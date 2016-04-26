@@ -22,7 +22,29 @@ Entry.block = {
         "isNotFor": [
             "albert"
         ],
-        func: "dummy_function (sprite, script) {newLine    var sq = Entry.hw.sendQueue;newLine    if (!script.isStart) {newLine        script.isStart = true;newLine        script.timeFlag = 1;newLine        sq.leftWheel = 30;newLine        sq.rightWheel = 30;newLine        var timeValue = 1 * 1000;newLine        setTimeout(function() {newLine            script.timeFlag = 0;newLine        }, timeValue);newLine        return script;newLine    } else if (script.timeFlag == 1) {newLine        return script;newLine    } else {newLine        delete script.timeFlag;newLine        delete script.isStart;newLine        Entry.engine.isContinue = false;newLine        sq.leftWheel = 0;newLine        sq.rightWheel = 0;newLine        return script.callReturn();newLine    }newLine}_dummy"
+        func: function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                sq.leftWheel = 30;
+                sq.rightWheel = 30;
+                var timeValue = 1 * 1000;
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+                sq.leftWheel = 0;
+                sq.rightWheel = 0;
+                return script.callReturn();
+            }
+        }
     },
     "albert_move_backward": {
         "color": "#00979D",
@@ -47,7 +69,29 @@ Entry.block = {
         "isNotFor": [
             "albert"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var sq = Entry.hw.sendQueue;newLine    if (!script.isStart) {newLine        script.isStart = true;newLine        script.timeFlag = 1;newLine        var timeValue = 1 * 1000;newLine        setTimeout(function() {newLine            script.timeFlag = 0;newLine        }, timeValue);newLine        return script;newLine    } else if (script.timeFlag == 1) {newLine        sq.leftWheel = -30;newLine        sq.rightWheel = -30;newLine        return script;newLine    } else {newLine        delete script.timeFlag;newLine        delete script.isStart;newLine        Entry.engine.isContinue = false;newLine        sq.leftWheel = 0;newLine        sq.rightWheel = 0;newLine        return script.callReturn();newLine    }newLine}_dummy"
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                var timeValue = 1 * 1000;
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            } else if (script.timeFlag == 1) {
+                sq.leftWheel = -30;
+                sq.rightWheel = -30;
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+                sq.leftWheel = 0;
+                sq.rightWheel = 0;
+                return script.callReturn();
+            }
+        }
     },
     "albert_turn_around": {
         "color": "#00979D",
@@ -91,7 +135,35 @@ Entry.block = {
         "isNotFor": [
             "albert"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var sq = Entry.hw.sendQueue;newLine    if (!script.isStart) {newLine        var direction = script.getField(\"DIRECTION\", script);newLine        var isLeft = direction == 'LEFT';newLine        script.leftValue = isLeft ? -30 : 30;newLine        script.rightValue = isLeft ? 30 : -30;newLine        script.isStart = true;newLine        script.timeFlag = 1;newLine        var timeValue = 1 * 1000;newLine        setTimeout(function() {newLine            script.timeFlag = 0;newLine        }, timeValue);newLine        return script;newLine    } else if (script.timeFlag == 1) {newLine        sq.leftWheel = script.leftValue;newLine        sq.rightWheel = script.rightValue;newLine        return script;newLine    } else {newLine        delete script.timeFlag;newLine        delete script.isStart;newLine        delete script.leftValue;newLine        delete script.rightValue;newLine        Entry.engine.isContinue = false;newLine        sq.leftWheel = 0;newLine        sq.rightWheel = 0;newLine        return script.callReturn();newLine    }newLine}_dummy"
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            if (!script.isStart) {
+                var direction = script.getField("DIRECTION", script);
+                var isLeft = direction == 'LEFT';
+                script.leftValue = isLeft ? -30 : 30;
+                script.rightValue = isLeft ? 30 : -30;
+                script.isStart = true;
+                script.timeFlag = 1;
+                var timeValue = 1 * 1000;
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            } else if (script.timeFlag == 1) {
+                sq.leftWheel = script.leftValue;
+                sq.rightWheel = script.rightValue;
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                delete script.leftValue;
+                delete script.rightValue;
+                Entry.engine.isContinue = false;
+                sq.leftWheel = 0;
+                sq.rightWheel = 0;
+                return script.callReturn();
+            }
+        }
     },
     "albert_set_led_to": {
         "color": "#00979D",
@@ -176,7 +248,20 @@ Entry.block = {
         "isNotFor": [
             "albert"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var sq = Entry.hw.sendQueue;newLine    var direction = script.getField(\"DIRECTION\", script);newLine    var color = Number(script.getField(\"COLOR\", script));newLine    if (direction == 'FRONT') {newLine        sq.leftEye = color;newLine        sq.rightEye = color;newLine    } else if (direction == 'LEFT')newLine        sq.leftEye = color;newLine    elsenewLine        sq.rightEye = color;newLinenewLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var direction = script.getField("DIRECTION", script);
+            var color = Number(script.getField("COLOR", script));
+            if (direction == 'FRONT') {
+                sq.leftEye = color;
+                sq.rightEye = color;
+            } else if (direction == 'LEFT')
+                sq.leftEye = color;
+            else
+                sq.rightEye = color;
+
+            return script.callReturn();
+        }
     },
     "albert_clear_led": {
         "color": "#00979D",
@@ -224,7 +309,17 @@ Entry.block = {
         "isNotFor": [
             "albert"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var sq = Entry.hw.sendQueue;newLine    var direction = script.getField(\"DIRECTION\", script);newLine    if (direction == 'FRONT') {newLine        sq.leftEye = 0;newLine        sq.rightEye = 0;newLine    } else if (direction == 'LEFT') sq.leftEye = 0;newLine    else sq.rightEye = 0;newLinenewLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var direction = script.getField("DIRECTION", script);
+            if (direction == 'FRONT') {
+                sq.leftEye = 0;
+                sq.rightEye = 0;
+            } else if (direction == 'LEFT') sq.leftEye = 0;
+            else sq.rightEye = 0;
+
+            return script.callReturn();
+        }
     },
     "albert_body_led": {
         "color": "#00979D",
@@ -268,7 +363,15 @@ Entry.block = {
         "isNotFor": [
             "albert"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var sq = Entry.hw.sendQueue;newLine    var direction = script.getField(\"STATE\", script);newLine    if (direction == 'ON')newLine        sq.bodyLed = 1;newLine    else sq.bodyLed = 0;newLinenewLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var direction = script.getField("STATE", script);
+            if (direction == 'ON')
+                sq.bodyLed = 1;
+            else sq.bodyLed = 0;
+
+            return script.callReturn();
+        }
     },
     "albert_front_led": {
         "color": "#00979D",
@@ -312,7 +415,15 @@ Entry.block = {
         "isNotFor": [
             "albert"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var sq = Entry.hw.sendQueue;newLine    var direction = script.getField(\"STATE\", script);newLine    if (direction == 'ON')newLine        sq.frontLed = 1;newLine    else sq.frontLed = 0;newLinenewLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var direction = script.getField("STATE", script);
+            if (direction == 'ON')
+                sq.frontLed = 1;
+            else sq.frontLed = 0;
+
+            return script.callReturn();
+        }
     },
     "albert_beep": {
         "color": "#00979D",
@@ -337,7 +448,26 @@ Entry.block = {
         "isNotFor": [
             "albert"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var sq = Entry.hw.sendQueue;newLine    if (!script.isStart) {newLine        script.isStart = true;newLine        script.timeFlag = 1;newLine        delete sq.note;newLine        sq.buzzer = 440;newLine        var timeValue = 0.2 * 1000;newLine        setTimeout(function() {newLine            script.timeFlag = 0;newLine        }, timeValue);newLine        return script;newLine    } else {newLine        delete script.timeFlag;newLine        delete script.isStart;newLine        Entry.engine.isContinue = false;newLine        sq.buzzer = 0;newLine        return script.callReturn();newLine    }newLine}_dummy"
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                delete sq.note;
+                sq.buzzer = 440;
+                var timeValue = 0.2 * 1000;
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+                sq.buzzer = 0;
+                return script.callReturn();
+            }
+        }
     },
     "albert_hand_found": {
         "color": "#00979D",
@@ -354,7 +484,11 @@ Entry.block = {
         "isNotFor": [
             "albert"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var pd = Entry.hw.portData;newLine    return pd.leftProximity > 40 ||newLine        pd.rightProximity > 40;newLine}_dummy"
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            return pd.leftProximity > 40 ||
+                pd.rightProximity > 40;
+        }
     },
     "albert_move_forward_for_secs": {
         "color": "#00979D",
@@ -392,7 +526,29 @@ Entry.block = {
         "isNotFor": [
             "albert"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var sq = Entry.hw.sendQueue;newLine    if (!script.isStart) {newLine        script.isStart = true;newLine        script.timeFlag = 1;newLine        var timeValue = script.getNumberValue(\"VALUE\") * 1000;newLine        setTimeout(function() {newLine            script.timeFlag = 0;newLine        }, timeValue);newLine        return script;newLine    } else if (script.timeFlag == 1) {newLine        sq.leftWheel = 30;newLine        sq.rightWheel = 30;newLine        return script;newLine    } else {newLine        delete script.timeFlag;newLine        delete script.isStart;newLine        Entry.engine.isContinue = false;newLine        sq.leftWheel = 0;newLine        sq.rightWheel = 0;newLine        return script.callReturn();newLine    }newLine}_dummy"
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                var timeValue = script.getNumberValue("VALUE") * 1000;
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            } else if (script.timeFlag == 1) {
+                sq.leftWheel = 30;
+                sq.rightWheel = 30;
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+                sq.leftWheel = 0;
+                sq.rightWheel = 0;
+                return script.callReturn();
+            }
+        }
     },
     "albert_move_backward_for_secs": {
         "color": "#00979D",
@@ -430,7 +586,29 @@ Entry.block = {
         "isNotFor": [
             "albert"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var sq = Entry.hw.sendQueue;newLine    if (!script.isStart) {newLine        script.isStart = true;newLine        script.timeFlag = 1;newLine        var timeValue = script.getNumberValue(\"VALUE\") * 1000;newLine        setTimeout(function() {newLine            script.timeFlag = 0;newLine        }, timeValue);newLine        return script;newLine    } else if (script.timeFlag == 1) {newLine        sq.leftWheel = -30;newLine        sq.rightWheel = -30;newLine        return script;newLine    } else {newLine        delete script.timeFlag;newLine        delete script.isStart;newLine        Entry.engine.isContinue = false;newLine        sq.leftWheel = 0;newLine        sq.rightWheel = 0;newLine        return script.callReturn();newLine    }newLine}_dummy"
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                var timeValue = script.getNumberValue("VALUE") * 1000;
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            } else if (script.timeFlag == 1) {
+                sq.leftWheel = -30;
+                sq.rightWheel = -30;
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+                sq.leftWheel = 0;
+                sq.rightWheel = 0;
+                return script.callReturn();
+            }
+        }
     },
     "albert_turn_for_secs": {
         "color": "#00979D",
@@ -485,7 +663,35 @@ Entry.block = {
         "isNotFor": [
             "albert"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var sq = Entry.hw.sendQueue;newLine    if (!script.isStart) {newLine        var direction = script.getField(\"DIRECTION\", script);newLine        var isLeft = direction == 'LEFT';newLine        script.leftValue = isLeft ? -30 : 30;newLine        script.rightValue = isLeft ? 30 : -30;newLine        script.isStart = true;newLine        script.timeFlag = 1;newLine        var timeValue = script.getNumberValue(\"VALUE\") * 1000;newLine        setTimeout(function() {newLine            script.timeFlag = 0;newLine        }, timeValue);newLine        return script;newLine    } else if (script.timeFlag == 1) {newLine        sq.leftWheel = script.leftValue;newLine        sq.rightWheel = script.rightValue;newLine        return script;newLine    } else {newLine        delete script.timeFlag;newLine        delete script.isStart;newLine        delete script.leftValue;newLine        delete script.rightValue;newLine        Entry.engine.isContinue = false;newLine        sq.leftWheel = 0;newLine        sq.rightWheel = 0;newLine        return script.callReturn();newLine    }newLine}_dummy"
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            if (!script.isStart) {
+                var direction = script.getField("DIRECTION", script);
+                var isLeft = direction == 'LEFT';
+                script.leftValue = isLeft ? -30 : 30;
+                script.rightValue = isLeft ? 30 : -30;
+                script.isStart = true;
+                script.timeFlag = 1;
+                var timeValue = script.getNumberValue("VALUE") * 1000;
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            } else if (script.timeFlag == 1) {
+                sq.leftWheel = script.leftValue;
+                sq.rightWheel = script.rightValue;
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                delete script.leftValue;
+                delete script.rightValue;
+                Entry.engine.isContinue = false;
+                sq.leftWheel = 0;
+                sq.rightWheel = 0;
+                return script.callReturn();
+            }
+        }
     },
     "albert_play_note_for": {
         "color": "#00979D",
@@ -617,7 +823,40 @@ Entry.block = {
         "isNotFor": [
             "albert"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var sq = Entry.hw.sendQueue;newLine    if (!script.isStart) {newLine        var note = script.getNumberField(\"NOTE\", script);newLine        var octave = script.getNumberField(\"OCTAVE\", script);newLine        var beat = script.getNumberValue(\"VALUE\", script);newLine        var tempo = Entry.Albert.tempo;newLine        note += (octave-1)*12;newLine        var timeValue = beat*60*1000/tempo;newLine        script.note = note;newLinenewLine        script.isStart = true;newLine        script.timeFlag = 1;newLine        if (timeValue > 100) {newLine            setTimeout(function() {newLine                sq.note = 0;newLine            }, timeValue-100);newLine        }newLine        setTimeout(function() {newLine            script.timeFlag = 0;newLine        }, timeValue);newLine        return script;newLine    } else if (script.timeFlag == 1) {newLine        sq.note = script.note;newLine        return script;newLine    } else {newLine        delete script.timeFlag;newLine        delete script.isStart;newLine        delete script.note;newLine        Entry.engine.isContinue = false;newLine        sq.note = 0;newLine        return script.callReturn();newLine    }newLinenewLine}_dummy"
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            if (!script.isStart) {
+                var note = script.getNumberField("NOTE", script);
+                var octave = script.getNumberField("OCTAVE", script);
+                var beat = script.getNumberValue("VALUE", script);
+                var tempo = Entry.Albert.tempo;
+                note += (octave-1)*12;
+                var timeValue = beat*60*1000/tempo;
+                script.note = note;
+
+                script.isStart = true;
+                script.timeFlag = 1;
+                if (timeValue > 100) {
+                    setTimeout(function() {
+                        sq.note = 0;
+                    }, timeValue-100);
+                }
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            } else if (script.timeFlag == 1) {
+                sq.note = script.note;
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                delete script.note;
+                Entry.engine.isContinue = false;
+                sq.note = 0;
+                return script.callReturn();
+            }
+        }
     },
     "albert_rest_for": {
         "color": "#00979D",
@@ -655,7 +894,25 @@ Entry.block = {
         "isNotFor": [
             "albert"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var sq = Entry.hw.sendQueue;newLine    if (!script.isStart) {newLine        script.isStart = true;newLine        script.timeFlag = 1;newLine        var timeValue = script.getNumberValue('VALUE');newLine        timeValue = timeValue*60*1000/Entry.Albert.tempo;newLine        sq.note = 0;newLine        setTimeout(function() {newLine            script.timeFlag = 0;newLine        }, timeValue);newLine        return script;newLine    } else {newLine        delete script.isStart;newLine        delete script.timeFlag;newLine        Entry.engine.isContinue = false;newLine        return script.callReturn();newLine    }newLine}_dummy"
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                var timeValue = script.getNumberValue('VALUE');
+                timeValue = timeValue*60*1000/Entry.Albert.tempo;
+                sq.note = 0;
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        }
     },
     "albert_change_tempo_by": {
         "color": "#00979D",
@@ -693,7 +950,10 @@ Entry.block = {
         "isNotFor": [
             "albert"
         ],
-        "func": "dummy_function (sprite, script) {newLine    Entry.Albert.tempo += script.getNumberValue('VALUE');newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            Entry.Albert.tempo += script.getNumberValue('VALUE');
+            return script.callReturn();
+        }
     },
     "albert_set_tempo_to": {
         "color": "#00979D",
@@ -731,7 +991,10 @@ Entry.block = {
         "isNotFor": [
             "albert"
         ],
-        "func": "dummy_function (sprite, script) {newLine    Entry.Albert.tempo = script.getNumberValue('VALUE');newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            Entry.Albert.tempo = script.getNumberValue('VALUE');
+            return script.callReturn();
+        }
     },
     "albert_change_both_wheels_by": {
         "color": "#00979D",
@@ -780,7 +1043,22 @@ Entry.block = {
         "isNotFor": [
             "albert"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var sq = Entry.hw.sendQueue;newLine    var pd = Entry.hw.portData;newLine    var left = sq.leftWheel != undefined ?newLine        sq.leftWheel : pd.leftWheel;newLine    var right = sq.rightWheel != undefined ?newLine        sq.rightWheel : pd.rightWheel;newLinenewLine    left += script.getNumberValue('LEFT');newLine    right += script.getNumberValue('RIGHT');newLinenewLine    sq.leftWheel = left;newLine    sq.rightWheel = right;newLinenewLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            var left = sq.leftWheel != undefined ?
+                sq.leftWheel : pd.leftWheel;
+            var right = sq.rightWheel != undefined ?
+                sq.rightWheel : pd.rightWheel;
+
+            left += script.getNumberValue('LEFT');
+            right += script.getNumberValue('RIGHT');
+
+            sq.leftWheel = left;
+            sq.rightWheel = right;
+
+            return script.callReturn();
+        }
     },
     "albert_set_both_wheels_to": {
         "color": "#00979D",
@@ -829,7 +1107,12 @@ Entry.block = {
         "isNotFor": [
             "albert"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var sq = Entry.hw.sendQueue;newLine    sq.leftWheel = script.getNumberValue('LEFT');newLine    sq.rightWheel = script.getNumberValue('RIGHT');newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            sq.leftWheel = script.getNumberValue('LEFT');
+            sq.rightWheel = script.getNumberValue('RIGHT');
+            return script.callReturn();
+        }
     },
     "albert_change_wheels_by": {
         "color": "#00979D",
@@ -888,7 +1171,27 @@ Entry.block = {
         "isNotFor": [
             "albert"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var sq = Entry.hw.sendQueue;newLine    var pd = Entry.hw.portData;newLine    var direction = script.getField('DIRECTION');newLine    var value = script.getNumberValue('VALUE');newLinenewLine    if (direction == 'LEFT') {newLine        sq.leftWheel = sq.leftWheel != undefined ?newLine            sq.leftWheel + value : pd.leftWheel + value;newLine    } else if (direction == 'RIGHT')newLine        sq.rightWheel = sq.rightWheel != undefined ?newLine            sq.rightWheel + value : pd.rightWheel + value;newLine    else {newLine        sq.leftWheel = sq.leftWheel != undefined ?newLine            sq.leftWheel + value : pd.leftWheel + value;newLine        sq.rightWheel = sq.rightWheel != undefined ?newLine            sq.rightWheel + value : pd.rightWheel + value;newLine    }newLinenewLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            var direction = script.getField('DIRECTION');
+            var value = script.getNumberValue('VALUE');
+
+            if (direction == 'LEFT') {
+                sq.leftWheel = sq.leftWheel != undefined ?
+                    sq.leftWheel + value : pd.leftWheel + value;
+            } else if (direction == 'RIGHT')
+                sq.rightWheel = sq.rightWheel != undefined ?
+                    sq.rightWheel + value : pd.rightWheel + value;
+            else {
+                sq.leftWheel = sq.leftWheel != undefined ?
+                    sq.leftWheel + value : pd.leftWheel + value;
+                sq.rightWheel = sq.rightWheel != undefined ?
+                    sq.rightWheel + value : pd.rightWheel + value;
+            }
+
+            return script.callReturn();
+        }
     },
     "albert_set_wheels_to": {
         "color": "#00979D",
@@ -947,7 +1250,20 @@ Entry.block = {
         "isNotFor": [
             "albert"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var sq = Entry.hw.sendQueue;newLine    var direction = script.getField('DIRECTION');newLine    var value = script.getNumberValue('VALUE');newLinenewLine    if (direction == 'LEFT') sq.leftWheel = value;newLine    else if (direction == 'RIGHT') sq.rightWheel = value;newLine    else {newLine        sq.leftWheel = value;newLine        sq.rightWheel = value;newLine    }newLinenewLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var direction = script.getField('DIRECTION');
+            var value = script.getNumberValue('VALUE');
+
+            if (direction == 'LEFT') sq.leftWheel = value;
+            else if (direction == 'RIGHT') sq.rightWheel = value;
+            else {
+                sq.leftWheel = value;
+                sq.rightWheel = value;
+            }
+
+            return script.callReturn();
+        }
     },
     "albert_stop": {
         "color": "#00979D",
@@ -972,7 +1288,13 @@ Entry.block = {
         "isNotFor": [
             "albert"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var sq = Entry.hw.sendQueue;newLine    sq.leftWheel = 0;newLine    sq.rightWheel = 0;newLinenewLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            sq.leftWheel = 0;
+            sq.rightWheel = 0;
+
+            return script.callReturn();
+        }
     },
     "albert_change_buzzer_by": {
         "color": "#00979D",
@@ -1010,7 +1332,16 @@ Entry.block = {
         "isNotFor": [
             "albert"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var hw = Entry.hw,newLine        sq = hw.sendQueue,newLine        pd = hw.portData;newLine        value = script.getNumberValue('VALUE');newLine    delete sq.note;newLine    sq.buzzer = sq.buzzer == undefined ?newLine        value : sq.buzzer + value;newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var hw = Entry.hw,
+                sq = hw.sendQueue,
+                pd = hw.portData;
+                value = script.getNumberValue('VALUE');
+            delete sq.note;
+            sq.buzzer = sq.buzzer == undefined ?
+                value : sq.buzzer + value;
+            return script.callReturn();
+        }
     },
     "albert_set_buzzer_to": {
         "color": "#00979D",
@@ -1048,7 +1379,12 @@ Entry.block = {
         "isNotFor": [
             "albert"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var sq = Entry.hw.sendQueue;newLine    delete sq.note;newLine    sq.buzzer = script.getNumberValue('VALUE');newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            delete sq.note;
+            sq.buzzer = script.getNumberValue('VALUE');
+            return script.callReturn();
+        }
     },
     "albert_clear_buzzer": {
         "color": "#00979D",
@@ -1073,7 +1409,10 @@ Entry.block = {
         "isNotFor": [
             "albert"
         ],
-        "func": "dummy_function (sprite, script) {newLine    Entry.hw.sendQueue.buzzer = 0;newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            Entry.hw.sendQueue.buzzer = 0;
+            return script.callReturn();
+        }
     },
     "albert_value": {
         "color": "#00979D",
@@ -1119,7 +1458,15 @@ Entry.block = {
         "isNotFor": [
             "albert"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var hw = Entry.hw,newLine        sq = hw.sendQueue,newLine        pd = hw.portData,newLine        port = script.getField('PORT');newLinenewLine    return sq[port] != undefined ?newLine        sq[port] : pd[port]newLine}_dummy"
+        "func": function (sprite, script) {
+            var hw = Entry.hw,
+                sq = hw.sendQueue,
+                pd = hw.portData,
+                port = script.getField('PORT');
+
+            return sq[port] != undefined ?
+                sq[port] : pd[port]
+        }
     },
     "arduino_text": {
         "color": "#00979D",
@@ -1139,7 +1486,9 @@ Entry.block = {
         "paramsKeyMap": {
             "NAME": 0
         },
-        "func": "dummy_function (sprite, script) {newLine    return script.getStringField(\"NAME\");newLine}_dummy"
+        "func": function (sprite, script) {
+            return script.getStringField("NAME");
+        }
     },
     "arduino_send": {
         "color": "#00979D",
@@ -1159,7 +1508,14 @@ Entry.block = {
         "paramsKeyMap": {
             "VALUE": 0
         },
-        "func": "dummy_function (sprite, script) {newLine    var signal = script.getValue(\"VALUE\", script);newLine    var xmlHttp = new XMLHttpRequest();newLine    xmlHttp.open( \"POST\", 'http://localhost:23518/arduino/', false );newLine    xmlHttp.send(String(signal));newLine    Entry.assert(xmlHttp.status == 200, \"arduino is not connected\");newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var signal = script.getValue("VALUE", script);
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.open( "POST", 'http://localhost:23518/arduino/', false );
+            xmlHttp.send(String(signal));
+            Entry.assert(xmlHttp.status == 200, "arduino is not connected");
+            return script.callReturn();
+        }
     },
     "arduino_get_number": {
         "color": "#00979D",
@@ -1179,7 +1535,15 @@ Entry.block = {
         "paramsKeyMap": {
             "VALUE": 0
         },
-        "func": "dummy_function (sprite, script) {newLine    var signal = script.getValue(\"VALUE\", script);newLine    var xmlHttp = new XMLHttpRequest();newLine    xmlHttp.open( \"POST\", 'http://localhost:23518/arduino/', false );newLine    xmlHttp.send(String(signal));newLine    Entry.assert(xmlHttp.status == 200, \"arduino is not connected\");newLine    var data = xmlHttp.responseText;newLine    return Number(data);newLine}_dummy"
+        "func": function (sprite, script) {
+            var signal = script.getValue("VALUE", script);
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.open( "POST", 'http://localhost:23518/arduino/', false );
+            xmlHttp.send(String(signal));
+            Entry.assert(xmlHttp.status == 200, "arduino is not connected");
+            var data = xmlHttp.responseText;
+            return Number(data);
+        }
     },
     "arduino_get_string": {
         "color": "#00979D",
@@ -1199,7 +1563,15 @@ Entry.block = {
         "paramsKeyMap": {
             "VALUE": 0
         },
-        "func": "dummy_function (sprite, script) {newLine    var signal = script.getValue(\"VALUE\", script);newLine    var xmlHttp = new XMLHttpRequest();newLine    xmlHttp.open( \"POST\", 'http://localhost:23518/arduino/', false );newLine    xmlHttp.send(String(signal));newLine    Entry.assert(xmlHttp.status == 200, \"arduino is not connected\");newLine    var data = xmlHttp.responseText;newLine    return data;newLine}_dummy"
+        "func": function (sprite, script) {
+            var signal = script.getValue("VALUE", script);
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.open( "POST", 'http://localhost:23518/arduino/', false );
+            xmlHttp.send(String(signal));
+            Entry.assert(xmlHttp.status == 200, "arduino is not connected");
+            var data = xmlHttp.responseText;
+            return data;
+        }
     },
     "arduino_get_sensor_number": {
         "color": "#00979D",
@@ -1248,7 +1620,9 @@ Entry.block = {
         "paramsKeyMap": {
             "PORT": 0
         },
-        "func": "dummy_function (sprite, script) {newLine    return script.getStringField(\"PORT\");newLine}_dummy"
+        "func": function (sprite, script) {
+            return script.getStringField("PORT");
+        }
     },
     "arduino_get_port_number": {
         "color": "#00979D",
@@ -1329,7 +1703,9 @@ Entry.block = {
         "paramsKeyMap": {
             "PORT": 0
         },
-        "func": "dummy_function (sprite, script) {newLine    return script.getStringField(\"PORT\");newLine}_dummy"
+        "func": function (sprite, script) {
+            return script.getStringField("PORT");
+        }
     },
     "arduino_get_pwm_port_number": {
         "color": "#00979D",
@@ -1378,7 +1754,9 @@ Entry.block = {
         "paramsKeyMap": {
             "PORT": 0
         },
-        "func": "dummy_function (sprite, script) {newLine    return script.getStringField(\"PORT\");newLine}_dummy"
+        "func": function (sprite, script) {
+                return script.getStringField("PORT");
+            }
     },
     "arduino_get_number_sensor_value": {
         "color": "#00979D",
@@ -1407,7 +1785,10 @@ Entry.block = {
         "isNotFor": [
             "arduino"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var signal = script.getValue(\"VALUE\", script);newLine    return Entry.hw.getAnalogPortValue(signal[1]);newLine}_dummy"
+        "func": function (sprite, script) {
+            var signal = script.getValue("VALUE", script);
+            return Entry.hw.getAnalogPortValue(signal[1]);
+        }
     },
     "arduino_get_digital_value": {
         "color": "#00979D",
@@ -1436,7 +1817,10 @@ Entry.block = {
         "isNotFor": [
             "arduino"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var signal = script.getNumberValue(\"VALUE\", script);newLine    return Entry.hw.getDigitalPortValue(signal);newLine}_dummy"
+        "func": function (sprite, script) {
+            var signal = script.getNumberValue("VALUE", script);
+            return Entry.hw.getDigitalPortValue(signal);
+        }
     },
     "arduino_toggle_led": {
         "color": "#00979D",
@@ -1488,7 +1872,13 @@ Entry.block = {
         "isNotFor": [
             "arduino"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var port = script.getNumberValue(\"VALUE\");newLine    var operator = script.getField(\"OPERATOR\");newLine    var value = operator == \"on\" ? 255 : 0;newLine    Entry.hw.setDigitalPortValue(port, value);newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var port = script.getNumberValue("VALUE");
+            var operator = script.getField("OPERATOR");
+            var value = operator == "on" ? 255 : 0;
+            Entry.hw.setDigitalPortValue(port, value);
+            return script.callReturn();
+        }
     },
     "arduino_toggle_pwm": {
         "color": "#00979D",
@@ -1534,7 +1924,15 @@ Entry.block = {
         "isNotFor": [
             "arduino"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var port = script.getNumberValue(\"PORT\");newLine    var value = script.getNumberValue(\"VALUE\");newLine    value = Math.round(value);newLine    value = Math.max(value, 0);newLine    value = Math.min(value, 255);newLine    Entry.hw.setDigitalPortValue(port, value);newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var port = script.getNumberValue("PORT");
+            var value = script.getNumberValue("VALUE");
+            value = Math.round(value);
+            value = Math.max(value, 0);
+            value = Math.min(value, 255);
+            Entry.hw.setDigitalPortValue(port, value);
+            return script.callReturn();
+        }
     },
     "arduino_convert_scale": {
         "color": "#00979D",
@@ -1612,7 +2010,30 @@ Entry.block = {
         "isNotFor": [
             "arduino"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var value1 = script.getNumberValue(\"VALUE1\", script);newLine    var value2 = script.getNumberValue(\"VALUE2\", script);newLine    var value3 = script.getNumberValue(\"VALUE3\", script);newLine    var value4 = script.getNumberValue(\"VALUE4\", script);newLine    var value5 = script.getNumberValue(\"VALUE5\", script);newLine    var result = value1;newLine    if (value2 > value3) {newLine        var swap = value2;newLine        value2 = value3;newLine        value3 = swap;newLine    }newLine    if (value4 > value5) {newLine        var swap = value4;newLine        value4 = value5;newLine        value5 = swap;newLine    }newLine    result -= value2;newLine    result = result * ((value5 - value4) / (value3 - value2));newLine    result += value4;newLine    result = Math.min(value5, result);newLine    result = Math.max(value4, result);newLine    return Math.round(result);newLine}_dummy"
+        "func": function (sprite, script) {
+            var value1 = script.getNumberValue("VALUE1", script);
+            var value2 = script.getNumberValue("VALUE2", script);
+            var value3 = script.getNumberValue("VALUE3", script);
+            var value4 = script.getNumberValue("VALUE4", script);
+            var value5 = script.getNumberValue("VALUE5", script);
+            var result = value1;
+            if (value2 > value3) {
+                var swap = value2;
+                value2 = value3;
+                value3 = swap;
+            }
+            if (value4 > value5) {
+                var swap = value4;
+                value4 = value5;
+                value5 = swap;
+            }
+            result -= value2;
+            result = result * ((value5 - value4) / (value3 - value2));
+            result += value4;
+            result = Math.min(value5, result);
+            result = Math.max(value4, result);
+            return Math.round(result);
+        }
     },
     "sensorBoard_get_named_sensor_value": {
         "color": "#00979D",
@@ -1658,7 +2079,9 @@ Entry.block = {
         "isNotFor": [
             "sensorBoard"
         ],
-        "func": "dummy_function (sprite, script) {newLine    return Entry.hw.getAnalogPortValue(script.getField(\"PORT\", script));newLine}_dummy"
+        "func": function (sprite, script) {
+            return Entry.hw.getAnalogPortValue(script.getField("PORT", script));
+        }
     },
     "sensorBoard_is_button_pressed": {
         "color": "#00979D",
@@ -1704,7 +2127,9 @@ Entry.block = {
         "isNotFor": [
             "sensorBoard"
         ],
-        "func": "dummy_function (sprite, script) {newLine    return Entry.hw.getDigitalPortValue(script.getNumberField(\"PORT\", script));newLine}_dummy"
+        "func": function (sprite, script) {
+            return Entry.hw.getDigitalPortValue(script.getNumberField("PORT", script));
+        }
     },
     "sensorBoard_led": {
         "color": "#00979D",
@@ -1773,7 +2198,11 @@ Entry.block = {
         "isNotFor": [
             "sensorBoard"
         ],
-        "func": "dummy_function (sprite, script) {newLine    Entry.hw.setDigitalPortValue(script.getField(\"PORT\"),newLine                                 script.getNumberField(\"OPERATOR\"));newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            Entry.hw.setDigitalPortValue(script.getField("PORT"),
+                                         script.getNumberField("OPERATOR"));
+            return script.callReturn();
+        }
     },
     "arduino_download_connector": {
         "skeleton": "basic_button",
@@ -1873,7 +2302,12 @@ Entry.block = {
         "isNotFor": [
             "bitbrick"
         ],
-        "func": "dummy_function (sprite, script) {newLine  var port = script.getStringField(\"PORT\");newLine  console.log(port);newLine  console.log(Entry.hw.portData[port]);newLine  return Entry.hw.portData[port].value;newLine}_dummy"
+        "func": function (sprite, script) {
+          var port = script.getStringField("PORT");
+          console.log(port);
+          console.log(Entry.hw.portData[port]);
+          return Entry.hw.portData[port].value;
+        }
     },
     "bitbrick_is_touch_pressed": {
         "color": "#00979D",
@@ -1901,7 +2335,9 @@ Entry.block = {
         "isNotFor": [
             "bitbrick"
         ],
-        "func": "dummy_function (sprite, script) {newLine  return Entry.hw.portData[script.getStringField(\"PORT\")].value === 0;newLine}_dummy"
+        "func": function (sprite, script) {
+          return Entry.hw.portData[script.getStringField("PORT")].value === 0;
+        }
     },
     "bitbrick_turn_off_color_led": {
         "color": "#00979D",
@@ -1926,7 +2362,12 @@ Entry.block = {
         "isNotFor": [
             "bitbrick"
         ],
-        "func": "dummy_function (sprite, script) {newLine  Entry.hw.sendQueue[\"LEDR\"] = 0;newLine  Entry.hw.sendQueue[\"LEDG\"] = 0;newLine  Entry.hw.sendQueue[\"LEDB\"] = 0;newLine  return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            Entry.hw.sendQueue["LEDR"] = 0;
+            Entry.hw.sendQueue["LEDG"] = 0;
+            Entry.hw.sendQueue["LEDB"] = 0;
+            return script.callReturn();
+        }
     },
     "bitbrick_turn_on_color_led_by_rgb": {
         "color": "#00979D",
@@ -1986,7 +2427,20 @@ Entry.block = {
         "isNotFor": [
             "bitbrick"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var red = script.getNumberValue(\"rValue\"),newLine        green = script.getNumberValue(\"gValue\"),newLine        blue = script.getNumberValue(\"bValue\"),newLine        min = 0,newLine        max = 255,newLine        adjustor = Entry.adjustValueWithMaxMin,newLine        sq = Entry.hw.sendQueue;newLinenewLine    sq[\"LEDR\"] = adjustor(red, min, max);newLine    sq[\"LEDG\"] = adjustor(green, min, max);newLine    sq[\"LEDB\"] = adjustor(blue, min, max);newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var red = script.getNumberValue("rValue"),
+                green = script.getNumberValue("gValue"),
+                blue = script.getNumberValue("bValue"),
+                min = 0,
+                max = 255,
+                adjustor = Entry.adjustValueWithMaxMin,
+                sq = Entry.hw.sendQueue;
+
+            sq["LEDR"] = adjustor(red, min, max);
+            sq["LEDG"] = adjustor(green, min, max);
+            sq["LEDB"] = adjustor(blue, min, max);
+            return script.callReturn();
+        }
     },
     "bitbrick_turn_on_color_led_by_picker": {
         "color": "#00979D",
@@ -2017,7 +2471,13 @@ Entry.block = {
         "isNotFor": [
             "bitbrick"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var port = script.getStringField(\"VALUE\");newLine    Entry.hw.sendQueue[\"LEDR\"] = parseInt(port.substr(1,2), 16);newLine    Entry.hw.sendQueue[\"LEDG\"] = parseInt(port.substr(3,2), 16);newLine    Entry.hw.sendQueue[\"LEDB\"] = parseInt(port.substr(5,2), 16);newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var port = script.getStringField("VALUE");
+            Entry.hw.sendQueue["LEDR"] = parseInt(port.substr(1,2), 16);
+            Entry.hw.sendQueue["LEDG"] = parseInt(port.substr(3,2), 16);
+            Entry.hw.sendQueue["LEDB"] = parseInt(port.substr(5,2), 16);
+            return script.callReturn();
+        }
     },
     "bitbrick_turn_on_color_led_by_value": {
         "color": "#00979D",
@@ -2055,7 +2515,30 @@ Entry.block = {
         "isNotFor": [
             "bitbrick"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var value = script.getNumberValue(\"VALUE\");newLine    var red, green, blue;newLine    value = value % 200;newLine    if ( value < 67 ) {newLine        red = 200 - (value * 3);newLine        green = value * 3;newLine        blue = 0;newLine    } else if ( value < 134 ) {newLine        value = value - 67;newLine        red = 0;newLine        green = 200 - (value * 3);newLine        blue = value * 3;newLine    } else if ( value < 201 ) {newLine        value = value - 134;newLine        red = value * 3;newLine        green = 0;newLine        blue = 200 - (value * 3);newLine    }newLine    Entry.hw.sendQueue[\"LEDR\"] = red;newLine    Entry.hw.sendQueue[\"LEDG\"] = green;newLine    Entry.hw.sendQueue[\"LEDB\"] = blue;newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var value = script.getNumberValue("VALUE");
+            var red, green, blue;
+            value = value % 200;
+            if ( value < 67 ) {
+                red = 200 - (value * 3);
+                green = value * 3;
+                blue = 0;
+            } else if ( value < 134 ) {
+                value = value - 67;
+                red = 0;
+                green = 200 - (value * 3);
+                blue = value * 3;
+            } else if ( value < 201 ) {
+                value = value - 134;
+                red = value * 3;
+                green = 0;
+                blue = 200 - (value * 3);
+            }
+            Entry.hw.sendQueue["LEDR"] = red;
+            Entry.hw.sendQueue["LEDG"] = green;
+            Entry.hw.sendQueue["LEDB"] = blue;
+            return script.callReturn();
+        }
     },
     "bitbrick_buzzer": {
         "color": "#00979D",
@@ -2093,7 +2576,18 @@ Entry.block = {
         "isNotFor": [
             "bitbrick"
         ],
-        "func": "dummy_function (sprite, script) {newLine    if (!script.isStart) {newLine        var value = script.getNumberValue(\"VALUE\");newLine        Entry.hw.sendQueue[\"buzzer\"] = value;newLine        script.isStart = true;newLine        return script;newLine    } else {newLine        Entry.hw.sendQueue[\"buzzer\"] = 0;newLine        delete script.isStart;newLine        return script.callReturn();newLine    }newLine}_dummy"
+        "func": function (sprite, script) {
+            if (!script.isStart) {
+                var value = script.getNumberValue("VALUE");
+                Entry.hw.sendQueue["buzzer"] = value;
+                script.isStart = true;
+                return script;
+            } else {
+                Entry.hw.sendQueue["buzzer"] = 0;
+                delete script.isStart;
+                return script.callReturn();
+            }
+        }
     },
     "bitbrick_turn_off_all_motors": {
         "color": "#00979D",
@@ -2118,7 +2612,17 @@ Entry.block = {
         "isNotFor": [
             "bitbrick"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var sq = Entry.hw.sendQueue;newLine    var bitbrick = Entry.Bitbrick;newLine    bitbrick.servoList().map(function(servo){newLine        sq[servo[1]] = 0;newLine    });newLine    bitbrick.dcList().map(function(dc){newLine        sq[dc[1]] = 128;newLine    });newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var bitbrick = Entry.Bitbrick;
+            bitbrick.servoList().map(function(servo){
+                sq[servo[1]] = 0;
+            });
+            bitbrick.dcList().map(function(dc){
+                sq[dc[1]] = 128;
+            });
+            return script.callReturn();
+        }
     },
     "bitbrick_dc_speed": {
         "color": "#00979D",
@@ -2163,7 +2667,15 @@ Entry.block = {
         "isNotFor": [
             "bitbrick"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var value = script.getNumberValue(\"VALUE\");newLine    value = Math.min(value, Entry.Bitbrick.dcMaxValue);newLine    value = Math.max(value, Entry.Bitbrick.dcMinValue);newLinenewLine    Entry.hw.sendQueue[script.getStringField(\"PORT\")] =newLine        value + 128;newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var value = script.getNumberValue("VALUE");
+            value = Math.min(value, Entry.Bitbrick.dcMaxValue);
+            value = Math.max(value, Entry.Bitbrick.dcMinValue);
+
+            Entry.hw.sendQueue[script.getStringField("PORT")] =
+                value + 128;
+            return script.callReturn();
+        }
     },
     "bitbrick_dc_direction_speed": {
         "color": "#00979D",
@@ -2225,7 +2737,16 @@ Entry.block = {
         "isNotFor": [
             "bitbrick"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var isFront = script.getStringField(\"DIRECTION\") === \"CW\";newLine    var value = script.getNumberValue(\"VALUE\");newLine    value = Math.min(value, Entry.Bitbrick.dcMaxValue);newLine    value = Math.max(value, 0);newLinenewLine    Entry.hw.sendQueue[script.getStringField(\"PORT\")] =newLine        isFront ? value + 128 : 128 - value;newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var isFront = script.getStringField("DIRECTION") === "CW";
+            var value = script.getNumberValue("VALUE");
+            value = Math.min(value, Entry.Bitbrick.dcMaxValue);
+            value = Math.max(value, 0);
+
+            Entry.hw.sendQueue[script.getStringField("PORT")] =
+                isFront ? value + 128 : 128 - value;
+            return script.callReturn();
+        }
     },
     "bitbrick_servomotor_angle": {
         "color": "#00979D",
@@ -2270,7 +2791,13 @@ Entry.block = {
         "isNotFor": [
             "bitbrick"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var value = script.getNumberValue(\"VALUE\") + 1;newLine    value = Math.min(value, Entry.Bitbrick.servoMaxValue);newLine    value = Math.max(value, Entry.Bitbrick.servoMinValue);newLine    Entry.hw.sendQueue[script.getStringField(\"PORT\")] = value;newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var value = script.getNumberValue("VALUE") + 1;
+            value = Math.min(value, Entry.Bitbrick.servoMaxValue);
+            value = Math.max(value, Entry.Bitbrick.servoMinValue);
+            Entry.hw.sendQueue[script.getStringField("PORT")] = value;
+            return script.callReturn();
+        }
     },
     "start_drawing": {
         "color": "#FF9E20",
@@ -2295,7 +2822,18 @@ Entry.block = {
         "isNotFor": [
             "textBox"
         ],
-        "func": "dummy_function (sprite, script) {newLinenewLine    if (sprite.brush)newLine        sprite.brush.stop = false;newLine    elsenewLine        Entry.setBasicBrush(sprite);newLinenewLine    Entry.stage.sortZorder();newLine    sprite.brush.moveTo(sprite.getX(), sprite.getY()*-1);newLinenewLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+
+            if (sprite.brush)
+                sprite.brush.stop = false;
+            else
+                Entry.setBasicBrush(sprite);
+
+            Entry.stage.sortZorder();
+            sprite.brush.moveTo(sprite.getX(), sprite.getY()*-1);
+
+            return script.callReturn();
+        }
     },
     "stop_drawing": {
         "color": "#FF9E20",
@@ -2320,7 +2858,12 @@ Entry.block = {
         "isNotFor": [
             "textBox"
         ],
-        "func": "dummy_function (sprite, script) {newLine    if (sprite.brush && sprite.shape)newLine        sprite.brush.stop = true;newLinenewLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            if (sprite.brush && sprite.shape)
+                sprite.brush.stop = true;
+
+            return script.callReturn();
+        }
     },
     "set_color": {
         "color": "#FF9E20",
@@ -2351,7 +2894,25 @@ Entry.block = {
         "isNotFor": [
             "textBox"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var colour = script.getField(\"VALUE\", script);newLinenewLine    if (!sprite.brush) {newLine        Entry.setBasicBrush(sprite);newLine        sprite.brush.stop = true;newLine    }newLinenewLine    if (sprite.brush) {newLine        var rgb = Entry.hex2rgb(colour);newLine        sprite.brush.rgb = rgb;newLine        sprite.brush.endStroke();newLine        sprite.brush.beginStroke(\"rgba(\"+rgb.r+\",\"+rgb.g+\",\"+rgb.b+\",\"+(sprite.brush.opacity/100)+\")\");newLinenewLine        sprite.brush.moveTo(sprite.getX(), sprite.getY()*-1);newLine    }newLinenewLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var colour = script.getField("VALUE", script);
+
+            if (!sprite.brush) {
+                Entry.setBasicBrush(sprite);
+                sprite.brush.stop = true;
+            }
+
+            if (sprite.brush) {
+                var rgb = Entry.hex2rgb(colour);
+                sprite.brush.rgb = rgb;
+                sprite.brush.endStroke();
+                sprite.brush.beginStroke("rgba("+rgb.r+","+rgb.g+","+rgb.b+","+(sprite.brush.opacity/100)+")");
+
+                sprite.brush.moveTo(sprite.getX(), sprite.getY()*-1);
+            }
+
+            return script.callReturn();
+        }
     },
     "set_random_color": {
         "color": "#FF9E20",
@@ -2376,7 +2937,22 @@ Entry.block = {
         "isNotFor": [
             "textBox"
         ],
-        "func": "dummy_function (sprite, script) {newLine    if (!sprite.brush) {newLine        Entry.setBasicBrush(sprite);newLine        sprite.brush.stop = true;newLine    }newLinenewLine    if (sprite.brush) {newLine        var rgb = Entry.generateRgb();newLine        sprite.brush.rgb = rgb;newLine        sprite.brush.endStroke();newLine        sprite.brush.beginStroke(\"rgba(\"+rgb.r+\",\"+rgb.g+\",\"+rgb.b+\",\"+(sprite.brush.opacity/100)+\")\");newLinenewLine        sprite.brush.moveTo(sprite.getX(), sprite.getY()*-1);newLine    }newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            if (!sprite.brush) {
+                Entry.setBasicBrush(sprite);
+                sprite.brush.stop = true;
+            }
+
+            if (sprite.brush) {
+                var rgb = Entry.generateRgb();
+                sprite.brush.rgb = rgb;
+                sprite.brush.endStroke();
+                sprite.brush.beginStroke("rgba("+rgb.r+","+rgb.g+","+rgb.b+","+(sprite.brush.opacity/100)+")");
+
+                sprite.brush.moveTo(sprite.getX(), sprite.getY()*-1);
+            }
+            return script.callReturn();
+        }
     },
     "change_thickness": {
         "color": "#FF9E20",
@@ -2414,7 +2990,26 @@ Entry.block = {
         "isNotFor": [
             "textBox"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var thickness = script.getNumberValue(\"VALUE\", script);newLinenewLine    if (!sprite.brush) {newLine        Entry.setBasicBrush(sprite);newLine        sprite.brush.stop = true;newLine    }newLinenewLine    if (sprite.brush) {newLine        sprite.brush.thickness += thickness;newLine        if (sprite.brush.thickness < 1)newLine            sprite.brush.thickness = 1;newLinenewLine        sprite.brush.setStrokeStyle(sprite.brush.thickness);newLinenewLine        sprite.brush.moveTo(sprite.getX(), sprite.getY()*-1);newLine    }newLinenewLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var thickness = script.getNumberValue("VALUE", script);
+
+            if (!sprite.brush) {
+                Entry.setBasicBrush(sprite);
+                sprite.brush.stop = true;
+            }
+
+            if (sprite.brush) {
+                sprite.brush.thickness += thickness;
+                if (sprite.brush.thickness < 1)
+                    sprite.brush.thickness = 1;
+
+                sprite.brush.setStrokeStyle(sprite.brush.thickness);
+
+                sprite.brush.moveTo(sprite.getX(), sprite.getY()*-1);
+            }
+
+            return script.callReturn();
+        }
     },
     "set_thickness": {
         "color": "#FF9E20",
@@ -2452,7 +3047,23 @@ Entry.block = {
         "isNotFor": [
             "textBox"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var thickness = script.getNumberValue(\"VALUE\", script);newLinenewLine    if (!sprite.brush) {newLine        Entry.setBasicBrush(sprite);newLine        sprite.brush.stop = true;newLine    }newLinenewLine    if (sprite.brush) {newLine        sprite.brush.thickness = thickness;newLine        sprite.brush.setStrokeStyle(sprite.brush.thickness);newLinenewLine        sprite.brush.moveTo(sprite.getX(), sprite.getY()*-1);newLine    }newLinenewLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var thickness = script.getNumberValue("VALUE", script);
+
+            if (!sprite.brush) {
+                Entry.setBasicBrush(sprite);
+                sprite.brush.stop = true;
+            }
+
+            if (sprite.brush) {
+                sprite.brush.thickness = thickness;
+                sprite.brush.setStrokeStyle(sprite.brush.thickness);
+
+                sprite.brush.moveTo(sprite.getX(), sprite.getY()*-1);
+            }
+
+            return script.callReturn();
+        }
     },
     "change_opacity": {
         "color": "#FF9E20",
@@ -2490,7 +3101,25 @@ Entry.block = {
         "isNotFor": [
             "textBox"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var opacity = script.getNumberValue(\"VALUE\", script);newLinenewLine    if (!sprite.brush) {newLine        Entry.setBasicBrush(sprite);newLine        sprite.brush.stop = true;newLine    }newLine    opacity = Entry.adjustValueWithMaxMin(sprite.brush.opacity + opacity, 0, 100);newLinenewLine    if (sprite.brush) {newLine        sprite.brush.opacity = opacity;newLine        sprite.brush.endStroke();newLine        var rgb = sprite.brush.rgb;newLine        sprite.brush.beginStroke(\"rgba(\"+rgb.r+\",\"+rgb.g+\",\"+rgb.b+\",\"+(sprite.brush.opacity/100)+\")\");newLine        sprite.brush.moveTo(sprite.getX(), sprite.getY()*-1);newLine    }newLinenewLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var opacity = script.getNumberValue("VALUE", script);
+
+            if (!sprite.brush) {
+                Entry.setBasicBrush(sprite);
+                sprite.brush.stop = true;
+            }
+            opacity = Entry.adjustValueWithMaxMin(sprite.brush.opacity + opacity, 0, 100);
+
+            if (sprite.brush) {
+                sprite.brush.opacity = opacity;
+                sprite.brush.endStroke();
+                var rgb = sprite.brush.rgb;
+                sprite.brush.beginStroke("rgba("+rgb.r+","+rgb.g+","+rgb.b+","+(sprite.brush.opacity/100)+")");
+                sprite.brush.moveTo(sprite.getX(), sprite.getY()*-1);
+            }
+
+            return script.callReturn();
+        }
     },
     "set_opacity": {
         "color": "#FF9E20",
@@ -2528,7 +3157,25 @@ Entry.block = {
         "isNotFor": [
             "textBox"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var opacity = script.getNumberValue(\"VALUE\", script);newLinenewLine    if (!sprite.brush) {newLine        Entry.setBasicBrush(sprite);newLine        sprite.brush.stop = true;newLine    }newLinenewLine    if (sprite.brush) {newLine        sprite.brush.opacity = Entry.adjustValueWithMaxMin(opacity, 0, 100);newLine        sprite.brush.endStroke();newLine        var rgb = sprite.brush.rgb;newLine        sprite.brush.beginStroke(\"rgba(\"+rgb.r+\",\"+rgb.g+\",\"+rgb.b+\",\"+(sprite.brush.opacity/100)+\")\");newLine        sprite.brush.moveTo(sprite.getX(), sprite.getY()*-1);newLine    }newLinenewLine    return script.callReturn();newLinenewLine}_dummy"
+        "func": function (sprite, script) {
+            var opacity = script.getNumberValue("VALUE", script);
+
+            if (!sprite.brush) {
+                Entry.setBasicBrush(sprite);
+                sprite.brush.stop = true;
+            }
+
+            if (sprite.brush) {
+                sprite.brush.opacity = Entry.adjustValueWithMaxMin(opacity, 0, 100);
+                sprite.brush.endStroke();
+                var rgb = sprite.brush.rgb;
+                sprite.brush.beginStroke("rgba("+rgb.r+","+rgb.g+","+rgb.b+","+(sprite.brush.opacity/100)+")");
+                sprite.brush.moveTo(sprite.getX(), sprite.getY()*-1);
+            }
+
+            return script.callReturn();
+
+        }
     },
     "brush_erase_all": {
         "color": "#FF9E20",
@@ -2553,7 +3200,23 @@ Entry.block = {
         "isNotFor": [
             "textBox"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var brush = sprite.brush;newLine    if (brush) {newLine        var stroke = brush._stroke.style;newLine        var style = brush._strokeStyle.width;newLine        brush.clear().setStrokeStyle(style).beginStroke(stroke);newLine        brush.moveTo(sprite.getX(), sprite.getY()*-1);newLine    }newLinenewLine    var stampEntities = sprite.parent.getStampEntities();newLine    stampEntities.map(function (entity) {newLine        entity.removeClone();newLine    });newLine    stampEntities = null;newLinenewLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var brush = sprite.brush;
+            if (brush) {
+                var stroke = brush._stroke.style;
+                var style = brush._strokeStyle.width;
+                brush.clear().setStrokeStyle(style).beginStroke(stroke);
+                brush.moveTo(sprite.getX(), sprite.getY()*-1);
+            }
+
+            var stampEntities = sprite.parent.getStampEntities();
+            stampEntities.map(function (entity) {
+                entity.removeClone();
+            });
+            stampEntities = null;
+
+            return script.callReturn();
+        }
     },
     "brush_stamp": {
         "color": "#FF9E20",
@@ -2578,7 +3241,11 @@ Entry.block = {
         "isNotFor": [
             "textBox"
         ],
-        "func": "dummy_function (sprite, script) {newLine    sprite.parent.addStampEntity(sprite);newLinenewLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            sprite.parent.addStampEntity(sprite);
+
+            return script.callReturn();
+        }
     },
     "change_brush_transparency": {
         "color": "#FF9E20",
@@ -2616,7 +3283,25 @@ Entry.block = {
         "isNotFor": [
             "textBox"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var opacity = script.getNumberValue(\"VALUE\", script);newLinenewLine    if (!sprite.brush) {newLine        Entry.setBasicBrush(sprite);newLine        sprite.brush.stop = true;newLine    }newLine    opacity = Entry.adjustValueWithMaxMin(sprite.brush.opacity - opacity, 0, 100);newLinenewLine    if (sprite.brush) {newLine        sprite.brush.opacity = opacity;newLine        sprite.brush.endStroke();newLine        var rgb = sprite.brush.rgb;newLine        sprite.brush.beginStroke(\"rgba(\"+rgb.r+\",\"+rgb.g+\",\"+rgb.b+\",\"+(sprite.brush.opacity/100)+\")\");newLine        sprite.brush.moveTo(sprite.getX(), sprite.getY()*-1);newLine    }newLinenewLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var opacity = script.getNumberValue("VALUE", script);
+
+            if (!sprite.brush) {
+                Entry.setBasicBrush(sprite);
+                sprite.brush.stop = true;
+            }
+            opacity = Entry.adjustValueWithMaxMin(sprite.brush.opacity - opacity, 0, 100);
+
+            if (sprite.brush) {
+                sprite.brush.opacity = opacity;
+                sprite.brush.endStroke();
+                var rgb = sprite.brush.rgb;
+                sprite.brush.beginStroke("rgba("+rgb.r+","+rgb.g+","+rgb.b+","+(sprite.brush.opacity/100)+")");
+                sprite.brush.moveTo(sprite.getX(), sprite.getY()*-1);
+            }
+
+            return script.callReturn();
+        }
     },
     "set_brush_tranparency": {
         "color": "#FF9E20",
@@ -2654,7 +3339,25 @@ Entry.block = {
         "isNotFor": [
             "textBox"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var opacity = script.getNumberValue(\"VALUE\", script);newLinenewLine    if (!sprite.brush) {newLine        Entry.setBasicBrush(sprite);newLine        sprite.brush.stop = true;newLine    }newLinenewLine    if (sprite.brush) {newLine        sprite.brush.opacity = Entry.adjustValueWithMaxMin(opacity, 0, 100);newLine        sprite.brush.endStroke();newLine        var rgb = sprite.brush.rgb;newLine        sprite.brush.beginStroke(\"rgba(\"+rgb.r+\",\"+rgb.g+\",\"+rgb.b+\",\"+(1 - sprite.brush.opacity/100)+\")\");newLine        sprite.brush.moveTo(sprite.getX(), sprite.getY()*-1);newLine    }newLinenewLine    return script.callReturn();newLinenewLine}_dummy"
+        "func": function (sprite, script) {
+            var opacity = script.getNumberValue("VALUE", script);
+
+            if (!sprite.brush) {
+                Entry.setBasicBrush(sprite);
+                sprite.brush.stop = true;
+            }
+
+            if (sprite.brush) {
+                sprite.brush.opacity = Entry.adjustValueWithMaxMin(opacity, 0, 100);
+                sprite.brush.endStroke();
+                var rgb = sprite.brush.rgb;
+                sprite.brush.beginStroke("rgba("+rgb.r+","+rgb.g+","+rgb.b+","+(1 - sprite.brush.opacity/100)+")");
+                sprite.brush.moveTo(sprite.getX(), sprite.getY()*-1);
+            }
+
+            return script.callReturn();
+
+        }
     },
     "number": {
         "color": "#FFD974",
@@ -2674,7 +3377,9 @@ Entry.block = {
         "paramsKeyMap": {
             "NUM": 0
         },
-        "func": "dummy_function (sprite, script) {newLine    return script.getField('NUM', script);newLine}_dummy",
+        "func": function (sprite, script) {
+            return script.getField('NUM', script);
+        },
         "isPrimitive": true
     },
     "angle": {
@@ -2696,7 +3401,9 @@ Entry.block = {
         "paramsKeyMap": {
             "ANGLE": 0
         },
-        "func": "dummy_function (sprite, script) {newLine    return script.getNumberField(\"ANGLE\");newLine}_dummy"
+        "func": function (sprite, script) {
+            return script.getNumberField("ANGLE");
+        }
     },
     "get_x_coordinate": {
         "color": "#FFD974",
@@ -2719,7 +3426,9 @@ Entry.block = {
         },
         "class": "calc",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    return sprite.getX();newLine}_dummy"
+        "func": function (sprite, script) {
+            return sprite.getX();
+        }
     },
     "get_y_coordinate": {
         "color": "#FFD974",
@@ -2742,7 +3451,9 @@ Entry.block = {
         },
         "class": "calc",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    return sprite.getY();newLine}_dummy"
+        "func": function (sprite, script) {
+            return sprite.getY();
+        }
     },
     "get_angle": {
         "color": "#FFD974",
@@ -2762,7 +3473,9 @@ Entry.block = {
                 null
             ]
         },
-        "func": "dummy_function (sprite, script) {newLine    return parseFloat(sprite.getRotation().toFixed(1));newLine}_dummy"
+        "func": function (sprite, script) {
+            return parseFloat(sprite.getRotation().toFixed(1));
+        }
     },
     "get_rotation_direction": {
         "color": "#FFD974",
@@ -2798,7 +3511,13 @@ Entry.block = {
         },
         "class": "calc",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var o = script.getField(\"OPERATOR\", script);newLine    if (o.toUpperCase() == 'DIRECTION')newLine        return parseFloat(sprite.getDirection().toFixed(1));newLine    elsenewLine        return parseFloat(sprite.getRotation().toFixed(1));newLine}_dummy"
+        "func": function (sprite, script) {
+            var o = script.getField("OPERATOR", script);
+            if (o.toUpperCase() == 'DIRECTION')
+                return parseFloat(sprite.getDirection().toFixed(1));
+            else
+                return parseFloat(sprite.getRotation().toFixed(1));
+        }
     },
     "distance_something": {
         "color": "#FFD974",
@@ -2831,7 +3550,22 @@ Entry.block = {
         },
         "class": "calc_distance",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var targetId = script.getField(\"VALUE\", script);newLine    if (targetId == 'mouse') {newLine        var mousePos = Entry.stage.mouseCoordinate;newLine        return Math.sqrt(newLine                Math.pow(sprite.getX() - mousePos.x, 2) +newLine                Math.pow(sprite.getY() - mousePos.y, 2)newLine            );newLine    } else {newLine        var targetEntity = Entry.container.getEntity(targetId);newLine        return Math.sqrt(newLine                Math.pow(sprite.getX() - targetEntity.getX(), 2) +newLine                Math.pow(sprite.getY() - targetEntity.getY(), 2)newLine            );newLine    }newLine}_dummy"
+        "func": function (sprite, script) {
+            var targetId = script.getField("VALUE", script);
+            if (targetId == 'mouse') {
+                var mousePos = Entry.stage.mouseCoordinate;
+                return Math.sqrt(
+                        Math.pow(sprite.getX() - mousePos.x, 2) +
+                        Math.pow(sprite.getY() - mousePos.y, 2)
+                    );
+            } else {
+                var targetEntity = Entry.container.getEntity(targetId);
+                return Math.sqrt(
+                        Math.pow(sprite.getX() - targetEntity.getX(), 2) +
+                        Math.pow(sprite.getY() - targetEntity.getY(), 2)
+                    );
+            }
+        }
     },
     "coordinate_mouse": {
         "color": "#FFD974",
@@ -2879,7 +3613,14 @@ Entry.block = {
         },
         "class": "calc",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var targetCoordinate = script.getField(\"VALUE\", script);newLine    if (targetCoordinate === 'x') {newLine        return Number(Entry.stage.mouseCoordinate.x);newLine    } else {newLine        return Number(Entry.stage.mouseCoordinate.y);newLine    }newLine}_dummy"
+        "func": function (sprite, script) {
+            var targetCoordinate = script.getField("VALUE", script);
+            if (targetCoordinate === 'x') {
+                return Number(Entry.stage.mouseCoordinate.x);
+            } else {
+                return Number(Entry.stage.mouseCoordinate.y);
+            }
+        }
     },
     "coordinate_object": {
         "color": "#FFD974",
@@ -2949,7 +3690,37 @@ Entry.block = {
         },
         "class": "calc",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var targetId = script.getField(\"VALUE\", script);newLine    var targetEntity;newLine    if (targetId == 'self')newLine        targetEntity = sprite;newLine    elsenewLine        targetEntity = Entry.container.getEntity(targetId);newLinenewLine    var targetCoordinate = script.getField(\"COORDINATE\", script);newLine    switch(targetCoordinate) {newLine        case 'x':newLine            return targetEntity.getX();newLine        case 'y':newLine            return targetEntity.getY();newLine        case 'rotation':newLine            return targetEntity.getRotation();newLine        case 'direction':newLine            return targetEntity.getDirection();newLine        case 'picture_index':newLine            var object = targetEntity.parent;newLine            var pictures = object.pictures;newLine            return pictures.indexOf(targetEntity.picture) + 1;newLine        case 'size':newLine            return Number(targetEntity.getSize().toFixed(1));newLine        case 'picture_name':newLine            var object = targetEntity.parent;newLine            var pictures = object.pictures;newLine            var picture = pictures[pictures.indexOf(targetEntity.picture)];newLine            return picture.name;newLine    }newLine}_dummy"
+        "func": function (sprite, script) {
+    var targetId = script.getField("VALUE", script);
+    var targetEntity;
+    if (targetId == 'self')
+        targetEntity = sprite;
+    else
+        targetEntity = Entry.container.getEntity(targetId);
+
+    var targetCoordinate = script.getField("COORDINATE", script);
+    switch(targetCoordinate) {
+        case 'x':
+            return targetEntity.getX();
+        case 'y':
+            return targetEntity.getY();
+        case 'rotation':
+            return targetEntity.getRotation();
+        case 'direction':
+            return targetEntity.getDirection();
+        case 'picture_index':
+            var object = targetEntity.parent;
+            var pictures = object.pictures;
+            return pictures.indexOf(targetEntity.picture) + 1;
+        case 'size':
+            return Number(targetEntity.getSize().toFixed(1));
+        case 'picture_name':
+            var object = targetEntity.parent;
+            var pictures = object.pictures;
+            var picture = pictures[pictures.indexOf(targetEntity.picture)];
+            return picture.name;
+    }
+}
     },
     "calc_basic": {
         "color": "#FFD974",
@@ -3015,7 +3786,19 @@ Entry.block = {
         },
         "class": "calc",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var operator = script.getField(\"OPERATOR\", script);newLine    var leftValue = script.getNumberValue(\"LEFTHAND\", script);newLine    var rightValue = script.getNumberValue(\"RIGHTHAND\", script);newLine    if (operator == \"PLUS\")newLine        return leftValue + rightValue;newLine    else if (operator == \"MINUS\")newLine        return leftValue - rightValue;newLine    else if (operator == \"MULTI\")newLine        return leftValue * rightValue;newLine    elsenewLine        return leftValue / rightValue;newLine}_dummy"
+        "func": function (sprite, script) {
+            var operator = script.getField("OPERATOR", script);
+            var leftValue = script.getNumberValue("LEFTHAND", script);
+            var rightValue = script.getNumberValue("RIGHTHAND", script);
+            if (operator == "PLUS")
+                return leftValue + rightValue;
+            else if (operator == "MINUS")
+                return leftValue - rightValue;
+            else if (operator == "MULTI")
+                return leftValue * rightValue;
+            else
+                return leftValue / rightValue;
+        }
     },
     "calc_plus": {
         "color": "#FFD974",
@@ -3047,7 +3830,11 @@ Entry.block = {
             "LEFTHAND": 0,
             "RIGHTHAND": 2
         },
-        "func": "dummy_function (sprite, script) {newLine    var leftValue = script.getNumberValue(\"LEFTHAND\", script);newLine    var rightValue = script.getNumberValue(\"RIGHTHAND\", script);newLine    return leftValue + rightValue;newLine}_dummy"
+        "func": function (sprite, script) {
+            var leftValue = script.getNumberValue("LEFTHAND", script);
+            var rightValue = script.getNumberValue("RIGHTHAND", script);
+            return leftValue + rightValue;
+        }
     },
     "calc_minus": {
         "color": "#FFD974",
@@ -3079,7 +3866,11 @@ Entry.block = {
             "LEFTHAND": 0,
             "RIGHTHAND": 2
         },
-        "func": "dummy_function (sprite, script) {newLine    var leftValue = script.getNumberValue(\"LEFTHAND\", script);newLine    var rightValue = script.getNumberValue(\"RIGHTHAND\", script);newLine    return leftValue - rightValue;newLine}_dummy"
+        "func": function (sprite, script) {
+            var leftValue = script.getNumberValue("LEFTHAND", script);
+            var rightValue = script.getNumberValue("RIGHTHAND", script);
+            return leftValue - rightValue;
+        }
     },
     "calc_times": {
         "color": "#FFD974",
@@ -3111,7 +3902,11 @@ Entry.block = {
             "LEFTHAND": 0,
             "RIGHTHAND": 2
         },
-        "func": "dummy_function (sprite, script) {newLine    var leftValue = script.getNumberValue(\"LEFTHAND\", script);newLine    var rightValue = script.getNumberValue(\"RIGHTHAND\", script);newLine    return leftValue * rightValue;newLine}_dummy"
+        "func": function (sprite, script) {
+            var leftValue = script.getNumberValue("LEFTHAND", script);
+            var rightValue = script.getNumberValue("RIGHTHAND", script);
+            return leftValue * rightValue;
+        }
     },
     "calc_divide": {
         "color": "#FFD974",
@@ -3143,7 +3938,11 @@ Entry.block = {
             "LEFTHAND": 0,
             "RIGHTHAND": 2
         },
-        "func": "dummy_function (sprite, script) {newLine    var leftValue = script.getNumberValue(\"LEFTHAND\", script);newLine    var rightValue = script.getNumberValue(\"RIGHTHAND\", script);newLine    return leftValue / rightValue;newLine}_dummy"
+        "func": function (sprite, script) {
+            var leftValue = script.getNumberValue("LEFTHAND", script);
+            var rightValue = script.getNumberValue("RIGHTHAND", script);
+            return leftValue / rightValue;
+        }
     },
     "calc_mod": {
         "color": "#FFD974",
@@ -3196,7 +3995,11 @@ Entry.block = {
         },
         "class": "calc",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var leftValue = script.getNumberValue(\"LEFTHAND\", script);newLine    var rightValue = script.getNumberValue(\"RIGHTHAND\", script);newLine    return leftValue % rightValue;newLine}_dummy"
+        "func": function (sprite, script) {
+            var leftValue = script.getNumberValue("LEFTHAND", script);
+            var rightValue = script.getNumberValue("RIGHTHAND", script);
+            return leftValue % rightValue;
+        }
     },
     "calc_share": {
         "color": "#FFD974",
@@ -3249,7 +4052,11 @@ Entry.block = {
         },
         "class": "calc",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var leftValue = script.getNumberValue(\"LEFTHAND\", script);newLine    var rightValue = script.getNumberValue(\"RIGHTHAND\", script);newLine    return Math.floor(leftValue/rightValue);newLine}_dummy"
+        "func": function (sprite, script) {
+            var leftValue = script.getNumberValue("LEFTHAND", script);
+            var rightValue = script.getNumberValue("RIGHTHAND", script);
+            return Math.floor(leftValue/rightValue);
+        }
     },
     "calc_operation": {
         "color": "#FFD974",
@@ -3358,7 +4165,53 @@ Entry.block = {
         },
         "class": "calc",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var value = script.getNumberValue(\"LEFTHAND\", script);newLine    var operator = script.getField(\"VALUE\", script);newLine    var xRangeCheckList = ['asin_radian', 'acos_radian'];newLine    if ((xRangeCheckList.indexOf(operator) > -1) &&newLine           (value > 1 || value < -1))newLine            throw new Error('x range exceeded');newLinenewLine    var needToConvertList = ['sin', 'cos', 'tan'];newLine    if (operator.indexOf('_'))newLine        operator = operator.split('_')[0];newLinenewLine    if (needToConvertList.indexOf(operator) > -1)newLine        value = Entry.toRadian(value);newLinenewLine    var returnVal = 0;newLine    switch(operator){newLine        case \"square\":newLine            returnVal = value * value;newLine            break;newLine        case \"factorial\":newLine            returnVal = Entry.factorial(value);newLine            break;newLine        case \"root\":newLine            returnVal = Math.sqrt(value);newLine            break;newLine        case \"log\":newLine            returnVal = Math.log(value) / Math.LN10;newLine            break;newLine        case \"ln\":newLine            returnVal = Math.log(value);newLine            break;newLine        case \"asin\":newLine        case \"acos\":newLine        case \"atan\":newLine            returnVal = Entry.toDegrees(Math[operator](value));newLine            break;newLine        case \"unnatural\":newLine            returnVal = value - Math.floor(value);newLine            if (value < 0)newLine                returnVal = 1 - returnVal;newLine            break;newLine        default:newLine            returnVal = Math[operator](value);newLine    }newLine    return Math.round(returnVal*1000)/1000;newLine}_dummy"
+        "func": function (sprite, script) {
+            var value = script.getNumberValue("LEFTHAND", script);
+            var operator = script.getField("VALUE", script);
+            var xRangeCheckList = ['asin_radian', 'acos_radian'];
+            if ((xRangeCheckList.indexOf(operator) > -1) &&
+                   (value > 1 || value < -1))
+                    throw new Error('x range exceeded');
+
+            var needToConvertList = ['sin', 'cos', 'tan'];
+            if (operator.indexOf('_'))
+                operator = operator.split('_')[0];
+
+            if (needToConvertList.indexOf(operator) > -1)
+                value = Entry.toRadian(value);
+
+            var returnVal = 0;
+            switch(operator){
+                case "square":
+                    returnVal = value * value;
+                    break;
+                case "factorial":
+                    returnVal = Entry.factorial(value);
+                    break;
+                case "root":
+                    returnVal = Math.sqrt(value);
+                    break;
+                case "log":
+                    returnVal = Math.log(value) / Math.LN10;
+                    break;
+                case "ln":
+                    returnVal = Math.log(value);
+                    break;
+                case "asin":
+                case "acos":
+                case "atan":
+                    returnVal = Entry.toDegrees(Math[operator](value));
+                    break;
+                case "unnatural":
+                    returnVal = value - Math.floor(value);
+                    if (value < 0)
+                        returnVal = 1 - returnVal;
+                    break;
+                default:
+                    returnVal = Math[operator](value);
+            }
+            return Math.round(returnVal*1000)/1000;
+        }
     },
     "calc_rand": {
         "color": "#FFD974",
@@ -3411,7 +4264,18 @@ Entry.block = {
         },
         "class": "calc",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var leftValue = script.getStringValue(\"LEFTHAND\", script);newLine    var rightValue = script.getStringValue(\"RIGHTHAND\", script);newLine    var left = Math.min(leftValue, rightValue);newLine    var right = Math.max(leftValue, rightValue);newLine    var isLeftFloat = Entry.isFloat(leftValue);newLine    var isRightFloat = Entry.isFloat(rightValue);newLine    if (isRightFloat || isLeftFloat)newLine        return  (Math.random() * (right - left) + left).toFixed(2);newLine    elsenewLine        return  Math.floor((Math.random() * (right - left +1) + left));newLine}_dummy"
+        "func": function (sprite, script) {
+            var leftValue = script.getStringValue("LEFTHAND", script);
+            var rightValue = script.getStringValue("RIGHTHAND", script);
+            var left = Math.min(leftValue, rightValue);
+            var right = Math.max(leftValue, rightValue);
+            var isLeftFloat = Entry.isFloat(leftValue);
+            var isRightFloat = Entry.isFloat(rightValue);
+            if (isRightFloat || isLeftFloat)
+                return  (Math.random() * (right - left) + left).toFixed(2);
+            else
+                return  Math.floor((Math.random() * (right - left +1) + left));
+        }
     },
     "get_date": {
         "color": "#FFD974",
@@ -3469,7 +4333,22 @@ Entry.block = {
         },
         "class": "calc_date",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var operator = script.getField(\"VALUE\", script);newLine    var dateTime = new Date();newLine    if (operator == \"YEAR\")newLine        return dateTime.getFullYear();newLine    else if (operator == \"MONTH\")newLine        return dateTime.getMonth()+1;newLine    else if (operator == \"DAY\")newLine        return dateTime.getDate();newLine    else if (operator == \"HOUR\")newLine        return dateTime.getHours();newLine    else if (operator == \"MINUTE\")newLine        return dateTime.getMinutes();newLine    elsenewLine        return dateTime.getSeconds();newLine}_dummy"
+        "func": function (sprite, script) {
+            var operator = script.getField("VALUE", script);
+            var dateTime = new Date();
+            if (operator == "YEAR")
+                return dateTime.getFullYear();
+            else if (operator == "MONTH")
+                return dateTime.getMonth()+1;
+            else if (operator == "DAY")
+                return dateTime.getDate();
+            else if (operator == "HOUR")
+                return dateTime.getHours();
+            else if (operator == "MINUTE")
+                return dateTime.getMinutes();
+            else
+                return dateTime.getSeconds();
+        }
     },
     "get_sound_duration": {
         "color": "#FFD974",
@@ -3502,7 +4381,15 @@ Entry.block = {
         },
         "class": "calc_duration",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var soundId = script.getField(\"VALUE\", script);newLine    var soundsArr = sprite.parent.sounds;newLinenewLine    for (var i = 0; i < soundsArr.length; i++) {newLine        if (soundsArr[i].id == soundId)newLine            return soundsArr[i].duration;newLine    }newLine}_dummy"
+        "func": function (sprite, script) {
+            var soundId = script.getField("VALUE", script);
+            var soundsArr = sprite.parent.sounds;
+
+            for (var i = 0; i < soundsArr.length; i++) {
+                if (soundsArr[i].id == soundId)
+                    return soundsArr[i].duration;
+            }
+        }
     },
     "reset_project_timer": {
         "color": "#FFD974",
@@ -3532,7 +4419,10 @@ Entry.block = {
         },
         "class": "calc_timer",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    Entry.engine.updateProjectTimer(0);newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            Entry.engine.updateProjectTimer(0);
+            return script.callReturn();
+        }
     },
     "set_visible_project_timer": {
         "color": "#FFD974",
@@ -3587,7 +4477,16 @@ Entry.block = {
         },
         "class": "calc_timer",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var action = script.getField(\"ACTION\", script);newLine    var timer = Entry.engine.projectTimer;newLine    if (action == 'SHOW')newLine        timer.setVisible(true);newLine    elsenewLine        timer.setVisible(false);newLinenewLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var action = script.getField("ACTION", script);
+            var timer = Entry.engine.projectTimer;
+            if (action == 'SHOW')
+                timer.setVisible(true);
+            else
+                timer.setVisible(false);
+
+            return script.callReturn();
+        }
     },
     "timer_variable": {
         "color": "#FFD974",
@@ -3613,7 +4512,9 @@ Entry.block = {
                 null
             ]
         },
-        "func": "dummy_function (sprite, script) {newLine    return Entry.container.inputValue.getValue();newLine}_dummy"
+        "func": function (sprite, script) {
+            return Entry.container.inputValue.getValue();
+        }
     },
     "get_project_timer_value": {
         "color": "#FFD974",
@@ -3649,7 +4550,9 @@ Entry.block = {
         },
         "class": "calc_timer",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    return Entry.engine.projectTimer.getValue();newLine}_dummy"
+        "func": function (sprite, script) {
+            return Entry.engine.projectTimer.getValue();
+        }
     },
     "char_at": {
         "color": "#FFD974",
@@ -3702,7 +4605,14 @@ Entry.block = {
         },
         "class": "calc_string",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var str = script.getStringValue(\"LEFTHAND\", script);newLine    var index = script.getNumberValue(\"RIGHTHAND\", script)-1;newLine    if (index <0 || index >str.length-1)newLine        throw new Error();newLine    elsenewLine        return str[index];newLine}_dummy"
+        "func": function (sprite, script) {
+            var str = script.getStringValue("LEFTHAND", script);
+            var index = script.getNumberValue("RIGHTHAND", script)-1;
+            if (index <0 || index >str.length-1)
+                throw new Error();
+            else
+                return str[index];
+        }
     },
     "length_of_string": {
         "color": "#FFD974",
@@ -3738,7 +4648,9 @@ Entry.block = {
         },
         "class": "calc_string",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    return script.getStringValue(\"STRING\", script).length;newLine}_dummy"
+        "func": function (sprite, script) {
+            return script.getStringValue("STRING", script).length;
+        }
     },
     "substring": {
         "color": "#FFD974",
@@ -3808,7 +4720,16 @@ Entry.block = {
         },
         "class": "calc_string",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var str = script.getStringValue(\"STRING\", script);newLine    var start = script.getNumberValue(\"START\", script)-1;newLine    var end = script.getNumberValue(\"END\", script)-1;newLine    var strLen = str.length-1;newLine    if (start <0 || end<0 || start>strLen || end>strLen)newLine        throw new Error();newLine    elsenewLine        return str.substring(Math.min(start, end), Math.max(start, end)+1);newLine}_dummy"
+        "func": function (sprite, script) {
+            var str = script.getStringValue("STRING", script);
+            var start = script.getNumberValue("START", script)-1;
+            var end = script.getNumberValue("END", script)-1;
+            var strLen = str.length-1;
+            if (start <0 || end<0 || start>strLen || end>strLen)
+                throw new Error();
+            else
+                return str.substring(Math.min(start, end), Math.max(start, end)+1);
+        }
     },
     "replace_string": {
         "color": "#FFD974",
@@ -3878,7 +4799,13 @@ Entry.block = {
         },
         "class": "calc_string",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    return script.getStringValue(\"STRING\", script).newLine        replace(newLine            new RegExp(script.getStringValue(\"OLD_WORD\", script), 'gm'),newLine            script.getStringValue(\"NEW_WORD\", script)newLine        );newLine}_dummy"
+        "func": function (sprite, script) {
+            return script.getStringValue("STRING", script).
+                replace(
+                    new RegExp(script.getStringValue("OLD_WORD", script), 'gm'),
+                    script.getStringValue("NEW_WORD", script)
+                );
+        }
     },
     "change_string_case": {
         "color": "#FFD974",
@@ -3937,7 +4864,9 @@ Entry.block = {
         },
         "class": "calc_string",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    return script.getStringValue(\"STRING\", script)[script.getField(\"CASE\", script)]();newLine}_dummy"
+        "func": function (sprite, script) {
+            return script.getStringValue("STRING", script)[script.getField("CASE", script)]();
+        }
     },
     "index_of_string": {
         "color": "#FFD974",
@@ -3990,7 +4919,12 @@ Entry.block = {
         },
         "class": "calc_string",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var str = script.getStringValue(\"LEFTHAND\", script);newLine    var target = script.getStringValue(\"RIGHTHAND\", script);newLine    var index = str.indexOf(target);newLine    return index > -1?index+1:0;newLine}_dummy"
+        "func": function (sprite, script) {
+            var str = script.getStringValue("LEFTHAND", script);
+            var target = script.getStringValue("RIGHTHAND", script);
+            var index = str.indexOf(target);
+            return index > -1?index+1:0;
+        }
     },
     "combine_something": {
         "color": "#FFD974",
@@ -4043,7 +4977,16 @@ Entry.block = {
         },
         "class": "calc_string",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var leftValue = script.getStringValue(\"VALUE1\", script);newLine    var rightValue = script.getStringValue(\"VALUE2\", script);newLinenewLine    if (!isNaN(leftValue))newLine        leftValue = Entry.convertToRoundedDecimals(leftValue, 3);newLine    if (!isNaN(rightValue))newLine        rightValue = Entry.convertToRoundedDecimals(rightValue, 3);newLine    return leftValue + rightValue;newLine}_dummy"
+        "func": function (sprite, script) {
+            var leftValue = script.getStringValue("VALUE1", script);
+            var rightValue = script.getStringValue("VALUE2", script);
+
+            if (!isNaN(leftValue))
+                leftValue = Entry.convertToRoundedDecimals(leftValue, 3);
+            if (!isNaN(rightValue))
+                rightValue = Entry.convertToRoundedDecimals(rightValue, 3);
+            return leftValue + rightValue;
+        }
     },
     "get_sound_volume": {
         "color": "#FFD974",
@@ -4074,7 +5017,9 @@ Entry.block = {
         "isNotFor": [
             ""
         ],
-        "func": "dummy_function (sprite, script) {newLine    return createjs.Sound.getVolume() * 100;newLine}_dummy"
+        "func": function (sprite, script) {
+            return createjs.Sound.getVolume() * 100;
+        }
     },
     "quotient_and_mod": {
         "color": "#FFD974",
@@ -4146,7 +5091,17 @@ Entry.block = {
         "isNotFor": [
             ""
         ],
-        "func": "dummy_function (sprite, script) {newLine    var left = script.getNumberValue(\"LEFTHAND\", script);newLine    var right = script.getNumberValue(\"RIGHTHAND\", script);newLine    if (isNaN(left) || isNaN(right))newLine        throw new Error();newLine    var operator = script.getField(\"OPERATOR\", script);newLine    if (operator == 'QUOTIENT')newLine        return Math.floor(left/right);newLine    elsenewLine        return left % right;newLine}_dummy"
+        "func": function (sprite, script) {
+            var left = script.getNumberValue("LEFTHAND", script);
+            var right = script.getNumberValue("RIGHTHAND", script);
+            if (isNaN(left) || isNaN(right))
+                throw new Error();
+            var operator = script.getField("OPERATOR", script);
+            if (operator == 'QUOTIENT')
+                return Math.floor(left/right);
+            else
+                return left % right;
+        }
     },
     "choose_project_timer_action": {
         "color": "#FFD974",
@@ -4207,7 +5162,37 @@ Entry.block = {
         "isNotFor": [
             ""
         ],
-        "func": "dummy_function (sprite, script) {newLine    var action = script.getField('ACTION');newLine    var engine = Entry.engine;newLine    var timer = engine.projectTimer;newLinenewLine    if (action == 'START') {newLine        if (!timer.isInit) {newLine            engine.startProjectTimer();newLine        }newLine        else if (timer.isInit && timer.isPaused) {newLine            if (timer.pauseStart)newLine                timer.pausedTime += (new Date()).getTime() - timer.pauseStart;newLine            delete timer.pauseStart;newLine            timer.isPaused = false;newLine        }newLine    } else if (action == 'STOP') {newLine        if (timer.isInit && !timer.isPaused) {newLine            timer.isPaused = true;newLine            timer.pauseStart = (new Date()).getTime();newLine        }newLine    } else if (action == 'RESET') {newLine        if (timer.isInit) {newLine            timer.setValue(0);newLine            timer.start = (new Date()).getTime();newLine            timer.pausedTime = 0;newLine            delete timer.pauseStart;newLine        }newLinenewLine    }newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var action = script.getField('ACTION');
+            var engine = Entry.engine;
+            var timer = engine.projectTimer;
+
+            if (action == 'START') {
+                if (!timer.isInit) {
+                    engine.startProjectTimer();
+                }
+                else if (timer.isInit && timer.isPaused) {
+                    if (timer.pauseStart)
+                        timer.pausedTime += (new Date()).getTime() - timer.pauseStart;
+                    delete timer.pauseStart;
+                    timer.isPaused = false;
+                }
+            } else if (action == 'STOP') {
+                if (timer.isInit && !timer.isPaused) {
+                    timer.isPaused = true;
+                    timer.pauseStart = (new Date()).getTime();
+                }
+            } else if (action == 'RESET') {
+                if (timer.isInit) {
+                    timer.setValue(0);
+                    timer.start = (new Date()).getTime();
+                    timer.pausedTime = 0;
+                    delete timer.pauseStart;
+                }
+
+            }
+            return script.callReturn();
+        }
     },
     "wait_second": {
         "color": "#498deb",
@@ -4243,7 +5228,26 @@ Entry.block = {
         },
         "class": "delay",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    if (!script.isStart) {newLine        script.isStart = true;newLine        script.timeFlag = 1;newLine        var timeValue = script.getNumberValue(\"SECOND\", script);newLine        var fps = Entry.FPS || 60;newLine        timeValue = 60/fps*timeValue*1000;newLine        setTimeout(function() {newLine            script.timeFlag = 0;newLine        }, timeValue);newLine        return script;newLine    } else if (script.timeFlag == 1) {newLine        return script;newLine    } else {newLine        delete script.timeFlag;newLine        delete script.isStart;newLine        Entry.engine.isContinue = false;newLine        return script.callReturn();newLine    }newLine}_dummy"
+        "func": function (sprite, script) {
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                var timeValue = script.getNumberValue("SECOND", script);
+                var fps = Entry.FPS || 60;
+                timeValue = 60/fps*timeValue*1000;
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        }
     },
     "repeat_basic": {
         "color": "#498deb",
@@ -4286,7 +5290,23 @@ Entry.block = {
         },
         "class": "repeat",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var iterNumber;newLine    if (!script.isLooped) {newLine        script.isLooped = true;newLine        var iterNumber = script.getNumberValue(\"VALUE\", script);newLine        if(iterNumber < 0) throw new Error(Lang.Blocks.FLOW_repeat_basic_errorMsg);newLine        script.iterCount = Math.floor(iterNumber);newLine    }newLine    if (script.iterCount != 0 && !(script.iterCount < 0)) {newLine        script.iterCount--;newLine        return script.getStatement(\"DO\", script);newLine    } else {newLine        delete script.isLooped;newLine        delete script.iterCount;newLine        return script.callReturn();newLine    }newLine}_dummy"
+        "func": function (sprite, script) {
+            var iterNumber;
+            if (!script.isLooped) {
+                script.isLooped = true;
+                var iterNumber = script.getNumberValue("VALUE", script);
+                if(iterNumber < 0) throw new Error(Lang.Blocks.FLOW_repeat_basic_errorMsg);
+                script.iterCount = Math.floor(iterNumber);
+            }
+            if (script.iterCount != 0 && !(script.iterCount < 0)) {
+                script.iterCount--;
+                return script.getStatement("DO", script);
+            } else {
+                delete script.isLooped;
+                delete script.iterCount;
+                return script.callReturn();
+            }
+        }
     },
     "repeat_inf": {
         "color": "#498deb",
@@ -4316,7 +5336,11 @@ Entry.block = {
         },
         "class": "repeat",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    //return script.getStatement(\"DO\", script);newLine    script.isLooped = true;newLine    return script.getStatement('DO');newLine}_dummy"
+        "func": function (sprite, script) {
+            //return script.getStatement("DO", script);
+            script.isLooped = true;
+            return script.getStatement('DO');
+        }
     },
     "stop_repeat": {
         "color": "#498deb",
@@ -4339,7 +5363,9 @@ Entry.block = {
         },
         "class": "repeat",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    return this.executor.break();newLine}_dummy"
+        "func": function (sprite, script) {
+            return this.executor.break();
+        }
     },
     "wait_until_true": {
         "color": "#498deb",
@@ -4372,7 +5398,14 @@ Entry.block = {
         },
         "class": "wait",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var value = script.getBooleanValue(\"BOOL\", script);newLine    if (value) {newLine        return script.callReturn();newLine    } else {newLine        return script;newLine    }newLine}_dummy"
+        "func": function (sprite, script) {
+            var value = script.getBooleanValue("BOOL", script);
+            if (value) {
+                return script.callReturn();
+            } else {
+                return script;
+            }
+        }
     },
     "_if": {
         "color": "#498deb",
@@ -4412,7 +5445,19 @@ Entry.block = {
         },
         "class": "condition",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    if (script.isLooped) {newLine        delete script.isLooped;newLine        return script.callReturn();newLine    }newLine    var value = script.getBooleanValue(\"BOOL\", script);newLine    if (value) {newLine        script.isLooped = true;newLine        return script.getStatement(\"STACK\", script);newLine    } else {newLine        return script.callReturn();newLine    }newLine}_dummy"
+        "func": function (sprite, script) {
+            if (script.isLooped) {
+                delete script.isLooped;
+                return script.callReturn();
+            }
+            var value = script.getBooleanValue("BOOL", script);
+            if (value) {
+                script.isLooped = true;
+                return script.getStatement("STACK", script);
+            } else {
+                return script.callReturn();
+            }
+        }
     },
     "if_else": {
         "color": "#498deb",
@@ -4459,7 +5504,18 @@ Entry.block = {
         },
         "class": "condition",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    if (script.isLooped) {newLine        delete script.isLooped;newLine        return script.callReturn();newLine    }newLine    var value = script.getBooleanValue(\"BOOL\", script);newLine    script.isLooped = true;newLine    if (value)newLine        return script.getStatement(\"STACK_IF\", script);newLine    elsenewLine        return script.getStatement(\"STACK_ELSE\", script);newLine}_dummy"
+        "func": function (sprite, script) {
+            if (script.isLooped) {
+                delete script.isLooped;
+                return script.callReturn();
+            }
+            var value = script.getBooleanValue("BOOL", script);
+            script.isLooped = true;
+            if (value)
+                return script.getStatement("STACK_IF", script);
+            else
+                return script.getStatement("STACK_ELSE", script);
+        }
     },
     "create_clone": {
         "color": "#498deb",
@@ -4492,7 +5548,17 @@ Entry.block = {
         },
         "class": "clone",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var targetSpriteId = script.getField(\"VALUE\", script);newLine    var returnBlock = script.callReturn();newLine    if (targetSpriteId == \"self\")newLine        sprite.parent.addCloneEntity(sprite.parent, sprite, null);newLine    else {newLine        var object = Entry.container.getObject(targetSpriteId);newLine        object.addCloneEntity(sprite.parent, null, null);newLine    }newLine    return returnBlock;newLine}_dummy"
+        "func": function (sprite, script) {
+            var targetSpriteId = script.getField("VALUE", script);
+            var returnBlock = script.callReturn();
+            if (targetSpriteId == "self")
+                sprite.parent.addCloneEntity(sprite.parent, sprite, null);
+            else {
+                var object = Entry.container.getObject(targetSpriteId);
+                object.addCloneEntity(sprite.parent, null, null);
+            }
+            return returnBlock;
+        }
     },
     "delete_clone": {
         "color": "#498deb",
@@ -4515,7 +5581,12 @@ Entry.block = {
         },
         "class": "clone",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    if (!sprite.isClone)newLine        return script.callReturn();newLine    sprite.removeClone();newLine    return;newLine}_dummy"
+        "func": function (sprite, script) {
+            if (!sprite.isClone)
+                return script.callReturn();
+            sprite.removeClone();
+            return;
+        }
     },
     "when_clone_start": {
         "color": "#498deb",
@@ -4542,7 +5613,9 @@ Entry.block = {
         },
         "class": "clone",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    return script.callReturn();newLine}_dummy",
+        "func": function (sprite, script) {
+            return script.callReturn();
+        },
         "event": "when_clone_start"
     },
     "stop_run": {
@@ -4563,7 +5636,9 @@ Entry.block = {
                 null
             ]
         },
-        "func": "dummy_function (sprite, script) {newLine    return Entry.engine.toggleStop();newLine}_dummy"
+        "func": function (sprite, script) {
+            return Entry.engine.toggleStop();
+        }
     },
     "repeat_while_true": {
         "color": "#498deb",
@@ -4620,7 +5695,16 @@ Entry.block = {
         },
         "class": "repeat",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var value = script.getBooleanValue(\"BOOL\", script);newLinenewLine    if (script.getField(\"OPTION\", script) == 'until')newLine        value = !value;newLine    script.isLooped = value;newLinenewLine    return value ? script.getStatement(\"DO\", script) :newLine        script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var value = script.getBooleanValue("BOOL", script);
+
+            if (script.getField("OPTION", script) == 'until')
+                value = !value;
+            script.isLooped = value;
+
+            return value ? script.getStatement("DO", script) :
+                script.callReturn();
+        }
     },
     "stop_object": {
         "color": "#498deb",
@@ -4670,7 +5754,38 @@ Entry.block = {
         },
         "class": "terminate",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var target = script.getField(\"TARGET\", script);newLine    var container = Entry.container;newLinenewLine    switch(target) {newLine        case 'all':newLine            container.mapEntityIncludeCloneOnScene(function (entity){newLine                entity.clearScript();newLine            });newLine            break;newLine        case 'thisObject':newLine            sprite.clearScript();newLine            var clonedEntities = sprite.parent.clonedEntities;newLine            clonedEntities.map(function (entity) {newLine                entity.clearScript();newLine            });newLine            break;newLine        case 'thisOnly':newLine            sprite.clearScript();newLine            break;newLine        case 'thisThread':newLine            break;newLine        case 'otherThread':newLine            sprite.clearScript();newLine            var clonedEntities = sprite.parent.clonedEntities;newLine            clonedEntities.map(function (entity) {newLine                entity.clearScript();newLine            });newLine            return script.callReturn();newLine    }newLine    return null;newLine}_dummy"
+        "func": function (sprite, script) {
+            var target = script.getField("TARGET", script);
+            var container = Entry.container;
+
+            switch(target) {
+                case 'all':
+                    container.mapEntityIncludeCloneOnScene(function (entity){
+                        entity.clearScript();
+                    });
+                    break;
+                case 'thisObject':
+                    sprite.clearScript();
+                    var clonedEntities = sprite.parent.clonedEntities;
+                    clonedEntities.map(function (entity) {
+                        entity.clearScript();
+                    });
+                    break;
+                case 'thisOnly':
+                    sprite.clearScript();
+                    break;
+                case 'thisThread':
+                    break;
+                case 'otherThread':
+                    sprite.clearScript();
+                    var clonedEntities = sprite.parent.clonedEntities;
+                    clonedEntities.map(function (entity) {
+                        entity.clearScript();
+                    });
+                    return script.callReturn();
+            }
+            return null;
+        }
     },
     "restart_project": {
         "color": "#498deb",
@@ -4693,7 +5808,10 @@ Entry.block = {
         },
         "class": "terminate",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    Entry.engine.toggleStop();newLine    Entry.engine.toggleRun();newLine}_dummy"
+        "func": function (sprite, script) {
+            Entry.engine.toggleStop();
+            Entry.engine.toggleRun();
+        }
     },
     "remove_all_clones": {
         "color": "#498deb",
@@ -4716,7 +5834,15 @@ Entry.block = {
         },
         "class": "clone",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var clonedEntities = sprite.parent.getClonedEntities();newLine    clonedEntities.map(function (entity) {newLine        entity.removeClone();newLine    });newLine    clonedEntities = null;newLinenewLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var clonedEntities = sprite.parent.getClonedEntities();
+            clonedEntities.map(function (entity) {
+                entity.removeClone();
+            });
+            clonedEntities = null;
+
+            return script.callReturn();
+        }
     },
     "functionAddButton": {
         "skeleton": "basic_button",
@@ -4854,7 +5980,29 @@ Entry.block = {
         "isNotFor": [
             "hamster"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var sq = Entry.hw.sendQueue;newLine    if (!script.isStart) {newLine        script.isStart = true;newLine        script.timeFlag = 1;newLine        var timeValue = 1 * 1000;newLine        setTimeout(function() {newLine            script.timeFlag = 0;newLine        }, timeValue);newLine        return script;newLine    } else if (script.timeFlag == 1) {newLine        sq.leftWheel = 50;newLine        sq.rightWheel = 50;newLine        return script;newLine    } else {newLine        delete script.timeFlag;newLine        delete script.isStart;newLine        Entry.engine.isContinue = false;newLine        sq.leftWheel = 0;newLine        sq.rightWheel = 0;newLine        return script.callReturn();newLine    }newLine}_dummy"
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                var timeValue = 1 * 1000;
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            } else if (script.timeFlag == 1) {
+                sq.leftWheel = 50;
+                sq.rightWheel = 50;
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+                sq.leftWheel = 0;
+                sq.rightWheel = 0;
+                return script.callReturn();
+            }
+        }
     },
     "hamster_move_backward": {
         "color": "#00979D",
@@ -4879,7 +6027,29 @@ Entry.block = {
         "isNotFor": [
             "hamster"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var sq = Entry.hw.sendQueue;newLine    if (!script.isStart) {newLine        script.isStart = true;newLine        script.timeFlag = 1;newLine        var timeValue = 1 * 1000;newLine        setTimeout(function() {newLine            script.timeFlag = 0;newLine        }, timeValue);newLine        return script;newLine    } else if (script.timeFlag == 1) {newLine        sq.leftWheel = -50;newLine        sq.rightWheel = -50;newLine        return script;newLine    } else {newLine        delete script.timeFlag;newLine        delete script.isStart;newLine        Entry.engine.isContinue = false;newLine        sq.leftWheel = 0;newLine        sq.rightWheel = 0;newLine        return script.callReturn();newLine    }newLine}_dummy"
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                var timeValue = 1 * 1000;
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            } else if (script.timeFlag == 1) {
+                sq.leftWheel = -50;
+                sq.rightWheel = -50;
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+                sq.leftWheel = 0;
+                sq.rightWheel = 0;
+                return script.callReturn();
+            }
+        }
     },
     "hamster_turn_around": {
         "color": "#00979D",
@@ -4923,7 +6093,35 @@ Entry.block = {
         "isNotFor": [
             "hamster"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var sq = Entry.hw.sendQueue;newLine    if (!script.isStart) {newLine        var direction = script.getField(\"DIRECTION\", script);newLine        var isLeft = direction == 'LEFT';newLine        script.leftValue = isLeft ? -50 : 50;newLine        script.rightValue = isLeft ? 50 : -50;newLine        script.isStart = true;newLine        script.timeFlag = 1;newLine        var timeValue = 1 * 1000;newLine        setTimeout(function() {newLine            script.timeFlag = 0;newLine        }, timeValue);newLine        return script;newLine    } else if (script.timeFlag == 1) {newLine        sq.leftWheel = script.leftValue;newLine        sq.rightWheel = script.rightValue;newLine        return script;newLine    } else {newLine        delete script.timeFlag;newLine        delete script.isStart;newLine        delete script.leftValue;newLine        delete script.rightValue;newLine        Entry.engine.isContinue = false;newLine        sq.leftWheel = 0;newLine        sq.rightWheel = 0;newLine        return script.callReturn();newLine    }newLine}_dummy"
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            if (!script.isStart) {
+                var direction = script.getField("DIRECTION", script);
+                var isLeft = direction == 'LEFT';
+                script.leftValue = isLeft ? -50 : 50;
+                script.rightValue = isLeft ? 50 : -50;
+                script.isStart = true;
+                script.timeFlag = 1;
+                var timeValue = 1 * 1000;
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            } else if (script.timeFlag == 1) {
+                sq.leftWheel = script.leftValue;
+                sq.rightWheel = script.rightValue;
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                delete script.leftValue;
+                delete script.rightValue;
+                Entry.engine.isContinue = false;
+                sq.leftWheel = 0;
+                sq.rightWheel = 0;
+                return script.callReturn();
+            }
+        }
     },
     "hamster_set_led_to": {
         "color": "#00979D",
@@ -5008,7 +6206,20 @@ Entry.block = {
         "isNotFor": [
             "hamster"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var sq = Entry.hw.sendQueue;newLine    var direction = script.getField(\"DIRECTION\", script);newLine    var color = Number(script.getField(\"COLOR\", script));newLine    if (direction == 'FRONT') {newLine        sq.leftLed = color;newLine        sq.rightLed = color;newLine    } else if (direction == 'LEFT')newLine        sq.leftLed = color;newLine    elsenewLine        sq.rightLed = color;newLinenewLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var direction = script.getField("DIRECTION", script);
+            var color = Number(script.getField("COLOR", script));
+            if (direction == 'FRONT') {
+                sq.leftLed = color;
+                sq.rightLed = color;
+            } else if (direction == 'LEFT')
+                sq.leftLed = color;
+            else
+                sq.rightLed = color;
+
+            return script.callReturn();
+        }
     },
     "hamster_clear_led": {
         "color": "#00979D",
@@ -5056,7 +6267,17 @@ Entry.block = {
         "isNotFor": [
             "hamster"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var sq = Entry.hw.sendQueue;newLine    var direction = script.getField(\"DIRECTION\", script);newLine    if (direction == 'FRONT') {newLine        sq.leftLed = 0;newLine        sq.rightLed = 0;newLine    } else if (direction == 'LEFT') sq.leftLed = 0;newLine    else sq.rightLed = 0;newLinenewLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var direction = script.getField("DIRECTION", script);
+            if (direction == 'FRONT') {
+                sq.leftLed = 0;
+                sq.rightLed = 0;
+            } else if (direction == 'LEFT') sq.leftLed = 0;
+            else sq.rightLed = 0;
+
+            return script.callReturn();
+        }
     },
     "hamster_beep": {
         "color": "#00979D",
@@ -5081,7 +6302,26 @@ Entry.block = {
         "isNotFor": [
             "hamster"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var sq = Entry.hw.sendQueue;newLine    if (!script.isStart) {newLine        script.isStart = true;newLine        script.timeFlag = 1;newLine        delete sq.note;newLine        sq.buzzer = 440;newLine        var timeValue = 0.2 * 1000;newLine        setTimeout(function() {newLine            script.timeFlag = 0;newLine        }, timeValue);newLine        return script;newLine    } else {newLine        delete script.timeFlag;newLine        delete script.isStart;newLine        Entry.engine.isContinue = false;newLine        sq.buzzer = 0;newLine        return script.callReturn();newLine    }newLine}_dummy"
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                delete sq.note;
+                sq.buzzer = 440;
+                var timeValue = 0.2 * 1000;
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+                sq.buzzer = 0;
+                return script.callReturn();
+            }
+        }
     },
     "hamster_hand_found": {
         "color": "#00979D",
@@ -5098,7 +6338,11 @@ Entry.block = {
         "isNotFor": [
             "hamster"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var pd = Entry.hw.portData;newLine    return pd.leftProximity > 40 ||newLine        pd.rightProximity > 40;newLine}_dummy"
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            return pd.leftProximity > 40 ||
+                pd.rightProximity > 40;
+        }
     },
     "hamster_move_forward_for_secs": {
         "color": "#00979D",
@@ -5136,7 +6380,29 @@ Entry.block = {
         "isNotFor": [
             "hamster"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var sq = Entry.hw.sendQueue;newLine    if (!script.isStart) {newLine        script.isStart = true;newLine        script.timeFlag = 1;newLine        var timeValue = script.getNumberValue(\"VALUE\") * 1000;newLine        setTimeout(function() {newLine            script.timeFlag = 0;newLine        }, timeValue);newLine        return script;newLine    } else if (script.timeFlag == 1) {newLine        sq.leftWheel = 50;newLine        sq.rightWheel = 50;newLine        return script;newLine    } else {newLine        delete script.timeFlag;newLine        delete script.isStart;newLine        Entry.engine.isContinue = false;newLine        sq.leftWheel = 0;newLine        sq.rightWheel = 0;newLine        return script.callReturn();newLine    }newLine}_dummy"
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                var timeValue = script.getNumberValue("VALUE") * 1000;
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            } else if (script.timeFlag == 1) {
+                sq.leftWheel = 50;
+                sq.rightWheel = 50;
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+                sq.leftWheel = 0;
+                sq.rightWheel = 0;
+                return script.callReturn();
+            }
+        }
     },
     "hamster_move_backward_for_secs": {
         "color": "#00979D",
@@ -5174,7 +6440,29 @@ Entry.block = {
         "isNotFor": [
             "hamster"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var sq = Entry.hw.sendQueue;newLine    if (!script.isStart) {newLine        script.isStart = true;newLine        script.timeFlag = 1;newLine        var timeValue = script.getNumberValue(\"VALUE\") * 1000;newLine        setTimeout(function() {newLine            script.timeFlag = 0;newLine        }, timeValue);newLine        return script;newLine    } else if (script.timeFlag == 1) {newLine        sq.leftWheel = -50;newLine        sq.rightWheel = -50;newLine        return script;newLine    } else {newLine        delete script.timeFlag;newLine        delete script.isStart;newLine        Entry.engine.isContinue = false;newLine        sq.leftWheel = 0;newLine        sq.rightWheel = 0;newLine        return script.callReturn();newLine    }newLine}_dummy"
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                var timeValue = script.getNumberValue("VALUE") * 1000;
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            } else if (script.timeFlag == 1) {
+                sq.leftWheel = -50;
+                sq.rightWheel = -50;
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+                sq.leftWheel = 0;
+                sq.rightWheel = 0;
+                return script.callReturn();
+            }
+        }
     },
     "hamster_turn_for_secs": {
         "color": "#00979D",
@@ -5229,7 +6517,35 @@ Entry.block = {
         "isNotFor": [
             "hamster"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var sq = Entry.hw.sendQueue;newLine    if (!script.isStart) {newLine        var direction = script.getField(\"DIRECTION\", script);newLine        var isLeft = direction == 'LEFT';newLine        script.leftValue = isLeft ? -50 : 50;newLine        script.rightValue = isLeft ? 50 : -50;newLine        script.isStart = true;newLine        script.timeFlag = 1;newLine        var timeValue = script.getNumberValue(\"VALUE\") * 1000;newLine        setTimeout(function() {newLine            script.timeFlag = 0;newLine        }, timeValue);newLine        return script;newLine    } else if (script.timeFlag == 1) {newLine        sq.leftWheel = script.leftValue;newLine        sq.rightWheel = script.rightValue;newLine        return script;newLine    } else {newLine        delete script.timeFlag;newLine        delete script.isStart;newLine        delete script.leftValue;newLine        delete script.rightValue;newLine        Entry.engine.isContinue = false;newLine        sq.leftWheel = 0;newLine        sq.rightWheel = 0;newLine        return script.callReturn();newLine    }newLine}_dummy"
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            if (!script.isStart) {
+                var direction = script.getField("DIRECTION", script);
+                var isLeft = direction == 'LEFT';
+                script.leftValue = isLeft ? -50 : 50;
+                script.rightValue = isLeft ? 50 : -50;
+                script.isStart = true;
+                script.timeFlag = 1;
+                var timeValue = script.getNumberValue("VALUE") * 1000;
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            } else if (script.timeFlag == 1) {
+                sq.leftWheel = script.leftValue;
+                sq.rightWheel = script.rightValue;
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                delete script.leftValue;
+                delete script.rightValue;
+                Entry.engine.isContinue = false;
+                sq.leftWheel = 0;
+                sq.rightWheel = 0;
+                return script.callReturn();
+            }
+        }
     },
     "hamster_play_note_for": {
         "color": "#00979D",
@@ -5361,7 +6677,40 @@ Entry.block = {
         "isNotFor": [
             "hamster"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var sq = Entry.hw.sendQueue;newLine    if (!script.isStart) {newLine        var note = script.getNumberField(\"NOTE\", script);newLine        var octave = script.getNumberField(\"OCTAVE\", script);newLine        var beat = script.getNumberValue(\"VALUE\", script);newLine        var tempo = Entry.Hamster.tempo;newLine        note += (octave-1)*12;newLine        var timeValue = beat*60*1000/tempo;newLine        script.note = note;newLinenewLine        script.isStart = true;newLine        script.timeFlag = 1;newLine        if (timeValue > 100) {newLine            setTimeout(function() {newLine                sq.note = 0;newLine            }, timeValue-100);newLine        }newLine        setTimeout(function() {newLine            script.timeFlag = 0;newLine        }, timeValue);newLine        return script;newLine    } else if (script.timeFlag == 1) {newLine        sq.note = script.note;newLine        return script;newLine    } else {newLine        delete script.timeFlag;newLine        delete script.isStart;newLine        delete script.note;newLine        Entry.engine.isContinue = false;newLine        sq.note = 0;newLine        return script.callReturn();newLine    }newLinenewLine}_dummy"
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            if (!script.isStart) {
+                var note = script.getNumberField("NOTE", script);
+                var octave = script.getNumberField("OCTAVE", script);
+                var beat = script.getNumberValue("VALUE", script);
+                var tempo = Entry.Hamster.tempo;
+                note += (octave-1)*12;
+                var timeValue = beat*60*1000/tempo;
+                script.note = note;
+
+                script.isStart = true;
+                script.timeFlag = 1;
+                if (timeValue > 100) {
+                    setTimeout(function() {
+                        sq.note = 0;
+                    }, timeValue-100);
+                }
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            } else if (script.timeFlag == 1) {
+                sq.note = script.note;
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                delete script.note;
+                Entry.engine.isContinue = false;
+                sq.note = 0;
+                return script.callReturn();
+            }
+        }
     },
     "hamster_rest_for": {
         "color": "#00979D",
@@ -5399,7 +6748,25 @@ Entry.block = {
         "isNotFor": [
             "hamster"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var sq = Entry.hw.sendQueue;newLine    if (!script.isStart) {newLine        script.isStart = true;newLine        script.timeFlag = 1;newLine        var timeValue = script.getNumberValue('VALUE');newLine        timeValue = timeValue*60*1000/Entry.Hamster.tempo;newLine        sq.note = 0;newLine        setTimeout(function() {newLine            script.timeFlag = 0;newLine        }, timeValue);newLine        return script;newLine    } else {newLine        delete script.isStart;newLine        delete script.timeFlag;newLine        Entry.engine.isContinue = false;newLine        return script.callReturn();newLine    }newLine}_dummy"
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                var timeValue = script.getNumberValue('VALUE');
+                timeValue = timeValue*60*1000/Entry.Hamster.tempo;
+                sq.note = 0;
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        }
     },
     "hamster_change_tempo_by": {
         "color": "#00979D",
@@ -5437,7 +6804,10 @@ Entry.block = {
         "isNotFor": [
             "hamster"
         ],
-        "func": "dummy_function (sprite, script) {newLine    Entry.Hamster.tempo += script.getNumberValue('VALUE');newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            Entry.Hamster.tempo += script.getNumberValue('VALUE');
+            return script.callReturn();
+        }
     },
     "hamster_set_tempo_to": {
         "color": "#00979D",
@@ -5475,7 +6845,10 @@ Entry.block = {
         "isNotFor": [
             "hamster"
         ],
-        "func": "dummy_function (sprite, script) {newLine    Entry.Hamster.tempo = script.getNumberValue('VALUE');newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            Entry.Hamster.tempo = script.getNumberValue('VALUE');
+            return script.callReturn();
+        }
     },
     "hamster_change_both_wheels_by": {
         "color": "#00979D",
@@ -5524,7 +6897,22 @@ Entry.block = {
         "isNotFor": [
             "hamster"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var sq = Entry.hw.sendQueue;newLine    var pd = Entry.hw.portData;newLine    var left = sq.leftWheel != undefined ?newLine        sq.leftWheel : pd.leftWheel;newLine    var right = sq.rightWheel != undefined ?newLine        sq.rightWheel : pd.rightWheel;newLinenewLine    left += script.getNumberValue('LEFT');newLine    right += script.getNumberValue('RIGHT');newLinenewLine    sq.leftWheel = left;newLine    sq.rightWheel = right;newLinenewLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            var left = sq.leftWheel != undefined ?
+                sq.leftWheel : pd.leftWheel;
+            var right = sq.rightWheel != undefined ?
+                sq.rightWheel : pd.rightWheel;
+
+            left += script.getNumberValue('LEFT');
+            right += script.getNumberValue('RIGHT');
+
+            sq.leftWheel = left;
+            sq.rightWheel = right;
+
+            return script.callReturn();
+        }
     },
     "hamster_set_both_wheels_to": {
         "color": "#00979D",
@@ -5573,7 +6961,12 @@ Entry.block = {
         "isNotFor": [
             "hamster"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var sq = Entry.hw.sendQueue;newLine    sq.leftWheel = script.getNumberValue('LEFT');newLine    sq.rightWheel = script.getNumberValue('RIGHT');newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            sq.leftWheel = script.getNumberValue('LEFT');
+            sq.rightWheel = script.getNumberValue('RIGHT');
+            return script.callReturn();
+        }
     },
     "hamster_change_wheels_by": {
         "color": "#00979D",
@@ -5632,7 +7025,27 @@ Entry.block = {
         "isNotFor": [
             "hamster"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var sq = Entry.hw.sendQueue;newLine    var pd = Entry.hw.portData;newLine    var direction = script.getField('DIRECTION');newLine    var value = script.getNumberValue('VALUE');newLinenewLine    if (direction == 'LEFT') {newLine        sq.leftWheel = sq.leftWheel != undefined ?newLine            sq.leftWheel + value : pd.leftWheel + value;newLine    } else if (direction == 'RIGHT')newLine        sq.rightWheel = sq.rightWheel != undefined ?newLine            sq.rightWheel + value : pd.rightWheel + value;newLine    else {newLine        sq.leftWheel = sq.leftWheel != undefined ?newLine            sq.leftWheel + value : pd.leftWheel + value;newLine        sq.rightWheel = sq.rightWheel != undefined ?newLine            sq.rightWheel + value : pd.rightWheel + value;newLine    }newLinenewLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            var direction = script.getField('DIRECTION');
+            var value = script.getNumberValue('VALUE');
+
+            if (direction == 'LEFT') {
+                sq.leftWheel = sq.leftWheel != undefined ?
+                    sq.leftWheel + value : pd.leftWheel + value;
+            } else if (direction == 'RIGHT')
+                sq.rightWheel = sq.rightWheel != undefined ?
+                    sq.rightWheel + value : pd.rightWheel + value;
+            else {
+                sq.leftWheel = sq.leftWheel != undefined ?
+                    sq.leftWheel + value : pd.leftWheel + value;
+                sq.rightWheel = sq.rightWheel != undefined ?
+                    sq.rightWheel + value : pd.rightWheel + value;
+            }
+
+            return script.callReturn();
+        }
     },
     "hamster_set_wheels_to": {
         "color": "#00979D",
@@ -5691,7 +7104,20 @@ Entry.block = {
         "isNotFor": [
             "hamster"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var sq = Entry.hw.sendQueue;newLine    var direction = script.getField('DIRECTION');newLine    var value = script.getNumberValue('VALUE');newLinenewLine    if (direction == 'LEFT') sq.leftWheel = value;newLine    else if (direction == 'RIGHT') sq.rightWheel = value;newLine    else {newLine        sq.leftWheel = value;newLine        sq.rightWheel = value;newLine    }newLinenewLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var direction = script.getField('DIRECTION');
+            var value = script.getNumberValue('VALUE');
+
+            if (direction == 'LEFT') sq.leftWheel = value;
+            else if (direction == 'RIGHT') sq.rightWheel = value;
+            else {
+                sq.leftWheel = value;
+                sq.rightWheel = value;
+            }
+
+            return script.callReturn();
+        }
     },
     "hamster_stop": {
         "color": "#00979D",
@@ -5716,7 +7142,13 @@ Entry.block = {
         "isNotFor": [
             "hamster"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var sq = Entry.hw.sendQueue;newLine    sq.leftWheel = 0;newLine    sq.rightWheel = 0;newLinenewLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            sq.leftWheel = 0;
+            sq.rightWheel = 0;
+
+            return script.callReturn();
+        }
     },
     "hamster_change_buzzer_by": {
         "color": "#00979D",
@@ -5754,7 +7186,16 @@ Entry.block = {
         "isNotFor": [
             "hamster"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var hw = Entry.hw,newLine        sq = hw.sendQueue,newLine        pd = hw.portData;newLine        value = script.getNumberValue('VALUE');newLine    delete sq.note;newLine    sq.buzzer = sq.buzzer == undefined ?newLine        value : sq.buzzer + value;newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var hw = Entry.hw,
+                sq = hw.sendQueue,
+                pd = hw.portData;
+                value = script.getNumberValue('VALUE');
+            delete sq.note;
+            sq.buzzer = sq.buzzer == undefined ?
+                value : sq.buzzer + value;
+            return script.callReturn();
+        }
     },
     "hamster_set_buzzer_to": {
         "color": "#00979D",
@@ -5792,7 +7233,12 @@ Entry.block = {
         "isNotFor": [
             "hamster"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var sq = Entry.hw.sendQueue;newLine    delete sq.note;newLine    sq.buzzer = script.getNumberValue('VALUE');newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            delete sq.note;
+            sq.buzzer = script.getNumberValue('VALUE');
+            return script.callReturn();
+        }
     },
     "hamster_clear_buzzer": {
         "color": "#00979D",
@@ -5817,7 +7263,10 @@ Entry.block = {
         "isNotFor": [
             "hamster"
         ],
-        "func": "dummy_function (sprite, script) {newLine    Entry.hw.sendQueue.buzzer = 0;newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            Entry.hw.sendQueue.buzzer = 0;
+            return script.callReturn();
+        }
     },
     "hamster_value": {
         "color": "#00979D",
@@ -5895,7 +7344,15 @@ Entry.block = {
         "isNotFor": [
             "hamster"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var hw = Entry.hw,newLine        sq = hw.sendQueue,newLine        pd = hw.portData,newLine        port = script.getField('PORT');newLinenewLine    return sq[port] != undefined ?newLine        sq[port] : pd[port]newLine}_dummy"
+        "func": function (sprite, script) {
+            var hw = Entry.hw,
+                sq = hw.sendQueue,
+                pd = hw.portData,
+                port = script.getField('PORT');
+
+            return sq[port] != undefined ?
+                sq[port] : pd[port]
+        }
     },
     "is_clicked": {
         "color": "#AEB8FF",
@@ -5918,7 +7375,9 @@ Entry.block = {
         },
         "class": "boolean_input",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    return Entry.stage.isClick;newLine}_dummy"
+        "func": function (sprite, script) {
+            return Entry.stage.isClick;
+        }
     },
     "is_press_some_key": {
         "color": "#AEB8FF",
@@ -5949,7 +7408,10 @@ Entry.block = {
         },
         "class": "boolean_input",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var keycode = Number(script.getField(\"VALUE\", script));newLine    return Entry.pressedKeys.indexOf(keycode) >= 0;newLine}_dummy"
+        "func": function (sprite, script) {
+            var keycode = Number(script.getField("VALUE", script));
+            return Entry.pressedKeys.indexOf(keycode) >= 0;
+        }
     },
     "reach_something": {
         "color": "#AEB8FF",
@@ -5981,9 +7443,84 @@ Entry.block = {
             "VALUE": 0
         },
         "class": "boolean_collision",
-        "isNotFor": []
-        //"func": "dummy_function (sprite, script) {newLine    if (!sprite.getVisible())newLine        return false;newLine    var targetSpriteId = script.getField(\"VALUE\", script);newLine    var reg = /wall/;newLine    var ath = 0.2;newLine    var object = sprite.objectnewLine    var isWall = reg.test(targetSpriteId);newLine    var collision = ndgmr.checkPixelCollision;newLine    if (isWall) {newLine        var wall = Entry.stage.wall;newLine        switch(targetSpriteId) {newLine            case 'wall':newLine                if (collision(object,wall.up,ath,true) ||newLine                    collision(object,wall.down,ath,true) ||newLine                    collision(object,wall.left,ath,true) ||newLine                    collision(object,wall.right,ath,true))newLine                    return true;newLine                elsenewLine                    return false;newLine            case 'wall_up':newLine                if (collision(object,wall.up,ath,true))newLine                    return true;newLine                elsenewLine                    return false;newLine            case 'wall_down':newLine                if (collision(object,wall.down,ath,true))newLine                    return true;newLine                elsenewLine                    return false;newLine            case 'wall_right':newLine                if (collision(object,wall.right,ath,true))newLine                    return true;newLine                elsenewLine                    return false;newLine            case 'wall_left':newLine                if (collision(object,wall.left,ath,true))newLine                    return true;newLine                elsenewLine                    return false;newLine        }newLine    } else if (targetSpriteId == 'mouse') {newLine        var stage = Entry.stage.canvas;newLine        var pt = object.globalToLocal(stage.mouseX, stage.mouseY);newLine        return object.hitTest(pt.x, pt.y);newLine    } else {newLine        var targetSprite = Entry.container.getEntity(targetSpriteId);newLine        if (targetSprite.type == \"textBox\" || sprite.type == 'textBox') {newLine            var targetBound = targetSprite.object.getTransformedBounds();newLine            var bound = object.getTransformedBounds();newLine            if (Entry.checkCollisionRect(bound, targetBound))newLine                return true;newLine            var clonedEntities = targetSprite.parent.clonedEntities;newLine            for (var i=0, len=clonedEntities.length; i<len; i++) {newLine                var entity = clonedEntities[i];newLine                if (!entity.getVisible() || entity.isStamp)newLine                    continue;newLine                if (Entry.checkCollisionRect(bound, entity.object.getTransformedBounds()))newLine                    return true;newLine            }newLine        } else {newLine            if (targetSprite.getVisible() &&newLine                collision(object,targetSprite.object,ath,true))newLine                return true;
-        //newLine            var clonedEntities = targetSprite.parent.clonedEntities;newLine            for (var i=0, len=clonedEntities.length; i<len; i++) {newLine                var entity = clonedEntities[i];newLine                if (!entity.getVisible() || entity.isStamp)newLine                    continue;newLine                if (collision(object,entity.object,ath,true))newLine                    return true;newLine            }newLine        }newLine    }newLine    return false;newLine}_dummy"
+        "isNotFor": [],
+        "func": function (sprite, script) {
+            if (!sprite.getVisible())
+                return false;
+            var targetSpriteId = script.getField("VALUE", script);
+            var reg = /wall/;
+            var ath = 0.2;
+            var object = sprite.object
+            var isWall = reg.test(targetSpriteId);
+            var collision = ndgmr.checkPixelCollision;
+            if (isWall) {
+                var wall = Entry.stage.wall;
+                switch(targetSpriteId) {
+                    case 'wall':
+                        if (collision(object,wall.up,ath,true) ||
+                            collision(object,wall.down,ath,true) ||
+                            collision(object,wall.left,ath,true) ||
+                            collision(object,wall.right,ath,true))
+                            return true;
+                        else
+                            return false;
+                    case 'wall_up':
+                        if (collision(object,wall.up,ath,true))
+                            return true;
+                        else
+                            return false;
+                    case 'wall_down':
+                        if (collision(object,wall.down,ath,true))
+                            return true;
+                        else
+                            return false;
+                    case 'wall_right':
+                        if (collision(object,wall.right,ath,true))
+                            return true;
+                        else
+                            return false;
+                    case 'wall_left':
+                        if (collision(object,wall.left,ath,true))
+                            return true;
+                        else
+                            return false;
+                }
+            } else if (targetSpriteId == 'mouse') {
+                var stage = Entry.stage.canvas;
+                var pt = object.globalToLocal(stage.mouseX, stage.mouseY);
+                return object.hitTest(pt.x, pt.y);
+            } else {
+                var targetSprite = Entry.container.getEntity(targetSpriteId);
+                if (targetSprite.type == "textBox" || sprite.type == 'textBox') {
+                    var targetBound = targetSprite.object.getTransformedBounds();
+                    var bound = object.getTransformedBounds();
+                    if (Entry.checkCollisionRect(bound, targetBound))
+                        return true;
+                    var clonedEntities = targetSprite.parent.clonedEntities;
+                    for (var i=0, len=clonedEntities.length; i<len; i++) {
+                        var entity = clonedEntities[i];
+                        if (!entity.getVisible() || entity.isStamp)
+                            continue;
+                        if (Entry.checkCollisionRect(bound, entity.object.getTransformedBounds()))
+                            return true;
+                    }
+                } else {
+                    if (targetSprite.getVisible() &&
+                        collision(object,targetSprite.object,ath,true))
+                        return true;
+                //
+                    var clonedEntities = targetSprite.parent.clonedEntities;
+                    for (var i=0, len=clonedEntities.length; i<len; i++) {
+                        var entity = clonedEntities[i];
+                        if (!entity.getVisible() || entity.isStamp)
+                            continue;
+                        if (collision(object,entity.object,ath,true))
+                            return true;
+                    }
+                }
+            }
+            return false;
+        }
     },
     "boolean_comparison": {
         "color": "#AEB8FF",
@@ -6030,7 +7567,17 @@ Entry.block = {
             "OPERATOR": 1,
             "RIGHTHAND": 2
         },
-        "func": "dummy_function (sprite, script) {newLine    var operator = script.getField(\"OPERATOR\", script);newLine    var leftValue = script.getNumberValue(\"LEFTHAND\", script);newLine    var rightValue = script.getNumberValue(\"RIGHTHAND\", script);newLine    if (operator == \"EQUAL\")newLine        return leftValue == rightValue;newLine    else if (operator == \"BIGGER\")newLine        return leftValue > rightValue;newLine    elsenewLine        return leftValue < rightValue;newLine}_dummy"
+        "func": function (sprite, script) {
+            var operator = script.getField("OPERATOR", script);
+            var leftValue = script.getNumberValue("LEFTHAND", script);
+            var rightValue = script.getNumberValue("RIGHTHAND", script);
+            if (operator == "EQUAL")
+                return leftValue == rightValue;
+            else if (operator == "BIGGER")
+                return leftValue > rightValue;
+            else
+                return leftValue < rightValue;
+        }
     },
     "boolean_equal": {
         "color": "#AEB8FF",
@@ -6077,7 +7624,11 @@ Entry.block = {
         },
         "class": "boolean_compare",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var leftValue = script.getStringValue(\"LEFTHAND\", script);newLine    var rightValue = script.getStringValue(\"RIGHTHAND\", script);newLine    return leftValue == rightValue;newLine}_dummy"
+        "func": function (sprite, script) {
+            var leftValue = script.getStringValue("LEFTHAND", script);
+            var rightValue = script.getStringValue("RIGHTHAND", script);
+            return leftValue == rightValue;
+        }
     },
     "boolean_bigger": {
         "color": "#AEB8FF",
@@ -6124,7 +7675,11 @@ Entry.block = {
         },
         "class": "boolean_compare",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var leftValue = script.getNumberValue(\"LEFTHAND\", script);newLine    var rightValue = script.getNumberValue(\"RIGHTHAND\", script);newLine    return leftValue > rightValue;newLine}_dummy"
+        "func": function (sprite, script) {
+            var leftValue = script.getNumberValue("LEFTHAND", script);
+            var rightValue = script.getNumberValue("RIGHTHAND", script);
+            return leftValue > rightValue;
+        }
     },
     "boolean_smaller": {
         "color": "#AEB8FF",
@@ -6171,7 +7726,11 @@ Entry.block = {
         },
         "class": "boolean_compare",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var leftValue = script.getNumberValue(\"LEFTHAND\", script);newLine    var rightValue = script.getNumberValue(\"RIGHTHAND\", script);newLine    return leftValue < rightValue;newLine}_dummy"
+        "func": function (sprite, script) {
+            var leftValue = script.getNumberValue("LEFTHAND", script);
+            var rightValue = script.getNumberValue("RIGHTHAND", script);
+            return leftValue < rightValue;
+        }
     },
     "boolean_and_or": {
         "color": "#AEB8FF",
@@ -6214,7 +7773,15 @@ Entry.block = {
             "OPERATOR": 1,
             "RIGHTHAND": 2
         },
-        "func": "dummy_function (sprite, script) {newLine    var operator = script.getField(\"OPERATOR\", script);newLine    var leftValue = script.getBooleanValue(\"LEFTHAND\", script);newLine    var rightValue = script.getBooleanValue(\"RIGHTHAND\", script);newLine    if (operator == \"AND\")newLine        return leftValue && rightValue;newLine    elsenewLine        return leftValue || rightValue;newLine}_dummy"
+        "func": function (sprite, script) {
+            var operator = script.getField("OPERATOR", script);
+            var leftValue = script.getBooleanValue("LEFTHAND", script);
+            var rightValue = script.getBooleanValue("RIGHTHAND", script);
+            if (operator == "AND")
+                return leftValue && rightValue;
+            else
+                return leftValue || rightValue;
+        }
     },
     "boolean_and": {
         "color": "#AEB8FF",
@@ -6255,7 +7822,11 @@ Entry.block = {
         },
         "class": "boolean",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var leftValue = script.getBooleanValue(\"LEFTHAND\", script);newLine    var rightValue = script.getBooleanValue(\"RIGHTHAND\", script);newLine    return leftValue && rightValue;newLine}_dummy"
+        "func": function (sprite, script) {
+            var leftValue = script.getBooleanValue("LEFTHAND", script);
+            var rightValue = script.getBooleanValue("RIGHTHAND", script);
+            return leftValue && rightValue;
+        }
     },
     "boolean_or": {
         "color": "#AEB8FF",
@@ -6296,7 +7867,11 @@ Entry.block = {
         },
         "class": "boolean",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var leftValue = script.getBooleanValue(\"LEFTHAND\", script);newLine    var rightValue = script.getBooleanValue(\"RIGHTHAND\", script);newLine    return leftValue || rightValue;newLine}_dummy"
+        "func": function (sprite, script) {
+            var leftValue = script.getBooleanValue("LEFTHAND", script);
+            var rightValue = script.getBooleanValue("RIGHTHAND", script);
+            return leftValue || rightValue;
+        }
     },
     "boolean_not": {
         "color": "#AEB8FF",
@@ -6329,7 +7904,9 @@ Entry.block = {
         },
         "class": "boolean",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    return !script.getBooleanValue(\"VALUE\");newLine}_dummy"
+        "func": function (sprite, script) {
+            return !script.getBooleanValue("VALUE");
+        }
     },
     "true_or_false": {
         "color": "#AEB8FF",
@@ -6362,7 +7939,10 @@ Entry.block = {
         "paramsKeyMap": {
             "VALUE": 0
         },
-        "func": "dummy_function (sprite, script) {newLine    var value = script.children[0].textContent;newLine    return value == \"true\";newLine}_dummy"
+        "func": function (sprite, script) {
+            var value = script.children[0].textContent;
+            return value == "true";
+        }
     },
     "True": {
         "color": "#AEB8FF",
@@ -6382,7 +7962,9 @@ Entry.block = {
                 null
             ]
         },
-        "func": "dummy_function (sprite, script) {newLine    return true;newLine}_dummy",
+        "func": function (sprite, script) {
+            return true;
+        },
         "isPrimitive": true
     },
     "False": {
@@ -6403,7 +7985,9 @@ Entry.block = {
                 null
             ]
         },
-        "func": "dummy_function (sprite, script) {newLine    return false;newLine}_dummy",
+        "func": function (sprite, script) {
+        return false;
+    },
         "isPrimitive": true
     },
     "boolean_basic_operator": {
@@ -6474,7 +8058,24 @@ Entry.block = {
         },
         "class": "boolean_compare",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var operator = script.getField(\"OPERATOR\", script);newLine    var leftValue = script.getStringValue(\"LEFTHAND\", script);newLine    var rightValue = script.getStringValue(\"RIGHTHAND\", script);newLinenewLine    switch(operator) {newLine        case 'EQUAL':newLine            return leftValue == rightValue;newLine        case 'GREATER':newLine            return Number(leftValue) > Number(rightValue);newLine        case 'LESS':newLine            return Number(leftValue) < Number(rightValue);newLine        case 'GREATER_OR_EQUAL':newLine            return Number(leftValue) >= Number(rightValue);newLine        case 'LESS_OR_EQUAL':newLine            return Number(leftValue) <= Number(rightValue);newLine    }newLine}_dummy"
+        "func": function (sprite, script) {
+            var operator = script.getField("OPERATOR", script);
+            var leftValue = script.getStringValue("LEFTHAND", script);
+            var rightValue = script.getStringValue("RIGHTHAND", script);
+
+            switch(operator) {
+                case 'EQUAL':
+                    return leftValue == rightValue;
+                case 'GREATER':
+                    return Number(leftValue) > Number(rightValue);
+                case 'LESS':
+                    return Number(leftValue) < Number(rightValue);
+                case 'GREATER_OR_EQUAL':
+                    return Number(leftValue) >= Number(rightValue);
+                case 'LESS_OR_EQUAL':
+                    return Number(leftValue) <= Number(rightValue);
+            }
+        }
     },
     "show": {
         "color": "#EC4466",
@@ -6497,7 +8098,10 @@ Entry.block = {
         },
         "class": "visibility",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    sprite.setVisible(true);newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            sprite.setVisible(true);
+            return script.callReturn();
+        }
     },
     "hide": {
         "color": "#EC4466",
@@ -6520,7 +8124,10 @@ Entry.block = {
         },
         "class": "visibility",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    sprite.setVisible(false);newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            sprite.setVisible(false);
+            return script.callReturn();
+        }
     },
     "dialog_time": {
         "color": "#EC4466",
@@ -6582,7 +8189,30 @@ Entry.block = {
         "isNotFor": [
             "textBox"
         ],
-        "func": "dummy_function (sprite, script) {newLine    if (!script.isStart) {newLine        var timeValue = script.getNumberValue(\"SECOND\", script);newLine        var message = script.getStringValue(\"VALUE\", script);newLine        var mode = script.getField(\"OPTION\", script);newLine        script.isStart = true;newLine        script.timeFlag = 1;newLine        if (!message && typeof message != 'number')newLine            message = '    ';newLine        message = Entry.convertToRoundedDecimals(message, 3);newLine        new Entry.Dialog(sprite, message, mode);newLine        sprite.syncDialogVisible(sprite.getVisible());newLine        setTimeout(function() {newLine            script.timeFlag = 0;newLine        }, timeValue * 1000);newLine    }newLine    if (script.timeFlag == 0) {newLine        delete script.timeFlag;newLine        delete script.isStart;newLine        if(sprite.dialog)   sprite.dialog.remove();newLine        return script.callReturn();newLine    } elsenewLine        return script;newLine}_dummy"
+        "func": function (sprite, script) {
+            if (!script.isStart) {
+                var timeValue = script.getNumberValue("SECOND", script);
+                var message = script.getStringValue("VALUE", script);
+                var mode = script.getField("OPTION", script);
+                script.isStart = true;
+                script.timeFlag = 1;
+                if (!message && typeof message != 'number')
+                    message = '    ';
+                message = Entry.convertToRoundedDecimals(message, 3);
+                new Entry.Dialog(sprite, message, mode);
+                sprite.syncDialogVisible(sprite.getVisible());
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue * 1000);
+            }
+            if (script.timeFlag == 0) {
+                delete script.timeFlag;
+                delete script.isStart;
+                if(sprite.dialog)   sprite.dialog.remove();
+                return script.callReturn();
+            } else
+                return script;
+        }
     },
     "dialog": {
         "color": "#EC4466",
@@ -6633,7 +8263,17 @@ Entry.block = {
         "isNotFor": [
             "textBox"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var message = script.getStringValue(\"VALUE\", script);newLine    if (!message && typeof message != 'number') {newLine        message = '    ';newLine    }newLine    var mode = script.getField(\"OPTION\", script);newLine    message = Entry.convertToRoundedDecimals(message, 3);newLine    new Entry.Dialog(sprite, message, mode);newLine    sprite.syncDialogVisible(sprite.getVisible());newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var message = script.getStringValue("VALUE", script);
+            if (!message && typeof message != 'number') {
+                message = '    ';
+            }
+            var mode = script.getField("OPTION", script);
+            message = Entry.convertToRoundedDecimals(message, 3);
+            new Entry.Dialog(sprite, message, mode);
+            sprite.syncDialogVisible(sprite.getVisible());
+            return script.callReturn();
+        }
     },
     "remove_dialog": {
         "color": "#EC4466",
@@ -6658,7 +8298,10 @@ Entry.block = {
         "isNotFor": [
             "textBox"
         ],
-        "func": "dummy_function (sprite, script) {newLine    if(sprite.dialog)   sprite.dialog.remove();newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            if(sprite.dialog)   sprite.dialog.remove();
+            return script.callReturn();
+        }
     },
     "change_to_nth_shape": {
         "color": "#EC4466",
@@ -6691,7 +8334,12 @@ Entry.block = {
         },
         "class": "shape",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var imageId = script.getField(\"VALUE\", script);newLine    var picture = sprite.parent.getPicture(imageId);newLine    sprite.setImage(picture);newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var imageId = script.getField("VALUE", script);
+            var picture = sprite.parent.getPicture(imageId);
+            sprite.setImage(picture);
+            return script.callReturn();
+        }
     },
     "change_to_next_shape": {
         "color": "#EC4466",
@@ -6716,7 +8364,11 @@ Entry.block = {
         "isNotFor": [
             "textBox"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var picture = sprite.parent.getNextPicture(sprite.picture.id);newLine    sprite.setImage(picture);newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var picture = sprite.parent.getNextPicture(sprite.picture.id);
+            sprite.setImage(picture);
+            return script.callReturn();
+        }
     },
     "set_effect_volume": {
         "color": "#EC4466",
@@ -6775,7 +8427,24 @@ Entry.block = {
         "isNotFor": [
             "textBox"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var effect = script.getField(\"EFFECT\", script);newLine    var effectValue = script.getNumberValue(\"VALUE\", script);newLine    if (effect == \"color\") {newLine        sprite.effect.hue = effectValue + sprite.effect.hue;newLine    } else if (effect == \"lens\") {newLine    } else if (effect == \"swriling\") {newLine    } else if (effect == \"pixel\") {newLine    } else if (effect == \"mosaic\") {newLine    } else if (effect == \"brightness\") {newLine        sprite.effect.brightness = effectValue + sprite.effect.brightness;newLine    } else if (effect == \"blur\") {newLine    } else if (effect == \"opacity\") {newLine        sprite.effect.alpha = (sprite.effect.alpha + effectValue / 100) ;newLine    }newLine    sprite.applyFilter();newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var effect = script.getField("EFFECT", script);
+            var effectValue = script.getNumberValue("VALUE", script);
+            if (effect == "color") {
+                sprite.effect.hue = effectValue + sprite.effect.hue;
+            } else if (effect == "lens") {
+            } else if (effect == "swriling") {
+            } else if (effect == "pixel") {
+            } else if (effect == "mosaic") {
+            } else if (effect == "brightness") {
+                sprite.effect.brightness = effectValue + sprite.effect.brightness;
+            } else if (effect == "blur") {
+            } else if (effect == "opacity") {
+                sprite.effect.alpha = (sprite.effect.alpha + effectValue / 100) ;
+            }
+            sprite.applyFilter();
+            return script.callReturn();
+        }
     },
     "set_effect": {
         "color": "#EC4466",
@@ -6834,7 +8503,24 @@ Entry.block = {
         "isNotFor": [
             "textBox"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var effect = script.getField(\"EFFECT\", script);newLine    var effectValue = script.getNumberValue(\"VALUE\", script);newLine    if (effect == \"color\") {newLine        sprite.effect.hue = effectValue;newLine    } else if (effect == \"lens\") {newLine    } else if (effect == \"swriling\") {newLine    } else if (effect == \"pixel\") {newLine    } else if (effect == \"mosaic\") {newLine    } else if (effect == \"brightness\") {newLine        sprite.effect.brightness = effectValue;newLine    } else if (effect == \"blur\") {newLine    } else if (effect == \"opacity\") {newLine        sprite.effect.alpha = effectValue / 100;newLine    }newLine    sprite.applyFilter();newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var effect = script.getField("EFFECT", script);
+            var effectValue = script.getNumberValue("VALUE", script);
+            if (effect == "color") {
+                sprite.effect.hue = effectValue;
+            } else if (effect == "lens") {
+            } else if (effect == "swriling") {
+            } else if (effect == "pixel") {
+            } else if (effect == "mosaic") {
+            } else if (effect == "brightness") {
+                sprite.effect.brightness = effectValue;
+            } else if (effect == "blur") {
+            } else if (effect == "opacity") {
+                sprite.effect.alpha = effectValue / 100;
+            }
+            sprite.applyFilter();
+            return script.callReturn();
+        }
     },
     "erase_all_effects": {
         "color": "#EC4466",
@@ -6859,7 +8545,10 @@ Entry.block = {
         "isNotFor": [
             "textBox"
         ],
-        "func": "dummy_function (sprite, script) {newLine    sprite.resetFilter();newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            sprite.resetFilter();
+            return script.callReturn();
+        }
     },
     "change_scale_percent": {
         "color": "#EC4466",
@@ -6895,7 +8584,12 @@ Entry.block = {
         },
         "class": "scale",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var scaleValue = (script.getNumberValue(\"VALUE\", script) + 100) / 100;newLine    sprite.setScaleX(sprite.getScaleX() * scaleValue);newLine    sprite.setScaleY(sprite.getScaleY() * scaleValue);newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var scaleValue = (script.getNumberValue("VALUE", script) + 100) / 100;
+            sprite.setScaleX(sprite.getScaleX() * scaleValue);
+            sprite.setScaleY(sprite.getScaleY() * scaleValue);
+            return script.callReturn();
+        }
     },
     "set_scale_percent": {
         "color": "#EC4466",
@@ -6931,7 +8625,13 @@ Entry.block = {
         },
         "class": "scale",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var scaleValue = script.getNumberValue(\"VALUE\", script) / 100;newLine    var snapshot = sprite.snapshot_;newLine    sprite.setScaleX(scaleValue * snapshot.scaleX);newLine    sprite.setScaleY(scaleValue * snapshot.scaleY);newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var scaleValue = script.getNumberValue("VALUE", script) / 100;
+            var snapshot = sprite.snapshot_;
+            sprite.setScaleX(scaleValue * snapshot.scaleX);
+            sprite.setScaleY(scaleValue * snapshot.scaleY);
+            return script.callReturn();
+        }
     },
     "change_scale_size": {
         "color": "#EC4466",
@@ -6967,7 +8667,11 @@ Entry.block = {
         },
         "class": "scale",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var sizeValue = script.getNumberValue(\"VALUE\", script);newLine    sprite.setSize(sprite.getSize() + sizeValue);newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var sizeValue = script.getNumberValue("VALUE", script);
+            sprite.setSize(sprite.getSize() + sizeValue);
+            return script.callReturn();
+        }
     },
     "set_scale_size": {
         "color": "#EC4466",
@@ -7003,7 +8707,11 @@ Entry.block = {
         },
         "class": "scale",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var sizeValue = script.getNumberValue(\"VALUE\", script);newLine    sprite.setSize(sizeValue);newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var sizeValue = script.getNumberValue("VALUE", script);
+            sprite.setSize(sizeValue);
+            return script.callReturn();
+        }
     },
     "flip_y": {
         "color": "#EC4466",
@@ -7026,7 +8734,10 @@ Entry.block = {
         },
         "class": "flip",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    sprite.setScaleX((-1)*sprite.getScaleX());newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            sprite.setScaleX((-1)*sprite.getScaleX());
+            return script.callReturn();
+        }
     },
     "flip_x": {
         "color": "#EC4466",
@@ -7049,7 +8760,10 @@ Entry.block = {
         },
         "class": "flip",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    sprite.setScaleY((-1)*sprite.getScaleY());newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            sprite.setScaleY((-1)*sprite.getScaleY());
+            return script.callReturn();
+        }
     },
     "set_object_order": {
         "color": "#EC4466",
@@ -7082,7 +8796,17 @@ Entry.block = {
         },
         "class": "z-index",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var targetIndex = script.getField(\"VALUE\", script);newLine    //var currentIndex = Entry.container.getBelongedObjectsToScene().indexOf(sprite.parent);newLine    var currentIndex = Entry.container.getCurrentObjects().indexOf(sprite.parent);newLinenewLine    if (currentIndex > -1) {newLine        Entry.container.moveElementByBlock(currentIndex, targetIndex);newLine        return script.callReturn();newLine    } elsenewLine        throw new Error('object is not available');newLine}_dummy"
+        "func": function (sprite, script) {
+            var targetIndex = script.getField("VALUE", script);
+            //var currentIndex = Entry.container.getBelongedObjectsToScene().indexOf(sprite.parent);
+            var currentIndex = Entry.container.getCurrentObjects().indexOf(sprite.parent);
+
+            if (currentIndex > -1) {
+                Entry.container.moveElementByBlock(currentIndex, targetIndex);
+                return script.callReturn();
+            } else
+                throw new Error('object is not available');
+        }
     },
     "get_pictures": {
         "color": "#EC4466",
@@ -7106,7 +8830,9 @@ Entry.block = {
         "paramsKeyMap": {
             "VALUE": 0
         },
-        "func": "dummy_function (sprite, script) {newLine    return script.getStringField(\"VALUE\");newLine}_dummy"
+        "func": function (sprite, script) {
+            return script.getStringField("VALUE");
+        }
     },
     "change_to_some_shape": {
         "color": "#EC4466",
@@ -7141,7 +8867,14 @@ Entry.block = {
         "isNotFor": [
             "textBox"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var imageId = script.getStringValue(\"VALUE\");newLine    var value = Entry.parseNumber(imageId);newLine    var picture = sprite.parent.getPicture(imageId);newLinenewLine    sprite.setImage(picture);newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var imageId = script.getStringValue("VALUE");
+            var value = Entry.parseNumber(imageId);
+            var picture = sprite.parent.getPicture(imageId);
+
+            sprite.setImage(picture);
+            return script.callReturn();
+        }
     },
     "add_effect_amount": {
         "color": "#EC4466",
@@ -7200,7 +8933,19 @@ Entry.block = {
         "isNotFor": [
             "textBox"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var effect = script.getField(\"EFFECT\", script);newLine    var effectValue = script.getNumberValue(\"VALUE\", script);newLine    if (effect == \"color\") {newLine        sprite.effect.hsv = effectValue + sprite.effect.hsv;newLine    } else if (effect == \"brightness\") {newLine        sprite.effect.brightness = effectValue + sprite.effect.brightness;newLine    } else if (effect == \"transparency\") {newLine        sprite.effect.alpha = (sprite.effect.alpha - effectValue / 100) ;newLine    }newLine    sprite.applyFilter();newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var effect = script.getField("EFFECT", script);
+            var effectValue = script.getNumberValue("VALUE", script);
+            if (effect == "color") {
+                sprite.effect.hsv = effectValue + sprite.effect.hsv;
+            } else if (effect == "brightness") {
+                sprite.effect.brightness = effectValue + sprite.effect.brightness;
+            } else if (effect == "transparency") {
+                sprite.effect.alpha = (sprite.effect.alpha - effectValue / 100) ;
+            }
+            sprite.applyFilter();
+            return script.callReturn();
+        }
     },
     "change_effect_amount": {
         "color": "#EC4466",
@@ -7259,7 +9004,19 @@ Entry.block = {
         "isNotFor": [
             "textBox"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var effect = script.getField(\"EFFECT\", script);newLine    var effectValue = script.getNumberValue(\"VALUE\", script);newLine    if (effect == \"color\") {newLine        sprite.effect.hsv = effectValue;newLine    } else if (effect == \"brightness\") {newLine        sprite.effect.brightness = effectValue;newLine    } else if (effect == \"transparency\") {newLine        sprite.effect.alpha = 1 - (effectValue / 100);newLine    }newLine    sprite.applyFilter();newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var effect = script.getField("EFFECT", script);
+            var effectValue = script.getNumberValue("VALUE", script);
+            if (effect == "color") {
+                sprite.effect.hsv = effectValue;
+            } else if (effect == "brightness") {
+                sprite.effect.brightness = effectValue;
+            } else if (effect == "transparency") {
+                sprite.effect.alpha = 1 - (effectValue / 100);
+            }
+            sprite.applyFilter();
+            return script.callReturn();
+        }
     },
     "set_effect_amount": {
         "color": "#EC4466",
@@ -7318,7 +9075,19 @@ Entry.block = {
         "isNotFor": [
             "textBox"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var effect = script.getField(\"EFFECT\", script);newLine    var effectValue = script.getNumberValue(\"VALUE\", script);newLine    if (effect == \"color\") {newLine        sprite.effect.hue = effectValue + sprite.effect.hue;newLine    } else if (effect == \"brightness\") {newLine        sprite.effect.brightness = effectValue + sprite.effect.brightness;newLine    } else if (effect == \"transparency\") {newLine        sprite.effect.alpha = (sprite.effect.alpha - effectValue / 100) ;newLine    }newLine    sprite.applyFilter();newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var effect = script.getField("EFFECT", script);
+            var effectValue = script.getNumberValue("VALUE", script);
+            if (effect == "color") {
+                sprite.effect.hue = effectValue + sprite.effect.hue;
+            } else if (effect == "brightness") {
+                sprite.effect.brightness = effectValue + sprite.effect.brightness;
+            } else if (effect == "transparency") {
+                sprite.effect.alpha = (sprite.effect.alpha - effectValue / 100) ;
+            }
+            sprite.applyFilter();
+            return script.callReturn();
+        }
     },
     "set_entity_effect": {
         "color": "#EC4466",
@@ -7377,7 +9146,19 @@ Entry.block = {
         "isNotFor": [
             "textBox"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var effect = script.getField(\"EFFECT\", script);newLine    var effectValue = script.getNumberValue(\"VALUE\", script);newLine    if (effect == \"color\") {newLine        sprite.effect.hue = effectValue;newLine    } else if (effect == \"brightness\") {newLine        sprite.effect.brightness = effectValue;newLine    } else if (effect == \"transparency\") {newLine        sprite.effect.alpha = 1 - (effectValue / 100);newLine    }newLine    sprite.applyFilter();newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var effect = script.getField("EFFECT", script);
+            var effectValue = script.getNumberValue("VALUE", script);
+            if (effect == "color") {
+                sprite.effect.hue = effectValue;
+            } else if (effect == "brightness") {
+                sprite.effect.brightness = effectValue;
+            } else if (effect == "transparency") {
+                sprite.effect.alpha = 1 - (effectValue / 100);
+            }
+            sprite.applyFilter();
+            return script.callReturn();
+        }
     },
     "change_object_index": {
         "color": "#EC4466",
@@ -7427,7 +9208,35 @@ Entry.block = {
         },
         "class": "z-index",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var targetIndex;newLine    var location = script.getField(\"LOCATION\", script);newLine    var objects = Entry.container.getCurrentObjects();newLine    var currentIndex = objects.indexOf(sprite.parent);newLine    var max = objects.length-1newLinenewLine    if (currentIndex < 0)newLine        throw new Error('object is not available for current scene');newLinenewLine    switch (location) {newLine        case 'FRONT':newLine            targetIndex = 0;newLine            break;newLine        case 'FORWARD':newLine            targetIndex = Math.max(0, currentIndex-1);newLine            break;newLine        case 'BACKWARD':newLine            targetIndex = Math.min(max, currentIndex+1);newLine            break;newLine        case 'BACK':newLine            targetIndex = max;newLine            break;newLinenewLine    }newLinenewLine    Entry.container.moveElementByBlock(currentIndex, targetIndex);newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var targetIndex;
+            var location = script.getField("LOCATION", script);
+            var objects = Entry.container.getCurrentObjects();
+            var currentIndex = objects.indexOf(sprite.parent);
+            var max = objects.length-1
+
+            if (currentIndex < 0)
+                throw new Error('object is not available for current scene');
+
+            switch (location) {
+                case 'FRONT':
+                    targetIndex = 0;
+                    break;
+                case 'FORWARD':
+                    targetIndex = Math.max(0, currentIndex-1);
+                    break;
+                case 'BACKWARD':
+                    targetIndex = Math.min(max, currentIndex+1);
+                    break;
+                case 'BACK':
+                    targetIndex = max;
+                    break;
+
+            }
+
+            Entry.container.moveElementByBlock(currentIndex, targetIndex);
+            return script.callReturn();
+        }
     },
     "move_direction": {
         "color": "#A751E3",
@@ -7463,7 +9272,15 @@ Entry.block = {
         },
         "class": "walk",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var value = script.getNumberValue(\"VALUE\", script);newLine    sprite.setX(sprite.getX() + value * Math.cos((sprite.getRotation() + sprite.getDirection() - 90) / 180 * Math.PI));newLine    sprite.setY(sprite.getY() - value * Math.sin((sprite.getRotation() + sprite.getDirection() - 90) / 180 * Math.PI));newLine    if (sprite.brush && !sprite.brush.stop) {newLine        sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);newLine    }newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var value = script.getNumberValue("VALUE", script);
+            sprite.setX(sprite.getX() + value * Math.cos((sprite.getRotation() + sprite.getDirection() - 90) / 180 * Math.PI));
+            sprite.setY(sprite.getY() - value * Math.sin((sprite.getRotation() + sprite.getDirection() - 90) / 180 * Math.PI));
+            if (sprite.brush && !sprite.brush.stop) {
+                sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);
+            }
+            return script.callReturn();
+        }
     },
     "move_x": {
         "color": "#A751E3",
@@ -7499,7 +9316,14 @@ Entry.block = {
         },
         "class": "move_relative",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var value = script.getNumberValue(\"VALUE\", script);newLine    sprite.setX(sprite.getX() + value);newLine    if (sprite.brush && !sprite.brush.stop) {newLine        sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);newLine    }newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var value = script.getNumberValue("VALUE", script);
+            sprite.setX(sprite.getX() + value);
+            if (sprite.brush && !sprite.brush.stop) {
+                sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);
+            }
+            return script.callReturn();
+        }
     },
     "move_y": {
         "color": "#A751E3",
@@ -7535,7 +9359,14 @@ Entry.block = {
         },
         "class": "move_relative",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var value = script.getNumberValue(\"VALUE\", script);newLine    sprite.setY(sprite.getY() + value);newLine    if (sprite.brush && !sprite.brush.stop) {newLine        sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);newLine    }newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var value = script.getNumberValue("VALUE", script);
+            sprite.setY(sprite.getY() + value);
+            if (sprite.brush && !sprite.brush.stop) {
+                sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);
+            }
+            return script.callReturn();
+        }
     },
     "locate_xy_time": {
         "color": "#A751E3",
@@ -7593,7 +9424,31 @@ Entry.block = {
         },
         "class": "move_absolute",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    if (!script.isStart) {newLine        var timeValue;newLine        timeValue = script.getNumberValue(\"VALUE1\", script);newLine        var xValue = script.getNumberValue(\"VALUE2\", script) - sprite.getX();newLine        var yValue = script.getNumberValue(\"VALUE3\", script) - sprite.getY();newLine        script.isStart = true;newLine        script.frameCount = Math.floor(timeValue * Entry.FPS)newLine        script.dX = xValue/script.frameCount;newLine        script.dY = yValue/script.frameCount;newLine    }newLine    if (script.frameCount != 0) {newLine        sprite.setX(sprite.getX() + script.dX);newLine        sprite.setY(sprite.getY() + script.dY);newLine        script.frameCount--;newLine        if (sprite.brush && !sprite.brush.stop) {newLine            sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);newLine        }newLine        return script;newLine    } else {newLine        delete script.isStart;newLine        delete script.frameCount;newLine        return script.callReturn();newLine    }newLine}_dummy"
+        "func": function (sprite, script) {
+            if (!script.isStart) {
+                var timeValue;
+                timeValue = script.getNumberValue("VALUE1", script);
+                var xValue = script.getNumberValue("VALUE2", script) - sprite.getX();
+                var yValue = script.getNumberValue("VALUE3", script) - sprite.getY();
+                script.isStart = true;
+                script.frameCount = Math.floor(timeValue * Entry.FPS)
+                script.dX = xValue/script.frameCount;
+                script.dY = yValue/script.frameCount;
+            }
+            if (script.frameCount != 0) {
+                sprite.setX(sprite.getX() + script.dX);
+                sprite.setY(sprite.getY() + script.dY);
+                script.frameCount--;
+                if (sprite.brush && !sprite.brush.stop) {
+                    sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);
+                }
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.frameCount;
+                return script.callReturn();
+            }
+        }
     },
     "rotate_by_angle": {
         "color": "#A751E3",
@@ -7629,7 +9484,11 @@ Entry.block = {
         },
         "class": "rotate",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var value = script.getNumberValue(\"VALUE\", script);newLine    sprite.setRotation(sprite.getRotation() + value);newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var value = script.getNumberValue("VALUE", script);
+            sprite.setRotation(sprite.getRotation() + value);
+            return script.callReturn();
+        }
     },
     "rotate_by_angle_dropdown": {
         "color": "#A751E3",
@@ -7679,7 +9538,11 @@ Entry.block = {
         },
         "class": "ebs",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var value = script.getField(\"VALUE\", script);newLine    sprite.setRotation(sprite.getRotation() + Number(value));newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var value = script.getField("VALUE", script);
+            sprite.setRotation(sprite.getRotation() + Number(value));
+            return script.callReturn();
+        }
     },
     "see_angle": {
         "color": "#A751E3",
@@ -7715,7 +9578,11 @@ Entry.block = {
         },
         "class": "rotate",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var value = script.getNumberValue(\"VALUE\", script);newLine    sprite.setDirection(value);newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var value = script.getNumberValue("VALUE", script);
+            sprite.setDirection(value);
+            return script.callReturn();
+        }
     },
     "see_direction": {
         "color": "#A751E3",
@@ -7745,7 +9612,18 @@ Entry.block = {
         "paramsKeyMap": {
             "VALUE": 0
         },
-        "func": "dummy_function (sprite, script) {newLine    var targetId = script.getField(\"VALUE\", script);newLine    var targetEntity = Entry.container.getEntity(targetId);//fucknewLine    var deltaX = targetEntity.getX() - sprite.getX();newLine    var deltaY = targetEntity.getY() - sprite.getY();newLine    if (deltaX>=0) {newLine        sprite.setRotation(Math.atan(deltaY / deltaX) / Math.PI * 180 + 90);newLine    } else {newLine        sprite.setRotation(Math.atan(deltaY / deltaX) / Math.PI * 180 + 270);newLine    }newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var targetId = script.getField("VALUE", script);
+            var targetEntity = Entry.container.getEntity(targetId);//fuck
+            var deltaX = targetEntity.getX() - sprite.getX();
+            var deltaY = targetEntity.getY() - sprite.getY();
+            if (deltaX>=0) {
+                sprite.setRotation(Math.atan(deltaY / deltaX) / Math.PI * 180 + 90);
+            } else {
+                sprite.setRotation(Math.atan(deltaY / deltaX) / Math.PI * 180 + 270);
+            }
+            return script.callReturn();
+        }
     },
     "locate_xy": {
         "color": "#A751E3",
@@ -7792,7 +9670,16 @@ Entry.block = {
         },
         "class": "move_absolute",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var value1 = script.getNumberValue(\"VALUE1\", script);newLine    sprite.setX(value1);newLine    var value2 = script.getNumberValue(\"VALUE2\", script);newLine    sprite.setY(value2);newLine    if (sprite.brush && !sprite.brush.stop) {newLine        sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);newLine    }newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var value1 = script.getNumberValue("VALUE1", script);
+            sprite.setX(value1);
+            var value2 = script.getNumberValue("VALUE2", script);
+            sprite.setY(value2);
+            if (sprite.brush && !sprite.brush.stop) {
+                sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);
+            }
+            return script.callReturn();
+        }
     },
     "locate_x": {
         "color": "#A751E3",
@@ -7828,7 +9715,14 @@ Entry.block = {
         },
         "class": "move_absolute",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var value = script.getNumberValue(\"VALUE\", script);newLine    sprite.setX(value);newLine    if (sprite.brush && !sprite.brush.stop) {newLine        sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);newLine    }newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var value = script.getNumberValue("VALUE", script);
+            sprite.setX(value);
+            if (sprite.brush && !sprite.brush.stop) {
+                sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);
+            }
+            return script.callReturn();
+        }
     },
     "locate_y": {
         "color": "#A751E3",
@@ -7864,7 +9758,15 @@ Entry.block = {
         },
         "class": "move_absolute",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var value = script.getNumberValue(\"VALUE\", script);newLine    //sprite.y = 340 - value;newLine    sprite.setY(value);newLine    if (sprite.brush && !sprite.brush.stop) {newLine        sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);newLine    }newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var value = script.getNumberValue("VALUE", script);
+            //sprite.y = 340 - value;
+            sprite.setY(value);
+            if (sprite.brush && !sprite.brush.stop) {
+                sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);
+            }
+            return script.callReturn();
+        }
     },
     "locate": {
         "color": "#A751E3",
@@ -7897,7 +9799,24 @@ Entry.block = {
         },
         "class": "move_absolute",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var targetId = script.getField(\"VALUE\", script);newLine    var x,y;newLine    if (targetId == 'mouse') {newLine        x = Entry.stage.mouseCoordinate.x;newLine        y = Entry.stage.mouseCoordinate.y;newLine    } else {newLine        var targetEntity = Entry.container.getEntity(targetId);newLine        x = targetEntity.getX();newLine        y = targetEntity.getY();newLine    }newLine    sprite.setX(Number(x));newLine    sprite.setY(Number(y));newLine    if (sprite.brush && !sprite.brush.stop) {newLine        sprite.brush.lineTo(x, y*-1);newLine    }newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var targetId = script.getField("VALUE", script);
+            var x,y;
+            if (targetId == 'mouse') {
+                x = Entry.stage.mouseCoordinate.x;
+                y = Entry.stage.mouseCoordinate.y;
+            } else {
+                var targetEntity = Entry.container.getEntity(targetId);
+                x = targetEntity.getX();
+                y = targetEntity.getY();
+            }
+            sprite.setX(Number(x));
+            sprite.setY(Number(y));
+            if (sprite.brush && !sprite.brush.stop) {
+                sprite.brush.lineTo(x, y*-1);
+            }
+            return script.callReturn();
+        }
     },
     "move_xy_time": {
         "color": "#A751E3",
@@ -7955,7 +9874,31 @@ Entry.block = {
         },
         "class": "move_relative",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    if (!script.isStart) {newLine        var timeValue;newLine        timeValue = script.getNumberValue(\"VALUE1\", script);newLine        var xValue = script.getNumberValue(\"VALUE2\", script);newLine        var yValue = script.getNumberValue(\"VALUE3\", script);newLine        script.isStart = true;newLine        script.frameCount = Math.floor(timeValue * Entry.FPS)newLine        script.dX = xValue/script.frameCount;newLine        script.dY = yValue/script.frameCount;newLine    }newLine    if (script.frameCount != 0) {newLine        sprite.setX(sprite.getX() + script.dX);newLine        sprite.setY(sprite.getY() + script.dY);newLine        script.frameCount--;newLine        if (sprite.brush && !sprite.brush.stop) {newLine            sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);newLine        }newLine        return script;newLine    } else {newLine        delete script.isStart;newLine        delete script.frameCount;newLine        return script.callReturn();newLine    }newLine}_dummy"
+        "func": function (sprite, script) {
+            if (!script.isStart) {
+                var timeValue;
+                timeValue = script.getNumberValue("VALUE1", script);
+                var xValue = script.getNumberValue("VALUE2", script);
+                var yValue = script.getNumberValue("VALUE3", script);
+                script.isStart = true;
+                script.frameCount = Math.floor(timeValue * Entry.FPS)
+                script.dX = xValue/script.frameCount;
+                script.dY = yValue/script.frameCount;
+            }
+            if (script.frameCount != 0) {
+                sprite.setX(sprite.getX() + script.dX);
+                sprite.setY(sprite.getY() + script.dY);
+                script.frameCount--;
+                if (sprite.brush && !sprite.brush.stop) {
+                    sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);
+                }
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.frameCount;
+                return script.callReturn();
+            }
+        }
     },
     "rotate_by_angle_time": {
         "color": "#A751E3",
@@ -8000,7 +9943,25 @@ Entry.block = {
         },
         "class": "rotate",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    if (!script.isStart) {newLine        var timeValue;newLine        timeValue = script.getNumberValue(\"VALUE\", script);newLine        var angleValue = script.getNumberField(\"VALUE\", script);newLine        script.isStart = true;newLine        script.frameCount = Math.floor(timeValue * Entry.FPS)newLine        script.dAngle = angleValue/script.frameCount;newLine    }newLine    if (script.frameCount != 0) {newLine        sprite.setRotation(sprite.getRotation() + script.dAngle);newLine        script.frameCount--;newLine        return script;newLine    } else {newLine        delete script.isStart;newLine        delete script.frameCount;newLine        return script.callReturn();newLine    }newLine}_dummy"
+        "func": function (sprite, script) {
+            if (!script.isStart) {
+                var timeValue;
+                timeValue = script.getNumberValue("VALUE", script);
+                var angleValue = script.getNumberField("VALUE", script);
+                script.isStart = true;
+                script.frameCount = Math.floor(timeValue * Entry.FPS)
+                script.dAngle = angleValue/script.frameCount;
+            }
+            if (script.frameCount != 0) {
+                sprite.setRotation(sprite.getRotation() + script.dAngle);
+                script.frameCount--;
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.frameCount;
+                return script.callReturn();
+            }
+        }
     },
     "bounce_wall": {
         "color": "#A751E3",
@@ -8022,9 +9983,108 @@ Entry.block = {
             "type": "bounce_wall"
         },
         "class": "walk",
-        "isNotFor": []
-        //"func": "dummy_function (sprite, script) {newLine    var threshold = 0;newLinenewLine    var method = sprite.parent.getRotateMethod();newLine    var bound = sprite.object.getTransformedBounds();newLine    var size = {};newLine    size.width = bound.width * Math.sqrt(1.0 + (bound.height/bound.width) * (bound.height/bound.width));newLine    size.height = bound.height * Math.sqrt(1.0 + (bound.width/bound.height) * (bound.width/bound.height));newLinenewLine    if (method == 'free')newLine        var angle = (sprite.getRotation() + sprite.getDirection()).mod(360);newLine    elsenewLine        var angle = sprite.getDirection();newLinenewLine    if ((angle < 90 && angle >= 0) || (angle < 360 && angle >= 270)) {newLine        var up = ndgmr.checkPixelCollision(Entry.stage.wall.up,sprite.object,threshold,false);newLine        if (up) {newLine            if (method == 'free')newLine                sprite.setRotation(- sprite.getRotation() - sprite.getDirection() * 2 + 180);newLine            elsenewLine                sprite.setDirection(- sprite.getDirection() + 180);newLinenewLine            sprite.setY(135 - size.height/2 - 1);newLine        } else {newLine            var down = ndgmr.checkPixelCollision(Entry.stage.wall.down,sprite.object,threshold,false);newLine            if (down) {newLine                if (method == 'free')newLine                    sprite.setRotation(- sprite.getRotation() - sprite.getDirection() * 2 + 180);newLine                elsenewLine                    sprite.setDirection(- sprite.getDirection() + 180);newLinenewLine                sprite.setY(-135 + size.height/2 + 1);newLine            }newLinenewLine        }newLine    } else if (angle < 270 && angle >= 90) {newLine        var down = ndgmr.checkPixelCollision(Entry.stage.wall.down,sprite.object,threshold,false);newLine        if (down) {newLine            if (method == 'free')newLine                sprite.setRotation(- sprite.getRotation() - sprite.getDirection() * 2 + 180);newLine            elsenewLine                sprite.setDirection(- sprite.getDirection() + 180);newLinenewLine            sprite.setY(-135 + size.height/2 + 1);newLine        } else {newLine            var up = ndgmr.checkPixelCollision(Entry.stage.wall.up,sprite.object,threshold,false);newLine            if (up) {newLine                if (method == 'free')newLine                    sprite.setRotation(- sprite.getRotation() - sprite.getDirection() * 2 + 180);newLine                elsenewLine                    sprite.setDirection(- sprite.getDirection() + 180);newLinenewLine                sprite.setY(135 - size.height/2 - 1);newLine            }newLine        }newLine    }newLine    if (angle < 360 && angle >= 180) {newLine        var left = ndgmr.checkPixelCollision(Entry.stage.wall.left,sprite.object,threshold,false);newLine        if (left) {newLine            if (method == 'free')newLine                sprite.setRotation(- sprite.getRotation() - sprite.getDirection() * 2);newLine
-       //elsenewLine                sprite.setDirection(- sprite.getDirection() + 360);newLinenewLine            sprite.setX(-240 + size.width/2 + 1);newLine        } else {newLine            var right = ndgmr.checkPixelCollision(Entry.stage.wall.right,sprite.object,threshold,false);newLine            if (right) {newLine                if (method == 'free')newLine                    sprite.setRotation(- sprite.getRotation() - sprite.getDirection() * 2);newLine                elsenewLine                    sprite.setDirection(- sprite.getDirection() + 360);newLinenewLine                sprite.setX(240 - size.width/2 - 1);newLine            }newLinenewLine        }newLine    } else if (angle < 180 && angle >= 0) {newLine        var right = ndgmr.checkPixelCollision(Entry.stage.wall.right,sprite.object,threshold,false);newLine        if (right) {newLine            if (method == 'free')newLine                sprite.setRotation(- sprite.getRotation() - sprite.getDirection() * 2);newLine            elsenewLine                sprite.setDirection(- sprite.getDirection() + 360);newLinenewLine            sprite.setX(240 - size.width/2 - 1);newLine        } else {newLine            var left = ndgmr.checkPixelCollision(Entry.stage.wall.left,sprite.object,threshold,false);newLine            if (left) {newLine                if (method == 'free')newLine                    sprite.setRotation(- sprite.getRotation() - sprite.getDirection() * 2);newLine                elsenewLine                    sprite.setDirection(- sprite.getDirection() + 360);newLinenewLine                sprite.setX(-240 + size.width/2 + 1);newLine            }newLine        }newLine    }newLine    return script.callReturn();newLine}_dummy"
+        "isNotFor": [],
+        "func": function (sprite, script) {
+            var threshold = 0;
+
+            var method = sprite.parent.getRotateMethod();
+            var bound = sprite.object.getTransformedBounds();
+            var size = {};
+            size.width = bound.width * Math.sqrt(1.0 + (bound.height/bound.width) * (bound.height/bound.width));
+            size.height = bound.height * Math.sqrt(1.0 + (bound.width/bound.height) * (bound.width/bound.height));
+
+            if (method == 'free')
+                var angle = (sprite.getRotation() + sprite.getDirection()).mod(360);
+            else
+                var angle = sprite.getDirection();
+
+            if ((angle < 90 && angle >= 0) || (angle < 360 && angle >= 270)) {
+                var up = ndgmr.checkPixelCollision(Entry.stage.wall.up,sprite.object,threshold,false);
+                if (up) {
+                    if (method == 'free')
+                        sprite.setRotation(- sprite.getRotation() - sprite.getDirection() * 2 + 180);
+                    else
+                        sprite.setDirection(- sprite.getDirection() + 180);
+
+                    sprite.setY(135 - size.height/2 - 1);
+                } else {
+                    var down = ndgmr.checkPixelCollision(Entry.stage.wall.down,sprite.object,threshold,false);
+                    if (down) {
+                        if (method == 'free')
+                            sprite.setRotation(- sprite.getRotation() - sprite.getDirection() * 2 + 180);
+                        else
+                            sprite.setDirection(- sprite.getDirection() + 180);
+
+                        sprite.setY(-135 + size.height/2 + 1);
+                    }
+
+                }
+            } else if (angle < 270 && angle >= 90) {
+                var down = ndgmr.checkPixelCollision(Entry.stage.wall.down,sprite.object,threshold,false);
+                if (down) {
+                    if (method == 'free')
+                        sprite.setRotation(- sprite.getRotation() - sprite.getDirection() * 2 + 180);
+                    else
+                        sprite.setDirection(- sprite.getDirection() + 180);
+
+                    sprite.setY(-135 + size.height/2 + 1);
+                } else {
+                    var up = ndgmr.checkPixelCollision(Entry.stage.wall.up,sprite.object,threshold,false);
+                    if (up) {
+                        if (method == 'free')
+                            sprite.setRotation(- sprite.getRotation() - sprite.getDirection() * 2 + 180);
+                        else
+                            sprite.setDirection(- sprite.getDirection() + 180);
+
+                        sprite.setY(135 - size.height/2 - 1);
+                    }
+                }
+            }
+            if (angle < 360 && angle >= 180) {
+                var left = ndgmr.checkPixelCollision(Entry.stage.wall.left,sprite.object,threshold,false);
+                if (left) {
+                    if (method == 'free')
+                        sprite.setRotation(- sprite.getRotation() - sprite.getDirection() * 2);
+
+               //else
+                        sprite.setDirection(- sprite.getDirection() + 360);
+
+                    sprite.setX(-240 + size.width/2 + 1);
+                } else {
+                    var right = ndgmr.checkPixelCollision(Entry.stage.wall.right,sprite.object,threshold,false);
+                    if (right) {
+                        if (method == 'free')
+                            sprite.setRotation(- sprite.getRotation() - sprite.getDirection() * 2);
+                        else
+                            sprite.setDirection(- sprite.getDirection() + 360);
+
+                        sprite.setX(240 - size.width/2 - 1);
+                    }
+
+                }
+            } else if (angle < 180 && angle >= 0) {
+                var right = ndgmr.checkPixelCollision(Entry.stage.wall.right,sprite.object,threshold,false);
+                if (right) {
+                    if (method == 'free')
+                        sprite.setRotation(- sprite.getRotation() - sprite.getDirection() * 2);
+                    else
+                        sprite.setDirection(- sprite.getDirection() + 360);
+
+                    sprite.setX(240 - size.width/2 - 1);
+                } else {
+                    var left = ndgmr.checkPixelCollision(Entry.stage.wall.left,sprite.object,threshold,false);
+                    if (left) {
+                        if (method == 'free')
+                            sprite.setRotation(- sprite.getRotation() - sprite.getDirection() * 2);
+                        else
+                            sprite.setDirection(- sprite.getDirection() + 360);
+
+                        sprite.setX(-240 + size.width/2 + 1);
+                    }
+                }
+            }
+            return script.callReturn();
+        }
     },
     "flip_arrow_horizontal": {
         "color": "#A751E3",
@@ -8044,7 +10104,10 @@ Entry.block = {
                 null
             ]
         },
-        "func": "dummy_function (sprite, script) {newLine    sprite.setDirection(sprite.getDirection() + 180);newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            sprite.setDirection(sprite.getDirection() + 180);
+            return script.callReturn();
+        }
     },
     "flip_arrow_vertical": {
         "color": "#A751E3",
@@ -8064,7 +10127,10 @@ Entry.block = {
                 null
             ]
         },
-        "func": "dummy_function (sprite, script) {newLine    sprite.setDirection(sprite.getDirection() + 180);newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            sprite.setDirection(sprite.getDirection() + 180);
+            return script.callReturn();
+        }
     },
     "see_angle_object": {
         "color": "#A751E3",
@@ -8097,7 +10163,36 @@ Entry.block = {
         },
         "class": "rotate_absolute",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var targetId = script.getField(\"VALUE\", script);newLine    var spriteX = sprite.getX();newLine    var spriteY = sprite.getY();newLine    var deltaX, deltaY;newLinenewLine    if (sprite.parent.id == targetId)newLine        return script.callReturn();newLinenewLine    if ( targetId == 'mouse' ) {newLine        var mX = Entry.stage.mouseCoordinate.x;newLine        var mY = Entry.stage.mouseCoordinate.y;newLinenewLine        deltaX = mX - spriteX;newLine        deltaY = mY - spriteY;newLine    } else {newLine        var targetEntity = Entry.container.getEntity(targetId);newLine        deltaX = targetEntity.getX() - spriteX;newLine        deltaY = targetEntity.getY() - spriteY;newLine    }newLinenewLine    if ( deltaX >= 0 ) {newLine        var value = -Math.atan(deltaY / deltaX) / Math.PI * 180 + 90;newLine    } else {newLine        var value = -Math.atan(deltaY / deltaX) / Math.PI * 180 + 270;newLine    }newLine    var nativeDirection = sprite.getDirection() + sprite.getRotation();newLine    sprite.setRotation(sprite.getRotation() + value - nativeDirection);newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var targetId = script.getField("VALUE", script);
+            var spriteX = sprite.getX();
+            var spriteY = sprite.getY();
+            var deltaX, deltaY;
+
+            if (sprite.parent.id == targetId)
+                return script.callReturn();
+
+            if ( targetId == 'mouse' ) {
+                var mX = Entry.stage.mouseCoordinate.x;
+                var mY = Entry.stage.mouseCoordinate.y;
+
+                deltaX = mX - spriteX;
+                deltaY = mY - spriteY;
+            } else {
+                var targetEntity = Entry.container.getEntity(targetId);
+                deltaX = targetEntity.getX() - spriteX;
+                deltaY = targetEntity.getY() - spriteY;
+            }
+
+            if ( deltaX >= 0 ) {
+                var value = -Math.atan(deltaY / deltaX) / Math.PI * 180 + 90;
+            } else {
+                var value = -Math.atan(deltaY / deltaX) / Math.PI * 180 + 270;
+            }
+            var nativeDirection = sprite.getDirection() + sprite.getRotation();
+            sprite.setRotation(sprite.getRotation() + value - nativeDirection);
+            return script.callReturn();
+        }
     },
     "see_angle_direction": {
         "color": "#A751E3",
@@ -8133,7 +10228,12 @@ Entry.block = {
         },
         "class": "rotate",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var value = script.getNumberValue(\"VALUE\", script);newLine    var nativeDirection = sprite.getDirection() + sprite.getRotation();newLine    sprite.setRotation(sprite.getRotation() + value - nativeDirection);newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var value = script.getNumberValue("VALUE", script);
+            var nativeDirection = sprite.getDirection() + sprite.getRotation();
+            sprite.setRotation(sprite.getRotation() + value - nativeDirection);
+            return script.callReturn();
+        }
     },
     "rotate_direction": {
         "color": "#A751E3",
@@ -8169,7 +10269,11 @@ Entry.block = {
         },
         "class": "rotate",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var value = script.getNumberValue(\"VALUE\", script);newLine    sprite.setDirection(value + sprite.getDirection());newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var value = script.getNumberValue("VALUE", script);
+            sprite.setDirection(value + sprite.getDirection());
+            return script.callReturn();
+        }
     },
     "locate_object_time": {
         "color": "#A751E3",
@@ -8213,7 +10317,58 @@ Entry.block = {
         },
         "class": "move_absolute",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    if (!script.isStart) {newLine        var timeValue, xValue, yValue;newLine        var targetId = script.getField(\"TARGET\", script);newLine        timeValue = script.getNumberValue(\"VALUE\", script);newLine        var frameCount = Math.floor(timeValue * Entry.FPS);newLine        var mouseCoordi = Entry.stage.mouseCoordinate;newLinenewLine        if (frameCount != 0) {newLine            if (targetId == 'mouse') {newLine                xValue = mouseCoordi.x - sprite.getX();newLine                yValue = mouseCoordi.y - sprite.getY();newLine            } else {newLine                var targetEntity = Entry.container.getEntity(targetId);newLine                xValue = targetEntity.getX() - sprite.getX();newLine                yValue = targetEntity.getY() - sprite.getY();newLine            }newLine            script.isStart = true;newLine            script.frameCount = frameCount;newLine            script.dX = xValue/script.frameCount;newLine            script.dY = yValue/script.frameCount;newLine        } else {newLine            //frame count is zero so execute immediatelynewLine            if (targetId == 'mouse') {newLine                xValue = Number(mouseCoordi.x);newLine                yValue = Number(mouseCoordi.y);newLine            } else {newLine                var targetEntity = Entry.container.getEntity(targetId);newLine                xValue = targetEntity.getX();newLine                yValue = targetEntity.getY();newLine            }newLine            sprite.setX(xValue);newLine            sprite.setY(yValue);newLine            if (sprite.brush && !sprite.brush.stop) {newLine                sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);newLine            }newLine            return script.callReturn();newLine        }newLine    }newLine    if (script.frameCount != 0) {newLine        sprite.setX(sprite.getX() + script.dX);newLine        sprite.setY(sprite.getY() + script.dY);newLine        script.frameCount--;newLine        if (sprite.brush && !sprite.brush.stop)newLine            sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);newLine        return script;newLine    } else {newLine        delete script.isStart;newLine        delete script.frameCount;newLine        return script.callReturn();newLine    }newLine}_dummy"
+        "func": function (sprite, script) {
+            if (!script.isStart) {
+                var timeValue, xValue, yValue;
+                var targetId = script.getField("TARGET", script);
+                timeValue = script.getNumberValue("VALUE", script);
+                var frameCount = Math.floor(timeValue * Entry.FPS);
+                var mouseCoordi = Entry.stage.mouseCoordinate;
+
+                if (frameCount != 0) {
+                    if (targetId == 'mouse') {
+                        xValue = mouseCoordi.x - sprite.getX();
+                        yValue = mouseCoordi.y - sprite.getY();
+                    } else {
+                        var targetEntity = Entry.container.getEntity(targetId);
+                        xValue = targetEntity.getX() - sprite.getX();
+                        yValue = targetEntity.getY() - sprite.getY();
+                    }
+                    script.isStart = true;
+                    script.frameCount = frameCount;
+                    script.dX = xValue/script.frameCount;
+                    script.dY = yValue/script.frameCount;
+                } else {
+                    //frame count is zero so execute immediately
+                    if (targetId == 'mouse') {
+                        xValue = Number(mouseCoordi.x);
+                        yValue = Number(mouseCoordi.y);
+                    } else {
+                        var targetEntity = Entry.container.getEntity(targetId);
+                        xValue = targetEntity.getX();
+                        yValue = targetEntity.getY();
+                    }
+                    sprite.setX(xValue);
+                    sprite.setY(yValue);
+                    if (sprite.brush && !sprite.brush.stop) {
+                        sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);
+                    }
+                    return script.callReturn();
+                }
+            }
+            if (script.frameCount != 0) {
+                sprite.setX(sprite.getX() + script.dX);
+                sprite.setY(sprite.getY() + script.dY);
+                script.frameCount--;
+                if (sprite.brush && !sprite.brush.stop)
+                    sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.frameCount;
+                return script.callReturn();
+            }
+        }
     },
     "rotate_absolute": {
         "color": "#A751E3",
@@ -8246,7 +10401,11 @@ Entry.block = {
         },
         "class": "rotate_absolute",
         "isNotFor": [],
-        "func": "dummy_function (entity, script) {newLine    var value = script.getNumberValue(\"VALUE\", script);newLine    entity.setRotation(value);newLine    return script.callReturn();newLine}_dummy"
+        "func": function (entity, script) {
+            var value = script.getNumberValue("VALUE", script);
+            entity.setRotation(value);
+            return script.callReturn();
+        }
     },
     "rotate_relative": {
         "color": "#A751E3",
@@ -8279,7 +10438,11 @@ Entry.block = {
         },
         "class": "rotate",
         "isNotFor": [],
-        "func": "dummy_function (entity, script) {newLine    var value = script.getNumberValue(\"VALUE\", script);newLine    entity.setRotation(value + entity.getRotation());newLine    return script.callReturn();newLine}_dummy"
+        "func": function (entity, script) {
+            var value = script.getNumberValue("VALUE", script);
+            entity.setRotation(value + entity.getRotation());
+            return script.callReturn();
+        }
     },
     "direction_absolute": {
         "color": "#A751E3",
@@ -8312,7 +10475,11 @@ Entry.block = {
         },
         "class": "rotate_absolute",
         "isNotFor": [],
-        "func": "dummy_function (entity, script) {newLine    var value = script.getNumberValue(\"VALUE\", script);newLine    entity.setDirection(value);newLine    return script.callReturn();newLine}_dummy"
+        "func": function (entity, script) {
+            var value = script.getNumberValue("VALUE", script);
+            entity.setDirection(value);
+            return script.callReturn();
+        }
     },
     "direction_relative": {
         "color": "#A751E3",
@@ -8345,7 +10512,11 @@ Entry.block = {
         },
         "class": "rotate",
         "isNotFor": [],
-        "func": "dummy_function (entity, script) {newLine    var value = script.getNumberValue(\"VALUE\", script);newLine    entity.setDirection(value + entity.getDirection());newLine    return script.callReturn();newLine}_dummy"
+        "func": function (entity, script) {
+            var value = script.getNumberValue("VALUE", script);
+            entity.setDirection(value + entity.getDirection());
+            return script.callReturn();
+        }
     },
     "move_to_angle": {
         "color": "#A751E3",
@@ -8389,7 +10560,16 @@ Entry.block = {
         },
         "class": "move_rotate",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var value = script.getNumberValue(\"VALUE\", script);newLine    var angle = script.getNumberValue(\"ANGLE\", script);newLine    sprite.setX(sprite.getX() + value * Math.cos((angle - 90) / 180 * Math.PI));newLine    sprite.setY(sprite.getY() - value * Math.sin((angle - 90) / 180 * Math.PI));newLine    if (sprite.brush && !sprite.brush.stop) {newLine        sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);newLine    }newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var value = script.getNumberValue("VALUE", script);
+            var angle = script.getNumberValue("ANGLE", script);
+            sprite.setX(sprite.getX() + value * Math.cos((angle - 90) / 180 * Math.PI));
+            sprite.setY(sprite.getY() - value * Math.sin((angle - 90) / 180 * Math.PI));
+            if (sprite.brush && !sprite.brush.stop) {
+                sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);
+            }
+            return script.callReturn();
+        }
     },
     "rotate_by_time": {
         "color": "#A751E3",
@@ -8433,7 +10613,25 @@ Entry.block = {
         },
         "class": "rotate",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    if (!script.isStart) {newLine        var timeValue;newLine        timeValue = script.getNumberValue(\"VALUE\", script);newLine        var angleValue = script.getNumberValue(\"ANGLE\", script);newLine        script.isStart = true;newLine        script.frameCount = Math.floor(timeValue * Entry.FPS)newLine        script.dAngle = angleValue/script.frameCount;newLine    }newLine    if (script.frameCount != 0) {newLine        sprite.setRotation(sprite.getRotation() + script.dAngle);newLine        script.frameCount--;newLine        return script;newLine    } else {newLine        delete script.isStart;newLine        delete script.frameCount;newLine        return script.callReturn();newLine    }newLine}_dummy"
+        "func": function (sprite, script) {
+            if (!script.isStart) {
+                var timeValue;
+                timeValue = script.getNumberValue("VALUE", script);
+                var angleValue = script.getNumberValue("ANGLE", script);
+                script.isStart = true;
+                script.frameCount = Math.floor(timeValue * Entry.FPS)
+                script.dAngle = angleValue/script.frameCount;
+            }
+            if (script.frameCount != 0) {
+                sprite.setRotation(sprite.getRotation() + script.dAngle);
+                script.frameCount--;
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.frameCount;
+                return script.callReturn();
+            }
+        }
     },
     "direction_relative_duration": {
         "color": "#A751E3",
@@ -8479,7 +10677,26 @@ Entry.block = {
         "isNotFor": [
             ""
         ],
-        "func": "dummy_function (sprite, script) {newLine    if (!script.isStart) {newLine        var timeValue;newLine        timeValue = script.getNumberValue(\"DURATION\", script);newLine        var directionValue = script.getNumberValue(\"AMOUNT\", script);newLine        script.isStart = true;newLine        script.frameCount = Math.floor(timeValue * Entry.FPS)newLine        script.dDirection = directionValue/script.frameCount;newLine    }newLine    if (script.frameCount != 0) {newLine        sprite.setDirection(sprite.getDirection() + script.dDirection);newLine        script.frameCount--;newLine        return script;newLine    } else {newLine        delete script.isStart;newLine        delete script.frameCount;newLine        delete script.dDirection;newLine        return script.callReturn();newLine    }newLine}_dummy"
+        "func": function (sprite, script) {
+            if (!script.isStart) {
+                var timeValue;
+                timeValue = script.getNumberValue("DURATION", script);
+                var directionValue = script.getNumberValue("AMOUNT", script);
+                script.isStart = true;
+                script.frameCount = Math.floor(timeValue * Entry.FPS)
+                script.dDirection = directionValue/script.frameCount;
+            }
+            if (script.frameCount != 0) {
+                sprite.setDirection(sprite.getDirection() + script.dDirection);
+                script.frameCount--;
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.frameCount;
+                delete script.dDirection;
+                return script.callReturn();
+            }
+        }
     },
     "neobot_sensor_value": {
         "color": "#00979D",
@@ -8525,7 +10742,10 @@ Entry.block = {
         "isNotFor": [
             "neobot"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var port = script.getStringField(\"PORT\");newLine    return Entry.hw.portData[port];newLine}_dummy"
+        "func": function (sprite, script) {
+            var port = script.getStringField("PORT");
+            return Entry.hw.portData[port];
+        }
     },
     "neobot_turn_left": {
         "color": "#00979D",
@@ -8590,7 +10810,12 @@ Entry.block = {
         "isNotFor": [
             "neobot"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var port = script.getNumberField(\"VALUE\");newLine    var direction = script.getNumberField(\"DIRECTION\");newLine    Entry.hw.sendQueue[\"LMOT\"] = port * direction;newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var port = script.getNumberField("VALUE");
+            var direction = script.getNumberField("DIRECTION");
+            Entry.hw.sendQueue["LMOT"] = port * direction;
+            return script.callReturn();
+        }
     },
     "neobot_stop_left": {
         "color": "#00979D",
@@ -8615,7 +10840,10 @@ Entry.block = {
         "isNotFor": [
             "neobot"
         ],
-        "func": "dummy_function (sprite, script) {newLine    Entry.hw.sendQueue[\"LMOT\"] = 0;newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            Entry.hw.sendQueue["LMOT"] = 0;
+            return script.callReturn();
+        }
     },
     "neobot_turn_right": {
         "color": "#00979D",
@@ -8680,7 +10908,12 @@ Entry.block = {
         "isNotFor": [
             "neobot"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var port = script.getNumberField(\"VALUE\");newLine    var direction = script.getNumberField(\"DIRECTION\");newLine    Entry.hw.sendQueue[\"RMOT\"] = port * direction;newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var port = script.getNumberField("VALUE");
+            var direction = script.getNumberField("DIRECTION");
+            Entry.hw.sendQueue["RMOT"] = port * direction;
+            return script.callReturn();
+        }
     },
     "neobot_stop_right": {
         "color": "#00979D",
@@ -8705,7 +10938,10 @@ Entry.block = {
         "isNotFor": [
             "neobot"
         ],
-        "func": "dummy_function (sprite, script) {newLine    Entry.hw.sendQueue[\"RMOT\"] = 0;newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            Entry.hw.sendQueue["RMOT"] = 0;
+            return script.callReturn();
+        }
     },
     "neobot_run_motor": {
         "color": "#00979D",
@@ -8810,7 +11046,54 @@ Entry.block = {
         "isNotFor": [
             "neobot"
         ],
-        "func": "dummy_function (sprite, script) {newLine    if (!script.isStart) {newLine        script.isStart = true;newLine        script.timeFlag = 1;newLine        var timeValue = script.getNumberValue(\"DURATION\") * 1000;newLine        setTimeout(function() {newLine            script.timeFlag = 0;newLine        }, timeValue);newLine        return script;newLine    } else if (script.timeFlag == 1) {newLine        var type = script.getNumberField(\"TYPE\");newLine        var value = script.getNumberField(\"VALUE\");newLine        var direction = script.getNumberField(\"DIRECTION\");newLine        switch (direction) {newLine            case 1:newLine            Entry.hw.sendQueue[\"LMOT\"] = value;newLine            Entry.hw.sendQueue[\"RMOT\"] = value;newLine            break;newLine            case 2:newLine            Entry.hw.sendQueue[\"LMOT\"] = value * -1;newLine            Entry.hw.sendQueue[\"RMOT\"] = value * -1;newLine            break;newLine            case 3:newLine            Entry.hw.sendQueue[\"LMOT\"] = value;newLine            Entry.hw.sendQueue[\"RMOT\"] = value * -1;newLine            break;newLine            case 4:newLine            Entry.hw.sendQueue[\"LMOT\"] = value * -1;newLine            Entry.hw.sendQueue[\"RMOT\"] = value;newLine            break;newLine        }newLinenewLine        if(type === 2)  {newLine            Entry.hw.sendQueue[\"RMOT\"] = 0;newLine        } else if(type === 3) {newLine            Entry.hw.sendQueue[\"LMOT\"] = 0;newLine        }newLinenewLine        return script;newLine    } else {newLine        delete script.timeFlag;newLine        delete script.isStart;newLine        Entry.engine.isContinue = false;newLine        Entry.hw.sendQueue[\"LMOT\"] = 0;newLine        Entry.hw.sendQueue[\"RMOT\"] = 0;newLine        return script.callReturn();newLine    }newLine}_dummy"
+        "func": function (sprite, script) {
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                var timeValue = script.getNumberValue("DURATION") * 1000;
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            } else if (script.timeFlag == 1) {
+                var type = script.getNumberField("TYPE");
+                var value = script.getNumberField("VALUE");
+                var direction = script.getNumberField("DIRECTION");
+                switch (direction) {
+                    case 1:
+                    Entry.hw.sendQueue["LMOT"] = value;
+                    Entry.hw.sendQueue["RMOT"] = value;
+                    break;
+                    case 2:
+                    Entry.hw.sendQueue["LMOT"] = value * -1;
+                    Entry.hw.sendQueue["RMOT"] = value * -1;
+                    break;
+                    case 3:
+                    Entry.hw.sendQueue["LMOT"] = value;
+                    Entry.hw.sendQueue["RMOT"] = value * -1;
+                    break;
+                    case 4:
+                    Entry.hw.sendQueue["LMOT"] = value * -1;
+                    Entry.hw.sendQueue["RMOT"] = value;
+                    break;
+                }
+
+                if(type === 2)  {
+                    Entry.hw.sendQueue["RMOT"] = 0;
+                } else if(type === 3) {
+                    Entry.hw.sendQueue["LMOT"] = 0;
+                }
+
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+                Entry.hw.sendQueue["LMOT"] = 0;
+                Entry.hw.sendQueue["RMOT"] = 0;
+                return script.callReturn();
+            }
+        }
     },
     "neobot_servo_1": {
         "color": "#00979D",
@@ -8935,7 +11218,13 @@ Entry.block = {
         "isNotFor": [
             "neobot"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var value = script.getNumberField(\"VALUE\");newLine    var speed = script.getNumberField(\"SPEED\");newLine    Entry.hw.sendQueue[\"SERVO1\"] = value;newLine    Entry.hw.sendQueue[\"SERVO1_SPEED\"] = speed;newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var value = script.getNumberField("VALUE");
+            var speed = script.getNumberField("SPEED");
+            Entry.hw.sendQueue["SERVO1"] = value;
+            Entry.hw.sendQueue["SERVO1_SPEED"] = speed;
+            return script.callReturn();
+        }
     },
     "neobot_servo_2": {
         "color": "#00979D",
@@ -9060,7 +11349,13 @@ Entry.block = {
         "isNotFor": [
             "neobot"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var value = script.getNumberField(\"VALUE\");newLine    var speed = script.getNumberField(\"SPEED\");newLine    Entry.hw.sendQueue[\"SERVO2\"] = value;newLine    Entry.hw.sendQueue[\"SERVO2_SPEED\"] = speed;newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var value = script.getNumberField("VALUE");
+            var speed = script.getNumberField("SPEED");
+            Entry.hw.sendQueue["SERVO2"] = value;
+            Entry.hw.sendQueue["SERVO2_SPEED"] = speed;
+            return script.callReturn();
+        }
     },
     "neobot_play_note_for": {
         "color": "#00979D",
@@ -9170,7 +11465,35 @@ Entry.block = {
         "isNotFor": [
             "neobot"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var sq = Entry.hw.sendQueue;newLinenewLine    if (!script.isStart) {newLine        var note = script.getNumberField(\"NOTE\", script);newLine        var octave = script.getNumberField(\"OCTAVE\", script);newLine        var duration = script.getNumberField(\"DURATION\", script);newLine        script.note = note;newLinenewLine        script.isStart = true;newLine        script.timeFlag = 1;newLine        sq.note = note;newLine        sq.octave = octave;newLine        sq.duration = duration;newLine        sq.sound_check = (Math.random() * 100000).toFixed(0);newLine        setTimeout(function() {newLine            script.timeFlag = 0;newLine        }, 1 / duration * 2000);newLine        return script;newLine    } else if (script.timeFlag == 1) {newLine        return script;newLine    } else {newLine        delete script.timeFlag;newLine        delete script.isStart;newLine        Entry.engine.isContinue = false;newLine        return script.callReturn();newLine    }newLinenewLine}_dummy"
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+
+            if (!script.isStart) {
+                var note = script.getNumberField("NOTE", script);
+                var octave = script.getNumberField("OCTAVE", script);
+                var duration = script.getNumberField("DURATION", script);
+                script.note = note;
+
+                script.isStart = true;
+                script.timeFlag = 1;
+                sq.note = note;
+                sq.octave = octave;
+                sq.duration = duration;
+                sq.sound_check = (Math.random() * 100000).toFixed(0);
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, 1 / duration * 2000);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+
+        }
     },
     "neobot_set_sensor_value": {
         "color": "#00979D",
@@ -9231,7 +11554,14 @@ Entry.block = {
         "isNotFor": [
             "neobot"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var sq = Entry.hw.sendQueue;newLinenewLine    var port = script.getStringField(\"PORT\", script);newLine    var value = script.getNumberField(\"VALUE\", script);newLine    sq[port] = value;newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+
+            var port = script.getStringField("PORT", script);
+            var value = script.getNumberField("VALUE", script);
+            sq[port] = value;
+            return script.callReturn();
+        }
     },
     "when_scene_start": {
         "color": "#3BBD70",
@@ -9260,7 +11590,9 @@ Entry.block = {
         "isNotFor": [
             "scene"
         ],
-        "func": "dummy_function (sprite, script) {newLine    return script.callReturn();newLine}_dummy",
+        "func": function (sprite, script) {
+            return script.callReturn();
+        },
         "event": "when_scene_start"
     },
     "start_scene": {
@@ -9296,7 +11628,15 @@ Entry.block = {
         "isNotFor": [
             "scene"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var value = script.getField(\"VALUE\", script);newLine    var scene = Entry.scene.getSceneById(value);newLine    if (scene) {newLine        Entry.scene.selectScene(scene);newLine        Entry.engine.fireEvent('when_scene_start');newLine    }newLine    return null;newLine}_dummy"
+        "func": function (sprite, script) {
+            var value = script.getField("VALUE", script);
+            var scene = Entry.scene.getSceneById(value);
+            if (scene) {
+                Entry.scene.selectScene(scene);
+                Entry.engine.fireEvent('when_scene_start');
+            }
+            return null;
+        }
     },
     "start_neighbor_scene": {
         "color": "#3BBD70",
@@ -9340,7 +11680,30 @@ Entry.block = {
         "isNotFor": [
             "scene"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var currentScene = Entry.scene.selectedScene;newLine    var scenes = Entry.scene.getScenes();newLine    var index = scenes.indexOf(currentScene);newLine    var o = script.getField(\"OPERATOR\", script);newLine    if (o == 'next') {newLine        if (index + 1 < scenes.length) {newLine            var nextScene = Entry.scene.getSceneById(scenes[index + 1].id);newLine            if (nextScene) {newLine                Entry.scene.selectScene(nextScene);newLine                Entry.engine.fireEvent('when_scene_start');newLine            }newLine        }newLine    } else {newLine        if (index > 0) {newLine            var nextScene = Entry.scene.getSceneById(scenes[index - 1].id);newLine            if (nextScene) {newLine                Entry.scene.selectScene(nextScene);newLine                Entry.engine.fireEvent('when_scene_start');newLine            }newLine        }newLine    }newLine    return null;newLine}_dummy"
+        "func": function (sprite, script) {
+            var currentScene = Entry.scene.selectedScene;
+            var scenes = Entry.scene.getScenes();
+            var index = scenes.indexOf(currentScene);
+            var o = script.getField("OPERATOR", script);
+            if (o == 'next') {
+                if (index + 1 < scenes.length) {
+                    var nextScene = Entry.scene.getSceneById(scenes[index + 1].id);
+                    if (nextScene) {
+                        Entry.scene.selectScene(nextScene);
+                        Entry.engine.fireEvent('when_scene_start');
+                    }
+                }
+            } else {
+                if (index > 0) {
+                    var nextScene = Entry.scene.getSceneById(scenes[index - 1].id);
+                    if (nextScene) {
+                        Entry.scene.selectScene(nextScene);
+                        Entry.engine.fireEvent('when_scene_start');
+                    }
+                }
+            }
+            return null;
+        }
     },
     "sound_something": {
         "color": "#A4D01D",
@@ -9373,7 +11736,14 @@ Entry.block = {
         },
         "class": "sound",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var soundId = script.getField(\"VALUE\", script);newLine    var sounds = sprite.parent.sounds;newLine    var isExist = Entry.isExist(soundId, 'id', sounds);newLine    if (isExist)newLine        createjs.Sound.play(soundId);newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var soundId = script.getField("VALUE", script);
+            var sounds = sprite.parent.sounds;
+            var isExist = Entry.isExist(soundId, 'id', sounds);
+            if (isExist)
+                createjs.Sound.play(soundId);
+            return script.callReturn();
+        }
     },
     "sound_something_second": {
         "color": "#A4D01D",
@@ -9417,7 +11787,20 @@ Entry.block = {
         },
         "class": "sound",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var soundId = script.getField(\"VALUE\", script);newLine    var timeValue = script.getNumberValue(\"SECOND\", script);newLine    var sounds = sprite.parent.sounds;newLine    var isExist = Entry.isExist(soundId, 'id', sounds);newLine    if (isExist) {newLine        //var instance = createjs.Sound.play(soundId, {startTime: 0, duration: timeValue * 1000});newLine        var instance = createjs.Sound.play(soundId);newLine        setTimeout(function() {newLine            instance.stop();newLine        }, timeValue * 1000);newLine    }newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var soundId = script.getField("VALUE", script);
+            var timeValue = script.getNumberValue("SECOND", script);
+            var sounds = sprite.parent.sounds;
+            var isExist = Entry.isExist(soundId, 'id', sounds);
+            if (isExist) {
+                //var instance = createjs.Sound.play(soundId, {startTime: 0, duration: timeValue * 1000});
+                var instance = createjs.Sound.play(soundId);
+                setTimeout(function() {
+                    instance.stop();
+                }, timeValue * 1000);
+            }
+            return script.callReturn();
+        }
     },
     "sound_something_wait": {
         "color": "#A4D01D",
@@ -9450,7 +11833,29 @@ Entry.block = {
         },
         "class": "sound",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    if (!script.isPlay) {newLine        script.isPlay = true;newLine        script.playState = 1;newLine        var soundId = script.getField(\"VALUE\", script);newLine        var sound = sprite.parent.getSound(soundId);newLine        var sounds = sprite.parent.sounds;newLine        var isExist = Entry.isExist(soundId, 'id', sounds);newLine        if (isExist) {newLine            var instance = createjs.Sound.play(soundId);newLine            setTimeout(function() {newLine                script.playState = 0;newLine            }, sound.duration * 1000)newLine        }newLine        return script;newLine    } else if (script.playState == 1) {newLine        return script;newLine    } else {newLine        delete script.playState;newLine        delete script.isPlay;newLine        return script.callReturn();newLine    }newLine}_dummy"
+        "func": function (sprite, script) {
+            if (!script.isPlay) {
+                script.isPlay = true;
+                script.playState = 1;
+                var soundId = script.getField("VALUE", script);
+                var sound = sprite.parent.getSound(soundId);
+                var sounds = sprite.parent.sounds;
+                var isExist = Entry.isExist(soundId, 'id', sounds);
+                if (isExist) {
+                    var instance = createjs.Sound.play(soundId);
+                    setTimeout(function() {
+                        script.playState = 0;
+                    }, sound.duration * 1000)
+                }
+                return script;
+            } else if (script.playState == 1) {
+                return script;
+            } else {
+                delete script.playState;
+                delete script.isPlay;
+                return script.callReturn();
+            }
+        }
     },
     "sound_something_second_wait": {
         "color": "#A4D01D",
@@ -9494,7 +11899,32 @@ Entry.block = {
         },
         "class": "sound",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    if (!script.isPlay) {newLine        script.isPlay = true;newLine        script.playState = 1;newLine        var soundId = script.getField(\"VALUE\", script);newLine        var sounds = sprite.parent.sounds;newLine        var isExist = Entry.isExist(soundId, 'id', sounds);newLine        if (isExist) {newLine            var instance = createjs.Sound.play(soundId);newLine            var timeValue = script.getNumberValue(\"SECOND\", script);newLine            setTimeout(function() {newLine                instance.stop();newLine                script.playState = 0;newLine            }, timeValue * 1000)newLine            instance.addEventListener('complete', function(e) {newLine            });newLine        }newLine        return script;newLine    } else if (script.playState == 1) {newLine        return script;newLine    } else {newLine        delete script.isPlay;newLine        delete script.playState;newLine        return script.callReturn();newLine    }newLine}_dummy"
+        "func": function (sprite, script) {
+            if (!script.isPlay) {
+                script.isPlay = true;
+                script.playState = 1;
+                var soundId = script.getField("VALUE", script);
+                var sounds = sprite.parent.sounds;
+                var isExist = Entry.isExist(soundId, 'id', sounds);
+                if (isExist) {
+                    var instance = createjs.Sound.play(soundId);
+                    var timeValue = script.getNumberValue("SECOND", script);
+                    setTimeout(function() {
+                        instance.stop();
+                        script.playState = 0;
+                    }, timeValue * 1000)
+                    instance.addEventListener('complete', function(e) {
+                    });
+                }
+                return script;
+            } else if (script.playState == 1) {
+                return script;
+            } else {
+                delete script.isPlay;
+                delete script.playState;
+                return script.callReturn();
+            }
+        }
     },
     "sound_volume_change": {
         "color": "#A4D01D",
@@ -9530,43 +11960,60 @@ Entry.block = {
         },
         "class": "sound_volume",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var value = script.getNumberValue(\"VALUE\", script) / 100;newLine    value = value + createjs.Sound.getVolume();newLine    if (value>1)newLine        value = 1;newLine    if (value<0)newLine        value = 0;newLine    createjs.Sound.setVolume(value);newLine    return script.callReturn();newLine}_dummy"
-    },
-    "sound_volume_set": {
-        "color": "#A4D01D",
-        "skeleton": "basic",
-        "statements": [],
-        "template": "소리 크기를 %1 % 로 정하기 %2",
-        "params": [
-            {
-                "type": "Block",
-                "accept": "stringMagnet"
+        "func": function (sprite, script) {
+            var value = script.getNumberValue("VALUE", script) / 100;
+            value = value + createjs.Sound.getVolume();
+            if (value>1)
+                value = 1;
+            if (value<0)
+                value = 0;
+            createjs.Sound.setVolume(value);
+            return script.callReturn();
+        }
             },
-            {
-                "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/sound_03.png",
-                "size": 12
-            }
-        ],
-        "events": {},
-        "def": {
-            "params": [
-                {
-                    "type": "number",
+            "sound_volume_set": {
+                "color": "#A4D01D",
+                "skeleton": "basic",
+                "statements": [],
+                "template": "소리 크기를 %1 % 로 정하기 %2",
+                "params": [
+                    {
+                        "type": "Block",
+                        "accept": "stringMagnet"
+                    },
+                    {
+                        "type": "Indicator",
+                        "img": "/lib/entryjs/images/block_icon/sound_03.png",
+                        "size": 12
+                    }
+                ],
+                "events": {},
+                "def": {
                     "params": [
-                        "10"
-                    ]
+                        {
+                            "type": "number",
+                            "params": [
+                                "10"
+                            ]
+                        },
+                        null
+                    ],
+                    "type": "sound_volume_set"
                 },
-                null
-            ],
-            "type": "sound_volume_set"
-        },
-        "paramsKeyMap": {
-            "VALUE": 0
-        },
-        "class": "sound_volume",
-        "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var value = script.getNumberValue(\"VALUE\", script) / 100;newLine    if (value>1)newLine        value = 1;newLine    if (value<0)newLine        value = 0;newLine    createjs.Sound.setVolume(value);newLine    return script.callReturn();newLine}_dummy"
+                "paramsKeyMap": {
+                    "VALUE": 0
+                },
+                "class": "sound_volume",
+                "isNotFor": [],
+                "func": function (sprite, script) {
+            var value = script.getNumberValue("VALUE", script) / 100;
+            if (value>1)
+                value = 1;
+            if (value<0)
+                value = 0;
+            createjs.Sound.setVolume(value);
+            return script.callReturn();
+        }
     },
     "sound_silent_all": {
         "color": "#A4D01D",
@@ -9589,7 +12036,10 @@ Entry.block = {
         },
         "class": "sound_stop",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    createjs.Sound.stop();newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            createjs.Sound.stop();
+            return script.callReturn();
+        }
     },
     "get_sounds": {
         "color": "#A4D01D",
@@ -9613,7 +12063,9 @@ Entry.block = {
         "paramsKeyMap": {
             "VALUE": 0
         },
-        "func": "dummy_function (sprite, script) {newLine    return script.getStringField(\"VALUE\");newLine}_dummy"
+        "func": function (sprite, script) {
+            return script.getStringField("VALUE");
+        }
     },
     "sound_something_with_block": {
         "color": "#A4D01D",
@@ -9646,7 +12098,15 @@ Entry.block = {
         },
         "class": "sound_play",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var soundId = script.getStringValue(\"VALUE\", script);newLine    var sound = sprite.parent.getSound(soundId);newLinenewLine    if (sound)newLine        createjs.Sound.play(sound.id);newLinenewLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var soundId = script.getStringValue("VALUE", script);
+            var sound = sprite.parent.getSound(soundId);
+
+            if (sound)
+                createjs.Sound.play(sound.id);
+
+            return script.callReturn();
+        }
     },
     "sound_something_second_with_block": {
         "color": "#A4D01D",
@@ -9690,7 +12150,22 @@ Entry.block = {
         },
         "class": "sound_play",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var soundId = script.getStringValue(\"VALUE\", script);newLine    var timeValue = script.getNumberValue(\"SECOND\", script);newLine    var sound = sprite.parent.getSound(soundId);newLinenewLine    if (sound) {newLine        var instance = createjs.Sound.play(sound.id, {startTime: 0, duration: timeValue * 1000});newLine        /*newLine        var instance = createjs.Sound.play(sound.id);newLine        setTimeout(function() {newLine            instance.stop();newLine        }, timeValue * 1000);newLine        */newLine    }newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var soundId = script.getStringValue("VALUE", script);
+            var timeValue = script.getNumberValue("SECOND", script);
+            var sound = sprite.parent.getSound(soundId);
+
+            if (sound) {
+                var instance = createjs.Sound.play(sound.id, {startTime: 0, duration: timeValue * 1000});
+                /*
+                var instance = createjs.Sound.play(sound.id);
+                setTimeout(function() {
+                    instance.stop();
+                }, timeValue * 1000);
+                */
+            }
+            return script.callReturn();
+        }
     },
     "sound_something_wait_with_block": {
         "color": "#A4D01D",
@@ -9723,7 +12198,27 @@ Entry.block = {
         },
         "class": "sound_play",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    if (!script.isPlay) {newLine        script.isPlay = true;newLine        script.playState = 1;newLine        var soundId = script.getStringValue(\"VALUE\", script);newLine        var sound = sprite.parent.getSound(soundId);newLine        if (sound) {newLine            var instance = createjs.Sound.play(sound.id);newLine            setTimeout(function() {newLine                script.playState = 0;newLine            }, sound.duration * 1000)newLine        }newLine        return script;newLine    } else if (script.playState == 1) {newLine        return script;newLine    } else {newLine        delete script.playState;newLine        delete script.isPlay;newLine        return script.callReturn();newLine    }newLine}_dummy"
+        "func": function (sprite, script) {
+            if (!script.isPlay) {
+                script.isPlay = true;
+                script.playState = 1;
+                var soundId = script.getStringValue("VALUE", script);
+                var sound = sprite.parent.getSound(soundId);
+                if (sound) {
+                    var instance = createjs.Sound.play(sound.id);
+                    setTimeout(function() {
+                        script.playState = 0;
+                    }, sound.duration * 1000)
+                }
+                return script;
+            } else if (script.playState == 1) {
+                return script;
+            } else {
+                delete script.playState;
+                delete script.isPlay;
+                return script.callReturn();
+            }
+        }
     },
     "sound_something_second_wait_with_block": {
         "color": "#A4D01D",
@@ -9767,7 +12262,31 @@ Entry.block = {
         },
         "class": "sound_play",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    if (!script.isPlay) {newLine        script.isPlay = true;newLine        script.playState = 1;newLine        var soundId = script.getStringValue(\"VALUE\", script);newLine        var sound = sprite.parent.getSound(soundId);newLine        if (sound) {newLine            var instance = createjs.Sound.play(sound.id);newLine            var timeValue = script.getNumberValue(\"SECOND\", script);newLine            setTimeout(function() {newLine                instance.stop();newLine                script.playState = 0;newLine            }, timeValue * 1000)newLine            instance.addEventListener('complete', function(e) {newLine            });newLine        }newLine        return script;newLine    } else if (script.playState == 1) {newLine        return script;newLine    } else {newLine        delete script.isPlay;newLine        delete script.playState;newLine        return script.callReturn();newLine    }newLine}_dummy"
+        "func": function (sprite, script) {
+            if (!script.isPlay) {
+                script.isPlay = true;
+                script.playState = 1;
+                var soundId = script.getStringValue("VALUE", script);
+                var sound = sprite.parent.getSound(soundId);
+                if (sound) {
+                    var instance = createjs.Sound.play(sound.id);
+                    var timeValue = script.getNumberValue("SECOND", script);
+                    setTimeout(function() {
+                        instance.stop();
+                        script.playState = 0;
+                    }, timeValue * 1000)
+                    instance.addEventListener('complete', function(e) {
+                    });
+                }
+                return script;
+            } else if (script.playState == 1) {
+                return script;
+            } else {
+                delete script.isPlay;
+                delete script.playState;
+                return script.callReturn();
+            }
+        }
     },
     "sound_from_to": {
         "color": "#A4D01D",
@@ -9824,7 +12343,20 @@ Entry.block = {
         "isNotFor": [
             ""
         ],
-        "func": "dummy_function (sprite, script) {newLine    var soundId = script.getField(\"SOUND\", script);newLine    var sound = sprite.parent.getSound(soundId);newLinenewLine    if (sound) {newLine        var start = script.getNumberValue(\"START\", script)*1000;newLine        var end = script.getNumberValue(\"END\", script)*1000;newLine        createjs.Sound.play(sound.id, {newLine            startTime: Math.min(start, end),newLine            duration: Math.max(start, end) - Math.min(start, end)newLine        });newLine    }newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var soundId = script.getField("SOUND", script);
+            var sound = sprite.parent.getSound(soundId);
+
+            if (sound) {
+                var start = script.getNumberValue("START", script)*1000;
+                var end = script.getNumberValue("END", script)*1000;
+                createjs.Sound.play(sound.id, {
+                    startTime: Math.min(start, end),
+                    duration: Math.max(start, end) - Math.min(start, end)
+                });
+            }
+            return script.callReturn();
+        }
     },
     "sound_from_to_and_wait": {
         "color": "#A4D01D",
@@ -9881,7 +12413,36 @@ Entry.block = {
         "isNotFor": [
             ""
         ],
-        "func": "dummy_function (sprite, script) {newLine    if (!script.isPlay) {newLine        script.isPlay = true;newLine        script.playState = 1;newLine        var sound = sprite.parent.getSound(script.getField(\"SOUND\", script));newLine        if (sound) {newLine            var start = script.getNumberValue(\"START\", script)*1000;newLine            var end = script.getNumberValue(\"END\", script)*1000;newLine            var startValue = Math.min(start, end);newLine            var endValue = Math.max(start, end);newLine            var duration = endValue - startValue;newLinenewLine            createjs.Sound.play(sound.id, {newLine                startTime: startValue,newLine                duration: durationnewLine            });newLinenewLine            setTimeout(function() {newLine                script.playState = 0;newLine            }, duration)newLine        }newLine        return script;newLine    } else if (script.playState == 1) {newLine        return script;newLine    } else {newLine        delete script.isPlay;newLine        delete script.playState;newLine        return script.callReturn();newLine    }newLine}_dummy"
+        "func": function (sprite, script) {
+            if (!script.isPlay) {
+                script.isPlay = true;
+                script.playState = 1;
+                var sound = sprite.parent.getSound(script.getField("SOUND", script));
+                if (sound) {
+                    var start = script.getNumberValue("START", script)*1000;
+                    var end = script.getNumberValue("END", script)*1000;
+                    var startValue = Math.min(start, end);
+                    var endValue = Math.max(start, end);
+                    var duration = endValue - startValue;
+
+                    createjs.Sound.play(sound.id, {
+                        startTime: startValue,
+                        duration: duration
+                    });
+
+                    setTimeout(function() {
+                        script.playState = 0;
+                    }, duration)
+                }
+                return script;
+            } else if (script.playState == 1) {
+                return script;
+            } else {
+                delete script.isPlay;
+                delete script.playState;
+                return script.callReturn();
+            }
+        }
     },
     "when_run_button_click": {
         "color": "#3BBD70",
@@ -9908,7 +12469,9 @@ Entry.block = {
         },
         "class": "event",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    return script.callReturn();newLine}_dummy",
+        "func": function (sprite, script) {
+            return script.callReturn();
+        },
         "event": "start"
     },
     "press_some_key": {
@@ -10002,7 +12565,9 @@ Entry.block = {
         "paramsKeyMap": {
             "VALUE": 1
         },
-        "func": "dummy_function (sprite, script) {newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            return script.callReturn();
+        }
     },
     "when_some_key_pressed": {
         "color": "#3BBD70",
@@ -10037,7 +12602,9 @@ Entry.block = {
         },
         "class": "event",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    return script.callReturn();newLine}_dummy",
+        "func": function (sprite, script) {
+            return script.callReturn();
+        },
         "event": "keyPress"
     },
     "mouse_clicked": {
@@ -10065,7 +12632,9 @@ Entry.block = {
         },
         "class": "event",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            return script.callReturn();
+        }
     },
     "mouse_click_cancled": {
         "color": "#3BBD70",
@@ -10092,7 +12661,9 @@ Entry.block = {
         },
         "class": "event",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            return script.callReturn();
+        }
     },
     "when_object_click": {
         "color": "#3BBD70",
@@ -10119,7 +12690,9 @@ Entry.block = {
         },
         "class": "event",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            return script.callReturn();
+        }
     },
     "when_object_click_canceled": {
         "color": "#3BBD70",
@@ -10146,7 +12719,9 @@ Entry.block = {
         },
         "class": "event",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            return script.callReturn();
+        }
     },
     "when_some_key_click": {
         "color": "#3BBD70",
@@ -10170,7 +12745,9 @@ Entry.block = {
                 null
             ]
         },
-        "func": "dummy_function (sprite, script) {newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            return script.callReturn();
+        }
     },
     "when_message_cast": {
         "color": "#3BBD70",
@@ -10216,7 +12793,9 @@ Entry.block = {
         "isNotFor": [
             "message"
         ],
-        "func": "dummy_function (sprite, script) {newLine    return script.callReturn();newLine}_dummy",
+        "func": function (sprite, script) {
+            return script.callReturn();
+        },
         "event": "when_message_cast"
     },
     "message_cast": {
@@ -10259,7 +12838,19 @@ Entry.block = {
         "isNotFor": [
             "message"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var value = script.getField(\"VALUE\", script);newLinenewLine    var arr = Entry.variableContainer.messages_;newLine    var isExist = Entry.isExist(value, 'id', arr);newLinenewLine    if (value == 'null' || !isExist)newLine        throw new Error('value can not be null or undefined');newLinenewLine    Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent,newLine                              [\"when_message_cast\", value]);newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var value = script.getField("VALUE", script);
+
+            var arr = Entry.variableContainer.messages_;
+            var isExist = Entry.isExist(value, 'id', arr);
+
+            if (value == 'null' || !isExist)
+                throw new Error('value can not be null or undefined');
+
+            Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent,
+                                      ["when_message_cast", value]);
+            return script.callReturn();
+        }
     },
     "message_cast_wait": {
         "color": "#3BBD70",
@@ -10301,7 +12892,44 @@ Entry.block = {
         "isNotFor": [
             "message"
         ],
-        "func": "dummy_function (sprite, script) {newLine    if (script.runningScript) {newLine        if (script.runningScript.length) {newLine            Entry.engine.computeFunction(script);newLine            return script;newLine        } else {newLine            delete script.runningScript;newLine            return script.callReturn();newLine        }newLine    } else {newLine        var value = script.getField(\"VALUE\", script);newLine        var arr = Entry.variableContainer.messages_;newLine        var isExist = Entry.isExist(value, 'id', arr);newLine        if (value == 'null' || !isExist)newLine            throw new Error('value can not be null or undefined');newLine        var runningScript = []newLinenewLine        Entry.container.mapEntityIncludeCloneOnScene(function(entity, param) {newLine            var eventName = param[0];newLine            var keyCode = param[1];newLine            var blocks = entity.parent.script.childNodes;newLine            //handle clone entitynewLine            for (var i=0; i<blocks.length; i++) {newLine                var block = blocks[i];newLine                var value = Entry.Xml.getField(\"VALUE\", block);newLine                if (Entry.Xml.isTypeOf(eventName, block) &&newLine                   (value == keyCode)) {newLine                    var script = new Entry.Script(entity);newLine                    script.init(block);newLine                    runningScript.push(script);newLine                }newLine            };newLine        }, [\"when_message_cast\", value]);newLinenewLine        script.runningScript = runningScript;newLine        return script;newLine    }newLine}_dummy"
+        "func": function (sprite, script) {
+            if (script.runningScript) {
+                if (script.runningScript.length) {
+                    Entry.engine.computeFunction(script);
+                    return script;
+                } else {
+                    delete script.runningScript;
+                    return script.callReturn();
+                }
+            } else {
+                var value = script.getField("VALUE", script);
+                var arr = Entry.variableContainer.messages_;
+                var isExist = Entry.isExist(value, 'id', arr);
+                if (value == 'null' || !isExist)
+                    throw new Error('value can not be null or undefined');
+                var runningScript = []
+
+                Entry.container.mapEntityIncludeCloneOnScene(function(entity, param) {
+                    var eventName = param[0];
+                    var keyCode = param[1];
+                    var blocks = entity.parent.script.childNodes;
+                    //handle clone entity
+                    for (var i=0; i<blocks.length; i++) {
+                        var block = blocks[i];
+                        var value = Entry.Xml.getField("VALUE", block);
+                        if (Entry.Xml.isTypeOf(eventName, block) &&
+                           (value == keyCode)) {
+                            var script = new Entry.Script(entity);
+                            script.init(block);
+                            runningScript.push(script);
+                        }
+                    };
+                }, ["when_message_cast", value]);
+
+                script.runningScript = runningScript;
+                return script;
+            }
+        }
     },
     "text": {
         "color": "#FFD974",
@@ -10326,7 +12954,9 @@ Entry.block = {
         "isNotFor": [
             "sprite"
         ],
-        "func": "dummy_function (sprite, script) {newLine    return script.getField('NAME', script);newLine}_dummy",
+        "func": function (sprite, script) {
+            return script.getField('NAME', script);
+        },
         "isPrimitive": true
     },
     "text_write": {
@@ -10356,7 +12986,12 @@ Entry.block = {
         "isNotFor": [
             "sprite"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var text = script.getStringValue(\"VALUE\", script);newLine    text = Entry.convertToRoundedDecimals(text, 3);newLine    sprite.setText(text);newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var text = script.getStringValue("VALUE", script);
+            text = Entry.convertToRoundedDecimals(text, 3);
+            sprite.setText(text);
+            return script.callReturn();
+        }
     },
     "text_append": {
         "color": "#FFCA36",
@@ -10385,7 +13020,12 @@ Entry.block = {
         "isNotFor": [
             "sprite"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var text = script.getStringValue(\"VALUE\", script);newLine    sprite.setText(Entry.convertToRoundedDecimals(sprite.getText(),3) +newLine                  Entry.convertToRoundedDecimals(text, 3));newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var text = script.getStringValue("VALUE", script);
+            sprite.setText(Entry.convertToRoundedDecimals(sprite.getText(),3) +
+                          Entry.convertToRoundedDecimals(text, 3));
+            return script.callReturn();
+        }
     },
     "text_prepend": {
         "color": "#FFCA36",
@@ -10414,7 +13054,12 @@ Entry.block = {
         "isNotFor": [
             "sprite"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var text = script.getStringValue(\"VALUE\", script);newLine    sprite.setText(Entry.convertToRoundedDecimals(text, 3) +newLine                  Entry.convertToRoundedDecimals(sprite.getText(), 3));newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var text = script.getStringValue("VALUE", script);
+            sprite.setText(Entry.convertToRoundedDecimals(text, 3) +
+                          Entry.convertToRoundedDecimals(sprite.getText(), 3));
+            return script.callReturn();
+        }
     },
     "text_flush": {
         "color": "#FFCA36",
@@ -10431,7 +13076,10 @@ Entry.block = {
         "isNotFor": [
             "sprite"
         ],
-        "func": "dummy_function (sprite, script) {newLine    sprite.setText('');newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            sprite.setText('');
+            return script.callReturn();
+        }
     },
     "variableAddButton": {
         "skeleton": "basic_button",
@@ -10521,7 +13169,19 @@ Entry.block = {
             "variable",
             "variableNotExist"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var variableId = script.getField(\"VARIABLE\", script);newLine    var value = script.getNumberValue(\"VALUE\", script);newLine    var fixed = 0;newLinenewLine    value = Entry.parseNumber(value);newLine    if ((value == false && typeof value == 'boolean'))newLine        throw new Error('Type is not correct');newLine    var variable = Entry.variableContainer.getVariable(variableId, sprite);newLine    fixed = Entry.getMaxFloatPoint([value, variable.getValue()]);newLine    variable.setValue((value + variable.getValue()).toFixed(fixed));newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var variableId = script.getField("VARIABLE", script);
+            var value = script.getNumberValue("VALUE", script);
+            var fixed = 0;
+
+            value = Entry.parseNumber(value);
+            if ((value == false && typeof value == 'boolean'))
+                throw new Error('Type is not correct');
+            var variable = Entry.variableContainer.getVariable(variableId, sprite);
+            fixed = Entry.getMaxFloatPoint([value, variable.getValue()]);
+            variable.setValue((value + variable.getValue()).toFixed(fixed));
+            return script.callReturn();
+        }
     },
     "set_variable": {
         "color": "#E457DC",
@@ -10575,7 +13235,13 @@ Entry.block = {
             "variable",
             "variableNotExist"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var variableId = script.getField(\"VARIABLE\", script);newLine    var value = script.getValue(\"VALUE\", script);newLine    var variable = Entry.variableContainer.getVariable(variableId, sprite);newLine    variable.setValue(value);newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var variableId = script.getField("VARIABLE", script);
+            var value = script.getValue("VALUE", script);
+            var variable = Entry.variableContainer.getVariable(variableId, sprite);
+            variable.setValue(value);
+            return script.callReturn();
+        }
     },
     "show_variable": {
         "color": "#E457DC",
@@ -10618,7 +13284,13 @@ Entry.block = {
             "variable",
             "variableNotExist"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var variableId = script.getField(\"VARIABLE\", script);newLine    var variable = Entry.variableContainer.getVariable(variableId, sprite);newLine    variable.setVisible(true);newLine    variable.updateView();newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var variableId = script.getField("VARIABLE", script);
+            var variable = Entry.variableContainer.getVariable(variableId, sprite);
+            variable.setVisible(true);
+            variable.updateView();
+            return script.callReturn();
+        }
     },
     "hide_variable": {
         "color": "#E457DC",
@@ -10661,7 +13333,12 @@ Entry.block = {
             "variable",
             "variableNotExist"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var variableId = script.getField(\"VARIABLE\", script);newLine    var variable = Entry.variableContainer.getVariable(variableId, sprite);newLine    variable.setVisible(false);newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var variableId = script.getField("VARIABLE", script);
+            var variable = Entry.variableContainer.getVariable(variableId, sprite);
+            variable.setVisible(false);
+            return script.callReturn();
+        }
     },
     "get_variable": {
         "color": "#E457DC",
@@ -10698,7 +13375,11 @@ Entry.block = {
             "variable",
             "variableNotExist"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var variableId = script.getField(\"VARIABLE\", script);newLine    var variable = Entry.variableContainer.getVariable(variableId, sprite);newLine    return variable.getValue();newLine}_dummy"
+        "func": function (sprite, script) {
+            var variableId = script.getField("VARIABLE", script);
+            var variable = Entry.variableContainer.getVariable(variableId, sprite);
+            return variable.getValue();
+        }
     },
     "ask_and_wait": {
         "color": "#E457DC",
@@ -10741,7 +13422,40 @@ Entry.block = {
         },
         "class": "ask",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    var inputModel = Entry.container.inputValue,newLine        inputView = Entry.stage.inputField,newLine        message = script.getValue(\"VALUE\", script);newLinenewLine    if (!message)newLine        throw new Error('message can not be empty');newLinenewLine    if (inputModel.sprite == sprite &&newLine        inputView && !inputView._isHidden) {newLine        return script;newLine    } else if (inputModel.sprite != sprite && script.isInit) {newLine        if(sprite.dialog)newLine            sprite.dialog.remove();newLine        delete script.isInit;newLine        return script.callReturn();newLine    } else if (inputModel.complete &&newLine               inputModel.sprite == sprite &&newLine               inputView._isHidden && script.isInit) {newLine        if(sprite.dialog)newLine            sprite.dialog.remove();newLine        delete inputModel.complete;newLine        delete script.isInit;newLine        return script.callReturn();newLine    } else {newLine        message = Entry.convertToRoundedDecimals(message, 3);newLine        new Entry.Dialog(sprite, message, 'speak');newLine        Entry.stage.showInputField();newLine        inputModel.script = script;newLine        inputModel.sprite = sprite;newLine        script.isInit = true;newLine        return script;newLine    }newLine}_dummy"
+        "func": function (sprite, script) {
+            var inputModel = Entry.container.inputValue,
+                inputView = Entry.stage.inputField,
+                message = script.getValue("VALUE", script);
+
+            if (!message)
+                throw new Error('message can not be empty');
+
+            if (inputModel.sprite == sprite &&
+                inputView && !inputView._isHidden) {
+                return script;
+            } else if (inputModel.sprite != sprite && script.isInit) {
+                if(sprite.dialog)
+                    sprite.dialog.remove();
+                delete script.isInit;
+                return script.callReturn();
+            } else if (inputModel.complete &&
+                       inputModel.sprite == sprite &&
+                       inputView._isHidden && script.isInit) {
+                if(sprite.dialog)
+                    sprite.dialog.remove();
+                delete inputModel.complete;
+                delete script.isInit;
+                return script.callReturn();
+            } else {
+                message = Entry.convertToRoundedDecimals(message, 3);
+                new Entry.Dialog(sprite, message, 'speak');
+                Entry.stage.showInputField();
+                inputModel.script = script;
+                inputModel.sprite = sprite;
+                script.isInit = true;
+                return script;
+            }
+        }
     },
     "get_canvas_input_value": {
         "color": "#E457DC",
@@ -10771,7 +13485,9 @@ Entry.block = {
         },
         "class": "ask",
         "isNotFor": [],
-        "func": "dummy_function (sprite, script) {newLine    return Entry.container.getInputValue();newLine}_dummy"
+        "func": function (sprite, script) {
+            return Entry.container.getInputValue();
+        }
     },
     "add_value_to_list": {
         "color": "#E457DC",
@@ -10825,7 +13541,17 @@ Entry.block = {
             "list",
             "listNotExist"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var listId = script.getField(\"LIST\", script);newLine    var value = script.getValue(\"VALUE\", script);newLine    var list = Entry.variableContainer.getList(listId, sprite);newLinenewLine    if (!list.array_)newLine        list.array_ = [];newLine    list.array_.push({'data' : value});newLine    list.updateView();newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var listId = script.getField("LIST", script);
+            var value = script.getValue("VALUE", script);
+            var list = Entry.variableContainer.getList(listId, sprite);
+
+            if (!list.array_)
+                list.array_ = [];
+            list.array_.push({'data' : value});
+            list.updateView();
+            return script.callReturn();
+        }
     },
     "remove_value_from_list": {
         "color": "#E457DC",
@@ -10872,7 +13598,19 @@ Entry.block = {
             "list",
             "listNotExist"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var listId = script.getField(\"LIST\", script);newLine    var value = script.getValue(\"VALUE\", script);newLine    var list = Entry.variableContainer.getList(listId, sprite);newLinenewLine    if (!list.array_ || isNaN(value) || value > list.array_.length)newLine        throw new Error('can not remove value from array');newLinenewLine    list.array_.splice(value-1,1);newLinenewLine    list.updateView();newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var listId = script.getField("LIST", script);
+            var value = script.getValue("VALUE", script);
+            var list = Entry.variableContainer.getList(listId, sprite);
+
+            if (!list.array_ || isNaN(value) || value > list.array_.length)
+                throw new Error('can not remove value from array');
+
+            list.array_.splice(value-1,1);
+
+            list.updateView();
+            return script.callReturn();
+        }
     },
     "insert_value_to_list": {
         "color": "#E457DC",
@@ -10930,7 +13668,19 @@ Entry.block = {
             "list",
             "listNotExist"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var listId = script.getField(\"LIST\", script);newLine    var data = script.getValue(\"DATA\", script);newLine    var index = script.getValue(\"INDEX\", script);newLine    var list = Entry.variableContainer.getList(listId, sprite);newLinenewLine    if (!list.array_ || isNaN(index) || index == 0 || index > list.array_.length +1)newLine        throw new Error('can not insert value to array');newLinenewLine    list.array_.splice(index-1, 0, {'data': data});newLine    list.updateView();newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var listId = script.getField("LIST", script);
+            var data = script.getValue("DATA", script);
+            var index = script.getValue("INDEX", script);
+            var list = Entry.variableContainer.getList(listId, sprite);
+
+            if (!list.array_ || isNaN(index) || index == 0 || index > list.array_.length +1)
+                throw new Error('can not insert value to array');
+
+            list.array_.splice(index-1, 0, {'data': data});
+            list.updateView();
+            return script.callReturn();
+        }
     },
     "change_value_list_index": {
         "color": "#E457DC",
@@ -10988,7 +13738,19 @@ Entry.block = {
             "list",
             "listNotExist"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var listId = script.getField(\"LIST\", script);newLine    var data = script.getValue(\"DATA\", script);newLine    var index = script.getValue(\"INDEX\", script);newLine    var list = Entry.variableContainer.getList(listId, sprite);newLinenewLine    if (!list.array_ || isNaN(index) || index > list.array_.length)newLine        throw new Error('can not insert value to array');newLinenewLine    list.array_[index-1].data = data;newLine    list.updateView();newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var listId = script.getField("LIST", script);
+            var data = script.getValue("DATA", script);
+            var index = script.getValue("INDEX", script);
+            var list = Entry.variableContainer.getList(listId, sprite);
+
+            if (!list.array_ || isNaN(index) || index > list.array_.length)
+                throw new Error('can not insert value to array');
+
+            list.array_[index-1].data = data;
+            list.updateView();
+            return script.callReturn();
+        }
     },
     "value_of_index_from_list": {
         "color": "#E457DC",
@@ -11026,7 +13788,17 @@ Entry.block = {
             "list",
             "listNotExist"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var listId = script.getField(\"LIST\", script);newLine    var index = script.getValue(\"INDEX\", script);newLine    var list = Entry.variableContainer.getList(listId, sprite);newLine    index = Entry.getListRealIndex(index, list);newLinenewLine    if (!list.array_ || isNaN(index) || index > list.array_.length)newLine        throw new Error('can not insert value to array');newLinenewLine    return list.array_[index-1].datanewLine}_dummy"
+        "func": function (sprite, script) {
+            var listId = script.getField("LIST", script);
+            var index = script.getValue("INDEX", script);
+            var list = Entry.variableContainer.getList(listId, sprite);
+            index = Entry.getListRealIndex(index, list);
+
+            if (!list.array_ || isNaN(index) || index > list.array_.length)
+                throw new Error('can not insert value to array');
+
+            return list.array_[index-1].data
+        }
     },
     "length_of_list": {
         "color": "#E457DC",
@@ -11056,7 +13828,12 @@ Entry.block = {
             "list",
             "listNotExist"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var listId = script.getField(\"LIST\", script);newLine    var list = Entry.variableContainer.getList(listId);newLinenewLine    return list.array_.length;newLine}_dummy"
+        "func": function (sprite, script) {
+            var listId = script.getField("LIST", script);
+            var list = Entry.variableContainer.getList(listId);
+
+            return list.array_.length;
+        }
     },
     "show_list": {
         "color": "#E457DC",
@@ -11092,7 +13869,13 @@ Entry.block = {
             "list",
             "listNotExist"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var listId = script.getField(\"LIST\", script);newLine    var list = Entry.variableContainer.getList(listId);newLinenewLine    list.setVisible(true);newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var listId = script.getField("LIST", script);
+            var list = Entry.variableContainer.getList(listId);
+
+            list.setVisible(true);
+            return script.callReturn();
+        }
     },
     "hide_list": {
         "color": "#E457DC",
@@ -11128,7 +13911,13 @@ Entry.block = {
             "list",
             "listNotExist"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var listId = script.getField(\"LIST\", script);newLine    var list = Entry.variableContainer.getList(listId);newLinenewLine    list.setVisible(false);newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var listId = script.getField("LIST", script);
+            var list = Entry.variableContainer.getList(listId);
+
+            list.setVisible(false);
+            return script.callReturn();
+        }
     },
     "options_for_list": {
         "color": "#E457DC",
@@ -11165,7 +13954,9 @@ Entry.block = {
         "paramsKeyMap": {
             "OPERATOR": 0
         },
-        "func": "dummy_function (sprite, script) {newLine    return script.getField(\"OPERATOR\", script);newLine}_dummy"
+        "func": function (sprite, script) {
+            return script.getField("OPERATOR", script);
+        }
     },
     "set_visible_answer": {
         "color": "#E457DC",
@@ -11216,7 +14007,14 @@ Entry.block = {
         "isNotFor": [
             ""
         ],
-        "func": "dummy_function (sprite, script) {newLine    var bool = script.getField(\"BOOL\", script);newLine    if (bool == 'HIDE')newLine        Entry.container.inputValue.setVisible(false);newLine    elsenewLine        Entry.container.inputValue.setVisible(true);newLine    return script.callReturn();newLine}_dummy"
+        "func": function (sprite, script) {
+            var bool = script.getField("BOOL", script);
+            if (bool == 'HIDE')
+                Entry.container.inputValue.setVisible(false);
+            else
+                Entry.container.inputValue.setVisible(true);
+            return script.callReturn();
+        }
     },
     "is_included_in_list": {
         "color": "#E457DC",
@@ -11257,7 +14055,20 @@ Entry.block = {
             "list",
             "listNotExist"
         ],
-        "func": "dummy_function (sprite, script) {newLine    var listId = script.getField(\"LIST\", script);newLine    var data = script.getStringValue(\"DATA\", script);newLine    var list = Entry.variableContainer.getList(listId);newLine    if (!list)newLine        return false;newLine    var arr = list.array_;newLinenewLine    for (var i=0, len=arr.length; i<len; i++) {newLine        if (arr[i].data.toString() == data.toString())newLine            return true;newLine    }newLine    return false;newLine}_dummy"
+        "func": function (sprite, script) {
+            var listId = script.getField("LIST", script);
+            var data = script.getStringValue("DATA", script);
+            var list = Entry.variableContainer.getList(listId);
+            if (!list)
+                return false;
+            var arr = list.array_;
+
+            for (var i=0, len=arr.length; i<len; i++) {
+                if (arr[i].data.toString() == data.toString())
+                    return true;
+            }
+            return false;
+        }
     },
     "run": {
         "skeleton": "basic",
@@ -11817,7 +14628,7 @@ Entry.block = {
         "template": "만약 앞에 %1 있다면%2",
         "syntax": [
             "BasicIf",
-            "front == \"wall\""
+            "front == wall"
         ],
         "params": [
             {
@@ -11844,7 +14655,7 @@ Entry.block = {
         "template": "만약 앞에 %1 있다면%2",
         "syntax": [
             "BasicIf",
-            "front == \"bee\""
+            "front == bee"
         ],
         "params": [
             {
@@ -11910,7 +14721,7 @@ Entry.block = {
         "template": "만약 앞에 %1 있다면%2",
         "syntax": [
             "BasicIf",
-            "front == \"banana\""
+            "front == banana"
         ],
         "params": [
             {
@@ -11937,7 +14748,7 @@ Entry.block = {
         "template": "만약 앞에 %1 있다면%2",
         "syntax": [
             "BasicIf",
-            "front == \"wall\""
+            "front == wall"
         ],
         "params": [
             {
