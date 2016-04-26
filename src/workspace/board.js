@@ -308,6 +308,7 @@ Entry.Board = function(option) {
 
         for (var i =0; i < threads.length; i++) {
             var block = threads[i].getFirstBlock();
+            if (!block) continue;
             var blockView = block.view;
             var bBox = blockView.svgGroup.getBBox();
             var top = acculmulatedTop + verticalGap;
