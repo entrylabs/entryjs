@@ -257,6 +257,9 @@ Entry.Board = function(option) {
     p.mouseWheel = function(e) {
         e = e.originalEvent;
         e.preventDefault();
+        var disposeEvent = Entry.disposeEvent;
+        if (disposeEvent)
+            disposeEvent.notify(e);
 
         this.scroller.scroll(
             e.wheelDeltaX || -e.deltaX,

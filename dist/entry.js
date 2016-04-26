@@ -9284,7 +9284,7 @@ Entry.init = function(b, a) {
   Entry.assert("object" === typeof a, "Init option is not object");
   this.events_ = {};
   this.interfaceState = {menuWidth:264};
-  Entry.Utils.bindGlobalEvent(["resize", "mousedown", "mousemove", "keydown", "keyup"]);
+  Entry.Utils.bindGlobalEvent("resize mousedown mousemove keydown keyup dispose".split(" "));
   this.options = a;
   this.parseOptions(a);
   this.mediaFilePath = (a.libDir ? a.libDir : "/lib") + "/entryjs/images/";
@@ -10498,7 +10498,7 @@ Entry.Utils.hslToHex = function(b) {
   return "#" + [c(Math.round(255 * d).toString(16)), c(Math.round(b).toString(16)), c(Math.round(e).toString(16))].join("");
 };
 Entry.Utils.bindGlobalEvent = function(b) {
-  void 0 === b && (b = ["resize", "mousedown", "mousemove", "keydown", "keyup"]);
+  void 0 === b && (b = "resize mousedown mousemove keydown keyup dispose".split(" "));
   !Entry.windowReszied && -1 < b.indexOf("resize") && (Entry.windowResized = new Entry.Event(window), $(window).on("resize", function(a) {
     Entry.windowResized.notify(a);
   }));
@@ -10521,6 +10521,7 @@ Entry.Utils.bindGlobalEvent = function(b) {
     -1 < b && Entry.pressedKeys.splice(b, 1);
     Entry.keyUpped.notify(a);
   }));
+  !Entry.disposeEvent && -1 < b.indexOf("dispose") && (Entry.disposeEvent = new Entry.Event(window));
 };
 Entry.Utils.makeActivityReporter = function() {
   Entry.activityReporter = new Entry.ActivityReporter;
@@ -16356,10 +16357,8 @@ Entry.PARAM = -1;
       for (var f = 0;f < a.length;f++) {
         var g = a[f];
         if (void 0 === d || -1 < g.params.indexOf(d)) {
-          var h = new Entry.Executor(a[f], b)
+          g = new Entry.Executor(a[f], b), this.executors.push(g), e.push(g);
         }
-        this.executors.push(h);
-        e.push(h);
       }
       return e;
     }
@@ -18034,6 +18033,8 @@ Entry.Board = function(b) {
   b.mouseWheel = function(a) {
     a = a.originalEvent;
     a.preventDefault();
+    var b = Entry.disposeEvent;
+    b && b.notify(a);
     this.scroller.scroll(a.wheelDeltaX || -a.deltaX, a.wheelDeltaY || -a.deltaY);
   };
   b.setSelectedBlock = function(a) {

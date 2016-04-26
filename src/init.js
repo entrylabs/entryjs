@@ -21,7 +21,7 @@ Entry.init = function(container, options) {
     Entry.Utils.bindGlobalEvent([
         'resize', 'mousedown',
         'mousemove', 'keydown',
-        'keyup'
+        'keyup', 'dispose'
     ]);
 
     /** @type {object} */

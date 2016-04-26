@@ -94,10 +94,11 @@ Entry.PARAM = -1;
         for (var i = 0; i < blocks.length; i++) {
             var block = blocks[i];
             if (value === undefined ||
-                block.params.indexOf(value) > -1)
-                var executor = new Entry.Executor(blocks[i], entity);
-                this.executors.push(executor);
-                executors.push(executor);
+                block.params.indexOf(value) > -1) {
+                    var executor = new Entry.Executor(blocks[i], entity);
+                    this.executors.push(executor);
+                    executors.push(executor);
+                }
         }
         return executors;
     };
