@@ -403,8 +403,10 @@ EntryStatic.getAllBlocks = function() {
                 "xbot_servo",
                 "xbot_oneWheel",
                 "xbot_twoWheel",
-                "xbot_lcd"
+                "xbot_lcd",
                 //end of XBOT Blocks added                
+                "ev3_port_out",
+                "ev3_touch_sensor"
             ]
         }
     ]
@@ -458,13 +460,11 @@ EntryStatic.blockInfo = {
         "xml": "<block type='xbot_digitalOutput'></block>",
         "class": "xbot_sensor"
     },
-
-     "xbot_digitalInput": {
+    "xbot_digitalInput": {
         "isNotFor": ["xbot_epor_edge"],
         "xml": "<block type='xbot_digitalInput'></block>",
         "class": "xbot_sensor"
     },
-
     "xbot_analogValue": {
         "isNotFor": ["xbot_epor_edge"],
         "xml": "<block type='xbot_analogValue'></block>",
@@ -476,7 +476,16 @@ EntryStatic.blockInfo = {
         "class": "xbot_sensor"
     },
     //end of XBOT Blocks added   
-
+    "ev3_port_out": {
+        "isNotFor": ["EV3"],
+        "xml": "<block type='ev3_port_out'><value name='VALUE'><block type='text'><field name='NAME'>10</field></block></value></block>",
+        "class": "ev3_output"
+    },//end of XBOT Blocks added   
+    "ev3_touch_sensor": {
+        "isNotFor": ["EV3"],
+        "xml": "<block type='ev3_touch_sensor'></block>",
+        "class": "ev3_sensor"
+    },
     "when_run_button_click": {
         "xml": "<block type='when_run_button_click'></block>",
         "class": "event",
