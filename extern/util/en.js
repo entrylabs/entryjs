@@ -817,6 +817,13 @@ Lang.Buttons = {
 };
 Lang.ko = "한국어";
 Lang.Menus = {
+    "helper": "helper",
+    "youtube": "vedio",
+    "tvcast": "vedio",
+    "goal": "goal",
+    "basicproject": "basic",
+    "hw": "hardware",
+    "object": "object",
     "download_info": "모든 교육자료는 각각의 제목을 클릭 하시면 다운받으실 수 있습니다.",
     "entry_materials_all": "엔트리 교육자료 모음",
     "recommand_grade": "추천학년",
@@ -2770,7 +2777,8 @@ Lang.Device = {
     "bitbrick": "bitbrick",
     "bitBlock": "bitBlock",
     "xbot_epor_edge": "XBOT",
-    "dplay": "DPLAY"
+    "dplay": "DPLAY",
+    "nemoino": "NEMOino"
 };
 Lang.General = {
     "turn_on": "turn on",
