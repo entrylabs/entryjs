@@ -17114,7 +17114,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     var a = this.getAbsolutePosFromDocument();
     a.y += this.box.height / 2;
     var b = $(document).height(), d = this.optionGroup.height();
-    b - 20 < a.y + d ? (a.x += this.box.width + 1, a.y -= d) : a.x += this.box.width / 2 - this.optionGroup.width() / 2;
+    if (b < a.y + d) {
+      a.x += this.box.width + 1;
+      var b = this.getAbsolutePosFromBoard(), e = this._blockView.getBoard().svgDom.height(), e = e - (e - b.y);
+      e - 20 < d && this.optionGroup.height(e - e % 20);
+      a.y -= this.optionGroup.height();
+    } else {
+      a.x += this.box.width / 2 - this.optionGroup.width() / 2;
+    }
     this.optionGroup.css({left:a.x, top:a.y});
   };
   b.applyValue = function(a) {

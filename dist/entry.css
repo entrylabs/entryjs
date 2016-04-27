@@ -4794,6 +4794,7 @@ svg .svgBlockGroup text {
   font-size: 9pt;
   color: #000;
   z-index: 1001;
+  overflow: auto;
 }
 .entry-widget-dropdown .rect {
   height: 20px;

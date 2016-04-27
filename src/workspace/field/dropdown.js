@@ -187,9 +187,19 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         var optionGroupHeight = this.optionGroup.height();
 
         //not enough space below
-        if (documentHeight - 20 < pos.y + optionGroupHeight) {
+        if (documentHeight < pos.y + optionGroupHeight) {
             pos.x += this.box.width + 1;
-            pos.y -= optionGroupHeight;
+
+            var relPos = this.getAbsolutePosFromBoard();
+            var domHeight = this._blockView.getBoard().svgDom.height();
+            domHeight -=  domHeight - relPos.y;
+
+            if (domHeight - 20 < optionGroupHeight) {
+                domHeight -= domHeight % 20;
+                this.optionGroup.height(domHeight)
+            }
+
+            pos.y -= this.optionGroup.height();
         } else pos.x += this.box.width/2 - this.optionGroup.width()/2;
 
         this.optionGroup.css({left: pos.x, top: pos.y});
