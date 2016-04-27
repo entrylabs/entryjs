@@ -213,7 +213,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     };
 
     p.getTextByValue = function(value) {
-        if (!value) return Lang.Blocks.no_target;
+        if (!value || value === 'null') return Lang.Blocks.no_target;
 
         var options = this._contents.options;
         for (var i=0, len=options.length; i<len; i++) {
