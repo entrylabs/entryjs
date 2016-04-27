@@ -351,11 +351,8 @@ Entry.VariableContainer.prototype.renderFunctionReference = function(func) {
     var callers = [];
 
 
-    for (var i=0; i<refs.length; i++) {
-        var params = refs[i].block.params;
-        var index = params.indexOf(funcId);
-        if (index > -1) callers.push(refs[i]);
-    }
+    for (var i=0; i<refs.length; i++)
+        callers.push(refs[i]);
 
     var listView = Entry.createElement('ul');
     listView.addClass('entryVariableListCallerListWorkspace');
@@ -377,8 +374,9 @@ Entry.VariableContainer.prototype.renderFunctionReference = function(func) {
                 that.select(null);
                 that.select(func);
             }
-            var id = this.caller.block.id;
+            var block = this.caller.block;
             Entry.playground.toggleOnVariableView();
+            block.view.getBoard().activateBlock(block);
             Entry.playground.changeViewMode('variable');
         });
         listView.appendChild(element);

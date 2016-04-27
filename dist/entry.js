@@ -11894,28 +11894,30 @@ Entry.VariableContainer.prototype.renderVariableReference = function(b) {
   this.listView_.insertBefore(b.listElement, c);
 };
 Entry.VariableContainer.prototype.renderFunctionReference = function(b) {
-  for (var a = this, c = this._functionRefs, d = b.id_, e = [], f = 0;f < c.length;f++) {
-    -1 < c[f].block.params.indexOf(d) && e.push(c[f]);
+  for (var a = this, c = this._functionRefs, d = [], e = 0;e < c.length;e++) {
+    d.push(c[e]);
   }
   c = Entry.createElement("ul");
   c.addClass("entryVariableListCallerListWorkspace");
-  for (f in e) {
-    var d = e[f], g = Entry.createElement("li");
+  for (e in d) {
+    var f = d[e], g = Entry.createElement("li");
     g.addClass("entryVariableListCallerWorkspace");
-    g.appendChild(d.object.thumbnailView_.cloneNode());
+    g.appendChild(f.object.thumbnailView_.cloneNode());
     var h = Entry.createElement("div");
     h.addClass("entryVariableListCallerNameWorkspace");
-    h.innerHTML = d.object.name;
+    h.innerHTML = f.object.name;
     g.appendChild(h);
-    g.caller = d;
+    g.caller = f;
     g.bindOnClick(function(c) {
       Entry.playground.object != this.caller.object && (Entry.container.selectObject(), Entry.container.selectObject(this.caller.object.id, !0), a.select(null), a.select(b));
+      c = this.caller.block;
       Entry.playground.toggleOnVariableView();
+      c.view.getBoard().activateBlock(c);
       Entry.playground.changeViewMode("variable");
     });
     c.appendChild(g);
   }
-  0 === e.length && (g = Entry.createElement("li"), g.addClass("entryVariableListCallerWorkspace"), g.addClass("entryVariableListCallerNoneWorkspace"), g.innerHTML = Lang.Workspace.no_use, c.appendChild(g));
+  0 === d.length && (g = Entry.createElement("li"), g.addClass("entryVariableListCallerWorkspace"), g.addClass("entryVariableListCallerNoneWorkspace"), g.innerHTML = Lang.Workspace.no_use, c.appendChild(g));
   b.callerListElement = c;
   this.listView_.insertBefore(c, b.listElement);
   this.listView_.insertBefore(b.listElement, c);
@@ -14191,8 +14193,13 @@ isNotFor:[], func:function(b, a) {
   Entry.variableContainer.createFunction();
 }]}}, function_field_label:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#f9c535", template:"%1%2", params:[{type:"TextInput", value:"\ud568\uc218"}, {type:"Output", accept:"paramMagnet"}]}, function_field_string:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#ffd974", template:"%1%2", params:[{type:"Block", accept:"stringMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}]}, function_field_boolean:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#aeb8ff", 
 template:"%1%2", params:[{type:"Block", accept:"booleanMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}]}, function_param_string:{skeleton:"basic_string_field", color:"#ffd974", template:"\ubb38\uc790/\uc22b\uc790\uac12"}, function_param_boolean:{skeleton:"basic_boolean_field", color:"#aeb8ff", template:"\ud310\ub2e8\uac12"}, function_create:{skeleton:"basic", color:"#cc7337", event:"funcDef", template:"\ud568\uc218 \uc815\uc758\ud558\uae30 %1 %2", paramsKeyMap:{FIELD:0}, params:[{type:"Block", 
-accept:"paramMagnet", value:{type:"function_field_label"}}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/function_03.png", size:12}]}, function_general:{skeleton:"basic", color:"#cc7337", template:"\ud568\uc218", params:[]}, hamster_move_forward:{color:"#00979D", skeleton:"basic", statements:[], template:"\uc55e\uc73c\ub85c \uc774\ub3d9\ud558\uae30 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"hamster_move_forward"}, 
-"class":"hamster_novice", isNotFor:["hamster"], func:function(b, a) {
+accept:"paramMagnet", value:{type:"function_field_label"}}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/function_03.png", size:12}]}, function_general:{skeleton:"basic", color:"#cc7337", template:"\ud568\uc218", params:[], events:{whenBlockAdd:[function(b) {
+  var a = Entry.variableContainer;
+  a && a.addRef("_functionRefs", b);
+}], whenBlockDestroy:[function(b) {
+  var a = Entry.variableContainer;
+  a && a.removeRef("_functionRefs", b);
+}]}}, hamster_move_forward:{color:"#00979D", skeleton:"basic", statements:[], template:"\uc55e\uc73c\ub85c \uc774\ub3d9\ud558\uae30 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"hamster_move_forward"}, "class":"hamster_novice", isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue;
   if (a.isStart) {
     if (1 == a.timeFlag) {

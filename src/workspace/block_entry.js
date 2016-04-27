@@ -6016,7 +6016,21 @@ Entry.block = {
         "skeleton": "basic",
         "color": "#cc7337",
         "template": "함수",
-        "params": []
+        "params": [],
+        "events": {
+            "whenBlockAdd": [
+                function(block) {
+                    var vc = Entry.variableContainer;
+                    if (vc) vc.addRef('_functionRefs', block);
+                }
+            ],
+            "whenBlockDestroy": [
+                function(block) {
+                    var vc = Entry.variableContainer;
+                    if (vc) vc.removeRef('_functionRefs', block);
+                }
+            ]
+        },
     },
     "hamster_move_forward": {
         "color": "#00979D",
