@@ -574,7 +574,7 @@ Entry.Board = function(option) {
             if (contentBlock.view.dragInstance)
                 continue;
             var startX = cursorX + content.box.x;
-            var startY = cursorY + content.box.y + blockView.height * -0.5;
+            var startY = cursorY + content.box.y + (blockView.contentHeight % 1000) * -0.5;
             var endY = cursorY + content.box.y + content.box.height;
             metaData.push({
                 point: startY,

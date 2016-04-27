@@ -18249,7 +18249,7 @@ Entry.Board = function(b) {
       if (m instanceof Entry.FieldBlock && m.acceptType === f) {
         var n = m._valueBlock;
         if (!n.view.dragInstance) {
-          var l = b + m.box.x, q = d + m.box.y + -.5 * a.height, m = d + m.box.y + m.box.height;
+          var l = b + m.box.x, q = d + m.box.y + a.contentHeight % 1E3 * -.5, m = d + m.box.y + m.box.height;
           h.push({point:q, endPoint:m, startBlock:n, blocks:[]});
           h.push({point:m, blocks:[]});
           n = n.view;
