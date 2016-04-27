@@ -5994,6 +5994,9 @@ Entry.block = {
         "color": "#cc7337",
         "event": "funcDef",
         "template": "함수 정의하기 %1 %2",
+        "paramsKeyMap": {
+            "FIELD": 0
+        },
         "params": [
             {
                 "type": "Block",

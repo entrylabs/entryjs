@@ -364,7 +364,10 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     p.getCategoryCodes = function(selector) {
         var name = this._convertSelector(selector);
-        return this._categoryCodes[name];
+        var code = this._categoryCodes[name];
+        if (!(code instanceof Entry.Code))
+            code = this._categoryCodes[name] = new Entry.Code(code);
+        return code;
     };
 
     p._convertSelector = function(selector) {

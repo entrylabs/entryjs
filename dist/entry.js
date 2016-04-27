@@ -6,8 +6,8 @@ Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:2, T
   Entry.variableContainer.setMessages(b.messages);
   Entry.scene.addScenes(b.scenes);
   Entry.stage.initObjectContainers();
-  Entry.container.setObjects(b.objects);
   Entry.variableContainer.setFunctions(b.functions);
+  Entry.container.setObjects(b.objects);
   Entry.FPS = b.speed ? b.speed : 60;
   createjs.Ticker.setFPS(Entry.FPS);
   "workspace" == this.type && Entry.stateManager.endIgnore();
@@ -14190,9 +14190,9 @@ isNotFor:[], func:function(b, a) {
 }}, functionAddButton:{skeleton:"basic_button", color:"#eee", isNotFor:["functionInit"], template:"%1", params:[{type:"Text", text:"\ud568\uc218 \ucd94\uac00", color:"#333", align:"center"}], events:{mousedown:[function() {
   Entry.variableContainer.createFunction();
 }]}}, function_field_label:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#f9c535", template:"%1%2", params:[{type:"TextInput", value:"\ud568\uc218"}, {type:"Output", accept:"paramMagnet"}]}, function_field_string:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#ffd974", template:"%1%2", params:[{type:"Block", accept:"stringMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}]}, function_field_boolean:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#aeb8ff", 
-template:"%1%2", params:[{type:"Block", accept:"booleanMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}]}, function_param_string:{skeleton:"basic_string_field", color:"#ffd974", template:"\ubb38\uc790/\uc22b\uc790\uac12"}, function_param_boolean:{skeleton:"basic_boolean_field", color:"#aeb8ff", template:"\ud310\ub2e8\uac12"}, function_create:{skeleton:"basic", color:"#cc7337", event:"funcDef", template:"\ud568\uc218 \uc815\uc758\ud558\uae30 %1 %2", params:[{type:"Block", accept:"paramMagnet", 
-value:{type:"function_field_label"}}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/function_03.png", size:12}]}, function_general:{skeleton:"basic", color:"#cc7337", template:"\ud568\uc218", params:[]}, hamster_move_forward:{color:"#00979D", skeleton:"basic", statements:[], template:"\uc55e\uc73c\ub85c \uc774\ub3d9\ud558\uae30 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"hamster_move_forward"}, "class":"hamster_novice", 
-isNotFor:["hamster"], func:function(b, a) {
+template:"%1%2", params:[{type:"Block", accept:"booleanMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}]}, function_param_string:{skeleton:"basic_string_field", color:"#ffd974", template:"\ubb38\uc790/\uc22b\uc790\uac12"}, function_param_boolean:{skeleton:"basic_boolean_field", color:"#aeb8ff", template:"\ud310\ub2e8\uac12"}, function_create:{skeleton:"basic", color:"#cc7337", event:"funcDef", template:"\ud568\uc218 \uc815\uc758\ud558\uae30 %1 %2", paramsKeyMap:{FIELD:0}, params:[{type:"Block", 
+accept:"paramMagnet", value:{type:"function_field_label"}}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/function_03.png", size:12}]}, function_general:{skeleton:"basic", color:"#cc7337", template:"\ud568\uc218", params:[]}, hamster_move_forward:{color:"#00979D", skeleton:"basic", statements:[], template:"\uc55e\uc73c\ub85c \uc774\ub3d9\ud558\uae30 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"hamster_move_forward"}, 
+"class":"hamster_novice", isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue;
   if (a.isStart) {
     if (1 == a.timeFlag) {
@@ -15640,7 +15640,9 @@ Entry.BlockMenu = function(b, a, c, d) {
   };
   b.getCategoryCodes = function(a) {
     a = this._convertSelector(a);
-    return this._categoryCodes[a];
+    var b = this._categoryCodes[a];
+    b instanceof Entry.Code || (b = this._categoryCodes[a] = new Entry.Code(b));
+    return b;
   };
   b._convertSelector = function(a) {
     if (isNaN(a)) {

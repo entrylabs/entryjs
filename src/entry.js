@@ -32,8 +32,8 @@ Entry.loadProject = function(project) {
     Entry.variableContainer.setMessages(project.messages);
     Entry.scene.addScenes(project.scenes);
     Entry.stage.initObjectContainers();
-    Entry.container.setObjects(project.objects);
     Entry.variableContainer.setFunctions(project.functions);
+    Entry.container.setObjects(project.objects);
     Entry.FPS = project.speed ? project.speed : 60;
     createjs.Ticker.setFPS(Entry.FPS);
     if (this.type == 'workspace')
