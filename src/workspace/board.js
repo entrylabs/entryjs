@@ -42,8 +42,6 @@ Entry.Board = function(option) {
     if (Entry.windowResized)
         Entry.windowResized.attach(this, this.updateOffset);
 
-    this.observe(this, "generateCodeMagnetMap", ["dragBlock"], false);
-
     Entry.commander.setCurrentEditor("board", this);
 };
 

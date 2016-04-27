@@ -395,6 +395,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
                 height: 0,
                 mode: true
             });
+            board.set({dragBlock:this});
             this.addDragging();
             this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
         } else if (Entry.Utils.isRightButton(e)) {
@@ -470,11 +471,13 @@ Entry.BlockView.DRAG_RADIUS = 5;
                 if (!blockView.movable) return;
 
                 if (!blockView.isInBlockMenu) {
+                    var isFirst = false;
                     if (blockView.dragMode != Entry.DRAG_MODE_DRAG) {
                         blockView._toGlobalCoordinate();
                         blockView.dragMode = Entry.DRAG_MODE_DRAG;
                         blockView.block.getThread().changeEvent.notify();
                         Entry.GlobalSvg.setView(blockView, workspaceMode);
+                        isFirst = true;
                     }
 
                     if (this.animating)
@@ -506,9 +509,9 @@ Entry.BlockView.DRAG_RADIUS = 5;
                     } else board.setMagnetedBlock(null);
                     if (!blockView.originPos)
                         blockView.originPos = {x: blockView.x, y: blockView.y};
-                    board.set({dragBlock:blockView});
+                    if (isFirst)
+                        board.generateCodeMagnetMap();
                 } else {
-                    board.set({dragBlock:blockView});
                     board.cloneToGlobal(e);
                 }
             }
