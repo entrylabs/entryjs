@@ -1220,6 +1220,7 @@ Entry.Playground.prototype.reloadPlayground = function () {
     var selectedCategory, selector;
 
     var mainWorkspace = this.mainWorkspace;
+    if (!mainWorkspace) return;
     mainWorkspace.getBlockMenu().reDraw();
 
     if (this.object) this.object.script.view.reDraw();

@@ -19908,8 +19908,8 @@ Entry.Playground.prototype.initializeResizeHandle = function(b) {
   });
 };
 Entry.Playground.prototype.reloadPlayground = function() {
-  this.mainWorkspace.getBlockMenu().reDraw();
-  this.object && this.object.script.view.reDraw();
+  var b = this.mainWorkspace;
+  b && (b.getBlockMenu().reDraw(), this.object && this.object.script.view.reDraw());
 };
 Entry.Playground.prototype.flushPlayground = function() {
   this.object = null;
