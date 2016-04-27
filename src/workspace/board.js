@@ -119,7 +119,7 @@ Entry.Board = function(option) {
         );
         code.createView(this);
         this.generateCodeMagnetMap(code);
-
+        this.scroller.resizeScrollBar();
     };
 
     p.bindCodeView = function(codeView) {
@@ -825,6 +825,35 @@ Entry.Board = function(option) {
             } else {
                 block.doInsert(targetObj);
             }
+        }
+    };
+
+    p.adjustThreadsPosition = function() {
+        var code = this.code;
+        if (!code) return;
+
+        var threads = code.getThreads();
+        var arr = [];
+
+        threads.forEach(function(t) {
+            arr.push({
+                    thread: t,
+                    len: t.countBlock()
+                });
+        });
+
+        arr = arr.sort(function(a,b) {
+            return b.len - a.len;
+        });
+
+        var target = arr[0];
+        if (target) {
+            target = target.thread.getFirstBlock().view;
+            var pos = target.getAbsoluteCoordinate();
+
+            this.scroller.scroll(
+                50 - pos.x, 30 - pos.y
+            );
         }
     };
 

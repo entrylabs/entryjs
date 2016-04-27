@@ -17958,6 +17958,7 @@ Entry.Board = function(b) {
     });
     a.createView(this);
     this.generateCodeMagnetMap(a);
+    this.scroller.resizeScrollBar();
   };
   b.bindCodeView = function(a) {
     this.svgBlockGroup.remove();
@@ -18322,6 +18323,21 @@ Entry.Board = function(b) {
     "string" === typeof a && (a = this.findById(a));
     this.separate(a, d);
     4 === b.length && 0 === b[3] ? a.moveTo(b[0], b[1]) : (b = b instanceof Array ? this.code.getTargetByPointer(b) : b, b instanceof Entry.Block ? ("basic" === a.getBlockType() && a.view.bindPrev(b), a.doInsert(b)) : b instanceof Entry.FieldStatement ? (a.view.bindPrev(b), b.insertTopBlock(a)) : a.doInsert(b));
+  };
+  b.adjustThreadsPosition = function() {
+    var a = this.code;
+    if (a) {
+      var b = [];
+      a.getThreads().forEach(function(a) {
+        b.push({thread:a, len:a.countBlock()});
+      });
+      b = b.sort(function(a, b) {
+        return b.len - a.len;
+      });
+      if (a = b[0]) {
+        a = a.thread.getFirstBlock().view, a = a.getAbsoluteCoordinate(), this.scroller.scroll(50 - a.x, 30 - a.y);
+      }
+    }
   };
 })(Entry.Board.prototype);
 Entry.skeleton = function() {
@@ -19659,7 +19675,9 @@ Entry.Playground.prototype.injectObject = function(b) {
   }
 };
 Entry.Playground.prototype.injectCode = function() {
-  this.mainWorkspace.changeBoardCode(this.object.script);
+  var b = this.object.script;
+  this.mainWorkspace.changeBoardCode(b);
+  b.board.adjustThreadsPosition();
 };
 Entry.Playground.prototype.injectPicture = function() {
   var b = this.pictureListView_;

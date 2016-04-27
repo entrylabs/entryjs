@@ -814,14 +814,16 @@ Entry.Playground.prototype.injectObject = function(object) {
     else if (viewMode == 'sound')
         this.changeViewMode('sound');
     this.reloadPlayground();
+
 };
 
 /**
  * Inject code
  */
 Entry.Playground.prototype.injectCode = function() {
-    var object = this.object;
-    this.mainWorkspace.changeBoardCode(object.script);
+    var code = this.object.script;
+    this.mainWorkspace.changeBoardCode(code);
+    code.board.adjustThreadsPosition();
 };
 
 /**
