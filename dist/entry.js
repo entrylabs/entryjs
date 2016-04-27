@@ -715,8 +715,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
+  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(c, d);
   return a.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1694,10 +1694,10 @@ Entry.block.wait_second = function(b, a) {
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a);
+  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
   setTimeout(function() {
     a.timeFlag = 0;
-  }, 60 / (Entry.FPS || 60) * c * 1E3);
+  }, c);
   return a;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -10521,7 +10521,9 @@ Entry.Utils.bindGlobalEvent = function(b) {
     -1 < b && Entry.pressedKeys.splice(b, 1);
     Entry.keyUpped.notify(a);
   }));
-  !Entry.disposeEvent && -1 < b.indexOf("dispose") && (Entry.disposeEvent = new Entry.Event(window));
+  !Entry.disposeEvent && -1 < b.indexOf("dispose") && (Entry.disposeEvent = new Entry.Event(window), Entry.documentMousedown && Entry.documentMousedown.attach(this, function(a) {
+    Entry.disposeEvent.notify(a);
+  }));
 };
 Entry.Utils.makeActivityReporter = function() {
   Entry.activityReporter = new Entry.ActivityReporter;
@@ -13727,8 +13729,8 @@ RIGHT:1}, "class":"rank", isNotFor:["albert"], func:function(b, a) {
   return Entry.hw.getDigitalPortValue(c);
 }}, arduino_toggle_led:{color:"#00979D", skeleton:"basic", statements:[], template:"\ub514\uc9c0\ud138 %1 \ubc88 \ud540 %2 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["\ucf1c\uae30", "on"], ["\ub044\uae30", "off"]], value:"on", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"arduino_get_port_number"}, null, null], type:"arduino_toggle_led"}, paramsKeyMap:{VALUE:0, OPERATOR:1}, "class":"arduino_set", 
 isNotFor:["arduino"], func:function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
+  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(c, d);
   return a.callReturn();
 }}, arduino_toggle_pwm:{color:"#00979D", skeleton:"basic", statements:[], template:"\ub514\uc9c0\ud138 %1 \ubc88 \ud540\uc744 %2 (\uc73c)\ub85c \uc815\ud558\uae30 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"arduino_get_pwm_port_number"}, {type:"arduino_text", params:["255"]}, null], type:"arduino_toggle_pwm"}, paramsKeyMap:{PORT:0, VALUE:1}, 
 "class":"arduino_set", isNotFor:["arduino"], func:function(b, a) {
@@ -14095,10 +14097,10 @@ type:"quotient_and_mod"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2, OPERATOR:4}, "c
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a);
+  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
   setTimeout(function() {
     a.timeFlag = 0;
-  }, 60 / (Entry.FPS || 60) * c * 1E3);
+  }, c);
   return a;
 }}, repeat_basic:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], template:"%1 \ubc88 \ubc18\ubcf5\ud558\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"repeat_basic"}, paramsKeyMap:{VALUE:0}, statementsKeyMap:{DO:0}, "class":"repeat", isNotFor:[], func:function(b, a) {
   var c;
@@ -15709,6 +15711,8 @@ Entry.BlockMenu = function(b, a, c, d) {
   b._mouseWheel = function(a) {
     a = a.originalEvent;
     a.preventDefault();
+    var b = Entry.disposeEvent;
+    b && b.notify(a);
     this._scroller.scroll(-a.wheelDeltaY || a.deltaY / 3);
   };
   b.dominate = function(a) {
@@ -16648,7 +16652,14 @@ Entry.Field = function() {
   };
   b.destroyOption = function() {
     this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
+    this.disposeEvent && (Entry.disposeEvent.detach(this.disposeEvent), delete this.documentDownEvent);
     this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
+  };
+  b._attachDisposeEvent = function(a) {
+    var b = this;
+    b.disposeEvent = Entry.disposeEvent.attach(b, a || function() {
+      b.destroyOption();
+    });
   };
   b.align = function(a, b, d) {
     var e = this.svgGroup;
@@ -16738,8 +16749,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
   b.renderOptions = function() {
     var a = this;
     this.destroyOption();
-    this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
-      Entry.documentMousedown.detach(this.documentDownEvent);
+    this._attachDisposeEvent(function() {
       a.applyValue();
       a.destroyOption();
     });
@@ -16808,7 +16818,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     return a % 360;
   };
   b.destroyOption = function() {
-    this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
+    this.disposeEvent && (Entry.disposeEvent.detach(this.disposeEvent), delete this.documentDownEvent);
     this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
     this.svgOptionGroup && (this.svgOptionGroup.remove(), delete this.svgOptionGroup);
     this.textElement.textContent = this.getText();
@@ -17003,10 +17013,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
   b.renderOptions = function() {
     var a = this;
     this.destroyOption();
-    this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
-      Entry.documentMousedown.detach(this.documentDownEvent);
-      a.optionGroup.remove();
-    });
+    this._attachDisposeEvent();
     var b = Entry.FieldColor.getWidgetColorList();
     this.optionGroup = Entry.Dom("table", {class:"entry-widget-color-table", parent:$("body")});
     for (var d = 0;d < b.length;d++) {
@@ -17083,10 +17090,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
   b.renderOptions = function() {
     var a = this;
     this.destroyOption();
-    this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
-      Entry.documentMousedown.detach(this.documentDownEvent);
-      a.optionGroup.remove();
-    });
+    this._attachDisposeEvent();
     this.optionGroup = Entry.Dom("ul", {class:"entry-widget-dropdown", parent:$("body")});
     for (var b = this._contents.options, d = 0, e = b.length;d < e;d++) {
       var f = b[d], g = f[0], f = f[1], h = Entry.Dom("li", {class:"rect", parent:this.optionGroup}), k = "";
@@ -17104,10 +17108,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         });
       })(h, f);
     }
-    b = this.getAbsolutePosFromDocument();
-    b.x += this.box.width / 2 - this.optionGroup.width() / 2;
-    b.y += this.box.height / 2;
-    this.optionGroup.css({left:b.x, top:b.y});
+    this._position();
+  };
+  b._position = function() {
+    var a = this.getAbsolutePosFromDocument();
+    a.y += this.box.height / 2;
+    var b = $(document).height(), d = this.optionGroup.height();
+    b - 20 < a.y + d ? (a.x += this.box.width + 1, a.y -= d) : a.x += this.box.width / 2 - this.optionGroup.width() / 2;
+    this.optionGroup.css({left:a.x, top:a.y});
   };
   b.applyValue = function(a) {
     this.value != a && (this.setValue(a), this.textElement.textContent = this.getTextByValue(a), this.resize());
@@ -17151,10 +17159,7 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
   b.renderOptions = function() {
     var a = this;
     this.destroyOption();
-    this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
-      Entry.documentMousedown.detach(this.documentDownEvent);
-      a.optionGroup.remove();
-    });
+    this._attachDisposeEvent();
     this.optionGroup = Entry.Dom("ul", {class:"entry-widget-dropdown", parent:$("body")});
     var b = Entry.container.getDropdownList(this._contents.menuName);
     this._contents.options = b;
@@ -17174,10 +17179,7 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
         });
       })(g, e);
     }
-    b = this.getAbsolutePosFromDocument();
-    b.x += this.box.width / 2 - this.optionGroup.width() / 2;
-    b.y += this.box.height / 2;
-    this.optionGroup.css({left:b.x, top:b.y});
+    this._position();
   };
 })(Entry.FieldDropdownDynamic.prototype);
 Entry.FieldImage = function(b, a, c) {
@@ -17268,21 +17270,17 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     this.box.set({x:0, y:0, width:a, height:16});
   };
   b.renderOptions = function() {
-    var a = this;
     this.destroyOption();
     this._optionVisible = !0;
-    this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
-      Entry.documentMousedown.detach(this.documentDownEvent);
-      a.destroyOption();
-    });
-    var b = this.getAbsolutePosFromDocument();
-    b.x -= this.box.width / 2;
-    b.y += this.box.height / 2 + 1;
+    this._attachDisposeEvent();
+    var a = this.getAbsolutePosFromDocument();
+    a.x -= this.box.width / 2;
+    a.y += this.box.height / 2 + 1;
     this.optionGroup = Entry.Dom("img", {class:"entry-widget-keyboard-input", src:Entry.mediaFilePath + "/media/keyboard_workspace.png", parent:$("body")});
-    this.optionGroup.css({left:b.x, top:b.y});
+    this.optionGroup.css({left:a.x, top:a.y});
   };
   b.destroyOption = function() {
-    this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
+    this.disposeEvent && (Entry.disposeEvent.detach(this.disposeEvent), delete this.disposeEvent);
     this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
     this._optionVisible = !1;
   };
@@ -17595,8 +17593,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
   b.renderOptions = function() {
     var a = this;
     this.destroyOption();
-    this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
-      Entry.documentMousedown.detach(this.documentDownEvent);
+    this._attachDisposeEvent(function() {
       a.applyValue();
       a.destroyOption();
     });

@@ -86,12 +86,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
         this._optionVisible = true;
 
         var blockView = this._blockView;
-        this.documentDownEvent = Entry.documentMousedown.attach(
-            this, function(){
-                Entry.documentMousedown.detach(this.documentDownEvent);
-                that.destroyOption();
-            }
-        );
+        this._attachDisposeEvent();
 
         var pos = this.getAbsolutePosFromDocument();
         pos.x -= this.box.width/2;
@@ -109,9 +104,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     };
 
     p.destroyOption = function() {
-        if (this.documentDownEvent) {
-            Entry.documentMousedown.detach(this.documentDownEvent);
-            delete this.documentDownEvent;
+        if (this.disposeEvent) {
+            Entry.disposeEvent.detach(this.disposeEvent);
+            delete this.disposeEvent;
         }
 
         if (this.optionGroup) {
@@ -149,14 +144,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     };
 
     p.getTextWidth = function() {
-         return this.textElement.getComputedTextLength() + X_PADDING;
+        return this.textElement.getComputedTextLength() + X_PADDING;
     };
 
     p.destroy = function() {
         this.destroyOption();
 
         if (Entry.keyPressed && this.keyPressed)
-            Entry.keyPressed.detach(this.keyPressed);
+           Entry.keyPressed.detach(this.keyPressed);
     };
 
 })(Entry.FieldKeyboard.prototype);

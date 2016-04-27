@@ -14,7 +14,7 @@ Entry.Field = function() {};
     p.TEXT_LIMIT_LENGTH = 20;
 
     p.destroy = function() {
-         this.destroyOption();
+        this.destroyOption();
     };
 
     p.destroyOption = function() {
@@ -23,10 +23,26 @@ Entry.Field = function() {};
             delete this.documentDownEvent;
         }
 
+        if (this.disposeEvent) {
+            Entry.disposeEvent.detach(this.disposeEvent);
+            delete this.documentDownEvent;
+        }
+
         if (this.optionGroup) {
             this.optionGroup.remove();
             delete this.optionGroup;
         }
+    };
+
+    p._attachDisposeEvent = function(func) {
+        var that = this;
+
+        func = func || function() {
+            that.destroyOption();
+        };
+
+        that.disposeEvent =
+            Entry.disposeEvent.attach(that, func);
     };
 
     p.align = function(x, y, animate) {

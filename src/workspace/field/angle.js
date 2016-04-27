@@ -85,13 +85,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
         this.destroyOption();
 
         var blockView = this._block.view;
-        this.documentDownEvent = Entry.documentMousedown.attach(
-            this, function(){
-                Entry.documentMousedown.detach(this.documentDownEvent);
-                that.applyValue();
-                that.destroyOption();
-            }
-        );
+        var func = function() {
+            that.applyValue();
+            that.destroyOption();
+        };
+
+        this._attachDisposeEvent(func);
 
         //html option
         this.optionGroup = Entry.Dom('input', {
@@ -228,7 +227,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     };
 
     p.getTextWidth = function() {
-         return this.textElement.getComputedTextLength() + X_PADDING;
+        return this.textElement.getComputedTextLength() + X_PADDING;
     };
 
     p.getText = function() {
@@ -238,8 +237,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     p.modValue = function(value) {return value % 360;};
 
     p.destroyOption = function() {
-        if (this.documentDownEvent) {
-            Entry.documentMousedown.detach(this.documentDownEvent);
+        if (this.disposeEvent) {
+            Entry.disposeEvent.detach(this.disposeEvent);
             delete this.documentDownEvent;
         }
 

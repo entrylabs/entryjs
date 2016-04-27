@@ -132,12 +132,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
         var blockView = this._block.view;
 
-        this.documentDownEvent = Entry.documentMousedown.attach(
-            this, function() {
-                Entry.documentMousedown.detach(this.documentDownEvent);
-                that.optionGroup.remove();
-            }
-        );
+        this._attachDisposeEvent();
 
         this.optionGroup = Entry.Dom('ul', {
             class:'entry-widget-dropdown',
@@ -180,13 +175,24 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             })(element, value);
         }
 
+        this._position();
+    };
 
+    p._position = function() {
+        //inspect enough space below
         var pos = this.getAbsolutePosFromDocument();
-        pos.x += this.box.width/2 - this.optionGroup.width()/2;
         pos.y += this.box.height/2;
 
-        this.optionGroup.css({left: pos.x, top: pos.y});
+        var documentHeight = $(document).height();
+        var optionGroupHeight = this.optionGroup.height();
 
+        //not enough space below
+        if (documentHeight - 20 < pos.y + optionGroupHeight) {
+            pos.x += this.box.width + 1;
+            pos.y -= optionGroupHeight;
+        } else pos.x += this.box.width/2 - this.optionGroup.width()/2;
+
+        this.optionGroup.css({left: pos.x, top: pos.y});
     };
 
     p.applyValue = function(value) {

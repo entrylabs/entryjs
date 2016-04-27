@@ -250,6 +250,10 @@ Entry.Utils.bindGlobalEvent = function(options) {
 
     if (!Entry.disposeEvent && options.indexOf('dispose') > -1) {
         Entry.disposeEvent = new Entry.Event(window);
+        if (Entry.documentMousedown)
+            Entry.documentMousedown.attach(this, function(e) {
+                Entry.disposeEvent.notify(e);
+            });
     }
 };
 

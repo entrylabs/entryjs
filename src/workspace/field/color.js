@@ -73,12 +73,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
 
         var blockView = this._block.view;
 
-        this.documentDownEvent = Entry.documentMousedown.attach(
-            this, function(){
-                Entry.documentMousedown.detach(this.documentDownEvent);
-                that.optionGroup.remove();
-            }
-        );
+        this._attachDisposeEvent();
 
         var colors = Entry.FieldColor.getWidgetColorList();
         this.optionGroup = Entry.Dom('table', {

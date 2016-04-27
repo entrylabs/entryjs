@@ -494,6 +494,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     p._mouseWheel = function(e) {
         e = e.originalEvent;
         e.preventDefault();
+        var disposeEvent = Entry.disposeEvent;
+        if (disposeEvent)
+            disposeEvent.notify(e);
         this._scroller.scroll(
             -e.wheelDeltaY || e.deltaY / 3
         );

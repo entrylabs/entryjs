@@ -56,12 +56,7 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
 
         var blockView = this._block.view;
 
-        this.documentDownEvent = Entry.documentMousedown.attach(
-            this, function() {
-                Entry.documentMousedown.detach(this.documentDownEvent);
-                that.optionGroup.remove();
-            }
-        );
+        this._attachDisposeEvent();
 
         this.optionGroup = Entry.Dom('ul', {
             class:'entry-widget-dropdown',
@@ -106,12 +101,7 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
             })(element, value);
         }
 
-
-        var pos = this.getAbsolutePosFromDocument();
-        pos.x += this.box.width/2 - this.optionGroup.width()/2;
-        pos.y += this.box.height/2;
-
-        this.optionGroup.css({left: pos.x, top: pos.y});
+        this._position();
     };
 
 })(Entry.FieldDropdownDynamic.prototype);
