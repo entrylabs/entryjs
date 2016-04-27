@@ -10599,7 +10599,7 @@ Entry.PropertyPanel = function() {
     this.splitter = d;
   };
   b.addMode = function(a, b) {
-    var d = b.getView(), d = Entry.Dom(d, {parent:this._contentView}), e = Entry.Dom("<div>" + a + "</div>", {classes:["propertyTabElement", "propertyTab" + a], parent:this._tabView}), f = this;
+    var d = b.getView(), d = Entry.Dom(d, {parent:this._contentView}), e = Entry.Dom("<div>" + Lang.Menus[a] + "</div>", {classes:["propertyTabElement", "propertyTab" + a], parent:this._tabView}), f = this;
     e.bind("click", function() {
       f.select(a);
     });

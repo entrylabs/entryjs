@@ -46,7 +46,7 @@ Entry.PropertyPanel = function() {
             parent: this._contentView
         });
 
-        var tabDom = Entry.Dom('<div>' + mode +'</div>', {
+        var tabDom = Entry.Dom('<div>' +Lang.Menus[mode] +'</div>', {
             classes: ["propertyTabElement", "propertyTab" + mode],
             parent: this._tabView
         });
