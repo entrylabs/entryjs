@@ -16028,8 +16028,8 @@ Entry.BlockView.DRAG_RADIUS = 5;
       c === Entry.Workspace.MODE_VIMBOARD && b.vimBoardEvent(a, "dragOver");
       d = a.originalEvent && a.originalEvent.touches ? a.originalEvent.touches[0] : a;
       var f = l.mouseDownCoordinate, f = Math.sqrt(Math.pow(d.pageX - f.x, 2) + Math.pow(d.pageY - f.y, 2));
-      (l.dragMode == Entry.DRAG_MODE_DRAG || f > Entry.BlockView.DRAG_RADIUS) && l.movable && (l.isInBlockMenu ? e.cloneToGlobal(a) : (l.dragMode != Entry.DRAG_MODE_DRAG && (l._toGlobalCoordinate(), l.dragMode = Entry.DRAG_MODE_DRAG, l.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(l, c)), this.animating && this.set({animating:!1}), 0 === l.dragInstance.height && l.dragInstance.set({height:-1 + l.height}), a = l.dragInstance, l._moveBy(d.pageX - a.offsetX, d.pageY - a.offsetY, !1), 
-      a.set({offsetX:d.pageX, offsetY:d.pageY}), Entry.GlobalSvg.position(), (d = l._getCloseBlock()) ? e.setMagnetedBlock(d.view) : e.setMagnetedBlock(null), l.originPos || (l.originPos = {x:l.x, y:l.y}), e.set({dragBlock:l})));
+      (l.dragMode == Entry.DRAG_MODE_DRAG || f > Entry.BlockView.DRAG_RADIUS) && l.movable && (l.isInBlockMenu ? (e.set({dragBlock:l}), e.cloneToGlobal(a)) : (l.dragMode != Entry.DRAG_MODE_DRAG && (l._toGlobalCoordinate(), l.dragMode = Entry.DRAG_MODE_DRAG, l.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(l, c)), this.animating && this.set({animating:!1}), 0 === l.dragInstance.height && l.dragInstance.set({height:-1 + l.height}), a = l.dragInstance, l._moveBy(d.pageX - a.offsetX, 
+      d.pageY - a.offsetY, !1), a.set({offsetX:d.pageX, offsetY:d.pageY}), Entry.GlobalSvg.position(), (d = l._getCloseBlock()) ? e.setMagnetedBlock(d.view) : e.setMagnetedBlock(null), l.originPos || (l.originPos = {x:l.x, y:l.y}), e.set({dragBlock:l})));
     }
     function d(a) {
       $(document).unbind(".block");

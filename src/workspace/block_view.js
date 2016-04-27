@@ -346,7 +346,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
             this.y + y,
             animate
         );
-};
+    };
 
     p._addControl = function() {
         var that = this;
@@ -508,6 +508,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
                         blockView.originPos = {x: blockView.x, y: blockView.y};
                     board.set({dragBlock:blockView});
                 } else {
+                    board.set({dragBlock:blockView});
                     board.cloneToGlobal(e);
                 }
             }
