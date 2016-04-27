@@ -449,9 +449,15 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
                 if (!block || !block.def) {
                     codesJSON.push([{type:b}]);
                 } else {
-                    codesJSON.push([
-                        block.def
-                    ]);
+                    if (block.defs) {
+                        for (var i =0; i <block.defs.length; i++)
+                            codesJSON.push([
+                                block.defs[i]
+                            ]);
+                    } else
+                        codesJSON.push([
+                            block.def
+                        ]);
                 }
             });
             var categoryName = datum.category;

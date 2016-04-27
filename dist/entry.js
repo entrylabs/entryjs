@@ -13935,8 +13935,8 @@ func:function(b, a) {
     case "picture_name":
       return d = c.parent, d = d.pictures, d[d.indexOf(c.picture)].name;
   }
-}}, calc_basic:{color:"#FFD974", skeleton:"basic_string_field", statements:[], template:"%1 %2 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["+", "PLUS"], ["-", "MINUS"], ["x", "MULTI"], ["/", "DIVIDE"]], value:"PLUS", fontSize:11}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"number", params:["10"]}, "PLUS", {type:"number", params:["10"]}], type:"calc_basic"}, paramsKeyMap:{LEFTHAND:0, OPERATOR:1, RIGHTHAND:2}, "class":"calc", isNotFor:[], 
-func:function(b, a) {
+}}, calc_basic:{color:"#FFD974", skeleton:"basic_string_field", statements:[], template:"%1 %2 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["+", "PLUS"], ["-", "MINUS"], ["x", "MULTI"], ["/", "DIVIDE"]], value:"PLUS", fontSize:11, noArrow:!0}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"number", params:["10"]}, "PLUS", {type:"number", params:["10"]}], type:"calc_basic"}, defs:[{params:[{type:"number", params:["10"]}, "PLUS", {type:"number", 
+params:["10"]}], type:"calc_basic"}, {params:[{type:"number", params:["10"]}, "MINUS", {type:"number", params:["10"]}], type:"calc_basic"}, {params:[{type:"number", params:["10"]}, "MULTI", {type:"number", params:["10"]}], type:"calc_basic"}, {params:[{type:"number", params:["10"]}, "DIVIDE", {type:"number", params:["10"]}], type:"calc_basic"}], paramsKeyMap:{LEFTHAND:0, OPERATOR:1, RIGHTHAND:2}, "class":"calc", isNotFor:[], func:function(b, a) {
   var c = a.getField("OPERATOR", a), d = a.getNumberValue("LEFTHAND", a), e = a.getNumberValue("RIGHTHAND", a);
   return "PLUS" == c ? d + e : "MINUS" == c ? d - e : "MULTI" == c ? d * e : d / e;
 }}, calc_plus:{color:"#FFD974", skeleton:"basic_string_field", statements:[], template:"%1 %2 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"+", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[null]}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, func:function(b, a) {
@@ -14152,8 +14152,8 @@ OPTION:1}, statementsKeyMap:{DO:0}, "class":"repeat", isNotFor:[], func:function
   var c = a.getBooleanValue("BOOL", a);
   "until" == a.getField("OPTION", a) && (c = !c);
   return (a.isLooped = c) ? a.getStatement("DO", a) : a.callReturn();
-}}, stop_object:{color:"#498deb", skeleton:"basic", statements:[], template:"%1 \uba48\ucd94\uae30 %2", params:[{type:"Dropdown", options:[["\ubaa8\ub4e0", "all"], ["\uc790\uc2e0\uc758", "thisOnly"], ["\uc774", "thisThread"], ["\uc790\uc2e0\uc758 \ub2e4\ub978", "otherThread"]], value:"all", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null, null], type:"stop_object"}, paramsKeyMap:{TARGET:0}, "class":"terminate", isNotFor:[], 
-func:function(b, a) {
+}}, stop_object:{color:"#498deb", skeleton:"basic", statements:[], template:"%1 \ucf54\ub4dc \uba48\ucd94\uae30 %2", params:[{type:"Dropdown", options:[["\ubaa8\ub4e0", "all"], ["\uc790\uc2e0\uc758", "thisOnly"], ["\uc774", "thisThread"], ["\uc790\uc2e0\uc758 \ub2e4\ub978", "otherThread"]], value:"all", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null, null], type:"stop_object"}, paramsKeyMap:{TARGET:0}, "class":"terminate", 
+isNotFor:[], func:function(b, a) {
   var c = a.getField("TARGET", a), d = Entry.container;
   switch(c) {
     case "all":
@@ -14532,8 +14532,9 @@ VALUE:1}, "class":"rank", isNotFor:["hamster"], func:function(b, a) {
   return !0;
 }, isPrimitive:!0}, False:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], template:"%1  ", params:[{type:"Text", text:"\uac70\uc9d3", color:"#3D3D3D"}], events:{}, def:{params:[null]}, func:function(b, a) {
   return !1;
-}, isPrimitive:!0}, boolean_basic_operator:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], template:"%1 %2 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["=", "EQUAL"], ["\uff1e", "GREATER"], ["\uff1c", "LESS"], ["\u2265", "GREATER_OR_EQUAL"], ["\u2264", "LESS_OR_EQUAL"]], value:"EQUAL", fontSize:11}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"text", params:["10"]}, "EQUAL", {type:"text", params:["10"]}], type:"boolean_basic_operator"}, 
-paramsKeyMap:{LEFTHAND:0, OPERATOR:1, RIGHTHAND:2}, "class":"boolean_compare", isNotFor:[], func:function(b, a) {
+}, isPrimitive:!0}, boolean_basic_operator:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], template:"%1 %2 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["=", "EQUAL"], ["\uff1e", "GREATER"], ["\uff1c", "LESS"], ["\u2265", "GREATER_OR_EQUAL"], ["\u2264", "LESS_OR_EQUAL"]], value:"EQUAL", fontSize:11, noArrow:!0}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"text", params:["10"]}, "EQUAL", {type:"text", params:["10"]}], type:"boolean_basic_operator"}, 
+defs:[{params:[{type:"text", params:["10"]}, "EQUAL", {type:"text", params:["10"]}], type:"boolean_basic_operator"}, {params:[{type:"text", params:["10"]}, "GREATER", {type:"text", params:["10"]}], type:"boolean_basic_operator"}, {params:[{type:"text", params:["10"]}, "LESS", {type:"text", params:["10"]}], type:"boolean_basic_operator"}, {params:[{type:"text", params:["10"]}, "GREATER_OR_EQUAL", {type:"text", params:["10"]}], type:"boolean_basic_operator"}, {params:[{type:"text", params:["10"]}, 
+"LESS_OR_EQUAL", {type:"text", params:["10"]}], type:"boolean_basic_operator"}], paramsKeyMap:{LEFTHAND:0, OPERATOR:1, RIGHTHAND:2}, "class":"boolean_compare", isNotFor:[], func:function(b, a) {
   var c = a.getField("OPERATOR", a), d = a.getStringValue("LEFTHAND", a), e = a.getStringValue("RIGHTHAND", a);
   switch(c) {
     case "EQUAL":
@@ -15199,7 +15200,7 @@ params:["10"]}, null], type:"sound_from_to_and_wait"}, paramsKeyMap:{SOUND:0, ST
 }, event:"start"}, press_some_key:{color:"#3BBD70", skeleton:"basic_event", statements:[], template:"%1 %2 \ud0a4\ub97c \ub20c\ub800\uc744 \ub54c %3", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_keyboard.png", size:17, position:{x:0, y:-2}}, {type:"Dropdown", options:[["q", "81"], ["w", "87"], ["e", "69"], ["r", "82"], ["a", "65"], ["s", "83"], ["d", "68"], ["\uc704\ucabd \ud654\uc0b4\ud45c", "38"], ["\uc544\ub798\ucabd \ud654\uc0b4\ud45c", "40"], ["\uc67c\ucabd \ud654\uc0b4\ud45c", 
 "37"], ["\uc624\ub978\ucabd \ud654\uc0b4\ud45c", "39"], ["\uc5d4\ud130", "13"], ["\uc2a4\ud398\uc774\uc2a4", "32"]], value:"81", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/start_03.png", size:12}], events:{}, def:{params:[null, null, null]}, paramsKeyMap:{VALUE:1}, func:function(b, a) {
   return a.callReturn();
-}}, when_some_key_pressed:{color:"#3BBD70", skeleton:"basic_event", statements:[], template:"%1 %2 \ud0a4\ub97c \ub20c\ub800\uc744 \ub54c", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_keyboard.png", size:17, position:{x:0, y:-2}}, {type:"Keyboard", value:81}], events:{}, def:{params:[null, "67"], type:"when_some_key_pressed"}, paramsKeyMap:{VALUE:1}, "class":"event", isNotFor:[], func:function(b, a) {
+}}, when_some_key_pressed:{color:"#3BBD70", skeleton:"basic_event", statements:[], template:"%1 %2 \ud0a4\ub97c \ub20c\ub800\uc744 \ub54c", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_keyboard.png", size:17, position:{x:0, y:-2}}, {type:"Keyboard", value:81}], events:{}, def:{params:[null, null], type:"when_some_key_pressed"}, paramsKeyMap:{VALUE:1}, "class":"event", isNotFor:[], func:function(b, a) {
   return a.callReturn();
 }, event:"keyPress"}, mouse_clicked:{color:"#3BBD70", skeleton:"basic_event", statements:[], template:"%1 \ub9c8\uc6b0\uc2a4\ub97c \ud074\ub9ad\ud588\uc744 \ub54c", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_mouse.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null], type:"mouse_clicked"}, "class":"event", isNotFor:[], func:function(b, a) {
   return a.callReturn();
@@ -15428,7 +15429,7 @@ type:"change_value_list_index"}, paramsKeyMap:{LIST:0, INDEX:1, DATA:2}, "class"
   Entry.container && Entry.container.showProjectAnswer();
 }], whenBlockDestroy:[function(b) {
   Entry.container && Entry.container.hideProjectAnswer(b);
-}]}, def:{params:["SHOW", null], type:"set_visible_answer"}, paramsKeyMap:{BOOL:0}, "class":"ask", isNotFor:[""], func:function(b, a) {
+}]}, def:{params:["HIDE", null], type:"set_visible_answer"}, paramsKeyMap:{BOOL:0}, "class":"ask", isNotFor:[""], func:function(b, a) {
   "HIDE" == a.getField("BOOL", a) ? Entry.container.inputValue.setVisible(!1) : Entry.container.inputValue.setVisible(!0);
   return a.callReturn();
 }}, is_included_in_list:{color:"#E457DC", skeleton:"basic_boolean_field", statements:[], template:"%1 \uc5d0 %2 \uc774 \ud3ec\ud568\ub418\uc5b4 \uc788\ub294\uac00?", params:[{type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[null, {type:"text", params:["10"]}], type:"is_included_in_list"}, paramsKeyMap:{LIST:0, DATA:1}, "class":"list", isNotFor:["list", "listNotExist"], func:function(b, a) {
@@ -15675,7 +15676,17 @@ Entry.BlockMenu = function(b, a, c, d) {
       var d = a[b], e = [];
       d.blocks.forEach(function(a) {
         var b = Entry.block[a];
-        b && b.def ? e.push([b.def]) : e.push([{type:a}]);
+        if (b && b.def) {
+          if (b.defs) {
+            for (a = 0;a < b.defs.length;a++) {
+              e.push([b.defs[a]]);
+            }
+          } else {
+            e.push([b.def]);
+          }
+        } else {
+          e.push([{type:a}]);
+        }
       });
       d = d.category;
       this._categories.push(d);

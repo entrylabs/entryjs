@@ -3688,36 +3688,36 @@ Entry.block = {
         "class": "calc",
         "isNotFor": [],
         "func": function (sprite, script) {
-    var targetId = script.getField("VALUE", script);
-    var targetEntity;
-    if (targetId == 'self')
-        targetEntity = sprite;
-    else
-        targetEntity = Entry.container.getEntity(targetId);
+            var targetId = script.getField("VALUE", script);
+            var targetEntity;
+            if (targetId == 'self')
+                targetEntity = sprite;
+            else
+                targetEntity = Entry.container.getEntity(targetId);
 
-    var targetCoordinate = script.getField("COORDINATE", script);
-    switch(targetCoordinate) {
-        case 'x':
-            return targetEntity.getX();
-        case 'y':
-            return targetEntity.getY();
-        case 'rotation':
-            return targetEntity.getRotation();
-        case 'direction':
-            return targetEntity.getDirection();
-        case 'picture_index':
-            var object = targetEntity.parent;
-            var pictures = object.pictures;
-            return pictures.indexOf(targetEntity.picture) + 1;
-        case 'size':
-            return Number(targetEntity.getSize().toFixed(1));
-        case 'picture_name':
-            var object = targetEntity.parent;
-            var pictures = object.pictures;
-            var picture = pictures[pictures.indexOf(targetEntity.picture)];
-            return picture.name;
-    }
-}
+            var targetCoordinate = script.getField("COORDINATE", script);
+            switch(targetCoordinate) {
+                case 'x':
+                    return targetEntity.getX();
+                case 'y':
+                    return targetEntity.getY();
+                case 'rotation':
+                    return targetEntity.getRotation();
+                case 'direction':
+                    return targetEntity.getDirection();
+                case 'picture_index':
+                    var object = targetEntity.parent;
+                    var pictures = object.pictures;
+                    return pictures.indexOf(targetEntity.picture) + 1;
+                case 'size':
+                    return Number(targetEntity.getSize().toFixed(1));
+                case 'picture_name':
+                    var object = targetEntity.parent;
+                    var pictures = object.pictures;
+                    var picture = pictures[pictures.indexOf(targetEntity.picture)];
+                    return picture.name;
+            }
+        }
     },
     "calc_basic": {
         "color": "#FFD974",
@@ -3732,25 +3732,14 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [
-                        "+",
-                        "PLUS"
-                    ],
-                    [
-                        "-",
-                        "MINUS"
-                    ],
-                    [
-                        "x",
-                        "MULTI"
-                    ],
-                    [
-                        "/",
-                        "DIVIDE"
-                    ]
+                    [ "+", "PLUS" ],
+                    [ "-", "MINUS" ],
+                    [ "x", "MULTI" ],
+                    [ "/", "DIVIDE" ]
                 ],
                 "value": "PLUS",
-                "fontSize": 11
+                "fontSize": 11,
+                noArrow: true
             },
             {
                 "type": "Block",
@@ -3762,20 +3751,74 @@ Entry.block = {
             "params": [
                 {
                     "type": "number",
-                    "params": [
-                        "10"
-                    ]
+                    "params": [ "10" ]
                 },
                 "PLUS",
                 {
                     "type": "number",
-                    "params": [
-                        "10"
-                    ]
+                    "params": [ "10" ]
                 }
             ],
             "type": "calc_basic"
         },
+        "defs": [
+            {
+                "params": [
+                    {
+                        "type": "number",
+                        "params": [ "10" ]
+                    },
+                    "PLUS",
+                    {
+                        "type": "number",
+                        "params": [ "10" ]
+                    }
+                ],
+                "type": "calc_basic"
+            },
+            {
+                "params": [
+                    {
+                        "type": "number",
+                        "params": [ "10" ]
+                    },
+                    "MINUS",
+                    {
+                        "type": "number",
+                        "params": [ "10" ]
+                    }
+                ],
+                "type": "calc_basic"
+            },
+            {
+                "params": [
+                    {
+                        "type": "number",
+                        "params": [ "10" ]
+                    },
+                    "MULTI",
+                    {
+                        "type": "number",
+                        "params": [ "10" ]
+                    }
+                ],
+                "type": "calc_basic"
+            },
+            {
+                "params": [
+                    {
+                        "type": "number",
+                        "params": [ "10" ]
+                    },
+                    "DIVIDE",
+                    {
+                        "type": "number",
+                        "params": [ "10" ]
+                    }
+                ],
+                "type": "calc_basic"
+            }
+        ],
         "paramsKeyMap": {
             "LEFTHAND": 0,
             "OPERATOR": 1,
@@ -5723,7 +5766,7 @@ Entry.block = {
         "color": "#498deb",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 멈추기 %2",
+        "template": "%1 코드 멈추기 %2",
         "params": [
             {
                 "type": "Dropdown",
@@ -8018,29 +8061,15 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [
-                        "=",
-                        "EQUAL"
-                    ],
-                    [
-                        "＞",
-                        "GREATER"
-                    ],
-                    [
-                        "＜",
-                        "LESS"
-                    ],
-                    [
-                        "≥",
-                        "GREATER_OR_EQUAL"
-                    ],
-                    [
-                        "≤",
-                        "LESS_OR_EQUAL"
-                    ]
+                    [ "=", "EQUAL" ],
+                    [ "＞", "GREATER" ],
+                    [ "＜", "LESS" ],
+                    [ "≥", "GREATER_OR_EQUAL" ],
+                    [ "≤", "LESS_OR_EQUAL" ]
                 ],
                 "value": "EQUAL",
-                "fontSize": 11
+                "fontSize": 11,
+                noArrow: true
             },
             {
                 "type": "Block",
@@ -8066,6 +8095,78 @@ Entry.block = {
             ],
             "type": "boolean_basic_operator"
         },
+        "defs": [
+            {
+                "params": [
+                    {
+                        "type": "text",
+                        "params": [ "10" ]
+                    },
+                    "EQUAL",
+                    {
+                        "type": "text",
+                        "params": [ "10" ]
+                    }
+                ],
+                "type": "boolean_basic_operator"
+            },
+            {
+                "params": [
+                    {
+                        "type": "text",
+                        "params": [ "10" ]
+                    },
+                    "GREATER",
+                    {
+                        "type": "text",
+                        "params": [ "10" ]
+                    }
+                ],
+                "type": "boolean_basic_operator"
+            },
+            {
+                "params": [
+                    {
+                        "type": "text",
+                        "params": [ "10" ]
+                    },
+                    "LESS",
+                    {
+                        "type": "text",
+                        "params": [ "10" ]
+                    }
+                ],
+                "type": "boolean_basic_operator"
+            },
+            {
+                "params": [
+                    {
+                        "type": "text",
+                        "params": [ "10" ]
+                    },
+                    "GREATER_OR_EQUAL",
+                    {
+                        "type": "text",
+                        "params": [ "10" ]
+                    }
+                ],
+                "type": "boolean_basic_operator"
+            },
+            {
+                "params": [
+                    {
+                        "type": "text",
+                        "params": [ "10" ]
+                    },
+                    "LESS_OR_EQUAL",
+                    {
+                        "type": "text",
+                        "params": [ "10" ]
+                    }
+                ],
+                "type": "boolean_basic_operator"
+            }
+        ],
         "paramsKeyMap": {
             "LEFTHAND": 0,
             "OPERATOR": 1,
@@ -12608,7 +12709,7 @@ Entry.block = {
         "def": {
             "params": [
                 null,
-                "67"
+                null
             ],
             "type": "when_some_key_pressed"
         },
@@ -14053,14 +14154,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [
-                        "보이기",
-                        "SHOW"
-                    ],
-                    [
-                        "숨기기",
-                        "HIDE"
-                    ]
+                    [ "보이기", "SHOW" ],
+                    [ "숨기기", "HIDE" ]
                 ],
                 "value": "SHOW",
                 "fontSize": 11
@@ -14084,10 +14179,7 @@ Entry.block = {
             ]
         },
         "def": {
-            "params": [
-                "SHOW",
-                null
-            ],
+            "params": [ "HIDE", null ],
             "type": "set_visible_answer"
         },
         "paramsKeyMap": {
