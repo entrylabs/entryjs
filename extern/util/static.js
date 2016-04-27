@@ -275,7 +275,13 @@ EntryStatic.getAllBlocks = function() {
                 "dplay_get_digital_value",
                 "dplay_toggle_led",
                 "dplay_toggle_pwm",
-                "dplay_convert_scale",
+                "dplay_convert_scale",                
+                //nemoino
+                "nemoino_get_number_sensor_value",
+                "nemoino_get_digital_value",
+                "nemoino_toggle_led",
+                "nemoino_toggle_pwm",
+                "nemoino_convert_scale",
                 //neobot
                 "neobot_sensor_value",
                 "neobot_turn_left",
@@ -1310,6 +1316,12 @@ EntryStatic.blockInfo = {
         "usage": ["arduino"],
         "class": "arduino_value"
     },
+    "nemoino_get_number_sensor_value": {
+        "xml": "<block type='arduino_get_number_sensor_value'><value name='VALUE'><block type='arduino_get_sensor_number'></block></value></block>",
+        "isNotFor": ['nemoino'],
+        "usage": ["arduino"],
+        "class": "arduino_value"
+    },
     "sensorBoard_get_number_sensor_value": {
         "xml": "<block type='arduino_get_number_sensor_value'><value name='VALUE'><block type='arduino_get_sensor_number'></block></value></block>",
         "isNotFor": ['sensorBoard'],
@@ -1331,6 +1343,12 @@ EntryStatic.blockInfo = {
     "dplay_get_digital_value": {
         "xml": "<block type='arduino_get_digital_value'><value name='VALUE'><block type='arduino_get_port_number'></block></value></block>",
         "isNotFor": ['dplay'],
+        "usage": ["arduino"],
+        "class": "arduino_value"
+    },
+    "nemoino_get_digital_value": {
+        "xml": "<block type='arduino_get_digital_value'><value name='VALUE'><block type='arduino_get_port_number'></block></value></block>",
+        "isNotFor": ['nemoino'],
         "usage": ["arduino"],
         "class": "arduino_value"
     },
@@ -1358,6 +1376,12 @@ EntryStatic.blockInfo = {
         "usage": ["arduino"],
         "class": "arduino_set"
     },
+    "nemoino_toggle_led": {
+        "xml": "<block type='arduino_toggle_led'><value name='VALUE'><block type='arduino_get_port_number'></block></value></block>",
+        "isNotFor": ['nemoino'],
+        "usage": ["arduino"],
+        "class": "arduino_set"
+    },
     "sensorBoard_toggle_led": {
         "xml": "<block type='arduino_toggle_led'><value name='VALUE'><block type='arduino_get_port_number'></block></value></block>",
         "isNotFor": ['sensorBoard'],
@@ -1382,6 +1406,12 @@ EntryStatic.blockInfo = {
         "usage": ["arduino"],
         "class": "arduino_set"
     },
+    "nemoino_toggle_pwm": {
+        "xml": "<block type='arduino_toggle_pwm'><value name='PORT'><block type='arduino_get_pwm_port_number'></block></value><value name='VALUE'><block type='arduino_text'><field name='NAME'>255</field></block></value></block>",
+        "isNotFor": ['nemoino'],
+        "usage": ["arduino"],
+        "class": "arduino_set"
+    },
     "sensorBoard_toggle_pwm": {
         "xml": "<block type='arduino_toggle_pwm'><value name='PORT'><block type='arduino_get_pwm_port_number'></block></value><value name='VALUE'><block type='arduino_text'><field name='NAME'>255</field></block></value></block>",
         "isNotFor": ['sensorBoard'],
@@ -1403,6 +1433,12 @@ EntryStatic.blockInfo = {
     "dplay_convert_scale": {
         "xml": "<block type='arduino_convert_scale'><value name='VALUE1'><block type='arduino_get_number_sensor_value'><value name='VALUE'><block type='arduino_get_sensor_number'></block></value></block></value><value name='VALUE2'> <block type='number'><field name='NUM'>0</field></block> </value><value name='VALUE3'> <block type='number'><field name='NUM'>1023</field></block> </value><value name='VALUE4'> <block type='number'><field name='NUM'>0</field></block> </value><value name='VALUE5'> <block type='number'><field name='NUM'>100</field></block> </value></block>",
         "isNotFor": ['dplay'],
+        "usage": ["arduino"],
+        "class": "arduino"
+    },
+    "nemoino_convert_scale": {
+        "xml": "<block type='arduino_convert_scale'><value name='VALUE1'><block type='arduino_get_number_sensor_value'><value name='VALUE'><block type='arduino_get_sensor_number'></block></value></block></value><value name='VALUE2'> <block type='number'><field name='NUM'>0</field></block> </value><value name='VALUE3'> <block type='number'><field name='NUM'>1023</field></block> </value><value name='VALUE4'> <block type='number'><field name='NUM'>0</field></block> </value><value name='VALUE5'> <block type='number'><field name='NUM'>100</field></block> </value></block>",
+        "isNotFor": ['nemoino'],
         "usage": ["arduino"],
         "class": "arduino"
     },

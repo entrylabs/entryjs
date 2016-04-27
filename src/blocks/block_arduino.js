@@ -77,6 +77,11 @@ Entry.dplay = {
     setZero: Entry.Arduino.setZero
 };
 
+Entry.nemoino = {
+    name: 'nemoino',
+    setZero: Entry.Arduino.setZero
+};
+
 Entry.CODEino = {
     name: 'CODEino',
     setZero: Entry.Arduino.setZero,

@@ -26,6 +26,7 @@ Entry.HW = function() {
         '12': Entry.SensorBoard,
         '13': Entry.CODEino,
         '15': Entry.dplay,
+        '16': Entry.nemoino,
         '17': Entry.Xbot,        
         '24': Entry.Hamster,
         '25': Entry.Albert,
