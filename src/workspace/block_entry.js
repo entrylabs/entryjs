@@ -6029,6 +6029,15 @@ Entry.block = {
                     var vc = Entry.variableContainer;
                     if (vc) vc.removeRef('_functionRefs', block);
                 }
+            ],
+            "dblclick": [
+                function(blockView) {
+                    var mode = blockView.getBoard().workspace.getMode();
+                    if (mode !== Entry.Workspace.MODE_BOARD) return;
+                    var block = blockView.block;
+                    var id = block.type.substr(5);
+                    Entry.Func.edit(Entry.variableContainer.functions_[id]);
+                }
             ]
         },
     },

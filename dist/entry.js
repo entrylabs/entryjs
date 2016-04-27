@@ -715,8 +715,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
+  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(c, d);
   return a.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1694,10 +1694,10 @@ Entry.block.wait_second = function(b, a) {
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a);
+  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
   setTimeout(function() {
     a.timeFlag = 0;
-  }, 60 / (Entry.FPS || 60) * c * 1E3);
+  }, c);
   return a;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -13731,8 +13731,8 @@ RIGHT:1}, "class":"rank", isNotFor:["albert"], func:function(b, a) {
   return Entry.hw.getDigitalPortValue(c);
 }}, arduino_toggle_led:{color:"#00979D", skeleton:"basic", statements:[], template:"\ub514\uc9c0\ud138 %1 \ubc88 \ud540 %2 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["\ucf1c\uae30", "on"], ["\ub044\uae30", "off"]], value:"on", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"arduino_get_port_number"}, null, null], type:"arduino_toggle_led"}, paramsKeyMap:{VALUE:0, OPERATOR:1}, "class":"arduino_set", 
 isNotFor:["arduino"], func:function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
+  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(c, d);
   return a.callReturn();
 }}, arduino_toggle_pwm:{color:"#00979D", skeleton:"basic", statements:[], template:"\ub514\uc9c0\ud138 %1 \ubc88 \ud540\uc744 %2 (\uc73c)\ub85c \uc815\ud558\uae30 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"arduino_get_pwm_port_number"}, {type:"arduino_text", params:["255"]}, null], type:"arduino_toggle_pwm"}, paramsKeyMap:{PORT:0, VALUE:1}, 
 "class":"arduino_set", isNotFor:["arduino"], func:function(b, a) {
@@ -14099,10 +14099,10 @@ type:"quotient_and_mod"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2, OPERATOR:4}, "c
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a);
+  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
   setTimeout(function() {
     a.timeFlag = 0;
-  }, 60 / (Entry.FPS || 60) * c * 1E3);
+  }, c);
   return a;
 }}, repeat_basic:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], template:"%1 \ubc88 \ubc18\ubcf5\ud558\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"repeat_basic"}, paramsKeyMap:{VALUE:0}, statementsKeyMap:{DO:0}, "class":"repeat", isNotFor:[], func:function(b, a) {
   var c;
@@ -14199,6 +14199,8 @@ accept:"paramMagnet", value:{type:"function_field_label"}}, {type:"Indicator", i
 }], whenBlockDestroy:[function(b) {
   var a = Entry.variableContainer;
   a && a.removeRef("_functionRefs", b);
+}], dblclick:[function(b) {
+  b.getBoard().workspace.getMode() === Entry.Workspace.MODE_BOARD && (b = b.block.type.substr(5), Entry.Func.edit(Entry.variableContainer.functions_[b]));
 }]}}, hamster_move_forward:{color:"#00979D", skeleton:"basic", statements:[], template:"\uc55e\uc73c\ub85c \uc774\ub3d9\ud558\uae30 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"hamster_move_forward"}, "class":"hamster_novice", isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue;
   if (a.isStart) {
@@ -15865,7 +15867,7 @@ Entry.BlockView = function(b, a, c) {
   this.mouseHandler = function() {
     var a = e.block.events;
     a && a.mousedown && a.mousedown.forEach(function(a) {
-      a();
+      a(e);
     });
     e.onMouseDown.apply(e, arguments);
   };
@@ -16021,8 +16023,15 @@ Entry.BlockView.DRAG_RADIUS = 5;
     return this._moveTo(this.x + a, this.y + b, d);
   };
   b._addControl = function() {
+    var a = this;
     this._mouseEnable = !0;
-    $(this.svgGroup).bind("mousedown.blockViewMousedown touchstart.blockViewMousedown", this.mouseHandler);
+    $(this.svgGroup).bind("mousedown.blockViewMousedown touchstart.blockViewMousedown", a.mouseHandler);
+    var b = a.block.events;
+    b && b.dblclick && $(this.svgGroup).dblclick(function() {
+      b.dblclick.forEach(function(b) {
+        b(a);
+      });
+    });
   };
   b.removeControl = function() {
     this._mouseEnable = !1;

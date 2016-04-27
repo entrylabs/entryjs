@@ -41,9 +41,11 @@ Entry.BlockView = function(block, board, mode) {
     this.mouseHandler = function() {
         var events = that.block.events;
         if (events && events.mousedown)
-            events.mousedown.forEach(function(fn){fn();});
+            events.mousedown.forEach(function(fn){fn(that);});
 
         that.onMouseDown.apply(that, arguments);
+
+
     };
     this._startRender(block, mode);
 
@@ -147,8 +149,9 @@ Entry.BlockView.DRAG_RADIUS = 5;
 
         this._moveTo(this.x, this.y, false);
         this._startContentRender(mode);
-        if (this._board.disableMouseEvent !== true)
+        if (this._board.disableMouseEvent !== true) {
             this._addControl();
+        }
 
         this.bindPrev();
     };
@@ -355,6 +358,13 @@ Entry.BlockView.DRAG_RADIUS = 5;
             'mousedown.blockViewMousedown touchstart.blockViewMousedown',
             that.mouseHandler
         );
+
+        var events = that.block.events;
+        if (events && events.dblclick)
+            $(this.svgGroup).dblclick(function() {
+                events.dblclick.forEach(function(fn){fn(that);});
+            });
+
     };
 
     p.removeControl = function() {
