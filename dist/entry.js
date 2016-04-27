@@ -17171,9 +17171,10 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
     var a = [];
     Entry.container && (a = Entry.container.getDropdownList(this._contents.menuName));
     this._contents.options = a;
-    a = this._contents.options;
-    a = this.getValue() || (0 !== a.length ? a[0][1] : null);
-    this.setValue(a);
+    var a = this._contents.options, b = this.getValue();
+    console.log(b);
+    b && "null" != b || (b = 0 !== a.length ? a[0][1] : null);
+    this.setValue(b);
   };
   b.renderOptions = function() {
     var a = this;

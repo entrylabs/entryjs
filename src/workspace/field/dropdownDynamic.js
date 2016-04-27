@@ -43,8 +43,10 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
 
         this._contents.options = options;
         var options = this._contents.options;
-        var value = this.getValue() ||
-            (options.length !== 0 ? options[0][1] : null);
+        var value = this.getValue();
+        console.log(value);
+        if (!value || value == 'null')
+            value = (options.length !== 0 ? options[0][1] : null);
 
 
         this.setValue(value);
