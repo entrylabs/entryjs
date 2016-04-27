@@ -9,6 +9,7 @@ goog.provide("Entry.FieldDropdown");
  */
 Entry.FieldDropdown = function(content, blockView) {
     this._block = blockView.block;
+    this._blockView = blockView;
 
     var box = new Entry.BoxModel();
     this.box = box;
@@ -107,18 +108,10 @@ Entry.FieldDropdown = function(content, blockView) {
         this.optionGroup = blockView.getBoard().svgGroup.group();
 
         var matrix = blockView.svgGroup.transform().globalMatrix;
-        var x = matrix.e;
-        var y = matrix.f;
-
-        var options = this._contents.options;
-        this.optionGroup.attr({
-            class: 'entry-field-dropdown',
-            transform: "t" + (x -60) + " " + (y + 35)
-        });
-
         var resizeList = [];
         var OPTION_X_PADDING = 50;
         var maxWidth = 0;
+        var options = this._contents.options;
 
         resizeList.push(this.optionGroup.rect(
             0, 0,
@@ -169,6 +162,16 @@ Entry.FieldDropdown = function(content, blockView) {
         resizeList.forEach(function(elem){
             elem.attr(attr);
         });
+
+        var box = this.box;
+        var x = matrix.e + this._blockView.offsetX + box.x + 29 + box.width/2 - maxWidth/2;
+        var y = matrix.f;
+
+        this.optionGroup.attr({
+            class: 'entry-field-dropdown',
+            transform: "t" + (x) + " " + (y + 35)
+        });
+
     };
 
     p.align = function(x, y, animate) {

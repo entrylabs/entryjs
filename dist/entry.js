@@ -355,7 +355,7 @@ Blockly.Blocks.albert_set_eye_to = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.albert_set_eye_to = function(a, b) {
-  var c = Entry.hw.sendQueue, d = b.getField("DIRECTION", b), e = Number(b.getField("COLOR", b));
+  var c = Entry.hw.sendQueue, d = b.getField("DIRECTION", b), e = +b.getField("COLOR", b);
   "LEFT" == d ? c.leftEye = e : ("RIGHT" != d && (c.leftEye = e), c.rightEye = e);
   return b.callReturn();
 };
@@ -666,7 +666,7 @@ Blockly.Blocks.albert_set_led_to = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.albert_set_led_to = function(a, b) {
-  var c = Entry.hw.sendQueue, d = b.getField("DIRECTION", b), e = Number(b.getField("COLOR", b));
+  var c = Entry.hw.sendQueue, d = b.getField("DIRECTION", b), e = +b.getField("COLOR", b);
   "FRONT" == d ? (c.leftEye = e, c.rightEye = e) : "LEFT" == d ? c.leftEye = e : c.rightEye = e;
   return b.callReturn();
 };
@@ -760,7 +760,7 @@ Entry.block.arduino_get_number = function(a, b) {
   d.open("POST", "http://localhost:23518/arduino/", !1);
   d.send(String(c));
   Entry.assert(200 == d.status, "arduino is not connected");
-  return Number(d.responseText);
+  return +d.responseText;
 };
 Blockly.Blocks.arduino_get_number = {init:function() {
   this.setColour("#00979D");
@@ -842,8 +842,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(a, b) {
-  var c = b.getNumberValue("VALUE"), d = b.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
+  var c = b.getNumberValue("VALUE"), d = "on" == b.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(c, d);
   return b.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1156,11 +1156,11 @@ Blockly.Blocks.bitbrick_turn_off_all_motors = {init:function() {
 }};
 Entry.block.bitbrick_turn_off_all_motors = function(a, b) {
   var c = Entry.hw.sendQueue, d = Entry.Bitbrick;
-  d.servoList().map(function(b) {
-    c[b[1]] = 0;
+  d.servoList().map(function(a) {
+    c[a[1]] = 0;
   });
-  d.dcList().map(function(b) {
-    c[b[1]] = 128;
+  d.dcList().map(function(a) {
+    c[a[1]] = 128;
   });
   return b.callReturn();
 };
@@ -1367,8 +1367,8 @@ Entry.block.brush_erase_all = function(a, b) {
     c.moveTo(a.getX(), -1 * a.getY());
   }
   c = a.parent.getStampEntities();
-  c.map(function(b) {
-    b.removeClone();
+  c.map(function(a) {
+    a.removeClone();
   });
   c = null;
   return b.callReturn();
@@ -1492,7 +1492,7 @@ Blockly.Blocks.coordinate_mouse = {init:function() {
   this.setInputsInline(!0);
 }};
 Entry.block.coordinate_mouse = function(a, b) {
-  return "x" === b.getField("VALUE", b) ? Number(Entry.stage.mouseCoordinate.x) : Number(Entry.stage.mouseCoordinate.y);
+  return "x" === b.getField("VALUE", b) ? +Entry.stage.mouseCoordinate.x : +Entry.stage.mouseCoordinate.y;
 };
 Blockly.Blocks.coordinate_object = {init:function() {
   this.setColour(calcBlockColor);
@@ -1516,7 +1516,7 @@ Entry.block.coordinate_object = function(a, b) {
       var d = c.parent, d = d.pictures;
       return d.indexOf(c.picture) + 1;
     case "size":
-      return Number(c.getSize().toFixed(1));
+      return +c.getSize().toFixed(1);
     case "picture_name":
       return d = c.parent, d = d.pictures, d[d.indexOf(c.picture)].name;
   }
@@ -1921,10 +1921,10 @@ Entry.block.wait_second = function(a, b) {
   }
   b.isStart = !0;
   b.timeFlag = 1;
-  var c = b.getNumberValue("SECOND", b);
+  var c = b.getNumberValue("SECOND", b), c = 60 / (Entry.FPS || 60) * c * 1E3;
   setTimeout(function() {
     b.timeFlag = 0;
-  }, 60 / (Entry.FPS || 60) * c * 1E3);
+  }, c);
   return b;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -2096,23 +2096,23 @@ Entry.block.stop_object = function(a, b) {
   var c = b.getField("TARGET", b), d = Entry.container;
   switch(c) {
     case "all":
-      d.mapEntityIncludeCloneOnScene(function(b) {
-        b.clearScript();
+      d.mapEntityIncludeCloneOnScene(function(a) {
+        a.clearScript();
       });
       break;
     case "thisObject":
       a.clearScript();
       c = a.parent.clonedEntities;
-      c.map(function(b) {
-        b.clearScript();
+      c.map(function(a) {
+        a.clearScript();
       });
       break;
     case "thisOnly":
       a.clearScript();
       break;
     case "otherThread":
-      return a.clearScript(), c = a.parent.clonedEntities, c.map(function(b) {
-        b.clearScript();
+      return a.clearScript(), c = a.parent.clonedEntities, c.map(function(a) {
+        a.clearScript();
       }), b.callReturn();
   }
   return null;
@@ -2136,8 +2136,8 @@ Blockly.Blocks.remove_all_clones = {init:function() {
 }};
 Entry.block.remove_all_clones = function(a, b) {
   var c = a.parent.getClonedEntities();
-  c.map(function(b) {
-    b.removeClone();
+  c.map(function(a) {
+    a.removeClone();
   });
   c = null;
   return b.callReturn();
@@ -2647,7 +2647,7 @@ Blockly.Blocks.hamster_set_following_speed_to = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_set_following_speed_to = function(a, b) {
-  Entry.hw.sendQueue.lineTracerSpeed = Number(b.getField("SPEED", b));
+  Entry.hw.sendQueue.lineTracerSpeed = +b.getField("SPEED", b);
   return b.callReturn();
 };
 Blockly.Blocks.hamster_stop = {init:function() {
@@ -2673,7 +2673,7 @@ Blockly.Blocks.hamster_set_led_to = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_set_led_to = function(a, b) {
-  var c = Entry.hw.sendQueue, d = b.getField("DIRECTION", b), e = Number(b.getField("COLOR", b));
+  var c = Entry.hw.sendQueue, d = b.getField("DIRECTION", b), e = +b.getField("COLOR", b);
   "LEFT" == d ? c.leftLed = e : ("RIGHT" != d && (c.leftLed = e), c.rightLed = e);
   return b.callReturn();
 };
@@ -2872,7 +2872,7 @@ Blockly.Blocks.hamster_set_port_to = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_set_port_to = function(a, b) {
-  var c = Entry.hw.sendQueue, d = b.getField("PORT", b), e = Number(b.getField("MODE", b));
+  var c = Entry.hw.sendQueue, d = b.getField("PORT", b), e = +b.getField("MODE", b);
   "A" == d ? c.ioModeA = e : ("B" != d && (c.ioModeA = e), c.ioModeB = e);
   return b.callReturn();
 };
@@ -2921,7 +2921,7 @@ Blockly.Blocks.is_press_some_key = {init:function() {
   this.setInputsInline(!0);
 }};
 Entry.block.is_press_some_key = function(a, b) {
-  var c = Number(b.getField("VALUE", b));
+  var c = +b.getField("VALUE", b);
   return 0 <= Entry.engine.pressedKeys.indexOf(c);
 };
 Blockly.Blocks.reach_something = {init:function() {
@@ -3135,13 +3135,13 @@ Entry.block.boolean_basic_operator = function(a, b) {
     case "EQUAL":
       return d == e;
     case "GREATER":
-      return Number(d) > Number(e);
+      return +d > +e;
     case "LESS":
-      return Number(d) < Number(e);
+      return +d < +e;
     case "GREATER_OR_EQUAL":
-      return Number(d) >= Number(e);
+      return +d >= +e;
     case "LESS_OR_EQUAL":
-      return Number(d) <= Number(e);
+      return +d <= +e;
   }
 };
 Blockly.Blocks.show = {init:function() {
@@ -3623,7 +3623,7 @@ Blockly.Blocks.rotate_by_angle_dropdown = {init:function() {
 }};
 Entry.block.rotate_by_angle_dropdown = function(a, b) {
   var c = b.getField("VALUE", b);
-  a.setRotation(a.getRotation() + Number(c));
+  a.setRotation(a.getRotation() + +c);
   return b.callReturn();
 };
 Blockly.Blocks.see_angle = {init:function() {
@@ -3715,8 +3715,8 @@ Blockly.Blocks.locate = {init:function() {
 Entry.block.locate = function(a, b) {
   var c = b.getField("VALUE", b), d;
   "mouse" == c ? (c = Entry.stage.mouseCoordinate.x, d = Entry.stage.mouseCoordinate.y) : (d = Entry.container.getEntity(c), c = d.getX(), d = d.getY());
-  a.setX(Number(c));
-  a.setY(Number(d));
+  a.setX(+c);
+  a.setY(+d);
   a.brush && !a.brush.stop && a.brush.lineTo(c, -1 * d);
   return b.callReturn();
 };
@@ -3912,7 +3912,7 @@ Entry.block.locate_object_time = function(a, b) {
     if (0 != c) {
       "mouse" == d ? (d = e.x - a.getX(), e = e.y - a.getY()) : (e = Entry.container.getEntity(d), d = e.getX() - a.getX(), e = e.getY() - a.getY()), b.isStart = !0, b.frameCount = c, b.dX = d / b.frameCount, b.dY = e / b.frameCount;
     } else {
-      return "mouse" == d ? (d = Number(e.x), e = Number(e.y)) : (e = Entry.container.getEntity(d), d = e.getX(), e = e.getY()), a.setX(d), a.setY(e), a.brush && !a.brush.stop && a.brush.lineTo(a.getX(), -1 * a.getY()), b.callReturn();
+      return "mouse" == d ? (d = +e.x, e = +e.y) : (e = Entry.container.getEntity(d), d = e.getX(), e = e.getY()), a.setX(d), a.setY(e), a.brush && !a.brush.stop && a.brush.lineTo(a.getX(), -1 * a.getY()), b.callReturn();
     }
   }
   if (0 != b.frameCount) {
@@ -4744,7 +4744,7 @@ Entry.block.sound_something_second_wait = function(a, b) {
       d.stop();
       b.playState = 0;
     }, 1E3 * c);
-    d.addEventListener("complete", function(b) {
+    d.addEventListener("complete", function(a) {
     });
   }
   return b;
@@ -4890,7 +4890,7 @@ Entry.block.sound_something_second_wait_with_block = function(a, b) {
       d.stop();
       b.playState = 0;
     }, 1E3 * c);
-    d.addEventListener("complete", function(b) {
+    d.addEventListener("complete", function(a) {
     });
   }
   return b;
@@ -5076,10 +5076,10 @@ Entry.block.message_cast_wait = function(a, b) {
     throw Error("value can not be null or undefined");
   }
   var e = [];
-  Entry.container.mapEntityIncludeCloneOnScene(function(b, a) {
-    for (var c = a[0], d = a[1], l = b.parent.script.childNodes, q = 0;q < l.length;q++) {
+  Entry.container.mapEntityIncludeCloneOnScene(function(a, b) {
+    for (var c = b[0], d = b[1], l = a.parent.script.childNodes, q = 0;q < l.length;q++) {
       var n = l[q], m = Entry.Xml.getField("VALUE", n);
-      Entry.Xml.isTypeOf(c, n) && m == d && (m = new Entry.Script(b), m.init(n), e.push(m));
+      Entry.Xml.isTypeOf(c, n) && m == d && (m = new Entry.Script(a), m.init(n), e.push(m));
     }
   }, ["when_message_cast", c]);
   b.runningScript = e;
@@ -5503,37 +5503,37 @@ Entry.Collection = function(a) {
     b.splice.call(this, d, 0, a);
     this._hashMap[a.id] = a;
   };
-  a.has = function(b) {
-    return !!this._hashMap[b];
+  a.has = function(a) {
+    return !!this._hashMap[a];
   };
-  a.get = function(b) {
-    return this._hashMap[b];
+  a.get = function(a) {
+    return this._hashMap[a];
   };
-  a.at = function(b) {
-    return this[b];
+  a.at = function(a) {
+    return this[a];
   };
   a.getAll = function() {
-    for (var b = this.length, a = [], e = 0;e < b;e++) {
-      a.push(this[e]);
+    for (var a = this.length, b = [], e = 0;e < a;e++) {
+      b.push(this[e]);
     }
-    return a;
+    return b;
   };
   a.indexOf = function(a) {
     return b.indexOf.call(this, a);
   };
-  a.find = function(b) {
-    for (var a = [], e, f = 0, g = this.length;f < g;f++) {
+  a.find = function(a) {
+    for (var b = [], e, f = 0, g = this.length;f < g;f++) {
       e = !0;
       var h = this[f], k;
-      for (k in b) {
-        if (b[k] != h[k]) {
+      for (k in a) {
+        if (a[k] != h[k]) {
           e = !1;
           break;
         }
       }
-      e && a.push(h);
+      e && b.push(h);
     }
-    return a;
+    return b;
   };
   a.pop = function() {
     var a = b.pop.call(this);
@@ -7548,7 +7548,7 @@ Entry.EntryObject.prototype.generateView = function() {
       13 == a.keyCode && c.editObjectValues(!1);
     };
     g.onblur = function(a) {
-      isNaN(g.value) || c.entity.setX(Number(g.value));
+      isNaN(g.value) || c.entity.setX(+g.value);
       c.updateCoordinateView();
       Entry.stage.updateObject();
     };
@@ -7556,7 +7556,7 @@ Entry.EntryObject.prototype.generateView = function() {
       13 == a.keyCode && c.editObjectValues(!1);
     };
     k.onblur = function(a) {
-      isNaN(k.value) || c.entity.setY(Number(k.value));
+      isNaN(k.value) || c.entity.setY(+k.value);
       c.updateCoordinateView();
       Entry.stage.updateObject();
     };
@@ -7564,7 +7564,7 @@ Entry.EntryObject.prototype.generateView = function() {
       13 == a.keyCode && c.editObjectValues(!1);
     };
     q.onblur = function(a) {
-      isNaN(q.value) || c.entity.setSize(Number(q.value));
+      isNaN(q.value) || c.entity.setSize(+q.value);
       c.updateCoordinateView();
       Entry.stage.updateObject();
     };
@@ -7608,7 +7608,7 @@ Entry.EntryObject.prototype.generateView = function() {
     n.onblur = function(a) {
       a = n.value;
       -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da")));
-      isNaN(a) || c.entity.setRotation(Number(a));
+      isNaN(a) || c.entity.setRotation(+a);
       c.updateRotationView();
       Entry.stage.updateObject();
     };
@@ -7618,7 +7618,7 @@ Entry.EntryObject.prototype.generateView = function() {
     m.onblur = function(a) {
       a = m.value;
       -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da")));
-      isNaN(a) || c.entity.setDirection(Number(a));
+      isNaN(a) || c.entity.setDirection(+a);
       c.updateRotationView();
       Entry.stage.updateObject();
     };
@@ -7690,24 +7690,24 @@ Entry.EntryObject.prototype.generateView = function() {
       }
     }), this.view_.appendChild(d), d = Entry.createElement("div"), d.addClass("entryObjectInformationWorkspace"), d.object = this, this.isInformationToggle = !1, a.appendChild(d), this.informationView_ = d, d = Entry.createElement("div"), d.addClass("entryObjectRotateLabelWrapperWorkspace"), this.view_.appendChild(d), this.rotateLabelWrapperView_ = d, e = Entry.createElement("span"), e.addClass("entryObjectRotateSpanWorkspace"), e.innerHTML = Lang.Workspace.rotation + " : ", n = Entry.createElement("input"), 
     n.addClass("entryObjectRotateInputWorkspace"), this.rotateSpan_ = e, this.rotateInput_ = n, h = Entry.createElement("span"), h.addClass("entryObjectDirectionSpanWorkspace"), h.innerHTML = Lang.Workspace.direction + " : ", m = Entry.createElement("input"), m.addClass("entryObjectDirectionInputWorkspace"), this.directionInput_ = m, d.appendChild(e), d.appendChild(n), d.appendChild(h), d.appendChild(m), d.rotateInput_ = n, d.directionInput_ = m, c = this, n.onkeypress = function(a) {
-      13 == a.keyCode && (a = n.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || c.entity.setRotation(Number(a)), c.updateRotationView(), n.blur());
+      13 == a.keyCode && (a = n.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || c.entity.setRotation(+a), c.updateRotationView(), n.blur());
     }, n.onblur = function(a) {
       c.entity.setRotation(c.entity.getRotation());
       Entry.stage.updateObject();
     }, m.onkeypress = function(a) {
-      13 == a.keyCode && (a = m.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || c.entity.setDirection(Number(a)), c.updateRotationView(), m.blur());
+      13 == a.keyCode && (a = m.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || c.entity.setDirection(+a), c.updateRotationView(), m.blur());
     }, m.onblur = function(a) {
       c.entity.setDirection(c.entity.getDirection());
       Entry.stage.updateObject();
     }, a = Entry.createElement("div"), a.addClass("entryObjectRotationWrapperWorkspace"), a.object = this, this.view_.appendChild(a), d = Entry.createElement("span"), d.addClass("entryObjectCoordinateWorkspace"), a.appendChild(d), e = Entry.createElement("span"), e.addClass("entryObjectCoordinateSpanWorkspace"), e.innerHTML = "X:", g = Entry.createElement("input"), g.addClass("entryObjectCoordinateInputWorkspace"), h = Entry.createElement("span"), h.addClass("entryObjectCoordinateSpanWorkspace"), 
     h.innerHTML = "Y:", k = Entry.createElement("input"), k.addClass("entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right"), l = Entry.createElement("span"), l.addClass("entryObjectCoordinateSpanWorkspace"), l.innerHTML = Lang.Workspace.Size, q = Entry.createElement("input"), q.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size"), d.appendChild(e), d.appendChild(g), d.appendChild(h), d.appendChild(k), d.appendChild(l), d.appendChild(q), 
     d.xInput_ = g, d.yInput_ = k, d.sizeInput_ = q, this.coordinateView_ = d, c = this, g.onkeypress = function(a) {
-      13 == a.keyCode && (isNaN(g.value) || c.entity.setX(Number(g.value)), c.updateCoordinateView(), c.blur());
+      13 == a.keyCode && (isNaN(g.value) || c.entity.setX(+g.value), c.updateCoordinateView(), c.blur());
     }, g.onblur = function(a) {
       c.entity.setX(c.entity.getX());
       Entry.stage.updateObject();
     }, k.onkeypress = function(a) {
-      13 == a.keyCode && (isNaN(k.value) || c.entity.setY(Number(k.value)), c.updateCoordinateView(), c.blur());
+      13 == a.keyCode && (isNaN(k.value) || c.entity.setY(+k.value), c.updateCoordinateView(), c.blur());
     }, k.onblur = function(a) {
       c.entity.setY(c.entity.getY());
       Entry.stage.updateObject();
@@ -9785,13 +9785,13 @@ Entry.Playground.prototype.injectCode = function() {
   Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, a.script);
   var b = 0, c = 0, d = null;
   $(a.script).children("block").each(function(a) {
-    var e = Number($(this).attr("x")), f = Number($(this).attr("y"));
+    var e = +$(this).attr("x"), f = +$(this).attr("y");
     0 == a && (b = e, c = f, d = this);
     e < b && (b = e, d = this);
     f < c && (varyTopY = f);
   });
   if (null != d) {
-    var a = Number($(d).attr("x")), e = Number($(d).attr("y")), f = Blockly.mainWorkspace.getMetrics(), g = (.1 * f.viewWidth).toFixed(1), h = (.4 * f.viewHeight).toFixed(1);
+    var a = +$(d).attr("x"), e = +$(d).attr("y"), f = Blockly.mainWorkspace.getMetrics(), g = (.1 * f.viewWidth).toFixed(1), h = (.4 * f.viewHeight).toFixed(1);
     e == c && (h = (.1 * f.viewHeight).toFixed(1));
     Blockly.mainWorkspace.scrollbar.set(a - f.contentLeft - g, e - f.contentTop - h);
   }
@@ -10863,7 +10863,7 @@ p = Entry.Script.prototype;
 p.init = function(a, b, c) {
   Entry.assert("BLOCK" == a.tagName.toUpperCase(), a.tagName);
   this.type = a.getAttribute("type");
-  this.id = Number(a.getAttribute("id"));
+  this.id = +a.getAttribute("id");
   a.getElementsByTagName("mutation").length && a.getElementsByTagName("mutation")[0].hasAttribute("hashid") && (this.hashId = a.childNodes[0].getAttribute("hashid"));
   "REPEAT" == this.type.substr(0, 6).toUpperCase() && (this.isRepeat = !0);
   b instanceof Entry.Script && (this.previousScript = b, b.parentScript && (this.parentScript = b.parentScript));
@@ -10927,7 +10927,7 @@ p.getValue = function(a) {
   return this.values[a].run();
 };
 p.getNumberValue = function(a) {
-  return Number(this.values[a].run());
+  return +this.values[a].run();
 };
 p.getStringValue = function(a) {
   return String(this.values[a].run());
@@ -10942,7 +10942,7 @@ p.getStringField = function(a) {
   return String(this.fields[a]);
 };
 p.getNumberField = function(a) {
-  return Number(this.fields[a]);
+  return +this.fields[a];
 };
 p.callReturn = function() {
   return this.nextScript ? this.nextScript : this.parentScript ? this.parentScript : null;
@@ -11750,7 +11750,7 @@ Entry.getElementsByClassName = function(a) {
   return b;
 };
 Entry.parseNumber = function(a) {
-  return "string" != typeof a || isNaN(Number(a)) ? "number" != typeof a || isNaN(Number(a)) ? !1 : a : Number(a);
+  return "string" != typeof a || isNaN(+a) ? "number" != typeof a || isNaN(+a) ? !1 : a : +a;
 };
 Entry.countStringLength = function(a) {
   var b, c = 0;
@@ -11816,7 +11816,7 @@ Entry.computeInputWidth = function(a) {
   document.body.appendChild(b);
   a = b.offsetWidth;
   document.body.removeChild(b);
-  return Number(a + 10) + "px";
+  return +(a + 10) + "px";
 };
 Entry.isArrowOrBackspace = function(a) {
   return -1 < [37, 38, 39, 40, 8].indexOf(a);
@@ -11981,7 +11981,7 @@ Entry.getMaxFloatPoint = function(a) {
   return Math.min(b, 20);
 };
 Entry.convertToRoundedDecimals = function(a, b) {
-  return isNaN(a) || !this.isFloat(a) ? a : Number(Math.round(a + "e" + b) + "e-" + b);
+  return isNaN(a) || !this.isFloat(a) ? a : +(Math.round(a + "e" + b) + "e-" + b);
 };
 Entry.attachEventListener = function(a, b, c) {
   setTimeout(function() {
@@ -12421,36 +12421,37 @@ Entry.Func.generateWsBlock = function(a, b, c) {
   e.init(d);
   d = e;
   d.values && (d = e.values.FIELD);
-  c = '<mutation hashid="' + c + '">';
-  b = e = "";
+  e = '<mutation hashid="' + c + '">';
+  c = b = "";
   var f = 0, g = 0;
   a.stringHash = {};
   for (a.booleanHash = {};;) {
     switch(d.type) {
       case "function_field_label":
-        c += '<field type="label" content="' + d.fields.NAME.replace("<", "&lt;").replace(">", "&gt;") + '"></field>';
-        b += d.fields.NAME;
+        e += '<field type="label" content="' + d.fields.NAME.replace("<", "&lt;").replace(">", "&gt;") + '"></field>';
+        c += d.fields.NAME;
         break;
       case "function_field_boolean":
         var h = d.values.PARAM.hashId;
-        c += '<field type="boolean" hashid="' + h + '"></field>';
-        e += '<value name="' + h + '"><block type="function_param_boolean"><mutation hashid="' + h + '"></mutation></block></value>';
+        e += '<field type="boolean" hashid="' + h + '"></field>';
+        b += '<value name="' + h + '"><block type="function_param_boolean"><mutation hashid="' + h + '"></mutation></block></value>';
         a.booleanHash[h] = g;
         g++;
-        b += "\ub17c\ub9ac\uac12" + g;
+        c += "\ub17c\ub9ac\uac12" + g;
         break;
       case "function_field_string":
-        h = d.values.PARAM.hashId, c += '<field type="string" hashid="' + h + '"></field>', e += '<value name="' + h + '"><block type="function_param_string"><mutation hashid="' + h + '"></mutation></block></value>', a.stringHash[h] = f, f++, b += "\ubb38\uc790\uac12" + f;
+        h = d.values.PARAM.hashId, e += '<field type="string" hashid="' + h + '"></field>', b += '<value name="' + h + '"><block type="function_param_string"><mutation hashid="' + h + '"></mutation></block></value>', a.stringHash[h] = f, f++, c += "\ubb38\uc790\uac12" + f;
     }
     if (d.values && d.values.NEXT) {
       d = d.values.NEXT;
     } else {
       break;
     }
-    b += " ";
+    c += " ";
   }
-  b || (b = "\ud568\uc218");
-  return {block:Blockly.Xml.textToDom('<xml><block type="function_general">' + (c + "</mutation>") + e + "</block></xml>").childNodes[0], description:b};
+  a = '<xml><block type="function_general">' + (e + "</mutation>") + b + "</block></xml>";
+  c || (c = "\ud568\uc218");
+  return {block:Blockly.Xml.textToDom(a).childNodes[0], description:c};
 };
 Entry.HWMontior = {};
 Entry.HWMonitor = function(a) {
@@ -12973,7 +12974,7 @@ Entry.Variable.prototype.getId = function() {
   return this.id_;
 };
 Entry.Variable.prototype.getValue = function() {
-  return this.isNumber() ? Number(this.value_) : this.value_;
+  return this.isNumber() ? +this.value_ : this.value_;
 };
 Entry.Variable.prototype.isNumber = function() {
   return isNaN(this.value_) ? !1 : !0;
@@ -13086,7 +13087,7 @@ Entry.Variable.prototype.updateSlideValueByView = function() {
   var a = Math.max(this.valueSetter_.graphics.command.x - 10, 0) / this.maxWidth;
   0 > a && (a = 0);
   1 < a && (a = 1);
-  var b = parseFloat(this.minValue_), c = parseFloat(this.maxValue_), a = (b + Number(Math.abs(c - b) * a)).toFixed(2), a = parseFloat(a);
+  var b = parseFloat(this.minValue_), c = parseFloat(this.maxValue_), a = (b + Math.abs(c - b) * a).toFixed(2), a = parseFloat(a);
   a < b ? this.setValue(this.minValue_) : a > c ? this.setValue(this.maxValue_) : this.setValue(a);
 };
 Entry.Variable.prototype.getMinValue = function() {
@@ -13247,7 +13248,7 @@ Entry.VariableContainer.prototype.renderMessageReference = function(a) {
       Entry.playground.object != this.caller.object && (Entry.container.selectObject(), Entry.container.selectObject(this.caller.object.id, !0), b.select(null), b.select(this.message));
       a = this.caller;
       a = a.funcBlock ? a.funcBlock.getAttribute("id") : a.block.getAttribute("id");
-      Blockly.mainWorkspace.activatePreviousBlock(Number(a));
+      Blockly.mainWorkspace.activatePreviousBlock(+a);
       Entry.playground.toggleOnVariableView();
       Entry.playground.changeViewMode("variable");
     }), f.appendChild(d);
@@ -13286,7 +13287,7 @@ Entry.VariableContainer.prototype.renderVariableReference = function(a) {
       Entry.playground.object != this.caller.object && (Entry.container.selectObject(), Entry.container.selectObject(this.caller.object.id, !0), b.select(null));
       a = this.caller;
       a = a.funcBlock ? a.funcBlock.getAttribute("id") : a.block.getAttribute("id");
-      Blockly.mainWorkspace.activatePreviousBlock(Number(a));
+      Blockly.mainWorkspace.activatePreviousBlock(+a);
       Entry.playground.toggleOnVariableView();
       Entry.playground.changeViewMode("variable");
     }), f.appendChild(d);
@@ -13309,7 +13310,7 @@ Entry.VariableContainer.prototype.renderFunctionReference = function(a) {
     c = d[f], g = Entry.createElement("li"), g.addClass("entryVariableListCallerWorkspace"), g.appendChild(c.object.thumbnailView_.cloneNode()), h = Entry.createElement("div"), h.addClass("entryVariableListCallerNameWorkspace"), h.innerHTML = c.object.name, g.appendChild(h), g.caller = c, g.bindOnClick(function(c) {
       Entry.playground.object != this.caller.object && (Entry.container.selectObject(), Entry.container.selectObject(this.caller.object.id, !0), b.select(null), b.select(a));
       c = this.caller.block.getAttribute("id");
-      Blockly.mainWorkspace.activatePreviousBlock(Number(c));
+      Blockly.mainWorkspace.activatePreviousBlock(+c);
       Entry.playground.toggleOnVariableView();
       Entry.playground.changeViewMode("variable");
     }), e.appendChild(g);
@@ -14276,7 +14277,7 @@ Entry.VariableContainer.prototype.updateListSettingView = function(a) {
   c.removeClass("entryRemove");
 };
 Entry.VariableContainer.prototype.setListLength = function(a) {
-  a = Number(a);
+  a = +a;
   var b = this.selectedList.array_;
   if (!isNaN(a)) {
     var c = b.length;
@@ -14336,7 +14337,7 @@ Entry.block.jr_start = {skeleton:"pebble_event", event:"start", color:"#3BBD70",
   }
   Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
 }};
-Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", contents:[{type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}, {type:"Text", text:"\ubc18\ubcf5"}, {type:"Statement", key:"STATEMENT", accept:"pebble_basic"}], func:function() {
+Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", contents:[{type:"Text", text:Lang.Menus.repeat_0}, {type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}, {type:"Text", text:Lang.Menus.repeat_1}, {type:"Statement", key:"STATEMENT", accept:"pebble_basic"}], func:function() {
   if (void 0 === this.repeatCount) {
     return this.repeatCount = this.block.values.REPEAT, Entry.STATIC.CONTINUE;
   }
@@ -14362,7 +14363,7 @@ Entry.block.jr_item = {skeleton:"pebble_basic", color:"#F46C6C", contents:[{type
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.cparty_jr_item = {skeleton:"pebble_basic", color:"#8ABC1D", contents:[{type:"Text", text:"\uc5f0\ud544 \uc90d\uae30"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/cpartyjr/pen.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}], func:function() {
+Entry.block.cparty_jr_item = {skeleton:"pebble_basic", color:"#8ABC1D", contents:[{type:"Text", text:Lang.Menus.pick_up_pencil}, {type:"Indicator", img:"/img/assets/ntry/bitmap/cpartyjr/pen.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -14379,7 +14380,7 @@ Entry.block.cparty_jr_item = {skeleton:"pebble_basic", color:"#8ABC1D", contents
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_north = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type:"Text", text:"  \uc704\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_up_image.png", position:{x:83, y:0}, size:22}], func:function() {
+Entry.block.jr_north = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type:"Text", text:Lang.Menus.go_up}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_up_image.png", position:{x:83, y:0}, size:22}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -14412,7 +14413,7 @@ Entry.block.jr_north = {skeleton:"pebble_basic", color:"#A751E3", contents:[{typ
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_east = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type:"Text", text:"\uc624\ub978\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_right_image.png", position:{x:83, y:0}, size:22}], func:function() {
+Entry.block.jr_east = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type:"Text", text:Lang.Menus.go_right}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_right_image.png", position:{x:83, y:0}, size:22}], func:function() {
   var a = Ntry.STATIC;
   if (this.isContinue) {
     if (this.isAction) {
@@ -14446,7 +14447,7 @@ Entry.block.jr_east = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_south = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type:"Text", text:"  \uc544\ub798\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_down_image.png", position:{x:83, y:0}, size:22}], func:function() {
+Entry.block.jr_south = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type:"Text", text:Lang.Menus.go_down}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_down_image.png", position:{x:83, y:0}, size:22}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -14479,7 +14480,7 @@ Entry.block.jr_south = {skeleton:"pebble_basic", color:"#A751E3", contents:[{typ
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type:"Text", text:"  \uc67c\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_left_image.png", position:{x:83, y:0}, size:22}], func:function() {
+Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type:"Text", text:Lang.Menus.go_left}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_left_image.png", position:{x:83, y:0}, size:22}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -14512,14 +14513,14 @@ Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_start_basic = {skeleton:"basic_event", event:"start", color:"#3BBD70", contents:[{type:"Indicator", boxMultiplier:1, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}, "\uc2dc\uc791 \ubc84\ud2bc\uc744 \ub20c\ub800\uc744 \ub54c"], func:function() {
+Entry.block.jr_start_basic = {skeleton:"basic_event", event:"start", color:"#3BBD70", contents:[{type:"Indicator", boxMultiplier:1, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}, Lang.Menus.maze_when_run], func:function() {
   var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b;
   for (b in a) {
     this._unit = a[b];
   }
   Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
 }};
-Entry.block.jr_go_straight = {skeleton:"basic", color:"#A751E3", contents:["\uc55e\uc73c\ub85c \uac00\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}], func:function() {
+Entry.block.jr_go_straight = {skeleton:"basic", color:"#A751E3", contents:[Lang.Menus.go_forward, {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -14535,7 +14536,7 @@ Entry.block.jr_go_straight = {skeleton:"basic", color:"#A751E3", contents:["\uc5
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_turn_left = {skeleton:"basic", color:"#A751E3", contents:["\uc67c\ucabd\uc73c\ub85c \ub3cc\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_l.png", size:24}], func:function() {
+Entry.block.jr_turn_left = {skeleton:"basic", color:"#A751E3", contents:[Lang.Menus.jr_turn_left, {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_l.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -14551,7 +14552,7 @@ Entry.block.jr_turn_left = {skeleton:"basic", color:"#A751E3", contents:["\uc67c
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_turn_right = {skeleton:"basic", color:"#A751E3", contents:["\uc624\ub978\ucabd\uc73c\ub85c \ub3cc\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_r.png", size:24}], func:function() {
+Entry.block.jr_turn_right = {skeleton:"basic", color:"#A751E3", contents:[Lang.Menus.jr_turn_right, {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_r.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -14567,7 +14568,7 @@ Entry.block.jr_turn_right = {skeleton:"basic", color:"#A751E3", contents:["\uc62
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_go_slow = {skeleton:"basic", color:"#f46c6c", contents:["\ucc9c\ucc9c\ud788 \uac00\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_slow.png", size:24}], func:function() {
+Entry.block.jr_go_slow = {skeleton:"basic", color:"#f46c6c", contents:[Lang.Menus.go_slow, {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_slow.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -14583,12 +14584,12 @@ Entry.block.jr_go_slow = {skeleton:"basic", color:"#f46c6c", contents:["\ucc9c\u
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_repeat_until_dest = {skeleton:"basic_loop", color:"#498DEB", contents:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_goal_image.png", size:18}, "\ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", alignY:15, alignX:2}], func:function() {
+Entry.block.jr_repeat_until_dest = {skeleton:"basic_loop", color:"#498DEB", contents:[Lang.Menus.repeat_until_reach_2, {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_goal_image.png", size:18}, Lang.Menus.repeat_until_reach_1, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", alignY:15, alignX:2}], func:function() {
   if (1 !== this.block.values.STATEMENT.getBlocks().length) {
     return this.executor.stepInto(this.block.values.STATEMENT), Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", contents:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_construction_image.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", alignY:15, alignX:2}], func:function() {
+Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", contents:[Lang.Menus.jr_if_1, {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_construction_image.png", size:18}, Lang.Menus.jr_if_2, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", alignY:15, alignX:2}], func:function() {
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -14606,7 +14607,7 @@ Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", conten
     }
   }
 }};
-Entry.block.jr_if_speed = {skeleton:"basic_loop", color:"#498DEB", contents:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_speed_image.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", alignY:15, alignX:2}], func:function() {
+Entry.block.jr_if_speed = {skeleton:"basic_loop", color:"#498DEB", contents:[Lang.Menus.jr_if_1, {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_speed_image.png", size:18}, Lang.Menus.jr_if_2, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", alignY:15, alignX:2}], func:function() {
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -15171,6 +15172,7 @@ Entry.Executor = function(a) {
 })(Entry.Executor.prototype);
 Entry.FieldDropdown = function(a, b) {
   this._block = b.block;
+  this._blockView = b;
   this.box = new Entry.BoxModel;
   this.svgGroup = null;
   this._contents = a;
@@ -15209,27 +15211,27 @@ Entry.FieldDropdown = function(a, b) {
       a.optionGroup.remove();
     });
     this.optionGroup = c.getBoard().svgGroup.group();
-    var d = c.svgGroup.transform().globalMatrix, c = this._contents.options;
-    this.optionGroup.attr({class:"entry-field-dropdown", transform:"t" + (d.e - 60) + " " + (d.f + 35)});
-    var d = [], e = 0;
-    d.push(this.optionGroup.rect(0, 0, 0, 23 * c.length).attr({fill:"white"}));
-    for (var f = 0, g = c.length;f < g;f++) {
-      var h = c[f], k = h[0], h = h[1], l = this.optionGroup.group().attr({class:"rect", transform:"t0 " + 23 * f});
-      d.push(l.rect(0, 0, 0, 23));
-      this.value == h && l.text(5, 13, "\u2713").attr({"alignment-baseline":"central"});
-      k = l.text(20, 13, k).attr({"alignment-baseline":"central"});
-      e = Math.max(k.node.getComputedTextLength() + 50, e);
+    var c = c.svgGroup.transform().globalMatrix, d = [], e = 0, f = this._contents.options;
+    d.push(this.optionGroup.rect(0, 0, 0, 23 * f.length).attr({fill:"white"}));
+    for (var g = 0, h = f.length;g < h;g++) {
+      var k = f[g], l = k[0], k = k[1], q = this.optionGroup.group().attr({class:"rect", transform:"t0 " + 23 * g});
+      d.push(q.rect(0, 0, 0, 23));
+      this.value == k && q.text(5, 13, "\u2713").attr({"alignment-baseline":"central"});
+      l = q.text(20, 13, l).attr({"alignment-baseline":"central"});
+      e = Math.max(l.node.getComputedTextLength() + 50, e);
       (function(c, d) {
         c.mousedown(function() {
           a.applyValue(d);
           a.destroyOption();
         });
-      })(l, h);
+      })(q, k);
     }
-    var q = {width:e};
+    var n = {width:e};
     d.forEach(function(a) {
-      a.attr(q);
+      a.attr(n);
     });
+    d = this.box;
+    this.optionGroup.attr({class:"entry-field-dropdown", transform:"t" + (c.e + this._blockView.offsetX + d.x + 29 + d.width / 2 - e / 2) + " " + (c.f + 35)});
   };
   a.align = function(a, c, d) {
     var e = this.svgGroup, f = "t" + a + " " + c;
@@ -15602,7 +15604,7 @@ Entry.skeleton.pebble_loop = {fontSize:16, path:function(a) {
 }, contentPos:function() {
   return {x:-46, y:25};
 }};
-Entry.skeleton.pebble_basic = {fontSize:16, morph:["prev", "next"], path:function(a) {
+Entry.skeleton.pebble_basic = {fontSize:15, morph:["prev", "next"], path:function(a) {
   var b = a.block;
   a = b.prev && "pebble_basic" === b.prev._schema.skeleton;
   b = b.next && "pebble_basic" === b.next._schema.skeleton;
@@ -16250,7 +16252,7 @@ Entry.Xml.getNumberValue = function(a, b, c) {
   }
   for (var d in c) {
     if (c[d].tagName && "VALUE" == c[d].tagName.toUpperCase() && c[d].getAttribute("name") == b) {
-      return Number(Entry.Xml.operate(a, c[d].children[0]));
+      return +Entry.Xml.operate(a, c[d].children[0]);
     }
   }
   return null;
@@ -16273,7 +16275,7 @@ Entry.Xml.getNumberField = function(a, b) {
   }
   for (var d in c) {
     if ("FIELD" == c[d].tagName.toUpperCase() && c[d].getAttribute("name") == a) {
-      return Number(c[d].textContent);
+      return +c[d].textContent;
     }
   }
 };

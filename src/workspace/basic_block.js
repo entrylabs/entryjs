@@ -42,6 +42,10 @@ Entry.block.jr_repeat = {
     color: "#127CDB",
     contents: [
         {
+            type: "Text",
+            text: Lang.Menus.repeat_0
+        },
+        {
             type: "Dropdown",
             key: "REPEAT",
             options: [
@@ -60,7 +64,7 @@ Entry.block.jr_repeat = {
         },
         {
             type: "Text",
-            text: "반복"
+            text: Lang.Menus.repeat_1
         },
         {
             type: "Statement",
@@ -126,7 +130,7 @@ Entry.block.cparty_jr_item = {
     contents: [
         {
             type: "Text",
-            text: "연필 줍기"
+            text: Lang.Menus.pick_up_pencil
         },
         {
             type: "Indicator",
@@ -164,7 +168,7 @@ Entry.block.jr_north = {
     contents: [
         {
             type: "Text",
-            text: "  위쪽"
+            text: Lang.Menus.go_up
         },
         {
             type: "Indicator",
@@ -220,7 +224,7 @@ Entry.block.jr_east = {
     contents: [
         {
             type: "Text",
-            text: "오른쪽"
+            text: Lang.Menus.go_right
         },
         {
             type: "Indicator",
@@ -280,7 +284,7 @@ Entry.block.jr_south = {
     contents: [
         {
             type: "Text",
-            text: "  아래쪽"
+            text: Lang.Menus.go_down
         },
         {
             type: "Indicator",
@@ -340,7 +344,7 @@ Entry.block.jr_west = {
     contents: [
         {
             type: "Text",
-            text: "  왼쪽"
+            text: Lang.Menus.go_left
         },
         {
             type: "Indicator",
@@ -409,7 +413,7 @@ Entry.block.jr_start_basic = {
                  x: 0, y: -2
             }
         },
-        "시작 버튼을 눌렀을 때"
+        Lang.Menus.maze_when_run
     ],
     func: function() {
         var entities = Ntry.entityManager.getEntitiesByComponent(
@@ -427,7 +431,7 @@ Entry.block.jr_go_straight = {
     skeleton: "basic",
     color: "#A751E3",
     contents: [
-        "앞으로 가기",
+        Lang.Menus.go_forward,
         {
             type: "Image",
             img: "/img/assets/ntry/bitmap/jr/cparty_go_straight.png",
@@ -461,7 +465,7 @@ Entry.block.jr_turn_left = {
     skeleton: "basic",
     color: "#A751E3",
     contents: [
-        "왼쪽으로 돌기",
+        Lang.Menus.jr_turn_left,
         {
             type: "Image",
             img: "/img/assets/ntry/bitmap/jr/cparty_rotate_l.png",
@@ -495,7 +499,7 @@ Entry.block.jr_turn_right = {
     skeleton: "basic",
     color: "#A751E3",
     contents: [
-        "오른쪽으로 돌기",
+        Lang.Menus.jr_turn_right,
         {
             type: "Image",
             img: "/img/assets/ntry/bitmap/jr/cparty_rotate_r.png",
@@ -529,7 +533,7 @@ Entry.block.jr_go_slow = {
     skeleton: "basic",
     color: "#f46c6c",
     contents: [
-        "천천히 가기",
+        Lang.Menus.go_slow,
         {
             type: "Image",
             img: "/img/assets/ntry/bitmap/jr/cparty_go_slow.png",
@@ -563,12 +567,13 @@ Entry.block.jr_repeat_until_dest = {
     skeleton: "basic_loop",
     color: "#498DEB",
     contents: [
+        Lang.Menus.repeat_until_reach_2,
         {
             type: "Image",
             img: "/img/assets/ntry/bitmap/jr/jr_goal_image.png",
             size: 18
         },
-        "만날 때 까지 반복하기",
+        Lang.Menus.repeat_until_reach_1,
         {
             type: "Image",
             img: "/img/assets/week/blocks/for.png",
@@ -595,13 +600,13 @@ Entry.block.jr_if_construction = {
     skeleton: "basic_loop",
     color: "#498DEB",
     contents: [
-        "만약",
+        Lang.Menus.jr_if_1,
         {
             type: "Image",
             img: "/img/assets/ntry/bitmap/jr/jr_construction_image.png",
             size: 18
         },
-        "앞에 있다면",
+        Lang.Menus.jr_if_2,
         {
             type: "Image",
             img: "/img/assets/week/blocks/for.png",
@@ -663,13 +668,13 @@ Entry.block.jr_if_speed = {
     skeleton: "basic_loop",
     color: "#498DEB",
     contents: [
-        "만약",
+        Lang.Menus.jr_if_1,
         {
             type: "Image",
             img: "/img/assets/ntry/bitmap/jr/jr_speed_image.png",
             size: 18
         },
-        "앞에 있다면",
+        Lang.Menus.jr_if_2,
         {
             type: "Image",
             img: "/img/assets/week/blocks/for.png",
