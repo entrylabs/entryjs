@@ -413,7 +413,7 @@ Entry.block.jr_start_basic = {
                  x: 0, y: -2
             }
         },
-        Lang.Menus.when_start_clicked
+        Lang.Menus.maze_when_run
     ],
     func: function() {
         var entities = Ntry.entityManager.getEntitiesByComponent(
