@@ -395,7 +395,6 @@ Entry.BlockView.DRAG_RADIUS = 5;
                 height: 0,
                 mode: true
             });
-            board.set({dragBlock:this});
             this.addDragging();
             this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
         } else if (Entry.Utils.isRightButton(e)) {
@@ -507,6 +506,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
                     } else board.setMagnetedBlock(null);
                     if (!blockView.originPos)
                         blockView.originPos = {x: blockView.x, y: blockView.y};
+                    board.set({dragBlock:blockView});
                 } else {
                     board.cloneToGlobal(e);
                 }
