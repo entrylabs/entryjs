@@ -235,9 +235,10 @@ Blockly.Blocks.message_cast_wait = {
 Entry.block.message_cast_wait = function (sprite, script) {
     if (script.runningScript) {
         var runningScript = script.runningScript;
-        for (var i = 0; i < runningScript.length; i++) {
+        var length = runningScript.length;
+        for (var i = 0; i < length; i++) {
             var executor = runningScript.shift();
-            if (!executor.isEnd())
+            if (executor && !executor.isEnd())
                 runningScript.push(executor);
         }
         if (runningScript.length) {
@@ -256,8 +257,10 @@ Entry.block.message_cast_wait = function (sprite, script) {
             ["when_message_cast", value]
         );
         var runningScript = [];
-        for (var i in data) {
-            runningScript = runningScript.concat(data.shift());
+        while (data.length) {
+            var executor = data.shift();
+            if (executor)
+                runningScript = runningScript.concat(executor);
         }
 
         script.runningScript = runningScript;
