@@ -135,6 +135,22 @@ Entry.PARAM = -1;
         this.executors = [];
     };
 
+    p.clearExecutorsByEntity = function(entity) {
+        var executors = [];
+        while (this.executors.length) {
+            var executor = this.executors.shift();
+            if (executor.entity !== entity)
+                executors.push(executor);
+            else
+                executor.end();
+        }
+        this.executors = executors;
+    };
+
+    p.addExecutor = function(executor) {
+        this.executors.push(executor);
+    };
+
     p.createThread = function(blocks) {
         if (!(blocks instanceof Array))
             return console.error("blocks must be array");

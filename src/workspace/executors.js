@@ -56,6 +56,10 @@ Entry.Executor = function(block, entity) {
         return Entry.STATIC.PASS;
     };
 
+    p.end = function() {
+         this.scope.block === null;
+    };
+
     p.isEnd = function() {
          return this.scope.block === null;
     };
@@ -134,5 +138,10 @@ Entry.Scope = function(block, executor) {
 
     p._getStatementIndex = function(key) {
         return Entry.block[this.type].statementsKeyMap[key];
+    };
+
+    p.die = function() {
+        this.block = null;
+        return Entry.STATIC.BREAK;
     };
 })(Entry.Scope.prototype);

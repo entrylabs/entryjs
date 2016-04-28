@@ -1865,26 +1865,14 @@ Entry.block.stop_object = function(b, a) {
   var c = a.getField("TARGET", a), d = Entry.container;
   switch(c) {
     case "all":
-      d.mapEntityIncludeCloneOnScene(function(a) {
-        a.clearScript();
-      });
-      break;
-    case "thisObject":
-      b.clearScript();
-      c = b.parent.clonedEntities;
-      c.map(function(a) {
-        a.clearScript();
-      });
-      break;
+      return d.clearRunningState(), this.die();
     case "thisOnly":
-      b.clearScript();
-      break;
+      return b.parent.script.clearExecutorsByEntity(b), this.die();
+    case "thisThread":
+      return this.die();
     case "otherThread":
-      return b.clearScript(), c = b.parent.clonedEntities, c.map(function(a) {
-        a.clearScript();
-      }), a.callReturn();
+      b.parent.script.clearExecutors(), b.parent.script.addExecutor(this.executor);
   }
-  return null;
 };
 Blockly.Blocks.restart_project = {init:function() {
   this.setColour("#498deb");
@@ -14196,26 +14184,14 @@ isNotFor:[], func:function(b, a) {
   var c = a.getField("TARGET", a), d = Entry.container;
   switch(c) {
     case "all":
-      d.mapEntityIncludeCloneOnScene(function(a) {
-        a.clearScript();
-      });
-      break;
-    case "thisObject":
-      b.clearScript();
-      c = b.parent.clonedEntities;
-      c.map(function(a) {
-        a.clearScript();
-      });
-      break;
+      return d.clearRunningState(), this.die();
     case "thisOnly":
-      b.clearScript();
-      break;
+      return b.parent.script.clearExecutorsByEntity(b), this.die();
+    case "thisThread":
+      return this.die();
     case "otherThread":
-      return b.clearScript(), c = b.parent.clonedEntities, c.map(function(a) {
-        a.clearScript();
-      }), a.callReturn();
+      b.parent.script.clearExecutors(), b.parent.script.addExecutor(this.executor);
   }
-  return null;
 }}, restart_project:{color:"#498deb", skeleton:"basic_without_next", statements:[], template:"\ucc98\uc74c\ubd80\ud130 \ub2e4\uc2dc \uc2e4\ud589\ud558\uae30 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null], type:"restart_project"}, "class":"terminate", isNotFor:[], func:function(b, a) {
   Entry.engine.toggleStop();
   Entry.engine.toggleRun();
@@ -16459,6 +16435,16 @@ Entry.PARAM = -1;
   b.clearExecutors = function() {
     this.executors = [];
   };
+  b.clearExecutorsByEntity = function(a) {
+    for (var b = [];this.executors.length;) {
+      var d = this.executors.shift();
+      d.entity !== a ? b.push(d) : d.end();
+    }
+    this.executors = b;
+  };
+  b.addExecutor = function(a) {
+    this.executors.push(a);
+  };
   b.createThread = function(a) {
     if (!(a instanceof Array)) {
       return console.error("blocks must be array");
@@ -16658,6 +16644,9 @@ Entry.Executor = function(b, a) {
     this._callStack.length && (this.scope = this._callStack.pop());
     return Entry.STATIC.PASS;
   };
+  b.end = function() {
+    null === this.scope.block;
+  };
   b.isEnd = function() {
     return null === this.scope.block;
   };
@@ -16715,6 +16704,10 @@ Entry.Scope = function(b, a) {
   };
   b._getStatementIndex = function(a) {
     return Entry.block[this.type].statementsKeyMap[a];
+  };
+  b.die = function() {
+    this.block = null;
+    return Entry.STATIC.BREAK;
   };
 })(Entry.Scope.prototype);
 Entry.Field = function() {
