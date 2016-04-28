@@ -4444,12 +4444,12 @@ Entry.block = {
             }
         ],
         "events": {
-            "blockViewAdd": [
+            "viewAdd": [
                 function() {
                     if (Entry.engine) Entry.engine.showProjectTimer();
                 }
             ],
-            "blockViewDestroy": [
+            "viewDestroy": [
                 function(block) {
                     if (Entry.engine) Entry.engine.hideProjectTimer(block);
                 }
@@ -4501,12 +4501,12 @@ Entry.block = {
             }
         ],
         "events": {
-            "blockViewAdd": [
+            "viewAdd": [
                 function() {
                     if (Entry.engine) Entry.engine.showProjectTimer();
                 }
             ],
-            "blockViewDestroy": [
+            "viewDestroy": [
                 function(block) {
                     if (Entry.engine) Entry.engine.hideProjectTimer(block);
                 }
@@ -4582,12 +4582,12 @@ Entry.block = {
             }
         ],
         "events": {
-            "blockViewAdd": [
+            "viewAdd": [
                 function() {
                     if (Entry.engine) Entry.engine.showProjectTimer();
                 }
             ],
-            "blockViewDestroy": [
+            "viewDestroy": [
                 function(block) {
                     if (Entry.engine) Entry.engine.hideProjectTimer(block);
                 }
@@ -5192,12 +5192,12 @@ Entry.block = {
             }
         ],
         "events": {
-            "blockViewAdd": [
+            "viewAdd": [
                 function() {
                     if (Entry.engine) Entry.engine.showProjectTimer();
                 }
             ],
-            "blockViewDestroy": [
+            "viewDestroy": [
                 function(block) {
                     if (Entry.engine) Entry.engine.hideProjectTimer(block);
                 }
@@ -12919,13 +12919,13 @@ Entry.block = {
             }
         ],
         "events": {
-            "blockViewAdd": [
+            "viewAdd": [
                 function(block) {
                     var vc = Entry.variableContainer;
                     if (vc) vc.addRef('_messageRefs', block);
                 }
             ],
-            "blockViewDestroy": [
+            "viewDestroy": [
                 function(block) {
                     var vc = Entry.variableContainer;
                     if (vc) vc.removeRef('_messageRefs', block);
@@ -12970,13 +12970,13 @@ Entry.block = {
             }
         ],
         "events": {
-            "blockViewAdd": [
+            "viewAdd": [
                 function(block) {
                     var vc = Entry.variableContainer;
                     if (vc) vc.addRef('_messageRefs', block);
                 }
             ],
-            "blockViewDestroy": [
+            "viewDestroy": [
                 function(block) {
                     var vc = Entry.variableContainer;
                     if (vc) vc.removeRef('_messageRefs', block);
@@ -13030,13 +13030,13 @@ Entry.block = {
             }
         ],
         "events": {
-            "blockViewAdd": [
+            "viewAdd": [
                 function(block) {
                     var vc = Entry.variableContainer;
                     if (vc) vc.addRef('_messageRefs', block);
                 }
             ],
-            "blockViewDestroy": [
+            "viewDestroy": [
                 function(block) {
                     var vc = Entry.variableContainer;
                     if (vc) vc.removeRef('_messageRefs', block);
@@ -13309,13 +13309,13 @@ Entry.block = {
             }
         ],
         "events": {
-            "blockViewAdd": [
+            "viewAdd": [
                 function(block) {
                     var vc = Entry.variableContainer;
                     if (vc) vc.addRef('_variableRefs', block);
                 }
             ],
-            "blockViewDestroy": [
+            "viewDestroy": [
                 function(block) {
                     var vc = Entry.variableContainer;
                     if (vc) vc.removeRef('_variableRefs', block);
@@ -13381,13 +13381,13 @@ Entry.block = {
             }
         ],
         "events": {
-            "blockViewAdd": [
+            "viewAdd": [
                 function(block) {
                     var vc = Entry.variableContainer;
                     if (vc) vc.addRef('_variableRefs', block);
                 }
             ],
-            "blockViewDestroy": [
+            "viewDestroy": [
                 function(block) {
                     var vc = Entry.variableContainer;
                     if (vc) vc.removeRef('_variableRefs', block);
@@ -13443,13 +13443,13 @@ Entry.block = {
             }
         ],
         "events": {
-            "blockViewAdd": [
+            "viewAdd": [
                 function(block) {
                     var vc = Entry.variableContainer;
                     if (vc) vc.addRef('_variableRefs', block);
                 }
             ],
-            "blockViewDestroy": [
+            "viewDestroy": [
                 function(block) {
                     var vc = Entry.variableContainer;
                     if (vc) vc.removeRef('_variableRefs', block);
@@ -13498,13 +13498,13 @@ Entry.block = {
             }
         ],
         "events": {
-            "blockViewAdd": [
+            "viewAdd": [
                 function(block) {
                     var vc = Entry.variableContainer;
                     if (vc) vc.addRef('_variableRefs', block);
                 }
             ],
-            "blockViewDestroy": [
+            "viewDestroy": [
                 function(block) {
                     var vc = Entry.variableContainer;
                     if (vc) vc.removeRef('_variableRefs', block);
@@ -13547,13 +13547,13 @@ Entry.block = {
             }
         ],
         "events": {
-            "blockViewAdd": [
+            "viewAdd": [
                 function(block) {
                     var vc = Entry.variableContainer;
                     if (vc) vc.addRef('_variableRefs', block);
                 }
             ],
-            "blockViewDestroy": [
+            "viewDestroy": [
                 function(block) {
                     var vc = Entry.variableContainer;
                     if (vc) vc.removeRef('_variableRefs', block);
@@ -13597,12 +13597,12 @@ Entry.block = {
             }
         ],
         "events": {
-            "blockViewAdd": [
+            "viewAdd": [
                 function() {
                     if (Entry.container) Entry.container.showProjectAnswer();
                 }
             ],
-            "blockViewDestroy": [
+            "viewDestroy": [
                 function(block) {
                     if (Entry.container) Entry.container.hideProjectAnswer(block);
                 }
@@ -13673,12 +13673,12 @@ Entry.block = {
             }
         ],
         "events": {
-            "blockViewAdd": [
+            "viewAdd": [
                 function() {
                     if (Entry.container) Entry.container.showProjectAnswer();
                 }
             ],
-            "blockViewDestroy": [
+            "viewDestroy": [
                 function(block) {
                     if (Entry.container) Entry.container.hideProjectAnswer(block);
                 }
@@ -13719,13 +13719,13 @@ Entry.block = {
             }
         ],
         "events": {
-            "blockViewAdd": [
+            "viewAdd": [
                 function(block) {
                     var vc = Entry.variableContainer;
                     if (vc) vc.addRef('_variableRefs', block);
                 }
             ],
-            "blockViewDestroy": [
+            "viewDestroy": [
                 function(block) {
                     var vc = Entry.variableContainer;
                     if (vc) vc.removeRef('_variableRefs', block);
@@ -14193,12 +14193,12 @@ Entry.block = {
             }
         ],
         "events": {
-            "blockViewAdd": [
+            "viewAdd": [
                 function(block) {
                     if (Entry.container) Entry.container.showProjectAnswer();
                 }
             ],
-            "blockViewDestroy": [
+            "viewDestroy": [
                 function(block) {
                     if (Entry.container) Entry.container.hideProjectAnswer(block);
                 }
