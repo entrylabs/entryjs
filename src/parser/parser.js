@@ -228,8 +228,7 @@ Entry.Parser = function(mode, type, cm) {
                     var astTree = pyAstGenerator.generate(code);
 
                     result = this._parser.Program(astTree);
-
-                    //result = this._convertor.Program(astTree);
+                    console.log("result", result);
                 } catch(error) {
                     if (this.codeMirror) {
                         var annotation;
@@ -417,7 +416,7 @@ Entry.Parser = function(mode, type, cm) {
     p.mappingSyntaxPy = function(mode) {
         if(mode != Entry.Vim.WORKSPACE_MODE) return;
 
-        var syntaxList = [];
+        var syntaxList = {};
         var blockList = Entry.block;
 
         for (var key in blockList) {
@@ -427,23 +426,17 @@ Entry.Parser = function(mode, type, cm) {
 
             if(block.syntax && block.syntax.py)
                 syntax = block.syntax.py;
-
             if (!syntax)
                 continue;
 
             syntax = String(syntax);
-
             if(syntax.match(/\(.*\)/)) {
                 var index = syntax.indexOf('(');
                 
                 syntax = syntax.substring(0, index);
             }
-            pyBlockSyntax[0] = syntax;
-            pyBlockSyntax[1] = block;
-
-            syntaxList.push(pyBlockSyntax);
+            syntaxList[syntax] = key;
         }
-        
         return syntaxList;
     };
 

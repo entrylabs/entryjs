@@ -5,84 +5,88 @@
 
 goog.provide("Entry.PyToBlockParser");
 
-Entry.PyToBlockParser = function(blockSyntaxList) {
-    this.blockSyntaxList = blockSyntaxList;
+Entry.PyToBlockParser = function(blockSyntax) {
+    this.blockSyntax = blockSyntax;
 };
 
 (function(p){
-
-    p.Start = function(ast) {
-        var code = [];
-        
-        
-        if(ast.type != 'Program') 
-            return;
-        else
-            this.Program(ast);
-
-    };
-
     p.Program = function(node) {
-        var blocks = [];
+        if(node.type != 'Program') return;
+        var code = [];
+        var thread = []; 
 
-        var nodeList = node.body;
+        var nodes = node.body;
 
-        for(var node in nodeList) {
-            var block = this[node.type](node));
-            blocks.push(block);
+        for(var index in nodes) {
+            var node = nodes[index];
+            var result = this[node.type](node);
+            
+            thread.push({
+                type: result.block
+            });
         }
+
+        code.push(thread);
 
         return code;
     };
 
     p.Identifier = function(node) {
-        var name = node.name
+        console.log("Identifier", node);
+        var name = node.name;
         return {
             name: name
-        }
+        };
     };
 
     p.Literal = function(node) {
+        console.log("Literal", node);
+        console.log("typeof node at Literal", typeof node.value);
+
         var value;
-        if(typeof node.value === String) {
-            value = node.value;
+        if(typeof node.value === 'string') {
+            value = node.value; 
         } 
-        else if(typeof node.value === boolean) {
+        else if(typeof node.value === 'boolean') {
             value = node.value;
         } 
         else if(typeof node.value === null) {
             value = node.value;
         }
-        else if(typeof node.value === Number) {
+        else if(typeof node.value === 'number') {
             value = node.value;
         } 
-        else if(typeof node.value === RegExp) {
+        else if(typeof node.value === 'RegExp') {
             var value = this[typeof node.value](node);
             value = value.regex.pattern;
         }
         else {
-            throw value = null;
+            value = null;
         }
 
+        console.log("value", value);
+
         return {
-            value: value
-        }
+            value: value 
+        };
 
     };
 
     p.RegExp = function(node) {
+        console.log("RegExp", node);
         var regex = node.regex;
         return {
             regex: regex
-        }
+        };
     };
 
-    P.Function = function(node) {
+    p.Function = function(node) {
+        console.log("Function", node);
         var id = this[node.id](node);
         
         var params = [];
-        for(var param in node.params){
-            var param = this.pattern(param);
+        for(var index in node.params){
+            var param = node.params[index];
             params.push(param);
         }
 
@@ -92,90 +96,128 @@ Entry.PyToBlockParser = function(blockSyntaxList) {
             id: id,
             params: params,
             body: body
-        }
+        };
     };
 
-    p.ExpressionStatement = function(node) {
+    p.ExpressionStatement = function(node) { 
+        console.log("ExpressionStatement", node);
         var expression = this[node.expression.type](node.expression);
-        return expression;
+        console.log("ExpressionStatement", expression);
+
+        console.log("expression", expression);
+
+        var targetSyntax = String(expression.callee.object.name).concat(".").concat(expression.callee.property.name);
+        console.log("ts", targetSyntax);
+
+        var block = this.blockSyntax[targetSyntax];
+
+        console.log("block", block);
+
+        return {
+            block: block
+        }        
+
+        /*return {
+            expresstion: expression
+        }*/
     };
 
     p.BlockStatement = function(node) {
+        console.log("BlockStatement", node);
        var bodies = [];
-       for(var statement in node.body) {
+       for(var index in node.body) {
+            var statment = node.body[index];
             var body = this[statement.type](statement);
             bodies.push(body);
         }
 
         return {
-            body: bodies;
-        }
+            body: bodies 
+        };
     };
 
     p.EmptyStatement = function(node) {
-        return '';
+        console.log("EmptyStatement", node);
+        return {
+            type: node.type
+        };
     };
 
     p.DebuggerStatement = function(node) {
-        return 'debugger';
+        console.log("DebuggerStatement", node);
+        return {
+            type: node.type
+        };
     };
 
     p.WithStatement = function(node) {
+        console.log("WithStatement", node);
         var object = this[node.object.type](node.object);
         var body = this[node.body.type](node.body);
 
         return {
             object: object,
             body: body
-        }
+        };
     };
 
     p.ReturnStaement = function(node) {
+        console.log("ReturnStaement", node);
         var argument;
-        if(node.argument == null) 
+        if(node.argument === null) 
             argument = null;
         else 
             argument = this[node.argument.type](node.argument);
 
-        return argument
+        return {
+            argument: argument
+        };
     };
 
     p.LabeledStatement = function(node) {
+        console.log("LabeledStatement", node);
         var label = this[node.label.type](node.label);
         var body = this[node.body.type](node.body);
 
         return {
             label: label,
             body: body
-        }
+        };
     };
 
     p.BreakStatement = function(node) {
+        console.log("BreakStatement", node);
         var label;
-        if(node.label == null)
+        if(node.label === null)
             label = null;
         else 
             label = this[node.label.type](node.label);
 
-        return label;
+        return {
+            label: label
+        };
     };
 
     p.ContinueStatement = function(node) {
+        console.log("ContinueStatement", node);
         var label;
-        if(node.label == null)
+        if(node.label === null)
             label = null;
         else 
             label = this[node.label.type](node.label);
 
-        return label;
+        return {
+            label: label
+        };
     };
 
     p.IfStatement = function(node) {
+        console.log("IfStatement", node);
         var test = this[node.test.type](node.test);
         var consequent = this[node.consequent.type](node.consequent);
         
         var alternate;
-        if(node.alternate == null)
+        if(node.alternate === null)
             alternate = null;
         else 
             alternate = this[node.alternate.type](node.alternate);
@@ -184,13 +226,15 @@ Entry.PyToBlockParser = function(blockSyntaxList) {
             test: test,
             consequent: consequent,
             alternate: alternate
-        }
+        };
     };
 
     p.SwitchStatement = function(node) {
+        console.log("SwitchStatement", node);
         var discriminant = this[node.discriminant.type](node.discriminant);
         var cases = [];
-        for(var switchCase in node.cases) {
+        for(var index in node.cases) {
+            var switchCase = node.cases[index];
             var caseStmt = this[switchCase.type](switchCase);
             cases.push(caseStmt);
         }
@@ -198,19 +242,21 @@ Entry.PyToBlockParser = function(blockSyntaxList) {
         return {
             discriminant: discriminant,
             cases: cases
-        }
+        };
 
     };
 
     p.SwitchCase = function(node) {
+        console.log("SwitchCase", node);
         var test;
-        if(node.test == null)
+        if(node.test === null)
             test = null;
         else
             test = this[node.test.type](node.test);
 
         var consequents;
-        for(var statment in node.consequent){
+        for(var index in node.consequent){
+            var statement = node.consequent[index];
             var consequent = this[statment.type](statment);
             consequents.push(consequent);
         } 
@@ -218,616 +264,522 @@ Entry.PyToBlockParser = function(blockSyntaxList) {
         return {
             test: test,
             consequent: consequents
-        }
+        };
     };
 
     p.ThrowStatement = function(node) {
-        var argument = this[node.argument.type](node.argument);
+        console.log("ThrowStatement", node);
+        var arg = this[node.argument.type](node.argument);
 
         return {
-            argument: arguemnt
-        }
-    };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //legacy code
-
-    /*p.ExpressionStatement = function(node) {
-        var expression = node.expression;
-        return this[expression.type](expression);
-    };
-
-    p.ForStatement = function(node) {
-        var init = node.init,
-            test = node.test,
-            update = node.update,
-            body = node.body;
-
-        var contents = "";
-
-        var blockType = this.syntax.ForStatement;
-
-        if (!blockType) {
-            body = this[body.type](body);
-
-            var startVal = init.declarations[0].init.value;
-            var test = test;
-            var op = test.operator;
-            var endVal = test.right.value;
-            var updateOp = update.operator;
-
-            var res = 0;
-            if(!(updateOp == '++')){
-                var temp = startVal;
-                var startVal = endVal;
-                var endVal = temp;
-            }
-
-            switch (op) {
-                case '<':
-                    res = endVal - startVal;
-                break;
-
-                case '<=':
-                    res = ((endVal+1) - startVal);
-                break;
-
-                case '>':
-                    res =  startVal - endVal;
-                break;
-
-                case '>=':
-                    res = ((startVal+ 1) - endVal);
-                break;
-            }
-
-            return this.BasicIteration(node, res, body);
-        } else {
-            throw {
-                message : '지원하지 않는 표현식 입니다.',
-                node : node
-            };
-        }
-    };
-
-    p.BlockStatement = function(node) {
-        var blocks = [];
-        var body = node.body;
-
-        for (var i = 0; i < body.length; i++) {
-            var childNode = body[i];
-
-            var block = this[childNode.type](childNode);
-            if(!block) {
-                continue;
-            }
-            else if(block.type === undefined) {
-                throw {
-                    message : '해당하는 블록이 없습니다.',
-                    node : childNode
-                };
-            }
-            else if (block)
-                blocks.push(block);
-        }
-
-        return blocks;
-    };
-
-    p.EmptyStatement = function(node) {
-        throw {
-            message : 'empty는 지원하지 않는 표현식 입니다.',
-            node : node
-        };
-    };
-
-    p.DebuggerStatement = function(node) {
-        throw {
-            message : 'debugger는 지원하지 않는 표현식 입니다.',
-            node : node
-        };
-    };
-
-    p.WithStatement = function(node) {
-        var object = node.object,
-            body = node.body;
-
-        throw {
-            message : 'with는 지원하지 않는 표현식 입니다.',
-            node : node
-        };
-    };
-
-    //control flow
-    p.ReturnStaement = function(node) {
-        var args = node.arguments;
-
-        throw {
-            message : 'return은 지원하지 않는 표현식 입니다.',
-            node : node
-        };
-    };
-
-    p.LabeledStatement = function(node) {
-        var label = node.label,
-            body = node.body;
-
-        throw {
-            message : 'label은 지원하지 않는 표현식 입니다.',
-            node : node
-        };
-    };
-
-    p.BreakStatement = function(node) {
-        var label = node.label;
-
-        throw {
-            message : 'break는 지원하지 않는 표현식 입니다.',
-            node : node
-        };
-    };
-
-    p.ContinueStatement = function(node) {
-        var label = node.label;
-
-        throw {
-            message : 'continue는 지원하지 않는 표현식 입니다.',
-            node : node
-        };
-    };
-
-    p.IfStatement = function(node) {
-        var test = node.test,
-            consequent = node.consequent,
-            alternate  = node.alternate;
-
-        var blockType = this.syntax.IfStatement;
-        if (!blockType) {
-            return this.BasicIf(node);
-        } else {
-            throw {
-                message : 'if는 지원하지 않는 표현식 입니다.',
-                node : node
-            };
-        }
-
-    };
-
-    p.SwitchStatement = function(node) {
-        var discriminant = node.discriminant,
-            cases = node.cases;
-
-        throw {
-            message : 'switch는 지원하지 않는 표현식 입니다.',
-            node : node
-        };
-    };
-
-    p.SwitchCase = function(node) {
-        var test = node.test,
-            consequent = node.consequent;
-
-        throw {
-            message : 'switch ~ case는 지원하지 않는 표현식 입니다.',
-            node : node
-        };
-    };
-
-    //throwstatement
-
-    p.ThrowStatement = function(node) {
-        var args = node.arguments;
-
-        throw {
-            message : 'throw는 지원하지 않는 표현식 입니다.',
-            node : node
+            argument: arg
         };
     };
 
     p.TryStatement = function(node) {
-        var block = node.block,
-            handler = node.handler,
-            finalizer = node.finalizer;
+        console.log("TryStatement", node);
+        var block = this[node.block.type](node.block);
+        
+        var handler;
+        if(node.handler === null)
+            handler = null;
+        else
+            handler = this[node.handler.type](node.handler);
 
-        throw {
-            message : 'try는 지원하지 않는 표현식 입니다.',
-            node : node
+        var finalizer;
+        if(node.finalizer === null)
+            finalizer = null;
+        else
+            finalizer = this[node.finalizer.type](node.finalizer);
+
+        return {
+            block: block,
+            handler: handler,
+            finalizer: finalizer
         };
     };
 
     p.CatchClause = function(node) {
-        var param = node.param,
-            body = node.body;
+        console.log("CatchClause", node);
+        var param = node.param;
+        var body = this[node.body.type](node.body);
 
-        throw {
-            message : 'catch는 지원하지 않는 표현식 입니다.',
-            node : node
+        return {
+            param: param,
+            body: body
         };
     };
 
     p.WhileStatement = function(node) {
-        var test = node.test,
-            body = node.body;
-        var blockType = this.syntax.WhileStatement;
-        body = this[body.type](body);
+        console.log("WhileStatement", node);
+        var test = this[node.test.type](node.test);
+        var body = this[node.body.type](node.body);
 
-        if (!blockType) {
-            return this.BasicWhile(node, body);
-        } else {
-
-            throw {
-                message : 'while은 지원하지 않는 표현식 입니다.',
-                node : node
-            };
-        }
+        return {
+            test: test,
+            body: body
+        };
     };
 
     p.DoWhileStatement = function(node) {
-        var body = node.body,
-            test = node.test;
+        console.log("DoWhileStatement", node);
+        var init;
+        if(node.init === null)
+            init = this[node.init.type](node.init);
+        else
+            init = this[node.init.type](node.init);
 
-        throw {
-            message : 'do ~ while은 지원하지 않는 표현식 입니다.',
-            node : node
+        var test;
+        if(node.test === null)
+            test = null;
+        else
+            test = this[node.test.type](node.test);
+
+        var update;
+        if(node.update === null)
+            update = null;
+        else
+            update = this[node.update.type](node.update);
+
+        var body = this[node.body.type](node.body);
+
+        return {
+            init: init,
+            test: test,
+            update: update,
+            body: body
         };
     };
-
 
     p.ForInStatement = function(node) {
-        var left = node.left,
-            right = node.right,
-            body = node.body;
+        console.log("ForInStatement", node);
+        var left;
+        if(node.left.type != 'VariableDeclaration')
+            left = this[node.left.type](node.left);
+        else
+            left = node.left;
 
-        throw {
-            message : 'for ~ in은 지원하지 않는 표현식 입니다.',
-            node : node
+        var right = this[node.right.type](node.right);
+        var body = this[node.body.type](node.body);
+
+        return {
+            left: left,
+            right: right,
+            body: body
         };
     };
 
-    //Declaration
-
     p.FunctionDeclaration = function(node) {
-        var id = node.id;
+        console.log("FunctionDeclaration", node);
+        var id = this[node.id.type](node.id);
 
-        var blockType = this.syntax.FunctionDeclaration;
-
-        if (!blockType) {
-            return null;
-        } else {
-            throw {
-                message : 'function은 지원하지 않는 표현식 입니다.',
-                node : node
-            };
-        }
+        return {
+            id: id
+        };
     };
 
     p.VariableDeclaration = function(node) {
-        var declaration = node.declarations,
-            kind = node.kind;
+        console.log("VariableDeclaration", node);
+        var declarations;
 
-        throw {
-            message : 'var은 지원하지 않는 표현식 입니다.',
-            node : node
+        for(var index in node.declarations) {
+            var variableDeclaration = node.declarations[index];
+            var declaration = this[variableDeclaration.type](variableDeclaration);
+            declarations.push(declaration);
+        }
+
+        var kind = "var";
+
+        return {
+            declarations: declarations,
+            kind: kind
         };
     };
 
-    // Expression
+    p.VariableDeclarator = function(node) {
+        console.log("VariableDeclarator", node);
+        var id = node.id;
+        
+        var init;
+        if(node.init === null)
+            init = null;
+        else
+            init = this[node.init.type](node.init);
+
+        return {
+            id: id,
+            init: init
+        };
+    };
+
     p.ThisExpression = function(node) {
-        return this.scope.this;
+        console.log("ThisExpression", node);
+        return {
+            type: node.type
+        }
     };
 
     p.ArrayExpression = function(node) {
-        var elements = node.elements;
+        console.log("ArrayExpression", node);
+        var elements;
 
-        throw {
-            message : 'array는 지원하지 않는 표현식 입니다.',
-            node : node
+        if(node.elements === null) {
+            elements = null;
+        }
+        else {
+            for(var index in node.elements) {
+                var expression = node.elements[index];
+                var element = this[expression.type](expression);
+                elements.push(element);
+            }
+        }
+
+        return {
+            elements: elements
         };
     };
 
     p.ObjectExpression = function(node) {
-        var property = node.property;
+        console.log("ObjectExpression", node);
+        var properties;
 
-        throw {
-            message : 'object는 지원하지 않는 표현식 입니다.',
-            node : node
+        for(var index in node.properties){
+            var property = node.properties[index];
+            var prop = this[property.type](property);
+            properties.push(prop);
+        }
+
+        return {
+            properties: properties
         };
     };
 
     p.Property = function(node) {
-        var key = node.key,
-            value = node.value,
-            kind = node.kind;
+        console.log("Property", node);
+        var key = this[node.key.type](node.key);
+        var value = this[node.value.type](node.value);
+        var kind = node.kind;
 
-        throw {
-            message : 'init, get, set은 지원하지 않는 표현식 입니다.',
-            node : node
+        return {
+            key: key,
+            value: value,
+            kind: kind
         };
     };
 
     p.FunctionExpression = function(node) {
-
-        throw {
-            message : 'function은 지원하지 않는 표현식 입니다.',
-            node : node
+        console.log("FunctionExpression", node);
+        return {
+            type: node.type
         };
     };
-    // unary expression
 
     p.UnaryExpression = function(node) {
-        var operator = node.operator,
-            prefix = node.prefix,
-            args  = node.argument;
-
-        throw {
-            message : operator + '은(는) 지원하지 않는 명령어 입니다.',
-            node : node
-        };
-    };
-
-    p.UnaryOperator = function(){
-        return  ["-" , "+" , "!" , "~" , "typeof" , "void" , "delete"];
-    };
-
-    p.updateOperator = function() {
-        return ["++" , "--"];
-    };
-
-    //Binary expression
-    p.BinaryOperator = function() {
-        return [
-            "==" , "!=" , "===" , "!==",
-            "<" , "<=" , ">" , ">=",
-            "<<" , ">>" , ">>>",
-            "+" , "-" , "*" , "/" , "%",
-            "," , "^" , "&" , "in",
-            "instanceof"
-        ];
-    };
-
-    p.AssignmentExpression = function(node) {
-        var operator = node.operator,
-            left = node.left,
-            right = node.right;
-
-        throw {
-            message : operator + '은(는) 지원하지 않는 명령어 입니다.',
-            node : node
-        };
-    };
-
-    p.AssignmentOperator = function() {
-        return [
-            "=" , "+=" , "-=" , "*=" , "/=" , "%=",
-            "<<=" , ">>=" , ">>>=",
-            ",=" , "^=" , "&="
-        ];
-    };
-
-    p.LogicalExpression = function(node) {
-        var operator = node.operator,
-            left = node.left,
-            right = node.right;
-        throw {
-            message : operator + '은(는) 지원하지 않는 명령어 입니다.',
-            node : node
-        };
-    };
-
-    p.LogicalOperator = function() {
-        return ["||" , "&&"];
-    };
-
-    p.MemberExpression = function(node) {
-        var object = node.object,
-            property = node.property,
-            computed = node.computed;
-
-        console.log(object.type)
-        object = this[object.type](object);
-        console.log(object);
-
-        property = this[property.type](property, object);
-
-        if(!(Object(object) === object && Object.getPrototypeOf(object) === Object.prototype)) {
-            throw {
-                message : object + '은(는) 잘못된 멤버 변수입니다.',
-                node : node
-            };
+        console.log("UnaryExpression", node);
+        var operator;
+        switch(node.operator){
+            case "-": 
+                operator = node.operator;
+                break;
+            case "+": 
+                operator = node.operator;
+                break;
+            case "!": 
+                operator = node.operator;
+                break;
+            case "~": 
+                operator = node.operator;
+                break;
+            case "typeof": 
+                operator = node.operator;
+                break;
+            case "void": 
+                operator = node.operator;
+                break;
+            case "delete": 
+                operator = node.operator;
+                break;
+            default: 
+                operator = null;
         }
 
-        var blockType = property;
-        if(!blockType) {
-            throw {
-                message : property + '이(가) 존재하지 않습니다.',
-                node : node
-            };
-        }
-        return blockType;
-    };
+        var prefix = node.prefix;
 
-    p.ConditionalExpression = function(node) {
-        var test = node.test,
-            alternate = node.alternate,
-            consequent = node.consequent;
+        var argument = this[node.argument.type](node.argument);
 
-        throw {
-            message : '지원하지 않는 표현식 입니다.',
-            node : node
+        return {
+            operator: operator,
+            perfix: prefix,
+            argument: argument
         };
     };
 
     p.UpdateExpression = function(node) {
-        var operator = node.operator,
-            args = node.argument,
-            prefix = node.prefix;
+        console.log("UpdateExpression", node);
+        var operator;
+        switch(node.operator){
+            case "++": 
+                operator = node.operator;
+                break;
+            case "--": 
+                operator = node.operator;
+                break;
+            default: 
+                operator = null;
+        }
 
-        throw {
-            message : operator + '은(는) 지원하지 않는 명렁어 입니다.',
-            node : node
+        var argument = this[node.argument.type](node.argument);
+
+        var prefix = node.prefix;
+
+        return {
+            operator: operator,
+            perfix: prefix,
+            argument: argument
+        };
+    };
+
+    p.BinaryExpression = function(node) {
+        console.log("BinaryExpression", node);
+        var operator;
+
+        switch(node.operator){
+            case "==": 
+                operator = node.operator;
+                break;
+            case "!=": 
+                operator = node.operator;
+                break;
+            case "===": 
+                operator = node.operator;
+                break;
+            case "!==": 
+                operator = node.operator;
+                break;
+            case "<": 
+                operator = node.operator;
+                break;
+            case "<=": 
+                operator = node.operator;
+                break;
+            case ">": 
+                operator = node.operator;
+                break;
+            case ">=": 
+                operator = node.operator;
+                break;
+            case "<<": 
+                operator = node.operator;
+                break;
+            case ">>": 
+                operator = node.operator;
+                break;
+            case ">>>": 
+                operator = node.operator;
+                break;
+            case "+": 
+                operator = node.operator;
+                break;
+            case "-": 
+                operator = node.operator;
+                break;
+            case "*": 
+                operator = node.operator;
+                break; 
+            case "/": 
+                operator = node.operator;
+                break; 
+            case "%": 
+                operator = node.operator;
+                break; 
+            case "|": 
+                operator = node.operator;
+                break;
+            case "^": 
+                operator = node.operator;
+                break;
+            case "|": 
+                operator = node.operator;
+                break;
+            case "&": 
+                operator = node.operator;
+                break;
+            case "in": 
+                operator = node.operator;
+                break;
+            case "instanceof": 
+                operator = node.operator;
+                break;     
+            default: 
+                operator = null;
+        }
+
+        var left = this[node.left.type](node.left);
+        var right = this[node.right.type](node.right);
+
+        return {
+            operator: operator,
+            left: left,
+            right: right
+        };
+    };
+
+
+    p.AssignmentExpression = function(node) {
+        console.log("AssignmentExpression", node);
+        var operator;
+
+        switch(node.operator){
+            case "=": 
+                operator = node.operator;
+                break;
+            case "+=": 
+                operator = node.operator;
+                break;
+            case "-=": 
+                operator = node.operator;
+                break;
+            case "*=": 
+                operator = node.operator;
+                break;
+            case "/=": 
+                operator = node.operator;
+                break;
+            case "%=": 
+                operator = node.operator;
+                break;
+            case "<<=": 
+                operator = node.operator;
+                break;
+            case ">>=": 
+                operator = node.operator;
+                break;
+            case "|=": 
+                operator = node.operator;
+                break;
+            case "^=": 
+                operator = node.operator;
+                break;
+            case "&=": 
+                operator = node.operator;
+                break;
+            default: 
+                operator = null;
+        }
+
+        var left;
+        if(node.left.type == 'ThisExpression' || 'ArrayExpression' || 'ObjectExpression' || 'FunctionExpression' ||
+            'UnaryExpression' || 'UpdateExpression' || 'BinaryExpression' || 'AssignmentExpression' ||
+            'LogicalExpression' || 'MemberExpression' || 'ConditionalExpression' || 'CallExpression' ||
+            'NewExpression' || 'SequenceExpression') {
+            left = node.left;
+        }
+        else{
+            left = this[node.left.type](node.left);
+        }
+
+        var right = this[node.right.type](node.right);
+
+        return {
+            operator: operator,
+            left: left,
+            right: right
+        };
+    };
+
+    p.LogicalExpression = function(node) {
+        console.log("LogicalExpression", node);
+        var operator;
+
+        switch(node.operator){
+            case "||": 
+                operator = node.operator;
+                break;
+            case "&&": 
+                operator = node.operator;
+                break;
+            default: 
+                operator = null;
+        }
+
+        var left = this[node.left.type](node.left);
+        var right = this[node.right.type](node.right);
+
+        return {
+            operator: operator,
+            left: left,
+            right: right
+        };
+    };
+
+    p.MemberExpression = function(node) {
+        console.log("MemberExpression", node);
+        var object = this[node.object.type](node.object);
+        var property = this[node.property.type](node.property);
+        var computed = node.computed; 
+
+        return {
+            type: node.type,
+            object: object,
+            property: property,
+            computed: computed
+        };
+    };
+    
+    p.ConditionalExpression = function(node) {
+        console.log("ConditionalExpression", node);
+        var callee = this[node.callee.type](node.callee);
+        
+        var args;
+        for(var index in node.arguments) {
+            var expression = node.arguments[index];
+            var arg = this[expression.type](expression);
+            args.push(arg);
+        }
+
+        return {
+            callee: callee,
+            arguments: args
         };
     };
 
     p.CallExpression = function(node) {
-        var callee = node.callee,
-            args = node.arguments;
-        var blockType = this[callee.type](callee);
+        console.log("CallExpression", node);
+        var callee = this[node.callee.type](node.callee);
+
+        var args;
+        for(var index in node.arguments) {
+            var expression = node.arguments[index];
+            var arg = this[expression.type](expression);
+            args.push(arg);
+        } 
+
         return {
-            type: blockType
+            type: node.type,
+            callee: callee,
+            arguments: args
         };
     };
 
     p.NewExpression = function(node) {
-        throw {
-            message : 'new는 지원하지 않는 표현식 입니다.',
-            node : node
+        console.log("NewExpression", node);
+        return {
+            type: node.type
         };
     };
 
     p.SequenceExpression = function(node) {
-        var expressions = node.expressions;
-
-        throw {
-            message : '지원하지 않는 표현식 입니다.',
-            node : node
-        };
-    };
-
-    // scope method
-    p.initScope = function(node) {
-        if (this.scope === null) {
-            var scoper = function() {};
-            scoper.prototype = this.syntax.Scope;
-            this.scope = new scoper();
-        } else {
-            var scoper = function() {};
-            scoper.prototype = this.scope;
-            this.scope = new scoper();
+        console.log("SequenceExpression", node);
+        var expressions;
+        for(var index in node.expressions) {
+            var expression = node.expressions[index];
+            var express = this[expression.type](expression);
+            expressions.push(express);
         }
-        this.scopeChain.push(this.scope);
-        return this.scanDefinition(node);
-    };
 
-    p.unloadScope = function() {
-        this.scopeChain.pop();
-        if (this.scopeChain.length)
-            this.scope = this.scopeChain[this.scopeChain.length - 1];
-        else
-            this.scope = null;
-    };
-
-    p.scanDefinition = function(node) {
-        var body = node.body;
-        var separatedBlocks = [];
-        for (var i = 0; i < body.length; i++) {
-            var childNode = body[i];
-            if (childNode.type === "FunctionDeclaration") {
-                this.scope[childNode.id.name] = this.scope.promise;
-                if (this.syntax.BasicFunction) {
-                    var childBody = childNode.body;
-                    separatedBlocks.push([{
-                        type: this.syntax.BasicFunction,
-                        statements: [this[childBody.type](childBody)]
-                    }]);
-                }
-            }
-        }
-        return separatedBlocks;
-    };
-
-    p.BasicFunction = function(node, body) {
-
-        return null;
-    };
-
-    // custom node parser
-    p.BasicIteration = function(node, iterCount, body) {
-        var blockType = this.syntax.BasicIteration;
-        if (!blockType)
-            throw {
-                message : '지원하지 않는 표현식 입니다.',
-                node : node
-            };
         return {
-            params: [iterCount],
-            type: blockType,
-            statements: [body]
+            expressions: expressions
         };
     };
-
-    p.BasicWhile = function(node, body) {
-        var raw = node.test.raw;
-        if (this.syntax.BasicWhile[raw]) {
-            return {
-                type: this.syntax.BasicWhile[raw],
-                statements: [body]
-            }
-        } else {
-            throw {
-                message : '지원하지 않는 표현식 입니다.',
-                node : node.test
-            };
-        }
-    };
-
-    p.BasicIf = function(node) {
-        var consequent = node.consequent;
-        consequent = this[consequent.type](consequent);
-        try{
-            var test = '';
-            var operator = (node.test.operator === '===') ? '==' : node.test.operator;
-
-            if(node.test.left.type === 'Identifier' && node.test.right.type === 'Literal') {
-                test = node.test.left.name + " " +
-                operator + " " +
-                node.test.right.raw;
-            } else if(node.test.left.type === 'Literal' && node.test.right.type === 'Identifier') {
-                test = node.test.right.name + " " +
-                operator + " " +
-                node.test.left.raw;
-            } else {
-                throw new Error();
-            }
-
-            if (this.syntax.BasicIf[test]) {
-                if(!Array.isArray(consequent) && typeof consequent === 'object') 
-                    consequent = [consequent];
-                return {
-                    type: this.syntax.BasicIf[test],
-                    statements: [consequent]
-                }
-            } else {
-                throw new Error();
-            }
-        } catch (e) {
-            throw {
-                message : '지원하지 않는 표현식 입니다.',
-                node : node.test
-            };
-        }
-    };*/
 
 })(Entry.PyToBlockParser.prototype);
