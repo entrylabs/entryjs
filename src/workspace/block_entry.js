@@ -5997,7 +5997,9 @@ Entry.block = {
                 "img": "/lib/entryjs/images/block_icon/function_03.png",
                 "size": 12
             }
-        ]
+        ],
+        func: function() {
+        }
     },
     "function_general": {
         "skeleton": "basic",
