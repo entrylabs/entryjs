@@ -945,7 +945,12 @@ Entry.EntityObject.prototype.removeClone = function() {
         Entry.stage.unloadEntity(this);
         var index = this.parent.clonedEntities.indexOf(this);
         this.parent.clonedEntities.splice(index, 1);
+        this.clearExecutor();
     }
+};
+
+Entry.EntityObject.prototype.clearExecutor = function() {
+    this.parent.script.clearExecutorsByEntity(this);
 };
 
 /**
