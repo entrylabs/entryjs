@@ -246,4 +246,13 @@ Entry.Thread = function(thread, code, parent) {
         }
         return this.parent.pointer(pointer);
     };
+
+    p.getBlockList = function() {
+        var blocks = [];
+        for (var i = 0; i < this._data.length; i++)
+            blocks = blocks.concat(this._data[i].getBlockList());
+
+        return blocks;
+    };
+
 })(Entry.Thread.prototype);

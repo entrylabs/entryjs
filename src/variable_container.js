@@ -207,8 +207,10 @@ Entry.VariableContainer.prototype.select = function(object) {
     object = this.selected == object ? null : object;
     if (this.selected) {
         this.selected.listElement.removeClass('selected');
-        this.listView_.removeChild(this.selected.callerListElement);
-        delete this.selected.callerListElement;
+        if (this.selected.callerListElement) {
+            this.listView_.removeChild(this.selected.callerListElement);
+            delete this.selected.callerListElement;
+        }
         this.selected = null;
     }
     if (!object)
@@ -321,7 +323,7 @@ Entry.VariableContainer.prototype.renderVariableReference = function(variable) {
                 that.select(null);
             }
             var caller = this.caller;
-            var block = caller.block;
+            var block = caller.funcBlock || caller.block;
             block.view.getBoard().activateBlock(block);
             Entry.playground.toggleOnVariableView();
             Entry.playground.changeViewMode('variable');
@@ -2170,13 +2172,49 @@ Entry.VariableContainer.prototype.updateCloudVariables = function() {
 };
 
 Entry.VariableContainer.prototype.addRef = function(type, block) {
-    this[type].push({
+    var wsMode = Entry.playground.mainWorkspace.getMode();
+    if (wsMode !== Entry.Workspace.MODE_BOARD) return;
+
+    var datum = {
         object:block.getCode().object,
         block: block
-    });
+    };
+
+    if (block.funcBlock) {
+        datum.funcBlock = block.funcBlock;
+        delete block.funcBlock;
+    }
+
+    this[type].push(datum);
+
+    if (type == '_functionRefs') {
+        var id = block.type.substr(5);
+        var func = Entry.variableContainer.functions_[id];
+        var blocks = func.content.getBlockList();
+
+        for (var i=0; i<blocks.length; i++) {
+            var block = blocks[i];
+            var events = block.events;
+
+            if (events && events.whenBlockAdd) {
+                events.whenBlockAdd.forEach(function(fn) {
+                    block.getCode().object = datum.object;
+                    if (fn) {
+                        block.funcBlock = datum.block;
+                        fn(block);
+                    }
+                });;
+            }
+        }
+    }
+
+    return datum;
 };
 
 Entry.VariableContainer.prototype.removeRef = function(type, block) {
+    var wsMode = Entry.playground.mainWorkspace.getMode();
+    if (wsMode !== Entry.Workspace.MODE_BOARD) return;
+
     var arr = this[type];
 
     for (var i=0; i<arr.length; i++) {
@@ -2184,6 +2222,23 @@ Entry.VariableContainer.prototype.removeRef = function(type, block) {
         if (current.block == block) {
             arr.splice(i,1);
             break;
+        }
+    }
+
+    if (type == '_functionRefs') {
+        var id = block.type.substr(5);
+        var func = Entry.variableContainer.functions_[id];
+        var blocks = func.content.getBlockList();
+
+        for (var i=0; i<blocks.length; i++) {
+            var block = blocks[i];
+            var events = block.events;
+
+            if (events && events.whenBlockDestroy) {
+                events.whenBlockDestroy.forEach(function(fn) {
+                    if (fn) fn(block);
+                });;
+            }
         }
     }
 };

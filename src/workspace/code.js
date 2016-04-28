@@ -286,5 +286,15 @@ Entry.PARAM = -1;
             }
         }
         return block;
-    }
+    };
+
+    p.getBlockList = function() {
+        var threads = this.getThreads();
+        var blocks = [];
+
+        for (var i = 0; i < threads.length; i ++)
+            blocks = blocks.concat(threads[i].getBlockList());
+
+        return blocks;
+    };
 })(Entry.Code.prototype);

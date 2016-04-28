@@ -469,12 +469,34 @@ Entry.Block.MAGNET_OFFSET = 0.4;
 
     p.indexOfStatements = function(statement) {
         return this.statements.indexOf(statement);
+
     };
 
     p.pointer = function(pointer) {
         if (!pointer)
             pointer = [];
         return this.thread.pointer(pointer, this);
+    };
+
+    p.getBlockList = function() {
+        var blocks = [];
+        blocks.push(this);
+
+        var params = this.params;
+        for (var k = 0; k < params.length; k++) {
+            var param = params[k];
+            if (param && param.constructor == Entry.Block) {
+                blocks = blocks.concat(param.getBlockList());
+            }
+        }
+
+        var statements = this.statements;
+        if (statements) {
+            for (var j = 0; j < statements.length; j++) {
+                blocks = blocks.concat(statements[j].getBlockList());
+            }
+        }
+        return blocks;
     };
 
 })(Entry.Block.prototype);

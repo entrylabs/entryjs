@@ -715,8 +715,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
+  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(c, d);
   return a.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1694,10 +1694,10 @@ Entry.block.wait_second = function(b, a) {
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a);
+  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
   setTimeout(function() {
     a.timeFlag = 0;
-  }, 60 / (Entry.FPS || 60) * c * 1E3);
+  }, c);
   return a;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -11832,7 +11832,7 @@ Entry.VariableContainer.prototype.updateVariableAddView = function(b) {
 };
 Entry.VariableContainer.prototype.select = function(b) {
   b = this.selected == b ? null : b;
-  this.selected && (this.selected.listElement.removeClass("selected"), this.listView_.removeChild(this.selected.callerListElement), delete this.selected.callerListElement, this.selected = null);
+  this.selected && (this.selected.listElement.removeClass("selected"), this.selected.callerListElement && (this.listView_.removeChild(this.selected.callerListElement), delete this.selected.callerListElement), this.selected = null);
   b && (b.listElement.addClass("selected"), this.selected = b, b instanceof Entry.Variable ? (this.renderVariableReference(b), b.object_ && Entry.container.selectObject(b.object_, !0)) : b instanceof Entry.Func ? this.renderFunctionReference(b) : this.renderMessageReference(b));
 };
 Entry.VariableContainer.prototype.renderMessageReference = function(b) {
@@ -11881,7 +11881,8 @@ Entry.VariableContainer.prototype.renderVariableReference = function(b) {
     g.variable = b;
     g.bindOnClick(function(b) {
       Entry.playground.object != this.caller.object && (Entry.container.selectObject(), Entry.container.selectObject(this.caller.object.id, !0), a.select(null));
-      b = this.caller.block;
+      b = this.caller;
+      b = b.funcBlock || b.block;
       b.view.getBoard().activateBlock(b);
       Entry.playground.toggleOnVariableView();
       Entry.playground.changeViewMode("variable");
@@ -12929,13 +12930,39 @@ Entry.VariableContainer.prototype.updateCloudVariables = function() {
   }
 };
 Entry.VariableContainer.prototype.addRef = function(b, a) {
-  this[b].push({object:a.getCode().object, block:a});
+  if (Entry.playground.mainWorkspace.getMode() === Entry.Workspace.MODE_BOARD) {
+    var c = {object:a.getCode().object, block:a};
+    a.funcBlock && (c.funcBlock = a.funcBlock, delete a.funcBlock);
+    this[b].push(c);
+    if ("_functionRefs" == b) {
+      for (var d = a.type.substr(5), d = Entry.variableContainer.functions_[d].content.getBlockList(), e = 0;e < d.length;e++) {
+        a = d[e];
+        var f = a.events;
+        f && f.whenBlockAdd && f.whenBlockAdd.forEach(function(b) {
+          a.getCode().object = c.object;
+          b && (a.funcBlock = c.block, b(a));
+        });
+      }
+    }
+    return c;
+  }
 };
 Entry.VariableContainer.prototype.removeRef = function(b, a) {
-  for (var c = this[b], d = 0;d < c.length;d++) {
-    if (c[d].block == a) {
-      c.splice(d, 1);
-      break;
+  if (Entry.playground.mainWorkspace.getMode() === Entry.Workspace.MODE_BOARD) {
+    for (var c = this[b], d = 0;d < c.length;d++) {
+      if (c[d].block == a) {
+        c.splice(d, 1);
+        break;
+      }
+    }
+    if ("_functionRefs" == b) {
+      for (d = a.type.substr(5), c = Entry.variableContainer.functions_[d].content.getBlockList(), d = 0;d < c.length;d++) {
+        a = c[d];
+        var e = a.events;
+        e && e.whenBlockDestroy && e.whenBlockDestroy.forEach(function(b) {
+          b && b(a);
+        });
+      }
     }
   }
 };
@@ -13731,8 +13758,8 @@ RIGHT:1}, "class":"rank", isNotFor:["albert"], func:function(b, a) {
   return Entry.hw.getDigitalPortValue(c);
 }}, arduino_toggle_led:{color:"#00979D", skeleton:"basic", statements:[], template:"\ub514\uc9c0\ud138 %1 \ubc88 \ud540 %2 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["\ucf1c\uae30", "on"], ["\ub044\uae30", "off"]], value:"on", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"arduino_get_port_number"}, null, null], type:"arduino_toggle_led"}, paramsKeyMap:{VALUE:0, OPERATOR:1}, "class":"arduino_set", 
 isNotFor:["arduino"], func:function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
+  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(c, d);
   return a.callReturn();
 }}, arduino_toggle_pwm:{color:"#00979D", skeleton:"basic", statements:[], template:"\ub514\uc9c0\ud138 %1 \ubc88 \ud540\uc744 %2 (\uc73c)\ub85c \uc815\ud558\uae30 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"arduino_get_pwm_port_number"}, {type:"arduino_text", params:["255"]}, null], type:"arduino_toggle_pwm"}, paramsKeyMap:{PORT:0, VALUE:1}, 
 "class":"arduino_set", isNotFor:["arduino"], func:function(b, a) {
@@ -14099,10 +14126,10 @@ type:"quotient_and_mod"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2, OPERATOR:4}, "c
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a);
+  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
   setTimeout(function() {
     a.timeFlag = 0;
-  }, 60 / (Entry.FPS || 60) * c * 1E3);
+  }, c);
   return a;
 }}, repeat_basic:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], template:"%1 \ubc88 \ubc18\ubcf5\ud558\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"repeat_basic"}, paramsKeyMap:{VALUE:0}, statementsKeyMap:{DO:0}, "class":"repeat", isNotFor:[], func:function(b, a) {
   var c;
@@ -16522,6 +16549,12 @@ Entry.PARAM = -1;
     }
     return d;
   };
+  b.getBlockList = function() {
+    for (var a = this.getThreads(), b = [], d = 0;d < a.length;d++) {
+      b = b.concat(a[d].getBlockList());
+    }
+    return b;
+  };
 })(Entry.Code.prototype);
 Entry.CodeView = function(b, a) {
   Entry.Model(this, !1);
@@ -18709,6 +18742,12 @@ Entry.Thread = function(b, a, c) {
     this.parent instanceof Entry.Block && a.unshift(this.parent.indexOfStatements(this));
     return this._code === this.parent ? (a.unshift(this._code.indexOf(this)), d = this._data[0], a.unshift(d.y), a.unshift(d.x), a) : this.parent.pointer(a);
   };
+  b.getBlockList = function() {
+    for (var a = [], b = 0;b < this._data.length;b++) {
+      a = a.concat(this._data[b].getBlockList());
+    }
+    return a;
+  };
 })(Entry.Thread.prototype);
 Entry.Block = function(b, a) {
   Entry.Model(this, !1);
@@ -18963,6 +19002,20 @@ Entry.Block.MAGNET_OFFSET = .4;
   b.pointer = function(a) {
     a || (a = []);
     return this.thread.pointer(a, this);
+  };
+  b.getBlockList = function() {
+    var a = [];
+    a.push(this);
+    for (var b = this.params, d = 0;d < b.length;d++) {
+      var e = b[d];
+      e && e.constructor == Entry.Block && (a = a.concat(e.getBlockList()));
+    }
+    if (b = this.statements) {
+      for (d = 0;d < b.length;d++) {
+        a = a.concat(b[d].getBlockList());
+      }
+    }
+    return a;
   };
 })(Entry.Block.prototype);
 Entry.ThreadView = function(b, a) {
