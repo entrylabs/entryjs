@@ -14214,7 +14214,20 @@ accept:"paramMagnet", value:{type:"function_field_label"}}, {type:"Indicator", i
   a && a.removeRef("_functionRefs", b);
 }], dblclick:[function(b) {
   b.getBoard().workspace.getMode() === Entry.Workspace.MODE_BOARD && (b = b.block.type.substr(5), Entry.Func.edit(Entry.variableContainer.functions_[b]));
-}]}}, hamster_move_forward:{color:"#00979D", skeleton:"basic", statements:[], template:"\uc55e\uc73c\ub85c \uc774\ub3d9\ud558\uae30 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"hamster_move_forward"}, "class":"hamster_novice", isNotFor:["hamster"], func:function(b, a) {
+}]}, func:function(b) {
+  if (!this.initiated) {
+    this.initiated = !0;
+    var a = Entry.variableContainer.getFunction(this.block.type.substr(5, 9));
+    this.funcCode = a.content;
+    this.funcExecutor = this.funcCode.raiseEvent("funcDef", b)[0];
+    this.funcExecutor.register.params = this.getParams();
+    this.funcExecutor.register.paramMap = a.paramMap;
+  }
+  this.funcExecutor.execute();
+  if (!this.funcExecutor.isEnd()) {
+    return this.funcCode.removeExecutor(this.funcExecutor), Entry.STATIC.BREAK;
+  }
+}}, hamster_move_forward:{color:"#00979D", skeleton:"basic", statements:[], template:"\uc55e\uc73c\ub85c \uc774\ub3d9\ud558\uae30 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"hamster_move_forward"}, "class":"hamster_novice", isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue;
   if (a.isStart) {
     if (1 == a.timeFlag) {

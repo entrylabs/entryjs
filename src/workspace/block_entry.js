@@ -6027,6 +6027,25 @@ Entry.block = {
                 }
             ]
         },
+        func: function(entity) {
+            if (!this.initiated) {
+                this.initiated = true;
+
+                var func = Entry.variableContainer.getFunction(
+                    this.block.type.substr(5, 9)
+                );
+                this.funcCode = func.content;
+                this.funcExecutor = this.funcCode.raiseEvent("funcDef", entity)[0];
+                this.funcExecutor.register.params = this.getParams();
+                var paramMap = {};
+                this.funcExecutor.register.paramMap = func.paramMap;
+            }
+            this.funcExecutor.execute();
+            if (!this.funcExecutor.isEnd()) {
+                this.funcCode.removeExecutor(this.funcExecutor);
+                return Entry.STATIC.BREAK;
+            }
+        }
     },
     "hamster_move_forward": {
         "color": "#00979D",
