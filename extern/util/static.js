@@ -405,8 +405,12 @@ EntryStatic.getAllBlocks = function() {
                 "xbot_twoWheel",
                 "xbot_lcd",
                 //end of XBOT Blocks added                
-                "ev3_port_out",
-                "ev3_touch_sensor"
+                "ev3_get_sensor_value",
+                "ev3_touch_sensor",
+                "ev3_color_sensor",
+                "ev3_motor_power",
+                "ev3_motor_power_on_time",
+                "ev3_motor_degrees"
             ]
         }
     ]
@@ -476,15 +480,36 @@ EntryStatic.blockInfo = {
         "class": "xbot_sensor"
     },
     //end of XBOT Blocks added   
-    "ev3_port_out": {
+    //EV3 BLOCK
+    "ev3_get_sensor_value": {
         "isNotFor": ["EV3"],
-        "xml": "<block type='ev3_port_out'><value name='VALUE'><block type='text'><field name='NAME'>10</field></block></value></block>",
-        "class": "ev3_output"
-    },//end of XBOT Blocks added   
+        "xml": "<block type='ev3_get_sensor_value'></block>",
+        "class": "ev3_sensor"
+    },
     "ev3_touch_sensor": {
         "isNotFor": ["EV3"],
         "xml": "<block type='ev3_touch_sensor'></block>",
         "class": "ev3_sensor"
+    },
+    "ev3_color_sensor": {
+        "isNotFor": ["EV3"],
+        "xml": "<block type='ev3_color_sensor'></block>",
+        "class": "ev3_sensor"
+    },
+    "ev3_motor_power": {
+        "isNotFor": ["EV3"],
+        "xml": "<block type='ev3_motor_power'><value name='VALUE'><block type='number'><field name='NUM'>50</field></block></value></block>",
+        "class": "ev3_output"
+    },
+    "ev3_motor_power_on_time": {
+        "isNotFor": ["EV3"],
+        "xml": "<block type='ev3_motor_power_on_time'><value name='TIME'><block type='number'><field name='NUM'>2</field></block></value><value name='VALUE'><block type='number'><field name='NUM'>50</field></block></value></block>",
+        "class": "ev3_output"
+    },
+    "ev3_motor_degrees": {
+        "isNotFor": ["EV3"],
+        "xml": "<block type='ev3_motor_degrees'><value name='DEGREE'> <block type='angle'></block> </value></block>",
+        "class": "ev3_output"
     },
     "when_run_button_click": {
         "xml": "<block type='when_run_button_click'></block>",

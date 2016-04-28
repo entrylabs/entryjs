@@ -1904,26 +1904,35 @@ Entry.block.choose_project_timer_action = function(b, a) {
   "START" == c ? e.isInit ? e.isInit && e.isPaused && (e.pauseStart && (e.pausedTime += (new Date).getTime() - e.pauseStart), delete e.pauseStart, e.isPaused = !1) : d.startProjectTimer() : "STOP" == c ? e.isInit && !e.isPaused && (e.isPaused = !0, e.pauseStart = (new Date).getTime()) : "RESET" == c && e.isInit && (e.setValue(0), e.start = (new Date).getTime(), e.pausedTime = 0, delete e.pauseStart);
   return a.callReturn();
 };
-Entry.EV3 = {PORT_MAP:{A:0, B:0, C:0, D:0, 1:void 0, 2:void 0, 3:void 0, 4:void 0}, deviceType:{NxtTouch:1, NxtLight:2, NxtSound:3, NxtColor:4, NxtUltrasonic:5, NxtTemperature:6, LMotor:7, MMotor:8, Touch:16, Color:29, Ultrasonic:30, Gyroscope:32, Infrared:33, Initializing:125, Empty:126, WrongPort:127, Unknown:255}, setZero:function() {
+Entry.EV3 = {PORT_MAP:{A:0, B:0, C:0, D:0, 1:void 0, 2:void 0, 3:void 0, 4:void 0}, motorMovementTypes:{Degrees:0, Power:1}, deviceTypes:{NxtTouch:1, NxtLight:2, NxtSound:3, NxtColor:4, NxtUltrasonic:5, NxtTemperature:6, LMotor:7, MMotor:8, Touch:16, Color:29, Ultrasonic:30, Gyroscope:32, Infrared:33, Initializing:125, Empty:126, WrongPort:127, Unknown:255}, colorSensorValue:" 000000 0000FF 00FF00 FFFF00 FF0000 FFFFFF A52A2A".split(" "), timeouts:[], removeTimeout:function(b) {
+  clearTimeout(b);
+  var a = this.timeouts;
+  b = a.indexOf(b);
+  0 <= b && a.splice(b, 1);
+}, removeAllTimeouts:function() {
+  var b = this.timeouts, a;
+  for (a in b) {
+    clearTimeout(b[a]);
+  }
+  this.timeouts = [];
+}, setZero:function() {
   var b = this.PORT_MAP;
   Object.keys(b).forEach(function(a) {
-    Entry.hw.sendQueue[a] = b[a];
+    /[A-D]/i.test(a) ? Entry.hw.sendQueue[a] = {type:Entry.EV3.motorMovementTypes.Power, power:0} : Entry.hw.sendQueue[a] = b[a];
   });
   Entry.hw.update();
 }, name:"EV3"};
-Blockly.Blocks.ev3_port_out = {init:function() {
+Blockly.Blocks.ev3_get_sensor_value = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["A", "A"], ["B", "B"], ["C", "C"], ["D", "D"]]), "PORT").appendField("\uc758 \uac12\uc744");
-  this.appendValueInput("VALUE").setCheck(["Number", "String", null]);
-  this.appendDummyInput().appendField("\uc73c\ub85c \ubcc0\ud658");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"]]), "PORT").appendField("\uc758 \uac12");
+  this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
 }};
-Entry.block.ev3_port_out = function(b, a) {
-  var c = a.getStringField("PORT", a), d = a.getValue("VALUE", a);
-  Entry.hw.sendQueue[c] = d;
-  return a.callReturn();
+Entry.block.ev3_get_sensor_value = function(b, a) {
+  a.getStringField("PORT", a);
+  var c = Entry.hw.getDigitalPortValue(a.getNumberField("PORT", a)), d;
+  $.isPlainObject(c) && (d = c.siValue || 0);
+  return d;
 };
 Blockly.Blocks.ev3_touch_sensor = {init:function() {
   this.setColour("#00979D");
@@ -1933,10 +1942,104 @@ Blockly.Blocks.ev3_touch_sensor = {init:function() {
 }};
 Entry.block.ev3_touch_sensor = function(b, a) {
   a.getStringField("PORT", a);
-  var c = Entry.hw.getDigitalPortValue(a.getNumberField("PORT", a));
-  result = !1;
-  c.type == Entry.EV3.deviceType.Touch && 1 <= +c.siValue && (result = !0);
-  return result;
+  var c = Entry.hw.getDigitalPortValue(a.getNumberField("PORT", a)), d = !1;
+  c.type == Entry.EV3.deviceTypes.Touch && 1 <= +c.siValue && (d = !0);
+  return d;
+};
+Blockly.Blocks.ev3_color_sensor = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"]]), "PORT").appendField("\uc758 ").appendField(new Blockly.FieldDropdown([["RGB", "RGB"], ["R", "R"], ["G", "G"], ["B", "B"]]), "RGB").appendField("\uac12");
+  this.setOutput(!0, "String");
+  this.setInputsInline(!0);
+}};
+Entry.block.ev3_color_sensor = function(b, a) {
+  a.getStringField("PORT", a);
+  var c = a.getStringField("RGB", a), d = Entry.hw.getDigitalPortValue(a.getNumberField("PORT", a)), e = "";
+  if (d.type == Entry.EV3.deviceTypes.Color) {
+    if (0 == d.siValue) {
+      e = "";
+    } else {
+      switch(c) {
+        case "RGB":
+          e = Entry.EV3.colorSensorValue[d.siValue];
+          break;
+        case "R":
+          e = Entry.EV3.colorSensorValue[d.siValue].substring(0, 2);
+          break;
+        case "G":
+          e = Entry.EV3.colorSensorValue[d.siValue].substring(2, 4);
+          break;
+        case "B":
+          e = Entry.EV3.colorSensorValue[d.siValue].substring(4, 6);
+      }
+    }
+  } else {
+    e = "\uceec\ub7ec \uc13c\uc11c \uc544\ub2d8";
+  }
+  return e;
+};
+Blockly.Blocks.ev3_motor_power = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["A", "A"], ["B", "B"], ["C", "C"], ["D", "D"]]), "PORT").appendField("\uc758 \uac12\uc744");
+  this.appendValueInput("VALUE").setCheck(["Number"]);
+  this.appendDummyInput().appendField("\uc73c\ub85c \ucd9c\ub825");
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.ev3_motor_power = function(b, a) {
+  var c = a.getStringField("PORT", a), d = a.getValue("VALUE", a);
+  Entry.hw.sendQueue[c] = {id:Math.floor(1E5 * Math.random(), 0), type:Entry.EV3.motorMovementTypes.Power, power:d};
+  return a.callReturn();
+};
+Blockly.Blocks.ev3_motor_power_on_time = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["A", "A"], ["B", "B"], ["C", "C"], ["D", "D"]]), "PORT").appendField("\uc758 \uac12\uc744");
+  this.appendValueInput("TIME").setCheck(["Number"]);
+  this.appendDummyInput().appendField("\ucd08 \ub3d9\uc548");
+  this.appendValueInput("VALUE").setCheck(["Number"]);
+  this.appendDummyInput().appendField("\uc73c\ub85c \ucd9c\ub825");
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.ev3_motor_power_on_time = function(b, a) {
+  if (a.isStart) {
+    if (1 == a.timeFlag) {
+      return a;
+    }
+    delete a.isStart;
+    delete a.timeFlag;
+    Entry.engine.isContinue = !1;
+    Entry.hw.sendQueue[c] = {id:Math.floor(1E5 * Math.random(), 0), type:Entry.EV3.motorMovementTypes.Power, power:0};
+    return a.callReturn();
+  }
+  a.isStart = !0;
+  a.timeFlag = 1;
+  var c = a.getStringField("PORT", a), d = a.getValue("TIME", a), e = a.getValue("VALUE", a);
+  Entry.hw.sendQueue[c] = {id:Math.floor(1E5 * Math.random(), 0), type:Entry.EV3.motorMovementTypes.Power, power:e};
+  var f = setTimeout(function() {
+    a.timeFlag = 0;
+    Entry.EV3.removeTimeout(f);
+  }, 1E3 * d);
+  Entry.EV3.timeouts.push(f);
+  return a;
+};
+Blockly.Blocks.ev3_motor_degrees = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["A", "A"], ["B", "B"], ["C", "C"], ["D", "D"]]), "PORT").appendField("\uc758 \uac12\uc744").appendField(new Blockly.FieldDropdown([["\uc2dc\uacc4\ubc29\ud5a5", "CW"], ["\ubc18\uc2dc\uacc4\ubc29\ud5a5", "CCW"]]), "DIRECTION").appendField("\uc73c\ub85c ");
+  this.appendValueInput("DEGREE").setCheck(["Number"]);
+  this.appendDummyInput().appendField("\ub3c4 \ub9cc\ud07c \ud68c\uc804");
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.ev3_motor_degrees = function(b, a) {
+  var c = a.getStringField("PORT", a), d = a.getValue("DEGREE", a);
+  0 >= d ? d = 0 : 720 <= d && (d = 720);
+  var e = a.getStringField("DIRECTION", a);
+  Entry.hw.sendQueue[c] = {id:Math.floor(1E5 * Math.random(), 0), type:Entry.EV3.motorMovementTypes.Degrees, degree:d, power:"CW" == e ? 50 : -50};
+  return a.callReturn();
 };
 Blockly.Blocks.wait_second = {init:function() {
   this.setColour("#498deb");
