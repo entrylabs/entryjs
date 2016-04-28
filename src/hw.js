@@ -186,7 +186,6 @@ p.removePortReadable = function(port) {
     if(target != undefined) {
         this.sendQueue.readablePorts = this.sendQueue.readablePorts.slice(0, target).concat(this.sendQueue.readablePorts.slice(target + 1, this.sendQueue.readablePorts.length));
     } else {
-        this.sendQueue = [];
         this.sendQueue.readablePorts = [];
     }
 }
@@ -201,7 +200,6 @@ p.update = function() {
     }
 
     this.socket.send(JSON.stringify(this.sendQueue));
-    // this.sendQueue.readablePorts = [];
 };
 
 p.updatePortData = function(data) {
