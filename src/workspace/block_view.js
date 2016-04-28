@@ -65,7 +65,7 @@ Entry.BlockView = function(block, board, mode) {
     this.dragMode = Entry.DRAG_MODE_NONE;
     Entry.Utils.disableContextmenu(this.svgGroup.node);
     this._targetType = this._getTargetType();
-    var events = block.events.whenBlockAdd;
+    var events = block.events.blocViewkAdd;
     if (events && !this.isInBlockMenu) {
         events.forEach(function(fn) {
             if (Entry.Utils.isFunction(fn)) fn(block);

@@ -10268,8 +10268,8 @@ Entry.BlockMockup = function(b, a, c) {
 (function(b) {
   b.simulate = function(a) {
     a.init.call(this);
-    a.whenAdd && (this.events.whenBlockAdd || (this.events.whenBlockAdd = []), this.events.whenBlockAdd.push(a.whenAdd));
-    a.whenRemove && (this.events.whenBlockDestroy || (this.events.whenBlockDestroy = []), this.events.whenBlockDestroy.push(a.whenRemove));
+    a.whenAdd && (this.events.blockViewAdd || (this.events.blockViewAdd = []), this.events.blockViewAdd.push(a.whenAdd));
+    a.whenRemove && (this.events.blockViewDestroy || (this.events.blockViewDestroy = []), this.events.blockViewDestroy.push(a.whenRemove));
   };
   b.toJSON = function() {
     function a(b) {
@@ -14042,16 +14042,16 @@ func:function(b, a) {
       return d[e].duration;
     }
   }
-}}, reset_project_timer:{color:"#FFD974", skeleton:"basic", statements:[], template:"%1", params:[{type:"Text", text:"\ucd08\uc2dc\uacc4 \ucd08\uae30\ud654", color:"#3D3D3D"}], events:{whenBlockAdd:[function() {
+}}, reset_project_timer:{color:"#FFD974", skeleton:"basic", statements:[], template:"%1", params:[{type:"Text", text:"\ucd08\uc2dc\uacc4 \ucd08\uae30\ud654", color:"#3D3D3D"}], events:{blockViewAdd:[function() {
   Entry.engine && Entry.engine.showProjectTimer();
-}], whenBlockDestroy:[function(b) {
+}], blockViewDestroy:[function(b) {
   Entry.engine && Entry.engine.hideProjectTimer(b);
 }]}, def:{params:[null], type:"reset_project_timer"}, "class":"calc_timer", isNotFor:[], func:function(b, a) {
   Entry.engine.updateProjectTimer(0);
   return a.callReturn();
-}}, set_visible_project_timer:{color:"#FFD974", skeleton:"basic", statements:[], template:"%1 %2 %3", params:[{type:"Text", text:"\ucd08\uc2dc\uacc4", color:"#3D3D3D"}, {type:"Dropdown", options:[["\ubcf4\uc774\uae30", "SHOW"], ["\uc228\uae30\uae30", "HIDE"]], value:"SHOW", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/calc_01.png", size:12}], events:{whenBlockAdd:[function() {
+}}, set_visible_project_timer:{color:"#FFD974", skeleton:"basic", statements:[], template:"%1 %2 %3", params:[{type:"Text", text:"\ucd08\uc2dc\uacc4", color:"#3D3D3D"}, {type:"Dropdown", options:[["\ubcf4\uc774\uae30", "SHOW"], ["\uc228\uae30\uae30", "HIDE"]], value:"SHOW", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/calc_01.png", size:12}], events:{blockViewAdd:[function() {
   Entry.engine && Entry.engine.showProjectTimer();
-}], whenBlockDestroy:[function(b) {
+}], blockViewDestroy:[function(b) {
   Entry.engine && Entry.engine.hideProjectTimer(b);
 }]}, def:{params:[null, "HIDE", null], type:"set_visible_project_timer"}, paramsKeyMap:{ACTION:1}, "class":"calc_timer", isNotFor:[], func:function(b, a) {
   var c = a.getField("ACTION", a), d = Entry.engine.projectTimer;
@@ -14059,9 +14059,9 @@ func:function(b, a) {
   return a.callReturn();
 }}, timer_variable:{color:"#FFD974", skeleton:"basic_string_field", statements:[], template:"%1 %2", params:[{type:"Text", text:"\ucd08\uc2dc\uacc4 \uac12", color:"#3D3D3D"}, {type:"Text", text:" ", color:"#3D3D3D"}], events:{}, def:{params:[null, null]}, func:function(b, a) {
   return Entry.container.inputValue.getValue();
-}}, get_project_timer_value:{color:"#FFD974", skeleton:"basic_string_field", statements:[], template:"%1 %2", params:[{type:"Text", text:"\ucd08\uc2dc\uacc4 \uac12", color:"#3D3D3D"}, {type:"Text", text:" ", color:"#3D3D3D"}], events:{whenBlockAdd:[function() {
+}}, get_project_timer_value:{color:"#FFD974", skeleton:"basic_string_field", statements:[], template:"%1 %2", params:[{type:"Text", text:"\ucd08\uc2dc\uacc4 \uac12", color:"#3D3D3D"}, {type:"Text", text:" ", color:"#3D3D3D"}], events:{blockViewAdd:[function() {
   Entry.engine && Entry.engine.showProjectTimer();
-}], whenBlockDestroy:[function(b) {
+}], blockViewDestroy:[function(b) {
   Entry.engine && Entry.engine.hideProjectTimer(b);
 }]}, def:{params:[null, null], type:"get_project_timer_value"}, "class":"calc_timer", isNotFor:[], func:function(b, a) {
   return Entry.engine.projectTimer.getValue();
@@ -14106,9 +14106,9 @@ type:"quotient_and_mod"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2, OPERATOR:4}, "c
     throw Error();
   }
   return "QUOTIENT" == a.getField("OPERATOR", a) ? Math.floor(c / d) : c % d;
-}}, choose_project_timer_action:{color:"#FFD974", skeleton:"basic", statements:[], template:"%1 %2 %3", params:[{type:"Text", text:"\ucd08\uc2dc\uacc4", color:"#3D3D3D"}, {type:"Dropdown", options:[["\uc2dc\uc791\ud558\uae30", "START"], ["\uc815\uc9c0\ud558\uae30", "STOP"], ["\ucd08\uae30\ud654\ud558\uae30", "RESET"]], value:"START", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/calc_01.png", size:12}], events:{whenBlockAdd:[function() {
+}}, choose_project_timer_action:{color:"#FFD974", skeleton:"basic", statements:[], template:"%1 %2 %3", params:[{type:"Text", text:"\ucd08\uc2dc\uacc4", color:"#3D3D3D"}, {type:"Dropdown", options:[["\uc2dc\uc791\ud558\uae30", "START"], ["\uc815\uc9c0\ud558\uae30", "STOP"], ["\ucd08\uae30\ud654\ud558\uae30", "RESET"]], value:"START", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/calc_01.png", size:12}], events:{blockViewAdd:[function() {
   Entry.engine && Entry.engine.showProjectTimer();
-}], whenBlockDestroy:[function(b) {
+}], blockViewDestroy:[function(b) {
   Entry.engine && Entry.engine.hideProjectTimer(b);
 }]}, def:{params:[null, "START", null], type:"choose_project_timer_action"}, paramsKeyMap:{ACTION:1}, "class":"calc_timer", isNotFor:[""], func:function(b, a) {
   var c = a.getField("ACTION"), d = Entry.engine, e = d.projectTimer;
@@ -14220,10 +14220,10 @@ isNotFor:[], func:function(b, a) {
   Entry.variableContainer.createFunction();
 }]}}, function_field_label:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#f9c535", template:"%1%2", params:[{type:"TextInput", value:"\ud568\uc218"}, {type:"Output", accept:"paramMagnet"}]}, function_field_string:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#ffd974", template:"%1%2", params:[{type:"Block", accept:"stringMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}]}, function_field_boolean:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#aeb8ff", 
 template:"%1%2", params:[{type:"Block", accept:"booleanMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}]}, function_param_string:{skeleton:"basic_string_field", color:"#ffd974", template:"\ubb38\uc790/\uc22b\uc790\uac12"}, function_param_boolean:{skeleton:"basic_boolean_field", color:"#aeb8ff", template:"\ud310\ub2e8\uac12"}, function_create:{skeleton:"basic", color:"#cc7337", event:"funcDef", template:"\ud568\uc218 \uc815\uc758\ud558\uae30 %1 %2", paramsKeyMap:{FIELD:0}, params:[{type:"Block", 
-accept:"paramMagnet", value:{type:"function_field_label"}}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/function_03.png", size:12}]}, function_general:{skeleton:"basic", color:"#cc7337", template:"\ud568\uc218", params:[], events:{whenBlockAdd:[function(b) {
+accept:"paramMagnet", value:{type:"function_field_label"}}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/function_03.png", size:12}]}, function_general:{skeleton:"basic", color:"#cc7337", template:"\ud568\uc218", params:[], events:{blockDataAdd:[function(b) {
   var a = Entry.variableContainer;
   a && a.addRef("_functionRefs", b);
-}], whenBlockDestroy:[function(b) {
+}], blockDataDestroy:[function(b) {
   var a = Entry.variableContainer;
   a && a.removeRef("_functionRefs", b);
 }], dblclick:[function(b) {
@@ -15248,18 +15248,18 @@ params:["10"]}, null], type:"sound_from_to_and_wait"}, paramsKeyMap:{SOUND:0, ST
   return a.callReturn();
 }, event:"when_object_click_canceled"}, when_some_key_click:{color:"#3BBD70", skeleton:"basic_event", statements:[], template:"%1 \ud0a4\ub97c \ub20c\ub800\uc744 \ub54c", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_keyboard.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null]}, func:function(b, a) {
   return a.callReturn();
-}, event:"keyPress"}, when_message_cast:{color:"#3BBD70", skeleton:"basic_event", statements:[], template:"%1 %2 \uc2e0\ud638\ub97c \ubc1b\uc558\uc744 \ub54c", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_signal.png", size:17, position:{x:0, y:-2}}, {type:"DropdownDynamic", value:null, menuName:"messages", fontSize:11}], events:{whenBlockAdd:[function(b) {
+}, event:"keyPress"}, when_message_cast:{color:"#3BBD70", skeleton:"basic_event", statements:[], template:"%1 %2 \uc2e0\ud638\ub97c \ubc1b\uc558\uc744 \ub54c", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_signal.png", size:17, position:{x:0, y:-2}}, {type:"DropdownDynamic", value:null, menuName:"messages", fontSize:11}], events:{blockViewAdd:[function(b) {
   var a = Entry.variableContainer;
   a && a.addRef("_messageRefs", b);
-}], whenBlockDestroy:[function(b) {
+}], blockViewDestroy:[function(b) {
   var a = Entry.variableContainer;
   a && a.removeRef("_messageRefs", b);
 }]}, def:{params:[null, null], type:"when_message_cast"}, paramsKeyMap:{VALUE:1}, "class":"message", isNotFor:["message"], func:function(b, a) {
   return a.callReturn();
-}, event:"when_message_cast"}, message_cast:{color:"#3BBD70", skeleton:"basic", statements:[], template:"%1 \uc2e0\ud638 \ubcf4\ub0b4\uae30 %2", params:[{type:"DropdownDynamic", value:null, menuName:"messages", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/start_03.png", size:12}], events:{whenBlockAdd:[function(b) {
+}, event:"when_message_cast"}, message_cast:{color:"#3BBD70", skeleton:"basic", statements:[], template:"%1 \uc2e0\ud638 \ubcf4\ub0b4\uae30 %2", params:[{type:"DropdownDynamic", value:null, menuName:"messages", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/start_03.png", size:12}], events:{blockViewAdd:[function(b) {
   var a = Entry.variableContainer;
   a && a.addRef("_messageRefs", b);
-}], whenBlockDestroy:[function(b) {
+}], blockViewDestroy:[function(b) {
   var a = Entry.variableContainer;
   a && a.removeRef("_messageRefs", b);
 }]}, def:{params:[null, null], type:"message_cast"}, paramsKeyMap:{VALUE:0}, "class":"message", isNotFor:["message"], func:function(b, a) {
@@ -15269,10 +15269,10 @@ params:["10"]}, null], type:"sound_from_to_and_wait"}, paramsKeyMap:{SOUND:0, ST
   }
   Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["when_message_cast", c]);
   return a.callReturn();
-}}, message_cast_wait:{color:"#3BBD70", skeleton:"basic", statements:[], template:"%1 \uc2e0\ud638 \ubcf4\ub0b4\uace0 \uae30\ub2e4\ub9ac\uae30 %2", params:[{type:"DropdownDynamic", value:null, menuName:"messages", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/start_03.png", size:12}], events:{whenBlockAdd:[function(b) {
+}}, message_cast_wait:{color:"#3BBD70", skeleton:"basic", statements:[], template:"%1 \uc2e0\ud638 \ubcf4\ub0b4\uace0 \uae30\ub2e4\ub9ac\uae30 %2", params:[{type:"DropdownDynamic", value:null, menuName:"messages", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/start_03.png", size:12}], events:{blockViewAdd:[function(b) {
   var a = Entry.variableContainer;
   a && a.addRef("_messageRefs", b);
-}], whenBlockDestroy:[function(b) {
+}], blockViewDestroy:[function(b) {
   var a = Entry.variableContainer;
   a && a.removeRef("_messageRefs", b);
 }]}, def:{params:[null, null], type:"message_cast_wait"}, paramsKeyMap:{VALUE:0}, "class":"message", isNotFor:["message"], func:function(b, a) {
@@ -15317,10 +15317,10 @@ params:["10"]}, null], type:"sound_from_to_and_wait"}, paramsKeyMap:{SOUND:0, ST
   Entry.variableContainer.openVariableAddPanel("variable");
 }]}}, listAddButton:{skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"\ub9ac\uc2a4\ud2b8 \ucd94\uac00", color:"#333", align:"center"}], events:{mousedown:[function() {
   Entry.variableContainer.openVariableAddPanel("list");
-}]}}, change_variable:{color:"#E457DC", skeleton:"basic", statements:[], template:"%1 \uc5d0 %2 \ub9cc\ud07c \ub354\ud558\uae30 %3", params:[{type:"DropdownDynamic", value:null, menuName:"variables", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{whenBlockAdd:[function(b) {
+}]}}, change_variable:{color:"#E457DC", skeleton:"basic", statements:[], template:"%1 \uc5d0 %2 \ub9cc\ud07c \ub354\ud558\uae30 %3", params:[{type:"DropdownDynamic", value:null, menuName:"variables", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{blockViewAdd:[function(b) {
   var a = Entry.variableContainer;
   a && a.addRef("_variableRefs", b);
-}], whenBlockDestroy:[function(b) {
+}], blockViewDestroy:[function(b) {
   var a = Entry.variableContainer;
   a && a.removeRef("_variableRefs", b);
 }]}, def:{params:[null, {type:"text", params:["10"]}, null], type:"change_variable"}, paramsKeyMap:{VARIABLE:0, VALUE:1}, "class":"variable", isNotFor:["variable", "variableNotExist"], func:function(b, a) {
@@ -15332,20 +15332,20 @@ params:["10"]}, null], type:"sound_from_to_and_wait"}, paramsKeyMap:{SOUND:0, ST
   e = Entry.getMaxFloatPoint([d, c.getValue()]);
   c.setValue((d + c.getValue()).toFixed(e));
   return a.callReturn();
-}}, set_variable:{color:"#E457DC", skeleton:"basic", statements:[], template:"%1 \ub97c %2 \ub85c \uc815\ud558\uae30 %3", params:[{type:"DropdownDynamic", value:null, menuName:"variables", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{whenBlockAdd:[function(b) {
+}}, set_variable:{color:"#E457DC", skeleton:"basic", statements:[], template:"%1 \ub97c %2 \ub85c \uc815\ud558\uae30 %3", params:[{type:"DropdownDynamic", value:null, menuName:"variables", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{blockViewAdd:[function(b) {
   var a = Entry.variableContainer;
   a && a.addRef("_variableRefs", b);
-}], whenBlockDestroy:[function(b) {
+}], blockViewDestroy:[function(b) {
   var a = Entry.variableContainer;
   a && a.removeRef("_variableRefs", b);
 }]}, def:{params:[null, {type:"text", params:["10"]}, null], type:"set_variable"}, paramsKeyMap:{VARIABLE:0, VALUE:1}, "class":"variable", isNotFor:["variable", "variableNotExist"], func:function(b, a) {
   var c = a.getField("VARIABLE", a), d = a.getValue("VALUE", a);
   Entry.variableContainer.getVariable(c, b).setValue(d);
   return a.callReturn();
-}}, show_variable:{color:"#E457DC", skeleton:"basic", statements:[], template:"\ubcc0\uc218 %1 \ubcf4\uc774\uae30 %2", params:[{type:"DropdownDynamic", value:null, menuName:"variables", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{whenBlockAdd:[function(b) {
+}}, show_variable:{color:"#E457DC", skeleton:"basic", statements:[], template:"\ubcc0\uc218 %1 \ubcf4\uc774\uae30 %2", params:[{type:"DropdownDynamic", value:null, menuName:"variables", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{blockViewAdd:[function(b) {
   var a = Entry.variableContainer;
   a && a.addRef("_variableRefs", b);
-}], whenBlockDestroy:[function(b) {
+}], blockViewDestroy:[function(b) {
   var a = Entry.variableContainer;
   a && a.removeRef("_variableRefs", b);
 }]}, def:{params:[null, null], type:"show_variable"}, paramsKeyMap:{VARIABLE:0}, "class":"variable_visibility", isNotFor:["variable", "variableNotExist"], func:function(b, a) {
@@ -15353,28 +15353,28 @@ params:["10"]}, null], type:"sound_from_to_and_wait"}, paramsKeyMap:{SOUND:0, ST
   c.setVisible(!0);
   c.updateView();
   return a.callReturn();
-}}, hide_variable:{color:"#E457DC", skeleton:"basic", statements:[], template:"\ubcc0\uc218 %1 \uc228\uae30\uae30 %2", params:[{type:"DropdownDynamic", value:null, menuName:"variables", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{whenBlockAdd:[function(b) {
+}}, hide_variable:{color:"#E457DC", skeleton:"basic", statements:[], template:"\ubcc0\uc218 %1 \uc228\uae30\uae30 %2", params:[{type:"DropdownDynamic", value:null, menuName:"variables", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{blockViewAdd:[function(b) {
   var a = Entry.variableContainer;
   a && a.addRef("_variableRefs", b);
-}], whenBlockDestroy:[function(b) {
+}], blockViewDestroy:[function(b) {
   var a = Entry.variableContainer;
   a && a.removeRef("_variableRefs", b);
 }]}, def:{params:[null, null], type:"hide_variable"}, paramsKeyMap:{VARIABLE:0}, "class":"variable_visibility", isNotFor:["variable", "variableNotExist"], func:function(b, a) {
   var c = a.getField("VARIABLE", a);
   Entry.variableContainer.getVariable(c, b).setVisible(!1);
   return a.callReturn();
-}}, get_variable:{color:"#E457DC", skeleton:"basic_string_field", statements:[], template:"%1 \uac12", params:[{type:"DropdownDynamic", value:null, menuName:"variables", fontSize:11}], events:{whenBlockAdd:[function(b) {
+}}, get_variable:{color:"#E457DC", skeleton:"basic_string_field", statements:[], template:"%1 \uac12", params:[{type:"DropdownDynamic", value:null, menuName:"variables", fontSize:11}], events:{blockViewAdd:[function(b) {
   var a = Entry.variableContainer;
   a && a.addRef("_variableRefs", b);
-}], whenBlockDestroy:[function(b) {
+}], blockViewDestroy:[function(b) {
   var a = Entry.variableContainer;
   a && a.removeRef("_variableRefs", b);
 }]}, def:{params:[null], type:"get_variable"}, paramsKeyMap:{VARIABLE:0}, "class":"variable", isNotFor:["variable", "variableNotExist"], func:function(b, a) {
   var c = a.getField("VARIABLE", a);
   return Entry.variableContainer.getVariable(c, b).getValue();
-}}, ask_and_wait:{color:"#E457DC", skeleton:"basic", statements:[], template:"%1 \uc744(\ub97c) \ubb3b\uace0 \ub300\ub2f5 \uae30\ub2e4\ub9ac\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{whenBlockAdd:[function() {
+}}, ask_and_wait:{color:"#E457DC", skeleton:"basic", statements:[], template:"%1 \uc744(\ub97c) \ubb3b\uace0 \ub300\ub2f5 \uae30\ub2e4\ub9ac\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{blockViewAdd:[function() {
   Entry.container && Entry.container.showProjectAnswer();
-}], whenBlockDestroy:[function(b) {
+}], blockViewDestroy:[function(b) {
   Entry.container && Entry.container.hideProjectAnswer(b);
 }]}, def:{params:[{type:"text", params:["\uc548\ub155!"]}, null], type:"ask_and_wait"}, paramsKeyMap:{VALUE:0}, "class":"ask", isNotFor:[], func:function(b, a) {
   var c = Entry.container.inputValue, d = Entry.stage.inputField, e = a.getValue("VALUE", a);
@@ -15397,16 +15397,16 @@ params:["10"]}, null], type:"sound_from_to_and_wait"}, paramsKeyMap:{SOUND:0, ST
   c.sprite = b;
   a.isInit = !0;
   return a;
-}}, get_canvas_input_value:{color:"#E457DC", skeleton:"basic_string_field", statements:[], template:"%1  ", params:[{type:"Text", text:"\ub300\ub2f5", color:"#fff"}], events:{whenBlockAdd:[function() {
+}}, get_canvas_input_value:{color:"#E457DC", skeleton:"basic_string_field", statements:[], template:"%1  ", params:[{type:"Text", text:"\ub300\ub2f5", color:"#fff"}], events:{blockViewAdd:[function() {
   Entry.container && Entry.container.showProjectAnswer();
-}], whenBlockDestroy:[function(b) {
+}], blockViewDestroy:[function(b) {
   Entry.container && Entry.container.hideProjectAnswer(b);
 }]}, def:{params:[null], type:"get_canvas_input_value"}, "class":"ask", isNotFor:[], func:function(b, a) {
   return Entry.container.getInputValue();
-}}, add_value_to_list:{color:"#E457DC", skeleton:"basic", statements:[], template:"%1 \ud56d\ubaa9\uc744 %2 \uc5d0 \ucd94\uac00\ud558\uae30 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{whenBlockAdd:[function(b) {
+}}, add_value_to_list:{color:"#E457DC", skeleton:"basic", statements:[], template:"%1 \ud56d\ubaa9\uc744 %2 \uc5d0 \ucd94\uac00\ud558\uae30 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{blockViewAdd:[function(b) {
   var a = Entry.variableContainer;
   a && a.addRef("_variableRefs", b);
-}], whenBlockDestroy:[function(b) {
+}], blockViewDestroy:[function(b) {
   var a = Entry.variableContainer;
   a && a.removeRef("_variableRefs", b);
 }]}, def:{params:[{type:"text", params:["10"]}, null, null], type:"add_value_to_list"}, paramsKeyMap:{VALUE:0, LIST:1}, "class":"list", isNotFor:["list", "listNotExist"], func:function(b, a) {
@@ -15461,9 +15461,9 @@ type:"change_value_list_index"}, paramsKeyMap:{LIST:0, INDEX:1, DATA:2}, "class"
   return a.callReturn();
 }}, options_for_list:{color:"#E457DC", skeleton:"basic_string_field", statements:[], template:"%1  ", params:[{type:"Dropdown", options:[["\uccab\ubc88\uc9f8", "FIRST"], ["\ub9c8\uc9c0\ub9c9", "LAST"], ["\ubb34\uc791\uc704", "RANDOM"]], value:"FIRST", fontSize:11}], events:{}, def:{params:[null]}, paramsKeyMap:{OPERATOR:0}, func:function(b, a) {
   return a.getField("OPERATOR", a);
-}}, set_visible_answer:{color:"#E457DC", skeleton:"basic", statements:[], template:"\ub300\ub2f5 %1 %2", params:[{type:"Dropdown", options:[["\ubcf4\uc774\uae30", "SHOW"], ["\uc228\uae30\uae30", "HIDE"]], value:"SHOW", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{whenBlockAdd:[function(b) {
+}}, set_visible_answer:{color:"#E457DC", skeleton:"basic", statements:[], template:"\ub300\ub2f5 %1 %2", params:[{type:"Dropdown", options:[["\ubcf4\uc774\uae30", "SHOW"], ["\uc228\uae30\uae30", "HIDE"]], value:"SHOW", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{blockViewAdd:[function(b) {
   Entry.container && Entry.container.showProjectAnswer();
-}], whenBlockDestroy:[function(b) {
+}], blockViewDestroy:[function(b) {
   Entry.container && Entry.container.hideProjectAnswer(b);
 }]}, def:{params:["HIDE", null], type:"set_visible_answer"}, paramsKeyMap:{BOOL:0}, "class":"ask", isNotFor:[""], func:function(b, a) {
   "HIDE" == a.getField("BOOL", a) ? Entry.container.inputValue.setVisible(!1) : Entry.container.inputValue.setVisible(!0);
@@ -15912,7 +15912,7 @@ Entry.BlockView = function(b, a, c) {
   this.dragMode = Entry.DRAG_MODE_NONE;
   Entry.Utils.disableContextmenu(this.svgGroup.node);
   this._targetType = this._getTargetType();
-  (a = b.events.whenBlockAdd) && !this.isInBlockMenu && a.forEach(function(a) {
+  (a = b.events.blocViewkAdd) && !this.isInBlockMenu && a.forEach(function(a) {
     Entry.Utils.isFunction(a) && a(b);
   });
 };

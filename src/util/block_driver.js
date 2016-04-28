@@ -112,15 +112,15 @@ Entry.BlockMockup = function(blocklyInfo, def, blockType) {
     p.simulate = function(blocklyInfo) {
         blocklyInfo.init.call(this);
         if (blocklyInfo.whenAdd) {
-            if (!this.events.whenBlockAdd)
-                this.events.whenBlockAdd = [];
-            this.events.whenBlockAdd.push(blocklyInfo.whenAdd);
+            if (!this.events.blockViewAdd)
+                this.events.blockViewAdd = [];
+            this.events.blockViewAdd.push(blocklyInfo.whenAdd);
         }
 
         if (blocklyInfo.whenRemove) {
-            if (!this.events.whenBlockDestroy)
-                this.events.whenBlockDestroy = [];
-            this.events.whenBlockDestroy.push(blocklyInfo.whenRemove);
+            if (!this.events.blockViewDestroy)
+                this.events.blockViewDestroy = [];
+            this.events.blockViewDestroy.push(blocklyInfo.whenRemove);
         }
     };
 
