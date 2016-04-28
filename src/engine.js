@@ -638,7 +638,7 @@ Entry.Engine.prototype.captureKeyEvent = function(e) {
 Entry.Engine.prototype.raiseKeyEvent = function(entity, param) {
     var eventName = param[0];
     var keyCode = String(param[1]);
-    entity.parent.script.raiseEvent(eventName, entity, keyCode);
+    return entity.parent.script.raiseEvent(eventName, entity, keyCode);
 };
 
 /**

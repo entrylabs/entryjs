@@ -4322,24 +4322,23 @@ Blockly.Blocks.message_cast_wait = {init:function() {
 }};
 Entry.block.message_cast_wait = function(b, a) {
   if (a.runningScript) {
-    if (a.runningScript.length) {
-      return Entry.engine.computeFunction(a), a;
+    for (var c = a.runningScript, d = 0;d < c.length;d++) {
+      var e = c.shift();
+      e.isEnd() || c.push(e);
     }
-    delete a.runningScript;
-    return a.callReturn();
+    return c.length ? a : a.callReturn();
   }
-  var c = a.getField("VALUE", a), d = Entry.isExist(c, "id", Entry.variableContainer.messages_);
-  if ("null" == c || !d) {
+  c = a.getField("VALUE", a);
+  e = Entry.isExist(c, "id", Entry.variableContainer.messages_);
+  if ("null" == c || !e) {
     throw Error("value can not be null or undefined");
   }
-  var e = [];
-  Entry.container.mapEntityIncludeCloneOnScene(function(a, b) {
-    for (var c = b[0], d = b[1], m = a.parent.script.childNodes, n = 0;n < m.length;n++) {
-      var l = m[n], q = Entry.Xml.getField("VALUE", l);
-      Entry.Xml.isTypeOf(c, l) && q == d && (q = new Entry.Script(a), q.init(l), e.push(q));
-    }
-  }, ["when_message_cast", c]);
-  a.runningScript = e;
+  e = Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["when_message_cast", c]);
+  c = [];
+  for (d in e) {
+    c = c.concat(e.shift());
+  }
+  a.runningScript = c;
   return a;
 };
 var colour = "#FFCA36";
@@ -5323,14 +5322,16 @@ Entry.Container.prototype.clearRunningState = function() {
   });
 };
 Entry.Container.prototype.mapObject = function(b, a) {
-  for (var c = this.objects_.length, d = 0;d < c;d++) {
-    b(this.objects_[d], a);
+  for (var c = this.objects_.length, d = [], e = 0;e < c;e++) {
+    d.push(b(this.objects_[e], a));
   }
+  return d;
 };
 Entry.Container.prototype.mapObjectOnScene = function(b, a) {
-  for (var c = this.getCurrentObjects(), d = c.length, e = 0;e < d;e++) {
-    b(c[e], a);
+  for (var c = this.getCurrentObjects(), d = c.length, e = [], f = 0;f < d;f++) {
+    e.push(b(c[f], a));
   }
+  return e;
 };
 Entry.Container.prototype.clearRunningStateOnScene = function() {
   this.mapObjectOnScene(function(b) {
@@ -5342,34 +5343,38 @@ Entry.Container.prototype.clearRunningStateOnScene = function() {
   });
 };
 Entry.Container.prototype.mapEntity = function(b, a) {
-  for (var c = this.objects_.length, d = 0;d < c;d++) {
-    b(this.objects_[d].entity, a);
+  for (var c = this.objects_.length, d = [], e = 0;e < c;e++) {
+    d.push(b(this.objects_[e].entity, a));
   }
+  return d;
 };
 Entry.Container.prototype.mapEntityOnScene = function(b, a) {
-  for (var c = this.getCurrentObjects(), d = c.length, e = 0;e < d;e++) {
-    b(c[e].entity, a);
+  for (var c = this.getCurrentObjects(), d = c.length, e = [], f = 0;f < d;f++) {
+    e.push(b(c[f].entity, a));
   }
+  return e;
 };
 Entry.Container.prototype.mapEntityIncludeClone = function(b, a) {
-  for (var c = this.objects_, d = c.length, e = 0;e < d;e++) {
-    var f = c[e], g = f.clonedEntities.length;
-    b(f.entity, a);
-    for (var h = 0;h < g;h++) {
-      var k = f.clonedEntities[h];
-      k && !k.isStamp && b(k, a);
+  for (var c = this.objects_, d = c.length, e = [], f = 0;f < d;f++) {
+    var g = c[f], h = g.clonedEntities.length;
+    e.push(b(g.entity, a));
+    for (var k = 0;k < h;k++) {
+      var m = g.clonedEntities[k];
+      m && !m.isStamp && e.push(b(m, a));
     }
   }
+  return e;
 };
 Entry.Container.prototype.mapEntityIncludeCloneOnScene = function(b, a) {
-  for (var c = this.getCurrentObjects(), d = c.length, e = 0;e < d;e++) {
-    var f = c[e], g = f.clonedEntities.length;
-    b(f.entity, a);
-    for (var h = 0;h < g;h++) {
-      var k = f.clonedEntities[h];
-      k && !k.isStamp && b(k, a);
+  for (var c = this.getCurrentObjects(), d = c.length, e = [], f = 0;f < d;f++) {
+    var g = c[f], h = g.clonedEntities.length;
+    e.push(b(g.entity, a));
+    for (var k = 0;k < h;k++) {
+      var m = g.clonedEntities[k];
+      m && !m.isStamp && e.push(b(m, a));
     }
   }
+  return e;
 };
 Entry.Container.prototype.getCachedPicture = function(b) {
   Entry.assert("string" == typeof b, "pictureId must be string");
@@ -6045,7 +6050,7 @@ Entry.Engine.prototype.captureKeyEvent = function(b) {
   Entry.engine.isState("stop") && "workspace" === c && 37 <= a && 40 >= a && Entry.stage.moveSprite(b);
 };
 Entry.Engine.prototype.raiseKeyEvent = function(b, a) {
-  b.parent.script.raiseEvent(a[0], b, String(a[1]));
+  return b.parent.script.raiseEvent(a[0], b, String(a[1]));
 };
 Entry.Engine.prototype.updateMouseView = function() {
   var b = Entry.stage.mouseCoordinate;
@@ -15277,24 +15282,23 @@ params:["10"]}, null], type:"sound_from_to_and_wait"}, paramsKeyMap:{SOUND:0, ST
   a && a.removeRef("_messageRefs", b);
 }]}, def:{params:[null, null], type:"message_cast_wait"}, paramsKeyMap:{VALUE:0}, "class":"message", isNotFor:["message"], func:function(b, a) {
   if (a.runningScript) {
-    if (a.runningScript.length) {
-      return Entry.engine.computeFunction(a), a;
+    for (var c = a.runningScript, d = 0;d < c.length;d++) {
+      var e = c.shift();
+      e.isEnd() || c.push(e);
     }
-    delete a.runningScript;
-    return a.callReturn();
+    return c.length ? a : a.callReturn();
   }
-  var c = a.getField("VALUE", a), d = Entry.isExist(c, "id", Entry.variableContainer.messages_);
-  if ("null" == c || !d) {
+  c = a.getField("VALUE", a);
+  e = Entry.isExist(c, "id", Entry.variableContainer.messages_);
+  if ("null" == c || !e) {
     throw Error("value can not be null or undefined");
   }
-  var e = [];
-  Entry.container.mapEntityIncludeCloneOnScene(function(a, b) {
-    for (var c = b[0], d = b[1], m = a.parent.script.childNodes, n = 0;n < m.length;n++) {
-      var l = m[n], q = Entry.Xml.getField("VALUE", l);
-      Entry.Xml.isTypeOf(c, l) && q == d && (q = new Entry.Script(a), q.init(l), e.push(q));
-    }
-  }, ["when_message_cast", c]);
-  a.runningScript = e;
+  e = Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["when_message_cast", c]);
+  c = [];
+  for (d in e) {
+    c = c.concat(e.shift());
+  }
+  a.runningScript = c;
   return a;
 }}, text:{color:"#FFD974", skeleton:"basic_string_field", statements:[], template:"%1", params:[{type:"TextInput", value:10}], events:{}, def:{params:[], type:"text"}, paramsKeyMap:{NAME:0}, "class":"text", isNotFor:["sprite"], func:function(b, a) {
   return a.getField("NAME", a);

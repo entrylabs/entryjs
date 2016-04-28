@@ -234,11 +234,15 @@ Blockly.Blocks.message_cast_wait = {
 
 Entry.block.message_cast_wait = function (sprite, script) {
     if (script.runningScript) {
-        if (script.runningScript.length) {
-            Entry.engine.computeFunction(script);
+        var runningScript = script.runningScript;
+        for (var i = 0; i < runningScript.length; i++) {
+            var executor = runningScript.shift();
+            if (!executor.isEnd())
+                runningScript.push(executor);
+        }
+        if (runningScript.length) {
             return script;
         } else {
-            delete script.runningScript;
             return script.callReturn();
         }
     } else {
@@ -247,24 +251,14 @@ Entry.block.message_cast_wait = function (sprite, script) {
         var isExist = Entry.isExist(value, 'id', arr);
         if (value == 'null' || !isExist)
             throw new Error('value can not be null or undefined');
-        var runningScript = []
-
-        Entry.container.mapEntityIncludeCloneOnScene(function(entity, param) {
-            var eventName = param[0];
-            var keyCode = param[1];
-            var blocks = entity.parent.script.childNodes;
-            //handle clone entity
-            for (var i=0; i<blocks.length; i++) {
-                var block = blocks[i];
-                var value = Entry.Xml.getField("VALUE", block);
-                if (Entry.Xml.isTypeOf(eventName, block) &&
-                   (value == keyCode)) {
-                    var script = new Entry.Script(entity);
-                    script.init(block);
-                    runningScript.push(script);
-                }
-            };
-        }, ["when_message_cast", value]);
+        var data = Entry.container.mapEntityIncludeCloneOnScene(
+            Entry.engine.raiseKeyEvent,
+            ["when_message_cast", value]
+        );
+        var runningScript = [];
+        for (var i in data) {
+            runningScript = runningScript.concat(data.shift());
+        }
 
         script.runningScript = runningScript;
         return script;
