@@ -11,8 +11,10 @@ goog.require('Entry.STATIC');
 /*
  *
  */
-Entry.Code = function(code) {
+Entry.Code = function(code, object) {
     Entry.Model(this, false);
+
+    if (object) this.object = object;
 
     this._data = new Entry.Collection();
 

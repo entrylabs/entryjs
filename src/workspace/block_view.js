@@ -71,6 +71,8 @@ Entry.BlockView = function(block, board, mode) {
             if (Entry.Utils.isFunction(fn)) fn(block);
         });
     }
+    if (this.block.type == 'function_general')
+        debugger;
 };
 
 Entry.BlockView.PARAM_SPACE = 5;
@@ -360,10 +362,14 @@ Entry.BlockView.DRAG_RADIUS = 5;
         );
 
         var events = that.block.events;
-        if (events && events.dblclick)
+        if (events && events.dblclick) {
+            console.log(events.dblclick);
             $(this.svgGroup).dblclick(function() {
-                events.dblclick.forEach(function(fn){fn(that);});
+                events.dblclick.forEach(function(fn){
+                    if (fn) fn(that);});
             });
+
+        }
 
     };
 

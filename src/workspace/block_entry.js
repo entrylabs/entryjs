@@ -5197,7 +5197,7 @@ Entry.block = {
                     if (Entry.engine) Entry.engine.showProjectTimer();
                 }
             ],
-            "viewDestroy": [
+            "dataDestroy": [
                 function(block) {
                     if (Entry.engine) Entry.engine.hideProjectTimer(block);
                 }
@@ -6018,13 +6018,13 @@ Entry.block = {
         "template": "함수",
         "params": [],
         "events": {
-            "blockDataAdd": [
+            "dataAdd": [
                 function(block) {
                     var vc = Entry.variableContainer;
                     if (vc) vc.addRef('_functionRefs', block);
                 }
             ],
-            "blockDataDestroy": [
+            "dataDestroy": [
                 function(block) {
                     var vc = Entry.variableContainer;
                     if (vc) vc.removeRef('_functionRefs', block);
@@ -12919,7 +12919,7 @@ Entry.block = {
             }
         ],
         "events": {
-            "viewAdd": [
+            "dataAdd": [
                 function(block) {
                     var vc = Entry.variableContainer;
                     if (vc) vc.addRef('_messageRefs', block);
@@ -12970,13 +12970,13 @@ Entry.block = {
             }
         ],
         "events": {
-            "viewAdd": [
+            "dataAdd": [
                 function(block) {
                     var vc = Entry.variableContainer;
                     if (vc) vc.addRef('_messageRefs', block);
                 }
             ],
-            "viewDestroy": [
+            "dataDestroy": [
                 function(block) {
                     var vc = Entry.variableContainer;
                     if (vc) vc.removeRef('_messageRefs', block);
@@ -13030,13 +13030,13 @@ Entry.block = {
             }
         ],
         "events": {
-            "viewAdd": [
+            "dataAdd": [
                 function(block) {
                     var vc = Entry.variableContainer;
                     if (vc) vc.addRef('_messageRefs', block);
                 }
             ],
-            "viewDestroy": [
+            "dataDestroy": [
                 function(block) {
                     var vc = Entry.variableContainer;
                     if (vc) vc.removeRef('_messageRefs', block);
@@ -13303,13 +13303,13 @@ Entry.block = {
             }
         ],
         "events": {
-            "viewAdd": [
+            "dataAdd": [
                 function(block) {
                     var vc = Entry.variableContainer;
                     if (vc) vc.addRef('_variableRefs', block);
                 }
             ],
-            "viewDestroy": [
+            "dataDestroy": [
                 function(block) {
                     var vc = Entry.variableContainer;
                     if (vc) vc.removeRef('_variableRefs', block);
@@ -13375,13 +13375,13 @@ Entry.block = {
             }
         ],
         "events": {
-            "viewAdd": [
+            "dataAdd": [
                 function(block) {
                     var vc = Entry.variableContainer;
                     if (vc) vc.addRef('_variableRefs', block);
                 }
             ],
-            "viewDestroy": [
+            "dataDestroy": [
                 function(block) {
                     var vc = Entry.variableContainer;
                     if (vc) vc.removeRef('_variableRefs', block);
@@ -13437,13 +13437,13 @@ Entry.block = {
             }
         ],
         "events": {
-            "viewAdd": [
+            "dataAdd": [
                 function(block) {
                     var vc = Entry.variableContainer;
                     if (vc) vc.addRef('_variableRefs', block);
                 }
             ],
-            "viewDestroy": [
+            "dataDestroy": [
                 function(block) {
                     var vc = Entry.variableContainer;
                     if (vc) vc.removeRef('_variableRefs', block);
@@ -13492,13 +13492,13 @@ Entry.block = {
             }
         ],
         "events": {
-            "viewAdd": [
+            "dataAdd": [
                 function(block) {
                     var vc = Entry.variableContainer;
                     if (vc) vc.addRef('_variableRefs', block);
                 }
             ],
-            "viewDestroy": [
+            "dataDestroy": [
                 function(block) {
                     var vc = Entry.variableContainer;
                     if (vc) vc.removeRef('_variableRefs', block);
@@ -13541,13 +13541,13 @@ Entry.block = {
             }
         ],
         "events": {
-            "viewAdd": [
+            "dataAdd": [
                 function(block) {
                     var vc = Entry.variableContainer;
                     if (vc) vc.addRef('_variableRefs', block);
                 }
             ],
-            "viewDestroy": [
+            "dataDestroy": [
                 function(block) {
                     var vc = Entry.variableContainer;
                     if (vc) vc.removeRef('_variableRefs', block);
@@ -13713,13 +13713,13 @@ Entry.block = {
             }
         ],
         "events": {
-            "viewAdd": [
+            "dataAdd": [
                 function(block) {
                     var vc = Entry.variableContainer;
                     if (vc) vc.addRef('_variableRefs', block);
                 }
             ],
-            "viewDestroy": [
+            "dataDestroy": [
                 function(block) {
                     var vc = Entry.variableContainer;
                     if (vc) vc.removeRef('_variableRefs', block);

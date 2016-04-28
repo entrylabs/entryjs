@@ -2196,8 +2196,18 @@ Entry.VariableContainer.prototype.addRef = function(type, block) {
             var block = blocks[i];
             var events = block.events;
 
-            if (events && events.whenBlockAdd) {
-                events.whenBlockAdd.forEach(function(fn) {
+            if (events && events.viewAdd) {
+                events.viewAdd.forEach(function(fn) {
+                    block.getCode().object = datum.object;
+                    if (fn) {
+                        block.funcBlock = datum.block;
+                        fn(block);
+                    }
+                });;
+            }
+
+            if (events && events.dataAdd) {
+                events.dataAdd.forEach(function(fn) {
                     block.getCode().object = datum.object;
                     if (fn) {
                         block.funcBlock = datum.block;
@@ -2234,8 +2244,14 @@ Entry.VariableContainer.prototype.removeRef = function(type, block) {
             var block = blocks[i];
             var events = block.events;
 
-            if (events && events.whenBlockDestroy) {
-                events.whenBlockDestroy.forEach(function(fn) {
+            if (events && events.viewDestroy) {
+                events.viewDestroy.forEach(function(fn) {
+                    if (fn) fn(block);
+                });;
+            }
+
+            if (events && events.dataDestroy) {
+                events.dataDestroy.forEach(function(fn) {
                     if (fn) fn(block);
                 });;
             }

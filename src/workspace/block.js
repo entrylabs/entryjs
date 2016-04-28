@@ -14,13 +14,22 @@ goog.require("Entry.skeleton");
  *
  */
 Entry.Block = function(block, thread) {
+    var that = this;
     Entry.Model(this, false);
     this._schema = null;
 
     this.setThread(thread);
     this.load(block);
 
-    this.getCode().registerBlock(this);
+    var code = this.getCode();
+
+    code.registerBlock(this);
+    var events = this.events.dataAdd;
+    if (events && code.object) {
+        events.forEach(function(fn) {
+            if (Entry.Utils.isFunction(fn)) fn(that);
+        });
+    }
 };
 
 Entry.Block.MAGNET_RANGE = 10;
@@ -73,6 +82,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
                 var funcs = events[key];
                 for (var i=0; i<funcs.length; i++) {
                     var func = funcs[i];
+                    if (!func) continue;
                     var index = this.events[key].indexOf(func);
                     if (index < 0) this.events[key].push(func);
                 }
@@ -165,6 +175,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         var json = this._toJSON();
         delete json.view;
         delete json.thread;
+        delete json.events;
 
         if (isNew) delete json.id;
 
@@ -188,6 +199,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
     };
 
     p.destroy = function(animate, next) {
+        var that = this;
         var params = this.params;
         if (params) {
             for (var i=0; i<params.length; i++) {
@@ -233,6 +245,13 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         if (this.view) this.view.destroy(animate);
         if (this._schemaChangeEvent)
             this._schemaChangeEvent.destroy();
+
+        var events = this.events.dataDestroy;
+        if (events && this.getCode().object) {
+            events.forEach(function(fn) {
+                if (Entry.Utils.isFunction(fn)) fn(that);
+            });
+        }
     };
 
     p.getView = function() {return this.view;};
