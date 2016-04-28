@@ -5969,12 +5969,18 @@ Entry.block = {
     "function_param_string": {
         "skeleton": "basic_string_field",
         "color": "#ffd974",
-        "template": "문자/숫자값"
+        "template": "문자/숫자값",
+        func: function() {
+            return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
+        }
     },
     "function_param_boolean": {
         "skeleton": "basic_boolean_field",
         "color": "#aeb8ff",
-        "template": "판단값"
+        "template": "판단값",
+        func: function() {
+            return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
+        }
     },
     "function_create": {
         "skeleton": "basic",
