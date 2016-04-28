@@ -14191,6 +14191,8 @@ isNotFor:[], func:function(b, a) {
       return d.clearRunningState(), this.die();
     case "thisOnly":
       return b.parent.script.clearExecutorsByEntity(b), this.die();
+    case "thisObject":
+      return b.parent.script.clearExecutors(), this.die();
     case "thisThread":
       return this.die();
     case "otherThread":
