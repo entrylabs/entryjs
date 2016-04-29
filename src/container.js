@@ -51,6 +51,7 @@ Entry.Container.prototype.generateView = function(containerView, option) {
     this._view.addClass('entryContainer');
     if (!option || option == 'workspace') {
         this._view.addClass('entryContainerWorkspace');
+        this._view.setAttribute('id' , 'entryContainerWorkspaceId');
 
         var addButton = Entry.createElement('div');
         addButton.addClass('entryAddObjectWorkspace');
@@ -195,6 +196,65 @@ Entry.Container.prototype.setObjects = function(objectModels) {
 };
 
 /**
+ * get Pictures element
+ * @param {!String} pictureId
+ */
+Entry.Container.prototype.getPictureElement = function(pictureId) {
+    for(var i in this.objects_) {
+        var object = this.objects_[i];
+        for (var j in object.pictures) {
+            if (pictureId === object.pictures[j].id) {
+                return object.pictures[j].view;
+            }
+        }
+    }
+    throw new Error('No picture found');
+};
+/**
+ * Set Pictures
+ * @param {!Object picture} picture
+ */
+Entry.Container.prototype.setPicture = function(picture) {
+    for(var i in this.objects_) {
+        var object = this.objects_[i];
+        for (var j in object.pictures) {
+            if (picture.id === object.pictures[j].id) {
+                var picture_ = {};
+                picture_.dimension = picture.dimension;
+                picture_.id = picture.id;
+                picture_.filename = picture.filename;
+                picture_.fileurl = picture.fileurl;
+                picture_.name = picture.name;
+                picture_.view = object.pictures[j].view;
+                object.pictures[j] = picture_;
+                return;
+            }
+        }
+    }
+    throw new Error('No picture found');
+};
+
+/**
+ * Set Pictures
+ * @param {!String} pictureId
+ */
+Entry.Container.prototype.selectPicture = function(pictureId) {
+    for(var i in this.objects_) {
+        var object = this.objects_[i];
+        for (var j in object.pictures) {
+            var picture_ = object.pictures[j];
+            if (pictureId === picture_.id) {
+                object.selectedPicture = picture_;
+                object.entity.setImage(picture_);
+                object.updateThumbnailView();
+                return object.id;
+            }
+        }
+    }
+    throw new Error('No picture found');
+};
+
+/**
  * Add object
  * @param {!object model} objectModel
  * @param {?number} index exist when user add object
@@ -293,8 +353,15 @@ Entry.Container.prototype.removeObject = function(object) {
     this.setCurrentObjects();
     Entry.stage.sortZorder();
 
-    if (this.objects_.length && index !== 0)
-        Entry.container.selectObject(this.objects_[index -1].id);
+    if (this.objects_.length && index !== 0) {
+        // Entry.container.selectObject(this.objects_[index -1].id);
+        var currentObjects_ = this.getCurrentObjects();
+        if(currentObjects_.length > 0) {
+            Entry.container.selectObject(this.getCurrentObjects()[0].id);
+        } else {
+            Entry.container.selectObject();
+        }
+    }
     else if (this.objects_.length && index === 0)
         Entry.container.selectObject(this.getCurrentObjects()[0].id);
     else {
@@ -897,8 +964,10 @@ Entry.Container.prototype.generateTabView = function() {
     helperContainer.addClass('entryContainerHelperWorkspace');
     helperContainer.addClass('entryHide');
     view.appendChild(helperContainer);
+
+
     this.helperContainer = helperContainer;
-    Entry.helper.initBlockHelper(helperContainer);
+    // Entry.helper.initBlockHelper(helperContainer);
 
     tab1.addClass('selected');
 };
@@ -964,7 +1033,7 @@ Entry.Container.prototype.initYoutube = function(youtubeHash) {
 };
 
 Entry.Container.prototype.initTvcast = function(tvcast) {
-    this.tvcast = tvcast;
+    this.tvcast = tvcast;   
     this.youtubeTab.removeClass('entryRemove');
     var view = this._view;
     var width = view.style.width.substring(0,
@@ -986,7 +1055,7 @@ Entry.Container.prototype.initDoneProject = function(projectId) {
     var view = this._view;
     var width = view.style.width.substring(0,
                                           view.style.width.length-2);
-    var url = '/api/project/iframe/';
+    var url = '/api/iframe/project/';
     var iframe = Entry.createElement('iframe');
     iframe.setAttribute('width', width);
     iframe.setAttribute('height',width*9/16 + 35);

@@ -41,6 +41,8 @@ Entry.EntryObject = function(model) {
         /** @type {string} */
         this.lock = model.lock ? model.lock : false;
 
+        this.isEditing = false;
+
         if (this.objectType == "sprite") {
             if (!model.selectedPictureId)
                 this.selectedPicture = this.pictures[0];
@@ -76,7 +78,7 @@ Entry.EntryObject = function(model) {
                     image.src = picture.fileurl;
                 } else {
                     var fileName = picture.filename;
-                    image.src = '/uploads/' + fileName.substring(0, 2) + '/' +
+                    image.src = Entry.defaultPath + '/uploads/' + fileName.substring(0, 2) + '/' +
                         fileName.substring(2, 4) + '/image/' + fileName + '.png';
                 }
             }
@@ -91,7 +93,7 @@ Entry.EntryObject = function(model) {
  * View generator for workspace or others.
  * @return {!Element}
  */
-Entry.EntryObject.prototype.generateView= function() {
+Entry.EntryObject.prototype.generateView = function() {
     if (Entry.type == "workspace") {
         var objectView = Entry.createElement('li', this.id);
         objectView.addClass('entryContainerListElementWorkspace');
@@ -99,7 +101,6 @@ Entry.EntryObject.prototype.generateView= function() {
         objectView.bindOnClick(function(e) {
             if (Entry.container.getObject(this.id))
                 Entry.container.selectObject(this.id);
-            Entry.container.blurAllInputs();
         });
 
         // generate context menu
@@ -109,7 +110,8 @@ Entry.EntryObject.prototype.generateView= function() {
             var options = [
                 {
                     text: Lang.Workspace.context_rename,
-                    callback: function(){
+                    callback: function(e){
+                        e.stopPropagation();
                         (function (o){
                             o.setLock(false);
                             o.editObjectValues(true);
@@ -213,16 +215,23 @@ Entry.EntryObject.prototype.generateView= function() {
         wrapperView.appendChild(nameView);
         this.nameView_ = nameView;
         this.nameView_.entryObject = this;
-        nameView.setAttribute("disabled", 'disabled');
+        nameView.setAttribute("readonly", true);
 
         var self = this;
-        this.nameView_.onblur = function() {
+        this.nameView_.onblur = function(bool) {
             this.entryObject.name = this.value;
+            Entry.playground.reloadPlayground();
+
         };
+
         this.nameView_.onkeypress = function(e) {
-            if (e.keyCode == 13)
-                this.blur();
+            if (e.keyCode == 13) {
+                self.editObjectValues(false);
+            }
+
+                
         };
+
         this.nameView_.value = this.name;
 
         var editView = Entry.createElement('div');
@@ -230,17 +239,22 @@ Entry.EntryObject.prototype.generateView= function() {
         editView.object = this;
         this.editView_ = editView;
         this.view_.appendChild(editView);
-        var click = false;
         if(Entry.objectEditable) {
-            editView.bindOnClick(function(e){
+            $(editView).mousedown(function(e) {
+                var current = object.isEditing;
                 e.stopPropagation();
-                if(Entry.engine.isState('run')){
-                    return;
-                }else{
-                    object.editObjectValues(tog);
-                }
+                Entry.documentMousedown.notify(e);
+                if(Entry.engine.isState('run')) return;
 
+                if (current === false) {
+                    object.editObjectValues(!current);
+                    if (Entry.playground.object !== object)
+                        Entry.container.selectObject(object.id);
+                    object.nameView_.select();
+                    return;
+                }
             });
+
             editView.blur = function(e){
                 object.editObjectComplete();
             };
@@ -283,7 +297,7 @@ Entry.EntryObject.prototype.generateView= function() {
         xCoordi.innerHTML = 'X:';
         var xInput = Entry.createElement('input');
         xInput.addClass('entryObjectCoordinateInputWorkspace');
-        xInput.setAttribute("disabled","disabled");
+        xInput.setAttribute("readonly", true);
         xInput.bindOnClick(function (e) {
             e.stopPropagation();
             this.select();
@@ -298,10 +312,10 @@ Entry.EntryObject.prototype.generateView= function() {
             e.stopPropagation();
             this.select();
         });
-        yInput.setAttribute("disabled","disabled");
+        yInput.setAttribute("readonly", true);
         var sizeSpan = Entry.createElement('span');
         sizeSpan.addClass('entryObjectCoordinateSizeWorkspace');
-        sizeSpan.innerHTML = '크기 :';
+        sizeSpan.innerHTML = Lang.Workspace.Size + ' : ';
         var sizeInput = Entry.createElement('input');
         sizeInput.addClass('entryObjectCoordinateInputWorkspace',
                            'entryObjectCoordinateInputWorkspace_size');
@@ -309,7 +323,7 @@ Entry.EntryObject.prototype.generateView= function() {
             e.stopPropagation();
             this.select();
         });
-        sizeInput.setAttribute("disabled","disabled");
+        sizeInput.setAttribute("readonly", true);
         coordinateView.appendChild(xCoordi);
         coordinateView.appendChild(xInput);
         coordinateView.appendChild(yCoordi);
@@ -321,34 +335,45 @@ Entry.EntryObject.prototype.generateView= function() {
         coordinateView.sizeInput_ = sizeInput;
         this.coordinateView_ = coordinateView;
         var thisPointer = this;
+
         xInput.onkeypress = function (e) {
-            if (e.keyCode == 13)
-                this.blur();
+            if (e.keyCode == 13) {
+                thisPointer.editObjectValues(false);
+            }               
         };
 
-        xInput.onblur = function (e) {
+        xInput.onblur = function (bool) {
             if (!isNaN(xInput.value)) {
                 thisPointer.entity.setX(Number(xInput.value));
             }
             thisPointer.updateCoordinateView();
             Entry.stage.updateObject();
+
         };
+
         yInput.onkeypress = function (e) {
-            if (e.keyCode == 13)
-                this.blur();
+            if (e.keyCode == 13) {
+                thisPointer.editObjectValues(false);
+            }
         };
-        yInput.onblur = function (e) {
+
+        yInput.onblur =  function(bool){
             if (!isNaN(yInput.value)) {
                 thisPointer.entity.setY(Number(yInput.value));
             }
             thisPointer.updateCoordinateView();
             Entry.stage.updateObject();
+
         };
+
         sizeInput.onkeypress = function (e) {
-            if (e.keyCode == 13)
-                this.blur();
+            if (e.keyCode == 13) {
+                thisPointer.editObjectValues(false);
+            }
         };
-        sizeInput.onblur = function (e) {
+
+
+        sizeInput.onblur = function (bool) {
             if (!isNaN(sizeInput.value)) {
                 thisPointer.entity.setSize(Number(sizeInput.value));
             }
@@ -366,7 +391,7 @@ Entry.EntryObject.prototype.generateView= function() {
         rotateSpan.innerHTML = Lang.Workspace.rotation + ' : ';
         var rotateInput = Entry.createElement('input');
         rotateInput.addClass('entryObjectRotateInputWorkspace');
-        rotateInput.setAttribute("disabled","disabled");
+        rotateInput.setAttribute("readonly", true);
         rotateInput.bindOnClick(function (e) {
             e.stopPropagation();
             this.select();
@@ -379,7 +404,7 @@ Entry.EntryObject.prototype.generateView= function() {
         directionSpan.innerHTML = Lang.Workspace.direction + ' : ';
         var directionInput = Entry.createElement('input');
         directionInput.addClass('entryObjectDirectionInputWorkspace');
-        directionInput.setAttribute("disabled","disabled");
+        directionInput.setAttribute("readonly", true);
         directionInput.bindOnClick(function (e) {
             e.stopPropagation();
             this.select();
@@ -394,10 +419,11 @@ Entry.EntryObject.prototype.generateView= function() {
         rotateLabelWrapperView.directionInput_ = directionInput;
         var thisPointer = this;
         rotateInput.onkeypress = function (e) {
-            if (e.keyCode == 13)
-                this.blur();
+            if (e.keyCode == 13) {
+                thisPointer.editObjectValues(false);
+            }
         };
-        rotateInput.onblur = function (e) {
+        rotateInput.onblur = function (bool) {
             var value = rotateInput.value;
             if (value.indexOf('˚') != -1)
                 value = value.substring(0, value.indexOf('˚'));
@@ -407,11 +433,13 @@ Entry.EntryObject.prototype.generateView= function() {
             thisPointer.updateRotationView();
             Entry.stage.updateObject();
         };
+
         directionInput.onkeypress = function (e) {
-            if (e.keyCode == 13)
-                this.blur();
+            if (e.keyCode == 13) {
+                thisPointer.editObjectValues(false);
+            }
         };
-        directionInput.onblur = function (e) {
+        directionInput.onblur = function (bool) {
             var value = directionInput.value;
             if (value.indexOf('˚') != -1)
                 value = value.substring(0,value.indexOf('˚'));
@@ -441,6 +469,7 @@ Entry.EntryObject.prototype.generateView= function() {
             if (Entry.engine.isState('run') || this.object.getLock()) {
                 return;
             }
+            this.object.initRotateValue('free');
             this.object.setRotateMethod('free');
         });
 
@@ -454,6 +483,7 @@ Entry.EntryObject.prototype.generateView= function() {
             if (Entry.engine.isState('run') || this.object.getLock()) {
                 return;
             }
+            this.object.initRotateValue('vertical');
             this.object.setRotateMethod('vertical');
         });
 
@@ -466,16 +496,19 @@ Entry.EntryObject.prototype.generateView= function() {
         rotateModeCView.bindOnClick(function(e){
             if (Entry.engine.isState('run') || this.object.getLock())
                 return;
+            this.object.initRotateValue('none');
             this.object.setRotateMethod('none');
         });
 
         this.updateThumbnailView();
         this.updateCoordinateView();
         this.updateRotateMethodView();
-        this.updateInputViews();
+        this.updateInputViews();    
 
         this.updateCoordinateView(true);
         this.updateRotationView(true);
+    
+
         return this.view_;
     } else if (Entry.type == "phone") {
         var objectView = Entry.createElement('li', this.id);
@@ -546,10 +579,11 @@ Entry.EntryObject.prototype.generateView= function() {
         this.nameView_.entryObject = this;
         this.nameView_.onblur = function() {
             this.entryObject.name = this.value;
+            Entry.playground.reloadPlayground();
         };
         this.nameView_.onkeypress = function(e) {
             if (e.keyCode == 13)
-                this.blur();
+                thisPointer.editObjectValues(false);
         };
         this.nameView_.value = this.name;
 
@@ -691,20 +725,21 @@ Entry.EntryObject.prototype.generateView= function() {
                     thisPointer.entity.setX(Number(xInput.value));
                 }
                 thisPointer.updateCoordinateView();
-                xInput.blur();
+                thisPointer.blur();
             }
         };
         xInput.onblur = function (e) {
             thisPointer.entity.setX(thisPointer.entity.getX());
             Entry.stage.updateObject();
         };
+
         yInput.onkeypress = function (e) {
             if (e.keyCode == 13) {
                 if (!isNaN(yInput.value)) {
                     thisPointer.entity.setY(Number(yInput.value));
                 }
                 thisPointer.updateCoordinateView();
-                yInput.blur();
+                thisPointer.blur();
             }
         };
         yInput.onblur = function (e) {
@@ -834,7 +869,7 @@ Entry.EntryObject.prototype.initEntity = function(model) {
         json.scaleX = json.scaleY = 1.5;
         json.width = 50;
         json.height = 24;
-        json.text = model.name;
+        json.text = model.text;
         if (model.options) {
             var options = model.options;
             var fontStyle = '';
@@ -850,19 +885,8 @@ Entry.EntryObject.prototype.initEntity = function(model) {
             json.bgColor = options.background;
             json.lineBreak = options.lineBreak;
             if (options.lineBreak) {
-                var lines = json.text.split('\n');
-                if (lines.length > 1) {
-                    var maxLen = lines[0].length;
-                    for(var i=1,len=lines.length;i<len;i++) {
-                        if (lines[i].length > maxLen) {
-                            maxLen = lines[i].length;
-                        }
-                    }
-                    json.width = 25 * maxLen;
-                    json.height = 24 * lines.length;
-                } else {
-                    json.width = 25 * json.text.length;
-                }
+                json.width = 256;
+                json.height = json.width * 0.5625;
                 json.regX = json.width / 2;
                 json.regY = json.height / 2;
             }
@@ -887,7 +911,7 @@ Entry.EntryObject.prototype.updateThumbnailView = function() {
         } else {
             var fileName = this.entity.picture.filename;
             this.thumbnailView_.style.backgroundImage =
-                'url("' + '/uploads/' + fileName.substring(0, 2) + '/' +
+                'url("' + Entry.defaultPath + '/uploads/' + fileName.substring(0, 2) + '/' +
                 fileName.substring(2, 4) + '/thumb/' + fileName + '.png")';
         }
     }
@@ -931,6 +955,7 @@ Entry.EntryObject.prototype.updateRotationView = function(isForced) {
     if (rotateMethod == 'free') {
         this.rotateSpan_.removeClass('entryRemove');
         this.rotateInput_.removeClass('entryRemove');
+
         content += this.entity.getRotation().toFixed(1);
         content += '˚';
         this.rotateInput_.value = content;
@@ -939,9 +964,11 @@ Entry.EntryObject.prototype.updateRotationView = function(isForced) {
         content += this.entity.getDirection().toFixed(1);
         content += '˚';
         this.directionInput_.value = content;
+
     } else {
         this.rotateSpan_.addClass('entryRemove');
         this.rotateInput_.addClass('entryRemove');
+
         content = '';
         content += this.entity.getDirection().toFixed(1);
         content += '˚';
@@ -1051,6 +1078,21 @@ Entry.EntryObject.prototype.setPicture = function(picture) {
 };
 
 /**
+ * Get previous picture object by Id.
+ * @param {?string} pictureId
+ * @return {picture object}
+ */
+Entry.EntryObject.prototype.getPrevPicture = function(pictureId) {
+    var pictures = this.pictures,
+        len = pictures.length;
+    for (var i = 0; i < len; i++) {
+        var picture = pictures[i];
+        if (picture.id == pictureId)
+            return pictures[i == 0 ? len-1 : i-1];
+    }
+};
+
+/**
  * Get next picture object by Id.
  * @param {?string} pictureId
  * @return {picture object}
@@ -1156,6 +1198,18 @@ Entry.EntryObject.prototype.setRotateMethod = function(rotateMethod) {
         rotateMethod = 'free';
     this.rotateMethod = rotateMethod;
     this.updateRotateMethodView();
+
+    if(Entry.stage.selectedObject && Entry.stage.selectedObject.entity) {
+        Entry.stage.updateObject();
+        Entry.stage.updateHandle();
+    }
+};
+
+Entry.EntryObject.prototype.initRotateValue = function(rotateMethod) {
+    if(this.rotateMethod != rotateMethod) {
+        this.entity.rotation = 0.0;
+        this.entity.direction = 90.0;
+    }
 };
 
 Entry.EntryObject.prototype.updateRotateMethodView = function() {
@@ -1200,8 +1254,8 @@ Entry.EntryObject.prototype.toggleInformation = function(isToggle) {
  * @param {?xml block} script
  */
 Entry.EntryObject.prototype.addCloneEntity = function(object, entity, script) {
-    if (this.clonedEntities.length > Entry.maxCloneLimit)
-        return;
+    if (this.clonedEntities.length > Entry.maxCloneLimit) return;
+
     var clonedEntity = new Entry.EntityObject(this);
     if (entity) {
         clonedEntity.injectModel(
@@ -1213,6 +1267,9 @@ Entry.EntryObject.prototype.addCloneEntity = function(object, entity, script) {
             clonedEntity.effect = Entry.cloneSimpleObject(entity.effect);
             clonedEntity.applyFilter();
         }
+        if(entity.brush) {
+            Entry.setCloneBrush(clonedEntity, entity.brush);
+        }
     } else {
         clonedEntity.injectModel(
             this.entity.picture ? this.entity.picture : null,
@@ -1223,6 +1280,9 @@ Entry.EntryObject.prototype.addCloneEntity = function(object, entity, script) {
             clonedEntity.effect = Entry.cloneSimpleObject(this.entity.effect);
             clonedEntity.applyFilter();
         }
+        if(this.entity.brush) {
+            Entry.setCloneBrush(clonedEntity, this.entity.brush);
+        }
     }
     Entry.engine.raiseEventOnEntity(clonedEntity,
                                     [clonedEntity, 'when_clone_start']);
@@ -1231,6 +1291,7 @@ Entry.EntryObject.prototype.addCloneEntity = function(object, entity, script) {
     this.addCloneVariables(this, clonedEntity,
                            entity ? entity.variables : null,
                            entity ? entity.lists : null);
+
     this.clonedEntities.push(clonedEntity);
     Entry.stage.loadEntity(clonedEntity);
 };
@@ -1362,19 +1423,18 @@ Entry.EntryObject.prototype.updateInputViews = function(isLocked) {
         this.coordinateView_.sizeInput_
     ];
     if (isLocked){
-        if(inputs[0].getAttribute("disabled")!='disabled'){
+        if(inputs[0].getAttribute("readonly")!= true){
             for(var i=0; i<inputs.length; i++){
-                inputs[i].setAttribute('disabled', 'disabled');
                 inputs[i].removeClass('selectedEditingObject');
-                tog = true;
+                inputs[i].setAttribute('readonly', false);
+                this.isEditing = false;
             }
         }
     }
 };
 
-var tog = true;
-Entry.EntryObject.prototype.editObjectValues = function(click) {
 
+Entry.EntryObject.prototype.editObjectValues = function(click) {
     var inputs;
     if(this.getLock()) {
         inputs = [this.nameView_];
@@ -1387,21 +1447,50 @@ Entry.EntryObject.prototype.editObjectValues = function(click) {
     }
 
     if (click) {
+        
+        $(inputs).removeClass('selectedNotEditingObject');
+
         for(var i=0; i<inputs.length; i++){
-            inputs[i].removeAttribute('disabled');
+            inputs[i].removeAttribute('readonly');
             inputs[i].addClass("selectedEditingObject");
         }
-        this.nameView_.select();
-        tog = false;
+        this.isEditing = true;
     } else {
         for(var i=0; i<inputs.length; i++){
-            inputs[i].setAttribute('disabled', 'disabled');
-            inputs[i].removeClass('selectedEditingObject');
+            inputs[i].blur(true);
         }
-        inputs[0].blur();
-        tog = true;
+        
+        this.blurAllInput();
+        this.isEditing = false;
     }
 };
+
+Entry.EntryObject.prototype.blurAllInput = function() {
+    var inputs = document.getElementsByClassName('selectedEditingObject');            
+    $(inputs).removeClass('selectedEditingObject');
+
+    inputs = [
+            this.nameView_, this.coordinateView_.xInput_,
+            this.coordinateView_.yInput_, this.rotateInput_,
+            this.directionInput_, this.coordinateView_.sizeInput_
+        ];
+
+        for(var i=0; i<inputs.length; i++){
+            inputs[i].addClass('selectedNotEditingObject');
+            inputs[i].setAttribute('readonly', true);
+        }
+    };
+
+// Entry.EntryObject.prototype.disableInput = function(){
+//     var inputs = [
+//             this.nameView_, this.coordinateView_.xInput_,
+//             this.coordinateView_.yInput_, this.rotateInput_,
+//             this.directionInput_, this.coordinateView_.sizeInput_
+//         ];
+//     for(var i=0; i<inputs.length; i++){     
+//         inputs[i].setAttribute('disabled', 'disabled');
+//     }
+// };
 
 
 /**

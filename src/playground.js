@@ -316,7 +316,6 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
     this.blockMenu = this.mainWorkspace.blockMenu;
     this.board = this.mainWorkspace.board;
 
-
 };
 
 /**
@@ -673,6 +672,9 @@ Entry.Playground.prototype.generateTextView = function(textView) {
     var linebreakOffImage = Entry.createElement("img");
     linebreakOffImage.bindOnClick(function() {
         Entry.playground.toggleLineBreak(false);
+        linebreakDescTitle.innerHTML = Lang.Menus.linebreak_off_desc_1;
+        linebreakDescList1.innerHTML = Lang.Menus.linebreak_off_desc_2;
+        linebreakDescList2.innerHTML = Lang.Menus.linebreak_off_desc_3;
     });
 
     linebreakOffImage.src = Entry.mediaFilePath + 'text-linebreak-off-true.png';
@@ -682,6 +684,9 @@ Entry.Playground.prototype.generateTextView = function(textView) {
     var linebreakOnImage = Entry.createElement("img");
     linebreakOnImage.bindOnClick(function() {
         Entry.playground.toggleLineBreak(true);
+        linebreakDescTitle.innerHTML = Lang.Menus.linebreak_on_desc_1;
+        linebreakDescList1.innerHTML = Lang.Menus.linebreak_on_desc_2;
+        linebreakDescList2.innerHTML = Lang.Menus.linebreak_on_desc_3;
     });
 
     linebreakOnImage.src = Entry.mediaFilePath + 'text-linebreak-on-false.png';
@@ -693,19 +698,17 @@ Entry.Playground.prototype.generateTextView = function(textView) {
     linebreakWrapper.appendChild(linebreakDescription);
 
     var linebreakDescTitle = Entry.createElement("p");
-    linebreakDescTitle.innerHTML = '글상자의 크기가 글자가 쓰일 수 있는 영역을 결정합니다.';
+    linebreakDescTitle.innerHTML = Lang.Menus.linebreak_off_desc_1;
     linebreakDescription.appendChild(linebreakDescTitle);
 
     var linebreakDescUL = Entry.createElement("ul");
     linebreakDescription.appendChild(linebreakDescUL);
     var linebreakDescList1 = Entry.createElement("li");
-    linebreakDescList1.innerHTML = '내용 작성시 엔터키로 줄바꿈을 할 수 있습니다.';
+    linebreakDescList1.innerHTML = Lang.Menus.linebreak_off_desc_2;
     linebreakDescUL.appendChild(linebreakDescList1);
     var linebreakDescList2 = Entry.createElement("li");
-    linebreakDescList2.innerHTML = '내용을 작성하시거나 새로운 글자를 추가시 길이가 글상자의 가로 영역을 넘어서면 자동으로 줄이 바뀝니다.';
+    linebreakDescList2.innerHTML = Lang.Menus.linebreak_off_desc_3;
     linebreakDescUL.appendChild(linebreakDescList2);
-
-
 };
 
 /**
@@ -779,7 +782,7 @@ Entry.Playground.prototype.generateSoundView = function(SoundView) {
 Entry.Playground.prototype.injectObject = function(object) {
     /** @type {Entry.Entryobject} */
     if (!object) {
-        this.changeViewMode('default');
+        this.changeViewMode('code');
         this.object = null;
         return;
     }
@@ -826,6 +829,29 @@ Entry.Playground.prototype.injectCode = function() {
     code.board.adjustThreadsPosition();
 };
 
+Entry.Playground.prototype.adjustScroll = function(xc, yc) {
+  var hScroll = Blockly.mainWorkspace.scrollbar.hScroll;
+  var vScroll = Blockly.mainWorkspace.scrollbar.vScroll;
+  hScroll.svgGroup_.setAttribute('opacity', '1');
+  vScroll.svgGroup_.setAttribute('opacity', '1');
+
+  if(Blockly.mainWorkspace.getMetrics()) {
+    Blockly.removeAllRanges();
+    var metrics = Blockly.mainWorkspace.getMetrics();
+    var x = xc;
+    var y = yc;
+    x = Math.min(x, -metrics.contentLeft);
+    y = Math.min(y, -metrics.contentTop);
+    x = Math.max(x, metrics.viewWidth - metrics.contentLeft -
+                 metrics.contentWidth);
+    y = Math.max(y, metrics.viewHeight - metrics.contentTop -
+                 metrics.contentHeight);
+
+    Blockly.mainWorkspace.scrollbar.set(-x - metrics.contentLeft,
+                                        -y - metrics.contentTop);
+
+    }
+};
 /**
  * Inject picture
  */
@@ -845,6 +871,8 @@ Entry.Playground.prototype.injectPicture = function() {
             view.appendChild(element);
         }
         this.selectPicture(this.object.selectedPicture);
+    } else {
+        Entry.dispatchEvent('pictureClear');
     }
 };
 
@@ -867,27 +895,40 @@ Entry.Playground.prototype.addPicture = function(picture, NotForView) {
     this.selectPicture(picture);
 };
 
+/**
+ * set picture
+ * @param {picture}
+ */
 Entry.Playground.prototype.setPicture = function(picture) {
-    var element = document.getElementById(picture.id);
-    picture.view = element;
-    element.picture = picture;
+    var element = Entry.container.getPictureElement(picture.id);
+    var $element = $(element);
+    if(element) {
+        picture.view = element;
+        element.picture = picture;
 
-    var thumbnailView = document.getElementById('t_'+picture.id);
-    if (picture.fileurl) {
-        thumbnailView.style.backgroundImage = 'url("' + picture.fileurl + '")';
-    } else {
-        // deprecated
-        var fileName = picture.filename;
-        thumbnailView.style.backgroundImage =
-            'url("' + '/uploads/' + fileName.substring(0, 2) + '/' +
-            fileName.substring(2, 4) + '/thumb/' + fileName + '.png")';
+        var thumbnailView = $element.find('#t_'+picture.id)[0];
+        if (picture.fileurl) {
+            thumbnailView.style.backgroundImage = 'url("' + picture.fileurl + '")';
+        } else {
+            // deprecated
+            var fileName = picture.filename;
+            thumbnailView.style.backgroundImage =
+                'url("' + Entry.defaultPath + '/uploads/' + fileName.substring(0, 2) + '/' +
+                fileName.substring(2, 4) + '/thumb/' + fileName + '.png")';
+        }
+        var sizeView = $element.find('#s_'+picture.id)[0];
+        sizeView.innerHTML = picture.dimension.width + ' X ' +
+            picture.dimension.height;
     }
-    var sizeView = document.getElementById('s_'+picture.id);
-    sizeView.innerHTML = picture.dimension.width + ' X ' +
-        picture.dimension.height;
-    Entry.playground.object.setPicture(picture);
+
+    Entry.container.setPicture(picture);
+    // Entry.playground.object.setPicture(picture);
 };
 
+/**
+ * Clone picture
+ * @param {!String} pictureId
+ */
 Entry.Playground.prototype.clonePicture = function(pictureId) {
     var sourcePicture = Entry.playground.object.getPicture(pictureId);
     this.addPicture(sourcePicture, true);
@@ -901,13 +942,20 @@ Entry.Playground.prototype.selectPicture = function(picture) {
     var pictures = this.object.pictures;
     for (var i = 0, len=pictures.length; i<len; i++) {
         var target = pictures[i];
-        if (target === picture)
+        if (target.id === picture.id)
             target.view.addClass('entryPictureSelected');
         else
             target.view.removeClass('entryPictureSelected');
     }
-    Entry.playground.object.selectPicture(picture.id);
-    Entry.dispatchEvent('pictureSelected', picture);
+
+    var objectId_;
+    if(picture && picture.id) {
+        objectId_ = Entry.container.selectPicture(picture.id);
+    }
+
+    if( this.object.id === objectId_) {
+        Entry.dispatchEvent('pictureSelected', picture);
+    }
 };
 
 /**
@@ -956,12 +1004,19 @@ Entry.Playground.prototype.injectText = function() {
         Entry.playground.toggleLineBreak(
             Entry.playground.object.entity.getLineBreak());
 
+        if (Entry.playground.object.entity.getLineBreak()) {
+            $(".entryPlaygroundLinebreakDescription > p").html(Lang.Menus.linebreak_on_desc_1);
+            $(".entryPlaygroundLinebreakDescription > ul > li").eq(0).html(Lang.Menus.linebreak_on_desc_2);
+            $(".entryPlaygroundLinebreakDescription > ul > li").eq(1).html(Lang.Menus.linebreak_on_desc_3);
+        }
+
         Entry.playground.setFontAlign(
             Entry.playground.object.entity.getTextAlign());
 
         var fontSize = Entry.playground.object.entity.getFontSize();
         Entry.playground.fontSizeIndiciator.style.width = fontSize + '%';
         Entry.playground.fontSizeKnob.style.left = (fontSize * 0.88) + 'px';
+
     }
 };
 
@@ -1238,6 +1293,13 @@ Entry.Playground.prototype.flushPlayground = function () {
     }
 };
 
+Entry.Playground.prototype.refreshPlayground = function () {
+    if (Entry.playground && Entry.playground.view_) {
+        this.injectPicture();
+        this.injectSound();
+    }
+};
+
 Entry.Playground.prototype.updateListViewOrder = function (type) {
     var list;
     if (type == 'picture')
@@ -1316,7 +1378,7 @@ Entry.Playground.prototype.generatePictureElement = function(picture) {
         // deptecated
         var fileName = picture.filename;
         thumbnailView.style.backgroundImage =
-            'url("' + '/uploads/' + fileName.substring(0, 2) + '/' +
+            'url("' + Entry.defaultPath + '/uploads/' + fileName.substring(0, 2) + '/' +
             fileName.substring(2, 4) + '/thumb/' + fileName + '.png")';
     }
     element.appendChild(thumbnailView);
@@ -1348,6 +1410,7 @@ Entry.Playground.prototype.generatePictureElement = function(picture) {
             }
         }
         this.picture.name = this.value;
+        Entry.playground.reloadPlayground();
         Entry.dispatchEvent('pictureNameChanged', this.picture);
     }
     nameView.onkeypress = function(e) {

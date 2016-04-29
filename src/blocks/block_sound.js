@@ -392,8 +392,10 @@ Blockly.Blocks.sound_from_to = {
   init: function() {
     this.setColour("#A4D01D");
     this.appendDummyInput()
-        .appendField(Lang.Blocks.SOUND_sound_from_to_1)
-        .appendField(new Blockly.FieldDropdownDynamic("sounds"), "SOUND")
+        .appendField(Lang.Blocks.SOUND_sound_from_to_1);
+    this.appendValueInput("VALUE")
+        .setCheck(["Number", "String"]);
+    this.appendDummyInput()
         .appendField(Lang.Blocks.SOUND_sound_from_to_2);
     this.appendValueInput("START")
         .setCheck(["String", "Number"]);
@@ -411,7 +413,7 @@ Blockly.Blocks.sound_from_to = {
 };
 
 Entry.block.sound_from_to = function (sprite, script) {
-    var soundId = script.getField("SOUND", script);
+    var soundId = script.getStringValue("VALUE", script);
     var sound = sprite.parent.getSound(soundId);
 
     if (sound) {
@@ -425,12 +427,16 @@ Entry.block.sound_from_to = function (sprite, script) {
     return script.callReturn();
 };
 
+
+
 Blockly.Blocks.sound_from_to_and_wait = {
   init: function() {
     this.setColour("#A4D01D");
     this.appendDummyInput()
-        .appendField(Lang.Blocks.SOUND_sound_from_to_and_wait_1)
-        .appendField(new Blockly.FieldDropdownDynamic("sounds"), "SOUND")
+        .appendField(Lang.Blocks.SOUND_sound_from_to_and_wait_1);
+    this.appendValueInput("VALUE")
+        .setCheck(["Number", "String"]);
+    this.appendDummyInput()
         .appendField(Lang.Blocks.SOUND_sound_from_to_and_wait_2);
     this.appendValueInput("START")
         .setCheck(["String", "Number"]);
@@ -451,7 +457,8 @@ Entry.block.sound_from_to_and_wait = function (sprite, script) {
     if (!script.isPlay) {
         script.isPlay = true;
         script.playState = 1;
-        var sound = sprite.parent.getSound(script.getField("SOUND", script));
+        var soundId = script.getStringValue("VALUE", script);
+        var sound = sprite.parent.getSound(soundId);
         if (sound) {
             var start = script.getNumberValue("START", script)*1000;
             var end = script.getNumberValue("END", script)*1000;

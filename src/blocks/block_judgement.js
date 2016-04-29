@@ -102,7 +102,9 @@ Entry.block.reach_something = function (sprite, script) {
             var clonedEntities = targetSprite.parent.clonedEntities;
             for (var i=0, len=clonedEntities.length; i<len; i++) {
                 var entity = clonedEntities[i];
-                if (!entity.getVisible() || entity.isStamp)
+                if(entity.isStamp)
+                    continue;
+                if (!entity.getVisible())
                     continue;
                 if (Entry.checkCollisionRect(bound, entity.object.getTransformedBounds()))
                     return true;
@@ -114,7 +116,9 @@ Entry.block.reach_something = function (sprite, script) {
             var clonedEntities = targetSprite.parent.clonedEntities;
             for (var i=0, len=clonedEntities.length; i<len; i++) {
                 var entity = clonedEntities[i];
-                if (!entity.getVisible() || entity.isStamp)
+                if(entity.isStamp)
+                    continue;
+                if (!entity.getVisible())
                     continue;
                 if (collision(object,entity.object,ath,true))
                     return true;
@@ -362,8 +366,8 @@ Blockly.Blocks.boolean_basic_operator = {
     this.appendDummyInput("VALUE")
     .appendField(new Blockly.FieldDropdown([
       ["=","EQUAL"],
-      ["＞","GREATER"],
-      ["＜","LESS"],
+      [">","GREATER"],
+      ["<","LESS"],
       ["≥","GREATER_OR_EQUAL"],
       ["≤","LESS_OR_EQUAL"]
       ], null, false), "OPERATOR");

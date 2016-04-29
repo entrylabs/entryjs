@@ -100,7 +100,11 @@ Entry.SVG.removeClass = function(className) {
 };
 
 Entry.SVG.hasClass = function(className) {
-    return this.getAttribute('class').match(new RegExp('(\\s|^)'+className+'(\\s|$)'));
+    var attr = this.getAttribute("class");
+    if(!attr)
+        return false;
+    else
+        return attr.match(new RegExp('(\\s|^)'+className+'(\\s|$)'));
 };
 
 Entry.SVG.remove = function() {

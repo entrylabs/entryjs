@@ -224,6 +224,14 @@ Blockly.Block.prototype.initSvg = function() {
     this.mouseDownWrapper_ =
         Blockly.bindEvent_(this.svg_.getRootElement(), 'mousedown', this,
                        this.onMouseDown_);
+
+    if(this.type === "function_general") {
+      if (this.dblClickWrapper_)
+          Blockly.unbindEvent_(this.dblClickWrapper_);
+      this.dblClickWrapper_ =
+          Blockly.bindEvent_(this.svg_.getRootElement(), 'dblclick', this,
+                         this.onDblClick_);
+    }
   }
   if (Blockly.enableBlockAnimation) {
       Blockly.bindEvent_(this.svg_.svgGroup_,
@@ -529,12 +537,24 @@ Blockly.Block.prototype.getHeightWidth = function() {
   return {height: height, width: bBox.width};
 };
 
+Blockly.Block.prototype.onDblClick_ = function(e) {
+  if (Entry.Func.isEdit)
+    return;
+  
+   var funcs = Entry.variableContainer.functions_;
+   if(funcs && funcs.length !== 0) 
+      Entry.Func.edit(funcs[this.hashId]);
+};
+
 /**
  * Handle a mouse-down on an SVG block.
  * @param {!Event} e Mouse down event.
  * @private
  */
 Blockly.Block.prototype.onMouseDown_ = function(e) {
+  if (Entry.documentMousedown)
+      Entry.documentMousedown.notify(e);
+
   if (this.isInFlyout) {
     this.select();
     return;
@@ -613,6 +633,7 @@ Blockly.Block.prototype.onMouseDown_ = function(e) {
  * @private
  */
 Blockly.Block.prototype.onMouseUp_ = function(e) {
+
   if (this.isInBlockMenu) {
     this.isInBlockMenu = false;
     var selected = Blockly.selected;

@@ -165,19 +165,29 @@ Entry.block.change_to_nth_shape = function (sprite, script) {
 
 // 다음 모양으로 바꾸기
 Blockly.Blocks.change_to_next_shape = {
-  init: function() {
-    this.setColour("#EC4466");
-    this.appendDummyInput()
-        .appendField(Lang.Blocks.LOOKS_change_to_next_shape)
-        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/looks_03.png', '*'));
-    this.setInputsInline(true);
-    this.setPreviousStatement(true);
-    this.setNextStatement(true);
-  }
+    init: function() {
+        this.setColour("#EC4466");
+        this.appendDummyInput()
+            .appendField(Lang.Blocks.LOOKS_change_to_near_shape_1)
+            .appendField(new Blockly.FieldDropdown([
+                [Lang.Blocks.LOOKS_change_shape_next,"next"],
+                [Lang.Blocks.LOOKS_change_shape_prev,"prev"]
+            ]), "DRIECTION")
+            .appendField(Lang.Blocks.LOOKS_change_to_near_shape_2)
+            .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/looks_03.png', '*'));
+        this.setInputsInline(true);
+        this.setPreviousStatement(true);
+        this.setNextStatement(true);
+    }
 };
 
 Entry.block.change_to_next_shape = function (sprite, script) {
-    var picture = sprite.parent.getNextPicture(sprite.picture.id);
+    var picture;
+    if(!script.fields || script.getStringField("DRIECTION") !== 'prev') {
+        picture = sprite.parent.getNextPicture(sprite.picture.id);
+    } else {
+        picture = sprite.parent.getPrevPicture(sprite.picture.id);
+    }
     sprite.setImage(picture);
     return script.callReturn();
 };

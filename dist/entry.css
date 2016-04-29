@@ -476,9 +476,7 @@ span.CodeMirror-selectedtext {
 }
 .entrySceneListWorkspace {
   margin: 0px;
-  margin-left: 30px;
-  padding: 0px 5px 0px 25px;
-  float: left;
+  padding: 0px 5px 0px 55px;
 }
 .entrySceneElementWorkspace {
   float: left;
@@ -507,35 +505,38 @@ span.CodeMirror-selectedtext {
   position: relative;
   z-index: 999;
   cursor: pointer;
-  background-image: url("../images/top_icon_add_b_nor.png");
+  background-image: url("../../images/top_icon_add_b_nor.png");
 }
 .selectedScene .entrySceneLeftWorkspace {
-  background-image: url("../images/top_tab_b_sel_left.png");
+  background-image: url("../../images/top_tab_b_sel_left.png");
 }
 .entrySceneLeftWorkspace {
   display: inline-block;
   float: left;
   width: 15px;
   height: 40px;
-  background-image: url("../images/top_tab_b_nor_left_blue.png");
+  background-image: url("../../images/top_tab_b_nor_left_blue.png");
 }
 .entrySceneInputCover {
   margin-left: -1px;
   display: inline-block;
   float: left;
   height: 40px;
+  width: 76px;
   padding-top: 11px;
   padding-right: 2px;
   background-color: #0e68e3;
+}
+.minValue .entrySceneInputCover {
+  min-width: 70px;
 }
 .entrySceneFieldWorkspace {
   cursor: text !important;
   display: inline-block;
   margin: 0px;
   height: 20px;
-  width: 76px;
+  width: 100%;
   color: white;
-  min-width: 70px;
   border: 1px solid transparent;
   background-color: #0e68e3;
   padding: 0px 0px 0px 5px;
@@ -546,6 +547,7 @@ span.CodeMirror-selectedtext {
 }
 .selectedScene .entrySceneInputCover {
   background-color: white;
+  min-width: 70px;
 }
 .selectedScene .entrySceneFieldWorkspace {
   background-color: white;
@@ -566,25 +568,29 @@ span.CodeMirror-selectedtext {
   float: left;
   height: 40px;
   position: relative;
-  background-image: url("../images/top_tab_b_nor_right_blue.png");
+  background-image: url("../../images/top_tab_b_nor_right_blue.png");
 }
 .selectedScene .entrySceneRemoveButtonCoverWorkspace {
-  background-image: url("../images/top_tab_b_sel_right.png");
+  display: inline-block;
+  background: url("../../images/top_tab_b_sel_right.png");
 }
 .entrySceneRemoveButtonWorkspace {
   border: 0;
   padding: 0;
   width: 12px;
   background-color: #0e68e3;
-  display: inline-block;
   height: 14px;
   position: absolute;
   right: 45px;
   top: 12px;
+  display: none;
 }
 .selectedScene .entrySceneRemoveButtonWorkspace {
   background-color: white;
   color: black;
+}
+.minValue .entrySceneRemoveButtonWorkspace {
+  display: inline-block;
 }
 .entrySceneRemoveButtonWorkspace:hover {
   color: #FF3E24;
@@ -645,7 +651,8 @@ span.CodeMirror-selectedtext {
   width: 100% !important;
   height: 100% !important;
   position: relative;
-  /*padding-bottom: 35px;*/
+  border-bottom: 1px solid #ccc;
+  border-top: 0px;
 }
 .entryPopupWindow > .entryEngine_w {
   width: 100% !important;
@@ -655,9 +662,11 @@ span.CodeMirror-selectedtext {
   border-top: 1px solid #ccc;
 }
 .entryPopupWindow > div > .entryCanvasWorkspace {
-  border-top: 1px solid #ccc;
+  bottom: 24px;
+  border-bottom: 1px solid #ccc;
   width: 100% !important;
   height: 100% !important;
+  top: -25px !important;
 }
 .entryEngineWorkspace {
   height: 35px;
@@ -687,44 +696,55 @@ span.CodeMirror-selectedtext {
 .entryPopupWindow > .entryEngineWorkspace_w {
   position: absolute;
   width: 100% !important;
-  top: -15px !important;
+  top: 0px !important;
 }
 .entryPopupWindow > .entryEngineWorkspace_w > .entryRunButtonWorkspace_w {
   display: none;
+  top: 37%;
+  left: 46%;
 }
 .entryPopupWindow > .entryEngineWorkspace_w > .entryRunButtonWorkspace_w2 {
   display: block;
-  width: 84px;
-  height: 84px;
-  background-image: url("../images/screen_btn_play_nor.png");
+  width: 111px;
+  height: 111px;
+  background-image: url("../../images/play_btn.png");
+  background-position: 40px center;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 55px;
   background-repeat: no-repeat;
   right: 5px;
   /*bottom: 5px;*/
   bottom: -10px;
+  left: 44%;
+  top: 35%;
 }
 .entryPopupWindow > .entryEngineWorkspace_w > .entryStopButtonWorkspace_w2 {
   display: block;
-  width: 84px;
-  height: 84px;
-  background-image: url("../images/screen_btn_stop_nor.png");
+  background-image: url("../../images/stop_btn.png");
   background-repeat: no-repeat;
-  right: 5px;
-  /*bottom: 5px;*/
+  left: 20px;
+  color: transparent;
   bottom: -10px;
+  width: 90px;
+  background-position: left;
+  color: #4b37a0;
 }
 .entryPopupWindow > .entryEngineWorkspace_w > .entryStopButtonWorkspace_w {
   display: none;
 }
 .entryPopupWindow > .entryEngineWorkspace_w > .entryCoordinateButtonWorkspace_w {
-  left: 5px;
+  background-image: url("../../images/grid.png") !important;
+  right: 34px;
+  color: #4b37a0;
 }
 .entryPopupWindow > .entryEngineWorkspace_w > .entryMaximizeButtonWorkspace_w {
-  background-image: url("../images/layers_icon_fullmode02_nor.png");
+  background-image: url("../../images/zoom_out_btn.png");
   background-repeat: no-repeat;
   right: 5px;
 }
 .entryPopupWindow > .entryEngineWorkspace_w > .entryEngineButtonWorkspace_w {
   position: absolute;
+  bottom: 1px;
 }
 .entryPopupWindow > .entryEngineWorkspace_w > .entryAddButtonWorkspace_w {
   display: none;
@@ -766,7 +786,7 @@ span.CodeMirror-selectedtext {
   background-color: transparent;
   font-size: 12pt;
   border-bottom: 2px solid #89c0d5;
-  background-image: url("../images/layers_icon_button_play_nor.png");
+  background-image: url("../../images/layers_icon_button_play_nor.png");
   background-position: 10px 50%;
   background-repeat: no-repeat;
 }
@@ -777,7 +797,7 @@ span.CodeMirror-selectedtext {
   background-color: transparent;
   font-size: 12pt;
   border-bottom: 2px solid #89c0d5;
-  background-image: url("../images/layers_icon_button_stop_nor.png");
+  background-image: url("../../images/layers_icon_button_stop_nor.png");
   background-position: 10px 50%;
   background-repeat: no-repeat;
 }
@@ -827,12 +847,17 @@ span.CodeMirror-selectedtext {
 .entryMaximizeButtonWorkspace {
   float: left;
   margin-left: 5px;
-  background-image: url("../images/fullscreen_edit.png");
+  background-image: url("../../images/fullscreen_edit.png");
 }
 .entryMaximizeButtonMinimize {
   float: right;
   margin-right: 5px;
-  background-image: url("../images/zoom_out_btn.png");
+  background-image: url("../../images/zoom_in_btn.png");
+}
+.entryPopupWindow > .entryEngineMinimize > .entryMaximizeButtonMinimize {
+  float: right;
+  margin-right: 5px;
+  background-image: url("../../images/zoom_out_btn.png");
 }
 .entryMaximizeButtonPhone {
   width: 20px;
@@ -843,16 +868,16 @@ span.CodeMirror-selectedtext {
   background-repeat: no-repeat;
   background-position: center;
   background-color: transparent;
-  background-image: url("../images/layers_icon_fullmode01_nor.png");
+  background-image: url("../../images/layers_icon_fullmode01_nor.png");
 }
 .entryMaximizeButtonWorkspace_w {
   float: right;
   margin-right: 5px;
-  background-image: url("../images/layers_icon_fullmode01_nor_1.png");
+  background-image: url("../../images/layers_icon_fullmode01_nor_1.png");
   background-repeat: no-repeat;
 }
 .entryEngineBlueWorkspace > .entryMaximizeButtonWorkspace {
-  background-image: url("../images/fullscreen_play.png");
+  background-image: url("../../images/fullscreen_play.png");
 }
 #entrySpeedPanelWorkspace {
   width: 100%;
@@ -866,10 +891,20 @@ span.CodeMirror-selectedtext {
   height: 15px;
   margin-top: 5px;
   margin-left: 10px;
-  background-image: url("../images/speed_edit.png");
+  background-image: url("../../images/speed_edit.png");
 }
 .entryPopupWindow > div > .entrySpeedButtonWorkspace {
   display: none;
+}
+.entryPopupWindow .entryMouseViewWorkspace_w {
+  font-size: 9pt;
+  margin: 0 auto;
+  width: 100%;
+  color: #4b37a0;
+  line-height: 24px;
+  bottom: 1px;
+  position: absolute;
+  text-align: center;
 }
 #entrySpeedProgressWorkspace {
   position: absolute;
@@ -927,28 +962,28 @@ span.CodeMirror-selectedtext {
   height: 16px;
   top: 21px;
   z-index: 100;
-  background-image: url("../images/speed_handle.png");
+  background-image: url("../../images/speed_handle.png");
 }
 .entryCoordinateButtonWorkspace {
   float: right;
-  background-image: url("../images/coordinates_edit.png");
+  background-image: url("../../images/coordinates_edit.png");
 }
 .entryCoordinateButtonMinimize {
   float: right;
-  background-image: url("../images/grid.png");
+  background-image: url("../../images/grid.png");
 }
 .entryCoordinateButtonWorkspace_w {
   float: right;
-  background-image: url("../images/layers_icon_grid_nor.png");
+  background-image: url("../../images/layers_icon_grid_nor.png");
 }
 .entryCoordinateButtonWorkspace.toggleOn {
-  background-image: url("../images/coordinates_edit_on.png");
+  background-image: url("../../images/coordinates_edit_on.png");
 }
 .entryCoordinateButtonWorkspace_w.toggleOn {
-  background-image: url("../images/layers_icon_grid_nor_1.png");
+  background-image: url("../../images/layers_icon_grid_nor_1.png");
 }
 .entryEngineBlueWorkspace > .entryCoordinateButtonWorkspace {
-  background-image: url("../images/coordinates_play.png");
+  background-image: url("../../images/coordinates_play.png");
 }
 .entryRunButtonWorkspace {
   float: right;
@@ -958,7 +993,7 @@ span.CodeMirror-selectedtext {
   text-align: right;
   font-size: 9pt;
   color: #61abdb;
-  background-image: url("../images/playbutton_edit.png");
+  background-image: url("../../images/playbutton_edit.png");
 }
 .entryRunButtonMinimize {
   display: none;
@@ -982,7 +1017,7 @@ span.CodeMirror-selectedtext {
   background-repeat: no-repeat;
   background-position: 10% 43%;
   font-family: nanumBarunBold !important;
-  background-image: url("../images/layers_icon_button_plus_nor.png");
+  background-image: url("../../images/layers_icon_button_plus_nor.png");
 }
 .collapsed > .entryAddButtonWorkspace_w {
   color: transparent;
@@ -1004,7 +1039,7 @@ span.CodeMirror-selectedtext {
   background-repeat: no-repeat;
   background-position: 10% 43%;
   font-family: nanumBarunBold !important;
-  background-image: url("../images/layers_icon_button_play_nor_1.png");
+  background-image: url("../../images/layers_icon_button_play_nor_1.png");
 }
 .collapsed > .entryRunButtonWorkspace_w {
   color: transparent;
@@ -1014,7 +1049,7 @@ span.CodeMirror-selectedtext {
   display: none;
 }
 .entryEngineBlueWorkspace > .entryRunButtonWorkspace {
-  background-image: url("../images/playbutton_play.png");
+  background-image: url("../../images/playbutton_play.png");
   color: white;
 }
 .entryStopButtonWorkspace {
@@ -1026,7 +1061,7 @@ span.CodeMirror-selectedtext {
   text-align: right;
   font-size: 9pt;
   color: #61abdb;
-  background-image: url("../images/stopbutton_pause.png");
+  background-image: url("../../images/stopbutton_pause.png");
 }
 .entryStopButtonMinimize {
   float: left;
@@ -1036,7 +1071,7 @@ span.CodeMirror-selectedtext {
   text-align: right;
   font-size: 9pt;
   color: #6c5af2;
-  background-image: url("../images/stop_btn.png");
+  background-image: url("../../images/stop_btn.png");
 }
 .entryStopButtonWorkspace_w {
   top: 289px;
@@ -1054,7 +1089,7 @@ span.CodeMirror-selectedtext {
   background-repeat: no-repeat;
   background-position: 10% center;
   font-weight: 600;
-  background-image: url("../images/layers_icon_button_stop_nor_1.png");
+  background-image: url("../../images/layers_icon_button_stop_nor_1.png");
 }
 .collapsed > .entryStopButtonWorkspace_w {
   color: transparent;
@@ -1067,16 +1102,16 @@ span.CodeMirror-selectedtext {
   display: none;
 }
 .entryEngineBlueWorkspace > .entryStopButtonWorkspace {
-  background-image: url("../images/stopbutton_play.png");
+  background-image: url("../../images/stopbutton_play.png");
   color: white;
 }
 .entryPauseButtonWorkspace {
   float: right;
-  background-image: url("../images/pausebutton_edit.png");
+  background-image: url("../../images/pausebutton_edit.png");
 }
 .entryPauseButtonMinimize {
   float: left;
-  background-image: url("../images/pause_btn.png");
+  background-image: url("../../images/pause_btn.png");
   width: auto;
   background-position: left;
   padding-left: 17px;
@@ -1084,7 +1119,7 @@ span.CodeMirror-selectedtext {
   font-size: 9pt;
 }
 .entryEngineBlueWorkspace > .entryPauseButtonWorkspace {
-  background-image: url("../images/pausebutton_play.png");
+  background-image: url("../../images/pausebutton_play.png");
   color: white;
 }
 .entryEngineBigButtonMinimize_popup {
@@ -1153,17 +1188,35 @@ span.CodeMirror-selectedtext {
   background-color: #5096f5;
   color: #fff;
 }
-.propertyTabcontainer {
-  background-image: url("../images/property/container_off.png");
+.propertyTabobject {
+  background-image: url("../../images/property/container_off.png");
 }
-.propertyTabcontainer.selected {
-  background-image: url("../images/property/container_on.png");
+.propertyTabobject.selected {
+  background-image: url("../../images/property/container_on.png");
 }
 .propertyTabhw {
-  background-image: url("../images/property/hw_off.png");
+  background-image: url("../../images/property/hw_off.png");
 }
 .propertyTabhw.selected {
-  background-image: url("../images/property/hw_on.png");
+  background-image: url("../../images/property/hw_on.png");
+}
+.propertyTabtvCast {
+  background-image: url("../../images/property/vedio_off.png");
+}
+.propertyTabtvCast.selected {
+  background-image: url("../../images/property/vedio_on.png");
+}
+.propertyTabyoutube {
+  background-image: url("../../images/property/vedio_off.png");
+}
+.propertyTabyoutube.selected {
+  background-image: url("../../images/property/vedio_on.png");
+}
+.propertyTabgoal {
+  background-image: url("../../images/property/doneproject.png");
+}
+.propertyTabgoal.selected {
+  background-image: url("../../images/property/doneproject_on.png");
 }
 .propertyContent {
   position: absolute;
@@ -1171,12 +1224,14 @@ span.CodeMirror-selectedtext {
   bottom: 0;
   left: 50px;
   right: 0;
+  background-color: #363C46;
 }
 .collapsed .propertyContent {
   left: 30px;
 }
 .hwMonitor {
   background-color: #363c46;
+  position: absolute;
 }
 .hwComponent text {
   font-size: 12px;
@@ -1269,15 +1324,30 @@ span.CodeMirror-selectedtext {
   width: 25%;
   text-align: center;
   display: inline-block;
+<<<<<<< HEAD
   background-color: #e5e5e5;
   color: #9e9f9f;
   font-size: 13px;
+=======
+  position: absolute;
+  top: 10px;
+  left: 0;
+  height: 18px;
+  width: 18px;
+  background-image: url("../../images/layers_icon_visible.png");
+  border-bottom: 1px solid rgba(159, 159, 159, 0.3);
+>>>>>>> master
   cursor: pointer;
   padding-top: 13px;
 }
+<<<<<<< HEAD
 .entryContainerTabItemWorkspace:nth-child(2) {
   border-left: 2px solid white;
   border-right: 2px solid white;
+=======
+.objectInfo_unvisible {
+  background-image: url("../../images/layers_icon_unvisible.png");
+>>>>>>> master
 }
 .entryContainerTabItemWorkspace:nth-child(3) {
   border-right: 2px solid white;
@@ -1353,14 +1423,14 @@ span.CodeMirror-selectedtext {
   left: 0;
   height: 18px;
   width: 18px;
-  background-image: url("../images/layers_icon_unlock.png");
+  background-image: url("../../images/layers_icon_unlock.png");
   cursor: pointer;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
 .objectInfo_lock {
-  background-image: url("../images/layers_icon_lock.png");
+  background-image: url("../../images/layers_icon_lock.png");
 }
 .entryObjectThumbnailWorkspace {
   float: left;
@@ -1411,6 +1481,15 @@ span.CodeMirror-selectedtext {
   outline: none;
   background-color: transparent;
 }
+.selectedNotEditionObject {
+  background-color: transparent;
+}
+.selectedNotEditionObject:hover {
+  background-color: transparent;
+}
+.selectedNotEditionObject:focus {
+  background-color: transparent !important;
+}
 /*sj*/
 .selectedObject .entryObjectNameWorkspace {
   color: #474747;
@@ -1418,15 +1497,6 @@ span.CodeMirror-selectedtext {
 .selectedObject > .entryObjectWrapperWorkspace > .entryObjectNameWorkspace {
   color: black;
   font-family: nanumBarunRegular !important;
-}
-/*.entryObjectNameWorkspace:hover{
-    background-color: white;
-    color: black;
-}
-*/
-.entryObjectNameWorkspace:focus {
-  background-color: white;
-  color: black;
 }
 .entryObjectNameWorkspace:disabled {
   background-color: transparent;
@@ -1439,7 +1509,7 @@ span.CodeMirror-selectedtext {
   right: 43px;
   top: 22px;
   cursor: pointer;
-  background-image: url("../images/layers_icon_edit_nor_new.png");
+  background-image: url("../../images/layers_icon_edit_nor_new.png");
 }
 .entryObjectDeleteWorkspace {
   float: left;
@@ -1449,7 +1519,7 @@ span.CodeMirror-selectedtext {
   right: 21px;
   top: 22px;
   cursor: pointer;
-  background-image: url("../images/layers_icon_close_nor_new.png");
+  background-image: url("../../images/layers_icon_close_nor_new.png");
 }
 .entryObjectDeletePhone {
   float: left;
@@ -1459,7 +1529,7 @@ span.CodeMirror-selectedtext {
   right: 57px;
   top: 25px;
   cursor: pointer;
-  background-image: url("../images/layers_icon_close_nor.png");
+  background-image: url("../../images/layers_icon_close_nor.png");
 }
 .entryObjectEditPhone {
   float: left;
@@ -1472,7 +1542,7 @@ span.CodeMirror-selectedtext {
   border: none;
   top: 21px;
   cursor: pointer;
-  background-image: url("../images/glyphicons_150_edit.png");
+  background-image: url("../../images/glyphicons_150_edit.png");
 }
 .entryObjectSelectedImgWorkspace {
   float: left;
@@ -1482,7 +1552,7 @@ span.CodeMirror-selectedtext {
   right: 0;
   top: 20px;
   cursor: col-resize;
-  background-image: url("../images/entry_scroll.png");
+  background-image: url("../../images/entry_scroll.png");
 }
 .selectedObject .entryObjectSelectedImgWorkspace {
   float: left;
@@ -1492,7 +1562,7 @@ span.CodeMirror-selectedtext {
   right: 0;
   top: 20px;
   cursor: col-resize;
-  background-image: url("../images/entry_scroll.png");
+  background-image: url("../../images/entry_scroll.png");
 }
 .entryObjectCoordinateWorkspace {
   float: left;
@@ -1513,13 +1583,13 @@ span.CodeMirror-selectedtext {
   margin: 12px 0 0 0;
   width: 13px;
   height: 13px;
-  background-image: url("../images/layers_arrow_up_nor.png");
+  background-image: url("../../images/layers_arrow_up_nor.png");
 }
 .selectedObject .entryObjectInformationWorkspace {
-  background-image: url("../images/layers_arrow_down_nor.png");
+  background-image: url("../../images/layers_arrow_down_nor.png");
 }
 .informationToggle > .entryObjectWrapperWorkspace > .entryObjectInformationWorkspace {
-  background-image: url("../images/layers_arrow_down_nor_1.png");
+  background-image: url("../../images/layers_arrow_down_nor_1.png");
 }
 .entryObjectButtonWorkspace {
   display: none;
@@ -1544,28 +1614,28 @@ span.CodeMirror-selectedtext {
   display: none;
 }
 .entryObjectSoundWorkspace {
-  background-image: url("../images/icon_sound.png");
+  background-image: url("../../images/icon_sound.png");
   background-color: #6a9a1f;
 }
 .entryObjectSoundWorkspace:hover {
   background-color: #83AF3D;
 }
 .entryObjectPictureWorkspace {
-  background-image: url("../images/icon_picture.png");
+  background-image: url("../../images/icon_picture.png");
   background-color: #f26724;
 }
 .entryObjectPictureWorkspace:hover {
   background-color: #F3783C;
 }
 .entryObjectCodeWorkspace {
-  background-image: url("../images/icon_code.png");
+  background-image: url("../../images/icon_code.png");
   background-color: #00ace9;
 }
 .entryObjectCodeWorkspace:hover {
   background-color: #5FC8EE;
 }
 .entryObjectTextWorkspace {
-  background-image: url("../images/text_icon_white.png");
+  background-image: url("../../images/text_icon_white.png");
   background-color: #F3BB1D;
   background-position: 50% 20%;
   background-size: 75%;
@@ -1641,24 +1711,36 @@ span.CodeMirror-selectedtext {
   width: 22px;
   height: 22px;
 }
+.propertyTabhelper {
+  background-image: url("../../images/property/helper_off.png");
+}
+.propertyTabhelper.selected {
+  background-image: url("../../images/property/helper_on.png");
+}
+.propertyTabContainer {
+  background-image: url("../../images/property/container_off.png");
+}
+.propertyTabContainer.selected {
+  background-image: url("../../images/property/container_on.png");
+}
 .entryObjectRotateModeAWorkspace {
   margin-left: 80px;
-  background-image: url("../images/layers_icon_rotate01_nor.png");
+  background-image: url("../../images/layers_icon_rotate01_nor.png");
 }
 .entryObjectRotateModeAWorkspace.selected {
-  background-image: url("../images/layers_icon_rotate01_sel.png");
+  background-image: url("../../images/layers_icon_rotate01_sel.png");
 }
 .entryObjectRotateModeBWorkspace {
-  background-image: url("../images/layers_icon_rotate02_nor.png");
+  background-image: url("../../images/layers_icon_rotate02_nor.png");
 }
 .entryObjectRotateModeBWorkspace.selected {
-  background-image: url("../images/layers_icon_rotate02_sel.png");
+  background-image: url("../../images/layers_icon_rotate02_sel.png");
 }
 .entryObjectRotateModeCWorkspace {
-  background-image: url("../images/layers_icon_rotate03_nor.png");
+  background-image: url("../../images/layers_icon_rotate03_nor.png");
 }
 .entryObjectRotateModeCWorkspace.selected {
-  background-image: url("../images/layers_icon_rotate03_sel.png");
+  background-image: url("../../images/layers_icon_rotate03_sel.png");
 }
 .entryObjectCoordinateSpanWorkspace {
   float: left;
@@ -1728,7 +1810,7 @@ span.CodeMirror-selectedtext {
   border: solid 1px #afafaf;
   border-left: none;
   z-index: 250;
-  background-image: url("../images/entry_scroll_02.png");
+  background-image: url("../../images/entry_scroll_02.png");
 }
 .entryPlaygroundTabWorkspace {
   position: absolute;
@@ -2040,6 +2122,229 @@ span.CodeMirror-selectedtext {
   color: #294117;
   cursor: pointer;
 }
+<<<<<<< HEAD
+=======
+.entryVariableListElementWorkspace.selected {
+  background-color: #d3d3d3;
+}
+.entryVariableListElementNameWorkspace {
+  position: absolute;
+  left: 47px;
+  margin-top: 12px;
+  background-color: #efefef;
+  width: 55%;
+  border: 1px solid transparent;
+  padding-left: 5px;
+}
+.selected .entryVariableListElementNameWorkspace {
+  background-color: #d3d3d3;
+}
+.entryVariableListElementNameWorkspace:focus {
+  background-color: white;
+  border: 1px solid gray;
+}
+.entryVariableFunctionElementNameWorkspace {
+  border: none;
+  position: absolute;
+  left: 55px;
+  margin-top: 12px;
+  background-color: transparent;
+  width: 60%;
+  overflow: hidden;
+  height: 20px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.entryVariableListElementDeleteWorkspace {
+  position: absolute;
+  margin-top: 5px;
+  padding-right: 5px;
+  right: 3px;
+  border: 0;
+  outline: 0;
+  width: 22px;
+  height: 40px;
+  opacity: 0;
+  background-color: transparent;
+  background-image: url("../../images/layers_icon_close_nor_new_1.png");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.entryVariableListElementWorkspace:hover .entryVariableListElementDeleteWorkspace {
+  opacity: 1;
+}
+.entryVariableListElementEditWorkspace {
+  display: inline-block;
+  float: right;
+  border: 0;
+  outline: 0;
+  width: 20px;
+  height: 40px;
+  margin-top: 5px;
+  margin-right: 25px;
+  background-color: transparent;
+  background-image: url("../../images/layers_icon_edit_nor_new_1.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0;
+}
+.entryVariableListElementWorkspace:hover .entryVariableListElementEditWorkspace {
+  opacity: 1;
+}
+.entryVariableListCallerListWorkspace {
+  list-style: none;
+  padding: 0;
+}
+.entryVariableListCallerWorkspace {
+  border: solid 1px #c8c8c8;
+  border-top: none;
+  height: 50px;
+  cursor: pointer;
+  overflow: hidden;
+}
+.entryVariableListCallerWorkspace:hover {
+  background-color: #e0e0e0;
+}
+.entryVariableListCallerWorkspace:first-child {
+  border-top: none;
+}
+.entryVariableListCallerWorkspace > .entryObjectThumbnailWorkspace {
+  position: inherit;
+  display: block;
+  float: left;
+  top: 0;
+  left: 0;
+  margin: 5px 0 0 5px;
+  height: 40px;
+  width: 40px;
+}
+.entryVariableListCallerNameWorkspace {
+  position: absolute;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  float: left;
+  height: 49px;
+  line-height: 49px;
+  left: 60px;
+  right: 0;
+  padding-right: 7px;
+}
+.entryVariableListCallerNoneWorkspace {
+  color: #C16B6B;
+  cursor: default;
+  line-height: 48px;
+  padding-left: 50px;
+}
+.entryVariableLocalElementWorkspace {
+  background-image: url("../../images/local_question_icon.png");
+}
+.entryVariableCloudElementWorkspace {
+  background-image: url("../../images/cloud_question_icon.png");
+}
+.entryVariableGlobalElementWorkspace {
+  background-image: url("../../images/list_icon_question.png");
+}
+.entryMessageElementWorkspace {
+  background-image: url("../../images/list_icon_signal.png");
+}
+.entryListCloudElementWorkspace {
+  background-image: url("../../images/cloud_list_icon.png");
+}
+.entryListGlobalElementWorkspace {
+  background-image: url("../../images/list_icon_list.png");
+}
+.entryListLocalElementWorkspace {
+  background-image: url("../../images/local_list_icon.png");
+}
+.entryFunctionElementWorkspace {
+  background-image: url("../../images/list_icon_function_v1.png");
+}
+.entryPlaygroundPictureWorkspace {
+  position: absolute;
+  top: 47px;
+  margin-left: 0;
+  height: 100%;
+  background-color: #ececec;
+}
+.entryPlaygroundPicturePhone {
+  margin-left: 0;
+  height: 100%;
+  background-color: #ececec;
+}
+.entryPlaygroundAddPicture {
+  position: absolute;
+  width: 240px;
+  height: 60px;
+  background-color: #e5e5e5;
+  cursor: pointer;
+  border-bottom: 1pt solid #ebeff1;
+}
+.entryPlaygroundAddPicturePhone {
+  position: relative;
+  padding: 0;
+  margin: 0;
+  height: 50px;
+  cursor: pointer;
+  border-bottom: 1pt solid #ebeff1;
+}
+.entryPlaygroundAddPictureInner {
+  display: block;
+  width: 141px;
+  height: 30px;
+  background-color: #eeeeee;
+  color: black;
+  text-align: center;
+  font-size: 11px;
+  line-height: 28px;
+  border: 1px solid #cccccc;
+  border-radius: 7px;
+  margin-top: 15px;
+  margin-left: 49.5px;
+}
+.entryPlaygroundAddPictureInnerPhone {
+  display: block;
+  height: 50px;
+  background-color: #CDCFC9;
+  color: #656565;
+  text-align: center;
+  font-size: 10.5pt;
+  line-height: 36px;
+  border: 2px dashed #737373;
+  width: 240px;
+  padding: 8px 10px 12px 10px;
+}
+.entryPlaygroundPictureList {
+  position: absolute;
+  padding: 0px;
+  margin: 0px;
+  width: 240px;
+  top: 60px;
+  margin-bottom: 47px;
+  bottom: 0px;
+  overflow: auto;
+  list-style: none;
+  background-color: #Cfcfcf;
+}
+.entryPlaygroundPictureListPhone {
+  position: relative;
+  padding: 0px;
+  margin: 0px;
+  width: 240px;
+  bottom: 0px;
+  overflow: auto;
+  list-style: none;
+  background-color: #Cfcfcf;
+}
+.entryPlaygroundPictureElement {
+  display: block;
+  background-color: #f4f4f4;
+  border-bottom: 1pt solid #ebeff1;
+  height: 60px;
+  color: #294117;
+  cursor: pointer;
+}
+>>>>>>> master
 .entryPlaygroundPictureElement:hover {
   background-color: #C0C0C0;
   cursor: move;
@@ -2139,17 +2444,17 @@ span.CodeMirror-selectedtext {
   float: right;
 }
 #entryFontColorToggle {
-  background-image: url("../images/text_in_off.png");
+  background-image: url("../../images/text_in_off.png");
 }
 #entryFontColorToggle.selected {
-  background-image: url("../images/text_in_on.png");
+  background-image: url("../../images/text_in_on.png");
 }
 #entryFontBGToggle {
   margin-left: 6px;
-  background-image: url("../images/text_out_off.png");
+  background-image: url("../../images/text_out_off.png");
 }
 #entryFontBGToggle.selected {
-  background-image: url("../images/text_out_on.png");
+  background-image: url("../../images/text_out_on.png");
 }
 .entryPlaygroundSoundWorkspace {
   position: absolute;
@@ -2247,10 +2552,10 @@ span.CodeMirror-selectedtext {
   cursor: pointer;
 }
 .entryPlaygroundSoundThumbnail.entryPlaygroundSoundPlay {
-  background-image: url("../images/workspace_sound_play.png");
+  background-image: url("../../images/workspace_sound_play.png");
 }
 .entryPlaygroundSoundThumbnail.entryPlaygroundSoundStop {
-  background-image: url("../images/workspace_sound_stop.png");
+  background-image: url("../../images/workspace_sound_stop.png");
 }
 .entryPlaygroundSoundName {
   float: left;
@@ -2310,7 +2615,129 @@ span.CodeMirror-selectedtext {
     left: 64px;
   }
 }
+<<<<<<< HEAD
 @-ot-keyframes foldBoard {
+=======
+.entryCategoryElementWorkspace {
+  clear: both;
+  padding-top: 38px;
+  width: 64px;
+  text-align: center;
+  background-color: #edf5f7;
+  font-size: 13px;
+  color: #474747;
+  float: left;
+  border-bottom: 1px solid #a6cafb;
+  cursor: pointer;
+  font-family: nanumBarunBold !important;
+}
+@media screen and (max-height: 10000px) {
+  .entryCategoryElementWorkspace {
+    height: 61px;
+    background-position: 50% 6px;
+    padding-top: 38px;
+  }
+}
+@media screen and (max-height: 880px) {
+  .entryCategoryElementWorkspace {
+    height: 56px;
+    background-position: 50% 4px;
+    padding-top: 34px;
+  }
+}
+@media screen and (max-height: 810px) {
+  .entryCategoryElementWorkspace {
+    height: 50px;
+    background-position: 50% 2px;
+    padding-top: 30px;
+  }
+}
+@media screen and (max-height: 740px) {
+  .entryCategoryElementWorkspace {
+    height: 42px;
+    background-position: 50% 1px;
+    background-size: 35px;
+    padding-top: 23px;
+  }
+}
+@media screen and (max-height: 640px) {
+  .entryCategoryElementWorkspace {
+    height: 36px;
+    background-position: 50% 1px;
+    background-size: 30px;
+    padding-top: 18px;
+  }
+}
+.entryCategoryElementPhone {
+  height: 50px;
+  clear: both;
+  width: 56px;
+  padding-top: 30px;
+  text-align: center;
+  background-color: #E2E9F0;
+  font-size: 13px;
+  color: #474747;
+  float: left;
+  border-bottom: 1px solid #B7C4CC;
+  background-position: 5px 2px;
+  cursor: pointer;
+}
+.entryCategoryElementEndWorkspace {
+  clear: both;
+  width: 3px;
+  margin-left: 56px;
+  background-color: #515B7C;
+  height: 4000px;
+}
+.entrySelectedCategory {
+  margin: 0;
+  background-color: #e5e5e5;
+}
+.entryBlockMenuWorkspace {
+  background-color: #e5e5e5;
+  position: absolute;
+  left: 64px;
+  top: 45px;
+  width: 186px;
+  bottom: 0px;
+  z-index: 100;
+}
+.entryBlocklyWorkspace {
+  position: absolute;
+  left: 250px;
+  top: 8px;
+  bottom: 0px;
+  right: 0px;
+  overflow: hidden;
+  border: solid 1px #C4C4B9;
+  border-top-left-radius: 10px;
+  background-image: url("../../images/entry_bg.png");
+}
+.entryBlocklyWorkspace.folding {
+  z-index: 300;
+  border-left: solid 1px #C4C4B9;
+  -webkit-animation-duration: 0.7s;
+  -moz-animation-duration: 0.7s;
+  -ms-animation-duration: 0.7s;
+  -o-animation-duration: 0.7s;
+  -webkit-animation-name: foldBlockly;
+  -moz-animation-name: foldBlockly;
+  -ms-animation-name: foldBlockly;
+  -o-animation-name: foldBlockly;
+  animation-name: foldBlockly;
+  -webkit-animation-fill-mode: forwards;
+  -moz-animation-fill-mode: forwards;
+  -ms-animation-fill-mode: forwards;
+  -o-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+}
+@keyframes foldBlockly {
+  to {
+    left: 64px;
+  }
+}
+@-ot-keyframes foldBlockly {
+>>>>>>> master
   to {
     left: 64px;
   }
@@ -2381,11 +2808,11 @@ span.CodeMirror-selectedtext {
   overflow: hidden;
   border: solid 1px #C4C4B9;
   border-left: 0;
-  background-image: url("../images/entry_bg_1.png");
+  background-image: url("../../images/entry_bg_1.png");
 }
 #entryCategorymoving {
   /*border-right: 4px solid #A751E3;*/
-  background-image: url("../images/movement.png");
+  background-image: url("../../images/movement.png");
   background-repeat: no-repeat;
 }
 .entrySelectedCategory#entryCategorymoving {
@@ -2394,7 +2821,7 @@ span.CodeMirror-selectedtext {
 }
 #entryCategorylooks {
   /*border-right: 4px solid #EC4466;*/
-  background-image: url("../images/looks.png");
+  background-image: url("../../images/looks.png");
   background-repeat: no-repeat;
 }
 .entrySelectedCategory#entryCategorylooks {
@@ -2403,63 +2830,63 @@ span.CodeMirror-selectedtext {
 }
 #entryCategorybrush {
   /*border-right: 4px solid #FF9E20;*/
-  background-image: url("../images/brush.png");
+  background-image: url("../../images/brush.png");
   background-repeat: no-repeat;
 }
 .entrySelectedCategory#entryCategorybrush {
   border-right: none;
 }
 #entryCategorytext {
-  background-image: url("../images/postbox_new.png");
+  background-image: url("../../images/postbox_new.png");
   background-repeat: no-repeat;
 }
 .entrySelectedCategory#entryCategorytext {
   border-right: none;
 }
 #entryCategorysound {
-  background-image: url("../images/sound.png");
+  background-image: url("../../images/sound.png");
   background-repeat: no-repeat;
 }
 .entrySelectedCategory#entryCategorysound {
   border-right: none;
 }
 #entryCategorystart {
-  background-image: url("../images/start.png");
+  background-image: url("../../images/start.png");
   background-repeat: no-repeat;
 }
 .entrySelectedCategory#entryCategorystart {
   border-right: none;
 }
 #entryCategoryflow {
-  background-image: url("../images/flow.png");
+  background-image: url("../../images/flow.png");
   background-repeat: no-repeat;
 }
 .entrySelectedCategory#entryCategoryflow {
   border-right: none;
 }
 #entryCategoryjudgement {
-  background-image: url("../images/judgement.png");
+  background-image: url("../../images/judgement.png");
   background-repeat: no-repeat;
 }
 .entrySelectedCategory#entryCategoryjudgement {
   border-right: none;
 }
 #entryCategorycalc {
-  background-image: url("../images/calc.png");
+  background-image: url("../../images/calc.png");
   background-repeat: no-repeat;
 }
 .entrySelectedCategory#entryCategorycalc {
   border-right: none;
 }
 #entryCategoryvariable {
-  background-image: url("../images/variable.png");
+  background-image: url("../../images/variable.png");
   background-repeat: no-repeat;
 }
 .entrySelectedCategory#entryCategoryvariable {
   border-right: none;
 }
 #entryCategoryfunc {
-  background-image: url("../images/function.png");
+  background-image: url("../../images/function.png");
   background-repeat: no-repeat;
 }
 .entrySelectedCategory#entryCategoryfunc {
@@ -2467,7 +2894,7 @@ span.CodeMirror-selectedtext {
 }
 #entryCategoryscene {
   border-right: none;
-  background-image: url("../images/scene.png");
+  background-image: url("../../images/scene.png");
   background-repeat: no-repeat;
 }
 .entrySelectedCategory#entryCategoryscene {
@@ -2475,7 +2902,7 @@ span.CodeMirror-selectedtext {
   border-right: none;
 }
 #entryCategoryarduino {
-  background-image: url("../images/arduino.png");
+  background-image: url("../../images/arduino.png");
   background-repeat: no-repeat;
 }
 .entrySelectedCategory#entryCategoryarduino {
@@ -2555,6 +2982,7 @@ span.CodeMirror-selectedtext {
   width: 400px;
   height: 39px;
 }
+<<<<<<< HEAD
 .entryPlaygroundFontSizeLabel {
   display: inline-block;
   float: right;
@@ -2571,6 +2999,12 @@ span.CodeMirror-selectedtext {
   margin: 18px 0px 18px 4px;
   background-color: #cfcfcf;
   border-radius: 1.5px;
+=======
+.entryObjectCoordinateInputWorkspace:focus,
+.entryObjectRotateInputWorkspace:focus,
+.entryObjectDirectionInputWorkspace:focus {
+  background-color: transparent;
+>>>>>>> master
 }
 .entryPlaygroundFontSizeIndicator {
   height: 100%;
@@ -2753,6 +3187,7 @@ span.CodeMirror-selectedtext {
 .entryVariableFunctionElementNameWorkspace {
   border: none;
   position: absolute;
+<<<<<<< HEAD
   left: 55px;
   margin-top: 12px;
   background-color: transparent;
@@ -2761,9 +3196,19 @@ span.CodeMirror-selectedtext {
   height: 20px;
   text-overflow: ellipsis;
   white-space: nowrap;
+=======
+  top: 90px;
+  left: 90px;
+  background-image: url("../../images/horizontal.png");
+  background-repeat: no-repeat;
+  border-radius: 3px;
+  width: 28px;
+  height: 28px;
+>>>>>>> master
 }
 .entryVariableListElementDeleteWorkspace {
   position: absolute;
+<<<<<<< HEAD
   margin-top: 5px;
   padding-right: 5px;
   right: 3px;
@@ -2774,6 +3219,11 @@ span.CodeMirror-selectedtext {
   opacity: 0;
   background-color: transparent;
   background-image: url("../images/layers_icon_close_nor_new_1.png");
+=======
+  top: 90px;
+  left: 60px;
+  background-image: url("../../images/vertical.png");
+>>>>>>> master
   background-repeat: no-repeat;
   background-position: center;
 }
@@ -2880,11 +3330,11 @@ span.CodeMirror-selectedtext {
 .entryVariableAddSpaceNameWrapperWorkspace {
   height: 28px;
   margin-top: 16px;
-  background-image: url("../images/list_icon_question_1.png");
+  background-image: url("../../images/list_icon_question_1.png");
   background-repeat: no-repeat;
 }
 .entryVariableAddSpaceNameWrapperWorkspace.entryListAddSpaceNameWrapperWorkspace {
-  background-image: url("../images/list_icon_list_1.png");
+  background-image: url("../../images/list_icon_list_1.png");
 }
 .entryVariableAddSpaceInputWorkspace {
   width: 80%;
@@ -2909,7 +3359,9 @@ span.CodeMirror-selectedtext {
   border: 1px solid gray;
 }
 .entryVariableAddSpaceCheckWorkspace.entryVariableAddChecked {
-  background-color: gray;
+  /*background-color: gray;*/
+  background-image: url("../../images/check_on.png");
+  background-repeat: no-repeat;
 }
 .entryVariableAddSpaceLocalWrapperWorkspace {
   color: #5e5e5e;
@@ -3018,6 +3470,7 @@ span.CodeMirror-selectedtext {
   background-color: #a8a8a8;
   margin-top: 16px;
 }
+<<<<<<< HEAD
 .entryVariableSettingMinValueInputWorkspace,
 .entryVariableSettingMaxValueInputWorkspace {
   margin-left: 3px;
@@ -3136,6 +3589,74 @@ span.CodeMirror-selectedtext {
   display: inline-block;
   float: left;
   margin-top: 3px;
+=======
+.entryPlaygroundPainterToolboxPen {
+  background-image: url("../../images/off_pen.png");
+  background-repeat: no-repeat;
+}
+.entryPlaygroundPainterToolboxPen:hover {
+  background-image: url("../../images/on_pen.png");
+}
+.entryPlaygroundPainterToolboxLine {
+  background-image: url("../../images/off_line.png");
+}
+.entryPlaygroundPainterToolboxLine:hover {
+  background-image: url("../../images/on_line.png");
+}
+.entryPlaygroundPainterToolboxRect {
+  background-image: url("../../images/off_square.png");
+}
+.entryPlaygroundPainterToolboxRect:hover {
+  background-image: url("../../images/on_square.png");
+}
+.entryPlaygroundPainterToolboxCircle {
+  background-image: url("../../images/off_circle.png");
+}
+.entryPlaygroundPainterToolboxCircle:hover {
+  background-image: url("../../images/on_circle.png");
+}
+.entryPlaygroundPainterToolboxSelect:hover {
+  background-image: url("../../images/on_choice.png");
+}
+.entryPlaygroundPainterToolboxText {
+  background-image: url("../../images/off_text.png");
+}
+.entryPlaygroundPainterToolboxText:hover {
+  background-image: url("../../images/on_text.png");
+}
+.entryPlaygroundPainterToolboxFill {
+  background-image: url("../../images/off_paint.png");
+}
+.entryPlaygroundPainterToolboxFill:hover {
+  background-image: url("../../images/on_paint.png");
+}
+.entryPlaygroundPainterToolboxErase {
+  background-image: url("../../images/off_eraser.png");
+}
+.entryPlaygroundPainterToolboxErase:hover {
+  background-image: url("../../images/on_eraser.png");
+}
+.entryPlaygroundPainterToolboxSelect {
+  background-image: url("../../images/off_choice.png");
+}
+.entryPlaygroundPainterToolboxCoordinate {
+  background-image: url("../../images/off_center.png");
+}
+.entryPlaygroundPainterToolboxCoordinate:hover {
+  background-image: url("../../images/on_center.png");
+}
+.entryPlaygroundPainterToolboxGlasses {
+  background-image: url("../../images/off_zoom.png");
+}
+.entryPlaygroundPainterToolboxGlasses:hover {
+  background-image: url("../../images/on_zoom.png");
+}
+.entryPlaygroundPainterToolboxCursor {
+  background-image: url("../../images/off_hand.png");
+}
+.entryPlaygroundPainterToolboxCursor:hover {
+  background-image: url("../../images/on_hand.png");
+>>>>>>> master
 }
 .entryListSettingValueRemoveWorkspace {
   display: inline-block;
@@ -3357,6 +3878,7 @@ span.CodeMirror-selectedtext {
   margin-top: 5px;
   margin-left: -8px;
 }
+<<<<<<< HEAD
 /*.entryPlaygroundPainterTopMenu ul ul {
     background: #5f6975;
     border-radius: 0px;
@@ -3369,6 +3891,14 @@ span.CodeMirror-selectedtext {
   list-style-type: none;
   top: 100%;
   width: 120px;
+=======
+.entryPlaygroundPainterAttrFGButton {
+  background-image: url("../../images/square_on_in.png");
+  background-repeat: no-repeat;
+  width: 42px;
+  height: 42px;
+  cursor: pointer;
+>>>>>>> master
 }
 /*.entryPlaygroundPainterTopMenu ul ul ul {
     position: absolute;
@@ -3389,6 +3919,7 @@ span.CodeMirror-selectedtext {
   /*color: #fff;*/
   color: black;
 }
+<<<<<<< HEAD
 .entryPlaygroundPainterTopMenu ul ul li a:hover {
   background: white;
   color: black;
@@ -3402,6 +3933,41 @@ span.CodeMirror-selectedtext {
 }
 .entryPlaygroundPainterTopMenu ul li a:hover {
   background-color: #3b329e;
+=======
+.entryPlaygroundPainterAttrBGButton {
+  background-image: url("../../images/square_off_out.png");
+  background-repeat: no-repeat;
+  width: 42px;
+  height: 42px;
+  cursor: pointer;
+}
+.painterAttrColorSpoid {
+  position: absolute;
+  top: 150px;
+  left: 330px;
+  width: 27px;
+  height: 27px;
+  background-repeat: no-repeat;
+  background-image: url("../../images/color_off_spoid.png");
+}
+.painterAttrColorSpoidClicked {
+  position: absolute;
+  top: 150px;
+  left: 330px;
+  width: 27px;
+  height: 27px;
+  background-repeat: no-repeat;
+  background-image: url("../../images/color_on_spoid.png");
+}
+.painterAttrColorTransparent {
+  position: absolute;
+  top: 150px;
+  left: 300px;
+  width: 27px;
+  height: 27px;
+  background-repeat: no-repeat;
+  background-image: url("../../images/color_off_spoid_1.png");
+>>>>>>> master
 }
 .entryPlaygroundPainterTopMenu ul {
   padding: 0;
@@ -3454,6 +4020,7 @@ span.CodeMirror-selectedtext {
 #entryPainterTopMenuEdit {
   color: white;
 }
+<<<<<<< HEAD
 #entryPainterTopMenuFile > ul > li {
   border-bottom: solid 1px #643cd9;
   border-left: solid 1px #643cd9;
@@ -3468,6 +4035,17 @@ span.CodeMirror-selectedtext {
 #entryPainterTopMenuFile > ul > li > :hover {
   background-color: #643cd9;
   color: white;
+=======
+.entryPlaygroundPainterAttrAddButton {
+  background-image: url("../../images/fill_in.png");
+}
+.entryPlaygroundPainterAttrRemoveButton {
+  background-image: url("../../images/fill_out.png");
+}
+.painterAttrColorSpoid:hover {
+  background-image: url("../../images/color_on_spoid_1.png");
+  background-repeat: no-repeat;
+>>>>>>> master
 }
 #entryPainterTopMenuFile {
   color: white;
@@ -3527,19 +4105,32 @@ span.CodeMirror-selectedtext {
 }
 .entryPlaygroundPainterToolbox {
   position: absolute;
+<<<<<<< HEAD
   height: 100%;
   width: 54px;
+=======
+  top: 10px;
+  background-image: url("../../images/line1_category_off.png");
+  background-repeat: no-repeat;
+>>>>>>> master
   background-color: #f5f5f5;
 }
+<<<<<<< HEAD
 .entryPlaygroundPainterToolboxContainer li {
   cursor: pointer;
   top: 16px;
+=======
+.entryPlaygroundPainterAttrLineStyleLine:hover {
+  background-image: url("../../images/line1_category_on.png");
+  background-repeat: no-repeat;
+>>>>>>> master
 }
 .entryPlaygroundPainterToolboxSelected {
   background-color: #ccc;
 }
 .entryPlaygroundPainterContainer {
   position: absolute;
+<<<<<<< HEAD
   top: 30px;
   left: 56px;
   background-color: transparent;
@@ -3551,20 +4142,46 @@ span.CodeMirror-selectedtext {
   left: 0;
   width: 960px;
   height: 540px;
+=======
+  top: -9px;
+  left: 1px;
+  background-image: url("../../images/line2_off.png");
+  background-repeat: no-repeat;
+  background-color: #f5f5f5;
+  width: 75px;
+  height: 20px;
+}
+.entryPlaygroundPainterAttrLineStyleDot1:hover {
+  background-image: url("../../images/line2_on.png");
+  background-repeat: no-repeat;
+>>>>>>> master
 }
 .entryPlaygroundPainterAttr {
   position: absolute;
+<<<<<<< HEAD
   top: 342px;
   width: 100%;
   height: 192px;
+=======
+  top: -29px;
+  left: 1px;
+  background-image: url("../../images/line3_off.png");
+  background-repeat: no-repeat;
+>>>>>>> master
   background-color: #f5f5f5;
   padding-left: 6px;
   left: 54px;
 }
+<<<<<<< HEAD
 .entryPlaygroundPainterToolboxContainer {
   list-style-type: none;
   margin: 0;
   padding: 0;
+=======
+.entryPlaygroundPainterAttrLineStyleDot2:hover {
+  background-image: url("../../images/line3_on.png");
+  background-repeat: no-repeat;
+>>>>>>> master
 }
 .entryPlaygroundPainterToolboxContainer > li {
   float: left;
@@ -3581,6 +4198,7 @@ span.CodeMirror-selectedtext {
 }
 .entryPlaygroundPainterAttrResize {
   position: absolute;
+<<<<<<< HEAD
   top: 4px;
   left: 5px;
   padding: 4px;
@@ -3601,9 +4219,38 @@ span.CodeMirror-selectedtext {
 .painterAttrRotateTop {
   padding-left: 28px;
   color: white;
+=======
+  top: -48px;
+  left: 1px;
+  background-image: url("../../images/line4_off.png");
+  background-repeat: no-repeat;
+  background-color: #f5f5f5;
+  width: 75px;
+  height: 19px;
+}
+.entryPlaygroundPainterAttrLineStyleDot3:hover {
+  background-image: url("../../images/line4_on.png");
+  background-repeat: no-repeat;
+}
+.entryPlaygroundPainterAttrLineStyleLine1 {
+  position: absolute;
+  top: -67px;
+  left: 1px;
+  background-image: url("../../images/line1_off.png");
+  background-repeat: no-repeat;
+  background-color: #f5f5f5;
+  width: 75px;
+  height: 19px;
+  border-radius: 4px;
+}
+.entryPlaygroundPainterAttrLineStyleLine1:hover {
+  background-image: url("../../images/line1_on.png");
+  background-repeat: no-repeat;
+>>>>>>> master
 }
 .entryPlaygroundPainterAttrRotate {
   position: absolute;
+<<<<<<< HEAD
   top: 77px;
   left: 10px;
   width: 40px;
@@ -3720,6 +4367,71 @@ span.CodeMirror-selectedtext {
   background-color: #fff;
   border: 1px solid #000;
   float: right;
+=======
+  top: 10px;
+  background-repeat: no-repeat;
+  background-color: #f5f5f5;
+  width: 76px;
+  height: 21px;
+}
+.painterAttrLineStyleBackgroundDot1 {
+  background-image: url("../../images/line2_category_off.png");
+}
+.painterAttrLineStyleBackgroundDot2 {
+  background-image: url("../../images/line3_category_off.png");
+}
+.painterAttrLineStyleBackgroundDot3 {
+  background-image: url("../../images/line4_category_off.png");
+}
+.painterAttrLineStyleBackgroundLine {
+  background-image: url("../../images/line1_category_off_1.png");
+}
+.painterAttrLineStyleBackgroundDot1:hover {
+  background-image: url("../../images/line2_category_on.png");
+  background-repeat: no-repeat;
+}
+.painterAttrLineStyleBackgroundDot2:hover {
+  background-image: url("../../images/line3_category_on.png");
+  background-repeat: no-repeat;
+}
+.painterAttrLineStyleBackgroundDot3:hover {
+  background-image: url("../../images/line4_category_on.png");
+  background-repeat: no-repeat;
+}
+.painterAttrLineStyleBackgroundLine:hover {
+  background-image: url("../../images/line1_category_on_1.png");
+  background-repeat: no-repeat;
+}
+.entryToolboxCursorClicked {
+  background-image: url("../../images/on_hand_1.png");
+}
+.entryToolboxSelectClicked {
+  background-image: url("../../images/on_choice_1.png");
+}
+.entryToolboxPenClicked {
+  background-image: url("../../images/on_pen_1.png");
+}
+.entryToolboxLineClicked {
+  background-image: url("../../images/on_line_1.png");
+}
+.entryToolboxRectClicked {
+  background-image: url("../../images/on_square_1.png");
+}
+.entryToolBoxCircleClicked {
+  background-image: url("../../images/on_circle_1.png");
+}
+.entryToolBoxTextClicked {
+  background-image: url("../../images/on_text_1.png");
+}
+.entryToolBoxFillClicked {
+  background-image: url("../../images/on_paint_1.png");
+}
+.entryToolBoxEraseClicked {
+  background-image: url("../../images/on_eraser_1.png");
+}
+.dd {
+  cursor: url("../../images/cursor_eraser.cur");
+>>>>>>> master
 }
 .entryPlaygroundPainterAttrFont {
   position: absolute;
@@ -4179,6 +4891,18 @@ span.CodeMirror-selectedtext {
   width: 42px;
   height: 42px;
   background-color: #fff;
+<<<<<<< HEAD
+=======
+  -webkit-animation-name: blockHelperUp;
+  -moz-animation-name: blockHelperUp;
+  -ms-animation-name: blockHelperUp;
+  -o-animation-name: blockHelperUp;
+  animation-name: blockHelperUp;
+  -webkit-animation-duration: 0.6s;
+  -moz-animation-duration: 0.6s;
+  -ms-animation-duration: 0.6s;
+  -o-animation-duration: 0.6s;
+>>>>>>> master
 }
 .entryPlaygroundPainterAttrFGButton {
   left: 0px;
@@ -4189,11 +4913,17 @@ span.CodeMirror-selectedtext {
 .entryPlaygroundPainterAttrAddButton {
   background-image: url("../images/fill_in.png");
 }
+<<<<<<< HEAD
 .entryPlaygroundPainterAttrRemoveButton {
   background-image: url("../images/fill_out.png");
 }
 .painterAttrColorSpoid:hover {
   background-image: url("../images/color_on_spoid_1.png");
+=======
+#entryBlockHelperDisposeWorkspace {
+  float: right;
+  background-image: url("../../images/block_helper_dispose.png");
+>>>>>>> master
   background-repeat: no-repeat;
 }
 .displayPaintArea {
@@ -4205,6 +4935,7 @@ span.CodeMirror-selectedtext {
   top: -56px;
   left: 0px;
 }
+<<<<<<< HEAD
 .displayThickArea {
   position: absolute;
   top: -112px;
@@ -4221,11 +4952,29 @@ span.CodeMirror-selectedtext {
   position: absolute;
   top: -56px;
   left: 0px;
+=======
+#entryBlockHelperContentWorkspace.lecture {
+  top: 40px;
+}
+.entryBlockHelperIntro {
+  background-image: url("../../images/block_help_icon.png");
+  background-repeat: no-repeat;
+  background-position: center top;
+  margin-top: 28px;
+  padding-top: 100px;
+  text-align: center;
+  color: #707070;
+  font-size: 12px;
+>>>>>>> master
 }
 .entryPlaygroundPainterAttrLineStyle {
   position: absolute;
+<<<<<<< HEAD
   top: 140px;
   left: 230px;
+=======
+  background-image: url("../../images/block_help.png");
+>>>>>>> master
   background-repeat: no-repeat;
 }
 .entryPlaygroundPainterAttrLineStyle:hover {
@@ -4246,6 +4995,7 @@ span.CodeMirror-selectedtext {
 }
 .entryPlaygroundPainterAttrLineStyleDot1 {
   position: absolute;
+<<<<<<< HEAD
   top: -9px;
   left: 1px;
   background-image: url("../images/line2_off.png");
@@ -4253,6 +5003,19 @@ span.CodeMirror-selectedtext {
   background-color: #f5f5f5;
   width: 75px;
   height: 20px;
+=======
+  line-height: 20px;
+  width: 100%;
+  top: 100px;
+  font-size: 13px;
+  color: #707074;
+  padding: 0 50px;
+  text-align: center;
+}
+.entryPlaygroundPainterTopMenuEdit > ul > li {
+  list-style-type: none;
+  width: 120px;
+>>>>>>> master
 }
 .entryPlaygroundPainterAttrLineStyleDot1:hover {
   background-image: url("../images/line2_on.png");
@@ -4297,8 +5060,15 @@ span.CodeMirror-selectedtext {
   height: 19px;
   border-radius: 4px;
 }
+<<<<<<< HEAD
 .entryPlaygroundPainterAttrLineStyleLine1:hover {
   background-image: url("../images/line1_on.png");
+=======
+.entryVariableAddSpaceCheckWorkspace.entryVariableAddChecked,
+.entryVariableSettingCheckWorkspace.entryVariableSettingChecked {
+  /*background-color: gray;*/
+  background-image: url("../../images/check_on.png");
+>>>>>>> master
   background-repeat: no-repeat;
 }
 .painterAttrLineStyleBackgroundDot1,
@@ -4352,8 +5122,15 @@ span.CodeMirror-selectedtext {
 .entryToolboxLineClicked {
   background-image: url("../images/on_line_1.png");
 }
+<<<<<<< HEAD
 .entryToolboxRectClicked {
   background-image: url("../images/on_square_1.png");
+=======
+.entryListSettingCheckedWorkspace {
+  /*background-color: gray;*/
+  background-image: url("../../images/check_on.png");
+  background-repeat: no-repeat;
+>>>>>>> master
 }
 .entryToolBoxCircleClicked {
   background-image: url("../images/on_circle_1.png");
@@ -4364,8 +5141,17 @@ span.CodeMirror-selectedtext {
 .entryToolBoxFillClicked {
   background-image: url("../images/on_paint_1.png");
 }
+<<<<<<< HEAD
 .entryToolBoxEraseClicked {
   background-image: url("../images/on_eraser_1.png");
+=======
+.entryListSettingMinusWorkspace {
+  width: 23px;
+  height: 23px;
+  float: left;
+  background-image: url("../../images/list_minus.png");
+  cursor: pointer;
+>>>>>>> master
 }
 .dd {
   cursor: url("../images/cursor_eraser.cur");
@@ -4374,9 +5160,18 @@ span.CodeMirror-selectedtext {
   list-style-type: none;
   width: 120px;
 }
+<<<<<<< HEAD
 .entryPlaygroundPainterTopMenuFile > ul > li {
   list-style-type: none;
   width: 120px;
+=======
+.entryListSettingPlusWorkspace {
+  width: 23px;
+  height: 23px;
+  float: left;
+  background-image: url("../../images/list_plus.png");
+  cursor: pointer;
+>>>>>>> master
 }
 .entryPlaygroundPainterTopMenu > ul {
   position: absolute;
@@ -4418,6 +5213,7 @@ span.CodeMirror-selectedtext {
     top: 0%;
   }
 }
+<<<<<<< HEAD
 @-webkit-keyframes blockHelperUp {
   0% {
     top: 100%;
@@ -4425,6 +5221,17 @@ span.CodeMirror-selectedtext {
   100% {
     top: 0%;
   }
+=======
+.entryListSettingValueRemoveWorkspace {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  float: right;
+  margin-right: 10px;
+  margin-top: 4px;
+  cursor: pointer;
+  background-image: url("../../images/list_remove_button.png");
+>>>>>>> master
 }
 @keyframes blockHelperDown {
   0% {
@@ -4450,6 +5257,7 @@ span.CodeMirror-selectedtext {
     top: 100%;
   }
 }
+<<<<<<< HEAD
 @-moz-keyframes blockHelperDown {
   0% {
     top: 0%;
@@ -4457,6 +5265,10 @@ span.CodeMirror-selectedtext {
   100% {
     top: 100%;
   }
+=======
+.entryEngineBigButtonMinimize_popup.entryEngineBigButtonMinimize_popup_run {
+  background-image: url("../../images/play_btn.png");
+>>>>>>> master
 }
 @-webkit-keyframes blockHelperDown {
   0% {
@@ -4496,6 +5308,7 @@ span.CodeMirror-selectedtext {
   padding-left: 28px;
   color: #fff;
 }
+<<<<<<< HEAD
 #entryBlockHelperDisposeWorkspace {
   float: right;
   background-image: url("../images/block_helper_dispose.png");
@@ -4512,6 +5325,22 @@ span.CodeMirror-selectedtext {
   bottom: 0px;
   overflow-y: auto;
   overflow-x: hidden;
+=======
+.entryContainerMovieWorkspace {
+  /*
+    position: absolute;
+    width: 100%;
+    top: 45px;
+    bottom: 0px;
+    
+    z-index: 1000;
+*/
+  position: absolute;
+  background-color: #363C46;
+  top: 0px;
+  width: 100%;
+  overflow: scroll;
+>>>>>>> master
 }
 #entryBlockHelperContentWorkspace.lecture {
   top: 0px;
@@ -4528,6 +5357,7 @@ span.CodeMirror-selectedtext {
 }
 #entryBlockHelpBtn {
   position: absolute;
+<<<<<<< HEAD
   background-image: url("../images/block_help.png");
   background-repeat: no-repeat;
   background-position: center;
@@ -4540,6 +5370,11 @@ span.CodeMirror-selectedtext {
   width: 400px;
   height: 160px;
   top: 16px;
+=======
+  width: 100%;
+  top: 0px;
+  background-color: #363C46;
+>>>>>>> master
   overflow: hidden;
 }
 #entryBlockHelperBlockWorkspace > .renderViewContainer {
@@ -4603,6 +5438,7 @@ span.CodeMirror-selectedtext {
   cursor: pointer;
   font-family: nanumBarunBold !important;
 }
+<<<<<<< HEAD
 @media screen and (max-height: 10000px) {
   .entryCategoryElementWorkspace {
     height: 61px;
@@ -4653,6 +5489,25 @@ span.CodeMirror-selectedtext {
   border-bottom: 1px solid #B7C4CC;
   background-position: 5px 2px;
   cursor: pointer;
+=======
+.entryPlaygroundTextAlignLeft {
+  background-image: url("../../images/text_align_left_off.png");
+}
+.entryPlaygroundTextAlignLeft.toggle {
+  background-image: url("../../images/text_align_left_on.png");
+}
+.entryPlaygroundTextAlignCenter {
+  background-image: url("../../images/text_align_center_off.png");
+}
+.entryPlaygroundTextAlignCenter.toggle {
+  background-image: url("../../images/text_align_center_on.png");
+}
+.entryPlaygroundTextAlignRight {
+  background-image: url("../../images/text_align_right_off.png");
+}
+.entryPlaygroundTextAlignRight.toggle {
+  background-image: url("../../images/text_align_right_on.png");
+>>>>>>> master
 }
 .entryCategoryElementEndWorkspace {
   clear: both;
@@ -4735,14 +5590,48 @@ span.CodeMirror-selectedtext {
 .block g image {
   pointer-events: none;
 }
+<<<<<<< HEAD
 svg .svgBlockGroup text {
   white-space: pre;
+=======
+.entryPlaygroundFontSizeKnob {
+  width: 16px;
+  height: 16px;
+  position: relative;
+  margin-top: -10px;
+  margin-left: -7px;
+  background-image: url("../../images/text_size_knob.png");
+  cursor: pointer;
+>>>>>>> master
 }
 .entry-field-color {
   cursor: pointer;
+<<<<<<< HEAD
 }
 .entry-input-field {
   cursor: text;
+=======
+  margin-top: -5px;
+  margin-left: 335px;
+  padding: 20px 5px;
+  position: absolute;
+  background-image: url("../../images/text_color_bg.png");
+  background-repeat: no-repeat;
+  background-size: 260px 226px;
+}
+.entryPlaygroundTextBackgroundsWrapper {
+  width: 260px;
+  height: 226px;
+  z-index: 10;
+  cursor: pointer;
+  margin-top: -5px;
+  margin-left: 369px;
+  padding: 20px 5px;
+  position: absolute;
+  background-image: url("../../images/text_color_bg_1.png");
+  background-repeat: no-repeat;
+  background-size: 260px 226px;
+>>>>>>> master
 }
 .entry-widget-input-field {
   position: fixed;
@@ -4912,6 +5801,7 @@ svg .svgBlockGroup text {
     opacity: 0.2;
   }
 }
+<<<<<<< HEAD
 @-o-keyframes blockPatternAnimation {
   from {
     opacity: 0;
@@ -4927,6 +5817,111 @@ svg .svgBlockGroup text {
   to {
     opacity: 0.2;
   }
+=======
+.entryPauseButtonWorkspace_w {
+  display: none;
+}
+.entryPopupWindow .entryPauseButtonWorkspace_w {
+  display: inline-block;
+  background: url("../../images/pause_btn.png");
+  background-repeat: no-repeat;
+  color: transparent;
+  width: 90px;
+  left: 103px;
+  color: #4b37a0;
+  background-position: center left;
+}
+.entrySceneDummyView {
+  width: 55px;
+  height: 40px;
+  background-color: orange;
+  display: inline-block;
+  opacity: 0.3;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 889;
+  left: 100px;
+}
+.entryPopup {
+  overflow: hidden;
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 7000;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+.entryPopup.popupHelper {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-direction: normal;
+  -moz-box-direction: normal;
+  -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+.entryPopupWindow {
+  width: 80%;
+  height: 80%;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  max-width: 100%;
+  max-height: 100%;
+  /*overflow: hidden;*/
+  z-index: 8000;
+  background-color: #ffffff;
+}
+.entryPopup.hiddenPopup {
+  display: none;
+}
+.entryPopupHelperTopSpan,
+.entryPopupHelperBottomSpan {
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+.entryPopupHelperMiddleSpan {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-direction: normal;
+  -moz-box-direction: normal;
+  -webkit-box-orient: horizontal;
+  -moz-box-orient: horizontal;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+}
+.entryPopupHelperMiddleSpan .entryPopupHelperLeftSpan,
+.entryPopupHelperMiddleSpan .entryPopupHelperRightSpan {
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+
+.block {
+  cursor: url('../../images/handopen.cur') 8 5, auto;
+}
+.block.dragging {
+  cursor: url('../../images/handclosed.cur') 8 5, auto;
+>>>>>>> master
 }
 @-moz-keyframes blockPatternAnimation {
   from {
@@ -5053,5 +6048,6 @@ svg .svgBlockGroup text {
   fill: black;
   cursor: pointer !important;
 }
+
 
 

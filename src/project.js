@@ -111,37 +111,48 @@ Entry.getStartProject = function(mediaFilePath) {
                             "width" : 284,
                             "height" : 350
                         }
-                    },
-                    {
-                        "id" : "4t48",
-                        "fileurl" : mediaFilePath + "media/entrybot2.png",
-                        "name" : "엔트리봇_걷기2",
-                        "scale" : 100,
-                        "dimension" : {
-                            "width" : 284,
-                            "height" : 350
+                    ],
+                    "pictures" : [
+                        {
+                            "id" : "vx80",
+                            "fileurl" : mediaFilePath + "media/entrybot1.png",
+                            "name" : Lang.Blocks.walking_entryBot+"1",
+                            "scale" : 100,
+                            "dimension" : {
+                                "width" : 284,
+                                "height" : 350
+                            }
+                        },
+                        {
+                            "id" : "4t48",
+                            "fileurl" : mediaFilePath + "media/entrybot2.png",
+                            "name" : Lang.Blocks.walking_entryBot+"2",
+                            "scale" : 100,
+                            "dimension" : {
+                                "width" : 284,
+                                "height" : 350
+                            }
                         }
-                    }
-                ]
-            },
-            "entity" : {
-                "x" : 0,
-                "y" : 0,
-                "regX" : 142,
-                "regY" : 175,
-                "scaleX" : 0.3154574132492113,
-                "scaleY" : 0.3154574132492113,
-                "rotation" : 0,
-                "direction" : 90,
-                "width" : 284,
-                "height" : 350,
-                "visible" : true
-            },
-            "lock" : false,
-            "active" : true
-        }
-    ],
-    "speed" : 60
-  };
+                    ]
+                },
+                "entity" : {
+                    "x" : 0,
+                    "y" : 0,
+                    "regX" : 142,
+                    "regY" : 175,
+                    "scaleX" : 0.3154574132492113,
+                    "scaleY" : 0.3154574132492113,
+                    "rotation" : 0,
+                    "direction" : 90,
+                    "width" : 284,
+                    "height" : 350,
+                    "visible" : true
+                },
+                "lock" : false,
+                "active" : true
+            }
+        ],
+        "speed" : 60
+    };
 
 };

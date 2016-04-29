@@ -35,7 +35,6 @@ Entry.Event = function(sender) {
 
     p.notify = function () {
         var args = arguments;
-
         this._listeners.slice().forEach(function(listener){
             listener.fn.apply(
                 listener.obj,

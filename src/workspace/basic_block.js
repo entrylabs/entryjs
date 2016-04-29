@@ -57,6 +57,10 @@ Entry.block.jr_repeat = {
     template: "%1 반복",
     params: [
         {
+            type: "Text",
+            text: Lang.Menus.repeat_0
+        },
+        {
             type: "Dropdown",
             options: [
                 [1,1],
@@ -73,12 +77,13 @@ Entry.block.jr_repeat = {
             value: 3,
             fontSize: 14,
             roundValue: 3
+        },
+        {
+            type: "Text",
+            text: Lang.Menus.repeat_1
         }
     ],
     statements: [
-        {
-            accept: "pebble_basic"
-        }
     ],
     func: function() {
         if (this.repeatCount === undefined) {
@@ -134,8 +139,12 @@ Entry.block.jr_item = {
 Entry.block.cparty_jr_item = {
     skeleton: "pebble_basic",
     color: "#8ABC1D",
-    template: "연필 줍기 %1",
+    template: "%1 %2",
     params: [
+        {
+            type: "Text",
+            text: Lang.Menus.pick_up_pencil
+        },
         {
             type: "Indicator",
             img: "/img/assets/ntry/bitmap/cpartyjr/pen.png",
@@ -169,8 +178,12 @@ Entry.block.cparty_jr_item = {
 Entry.block.jr_north = {
     skeleton: "pebble_basic",
     color: "#A751E3",
-    template: "위쪽 %1",
+    template: "%1 %2",
     params: [
+        {
+            type: "Text",
+            text: Lang.Menus.go_up
+        },
         {
             type: "Indicator",
             img: "/img/assets/ntry/bitmap/jr/block_up_image.png",
@@ -222,8 +235,12 @@ Entry.block.jr_north = {
 Entry.block.jr_east = {
     skeleton: "pebble_basic",
     color: "#A751E3",
-    template: "오른쪽 %1",
+    template: "%1 %2",
     params: [
+        {
+            type: "Text",
+            text: Lang.Menus.go_right
+        },
         {
             type: "Indicator",
             img: "/img/assets/ntry/bitmap/jr/block_right_image.png",
@@ -279,8 +296,12 @@ Entry.block.jr_east = {
 Entry.block.jr_south = {
     skeleton: "pebble_basic",
     color: "#A751E3",
-    template: "아래쪽 %1",
+    template: "%1 %2",
     params: [
+        {
+            type: "Text",
+            text: Lang.Menus.go_down
+        },
         {
             type: "Indicator",
             img: "/img/assets/ntry/bitmap/jr/block_down_image.png",
@@ -336,8 +357,12 @@ Entry.block.jr_south = {
 Entry.block.jr_west = {
     skeleton: "pebble_basic",
     color: "#A751E3",
-    template: "왼쪽 %1",
+    template: "%1 %2",
     params: [
+        {
+            type: "Text",
+            text: Lang.Menus.go_left
+        },
         {
             type: "Indicator",
             img: "/img/assets/ntry/bitmap/jr/block_left_image.png",
@@ -394,7 +419,7 @@ Entry.block.jr_start_basic = {
     skeleton: "basic_event",
     event: "start",
     color: "#3BBD70",
-    template: "%1 시작 버튼을 눌렀을 떄",
+    template: "%1 %2",
     params: [
         {
             type: "Indicator",
@@ -405,7 +430,8 @@ Entry.block.jr_start_basic = {
             position: {
                  x: 0, y: -2
             }
-        }
+        },
+        Lang.Menus.maze_when_run
     ],
     func: function() {
         var entities = Ntry.entityManager.getEntitiesByComponent(
@@ -422,8 +448,9 @@ Entry.block.jr_start_basic = {
 Entry.block.jr_go_straight = {
     skeleton: "basic",
     color: "#A751E3",
-    template: "앞으로 가기 %1",
+    template: "%1 %2",
     params: [
+        Lang.Menus.go_forward,
         {
             type: "Image",
             img: "/img/assets/ntry/bitmap/jr/cparty_go_straight.png",
@@ -455,8 +482,9 @@ Entry.block.jr_go_straight = {
 Entry.block.jr_turn_left = {
     skeleton: "basic",
     color: "#A751E3",
-    template: "왼쪽으로 돌기 %1",
+    template: "%1 %2",
     params: [
+        Lang.Menus.jr_turn_left,
         {
             type: "Image",
             img: "/img/assets/ntry/bitmap/jr/cparty_rotate_l.png",
@@ -489,8 +517,9 @@ Entry.block.jr_turn_left = {
 Entry.block.jr_turn_right = {
     skeleton: "basic",
     color: "#A751E3",
-    template: "오른쪽으로 돌기 %1",
+    template: "%1 %2",
     params: [
+        Lang.Menus.jr_turn_right,
         {
             type: "Image",
             img: "/img/assets/ntry/bitmap/jr/cparty_rotate_r.png",
@@ -523,8 +552,9 @@ Entry.block.jr_turn_right = {
 Entry.block.jr_go_slow = {
     skeleton: "basic",
     color: "#f46c6c",
-    template: "천천히 가기 %1",
+    template: "%1 %2",
     params: [
+        Lang.Menus.go_slow,
         {
             type: "Image",
             img: "/img/assets/ntry/bitmap/jr/cparty_go_slow.png",
@@ -557,14 +587,16 @@ Entry.block.jr_go_slow = {
 Entry.block.jr_repeat_until_dest = {
     skeleton: "basic_loop",
     color: "#498DEB",
-    template: "%1 만날 때 까지 반복하기 %2",
+    template: "%1 %2 %3 %4",
     syntax: ["BasicWhile", "true"],
     params: [
+        Lang.Menus.repeat_until_reach_2,
         {
             type: "Image",
             img: "/img/assets/ntry/bitmap/jr/jr_goal_image.png",
             size: 18
         },
+        Lang.Menus.repeat_until_reach_1,
         {
             type: "Image",
             img: "/img/assets/week/blocks/for.png",
@@ -589,13 +621,16 @@ Entry.block.jr_repeat_until_dest = {
 Entry.block.jr_if_construction = {
     skeleton: "basic_loop",
     color: "#498DEB",
-    template: "만약 %1 앞에 있다면 %2",
+    template: "%1 %2 %3 %4",
     params: [
+    contents: [
+        Lang.Menus.jr_if_1,
         {
             type: "Image",
             img: "/img/assets/ntry/bitmap/jr/jr_construction_image.png",
             size: 18
         },
+        Lang.Menus.jr_if_2,
         {
             type: "Image",
             img: "/img/assets/week/blocks/for.png",
@@ -652,7 +687,7 @@ Entry.block.jr_if_construction = {
 Entry.block.jr_if_speed = {
     skeleton: "basic_loop",
     color: "#498DEB",
-    template: "만약 %1 앞에 있다면 %2",
+    template: Lang.Menus.jr_if_1 + " %1 " + Lang.Menus.jr_if_2 + " %2",
     params: [
         {
             type: "Image",

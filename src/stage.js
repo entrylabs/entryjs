@@ -239,15 +239,19 @@ Entry.Stage.prototype.sortZorder = function() {
 
     for (var i = length-1; i>=0; i--) {
         var object = objects[i];
+        var entity = object.entity;
         var clonedEntities = object.clonedEntities;
 
-        for (var j=0, len=clonedEntities.length; j<len; j++)
+        for (var j=0, len=clonedEntities.length; j<len; j++) {
+            if (clonedEntities[j].shape) {
+                container.setChildIndex(clonedEntities[j].shape, index++);
+            }
             container.setChildIndex(clonedEntities[j].object, index++);
+        }
 
-        var entity = object.entity;
-        //entity.shape == brush
-        if (entity.shape)
+        if (entity.shape) {
             container.setChildIndex(entity.shape, index++);
+        }
         container.setChildIndex(entity.object, index++);
     }
 };
@@ -257,7 +261,7 @@ Entry.Stage.prototype.sortZorder = function() {
  */
 Entry.Stage.prototype.initCoordinator = function() {
     var coordinator = new createjs.Container();
-    var img = new createjs.Bitmap(Entry.mediaFilePath + "workspace_coordinate_v1.png");
+    var img = new createjs.Bitmap(Entry.mediaFilePath + "workspace_coordinate.png");
     img.scaleX = 0.5;
     img.scaleY = 0.5;
     img.x = -240;
@@ -310,79 +314,84 @@ Entry.Stage.prototype.updateObject = function() {
     if (this.editEntity)
         return;
     var object = this.selectedObject;
-    if (!object || !object.entity.getVisible()) {
-        this.handle.setVisible(false);
-        return;
-    }
-    if (object.objectType == "textBox"){
-        this.handle.toggleCenter(false);
-    } else {
-        this.handle.toggleCenter(true);
-    }
-    var rotateMethod = object.getRotateMethod();
-    if (rotateMethod == "free") {
-        this.handle.toggleRotation(true);
-        this.handle.toggleDirection(true);
-    } else if (rotateMethod == "vertical") {
-        this.handle.toggleRotation(false);
-        this.handle.toggleDirection(true);
-    } else {
-        this.handle.toggleRotation(false);
-        this.handle.toggleDirection(true);
-    }
-    if (object.getLock()) {
-        this.handle.toggleRotation(false);
-        this.handle.toggleDirection(false);
-        this.handle.toggleResize(false);
-        this.handle.toggleCenter(false);
-        this.handle.setDraggable(false);
-    } else {
-        this.handle.toggleResize(true);
-    }
-    this.handle.setVisible(true);
-    var entity = object.entity;
-    this.handle.setWidth(entity.getScaleX() * entity.getWidth());
-    this.handle.setHeight(entity.getScaleY() * entity.getHeight());
-    var regX, regY;
-    if (entity.type == "textBox") {
-        // maybe 0.
-        if (entity.getLineBreak()) {
-            regX = (entity.regX) * entity.scaleX;
-            regY = (- entity.regY) * entity.scaleY;
+    if (object) {
+        if (object.objectType == "textBox"){
+            this.handle.toggleCenter(false);
         } else {
-            var fontAlign = entity.getTextAlign();
-            regY = (- entity.regY) * entity.scaleY;
-            switch (fontAlign) {
-                case Entry.TEXT_ALIGN_LEFT:
-                    regX = - entity.getWidth() / 2 * entity.scaleX;
-                    break;
-                case Entry.TEXT_ALIGN_CENTER:
-                    regX = (entity.regX) * entity.scaleX;
-                    break;
-                case Entry.TEXT_ALIGN_RIGHT:
-                    regX = entity.getWidth() / 2 * entity.scaleX;
-                    break;
+            this.handle.toggleCenter(true);
+        }
+        var rotateMethod = object.getRotateMethod();
+        if (rotateMethod == "free") {
+            this.handle.toggleRotation(true);
+            this.handle.toggleDirection(true);
+        } else if (rotateMethod == "vertical") {
+            this.handle.toggleRotation(false);
+            this.handle.toggleDirection(true);
+        } else {
+            this.handle.toggleRotation(false);
+            this.handle.toggleDirection(true);
+        }
+        if (object.getLock()) {
+            this.handle.toggleRotation(false);
+            this.handle.toggleDirection(false);
+            this.handle.toggleResize(false);
+            this.handle.toggleCenter(false);
+            this.handle.setDraggable(false);
+        } else {
+            this.handle.toggleResize(true);
+        }
+        this.handle.setVisible(true);
+        var entity = object.entity;
+        this.handle.setWidth(entity.getScaleX() * entity.getWidth());
+        this.handle.setHeight(entity.getScaleY() * entity.getHeight());
+        var regX, regY;
+        if (entity.type == "textBox") {
+            // maybe 0.
+            if (entity.getLineBreak()) {
+                regX = (entity.regX) * entity.scaleX;
+                regY = (- entity.regY) * entity.scaleY;
+            } else {
+                var fontAlign = entity.getTextAlign();
+                regY = (- entity.regY) * entity.scaleY;
+                switch (fontAlign) {
+                    case Entry.TEXT_ALIGN_LEFT:
+                        regX = - entity.getWidth() / 2 * entity.scaleX;
+                        break;
+                    case Entry.TEXT_ALIGN_CENTER:
+                        regX = (entity.regX) * entity.scaleX;
+                        break;
+                    case Entry.TEXT_ALIGN_RIGHT:
+                        regX = entity.getWidth() / 2 * entity.scaleX;
+                        break;
+                }
             }
+        } else {
+            regX = (entity.regX - entity.width / 2) * entity.scaleX;
+            regY = (entity.height / 2 - entity.regY) * entity.scaleY;
+        }
+
+        var rotation = entity.getRotation() / 180 * Math.PI;
+
+        this.handle.setX(entity.getX() -
+                        regX * Math.cos(rotation) -
+                        regY * Math.sin(rotation));
+        this.handle.setY(-entity.getY() -
+                        regX * Math.sin(rotation) +
+                        regY * Math.cos(rotation));
+        this.handle.setRegX((entity.regX - entity.width / 2) * entity.scaleX);
+        this.handle.setRegY((entity.regY - entity.height / 2) * entity.scaleY);
+        this.handle.setRotation(entity.getRotation());
+        this.handle.setDirection(entity.getDirection());
+        this.objectUpdated = true;
+
+
+        this.handle.setVisible(object.entity.getVisible());
+        if(object.entity.getVisible()) {
+            this.handle.render();
         }
     } else {
-        regX = (entity.regX - entity.width / 2) * entity.scaleX;
-        regY = (entity.height / 2 - entity.regY) * entity.scaleY;
+        this.handle.setVisible(false);
     }
-
-    var rotation = entity.getRotation() / 180 * Math.PI;
-
-    this.handle.setX(entity.getX() -
-                    regX * Math.cos(rotation) -
-                    regY * Math.sin(rotation));
-    this.handle.setY(-entity.getY() -
-                    regX * Math.sin(rotation) +
-                    regY * Math.cos(rotation));
-    this.handle.setRegX((entity.regX - entity.width / 2) * entity.scaleX);
-    this.handle.setRegY((entity.regY - entity.height / 2) * entity.scaleY);
-    this.handle.setRotation(entity.getRotation());
-    this.handle.setDirection(entity.getDirection());
-    this.handle.render();
-    this.objectUpdated = true;
     //this.toggleHandleEditable(!object.getLock());
 };
 
@@ -653,7 +662,7 @@ Entry.Stage.prototype.moveSprite = function (e) {
 
     var distance = 5;
     if (e.shiftKey)
-        distance = 10;
+        distance = 1;
 
     var entity = this.selectedObject.entity;
     switch (e.keyCode) {

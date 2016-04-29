@@ -256,7 +256,7 @@ Blockly.FieldAngle.prototype.updateGraph = function() {
 Blockly.FieldAngle.angleValidator = function(text) {
   var n = Blockly.FieldTextInput.numberValidator(text);
   if (n !== null) {
-    n = n % 360;
+    //n = n % 360;
     //if (n < 0) {
       //n += 360;
     //}

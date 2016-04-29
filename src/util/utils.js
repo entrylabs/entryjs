@@ -342,6 +342,16 @@ Entry.createElement = function(type, elementId) {
     return element;
 };
 
+Entry.makeAutolink = function(html) {
+    if(html) {
+        var regURL = new RegExp("(http|https|ftp|telnet|news|irc)://([-/.a-zA-Z0-9_~#%$?&=:200-377()][^)\\]}]+)","gi");
+        var regEmail = new RegExp("([xA1-xFEa-z0-9_-]+@[xA1-xFEa-z0-9-]+\.[a-z0-9-]+)","gi");
+        return html.replace(regURL,"<a href='$1://$2' target='_blank'>$1://$2</a>").replace(regEmail,"<a href='mailto:$1'>$1</a>");
+    } else {
+        return '';
+    }
+}
+
 /**
  * Generate random hash
  * @return {string}
@@ -676,10 +686,10 @@ Entry.nodeListToArray = function(nl) {
     return arr;
 };
 
-Entry.computeInputWidth = function(nameField){
+Entry.computeInputWidth = function(value){
     var tmp = document.createElement("span");
     tmp.className = "tmp-element";
-    tmp.innerHTML = nameField.value.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    tmp.innerHTML = value.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     document.body.appendChild(tmp);
     var theWidth = tmp.offsetWidth;
     document.body.removeChild(tmp);
@@ -811,6 +821,27 @@ Entry.setBasicBrush = function (sprite) {
     brush.opacity = 100;
     brush.setStrokeStyle(1);
     brush.beginStroke("rgba(255,0,0,1)");
+
+    var shape = new createjs.Shape(brush);
+    Entry.stage.selectedObjectContainer.addChild(shape);
+
+    if (sprite.brush)
+        sprite.brush = null;
+    sprite.brush = brush;
+
+    if (sprite.shape)
+        sprite.shape = null;
+    sprite.shape = shape;
+};
+
+Entry.setCloneBrush = function (sprite, parentBrush) {
+    var brush = new createjs.Graphics();
+    brush.thickness = parentBrush.thickness;
+    brush.rgb = parentBrush.rgb;
+
+    brush.opacity = parentBrush.opacity;
+    brush.setStrokeStyle(brush.thickness);
+    brush.beginStroke("rgba("+brush.rgb.r+","+brush.rgb.g+","+brush.rgb.b+","+(brush.opacity/100)+")");
 
     var shape = new createjs.Shape(brush);
     Entry.stage.selectedObjectContainer.addChild(shape);
@@ -1028,4 +1059,12 @@ Entry.Utils.addBlockPattern = function (boardSvgDom, suffix) {
     }
 
     return elem;
+};
+
+Entry.Utils.COLLISION = {
+    NONE: 0,
+    UP: 1,
+    RIGHT: 2,
+    LEFT: 3,
+    DOWN: 4
 };
