@@ -107,7 +107,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("expression", expression);
 
         var targetSyntax = String(expression.callee.object.name).concat(".").concat(expression.callee.property.name);
-        console.log("ts", targetSyntax);
+        console.log("target syntax", targetSyntax);
 
         var block = this.blockSyntax[targetSyntax];
 
