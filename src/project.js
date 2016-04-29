@@ -1,118 +1,117 @@
 'use strict';
 
 Entry.getStartProject = function(mediaFilePath) {
-  return {
-    "category" : "기타",
-    "scenes" : [
-        {
-            "name" : "장면 1",
-            "id" : "7dwq"
-        }
-    ],
-    "variables" : [
-        {
-            "name" : "초시계",
-            "id" : "brih",
-            "visible" : false,
-            "value" : "0",
-            "variableType" : "timer",
-            "x" : 150,
-            "y" : -70,
-            "array" : [],
-            "object" : null,
-            "isCloud" : false
-        },
-        {
-            "name" : "대답",
-            "id" : "1vu8",
-            "visible" : false,
-            "value" : "0",
-            "variableType" : "answer",
-            "x" : 150,
-            "y" : -100,
-            "array" : [],
-            "object" : null,
-            "isCloud" : false
-        }
-    ],
-    "objects" : [
-        {
-            "id" : "7y0y",
-            "name" : "엔트리봇",
-            //TODO restore original script
-            "script" : [
-                [
-                    {
-                        type: "length_of_string",
-                        x: 200,
-                        y: 140,
-                        params: [
-                            {
-                                type: "length_of_string"
-                            }
-                        ]
-                    }
-                ],
-                [
-                    {
-                        type: "when_run_button_click",
-                        x: 40,
-                        y: 240
-                    },
-                    {
-                        type: "move_direction"
-                    },
-                    {
-                        type: "stop_repeat"
-                    },
-                    {
-                        type: "move_direction"
-                    },
-                    {
-                        type: "repeat_basic",
-                        statements: [
-                            [
-                                {type: "move_direction"},
-                                {type: "move_x"},
-                                {type: "move_y"},
-                                {type: "stop_repeat"}
+    return {
+        "category" : "기타",
+        "scenes" : [
+            {
+                "name" : "장면 1",
+                "id" : "7dwq"
+            }
+        ],
+        "variables" : [
+            {
+                "name" : "초시계",
+                "id" : "brih",
+                "visible" : false,
+                "value" : "0",
+                "variableType" : "timer",
+                "x" : 150,
+                "y" : -70,
+                "array" : [],
+                "object" : null,
+                "isCloud" : false
+            },
+            {
+                "name" : "대답",
+                "id" : "1vu8",
+                "visible" : false,
+                "value" : "0",
+                "variableType" : "answer",
+                "x" : 150,
+                "y" : -100,
+                "array" : [],
+                "object" : null,
+                "isCloud" : false
+            }
+        ],
+        "objects" : [
+            {
+                "id" : "7y0y",
+                "name" : "엔트리봇",
+                //TODO restore original script
+                "script" : [
+                    [
+                        {
+                            type: "length_of_string",
+                            x: 200,
+                            y: 140,
+                            params: [
+                                {
+                                    type: "length_of_string"
+                                }
                             ]
-                        ]
-                    },
-                    {
-                        type: "stop_repeat"
-                    },
-                    {
-                        type: "move_direction"
-                    }
-                ]
-            ],
-            "selectedPictureId" : "vx80",
-            "objectType" : "sprite",
-            "rotateMethod" : "free",
-            "scene" : "7dwq",
-            "sprite" : {
-                "sounds" : [
-                    {
-                        "duration" : 1.3000000000000000,
-                        "ext" : ".mp3",
-                        "id" : "8el5",
-                        "fileurl" : mediaFilePath + "media/bark.mp3",
-                        "name" : "강아지 짖는소리"
-                    }
+                        }
+                    ],
+                    [
+                        {
+                            type: "when_run_button_click",
+                            x: 40,
+                            y: 240
+                        },
+                        {
+                            type: "move_direction"
+                        },
+                        {
+                            type: "stop_repeat"
+                        },
+                        {
+                            type: "move_direction"
+                        },
+                        {
+                            type: "repeat_basic",
+                            statements: [
+                                [
+                                    {type: "move_direction"},
+                                    {type: "move_x"},
+                                    {type: "move_y"},
+                                    {type: "stop_repeat"}
+                                ]
+                            ]
+                        },
+                        {
+                            type: "stop_repeat"
+                        },
+                        {
+                            type: "move_direction"
+                        }
+                    ]
                 ],
-                "pictures" : [
-                    {
-                        "id" : "vx80",
-                        "fileurl" : mediaFilePath + "media/entrybot1.png",
-                        "name" : "엔트리봇_걷기1",
-                        "scale" : 100,
-                        "dimension" : {
-                            "width" : 284,
-                            "height" : 350
+                "selectedPictureId" : "vx80",
+                "objectType" : "sprite",
+                "rotateMethod" : "free",
+                "scene" : "7dwq",
+                "sprite" : {
+                    "sounds" : [
+                        {
+                            "duration" : 1.3000000000000000,
+                            "ext" : ".mp3",
+                            "id" : "8el5",
+                            "fileurl" : mediaFilePath + "media/bark.mp3",
+                            "name" : "강아지 짖는소리"
                         }
                     ],
                     "pictures" : [
+                        {
+                            "id" : "vx80",
+                            "fileurl" : mediaFilePath + "media/entrybot1.png",
+                            "name" : "엔트리봇_걷기1",
+                            "scale" : 100,
+                            "dimension" : {
+                                "width" : 284,
+                                "height" : 350
+                            }
+                        },
                         {
                             "id" : "vx80",
                             "fileurl" : mediaFilePath + "media/entrybot1.png",

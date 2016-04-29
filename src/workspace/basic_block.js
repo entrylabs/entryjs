@@ -623,7 +623,6 @@ Entry.block.jr_if_construction = {
     color: "#498DEB",
     template: "%1 %2 %3 %4",
     params: [
-    contents: [
         Lang.Menus.jr_if_1,
         {
             type: "Image",
