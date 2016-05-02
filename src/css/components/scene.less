@@ -8,9 +8,7 @@
 
 .entrySceneListWorkspace {
     margin: 0px;
-    margin-left:30px;
-    padding: 0px 5px 0px 25px;
-    float: left;
+    padding: 0px 5px 0px 55px;
 }
 .entrySceneElementWorkspace {
     float: left;
@@ -61,9 +59,14 @@
     display: inline-block;
     float: left;
     height: 40px;
+    width: 76px;
     padding-top: 11px;
     padding-right: 2px;
     background-color: #0e68e3;
+}
+
+.minValue .entrySceneInputCover {
+    min-width: 70px;
 }
 
 .entrySceneFieldWorkspace {
@@ -71,9 +74,8 @@
     display: inline-block;
     margin: 0px;
     height: 20px;
-    width: 76px;
+    width: 100%;
     color: white;
-    min-width: 70px;
     border: 1px solid transparent;
     background-color: #0e68e3;
     padding: 0px 0px 0px 5px;
@@ -86,6 +88,7 @@
 
 .selectedScene .entrySceneInputCover {
     background-color: white;
+    min-width: 70px;
 }
 
 .selectedScene .entrySceneFieldWorkspace {
@@ -113,7 +116,8 @@
 }
 
 .selectedScene .entrySceneRemoveButtonCoverWorkspace {
-    .backgroundImage("top_tab_b_sel_right.png");
+    display: inline-block;
+    background: url("@{image_url}top_tab_b_sel_right.png");
 }
 
 .entrySceneRemoveButtonWorkspace {
@@ -121,11 +125,11 @@
     padding: 0;
     width: 12px;
     background-color: #0e68e3;
-    display: inline-block;
     height: 14px;
     position: absolute;
     right: 45px;
     top: 12px;
+    display: none;
 }
 
 .selectedScene .entrySceneRemoveButtonWorkspace {
@@ -133,6 +137,25 @@
     color: black;
 }
 
+.minValue .entrySceneRemoveButtonWorkspace {
+    display: inline-block;
+}
+
 .entrySceneRemoveButtonWorkspace:hover {
     color: #FF3E24;
 }
+
+
+.entrySceneDummyView {
+    width: 55px;
+    height: 40px;
+    background-color: orange;
+    display: inline-block;
+    opacity: 0.3;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 889;
+    left: 100px;
+}
+

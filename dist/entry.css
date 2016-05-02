@@ -467,929 +467,6 @@ span.CodeMirror-selectedtext {
   margin: 0;
   background-color: transparent;
 }
-.entrySceneWorkspace {
-  height: 40px;
-  width: 100%;
-  background-color: #5096f5;
-  position: fixed;
-  overflow: hidden;
-}
-.entrySceneListWorkspace {
-  margin: 0px;
-  padding: 0px 5px 0px 55px;
-}
-.entrySceneElementWorkspace {
-  float: left;
-  display: inline-block;
-  list-style-type: none;
-  color: white;
-  font-size: 10pt;
-  cursor: move;
-  border-radius: 20px;
-  margin-left: -40px;
-  position: relative;
-  margin-right: -2px;
-}
-.entrySceneElementWorkspace.selectedScene {
-  z-index: 888;
-}
-.entrySceneAddButtonWorkspace:hover {
-  background-color: #A3CAF5;
-}
-.entrySceneAddButtonWorkspace {
-  float: left;
-  margin-left: -23px;
-  margin-top: 8px;
-  width: 23px;
-  height: 23px;
-  position: relative;
-  z-index: 999;
-  cursor: pointer;
-  background-image: url("../../images/top_icon_add_b_nor.png");
-}
-.selectedScene .entrySceneLeftWorkspace {
-  background-image: url("../../images/top_tab_b_sel_left.png");
-}
-.entrySceneLeftWorkspace {
-  display: inline-block;
-  float: left;
-  width: 15px;
-  height: 40px;
-  background-image: url("../../images/top_tab_b_nor_left_blue.png");
-}
-.entrySceneInputCover {
-  margin-left: -1px;
-  display: inline-block;
-  float: left;
-  height: 40px;
-  width: 76px;
-  padding-top: 11px;
-  padding-right: 2px;
-  background-color: #0e68e3;
-}
-.minValue .entrySceneInputCover {
-  min-width: 70px;
-}
-.entrySceneFieldWorkspace {
-  cursor: text !important;
-  display: inline-block;
-  margin: 0px;
-  height: 20px;
-  width: 100%;
-  color: white;
-  border: 1px solid transparent;
-  background-color: #0e68e3;
-  padding: 0px 0px 0px 5px;
-}
-.entrySceneFieldWorkspace:focus {
-  background-color: #eee;
-  color: #000;
-}
-.selectedScene .entrySceneInputCover {
-  background-color: white;
-  min-width: 70px;
-}
-.selectedScene .entrySceneFieldWorkspace {
-  background-color: white;
-  color: black;
-}
-.entrySceneFieldWorkspace:hover,
-.entrySceneFieldWorkspace:focus,
-.entrySceneFieldWorkspace:active {
-  outline: none;
-  border: 1px solid gray;
-}
-.entrySceneRemoveButtonCoverWorkspace {
-  border: 0;
-  padding: 0;
-  width: 55px;
-  background-color: transparent;
-  display: inline-block;
-  float: left;
-  height: 40px;
-  position: relative;
-  background-image: url("../../images/top_tab_b_nor_right_blue.png");
-}
-.selectedScene .entrySceneRemoveButtonCoverWorkspace {
-  display: inline-block;
-  background: url("../../images/top_tab_b_sel_right.png");
-}
-.entrySceneRemoveButtonWorkspace {
-  border: 0;
-  padding: 0;
-  width: 12px;
-  background-color: #0e68e3;
-  height: 14px;
-  position: absolute;
-  right: 45px;
-  top: 12px;
-  display: none;
-}
-.selectedScene .entrySceneRemoveButtonWorkspace {
-  background-color: white;
-  color: black;
-}
-.minValue .entrySceneRemoveButtonWorkspace {
-  display: inline-block;
-}
-.entrySceneRemoveButtonWorkspace:hover {
-  color: #FF3E24;
-}
-.entryStateManagerWorkspace {
-  float: right;
-  height: 40px;
-  margin-right: 10px;
-}
-.entryStateManagerButtonWorkspace {
-  border: 0;
-  margin: 3px;
-  padding-left: 26px;
-  height: 32px;
-  border-radius: 4px;
-  background-color: #BDC4C9;
-  color: #E2EBFA;
-  font-size: 10pt;
-  background-repeat: no-repeat;
-  background-position: 7px 8px;
-  border-bottom: 2pt solid #A0ACB2;
-  border-right: 2pt solid #A0ACB2;
-}
-.entryStateManagerButtonWorkspace.active:hover {
-  background-color: #7CC2EE;
-}
-.entryStateManagerButtonWorkspace.active {
-  background-color: #6AAFDA;
-  border-bottom: 2pt solid #639FBD;
-  border-right: 2pt solid #639FBD;
-}
-.entryUndoButtonWorkspace {
-  background-image: url("/img/assets/undo.png");
-}
-.entryRedoButtonWorkspace {
-  background-image: url("/img/assets/redo.png");
-}
-.entryCanvasWrapper {
-  position: absolute;
-}
-.entryCanvasWorkspace {
-  width: 480px;
-  height: 270px;
-  background-color: white;
-  display: block;
-  position: absolute;
-  top: 24px;
-}
-.entryPopupWindow .entryCanvasWorkspace {
-  top: -11px !important;
-}
-.entryCanvasPhone {
-  width: 100%;
-  background-color: white;
-  display: block;
-}
-.entryPopupWindow > .entryCanvasWorkspace {
-  width: 100% !important;
-  height: 100% !important;
-  position: relative;
-  border-bottom: 1px solid #ccc;
-  border-top: 0px;
-}
-.entryPopupWindow > .entryEngine_w {
-  width: 100% !important;
-  height: 100% !important;
-}
-.entryEngine_w > .entryCanvasWorkspace {
-  border-top: 1px solid #ccc;
-}
-.entryPopupWindow > div > .entryCanvasWorkspace {
-  bottom: 24px;
-  border-bottom: 1px solid #ccc;
-  width: 100% !important;
-  height: 100% !important;
-  top: -25px !important;
-}
-.entryEngineWorkspace {
-  height: 35px;
-  width: 480px;
-  background-color: white;
-  border-top: 1pt solid #ebeff1;
-}
-.entryEngineMinimize {
-  height: 35px;
-  width: 100%;
-  background-color: white;
-  border-top: 1pt solid #ebeff1;
-}
-.entryEngineWorkspace_w {
-  height: 225px;
-  width: 400px;
-  background-color: white;
-  border-top: 1pt solid #ebeff1;
-  position: absolute;
-}
-.entryPopupWindow > .entryEngineWorkspace {
-  position: absolute;
-  top: auto !important;
-  width: 100% !important;
-  bottom: 0px;
-}
-.entryPopupWindow > .entryEngineWorkspace_w {
-  position: absolute;
-  width: 100% !important;
-  top: 0px !important;
-}
-.entryPopupWindow > .entryEngineWorkspace_w > .entryRunButtonWorkspace_w {
-  display: none;
-  top: 37%;
-  left: 46%;
-}
-.entryPopupWindow > .entryEngineWorkspace_w > .entryRunButtonWorkspace_w2 {
-  display: block;
-  width: 111px;
-  height: 111px;
-  background-image: url("../../images/play_btn.png");
-  background-position: 40px center;
-  background-color: rgba(0, 0, 0, 0.5);
-  border-radius: 55px;
-  background-repeat: no-repeat;
-  right: 5px;
-  /*bottom: 5px;*/
-  bottom: -10px;
-  left: 44%;
-  top: 35%;
-}
-.entryPopupWindow > .entryEngineWorkspace_w > .entryStopButtonWorkspace_w2 {
-  display: block;
-  background-image: url("../../images/stop_btn.png");
-  background-repeat: no-repeat;
-  left: 20px;
-  color: transparent;
-  bottom: -10px;
-  width: 90px;
-  background-position: left;
-  color: #4b37a0;
-}
-.entryPopupWindow > .entryEngineWorkspace_w > .entryStopButtonWorkspace_w {
-  display: none;
-}
-.entryPopupWindow > .entryEngineWorkspace_w > .entryCoordinateButtonWorkspace_w {
-  background-image: url("../../images/grid.png") !important;
-  right: 34px;
-  color: #4b37a0;
-}
-.entryPopupWindow > .entryEngineWorkspace_w > .entryMaximizeButtonWorkspace_w {
-  background-image: url("../../images/zoom_out_btn.png");
-  background-repeat: no-repeat;
-  right: 5px;
-}
-.entryPopupWindow > .entryEngineWorkspace_w > .entryEngineButtonWorkspace_w {
-  position: absolute;
-  bottom: 1px;
-}
-.entryPopupWindow > .entryEngineWorkspace_w > .entryAddButtonWorkspace_w {
-  display: none;
-}
-.entryEngineBlueWorkspace {
-  background-color: #61abdb;
-}
-.entryEngineButtonWorkspace {
-  border: none;
-  outline: none;
-  width: 25px;
-  height: 35px;
-  background-color: transparent;
-  background-repeat: no-repeat;
-  background-position: center;
-}
-.entryEngineButtonMinimize {
-  border: none;
-  outline: none;
-  width: 25px;
-  height: 35px;
-  background-color: transparent;
-  background-repeat: no-repeat;
-  background-position: center;
-}
-.entryEngineButtonWorkspace_w {
-  border: none;
-  outline: none;
-  width: 25px;
-  height: 24px;
-  background-color: transparent;
-  background-repeat: no-repeat;
-  background-position: center;
-}
-.entryRunButtonPhone {
-  width: 100%;
-  height: 100%;
-  border: none;
-  background-color: transparent;
-  font-size: 12pt;
-  border-bottom: 2px solid #89c0d5;
-  background-image: url("../../images/layers_icon_button_play_nor.png");
-  background-position: 10px 50%;
-  background-repeat: no-repeat;
-}
-.entryStopButtonPhone {
-  width: 100%;
-  height: 100%;
-  border: none;
-  background-color: transparent;
-  font-size: 12pt;
-  border-bottom: 2px solid #89c0d5;
-  background-image: url("../../images/layers_icon_button_stop_nor.png");
-  background-position: 10px 50%;
-  background-repeat: no-repeat;
-}
-.entryEnginePhone {
-  width: 100%;
-}
-.entryEngineHeaderPhone {
-  border-bottom: 1px solid #ccc;
-  width: 100%;
-  background-color: #fff;
-  height: 34px;
-}
-.entryEngineFooterPhone {
-  border-top: 1px solid #ccc;
-  width: 100%;
-  background-color: #fff;
-  height: 38px;
-}
-.entryMouseViewWorkspace {
-  position: relative;
-  font-size: 9pt;
-  margin: 0 auto;
-  width: 40%;
-  color: #61abdb;
-  line-height: 35px;
-  text-align: center;
-}
-.entryMouseViewMinimize {
-  font-size: 9pt;
-  margin: 0 auto;
-  width: 40%;
-  color: #6c5af2;
-  line-height: 35px;
-  text-align: center;
-}
-.entryMouseViewWorkspace_w {
-  font-size: 9pt;
-  margin: 0 auto;
-  width: 40%;
-  color: #61abdb;
-  line-height: 24px;
-  text-align: center;
-}
-.entryEngineBlueWorkspace > .entryMouseViewWorkspace {
-  color: white;
-}
-.entryMaximizeButtonWorkspace {
-  float: left;
-  margin-left: 5px;
-  background-image: url("../../images/fullscreen_edit.png");
-}
-.entryMaximizeButtonMinimize {
-  float: right;
-  margin-right: 5px;
-  background-image: url("../../images/zoom_in_btn.png");
-}
-.entryPopupWindow > .entryEngineMinimize > .entryMaximizeButtonMinimize {
-  float: right;
-  margin-right: 5px;
-  background-image: url("../../images/zoom_out_btn.png");
-}
-.entryMaximizeButtonPhone {
-  width: 20px;
-  height: 100%;
-  border: none;
-  float: right;
-  margin-right: 9px;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-color: transparent;
-  background-image: url("../../images/layers_icon_fullmode01_nor.png");
-}
-.entryMaximizeButtonWorkspace_w {
-  float: right;
-  margin-right: 5px;
-  background-image: url("../../images/layers_icon_fullmode01_nor_1.png");
-  background-repeat: no-repeat;
-}
-.entryEngineBlueWorkspace > .entryMaximizeButtonWorkspace {
-  background-image: url("../../images/fullscreen_play.png");
-}
-#entrySpeedPanelWorkspace {
-  width: 100%;
-  height: 0px;
-  background-color: #0e0;
-}
-.entrySpeedButtonWorkspace {
-  float: left;
-  background-size: contain;
-  width: 22px;
-  height: 15px;
-  margin-top: 5px;
-  margin-left: 10px;
-  background-image: url("../../images/speed_edit.png");
-}
-.entryPopupWindow > div > .entrySpeedButtonWorkspace {
-  display: none;
-}
-.entryPopupWindow .entryMouseViewWorkspace_w {
-  font-size: 9pt;
-  margin: 0 auto;
-  width: 100%;
-  color: #4b37a0;
-  line-height: 24px;
-  bottom: 1px;
-  position: absolute;
-  text-align: center;
-}
-#entrySpeedProgressWorkspace {
-  position: absolute;
-  display: block;
-  left: 80px;
-  top: 23px;
-  right: 4px;
-  height: 13px;
-}
-#entrySpeedProgressWorkspace > tr {
-  width: 100%;
-}
-#entrySpeedProgressWorkspace > tr > td {
-  position: absolute;
-  height: 14px;
-  width: 20%;
-  cursor: pointer;
-}
-#progressCell0 {
-  border-top-left-radius: 6.5px;
-  border-bottom-left-radius: 6.5px;
-  left: 0%;
-  background-color: #bee8f4;
-}
-#progressCell1 {
-  left: 20%;
-  background-color: #96cfe7;
-}
-#progressCell2 {
-  left: 40%;
-  background-color: #83b8e1;
-}
-#progressCell3 {
-  left: 60%;
-  background-color: #67a9c9;
-}
-#progressCell4 {
-  border-top-right-radius: 6.5px;
-  border-bottom-right-radius: 6.5px;
-  left: 80%;
-  background-color: #5099b5;
-}
-#entrySpeedLabelWorkspace {
-  clear: both;
-  display: block;
-  font-family: ng;
-  padding-top: 2px;
-  padding-left: 10px;
-  font-size: 11px;
-}
-#entrySpeedHandleWorkspace {
-  position: absolute !important;
-  cursor: pointer;
-  width: 18px;
-  height: 16px;
-  top: 21px;
-  z-index: 100;
-  background-image: url("../../images/speed_handle.png");
-}
-.entryCoordinateButtonWorkspace {
-  float: right;
-  background-image: url("../../images/coordinates_edit.png");
-}
-.entryCoordinateButtonMinimize {
-  float: right;
-  background-image: url("../../images/grid.png");
-}
-.entryCoordinateButtonWorkspace_w {
-  float: right;
-  background-image: url("../../images/layers_icon_grid_nor.png");
-}
-.entryCoordinateButtonWorkspace.toggleOn {
-  background-image: url("../../images/coordinates_edit_on.png");
-}
-.entryCoordinateButtonWorkspace_w.toggleOn {
-  background-image: url("../../images/layers_icon_grid_nor_1.png");
-}
-.entryEngineBlueWorkspace > .entryCoordinateButtonWorkspace {
-  background-image: url("../../images/coordinates_play.png");
-}
-.entryRunButtonWorkspace {
-  float: right;
-  width: 80px;
-  background-position: 7px 50%;
-  padding-right: 10px;
-  text-align: right;
-  font-size: 9pt;
-  color: #61abdb;
-  background-image: url("../../images/playbutton_edit.png");
-}
-.entryRunButtonMinimize {
-  display: none;
-  float: left;
-  width: 65px;
-  font-size: 9pt;
-  color: #6c5af2;
-}
-.entryAddButtonWorkspace_w {
-  top: 289px;
-  left: 0px;
-  width: 236px;
-  height: 38px;
-  font-size: 12pt;
-  background-color: #fff;
-  color: #666666;
-  text-align: center;
-  position: absolute;
-  border-top: 1px solid #ccc;
-  padding-left: 50px;
-  background-repeat: no-repeat;
-  background-position: 10% 43%;
-  font-family: nanumBarunBold !important;
-  background-image: url("../../images/layers_icon_button_plus_nor.png");
-}
-.collapsed > .entryAddButtonWorkspace_w {
-  color: transparent;
-  background-position: 50% 43%;
-}
-.entryRunButtonWorkspace_w {
-  top: 289px;
-  left: 272px;
-  width: 156px;
-  height: 38px;
-  font-size: 12pt;
-  border-left: 1px solid #ccc;
-  border-top: 1px solid #ccc;
-  background-color: #fff;
-  padding-left: 28px;
-  color: #666666;
-  text-align: center;
-  position: absolute;
-  background-repeat: no-repeat;
-  background-position: 10% 43%;
-  font-family: nanumBarunBold !important;
-  background-image: url("../../images/layers_icon_button_play_nor_1.png");
-}
-.collapsed > .entryRunButtonWorkspace_w {
-  color: transparent;
-  background-position: 50% 43%;
-}
-.entryRunButtonWorkspace_w2 {
-  display: none;
-}
-.entryEngineBlueWorkspace > .entryRunButtonWorkspace {
-  background-image: url("../../images/playbutton_play.png");
-  color: white;
-}
-.entryStopButtonWorkspace {
-  float: right;
-  width: 80px;
-  background-position: 7px 50%;
-  border-top: 1px solid #ccc;
-  padding-right: 10px;
-  text-align: right;
-  font-size: 9pt;
-  color: #61abdb;
-  background-image: url("../../images/stopbutton_pause.png");
-}
-.entryStopButtonMinimize {
-  float: left;
-  width: 80px;
-  background-position: 7px 50%;
-  padding-right: 10px;
-  text-align: right;
-  font-size: 9pt;
-  color: #6c5af2;
-  background-image: url("../../images/stop_btn.png");
-}
-.entryStopButtonWorkspace_w {
-  top: 289px;
-  left: 272px;
-  width: 156px;
-  height: 38px;
-  font-size: 12pt;
-  border-top: 1px solid #ccc;
-  border-left: 1px solid #ccc;
-  background-color: #fff;
-  color: #666666;
-  padding-left: 28px;
-  text-align: center;
-  position: absolute;
-  background-repeat: no-repeat;
-  background-position: 10% center;
-  font-weight: 600;
-  background-image: url("../../images/layers_icon_button_stop_nor_1.png");
-}
-.collapsed > .entryStopButtonWorkspace_w {
-  color: transparent;
-  background-position: 50% 43%;
-}
-.entryStopButtonWorkspace_w2 {
-  display: none;
-}
-.entryPauseButtonWorkspace_w {
-  display: none;
-}
-.entryEngineBlueWorkspace > .entryStopButtonWorkspace {
-  background-image: url("../../images/stopbutton_play.png");
-  color: white;
-}
-.entryPauseButtonWorkspace {
-  float: right;
-  background-image: url("../../images/pausebutton_edit.png");
-}
-.entryPauseButtonMinimize {
-  float: left;
-  background-image: url("../../images/pause_btn.png");
-  width: auto;
-  background-position: left;
-  padding-left: 17px;
-  color: #6c5af2;
-  font-size: 9pt;
-}
-.entryEngineBlueWorkspace > .entryPauseButtonWorkspace {
-  background-image: url("../../images/pausebutton_play.png");
-  color: white;
-}
-.entryEngineBigButtonMinimize_popup {
-  border: none;
-  display: none;
-  margin: 0;
-  padding: 0;
-  position: absolute;
-  left: 50%;
-  width: 111px;
-  height: 111px;
-  margin-left: -55.5px;
-  top: 50%;
-  margin-top: -55.5px;
-  background-repeat: no-repeat;
-  background-position: 40px center;
-  background-color: rgba(0, 0, 0, 0.5);
-  border-radius: 55px;
-}
-.entryEngineBigButtonMinimize_popup:hover {
-  opacity: 0.8;
-}
-.entryEngineBigButtonMinimize_popup:focus {
-  outline: none;
-}
-.entryEngineBigButtonMinimize_popup.entryEngineBigButtonMinimize_popup_run {
-  background-image: url("../images/play_btn.png");
-}
-.entryPopupWindow .entryEngineBigButtonMinimize_popup {
-  display: block;
-}
-.propertyPanel {
-  position: absolute;
-  top: 326px;
-  bottom: 0px;
-  width: 400px;
-  background-color: #e7e7e7;
-  border-top: 2px solid #5096f5;
-}
-.propertyTab {
-  width: 50px;
-  height: 100%;
-  background-color: #f5f5f5;
-}
-.collapsed .propertyTab {
-  width: 30px;
-}
-.propertyTabElement {
-  width: 100%;
-  height: 40px;
-  background-color: #dbdcdc;
-  background-repeat: no-repeat;
-  background-position: 50% 6px;
-  color: #9e9e9f;
-  font-size: 11px;
-  padding-top: 24px;
-  cursor: pointer;
-  text-align: center;
-}
-.collapsed .propertyTabElement {
-  background-position: 50% 9px;
-  height: 36px;
-  font-size: 0;
-}
-.propertyTabElement.selected {
-  background-color: #5096f5;
-  color: #fff;
-}
-.propertyTabobject {
-  background-image: url("../../images/property/container_off.png");
-}
-.propertyTabobject.selected {
-  background-image: url("../../images/property/container_on.png");
-}
-.propertyTabhw {
-  background-image: url("../../images/property/hw_off.png");
-}
-.propertyTabhw.selected {
-  background-image: url("../../images/property/hw_on.png");
-}
-.propertyTabtvCast {
-  background-image: url("../../images/property/vedio_off.png");
-}
-.propertyTabtvCast.selected {
-  background-image: url("../../images/property/vedio_on.png");
-}
-.propertyTabyoutube {
-  background-image: url("../../images/property/vedio_off.png");
-}
-.propertyTabyoutube.selected {
-  background-image: url("../../images/property/vedio_on.png");
-}
-.propertyTabgoal {
-  background-image: url("../../images/property/doneproject.png");
-}
-.propertyTabgoal.selected {
-  background-image: url("../../images/property/doneproject_on.png");
-}
-.propertyContent {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50px;
-  right: 0;
-  background-color: #363C46;
-}
-.collapsed .propertyContent {
-  left: 30px;
-}
-.hwMonitor {
-  background-color: #363c46;
-  position: absolute;
-}
-.hwComponent text {
-  font-size: 12px;
-}
-.entryContainerWorkspace {
-  background-color: #e7e7e7;
-}
-.entryContainerPhone {
-  width: 100%;
-  background-color: #e7e7e7;
-}
-.entryAddObjectWorkspace {
-  display: block;
-  height: 48px;
-  background-color: #e7e7e7;
-  color: #757575;
-  text-align: center;
-  font-size: 11pt;
-  line-height: 44px;
-  margin: 10px;
-  border: 2px dashed #979797;
-  cursor: pointer;
-}
-.entryContainerListWorkspaceWrapper {
-  position: absolute;
-  bottom: 0;
-  padding: 0;
-  margin: 0;
-  overflow: auto;
-  width: 100%;
-  top: 0;
-  background-color: #363C46;
-}
-.entryContainerListWorkspace {
-  position: relative;
-  margin: 0px;
-  padding: 0px;
-  width: 100%;
-  background-color: #363C46;
-  list-style-type: none;
-  border-top: 1pt solid #ebeff1;
-}
-.entryContainerListPhone {
-  position: relative;
-  margin: 0px;
-  padding: 0px;
-  width: 100%;
-  background-color: #363C46;
-  list-style-type: none;
-  border-top: 1pt solid #ebeff1;
-}
-.entryContainerListWorkspace::-webkit-scrollbar {
-  display: none;
-}
-.entryContainerListElementWorkspace {
-  background-color: white;
-  display: block;
-  padding: 0;
-  margin: 0;
-  border-bottom: 1pt solid #ebeff1;
-  position: relative;
-  overflow: hidden;
-  cursor: move;
-  min-height: 59px;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-}
-.entryContainerListElementWorkspace.selectedObject {
-  background-color: #f4f4f4;
-  height: 118px;
-  border-top: 1px solid #aaaaaa;
-  border-bottom: 1px solid #aaaaaa;
-}
-.collapsed .selectedObject {
-  height: 149px;
-}
-.entryContainerListElementWorkspace:first-child,
-.entryContainerListElementWorkspace.selectedObject + .entryContainerListElementWorkspace {
-  border-top: 0;
-}
-.entryContainerTabViewWorkspace {
-  width: 100%;
-  height: 45px;
-  border-bottom: 2px solid #1bafea;
-}
-.entryContainerTabItemWorkspace {
-  vertical-align: top;
-  height: 100%;
-  width: 25%;
-  text-align: center;
-  display: inline-block;
-<<<<<<< HEAD
-  background-color: #e5e5e5;
-  color: #9e9f9f;
-  font-size: 13px;
-=======
-  position: absolute;
-  top: 10px;
-  left: 0;
-  height: 18px;
-  width: 18px;
-  background-image: url("../../images/layers_icon_visible.png");
-  border-bottom: 1px solid rgba(159, 159, 159, 0.3);
->>>>>>> master
-  cursor: pointer;
-  padding-top: 13px;
-}
-<<<<<<< HEAD
-.entryContainerTabItemWorkspace:nth-child(2) {
-  border-left: 2px solid white;
-  border-right: 2px solid white;
-=======
-.objectInfo_unvisible {
-  background-image: url("../../images/layers_icon_unvisible.png");
->>>>>>> master
-}
-.entryContainerTabItemWorkspace:nth-child(3) {
-  border-right: 2px solid white;
-}
-.entryContainerTabItemWorkspace.selected {
-  background-color: #1bafea;
-  color: white;
-}
-.entryContainerListWorkspaceWrapper.lecture {
-  top: 45px;
-}
-.entryContainerMovieWorkspace {
-  position: absolute;
-  width: 100%;
-  top: 45px;
-  bottom: 0px;
-  background-color: #363C46;
-  z-index: 1000;
-  overflow: scroll;
-}
-.entryContainerMovieWorkspace::-webkit-scrollbar {
-  display: none;
-}
-.entryContainerDoneWorkspace {
-  position: absolute;
-  width: 100%;
-  top: 45px;
-  bottom: 0;
-  background-color: #363C46;
-  z-index: 1000;
-  overflow: hidden;
-  text-align: center;
-}
-.entryContainerHelperWorkspace {
-  position: absolute;
-  width: 100%;
-  top: 45px;
-  bottom: 0;
-  background-color: #fff;
-  z-index: 1000;
-  background: gray;
-}
 .objectInfoView {
   list-style: none;
   padding: 0;
@@ -1406,7 +483,7 @@ span.CodeMirror-selectedtext {
   left: 0;
   height: 18px;
   width: 18px;
-  background-image: url("../images/layers_icon_visible.png");
+  background-image: url("../../images/layers_icon_visible.png");
   border-bottom: 1px solid rgba(159, 159, 159, 0.3);
   cursor: pointer;
   -webkit-box-sizing: border-box;
@@ -1414,7 +491,7 @@ span.CodeMirror-selectedtext {
   box-sizing: border-box;
 }
 .objectInfo_unvisible {
-  background-image: url("../images/layers_icon_unvisible.png");
+  background-image: url("../../images/layers_icon_unvisible.png");
 }
 .objectInfo_unlock {
   display: inline-block;
@@ -1481,15 +558,6 @@ span.CodeMirror-selectedtext {
   outline: none;
   background-color: transparent;
 }
-.selectedNotEditionObject {
-  background-color: transparent;
-}
-.selectedNotEditionObject:hover {
-  background-color: transparent;
-}
-.selectedNotEditionObject:focus {
-  background-color: transparent !important;
-}
 /*sj*/
 .selectedObject .entryObjectNameWorkspace {
   color: #474747;
@@ -1497,6 +565,15 @@ span.CodeMirror-selectedtext {
 .selectedObject > .entryObjectWrapperWorkspace > .entryObjectNameWorkspace {
   color: black;
   font-family: nanumBarunRegular !important;
+}
+/*.entryObjectNameWorkspace:hover{
+    background-color: white;
+    color: black;
+}
+*/
+.entryObjectNameWorkspace:focus {
+  background-color: white;
+  color: black;
 }
 .entryObjectNameWorkspace:disabled {
   background-color: transparent;
@@ -1710,18 +787,6 @@ span.CodeMirror-selectedtext {
   margin-top: 18px;
   width: 22px;
   height: 22px;
-}
-.propertyTabhelper {
-  background-image: url("../../images/property/helper_off.png");
-}
-.propertyTabhelper.selected {
-  background-image: url("../../images/property/helper_on.png");
-}
-.propertyTabContainer {
-  background-image: url("../../images/property/container_off.png");
-}
-.propertyTabContainer.selected {
-  background-image: url("../../images/property/container_on.png");
 }
 .entryObjectRotateModeAWorkspace {
   margin-left: 80px;
@@ -2122,229 +1187,6 @@ span.CodeMirror-selectedtext {
   color: #294117;
   cursor: pointer;
 }
-<<<<<<< HEAD
-=======
-.entryVariableListElementWorkspace.selected {
-  background-color: #d3d3d3;
-}
-.entryVariableListElementNameWorkspace {
-  position: absolute;
-  left: 47px;
-  margin-top: 12px;
-  background-color: #efefef;
-  width: 55%;
-  border: 1px solid transparent;
-  padding-left: 5px;
-}
-.selected .entryVariableListElementNameWorkspace {
-  background-color: #d3d3d3;
-}
-.entryVariableListElementNameWorkspace:focus {
-  background-color: white;
-  border: 1px solid gray;
-}
-.entryVariableFunctionElementNameWorkspace {
-  border: none;
-  position: absolute;
-  left: 55px;
-  margin-top: 12px;
-  background-color: transparent;
-  width: 60%;
-  overflow: hidden;
-  height: 20px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.entryVariableListElementDeleteWorkspace {
-  position: absolute;
-  margin-top: 5px;
-  padding-right: 5px;
-  right: 3px;
-  border: 0;
-  outline: 0;
-  width: 22px;
-  height: 40px;
-  opacity: 0;
-  background-color: transparent;
-  background-image: url("../../images/layers_icon_close_nor_new_1.png");
-  background-repeat: no-repeat;
-  background-position: center;
-}
-.entryVariableListElementWorkspace:hover .entryVariableListElementDeleteWorkspace {
-  opacity: 1;
-}
-.entryVariableListElementEditWorkspace {
-  display: inline-block;
-  float: right;
-  border: 0;
-  outline: 0;
-  width: 20px;
-  height: 40px;
-  margin-top: 5px;
-  margin-right: 25px;
-  background-color: transparent;
-  background-image: url("../../images/layers_icon_edit_nor_new_1.png");
-  background-repeat: no-repeat;
-  background-position: center;
-  opacity: 0;
-}
-.entryVariableListElementWorkspace:hover .entryVariableListElementEditWorkspace {
-  opacity: 1;
-}
-.entryVariableListCallerListWorkspace {
-  list-style: none;
-  padding: 0;
-}
-.entryVariableListCallerWorkspace {
-  border: solid 1px #c8c8c8;
-  border-top: none;
-  height: 50px;
-  cursor: pointer;
-  overflow: hidden;
-}
-.entryVariableListCallerWorkspace:hover {
-  background-color: #e0e0e0;
-}
-.entryVariableListCallerWorkspace:first-child {
-  border-top: none;
-}
-.entryVariableListCallerWorkspace > .entryObjectThumbnailWorkspace {
-  position: inherit;
-  display: block;
-  float: left;
-  top: 0;
-  left: 0;
-  margin: 5px 0 0 5px;
-  height: 40px;
-  width: 40px;
-}
-.entryVariableListCallerNameWorkspace {
-  position: absolute;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  float: left;
-  height: 49px;
-  line-height: 49px;
-  left: 60px;
-  right: 0;
-  padding-right: 7px;
-}
-.entryVariableListCallerNoneWorkspace {
-  color: #C16B6B;
-  cursor: default;
-  line-height: 48px;
-  padding-left: 50px;
-}
-.entryVariableLocalElementWorkspace {
-  background-image: url("../../images/local_question_icon.png");
-}
-.entryVariableCloudElementWorkspace {
-  background-image: url("../../images/cloud_question_icon.png");
-}
-.entryVariableGlobalElementWorkspace {
-  background-image: url("../../images/list_icon_question.png");
-}
-.entryMessageElementWorkspace {
-  background-image: url("../../images/list_icon_signal.png");
-}
-.entryListCloudElementWorkspace {
-  background-image: url("../../images/cloud_list_icon.png");
-}
-.entryListGlobalElementWorkspace {
-  background-image: url("../../images/list_icon_list.png");
-}
-.entryListLocalElementWorkspace {
-  background-image: url("../../images/local_list_icon.png");
-}
-.entryFunctionElementWorkspace {
-  background-image: url("../../images/list_icon_function_v1.png");
-}
-.entryPlaygroundPictureWorkspace {
-  position: absolute;
-  top: 47px;
-  margin-left: 0;
-  height: 100%;
-  background-color: #ececec;
-}
-.entryPlaygroundPicturePhone {
-  margin-left: 0;
-  height: 100%;
-  background-color: #ececec;
-}
-.entryPlaygroundAddPicture {
-  position: absolute;
-  width: 240px;
-  height: 60px;
-  background-color: #e5e5e5;
-  cursor: pointer;
-  border-bottom: 1pt solid #ebeff1;
-}
-.entryPlaygroundAddPicturePhone {
-  position: relative;
-  padding: 0;
-  margin: 0;
-  height: 50px;
-  cursor: pointer;
-  border-bottom: 1pt solid #ebeff1;
-}
-.entryPlaygroundAddPictureInner {
-  display: block;
-  width: 141px;
-  height: 30px;
-  background-color: #eeeeee;
-  color: black;
-  text-align: center;
-  font-size: 11px;
-  line-height: 28px;
-  border: 1px solid #cccccc;
-  border-radius: 7px;
-  margin-top: 15px;
-  margin-left: 49.5px;
-}
-.entryPlaygroundAddPictureInnerPhone {
-  display: block;
-  height: 50px;
-  background-color: #CDCFC9;
-  color: #656565;
-  text-align: center;
-  font-size: 10.5pt;
-  line-height: 36px;
-  border: 2px dashed #737373;
-  width: 240px;
-  padding: 8px 10px 12px 10px;
-}
-.entryPlaygroundPictureList {
-  position: absolute;
-  padding: 0px;
-  margin: 0px;
-  width: 240px;
-  top: 60px;
-  margin-bottom: 47px;
-  bottom: 0px;
-  overflow: auto;
-  list-style: none;
-  background-color: #Cfcfcf;
-}
-.entryPlaygroundPictureListPhone {
-  position: relative;
-  padding: 0px;
-  margin: 0px;
-  width: 240px;
-  bottom: 0px;
-  overflow: auto;
-  list-style: none;
-  background-color: #Cfcfcf;
-}
-.entryPlaygroundPictureElement {
-  display: block;
-  background-color: #f4f4f4;
-  border-bottom: 1pt solid #ebeff1;
-  height: 60px;
-  color: #294117;
-  cursor: pointer;
-}
->>>>>>> master
 .entryPlaygroundPictureElement:hover {
   background-color: #C0C0C0;
   cursor: move;
@@ -2590,7 +1432,7 @@ span.CodeMirror-selectedtext {
   overflow: hidden;
   border: solid 1px #C4C4B9;
   border-top-left-radius: 10px;
-  background-image: url("../images/entry_bg.png");
+  background-image: url("../../images/entry_bg.png");
 }
 .entryWorkspaceBoard.folding {
   z-index: 300;
@@ -2615,129 +1457,7 @@ span.CodeMirror-selectedtext {
     left: 64px;
   }
 }
-<<<<<<< HEAD
 @-ot-keyframes foldBoard {
-=======
-.entryCategoryElementWorkspace {
-  clear: both;
-  padding-top: 38px;
-  width: 64px;
-  text-align: center;
-  background-color: #edf5f7;
-  font-size: 13px;
-  color: #474747;
-  float: left;
-  border-bottom: 1px solid #a6cafb;
-  cursor: pointer;
-  font-family: nanumBarunBold !important;
-}
-@media screen and (max-height: 10000px) {
-  .entryCategoryElementWorkspace {
-    height: 61px;
-    background-position: 50% 6px;
-    padding-top: 38px;
-  }
-}
-@media screen and (max-height: 880px) {
-  .entryCategoryElementWorkspace {
-    height: 56px;
-    background-position: 50% 4px;
-    padding-top: 34px;
-  }
-}
-@media screen and (max-height: 810px) {
-  .entryCategoryElementWorkspace {
-    height: 50px;
-    background-position: 50% 2px;
-    padding-top: 30px;
-  }
-}
-@media screen and (max-height: 740px) {
-  .entryCategoryElementWorkspace {
-    height: 42px;
-    background-position: 50% 1px;
-    background-size: 35px;
-    padding-top: 23px;
-  }
-}
-@media screen and (max-height: 640px) {
-  .entryCategoryElementWorkspace {
-    height: 36px;
-    background-position: 50% 1px;
-    background-size: 30px;
-    padding-top: 18px;
-  }
-}
-.entryCategoryElementPhone {
-  height: 50px;
-  clear: both;
-  width: 56px;
-  padding-top: 30px;
-  text-align: center;
-  background-color: #E2E9F0;
-  font-size: 13px;
-  color: #474747;
-  float: left;
-  border-bottom: 1px solid #B7C4CC;
-  background-position: 5px 2px;
-  cursor: pointer;
-}
-.entryCategoryElementEndWorkspace {
-  clear: both;
-  width: 3px;
-  margin-left: 56px;
-  background-color: #515B7C;
-  height: 4000px;
-}
-.entrySelectedCategory {
-  margin: 0;
-  background-color: #e5e5e5;
-}
-.entryBlockMenuWorkspace {
-  background-color: #e5e5e5;
-  position: absolute;
-  left: 64px;
-  top: 45px;
-  width: 186px;
-  bottom: 0px;
-  z-index: 100;
-}
-.entryBlocklyWorkspace {
-  position: absolute;
-  left: 250px;
-  top: 8px;
-  bottom: 0px;
-  right: 0px;
-  overflow: hidden;
-  border: solid 1px #C4C4B9;
-  border-top-left-radius: 10px;
-  background-image: url("../../images/entry_bg.png");
-}
-.entryBlocklyWorkspace.folding {
-  z-index: 300;
-  border-left: solid 1px #C4C4B9;
-  -webkit-animation-duration: 0.7s;
-  -moz-animation-duration: 0.7s;
-  -ms-animation-duration: 0.7s;
-  -o-animation-duration: 0.7s;
-  -webkit-animation-name: foldBlockly;
-  -moz-animation-name: foldBlockly;
-  -ms-animation-name: foldBlockly;
-  -o-animation-name: foldBlockly;
-  animation-name: foldBlockly;
-  -webkit-animation-fill-mode: forwards;
-  -moz-animation-fill-mode: forwards;
-  -ms-animation-fill-mode: forwards;
-  -o-animation-fill-mode: forwards;
-  animation-fill-mode: forwards;
-}
-@keyframes foldBlockly {
-  to {
-    left: 64px;
-  }
-}
-@-ot-keyframes foldBlockly {
->>>>>>> master
   to {
     left: 64px;
   }
@@ -2936,22 +1656,22 @@ span.CodeMirror-selectedtext {
   cursor: pointer;
 }
 .entryPlaygroundTextAlignLeft {
-  background-image: url("../images/text_align_left_off.png");
+  background-image: url("../../images/text_align_left_off.png");
 }
 .entryPlaygroundTextAlignLeft.toggle {
-  background-image: url("../images/text_align_left_on.png");
+  background-image: url("../../images/text_align_left_on.png");
 }
 .entryPlaygroundTextAlignCenter {
-  background-image: url("../images/text_align_center_off.png");
+  background-image: url("../../images/text_align_center_off.png");
 }
 .entryPlaygroundTextAlignCenter.toggle {
-  background-image: url("../images/text_align_center_on.png");
+  background-image: url("../../images/text_align_center_on.png");
 }
 .entryPlaygroundTextAlignRight {
-  background-image: url("../images/text_align_right_off.png");
+  background-image: url("../../images/text_align_right_off.png");
 }
 .entryPlaygroundTextAlignRight.toggle {
-  background-image: url("../images/text_align_right_on.png");
+  background-image: url("../../images/text_align_right_on.png");
 }
 .entryPlayground_fgColorDiv {
   position: absolute;
@@ -2982,7 +1702,6 @@ span.CodeMirror-selectedtext {
   width: 400px;
   height: 39px;
 }
-<<<<<<< HEAD
 .entryPlaygroundFontSizeLabel {
   display: inline-block;
   float: right;
@@ -2999,12 +1718,6 @@ span.CodeMirror-selectedtext {
   margin: 18px 0px 18px 4px;
   background-color: #cfcfcf;
   border-radius: 1.5px;
-=======
-.entryObjectCoordinateInputWorkspace:focus,
-.entryObjectRotateInputWorkspace:focus,
-.entryObjectDirectionInputWorkspace:focus {
-  background-color: transparent;
->>>>>>> master
 }
 .entryPlaygroundFontSizeIndicator {
   height: 100%;
@@ -3017,7 +1730,7 @@ span.CodeMirror-selectedtext {
   position: relative;
   margin-top: -10px;
   margin-left: -7px;
-  background-image: url("../images/text_size_knob.png");
+  background-image: url("../../images/text_size_knob.png");
   cursor: pointer;
 }
 .entryPlaygroundTextColoursWrapper {
@@ -3029,7 +1742,7 @@ span.CodeMirror-selectedtext {
   margin-left: 335px;
   padding: 20px 5px;
   position: absolute;
-  background-image: url("../images/text_color_bg.png");
+  background-image: url("../../images/text_color_bg.png");
   background-repeat: no-repeat;
   background-size: 260px 226px;
 }
@@ -3042,7 +1755,7 @@ span.CodeMirror-selectedtext {
   margin-left: 369px;
   padding: 20px 5px;
   position: absolute;
-  background-image: url("../images/text_color_bg_1.png");
+  background-image: url("../../images/text_color_bg_1.png");
   background-repeat: no-repeat;
   background-size: 260px 226px;
 }
@@ -3078,6 +1791,72 @@ span.CodeMirror-selectedtext {
 .entryPlaygroundLinebreakDescription ul li {
   color: #B4B4B5;
   font-size: 11px;
+}
+.entryBoard {
+  cursor: move;
+  position: absolute;
+  -ms-touch-action: none;
+}
+.entryOverlayBoard {
+  background: rgba(180, 180, 180, 0.4);
+}
+.boardScrollbar {
+  opacity: 0.4;
+  cursor: move;
+  -ms-touch-action: none;
+}
+.boardScrollbar:hover {
+  opacity: 0.6;
+}
+.entry-widget-color-table {
+  border: 1px solid #666;
+  border-collapse: collapse;
+  z-index: 1001;
+  position: fixed;
+}
+.entry-widget-color-table .entry-widget-color-row {
+  border-bottom: 2px solid #666;
+}
+.entry-widget-color-table .entry-widget-color-cell {
+  height: 13px;
+  width: 15px;
+  margin: 0;
+  border: 0;
+  text-align: center;
+  vertical-align: middle;
+  border-right: 2px solid #666;
+  font-size: 1px;
+  cursor: pointer;
+}
+.entryBoardWrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+}
+.entryVimBoard {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+.entryFunctionButton {
+  stroke: #555;
+  stroke-width: 3;
+  fill: transparent;
+  cursor: pointer;
+}
+.entryFunctionButton:hover {
+  stroke: #000;
+}
+.entryFunctionButtonText {
+  font-family: ng !important;
+  font-size: 13 !important;
+  text-anchor: middle;
+  fill: black;
+  cursor: pointer !important;
 }
 .entryVariablePanelWorkspace {
   position: absolute;
@@ -3187,7 +1966,6 @@ span.CodeMirror-selectedtext {
 .entryVariableFunctionElementNameWorkspace {
   border: none;
   position: absolute;
-<<<<<<< HEAD
   left: 55px;
   margin-top: 12px;
   background-color: transparent;
@@ -3196,19 +1974,9 @@ span.CodeMirror-selectedtext {
   height: 20px;
   text-overflow: ellipsis;
   white-space: nowrap;
-=======
-  top: 90px;
-  left: 90px;
-  background-image: url("../../images/horizontal.png");
-  background-repeat: no-repeat;
-  border-radius: 3px;
-  width: 28px;
-  height: 28px;
->>>>>>> master
 }
 .entryVariableListElementDeleteWorkspace {
   position: absolute;
-<<<<<<< HEAD
   margin-top: 5px;
   padding-right: 5px;
   right: 3px;
@@ -3218,12 +1986,7 @@ span.CodeMirror-selectedtext {
   height: 40px;
   opacity: 0;
   background-color: transparent;
-  background-image: url("../images/layers_icon_close_nor_new_1.png");
-=======
-  top: 90px;
-  left: 60px;
-  background-image: url("../../images/vertical.png");
->>>>>>> master
+  background-image: url("../../images/layers_icon_close_nor_new_1.png");
   background-repeat: no-repeat;
   background-position: center;
 }
@@ -3240,7 +2003,7 @@ span.CodeMirror-selectedtext {
   margin-top: 5px;
   margin-right: 25px;
   background-color: transparent;
-  background-image: url("../images/layers_icon_edit_nor_new_1.png");
+  background-image: url("../../images/layers_icon_edit_nor_new_1.png");
   background-repeat: no-repeat;
   background-position: center;
   opacity: 0;
@@ -3294,28 +2057,28 @@ span.CodeMirror-selectedtext {
   padding-left: 50px;
 }
 .entryVariableLocalElementWorkspace {
-  background-image: url("../images/local_question_icon.png");
+  background-image: url("../../images/local_question_icon.png");
 }
 .entryVariableCloudElementWorkspace {
-  background-image: url("../images/cloud_question_icon.png");
+  background-image: url("../../images/cloud_question_icon.png");
 }
 .entryVariableGlobalElementWorkspace {
-  background-image: url("../images/list_icon_question.png");
+  background-image: url("../../images/list_icon_question.png");
 }
 .entryMessageElementWorkspace {
-  background-image: url("../images/list_icon_signal.png");
+  background-image: url("../../images/list_icon_signal.png");
 }
 .entryListCloudElementWorkspace {
-  background-image: url("../images/cloud_list_icon.png");
+  background-image: url("../../images/cloud_list_icon.png");
 }
 .entryListGlobalElementWorkspace {
-  background-image: url("../images/list_icon_list.png");
+  background-image: url("../../images/list_icon_list.png");
 }
 .entryListLocalElementWorkspace {
-  background-image: url("../images/local_list_icon.png");
+  background-image: url("../../images/local_list_icon.png");
 }
 .entryFunctionElementWorkspace {
-  background-image: url("../images/list_icon_function_v1.png");
+  background-image: url("../../images/list_icon_function_v1.png");
 }
 .entryVariableAddSpaceWorkspace {
   padding: 0;
@@ -3359,9 +2122,7 @@ span.CodeMirror-selectedtext {
   border: 1px solid gray;
 }
 .entryVariableAddSpaceCheckWorkspace.entryVariableAddChecked {
-  /*background-color: gray;*/
-  background-image: url("../../images/check_on.png");
-  background-repeat: no-repeat;
+  background-color: gray;
 }
 .entryVariableAddSpaceLocalWrapperWorkspace {
   color: #5e5e5e;
@@ -3470,7 +2231,6 @@ span.CodeMirror-selectedtext {
   background-color: #a8a8a8;
   margin-top: 16px;
 }
-<<<<<<< HEAD
 .entryVariableSettingMinValueInputWorkspace,
 .entryVariableSettingMaxValueInputWorkspace {
   margin-left: 3px;
@@ -3537,7 +2297,7 @@ span.CodeMirror-selectedtext {
   width: 23px;
   height: 23px;
   float: left;
-  background-image: url("../images/list_minus.png");
+  background-image: url("../../images/list_minus.png");
   cursor: pointer;
 }
 .entryListSettingLengthInputWorkspace {
@@ -3557,7 +2317,7 @@ span.CodeMirror-selectedtext {
   width: 23px;
   height: 23px;
   float: left;
-  background-image: url("../images/list_plus.png");
+  background-image: url("../../images/list_plus.png");
   cursor: pointer;
 }
 .entryListSettingSeperatorWorkspace {
@@ -3589,74 +2349,6 @@ span.CodeMirror-selectedtext {
   display: inline-block;
   float: left;
   margin-top: 3px;
-=======
-.entryPlaygroundPainterToolboxPen {
-  background-image: url("../../images/off_pen.png");
-  background-repeat: no-repeat;
-}
-.entryPlaygroundPainterToolboxPen:hover {
-  background-image: url("../../images/on_pen.png");
-}
-.entryPlaygroundPainterToolboxLine {
-  background-image: url("../../images/off_line.png");
-}
-.entryPlaygroundPainterToolboxLine:hover {
-  background-image: url("../../images/on_line.png");
-}
-.entryPlaygroundPainterToolboxRect {
-  background-image: url("../../images/off_square.png");
-}
-.entryPlaygroundPainterToolboxRect:hover {
-  background-image: url("../../images/on_square.png");
-}
-.entryPlaygroundPainterToolboxCircle {
-  background-image: url("../../images/off_circle.png");
-}
-.entryPlaygroundPainterToolboxCircle:hover {
-  background-image: url("../../images/on_circle.png");
-}
-.entryPlaygroundPainterToolboxSelect:hover {
-  background-image: url("../../images/on_choice.png");
-}
-.entryPlaygroundPainterToolboxText {
-  background-image: url("../../images/off_text.png");
-}
-.entryPlaygroundPainterToolboxText:hover {
-  background-image: url("../../images/on_text.png");
-}
-.entryPlaygroundPainterToolboxFill {
-  background-image: url("../../images/off_paint.png");
-}
-.entryPlaygroundPainterToolboxFill:hover {
-  background-image: url("../../images/on_paint.png");
-}
-.entryPlaygroundPainterToolboxErase {
-  background-image: url("../../images/off_eraser.png");
-}
-.entryPlaygroundPainterToolboxErase:hover {
-  background-image: url("../../images/on_eraser.png");
-}
-.entryPlaygroundPainterToolboxSelect {
-  background-image: url("../../images/off_choice.png");
-}
-.entryPlaygroundPainterToolboxCoordinate {
-  background-image: url("../../images/off_center.png");
-}
-.entryPlaygroundPainterToolboxCoordinate:hover {
-  background-image: url("../../images/on_center.png");
-}
-.entryPlaygroundPainterToolboxGlasses {
-  background-image: url("../../images/off_zoom.png");
-}
-.entryPlaygroundPainterToolboxGlasses:hover {
-  background-image: url("../../images/on_zoom.png");
-}
-.entryPlaygroundPainterToolboxCursor {
-  background-image: url("../../images/off_hand.png");
-}
-.entryPlaygroundPainterToolboxCursor:hover {
-  background-image: url("../../images/on_hand.png");
->>>>>>> master
 }
 .entryListSettingValueRemoveWorkspace {
   display: inline-block;
@@ -3666,7 +2358,7 @@ span.CodeMirror-selectedtext {
   margin-right: 10px;
   margin-top: 4px;
   cursor: pointer;
-  background-image: url("../images/list_remove_button.png");
+  background-image: url("../../images/list_remove_button.png");
 }
 .entryToastContainer {
   position: fixed;
@@ -3878,7 +2570,6 @@ span.CodeMirror-selectedtext {
   margin-top: 5px;
   margin-left: -8px;
 }
-<<<<<<< HEAD
 /*.entryPlaygroundPainterTopMenu ul ul {
     background: #5f6975;
     border-radius: 0px;
@@ -3891,14 +2582,6 @@ span.CodeMirror-selectedtext {
   list-style-type: none;
   top: 100%;
   width: 120px;
-=======
-.entryPlaygroundPainterAttrFGButton {
-  background-image: url("../../images/square_on_in.png");
-  background-repeat: no-repeat;
-  width: 42px;
-  height: 42px;
-  cursor: pointer;
->>>>>>> master
 }
 /*.entryPlaygroundPainterTopMenu ul ul ul {
     position: absolute;
@@ -3919,7 +2602,6 @@ span.CodeMirror-selectedtext {
   /*color: #fff;*/
   color: black;
 }
-<<<<<<< HEAD
 .entryPlaygroundPainterTopMenu ul ul li a:hover {
   background: white;
   color: black;
@@ -3933,41 +2615,6 @@ span.CodeMirror-selectedtext {
 }
 .entryPlaygroundPainterTopMenu ul li a:hover {
   background-color: #3b329e;
-=======
-.entryPlaygroundPainterAttrBGButton {
-  background-image: url("../../images/square_off_out.png");
-  background-repeat: no-repeat;
-  width: 42px;
-  height: 42px;
-  cursor: pointer;
-}
-.painterAttrColorSpoid {
-  position: absolute;
-  top: 150px;
-  left: 330px;
-  width: 27px;
-  height: 27px;
-  background-repeat: no-repeat;
-  background-image: url("../../images/color_off_spoid.png");
-}
-.painterAttrColorSpoidClicked {
-  position: absolute;
-  top: 150px;
-  left: 330px;
-  width: 27px;
-  height: 27px;
-  background-repeat: no-repeat;
-  background-image: url("../../images/color_on_spoid.png");
-}
-.painterAttrColorTransparent {
-  position: absolute;
-  top: 150px;
-  left: 300px;
-  width: 27px;
-  height: 27px;
-  background-repeat: no-repeat;
-  background-image: url("../../images/color_off_spoid_1.png");
->>>>>>> master
 }
 .entryPlaygroundPainterTopMenu ul {
   padding: 0;
@@ -4020,7 +2667,6 @@ span.CodeMirror-selectedtext {
 #entryPainterTopMenuEdit {
   color: white;
 }
-<<<<<<< HEAD
 #entryPainterTopMenuFile > ul > li {
   border-bottom: solid 1px #643cd9;
   border-left: solid 1px #643cd9;
@@ -4035,17 +2681,6 @@ span.CodeMirror-selectedtext {
 #entryPainterTopMenuFile > ul > li > :hover {
   background-color: #643cd9;
   color: white;
-=======
-.entryPlaygroundPainterAttrAddButton {
-  background-image: url("../../images/fill_in.png");
-}
-.entryPlaygroundPainterAttrRemoveButton {
-  background-image: url("../../images/fill_out.png");
-}
-.painterAttrColorSpoid:hover {
-  background-image: url("../../images/color_on_spoid_1.png");
-  background-repeat: no-repeat;
->>>>>>> master
 }
 #entryPainterTopMenuFile {
   color: white;
@@ -4076,7 +2711,7 @@ span.CodeMirror-selectedtext {
   position: absolute;
   top: 90px;
   left: 90px;
-  background-image: url("../images/horizontal.png");
+  background-image: url("../../images/horizontal.png");
   background-repeat: no-repeat;
   border-radius: 3px;
   width: 28px;
@@ -4086,7 +2721,7 @@ span.CodeMirror-selectedtext {
   position: absolute;
   top: 90px;
   left: 60px;
-  background-image: url("../images/vertical.png");
+  background-image: url("../../images/vertical.png");
   background-repeat: no-repeat;
   border-radius: 3px;
   width: 28px;
@@ -4105,32 +2740,19 @@ span.CodeMirror-selectedtext {
 }
 .entryPlaygroundPainterToolbox {
   position: absolute;
-<<<<<<< HEAD
   height: 100%;
   width: 54px;
-=======
-  top: 10px;
-  background-image: url("../../images/line1_category_off.png");
-  background-repeat: no-repeat;
->>>>>>> master
   background-color: #f5f5f5;
 }
-<<<<<<< HEAD
 .entryPlaygroundPainterToolboxContainer li {
   cursor: pointer;
   top: 16px;
-=======
-.entryPlaygroundPainterAttrLineStyleLine:hover {
-  background-image: url("../../images/line1_category_on.png");
-  background-repeat: no-repeat;
->>>>>>> master
 }
 .entryPlaygroundPainterToolboxSelected {
   background-color: #ccc;
 }
 .entryPlaygroundPainterContainer {
   position: absolute;
-<<<<<<< HEAD
   top: 30px;
   left: 56px;
   background-color: transparent;
@@ -4142,46 +2764,20 @@ span.CodeMirror-selectedtext {
   left: 0;
   width: 960px;
   height: 540px;
-=======
-  top: -9px;
-  left: 1px;
-  background-image: url("../../images/line2_off.png");
-  background-repeat: no-repeat;
-  background-color: #f5f5f5;
-  width: 75px;
-  height: 20px;
-}
-.entryPlaygroundPainterAttrLineStyleDot1:hover {
-  background-image: url("../../images/line2_on.png");
-  background-repeat: no-repeat;
->>>>>>> master
 }
 .entryPlaygroundPainterAttr {
   position: absolute;
-<<<<<<< HEAD
   top: 342px;
   width: 100%;
   height: 192px;
-=======
-  top: -29px;
-  left: 1px;
-  background-image: url("../../images/line3_off.png");
-  background-repeat: no-repeat;
->>>>>>> master
   background-color: #f5f5f5;
   padding-left: 6px;
   left: 54px;
 }
-<<<<<<< HEAD
 .entryPlaygroundPainterToolboxContainer {
   list-style-type: none;
   margin: 0;
   padding: 0;
-=======
-.entryPlaygroundPainterAttrLineStyleDot2:hover {
-  background-image: url("../../images/line3_on.png");
-  background-repeat: no-repeat;
->>>>>>> master
 }
 .entryPlaygroundPainterToolboxContainer > li {
   float: left;
@@ -4198,7 +2794,6 @@ span.CodeMirror-selectedtext {
 }
 .entryPlaygroundPainterAttrResize {
   position: absolute;
-<<<<<<< HEAD
   top: 4px;
   left: 5px;
   padding: 4px;
@@ -4219,38 +2814,9 @@ span.CodeMirror-selectedtext {
 .painterAttrRotateTop {
   padding-left: 28px;
   color: white;
-=======
-  top: -48px;
-  left: 1px;
-  background-image: url("../../images/line4_off.png");
-  background-repeat: no-repeat;
-  background-color: #f5f5f5;
-  width: 75px;
-  height: 19px;
-}
-.entryPlaygroundPainterAttrLineStyleDot3:hover {
-  background-image: url("../../images/line4_on.png");
-  background-repeat: no-repeat;
-}
-.entryPlaygroundPainterAttrLineStyleLine1 {
-  position: absolute;
-  top: -67px;
-  left: 1px;
-  background-image: url("../../images/line1_off.png");
-  background-repeat: no-repeat;
-  background-color: #f5f5f5;
-  width: 75px;
-  height: 19px;
-  border-radius: 4px;
-}
-.entryPlaygroundPainterAttrLineStyleLine1:hover {
-  background-image: url("../../images/line1_on.png");
-  background-repeat: no-repeat;
->>>>>>> master
 }
 .entryPlaygroundPainterAttrRotate {
   position: absolute;
-<<<<<<< HEAD
   top: 77px;
   left: 10px;
   width: 40px;
@@ -4367,71 +2933,6 @@ span.CodeMirror-selectedtext {
   background-color: #fff;
   border: 1px solid #000;
   float: right;
-=======
-  top: 10px;
-  background-repeat: no-repeat;
-  background-color: #f5f5f5;
-  width: 76px;
-  height: 21px;
-}
-.painterAttrLineStyleBackgroundDot1 {
-  background-image: url("../../images/line2_category_off.png");
-}
-.painterAttrLineStyleBackgroundDot2 {
-  background-image: url("../../images/line3_category_off.png");
-}
-.painterAttrLineStyleBackgroundDot3 {
-  background-image: url("../../images/line4_category_off.png");
-}
-.painterAttrLineStyleBackgroundLine {
-  background-image: url("../../images/line1_category_off_1.png");
-}
-.painterAttrLineStyleBackgroundDot1:hover {
-  background-image: url("../../images/line2_category_on.png");
-  background-repeat: no-repeat;
-}
-.painterAttrLineStyleBackgroundDot2:hover {
-  background-image: url("../../images/line3_category_on.png");
-  background-repeat: no-repeat;
-}
-.painterAttrLineStyleBackgroundDot3:hover {
-  background-image: url("../../images/line4_category_on.png");
-  background-repeat: no-repeat;
-}
-.painterAttrLineStyleBackgroundLine:hover {
-  background-image: url("../../images/line1_category_on_1.png");
-  background-repeat: no-repeat;
-}
-.entryToolboxCursorClicked {
-  background-image: url("../../images/on_hand_1.png");
-}
-.entryToolboxSelectClicked {
-  background-image: url("../../images/on_choice_1.png");
-}
-.entryToolboxPenClicked {
-  background-image: url("../../images/on_pen_1.png");
-}
-.entryToolboxLineClicked {
-  background-image: url("../../images/on_line_1.png");
-}
-.entryToolboxRectClicked {
-  background-image: url("../../images/on_square_1.png");
-}
-.entryToolBoxCircleClicked {
-  background-image: url("../../images/on_circle_1.png");
-}
-.entryToolBoxTextClicked {
-  background-image: url("../../images/on_text_1.png");
-}
-.entryToolBoxFillClicked {
-  background-image: url("../../images/on_paint_1.png");
-}
-.entryToolBoxEraseClicked {
-  background-image: url("../../images/on_eraser_1.png");
-}
-.dd {
-  cursor: url("../../images/cursor_eraser.cur");
->>>>>>> master
 }
 .entryPlaygroundPainterAttrFont {
   position: absolute;
@@ -4551,71 +3052,71 @@ span.CodeMirror-selectedtext {
   list-style-type: none;
 }
 .entryPlaygroundPainterToolboxPen {
-  background-image: url("../images/off_pen.png");
+  background-image: url("../../images/off_pen.png");
   background-repeat: no-repeat;
 }
 .entryPlaygroundPainterToolboxPen:hover {
-  background-image: url("../images/on_pen.png");
+  background-image: url("../../images/on_pen.png");
 }
 .entryPlaygroundPainterToolboxLine {
-  background-image: url("../images/off_line.png");
+  background-image: url("../../images/off_line.png");
 }
 .entryPlaygroundPainterToolboxLine:hover {
-  background-image: url("../images/on_line.png");
+  background-image: url("../../images/on_line.png");
 }
 .entryPlaygroundPainterToolboxRect {
-  background-image: url("../images/off_square.png");
+  background-image: url("../../images/off_square.png");
 }
 .entryPlaygroundPainterToolboxRect:hover {
-  background-image: url("../images/on_square.png");
+  background-image: url("../../images/on_square.png");
 }
 .entryPlaygroundPainterToolboxCircle {
-  background-image: url("../images/off_circle.png");
+  background-image: url("../../images/off_circle.png");
 }
 .entryPlaygroundPainterToolboxCircle:hover {
-  background-image: url("../images/on_circle.png");
+  background-image: url("../../images/on_circle.png");
 }
 .entryPlaygroundPainterToolboxSelect:hover {
-  background-image: url("../images/on_choice.png");
+  background-image: url("../../images/on_choice.png");
 }
 .entryPlaygroundPainterToolboxText {
-  background-image: url("../images/off_text.png");
+  background-image: url("../../images/off_text.png");
 }
 .entryPlaygroundPainterToolboxText:hover {
-  background-image: url("../images/on_text.png");
+  background-image: url("../../images/on_text.png");
 }
 .entryPlaygroundPainterToolboxFill {
-  background-image: url("../images/off_paint.png");
+  background-image: url("../../images/off_paint.png");
 }
 .entryPlaygroundPainterToolboxFill:hover {
-  background-image: url("../images/on_paint.png");
+  background-image: url("../../images/on_paint.png");
 }
 .entryPlaygroundPainterToolboxErase {
-  background-image: url("../images/off_eraser.png");
+  background-image: url("../../images/off_eraser.png");
 }
 .entryPlaygroundPainterToolboxErase:hover {
-  background-image: url("../images/on_eraser.png");
+  background-image: url("../../images/on_eraser.png");
 }
 .entryPlaygroundPainterToolboxSelect {
-  background-image: url("../images/off_choice.png");
+  background-image: url("../../images/off_choice.png");
 }
 .entryPlaygroundPainterToolboxCoordinate {
-  background-image: url("../images/off_center.png");
+  background-image: url("../../images/off_center.png");
 }
 .entryPlaygroundPainterToolboxCoordinate:hover {
-  background-image: url("../images/on_center.png");
+  background-image: url("../../images/on_center.png");
 }
 .entryPlaygroundPainterToolboxGlasses {
-  background-image: url("../images/off_zoom.png");
+  background-image: url("../../images/off_zoom.png");
 }
 .entryPlaygroundPainterToolboxGlasses:hover {
-  background-image: url("../images/on_zoom.png");
+  background-image: url("../../images/on_zoom.png");
 }
 .entryPlaygroundPainterToolboxCursor {
-  background-image: url("../images/off_hand.png");
+  background-image: url("../../images/off_hand.png");
 }
 .entryPlaygroundPainterToolboxCursor:hover {
-  background-image: url("../images/on_hand.png");
+  background-image: url("../../images/on_hand.png");
 }
 .entryPlaygroundPainterAttrResizeX {
   position: absolute;
@@ -4779,7 +3280,7 @@ span.CodeMirror-selectedtext {
   background-color: #000;
 }
 .entryPlaygroundPainterAttrFGButton {
-  background-image: url("../images/square_on_in.png");
+  background-image: url("../../images/square_on_in.png");
   background-repeat: no-repeat;
   width: 42px;
   height: 42px;
@@ -4792,7 +3293,7 @@ span.CodeMirror-selectedtext {
   margin: 10px;
 }
 .entryPlaygroundPainterAttrBGButton {
-  background-image: url("../images/square_off_out.png");
+  background-image: url("../../images/square_off_out.png");
   background-repeat: no-repeat;
   width: 42px;
   height: 42px;
@@ -4805,7 +3306,7 @@ span.CodeMirror-selectedtext {
   width: 27px;
   height: 27px;
   background-repeat: no-repeat;
-  background-image: url("../images/color_off_spoid.png");
+  background-image: url("../../images/color_off_spoid.png");
 }
 .painterAttrColorSpoidClicked {
   position: absolute;
@@ -4814,7 +3315,7 @@ span.CodeMirror-selectedtext {
   width: 27px;
   height: 27px;
   background-repeat: no-repeat;
-  background-image: url("../images/color_on_spoid.png");
+  background-image: url("../../images/color_on_spoid.png");
 }
 .painterAttrColorTransparent {
   position: absolute;
@@ -4823,7 +3324,7 @@ span.CodeMirror-selectedtext {
   width: 27px;
   height: 27px;
   background-repeat: no-repeat;
-  background-image: url("../images/color_off_spoid_1.png");
+  background-image: url("../../images/color_off_spoid_1.png");
 }
 .painterAttrRotateName,
 .painterAttrOpacityName {
@@ -4891,18 +3392,6 @@ span.CodeMirror-selectedtext {
   width: 42px;
   height: 42px;
   background-color: #fff;
-<<<<<<< HEAD
-=======
-  -webkit-animation-name: blockHelperUp;
-  -moz-animation-name: blockHelperUp;
-  -ms-animation-name: blockHelperUp;
-  -o-animation-name: blockHelperUp;
-  animation-name: blockHelperUp;
-  -webkit-animation-duration: 0.6s;
-  -moz-animation-duration: 0.6s;
-  -ms-animation-duration: 0.6s;
-  -o-animation-duration: 0.6s;
->>>>>>> master
 }
 .entryPlaygroundPainterAttrFGButton {
   left: 0px;
@@ -4911,19 +3400,13 @@ span.CodeMirror-selectedtext {
   left: 55px;
 }
 .entryPlaygroundPainterAttrAddButton {
-  background-image: url("../images/fill_in.png");
+  background-image: url("../../images/fill_in.png");
 }
-<<<<<<< HEAD
 .entryPlaygroundPainterAttrRemoveButton {
-  background-image: url("../images/fill_out.png");
+  background-image: url("../../images/fill_out.png");
 }
 .painterAttrColorSpoid:hover {
-  background-image: url("../images/color_on_spoid_1.png");
-=======
-#entryBlockHelperDisposeWorkspace {
-  float: right;
-  background-image: url("../../images/block_helper_dispose.png");
->>>>>>> master
+  background-image: url("../../images/color_on_spoid_1.png");
   background-repeat: no-repeat;
 }
 .displayPaintArea {
@@ -4935,7 +3418,6 @@ span.CodeMirror-selectedtext {
   top: -56px;
   left: 0px;
 }
-<<<<<<< HEAD
 .displayThickArea {
   position: absolute;
   top: -112px;
@@ -4952,29 +3434,11 @@ span.CodeMirror-selectedtext {
   position: absolute;
   top: -56px;
   left: 0px;
-=======
-#entryBlockHelperContentWorkspace.lecture {
-  top: 40px;
-}
-.entryBlockHelperIntro {
-  background-image: url("../../images/block_help_icon.png");
-  background-repeat: no-repeat;
-  background-position: center top;
-  margin-top: 28px;
-  padding-top: 100px;
-  text-align: center;
-  color: #707070;
-  font-size: 12px;
->>>>>>> master
 }
 .entryPlaygroundPainterAttrLineStyle {
   position: absolute;
-<<<<<<< HEAD
   top: 140px;
   left: 230px;
-=======
-  background-image: url("../../images/block_help.png");
->>>>>>> master
   background-repeat: no-repeat;
 }
 .entryPlaygroundPainterAttrLineStyle:hover {
@@ -4983,92 +3447,71 @@ span.CodeMirror-selectedtext {
 .entryPlaygroundPainterAttrLineStyleLine {
   position: absolute;
   top: 10px;
-  background-image: url("../images/line1_category_off.png");
+  background-image: url("../../images/line1_category_off.png");
   background-repeat: no-repeat;
   background-color: #f5f5f5;
   width: 76px;
   height: 24px;
 }
 .entryPlaygroundPainterAttrLineStyleLine:hover {
-  background-image: url("../images/line1_category_on.png");
+  background-image: url("../../images/line1_category_on.png");
   background-repeat: no-repeat;
 }
 .entryPlaygroundPainterAttrLineStyleDot1 {
   position: absolute;
-<<<<<<< HEAD
   top: -9px;
   left: 1px;
-  background-image: url("../images/line2_off.png");
+  background-image: url("../../images/line2_off.png");
   background-repeat: no-repeat;
   background-color: #f5f5f5;
   width: 75px;
   height: 20px;
-=======
-  line-height: 20px;
-  width: 100%;
-  top: 100px;
-  font-size: 13px;
-  color: #707074;
-  padding: 0 50px;
-  text-align: center;
-}
-.entryPlaygroundPainterTopMenuEdit > ul > li {
-  list-style-type: none;
-  width: 120px;
->>>>>>> master
 }
 .entryPlaygroundPainterAttrLineStyleDot1:hover {
-  background-image: url("../images/line2_on.png");
+  background-image: url("../../images/line2_on.png");
   background-repeat: no-repeat;
 }
 .entryPlaygroundPainterAttrLineStyleDot2 {
   position: absolute;
   top: -29px;
   left: 1px;
-  background-image: url("../images/line3_off.png");
+  background-image: url("../../images/line3_off.png");
   background-repeat: no-repeat;
   background-color: #f5f5f5;
   width: 75px;
   height: 20px;
 }
 .entryPlaygroundPainterAttrLineStyleDot2:hover {
-  background-image: url("../images/line3_on.png");
+  background-image: url("../../images/line3_on.png");
   background-repeat: no-repeat;
 }
 .entryPlaygroundPainterAttrLineStyleDot3 {
   position: absolute;
   top: -48px;
   left: 1px;
-  background-image: url("../images/line4_off.png");
+  background-image: url("../../images/line4_off.png");
   background-repeat: no-repeat;
   background-color: #f5f5f5;
   width: 75px;
   height: 19px;
 }
 .entryPlaygroundPainterAttrLineStyleDot3:hover {
-  background-image: url("../images/line4_on.png");
+  background-image: url("../../images/line4_on.png");
   background-repeat: no-repeat;
 }
 .entryPlaygroundPainterAttrLineStyleLine1 {
   position: absolute;
   top: -67px;
   left: 1px;
-  background-image: url("../images/line1_off.png");
+  background-image: url("../../images/line1_off.png");
   background-repeat: no-repeat;
   background-color: #f5f5f5;
   width: 75px;
   height: 19px;
   border-radius: 4px;
 }
-<<<<<<< HEAD
 .entryPlaygroundPainterAttrLineStyleLine1:hover {
-  background-image: url("../images/line1_on.png");
-=======
-.entryVariableAddSpaceCheckWorkspace.entryVariableAddChecked,
-.entryVariableSettingCheckWorkspace.entryVariableSettingChecked {
-  /*background-color: gray;*/
-  background-image: url("../../images/check_on.png");
->>>>>>> master
+  background-image: url("../../images/line1_on.png");
   background-repeat: no-repeat;
 }
 .painterAttrLineStyleBackgroundDot1,
@@ -5083,95 +3526,70 @@ span.CodeMirror-selectedtext {
   height: 21px;
 }
 .painterAttrLineStyleBackgroundDot1 {
-  background-image: url("../images/line2_category_off.png");
+  background-image: url("../../images/line2_category_off.png");
 }
 .painterAttrLineStyleBackgroundDot2 {
-  background-image: url("../images/line3_category_off.png");
+  background-image: url("../../images/line3_category_off.png");
 }
 .painterAttrLineStyleBackgroundDot3 {
-  background-image: url("../images/line4_category_off.png");
+  background-image: url("../../images/line4_category_off.png");
 }
 .painterAttrLineStyleBackgroundLine {
-  background-image: url("../images/line1_category_off_1.png");
+  background-image: url("../../images/line1_category_off_1.png");
 }
 .painterAttrLineStyleBackgroundDot1:hover {
-  background-image: url("../images/line2_category_on.png");
+  background-image: url("../../images/line2_category_on.png");
   background-repeat: no-repeat;
 }
 .painterAttrLineStyleBackgroundDot2:hover {
-  background-image: url("../images/line3_category_on.png");
+  background-image: url("../../images/line3_category_on.png");
   background-repeat: no-repeat;
 }
 .painterAttrLineStyleBackgroundDot3:hover {
-  background-image: url("../images/line4_category_on.png");
+  background-image: url("../../images/line4_category_on.png");
   background-repeat: no-repeat;
 }
 .painterAttrLineStyleBackgroundLine:hover {
-  background-image: url("../images/line1_category_on_1.png");
+  background-image: url("../../images/line1_category_on_1.png");
   background-repeat: no-repeat;
 }
 .entryToolboxCursorClicked {
-  background-image: url("../images/on_hand_1.png");
+  background-image: url("../../images/on_hand_1.png");
 }
 .entryToolboxSelectClicked {
-  background-image: url("../images/on_choice_1.png");
+  background-image: url("../../images/on_choice_1.png");
 }
 .entryToolboxPenClicked {
-  background-image: url("../images/on_pen_1.png");
+  background-image: url("../../images/on_pen_1.png");
 }
 .entryToolboxLineClicked {
-  background-image: url("../images/on_line_1.png");
+  background-image: url("../../images/on_line_1.png");
 }
-<<<<<<< HEAD
 .entryToolboxRectClicked {
-  background-image: url("../images/on_square_1.png");
-=======
-.entryListSettingCheckedWorkspace {
-  /*background-color: gray;*/
-  background-image: url("../../images/check_on.png");
-  background-repeat: no-repeat;
->>>>>>> master
+  background-image: url("../../images/on_square_1.png");
 }
 .entryToolBoxCircleClicked {
-  background-image: url("../images/on_circle_1.png");
+  background-image: url("../../images/on_circle_1.png");
 }
 .entryToolBoxTextClicked {
-  background-image: url("../images/on_text_1.png");
+  background-image: url("../../images/on_text_1.png");
 }
 .entryToolBoxFillClicked {
-  background-image: url("../images/on_paint_1.png");
+  background-image: url("../../images/on_paint_1.png");
 }
-<<<<<<< HEAD
 .entryToolBoxEraseClicked {
-  background-image: url("../images/on_eraser_1.png");
-=======
-.entryListSettingMinusWorkspace {
-  width: 23px;
-  height: 23px;
-  float: left;
-  background-image: url("../../images/list_minus.png");
-  cursor: pointer;
->>>>>>> master
+  background-image: url("../../images/on_eraser_1.png");
 }
 .dd {
-  cursor: url("../images/cursor_eraser.cur");
+  cursor: url("../../images/cursor_eraser.cur");
 }
 .entryPlaygroundPainterTopMenuEdit > ul > li {
   list-style-type: none;
   width: 120px;
 }
-<<<<<<< HEAD
 .entryPlaygroundPainterTopMenuFile > ul > li {
   list-style-type: none;
   width: 120px;
-=======
-.entryListSettingPlusWorkspace {
-  width: 23px;
-  height: 23px;
-  float: left;
-  background-image: url("../../images/list_plus.png");
-  cursor: pointer;
->>>>>>> master
 }
 .entryPlaygroundPainterTopMenu > ul {
   position: absolute;
@@ -5213,7 +3631,6 @@ span.CodeMirror-selectedtext {
     top: 0%;
   }
 }
-<<<<<<< HEAD
 @-webkit-keyframes blockHelperUp {
   0% {
     top: 100%;
@@ -5221,17 +3638,6 @@ span.CodeMirror-selectedtext {
   100% {
     top: 0%;
   }
-=======
-.entryListSettingValueRemoveWorkspace {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  float: right;
-  margin-right: 10px;
-  margin-top: 4px;
-  cursor: pointer;
-  background-image: url("../../images/list_remove_button.png");
->>>>>>> master
 }
 @keyframes blockHelperDown {
   0% {
@@ -5257,7 +3663,6 @@ span.CodeMirror-selectedtext {
     top: 100%;
   }
 }
-<<<<<<< HEAD
 @-moz-keyframes blockHelperDown {
   0% {
     top: 0%;
@@ -5265,10 +3670,6 @@ span.CodeMirror-selectedtext {
   100% {
     top: 100%;
   }
-=======
-.entryEngineBigButtonMinimize_popup.entryEngineBigButtonMinimize_popup_run {
-  background-image: url("../../images/play_btn.png");
->>>>>>> master
 }
 @-webkit-keyframes blockHelperDown {
   0% {
@@ -5308,10 +3709,9 @@ span.CodeMirror-selectedtext {
   padding-left: 28px;
   color: #fff;
 }
-<<<<<<< HEAD
 #entryBlockHelperDisposeWorkspace {
   float: right;
-  background-image: url("../images/block_helper_dispose.png");
+  background-image: url("../../images/block_helper_dispose.png");
   background-repeat: no-repeat;
   background-position: center;
   padding: 15px;
@@ -5325,28 +3725,12 @@ span.CodeMirror-selectedtext {
   bottom: 0px;
   overflow-y: auto;
   overflow-x: hidden;
-=======
-.entryContainerMovieWorkspace {
-  /*
-    position: absolute;
-    width: 100%;
-    top: 45px;
-    bottom: 0px;
-    
-    z-index: 1000;
-*/
-  position: absolute;
-  background-color: #363C46;
-  top: 0px;
-  width: 100%;
-  overflow: scroll;
->>>>>>> master
 }
 #entryBlockHelperContentWorkspace.lecture {
   top: 0px;
 }
 .entryBlockHelperIntro {
-  background-image: url("../images/block_help_icon.png");
+  background-image: url("../../images/block_help_icon.png");
   background-repeat: no-repeat;
   background-position: center top;
   margin-top: 28px;
@@ -5357,8 +3741,7 @@ span.CodeMirror-selectedtext {
 }
 #entryBlockHelpBtn {
   position: absolute;
-<<<<<<< HEAD
-  background-image: url("../images/block_help.png");
+  background-image: url("../../images/block_help.png");
   background-repeat: no-repeat;
   background-position: center;
   padding: 15px;
@@ -5370,11 +3753,6 @@ span.CodeMirror-selectedtext {
   width: 400px;
   height: 160px;
   top: 16px;
-=======
-  width: 100%;
-  top: 0px;
-  background-color: #363C46;
->>>>>>> master
   overflow: hidden;
 }
 #entryBlockHelperBlockWorkspace > .renderViewContainer {
@@ -5438,7 +3816,6 @@ span.CodeMirror-selectedtext {
   cursor: pointer;
   font-family: nanumBarunBold !important;
 }
-<<<<<<< HEAD
 @media screen and (max-height: 10000px) {
   .entryCategoryElementWorkspace {
     height: 61px;
@@ -5489,25 +3866,6 @@ span.CodeMirror-selectedtext {
   border-bottom: 1px solid #B7C4CC;
   background-position: 5px 2px;
   cursor: pointer;
-=======
-.entryPlaygroundTextAlignLeft {
-  background-image: url("../../images/text_align_left_off.png");
-}
-.entryPlaygroundTextAlignLeft.toggle {
-  background-image: url("../../images/text_align_left_on.png");
-}
-.entryPlaygroundTextAlignCenter {
-  background-image: url("../../images/text_align_center_off.png");
-}
-.entryPlaygroundTextAlignCenter.toggle {
-  background-image: url("../../images/text_align_center_on.png");
-}
-.entryPlaygroundTextAlignRight {
-  background-image: url("../../images/text_align_right_off.png");
-}
-.entryPlaygroundTextAlignRight.toggle {
-  background-image: url("../../images/text_align_right_on.png");
->>>>>>> master
 }
 .entryCategoryElementEndWorkspace {
   clear: both;
@@ -5535,11 +3893,11 @@ span.CodeMirror-selectedtext {
   fill: #f4f4f4;
 }
 .block {
-  cursor: url('../images/handopen.cur') 8 5, auto;
+  cursor: url('../../images/handopen.cur') 8 5, auto;
   -ms-touch-action: none;
 }
 .block.dragging {
-  cursor: url('../images/handclosed.cur') 8 5, auto;
+  cursor: url('../../images/handclosed.cur') 8 5, auto;
 }
 .block.selected > path {
   stroke-width: 3px;
@@ -5590,48 +3948,14 @@ span.CodeMirror-selectedtext {
 .block g image {
   pointer-events: none;
 }
-<<<<<<< HEAD
 svg .svgBlockGroup text {
   white-space: pre;
-=======
-.entryPlaygroundFontSizeKnob {
-  width: 16px;
-  height: 16px;
-  position: relative;
-  margin-top: -10px;
-  margin-left: -7px;
-  background-image: url("../../images/text_size_knob.png");
-  cursor: pointer;
->>>>>>> master
 }
 .entry-field-color {
   cursor: pointer;
-<<<<<<< HEAD
 }
 .entry-input-field {
   cursor: text;
-=======
-  margin-top: -5px;
-  margin-left: 335px;
-  padding: 20px 5px;
-  position: absolute;
-  background-image: url("../../images/text_color_bg.png");
-  background-repeat: no-repeat;
-  background-size: 260px 226px;
-}
-.entryPlaygroundTextBackgroundsWrapper {
-  width: 260px;
-  height: 226px;
-  z-index: 10;
-  cursor: pointer;
-  margin-top: -5px;
-  margin-left: 369px;
-  padding: 20px 5px;
-  position: absolute;
-  background-image: url("../../images/text_color_bg_1.png");
-  background-repeat: no-repeat;
-  background-size: 260px 226px;
->>>>>>> master
 }
 .entry-widget-input-field {
   position: fixed;
@@ -5801,7 +4125,6 @@ svg .svgBlockGroup text {
     opacity: 0.2;
   }
 }
-<<<<<<< HEAD
 @-o-keyframes blockPatternAnimation {
   from {
     opacity: 0;
@@ -5817,111 +4140,6 @@ svg .svgBlockGroup text {
   to {
     opacity: 0.2;
   }
-=======
-.entryPauseButtonWorkspace_w {
-  display: none;
-}
-.entryPopupWindow .entryPauseButtonWorkspace_w {
-  display: inline-block;
-  background: url("../../images/pause_btn.png");
-  background-repeat: no-repeat;
-  color: transparent;
-  width: 90px;
-  left: 103px;
-  color: #4b37a0;
-  background-position: center left;
-}
-.entrySceneDummyView {
-  width: 55px;
-  height: 40px;
-  background-color: orange;
-  display: inline-block;
-  opacity: 0.3;
-  position: absolute;
-  left: 0;
-  top: 0;
-  z-index: 889;
-  left: 100px;
-}
-.entryPopup {
-  overflow: hidden;
-  position: absolute;
-  margin: 0;
-  padding: 0;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  z-index: 7000;
-  background-color: rgba(0, 0, 0, 0.2);
-}
-.entryPopup.popupHelper {
-  display: -webkit-box;
-  display: -moz-box;
-  display: -ms-flexbox;
-  display: -webkit-flex;
-  display: flex;
-  -webkit-box-direction: normal;
-  -moz-box-direction: normal;
-  -webkit-box-orient: vertical;
-  -moz-box-orient: vertical;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-}
-.entryPopupWindow {
-  width: 80%;
-  height: 80%;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  margin: auto;
-  max-width: 100%;
-  max-height: 100%;
-  /*overflow: hidden;*/
-  z-index: 8000;
-  background-color: #ffffff;
-}
-.entryPopup.hiddenPopup {
-  display: none;
-}
-.entryPopupHelperTopSpan,
-.entryPopupHelperBottomSpan {
-  -webkit-box-flex: 1;
-  -moz-box-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-}
-.entryPopupHelperMiddleSpan {
-  display: -webkit-box;
-  display: -moz-box;
-  display: -ms-flexbox;
-  display: -webkit-flex;
-  display: flex;
-  -webkit-box-direction: normal;
-  -moz-box-direction: normal;
-  -webkit-box-orient: horizontal;
-  -moz-box-orient: horizontal;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-}
-.entryPopupHelperMiddleSpan .entryPopupHelperLeftSpan,
-.entryPopupHelperMiddleSpan .entryPopupHelperRightSpan {
-  -webkit-box-flex: 1;
-  -moz-box-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-}
-
-.block {
-  cursor: url('../../images/handopen.cur') 8 5, auto;
-}
-.block.dragging {
-  cursor: url('../../images/handclosed.cur') 8 5, auto;
->>>>>>> master
 }
 @-moz-keyframes blockPatternAnimation {
   from {
@@ -5956,98 +4174,5 @@ svg .svgBlockGroup text {
   opacity: 0.8;
   display: none;
 }
-
-.dragNone {
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-.entryHidden {
-  visibility: hidden;
-}
-.entryRemove {
-  display: none !important;
-}
-.entryRemoveElement {
-  display: none !important;
-}
-.entryNoDeco {
-  text-decoration: none !important;
-}
-.entryBtn {
-  border: none;
-  margin: 0;
-  background-color: transparent;
-}
-.entryBoard {
-  cursor: move;
-  position: absolute;
-  -ms-touch-action: none;
-}
-.entryOverlayBoard {
-  background: rgba(180, 180, 180, 0.4);
-}
-.boardScrollbar {
-  opacity: 0.4;
-  cursor: move;
-  -ms-touch-action: none;
-}
-.boardScrollbar:hover {
-  opacity: 0.6;
-}
-.entry-widget-color-table {
-  border: 1px solid #666;
-  border-collapse: collapse;
-  z-index: 1001;
-  position: fixed;
-}
-.entry-widget-color-table .entry-widget-color-row {
-  border-bottom: 2px solid #666;
-}
-.entry-widget-color-table .entry-widget-color-cell {
-  height: 13px;
-  width: 15px;
-  margin: 0;
-  border: 0;
-  text-align: center;
-  vertical-align: middle;
-  border-right: 2px solid #666;
-  font-size: 1px;
-  cursor: pointer;
-}
-.entryBoardWrapper {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 100%;
-}
-.entryVimBoard {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-}
-.entryFunctionButton {
-  stroke: #555;
-  stroke-width: 3;
-  fill: transparent;
-  cursor: pointer;
-}
-.entryFunctionButton:hover {
-  stroke: #000;
-}
-.entryFunctionButtonText {
-  font-family: ng !important;
-  font-size: 13 !important;
-  text-anchor: middle;
-  fill: black;
-  cursor: pointer !important;
-}
-
 
 
