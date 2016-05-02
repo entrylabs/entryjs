@@ -622,10 +622,10 @@ Entry.BlockView.DRAG_RADIUS = 5;
                         } else {
                             var parent = block.getThread().view.getParent();
 
-                            if (!(parent instanceof Entry.Code))
+                            if (!(parent instanceof Entry.Board)) {
+                                createjs.Sound.play('entryMagneting');
                                 Entry.do("insertBlock", block, parent);
-                            else
-                                this._moveTo(originPos.x, originPos.y, false);
+                            } else this._moveTo(originPos.x, originPos.y, false);
                         }
                         break;
                     case gs.REMOVE:

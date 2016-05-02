@@ -4599,6 +4599,16 @@ svg .svgBlockGroup text {
   background-color: #C0C0C0;
   cursor: move;
 }
+.entryPlaygroundPictureOrder,
+.entryPlaygroundSoundOrder {
+  width: 15px;
+  height: 100%;
+  float: left;
+  line-height: 57px;
+  font-size: 10px;
+  text-align: center;
+  background-color: #d8d8d8;
+}
 .entryPlaygroundPictureElement:hover .entryPlaygroundPictureOrder,
 .entryPlaygroundSoundElement:hover .entryPlaygroundSoundOrder {
   background-color: #634cd9;
