@@ -249,12 +249,12 @@ Blockly.Blocks.ev3_motor_power_on_time = {
 
 Entry.block.ev3_motor_power_on_time = function (sprite, script) {
 	var sq = Entry.hw.sendQueue;
+	var port = script.getStringField("PORT", script);
 	if (!script.isStart) {
-		script.isStart = true;
-		script.timeFlag = 1;
-		var port = script.getStringField("PORT", script);
 		var time = script.getValue("TIME", script);
 		var value = script.getValue("VALUE", script);
+		script.isStart = true;
+		script.timeFlag = 1;
 		Entry.hw.sendQueue[port] = {
 			'id': Math.floor(Math.random() * 100000, 0),
 			'type': Entry.EV3.motorMovementTypes.Power,

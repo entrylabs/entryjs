@@ -2004,6 +2004,7 @@ Blockly.Blocks.ev3_motor_power_on_time = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.ev3_motor_power_on_time = function(b, a) {
+  var c = a.getStringField("PORT", a);
   if (a.isStart) {
     if (1 == a.timeFlag) {
       return a;
@@ -2014,9 +2015,9 @@ Entry.block.ev3_motor_power_on_time = function(b, a) {
     Entry.hw.sendQueue[c] = {id:Math.floor(1E5 * Math.random(), 0), type:Entry.EV3.motorMovementTypes.Power, power:0};
     return a.callReturn();
   }
+  var d = a.getValue("TIME", a), e = a.getValue("VALUE", a);
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getStringField("PORT", a), d = a.getValue("TIME", a), e = a.getValue("VALUE", a);
   Entry.hw.sendQueue[c] = {id:Math.floor(1E5 * Math.random(), 0), type:Entry.EV3.motorMovementTypes.Power, power:e};
   var f = setTimeout(function() {
     a.timeFlag = 0;
