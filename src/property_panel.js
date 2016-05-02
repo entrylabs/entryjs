@@ -70,6 +70,7 @@ Entry.PropertyPanel = function() {
             tabDom: tabDom,
             contentDom: contentDom
         };
+
         if(mode == 'hw') {
             $('.propertyTabhw').bind('dblclick',(function(){
                 Entry.dispatchEvent('hwModeChange');
@@ -112,6 +113,7 @@ Entry.PropertyPanel = function() {
         selected.contentDom.removeClass("entryHidden");
         if(selected.obj.resize)
             selected.obj.resize();
+        selected.obj.visible = true;
         this.selected = modeName;
     };
 

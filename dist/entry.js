@@ -10342,6 +10342,7 @@ Entry.PropertyPanel = function() {
     b.tabDom.addClass("selected");
     b.contentDom.removeClass("entryHidden");
     b.obj.resize && b.obj.resize();
+    b.obj.visible = !0;
     this.selected = a;
   };
   b.initializeSplitter = function(a) {
@@ -10474,13 +10475,15 @@ Entry.createDom = function(b, a) {
     this.propertyPanel.generateView(b, a);
     this.containerView = c;
     this.container.generateView(this.containerView, a);
+    this.propertyPanel.addMode("object", this.container);
+    this.helper.generateView(this.containerView, a);
+    this.propertyPanel.addMode("helper", this.helper);
     c = Entry.createElement("div");
     b.appendChild(c);
     this.playgroundView = c;
     this.playground.generateView(this.playgroundView, a);
-    this.propertyPanel.addMode("object", this.container);
-    this.propertyPanel.addMode("helper", this.helper);
     this.propertyPanel.select("object");
+    this.helper.bindWorkspace(this.playground.mainWorkspace);
   }
 };
 Entry.start = function(b) {
@@ -17434,11 +17437,11 @@ Entry.BlockView.DRAG_RADIUS = 5;
     this._mouseEnable = !0;
     $(this.svgGroup).bind("mousedown.blockViewMousedown touchstart.blockViewMousedown", a.mouseHandler);
     var b = a.block.events;
-    b && b.dblclick && (console.log(b.dblclick), $(this.svgGroup).dblclick(function() {
+    b && b.dblclick && $(this.svgGroup).dblclick(function() {
       b.dblclick.forEach(function(b) {
         b && b(a);
       });
-    }));
+    });
   };
   b.removeControl = function() {
     this._mouseEnable = !1;

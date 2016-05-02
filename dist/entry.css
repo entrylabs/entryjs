@@ -2499,7 +2499,6 @@ svg .svgBlockGroup text {
   position: absolute;
   overflow: visible;
   left: 50%;
-  padding-top: 20px;
 }
 #entryBlockHelperDescriptionWorkspace {
   position: absolute;
@@ -2672,10 +2671,10 @@ svg .svgBlockGroup text {
 }
 #entryBlockHelperBlockWorkspace {
   position: absolute;
-  width: 400px;
-  height: 160px;
-  top: 16px;
-  left: 50%;
+  width: 100%;
+  bottom: 0px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 #entryBlockHelperBlockWorkspace > svg {
   position: relative;

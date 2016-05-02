@@ -363,7 +363,6 @@ Entry.BlockView.DRAG_RADIUS = 5;
 
         var events = that.block.events;
         if (events && events.dblclick) {
-            console.log(events.dblclick);
             $(this.svgGroup).dblclick(function() {
                 events.dblclick.forEach(function(fn){
                     if (fn) fn(that);});
