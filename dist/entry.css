@@ -3581,7 +3581,7 @@ span.CodeMirror-selectedtext {
   background-image: url("../../images/on_eraser_1.png");
 }
 .dd {
-  cursor: url("../../images/cursor_eraser.cur");
+  cursor: url("../../../images/cursor_eraser.cur");
 }
 .entryPlaygroundPainterTopMenuEdit > ul > li {
   list-style-type: none;
@@ -3893,11 +3893,11 @@ span.CodeMirror-selectedtext {
   fill: #f4f4f4;
 }
 .block {
-  cursor: url('../../images/handopen.cur') 8 5, auto;
+  cursor: url('../../../images/handopen.cur') 8 5, auto;
   -ms-touch-action: none;
 }
 .block.dragging {
-  cursor: url('../../images/handclosed.cur') 8 5, auto;
+  cursor: url('../../../images/handclosed.cur') 8 5, auto;
 }
 .block.selected > path {
   stroke-width: 3px;
