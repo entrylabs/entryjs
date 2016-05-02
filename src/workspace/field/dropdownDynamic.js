@@ -48,8 +48,10 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
 
         this._contents.options = options;
         var options = this._contents.options;
-        var value = this.getValue() ||
-            options.length !== 0 ? options[0][1] : null;
+        var value = this.getValue();
+        if (!value || value == 'null')
+            value = (options.length !== 0 ? options[0][1] : null);
+
 
         this.setValue(value);
     };
@@ -60,12 +62,7 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
 
         var blockView = this._block.view;
 
-        this.documentDownEvent = Entry.documentMousedown.attach(
-            this, function() {
-                Entry.documentMousedown.detach(this.documentDownEvent);
-                that.optionGroup.remove();
-            }
-        );
+        this._attachDisposeEvent();
 
         this.optionGroup = Entry.Dom('ul', {
             class:'entry-widget-dropdown',
@@ -81,7 +78,7 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
 
         var CONTENT_HEIGHT = this._CONTENT_HEIGHT + 4;
 
-        for (var i=options.length-1; i>=0; i--) {
+        for (var i=0; i<options.length; i++) {
             var option = options[i];
             var text = option[0];
             var value = option[1];
@@ -111,12 +108,7 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
             })(element, value);
         }
 
-
-        var pos = this.getAbsolutePosFromDocument();
-        pos.x += this.box.width/2 - this.optionGroup.width()/2;
-        pos.y += this.box.height/2;
-
-        this.optionGroup.css({left: pos.x, top: pos.y});
+        this._position();
     };
 
 })(Entry.FieldDropdownDynamic.prototype);

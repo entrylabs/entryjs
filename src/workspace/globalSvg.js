@@ -10,9 +10,16 @@ goog.provide('Entry.GlobalSvg');
 
     gs.createDom = function() {
         if (this.inited) return;
+
+
+        //document attached element not removed by angular
+        $('#globalSvgSurface').remove();
+        $('#globalSvg').remove();
+
         var body = $('body');
         this._container = Entry.Dom('div', {
             classes: ['globalSvgSurface', 'entryRemove'],
+            id: 'globalSvgSurface',
             parent: body
         });
 

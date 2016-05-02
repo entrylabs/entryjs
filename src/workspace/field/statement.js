@@ -27,7 +27,7 @@ Entry.FieldStatement = function(content, blockView, index) {
 
     this._position = content.position;
 
-    this.observe(blockView, "alignContent", ["height"]);
+    this.observe(blockView, "alignContent", ["height"], false);
     this.observe(this, "_updateBG", ["magneting"], false);
 
     this.renderStart(blockView.getBoard());
@@ -61,11 +61,11 @@ Entry.FieldStatement = function(content, blockView, index) {
         thread.view.setParent(this);
         var firstBlock = thread.getFirstBlock();
         if (firstBlock) {
-            this._posObserver = firstBlock.view.observe(this, "removeFirstBlock", ["x", "y"]);
             firstBlock.view._toLocalCoordinate(this.statementSvgGroup);
             this.firstBlock = firstBlock;
         }
         thread.changeEvent.attach(this, this.calcHeight);
+        thread.changeEvent.attach(this, this.checkTopBlock);
         this.calcHeight();
     };
 
@@ -175,20 +175,27 @@ Entry.FieldStatement = function(content, blockView, index) {
         if (this._posObserver) this._posObserver.destroy();
 
         var block = this.firstBlock;
-        newBlock.doInsert(this._thread);
         this.firstBlock = newBlock;
+        if (newBlock) {
+            newBlock.doInsert(this._thread);
 
-        this._posObserver = newBlock.view.observe(this, "removeFirstBlock", ["x", "y"], false);
+        }
         return block;
-    };
-
-    p.removeFirstBlock = function() {
-        if (this._posObserver) this._posObserver.destroy();
-        this.firstBlock = null;
     };
 
     p.getNextBlock = function () {
         return this.firstBlock;
+    };
+
+    p.checkTopBlock = function() {
+        var firstBlock = this._thread.getFirstBlock();
+        if (firstBlock && this.firstBlock !== firstBlock) {
+            this.firstBlock = firstBlock;
+            firstBlock.view.bindPrev(this);
+            firstBlock._updatePos();
+        } else if (!firstBlock){
+            this.firstBlock = null;
+        }
     };
 
 })(Entry.FieldStatement.prototype);

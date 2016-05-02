@@ -102,6 +102,10 @@ Entry.StateManager.prototype.cancelLastCommand = function() {
         Entry.creationChangedEvent.notify();
 };
 
+Entry.StateManager.prototype.getLastCommand = function() {
+    return this.undoStack_[this.undoStack_.length - 1];
+};
+
 /**
  * Do undo
  */
@@ -110,8 +114,12 @@ Entry.StateManager.prototype.undo = function() {
         return;
     this.addActivity("undo");
     this.startRestore();
-    var state = this.undoStack_.pop();
-    state.func.apply(state.caller, state.params);
+    while (true) {
+        var state = this.undoStack_.pop();
+        state.func.apply(state.caller, state.params);
+        if (state.isPass !== true)
+            break;
+    }
     this.updateView();
     this.endRestore();
     if (Entry.creationChangedEvent)

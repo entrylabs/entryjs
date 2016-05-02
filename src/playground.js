@@ -288,7 +288,24 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
     });
 
     new Entry.BlockDriver().convert();
-    Entry.block.when_run_button_click.event = "start";
+    //attach event for event block
+    var blocks = Entry.block;
+
+    blocks.when_run_button_click.event = "start";
+    blocks.when_some_key_pressed.event = "keyPress";
+    blocks.when_some_key_click.event = "keyPress";
+    blocks.when_message_cast.event = "when_message_cast";
+    blocks.when_scene_start.event = "when_scene_start";
+    blocks.when_clone_start.event = "when_clone_start";
+    blocks.mouse_clicked.event = "mouse_clicked";
+    blocks.mouse_click_cancled.event = "mouse_click_cancled";
+    blocks.when_object_click.event = "when_object_click";
+    blocks.when_object_click_canceled.event = "when_object_click_canceled";
+
+    blocks.if_else.template = "만일 %1 이라면 %2 %3 아니면";
+    blocks.if_else.params.push({
+        type: 'LineBreak'
+    });
 
     this.mainWorkspace = new Entry.Workspace(
         {
@@ -807,14 +824,17 @@ Entry.Playground.prototype.injectObject = function(object) {
         this.changeViewMode('picture');
     else if (viewMode == 'sound')
         this.changeViewMode('sound');
+    this.reloadPlayground();
+
 };
 
 /**
  * Inject code
  */
 Entry.Playground.prototype.injectCode = function() {
-    var object = this.object;
-    this.mainWorkspace.changeBoardCode(object.script);
+    var code = this.object.script;
+    this.mainWorkspace.changeBoardCode(code);
+    code.board.adjustThreadsPosition();
 };
 
 /**
@@ -1211,11 +1231,10 @@ Entry.Playground.prototype.reloadPlayground = function () {
     var selectedCategory, selector;
 
     var mainWorkspace = this.mainWorkspace;
+    if (!mainWorkspace) return;
     mainWorkspace.getBlockMenu().reDraw();
 
-    if (Entry.stage.selectedObject) {
-        Entry.stage.selectedObject.script.view.reDraw();
-    }
+    if (this.object) this.object.script.view.reDraw();
 };
 
 /**

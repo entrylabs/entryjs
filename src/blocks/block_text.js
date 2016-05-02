@@ -14,7 +14,7 @@ Blockly.Blocks.text = {
 };
 
 Entry.block.text = function (sprite, script) {
-    return script.getField('NAME');
+    return script.getField('NAME', script);
 };
 
 Blockly.Blocks.text_write = {

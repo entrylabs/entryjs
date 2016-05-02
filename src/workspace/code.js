@@ -11,8 +11,10 @@ goog.require('Entry.STATIC');
 /*
  *
  */
-Entry.Code = function(code) {
+Entry.Code = function(code, object) {
     Entry.Model(this, false);
+
+    if (object) this.object = object;
 
     this._data = new Entry.Collection();
 
@@ -25,8 +27,13 @@ Entry.Code = function(code) {
     this.changeEvent = new Entry.Event(this);
     this.changeEvent.attach(this, this._handleChange);
 
+    this._maxZIndex = 0;
+
     this.load(code);
 };
+
+Entry.STATEMENT = 0;
+Entry.PARAM = -1;
 
 (function(p) {
     p.schema = {
@@ -36,7 +43,7 @@ Entry.Code = function(code) {
 
     p.load = function(code) {
         if (!(code instanceof Array))
-            return console.error("code must be array");
+            code = JSON.parse(code);
 
         this.clear();
 
@@ -82,12 +89,20 @@ Entry.Code = function(code) {
         blocks.splice(index,1);
     };
 
-    p.raiseEvent = function(eventType, entity) {
+    p.raiseEvent = function(eventType, entity, value) {
         var blocks = this._eventMap[eventType];
+        var executors = [];
         if (blocks === undefined) return;
         for (var i = 0; i < blocks.length; i++) {
-            this.executors.push(new Entry.Executor(blocks[i], entity));
+            var block = blocks[i];
+            if (value === undefined ||
+                block.params.indexOf(value) > -1) {
+                    var executor = new Entry.Executor(blocks[i], entity);
+                    this.executors.push(executor);
+                    executors.push(executor);
+                }
         }
+        return executors;
     };
 
     p.getEventMap = function(eventType) {return this._eventMap[eventType];};
@@ -101,7 +116,7 @@ Entry.Code = function(code) {
         for (var i = 0; i < executors.length; i++) {
             var executor = executors[i];
             executor.execute();
-            if (executor.scope.block === null) {
+            if (executor.isEnd()) {
                 executors.splice(i, 1);
                 i--;
                 if (executors.length === 0)
@@ -110,8 +125,30 @@ Entry.Code = function(code) {
         }
     };
 
+    p.removeExecutor = function(executor) {
+        var index = this.executors.indexOf(executor);
+        if (index > -1)
+            this.executors.splice(index, 1);
+    };
+
     p.clearExecutors = function() {
         this.executors = [];
+    };
+
+    p.clearExecutorsByEntity = function(entity) {
+        var executors = [];
+        while (this.executors.length) {
+            var executor = this.executors.shift();
+            if (executor.entity !== entity)
+                executors.push(executor);
+            else
+                executor.end();
+        }
+        this.executors = executors;
+    };
+
+    p.addExecutor = function(executor) {
+        this.executors.push(executor);
     };
 
     p.createThread = function(blocks) {
@@ -182,12 +219,11 @@ Entry.Code = function(code) {
     };
 
     p.dominate = function(thread) {
-        var data = this._data;
-        var index = data.indexOf(thread);
-        // case of statement thread
-        if (index < 0) return;
-        data.splice(index, 1);
-        data.push(thread);
+        thread.view.setZIndex(this._maxZIndex++);
+    };
+
+    p.indexOf = function(thread) {
+        return this._data.indexOf(thread);
     };
 
     p._handleChange = function() {
@@ -216,4 +252,67 @@ Entry.Code = function(code) {
         delete this._blockMap[block.id];
     };
 
+    p.getByPointer = function(pointer) {
+        pointer = pointer.concat();
+        pointer.shift();
+        pointer.shift();
+        var thread = this._data[pointer.shift()];
+        var block = thread.getBlock(pointer.shift());
+        while (pointer.length) {
+            if (!(block instanceof Entry.Block))
+                block = block.getValueBlock();
+            var type = pointer.shift();
+            var index = pointer.shift();
+            if (type > -1) {
+                var statements = block.statements[type];
+                block = statements.getBlock(index);
+            } else if (type === -1) {
+                block = block.view.getParam(index);
+            }
+        }
+        return block;
+    };
+
+    p.getTargetByPointer = function(pointer) {
+        pointer = pointer.concat();
+        pointer.shift();
+        pointer.shift();
+        var thread = this._data[pointer.shift()];
+        var block;
+        if (pointer.length === 1) {
+            block = thread.getBlock(pointer.shift() - 1);
+        } else {
+            block = thread.getBlock(pointer.shift());
+            while (pointer.length) {
+                if (!(block instanceof Entry.Block))
+                    block = block.getValueBlock();
+                var type = pointer.shift();
+                var index = pointer.shift();
+                if (type > -1) {
+                    var statement = block.statements[type];
+                    if (!pointer.length) {
+                        if (index === 0)
+                            block = statement.view.getParent();
+                        else
+                            block = statement.getBlock(index - 1);
+                    } else {
+                        block = statement.getBlock(index);
+                    }
+                } else if (type === -1) {
+                    block = block.view.getParam(index);
+                }
+            }
+        }
+        return block;
+    };
+
+    p.getBlockList = function() {
+        var threads = this.getThreads();
+        var blocks = [];
+
+        for (var i = 0; i < threads.length; i ++)
+            blocks = blocks.concat(threads[i].getBlockList());
+
+        return blocks;
+    };
 })(Entry.Code.prototype);

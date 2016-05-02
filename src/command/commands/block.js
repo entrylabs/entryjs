@@ -25,55 +25,28 @@ goog.require("Entry.Command");
     c.insertBlock = {
         type: 102,
         do: function(block, targetBlock) {
-            block.doInsert(targetBlock);
+            var board = Entry.commander.editor.board;
+            board.insert(block, targetBlock);
         },
         state: function(block, targetBlock) {
+            if (typeof block === "string")
+                block = Entry.playground.mainWorkspace.board.findById(block);
             var data = [
-                block.id,
-                {
-                    x: block.x,
-                    y: block.y
-                }
+                block.id
             ];
-            if (block.getBlockType() === "basic") {
+            var pointer = block.pointer()
+            data.push(pointer);
+
+            if (typeof block !== "string" && block.getBlockType() === "basic")
                 data.push(block.thread.getCount(block));
-                if (block.getPrevBlock())
-                    data.push(block.getPrevBlock().id);
-            } else {
-                if (!(block.getThread() instanceof Entry.Thread)) {
-                    var parent = block.getThread();
-                    data.push(parent._block.id);
-                    data.push(parent._index);
-                }
-            }
             return data;
         },
         log: function(block) {
         },
-        undo: function(blockId, prevPos, originBlock, count) {
+        undo: function(blockId, pointer, count) {
             var block = Entry.playground.mainWorkspace.board.findById(blockId);
-            if (block.getBlockType() === "basic") {
-                var prevBlock = block.getPrevBlock();
-                if (originBlock) {
-                    originBlock = Entry.playground.mainWorkspace.board.findById(originBlock);
-                    block.separate(count);
-                    block.insert(originBlock);
-                    block.view.bindPrev(originBlock);
-                } else {
-                    if (block.view)
-                        block.view._toGlobalCoordinate();
-                    block.separate(count);
-                    block.moveTo(prevPos.x, prevPos.y);
-                }
-                if (prevBlock && prevBlock.getNextBlock())
-                    prevBlock.getNextBlock().view.bindPrev();
-            } else {
-                if (originBlock) {
-                    var param = block.view._contents[count];
-                    block.separate();
-                    block.doInsert(param);
-                }
-            }
+            var board = Entry.commander.editor.board;
+            board.insert(block, pointer, count);
         }
     };
 
@@ -85,22 +58,40 @@ goog.require("Entry.Command");
             block.doSeparate();
         },
         state: function(block) {
+            var data = [
+                block.id
+            ];
+            var pointer = block.pointer()
+            data.push(pointer);
+
+            if (block.getBlockType() === "basic")
+                data.push(block.thread.getCount(block));
+            return data;
         },
         log: function(block) {
         },
-        undo: function(blockId) {
+        undo: function(blockId, pointer, count) {
+            var block = Entry.playground.mainWorkspace.board.findById(blockId);
+            var board = Entry.commander.editor.board;
+            board.insert(block, pointer, count);
         }
     };
 
     c.moveBlock = {
         type: 104,
         do: function(block) {
+            block.doMove();
         },
         state: function(block) {
+            return [block.id, block.x, block.y];
         },
         log: function(block) {
+            return [block.id, block.toJSON()];
         },
-        undo: function(blockId) {
+        undo: function(blockId, x, y) {
+            Entry.playground.mainWorkspace.board
+                .findById(blockId)
+                .moveTo(x, y);
         }
     };
 

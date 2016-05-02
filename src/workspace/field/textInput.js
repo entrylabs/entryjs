@@ -80,13 +80,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         this.destroyOption();
 
         var blockView = this._blockView;
-        this.documentDownEvent = Entry.documentMousedown.attach(
-            this, function(){
-                Entry.documentMousedown.detach(this.documentDownEvent);
-                that.applyValue();
-                that.destroyOption();
-            }
-        );
+
+        var func = function() {
+            that.applyValue();
+            that.destroyOption();
+        };
+
+        this._attachDisposeEvent(func);
 
         this.optionGroup = Entry.Dom('input', {
             class:'entry-widget-input-field',

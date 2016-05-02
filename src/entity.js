@@ -13,7 +13,6 @@ Entry.EntityObject = function(object) {
     this.parent = object;
     this.type = object.objectType;
     /** @type {Array<xml script>} */
-    this.runningScript = [];
     this.flip = false;
     this.id = Entry.generateHash();
 
@@ -165,14 +164,6 @@ Entry.EntityObject.prototype.restoreEntity = function(entityModel) {
             this.restoreEntity,
             currentModel
         );
-};
-
-/**
- * clear runningscript
- */
-Entry.EntityObject.prototype.clearScript = function(entityModel) {
-    while (this.runningScript.length)
-        this.runningScript.pop();
 };
 
 /**
@@ -954,7 +945,12 @@ Entry.EntityObject.prototype.removeClone = function() {
         Entry.stage.unloadEntity(this);
         var index = this.parent.clonedEntities.indexOf(this);
         this.parent.clonedEntities.splice(index, 1);
+        this.clearExecutor();
     }
+};
+
+Entry.EntityObject.prototype.clearExecutor = function() {
+    this.parent.script.clearExecutorsByEntity(this);
 };
 
 /**

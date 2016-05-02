@@ -192,7 +192,14 @@ Entry.Utils.hslToHex = function(color) {
 
 Entry.Utils.bindGlobalEvent = function(options) {
     if (options === undefined)
-        options = ['resize', 'mousedown', 'mousemove', 'keydown', 'keyup'];
+        options = [
+            'resize',
+            'mousedown',
+            'mousemove',
+            'keydown',
+            'keyup',
+            'dispose'
+        ];
 
     if (!Entry.windowReszied && options.indexOf('resize') > -1) {
         Entry.windowResized = new Entry.Event(window);
@@ -239,6 +246,14 @@ Entry.Utils.bindGlobalEvent = function(options) {
             if (index > -1) Entry.pressedKeys.splice(index,1);
             Entry.keyUpped.notify(e);
         }));
+    }
+
+    if (!Entry.disposeEvent && options.indexOf('dispose') > -1) {
+        Entry.disposeEvent = new Entry.Event(window);
+        if (Entry.documentMousedown)
+            Entry.documentMousedown.attach(this, function(e) {
+                Entry.disposeEvent.notify(e);
+            });
     }
 };
 

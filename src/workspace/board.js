@@ -16,60 +16,11 @@ goog.require("Entry.SVG");
  * @param {object} dom which to inject playground
  */
 Entry.Board = function(option) {
-    var dom = option.dom;
-    if (typeof dom === "string")
-        dom = $('#' + dom);
-    else
-        dom = $(dom);
-
-    if (dom.prop("tagName") !== "DIV")
-        return console.error("Dom is not div element");
-
     Entry.Model(this, false);
 
-    this.view = dom;
-    this._svgId = 'play' + new Date().getTime();
-
-    this.workspace = option.workspace;
-
-    this._activatedBlockView = null;
-
-    this.wrapper = Entry.Dom('div', {
-        parent: dom,
-        class: 'entryBoardWrapper'
-    });
-
-    this.svgDom = Entry.Dom(
-        $('<svg id="' + this._svgId + '" class="entryBoard" width="100%" height="100%"' +
-          'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
-        { parent: this.wrapper }
-    );
-
-    this.visible = true;
-    var that = this;
-    this.svg = Entry.SVG(this._svgId);
-    $(window).scroll(function() {
-        that.updateOffset();
-    });
+    this.createView(option);
 
     this._magnetMap = null;
-
-    this.svgGroup = this.svg.elem("g");
-
-    this.svgThreadGroup = this.svgGroup.elem("g");
-    this.svgThreadGroup.board = this;
-
-    this.svgBlockGroup = this.svgGroup.elem("g");
-    this.svgBlockGroup.board = this;
-
-    if (option.isOverlay) {
-        this.wrapper.addClass("entryOverlayBoard");
-        this.generateButtons();
-        this.suffix = 'overlayBoard';
-    } else this.suffix = 'board';
-
-    Entry.Utils.addFilters(this.svg, this.suffix);
-    this.patternRect = Entry.Utils.addBlockPattern(this.svg, this.suffix);
 
     Entry.ANIMATION_DURATION = 200;
     Entry.BOARD_PADDING = 100;
@@ -91,7 +42,7 @@ Entry.Board = function(option) {
     if (Entry.windowResized)
         Entry.windowResized.attach(this, this.updateOffset);
 
-    this.observe(this, "generateCodeMagnetMap", ["dragBlock"], false);
+    Entry.commander.setCurrentEditor("board", this);
 };
 
 (function(p) {
@@ -100,6 +51,59 @@ Entry.Board = function(option) {
         dragBlock: null,
         magnetedBlockView: null,
         selectedBlockView: null
+    };
+
+    p.createView = function(option) {
+        var dom = option.dom;
+        if (typeof dom === "string")
+            dom = $('#' + dom);
+        else
+            dom = $(dom);
+
+        if (dom.prop("tagName") !== "DIV")
+            return console.error("Dom is not div element");
+
+        this.view = dom;
+        this._svgId = 'play' + new Date().getTime();
+
+        this.workspace = option.workspace;
+
+        this._activatedBlockView = null;
+
+        this.wrapper = Entry.Dom('div', {
+            parent: dom,
+            class: 'entryBoardWrapper'
+        });
+
+        this.svgDom = Entry.Dom(
+            $('<svg id="' + this._svgId + '" class="entryBoard" width="100%" height="100%"' +
+              'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
+            { parent: this.wrapper }
+        );
+
+        this.visible = true;
+        var that = this;
+        this.svg = Entry.SVG(this._svgId);
+        $(window).scroll(function() {
+            that.updateOffset();
+        });
+
+        this.svgGroup = this.svg.elem("g");
+
+        this.svgThreadGroup = this.svgGroup.elem("g");
+        this.svgThreadGroup.board = this;
+
+        this.svgBlockGroup = this.svgGroup.elem("g");
+        this.svgBlockGroup.board = this;
+
+        if (option.isOverlay) {
+            this.wrapper.addClass("entryOverlayBoard");
+            this.generateButtons();
+            this.suffix = 'overlayBoard';
+        } else this.suffix = 'board';
+
+        Entry.Utils.addFilters(this.svg, this.suffix);
+        this.patternRect = Entry.Utils.addBlockPattern(this.svg, this.suffix);
     };
 
     p.changeCode = function(code) {
@@ -113,7 +117,7 @@ Entry.Board = function(option) {
         );
         code.createView(this);
         this.generateCodeMagnetMap(code);
-
+        this.scroller.resizeScrollBar();
     };
 
     p.bindCodeView = function(codeView) {
@@ -156,7 +160,7 @@ Entry.Board = function(option) {
         dom.bind('touchstart', function() {
             that.onMouseDown.apply(that, arguments);
         });
-        dom.on('mousewheel', function(){
+        dom.on('wheel', function(){
             that.mouseWheel.apply(that, arguments);
         });
     };
@@ -195,7 +199,7 @@ Entry.Board = function(option) {
                 text: '붙여넣기',
                 enable: !!Entry.clipboard,
                 callback: function(){
-                    that.code.createThread(Entry.clipboard)
+                    Entry.do('cloneBlock', that.code).value
                         .getFirstBlock().copyToClipboard();
                 }
             };
@@ -250,6 +254,10 @@ Entry.Board = function(option) {
 
     p.mouseWheel = function(e) {
         e = e.originalEvent;
+        e.preventDefault();
+        var disposeEvent = Entry.disposeEvent;
+        if (disposeEvent)
+            disposeEvent.notify(e);
 
         this.scroller.scroll(
             e.wheelDeltaX || -e.deltaX,
@@ -301,6 +309,7 @@ Entry.Board = function(option) {
 
         for (var i =0; i < threads.length; i++) {
             var block = threads[i].getFirstBlock();
+            if (!block) continue;
             var blockView = block.view;
             var bBox = blockView.svgGroup.getBBox();
             var top = acculmulatedTop + verticalGap;
@@ -314,13 +323,13 @@ Entry.Board = function(option) {
             blockView._moveTo(left, top, false);
             acculmulatedTop = acculmulatedTop + bBox.height + verticalGap;
         }
+
         this.scroller.resizeScrollBar();
     };
 
     p.clear = function() {
-        var node = this.svgBlockGroup;
-        while (node.firstChild)
-            node.removeChild(node.firstChild);
+        this.svgBlockGroup.remove();
+        this.svgThreadGroup.remove();
     };
 
     p.updateOffset = function () {
@@ -421,7 +430,6 @@ Entry.Board = function(option) {
     p._getCodeBlocks = function(code, targetType) {
         var threads = code.getThreads();
         var blocks = [];
-        var zIndex = 0;
         var func;
         switch (targetType) {
             case "nextMagnet":
@@ -441,8 +449,7 @@ Entry.Board = function(option) {
         }
         for (var i = 0; i < threads.length; i++) {
             var thread = threads[i];
-            blocks = blocks.concat(func.call(this, thread, zIndex, null, targetType));
-            zIndex++;
+            blocks = blocks.concat(func.call(this, thread, thread.view.zIndex, null, targetType));
         }
         return blocks;
     };
@@ -568,7 +575,7 @@ Entry.Board = function(option) {
             if (contentBlock.view.dragInstance)
                 continue;
             var startX = cursorX + content.box.x;
-            var startY = cursorY + content.box.y + blockView.height * -0.5;
+            var startY = cursorY + content.box.y + (blockView.contentHeight % 1000) * -0.5;
             var endY = cursorY + content.box.y + content.box.height;
             metaData.push({
                 point: startY,
@@ -784,6 +791,69 @@ Entry.Board = function(option) {
         this.code.view.reDraw();
     };
 
+    p.separate = function(block, count) {
+        if (typeof block === "string")
+            block = this.findById(block);
+        if (block.view)
+            block.view._toGlobalCoordinate();
+        var prevBlock = block.getPrevBlock();
+        block.separate(count);
+        if (prevBlock && prevBlock.getNextBlock())
+            prevBlock.getNextBlock().view.bindPrev();
+    };
 
+    p.insert = function(block, pointer, count) { // pointer can be target
+        if (typeof block === "string")
+            block = this.findById(block);
+        this.separate(block, count);
+        if (pointer.length === 4 && pointer[3] === 0) // is global
+            block.moveTo(pointer[0], pointer[1]);
+        else {
+            var targetObj;
+            if (pointer instanceof Array)
+                targetObj = this.code.getTargetByPointer(pointer);
+            else
+                targetObj = pointer;
+            if (targetObj instanceof Entry.Block) {
+                if (block.getBlockType() === "basic")
+                    block.view.bindPrev(targetObj);
+                block.doInsert(targetObj);
+            } else if (targetObj instanceof Entry.FieldStatement) {
+                block.view.bindPrev(targetObj);
+                targetObj.insertTopBlock(block);
+            } else {
+                block.doInsert(targetObj);
+            }
+        }
+    };
+
+    p.adjustThreadsPosition = function() {
+        var code = this.code;
+        if (!code) return;
+
+        var threads = code.getThreads();
+        var arr = [];
+
+        threads.forEach(function(t) {
+            arr.push({
+                    thread: t,
+                    len: t.countBlock()
+                });
+        });
+
+        arr = arr.sort(function(a,b) {
+            return b.len - a.len;
+        });
+
+        var target = arr[0];
+        if (target) {
+            target = target.thread.getFirstBlock().view;
+            var pos = target.getAbsoluteCoordinate();
+
+            this.scroller.scroll(
+                50 - pos.x, 30 - pos.y
+            );
+        }
+    };
 
 })(Entry.Board.prototype);

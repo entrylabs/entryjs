@@ -8,7 +8,7 @@ goog.require("Entry.Field");
 /*
  *
  */
-Entry.FieldOutput = function(content, blockView, index, mode) {
+Entry.FieldOutput = function(content, blockView, index, mode, contentIndex) {
     Entry.Model(this, false);
 
     this._blockView = blockView;
@@ -21,6 +21,7 @@ Entry.FieldOutput = function(content, blockView, index, mode) {
     this.changeEvent = new Entry.Event(this);
 
     this._index = index;
+    this.contentIndex = contentIndex;
     this._content = content;
 
     this.acceptType = content.accept;
@@ -238,6 +239,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
 
     p.getThread = function() {
          return this;
+    };
+
+    p.getValueBlock = function() {return this._valueBlock;};
+
+    p.pointer = function(pointer) {
+        pointer.unshift(this._index);
+        pointer.unshift(Entry.PARAM);
+        return this._block.pointer(pointer);
     };
 
 })(Entry.FieldOutput.prototype);

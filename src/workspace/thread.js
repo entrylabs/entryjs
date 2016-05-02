@@ -11,12 +11,13 @@ goog.require("Entry.Collection");
 /*
  *
  */
-Entry.Thread = function(thread, code) {
+Entry.Thread = function(thread, code, parent) {
     this._data = new Entry.Collection();
     this._code = code;
     this.changeEvent = new Entry.Event(this);
     this.changeEvent.attach(this, this.handleChange);
     this._event = null;
+    this.parent = parent ? parent : code;
 
     this.load(thread);
 };
@@ -120,6 +121,10 @@ Entry.Thread = function(thread, code) {
             blocks[i].destroy(animate);
     };
 
+    p.getBlock = function(index) {
+        return this._data[index];
+    };
+
     p.getBlocks = function() {
         return this._data.map(function(b){return b;});
     };
@@ -161,9 +166,8 @@ Entry.Thread = function(thread, code) {
 
         if (blocks.length === 0) {
             var parent = this.view.getParent();
-            if (parent.constructor === Entry.FieldStatement)
-                parent.removeFirstBlock();
-            else this.destroy();
+            if (parent.constructor !== Entry.FieldStatement)
+                 this.destroy();
         }
 
         this.changeEvent.notify();
@@ -223,4 +227,32 @@ Entry.Thread = function(thread, code) {
             result -= this._data.indexOf(startBlock);
         return result
     };
+
+    p.indexOf = function(block) {
+        return this._data.indexOf(block);
+    };
+
+    p.pointer = function(pointer, block) {
+        var index = this.indexOf(block);
+        pointer.unshift(index);
+        if (this.parent instanceof Entry.Block)
+            pointer.unshift(this.parent.indexOfStatements(this));
+        if (this._code === this.parent) {
+            pointer.unshift(this._code.indexOf(this));
+            var topBlock = this._data[0];
+            pointer.unshift(topBlock.y);
+            pointer.unshift(topBlock.x);
+            return pointer;
+        }
+        return this.parent.pointer(pointer);
+    };
+
+    p.getBlockList = function() {
+        var blocks = [];
+        for (var i = 0; i < this._data.length; i++)
+            blocks = blocks.concat(this._data[i].getBlockList());
+
+        return blocks;
+    };
+
 })(Entry.Thread.prototype);

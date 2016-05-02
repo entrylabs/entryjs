@@ -113,21 +113,7 @@ Blockly.Blocks.stop_repeat = {
 };
 
 Entry.block.stop_repeat = function (sprite, script) {
-    var parentScript = script;
-    while (parentScript.type.substr(0, 6).toUpperCase() != "REPEAT" &&
-        parentScript.parentScript) {
-        parentScript = parentScript.parentScript;
-        delete parentScript.isLooped;
-        delete parentScript.iterCount;
-    }
-    var nextScript = parentScript.callReturn();
-    if (parentScript.statements && nextScript) {
-        return nextScript;
-    }
-    else if (parentScript)
-        return null;
-    else
-        return script.callReturn();
+    return this.executor.break();
 };
 
 // wait until condtion is true
@@ -386,31 +372,18 @@ Entry.block.stop_object = function (sprite, script) {
 
     switch(target) {
         case 'all':
-            container.mapEntityIncludeCloneOnScene(function (entity){
-                entity.clearScript();
-            });
-            break;
-        case 'thisObject':
-            sprite.clearScript();
-            var clonedEntities = sprite.parent.clonedEntities;
-            clonedEntities.map(function (entity) {
-                entity.clearScript();
-            });
-            break;
+            container.clearRunningState();
+            return this.die();
         case 'thisOnly':
-            sprite.clearScript();
-            break;
+            sprite.parent.script.clearExecutorsByEntity(sprite);
+            return this.die();
         case 'thisThread':
-            break;
+            return this.die();
         case 'otherThread':
-            sprite.clearScript();
-            var clonedEntities = sprite.parent.clonedEntities;
-            clonedEntities.map(function (entity) {
-                entity.clearScript();
-            });
-            return script.callReturn();
+            sprite.parent.script.clearExecutors();
+            sprite.parent.script.addExecutor(this.executor);
+            return;
     }
-    return null;
 };
 
 Blockly.Blocks.restart_project = {

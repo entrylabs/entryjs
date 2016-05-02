@@ -25,5 +25,7 @@ Entry.STATIC = {
 
     /* execute return state */
     RETURN: 0,
-    CONTINUE: 1
+    CONTINUE: 1,
+    BREAK: 2,
+    PASS: 3
 };

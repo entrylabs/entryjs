@@ -23,8 +23,8 @@ Entry.EntryObject = function(model) {
         if (!this.objectType)
             this.objectType = 'sprite';
 
-        this.script = new Entry.Code(model.script ? model.script : []);
-        this.script.object = this;
+        var script = model.script ? model.script : [];
+        this.script = new Entry.Code(script, this);
 
         /** @type {Array.<picture object>} */
         this.pictures = model.sprite.pictures;
@@ -801,7 +801,7 @@ Entry.EntryObject.prototype.setScript = function(script) {
  * @return {!xml script} script
  */
 Entry.EntryObject.prototype.getScriptText = function() {
-    return this.script.toJSON();
+    return JSON.stringify(this.script.toJSON());
 };
 
 /**
@@ -1446,4 +1446,8 @@ Entry.EntryObject.prototype.getStampEntities = function() {
             entities.push(entity);
     });
     return entities;
+};
+
+Entry.EntryObject.prototype.clearExecutor = function() {
+    this.script.clearExecutors();
 };

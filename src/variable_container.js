@@ -131,9 +131,10 @@ Entry.VariableContainer.prototype.createDom = function(view) {
     //functionAddButton.innerHTML = '+ ' + Lang.Msgs.to_be_continue;
     this.functionAddButton_ = functionAddButton;
     functionAddButton.bindOnClick(function(e) {
+        var blockMenu = that._getBlockMenu();
         Entry.playground.changeViewMode('code');
-        if (Entry.playground.selectedMenu != 'func')
-            Entry.playground.mainWorkspace.blockMenu.selectMenu('func');
+        if (blockMenu.lastSelector != 'func')
+            blockMenu.selectMenu('func');
         that.createFunction();
     });
 
@@ -206,8 +207,10 @@ Entry.VariableContainer.prototype.select = function(object) {
     object = this.selected == object ? null : object;
     if (this.selected) {
         this.selected.listElement.removeClass('selected');
-        this.listView_.removeChild(this.selected.callerListElement);
-        delete this.selected.callerListElement;
+        if (this.selected.callerListElement) {
+            this.listView_.removeChild(this.selected.callerListElement);
+            delete this.selected.callerListElement;
+        }
         this.selected = null;
     }
     if (!object)
@@ -320,7 +323,7 @@ Entry.VariableContainer.prototype.renderVariableReference = function(variable) {
                 that.select(null);
             }
             var caller = this.caller;
-            var block = caller.block;
+            var block = caller.funcBlock || caller.block;
             block.view.getBoard().activateBlock(block);
             Entry.playground.toggleOnVariableView();
             Entry.playground.changeViewMode('variable');
@@ -350,11 +353,8 @@ Entry.VariableContainer.prototype.renderFunctionReference = function(func) {
     var callers = [];
 
 
-    for (var i=0; i<refs.length; i++) {
-        var params = refs[i].block.params;
-        var index = params.indexOf(funcId);
-        if (index > -1) callers.push(refs[i]);
-    }
+    for (var i=0; i<refs.length; i++)
+        callers.push(refs[i]);
 
     var listView = Entry.createElement('ul');
     listView.addClass('entryVariableListCallerListWorkspace');
@@ -376,8 +376,9 @@ Entry.VariableContainer.prototype.renderFunctionReference = function(func) {
                 that.select(null);
                 that.select(func);
             }
-            var id = this.caller.block.id;
+            var block = this.caller.block;
             Entry.playground.toggleOnVariableView();
+            block.view.getBoard().activateBlock(block);
             Entry.playground.changeViewMode('variable');
         });
         listView.appendChild(element);
@@ -590,8 +591,7 @@ Entry.VariableContainer.prototype.setVariables = function(variables) {
  */
 Entry.VariableContainer.prototype.setFunctions = function(functions) {
     for (var i in functions) {
-        var func = new Entry.Func();
-        func.init(functions[i]);
+        var func = new Entry.Func(functions[i]);
         func.generateBlock();
         this.createFunctionView(func);
         this.functions_[func.id] = func;
@@ -736,13 +736,13 @@ Entry.VariableContainer.prototype.createFunctionView = function(func) {
 
     var editButton = Entry.createElement('button');
     editButton.addClass('entryVariableListElementEditWorkspace');
+    var blockMenu = this._getBlockMenu();
     editButton.bindOnClick(function (e) {
         e.stopPropagation();
         Entry.Func.edit(func);
         if (Entry.playground) {
             Entry.playground.changeViewMode('code');
-            if (Entry.playground.selectedMenu != 'func')
-                Entry.playground.mainWorkspace.blockMenu.selectMenu('func');
+            if (blockMenu.lastSelector != 'func') blockMenu.selectMenu('func');
         }
     });
 
@@ -1350,8 +1350,7 @@ Entry.VariableContainer.prototype.getFunctionJSON = function() {
         var func = this.functions_[i];
         var funcJSON = {
             id: func.id,
-            block: func.block,
-            content: func.content.toJSON()
+            content: JSON.stringify(func.content.toJSON())
         };
         json.push(funcJSON);
     }
@@ -2173,13 +2172,59 @@ Entry.VariableContainer.prototype.updateCloudVariables = function() {
 };
 
 Entry.VariableContainer.prototype.addRef = function(type, block) {
-    this[type].push({
+    var wsMode = Entry.playground.mainWorkspace.getMode();
+    if (wsMode !== Entry.Workspace.MODE_BOARD) return;
+
+    var datum = {
         object:block.getCode().object,
         block: block
-    });
+    };
+
+    if (block.funcBlock) {
+        datum.funcBlock = block.funcBlock;
+        delete block.funcBlock;
+    }
+
+    this[type].push(datum);
+
+    if (type == '_functionRefs') {
+        var id = block.type.substr(5);
+        var func = Entry.variableContainer.functions_[id];
+        var blocks = func.content.getBlockList();
+
+        for (var i=0; i<blocks.length; i++) {
+            var block = blocks[i];
+            var events = block.events;
+
+            if (events && events.viewAdd) {
+                events.viewAdd.forEach(function(fn) {
+                    block.getCode().object = datum.object;
+                    if (fn) {
+                        block.funcBlock = datum.block;
+                        fn(block);
+                    }
+                });;
+            }
+
+            if (events && events.dataAdd) {
+                events.dataAdd.forEach(function(fn) {
+                    block.getCode().object = datum.object;
+                    if (fn) {
+                        block.funcBlock = datum.block;
+                        fn(block);
+                    }
+                });;
+            }
+        }
+    }
+
+    return datum;
 };
 
 Entry.VariableContainer.prototype.removeRef = function(type, block) {
+    var wsMode = Entry.playground.mainWorkspace.getMode();
+    if (wsMode !== Entry.Workspace.MODE_BOARD) return;
+
     var arr = this[type];
 
     for (var i=0; i<arr.length; i++) {
@@ -2189,4 +2234,31 @@ Entry.VariableContainer.prototype.removeRef = function(type, block) {
             break;
         }
     }
+
+    if (type == '_functionRefs') {
+        var id = block.type.substr(5);
+        var func = Entry.variableContainer.functions_[id];
+        var blocks = func.content.getBlockList();
+
+        for (var i=0; i<blocks.length; i++) {
+            var block = blocks[i];
+            var events = block.events;
+
+            if (events && events.viewDestroy) {
+                events.viewDestroy.forEach(function(fn) {
+                    if (fn) fn(block);
+                });;
+            }
+
+            if (events && events.dataDestroy) {
+                events.dataDestroy.forEach(function(fn) {
+                    if (fn) fn(block);
+                });;
+            }
+        }
+    }
+};
+
+Entry.VariableContainer.prototype._getBlockMenu = function() {
+    return Entry.playground.mainWorkspace.getBlockMenu();
 };

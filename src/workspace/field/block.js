@@ -8,7 +8,7 @@ goog.require("Entry.Field");
 /*
  *
  */
-Entry.FieldBlock = function(content, blockView, index, mode) {
+Entry.FieldBlock = function(content, blockView, index, mode, contentIndex) {
     Entry.Model(this, false);
     this._blockView = blockView;
     this._block = blockView.block;
@@ -20,6 +20,7 @@ Entry.FieldBlock = function(content, blockView, index, mode) {
     this.changeEvent = new Entry.Event(this);
 
     this._index = index;
+    this.contentIndex = contentIndex;
     this._content = content;
 
     this.acceptType = content.accept;
@@ -156,12 +157,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         return this._valueBlock;
     };
 
-    p._getValueBlock = function() {return this._valueBlock;};
+    p.getValueBlock = function() {return this._valueBlock;};
 
     p.updateValueBlock = function(block) {
         if (!(block instanceof Entry.Block)) block = undefined;
-        if (this._sizeObserver) this._sizeObserver.destroy();
-        if (this._posObserver) this._posObserver.destroy();
+        this._destroyObservers();
 
         var view = this._setValueBlock(block).view;
         view.bindPrev(this);
@@ -171,6 +171,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         var board = this._blockView.getBoard();// performance issue
         if (board.constructor === Entry.Board)
             board.generateCodeMagnetMap();
+    };
+
+    p._destroyObservers = function() {
+        if (this._sizeObserver) this._sizeObserver.destroy();
+        if (this._posObserver) this._posObserver.destroy();
     };
 
     p.getPrevBlock = function(block) {
@@ -201,6 +206,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 
     p.separate = function(block) {
         this.getCode().createThread([block]);
+        this.calcWH();
         this.changeEvent.notify();
     };
 
@@ -219,9 +225,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         var valueBlock = this._valueBlock;
         var valueBlockType = valueBlock.type;
         if (Entry.block[valueBlockType].isPrimitive) {
+            valueBlock.doNotSplice = true;
             valueBlock.destroy();
-        }
-        else {
+        } else {
+            this._destroyObservers();
             valueBlock.view._toGlobalCoordinate();
             this.separate(valueBlock);
             valueBlock.view.bumpAway(30, 150);
@@ -276,5 +283,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     };
 
     p.getThread = function() {return this;};
+
+    p.pointer = function(pointer) {
+        pointer.unshift(this._index);
+        pointer.unshift(Entry.PARAM);
+        return this._block.pointer(pointer);
+    };
 
 })(Entry.FieldBlock.prototype);

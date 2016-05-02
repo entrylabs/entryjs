@@ -99,22 +99,27 @@ Entry.PyToBlockParser = function(blockSyntax) {
         };
     };
 
-    p.ExpressionStatement = function(node) { 
-        console.log("ExpressionStatement", node);
+    p.ExpressionStatement = function(node) {
+        console.log("ccccccccccccc");
         var expression = this[node.expression.type](node.expression);
-        console.log("ExpressionStatement", expression);
+        var params = [];
 
-        console.log("expression", expression);
+        if(expression.arguments && expression.arguments.length){
+            for(var index in expression.arguments) {
+                var arg = expression.arguments[index];
+                params.push(arg.value);
+            }
+        }
 
         var targetSyntax = String(expression.callee.object.name).concat(".").concat(expression.callee.property.name);
-        console.log("target syntax", targetSyntax);
-
         var block = this.blockSyntax[targetSyntax];
-
+       
         console.log("block", block);
+        console.log("params", params);
 
         return {
-            block: block
+            block: block,
+            params: params
         }        
 
         /*return {
@@ -747,7 +752,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("CallExpression", node);
         var callee = this[node.callee.type](node.callee);
 
-        var args;
+        var args = [];
         for(var index in node.arguments) {
             var expression = node.arguments[index];
             var arg = this[expression.type](expression);

@@ -132,12 +132,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
         var blockView = this._block.view;
 
-        this.documentDownEvent = Entry.documentMousedown.attach(
-            this, function() {
-                Entry.documentMousedown.detach(this.documentDownEvent);
-                that.optionGroup.remove();
-            }
-        );
+        this._attachDisposeEvent();
 
         this.optionGroup = Entry.Dom('ul', {
             class:'entry-widget-dropdown',
@@ -180,13 +175,34 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             })(element, value);
         }
 
+        this._position();
+    };
 
+    p._position = function() {
+        //inspect enough space below
         var pos = this.getAbsolutePosFromDocument();
-        pos.x += this.box.width/2 - this.optionGroup.width()/2;
         pos.y += this.box.height/2;
 
-        this.optionGroup.css({left: pos.x, top: pos.y});
+        var documentHeight = $(document).height();
+        var optionGroupHeight = this.optionGroup.height();
 
+        //not enough space below
+        if (documentHeight < pos.y + optionGroupHeight) {
+            pos.x += this.box.width + 1;
+
+            var relPos = this.getAbsolutePosFromBoard();
+            var domHeight = this._blockView.getBoard().svgDom.height();
+            domHeight -=  domHeight - relPos.y;
+
+            if (domHeight - 20 < optionGroupHeight) {
+                domHeight -= domHeight % 20;
+                this.optionGroup.height(domHeight)
+            }
+
+            pos.y -= this.optionGroup.height();
+        } else pos.x += this.box.width/2 - this.optionGroup.width()/2;
+
+        this.optionGroup.css({left: pos.x, top: pos.y});
     };
 
     p.applyValue = function(value) {
@@ -197,7 +213,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     };
 
     p.getTextByValue = function(value) {
-        if (!value) return Lang.Blocks.no_target;
+        if (!value || value === 'null') return Lang.Blocks.no_target;
 
         var options = this._contents.options;
         for (var i=0, len=options.length; i<len; i++) {

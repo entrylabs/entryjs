@@ -17,9 +17,11 @@ Entry.Commander = function(injectType) {
         Entry.stateManager = new Entry.StateManager();
 
     }
-    Entry.do = this.do;
+    Entry.do = this.do.bind(this);
 
-    Entry.undo = this.undo;
+    Entry.undo = this.undo.bind(this);
+
+    this.editor = {};
 };
 
 
@@ -31,19 +33,51 @@ Entry.Commander = function(injectType) {
         if (Entry.stateManager) {
             Entry.stateManager.addCommand.apply(
                 Entry.stateManager,
-                [commandType, Entry.Command, commandFunc.undo]
+                [commandType, this, this.undo, commandType]
                     .concat(commandFunc.state.apply(null, argumentArray))
             );
         }
         // TODO: activity reporter
-        Entry.Command[commandType].do.apply(Entry.Command, argumentArray);
+        return {
+            value: Entry.Command[commandType].do.apply(Entry.Command, argumentArray),
+            isPass: this.isPass.bind(this)
+        }
     };
 
     p.undo = function() {
-
+        var argumentArray = Array.prototype.slice.call(arguments);
+        var commandType = argumentArray.shift();
+        var commandFunc = Entry.Command[commandType];
+        if (Entry.stateManager) {
+            Entry.stateManager.addCommand.apply(
+                Entry.stateManager,
+                [commandType, this, this.redo, commandType]
+                    .concat(commandFunc.state.apply(null, argumentArray))
+            );
+        }
+        commandFunc.undo.apply(this, argumentArray);
     };
 
     p.redo = function() {
+        var argumentArray = Array.prototype.slice.call(arguments);
+        var commandType = argumentArray.shift();
+        var commandFunc = Entry.Command[commandType];
 
+        if (Entry.stateManager) {
+            Entry.stateManager.addCommand.apply(
+                Entry.stateManager,
+                [commandType, this, this.undo, commandType]
+                    .concat(commandFunc.state.apply(null, argumentArray))
+            );
+        }
+        commandFunc.undo.apply(this, argumentArray);
+    };
+
+    p.setCurrentEditor = function(key, object) {
+        this.editor[key] = object;
+    };
+
+    p.isPass = function() {
+        Entry.stateManager.getLastCommand().isPass = true;
     };
 })(Entry.Commander.prototype)

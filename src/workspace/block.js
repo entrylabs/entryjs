@@ -8,20 +8,28 @@ goog.provide("Entry.Block");
 goog.require('Entry.Thread');
 goog.require('Entry.Utils');
 goog.require('Entry.Model');
-goog.require("Entry.BoxModel");
 goog.require("Entry.skeleton");
 
 /*
  *
  */
 Entry.Block = function(block, thread) {
+    var that = this;
     Entry.Model(this, false);
     this._schema = null;
 
     this.setThread(thread);
     this.load(block);
 
-    this.getCode().registerBlock(this);
+    var code = this.getCode();
+
+    code.registerBlock(this);
+    var events = this.events.dataAdd;
+    if (events && code.object) {
+        events.forEach(function(fn) {
+            if (Entry.Utils.isFunction(fn)) fn(that);
+        });
+    }
 };
 
 Entry.Block.MAGNET_RANGE = 10;
@@ -74,6 +82,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
                 var funcs = events[key];
                 for (var i=0; i<funcs.length; i++) {
                     var func = funcs[i];
+                    if (!func) continue;
                     var index = this.events[key].indexOf(func);
                     if (index < 0) this.events[key].push(func);
                 }
@@ -86,9 +95,9 @@ Entry.Block.MAGNET_OFFSET = 0.4;
 
         var params = this._schema.params;
         for (var i = 0; params && i < params.length; i++) {
-            var value = thisParams[i] !== undefined ? thisParams[i] : params[i].value;
+            var value = thisParams[i] ? thisParams[i] : params[i].value;
 
-            var paramInjected = thisParams[i] !== undefined;
+            var paramInjected = thisParams[i] || i<thisParams.length;
 
             if (value && (params[i].type === 'Output' || params[i].type === 'Block'))
                 value = new Entry.Block(value, this.thread);
@@ -102,7 +111,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
             for (var i = 0; i < statements.length; i++) {
                 this.statements.splice(
                     i, 1,
-                    new Entry.Thread(this.statements[i], that.getCode())
+                    new Entry.Thread(this.statements[i], that.getCode(), this)
                 );
             }
         }
@@ -135,17 +144,13 @@ Entry.Block.MAGNET_OFFSET = 0.4;
                 x: this.view.x,
                 y: this.view.y
             });
-
-        //TODO update next pos
     };
 
     p.moveTo = function(x, y) {
         if (this.view)
             this.view._moveTo(x, y);
-        this.set({
-            x: this.view.x,
-            y: this.view.y
-        });
+        this._updatePos();
+        this.getCode().changeEvent.notify();
     };
 
     p.createView = function(board, mode) {
@@ -170,6 +175,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         var json = this._toJSON();
         delete json.view;
         delete json.thread;
+        delete json.events;
 
         if (isNew) delete json.id;
 
@@ -193,6 +199,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
     };
 
     p.destroy = function(animate, next) {
+        var that = this;
         var params = this.params;
         if (params) {
             for (var i=0; i<params.length; i++) {
@@ -238,6 +245,13 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         if (this.view) this.view.destroy(animate);
         if (this._schemaChangeEvent)
             this._schemaChangeEvent.destroy();
+
+        var events = this.events.dataDestroy;
+        if (events && this.getCode().object) {
+            events.forEach(function(fn) {
+                if (Entry.Utils.isFunction(fn)) fn(that);
+            });
+        }
     };
 
     p.getView = function() {return this.view;};
@@ -392,8 +406,10 @@ Entry.Block.MAGNET_OFFSET = 0.4;
             cloned.push(this.toJSON(true));
 
         var pos = this.view.getAbsoluteCoordinate();
-        cloned[0].x = pos.x + 15;
-        cloned[0].y = pos.y + 15;
+        var block = cloned[0];
+        block.x = pos.x + 15;
+        block.y = pos.y + 15;
+        block.id = Entry.Utils.generateId();
 
         return cloned;
     };
@@ -456,9 +472,11 @@ Entry.Block.MAGNET_OFFSET = 0.4;
     };
 
     p.getBlockType = function() {
+        if (!this.view)
+            return null;
         var skeleton = Entry.skeleton[this._schema.skeleton]
-        var magnet = skeleton.magnets();
-        if (magnet.next || magnet.prev)
+        var magnet = skeleton.magnets(this.view);
+        if (magnet.next || magnet.previous)
             return "basic";
         else if (magnet.bool || magnet.string)
             return "field";
@@ -466,6 +484,38 @@ Entry.Block.MAGNET_OFFSET = 0.4;
             return "output";
         else
             return null;
+    };
+
+    p.indexOfStatements = function(statement) {
+        return this.statements.indexOf(statement);
+
+    };
+
+    p.pointer = function(pointer) {
+        if (!pointer)
+            pointer = [];
+        return this.thread.pointer(pointer, this);
+    };
+
+    p.getBlockList = function() {
+        var blocks = [];
+        blocks.push(this);
+
+        var params = this.params;
+        for (var k = 0; k < params.length; k++) {
+            var param = params[k];
+            if (param && param.constructor == Entry.Block) {
+                blocks = blocks.concat(param.getBlockList());
+            }
+        }
+
+        var statements = this.statements;
+        if (statements) {
+            for (var j = 0; j < statements.length; j++) {
+                blocks = blocks.concat(statements[j].getBlockList());
+            }
+        }
+        return blocks;
     };
 
 })(Entry.Block.prototype);

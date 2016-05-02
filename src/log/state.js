@@ -33,6 +33,8 @@ Entry.State = function(type, caller, func, param) {
      * @type {Number}
      * */
     this.time = Entry.getUpTime();
+
+    this.isPass = Entry.Command[type] ? Entry.Command[type].isPass : false;
 };
 
 /**

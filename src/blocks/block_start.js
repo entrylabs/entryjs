@@ -103,23 +103,6 @@ Entry.block.mouse_click_cancled = function (sprite, script) {
     return script.callReturn();
 };
 
-
-// //장면이 시작했을 때
-/*Blockly.Blocks.when_scene_start = {
-  init: function() {
-      this.setColour("#3BBD70");
-    this.appendDummyInput()
-        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/start_icon_start.png', '*', "start"))
-        .appendField(Lang.Blocks.START_when_scene_start);
-    this.setInputsInline(true);
-    this.setNextStatement(true);
-  }
-};*/
-
-Entry.block.when_scene_start = function (sprite, script) {
-    return script.callReturn();
-};
-
 //오브젝트를 클릭 했을 때
 Blockly.Blocks.when_object_click = {
   init: function() {
@@ -231,6 +214,7 @@ Entry.block.message_cast = function (sprite, script) {
 
     if (value == 'null' || !isExist)
         throw new Error('value can not be null or undefined');
+
     Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent,
                               ["when_message_cast", value]);
     return script.callReturn();
@@ -261,11 +245,16 @@ Blockly.Blocks.message_cast_wait = {
 
 Entry.block.message_cast_wait = function (sprite, script) {
     if (script.runningScript) {
-        if (script.runningScript.length) {
-            Entry.engine.computeFunction(script);
+        var runningScript = script.runningScript;
+        var length = runningScript.length;
+        for (var i = 0; i < length; i++) {
+            var executor = runningScript.shift();
+            if (executor && !executor.isEnd())
+                runningScript.push(executor);
+        }
+        if (runningScript.length) {
             return script;
         } else {
-            delete script.runningScript;
             return script.callReturn();
         }
     } else {
@@ -274,24 +263,16 @@ Entry.block.message_cast_wait = function (sprite, script) {
         var isExist = Entry.isExist(value, 'id', arr);
         if (value == 'null' || !isExist)
             throw new Error('value can not be null or undefined');
-        var runningScript = []
-
-        Entry.container.mapEntityIncludeCloneOnScene(function(entity, param) {
-            var eventName = param[0];
-            var keyCode = param[1];
-            var blocks = entity.parent.script.childNodes;
-            //handle clone entity
-            for (var i=0; i<blocks.length; i++) {
-                var block = blocks[i];
-                var value = Entry.Xml.getField("VALUE", block);
-                if (Entry.Xml.isTypeOf(eventName, block) &&
-                   (value == keyCode)) {
-                    var script = new Entry.Script(entity);
-                    script.init(block);
-                    runningScript.push(script);
-                }
-            };
-        }, ["when_message_cast", value]);
+        var data = Entry.container.mapEntityIncludeCloneOnScene(
+            Entry.engine.raiseKeyEvent,
+            ["when_message_cast", value]
+        );
+        var runningScript = [];
+        while (data.length) {
+            var executor = data.shift();
+            if (executor)
+                runningScript = runningScript.concat(executor);
+        }
 
         script.runningScript = runningScript;
         return script;

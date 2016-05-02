@@ -24,6 +24,7 @@ Entry.BlockView = function(block, board, mode) {
     this._contents = [];
     this._statements = [];
     this.magnet = {};
+    this._paramMap = {};
 
     if (skeleton.magnets && skeleton.magnets(this).next) {
         this.svgGroup.nextMagnet = this.block;
@@ -40,9 +41,11 @@ Entry.BlockView = function(block, board, mode) {
     this.mouseHandler = function() {
         var events = that.block.events;
         if (events && events.mousedown)
-            events.mousedown.forEach(function(fn){fn();});
+            events.mousedown.forEach(function(fn){fn(that);});
 
         that.onMouseDown.apply(that, arguments);
+
+
     };
     this._startRender(block, mode);
 
@@ -62,12 +65,14 @@ Entry.BlockView = function(block, board, mode) {
     this.dragMode = Entry.DRAG_MODE_NONE;
     Entry.Utils.disableContextmenu(this.svgGroup.node);
     this._targetType = this._getTargetType();
-    var events = block.events.whenBlockAdd;
+    var events = block.events.viewAdd;
     if (events && !this.isInBlockMenu) {
         events.forEach(function(fn) {
             if (Entry.Utils.isFunction(fn)) fn(block);
         });
     }
+    if (this.block.type == 'function_general')
+        debugger;
 };
 
 Entry.BlockView.PARAM_SPACE = 5;
@@ -131,7 +136,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
             fill: fillColor,
             class: 'blockPath'
         };
-        if (this.magnet.next) {
+        if (this.magnet.next || this._skeleton.nextShadow) {
             var suffix = this.getBoard().suffix;
             this.pathGroup.attr({
                 filter: 'url(#entryBlockShadowFilter_' + suffix + ')'
@@ -146,8 +151,9 @@ Entry.BlockView.DRAG_RADIUS = 5;
 
         this._moveTo(this.x, this.y, false);
         this._startContentRender(mode);
-        if (this._board.disableMouseEvent !== true)
+        if (this._board.disableMouseEvent !== true) {
             this._addControl();
+        }
 
         this.bindPrev();
     };
@@ -174,12 +180,13 @@ Entry.BlockView.DRAG_RADIUS = 5;
                 for (var i=0; i<templateParams.length; i++) {
                     var param = templateParams[i].trim();
                     if (param.length === 0) continue;
+
                     if (reg.test(param)) {
                         var paramIndex = Number(param.split('%')[1]) - 1;
                         param = params[paramIndex];
-                        this._contents.push(
-                            new Entry['Field' + param.type](param, this, paramIndex, mode)
-                        );
+                        var field = new Entry['Field' + param.type](param, this, paramIndex, mode, i);
+                        this._contents.push(field);
+                        this._paramMap[paramIndex] = field;
                     } else this._contents.push(new Entry.FieldText({text: param}, this));
                 }
 
@@ -216,34 +223,45 @@ Entry.BlockView.DRAG_RADIUS = 5;
     p.alignContent = function(animate) {
         if (animate !== true) animate = false;
         var cursor = {x: 0, y: 0, height: 0};
+        var statementIndex = 0;
+        var width = 0;
+        var secondLineHeight = 0;
         for (var i = 0; i < this._contents.length; i++) {
             var c = this._contents[i];
-            c.align(cursor.x, cursor.y, animate);
 
-            // space between content
-            if (i !== this._contents.length - 1)
-                cursor.x += Entry.BlockView.PARAM_SPACE;
+            if (c instanceof Entry.FieldLineBreak) {
+                this._alignStatement(animate, statementIndex);
+                c.align(statementIndex);
+                statementIndex++;
+                cursor.y = c.box.y;
+                cursor.x = 8;
+            } else {
+                c.align(cursor.x, cursor.y, animate);
+                // space between content
+                if (i !== this._contents.length - 1)
+                    cursor.x += Entry.BlockView.PARAM_SPACE;
+            }
 
             var box = c.box;
-            cursor.height = Math.max(box.height, cursor.height);
+            if (statementIndex !== 0) {
+                secondLineHeight = Math.max(Math.round(box.height)*1000, secondLineHeight);
+            } else
+                cursor.height = Math.max(box.height, cursor.height);
+
             cursor.x += box.width;
+            width = Math.max(width, cursor.x);
+            this.set({
+                contentWidth: width,
+                contentHeight: cursor.height
+            });
         }
 
         this.set({
-            contentWidth: cursor.x,
-            contentHeight: cursor.height
+            contentHeight: cursor.height + secondLineHeight
         });
 
-        if (this._statements.length) {
-            var positions = this._skeleton.statementPos ?
-                this._skeleton.statementPos(this) : [];
-            for (var i = 0; i < this._statements.length; i++) {
-                var s = this._statements[i];
-                var pos = positions[i];
-                if (pos)
-                    s.align(pos.x, pos.y, animate);
-            }
-        }
+        if (this._statements.length != statementIndex)
+            this._alignStatement(animate, statementIndex);
 
         var contentPos = this.getContentPos();
         this.contentSvgGroup.attr("transform",
@@ -252,6 +270,15 @@ Entry.BlockView.DRAG_RADIUS = 5;
         this.contentPos = contentPos;
         this._render();
         this._updateMagnet();
+    };
+
+    p._alignStatement = function(animate, index) {
+        var positions = this._skeleton.statementPos ?
+            this._skeleton.statementPos(this) : [];
+        var statement = this._statements[index];
+        if (!statement) return;
+        var pos = positions[index];
+        if (pos) statement.align(pos.x, pos.y, animate);
     };
 
     p._render = function() {
@@ -324,7 +351,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
             this.y + y,
             animate
         );
-};
+    };
 
     p._addControl = function() {
         var that = this;
@@ -333,6 +360,17 @@ Entry.BlockView.DRAG_RADIUS = 5;
             'mousedown.blockViewMousedown touchstart.blockViewMousedown',
             that.mouseHandler
         );
+
+        var events = that.block.events;
+        if (events && events.dblclick) {
+            console.log(events.dblclick);
+            $(this.svgGroup).dblclick(function() {
+                events.dblclick.forEach(function(fn){
+                    if (fn) fn(that);});
+            });
+
+        }
+
     };
 
     p.removeControl = function() {
@@ -341,6 +379,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
     };
 
     p.onMouseDown = function(e) {
+        console.log(this.block.pointer());
         if (e.stopPropagation) e.stopPropagation();
         if (e.preventDefault) e.preventDefault();
 
@@ -448,11 +487,13 @@ Entry.BlockView.DRAG_RADIUS = 5;
                 if (!blockView.movable) return;
 
                 if (!blockView.isInBlockMenu) {
+                    var isFirst = false;
                     if (blockView.dragMode != Entry.DRAG_MODE_DRAG) {
                         blockView._toGlobalCoordinate();
                         blockView.dragMode = Entry.DRAG_MODE_DRAG;
                         blockView.block.getThread().changeEvent.notify();
                         Entry.GlobalSvg.setView(blockView, workspaceMode);
+                        isFirst = true;
                     }
 
                     if (this.animating)
@@ -484,6 +525,8 @@ Entry.BlockView.DRAG_RADIUS = 5;
                     } else board.setMagnetedBlock(null);
                     if (!blockView.originPos)
                         blockView.originPos = {x: blockView.x, y: blockView.y};
+                    if (isFirst)
+                        board.generateCodeMagnetMap();
                 } else {
                     board.cloneToGlobal(e);
                 }
@@ -556,24 +599,15 @@ Entry.BlockView.DRAG_RADIUS = 5;
                             if (!block.getThread().view.isGlobal()) {
                                 Entry.do("separateBlock", block);
                             } else {
-                                block.doMove();
+                                Entry.do("moveBlock", block);
                             }
                         } else {
                             if (closeBlock) {
-                                if (closeBlock.view.magnet && closeBlock.view.magnet.next) {
-                                    this.bindPrev(closeBlock);
-                                    if (!(closeBlock instanceof Entry.Block)) {
-                                        closeBlock = closeBlock.insertTopBlock(block);
-                                    } else {
-                                        Entry.do("insertBlock", block, closeBlock);
-                                    }
-                                } else {// field block
-                                    Entry.do("insertBlock", block, closeBlock);
-                                }
+                                Entry.do("insertBlock", block, closeBlock).isPass();
                                 createjs.Sound.play('entryMagneting');
                                 ripple = true;
                             } else {
-                                Entry.do("separateBlock", block);
+                                Entry.do("moveBlock", block).isPass();
                             }
                         }
                         break;
@@ -588,12 +622,10 @@ Entry.BlockView.DRAG_RADIUS = 5;
                         } else {
                             var parent = block.getThread().view.getParent();
 
-                            if (parent instanceof Entry.FieldStatement) {
-                                this.bindPrev(parent);
-                                parent.insertTopBlock(block);
-                            } else if (parent instanceof Entry.FieldBlock)
-                                block.replace(parent._valueBlock);
-                            else this._moveTo(originPos.x, originPos.y, false);
+                            if (!(parent instanceof Entry.Code))
+                                Entry.do("insertBlock", block, parent);
+                            else
+                                this._moveTo(originPos.x, originPos.y, false);
                         }
                         break;
                     case gs.REMOVE:
@@ -660,7 +692,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
         });
 
         var block = this.block;
-        var events = block.events.whenBlockDestroy;
+        var events = block.events.viewDestroy;
         if (events && !this.isInBlockMenu)
             events.forEach(function(fn){
                 if (Entry.Utils.isFunction(fn)) fn(block);
@@ -967,5 +999,8 @@ Entry.BlockView.DRAG_RADIUS = 5;
         }
     };
 
+    p.getParam = function(index) {
+        return this._paramMap[index];
+    };
 
 })(Entry.BlockView.prototype);

@@ -30,9 +30,9 @@ Entry.loadProject = function(project) {
     Entry.projectId = project._id;
     Entry.variableContainer.setVariables(project.variables);
     Entry.variableContainer.setMessages(project.messages);
-    Entry.variableContainer.setFunctions(project.functions);
     Entry.scene.addScenes(project.scenes);
     Entry.stage.initObjectContainers();
+    Entry.variableContainer.setFunctions(project.functions);
     Entry.container.setObjects(project.objects);
     Entry.FPS = project.speed ? project.speed : 60;
     createjs.Ticker.setFPS(Entry.FPS);
@@ -324,4 +324,9 @@ Entry.DRAG_MODE_NONE = 0;
 Entry.DRAG_MODE_MOUSEDOWN = 1;
 Entry.DRAG_MODE_DRAG = 2;
 
-window.Entry = Entry;
+if (typeof window == "object")
+    window.Entry = Entry;
+
+if (typeof exports == "object") {
+    exports.block = Entry.block;
+}

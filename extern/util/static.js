@@ -339,7 +339,7 @@ EntryStatic.blockInfo = {
         "usage": ["start"]
     },
     "when_some_key_pressed": {
-        "xml": "<block type='when_some_key_pressed'></block>",
+        "xml": "<block type='when_some_key_pressed'><field name='VALUE'>67</field></block>",
         "class": "event",
         "isNotFor": [],
         "usage": ["start"]
