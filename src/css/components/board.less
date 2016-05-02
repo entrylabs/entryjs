@@ -74,3 +74,81 @@
     fill: black;
     cursor: pointer !important;
 }
+
+.entryWorkspaceBoard {
+    position: absolute;
+    left: 250px;
+    top: 8px;
+    bottom: 0px;
+    right: 0px;
+    overflow: hidden;
+    border: solid 1px #C4C4B9;
+    border-top-left-radius: 10px;
+    .backgroundImage("entry_bg.png");
+}
+
+.entryWorkspaceBoard.folding {
+    z-index: 300;
+    border-left: solid 1px #C4C4B9;
+    .animation-duration(0.7s);
+    .animation-name(foldBoard);
+    .animation-fill-mode(forwards);
+}
+
+@keyframes foldBoard {
+    from {}
+    to {left: 64px;}
+}
+
+@-ot-keyframes foldBoard {
+    from {}
+    to {left: 64px;}
+}
+
+@-ms-keyframes foldBoard {
+    from {}
+    to {left: 64px;}
+}
+
+@-moz-keyframes foldBoard {
+    from {}
+    to {left: 64px;}
+}
+
+@-webkit-keyframes foldBoard {
+    from {}
+    to {left: 64px;}
+}
+
+.entryWorkspaceBoard.foldOut {
+    z-index:300;
+    .animation-duration(0.7s);
+    .animation-name(foldOutBoard);
+    .animation-fill-mode(forwards);
+}
+
+@keyframes foldOutBoard {
+    from {left: 64px;}
+    to {}
+}
+
+@-o-keyframes foldOutBoard {
+    from {left: 64px;}
+    to {}
+}
+
+@-ms-keyframes foldOutBoard {
+    from {left: 64px;}
+    to {}
+}
+
+@-moz-keyframes foldOutBoard {
+    from {left: 64px;}
+    to {}
+}
+
+@-webkit-keyframes foldOutBoard {
+    from {left: 64px;}
+    to {}
+}
+

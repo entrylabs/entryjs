@@ -851,6 +851,225 @@ svg .svgBlockGroup text {
   margin: 0;
   background-color: #e5e5e5;
 }
+.entryCategoryWorkspace {
+  width: 74px;
+  height: 100%;
+  display: block;
+}
+.entryBlockMenuWorkspace {
+  background-color: #e5e5e5;
+  position: absolute;
+  left: 64px;
+  top: 45px;
+  width: 186px;
+  bottom: 0px;
+  z-index: 100;
+}
+#entryCategorymoving {
+  /*border-right: 4px solid #A751E3;*/
+  background-image: url("../images/movement.png");
+  background-repeat: no-repeat;
+}
+.entrySelectedCategory#entryCategorymoving {
+  /*border-left: 4px solid #A751E3;*/
+  border-right: none;
+}
+#entryCategorylooks {
+  /*border-right: 4px solid #EC4466;*/
+  background-image: url("../images/looks.png");
+  background-repeat: no-repeat;
+}
+.entrySelectedCategory#entryCategorylooks {
+  /*border-left: 4px solid #EC4466;*/
+  border-right: none;
+}
+#entryCategorybrush {
+  /*border-right: 4px solid #FF9E20;*/
+  background-image: url("../images/brush.png");
+  background-repeat: no-repeat;
+}
+.entrySelectedCategory#entryCategorybrush {
+  border-right: none;
+}
+#entryCategorytext {
+  background-image: url("../images/postbox_new.png");
+  background-repeat: no-repeat;
+}
+.entrySelectedCategory#entryCategorytext {
+  border-right: none;
+}
+#entryCategorysound {
+  background-image: url("../images/sound.png");
+  background-repeat: no-repeat;
+}
+.entrySelectedCategory#entryCategorysound {
+  border-right: none;
+}
+#entryCategorystart {
+  background-image: url("../images/start.png");
+  background-repeat: no-repeat;
+}
+.entrySelectedCategory#entryCategorystart {
+  border-right: none;
+}
+#entryCategoryflow {
+  background-image: url("../images/flow.png");
+  background-repeat: no-repeat;
+}
+.entrySelectedCategory#entryCategoryflow {
+  border-right: none;
+}
+#entryCategoryjudgement {
+  background-image: url("../images/judgement.png");
+  background-repeat: no-repeat;
+}
+.entrySelectedCategory#entryCategoryjudgement {
+  border-right: none;
+}
+#entryCategorycalc {
+  background-image: url("../images/calc.png");
+  background-repeat: no-repeat;
+}
+.entrySelectedCategory#entryCategorycalc {
+  border-right: none;
+}
+#entryCategoryvariable {
+  background-image: url("../images/variable.png");
+  background-repeat: no-repeat;
+}
+.entrySelectedCategory#entryCategoryvariable {
+  border-right: none;
+}
+#entryCategoryfunc {
+  background-image: url("../images/function.png");
+  background-repeat: no-repeat;
+}
+.entrySelectedCategory#entryCategoryfunc {
+  border-right: none;
+}
+#entryCategoryscene {
+  border-right: none;
+  background-image: url("../images/scene.png");
+  background-repeat: no-repeat;
+}
+.entrySelectedCategory#entryCategoryscene {
+  border-left: none;
+  border-right: none;
+}
+#entryCategoryarduino {
+  background-image: url("../images/arduino.png");
+  background-repeat: no-repeat;
+}
+.entrySelectedCategory#entryCategoryarduino {
+  border-right: none;
+}
+.entryBlocklyWorkspace {
+  position: absolute;
+  left: 250px;
+  top: 8px;
+  bottom: 0px;
+  right: 0px;
+  overflow: hidden;
+  border: solid 1px #C4C4B9;
+  border-top-left-radius: 10px;
+  background-image: url("../images/entry_bg.png");
+}
+.entryBlocklyWorkspace.folding {
+  z-index: 300;
+  border-left: solid 1px #C4C4B9;
+  -webkit-animation-duration: 0.7s;
+  -moz-animation-duration: 0.7s;
+  -ms-animation-duration: 0.7s;
+  -o-animation-duration: 0.7s;
+  -webkit-animation-name: foldBlockly;
+  -moz-animation-name: foldBlockly;
+  -ms-animation-name: foldBlockly;
+  -o-animation-name: foldBlockly;
+  animation-name: foldBlockly;
+  -webkit-animation-fill-mode: forwards;
+  -moz-animation-fill-mode: forwards;
+  -ms-animation-fill-mode: forwards;
+  -o-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+}
+@keyframes foldBlockly {
+  to {
+    left: 64px;
+  }
+}
+@-ot-keyframes foldBlockly {
+  to {
+    left: 64px;
+  }
+}
+@-ms-keyframes foldBlockly {
+  to {
+    left: 64px;
+  }
+}
+@-moz-keyframes foldBlockly {
+  to {
+    left: 64px;
+  }
+}
+@-webkit-keyframes foldBlockly {
+  to {
+    left: 64px;
+  }
+}
+.entryBlocklyWorkspace.foldOut {
+  z-index: 300;
+  -webkit-animation-duration: 0.7s;
+  -moz-animation-duration: 0.7s;
+  -ms-animation-duration: 0.7s;
+  -o-animation-duration: 0.7s;
+  -webkit-animation-name: foldOutBlockly;
+  -moz-animation-name: foldOutBlockly;
+  -ms-animation-name: foldOutBlockly;
+  -o-animation-name: foldOutBlockly;
+  animation-name: foldOutBlockly;
+  -webkit-animation-fill-mode: forwards;
+  -moz-animation-fill-mode: forwards;
+  -ms-animation-fill-mode: forwards;
+  -o-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+}
+@keyframes foldOutBlockly {
+  from {
+    left: 64px;
+  }
+}
+@-o-keyframes foldOutBlockly {
+  from {
+    left: 64px;
+  }
+}
+@-ms-keyframes foldOutBlockly {
+  from {
+    left: 64px;
+  }
+}
+@-moz-keyframes foldOutBlockly {
+  from {
+    left: 64px;
+  }
+}
+@-webkit-keyframes foldOutBlockly {
+  from {
+    left: 64px;
+  }
+}
+.entryBlocklyPhone {
+  position: absolute;
+  top: 0px;
+  left: 56px;
+  right: 0px;
+  bottom: 0px;
+  overflow: hidden;
+  border: solid 1px #C4C4B9;
+  border-left: 0;
+  background-image: url("../images/entry_bg_1.png");
+}
 .entryBoard {
   cursor: move;
   position: absolute;
@@ -916,6 +1135,102 @@ svg .svgBlockGroup text {
   text-anchor: middle;
   fill: black;
   cursor: pointer !important;
+}
+.entryWorkspaceBoard {
+  position: absolute;
+  left: 250px;
+  top: 8px;
+  bottom: 0px;
+  right: 0px;
+  overflow: hidden;
+  border: solid 1px #C4C4B9;
+  border-top-left-radius: 10px;
+  background-image: url("../images/entry_bg.png");
+}
+.entryWorkspaceBoard.folding {
+  z-index: 300;
+  border-left: solid 1px #C4C4B9;
+  -webkit-animation-duration: 0.7s;
+  -moz-animation-duration: 0.7s;
+  -ms-animation-duration: 0.7s;
+  -o-animation-duration: 0.7s;
+  -webkit-animation-name: foldBoard;
+  -moz-animation-name: foldBoard;
+  -ms-animation-name: foldBoard;
+  -o-animation-name: foldBoard;
+  animation-name: foldBoard;
+  -webkit-animation-fill-mode: forwards;
+  -moz-animation-fill-mode: forwards;
+  -ms-animation-fill-mode: forwards;
+  -o-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+}
+@keyframes foldBoard {
+  to {
+    left: 64px;
+  }
+}
+@-ot-keyframes foldBoard {
+  to {
+    left: 64px;
+  }
+}
+@-ms-keyframes foldBoard {
+  to {
+    left: 64px;
+  }
+}
+@-moz-keyframes foldBoard {
+  to {
+    left: 64px;
+  }
+}
+@-webkit-keyframes foldBoard {
+  to {
+    left: 64px;
+  }
+}
+.entryWorkspaceBoard.foldOut {
+  z-index: 300;
+  -webkit-animation-duration: 0.7s;
+  -moz-animation-duration: 0.7s;
+  -ms-animation-duration: 0.7s;
+  -o-animation-duration: 0.7s;
+  -webkit-animation-name: foldOutBoard;
+  -moz-animation-name: foldOutBoard;
+  -ms-animation-name: foldOutBoard;
+  -o-animation-name: foldOutBoard;
+  animation-name: foldOutBoard;
+  -webkit-animation-fill-mode: forwards;
+  -moz-animation-fill-mode: forwards;
+  -ms-animation-fill-mode: forwards;
+  -o-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+}
+@keyframes foldOutBoard {
+  from {
+    left: 64px;
+  }
+}
+@-o-keyframes foldOutBoard {
+  from {
+    left: 64px;
+  }
+}
+@-ms-keyframes foldOutBoard {
+  from {
+    left: 64px;
+  }
+}
+@-moz-keyframes foldOutBoard {
+  from {
+    left: 64px;
+  }
+}
+@-webkit-keyframes foldOutBoard {
+  from {
+    left: 64px;
+  }
 }
 .entryContainerWorkspace {
   background-color: #e7e7e7;
@@ -1895,2849 +2210,6 @@ svg .svgBlockGroup text {
 .entryPauseButtonWorkspace_w {
   display: none;
 }
-.entryPlaygroundWorkspace {
-  position: absolute;
-  top: 40px;
-  bottom: 0px;
-  left: 400.5px;
-  right: 0px;
-  background-color: #F5F5F5;
-  overflow: hidden;
-}
-.entryPlaygroundPhone {
-  width: 100%;
-  height: 500px;
-  background-color: #F5F5F5;
-}
-.entryPlaygroundResizeWorkspace {
-  position: absolute;
-  top: 45%;
-  height: 28px;
-  width: 11px;
-  left: 272px;
-  cursor: ew-resize;
-  border: solid 1px #afafaf;
-  border-left: none;
-  z-index: 250;
-  background-image: url("../images/entry_scroll_02.png");
-}
-.entryPlaygroundTabWorkspace {
-  position: absolute;
-  /*margin-top: 1px;*/
-  top: 0;
-  height: 43px;
-  width: 100%;
-  background-color: #f1f1f1;
-}
-.entryPlaygroundTabWorkspace.entryRemove {
-  display: block !important;
-}
-.entryPlaygroundTabPhone {
-  width: 100%;
-  height: 43px;
-  position: relative;
-  background-color: #f1f1f1;
-}
-.entryTabListWorkspace {
-  list-style: none;
-  height: 44px;
-  padding: 0;
-  margin: 1px 0 0 0;
-  border-bottom: 2px solid #643cd9;
-}
-.entryTabListItemWorkspace {
-  float: left;
-  width: 59px;
-  height: 42px;
-  margin: 0 1px 0 1px;
-  cursor: pointer;
-  display: block;
-  padding: 10px 0 0 0;
-  text-align: center;
-  font-family: nanumBarunBold !important;
-  color: gray;
-  background-color: #e5e5e5;
-  border-top-right-radius: 7px;
-  border-top-left-radius: 7px;
-}
-.entryTabSelected {
-  color: white;
-  background-color: #6e5ae6;
-}
-#entrySoundTab {
-  -webkit-animation-delay: 0.1s;
-  -moz-animation-delay: 0.1s;
-  -ms-animation-delay: 0.1s;
-  -o-animation-delay: 0.1s;
-  animation-delay: 0.1s;
-}
-#entryPictureTab.hideTab,
-#entryTextTab.hideTab {
-  -webkit-animation-delay: 0.2s;
-  -moz-animation-delay: 0.2s;
-  -ms-animation-delay: 0.2s;
-  -o-animation-delay: 0.2s;
-  animation-delay: 0.2s;
-}
-#entrySoundTab.hideTab {
-  -webkit-animation-delay: 0.1s;
-  -moz-animation-delay: 0.1s;
-  -ms-animation-delay: 0.1s;
-  -o-animation-delay: 0.1s;
-  animation-delay: 0.1s;
-}
-#entryVariableTab.showTab {
-  -webkit-animation-delay: 0.2s;
-  -moz-animation-delay: 0.2s;
-  -ms-animation-delay: 0.2s;
-  -o-animation-delay: 0.2s;
-  animation-delay: 0.2s;
-}
-.hideTab {
-  -webkit-animation-duration: 0.7s;
-  -moz-animation-duration: 0.7s;
-  -ms-animation-duration: 0.7s;
-  -o-animation-duration: 0.7s;
-  -webkit-animation-name: hideTab;
-  -moz-animation-name: hideTab;
-  -ms-animation-name: hideTab;
-  -o-animation-name: hideTab;
-  animation-name: hideTab;
-  -webkit-animation-fill-mode: forwards;
-  -moz-animation-fill-mode: forwards;
-  -ms-animation-fill-mode: forwards;
-  -o-animation-fill-mode: forwards;
-  animation-fill-mode: forwards;
-}
-@keyframes hideTab {
-  to {
-    margin-top: 44px;
-    opacity: 0;
-  }
-}
-@-o-keyframes hideTab {
-  to {
-    margin-top: 44px;
-    opacity: 0;
-  }
-}
-@-ms-keyframes hideTab {
-  to {
-    margin-top: 44px;
-    opacity: 0;
-  }
-}
-@-moz-keyframes hideTab {
-  to {
-    margin-top: 44px;
-    opacity: 0;
-  }
-}
-@-webkit-keyframes hideTab {
-  to {
-    margin-top: 44px;
-    opacity: 0;
-  }
-}
-.showTab {
-  opacity: 0;
-  -webkit-animation-duration: 0.7s;
-  -moz-animation-duration: 0.7s;
-  -ms-animation-duration: 0.7s;
-  -o-animation-duration: 0.7s;
-  -webkit-animation-name: showTab;
-  -moz-animation-name: showTab;
-  -ms-animation-name: showTab;
-  -o-animation-name: showTab;
-  animation-name: showTab;
-  -webkit-animation-fill-mode: forwards;
-  -moz-animation-fill-mode: forwards;
-  -ms-animation-fill-mode: forwards;
-  -o-animation-fill-mode: forwards;
-  animation-fill-mode: forwards;
-}
-@keyframes showTab {
-  from {
-    margin-top: 44px;
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-@-o-keyframes showTab {
-  from {
-    margin-top: 44px;
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-@-ms-keyframes showTab {
-  from {
-    margin-top: 44px;
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-@-moz-keyframes showTab {
-  from {
-    margin-top: 44px;
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-@-webkit-keyframes showTab {
-  from {
-    margin-top: 44px;
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-.entryPlaygroundCurtainWorkspace {
-  position: absolute;
-  background-color: black;
-  color: white;
-  padding-top: 270px;
-  text-align: center;
-  font-size: 40px;
-  height: 100%;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  opacity: 0.5;
-  z-index: 5000;
-  cursor: pointer;
-}
-.entryPlaygroundCurtainPhone {
-  position: absolute;
-  background-color: rgba(0, 0, 0, 0.8);
-  color: white;
-  padding-top: 100px;
-  text-align: center;
-  font-size: 17px;
-  height: 110%;
-  width: 100%;
-  opacity: 0.5;
-  z-index: 5000;
-  cursor: pointer;
-}
-.entryPlaygroundCodeWorkspace {
-  height: 100%;
-  background-color: #F5F5F5;
-}
-.entryPlaygroundCodeWorkspace.entryRemove {
-  display: block !important;
-  visibility: hidden;
-}
-.entryPlaygroundCodePhone {
-  position: relative;
-  height: 100%;
-  background-color: #F5F5F5;
-}
-.entryPlaygroundCodePhone.entryRemove {
-  display: block !important;
-  visibility: hidden;
-}
-.entryVariablePanelWorkspace {
-  position: absolute;
-  width: 250px;
-  top: 47px;
-  bottom: 0px;
-  padding: 6px 4px 0px 4px;
-}
-.entryVariablePanelPhone {
-  width: 250px;
-  top: 47px;
-  bottom: 0px;
-  padding: 6px 4px 0px 4px;
-}
-.entryVariableSelectorWorkspace {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-}
-.entryVariableSelectButtonWorkspace {
-  font-family: nanumBarunBold !important;
-  width: 25%;
-  border-collapse: collapse;
-  text-align: center;
-  vertical-align: center;
-  background-color: #EDEDED;
-  height: 38px;
-  border: solid 1px #bdbdbd;
-  border-left: none;
-  color: #535353;
-  padding-top: 4px;
-  cursor: pointer;
-}
-.entryVariableSelectButtonWorkspace.selected {
-  color: #ffffff;
-  background-color: #0e68e3;
-}
-.entryVariableSelectButtonWorkspace.allButton {
-  border-radius: 6px 0 0 6px;
-  border-left: solid 1px #bdbdbd;
-}
-.entryVariableSelectButtonWorkspace.message {
-  border-radius: 0 6px 0px 0;
-}
-.entryVariableSelectButtonWorkspace.list {
-  border-top: none;
-}
-.entryVariableSelectButtonWorkspace.func {
-  border-top: none;
-  border-radius: 0 0px 6px 0;
-}
-.entryVariableSelectButtonWorkspace.disable {
-  color: #bdbdbd;
-  cursor: default;
-}
-.entryVariableListWorkspace {
-  position: absolute;
-  top: 88px;
-  bottom: 0px;
-  right: 4px;
-  left: 4px;
-  padding: 0;
-  margin: 0;
-  list-style: none;
-  overflow: auto;
-}
-.entryVariableListElementWorkspace {
-  background-repeat: no-repeat;
-  background-position: 14px 10px;
-  background-color: #efefef;
-  border: solid 1px #a8a8a8;
-  margin-bottom: -1px;
-  min-height: 50px;
-}
-.entryVariableAddWorkspace {
-  padding: 0;
-  font-size: 13pt;
-  color: #717171;
-  cursor: pointer;
-  line-height: 49px;
-  position: relative;
-  text-align: center;
-}
-.entryVariableAddWorkspace:hover {
-  background-color: #d3d3d3;
-  color: #333;
-}
-.entryVariableListElementWorkspace.selected {
-  background-color: #d3d3d3;
-}
-.entryVariableListElementNameWorkspace {
-  position: absolute;
-  left: 47px;
-  margin-top: 12px;
-  background-color: #efefef;
-  width: 55%;
-  border: 1px solid transparent;
-  padding-left: 5px;
-}
-.selected .entryVariableListElementNameWorkspace {
-  background-color: #d3d3d3;
-}
-.entryVariableListElementNameWorkspace:focus {
-  background-color: white;
-  border: 1px solid gray;
-}
-.entryVariableFunctionElementNameWorkspace {
-  border: none;
-  position: absolute;
-  left: 55px;
-  margin-top: 12px;
-  background-color: transparent;
-  width: 60%;
-  overflow: hidden;
-  height: 20px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.entryVariableListElementDeleteWorkspace {
-  position: absolute;
-  margin-top: 5px;
-  padding-right: 5px;
-  right: 3px;
-  border: 0;
-  outline: 0;
-  width: 22px;
-  height: 40px;
-  opacity: 0;
-  background-color: transparent;
-  background-image: url("../images/layers_icon_close_nor_new_1.png");
-  background-repeat: no-repeat;
-  background-position: center;
-}
-.entryVariableListElementWorkspace:hover .entryVariableListElementDeleteWorkspace {
-  opacity: 1;
-}
-.entryVariableListElementEditWorkspace {
-  display: inline-block;
-  float: right;
-  border: 0;
-  outline: 0;
-  width: 20px;
-  height: 40px;
-  margin-top: 5px;
-  margin-right: 25px;
-  background-color: transparent;
-  background-image: url("../images/layers_icon_edit_nor_new_1.png");
-  background-repeat: no-repeat;
-  background-position: center;
-  opacity: 0;
-}
-.entryVariableListElementWorkspace:hover .entryVariableListElementEditWorkspace {
-  opacity: 1;
-}
-.entryVariableListCallerListWorkspace {
-  list-style: none;
-  padding: 0;
-}
-.entryVariableListCallerWorkspace {
-  border: solid 1px #c8c8c8;
-  border-top: none;
-  height: 50px;
-  cursor: pointer;
-  overflow: hidden;
-}
-.entryVariableListCallerWorkspace:hover {
-  background-color: #e0e0e0;
-}
-.entryVariableListCallerWorkspace:first-child {
-  border-top: none;
-}
-.entryVariableListCallerWorkspace > .entryObjectThumbnailWorkspace {
-  position: inherit;
-  display: block;
-  float: left;
-  top: 0;
-  left: 0;
-  margin: 5px 0 0 5px;
-  height: 40px;
-  width: 40px;
-}
-.entryVariableListCallerNameWorkspace {
-  position: absolute;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  float: left;
-  height: 49px;
-  line-height: 49px;
-  left: 60px;
-  right: 0;
-  padding-right: 7px;
-}
-.entryVariableListCallerNoneWorkspace {
-  color: #C16B6B;
-  cursor: default;
-  line-height: 48px;
-  padding-left: 50px;
-}
-.entryVariableLocalElementWorkspace {
-  background-image: url("../images/local_question_icon.png");
-}
-.entryVariableCloudElementWorkspace {
-  background-image: url("../images/cloud_question_icon.png");
-}
-.entryVariableGlobalElementWorkspace {
-  background-image: url("../images/list_icon_question.png");
-}
-.entryMessageElementWorkspace {
-  background-image: url("../images/list_icon_signal.png");
-}
-.entryListCloudElementWorkspace {
-  background-image: url("../images/cloud_list_icon.png");
-}
-.entryListGlobalElementWorkspace {
-  background-image: url("../images/list_icon_list.png");
-}
-.entryListLocalElementWorkspace {
-  background-image: url("../images/local_list_icon.png");
-}
-.entryFunctionElementWorkspace {
-  background-image: url("../images/list_icon_function_v1.png");
-}
-.entryPlaygroundPictureWorkspace {
-  position: absolute;
-  top: 47px;
-  margin-left: 0;
-  height: 100%;
-  background-color: #ececec;
-}
-.entryPlaygroundPicturePhone {
-  margin-left: 0;
-  height: 100%;
-  background-color: #ececec;
-}
-.entryPlaygroundAddPicture {
-  position: absolute;
-  width: 240px;
-  height: 60px;
-  background-color: #e5e5e5;
-  cursor: pointer;
-  border-bottom: 1pt solid #ebeff1;
-}
-.entryPlaygroundAddPicturePhone {
-  position: relative;
-  padding: 0;
-  margin: 0;
-  height: 50px;
-  cursor: pointer;
-  border-bottom: 1pt solid #ebeff1;
-}
-.entryPlaygroundAddPictureInner {
-  display: block;
-  width: 141px;
-  height: 30px;
-  background-color: #eeeeee;
-  color: black;
-  text-align: center;
-  font-size: 11px;
-  line-height: 28px;
-  border: 1px solid #cccccc;
-  border-radius: 7px;
-  margin-top: 15px;
-  margin-left: 49.5px;
-}
-.entryPlaygroundAddPictureInnerPhone {
-  display: block;
-  height: 50px;
-  background-color: #CDCFC9;
-  color: #656565;
-  text-align: center;
-  font-size: 10.5pt;
-  line-height: 36px;
-  border: 2px dashed #737373;
-  width: 240px;
-  padding: 8px 10px 12px 10px;
-}
-.entryPlaygroundPictureList {
-  position: absolute;
-  padding: 0px;
-  margin: 0px;
-  width: 240px;
-  top: 60px;
-  margin-bottom: 47px;
-  bottom: 0px;
-  overflow: auto;
-  list-style: none;
-  background-color: #Cfcfcf;
-}
-.entryPlaygroundPictureListPhone {
-  position: relative;
-  padding: 0px;
-  margin: 0px;
-  width: 240px;
-  bottom: 0px;
-  overflow: auto;
-  list-style: none;
-  background-color: #Cfcfcf;
-}
-.entryPlaygroundPictureElement {
-  display: block;
-  background-color: #f4f4f4;
-  border-bottom: 1pt solid #ebeff1;
-  height: 60px;
-  color: #294117;
-  cursor: pointer;
-}
-.entryPlaygroundPictureElement:hover {
-  background-color: #C0C0C0;
-  cursor: move;
-}
-.entryPlaygroundPictureElement:hover .entryPlaygroundPictureOrder,
-.entryPlaygroundSoundElement:hover .entryPlaygroundSoundOrder {
-  background-color: #634cd9;
-  color: white;
-}
-.entryPictureSelected {
-  background-color: #c1c1c1;
-}
-.entryPlaygroundPictureThumbnail {
-  float: left;
-  position: relative;
-  height: 49px;
-  width: 49px;
-  top: 5px;
-  left: 10px;
-  border: 1px solid #bcc2c8;
-  background-color: #ccc;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-}
-.entryPlaygroundPictureName {
-  float: left;
-  position: relative;
-  top: 17px;
-  left: 17px;
-  width: 78px;
-  background-color: transparent;
-  font-size: 10pt;
-  text-overflow: ellipsis;
-  color: #294117;
-  cursor: text;
-  border: 1px solid transparent;
-}
-.entryPlaygroundPictureName:focus,
-.entryPlaygroundSoundName:focus {
-  border: 1px solid gray;
-  background-color: white;
-}
-.entryPlaygroundPictureName:hover,
-.entryPlaygroundSoundName:hover {
-  border: 1px solid gray;
-}
-.entryPlaygroundPictureSize {
-  float: right;
-  position: relative;
-  top: 21px;
-  right: 10px;
-  font-size: 8pt;
-}
-.entryPlaygroundTextWorkspace {
-  position: absolute;
-  top: 45px;
-  height: 100%;
-  width: 100%;
-  background-color: #ececec;
-  padding-left: 20px;
-  padding-top: 20px;
-}
-.entryTextHead {
-  font-size: 18px;
-}
-.entryTextEdit {
-  font-size: 17px;
-  width: 220px;
-  height: 30px;
-  border: 1px solid #808080;
-  border-radius: 3px;
-}
-#entryTextProperty {
-  width: 220px;
-  height: 32px;
-  margin-top: 12px;
-}
-.entryTextFontSelect {
-  display: inline-block;
-  width: 96px;
-  height: 32px;
-  border: 1px solid #808080;
-  border-radius: 4px;
-  background-color: white;
-  float: left;
-}
-.entryTextFontSelecter {
-  margin-top: 5px;
-  margin-left: 2px;
-}
-.entryFontToggle {
-  display: inline-block;
-  width: 96px;
-  width: 32px;
-  height: 32px;
-  float: right;
-}
-#entryFontColorToggle {
-  background-image: url("../images/text_in_off.png");
-}
-#entryFontColorToggle.selected {
-  background-image: url("../images/text_in_on.png");
-}
-#entryFontBGToggle {
-  margin-left: 6px;
-  background-image: url("../images/text_out_off.png");
-}
-#entryFontBGToggle.selected {
-  background-image: url("../images/text_out_on.png");
-}
-.entryPlaygroundSoundWorkspace {
-  position: absolute;
-  top: 47px;
-  margin-left: 0;
-  height: 100%;
-  background-color: #ececec;
-}
-.entryPlaygroundAddSound {
-  position: absolute;
-  height: 60px;
-  width: 240px;
-  background-color: #e5e5e5;
-  cursor: pointer;
-  border-bottom: 1pt solid #ebeff1;
-}
-.entryPlaygroundAddSoundPhone {
-  position: relative;
-  height: 50px;
-  cursor: pointer;
-  border-bottom: 1pt solid #ebeff1;
-}
-.entryPlaygroundAddSoundInner {
-  display: block;
-  width: 141px;
-  height: 30px;
-  background-color: #eeeeee;
-  color: black;
-  text-align: center;
-  font-size: 11px;
-  line-height: 28px;
-  border: 1px solid #cccccc;
-  border-radius: 7px;
-  margin-top: 15px;
-  margin-left: 49.5px;
-}
-.entryPlaygroundAddSoundInnerPhone {
-  display: block;
-  height: 40px;
-  background-color: #CDCFC9;
-  color: #656565;
-  text-align: center;
-  font-size: 10.5pt;
-  line-height: 36px;
-  margin: 10px;
-  border: 2px dashed #737373;
-  width: 220px;
-}
-.entryPlaygroundSoundList {
-  position: absolute;
-  padding: 0px;
-  margin: 0px;
-  width: 240px;
-  top: 60px;
-  margin-bottom: 47px;
-  bottom: 0px;
-  overflow: auto;
-  list-style: none;
-  background-color: #cfcfcf;
-}
-.entryPlaygroundSoundListPhone {
-  position: relative;
-  padding: 0px;
-  margin: 0px;
-  width: 240px;
-  bottom: 0px;
-  overflow: auto;
-  list-style: none;
-  background-color: #cfcfcf;
-}
-.entryPlaygroundSoundElement {
-  display: block;
-  background-color: #f4f4f4;
-  border-bottom: 1pt solid #ebeff1;
-  height: 60px;
-  color: #294117;
-  cursor: pointer;
-}
-.entryPlaygroundSoundElement:hover {
-  background-color: #c1c1c1;
-  cursor: move;
-}
-.entryPlaygroundSoundThumbnail {
-  float: left;
-  position: relative;
-  height: 49px;
-  width: 49px;
-  top: 5px;
-  left: 10px;
-  border: 1px solid #bcc2c8;
-  background-color: #ccc;
-  background-size: 32px 32px;
-  background-repeat: no-repeat;
-  background-position: center;
-  cursor: pointer;
-}
-.entryPlaygroundSoundThumbnail.entryPlaygroundSoundPlay {
-  background-image: url("../images/workspace_sound_play.png");
-}
-.entryPlaygroundSoundThumbnail.entryPlaygroundSoundStop {
-  background-image: url("../images/workspace_sound_stop.png");
-}
-.entryPlaygroundSoundName {
-  float: left;
-  position: relative;
-  top: 18px;
-  left: 17px;
-  width: 95px;
-  background-color: transparent;
-  font-size: 10pt;
-  border: 1px solid transparent;
-  text-overflow: ellipsis;
-  color: #294117;
-}
-.entryPlaygroundSoundLength {
-  float: right;
-  position: relative;
-  top: 20px;
-  right: 10px;
-  font-size: 9pt;
-}
-.entryPlaygroundDefaultWorkspace {
-  height: 100%;
-  background-color: #363C46;
-  color: white;
-}
-.entryCategoryWorkspace {
-  width: 74px;
-  height: 100%;
-  display: block;
-}
-.entryCategoryListWorkspace {
-  padding: 44px 0 0 0;
-  margin: 0;
-  list-style-type: none;
-}
-.entryCategoryListPhone {
-  padding: 0;
-  margin: 0;
-  list-style-type: none;
-}
-.entryCategoryElementWorkspace {
-  clear: both;
-  padding-top: 38px;
-  width: 64px;
-  text-align: center;
-  background-color: #edf5f7;
-  font-size: 13px;
-  color: #474747;
-  float: left;
-  border-bottom: 1px solid #a6cafb;
-  cursor: pointer;
-  font-family: nanumBarunBold !important;
-}
-@media screen and (max-height: 10000px) {
-  .entryCategoryElementWorkspace {
-    height: 61px;
-    background-position: 50% 6px;
-    padding-top: 38px;
-  }
-}
-@media screen and (max-height: 880px) {
-  .entryCategoryElementWorkspace {
-    height: 56px;
-    background-position: 50% 4px;
-    padding-top: 34px;
-  }
-}
-@media screen and (max-height: 810px) {
-  .entryCategoryElementWorkspace {
-    height: 50px;
-    background-position: 50% 2px;
-    padding-top: 30px;
-  }
-}
-@media screen and (max-height: 740px) {
-  .entryCategoryElementWorkspace {
-    height: 42px;
-    background-position: 50% 1px;
-    background-size: 35px;
-    padding-top: 23px;
-  }
-}
-@media screen and (max-height: 640px) {
-  .entryCategoryElementWorkspace {
-    height: 36px;
-    background-position: 50% 1px;
-    background-size: 30px;
-    padding-top: 18px;
-  }
-}
-.entryCategoryElementPhone {
-  height: 50px;
-  clear: both;
-  width: 56px;
-  padding-top: 30px;
-  text-align: center;
-  background-color: #E2E9F0;
-  font-size: 13px;
-  color: #474747;
-  float: left;
-  border-bottom: 1px solid #B7C4CC;
-  background-position: 5px 2px;
-  cursor: pointer;
-}
-.entryCategoryElementEndWorkspace {
-  clear: both;
-  width: 3px;
-  margin-left: 56px;
-  background-color: #515B7C;
-  height: 4000px;
-}
-.entrySelectedCategory {
-  margin: 0;
-  background-color: #e5e5e5;
-}
-.entryBlockMenuWorkspace {
-  background-color: #e5e5e5;
-  position: absolute;
-  left: 64px;
-  top: 45px;
-  width: 186px;
-  bottom: 0px;
-  z-index: 100;
-}
-.entryBlocklyWorkspace {
-  position: absolute;
-  left: 250px;
-  top: 8px;
-  bottom: 0px;
-  right: 0px;
-  overflow: hidden;
-  border: solid 1px #C4C4B9;
-  border-top-left-radius: 10px;
-  background-image: url("../images/entry_bg.png");
-}
-.entryBlocklyWorkspace.folding {
-  z-index: 300;
-  border-left: solid 1px #C4C4B9;
-  -webkit-animation-duration: 0.7s;
-  -moz-animation-duration: 0.7s;
-  -ms-animation-duration: 0.7s;
-  -o-animation-duration: 0.7s;
-  -webkit-animation-name: foldBlockly;
-  -moz-animation-name: foldBlockly;
-  -ms-animation-name: foldBlockly;
-  -o-animation-name: foldBlockly;
-  animation-name: foldBlockly;
-  -webkit-animation-fill-mode: forwards;
-  -moz-animation-fill-mode: forwards;
-  -ms-animation-fill-mode: forwards;
-  -o-animation-fill-mode: forwards;
-  animation-fill-mode: forwards;
-}
-@keyframes foldBlockly {
-  to {
-    left: 64px;
-  }
-}
-@-ot-keyframes foldBlockly {
-  to {
-    left: 64px;
-  }
-}
-@-ms-keyframes foldBlockly {
-  to {
-    left: 64px;
-  }
-}
-@-moz-keyframes foldBlockly {
-  to {
-    left: 64px;
-  }
-}
-@-webkit-keyframes foldBlockly {
-  to {
-    left: 64px;
-  }
-}
-.entryBlocklyWorkspace.foldOut {
-  z-index: 300;
-  -webkit-animation-duration: 0.7s;
-  -moz-animation-duration: 0.7s;
-  -ms-animation-duration: 0.7s;
-  -o-animation-duration: 0.7s;
-  -webkit-animation-name: foldOutBlockly;
-  -moz-animation-name: foldOutBlockly;
-  -ms-animation-name: foldOutBlockly;
-  -o-animation-name: foldOutBlockly;
-  animation-name: foldOutBlockly;
-  -webkit-animation-fill-mode: forwards;
-  -moz-animation-fill-mode: forwards;
-  -ms-animation-fill-mode: forwards;
-  -o-animation-fill-mode: forwards;
-  animation-fill-mode: forwards;
-}
-@keyframes foldOutBlockly {
-  from {
-    left: 64px;
-  }
-}
-@-o-keyframes foldOutBlockly {
-  from {
-    left: 64px;
-  }
-}
-@-ms-keyframes foldOutBlockly {
-  from {
-    left: 64px;
-  }
-}
-@-moz-keyframes foldOutBlockly {
-  from {
-    left: 64px;
-  }
-}
-@-webkit-keyframes foldOutBlockly {
-  from {
-    left: 64px;
-  }
-}
-.entryBlocklyPhone {
-  position: absolute;
-  top: 0px;
-  left: 56px;
-  right: 0px;
-  bottom: 0px;
-  overflow: hidden;
-  border: solid 1px #C4C4B9;
-  border-left: 0;
-  background-image: url("../images/entry_bg_1.png");
-}
-#entryCategorymoving {
-  /*border-right: 4px solid #A751E3;*/
-  background-image: url("../images/movement.png");
-  background-repeat: no-repeat;
-}
-.entrySelectedCategory#entryCategorymoving {
-  /*border-left: 4px solid #A751E3;*/
-  border-right: none;
-}
-#entryCategorylooks {
-  /*border-right: 4px solid #EC4466;*/
-  background-image: url("../images/looks.png");
-  background-repeat: no-repeat;
-}
-.entrySelectedCategory#entryCategorylooks {
-  /*border-left: 4px solid #EC4466;*/
-  border-right: none;
-}
-#entryCategorybrush {
-  /*border-right: 4px solid #FF9E20;*/
-  background-image: url("../images/brush.png");
-  background-repeat: no-repeat;
-}
-.entrySelectedCategory#entryCategorybrush {
-  border-right: none;
-}
-#entryCategorytext {
-  background-image: url("../images/postbox_new.png");
-  background-repeat: no-repeat;
-}
-.entrySelectedCategory#entryCategorytext {
-  border-right: none;
-}
-#entryCategorysound {
-  background-image: url("../images/sound.png");
-  background-repeat: no-repeat;
-}
-.entrySelectedCategory#entryCategorysound {
-  border-right: none;
-}
-#entryCategorystart {
-  background-image: url("../images/start.png");
-  background-repeat: no-repeat;
-}
-.entrySelectedCategory#entryCategorystart {
-  border-right: none;
-}
-#entryCategoryflow {
-  background-image: url("../images/flow.png");
-  background-repeat: no-repeat;
-}
-.entrySelectedCategory#entryCategoryflow {
-  border-right: none;
-}
-#entryCategoryjudgement {
-  background-image: url("../images/judgement.png");
-  background-repeat: no-repeat;
-}
-.entrySelectedCategory#entryCategoryjudgement {
-  border-right: none;
-}
-#entryCategorycalc {
-  background-image: url("../images/calc.png");
-  background-repeat: no-repeat;
-}
-.entrySelectedCategory#entryCategorycalc {
-  border-right: none;
-}
-#entryCategoryvariable {
-  background-image: url("../images/variable.png");
-  background-repeat: no-repeat;
-}
-.entrySelectedCategory#entryCategoryvariable {
-  border-right: none;
-}
-#entryCategoryfunc {
-  background-image: url("../images/function.png");
-  background-repeat: no-repeat;
-}
-.entrySelectedCategory#entryCategoryfunc {
-  border-right: none;
-}
-#entryCategoryscene {
-  border-right: none;
-  background-image: url("../images/scene.png");
-  background-repeat: no-repeat;
-}
-.entrySelectedCategory#entryCategoryscene {
-  border-left: none;
-  border-right: none;
-}
-#entryCategoryarduino {
-  background-image: url("../images/arduino.png");
-  background-repeat: no-repeat;
-}
-.entrySelectedCategory#entryCategoryarduino {
-  border-right: none;
-}
-.entryToastContainer {
-  position: fixed;
-  right: 0px;
-  bottom: 0px;
-  margin: 0px;
-  padding: 10px;
-  width: 300px;
-  max-height: 100%;
-  overflow: auto;
-  z-index: 9000;
-}
-.entryToast {
-  padding: 7px 16px;
-  margin-top: 8px;
-  width: 100%;
-  background-color: #eee;
-  box-shadow: #999 0 0 8px;
-  border: 2px solid;
-  -webkit-border-radius: 4px;
-  border-radius: 4px;
-  background-clip: padding-box;
-  -webkit-transition: opacity 0.25s ease-in-out;
-  -moz-transition: opacity 0.25s ease-in-out;
-  -o-transition: opacity 0.25s ease-in-out;
-  -ms-transition: opacity 0.25s ease-in-out;
-  transition: opacity 0.25s ease-in-out;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
-  cursor: pointer;
-  opacity: 1;
-}
-.entryToastSuccess {
-  border-color: #d6e9c6;
-  background-color: #e5f3df;
-  color: #468847;
-}
-.entryToastWarning {
-  border-color: #7e719;
-  background-color: #fff9ab;
-  color: #e07000;
-}
-.entryToastAlert {
-  color: #b94a48;
-  background-color: #f2dede;
-  border-color: #eed3d7;
-}
-.entryToastTitle {
-  font-size: 12pt;
-  font-weight: bold;
-}
-.entryToastMessage {
-  font-size: 9pt;
-  margin-top: 4px;
-  margin-bottom: 2px;
-}
-.entryPopup {
-  position: absolute;
-  margin: 0;
-  padding: 0;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  z-index: 7000;
-  background-color: rgba(0, 0, 0, 0.2);
-}
-.entryPopupWindow {
-  width: 80%;
-  height: 80%;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  margin: auto;
-  max-width: 100%;
-  max-height: 100%;
-  /*overflow: hidden;*/
-  z-index: 8000;
-  background-color: white;
-}
-#entryTextColourTable {
-  margin-top: 12px;
-  cursor: pointer;
-  border-collapse: collapse;
-}
-.entryTd {
-  width: 22px;
-  height: 22px;
-}
-.entryTdTransparent {
-  width: 20px;
-  height: 20px;
-  background-color: white;
-  background-image: -webkit-linear-gradient(135deg, transparent 11.5px, #ff0000 13px, rgba(255, 255, 255, 0.5) 14.5px);
-  border: 1px solid;
-}
-.nav_right_wrapper {
-  right: 0;
-}
-.navbar-default {
-  background-color: #89c1e4;
-  border-color: #89c1e4;
-  /*background-color: #4accaa;
-    border-color: #4accaa;*/
-}
-#project_name.normal {
-  background-color: #89c1e4;
-  /*background-color: #4accaa;*/
-}
-.btn-group > .btn {
-  background-color: transparent;
-  border-color: transparent;
-  /*background-color: #4accaa;
-    border-color: #4accaa;*/
-}
-.art_project_name {
-  background-color: white !important;
-}
-.art_project_name:hover {
-  border: 1px solid #b4b4b4 !important;
-}
-.entryObjectCoordinateSpanWorkspace {
-  float: left;
-  position: absolute;
-}
-.entryObjectCoordinateSpanWorkspace:nth-child(3) {
-  float: left;
-  margin-left: 57px;
-}
-.entryObjectCoordinateSizeWorkspace {
-  float: left;
-  margin-left: 113px;
-  position: absolute;
-}
-.entryObjectCoordinateInputWorkspace {
-  width: 40px;
-  height: 20px;
-  position: absolute;
-  float: left;
-  margin: -2px 5px 0px 15px;
-  background-color: #e5e5e5;
-  border: none;
-  border: 1px solid transparent;
-}
-.entryObjectCoordinateInputWorkspace_right {
-  margin-left: 70px;
-}
-.entryObjectCoordinateInputWorkspace_size {
-  float: left;
-  position: absolute;
-  margin-left: 145px;
-}
-.entryObjectCoordinateInputWorkspace:focus,
-.entryObjectRotateInputWorkspace:focus,
-.entryObjectDirectionInputWorkspace:focus {
-  background-color: transparent;
-}
-.entryFunctionEdit {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(180, 180, 180, 0.4) !important;
-  z-index: 50;
-}
-#entryFunctionBtnWrapper {
-  position: absolute;
-  z-index: 100;
-  bottom: 90px;
-  margin: 0 auto;
-  left: 50%;
-}
-.entryFunctionBtn {
-  position: relative;
-  display: inline-block;
-  cursor: pointer;
-  border: solid 3px #888;
-  color: #666;
-  width: 55px;
-  height: 55px;
-  border-radius: 27.5px;
-  text-align: center;
-  line-height: 48px;
-  left: -50%;
-}
-.entryFunctionBtn:hover {
-  border: solid 3px #555;
-  color: #222;
-}
-#entryFunctionSave {
-  margin-right: 20px;
-}
-/* Painter css start */
-.entryPlaygroundPainter {
-  position: absolute;
-  left: 240px;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  overflow: hidden;
-  border-left: 2px solid #c4c4b9;
-  background-color: #fff;
-}
-.entryPlaygroundPainterTop {
-  position: absolute;
-  display: block;
-  width: 100%;
-  left: 55px;
-  background-color: #634cd9;
-  height: 29px;
-}
-.entryPlaygroundPainterTopMenu ul ul {
-  display: none;
-  margin-top: 5px;
-  margin-left: -8px;
-}
-/*.entryPlaygroundPainterTopMenu ul ul {
-    background: #5f6975;
-    border-radius: 0px;
-    padding: 0;
-    position: absolute;
-    top: 100%;
-    width: 120px;
-}*/
-.entryPlaygroundPainterTopMenu > li {
-  list-style-type: none;
-  top: 100%;
-  width: 120px;
-}
-/*.entryPlaygroundPainterTopMenu ul ul ul {
-    position: absolute;
-    color:black;
-    left: 100%;
-    top:0;
-}*/
-/*.entryPlaygroundPainterTopMenu ul ul li {
-    float: none; 
-    border-top: 1px solid #6b727c;
-    border-bottom: 1px solid #575f6a;
-    position: relative;
-    cursor: pointer;
-    color:black;
-}*/
-.entryPlaygroundPainterTopMenu ul ul li a {
-  padding: 10px;
-  /*color: #fff;*/
-  color: black;
-}
-.entryPlaygroundPainterTopMenu ul ul li a:hover {
-  background: white;
-  color: black;
-}
-.entryPlaygroundPainterTopMenu li a:hover {
-  background: #4b545f;
-  color: white;
-}
-.entryPlaygroundPainterTopMenu ul li:hover > ul {
-  display: block;
-}
-.entryPlaygroundPainterTopMenu ul li a:hover {
-  background-color: #3b329e;
-}
-.entryPlaygroundPainterTopMenu ul {
-  padding: 0;
-  border-radius: 0;
-  height: 50px;
-  list-style: none;
-  position: relative;
-  display: inline-table;
-  z-index: 100;
-}
-.entryPlaygroundPainterTopMenu ul:after {
-  content: "";
-  clear: both;
-  display: block;
-}
-.entryPlaygroundPainterTopMenuEdit:hover {
-  background-color: #3b329e;
-}
-/*.entryPlaygroundPainterTopMenu ul li {
-    float: left;
-}*/
-/*.entryPlaygroundPainterTopMenu ul li:hover {
-    background: #4b545f;
-}*/
-/*.entryPlaygroundPainterTopMenu ul li:hover {
-    background-color: #3b329e !important;
-    font:bold;
-}*/
-.entryPlaygroundPainterTopMenu ul li a {
-  display: block;
-  padding: 5px 10px;
-  color: white;
-  text-decoration: none;
-}
-#entryPainterTopMenuEdit > ul > li {
-  border-bottom: solid 1px #643cd9;
-  border-left: solid 1px #643cd9;
-  border-right: solid 1px #643cd9;
-  background-color: white;
-  font-family: nanumBarunRegular !important;
-}
-#entryPainterTopMenuEdit > ul > li {
-  background-color: white;
-  border-bottom: solid 1px #643cd9;
-}
-#entryPainterTopMenuEdit > ul > li > :hover {
-  background-color: #643cd9;
-  color: white;
-}
-#entryPainterTopMenuEdit {
-  color: white;
-}
-#entryPainterTopMenuFile > ul > li {
-  border-bottom: solid 1px #643cd9;
-  border-left: solid 1px #643cd9;
-  border-right: solid 1px #643cd9;
-  background-color: white;
-  font-family: nanumBarunRegular !important;
-}
-#entryPainterTopMenuFile > ul > li {
-  background-color: white;
-  border-bottom: solid 1px #643cd9;
-}
-#entryPainterTopMenuFile > ul > li > :hover {
-  background-color: #643cd9;
-  color: white;
-}
-#entryPainterTopMenuFile {
-  color: white;
-}
-.entryPlaygroundPainterTopStageXY {
-  position: absolute;
-  width: 150px;
-  height: 30px;
-  top: 5px;
-  left: 280px;
-  font-size: 10pt;
-  color: white;
-}
-.entryPlaygroundPainterTopToolbar {
-  position: absolute;
-  top: 0;
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  right: 170px;
-  width: 100px;
-  height: 30px;
-}
-.entryPlaygroundPainterFlip {
-  width: 200px;
-}
-.entryPlaygroundPainterFlipY {
-  position: absolute;
-  top: 90px;
-  left: 90px;
-  background-image: url("../images/horizontal.png");
-  background-repeat: no-repeat;
-  border-radius: 3px;
-  width: 28px;
-  height: 28px;
-}
-.entryPlaygroundPainterFlipX {
-  position: absolute;
-  top: 90px;
-  left: 60px;
-  background-image: url("../images/vertical.png");
-  background-repeat: no-repeat;
-  border-radius: 3px;
-  width: 28px;
-  height: 28px;
-}
-.entryPlaygroundPainterTopToolbar > li {
-  float: left;
-  position: relative;
-  left: 0;
-  margin: 2px 5px;
-  width: 35px;
-  height: 25px;
-  text-align: center;
-  line-height: 30px;
-  cursor: pointer;
-}
-.entryPlaygroundPainterToolbox {
-  position: absolute;
-  height: 100%;
-  width: 54px;
-  background-color: #f5f5f5;
-}
-.entryPlaygroundPainterToolboxContainer li {
-  cursor: pointer;
-  top: 16px;
-}
-.entryPlaygroundPainterToolboxSelected {
-  background-color: #ccc;
-}
-.entryPlaygroundPainterContainer {
-  position: absolute;
-  top: 30px;
-  left: 56px;
-  background-color: transparent;
-  overflow: scroll;
-}
-.entryPlaygroundPainterCanvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 960px;
-  height: 540px;
-}
-.entryPlaygroundPainterAttr {
-  position: absolute;
-  top: 342px;
-  width: 100%;
-  height: 192px;
-  background-color: #f5f5f5;
-  padding-left: 6px;
-  left: 54px;
-}
-.entryPlaygroundPainterToolboxContainer {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-}
-.entryPlaygroundPainterToolboxContainer > li {
-  float: left;
-  position: relative;
-  left: 8px;
-  margin: 5px 5px;
-  width: 27px;
-  height: 27px;
-  background-color: #fff;
-  font-size: 9pt;
-  color: #000;
-  text-align: center;
-  line-height: 40px;
-}
-.entryPlaygroundPainterAttrResize {
-  position: absolute;
-  top: 4px;
-  left: 5px;
-  padding: 4px;
-}
-.entryPlaygroundPainterAttrResize > legend {
-  background-color: transparent;
-  padding: 2px;
-  width: 30px;
-  margin-bottom: 0;
-  border-bottom: 0;
-  font-size: 9pt;
-}
-.entryPlaygroundPainterAttrResize > span {
-  font-size: 9pt;
-  padding: 2px;
-  margin: 0;
-}
-.painterAttrRotateTop {
-  padding-left: 28px;
-  color: white;
-}
-.entryPlaygroundPainterAttrRotate {
-  position: absolute;
-  top: 77px;
-  left: 10px;
-  width: 40px;
-  height: 40px;
-  background-color: #643cd9;
-  border-radius: 3px;
-}
-.entryPlaygroundPainterSizeText {
-  position: absolute;
-  left: 48px;
-  width: 10px;
-  color: black;
-}
-.painterAttrRotateTop {
-  width: 40px;
-  height: 10px;
-}
-.entryPlaygroundPainterNumberInput {
-  width: 30px;
-  font-size: 9pt;
-  color: white;
-  padding-left: 3px;
-  padding-right: 3px;
-}
-.entryPlaygroundPainterAttrOpacity {
-  position: absolute;
-  top: 77px;
-  left: 65px;
-  border-radius: 3px;
-  background-color: #643cd9;
-}
-.entryPlaygroundPainterAttrOpacity > legend {
-  background-color: transparent;
-  padding: 2px;
-  width: 45px;
-  margin-bottom: 0;
-  border-bottom: 0;
-  font-size: 9pt;
-}
-.entryPlaygroundPainterAttrOpacity > span {
-  font-size: 9pt;
-  padding: 2px;
-  margin: 0;
-}
-.entryPlaygroundPainterNumberInput {
-  width: 30px;
-  font-size: 9pt;
-}
-.entryPlaygroundPainterAttrColor {
-  position: absolute;
-  left: 210px;
-  top: 20px;
-  width: 160px;
-  padding: 4px;
-}
-.entryPlaygroundPainterAttrColor > legend {
-  background-color: transparent;
-  padding: 2px;
-  width: 35px;
-  margin-bottom: 0;
-  border-bottom: 0;
-  font-size: 9pt;
-}
-.entryPlaygroundPainterAttrColorElement {
-  float: left;
-  width: 15px;
-  height: 15px;
-}
-.entryPlaygroundPainterAttrThick {
-  position: absolute;
-  top: 20px;
-  left: 2px;
-  background-color: #643cd9;
-  border-radius: 3px;
-}
-.entryPlaygroundPainterAttrThick > legend {
-  position: absolute;
-  top: -30pxpx;
-  background-color: transparent;
-  padding: 2px;
-  width: 60px;
-  margin-bottom: 0;
-  border-bottom: 0;
-  font-size: 9pt;
-}
-.entryPlaygroundPainterAttrThickInput {
-  font-size: 9pt;
-}
-.entryPlaygroundPainterAttrRect {
-  position: absolute;
-  top: 40px;
-  left: 490px;
-  padding: 4px;
-  border: 1px solid #000;
-}
-.entryPlaygroundPainterAttrRect > legend {
-  background-color: transparent;
-  padding: 2px;
-  width: 60px;
-  margin-bottom: 0;
-  border-bottom: 0;
-  font-size: 9pt;
-}
-.entryPlaygroundPainterAttrRectFilled {
-  width: 15px;
-  height: 15px;
-  background-color: #000;
-  border: 1px solid #000;
-  float: left;
-}
-.entryPlaygroundPainterAttrRectEmpty {
-  width: 15px;
-  height: 15px;
-  background-color: #fff;
-  border: 1px solid #000;
-  float: right;
-}
-.entryPlaygroundPainterAttrFont {
-  position: absolute;
-  left: 0px;
-  padding: 4px;
-  width: 100px;
-  height: 40px;
-}
-.entryPlaygroundPainterAttrTop {
-  position: absolute;
-  top: 20px;
-  width: 93px;
-  height: 40px;
-  border-radius: 3px;
-  color: white;
-  background-color: #643cd9;
-}
-.entryPlaygroundPaintAttrTop_ {
-  width: 93px;
-  height: 10px;
-}
-.entryPlaygroundPainterAttrFont > legend {
-  background-color: transparent;
-  width: 60px;
-  margin-bottom: 0;
-  border-bottom: 0;
-  font-size: 9pt;
-}
-.painterAttrFontSizeArea {
-  position: absolute;
-  top: 70px;
-  background-color: #643cd9;
-  width: 44px;
-  height: 40px;
-  color: white;
-  border-radius: 3px;
-}
-.painterAttrFontSizeTop {
-  width: 40px;
-  height: 10px;
-}
-.entryPlaygroundPainterAttrFontName,
-.entryPlaygroundPainterAttrFontSize,
-.entryPlaygroundPainterAttrFontStyle {
-  background: transparent;
-  border: 0px;
-}
-.entryPlaygroundPainterAttrFontStyleArea {
-  position: absolute;
-  background-color: #643cd9 ;
-  top: 120px;
-  width: 67px;
-  height: 40px;
-  border-radius: 3px;
-  color: white;
-}
-.entryPlaygroundPainterAttrFontStyle option {
-  color: black;
-}
-.entryPlaygroundPainterAttrFontSize option {
-  color: black;
-}
-.entryPlaygroundPainterAttrFontName option {
-  color: black;
-}
-.entryPlaygroundPainterAttrFontTop {
-  width: 67px;
-  height: 10px;
-}
-/* Painter css finish */
-.temp-element {
-  visibility: hidden;
-  white-space: pre;
-}
-.highlight {
-  margin: 0;
-  color: white;
-  width: 120px;
-  float: left;
-  list-style: none;
-  display: block;
-}
-.entryVariableAddSpaceWorkspace {
-  padding: 0;
-  padding-left: 16px;
-  padding-right: 16px;
-  margin: 0;
-  /*height: 215px;*/
-  height: 200px;
-  background-color: white;
-  border: 1px solid #a8a8a8;
-}
-.entryVariableAddSpaceNameWrapperWorkspace {
-  height: 28px;
-  margin-top: 16px;
-  background-image: url("../images/list_icon_question_1.png");
-  background-repeat: no-repeat;
-}
-.entryVariableAddSpaceNameWrapperWorkspace.entryListAddSpaceNameWrapperWorkspace {
-  background-image: url("../images/list_icon_list_1.png");
-}
-.entryVariableAddSpaceInputWorkspace {
-  width: 80%;
-  margin-left: 42px;
-  margin-top: 2px;
-}
-.entryVariableAddSpaceGlobalWrapperWorkspace {
-  margin-top: 16px;
-  color: #5e5e5e;
-  font-size: 11px;
-  position: relative;
-  cursor: pointer;
-}
-.entryVariableAddSpaceCheckWorkspace {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  border-radius: 2px;
-  margin-top: 2px;
-  position: absolute;
-  right: 17px;
-  border: 1px solid gray;
-}
-.entryVariableAddSpaceCheckWorkspace.entryVariableAddChecked {
-  /*background-color: gray;*/
-  background-image: url("../images/check_on.png");
-  background-repeat: no-repeat;
-}
-.entryVariableAddSpaceLocalWrapperWorkspace {
-  color: #5e5e5e;
-  font-size: 11px;
-  position: relative;
-  margin-top: 12px;
-  cursor: pointer;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #a8a8a8;
-}
-.entryVariableAddSpaceCloudWrapperWorkspace {
-  padding-top: 8px;
-}
-.entryVariableAddSpaceCloudWrapperWorkspace {
-  cursor: pointer;
-  color: #5e5e5e;
-  font-size: 11px;
-  position: relative;
-}
-.entryVariableAddSpaceUnCheckedWorkspace {
-  color: #afafaf;
-}
-.entryVariableAddSpaceCloudCheckWorkspace {
-  margin-top: -12px;
-}
-.entryVariableAddSpaceButtonWrapperWorkspace {
-  margin-top: 12px;
-}
-.entryVariableAddSpaceButtonWorkspace {
-  font-size: 11px;
-  display: inline-block;
-  width: 48px;
-  height: 24px;
-  border: 2px solid gray;
-  text-align: center;
-  line-height: 22px;
-  cursor: pointer;
-  float: right;
-}
-.entryVariableAddSpaceCancelWorkspace {
-  margin-left: 7px;
-}
-.entryVariableSplitterWorkspace {
-  height: 25px;
-  font-size: 11px;
-  border: 1px solid #a8a8a8;
-  border-top: none;
-  line-height: 25px;
-  padding-left: 9px;
-}
-/*first element after splitter should not have border-top*/
-.entryVariableSplitterWorkspace + .entryVariableListElementWorkspace {
-  border-top: none;
-}
-.entryVariableListCallerListWorkspace + .entryVariableListElementWorkspace {
-  border-top: none;
-}
-.entryPlaygroundPainterTopMenuFileNew {
-  position: absolute;
-  color: white;
-  left: 20px;
-  top: 0px;
-  padding: 4px;
-  height: 28px;
-  cursor: pointer;
-  list-style: none;
-  font-family: nanumBarunBold !important;
-}
-.entryPlaygroundPainterTopMenuFileSave {
-  position: absolute;
-  color: white;
-  padding-left: 8px;
-  left: 95px;
-  top: 0px;
-  padding-top: 4px;
-  height: 28px;
-  width: 70px;
-  cursor: pointer;
-  font-family: nanumBarunBold !important;
-}
-.entryPlaygroundPainterTopMenuFileSave:hover,
-.entryPlaygroundPainterTopMenuFileNew:hover {
-  background-color: #3b329e !important;
-}
-.entryPlaygroundPainterTopMenuEdit,
-.entryPlaygroundPainterTopMenuFile,
-.entryPlaygroundPainterTopMenuFile {
-  position: absolute;
-  color: white;
-  padding-left: 8px;
-  left: 158px;
-  height: 28px;
-  width: 55px;
-  cursor: pointer;
-  margin-top: -4px;
-  padding-top: 3px;
-  font-family: nanumBarunBold !important;
-}
-.entryPlaygroundPainterTopMenuEdit > li {
-  list-style-type: none;
-}
-.entryPlaygroundPainterTopMenuFile {
-  left: 100px;
-}
-.entryPlaygroundPainterTopMenuFile > li {
-  list-style-type: none;
-}
-.entryPlaygroundPainterToolboxPen {
-  background-image: url("../images/off_pen.png");
-  background-repeat: no-repeat;
-}
-.entryPlaygroundPainterToolboxPen:hover {
-  background-image: url("../images/on_pen.png");
-}
-.entryPlaygroundPainterToolboxLine {
-  background-image: url("../images/off_line.png");
-}
-.entryPlaygroundPainterToolboxLine:hover {
-  background-image: url("../images/on_line.png");
-}
-.entryPlaygroundPainterToolboxRect {
-  background-image: url("../images/off_square.png");
-}
-.entryPlaygroundPainterToolboxRect:hover {
-  background-image: url("../images/on_square.png");
-}
-.entryPlaygroundPainterToolboxCircle {
-  background-image: url("../images/off_circle.png");
-}
-.entryPlaygroundPainterToolboxCircle:hover {
-  background-image: url("../images/on_circle.png");
-}
-.entryPlaygroundPainterToolboxSelect:hover {
-  background-image: url("../images/on_choice.png");
-}
-.entryPlaygroundPainterToolboxText {
-  background-image: url("../images/off_text.png");
-}
-.entryPlaygroundPainterToolboxText:hover {
-  background-image: url("../images/on_text.png");
-}
-.entryPlaygroundPainterToolboxFill {
-  background-image: url("../images/off_paint.png");
-}
-.entryPlaygroundPainterToolboxFill:hover {
-  background-image: url("../images/on_paint.png");
-}
-.entryPlaygroundPainterToolboxErase {
-  background-image: url("../images/off_eraser.png");
-}
-.entryPlaygroundPainterToolboxErase:hover {
-  background-image: url("../images/on_eraser.png");
-}
-.entryPlaygroundPainterToolboxSelect {
-  background-image: url("../images/off_choice.png");
-}
-.entryPlaygroundPainterToolboxCoordinate {
-  background-image: url("../images/off_center.png");
-}
-.entryPlaygroundPainterToolboxCoordinate:hover {
-  background-image: url("../images/on_center.png");
-}
-.entryPlaygroundPainterToolboxGlasses {
-  background-image: url("../images/off_zoom.png");
-}
-.entryPlaygroundPainterToolboxGlasses:hover {
-  background-image: url("../images/on_zoom.png");
-}
-.entryPlaygroundPainterToolboxCursor {
-  background-image: url("../images/off_hand.png");
-}
-.entryPlaygroundPainterToolboxCursor:hover {
-  background-image: url("../images/on_hand.png");
-}
-.entryPlaygroundPainterAttrResizeX {
-  position: absolute;
-  top: 17px;
-  background-color: transparent;
-  width: 40px;
-  height: 40px;
-  background-color: #643cd9;
-  border-radius: 3px 3px 3px 3px;
-}
-.entryPlaygroundPainterAttrResizeXTop {
-  width: 40px;
-  height: 10px;
-  border-radius: 3px 3px 0 0;
-  background-color: #643cd9;
-  padding: 0 0 0 3px ;
-  font-size: 11px;
-  color: white;
-}
-.entryPlaygroundPainterAttrResizeXBottom {
-  width: 40px;
-  height: 10px;
-  border-radius: 0 0 3px 3px;
-  background-color: #aaa;
-}
-.entryPlaygroundPainterNumberInput {
-  width: 40px;
-  height: 20px;
-  background-color: transparent;
-  border: 0px;
-}
-.entryPlaygroundPainterAttrResizeYTop {
-  width: 40px;
-  height: 10px;
-  border-radius: 3px 3px 0 0;
-  background-color: #643cd9;
-  padding: 0 0 0 3px ;
-  font-size: 11px;
-  color: white;
-}
-.entryPlaygroundPainterAttrResizeYBottom {
-  width: 40px;
-  height: 10px;
-  border-radius: 0 0 3px 3px;
-  background-color: #643cd9;
-}
-.entryPlaygroundPainterAttrResize {
-  float: left;
-  width: 100px;
-}
-.entryPlaygroundAttrReiszeY {
-  position: absolute;
-  top: 17px;
-  left: 60px;
-  width: 40px;
-  height: 40px;
-  background-color: #643cd9;
-  border-radius: 3px;
-}
-.entryPlaygroundPainterspace {
-  position: absolute;
-  left: 50px;
-  top: 35px;
-  width: 20px;
-}
-.entryPlaygroundPainterRotateArea {
-  position: absolute;
-  top: 90px;
-  left: 19px;
-  width: 40px;
-  height: 40px;
-  background-color: #643cd9;
-  border-radius: 3px;
-}
-.entryPlaygroundPainterRotateAreaTop {
-  height: 10px;
-  width: 20px;
-}
-.entryPlaygroundPainterRotateArea_ {
-  height: 10px;
-  width: 40px;
-}
-.entryPlaygroundPainterNumberInput {
-  height: 20px;
-}
-.entryPlaygroundPainterAttrOpacity {
-  width: 40px;
-  height: 40px;
-}
-.entryPlaygroundPainterAttyOpacityTop {
-  width: 40px;
-  height: 10px;
-  color: white;
-  padding-left: 25px;
-}
-.entryPlaygroundPainterNumberInput {
-  width: 40px;
-  height: 20px;
-}
-.entryPlaygroundPainterRotateName {
-  position: absolute;
-  top: 70px;
-  left: 20px;
-}
-.entryPlaygroundPainterOpacityName {
-  position: absolute;
-  top: 70px;
-  left: 80px;
-}
-.paintAttrThickTop {
-  width: 40px;
-  height: 10px;
-}
-.entryPlaygroundPainterAttrThickInput {
-  width: 45px;
-  height: 20px;
-  background-color: transparent;
-  border: 0px;
-  color: white;
-}
-.entryPlaygroundPainterAttrThickInput option {
-  color: black;
-  border: 1px solid;
-}
-.entryPlaygroundPainterAttrThick {
-  width: 45px;
-  height: 40px;
-}
-.painterAttrBackgroundName {
-  width: 45px;
-  height: 20px;
-  background-color: transparent;
-  color: black;
-  border: 0px;
-  position: absolute;
-  top: 60px;
-  font-size: 9pt;
-}
-.paintAttrBackgroundTop {
-  position: absolute;
-  top: 77px;
-  left: 2px;
-  background-color: #643cd9;
-  border-radius: 3px;
-  font-size: 11pt;
-}
-.painterAttrShapeLineColor {
-  position: absolute;
-  top: 18px;
-  left: 154px;
-  width: 40px;
-  height: 40px;
-  background-color: #000;
-}
-.painterAttrShapeBackgroundColor {
-  position: absolute;
-  top: -57px;
-  left: 140px;
-  width: 40px;
-  height: 40px;
-  background-color: #000;
-}
-.entryPlaygroundPainterAttrFGButton {
-  background-image: url("../images/square_on_in.png");
-  background-repeat: no-repeat;
-  width: 42px;
-  height: 42px;
-  cursor: pointer;
-}
-.painterAttrShapeInnerBackground {
-  width: 20px;
-  height: 20px;
-  background: #f5f5f5;
-  margin: 10px;
-}
-.entryPlaygroundPainterAttrBGButton {
-  background-image: url("../images/square_off_out.png");
-  background-repeat: no-repeat;
-  width: 42px;
-  height: 42px;
-  cursor: pointer;
-}
-.painterAttrColorSpoid {
-  position: absolute;
-  top: 150px;
-  left: 330px;
-  width: 27px;
-  height: 27px;
-  background-repeat: no-repeat;
-  background-image: url("../images/color_off_spoid.png");
-}
-.painterAttrColorSpoidClicked {
-  position: absolute;
-  top: 150px;
-  left: 330px;
-  width: 27px;
-  height: 27px;
-  background-repeat: no-repeat;
-  background-image: url("../images/color_on_spoid.png");
-}
-.painterAttrColorTransparent {
-  position: absolute;
-  top: 150px;
-  left: 300px;
-  width: 27px;
-  height: 27px;
-  background-repeat: no-repeat;
-  background-image: url("../images/color_off_spoid_1.png");
-}
-.painterAttrRotateName,
-.painterAttrOpacityName {
-  position: absolute;
-  background-color: transparent;
-  margin-bottom: 0;
-  border-bottom: 0;
-  left: 2px;
-  padding: 2px;
-  font-size: 9pt;
-}
-.painterAttrThickName {
-  position: absolute;
-  background-color: transparent;
-  margin-bottom: 0;
-  border-bottom: 0;
-  font-size: 9pt;
-  padding-top: 2px ;
-}
-.painterAttrRotateName {
-  top: 60px;
-  left: 9px;
-  width: 30px;
-}
-.painterAttrOpacityName {
-  top: 60px;
-  left: 65px;
-  width: 50px;
-}
-/*
-.painterAttrThickName {
-    top:115px;
-    left:10px;
-}
-*/
-.painterAttrCircleArea {
-  position: absolute;
-  left: 150px;
-  top: 20px;
-}
-/*.painterInnerCircle {
-    width: 20px;
-    height: 20px;
-    background: #000000;
-    margin: 9px;
-}*/
-.painterAttrCircle {
-  width: 40px;
-  height: 40px;
-  top: 13px;
-  position: absolute;
-  left: 5px;
-  background-color: black;
-}
-.painterAttrCircleInput {
-  position: absolute;
-  top: 65px;
-  width: 50px;
-  height: 15px;
-  font-size: 5pt;
-}
-.entryPlaygroundPainterAttrButtonGroup > div {
-  position: absolute;
-  top: 70px;
-  width: 42px;
-  height: 42px;
-  background-color: #fff;
-}
-.entryPlaygroundPainterAttrFGButton {
-  left: 0px;
-}
-.entryPlaygroundPainterAttrBGButton {
-  left: 55px;
-}
-.btn_code,
-.btn_undo_workspace {
-  margin-left: 15px;
-}
-.entryPlaygroundPictureOrder,
-.entryPlaygroundSoundOrder {
-  width: 15px;
-  height: 100%;
-  float: left;
-  line-height: 57px;
-  font-size: 10px;
-  text-align: center;
-  background-color: #d8d8d8;
-}
-.entryPictureSelected .entryPlaygroundPictureOrder {
-  background-color: #634cd9;
-  color: white;
-}
-.deleteChild > * {
-  display: none;
-}
-.entryPlaygroundPainterAttrAddButton {
-  background-image: url("../images/fill_in.png");
-}
-.entryPlaygroundPainterAttrRemoveButton {
-  background-image: url("../images/fill_out.png");
-}
-.painterAttrColorSpoid:hover {
-  background-image: url("../images/color_on_spoid_1.png");
-  background-repeat: no-repeat;
-}
-.displayPaintArea {
-  display: none !important;
-  position: absolute !important;
-}
-.displayOpacityArea {
-  position: absolute;
-  top: -56px;
-  left: 0px;
-}
-.displayThickArea {
-  position: absolute;
-  top: -112px;
-  width: 50px;
-  left: 0px;
-}
-.displayFontArea {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  font: 9px;
-}
-.displayRotateArea {
-  position: absolute;
-  top: -56px;
-  left: 0px;
-}
-.entryPlaygroundPainterAttrLineStyle {
-  position: absolute;
-  top: 140px;
-  left: 230px;
-  background-repeat: no-repeat;
-}
-.entryPlaygroundPainterAttrLineStyle:hover {
-  background-repeat: no-repeat;
-}
-.entryPlaygroundPainterAttrLineStyleLine {
-  position: absolute;
-  top: 10px;
-  background-image: url("../images/line1_category_off.png");
-  background-repeat: no-repeat;
-  background-color: #f5f5f5;
-  width: 76px;
-  height: 24px;
-}
-.entryPlaygroundPainterAttrLineStyleLine:hover {
-  background-image: url("../images/line1_category_on.png");
-  background-repeat: no-repeat;
-}
-.entryPlaygroundPainterAttrLineStyleDot1 {
-  position: absolute;
-  top: -9px;
-  left: 1px;
-  background-image: url("../images/line2_off.png");
-  background-repeat: no-repeat;
-  background-color: #f5f5f5;
-  width: 75px;
-  height: 20px;
-}
-.entryPlaygroundPainterAttrLineStyleDot1:hover {
-  background-image: url("../images/line2_on.png");
-  background-repeat: no-repeat;
-}
-.entryPlaygroundPainterAttrLineStyleDot2 {
-  position: absolute;
-  top: -29px;
-  left: 1px;
-  background-image: url("../images/line3_off.png");
-  background-repeat: no-repeat;
-  background-color: #f5f5f5;
-  width: 75px;
-  height: 20px;
-}
-.entryPlaygroundPainterAttrLineStyleDot2:hover {
-  background-image: url("../images/line3_on.png");
-  background-repeat: no-repeat;
-}
-.entryPlaygroundPainterAttrLineStyleDot3 {
-  position: absolute;
-  top: -48px;
-  left: 1px;
-  background-image: url("../images/line4_off.png");
-  background-repeat: no-repeat;
-  background-color: #f5f5f5;
-  width: 75px;
-  height: 19px;
-}
-.entryPlaygroundPainterAttrLineStyleDot3:hover {
-  background-image: url("../images/line4_on.png");
-  background-repeat: no-repeat;
-}
-.entryPlaygroundPainterAttrLineStyleLine1 {
-  position: absolute;
-  top: -67px;
-  left: 1px;
-  background-image: url("../images/line1_off.png");
-  background-repeat: no-repeat;
-  background-color: #f5f5f5;
-  width: 75px;
-  height: 19px;
-  border-radius: 4px;
-}
-.entryPlaygroundPainterAttrLineStyleLine1:hover {
-  background-image: url("../images/line1_on.png");
-  background-repeat: no-repeat;
-}
-.painterAttrLineStyleBackgroundDot1,
-.painterAttrLineStyleBackgroundDot2,
-.painterAttrLineStyleBackgroundDot3,
-.painterAttrLineStyleBackgroundLine {
-  position: absolute;
-  top: 10px;
-  background-repeat: no-repeat;
-  background-color: #f5f5f5;
-  width: 76px;
-  height: 21px;
-}
-.painterAttrLineStyleBackgroundDot1 {
-  background-image: url("../images/line2_category_off.png");
-}
-.painterAttrLineStyleBackgroundDot2 {
-  background-image: url("../images/line3_category_off.png");
-}
-.painterAttrLineStyleBackgroundDot3 {
-  background-image: url("../images/line4_category_off.png");
-}
-.painterAttrLineStyleBackgroundLine {
-  background-image: url("../images/line1_category_off_1.png");
-}
-.painterAttrLineStyleBackgroundDot1:hover {
-  background-image: url("../images/line2_category_on.png");
-  background-repeat: no-repeat;
-}
-.painterAttrLineStyleBackgroundDot2:hover {
-  background-image: url("../images/line3_category_on.png");
-  background-repeat: no-repeat;
-}
-.painterAttrLineStyleBackgroundDot3:hover {
-  background-image: url("../images/line4_category_on.png");
-  background-repeat: no-repeat;
-}
-.painterAttrLineStyleBackgroundLine:hover {
-  background-image: url("../images/line1_category_on_1.png");
-  background-repeat: no-repeat;
-}
-.entryToolboxCursorClicked {
-  background-image: url("../images/on_hand_1.png");
-}
-.entryToolboxSelectClicked {
-  background-image: url("../images/on_choice_1.png");
-}
-.entryToolboxPenClicked {
-  background-image: url("../images/on_pen_1.png");
-}
-.entryToolboxLineClicked {
-  background-image: url("../images/on_line_1.png");
-}
-.entryToolboxRectClicked {
-  background-image: url("../images/on_square_1.png");
-}
-.entryToolBoxCircleClicked {
-  background-image: url("../images/on_circle_1.png");
-}
-.entryToolBoxTextClicked {
-  background-image: url("../images/on_text_1.png");
-}
-.entryToolBoxFillClicked {
-  background-image: url("../images/on_paint_1.png");
-}
-.entryToolBoxEraseClicked {
-  background-image: url("../images/on_eraser_1.png");
-}
-.dd {
-  cursor: url("../images/cursor_eraser.cur");
-}
-/* helper */
-@keyframes blockHelperUp {
-  0% {
-    top: 100%;
-  }
-  100% {
-    top: 0%;
-  }
-}
-@-o-keyframes blockHelperUp {
-  0% {
-    top: 100%;
-  }
-  100% {
-    top: 0%;
-  }
-}
-@-ms-keyframes blockHelperUp {
-  0% {
-    top: 100%;
-  }
-  100% {
-    top: 0%;
-  }
-}
-@-moz-keyframes blockHelperUp {
-  0% {
-    top: 100%;
-  }
-  100% {
-    top: 0%;
-  }
-}
-@-webkit-keyframes blockHelperUp {
-  0% {
-    top: 100%;
-  }
-  100% {
-    top: 0%;
-  }
-}
-@keyframes blockHelperDown {
-  0% {
-    top: 0%;
-  }
-  100% {
-    top: 100%;
-  }
-}
-@-o-keyframes blockHelperDown {
-  0% {
-    top: 0%;
-  }
-  100% {
-    top: 100%;
-  }
-}
-@-ms-keyframes blockHelperDown {
-  0% {
-    top: 0%;
-  }
-  100% {
-    top: 100%;
-  }
-}
-@-moz-keyframes blockHelperDown {
-  0% {
-    top: 0%;
-  }
-  100% {
-    top: 100%;
-  }
-}
-@-webkit-keyframes blockHelperDown {
-  0% {
-    top: 0%;
-  }
-  100% {
-    top: 100%;
-  }
-}
-#entryBlockHelperWorkspace {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
-  background-color: #fff;
-  -webkit-animation-name: blockHelperUp;
-  -moz-animation-name: blockHelperUp;
-  -ms-animation-name: blockHelperUp;
-  -o-animation-name: blockHelperUp;
-  animation-name: blockHelperUp;
-  -webkit-animation-duration: 0.6s;
-  -moz-animation-duration: 0.6s;
-  -ms-animation-duration: 0.6s;
-  -o-animation-duration: 0.6s;
-}
-#entryBlockHelperWorkspace.lecture {
-  -webkit-animation-duration: 0s;
-  -moz-animation-duration: 0s;
-  -ms-animation-duration: 0s;
-  -o-animation-duration: 0s;
-}
-#entryBlockHelperWorkspace.dispose {
-  -webkit-animation-name: blockHelperDown;
-  -moz-animation-name: blockHelperDown;
-  -ms-animation-name: blockHelperDown;
-  -o-animation-name: blockHelperDown;
-  animation-name: blockHelperDown;
-}
-#entryBlockHelperHeaderWorkspace {
-  position: absolute;
-  width: 100%;
-  height: 40px;
-  background-color: #1bafea;
-  font-size: 16px;
-  line-height: 38px;
-  padding-left: 28px;
-  color: #fff;
-}
-#entryBlockHelperDisposeWorkspace {
-  float: right;
-  background-image: url("../images/block_helper_dispose.png");
-  background-repeat: no-repeat;
-  background-position: center;
-  padding: 15px;
-  margin-top: 4px;
-  margin-right: 5px;
-}
-#entryBlockHelperContentWorkspace {
-  position: absolute;
-  width: 100%;
-  top: 40px;
-  bottom: 0px;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-#entryBlockHelperContentWorkspace.lecture {
-  top: 40px;
-}
-.entryBlockHelperIntro {
-  background-image: url("../images/block_help_icon.png");
-  background-repeat: no-repeat;
-  background-position: center top;
-  margin-top: 28px;
-  padding-top: 100px;
-  text-align: center;
-  color: #707070;
-  font-size: 12px;
-}
-#entryBlockHelpBtn {
-  position: absolute;
-  background-image: url("../images/block_help.png");
-  background-repeat: no-repeat;
-  background-position: center;
-  padding: 15px;
-  margin-top: 3px;
-  margin-left: 6px;
-  z-index: 100;
-}
-#entryBlockHelperBlockWorkspace {
-  position: absolute;
-  width: 400px;
-  height: 160px;
-  top: 16px;
-  left: 50%;
-}
-#entryBlockHelperBlockWorkspace > svg {
-  position: relative;
-  left: -50%;
-}
-#entryBlockHelperDescriptionWorkspace {
-  position: absolute;
-  line-height: 20px;
-  width: 100%;
-  top: 100px;
-  font-size: 13px;
-  color: #707074;
-  padding: 0 50px;
-  text-align: center;
-}
-.entryPlaygroundPainterTopMenuEdit > ul > li {
-  list-style-type: none;
-  width: 120px;
-}
-.entryPlaygroundPainterTopMenuFile > ul > li {
-  list-style-type: none;
-  width: 120px;
-}
-.entryPlaygroundPainterTopMenu > ul {
-  position: absolute;
-  top: 5px;
-}
-.entryPainterTopMenuEditImport {
-  height: 40px;
-}
-.entryVariableSettingWorkspace {
-  width: 100%;
-  height: 165px;
-  border-top: 1px solid #a8a8a8;
-  padding-left: 16px;
-  padding-right: 16px;
-  font-size: 11px;
-  background-color: #efefef;
-}
-.entryVariableSettingVisibleWrapperWorkspace {
-  padding-top: 22px;
-  cursor: pointer;
-}
-.entryVariableSettingCheckWorkspace {
-  display: inline-block;
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  border-radius: 2px;
-  left: 90px;
-  margin-top: 2px;
-  border: 1px solid gray;
-  color: #5e5e5e;
-}
-.entryVariableAddSpaceCheckWorkspace.entryVariableAddChecked,
-.entryVariableSettingCheckWorkspace.entryVariableSettingChecked {
-  /*background-color: gray;*/
-  background-image: url("../images/check_on.png");
-  background-repeat: no-repeat;
-}
-.entryVariableSettingInitValueWrapperWorkspace,
-.entryVariableSettingSlideWrapperWorkspace,
-.entryVariableSettingMinMaxWrapperWorkspace {
-  margin-top: 12px;
-}
-.entryVariableSettingSlideWrapperWorkspace {
-  cursor: pointer;
-}
-.entryVariableMinMaxDisabledWorkspace.entryVariableSettingMinMaxWrapperWorkspace {
-  color: #a8a8a8;
-}
-.entryVariableSettingInitValueInputWorkspace {
-  margin-left: 33px;
-  border: 2px solid #a8a8a8;
-  padding-left: 5px;
-  width: 65%;
-}
-.entryVariableSettingSplitterWorkspace {
-  width: 100%;
-  height: 1px;
-  background-color: #a8a8a8;
-  margin-top: 16px;
-}
-.entryVariableSettingMinValueInputWorkspace,
-.entryVariableSettingMaxValueInputWorkspace {
-  margin-left: 3px;
-  width: 22%;
-  border: 1px solid #afafaf;
-  padding-left: 5px;
-}
-.entryVariableSettingMinValueInputWorkspace:disabled,
-.entryVariableSettingMaxValueInputWorkspace:disabled {
-  background-color: #d3d3d3;
-}
-.entryVariableSettingMaxValueSpanWorkspace {
-  margin-left: 5px;
-}
-.entryVariableSettingButtonWrapperWorkspace {
-  margin-top: 18px;
-}
-.entryVariableListElementWrapperWorkspace {
-  width: 100%;
-  height: 50px;
-}
-.entryListSettingWorkspace {
-  width: 100%;
-  padding-top: 24px;
-  padding-bottom: 5px;
-  border-top: 1px solid #a8a8a8;
-  padding-left: 16px;
-  padding-right: 16px;
-  font-size: 13px;
-  background-color: #efefef;
-}
-.entryListSettingVisibleWrapperWorkspace {
-  cursor: pointer;
-}
-.entryListSettingCheckWorkspace {
-  display: inline-block;
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  border-radius: 2px;
-  left: 103px;
-  margin-top: 4px;
-  border: 1px solid gray;
-  color: #5e5e5e;
-}
-.entryListSettingCheckedWorkspace {
-  /*background-color: gray;*/
-  background-image: url("../images/check_on.png");
-  background-repeat: no-repeat;
-}
-.entryListSettingLengthWrapperWorkspace {
-  margin-top: 15px;
-  overflow: hidden;
-}
-.entryListSettingLengthControllerWorkspace {
-  margin-left: 5px;
-  height: 23px;
-  display: inline-block;
-  position: relative;
-}
-.entryListSettingLengthSpanWorkspace {
-  float: left;
-  margin-top: 2px;
-}
-.entryListSettingMinusWorkspace {
-  width: 23px;
-  height: 23px;
-  float: left;
-  background-image: url("../images/list_minus.png");
-  cursor: pointer;
-}
-.entryListSettingLengthInputWorkspace {
-  float: left;
-  height: 23px;
-  margin-left: 5px;
-  margin-right: 5px;
-  padding-left: 5px;
-  border: 2px solid #a8a8a8;
-  width: 60px;
-}
-.entryListSettingLengthInputWorkspace:focus {
-  border: 2px solid #1bafea;
-  outline: none;
-}
-.entryListSettingPlusWorkspace {
-  width: 23px;
-  height: 23px;
-  float: left;
-  background-image: url("../images/list_plus.png");
-  cursor: pointer;
-}
-.entryListSettingSeperatorWorkspace {
-  height: 1px;
-  background-color: gray;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-.entryListSettingListValuesWorkspace {
-  padding-left: 15px;
-  color: #a8a8a8;
-}
-.entryListSettingValueWrapperWorkspace {
-  margin-bottom: 10px;
-  overflow: hidden;
-}
-.entryListSettingEachInputWorkspace {
-  border: 2px solid #a8a8a8;
-  width: 130px;
-  float: left;
-  padding-left: 5px;
-}
-.entryListSettingEachInputWorkspace:focus {
-  border: 2px solid #1baefa;
-  outline: none;
-}
-.entryListSettingValueNumberSpanWorkspace {
-  width: 20px;
-  display: inline-block;
-  float: left;
-  margin-top: 3px;
-}
-.entryListSettingValueRemoveWorkspace {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  float: right;
-  margin-right: 10px;
-  margin-top: 4px;
-  cursor: pointer;
-  background-image: url("../images/list_remove_button.png");
-}
 .entryEngineBigButtonMinimize_popup {
   border: none;
   display: none;
@@ -4780,12 +2252,71 @@ svg .svgBlockGroup text {
   color: #4b37a0;
   background-position: center left;
 }
+.nav_right_wrapper {
+  right: 0;
+}
+.navbar-default {
+  background-color: #89c1e4;
+  border-color: #89c1e4;
+  /*background-color: #4accaa;
+    border-color: #4accaa;*/
+}
+#project_name.normal {
+  background-color: #89c1e4;
+  /*background-color: #4accaa;*/
+}
+.btn-group > .btn {
+  background-color: transparent;
+  border-color: transparent;
+  /*background-color: #4accaa;
+    border-color: #4accaa;*/
+}
+.art_project_name {
+  background-color: white !important;
+}
+.art_project_name:hover {
+  border: 1px solid #b4b4b4 !important;
+}
 .entryFunctionEdit {
   position: absolute;
   width: 100%;
   height: 100%;
   background-color: rgba(180, 180, 180, 0.4) !important;
   z-index: 50;
+}
+.entryFunctionEdit {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(180, 180, 180, 0.4) !important;
+  z-index: 50;
+}
+#entryFunctionBtnWrapper {
+  position: absolute;
+  z-index: 100;
+  bottom: 90px;
+  margin: 0 auto;
+  left: 50%;
+}
+.entryFunctionBtn {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  border: solid 3px #888;
+  color: #666;
+  width: 55px;
+  height: 55px;
+  border-radius: 27.5px;
+  text-align: center;
+  line-height: 48px;
+  left: -50%;
+}
+.entryFunctionBtn:hover {
+  border: solid 3px #555;
+  color: #222;
+}
+#entryFunctionSave {
+  margin-right: 20px;
 }
 .globalSvgSurface {
   position: fixed;
@@ -4978,6 +2509,187 @@ svg .svgBlockGroup text {
   font-size: 13px;
   color: #707074;
   padding: 0 50px;
+}
+/* helper */
+@keyframes blockHelperUp {
+  0% {
+    top: 100%;
+  }
+  100% {
+    top: 0%;
+  }
+}
+@-o-keyframes blockHelperUp {
+  0% {
+    top: 100%;
+  }
+  100% {
+    top: 0%;
+  }
+}
+@-ms-keyframes blockHelperUp {
+  0% {
+    top: 100%;
+  }
+  100% {
+    top: 0%;
+  }
+}
+@-moz-keyframes blockHelperUp {
+  0% {
+    top: 100%;
+  }
+  100% {
+    top: 0%;
+  }
+}
+@-webkit-keyframes blockHelperUp {
+  0% {
+    top: 100%;
+  }
+  100% {
+    top: 0%;
+  }
+}
+@keyframes blockHelperDown {
+  0% {
+    top: 0%;
+  }
+  100% {
+    top: 100%;
+  }
+}
+@-o-keyframes blockHelperDown {
+  0% {
+    top: 0%;
+  }
+  100% {
+    top: 100%;
+  }
+}
+@-ms-keyframes blockHelperDown {
+  0% {
+    top: 0%;
+  }
+  100% {
+    top: 100%;
+  }
+}
+@-moz-keyframes blockHelperDown {
+  0% {
+    top: 0%;
+  }
+  100% {
+    top: 100%;
+  }
+}
+@-webkit-keyframes blockHelperDown {
+  0% {
+    top: 0%;
+  }
+  100% {
+    top: 100%;
+  }
+}
+#entryBlockHelperWorkspace {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  -webkit-animation-name: blockHelperUp;
+  -moz-animation-name: blockHelperUp;
+  -ms-animation-name: blockHelperUp;
+  -o-animation-name: blockHelperUp;
+  animation-name: blockHelperUp;
+  -webkit-animation-duration: 0.6s;
+  -moz-animation-duration: 0.6s;
+  -ms-animation-duration: 0.6s;
+  -o-animation-duration: 0.6s;
+}
+#entryBlockHelperWorkspace.lecture {
+  -webkit-animation-duration: 0s;
+  -moz-animation-duration: 0s;
+  -ms-animation-duration: 0s;
+  -o-animation-duration: 0s;
+}
+#entryBlockHelperWorkspace.dispose {
+  -webkit-animation-name: blockHelperDown;
+  -moz-animation-name: blockHelperDown;
+  -ms-animation-name: blockHelperDown;
+  -o-animation-name: blockHelperDown;
+  animation-name: blockHelperDown;
+}
+#entryBlockHelperHeaderWorkspace {
+  position: absolute;
+  width: 100%;
+  height: 40px;
+  background-color: #1bafea;
+  font-size: 16px;
+  line-height: 38px;
+  padding-left: 28px;
+  color: #fff;
+}
+#entryBlockHelperDisposeWorkspace {
+  float: right;
+  background-image: url("../images/block_helper_dispose.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  padding: 15px;
+  margin-top: 4px;
+  margin-right: 5px;
+}
+#entryBlockHelperContentWorkspace {
+  position: absolute;
+  width: 100%;
+  top: 40px;
+  bottom: 0px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+#entryBlockHelperContentWorkspace.lecture {
+  top: 40px;
+}
+.entryBlockHelperIntro {
+  background-image: url("../images/block_help_icon.png");
+  background-repeat: no-repeat;
+  background-position: center top;
+  margin-top: 28px;
+  padding-top: 100px;
+  text-align: center;
+  color: #707070;
+  font-size: 12px;
+}
+#entryBlockHelpBtn {
+  position: absolute;
+  background-image: url("../images/block_help.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  padding: 15px;
+  margin-top: 3px;
+  margin-left: 6px;
+  z-index: 100;
+}
+#entryBlockHelperBlockWorkspace {
+  position: absolute;
+  width: 400px;
+  height: 160px;
+  top: 16px;
+  left: 50%;
+}
+#entryBlockHelperBlockWorkspace > svg {
+  position: relative;
+  left: -50%;
+}
+#entryBlockHelperDescriptionWorkspace {
+  position: absolute;
+  line-height: 20px;
+  width: 100%;
+  top: 100px;
+  font-size: 13px;
+  color: #707074;
+  padding: 0 50px;
+  text-align: center;
 }
 .hwMonitor {
   background-color: #363c46;
@@ -5370,6 +3082,11 @@ svg .svgBlockGroup text {
 .entryObjectDirectionInputWorkspace:disabled {
   background-color: transparent;
 }
+.entryObjectCoordinateInputWorkspace:focus,
+.entryObjectRotateInputWorkspace:focus,
+.entryObjectDirectionInputWorkspace:focus {
+  background-color: transparent;
+}
 /* Painter css start */
 .entryPlaygroundPainter {
   position: absolute;
@@ -5854,7 +3571,6 @@ svg .svgBlockGroup text {
   background-color: #3b329e !important;
 }
 .entryPlaygroundPainterTopMenuEdit,
-.entryPlaygroundPainterTopMenuFile,
 .entryPlaygroundPainterTopMenuFile {
   position: absolute;
   color: white;
@@ -6423,6 +4139,126 @@ svg .svgBlockGroup text {
 .entryPainterTopMenuEditImport {
   height: 40px;
 }
+.entryPlayground_text_buttons {
+  display: inline-block;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+.entryPlayground_text_buttons > li {
+  float: left;
+  width: 32px;
+  height: 32px;
+  margin-left: 2px;
+  cursor: pointer;
+}
+.entryPlaygroundTextAlignLeft {
+  background-image: url("../images/text_align_left_off.png");
+}
+.entryPlaygroundTextAlignLeft.toggle {
+  background-image: url("../images/text_align_left_on.png");
+}
+.entryPlaygroundTextAlignCenter {
+  background-image: url("../images/text_align_center_off.png");
+}
+.entryPlaygroundTextAlignCenter.toggle {
+  background-image: url("../images/text_align_center_on.png");
+}
+.entryPlaygroundTextAlignRight {
+  background-image: url("../images/text_align_right_off.png");
+}
+.entryPlaygroundTextAlignRight.toggle {
+  background-image: url("../images/text_align_right_on.png");
+}
+.entryPlayground_fgColorDiv {
+  position: absolute;
+  width: 15px;
+  height: 4px;
+  margin-top: -15px;
+  margin-left: 345px;
+}
+.entryPlayground_bgColorDiv {
+  position: absolute;
+  width: 15px;
+  height: 4px;
+  margin-top: -15px;
+  margin-left: 379px;
+}
+.entryPlayground_textBox {
+  margin-top: 5px;
+  height: 33px;
+  width: 400px;
+}
+.entryPlayground_textArea {
+  margin-top: 5px;
+  height: 120px;
+  width: 400px;
+  resize: none;
+}
+.entryPlaygroundFontSizeWrapper {
+  width: 400px;
+  height: 39px;
+}
+.entryPlaygroundFontSizeLabel {
+  display: inline-block;
+  float: right;
+  font-size: 9px;
+  font-family: notoSansMedium;
+  color: #444;
+  line-height: 39px;
+}
+.entryPlaygroundFontSizeSlider {
+  display: inline-block;
+  float: right;
+  width: 96px;
+  height: 3px;
+  margin: 18px 0px 18px 4px;
+  background-color: #cfcfcf;
+  border-radius: 1.5px;
+}
+#entryTextColourTable {
+  margin-top: 12px;
+  cursor: pointer;
+  border-collapse: collapse;
+}
+.entryTd {
+  width: 22px;
+  height: 22px;
+}
+.entryTdTransparent {
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  background-image: -webkit-linear-gradient(135deg, transparent 11.5px, #ff0000 13px, rgba(255, 255, 255, 0.5) 14.5px);
+  border: 1px solid;
+}
+.entryPlaygroundPainterTopMenuEdit > ul > li {
+  list-style-type: none;
+  width: 120px;
+}
+.entryPlaygroundPainterTopMenuFile > ul > li {
+  list-style-type: none;
+  width: 120px;
+}
+.entryPlaygroundPainterTopMenu > ul {
+  position: absolute;
+  top: 5px;
+}
+.entryPainterTopMenuEditImport {
+  height: 40px;
+}
+.entryPlaygroundSoundLength {
+  float: right;
+  position: relative;
+  top: 20px;
+  right: 10px;
+  font-size: 9pt;
+}
+.entryPlaygroundDefaultWorkspace {
+  height: 100%;
+  background-color: #363C46;
+  color: white;
+}
 .entryPlaygroundWorkspace {
   position: absolute;
   top: 40px;
@@ -6982,387 +4818,6 @@ svg .svgBlockGroup text {
   border: 1px solid transparent;
   text-overflow: ellipsis;
   color: #294117;
-}
-.entryPlaygroundSoundLength {
-  float: right;
-  position: relative;
-  top: 20px;
-  right: 10px;
-  font-size: 9pt;
-}
-.entryPlaygroundDefaultWorkspace {
-  height: 100%;
-  background-color: #363C46;
-  color: white;
-}
-.entryWorkspaceBoard {
-  position: absolute;
-  left: 250px;
-  top: 8px;
-  bottom: 0px;
-  right: 0px;
-  overflow: hidden;
-  border: solid 1px #C4C4B9;
-  border-top-left-radius: 10px;
-  background-image: url("../images/entry_bg.png");
-}
-.entryWorkspaceBoard.folding {
-  z-index: 300;
-  border-left: solid 1px #C4C4B9;
-  -webkit-animation-duration: 0.7s;
-  -moz-animation-duration: 0.7s;
-  -ms-animation-duration: 0.7s;
-  -o-animation-duration: 0.7s;
-  -webkit-animation-name: foldBoard;
-  -moz-animation-name: foldBoard;
-  -ms-animation-name: foldBoard;
-  -o-animation-name: foldBoard;
-  animation-name: foldBoard;
-  -webkit-animation-fill-mode: forwards;
-  -moz-animation-fill-mode: forwards;
-  -ms-animation-fill-mode: forwards;
-  -o-animation-fill-mode: forwards;
-  animation-fill-mode: forwards;
-}
-@keyframes foldBoard {
-  to {
-    left: 64px;
-  }
-}
-@-ot-keyframes foldBoard {
-  to {
-    left: 64px;
-  }
-}
-@-ms-keyframes foldBoard {
-  to {
-    left: 64px;
-  }
-}
-@-moz-keyframes foldBoard {
-  to {
-    left: 64px;
-  }
-}
-@-webkit-keyframes foldBoard {
-  to {
-    left: 64px;
-  }
-}
-.entryWorkspaceBoard.foldOut {
-  z-index: 300;
-  -webkit-animation-duration: 0.7s;
-  -moz-animation-duration: 0.7s;
-  -ms-animation-duration: 0.7s;
-  -o-animation-duration: 0.7s;
-  -webkit-animation-name: foldOutBoard;
-  -moz-animation-name: foldOutBoard;
-  -ms-animation-name: foldOutBoard;
-  -o-animation-name: foldOutBoard;
-  animation-name: foldOutBoard;
-  -webkit-animation-fill-mode: forwards;
-  -moz-animation-fill-mode: forwards;
-  -ms-animation-fill-mode: forwards;
-  -o-animation-fill-mode: forwards;
-  animation-fill-mode: forwards;
-}
-@keyframes foldOutBoard {
-  from {
-    left: 64px;
-  }
-}
-@-o-keyframes foldOutBoard {
-  from {
-    left: 64px;
-  }
-}
-@-ms-keyframes foldOutBoard {
-  from {
-    left: 64px;
-  }
-}
-@-moz-keyframes foldOutBoard {
-  from {
-    left: 64px;
-  }
-}
-@-webkit-keyframes foldOutBoard {
-  from {
-    left: 64px;
-  }
-}
-.entryBlocklyPhone {
-  position: absolute;
-  top: 0px;
-  left: 56px;
-  right: 0px;
-  bottom: 0px;
-  overflow: hidden;
-  border: solid 1px #C4C4B9;
-  border-left: 0;
-  background-image: url("../images/entry_bg_1.png");
-}
-#entryCategorymoving {
-  /*border-right: 4px solid #A751E3;*/
-  background-image: url("../images/movement.png");
-  background-repeat: no-repeat;
-}
-.entrySelectedCategory#entryCategorymoving {
-  /*border-left: 4px solid #A751E3;*/
-  border-right: none;
-}
-#entryCategorylooks {
-  /*border-right: 4px solid #EC4466;*/
-  background-image: url("../images/looks.png");
-  background-repeat: no-repeat;
-}
-.entrySelectedCategory#entryCategorylooks {
-  /*border-left: 4px solid #EC4466;*/
-  border-right: none;
-}
-#entryCategorybrush {
-  /*border-right: 4px solid #FF9E20;*/
-  background-image: url("../images/brush.png");
-  background-repeat: no-repeat;
-}
-.entrySelectedCategory#entryCategorybrush {
-  border-right: none;
-}
-#entryCategorytext {
-  background-image: url("../images/postbox_new.png");
-  background-repeat: no-repeat;
-}
-.entrySelectedCategory#entryCategorytext {
-  border-right: none;
-}
-#entryCategorysound {
-  background-image: url("../images/sound.png");
-  background-repeat: no-repeat;
-}
-.entrySelectedCategory#entryCategorysound {
-  border-right: none;
-}
-#entryCategorystart {
-  background-image: url("../images/start.png");
-  background-repeat: no-repeat;
-}
-.entrySelectedCategory#entryCategorystart {
-  border-right: none;
-}
-#entryCategoryflow {
-  background-image: url("../images/flow.png");
-  background-repeat: no-repeat;
-}
-.entrySelectedCategory#entryCategoryflow {
-  border-right: none;
-}
-#entryCategoryjudgement {
-  background-image: url("../images/judgement.png");
-  background-repeat: no-repeat;
-}
-.entrySelectedCategory#entryCategoryjudgement {
-  border-right: none;
-}
-#entryCategorycalc {
-  background-image: url("../images/calc.png");
-  background-repeat: no-repeat;
-}
-.entrySelectedCategory#entryCategorycalc {
-  border-right: none;
-}
-#entryCategoryvariable {
-  background-image: url("../images/variable.png");
-  background-repeat: no-repeat;
-}
-.entrySelectedCategory#entryCategoryvariable {
-  border-right: none;
-}
-#entryCategoryfunc {
-  background-image: url("../images/function.png");
-  background-repeat: no-repeat;
-}
-.entrySelectedCategory#entryCategoryfunc {
-  border-right: none;
-}
-#entryCategoryscene {
-  border-right: none;
-  background-image: url("../images/scene.png");
-  background-repeat: no-repeat;
-}
-.entrySelectedCategory#entryCategoryscene {
-  border-left: none;
-  border-right: none;
-}
-#entryCategoryarduino {
-  background-image: url("../images/arduino.png");
-  background-repeat: no-repeat;
-}
-.entrySelectedCategory#entryCategoryarduino {
-  border-right: none;
-}
-.entryPlaygroundPictureOrder,
-.entryPlaygroundSoundOrder {
-  width: 15px;
-  height: 100%;
-  float: left;
-  line-height: 57px;
-  font-size: 10px;
-  text-align: center;
-  background-color: #d8d8d8;
-}
-.entryPictureSelected .entryPlaygroundPictureOrder {
-  background-color: #634cd9;
-  color: white;
-}
-.entryPlayground_text_buttons {
-  display: inline-block;
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-}
-.entryPlayground_text_buttons > li {
-  float: left;
-  width: 32px;
-  height: 32px;
-  margin-left: 2px;
-  cursor: pointer;
-}
-.entryPlaygroundTextAlignLeft {
-  background-image: url("../images/text_align_left_off.png");
-}
-.entryPlaygroundTextAlignLeft.toggle {
-  background-image: url("../images/text_align_left_on.png");
-}
-.entryPlaygroundTextAlignCenter {
-  background-image: url("../images/text_align_center_off.png");
-}
-.entryPlaygroundTextAlignCenter.toggle {
-  background-image: url("../images/text_align_center_on.png");
-}
-.entryPlaygroundTextAlignRight {
-  background-image: url("../images/text_align_right_off.png");
-}
-.entryPlaygroundTextAlignRight.toggle {
-  background-image: url("../images/text_align_right_on.png");
-}
-.entryPlayground_fgColorDiv {
-  position: absolute;
-  width: 15px;
-  height: 4px;
-  margin-top: -15px;
-  margin-left: 345px;
-}
-.entryPlayground_bgColorDiv {
-  position: absolute;
-  width: 15px;
-  height: 4px;
-  margin-top: -15px;
-  margin-left: 379px;
-}
-.entryPlayground_textBox {
-  margin-top: 5px;
-  height: 33px;
-  width: 400px;
-}
-.entryPlayground_textArea {
-  margin-top: 5px;
-  height: 120px;
-  width: 400px;
-  resize: none;
-}
-.entryPlaygroundFontSizeWrapper {
-  width: 400px;
-  height: 39px;
-}
-.entryPlaygroundFontSizeLabel {
-  display: inline-block;
-  float: right;
-  font-size: 9px;
-  font-family: notoSansMedium;
-  color: #444;
-  line-height: 39px;
-}
-.entryPlaygroundFontSizeSlider {
-  display: inline-block;
-  float: right;
-  width: 96px;
-  height: 3px;
-  margin: 18px 0px 18px 4px;
-  background-color: #cfcfcf;
-  border-radius: 1.5px;
-}
-.entryPlaygroundFontSizeIndicator {
-  height: 100%;
-  width: 45%;
-  background-color: #643cd9;
-}
-.entryPlaygroundFontSizeKnob {
-  width: 16px;
-  height: 16px;
-  position: relative;
-  margin-top: -10px;
-  margin-left: -7px;
-  background-image: url("../images/text_size_knob.png");
-  cursor: pointer;
-}
-.entryPlaygroundTextColoursWrapper {
-  width: 260px;
-  height: 226px;
-  z-index: 10;
-  cursor: pointer;
-  margin-top: -5px;
-  margin-left: 335px;
-  padding: 20px 5px;
-  position: absolute;
-  background-image: url("../images/text_color_bg.png");
-  background-repeat: no-repeat;
-  background-size: 260px 226px;
-}
-.entryPlaygroundTextBackgroundsWrapper {
-  width: 260px;
-  height: 226px;
-  z-index: 10;
-  cursor: pointer;
-  margin-top: -5px;
-  margin-left: 369px;
-  padding: 20px 5px;
-  position: absolute;
-  background-image: url("../images/text_color_bg_1.png");
-  background-repeat: no-repeat;
-  background-size: 260px 226px;
-}
-.entryPlaygroundLinebreakWrapper {
-  position: fixed;
-  top: 351px;
-}
-.entryPlaygroundLinebreakButtons {
-  display: inline;
-  font-size: 0;
-}
-.entryPlaygroundLinebreakButtons img {
-  cursor: pointer;
-}
-.entryPlaygroundLinebreakHorizontal {
-  display: block;
-  border-top: 1px solid #808080;
-  margin: 0 0 12px 0;
-  padding: 0;
-  width: 260px;
-}
-.entryPlaygroundLinebreakDescription {
-  margin-top: 12px;
-}
-.entryPlaygroundLinebreakDescription p {
-  color: #8888;
-  font-size: 11px;
-  margin-bottom: 5px;
-}
-.entryPlaygroundLinebreakDescription ul {
-  padding-left: 20px;
-}
-.entryPlaygroundLinebreakDescription ul li {
-  color: #B4B4B5;
-  font-size: 11px;
 }
 .entryPopup {
   overflow: hidden;
