@@ -8,7 +8,6 @@
  */
 Entry.Helper = function() {
     this.visible = false;
-    //this.generateView();
 };
 
 var p = Entry.Helper.prototype;
@@ -17,21 +16,20 @@ p.generateView = function(parentView, option) {
     if (this.parentView_) return;
     /** @type {!Element} parent view */
     this.parentView_ = parentView;
-
     var helper = this;
     helper.blockHelpData = EntryStatic.blockInfo;
     var blockHelperView = Entry.createElement('div',
                             'entryBlockHelperWorkspace');
-
+    this.view = blockHelperView;
     if (Entry.isForLecture)
         blockHelperView.addClass('lecture');
-
-    // if (!Entry.isForLecture) {
+    helper.parentView_.appendChild(blockHelperView);
+    if (!Entry.isForLecture) {
         var blockHelperHeader = Entry.createElement('div',
                                 'entryBlockHelperHeaderWorkspace');
         blockHelperHeader.innerHTML = Lang.Helper.Block_info;
         blockHelperView.appendChild(blockHelperHeader);
-    // }
+    }
     var blockHelperContent = Entry.createElement('div',
                             'entryBlockHelperContentWorkspace');
     blockHelperContent.addClass('entryBlockHelperIntro');
@@ -75,34 +73,6 @@ p._updateSelectedBlock = function() {
     var blockView = this.workspace.selectedBlockView;
     if (!blockView || !this.visible || blockView == this._blockView) return;
 
-    this.first = true;
-};
-
-/**
- * toggle on block helper
- */
-
-p.getView = function() {
-    this.bindEvent();
-    return this._view;
-};
-
-p.bindEvent = function() {
-    if (!this.blockChangeEvent) {
-        this.blockChangeEvent = Blockly.bindEvent_(Blockly.mainWorkspace.getCanvas(),
-        'blocklySelectChange', this, this.updateSelectedBlock);
-        if (Entry.playground.blockMenu)
-            this.menuBlockChangeEvent = Blockly.bindEvent_(
-                Entry.playground.blockMenu.workspace_.getCanvas(),
-                'blocklySelectChange', this, this.updateSelectedBlock);
-    }
-}
-
-
-p.updateSelectedBlock = function() {
-    if (!Blockly.selected)
-        return;
->>>>>>> master
     if (this.first) {
         this.blockHelperContent_.removeClass('entryBlockHelperIntro');
         this.first = false;
@@ -131,6 +101,15 @@ p.renderBlock = function(type) {
     this.blockHelperDescription_.innerHTML = Lang.Helper[type];
     this._renderView.align();
 
+    $(this.blockHelperDescription_).css({
+        top: blockHeight + 30
+    });
+
+    var renderView = this._renderView;
+    var dom = renderView.svgDom;
+    dom.css({
+        'margin-left':-(blockWidth/2) -20 - offsetX
+    });
 };
 
 p.getView = function() {
@@ -138,4 +117,3 @@ p.getView = function() {
 };
 
 p.resize = function() {};
-};
