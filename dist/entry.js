@@ -16892,11 +16892,9 @@ Entry.BlockMenu = function(b, a, c, d) {
     return console.error("Dom is not div element");
   }
   this.view = b;
-  this._categoryCodes = null;
-  this._categoryElems = {};
-  this._selectedCategoryView = null;
   this.visible = !0;
   this._svgId = "blockMenu" + (new Date).getTime();
+  this._clearCategory();
   this._generateView(c);
   this.offset = this.svgDom.offset();
   this._splitters = [];
@@ -16920,18 +16918,7 @@ Entry.BlockMenu = function(b, a, c, d) {
   b.schema = {code:null, dragBlock:null, closeBlock:null, selectedBlockView:null};
   b._generateView = function(a) {
     var b = this.view, d = this;
-    if (a) {
-      for (var e = Entry.Dom("ul", {class:"entryCategoryListWorkspace", parent:b}), f = 0;f < a.length;f++) {
-        var g = a[f].category;
-        (function(a, b) {
-          a.text(Lang.Blocks[b.toUpperCase()]);
-          d._categoryElems[b] = a;
-          a.bindOnClick(function(a) {
-            d.selectMenu(b);
-          });
-        })(Entry.Dom("li", {id:"entryCategory" + g, class:"entryCategoryElementWorkspace", parent:e}), g);
-      }
-    }
+    a && (this._categoryCol = Entry.Dom("ul", {class:"entryCategoryListWorkspace", parent:b}), this._generateCategoryView(a));
     this.blockMenuContainer = Entry.Dom("div", {"class":"blockMenuContainer", parent:b});
     this.svgDom = Entry.Dom($('<svg id="' + this._svgId + '" class="blockMenu" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this.blockMenuContainer});
     this.svgDom.mouseenter(function(a) {
@@ -17163,6 +17150,40 @@ Entry.BlockMenu = function(b, a, c, d) {
   };
   b.setPatternRectFill = function(a) {
     this.patternRect.attr({fill:a});
+  };
+  b._clearCategory = function() {
+    this._selectedCategoryView = null;
+    this._categories = [];
+    var a = this._categoryElems, b;
+    for (b in a) {
+      a[b].remove();
+    }
+    this._categoryElems = {};
+    a = this._categoryCodes;
+    for (b in a) {
+      var d = a[b];
+      d.constructor == Entry.Code && d.clear();
+    }
+    this._categoryCodes = null;
+  };
+  b.setCategoryData = function(a) {
+    this._clearCategory();
+    this._generateCategoryView(a);
+    this._generateCategoryCodes(a);
+  };
+  b._generateCategoryView = function(a) {
+    if (a) {
+      for (var b = this, d = 0;d < a.length;d++) {
+        var e = a[d].category;
+        (function(a, d) {
+          a.text(Lang.Blocks[d.toUpperCase()]);
+          b._categoryElems[d] = a;
+          a.bindOnClick(function(a) {
+            b.selectMenu(d);
+          });
+        })(Entry.Dom("li", {id:"entryCategory" + e, class:"entryCategoryElementWorkspace", parent:this._categoryCol}), e);
+      }
+    }
   };
 })(Entry.BlockMenu.prototype);
 Entry.BlockMenuScroller = function(b) {

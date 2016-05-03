@@ -2646,9 +2646,6 @@ svg .svgBlockGroup text {
   overflow-y: auto;
   overflow-x: hidden;
 }
-#entryBlockHelperContentWorkspace.lecture {
-  top: 40px;
-}
 .entryBlockHelperIntro {
   background-image: url("../images/block_help_icon.png");
   background-repeat: no-repeat;

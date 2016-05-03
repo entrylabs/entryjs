@@ -26,11 +26,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     this.view = dom;
 
-    this._categoryCodes = null;
-    this._categoryElems = {};
-    this._selectedCategoryView = null;
     this.visible = true;
     this._svgId = 'blockMenu' + new Date().getTime();
+    this._clearCategory();
     this._generateView(categoryData);
 
     this.offset = this.svgDom.offset();
@@ -79,27 +77,12 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         var that = this;
 
         if (categoryData) {
-            var categoryCol = Entry.Dom('ul', {
+            this._categoryCol = Entry.Dom('ul', {
                 class: 'entryCategoryListWorkspace',
                 parent: parent
             });
 
-            for (var i=0; i<categoryData.length; i++) {
-                var name = categoryData[i].category;
-                var element = Entry.Dom('li', {
-                    id: 'entryCategory' + name,
-                    class: 'entryCategoryElementWorkspace',
-                    parent: categoryCol
-                });
-
-                (function(elem, name){
-                    elem.text(Lang.Blocks[name.toUpperCase()]);
-                    that._categoryElems[name] = elem;
-                    elem.bindOnClick(function(e) {
-                        that.selectMenu(name);
-                    });
-                })(element, name);
-            }
+            this._generateCategoryView(categoryData);
         }
 
         this.blockMenuContainer = Entry.Dom('div', {
@@ -541,4 +524,52 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     p.setPatternRectFill = function(color) {
         this.patternRect.attr({fill:color});
     };
+
+    p._clearCategory = function() {
+        this._selectedCategoryView = null;
+        this._categories = [];
+
+        var categories = this._categoryElems;
+        for (var key in categories)
+            categories[key].remove();
+        this._categoryElems = {};
+
+        categories = this._categoryCodes;
+        for (key in categories) {
+            var code = categories[key];
+            if (code.constructor == Entry.Code)
+                code.clear();
+        }
+        this._categoryCodes = null;
+    };
+
+    p.setCategoryData = function(data) {
+        this._clearCategory();
+        this._generateCategoryView(data);
+        this._generateCategoryCodes(data);
+    };
+
+    p._generateCategoryView = function(data) {
+        if (!data) return;
+        var that = this;
+
+        for (var i=0; i<data.length; i++) {
+            var name = data[i].category;
+            var element = Entry.Dom('li', {
+                id: 'entryCategory' + name,
+                class: 'entryCategoryElementWorkspace',
+                parent: this._categoryCol
+            });
+
+            (function(elem, name){
+                elem.text(Lang.Blocks[name.toUpperCase()]);
+                that._categoryElems[name] = elem;
+                elem.bindOnClick(function(e) {
+                    that.selectMenu(name);
+                });
+            })(element, name);
+        }
+    };
+
+
 })(Entry.BlockMenu.prototype);
