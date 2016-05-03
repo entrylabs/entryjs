@@ -92,6 +92,10 @@ p.renderBlock = function(type) {
         type:type
     }]);
 
+    this.code.board.align();
+    this.code.board.resize();
+
+
     var blockView = this.code.getThreads()[0].getFirstBlock().view;
     var bBox = blockView.svgGroup.getBBox();
     var blockWidth = bBox.width;

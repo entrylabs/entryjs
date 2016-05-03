@@ -83,7 +83,7 @@ Entry.RenderView = function(dom, align) {
 
         code.createView(this);
         this.align();
-        this._resize();
+        this.resize();
     };
 
     p.align = function() {
@@ -130,7 +130,7 @@ Entry.RenderView = function(dom, align) {
         this.svgGroup.appendChild(this.svgBlockGroup);
     };
 
-    p._resize = function() {
+    p.resize = function() {
         if (!this.svg || !this._bBox) return;
         $(this.svg).css('height', this._bBox.height + 10);
     };

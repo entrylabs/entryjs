@@ -7672,6 +7672,8 @@ p.renderBlock = function(b) {
   if (b && this.visible) {
     this.code.clear();
     this.code.createThread([{type:b}]);
+    this.code.board.align();
+    this.code.board.resize();
     var a = this.code.getThreads()[0].getFirstBlock().view, c = a.svgGroup.getBBox(), d = c.width, c = c.height, a = a.getSkeleton().box(a).offsetX;
     isNaN(a) && (a = 0);
     this.blockHelperDescription_.innerHTML = Lang.Helper[b];
@@ -19235,7 +19237,7 @@ Entry.RenderView = function(b, a) {
     this.svg || (this.svg = Entry.SVG(this._svgId), this.svgGroup = this.svg.elem("g"), this.svgThreadGroup = this.svgGroup.elem("g"), this.svgThreadGroup.board = this, this.svgBlockGroup = this.svgGroup.elem("g"), this.svgBlockGroup.board = this);
     a.createView(this);
     this.align();
-    this._resize();
+    this.resize();
   };
   b.align = function() {
     var a = this.code.getThreads();
@@ -19268,7 +19270,7 @@ Entry.RenderView = function(b, a) {
     this.svgGroup.appendChild(this.svgThreadGroup);
     this.svgGroup.appendChild(this.svgBlockGroup);
   };
-  b._resize = function() {
+  b.resize = function() {
     this.svg && this._bBox && $(this.svg).css("height", this._bBox.height + 10);
   };
 })(Entry.RenderView.prototype);
