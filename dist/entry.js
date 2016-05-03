@@ -13206,7 +13206,7 @@ Entry.VariableContainer.prototype.select = function(b) {
   b && (b.listElement.addClass("selected"), this.selected = b, b instanceof Entry.Variable ? (this.renderVariableReference(b), b.object_ && Entry.container.selectObject(b.object_, !0)) : b instanceof Entry.Func ? this.renderFunctionReference(b) : this.renderMessageReference(b));
 };
 Entry.VariableContainer.prototype.renderMessageReference = function(b) {
-  for (var a = this, c = this._messageRefs, d = b.id_, e = [], f = 0;f < c.length;f++) {
+  for (var a = this, c = this._messageRefs, d = b.id, e = [], f = 0;f < c.length;f++) {
     -1 < c[f].block.params.indexOf(d) && e.push(c[f]);
   }
   c = Entry.createElement("ul");
@@ -14300,7 +14300,7 @@ Entry.VariableContainer.prototype.updateCloudVariables = function() {
   }
 };
 Entry.VariableContainer.prototype.addRef = function(b, a) {
-  if (Entry.playground.mainWorkspace.getMode() === Entry.Workspace.MODE_BOARD) {
+  if (this.view_ && Entry.playground.mainWorkspace.getMode() === Entry.Workspace.MODE_BOARD) {
     var c = {object:a.getCode().object, block:a};
     a.funcBlock && (c.funcBlock = a.funcBlock, delete a.funcBlock);
     this[b].push(c);

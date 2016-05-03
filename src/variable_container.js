@@ -234,9 +234,8 @@ Entry.VariableContainer.prototype.select = function(object) {
 Entry.VariableContainer.prototype.renderMessageReference = function(message) {
     var that = this;
     var refs = this._messageRefs;
-    var messageId = message.id_;
+    var messageId = message.id;
     var callers = [];
-
 
     for (var i=0; i<refs.length; i++) {
         var params = refs[i].block.params;
@@ -2182,8 +2181,9 @@ Entry.VariableContainer.prototype.updateCloudVariables = function() {
 };
 
 Entry.VariableContainer.prototype.addRef = function(type, block) {
-    var wsMode = Entry.playground.mainWorkspace.getMode();
-    if (wsMode !== Entry.Workspace.MODE_BOARD) return;
+    if (!this.view_ ||
+        Entry.playground.mainWorkspace.getMode() !== Entry.Workspace.MODE_BOARD)
+        return;
 
     var datum = {
         object:block.getCode().object,
