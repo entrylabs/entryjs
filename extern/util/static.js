@@ -172,7 +172,6 @@ EntryStatic.getAllBlocks = function() {
                 "change_brush_transparency",
                 "set_brush_tranparency",
                 "brush_erase_all"
-
             ]
         },
         {
@@ -271,6 +270,29 @@ EntryStatic.getAllBlocks = function() {
                 "arduino_toggle_led",
                 "arduino_toggle_pwm",
                 "arduino_convert_scale",
+                //dplay
+                "dplay_get_number_sensor_value",
+                "dplay_get_digital_value",
+                "dplay_toggle_led",
+                "dplay_toggle_pwm",
+                "dplay_convert_scale",                
+                //nemoino
+                "nemoino_get_number_sensor_value",
+                "nemoino_get_digital_value",
+                "nemoino_toggle_led",
+                "nemoino_toggle_pwm",
+                "nemoino_convert_scale",
+                //neobot
+                "neobot_sensor_value",
+                "neobot_turn_left",
+                "neobot_stop_left",
+                "neobot_turn_right",
+                "neobot_stop_right",
+                "neobot_run_motor",
+                "neobot_servo_1",
+                "neobot_servo_2",
+                "neobot_play_note_for",
+                "neobot_set_sensor_value",
                 "bitbrick_sensor_value",
                 "bitbrick_convert_scale",
                 "bitbrick_is_touch_pressed",
@@ -362,7 +384,7 @@ EntryStatic.getAllBlocks = function() {
                 "robotis_openCM70_cm_sound_detected_clear",
                 "robotis_openCM70_cm_led",
                 "robotis_openCM70_cm_motion",
-                "robotis_openCM70_aux_motor_speed",              
+                "robotis_openCM70_aux_motor_speed",
                 "robotis_openCM70_aux_servo_mode",
                 "robotis_openCM70_aux_servo_speed",
                 "robotis_openCM70_aux_servo_position",
@@ -370,17 +392,97 @@ EntryStatic.getAllBlocks = function() {
                 "robotis_openCM70_aux_custom",
                 "robotis_openCM70_cm_custom_value",
                 "robotis_openCM70_cm_custom",
-                "robotis_carCont_sensor_value",  
+                "robotis_carCont_sensor_value",
                 "robotis_carCont_cm_led",
                 "robotis_carCont_cm_sound_detected_clear",
                 "robotis_carCont_aux_motor_speed",
-                "robotis_carCont_cm_calibration"
+                "robotis_carCont_cm_calibration",
+
+                //XBOT Blocks added
+                "xbot_analogValue",
+                "xbot_digitalInput",
+                "xbot_digitalOutput",
+                "xbot_analogOutput",
+                "xbot_rgb",
+                "xbot_rgb_picker",
+                "xbot_buzzer",
+                "xbot_servo",
+                "xbot_oneWheel",
+                "xbot_twoWheel",
+                "xbot_lcd"
+                //end of XBOT Blocks added                
             ]
         }
     ]
 }
 
 EntryStatic.blockInfo = {
+    
+    //XBOT Blocks added    
+    "xbot_servo": {
+        "isNotFor": ['xbot_epor_edge'],
+        "xml": "<block type='xbot_servo'><value name='VALUE'><block type='text'><field name='NAME'>90</field></block></value></block>",
+        "class": "xbot_motor"
+    },
+
+    "xbot_rgb": {
+        "isNotFor": ['xbot_epor_edge'],
+        "xml": "<block type='xbot_rgb'><value name='ledR'><block type='text'><field name='NAME'>255</field></block></value><value name='ledG'><block type='text'><field name='NAME'>255</field></block></value><value name='ledB'><block type='text'><field name='NAME'>255</field></block></value></block>",
+        "class": "xbot_rgb"
+    },
+
+    "xbot_rgb_picker": {
+        "isNotFor": ['xbot_epor_edge'],
+        "xml": "<block type='xbot_rgb_picker'></block>",
+        "class": "xbot_rgb"
+    },
+     "xbot_lcd":{
+        "isNotFor": ["xbot_epor_edge"],
+        "xml": "<block type='xbot_lcd'><value name='VALUE'><block type='text'><field name='NAME'>Hello</field></block></value></block>",
+        "class": "xbot_sensor"
+     },
+
+     "xbot_oneWheel": {
+        "isNotFor": ["xbot_epor_edge"],
+        "xml": "<block type='xbot_oneWheel'><value name='VALUE'><block type='text'><field name='NAME'>0</field></block></value></block>",
+        "class": "xbot_motor"
+    },
+
+     "xbot_twoWheel": {
+        "isNotFor": ["xbot_epor_edge"],
+        "xml": "<block type='xbot_twoWheel'><value name='rightWheel'><block type='text'><field name='NAME'>0</field></block></value><value name='leftWheel'><block type='text'><field name='NAME'>0</field></block></value></block>",
+        "class": "xbot_motor"
+    },
+
+    "xbot_buzzer": {
+        "isNotFor": ['xbot_epor_edge'],
+        "xml": "<block type='xbot_buzzer'><field name='OCTAVE'>4</field><value name='VALUE'><block type='text'><field name='NAME'>0.5</field></block></value></block>",
+        "class": "xbot_sensor"
+    },
+	"xbot_digitalOutput": {
+        "isNotFor": ["xbot_epor_edge"],
+        "xml": "<block type='xbot_digitalOutput'></block>",
+        "class": "xbot_sensor"
+    },
+
+     "xbot_digitalInput": {
+        "isNotFor": ["xbot_epor_edge"],
+        "xml": "<block type='xbot_digitalInput'></block>",
+        "class": "xbot_sensor"
+    },
+
+    "xbot_analogValue": {
+        "isNotFor": ["xbot_epor_edge"],
+        "xml": "<block type='xbot_analogValue'></block>",
+        "class": "xbot_sensor"
+    },
+    "xbot_analogOutput": {
+        "isNotFor": ["xbot_epor_edge"],
+        "xml": "<block type='xbot_analogOutput'><value name='VALUE'><block type='text'><field name='NAME'>255</field></block></value></block>",
+        "class": "xbot_sensor"
+    },
+    //end of XBOT Blocks added   
+
     "when_run_button_click": {
         "xml": "<block type='when_run_button_click'></block>",
         "class": "event",
@@ -658,13 +760,13 @@ EntryStatic.blockInfo = {
         "usage": ["shape"]
     },
     "dialog_time": {
-        "xml": "<block type='dialog_time'> <value name='VALUE'> <block type='text'> <field name='NAME'>안녕!</field> </block> </value> <value name='SECOND'> <block type='number'><field name='NUM'>4</field></block> </value> </block>",
+        "xml": "<block type='dialog_time'> <value name='VALUE'> <block type='text'> <field name='NAME'>"+ Lang.Blocks.block_hi +"</field> </block> </value> <value name='SECOND'> <block type='number'><field name='NUM'>4</field></block> </value> </block>",
         "class": "say",
         "isNotFor": ["textBox"],
         "usage": ["dialog"]
     },
     "dialog": {
-        "xml": "<block type='dialog'> <value name='VALUE'> <block type='text'> <field name='NAME'>안녕!</field> </block> </value> </block>",
+        "xml": "<block type='dialog'> <value name='VALUE'> <block type='text'> <field name='NAME'>"+ Lang.Blocks.block_hi +"</field> </block> </value> </block>",
         "class": "say",
         "isNotFor": ["textBox"],
         "usage": ["dialog"]
@@ -1059,7 +1161,7 @@ EntryStatic.blockInfo = {
         "class": "button"
     },
     "ask_and_wait": {
-        "xml": "<block type='ask_and_wait'> <value name='VALUE'> <block type='text'> <field name='NAME'>안녕!</field> </block> </value> </block>",
+        "xml": "<block type='ask_and_wait'> <value name='VALUE'> <block type='text'> <field name='NAME'>" + Lang.Blocks.block_hi + "</field> </block> </value> </block>",
         "class": "ask",
         "isNotFor": [],
         "usage": ["answer"]
@@ -1071,7 +1173,7 @@ EntryStatic.blockInfo = {
         "usage": ["answer"]
     },
     "combine_something": {
-        "xml": "<block type='combine_something'> <value name='VALUE1'> <block type='text'> <field name='NAME'>안녕!</field> </block> </value> <value name='VALUE2'> <block type='text'> <field name='NAME'>엔트리</field> </block> </value> </block>",
+        "xml": "<block type='combine_something'> <value name='VALUE1'> <block type='text'> <field name='NAME'>" + Lang.Blocks.block_hi + "</field> </block> </value> <value name='VALUE2'> <block type='text'> <field name='NAME'>" + Lang.Blocks.entry + "</field> </block> </value> </block>",
         "class": "calc_string",
         "isNotFor": [],
         "description": "입력한 두 개의 문자를 결합합니다."
@@ -1208,6 +1310,18 @@ EntryStatic.blockInfo = {
         "usage": ["arduino"],
         "class": "arduino_value"
     },
+    "dplay_get_number_sensor_value": {
+        "xml": "<block type='arduino_get_number_sensor_value'><value name='VALUE'><block type='arduino_get_sensor_number'></block></value></block>",
+        "isNotFor": ['dplay'],
+        "usage": ["arduino"],
+        "class": "arduino_value"
+    },
+    "nemoino_get_number_sensor_value": {
+        "xml": "<block type='arduino_get_number_sensor_value'><value name='VALUE'><block type='arduino_get_sensor_number'></block></value></block>",
+        "isNotFor": ['nemoino'],
+        "usage": ["arduino"],
+        "class": "arduino_value"
+    },
     "sensorBoard_get_number_sensor_value": {
         "xml": "<block type='arduino_get_number_sensor_value'><value name='VALUE'><block type='arduino_get_sensor_number'></block></value></block>",
         "isNotFor": ['sensorBoard'],
@@ -1226,12 +1340,24 @@ EntryStatic.blockInfo = {
         "usage": ["arduino"],
         "class": "arduino_value"
     },
+    "dplay_get_digital_value": {
+        "xml": "<block type='arduino_get_digital_value'><value name='VALUE'><block type='arduino_get_port_number'></block></value></block>",
+        "isNotFor": ['dplay'],
+        "usage": ["arduino"],
+        "class": "arduino_value"
+    },
+    "nemoino_get_digital_value": {
+        "xml": "<block type='arduino_get_digital_value'><value name='VALUE'><block type='arduino_get_port_number'></block></value></block>",
+        "isNotFor": ['nemoino'],
+        "usage": ["arduino"],
+        "class": "arduino_value"
+    },
     "sensorBoard_get_digital_value": {
         "xml": "<block type='arduino_get_digital_value'><value name='VALUE'><block type='arduino_get_port_number'></block></value></block>",
         "isNotFor": ['sensorBoard'],
         "usage": ["arduino"],
         "class": "arduino_value"
-    },    
+    },
     "CODEino_get_digital_value": {
         "xml": "<block type='arduino_get_digital_value'><value name='VALUE'><block type='arduino_get_port_number'></block></value></block>",
         "isNotFor": ['CODEino'],
@@ -1241,6 +1367,18 @@ EntryStatic.blockInfo = {
     "arduino_toggle_led": {
         "xml": "<block type='arduino_toggle_led'><value name='VALUE'><block type='arduino_get_port_number'></block></value></block>",
         "isNotFor": ['arduino'],
+        "usage": ["arduino"],
+        "class": "arduino_set"
+    },
+    "dplay_toggle_led": {
+        "xml": "<block type='arduino_toggle_led'><value name='VALUE'><block type='arduino_get_port_number'></block></value></block>",
+        "isNotFor": ['dplay'],
+        "usage": ["arduino"],
+        "class": "arduino_set"
+    },
+    "nemoino_toggle_led": {
+        "xml": "<block type='arduino_toggle_led'><value name='VALUE'><block type='arduino_get_port_number'></block></value></block>",
+        "isNotFor": ['nemoino'],
         "usage": ["arduino"],
         "class": "arduino_set"
     },
@@ -1262,6 +1400,18 @@ EntryStatic.blockInfo = {
         "usage": ["arduino"],
         "class": "arduino_set"
     },
+    "dplay_toggle_pwm": {
+        "xml": "<block type='arduino_toggle_pwm'><value name='PORT'><block type='arduino_get_pwm_port_number'></block></value><value name='VALUE'><block type='arduino_text'><field name='NAME'>255</field></block></value></block>",
+        "isNotFor": ['dplay'],
+        "usage": ["arduino"],
+        "class": "arduino_set"
+    },
+    "nemoino_toggle_pwm": {
+        "xml": "<block type='arduino_toggle_pwm'><value name='PORT'><block type='arduino_get_pwm_port_number'></block></value><value name='VALUE'><block type='arduino_text'><field name='NAME'>255</field></block></value></block>",
+        "isNotFor": ['nemoino'],
+        "usage": ["arduino"],
+        "class": "arduino_set"
+    },
     "sensorBoard_toggle_pwm": {
         "xml": "<block type='arduino_toggle_pwm'><value name='PORT'><block type='arduino_get_pwm_port_number'></block></value><value name='VALUE'><block type='arduino_text'><field name='NAME'>255</field></block></value></block>",
         "isNotFor": ['sensorBoard'],
@@ -1277,6 +1427,18 @@ EntryStatic.blockInfo = {
     "arduino_convert_scale": {
         "xml": "<block type='arduino_convert_scale'><value name='VALUE1'><block type='arduino_get_number_sensor_value'><value name='VALUE'><block type='arduino_get_sensor_number'></block></value></block></value><value name='VALUE2'> <block type='number'><field name='NUM'>0</field></block> </value><value name='VALUE3'> <block type='number'><field name='NUM'>1023</field></block> </value><value name='VALUE4'> <block type='number'><field name='NUM'>0</field></block> </value><value name='VALUE5'> <block type='number'><field name='NUM'>100</field></block> </value></block>",
         "isNotFor": ['arduino'],
+        "usage": ["arduino"],
+        "class": "arduino"
+    },
+    "dplay_convert_scale": {
+        "xml": "<block type='arduino_convert_scale'><value name='VALUE1'><block type='arduino_get_number_sensor_value'><value name='VALUE'><block type='arduino_get_sensor_number'></block></value></block></value><value name='VALUE2'> <block type='number'><field name='NUM'>0</field></block> </value><value name='VALUE3'> <block type='number'><field name='NUM'>1023</field></block> </value><value name='VALUE4'> <block type='number'><field name='NUM'>0</field></block> </value><value name='VALUE5'> <block type='number'><field name='NUM'>100</field></block> </value></block>",
+        "isNotFor": ['dplay'],
+        "usage": ["arduino"],
+        "class": "arduino"
+    },
+    "nemoino_convert_scale": {
+        "xml": "<block type='arduino_convert_scale'><value name='VALUE1'><block type='arduino_get_number_sensor_value'><value name='VALUE'><block type='arduino_get_sensor_number'></block></value></block></value><value name='VALUE2'> <block type='number'><field name='NUM'>0</field></block> </value><value name='VALUE3'> <block type='number'><field name='NUM'>1023</field></block> </value><value name='VALUE4'> <block type='number'><field name='NUM'>0</field></block> </value><value name='VALUE5'> <block type='number'><field name='NUM'>100</field></block> </value></block>",
+        "isNotFor": ['nemoino'],
         "usage": ["arduino"],
         "class": "arduino"
     },
@@ -1379,40 +1541,90 @@ EntryStatic.blockInfo = {
         "class": "condition"
     },
     "char_at": {
-        "xml": "<block type='char_at'><value name='LEFTHAND'><block type='text'><field name='NAME'>안녕, 엔트리!</field></block></value><value name='RIGHTHAND'><block type='number'><field name='NUM'>1</field></block></value></block>",
+        "xml": "<block type='char_at'><value name='LEFTHAND'><block type='text'><field name='NAME'>" + Lang.Blocks.hi_entry + "</field></block></value><value name='RIGHTHAND'><block type='number'><field name='NUM'>1</field></block></value></block>",
         "class": "calc_string",
         "isNotFor": [],
         "usage": []
     },
     "length_of_string": {
-        "xml": "<block type='length_of_string'><value name='STRING'><block type='text'><field name='NAME'>엔트리</field></block></value></block>",
+        "xml": "<block type='length_of_string'><value name='STRING'><block type='text'><field name='NAME'>" + Lang.Blocks.entry + "</field></block></value></block>",
         "class": "calc_string",
         "isNotFor": [],
         "usage": []
     },
     "substring": {
-        "xml": "<block type='substring'><value name='STRING'><block type='text'><field name='NAME'>안녕, 엔트리!</field></block></value><value name='START'><block type='number'><field name='NUM'>2</field></block></value><value name='END'><block type='number'><field name='NUM'>5</field></block></value></block>",
+        "xml": "<block type='substring'><value name='STRING'><block type='text'><field name='NAME'>" + Lang.Blocks.hi_entry + "</field></block></value><value name='START'><block type='number'><field name='NUM'>2</field></block></value><value name='END'><block type='number'><field name='NUM'>5</field></block></value></block>",
         "class": "calc_string",
         "isNotFor": [],
         "usage": []
     },
     "replace_string": {
-        "xml": "<block type='replace_string'><value name='STRING'><block type='text'><field name='NAME'>안녕, 엔트리!</field></block></value><value name='OLD_WORD'><block type='text'><field name='NAME'>안녕</field></block></value><value name='NEW_WORD'><block type='text'><field name='NAME'>반가워</field></block></value></block>",
+        "xml": "<block type='replace_string'><value name='STRING'><block type='text'><field name='NAME'>" + Lang.Blocks.hi_entry + "</field></block></value><value name='OLD_WORD'><block type='text'><field name='NAME'>" + Lang.Blocks.hello + "</field></block></value><value name='NEW_WORD'><block type='text'><field name='NAME'>" + Lang.Blocks.nice + "</field></block></value></block>",
         "class": "calc_string",
         "isNotFor": [],
         "usage": []
     },
     "change_string_case": {
-        "xml": "<block type='change_string_case'><value name='STRING'><block type='text'><field name='NAME'>Hello, Entry!</field></block></value></block>",
+        "xml": "<block type='change_string_case'><value name='STRING'><block type='text'><field name='NAME'>" + Lang.Blocks.hi_entry_en + "</field></block></value></block>",
         "class": "calc_string",
         "isNotFor": [],
         "usage": []
     },
     "index_of_string": {
-        "xml": "<block type='index_of_string'><value name='LEFTHAND'><block type='text'><field name='NAME'>안녕, 엔트리!</field></block></value><value name='RIGHTHAND'><block type='text'><field name='NAME'>엔트리</field></block></value></block>",
+        "xml": "<block type='index_of_string'><value name='LEFTHAND'><block type='text'><field name='NAME'>" + Lang.Blocks.hi_entry + "</field></block></value><value name='RIGHTHAND'><block type='text'><field name='NAME'>" + Lang.Blocks.entry + "</field></block></value></block>",
         "class": "calc_string",
         "isNotFor": [],
         "usage": []
+    },
+    "neobot_sensor_value": {
+        "isNotFor": ['neobot'],
+        "xml": "<block type='neobot_sensor_value'></block>",
+        "class": "neobot_value"
+    },
+    "neobot_turn_left": {
+        "isNotFor": ['neobot'],
+        "xml": "<block type='neobot_turn_left'></block>",
+        "class": "neobot_motor"
+    },
+    "neobot_stop_left": {
+        "isNotFor": ['neobot'],
+        "xml": "<block type='neobot_stop_left'></block>",
+        "class": "neobot_motor"
+    },
+    "neobot_turn_right": {
+        "isNotFor": ['neobot'],
+        "xml": "<block type='neobot_turn_right'></block>",
+        "class": "neobot_motor"
+    },
+    "neobot_stop_right": {
+        "isNotFor": ['neobot'],
+        "xml": "<block type='neobot_stop_right'></block>",
+        "class": "neobot_motor"
+    },
+    "neobot_run_motor": {
+        "isNotFor": ['neobot'],
+        "xml": "<block type='neobot_run_motor'><value name='DURATION'><block type='text'><field name='NAME'>1</field></block></value></block>",
+        "class": "neobot_motor"
+    },
+    "neobot_servo_1": {
+        "isNotFor": ['neobot'],
+        "xml": "<block type='neobot_servo_1'></block>",
+        "class": "neobot_servo"
+    },
+    "neobot_servo_2": {
+        "isNotFor": ['neobot'],
+        "xml": "<block type='neobot_servo_2'></block>",
+        "class": "neobot_servo"
+    },
+    "neobot_play_note_for": {
+        "isNotFor": ['neobot'],
+        "xml": "<block type='neobot_play_note_for'></block>",
+        "class": "neobot_note"
+    },
+    "neobot_set_sensor_value": {
+        "isNotFor": ['neobot'],
+        "xml": "<block type='neobot_set_sensor_value'></block>",
+        "class": "neobot_set_value"
     },
     "bitbrick_sensor_value": {
         "isNotFor": ['bitbrick'],
@@ -1468,7 +1680,7 @@ EntryStatic.blockInfo = {
         "isNotFor": ['bitbrick'],
         "xml": "<block type='bitbrick_servomotor_angle'><value name='VALUE'><block type='text'><field name='NAME'>100</field></block></value></block>",
         "class": "condition"
-    },    
+    },
     "bitbrick_convert_scale": {
         "isNotFor": ['bitbrick'],
         "xml": "<block type='bitbrick_convert_scale'><value name='VALUE2'> <block type='number'><field name='NUM'>0</field></block> </value><value name='VALUE3'> <block type='number'><field name='NUM'>1023</field></block> </value><value name='VALUE4'> <block type='number'><field name='NUM'>-100</field></block> </value><value name='VALUE5'> <block type='number'><field name='NUM'>100</field></block> </value></block>",
@@ -2136,3 +2348,23 @@ EntryStatic.fonts = [
 }
 ];
 
+EntryStatic.getName = function(str, type) {
+    var dict = SpriteNames;
+    if (type == 'picture')
+        dict = PictureNames;
+    else if (type == 'sound')
+        dict = SoundNames;
+
+    var lang = navigator.language ? navigator.language : 'ko';
+    if (window.lang)
+        lang = window.lang;
+
+    if (window.user && window.user.language)
+        lang = window.user.language;
+
+    if (!dict || lang == 'ko' || lang == 'code') {
+        return str;
+    } else {
+        return dict[str] ? dict[str] : str;
+    }
+};

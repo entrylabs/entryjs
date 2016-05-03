@@ -205,7 +205,7 @@ Entry.resizeElement = function(interfaceModel) {
 
         var canvasSize = interfaceModel.canvasWidth;
         if (!canvasSize)            canvasSize = 400;
-        else if (canvasSize < 300)  canvasSize = 300;
+        else if (canvasSize < 325)  canvasSize = 325;
         else if (canvasSize > 720)  canvasSize = 720;
         interfaceModel.canvasWidth = canvasSize;
 
@@ -216,16 +216,14 @@ Entry.resizeElement = function(interfaceModel) {
         Entry.engine.view_.style.top = '40px';
         Entry.stage.canvas.canvas.style.height = canvasHeight + 'px';
         Entry.stage.canvas.canvas.style.width = canvasSize + 'px';
-        Entry.container.view_.style.width = canvasSize + 'px';
-        Entry.container.view_.style.top = (canvasHeight + 35 + 40 + 48 - 22) + 'px';
         if (canvasSize >= 400) {
             Entry.engine.view_.removeClass("collapsed");
-            Entry.container.listView_.removeClass("collapsed");
         } else {
             Entry.engine.view_.addClass("collapsed");
-            Entry.container.listView_.addClass("collapsed");
         }
         Entry.playground.view_.style.left = (canvasSize + 0.5) + 'px';
+
+        Entry.propertyPanel.resize(canvasSize);
 
         var addButton = Entry.engine.view_.getElementsByClassName('entryAddButtonWorkspace_w')[0];
         if (addButton) {
@@ -335,7 +333,7 @@ Entry.cancelObjectEdit = function(e) {
     var tagName = target.tagName.toUpperCase();
     if (!object.isEditing || (tagName === 'INPUT' && isCurrent))
         return;
-
+    
     object.editObjectValues(false);
 };
 

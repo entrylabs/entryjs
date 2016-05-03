@@ -24,6 +24,29 @@ Entry.Albert = {
 		albert.tempo = 60;
 		albert.removeAllTimeouts();
 	},
+	monitorTemplate: {
+        imgPath: "hw/albert.png",
+        width: 387,
+        height: 503,
+        listPorts: {
+            "oid":{name: "OID", type: "input", pos: {x: 0, y: 0}},
+        	"buzzer":{name: Lang.Hw.buzzer , type: "output", pos: {x: 0, y: 0}},
+        	"note":{name: Lang.Hw.note , type: "output", pos: {x: 0, y: 0}}
+        },
+        ports: {
+            "leftProximity":{name: Lang.Blocks.ALBERT_sensor_leftProximity, type: "input", pos: {x : 178, y: 401}},
+            "rightProximity":{name: Lang.Blocks.ALBERT_sensor_rightProximity, type: "input", pos: {x: 66, y: 359}},
+            "battery":{name: Lang.Blocks.ALBERT_sensor_battery , type: "input", pos: {x : 88, y: 368}},
+            "light":{name: Lang.Blocks.ALBERT_sensor_light, type: "input", pos: {x: 127, y: 391}},
+            "leftWheel":{name: Lang.Hw.leftWheel , type: "output", pos: {x: 299, y: 406}},
+            "rightWheel":{name: Lang.Hw.rightWheel , type: "output", pos: {x: 22, y: 325}},
+            "leftEye":{name: Lang.Hw.leftEye , type: "output", pos: {x: 260, y:26}},
+            "rightEye":{name: Lang.Hw.rightEye, type: "output", pos: {x: 164, y: 13}},
+            "bodyLed":{name: Lang.Hw.body + " " + Lang.Hw.led, type: "output", pos: {x: 367, y: 308}},
+            "frontLed":{name:  Lang.Hw.front + " " + Lang.Hw.led, pos: {x: 117, y: 410}}
+        },
+        mode : 'both'
+    },
 	tempo: 60,
 	timeouts: [],
 	removeTimeout: function(id) {

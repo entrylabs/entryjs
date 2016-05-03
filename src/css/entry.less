@@ -34,6 +34,7 @@
     text-decoration: none !important;
 }
 
+
 .entryBtn {
     border: none;
     margin: 0;
@@ -81,11 +82,11 @@
     position: relative;
     z-index: 999;
     cursor: pointer;
-    background: url("@{image_url}top_icon_add_b_nor.png");
+    .backgroundImage("top_icon_add_b_nor.png");
 }
 
 .selectedScene .entrySceneLeftWorkspace {
-    background: url("@{image_url}top_tab_b_sel_left.png");
+    .backgroundImage("top_tab_b_sel_left.png");
 }
 
 .entrySceneLeftWorkspace {
@@ -93,7 +94,7 @@
     float: left;
     width: 15px;
     height: 40px;
-    background: url("@{image_url}top_tab_b_nor_left_blue.png");
+    .backgroundImage("top_tab_b_nor_left_blue.png");
 }
 
 .entrySceneInputCover {
@@ -154,7 +155,7 @@
     float: left;
     height: 40px;
     position: relative;
-    background: url("@{image_url}top_tab_b_nor_right_blue.png");
+    .backgroundImage("top_tab_b_nor_right_blue.png");
 }
 
 .selectedScene .entrySceneRemoveButtonCoverWorkspace {
@@ -219,6 +220,15 @@
     border-right: 2pt solid #639FBD;
 }
 
+.entryUndoButtonWorkspace {
+    background-image: url("/img/assets/undo.png");
+}
+
+.entryRedoButtonWorkspace {
+    background-image: url("/img/assets/redo.png");
+}
+
+
 .entryCanvasWrapper {
     position: absolute;
 }
@@ -231,6 +241,11 @@
     position: absolute;
     top: 24px;
 }
+
+.entryPopupWindow .entryCanvasWorkspace  {
+    top: -11px !important;
+}
+
 
 .entryCanvasPhone {
     width: 100%;
@@ -398,7 +413,7 @@
     background-color: transparent;
     font-size: 12pt;
     border-bottom: 2px solid #89c0d5;
-    background-image: url("@{image_url}layers_icon_button_play_nor.png");
+    .backgroundImage("layers_icon_button_play_nor.png");
     background-position: 10px 50%;
     background-repeat: no-repeat;
 }
@@ -410,7 +425,7 @@
     background-color: transparent;
     font-size: 12pt;
     border-bottom: 2px solid #89c0d5;
-    background-image: url("@{image_url}layers_icon_button_stop_nor.png");
+    .backgroundImage("layers_icon_button_stop_nor.png");
     background-position: 10px 50%;
     background-repeat: no-repeat;
 }
@@ -471,7 +486,7 @@
 .entryMaximizeButtonWorkspace {
     float: left;
     margin-left: 5px;
-    background-image: url("@{image_url}fullscreen_edit.png");
+    .backgroundImage("fullscreen_edit.png");
 }
 
 .entryMaximizeButtonMinimize {
@@ -495,18 +510,18 @@
     background-repeat: no-repeat;
     background-position: center;
     background-color: transparent;
-    background-image: url("@{image_url}layers_icon_fullmode01_nor.png");
+    .backgroundImage("layers_icon_fullmode01_nor.png");
 }
 
 .entryMaximizeButtonWorkspace_w {
     float: right;
     margin-right: 5px;
-    background-image: url("@{image_url}layers_icon_fullmode01_nor_1.png");
+    .backgroundImage("layers_icon_fullmode01_nor_1.png");
     background-repeat: no-repeat;
 }
 
 .entryEngineBlueWorkspace > .entryMaximizeButtonWorkspace {
-    background-image: url("@{image_url}fullscreen_play.png");
+    .backgroundImage("fullscreen_play.png");
 }
 
 #entrySpeedPanelWorkspace {
@@ -523,7 +538,7 @@
     height: 15px;
     margin-top: 5px;
     margin-left: 10px;
-    background-image: url("@{image_url}speed_edit.png");
+    .backgroundImage("speed_edit.png");
 }
 
 .entryPopupWindow > div > .entrySpeedButtonWorkspace {
@@ -590,34 +605,34 @@
     height: 16px;
     top: 21px;
     z-index: 100;
-    background-image: url("@{image_url}speed_handle.png");
+    .backgroundImage("speed_handle.png");
 }
 
 .entryCoordinateButtonWorkspace {
     float: right;
-    background-image: url("@{image_url}coordinates_edit.png");
+    .backgroundImage("coordinates_edit.png");
 }
 
 .entryCoordinateButtonMinimize {
     float: right;
-    background-image: url("@{image_url}grid.png");
+    .backgroundImage("grid.png");
 }
 
 .entryCoordinateButtonWorkspace_w {
     float: right;
-    background-image: url("@{image_url}layers_icon_grid_nor.png");
+    .backgroundImage("layers_icon_grid_nor.png");
 }
 
 .entryCoordinateButtonWorkspace.toggleOn {
-    background-image: url("@{image_url}coordinates_edit_on.png");
+    .backgroundImage("coordinates_edit_on.png");
 }
 
 .entryCoordinateButtonWorkspace_w.toggleOn {
-    background-image: url("@{image_url}layers_icon_grid_nor_1.png");
+    .backgroundImage("layers_icon_grid_nor_1.png");
 }
 
 .entryEngineBlueWorkspace > .entryCoordinateButtonWorkspace {
-    background-image: url("@{image_url}coordinates_play.png");
+    .backgroundImage("coordinates_play.png");
 }
 
 .entryRunButtonWorkspace {
@@ -628,7 +643,7 @@
     text-align: right;
     font-size:9pt;
     color: #61abdb;
-    background-image: url("@{image_url}playbutton_edit.png");
+    .backgroundImage("playbutton_edit.png");
 }
 
 .entryRunButtonMinimize {
@@ -654,7 +669,7 @@
     background-repeat: no-repeat;
     background-position: 10% 43%;
     font-family: nanumBarunBold !important;
-    background-image: url("@{image_url}layers_icon_button_plus_nor.png");
+    .backgroundImage("layers_icon_button_plus_nor.png");
 }
 
 .collapsed>.entryAddButtonWorkspace_w {
@@ -678,7 +693,7 @@
     background-repeat: no-repeat;
     background-position: 10% 43%;
     font-family: nanumBarunBold !important;
-    background-image: url("@{image_url}layers_icon_button_play_nor_1.png");
+    .backgroundImage("layers_icon_button_play_nor_1.png");
 }
 
 .collapsed>.entryRunButtonWorkspace_w {
@@ -691,7 +706,7 @@
 }
 
 .entryEngineBlueWorkspace > .entryRunButtonWorkspace {
-    background-image: url("@{image_url}playbutton_play.png");
+    .backgroundImage("playbutton_play.png");
     color: white;
 }
 
@@ -704,7 +719,7 @@
     text-align: right;
     font-size:9pt;
     color: #61abdb;
-    background-image: url("@{image_url}stopbutton_pause.png");
+    .backgroundImage("stopbutton_pause.png");
 }
 
 .entryStopButtonMinimize {
@@ -715,7 +730,7 @@
     text-align: right;
     font-size:9pt;
     color: @lightBora;
-    background-image: url("@{image_url}stop_btn.png");
+    .backgroundImage("stop_btn.png");
 }
 
 .entryStopButtonWorkspace_w {
@@ -734,7 +749,7 @@
     background-repeat: no-repeat;
     background-position: 10% center;
     font-weight: 600;
-    background-image: url("@{image_url}layers_icon_button_stop_nor_1.png");
+    .backgroundImage("layers_icon_button_stop_nor_1.png");
 }
 
 .collapsed>.entryStopButtonWorkspace_w {
@@ -746,19 +761,23 @@
     display: none;
 }
 
+.entryPauseButtonWorkspace_w {
+    display: none;
+}
+
 .entryEngineBlueWorkspace > .entryStopButtonWorkspace {
-    background-image: url("@{image_url}stopbutton_play.png");
+    .backgroundImage("stopbutton_play.png");
     color: white;
 }
 
 .entryPauseButtonWorkspace {
     float:right;
-    background-image: url("@{image_url}pausebutton_edit.png");
+    .backgroundImage("pausebutton_edit.png");
 }
 
 .entryPauseButtonMinimize {
     float:left;
-    background-image: url("@{image_url}pause_btn.png");
+    .backgroundImage("pause_btn.png");
     width: auto;
     background-position: left;
     padding-left: 17px;
@@ -767,18 +786,15 @@
 }
 
 .entryEngineBlueWorkspace > .entryPauseButtonWorkspace {
-    background-image: url("@{image_url}pausebutton_play.png");
+    .backgroundImage("pausebutton_play.png");
     color: white;
 }
 
+@import "/components/property_panel.less";
+@import "/components/hw_monitor.less";
 
 .entryContainerWorkspace {
-    position: absolute;
-    top: 326px;
-    bottom: 0px;
-    width: 400px;
     background-color: #e7e7e7;
-    border-top: 2px solid @blueHaneul;
 }
 
 .entryContainerPhone {
@@ -854,7 +870,7 @@
     border-bottom: 1px solid #aaaaaa;
 }
 
-.collapsed>.entryContainerListElementWorkspace.selectedObject {
+.collapsed .selectedObject {
     height: 149px;
 }
 
@@ -880,14 +896,14 @@
     left:0;
     height: 18px;
     width: 18px;
-    background-image: url("@{image_url}layers_icon_visible.png");
+    .backgroundImage("layers_icon_visible.png");
     border-bottom: 1px solid rgba(159,159,159,0.3);
     cursor: pointer;
     .box-sizing(border-box);
 }
 
 .objectInfo_unvisible {
-    background-image: url("@{image_url}layers_icon_unvisible.png");
+    .backgroundImage("layers_icon_unvisible.png");
 }
 
 .objectInfo_unlock {
@@ -897,13 +913,13 @@
     left:0;
     height: 18px;
     width: 18px;
-    background-image: url("@{image_url}layers_icon_unlock.png");
+    .backgroundImage("layers_icon_unlock.png");
     cursor: pointer;
     .box-sizing(border-box);
 }
 
 .objectInfo_lock {
-    background-image: url("@{image_url}layers_icon_lock.png");
+    .backgroundImage("layers_icon_lock.png");
 }
 
 
@@ -960,6 +976,17 @@
     background-color: transparent;
 }
 
+.selectedNotEditionObject {
+    background-color: transparent;
+}
+
+.selectedNotEditionObject:hover {
+    background-color: transparent;
+}
+
+.selectedNotEditionObject:focus {
+    background-color: transparent !important;
+}
 /*sj*/
 
 .selectedObject .entryObjectNameWorkspace{
@@ -971,15 +998,6 @@
     font-family: nanumBarunRegular !important;
 }
 
-/*.entryObjectNameWorkspace:hover{
-    background-color: white;
-    color: black;
-}
-*/
-.entryObjectNameWorkspace:focus{
-    background-color: white;
-    color: black;
-}
 
 .entryObjectNameWorkspace:disabled{
     background-color: transparent;
@@ -992,7 +1010,7 @@
     right: 43px;
     top: 22px;
     cursor: pointer;
-    background-image: url("@{image_url}layers_icon_edit_nor_new.png");
+    .backgroundImage("layers_icon_edit_nor_new.png");
 
 }
 
@@ -1004,7 +1022,7 @@
     right: 21px;
     top: 22px;
     cursor: pointer;
-    background-image: url("@{image_url}layers_icon_close_nor_new.png");
+    .backgroundImage("layers_icon_close_nor_new.png");
 }
 
 .entryObjectDeletePhone {
@@ -1015,7 +1033,7 @@
     right: 57px;
     top: 25px;
     cursor: pointer;
-    background-image: url("@{image_url}layers_icon_close_nor.png");
+    .backgroundImage("layers_icon_close_nor.png");
 }
 
 .entryObjectEditPhone {
@@ -1029,7 +1047,18 @@
     border: none;
     top: 21px;
     cursor: pointer;
-    background-image: url("@{image_url}glyphicons_150_edit.png");
+    .backgroundImage("glyphicons_150_edit.png");
+}
+
+.entryObjectSelectedImgWorkspace {
+    float: left;
+    position: absolute;
+    width: 14px;
+    height: 26px;
+    right: 0;
+    top: 20px;
+    cursor: col-resize;
+    .backgroundImage("entry_scroll.png");
 }
 
 .selectedObject .entryObjectSelectedImgWorkspace {
@@ -1040,7 +1069,7 @@
     right: 0;
     top: 20px;
     cursor: col-resize;
-    background-image: url("@{image_url}entry_scroll.png");
+    .backgroundImage("entry_scroll.png");
 }
 
 .entryObjectCoordinateWorkspace{
@@ -1064,15 +1093,15 @@
     margin: 12px 0 0 0;
     width: 13px;
     height: 13px;
-    background-image: url("@{image_url}layers_arrow_up_nor.png");
+    .backgroundImage("layers_arrow_up_nor.png");
 }
 
 .selectedObject .entryObjectInformationWorkspace{
-    background-image: url("@{image_url}layers_arrow_down_nor.png");
+    .backgroundImage("layers_arrow_down_nor.png");
 }
 
 .informationToggle>.entryObjectWrapperWorkspace>.entryObjectInformationWorkspace{
-    background-image: url("@{image_url}layers_arrow_down_nor_1.png");
+    .backgroundImage("layers_arrow_down_nor_1.png");
 }
 
 .entryObjectButtonWorkspace {
@@ -1100,7 +1129,7 @@
 }
 
 .entryObjectSoundWorkspace {
-    background-image: url("@{image_url}icon_sound.png");
+    .backgroundImage("icon_sound.png");
     background-color: #6a9a1f;
 }
 
@@ -1109,7 +1138,7 @@
 }
 
 .entryObjectPictureWorkspace {
-    background-image: url("@{image_url}icon_picture.png");
+    .backgroundImage("icon_picture.png");
     background-color: #f26724;
 }
 
@@ -1118,7 +1147,7 @@
 }
 
 .entryObjectCodeWorkspace {
-    background-image: url("@{image_url}icon_code.png");
+    .backgroundImage("icon_code.png");
     background-color: #00ace9;
 }
 
@@ -1127,7 +1156,7 @@
 }
 
 .entryObjectTextWorkspace {
-    background-image: url("@{image_url}text_icon_white.png");
+    .backgroundImage("text_icon_white.png");
     background-color: #F3BB1D;
     background-position: 50% 20%;
     background-size: 75%;
@@ -1142,9 +1171,7 @@
     background-color: #e5e5e5;
 }
 
-.collapsed>
-.entryContainerListElementWorkspace>
-.entryObjectRotationWrapperWorkspace {
+.collapsed .entryObjectRotationWrapperWorkspace {
     height: 90px;
 }
 
@@ -1162,10 +1189,7 @@
     position: relative;
 }
 
-.collapsed>
-.entryContainerListElementWorkspace>
-.entryObjectRotationWrapperWorkspace>
-.rotationMethodWrapper {
+.collapsed .rotationMethodWrapper {
     float: left;
     top: 39px;
 }
@@ -1220,29 +1244,43 @@
     height: 22px;
 }
 
+.propertyTabhelper {
+    .backgroundImage("property/helper_off.png"); 
+}
+
+.propertyTabhelper.selected {
+    .backgroundImage("property/helper_on.png");
+}
+
+.propertyTabContainer {
+  .backgroundImage("property/container_off.png");
+}
+.propertyTabContainer.selected {
+  .backgroundImage("property/container_on.png");
+}
 .entryObjectRotateModeAWorkspace {
     margin-left: 80px;
-    background-image: url("@{image_url}layers_icon_rotate01_nor.png");
+    .backgroundImage("layers_icon_rotate01_nor.png");
 }
 
 .entryObjectRotateModeAWorkspace.selected {
-    background-image: url("@{image_url}layers_icon_rotate01_sel.png");
+    .backgroundImage("layers_icon_rotate01_sel.png");
 }
 
 .entryObjectRotateModeBWorkspace {
-    background-image: url("@{image_url}layers_icon_rotate02_nor.png");
+    .backgroundImage("layers_icon_rotate02_nor.png");
 }
 
 .entryObjectRotateModeBWorkspace.selected {
-    background-image: url("@{image_url}layers_icon_rotate02_sel.png");
+    .backgroundImage("layers_icon_rotate02_sel.png");
 }
 
 .entryObjectRotateModeCWorkspace {
-    background-image: url("@{image_url}layers_icon_rotate03_nor.png");
+    .backgroundImage("layers_icon_rotate03_nor.png");
 }
 
 .entryObjectRotateModeCWorkspace.selected {
-    background-image: url("@{image_url}layers_icon_rotate03_sel.png");
+    .backgroundImage("layers_icon_rotate03_sel.png");
 }
 
 .entryPlaygroundWorkspace {
@@ -1271,7 +1309,7 @@
     border: solid 1px #afafaf;
     border-left: none;
     z-index: 250;
-    background-image: url("@{image_url}entry_scroll_02.png");
+    .backgroundImage("entry_scroll_02.png");
 }
 
 .entryPlaygroundTabWorkspace {
@@ -1602,7 +1640,7 @@
     height: 40px;
     opacity: 0;
     background-color: transparent;
-    background-image: url("@{image_url}layers_icon_close_nor_new_1.png");
+    .backgroundImage("layers_icon_close_nor_new_1.png");
     background-repeat: no-repeat;
     background-position: center;
 }
@@ -1622,7 +1660,7 @@
     margin-top: 5px;
     margin-right: 25px;
     background-color: transparent;
-    background-image: url("@{image_url}layers_icon_edit_nor_new_1.png");
+    .backgroundImage("layers_icon_edit_nor_new_1.png");
     background-repeat: no-repeat;
     background-position: center;
     opacity: 0;
@@ -1684,35 +1722,35 @@
 }
 
 .entryVariableLocalElementWorkspace {
-    background-image: url("@{image_url}local_question_icon.png");
+    .backgroundImage("local_question_icon.png");
 }
 
 .entryVariableCloudElementWorkspace {
-    background-image: url("@{image_url}cloud_question_icon.png");
+    .backgroundImage("cloud_question_icon.png");
 }
 
 .entryVariableGlobalElementWorkspace {
-    background-image: url("@{image_url}list_icon_question.png");
+    .backgroundImage("list_icon_question.png");
 }
 
 .entryMessageElementWorkspace {
-    background-image: url("@{image_url}list_icon_signal.png");
+    .backgroundImage("list_icon_signal.png");
 }
 
 .entryListCloudElementWorkspace {
-    background-image: url("@{image_url}cloud_list_icon.png");
+    .backgroundImage("cloud_list_icon.png");
 }
 
 .entryListGlobalElementWorkspace {
-    background-image: url("@{image_url}list_icon_list.png");
+    .backgroundImage("list_icon_list.png");
 }
 
 .entryListLocalElementWorkspace {
-    background-image: url("@{image_url}local_list_icon.png");
+    .backgroundImage("local_list_icon.png");
 }
 
 .entryFunctionElementWorkspace {
-    background-image: url("@{image_url}list_icon_function_v1.png");
+    .backgroundImage("list_icon_function_v1.png");
 }
 
 .entryPlaygroundPictureWorkspace {
@@ -1920,20 +1958,20 @@
 }
 
 #entryFontColorToggle {
-    background-image: url("@{image_url}text_in_off.png");
+    .backgroundImage("text_in_off.png");
 }
 
 #entryFontColorToggle.selected {
-    background-image: url("@{image_url}text_in_on.png");
+    .backgroundImage("text_in_on.png");
 }
 
 #entryFontBGToggle {
     margin-left: 6px;
-    background-image: url("@{image_url}text_out_off.png");
+    .backgroundImage("text_out_off.png");
 }
 
 #entryFontBGToggle.selected {
-    background-image: url("@{image_url}text_out_on.png");
+    .backgroundImage("text_out_on.png");
 }
 
 .entryPlaygroundSoundWorkspace {
@@ -2042,11 +2080,11 @@
 }
 
 .entryPlaygroundSoundThumbnail.entryPlaygroundSoundPlay {
-    background-image: url("@{image_url}workspace_sound_play.png");
+    .backgroundImage("workspace_sound_play.png");
 }
 
 .entryPlaygroundSoundThumbnail.entryPlaygroundSoundStop {
-    background-image: url("@{image_url}workspace_sound_stop.png");
+    .backgroundImage("workspace_sound_stop.png");
 }
 
 .entryPlaygroundSoundName {
@@ -2201,7 +2239,7 @@
     overflow: hidden;
     border: solid 1px #C4C4B9;
     border-top-left-radius: 10px;
-    background-image: url("@{image_url}entry_bg.png");
+    .backgroundImage("entry_bg.png");
 }
 
 .entryBlocklyWorkspace.folding {
@@ -2278,12 +2316,12 @@
     overflow: hidden;
     border: solid 1px #C4C4B9;
     border-left: 0;
-    background-image: url("@{image_url}entry_bg_1.png");
+    .backgroundImage("entry_bg_1.png");
 }
 
 #entryCategorymoving {
     /*border-right: 4px solid #A751E3;*/
-    background-image: url("@{image_url}movement.png");
+    .backgroundImage("movement.png");
     background-repeat: no-repeat;
 }
 
@@ -2294,7 +2332,7 @@
 
 #entryCategorylooks {
     /*border-right: 4px solid #EC4466;*/
-    background-image: url("@{image_url}looks.png");
+    .backgroundImage("looks.png");
     background-repeat: no-repeat;
 }
 
@@ -2305,7 +2343,7 @@
 
 #entryCategorybrush {
     /*border-right: 4px solid #FF9E20;*/
-    background-image: url("@{image_url}brush.png");
+    .backgroundImage("brush.png");
     background-repeat: no-repeat;
 }
 
@@ -2314,7 +2352,7 @@
 }
 
 #entryCategorytext {
-    background-image: url("@{image_url}postbox_new.png");
+    .backgroundImage("postbox_new.png");
     background-repeat: no-repeat;
 }
 
@@ -2323,7 +2361,7 @@
 }
 
 #entryCategorysound {
-    background-image: url("@{image_url}sound.png");
+    .backgroundImage("sound.png");
     background-repeat: no-repeat;
 }
 
@@ -2332,7 +2370,7 @@
 }
 
 #entryCategorystart {
-    background-image: url("@{image_url}start.png");
+    .backgroundImage("start.png");
     background-repeat: no-repeat;
 }
 
@@ -2341,7 +2379,7 @@
 }
 
 #entryCategoryflow {
-    background-image: url("@{image_url}flow.png");
+    .backgroundImage("flow.png");
     background-repeat: no-repeat;
 }
 
@@ -2350,7 +2388,7 @@
 }
 
 #entryCategoryjudgement {
-    background-image: url("@{image_url}judgement.png");
+    .backgroundImage("judgement.png");
     background-repeat: no-repeat;
 }
 
@@ -2359,7 +2397,7 @@
 }
 
 #entryCategorycalc {
-    background-image: url("@{image_url}calc.png");
+    .backgroundImage("calc.png");
     background-repeat: no-repeat;
 }
 
@@ -2368,7 +2406,7 @@
 }
 
 #entryCategoryvariable {
-    background-image: url("@{image_url}variable.png");
+    .backgroundImage("variable.png");
     background-repeat: no-repeat;
 }
 
@@ -2377,7 +2415,7 @@
 }
 
 #entryCategoryfunc {
-    background-image: url("@{image_url}function.png");
+    .backgroundImage("function.png");
     background-repeat: no-repeat;
 }
 
@@ -2387,7 +2425,7 @@
 
 #entryCategoryscene {
     border-right: none;
-    background-image: url("@{image_url}scene.png");
+    .backgroundImage("scene.png");
     background-repeat: no-repeat;
 }
 
@@ -2397,7 +2435,7 @@
 }
 
 #entryCategoryarduino {
-    background-image: url("@{image_url}arduino.png");
+    .backgroundImage("arduino.png");
     background-repeat: no-repeat;
 }
 
@@ -2577,15 +2615,9 @@
     margin-left: 145px;
 }
 
-.entryObjectCoordinateInputWorkspace:hover, .entryObjectCoordinateInputWorkspace:focus,
-.entryObjectRotateInputWorkspace:hover, .entryObjectDirectionInputWorkspace:hover,
-.entryObjectRotateInputWorkspace:focus, .entryObjectDirectionInputWorkspace:focus {
-    background-color: white;
-}
-
-.entryObjectCoordinateInputWorkspace:disabled,
-.entryObjectRotateInputWorkspace:disabled,
-.entryObjectDirectionInputWorkspace:disabled{
+.entryObjectCoordinateInputWorkspace:focus,
+.entryObjectRotateInputWorkspace:focus,
+.entryObjectDirectionInputWorkspace:focus{
     background-color: transparent;
 }
 
@@ -2813,7 +2845,7 @@
     position: absolute;
     top:90px;
     left: 90px;
-    background-image: url("@{image_url}horizontal.png");
+    .backgroundImage("horizontal.png");
     background-repeat: no-repeat;
     border-radius: 3px;
     width: 28px;
@@ -2823,7 +2855,7 @@
     position: absolute;
     top:90px;
     left: 60px;
-    background-image: url("@{image_url}vertical.png");
+    .backgroundImage("vertical.png");
     background-repeat: no-repeat;
     border-radius: 3px;
     width: 28px;
@@ -3146,12 +3178,12 @@
 .entryVariableAddSpaceNameWrapperWorkspace {
     height: 28px;
     margin-top: 16px;
-    background-image: url("@{image_url}list_icon_question_1.png");
+    .backgroundImage("list_icon_question_1.png");
     background-repeat: no-repeat;
 }
 
 .entryVariableAddSpaceNameWrapperWorkspace.entryListAddSpaceNameWrapperWorkspace {
-    background-image: url("@{image_url}list_icon_list_1.png");
+    .backgroundImage("list_icon_list_1.png");
 }
 
 .entryVariableAddSpaceInputWorkspace {
@@ -3181,7 +3213,7 @@
 
 .entryVariableAddSpaceCheckWorkspace.entryVariableAddChecked {
     /*background-color: gray;*/
-    background-image: url("../images/check_on.png");
+    .backgroundImage("check_on.png");
     background-repeat: no-repeat;
 }
 
@@ -3304,31 +3336,31 @@
 
 
 .entryPlaygroundPainterToolboxPen {
-    background-image: url("@{image_url}off_pen.png");
+    .backgroundImage("off_pen.png");
     background-repeat: no-repeat;
 }
 .entryPlaygroundPainterToolboxPen:hover {
-    background-image: url("@{image_url}on_pen.png");
+    .backgroundImage("on_pen.png");
 }
 
 .entryPlaygroundPainterToolboxLine {
-    background-image: url("@{image_url}off_line.png");
+    .backgroundImage("off_line.png");
 }
 .entryPlaygroundPainterToolboxLine:hover {
-    background-image: url("@{image_url}on_line.png");
+    .backgroundImage("on_line.png");
 }
 
 .entryPlaygroundPainterToolboxRect {
-    background-image: url("@{image_url}off_square.png");
+    .backgroundImage("off_square.png");
 }
 .entryPlaygroundPainterToolboxRect:hover {
-    background-image: url("@{image_url}on_square.png");
+    .backgroundImage("on_square.png");
 }
 .entryPlaygroundPainterToolboxCircle {
-    background-image: url("@{image_url}off_circle.png");
+    .backgroundImage("off_circle.png");
 }
 .entryPlaygroundPainterToolboxCircle:hover {
-    background-image: url("@{image_url}on_circle.png");
+    .backgroundImage("on_circle.png");
 }
 
 .entryPlaygroundPainterToolboxCursor {
@@ -3339,50 +3371,50 @@
 
 }
 .entryPlaygroundPainterToolboxSelect:hover {
-    background-image: url("@{image_url}on_choice.png");
+    .backgroundImage("on_choice.png");
 }
 
 .entryPlaygroundPainterToolboxText {
-    background-image: url("@{image_url}off_text.png");
+    .backgroundImage("off_text.png");
 }
 .entryPlaygroundPainterToolboxText:hover {
-    background-image: url("@{image_url}on_text.png");
+    .backgroundImage("on_text.png");
 }
 
 .entryPlaygroundPainterToolboxFill {
-    background-image: url("@{image_url}off_paint.png");
+    .backgroundImage("off_paint.png");
 }
 .entryPlaygroundPainterToolboxFill:hover {
-    background-image: url("@{image_url}on_paint.png");
+    .backgroundImage("on_paint.png");
 }
 
 .entryPlaygroundPainterToolboxErase {
-    background-image: url("@{image_url}off_eraser.png");
+    .backgroundImage("off_eraser.png");
 }
 .entryPlaygroundPainterToolboxErase:hover {
-    background-image: url("@{image_url}on_eraser.png");
+    .backgroundImage("on_eraser.png");
 }
 .entryPlaygroundPainterToolboxSelect {
-    background-image: url("@{image_url}off_choice.png");
+    .backgroundImage("off_choice.png");
 }
 
 .entryPlaygroundPainterToolboxCoordinate {
-    background-image: url("@{image_url}off_center.png");
+    .backgroundImage("off_center.png");
 }
 .entryPlaygroundPainterToolboxCoordinate:hover {
-    background-image: url("@{image_url}on_center.png");
+    .backgroundImage("on_center.png");
 }
 .entryPlaygroundPainterToolboxGlasses {
-    background-image: url("@{image_url}off_zoom.png");
+    .backgroundImage("off_zoom.png");
 }
 .entryPlaygroundPainterToolboxGlasses:hover {
-    background-image: url("@{image_url}on_zoom.png");
+    .backgroundImage("on_zoom.png");
 }
 .entryPlaygroundPainterToolboxCursor {
-    background-image: url("@{image_url}off_hand.png");
+    .backgroundImage("off_hand.png");
 }
 .entryPlaygroundPainterToolboxCursor:hover {
-    background-image: url("@{image_url}on_hand.png");
+    .backgroundImage("on_hand.png");
 }
 .entryPlaygroundPainterAttrResizeX {
     position:absolute;
@@ -3562,7 +3594,7 @@
 }
 
 .entryPlaygroundPainterAttrFGButton {
-    background-image: url("@{image_url}square_on_in.png");
+    .backgroundImage("square_on_in.png");
     background-repeat: no-repeat;
     width: 42px;
     height: 42px;
@@ -3578,7 +3610,7 @@
 }
 
 .entryPlaygroundPainterAttrBGButton {
-    background-image: url("@{image_url}square_off_out.png");
+    .backgroundImage("square_off_out.png");
     background-repeat: no-repeat;
     width: 42px;
     height: 42px;
@@ -3592,7 +3624,7 @@
     width:27px;
     height:27px;
     background-repeat: no-repeat;
-    background-image: url("@{image_url}color_off_spoid.png");
+    .backgroundImage("color_off_spoid.png");
 }
 
 .painterAttrColorSpoidClicked {
@@ -3602,7 +3634,7 @@
     width:27px;
     height:27px;
     background-repeat: no-repeat;
-    background-image: url("@{image_url}color_on_spoid.png");
+    .backgroundImage("color_on_spoid.png");
 }
 
 .painterAttrColorTransparent {
@@ -3612,7 +3644,7 @@
     width:27px;
     height:27px;
     background-repeat: no-repeat;
-    background-image: url("@{image_url}color_off_spoid_1.png");
+    .backgroundImage("color_off_spoid_1.png");
 }
 
 .painterAttrRotateName ,.painterAttrOpacityName  {
@@ -3719,14 +3751,14 @@
 
 
 .entryPlaygroundPainterAttrAddButton {
-    background: url("@{image_url}fill_in.png");
+    .backgroundImage("fill_in.png");
 }
 
 .entryPlaygroundPainterAttrRemoveButton {
-    background: url("@{image_url}fill_out.png");
+    .backgroundImage("fill_out.png");
 }
 .painterAttrColorSpoid:hover {
-    background: url("@{image_url}color_on_spoid_1.png");
+    .backgroundImage("color_on_spoid_1.png");
     background-repeat: no-repeat;
 }
 
@@ -3770,14 +3802,14 @@
 .entryPlaygroundPainterAttrLineStyleLine {
     position: absolute;
     top: 10px;
-    background: url("@{image_url}line1_category_off.png");
+    .backgroundImage("line1_category_off.png");
     background-repeat: no-repeat;
     background-color: #f5f5f5;
     width: 76px;
     height: 24px;
 }
 .entryPlaygroundPainterAttrLineStyleLine:hover {
-    background: url("@{image_url}line1_category_on.png");
+    .backgroundImage("line1_category_on.png");
     background-repeat: no-repeat;
 }
 
@@ -3785,14 +3817,14 @@
     position: absolute;
     top: -9px;
     left:1px;
-    background: url("@{image_url}line2_off.png");
+    .backgroundImage("line2_off.png");
     background-repeat: no-repeat;
     background-color: #f5f5f5;
     width: 75px;
     height: 20px;
 }
 .entryPlaygroundPainterAttrLineStyleDot1:hover {
-    background: url("@{image_url}line2_on.png");
+    .backgroundImage("line2_on.png");
     background-repeat: no-repeat;
 }
 
@@ -3800,35 +3832,35 @@
     position: absolute;
     top: -29px;
     left:1px;
-    background: url("@{image_url}line3_off.png");
+    .backgroundImage("line3_off.png");
     background-repeat: no-repeat;
     background-color: #f5f5f5;
     width: 75px;
     height: 20px;
 }
 .entryPlaygroundPainterAttrLineStyleDot2:hover {
-    background: url("@{image_url}line3_on.png");
+    .backgroundImage("line3_on.png");
     background-repeat: no-repeat;
 }
 .entryPlaygroundPainterAttrLineStyleDot3 {
     position: absolute;
     top: -48px;
     left:1px;
-    background: url("@{image_url}line4_off.png");
+    .backgroundImage("line4_off.png");
     background-repeat: no-repeat;
     background-color: #f5f5f5;
     width: 75px;
     height: 19px;
 }
 .entryPlaygroundPainterAttrLineStyleDot3:hover {
-    background: url("@{image_url}line4_on.png");
+    .backgroundImage("line4_on.png");
     background-repeat: no-repeat;
 }
 .entryPlaygroundPainterAttrLineStyleLine1 {
     position: absolute;
     top: -67px;
     left:1px;
-    background: url("@{image_url}line1_off.png");
+    .backgroundImage("line1_off.png");
     background-repeat: no-repeat;
     background-color: #f5f5f5;
     width: 75px;
@@ -3836,7 +3868,7 @@
     border-radius: 4px;
 }
 .entryPlaygroundPainterAttrLineStyleLine1:hover {
-     background: url("@{image_url}line1_on.png");
+     .backgroundImage("line1_on.png");
     background-repeat: no-repeat;
 }
 .painterAttrLineStyleBackgroundDot1, .painterAttrLineStyleBackgroundDot2, .painterAttrLineStyleBackgroundDot3,.painterAttrLineStyleBackgroundLine{
@@ -3849,60 +3881,60 @@
     height: 21px;
 }
 .painterAttrLineStyleBackgroundDot1 {
-    background: url("@{image_url}line2_category_off.png");
+    .backgroundImage("line2_category_off.png");
 }
 .painterAttrLineStyleBackgroundDot2 {
-    background: url("@{image_url}line3_category_off.png");
+    .backgroundImage("line3_category_off.png");
 }
 .painterAttrLineStyleBackgroundDot3 {
-    background: url("@{image_url}line4_category_off.png");
+    .backgroundImage("line4_category_off.png");
 }
 .painterAttrLineStyleBackgroundLine {
-    background: url("@{image_url}line1_category_off_1.png");
+    .backgroundImage("line1_category_off_1.png");
 }
 .painterAttrLineStyleBackgroundDot1:hover {
-    background: url("@{image_url}line2_category_on.png");
+    .backgroundImage("line2_category_on.png");
     background-repeat: no-repeat;
 }
 .painterAttrLineStyleBackgroundDot2:hover {
-    background: url("@{image_url}line3_category_on.png");
+    .backgroundImage("line3_category_on.png");
     background-repeat: no-repeat;
 }
 
 .painterAttrLineStyleBackgroundDot3:hover {
-    background: url("@{image_url}line4_category_on.png");
+    .backgroundImage("line4_category_on.png");
     background-repeat: no-repeat;
 }
 .painterAttrLineStyleBackgroundLine:hover {
-    background: url("@{image_url}line1_category_on_1.png");
+    .backgroundImage("line1_category_on_1.png");
     background-repeat: no-repeat;
 }
 .entryToolboxCursorClicked {
-    background: url("@{image_url}on_hand_1.png");
+    .backgroundImage("on_hand_1.png");
 }
 .entryToolboxSelectClicked {
-    background: url("@{image_url}on_choice_1.png");
+    .backgroundImage("on_choice_1.png");
 }
 .entryToolboxPenClicked {
-    background: url("@{image_url}on_pen_1.png");
+    .backgroundImage("on_pen_1.png");
 }
 .entryToolboxLineClicked {
-    background: url("@{image_url}on_line_1.png");
+    .backgroundImage("on_line_1.png");
 }
 .entryToolboxRectClicked {
-    background: url("@{image_url}on_square_1.png");
+    .backgroundImage("on_square_1.png");
 }
 .entryToolBoxCircleClicked {
-    background: url("@{image_url}on_circle_1.png");
+    .backgroundImage("on_circle_1.png");
 }
 .entryToolBoxTextClicked {
-    background: url("@{image_url}on_text_1.png");
+    .backgroundImage("on_text_1.png");
 }
 .entryToolBoxFillClicked {
-    background: url("@{image_url}on_paint_1.png");
+    .backgroundImage("on_paint_1.png");
 } 
 .entryToolBoxEraseClicked {
-    background: url("@{image_url}on_eraser_1.png");
+    .backgroundImage("on_eraser_1.png");
 }
 
 .dd {
@@ -3965,7 +3997,6 @@
     width: 100%;
     height: 100%;
     background-color: #fff;
-    z-index: 1000;
     .animation-name(blockHelperUp);
     .animation-duration(0.6s);
 }
@@ -3991,7 +4022,7 @@
 
 #entryBlockHelperDisposeWorkspace {
     float: right;
-    background-image: url("@{image_url}block_helper_dispose.png");
+    .backgroundImage("block_helper_dispose.png");
     background-repeat: no-repeat;
     background-position: center;
     padding: 15px;
@@ -4009,11 +4040,11 @@
 }
 
 #entryBlockHelperContentWorkspace.lecture {
-    top: 0px;
+    top: 40px;
 }
 
 .entryBlockHelperIntro {
-    background-image: url("@{image_url}block_help_icon.png");
+    .backgroundImage("block_help_icon.png");
     background-repeat: no-repeat;
     background-position: center top;
     margin-top: 28px;
@@ -4025,7 +4056,7 @@
 
 #entryBlockHelpBtn {
     position: absolute;
-    background-image: url("@{image_url}block_help.png");
+    .backgroundImage("block_help.png");
     background-repeat: no-repeat;
     background-position: center;
     padding: 15px;
@@ -4054,6 +4085,7 @@
     font-size: 13px;
     color: #707074;
     padding: 0 50px;
+    text-align: center;
 }
 
 .entryPlaygroundPainterTopMenuEdit>ul>li {
@@ -4104,7 +4136,7 @@
 .entryVariableAddSpaceCheckWorkspace.entryVariableAddChecked,
 .entryVariableSettingCheckWorkspace.entryVariableSettingChecked {
     /*background-color: gray;*/
-    background-image: url("../images/check_on.png");
+    .backgroundImage("check_on.png");
     background-repeat: no-repeat;
 }
 
@@ -4192,7 +4224,7 @@
 
 .entryListSettingCheckedWorkspace {
     /*background-color: gray;*/
-    background-image: url("../images/check_on.png");
+    .backgroundImage("check_on.png");
     background-repeat: no-repeat;
 }
 
@@ -4217,7 +4249,7 @@
     width: 23px;
     height: 23px;
     float: left;
-    background-image: url("@{image_url}list_minus.png");
+    .backgroundImage("list_minus.png");
     cursor: pointer;
 }
 
@@ -4240,7 +4272,7 @@
     width: 23px;
     height: 23px;
     float: left;
-    background-image: url("@{image_url}list_plus.png");
+    .backgroundImage("list_plus.png");
     cursor: pointer;
 }
 
@@ -4288,7 +4320,7 @@
     margin-right: 10px;
     margin-top: 4px;
     cursor: pointer;
-    background-image: url("@{image_url}list_remove_button.png");
+    .backgroundImage("list_remove_button.png");
 }
 
 .entryEngineBigButtonMinimize_popup {
@@ -4318,7 +4350,7 @@
 }
 
 .entryEngineBigButtonMinimize_popup.entryEngineBigButtonMinimize_popup_run {
-    background-image: url("@{image_url}play_btn.png");
+    .backgroundImage("play_btn.png");
 }
 
 .entryPopupWindow .entryEngineBigButtonMinimize_popup {
@@ -4358,17 +4390,19 @@
     color: white;
 }
 
-.entryContainerListWorkspaceWrapper.lecture {
-    top: 45px;
-}
-
 .entryContainerMovieWorkspace {
+/*
     position: absolute;
     width: 100%;
     top: 45px;
     bottom: 0px;
-    background-color: #363C46;
+    
     z-index: 1000;
+*/  
+    position: absolute;
+    background-color: #363C46;
+    top: 0px;
+    width: 100%;
     overflow: scroll;
 }
 .entryContainerMovieWorkspace::-webkit-scrollbar {
@@ -4378,10 +4412,8 @@
 .entryContainerDoneWorkspace {
     position: absolute;
     width: 100%;
-    top: 45px;
-    bottom: 0;
+    top: 0px;
     background-color: #363C46;
-    z-index: 1000;
     overflow: hidden;
     text-align: center;
 }
@@ -4413,24 +4445,24 @@
 }
 
 .entryPlaygroundTextAlignLeft {
-    background-image: url("@{image_url}text_align_left_off.png");
+    .backgroundImage("text_align_left_off.png");
 }
 .entryPlaygroundTextAlignLeft.toggle {
-    background-image: url("@{image_url}text_align_left_on.png");
+    .backgroundImage("text_align_left_on.png");
 }
 
 .entryPlaygroundTextAlignCenter {
-    background-image: url("@{image_url}text_align_center_off.png");
+    .backgroundImage("text_align_center_off.png");
 }
 .entryPlaygroundTextAlignCenter.toggle {
-    background-image: url("@{image_url}text_align_center_on.png");
+    .backgroundImage("text_align_center_on.png");
 }
 
 .entryPlaygroundTextAlignRight {
-    background-image: url("@{image_url}text_align_right_off.png");
+    .backgroundImage("text_align_right_off.png");
 }
 .entryPlaygroundTextAlignRight.toggle {
-    background-image: url("@{image_url}text_align_right_on.png");
+    .backgroundImage("text_align_right_on.png");
 }
 
 .entryPlayground_fgColorDiv {
@@ -4495,7 +4527,7 @@
     position: relative;
     margin-top: -10px;
     margin-left: -7px;
-    background-image: url("@{image_url}text_size_knob.png");
+    .backgroundImage("text_size_knob.png");
     cursor: pointer;
 }
 
@@ -4508,7 +4540,7 @@
     margin-left: 335px;
     padding: 20px 5px;
     position: absolute;
-    background-image: url("@{image_url}text_color_bg.png");
+    .backgroundImage("text_color_bg.png");
     background-repeat: no-repeat;
     background-size: 260px 226px;
 }
@@ -4521,7 +4553,7 @@
     margin-left: 369px;
     padding: 20px 5px;
     position: absolute;
-    background-image: url("@{image_url}text_color_bg_1.png");
+    .backgroundImage("text_color_bg_1.png");
     background-repeat: no-repeat;
     background-size: 260px 226px;
 }
@@ -4565,7 +4597,9 @@
     }
 }
 
-#entry-contextmenu {
+
+
+#entry-contextmenu.workspace-contextmenu {
     position: fixed;
     background-color: white;
     display: inline-block;
@@ -4575,9 +4609,13 @@
     border-style: solid;
     border-width: 1px;
     outline: none;
-    font-size: 13px;
+    font-size: 14px;
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    min-width: 160px;
+    border-radius: 4px;
+    background-clip: padding-box;
+    color: #262626;
     .menuAble {
-        cursor: pointer;
         padding: 3px 20px;
     }
     .menuAble:hover {
