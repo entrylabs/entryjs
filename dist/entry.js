@@ -16968,8 +16968,10 @@ Entry.BlockMenu = function(b, a, c, d) {
       if (!g || d != Entry.Workspace.MODE_BOARD && d != Entry.Workspace.MODE_OVERLAYBOARD) {
         Entry.GlobalSvg.setView(e, b.getMode()) && Entry.GlobalSvg.addControl(a);
       } else {
-        var b = e.block, h = b.getThread();
-        b && h && (this._boardBlockView = g.code.cloneThread(h, d).getFirstBlock().view, this._boardBlockView._moveTo(e.x - f, e.y + (this.offset.top - g.offset.top), !1), this._boardBlockView.onMouseDown.call(this._boardBlockView, a), this._boardBlockView.dragInstance.set({isNew:!0}));
+        if (g.code) {
+          var b = e.block, h = b.getThread();
+          b && h && (this._boardBlockView = g.code.cloneThread(h, d).getFirstBlock().view, this._boardBlockView._moveTo(e.x - f, e.y + (this.offset.top - g.offset.top), !1), this._boardBlockView.onMouseDown.call(this._boardBlockView, a), this._boardBlockView.dragInstance.set({isNew:!0}));
+        }
       }
     }
   };
@@ -19379,14 +19381,16 @@ Entry.Scroller.RADIUS = 7;
     this._vertical && (this.vY += b * this.vRatio, this.vScrollbar.attr({y:this.vY}));
   };
   b.scroll = function(a, b) {
-    var d = this.board.svgBlockGroup.getBoundingClientRect(), e = this.board.svgDom, f = d.left - this.board.offset.left, g = d.top - this.board.offset.top, h = d.height;
-    a = Math.max(-d.width + Entry.BOARD_PADDING - f, a);
-    b = Math.max(-h + Entry.BOARD_PADDING - g, b);
-    a = Math.min(e.width() - Entry.BOARD_PADDING - f, a);
-    b = Math.min(e.height() - Entry.BOARD_PADDING - g, b);
-    this.board.code.moveBy(a, b);
-    this.board.generateCodeMagnetMap();
-    this.updateScrollBar(a, b);
+    if (this.board.code) {
+      var d = this.board.svgBlockGroup.getBoundingClientRect(), e = this.board.svgDom, f = d.left - this.board.offset.left, g = d.top - this.board.offset.top, h = d.height;
+      a = Math.max(-d.width + Entry.BOARD_PADDING - f, a);
+      b = Math.max(-h + Entry.BOARD_PADDING - g, b);
+      a = Math.min(e.width() - Entry.BOARD_PADDING - f, a);
+      b = Math.min(e.height() - Entry.BOARD_PADDING - g, b);
+      this.board.code.moveBy(a, b);
+      this.board.generateCodeMagnetMap();
+      this.updateScrollBar(a, b);
+    }
   };
   b.setVisible = function(a) {
     a != this.isVisible() && (this._visible = a, this.svgGroup.attr({display:!0 === a ? "block" : "none"}));
@@ -19440,14 +19444,12 @@ Entry.Board = function(b) {
     this.patternRect = Entry.Utils.addBlockPattern(this.svg, this.suffix);
   };
   b.changeCode = function(a) {
-    this.codeListener && this.code.changeEvent.detach(this.codeListener);
+    this.code && this.codeListener && this.code.changeEvent.detach(this.codeListener);
     this.set({code:a});
     var b = this;
-    this.codeListener = this.code.changeEvent.attach(this, function() {
+    a && (this.codeListener = this.code.changeEvent.attach(this, function() {
       b.changeEvent.notify();
-    });
-    a.createView(this);
-    this.generateCodeMagnetMap(a);
+    }), a.createView(this), this.generateCodeMagnetMap(a));
     this.scroller.resizeScrollBar();
   };
   b.bindCodeView = function(a) {
@@ -21448,7 +21450,13 @@ Entry.Playground.prototype.reloadPlayground = function() {
 };
 Entry.Playground.prototype.flushPlayground = function() {
   this.object = null;
-  Entry.playground && Entry.playground.view_ && (this.injectPicture(), this.injectSound(), Entry.playground.mainWorkspace.getBoard().clear());
+  if (Entry.playground && Entry.playground.view_) {
+    this.injectPicture();
+    this.injectSound();
+    var b = Entry.playground.mainWorkspace.getBoard();
+    b.clear();
+    b.changeCode(null);
+  }
 };
 Entry.Playground.prototype.refreshPlayground = function() {
   Entry.playground && Entry.playground.view_ && (this.injectPicture(), this.injectSound());

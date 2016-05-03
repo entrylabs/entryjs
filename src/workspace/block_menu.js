@@ -210,6 +210,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
         if (board && (workspaceMode == Entry.Workspace.MODE_BOARD ||
                       workspaceMode == Entry.Workspace.MODE_OVERLAYBOARD)) {
+            if (!board.code) return;
+
             var block = blockView.block;
             var clonedThread;
             var code = this.code;

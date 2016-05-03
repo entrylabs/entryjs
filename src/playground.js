@@ -1289,7 +1289,10 @@ Entry.Playground.prototype.flushPlayground = function () {
     if (Entry.playground && Entry.playground.view_) {
         this.injectPicture();
         this.injectSound();
-        Entry.playground.mainWorkspace.getBoard().clear();
+        var board = Entry.playground.mainWorkspace.getBoard();
+        board.clear();
+        board.changeCode(null);
+
     }
 };
 
