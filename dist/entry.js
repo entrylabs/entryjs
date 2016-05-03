@@ -19235,6 +19235,7 @@ Entry.RenderView = function(b, a) {
     this.svg || (this.svg = Entry.SVG(this._svgId), this.svgGroup = this.svg.elem("g"), this.svgThreadGroup = this.svgGroup.elem("g"), this.svgThreadGroup.board = this, this.svgBlockGroup = this.svgGroup.elem("g"), this.svgBlockGroup.board = this);
     a.createView(this);
     this.align();
+    this._resize();
   };
   b.align = function() {
     var a = this.code.getThreads();
@@ -19245,7 +19246,8 @@ Entry.RenderView = function(b, a) {
         g = g.svgGroup.getBBox().height;
         b += g + 15;
       }
-      this.height = this.svgGroup.getBBox().height;
+      this._bBox = this.svgGroup.getBBox();
+      this.height = this._bBox.height;
     }
   };
   b.hide = function() {
@@ -19265,6 +19267,9 @@ Entry.RenderView = function(b, a) {
     this.svgThreadGroup = a.svgThreadGroup;
     this.svgGroup.appendChild(this.svgThreadGroup);
     this.svgGroup.appendChild(this.svgBlockGroup);
+  };
+  b._resize = function() {
+    this.svg && this._bBox && $(this.svg).css("height", this._bBox.height + 10);
   };
 })(Entry.RenderView.prototype);
 Entry.Scroller = function(b, a, c) {
