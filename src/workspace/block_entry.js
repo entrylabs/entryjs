@@ -5740,7 +5740,9 @@ Entry.block = {
         ],
         "events": {
             "mousedown": [
-                null
+                function() {
+                    Entry.variableContainer.createFunction();
+                }
             ]
         }
     },
@@ -13704,7 +13706,9 @@ Entry.block = {
         ],
         "events": {
             "mousedown": [
-                null
+                function() {
+                    Entry.variableContainer.openVariableAddPanel('variable');
+                }
             ]
         }
     },
@@ -13722,7 +13726,9 @@ Entry.block = {
         ],
         "events": {
             "mousedown": [
-                null
+                function() {
+                    Entry.variableContainer.openVariableAddPanel('list');
+                }
             ]
         }
     },
