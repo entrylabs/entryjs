@@ -241,6 +241,10 @@ Entry.Scroller.RADIUS = 7;
             y
         );
 
+        Entry.do("scrollBoard", x, y).isPass();
+    };
+
+    p._scroll = function(x, y) {
         this.board.code.moveBy(x, y);
         this.updateScrollBar(x, y);
     };

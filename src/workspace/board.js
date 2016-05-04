@@ -839,6 +839,7 @@ Entry.Board = function(option) {
     };
 
     p.adjustThreadsPosition = function() {
+        return;
         var code = this.code;
         if (!code) return;
 

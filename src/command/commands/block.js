@@ -181,4 +181,18 @@ goog.require("Entry.Command");
         undo: "cloneBlock"
     };
 
+    c.scrollBoard = {
+        type: 105,
+        do: function(dx, dy) {
+            this.editor.board.scroller._scroll(dx, dy);
+        },
+        state: function(dx, dy) {
+            return [-dx, -dy];
+        },
+        log: function(block) {
+            return [block.id, block.toJSON()];
+        },
+        undo: "scrollBoard"
+    };
+
 })(Entry.Command);

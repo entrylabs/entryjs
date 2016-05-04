@@ -114,7 +114,7 @@ Entry.StateManager.prototype.undo = function() {
         return;
     this.addActivity("undo");
     this.startRestore();
-    while (true) {
+    while (this.undoStack_.length) {
         var state = this.undoStack_.pop();
         state.func.apply(state.caller, state.params);
         if (state.isPass !== true)
