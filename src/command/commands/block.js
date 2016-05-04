@@ -39,33 +39,39 @@ goog.require("Entry.Command");
         undo: "addThread"
     };
 
-    c.addBlock = {
-        type: 101,
-        do: function(block) {
-            block.doAdd();
-        },
-        state: function(block) {
-            return [block.id];
-        },
-        log: function(block) {
-            return [block.id, block.toJSON()];
-        },
-        undo: function(blockId) {
-            Entry.playground.mainWorkspace.board.findById(blockId).destroy();
-        }
-    };
-
     c.destroyBlock = {
         type: 106,
         do: function(block) {
+            if (typeof block === "string")
+                block = this.editor.board.findById(block);
             block.doDestroy(true);
         },
         state: function(block) {
-            return [block.toJSON()];
+            if (typeof block === "string")
+                block = this.editor.board.findById(block);
+            return [block.toJSON(), block.pointer()];
         },
         log: function(block) {
         },
-        undo: "addBlock"
+        undo: "recoverBlock"
+    };
+
+    c.recoverBlock = {
+        type: 106,
+        do: function(blockModel, pointer) {
+            var block = this.editor.board.code.createThread([blockModel]).getFirstBlock();
+            if (typeof block === "string")
+                block = this.editor.board.findById(block);
+            this.editor.board.insert(block, pointer);
+        },
+        state: function(block) {
+            if (typeof block !== "string")
+                block = block.id;
+            return [block];
+        },
+        log: function(block) {
+        },
+        undo: "destroyBlock"
     };
 
     c.insertBlock = {
@@ -81,7 +87,7 @@ goog.require("Entry.Command");
             var data = [
                 block.id
             ];
-            var pointer = block.pointer()
+            var pointer = block.targetPointer()
             data.push(pointer);
 
             if (typeof block !== "string" && block.getBlockType() === "basic")
@@ -104,7 +110,7 @@ goog.require("Entry.Command");
             var data = [
                 block.id
             ];
-            var pointer = block.pointer()
+            var pointer = block.targetPointer()
             data.push(pointer);
 
             if (block.getBlockType() === "basic")

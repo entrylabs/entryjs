@@ -87,6 +87,15 @@ Entry.Thread = function(thread, code, parent) {
         this.changeEvent.notify();
     };
 
+    p.insertToTop = function(newBlock) {
+        newBlock.setThread(this);
+        this._data.unshift.apply(
+            this._data,
+            [newBlock]
+        );
+        this.changeEvent.notify();
+    };
+
     p.clone = function(code, mode) {
         var code = code || this._code;
         var newThread = new Entry.Thread([], code);

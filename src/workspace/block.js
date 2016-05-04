@@ -488,6 +488,13 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         return this.thread.pointer(pointer, this);
     };
 
+    p.targetPointer = function() {
+        var pointer =  this.thread.pointer([], this);
+        if (pointer.length === 4 && pointer[3] === 0)
+            pointer.pop();
+        return pointer;
+    };
+
     p.getBlockList = function() {
         var blocks = [];
         blocks.push(this);

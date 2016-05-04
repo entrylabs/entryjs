@@ -5963,27 +5963,29 @@ Entry.Commander = function(b) {
     return [this.editor.board.findById(a[0].id).toJSON()];
   }, log:function(a) {
   }, undo:"addThread"};
-  b.addBlock = {type:101, do:function(a) {
-    a.doAdd();
-  }, state:function(a) {
-    return [a.id];
-  }, log:function(a) {
-    return [a.id, a.toJSON()];
-  }, undo:function(a) {
-    Entry.playground.mainWorkspace.board.findById(a).destroy();
-  }};
   b.destroyBlock = {type:106, do:function(a) {
+    "string" === typeof a && (a = this.editor.board.findById(a));
     a.doDestroy(!0);
   }, state:function(a) {
-    return [a.toJSON()];
+    "string" === typeof a && (a = this.editor.board.findById(a));
+    return [a.toJSON(), a.pointer()];
   }, log:function(a) {
-  }, undo:"addBlock"};
+  }, undo:"recoverBlock"};
+  b.recoverBlock = {type:106, do:function(a, b) {
+    var d = this.editor.board.code.createThread([a]).getFirstBlock();
+    "string" === typeof d && (d = this.editor.board.findById(d));
+    this.editor.board.insert(d, b);
+  }, state:function(a) {
+    "string" !== typeof a && (a = a.id);
+    return [a];
+  }, log:function(a) {
+  }, undo:"destroyBlock"};
   b.insertBlock = {type:102, do:function(a, b, d) {
     "string" === typeof a && (a = this.editor.board.findById(a));
     this.editor.board.insert(a, b, d);
   }, state:function(a, b) {
     "string" === typeof a && (a = this.editor.board.findById(a));
-    var d = [a.id], e = a.pointer();
+    var d = [a.id], e = a.targetPointer();
     d.push(e);
     "string" !== typeof a && "basic" === a.getBlockType() && d.push(a.thread.getCount(a));
     return d;
@@ -5993,7 +5995,7 @@ Entry.Commander = function(b) {
     a.view && a.view._toGlobalCoordinate(Entry.DRAG_MODE_DRAG);
     a.doSeparate();
   }, state:function(a) {
-    var b = [a.id], d = a.pointer();
+    var b = [a.id], d = a.targetPointer();
     b.push(d);
     "basic" === a.getBlockType() && b.push(a.thread.getCount(a));
     return b;
@@ -19561,7 +19563,7 @@ Entry.Board = function(b) {
   };
   b._keyboardControl = function(a) {
     var b = this.selectedBlockView;
-    b && 46 == a.keyCode && b.block.doDestroy(!1) && this.set({selectedBlockView:null});
+    b && 46 == a.keyCode && b.block && (Entry.do("destroyBlock", b.block), this.set({selectedBlockView:null}));
   };
   b.hide = function() {
     this.wrapper.addClass("entryRemove");
@@ -19817,7 +19819,7 @@ Entry.Board = function(b) {
   b.insert = function(a, b, d) {
     "string" === typeof a && (a = this.findById(a));
     this.separate(a, d);
-    4 === b.length && 0 === b[3] ? a.moveTo(b[0], b[1]) : (b = b instanceof Array ? this.code.getTargetByPointer(b) : b, b instanceof Entry.Block ? ("basic" === a.getBlockType() && a.view.bindPrev(b), a.doInsert(b)) : b instanceof Entry.FieldStatement ? (a.view.bindPrev(b), b.insertTopBlock(a)) : a.doInsert(b));
+    3 === b.length ? a.moveTo(b[0], b[1]) : 4 === b.length && 0 === b[3] ? (b = this.code.getThreads()[b[2]], a.thread.cut(a), b.insertToTop(a), a.getNextBlock().view.bindPrev()) : (b = b instanceof Array ? this.code.getTargetByPointer(b) : b, b instanceof Entry.Block ? ("basic" === a.getBlockType() && a.view.bindPrev(b), a.doInsert(b)) : b instanceof Entry.FieldStatement ? (a.view.bindPrev(b), b.insertTopBlock(a)) : a.doInsert(b));
   };
   b.adjustThreadsPosition = function() {
     var a = this.code;
@@ -20061,6 +20063,11 @@ Entry.Thread = function(b, a, c) {
       b[e].setThread(this);
     }
     this._data.splice.apply(this._data, [d + 1, 0].concat(b));
+    this.changeEvent.notify();
+  };
+  b.insertToTop = function(a) {
+    a.setThread(this);
+    this._data.unshift.apply(this._data, [a]);
     this.changeEvent.notify();
   };
   b.clone = function(a, b) {
@@ -20445,6 +20452,11 @@ Entry.Block.MAGNET_OFFSET = .4;
     a || (a = []);
     return this.thread.pointer(a, this);
   };
+  b.targetPointer = function() {
+    var a = this.thread.pointer([], this);
+    4 === a.length && 0 === a[3] && a.pop();
+    return a;
+  };
   b.getBlockList = function() {
     var a = [];
     a.push(this);
@@ -20747,7 +20759,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     var b = a.keyCode || a.which, d = a.ctrlKey;
     if (!Entry.Utils.isInInput(a)) {
       var e = this.selectedBlockView;
-      e && !e.isInBlockMenu && e.block.isDeletable() && (8 == b || 46 == b ? (e.block.doDestroy(!0), a.preventDefault()) : d && (67 == b ? e.block.copyToClipboard() : 88 == b && (a = e.block, a.copyToClipboard(), a.destroy(!0, !0), e.getBoard().setSelectedBlock(null))));
+      e && !e.isInBlockMenu && e.block.isDeletable() && (8 == b || 46 == b ? (Entry.do("destroyBlock", e.block), a.preventDefault()) : d && (67 == b ? e.block.copyToClipboard() : 88 == b && (a = e.block, a.copyToClipboard(), a.destroy(!0, !0), e.getBoard().setSelectedBlock(null))));
       d && 86 == b && (b = this.selectedBoard) && b instanceof Entry.Board && Entry.clipboard && Entry.do("cloneBlock", b.code).value.getFirstBlock().copyToClipboard();
     }
   };
