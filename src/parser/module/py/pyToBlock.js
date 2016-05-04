@@ -150,6 +150,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var body = this[node.body.type](node.body);
 
         return {
+            type: node.type,
             object: object,
             body: body
         };
@@ -164,6 +165,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             argument = this[node.argument.type](node.argument);
 
         return {
+            type: node.type,
             argument: argument
         };
     };
@@ -174,6 +176,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var body = this[node.body.type](node.body);
 
         return {
+            type: node.type,
             label: label,
             body: body
         };
@@ -188,6 +191,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             label = this[node.label.type](node.label);
 
         return {
+            type: node.type,
             label: label
         };
     };
@@ -201,6 +205,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             label = this[node.label.type](node.label);
 
         return {
+            type: node.type,
             label: label
         };
     };
@@ -208,18 +213,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.IfStatement = function(node) {
         console.log("IfStatement", node);
         var test = this[node.test.type](node.test);
-        
-        var consequent = {};
-        consequent.body = [];
-        console.log("vvvv", node.consequent);
-        for(var index in node.consequent.body) {
-            var body = node.consequent.body[index];
-            console.log("body", body);
-            var c = this[body.body.type](body.body);
-            console.log("ccccc", c);
-            consequent.body.push(c);
-        }
-        
+
         var alternate = {};
         alternate.body = [];
         if(node.alternate === null) {
@@ -228,15 +222,33 @@ Entry.PyToBlockParser = function(blockSyntax) {
         else {
             for(var index in node.alternate.body) {
                 var body = node.alternate.body[index];
-                var a = this[body.body.type](body.body);
+                if(body.type == 'ForInStatement') {
+                    var a = this[body.body.type](body.body);
+                } else if(body.type == 'ExpressionStatement') {
+                    var a = this[body.type](body);
+                }
                 alternate.body.push(a);
             }
         }
 
-        console.log("consequent", consequent);
+        var consequent = {};
+        consequent.body = [];
+        for(var index in node.consequent.body) {
+            var body = node.consequent.body[index];
+            if(body.type == 'ForStatement') {
+                var c = this[body.body.type](body.body);
+            } else if(body.type == 'ExpressionStatement') {
+                var c = this[body.type](body);
+            }
+            consequent.body.push(c);
+        }
+        
         console.log("alternate", alternate);
+        console.log("consequent", consequent);
+        
         
         return {
+            type: node.type,
             test: test,
             consequent: consequent,
             alternate: alternate
@@ -254,6 +266,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
 
         return {
+            type: node.type,
             discriminant: discriminant,
             cases: cases
         };
@@ -286,6 +299,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var arg = this[node.argument.type](node.argument);
 
         return {
+            type: node.type,
             argument: arg
         };
     };
@@ -307,6 +321,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             finalizer = this[node.finalizer.type](node.finalizer);
 
         return {
+            type: node.type,
             block: block,
             handler: handler,
             finalizer: finalizer
@@ -363,6 +378,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var body = this[node.body.type](node.body);
 
         return {
+            type: node.type,
             init: init,
             test: test,
             update: update,
@@ -416,6 +432,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var body = this[node.body.type](node.body);
 
         return {
+            type: node.type,
             left: left,
             right: right,
             body: body
@@ -447,6 +464,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("declarations", declarations);
 
         return {
+            type: node.type,
             declarations: declarations,
             kind: kind
         };
@@ -466,6 +484,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("init", init);
 
         return {
+            type: node.type,
             id: id,
             init: init
         };
@@ -474,6 +493,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.ThisExpression = function(node) {
         console.log("ThisExpression", node);
         return {
+            type: node.type,
             type: node.type
         }
     };
@@ -494,6 +514,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
 
         return {
+            type: node.type,
             elements: elements
         };
     };
