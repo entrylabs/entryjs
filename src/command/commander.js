@@ -22,6 +22,8 @@ Entry.Commander = function(injectType) {
     Entry.undo = this.undo.bind(this);
 
     this.editor = {};
+
+    Entry.Command.editor = this.editor;
 };
 
 
@@ -29,12 +31,13 @@ Entry.Commander = function(injectType) {
     p.do = function(commandType) {
         var argumentArray = Array.prototype.slice.call(arguments);
         argumentArray.shift();
-        var commandFunc = Entry.Command[commandType];
+        var command = Entry.Command[commandType];
         if (Entry.stateManager) {
+            var uncommand = Entry.Command[command.undo];
             Entry.stateManager.addCommand.apply(
                 Entry.stateManager,
-                [commandType, this, this.undo, commandType]
-                    .concat(commandFunc.state.apply(null, argumentArray))
+                [commandType, this, uncommand.do]
+                    .concat(command.state.apply(null, argumentArray))
             );
         }
         // TODO: activity reporter
@@ -77,7 +80,9 @@ Entry.Commander = function(injectType) {
         this.editor[key] = object;
     };
 
-    p.isPass = function() {
-        Entry.stateManager.getLastCommand().isPass = true;
+    p.isPass = function(isPass) {
+        console.log(isPass);
+        isPass = isPass === undefined ? true : isPass;
+        Entry.stateManager.getLastCommand().isPass = isPass;
     };
 })(Entry.Commander.prototype)

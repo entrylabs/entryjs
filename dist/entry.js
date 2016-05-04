@@ -848,8 +848,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(c, d);
+  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
   return a.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1943,10 +1943,10 @@ Entry.block.wait_second = function(b, a) {
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
+  var c = a.getNumberValue("SECOND", a);
   setTimeout(function() {
     a.timeFlag = 0;
-  }, c);
+  }, 60 / (Entry.FPS || 60) * c * 1E3);
   return a;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -5920,13 +5920,14 @@ Entry.Commander = function(b) {
   Entry.do = this.do.bind(this);
   Entry.undo = this.undo.bind(this);
   this.editor = {};
+  Entry.Command.editor = this.editor;
 };
 (function(b) {
   b.do = function(a) {
     var b = Array.prototype.slice.call(arguments);
     b.shift();
     var d = Entry.Command[a];
-    Entry.stateManager && Entry.stateManager.addCommand.apply(Entry.stateManager, [a, this, this.undo, a].concat(d.state.apply(null, b)));
+    Entry.stateManager && Entry.stateManager.addCommand.apply(Entry.stateManager, [a, this, Entry.Command[d.undo].do].concat(d.state.apply(null, b)));
     return {value:Entry.Command[a].do.apply(Entry.Command, b), isPass:this.isPass.bind(this)};
   };
   b.undo = function() {
@@ -5942,11 +5943,27 @@ Entry.Commander = function(b) {
   b.setCurrentEditor = function(a, b) {
     this.editor[a] = b;
   };
-  b.isPass = function() {
-    Entry.stateManager.getLastCommand().isPass = !0;
+  b.isPass = function(a) {
+    console.log(a);
+    a = void 0 === a ? !0 : a;
+    Entry.stateManager.getLastCommand().isPass = a;
   };
 })(Entry.Commander.prototype);
 (function(b) {
+  b.addThread = {type:101, do:function(a) {
+    return this.editor.board.code.createThread(a);
+  }, state:function(a) {
+    0 < a.length && (a[0].id = Entry.Utils.generateId());
+    return [a];
+  }, log:function(a) {
+    return [a.id, a.toJSON()];
+  }, undo:"destroyThread"};
+  b.destroyThread = {type:106, do:function(a) {
+    this.editor.board.findById(a[0].id).destroy(!0, !0);
+  }, state:function(a) {
+    return [this.editor.board.findById(a[0].id).toJSON()];
+  }, log:function(a) {
+  }, undo:"addThread"};
   b.addBlock = {type:101, do:function(a) {
     a.doAdd();
   }, state:function(a) {
@@ -5956,19 +5973,23 @@ Entry.Commander = function(b) {
   }, undo:function(a) {
     Entry.playground.mainWorkspace.board.findById(a).destroy();
   }};
-  b.insertBlock = {type:102, do:function(a, b) {
-    Entry.commander.editor.board.insert(a, b);
+  b.destroyBlock = {type:106, do:function(a) {
+    a.doDestroy(!0);
+  }, state:function(a) {
+    return [a.toJSON()];
+  }, log:function(a) {
+  }, undo:"addBlock"};
+  b.insertBlock = {type:102, do:function(a, b, d) {
+    "string" === typeof a && (a = this.editor.board.findById(a));
+    this.editor.board.insert(a, b, d);
   }, state:function(a, b) {
-    "string" === typeof a && (a = Entry.playground.mainWorkspace.board.findById(a));
+    "string" === typeof a && (a = this.editor.board.findById(a));
     var d = [a.id], e = a.pointer();
     d.push(e);
     "string" !== typeof a && "basic" === a.getBlockType() && d.push(a.thread.getCount(a));
     return d;
   }, log:function(a) {
-  }, undo:function(a, b, d) {
-    a = Entry.playground.mainWorkspace.board.findById(a);
-    Entry.commander.editor.board.insert(a, b, d);
-  }};
+  }, undo:"insertBlock"};
   b.separateBlock = {type:103, do:function(a) {
     a.view && a.view._toGlobalCoordinate(Entry.DRAG_MODE_DRAG);
     a.doSeparate();
@@ -5978,29 +5999,30 @@ Entry.Commander = function(b) {
     "basic" === a.getBlockType() && b.push(a.thread.getCount(a));
     return b;
   }, log:function(a) {
-  }, undo:function(a, b, d) {
-    a = Entry.playground.mainWorkspace.board.findById(a);
-    Entry.commander.editor.board.insert(a, b, d);
-  }};
-  b.moveBlock = {type:104, do:function(a) {
-    a.doMove();
+  }, undo:"insertBlock"};
+  b.moveBlock = {type:104, do:function(a, b, d) {
+    void 0 !== b ? (a = this.editor.board.findById(a), a.moveTo(b, d)) : a._updatePos();
   }, state:function(a) {
     return [a.id, a.x, a.y];
   }, log:function(a) {
     return [a.id, a.toJSON()];
-  }, undo:function(a, b, d) {
-    Entry.playground.mainWorkspace.board.findById(a).moveTo(b, d);
-  }};
+  }, undo:"moveBlock"};
   b.cloneBlock = {type:105, do:function(a) {
+    "string" === typeof a && (a = this.editor.board.findById(a));
+    this.editor.board.code.createThread(a.copy());
   }, state:function(a) {
+    "string" !== typeof a && (a = a.id);
+    return [a];
   }, log:function(a) {
-  }, undo:function(a) {
-  }};
-  b.removeBlock = {type:106, do:function(a) {
+    return [a.id, a.toJSON()];
+  }, undo:"uncloneBlock"};
+  b.uncloneBlock = {type:105, do:function(a) {
+    this.editor.board.code.getThreads().pop().getFirstBlock().destroy(!0, !0);
   }, state:function(a) {
+    return [a];
   }, log:function(a) {
-  }, undo:function(a) {
-  }};
+    return [a.id, a.toJSON()];
+  }, undo:"cloneBlock"};
 })(Entry.Command);
 Entry.Container = function() {
   this.objects_ = [];
@@ -15135,8 +15157,8 @@ RIGHT:1}, "class":"rank", isNotFor:["albert"], func:function(b, a) {
   return Entry.hw.getDigitalPortValue(c);
 }}, arduino_toggle_led:{color:"#00979D", skeleton:"basic", statements:[], template:"\ub514\uc9c0\ud138 %1 \ubc88 \ud540 %2 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["\ucf1c\uae30", "on"], ["\ub044\uae30", "off"]], value:"on", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"arduino_get_port_number"}, null, null], type:"arduino_toggle_led"}, paramsKeyMap:{VALUE:0, OPERATOR:1}, "class":"arduino_set", 
 isNotFor:["arduino"], func:function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(c, d);
+  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
   return a.callReturn();
 }}, arduino_toggle_pwm:{color:"#00979D", skeleton:"basic", statements:[], template:"\ub514\uc9c0\ud138 %1 \ubc88 \ud540\uc744 %2 (\uc73c)\ub85c \uc815\ud558\uae30 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"arduino_get_pwm_port_number"}, {type:"arduino_text", params:["255"]}, null], type:"arduino_toggle_pwm"}, paramsKeyMap:{PORT:0, VALUE:1}, 
 "class":"arduino_set", isNotFor:["arduino"], func:function(b, a) {
@@ -15503,10 +15525,10 @@ type:"quotient_and_mod"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2, OPERATOR:4}, "c
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
+  var c = a.getNumberValue("SECOND", a);
   setTimeout(function() {
     a.timeFlag = 0;
-  }, c);
+  }, 60 / (Entry.FPS || 60) * c * 1E3);
   return a;
 }}, repeat_basic:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], template:"%1 \ubc88 \ubc18\ubcf5\ud558\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"repeat_basic"}, paramsKeyMap:{VALUE:0}, statementsKeyMap:{DO:0}, "class":"repeat", isNotFor:[], func:function(b, a) {
   var c;
@@ -16965,12 +16987,7 @@ Entry.BlockMenu = function(b, a, c, d) {
   b.cloneToGlobal = function(a) {
     if (!this._boardBlockView && null !== this.dragBlock) {
       var b = this.workspace, d = b.getMode(), e = this.dragBlock, f = this._svgWidth, g = b.selectedBoard;
-      if (!g || d != Entry.Workspace.MODE_BOARD && d != Entry.Workspace.MODE_OVERLAYBOARD) {
-        Entry.GlobalSvg.setView(e, b.getMode()) && Entry.GlobalSvg.addControl(a);
-      } else {
-        var b = e.block, h = b.getThread();
-        b && h && (this._boardBlockView = g.code.cloneThread(h, d).getFirstBlock().view, this._boardBlockView._moveTo(e.x - f, e.y + (this.offset.top - g.offset.top), !1), this._boardBlockView.onMouseDown.call(this._boardBlockView, a), this._boardBlockView.dragInstance.set({isNew:!0}));
-      }
+      !g || d != Entry.Workspace.MODE_BOARD && d != Entry.Workspace.MODE_OVERLAYBOARD ? Entry.GlobalSvg.setView(e, b.getMode()) && Entry.GlobalSvg.addControl(a) : (b = e.block, d = b.getThread(), b && d && (b = d.toJSON(!0), this._boardBlockView = Entry.do("addThread", b).value.getFirstBlock().view, this._boardBlockView._moveTo(e.x - f, e.y + (this.offset.top - g.offset.top), !1), this._boardBlockView.onMouseDown.call(this._boardBlockView, a), this._boardBlockView.dragInstance.set({isNew:!0})));
     }
   };
   b.terminateDrag = function() {
@@ -17517,11 +17534,11 @@ Entry.BlockView.DRAG_RADIUS = 5;
           }
           f = [];
           var g = {text:"\ube14\ub85d \ubcf5\uc0ac & \ubd99\uc5ec\ub123\uae30", enable:this.copyable, callback:function() {
-            e.code.createThread(k.copy());
+            Entry.do("cloneBlock", k);
           }}, l = {text:"\ube14\ub85d \ubcf5\uc0ac", enable:this.copyable, callback:function() {
             h.block.copyToClipboard();
           }}, n = {text:"\ube14\ub85d \uc0ad\uc81c", enable:k.isDeletable(), callback:function() {
-            h.block.doDestroy(!0);
+            Entry.do("destroyBlock", h.block);
           }};
           f.push(g);
           f.push(l);
@@ -17545,7 +17562,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
       b instanceof Entry.BlockMenu ? (b.terminateDrag(), this.vimBoardEvent(a, "dragEnd", e)) : b.clear();
     } else {
       if (d === Entry.DRAG_MODE_DRAG) {
-        (f = this.dragInstance && this.dragInstance.isNew) && !b.workspace.blockMenu.terminateDrag() && (e._updatePos(), Entry.do("addBlock", e));
+        (f = this.dragInstance && this.dragInstance.isNew) && (b.workspace.blockMenu.terminateDrag() || e._updatePos());
         var g = Entry.GlobalSvg;
         a = !1;
         d = this.block.getPrevBlock(this.block);
@@ -17553,7 +17570,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
         switch(Entry.GlobalSvg.terminateDrag(this)) {
           case g.DONE:
             g = this._getCloseBlock();
-            d && !g ? Entry.do("separateBlock", e) : d || g || f ? g ? (Entry.do("insertBlock", e, g).isPass(), createjs.Sound.play("entryMagneting"), a = !0) : Entry.do("moveBlock", e).isPass() : e.getThread().view.isGlobal() ? Entry.do("moveBlock", e) : Entry.do("separateBlock", e);
+            d && !g ? Entry.do("separateBlock", e) : d || g || f ? g ? (Entry.do("insertBlock", e, g).isPass(f), createjs.Sound.play("entryMagneting"), a = !0) : Entry.do("moveBlock", e).isPass(f) : e.getThread().view.isGlobal() ? Entry.do("moveBlock", e) : Entry.do("separateBlock", e);
             break;
           case g.RETURN:
             e = this.block;
@@ -19385,7 +19402,6 @@ Entry.Scroller.RADIUS = 7;
     a = Math.min(e.width() - Entry.BOARD_PADDING - f, a);
     b = Math.min(e.height() - Entry.BOARD_PADDING - g, b);
     this.board.code.moveBy(a, b);
-    this.board.generateCodeMagnetMap();
     this.updateScrollBar(a, b);
   };
   b.setVisible = function(a) {
@@ -20360,11 +20376,9 @@ Entry.Block.MAGNET_OFFSET = .4;
     return this;
   };
   b.doDestroyBelow = function(a) {
-    var b = this.id, d = this.x, e = this.y;
-    console.log("destroyBelow", b, d, e);
+    console.log("destroyBelow", this.id, this.x, this.y);
     this.destroy(a, !0);
     this.getCode().changeEvent.notify();
-    Entry.activityReporter && (a = [b, d, e, this.getCode().stringify()], Entry.activityReporter.add(new Entry.Activity("destroyBlock", a)));
     return this;
   };
   b.copy = function() {

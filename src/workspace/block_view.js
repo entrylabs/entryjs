@@ -424,7 +424,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
                 text: '블록 복사 & 붙여넣기',
                 enable: this.copyable,
                 callback: function(){
-                    board.code.createThread(block.copy());
+                    Entry.do("cloneBlock", block);
                 }
             };
 
@@ -440,7 +440,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
                 text: '블록 삭제',
                 enable: block.isDeletable(),
                 callback: function(){
-                    that.block.doDestroy(true);
+                    Entry.do("destroyBlock", that.block);
                 }
             };
 
@@ -581,7 +581,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
                     var removed = board.workspace.blockMenu.terminateDrag();
                     if (!removed) {
                         block._updatePos();
-                        Entry.do("addBlock", block);
+                        //Entry.do("addBlock", block);
                     }
                 }
 
@@ -602,11 +602,11 @@ Entry.BlockView.DRAG_RADIUS = 5;
                             }
                         } else {
                             if (closeBlock) {
-                                Entry.do("insertBlock", block, closeBlock).isPass();
+                                Entry.do("insertBlock", block, closeBlock).isPass(fromBlockMenu);
                                 createjs.Sound.play('entryMagneting');
                                 ripple = true;
                             } else {
-                                Entry.do("moveBlock", block).isPass();
+                                Entry.do("moveBlock", block).isPass(fromBlockMenu);
                             }
                         }
                         break;
