@@ -115,16 +115,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.BlockStatement = function(node) {
        console.log("BlockStatement", node);
-       var blocks = [];
        var bodies = [];
        for(var index in node.body) {
             var statement = node.body[index];
             console.log("statement", statement);
             var body = this[statement.type](statement);
-            console.log("body", body);
+            console.log("body222", body);
             bodies.push(body);
         }
-
+        console.log("bodies", bodies);
         return {
             type: node.type,
             body: bodies 
@@ -209,14 +208,34 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.IfStatement = function(node) {
         console.log("IfStatement", node);
         var test = this[node.test.type](node.test);
-        var consequent = this[node.consequent.type](node.consequent);
         
-        var alternate;
-        if(node.alternate === null)
+        var consequent = {};
+        consequent.body = [];
+        console.log("vvvv", node.consequent);
+        for(var index in node.consequent.body) {
+            var body = node.consequent.body[index];
+            console.log("body", body);
+            var c = this[body.body.type](body.body);
+            console.log("ccccc", c);
+            consequent.body.push(c);
+        }
+        
+        var alternate = {};
+        alternate.body = [];
+        if(node.alternate === null) {
             alternate = null;
-        else 
-            alternate = this[node.alternate.type](node.alternate);
+        }
+        else {
+            for(var index in node.alternate.body) {
+                var body = node.alternate.body[index];
+                var a = this[body.body.type](body.body);
+                alternate.body.push(a);
+            }
+        }
 
+        console.log("consequent", consequent);
+        console.log("alternate", alternate);
+        
         return {
             test: test,
             consequent: consequent,
@@ -374,6 +393,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         var body = this[node.body.type](node.body);
 
+        console.log("body", body);
+
         return {
             type: node.type,
             init: init,
@@ -488,6 +509,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
 
         return {
+            type: node.type,
             properties: properties
         };
     };
@@ -499,6 +521,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var kind = node.kind;
 
         return {
+            type: node.type,
             key: key,
             value: value,
             kind: kind

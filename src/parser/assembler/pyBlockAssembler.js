@@ -80,8 +80,52 @@ Entry.PyBlockAssembler = function(blockSyntax) {
             }
             case 'BlockStatement' : {
             	console.log("BlockStatement unit", unit);
-            	
-		        result = { type: block, statements: [statements] };
+
+            	var body0 = unit.body[0];
+            	var body1 = unit.body[1];
+
+            	var params = [];
+            	var args = [];
+            	var arguments = body0.declarations[0].init.arguments;
+            	if(arguments && arguments.length){
+		            for(var index in arguments) {
+		                var arg = arguments[index];
+		                var a;
+		                if(arg.type == 'UnaryExpression') {
+		                	if(arg.prefix)
+		                		a = arg.operator.concat(arg.argument.value)
+		                } else if(arg.type == 'Literal') {
+		                	a = arg.value;
+		                }
+
+		                args.push(a);
+		            }
+        		}
+		        
+		        for(var index in args) {
+		            var arg = args[index];
+		            if(typeof arg === 'string')
+		            	var type = 'text';
+		            else
+		            	var type = 'number'
+		            var param = {type: type, params: [arg]};
+		            params.push(param);
+		        }
+
+		        var property = body0.declarations[0].init.callee.property;
+		        if(property.name == 'range') {
+		        	var targetSyntax = String("for i in range");
+            	}
+
+            	var block = this.getBlock(targetSyntax);
+            	var bodies = body1.alternate.body[0].body;
+            	var statements = [];
+            	for(var index in bodies) {
+            		var unit = this.assemble(bodies[index]);
+            		statements.push(unit);
+            	}
+
+		        result = { type: block, params: params, statements: [statements] };
 
 		        console.log("BlockStatement result", result);
                 break;

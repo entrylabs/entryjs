@@ -4,9 +4,9 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
   Entry.projectId = b._id;
   Entry.variableContainer.setVariables(b.variables);
   Entry.variableContainer.setMessages(b.messages);
-  Entry.variableContainer.setFunctions(b.functions);
   Entry.scene.addScenes(b.scenes);
   Entry.stage.initObjectContainers();
+  Entry.variableContainer.setFunctions(b.functions);
   Entry.container.setObjects(b.objects);
   Entry.FPS = b.speed ? b.speed : 60;
   createjs.Ticker.setFPS(Entry.FPS);
@@ -40,7 +40,7 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
   Entry.playground.setMenuBlock(b, a);
 }, enableArduino:function() {
 }, initSound:function(b) {
-  b.path = b.fileurl ? b.fileurl : "/uploads/" + b.filename.substring(0, 2) + "/" + b.filename.substring(2, 4) + "/" + b.filename + b.ext;
+  b.path = b.fileurl ? b.fileurl : Entry.defaultPath + "/uploads/" + b.filename.substring(0, 2) + "/" + b.filename.substring(2, 4) + "/" + b.filename + b.ext;
   Entry.soundQueue.loadFile({id:b.id, src:b.path, type:createjs.LoadQueue.SOUND});
 }, beforeUnload:function(b) {
   Entry.hw.closeConnection();
@@ -103,16 +103,473 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
   var b = {};
   Entry.stateManager && (b.activityLog = Entry.stateManager.activityLog_);
   return b;
-}, DRAG_MODE_NONE:0, DRAG_MODE_MOUSEDOWN:1, DRAG_MODE_DRAG:2};
+}, DRAG_MODE_NONE:0, DRAG_MODE_MOUSEDOWN:1, DRAG_MODE_DRAG:2, cancelObjectEdit:function(b) {
+  var a = Entry.playground.object;
+  if (a) {
+    var c = b.target;
+    b = 0 !== $(a.view_).find(c).length;
+    c = c.tagName.toUpperCase();
+    !a.isEditing || "INPUT" === c && b || a.editObjectValues(!1);
+  }
+}};
 window.Entry = Entry;
-Entry.Albert = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, bodyLed:0, frontLed:0, leftEye:0, rightEye:0, topology:0, note:0, ioModeA:0, ioModeB:0}, setZero:function() {
-  var b = Entry.Albert.PORT_MAP, a;
-  for (a in b) {
-    Entry.hw.sendQueue[a] = b[a];
+Entry.Albert = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, leftEye:0, rightEye:0, note:0, bodyLed:0, frontLed:0, padWidth:0, padHeight:0}, setZero:function() {
+  var b = Entry.Albert.PORT_MAP, a = Entry.hw.sendQueue, c;
+  for (c in b) {
+    a[c] = b[c];
   }
   Entry.hw.update();
-  Entry.Albert.tempo = 60;
-}, tempo:60, name:"albert"};
+  b = Entry.Albert;
+  b.tempo = 60;
+  b.removeAllTimeouts();
+}, monitorTemplate:{imgPath:"hw/albert.png", width:387, height:503, listPorts:{oid:{name:"OID", type:"input", pos:{x:0, y:0}}, buzzer:{name:Lang.Hw.buzzer, type:"output", pos:{x:0, y:0}}, note:{name:Lang.Hw.note, type:"output", pos:{x:0, y:0}}}, ports:{leftProximity:{name:Lang.Blocks.ALBERT_sensor_leftProximity, type:"input", pos:{x:178, y:401}}, rightProximity:{name:Lang.Blocks.ALBERT_sensor_rightProximity, type:"input", pos:{x:66, y:359}}, battery:{name:Lang.Blocks.ALBERT_sensor_battery, type:"input", 
+pos:{x:88, y:368}}, light:{name:Lang.Blocks.ALBERT_sensor_light, type:"input", pos:{x:127, y:391}}, leftWheel:{name:Lang.Hw.leftWheel, type:"output", pos:{x:299, y:406}}, rightWheel:{name:Lang.Hw.rightWheel, type:"output", pos:{x:22, y:325}}, leftEye:{name:Lang.Hw.leftEye, type:"output", pos:{x:260, y:26}}, rightEye:{name:Lang.Hw.rightEye, type:"output", pos:{x:164, y:13}}, bodyLed:{name:Lang.Hw.body + " " + Lang.Hw.led, type:"output", pos:{x:367, y:308}}, frontLed:{name:Lang.Hw.front + " " + Lang.Hw.led, 
+pos:{x:117, y:410}}}, mode:"both"}, tempo:60, timeouts:[], removeTimeout:function(b) {
+  clearTimeout(b);
+  var a = this.timeouts;
+  b = a.indexOf(b);
+  0 <= b && a.splice(b, 1);
+}, removeAllTimeouts:function() {
+  var b = this.timeouts, a;
+  for (a in b) {
+    clearTimeout(b[a]);
+  }
+  this.timeouts = [];
+}, name:"albert"};
+Blockly.Blocks.albert_hand_found = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_hand_found);
+  this.setOutput(!0, "Boolean");
+  this.setInputsInline(!0);
+}};
+Entry.block.albert_hand_found = function(b, a) {
+  var c = Entry.hw.portData;
+  return 40 < c.leftProximity || 40 < c.rightProximity;
+};
+Blockly.Blocks.albert_value = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([[Lang.Blocks.ALBERT_sensor_leftProximity, "leftProximity"], [Lang.Blocks.ALBERT_sensor_rightProximity, "rightProximity"], [Lang.Blocks.ALBERT_sensor_light, "light"], [Lang.Blocks.ALBERT_sensor_battery, "battery"], [Lang.Blocks.ALBERT_sensor_signalStrength, "signalStrength"], [Lang.Blocks.ALBERT_sensor_frontOid, "frontOid"], [Lang.Blocks.ALBERT_sensor_backOid, "backOid"], [Lang.Blocks.ALBERT_sensor_positionX, "positionX"], 
+  [Lang.Blocks.ALBERT_sensor_positionY, "positionY"], [Lang.Blocks.ALBERT_sensor_orientation, "orientation"]]), "DEVICE");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.albert_value = function(b, a) {
+  var c = Entry.hw.portData, d = a.getField("DEVICE");
+  return c[d];
+};
+Blockly.Blocks.albert_move_forward_for_secs = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_move_forward_for_secs_1);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_move_forward_for_secs_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_move_forward_for_secs = function(b, a) {
+  var c = Entry.hw.sendQueue;
+  if (a.isStart) {
+    if (1 == a.timeFlag) {
+      return a;
+    }
+    delete a.isStart;
+    delete a.timeFlag;
+    Entry.engine.isContinue = !1;
+    c.leftWheel = 0;
+    c.rightWheel = 0;
+    return a.callReturn();
+  }
+  a.isStart = !0;
+  a.timeFlag = 1;
+  c.leftWheel = 30;
+  c.rightWheel = 30;
+  var c = 1E3 * a.getNumberValue("VALUE"), d = setTimeout(function() {
+    a.timeFlag = 0;
+    Entry.Albert.removeTimeout(d);
+  }, c);
+  Entry.Albert.timeouts.push(d);
+  return a;
+};
+Blockly.Blocks.albert_move_backward_for_secs = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_move_backward_for_secs_1);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_move_backward_for_secs_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_move_backward_for_secs = function(b, a) {
+  var c = Entry.hw.sendQueue;
+  if (a.isStart) {
+    if (1 == a.timeFlag) {
+      return a;
+    }
+    delete a.isStart;
+    delete a.timeFlag;
+    Entry.engine.isContinue = !1;
+    c.leftWheel = 0;
+    c.rightWheel = 0;
+    return a.callReturn();
+  }
+  a.isStart = !0;
+  a.timeFlag = 1;
+  c.leftWheel = -30;
+  c.rightWheel = -30;
+  var c = 1E3 * a.getNumberValue("VALUE"), d = setTimeout(function() {
+    a.timeFlag = 0;
+    Entry.Albert.removeTimeout(d);
+  }, c);
+  Entry.Albert.timeouts.push(d);
+  return a;
+};
+Blockly.Blocks.albert_turn_for_secs = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_turn_for_secs_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"]]), "DIRECTION").appendField(Lang.Blocks.ALBERT_turn_for_secs_2);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_turn_for_secs_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_turn_for_secs = function(b, a) {
+  var c = Entry.hw.sendQueue;
+  if (a.isStart) {
+    if (1 == a.timeFlag) {
+      return a;
+    }
+    delete a.isStart;
+    delete a.timeFlag;
+    Entry.engine.isContinue = !1;
+    c.leftWheel = 0;
+    c.rightWheel = 0;
+    return a.callReturn();
+  }
+  a.isStart = !0;
+  a.timeFlag = 1;
+  "LEFT" == a.getField("DIRECTION", a) ? (c.leftWheel = -30, c.rightWheel = 30) : (c.leftWheel = 30, c.rightWheel = -30);
+  var c = 1E3 * a.getNumberValue("VALUE"), d = setTimeout(function() {
+    a.timeFlag = 0;
+    Entry.Albert.removeTimeout(d);
+  }, c);
+  Entry.Albert.timeouts.push(d);
+  return a;
+};
+Blockly.Blocks.albert_change_both_wheels_by = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_change_both_wheels_by_1);
+  this.appendValueInput("LEFT").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_change_both_wheels_by_2);
+  this.appendValueInput("RIGHT").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_change_both_wheels_by_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_change_both_wheels_by = function(b, a) {
+  var c = Entry.hw.sendQueue, d = a.getNumberValue("LEFT"), e = a.getNumberValue("RIGHT");
+  c.leftWheel = void 0 != c.leftWheel ? c.leftWheel + d : d;
+  c.rightWheel = void 0 != c.rightWheel ? c.rightWheel + e : e;
+  return a.callReturn();
+};
+Blockly.Blocks.albert_set_both_wheels_to = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_set_both_wheels_to_1);
+  this.appendValueInput("LEFT").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_set_both_wheels_to_2);
+  this.appendValueInput("RIGHT").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_set_both_wheels_to_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_set_both_wheels_to = function(b, a) {
+  var c = Entry.hw.sendQueue;
+  c.leftWheel = a.getNumberValue("LEFT");
+  c.rightWheel = a.getNumberValue("RIGHT");
+  return a.callReturn();
+};
+Blockly.Blocks.albert_change_wheel_by = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_change_wheel_by_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]]), "DIRECTION").appendField(Lang.Blocks.ALBERT_change_wheel_by_2);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_change_wheel_by_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_change_wheel_by = function(b, a) {
+  var c = Entry.hw.sendQueue, d = a.getField("DIRECTION"), e = a.getNumberValue("VALUE");
+  "LEFT" == d ? c.leftWheel = void 0 != c.leftWheel ? c.leftWheel + e : e : ("RIGHT" != d && (c.leftWheel = void 0 != c.leftWheel ? c.leftWheel + e : e), c.rightWheel = void 0 != c.rightWheel ? c.rightWheel + e : e);
+  return a.callReturn();
+};
+Blockly.Blocks.albert_set_wheel_to = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_set_wheel_to_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]]), "DIRECTION").appendField(Lang.Blocks.ALBERT_set_wheel_to_2);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_set_wheel_to_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_set_wheel_to = function(b, a) {
+  var c = Entry.hw.sendQueue, d = a.getField("DIRECTION"), e = a.getNumberValue("VALUE");
+  "LEFT" == d ? c.leftWheel = e : ("RIGHT" != d && (c.leftWheel = e), c.rightWheel = e);
+  return a.callReturn();
+};
+Blockly.Blocks.albert_stop = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_stop).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_stop = function(b, a) {
+  var c = Entry.hw.sendQueue;
+  c.leftWheel = 0;
+  c.rightWheel = 0;
+  return a.callReturn();
+};
+Blockly.Blocks.albert_set_pad_size_to = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_set_pad_size_to_1);
+  this.appendValueInput("WIDTH").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_set_pad_size_to_2);
+  this.appendValueInput("HEIGHT").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_set_pad_size_to_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_set_pad_size_to = function(b, a) {
+  var c = Entry.hw.sendQueue;
+  c.padWidth = a.getNumberValue("WIDTH");
+  c.padHeight = a.getNumberValue("HEIGHT");
+  return a.callReturn();
+};
+Blockly.Blocks.albert_set_eye_to = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_set_eye_to_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]]), "DIRECTION").appendField(Lang.Blocks.ALBERT_set_eye_to_2).appendField(new Blockly.FieldDropdown([[Lang.General.red, "4"], [Lang.General.yellow, "6"], [Lang.General.green, "2"], [Lang.Blocks.ALBERT_color_cyan, "3"], [Lang.General.blue, "1"], [Lang.Blocks.ALBERT_color_magenta, "5"], [Lang.General.white, 
+  "7"]]), "COLOR").appendField(Lang.Blocks.ALBERT_set_eye_to_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_set_eye_to = function(b, a) {
+  var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a), e = Number(a.getField("COLOR", a));
+  "LEFT" == d ? c.leftEye = e : ("RIGHT" != d && (c.leftEye = e), c.rightEye = e);
+  return a.callReturn();
+};
+Blockly.Blocks.albert_clear_eye = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_clear_eye_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]]), "DIRECTION").appendField(Lang.Blocks.ALBERT_clear_eye_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_clear_eye = function(b, a) {
+  var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a);
+  "LEFT" == d ? c.leftEye = 0 : ("RIGHT" != d && (c.leftEye = 0), c.rightEye = 0);
+  return a.callReturn();
+};
+Blockly.Blocks.albert_body_led = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_body_led_1).appendField(new Blockly.FieldDropdown([[Lang.General.turn_on, "ON"], [Lang.General.turn_off, "OFF"]]), "STATE").appendField(Lang.Blocks.ALBERT_body_led_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_body_led = function(b, a) {
+  var c = Entry.hw.sendQueue;
+  "ON" == a.getField("STATE", a) ? c.bodyLed = 1 : c.bodyLed = 0;
+  return a.callReturn();
+};
+Blockly.Blocks.albert_front_led = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_front_led_1).appendField(new Blockly.FieldDropdown([[Lang.General.turn_on, "ON"], [Lang.General.turn_off, "OFF"]]), "STATE").appendField(Lang.Blocks.ALBERT_front_led_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_front_led = function(b, a) {
+  var c = Entry.hw.sendQueue;
+  "ON" == a.getField("STATE", a) ? c.frontLed = 1 : c.frontLed = 0;
+  return a.callReturn();
+};
+Blockly.Blocks.albert_beep = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_beep).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_beep = function(b, a) {
+  var c = Entry.hw.sendQueue;
+  if (a.isStart) {
+    if (1 == a.timeFlag) {
+      return a;
+    }
+    delete a.isStart;
+    delete a.timeFlag;
+    Entry.engine.isContinue = !1;
+    c.buzzer = 0;
+    return a.callReturn();
+  }
+  a.isStart = !0;
+  a.timeFlag = 1;
+  c.buzzer = 440;
+  c.note = 0;
+  var d = setTimeout(function() {
+    a.timeFlag = 0;
+    Entry.Albert.removeTimeout(d);
+  }, 200);
+  Entry.Albert.timeouts.push(d);
+  return a;
+};
+Blockly.Blocks.albert_change_buzzer_by = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_change_buzzer_by_1);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_change_buzzer_by_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_change_buzzer_by = function(b, a) {
+  var c = Entry.hw.sendQueue, d = a.getNumberValue("VALUE");
+  c.buzzer = void 0 != c.buzzer ? c.buzzer + d : d;
+  c.note = 0;
+  return a.callReturn();
+};
+Blockly.Blocks.albert_set_buzzer_to = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_set_buzzer_to_1);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_set_buzzer_to_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_set_buzzer_to = function(b, a) {
+  var c = Entry.hw.sendQueue;
+  c.buzzer = a.getNumberValue("VALUE");
+  c.note = 0;
+  return a.callReturn();
+};
+Blockly.Blocks.albert_clear_buzzer = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_clear_buzzer).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_clear_buzzer = function(b, a) {
+  var c = Entry.hw.sendQueue;
+  c.buzzer = 0;
+  c.note = 0;
+  return a.callReturn();
+};
+Blockly.Blocks.albert_play_note_for = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_play_note_for_1).appendField(new Blockly.FieldDropdown([[Lang.General.note_c + "", "4"], [Lang.General.note_c + "#", "5"], [Lang.General.note_d + "", "6"], [Lang.General.note_e + "b", "7"], [Lang.General.note_e + "", "8"], [Lang.General.note_f + "", "9"], [Lang.General.note_f + "#", "10"], [Lang.General.note_g + "", "11"], [Lang.General.note_g + "#", "12"], [Lang.General.note_a + "", "13"], [Lang.General.note_b + "b", "14"], [Lang.General.note_b + 
+  "", "15"]]), "NOTE").appendField(Lang.Blocks.ALBERT_play_note_for_2).appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"]]), "OCTAVE").appendField(Lang.Blocks.ALBERT_play_note_for_3);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_play_note_for_4).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_play_note_for = function(b, a) {
+  var c = Entry.hw.sendQueue;
+  if (a.isStart) {
+    if (1 == a.timeFlag) {
+      return a;
+    }
+    delete a.isStart;
+    delete a.timeFlag;
+    Entry.engine.isContinue = !1;
+    c.note = 0;
+    return a.callReturn();
+  }
+  var d = a.getNumberField("NOTE", a), e = a.getNumberField("OCTAVE", a), f = a.getNumberValue("VALUE", a), g = Entry.Albert.tempo, f = 6E4 * f / g;
+  a.isStart = !0;
+  a.timeFlag = 1;
+  c.buzzer = 0;
+  c.note = d + 12 * (e - 1);
+  if (100 < f) {
+    var h = setTimeout(function() {
+      c.note = 0;
+      Entry.Albert.removeTimeout(h);
+    }, f - 100);
+    Entry.Albert.timeouts.push(h);
+  }
+  var k = setTimeout(function() {
+    a.timeFlag = 0;
+    Entry.Albert.removeTimeout(k);
+  }, f);
+  Entry.Albert.timeouts.push(k);
+  return a;
+};
+Blockly.Blocks.albert_rest_for = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_rest_for_1);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_rest_for_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_rest_for = function(b, a) {
+  var c = Entry.hw.sendQueue;
+  if (a.isStart) {
+    if (1 == a.timeFlag) {
+      return a;
+    }
+    delete a.isStart;
+    delete a.timeFlag;
+    Entry.engine.isContinue = !1;
+    return a.callReturn();
+  }
+  a.isStart = !0;
+  a.timeFlag = 1;
+  var d = a.getNumberValue("VALUE"), d = 6E4 * d / Entry.Albert.tempo;
+  c.buzzer = 0;
+  c.note = 0;
+  var e = setTimeout(function() {
+    a.timeFlag = 0;
+    Entry.Albert.removeTimeout(e);
+  }, d);
+  Entry.Albert.timeouts.push(e);
+  return a;
+};
+Blockly.Blocks.albert_change_tempo_by = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_change_tempo_by_1);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_change_tempo_by_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_change_tempo_by = function(b, a) {
+  Entry.Albert.tempo += a.getNumberValue("VALUE");
+  1 > Entry.Albert.tempo && (Entry.Albert.tempo = 1);
+  return a.callReturn();
+};
+Blockly.Blocks.albert_set_tempo_to = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_set_tempo_to_1);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_set_tempo_to_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_set_tempo_to = function(b, a) {
+  Entry.Albert.tempo = a.getNumberValue("VALUE");
+  1 > Entry.Albert.tempo && (Entry.Albert.tempo = 1);
+  return a.callReturn();
+};
 Blockly.Blocks.albert_move_forward = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_move_forward).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
@@ -226,274 +683,6 @@ Entry.block.albert_clear_led = function(b, a) {
   "FRONT" == d ? (c.leftEye = 0, c.rightEye = 0) : "LEFT" == d ? c.leftEye = 0 : c.rightEye = 0;
   return a.callReturn();
 };
-Blockly.Blocks.albert_body_led = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_body_led_1).appendField(new Blockly.FieldDropdown([[Lang.General.turn_on, "ON"], [Lang.General.turn_off, "OFF"]]), "STATE").appendField(Lang.Blocks.ALBERT_body_led_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.albert_body_led = function(b, a) {
-  var c = Entry.hw.sendQueue;
-  "ON" == a.getField("STATE", a) ? c.bodyLed = 1 : c.bodyLed = 0;
-  return a.callReturn();
-};
-Blockly.Blocks.albert_front_led = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_front_led_1).appendField(new Blockly.FieldDropdown([[Lang.General.turn_on, "ON"], [Lang.General.turn_off, "OFF"]]), "STATE").appendField(Lang.Blocks.ALBERT_front_led_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.albert_front_led = function(b, a) {
-  var c = Entry.hw.sendQueue;
-  "ON" == a.getField("STATE", a) ? c.frontLed = 1 : c.frontLed = 0;
-  return a.callReturn();
-};
-Blockly.Blocks.albert_beep = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_beep).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.albert_beep = function(b, a) {
-  var c = Entry.hw.sendQueue;
-  if (a.isStart) {
-    return delete a.timeFlag, delete a.isStart, Entry.engine.isContinue = !1, c.buzzer = 0, a.callReturn();
-  }
-  a.isStart = !0;
-  a.timeFlag = 1;
-  delete c.note;
-  c.buzzer = 440;
-  setTimeout(function() {
-    a.timeFlag = 0;
-  }, 200);
-  return a;
-};
-Blockly.Blocks.albert_hand_found = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_hand_found);
-  this.setOutput(!0, "Boolean");
-  this.setInputsInline(!0);
-}};
-Entry.block.albert_hand_found = function(b, a) {
-  var c = Entry.hw.portData;
-  return 40 < c.leftProximity || 40 < c.rightProximity;
-};
-Blockly.Blocks.albert_move_forward_for_secs = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_move_forward_for_secs_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_move_forward_for_secs_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.albert_move_forward_for_secs = function(b, a) {
-  var c = Entry.hw.sendQueue;
-  if (a.isStart) {
-    if (1 == a.timeFlag) {
-      return c.leftWheel = 30, c.rightWheel = 30, a;
-    }
-    delete a.timeFlag;
-    delete a.isStart;
-    Entry.engine.isContinue = !1;
-    c.leftWheel = 0;
-    c.rightWheel = 0;
-    return a.callReturn();
-  }
-  a.isStart = !0;
-  a.timeFlag = 1;
-  c = 1E3 * a.getNumberValue("VALUE");
-  setTimeout(function() {
-    a.timeFlag = 0;
-  }, c);
-  return a;
-};
-Blockly.Blocks.albert_move_backward_for_secs = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_move_backward_for_secs_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_move_backward_for_secs_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.albert_move_backward_for_secs = function(b, a) {
-  var c = Entry.hw.sendQueue;
-  if (a.isStart) {
-    if (1 == a.timeFlag) {
-      return c.leftWheel = -30, c.rightWheel = -30, a;
-    }
-    delete a.timeFlag;
-    delete a.isStart;
-    Entry.engine.isContinue = !1;
-    c.leftWheel = 0;
-    c.rightWheel = 0;
-    return a.callReturn();
-  }
-  a.isStart = !0;
-  a.timeFlag = 1;
-  c = 1E3 * a.getNumberValue("VALUE");
-  setTimeout(function() {
-    a.timeFlag = 0;
-  }, c);
-  return a;
-};
-Blockly.Blocks.albert_turn_for_secs = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_turn_for_secs_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_turn_for_secs_2);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_turn_for_secs_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.albert_turn_for_secs = function(b, a) {
-  var c = Entry.hw.sendQueue;
-  if (a.isStart) {
-    if (1 == a.timeFlag) {
-      return c.leftWheel = a.leftValue, c.rightWheel = a.rightValue, a;
-    }
-    delete a.timeFlag;
-    delete a.isStart;
-    delete a.leftValue;
-    delete a.rightValue;
-    Entry.engine.isContinue = !1;
-    c.leftWheel = 0;
-    c.rightWheel = 0;
-    return a.callReturn();
-  }
-  c = "LEFT" == a.getField("DIRECTION", a);
-  a.leftValue = c ? -30 : 30;
-  a.rightValue = c ? 30 : -30;
-  a.isStart = !0;
-  a.timeFlag = 1;
-  c = 1E3 * a.getNumberValue("VALUE");
-  setTimeout(function() {
-    a.timeFlag = 0;
-  }, c);
-  return a;
-};
-Blockly.Blocks.albert_play_note_for = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_play_note_for_1).appendField(new Blockly.FieldDropdown([[Lang.General.note_c + "", "4"], [Lang.General.note_c + "#", "5"], [Lang.General.note_d + "", "6"], [Lang.General.note_e + "b", "7"], [Lang.General.note_e + "", "8"], [Lang.General.note_f + "", "9"], [Lang.General.note_f + "#", "10"], [Lang.General.note_g + "", "11"], [Lang.General.note_g + "#", "12"], [Lang.General.note_a + "", "13"], [Lang.General.note_b + "b", "14"], [Lang.General.note_b + 
-  "", "15"]]), "NOTE").appendField(Lang.Blocks.HAMSTER_play_note_for_2).appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"]]), "OCTAVE").appendField(Lang.Blocks.HAMSTER_play_note_for_3);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_play_note_for_4).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.albert_play_note_for = function(b, a) {
-  var c = Entry.hw.sendQueue;
-  if (a.isStart) {
-    if (1 == a.timeFlag) {
-      return c.note = a.note, a;
-    }
-    delete a.timeFlag;
-    delete a.isStart;
-    delete a.note;
-    Entry.engine.isContinue = !1;
-    c.note = 0;
-    return a.callReturn();
-  }
-  var d = a.getNumberField("NOTE", a), e = a.getNumberField("OCTAVE", a), f = a.getNumberValue("VALUE", a), g = Entry.Albert.tempo, f = 6E4 * f / g;
-  a.note = d + 12 * (e - 1);
-  a.isStart = !0;
-  a.timeFlag = 1;
-  100 < f && setTimeout(function() {
-    c.note = 0;
-  }, f - 100);
-  setTimeout(function() {
-    a.timeFlag = 0;
-  }, f);
-  return a;
-};
-Blockly.Blocks.albert_rest_for = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_rest_for_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_rest_for_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.albert_rest_for = function(b, a) {
-  var c = Entry.hw.sendQueue;
-  if (a.isStart) {
-    return delete a.isStart, delete a.timeFlag, Entry.engine.isContinue = !1, a.callReturn();
-  }
-  a.isStart = !0;
-  a.timeFlag = 1;
-  var d = a.getNumberValue("VALUE"), d = 6E4 * d / Entry.Albert.tempo;
-  c.note = 0;
-  setTimeout(function() {
-    a.timeFlag = 0;
-  }, d);
-  return a;
-};
-Blockly.Blocks.albert_change_tempo_by = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_tempo_by_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_tempo_by_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.albert_change_tempo_by = function(b, a) {
-  Entry.Albert.tempo += a.getNumberValue("VALUE");
-  return a.callReturn();
-};
-Blockly.Blocks.albert_set_tempo_to = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_tempo_to_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_tempo_to_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.albert_set_tempo_to = function(b, a) {
-  Entry.Albert.tempo = a.getNumberValue("VALUE");
-  return a.callReturn();
-};
-Blockly.Blocks.albert_change_both_wheels_by = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_both_wheels_by_1);
-  this.appendValueInput("LEFT").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_both_wheels_by_2);
-  this.appendValueInput("RIGHT").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_both_wheels_by_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.albert_change_both_wheels_by = function(b, a) {
-  var c = Entry.hw.sendQueue, d = Entry.hw.portData, e = void 0 != c.leftWheel ? c.leftWheel : d.leftWheel, d = void 0 != c.rightWheel ? c.rightWheel : d.rightWheel, e = e + a.getNumberValue("LEFT"), d = d + a.getNumberValue("RIGHT");
-  c.leftWheel = e;
-  c.rightWheel = d;
-  return a.callReturn();
-};
-Blockly.Blocks.albert_set_both_wheels_to = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_both_wheels_to_1);
-  this.appendValueInput("LEFT").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_both_wheels_to_2);
-  this.appendValueInput("RIGHT").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_both_wheels_to_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.albert_set_both_wheels_to = function(b, a) {
-  var c = Entry.hw.sendQueue;
-  c.leftWheel = a.getNumberValue("LEFT");
-  c.rightWheel = a.getNumberValue("RIGHT");
-  return a.callReturn();
-};
 Blockly.Blocks.albert_change_wheels_by = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_wheels_by_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "FRONT"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_change_wheels_by_2);
@@ -522,78 +711,23 @@ Entry.block.albert_set_wheels_to = function(b, a) {
   "LEFT" == d ? c.leftWheel = e : ("RIGHT" != d && (c.leftWheel = e), c.rightWheel = e);
   return a.callReturn();
 };
-Blockly.Blocks.albert_stop = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_stop).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.albert_stop = function(b, a) {
-  var c = Entry.hw.sendQueue;
-  c.leftWheel = 0;
-  c.rightWheel = 0;
-  return a.callReturn();
-};
-Blockly.Blocks.albert_change_buzzer_by = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_buzzer_by_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_buzzer_by_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.albert_change_buzzer_by = function(b, a) {
-  var c = Entry.hw.sendQueue;
-  value = a.getNumberValue("VALUE");
-  delete c.note;
-  c.buzzer = void 0 == c.buzzer ? value : c.buzzer + value;
-  return a.callReturn();
-};
-Blockly.Blocks.albert_set_buzzer_to = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_buzzer_to_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_buzzer_to_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.albert_set_buzzer_to = function(b, a) {
-  var c = Entry.hw.sendQueue;
-  delete c.note;
-  c.buzzer = a.getNumberValue("VALUE");
-  return a.callReturn();
-};
-Blockly.Blocks.albert_clear_buzzer = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_clear_buzzer).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.albert_clear_buzzer = function(b, a) {
-  Entry.hw.sendQueue.buzzer = 0;
-  return a.callReturn();
-};
-Blockly.Blocks.albert_value = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([[Lang.Blocks.HAMSTER_sensor_leftProximity, "leftProximity"], [Lang.Blocks.HAMSTER_sensor_rightProximity, "rightProximity"], [Lang.Blocks.HAMSTER_sensor_light, "light"], ["oid", "oid"]]), "PORT");
-  this.setInputsInline(!0);
-  this.setOutput(!0, "Number");
-}};
-Entry.block.albert_value = function(b, a) {
-  var c = Entry.hw, d = c.sendQueue, c = c.portData, e = a.getField("PORT");
-  return void 0 != d[e] ? d[e] : c[e];
-};
 Entry.Arduino = {name:"arduino", setZero:function() {
-  for (var b = 0;14 > b;b++) {
-    Entry.hw.sendQueue[b] = 0;
+  Entry.hw.sendQueue.readablePorts = [];
+  for (var b = 0;20 > b;b++) {
+    Entry.hw.sendQueue[b] = 0, Entry.hw.sendQueue.readablePorts.push(b);
   }
   Entry.hw.update();
-}};
-Entry.SensorBoard = {name:"sensorBoard", setZero:Entry.Arduino.setZero};
+}, monitorTemplate:{imgPath:"hw/arduino.png", width:605, height:434, listPorts:{2:{name:Lang.Hw.port_en + " 2 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 3:{name:Lang.Hw.port_en + " 3 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 4:{name:Lang.Hw.port_en + " 4 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 5:{name:Lang.Hw.port_en + " 5 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 6:{name:Lang.Hw.port_en + " 6 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 7:{name:Lang.Hw.port_en + 
+" 7 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 8:{name:Lang.Hw.port_en + " 8 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 9:{name:Lang.Hw.port_en + " 9 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 10:{name:Lang.Hw.port_en + " 10 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 11:{name:Lang.Hw.port_en + " 11 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 12:{name:Lang.Hw.port_en + " 12 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 13:{name:Lang.Hw.port_en + " 13 " + 
+Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a0:{name:Lang.Hw.port_en + " A0 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a1:{name:Lang.Hw.port_en + " A1 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a2:{name:Lang.Hw.port_en + " A2 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a3:{name:Lang.Hw.port_en + " A3 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a4:{name:Lang.Hw.port_en + " A4 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a5:{name:Lang.Hw.port_en + " A5 " + 
+Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}}, mode:"both"}};
+Entry.SensorBoard = {name:"sensorBoard", setZero:Entry.Arduino.setZero, monitorTemplate:{imgPath:"hw/sensorBoard.png", width:400, height:400, listPorts:{2:{name:Lang.Hw.port_en + " 2 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 3:{name:Lang.Hw.port_en + " 3 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 4:{name:Lang.Hw.port_en + " 4 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 5:{name:Lang.Hw.port_en + " 5 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a3:{name:Lang.Hw.port_en + 
+" A3 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a4:{name:Lang.Hw.port_en + " A4 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a5:{name:Lang.Hw.port_en + " A5 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 6:{name:Lang.Hw.port_en + " 6 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 7:{name:Lang.Hw.port_en + " 7 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 12:{name:Lang.Hw.port_en + " 12 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 13:{name:Lang.Hw.port_en + " 13 " + 
+Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}}, ports:{0:{name:Lang.Hw.light + " " + Lang.Hw.sensor + "2", type:"input", pos:{x:116, y:330}}, slider:{name:Lang.Blocks.CODEino_sensor_name_2, type:"input", pos:{x:230, y:47}}, 1:{name:Lang.Hw.temp, type:"input", pos:{x:310, y:332}}, 8:{name:Lang.Hw.right_ko + Lang.Hw.switch_ + Lang.Hw.right_en, type:"input", pos:{x:273, y:205}}, 9:{name:Lang.Hw.left_ko + Lang.Hw.switch_ + Lang.Hw.left_en, type:"input", pos:{x:112, y:155}}, 10:{name:Lang.Hw.up_ko + 
+Lang.Hw.switch_ + Lang.Hw.up_en, type:"input", pos:{x:188, y:83}}, 11:{name:Lang.Hw.down_ko + Lang.Hw.switch_ + Lang.Hw.down_en, type:"input", pos:{x:196, y:281}}}, mode:"both"}};
+Entry.dplay = {name:"dplay", setZero:Entry.Arduino.setZero};
+Entry.nemoino = {name:"nemoino", setZero:Entry.Arduino.setZero};
+Entry.CODEino = {name:"CODEino", setZero:Entry.Arduino.setZero, monitorTemplate:Entry.Arduino.monitorTemplate};
 Blockly.Blocks.arduino_text = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField(new Blockly.FieldTextInput("Arduino"), "NAME");
@@ -683,7 +817,7 @@ Blockly.Blocks.arduino_get_number_sensor_value = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField(Lang.Blocks.ARDUINO_num_sensor_value_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String", null]);
-  this.appendDummyInput().appendField(Lang.Blocks.ARDUINO_num_sensor_value_2);
+  this.appendDummyInput().appendField(Lang.Blocks.ARDUINO_num_sensor_value_2).appendField(" ");
   this.setInputsInline(!0);
   this.setOutput(!0, "Number");
 }};
@@ -695,7 +829,7 @@ Blockly.Blocks.arduino_get_digital_value = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField(Lang.Blocks.ARDUINO_get_digital_value_1);
   this.appendValueInput("VALUE").setCheck("Number");
-  this.appendDummyInput().appendField(Lang.Blocks.ARDUINO_num_sensor_value_2);
+  this.appendDummyInput().appendField(Lang.Blocks.ARDUINO_num_sensor_value_2).appendField(" ");
   this.setInputsInline(!0);
   this.setOutput(!0, "Boolean");
 }};
@@ -748,6 +882,7 @@ Blockly.Blocks.arduino_convert_scale = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.ARDUINO_convert_scale_5);
   this.appendValueInput("VALUE5").setCheck(["Number", "String", null]);
   this.appendDummyInput().appendField(Lang.Blocks.ARDUINO_convert_scale_6);
+  this.appendDummyInput().appendField(" ");
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
 }};
@@ -810,16 +945,107 @@ Entry.block.arduino_reconnect = {skeleton:"basic_button", color:"#eee", template
 }, events:{mousedown:[function() {
   console.log("download source");
 }]}};
-Entry.Bitbrick = {SENSOR_MAP:{1:"light", 2:"IR", 3:"touch", 4:"potentiometer", 5:"MIC", 11:"USER INPUT", 20:"LED", 19:"SERVO", 18:"DC"}, PORT_MAP:{buzzer:2, 5:4, 6:6, 7:8, 8:10, LEDR:12, LEDG:14, LEDB:16}, sensorList:function() {
+Blockly.Blocks.CODEino_get_sensor_number = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.CODEino_get_sensor_number_0, "A0"], [Lang.Blocks.CODEino_get_sensor_number_1, "A1"], [Lang.Blocks.CODEino_get_sensor_number_2, "A2"], [Lang.Blocks.CODEino_get_sensor_number_3, "A3"], [Lang.Blocks.CODEino_get_sensor_number_4, "A4"], [Lang.Blocks.CODEino_get_sensor_number_5, "A5"], [Lang.Blocks.CODEino_get_sensor_number_6, "A6"]]), "PORT");
+  this.appendDummyInput().appendField(" ");
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.CODEino_get_sensor_number = function(b, a) {
+  return a.getStringField("PORT");
+};
+Blockly.Blocks.CODEino_get_named_sensor_value = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(" ").appendField(new Blockly.FieldDropdown([[Lang.Blocks.CODEino_sensor_name_0, "0"], [Lang.Blocks.CODEino_sensor_name_1, "1"], [Lang.Blocks.CODEino_sensor_name_2, "2"], [Lang.Blocks.CODEino_sensor_name_3, "3"], [Lang.Blocks.CODEino_sensor_name_4, "4"], [Lang.Blocks.CODEino_sensor_name_5, "5"], [Lang.Blocks.CODEino_sensor_name_6, "6"]]), "PORT").appendField(Lang.Blocks.CODEino_string_1);
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.CODEino_get_named_sensor_value = function(b, a) {
+  return Entry.hw.getAnalogPortValue(a.getField("PORT", a));
+};
+Blockly.Blocks.CODEino_get_sound_status = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.CODEino_string_10).appendField(new Blockly.FieldDropdown([[Lang.Blocks.CODEino_string_11, "GREAT"], [Lang.Blocks.CODEino_string_12, "SMALL"]]), "STATUS").appendField(" ");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Boolean");
+}};
+Entry.block.CODEino_get_sound_status = function(b, a) {
+  return "GREAT" == a.getField("STATUS", a) ? 600 < Entry.hw.getAnalogPortValue(0) ? 1 : 0 : 600 > Entry.hw.getAnalogPortValue(0) ? 1 : 0;
+};
+Blockly.Blocks.CODEino_get_light_status = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.CODEino_string_13).appendField(new Blockly.FieldDropdown([[Lang.Blocks.CODEino_string_14, "BRIGHT"], [Lang.Blocks.CODEino_string_15, "DARK"]]), "STATUS").appendField(" ");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Boolean");
+}};
+Entry.block.CODEino_get_light_status = function(b, a) {
+  return "DARK" == a.getField("STATUS", a) ? 800 < Entry.hw.getAnalogPortValue(1) ? 1 : 0 : 800 > Entry.hw.getAnalogPortValue(1) ? 1 : 0;
+};
+Blockly.Blocks.CODEino_is_button_pressed = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.CODEino_string_2).appendField(new Blockly.FieldDropdown([[Lang.Blocks.CODEino_string_3, "4"], [Lang.Blocks.CODEino_string_4, "17"], [Lang.Blocks.CODEino_string_5, "18"], [Lang.Blocks.CODEino_string_6, "19"], [Lang.Blocks.CODEino_string_7, "20"]]), "PORT").appendField(" ");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Boolean");
+}};
+Entry.block.CODEino_is_button_pressed = function(b, a) {
+  var c = a.getNumberField("PORT", a);
+  return 14 < c ? !Entry.hw.getAnalogPortValue(c - 14) : !Entry.hw.getDigitalPortValue(c);
+};
+Blockly.Blocks.CODEino_get_accelerometer_direction = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.CODEino_string_8).appendField(new Blockly.FieldDropdown([[Lang.Blocks.CODEino_string_16, "LEFT"], [Lang.Blocks.CODEino_string_17, "RIGHT"], [Lang.Blocks.CODEino_string_18, "FRONT"], [Lang.Blocks.CODEino_string_19, "REAR"], [Lang.Blocks.CODEino_string_20, "REVERSE"]]), "DIRECTION");
+  this.appendDummyInput().appendField(" ");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Boolean");
+}};
+Entry.block.CODEino_get_accelerometer_direction = function(b, a) {
+  var c = a.getField("DIRECTION", a), d = 0;
+  "LEFT" == c || "RIGHT" == c ? d = 3 : "FRONT" == c || "REAR" == c ? d = 4 : "REVERSE" == c && (d = 5);
+  d = Entry.hw.getAnalogPortValue(d);
+  d = 180 / 137 * (d - 265);
+  d += -90;
+  d = Math.min(90, d);
+  d = Math.max(-90, d);
+  d = Math.round(d);
+  if ("LEFT" == c || "REAR" == c) {
+    return -30 > d ? 1 : 0;
+  }
+  if ("RIGHT" == c || "FRONT" == c) {
+    return 30 < d ? 1 : 0;
+  }
+  if ("REVERSE" == c) {
+    return -50 > d ? 1 : 0;
+  }
+};
+Blockly.Blocks.CODEino_get_accelerometer_value = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.CODEino_string_8).appendField(new Blockly.FieldDropdown([[Lang.Blocks.CODEino_accelerometer_X, "3"], [Lang.Blocks.CODEino_accelerometer_Y, "4"], [Lang.Blocks.CODEino_accelerometer_Z, "5"]]), "PORT").appendField(Lang.Blocks.CODEino_string_9);
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.CODEino_get_accelerometer_value = function(b, a) {
+  var c = 265, d = 402, e = -90, f = 90, g = Entry.hw.getAnalogPortValue(a.getField("PORT", a));
+  if (c > d) {
+    var h = c, c = d, d = h
+  }
+  e > f && (h = e, e = f, f = h);
+  g = (f - e) / (d - c) * (g - c);
+  g += e;
+  g = Math.min(f, g);
+  g = Math.max(e, g);
+  return Math.round(g);
+};
+Entry.Bitbrick = {SENSOR_MAP:{1:"light", 2:"IR", 3:"touch", 4:"potentiometer", 5:"MIC", 21:"UserSensor", 11:"USER INPUT", 20:"LED", 19:"SERVO", 18:"DC"}, PORT_MAP:{buzzer:2, 5:4, 6:6, 7:8, 8:10, LEDR:12, LEDG:14, LEDB:16}, sensorList:function() {
   for (var b = [], a = Entry.hw.portData, c = 1;5 > c;c++) {
     var d = a[c];
-    d && d.value && b.push([c + " - " + d.type, c.toString()]);
+    d && (d.value || 0 === d.value) && b.push([c + " - " + Lang.Blocks["BITBRICK_" + d.type], c.toString()]);
   }
   return 0 == b.length ? [[Lang.Blocks.no_target, "null"]] : b;
 }, touchList:function() {
   for (var b = [], a = Entry.hw.portData, c = 1;5 > c;c++) {
     var d = a[c];
-    d && "touch" === d.type && b.push([c + " - " + d.type, c.toString()]);
+    d && "touch" === d.type && b.push([c.toString(), c.toString()]);
   }
   return 0 == b.length ? [[Lang.Blocks.no_target, "null"]] : b;
 }, servoList:function() {
@@ -840,7 +1066,8 @@ Entry.Bitbrick = {SENSOR_MAP:{1:"light", 2:"IR", 3:"touch", 4:"potentiometer", 5
     b[a] = 0;
   }
   Entry.hw.update();
-}, name:"bitbrick", servoMaxValue:181, servoMinValue:1, dcMaxValue:100, dcMinValue:-100};
+}, name:"bitbrick", servoMaxValue:181, servoMinValue:1, dcMaxValue:100, dcMinValue:-100, monitorTemplate:{imgPath:"hw/bitbrick.png", width:400, height:400, listPorts:{1:{name:Lang.Hw.port_en + " 1 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 2:{name:Lang.Hw.port_en + " 2 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 3:{name:Lang.Hw.port_en + " 3 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 4:{name:Lang.Hw.port_en + " 4 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, A:{name:Lang.Hw.port_en + 
+" A " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, B:{name:Lang.Hw.port_en + " B " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, C:{name:Lang.Hw.port_en + " C " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, D:{name:Lang.Hw.port_en + " D " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}}, mode:"both"}};
 Blockly.Blocks.bitbrick_sensor_value = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.sensorList), "PORT").appendField(" \uac12");
@@ -849,13 +1076,11 @@ Blockly.Blocks.bitbrick_sensor_value = {init:function() {
 }};
 Entry.block.bitbrick_sensor_value = function(b, a) {
   var c = a.getStringField("PORT");
-  console.log(c);
-  console.log(Entry.hw.portData[c]);
   return Entry.hw.portData[c].value;
 };
 Blockly.Blocks.bitbrick_is_touch_pressed = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("\ud130\uce58\uc13c\uc11c").appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.touchList), "PORT").appendField(" \uac00 \ub20c\ub838\ub294\uac00?");
+  this.appendDummyInput().appendField(Lang.Blocks.BITBRICK_touch).appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.touchList), "PORT").appendField("\uc774(\uac00) \ub20c\ub838\ub294\uac00?");
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
 }};
@@ -928,7 +1153,7 @@ Entry.block.bitbrick_turn_on_color_led_by_value = function(b, a) {
 };
 Blockly.Blocks.bitbrick_buzzer = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("\ubd80\uc800\uc74c ");
+  this.appendDummyInput().appendField("\ubc84\uc800\uc74c ");
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField("\ub0b4\uae30").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
@@ -977,7 +1202,7 @@ Entry.block.bitbrick_dc_speed = function(b, a) {
 };
 Blockly.Blocks.bitbrick_dc_direction_speed = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("DC \ubaa8\ud130").appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.dcList), "PORT").appendField(" \ubc29\ud5a5").appendField(new Blockly.FieldDropdown([["CCW", "CCW"], ["CW", "CW"]]), "DIRECTION").appendField(" \uc18d\ub825");
+  this.appendDummyInput().appendField("DC \ubaa8\ud130").appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.dcList), "PORT").appendField(" ").appendField(new Blockly.FieldDropdown([[Lang.Blocks.BITBRICK_dc_direction_cw, "CW"], [Lang.Blocks.BITBRICK_dc_direction_ccw, "CCW"]]), "DIRECTION").appendField(" \ubc29\ud5a5").appendField(" \uc18d\ub825");
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField("").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setPreviousStatement(!0);
@@ -1002,6 +1227,33 @@ Entry.block.bitbrick_servomotor_angle = function(b, a) {
   var c = a.getNumberValue("VALUE") + 1, c = Math.min(c, Entry.Bitbrick.servoMaxValue), c = Math.max(c, Entry.Bitbrick.servoMinValue);
   Entry.hw.sendQueue[a.getStringField("PORT")] = c;
   return a.callReturn();
+};
+Blockly.Blocks.bitbrick_convert_scale = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\ubcc0\ud658");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.sensorList), "PORT");
+  this.appendDummyInput().appendField("\uac12");
+  this.appendValueInput("VALUE2").setCheck(["Number", "String", null]);
+  this.appendDummyInput().appendField(Lang.Blocks.ARDUINO_convert_scale_3);
+  this.appendValueInput("VALUE3").setCheck(["Number", "String", null]);
+  this.appendDummyInput().appendField("\uc5d0\uc11c");
+  this.appendValueInput("VALUE4").setCheck(["Number", "String", null]);
+  this.appendDummyInput().appendField(Lang.Blocks.ARDUINO_convert_scale_5);
+  this.appendValueInput("VALUE5").setCheck(["Number", "String", null]);
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.bitbrick_convert_scale = function(b, a) {
+  var c = a.getNumberField("PORT"), d = Entry.hw.portData[c].value, c = a.getNumberValue("VALUE2", a), e = a.getNumberValue("VALUE3", a), f = a.getNumberValue("VALUE4", a), g = a.getNumberValue("VALUE5", a);
+  if (f > g) {
+    var h = f, f = g, g = h
+  }
+  d -= c;
+  d *= (g - f) / (e - c);
+  d += f;
+  d = Math.min(g, d);
+  d = Math.max(f, d);
+  return Math.round(d);
 };
 var categoryColor = "#FF9E20";
 Blockly.Blocks.start_drawing = {init:function() {
@@ -1193,7 +1445,7 @@ Blockly.Blocks.number = {init:function() {
   this.setInputsInline(!0);
 }, syntax:{js:[], py:["%1"]}};
 Entry.block.number = function(b, a) {
-  return a.getField("NUM");
+  return a.getField("NUM", a);
 };
 Blockly.Blocks.angle = {init:function() {
   this.setColour(calcBlockColor);
@@ -1626,8 +1878,6 @@ Blockly.Blocks.combine_something = {init:function() {
 }, syntax:{js:[], py:['"%1".index(%2)\n']}};
 Entry.block.combine_something = function(b, a) {
   var c = a.getStringValue("VALUE1", a), d = a.getStringValue("VALUE2", a);
-  isNaN(c) || (c = Entry.convertToRoundedDecimals(c, 3));
-  isNaN(d) || (d = Entry.convertToRoundedDecimals(d, 3));
   return c + d;
 };
 Blockly.Blocks.get_sound_volume = {init:function() {
@@ -1745,11 +1995,7 @@ Blockly.Blocks.stop_repeat = {init:function() {
   this.setNextStatement(!0);
 }, syntax:{js:[], py:["break\n"]}};
 Entry.block.stop_repeat = function(b, a) {
-  for (var c = a;"REPEAT" != c.type.substr(0, 6).toUpperCase() && c.parentScript;) {
-    c = c.parentScript, delete c.isLooped, delete c.iterCount;
-  }
-  var d = c.callReturn();
-  return c.statements && d ? d : c ? null : a.callReturn();
+  return this.executor.break();
 };
 Blockly.Blocks.wait_until_true = {init:function() {
   this.setColour("#498deb");
@@ -1868,26 +2114,14 @@ Entry.block.stop_object = function(b, a) {
   var c = a.getField("TARGET", a), d = Entry.container;
   switch(c) {
     case "all":
-      d.mapEntityIncludeCloneOnScene(function(a) {
-        a.clearScript();
-      });
-      break;
-    case "thisObject":
-      b.clearScript();
-      c = b.parent.clonedEntities;
-      c.map(function(a) {
-        a.clearScript();
-      });
-      break;
+      return d.clearRunningState(), this.die();
     case "thisOnly":
-      b.clearScript();
-      break;
+      return b.parent.script.clearExecutorsByEntity(b), this.die();
+    case "thisThread":
+      return this.die();
     case "otherThread":
-      return b.clearScript(), c = b.parent.clonedEntities, c.map(function(a) {
-        a.clearScript();
-      }), a.callReturn();
+      b.parent.script.clearExecutors(), b.parent.script.addExecutor(this.executor);
   }
-  return null;
 };
 Blockly.Blocks.restart_project = {init:function() {
   this.setColour("#498deb");
@@ -1926,7 +2160,7 @@ Blockly.Blocks.function_field_label = {init:function() {
 }};
 Entry.block.function_field_label = {skeleton:"basic_param", isNotFor:["functionEdit"], color:"#f9c535", template:"%1%2", params:[{type:"TextInput", value:"\ud568\uc218"}, {type:"Output", accept:"paramMagnet"}]};
 Blockly.Blocks.function_field_string = {init:function() {
-  this.setColour("#ffec64");
+  this.setColour("#FFD974");
   this.appendValueInput("PARAM").setCheck(["String"]);
   this.appendValueInput("NEXT").setCheck(["Param"]);
   this.setOutput(!0, "Param");
@@ -1934,7 +2168,7 @@ Blockly.Blocks.function_field_string = {init:function() {
 }};
 Entry.block.function_field_string = {skeleton:"basic_param", isNotFor:["functionEdit"], color:"#ffd974", template:"%1%2", params:[{type:"Block", accept:"stringMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}]};
 Blockly.Blocks.function_field_boolean = {init:function() {
-  this.setColour("#2FC9F0");
+  this.setColour("#AEB8FF");
   this.appendValueInput("PARAM").setCheck(["Boolean"]);
   this.appendValueInput("NEXT").setCheck(["Param"]);
   this.setOutput(!0, "Param");
@@ -1943,7 +2177,7 @@ Blockly.Blocks.function_field_boolean = {init:function() {
 Entry.block.function_field_boolean = {skeleton:"basic_param", isNotFor:["functionEdit"], color:"#aeb8ff", template:"%1%2", params:[{type:"Block", accept:"booleanMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}]};
 Blockly.Blocks.function_param_string = {init:function() {
   this.setEditable(!1);
-  this.setColour("#ffec64");
+  this.setColour("#FFD974");
   this.setOutput(!0, ["String", "Number"]);
   this.setInputsInline(!0);
 }, domToMutation:function(b) {
@@ -1959,10 +2193,12 @@ Blockly.Blocks.function_param_string = {init:function() {
 Entry.block.function_param_string = function(b, a, c) {
   return a.register[a.hashId].run();
 };
-Entry.block.function_param_string = {skeleton:"basic_string_field", color:"#ffd974", template:"\ubb38\uc790/\uc22b\uc790\uac12"};
+Entry.block.function_param_string = {skeleton:"basic_string_field", color:"#ffd974", template:"\ubb38\uc790/\uc22b\uc790\uac12", func:function() {
+  return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
+}};
 Blockly.Blocks.function_param_boolean = {init:function() {
   this.setEditable(!1);
-  this.setColour("#2FC9F0");
+  this.setColour("#AEB8FF");
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
 }, domToMutation:function(b) {
@@ -1978,7 +2214,9 @@ Blockly.Blocks.function_param_boolean = {init:function() {
 Entry.block.function_param_boolean = function(b, a, c) {
   return a.register[a.hashId].run();
 };
-Entry.block.function_param_boolean = {skeleton:"basic_boolean_field", color:"#aeb8ff", template:"\ud310\ub2e8\uac12"};
+Entry.block.function_param_boolean = {skeleton:"basic_boolean_field", color:"#aeb8ff", template:"\ud310\ub2e8\uac12", func:function() {
+  return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
+}};
 Blockly.Blocks.function_create = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.FUNCTION_define);
   this.setColour("#cc7337");
@@ -1990,7 +2228,8 @@ Blockly.Blocks.function_create = {init:function() {
 Entry.block.function_create = function(b, a) {
   return a.callReturn();
 };
-Entry.block.function_create = {skeleton:"basic", color:"#cc7337", event:"funcDef", template:"\ud568\uc218 \uc815\uc758\ud558\uae30 %1 %2", params:[{type:"Block", accept:"paramMagnet", value:{type:"function_field_label"}}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/function_03.png", size:12}]};
+Entry.block.function_create = {skeleton:"basic", color:"#cc7337", event:"funcDef", template:"\ud568\uc218 \uc815\uc758\ud558\uae30 %1 %2", params:[{type:"Block", accept:"paramMagnet", value:{type:"function_field_label"}}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/function_03.png", size:12}], func:function() {
+}};
 Blockly.Blocks.function_general = {init:function() {
   this.setColour("#cc7337");
   this.setInputsInline(!0);
@@ -2045,147 +2284,49 @@ Entry.block.function_general = function(b, a) {
   delete a.thread;
   return a.callReturn();
 };
-Entry.block.function_general = {skeleton:"basic", color:"#cc7337", template:"\ud568\uc218", params:[]};
-Entry.Hamster = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, outputA:0, outputB:0, leftLed:0, rightLed:0, note:0, ioModeA:0, ioModeB:0}, setZero:function() {
-  var b = Entry.Hamster.PORT_MAP, a;
-  for (a in b) {
-    Entry.hw.sendQueue[a] = b[a];
+Entry.block.function_general = {skeleton:"basic", color:"#cc7337", template:"\ud568\uc218", params:[], func:function(b) {
+  if (!this.initiated) {
+    this.initiated = !0;
+    var a = Entry.variableContainer.getFunction(this.block.type.substr(5, 9));
+    this.funcCode = a.content;
+    this.funcExecutor = this.funcCode.raiseEvent("funcDef", b)[0];
+    this.funcExecutor.register.params = this.getParams();
+    this.funcExecutor.register.paramMap = a.paramMap;
+  }
+  this.funcExecutor.execute();
+  if (!this.funcExecutor.isEnd()) {
+    return this.funcCode.removeExecutor(this.funcExecutor), Entry.STATIC.BREAK;
+  }
+}};
+Entry.Hamster = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, outputA:0, outputB:0, leftLed:0, rightLed:0, note:0, lineTracerMode:0, lineTracerModeId:0, lineTracerSpeed:5, ioModeA:0, ioModeB:0}, setZero:function() {
+  var b = Entry.Hamster.PORT_MAP, a = Entry.hw.sendQueue, c;
+  for (c in b) {
+    a[c] = b[c];
   }
   Entry.hw.update();
-  Entry.Hamster.tempo = 60;
-}, tempo:60, name:"hamster"};
-Blockly.Blocks.hamster_move_forward = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_move_forward).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.hamster_move_forward = function(b, a) {
-  var c = Entry.hw.sendQueue;
-  if (a.isStart) {
-    if (1 == a.timeFlag) {
-      return c.leftWheel = 50, c.rightWheel = 50, a;
-    }
-    delete a.timeFlag;
-    delete a.isStart;
-    Entry.engine.isContinue = !1;
-    c.leftWheel = 0;
-    c.rightWheel = 0;
-    return a.callReturn();
+  b = Entry.Hamster;
+  b.lineTracerModeId = 0;
+  b.lineTracerStateId = -1;
+  b.tempo = 60;
+  b.removeAllTimeouts();
+}, lineTracerModeId:0, lineTracerStateId:-1, tempo:60, timeouts:[], removeTimeout:function(b) {
+  clearTimeout(b);
+  var a = this.timeouts;
+  b = a.indexOf(b);
+  0 <= b && a.splice(b, 1);
+}, removeAllTimeouts:function() {
+  var b = this.timeouts, a;
+  for (a in b) {
+    clearTimeout(b[a]);
   }
-  a.isStart = !0;
-  a.timeFlag = 1;
-  setTimeout(function() {
-    a.timeFlag = 0;
-  }, 1E3);
-  return a;
-};
-Blockly.Blocks.hamster_move_backward = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_move_backward).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.hamster_move_backward = function(b, a) {
-  var c = Entry.hw.sendQueue;
-  if (a.isStart) {
-    if (1 == a.timeFlag) {
-      return c.leftWheel = -50, c.rightWheel = -50, a;
-    }
-    delete a.timeFlag;
-    delete a.isStart;
-    Entry.engine.isContinue = !1;
-    c.leftWheel = 0;
-    c.rightWheel = 0;
-    return a.callReturn();
-  }
-  a.isStart = !0;
-  a.timeFlag = 1;
-  setTimeout(function() {
-    a.timeFlag = 0;
-  }, 1E3);
-  return a;
-};
-Blockly.Blocks.hamster_turn_around = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_turn_around_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_turn_around_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.hamster_turn_around = function(b, a) {
-  var c = Entry.hw.sendQueue;
-  if (a.isStart) {
-    if (1 == a.timeFlag) {
-      return c.leftWheel = a.leftValue, c.rightWheel = a.rightValue, a;
-    }
-    delete a.timeFlag;
-    delete a.isStart;
-    delete a.leftValue;
-    delete a.rightValue;
-    Entry.engine.isContinue = !1;
-    c.leftWheel = 0;
-    c.rightWheel = 0;
-    return a.callReturn();
-  }
-  c = "LEFT" == a.getField("DIRECTION", a);
-  a.leftValue = c ? -50 : 50;
-  a.rightValue = c ? 50 : -50;
-  a.isStart = !0;
-  a.timeFlag = 1;
-  setTimeout(function() {
-    a.timeFlag = 0;
-  }, 1E3);
-  return a;
-};
-Blockly.Blocks.hamster_set_led_to = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_led_to_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "FRONT"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_set_led_to_2).appendField(new Blockly.FieldDropdown([[Lang.General.red, "4"], [Lang.General.yellow, "6"], [Lang.General.green, "2"], [Lang.General.skyblue, "3"], [Lang.General.blue, "1"], [Lang.General.purple, "5"], [Lang.General.white, "7"]]), "COLOR").appendField(Lang.Blocks.HAMSTER_set_led_to_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 
-  "block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.hamster_set_led_to = function(b, a) {
-  var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a), e = Number(a.getField("COLOR", a));
-  "FRONT" == d ? (c.leftLed = e, c.rightLed = e) : "LEFT" == d ? c.leftLed = e : c.rightLed = e;
-  return a.callReturn();
-};
-Blockly.Blocks.hamster_clear_led = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_clear_led_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "FRONT"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_clear_led_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.hamster_clear_led = function(b, a) {
-  var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a);
-  "FRONT" == d ? (c.leftLed = 0, c.rightLed = 0) : "LEFT" == d ? c.leftLed = 0 : c.rightLed = 0;
-  return a.callReturn();
-};
-Blockly.Blocks.hamster_beep = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_beep).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.hamster_beep = function(b, a) {
-  var c = Entry.hw.sendQueue;
-  if (a.isStart) {
-    return delete a.timeFlag, delete a.isStart, Entry.engine.isContinue = !1, c.buzzer = 0, a.callReturn();
-  }
-  a.isStart = !0;
-  a.timeFlag = 1;
-  delete c.note;
-  c.buzzer = 440;
-  setTimeout(function() {
-    a.timeFlag = 0;
-  }, 200);
-  return a;
-};
+  this.timeouts = [];
+}, setLineTracerMode:function(b, a) {
+  this.lineTracerModeId = this.lineTracerModeId + 1 & 255;
+  b.lineTracerMode = a;
+  b.lineTracerModeId = this.lineTracerModeId;
+}, name:"hamster", monitorTemplate:{imgPath:"hw/hamster.png", width:256, height:256, listPorts:{temperature:{name:Lang.Blocks.HAMSTER_sensor_temperature, type:"input", pos:{x:0, y:0}}, accelerationX:{name:Lang.Blocks.HAMSTER_sensor_accelerationX, type:"input", pos:{x:0, y:0}}, accelerationY:{name:Lang.Blocks.HAMSTER_sensor_accelerationY, type:"input", pos:{x:0, y:0}}, accelerationZ:{name:Lang.Blocks.HAMSTER_sensor_accelerationZ, type:"input", pos:{x:0, y:0}}, buzzer:{name:Lang.Hw.buzzer, type:"output", 
+pos:{x:0, y:0}}, note:{name:Lang.Hw.buzzer + "2", type:"output", pos:{x:0, y:0}}, outputA:{name:Lang.Hw.output + "A", type:"output", pos:{x:0, y:0}}, outputB:{name:Lang.Hw.output + "B", type:"output", pos:{x:0, y:0}}}, ports:{leftProximity:{name:Lang.Blocks.HAMSTER_sensor_leftProximity, type:"input", pos:{x:122, y:156}}, rightProximity:{name:Lang.Blocks.HAMSTER_sensor_rightProximity, type:"input", pos:{x:10, y:108}}, leftFloor:{name:Lang.Blocks.HAMSTER_sensor_leftFloor, type:"input", pos:{x:100, 
+y:234}}, rightFloor:{name:Lang.Blocks.HAMSTER_sensor_rightFloor, type:"input", pos:{x:13, y:180}}, lightsensor:{name:Lang.Hw.light + Lang.Hw.sensor, type:"input", pos:{x:56, y:189}}, leftWheel:{name:Lang.Hw.leftWheel, type:"output", pos:{x:209, y:115}}, rightWheel:{name:Lang.Hw.rightWheel, type:"output", pos:{x:98, y:30}}, leftLed:{name:Lang.Hw.left + " " + Lang.Hw.led, type:"output", pos:{x:87, y:210}}, rightLed:{name:Lang.Hw.right + " " + Lang.Hw.led, type:"output", pos:{x:24, y:168}}}, mode:"both"}};
 Blockly.Blocks.hamster_hand_found = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_hand_found);
@@ -2194,7 +2335,138 @@ Blockly.Blocks.hamster_hand_found = {init:function() {
 }};
 Entry.block.hamster_hand_found = function(b, a) {
   var c = Entry.hw.portData;
-  return 40 < c.leftProximity || 40 < c.rightProximity;
+  return 50 < c.leftProximity || 50 < c.rightProximity;
+};
+Blockly.Blocks.hamster_value = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([[Lang.Blocks.HAMSTER_sensor_leftProximity, "leftProximity"], [Lang.Blocks.HAMSTER_sensor_rightProximity, "rightProximity"], [Lang.Blocks.HAMSTER_sensor_leftFloor, "leftFloor"], [Lang.Blocks.HAMSTER_sensor_rightFloor, "rightFloor"], [Lang.Blocks.HAMSTER_sensor_accelerationX, "accelerationX"], [Lang.Blocks.HAMSTER_sensor_accelerationY, "accelerationY"], [Lang.Blocks.HAMSTER_sensor_accelerationZ, "accelerationZ"], [Lang.Blocks.HAMSTER_sensor_light, 
+  "light"], [Lang.Blocks.HAMSTER_sensor_temperature, "temperature"], [Lang.Blocks.HAMSTER_sensor_signalStrength, "signalStrength"], [Lang.Blocks.HAMSTER_sensor_inputA, "inputA"], [Lang.Blocks.HAMSTER_sensor_inputB, "inputB"]]), "DEVICE");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.hamster_value = function(b, a) {
+  var c = Entry.hw.portData, d = a.getField("DEVICE");
+  return c[d];
+};
+Blockly.Blocks.hamster_move_forward_once = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_move_forward_once).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_move_forward_once = function(b, a) {
+  var c = Entry.hw.sendQueue, d = Entry.hw.portData;
+  if (a.isStart) {
+    if (a.isMoving) {
+      switch(a.boardState) {
+        case 1:
+          2 > a.count ? (50 > d.leftFloor && 50 > d.rightFloor ? a.count++ : a.count = 0, d = d.leftFloor - d.rightFloor, c.leftWheel = 45 + .25 * d, c.rightWheel = 45 - .25 * d) : (a.count = 0, a.boardState = 2);
+          break;
+        case 2:
+          d = d.leftFloor - d.rightFloor;
+          c.leftWheel = 45 + .25 * d;
+          c.rightWheel = 45 - .25 * d;
+          a.boardState = 3;
+          var e = setTimeout(function() {
+            a.boardState = 4;
+            Entry.Hamster.removeTimeout(e);
+          }, 250);
+          Entry.Hamster.timeouts.push(e);
+          break;
+        case 3:
+          d = d.leftFloor - d.rightFloor;
+          c.leftWheel = 45 + .25 * d;
+          c.rightWheel = 45 - .25 * d;
+          break;
+        case 4:
+          c.leftWheel = 0, c.rightWheel = 0, a.boardState = 0, a.isMoving = !1;
+      }
+      return a;
+    }
+    delete a.isStart;
+    delete a.isMoving;
+    delete a.count;
+    delete a.boardState;
+    Entry.engine.isContinue = !1;
+    c.leftWheel = 0;
+    c.rightWheel = 0;
+    return a.callReturn();
+  }
+  a.isStart = !0;
+  a.isMoving = !0;
+  a.count = 0;
+  a.boardState = 1;
+  c.leftWheel = 45;
+  c.rightWheel = 45;
+  Entry.Hamster.setLineTracerMode(c, 0);
+  return a;
+};
+Blockly.Blocks.hamster_turn_once = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_turn_once_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_turn_once_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_turn_once = function(b, a) {
+  var c = Entry.hw.sendQueue, d = Entry.hw.portData;
+  if (a.isStart) {
+    if (a.isMoving) {
+      if (a.isLeft) {
+        switch(a.boardState) {
+          case 1:
+            2 > a.count ? 50 < d.leftFloor && a.count++ : (a.count = 0, a.boardState = 2);
+            break;
+          case 2:
+            20 > d.leftFloor && (a.boardState = 3);
+            break;
+          case 3:
+            2 > a.count ? 20 > d.leftFloor && a.count++ : (a.count = 0, a.boardState = 4);
+            break;
+          case 4:
+            50 < d.leftFloor && (a.boardState = 5);
+            break;
+          case 5:
+            d = d.leftFloor - d.rightFloor, -15 < d ? (c.leftWheel = 0, c.rightWheel = 0, a.boardState = 0, a.isMoving = !1) : (c.leftWheel = .5 * d, c.rightWheel = .5 * -d);
+        }
+      } else {
+        switch(a.boardState) {
+          case 1:
+            2 > a.count ? 50 < d.rightFloor && a.count++ : (a.count = 0, a.boardState = 2);
+            break;
+          case 2:
+            20 > d.rightFloor && (a.boardState = 3);
+            break;
+          case 3:
+            2 > a.count ? 20 > d.rightFloor && a.count++ : (a.count = 0, a.boardState = 4);
+            break;
+          case 4:
+            50 < d.rightFloor && (a.boardState = 5);
+            break;
+          case 5:
+            d = d.rightFloor - d.leftFloor, -15 < d ? (c.leftWheel = 0, c.rightWheel = 0, a.boardState = 0, a.isMoving = !1) : (c.leftWheel = .5 * -d, c.rightWheel = .5 * d);
+        }
+      }
+      return a;
+    }
+    delete a.isStart;
+    delete a.isMoving;
+    delete a.count;
+    delete a.boardState;
+    delete a.isLeft;
+    Entry.engine.isContinue = !1;
+    c.leftWheel = 0;
+    c.rightWheel = 0;
+    return a.callReturn();
+  }
+  a.isStart = !0;
+  a.isMoving = !0;
+  a.count = 0;
+  a.boardState = 1;
+  "LEFT" == a.getField("DIRECTION", a) ? (a.isLeft = !0, c.leftWheel = -45, c.rightWheel = 45) : (a.isLeft = !1, c.leftWheel = 45, c.rightWheel = -45);
+  Entry.Hamster.setLineTracerMode(c, 0);
+  return a;
 };
 Blockly.Blocks.hamster_move_forward_for_secs = {init:function() {
   this.setColour("#00979D");
@@ -2209,10 +2481,10 @@ Entry.block.hamster_move_forward_for_secs = function(b, a) {
   var c = Entry.hw.sendQueue;
   if (a.isStart) {
     if (1 == a.timeFlag) {
-      return c.leftWheel = 50, c.rightWheel = 50, a;
+      return a;
     }
-    delete a.timeFlag;
     delete a.isStart;
+    delete a.timeFlag;
     Entry.engine.isContinue = !1;
     c.leftWheel = 0;
     c.rightWheel = 0;
@@ -2220,10 +2492,14 @@ Entry.block.hamster_move_forward_for_secs = function(b, a) {
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  c = 1E3 * a.getNumberValue("VALUE");
-  setTimeout(function() {
+  c.leftWheel = 30;
+  c.rightWheel = 30;
+  Entry.Hamster.setLineTracerMode(c, 0);
+  var c = 1E3 * a.getNumberValue("VALUE"), d = setTimeout(function() {
     a.timeFlag = 0;
+    Entry.Hamster.removeTimeout(d);
   }, c);
+  Entry.Hamster.timeouts.push(d);
   return a;
 };
 Blockly.Blocks.hamster_move_backward_for_secs = {init:function() {
@@ -2239,10 +2515,10 @@ Entry.block.hamster_move_backward_for_secs = function(b, a) {
   var c = Entry.hw.sendQueue;
   if (a.isStart) {
     if (1 == a.timeFlag) {
-      return c.leftWheel = -50, c.rightWheel = -50, a;
+      return a;
     }
-    delete a.timeFlag;
     delete a.isStart;
+    delete a.timeFlag;
     Entry.engine.isContinue = !1;
     c.leftWheel = 0;
     c.rightWheel = 0;
@@ -2250,10 +2526,14 @@ Entry.block.hamster_move_backward_for_secs = function(b, a) {
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  c = 1E3 * a.getNumberValue("VALUE");
-  setTimeout(function() {
+  c.leftWheel = -30;
+  c.rightWheel = -30;
+  Entry.Hamster.setLineTracerMode(c, 0);
+  var c = 1E3 * a.getNumberValue("VALUE"), d = setTimeout(function() {
     a.timeFlag = 0;
+    Entry.Hamster.removeTimeout(d);
   }, c);
+  Entry.Hamster.timeouts.push(d);
   return a;
 };
 Blockly.Blocks.hamster_turn_for_secs = {init:function() {
@@ -2269,111 +2549,25 @@ Entry.block.hamster_turn_for_secs = function(b, a) {
   var c = Entry.hw.sendQueue;
   if (a.isStart) {
     if (1 == a.timeFlag) {
-      return c.leftWheel = a.leftValue, c.rightWheel = a.rightValue, a;
+      return a;
     }
-    delete a.timeFlag;
     delete a.isStart;
-    delete a.leftValue;
-    delete a.rightValue;
+    delete a.timeFlag;
     Entry.engine.isContinue = !1;
     c.leftWheel = 0;
     c.rightWheel = 0;
     return a.callReturn();
   }
-  c = "LEFT" == a.getField("DIRECTION", a);
-  a.leftValue = c ? -50 : 50;
-  a.rightValue = c ? 50 : -50;
   a.isStart = !0;
   a.timeFlag = 1;
-  c = 1E3 * a.getNumberValue("VALUE");
-  setTimeout(function() {
+  "LEFT" == a.getField("DIRECTION", a) ? (c.leftWheel = -30, c.rightWheel = 30) : (c.leftWheel = 30, c.rightWheel = -30);
+  Entry.Hamster.setLineTracerMode(c, 0);
+  var c = 1E3 * a.getNumberValue("VALUE"), d = setTimeout(function() {
     a.timeFlag = 0;
+    Entry.Hamster.removeTimeout(d);
   }, c);
+  Entry.Hamster.timeouts.push(d);
   return a;
-};
-Blockly.Blocks.hamster_play_note_for = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_play_note_for_1).appendField(new Blockly.FieldDropdown([[Lang.General.note_c + "", "4"], [Lang.General.note_c + "#", "5"], [Lang.General.note_d + "", "6"], [Lang.General.note_e + "b", "7"], [Lang.General.note_e + "", "8"], [Lang.General.note_f + "", "9"], [Lang.General.note_f + "#", "10"], [Lang.General.note_g + "", "11"], [Lang.General.note_g + "#", "12"], [Lang.General.note_a + "", "13"], [Lang.General.note_b + "b", "14"], [Lang.General.note_b + 
-  "", "15"]]), "NOTE").appendField(Lang.Blocks.HAMSTER_play_note_for_2).appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"]]), "OCTAVE").appendField(Lang.Blocks.HAMSTER_play_note_for_3);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_play_note_for_4).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.hamster_play_note_for = function(b, a) {
-  var c = Entry.hw.sendQueue;
-  if (a.isStart) {
-    if (1 == a.timeFlag) {
-      return c.note = a.note, a;
-    }
-    delete a.timeFlag;
-    delete a.isStart;
-    delete a.note;
-    Entry.engine.isContinue = !1;
-    c.note = 0;
-    return a.callReturn();
-  }
-  var d = a.getNumberField("NOTE", a), e = a.getNumberField("OCTAVE", a), f = a.getNumberValue("VALUE", a), g = Entry.Hamster.tempo, f = 6E4 * f / g;
-  a.note = d + 12 * (e - 1);
-  a.isStart = !0;
-  a.timeFlag = 1;
-  100 < f && setTimeout(function() {
-    c.note = 0;
-  }, f - 100);
-  setTimeout(function() {
-    a.timeFlag = 0;
-  }, f);
-  return a;
-};
-Blockly.Blocks.hamster_rest_for = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_rest_for_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_rest_for_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.hamster_rest_for = function(b, a) {
-  var c = Entry.hw.sendQueue;
-  if (a.isStart) {
-    return delete a.isStart, delete a.timeFlag, Entry.engine.isContinue = !1, a.callReturn();
-  }
-  a.isStart = !0;
-  a.timeFlag = 1;
-  var d = a.getNumberValue("VALUE"), d = 6E4 * d / Entry.Hamster.tempo;
-  c.note = 0;
-  setTimeout(function() {
-    a.timeFlag = 0;
-  }, d);
-  return a;
-};
-Blockly.Blocks.hamster_change_tempo_by = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_tempo_by_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_tempo_by_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.hamster_change_tempo_by = function(b, a) {
-  Entry.Hamster.tempo += a.getNumberValue("VALUE");
-  return a.callReturn();
-};
-Blockly.Blocks.hamster_set_tempo_to = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_tempo_to_1);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_tempo_to_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.hamster_set_tempo_to = function(b, a) {
-  Entry.Hamster.tempo = a.getNumberValue("VALUE");
-  return a.callReturn();
 };
 Blockly.Blocks.hamster_change_both_wheels_by = {init:function() {
   this.setColour("#00979D");
@@ -2387,9 +2581,10 @@ Blockly.Blocks.hamster_change_both_wheels_by = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_change_both_wheels_by = function(b, a) {
-  var c = Entry.hw.sendQueue, d = Entry.hw.portData, e = void 0 != c.leftWheel ? c.leftWheel : d.leftWheel, d = void 0 != c.rightWheel ? c.rightWheel : d.rightWheel, e = e + a.getNumberValue("LEFT"), d = d + a.getNumberValue("RIGHT");
-  c.leftWheel = e;
-  c.rightWheel = d;
+  var c = Entry.hw.sendQueue, d = a.getNumberValue("LEFT"), e = a.getNumberValue("RIGHT");
+  c.leftWheel = void 0 != c.leftWheel ? c.leftWheel + d : d;
+  c.rightWheel = void 0 != c.rightWheel ? c.rightWheel + e : e;
+  Entry.Hamster.setLineTracerMode(c, 0);
   return a.callReturn();
 };
 Blockly.Blocks.hamster_set_both_wheels_to = {init:function() {
@@ -2407,34 +2602,86 @@ Entry.block.hamster_set_both_wheels_to = function(b, a) {
   var c = Entry.hw.sendQueue;
   c.leftWheel = a.getNumberValue("LEFT");
   c.rightWheel = a.getNumberValue("RIGHT");
+  Entry.Hamster.setLineTracerMode(c, 0);
   return a.callReturn();
 };
-Blockly.Blocks.hamster_change_wheels_by = {init:function() {
+Blockly.Blocks.hamster_change_wheel_by = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_wheels_by_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "FRONT"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_change_wheels_by_2);
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_wheel_by_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_change_wheel_by_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_wheels_by_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_wheel_by_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
 }};
-Entry.block.hamster_change_wheels_by = function(b, a) {
-  var c = Entry.hw.sendQueue, d = Entry.hw.portData, e = a.getField("DIRECTION"), f = a.getNumberValue("VALUE");
-  "LEFT" == e ? c.leftWheel = void 0 != c.leftWheel ? c.leftWheel + f : d.leftWheel + f : ("RIGHT" != e && (c.leftWheel = void 0 != c.leftWheel ? c.leftWheel + f : d.leftWheel + f), c.rightWheel = void 0 != c.rightWheel ? c.rightWheel + f : d.rightWheel + f);
+Entry.block.hamster_change_wheel_by = function(b, a) {
+  var c = Entry.hw.sendQueue, d = a.getField("DIRECTION"), e = a.getNumberValue("VALUE");
+  "LEFT" == d ? c.leftWheel = void 0 != c.leftWheel ? c.leftWheel + e : e : ("RIGHT" != d && (c.leftWheel = void 0 != c.leftWheel ? c.leftWheel + e : e), c.rightWheel = void 0 != c.rightWheel ? c.rightWheel + e : e);
+  Entry.Hamster.setLineTracerMode(c, 0);
   return a.callReturn();
 };
-Blockly.Blocks.hamster_set_wheels_to = {init:function() {
+Blockly.Blocks.hamster_set_wheel_to = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_wheels_to_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "FRONT"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_set_wheels_to_2);
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_wheel_to_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_set_wheel_to_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_wheels_to_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_wheel_to_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
 }};
-Entry.block.hamster_set_wheels_to = function(b, a) {
+Entry.block.hamster_set_wheel_to = function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getField("DIRECTION"), e = a.getNumberValue("VALUE");
   "LEFT" == d ? c.leftWheel = e : ("RIGHT" != d && (c.leftWheel = e), c.rightWheel = e);
+  Entry.Hamster.setLineTracerMode(c, 0);
+  return a.callReturn();
+};
+Blockly.Blocks.hamster_follow_line_using = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_follow_line_using_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.HAMSTER_color_black, "BLACK"], [Lang.General.white, "WHITE"]]), "COLOR").appendField(Lang.Blocks.HAMSTER_follow_line_using_2).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_follow_line_using_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 
+  "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_follow_line_using = function(b, a) {
+  var c = Entry.hw.sendQueue, d = a.getField("COLOR"), e = a.getField("DIRECTION"), f = 1;
+  "RIGHT" == e ? f = 2 : "BOTH" == e && (f = 3);
+  "WHITE" == d && (f += 7);
+  c.leftWheel = 0;
+  c.rightWheel = 0;
+  Entry.Hamster.setLineTracerMode(c, f);
+  return a.callReturn();
+};
+Blockly.Blocks.hamster_follow_line_until = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_follow_line_until_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.HAMSTER_color_black, "BLACK"], [Lang.General.white, "WHITE"]]), "COLOR").appendField(Lang.Blocks.HAMSTER_follow_line_until_2).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.Blocks.HAMSTER_front, "FRONT"], [Lang.Blocks.HAMSTER_rear, "REAR"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_follow_line_until_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 
+  "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_follow_line_until = function(b, a) {
+  var c = Entry.hw.sendQueue, d = Entry.hw.portData, e = a.getField("COLOR"), f = a.getField("DIRECTION"), g = 4;
+  "RIGHT" == f ? g = 5 : "FRONT" == f ? g = 6 : "REAR" == f && (g = 7);
+  "WHITE" == e && (g += 7);
+  if (a.isStart) {
+    if (e = Entry.Hamster, d.lineTracerStateId != e.lineTracerStateId && (e.lineTracerStateId = d.lineTracerStateId, 64 == d.lineTracerState)) {
+      return delete a.isStart, Entry.engine.isContinue = !1, e.setLineTracerMode(c, 0), a.callReturn();
+    }
+  } else {
+    a.isStart = !0, c.leftWheel = 0, c.rightWheel = 0, Entry.Hamster.setLineTracerMode(c, g);
+  }
+  return a;
+};
+Blockly.Blocks.hamster_set_following_speed_to = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_following_speed_to_1).appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"]]), "SPEED").appendField(Lang.Blocks.HAMSTER_set_following_speed_to_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_set_following_speed_to = function(b, a) {
+  Entry.hw.sendQueue.lineTracerSpeed = Number(a.getField("SPEED", a));
   return a.callReturn();
 };
 Blockly.Blocks.hamster_stop = {init:function() {
@@ -2448,7 +2695,63 @@ Entry.block.hamster_stop = function(b, a) {
   var c = Entry.hw.sendQueue;
   c.leftWheel = 0;
   c.rightWheel = 0;
+  Entry.Hamster.setLineTracerMode(c, 0);
   return a.callReturn();
+};
+Blockly.Blocks.hamster_set_led_to = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_led_to_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_set_led_to_2).appendField(new Blockly.FieldDropdown([[Lang.General.red, "4"], [Lang.General.yellow, "6"], [Lang.General.green, "2"], [Lang.Blocks.HAMSTER_color_cyan, "3"], [Lang.General.blue, "1"], [Lang.Blocks.HAMSTER_color_magenta, "5"], [Lang.General.white, 
+  "7"]]), "COLOR").appendField(Lang.Blocks.HAMSTER_set_led_to_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_set_led_to = function(b, a) {
+  var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a), e = Number(a.getField("COLOR", a));
+  "LEFT" == d ? c.leftLed = e : ("RIGHT" != d && (c.leftLed = e), c.rightLed = e);
+  return a.callReturn();
+};
+Blockly.Blocks.hamster_clear_led = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_clear_led_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_clear_led_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_clear_led = function(b, a) {
+  var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a);
+  "LEFT" == d ? c.leftLed = 0 : ("RIGHT" != d && (c.leftLed = 0), c.rightLed = 0);
+  return a.callReturn();
+};
+Blockly.Blocks.hamster_beep = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_beep).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_beep = function(b, a) {
+  var c = Entry.hw.sendQueue;
+  if (a.isStart) {
+    if (1 == a.timeFlag) {
+      return a;
+    }
+    delete a.isStart;
+    delete a.timeFlag;
+    Entry.engine.isContinue = !1;
+    c.buzzer = 0;
+    return a.callReturn();
+  }
+  a.isStart = !0;
+  a.timeFlag = 1;
+  c.buzzer = 440;
+  c.note = 0;
+  var d = setTimeout(function() {
+    a.timeFlag = 0;
+    Entry.Hamster.removeTimeout(d);
+  }, 200);
+  Entry.Hamster.timeouts.push(d);
+  return a;
 };
 Blockly.Blocks.hamster_change_buzzer_by = {init:function() {
   this.setColour("#00979D");
@@ -2460,10 +2763,9 @@ Blockly.Blocks.hamster_change_buzzer_by = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_change_buzzer_by = function(b, a) {
-  var c = Entry.hw.sendQueue;
-  value = a.getNumberValue("VALUE");
-  delete c.note;
-  c.buzzer = void 0 == c.buzzer ? value : c.buzzer + value;
+  var c = Entry.hw.sendQueue, d = a.getNumberValue("VALUE");
+  c.buzzer = void 0 != c.buzzer ? c.buzzer + d : d;
+  c.note = 0;
   return a.callReturn();
 };
 Blockly.Blocks.hamster_set_buzzer_to = {init:function() {
@@ -2477,8 +2779,8 @@ Blockly.Blocks.hamster_set_buzzer_to = {init:function() {
 }};
 Entry.block.hamster_set_buzzer_to = function(b, a) {
   var c = Entry.hw.sendQueue;
-  delete c.note;
   c.buzzer = a.getNumberValue("VALUE");
+  c.note = 0;
   return a.callReturn();
 };
 Blockly.Blocks.hamster_clear_buzzer = {init:function() {
@@ -2489,19 +2791,152 @@ Blockly.Blocks.hamster_clear_buzzer = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_clear_buzzer = function(b, a) {
-  Entry.hw.sendQueue.buzzer = 0;
+  var c = Entry.hw.sendQueue;
+  c.buzzer = 0;
+  c.note = 0;
   return a.callReturn();
 };
-Blockly.Blocks.hamster_value = {init:function() {
+Blockly.Blocks.hamster_play_note_for = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([[Lang.Blocks.HAMSTER_sensor_leftProximity, "leftProximity"], [Lang.Blocks.HAMSTER_sensor_rightProximity, "rightProximity"], [Lang.Blocks.HAMSTER_sensor_leftFloor, "leftFloor"], [Lang.Blocks.HAMSTER_sensor_rightFloor, "rightFloor"], [Lang.Blocks.HAMSTER_sensor_accelerationX, "accelerationX"], [Lang.Blocks.HAMSTER_sensor_accelerationY, "accelerationY"], [Lang.Blocks.HAMSTER_sensor_accelerationZ, "accelerationZ"], [Lang.Blocks.HAMSTER_sensor_light, 
-  "light"], [Lang.Blocks.HAMSTER_sensor_temperature, "temperature"], [Lang.Blocks.HAMSTER_sensor_signalStrength, "signalStrength"], [Lang.Blocks.HAMSTER_sensor_inputA, "inputA"], [Lang.Blocks.HAMSTER_sensor_inputB, "inputB"]]), "PORT");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_play_note_for_1).appendField(new Blockly.FieldDropdown([[Lang.General.note_c + "", "4"], [Lang.General.note_c + "#", "5"], [Lang.General.note_d + "", "6"], [Lang.General.note_e + "b", "7"], [Lang.General.note_e + "", "8"], [Lang.General.note_f + "", "9"], [Lang.General.note_f + "#", "10"], [Lang.General.note_g + "", "11"], [Lang.General.note_g + "#", "12"], [Lang.General.note_a + "", "13"], [Lang.General.note_b + "b", "14"], [Lang.General.note_b + 
+  "", "15"]]), "NOTE").appendField(Lang.Blocks.HAMSTER_play_note_for_2).appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"]]), "OCTAVE").appendField(Lang.Blocks.HAMSTER_play_note_for_3);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_play_note_for_4).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
-  this.setOutput(!0, "Number");
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
 }};
-Entry.block.hamster_value = function(b, a) {
-  var c = Entry.hw, d = c.sendQueue, c = c.portData, e = a.getField("PORT");
-  return void 0 != d[e] ? d[e] : c[e];
+Entry.block.hamster_play_note_for = function(b, a) {
+  var c = Entry.hw.sendQueue;
+  if (a.isStart) {
+    if (1 == a.timeFlag) {
+      return a;
+    }
+    delete a.isStart;
+    delete a.timeFlag;
+    Entry.engine.isContinue = !1;
+    c.note = 0;
+    return a.callReturn();
+  }
+  var d = a.getNumberField("NOTE", a), e = a.getNumberField("OCTAVE", a), f = a.getNumberValue("VALUE", a), g = Entry.Hamster.tempo, f = 6E4 * f / g;
+  a.isStart = !0;
+  a.timeFlag = 1;
+  c.buzzer = 0;
+  c.note = d + 12 * (e - 1);
+  if (100 < f) {
+    var h = setTimeout(function() {
+      c.note = 0;
+      Entry.Hamster.removeTimeout(h);
+    }, f - 100);
+    Entry.Hamster.timeouts.push(h);
+  }
+  var k = setTimeout(function() {
+    a.timeFlag = 0;
+    Entry.Hamster.removeTimeout(k);
+  }, f);
+  Entry.Hamster.timeouts.push(k);
+  return a;
+};
+Blockly.Blocks.hamster_rest_for = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_rest_for_1);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_rest_for_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_rest_for = function(b, a) {
+  var c = Entry.hw.sendQueue;
+  if (a.isStart) {
+    if (1 == a.timeFlag) {
+      return a;
+    }
+    delete a.isStart;
+    delete a.timeFlag;
+    Entry.engine.isContinue = !1;
+    return a.callReturn();
+  }
+  a.isStart = !0;
+  a.timeFlag = 1;
+  var d = a.getNumberValue("VALUE"), d = 6E4 * d / Entry.Hamster.tempo;
+  c.buzzer = 0;
+  c.note = 0;
+  var e = setTimeout(function() {
+    a.timeFlag = 0;
+    Entry.Hamster.removeTimeout(e);
+  }, d);
+  Entry.Hamster.timeouts.push(e);
+  return a;
+};
+Blockly.Blocks.hamster_change_tempo_by = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_tempo_by_1);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_tempo_by_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_change_tempo_by = function(b, a) {
+  Entry.Hamster.tempo += a.getNumberValue("VALUE");
+  1 > Entry.Hamster.tempo && (Entry.Hamster.tempo = 1);
+  return a.callReturn();
+};
+Blockly.Blocks.hamster_set_tempo_to = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_tempo_to_1);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_tempo_to_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_set_tempo_to = function(b, a) {
+  Entry.Hamster.tempo = a.getNumberValue("VALUE");
+  1 > Entry.Hamster.tempo && (Entry.Hamster.tempo = 1);
+  return a.callReturn();
+};
+Blockly.Blocks.hamster_set_port_to = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_port_to_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.HAMSTER_port_a, "A"], [Lang.Blocks.HAMSTER_port_b, "B"], [Lang.Blocks.HAMSTER_port_ab, "AB"]]), "PORT").appendField(Lang.Blocks.HAMSTER_set_port_to_2).appendField(new Blockly.FieldDropdown([[Lang.Blocks.HAMSTER_analog_input, "0"], [Lang.Blocks.HAMSTER_digital_input, "1"], [Lang.Blocks.HAMSTER_servo_output, "8"], [Lang.Blocks.HAMSTER_pwm_output, "9"], [Lang.Blocks.HAMSTER_digital_output, 
+  "10"]]), "MODE").appendField(Lang.Blocks.HAMSTER_set_port_to_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_set_port_to = function(b, a) {
+  var c = Entry.hw.sendQueue, d = a.getField("PORT", a), e = Number(a.getField("MODE", a));
+  "A" == d ? c.ioModeA = e : ("B" != d && (c.ioModeA = e), c.ioModeB = e);
+  return a.callReturn();
+};
+Blockly.Blocks.hamster_change_output_by = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_output_by_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.HAMSTER_port_a, "A"], [Lang.Blocks.HAMSTER_port_b, "B"], [Lang.Blocks.HAMSTER_port_ab, "AB"]]), "PORT").appendField(Lang.Blocks.HAMSTER_change_output_by_2);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_output_by_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_change_output_by = function(b, a) {
+  var c = Entry.hw.sendQueue, d = a.getField("PORT"), e = a.getNumberValue("VALUE");
+  "A" == d ? c.outputA = void 0 != c.outputA ? c.outputA + e : e : ("B" != d && (c.outputA = void 0 != c.outputA ? c.outputA + e : e), c.outputB = void 0 != c.outputB ? c.outputB + e : e);
+  return a.callReturn();
+};
+Blockly.Blocks.hamster_set_output_to = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_output_to_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.HAMSTER_port_a, "A"], [Lang.Blocks.HAMSTER_port_b, "B"], [Lang.Blocks.HAMSTER_port_ab, "AB"]]), "PORT").appendField(Lang.Blocks.HAMSTER_set_output_to_2);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_output_to_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_set_output_to = function(b, a) {
+  var c = Entry.hw.sendQueue, d = a.getField("PORT"), e = a.getNumberValue("VALUE");
+  "A" == d ? c.outputA = e : ("B" != d && (c.outputA = e), c.outputB = e);
+  return a.callReturn();
 };
 Blockly.Blocks.is_clicked = {init:function() {
   this.setColour("#AEB8FF");
@@ -2577,7 +3012,7 @@ Entry.block.reach_something = function(b, a) {
       }
       for (var c = c.parent.clonedEntities, e = 0, g = c.length;e < g;e++) {
         var h = c[e];
-        if (h.getVisible() && !h.isStamp && Entry.checkCollisionRect(d, h.object.getTransformedBounds())) {
+        if (!h.isStamp && h.getVisible() && Entry.checkCollisionRect(d, h.object.getTransformedBounds())) {
           return !0;
         }
       }
@@ -2588,7 +3023,7 @@ Entry.block.reach_something = function(b, a) {
       c = c.parent.clonedEntities;
       e = 0;
       for (g = c.length;e < g;e++) {
-        if (h = c[e], h.getVisible() && !h.isStamp && f(d, h.object, .2, !0)) {
+        if (h = c[e], !h.isStamp && h.getVisible() && f(d, h.object, .2, !0)) {
           return !0;
         }
       }
@@ -2723,7 +3158,7 @@ Entry.block.False = function(b, a) {
 Blockly.Blocks.boolean_basic_operator = {init:function() {
   this.setColour("#AEB8FF");
   this.appendValueInput("LEFTHAND").setCheck(["String", "Number"]);
-  this.appendDummyInput("VALUE").appendField(new Blockly.FieldDropdown([["=", "EQUAL"], ["\uff1e", "GREATER"], ["\uff1c", "LESS"], ["\u2265", "GREATER_OR_EQUAL"], ["\u2264", "LESS_OR_EQUAL"]], null, !1), "OPERATOR");
+  this.appendDummyInput("VALUE").appendField(new Blockly.FieldDropdown([["=", "EQUAL"], [">", "GREATER"], ["<", "LESS"], ["\u2265", "GREATER_OR_EQUAL"], ["\u2264", "LESS_OR_EQUAL"]], null, !1), "OPERATOR");
   this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
@@ -2839,13 +3274,14 @@ Entry.block.change_to_nth_shape = function(b, a) {
 };
 Blockly.Blocks.change_to_next_shape = {init:function() {
   this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_to_next_shape).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_to_near_shape_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.LOOKS_change_shape_next, "next"], [Lang.Blocks.LOOKS_change_shape_prev, "prev"]]), "DRIECTION").appendField(Lang.Blocks.LOOKS_change_to_near_shape_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
 }, syntax:{js:[], py:["self.change_shape_to_next()\n"]}};
 Entry.block.change_to_next_shape = function(b, a) {
-  var c = b.parent.getNextPicture(b.picture.id);
+  var c;
+  c = a.fields && "prev" === a.getStringField("DRIECTION") ? b.parent.getPrevPicture(b.picture.id) : b.parent.getNextPicture(b.picture.id);
   b.setImage(c);
   return a.callReturn();
 };
@@ -3177,14 +3613,21 @@ Entry.block.locate_xy_time = function(b, a) {
   if (!a.isStart) {
     var c;
     c = a.getNumberValue("VALUE1", a);
-    var d = a.getNumberValue("VALUE2", a) - b.getX(), e = a.getNumberValue("VALUE3", a) - b.getY();
     a.isStart = !0;
     a.frameCount = Math.floor(c * Entry.FPS);
-    a.dX = d / a.frameCount;
-    a.dY = e / a.frameCount;
+    a.x = a.getNumberValue("VALUE2", a);
+    a.y = a.getNumberValue("VALUE3", a);
   }
   if (0 != a.frameCount) {
-    return b.setX(b.getX() + a.dX), b.setY(b.getY() + a.dY), a.frameCount--, b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY()), a;
+    c = a.x - b.getX();
+    var d = a.y - b.getY();
+    c /= a.frameCount;
+    d /= a.frameCount;
+    b.setX(b.getX() + c);
+    b.setY(b.getY() + d);
+    a.frameCount--;
+    b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY());
+    return a;
   }
   delete a.isStart;
   delete a.frameCount;
@@ -3396,48 +3839,20 @@ Blockly.Blocks.bounce_wall = {init:function() {
   this.setNextStatement(!0);
 }, syntax:{js:[], py:["self.on_bounce_at_wall()\n"]}};
 Entry.block.bounce_wall = function(b, a) {
-  var c = b.parent.getRotateMethod(), d = b.object.getTransformedBounds(), e;
-  e = d.width * Math.sqrt(1 + d.height / d.width * (d.height / d.width));
-  var d = d.height * Math.sqrt(1 + d.width / d.height * (d.width / d.height)), f = "free" == c ? (b.getRotation() + b.getDirection()).mod(360) : b.getDirection();
-  if (90 > f && 0 <= f || 360 > f && 270 <= f) {
-    var g = ndgmr.checkPixelCollision(Entry.stage.wall.up, b.object, 0, !1);
-    if (g) {
-      "free" == c ? b.setRotation(-b.getRotation() - 2 * b.getDirection() + 180) : b.setDirection(-b.getDirection() + 180), b.setY(135 - d / 2 - 1);
-    } else {
-      if (g = ndgmr.checkPixelCollision(Entry.stage.wall.down, b.object, 0, !1)) {
-        "free" == c ? b.setRotation(-b.getRotation() - 2 * b.getDirection() + 180) : b.setDirection(-b.getDirection() + 180), b.setY(d / 2 + -134);
-      }
-    }
+  var c = b.parent.getRotateMethod(), d = "free" == c ? (b.getRotation() + b.getDirection()).mod(360) : b.getDirection(), e = Entry.Utils.COLLISION.NONE;
+  if (90 > d && 0 <= d || 360 > d && 270 <= d) {
+    var e = b.collision == Entry.Utils.COLLISION.UP, f = ndgmr.checkPixelCollision(Entry.stage.wall.up, b.object, 0, !1);
+    !f && e && (b.collision = Entry.Utils.COLLISION.NONE);
+    f && e && (f = !1);
+    f ? ("free" == c ? b.setRotation(-b.getRotation() - 2 * b.getDirection() + 180) : b.setDirection(-b.getDirection() + 180), b.collision = Entry.Utils.COLLISION.UP) : (e = b.collision == Entry.Utils.COLLISION.DOWN, f = ndgmr.checkPixelCollision(Entry.stage.wall.down, b.object, 0, !1), !f && e && (b.collision = Entry.Utils.COLLISION.NONE), f && e && (f = !1), f && ("free" == c ? b.setRotation(-b.getRotation() - 2 * b.getDirection() + 180) : b.setDirection(-b.getDirection() + 180), b.collision = 
+    Entry.Utils.COLLISION.DOWN));
   } else {
-    if (270 > f && 90 <= f) {
-      if (g = ndgmr.checkPixelCollision(Entry.stage.wall.down, b.object, 0, !1)) {
-        "free" == c ? b.setRotation(-b.getRotation() - 2 * b.getDirection() + 180) : b.setDirection(-b.getDirection() + 180), b.setY(d / 2 + -134);
-      } else {
-        if (g = ndgmr.checkPixelCollision(Entry.stage.wall.up, b.object, 0, !1)) {
-          "free" == c ? b.setRotation(-b.getRotation() - 2 * b.getDirection() + 180) : b.setDirection(-b.getDirection() + 180), b.setY(135 - d / 2 - 1);
-        }
-      }
-    }
+    270 > d && 90 <= d && (e = b.collision == Entry.Utils.COLLISION.DOWN, f = ndgmr.checkPixelCollision(Entry.stage.wall.down, b.object, 0, !1), !f && e && (b.collision = Entry.Utils.COLLISION.NONE), f && e && (f = !1), f ? ("free" == c ? b.setRotation(-b.getRotation() - 2 * b.getDirection() + 180) : b.setDirection(-b.getDirection() + 180), b.collision = Entry.Utils.COLLISION.DOWN) : (e = b.collision == Entry.Utils.COLLISION.UP, f = ndgmr.checkPixelCollision(Entry.stage.wall.up, b.object, 0, !1), 
+    !f && e && (b.collision = Entry.Utils.COLLISION.NONE), f && e && (f = !1), f && ("free" == c ? b.setRotation(-b.getRotation() - 2 * b.getDirection() + 180) : b.setDirection(-b.getDirection() + 180), b.collision = Entry.Utils.COLLISION.UP)));
   }
-  if (360 > f && 180 <= f) {
-    if (d = ndgmr.checkPixelCollision(Entry.stage.wall.left, b.object, 0, !1)) {
-      "free" == c ? b.setRotation(-b.getRotation() - 2 * b.getDirection()) : b.setDirection(-b.getDirection() + 360), b.setX(e / 2 + -239);
-    } else {
-      if (d = ndgmr.checkPixelCollision(Entry.stage.wall.right, b.object, 0, !1)) {
-        "free" == c ? b.setRotation(-b.getRotation() - 2 * b.getDirection()) : b.setDirection(-b.getDirection() + 360), b.setX(240 - e / 2 - 1);
-      }
-    }
-  } else {
-    if (180 > f && 0 <= f) {
-      if (d = ndgmr.checkPixelCollision(Entry.stage.wall.right, b.object, 0, !1)) {
-        "free" == c ? b.setRotation(-b.getRotation() - 2 * b.getDirection()) : b.setDirection(-b.getDirection() + 360), b.setX(240 - e / 2 - 1);
-      } else {
-        if (d = ndgmr.checkPixelCollision(Entry.stage.wall.left, b.object, 0, !1)) {
-          "free" == c ? b.setRotation(-b.getRotation() - 2 * b.getDirection()) : b.setDirection(-b.getDirection() + 360), b.setX(e / 2 + -239);
-        }
-      }
-    }
-  }
+  360 > d && 180 <= d ? (e = b.collision == Entry.Utils.COLLISION.LEFT, d = ndgmr.checkPixelCollision(Entry.stage.wall.left, b.object, 0, !1), !d && e && (b.collision = Entry.Utils.COLLISION.NONE), d && e && (d = !1), d ? ("free" == c ? b.setRotation(-b.getRotation() - 2 * b.getDirection()) : b.setDirection(-b.getDirection() + 360), b.collision = Entry.Utils.COLLISION.LEFT) : (e = b.collision == Entry.Utils.COLLISION.RIGHT, d = ndgmr.checkPixelCollision(Entry.stage.wall.right, b.object, 0, !1), !d && 
+  e && (b.collision = Entry.Utils.COLLISION.NONE), d && e && (d = !1), d && ("free" == c ? b.setRotation(-b.getRotation() - 2 * b.getDirection()) : b.setDirection(-b.getDirection() + 360), b.collision = Entry.Utils.COLLISION.RIGHT))) : 180 > d && 0 <= d && (e = b.collision == Entry.Utils.COLLISION.RIGHT, d = ndgmr.checkPixelCollision(Entry.stage.wall.right, b.object, 0, !1), !d && e && (b.collision = Entry.Utils.COLLISION.NONE), d && e && (d = !1), d ? ("free" == c ? b.setRotation(-b.getRotation() - 
+  2 * b.getDirection()) : b.setDirection(-b.getDirection() + 360), b.collision = Entry.Utils.COLLISION.RIGHT) : (e = b.collision == Entry.Utils.COLLISION.LEFT, d = ndgmr.checkPixelCollision(Entry.stage.wall.left, b.object, 0, !1), !d && e && (b.collision = Entry.Utils.COLLISION.NONE), d && e && (d = !1), d && ("free" == c ? b.setRotation(-b.getRotation() - 2 * b.getDirection()) : b.setDirection(-b.getDirection() + 360), b.collision = Entry.Utils.COLLISION.LEFT)));
   return a.callReturn();
 };
 Blockly.Blocks.flip_arrow_horizontal = {init:function() {
@@ -3477,7 +3892,7 @@ Entry.block.see_angle_object = function(b, a) {
     return a.callReturn();
   }
   "mouse" == c ? (c = Entry.stage.mouseCoordinate.y, d = Entry.stage.mouseCoordinate.x - d, e = c - e) : (c = Entry.container.getEntity(c), d = c.getX() - d, e = c.getY() - e);
-  e = 0 <= d ? -Math.atan(e / d) / Math.PI * 180 + 90 : -Math.atan(e / d) / Math.PI * 180 + 270;
+  e = 0 === d && 0 === e ? b.getDirection() + b.getRotation() : 0 <= d ? -Math.atan(e / d) / Math.PI * 180 + 90 : -Math.atan(e / d) / Math.PI * 180 + 270;
   d = b.getDirection() + b.getRotation();
   b.setRotation(b.getRotation() + e - d);
   return a.callReturn();
@@ -3676,8 +4091,8 @@ Entry.Neobot = {name:"neobot", PORT_MAP:{1:0, 2:0, 3:0, SERVO1:0, SERVO2:0, SERV
     Entry.hw.sendQueue[b] = Entry.Neobot.PORT_MAP[b];
   }
   Entry.hw.update();
-}, monitorTemplate:{imgPath:"hw/neobot.png", width:268, height:270, ports:{1:{name:"1\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:78, y:9}}, 2:{name:"2\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:115, y:9}}, 3:{name:"3\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:153, y:9}}, LMOT:{name:"\uc67c\ucabd \ubaa8\ud130", type:"output", pos:{x:78, y:259}}, RMOT:{name:"\uc624\ub978\ucabd \ubaa8\ud130", type:"output", pos:{x:191, y:259}}, note:{name:"\ubd80\uc800", type:"output", pos:{x:98, y:184}}, SERVO1:{name:"SERVO \ubaa8\ud130 1", 
-type:"output", pos:{x:115, y:259}}, SERVO2:{name:"SERVO \ubaa8\ud130 2", type:"output", pos:{x:191, y:9}}}}};
+}, name:"neobot", monitorTemplate:{imgPath:"hw/neobot.png", width:268, height:270, ports:{1:{name:Lang.Hw.port_en + " 1 " + Lang.Hw.port_ko, type:"input", pos:{x:78, y:9}}, 2:{name:Lang.Hw.port_en + " 2 " + Lang.Hw.port_ko, type:"input", pos:{x:115, y:9}}, 3:{name:Lang.Hw.port_en + " 3 " + Lang.Hw.port_ko, type:"input", pos:{x:153, y:9}}, LMOT:{name:Lang.Hw.left + " " + Lang.Hw.motor, type:"output", pos:{x:78, y:259}}, RMOT:{name:Lang.Hw.right + " " + Lang.Hw.motor, type:"output", pos:{x:191, y:259}}, 
+note:{name:Lang.Hw.buzzer, type:"output", pos:{x:98, y:184}}, SERVO1:{name:Lang.Hw.sub + " " + Lang.Hw.motor + " 1", type:"output", pos:{x:115, y:259}}, SERVO2:{name:Lang.Hw.sub + " " + Lang.Hw.motor + " 2", type:"output", pos:{x:191, y:9}}}}};
 Blockly.Blocks.neobot_sensor_value = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["1\ubc88 \ud3ec\ud2b8", "1"], ["2\ubc88 \ud3ec\ud2b8", "2"], ["3\ubc88 \ud3ec\ud2b8", "3"], ["\ub9ac\ubaa8\ucee8", "4"]]), "PORT").appendField(" \uac12");
@@ -3854,6 +4269,389 @@ Entry.block.neobot_set_sensor_value = function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getStringField("PORT", a), e = a.getNumberField("VALUE", a);
   c[d] = e;
   return a.callReturn();
+};
+Entry.Robotis_carCont = {INSTRUCTION:{NONE:0, WRITE:3, READ:2}, CONTROL_TABLE:{CM_LED:[67, 1], CM_SPRING_RIGHT:[69, 1, 69, 2], CM_SPRING_LEFT:[70, 1, 69, 2], CM_SWITCH:[71, 1], CM_SOUND_DETECTED:[86, 1], CM_SOUND_DETECTING:[87, 1], CM_IR_LEFT:[91, 2, 91, 4], CM_IR_RIGHT:[93, 2, 91, 4], CM_CALIBRATION_LEFT:[95, 2], CM_CALIBRATION_RIGHT:[97, 2], AUX_MOTOR_SPEED_LEFT:[152, 2], AUX_MOTOR_SPEED_RIGHT:[154, 2]}, setZero:function() {
+  this.setRobotisData([[Entry.Robotis_carCont.INSTRUCTION.WRITE, 152, 2, 0], [Entry.Robotis_carCont.INSTRUCTION.WRITE, 154, 2, 0]]);
+  Entry.hw.sendQueue.setZero = [1];
+  this.update();
+  this.setRobotisData(null);
+  Entry.hw.sendQueue.setZero = null;
+  this.update();
+}, name:"robotis_carCont", delay:40, postCallReturn:function(b, a, c) {
+  if (0 >= c) {
+    return this.setRobotisData(a), this.update(), b.callReturn();
+  }
+  if (b.isStart) {
+    if (1 == b.timeFlag) {
+      return this.setRobotisData(null), b;
+    }
+    delete b.timeFlag;
+    delete b.isStart;
+    Entry.engine.isContinue = !1;
+    this.update();
+    return b.callReturn();
+  }
+  b.isStart = !0;
+  b.timeFlag = 1;
+  this.setRobotisData(a);
+  setTimeout(function() {
+    b.timeFlag = 0;
+  }, c);
+  return b;
+}, wait:function(b, a) {
+  Entry.hw.socket.send(JSON.stringify(b));
+  for (var c = (new Date).getTime(), d = c;d < c + a;) {
+    d = (new Date).getTime();
+  }
+}, update:function() {
+  Entry.hw.update();
+  this.setRobotisData(null);
+}, setRobotisData:function(b) {
+  Entry.hw.sendQueue.ROBOTIS_DATA = null == b ? null : Entry.hw.sendQueue.ROBOTIS_DATA ? Entry.hw.sendQueue.ROBOTIS_DATA.concat(b) : b;
+}};
+Entry.Robotis_openCM70 = {INSTRUCTION:{NONE:0, WRITE:3, READ:2}, CONTROL_TABLE:{CM_LED_R:[79, 1], CM_LED_G:[80, 1], CM_LED_B:[81, 1], CM_BUZZER_INDEX:[84, 1], CM_BUZZER_TIME:[85, 1], CM_SOUND_DETECTED:[86, 1], CM_SOUND_DETECTING:[87, 1], CM_USER_BUTTON:[26, 1], CM_MOTION:[66, 1], AUX_SERVO_POSITION:[152, 2], AUX_IR:[168, 2], AUX_TOUCH:[202, 1], AUX_TEMPERATURE:[234, 1], AUX_ULTRASONIC:[242, 1], AUX_MAGNETIC:[250, 1], AUX_MOTION_DETECTION:[258, 1], AUX_COLOR:[266, 1], AUX_CUSTOM:[216, 2], AUX_BRIGHTNESS:[288, 
+2], AUX_HYDRO_THEMO_HUMIDITY:[274, 1], AUX_HYDRO_THEMO_TEMPER:[282, 1], AUX_SERVO_MODE:[126, 1], AUX_SERVO_SPEED:[136, 2], AUX_MOTOR_SPEED:[136, 2], AUX_LED_MODULE:[210, 1]}, setZero:function() {
+  Entry.Robotis_carCont.setRobotisData([[Entry.Robotis_openCM70.INSTRUCTION.WRITE, 136, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 138, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 140, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 142, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 144, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 146, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 79, 1, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 80, 1, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 
+  81, 1, 0]]);
+  Entry.hw.sendQueue.setZero = [1];
+  Entry.Robotis_carCont.update();
+  Entry.Robotis_carCont.setRobotisData(null);
+  Entry.hw.sendQueue.setZero = null;
+  Entry.Robotis_carCont.update();
+}, name:"robotis_openCM70", delay:15};
+Blockly.Blocks.robotis_openCM70_cm_custom_value = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.robotis_cm_custom);
+  this.appendDummyInput().appendField("(");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(")");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["BYTE", "BYTE"], ["WORD", "WORD"], ["DWORD", "DWORD"]]), "SIZE");
+  this.appendDummyInput().appendField(Lang.Blocks.robotis_common_value);
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.robotis_openCM70_cm_custom_value = function(b, a) {
+  var c = Entry.Robotis_openCM70.INSTRUCTION.READ, d = 0, e = 0, f = 0, d = a.getStringField("SIZE");
+  "BYTE" == d ? e = 1 : "WORD" == d ? e = 2 : "DWORD" == d && (e = 4);
+  f = d = a.getNumberValue("VALUE");
+  Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, e]]);
+  Entry.Robotis_carCont.update();
+  return Entry.hw.portData[f];
+};
+Blockly.Blocks.robotis_openCM70_sensor_value = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.robotis_common_cm);
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown(function() {
+    var b = [];
+    b.push([Lang.Blocks.robotis_cm_sound_detected, "CM_SOUND_DETECTED"]);
+    b.push([Lang.Blocks.robotis_cm_sound_detecting, "CM_SOUND_DETECTING"]);
+    b.push([Lang.Blocks.robotis_cm_user_button, "CM_USER_BUTTON"]);
+    return b;
+  }()), "SENSOR");
+  this.appendDummyInput().appendField(Lang.Blocks.robotis_common_value);
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.robotis_openCM70_sensor_value = function(b, a) {
+  var c = Entry.Robotis_openCM70.INSTRUCTION.READ, d = 0, e = 0, f = 0, g = 0, h = a.getStringField("SENSOR");
+  "CM_SOUND_DETECTED" == h ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1]) : "CM_SOUND_DETECTING" == h ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[0], 
+  e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[1]) : "CM_USER_BUTTON" == h && (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1]);
+  f += 0 * g;
+  Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, g]]);
+  Entry.Robotis_carCont.update();
+  return Entry.hw.portData[f];
+};
+Blockly.Blocks.robotis_openCM70_aux_sensor_value = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown(function() {
+    var b = [];
+    b.push([Lang.Blocks.robotis_common_port_3, "PORT_3"]);
+    b.push([Lang.Blocks.robotis_common_port_4, "PORT_4"]);
+    b.push([Lang.Blocks.robotis_common_port_5, "PORT_5"]);
+    b.push([Lang.Blocks.robotis_common_port_6, "PORT_6"]);
+    return b;
+  }()), "PORT");
+  this.appendDummyInput().appendField(" ");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown(function() {
+    var b = [];
+    b.push([Lang.Blocks.robotis_aux_servo_position, "AUX_SERVO_POSITION"]);
+    b.push([Lang.Blocks.robotis_aux_ir, "AUX_IR"]);
+    b.push([Lang.Blocks.robotis_aux_touch, "AUX_TOUCH"]);
+    b.push([Lang.Blocks.robotis_aux_brightness, "AUX_BRIGHTNESS"]);
+    b.push([Lang.Blocks.robotis_aux_hydro_themo_humidity, "AUX_HYDRO_THEMO_HUMIDITY"]);
+    b.push([Lang.Blocks.robotis_aux_hydro_themo_temper, "AUX_HYDRO_THEMO_TEMPER"]);
+    b.push([Lang.Blocks.robotis_aux_temperature, "AUX_TEMPERATURE"]);
+    b.push([Lang.Blocks.robotis_aux_ultrasonic, "AUX_ULTRASONIC"]);
+    b.push([Lang.Blocks.robotis_aux_magnetic, "AUX_MAGNETIC"]);
+    b.push([Lang.Blocks.robotis_aux_motion_detection, "AUX_MOTION_DETECTION"]);
+    b.push([Lang.Blocks.robotis_aux_color, "AUX_COLOR"]);
+    b.push([Lang.Blocks.robotis_aux_custom, "AUX_CUSTOM"]);
+    return b;
+  }()), "SENSOR");
+  this.appendDummyInput().appendField(Lang.Blocks.robotis_common_value);
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.robotis_openCM70_aux_sensor_value = function(b, a) {
+  var c = Entry.Robotis_openCM70.INSTRUCTION.READ, d = 0, e = 0, f = 0, g = 0, h = a.getStringField("PORT"), k = a.getStringField("SENSOR"), l = 0;
+  "PORT_3" == h ? l = 2 : "PORT_4" == h ? l = 3 : "PORT_5" == h ? l = 4 : "PORT_6" == h && (l = 5);
+  "AUX_SERVO_POSITION" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1]) : "AUX_IR" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[1]) : 
+  "AUX_TOUCH" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[1]) : "AUX_TEMPERATURE" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[1]) : 
+  "AUX_BRIGHTNESS" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[1]) : "AUX_HYDRO_THEMO_HUMIDITY" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[0], 
+  e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[1]) : "AUX_HYDRO_THEMO_TEMPER" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[1]) : "AUX_ULTRASONIC" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[1], 
+  d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[1]) : "AUX_MAGNETIC" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[1]) : "AUX_MOTION_DETECTION" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[1], 
+  d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[1]) : "AUX_COLOR" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[1]) : "AUX_CUSTOM" == k && (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1], 
+  d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1]);
+  f += l * g;
+  0 != l && (e = 6 * g);
+  Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, g]]);
+  Entry.Robotis_carCont.update();
+  return Entry.hw.portData[f];
+};
+Blockly.Blocks.robotis_openCM70_cm_buzzer_index = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.robotis_common_cm);
+  this.appendDummyInput().appendField(Lang.Blocks.robotis_cm_buzzer_index);
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.General.note_a + "(0)", "0"], [Lang.General.note_a + "#(1)", "1"], [Lang.General.note_b + "(2)", "2"], [Lang.General.note_c + "(3)", "3"], [Lang.General.note_c + "#(4)", "4"], [Lang.General.note_d + "(5)", "5"], [Lang.General.note_d + "#(6)", "6"], [Lang.General.note_e + "(7)", "7"], [Lang.General.note_f + "(8)", "8"], [Lang.General.note_f + "#(9)", "9"], [Lang.General.note_g + "(10)", "10"], [Lang.General.note_g + "#(11)", "11"], 
+  [Lang.General.note_a + "(12)", "12"], [Lang.General.note_a + "#(13)", "13"], [Lang.General.note_b + "(14)", "14"], [Lang.General.note_c + "(15)", "15"], [Lang.General.note_c + "#(16)", "16"], [Lang.General.note_d + "(17)", "17"], [Lang.General.note_d + "#(18)", "18"], [Lang.General.note_e + "(19)", "19"], [Lang.General.note_f + "(20)", "20"], [Lang.General.note_f + "#(21)", "21"], [Lang.General.note_g + "(22)", "22"], [Lang.General.note_g + "#(23)", "23"], [Lang.General.note_a + "(24)", "24"], 
+  [Lang.General.note_a + "#(25)", "25"], [Lang.General.note_b + "(26)", "26"], [Lang.General.note_c + "(27)", "27"], [Lang.General.note_c + "#(28)", "28"], [Lang.General.note_d + "(29)", "29"], [Lang.General.note_d + "#(30)", "30"], [Lang.General.note_e + "(31)", "31"], [Lang.General.note_f + "(32)", "32"], [Lang.General.note_f + "#(33)", "33"], [Lang.General.note_g + "(34)", "34"], [Lang.General.note_g + "#(35)", "35"], [Lang.General.note_a + "(36)", "36"], [Lang.General.note_a + "#(37)", "37"], 
+  [Lang.General.note_b + "(38)", "38"], [Lang.General.note_c + "(39)", "39"], [Lang.General.note_c + "#(40)", "40"], [Lang.General.note_d + "(41)", "41"], [Lang.General.note_d + "#(42)", "42"], [Lang.General.note_e + "(43)", "43"], [Lang.General.note_f + "(44)", "44"], [Lang.General.note_f + "#(45)", "45"], [Lang.General.note_g + "(46)", "46"], [Lang.General.note_g + "#(47)", "47"], [Lang.General.note_a + "(48)", "48"], [Lang.General.note_a + "#(49)", "49"], [Lang.General.note_b + "(50)", "50"], 
+  [Lang.General.note_c + "(51)", "51"]]), "CM_BUZZER_INDEX").appendField(Lang.Blocks.LOOKS_dialog_time_2);
+  this.appendValueInput("CM_BUZZER_TIME").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_dialog_time_3).appendField(Lang.Blocks.robotis_common_play_buzzer).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.robotis_openCM70_cm_buzzer_index = function(b, a) {
+  var c = a.getField("CM_BUZZER_INDEX", a), d = a.getNumberValue("CM_BUZZER_TIME", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, h = 0, k = 0, l = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[1], h = parseInt(10 * d);
+  50 < h && (h = 50);
+  k = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[0];
+  l = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[1];
+  return Entry.Robotis_carCont.postCallReturn(a, [[e, f, g, h], [e, k, l, c]], 1E3 * d);
+};
+Blockly.Blocks.robotis_openCM70_cm_buzzer_melody = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.robotis_common_cm);
+  this.appendDummyInput().appendField(Lang.Blocks.robotis_cm_buzzer_melody);
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["0", "0"], ["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"], ["9", "9"], ["10", "10"], ["11", "11"], ["12", "12"], ["13", "13"], ["14", "14"], ["15", "15"], ["16", "16"], ["17", "17"], ["18", "18"], ["19", "19"], ["20", "20"], ["21", "21"], ["22", "22"], ["23", "23"], ["24", "24"]]), "CM_BUZZER_MELODY");
+  this.appendDummyInput().appendField(Lang.Blocks.robotis_common_index_number);
+  this.appendDummyInput().appendField(Lang.Blocks.robotis_common_play_buzzer).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.robotis_openCM70_cm_buzzer_melody = function(b, a) {
+  var c = a.getField("CM_BUZZER_MELODY", a), d = Entry.Robotis_openCM70.INSTRUCTION.WRITE, e = 0, f = 0, g = 0, h = 0, e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[0], f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[1], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[0], h = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[1];
+  return Entry.Robotis_carCont.postCallReturn(a, [[d, e, f, 255], [d, g, h, c]], 1E3);
+};
+Blockly.Blocks.robotis_openCM70_cm_sound_detected_clear = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.robotis_cm_clear_sound_detected).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.robotis_openCM70_cm_sound_detected_clear = function(b, a) {
+  var c = Entry.Robotis_openCM70.INSTRUCTION.WRITE, d = 0, e = 0, d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1];
+  return Entry.Robotis_carCont.postCallReturn(a, [[c, d, e, 0]], Entry.Robotis_openCM70.delay);
+};
+Blockly.Blocks.robotis_openCM70_cm_led = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.robotis_common_cm);
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.robotis_common_red_color, "CM_LED_R"], [Lang.Blocks.robotis_common_green_color, "CM_LED_G"], [Lang.Blocks.robotis_common_blue_color, "CM_LED_B"]]), "CM_LED").appendField("LED").appendField(new Blockly.FieldDropdown([[Lang.Blocks.robotis_common_on, "1"], [Lang.Blocks.robotis_common_off, "0"]]), "VALUE").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.robotis_openCM70_cm_led = function(b, a) {
+  var c = a.getField("CM_LED", a), d = a.getField("VALUE", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0;
+  "CM_LED_R" == c ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_R[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_R[1]) : "CM_LED_G" == c ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_G[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_G[1]) : "CM_LED_B" == c && (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_B[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_B[1]);
+  return Entry.Robotis_carCont.postCallReturn(a, [[e, f, g, d]], Entry.Robotis_openCM70.delay);
+};
+Blockly.Blocks.robotis_openCM70_cm_motion = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.robotis_common_motion);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.robotis_common_index_number);
+  this.appendDummyInput().appendField(Lang.Blocks.robotis_common_play_motion).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.robotis_openCM70_cm_motion = function(b, a) {
+  var c = Entry.Robotis_openCM70.INSTRUCTION.WRITE, d = 0, e = 0, f = 0, d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_MOTION[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_MOTION[1], f = a.getNumberValue("VALUE", a);
+  return Entry.Robotis_carCont.postCallReturn(a, [[c, d, e, f]], Entry.Robotis_openCM70.delay);
+};
+Blockly.Blocks.robotis_openCM70_aux_motor_speed = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.robotis_common_port_1, "1"], [Lang.Blocks.robotis_common_port_2, "2"]]), "PORT").appendField(Lang.Blocks.robotis_openCM70_aux_motor_speed_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.robotis_common_clockwhise, "CW"], [Lang.Blocks.robotis_common_counter_clockwhise, "CCW"]]), "DIRECTION_ANGLE").appendField(Lang.Blocks.robotis_openCM70_aux_motor_speed_2);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.robotis_common_set).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.robotis_openCM70_aux_motor_speed = function(b, a) {
+  var c = a.getField("PORT", a), d = a.getField("DIRECTION_ANGLE", a), e = a.getNumberValue("VALUE"), f = Entry.Robotis_openCM70.INSTRUCTION.WRITE, g = 0, h = 0, g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTOR_SPEED[0], h = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTOR_SPEED[1];
+  "CW" == d ? (e += 1024, 2047 < e && (e = 2047)) : 1023 < e && (e = 1023);
+  return Entry.Robotis_carCont.postCallReturn(a, [[f, g + (c - 1) * h, h, e]], Entry.Robotis_openCM70.delay);
+};
+Blockly.Blocks.robotis_openCM70_aux_servo_mode = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.robotis_common_port_3, "3"], [Lang.Blocks.robotis_common_port_4, "4"], [Lang.Blocks.robotis_common_port_5, "5"], [Lang.Blocks.robotis_common_port_6, "6"]]), "PORT").appendField(Lang.Blocks.robotis_openCM70_aux_servo_mode_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.robotis_common_wheel_mode, "0"], [Lang.Blocks.robotis_common_joint_mode, "1"]]), "MODE");
+  this.appendDummyInput().appendField(Lang.Blocks.robotis_common_set).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.robotis_openCM70_aux_servo_mode = function(b, a) {
+  var c = a.getField("PORT", a), d = a.getField("MODE", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_MODE[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_MODE[1];
+  return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
+};
+Blockly.Blocks.robotis_openCM70_aux_servo_speed = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.robotis_common_port_3, "3"], [Lang.Blocks.robotis_common_port_4, "4"], [Lang.Blocks.robotis_common_port_5, "5"], [Lang.Blocks.robotis_common_port_6, "6"]]), "PORT").appendField(Lang.Blocks.robotis_openCM70_aux_servo_speed_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.robotis_common_clockwhise, "CW"], [Lang.Blocks.robotis_common_counter_clockwhise, "CCW"]]), "DIRECTION_ANGLE").appendField(Lang.Blocks.robotis_openCM70_aux_servo_speed_2);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.robotis_common_set).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.robotis_openCM70_aux_servo_speed = function(b, a) {
+  var c = a.getField("PORT", a), d = a.getField("DIRECTION_ANGLE", a), e = a.getNumberValue("VALUE"), f = Entry.Robotis_openCM70.INSTRUCTION.WRITE, g = 0, h = 0, g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_SPEED[0], h = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_SPEED[1];
+  "CW" == d ? (e += 1024, 2047 < e && (e = 2047)) : 1023 < e && (e = 1023);
+  return Entry.Robotis_carCont.postCallReturn(a, [[f, g + (c - 1) * h, h, e]], Entry.Robotis_openCM70.delay);
+};
+Blockly.Blocks.robotis_openCM70_aux_servo_position = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.robotis_common_port_3, "3"], [Lang.Blocks.robotis_common_port_4, "4"], [Lang.Blocks.robotis_common_port_5, "5"], [Lang.Blocks.robotis_common_port_6, "6"]]), "PORT").appendField(Lang.Blocks.robotis_openCM70_aux_servo_position_1);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.robotis_common_set).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.robotis_openCM70_aux_servo_position = function(b, a) {
+  var c = a.getField("PORT", a), d = a.getNumberValue("VALUE"), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1];
+  1023 < d ? d = 1023 : 0 > d && (d = 0);
+  return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
+};
+Blockly.Blocks.robotis_openCM70_aux_led_module = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.robotis_common_port_3, "3"], [Lang.Blocks.robotis_common_port_4, "4"], [Lang.Blocks.robotis_common_port_5, "5"], [Lang.Blocks.robotis_common_port_6, "6"]]), "PORT").appendField(Lang.Blocks.robotis_openCM70_aux_led_module_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.robotis_cm_led_both + Lang.Blocks.robotis_common_off, "0"], [Lang.Blocks.robotis_cm_led_right + Lang.Blocks.robotis_common_on, "1"], [Lang.Blocks.robotis_cm_led_left + 
+  Lang.Blocks.robotis_common_on, "2"], [Lang.Blocks.robotis_cm_led_both + Lang.Blocks.robotis_common_on, "3"]]), "LED_MODULE");
+  this.appendDummyInput().appendField(Lang.Blocks.robotis_common_set).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.robotis_openCM70_aux_led_module = function(b, a) {
+  var c = a.getField("PORT", a), d = a.getField("LED_MODULE", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_LED_MODULE[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_LED_MODULE[1];
+  return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
+};
+Blockly.Blocks.robotis_openCM70_aux_custom = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.robotis_common_port_3, "3"], [Lang.Blocks.robotis_common_port_4, "4"], [Lang.Blocks.robotis_common_port_5, "5"], [Lang.Blocks.robotis_common_port_6, "6"]]), "PORT").appendField(Lang.Blocks.robotis_openCM70_aux_custom_1);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.robotis_common_set).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.robotis_openCM70_aux_custom = function(b, a) {
+  var c = a.getField("PORT", a), d = a.getNumberValue("VALUE"), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1];
+  return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
+};
+Blockly.Blocks.robotis_openCM70_cm_custom = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.robotis_cm_custom);
+  this.appendDummyInput().appendField("(");
+  this.appendValueInput("ADDRESS").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(")");
+  this.appendDummyInput().appendField(Lang.Blocks.robotis_common_case_01);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.robotis_common_set).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.robotis_openCM70_cm_custom = function(b, a) {
+  var c = Entry.Robotis_openCM70.INSTRUCTION.WRITE, d = 0, e = 0, d = a.getNumberValue("ADDRESS"), e = a.getNumberValue("VALUE");
+  return Entry.Robotis_carCont.postCallReturn(a, [[c, d, 65535 < e ? 4 : 255 < e ? 2 : 1, e]], Entry.Robotis_openCM70.delay);
+};
+Blockly.Blocks.robotis_carCont_sensor_value = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([[Lang.Blocks.robotis_cm_spring_left, "CM_SPRING_LEFT"], [Lang.Blocks.robotis_cm_spring_right, "CM_SPRING_RIGHT"], [Lang.Blocks.robotis_cm_switch, "CM_SWITCH"], [Lang.Blocks.robotis_cm_sound_detected, "CM_SOUND_DETECTED"], [Lang.Blocks.robotis_cm_sound_detecting, "CM_SOUND_DETECTING"], [Lang.Blocks.robotis_cm_ir_left, "CM_IR_LEFT"], [Lang.Blocks.robotis_cm_ir_right, "CM_IR_RIGHT"], [Lang.Blocks.robotis_cm_calibration_left, 
+  "CM_CALIBRATION_LEFT"], [Lang.Blocks.robotis_cm_calibration_right, "CM_CALIBRATION_RIGHT"]]), "SENSOR").appendField(" ").appendField(Lang.Blocks.robotis_common_value);
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.robotis_carCont_sensor_value = function(b, a) {
+  var c = Entry.Robotis_carCont.INSTRUCTION.READ, d = 0, e = 0, f = 0, g = 0, h = a.getStringField("SENSOR");
+  "CM_SPRING_LEFT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[2], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[3]) : "CM_SPRING_RIGHT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[2], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[3]) : 
+  "CM_SWITCH" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[1]) : "CM_SOUND_DETECTED" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1]) : 
+  "CM_SOUND_DETECTING" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[1]) : "CM_IR_LEFT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[2], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[3]) : 
+  "CM_IR_RIGHT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[2], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[3]) : "CM_CALIBRATION_LEFT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[1]) : 
+  "CM_CALIBRATION_RIGHT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[1]) : "CM_BUTTON_STATUS" == h && (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[0], 
+  e = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[1]);
+  Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, g]]);
+  Entry.Robotis_carCont.update();
+  return Entry.hw.portData[f];
+};
+Blockly.Blocks.robotis_carCont_cm_led = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.robotis_cm_led_4).appendField(new Blockly.FieldDropdown([[Lang.Blocks.robotis_common_on, "1"], [Lang.Blocks.robotis_common_off, "0"]]), "VALUE_LEFT").appendField(", ").appendField(Lang.Blocks.robotis_cm_led_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.robotis_common_on, "1"], [Lang.Blocks.robotis_common_off, "0"]]), "VALUE_RIGHT").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.robotis_carCont_cm_led = function(b, a) {
+  var c = a.getField("VALUE_LEFT", a), d = a.getField("VALUE_RIGHT", a), e = Entry.Robotis_carCont.INSTRUCTION.WRITE, f = 0, g = 0, h = 0, f = Entry.Robotis_carCont.CONTROL_TABLE.CM_LED[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_LED[1];
+  1 == c && 1 == d ? h = 9 : 1 == c && 0 == d && (h = 8);
+  0 == c && 1 == d && (h = 1);
+  return Entry.Robotis_carCont.postCallReturn(a, [[e, f, g, h]], Entry.Robotis_carCont.delay);
+};
+Blockly.Blocks.robotis_carCont_cm_sound_detected_clear = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.robotis_cm_clear_sound_detected).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.robotis_carCont_cm_sound_detected_clear = function(b, a) {
+  var c = Entry.Robotis_carCont.INSTRUCTION.WRITE, d = 0, e = 0, d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1];
+  return Entry.Robotis_carCont.postCallReturn(a, [[c, d, e, 0]], Entry.Robotis_carCont.delay);
+};
+Blockly.Blocks.robotis_carCont_aux_motor_speed = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"]]), "DIRECTION").appendField(Lang.Blocks.robotis_carCont_aux_motor_speed_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.robotis_common_clockwhise, "CW"], [Lang.Blocks.robotis_common_counter_clockwhise, "CCW"]]), "DIRECTION_ANGLE").appendField(Lang.Blocks.robotis_carCont_aux_motor_speed_2);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.robotis_common_set).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.robotis_carCont_aux_motor_speed = function(b, a) {
+  var c = a.getField("DIRECTION", a), d = a.getField("DIRECTION_ANGLE", a), e = a.getNumberValue("VALUE"), f = Entry.Robotis_carCont.INSTRUCTION.WRITE, g = 0, h = 0;
+  "LEFT" == c ? (g = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_LEFT[0], h = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_LEFT[1]) : (g = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_RIGHT[0], h = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_RIGHT[1]);
+  "CW" == d ? (e += 1024, 2047 < e && (e = 2047)) : 1023 < e && (e = 1023);
+  return Entry.Robotis_carCont.postCallReturn(a, [[f, g, h, e]], Entry.Robotis_carCont.delay);
+};
+Blockly.Blocks.robotis_carCont_cm_calibration = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"]]), "DIRECTION").appendField(Lang.Blocks.robotis_carCont_calibration_1);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.robotis_common_set).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.robotis_carCont_cm_calibration = function(b, a) {
+  var c = a.getField("DIRECTION", a), d = a.getNumberValue("VALUE"), e = Entry.Robotis_carCont.INSTRUCTION.WRITE, f = 0, g = 0;
+  "LEFT" == c ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[1]) : (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[1]);
+  return Entry.Robotis_carCont.postCallReturn(a, [[e, f, g, d]], Entry.Robotis_carCont.delay);
 };
 Blockly.Blocks.when_scene_start = {init:function() {
   this.setColour("#3BBD70");
@@ -4133,7 +4931,9 @@ Entry.block.sound_something_second_wait_with_block = function(b, a) {
 };
 Blockly.Blocks.sound_from_to = {init:function() {
   this.setColour("#A4D01D");
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_from_to_1).appendField(new Blockly.FieldDropdownDynamic("sounds"), "SOUND").appendField(Lang.Blocks.SOUND_sound_from_to_2);
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_from_to_1);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_from_to_2);
   this.appendValueInput("START").setCheck(["String", "Number"]);
   this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_from_to_3);
   this.appendValueInput("END").setCheck(["String", "Number"]);
@@ -4143,7 +4943,7 @@ Blockly.Blocks.sound_from_to = {init:function() {
   this.setPreviousStatement(!0);
 }, syntax:{js:[], py:["Entry.play_sound_by_duration(%1, %2, %3)\n"]}};
 Entry.block.sound_from_to = function(b, a) {
-  var c = a.getField("SOUND", a);
+  var c = a.getStringValue("VALUE", a);
   if (c = b.parent.getSound(c)) {
     var d = 1E3 * a.getNumberValue("START", a), e = 1E3 * a.getNumberValue("END", a);
     createjs.Sound.play(c.id, {startTime:Math.min(d, e), duration:Math.max(d, e) - Math.min(d, e)});
@@ -4152,7 +4952,9 @@ Entry.block.sound_from_to = function(b, a) {
 };
 Blockly.Blocks.sound_from_to_and_wait = {init:function() {
   this.setColour("#A4D01D");
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_from_to_and_wait_1).appendField(new Blockly.FieldDropdownDynamic("sounds"), "SOUND").appendField(Lang.Blocks.SOUND_sound_from_to_and_wait_2);
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_from_to_and_wait_1);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_from_to_and_wait_2);
   this.appendValueInput("START").setCheck(["String", "Number"]);
   this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_from_to_and_wait_3);
   this.appendValueInput("END").setCheck(["String", "Number"]);
@@ -4172,8 +4974,8 @@ Entry.block.sound_from_to_and_wait = function(b, a) {
   }
   a.isPlay = !0;
   a.playState = 1;
-  var c = b.parent.getSound(a.getField("SOUND", a));
-  if (c) {
+  var c = a.getStringValue("VALUE", a);
+  if (c = b.parent.getSound(c)) {
     var d = 1E3 * a.getNumberValue("START", a), e = 1E3 * a.getNumberValue("END", a), f = Math.min(d, e), d = Math.max(d, e) - f;
     createjs.Sound.play(c.id, {startTime:f, duration:d});
     setTimeout(function() {
@@ -4226,9 +5028,6 @@ Blockly.Blocks.mouse_click_cancled = {init:function() {
   this.setNextStatement(!0);
 }, syntax:{js:[], py:["Entry.on_mouse_up()\n"]}};
 Entry.block.mouse_click_cancled = function(b, a) {
-  return a.callReturn();
-};
-Entry.block.when_scene_start = function(b, a) {
   return a.callReturn();
 };
 Blockly.Blocks.when_object_click = {init:function() {
@@ -4310,24 +5109,22 @@ Blockly.Blocks.message_cast_wait = {init:function() {
 }};
 Entry.block.message_cast_wait = function(b, a) {
   if (a.runningScript) {
-    if (a.runningScript.length) {
-      return Entry.engine.computeFunction(a), a;
+    for (var c = a.runningScript, d = c.length, e = 0;e < d;e++) {
+      var f = c.shift();
+      f && !f.isEnd() && c.push(f);
     }
-    delete a.runningScript;
-    return a.callReturn();
+    return c.length ? a : a.callReturn();
   }
-  var c = a.getField("VALUE", a), d = Entry.isExist(c, "id", Entry.variableContainer.messages_);
-  if ("null" == c || !d) {
+  c = a.getField("VALUE", a);
+  f = Entry.isExist(c, "id", Entry.variableContainer.messages_);
+  if ("null" == c || !f) {
     throw Error("value can not be null or undefined");
   }
-  var e = [];
-  Entry.container.mapEntityIncludeCloneOnScene(function(a, b) {
-    for (var c = b[0], d = b[1], m = a.parent.script.childNodes, n = 0;n < m.length;n++) {
-      var l = m[n], q = Entry.Xml.getField("VALUE", l);
-      Entry.Xml.isTypeOf(c, l) && q == d && (q = new Entry.Script(a), q.init(l), e.push(q));
-    }
-  }, ["when_message_cast", c]);
-  a.runningScript = e;
+  d = Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["when_message_cast", c]);
+  for (c = [];d.length;) {
+    (f = d.shift()) && (c = c.concat(f));
+  }
+  a.runningScript = c;
   return a;
 };
 var colour = "#FFCA36";
@@ -4338,7 +5135,7 @@ Blockly.Blocks.text = {init:function() {
   this.setInputsInline(!0);
 }, syntax:{js:[], py:["%1"]}};
 Entry.block.text = function(b, a) {
-  return a.getField("NAME");
+  return a.getField("NAME", a);
 };
 Blockly.Blocks.text_write = {init:function() {
   this.setColour(colour);
@@ -4753,6 +5550,184 @@ Entry.block.is_included_in_list = function(b, a) {
   }
   return !1;
 };
+Entry.Xbot = {PORT_MAP:{rightWheel:0, leftWheel:0, head:90, armR:90, armL:90, analogD5:127, analogD6:127, D4:0, D7:0, D12:0, D13:0, ledR:0, ledG:0, ledB:0, lcdNum:0, lcdTxt:"                ", note:262, duration:0}, setZero:function() {
+  var b = Entry.Xbot.PORT_MAP, a = Entry.hw.sendQueue, c;
+  for (c in b) {
+    a[c] = b[c];
+  }
+  Entry.hw.update();
+  Entry.Xbot.removeAllTimeouts();
+}, timeouts:[], removeTimeout:function(b) {
+  clearTimeout(b);
+  var a = this.timeouts;
+  b = a.indexOf(b);
+  0 <= b && a.splice(b, 1);
+}, removeAllTimeouts:function() {
+  var b = this.timeouts, a;
+  for (a in b) {
+    clearTimeout(b[a]);
+  }
+  this.timeouts = [];
+}, name:"xbot_epor_edge"};
+Blockly.Blocks.xbot_digitalInput = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([[Lang.Blocks.XBOT_D2_digitalInput, "D2"], [Lang.Blocks.XBOT_D3_digitalInput, "D3"], [Lang.Blocks.XBOT_D11_digitalInput, "D11"]]), "DEVICE");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Boolean");
+}};
+Entry.block.xbot_digitalInput = function(b, a) {
+  var c = Entry.hw.portData, d = a.getField("DEVICE");
+  return c[d];
+};
+Blockly.Blocks.xbot_analogValue = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([[Lang.Blocks.XBOT_CDS, "light"], [Lang.Blocks.XBOT_MIC, "mic"], [Lang.Blocks.XBOT_analog0, "adc0"], [Lang.Blocks.XBOT_analog1, "adc1"], [Lang.Blocks.XBOT_analog2, "adc2"], [Lang.Blocks.XBOT_analog3, "adc3"]]), "DEVICE");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.xbot_analogValue = function(b, a) {
+  var c = Entry.hw.portData, d = a.getField("DEVICE");
+  return c[d];
+};
+Blockly.Blocks.xbot_digitalOutput = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.XBOT_digital).appendField(new Blockly.FieldDropdown([["LED", "D13"], ["D4", "D4"], ["D7", "D7"], ["D12 ", "D12"]]), "DEVICE").appendField(Lang.Blocks.XBOT_pin_OutputValue).appendField(new Blockly.FieldDropdown([[Lang.Blocks.XBOT_High, "HIGH"], [Lang.Blocks.XBOT_Low, "LOW"]]), "VALUE");
+  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.xbot_digitalOutput = function(b, a) {
+  var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getStringField("VALUE", a);
+  c.D13 = "D13" == d && "HIGH" == e ? 1 : 0;
+  c.D4 = "D4" == d && "HIGH" == e ? 1 : 0;
+  c.D7 = "D7" == d && "HIGH" == e ? 1 : 0;
+  c.D12 = "D12" == d && "HIGH" == e ? 1 : 0;
+  return a.callReturn();
+};
+Blockly.Blocks.xbot_analogOutput = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.XBOT_analog).appendField(new Blockly.FieldDropdown([["D5", "analogD5"], ["D6", "analogD6"]]), "DEVICE").appendField(Lang.Blocks.XBOT_pin_Output_Value);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.xbot_analogOutput = function(b, a) {
+  var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getNumberValue("VALUE", a);
+  "analogD5" == d ? c.analogD5 = e : "analogD6" == d && (c.analogD6 = e);
+  return a.callReturn();
+};
+Blockly.Blocks.xbot_servo = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.XBOT_Servo).appendField(new Blockly.FieldDropdown([[Lang.Blocks.XBOT_Head, "head"], [Lang.Blocks.XBOT_ArmR, "right"], [Lang.Blocks.XBOT_ArmL, "left"]]), "DEVICE").appendField(Lang.Blocks.XBOT_angle);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.xbot_servo = function(b, a) {
+  var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getNumberValue("VALUE", a);
+  "head" == d ? c.head = e : "right" == d ? c.armR = e : "left" == d && (c.armL = e);
+  return a.callReturn();
+};
+Blockly.Blocks.xbot_oneWheel = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.XBOT_DC).appendField(new Blockly.FieldDropdown([[Lang.Blocks.XBOT_rightWheel, "rightWheel"], [Lang.Blocks.XBOT_leftWheel, "leftWheel"], [Lang.Blocks.XBOT_bothWheel, "bothWheel"]]), "DEVICE").appendField(Lang.Blocks.XBOT_speed);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.xbot_oneWheel = function(b, a) {
+  var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getNumberValue("VALUE", a);
+  "rightWheel" == d ? c.rightWheel = e : "leftWheel" == d ? c.leftWheel = e : c.rightWheel = c.leftWheel = e;
+  return a.callReturn();
+};
+Blockly.Blocks.xbot_twoWheel = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.XBOT_rightSpeed);
+  this.appendValueInput("rightWheel").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.XBOT_leftSpeed);
+  this.appendValueInput("leftWheel").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.xbot_twoWheel = function(b, a) {
+  var c = Entry.hw.sendQueue;
+  c.rightWheel = a.getNumberValue("rightWheel");
+  c.leftWheel = a.getNumberValue("leftWheel");
+  return a.callReturn();
+};
+Blockly.Blocks.xbot_rgb = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.XBOT_RGBLED_R);
+  this.appendValueInput("ledR").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.XBOT_RGBLED_G);
+  this.appendValueInput("ledG").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.XBOT_RGBLED_B);
+  this.appendValueInput("ledB").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.xbot_rgb = function(b, a) {
+  var c = Entry.hw.sendQueue;
+  c.ledR = a.getNumberValue("ledR");
+  c.ledG = a.getNumberValue("ledG");
+  c.ledB = a.getNumberValue("ledB");
+  return a.callReturn();
+};
+Blockly.Blocks.xbot_rgb_picker = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.XBOT_RGBLED_color).appendField(new Blockly.FieldColour("#ff0000"), "VALUE").appendField(Lang.Blocks.XBOT_set).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.xbot_rgb_picker = function(b, a) {
+  var c = a.getStringField("VALUE"), d = Entry.hw.sendQueue;
+  d.ledR = parseInt(.3 * parseInt(c.substr(1, 2), 16));
+  d.ledG = parseInt(.3 * parseInt(c.substr(3, 2), 16));
+  d.ledB = parseInt(.3 * parseInt(c.substr(5, 2), 16));
+  return a.callReturn();
+};
+Blockly.Blocks.xbot_buzzer = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_play_note_for_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.XBOT_c, "C"], [Lang.Blocks.XBOT_d, "D"], [Lang.Blocks.XBOT_e, "E"], [Lang.Blocks.XBOT_f, "F"], [Lang.Blocks.XBOT_g, "G"], [Lang.Blocks.XBOT_a, "A"], [Lang.Blocks.XBOT_b, "B"]]), "NOTE").appendField(" ").appendField(new Blockly.FieldDropdown([["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"]]), "OCTAVE").appendField(Lang.Blocks.HAMSTER_play_note_for_3);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.XBOT_melody_ms).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.xbot_buzzer = function(b, a) {
+  var c = Entry.hw.sendQueue, d = a.getStringField("NOTE", a), e = a.getStringField("OCTAVE", a), f = a.getNumberValue("VALUE", a), d = d + e;
+  c.note = "C2" == d ? 65 : "D2" == d ? 73 : "E2" == d ? 82 : "F2" == d ? 87 : "G2" == d ? 98 : "A2" == d ? 110 : "B2" == d ? 123 : "C3" == d ? 131 : "D3" == d ? 147 : "E3" == d ? 165 : "F3" == d ? 175 : "G3" == d ? 196 : "A3" == d ? 220 : "B3" == d ? 247 : "C4" == d ? 262 : "D4" == d ? 294 : "E4" == d ? 330 : "F4" == d ? 349 : "G4" == d ? 392 : "A4" == d ? 440 : "B4" == d ? 494 : "C5" == d ? 523 : "D5" == d ? 587 : "E5" == d ? 659 : "F5" == d ? 698 : "G5" == d ? 784 : "A5" == d ? 880 : "B5" == d ? 
+  988 : "C6" == d ? 1047 : "D6" == d ? 1175 : "E6" == d ? 1319 : "F6" == d ? 1397 : "G6" == d ? 1568 : "A6" == d ? 1760 : "B6" == d ? 1976 : "C7" == d ? 2093 : "D7" == d ? 2349 : "E7" == d ? 2637 : "F7" == d ? 2794 : "G7" == d ? 3136 : "A7" == d ? 3520 : "B7" == d ? 3951 : 262;
+  c.duration = 40 * f;
+  return a.callReturn();
+};
+Blockly.Blocks.xbot_lcd = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("LCD").appendField(new Blockly.FieldDropdown([["0", "0"], ["1", "1"]]), "LINE").appendField(Lang.Blocks.XBOT_Line).appendField(", ").appendField(Lang.Blocks.XBOT_outputValue);
+  this.appendValueInput("VALUE").setCheck(["String", "Number"]);
+  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.xbot_lcd = function(b, a) {
+  var c = Entry.hw.sendQueue, d = a.getNumberField("LINE", a), e = a.getStringValue("VALUE", a);
+  0 == d ? (c.lcdNum = 0, c.lcdTxt = e) : 1 == d && (c.lcdNum = 1, c.lcdTxt = e);
+  return a.callReturn();
+};
 Entry.Collection = function(b) {
   this.length = 0;
   this._hashMap = {};
@@ -4942,20 +5917,33 @@ Entry.Commander = function(b) {
   if ("workspace" == b || "phone" == b) {
     Entry.stateManager = new Entry.StateManager;
   }
-  Entry.do = this.do;
-  Entry.undo = this.undo;
+  Entry.do = this.do.bind(this);
+  Entry.undo = this.undo.bind(this);
+  this.editor = {};
 };
 (function(b) {
   b.do = function(a) {
     var b = Array.prototype.slice.call(arguments);
     b.shift();
     var d = Entry.Command[a];
-    Entry.stateManager && Entry.stateManager.addCommand.apply(Entry.stateManager, [a, Entry.Command, d.undo].concat(d.state.apply(null, b)));
-    Entry.Command[a].do.apply(Entry.Command, b);
+    Entry.stateManager && Entry.stateManager.addCommand.apply(Entry.stateManager, [a, this, this.undo, a].concat(d.state.apply(null, b)));
+    return {value:Entry.Command[a].do.apply(Entry.Command, b), isPass:this.isPass.bind(this)};
   };
   b.undo = function() {
+    var a = Array.prototype.slice.call(arguments), b = a.shift(), d = Entry.Command[b];
+    Entry.stateManager && Entry.stateManager.addCommand.apply(Entry.stateManager, [b, this, this.redo, b].concat(d.state.apply(null, a)));
+    d.undo.apply(this, a);
   };
   b.redo = function() {
+    var a = Array.prototype.slice.call(arguments), b = a.shift(), d = Entry.Command[b];
+    Entry.stateManager && Entry.stateManager.addCommand.apply(Entry.stateManager, [b, this, this.undo, b].concat(d.state.apply(null, a)));
+    d.undo.apply(this, a);
+  };
+  b.setCurrentEditor = function(a, b) {
+    this.editor[a] = b;
+  };
+  b.isPass = function() {
+    Entry.stateManager.getLastCommand().isPass = !0;
   };
 })(Entry.Commander.prototype);
 (function(b) {
@@ -4969,41 +5957,39 @@ Entry.Commander = function(b) {
     Entry.playground.mainWorkspace.board.findById(a).destroy();
   }};
   b.insertBlock = {type:102, do:function(a, b) {
-    a.doInsert(b);
+    Entry.commander.editor.board.insert(a, b);
   }, state:function(a, b) {
-    var d = [a.id, {x:a.x, y:a.y}];
-    if ("basic" === a.getBlockType()) {
-      d.push(a.thread.getCount(a)), a.getPrevBlock() && d.push(a.getPrevBlock().id);
-    } else {
-      if (!(a.getThread() instanceof Entry.Thread)) {
-        var e = a.getThread();
-        d.push(e._block.id);
-        d.push(e._index);
-      }
-    }
+    "string" === typeof a && (a = Entry.playground.mainWorkspace.board.findById(a));
+    var d = [a.id], e = a.pointer();
+    d.push(e);
+    "string" !== typeof a && "basic" === a.getBlockType() && d.push(a.thread.getCount(a));
     return d;
   }, log:function(a) {
-  }, undo:function(a, b, d, e) {
+  }, undo:function(a, b, d) {
     a = Entry.playground.mainWorkspace.board.findById(a);
-    if ("basic" === a.getBlockType()) {
-      var f = a.getPrevBlock();
-      d ? (d = Entry.playground.mainWorkspace.board.findById(d), a.separate(e), a.insert(d), a.view.bindPrev(d)) : (a.view && a.view._toGlobalCoordinate(), a.separate(e), a.moveTo(b.x, b.y));
-      f && f.getNextBlock() && f.getNextBlock().view.bindPrev();
-    } else {
-      d && (b = a.view._contents[e], a.separate(), a.doInsert(b));
-    }
+    Entry.commander.editor.board.insert(a, b, d);
   }};
   b.separateBlock = {type:103, do:function(a) {
     a.view && a.view._toGlobalCoordinate(Entry.DRAG_MODE_DRAG);
     a.doSeparate();
   }, state:function(a) {
+    var b = [a.id], d = a.pointer();
+    b.push(d);
+    "basic" === a.getBlockType() && b.push(a.thread.getCount(a));
+    return b;
   }, log:function(a) {
-  }, undo:function(a) {
+  }, undo:function(a, b, d) {
+    a = Entry.playground.mainWorkspace.board.findById(a);
+    Entry.commander.editor.board.insert(a, b, d);
   }};
   b.moveBlock = {type:104, do:function(a) {
+    a.doMove();
   }, state:function(a) {
+    return [a.id, a.x, a.y];
   }, log:function(a) {
-  }, undo:function(a) {
+    return [a.id, a.toJSON()];
+  }, undo:function(a, b, d) {
+    Entry.playground.mainWorkspace.board.findById(a).moveTo(b, d);
   }};
   b.cloneBlock = {type:105, do:function(a) {
   }, state:function(a) {
@@ -5031,6 +6017,7 @@ Entry.Container.prototype.generateView = function(b, a) {
     }), c = Entry.createElement("div"), c.addClass("entryContainerListPhoneWrapper"), this._view.appendChild(c), d = Entry.createElement("ul"), d.addClass("entryContainerListPhone"), c.appendChild(d), this.listView_ = d);
   } else {
     this._view.addClass("entryContainerWorkspace");
+    this._view.setAttribute("id", "entryContainerWorkspaceId");
     var c = Entry.createElement("div");
     c.addClass("entryAddObjectWorkspace");
     c.innerHTML = Lang.Workspace.add_object;
@@ -5096,6 +6083,48 @@ Entry.Container.prototype.setObjects = function(b) {
   b = Entry.type;
   ("workspace" == b || "phone" == b) && (b = this.getCurrentObjects()[0]) && this.selectObject(b.id);
 };
+Entry.Container.prototype.getPictureElement = function(b) {
+  for (var a in this.objects_) {
+    var c = this.objects_[a], d;
+    for (d in c.pictures) {
+      if (b === c.pictures[d].id) {
+        return c.pictures[d].view;
+      }
+    }
+  }
+  throw Error("No picture found");
+};
+Entry.Container.prototype.setPicture = function(b) {
+  for (var a in this.objects_) {
+    var c = this.objects_[a], d;
+    for (d in c.pictures) {
+      if (b.id === c.pictures[d].id) {
+        a = {};
+        a.dimension = b.dimension;
+        a.id = b.id;
+        a.filename = b.filename;
+        a.fileurl = b.fileurl;
+        a.name = b.name;
+        a.view = c.pictures[d].view;
+        c.pictures[d] = a;
+        return;
+      }
+    }
+  }
+  throw Error("No picture found");
+};
+Entry.Container.prototype.selectPicture = function(b) {
+  for (var a in this.objects_) {
+    var c = this.objects_[a], d;
+    for (d in c.pictures) {
+      var e = c.pictures[d];
+      if (b === e.id) {
+        return c.selectedPicture = e, c.entity.setImage(e), c.updateThumbnailView(), c.id;
+      }
+    }
+  }
+  throw Error("No picture found");
+};
 Entry.Container.prototype.addObject = function(b, a) {
   var c = new Entry.EntryObject(b);
   c.name = Entry.getOrderedName(c.name, this.objects_);
@@ -5132,7 +6161,7 @@ Entry.Container.prototype.removeObject = function(b) {
   this.objects_.splice(a, 1);
   this.setCurrentObjects();
   Entry.stage.sortZorder();
-  this.objects_.length && 0 !== a ? Entry.container.selectObject(this.objects_[a - 1].id) : this.objects_.length && 0 === a ? Entry.container.selectObject(this.getCurrentObjects()[0].id) : (Entry.container.selectObject(), Entry.playground.flushPlayground());
+  this.objects_.length && 0 !== a ? 0 < this.getCurrentObjects().length ? Entry.container.selectObject(this.getCurrentObjects()[0].id) : Entry.container.selectObject() : this.objects_.length && 0 === a ? Entry.container.selectObject(this.getCurrentObjects()[0].id) : (Entry.container.selectObject(), Entry.playground.flushPlayground());
   Entry.toast.success(Lang.Workspace.remove_object, b.name + " " + Lang.Workspace.remove_object_msg);
   Entry.variableContainer.removeLocalVariables(b.id);
   Entry.playground.reloadPlayground();
@@ -5292,7 +6321,7 @@ Entry.Container.prototype.getDropdownList = function(b) {
 };
 Entry.Container.prototype.clearRunningState = function() {
   this.mapObject(function(b) {
-    b.entity.clearScript();
+    b.clearExecutor();
     for (var a = b.clonedEntities.length;0 < a;a--) {
       b.clonedEntities[a - 1].removeClone();
     }
@@ -5300,18 +6329,20 @@ Entry.Container.prototype.clearRunningState = function() {
   });
 };
 Entry.Container.prototype.mapObject = function(b, a) {
-  for (var c = this.objects_.length, d = 0;d < c;d++) {
-    b(this.objects_[d], a);
+  for (var c = this.objects_.length, d = [], e = 0;e < c;e++) {
+    d.push(b(this.objects_[e], a));
   }
+  return d;
 };
 Entry.Container.prototype.mapObjectOnScene = function(b, a) {
-  for (var c = this.getCurrentObjects(), d = c.length, e = 0;e < d;e++) {
-    b(c[e], a);
+  for (var c = this.getCurrentObjects(), d = c.length, e = [], f = 0;f < d;f++) {
+    e.push(b(c[f], a));
   }
+  return e;
 };
 Entry.Container.prototype.clearRunningStateOnScene = function() {
   this.mapObjectOnScene(function(b) {
-    b.entity.clearScript();
+    b.clearExecutor();
     for (var a = b.clonedEntities.length;0 < a;a--) {
       b.clonedEntities[a - 1].removeClone();
     }
@@ -5319,34 +6350,38 @@ Entry.Container.prototype.clearRunningStateOnScene = function() {
   });
 };
 Entry.Container.prototype.mapEntity = function(b, a) {
-  for (var c = this.objects_.length, d = 0;d < c;d++) {
-    b(this.objects_[d].entity, a);
+  for (var c = this.objects_.length, d = [], e = 0;e < c;e++) {
+    d.push(b(this.objects_[e].entity, a));
   }
+  return d;
 };
 Entry.Container.prototype.mapEntityOnScene = function(b, a) {
-  for (var c = this.getCurrentObjects(), d = c.length, e = 0;e < d;e++) {
-    b(c[e].entity, a);
+  for (var c = this.getCurrentObjects(), d = c.length, e = [], f = 0;f < d;f++) {
+    e.push(b(c[f].entity, a));
   }
+  return e;
 };
 Entry.Container.prototype.mapEntityIncludeClone = function(b, a) {
-  for (var c = this.objects_, d = c.length, e = 0;e < d;e++) {
-    var f = c[e], g = f.clonedEntities.length;
-    b(f.entity, a);
-    for (var h = 0;h < g;h++) {
-      var k = f.clonedEntities[h];
-      k && !k.isStamp && b(k, a);
+  for (var c = this.objects_, d = c.length, e = [], f = 0;f < d;f++) {
+    var g = c[f], h = g.clonedEntities.length;
+    e.push(b(g.entity, a));
+    for (var k = 0;k < h;k++) {
+      var l = g.clonedEntities[k];
+      l && !l.isStamp && e.push(b(l, a));
     }
   }
+  return e;
 };
 Entry.Container.prototype.mapEntityIncludeCloneOnScene = function(b, a) {
-  for (var c = this.getCurrentObjects(), d = c.length, e = 0;e < d;e++) {
-    var f = c[e], g = f.clonedEntities.length;
-    b(f.entity, a);
-    for (var h = 0;h < g;h++) {
-      var k = f.clonedEntities[h];
-      k && !k.isStamp && b(k, a);
+  for (var c = this.getCurrentObjects(), d = c.length, e = [], f = 0;f < d;f++) {
+    var g = c[f], h = g.clonedEntities.length;
+    e.push(b(g.entity, a));
+    for (var k = 0;k < h;k++) {
+      var l = g.clonedEntities[k];
+      l && !l.isStamp && e.push(b(l, a));
     }
   }
+  return e;
 };
 Entry.Container.prototype.getCachedPicture = function(b) {
   Entry.assert("string" == typeof b, "pictureId must be string");
@@ -5485,7 +6520,6 @@ Entry.Container.prototype.generateTabView = function() {
   c.addClass("entryHide");
   b.appendChild(c);
   this.helperContainer = c;
-  Entry.helper.initBlockHelper(c);
   d.addClass("selected");
 };
 Entry.Container.prototype.changeTabView = function(b) {
@@ -5535,7 +6569,7 @@ Entry.Container.prototype.initDoneProject = function(b) {
   a.setAttribute("width", b);
   a.setAttribute("height", 9 * b / 16 + 35);
   a.setAttribute("frameborder", 0);
-  a.setAttribute("src", "/api/project/iframe/" + this.doneProject);
+  a.setAttribute("src", "/api/iframe/project/" + this.doneProject);
   this.doneProjectFrame = a;
   this.doneContainer.appendChild(a);
 };
@@ -5605,10 +6639,19 @@ Entry.Dom = function(b, a) {
   });
   a.src && d.attr("src", a.src);
   a.parent && a.parent.append(d);
-  d.bindOnClick = function(a) {
-    $(this).bind("click tab", function(b) {
-      a.call(this, b);
-    });
+  d.bindOnClick = function() {
+    var a, b, c = function(a) {
+      a.stopImmediatePropagation();
+      a.handled || (a.handled = !0, b.call(this, a));
+    };
+    1 < arguments.length ? (b = arguments[1] instanceof Function ? arguments[1] : function() {
+    }, a = "string" === typeof arguments[0] ? arguments[0] : "") : b = arguments[0] instanceof Function ? arguments[0] : function() {
+    };
+    if (a) {
+      $(this).on("click tab", a, c);
+    } else {
+      $(this).on("click tab", c);
+    }
   };
   return d;
 };
@@ -5666,7 +6709,8 @@ Entry.SVG.removeClass = function(b) {
   return this;
 };
 Entry.SVG.hasClass = function(b) {
-  return this.getAttribute("class").match(new RegExp("(\\s|^)" + b + "(\\s|$)"));
+  var a = this.getAttribute("class");
+  return a ? a.match(new RegExp("(\\s|^)" + b + "(\\s|$)")) : !1;
 };
 Entry.SVG.remove = function() {
   this.parentNode && this.parentNode.removeChild(this);
@@ -5721,6 +6765,34 @@ Entry.Dialog.prototype.createSpeakNotch = function(b) {
 Entry.Dialog.prototype.remove = function() {
   Entry.stage.unloadDialog(this);
   this.parent.dialog = null;
+};
+Entry.DoneProject = function(b) {
+  this.generateView(b);
+};
+var p = Entry.DoneProject.prototype;
+p.init = function(b) {
+  this.projectId = b;
+};
+p.generateView = function(b) {
+  var a = Entry.createElement("div");
+  a.addClass("entryContainerDoneWorkspace");
+  a.addClass("entryHidden");
+  this.doneContainer = a;
+  a = Entry.createElement("iframe");
+  a.setAttribute("id", "doneProjectframe");
+  a.setAttribute("frameborder", 0);
+  a.setAttribute("src", "/api/iframe/project/" + b);
+  this.doneProjectFrame = a;
+  this.doneContainer.appendChild(a);
+};
+p.getView = function() {
+  return this.doneContainer;
+};
+p.resize = function() {
+  var b = document.getElementById("entryContainerWorkspaceId"), a = document.getElementById("doneProjectframe");
+  w = b.offsetWidth;
+  a.width = w + "px";
+  a.height = 9 * w / 16 + "px";
 };
 Entry.Engine = function() {
   function b(a) {
@@ -6018,14 +7090,11 @@ Entry.Engine.prototype.raiseEventOnEntity = function(b, a) {
 };
 Entry.Engine.prototype.captureKeyEvent = function(b) {
   var a = b.keyCode, c = Entry.type;
-  b.ctrlKey && "workspace" == c ? 83 == a ? (b.preventDefault(), Entry.dispatchEvent("saveWorkspace")) : 82 == a ? (b.preventDefault(), Entry.engine.run()) : 90 == a && (b.preventDefault(), Entry.dispatchEvent(b.shiftKey ? "redo" : "undo")) : Entry.engine.isState("run") && (Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["press_some_key", a]), Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["when_some_key_pressed", a]));
+  b.ctrlKey && "workspace" == c ? 83 == a ? (b.preventDefault(), Entry.dispatchEvent("saveWorkspace")) : 82 == a ? (b.preventDefault(), Entry.engine.run()) : 90 == a && (b.preventDefault(), Entry.dispatchEvent(b.shiftKey ? "redo" : "undo")) : Entry.engine.isState("run") && Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["keyPress", a]);
   Entry.engine.isState("stop") && "workspace" === c && 37 <= a && 40 >= a && Entry.stage.moveSprite(b);
 };
 Entry.Engine.prototype.raiseKeyEvent = function(b, a) {
-  for (var c = a[0], d = a[1], e = b.parent.script.childNodes, f = 0;f < e.length;f++) {
-    var g = e[f], h = Entry.Xml.getField("VALUE", g);
-    Entry.Xml.isTypeOf(c, g) && h == d && (h = new Entry.Script(b), h.init(g), b.runningScript.push(h));
-  }
+  return b.parent.script.raiseEvent(a[0], b, String(a[1]));
 };
 Entry.Engine.prototype.updateMouseView = function() {
   var b = Entry.stage.mouseCoordinate;
@@ -6089,8 +7158,8 @@ Entry.Engine.prototype.updateProjectTimer = function(b) {
 Entry.EntityObject = function(b) {
   this.parent = b;
   this.type = b.objectType;
-  this.runningScript = [];
   this.flip = !1;
+  this.collision = Entry.Utils.COLLISION.NONE;
   this.id = Entry.generateHash();
   "sprite" == this.type ? (this.object = new createjs.Bitmap, this.effect = {}, this.setInitialEffectValue()) : "textBox" == this.type && (this.object = new createjs.Container, this.textObject = new createjs.Text, this.textObject.font = "20px Nanum Gothic", this.textObject.textBaseline = "middle", this.textObject.textAlign = "center", this.bgObject = new createjs.Shape, this.bgObject.graphics.setStrokeStyle(1).beginStroke("#f00").drawRect(0, 0, 100, 100), this.object.addChild(this.bgObject), this.object.addChild(this.textObject), 
   this.fontType = "Nanum Gothic", this.fontSize = 20, this.strike = this.underLine = this.fontItalic = this.fontBold = !1);
@@ -6117,12 +7186,13 @@ Entry.EntityObject.prototype.injectModel = function(b, a) {
   } else {
     if ("textBox" == this.type) {
       var c = this.parent;
-      a.text = c.text || c.name;
+      a.text = a.text || c.text || c.name;
       this.setFont(a.font);
       this.setBGColour(a.bgColor);
       this.setColour(a.colour);
       this.setUnderLine(a.underLine);
       this.setStrike(a.strike);
+      this.setText(a.text);
     }
   }
   a && this.syncModel_(a);
@@ -6158,11 +7228,6 @@ Entry.EntityObject.prototype.restoreEntity = function(b) {
   this.syncModel_(b);
   Entry.dispatchEvent("updateObject");
   Entry.stateManager && Entry.stateManager.addCommand("restore object", this, this.restoreEntity, a);
-};
-Entry.EntityObject.prototype.clearScript = function(b) {
-  for (;this.runningScript.length;) {
-    this.runningScript.pop();
-  }
 };
 Entry.EntityObject.prototype.setX = function(b) {
   "number" == typeof b && (this.x = b, this.object.x = this.x, this.isClone || this.parent.updateCoordinateView(), this.updateDialog());
@@ -6425,7 +7490,7 @@ Entry.EntityObject.prototype.setImage = function(b) {
     Entry.image = e, this.object.image = e, this.object.cache(0, 0, this.getWidth(), this.getHeight());
   } else {
     e = new Image;
-    b.fileurl ? e.src = b.fileurl : (a = b.filename, e.src = "/uploads/" + a.substring(0, 2) + "/" + a.substring(2, 4) + "/image/" + a + ".png");
+    b.fileurl ? e.src = b.fileurl : (a = b.filename, e.src = Entry.defaultPath + "/uploads/" + a.substring(0, 2) + "/" + a.substring(2, 4) + "/image/" + a + ".png");
     var f = this;
     e.onload = function(a) {
       Entry.container.cachePicture(b.id, e);
@@ -6467,6 +7532,7 @@ Entry.EntityObject.prototype.updateDialog = function() {
 };
 Entry.EntityObject.prototype.takeSnapshot = function() {
   this.snapshot_ = this.toJSON();
+  this.collision = Entry.Utils.COLLISION.NONE;
 };
 Entry.EntityObject.prototype.loadSnapshot = function() {
   this.snapshot_ && this.syncModel_(this.snapshot_);
@@ -6479,7 +7545,11 @@ Entry.EntityObject.prototype.removeClone = function() {
     Entry.stage.unloadEntity(this);
     var b = this.parent.clonedEntities.indexOf(this);
     this.parent.clonedEntities.splice(b, 1);
+    this.clearExecutor();
   }
+};
+Entry.EntityObject.prototype.clearExecutor = function() {
+  this.parent.script.clearExecutorsByEntity(this);
 };
 Entry.EntityObject.prototype.toJSON = function() {
   var b = {};
@@ -6554,7 +7624,7 @@ Entry.EntityObject.prototype.syncDialogVisible = function() {
 Entry.Helper = function() {
   this.visible = !1;
 };
-var p = Entry.Helper.prototype;
+p = Entry.Helper.prototype;
 p.generateView = function(b, a) {
   if (!this.parentView_) {
     this.parentView_ = b;
@@ -6650,6 +7720,7 @@ Entry.State = function(b, a, c, d) {
   3 < arguments.length && (this.params = Array.prototype.slice.call(arguments).slice(3));
   this.message = b;
   this.time = Entry.getUpTime();
+  this.isPass = Entry.Command[b] ? Entry.Command[b].isPass : !1;
 };
 Entry.State.prototype.generateMessage = function() {
 };
@@ -6694,12 +7765,19 @@ Entry.StateManager.prototype.addCommand = function(b, a, c, d) {
 Entry.StateManager.prototype.cancelLastCommand = function() {
   this.canUndo() && (this.undoStack_.pop(), this.updateView(), Entry.creationChangedEvent && Entry.creationChangedEvent.notify());
 };
+Entry.StateManager.prototype.getLastCommand = function() {
+  return this.undoStack_[this.undoStack_.length - 1];
+};
 Entry.StateManager.prototype.undo = function() {
   if (this.canUndo() && !this.isRestoring()) {
     this.addActivity("undo");
-    this.startRestore();
-    var b = this.undoStack_.pop();
-    b.func.apply(b.caller, b.params);
+    for (this.startRestore();;) {
+      var b = this.undoStack_.pop();
+      b.func.apply(b.caller, b.params);
+      if (!0 !== b.isPass) {
+        break;
+      }
+    }
     this.updateView();
     this.endRestore();
     Entry.creationChangedEvent && Entry.creationChangedEvent.notify();
@@ -6758,8 +7836,7 @@ Entry.EntryObject = function(b) {
     this.text = b.text || this.name;
     this.objectType = b.objectType;
     this.objectType || (this.objectType = "sprite");
-    this.script = new Entry.Code(b.script ? b.script : []);
-    this.script.object = this;
+    this.script = new Entry.Code(b.script ? b.script : [], this);
     this.pictures = b.sprite.pictures;
     this.sounds = [];
     this.sounds = b.sprite.sounds;
@@ -6767,6 +7844,7 @@ Entry.EntryObject = function(b) {
       this.sounds[a].id || (this.sounds[a].id = Entry.generateHash()), Entry.initSound(this.sounds[a]);
     }
     this.lock = b.lock ? b.lock : !1;
+    this.isEditing = !1;
     "sprite" == this.objectType && (this.selectedPicture = b.selectedPictureId ? this.getPicture(b.selectedPictureId) : this.pictures[0]);
     this.scene = Entry.scene.getSceneById(b.scene) || Entry.scene.selectedScene;
     this.setRotateMethod(b.rotateMethod);
@@ -6778,7 +7856,7 @@ Entry.EntryObject = function(b) {
       var c = this.pictures[a];
       c.id || (c.id = Entry.generateHash());
       var d = new Image;
-      c.fileurl ? d.src = c.fileurl : c.fileurl ? d.src = c.fileurl : (b = c.filename, d.src = "/uploads/" + b.substring(0, 2) + "/" + b.substring(2, 4) + "/image/" + b + ".png");
+      c.fileurl ? d.src = c.fileurl : c.fileurl ? d.src = c.fileurl : (b = c.filename, d.src = Entry.defaultPath + "/uploads/" + b.substring(0, 2) + "/" + b.substring(2, 4) + "/image/" + b + ".png");
       d.onload = function(a) {
         Entry.container.cachePicture(c.id, d);
       };
@@ -6792,13 +7870,13 @@ Entry.EntryObject.prototype.generateView = function() {
     b.object = this;
     b.bindOnClick(function(a) {
       Entry.container.getObject(this.id) && Entry.container.selectObject(this.id);
-      Entry.container.blurAllInputs();
     });
     Entry.Utils.disableContextmenu(b);
     var a = this;
     $(b).on("contextmenu", function(b) {
-      Entry.ContextMenu.show([{text:Lang.Workspace.context_rename, callback:function() {
-        var b = a;
+      Entry.ContextMenu.show([{text:Lang.Workspace.context_rename, callback:function(b) {
+        b.stopPropagation();
+        b = a;
         b.setLock(!1);
         b.editObjectValues(!0);
         b.nameView_.select();
@@ -6847,12 +7925,14 @@ Entry.EntryObject.prototype.generateView = function() {
     b.appendChild(d);
     this.nameView_ = d;
     this.nameView_.entryObject = this;
-    d.setAttribute("disabled", "disabled");
-    this.nameView_.onblur = function() {
+    d.setAttribute("readonly", !0);
+    var f = this;
+    this.nameView_.onblur = function(a) {
       this.entryObject.name = this.value;
+      Entry.playground.reloadPlayground();
     };
     this.nameView_.onkeypress = function(a) {
-      13 == a.keyCode && this.blur();
+      13 == a.keyCode && f.editObjectValues(!1);
     };
     this.nameView_.value = this.name;
     d = Entry.createElement("div");
@@ -6860,9 +7940,11 @@ Entry.EntryObject.prototype.generateView = function() {
     d.object = this;
     this.editView_ = d;
     this.view_.appendChild(d);
-    Entry.objectEditable ? (d.bindOnClick(function(b) {
+    Entry.objectEditable ? ($(d).mousedown(function(b) {
+      var c = a.isEditing;
       b.stopPropagation();
-      Entry.engine.isState("run") || a.editObjectValues(tog);
+      Entry.documentMousedown.notify(b);
+      Entry.engine.isState("run") || !1 !== c || (a.editObjectValues(!c), Entry.playground.object !== a && Entry.container.selectObject(a.id), a.nameView_.select());
     }), d.blur = function(b) {
       a.editObjectComplete();
     }) : d.addClass("entryRemove");
@@ -6885,65 +7967,65 @@ Entry.EntryObject.prototype.generateView = function() {
     e = Entry.createElement("span");
     e.addClass("entryObjectCoordinateSpanWorkspace");
     e.innerHTML = "X:";
-    var f = Entry.createElement("input");
-    f.addClass("entryObjectCoordinateInputWorkspace");
-    f.setAttribute("disabled", "disabled");
-    f.bindOnClick(function(a) {
+    var g = Entry.createElement("input");
+    g.addClass("entryObjectCoordinateInputWorkspace");
+    g.setAttribute("readonly", !0);
+    g.bindOnClick(function(a) {
       a.stopPropagation();
       this.select();
     });
-    var g = Entry.createElement("span");
-    g.addClass("entryObjectCoordinateSpanWorkspace");
-    g.innerHTML = "Y:";
-    var h = Entry.createElement("input");
-    h.addClass("entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right");
-    h.bindOnClick(function(a) {
+    var h = Entry.createElement("span");
+    h.addClass("entryObjectCoordinateSpanWorkspace");
+    h.innerHTML = "Y:";
+    var k = Entry.createElement("input");
+    k.addClass("entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right");
+    k.bindOnClick(function(a) {
       a.stopPropagation();
       this.select();
     });
-    h.setAttribute("disabled", "disabled");
-    var k = Entry.createElement("span");
-    k.addClass("entryObjectCoordinateSizeWorkspace");
-    k.innerHTML = "\ud06c\uae30 :";
-    var m = Entry.createElement("input");
-    m.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size");
-    m.bindOnClick(function(a) {
+    k.setAttribute("readonly", !0);
+    var l = Entry.createElement("span");
+    l.addClass("entryObjectCoordinateSizeWorkspace");
+    l.innerHTML = Lang.Workspace.Size + " : ";
+    var n = Entry.createElement("input");
+    n.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size");
+    n.bindOnClick(function(a) {
       a.stopPropagation();
       this.select();
     });
-    m.setAttribute("disabled", "disabled");
+    n.setAttribute("readonly", !0);
     d.appendChild(e);
-    d.appendChild(f);
     d.appendChild(g);
     d.appendChild(h);
     d.appendChild(k);
-    d.appendChild(m);
-    d.xInput_ = f;
-    d.yInput_ = h;
-    d.sizeInput_ = m;
+    d.appendChild(l);
+    d.appendChild(n);
+    d.xInput_ = g;
+    d.yInput_ = k;
+    d.sizeInput_ = n;
     this.coordinateView_ = d;
     c = this;
-    f.onkeypress = function(a) {
-      13 == a.keyCode && this.blur();
+    g.onkeypress = function(a) {
+      13 == a.keyCode && c.editObjectValues(!1);
     };
-    f.onblur = function(a) {
-      isNaN(f.value) || c.entity.setX(Number(f.value));
+    g.onblur = function(a) {
+      isNaN(g.value) || c.entity.setX(Number(g.value));
       c.updateCoordinateView();
       Entry.stage.updateObject();
     };
-    h.onkeypress = function(a) {
-      13 == a.keyCode && this.blur();
+    k.onkeypress = function(a) {
+      13 == a.keyCode && c.editObjectValues(!1);
     };
-    h.onblur = function(a) {
-      isNaN(h.value) || c.entity.setY(Number(h.value));
+    k.onblur = function(a) {
+      isNaN(k.value) || c.entity.setY(Number(k.value));
       c.updateCoordinateView();
       Entry.stage.updateObject();
     };
-    m.onkeypress = function(a) {
-      13 == a.keyCode && this.blur();
+    n.onkeypress = function(a) {
+      13 == a.keyCode && c.editObjectValues(!1);
     };
-    m.onblur = function(a) {
-      isNaN(m.value) || c.entity.setSize(Number(m.value));
+    n.onblur = function(a) {
+      isNaN(n.value) || c.entity.setSize(Number(n.value));
       c.updateCoordinateView();
       Entry.stage.updateObject();
     };
@@ -6954,48 +8036,48 @@ Entry.EntryObject.prototype.generateView = function() {
     e = Entry.createElement("span");
     e.addClass("entryObjectRotateSpanWorkspace");
     e.innerHTML = Lang.Workspace.rotation + " : ";
-    var n = Entry.createElement("input");
-    n.addClass("entryObjectRotateInputWorkspace");
-    n.setAttribute("disabled", "disabled");
-    n.bindOnClick(function(a) {
+    var m = Entry.createElement("input");
+    m.addClass("entryObjectRotateInputWorkspace");
+    m.setAttribute("readonly", !0);
+    m.bindOnClick(function(a) {
       a.stopPropagation();
       this.select();
     });
     this.rotateSpan_ = e;
-    this.rotateInput_ = n;
-    g = Entry.createElement("span");
-    g.addClass("entryObjectDirectionSpanWorkspace");
-    g.innerHTML = Lang.Workspace.direction + " : ";
-    var l = Entry.createElement("input");
-    l.addClass("entryObjectDirectionInputWorkspace");
-    l.setAttribute("disabled", "disabled");
-    l.bindOnClick(function(a) {
+    this.rotateInput_ = m;
+    h = Entry.createElement("span");
+    h.addClass("entryObjectDirectionSpanWorkspace");
+    h.innerHTML = Lang.Workspace.direction + " : ";
+    var q = Entry.createElement("input");
+    q.addClass("entryObjectDirectionInputWorkspace");
+    q.setAttribute("readonly", !0);
+    q.bindOnClick(function(a) {
       a.stopPropagation();
       this.select();
     });
-    this.directionInput_ = l;
+    this.directionInput_ = q;
     d.appendChild(e);
-    d.appendChild(n);
-    d.appendChild(g);
-    d.appendChild(l);
-    d.rotateInput_ = n;
-    d.directionInput_ = l;
+    d.appendChild(m);
+    d.appendChild(h);
+    d.appendChild(q);
+    d.rotateInput_ = m;
+    d.directionInput_ = q;
     c = this;
-    n.onkeypress = function(a) {
-      13 == a.keyCode && this.blur();
+    m.onkeypress = function(a) {
+      13 == a.keyCode && c.editObjectValues(!1);
     };
-    n.onblur = function(a) {
-      a = n.value;
+    m.onblur = function(a) {
+      a = m.value;
       -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da")));
       isNaN(a) || c.entity.setRotation(Number(a));
       c.updateRotationView();
       Entry.stage.updateObject();
     };
-    l.onkeypress = function(a) {
-      13 == a.keyCode && this.blur();
+    q.onkeypress = function(a) {
+      13 == a.keyCode && c.editObjectValues(!1);
     };
-    l.onblur = function(a) {
-      a = l.value;
+    q.onblur = function(a) {
+      a = q.value;
       -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da")));
       isNaN(a) || c.entity.setDirection(Number(a));
       c.updateRotationView();
@@ -7016,7 +8098,7 @@ Entry.EntryObject.prototype.generateView = function() {
     this.rotateModeAView_ = b;
     d.appendChild(b);
     b.bindOnClick(function(a) {
-      Entry.engine.isState("run") || this.object.getLock() || this.object.setRotateMethod("free");
+      Entry.engine.isState("run") || this.object.getLock() || (this.object.initRotateValue("free"), this.object.setRotateMethod("free"));
     });
     b = Entry.createElement("div");
     b.addClass("entryObjectRotateModeWorkspace");
@@ -7025,7 +8107,7 @@ Entry.EntryObject.prototype.generateView = function() {
     this.rotateModeBView_ = b;
     d.appendChild(b);
     b.bindOnClick(function(a) {
-      Entry.engine.isState("run") || this.object.getLock() || this.object.setRotateMethod("vertical");
+      Entry.engine.isState("run") || this.object.getLock() || (this.object.initRotateValue("vertical"), this.object.setRotateMethod("vertical"));
     });
     b = Entry.createElement("div");
     b.addClass("entryObjectRotateModeWorkspace");
@@ -7034,7 +8116,7 @@ Entry.EntryObject.prototype.generateView = function() {
     this.rotateModeCView_ = b;
     d.appendChild(b);
     b.bindOnClick(function(a) {
-      Entry.engine.isState("run") || this.object.getLock() || this.object.setRotateMethod("none");
+      Entry.engine.isState("run") || this.object.getLock() || (this.object.initRotateValue("none"), this.object.setRotateMethod("none"));
     });
     this.updateThumbnailView();
     this.updateCoordinateView();
@@ -7058,35 +8140,36 @@ Entry.EntryObject.prototype.generateView = function() {
     }}])), this.view_ = b, b = Entry.createElement("ul"), b.addClass("objectInfoView"), d = Entry.createElement("li"), d.addClass("objectInfo_visible"), e = Entry.createElement("li"), e.addClass("objectInfo_lock"), b.appendChild(d), b.appendChild(e), this.view_.appendChild(b), b = Entry.createElement("div"), b.addClass("entryObjectThumbnailWorkspace"), this.view_.appendChild(b), this.thumbnailView_ = b, b = Entry.createElement("div"), b.addClass("entryObjectWrapperWorkspace"), this.view_.appendChild(b), 
     d = Entry.createElement("input"), d.addClass("entryObjectNameWorkspace"), b.appendChild(d), this.nameView_ = d, this.nameView_.entryObject = this, this.nameView_.onblur = function() {
       this.entryObject.name = this.value;
+      Entry.playground.reloadPlayground();
     }, this.nameView_.onkeypress = function(a) {
-      13 == a.keyCode && this.blur();
+      13 == a.keyCode && c.editObjectValues(!1);
     }, this.nameView_.value = this.name, Entry.objectEditable && Entry.objectDeletable && (d = Entry.createElement("div"), d.addClass("entryObjectDeletePhone"), d.object = this, this.deleteView_ = d, this.view_.appendChild(d), d.bindOnClick(function(a) {
       Entry.engine.isState("run") || Entry.container.removeObject(this.object);
     })), d = Entry.createElement("button"), d.addClass("entryObjectEditPhone"), d.object = this, d.bindOnClick(function(a) {
       if (a = Entry.container.getObject(this.id)) {
         Entry.container.selectObject(a.id), Entry.playground.injectObject(a);
       }
-    }), this.view_.appendChild(d), d = Entry.createElement("div"), d.addClass("entryObjectInformationWorkspace"), d.object = this, this.isInformationToggle = !1, b.appendChild(d), this.informationView_ = d, d = Entry.createElement("div"), d.addClass("entryObjectRotateLabelWrapperWorkspace"), this.view_.appendChild(d), this.rotateLabelWrapperView_ = d, e = Entry.createElement("span"), e.addClass("entryObjectRotateSpanWorkspace"), e.innerHTML = Lang.Workspace.rotation + " : ", n = Entry.createElement("input"), 
-    n.addClass("entryObjectRotateInputWorkspace"), this.rotateSpan_ = e, this.rotateInput_ = n, g = Entry.createElement("span"), g.addClass("entryObjectDirectionSpanWorkspace"), g.innerHTML = Lang.Workspace.direction + " : ", l = Entry.createElement("input"), l.addClass("entryObjectDirectionInputWorkspace"), this.directionInput_ = l, d.appendChild(e), d.appendChild(n), d.appendChild(g), d.appendChild(l), d.rotateInput_ = n, d.directionInput_ = l, c = this, n.onkeypress = function(a) {
-      13 == a.keyCode && (a = n.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || c.entity.setRotation(Number(a)), c.updateRotationView(), n.blur());
-    }, n.onblur = function(a) {
+    }), this.view_.appendChild(d), d = Entry.createElement("div"), d.addClass("entryObjectInformationWorkspace"), d.object = this, this.isInformationToggle = !1, b.appendChild(d), this.informationView_ = d, d = Entry.createElement("div"), d.addClass("entryObjectRotateLabelWrapperWorkspace"), this.view_.appendChild(d), this.rotateLabelWrapperView_ = d, e = Entry.createElement("span"), e.addClass("entryObjectRotateSpanWorkspace"), e.innerHTML = Lang.Workspace.rotation + " : ", m = Entry.createElement("input"), 
+    m.addClass("entryObjectRotateInputWorkspace"), this.rotateSpan_ = e, this.rotateInput_ = m, h = Entry.createElement("span"), h.addClass("entryObjectDirectionSpanWorkspace"), h.innerHTML = Lang.Workspace.direction + " : ", q = Entry.createElement("input"), q.addClass("entryObjectDirectionInputWorkspace"), this.directionInput_ = q, d.appendChild(e), d.appendChild(m), d.appendChild(h), d.appendChild(q), d.rotateInput_ = m, d.directionInput_ = q, c = this, m.onkeypress = function(a) {
+      13 == a.keyCode && (a = m.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || c.entity.setRotation(Number(a)), c.updateRotationView(), m.blur());
+    }, m.onblur = function(a) {
       c.entity.setRotation(c.entity.getRotation());
       Entry.stage.updateObject();
-    }, l.onkeypress = function(a) {
-      13 == a.keyCode && (a = l.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || c.entity.setDirection(Number(a)), c.updateRotationView(), l.blur());
-    }, l.onblur = function(a) {
+    }, q.onkeypress = function(a) {
+      13 == a.keyCode && (a = q.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || c.entity.setDirection(Number(a)), c.updateRotationView(), q.blur());
+    }, q.onblur = function(a) {
       c.entity.setDirection(c.entity.getDirection());
       Entry.stage.updateObject();
-    }, b = Entry.createElement("div"), b.addClass("entryObjectRotationWrapperWorkspace"), b.object = this, this.view_.appendChild(b), d = Entry.createElement("span"), d.addClass("entryObjectCoordinateWorkspace"), b.appendChild(d), e = Entry.createElement("span"), e.addClass("entryObjectCoordinateSpanWorkspace"), e.innerHTML = "X:", f = Entry.createElement("input"), f.addClass("entryObjectCoordinateInputWorkspace"), g = Entry.createElement("span"), g.addClass("entryObjectCoordinateSpanWorkspace"), 
-    g.innerHTML = "Y:", h = Entry.createElement("input"), h.addClass("entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right"), k = Entry.createElement("span"), k.addClass("entryObjectCoordinateSpanWorkspace"), k.innerHTML = Lang.Workspace.Size, m = Entry.createElement("input"), m.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size"), d.appendChild(e), d.appendChild(f), d.appendChild(g), d.appendChild(h), d.appendChild(k), d.appendChild(m), 
-    d.xInput_ = f, d.yInput_ = h, d.sizeInput_ = m, this.coordinateView_ = d, c = this, f.onkeypress = function(a) {
-      13 == a.keyCode && (isNaN(f.value) || c.entity.setX(Number(f.value)), c.updateCoordinateView(), f.blur());
-    }, f.onblur = function(a) {
+    }, b = Entry.createElement("div"), b.addClass("entryObjectRotationWrapperWorkspace"), b.object = this, this.view_.appendChild(b), d = Entry.createElement("span"), d.addClass("entryObjectCoordinateWorkspace"), b.appendChild(d), e = Entry.createElement("span"), e.addClass("entryObjectCoordinateSpanWorkspace"), e.innerHTML = "X:", g = Entry.createElement("input"), g.addClass("entryObjectCoordinateInputWorkspace"), h = Entry.createElement("span"), h.addClass("entryObjectCoordinateSpanWorkspace"), 
+    h.innerHTML = "Y:", k = Entry.createElement("input"), k.addClass("entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right"), l = Entry.createElement("span"), l.addClass("entryObjectCoordinateSpanWorkspace"), l.innerHTML = Lang.Workspace.Size, n = Entry.createElement("input"), n.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size"), d.appendChild(e), d.appendChild(g), d.appendChild(h), d.appendChild(k), d.appendChild(l), d.appendChild(n), 
+    d.xInput_ = g, d.yInput_ = k, d.sizeInput_ = n, this.coordinateView_ = d, c = this, g.onkeypress = function(a) {
+      13 == a.keyCode && (isNaN(g.value) || c.entity.setX(Number(g.value)), c.updateCoordinateView(), c.blur());
+    }, g.onblur = function(a) {
       c.entity.setX(c.entity.getX());
       Entry.stage.updateObject();
-    }, h.onkeypress = function(a) {
-      13 == a.keyCode && (isNaN(h.value) || c.entity.setY(Number(h.value)), c.updateCoordinateView(), h.blur());
-    }, h.onblur = function(a) {
+    }, k.onkeypress = function(a) {
+      13 == a.keyCode && (isNaN(k.value) || c.entity.setY(Number(k.value)), c.updateCoordinateView(), c.blur());
+    }, k.onblur = function(a) {
       c.entity.setY(c.entity.getY());
       Entry.stage.updateObject();
     }, d = Entry.createElement("div"), d.addClass("rotationMethodWrapper"), b.appendChild(d), this.rotationMethodWrapper_ = d, b = Entry.createElement("span"), b.addClass("entryObjectRotateMethodLabelWorkspace"), d.appendChild(b), b.innerHTML = Lang.Workspace.rotate_method + " : ", b = Entry.createElement("div"), b.addClass("entryObjectRotateModeWorkspace"), b.addClass("entryObjectRotateModeAWorkspace"), b.object = this, this.rotateModeAView_ = b, d.appendChild(b), b.bindOnClick(function(a) {
@@ -7111,7 +8194,7 @@ Entry.EntryObject.prototype.setScript = function(b) {
   this.script = b;
 };
 Entry.EntryObject.prototype.getScriptText = function() {
-  return this.script.toJSON();
+  return JSON.stringify(this.script.toJSON());
 };
 Entry.EntryObject.prototype.initEntity = function(b) {
   var a = {};
@@ -7127,20 +8210,9 @@ Entry.EntryObject.prototype.initEntity = function(b) {
     a.height = c.height;
   } else {
     if ("textBox" == this.objectType) {
-      if (a.regX = 25, a.regY = 12, a.scaleX = a.scaleY = 1.5, a.width = 50, a.height = 24, a.text = b.name, b.options) {
+      if (a.regX = 25, a.regY = 12, a.scaleX = a.scaleY = 1.5, a.width = 50, a.height = 24, a.text = b.text, b.options) {
         if (b = b.options, c = "", b.bold && (c += "bold "), b.italic && (c += "italic "), a.underline = b.underline, a.strike = b.strike, a.font = c + "20px " + b.font.family, a.colour = b.colour, a.bgColor = b.background, a.lineBreak = b.lineBreak) {
-          b = a.text.split("\n");
-          if (1 < b.length) {
-            for (var c = b[0].length, d = 1, e = b.length;d < e;d++) {
-              b[d].length > c && (c = b[d].length);
-            }
-            a.width = 25 * c;
-            a.height = 24 * b.length;
-          } else {
-            a.width = 25 * a.text.length;
-          }
-          a.regX = a.width / 2;
-          a.regY = a.height / 2;
+          a.width = 256, a.height = .5625 * a.width, a.regX = a.width / 2, a.regY = a.height / 2;
         }
       } else {
         a.underline = !1, a.strike = !1, a.font = "20px Nanum Gothic", a.colour = "#000000", a.bgColor = "#ffffff";
@@ -7155,7 +8227,7 @@ Entry.EntryObject.prototype.updateThumbnailView = function() {
       this.thumbnailView_.style.backgroundImage = 'url("' + this.entity.picture.fileurl + '")';
     } else {
       var b = this.entity.picture.filename;
-      this.thumbnailView_.style.backgroundImage = 'url("/uploads/' + b.substring(0, 2) + "/" + b.substring(2, 4) + "/thumb/" + b + '.png")';
+      this.thumbnailView_.style.backgroundImage = 'url("' + Entry.defaultPath + "/uploads/" + b.substring(0, 2) + "/" + b.substring(2, 4) + "/thumb/" + b + '.png")';
     }
   } else {
     "textBox" == this.objectType && (this.thumbnailView_.style.backgroundImage = "url(" + (Entry.mediaFilePath + "/text_icon.png") + ")");
@@ -7226,6 +8298,13 @@ Entry.EntryObject.prototype.setPicture = function(b) {
   }
   throw Error("No picture found");
 };
+Entry.EntryObject.prototype.getPrevPicture = function(b) {
+  for (var a = this.pictures, c = a.length, d = 0;d < c;d++) {
+    if (a[d].id == b) {
+      return a[0 == d ? c - 1 : d - 1];
+    }
+  }
+};
 Entry.EntryObject.prototype.getNextPicture = function(b) {
   for (var a = this.pictures, c = a.length, d = 0;d < c;d++) {
     if (a[d].id == b) {
@@ -7266,6 +8345,10 @@ Entry.EntryObject.prototype.setRotateMethod = function(b) {
   b || (b = "free");
   this.rotateMethod = b;
   this.updateRotateMethodView();
+  Entry.stage.selectedObject && Entry.stage.selectedObject.entity && (Entry.stage.updateObject(), Entry.stage.updateHandle());
+};
+Entry.EntryObject.prototype.initRotateValue = function(b) {
+  this.rotateMethod != b && (this.entity.rotation = 0, this.entity.direction = 90);
 };
 Entry.EntryObject.prototype.updateRotateMethodView = function() {
   var b = this.rotateMethod;
@@ -7277,8 +8360,8 @@ Entry.EntryObject.prototype.toggleInformation = function(b) {
   b ? this.view_.addClass("informationToggle") : this.view_.removeClass("informationToggle");
 };
 Entry.EntryObject.prototype.addCloneEntity = function(b, a, c) {
-  this.clonedEntities.length > Entry.maxCloneLimit || (b = new Entry.EntityObject(this), a ? (b.injectModel(a.picture ? a.picture : null, a.toJSON()), b.snapshot_ = a.snapshot_, a.effect && (b.effect = Entry.cloneSimpleObject(a.effect), b.applyFilter())) : (b.injectModel(this.entity.picture ? this.entity.picture : null, this.entity.toJSON(b)), b.snapshot_ = this.entity.snapshot_, this.entity.effect && (b.effect = Entry.cloneSimpleObject(this.entity.effect), b.applyFilter())), Entry.engine.raiseEventOnEntity(b, 
-  [b, "when_clone_start"]), b.isClone = !0, b.isStarted = !0, this.addCloneVariables(this, b, a ? a.variables : null, a ? a.lists : null), this.clonedEntities.push(b), Entry.stage.loadEntity(b));
+  this.clonedEntities.length > Entry.maxCloneLimit || (b = new Entry.EntityObject(this), a ? (b.injectModel(a.picture ? a.picture : null, a.toJSON()), b.snapshot_ = a.snapshot_, a.effect && (b.effect = Entry.cloneSimpleObject(a.effect), b.applyFilter()), a.brush && Entry.setCloneBrush(b, a.brush)) : (b.injectModel(this.entity.picture ? this.entity.picture : null, this.entity.toJSON(b)), b.snapshot_ = this.entity.snapshot_, this.entity.effect && (b.effect = Entry.cloneSimpleObject(this.entity.effect), 
+  b.applyFilter()), this.entity.brush && Entry.setCloneBrush(b, this.entity.brush)), Entry.engine.raiseEventOnEntity(b, [b, "when_clone_start"]), b.isClone = !0, b.isStarted = !0, this.addCloneVariables(this, b, a ? a.variables : null, a ? a.lists : null), this.clonedEntities.push(b), Entry.stage.loadEntity(b));
 };
 Entry.EntryObject.prototype.initializeSplitter = function(b) {
   b.onmousedown = function(a) {
@@ -7354,28 +8437,34 @@ Entry.EntryObject.prototype.setLock = function(b) {
 Entry.EntryObject.prototype.updateInputViews = function(b) {
   b = b || this.getLock();
   var a = [this.nameView_, this.coordinateView_.xInput_, this.coordinateView_.yInput_, this.rotateInput_, this.directionInput_, this.coordinateView_.sizeInput_];
-  if (b && "disabled" != a[0].getAttribute("disabled")) {
+  if (b && 1 != a[0].getAttribute("readonly")) {
     for (b = 0;b < a.length;b++) {
-      a[b].setAttribute("disabled", "disabled"), a[b].removeClass("selectedEditingObject"), tog = !0;
+      a[b].removeClass("selectedEditingObject"), a[b].setAttribute("readonly", !1), this.isEditing = !1;
     }
   }
 };
-var tog = !0;
 Entry.EntryObject.prototype.editObjectValues = function(b) {
   var a;
   a = this.getLock() ? [this.nameView_] : [this.nameView_, this.coordinateView_.xInput_, this.coordinateView_.yInput_, this.rotateInput_, this.directionInput_, this.coordinateView_.sizeInput_];
   if (b) {
+    $(a).removeClass("selectedNotEditingObject");
     for (b = 0;b < a.length;b++) {
-      a[b].removeAttribute("disabled"), a[b].addClass("selectedEditingObject");
+      a[b].removeAttribute("readonly"), a[b].addClass("selectedEditingObject");
     }
-    this.nameView_.select();
-    tog = !1;
+    this.isEditing = !0;
   } else {
     for (b = 0;b < a.length;b++) {
-      a[b].setAttribute("disabled", "disabled"), a[b].removeClass("selectedEditingObject");
+      a[b].blur(!0);
     }
-    a[0].blur();
-    tog = !0;
+    this.blurAllInput();
+    this.isEditing = !1;
+  }
+};
+Entry.EntryObject.prototype.blurAllInput = function() {
+  var b = document.getElementsByClassName("selectedEditingObject");
+  $(b).removeClass("selectedEditingObject");
+  for (var b = [this.nameView_, this.coordinateView_.xInput_, this.coordinateView_.yInput_, this.rotateInput_, this.directionInput_, this.coordinateView_.sizeInput_], a = 0;a < b.length;a++) {
+    b[a].addClass("selectedNotEditingObject"), b[a].setAttribute("readonly", !0);
   }
 };
 Entry.EntryObject.prototype.addStampEntity = function(b) {
@@ -7398,12 +8487,16 @@ Entry.EntryObject.prototype.getStampEntities = function() {
   });
   return b;
 };
+Entry.EntryObject.prototype.clearExecutor = function() {
+  this.script.clearExecutors();
+};
 Entry.Painter = function() {
   this.toolbox = {selected:"cursor"};
   this.stroke = {enabled:!1, fillColor:"#000000", lineColor:"#000000", thickness:1, fill:!0, transparent:!1, style:"line", locked:!1};
   this.file = {id:Entry.generateHash(), name:"\uc0c8\uadf8\ub9bc", modified:!1, mode:"new"};
   this.font = {name:"KoPub Batang", size:20, style:"normal"};
   this.selectArea = {};
+  this.firstStatement = !1;
 };
 Entry.Painter.prototype.initialize = function(b) {
   this.generateView(b);
@@ -7599,13 +8692,14 @@ Entry.Painter.prototype.updateImageHandleCursor = function() {
   b.WHandle.cursor = a[3];
   b.NWHandle.cursor = a[0];
 };
-Entry.Painter.prototype.clearCanvas = function() {
+Entry.Painter.prototype.clearCanvas = function(b) {
   this.clearHandle();
-  this.initCommand();
+  b || this.initCommand();
   this.objectContainer.removeAllChildren();
   this.stage.update();
   this.colorLayerData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
-  for (var b = 0, a = this.colorLayerData.data.length;b < a;b++) {
+  b = 0;
+  for (var a = this.colorLayerData.data.length;b < a;b++) {
     this.colorLayerData.data[b] = 255, this.colorLayerData.data[b + 1] = 255, this.colorLayerData.data[b + 2] = 255, this.colorLayerData.data[b + 3] = 255;
   }
   this.reloadContext();
@@ -7620,14 +8714,15 @@ Entry.Painter.prototype.initPicture = function() {
   Entry.addEventListener("pictureSelected", function(a) {
     b.selectToolbox("cursor");
     if (b.file.id !== a.id) {
-      b.file.modified && confirm("\uc218\uc815\ub41c \ub0b4\uc6a9\uc744 \uc800\uc7a5\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?") && (b.file_ = JSON.parse(JSON.stringify(b.file)), b.file_save(!0), b.file.modified = !1);
-      b.clearCanvas();
+      b.file.modified && confirm("\uc218\uc815\ub41c \ub0b4\uc6a9\uc744 \uc800\uc7a5\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?") && (b.file_ = JSON.parse(JSON.stringify(b.file)), b.file_save(!0));
+      b.file.modified = !1;
+      b.clearCanvas(!0);
       var c = new Image;
       c.id = a.id ? a.id : Entry.generateHash();
       b.file.id = c.id;
       b.file.name = a.name;
       b.file.mode = "edit";
-      c.src = a.fileurl ? a.fileurl : "/uploads/" + a.filename.substring(0, 2) + "/" + a.filename.substring(2, 4) + "/image/" + a.filename + ".png";
+      c.src = a.fileurl ? a.fileurl : Entry.defaultPath + "/uploads/" + a.filename.substring(0, 2) + "/" + a.filename.substring(2, 4) + "/image/" + a.filename + ".png";
       c.onload = function(a) {
         b.addImage(a.target);
       };
@@ -7638,6 +8733,12 @@ Entry.Painter.prototype.initPicture = function() {
   });
   Entry.addEventListener("pictureNameChanged", function(a) {
     b.file.name = a.name;
+  });
+  Entry.addEventListener("pictureClear", function(a) {
+    b.file.modified = !1;
+    b.file.id = "";
+    b.file.name = "";
+    b.clearCanvas();
   });
 };
 Entry.Painter.prototype.initDraw = function() {
@@ -7769,7 +8870,8 @@ Entry.Painter.prototype.initCommand = function() {
   (b || a) && this.stage.update();
   this.isCommandValid = !1;
   this.colorLayerModel = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
-  Entry.stateManager && Entry.stateManager.addCommand("edit sprite", this, this.restorePainter, this.colorLayerModel);
+  Entry.stateManager && this.firstStatement && Entry.stateManager.addCommand("edit sprite", this, this.restorePainter, this.colorLayerModel);
+  this.firstStatement = !0;
   b && (this.handle.visible = !0);
   a && (this.coordinator.visible = !0);
   (b || a) && this.stage.update();
@@ -7810,14 +8912,14 @@ Entry.Painter.prototype.fill = function() {
     var c = new createjs.Point(this.stage.mouseX, this.stage.mouseY);
     c.x = Math.round(c.x);
     c.y = Math.round(c.y);
-    for (var d = 4 * (c.y * b + c.x), e = this.colorLayerData.data[d], f = this.colorLayerData.data[d + 1], g = this.colorLayerData.data[d + 2], h = this.colorLayerData.data[d + 3], k, m, c = [[c.x, c.y]], n = Entry.hex2rgb(this.stroke.lineColor);c.length;) {
-      for (var d = c.pop(), l = d[0], q = d[1], d = 4 * (q * b + l);0 <= q && this.matchColor(d, e, f, g, h);) {
+    for (var d = 4 * (c.y * b + c.x), e = this.colorLayerData.data[d], f = this.colorLayerData.data[d + 1], g = this.colorLayerData.data[d + 2], h = this.colorLayerData.data[d + 3], k, l, c = [[c.x, c.y]], n = Entry.hex2rgb(this.stroke.lineColor);c.length;) {
+      for (var d = c.pop(), m = d[0], q = d[1], d = 4 * (q * b + m);0 <= q && this.matchColor(d, e, f, g, h);) {
         --q, d -= 4 * b;
       }
       d += 4 * b;
       q += 1;
-      for (m = k = !1;q < a - 1 && this.matchColor(d, e, f, g, h);) {
-        q += 1, this.colorPixel(d, n.r, n.g, n.b), 0 < l && (this.matchColor(d - 4, e, f, g, h) ? k || (c.push([l - 1, q]), k = !0) : k && (k = !1)), l < b - 1 && (this.matchColor(d + 4, e, f, g, h) ? m || (c.push([l + 1, q]), m = !0) : m && (m = !1)), d += 4 * b;
+      for (l = k = !1;q < a - 1 && this.matchColor(d, e, f, g, h);) {
+        q += 1, this.colorPixel(d, n.r, n.g, n.b), 0 < m && (this.matchColor(d - 4, e, f, g, h) ? k || (c.push([m - 1, q]), k = !0) : k && (k = !1)), m < b - 1 && (this.matchColor(d + 4, e, f, g, h) ? l || (c.push([m + 1, q]), l = !0) : l && (l = !1)), d += 4 * b;
       }
       if (1080 < c.length) {
         break;
@@ -8000,7 +9102,7 @@ Entry.Painter.prototype.addPicture = function(b) {
   this.initCommand();
   var a = new Image;
   a.id = Entry.generateHash();
-  a.src = b.fileurl ? b.fileurl : "/uploads/" + b.filename.substring(0, 2) + "/" + b.filename.substring(2, 4) + "/image/" + b.filename + ".png";
+  a.src = b.fileurl ? b.fileurl : Entry.defaultPath + "/uploads/" + b.filename.substring(0, 2) + "/" + b.filename.substring(2, 4) + "/image/" + b.filename + ".png";
   var c = this;
   a.onload = function(a) {
     c.addImage(a.target);
@@ -8129,13 +9231,13 @@ Entry.Painter.prototype.generateView = function(b) {
     h.appendChild(k);
     h = Entry.createElement("li");
     k.appendChild(h);
-    var m = Entry.createElement("a", "entryPainterTopMenuFileSave");
-    m.bindOnClick(function() {
+    var l = Entry.createElement("a", "entryPainterTopMenuFileSave");
+    l.bindOnClick(function() {
       a.file_save(!1);
     });
-    m.addClass("entryPainterTopMenuFileSave");
-    m.innerHTML = Lang.Workspace.painter_file_save;
-    h.appendChild(m);
+    l.addClass("entryPainterTopMenuFileSave");
+    l.innerHTML = Lang.Workspace.painter_file_save;
+    h.appendChild(l);
     h = Entry.createElement("li");
     k.appendChild(h);
     k = Entry.createElement("a", "entryPainterTopMenuFileSaveAs");
@@ -8396,12 +9498,12 @@ Entry.Painter.prototype.generateView = function(b) {
     d.addClass("painterAttrThickName");
     d.innerHTML = Lang.Workspace.thickness;
     this.attrThickArea.appendChild(d);
-    var l = Entry.createElement("fieldset", "entryPainterAttrThick");
-    l.addClass("entryPlaygroundPainterAttrThick");
-    this.attrThickArea.appendChild(l);
+    var m = Entry.createElement("fieldset", "entryPainterAttrThick");
+    m.addClass("entryPlaygroundPainterAttrThick");
+    this.attrThickArea.appendChild(m);
     d = Entry.createElement("div");
     d.addClass("paintAttrThickTop");
-    l.appendChild(d);
+    m.appendChild(d);
     e = Entry.createElement("select", "entryPainterAttrThick");
     e.addClass("entryPlaygroundPainterAttrThickInput");
     e.size = "1";
@@ -8411,15 +9513,15 @@ Entry.Painter.prototype.generateView = function(b) {
     for (d = 1;10 >= d;d++) {
       c = Entry.createElement("option"), c.value = d, c.innerHTML = d, e.appendChild(c);
     }
-    l.appendChild(e);
+    m.appendChild(e);
     d = Entry.createElement("div", "entryPainterShapeLineColor");
     d.addClass("painterAttrShapeLineColor");
     c = Entry.createElement("div", "entryPainterShapeInnerBackground");
     c.addClass("painterAttrShapeInnerBackground");
     d.appendChild(c);
-    l.appendChild(d);
+    m.appendChild(d);
     this.attrThickArea.painterAttrShapeLineColor = d;
-    l.bindOnClick(function() {
+    m.bindOnClick(function() {
       q.style.zIndex = "1";
       this.style.zIndex = "10";
       r = !1;
@@ -8439,7 +9541,7 @@ Entry.Painter.prototype.generateView = function(b) {
     c.appendChild(q);
     var r = !1;
     q.bindOnClick(function(a) {
-      l.style.zIndex = "1";
+      m.style.zIndex = "1";
       this.style.zIndex = "10";
       r = !0;
     });
@@ -8495,7 +9597,7 @@ Entry.Painter.prototype.generateView = function(b) {
     };
     h = [{label:"\ubcf4\ud1b5", value:"normal"}, {label:"\uad75\uac8c", value:"bold"}, {label:"\uae30\uc6b8\uc784", value:"italic"}];
     for (d = 0;d < h.length;d++) {
-      m = h[d], c = Entry.createElement("option"), c.value = m.value, c.innerHTML = m.label, k.appendChild(c);
+      l = h[d], c = Entry.createElement("option"), c.value = l.value, c.innerHTML = l.label, k.appendChild(c);
     }
     e.appendChild(k);
     this.attrLineArea = Entry.createElement("div", "painterAttrLineStyle");
@@ -8662,6 +9764,76 @@ Entry.Painter.prototype.selectToolbox = function(b) {
       this.toggleCoordinator();
   }
 };
+Entry.PyBlockAssembler = function(b) {
+  this.blockSyntax = b;
+};
+(function(b) {
+  b.assemble = function(a) {
+    console.log("unit", a);
+    var b;
+    switch(a.type) {
+      case "ExpressionStatement":
+        console.log("ExpressionStatement unit", a);
+        var d = [];
+        b = [];
+        arguments = a.expression.arguments;
+        console.log("arguments", arguments);
+        if (arguments && arguments.length) {
+          for (var e in arguments) {
+            var f = arguments[e], g;
+            "UnaryExpression" == f.type ? f.prefix && (g = f.operator.concat(f.argument.value)) : "Literal" == f.type && (g = f.value);
+            d.push(g);
+          }
+        }
+        for (e in d) {
+          f = d[e], g = "string" === typeof f ? "text" : "number", f = {type:g, params:[f]}, b.push(f);
+        }
+        e = a.expression.callee;
+        var h = String(e.object.name).concat(".").concat(e.property.name), h = this.getBlock(h);
+        b = {type:h, params:b};
+        console.log("ExpressionStatement result", b);
+        break;
+      case "WhileStatement":
+        console.log("WhileStatement unit", a);
+        b = a.test;
+        "Literal" == b.type && b.value && (h = "while True:\n$1\n");
+        var h = this.getBlock(h), k = [];
+        b = a.body.body;
+        for (e in b) {
+          a = this.assemble(b[e]), k.push(a);
+        }
+        b = {type:h, statements:[k]};
+        console.log("WhileStatement result", b);
+        break;
+      case "BlockStatement":
+        console.log("BlockStatement unit", a);
+        var l = a.body[0], k = a.body[1];
+        b = [];
+        d = [];
+        if ((arguments = l.declarations[0].init.arguments) && arguments.length) {
+          for (e in arguments) {
+            f = arguments[e], "UnaryExpression" == f.type ? f.prefix && (g = f.operator.concat(f.argument.value)) : "Literal" == f.type && (g = f.value), d.push(g);
+          }
+        }
+        for (e in d) {
+          f = d[e], g = "string" === typeof f ? "text" : "number", f = {type:g, params:[f]}, b.push(f);
+        }
+        "range" == l.declarations[0].init.callee.property.name && (h = "for i in range");
+        h = this.getBlock(h);
+        d = k.alternate.body[0].body;
+        k = [];
+        for (e in d) {
+          a = this.assemble(d[e]), k.push(a);
+        }
+        b = {type:h, params:b, statements:[k]};
+        console.log("BlockStatement result", b);
+    }
+    return b;
+  };
+  b.getBlock = function(a) {
+    return this.blockSyntax[a];
+  };
+})(Entry.PyBlockAssembler.prototype);
 Entry.JsAstGenerator = function() {
 };
 (function(b) {
@@ -8681,13 +9853,6 @@ Entry.PyAstGenerator = function() {
     }
   };
 })(Entry.PyAstGenerator.prototype);
-Entry.PyBlockMapper = function() {
-};
-(function(b) {
-  b.getBlock = function(a) {
-    return Block(a);
-  };
-})(Entry.PyBlockMapper.prototype);
 Entry.BlockToJsParser = function(b) {
   this.syntax = b;
   this._iterVariableCount = 0;
@@ -9057,11 +10222,11 @@ Entry.BlockToPyParser = function() {
       var k = e[h];
       if (0 !== k.length) {
         if (b.test(k)) {
-          var m = Number(k.split("%")[1]) - 1, g = g + this["Field" + f[m].type](a.params[m], f[m])
+          var l = Number(k.split("%")[1]) - 1, g = g + this["Field" + f[l].type](a.params[l], f[l])
         } else {
           if (d.test(k)) {
             for (var k = k.split(d), n = 0;n < k.length;n++) {
-              m = k[n], 0 !== m.length && (d.test(m) ? (m = Number(m.split("$")[1]) - 1, g += this.indent(this.Thread(a.statements[m]))) : g += m);
+              l = k[n], 0 !== l.length && (d.test(l) ? (l = Number(l.split("$")[1]) - 1, g += this.indent(this.Thread(a.statements[l]))) : g += l);
             }
           } else {
             g += k;
@@ -9115,14 +10280,14 @@ Entry.BlockToPyParser = function() {
   };
 })(Entry.BlockToPyParser.prototype);
 Entry.PyToBlockParser = function(b) {
-  this.blockSyntax = b;
+  this._assembler = new Entry.PyBlockAssembler(b);
 };
 (function(b) {
   b.Program = function(a) {
     if ("Program" == a.type) {
       var b = [], d = [], e = a.body, f;
       for (f in e) {
-        a = e[f], a = this[a.type](a), d.push({type:a.block});
+        a = e[f], a = this[a.type](a), console.log("checkitout", a), a = this._assembler.assemble(a), d.push(a);
       }
       b.push(d);
       return b;
@@ -9130,14 +10295,15 @@ Entry.PyToBlockParser = function(b) {
   };
   b.Identifier = function(a) {
     console.log("Identifier", a);
-    return {name:a.name};
+    return {type:a.type, name:a.name};
   };
   b.Literal = function(a) {
     console.log("Literal", a);
     console.log("typeof node at Literal", typeof a.value);
-    "string" === typeof a.value ? a = a.value : "boolean" === typeof a.value ? a = a.value : "number" === typeof a.value ? a = a.value : "RegExp" === typeof a.value ? (a = this[typeof a.value](a), a = a.regex.pattern) : a = null;
-    console.log("value", a);
-    return {value:a};
+    var b;
+    "string" === typeof a.value ? b = a.value : "boolean" === typeof a.value ? b = a.value : "number" === typeof a.value ? b = a.value : "RegExp" === typeof a.value ? (b = this[typeof a.value](a), b = b.regex.pattern) : b = null;
+    console.log("value", b);
+    return {type:a.type, value:b};
   };
   b.RegExp = function(a) {
     console.log("RegExp", a);
@@ -9153,23 +10319,21 @@ Entry.PyToBlockParser = function(b) {
     return {id:b, params:d, body:a};
   };
   b.ExpressionStatement = function(a) {
-    console.log("ExpressionStatement", a);
-    a = this[a.expression.type](a.expression);
-    console.log("ExpressionStatement", a);
-    console.log("expression", a);
-    a = String(a.callee.object.name).concat(".").concat(a.callee.property.name);
-    console.log("ts", a);
-    a = this.blockSyntax[a];
-    console.log("block", a);
-    return {block:a};
+    var b = this[a.expression.type](a.expression);
+    return {type:a.type, expression:b};
   };
   b.BlockStatement = function(a) {
     console.log("BlockStatement", a);
     var b = [], d;
     for (d in a.body) {
-      a = this[statement.type](statement), b.push(a);
+      var e = a.body[d];
+      console.log("statement", e);
+      e = this[e.type](e);
+      console.log("body222", e);
+      b.push(e);
     }
-    return {body:b};
+    console.log("bodies", b);
+    return {type:a.type, body:b};
   };
   b.EmptyStatement = function(a) {
     console.log("EmptyStatement", a);
@@ -9205,9 +10369,26 @@ Entry.PyToBlockParser = function(b) {
   };
   b.IfStatement = function(a) {
     console.log("IfStatement", a);
-    var b = this[a.test.type](a.test), d = this[a.consequent.type](a.consequent);
-    a = null === a.alternate ? null : this[a.alternate.type](a.alternate);
-    return {test:b, consequent:d, alternate:a};
+    var b = this[a.test.type](a.test), d = {body:[]};
+    console.log("vvvv", a.consequent);
+    for (var e in a.consequent.body) {
+      var f = a.consequent.body[e];
+      console.log("body", f);
+      var g = this[f.body.type](f.body);
+      console.log("ccccc", g);
+      d.body.push(g);
+    }
+    g = {body:[]};
+    if (null === a.alternate) {
+      g = null;
+    } else {
+      for (e in a.alternate.body) {
+        f = a.alternate.body[e], f = this[f.body.type](f.body), g.body.push(f);
+      }
+    }
+    console.log("consequent", d);
+    console.log("alternate", g);
+    return {test:b, consequent:d, alternate:g};
   };
   b.SwitchStatement = function(a) {
     console.log("SwitchStatement", a);
@@ -9246,9 +10427,10 @@ Entry.PyToBlockParser = function(b) {
   };
   b.WhileStatement = function(a) {
     console.log("WhileStatement", a);
-    var b = this[a.test.type](a.test);
-    a = this[a.body.type](a.body);
-    return {test:b, body:a};
+    var b = this[a.test.type](a.test), d = this[a.body.type](a.body);
+    console.log("test11", b);
+    console.log("body11", d);
+    return {type:a.type, test:b, body:d};
   };
   b.DoWhileStatement = function(a) {
     console.log("DoWhileStatement", a);
@@ -9260,6 +10442,22 @@ Entry.PyToBlockParser = function(b) {
     e = null === a.update ? null : this[a.update.type](a.update);
     a = this[a.body.type](a.body);
     return {init:b, test:d, update:e, body:a};
+  };
+  b.ForStatement = function(a) {
+    console.log("ForStatement", a);
+    var b;
+    if (null === a.init) {
+      b = null;
+    } else {
+      this[a.init.type](a.init);
+    }
+    var d;
+    d = null === a.test ? null : this[a.test.type](a.test);
+    var e;
+    e = null === a.update ? null : this[a.update.type](a.update);
+    var f = this[a.body.type](a.body);
+    console.log("body", f);
+    return {type:a.type, init:b, test:d, update:e, body:statement};
   };
   b.ForInStatement = function(a) {
     console.log("ForInStatement", a);
@@ -9275,16 +10473,21 @@ Entry.PyToBlockParser = function(b) {
   };
   b.VariableDeclaration = function(a) {
     console.log("VariableDeclaration", a);
-    for (var b in a.declarations) {
-      var d = a.declarations[b], d = this[d.type](d);
-      (void 0).push(d);
+    var b = [], d;
+    for (d in a.declarations) {
+      var e = a.declarations[d], e = this[e.type](e);
+      console.log("declaration", e);
+      b.push(e);
     }
-    return {declarations:void 0, kind:"var"};
+    console.log("declarations", b);
+    return {declarations:b, kind:"var"};
   };
   b.VariableDeclarator = function(a) {
     console.log("VariableDeclarator", a);
     var b = a.id;
     a = null === a.init ? null : this[a.init.type](a.init);
+    console.log("id", b);
+    console.log("init", a);
     return {id:b, init:a};
   };
   b.ThisExpression = function(a) {
@@ -9310,12 +10513,12 @@ Entry.PyToBlockParser = function(b) {
       var d = a.properties[b], d = this[d.type](d);
       (void 0).push(d);
     }
-    return {properties:void 0};
+    return {type:a.type, properties:void 0};
   };
   b.Property = function(a) {
     console.log("Property", a);
     var b = this[a.key.type](a.key), d = this[a.value.type](a.value);
-    return {key:b, value:d, kind:a.kind};
+    return {type:a.type, key:b, value:d, kind:a.kind};
   };
   b.FunctionExpression = function(a) {
     console.log("FunctionExpression", a);
@@ -9349,9 +10552,8 @@ Entry.PyToBlockParser = function(b) {
       default:
         b = null;
     }
-    var d = a.prefix;
-    a = this[a.argument.type](a.argument);
-    return {operator:b, perfix:d, argument:a};
+    var d = a.prefix, e = this[a.argument.type](a.argument);
+    return {type:a.type, operator:b, prefix:d, argument:e};
   };
   b.UpdateExpression = function(a) {
     console.log("UpdateExpression", a);
@@ -9367,7 +10569,7 @@ Entry.PyToBlockParser = function(b) {
         b = null;
     }
     var d = this[a.argument.type](a.argument);
-    return {operator:b, perfix:a.prefix, argument:d};
+    return {operator:b, prefix:a.prefix, argument:d};
   };
   b.BinaryExpression = function(a) {
     console.log("BinaryExpression", a);
@@ -9510,8 +10712,10 @@ Entry.PyToBlockParser = function(b) {
   };
   b.MemberExpression = function(a) {
     console.log("MemberExpression", a);
-    var b = this[a.object.type](a.object), d = this[a.property.type](a.property);
-    return {type:a.type, object:b, property:d, computed:a.computed};
+    var b = this[a.object.type](a.object), d = this[a.property.type](a.property), e = a.computed;
+    console.log("object", b);
+    console.log("property", d);
+    return {type:a.type, object:b, property:d, computed:e};
   };
   b.ConditionalExpression = function(a) {
     console.log("ConditionalExpression", a);
@@ -9524,12 +10728,14 @@ Entry.PyToBlockParser = function(b) {
   };
   b.CallExpression = function(a) {
     console.log("CallExpression", a);
-    var b = this[a.callee.type](a.callee), d;
-    for (d in a.arguments) {
-      var e = a.arguments[d], e = this[e.type](e);
-      (void 0).push(e);
+    var b = this[a.callee.type](a.callee), d = [], e;
+    for (e in a.arguments) {
+      var f = a.arguments[e], f = this[f.type](f);
+      d.push(f);
     }
-    return {type:a.type, callee:b, arguments:void 0};
+    console.log("callee", b);
+    console.log("arguments", d);
+    return {type:a.type, callee:b, arguments:d};
   };
   b.NewExpression = function(a) {
     console.log("NewExpression", a);
@@ -9782,17 +10988,20 @@ Entry.Popup.prototype.resize = function(b) {
 };
 Entry.popupHelper = function(b) {
   this.popupList = {};
-  this.nowPopup;
+  this.nowContent;
   b && (window.popupHelper = null);
   Entry.assert(!window.popupHelper, "Popup exist");
-  var a = ["entryPopupHelperTopSpan", "entryPopupHelperBottomSpan", "entryPopupHelperLeftSpan", "entryPopupHelperRightSpan"];
+  var a = ["confirm", "spinner"], c = ["entryPopupHelperTopSpan", "entryPopupHelperBottomSpan", "entryPopupHelperLeftSpan", "entryPopupHelperRightSpan"];
   this.body_ = Entry.Dom("div", {classes:["entryPopup", "hiddenPopup", "popupHelper"]});
+  var d = this;
   this.body_.bindOnClick(function(b) {
-    var d = $(b.target);
-    a.forEach(function(a) {
-      d.hasClass(a) && this.popup.hide();
-    }.bind(this));
-    b.target == this && this.popup.hide();
+    if (!(d.nowContent && -1 < a.indexOf(d.nowContent.prop("type")))) {
+      var f = $(b.target);
+      c.forEach(function(a) {
+        f.hasClass(a) && this.popup.hide();
+      }.bind(this));
+      b.target == this && this.popup.hide();
+    }
   });
   window.popupHelper = this;
   this.body_.prop("popup", this);
@@ -9810,52 +11019,49 @@ Entry.popupHelper.prototype.clearPopup = function() {
   }
 };
 Entry.popupHelper.prototype.addPopup = function(b, a) {
-  var c = Entry.Dom("div"), d = Entry.Dom("div", {class:"entryPopupHelperTitle"}), e = Entry.Dom("div", {class:"entryPopupHelperCloseButton"});
-  e.bindOnClick(function() {
-    this.hide();
+  var c = Entry.Dom("div"), d = Entry.Dom("div", {class:"entryPopupHelperCloseButton"});
+  d.bindOnClick(function() {
+    a.closeEvent ? a.closeEvent(this) : this.hide();
   }.bind(this));
-  var f = Entry.Dom("div", {class:"entryPopupHelperWrapper"});
-  f.append(e);
-  f.append(d);
-  c.append(f);
-  c.popupWrapper_ = f;
-  d.text(a.title);
-  "function" === typeof a.setPopupLayout && (a.setPopupLayout(c), c.prop("popup", a));
+  var e = Entry.Dom("div", {class:"entryPopupHelperWrapper"});
+  e.append(d);
+  a.title && (d = Entry.Dom("div", {class:"entryPopupHelperTitle"}), e.append(d), d.text(a.title));
+  c.addClass(b);
+  c.append(e);
+  c.popupWrapper_ = e;
+  c.prop("type", a.type);
+  "function" === typeof a.setPopupLayout && a.setPopupLayout(c);
   this.popupList[b] = c;
 };
 Entry.popupHelper.prototype.hasPopup = function(b) {
   return !!this.popupList[b];
 };
-Entry.popupHelper.prototype.remove = function() {
-  var b = this.nowPopup.prop("popup");
-  if (b && "onRemove" in b) {
-    b.onRemove();
-  }
-  Entry.removeElement(this.body_);
-  window.popupHelper = null;
+Entry.popupHelper.prototype.setPopup = function(b) {
+};
+Entry.popupHelper.prototype.remove = function(b) {
+  0 < this.window_.children().length && this.window_.children().remove();
+  this.window_.remove();
+  delete this.popupList[b];
+  this.nowContent = void 0;
+  this.body_.addClass("hiddenPopup");
 };
 Entry.popupHelper.prototype.resize = function(b) {
 };
 Entry.popupHelper.prototype.show = function(b) {
   0 < this.window_.children().length && this.window_.children().detach();
-  this.nowPopup = this.popupList[b];
-  this.window_.append(this.nowPopup);
-  if ((b = this.nowPopup.prop("popup")) && "onShow" in b) {
-    b.onShow();
-  }
+  this.window_.append(this.popupList[b]);
+  this.nowContent = this.popupList[b];
   this.body_.removeClass("hiddenPopup");
 };
 Entry.popupHelper.prototype.hide = function() {
-  var b = this.nowPopup.prop("popup");
-  if (b && "onHide" in b) {
-    b.onHide();
-  }
+  this.nowContent = void 0;
   this.body_.addClass("hiddenPopup");
 };
 Entry.getStartProject = function(b) {
   return {category:"\uae30\ud0c0", scenes:[{name:"\uc7a5\uba74 1", id:"7dwq"}], variables:[{name:"\ucd08\uc2dc\uacc4", id:"brih", visible:!1, value:"0", variableType:"timer", x:150, y:-70, array:[], object:null, isCloud:!1}, {name:"\ub300\ub2f5", id:"1vu8", visible:!1, value:"0", variableType:"answer", x:150, y:-100, array:[], object:null, isCloud:!1}], objects:[{id:"7y0y", name:"\uc5d4\ud2b8\ub9ac\ubd07", script:[[{type:"length_of_string", x:200, y:140, params:[{type:"length_of_string"}]}], [{type:"when_run_button_click", 
   x:40, y:240}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"repeat_basic", statements:[[{type:"move_direction"}, {type:"move_x"}, {type:"move_y"}, {type:"stop_repeat"}]]}, {type:"stop_repeat"}, {type:"move_direction"}]], selectedPictureId:"vx80", objectType:"sprite", rotateMethod:"free", scene:"7dwq", sprite:{sounds:[{duration:1.3, ext:".mp3", id:"8el5", fileurl:b + "media/bark.mp3", name:"\uac15\uc544\uc9c0 \uc9d6\ub294\uc18c\ub9ac"}], pictures:[{id:"vx80", fileurl:b + 
-  "media/entrybot1.png", name:"\uc5d4\ud2b8\ub9ac\ubd07_\uac77\uae301", scale:100, dimension:{width:284, height:350}}, {id:"4t48", fileurl:b + "media/entrybot2.png", name:"\uc5d4\ud2b8\ub9ac\ubd07_\uac77\uae302", scale:100, dimension:{width:284, height:350}}]}, entity:{x:0, y:0, regX:142, regY:175, scaleX:.3154574132492113, scaleY:.3154574132492113, rotation:0, direction:90, width:284, height:350, visible:!0}, lock:!1, active:!0}], speed:60};
+  "media/entrybot1.png", name:"\uc5d4\ud2b8\ub9ac\ubd07_\uac77\uae301", scale:100, dimension:{width:284, height:350}}, {id:"vx80", fileurl:b + "media/entrybot1.png", name:Lang.Blocks.walking_entryBot + "1", scale:100, dimension:{width:284, height:350}}, {id:"4t48", fileurl:b + "media/entrybot2.png", name:Lang.Blocks.walking_entryBot + "2", scale:100, dimension:{width:284, height:350}}]}, entity:{x:0, y:0, regX:142, regY:175, scaleX:.3154574132492113, scaleY:.3154574132492113, rotation:0, direction:90, 
+  width:284, height:350, visible:!0}, lock:!1, active:!0}], speed:60};
 };
 Entry.PropertyPanel = function() {
   this.modes = {};
@@ -9874,17 +11080,21 @@ Entry.PropertyPanel = function() {
     this.splitter = d;
   };
   b.addMode = function(a, b) {
-    var d = b.getView(), d = Entry.Dom(d, {parent:this._contentView}), e = Entry.Dom("<div>" + a + "</div>", {classes:["propertyTabElement", "propertyTab" + a], parent:this._tabView}), f = this;
-    e.bindOnClick(function() {
+    var d = b.getView(), d = Entry.Dom(d, {parent:this._contentView}), e = Entry.Dom("<div>" + Lang.Menus[a] + "</div>", {classes:["propertyTabElement", "propertyTab" + a], parent:this._tabView}), f = this;
+    e.bind("click", function() {
       f.select(a);
     });
-    this.modes[a] && (this.modes[a].tabDom.remove(), this.modes[a].contentDom.remove());
+    this.modes[a] && (this.modes[a].tabDom.remove(), this.modes[a].contentDom.remove(), "hw" == a && ($(this.modes).removeClass(".propertyTabhw"), $(".propertyTabhw").unbind("dblclick")));
     this.modes[a] = {obj:b, tabDom:e, contentDom:d};
+    "hw" == a && $(".propertyTabhw").bind("dblclick", function() {
+      Entry.dispatchEvent("hwModeChange");
+    });
   };
   b.resize = function(a) {
     this._view.css({width:a + "px", top:9 * a / 16 + 123 - 22 + "px"});
     430 <= a ? this._view.removeClass("collapsed") : this._view.addClass("collapsed");
-    this.modes[this.selected].obj.resize();
+    Entry.dispatchEvent("windowResized");
+    (a = this.modes[this.selected].obj.resize) && "hw" != this.selected ? a() : "hw" == this.selected && this.modes.hw.obj.listPorts ? this.modes[this.selected].obj.resizeList() : "hw" == this.selected && this.modes[this.selected].obj.resize();
   };
   b.select = function(a) {
     for (var b in this.modes) {
@@ -9896,8 +11106,7 @@ Entry.PropertyPanel = function() {
     b = this.modes[a];
     b.tabDom.addClass("selected");
     b.contentDom.removeClass("entryHidden");
-    b.obj.resize();
-    b.obj.visible = !0;
+    b.obj.resize && b.obj.resize();
     this.selected = a;
   };
   b.initializeSplitter = function(a) {
@@ -9920,10 +11129,12 @@ Entry.init = function(b, a) {
   Entry.assert("object" === typeof a, "Init option is not object");
   this.events_ = {};
   this.interfaceState = {menuWidth:264};
-  Entry.Utils.bindGlobalEvent(["resize", "mousedown", "mousemove", "keydown", "keyup"]);
+  Entry.Utils.bindGlobalEvent("resize mousedown mousemove keydown keyup dispose".split(" "));
   this.options = a;
   this.parseOptions(a);
   this.mediaFilePath = (a.libDir ? a.libDir : "/lib") + "/entryjs/images/";
+  this.defaultPath = a.defaultDir || "";
+  this.blockInjectPath = a.blockInjectDir || "";
   "workspace" == this.type && this.isPhone() && (this.type = "phone");
   this.initialize_();
   this.view_ = b;
@@ -9972,6 +11183,7 @@ Entry.initialize_ = function() {
   this.propertyPanel = new Entry.PropertyPanel;
   this.container = new Entry.Container;
   this.helper = new Entry.Helper;
+  this.youtube = new Entry.Youtube;
   this.variableContainer = new Entry.VariableContainer;
   this.commander = new Entry.Commander(this.type);
   this.scene = new Entry.Scene;
@@ -9993,6 +11205,7 @@ Entry.createDom = function(b, a) {
     a), d = Entry.createElement("div"), b.appendChild(d), this.engineView = d, this.engine.generateView(this.engineView, a), c = Entry.createElement("canvas"), c.addClass("entryCanvasPhone"), c.id = "entryCanvas", c.width = 640, c.height = 360, d.insertBefore(c, this.engine.footerView_), this.canvas_ = c, this.stage.initStage(this.canvas_), c = Entry.createElement("div"), b.appendChild(c), this.containerView = c, this.container.generateView(this.containerView, a), c = Entry.createElement("div"), 
     b.appendChild(c), this.playgroundView = c, this.playground.generateView(this.playgroundView, a));
   } else {
+    Entry.documentMousedown.attach(this, this.cancelObjectEdit);
     var c = Entry.createElement("div");
     b.appendChild(c);
     this.sceneView = c;
@@ -10026,15 +11239,13 @@ Entry.createDom = function(b, a) {
     this.propertyPanel.generateView(b, a);
     this.containerView = c;
     this.container.generateView(this.containerView, a);
-    this.propertyPanel.addMode("container", this.container);
-    this.helper.generateView(this.containerView, a);
-    this.propertyPanel.addMode("helper", this.helper);
-    this.propertyPanel.select("container");
     c = Entry.createElement("div");
     b.appendChild(c);
     this.playgroundView = c;
     this.playground.generateView(this.playgroundView, a);
-    this.helper.bindWorkspace(this.playground.mainWorkspace);
+    this.propertyPanel.addMode("object", this.container);
+    this.propertyPanel.addMode("helper", this.helper);
+    this.propertyPanel.select("object");
   }
 };
 Entry.start = function(b) {
@@ -10074,15 +11285,6 @@ Entry.parseOptions = function(b) {
 Entry.initFonts = function(b) {
   this.fonts = b;
   b || (this.fonts = []);
-  var a = {custom:{families:[], urls:[]}};
-  for (b = 0;b < this.fonts.length;b++) {
-    var c = this.fonts[b];
-    a.custom.families.push(c.family);
-    a.custom.urls.push(c.url);
-  }
-  setTimeout(function() {
-    WebFont.load(a);
-  }, 1E3);
 };
 Entry.Reporter = function(b) {
   this.projectId = this.userId = null;
@@ -10106,81 +11308,96 @@ Entry.Reporter.prototype.report = function(b) {
   }
 };
 Entry.Scene = function() {
+  var b = this;
   this.scenes_ = [];
   this.selectedScene = null;
-  this.maxCount = 10;
+  this.maxCount = 20;
+  $(window).on("resize", function(a) {
+    b.resize();
+  });
 };
+Entry.Scene.viewBasicWidth = 70;
 Entry.Scene.prototype.generateView = function(b, a) {
+  var c = this;
   this.view_ = b;
   this.view_.addClass("entryScene");
   if (!a || "workspace" == a) {
     this.view_.addClass("entrySceneWorkspace");
-    var c = Entry.createElement("ul");
-    c.addClass("entrySceneListWorkspace");
-    Entry.sceneEditable && $ && $(c).sortable({start:function(a, b) {
+    $(this.view_).on("mousedown", function(a) {
+      var b = $(this).offset(), d = $(window), h = a.pageX - b.left + d.scrollLeft();
+      a = a.pageY - b.top + d.scrollTop();
+      a = 40 - a;
+      b = -40 / 55;
+      d = $(c.selectedScene.view).find(".entrySceneRemoveButtonCoverWorkspace").offset().left;
+      !(h < d || h > d + 55) && a > 40 + b * (h - d) && (h = c.getNextScene()) && (h = $(h.view), $(document).trigger("mouseup"), h.trigger("mousedown"));
+    });
+    var d = Entry.createElement("ul");
+    d.addClass("entrySceneListWorkspace");
+    Entry.sceneEditable && $ && $(d).sortable({start:function(a, b) {
       b.item.data("start_pos", b.item.index());
       $(b.item[0]).clone(!0);
     }, stop:function(a, b) {
-      var c = b.item.data("start_pos"), g = b.item.index();
-      Entry.scene.moveScene(c, g);
+      var c = b.item.data("start_pos"), d = b.item.index();
+      Entry.scene.moveScene(c, d);
     }, axis:"x", tolerance:"pointer"});
-    this.view_.appendChild(c);
-    this.listView_ = c;
-    Entry.sceneEditable && (c = Entry.createElement("span"), c.addClass("entrySceneElementWorkspace"), c.addClass("entrySceneAddButtonWorkspace"), c.bindOnClick(function(a) {
+    this.view_.appendChild(d);
+    this.listView_ = d;
+    Entry.sceneEditable && (d = Entry.createElement("span"), d.addClass("entrySceneElementWorkspace"), d.addClass("entrySceneAddButtonWorkspace"), d.bindOnClick(function(a) {
       Entry.engine.isState("run") || Entry.scene.addScene();
-    }), this.view_.appendChild(c), this.addButton_ = c);
+    }), this.view_.appendChild(d), this.addButton_ = d);
   }
 };
 Entry.Scene.prototype.generateElement = function(b) {
-  var a = Entry.createElement("li", b.id);
-  a.addClass("entrySceneElementWorkspace");
-  a.addClass("entrySceneButtonWorkspace");
-  a.bindOnClick(function(a) {
+  var a = this, c = Entry.createElement("li", b.id);
+  c.addClass("entrySceneElementWorkspace");
+  c.addClass("entrySceneButtonWorkspace");
+  c.addClass("minValue");
+  $(c).on("mousedown", function(a) {
     Entry.engine.isState("run") ? a.preventDefault() : Entry.scene.selectScene(b);
   });
-  var c = Entry.createElement("input");
-  c.addClass("entrySceneFieldWorkspace");
-  c.value = b.name;
-  c.style.width = Entry.computeInputWidth(c);
-  Entry.sceneEditable || (c.disabled = "disabled");
-  var d = Entry.createElement("span");
-  d.addClass("entrySceneLeftWorkspace");
-  a.appendChild(d);
-  d = Entry.createElement("span");
-  d.addClass("entrySceneInputCover");
-  a.appendChild(d);
-  c.onkeyup = function(a) {
-    a = a.keyCode;
-    Entry.isArrowOrBackspace(a) || (b.name = this.value, c.style.width = Entry.computeInputWidth(this), 13 == a && this.blur(), 9 < this.value.length && (this.value = this.value.substring(0, 10), this.blur()));
+  var d = Entry.createElement("input");
+  d.addClass("entrySceneFieldWorkspace");
+  d.value = b.name;
+  Entry.sceneEditable || (d.disabled = "disabled");
+  var e = Entry.createElement("span");
+  e.addClass("entrySceneLeftWorkspace");
+  c.appendChild(e);
+  var f = Entry.createElement("span");
+  f.addClass("entrySceneInputCover");
+  f.style.width = Entry.computeInputWidth(b.name);
+  c.appendChild(f);
+  b.inputWrapper = f;
+  d.onkeyup = function(c) {
+    c = c.keyCode;
+    Entry.isArrowOrBackspace(c) || (b.name = this.value, f.style.width = Entry.computeInputWidth(b.name), a.resize(), 13 == c && this.blur(), 9 < this.value.length && (this.value = this.value.substring(0, 10), this.blur()));
   };
-  c.onblur = function(a) {
-    c.value = this.value;
+  d.onblur = function(a) {
+    d.value = this.value;
     b.name = this.value;
-    c.style.width = Entry.computeInputWidth(this);
+    f.style.width = Entry.computeInputWidth(b.name);
   };
-  d.appendChild(c);
-  d.nameField = c;
-  d = Entry.createElement("span");
-  d.addClass("entrySceneRemoveButtonCoverWorkspace");
-  a.appendChild(d);
+  f.appendChild(d);
+  e = Entry.createElement("span");
+  e.addClass("entrySceneRemoveButtonCoverWorkspace");
+  c.appendChild(e);
   if (Entry.sceneEditable) {
-    var e = Entry.createElement("button");
-    e.addClass("entrySceneRemoveButtonWorkspace");
-    e.innerHTML = "x";
-    e.scene = b;
-    e.bindOnClick(function(a) {
+    var g = Entry.createElement("button");
+    g.addClass("entrySceneRemoveButtonWorkspace");
+    g.innerHTML = "x";
+    g.scene = b;
+    g.bindOnClick(function(a) {
       a.stopPropagation();
       Entry.engine.isState("run") || confirm(Lang.Workspace.will_you_delete_scene) && Entry.scene.removeScene(this.scene);
     });
-    d.appendChild(e);
+    e.appendChild(g);
   }
-  Entry.Utils.disableContextmenu(a);
-  $(a).on("contextmenu", function() {
+  Entry.Utils.disableContextmenu(c);
+  $(c).on("contextmenu", function() {
     Entry.ContextMenu.show([{text:Lang.Workspace.duplicate_scene, callback:function() {
       Entry.scene.cloneScene(b);
     }}], "workspace-contextmenu");
   });
-  return b.view = a;
+  return b.view = c;
 };
 Entry.Scene.prototype.updateView = function() {
   if (!Entry.type || "workspace" == Entry.type) {
@@ -10194,6 +11411,7 @@ Entry.Scene.prototype.updateView = function() {
     }
     this.addButton_ && (this.getScenes().length < this.maxCount ? this.addButton_.removeClass("entryRemove") : this.addButton_.addClass("entryRemove"));
   }
+  this.resize();
 };
 Entry.Scene.prototype.addScenes = function(b) {
   if ((this.scenes_ = b) && 0 !== b.length) {
@@ -10232,15 +11450,17 @@ Entry.Scene.prototype.removeScene = function(b) {
 };
 Entry.Scene.prototype.selectScene = function(b) {
   b = b || this.getScenes()[0];
-  this.selectedScene && this.selectedScene.id == b.id || (Entry.engine.isState("run") && Entry.container.resetSceneDuringRun(), this.selectedScene = b, Entry.container.setCurrentObjects(), Entry.stage.objectContainers && 0 !== Entry.stage.objectContainers.length && Entry.stage.selectObjectContainer(b), (b = Entry.container.getCurrentObjects()[0]) && "minimize" != Entry.type ? Entry.container.selectObject(b.id) : (Entry.stage.selectObject(null), Entry.playground.flushPlayground(), Entry.variableContainer.updateList()), 
-  Entry.container.listView_ || Entry.stage.sortZorder(), Entry.container.updateListView(), this.updateView());
+  this.selectedScene && this.selectedScene.id == b.id || (Entry.engine.isState("run") && Entry.container.resetSceneDuringRun(), this.selectedScene = b, Entry.container.setCurrentObjects(), Entry.stage.objectContainers && 0 !== Entry.stage.objectContainers.length && Entry.stage.selectObjectContainer(b), (b = Entry.container.getCurrentObjects()[0]) && "minimize" != Entry.type ? (Entry.container.selectObject(b.id), Entry.playground.refreshPlayground()) : (Entry.stage.selectObject(null), Entry.playground.flushPlayground(), 
+  Entry.variableContainer.updateList()), Entry.container.listView_ || Entry.stage.sortZorder(), Entry.container.updateListView(), this.updateView());
 };
 Entry.Scene.prototype.toJSON = function() {
   for (var b = [], a = this.getScenes().length, c = 0;c < a;c++) {
-    var d = this.getScenes()[c], e = d.view;
+    var d = this.getScenes()[c], e = d.view, f = d.inputWrapper;
     delete d.view;
+    delete d.inputWrapper;
     b.push(JSON.parse(JSON.stringify(d)));
     d.view = e;
+    d.inputWrapper = f;
   }
   return b;
 };
@@ -10284,6 +11504,29 @@ Entry.Scene.prototype.cloneScene = function(b) {
       Entry.container.addCloneObject(b[c], a.id);
     }
   }
+};
+Entry.Scene.prototype.resize = function() {
+  var b = this.getScenes(), a = this.selectedScene, c = b[0];
+  if (0 !== b.length && c) {
+    var d = $(c.view).offset().left, c = parseFloat($(a.view).css("margin-left")), e = $(this.view_).width() - d, f = 0, g;
+    for (g in b) {
+      var d = b[g], h = d.view;
+      h.addClass("minValue");
+      $(h).removeProp("style");
+      $(d.inputWrapper).width(Entry.computeInputWidth(d.name));
+      h = $(h);
+      f = f + h.width() + c;
+    }
+    if (f > e) {
+      for (g in e -= $(a.view).width(), c = e / (b.length - 1) - (Entry.Scene.viewBasicWidth + c), b) {
+        d = b[g], a.id != d.id ? (d.view.removeClass("minValue"), $(d.inputWrapper).width(c)) : d.view.addClass("minValue");
+      }
+    }
+  }
+};
+Entry.Scene.prototype.getNextScene = function() {
+  var b = this.getScenes();
+  return b[b.indexOf(this.selectedScene) + 1];
 };
 Entry.Script = function(b) {
   this.entity = b;
@@ -10505,16 +11748,15 @@ Entry.Stage.prototype.unloadDialog = function(b) {
 };
 Entry.Stage.prototype.sortZorder = function() {
   for (var b = Entry.container.getCurrentObjects(), a = this.selectedObjectContainer, c = 0, d = b.length - 1;0 <= d;d--) {
-    for (var e = b[d], f = e.clonedEntities, g = 0, h = f.length;g < h;g++) {
-      a.setChildIndex(f[g].object, c++);
+    for (var e = b[d], f = e.entity, e = e.clonedEntities, g = 0, h = e.length;g < h;g++) {
+      e[g].shape && a.setChildIndex(e[g].shape, c++), a.setChildIndex(e[g].object, c++);
     }
-    e = e.entity;
-    e.shape && a.setChildIndex(e.shape, c++);
-    a.setChildIndex(e.object, c++);
+    f.shape && a.setChildIndex(f.shape, c++);
+    a.setChildIndex(f.object, c++);
   }
 };
 Entry.Stage.prototype.initCoordinator = function() {
-  var b = new createjs.Container, a = new createjs.Bitmap(Entry.mediaFilePath + "workspace_coordinate_v1.png");
+  var b = new createjs.Container, a = new createjs.Bitmap(Entry.mediaFilePath + "workspace_coordinate.png");
   a.scaleX = .5;
   a.scaleY = .5;
   a.x = -240;
@@ -10541,45 +11783,46 @@ Entry.Stage.prototype.updateObject = function() {
   this.handle.setDraggable(!0);
   if (!this.editEntity) {
     var b = this.selectedObject;
-    if (b && b.entity.getVisible()) {
+    if (b) {
       "textBox" == b.objectType ? this.handle.toggleCenter(!1) : this.handle.toggleCenter(!0);
       "free" == b.getRotateMethod() ? this.handle.toggleRotation(!0) : this.handle.toggleRotation(!1);
       this.handle.toggleDirection(!0);
       b.getLock() ? (this.handle.toggleRotation(!1), this.handle.toggleDirection(!1), this.handle.toggleResize(!1), this.handle.toggleCenter(!1), this.handle.setDraggable(!1)) : this.handle.toggleResize(!0);
       this.handle.setVisible(!0);
-      b = b.entity;
-      this.handle.setWidth(b.getScaleX() * b.getWidth());
-      this.handle.setHeight(b.getScaleY() * b.getHeight());
-      var a, c;
-      if ("textBox" == b.type) {
-        if (b.getLineBreak()) {
-          a = b.regX * b.scaleX, c = -b.regY * b.scaleY;
+      var a = b.entity;
+      this.handle.setWidth(a.getScaleX() * a.getWidth());
+      this.handle.setHeight(a.getScaleY() * a.getHeight());
+      var c, d;
+      if ("textBox" == a.type) {
+        if (a.getLineBreak()) {
+          c = a.regX * a.scaleX, d = -a.regY * a.scaleY;
         } else {
-          var d = b.getTextAlign();
-          c = -b.regY * b.scaleY;
-          switch(d) {
+          var e = a.getTextAlign();
+          d = -a.regY * a.scaleY;
+          switch(e) {
             case Entry.TEXT_ALIGN_LEFT:
-              a = -b.getWidth() / 2 * b.scaleX;
+              c = -a.getWidth() / 2 * a.scaleX;
               break;
             case Entry.TEXT_ALIGN_CENTER:
-              a = b.regX * b.scaleX;
+              c = a.regX * a.scaleX;
               break;
             case Entry.TEXT_ALIGN_RIGHT:
-              a = b.getWidth() / 2 * b.scaleX;
+              c = a.getWidth() / 2 * a.scaleX;
           }
         }
       } else {
-        a = (b.regX - b.width / 2) * b.scaleX, c = (b.height / 2 - b.regY) * b.scaleY;
+        c = (a.regX - a.width / 2) * a.scaleX, d = (a.height / 2 - a.regY) * a.scaleY;
       }
-      d = b.getRotation() / 180 * Math.PI;
-      this.handle.setX(b.getX() - a * Math.cos(d) - c * Math.sin(d));
-      this.handle.setY(-b.getY() - a * Math.sin(d) + c * Math.cos(d));
-      this.handle.setRegX((b.regX - b.width / 2) * b.scaleX);
-      this.handle.setRegY((b.regY - b.height / 2) * b.scaleY);
-      this.handle.setRotation(b.getRotation());
-      this.handle.setDirection(b.getDirection());
-      this.handle.render();
+      e = a.getRotation() / 180 * Math.PI;
+      this.handle.setX(a.getX() - c * Math.cos(e) - d * Math.sin(e));
+      this.handle.setY(-a.getY() - c * Math.sin(e) + d * Math.cos(e));
+      this.handle.setRegX((a.regX - a.width / 2) * a.scaleX);
+      this.handle.setRegY((a.regY - a.height / 2) * a.scaleY);
+      this.handle.setRotation(a.getRotation());
+      this.handle.setDirection(a.getDirection());
       this.objectUpdated = !0;
+      this.handle.setVisible(b.entity.getVisible());
+      b.entity.getVisible() && this.handle.render();
     } else {
       this.handle.setVisible(!1);
     }
@@ -10728,7 +11971,7 @@ Entry.Stage.prototype.getObjectContainerByScene = function(b) {
 Entry.Stage.prototype.moveSprite = function(b) {
   if (this.selectedObject && Entry.stage.focused && !this.selectedObject.getLock()) {
     var a = 5;
-    b.shiftKey && (a = 10);
+    b.shiftKey && (a = 1);
     var c = this.selectedObject.entity;
     switch(b.keyCode) {
       case 38:
@@ -10849,6 +12092,35 @@ Entry.Toast.prototype.alert = function(b, a, c) {
     }, 20);
   }, 5E3);
 };
+Entry.TvCast = function(b) {
+  this.generateView(b);
+};
+p = Entry.TvCast.prototype;
+p.init = function(b) {
+  this.tvCastHash = b;
+};
+p.generateView = function(b) {
+  var a = Entry.createElement("div");
+  a.addClass("entryContainerMovieWorkspace");
+  a.addClass("entryHidden");
+  this.movieContainer = a;
+  a = Entry.createElement("iframe");
+  a.setAttribute("id", "tvCastIframe");
+  a.setAttribute("allowfullscreen", "");
+  a.setAttribute("frameborder", 0);
+  a.setAttribute("src", b);
+  this.movieFrame = a;
+  this.movieContainer.appendChild(this.movieFrame);
+};
+p.getView = function() {
+  return this.movieContainer;
+};
+p.resize = function() {
+  var b = document.getElementById("entryContainerWorkspaceId"), a = document.getElementById("tvCastIframe");
+  w = b.offsetWidth;
+  a.width = w + "px";
+  a.height = 9 * w / 16 + "px";
+};
 Entry.BlockDriver = function() {
 };
 (function(b) {
@@ -10860,17 +12132,34 @@ Entry.BlockDriver = function() {
     console.log((new Date).getTime() - a.getTime());
   };
   b._convertBlock = function(a) {
-    var b = Blockly.Blocks[a], d = (new Entry.BlockMockup(b)).toJSON();
-    d.func = Entry.block[a];
-    d.syntax = b.syntax;
-    if (b = EntryStatic.blockInfo[a]) {
-      d.class = b.class, d.isNotFor = b.isNotFor;
+    function b(a) {
+      var d = {type:a.getAttribute("type"), index:{}};
+      a = $(a).children();
+      if (!a) {
+        return d;
+      }
+      for (var e = 0;e < a.length;e++) {
+        var f = a[e], g = f.tagName, h = $(f).children()[0], u = f.getAttribute("name");
+        "value" === g ? "block" == h.nodeName && (d.params || (d.params = []), d.params.push(b(h)), d.index[u] = d.params.length - 1) : "field" === g && (d.params || (d.params = []), d.params.push(f.textContent), d.index[u] = d.params.length - 1);
+      }
+      return d;
     }
-    -1 < "NUMBER TRUE FALSE TEXT FUNCTION_PARAM_BOOLEAN FUNCTION_PARAM_STRING TRUE_UN".split(" ").indexOf(a.toUpperCase()) && (d.isPrimitive = !0);
-    Entry.block[a] = d;
+    var d = Blockly.Blocks[a], e = EntryStatic.blockInfo[a], f, g;
+    if (e && (f = e.class, g = e.isNotFor, e = e.xml)) {
+      var e = $.parseXML(e), h = b(e.childNodes[0])
+    }
+    h = (new Entry.BlockMockup(d, h, a)).toJSON();
+    h.class = f;
+    h.isNotFor = g;
+    h.syntax = d.syntax;
+    _.isEmpty(h.paramsKeyMap) && delete h.paramsKeyMap;
+    _.isEmpty(h.statementsKeyMap) && delete h.statementsKeyMap;
+    h.func = Entry.block[a];
+    -1 < "NUMBER TRUE FALSE TEXT FUNCTION_PARAM_BOOLEAN FUNCTION_PARAM_STRING TRUE_UN".split(" ").indexOf(a.toUpperCase()) && (h.isPrimitive = !0);
+    Entry.block[a] = h;
   };
 })(Entry.BlockDriver.prototype);
-Entry.BlockMockup = function(b) {
+Entry.BlockMockup = function(b, a, c) {
   this.templates = [];
   this.params = [];
   this.statements = [];
@@ -10878,30 +12167,54 @@ Entry.BlockMockup = function(b) {
   this.output = this.isNext = this.isPrev = !1;
   this.fieldCount = 0;
   this.events = {};
+  this.def = a || {};
+  this.paramsKeyMap = {};
+  this.statementsKeyMap = {};
+  this.definition = {params:[], type:this.def.type};
   this.simulate(b);
+  this.def = this.definition;
 };
 (function(b) {
   b.simulate = function(a) {
     a.init.call(this);
-    a.whenAdd && (this.events.whenBlockAdd || (this.events.whenBlockAdd = []), this.events.whenBlockAdd.push(a.whenAdd));
-    a.whenRemove && (this.events.whenBlockDestroy || (this.events.whenBlockDestroy = []), this.events.whenBlockDestroy.push(a.whenRemove));
+    a.whenAdd && (this.events.blockViewAdd || (this.events.blockViewAdd = []), this.events.blockViewAdd.push(a.whenAdd));
+    a.whenRemove && (this.events.blockViewDestroy || (this.events.blockViewDestroy = []), this.events.blockViewDestroy.push(a.whenRemove));
   };
   b.toJSON = function() {
-    var a = "";
-    this.output ? a = "Boolean" === this.output ? "basic_boolean_field" : "basic_string_field" : !this.isPrev && this.isNext ? a = "basic_event" : this.statements.length ? a = "basic_loop" : this.isPrev && this.isNext ? a = "basic" : this.isPrev && !this.isNext && (a = "basic_without_next");
-    return {color:this.color, skeleton:a, statements:this.statements, template:this.templates.filter(function(a) {
+    function a(b) {
+      if (b && (b = b.params)) {
+        for (var c = 0;c < b.length;c++) {
+          var d = b[c];
+          d && (delete d.index, a(d));
+        }
+      }
+    }
+    var b = "";
+    this.output ? b = "Boolean" === this.output ? "basic_boolean_field" : "basic_string_field" : !this.isPrev && this.isNext ? b = "basic_event" : 1 == this.statements.length ? b = "basic_loop" : 2 == this.statements.length ? b = "basic_double_loop" : this.isPrev && this.isNext ? b = "basic" : this.isPrev && !this.isNext && (b = "basic_without_next");
+    a(this.def);
+    var d = /dummy_/mi, e;
+    for (e in this.paramsKeyMap) {
+      d.test(e) && delete this.paramsKeyMap[e];
+    }
+    for (e in this.statementsKeyMap) {
+      d.test(e) && delete this.statementsKeyMap[e];
+    }
+    return {color:this.color, skeleton:b, statements:this.statements, template:this.templates.filter(function(a) {
       return "string" === typeof a;
-    }).join(" "), params:this.params, events:this.events};
+    }).join(" "), params:this.params, events:this.events, def:this.def, paramsKeyMap:this.paramsKeyMap, statementsKeyMap:this.statementsKeyMap};
   };
   b.appendDummyInput = function() {
     return this;
   };
   b.appendValueInput = function(a) {
+    this.def && this.def.index && (void 0 !== this.def.index[a] ? this.definition.params.push(this.def.params[this.def.index[a]]) : this.definition.params.push(null));
     this.params.push({type:"Block", accept:"stringMagnet"});
+    this._addToParamsKeyMap(a);
     this.templates.push(this.getFieldCount());
     return this;
   };
   b.appendStatementInput = function(a) {
+    this._addToStatementsKeyMap(a);
     this.statements.push({accept:"basic"});
   };
   b.setCheck = function(a) {
@@ -10912,9 +12225,11 @@ Entry.BlockMockup = function(b) {
     if (!a) {
       return this;
     }
-    "string" === typeof a && 0 < a.length ? b ? (a = {type:"Text", text:a, color:b}, this.params.push(a), this.templates.push(this.getFieldCount())) : this.templates.push(a) : a.constructor == Blockly.FieldIcon ? ("start" === a.type ? this.params.push({type:"Indicator", img:a.src_, size:17, position:{x:0, y:-2}}) : this.params.push({type:"Indicator", img:a.src_, size:12}), this.templates.push(this.getFieldCount())) : a.constructor == Blockly.FieldDropdown ? (this.params.push({type:"Dropdown", options:a.menuGenerator_, 
-    value:a.menuGenerator_[0][1], fontSize:11}), this.templates.push(this.getFieldCount())) : a.constructor == Blockly.FieldDropdownDynamic ? (this.params.push({type:"DropdownDynamic", value:null, menuName:a.menuName_, fontSize:11}), this.templates.push(this.getFieldCount())) : a.constructor == Blockly.FieldTextInput ? (this.params.push({type:"TextInput", value:10}), this.templates.push(this.getFieldCount())) : a.constructor == Blockly.FieldAngle ? (this.params.push({type:"Angle"}), this.templates.push(this.getFieldCount())) : 
-    a.constructor == Blockly.FieldKeydownInput ? (this.params.push({type:"Keyboard", value:81}), this.templates.push(this.getFieldCount())) : a.constructor == Blockly.FieldColour ? (this.params.push({type:"Color"}), this.templates.push(this.getFieldCount())) : console.log("else", a);
+    "string" === typeof a && 0 < a.length ? b ? (a = {type:"Text", text:a, color:b}, this.params.push(a), this._addToParamsKeyMap(), this.templates.push(this.getFieldCount()), this.def && this.def.index && void 0 !== this.def.index[b] ? this.definition.params.push(this.def.params[this.def.index[b]]) : this.definition.params.push(void 0)) : this.templates.push(a) : a.constructor == Blockly.FieldIcon ? ("start" === a.type ? this.params.push({type:"Indicator", img:a.src_, size:17, position:{x:0, y:-2}}) : 
+    this.params.push({type:"Indicator", img:a.src_, size:12}), this._addToParamsKeyMap(), this.templates.push(this.getFieldCount()), this.definition && this.definition.params.push(null)) : a.constructor == Blockly.FieldDropdown ? (this.params.push({type:"Dropdown", options:a.menuGenerator_, value:a.menuGenerator_[0][1], fontSize:11}), this._addToParamsKeyMap(b), this.templates.push(this.getFieldCount()), this.def && this.def.index && void 0 !== this.def.index[b] ? this.definition.params.push(this.def.params[this.def.index[b]]) : 
+    this.definition.params.push(void 0)) : a.constructor == Blockly.FieldDropdownDynamic ? (this.params.push({type:"DropdownDynamic", value:null, menuName:a.menuName_, fontSize:11}), this.templates.push(this.getFieldCount()), this.def && this.def.index && void 0 !== this.def.index[b] ? this.definition.params.push(this.def.params[this.def.index[b]]) : this.definition.params.push(void 0), this._addToParamsKeyMap(b)) : a.constructor == Blockly.FieldTextInput ? (this.params.push({type:"TextInput", value:10}), 
+    this.templates.push(this.getFieldCount()), this._addToParamsKeyMap(b)) : a.constructor == Blockly.FieldAngle ? (this.params.push({type:"Angle"}), this.templates.push(this.getFieldCount()), this.def && this.def.index && void 0 !== this.def.index[b] ? this.definition.params.push(this.def.params[this.def.index[b]]) : this.definition.params.push(null), this._addToParamsKeyMap(b)) : a.constructor == Blockly.FieldKeydownInput ? (this.params.push({type:"Keyboard", value:81}), this.templates.push(this.getFieldCount()), 
+    void 0 !== this.def.index[b] ? this.definition.params.push(this.def.params[this.def.index[b]]) : this.definition.params.push(void 0), this._addToParamsKeyMap(b)) : a.constructor == Blockly.FieldColour ? (this.params.push({type:"Color"}), this.templates.push(this.getFieldCount()), this._addToParamsKeyMap(b)) : console.log("else", a);
     return this;
   };
   b.setColour = function(a) {
@@ -10937,6 +12252,16 @@ Entry.BlockMockup = function(b) {
     this.fieldCount++;
     return "%" + this.fieldCount;
   };
+  b._addToParamsKeyMap = function(a) {
+    a = a ? a : "dummy_" + Entry.Utils.generateId();
+    var b = this.paramsKeyMap;
+    b[a] = Object.keys(b).length;
+  };
+  b._addToStatementsKeyMap = function(a) {
+    a = a ? a : "dummy_" + Entry.Utils.generateId();
+    var b = this.statementsKeyMap;
+    b[a] = Object.keys(b).length;
+  };
 })(Entry.BlockMockup.prototype);
 Entry.ContextMenu = {};
 (function(b) {
@@ -10950,20 +12275,22 @@ Entry.ContextMenu = {};
   b.show = function(a, b) {
     this.dom || this.createDom();
     if (0 !== a.length) {
+      var d = this;
       void 0 !== b && (this._className = b, this.dom.addClass(b));
-      var d = this.dom;
-      d.empty();
-      for (var e = 0, f = a.length;e < f;e++) {
-        var g = a[e], h = g.text, k = !1 !== g.enable, m = Entry.Dom("li", {class:k ? "menuAble" : "menuDisable", parent:d});
-        m.text(h);
-        k && g.callback && function(a, b) {
+      var e = this.dom;
+      e.empty();
+      for (var f = 0, g = a.length;f < g;f++) {
+        var h = a[f], k = h.text, l = !1 !== h.enable, n = Entry.Dom("li", {class:l ? "menuAble" : "menuDisable", parent:e});
+        n.text(k);
+        l && h.callback && function(a, b) {
           a.mousedown(function(a) {
             a.preventDefault();
-            b();
+            d.hide();
+            b(a);
           });
-        }(m, g.callback);
+        }(n, h.callback);
       }
-      d.removeClass("entryRemove");
+      e.removeClass("entryRemove");
       this.position(Entry.mouseCoordinate);
     }
   };
@@ -10981,7 +12308,7 @@ Entry.ContextMenu = {};
     this._className && (this.dom.removeClass(this._className), delete this._className);
   };
 })(Entry.ContextMenu);
-Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BLOCK_RENDER_MODEL:9, BOX_MODEL:10, THREAD_MODEL:11, DRAG_INSTANCE:12, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1};
+Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BLOCK_RENDER_MODEL:9, BOX_MODEL:10, THREAD_MODEL:11, DRAG_INSTANCE:12, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1, BREAK:2, PASS:3};
 Entry.Utils = {};
 Entry.overridePrototype = function() {
   Number.prototype.mod = function(b) {
@@ -11082,7 +12409,7 @@ Entry.Utils.hslToHex = function(b) {
   return "#" + [c(Math.round(255 * d).toString(16)), c(Math.round(b).toString(16)), c(Math.round(e).toString(16))].join("");
 };
 Entry.Utils.bindGlobalEvent = function(b) {
-  void 0 === b && (b = ["resize", "mousedown", "mousemove", "keydown", "keyup"]);
+  void 0 === b && (b = "resize mousedown mousemove keydown keyup dispose".split(" "));
   !Entry.windowReszied && -1 < b.indexOf("resize") && (Entry.windowResized = new Entry.Event(window), $(window).on("resize", function(a) {
     Entry.windowResized.notify(a);
   }));
@@ -11104,6 +12431,9 @@ Entry.Utils.bindGlobalEvent = function(b) {
     var b = Entry.pressedKeys.indexOf(a.keyCode);
     -1 < b && Entry.pressedKeys.splice(b, 1);
     Entry.keyUpped.notify(a);
+  }));
+  !Entry.disposeEvent && -1 < b.indexOf("dispose") && (Entry.disposeEvent = new Entry.Event(window), Entry.documentMousedown && Entry.documentMousedown.attach(this, function(a) {
+    Entry.disposeEvent.notify(a);
   }));
 };
 Entry.Utils.makeActivityReporter = function() {
@@ -11147,6 +12477,9 @@ Entry.createElement = function(b, a) {
     });
   };
   return c;
+};
+Entry.makeAutolink = function(b) {
+  return b ? b.replace(/(http|https|ftp|telnet|news|irc):\/\/([-/.a-zA-Z0-9_~#%$?&=:200-377()][^)\]}]+)/gi, "<a href='$1://$2' target='_blank'>$1://$2</a>").replace(/([xA1-xFEa-z0-9_-]+@[xA1-xFEa-z0-9-]+.[a-z0-9-]+)/gi, "<a href='mailto:$1'>$1</a>") : "";
 };
 Entry.generateHash = function() {
   return ("0000" + (Math.random() * Math.pow(36, 4) << 0).toString(36)).substr(-4);
@@ -11284,7 +12617,7 @@ Entry.nodeListToArray = function(b) {
 Entry.computeInputWidth = function(b) {
   var a = document.createElement("span");
   a.className = "tmp-element";
-  a.innerHTML = b.value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  a.innerHTML = b.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   document.body.appendChild(a);
   b = a.offsetWidth;
   document.body.removeChild(a);
@@ -11390,6 +12723,20 @@ Entry.setBasicBrush = function(b) {
   b.brush = a;
   b.shape && (b.shape = null);
   b.shape = c;
+};
+Entry.setCloneBrush = function(b, a) {
+  var c = new createjs.Graphics;
+  c.thickness = a.thickness;
+  c.rgb = a.rgb;
+  c.opacity = a.opacity;
+  c.setStrokeStyle(c.thickness);
+  c.beginStroke("rgba(" + c.rgb.r + "," + c.rgb.g + "," + c.rgb.b + "," + c.opacity / 100 + ")");
+  var d = new createjs.Shape(c);
+  Entry.stage.selectedObjectContainer.addChild(d);
+  b.brush && (b.brush = null);
+  b.brush = c;
+  b.shape && (b.shape = null);
+  b.shape = d;
 };
 Entry.isFloat = function(b) {
   return /\d+\.{1}\d+/.test(b);
@@ -11512,6 +12859,7 @@ Entry.Utils.addBlockPattern = function(b, a) {
   }
   return d;
 };
+Entry.Utils.COLLISION = {NONE:0, UP:1, RIGHT:2, LEFT:3, DOWN:4};
 Entry.Model = function(b, a) {
   var c = Entry.Model;
   c.generateSchema(b);
@@ -11584,17 +12932,25 @@ Entry.Model = function(b, a) {
     return a;
   };
 })(Entry.Model);
-Entry.Func = function() {
-  this.id = Entry.generateHash();
-  this.content = new Entry.Code([[{type:"function_create", x:40, y:40}]]);
+Entry.Func = function(b) {
+  this.id = b ? b.id : Entry.generateHash();
+  this.content = b ? new Entry.Code(b.content) : new Entry.Code([[{type:"function_create", x:40, y:40}]]);
   this.block = null;
   this.hashMap = {};
-  var b = function() {
+  this.paramMap = {};
+  var a = function() {
   };
-  b.prototype = Entry.block.function_general;
-  b = new b;
-  b.changeEvent = new Entry.Event;
-  Entry.block["func_" + this.id] = b;
+  a.prototype = Entry.block.function_general;
+  a = new a;
+  a.changeEvent = new Entry.Event;
+  Entry.block["func_" + this.id] = a;
+  if (b) {
+    b = this.content._blockMap;
+    for (var c in b) {
+      Entry.Func.registerParamBlock(b[c].type);
+    }
+    Entry.Func.generateWsBlock(this);
+  }
   Entry.Func.registerFunction(this);
 };
 Entry.Func.threads = {};
@@ -11632,7 +12988,7 @@ Entry.Func.initEditView = function(b) {
   this._workspaceStateEvent = a.changeEvent.attach(this, this.endEdit);
 };
 Entry.Func.endEdit = function(b) {
-  this._funcChangeEvent.destroy();
+  this.unbindFuncChangeEvent();
   this._workspaceStateEvent.destroy();
   delete this._workspaceStateEvent;
   switch(b) {
@@ -11645,6 +13001,38 @@ Entry.Func.endEdit = function(b) {
 Entry.Func.save = function() {
   this.targetFunc.generateBlock(!0);
   Entry.variableContainer.saveFunction(this.targetFunc);
+};
+Entry.Func.syncFuncName = function(b) {
+  var a = 0, c = [], c = b.split(" "), d = "";
+  b = [];
+  b = Blockly.mainWorkspace.getAllBlocks();
+  for (var e = 0;e < b.length;e++) {
+    var f = b[e];
+    if ("function_general" === f.type) {
+      for (var g = [], g = f.inputList, h = 0;h < g.length;h++) {
+        f = g[h], 0 < f.fieldRow.length && f.fieldRow[0] instanceof Blockly.FieldLabel && void 0 != f.fieldRow[0].text_ && (d += f.fieldRow[0].text_, d += " ");
+      }
+      d = d.trim();
+      if (d === this.srcFName && this.srcFName.split(" ").length == c.length) {
+        for (d = 0;d < g.length;d++) {
+          if (f = g[d], 0 < f.fieldRow.length && f.fieldRow[0] instanceof Blockly.FieldLabel && void 0 != f.fieldRow[0].text_) {
+            if (void 0 === c[a]) {
+              g.splice(d, 1);
+              break;
+            } else {
+              f.fieldRow[0].text_ = c[a];
+            }
+            a++;
+          }
+        }
+      }
+      d = "";
+      a = 0;
+    }
+  }
+  a = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace);
+  Blockly.mainWorkspace.clear();
+  Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, a);
 };
 Entry.Func.cancelEdit = function() {
   this.targetFunc && (Entry.Func.isEdit = !1, this.targetFunc.block || (this._targetFuncBlock.destroy(), delete Entry.variableContainer.functions_[this.targetFunc.id], delete Entry.variableContainer.selected), delete this.targetFunc, this.updateMenu(), Entry.variableContainer.updateList());
@@ -11675,6 +13063,7 @@ Entry.Func.setupMenuCode = function() {
   this.menuCode = b;
 };
 Entry.Func.refreshMenuCode = function() {
+  this.menuCode || this.setupMenuCode();
   var b = Entry.block[this._fieldString.params[0].type].changeEvent._listeners.length;
   2 < b && this._fieldString.params[0].changeType(this.requestParamBlock("string"));
   b = Entry.block[this._fieldBoolean.params[0].type].changeEvent._listeners.length;
@@ -11692,15 +13081,21 @@ Entry.Func.requestParamBlock = function(b) {
     default:
       return null;
   }
-  var d = function() {
-  };
-  d.prototype = c;
-  d = new d;
-  d.changeEvent = new Entry.Event;
   b = b + "Param_" + a;
-  Entry.block[b] = d;
-  this.targetFunc.hashMap[b] = !0;
+  c = Entry.Func.createParamBlock(b, c);
+  Entry.block[b] = c;
   return b;
+};
+Entry.Func.registerParamBlock = function(b) {
+  "string" === b.substr(0, 6) ? Entry.Func.createParamBlock(b, Entry.block.function_param_string) : "boolean" === b.substr(0, 7) && Entry.Func.createParamBlock(b, Entry.block.function_param_boolean);
+};
+Entry.Func.createParamBlock = function(b, a) {
+  var c = function() {
+  };
+  c.prototype = a;
+  c = new c;
+  c.changeEvent = new Entry.Event;
+  return Entry.block[b] = c;
 };
 Entry.Func.updateMenu = function() {
   var b = Entry.playground.mainWorkspace.getBlockMenu();
@@ -11718,35 +13113,37 @@ Entry.Func.prototype.generateBlock = function(b) {
   this.block = b.block;
   this.description = b.description;
 };
-Entry.Func.generateWsBlock = function() {
-  var b = this.targetFunc.content.getEventMap("funcDef")[0].params[0], a = 0, c = 0, d = [], e = "", f = this.targetFunc.hashMap;
-  for (this.unbindFuncChangeEvent();b;) {
-    var g = b.params[0];
-    switch(b.type) {
+Entry.Func.generateWsBlock = function(b) {
+  b = b ? b : this.targetFunc;
+  var a = b.content.getEventMap("funcDef")[0].params[0], c = 0, d = 0, e = [], f = "", g = b.hashMap, h = b.paramMap;
+  for (this.unbindFuncChangeEvent();a;) {
+    var k = a.params[0];
+    switch(a.type) {
       case "function_field_label":
-        e = e + " " + g;
+        f = f + " " + k;
         break;
       case "function_field_boolean":
-        Entry.Mutator.mutate(g.type, {template:Lang.Blocks.FUNCTION_logical_variable + " " + (a ? a : "")});
-        f[g.type] = !1;
-        a++;
-        d.push({type:"Block", accept:"booleanMagnet"});
-        e += " %" + (a + c);
+        Entry.Mutator.mutate(k.type, {template:Lang.Blocks.FUNCTION_logical_variable + " " + (c ? c : "")});
+        g[k.type] = !1;
+        h[k.type] = c + d;
+        c++;
+        e.push({type:"Block", accept:"booleanMagnet"});
+        f += " %" + (c + d);
         break;
       case "function_field_string":
-        Entry.Mutator.mutate(g.type, {template:Lang.Blocks.FUNCTION_character_variable + " " + (c ? c : "")}), f[g.type] = !1, c++, e += " %" + (a + c), d.push({type:"Block", accept:"stringMagnet"});
+        Entry.Mutator.mutate(k.type, {template:Lang.Blocks.FUNCTION_character_variable + " " + (d ? d : "")}), g[k.type] = !1, h[k.type] = c + d, d++, f += " %" + (c + d), e.push({type:"Block", accept:"stringMagnet"});
     }
-    b = b.getOutputBlock();
+    a = a.getOutputBlock();
   }
-  Entry.Mutator.mutate("func_" + this.targetFunc.id, {params:d, template:e});
-  for (var h in f) {
-    f[h] ? (b = -1 < h.indexOf("string") ? Lang.Blocks.FUNCTION_character_variable : Lang.Blocks.FUNCTION_logical_variable, Entry.Mutator.mutate(h, {template:b})) : f[h] = !0;
+  Entry.Mutator.mutate("func_" + b.id, {params:e, template:f});
+  for (var l in g) {
+    g[l] ? (b = -1 < l.indexOf("string") ? Lang.Blocks.FUNCTION_character_variable : Lang.Blocks.FUNCTION_logical_variable, Entry.Mutator.mutate(l, {template:b})) : g[l] = !0;
   }
   this.refreshMenuCode();
-  this.bindFuncChangeEvent();
 };
-Entry.Func.bindFuncChangeEvent = function() {
-  this._funcChangeEvent || (this._funcChangeEvent = this.targetFunc.content.getEventMap("funcDef")[0].view._contents[1].changeEvent.attach(this, this.generateWsBlock));
+Entry.Func.bindFuncChangeEvent = function(b) {
+  b = b ? b : this.targetFunc;
+  this._funcChangeEvent || (this._funcChangeEvent = b.content.getEventMap("funcDef")[0].view._contents[1].changeEvent.attach(this, this.generateWsBlock));
 };
 Entry.Func.unbindFuncChangeEvent = function() {
   this._funcChangeEvent && this._funcChangeEvent.destroy();
@@ -11754,29 +13151,40 @@ Entry.Func.unbindFuncChangeEvent = function() {
 };
 Entry.HWMontior = {};
 Entry.HWMonitor = function(b) {
-  this.svgDom = Entry.Dom($('<svg id="hwMonitor" class="hwMonitor" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this.view});
+  this.svgDom = Entry.Dom($('<svg id="hwMonitor" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'));
+  this._hwModule = b;
   var a = this;
   Entry.addEventListener("windowResized", function() {
-    a.resize();
+    var b = a._hwModule.monitorTemplate.mode;
+    "both" == b && (a.resize(), a.resizeList());
+    "list" == b ? a.resizeList() : a.resize();
   });
-  this._hwModule = b;
+  Entry.addEventListener("hwModeChange", function() {
+    a.changeMode();
+  });
+  this.changeOffset = 0;
   this.scale = .5;
-  this._portViews = {};
-  this._portMap = {n:[], e:[], s:[], w:[]};
+  this._listPortViews = {};
 };
 (function(b) {
+  b.initView = function() {
+    this.svgDom = Entry.Dom($('<svg id="hwMonitor" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'));
+  };
   b.generateView = function() {
-    this.snap = Snap("#hwMonitor");
-    this._svgGroup = this.snap.group();
-    var a = this._hwModule.monitorTemplate;
-    this.hwView = this._svgGroup.group();
-    this.hwView.image(Entry.mediaFilePath + "hw/neobot.png", -a.width / 2, -a.height / 2, a.width, a.height);
+    this.snap = Entry.SVG("hwMonitor");
+    this._svgGroup = this.snap.elem("g");
+    this._portMap = {n:[], e:[], s:[], w:[]};
+    var a = this._hwModule.monitorTemplate, b = {href:Entry.mediaFilePath + a.imgPath, x:-a.width / 2, y:-a.height / 2, width:a.width, height:a.height};
+    this._portViews = {};
+    this.hwView = this._svgGroup.elem("image");
+    this.hwView = this.hwView.attr(b);
     this._template = a;
     a = a.ports;
-    this.pathGroup = this._svgGroup.group();
+    this.pathGroup = null;
+    this.pathGroup = this._svgGroup.elem("g");
     var b = [], d;
     for (d in a) {
-      var e = this.generatePortView(a[d]);
+      var e = this.generatePortView(a[d], "_svgGroup");
       this._portViews[d] = e;
       b.push(e);
     }
@@ -11785,57 +13193,151 @@ Entry.HWMonitor = function(b) {
     });
     var f = this._portMap;
     b.map(function(a) {
-      switch(Math.round(Math.atan2(a.box.y, a.box.x) / Math.PI * 2)) {
-        case -1:
-          f.n.push(a);
-          break;
-        case 0:
-          f.e.push(a);
-          break;
-        case 1:
-          f.s.push(a);
-          break;
-        case 2:
-          f.w.push(a);
-      }
+      (1 > (Math.atan2(-a.box.y, a.box.x) / Math.PI + 2) % 2 ? f.n : f.s).push(a);
     });
     this.resize();
   };
-  b.generatePortView = function(a) {
-    var b = this._svgGroup.group();
-    b.addClass("hwComponent");
-    var d = this.pathGroup.path("m0,0").attr({fill:"none", stroke:"input" === a.type ? "#00979d" : "#A751E3", "stroke-width":3}), e = b.rect(0, 0, 150, 22, 4).attr({fill:"#fff", stroke:"#a0a1a1"}), f = b.text(4, 12, a.name).attr({fill:"#000", "class":"hwComponentName", "alignment-baseline":"central"}).node.getComputedTextLength();
-    b.rect(f + 8, 2, 30, 18, 9).attr({fill:"input" === a.type ? "#00979d" : "#A751E3"});
-    var g = b.text(f + 13, 12, "0").attr({fill:"#fff", "class":"hwComponentValue", "alignment-baseline":"central"}), f = f + 40;
-    e.attr({width:f + "px"});
-    return {group:b, value:g, type:a.type, path:d, box:{x:a.pos.x - this._template.width / 2, y:a.pos.y - this._template.height / 2, width:f}, width:f};
+  b.toggleMode = function(a) {
+    var b = this._hwModule.monitorTemplate;
+    "list" == a ? (b.TempPort = null, this._hwModule.monitorTemplate.ports && (this._hwModule.monitorTemplate.TempPort = this._hwModule.monitorTemplate.ports, this._hwModule.monitorTemplate.listPorts = this.addPortEle(this._hwModule.monitorTemplate.listPorts, this._hwModule.monitorTemplate.ports)), $(this._svglistGroup).remove(), this._svgGroup && $(this._svgGroup).remove(), $(this._pathGroup).remove(), this._hwModule.monitorTemplate.mode = "list", this.generateListView()) : (this._hwModule.monitorTemplate.TempPort && 
+    (this._hwModule.monitorTemplate.ports = this._hwModule.monitorTemplate.TempPort, this._hwModule.monitorTemplate.listPorts = this.removePortEle(this._hwModule.monitorTemplate.listPorts, this._hwModule.monitorTemplate.ports)), $(this._svglistGroup).remove(), this._hwModule.monitorTemplate.mode = "both", this.generateListView(), this.generateView());
+  };
+  b.setHwmonitor = function(a) {
+    this._hwmodule = a;
+  };
+  b.changeMode = function(a) {
+    "both" == this._hwModule.monitorTemplate.mode ? this.toggleMode("list") : "list" == this._hwModule.monitorTemplate.mode && this.toggleMode("both");
+  };
+  b.addPortEle = function(a, b) {
+    if ("object" != typeof b) {
+      return a;
+    }
+    for (var d in b) {
+      a[d] = b[d];
+    }
+    return a;
+  };
+  b.removePortEle = function(a, b) {
+    if ("object" != typeof b) {
+      return a;
+    }
+    for (var d in b) {
+      delete a[d];
+    }
+    return a;
+  };
+  b.generateListView = function() {
+    this._portMapList = {n:[]};
+    this._svglistGroup = null;
+    this.listsnap = Entry.SVG("hwMonitor");
+    this._svglistGroup = this.listsnap.elem("g");
+    var a = this._hwModule.monitorTemplate;
+    this._template = a;
+    a = a.listPorts;
+    this.pathGroup = this._svglistGroup.elem("g");
+    var b = [], d;
+    for (d in a) {
+      var e = this.generatePortView(a[d], "_svglistGroup");
+      this._listPortViews[d] = e;
+      b.push(e);
+    }
+    var f = this._portMapList;
+    b.map(function(a) {
+      f.n.push(a);
+    });
+    this.resizeList();
+  };
+  b.generatePortView = function(a, b) {
+    var d = this[b].elem("g");
+    d.addClass("hwComponent");
+    var e = null, e = this.pathGroup.elem("path").attr({d:"m0,0", fill:"none", stroke:"input" === a.type ? "#00979d" : "#A751E3", "stroke-width":3}), f = d.elem("rect").attr({x:0, y:0, width:150, height:22, rx:4, ry:4, fill:"#fff", stroke:"#a0a1a1"}), g = d.elem("text").attr({x:4, y:12, fill:"#000", "class":"hwComponentName", "alignment-baseline":"central"});
+    g.textContent = a.name;
+    g = g.getComputedTextLength();
+    d.elem("rect").attr({x:g + 8, y:2, width:30, height:18, rx:9, ry:9, fill:"input" === a.type ? "#00979d" : "#A751E3"});
+    var h = d.elem("text").attr({x:g + 13, y:12, fill:"#fff", "class":"hwComponentValue", "alignment-baseline":"central"});
+    h.textContent = 0;
+    g += 40;
+    f.attr({width:g});
+    return {group:d, value:h, type:a.type, path:e, box:{x:a.pos.x - this._template.width / 2, y:a.pos.y - this._template.height / 2, width:g}, width:g};
   };
   b.getView = function() {
     return this.svgDom;
   };
   b.update = function() {
-    var a = Entry.hw.portData, b = Entry.hw.sendQueue, d;
-    for (d in this._portViews) {
-      var e = this._portViews[d], f = "input" == e.type ? a[d] : b[d];
-      e.value.attr({text:f ? f : 0});
+    var a = Entry.hw.portData, b = Entry.hw.sendQueue, d = this._hwModule.monitorTemplate.mode, e = [];
+    if ("list" == d) {
+      e = this._listPortViews;
+    } else {
+      if ("both" == d) {
+        if (e = this._listPortViews, this._portViews) {
+          for (var f in this._portViews) {
+            e[f] = this._portViews[f];
+          }
+        }
+      } else {
+        e = this._portViews;
+      }
+    }
+    if (b) {
+      for (f in b) {
+        0 != b[f] && e[f] && (e[f].type = "output");
+      }
+    }
+    for (var g in e) {
+      d = e[g], "input" == d.type ? (f = a[g], d.value.textContent = f ? f : 0, d.group.getElementsByTagName("rect")[1].attr({fill:"#00979D"})) : (f = b[g], d.value.textContent = f ? f : 0, d.group.getElementsByTagName("rect")[1].attr({fill:"#A751E3"}));
     }
   };
   b.resize = function() {
-    this.hwView.attr({transform:"s" + this.scale});
-    var a = this.svgDom.get(0).getBoundingClientRect();
-    this._svgGroup.attr({transform:"t" + a.width / 2 + "," + a.height / 2});
+    this.hwView && this.hwView.attr({transform:"scale(" + this.scale + ")"});
+    if (this.svgDom) {
+      var a = this.svgDom.get(0).getBoundingClientRect()
+    }
+    this._svgGroup.attr({transform:"translate(" + a.width / 2 + "," + a.height / 1.8 + ")"});
     this._rect = a;
-    this.scale = a.height / this._template.height / 2;
-    this.align();
+    0 >= this._template.height || 0 >= a.height || (this.scale = a.height / this._template.height * this._template.height / 1E3, this.align());
+  };
+  b.resizeList = function() {
+    var a = this.svgDom.get(0).getBoundingClientRect();
+    this._svglistGroup.attr({transform:"translate(" + a.width / 2 + "," + a.height / 2 + ")"});
+    this._rect = a;
+    this.alignList();
   };
   b.align = function() {
-    for (var a = this._portMap.n, b = a.length, d = 0;d < a.length;d++) {
-      a[d].group.attr({transform:"t" + this._template.width * (d / b - .5) + "," + (-this._template.width / 2 - 30)});
-    }
-    a = this._portMap.s.concat();
-    this._alignNS(a, this._template.width * this.scale / 2 + 5, 27);
+    var a = [], a = this._portMap.s.concat();
+    this._alignNS(a, this.scale / 3 * this._template.height + 5, 27);
     a = this._portMap.n.concat();
-    this._alignNS(a, -this._template.width * this.scale / 2 - 32, -27);
+    this._alignNS(a, -this._template.height * this.scale / 3 - 32, -27);
+    a = this._portMap.e.concat();
+    this._alignEW(a, -this._template.width * this.scale / 3 - 5, -27);
+    a = this._portMap.w.concat();
+    this._alignEW(a, this._template.width * this.scale / 3 - 32, -27);
+  };
+  b.alignList = function() {
+    for (var a = {}, a = this._hwModule.monitorTemplate.listPorts, b = a.length, d = 0;d < a.length;d++) {
+      a[d].group.attr({transform:"translate(" + this._template.width * (d / b - .5) + "," + (-this._template.width / 2 - 30) + ")"});
+    }
+    a = this._portMapList.n.concat();
+    this._alignNSList(a, -this._template.width * this.scale / 2 - 32, -27);
+  };
+  b._alignEW = function(a, b, d) {
+    var e = a.length, f = this._rect.height - 50;
+    tP = -f / 2;
+    bP = f / 2;
+    height = this._rect.height;
+    listVLine = wholeHeight = 0;
+    mode = this._hwModule.monitorTemplate;
+    for (f = 0;f < e;f++) {
+      wholeHeight += a[f].height + 5;
+    }
+    wholeHeight < bP - tP && (bP = wholeHeight / 2 + 3, tP = -wholeHeight / 2 - 3);
+    for (;1 < e;) {
+      var g = a.shift(), f = a.pop(), h = tP, k = bP, l = d;
+      wholeWidth <= bP - tP ? (tP += g.width + 5, bP -= f.width + 5, l = 0) : 0 === a.length ? (tP = (tP + bP) / 2 - 3, bP = tP + 6) : (tP = Math.max(tP, -width / 2 + g.width) + 15, bP = Math.min(bP, width / 2 - f.width) - 15);
+      wholeWidth -= g.width + f.width + 10;
+      b += l;
+    }
+    a.length && a[0].group.attr({transform:"translate(" + b + ",60)"});
+    g && rPort && (this._movePort(g, b, tP, h), this._movePort(rPort, b, bP, k));
   };
   b._alignNS = function(a, b, d) {
     for (var e = -this._rect.width / 2, f = this._rect.width / 2, g = this._rect.width, h = 0, k = 0;k < a.length;k++) {
@@ -11843,72 +13345,105 @@ Entry.HWMonitor = function(b) {
     }
     h < f - e && (f = h / 2 + 3, e = -h / 2 - 3);
     for (;1 < a.length;) {
-      var k = a.shift(), m = a.pop(), n = e, l = f, q = d;
-      h <= f - e ? (e += k.width + 5, f -= m.width + 5, q = 0) : 0 === a.length ? (e = (e + f) / 2 - 3, f = e + 6) : (e = Math.max(e, -g / 2 + k.width) + 15, f = Math.min(f, g / 2 - m.width) - 15);
+      var k = a.shift(), l = a.pop(), n = e, m = f, q = d;
+      h <= f - e ? (e += k.width + 5, f -= l.width + 5, q = 0) : 0 === a.length ? (e = (e + f) / 2 - 3, f = e + 6) : (e = Math.max(e, -g / 2 + k.width) + 15, f = Math.min(f, g / 2 - l.width) - 15);
       this._movePort(k, e, b, n);
-      this._movePort(m, f, b, l);
-      h -= k.width + m.width + 10;
+      this._movePort(l, f, b, m);
+      h -= k.width + l.width + 10;
       b += q;
     }
-    a.length && a[0].group.attr({transform:"t" + (f + e - a[0].width) / 2 + "," + b});
+    a.length && this._movePort(a[0], (f + e - a[0].width) / 2, b, 100);
+  };
+  b._alignNSList = function(a, b) {
+    var d = this._rect.width;
+    initX = -this._rect.width / 2 + 10;
+    initY = -this._rect.height / 2 + 10;
+    for (var e = listLine = wholeWidth = 0;e < a.length;e++) {
+      wholeWidth += a[e].width;
+    }
+    for (var f = 0, g = 0, h = initX, k = 0, l = 0, n = 0, e = 0;e < a.length;e++) {
+      l = a[e], e != a.length - 1 && (n = a[e + 1]), g += l.width, lP = initX, k = initY + 30 * f, l.group.attr({transform:"translate(" + lP + "," + k + ")"}), initX += l.width + 10, g > d - (l.width + n.width / 2.2) && (f += 1, initX = h, g = 0);
+    }
   };
   b._movePort = function(a, b, d, e) {
     var f = b, g = a.box.x * this.scale, h = a.box.y * this.scale;
     b > e ? (f = b - a.width, b = b > g && g > e ? "M" + g + "," + d + "L" + g + "," + h : "M" + (b + e) / 2 + "," + d + "l0," + (h > d ? 28 : -3) + "H" + g + "L" + g + "," + h) : b = b < g && g < e ? "m" + g + "," + d + "L" + g + "," + h : "m" + (e + b) / 2 + "," + d + "l0," + (h > d ? 28 : -3) + "H" + g + "L" + g + "," + h;
-    a.group.attr({transform:"t" + f + "," + d});
+    a.group.attr({transform:"translate(" + f + "," + d + ")"});
     a.path.attr({d:b});
   };
 })(Entry.HWMonitor.prototype);
 Entry.HW = function() {
   this.connectTrial = 0;
   this.isFirstConnect = !0;
-  if ("WebSocket" in window) {
-    try {
-      this.initSocket();
-    } catch (b) {
-      console.log("socket error:", b);
-    }
-  } else {
-    console.log("socket not exist");
-  }
+  this.initSocket();
   this.connected = !1;
   this.portData = {};
   this.sendQueue = {};
+  this.outputQueue = {};
   this.settingQueue = {};
-  this.hwModule = this.selectedDevice = null;
+  this.socketType = this.hwModule = this.selectedDevice = null;
   Entry.addEventListener("stop", this.setZero);
-  this.hwInfo = {11:Entry.Arduino, 12:Entry.SensorBoard, 24:Entry.Hamster, 25:Entry.Albert, 31:Entry.Bitbrick, 51:Entry.Neobot};
+  this.hwInfo = {11:Entry.Arduino, 12:Entry.SensorBoard, 13:Entry.CODEino, 15:Entry.dplay, 16:Entry.nemoino, 17:Entry.Xbot, 24:Entry.Hamster, 25:Entry.Albert, 31:Entry.Bitbrick, 42:Entry.Arduino, 51:Entry.Neobot, 71:Entry.Robotis_carCont, 72:Entry.Robotis_openCM70};
 };
 Entry.HW.TRIAL_LIMIT = 1;
 p = Entry.HW.prototype;
 p.initSocket = function() {
-  if (this.connectTrial >= Entry.HW.TRIAL_LIMIT) {
-    this.isFirstConnect || Entry.toast.alert(Lang.Menus.connect_hw, Lang.Menus.connect_fail, !1), this.isFirstConnect = !1;
-  } else {
-    var b = this, a = new WebSocket("ws://localhost:23518");
-    this.socket = a;
-    this.connected = !1;
-    a.binaryType = "arraybuffer";
-    this.connectTrial++;
-    a.onopen = function() {
-      b.initHardware();
-    };
-    a.onmessage = function(a) {
-      a = JSON.parse(a.data);
-      b.checkDevice(a);
-      b.updatePortData(a);
-    };
-    a.onclose = function() {
-      b.initSocket();
-    };
-    Entry.dispatchEvent("hwChanged");
+  try {
+    if (this.connectTrial >= Entry.HW.TRIAL_LIMIT) {
+      this.isFirstConnect || Entry.toast.alert(Lang.Menus.connect_hw, Lang.Menus.connect_fail, !1), this.isFirstConnect = !1;
+    } else {
+      var b = this, a, c;
+      if (-1 < location.protocol.indexOf("https")) {
+        c = new WebSocket("wss://localhost:23518");
+      } else {
+        try {
+          a = new WebSocket("ws://localhost:23518");
+        } catch (d) {
+        }
+        try {
+          c = new WebSocket("wss://localhost:23518");
+        } catch (d) {
+        }
+      }
+      this.connected = !1;
+      a.binaryType = "arraybuffer";
+      c.binaryType = "arraybuffer";
+      this.connectTrial++;
+      a.onopen = function() {
+        b.socketType = "WebSocket";
+        b.initHardware(a);
+      };
+      a.onmessage = function(a) {
+        a = JSON.parse(a.data);
+        b.checkDevice(a);
+        b.updatePortData(a);
+      };
+      a.onclose = function() {
+        "WebSocket" === b.socketType && (this.socket = null, b.initSocket());
+      };
+      c.onopen = function() {
+        b.socketType = "WebSocketSecurity";
+        b.initHardware(c);
+      };
+      c.onmessage = function(a) {
+        a = JSON.parse(a.data);
+        b.checkDevice(a);
+        b.updatePortData(a);
+      };
+      c.onclose = function() {
+        "WebSocketSecurity" === b.socketType && (this.socket = null, b.initSocket());
+      };
+      Entry.dispatchEvent("hwChanged");
+    }
+  } catch (d) {
   }
 };
 p.retryConnect = function() {
   this.connectTrial = 0;
   this.initSocket();
 };
-p.initHardware = function() {
+p.initHardware = function(b) {
+  this.socket = b;
   this.connectTrial = 0;
   this.connected = !0;
   Entry.dispatchEvent("hwChanged");
@@ -11916,6 +13451,7 @@ p.initHardware = function() {
 };
 p.setDigitalPortValue = function(b, a) {
   this.sendQueue[b] = a;
+  this.removePortReadable(b);
 };
 p.getAnalogPortValue = function(b) {
   return this.connected ? this.portData["a" + b] : 0;
@@ -11929,10 +13465,29 @@ p.getDigitalPortValue = function(b) {
 };
 p.setPortReadable = function(b) {
   this.sendQueue.readablePorts || (this.sendQueue.readablePorts = []);
-  this.sendQueue.readablePorts.push(b);
+  var a = !1, c;
+  for (c in this.sendQueue.readablePorts) {
+    if (this.sendQueue.readablePorts[c] == b) {
+      a = !0;
+      break;
+    }
+  }
+  a || this.sendQueue.readablePorts.push(b);
+};
+p.removePortReadable = function(b) {
+  if (this.sendQueue.readablePorts || Array.isArray(this.sendQueue.readablePorts)) {
+    var a, c;
+    for (c in this.sendQueue.readablePorts) {
+      if (this.sendQueue.readablePorts[c] == b) {
+        a = Number(c);
+        break;
+      }
+    }
+    this.sendQueue.readablePorts = void 0 != a ? this.sendQueue.readablePorts.slice(0, a).concat(this.sendQueue.readablePorts.slice(a + 1, this.sendQueue.readablePorts.length)) : [];
+  }
 };
 p.update = function() {
-  this.socket && 1 == this.socket.readyState && (this.socket.send(JSON.stringify(this.sendQueue)), this.sendQueue.readablePorts = []);
+  this.socket && 1 == this.socket.readyState && this.socket.send(JSON.stringify(this.sendQueue));
 };
 p.updatePortData = function(b) {
   this.portData = b;
@@ -11942,16 +13497,17 @@ p.closeConnection = function() {
   this.socket && this.socket.close();
 };
 p.downloadConnector = function() {
-  window.open("http://play-entry.org/down/entry-hw_v1.1.zip", "_blank").focus();
+  window.open("http://github.com/entrylabs/entry-hw/releases/download/1.5.1/Entry_HW_1.5.1_Setup.exe", "_blank").focus();
 };
 p.downloadSource = function() {
-  window.open("http://play-entry.com/lib/EntryArduino/arduino/entry.ino", "_blank").focus();
+  window.open("http://play-entry.com/down/board.ino", "_blank").focus();
 };
 p.setZero = function() {
   Entry.hw.hwModule && Entry.hw.hwModule.setZero();
 };
 p.checkDevice = function(b) {
-  void 0 !== b.company && (b = "" + b.company + b.model, b != this.selectedDevice && (this.selectedDevice = b, this.hwModule = this.hwInfo[b], Entry.dispatchEvent("hwChanged"), Entry.toast.success(Lang.Menus.connect_hw, Lang.Menus.connect_message.replace("%1", Lang.Device[Entry.hw.hwModule.name]), !1), this.hwModule.monitorTemplate && (this.hwMonitor = new Entry.HWMonitor(this.hwModule), Entry.propertyPanel.addMode("hw", this.hwMonitor), this.hwMonitor.generateView())));
+  void 0 !== b.company && (b = "" + b.company + b.model, b != this.selectedDevice && (this.selectedDevice = b, this.hwModule = this.hwInfo[b], Entry.dispatchEvent("hwChanged"), Entry.toast.success("\ud558\ub4dc\uc6e8\uc5b4 \uc5f0\uacb0 \uc131\uacf5", "\ud558\ub4dc\uc6e8\uc5b4 \uc544\uc774\ucf58\uc744 \ub354\ube14\ud074\ub9ad\ud558\uba74, \uc13c\uc11c\uac12\ub9cc \ud655\uc778\ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4.", !0), this.hwModule.monitorTemplate && (this.hwMonitor ? (this.hwMonitor._hwModule = 
+  this.hwModule, this.hwMonitor.initView()) : this.hwMonitor = new Entry.HWMonitor(this.hwModule), Entry.propertyPanel.addMode("hw", this.hwMonitor), b = this.hwModule.monitorTemplate, "both" == b.mode ? (b.mode = "list", this.hwMonitor.generateListView(), b.mode = "general", this.hwMonitor.generateView(), b.mode = "both") : "list" == b.mode ? this.hwMonitor.generateListView() : this.hwMonitor.generateView())));
 };
 p.banHW = function() {
   var b = this.hwInfo, a;
@@ -12041,25 +13597,30 @@ Entry.Variable.prototype.generateView = function(b) {
       this.valueSetter_.on("pressmove", function(a) {
         if (Entry.engine.isState("run")) {
           var b = .75 * a.stageX - 240 - this.offsetX, f = this.graphics.command.x;
-          0 >= b + f ? c.setSlideCommandX(0, !0) : b + f > c.maxWidth + 10 ? c.setSlideCommandX(c.maxWidth, !0) : (this.offsetX = -(this.x - .75 * a.stageX + 240), c.setSlideCommandX(b), c.updateView());
+          0 >= b + f ? c.setSlideCommandX(0, !0) : b + f > c.maxWidth + 10 ? c.setSlideCommandX(c.maxWidth, !0) : (this.offsetX = -(this.x - .75 * a.stageX + 240), c.setSlideCommandX(b));
         }
       });
       this.valueSetter_.on("pressup", function(a) {
         c.isAdjusting = !1;
+        delete c.viewValue_;
       });
       this.view_.addChild(this.valueSetter_);
       a = Entry.variableContainer.variables_.length;
       this.getX() && this.getY() ? (this.setX(this.getX()), this.setY(this.getY())) : (this.setX(-230 + 80 * Math.floor(a / 11)), this.setY(24 * b + 20 - 135 - 264 * Math.floor(a / 11)));
     } else {
       this.view_ = new createjs.Container, this.rect_ = new createjs.Shape, this.view_.addChild(this.rect_), this.view_.variable = this, this.titleView_ = new createjs.Text("asdf", this.FONT, "#000"), this.titleView_.textBaseline = "alphabetic", this.titleView_.textAlign = "center", this.titleView_.width = this.width_ - 2 * this.BORDER, this.titleView_.y = this.BORDER + 10, this.titleView_.x = this.width_ / 2, this.view_.addChild(this.titleView_), this.resizeHandle_ = new createjs.Shape, this.resizeHandle_.graphics.f("#1bafea").ss(1, 
-      0, 0).s("#1bafea").lt(0, -7).lt(-7, 0).lt(0, 0), this.view_.addChild(this.resizeHandle_), this.resizeHandle_.list = this, this.resizeHandle_.on("mousedown", function(a) {
+      0, 0).s("#1bafea").lt(0, -9).lt(-9, 0).lt(0, 0), this.view_.addChild(this.resizeHandle_), this.resizeHandle_.list = this, this.resizeHandle_.on("mouseover", function(a) {
+        this.cursor = "nwse-resize";
+      }), this.resizeHandle_.on("mousedown", function(a) {
         this.list.isResizing = !0;
         this.offset = {x:.75 * a.stageX - this.list.getWidth(), y:.75 * a.stageY - this.list.getHeight()};
-        this.parent.cursor = "se-resize";
+        this.parent.cursor = "nwse-resize";
       }), this.resizeHandle_.on("pressmove", function(a) {
         this.list.setWidth(.75 * a.stageX - this.offset.x);
         this.list.setHeight(.75 * a.stageY - this.offset.y);
         this.list.updateView();
+      }), this.view_.on("mouseover", function(a) {
+        this.cursor = "move";
       }), this.view_.on("mousedown", function(a) {
         "workspace" != Entry.type || this.variable.isResizing || (this.offset = {x:this.x - (.75 * a.stageX - 240), y:this.y - (.75 * a.stageY - 135)}, this.cursor = "move");
       }), this.view_.on("pressup", function(a) {
@@ -12159,7 +13720,13 @@ Entry.Variable.prototype.isNumber = function() {
   return isNaN(this.value_) ? !1 : !0;
 };
 Entry.Variable.prototype.setValue = function(b) {
-  this.value_ = "slide" != this.type ? b : b < this.minValue_ ? this.minValue_ : b > this.maxValue_ ? this.maxValue_ : b;
+  if ("slide" != this.type) {
+    this.value_ = b;
+  } else {
+    var a = Entry.isFloat(this.minValue_), c = Entry.isFloat(this.maxValue_);
+    this.value_ = b < this.minValue_ ? this.minValue_ : b > this.maxValue_ ? this.maxValue_ : b;
+    a || c || (this.viewValue_ = this.value_, this.value_ = Math.floor(this.value_));
+  }
   this.isCloud_ && Entry.variableContainer.updateCloudVariables();
   this.updateView();
 };
@@ -12248,7 +13815,7 @@ Entry.Variable.prototype.setType = function(b) {
 };
 Entry.Variable.prototype.getSlidePosition = function(b) {
   var a = this.minValue_;
-  return Math.abs(this.value_ - a) / Math.abs(this.maxValue_ - a) * b + 10;
+  return Math.abs((this.viewValue_ || this.value_) - a) / Math.abs(this.maxValue_ - a) * b + 10;
 };
 Entry.Variable.prototype.setSlideCommandX = function(b, a) {
   var c = this.valueSetter_.graphics.command;
@@ -12260,8 +13827,8 @@ Entry.Variable.prototype.updateSlideValueByView = function() {
   var b = Math.max(this.valueSetter_.graphics.command.x - 10, 0) / this.maxWidth;
   0 > b && (b = 0);
   1 < b && (b = 1);
-  b = (this.minValue_ + Number(Math.abs(this.maxValue_ - this.minValue_) * b)).toFixed(2);
-  b < this.minValue_ ? this.setValue(this.minValue_) : b > this.maxValue_ ? this.setValue(this.maxValue_) : this.setValue(b);
+  var a = parseFloat(this.minValue_), c = parseFloat(this.maxValue_), b = (a + Number(Math.abs(c - a) * b)).toFixed(2), b = parseFloat(b);
+  b < a ? this.setValue(this.minValue_) : b > c ? this.setValue(this.maxValue_) : this.setValue(b);
 };
 Entry.Variable.prototype.getMinValue = function() {
   return this.minValue_;
@@ -12355,8 +13922,9 @@ Entry.VariableContainer.prototype.createDom = function(b) {
   c.innerHTML = "+ " + Lang.Workspace.function_create;
   this.functionAddButton_ = c;
   c.bindOnClick(function(b) {
+    b = a._getBlockMenu();
     Entry.playground.changeViewMode("code");
-    "func" != Entry.playground.selectedMenu && Entry.playground.mainWorkspace.blockMenu.selectMenu("func");
+    "func" != b.lastSelector && b.selectMenu("func");
     a.createFunction();
   });
   return b;
@@ -12395,7 +13963,7 @@ Entry.VariableContainer.prototype.updateVariableAddView = function(b) {
 };
 Entry.VariableContainer.prototype.select = function(b) {
   b = this.selected == b ? null : b;
-  this.selected && (this.selected.listElement.removeClass("selected"), this.listView_.removeChild(this.selected.callerListElement), delete this.selected.callerListElement, this.selected = null);
+  this.selected && (this.selected.listElement.removeClass("selected"), this.selected.callerListElement && (this.listView_.removeChild(this.selected.callerListElement), delete this.selected.callerListElement), this.selected = null);
   b && (b.listElement.addClass("selected"), this.selected = b, b instanceof Entry.Variable ? (this.renderVariableReference(b), b.object_ && Entry.container.selectObject(b.object_, !0)) : b instanceof Entry.Func ? this.renderFunctionReference(b) : this.renderMessageReference(b));
 };
 Entry.VariableContainer.prototype.renderMessageReference = function(b) {
@@ -12444,7 +14012,8 @@ Entry.VariableContainer.prototype.renderVariableReference = function(b) {
     g.variable = b;
     g.bindOnClick(function(b) {
       Entry.playground.object != this.caller.object && (Entry.container.selectObject(), Entry.container.selectObject(this.caller.object.id, !0), a.select(null));
-      b = this.caller.block;
+      b = this.caller;
+      b = b.funcBlock || b.block;
       b.view.getBoard().activateBlock(b);
       Entry.playground.toggleOnVariableView();
       Entry.playground.changeViewMode("variable");
@@ -12457,28 +14026,30 @@ Entry.VariableContainer.prototype.renderVariableReference = function(b) {
   this.listView_.insertBefore(b.listElement, c);
 };
 Entry.VariableContainer.prototype.renderFunctionReference = function(b) {
-  for (var a = this, c = this._functionRefs, d = b.id_, e = [], f = 0;f < c.length;f++) {
-    -1 < c[f].block.params.indexOf(d) && e.push(c[f]);
+  for (var a = this, c = this._functionRefs, d = [], e = 0;e < c.length;e++) {
+    d.push(c[e]);
   }
   c = Entry.createElement("ul");
   c.addClass("entryVariableListCallerListWorkspace");
-  for (f in e) {
-    var d = e[f], g = Entry.createElement("li");
+  for (e in d) {
+    var f = d[e], g = Entry.createElement("li");
     g.addClass("entryVariableListCallerWorkspace");
-    g.appendChild(d.object.thumbnailView_.cloneNode());
+    g.appendChild(f.object.thumbnailView_.cloneNode());
     var h = Entry.createElement("div");
     h.addClass("entryVariableListCallerNameWorkspace");
-    h.innerHTML = d.object.name;
+    h.innerHTML = f.object.name;
     g.appendChild(h);
-    g.caller = d;
+    g.caller = f;
     g.bindOnClick(function(c) {
       Entry.playground.object != this.caller.object && (Entry.container.selectObject(), Entry.container.selectObject(this.caller.object.id, !0), a.select(null), a.select(b));
+      c = this.caller.block;
       Entry.playground.toggleOnVariableView();
+      c.view.getBoard().activateBlock(c);
       Entry.playground.changeViewMode("variable");
     });
     c.appendChild(g);
   }
-  0 === e.length && (g = Entry.createElement("li"), g.addClass("entryVariableListCallerWorkspace"), g.addClass("entryVariableListCallerNoneWorkspace"), g.innerHTML = Lang.Workspace.no_use, c.appendChild(g));
+  0 === d.length && (g = Entry.createElement("li"), g.addClass("entryVariableListCallerWorkspace"), g.addClass("entryVariableListCallerNoneWorkspace"), g.innerHTML = Lang.Workspace.no_use, c.appendChild(g));
   b.callerListElement = c;
   this.listView_.insertBefore(c, b.listElement);
   this.listView_.insertBefore(b.listElement, c);
@@ -12578,8 +14149,7 @@ Entry.VariableContainer.prototype.setVariables = function(b) {
 };
 Entry.VariableContainer.prototype.setFunctions = function(b) {
   for (var a in b) {
-    var c = new Entry.Func;
-    c.init(b[a]);
+    var c = new Entry.Func(b[a]);
     c.generateBlock();
     this.createFunctionView(c);
     this.functions_[c.id] = c;
@@ -12649,16 +14219,17 @@ Entry.VariableContainer.prototype.createFunctionView = function(b) {
   });
   var e = Entry.createElement("button");
   e.addClass("entryVariableListElementEditWorkspace");
+  var f = this._getBlockMenu();
   e.bindOnClick(function(a) {
     a.stopPropagation();
     Entry.Func.edit(b);
-    Entry.playground && (Entry.playground.changeViewMode("code"), "func" != Entry.playground.selectedMenu && Entry.playground.mainWorkspace.blockMenu.selectMenu("func"));
+    Entry.playground && (Entry.playground.changeViewMode("code"), "func" != f.lastSelector && f.selectMenu("func"));
   });
-  var f = Entry.createElement("div");
-  f.addClass("entryVariableFunctionElementNameWorkspace");
-  f.innerHTML = b.description;
-  c.nameField = f;
-  c.appendChild(f);
+  var g = Entry.createElement("div");
+  g.addClass("entryVariableFunctionElementNameWorkspace");
+  g.innerHTML = b.description;
+  c.nameField = g;
+  c.appendChild(g);
   c.appendChild(e);
   c.appendChild(d);
   b.listElement = c;
@@ -12695,19 +14266,19 @@ Entry.VariableContainer.prototype.addVariable = function(b) {
 };
 Entry.VariableContainer.prototype.removeVariable = function(b) {
   var a = this.variables_.indexOf(b), c = b.toJSON();
-  Entry.stateManager && Entry.stateManager.addCommand("remove variable", this, this.addVariable, c);
   this.selected == b && this.select(null);
   b.remove();
   this.variables_.splice(a, 1);
+  Entry.stateManager && Entry.stateManager.addCommand("remove variable", this, this.addVariable, c);
   Entry.playground.reloadPlayground();
   this.updateList();
   return new Entry.State(this, this.addVariable, c);
 };
 Entry.VariableContainer.prototype.changeVariableName = function(b, a) {
-  b.name_ != a && (Entry.isExist(a, "name_", this.variables_) ? (b.listElement.nameField.value = b.name_, Entry.toast.alert(Lang.Workspace.variable_rename_failed, Lang.Workspace.variable_dup)) : 10 < a.length ? (b.listElement.nameField.value = b.name_, Entry.toast.alert(Lang.Workspace.variable_rename_failed, Lang.Workspace.variable_too_long)) : (b.name_ = a, b.updateView(), Entry.toast.success(Lang.Workspace.variable_rename, Lang.Workspace.variable_rename_ok)));
+  b.name_ != a && (Entry.isExist(a, "name_", this.variables_) ? (b.listElement.nameField.value = b.name_, Entry.toast.alert(Lang.Workspace.variable_rename_failed, Lang.Workspace.variable_dup)) : 10 < a.length ? (b.listElement.nameField.value = b.name_, Entry.toast.alert(Lang.Workspace.variable_rename_failed, Lang.Workspace.variable_too_long)) : (b.name_ = a, b.updateView(), Entry.playground.reloadPlayground(), Entry.toast.success(Lang.Workspace.variable_rename, Lang.Workspace.variable_rename_ok)));
 };
 Entry.VariableContainer.prototype.changeListName = function(b, a) {
-  b.name_ != a && (Entry.isExist(a, "name_", this.lists_) ? (b.listElement.nameField.value = b.name_, Entry.toast.alert(Lang.Workspace.list_rename_failed, Lang.Workspace.list_dup)) : 10 < a.length ? (b.listElement.nameField.value = b.name_, Entry.toast.alert(Lang.Workspace.list_rename_failed, Lang.Workspace.list_too_long)) : (b.name_ = a, b.updateView(), Entry.toast.success(Lang.Workspace.list_rename, Lang.Workspace.list_rename_ok)));
+  b.name_ != a && (Entry.isExist(a, "name_", this.lists_) ? (b.listElement.nameField.value = b.name_, Entry.toast.alert(Lang.Workspace.list_rename_failed, Lang.Workspace.list_dup)) : 10 < a.length ? (b.listElement.nameField.value = b.name_, Entry.toast.alert(Lang.Workspace.list_rename_failed, Lang.Workspace.list_too_long)) : (b.name_ = a, b.updateView(), Entry.playground.reloadPlayground(), Entry.toast.success(Lang.Workspace.list_rename, Lang.Workspace.list_rename_ok)));
 };
 Entry.VariableContainer.prototype.removeList = function(b) {
   var a = this.lists_.indexOf(b), c = b.toJSON();
@@ -12799,7 +14370,7 @@ Entry.VariableContainer.prototype.removeMessage = function(b) {
   return new Entry.State(this, this.addMessage, b);
 };
 Entry.VariableContainer.prototype.changeMessageName = function(b, a) {
-  b.name != a && (Entry.isExist(a, "name", this.messages_) ? (b.listElement.nameField.value = b.name, Entry.toast.alert(Lang.Workspace.message_rename_failed, Lang.Workspace.message_dup)) : 10 < a.length ? (b.listElement.nameField.value = b.name, Entry.toast.alert(Lang.Workspace.message_rename_failed, Lang.Workspace.message_too_long)) : (b.name = a, Entry.toast.success(Lang.Workspace.message_rename, Lang.Workspace.message_rename_ok)));
+  b.name != a && (Entry.isExist(a, "name", this.messages_) ? (b.listElement.nameField.value = b.name, Entry.toast.alert(Lang.Workspace.message_rename_failed, Lang.Workspace.message_dup)) : 10 < a.length ? (b.listElement.nameField.value = b.name, Entry.toast.alert(Lang.Workspace.message_rename_failed, Lang.Workspace.message_too_long)) : (b.name = a, Entry.playground.reloadPlayground(), Entry.toast.success(Lang.Workspace.message_rename, Lang.Workspace.message_rename_ok)));
 };
 Entry.VariableContainer.prototype.createMessageView = function(b) {
   var a = this, c = Entry.createElement("li");
@@ -12964,7 +14535,7 @@ Entry.VariableContainer.prototype.getMessageJSON = function() {
 Entry.VariableContainer.prototype.getFunctionJSON = function() {
   var b = [], a;
   for (a in this.functions_) {
-    var c = this.functions_[a], c = {id:c.id, block:c.block, content:c.content.toJSON()};
+    var c = this.functions_[a], c = {id:c.id, content:JSON.stringify(c.content.toJSON())};
     b.push(c);
   }
   return b;
@@ -13199,7 +14770,7 @@ Entry.VariableContainer.prototype.addCloneLocalVariables = function(b) {
       delete f.x;
       delete f.y;
       a.push(f);
-      c.json.script = c.json.script.replace(f.originId, f.id);
+      c.json.script = c.json.script.replace(new RegExp(f.originId, "g"), f.id);
     }
   }, b);
   a.map(function(a) {
@@ -13298,7 +14869,7 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function() {
   d = b.selectedVariable;
   e.value = d && "slide" == d.type ? d.minValue_ : 0;
   e.onblur = function(a) {
-    isNaN(this.value) || (a = b.selectedVariable, a.setMinValue(Number(this.value)), b.updateVariableSettingView(a));
+    isNaN(this.value) || (a = b.selectedVariable, a.setMinValue(this.value), b.updateVariableSettingView(a));
   };
   a.minValueInput = e;
   c.appendChild(e);
@@ -13310,7 +14881,7 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function() {
   g.addClass("entryVariableSettingMaxValueInputWorkspace");
   g.value = d && "slide" == d.type ? d.maxValue_ : 100;
   g.onblur = function(a) {
-    isNaN(this.value) || (a = b.selectedVariable, a.setMaxValue(Number(this.value)), b.updateVariableSettingView(a));
+    isNaN(this.value) || (a = b.selectedVariable, a.setMaxValue(this.value), b.updateVariableSettingView(a));
   };
   a.maxValueInput = g;
   c.appendChild(g);
@@ -13490,15 +15061,51 @@ Entry.VariableContainer.prototype.updateCloudVariables = function() {
   }
 };
 Entry.VariableContainer.prototype.addRef = function(b, a) {
-  this[b].push({object:a.getCode().object, block:a});
+  if (Entry.playground.mainWorkspace.getMode() === Entry.Workspace.MODE_BOARD) {
+    var c = {object:a.getCode().object, block:a};
+    a.funcBlock && (c.funcBlock = a.funcBlock, delete a.funcBlock);
+    this[b].push(c);
+    if ("_functionRefs" == b) {
+      for (var d = a.type.substr(5), d = Entry.variableContainer.functions_[d].content.getBlockList(), e = 0;e < d.length;e++) {
+        a = d[e];
+        var f = a.events;
+        f && f.viewAdd && f.viewAdd.forEach(function(b) {
+          a.getCode().object = c.object;
+          b && (a.funcBlock = c.block, b(a));
+        });
+        f && f.dataAdd && f.dataAdd.forEach(function(b) {
+          a.getCode().object = c.object;
+          b && (a.funcBlock = c.block, b(a));
+        });
+      }
+    }
+    return c;
+  }
 };
 Entry.VariableContainer.prototype.removeRef = function(b, a) {
-  for (var c = this[b], d = 0;d < c.length;d++) {
-    if (c[d].block == a) {
-      c.splice(d, 1);
-      break;
+  if (Entry.playground.mainWorkspace.getMode() === Entry.Workspace.MODE_BOARD) {
+    for (var c = this[b], d = 0;d < c.length;d++) {
+      if (c[d].block == a) {
+        c.splice(d, 1);
+        break;
+      }
+    }
+    if ("_functionRefs" == b) {
+      for (d = a.type.substr(5), c = Entry.variableContainer.functions_[d].content.getBlockList(), d = 0;d < c.length;d++) {
+        a = c[d];
+        var e = a.events;
+        e && e.viewDestroy && e.viewDestroy.forEach(function(b) {
+          b && b(a);
+        });
+        e && e.dataDestroy && e.dataDestroy.forEach(function(b) {
+          b && b(a);
+        });
+      }
     }
   }
+};
+Entry.VariableContainer.prototype._getBlockMenu = function() {
+  return Entry.playground.mainWorkspace.getBlockMenu();
 };
 Entry.block.run = {skeleton:"basic", color:"#3BBD70", contents:["this is", "basic block"], func:function() {
 }};
@@ -13511,7 +15118,7 @@ Entry.block.jr_start = {skeleton:"pebble_event", event:"start", color:"#3BBD70",
   }
   Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
 }};
-Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", template:"%1 \ubc18\ubcf5", params:[{type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:3, fontSize:14, roundValue:3}], statements:[{accept:"pebble_basic"}], func:function() {
+Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", template:"%1 \ubc18\ubcf5", params:[{type:"Text", text:Lang.Menus.repeat_0}, {type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:3, fontSize:14, roundValue:3}, {type:"Text", text:Lang.Menus.repeat_1}], statements:[], func:function() {
   if (void 0 === this.repeatCount) {
     return this.repeatCount = this.block.params[0], Entry.STATIC.CONTINUE;
   }
@@ -13542,7 +15149,7 @@ Entry.block.jr_item = {skeleton:"pebble_basic", color:"#F46C6C", template:"\uaf4
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.cparty_jr_item = {skeleton:"pebble_basic", color:"#8ABC1D", template:"\uc5f0\ud544 \uc90d\uae30 %1", params:[{type:"Indicator", img:"/img/assets/ntry/bitmap/cpartyjr/pen.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}], func:function() {
+Entry.block.cparty_jr_item = {skeleton:"pebble_basic", color:"#8ABC1D", template:"%1 %2", params:[{type:"Text", text:Lang.Menus.pick_up_pencil}, {type:"Indicator", img:"/img/assets/ntry/bitmap/cpartyjr/pen.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -13559,7 +15166,7 @@ Entry.block.cparty_jr_item = {skeleton:"pebble_basic", color:"#8ABC1D", template
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_north = {skeleton:"pebble_basic", color:"#A751E3", template:"\uc704\ucabd %1", params:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_up_image.png", position:{x:83, y:0}, size:22}], func:function() {
+Entry.block.jr_north = {skeleton:"pebble_basic", color:"#A751E3", template:"%1 %2", params:[{type:"Text", text:Lang.Menus.go_up}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_up_image.png", position:{x:83, y:0}, size:22}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -13592,7 +15199,7 @@ Entry.block.jr_north = {skeleton:"pebble_basic", color:"#A751E3", template:"\uc7
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_east = {skeleton:"pebble_basic", color:"#A751E3", template:"\uc624\ub978\ucabd %1", params:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_right_image.png", position:{x:83, y:0}, size:22}], func:function() {
+Entry.block.jr_east = {skeleton:"pebble_basic", color:"#A751E3", template:"%1 %2", params:[{type:"Text", text:Lang.Menus.go_right}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_right_image.png", position:{x:83, y:0}, size:22}], func:function() {
   var b = Ntry.STATIC;
   if (this.isContinue) {
     if (this.isAction) {
@@ -13626,7 +15233,7 @@ Entry.block.jr_east = {skeleton:"pebble_basic", color:"#A751E3", template:"\uc62
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_south = {skeleton:"pebble_basic", color:"#A751E3", template:"\uc544\ub798\ucabd %1", params:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_down_image.png", position:{x:83, y:0}, size:22}], func:function() {
+Entry.block.jr_south = {skeleton:"pebble_basic", color:"#A751E3", template:"%1 %2", params:[{type:"Text", text:Lang.Menus.go_down}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_down_image.png", position:{x:83, y:0}, size:22}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -13659,7 +15266,7 @@ Entry.block.jr_south = {skeleton:"pebble_basic", color:"#A751E3", template:"\uc5
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", template:"\uc67c\ucabd %1", params:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_left_image.png", position:{x:83, y:0}, size:22}], func:function() {
+Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", template:"%1 %2", params:[{type:"Text", text:Lang.Menus.go_left}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_left_image.png", position:{x:83, y:0}, size:22}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -13692,14 +15299,14 @@ Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", template:"\uc67
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_start_basic = {skeleton:"basic_event", event:"start", color:"#3BBD70", template:"%1 \uc2dc\uc791 \ubc84\ud2bc\uc744 \ub20c\ub800\uc744 \ub584", params:[{type:"Indicator", boxMultiplier:2, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}], func:function() {
+Entry.block.jr_start_basic = {skeleton:"basic_event", event:"start", color:"#3BBD70", template:"%1 %2", params:[{type:"Indicator", boxMultiplier:2, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}, Lang.Menus.maze_when_run], func:function() {
   var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a;
   for (a in b) {
     this._unit = b[a];
   }
   Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
 }};
-Entry.block.jr_go_straight = {skeleton:"basic", color:"#A751E3", template:"\uc55e\uc73c\ub85c \uac00\uae30 %1", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}], func:function() {
+Entry.block.jr_go_straight = {skeleton:"basic", color:"#A751E3", template:"%1 %2", params:[Lang.Menus.go_forward, {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -13715,7 +15322,7 @@ Entry.block.jr_go_straight = {skeleton:"basic", color:"#A751E3", template:"\uc55
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_turn_left = {skeleton:"basic", color:"#A751E3", template:"\uc67c\ucabd\uc73c\ub85c \ub3cc\uae30 %1", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_l.png", size:24}], func:function() {
+Entry.block.jr_turn_left = {skeleton:"basic", color:"#A751E3", template:"%1 %2", params:[Lang.Menus.jr_turn_left, {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_l.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -13731,7 +15338,7 @@ Entry.block.jr_turn_left = {skeleton:"basic", color:"#A751E3", template:"\uc67c\
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_turn_right = {skeleton:"basic", color:"#A751E3", template:"\uc624\ub978\ucabd\uc73c\ub85c \ub3cc\uae30 %1", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_r.png", size:24}], func:function() {
+Entry.block.jr_turn_right = {skeleton:"basic", color:"#A751E3", template:"%1 %2", params:[Lang.Menus.jr_turn_right, {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_r.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -13747,7 +15354,7 @@ Entry.block.jr_turn_right = {skeleton:"basic", color:"#A751E3", template:"\uc624
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_go_slow = {skeleton:"basic", color:"#f46c6c", template:"\ucc9c\ucc9c\ud788 \uac00\uae30 %1", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_slow.png", size:24}], func:function() {
+Entry.block.jr_go_slow = {skeleton:"basic", color:"#f46c6c", template:"%1 %2", params:[Lang.Menus.go_slow, {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_slow.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -13763,13 +15370,13 @@ Entry.block.jr_go_slow = {skeleton:"basic", color:"#f46c6c", template:"\ucc9c\uc
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_repeat_until_dest = {skeleton:"basic_loop", color:"#498DEB", template:"%1 \ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30 %2", syntax:["BasicWhile", "true"], params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_goal_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
+Entry.block.jr_repeat_until_dest = {skeleton:"basic_loop", color:"#498DEB", template:"%1 %2 %3 %4", syntax:["BasicWhile", "true"], params:[Lang.Menus.repeat_until_reach_2, {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_goal_image.png", size:18}, Lang.Menus.repeat_until_reach_1, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
   var b = this.block.statements[0];
   if (0 !== b.getBlocks().length) {
     return this.executor.stepInto(b), Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_construction_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
+Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", template:"%1 %2 %3 %4", params:[Lang.Menus.jr_if_1, {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_construction_image.png", size:18}, Lang.Menus.jr_if_2, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
   if (!this.isContinue) {
     var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a, c;
     for (c in b) {
@@ -13787,7 +15394,7 @@ Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", templa
     }
   }
 }};
-Entry.block.jr_if_speed = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_speed_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
+Entry.block.jr_if_speed = {skeleton:"basic_loop", color:"#498DEB", template:Lang.Menus.jr_if_1 + " %1 " + Lang.Menus.jr_if_2 + " %2", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_speed_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
   if (!this.isContinue) {
     var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a, c;
     for (c in b) {
@@ -14185,7 +15792,9 @@ Entry.BlockMenu = function(b, a, c, d) {
   };
   b.getCategoryCodes = function(a) {
     a = this._convertSelector(a);
-    return this._categoryCodes[a];
+    var b = this._categoryCodes[a];
+    b instanceof Entry.Code || (b = this._categoryCodes[a] = new Entry.Code(b));
+    return b;
   };
   b._convertSelector = function(a) {
     if (isNaN(a)) {
@@ -14221,7 +15830,17 @@ Entry.BlockMenu = function(b, a, c, d) {
       var d = a[b], e = [];
       d.blocks.forEach(function(a) {
         var b = Entry.block[a];
-        b && b.def ? e.push([b.def]) : e.push([{type:a}]);
+        if (b && b.def) {
+          if (b.defs) {
+            for (a = 0;a < b.defs.length;a++) {
+              e.push([b.defs[a]]);
+            }
+          } else {
+            e.push([b.def]);
+          }
+        } else {
+          e.push([{type:a}]);
+        }
       });
       d = d.category;
       this._categories.push(d);
@@ -14250,13 +15869,16 @@ Entry.BlockMenu = function(b, a, c, d) {
   };
   b._addControl = function(a) {
     var b = this;
-    a.on("mousewheel", function() {
+    a.on("wheel", function() {
       b._mouseWheel.apply(b, arguments);
     });
   };
   b._mouseWheel = function(a) {
     a = a.originalEvent;
-    this._scroller.scroll((-a.wheelDeltaY || a.deltaY) / 3);
+    a.preventDefault();
+    var b = Entry.disposeEvent;
+    b && b.notify(a);
+    this._scroller.scroll(-a.wheelDeltaY || a.deltaY / 3);
   };
   b.dominate = function(a) {
     this.svgBlockGroup.appendChild(a.view.svgGroup);
@@ -14368,6 +15990,7 @@ Entry.BlockMenuScroller.RADIUS = 7;
   };
 })(Entry.BlockMenuScroller.prototype);
 Entry.BlockView = function(b, a, c) {
+  console.log("block type", b.type);
   Entry.Model(this, !1);
   this.block = b;
   this._board = a;
@@ -14380,6 +16003,7 @@ Entry.BlockView = function(b, a, c) {
   this._contents = [];
   this._statements = [];
   this.magnet = {};
+  this._paramMap = {};
   d.magnets && d.magnets(this).next && (this.svgGroup.nextMagnet = this.block, this._nextGroup = this.svgGroup.elem("g"), this._observers.push(this.observe(this, "_updateMagnet", ["contentHeight"])));
   this.isInBlockMenu = this.getBoard() instanceof Entry.BlockMenu;
   d.morph && this._observers.push(this.block.observe(this, "_renderPath", d.morph, !1));
@@ -14387,7 +16011,7 @@ Entry.BlockView = function(b, a, c) {
   this.mouseHandler = function() {
     var a = e.block.events;
     a && a.mousedown && a.mousedown.forEach(function(a) {
-      a();
+      a(e);
     });
     e.onMouseDown.apply(e, arguments);
   };
@@ -14405,9 +16029,12 @@ Entry.BlockView = function(b, a, c) {
   this.dragMode = Entry.DRAG_MODE_NONE;
   Entry.Utils.disableContextmenu(this.svgGroup.node);
   this._targetType = this._getTargetType();
-  (a = b.events.whenBlockAdd) && !this.isInBlockMenu && a.forEach(function(a) {
+  (a = b.events.viewAdd) && !this.isInBlockMenu && a.forEach(function(a) {
     Entry.Utils.isFunction(a) && a(b);
   });
+  if ("function_general" == this.block.type) {
+    debugger;
+  }
 };
 Entry.BlockView.PARAM_SPACE = 5;
 Entry.BlockView.DRAG_RADIUS = 5;
@@ -14433,7 +16060,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
     this.block.isDeletable() || (g = Entry.Utils.colorLighten(g));
     this._fillColor = g;
     f = {d:f, fill:g, class:"blockPath"};
-    if (this.magnet.next) {
+    if (this.magnet.next || this._skeleton.nextShadow) {
       g = this.getBoard().suffix, this.pathGroup.attr({filter:"url(#entryBlockShadowFilter_" + g + ")"});
     } else {
       if (this.magnet.string || this.magnet.bool) {
@@ -14463,8 +16090,9 @@ Entry.BlockView.DRAG_RADIUS = 5;
           var h = e[g].trim();
           if (0 !== h.length) {
             if (d.test(h)) {
-              var k = Number(h.split("%")[1]) - 1, h = f[k];
-              this._contents.push(new Entry["Field" + h.type](h, this, k, a));
+              var k = Number(h.split("%")[1]) - 1, h = f[k], h = new Entry["Field" + h.type](h, this, k, a, g);
+              this._contents.push(h);
+              this._paramMap[k] = h;
             } else {
               this._contents.push(new Entry.FieldText({text:h}, this));
             }
@@ -14492,25 +16120,26 @@ Entry.BlockView.DRAG_RADIUS = 5;
   };
   b.alignContent = function(a) {
     !0 !== a && (a = !1);
-    for (var b = 0, d = 0, e = 0;e < this._contents.length;e++) {
-      var f = this._contents[e];
-      f.align(b, 0, a);
-      e !== this._contents.length - 1 && (b += Entry.BlockView.PARAM_SPACE);
-      f = f.box;
-      d = Math.max(f.height, d);
-      b += f.width;
+    for (var b = 0, d = 0, e = 0, f = 0, g = 0, h = 0, k = 0;k < this._contents.length;k++) {
+      var l = this._contents[k];
+      l instanceof Entry.FieldLineBreak ? (this._alignStatement(a, f), l.align(f), f++, d = l.box.y, b = 8) : (l.align(b, d, a), k !== this._contents.length - 1 && (b += Entry.BlockView.PARAM_SPACE));
+      l = l.box;
+      0 !== f ? h = Math.max(1E3 * Math.round(l.height), h) : e = Math.max(l.height, e);
+      b += l.width;
+      g = Math.max(g, b);
+      this.set({contentWidth:g, contentHeight:e});
     }
-    this.set({contentWidth:b, contentHeight:d});
-    if (this._statements.length) {
-      for (b = this._skeleton.statementPos ? this._skeleton.statementPos(this) : [], e = 0;e < this._statements.length;e++) {
-        d = this._statements[e], (f = b[e]) && d.align(f.x, f.y, a);
-      }
-    }
+    this.set({contentHeight:e + h});
+    this._statements.length != f && this._alignStatement(a, f);
     a = this.getContentPos();
     this.contentSvgGroup.attr("transform", "translate(" + a.x + "," + a.y + ")");
     this.contentPos = a;
     this._render();
     this._updateMagnet();
+  };
+  b._alignStatement = function(a, b) {
+    var d = this._skeleton.statementPos ? this._skeleton.statementPos(this) : [], e = this._statements[b];
+    e && (d = d[b]) && e.align(d.x, d.y, a);
   };
   b._render = function() {
     this._renderPath();
@@ -14541,8 +16170,15 @@ Entry.BlockView.DRAG_RADIUS = 5;
     return this._moveTo(this.x + a, this.y + b, d);
   };
   b._addControl = function() {
+    var a = this;
     this._mouseEnable = !0;
-    $(this.svgGroup).bind("mousedown.blockViewMousedown touchstart.blockViewMousedown", this.mouseHandler);
+    $(this.svgGroup).bind("mousedown.blockViewMousedown touchstart.blockViewMousedown", a.mouseHandler);
+    var b = a.block.events;
+    b && b.dblclick && (console.log(b.dblclick), $(this.svgGroup).dblclick(function() {
+      b.dblclick.forEach(function(b) {
+        b && b(a);
+      });
+    }));
   };
   b.removeControl = function() {
     this._mouseEnable = !1;
@@ -14554,19 +16190,20 @@ Entry.BlockView.DRAG_RADIUS = 5;
       var c = e.workspace.getMode(), d;
       c === Entry.Workspace.MODE_VIMBOARD && b.vimBoardEvent(a, "dragOver");
       d = a.originalEvent && a.originalEvent.touches ? a.originalEvent.touches[0] : a;
-      var f = l.mouseDownCoordinate, f = Math.sqrt(Math.pow(d.pageX - f.x, 2) + Math.pow(d.pageY - f.y, 2));
-      (l.dragMode == Entry.DRAG_MODE_DRAG || f > Entry.BlockView.DRAG_RADIUS) && l.movable && (l.isInBlockMenu ? e.cloneToGlobal(a) : (l.dragMode != Entry.DRAG_MODE_DRAG && (l._toGlobalCoordinate(), l.dragMode = Entry.DRAG_MODE_DRAG, l.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(l, c)), this.animating && this.set({animating:!1}), 0 === l.dragInstance.height && l.dragInstance.set({height:-1 + l.height}), a = l.dragInstance, l._moveBy(d.pageX - a.offsetX, d.pageY - a.offsetY, !1), 
-      a.set({offsetX:d.pageX, offsetY:d.pageY}), Entry.GlobalSvg.position(), (d = l._getCloseBlock()) ? e.setMagnetedBlock(d.view) : e.setMagnetedBlock(null), l.originPos || (l.originPos = {x:l.x, y:l.y})));
+      var f = m.mouseDownCoordinate, f = Math.sqrt(Math.pow(d.pageX - f.x, 2) + Math.pow(d.pageY - f.y, 2));
+      (m.dragMode == Entry.DRAG_MODE_DRAG || f > Entry.BlockView.DRAG_RADIUS) && m.movable && (m.isInBlockMenu ? e.cloneToGlobal(a) : (a = !1, m.dragMode != Entry.DRAG_MODE_DRAG && (m._toGlobalCoordinate(), m.dragMode = Entry.DRAG_MODE_DRAG, m.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(m, c), a = !0), this.animating && this.set({animating:!1}), 0 === m.dragInstance.height && m.dragInstance.set({height:-1 + m.height}), c = m.dragInstance, m._moveBy(d.pageX - c.offsetX, d.pageY - 
+      c.offsetY, !1), c.set({offsetX:d.pageX, offsetY:d.pageY}), Entry.GlobalSvg.position(), (d = m._getCloseBlock()) ? e.setMagnetedBlock(d.view) : e.setMagnetedBlock(null), m.originPos || (m.originPos = {x:m.x, y:m.y}), a && e.generateCodeMagnetMap()));
     }
     function d(a) {
       $(document).unbind(".block");
-      l.terminateDrag(a);
+      m.terminateDrag(a);
       e && e.set({dragBlock:null});
-      l._changeFill(!1);
+      m._changeFill(!1);
       Entry.GlobalSvg.remove();
       delete this.mouseDownCoordinate;
-      delete l.dragInstance;
+      delete m.dragInstance;
     }
+    console.log(this.block.pointer());
     a.stopPropagation && a.stopPropagation();
     a.preventDefault && a.preventDefault();
     this._changeFill(!1);
@@ -14595,18 +16232,18 @@ Entry.BlockView.DRAG_RADIUS = 5;
           f = [];
           var g = {text:"\ube14\ub85d \ubcf5\uc0ac & \ubd99\uc5ec\ub123\uae30", enable:this.copyable, callback:function() {
             e.code.createThread(k.copy());
-          }}, m = {text:"\ube14\ub85d \ubcf5\uc0ac", enable:this.copyable, callback:function() {
+          }}, l = {text:"\ube14\ub85d \ubcf5\uc0ac", enable:this.copyable, callback:function() {
             h.block.copyToClipboard();
           }}, n = {text:"\ube14\ub85d \uc0ad\uc81c", enable:k.isDeletable(), callback:function() {
             h.block.doDestroy(!0);
           }};
           f.push(g);
-          f.push(m);
+          f.push(l);
           f.push(n);
           Entry.ContextMenu.show(f);
         }
       }
-      var l = this;
+      var m = this;
       e.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD && a && (a = new MouseEvent("dragStart", {view:window, bubbles:!0, cancelable:!0, clientX:event.clientX, clientY:event.clientY}), document.getElementsByClassName("CodeMirror")[0].dispatchEvent(a));
     }
   };
@@ -14630,12 +16267,12 @@ Entry.BlockView.DRAG_RADIUS = 5;
         switch(Entry.GlobalSvg.terminateDrag(this)) {
           case g.DONE:
             g = this._getCloseBlock();
-            d && !g ? Entry.do("separateBlock", e) : d || g || f ? g ? (g.view.magnet && g.view.magnet.next ? (this.bindPrev(g), g instanceof Entry.Block ? Entry.do("insertBlock", e, g) : g.insertTopBlock(e)) : Entry.do("insertBlock", e, g), createjs.Sound.play("entryMagneting"), a = !0) : Entry.do("separateBlock", e) : e.getThread().view.isGlobal() ? e.doMove() : Entry.do("separateBlock", e);
+            d && !g ? Entry.do("separateBlock", e) : d || g || f ? g ? (Entry.do("insertBlock", e, g).isPass(), createjs.Sound.play("entryMagneting"), a = !0) : Entry.do("moveBlock", e).isPass() : e.getThread().view.isGlobal() ? Entry.do("moveBlock", e) : Entry.do("separateBlock", e);
             break;
           case g.RETURN:
             e = this.block;
             f = this.originPos;
-            d ? (this.set({animating:!1}), createjs.Sound.play("entryMagneting"), this.bindPrev(d), e.insert(d)) : (d = e.getThread().view.getParent(), d instanceof Entry.FieldStatement ? (this.bindPrev(d), d.insertTopBlock(e)) : d instanceof Entry.FieldBlock ? e.replace(d._valueBlock) : this._moveTo(f.x, f.y, !1));
+            d ? (this.set({animating:!1}), createjs.Sound.play("entryMagneting"), this.bindPrev(d), e.insert(d)) : (d = e.getThread().view.getParent(), d instanceof Entry.Code ? this._moveTo(f.x, f.y, !1) : Entry.do("insertBlock", e, d));
             break;
           case g.REMOVE:
             createjs.Sound.play("entryDelete"), f ? this.block.destroy(!1, !0) : this.block.doDestroyBelow(!1);
@@ -14680,7 +16317,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
       a.constructor !== Entry.Block && a.destroy();
     });
     var d = this.block;
-    (a = d.events.whenBlockDestroy) && !this.isInBlockMenu && a.forEach(function(a) {
+    (a = d.events.viewDestroy) && !this.isInBlockMenu && a.forEach(function(a) {
       Entry.Utils.isFunction(a) && a(d);
     });
     this._schemaChangeEvent && this._schemaChangeEvent.destroy();
@@ -14848,9 +16485,13 @@ Entry.BlockView.DRAG_RADIUS = 5;
       }
     }
   };
+  b.getParam = function(a) {
+    return this._paramMap[a];
+  };
 })(Entry.BlockView.prototype);
-Entry.Code = function(b) {
+Entry.Code = function(b, a) {
   Entry.Model(this, !1);
+  a && (this.object = a);
   this._data = new Entry.Collection;
   this._eventMap = {};
   this._blockMap = {};
@@ -14858,14 +16499,15 @@ Entry.Code = function(b) {
   this.executeEndEvent = new Entry.Event(this);
   this.changeEvent = new Entry.Event(this);
   this.changeEvent.attach(this, this._handleChange);
+  this._maxZIndex = 0;
   this.load(b);
 };
+Entry.STATEMENT = 0;
+Entry.PARAM = -1;
 (function(b) {
   b.schema = {view:null, board:null};
   b.load = function(a) {
-    if (!(a instanceof Array)) {
-      return console.error("code must be array");
-    }
+    a instanceof Array || (a = JSON.parse(a));
     this.clear();
     for (var b = 0;b < a.length;b++) {
       this._data.push(new Entry.Thread(a[b], this));
@@ -14893,12 +16535,17 @@ Entry.Code = function(b) {
       0 > e || d.splice(e, 1);
     }
   };
-  b.raiseEvent = function(a, b) {
-    var d = this._eventMap[a];
-    if (void 0 !== d) {
-      for (var e = 0;e < d.length;e++) {
-        this.executors.push(new Entry.Executor(d[e], b));
+  b.raiseEvent = function(a, b, d) {
+    a = this._eventMap[a];
+    var e = [];
+    if (void 0 !== a) {
+      for (var f = 0;f < a.length;f++) {
+        var g = a[f];
+        if (void 0 === d || -1 < g.params.indexOf(d)) {
+          g = new Entry.Executor(a[f], b), this.executors.push(g), e.push(g);
+        }
       }
+      return e;
     }
   };
   b.getEventMap = function(a) {
@@ -14911,11 +16558,25 @@ Entry.Code = function(b) {
     for (var a = this.executors, b = 0;b < a.length;b++) {
       var d = a[b];
       d.execute();
-      null === d.scope.block && (a.splice(b, 1), b--, 0 === a.length && this.executeEndEvent.notify());
+      d.isEnd() && (a.splice(b, 1), b--, 0 === a.length && this.executeEndEvent.notify());
     }
+  };
+  b.removeExecutor = function(a) {
+    a = this.executors.indexOf(a);
+    -1 < a && this.executors.splice(a, 1);
   };
   b.clearExecutors = function() {
     this.executors = [];
+  };
+  b.clearExecutorsByEntity = function(a) {
+    for (var b = [];this.executors.length;) {
+      var d = this.executors.shift();
+      d.entity !== a ? b.push(d) : d.end();
+    }
+    this.executors = b;
+  };
+  b.addExecutor = function(a) {
+    this.executors.push(a);
   };
   b.createThread = function(a) {
     if (!(a instanceof Array)) {
@@ -14967,8 +16628,10 @@ Entry.Code = function(b) {
     return JSON.stringify(this.toJSON());
   };
   b.dominate = function(a) {
-    var b = this._data, d = b.indexOf(a);
-    0 > d || (b.splice(d, 1), b.push(a));
+    a.view.setZIndex(this._maxZIndex++);
+  };
+  b.indexOf = function(a) {
+    return this._data.indexOf(a);
   };
   b._handleChange = function() {
     Entry.creationChangedEvent && Entry.creationChangedEvent.notify();
@@ -14989,6 +16652,39 @@ Entry.Code = function(b) {
   };
   b.unregisterBlock = function(a) {
     delete this._blockMap[a.id];
+  };
+  b.getByPointer = function(a) {
+    a = a.concat();
+    a.shift();
+    a.shift();
+    for (var b = this._data[a.shift()].getBlock(a.shift());a.length;) {
+      b instanceof Entry.Block || (b = b.getValueBlock());
+      var d = a.shift(), e = a.shift();
+      -1 < d ? b = b.statements[d].getBlock(e) : -1 === d && (b = b.view.getParam(e));
+    }
+    return b;
+  };
+  b.getTargetByPointer = function(a) {
+    a = a.concat();
+    a.shift();
+    a.shift();
+    var b = this._data[a.shift()], d;
+    if (1 === a.length) {
+      d = b.getBlock(a.shift() - 1);
+    } else {
+      for (d = b.getBlock(a.shift());a.length;) {
+        d instanceof Entry.Block || (d = d.getValueBlock());
+        var e = a.shift(), b = a.shift();
+        -1 < e ? (d = d.statements[e], d = a.length ? d.getBlock(b) : 0 === b ? d.view.getParent() : d.getBlock(b - 1)) : -1 === e && (d = d.view.getParam(b));
+      }
+    }
+    return d;
+  };
+  b.getBlockList = function() {
+    for (var a = this.getThreads(), b = [], d = 0;d < a.length;d++) {
+      b = b.concat(a[d].getBlockList());
+    }
+    return b;
   };
 })(Entry.Code.prototype);
 Entry.CodeView = function(b, a) {
@@ -15044,21 +16740,24 @@ Entry.Executor = function(b, a) {
   this.scope = new Entry.Scope(b, this);
   this.entity = a;
   this._callStack = [];
+  this.register = {};
 };
 (function(b) {
   b.execute = function() {
     for (;;) {
       var a = this.scope.block._schema.func.call(this.scope, this.entity, this.scope);
-      if (void 0 === a || null === a) {
+      if (void 0 === a || null === a || a === Entry.STATIC.PASS) {
         if (this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this), null === this.scope.block) {
           if (this._callStack.length) {
-            this.scope = this._callStack.pop();
+            if (a = this.scope, this.scope = this._callStack.pop(), this.scope.isLooped !== a.isLooped) {
+              break;
+            }
           } else {
             break;
           }
         }
       } else {
-        if (a === Entry.STATIC.CONTINUE) {
+        if (a !== Entry.STATIC.CONTINUE && (a === Entry.STATIC.BREAK || this.scope === a)) {
           break;
         }
       }
@@ -15066,9 +16765,23 @@ Entry.Executor = function(b, a) {
   };
   b.stepInto = function(a) {
     a instanceof Entry.Thread || console.error("Must step in to thread");
-    this._callStack.push(this.scope);
     a = a.getFirstBlock();
+    if (!a) {
+      return Entry.STATIC.BREAK;
+    }
+    this._callStack.push(this.scope);
     this.scope = new Entry.Scope(a, this);
+    return Entry.STATIC.CONTINUE;
+  };
+  b.break = function() {
+    this._callStack.length && (this.scope = this._callStack.pop());
+    return Entry.STATIC.PASS;
+  };
+  b.end = function() {
+    null === this.scope.block;
+  };
+  b.isEnd = function() {
+    return null === this.scope.block;
   };
 })(Entry.Executor.prototype);
 Entry.Scope = function(b, a) {
@@ -15079,31 +16792,55 @@ Entry.Scope = function(b, a) {
 (function(b) {
   b.callReturn = function() {
   };
+  b.getParam = function(a) {
+    a = this.block.params[a];
+    var b = new Entry.Scope(a, this.executor);
+    return Entry.block[a.type].func.call(b, this.entity, b);
+  };
+  b.getParams = function() {
+    var a = this;
+    return this.block.params.map(function(b) {
+      if (b instanceof Entry.Block) {
+        var d = new Entry.Scope(b, a.executor);
+        return Entry.block[b.type].func.call(d, a.entity, d);
+      }
+      return b;
+    });
+  };
   b.getValue = function(a, b) {
-    var d = this.block.params[0], e = new Entry.Scope(d, this.executor);
+    var d = this.block.params[this._getParamIndex(a, b)], e = new Entry.Scope(d, this.executor);
     return Entry.block[d.type].func.call(e, this.entity, e);
   };
   b.getStringValue = function(a, b) {
     return String(this.getValue(a, b));
   };
   b.getNumberValue = function(a, b) {
-    return Number(this.getValue(a, b));
+    return Number(this.getValue(a));
   };
   b.getBooleanValue = function(a, b) {
     return Number(this.getValue(a, b)) ? !0 : !1;
   };
-  b.getField = function() {
-    return this.block.params[0];
+  b.getField = function(a, b) {
+    return this.block.params[this._getParamIndex(a)];
   };
-  b.getStringField = function() {
-    return String(this.getField());
+  b.getStringField = function(a, b) {
+    return String(this.getField(a));
   };
-  b.getNumberField = function() {
-    return Number(this.getField());
+  b.getNumberField = function(a) {
+    return Number(this.getField(a));
   };
-  b.getStatement = function(a) {
-    this.executor.stepInto(this.block.statements[0]);
-    return Entry.STATIC.CONTINUE;
+  b.getStatement = function(a, b) {
+    return this.executor.stepInto(this.block.statements[this._getStatementIndex(a, b)]);
+  };
+  b._getParamIndex = function(a) {
+    return Entry.block[this.type].paramsKeyMap[a];
+  };
+  b._getStatementIndex = function(a) {
+    return Entry.block[this.type].statementsKeyMap[a];
+  };
+  b.die = function() {
+    this.block = null;
+    return Entry.STATIC.BREAK;
   };
 })(Entry.Scope.prototype);
 Entry.Field = function() {
@@ -15115,7 +16852,14 @@ Entry.Field = function() {
   };
   b.destroyOption = function() {
     this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
+    this.disposeEvent && (Entry.disposeEvent.detach(this.disposeEvent), delete this.documentDownEvent);
     this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
+  };
+  b._attachDisposeEvent = function(a) {
+    var b = this;
+    b.disposeEvent = Entry.disposeEvent.attach(b, a || function() {
+      b.destroyOption();
+    });
   };
   b.align = function(a, b, d) {
     var e = this.svgGroup;
@@ -15185,7 +16929,8 @@ Entry.FieldAngle = function(b, a, c) {
   this.position = b.position;
   this._contents = b;
   this._index = c;
-  this.setValue(this.modValue(this.getValue()));
+  b = this.getValue();
+  this.setValue(this.modValue(void 0 !== b ? b : 90));
   this.renderStart();
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
@@ -15204,8 +16949,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
   b.renderOptions = function() {
     var a = this;
     this.destroyOption();
-    this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
-      Entry.documentMousedown.detach(this.documentDownEvent);
+    this._attachDisposeEvent(function() {
       a.applyValue();
       a.destroyOption();
     });
@@ -15225,16 +16969,16 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     this.optionGroup.select();
     this.svgOptionGroup = this.appendSvgOptionGroup();
     this.svgOptionGroup.elem("circle", {x:0, y:0, r:49, class:"entry-field-angle-circle"});
-    this._dividerGroup = this.svgOptionGroup.group();
+    this._dividerGroup = this.svgOptionGroup.elem("g");
     for (b = 0;360 > b;b += 15) {
-      this._dividerGroup.line(49, 0, 49 - (0 === b % 45 ? 10 : 5), 0).attr({transform:"rotate(" + b + ", 0, 0)", class:"entry-angle-divider"});
+      this._dividerGroup.elem("line", {x1:49, y1:0, x2:49 - (0 === b % 45 ? 10 : 5), y2:0, transform:"rotate(" + b + ", 0, 0)", class:"entry-angle-divider"});
     }
-    b = this.getRelativePos();
+    b = this.getAbsolutePosFromBoard();
     b.x += this.box.width / 2;
     b.y = b.y + this.box.height / 2 + 49 + 1;
-    this.svgOptionGroup.attr({class:"entry-field-angle", transform:"t" + b.x + " " + b.y});
-    var b = a.getAbsolutePos(), d = [b.x + a.box.width / 2, b.y + a.box.height / 2 + 1];
-    this.svgOptionGroup.mousemove(function(b) {
+    this.svgOptionGroup.attr({class:"entry-field-angle", transform:"translate(" + b.x + "," + b.y + ")"});
+    var b = a.getAbsolutePosFromDocument(), d = [b.x + a.box.width / 2, b.y + a.box.height / 2 + 1];
+    $(this.svgOptionGroup).mousemove(function(b) {
       a.optionGroup.val(a.modValue(function(a, b) {
         var c = b[0] - a[0], d = b[1] - a[1] - 49 - 1, e = Math.atan(-d / c), e = Entry.toDegrees(e), e = 90 - e;
         0 > c ? e += 180 : 0 < d && (e += 360);
@@ -15247,16 +16991,15 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
   b.updateGraph = function() {
     this._fillPath && this._fillPath.remove();
     var a = Entry.toRadian(this.getValue()), b = 49 * Math.sin(a), d = -49 * Math.cos(a), a = a > Math.PI ? 1 : 0;
-    this._fillPath = this.svgOptionGroup.path("M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z".replace("%X", b).replace("%Y", d).replace("%LARGE", a));
-    this._fillPath.attr({class:"entry-angle-fill-area"});
-    this.svgOptionGroup.append(this._dividerGroup);
+    this._fillPath = this.svgOptionGroup.elem("path", {d:"M 0,0 v -49 A 49,49 0 %LARGE 1 %X,%Y z".replace("%X", b).replace("%Y", d).replace("%LARGE", a), class:"entry-angle-fill-area"});
+    this.svgOptionGroup.appendChild(this._dividerGroup);
     this._indicator && this._indicator.remove();
-    this._indicator = this.svgOptionGroup.line(0, 0, b, d);
+    this._indicator = this.svgOptionGroup.elem("line", {x1:0, y1:0, x2:b, y2:d});
     this._indicator.attr({class:"entry-angle-indicator"});
   };
   b.applyValue = function() {
     var a = this.optionGroup.val();
-    isNaN(a) || (a = this.modValue(a), this.setValue(a), this.updateGraph(), this.textElement.node.textContent = this.getValue(), this.optionGroup && this.optionGroup.val(a), this.resize());
+    isNaN(a) || (a = this.modValue(a), this.setValue(a), this.updateGraph(), this.textElement.textContent = this.getValue(), this.optionGroup && this.optionGroup.val(a), this.resize());
   };
   b.resize = function() {
     var a = this.getTextWidth();
@@ -15275,14 +17018,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     return a % 360;
   };
   b.destroyOption = function() {
-    this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
+    this.disposeEvent && (Entry.disposeEvent.detach(this.disposeEvent), delete this.documentDownEvent);
     this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
     this.svgOptionGroup && (this.svgOptionGroup.remove(), delete this.svgOptionGroup);
     this.textElement.textContent = this.getText();
     this.resize();
   };
 })(Entry.FieldAngle.prototype);
-Entry.FieldBlock = function(b, a, c, d) {
+Entry.FieldBlock = function(b, a, c, d, e) {
   Entry.Model(this, !1);
   this._blockView = a;
   this._block = a.block;
@@ -15290,6 +17033,7 @@ Entry.FieldBlock = function(b, a, c, d) {
   this.box = new Entry.BoxModel;
   this.changeEvent = new Entry.Event(this);
   this._index = c;
+  this.contentIndex = e;
   this._content = b;
   this.acceptType = b.accept;
   this._restoreCurrent = b.restore;
@@ -15356,13 +17100,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     a.getThread().view.setParent(this);
     return this._valueBlock;
   };
-  b._getValueBlock = function() {
+  b.getValueBlock = function() {
     return this._valueBlock;
   };
   b.updateValueBlock = function(a) {
     a instanceof Entry.Block || (a = void 0);
-    this._sizeObserver && this._sizeObserver.destroy();
-    this._posObserver && this._posObserver.destroy();
+    this._destroyObservers();
     a = this._setValueBlock(a).view;
     a.bindPrev(this);
     this._blockView.alignContent();
@@ -15370,6 +17113,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     this._sizeObserver = a.observe(this, "calcWH", ["width", "height"]);
     a = this._blockView.getBoard();
     a.constructor === Entry.Board && a.generateCodeMagnetMap();
+  };
+  b._destroyObservers = function() {
+    this._sizeObserver && this._sizeObserver.destroy();
+    this._posObserver && this._posObserver.destroy();
   };
   b.getPrevBlock = function(a) {
     return this._valueBlock === a ? this : null;
@@ -15393,6 +17140,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
   };
   b.separate = function(a) {
     this.getCode().createThread([a]);
+    this.calcWH();
     this.changeEvent.notify();
   };
   b.getCode = function() {
@@ -15404,7 +17152,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
   b.replace = function(a) {
     "string" === typeof a && (a = this._createBlockByType(a));
     var b = this._valueBlock;
-    Entry.block[b.type].isPrimitive ? b.destroy() : (b.view._toGlobalCoordinate(), this.separate(b), b.view.bumpAway(30, 150));
+    Entry.block[b.type].isPrimitive ? (b.doNotSplice = !0, b.destroy()) : (this._destroyObservers(), b.view._toGlobalCoordinate(), this.separate(b), b.view.bumpAway(30, 150));
     this.updateValueBlock(a);
     a.view._toLocalCoordinate(this.svgGroup);
     this.calcWH();
@@ -15434,9 +17182,15 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
   b.getThread = function() {
     return this;
   };
+  b.pointer = function(a) {
+    a.unshift(this._index);
+    a.unshift(Entry.PARAM);
+    return this._block.pointer(a);
+  };
 })(Entry.FieldBlock.prototype);
 Entry.FieldColor = function(b, a, c) {
   this._block = a.block;
+  this._blockView = a;
   this.box = new Entry.BoxModel;
   this.svgGroup = null;
   this._contents = b;
@@ -15448,21 +17202,18 @@ Entry.FieldColor = function(b, a, c) {
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
 (function(b) {
-  b.renderStart = function(a) {
-    this.svgGroup = a.contentSvgGroup.elem("g", {class:"entry-field-color"});
-    var b = this._position;
-    b ? (a = b.x || 0, b = b.y || 0) : (a = 0, b = -8);
-    this._header = this.svgGroup.elem("rect", {x:a, y:b, width:14.5, height:16, fill:this.getValue()});
+  b.renderStart = function() {
+    this.svgGroup = this._blockView.contentSvgGroup.elem("g", {class:"entry-field-color"});
+    var a = this._position, b;
+    a ? (b = a.x || 0, a = a.y || 0) : (b = 0, a = -8);
+    this._header = this.svgGroup.elem("rect", {x:b, y:a, width:14.5, height:16, fill:this.getValue()});
     this._bindRenderOptions();
-    this.box.set({x:a, y:b, width:14.5, height:16});
+    this.box.set({x:b, y:a, width:14.5, height:16});
   };
   b.renderOptions = function() {
     var a = this;
     this.destroyOption();
-    this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
-      Entry.documentMousedown.detach(this.documentDownEvent);
-      a.optionGroup.remove();
-    });
+    this._attachDisposeEvent();
     var b = Entry.FieldColor.getWidgetColorList();
     this.optionGroup = Entry.Dom("table", {class:"entry-widget-color-table", parent:$("body")});
     for (var d = 0;d < b.length;d++) {
@@ -15539,12 +17290,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
   b.renderOptions = function() {
     var a = this;
     this.destroyOption();
-    this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
-      Entry.documentMousedown.detach(this.documentDownEvent);
-      a.optionGroup.remove();
-    });
+    this._attachDisposeEvent();
     this.optionGroup = Entry.Dom("ul", {class:"entry-widget-dropdown", parent:$("body")});
-    for (var b = this._contents.options, d = 0, e = b.length;d < e;d++) {
+    for (var b = this._contents.options, b = this._contents.options, d = 0, e = b.length;d < e;d++) {
       var f = b[d], g = f[0], f = f[1], h = Entry.Dom("li", {class:"rect", parent:this.optionGroup}), k = "";
       this.getValue() == f && (k += "\u2713  ");
       h.text(k += g);
@@ -15560,16 +17308,27 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         });
       })(h, f);
     }
-    b = this.getAbsolutePosFromDocument();
-    b.x += this.box.width / 2 - this.optionGroup.width() / 2;
-    b.y += this.box.height / 2;
-    this.optionGroup.css({left:b.x, top:b.y});
+    this._position();
+  };
+  b._position = function() {
+    var a = this.getAbsolutePosFromDocument();
+    a.y += this.box.height / 2;
+    var b = $(document).height(), d = this.optionGroup.height();
+    if (b < a.y + d) {
+      a.x += this.box.width + 1;
+      var b = this.getAbsolutePosFromBoard(), e = this._blockView.getBoard().svgDom.height(), e = e - (e - b.y);
+      e - 20 < d && this.optionGroup.height(e - e % 20);
+      a.y -= this.optionGroup.height();
+    } else {
+      a.x += this.box.width / 2 - this.optionGroup.width() / 2;
+    }
+    this.optionGroup.css({left:a.x, top:a.y});
   };
   b.applyValue = function(a) {
     this.value != a && (this.setValue(a), this.textElement.textContent = this.getTextByValue(a), this.resize());
   };
   b.getTextByValue = function(a) {
-    if (!a) {
+    if (!a || "null" === a) {
       return Lang.Blocks.no_target;
     }
     for (var b = this._contents.options, d = 0, e = b.length;d < e;d++) {
@@ -15602,21 +17361,18 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
     var a = [];
     Entry.container && (a = Entry.container.getDropdownList(this._contents.menuName));
     this._contents.options = a;
-    a = this._contents.options;
-    a = this.getValue() || 0 !== a.length ? a[0][1] : null;
-    this.setValue(a);
+    var a = this._contents.options, b = this.getValue();
+    b && "null" != b || (b = 0 !== a.length ? a[0][1] : null);
+    this.setValue(b);
   };
   b.renderOptions = function() {
     var a = this;
     this.destroyOption();
-    this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
-      Entry.documentMousedown.detach(this.documentDownEvent);
-      a.optionGroup.remove();
-    });
+    this._attachDisposeEvent();
     this.optionGroup = Entry.Dom("ul", {class:"entry-widget-dropdown", parent:$("body")});
     var b = Entry.container.getDropdownList(this._contents.menuName);
     this._contents.options = b;
-    for (var d = b.length - 1;0 <= d;d--) {
+    for (var d = 0;d < b.length;d++) {
       var e = b[d], f = e[0], e = e[1], g = Entry.Dom("li", {class:"rect", parent:this.optionGroup}), h = "";
       this.getValue() == e && (h += "\u2713  ");
       g.text(h += f);
@@ -15632,10 +17388,7 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
         });
       })(g, e);
     }
-    b = this.getAbsolutePosFromDocument();
-    b.x += this.box.width / 2 - this.optionGroup.width() / 2;
-    b.y += this.box.height / 2;
-    this.optionGroup.css({left:b.x, top:b.y});
+    this._position();
   };
 })(Entry.FieldDropdownDynamic.prototype);
 Entry.FieldImage = function(b, a, c) {
@@ -15726,21 +17479,17 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     this.box.set({x:0, y:0, width:a, height:16});
   };
   b.renderOptions = function() {
-    var a = this;
     this.destroyOption();
     this._optionVisible = !0;
-    this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
-      Entry.documentMousedown.detach(this.documentDownEvent);
-      a.destroyOption();
-    });
-    var b = this.getAbsolutePosFromDocument();
-    b.x -= this.box.width / 2;
-    b.y += this.box.height / 2 + 1;
+    this._attachDisposeEvent();
+    var a = this.getAbsolutePosFromDocument();
+    a.x -= this.box.width / 2;
+    a.y += this.box.height / 2 + 1;
     this.optionGroup = Entry.Dom("img", {class:"entry-widget-keyboard-input", src:Entry.mediaFilePath + "/media/keyboard_workspace.png", parent:$("body")});
-    this.optionGroup.css({left:b.x, top:b.y});
+    this.optionGroup.css({left:a.x, top:a.y});
   };
   b.destroyOption = function() {
-    this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
+    this.disposeEvent && (Entry.disposeEvent.detach(this.disposeEvent), delete this.disposeEvent);
     this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
     this._optionVisible = !1;
   };
@@ -15770,7 +17519,24 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     Entry.keyPressed && this.keyPressed && Entry.keyPressed.detach(this.keyPressed);
   };
 })(Entry.FieldKeyboard.prototype);
-Entry.FieldOutput = function(b, a, c, d) {
+Entry.FieldLineBreak = function(b, a, c) {
+  this._block = a.block;
+  this._blockView = a;
+  this._index = c;
+  this.box = new Entry.BoxModel;
+  this.setValue(null);
+  this.renderStart();
+};
+Entry.Utils.inherit(Entry.Field, Entry.FieldLineBreak);
+(function(b) {
+  b.renderStart = function() {
+  };
+  b.align = function(a) {
+    var b = this._blockView;
+    0 !== b._statements.length && this.box.set({y:(b._statements[a].height || 20) + Math.max(b.contentHeight % 1E3, 30)});
+  };
+})(Entry.FieldLineBreak.prototype);
+Entry.FieldOutput = function(b, a, c, d, e) {
   Entry.Model(this, !1);
   this._blockView = a;
   this._block = a.block;
@@ -15778,6 +17544,7 @@ Entry.FieldOutput = function(b, a, c, d) {
   this.box = new Entry.BoxModel;
   this.changeEvent = new Entry.Event(this);
   this._index = c;
+  this.contentIndex = e;
   this._content = b;
   this.acceptType = b.accept;
   this.view = this;
@@ -15881,6 +17648,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
   b.getThread = function() {
     return this;
   };
+  b.getValueBlock = function() {
+    return this._valueBlock;
+  };
+  b.pointer = function(a) {
+    a.unshift(this._index);
+    a.unshift(Entry.PARAM);
+    return this._block.pointer(a);
+  };
 })(Entry.FieldOutput.prototype);
 Entry.FieldStatement = function(b, a, c) {
   Entry.Model(this, !1);
@@ -15891,7 +17666,7 @@ Entry.FieldStatement = function(b, a, c) {
   this.acceptType = b.accept;
   this._thread = this.statementSvgGroup = this.svgGroup = null;
   this._position = b.position;
-  this.observe(a, "alignContent", ["height"]);
+  this.observe(a, "alignContent", ["height"], !1);
   this.observe(this, "_updateBG", ["magneting"], !1);
   this.renderStart(a.getBoard());
 };
@@ -15910,9 +17685,10 @@ Entry.FieldStatement = function(b, a, c) {
     b.createView(a);
     b.view.setParent(this);
     if (a = b.getFirstBlock()) {
-      this._posObserver = a.view.observe(this, "removeFirstBlock", ["x", "y"]), a.view._toLocalCoordinate(this.statementSvgGroup), this.firstBlock = a;
+      a.view._toLocalCoordinate(this.statementSvgGroup), this.firstBlock = a;
     }
     b.changeEvent.attach(this, this.calcHeight);
+    b.changeEvent.attach(this, this.checkTopBlock);
     this.calcHeight();
   };
   b.align = function(a, b, d) {
@@ -15960,17 +17736,15 @@ Entry.FieldStatement = function(b, a, c) {
   b.insertTopBlock = function(a) {
     this._posObserver && this._posObserver.destroy();
     var b = this.firstBlock;
-    a.doInsert(this._thread);
-    this.firstBlock = a;
-    this._posObserver = a.view.observe(this, "removeFirstBlock", ["x", "y"], !1);
+    (this.firstBlock = a) && a.doInsert(this._thread);
     return b;
-  };
-  b.removeFirstBlock = function() {
-    this._posObserver && this._posObserver.destroy();
-    this.firstBlock = null;
   };
   b.getNextBlock = function() {
     return this.firstBlock;
+  };
+  b.checkTopBlock = function() {
+    var a = this._thread.getFirstBlock();
+    a && this.firstBlock !== a ? (this.firstBlock = a, a.view.bindPrev(this), a._updatePos()) : a || (this.firstBlock = null);
   };
 })(Entry.FieldStatement.prototype);
 Entry.FieldText = function(b, a, c) {
@@ -16028,8 +17802,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
   b.renderOptions = function() {
     var a = this;
     this.destroyOption();
-    this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
-      Entry.documentMousedown.detach(this.documentDownEvent);
+    this._attachDisposeEvent(function() {
       a.applyValue();
       a.destroyOption();
     });
@@ -16074,8 +17847,10 @@ Entry.GlobalSvg = {};
   b.RETURN = 2;
   b.createDom = function() {
     if (!this.inited) {
+      $("#globalSvgSurface").remove();
+      $("#globalSvg").remove();
       var a = $("body");
-      this._container = Entry.Dom("div", {classes:["globalSvgSurface", "entryRemove"], parent:a});
+      this._container = Entry.Dom("div", {classes:["globalSvgSurface", "entryRemove"], id:"globalSvgSurface", parent:a});
       this.svgDom = Entry.Dom($('<svg id="globalSvg" width="0" height="0"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:a});
       this.svg = Entry.SVG("globalSvg");
       this.top = this.left = this.width = 0;
@@ -16332,32 +18107,9 @@ Entry.Scroller.RADIUS = 7;
   };
 })(Entry.Scroller.prototype);
 Entry.Board = function(b) {
-  var a = b.dom, a = "string" === typeof a ? $("#" + a) : $(a);
-  if ("DIV" !== a.prop("tagName")) {
-    return console.error("Dom is not div element");
-  }
   Entry.Model(this, !1);
-  this.view = a;
-  this._svgId = "play" + (new Date).getTime();
-  this.workspace = b.workspace;
-  this._activatedBlockView = null;
-  this.wrapper = Entry.Dom("div", {parent:a, class:"entryBoardWrapper"});
-  this.svgDom = Entry.Dom($('<svg id="' + this._svgId + '" class="entryBoard" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this.wrapper});
-  this.visible = !0;
-  var c = this;
-  this.svg = Entry.SVG(this._svgId);
-  $(window).scroll(function() {
-    c.updateOffset();
-  });
+  this.createView(b);
   this._magnetMap = null;
-  this.svgGroup = this.svg.elem("g");
-  this.svgThreadGroup = this.svgGroup.elem("g");
-  this.svgThreadGroup.board = this;
-  this.svgBlockGroup = this.svgGroup.elem("g");
-  this.svgBlockGroup.board = this;
-  b.isOverlay ? (this.wrapper.addClass("entryOverlayBoard"), this.generateButtons(), this.suffix = "overlayBoard") : this.suffix = "board";
-  Entry.Utils.addFilters(this.svg, this.suffix);
-  this.patternRect = Entry.Utils.addBlockPattern(this.svg, this.suffix);
   Entry.ANIMATION_DURATION = 200;
   Entry.BOARD_PADDING = 100;
   this.updateOffset();
@@ -16368,10 +18120,36 @@ Entry.Board = function(b) {
   Entry.documentMousedown && (Entry.documentMousedown.attach(this, this.setSelectedBlock), Entry.documentMousedown.attach(this, this._removeActivated));
   Entry.keyPressed && Entry.keyPressed.attach(this, this._keyboardControl);
   Entry.windowResized && Entry.windowResized.attach(this, this.updateOffset);
-  this.observe(this, "generateCodeMagnetMap", ["dragBlock"], !1);
+  Entry.commander.setCurrentEditor("board", this);
 };
 (function(b) {
   b.schema = {code:null, dragBlock:null, magnetedBlockView:null, selectedBlockView:null};
+  b.createView = function(a) {
+    var b = a.dom, b = "string" === typeof b ? $("#" + b) : $(b);
+    if ("DIV" !== b.prop("tagName")) {
+      return console.error("Dom is not div element");
+    }
+    this.view = b;
+    this._svgId = "play" + (new Date).getTime();
+    this.workspace = a.workspace;
+    this._activatedBlockView = null;
+    this.wrapper = Entry.Dom("div", {parent:b, class:"entryBoardWrapper"});
+    this.svgDom = Entry.Dom($('<svg id="' + this._svgId + '" class="entryBoard" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this.wrapper});
+    this.visible = !0;
+    var d = this;
+    this.svg = Entry.SVG(this._svgId);
+    $(window).scroll(function() {
+      d.updateOffset();
+    });
+    this.svgGroup = this.svg.elem("g");
+    this.svgThreadGroup = this.svgGroup.elem("g");
+    this.svgThreadGroup.board = this;
+    this.svgBlockGroup = this.svgGroup.elem("g");
+    this.svgBlockGroup.board = this;
+    a.isOverlay ? (this.wrapper.addClass("entryOverlayBoard"), this.generateButtons(), this.suffix = "overlayBoard") : this.suffix = "board";
+    Entry.Utils.addFilters(this.svg, this.suffix);
+    this.patternRect = Entry.Utils.addBlockPattern(this.svg, this.suffix);
+  };
   b.changeCode = function(a) {
     this.codeListener && this.code.changeEvent.detach(this.codeListener);
     this.set({code:a});
@@ -16381,6 +18159,7 @@ Entry.Board = function(b) {
     });
     a.createView(this);
     this.generateCodeMagnetMap(a);
+    this.scroller.resizeScrollBar();
   };
   b.bindCodeView = function(a) {
     this.svgBlockGroup.remove();
@@ -16414,7 +18193,7 @@ Entry.Board = function(b) {
     a.bind("touchstart", function() {
       b.onMouseDown.apply(b, arguments);
     });
-    a.on("mousewheel", function() {
+    a.on("wheel", function() {
       b.mouseWheel.apply(b, arguments);
     });
   };
@@ -16450,7 +18229,7 @@ Entry.Board = function(b) {
           }
           var f = this;
           Entry.ContextMenu.show([{text:"\ubd99\uc5ec\ub123\uae30", enable:!!Entry.clipboard, callback:function() {
-            f.code.createThread(Entry.clipboard).getFirstBlock().copyToClipboard();
+            Entry.do("cloneBlock", f.code).value.getFirstBlock().copyToClipboard();
           }}, {text:"\ube14\ub85d \uc815\ub9ac\ud558\uae30", callback:function() {
             f.alignThreads();
           }}, {text:"\ubaa8\ub4e0 \ucf54\ub4dc \uc0ad\uc81c\ud558\uae30", callback:function() {
@@ -16463,6 +18242,9 @@ Entry.Board = function(b) {
   };
   b.mouseWheel = function(a) {
     a = a.originalEvent;
+    a.preventDefault();
+    var b = Entry.disposeEvent;
+    b && b.notify(a);
     this.scroller.scroll(a.wheelDeltaX || -a.deltaX, a.wheelDeltaY || -a.deltaY);
   };
   b.setSelectedBlock = function(a) {
@@ -16485,19 +18267,21 @@ Entry.Board = function(b) {
   };
   b.alignThreads = function() {
     for (var a = this.svgDom.height(), b = this.code.getThreads(), d = 15, e = 0, a = a - 30, f = 50, g = 0;g < b.length;g++) {
-      var h = b[g].getFirstBlock().view, k = h.svgGroup.getBBox(), m = d + 15;
-      m > a && (f = f + e + 10, e = 0, d = 15);
-      e = Math.max(e, k.width);
-      m = d + 15;
-      h._moveTo(f, m, !1);
-      d = d + k.height + 15;
+      var h = b[g].getFirstBlock();
+      if (h) {
+        var h = h.view, k = h.svgGroup.getBBox(), l = d + 15;
+        l > a && (f = f + e + 10, e = 0, d = 15);
+        e = Math.max(e, k.width);
+        l = d + 15;
+        h._moveTo(f, l, !1);
+        d = d + k.height + 15;
+      }
     }
     this.scroller.resizeScrollBar();
   };
   b.clear = function() {
-    for (var a = this.svgBlockGroup;a.firstChild;) {
-      a.removeChild(a.firstChild);
-    }
+    this.svgBlockGroup.remove();
+    this.svgThreadGroup.remove();
   };
   b.updateOffset = function() {
     this.offset = this.svg.getBoundingClientRect();
@@ -16554,25 +18338,25 @@ Entry.Board = function(b) {
     }
   };
   b._getCodeBlocks = function(a, b) {
-    var d = a.getThreads(), e = [], f = 0, g;
+    var d = a.getThreads(), e = [], f;
     switch(b) {
       case "nextMagnet":
-        g = this._getNextMagnets;
+        f = this._getNextMagnets;
         break;
       case "stringMagnet":
-        g = this._getFieldMagnets;
+        f = this._getFieldMagnets;
         break;
       case "booleanMagnet":
-        g = this._getFieldMagnets;
+        f = this._getFieldMagnets;
         break;
       case "paramMagnet":
-        g = this._getOutputMagnets;
+        f = this._getOutputMagnets;
         break;
       default:
         return [];
     }
-    for (var h = 0;h < d.length;h++) {
-      e = e.concat(g.call(this, d[h], f, null, b)), f++;
+    for (var g = 0;g < d.length;g++) {
+      var h = d[g], e = e.concat(f.call(this, h, h.view.zIndex, null, b))
     }
     return e;
   };
@@ -16581,16 +18365,16 @@ Entry.Board = function(b) {
     d || (d = {x:0, y:0});
     var k = d.x;
     d = d.y;
-    for (var m = 0;m < f.length;m++) {
-      var n = f[m], l = n.view;
-      l.zIndex = b;
-      if (l.dragInstance) {
+    for (var l = 0;l < f.length;l++) {
+      var n = f[l], m = n.view;
+      m.zIndex = b;
+      if (m.dragInstance) {
         break;
       }
-      d += l.y;
-      k += l.x;
+      d += m.y;
+      k += m.x;
       a = d + 1;
-      l.magnet.next && (a += l.magnet.next.y, h.push({point:d, endPoint:a, startBlock:n, blocks:[]}), h.push({point:a, blocks:[]}), l.absX = k);
+      m.magnet.next && (a += m.magnet.next.y, h.push({point:d, endPoint:a, startBlock:n, blocks:[]}), h.push({point:a, blocks:[]}), m.absX = k);
       n.statements && (b += .01);
       for (var q = 0;q < n.statements.length;q++) {
         a = n.statements[q];
@@ -16602,7 +18386,7 @@ Entry.Board = function(b) {
         b += .01;
         g = g.concat(this._getNextMagnets(a, b, {x:r.x + k, y:r.y + d}, e));
       }
-      l.magnet.next && (d += l.magnet.next.y, k += l.magnet.next.x);
+      m.magnet.next && (d += m.magnet.next.y, k += m.magnet.next.x);
     }
     return g.concat(h);
   };
@@ -16611,21 +18395,21 @@ Entry.Board = function(b) {
     d || (d = {x:0, y:0});
     var k = d.x;
     d = d.y;
-    for (var m = 0;m < f.length;m++) {
-      var n = f[m], l = n.view;
-      if (l.dragInstance) {
+    for (var l = 0;l < f.length;l++) {
+      var n = f[l], m = n.view;
+      if (m.dragInstance) {
         break;
       }
-      l.zIndex = b;
-      d += l.y;
-      k += l.x;
-      h = h.concat(this._getFieldBlockMetaData(l, k, d, b, e));
+      m.zIndex = b;
+      d += m.y;
+      k += m.x;
+      h = h.concat(this._getFieldBlockMetaData(m, k, d, b, e));
       n.statements && (b += .01);
       for (var q = 0;q < n.statements.length;q++) {
         a = n.statements[q];
         var r = n.view._statements[q], g = g.concat(this._getFieldMagnets(a, b, {x:r.x + k, y:r.y + d}, e));
       }
-      l.magnet.next && (d += l.magnet.next.y, k += l.magnet.next.x);
+      m.magnet.next && (d += m.magnet.next.y, k += m.magnet.next.x);
     }
     return g.concat(h);
   };
@@ -16634,17 +18418,17 @@ Entry.Board = function(b) {
     b += a.contentPos.x;
     d += a.contentPos.y;
     for (var k = 0;k < g.length;k++) {
-      var m = g[k];
-      if (m instanceof Entry.FieldBlock && m.acceptType === f) {
-        var n = m._valueBlock;
+      var l = g[k];
+      if (l instanceof Entry.FieldBlock && l.acceptType === f) {
+        var n = l._valueBlock;
         if (!n.view.dragInstance) {
-          var l = b + m.box.x, q = d + m.box.y + -.5 * a.height, m = d + m.box.y + m.box.height;
-          h.push({point:q, endPoint:m, startBlock:n, blocks:[]});
-          h.push({point:m, blocks:[]});
+          var m = b + l.box.x, q = d + l.box.y + a.contentHeight % 1E3 * -.5, l = d + l.box.y + l.box.height;
+          h.push({point:q, endPoint:l, startBlock:n, blocks:[]});
+          h.push({point:l, blocks:[]});
           n = n.view;
-          n.absX = l;
+          n.absX = m;
           n.zIndex = e;
-          h = h.concat(this._getFieldBlockMetaData(n, l + n.contentPos.x, q + n.contentPos.y, e + .01, f));
+          h = h.concat(this._getFieldBlockMetaData(n, m + n.contentPos.x, q + n.contentPos.y, e + .01, f));
         }
       }
     }
@@ -16655,21 +18439,21 @@ Entry.Board = function(b) {
     d || (d = {x:0, y:0});
     var k = d.x;
     d = d.y;
-    for (var m = 0;m < f.length;m++) {
-      var n = f[m], l = n.view;
-      if (l.dragInstance) {
+    for (var l = 0;l < f.length;l++) {
+      var n = f[l], m = n.view;
+      if (m.dragInstance) {
         break;
       }
-      l.zIndex = b;
-      d += l.y;
-      k += l.x;
-      h = h.concat(this._getOutputMetaData(l, k, d, b, e));
+      m.zIndex = b;
+      d += m.y;
+      k += m.x;
+      h = h.concat(this._getOutputMetaData(m, k, d, b, e));
       n.statements && (b += .01);
       for (var q = 0;q < n.statements.length;q++) {
         a = n.statements[q];
         var r = n.view._statements[q], g = g.concat(this._getOutputMagnets(a, b, {x:r.x + k, y:r.y + d}, e));
       }
-      l.magnet.next && (d += l.magnet.next.y, k += l.magnet.next.x);
+      m.magnet.next && (d += m.magnet.next.y, k += m.magnet.next.x);
     }
     return g.concat(h);
   };
@@ -16678,8 +18462,8 @@ Entry.Board = function(b) {
     b += a.contentPos.x;
     d += a.contentPos.y;
     for (a = 0;a < g.length;a++) {
-      var k = g[a], m = b + k.box.x, n = d - 24, l = d;
-      k instanceof Entry.FieldBlock ? (k.acceptType === f && (h.push({point:n, endPoint:l, startBlock:k, blocks:[]}), h.push({point:l, blocks:[]}), k.absX = m, k.zIndex = e, k.width = 20), (n = k._valueBlock) && (h = h.concat(this._getOutputMetaData(n.view, m, d + k.box.y, e + .01, f)))) : k instanceof Entry.FieldOutput && k.acceptType === f && (h.push({point:n, endPoint:l, startBlock:k, blocks:[]}), h.push({point:l, blocks:[]}), k.absX = m, k.zIndex = e, k.width = 20, (n = k._valueBlock) && (n.view.dragInstance || 
+      var k = g[a], l = b + k.box.x, n = d - 24, m = d;
+      k instanceof Entry.FieldBlock ? (k.acceptType === f && (h.push({point:n, endPoint:m, startBlock:k, blocks:[]}), h.push({point:m, blocks:[]}), k.absX = l, k.zIndex = e, k.width = 20), (n = k._valueBlock) && (h = h.concat(this._getOutputMetaData(n.view, l, d + k.box.y, e + .01, f)))) : k instanceof Entry.FieldOutput && k.acceptType === f && (h.push({point:n, endPoint:m, startBlock:k, blocks:[]}), h.push({point:m, blocks:[]}), k.absX = l, k.zIndex = e, k.width = 20, (n = k._valueBlock) && (n.view.dragInstance || 
       (h = h.concat(this._getOutputMetaData(n.view, b + k.box.x, d + k.box.y, e + .01, f)))));
     }
     return h;
@@ -16687,12 +18471,12 @@ Entry.Board = function(b) {
   b.getNearestMagnet = function(a, b, d) {
     var e = this._magnetMap;
     if (e && 0 !== e.length) {
-      var f = 0, g = e.length - 1, h, k = null, m = "nextMagnet" === d ? b - 15 : b;
+      var f = 0, g = e.length - 1, h, k = null, l = "nextMagnet" === d ? b - 15 : b;
       for (b = "nextMagnet" === d ? 20 : 0;f <= g;) {
-        if (h = (f + g) / 2 | 0, d = e[h], m < d.point) {
+        if (h = (f + g) / 2 | 0, d = e[h], l < d.point) {
           g = h - 1;
         } else {
-          if (m > d.endPoint) {
+          if (l > d.endPoint) {
             f = h + 1;
           } else {
             e = d.blocks;
@@ -16728,6 +18512,33 @@ Entry.Board = function(b) {
   };
   b.reDraw = function() {
     this.code.view.reDraw();
+  };
+  b.separate = function(a, b) {
+    "string" === typeof a && (a = this.findById(a));
+    a.view && a.view._toGlobalCoordinate();
+    var d = a.getPrevBlock();
+    a.separate(b);
+    d && d.getNextBlock() && d.getNextBlock().view.bindPrev();
+  };
+  b.insert = function(a, b, d) {
+    "string" === typeof a && (a = this.findById(a));
+    this.separate(a, d);
+    4 === b.length && 0 === b[3] ? a.moveTo(b[0], b[1]) : (b = b instanceof Array ? this.code.getTargetByPointer(b) : b, b instanceof Entry.Block ? ("basic" === a.getBlockType() && a.view.bindPrev(b), a.doInsert(b)) : b instanceof Entry.FieldStatement ? (a.view.bindPrev(b), b.insertTopBlock(a)) : a.doInsert(b));
+  };
+  b.adjustThreadsPosition = function() {
+    var a = this.code;
+    if (a) {
+      var b = [];
+      a.getThreads().forEach(function(a) {
+        b.push({thread:a, len:a.countBlock()});
+      });
+      b = b.sort(function(a, b) {
+        return b.len - a.len;
+      });
+      if (a = b[0]) {
+        a = a.thread.getFirstBlock().view, a = a.getAbsoluteCoordinate(), this.scroller.scroll(50 - a.x, 30 - a.y);
+      }
+    }
   };
 })(Entry.Board.prototype);
 Entry.skeleton = function() {
@@ -16813,7 +18624,7 @@ Entry.skeleton.pebble_loop = {fontSize:16, dropdownHeight:23, path:function(b) {
 }, contentPos:function() {
   return {x:-46, y:25};
 }};
-Entry.skeleton.pebble_basic = {fontSize:16, morph:["prev", "next"], path:function(b) {
+Entry.skeleton.pebble_basic = {fontSize:15, morph:["prev", "next"], path:function(b) {
   var a = b.block;
   b = a.getPrevBlock();
   a = a.getNextBlock();
@@ -16871,7 +18682,7 @@ Entry.skeleton.basic_button = {path:function() {
   return {offsetX:-80, offsetY:0, width:140, height:30};
 }, contentPos:function() {
   return {x:-50, y:15};
-}, movable:!1, readOnly:!0, color:"#333", classes:["basicButtonView"]};
+}, movable:!1, readOnly:!0, nextShadow:!0, classes:["basicButtonView"]};
 Entry.skeleton.basic_without_next = {box:Entry.skeleton.basic.box, contentPos:Entry.skeleton.basic.contentPos, path:function(b) {
   var a = b.contentWidth;
   b = b.contentHeight;
@@ -16881,12 +18692,36 @@ Entry.skeleton.basic_without_next = {box:Entry.skeleton.basic.box, contentPos:En
 }, magnets:function(b) {
   return {previous:{x:0, y:0}};
 }};
-Entry.Thread = function(b, a) {
+Entry.skeleton.basic_double_loop = {path:function(b) {
+  var a = b.contentWidth, c = b.contentHeight % 1E3, d = Math.floor(b.contentHeight / 1E3), c = Math.max(30, c + 2), d = Math.max(30, d + 2), a = Math.max(0, a + 5 - c / 2), e = b._statements;
+  b = e[0] ? e[0].height : 20;
+  e = e[1] ? e[1].height : 20;
+  b = Math.max(b, 20);
+  e = Math.max(e, 20);
+  return "m -8,0 l 8,8 8,-8 h %w a %h1,%h1 0 0,1 0,%wh1 H 24 l -8,8 -8,-8 h -0.4 v %sh1 h 0.4 l 8,8 8,-8 h %bw a %h2,%h2 0 0,1 0,%wh2 H 24 l -8,8 -8,-8 h -0.4 v %sh2 h 0.4 l 8,8 8,-8 h %bw a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z".replace(/%wh1/gi, c).replace(/%wh2/gi, d).replace(/%w/gi, a).replace(/%bw/gi, a - 8).replace(/%h1/gi, c / 2).replace(/%h2/gi, d / 2).replace(/%sh1/gi, b + 1).replace(/%sh2/gi, e + 1);
+}, magnets:function(b) {
+  var a = Math.max(b.contentHeight % 1E3 + 2, 30), c = Math.max(Math.floor(b.contentHeight / 1E3) + 2, 30), d = b._statements[0] ? b._statements[0].height : 20, e = b._statements[1] ? b._statements[1].height : 20, d = Math.max(d, 20), e = Math.max(e, 20);
+  return {previous:{x:0, y:0}, next:{x:0, y:d + e + a + c + 19 + b.offsetY}};
+}, box:function(b) {
+  var a = b.contentWidth, c = Math.max(Math.floor(b.contentHeight / 1E3) + 2, 30), d = Math.max(b.contentHeight % 1E3 + 2, 30), e = b._statements[0] ? b._statements[0].height % 1E3 : 20;
+  b = b._statements[1] ? b._statements[1].height : 20;
+  b = Math.floor(b / 1E3);
+  e = Math.max(e, 20);
+  b = Math.max(b, 20);
+  return {offsetX:-8, offsetY:0, width:a + 30, height:c + d + e + b + 17, marginBottom:0};
+}, statementPos:function(b) {
+  var a = Math.max(30, b.contentHeight % 1E3 + 2) + 1;
+  return [{x:16, y:a}, {x:16, y:a + Math.max(b._statements[0] ? b._statements[0].height % 1E3 : 20, 20) + Math.max(Math.floor(b.contentHeight / 1E3) + 2, 30) + 1}];
+}, contentPos:function(b) {
+  return {x:14, y:Math.max(b.contentHeight % 1E3, 28) / 2 + 1};
+}};
+Entry.Thread = function(b, a, c) {
   this._data = new Entry.Collection;
   this._code = a;
   this.changeEvent = new Entry.Event(this);
   this.changeEvent.attach(this, this.handleChange);
   this._event = null;
+  this.parent = c ? c : a;
   this.load(b);
 };
 (function(b) {
@@ -16955,6 +18790,9 @@ Entry.Thread = function(b, a) {
       b[d].destroy(a);
     }
   };
+  b.getBlock = function(a) {
+    return this._data[a];
+  };
   b.getBlocks = function() {
     return this._data.map(function(a) {
       return a;
@@ -16983,7 +18821,7 @@ Entry.Thread = function(b, a) {
   b.spliceBlock = function(a) {
     var b = this._data;
     b.remove(a);
-    0 === b.length && (a = this.view.getParent(), a.constructor === Entry.FieldStatement ? a.removeFirstBlock() : this.destroy());
+    0 === b.length && this.view.getParent().constructor !== Entry.FieldStatement && this.destroy();
     this.changeEvent.notify();
   };
   b.getFirstBlock = function() {
@@ -17035,13 +18873,34 @@ Entry.Thread = function(b, a) {
     a && (b -= this._data.indexOf(a));
     return b;
   };
+  b.indexOf = function(a) {
+    return this._data.indexOf(a);
+  };
+  b.pointer = function(a, b) {
+    var d = this.indexOf(b);
+    a.unshift(d);
+    this.parent instanceof Entry.Block && a.unshift(this.parent.indexOfStatements(this));
+    return this._code === this.parent ? (a.unshift(this._code.indexOf(this)), d = this._data[0], a.unshift(d.y), a.unshift(d.x), a) : this.parent.pointer(a);
+  };
+  b.getBlockList = function() {
+    for (var a = [], b = 0;b < this._data.length;b++) {
+      a = a.concat(this._data[b].getBlockList());
+    }
+    return a;
+  };
 })(Entry.Thread.prototype);
 Entry.Block = function(b, a) {
+  var c = this;
   Entry.Model(this, !1);
   this._schema = null;
   this.setThread(a);
   this.load(b);
-  this.getCode().registerBlock(this);
+  var d = this.getCode();
+  d.registerBlock(this);
+  var e = this.events.dataAdd;
+  e && d.object && e.forEach(function(a) {
+    Entry.Utils.isFunction(a) && a(c);
+  });
 };
 Entry.Block.MAGNET_RANGE = 10;
 Entry.Block.MAGNET_OFFSET = .4;
@@ -17065,7 +18924,7 @@ Entry.Block.MAGNET_OFFSET = .4;
           this.events[b] || (this.events[b] = []);
           for (var d = a[b], e = 0;e < d.length;e++) {
             var f = d[e];
-            0 > this.events[b].indexOf(f) && this.events[b].push(f);
+            f && 0 > this.events[b].indexOf(f) && this.events[b].push(f);
           }
         }
       }
@@ -17073,11 +18932,11 @@ Entry.Block.MAGNET_OFFSET = .4;
       a = this.params;
       b = this._schema.params;
       for (e = 0;b && e < b.length;e++) {
-        d = void 0 !== a[e] ? a[e] : b[e].value, f = void 0 !== a[e], !d || "Output" !== b[e].type && "Block" !== b[e].type || (d = new Entry.Block(d, this.thread)), f ? a.splice(e, 1, d) : a.push(d);
+        d = a[e] ? a[e] : b[e].value, f = a[e] || e < a.length, !d || "Output" !== b[e].type && "Block" !== b[e].type || (d = new Entry.Block(d, this.thread)), f ? a.splice(e, 1, d) : a.push(d);
       }
       if (a = this._schema.statements) {
         for (e = 0;e < a.length;e++) {
-          this.statements.splice(e, 1, new Entry.Thread(this.statements[e], this.getCode()));
+          this.statements.splice(e, 1, new Entry.Thread(this.statements[e], this.getCode(), this));
         }
       }
     }
@@ -17102,7 +18961,8 @@ Entry.Block.MAGNET_OFFSET = .4;
   };
   b.moveTo = function(a, b) {
     this.view && this.view._moveTo(a, b);
-    this.set({x:this.view.x, y:this.view.y});
+    this._updatePos();
+    this.getCode().changeEvent.notify();
   };
   b.createView = function(a, b) {
     this.view || (this.set({view:new Entry.BlockView(this, a, b)}), this._updatePos());
@@ -17114,6 +18974,7 @@ Entry.Block.MAGNET_OFFSET = .4;
     var b = this._toJSON();
     delete b.view;
     delete b.thread;
+    delete b.events;
     a && delete b.id;
     b.params = b.params.map(function(b) {
       b instanceof Entry.Block && (b = b.toJSON(a));
@@ -17130,27 +18991,30 @@ Entry.Block.MAGNET_OFFSET = .4;
     return b;
   };
   b.destroy = function(a, b) {
-    var d = this.params;
-    if (d) {
-      for (var e = 0;e < d.length;e++) {
-        var f = d[e];
-        f instanceof Entry.Block && (f.doNotSplice = !0, f.destroy(a));
+    var d = this, e = this.params;
+    if (e) {
+      for (var f = 0;f < e.length;f++) {
+        var g = e[f];
+        g instanceof Entry.Block && (g.doNotSplice = !0, g.destroy(a));
       }
     }
-    if (d = this.statements) {
-      for (e = 0;e < d.length;e++) {
-        d[e].destroy(a);
+    if (e = this.statements) {
+      for (f = 0;f < e.length;f++) {
+        e[f].destroy(a);
       }
     }
-    f = this.getPrevBlock();
-    e = this.getNextBlock();
+    g = this.getPrevBlock();
+    f = this.getNextBlock();
     this.getCode().unregisterBlock(this);
-    d = this.getThread();
-    this._schema.event && d.unregisterEvent(this, this._schema.event);
-    e && (b ? e.destroy(a, b) : f ? e.view.bindPrev(f) : (f = this.getThread().view.getParent(), f.constructor === Entry.FieldStatement ? (e.view.bindPrev(f), f.insertTopBlock(e)) : f.constructor === Entry.FieldStatement ? e.replace(f._valueBlock) : e.view._toGlobalCoordinate()));
-    this.doNotSplice ? delete this.doNotSplice : d.spliceBlock(this);
+    e = this.getThread();
+    this._schema.event && e.unregisterEvent(this, this._schema.event);
+    f && (b ? f.destroy(a, b) : g ? f.view.bindPrev(g) : (g = this.getThread().view.getParent(), g.constructor === Entry.FieldStatement ? (f.view.bindPrev(g), g.insertTopBlock(f)) : g.constructor === Entry.FieldStatement ? f.replace(g._valueBlock) : f.view._toGlobalCoordinate()));
+    this.doNotSplice ? delete this.doNotSplice : e.spliceBlock(this);
     this.view && this.view.destroy(a);
     this._schemaChangeEvent && this._schemaChangeEvent.destroy();
+    (f = this.events.dataDestroy) && this.getCode().object && f.forEach(function(a) {
+      Entry.Utils.isFunction(a) && a(d);
+    });
   };
   b.getView = function() {
     return this.view;
@@ -17224,8 +19088,10 @@ Entry.Block.MAGNET_OFFSET = .4;
       b.push(this.toJSON(!0));
     }
     a = this.view.getAbsoluteCoordinate();
-    b[0].x = a.x + 15;
-    b[0].y = a.y + 15;
+    d = b[0];
+    d.x = a.x + 15;
+    d.y = a.y + 15;
+    d.id = Entry.Utils.generateId();
     return b;
   };
   b.copyToClipboard = function() {
@@ -17274,26 +19140,50 @@ Entry.Block.MAGNET_OFFSET = .4;
     }
   };
   b.getBlockType = function() {
-    var a = Entry.skeleton[this._schema.skeleton].magnets();
-    return a.next || a.prev ? "basic" : a.bool || a.string ? "field" : a.output ? "output" : null;
+    if (!this.view) {
+      return null;
+    }
+    var a = Entry.skeleton[this._schema.skeleton].magnets(this.view);
+    return a.next || a.previous ? "basic" : a.bool || a.string ? "field" : a.output ? "output" : null;
+  };
+  b.indexOfStatements = function(a) {
+    return this.statements.indexOf(a);
+  };
+  b.pointer = function(a) {
+    a || (a = []);
+    return this.thread.pointer(a, this);
+  };
+  b.getBlockList = function() {
+    var a = [];
+    a.push(this);
+    for (var b = this.params, d = 0;d < b.length;d++) {
+      var e = b[d];
+      e && e.constructor == Entry.Block && (a = a.concat(e.getBlockList()));
+    }
+    if (b = this.statements) {
+      for (d = 0;d < b.length;d++) {
+        a = a.concat(b[d].getBlockList());
+      }
+    }
+    return a;
   };
 })(Entry.Block.prototype);
 Entry.ThreadView = function(b, a) {
   Entry.Model(this, !1);
   this.thread = b;
   this.svgGroup = a.svgThreadGroup.elem("g");
-  this._parent = a;
+  this.parent = a;
 };
 (function(b) {
-  b.schema = {height:0};
+  b.schema = {height:0, zIndex:0};
   b.destroy = function() {
     this.svgGroup.remove();
   };
   b.setParent = function(a) {
-    this._parent = a;
+    this.parent = a;
   };
   b.getParent = function() {
-    return this._parent;
+    return this.parent;
   };
   b.renderText = function() {
     for (var a = this.thread.getBlocks(), b = 0;b < a.length;b++) {
@@ -17307,7 +19197,7 @@ Entry.ThreadView = function(b, a) {
   };
   b.requestAbsoluteCoordinate = function(a) {
     var b = this.thread.getBlocks(), d = b.shift(), e = {x:0, y:0};
-    for (this._parent instanceof Entry.Board || this._parent instanceof Entry.BlockMenu || (e = this._parent.requestAbsoluteCoordinate());d.view !== a && d.view;) {
+    for (this.parent instanceof Entry.Board || this.parent instanceof Entry.BlockMenu || (e = this.parent.requestAbsoluteCoordinate());d && d.view !== a && d.view;) {
       d = d.view, e.x += d.x + d.magnet.next.x, e.y += d.y + d.magnet.next.y, d = b.shift();
     }
     return e;
@@ -17319,15 +19209,18 @@ Entry.ThreadView = function(b, a) {
     return f;
   };
   b.dominate = function() {
-    this._parent.dominate(this.thread);
+    this.parent.dominate(this.thread);
   };
   b.isGlobal = function() {
-    return this._parent instanceof Entry.Board;
+    return this.parent instanceof Entry.Board;
   };
   b.reDraw = function() {
     for (var a = this.thread._data, b = a.length - 1;0 <= b;b--) {
       a[b].view.reDraw();
     }
+  };
+  b.setZIndex = function(a) {
+    this.set({zIndex:a});
   };
 })(Entry.ThreadView.prototype);
 Entry.FieldTrashcan = function(b) {
@@ -17534,7 +19427,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         break;
       case Entry.Workspace.MODE_BOARD:
         try {
-          this.board.show(), this.set({selectedBoard:this.board}), this.textToCode(), this.vimBoard && this.vimBoard.hide(), this.overlayBoard && this.overlayBoard.hide(), this.blockMenu.renderBlock(), this.textType = b, this.mode = a;
+          this.vimBoard && this.vimBoard.hide(), this.overlayBoard && this.overlayBoard.hide(), this.board.show(), this.set({selectedBoard:this.board}), this.textToCode(), this.blockMenu.renderBlock(), this.textType = b, this.mode = a;
         } catch (e) {
           throw this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), Entry.dispatchEvent("setProgrammingMode", Entry.Workspace.MODE_VIMBOARD), e;
         }
@@ -17556,8 +19449,11 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
   b.textToCode = function() {
     if (this.mode == Entry.Workspace.MODE_VIMBOARD) {
       var a = this.vimBoard.textToCode();
+      console.log("changedCode", a);
       this.board.code.load(a);
+      this.board.code.createView(this.board);
       this.board.alignThreads();
+      this.board.reDraw();
     }
   };
   b.codeToText = function(a) {
@@ -17580,7 +19476,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     if (!Entry.Utils.isInInput(a)) {
       var e = this.selectedBlockView;
       e && !e.isInBlockMenu && e.block.isDeletable() && (8 == b || 46 == b ? (e.block.doDestroy(!0), a.preventDefault()) : d && (67 == b ? e.block.copyToClipboard() : 88 == b && (a = e.block, a.copyToClipboard(), a.destroy(!0, !0), e.getBoard().setSelectedBlock(null))));
-      d && 86 == b && (b = this.selectedBoard) && b instanceof Entry.Board && Entry.clipboard && b.code.createThread(Entry.clipboard).getFirstBlock().copyToClipboard();
+      d && 86 == b && (b = this.selectedBoard) && b instanceof Entry.Board && Entry.clipboard && Entry.do("cloneBlock", b.code).value.getFirstBlock().copyToClipboard();
     }
   };
   b._handleChangeBoard = function() {
@@ -17705,7 +19601,19 @@ Entry.Playground.prototype.generateCodeView = function(b) {
   a = Entry.Dom("div", {parent:b, id:"entryWorkspaceBoard", class:"entryWorkspaceBoard"});
   b = Entry.Dom("div", {parent:b, id:"entryWorkspaceBlockMenu", class:"entryWorkspaceBlockMenu"});
   (new Entry.BlockDriver).convert();
-  Entry.block.when_run_button_click.event = "start";
+  var c = Entry.block;
+  c.when_run_button_click.event = "start";
+  c.when_some_key_pressed.event = "keyPress";
+  c.when_some_key_click.event = "keyPress";
+  c.when_message_cast.event = "when_message_cast";
+  c.when_scene_start.event = "when_scene_start";
+  c.when_clone_start.event = "when_clone_start";
+  c.mouse_clicked.event = "mouse_clicked";
+  c.mouse_click_cancled.event = "mouse_click_cancled";
+  c.when_object_click.event = "when_object_click";
+  c.when_object_click_canceled.event = "when_object_click_canceled";
+  c.if_else.template = "\ub9cc\uc77c %1 \uc774\ub77c\uba74 %2 %3 \uc544\ub2c8\uba74";
+  c.if_else.params.push({type:"LineBreak"});
   this.mainWorkspace = new Entry.Workspace({blockMenu:{dom:b, align:"LEFT", categoryData:EntryStatic.getAllBlocks(), scroll:!0}, board:{dom:a}, vimBoard:{dom:a}});
   this.blockMenu = this.mainWorkspace.blockMenu;
   this.board = this.mainWorkspace.board;
@@ -17823,11 +19731,11 @@ Entry.Playground.prototype.generateTextView = function(b) {
   d = Entry.createElement("a");
   c.appendChild(d);
   d.bindOnClick(function() {
-    Entry.playground.object.entity.toggleFontItalic() ? m.src = Entry.mediaFilePath + "text_button_italic_true.png" : m.src = Entry.mediaFilePath + "/text_button_italic_false.png";
+    Entry.playground.object.entity.toggleFontItalic() ? l.src = Entry.mediaFilePath + "text_button_italic_true.png" : l.src = Entry.mediaFilePath + "/text_button_italic_false.png";
   });
-  var m = Entry.createElement("img", "entryPlaygroundText_italicImage");
-  d.appendChild(m);
-  m.src = Entry.mediaFilePath + "text_button_italic_false.png";
+  var l = Entry.createElement("img", "entryPlaygroundText_italicImage");
+  d.appendChild(l);
+  l.src = Entry.mediaFilePath + "text_button_italic_false.png";
   c = Entry.createElement("li");
   e.appendChild(c);
   d = Entry.createElement("a");
@@ -17914,16 +19822,16 @@ Entry.Playground.prototype.generateTextView = function(b) {
   b.addClass("entryPlaygroundFontSizeWrapper");
   a.appendChild(b);
   this.fontSizeWrapper = b;
-  var l = Entry.createElement("div");
-  l.addClass("entryPlaygroundFontSizeSlider");
-  b.appendChild(l);
+  var m = Entry.createElement("div");
+  m.addClass("entryPlaygroundFontSizeSlider");
+  b.appendChild(m);
   var q = Entry.createElement("div");
   q.addClass("entryPlaygroundFontSizeIndicator");
-  l.appendChild(q);
+  m.appendChild(q);
   this.fontSizeIndiciator = q;
   var r = Entry.createElement("div");
   r.addClass("entryPlaygroundFontSizeKnob");
-  l.appendChild(r);
+  m.appendChild(r);
   this.fontSizeKnob = r;
   e = Entry.createElement("div");
   e.addClass("entryPlaygroundFontSizeLabel");
@@ -17932,7 +19840,7 @@ Entry.Playground.prototype.generateTextView = function(b) {
   var u = !1, t = 0;
   r.onmousedown = function(a) {
     u = !0;
-    t = $(l).offset().left;
+    t = $(m).offset().left;
   };
   document.addEventListener("mousemove", function(a) {
     u && (a = a.pageX - t, a = Math.max(a, 5), a = Math.min(a, 88), r.style.left = a + "px", a /= .88, q.style.width = a + "%", Entry.playground.object.entity.setFontSize(a));
@@ -17952,6 +19860,9 @@ Entry.Playground.prototype.generateTextView = function(b) {
   e = Entry.createElement("img");
   e.bindOnClick(function() {
     Entry.playground.toggleLineBreak(!1);
+    v.innerHTML = Lang.Menus.linebreak_off_desc_1;
+    x.innerHTML = Lang.Menus.linebreak_off_desc_2;
+    y.innerHTML = Lang.Menus.linebreak_off_desc_3;
   });
   e.src = Entry.mediaFilePath + "text-linebreak-off-true.png";
   a.appendChild(e);
@@ -17959,6 +19870,9 @@ Entry.Playground.prototype.generateTextView = function(b) {
   e = Entry.createElement("img");
   e.bindOnClick(function() {
     Entry.playground.toggleLineBreak(!0);
+    v.innerHTML = Lang.Menus.linebreak_on_desc_1;
+    x.innerHTML = Lang.Menus.linebreak_on_desc_2;
+    y.innerHTML = Lang.Menus.linebreak_on_desc_3;
   });
   e.src = Entry.mediaFilePath + "text-linebreak-on-false.png";
   a.appendChild(e);
@@ -17966,17 +19880,17 @@ Entry.Playground.prototype.generateTextView = function(b) {
   a = Entry.createElement("div");
   a.addClass("entryPlaygroundLinebreakDescription");
   b.appendChild(a);
-  b = Entry.createElement("p");
-  b.innerHTML = "\uae00\uc0c1\uc790\uc758 \ud06c\uae30\uac00 \uae00\uc790\uac00 \uc4f0\uc77c \uc218 \uc788\ub294 \uc601\uc5ed\uc744 \uacb0\uc815\ud569\ub2c8\ub2e4.";
-  a.appendChild(b);
+  var v = Entry.createElement("p");
+  v.innerHTML = Lang.Menus.linebreak_off_desc_1;
+  a.appendChild(v);
   b = Entry.createElement("ul");
   a.appendChild(b);
-  a = Entry.createElement("li");
-  a.innerHTML = "\ub0b4\uc6a9 \uc791\uc131\uc2dc \uc5d4\ud130\ud0a4\ub85c \uc904\ubc14\uafc8\uc744 \ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4.";
-  b.appendChild(a);
-  a = Entry.createElement("li");
-  a.innerHTML = "\ub0b4\uc6a9\uc744 \uc791\uc131\ud558\uc2dc\uac70\ub098 \uc0c8\ub85c\uc6b4 \uae00\uc790\ub97c \ucd94\uac00\uc2dc \uae38\uc774\uac00 \uae00\uc0c1\uc790\uc758 \uac00\ub85c \uc601\uc5ed\uc744 \ub118\uc5b4\uc11c\uba74 \uc790\ub3d9\uc73c\ub85c \uc904\uc774 \ubc14\ub01d\ub2c8\ub2e4.";
-  b.appendChild(a);
+  var x = Entry.createElement("li");
+  x.innerHTML = Lang.Menus.linebreak_off_desc_2;
+  b.appendChild(x);
+  var y = Entry.createElement("li");
+  y.innerHTML = Lang.Menus.linebreak_off_desc_3;
+  b.appendChild(y);
 };
 Entry.Playground.prototype.generateSoundView = function(b) {
   if ("workspace" == Entry.type) {
@@ -18013,7 +19927,7 @@ Entry.Playground.prototype.generateSoundView = function(b) {
 };
 Entry.Playground.prototype.injectObject = function(b) {
   if (!b) {
-    this.changeViewMode("default"), this.object = null;
+    this.changeViewMode("code"), this.object = null;
   } else {
     if (b !== this.object) {
       this.object && this.object.toggleInformation(!1);
@@ -18023,11 +19937,28 @@ Entry.Playground.prototype.injectObject = function(b) {
       "sprite" == b.objectType && Entry.pictureEditable ? (this.tabViewElements.text && this.tabViewElements.text.addClass("entryRemove"), this.tabViewElements.picture && this.tabViewElements.picture.removeClass("entryRemove")) : "textBox" == b.objectType && (this.tabViewElements.picture && this.tabViewElements.picture.addClass("entryRemove"), this.tabViewElements.text && this.tabViewElements.text.removeClass("entryRemove"));
       var a = this.viewMode_;
       "default" == a ? this.changeViewMode("code") : "picture" != a && "text" != a || "textBox" != b.objectType ? "text" != a && "picture" != a || "sprite" != b.objectType ? "sound" == a && this.changeViewMode("sound") : this.changeViewMode("picture") : this.changeViewMode("text");
+      this.reloadPlayground();
     }
   }
 };
 Entry.Playground.prototype.injectCode = function() {
-  this.mainWorkspace.changeBoardCode(this.object.script);
+  var b = this.object.script;
+  this.mainWorkspace.changeBoardCode(b);
+  b.board.adjustThreadsPosition();
+};
+Entry.Playground.prototype.adjustScroll = function(b, a) {
+  var c = Blockly.mainWorkspace.scrollbar.vScroll;
+  Blockly.mainWorkspace.scrollbar.hScroll.svgGroup_.setAttribute("opacity", "1");
+  c.svgGroup_.setAttribute("opacity", "1");
+  if (Blockly.mainWorkspace.getMetrics()) {
+    Blockly.removeAllRanges();
+    var c = Blockly.mainWorkspace.getMetrics(), d, e;
+    d = Math.min(b, -c.contentLeft);
+    e = Math.min(a, -c.contentTop);
+    d = Math.max(d, c.viewWidth - c.contentLeft - c.contentWidth);
+    e = Math.max(e, c.viewHeight - c.contentTop - c.contentHeight);
+    Blockly.mainWorkspace.scrollbar.set(-d - c.contentLeft, -e - c.contentTop);
+  }
 };
 Entry.Playground.prototype.injectPicture = function() {
   var b = this.pictureListView_;
@@ -18043,6 +19974,8 @@ Entry.Playground.prototype.injectPicture = function() {
         b.appendChild(e);
       }
       this.selectPicture(this.object.selectedPicture);
+    } else {
+      Entry.dispatchEvent("pictureClear");
     }
   }
 };
@@ -18059,18 +19992,20 @@ Entry.Playground.prototype.addPicture = function(b, a) {
   this.selectPicture(b);
 };
 Entry.Playground.prototype.setPicture = function(b) {
-  var a = document.getElementById(b.id);
-  b.view = a;
-  a.picture = b;
-  a = document.getElementById("t_" + b.id);
-  if (b.fileurl) {
-    a.style.backgroundImage = 'url("' + b.fileurl + '")';
-  } else {
-    var c = b.filename;
-    a.style.backgroundImage = 'url("/uploads/' + c.substring(0, 2) + "/" + c.substring(2, 4) + "/thumb/" + c + '.png")';
+  var a = Entry.container.getPictureElement(b.id), c = $(a);
+  if (a) {
+    b.view = a;
+    a.picture = b;
+    a = c.find("#t_" + b.id)[0];
+    if (b.fileurl) {
+      a.style.backgroundImage = 'url("' + b.fileurl + '")';
+    } else {
+      var d = b.filename;
+      a.style.backgroundImage = 'url("' + Entry.defaultPath + "/uploads/" + d.substring(0, 2) + "/" + d.substring(2, 4) + "/thumb/" + d + '.png")';
+    }
+    c.find("#s_" + b.id)[0].innerHTML = b.dimension.width + " X " + b.dimension.height;
   }
-  document.getElementById("s_" + b.id).innerHTML = b.dimension.width + " X " + b.dimension.height;
-  Entry.playground.object.setPicture(b);
+  Entry.container.setPicture(b);
 };
 Entry.Playground.prototype.clonePicture = function(b) {
   b = Entry.playground.object.getPicture(b);
@@ -18079,10 +20014,11 @@ Entry.Playground.prototype.clonePicture = function(b) {
 Entry.Playground.prototype.selectPicture = function(b) {
   for (var a = this.object.pictures, c = 0, d = a.length;c < d;c++) {
     var e = a[c];
-    e === b ? e.view.addClass("entryPictureSelected") : e.view.removeClass("entryPictureSelected");
+    e.id === b.id ? e.view.addClass("entryPictureSelected") : e.view.removeClass("entryPictureSelected");
   }
-  Entry.playground.object.selectPicture(b.id);
-  Entry.dispatchEvent("pictureSelected", b);
+  var f;
+  b && b.id && (f = Entry.container.selectPicture(b.id));
+  this.object.id === f && Entry.dispatchEvent("pictureSelected", b);
 };
 Entry.Playground.prototype.movePicture = function(b, a) {
   this.object.pictures.splice(a, 0, this.object.pictures.splice(b, 1)[0]);
@@ -18107,6 +20043,7 @@ Entry.Playground.prototype.injectText = function() {
     $(".entryPlayground_fgColorDiv").css("backgroundColor", Entry.playground.object.entity.colour);
     $(".entryPlayground_bgColorDiv").css("backgroundColor", Entry.playground.object.entity.bgColour);
     Entry.playground.toggleLineBreak(Entry.playground.object.entity.getLineBreak());
+    Entry.playground.object.entity.getLineBreak() && ($(".entryPlaygroundLinebreakDescription > p").html(Lang.Menus.linebreak_on_desc_1), $(".entryPlaygroundLinebreakDescription > ul > li").eq(0).html(Lang.Menus.linebreak_on_desc_2), $(".entryPlaygroundLinebreakDescription > ul > li").eq(1).html(Lang.Menus.linebreak_on_desc_3));
     Entry.playground.setFontAlign(Entry.playground.object.entity.getTextAlign());
     b = Entry.playground.object.entity.getFontSize();
     Entry.playground.fontSizeIndiciator.style.width = b + "%";
@@ -18247,12 +20184,15 @@ Entry.Playground.prototype.initializeResizeHandle = function(b) {
   });
 };
 Entry.Playground.prototype.reloadPlayground = function() {
-  this.mainWorkspace.getBlockMenu().reDraw();
-  Entry.stage.selectedObject && Entry.stage.selectedObject.script.view.reDraw();
+  var b = this.mainWorkspace;
+  b && (b.getBlockMenu().reDraw(), this.object && this.object.script.view.reDraw());
 };
 Entry.Playground.prototype.flushPlayground = function() {
   this.object = null;
   Entry.playground && Entry.playground.view_ && (this.injectPicture(), this.injectSound(), Entry.playground.mainWorkspace.getBoard().clear());
+};
+Entry.Playground.prototype.refreshPlayground = function() {
+  Entry.playground && Entry.playground.view_ && (this.injectPicture(), this.injectSound());
 };
 Entry.Playground.prototype.updateListViewOrder = function(b) {
   b = "picture" == b ? this.pictureListView_.childNodes : this.soundListView_.childNodes;
@@ -18275,6 +20215,7 @@ Entry.Playground.prototype.generatePictureElement = function(b) {
         }
       }
       this.picture.name = this.value;
+      Entry.playground.reloadPlayground();
       Entry.dispatchEvent("pictureNameChanged", this.picture);
     }
   }
@@ -18307,7 +20248,7 @@ Entry.Playground.prototype.generatePictureElement = function(b) {
     d.style.backgroundImage = 'url("' + b.fileurl + '")';
   } else {
     var e = b.filename;
-    d.style.backgroundImage = 'url("/uploads/' + e.substring(0, 2) + "/" + e.substring(2, 4) + "/thumb/" + e + '.png")';
+    d.style.backgroundImage = 'url("' + Entry.defaultPath + "/uploads/" + e.substring(0, 2) + "/" + e.substring(2, 4) + "/thumb/" + e + '.png")';
   }
   c.appendChild(d);
   var f = Entry.createElement("input");
@@ -18576,5 +20517,35 @@ Entry.Xml.cloneBlock = function(b, a, c) {
     f instanceof Text ? d.textContent = f.textContent : "parent" == c ? d.appendChild(a) : d.appendChild(Entry.Xml.cloneBlock(f, d, "child"));
   }
   return d;
+};
+Entry.Youtube = function(b) {
+  this.generateView(b);
+};
+p = Entry.Youtube.prototype;
+p.init = function(b) {
+  this.youtubeHash = b;
+  this.generateView();
+};
+p.generateView = function(b) {
+  var a = Entry.createElement("div");
+  a.addClass("entryContainerMovieWorkspace");
+  a.addClass("entryHidden");
+  this.movieContainer = a;
+  a = Entry.createElement("iframe");
+  a.setAttribute("id", "youtubeIframe");
+  a.setAttribute("allowfullscreen", "");
+  a.setAttribute("frameborder", 0);
+  a.setAttribute("src", "https://www.youtube.com/embed/" + b);
+  this.movieFrame = a;
+  this.movieContainer.appendChild(a);
+};
+p.getView = function() {
+  return this.movieContainer;
+};
+p.resize = function() {
+  var b = document.getElementById("entryContainerWorkspaceId"), a = document.getElementById("youtubeIframe");
+  w = b.offsetWidth;
+  a.width = w + "px";
+  a.height = 9 * w / 16 + "px";
 };
 
