@@ -7693,15 +7693,16 @@ p._updateSelectedBlock = function() {
 p.renderBlock = function(b) {
   if (b && this.visible) {
     this.code.clear();
-    this.code.createThread([{type:b}]);
+    var a = Entry.block[b].def, a = a || {type:b};
+    this.code.createThread([a]);
     this.code.board.align();
     this.code.board.resize();
-    var a = this.code.getThreads()[0].getFirstBlock().view, c = a.svgGroup.getBBox(), d = c.width, c = c.height, a = a.getSkeleton().box(a).offsetX;
-    isNaN(a) && (a = 0);
+    var c = this.code.getThreads()[0].getFirstBlock().view, d = c.svgGroup.getBBox(), a = d.width, d = d.height, c = c.getSkeleton().box(c).offsetX;
+    isNaN(c) && (c = 0);
     this.blockHelperDescription_.innerHTML = Lang.Helper[b];
     this._renderView.align();
-    $(this.blockHelperDescription_).css({top:c + 30});
-    this._renderView.svgDom.css({"margin-left":-(d / 2) - 20 - a});
+    $(this.blockHelperDescription_).css({top:d + 30});
+    this._renderView.svgDom.css({"margin-left":-(a / 2) - 20 - c});
   }
 };
 p.getView = function() {
@@ -13228,7 +13229,7 @@ Entry.VariableContainer.prototype.select = function(b) {
   b && (b.listElement.addClass("selected"), this.selected = b, b instanceof Entry.Variable ? (this.renderVariableReference(b), b.object_ && Entry.container.selectObject(b.object_, !0)) : b instanceof Entry.Func ? this.renderFunctionReference(b) : this.renderMessageReference(b));
 };
 Entry.VariableContainer.prototype.renderMessageReference = function(b) {
-  for (var a = this, c = this._messageRefs, d = b.id_, e = [], f = 0;f < c.length;f++) {
+  for (var a = this, c = this._messageRefs, d = b.id, e = [], f = 0;f < c.length;f++) {
     -1 < c[f].block.params.indexOf(d) && e.push(c[f]);
   }
   c = Entry.createElement("ul");
@@ -14322,7 +14323,7 @@ Entry.VariableContainer.prototype.updateCloudVariables = function() {
   }
 };
 Entry.VariableContainer.prototype.addRef = function(b, a) {
-  if (Entry.playground.mainWorkspace.getMode() === Entry.Workspace.MODE_BOARD) {
+  if (this.view_ && Entry.playground.mainWorkspace.getMode() === Entry.Workspace.MODE_BOARD) {
     var c = {object:a.getCode().object, block:a};
     a.funcBlock && (c.funcBlock = a.funcBlock, delete a.funcBlock);
     this[b].push(c);
@@ -16987,7 +16988,7 @@ Entry.BlockMenu = function(b, a, c, d) {
   b.cloneToGlobal = function(a) {
     if (!this._boardBlockView && null !== this.dragBlock) {
       var b = this.workspace, d = b.getMode(), e = this.dragBlock, f = this._svgWidth, g = b.selectedBoard;
-      !g || d != Entry.Workspace.MODE_BOARD && d != Entry.Workspace.MODE_OVERLAYBOARD ? Entry.GlobalSvg.setView(e, b.getMode()) && Entry.GlobalSvg.addControl(a) : (b = e.block, d = b.getThread(), b && d && (b = d.toJSON(!0), this._boardBlockView = Entry.do("addThread", b).value.getFirstBlock().view, this._boardBlockView._moveTo(e.x - f, e.y + (this.offset.top - g.offset.top), !1), this._boardBlockView.onMouseDown.call(this._boardBlockView, a), this._boardBlockView.dragInstance.set({isNew:!0})));
+      !g || d != Entry.Workspace.MODE_BOARD && d != Entry.Workspace.MODE_OVERLAYBOARD ? Entry.GlobalSvg.setView(e, b.getMode()) && Entry.GlobalSvg.addControl(a) : g.code && (b = e.block, d = b.getThread(), b && d && (b = d.toJSON(!0), this._boardBlockView = Entry.do("addThread", b).value.getFirstBlock().view, this._boardBlockView._moveTo(e.x - f, e.y + (this.offset.top - g.offset.top), !1), this._boardBlockView.onMouseDown.call(this._boardBlockView, a), this._boardBlockView.dragInstance.set({isNew:!0})));
     }
   };
   b.terminateDrag = function() {
@@ -19396,13 +19397,15 @@ Entry.Scroller.RADIUS = 7;
     this._vertical && (this.vY += b * this.vRatio, this.vScrollbar.attr({y:this.vY}));
   };
   b.scroll = function(a, b) {
-    var d = this.board.svgBlockGroup.getBoundingClientRect(), e = this.board.svgDom, f = d.left - this.board.offset.left, g = d.top - this.board.offset.top, h = d.height;
-    a = Math.max(-d.width + Entry.BOARD_PADDING - f, a);
-    b = Math.max(-h + Entry.BOARD_PADDING - g, b);
-    a = Math.min(e.width() - Entry.BOARD_PADDING - f, a);
-    b = Math.min(e.height() - Entry.BOARD_PADDING - g, b);
-    this.board.code.moveBy(a, b);
-    this.updateScrollBar(a, b);
+    if (this.board.code) {
+      var d = this.board.svgBlockGroup.getBoundingClientRect(), e = this.board.svgDom, f = d.left - this.board.offset.left, g = d.top - this.board.offset.top, h = d.height;
+      a = Math.max(-d.width + Entry.BOARD_PADDING - f, a);
+      b = Math.max(-h + Entry.BOARD_PADDING - g, b);
+      a = Math.min(e.width() - Entry.BOARD_PADDING - f, a);
+      b = Math.min(e.height() - Entry.BOARD_PADDING - g, b);
+      this.board.code.moveBy(a, b);
+      this.updateScrollBar(a, b);
+    }
   };
   b.setVisible = function(a) {
     a != this.isVisible() && (this._visible = a, this.svgGroup.attr({display:!0 === a ? "block" : "none"}));
@@ -19456,14 +19459,12 @@ Entry.Board = function(b) {
     this.patternRect = Entry.Utils.addBlockPattern(this.svg, this.suffix);
   };
   b.changeCode = function(a) {
-    this.codeListener && this.code.changeEvent.detach(this.codeListener);
+    this.code && this.codeListener && this.code.changeEvent.detach(this.codeListener);
     this.set({code:a});
     var b = this;
-    this.codeListener = this.code.changeEvent.attach(this, function() {
+    a && (this.codeListener = this.code.changeEvent.attach(this, function() {
       b.changeEvent.notify();
-    });
-    a.createView(this);
-    this.generateCodeMagnetMap(a);
+    }), a.createView(this), this.generateCodeMagnetMap(a));
     this.scroller.resizeScrollBar();
   };
   b.bindCodeView = function(a) {
@@ -21462,7 +21463,13 @@ Entry.Playground.prototype.reloadPlayground = function() {
 };
 Entry.Playground.prototype.flushPlayground = function() {
   this.object = null;
-  Entry.playground && Entry.playground.view_ && (this.injectPicture(), this.injectSound(), Entry.playground.mainWorkspace.getBoard().clear());
+  if (Entry.playground && Entry.playground.view_) {
+    this.injectPicture();
+    this.injectSound();
+    var b = Entry.playground.mainWorkspace.getBoard();
+    b.clear();
+    b.changeCode(null);
+  }
 };
 Entry.Playground.prototype.refreshPlayground = function() {
   Entry.playground && Entry.playground.view_ && (this.injectPicture(), this.injectSound());

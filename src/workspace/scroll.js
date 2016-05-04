@@ -221,6 +221,7 @@ Entry.Scroller.RADIUS = 7;
     };
 
     p.scroll = function(x, y) {
+        if (!this.board.code) return;
         var clientRect = this.board.svgBlockGroup.getBoundingClientRect(),
             svgDom = this.board.svgDom,
             bBox = {
@@ -239,6 +240,7 @@ Entry.Scroller.RADIUS = 7;
             svgDom.height() - Entry.BOARD_PADDING - bBox.y,
             y
         );
+
         this.board.code.moveBy(x, y);
         this.updateScrollBar(x, y);
     };

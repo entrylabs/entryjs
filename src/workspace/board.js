@@ -107,16 +107,19 @@ Entry.Board = function(option) {
     };
 
     p.changeCode = function(code) {
-        if (this.codeListener)
+        if (this.code && this.codeListener)
             this.code.changeEvent.detach(this.codeListener);
+
         this.set({code: code});
+
         var that = this;
-        this.codeListener = this.code.changeEvent.attach(
-            this,
-            function() {that.changeEvent.notify();}
-        );
-        code.createView(this);
-        this.generateCodeMagnetMap(code);
+        if (code) {
+            this.codeListener = this.code.changeEvent.attach(
+                this, function() {that.changeEvent.notify();}
+            );
+            code.createView(this);
+            this.generateCodeMagnetMap(code);
+        }
         this.scroller.resizeScrollBar();
     };
 
