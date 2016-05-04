@@ -383,15 +383,6 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         );
         this.destroy(animate, true);
         this.getCode().changeEvent.notify();
-        if (Entry.activityReporter) {
-            var data = [
-                id,
-                positionX,
-                positionY,
-                this.getCode().stringify()
-            ];
-            Entry.activityReporter.add(new Entry.Activity('destroyBlock', data));
-        }
         return this;
     };
 

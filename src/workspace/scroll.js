@@ -242,7 +242,6 @@ Entry.Scroller.RADIUS = 7;
         );
 
         this.board.code.moveBy(x, y);
-        this.board.generateCodeMagnetMap();
         this.updateScrollBar(x, y);
     };
 

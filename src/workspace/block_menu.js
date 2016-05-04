@@ -217,8 +217,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             var code = this.code;
             var currentThread = block.getThread();
             if (block && currentThread) {
-                this._boardBlockView = board.code.
-                    cloneThread(currentThread, workspaceMode).getFirstBlock().view;
+                var threadJSON = currentThread.toJSON(true);
+                this._boardBlockView = Entry.do("addThread", threadJSON).value
+                    .getFirstBlock().view;
 
                 var distance = this.offset.top - board.offset.top;
 
