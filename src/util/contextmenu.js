@@ -17,7 +17,7 @@ goog.provide('Entry.ContextMenu');
     ctx.show = function(options, className) {
         if (!this.dom) this.createDom();
         if (options.length === 0) return;
-
+        var that = this;
         if (className !== undefined) {
             this._className = className;
             this.dom.addClass(className);
@@ -43,7 +43,8 @@ goog.provide('Entry.ContextMenu');
                 (function(elem, cb) {
                     elem.mousedown(function(e){
                         e.preventDefault();
-                        cb();
+                        that.hide();
+                        cb(e);
                     });
                 })(elem, option.callback);
             }

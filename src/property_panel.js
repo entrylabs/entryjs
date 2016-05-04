@@ -39,29 +39,43 @@ Entry.PropertyPanel = function() {
     };
 
     p.addMode = function(mode, contentObj) {
+
         var contentDom = contentObj.getView();
         // will be removed after apply new Dom class
         contentDom = Entry.Dom(contentDom, {
             parent: this._contentView
         });
-        var tabDom = Entry.Dom('<div>' + mode +'</div>', {
+
+        var tabDom = Entry.Dom('<div>' +Lang.Menus[mode] +'</div>', {
             classes: ["propertyTabElement", "propertyTab" + mode],
             parent: this._tabView
         });
         var that = this;
-        tabDom.bindOnClick(function() {
+        tabDom.bind('click',function() {
             that.select(mode);
         });
+
         if (this.modes[mode]) {
             this.modes[mode].tabDom.remove();
             this.modes[mode].contentDom.remove();
+            if(mode == 'hw'){
+                $(this.modes).removeClass('.propertyTabhw');
+                $('.propertyTabhw').unbind('dblclick');
+            }
         }
+
+
         this.modes[mode] = {
             obj: contentObj,
             tabDom: tabDom,
             contentDom: contentDom
         };
-    };
+        if(mode == 'hw') {
+            $('.propertyTabhw').bind('dblclick',(function(){
+                Entry.dispatchEvent('hwModeChange');
+            }));
+        }
+     };
 
     p.resize = function(canvasSize) {
         var canvasHeight = canvasSize*9/16;
@@ -74,7 +88,16 @@ Entry.PropertyPanel = function() {
         else
             this._view.addClass("collapsed");
 
-        this.modes[this.selected].obj.resize();
+        Entry.dispatchEvent('windowResized');
+
+        var modeResize  = this.modes[this.selected].obj.resize;
+        if(modeResize && this.selected != 'hw')
+            modeResize();
+        else if(this.selected == 'hw' && this.modes.hw.obj.listPorts)
+             this.modes[this.selected].obj.resizeList();
+         else if(this.selected == 'hw')
+            this.modes[this.selected].obj.resize();
+
     };
 
     p.select = function(modeName) {
@@ -87,8 +110,8 @@ Entry.PropertyPanel = function() {
         var selected = this.modes[modeName];
         selected.tabDom.addClass("selected");
         selected.contentDom.removeClass("entryHidden");
-        selected.obj.resize();
-        selected.obj.visible = true;
+        if(selected.obj.resize)
+            selected.obj.resize();
         this.selected = modeName;
     };
 

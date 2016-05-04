@@ -53,7 +53,7 @@ Entry.block.function_field_label = {
 
 Blockly.Blocks.function_field_string = {
   init: function() {
-    this.setColour("#ffec64");
+    this.setColour("#FFD974");
     this.appendValueInput("PARAM")
         .setCheck(['String']);
     this.appendValueInput("NEXT")
@@ -83,7 +83,7 @@ Entry.block.function_field_string = {
 
 Blockly.Blocks.function_field_boolean = {
   init: function() {
-    this.setColour("#2FC9F0");
+    this.setColour("#AEB8FF");
     this.appendValueInput("PARAM")
         .setCheck(['Boolean']);
     this.appendValueInput("NEXT")
@@ -114,7 +114,7 @@ Entry.block.function_field_boolean = {
 Blockly.Blocks.function_param_string = {
   init: function() {
     this.setEditable(false);
-    this.setColour("#ffec64");
+    this.setColour("#FFD974");
     /*
     this.appendDummyInput()
         .appendField(new Blockly.FieldTextInput('문자값1'), "NAME");
@@ -154,7 +154,7 @@ Entry.block.function_param_string = {
 Blockly.Blocks.function_param_boolean = {
   init: function() {
     this.setEditable(false);
-    this.setColour("#2FC9F0");
+    this.setColour("#AEB8FF");
     this.setOutput(true, 'Boolean');
     this.setInputsInline(true);
   },

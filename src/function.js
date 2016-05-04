@@ -110,6 +110,51 @@ Entry.Func.save = function() {
     Entry.variableContainer.saveFunction(this.targetFunc);
 };
 
+Entry.Func.syncFuncName = function(dstFName) {
+    var index = 0;
+    var dstFNameTokens = [];
+    dstFNameTokens = dstFName.split(' ');
+    var name ="";
+    var blocks = [];
+    blocks =  Blockly.mainWorkspace.getAllBlocks();
+    for(var i = 0; i < blocks.length; i++) {
+        var block = blocks[i];
+        if(block.type === "function_general") {
+            var iList = [];
+            iList = block.inputList;
+            for(var j=0; j < iList.length; j++) {
+                var input = iList[j];
+                if(input.fieldRow.length > 0 && (input.fieldRow[0] instanceof Blockly.FieldLabel) && (input.fieldRow[0].text_ != undefined)) {
+                    name+=input.fieldRow[0].text_;
+                    name+=" ";
+                }
+            }
+            name = name.trim();
+            if(name === this.srcFName && (this.srcFName.split(' ').length == dstFNameTokens.length)) {
+                for(var k=0; k < iList.length; k++) {
+                    var input = iList[k];
+                    if(input.fieldRow.length > 0 && (input.fieldRow[0] instanceof Blockly.FieldLabel) && (input.fieldRow[0].text_ != undefined)) {
+                        if(dstFNameTokens[index] === undefined) {
+                            iList.splice(k,1);
+                            break;
+                        }
+                        else {
+                           input.fieldRow[0].text_ = dstFNameTokens[index];
+                        }
+
+                        index++;
+                    }
+                }
+            }
+            name = '';
+            index = 0;
+        }
+    }
+    var updatedDom = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace)
+    Blockly.mainWorkspace.clear();
+    Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, updatedDom);
+};
+
 Entry.Func.cancelEdit = function() {
     if (!this.targetFunc)
         return;
@@ -361,3 +406,4 @@ Entry.Func.unbindFuncChangeEvent = function() {
         this._funcChangeEvent.destroy();
     delete this._funcChangeEvent;
 };
+

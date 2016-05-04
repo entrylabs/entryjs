@@ -23,20 +23,21 @@ Entry.Neobot = {
         }
         Entry.hw.update();
     },
+    name: 'neobot',
     monitorTemplate: {
         imgPath: "hw/neobot.png",
         width: 268,
         height: 270,
         ports: {
-            "1":{name: "1번 포트", type: "input", pos: {x: 78, y: 9}},
-            "2":{name: "2번 포트", type: "input", pos: {x : 115, y: 9}},
-            "3":{name: "3번 포트", type: "input", pos: {x: 153, y: 9}},
-            //{name: "리모컨", type: "input"},
-            "LMOT":{name: "왼쪽 모터", type: "output", pos: {x: 78, y: 259}},
-            "RMOT":{name: "오른쪽 모터", type: "output", pos: {x: 191, y: 259}},
-            "note":{name: "부저", type: "output", pos: {x: 98, y: 184}},
-            "SERVO1":{name: "SERVO 모터 1", type: "output", pos: {x: 115, y: 259}},
-            "SERVO2":{name: "SERVO 모터 2", type: "output", pos: {x: 191, y: 9}}
+
+            "1":{name: Lang.Hw.port_en + " 1 " + Lang.Hw.port_ko, type: "input", pos: {x: 78, y: 9}},
+            "2":{name: Lang.Hw.port_en + " 2 " + Lang.Hw.port_ko, type: "input", pos: {x : 115, y: 9}},
+            "3":{name: Lang.Hw.port_en + " 3 " + Lang.Hw.port_ko, type: "input", pos: {x: 153, y: 9}},
+            "LMOT":{name: Lang.Hw.left + " " + Lang.Hw.motor , type: "output", pos: {x: 78, y: 259}},
+            "RMOT":{name: Lang.Hw.right + " " + Lang.Hw.motor , type: "output", pos: {x: 191, y: 259}},
+            "note":{name: Lang.Hw.buzzer , type: "output", pos: {x: 98, y: 184}},
+            "SERVO1":{name: Lang.Hw.sub + " " + Lang.Hw.motor + " 1", type: "output", pos: {x: 115, y: 259}},
+            "SERVO2":{name: Lang.Hw.sub + " " + Lang.Hw.motor +  " 2", type: "output", pos: {x: 191, y: 9}}
         }
     }
 }

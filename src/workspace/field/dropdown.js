@@ -143,6 +143,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
         var OPTION_X_PADDING = 30;
         var maxWidth = 0;
+        var options = this._contents.options;
 
         var CONTENT_HEIGHT = this._CONTENT_HEIGHT + 4;
 

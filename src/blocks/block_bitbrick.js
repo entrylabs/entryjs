@@ -1,12 +1,13 @@
 "use strict";
-
 Entry.Bitbrick = {
+
     SENSOR_MAP : {
         1: "light",
         2: "IR",
         3: "touch",
         4: "potentiometer",
         5: "MIC",
+        21: "UserSensor",
         11: "USER INPUT",
         20: "LED",
         19: "SERVO",
@@ -27,9 +28,11 @@ Entry.Bitbrick = {
     var portData = Entry.hw.portData;
     for (var i = 1; i < 5; i++) {
         var data = portData[i];
-        if (data && data.value)
-            list.push([i + ' - ' + data.type, i.toString()]);
+        if (data && (data.value || data.value === 0)) {
+            list.push([i + ' - ' + Lang.Blocks['BITBRICK_' + data.type], i.toString()]);
+        }
     }
+
     if (list.length == 0)
       return [[Lang.Blocks.no_target, 'null']]
     return list;
@@ -40,7 +43,7 @@ Entry.Bitbrick = {
     for (var i = 1; i < 5; i++) {
         var data = portData[i];
       if (data && data.type === "touch")
-        list.push([i + ' - ' + data.type, i.toString()]);
+        list.push([i.toString(), i.toString()]);
     }
     if (list.length == 0)
       return [[Lang.Blocks.no_target, 'null']]
@@ -80,7 +83,40 @@ Entry.Bitbrick = {
   servoMaxValue: 181,
   servoMinValue: 1,
   dcMaxValue: 100,
-  dcMinValue: -100
+  dcMinValue: -100,
+  monitorTemplate: {
+        imgPath: "hw/bitbrick.png",
+        width: 400,
+        height: 400,
+        listPorts: {
+            "1":{name: Lang.Hw.port_en + " 1 " + Lang.Hw.port_ko, type: "input", pos: {x : 0, y: 0}},
+            "2":{name: Lang.Hw.port_en + " 2 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "3":{name: Lang.Hw.port_en + " 3 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "4":{name: Lang.Hw.port_en + " 4 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "A":{name: Lang.Hw.port_en + " A " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "B":{name: Lang.Hw.port_en + " B " + Lang.Hw.port_ko, type: "input", pos: {x : 0, y: 0}},
+            "C":{name: Lang.Hw.port_en + " C " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "D":{name: Lang.Hw.port_en + " D " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}}
+        }
+        // },
+        // ports : {
+        //     "1":{name: "light", type: "input", pos: {x: 0, y: 0}},
+        //     "2":{name: "IR", type: "input", pos: {x : 0, y: 0}},
+        //     "3":{name: "touch", type: "input", pos: {x: 0, y: 0}},
+        //     "4":{name: "potentiometer", type: "input", pos: {x: 0, y: 0}},
+        //     "5":{name: "MIC", type: "input", pos: {x: 0, y: 0}},
+        //     "21":{name: "UserSensor", type: "input", pos: {x: 0, y: 0}},
+        //     "11":{name: "USER INPUT", type: "input", pos: {x: 0, y: 0}},
+        //     "20":{name: "LED", type: "input", pos: {x: 0, y: 0}},
+        //     "19":{name: "SERVO", type: "input", pos: {x: 0, y: 0}},
+        //     "18":{name: "DC", type: "input", pos: {x: 0, y: 0}},
+        //     "buzzer":{name: "부저", type: "input", pos: {x: 0, y: 0}},
+        //     "LEDR":{name: "LEDR", type: "output", pos: {x: 0, y: 0}},
+        //     "LEDG":{name: "LEDG", type: "output", pos: {x: 0, y: 0}},
+        //     "LEDB":{name: "LEDG", type: "output", pos: {x: 0, y: 0}}
+        // },
+        ,mode: 'both'
+    }
 };
 
 
@@ -98,8 +134,6 @@ Blockly.Blocks.bitbrick_sensor_value = {
 
 Entry.block.bitbrick_sensor_value = function (sprite, script) {
   var port = script.getStringField("PORT");
-  console.log(port);
-  console.log(Entry.hw.portData[port]);
   return Entry.hw.portData[port].value;
 };
 
@@ -107,9 +141,9 @@ Blockly.Blocks.bitbrick_is_touch_pressed = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
-    .appendField("터치센서")
+    .appendField(Lang.Blocks.BITBRICK_touch)
     .appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.touchList), "PORT")
-    .appendField(" 가 눌렸는가?");
+    .appendField("이(가) 눌렸는가?");
     this.setOutput(true, 'Boolean');
     this.setInputsInline(true);
   }
@@ -243,7 +277,7 @@ Blockly.Blocks.bitbrick_buzzer = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
-    .appendField('부저음 ');
+    .appendField('버저음 ');
     this.appendValueInput("VALUE")
     .setCheck(["Number", "String"]);
     this.appendDummyInput()
@@ -326,11 +360,12 @@ Blockly.Blocks.bitbrick_dc_direction_speed = {
     this.appendDummyInput()
     .appendField("DC 모터")
     .appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.dcList), "PORT")
-    .appendField(" 방향")
+    .appendField(" ")
     .appendField(new Blockly.FieldDropdown([
-      ['CCW',"CCW"],
-      ['CW',"CW"]
+      [Lang.Blocks.BITBRICK_dc_direction_cw,"CW"],
+      [Lang.Blocks.BITBRICK_dc_direction_ccw,"CCW"]
       ]), "DIRECTION")
+    .appendField(" 방향")
     .appendField(" 속력");
     this.appendValueInput("VALUE")
     .setCheck(["Number", "String"]);
@@ -378,4 +413,58 @@ Entry.block.bitbrick_servomotor_angle = function (sprite, script) {
     value = Math.max(value, Entry.Bitbrick.servoMinValue);
     Entry.hw.sendQueue[script.getStringField("PORT")] = value;
     return script.callReturn();
+};
+
+
+
+Blockly.Blocks.bitbrick_convert_scale = {
+    init: function() {
+        this.setColour("#00979D");
+        this.appendDummyInput()
+            .appendField('변환');
+        this.appendDummyInput()
+            .appendField("")
+            .appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.sensorList), "PORT")
+        this.appendDummyInput()
+            .appendField('값');
+        this.appendValueInput("VALUE2")
+            .setCheck(["Number", "String", null]);
+        this.appendDummyInput()
+            .appendField(Lang.Blocks.ARDUINO_convert_scale_3);
+        this.appendValueInput("VALUE3")
+            .setCheck(["Number", "String", null]);
+        this.appendDummyInput()
+            .appendField('에서');
+        this.appendValueInput("VALUE4")
+            .setCheck(["Number", "String", null]);
+        this.appendDummyInput()
+            .appendField(Lang.Blocks.ARDUINO_convert_scale_5);
+        this.appendValueInput("VALUE5")
+            .setCheck(["Number", "String", null]);
+        this.setOutput(true, 'Number');
+        this.setInputsInline(true);
+    }
+};
+
+Entry.block.bitbrick_convert_scale = function (sprite, script) {
+    var port = script.getNumberField("PORT");
+    var value1 = Entry.hw.portData[port].value;
+    var value2 = script.getNumberValue("VALUE2", script);
+    var value3 = script.getNumberValue("VALUE3", script);
+    var value4 = script.getNumberValue("VALUE4", script);
+    var value5 = script.getNumberValue("VALUE5", script);
+    var result = value1;
+
+    if (value4 > value5) {
+        var swap = value4;
+        value4 = value5;
+        value5 = swap;
+    }
+
+    result -= value2;
+    result = result * ((value5 - value4) / (value3 - value2));
+    result += value4;
+    result = Math.min(value5, result);
+    result = Math.max(value4, result);
+    return Math.round(result);
 };

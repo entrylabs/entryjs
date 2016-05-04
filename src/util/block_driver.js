@@ -39,7 +39,7 @@ Entry.BlockDriver = function() {
         var blockObject = mockup.toJSON();
         blockObject.class = className;
         blockObject.isNotFor = isNotFor;
-                blockObject.syntax = blocklyInfo.syntax;
+        blockObject.syntax = blocklyInfo.syntax;
 
         if (_.isEmpty(blockObject.paramsKeyMap))
             delete blockObject.paramsKeyMap

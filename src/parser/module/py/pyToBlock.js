@@ -5,8 +5,10 @@
 
 goog.provide("Entry.PyToBlockParser");
 
+goog.require("Entry.PyBlockAssembler");
+
 Entry.PyToBlockParser = function(blockSyntax) {
-    this.blockSyntax = blockSyntax;
+    this._assembler = new Entry.PyBlockAssembler(blockSyntax);
 };
 
 (function(p){
@@ -19,11 +21,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         for(var index in nodes) {
             var node = nodes[index];
-            var result = this[node.type](node);
+            var unit = this[node.type](node);
+            console.log("checkitout", unit);
             
-            thread.push({
-                type: result.block
-            });
+            var block = this._assembler.assemble(unit);
+
+            thread.push(block);
         }
 
         code.push(thread);
@@ -35,6 +38,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("Identifier", node);
         var name = node.name;
         return {
+            type: node.type,
             name: name
         };
     };
@@ -67,6 +71,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("value", value);
 
         return {
+            type: node.type,
             value: value 
         };
 
@@ -100,43 +105,28 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.ExpressionStatement = function(node) {
-        console.log("ccccccccccccc");
         var expression = this[node.expression.type](node.expression);
-        var params = [];
 
-        if(expression.arguments && expression.arguments.length){
-            for(var index in expression.arguments) {
-                var arg = expression.arguments[index];
-                params.push(arg.value);
-            }
-        }
-
-        var targetSyntax = String(expression.callee.object.name).concat(".").concat(expression.callee.property.name);
-        var block = this.blockSyntax[targetSyntax];
-       
-        console.log("block", block);
-        console.log("params", params);
-
-        return {
-            block: block,
-            params: params
-        }        
-
-        /*return {
-            expresstion: expression
-        }*/
+        return { 
+            type: node.type,
+            expression: expression,
+        }    
     };
 
     p.BlockStatement = function(node) {
-        console.log("BlockStatement", node);
+       console.log("BlockStatement", node);
+       var blocks = [];
        var bodies = [];
        for(var index in node.body) {
-            var statment = node.body[index];
+            var statement = node.body[index];
+            console.log("statement", statement);
             var body = this[statement.type](statement);
+            console.log("body", body);
             bodies.push(body);
         }
 
         return {
+            type: node.type,
             body: bodies 
         };
     };
@@ -317,10 +307,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.WhileStatement = function(node) {
         console.log("WhileStatement", node);
+
         var test = this[node.test.type](node.test);
         var body = this[node.body.type](node.body);
 
+        console.log("test11", test);
+        console.log("body11", body);
+
         return {
+            type: node.type,
             test: test,
             body: body
         };
@@ -356,6 +351,38 @@ Entry.PyToBlockParser = function(blockSyntax) {
         };
     };
 
+    p.ForStatement = function(node) {
+        console.log("ForStatement", node);
+        
+        var init;
+        if(node.init === null)
+            init = null;
+        else
+            this[node.init.type](node.init);
+
+        var test;
+        if(node.test === null)
+            test = null;
+        else
+            test = this[node.test.type](node.test);       
+
+        var update;
+        if(node.update === null)
+            update = null;
+        else
+            update = this[node.update.type](node.update);
+
+        var body = this[node.body.type](node.body);
+
+        return {
+            type: node.type,
+            init: init,
+            test: test,
+            update: update,
+            body: statement
+        };
+    };
+
     p.ForInStatement = function(node) {
         console.log("ForInStatement", node);
         var left;
@@ -385,15 +412,18 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.VariableDeclaration = function(node) {
         console.log("VariableDeclaration", node);
-        var declarations;
+        var declarations = [];
 
         for(var index in node.declarations) {
             var variableDeclaration = node.declarations[index];
             var declaration = this[variableDeclaration.type](variableDeclaration);
+            console.log("declaration", declaration);
             declarations.push(declaration);
         }
 
         var kind = "var";
+
+        console.log("declarations", declarations);
 
         return {
             declarations: declarations,
@@ -410,6 +440,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
             init = null;
         else
             init = this[node.init.type](node.init);
+
+        console.log("id", id);
+        console.log("init", init);
 
         return {
             id: id,
@@ -513,8 +546,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var argument = this[node.argument.type](node.argument);
 
         return {
+            type: node.type,
             operator: operator,
-            perfix: prefix,
+            prefix: prefix,
             argument: argument
         };
     };
@@ -539,7 +573,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         return {
             operator: operator,
-            perfix: prefix,
+            prefix: prefix,
             argument: argument
         };
     };
@@ -723,6 +757,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var property = this[node.property.type](node.property);
         var computed = node.computed; 
 
+        console.log("object", object);
+        console.log("property", property);
+
         return {
             type: node.type,
             object: object,
@@ -756,8 +793,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
         for(var index in node.arguments) {
             var expression = node.arguments[index];
             var arg = this[expression.type](expression);
-            args.push(arg);
+        
+            args.push(arg);      
         } 
+
+        console.log("callee", callee);
+        console.log("arguments", args);
 
         return {
             type: node.type,

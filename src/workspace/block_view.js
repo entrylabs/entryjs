@@ -9,6 +9,8 @@ goog.provide("Entry.BlockView");
  *
  */
 Entry.BlockView = function(block, board, mode) {
+    console.log("block type", block.type);
+
     Entry.Model(this, false);
     this.block = block;
     this._board = board;
@@ -17,7 +19,8 @@ Entry.BlockView = function(block, board, mode) {
     this.svgGroup = board.svgBlockGroup.elem("g");
 
     this._schema = Entry.block[block.type];
-    if (this._schema.changeEvent)
+
+    if (this._schema.changeEvent) 
         this._schemaChangeEvent = this._schema.changeEvent.attach(
             this, this._updateSchema);
     var skeleton = this._skeleton = Entry.skeleton[this._schema.skeleton];

@@ -28,6 +28,8 @@ Entry.init = function(container, options) {
     this.options = options;
     this.parseOptions(options);
     this.mediaFilePath = (options.libDir ? options.libDir : '/lib') + '/entryjs/images/';
+    this.defaultPath = options.defaultDir || '';
+    this.blockInjectPath = options.blockInjectDir || '';
 
     if (this.type == 'workspace' && this.isPhone())
         this.type = 'phone';
@@ -133,7 +135,7 @@ Entry.initialize_ = function() {
 
     /**
      * Initialize container for objects.
-     * @type {!Entry.Container}
+     * @type {!Entry.Container}π
      * @type {!object}
      */
     this.container = new Entry.Container();
@@ -144,7 +146,9 @@ Entry.initialize_ = function() {
      * @type {!object}
      */
     this.helper = new Entry.Helper();
-
+    this.youtube = new Entry.Youtube();
+    // this.tvCast = new Entry.TvCast();
+    // this.doneProject = new Entry.DoneProject();
     /**
      * Initialize container for objects.
      * @type {!Entry.VariableContainer}
@@ -195,8 +199,12 @@ Entry.initialize_ = function() {
  * @param {!string} option for create dom by type.
  */
 Entry.createDom = function(container, option) {
-
+    var that = this;
     if (!option || option == 'workspace') {
+        Entry.documentMousedown.attach(
+            that, that.cancelObjectEdit
+        );
+
         var sceneView = Entry.createElement('div');
         container.appendChild(sceneView);
         /** @type {!Element} */
@@ -252,12 +260,6 @@ Entry.createDom = function(container, option) {
         /** @type {!Element} */
         this.containerView = containerView;
         this.container.generateView(this.containerView, option);
-        this.propertyPanel.addMode("container", this.container);
-
-        this.helper.generateView(this.containerView, option);
-        this.propertyPanel.addMode("helper", this.helper);
-
-        this.propertyPanel.select("container");
 
         var playgroundView = Entry.createElement('div');
         container.appendChild(playgroundView);
@@ -265,8 +267,11 @@ Entry.createDom = function(container, option) {
         this.playgroundView = playgroundView;
         this.playground.generateView(this.playgroundView, option);
 
-        //bind workspace for select block observing
-        this.helper.bindWorkspace(this.playground.mainWorkspace);
+        this.propertyPanel.addMode("object", this.container);
+        this.propertyPanel.addMode("helper" , this.helper);
+        // this.propertyPanel.addMode("youtube" , this.youtube);
+
+        this.propertyPanel.select("object");
     } else if (option == 'minimize') {
         var canvas = Entry.createElement('canvas');
         canvas.className = 'entryCanvasWorkspace';
@@ -403,40 +408,5 @@ Entry.parseOptions = function(options) {
 Entry.initFonts = function(fonts) {
     this.fonts = fonts;
     if (!fonts) this.fonts = [];
-
-    var config = {
-        custom: {
-            families: [],
-            urls: []
-        }
-    };
-
-    for (var i=0; i<this.fonts.length; i++) {
-        var font = this.fonts[i];
-        config.custom.families.push(font.family);
-        config.custom.urls.push(font.url);
-    }
-
-    setTimeout(function() {
-        WebFont.load(config);
-    },1000);
-
-    /*
-    config.custom.families.forEach(function(font) {
-        var node = Entry.createElement('div');
-        node.innerHTML = "abcd한글123#$";
-        node.style.position      = 'absolute';
-        node.style.left          = '-10000px';
-        node.style.top           = '-10000px';
-        node.style.fontSize      = '300px';
-
-        node.style.fontFamily    = font;
-        node.style.fontVariant   = 'normal';
-        node.style.fontStyle     = 'normal';
-        node.style.fontWeight    = 'normal';
-        node.style.letterSpacing = '0';
-        document.body.appendChild(node);
-    });
-    */
 
 };

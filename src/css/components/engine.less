@@ -30,33 +30,41 @@
 .entryPopupWindow > .entryEngineWorkspace_w {
     position: absolute;
     width: 100% !important;
-    top: -15px !important;
+    top: 0px !important;
 }
 
 .entryPopupWindow > .entryEngineWorkspace_w > .entryRunButtonWorkspace_w {
     display: none;
+    top: 37%;
+    left: 46%;
 }
 
 .entryPopupWindow > .entryEngineWorkspace_w > .entryRunButtonWorkspace_w2 {
     display: block;
-    width: 84px;
-    height: 84px;
-    .backgroundImage("screen_btn_play_nor.png");
+    width: 111px;  
+    height: 111px;
+    background-image: url("@{image_url}play_btn.png");
+    background-position: 40px center;
+    background-color: rgba(0,0,0,0.5);
+    border-radius: 55px;
     background-repeat: no-repeat;
     right: 5px;
     /*bottom: 5px;*/
     bottom: -10px;
+    left: 44%;
+    top : 35%;
 }
 
 .entryPopupWindow > .entryEngineWorkspace_w > .entryStopButtonWorkspace_w2 {
     display: block;
-    width: 84px;
-    height: 84px;
-    .backgroundImage("screen_btn_stop_nor.png");
+    background-image: url("@{image_url}stop_btn.png");
     background-repeat: no-repeat;
-    right: 5px;
-    /*bottom: 5px;*/
+    left: 20px;
+    color: transparent;
     bottom: -10px;
+    width: 90px;
+    background-position:left;
+    color: @bora;
 }
 
 .entryPopupWindow > .entryEngineWorkspace_w > .entryStopButtonWorkspace_w {
@@ -64,17 +72,20 @@
 }
 
 .entryPopupWindow > .entryEngineWorkspace_w > .entryCoordinateButtonWorkspace_w {
-    left: 5px;
+    background-image : url("@{image_url}grid.png") !important;
+    right: 34px;
+    color : @bora;
 }
 
 .entryPopupWindow > .entryEngineWorkspace_w > .entryMaximizeButtonWorkspace_w {
-    .backgroundImage("layers_icon_fullmode02_nor.png");
+    background-image: url("@{image_url}zoom_out_btn.png");
     background-repeat: no-repeat;
     right: 5px;
 }
 
 .entryPopupWindow > .entryEngineWorkspace_w > .entryEngineButtonWorkspace_w {
     position: absolute;
+    bottom: 1px;
 }
 
 .entryPopupWindow > .entryEngineWorkspace_w > .entryAddButtonWorkspace_w {
@@ -201,7 +212,13 @@
 .entryMaximizeButtonMinimize {
     float: right;
     margin-right: 5px;
-    .backgroundImage("zoom_out_btn.png");
+    background-image: url("@{image_url}zoom_in_btn.png");
+}
+
+.entryPopupWindow > .entryEngineMinimize > .entryMaximizeButtonMinimize {
+    float: right;
+    margin-right: 5px;
+    background-image: url("@{image_url}zoom_out_btn.png");
 }
 
 .entryMaximizeButtonPhone {
@@ -246,6 +263,18 @@
 
 .entryPopupWindow > div > .entrySpeedButtonWorkspace {
     display: none;
+}
+
+.entryPopupWindow  .entryMouseViewWorkspace_w {
+    font-size: 9pt;
+    margin: 0 auto;
+    width: 100%;
+    color: @bora;
+    line-height: 24px;
+    text-align: center;
+    bottom: 1px;
+    position: absolute;
+    text-align: center;
 }
 
 #entrySpeedProgressWorkspace {
@@ -456,31 +485,6 @@
     display: none;
 }
 
-.entryEngineBlueWorkspace > .entryStopButtonWorkspace {
-    .backgroundImage("stopbutton_play.png");
-    color: white;
-}
-
-.entryPauseButtonWorkspace {
-    float:right;
-    .backgroundImage("pausebutton_edit.png");
-}
-
-.entryPauseButtonMinimize {
-    float:left;
-    .backgroundImage("pause_btn.png");
-    width: auto;
-    background-position: left;
-    padding-left: 17px;
-    color: #6c5af2;
-    font-size: 9pt;
-}
-
-.entryEngineBlueWorkspace > .entryPauseButtonWorkspace {
-    .backgroundImage("pausebutton_play.png");
-    color: white;
-}
-
 .entryEngineBigButtonMinimize_popup {
     border: none;
     display: none;
@@ -515,3 +519,50 @@
     display: block;
 }
 
+.entryPauseButtonWorkspace_w {
+    display: none;
+}
+
+.entryPopupWindow .entryPauseButtonWorkspace_w { 
+    display: inline-block; 
+    background: url("@{image_url}pause_btn.png");
+    background-repeat: no-repeat;
+    color: transparent;
+    width: 90px;
+    left: 103px;
+    color: @bora;
+    background-position: center left;
+}
+
+
+.nav_right_wrapper {
+    right: 0;
+}
+
+.navbar-default {
+    background-color: #89c1e4;
+    border-color: #89c1e4;
+    /*background-color: #4accaa;
+    border-color: #4accaa;*/
+}
+
+#project_name.normal {
+    background-color: #89c1e4;
+    /*background-color: #4accaa;*/
+}
+
+
+.btn-group > .btn {
+    background-color: transparent;
+    border-color: transparent;
+    /*background-color: #4accaa;
+    border-color: #4accaa;*/
+}
+
+.art_project_name {
+    background-color: white !important;
+}
+
+.art_project_name:hover {
+    border: 1px solid #b4b4b4 !important;
+}

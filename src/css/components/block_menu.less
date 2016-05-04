@@ -120,3 +120,234 @@
     background-color: #e5e5e5;
 }
 
+.entryCategoryWorkspace {
+    width: 74px;
+    height: 100%;
+    display: block;
+}
+
+
+.entryBlockMenuWorkspace {
+    background-color: #e5e5e5;
+    position: absolute;
+    left: 64px;
+    top: 45px;
+    width: 186px;
+    bottom: 0px;
+    z-index: 100;
+}
+
+#entryCategorymoving {
+    /*border-right: 4px solid #A751E3;*/
+    .backgroundImage("movement.png");
+    background-repeat: no-repeat;
+}
+
+.entrySelectedCategory#entryCategorymoving {
+    /*border-left: 4px solid #A751E3;*/
+    border-right: none;
+}
+
+#entryCategorylooks {
+    /*border-right: 4px solid #EC4466;*/
+    .backgroundImage("looks.png");
+    background-repeat: no-repeat;
+}
+
+.entrySelectedCategory#entryCategorylooks {
+    /*border-left: 4px solid #EC4466;*/
+    border-right: none;
+}
+
+#entryCategorybrush {
+    /*border-right: 4px solid #FF9E20;*/
+    .backgroundImage("brush.png");
+    background-repeat: no-repeat;
+}
+
+.entrySelectedCategory#entryCategorybrush {
+    border-right: none;
+}
+
+#entryCategorytext {
+    .backgroundImage("postbox_new.png");
+    background-repeat: no-repeat;
+}
+
+.entrySelectedCategory#entryCategorytext {
+    border-right: none;
+}
+
+#entryCategorysound {
+    .backgroundImage("sound.png");
+    background-repeat: no-repeat;
+}
+
+.entrySelectedCategory#entryCategorysound {
+    border-right: none;
+}
+
+#entryCategorystart {
+    .backgroundImage("start.png");
+    background-repeat: no-repeat;
+}
+
+.entrySelectedCategory#entryCategorystart {
+    border-right: none;
+}
+
+#entryCategoryflow {
+    .backgroundImage("flow.png");
+    background-repeat: no-repeat;
+}
+
+.entrySelectedCategory#entryCategoryflow {
+    border-right: none;
+}
+
+#entryCategoryjudgement {
+    .backgroundImage("judgement.png");
+    background-repeat: no-repeat;
+}
+
+.entrySelectedCategory#entryCategoryjudgement {
+    border-right: none;
+}
+
+#entryCategorycalc {
+    .backgroundImage("calc.png");
+    background-repeat: no-repeat;
+}
+
+.entrySelectedCategory#entryCategorycalc {
+    border-right: none;
+}
+
+#entryCategoryvariable {
+    .backgroundImage("variable.png");
+    background-repeat: no-repeat;
+}
+
+.entrySelectedCategory#entryCategoryvariable {
+    border-right: none;
+}
+
+#entryCategoryfunc {
+    .backgroundImage("function.png");
+    background-repeat: no-repeat;
+}
+
+.entrySelectedCategory#entryCategoryfunc {
+    border-right: none;
+}
+
+#entryCategoryscene {
+    border-right: none;
+    .backgroundImage("scene.png");
+    background-repeat: no-repeat;
+}
+
+.entrySelectedCategory#entryCategoryscene {
+    border-left: none;
+    border-right: none;
+}
+
+#entryCategoryarduino {
+    .backgroundImage("arduino.png");
+    background-repeat: no-repeat;
+}
+
+.entrySelectedCategory#entryCategoryarduino {
+    border-right: none;
+}
+
+.entryBlocklyWorkspace {
+    position: absolute;
+    left: 250px;
+    top: 8px;
+    bottom: 0px;
+    right: 0px;
+    overflow: hidden;
+    border: solid 1px #C4C4B9;
+    border-top-left-radius: 10px;
+    .backgroundImage("entry_bg.png");
+}
+
+.entryBlocklyWorkspace.folding {
+    z-index: 300;
+    border-left: solid 1px #C4C4B9;
+    .animation-duration(0.7s);
+    .animation-name(foldBlockly);
+    .animation-fill-mode(forwards);
+}
+
+@keyframes foldBlockly {
+    from {}
+    to {left: 64px;}
+}
+
+@-ot-keyframes foldBlockly {
+    from {}
+    to {left: 64px;}
+}
+
+@-ms-keyframes foldBlockly {
+    from {}
+    to {left: 64px;}
+}
+
+@-moz-keyframes foldBlockly {
+    from {}
+    to {left: 64px;}
+}
+
+@-webkit-keyframes foldBlockly {
+    from {}
+    to {left: 64px;}
+}
+
+.entryBlocklyWorkspace.foldOut {
+    z-index:300;
+    .animation-duration(0.7s);
+    .animation-name(foldOutBlockly);
+    .animation-fill-mode(forwards);
+}
+
+@keyframes foldOutBlockly {
+    from {left: 64px;}
+    to {}
+}
+
+@-o-keyframes foldOutBlockly {
+    from {left: 64px;}
+    to {}
+}
+
+@-ms-keyframes foldOutBlockly {
+    from {left: 64px;}
+    to {}
+}
+
+@-moz-keyframes foldOutBlockly {
+    from {left: 64px;}
+    to {}
+}
+
+@-webkit-keyframes foldOutBlockly {
+    from {left: 64px;}
+    to {}
+}
+
+.entryBlocklyPhone {
+    position: absolute;
+    top: 0px;
+    left: 56px;
+    right: 0px;
+    bottom: 0px;
+    overflow: hidden;
+    border: solid 1px #C4C4B9;
+    border-left: 0;
+    .backgroundImage("entry_bg_1.png");
+}
+
+

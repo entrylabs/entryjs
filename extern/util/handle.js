@@ -196,6 +196,7 @@ p.createHandle = function() {
         handle.dispatchEditEndEvent();
     });
     container.addChild(rotateKnob);
+    container.setChildIndex(rotateKnob, 1);
     this.rotateKnob = rotateKnob;
 
     var directionArrow = new createjs.Shape();
@@ -217,6 +218,7 @@ p.createHandle = function() {
         handle.dispatchEditEndEvent();
     });
     container.addChild(directionArrow);
+    container.setChildIndex(directionArrow, 0);
     this.directionArrow = directionArrow;
 
     // center
@@ -224,7 +226,7 @@ p.createHandle = function() {
     centerPoint.graphics.beginFill(this.centerColor)
         .ss(1, 2, 0)
         .s(this.centerColor)
-        .dc(0, 0, 3, 3);
+        .dc(0, 0, 5, 5); 
     centerPoint.on("mousedown", function(e) {
         handle.dispatchEditStartEvent();
     });
