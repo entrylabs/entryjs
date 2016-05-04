@@ -5927,13 +5927,13 @@ Entry.Commander = function(b) {
     var b = Array.prototype.slice.call(arguments);
     b.shift();
     var d = Entry.Command[a];
-    Entry.stateManager && Entry.stateManager.addCommand.apply(Entry.stateManager, [a, this, Entry.Command[d.undo].do].concat(d.state.apply(null, b)));
-    return {value:Entry.Command[a].do.apply(Entry.Command, b), isPass:this.isPass.bind(this)};
+    Entry.stateManager && Entry.stateManager.addCommand.apply(Entry.stateManager, [a, this, this.do, d.undo].concat(d.state.apply(this, b)));
+    return {value:Entry.Command[a].do.apply(this, b), isPass:this.isPass.bind(this)};
   };
   b.undo = function() {
     var a = Array.prototype.slice.call(arguments), b = a.shift(), d = Entry.Command[b];
-    Entry.stateManager && Entry.stateManager.addCommand.apply(Entry.stateManager, [b, this, this.redo, b].concat(d.state.apply(null, a)));
-    d.undo.apply(this, a);
+    Entry.stateManager && Entry.stateManager.addCommand.apply(Entry.stateManager, [b, this, this.do, d.undo].concat(d.state.apply(this, a)));
+    return {value:Entry.Command[b].do.apply(this, a), isPass:this.isPass.bind(this)};
   };
   b.redo = function() {
     var a = Array.prototype.slice.call(arguments), b = a.shift(), d = Entry.Command[b];
@@ -5944,7 +5944,6 @@ Entry.Commander = function(b) {
     this.editor[a] = b;
   };
   b.isPass = function(a) {
-    console.log(a);
     a = void 0 === a ? !0 : a;
     Entry.stateManager.getLastCommand().isPass = a;
   };
@@ -6003,6 +6002,7 @@ Entry.Commander = function(b) {
   b.moveBlock = {type:104, do:function(a, b, d) {
     void 0 !== b ? (a = this.editor.board.findById(a), a.moveTo(b, d)) : a._updatePos();
   }, state:function(a) {
+    "string" === typeof a && (a = this.editor.board.findById(a));
     return [a.id, a.x, a.y];
   }, log:function(a) {
     return [a.id, a.toJSON()];
@@ -19572,18 +19572,6 @@ Entry.Board = function(b) {
     this.visible = !0;
   };
   b.alignThreads = function() {
-    for (var a = this.svgDom.height(), b = this.code.getThreads(), d = 15, e = 0, a = a - 30, f = 50, g = 0;g < b.length;g++) {
-      var h = b[g].getFirstBlock();
-      if (h) {
-        var h = h.view, k = h.svgGroup.getBBox(), l = d + 15;
-        l > a && (f = f + e + 10, e = 0, d = 15);
-        e = Math.max(e, k.width);
-        l = d + 15;
-        h._moveTo(f, l, !1);
-        d = d + k.height + 15;
-      }
-    }
-    this.scroller.resizeScrollBar();
   };
   b.clear = function() {
     this.svgBlockGroup.remove();

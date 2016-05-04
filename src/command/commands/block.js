@@ -127,6 +127,8 @@ goog.require("Entry.Command");
             }
         },
         state: function(block) {
+            if (typeof block === "string")
+                block = this.editor.board.findById(block);
             return [
                 block.id,
                 block.x,

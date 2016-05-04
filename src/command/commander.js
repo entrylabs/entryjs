@@ -33,16 +33,15 @@ Entry.Commander = function(injectType) {
         argumentArray.shift();
         var command = Entry.Command[commandType];
         if (Entry.stateManager) {
-            var uncommand = Entry.Command[command.undo];
             Entry.stateManager.addCommand.apply(
                 Entry.stateManager,
-                [commandType, this, uncommand.do]
-                    .concat(command.state.apply(null, argumentArray))
+                [commandType, this, this.do, command.undo]
+                    .concat(command.state.apply(this, argumentArray))
             );
         }
         // TODO: activity reporter
         return {
-            value: Entry.Command[commandType].do.apply(Entry.Command, argumentArray),
+            value: Entry.Command[commandType].do.apply(this, argumentArray),
             isPass: this.isPass.bind(this)
         }
     };
@@ -54,11 +53,14 @@ Entry.Commander = function(injectType) {
         if (Entry.stateManager) {
             Entry.stateManager.addCommand.apply(
                 Entry.stateManager,
-                [commandType, this, this.redo, commandType]
-                    .concat(commandFunc.state.apply(null, argumentArray))
+                [commandType, this, this.do, commandFunc.undo]
+                    .concat(commandFunc.state.apply(this, argumentArray))
             );
         }
-        commandFunc.undo.apply(this, argumentArray);
+        return {
+            value: Entry.Command[commandType].do.apply(this, argumentArray),
+            isPass: this.isPass.bind(this)
+        }
     };
 
     p.redo = function() {
@@ -81,7 +83,6 @@ Entry.Commander = function(injectType) {
     };
 
     p.isPass = function(isPass) {
-        console.log(isPass);
         isPass = isPass === undefined ? true : isPass;
         Entry.stateManager.getLastCommand().isPass = isPass;
     };
