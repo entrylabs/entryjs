@@ -7671,15 +7671,16 @@ p._updateSelectedBlock = function() {
 p.renderBlock = function(b) {
   if (b && this.visible) {
     this.code.clear();
-    this.code.createThread([{type:b}]);
+    var a = Entry.block[b].def, a = a || {type:b};
+    this.code.createThread([a]);
     this.code.board.align();
     this.code.board.resize();
-    var a = this.code.getThreads()[0].getFirstBlock().view, c = a.svgGroup.getBBox(), d = c.width, c = c.height, a = a.getSkeleton().box(a).offsetX;
-    isNaN(a) && (a = 0);
+    var c = this.code.getThreads()[0].getFirstBlock().view, d = c.svgGroup.getBBox(), a = d.width, d = d.height, c = c.getSkeleton().box(c).offsetX;
+    isNaN(c) && (c = 0);
     this.blockHelperDescription_.innerHTML = Lang.Helper[b];
     this._renderView.align();
-    $(this.blockHelperDescription_).css({top:c + 30});
-    this._renderView.svgDom.css({"margin-left":-(d / 2) - 20 - a});
+    $(this.blockHelperDescription_).css({top:d + 30});
+    this._renderView.svgDom.css({"margin-left":-(a / 2) - 20 - c});
   }
 };
 p.getView = function() {
