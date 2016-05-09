@@ -175,7 +175,8 @@ Entry.BlockView.DRAG_RADIUS = 5;
             case Entry.Workspace.MODE_BOARD:
             case Entry.Workspace.MODE_OVERLAYBOARD:
                 var reg = /(%\d)/mi;
-                var templateParams = schema.template.split(reg);
+                var template = schema.template ? schema.template : Lang.template[this.block.type];
+                var templateParams = template.split(reg);
                 var params = schema.params;
                 for (var i=0; i<templateParams.length; i++) {
                     var param = templateParams[i].trim();

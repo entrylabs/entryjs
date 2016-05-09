@@ -6,7 +6,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "손 찾음?",
         "params": [],
         "events": {},
         "def": {
@@ -24,7 +23,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1",
         "params": [
             {
                 "type": "Dropdown",
@@ -67,7 +65,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "앞으로 %1 초 이동하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -125,7 +122,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "뒤로 %1 초 이동하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -185,7 +181,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 으로 %2 초 돌기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -261,7 +256,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "왼쪽 바퀴 %1 오른쪽 바퀴 %2 만큼 바꾸기 %3",
         "params": [
             {
                 "type": "Block",
@@ -311,7 +305,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "왼쪽 바퀴 %1 오른쪽 바퀴 %2 (으)로 정하기 %3",
         "params": [
             {
                 "type": "Block",
@@ -359,7 +352,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 바퀴 %2 만큼 바꾸기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -418,7 +410,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 바퀴 %2 (으)로 정하기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -477,7 +468,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "정지하기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -508,7 +498,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "패드 크기를 폭 %1 높이 %2 (으)로 정하기 %3",
         "params": [
             {
                 "type": "Block",
@@ -557,7 +546,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 눈을 %2 으로 정하기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -619,7 +607,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 눈 끄기 %2",
         "params": [
             {
                 "type": "Dropdown",
@@ -665,7 +652,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "몸통 LED %1 %2",
         "params": [
             {
                 "type": "Dropdown",
@@ -704,7 +690,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "앞쪽 LED %1 %2",
         "params": [
             {
                 "type": "Dropdown",
@@ -743,7 +728,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "삐 소리내기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -787,7 +771,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "버저 음을 %1 만큼 바꾸기 %2",
         "params": [
             {
                 "type": "Block",
@@ -827,7 +810,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "버저 음을 %1 (으)로 정하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -866,7 +848,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "버저 끄기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -892,7 +873,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 %2 음을 %3 박자 연주하기 %4",
         "params": [
             {
                 "type": "Dropdown",
@@ -998,7 +978,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 박자 쉬기 %2",
         "params": [
             {
                 "type": "Block",
@@ -1055,7 +1034,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "연주 속도를 %1 만큼 바꾸기 %2",
         "params": [
             {
                 "type": "Block",
@@ -1093,7 +1071,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "연주 속도를 %1 BPM으로 정하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -1131,7 +1108,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "앞으로 이동하기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -1171,7 +1147,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "뒤로 이동하기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -1213,7 +1188,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 으로 돌기 %2",
         "params": [
             {
                 "type": "Dropdown",
@@ -1271,7 +1245,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 %2 으로 정하기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -1330,7 +1303,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 %2",
         "params": [
             {
                 "type": "Dropdown",
@@ -1371,7 +1343,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 %2 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -1427,7 +1398,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 %2 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -1476,7 +1446,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1",
         "params": [
             {
                 "type": "TextInput",
@@ -1498,7 +1467,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "신호 %1 보내기",
         "params": [
             {
                 "type": "Block",
@@ -1525,7 +1493,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "신호 %1 의 숫자 결과값",
         "params": [
             {
                 "type": "Block",
@@ -1553,7 +1520,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "신호 %1 의 글자 결과값",
         "params": [
             {
                 "type": "Block",
@@ -1581,7 +1547,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1  ",
         "params": [
             {
                 "type": "Dropdown",
@@ -1612,7 +1577,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1  ",
         "params": [
             {
                 "type": "Dropdown",
@@ -1651,7 +1615,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1  ",
         "params": [
             {
                 "type": "Dropdown",
@@ -1682,7 +1645,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "아날로그 %1 번 센서값  ",
         "params": [
             {
                 "type": "Block",
@@ -1712,7 +1674,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "디지털 %1 번 센서값  ",
         "params": [
             {
                 "type": "Block",
@@ -1742,7 +1703,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "디지털 %1 번 핀 %2 %3",
         "params": [
             {
                 "type": "Block",
@@ -1792,7 +1752,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "디지털 %1 번 핀을 %2 (으)로 정하기 %3",
         "params": [
             {
                 "type": "Block",
@@ -1842,7 +1801,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 바꾼값  ",
         "params": [
             {
                 "type": "Block",
@@ -1934,7 +1892,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1  센서값",
         "params": [
             {
                 "type": "Dropdown",
@@ -1966,7 +1923,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "%1  버튼을 눌렀는가?",
         "params": [
             {
                 "type": "Dropdown",
@@ -1998,7 +1954,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1  LED %2   %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -2046,7 +2001,6 @@ Entry.block = {
     "arduino_download_connector": {
         "skeleton": "basic_button",
         "color": "#eee",
-        "template": "%1",
         "params": [
             {
                 "type": "Text",
@@ -2064,7 +2018,6 @@ Entry.block = {
     "arduino_download_source": {
         "skeleton": "basic_button",
         "color": "#eee",
-        "template": "%1",
         "params": [
             {
                 "type": "Text",
@@ -2082,7 +2035,6 @@ Entry.block = {
     "arduino_connected": {
         "skeleton": "basic_button",
         "color": "#eee",
-        "template": "%1",
         "params": [
             {
                 "type": "Text",
@@ -2100,7 +2052,6 @@ Entry.block = {
     "arduino_reconnect": {
         "skeleton": "basic_button",
         "color": "#eee",
-        "template": "%1",
         "params": [
             {
                 "type": "Text",
@@ -2119,7 +2070,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1  ",
         "params": [
             {
                 "type": "Dropdown",
@@ -2151,7 +2101,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "  %1  센서값 ",
         "params": [
             {
                 "type": "Dropdown",
@@ -2186,7 +2135,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "소리센서  %1  ",
         "params": [
             {
                 "type": "Dropdown",
@@ -2219,7 +2167,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "빛센서  %1  ",
         "params": [
             {
                 "type": "Dropdown",
@@ -2252,7 +2199,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": " 보드의  %1  ",
         "params": [
             {
                 "type": "Dropdown",
@@ -2289,7 +2235,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": " 3축 가속도센서  %1  ",
         "params": [
             {
                 "type": "Dropdown",
@@ -2341,7 +2286,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": " 3축 가속도센서  %1 축의 센서값 ",
         "params": [
             {
                 "type": "Dropdown",
@@ -2393,7 +2337,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1  값",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -2420,7 +2363,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "버튼 %1 이(가) 눌렸는가?",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -2446,7 +2388,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "컬러 LED 끄기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -2473,7 +2414,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "컬러 LED 켜기 R %1 G %2 B %3 %4",
         "params": [
             {
                 "type": "Block",
@@ -2538,7 +2478,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "컬러 LED 색  %1 로 정하기 %2",
         "params": [
             {
                 "type": "Color"
@@ -2571,7 +2510,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "컬러 LED 켜기 색 %1 로 정하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -2628,7 +2566,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "버저음  %1 내기 %2",
         "params": [
             {
                 "type": "Block",
@@ -2673,7 +2610,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "모든 모터 끄기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -2704,7 +2640,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "DC 모터 %1  속도 %2 %3",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -2753,7 +2688,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "DC 모터 %1   %2  방향  속력 %3 %4",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -2814,7 +2748,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "서보 모터 %1  각도 %2 %3",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -2861,7 +2794,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "변환 %1 값 %2 ~ %3 에서 %4 ~ %5",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -2944,7 +2876,6 @@ Entry.block = {
         "color": "#FF9E20",
         "skeleton": "basic",
         "statements": [],
-        "template": "그리기 시작하기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -2976,7 +2907,6 @@ Entry.block = {
         "color": "#FF9E20",
         "skeleton": "basic",
         "statements": [],
-        "template": "그리기 멈추기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -3002,7 +2932,6 @@ Entry.block = {
         "color": "#FF9E20",
         "skeleton": "basic",
         "statements": [],
-        "template": "붓의 색을 %1 (으)로 정하기 %2",
         "params": [
             {
                 "type": "Color"
@@ -3047,7 +2976,6 @@ Entry.block = {
         "color": "#FF9E20",
         "skeleton": "basic",
         "statements": [],
-        "template": "붓의 색을 무작위로 정하기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -3083,7 +3011,6 @@ Entry.block = {
         "color": "#FF9E20",
         "skeleton": "basic",
         "statements": [],
-        "template": "붓의 굵기를 %1 만큼 바꾸기 %2",
         "params": [
             {
                 "type": "Block",
@@ -3136,7 +3063,6 @@ Entry.block = {
         "color": "#FF9E20",
         "skeleton": "basic",
         "statements": [],
-        "template": "붓의 굵기를 %1 (으)로 정하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -3186,7 +3112,6 @@ Entry.block = {
         "color": "#FF9E20",
         "skeleton": "basic",
         "statements": [],
-        "template": "붓의 불투명도를 %1 % 만큼 바꾸기 %2",
         "params": [
             {
                 "type": "Block",
@@ -3238,7 +3163,6 @@ Entry.block = {
         "color": "#FF9E20",
         "skeleton": "basic",
         "statements": [],
-        "template": "붓의 불투명도를 %1 % 로 정하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -3290,7 +3214,6 @@ Entry.block = {
         "color": "#FF9E20",
         "skeleton": "basic",
         "statements": [],
-        "template": "모든 붓 지우기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -3327,7 +3250,6 @@ Entry.block = {
         "color": "#FF9E20",
         "skeleton": "basic",
         "statements": [],
-        "template": "도장찍기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -3352,7 +3274,6 @@ Entry.block = {
         "color": "#FF9E20",
         "skeleton": "basic",
         "statements": [],
-        "template": "붓의 투명도를 %1 % 만큼 바꾸기 %2",
         "params": [
             {
                 "type": "Block",
@@ -3404,7 +3325,6 @@ Entry.block = {
         "color": "#FF9E20",
         "skeleton": "basic",
         "statements": [],
-        "template": "붓의 투명도를 %1 % 로 정하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -3456,7 +3376,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1",
         "params": [
             {
                 "type": "TextInput",
@@ -3479,7 +3398,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1",
         "params": [
             {
                 "type": "Angle"
@@ -3500,7 +3418,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1",
         "params": [
             {
                 "type": "Text",
@@ -3523,7 +3440,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1",
         "params": [
             {
                 "type": "Text",
@@ -3546,7 +3462,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1",
         "params": [
             {
                 "type": "Text",
@@ -3566,7 +3481,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1  ",
         "params": [
             {
                 "type": "Dropdown",
@@ -3600,7 +3514,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -3645,7 +3558,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2 %3",
         "params": [
             {
                 "type": "Text",
@@ -3690,7 +3602,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2 %3",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -3765,7 +3676,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2 %3",
         "params": [
             {
                 "type": "Block",
@@ -3886,7 +3796,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2 %3",
         "params": [
             {
                 "type": "Block",
@@ -3920,7 +3829,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2 %3",
         "params": [
             {
                 "type": "Block",
@@ -3954,7 +3862,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2 %3",
         "params": [
             {
                 "type": "Block",
@@ -3988,7 +3895,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2 %3",
         "params": [
             {
                 "type": "Block",
@@ -4022,7 +3928,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2 %3 %4",
         "params": [
             {
                 "type": "Block",
@@ -4075,7 +3980,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2 %3 %4",
         "params": [
             {
                 "type": "Block",
@@ -4128,7 +4032,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2 %3  ",
         "params": [
             {
                 "type": "Block",
@@ -4233,7 +4136,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2 %3 %4",
         "params": [
             {
                 "type": "Block",
@@ -4293,7 +4195,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2  ",
         "params": [
             {
                 "type": "Text",
@@ -4345,7 +4246,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -4383,7 +4283,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1",
         "params": [
             {
                 "type": "Text",
@@ -4418,7 +4317,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 %2 %3",
         "params": [
             {
                 "type": "Text",
@@ -4476,7 +4374,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2",
         "params": [
             {
                 "type": "Text",
@@ -4501,7 +4398,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2",
         "params": [
             {
                 "type": "Text",
@@ -4540,7 +4436,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2 %3 %4",
         "params": [
             {
                 "type": "Block",
@@ -4596,7 +4491,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2",
         "params": [
             {
                 "type": "Block",
@@ -4632,7 +4526,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2 %3 %4 %5 %6",
         "params": [
             {
                 "type": "Block",
@@ -4705,7 +4598,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2 %3 %4 %5 %6",
         "params": [
             {
                 "type": "Block",
@@ -4775,7 +4667,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2 %3 %4",
         "params": [
             {
                 "type": "Block",
@@ -4834,7 +4725,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2 %3 %4",
         "params": [
             {
                 "type": "Block",
@@ -4888,7 +4778,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2 %3 %4",
         "params": [
             {
                 "type": "Block",
@@ -4942,7 +4831,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2",
         "params": [
             {
                 "type": "Text",
@@ -4972,7 +4860,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2 %3 %4 %5",
         "params": [
             {
                 "type": "Block",
@@ -5042,7 +4929,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 %2 %3",
         "params": [
             {
                 "type": "Text",
@@ -5126,7 +5012,6 @@ Entry.block = {
         "color": "#498deb",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 초 기다리기 %2",
         "params": [
             {
                 "type": "Block",
@@ -5183,7 +5068,6 @@ Entry.block = {
                 "accept": "basic"
             }
         ],
-        "template": "%1 번 반복하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -5240,7 +5124,6 @@ Entry.block = {
                 "accept": "basic"
             }
         ],
-        "template": "계속 반복하기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -5268,7 +5151,6 @@ Entry.block = {
         "color": "#498deb",
         "skeleton": "basic",
         "statements": [],
-        "template": "반복 중단하기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -5293,7 +5175,6 @@ Entry.block = {
         "color": "#498deb",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 이(가) 될 때까지 기다리기 %2",
         "params": [
             {
                 "type": "Block",
@@ -5337,7 +5218,6 @@ Entry.block = {
                 "accept": "basic"
             }
         ],
-        "template": "만일 %1 이라면 %2",
         "params": [
             {
                 "type": "Block",
@@ -5392,7 +5272,6 @@ Entry.block = {
                 "accept": "basic"
             }
         ],
-        "template": "만일 %1 이라면 %2 %3 아니면",
         "params": [
             {
                 "type": "Block",
@@ -5443,7 +5322,6 @@ Entry.block = {
         "color": "#498deb",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 의 복제본 만들기 %2",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -5487,7 +5365,6 @@ Entry.block = {
         "color": "#498deb",
         "skeleton": "basic_without_next",
         "statements": [],
-        "template": "이 복제본 삭제하기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -5513,7 +5390,6 @@ Entry.block = {
         "color": "#498deb",
         "skeleton": "basic_event",
         "statements": [],
-        "template": "%1 복제본이 처음 생성되었을때",
         "params": [
             {
                 "type": "Indicator",
@@ -5541,7 +5417,6 @@ Entry.block = {
         "color": "#498deb",
         "skeleton": "basic",
         "statements": [],
-        "template": "프로그램 끝내기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -5565,7 +5440,6 @@ Entry.block = {
                 "accept": "basic"
             }
         ],
-        "template": "%1 %2  반복하기 %3",
         "params": [
             {
                 "type": "Block",
@@ -5621,7 +5495,6 @@ Entry.block = {
         "color": "#498deb",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 멈추기 %2",
         "params": [
             {
                 "type": "Dropdown",
@@ -5674,7 +5547,6 @@ Entry.block = {
         "color": "#498deb",
         "skeleton": "basic_without_next",
         "statements": [],
-        "template": "처음부터 다시 실행하기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -5698,7 +5570,6 @@ Entry.block = {
         "color": "#498deb",
         "skeleton": "basic",
         "statements": [],
-        "template": "모든 복제본 삭제하기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -5729,7 +5600,6 @@ Entry.block = {
         "isNotFor": [
             "functionInit"
         ],
-        "template": "%1",
         "params": [
             {
                 "type": "Text",
@@ -5750,7 +5620,6 @@ Entry.block = {
         "skeleton": "basic_param",
         "isNotFor": [ "functionEdit" ],
         "color": "#f9c535",
-        "template": "%1%2",
         "params": [
             {
                 "type": "TextInput",
@@ -5768,7 +5637,6 @@ Entry.block = {
             "functionEdit"
         ],
         "color": "#ffd974",
-        "template": "%1%2",
         "params": [
             {
                 "type": "Block",
@@ -5785,7 +5653,6 @@ Entry.block = {
         "skeleton": "basic_param",
         "isNotFor": [ "functionEdit" ],
         "color": "#aeb8ff",
-        "template": "%1%2",
         "params": [
             {
                 "type": "Block",
@@ -5801,7 +5668,6 @@ Entry.block = {
     "function_param_string": {
         "skeleton": "basic_string_field",
         "color": "#ffd974",
-        "template": "문자/숫자값",
         func: function() {
             return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
         }
@@ -5809,7 +5675,6 @@ Entry.block = {
     "function_param_boolean": {
         "skeleton": "basic_boolean_field",
         "color": "#aeb8ff",
-        "template": "판단값",
         func: function() {
             return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
         }
@@ -5818,7 +5683,6 @@ Entry.block = {
         "skeleton": "basic",
         "color": "#cc7337",
         "event": "funcDef",
-        "template": "함수 정의하기 %1 %2",
         "params": [
             {
                 "type": "Block",
@@ -5839,7 +5703,6 @@ Entry.block = {
     "function_general": {
         "skeleton": "basic",
         "color": "#cc7337",
-        "template": "함수",
         "params": [],
         "events": {
             "dataAdd": [
@@ -5888,7 +5751,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "손 찾음?",
         "params": [],
         "events": {},
         "def": {
@@ -5906,7 +5768,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1",
         "params": [
             {
                 "type": "Dropdown",
@@ -5948,7 +5809,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "말판 앞으로 한 칸 이동하기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -6035,7 +5895,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "말판 %1 으로 한 번 돌기 %2",
         "params": [
             {
                 "type": "Dropdown",
@@ -6198,7 +6057,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "앞으로 %1 초 이동하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -6257,7 +6115,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "뒤로 %1 초 이동하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -6316,7 +6173,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 으로 %2 초 돌기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -6392,7 +6248,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "왼쪽 바퀴 %1 오른쪽 바퀴 %2 만큼 바꾸기 %3",
         "params": [
             {
                 "type": "Block",
@@ -6443,7 +6298,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "왼쪽 바퀴 %1 오른쪽 바퀴 %2 (으)로 정하기 %3",
         "params": [
             {
                 "type": "Block",
@@ -6492,7 +6346,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 바퀴 %2 만큼 바꾸기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -6552,7 +6405,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 바퀴 %2 (으)로 정하기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -6612,7 +6464,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 선을 %2 바닥 센서로 따라가기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -6670,7 +6521,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 선을 따라 %2 교차로까지 이동하기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -6746,7 +6596,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "선 따라가기 속도를 %1 (으)로 정하기 %2",
         "params": [
             {
                 "type": "Dropdown",
@@ -6789,7 +6638,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "정지하기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -6816,7 +6664,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 LED를 %2 으로 정하기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -6878,7 +6725,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 LED 끄기 %2",
         "params": [
             {
                 "type": "Dropdown",
@@ -6924,7 +6770,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "삐 소리내기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -6968,7 +6813,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "버저 음을 %1 만큼 바꾸기 %2",
         "params": [
             {
                 "type": "Block",
@@ -7008,7 +6852,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "버저 음을 %1 (으)로 정하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -7047,7 +6890,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "버저 끄기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -7073,7 +6915,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 %2 음을 %3 박자 연주하기 %4",
         "params": [
             {
                 "type": "Dropdown",
@@ -7179,7 +7020,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 박자 쉬기 %2",
         "params": [
             {
                 "type": "Block",
@@ -7236,7 +7076,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "연주 속도를 %1 만큼 바꾸기 %2",
         "params": [
             {
                 "type": "Block",
@@ -7274,7 +7113,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "연주 속도를 %1 BPM으로 정하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -7312,7 +7150,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "포트 %1 를 %2 으로 정하기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -7372,7 +7209,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "출력 %1 를 %2 만큼 바꾸기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -7431,7 +7267,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "출력 %1 를 %2 (으)로 정하기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -7490,7 +7325,6 @@ Entry.block = {
         "color": "#AEB8FF",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "%1",
         "params": [
             {
                 "type": "Text",
@@ -7513,7 +7347,6 @@ Entry.block = {
         "color": "#AEB8FF",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "%1 %2",
         "params": [
             {
                 "type": "Keyboard",
@@ -7544,7 +7377,6 @@ Entry.block = {
         "color": "#AEB8FF",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "%1 %2",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -7653,7 +7485,6 @@ Entry.block = {
         "color": "#AEB8FF",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "%1 %2 %3",
         "params": [
             {
                 "type": "Block",
@@ -7700,7 +7531,6 @@ Entry.block = {
         "color": "#AEB8FF",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "%1 %2 %3",
         "params": [
             {
                 "type": "Block",
@@ -7747,7 +7577,6 @@ Entry.block = {
         "color": "#AEB8FF",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "%1 %2 %3",
         "params": [
             {
                 "type": "Block",
@@ -7794,7 +7623,6 @@ Entry.block = {
         "color": "#AEB8FF",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "%1 %2 %3",
         "params": [
             {
                 "type": "Block",
@@ -7841,7 +7669,6 @@ Entry.block = {
         "color": "#AEB8FF",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "%1 %2 %3",
         "params": [
             {
                 "type": "Block",
@@ -7884,7 +7711,6 @@ Entry.block = {
         "color": "#AEB8FF",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "%1 %2 %3",
         "params": [
             {
                 "type": "Block",
@@ -7929,7 +7755,6 @@ Entry.block = {
         "color": "#AEB8FF",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "%1 %2 %3",
         "params": [
             {
                 "type": "Block",
@@ -7974,7 +7799,6 @@ Entry.block = {
         "color": "#AEB8FF",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "%1 %2",
         "params": [
             {
                 "type": "Block",
@@ -8009,7 +7833,6 @@ Entry.block = {
         "color": "#AEB8FF",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "%1",
         "params": [
             {
                 "type": "Dropdown",
@@ -8037,7 +7860,6 @@ Entry.block = {
         "color": "#AEB8FF",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "%1  ",
         "params": [
             {
                 "type": "Text",
@@ -8059,7 +7881,6 @@ Entry.block = {
         "color": "#AEB8FF",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "%1  ",
         "params": [
             {
                 "type": "Text",
@@ -8083,7 +7904,6 @@ Entry.block = {
         "color": "#AEB8FF",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "%1 %2 %3",
         "params": [
             {
                 "type": "Block",
@@ -8224,7 +8044,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "모양 보이기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -8248,7 +8067,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "모양 숨기기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -8272,7 +8090,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 을(를) %2 초 동안 %3 %4",
         "params": [
             {
                 "type": "Block",
@@ -8348,7 +8165,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 을(를) %2 %3",
         "params": [
             {
                 "type": "Block",
@@ -8402,7 +8218,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "말하기 지우기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -8426,7 +8241,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 모양으로 바꾸기 %2",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -8461,7 +8275,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 모양으로 바꾸기 %2",
         "params": [
             {
                 "type": "Dropdown",
@@ -8503,7 +8316,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 효과를 %2 만큼 주기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -8566,7 +8378,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 효과를 %2 (으)로 정하기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -8629,7 +8440,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "효과 모두 지우기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -8653,7 +8463,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "크기를 %1 만큼 바꾸기 %2",
         "params": [
             {
                 "type": "Block",
@@ -8692,7 +8501,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "크기를 %1  (으)로 정하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -8732,7 +8540,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "크기를 %1 만큼 바꾸기 %2",
         "params": [
             {
                 "type": "Block",
@@ -8770,7 +8577,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "크기를 %1  (으)로 정하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -8808,7 +8614,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "좌우 모양 뒤집기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -8832,7 +8637,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "상하 모양 뒤집기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -8858,7 +8662,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 번째로 올라오기 %2",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -8898,7 +8701,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1  ",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -8927,7 +8729,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 모양으로 바꾸기 %2",
         "params": [
             {
                 "type": "Block",
@@ -8969,7 +8770,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 효과를 %2 만큼 주기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -9027,7 +8827,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 효과를 %2 (으)로 정하기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -9085,7 +8884,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 효과를 %2 만큼 주기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -9143,7 +8941,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 효과를 %2 (으)로 정하기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -9201,7 +8998,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 보내기 %2",
         "params": [
             {
                 "type": "Dropdown",
@@ -9264,7 +9060,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "이동 방향으로 %1 만큼 움직이기 %2",
         "params": [
             {
                 "type": "Block",
@@ -9306,7 +9101,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "x 좌표를 %1 만큼 바꾸기 %2",
         "params": [
             {
                 "type": "Block",
@@ -9347,7 +9141,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "y 좌표를 %1 만큼 바꾸기 %2",
         "params": [
             {
                 "type": "Block",
@@ -9388,7 +9181,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 초 동안 x: %2 y: %3 위치로 이동하기 %4",
         "params": [
             {
                 "type": "Block",
@@ -9466,7 +9258,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "오브젝트를 %1 만큼 회전하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -9504,7 +9295,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 만큼 회전하기 %2",
         "params": [
             {
                 "type": "Dropdown",
@@ -9543,7 +9333,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "이동 방향을 %1 (으)로 정하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -9581,7 +9370,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 쪽 보기 %2",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -9619,7 +9407,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "x: %1 y: %2 위치로 이동하기 %3",
         "params": [
             {
                 "type": "Block",
@@ -9671,7 +9458,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "x: %1 위치로 이동하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -9712,7 +9498,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "y: %1 위치로 이동하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -9754,7 +9539,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 위치로 이동하기 %2",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -9801,7 +9585,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 초 동안 x: %2 y: %3 만큼 움직이기 %4",
         "params": [
             {
                 "type": "Block",
@@ -9877,7 +9660,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "오브젝트를 %1 초 동안 %2 만큼 회전하기 %3",
         "params": [
             {
                 "type": "Block",
@@ -9936,7 +9718,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "화면 끝에 닿으면 튕기기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -10123,7 +9904,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "화살표 방향 좌우 뒤집기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -10144,7 +9924,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "화살표 방향 상하 뒤집기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -10165,7 +9944,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 쪽 바라보기 %2",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -10226,7 +10004,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "오브젝트를 %1 (으)로 정하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -10265,7 +10042,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "이동 방향을 %1 만큼 회전하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -10303,7 +10079,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 초 동안 %2 위치로 이동하기 %3",
         "params": [
             {
                 "type": "Block",
@@ -10396,7 +10171,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "방향을 %1 (으)로 정하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -10433,7 +10207,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "방향을 %1 만큼 회전하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -10470,7 +10243,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "이동 방향을 %1 (으)로 정하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -10507,7 +10279,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "이동 방향을 %1 만큼 회전하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -10544,7 +10315,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 방향으로 %2 만큼 움직이기 %3",
         "params": [
             {
                 "type": "Block",
@@ -10595,7 +10365,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 초 동안 방향을 %2 만큼 회전하기 %3",
         "params": [
             {
                 "type": "Block",
@@ -10655,7 +10424,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 초 동안 이동 방향 %2 만큼 회전하기 %3",
         "params": [
             {
                 "type": "Block",
@@ -10716,7 +10484,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1  값",
         "params": [
             {
                 "type": "Dropdown",
@@ -10749,7 +10516,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "왼쪽모터를 %1 %2 회전 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -10798,7 +10564,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "왼쪽모터 정지 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -10822,7 +10587,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "오른쪽모터를 %1 %2 회전 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -10871,7 +10635,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "오른쪽모터 정지 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -10895,7 +10658,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 모터를  %2 초간 %3 %4 %5",
         "params": [
             {
                 "type": "Dropdown",
@@ -11013,7 +10775,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "SERVO1에 연결된 서보모터를 %1 속도로 %2 로 이동 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -11078,7 +10839,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "SERVO2에 연결된 서보모터를 %1 속도로 %2 로 이동 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -11143,7 +10903,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "멜로디 %1 을(를) %2 옥타브로 %3 길이만큼 소리내기 %4",
         "params": [
             {
                 "type": "Dropdown",
@@ -11232,7 +10991,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 번 포트의 값을 %2 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -11282,7 +11040,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "직접입력 주소 ( %1 ) %2 값",
         "params": [
             {
                 "type": "Block",
@@ -11329,7 +11086,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "제어기 %1 값",
         "params": [
             {
                 "type": "Dropdown",
@@ -11366,7 +11122,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1   %2 값",
         "params": [
             {
                 "type": "Dropdown",
@@ -11431,7 +11186,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "제어기 음계값 %1 을(를) %2 초 동안 연주 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -11532,7 +11286,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "제어기 멜로디 %1 번 연주 %2",
         "params": [
             {
                 "type": "Dropdown",
@@ -11591,7 +11344,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "최종소리감지횟수 초기화 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -11615,7 +11367,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "제어기 %1 LED %2 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -11663,7 +11414,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "모션 %1 번 실행 %2",
         "params": [
             {
                 "type": "Block",
@@ -11700,7 +11450,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 감속모터 속도를 %2 , 출력값을 %3 (으)로 정하기 %4",
         "params": [
             {
                 "type": "Dropdown",
@@ -11760,7 +11509,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 서보모터 모드를 %2 (으)로 정하기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -11808,7 +11556,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 서보모터 속도를 %2 , 출력값을 %3 (으)로 정하기 %4",
         "params": [
             {
                 "type": "Dropdown",
@@ -11870,7 +11617,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 서보모터 위치를 %2 (으)로 정하기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -11921,7 +11667,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 LED 모듈을 %2 (으)로 정하기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -11971,7 +11716,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 사용자 장치를 %2 (으)로 정하기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -12021,7 +11765,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "직접입력 주소 ( %1 ) (을)를 %2 (으)로 정하기 %3",
         "params": [
             {
                 "type": "Block",
@@ -12067,7 +11810,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1   값",
         "params": [
             {
                 "type": "Dropdown",
@@ -12113,7 +11855,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "4번 LED %1 ,  1번 LED %2 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -12161,7 +11902,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "최종소리감지횟수 초기화 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -12185,7 +11925,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 감속모터 속도를 %2 , 출력값을 %3 (으)로 정하기 %4",
         "params": [
             {
                 "type": "Dropdown",
@@ -12246,7 +11985,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 적외선 센서 캘리브레이션 값을 %2 (으)로 정하기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -12295,7 +12033,6 @@ Entry.block = {
         "color": "#3BBD70",
         "skeleton": "basic_event",
         "statements": [],
-        "template": "%1 장면이 시작되었을때",
         "params": [
             {
                 "type": "Indicator",
@@ -12323,7 +12060,6 @@ Entry.block = {
         "color": "#3BBD70",
         "skeleton": "basic_without_next",
         "statements": [],
-        "template": "%1 시작하기 %2",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -12361,7 +12097,6 @@ Entry.block = {
         "color": "#3BBD70",
         "skeleton": "basic_without_next",
         "statements": [],
-        "template": "%1 장면 시작하기 %2",
         "params": [
             {
                 "type": "Dropdown",
@@ -12417,7 +12152,6 @@ Entry.block = {
         "color": "#A4D01D",
         "skeleton": "basic",
         "statements": [],
-        "template": "소리 %1 재생하기 %2",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -12454,7 +12188,6 @@ Entry.block = {
         "color": "#A4D01D",
         "skeleton": "basic",
         "statements": [],
-        "template": "소리 %1 %2 초 재생하기 %3",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -12509,7 +12242,6 @@ Entry.block = {
         "color": "#A4D01D",
         "skeleton": "basic",
         "statements": [],
-        "template": "소리  %1 재생하고 기다리기 %2",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -12561,7 +12293,6 @@ Entry.block = {
         "color": "#A4D01D",
         "skeleton": "basic",
         "statements": [],
-        "template": "소리 %1 %2 초 재생하고 기다리기 %3",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -12628,7 +12359,6 @@ Entry.block = {
         "color": "#A4D01D",
         "skeleton": "basic",
         "statements": [],
-        "template": "소리 크기를 %1 % 만큼 바꾸기 %2",
         "params": [
             {
                 "type": "Block",
@@ -12671,7 +12401,6 @@ Entry.block = {
         "color": "#A4D01D",
         "skeleton": "basic",
         "statements": [],
-        "template": "소리 크기를 %1 % 로 정하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -12713,7 +12442,6 @@ Entry.block = {
         "color": "#A4D01D",
         "skeleton": "basic",
         "statements": [],
-        "template": "모든 소리 멈추기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -12737,7 +12465,6 @@ Entry.block = {
         "color": "#A4D01D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1  ",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -12761,7 +12488,6 @@ Entry.block = {
         "color": "#A4D01D",
         "skeleton": "basic",
         "statements": [],
-        "template": "소리 %1 재생하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -12802,7 +12528,6 @@ Entry.block = {
         "color": "#A4D01D",
         "skeleton": "basic",
         "statements": [],
-        "template": "소리 %1   %2 초 재생하기 %3",
         "params": [
             {
                 "type": "Block",
@@ -12860,7 +12585,6 @@ Entry.block = {
         "color": "#A4D01D",
         "skeleton": "basic",
         "statements": [],
-        "template": "소리  %1 재생하고 기다리기 %2",
         "params": [
             {
                 "type": "Block",
@@ -12913,7 +12637,6 @@ Entry.block = {
         "color": "#A4D01D",
         "skeleton": "basic",
         "statements": [],
-        "template": "소리 %1   %2 초 재생하고 기다리기 %3",
         "params": [
             {
                 "type": "Block",
@@ -12979,7 +12702,6 @@ Entry.block = {
         "color": "#A4D01D",
         "skeleton": "basic",
         "statements": [],
-        "template": "소리 %1 %2 초 부터 %3 초까지 재생하기 %4",
         "params": [
             {
                 "type": "Block",
@@ -13043,7 +12765,6 @@ Entry.block = {
         "color": "#A4D01D",
         "skeleton": "basic",
         "statements": [],
-        "template": "소리 %1 %2 초 부터 %3 초까지 재생하고 기다리기 %4",
         "params": [
             {
                 "type": "Block",
@@ -13124,7 +12845,6 @@ Entry.block = {
         "color": "#3BBD70",
         "skeleton": "basic_event",
         "statements": [],
-        "template": "%1 시작하기 버튼을 클릭했을 때",
         "params": [
             {
                 "type": "Indicator",
@@ -13152,7 +12872,6 @@ Entry.block = {
         "color": "#3BBD70",
         "skeleton": "basic_event",
         "statements": [],
-        "template": "%1 %2 키를 눌렀을 때 %3",
         "params": [
             {
                 "type": "Indicator",
@@ -13204,7 +12923,6 @@ Entry.block = {
         "color": "#3BBD70",
         "skeleton": "basic_event",
         "statements": [],
-        "template": "%1 %2 키를 눌렀을 때",
         "params": [
             {
                 "type": "Indicator",
@@ -13239,7 +12957,6 @@ Entry.block = {
         "color": "#3BBD70",
         "skeleton": "basic_event",
         "statements": [],
-        "template": "%1 마우스를 클릭했을 때",
         "params": [
             {
                 "type": "Indicator",
@@ -13267,7 +12984,6 @@ Entry.block = {
         "color": "#3BBD70",
         "skeleton": "basic_event",
         "statements": [],
-        "template": "%1 마우스 클릭을 해제했을 때",
         "params": [
             {
                 "type": "Indicator",
@@ -13295,7 +13011,6 @@ Entry.block = {
         "color": "#3BBD70",
         "skeleton": "basic_event",
         "statements": [],
-        "template": "%1 오브젝트를 클릭했을 때",
         "params": [
             {
                 "type": "Indicator",
@@ -13323,7 +13038,6 @@ Entry.block = {
         "color": "#3BBD70",
         "skeleton": "basic_event",
         "statements": [],
-        "template": "%1 오브젝트 클릭을 해제했을 때",
         "params": [
             {
                 "type": "Indicator",
@@ -13351,7 +13065,6 @@ Entry.block = {
         "color": "#3BBD70",
         "skeleton": "basic_event",
         "statements": [],
-        "template": "%1 키를 눌렀을 때",
         "params": [
             {
                 "type": "Indicator",
@@ -13376,7 +13089,6 @@ Entry.block = {
         "color": "#3BBD70",
         "skeleton": "basic_event",
         "statements": [],
-        "template": "%1 %2 신호를 받았을 때",
         "params": [
             {
                 "type": "Indicator",
@@ -13426,7 +13138,6 @@ Entry.block = {
         "color": "#3BBD70",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 신호 보내기 %2",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -13481,7 +13192,6 @@ Entry.block = {
         "color": "#3BBD70",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 신호 보내고 기다리기 %2",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -13558,7 +13268,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1",
         "params": [
             {
                 "type": "TextInput",
@@ -13582,7 +13291,6 @@ Entry.block = {
         "color": "#FFCA36",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 라고 글쓰기",
         "params": [
             {
                 "type": "Block",
@@ -13614,7 +13322,6 @@ Entry.block = {
         "color": "#FFCA36",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 라고 뒤에 이어쓰기",
         "params": [
             {
                 "type": "Block",
@@ -13646,7 +13353,6 @@ Entry.block = {
         "color": "#FFCA36",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 라고 앞에 추가하기",
         "params": [
             {
                 "type": "Block",
@@ -13678,7 +13384,6 @@ Entry.block = {
         "color": "#FFCA36",
         "skeleton": "basic",
         "statements": [],
-        "template": "텍스트 모두 지우기",
         "params": [],
         "events": {},
         "def": {
@@ -13695,7 +13400,6 @@ Entry.block = {
     "variableAddButton": {
         "skeleton": "basic_button",
         "color": "#eee",
-        "template": "%1",
         "params": [
             {
                 "type": "Text",
@@ -13715,7 +13419,6 @@ Entry.block = {
     "listAddButton": {
         "skeleton": "basic_button",
         "color": "#eee",
-        "template": "%1",
         "params": [
             {
                 "type": "Text",
@@ -13736,7 +13439,6 @@ Entry.block = {
         "color": "#E457DC",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 에 %2 만큼 더하기 %3",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -13803,7 +13505,6 @@ Entry.block = {
         "color": "#E457DC",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 를 %2 로 정하기 %3",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -13864,7 +13565,6 @@ Entry.block = {
         "color": "#E457DC",
         "skeleton": "basic",
         "statements": [],
-        "template": "변수 %1 보이기 %2",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -13913,7 +13613,6 @@ Entry.block = {
         "color": "#E457DC",
         "skeleton": "basic",
         "statements": [],
-        "template": "변수 %1 숨기기 %2",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -13961,7 +13660,6 @@ Entry.block = {
         "color": "#E457DC",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 값",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -14003,7 +13701,6 @@ Entry.block = {
         "color": "#E457DC",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 을(를) 묻고 대답 기다리기 %2",
         "params": [
             {
                 "type": "Block",
@@ -14081,7 +13778,6 @@ Entry.block = {
         "color": "#E457DC",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1  ",
         "params": [
             {
                 "type": "Text",
@@ -14115,7 +13811,6 @@ Entry.block = {
         "color": "#E457DC",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 항목을 %2 에 추가하기 %3",
         "params": [
             {
                 "type": "Block",
@@ -14180,7 +13875,6 @@ Entry.block = {
         "color": "#E457DC",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 번째 항목을 %2 에서 삭제하기 %3",
         "params": [
             {
                 "type": "Block",
@@ -14234,7 +13928,6 @@ Entry.block = {
         "color": "#E457DC",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 을(를) %2 의 %3 번째에 넣기 %4",
         "params": [
             {
                 "type": "Block",
@@ -14297,7 +13990,6 @@ Entry.block = {
         "color": "#E457DC",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1    %2 번째 항목을 %3 (으)로 바꾸기 %4",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -14360,7 +14052,6 @@ Entry.block = {
         "color": "#E457DC",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 의 %2 번째 항목",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -14406,7 +14097,6 @@ Entry.block = {
         "color": "#E457DC",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1  항목 수",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -14436,7 +14126,6 @@ Entry.block = {
         "color": "#E457DC",
         "skeleton": "basic",
         "statements": [],
-        "template": "리스트 %1 보이기 %2",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -14472,7 +14161,6 @@ Entry.block = {
         "color": "#E457DC",
         "skeleton": "basic",
         "statements": [],
-        "template": "리스트 %1 숨기기 %2",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -14508,7 +14196,6 @@ Entry.block = {
         "color": "#E457DC",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1  ",
         "params": [
             {
                 "type": "Dropdown",
@@ -14536,7 +14223,6 @@ Entry.block = {
         "color": "#E457DC",
         "skeleton": "basic",
         "statements": [],
-        "template": "대답 %1 %2",
         "params": [
             {
                 "type": "Dropdown",
@@ -14587,7 +14273,6 @@ Entry.block = {
         "color": "#E457DC",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "%1 에 %2 이 포함되어 있는가?",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -14637,7 +14322,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "%1",
         "params": [
             {
                 "type": "Dropdown",
@@ -14669,7 +14353,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1",
         "params": [
             {
                 "type": "Dropdown",
@@ -14704,7 +14387,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "디지털 %1 핀, 출력 값 %2 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -14756,7 +14438,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "아날로그 %1 %2 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -14805,7 +14486,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "서보 모터 %1 , 각도 %2 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -14856,7 +14536,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "바퀴(DC) 모터 %1 , 속도 %2 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -14906,7 +14585,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "바퀴(DC) 모터 오른쪽(2) 속도: %1 왼쪽(1) 속도: %2 %3",
         "params": [
             {
                 "type": "Block",
@@ -14954,7 +14632,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "RGB LED 켜기 R 값 %1 G 값 %2 B 값 %3 %4",
         "params": [
             {
                 "type": "Block",
@@ -15012,7 +14689,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "RGB LED 색 %1 로 정하기 %2",
         "params": [
             {
                 "type": "Color"
@@ -15045,7 +14721,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1   %2 음을 %3 초 연주하기 %4",
         "params": [
             {
                 "type": "Dropdown",
@@ -15116,7 +14791,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "LCD %1 번째 줄 ,  출력 값 %2 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -15173,7 +14847,6 @@ Entry.block = {
         "skeleton": "basic",
         "event": "start",
         "color": "#3BBD70",
-        "template": "test mutant block",
         "params": [],
         "changeEvent": {
             "_listeners": []
@@ -15183,7 +14856,6 @@ Entry.block = {
         "skeleton": "pebble_event",
         "event": "start",
         "color": "#3BBD70",
-        "template": "%1",
         "params": [
             {
                 "type": "Indicator",
@@ -15200,7 +14872,6 @@ Entry.block = {
     "jr_repeat": {
         "skeleton": "pebble_loop",
         "color": "#127CDB",
-        "template": "%1 반복",
         "params": [
             {
                 "type": "Text",
@@ -15234,7 +14905,6 @@ Entry.block = {
     "jr_item": {
         "skeleton": "pebble_basic",
         "color": "#F46C6C",
-        "template": "꽃 모으기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -15251,7 +14921,6 @@ Entry.block = {
     "cparty_jr_item": {
         "skeleton": "pebble_basic",
         "color": "#8ABC1D",
-        "template": "%1 %2",
         "params": [
             {
                 "type": "Text",
@@ -15272,7 +14941,6 @@ Entry.block = {
     "jr_north": {
         "skeleton": "pebble_basic",
         "color": "#A751E3",
-        "template": "%1 %2",
         "params": [
             {
                 "type": "Text",
@@ -15292,7 +14960,6 @@ Entry.block = {
     "jr_east": {
         "skeleton": "pebble_basic",
         "color": "#A751E3",
-        "template": "%1 %2",
         "params": [
             {
                 "type": "Text",
@@ -15312,7 +14979,6 @@ Entry.block = {
     "jr_south": {
         "skeleton": "pebble_basic",
         "color": "#A751E3",
-        "template": "%1 %2",
         "params": [
             {
                 "type": "Text",
@@ -15332,7 +14998,6 @@ Entry.block = {
     "jr_west": {
         "skeleton": "pebble_basic",
         "color": "#A751E3",
-        "template": "%1 %2",
         "params": [
             {
                 "type": "Text",
@@ -15353,7 +15018,6 @@ Entry.block = {
         "skeleton": "basic_event",
         "event": "start",
         "color": "#3BBD70",
-        "template": "%1 %2",
         "params": [
             {
                 "type": "Indicator",
@@ -15372,7 +15036,6 @@ Entry.block = {
     "jr_go_straight": {
         "skeleton": "basic",
         "color": "#A751E3",
-        "template": "%1 %2",
         "params": [
             "앞으로 가기",
             {
@@ -15385,7 +15048,6 @@ Entry.block = {
     "jr_turn_left": {
         "skeleton": "basic",
         "color": "#A751E3",
-        "template": "%1 %2",
         "params": [
             "왼쪽으로 돌기",
             {
@@ -15398,7 +15060,6 @@ Entry.block = {
     "jr_turn_right": {
         "skeleton": "basic",
         "color": "#A751E3",
-        "template": "%1 %2",
         "params": [
             "오른쪽으로 돌기",
             {
@@ -15411,7 +15072,6 @@ Entry.block = {
     "jr_go_slow": {
         "skeleton": "basic",
         "color": "#f46c6c",
-        "template": "%1 %2",
         "params": [
             "천천히 가기",
             {
@@ -15424,7 +15084,6 @@ Entry.block = {
     "jr_repeat_until_dest": {
         "skeleton": "basic_loop",
         "color": "#498DEB",
-        "template": "%1 %2 %3 %4",
         "syntax": [
             "BasicWhile",
             "true"
@@ -15452,7 +15111,6 @@ Entry.block = {
     "jr_if_construction": {
         "skeleton": "basic_loop",
         "color": "#498DEB",
-        "template": "%1 %2 %3 %4",
         "params": [
             "만약",
             {
@@ -15476,7 +15134,6 @@ Entry.block = {
     "jr_if_speed": {
         "skeleton": "basic_loop",
         "color": "#498DEB",
-        "template": "만약 %1 앞에 있다면 %2",
         "params": [
             {
                 "type": "Image",
@@ -15500,7 +15157,6 @@ Entry.block = {
         "mode": "maze",
         "event": "start",
         "color": "#3BBD70",
-        "template": "%1 시작하기를 클릭했을 때",
         "syntax": [
             "Program"
         ],
@@ -15522,7 +15178,6 @@ Entry.block = {
         "skeleton": "basic",
         "mode": "maze",
         "color": "#FF6E4B",
-        "template": "뛰어넘기%1",
         "params": [
             {
                 "type": "Image",
@@ -15539,7 +15194,6 @@ Entry.block = {
         "skeleton": "basic_loop",
         "mode": "maze",
         "color": "#498DEB",
-        "template": "%1 번 반복하기%2",
         "syntax": [
             "BasicIteration"
         ],
@@ -15607,7 +15261,6 @@ Entry.block = {
         "skeleton": "basic_boolean_field",
         "mode": "maze",
         "color": "#127CDB",
-        "template": "%1 this is test block %2",
         "params": [
             {
                 "type": "Angle",
@@ -15635,7 +15288,6 @@ Entry.block = {
         "skeleton": "basic_loop",
         "mode": "maze",
         "color": "#498DEB",
-        "template": "%1 만날 때 까지 반복%2",
         "syntax": [
             "BasicWhile",
             "true"
@@ -15662,7 +15314,6 @@ Entry.block = {
         "skeleton": "basic_loop",
         "mode": "maze",
         "color": "#498DEB",
-        "template": "모든 %1 만날 때 까지 반복%2",
         "syntax": [
             "BasicWhile",
             "true"
@@ -15689,7 +15340,6 @@ Entry.block = {
         "skeleton": "basic_loop",
         "mode": "maze",
         "color": "#498DEB",
-        "template": "만약 앞에 %1 있다면%2",
         "syntax": [
             "BasicIf",
             "front == wall"
@@ -15716,7 +15366,6 @@ Entry.block = {
         "skeleton": "basic_loop",
         "mode": "maze",
         "color": "#498DEB",
-        "template": "만약 앞에 %1 있다면%2",
         "syntax": [
             "BasicIf",
             "front == bee"
@@ -15743,7 +15392,6 @@ Entry.block = {
         "skeleton": "basic",
         "mode": "maze",
         "color": "#B57242",
-        "template": "약속 불러오기%1",
         "syntax": [
             "Scope",
             "promise"
@@ -15761,7 +15409,6 @@ Entry.block = {
         "mode": "maze",
         "color": "#B57242",
         "event": "define",
-        "template": "약속하기%1",
         "syntax": [
             "BasicFunction"
         ],
@@ -15782,7 +15429,6 @@ Entry.block = {
         "skeleton": "basic_loop",
         "mode": "maze",
         "color": "#498DEB",
-        "template": "만약 앞에 %1 있다면%2",
         "syntax": [
             "BasicIf",
             "front == banana"
@@ -15809,7 +15455,6 @@ Entry.block = {
         "skeleton": "basic_loop",
         "mode": "maze",
         "color": "#498DEB",
-        "template": "만약 앞에 %1 있다면%2",
         "syntax": [
             "BasicIf",
             "front == wall"
@@ -15836,7 +15481,6 @@ Entry.block = {
         "skeleton": "basic",
         "mode": "maze",
         "color": "#A751E3",
-        "template": "앞으로 한 칸 이동%1",
         "syntax": [
             "Scope",
             "move"
@@ -15853,7 +15497,6 @@ Entry.block = {
         "skeleton": "basic",
         "mode": "maze",
         "color": "#A751E3",
-        "template": "왼쪽으로 회전%1",
         "syntax": [
             "Scope",
             "left"
@@ -15870,7 +15513,6 @@ Entry.block = {
         "skeleton": "basic",
         "mode": "maze",
         "color": "#A751E3",
-        "template": "오른쪽으로 회전%1",
         "syntax": [
             "Scope",
             "right"
@@ -15887,7 +15529,6 @@ Entry.block = {
         "skeleton": "basic",
         "mode": "maze",
         "color": "#3BBD70",
-        "template": "%1 this is test block %2",
         "params": [
             {
                 "type": "Block",
@@ -15923,7 +15564,6 @@ Entry.block = {
     "basic_button": {
         "skeleton": "basic_button",
         "color": "#eee",
-        "template": "%1",
         "params": [
             {
                 "type": "Text",

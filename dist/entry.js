@@ -14896,14 +14896,14 @@ Entry.block.basic_button = {skeleton:"basic_button", color:"#eee", template:"%1"
 if ("object" !== typeof Entry) {
   var Entry = {}
 }
-Entry.block = {albert_hand_found:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], template:"\uc190 \ucc3e\uc74c?", params:[], events:{}, def:{params:[], type:"albert_hand_found"}, "class":"albert_sensor", isNotFor:["albert"], func:function(b, a) {
+Entry.block = {albert_hand_found:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], params:[], events:{}, def:{params:[], type:"albert_hand_found"}, "class":"albert_sensor", isNotFor:["albert"], func:function(b, a) {
   var c = Entry.hw.portData;
   return 40 < c.leftProximity || 40 < c.rightProximity;
-}}, albert_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], template:"%1", params:[{type:"Dropdown", options:[["\uc67c\ucabd \uadfc\uc811 \uc13c\uc11c", "leftProximity"], ["\uc624\ub978\ucabd \uadfc\uc811 \uc13c\uc11c", "rightProximity"], ["\ubc1d\uae30", "light"], ["\ubc30\ud130\ub9ac", "battery"], ["\uc2e0\ud638 \uc138\uae30", "signalStrength"], ["\uc55e\ucabd OID", "frontOid"], ["\ub4a4\ucabd OID", "backOid"], ["x \uc704\uce58", "positionX"], ["y \uc704\uce58", "positionY"], 
-["\ubc29\ud5a5", "orientation"]], value:"leftProximity", fontSize:11}], events:{}, def:{params:[null], type:"albert_value", id:"nw7o"}, paramsKeyMap:{DEVICE:0}, "class":"albert_sensor", isNotFor:["albert"], func:function(b, a) {
+}}, albert_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd \uadfc\uc811 \uc13c\uc11c", "leftProximity"], ["\uc624\ub978\ucabd \uadfc\uc811 \uc13c\uc11c", "rightProximity"], ["\ubc1d\uae30", "light"], ["\ubc30\ud130\ub9ac", "battery"], ["\uc2e0\ud638 \uc138\uae30", "signalStrength"], ["\uc55e\ucabd OID", "frontOid"], ["\ub4a4\ucabd OID", "backOid"], ["x \uc704\uce58", "positionX"], ["y \uc704\uce58", "positionY"], ["\ubc29\ud5a5", 
+"orientation"]], value:"leftProximity", fontSize:11}], events:{}, def:{params:[null], type:"albert_value", id:"nw7o"}, paramsKeyMap:{DEVICE:0}, "class":"albert_sensor", isNotFor:["albert"], func:function(b, a) {
   var c = Entry.hw.portData, d = a.getField("DEVICE");
   return c[d];
-}}, albert_move_forward_for_secs:{color:"#00979D", skeleton:"basic", statements:[], template:"\uc55e\uc73c\ub85c %1 \ucd08 \uc774\ub3d9\ud558\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["1"]}, null], type:"albert_move_forward_for_secs"}, paramsKeyMap:{VALUE:0}, "class":"albert_wheel", isNotFor:["albert"], func:function(b, a) {
+}}, albert_move_forward_for_secs:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["1"]}, null], type:"albert_move_forward_for_secs"}, paramsKeyMap:{VALUE:0}, "class":"albert_wheel", isNotFor:["albert"], func:function(b, a) {
   var c = Entry.hw.sendQueue;
   if (a.isStart) {
     if (1 == a.timeFlag) {
@@ -14926,7 +14926,7 @@ Entry.block = {albert_hand_found:{color:"#00979D", skeleton:"basic_boolean_field
   }, c);
   Entry.Albert.timeouts.push(d);
   return a;
-}}, albert_move_backward_for_secs:{color:"#00979D", skeleton:"basic", statements:[], template:"\ub4a4\ub85c %1 \ucd08 \uc774\ub3d9\ud558\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["1"]}, null], type:"albert_move_backward_for_secs"}, paramsKeyMap:{VALUE:0}, "class":"albert_wheel", isNotFor:["albert"], func:function(b, a) {
+}}, albert_move_backward_for_secs:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["1"]}, null], type:"albert_move_backward_for_secs"}, paramsKeyMap:{VALUE:0}, "class":"albert_wheel", isNotFor:["albert"], func:function(b, a) {
   var c = Entry.hw.sendQueue;
   if (a.isStart) {
     if (1 == a.timeFlag) {
@@ -14949,8 +14949,8 @@ Entry.block = {albert_hand_found:{color:"#00979D", skeleton:"basic_boolean_field
   }, c);
   Entry.Albert.timeouts.push(d);
   return a;
-}}, albert_turn_for_secs:{color:"#00979D", skeleton:"basic", statements:[], template:"%1 \uc73c\ub85c %2 \ucd08 \ub3cc\uae30 %3", params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["1"]}, null], type:"albert_turn_for_secs", id:"como"}, paramsKeyMap:{DIRECTION:0, 
-VALUE:1}, "class":"albert_wheel", isNotFor:["albert"], func:function(b, a) {
+}}, albert_turn_for_secs:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["1"]}, null], type:"albert_turn_for_secs", id:"como"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"albert_wheel", isNotFor:["albert"], 
+func:function(b, a) {
   var c = Entry.hw.sendQueue;
   if (a.isStart) {
     if (1 == a.timeFlag) {
@@ -14972,57 +14972,54 @@ VALUE:1}, "class":"albert_wheel", isNotFor:["albert"], func:function(b, a) {
   }, c);
   Entry.Albert.timeouts.push(d);
   return a;
-}}, albert_change_both_wheels_by:{color:"#00979D", skeleton:"basic", statements:[], template:"\uc67c\ucabd \ubc14\ud034 %1 \uc624\ub978\ucabd \ubc14\ud034 %2 \ub9cc\ud07c \ubc14\uafb8\uae30 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["10"]}, {type:"text", params:["10"]}, null], type:"albert_change_both_wheels_by"}, paramsKeyMap:{LEFT:0, 
-RIGHT:1}, "class":"albert_wheel", isNotFor:["albert"], func:function(b, a) {
+}}, albert_change_both_wheels_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["10"]}, {type:"text", params:["10"]}, null], type:"albert_change_both_wheels_by"}, paramsKeyMap:{LEFT:0, RIGHT:1}, "class":"albert_wheel", isNotFor:["albert"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getNumberValue("LEFT"), e = a.getNumberValue("RIGHT");
   c.leftWheel = void 0 != c.leftWheel ? c.leftWheel + d : d;
   c.rightWheel = void 0 != c.rightWheel ? c.rightWheel + e : e;
   return a.callReturn();
-}}, albert_set_both_wheels_to:{color:"#00979D", skeleton:"basic", statements:[], template:"\uc67c\ucabd \ubc14\ud034 %1 \uc624\ub978\ucabd \ubc14\ud034 %2 (\uc73c)\ub85c \uc815\ud558\uae30 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["30"]}, {type:"text", params:["30"]}, null], type:"albert_set_both_wheels_to"}, paramsKeyMap:{LEFT:0, 
-RIGHT:1}, "class":"albert_wheel", isNotFor:["albert"], func:function(b, a) {
+}}, albert_set_both_wheels_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["30"]}, {type:"text", params:["30"]}, null], type:"albert_set_both_wheels_to"}, paramsKeyMap:{LEFT:0, RIGHT:1}, "class":"albert_wheel", isNotFor:["albert"], func:function(b, a) {
   var c = Entry.hw.sendQueue;
   c.leftWheel = a.getNumberValue("LEFT");
   c.rightWheel = a.getNumberValue("RIGHT");
   return a.callReturn();
-}}, albert_change_wheel_by:{color:"#00979D", skeleton:"basic", statements:[], template:"%1 \ubc14\ud034 %2 \ub9cc\ud07c \ubc14\uafb8\uae30 %3", params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "BOTH"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["10"]}, null], type:"albert_change_wheel_by"}, 
-paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"albert_wheel", isNotFor:["albert"], func:function(b, a) {
+}}, albert_change_wheel_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "BOTH"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["10"]}, null], type:"albert_change_wheel_by"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"albert_wheel", 
+isNotFor:["albert"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getField("DIRECTION"), e = a.getNumberValue("VALUE");
   "LEFT" == d ? c.leftWheel = void 0 != c.leftWheel ? c.leftWheel + e : e : ("RIGHT" != d && (c.leftWheel = void 0 != c.leftWheel ? c.leftWheel + e : e), c.rightWheel = void 0 != c.rightWheel ? c.rightWheel + e : e);
   return a.callReturn();
-}}, albert_set_wheel_to:{color:"#00979D", skeleton:"basic", statements:[], template:"%1 \ubc14\ud034 %2 (\uc73c)\ub85c \uc815\ud558\uae30 %3", params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "BOTH"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["30"]}, null], type:"albert_set_wheel_to"}, 
-paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"albert_wheel", isNotFor:["albert"], func:function(b, a) {
+}}, albert_set_wheel_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "BOTH"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["30"]}, null], type:"albert_set_wheel_to"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"albert_wheel", 
+isNotFor:["albert"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getField("DIRECTION"), e = a.getNumberValue("VALUE");
   "LEFT" == d ? c.leftWheel = e : ("RIGHT" != d && (c.leftWheel = e), c.rightWheel = e);
   return a.callReturn();
-}}, albert_stop:{color:"#00979D", skeleton:"basic", statements:[], template:"\uc815\uc9c0\ud558\uae30 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"albert_stop", id:"4adb"}, "class":"albert_wheel", isNotFor:["albert"], func:function(b, a) {
+}}, albert_stop:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"albert_stop", id:"4adb"}, "class":"albert_wheel", isNotFor:["albert"], func:function(b, a) {
   var c = Entry.hw.sendQueue;
   c.leftWheel = 0;
   c.rightWheel = 0;
   return a.callReturn();
-}}, albert_set_pad_size_to:{color:"#00979D", skeleton:"basic", statements:[], template:"\ud328\ub4dc \ud06c\uae30\ub97c \ud3ed %1 \ub192\uc774 %2 (\uc73c)\ub85c \uc815\ud558\uae30 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["108"]}, {type:"text", params:["76"]}, null], type:"albert_set_pad_size_to", id:"5mhg"}, paramsKeyMap:{WIDTH:0, 
-HEIGHT:1}, "class":"albert_wheel", isNotFor:["albert"], func:function(b, a) {
+}}, albert_set_pad_size_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["108"]}, {type:"text", params:["76"]}, null], type:"albert_set_pad_size_to", id:"5mhg"}, paramsKeyMap:{WIDTH:0, HEIGHT:1}, "class":"albert_wheel", isNotFor:["albert"], func:function(b, a) {
   var c = Entry.hw.sendQueue;
   c.padWidth = a.getNumberValue("WIDTH");
   c.padHeight = a.getNumberValue("HEIGHT");
   return a.callReturn();
-}}, albert_set_eye_to:{color:"#00979D", skeleton:"basic", statements:[], template:"%1 \ub208\uc744 %2 \uc73c\ub85c \uc815\ud558\uae30 %3", params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "BOTH"]], value:"LEFT", fontSize:11}, {type:"Dropdown", options:[["\ube68\uac04\uc0c9", "4"], ["\ub178\ub780\uc0c9", "6"], ["\ucd08\ub85d\uc0c9", "2"], ["\ud558\ub298\uc0c9", "3"], ["\ud30c\ub780\uc0c9", "1"], ["\ubcf4\ub77c\uc0c9", "5"], ["\ud558\uc580\uc0c9", 
-"7"]], value:"4", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"albert_set_eye_to"}, paramsKeyMap:{DIRECTION:0, COLOR:1}, "class":"albert_led", isNotFor:["albert"], func:function(b, a) {
+}}, albert_set_eye_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "BOTH"]], value:"LEFT", fontSize:11}, {type:"Dropdown", options:[["\ube68\uac04\uc0c9", "4"], ["\ub178\ub780\uc0c9", "6"], ["\ucd08\ub85d\uc0c9", "2"], ["\ud558\ub298\uc0c9", "3"], ["\ud30c\ub780\uc0c9", "1"], ["\ubcf4\ub77c\uc0c9", "5"], ["\ud558\uc580\uc0c9", "7"]], value:"4", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", 
+size:12}], events:{}, def:{params:[null, null, null], type:"albert_set_eye_to"}, paramsKeyMap:{DIRECTION:0, COLOR:1}, "class":"albert_led", isNotFor:["albert"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a), e = Number(a.getField("COLOR", a));
   "LEFT" == d ? c.leftEye = e : ("RIGHT" != d && (c.leftEye = e), c.rightEye = e);
   return a.callReturn();
-}}, albert_clear_eye:{color:"#00979D", skeleton:"basic", statements:[], template:"%1 \ub208 \ub044\uae30 %2", params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "BOTH"]], value:"LEFT", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null], type:"albert_clear_eye"}, paramsKeyMap:{DIRECTION:0}, "class":"albert_led", isNotFor:["albert"], func:function(b, a) {
+}}, albert_clear_eye:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "BOTH"]], value:"LEFT", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null], type:"albert_clear_eye"}, paramsKeyMap:{DIRECTION:0}, "class":"albert_led", isNotFor:["albert"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a);
   "LEFT" == d ? c.leftEye = 0 : ("RIGHT" != d && (c.leftEye = 0), c.rightEye = 0);
   return a.callReturn();
-}}, albert_body_led:{color:"#00979D", skeleton:"basic", statements:[], template:"\ubab8\ud1b5 LED %1 %2", params:[{type:"Dropdown", options:[["\ucf1c\uae30", "ON"], ["\ub044\uae30", "OFF"]], value:"ON", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null], type:"albert_body_led"}, paramsKeyMap:{STATE:0}, "class":"albert_led", isNotFor:["albert"], func:function(b, a) {
+}}, albert_body_led:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\ucf1c\uae30", "ON"], ["\ub044\uae30", "OFF"]], value:"ON", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null], type:"albert_body_led"}, paramsKeyMap:{STATE:0}, "class":"albert_led", isNotFor:["albert"], func:function(b, a) {
   var c = Entry.hw.sendQueue;
   "ON" == a.getField("STATE", a) ? c.bodyLed = 1 : c.bodyLed = 0;
   return a.callReturn();
-}}, albert_front_led:{color:"#00979D", skeleton:"basic", statements:[], template:"\uc55e\ucabd LED %1 %2", params:[{type:"Dropdown", options:[["\ucf1c\uae30", "ON"], ["\ub044\uae30", "OFF"]], value:"ON", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null], type:"albert_front_led"}, paramsKeyMap:{STATE:0}, "class":"albert_led", isNotFor:["albert"], func:function(b, a) {
+}}, albert_front_led:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\ucf1c\uae30", "ON"], ["\ub044\uae30", "OFF"]], value:"ON", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null], type:"albert_front_led"}, paramsKeyMap:{STATE:0}, "class":"albert_led", isNotFor:["albert"], func:function(b, a) {
   var c = Entry.hw.sendQueue;
   "ON" == a.getField("STATE", a) ? c.frontLed = 1 : c.frontLed = 0;
   return a.callReturn();
-}}, albert_beep:{color:"#00979D", skeleton:"basic", statements:[], template:"\uc090 \uc18c\ub9ac\ub0b4\uae30 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"albert_beep"}, "class":"albert_buzzer", isNotFor:["albert"], func:function(b, a) {
+}}, albert_beep:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"albert_beep"}, "class":"albert_buzzer", isNotFor:["albert"], func:function(b, a) {
   var c = Entry.hw.sendQueue;
   if (a.isStart) {
     if (1 == a.timeFlag) {
@@ -15044,23 +15041,23 @@ HEIGHT:1}, "class":"albert_wheel", isNotFor:["albert"], func:function(b, a) {
   }, 200);
   Entry.Albert.timeouts.push(d);
   return a;
-}}, albert_change_buzzer_by:{color:"#00979D", skeleton:"basic", statements:[], template:"\ubc84\uc800 \uc74c\uc744 %1 \ub9cc\ud07c \ubc14\uafb8\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["10"]}, null], type:"albert_change_buzzer_by"}, paramsKeyMap:{VALUE:0}, "class":"albert_buzzer", isNotFor:["albert"], func:function(b, a) {
+}}, albert_change_buzzer_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["10"]}, null], type:"albert_change_buzzer_by"}, paramsKeyMap:{VALUE:0}, "class":"albert_buzzer", isNotFor:["albert"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getNumberValue("VALUE");
   c.buzzer = void 0 != c.buzzer ? c.buzzer + d : d;
   c.note = 0;
   return a.callReturn();
-}}, albert_set_buzzer_to:{color:"#00979D", skeleton:"basic", statements:[], template:"\ubc84\uc800 \uc74c\uc744 %1 (\uc73c)\ub85c \uc815\ud558\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["1000"]}, null], type:"albert_set_buzzer_to"}, paramsKeyMap:{VALUE:0}, "class":"albert_buzzer", isNotFor:["albert"], func:function(b, a) {
+}}, albert_set_buzzer_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["1000"]}, null], type:"albert_set_buzzer_to"}, paramsKeyMap:{VALUE:0}, "class":"albert_buzzer", isNotFor:["albert"], func:function(b, a) {
   var c = Entry.hw.sendQueue;
   c.buzzer = a.getNumberValue("VALUE");
   c.note = 0;
   return a.callReturn();
-}}, albert_clear_buzzer:{color:"#00979D", skeleton:"basic", statements:[], template:"\ubc84\uc800 \ub044\uae30 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"albert_clear_buzzer"}, "class":"albert_buzzer", isNotFor:["albert"], func:function(b, a) {
+}}, albert_clear_buzzer:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"albert_clear_buzzer"}, "class":"albert_buzzer", isNotFor:["albert"], func:function(b, a) {
   var c = Entry.hw.sendQueue;
   c.buzzer = 0;
   c.note = 0;
   return a.callReturn();
-}}, albert_play_note_for:{color:"#00979D", skeleton:"basic", statements:[], template:"%1 %2 \uc74c\uc744 %3 \ubc15\uc790 \uc5f0\uc8fc\ud558\uae30 %4", params:[{type:"Dropdown", options:[["\ub3c4", "4"], ["\ub3c4#", "5"], ["\ub808", "6"], ["\ubbf8b", "7"], ["\ubbf8", "8"], ["\ud30c", "9"], ["\ud30c#", "10"], ["\uc194", "11"], ["\uc194#", "12"], ["\ub77c", "13"], ["\uc2dcb", "14"], ["\uc2dc", "15"]], value:"4", fontSize:11}, {type:"Dropdown", options:[["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], 
-["5", "5"], ["6", "6"], ["7", "7"]], value:"1", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, "4", {type:"text", params:["0.5"]}, null], type:"albert_play_note_for"}, paramsKeyMap:{NOTE:0, OCTAVE:1, VALUE:2}, "class":"albert_buzzer", isNotFor:["albert"], func:function(b, a) {
+}}, albert_play_note_for:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\ub3c4", "4"], ["\ub3c4#", "5"], ["\ub808", "6"], ["\ubbf8b", "7"], ["\ubbf8", "8"], ["\ud30c", "9"], ["\ud30c#", "10"], ["\uc194", "11"], ["\uc194#", "12"], ["\ub77c", "13"], ["\uc2dcb", "14"], ["\uc2dc", "15"]], value:"4", fontSize:11}, {type:"Dropdown", options:[["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"]], value:"1", fontSize:11}, {type:"Block", 
+accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, "4", {type:"text", params:["0.5"]}, null], type:"albert_play_note_for"}, paramsKeyMap:{NOTE:0, OCTAVE:1, VALUE:2}, "class":"albert_buzzer", isNotFor:["albert"], func:function(b, a) {
   var c = Entry.hw.sendQueue;
   if (a.isStart) {
     if (1 == a.timeFlag) {
@@ -15090,7 +15087,7 @@ HEIGHT:1}, "class":"albert_wheel", isNotFor:["albert"], func:function(b, a) {
   }, f);
   Entry.Albert.timeouts.push(k);
   return a;
-}}, albert_rest_for:{color:"#00979D", skeleton:"basic", statements:[], template:"%1 \ubc15\uc790 \uc26c\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["0.25"]}, null], type:"albert_rest_for"}, paramsKeyMap:{VALUE:0}, "class":"albert_buzzer", isNotFor:["albert"], func:function(b, a) {
+}}, albert_rest_for:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["0.25"]}, null], type:"albert_rest_for"}, paramsKeyMap:{VALUE:0}, "class":"albert_buzzer", isNotFor:["albert"], func:function(b, a) {
   var c = Entry.hw.sendQueue;
   if (a.isStart) {
     if (1 == a.timeFlag) {
@@ -15112,15 +15109,15 @@ HEIGHT:1}, "class":"albert_wheel", isNotFor:["albert"], func:function(b, a) {
   }, d);
   Entry.Albert.timeouts.push(e);
   return a;
-}}, albert_change_tempo_by:{color:"#00979D", skeleton:"basic", statements:[], template:"\uc5f0\uc8fc \uc18d\ub3c4\ub97c %1 \ub9cc\ud07c \ubc14\uafb8\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["20"]}, null], type:"albert_change_tempo_by"}, paramsKeyMap:{VALUE:0}, "class":"albert_buzzer", isNotFor:["albert"], func:function(b, a) {
+}}, albert_change_tempo_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["20"]}, null], type:"albert_change_tempo_by"}, paramsKeyMap:{VALUE:0}, "class":"albert_buzzer", isNotFor:["albert"], func:function(b, a) {
   Entry.Albert.tempo += a.getNumberValue("VALUE");
   1 > Entry.Albert.tempo && (Entry.Albert.tempo = 1);
   return a.callReturn();
-}}, albert_set_tempo_to:{color:"#00979D", skeleton:"basic", statements:[], template:"\uc5f0\uc8fc \uc18d\ub3c4\ub97c %1 BPM\uc73c\ub85c \uc815\ud558\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["60"]}, null], type:"albert_set_tempo_to"}, paramsKeyMap:{VALUE:0}, "class":"albert_buzzer", isNotFor:["albert"], func:function(b, a) {
+}}, albert_set_tempo_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["60"]}, null], type:"albert_set_tempo_to"}, paramsKeyMap:{VALUE:0}, "class":"albert_buzzer", isNotFor:["albert"], func:function(b, a) {
   Entry.Albert.tempo = a.getNumberValue("VALUE");
   1 > Entry.Albert.tempo && (Entry.Albert.tempo = 1);
   return a.callReturn();
-}}, albert_move_forward:{color:"#00979D", skeleton:"basic", statements:[], template:"\uc55e\uc73c\ub85c \uc774\ub3d9\ud558\uae30 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null]}, func:function(b, a) {
+}}, albert_move_forward:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null]}, func:function(b, a) {
   var c = Entry.hw.sendQueue;
   if (a.isStart) {
     if (1 == a.timeFlag) {
@@ -15141,7 +15138,7 @@ HEIGHT:1}, "class":"albert_wheel", isNotFor:["albert"], func:function(b, a) {
     a.timeFlag = 0;
   }, 1E3);
   return a;
-}}, albert_move_backward:{color:"#00979D", skeleton:"basic", statements:[], template:"\ub4a4\ub85c \uc774\ub3d9\ud558\uae30 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null]}, func:function(b, a) {
+}}, albert_move_backward:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null]}, func:function(b, a) {
   var c = Entry.hw.sendQueue;
   if (a.isStart) {
     if (1 == a.timeFlag) {
@@ -15160,7 +15157,7 @@ HEIGHT:1}, "class":"albert_wheel", isNotFor:["albert"], func:function(b, a) {
     a.timeFlag = 0;
   }, 1E3);
   return a;
-}}, albert_turn_around:{color:"#00979D", skeleton:"basic", statements:[], template:"%1 \uc73c\ub85c \ub3cc\uae30 %2", params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"]], value:"LEFT", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null]}, paramsKeyMap:{DIRECTION:0}, func:function(b, a) {
+}}, albert_turn_around:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"]], value:"LEFT", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null]}, paramsKeyMap:{DIRECTION:0}, func:function(b, a) {
   var c = Entry.hw.sendQueue;
   if (a.isStart) {
     if (1 == a.timeFlag) {
@@ -15184,67 +15181,66 @@ HEIGHT:1}, "class":"albert_wheel", isNotFor:["albert"], func:function(b, a) {
     a.timeFlag = 0;
   }, 1E3);
   return a;
-}}, albert_set_led_to:{color:"#00979D", skeleton:"basic", statements:[], template:"%1 %2 \uc73c\ub85c \uc815\ud558\uae30 %3", params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "FRONT"]], value:"LEFT", fontSize:11}, {type:"Dropdown", options:[["\ube68\uac04\uc0c9", "4"], ["\ub178\ub780\uc0c9", "6"], ["\ucd08\ub85d\uc0c9", "2"], ["\ud558\ub298\uc0c9", "3"], ["\ud30c\ub780\uc0c9", "1"], ["\ubcf4\ub77c\uc0c9", "5"], ["\ud558\uc580\uc0c9", "7"]], 
-value:"4", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null]}, paramsKeyMap:{DIRECTION:0, COLOR:1}, func:function(b, a) {
+}}, albert_set_led_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "FRONT"]], value:"LEFT", fontSize:11}, {type:"Dropdown", options:[["\ube68\uac04\uc0c9", "4"], ["\ub178\ub780\uc0c9", "6"], ["\ucd08\ub85d\uc0c9", "2"], ["\ud558\ub298\uc0c9", "3"], ["\ud30c\ub780\uc0c9", "1"], ["\ubcf4\ub77c\uc0c9", "5"], ["\ud558\uc580\uc0c9", "7"]], value:"4", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", 
+size:12}], events:{}, def:{params:[null, null, null]}, paramsKeyMap:{DIRECTION:0, COLOR:1}, func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a), e = Number(a.getField("COLOR", a));
   "FRONT" == d ? (c.leftEye = e, c.rightEye = e) : "LEFT" == d ? c.leftEye = e : c.rightEye = e;
   return a.callReturn();
-}}, albert_clear_led:{color:"#00979D", skeleton:"basic", statements:[], template:"%1 %2", params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "FRONT"]], value:"LEFT", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null]}, paramsKeyMap:{DIRECTION:0}, func:function(b, a) {
+}}, albert_clear_led:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "FRONT"]], value:"LEFT", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null]}, paramsKeyMap:{DIRECTION:0}, func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a);
   "FRONT" == d ? (c.leftEye = 0, c.rightEye = 0) : "LEFT" == d ? c.leftEye = 0 : c.rightEye = 0;
   return a.callReturn();
-}}, albert_change_wheels_by:{color:"#00979D", skeleton:"basic", statements:[], template:"%1 %2 %3", params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "FRONT"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null]}, paramsKeyMap:{DIRECTION:0, VALUE:1}, func:function(b, a) {
+}}, albert_change_wheels_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "FRONT"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null]}, paramsKeyMap:{DIRECTION:0, VALUE:1}, func:function(b, a) {
   var c = Entry.hw.sendQueue, d = Entry.hw.portData, e = a.getField("DIRECTION"), f = a.getNumberValue("VALUE");
   "LEFT" == e ? c.leftWheel = void 0 != c.leftWheel ? c.leftWheel + f : d.leftWheel + f : ("RIGHT" != e && (c.leftWheel = void 0 != c.leftWheel ? c.leftWheel + f : d.leftWheel + f), c.rightWheel = void 0 != c.rightWheel ? c.rightWheel + f : d.rightWheel + f);
   return a.callReturn();
-}}, albert_set_wheels_to:{color:"#00979D", skeleton:"basic", statements:[], template:"%1 %2 %3", params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "FRONT"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null]}, paramsKeyMap:{DIRECTION:0, VALUE:1}, func:function(b, a) {
+}}, albert_set_wheels_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "FRONT"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null]}, paramsKeyMap:{DIRECTION:0, VALUE:1}, func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getField("DIRECTION"), e = a.getNumberValue("VALUE");
   "LEFT" == d ? c.leftWheel = e : ("RIGHT" != d && (c.leftWheel = e), c.rightWheel = e);
   return a.callReturn();
-}}, arduino_text:{color:"#00979D", skeleton:"basic_string_field", statements:[], template:"%1", params:[{type:"TextInput", value:10}], events:{}, def:{params:[]}, paramsKeyMap:{NAME:0}, func:function(b, a) {
+}}, arduino_text:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"TextInput", value:10}], events:{}, def:{params:[]}, paramsKeyMap:{NAME:0}, func:function(b, a) {
   return a.getStringField("NAME");
-}}, arduino_send:{color:"#00979D", skeleton:"basic", statements:[], template:"\uc2e0\ud638 %1 \ubcf4\ub0b4\uae30", params:[{type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[]}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
+}}, arduino_send:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[]}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
   var c = a.getValue("VALUE", a), d = new XMLHttpRequest;
   d.open("POST", "http://localhost:23518/arduino/", !1);
   d.send(String(c));
   Entry.assert(200 == d.status, "arduino is not connected");
   return a.callReturn();
-}}, arduino_get_number:{color:"#00979D", skeleton:"basic_string_field", statements:[], template:"\uc2e0\ud638 %1 \uc758 \uc22b\uc790 \uacb0\uacfc\uac12", params:[{type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[]}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
+}}, arduino_get_number:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[]}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
   var c = a.getValue("VALUE", a), d = new XMLHttpRequest;
   d.open("POST", "http://localhost:23518/arduino/", !1);
   d.send(String(c));
   Entry.assert(200 == d.status, "arduino is not connected");
   return Number(d.responseText);
-}}, arduino_get_string:{color:"#00979D", skeleton:"basic_string_field", statements:[], template:"\uc2e0\ud638 %1 \uc758 \uae00\uc790 \uacb0\uacfc\uac12", params:[{type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[]}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
+}}, arduino_get_string:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[]}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
   var c = a.getValue("VALUE", a), d = new XMLHttpRequest;
   d.open("POST", "http://localhost:23518/arduino/", !1);
   d.send(String(c));
   Entry.assert(200 == d.status, "arduino is not connected");
   return d.responseText;
-}}, arduino_get_sensor_number:{color:"#00979D", skeleton:"basic_string_field", statements:[], template:"%1  ", params:[{type:"Dropdown", options:[["0", "A0"], ["1", "A1"], ["2", "A2"], ["3", "A3"], ["4", "A4"], ["5", "A5"]], value:"A0", fontSize:11}], events:{}, def:{params:[null]}, paramsKeyMap:{PORT:0}, func:function(b, a) {
+}}, arduino_get_sensor_number:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["0", "A0"], ["1", "A1"], ["2", "A2"], ["3", "A3"], ["4", "A4"], ["5", "A5"]], value:"A0", fontSize:11}], events:{}, def:{params:[null]}, paramsKeyMap:{PORT:0}, func:function(b, a) {
   return a.getStringField("PORT");
-}}, arduino_get_port_number:{color:"#00979D", skeleton:"basic_string_field", statements:[], template:"%1  ", params:[{type:"Dropdown", options:[["0", "0"], ["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"], ["9", "9"], ["10", "10"], ["11", "11"], ["12", "12"], ["13", "13"]], value:"0", fontSize:11}], events:{}, def:{params:[null]}, paramsKeyMap:{PORT:0}, func:function(b, a) {
+}}, arduino_get_port_number:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["0", "0"], ["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"], ["9", "9"], ["10", "10"], ["11", "11"], ["12", "12"], ["13", "13"]], value:"0", fontSize:11}], events:{}, def:{params:[null]}, paramsKeyMap:{PORT:0}, func:function(b, a) {
   return a.getStringField("PORT");
-}}, arduino_get_pwm_port_number:{color:"#00979D", skeleton:"basic_string_field", statements:[], template:"%1  ", params:[{type:"Dropdown", options:[["3", "3"], ["5", "5"], ["6", "6"], ["9", "9"], ["10", "10"], ["11", "11"]], value:"3", fontSize:11}], events:{}, def:{params:[null]}, paramsKeyMap:{PORT:0}, func:function(b, a) {
+}}, arduino_get_pwm_port_number:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["3", "3"], ["5", "5"], ["6", "6"], ["9", "9"], ["10", "10"], ["11", "11"]], value:"3", fontSize:11}], events:{}, def:{params:[null]}, paramsKeyMap:{PORT:0}, func:function(b, a) {
   return a.getStringField("PORT");
-}}, arduino_get_number_sensor_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], template:"\uc544\ub0a0\ub85c\uadf8 %1 \ubc88 \uc13c\uc11c\uac12  ", params:[{type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"arduino_get_sensor_number"}], type:"arduino_get_number_sensor_value"}, paramsKeyMap:{VALUE:0}, "class":"arduino_value", isNotFor:["arduino"], func:function(b, a) {
+}}, arduino_get_number_sensor_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"arduino_get_sensor_number"}], type:"arduino_get_number_sensor_value"}, paramsKeyMap:{VALUE:0}, "class":"arduino_value", isNotFor:["arduino"], func:function(b, a) {
   var c = a.getValue("VALUE", a);
   return Entry.hw.getAnalogPortValue(c[1]);
-}}, arduino_get_digital_value:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], template:"\ub514\uc9c0\ud138 %1 \ubc88 \uc13c\uc11c\uac12  ", params:[{type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"arduino_get_port_number"}], type:"arduino_get_digital_value"}, paramsKeyMap:{VALUE:0}, "class":"arduino_value", isNotFor:["arduino"], func:function(b, a) {
+}}, arduino_get_digital_value:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"arduino_get_port_number"}], type:"arduino_get_digital_value"}, paramsKeyMap:{VALUE:0}, "class":"arduino_value", isNotFor:["arduino"], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   return Entry.hw.getDigitalPortValue(c);
-}}, arduino_toggle_led:{color:"#00979D", skeleton:"basic", statements:[], template:"\ub514\uc9c0\ud138 %1 \ubc88 \ud540 %2 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["\ucf1c\uae30", "on"], ["\ub044\uae30", "off"]], value:"on", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"arduino_get_port_number"}, null, null], type:"arduino_toggle_led"}, paramsKeyMap:{VALUE:0, OPERATOR:1}, "class":"arduino_set", 
-isNotFor:["arduino"], func:function(b, a) {
+}}, arduino_toggle_led:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["\ucf1c\uae30", "on"], ["\ub044\uae30", "off"]], value:"on", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"arduino_get_port_number"}, null, null], type:"arduino_toggle_led"}, paramsKeyMap:{VALUE:0, OPERATOR:1}, "class":"arduino_set", isNotFor:["arduino"], func:function(b, 
+a) {
   var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
   Entry.hw.setDigitalPortValue(c, d);
   return a.callReturn();
-}}, arduino_toggle_pwm:{color:"#00979D", skeleton:"basic", statements:[], template:"\ub514\uc9c0\ud138 %1 \ubc88 \ud540\uc744 %2 (\uc73c)\ub85c \uc815\ud558\uae30 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"arduino_get_pwm_port_number"}, {type:"arduino_text", params:["255"]}, null], type:"arduino_toggle_pwm"}, paramsKeyMap:{PORT:0, VALUE:1}, 
-"class":"arduino_set", isNotFor:["arduino"], func:function(b, a) {
+}}, arduino_toggle_pwm:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"arduino_get_pwm_port_number"}, {type:"arduino_text", params:["255"]}, null], type:"arduino_toggle_pwm"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"arduino_set", isNotFor:["arduino"], func:function(b, a) {
   var c = a.getNumberValue("PORT"), d = a.getNumberValue("VALUE"), d = Math.round(d), d = Math.max(d, 0), d = Math.min(d, 255);
   Entry.hw.setDigitalPortValue(c, d);
   return a.callReturn();
-}}, arduino_convert_scale:{color:"#00979D", skeleton:"basic_string_field", statements:[], template:"%1 \uac12\uc758 \ubc94\uc704\ub97c %2 ~ %3 \uc5d0\uc11c %4 ~ %5 (\uc73c)\ub85c \ubc14\uafbc\uac12  ", params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"arduino_get_number_sensor_value", params:[{type:"arduino_get_sensor_number", 
-id:"bl5e"}]}, {type:"number", params:["0"]}, {type:"number", params:["1023"]}, {type:"number", params:["0"]}, {type:"number", params:["100"]}], type:"arduino_convert_scale"}, paramsKeyMap:{VALUE1:0, VALUE2:1, VALUE3:2, VALUE4:3, VALUE5:4}, "class":"arduino", isNotFor:["arduino"], func:function(b, a) {
+}}, arduino_convert_scale:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"arduino_get_number_sensor_value", params:[{type:"arduino_get_sensor_number", id:"bl5e"}]}, {type:"number", params:["0"]}, {type:"number", params:["1023"]}, {type:"number", params:["0"]}, 
+{type:"number", params:["100"]}], type:"arduino_convert_scale"}, paramsKeyMap:{VALUE1:0, VALUE2:1, VALUE3:2, VALUE4:3, VALUE5:4}, "class":"arduino", isNotFor:["arduino"], func:function(b, a) {
   var c = a.getNumberValue("VALUE1", a), d = a.getNumberValue("VALUE2", a), e = a.getNumberValue("VALUE3", a), f = a.getNumberValue("VALUE4", a), g = a.getNumberValue("VALUE5", a);
   if (d > e) {
     var h = d, d = e, e = h
@@ -15256,31 +15252,29 @@ id:"bl5e"}]}, {type:"number", params:["0"]}, {type:"number", params:["1023"]}, {
   c = Math.min(g, c);
   c = Math.max(f, c);
   return Math.round(c);
-}}, sensorBoard_get_named_sensor_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], template:"%1  \uc13c\uc11c\uac12", params:[{type:"Dropdown", options:[["\uc18c\ub9ac", "0"], ["\ube5b \uac10\uc9c0", "1"], ["\uc2ac\ub77c\uc774\ub354", "2"], ["\uc628\ub3c4", "3"]], value:"0", fontSize:11}], events:{}, def:{params:[null], type:"sensorBoard_get_named_sensor_value"}, paramsKeyMap:{PORT:0}, "class":"sensorBoard", isNotFor:["sensorBoard"], func:function(b, a) {
+}}, sensorBoard_get_named_sensor_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["\uc18c\ub9ac", "0"], ["\ube5b \uac10\uc9c0", "1"], ["\uc2ac\ub77c\uc774\ub354", "2"], ["\uc628\ub3c4", "3"]], value:"0", fontSize:11}], events:{}, def:{params:[null], type:"sensorBoard_get_named_sensor_value"}, paramsKeyMap:{PORT:0}, "class":"sensorBoard", isNotFor:["sensorBoard"], func:function(b, a) {
   return Entry.hw.getAnalogPortValue(a.getField("PORT", a));
-}}, sensorBoard_is_button_pressed:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], template:"%1  \ubc84\ud2bc\uc744 \ub20c\ub800\ub294\uac00?", params:[{type:"Dropdown", options:[["\ube68\uac04", "8"], ["\ud30c\ub780", "9"], ["\ub178\ub780", "10"], ["\ucd08\ub85d", "11"]], value:"8", fontSize:11}], events:{}, def:{params:[null], type:"sensorBoard_is_button_pressed"}, paramsKeyMap:{PORT:0}, "class":"sensorBoard", isNotFor:["sensorBoard"], func:function(b, a) {
+}}, sensorBoard_is_button_pressed:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[["\ube68\uac04", "8"], ["\ud30c\ub780", "9"], ["\ub178\ub780", "10"], ["\ucd08\ub85d", "11"]], value:"8", fontSize:11}], events:{}, def:{params:[null], type:"sensorBoard_is_button_pressed"}, paramsKeyMap:{PORT:0}, "class":"sensorBoard", isNotFor:["sensorBoard"], func:function(b, a) {
   return Entry.hw.getDigitalPortValue(a.getNumberField("PORT", a));
-}}, sensorBoard_led:{color:"#00979D", skeleton:"basic", statements:[], template:"%1  LED %2   %3", params:[{type:"Dropdown", options:[["\ube68\uac04", "2"], ["\ucd08\ub85d", "3"], ["\ud30c\ub780", "4"], ["\ud770\uc0c9", "5"]], value:"2", fontSize:11}, {type:"Dropdown", options:[["\ucf1c\uae30", "255"], ["\ub044\uae30", "0"]], value:"255", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"sensorBoard_led"}, 
-paramsKeyMap:{PORT:0, OPERATOR:1}, "class":"sensorBoard", isNotFor:["sensorBoard"], func:function(b, a) {
+}}, sensorBoard_led:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\ube68\uac04", "2"], ["\ucd08\ub85d", "3"], ["\ud30c\ub780", "4"], ["\ud770\uc0c9", "5"]], value:"2", fontSize:11}, {type:"Dropdown", options:[["\ucf1c\uae30", "255"], ["\ub044\uae30", "0"]], value:"255", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"sensorBoard_led"}, paramsKeyMap:{PORT:0, 
+OPERATOR:1}, "class":"sensorBoard", isNotFor:["sensorBoard"], func:function(b, a) {
   Entry.hw.setDigitalPortValue(a.getField("PORT"), a.getNumberField("OPERATOR"));
   return a.callReturn();
-}}, arduino_download_connector:{skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"\uc5f0\uacb0 \ud504\ub85c\uadf8\ub7a8 \ub2e4\uc6b4\ub85c\ub4dc", color:"#333", align:"center"}], events:{mousedown:[null]}}, arduino_download_source:{skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"\uc5d4\ud2b8\ub9ac \uc544\ub450\uc774\ub178 \uc18c\uc2a4", color:"#333", align:"center"}], events:{mousedown:[null]}}, arduino_connected:{skeleton:"basic_button", 
-color:"#eee", template:"%1", params:[{type:"Text", text:"\uc5f0\uacb0 \ub428", color:"#333", align:"center"}], events:{mousedown:[null]}}, arduino_reconnect:{skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"\ub2e4\uc2dc \uc5f0\uacb0\ud558\uae30", color:"#333", align:"center"}], events:{mousedown:[null]}}, CODEino_get_sensor_number:{color:"#00979D", skeleton:"basic_string_field", statements:[], template:"%1  ", params:[{type:"Dropdown", options:[["0", "A0"], ["1", 
-"A1"], ["2", "A2"], ["3", "A3"], ["4", "A4"], ["5", "A5"], ["6", "A6"]], value:"A0", fontSize:11}], events:{}, def:{params:[null]}, paramsKeyMap:{PORT:0}, func:function(b, a) {
+}}, arduino_download_connector:{skeleton:"basic_button", color:"#eee", params:[{type:"Text", text:"\uc5f0\uacb0 \ud504\ub85c\uadf8\ub7a8 \ub2e4\uc6b4\ub85c\ub4dc", color:"#333", align:"center"}], events:{mousedown:[null]}}, arduino_download_source:{skeleton:"basic_button", color:"#eee", params:[{type:"Text", text:"\uc5d4\ud2b8\ub9ac \uc544\ub450\uc774\ub178 \uc18c\uc2a4", color:"#333", align:"center"}], events:{mousedown:[null]}}, arduino_connected:{skeleton:"basic_button", color:"#eee", params:[{type:"Text", 
+text:"\uc5f0\uacb0 \ub428", color:"#333", align:"center"}], events:{mousedown:[null]}}, arduino_reconnect:{skeleton:"basic_button", color:"#eee", params:[{type:"Text", text:"\ub2e4\uc2dc \uc5f0\uacb0\ud558\uae30", color:"#333", align:"center"}], events:{mousedown:[null]}}, CODEino_get_sensor_number:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["0", "A0"], ["1", "A1"], ["2", "A2"], ["3", "A3"], ["4", "A4"], ["5", "A5"], ["6", "A6"]], value:"A0", 
+fontSize:11}], events:{}, def:{params:[null]}, paramsKeyMap:{PORT:0}, func:function(b, a) {
   return a.getStringField("PORT");
-}}, CODEino_get_named_sensor_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], template:"  %1  \uc13c\uc11c\uac12 ", params:[{type:"Dropdown", options:[["\uc18c\ub9ac", "0"], ["\ube5b", "1"], ["\uc2ac\ub77c\uc774\ub354", "2"], ["\uc800\ud56d-A", "3"], ["\uc800\ud56d-B", "4"], ["\uc800\ud56d-C", "5"], ["\uc800\ud56d-D", "6"]], value:"0", fontSize:11}], events:{}, def:{params:[null], type:"CODEino_get_named_sensor_value"}, paramsKeyMap:{PORT:0}, "class":"CODEino", isNotFor:["CODEino"], 
-func:function(b, a) {
+}}, CODEino_get_named_sensor_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["\uc18c\ub9ac", "0"], ["\ube5b", "1"], ["\uc2ac\ub77c\uc774\ub354", "2"], ["\uc800\ud56d-A", "3"], ["\uc800\ud56d-B", "4"], ["\uc800\ud56d-C", "5"], ["\uc800\ud56d-D", "6"]], value:"0", fontSize:11}], events:{}, def:{params:[null], type:"CODEino_get_named_sensor_value"}, paramsKeyMap:{PORT:0}, "class":"CODEino", isNotFor:["CODEino"], func:function(b, a) {
   return Entry.hw.getAnalogPortValue(a.getField("PORT", a));
-}}, CODEino_get_sound_status:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], template:"\uc18c\ub9ac\uc13c\uc11c  %1  ", params:[{type:"Dropdown", options:[["\uc18c\ub9ac\ud07c", "GREAT"], ["\uc18c\ub9ac\uc791\uc74c", "SMALL"]], value:"GREAT", fontSize:11}], events:{}, def:{params:[null], type:"CODEino_get_sound_status"}, paramsKeyMap:{STATUS:0}, "class":"CODEino", isNotFor:["CODEino"], func:function(b, a) {
+}}, CODEino_get_sound_status:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[["\uc18c\ub9ac\ud07c", "GREAT"], ["\uc18c\ub9ac\uc791\uc74c", "SMALL"]], value:"GREAT", fontSize:11}], events:{}, def:{params:[null], type:"CODEino_get_sound_status"}, paramsKeyMap:{STATUS:0}, "class":"CODEino", isNotFor:["CODEino"], func:function(b, a) {
   return "GREAT" == a.getField("STATUS", a) ? 600 < Entry.hw.getAnalogPortValue(0) ? 1 : 0 : 600 > Entry.hw.getAnalogPortValue(0) ? 1 : 0;
-}}, CODEino_get_light_status:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], template:"\ube5b\uc13c\uc11c  %1  ", params:[{type:"Dropdown", options:[["\ubc1d\uc74c", "BRIGHT"], ["\uc5b4\ub450\uc6c0", "DARK"]], value:"BRIGHT", fontSize:11}], events:{}, def:{params:[null], type:"CODEino_get_light_status"}, paramsKeyMap:{STATUS:0}, "class":"CODEino", isNotFor:["CODEino"], func:function(b, a) {
+}}, CODEino_get_light_status:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[["\ubc1d\uc74c", "BRIGHT"], ["\uc5b4\ub450\uc6c0", "DARK"]], value:"BRIGHT", fontSize:11}], events:{}, def:{params:[null], type:"CODEino_get_light_status"}, paramsKeyMap:{STATUS:0}, "class":"CODEino", isNotFor:["CODEino"], func:function(b, a) {
   return "DARK" == a.getField("STATUS", a) ? 800 < Entry.hw.getAnalogPortValue(1) ? 1 : 0 : 800 > Entry.hw.getAnalogPortValue(1) ? 1 : 0;
-}}, CODEino_is_button_pressed:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], template:" \ubcf4\ub4dc\uc758  %1  ", params:[{type:"Dropdown", options:[["\ubc84\ud2bc\ub204\ub984", "4"], ["A \uc5f0\uacb0\ub428", "17"], ["B \uc5f0\uacb0\ub428", "18"], ["C \uc5f0\uacb0\ub428", "19"], ["D \uc5f0\uacb0\ub428", "20"]], value:"4", fontSize:11}], events:{}, def:{params:[null], type:"CODEino_is_button_pressed"}, paramsKeyMap:{PORT:0}, "class":"CODEino", isNotFor:["CODEino"], func:function(b, 
-a) {
+}}, CODEino_is_button_pressed:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[["\ubc84\ud2bc\ub204\ub984", "4"], ["A \uc5f0\uacb0\ub428", "17"], ["B \uc5f0\uacb0\ub428", "18"], ["C \uc5f0\uacb0\ub428", "19"], ["D \uc5f0\uacb0\ub428", "20"]], value:"4", fontSize:11}], events:{}, def:{params:[null], type:"CODEino_is_button_pressed"}, paramsKeyMap:{PORT:0}, "class":"CODEino", isNotFor:["CODEino"], func:function(b, a) {
   var c = a.getNumberField("PORT", a);
   return 14 < c ? !Entry.hw.getAnalogPortValue(c - 14) : !Entry.hw.getDigitalPortValue(c);
-}}, CODEino_get_accelerometer_direction:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], template:" 3\ucd95 \uac00\uc18d\ub3c4\uc13c\uc11c  %1  ", params:[{type:"Dropdown", options:[["\uc67c\ucabd \uae30\uc6b8\uc784", "LEFT"], ["\uc624\ub978\ucabd \uae30\uc6b8\uc784", "RIGHT"], ["\uc704\ucabd \uae30\uc6b8\uc784", "FRONT"], ["\uc544\ub798\ucabd \uae30\uc6b8\uc784", "REAR"], ["\ub4a4\uc9d1\ud798", "REVERSE"]], value:"LEFT", fontSize:11}], events:{}, def:{params:[null], type:"CODEino_get_accelerometer_direction"}, 
-paramsKeyMap:{DIRECTION:0}, "class":"CODEino", isNotFor:["CODEino"], func:function(b, a) {
+}}, CODEino_get_accelerometer_direction:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd \uae30\uc6b8\uc784", "LEFT"], ["\uc624\ub978\ucabd \uae30\uc6b8\uc784", "RIGHT"], ["\uc704\ucabd \uae30\uc6b8\uc784", "FRONT"], ["\uc544\ub798\ucabd \uae30\uc6b8\uc784", "REAR"], ["\ub4a4\uc9d1\ud798", "REVERSE"]], value:"LEFT", fontSize:11}], events:{}, def:{params:[null], type:"CODEino_get_accelerometer_direction"}, paramsKeyMap:{DIRECTION:0}, 
+"class":"CODEino", isNotFor:["CODEino"], func:function(b, a) {
   var c = a.getField("DIRECTION", a), d = 0;
   "LEFT" == c || "RIGHT" == c ? d = 3 : "FRONT" == c || "REAR" == c ? d = 4 : "REVERSE" == c && (d = 5);
   d = Entry.hw.getAnalogPortValue(d);
@@ -15298,7 +15292,7 @@ paramsKeyMap:{DIRECTION:0}, "class":"CODEino", isNotFor:["CODEino"], func:functi
   if ("REVERSE" == c) {
     return -50 > d ? 1 : 0;
   }
-}}, CODEino_get_accelerometer_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], template:" 3\ucd95 \uac00\uc18d\ub3c4\uc13c\uc11c  %1 \ucd95\uc758 \uc13c\uc11c\uac12 ", params:[{type:"Dropdown", options:[["X", "3"], ["Y", "4"], ["Z", "5"]], value:"3", fontSize:11}], events:{}, def:{params:[null], type:"CODEino_get_accelerometer_value"}, paramsKeyMap:{PORT:0}, "class":"CODEino", isNotFor:["CODEino"], func:function(b, a) {
+}}, CODEino_get_accelerometer_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["X", "3"], ["Y", "4"], ["Z", "5"]], value:"3", fontSize:11}], events:{}, def:{params:[null], type:"CODEino_get_accelerometer_value"}, paramsKeyMap:{PORT:0}, "class":"CODEino", isNotFor:["CODEino"], func:function(b, a) {
   var c = 265, d = 402, e = -90, f = 90, g = Entry.hw.getAnalogPortValue(a.getField("PORT", a));
   if (c > d) {
     var h = c, c = d, d = h
@@ -15309,37 +15303,37 @@ paramsKeyMap:{DIRECTION:0}, "class":"CODEino", isNotFor:["CODEino"], func:functi
   g = Math.min(f, g);
   g = Math.max(e, g);
   return Math.round(g);
-}}, bitbrick_sensor_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], template:"%1  \uac12", params:[{type:"DropdownDynamic", value:null, fontSize:11}], events:{}, def:{params:[null], type:"bitbrick_sensor_value"}, paramsKeyMap:{PORT:0}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
+}}, bitbrick_sensor_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"DropdownDynamic", value:null, fontSize:11}], events:{}, def:{params:[null], type:"bitbrick_sensor_value"}, paramsKeyMap:{PORT:0}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
   var c = a.getStringField("PORT");
   return Entry.hw.portData[c].value;
-}}, bitbrick_is_touch_pressed:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], template:"\ubc84\ud2bc %1 \uc774(\uac00) \ub20c\ub838\ub294\uac00?", params:[{type:"DropdownDynamic", value:null, fontSize:11}], events:{}, def:{params:[null], type:"bitbrick_is_touch_pressed"}, paramsKeyMap:{PORT:0}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
+}}, bitbrick_is_touch_pressed:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], params:[{type:"DropdownDynamic", value:null, fontSize:11}], events:{}, def:{params:[null], type:"bitbrick_is_touch_pressed"}, paramsKeyMap:{PORT:0}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
   return 0 === Entry.hw.portData[a.getStringField("PORT")].value;
-}}, bitbrick_turn_off_color_led:{color:"#00979D", skeleton:"basic", statements:[], template:"\uceec\ub7ec LED \ub044\uae30 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"bitbrick_turn_off_color_led", id:"i3je"}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
+}}, bitbrick_turn_off_color_led:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"bitbrick_turn_off_color_led", id:"i3je"}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
   Entry.hw.sendQueue.LEDR = 0;
   Entry.hw.sendQueue.LEDG = 0;
   Entry.hw.sendQueue.LEDB = 0;
   return a.callReturn();
-}}, bitbrick_turn_on_color_led_by_rgb:{color:"#00979D", skeleton:"basic", statements:[], template:"\uceec\ub7ec LED \ucf1c\uae30 R %1 G %2 B %3 %4", params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["255"]}, {type:"text", params:["255"]}, {type:"text", params:["255"]}, null], type:"bitbrick_turn_on_color_led_by_rgb"}, 
-paramsKeyMap:{rValue:0, gValue:1, bValue:2}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
+}}, bitbrick_turn_on_color_led_by_rgb:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["255"]}, {type:"text", params:["255"]}, {type:"text", params:["255"]}, null], type:"bitbrick_turn_on_color_led_by_rgb"}, paramsKeyMap:{rValue:0, gValue:1, bValue:2}, 
+"class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
   var c = a.getNumberValue("rValue"), d = a.getNumberValue("gValue"), e = a.getNumberValue("bValue"), f = Entry.adjustValueWithMaxMin, g = Entry.hw.sendQueue;
   g.LEDR = f(c, 0, 255);
   g.LEDG = f(d, 0, 255);
   g.LEDB = f(e, 0, 255);
   return a.callReturn();
-}}, bitbrick_turn_on_color_led_by_picker:{color:"#00979D", skeleton:"basic", statements:[], template:"\uceec\ub7ec LED \uc0c9  %1 \ub85c \uc815\ud558\uae30 %2", params:[{type:"Color"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"bitbrick_turn_on_color_led_by_picker"}, paramsKeyMap:{VALUE:0}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
+}}, bitbrick_turn_on_color_led_by_picker:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Color"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"bitbrick_turn_on_color_led_by_picker"}, paramsKeyMap:{VALUE:0}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
   var c = a.getStringField("VALUE");
   Entry.hw.sendQueue.LEDR = parseInt(c.substr(1, 2), 16);
   Entry.hw.sendQueue.LEDG = parseInt(c.substr(3, 2), 16);
   Entry.hw.sendQueue.LEDB = parseInt(c.substr(5, 2), 16);
   return a.callReturn();
-}}, bitbrick_turn_on_color_led_by_value:{color:"#00979D", skeleton:"basic", statements:[], template:"\uceec\ub7ec LED \ucf1c\uae30 \uc0c9 %1 \ub85c \uc815\ud558\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["0"]}, null], type:"bitbrick_turn_on_color_led_by_value"}, paramsKeyMap:{VALUE:0}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
+}}, bitbrick_turn_on_color_led_by_value:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["0"]}, null], type:"bitbrick_turn_on_color_led_by_value"}, paramsKeyMap:{VALUE:0}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
   var c = a.getNumberValue("VALUE"), d, e, f, c = c % 200;
   67 > c ? (d = 200 - 3 * c, e = 3 * c, f = 0) : 134 > c ? (c -= 67, d = 0, e = 200 - 3 * c, f = 3 * c) : 201 > c && (c -= 134, d = 3 * c, e = 0, f = 200 - 3 * c);
   Entry.hw.sendQueue.LEDR = d;
   Entry.hw.sendQueue.LEDG = e;
   Entry.hw.sendQueue.LEDB = f;
   return a.callReturn();
-}}, bitbrick_buzzer:{color:"#00979D", skeleton:"basic", statements:[], template:"\ubc84\uc800\uc74c  %1 \ub0b4\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["60"]}, null], type:"bitbrick_buzzer"}, paramsKeyMap:{VALUE:0}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
+}}, bitbrick_buzzer:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["60"]}, null], type:"bitbrick_buzzer"}, paramsKeyMap:{VALUE:0}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
   if (a.isStart) {
     return Entry.hw.sendQueue.buzzer = 0, delete a.isStart, a.callReturn();
   }
@@ -15347,7 +15341,7 @@ paramsKeyMap:{rValue:0, gValue:1, bValue:2}, "class":"condition", isNotFor:["bit
   Entry.hw.sendQueue.buzzer = c;
   a.isStart = !0;
   return a;
-}}, bitbrick_turn_off_all_motors:{color:"#00979D", skeleton:"basic", statements:[], template:"\ubaa8\ub4e0 \ubaa8\ud130 \ub044\uae30 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"bitbrick_turn_off_all_motors"}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
+}}, bitbrick_turn_off_all_motors:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"bitbrick_turn_off_all_motors"}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = Entry.Bitbrick;
   d.servoList().map(function(a) {
     c[a[1]] = 0;
@@ -15356,22 +15350,21 @@ paramsKeyMap:{rValue:0, gValue:1, bValue:2}, "class":"condition", isNotFor:["bit
     c[a[1]] = 128;
   });
   return a.callReturn();
-}}, bitbrick_dc_speed:{color:"#00979D", skeleton:"basic", statements:[], template:"DC \ubaa8\ud130 %1  \uc18d\ub3c4 %2 %3", params:[{type:"DropdownDynamic", value:null, fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["60"]}, null], type:"bitbrick_dc_speed"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
+}}, bitbrick_dc_speed:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["60"]}, null], type:"bitbrick_dc_speed"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
   var c = a.getNumberValue("VALUE"), c = Math.min(c, Entry.Bitbrick.dcMaxValue), c = Math.max(c, Entry.Bitbrick.dcMinValue);
   Entry.hw.sendQueue[a.getStringField("PORT")] = c + 128;
   return a.callReturn();
-}}, bitbrick_dc_direction_speed:{color:"#00979D", skeleton:"basic", statements:[], template:"DC \ubaa8\ud130 %1   %2  \ubc29\ud5a5  \uc18d\ub825 %3 %4", params:[{type:"DropdownDynamic", value:null, fontSize:11}, {type:"Dropdown", options:[["\uc2dc\uacc4", "CW"], ["\ubc18\uc2dc\uacc4", "CCW"]], value:"CW", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, {type:"text", params:["100"]}, 
-null], type:"bitbrick_dc_direction_speed"}, paramsKeyMap:{PORT:0, DIRECTION:1, VALUE:2}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
+}}, bitbrick_dc_direction_speed:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, fontSize:11}, {type:"Dropdown", options:[["\uc2dc\uacc4", "CW"], ["\ubc18\uc2dc\uacc4", "CCW"]], value:"CW", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, {type:"text", params:["100"]}, null], type:"bitbrick_dc_direction_speed"}, paramsKeyMap:{PORT:0, 
+DIRECTION:1, VALUE:2}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
   var c = "CW" === a.getStringField("DIRECTION"), d = a.getNumberValue("VALUE"), d = Math.min(d, Entry.Bitbrick.dcMaxValue), d = Math.max(d, 0);
   Entry.hw.sendQueue[a.getStringField("PORT")] = c ? d + 128 : 128 - d;
   return a.callReturn();
-}}, bitbrick_servomotor_angle:{color:"#00979D", skeleton:"basic", statements:[], template:"\uc11c\ubcf4 \ubaa8\ud130 %1  \uac01\ub3c4 %2 %3", params:[{type:"DropdownDynamic", value:null, fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["100"]}, null], type:"bitbrick_servomotor_angle"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"condition", isNotFor:["bitbrick"], 
-func:function(b, a) {
+}}, bitbrick_servomotor_angle:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["100"]}, null], type:"bitbrick_servomotor_angle"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
   var c = a.getNumberValue("VALUE") + 1, c = Math.min(c, Entry.Bitbrick.servoMaxValue), c = Math.max(c, Entry.Bitbrick.servoMinValue);
   Entry.hw.sendQueue[a.getStringField("PORT")] = c;
   return a.callReturn();
-}}, bitbrick_convert_scale:{color:"#00979D", skeleton:"basic_string_field", statements:[], template:"\ubcc0\ud658 %1 \uac12 %2 ~ %3 \uc5d0\uc11c %4 ~ %5", params:[{type:"DropdownDynamic", value:null, fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[null, {type:"number", params:["0"]}, {type:"number", params:["1023"]}, {type:"number", params:["-100"]}, {type:"number", 
-params:["100"]}], type:"bitbrick_convert_scale"}, paramsKeyMap:{PORT:0, VALUE2:1, VALUE3:2, VALUE4:3, VALUE5:4}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
+}}, bitbrick_convert_scale:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"DropdownDynamic", value:null, fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[null, {type:"number", params:["0"]}, {type:"number", params:["1023"]}, {type:"number", params:["-100"]}, {type:"number", params:["100"]}], type:"bitbrick_convert_scale"}, 
+paramsKeyMap:{PORT:0, VALUE2:1, VALUE3:2, VALUE4:3, VALUE5:4}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
   var c = a.getNumberField("PORT"), d = Entry.hw.portData[c].value, c = a.getNumberValue("VALUE2", a), e = a.getNumberValue("VALUE3", a), f = a.getNumberValue("VALUE4", a), g = a.getNumberValue("VALUE5", a);
   if (f > g) {
     var h = f, f = g, g = h
@@ -15382,20 +15375,20 @@ params:["100"]}], type:"bitbrick_convert_scale"}, paramsKeyMap:{PORT:0, VALUE2:1
   d = Math.min(g, d);
   d = Math.max(f, d);
   return Math.round(d);
-}}, start_drawing:{color:"#FF9E20", skeleton:"basic", statements:[], template:"\uadf8\ub9ac\uae30 \uc2dc\uc791\ud558\uae30 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[null], type:"start_drawing"}, "class":"brush_control", isNotFor:["textBox"], func:function(b, a) {
+}}, start_drawing:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[null], type:"start_drawing"}, "class":"brush_control", isNotFor:["textBox"], func:function(b, a) {
   b.brush ? b.brush.stop = !1 : Entry.setBasicBrush(b);
   Entry.stage.sortZorder();
   b.brush.moveTo(b.getX(), -1 * b.getY());
   return a.callReturn();
-}}, stop_drawing:{color:"#FF9E20", skeleton:"basic", statements:[], template:"\uadf8\ub9ac\uae30 \uba48\ucd94\uae30 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[null], type:"stop_drawing"}, "class":"brush_control", isNotFor:["textBox"], func:function(b, a) {
+}}, stop_drawing:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[null], type:"stop_drawing"}, "class":"brush_control", isNotFor:["textBox"], func:function(b, a) {
   b.brush && b.shape && (b.brush.stop = !0);
   return a.callReturn();
-}}, set_color:{color:"#FF9E20", skeleton:"basic", statements:[], template:"\ubd93\uc758 \uc0c9\uc744 %1 (\uc73c)\ub85c \uc815\ud558\uae30 %2", params:[{type:"Color"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[null], type:"set_color"}, paramsKeyMap:{VALUE:0}, "class":"brush_color", isNotFor:["textBox"], func:function(b, a) {
+}}, set_color:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Color"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[null], type:"set_color"}, paramsKeyMap:{VALUE:0}, "class":"brush_color", isNotFor:["textBox"], func:function(b, a) {
   var c = a.getField("VALUE", a);
   b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
   b.brush && (c = Entry.hex2rgb(c), b.brush.rgb = c, b.brush.endStroke(), b.brush.beginStroke("rgba(" + c.r + "," + c.g + "," + c.b + "," + b.brush.opacity / 100 + ")"), b.brush.moveTo(b.getX(), -1 * b.getY()));
   return a.callReturn();
-}}, set_random_color:{color:"#FF9E20", skeleton:"basic", statements:[], template:"\ubd93\uc758 \uc0c9\uc744 \ubb34\uc791\uc704\ub85c \uc815\ud558\uae30 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[null], type:"set_random_color"}, "class":"brush_color", isNotFor:["textBox"], func:function(b, a) {
+}}, set_random_color:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[null], type:"set_random_color"}, "class":"brush_color", isNotFor:["textBox"], func:function(b, a) {
   b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
   if (b.brush) {
     var c = Entry.generateRgb();
@@ -15405,28 +15398,28 @@ params:["100"]}], type:"bitbrick_convert_scale"}, paramsKeyMap:{PORT:0, VALUE2:1
     b.brush.moveTo(b.getX(), -1 * b.getY());
   }
   return a.callReturn();
-}}, change_thickness:{color:"#FF9E20", skeleton:"basic", statements:[], template:"\ubd93\uc758 \uad75\uae30\ub97c %1 \ub9cc\ud07c \ubc14\uafb8\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["1"]}, null], type:"change_thickness"}, paramsKeyMap:{VALUE:0}, "class":"brush_thickness", isNotFor:["textBox"], func:function(b, a) {
+}}, change_thickness:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["1"]}, null], type:"change_thickness"}, paramsKeyMap:{VALUE:0}, "class":"brush_thickness", isNotFor:["textBox"], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
   b.brush && (b.brush.thickness += c, 1 > b.brush.thickness && (b.brush.thickness = 1), b.brush.setStrokeStyle(b.brush.thickness), b.brush.moveTo(b.getX(), -1 * b.getY()));
   return a.callReturn();
-}}, set_thickness:{color:"#FF9E20", skeleton:"basic", statements:[], template:"\ubd93\uc758 \uad75\uae30\ub97c %1 (\uc73c)\ub85c \uc815\ud558\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["1"]}, null], type:"set_thickness"}, paramsKeyMap:{VALUE:0}, "class":"brush_thickness", isNotFor:["textBox"], func:function(b, a) {
+}}, set_thickness:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["1"]}, null], type:"set_thickness"}, paramsKeyMap:{VALUE:0}, "class":"brush_thickness", isNotFor:["textBox"], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
   b.brush && (b.brush.thickness = c, b.brush.setStrokeStyle(b.brush.thickness), b.brush.moveTo(b.getX(), -1 * b.getY()));
   return a.callReturn();
-}}, change_opacity:{color:"#FF9E20", skeleton:"basic", statements:[], template:"\ubd93\uc758 \ubd88\ud22c\uba85\ub3c4\ub97c %1 % \ub9cc\ud07c \ubc14\uafb8\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"change_opacity"}, paramsKeyMap:{VALUE:0}, "class":"brush_opacity", isNotFor:["textBox"], func:function(b, a) {
+}}, change_opacity:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"change_opacity"}, paramsKeyMap:{VALUE:0}, "class":"brush_opacity", isNotFor:["textBox"], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
   c = Entry.adjustValueWithMaxMin(b.brush.opacity + c, 0, 100);
   b.brush && (b.brush.opacity = c, b.brush.endStroke(), c = b.brush.rgb, b.brush.beginStroke("rgba(" + c.r + "," + c.g + "," + c.b + "," + b.brush.opacity / 100 + ")"), b.brush.moveTo(b.getX(), -1 * b.getY()));
   return a.callReturn();
-}}, set_opacity:{color:"#FF9E20", skeleton:"basic", statements:[], template:"\ubd93\uc758 \ubd88\ud22c\uba85\ub3c4\ub97c %1 % \ub85c \uc815\ud558\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["50"]}, null], type:"set_opacity"}, paramsKeyMap:{VALUE:0}, "class":"brush_opacity", isNotFor:["textBox"], func:function(b, a) {
+}}, set_opacity:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["50"]}, null], type:"set_opacity"}, paramsKeyMap:{VALUE:0}, "class":"brush_opacity", isNotFor:["textBox"], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
   b.brush && (b.brush.opacity = Entry.adjustValueWithMaxMin(c, 0, 100), b.brush.endStroke(), c = b.brush.rgb, b.brush.beginStroke("rgba(" + c.r + "," + c.g + "," + c.b + "," + b.brush.opacity / 100 + ")"), b.brush.moveTo(b.getX(), -1 * b.getY()));
   return a.callReturn();
-}}, brush_erase_all:{color:"#FF9E20", skeleton:"basic", statements:[], template:"\ubaa8\ub4e0 \ubd93 \uc9c0\uc6b0\uae30 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[null], type:"brush_erase_all"}, "class":"brush_clear", isNotFor:["textBox"], func:function(b, a) {
+}}, brush_erase_all:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[null], type:"brush_erase_all"}, "class":"brush_clear", isNotFor:["textBox"], func:function(b, a) {
   var c = b.brush;
   if (c) {
     var d = c._stroke.style, e = c._strokeStyle.width;
@@ -15439,43 +15432,43 @@ params:["100"]}], type:"bitbrick_convert_scale"}, paramsKeyMap:{PORT:0, VALUE2:1
   });
   c = null;
   return a.callReturn();
-}}, brush_stamp:{color:"#FF9E20", skeleton:"basic", statements:[], template:"\ub3c4\uc7a5\ucc0d\uae30 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[null], type:"brush_stamp"}, "class":"stamp", isNotFor:["textBox"], func:function(b, a) {
+}}, brush_stamp:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[null], type:"brush_stamp"}, "class":"stamp", isNotFor:["textBox"], func:function(b, a) {
   b.parent.addStampEntity(b);
   return a.callReturn();
-}}, change_brush_transparency:{color:"#FF9E20", skeleton:"basic", statements:[], template:"\ubd93\uc758 \ud22c\uba85\ub3c4\ub97c %1 % \ub9cc\ud07c \ubc14\uafb8\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"change_brush_transparency"}, paramsKeyMap:{VALUE:0}, "class":"brush_opacity", isNotFor:["textBox"], func:function(b, a) {
+}}, change_brush_transparency:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"change_brush_transparency"}, paramsKeyMap:{VALUE:0}, "class":"brush_opacity", isNotFor:["textBox"], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
   c = Entry.adjustValueWithMaxMin(b.brush.opacity - c, 0, 100);
   b.brush && (b.brush.opacity = c, b.brush.endStroke(), c = b.brush.rgb, b.brush.beginStroke("rgba(" + c.r + "," + c.g + "," + c.b + "," + b.brush.opacity / 100 + ")"), b.brush.moveTo(b.getX(), -1 * b.getY()));
   return a.callReturn();
-}}, set_brush_tranparency:{color:"#FF9E20", skeleton:"basic", statements:[], template:"\ubd93\uc758 \ud22c\uba85\ub3c4\ub97c %1 % \ub85c \uc815\ud558\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["50"]}, null], type:"set_brush_tranparency"}, paramsKeyMap:{VALUE:0}, "class":"brush_opacity", isNotFor:["textBox"], func:function(b, a) {
+}}, set_brush_tranparency:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["50"]}, null], type:"set_brush_tranparency"}, paramsKeyMap:{VALUE:0}, "class":"brush_opacity", isNotFor:["textBox"], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
   b.brush && (b.brush.opacity = Entry.adjustValueWithMaxMin(c, 0, 100), b.brush.endStroke(), c = b.brush.rgb, b.brush.beginStroke("rgba(" + c.r + "," + c.g + "," + c.b + "," + (1 - b.brush.opacity / 100) + ")"), b.brush.moveTo(b.getX(), -1 * b.getY()));
   return a.callReturn();
-}}, number:{color:"#FFD974", skeleton:"basic_string_field", statements:[], template:"%1", params:[{type:"TextInput", value:10}], events:{}, def:{params:[]}, paramsKeyMap:{NUM:0}, func:function(b, a) {
+}}, number:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"TextInput", value:10}], events:{}, def:{params:[]}, paramsKeyMap:{NUM:0}, func:function(b, a) {
   return a.getField("NUM", a);
-}, isPrimitive:!0}, angle:{color:"#FFD974", skeleton:"basic_string_field", statements:[], template:"%1", params:[{type:"Angle"}], events:{}, def:{params:[null]}, paramsKeyMap:{ANGLE:0}, func:function(b, a) {
+}, isPrimitive:!0}, angle:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Angle"}], events:{}, def:{params:[null]}, paramsKeyMap:{ANGLE:0}, func:function(b, a) {
   return a.getNumberField("ANGLE");
-}}, get_x_coordinate:{color:"#FFD974", skeleton:"basic_string_field", statements:[], template:"%1", params:[{type:"Text", text:"X \uc88c\ud46f\uac12", color:"#3D3D3D"}], events:{}, def:{params:[null], type:"get_x_coordinate"}, "class":"calc", isNotFor:[], func:function(b, a) {
+}}, get_x_coordinate:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:"X \uc88c\ud46f\uac12", color:"#3D3D3D"}], events:{}, def:{params:[null], type:"get_x_coordinate"}, "class":"calc", isNotFor:[], func:function(b, a) {
   return b.getX();
-}}, get_y_coordinate:{color:"#FFD974", skeleton:"basic_string_field", statements:[], template:"%1", params:[{type:"Text", text:"Y \uc88c\ud46f\uac12", color:"#3D3D3D"}], events:{}, def:{params:[null], type:"get_y_coordinate"}, "class":"calc", isNotFor:[], func:function(b, a) {
+}}, get_y_coordinate:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:"Y \uc88c\ud46f\uac12", color:"#3D3D3D"}], events:{}, def:{params:[null], type:"get_y_coordinate"}, "class":"calc", isNotFor:[], func:function(b, a) {
   return b.getY();
-}}, get_angle:{color:"#FFD974", skeleton:"basic_string_field", statements:[], template:"%1", params:[{type:"Text", text:"\uac01\ub3c4\uac12", color:"#3D3D3D"}], events:{}, def:{params:[null]}, func:function(b, a) {
+}}, get_angle:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:"\uac01\ub3c4\uac12", color:"#3D3D3D"}], events:{}, def:{params:[null]}, func:function(b, a) {
   return parseFloat(b.getRotation().toFixed(1));
-}}, get_rotation_direction:{color:"#FFD974", skeleton:"basic_string_field", statements:[], template:"%1  ", params:[{type:"Dropdown", options:[["\ubc29\ud5a5\uac12", "ROTATION"], ["\uc774\ub3d9 \ubc29\ud5a5\uac12", "DIRECTION"]], value:"ROTATION", fontSize:11}], events:{}, def:{params:[null], type:"get_rotation_direction"}, paramsKeyMap:{OPERATOR:0}, "class":"calc", isNotFor:[], func:function(b, a) {
+}}, get_rotation_direction:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["\ubc29\ud5a5\uac12", "ROTATION"], ["\uc774\ub3d9 \ubc29\ud5a5\uac12", "DIRECTION"]], value:"ROTATION", fontSize:11}], events:{}, def:{params:[null], type:"get_rotation_direction"}, paramsKeyMap:{OPERATOR:0}, "class":"calc", isNotFor:[], func:function(b, a) {
   return "DIRECTION" == a.getField("OPERATOR", a).toUpperCase() ? parseFloat(b.getDirection().toFixed(1)) : parseFloat(b.getRotation().toFixed(1));
-}}, distance_something:{color:"#FFD974", skeleton:"basic_string_field", statements:[], template:"%1 %2", params:[{type:"DropdownDynamic", value:null, menuName:"spritesWithMouse", fontSize:11}, {type:"Text", text:"\uae4c\uc9c0\uc758 \uac70\ub9ac", color:"#3D3D3D"}], events:{}, def:{params:[null, null], type:"distance_something"}, paramsKeyMap:{VALUE:0}, "class":"calc_distance", isNotFor:[], func:function(b, a) {
+}}, distance_something:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"spritesWithMouse", fontSize:11}, {type:"Text", text:"\uae4c\uc9c0\uc758 \uac70\ub9ac", color:"#3D3D3D"}], events:{}, def:{params:[null, null], type:"distance_something"}, paramsKeyMap:{VALUE:0}, "class":"calc_distance", isNotFor:[], func:function(b, a) {
   var c = a.getField("VALUE", a);
   if ("mouse" == c) {
     return c = Entry.stage.mouseCoordinate, Math.sqrt(Math.pow(b.getX() - c.x, 2) + Math.pow(b.getY() - c.y, 2));
   }
   c = Entry.container.getEntity(c);
   return Math.sqrt(Math.pow(b.getX() - c.getX(), 2) + Math.pow(b.getY() - c.getY(), 2));
-}}, coordinate_mouse:{color:"#FFD974", skeleton:"basic_string_field", statements:[], template:"%1 %2 %3", params:[{type:"Text", text:"\ub9c8\uc6b0\uc2a4", color:"#3D3D3D"}, {type:"Dropdown", options:[["x", "x"], ["y", "y"]], value:"x", fontSize:11}, {type:"Text", text:"\uc88c\ud45c", color:"#3D3D3D"}], events:{}, def:{params:[null, null, null], type:"coordinate_mouse"}, paramsKeyMap:{VALUE:1}, "class":"calc", isNotFor:[], func:function(b, a) {
+}}, coordinate_mouse:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:"\ub9c8\uc6b0\uc2a4", color:"#3D3D3D"}, {type:"Dropdown", options:[["x", "x"], ["y", "y"]], value:"x", fontSize:11}, {type:"Text", text:"\uc88c\ud45c", color:"#3D3D3D"}], events:{}, def:{params:[null, null, null], type:"coordinate_mouse"}, paramsKeyMap:{VALUE:1}, "class":"calc", isNotFor:[], func:function(b, a) {
   return "x" === a.getField("VALUE", a) ? Number(Entry.stage.mouseCoordinate.x) : Number(Entry.stage.mouseCoordinate.y);
-}}, coordinate_object:{color:"#FFD974", skeleton:"basic_string_field", statements:[], template:"%1 %2 %3", params:[{type:"DropdownDynamic", value:null, menuName:"spritesWithSelf", fontSize:11}, {type:"Text", text:"\uc758", color:"#3D3D3D"}, {type:"Dropdown", options:[["x \uc88c\ud46f\uac12", "x"], ["y \uc88c\ud46f\uac12", "y"], ["\ubc29\ud5a5", "rotation"], ["\uc774\ub3d9\ubc29\ud5a5", "direction"], ["\ud06c\uae30", "size"], ["\ubaa8\uc591 \ubc88\ud638", "picture_index"], ["\ubaa8\uc591 \uc774\ub984", 
-"picture_name"]], value:"x", fontSize:11}], events:{}, def:{params:[null, null, null], type:"coordinate_object"}, paramsKeyMap:{VALUE:0, COORDINATE:2}, "class":"calc", isNotFor:[], func:function(b, a) {
+}}, coordinate_object:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"spritesWithSelf", fontSize:11}, {type:"Text", text:"\uc758", color:"#3D3D3D"}, {type:"Dropdown", options:[["x \uc88c\ud46f\uac12", "x"], ["y \uc88c\ud46f\uac12", "y"], ["\ubc29\ud5a5", "rotation"], ["\uc774\ub3d9\ubc29\ud5a5", "direction"], ["\ud06c\uae30", "size"], ["\ubaa8\uc591 \ubc88\ud638", "picture_index"], ["\ubaa8\uc591 \uc774\ub984", "picture_name"]], 
+value:"x", fontSize:11}], events:{}, def:{params:[null, null, null], type:"coordinate_object"}, paramsKeyMap:{VALUE:0, COORDINATE:2}, "class":"calc", isNotFor:[], func:function(b, a) {
   var c = a.getField("VALUE", a), c = "self" == c ? b : Entry.container.getEntity(c);
   switch(a.getField("COORDINATE", a)) {
     case "x":
@@ -15494,30 +15487,29 @@ params:["100"]}], type:"bitbrick_convert_scale"}, paramsKeyMap:{PORT:0, VALUE2:1
     case "picture_name":
       return d = c.parent, d = d.pictures, d[d.indexOf(c.picture)].name;
   }
-}}, calc_basic:{color:"#FFD974", skeleton:"basic_string_field", statements:[], template:"%1 %2 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["+", "PLUS"], ["-", "MINUS"], ["x", "MULTI"], ["/", "DIVIDE"]], value:"PLUS", fontSize:11, noArrow:!0}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"number", params:["10"]}, "PLUS", {type:"number", params:["10"]}], type:"calc_basic"}, defs:[{params:[{type:"number", params:["10"]}, "PLUS", {type:"number", 
-params:["10"]}], type:"calc_basic"}, {params:[{type:"number", params:["10"]}, "MINUS", {type:"number", params:["10"]}], type:"calc_basic"}, {params:[{type:"number", params:["10"]}, "MULTI", {type:"number", params:["10"]}], type:"calc_basic"}, {params:[{type:"number", params:["10"]}, "DIVIDE", {type:"number", params:["10"]}], type:"calc_basic"}], paramsKeyMap:{LEFTHAND:0, OPERATOR:1, RIGHTHAND:2}, "class":"calc", isNotFor:[], func:function(b, a) {
+}}, calc_basic:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["+", "PLUS"], ["-", "MINUS"], ["x", "MULTI"], ["/", "DIVIDE"]], value:"PLUS", fontSize:11, noArrow:!0}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"number", params:["10"]}, "PLUS", {type:"number", params:["10"]}], type:"calc_basic"}, defs:[{params:[{type:"number", params:["10"]}, "PLUS", {type:"number", params:["10"]}], 
+type:"calc_basic"}, {params:[{type:"number", params:["10"]}, "MINUS", {type:"number", params:["10"]}], type:"calc_basic"}, {params:[{type:"number", params:["10"]}, "MULTI", {type:"number", params:["10"]}], type:"calc_basic"}, {params:[{type:"number", params:["10"]}, "DIVIDE", {type:"number", params:["10"]}], type:"calc_basic"}], paramsKeyMap:{LEFTHAND:0, OPERATOR:1, RIGHTHAND:2}, "class":"calc", isNotFor:[], func:function(b, a) {
   var c = a.getField("OPERATOR", a), d = a.getNumberValue("LEFTHAND", a), e = a.getNumberValue("RIGHTHAND", a);
   return "PLUS" == c ? d + e : "MINUS" == c ? d - e : "MULTI" == c ? d * e : d / e;
-}}, calc_plus:{color:"#FFD974", skeleton:"basic_string_field", statements:[], template:"%1 %2 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"+", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[null]}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, func:function(b, a) {
+}}, calc_plus:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"+", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[null]}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, func:function(b, a) {
   var c = a.getNumberValue("LEFTHAND", a), d = a.getNumberValue("RIGHTHAND", a);
   return c + d;
-}}, calc_minus:{color:"#FFD974", skeleton:"basic_string_field", statements:[], template:"%1 %2 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"-", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[null]}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, func:function(b, a) {
+}}, calc_minus:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"-", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[null]}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, func:function(b, a) {
   var c = a.getNumberValue("LEFTHAND", a), d = a.getNumberValue("RIGHTHAND", a);
   return c - d;
-}}, calc_times:{color:"#FFD974", skeleton:"basic_string_field", statements:[], template:"%1 %2 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"x", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[null]}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, func:function(b, a) {
+}}, calc_times:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"x", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[null]}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, func:function(b, a) {
   var c = a.getNumberValue("LEFTHAND", a), d = a.getNumberValue("RIGHTHAND", a);
   return c * d;
-}}, calc_divide:{color:"#FFD974", skeleton:"basic_string_field", statements:[], template:"%1 %2 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"/", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[null]}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, func:function(b, a) {
+}}, calc_divide:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"/", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[null]}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, func:function(b, a) {
   var c = a.getNumberValue("LEFTHAND", a), d = a.getNumberValue("RIGHTHAND", a);
   return c / d;
-}}, calc_mod:{color:"#FFD974", skeleton:"basic_string_field", statements:[], template:"%1 %2 %3 %4", params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"/", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uc758 \ub098\uba38\uc9c0", color:"#3D3D3D"}], events:{}, def:{params:[{type:"number", params:["10"]}, null, {type:"number", params:["10"]}, null], type:"calc_mod"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"calc", isNotFor:[], func:function(b, 
-a) {
+}}, calc_mod:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"/", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uc758 \ub098\uba38\uc9c0", color:"#3D3D3D"}], events:{}, def:{params:[{type:"number", params:["10"]}, null, {type:"number", params:["10"]}, null], type:"calc_mod"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"calc", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("LEFTHAND", a), d = a.getNumberValue("RIGHTHAND", a);
   return c % d;
-}}, calc_share:{color:"#FFD974", skeleton:"basic_string_field", statements:[], template:"%1 %2 %3 %4", params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"/", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uc758 \ubaab", color:"#3D3D3D"}], events:{}, def:{params:[{type:"number", params:["10"]}, null, {type:"number", params:["10"]}, null], type:"calc_share"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"calc", isNotFor:[], func:function(b, a) {
+}}, calc_share:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"/", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uc758 \ubaab", color:"#3D3D3D"}], events:{}, def:{params:[{type:"number", params:["10"]}, null, {type:"number", params:["10"]}, null], type:"calc_share"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"calc", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("LEFTHAND", a), d = a.getNumberValue("RIGHTHAND", a);
   return Math.floor(c / d);
-}}, calc_operation:{color:"#FFD974", skeleton:"basic_string_field", statements:[], template:"%1 %2 %3  ", params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uc758", color:"#3D3D3D"}, {type:"Dropdown", options:[["\uc81c\uacf1", "square"], ["\ub8e8\ud2b8", "root"], ["\uc0ac\uc778\uac12", "sin"], ["\ucf54\uc0ac\uc778\uac12", "cos"], ["\ud0c4\uc820\ud2b8\uac12", "tan"], ["\uc544\ud06c\uc0ac\uc778\uac12", "asin_radian"], ["\uc544\ud06c\ucf54\uc0ac\uc778\uac12", "acos_radian"], ["\uc544\ud06c\ud0c4\uc820\ud2b8\uac12", 
+}}, calc_operation:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uc758", color:"#3D3D3D"}, {type:"Dropdown", options:[["\uc81c\uacf1", "square"], ["\ub8e8\ud2b8", "root"], ["\uc0ac\uc778\uac12", "sin"], ["\ucf54\uc0ac\uc778\uac12", "cos"], ["\ud0c4\uc820\ud2b8\uac12", "tan"], ["\uc544\ud06c\uc0ac\uc778\uac12", "asin_radian"], ["\uc544\ud06c\ucf54\uc0ac\uc778\uac12", "acos_radian"], ["\uc544\ud06c\ud0c4\uc820\ud2b8\uac12", 
 "atan_radian"], ["\ub85c\uadf8\uac12", "log"], ["\uc790\uc5f0\ub85c\uadf8\uac12", "ln"], ["\uc18c\uc218\uc810 \ubd80\ubd84", "unnatural"], ["\uc18c\uc218\uc810 \ubc84\ub9bc\uac12", "floor"], ["\uc18c\uc218\uc810 \uc62c\ub9bc\uac12", "ceil"], ["\ubc18\uc62c\ub9bc\uac12", "round"], ["\ud399\ud1a0\ub9ac\uc5bc\uac12", "factorial"], ["\uc808\ub313\uac12", "abs"]], value:"square", fontSize:11}], events:{}, def:{params:[{type:"number", params:["10"]}, null, null], type:"calc_operation"}, paramsKeyMap:{LEFTHAND:0, 
 VALUE:2}, "class":"calc", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("LEFTHAND", a), d = a.getField("VALUE", a);
@@ -15558,28 +15550,27 @@ VALUE:2}, "class":"calc", isNotFor:[], func:function(b, a) {
       e = Math[d](c);
   }
   return Math.round(1E3 * e) / 1E3;
-}}, calc_rand:{color:"#FFD974", skeleton:"basic_string_field", statements:[], template:"%1 %2 %3 %4", params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\ubd80\ud130", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uc0ac\uc774\uc758 \ubb34\uc791\uc704 \uc218", color:"#3D3D3D"}], events:{}, def:{params:[{type:"number", params:["0"]}, null, {type:"number", params:["10"]}, null], type:"calc_rand"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"calc", 
-isNotFor:[], func:function(b, a) {
+}}, calc_rand:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\ubd80\ud130", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uc0ac\uc774\uc758 \ubb34\uc791\uc704 \uc218", color:"#3D3D3D"}], events:{}, def:{params:[{type:"number", params:["0"]}, null, {type:"number", params:["10"]}, null], type:"calc_rand"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"calc", isNotFor:[], func:function(b, 
+a) {
   var c = a.getStringValue("LEFTHAND", a), d = a.getStringValue("RIGHTHAND", a), e = Math.min(c, d), f = Math.max(c, d), c = Entry.isFloat(c);
   return Entry.isFloat(d) || c ? (Math.random() * (f - e) + e).toFixed(2) : Math.floor(Math.random() * (f - e + 1) + e);
-}}, get_date:{color:"#FFD974", skeleton:"basic_string_field", statements:[], template:"%1 %2  ", params:[{type:"Text", text:"\ud604\uc7ac", color:"#3D3D3D"}, {type:"Dropdown", options:[["\uc5f0\ub3c4", "YEAR"], ["\uc6d4", "MONTH"], ["\uc77c", "DAY"], ["\uc2dc\uac01(\uc2dc)", "HOUR"], ["\uc2dc\uac01(\ubd84)", "MINUTE"], ["\uc2dc\uac01(\ucd08)", "SECOND"]], value:"YEAR", fontSize:11}], events:{}, def:{params:[null, "YEAR"], type:"get_date"}, paramsKeyMap:{VALUE:1}, "class":"calc_date", isNotFor:[], 
-func:function(b, a) {
+}}, get_date:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:"\ud604\uc7ac", color:"#3D3D3D"}, {type:"Dropdown", options:[["\uc5f0\ub3c4", "YEAR"], ["\uc6d4", "MONTH"], ["\uc77c", "DAY"], ["\uc2dc\uac01(\uc2dc)", "HOUR"], ["\uc2dc\uac01(\ubd84)", "MINUTE"], ["\uc2dc\uac01(\ucd08)", "SECOND"]], value:"YEAR", fontSize:11}], events:{}, def:{params:[null, "YEAR"], type:"get_date"}, paramsKeyMap:{VALUE:1}, "class":"calc_date", isNotFor:[], func:function(b, a) {
   var c = a.getField("VALUE", a), d = new Date;
   return "YEAR" == c ? d.getFullYear() : "MONTH" == c ? d.getMonth() + 1 : "DAY" == c ? d.getDate() : "HOUR" == c ? d.getHours() : "MINUTE" == c ? d.getMinutes() : d.getSeconds();
-}}, get_sound_duration:{color:"#FFD974", skeleton:"basic_string_field", statements:[], template:"%1 %2", params:[{type:"DropdownDynamic", value:null, menuName:"sounds", fontSize:11}, {type:"Text", text:"\uc18c\ub9ac\uc758 \uae38\uc774", color:"#3D3D3D"}], events:{}, def:{params:[null, null], type:"get_sound_duration"}, paramsKeyMap:{VALUE:0}, "class":"calc_duration", isNotFor:[], func:function(b, a) {
+}}, get_sound_duration:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"sounds", fontSize:11}, {type:"Text", text:"\uc18c\ub9ac\uc758 \uae38\uc774", color:"#3D3D3D"}], events:{}, def:{params:[null, null], type:"get_sound_duration"}, paramsKeyMap:{VALUE:0}, "class":"calc_duration", isNotFor:[], func:function(b, a) {
   for (var c = a.getField("VALUE", a), d = b.parent.sounds, e = 0;e < d.length;e++) {
     if (d[e].id == c) {
       return d[e].duration;
     }
   }
-}}, reset_project_timer:{color:"#FFD974", skeleton:"basic", statements:[], template:"%1", params:[{type:"Text", text:"\ucd08\uc2dc\uacc4 \ucd08\uae30\ud654", color:"#3D3D3D"}], events:{viewAdd:[function() {
+}}, reset_project_timer:{color:"#FFD974", skeleton:"basic", statements:[], params:[{type:"Text", text:"\ucd08\uc2dc\uacc4 \ucd08\uae30\ud654", color:"#3D3D3D"}], events:{viewAdd:[function() {
   Entry.engine && Entry.engine.showProjectTimer();
 }], viewDestroy:[function(b) {
   Entry.engine && Entry.engine.hideProjectTimer(b);
 }]}, def:{params:[null], type:"reset_project_timer"}, "class":"calc_timer", isNotFor:[], func:function(b, a) {
   Entry.engine.updateProjectTimer(0);
   return a.callReturn();
-}}, set_visible_project_timer:{color:"#FFD974", skeleton:"basic", statements:[], template:"%1 %2 %3", params:[{type:"Text", text:"\ucd08\uc2dc\uacc4", color:"#3D3D3D"}, {type:"Dropdown", options:[["\ubcf4\uc774\uae30", "SHOW"], ["\uc228\uae30\uae30", "HIDE"]], value:"SHOW", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/calc_01.png", size:12}], events:{viewAdd:[function() {
+}}, set_visible_project_timer:{color:"#FFD974", skeleton:"basic", statements:[], params:[{type:"Text", text:"\ucd08\uc2dc\uacc4", color:"#3D3D3D"}, {type:"Dropdown", options:[["\ubcf4\uc774\uae30", "SHOW"], ["\uc228\uae30\uae30", "HIDE"]], value:"SHOW", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/calc_01.png", size:12}], events:{viewAdd:[function() {
   Entry.engine && Entry.engine.showProjectTimer();
 }], viewDestroy:[function(b) {
   Entry.engine && Entry.engine.hideProjectTimer(b);
@@ -15587,54 +15578,54 @@ func:function(b, a) {
   var c = a.getField("ACTION", a), d = Entry.engine.projectTimer;
   "SHOW" == c ? d.setVisible(!0) : d.setVisible(!1);
   return a.callReturn();
-}}, timer_variable:{color:"#FFD974", skeleton:"basic_string_field", statements:[], template:"%1 %2", params:[{type:"Text", text:"\ucd08\uc2dc\uacc4 \uac12", color:"#3D3D3D"}, {type:"Text", text:" ", color:"#3D3D3D"}], events:{}, def:{params:[null, null]}, func:function(b, a) {
+}}, timer_variable:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:"\ucd08\uc2dc\uacc4 \uac12", color:"#3D3D3D"}, {type:"Text", text:" ", color:"#3D3D3D"}], events:{}, def:{params:[null, null]}, func:function(b, a) {
   return Entry.container.inputValue.getValue();
-}}, get_project_timer_value:{color:"#FFD974", skeleton:"basic_string_field", statements:[], template:"%1 %2", params:[{type:"Text", text:"\ucd08\uc2dc\uacc4 \uac12", color:"#3D3D3D"}, {type:"Text", text:" ", color:"#3D3D3D"}], events:{viewAdd:[function() {
+}}, get_project_timer_value:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:"\ucd08\uc2dc\uacc4 \uac12", color:"#3D3D3D"}, {type:"Text", text:" ", color:"#3D3D3D"}], events:{viewAdd:[function() {
   Entry.engine && Entry.engine.showProjectTimer();
 }], viewDestroy:[function(b) {
   Entry.engine && Entry.engine.hideProjectTimer(b);
 }]}, def:{params:[null, null], type:"get_project_timer_value"}, "class":"calc_timer", isNotFor:[], func:function(b, a) {
   return Entry.engine.projectTimer.getValue();
-}}, char_at:{color:"#FFD974", skeleton:"basic_string_field", statements:[], template:"%1 %2 %3 %4", params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uc758", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\ubc88\uc9f8 \uae00\uc790", color:"#3D3D3D"}], events:{}, def:{params:[{type:"text", params:["\uc548\ub155 \uc5d4\ud2b8\ub9ac!"]}, null, {type:"number", params:["1"]}, null], type:"char_at"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"calc_string", 
-isNotFor:[], func:function(b, a) {
+}}, char_at:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uc758", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\ubc88\uc9f8 \uae00\uc790", color:"#3D3D3D"}], events:{}, def:{params:[{type:"text", params:["\uc548\ub155 \uc5d4\ud2b8\ub9ac!"]}, null, {type:"number", params:["1"]}, null], type:"char_at"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"calc_string", isNotFor:[], func:function(b, 
+a) {
   var c = a.getStringValue("LEFTHAND", a), d = a.getNumberValue("RIGHTHAND", a) - 1;
   if (0 > d || d > c.length - 1) {
     throw Error();
   }
   return c[d];
-}}, length_of_string:{color:"#FFD974", skeleton:"basic_string_field", statements:[], template:"%1 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uc758 \uae00\uc790 \uc218", color:"#3D3D3D"}], events:{}, def:{params:[{type:"text", params:["\uc5d4\ud2b8\ub9ac"]}, null], type:"length_of_string"}, paramsKeyMap:{STRING:0}, "class":"calc_string", isNotFor:[], func:function(b, a) {
+}}, length_of_string:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uc758 \uae00\uc790 \uc218", color:"#3D3D3D"}], events:{}, def:{params:[{type:"text", params:["\uc5d4\ud2b8\ub9ac"]}, null], type:"length_of_string"}, paramsKeyMap:{STRING:0}, "class":"calc_string", isNotFor:[], func:function(b, a) {
   return a.getStringValue("STRING", a).length;
-}}, substring:{color:"#FFD974", skeleton:"basic_string_field", statements:[], template:"%1 %2 %3 %4 %5 %6", params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uc758", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\ubc88\uc9f8 \uae00\uc790\ubd80\ud130", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\ubc88\uc9f8 \uae00\uc790\uae4c\uc9c0\uc758 \uae00\uc790", color:"#3D3D3D"}], events:{}, def:{params:[{type:"text", params:["\uc548\ub155 \uc5d4\ud2b8\ub9ac!"]}, 
+}}, substring:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uc758", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\ubc88\uc9f8 \uae00\uc790\ubd80\ud130", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\ubc88\uc9f8 \uae00\uc790\uae4c\uc9c0\uc758 \uae00\uc790", color:"#3D3D3D"}], events:{}, def:{params:[{type:"text", params:["\uc548\ub155 \uc5d4\ud2b8\ub9ac!"]}, 
 null, {type:"number", params:["2"]}, null, {type:"number", params:["5"]}, null], type:"substring"}, paramsKeyMap:{STRING:0, START:2, END:4}, "class":"calc_string", isNotFor:[], func:function(b, a) {
   var c = a.getStringValue("STRING", a), d = a.getNumberValue("START", a) - 1, e = a.getNumberValue("END", a) - 1, f = c.length - 1;
   if (0 > d || 0 > e || d > f || e > f) {
     throw Error();
   }
   return c.substring(Math.min(d, e), Math.max(d, e) + 1);
-}}, replace_string:{color:"#FFD974", skeleton:"basic_string_field", statements:[], template:"%1 %2 %3 %4 %5 %6", params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uc758", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uc744(\ub97c)", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\ub85c \ubc14\uafb8\uae30", color:"#3D3D3D"}], events:{}, def:{params:[{type:"text", params:["\uc548\ub155 \uc5d4\ud2b8\ub9ac!"]}, null, {type:"text", 
-params:["\uc548\ub155"]}, null, {type:"text", params:["\ubc18\uac00\uc6cc"]}, null], type:"replace_string"}, paramsKeyMap:{STRING:0, OLD_WORD:2, NEW_WORD:4}, "class":"calc_string", isNotFor:[], func:function(b, a) {
+}}, replace_string:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uc758", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uc744(\ub97c)", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\ub85c \ubc14\uafb8\uae30", color:"#3D3D3D"}], events:{}, def:{params:[{type:"text", params:["\uc548\ub155 \uc5d4\ud2b8\ub9ac!"]}, null, {type:"text", params:["\uc548\ub155"]}, 
+null, {type:"text", params:["\ubc18\uac00\uc6cc"]}, null], type:"replace_string"}, paramsKeyMap:{STRING:0, OLD_WORD:2, NEW_WORD:4}, "class":"calc_string", isNotFor:[], func:function(b, a) {
   return a.getStringValue("STRING", a).replace(new RegExp(a.getStringValue("OLD_WORD", a), "gm"), a.getStringValue("NEW_WORD", a));
-}}, change_string_case:{color:"#FFD974", skeleton:"basic_string_field", statements:[], template:"%1 %2 %3 %4", params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uc758", color:"#3D3D3D"}, {type:"Dropdown", options:[["\ub300\ubb38\uc790", "toUpperCase"], ["\uc18c\ubb38\uc790", "toLowerCase"]], value:"toUpperCase", fontSize:11}, {type:"Text", text:" ", color:"#3D3D3D"}], events:{}, def:{params:[{type:"text", params:["Hello Entry!"]}, null, null, null], type:"change_string_case"}, paramsKeyMap:{STRING:0, 
-CASE:2}, "class":"calc_string", isNotFor:[], func:function(b, a) {
+}}, change_string_case:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uc758", color:"#3D3D3D"}, {type:"Dropdown", options:[["\ub300\ubb38\uc790", "toUpperCase"], ["\uc18c\ubb38\uc790", "toLowerCase"]], value:"toUpperCase", fontSize:11}, {type:"Text", text:" ", color:"#3D3D3D"}], events:{}, def:{params:[{type:"text", params:["Hello Entry!"]}, null, null, null], type:"change_string_case"}, paramsKeyMap:{STRING:0, CASE:2}, 
+"class":"calc_string", isNotFor:[], func:function(b, a) {
   return a.getStringValue("STRING", a)[a.getField("CASE", a)]();
-}}, index_of_string:{color:"#FFD974", skeleton:"basic_string_field", statements:[], template:"%1 %2 %3 %4", params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uc5d0\uc11c", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uc758 \uc2dc\uc791 \uc704\uce58", color:"#3D3D3D"}], events:{}, def:{params:[{type:"text", params:["\uc548\ub155 \uc5d4\ud2b8\ub9ac!"]}, null, {type:"text", params:["\uc5d4\ud2b8\ub9ac"]}, null], type:"index_of_string"}, paramsKeyMap:{LEFTHAND:0, 
-RIGHTHAND:2}, "class":"calc_string", isNotFor:[], func:function(b, a) {
+}}, index_of_string:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uc5d0\uc11c", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uc758 \uc2dc\uc791 \uc704\uce58", color:"#3D3D3D"}], events:{}, def:{params:[{type:"text", params:["\uc548\ub155 \uc5d4\ud2b8\ub9ac!"]}, null, {type:"text", params:["\uc5d4\ud2b8\ub9ac"]}, null], type:"index_of_string"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, 
+"class":"calc_string", isNotFor:[], func:function(b, a) {
   var c = a.getStringValue("LEFTHAND", a), d = a.getStringValue("RIGHTHAND", a), c = c.indexOf(d);
   return -1 < c ? c + 1 : 0;
-}}, combine_something:{color:"#FFD974", skeleton:"basic_string_field", statements:[], template:"%1 %2 %3 %4", params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uacfc(\uc640)", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\ub97c \ud569\uce58\uae30", color:"#3D3D3D"}], events:{}, def:{params:[{type:"text", params:["\uc548\ub155!"]}, null, {type:"text", params:["\uc5d4\ud2b8\ub9ac"]}, null], type:"combine_something"}, paramsKeyMap:{VALUE1:0, VALUE2:2}, 
-"class":"calc_string", isNotFor:[], func:function(b, a) {
+}}, combine_something:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uacfc(\uc640)", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\ub97c \ud569\uce58\uae30", color:"#3D3D3D"}], events:{}, def:{params:[{type:"text", params:["\uc548\ub155!"]}, null, {type:"text", params:["\uc5d4\ud2b8\ub9ac"]}, null], type:"combine_something"}, paramsKeyMap:{VALUE1:0, VALUE2:2}, "class":"calc_string", 
+isNotFor:[], func:function(b, a) {
   var c = a.getStringValue("VALUE1", a), d = a.getStringValue("VALUE2", a);
   return c + d;
-}}, get_sound_volume:{color:"#FFD974", skeleton:"basic_string_field", statements:[], template:"%1 %2", params:[{type:"Text", text:"\uc18c\ub9bf\uac12", color:"#3D3D3D"}, {type:"Text", text:" ", color:"#3D3D3D"}], events:{}, def:{params:[null, null], type:"get_sound_volume"}, "class":"calc", isNotFor:[""], func:function(b, a) {
+}}, get_sound_volume:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:"\uc18c\ub9bf\uac12", color:"#3D3D3D"}, {type:"Text", text:" ", color:"#3D3D3D"}], events:{}, def:{params:[null, null], type:"get_sound_volume"}, "class":"calc", isNotFor:[""], func:function(b, a) {
   return 100 * createjs.Sound.getVolume();
-}}, quotient_and_mod:{color:"#FFD974", skeleton:"basic_string_field", statements:[], template:"%1 %2 %3 %4 %5", params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"/", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uc758", color:"#3D3D3D"}, {type:"Dropdown", options:[["\ubaab", "QUOTIENT"], ["\ub098\uba38\uc9c0", "MOD"]], value:"QUOTIENT", fontSize:11}], events:{}, def:{params:[{type:"text", params:["10"]}, null, {type:"text", params:["10"]}, null, null], 
-type:"quotient_and_mod"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2, OPERATOR:4}, "class":"calc", isNotFor:[""], func:function(b, a) {
+}}, quotient_and_mod:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"/", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uc758", color:"#3D3D3D"}, {type:"Dropdown", options:[["\ubaab", "QUOTIENT"], ["\ub098\uba38\uc9c0", "MOD"]], value:"QUOTIENT", fontSize:11}], events:{}, def:{params:[{type:"text", params:["10"]}, null, {type:"text", params:["10"]}, null, null], type:"quotient_and_mod"}, 
+paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2, OPERATOR:4}, "class":"calc", isNotFor:[""], func:function(b, a) {
   var c = a.getNumberValue("LEFTHAND", a), d = a.getNumberValue("RIGHTHAND", a);
   if (isNaN(c) || isNaN(d)) {
     throw Error();
   }
   return "QUOTIENT" == a.getField("OPERATOR", a) ? Math.floor(c / d) : c % d;
-}}, choose_project_timer_action:{color:"#FFD974", skeleton:"basic", statements:[], template:"%1 %2 %3", params:[{type:"Text", text:"\ucd08\uc2dc\uacc4", color:"#3D3D3D"}, {type:"Dropdown", options:[["\uc2dc\uc791\ud558\uae30", "START"], ["\uc815\uc9c0\ud558\uae30", "STOP"], ["\ucd08\uae30\ud654\ud558\uae30", "RESET"]], value:"START", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/calc_01.png", size:12}], events:{viewAdd:[function() {
+}}, choose_project_timer_action:{color:"#FFD974", skeleton:"basic", statements:[], params:[{type:"Text", text:"\ucd08\uc2dc\uacc4", color:"#3D3D3D"}, {type:"Dropdown", options:[["\uc2dc\uc791\ud558\uae30", "START"], ["\uc815\uc9c0\ud558\uae30", "STOP"], ["\ucd08\uae30\ud654\ud558\uae30", "RESET"]], value:"START", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/calc_01.png", size:12}], events:{viewAdd:[function() {
   Entry.engine && Entry.engine.showProjectTimer();
 }], dataDestroy:[function(b) {
   Entry.engine && Entry.engine.hideProjectTimer(b);
@@ -15642,7 +15633,7 @@ type:"quotient_and_mod"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2, OPERATOR:4}, "c
   var c = a.getField("ACTION"), d = Entry.engine, e = d.projectTimer;
   "START" == c ? e.isInit ? e.isInit && e.isPaused && (e.pauseStart && (e.pausedTime += (new Date).getTime() - e.pauseStart), delete e.pauseStart, e.isPaused = !1) : d.startProjectTimer() : "STOP" == c ? e.isInit && !e.isPaused && (e.isPaused = !0, e.pauseStart = (new Date).getTime()) : "RESET" == c && e.isInit && (e.setValue(0), e.start = (new Date).getTime(), e.pausedTime = 0, delete e.pauseStart);
   return a.callReturn();
-}}, wait_second:{color:"#498deb", skeleton:"basic", statements:[], template:"%1 \ucd08 \uae30\ub2e4\ub9ac\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["2"]}, null], type:"wait_second"}, paramsKeyMap:{SECOND:0}, "class":"delay", isNotFor:[], func:function(b, a) {
+}}, wait_second:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["2"]}, null], type:"wait_second"}, paramsKeyMap:{SECOND:0}, "class":"delay", isNotFor:[], func:function(b, a) {
   if (a.isStart) {
     if (1 == a.timeFlag) {
       return a;
@@ -15659,7 +15650,7 @@ type:"quotient_and_mod"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2, OPERATOR:4}, "c
     a.timeFlag = 0;
   }, c);
   return a;
-}}, repeat_basic:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], template:"%1 \ubc88 \ubc18\ubcf5\ud558\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"repeat_basic"}, paramsKeyMap:{VALUE:0}, statementsKeyMap:{DO:0}, "class":"repeat", isNotFor:[], func:function(b, a) {
+}}, repeat_basic:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"repeat_basic"}, paramsKeyMap:{VALUE:0}, statementsKeyMap:{DO:0}, "class":"repeat", isNotFor:[], func:function(b, a) {
   var c;
   if (!a.isLooped) {
     a.isLooped = !0;
@@ -15674,43 +15665,41 @@ type:"quotient_and_mod"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2, OPERATOR:4}, "c
   }
   a.iterCount--;
   return a.getStatement("DO", a);
-}}, repeat_inf:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], template:"\uacc4\uc18d \ubc18\ubcf5\ud558\uae30 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null], type:"repeat_inf"}, statementsKeyMap:{DO:0}, "class":"repeat", isNotFor:[], func:function(b, a) {
+}}, repeat_inf:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null], type:"repeat_inf"}, statementsKeyMap:{DO:0}, "class":"repeat", isNotFor:[], func:function(b, a) {
   a.isLooped = !0;
   return a.getStatement("DO");
-}}, stop_repeat:{color:"#498deb", skeleton:"basic", statements:[], template:"\ubc18\ubcf5 \uc911\ub2e8\ud558\uae30 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null], type:"stop_repeat"}, "class":"repeat", isNotFor:[], func:function(b, a) {
+}}, stop_repeat:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null], type:"stop_repeat"}, "class":"repeat", isNotFor:[], func:function(b, a) {
   return this.executor.break();
-}}, wait_until_true:{color:"#498deb", skeleton:"basic", statements:[], template:"%1 \uc774(\uac00) \ub420 \ub54c\uae4c\uc9c0 \uae30\ub2e4\ub9ac\uae30 %2", params:[{type:"Block", accept:"booleanMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"True"}, null], type:"wait_until_true"}, paramsKeyMap:{BOOL:0}, "class":"wait", isNotFor:[], func:function(b, a) {
+}}, wait_until_true:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"True"}, null], type:"wait_until_true"}, paramsKeyMap:{BOOL:0}, "class":"wait", isNotFor:[], func:function(b, a) {
   return a.getBooleanValue("BOOL", a) ? a.callReturn() : a;
-}}, _if:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], template:"\ub9cc\uc77c %1 \uc774\ub77c\uba74 %2", params:[{type:"Block", accept:"booleanMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"True"}, null], type:"_if"}, paramsKeyMap:{BOOL:0}, statementsKeyMap:{STACK:0}, "class":"condition", isNotFor:[], func:function(b, a) {
+}}, _if:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"True"}, null], type:"_if"}, paramsKeyMap:{BOOL:0}, statementsKeyMap:{STACK:0}, "class":"condition", isNotFor:[], func:function(b, a) {
   return a.isLooped ? (delete a.isLooped, a.callReturn()) : a.getBooleanValue("BOOL", a) ? (a.isLooped = !0, a.getStatement("STACK", a)) : a.callReturn();
-}}, if_else:{color:"#498deb", skeleton:"basic_double_loop", statements:[{accept:"basic"}, {accept:"basic"}], template:"\ub9cc\uc77c %1 \uc774\ub77c\uba74 %2 %3 \uc544\ub2c8\uba74", params:[{type:"Block", accept:"booleanMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}, {type:"LineBreak"}], events:{}, def:{params:[{type:"True"}, null], type:"if_else"}, paramsKeyMap:{BOOL:0}, statementsKeyMap:{STACK_IF:0, STACK_ELSE:1}, "class":"condition", isNotFor:[], func:function(b, 
-a) {
+}}, if_else:{color:"#498deb", skeleton:"basic_double_loop", statements:[{accept:"basic"}, {accept:"basic"}], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}, {type:"LineBreak"}], events:{}, def:{params:[{type:"True"}, null], type:"if_else"}, paramsKeyMap:{BOOL:0}, statementsKeyMap:{STACK_IF:0, STACK_ELSE:1}, "class":"condition", isNotFor:[], func:function(b, a) {
   if (a.isLooped) {
     return delete a.isLooped, a.callReturn();
   }
   var c = a.getBooleanValue("BOOL", a);
   a.isLooped = !0;
   return c ? a.getStatement("STACK_IF", a) : a.getStatement("STACK_ELSE", a);
-}}, create_clone:{color:"#498deb", skeleton:"basic", statements:[], template:"%1 \uc758 \ubcf5\uc81c\ubcf8 \ub9cc\ub4e4\uae30 %2", params:[{type:"DropdownDynamic", value:null, menuName:"clone", fontSize:11, options:[["\uc790\uc2e0", "self"], ["\uc5d4\ud2b8\ub9ac\ubd07", "7y0y"]]}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null, null], type:"create_clone"}, paramsKeyMap:{VALUE:0}, "class":"clone", isNotFor:[], func:function(b, a) {
+}}, create_clone:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"clone", fontSize:11, options:[["\uc790\uc2e0", "self"], ["\uc5d4\ud2b8\ub9ac\ubd07", "7y0y"]]}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null, null], type:"create_clone"}, paramsKeyMap:{VALUE:0}, "class":"clone", isNotFor:[], func:function(b, a) {
   var c = a.getField("VALUE", a), d = a.callReturn();
   "self" == c ? b.parent.addCloneEntity(b.parent, b, null) : Entry.container.getObject(c).addCloneEntity(b.parent, null, null);
   return d;
-}}, delete_clone:{color:"#498deb", skeleton:"basic_without_next", statements:[], template:"\uc774 \ubcf5\uc81c\ubcf8 \uc0ad\uc81c\ud558\uae30 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null], type:"delete_clone"}, "class":"clone", isNotFor:[], func:function(b, a) {
+}}, delete_clone:{color:"#498deb", skeleton:"basic_without_next", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null], type:"delete_clone"}, "class":"clone", isNotFor:[], func:function(b, a) {
   if (!b.isClone) {
     return a.callReturn();
   }
   b.removeClone();
-}}, when_clone_start:{color:"#498deb", skeleton:"basic_event", statements:[], template:"%1 \ubcf5\uc81c\ubcf8\uc774 \ucc98\uc74c \uc0dd\uc131\ub418\uc5c8\uc744\ub54c", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_clone.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null], type:"when_clone_start"}, "class":"clone", isNotFor:[], func:function(b, a) {
+}}, when_clone_start:{color:"#498deb", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_clone.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null], type:"when_clone_start"}, "class":"clone", isNotFor:[], func:function(b, a) {
   return a.callReturn();
-}, event:"when_clone_start"}, stop_run:{color:"#498deb", skeleton:"basic", statements:[], template:"\ud504\ub85c\uadf8\ub7a8 \ub05d\ub0b4\uae30 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null]}, func:function(b, a) {
+}, event:"when_clone_start"}, stop_run:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null]}, func:function(b, a) {
   return Entry.engine.toggleStop();
-}}, repeat_while_true:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], template:"%1 %2  \ubc18\ubcf5\ud558\uae30 %3", params:[{type:"Block", accept:"booleanMagnet"}, {type:"Dropdown", options:[["\uc774 \ub420 \ub54c\uae4c\uc9c0", "until"], ["\uc778 \ub3d9\uc548", "while"]], value:"until", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"True"}, null, null], type:"repeat_while_true"}, paramsKeyMap:{BOOL:0, 
-OPTION:1}, statementsKeyMap:{DO:0}, "class":"repeat", isNotFor:[], func:function(b, a) {
+}}, repeat_while_true:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Dropdown", options:[["\uc774 \ub420 \ub54c\uae4c\uc9c0", "until"], ["\uc778 \ub3d9\uc548", "while"]], value:"until", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"True"}, null, null], type:"repeat_while_true"}, paramsKeyMap:{BOOL:0, OPTION:1}, statementsKeyMap:{DO:0}, "class":"repeat", 
+isNotFor:[], func:function(b, a) {
   var c = a.getBooleanValue("BOOL", a);
   "until" == a.getField("OPTION", a) && (c = !c);
   return (a.isLooped = c) ? a.getStatement("DO", a) : a.callReturn();
-}}, stop_object:{color:"#498deb", skeleton:"basic", statements:[], template:"%1 \uba48\ucd94\uae30 %2", params:[{type:"Dropdown", options:[["\ubaa8\ub4e0", "all"], ["\uc790\uc2e0\uc758", "thisOnly"], ["\uc774", "thisThread"], ["\uc790\uc2e0\uc758 \ub2e4\ub978", "otherThread"]], value:"all", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null, null], type:"stop_object"}, paramsKeyMap:{TARGET:0}, "class":"terminate", isNotFor:[], 
-func:function(b, a) {
+}}, stop_object:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\ubaa8\ub4e0", "all"], ["\uc790\uc2e0\uc758", "thisOnly"], ["\uc774", "thisThread"], ["\uc790\uc2e0\uc758 \ub2e4\ub978", "otherThread"]], value:"all", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null, null], type:"stop_object"}, paramsKeyMap:{TARGET:0}, "class":"terminate", isNotFor:[], func:function(b, a) {
   var c = a.getField("TARGET", a), d = Entry.container;
   switch(c) {
     case "all":
@@ -15722,25 +15711,25 @@ func:function(b, a) {
     case "otherThread":
       b.parent.script.clearExecutors(), b.parent.script.addExecutor(this.executor);
   }
-}}, restart_project:{color:"#498deb", skeleton:"basic_without_next", statements:[], template:"\ucc98\uc74c\ubd80\ud130 \ub2e4\uc2dc \uc2e4\ud589\ud558\uae30 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null], type:"restart_project"}, "class":"terminate", isNotFor:[], func:function(b, a) {
+}}, restart_project:{color:"#498deb", skeleton:"basic_without_next", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null], type:"restart_project"}, "class":"terminate", isNotFor:[], func:function(b, a) {
   Entry.engine.toggleStop();
   Entry.engine.toggleRun();
-}}, remove_all_clones:{color:"#498deb", skeleton:"basic", statements:[], template:"\ubaa8\ub4e0 \ubcf5\uc81c\ubcf8 \uc0ad\uc81c\ud558\uae30 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null], type:"remove_all_clones"}, "class":"clone", isNotFor:[], func:function(b, a) {
+}}, remove_all_clones:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null], type:"remove_all_clones"}, "class":"clone", isNotFor:[], func:function(b, a) {
   var c = b.parent.getClonedEntities();
   c.map(function(a) {
     a.removeClone();
   });
   c = null;
   return a.callReturn();
-}}, functionAddButton:{skeleton:"basic_button", color:"#eee", isNotFor:["functionInit"], template:"%1", params:[{type:"Text", text:"\ud568\uc218 \ucd94\uac00", color:"#333", align:"center"}], events:{mousedown:[function() {
+}}, functionAddButton:{skeleton:"basic_button", color:"#eee", isNotFor:["functionInit"], params:[{type:"Text", text:"\ud568\uc218 \ucd94\uac00", color:"#333", align:"center"}], events:{mousedown:[function() {
   Entry.variableContainer.createFunction();
-}]}}, function_field_label:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#f9c535", template:"%1%2", params:[{type:"TextInput", value:"\ud568\uc218"}, {type:"Output", accept:"paramMagnet"}]}, function_field_string:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#ffd974", template:"%1%2", params:[{type:"Block", accept:"stringMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}]}, function_field_boolean:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#aeb8ff", 
-template:"%1%2", params:[{type:"Block", accept:"booleanMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}]}, function_param_string:{skeleton:"basic_string_field", color:"#ffd974", template:"\ubb38\uc790/\uc22b\uc790\uac12", func:function() {
+}]}}, function_field_label:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#f9c535", params:[{type:"TextInput", value:"\ud568\uc218"}, {type:"Output", accept:"paramMagnet"}]}, function_field_string:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#ffd974", params:[{type:"Block", accept:"stringMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}]}, function_field_boolean:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#aeb8ff", params:[{type:"Block", accept:"booleanMagnet", 
+restore:!0}, {type:"Output", accept:"paramMagnet"}]}, function_param_string:{skeleton:"basic_string_field", color:"#ffd974", func:function() {
   return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
-}}, function_param_boolean:{skeleton:"basic_boolean_field", color:"#aeb8ff", template:"\ud310\ub2e8\uac12", func:function() {
+}}, function_param_boolean:{skeleton:"basic_boolean_field", color:"#aeb8ff", func:function() {
   return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
-}}, function_create:{skeleton:"basic", color:"#cc7337", event:"funcDef", template:"\ud568\uc218 \uc815\uc758\ud558\uae30 %1 %2", params:[{type:"Block", accept:"paramMagnet", value:{type:"function_field_label"}}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/function_03.png", size:12}], func:function() {
-}}, function_general:{skeleton:"basic", color:"#cc7337", template:"\ud568\uc218", params:[], events:{dataAdd:[function(b) {
+}}, function_create:{skeleton:"basic", color:"#cc7337", event:"funcDef", params:[{type:"Block", accept:"paramMagnet", value:{type:"function_field_label"}}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/function_03.png", size:12}], func:function() {
+}}, function_general:{skeleton:"basic", color:"#cc7337", params:[], events:{dataAdd:[function(b) {
   var a = Entry.variableContainer;
   a && a.addRef("_functionRefs", b);
 }], dataDestroy:[function(b) {
@@ -15761,14 +15750,14 @@ template:"%1%2", params:[{type:"Block", accept:"booleanMagnet", restore:!0}, {ty
   if (!this.funcExecutor.isEnd()) {
     return this.funcCode.removeExecutor(this.funcExecutor), Entry.STATIC.BREAK;
   }
-}}, hamster_hand_found:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], template:"\uc190 \ucc3e\uc74c?", params:[], events:{}, def:{params:[], type:"hamster_hand_found"}, "class":"hamster_sensor", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_hand_found:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], params:[], events:{}, def:{params:[], type:"hamster_hand_found"}, "class":"hamster_sensor", isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.portData;
   return 50 < c.leftProximity || 50 < c.rightProximity;
-}}, hamster_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], template:"%1", params:[{type:"Dropdown", options:[["\uc67c\ucabd \uadfc\uc811 \uc13c\uc11c", "leftProximity"], ["\uc624\ub978\ucabd \uadfc\uc811 \uc13c\uc11c", "rightProximity"], ["\uc67c\ucabd \ubc14\ub2e5 \uc13c\uc11c", "leftFloor"], ["\uc624\ub978\ucabd \ubc14\ub2e5 \uc13c\uc11c", "rightFloor"], ["x\ucd95 \uac00\uc18d\ub3c4", "accelerationX"], ["y\ucd95 \uac00\uc18d\ub3c4", "accelerationY"], ["z\ucd95 \uac00\uc18d\ub3c4", 
-"accelerationZ"], ["\ubc1d\uae30", "light"], ["\uc628\ub3c4", "temperature"], ["\uc2e0\ud638 \uc138\uae30", "signalStrength"], ["\uc785\ub825 A", "inputA"], ["\uc785\ub825 B", "inputB"]], value:"leftProximity", fontSize:11}], events:{}, def:{params:[null], type:"hamster_value"}, paramsKeyMap:{DEVICE:0}, "class":"hamster_sensor", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd \uadfc\uc811 \uc13c\uc11c", "leftProximity"], ["\uc624\ub978\ucabd \uadfc\uc811 \uc13c\uc11c", "rightProximity"], ["\uc67c\ucabd \ubc14\ub2e5 \uc13c\uc11c", "leftFloor"], ["\uc624\ub978\ucabd \ubc14\ub2e5 \uc13c\uc11c", "rightFloor"], ["x\ucd95 \uac00\uc18d\ub3c4", "accelerationX"], ["y\ucd95 \uac00\uc18d\ub3c4", "accelerationY"], ["z\ucd95 \uac00\uc18d\ub3c4", "accelerationZ"], 
+["\ubc1d\uae30", "light"], ["\uc628\ub3c4", "temperature"], ["\uc2e0\ud638 \uc138\uae30", "signalStrength"], ["\uc785\ub825 A", "inputA"], ["\uc785\ub825 B", "inputB"]], value:"leftProximity", fontSize:11}], events:{}, def:{params:[null], type:"hamster_value"}, paramsKeyMap:{DEVICE:0}, "class":"hamster_sensor", isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.portData, d = a.getField("DEVICE");
   return c[d];
-}}, hamster_move_forward_once:{color:"#00979D", skeleton:"basic", statements:[], template:"\ub9d0\ud310 \uc55e\uc73c\ub85c \ud55c \uce78 \uc774\ub3d9\ud558\uae30 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"hamster_move_forward_once"}, "class":"hamster_board", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_move_forward_once:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"hamster_move_forward_once"}, "class":"hamster_board", isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = Entry.hw.portData;
   if (a.isStart) {
     if (a.isMoving) {
@@ -15814,8 +15803,7 @@ template:"%1%2", params:[{type:"Block", accept:"booleanMagnet", restore:!0}, {ty
   c.rightWheel = 45;
   Entry.Hamster.setLineTracerMode(c, 0);
   return a;
-}}, hamster_turn_once:{color:"#00979D", skeleton:"basic", statements:[], template:"\ub9d0\ud310 %1 \uc73c\ub85c \ud55c \ubc88 \ub3cc\uae30 %2", params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"]], value:"LEFT", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null], type:"hamster_turn_once"}, paramsKeyMap:{DIRECTION:0}, "class":"hamster_board", isNotFor:["hamster"], func:function(b, 
-a) {
+}}, hamster_turn_once:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"]], value:"LEFT", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null], type:"hamster_turn_once"}, paramsKeyMap:{DIRECTION:0}, "class":"hamster_board", isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = Entry.hw.portData;
   if (a.isStart) {
     if (a.isMoving) {
@@ -15873,7 +15861,7 @@ a) {
   "LEFT" == a.getField("DIRECTION", a) ? (a.isLeft = !0, c.leftWheel = -45, c.rightWheel = 45) : (a.isLeft = !1, c.leftWheel = 45, c.rightWheel = -45);
   Entry.Hamster.setLineTracerMode(c, 0);
   return a;
-}}, hamster_move_forward_for_secs:{color:"#00979D", skeleton:"basic", statements:[], template:"\uc55e\uc73c\ub85c %1 \ucd08 \uc774\ub3d9\ud558\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["1"]}, null], type:"hamster_move_forward_for_secs"}, paramsKeyMap:{VALUE:0}, "class":"hamster_wheel", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_move_forward_for_secs:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["1"]}, null], type:"hamster_move_forward_for_secs"}, paramsKeyMap:{VALUE:0}, "class":"hamster_wheel", isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue;
   if (a.isStart) {
     if (1 == a.timeFlag) {
@@ -15897,7 +15885,7 @@ a) {
   }, c);
   Entry.Hamster.timeouts.push(d);
   return a;
-}}, hamster_move_backward_for_secs:{color:"#00979D", skeleton:"basic", statements:[], template:"\ub4a4\ub85c %1 \ucd08 \uc774\ub3d9\ud558\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["1"]}, null], type:"hamster_move_backward_for_secs"}, paramsKeyMap:{VALUE:0}, "class":"hamster_wheel", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_move_backward_for_secs:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["1"]}, null], type:"hamster_move_backward_for_secs"}, paramsKeyMap:{VALUE:0}, "class":"hamster_wheel", isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue;
   if (a.isStart) {
     if (1 == a.timeFlag) {
@@ -15921,8 +15909,8 @@ a) {
   }, c);
   Entry.Hamster.timeouts.push(d);
   return a;
-}}, hamster_turn_for_secs:{color:"#00979D", skeleton:"basic", statements:[], template:"%1 \uc73c\ub85c %2 \ucd08 \ub3cc\uae30 %3", params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["1"]}, null], type:"hamster_turn_for_secs"}, paramsKeyMap:{DIRECTION:0, 
-VALUE:1}, "class":"hamster_wheel", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_turn_for_secs:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["1"]}, null], type:"hamster_turn_for_secs"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"hamster_wheel", isNotFor:["hamster"], 
+func:function(b, a) {
   var c = Entry.hw.sendQueue;
   if (a.isStart) {
     if (1 == a.timeFlag) {
@@ -15945,34 +15933,32 @@ VALUE:1}, "class":"hamster_wheel", isNotFor:["hamster"], func:function(b, a) {
   }, c);
   Entry.Hamster.timeouts.push(d);
   return a;
-}}, hamster_change_both_wheels_by:{color:"#00979D", skeleton:"basic", statements:[], template:"\uc67c\ucabd \ubc14\ud034 %1 \uc624\ub978\ucabd \ubc14\ud034 %2 \ub9cc\ud07c \ubc14\uafb8\uae30 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["10"]}, {type:"text", params:["10"]}, null], type:"hamster_change_both_wheels_by"}, paramsKeyMap:{LEFT:0, 
-RIGHT:1}, "class":"hamster_wheel", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_change_both_wheels_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["10"]}, {type:"text", params:["10"]}, null], type:"hamster_change_both_wheels_by"}, paramsKeyMap:{LEFT:0, RIGHT:1}, "class":"hamster_wheel", isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getNumberValue("LEFT"), e = a.getNumberValue("RIGHT");
   c.leftWheel = void 0 != c.leftWheel ? c.leftWheel + d : d;
   c.rightWheel = void 0 != c.rightWheel ? c.rightWheel + e : e;
   Entry.Hamster.setLineTracerMode(c, 0);
   return a.callReturn();
-}}, hamster_set_both_wheels_to:{color:"#00979D", skeleton:"basic", statements:[], template:"\uc67c\ucabd \ubc14\ud034 %1 \uc624\ub978\ucabd \ubc14\ud034 %2 (\uc73c)\ub85c \uc815\ud558\uae30 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["30"]}, {type:"text", params:["30"]}, null], type:"hamster_set_both_wheels_to"}, paramsKeyMap:{LEFT:0, 
-RIGHT:1}, "class":"hamster_wheel", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_set_both_wheels_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["30"]}, {type:"text", params:["30"]}, null], type:"hamster_set_both_wheels_to"}, paramsKeyMap:{LEFT:0, RIGHT:1}, "class":"hamster_wheel", isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue;
   c.leftWheel = a.getNumberValue("LEFT");
   c.rightWheel = a.getNumberValue("RIGHT");
   Entry.Hamster.setLineTracerMode(c, 0);
   return a.callReturn();
-}}, hamster_change_wheel_by:{color:"#00979D", skeleton:"basic", statements:[], template:"%1 \ubc14\ud034 %2 \ub9cc\ud07c \ubc14\uafb8\uae30 %3", params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "BOTH"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["10"]}, null], type:"hamster_change_wheel_by"}, 
-paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"hamster_wheel", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_change_wheel_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "BOTH"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["10"]}, null], type:"hamster_change_wheel_by"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"hamster_wheel", 
+isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getField("DIRECTION"), e = a.getNumberValue("VALUE");
   "LEFT" == d ? c.leftWheel = void 0 != c.leftWheel ? c.leftWheel + e : e : ("RIGHT" != d && (c.leftWheel = void 0 != c.leftWheel ? c.leftWheel + e : e), c.rightWheel = void 0 != c.rightWheel ? c.rightWheel + e : e);
   Entry.Hamster.setLineTracerMode(c, 0);
   return a.callReturn();
-}}, hamster_set_wheel_to:{color:"#00979D", skeleton:"basic", statements:[], template:"%1 \ubc14\ud034 %2 (\uc73c)\ub85c \uc815\ud558\uae30 %3", params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "BOTH"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["30"]}, null], type:"hamster_set_wheel_to"}, 
-paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"hamster_wheel", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_set_wheel_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "BOTH"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["30"]}, null], type:"hamster_set_wheel_to"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"hamster_wheel", 
+isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getField("DIRECTION"), e = a.getNumberValue("VALUE");
   "LEFT" == d ? c.leftWheel = e : ("RIGHT" != d && (c.leftWheel = e), c.rightWheel = e);
   Entry.Hamster.setLineTracerMode(c, 0);
   return a.callReturn();
-}}, hamster_follow_line_using:{color:"#00979D", skeleton:"basic", statements:[], template:"%1 \uc120\uc744 %2 \ubc14\ub2e5 \uc13c\uc11c\ub85c \ub530\ub77c\uac00\uae30 %3", params:[{type:"Dropdown", options:[["\uac80\uc740\uc0c9", "BLACK"], ["\ud558\uc580\uc0c9", "WHITE"]], value:"BLACK", fontSize:11}, {type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "BOTH"]], value:"LEFT", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", 
-size:12}], events:{}, def:{params:[null, null, null], type:"hamster_follow_line_using"}, paramsKeyMap:{COLOR:0, DIRECTION:1}, "class":"hamster_wheel", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_follow_line_using:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uac80\uc740\uc0c9", "BLACK"], ["\ud558\uc580\uc0c9", "WHITE"]], value:"BLACK", fontSize:11}, {type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "BOTH"]], value:"LEFT", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"hamster_follow_line_using"}, 
+paramsKeyMap:{COLOR:0, DIRECTION:1}, "class":"hamster_wheel", isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getField("COLOR"), e = a.getField("DIRECTION"), f = 1;
   "RIGHT" == e ? f = 2 : "BOTH" == e && (f = 3);
   "WHITE" == d && (f += 7);
@@ -15980,8 +15966,8 @@ size:12}], events:{}, def:{params:[null, null, null], type:"hamster_follow_line_
   c.rightWheel = 0;
   Entry.Hamster.setLineTracerMode(c, f);
   return a.callReturn();
-}}, hamster_follow_line_until:{color:"#00979D", skeleton:"basic", statements:[], template:"%1 \uc120\uc744 \ub530\ub77c %2 \uad50\ucc28\ub85c\uae4c\uc9c0 \uc774\ub3d9\ud558\uae30 %3", params:[{type:"Dropdown", options:[["\uac80\uc740\uc0c9", "BLACK"], ["\ud558\uc580\uc0c9", "WHITE"]], value:"BLACK", fontSize:11}, {type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc55e\ucabd", "FRONT"], ["\ub4a4\ucabd", "REAR"]], value:"LEFT", fontSize:11}, {type:"Indicator", 
-img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"hamster_follow_line_until"}, paramsKeyMap:{COLOR:0, DIRECTION:1}, "class":"hamster_wheel", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_follow_line_until:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uac80\uc740\uc0c9", "BLACK"], ["\ud558\uc580\uc0c9", "WHITE"]], value:"BLACK", fontSize:11}, {type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc55e\ucabd", "FRONT"], ["\ub4a4\ucabd", "REAR"]], value:"LEFT", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], 
+type:"hamster_follow_line_until"}, paramsKeyMap:{COLOR:0, DIRECTION:1}, "class":"hamster_wheel", isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = Entry.hw.portData, e = a.getField("COLOR"), f = a.getField("DIRECTION"), g = 4;
   "RIGHT" == f ? g = 5 : "FRONT" == f ? g = 6 : "REAR" == f && (g = 7);
   "WHITE" == e && (g += 7);
@@ -15993,26 +15979,25 @@ img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:
     a.isStart = !0, c.leftWheel = 0, c.rightWheel = 0, Entry.Hamster.setLineTracerMode(c, g);
   }
   return a;
-}}, hamster_set_following_speed_to:{color:"#00979D", skeleton:"basic", statements:[], template:"\uc120 \ub530\ub77c\uac00\uae30 \uc18d\ub3c4\ub97c %1 (\uc73c)\ub85c \uc815\ud558\uae30 %2", params:[{type:"Dropdown", options:[["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"]], value:"1", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:["5", null], type:"hamster_set_following_speed_to"}, 
-paramsKeyMap:{SPEED:0}, "class":"hamster_wheel", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_set_following_speed_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"]], value:"1", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:["5", null], type:"hamster_set_following_speed_to"}, paramsKeyMap:{SPEED:0}, "class":"hamster_wheel", isNotFor:["hamster"], func:function(b, a) {
   Entry.hw.sendQueue.lineTracerSpeed = Number(a.getField("SPEED", a));
   return a.callReturn();
-}}, hamster_stop:{color:"#00979D", skeleton:"basic", statements:[], template:"\uc815\uc9c0\ud558\uae30 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"hamster_stop"}, "class":"hamster_wheel", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_stop:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"hamster_stop"}, "class":"hamster_wheel", isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue;
   c.leftWheel = 0;
   c.rightWheel = 0;
   Entry.Hamster.setLineTracerMode(c, 0);
   return a.callReturn();
-}}, hamster_set_led_to:{color:"#00979D", skeleton:"basic", statements:[], template:"%1 LED\ub97c %2 \uc73c\ub85c \uc815\ud558\uae30 %3", params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "BOTH"]], value:"LEFT", fontSize:11}, {type:"Dropdown", options:[["\ube68\uac04\uc0c9", "4"], ["\ub178\ub780\uc0c9", "6"], ["\ucd08\ub85d\uc0c9", "2"], ["\ud558\ub298\uc0c9", "3"], ["\ud30c\ub780\uc0c9", "1"], ["\ubcf4\ub77c\uc0c9", "5"], ["\ud558\uc580\uc0c9", 
-"7"]], value:"4", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"hamster_set_led_to"}, paramsKeyMap:{DIRECTION:0, COLOR:1}, "class":"hamster_led", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_set_led_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "BOTH"]], value:"LEFT", fontSize:11}, {type:"Dropdown", options:[["\ube68\uac04\uc0c9", "4"], ["\ub178\ub780\uc0c9", "6"], ["\ucd08\ub85d\uc0c9", "2"], ["\ud558\ub298\uc0c9", "3"], ["\ud30c\ub780\uc0c9", "1"], ["\ubcf4\ub77c\uc0c9", "5"], ["\ud558\uc580\uc0c9", "7"]], value:"4", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", 
+size:12}], events:{}, def:{params:[null, null, null], type:"hamster_set_led_to"}, paramsKeyMap:{DIRECTION:0, COLOR:1}, "class":"hamster_led", isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a), e = Number(a.getField("COLOR", a));
   "LEFT" == d ? c.leftLed = e : ("RIGHT" != d && (c.leftLed = e), c.rightLed = e);
   return a.callReturn();
-}}, hamster_clear_led:{color:"#00979D", skeleton:"basic", statements:[], template:"%1 LED \ub044\uae30 %2", params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "BOTH"]], value:"LEFT", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null], type:"hamster_clear_led"}, paramsKeyMap:{DIRECTION:0}, "class":"hamster_led", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_clear_led:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "BOTH"]], value:"LEFT", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null], type:"hamster_clear_led"}, paramsKeyMap:{DIRECTION:0}, "class":"hamster_led", isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a);
   "LEFT" == d ? c.leftLed = 0 : ("RIGHT" != d && (c.leftLed = 0), c.rightLed = 0);
   return a.callReturn();
-}}, hamster_beep:{color:"#00979D", skeleton:"basic", statements:[], template:"\uc090 \uc18c\ub9ac\ub0b4\uae30 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"hamster_beep"}, "class":"hamster_buzzer", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_beep:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"hamster_beep"}, "class":"hamster_buzzer", isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue;
   if (a.isStart) {
     if (1 == a.timeFlag) {
@@ -16034,23 +16019,23 @@ paramsKeyMap:{SPEED:0}, "class":"hamster_wheel", isNotFor:["hamster"], func:func
   }, 200);
   Entry.Hamster.timeouts.push(d);
   return a;
-}}, hamster_change_buzzer_by:{color:"#00979D", skeleton:"basic", statements:[], template:"\ubc84\uc800 \uc74c\uc744 %1 \ub9cc\ud07c \ubc14\uafb8\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["10"]}, null], type:"hamster_change_buzzer_by"}, paramsKeyMap:{VALUE:0}, "class":"hamster_buzzer", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_change_buzzer_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["10"]}, null], type:"hamster_change_buzzer_by"}, paramsKeyMap:{VALUE:0}, "class":"hamster_buzzer", isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getNumberValue("VALUE");
   c.buzzer = void 0 != c.buzzer ? c.buzzer + d : d;
   c.note = 0;
   return a.callReturn();
-}}, hamster_set_buzzer_to:{color:"#00979D", skeleton:"basic", statements:[], template:"\ubc84\uc800 \uc74c\uc744 %1 (\uc73c)\ub85c \uc815\ud558\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["1000"]}, null], type:"hamster_set_buzzer_to"}, paramsKeyMap:{VALUE:0}, "class":"hamster_buzzer", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_set_buzzer_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["1000"]}, null], type:"hamster_set_buzzer_to"}, paramsKeyMap:{VALUE:0}, "class":"hamster_buzzer", isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue;
   c.buzzer = a.getNumberValue("VALUE");
   c.note = 0;
   return a.callReturn();
-}}, hamster_clear_buzzer:{color:"#00979D", skeleton:"basic", statements:[], template:"\ubc84\uc800 \ub044\uae30 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"hamster_clear_buzzer"}, "class":"hamster_buzzer", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_clear_buzzer:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"hamster_clear_buzzer"}, "class":"hamster_buzzer", isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue;
   c.buzzer = 0;
   c.note = 0;
   return a.callReturn();
-}}, hamster_play_note_for:{color:"#00979D", skeleton:"basic", statements:[], template:"%1 %2 \uc74c\uc744 %3 \ubc15\uc790 \uc5f0\uc8fc\ud558\uae30 %4", params:[{type:"Dropdown", options:[["\ub3c4", "4"], ["\ub3c4#", "5"], ["\ub808", "6"], ["\ubbf8b", "7"], ["\ubbf8", "8"], ["\ud30c", "9"], ["\ud30c#", "10"], ["\uc194", "11"], ["\uc194#", "12"], ["\ub77c", "13"], ["\uc2dcb", "14"], ["\uc2dc", "15"]], value:"4", fontSize:11}, {type:"Dropdown", options:[["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], 
-["5", "5"], ["6", "6"], ["7", "7"]], value:"1", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, "4", {type:"text", params:["0.5"]}, null], type:"hamster_play_note_for"}, paramsKeyMap:{NOTE:0, OCTAVE:1, VALUE:2}, "class":"hamster_buzzer", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_play_note_for:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\ub3c4", "4"], ["\ub3c4#", "5"], ["\ub808", "6"], ["\ubbf8b", "7"], ["\ubbf8", "8"], ["\ud30c", "9"], ["\ud30c#", "10"], ["\uc194", "11"], ["\uc194#", "12"], ["\ub77c", "13"], ["\uc2dcb", "14"], ["\uc2dc", "15"]], value:"4", fontSize:11}, {type:"Dropdown", options:[["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"]], value:"1", fontSize:11}, {type:"Block", 
+accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, "4", {type:"text", params:["0.5"]}, null], type:"hamster_play_note_for"}, paramsKeyMap:{NOTE:0, OCTAVE:1, VALUE:2}, "class":"hamster_buzzer", isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue;
   if (a.isStart) {
     if (1 == a.timeFlag) {
@@ -16080,7 +16065,7 @@ paramsKeyMap:{SPEED:0}, "class":"hamster_wheel", isNotFor:["hamster"], func:func
   }, f);
   Entry.Hamster.timeouts.push(k);
   return a;
-}}, hamster_rest_for:{color:"#00979D", skeleton:"basic", statements:[], template:"%1 \ubc15\uc790 \uc26c\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["0.25"]}, null], type:"hamster_rest_for"}, paramsKeyMap:{VALUE:0}, "class":"hamster_buzzer", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_rest_for:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["0.25"]}, null], type:"hamster_rest_for"}, paramsKeyMap:{VALUE:0}, "class":"hamster_buzzer", isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue;
   if (a.isStart) {
     if (1 == a.timeFlag) {
@@ -16102,35 +16087,34 @@ paramsKeyMap:{SPEED:0}, "class":"hamster_wheel", isNotFor:["hamster"], func:func
   }, d);
   Entry.Hamster.timeouts.push(e);
   return a;
-}}, hamster_change_tempo_by:{color:"#00979D", skeleton:"basic", statements:[], template:"\uc5f0\uc8fc \uc18d\ub3c4\ub97c %1 \ub9cc\ud07c \ubc14\uafb8\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["20"]}, null], type:"hamster_change_tempo_by"}, paramsKeyMap:{VALUE:0}, "class":"hamster_buzzer", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_change_tempo_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["20"]}, null], type:"hamster_change_tempo_by"}, paramsKeyMap:{VALUE:0}, "class":"hamster_buzzer", isNotFor:["hamster"], func:function(b, a) {
   Entry.Hamster.tempo += a.getNumberValue("VALUE");
   1 > Entry.Hamster.tempo && (Entry.Hamster.tempo = 1);
   return a.callReturn();
-}}, hamster_set_tempo_to:{color:"#00979D", skeleton:"basic", statements:[], template:"\uc5f0\uc8fc \uc18d\ub3c4\ub97c %1 BPM\uc73c\ub85c \uc815\ud558\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["60"]}, null], type:"hamster_set_tempo_to"}, paramsKeyMap:{VALUE:0}, "class":"hamster_buzzer", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_set_tempo_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["60"]}, null], type:"hamster_set_tempo_to"}, paramsKeyMap:{VALUE:0}, "class":"hamster_buzzer", isNotFor:["hamster"], func:function(b, a) {
   Entry.Hamster.tempo = a.getNumberValue("VALUE");
   1 > Entry.Hamster.tempo && (Entry.Hamster.tempo = 1);
   return a.callReturn();
-}}, hamster_set_port_to:{color:"#00979D", skeleton:"basic", statements:[], template:"\ud3ec\ud2b8 %1 \ub97c %2 \uc73c\ub85c \uc815\ud558\uae30 %3", params:[{type:"Dropdown", options:[["A", "A"], ["B", "B"], ["A\uc640 B", "AB"]], value:"A", fontSize:11}, {type:"Dropdown", options:[["\uc544\ub0a0\ub85c\uadf8 \uc785\ub825", "0"], ["\ub514\uc9c0\ud138 \uc785\ub825", "1"], ["\uc11c\ubcf4 \ucd9c\ub825", "8"], ["PWM \ucd9c\ub825", "9"], ["\ub514\uc9c0\ud138 \ucd9c\ub825", "10"]], value:"0", fontSize:11}, 
-{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"hamster_set_port_to"}, paramsKeyMap:{PORT:0, MODE:1}, "class":"hamster_port", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_set_port_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["A", "A"], ["B", "B"], ["A\uc640 B", "AB"]], value:"A", fontSize:11}, {type:"Dropdown", options:[["\uc544\ub0a0\ub85c\uadf8 \uc785\ub825", "0"], ["\ub514\uc9c0\ud138 \uc785\ub825", "1"], ["\uc11c\ubcf4 \ucd9c\ub825", "8"], ["PWM \ucd9c\ub825", "9"], ["\ub514\uc9c0\ud138 \ucd9c\ub825", "10"]], value:"0", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", 
+size:12}], events:{}, def:{params:[null, null, null], type:"hamster_set_port_to"}, paramsKeyMap:{PORT:0, MODE:1}, "class":"hamster_port", isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getField("PORT", a), e = Number(a.getField("MODE", a));
   "A" == d ? c.ioModeA = e : ("B" != d && (c.ioModeA = e), c.ioModeB = e);
   return a.callReturn();
-}}, hamster_change_output_by:{color:"#00979D", skeleton:"basic", statements:[], template:"\ucd9c\ub825 %1 \ub97c %2 \ub9cc\ud07c \ubc14\uafb8\uae30 %3", params:[{type:"Dropdown", options:[["A", "A"], ["B", "B"], ["A\uc640 B", "AB"]], value:"A", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["10"]}, null], type:"hamster_change_output_by"}, paramsKeyMap:{PORT:0, 
-VALUE:1}, "class":"hamster_port", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_change_output_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["A", "A"], ["B", "B"], ["A\uc640 B", "AB"]], value:"A", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["10"]}, null], type:"hamster_change_output_by"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"hamster_port", isNotFor:["hamster"], func:function(b, 
+a) {
   var c = Entry.hw.sendQueue, d = a.getField("PORT"), e = a.getNumberValue("VALUE");
   "A" == d ? c.outputA = void 0 != c.outputA ? c.outputA + e : e : ("B" != d && (c.outputA = void 0 != c.outputA ? c.outputA + e : e), c.outputB = void 0 != c.outputB ? c.outputB + e : e);
   return a.callReturn();
-}}, hamster_set_output_to:{color:"#00979D", skeleton:"basic", statements:[], template:"\ucd9c\ub825 %1 \ub97c %2 (\uc73c)\ub85c \uc815\ud558\uae30 %3", params:[{type:"Dropdown", options:[["A", "A"], ["B", "B"], ["A\uc640 B", "AB"]], value:"A", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["100"]}, null], type:"hamster_set_output_to"}, paramsKeyMap:{PORT:0, 
-VALUE:1}, "class":"hamster_port", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_set_output_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["A", "A"], ["B", "B"], ["A\uc640 B", "AB"]], value:"A", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["100"]}, null], type:"hamster_set_output_to"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"hamster_port", isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getField("PORT"), e = a.getNumberValue("VALUE");
   "A" == d ? c.outputA = e : ("B" != d && (c.outputA = e), c.outputB = e);
   return a.callReturn();
-}}, is_clicked:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], template:"%1", params:[{type:"Text", text:"\ub9c8\uc6b0\uc2a4\ub97c \ud074\ub9ad\ud588\ub294\uac00?", color:"#3D3D3D"}], events:{}, def:{params:[null], type:"is_clicked"}, "class":"boolean_input", isNotFor:[], func:function(b, a) {
+}}, is_clicked:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Text", text:"\ub9c8\uc6b0\uc2a4\ub97c \ud074\ub9ad\ud588\ub294\uac00?", color:"#3D3D3D"}], events:{}, def:{params:[null], type:"is_clicked"}, "class":"boolean_input", isNotFor:[], func:function(b, a) {
   return Entry.stage.isClick;
-}}, is_press_some_key:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], template:"%1 %2", params:[{type:"Keyboard", value:81}, {type:"Text", text:"\ud0a4\uac00 \ub20c\ub7ec\uc838 \uc788\ub294\uac00?", color:"#3D3D3D"}], events:{}, def:{params:[null, null], type:"is_press_some_key"}, paramsKeyMap:{VALUE:0}, "class":"boolean_input", isNotFor:[], func:function(b, a) {
+}}, is_press_some_key:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Keyboard", value:81}, {type:"Text", text:"\ud0a4\uac00 \ub20c\ub7ec\uc838 \uc788\ub294\uac00?", color:"#3D3D3D"}], events:{}, def:{params:[null, null], type:"is_press_some_key"}, paramsKeyMap:{VALUE:0}, "class":"boolean_input", isNotFor:[], func:function(b, a) {
   var c = Number(a.getField("VALUE", a));
   return 0 <= Entry.pressedKeys.indexOf(c);
-}}, reach_something:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], template:"%1 %2", params:[{type:"DropdownDynamic", value:null, menuName:"collision", fontSize:11}, {type:"Text", text:"\uc5d0 \ub2ff\uc558\ub294\uac00?", color:"#3D3D3D"}], events:{}, def:{params:[null, null], type:"reach_something"}, paramsKeyMap:{VALUE:0}, "class":"boolean_collision", isNotFor:[], func:function(b, a) {
+}}, reach_something:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"collision", fontSize:11}, {type:"Text", text:"\uc5d0 \ub2ff\uc558\ub294\uac00?", color:"#3D3D3D"}], events:{}, def:{params:[null, null], type:"reach_something"}, paramsKeyMap:{VALUE:0}, "class":"boolean_collision", isNotFor:[], func:function(b, a) {
   if (!b.getVisible()) {
     return !1;
   }
@@ -16194,38 +16178,38 @@ VALUE:1}, "class":"hamster_port", isNotFor:["hamster"], func:function(b, a) {
     }
   }
   return !1;
-}}, boolean_comparison:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], template:"%1 %2 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["=", "EQUAL"], ["<", "SMALLER"], [">", "BIGGER"]], value:"EQUAL", fontSize:11}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[null], type:"boolean_comparison"}, paramsKeyMap:{LEFTHAND:0, OPERATOR:1, RIGHTHAND:2}, func:function(b, a) {
+}}, boolean_comparison:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["=", "EQUAL"], ["<", "SMALLER"], [">", "BIGGER"]], value:"EQUAL", fontSize:11}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[null], type:"boolean_comparison"}, paramsKeyMap:{LEFTHAND:0, OPERATOR:1, RIGHTHAND:2}, func:function(b, a) {
   var c = a.getField("OPERATOR", a), d = a.getNumberValue("LEFTHAND", a), e = a.getNumberValue("RIGHTHAND", a);
   return "EQUAL" == c ? d == e : "BIGGER" == c ? d > e : d < e;
-}}, boolean_equal:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], template:"%1 %2 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"=", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"number", params:["10"]}, null, {type:"number", params:["10"]}], type:"boolean_equal"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"boolean_compare", isNotFor:[], func:function(b, a) {
+}}, boolean_equal:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"=", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"number", params:["10"]}, null, {type:"number", params:["10"]}], type:"boolean_equal"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"boolean_compare", isNotFor:[], func:function(b, a) {
   var c = a.getStringValue("LEFTHAND", a), d = a.getStringValue("RIGHTHAND", a);
   return c == d;
-}}, boolean_bigger:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], template:"%1 %2 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:">", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"number", params:["10"]}, null, {type:"number", params:["10"]}], type:"boolean_bigger"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"boolean_compare", isNotFor:[], func:function(b, a) {
+}}, boolean_bigger:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:">", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"number", params:["10"]}, null, {type:"number", params:["10"]}], type:"boolean_bigger"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"boolean_compare", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("LEFTHAND", a), d = a.getNumberValue("RIGHTHAND", a);
   return c > d;
-}}, boolean_smaller:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], template:"%1 %2 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"<", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"number", params:["10"]}, null, {type:"number", params:["10"]}], type:"boolean_smaller"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"boolean_compare", isNotFor:[], func:function(b, a) {
+}}, boolean_smaller:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"<", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"number", params:["10"]}, null, {type:"number", params:["10"]}], type:"boolean_smaller"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"boolean_compare", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("LEFTHAND", a), d = a.getNumberValue("RIGHTHAND", a);
   return c < d;
-}}, boolean_and_or:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], template:"%1 %2 %3", params:[{type:"Block", accept:"booleanMagnet"}, {type:"Dropdown", options:[["\uadf8\ub9ac\uace0", "AND"], ["\ub610\ub294", "OR"]], value:"AND", fontSize:11}, {type:"Block", accept:"booleanMagnet"}], events:{}, def:{params:[null]}, paramsKeyMap:{LEFTHAND:0, OPERATOR:1, RIGHTHAND:2}, func:function(b, a) {
+}}, boolean_and_or:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Dropdown", options:[["\uadf8\ub9ac\uace0", "AND"], ["\ub610\ub294", "OR"]], value:"AND", fontSize:11}, {type:"Block", accept:"booleanMagnet"}], events:{}, def:{params:[null]}, paramsKeyMap:{LEFTHAND:0, OPERATOR:1, RIGHTHAND:2}, func:function(b, a) {
   var c = a.getField("OPERATOR", a), d = a.getBooleanValue("LEFTHAND", a), e = a.getBooleanValue("RIGHTHAND", a);
   return "AND" == c ? d && e : d || e;
-}}, boolean_and:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], template:"%1 %2 %3", params:[{type:"Block", accept:"booleanMagnet"}, {type:"Text", text:"\uadf8\ub9ac\uace0", color:"#3D3D3D"}, {type:"Block", accept:"booleanMagnet"}], events:{}, def:{params:[{type:"True"}, null, {type:"True"}], type:"boolean_and"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"boolean", isNotFor:[], func:function(b, a) {
+}}, boolean_and:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Text", text:"\uadf8\ub9ac\uace0", color:"#3D3D3D"}, {type:"Block", accept:"booleanMagnet"}], events:{}, def:{params:[{type:"True"}, null, {type:"True"}], type:"boolean_and"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"boolean", isNotFor:[], func:function(b, a) {
   var c = a.getBooleanValue("LEFTHAND", a), d = a.getBooleanValue("RIGHTHAND", a);
   return c && d;
-}}, boolean_or:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], template:"%1 %2 %3", params:[{type:"Block", accept:"booleanMagnet"}, {type:"Text", text:"\ub610\ub294", color:"#3D3D3D"}, {type:"Block", accept:"booleanMagnet"}], events:{}, def:{params:[{type:"True"}, null, {type:"False"}], type:"boolean_or"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"boolean", isNotFor:[], func:function(b, a) {
+}}, boolean_or:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Text", text:"\ub610\ub294", color:"#3D3D3D"}, {type:"Block", accept:"booleanMagnet"}], events:{}, def:{params:[{type:"True"}, null, {type:"False"}], type:"boolean_or"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"boolean", isNotFor:[], func:function(b, a) {
   var c = a.getBooleanValue("LEFTHAND", a), d = a.getBooleanValue("RIGHTHAND", a);
   return c || d;
-}}, boolean_not:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], template:"%1 %2", params:[{type:"Block", accept:"booleanMagnet"}, {type:"Text", text:"(\uc774)\uac00 \uc544\ub2c8\ub2e4", color:"#3D3D3D"}], events:{}, def:{params:[{type:"True"}, null], type:"boolean_not"}, paramsKeyMap:{VALUE:0}, "class":"boolean", isNotFor:[], func:function(b, a) {
+}}, boolean_not:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Text", text:"(\uc774)\uac00 \uc544\ub2c8\ub2e4", color:"#3D3D3D"}], events:{}, def:{params:[{type:"True"}, null], type:"boolean_not"}, paramsKeyMap:{VALUE:0}, "class":"boolean", isNotFor:[], func:function(b, a) {
   return !a.getBooleanValue("VALUE");
-}}, true_or_false:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], template:"%1", params:[{type:"Dropdown", options:[["\ucc38", "true"], ["\uac70\uc9d3", "false"]], value:"true", fontSize:11}], events:{}, def:{params:[null]}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
+}}, true_or_false:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[["\ucc38", "true"], ["\uac70\uc9d3", "false"]], value:"true", fontSize:11}], events:{}, def:{params:[null]}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
   return "true" == a.children[0].textContent;
-}}, True:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], template:"%1  ", params:[{type:"Text", text:"\ucc38", color:"#3D3D3D"}], events:{}, def:{params:[null], type:"True"}, func:function(b, a) {
+}}, True:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Text", text:"\ucc38", color:"#3D3D3D"}], events:{}, def:{params:[null], type:"True"}, func:function(b, a) {
   return !0;
-}, isPrimitive:!0}, False:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], template:"%1  ", params:[{type:"Text", text:"\uac70\uc9d3", color:"#3D3D3D"}], events:{}, def:{params:[null], type:"False"}, func:function(b, a) {
+}, isPrimitive:!0}, False:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Text", text:"\uac70\uc9d3", color:"#3D3D3D"}], events:{}, def:{params:[null], type:"False"}, func:function(b, a) {
   return !1;
-}, isPrimitive:!0}, boolean_basic_operator:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], template:"%1 %2 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["=", "EQUAL"], [">", "GREATER"], ["<", "LESS"], ["\u2265", "GREATER_OR_EQUAL"], ["\u2264", "LESS_OR_EQUAL"]], value:"EQUAL", fontSize:11, noArrow:!0}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"text", params:["10"]}, "EQUAL", {type:"text", params:["10"]}], type:"boolean_basic_operator"}, 
-defs:[{params:[{type:"text", params:["10"]}, "EQUAL", {type:"text", params:["10"]}], type:"boolean_basic_operator"}, {params:[{type:"text", params:["10"]}, "GREATER", {type:"text", params:["10"]}], type:"boolean_basic_operator"}, {params:[{type:"text", params:["10"]}, "LESS", {type:"text", params:["10"]}], type:"boolean_basic_operator"}, {params:[{type:"text", params:["10"]}, "GREATER_OR_EQUAL", {type:"text", params:["10"]}], type:"boolean_basic_operator"}, {params:[{type:"text", params:["10"]}, 
-"LESS_OR_EQUAL", {type:"text", params:["10"]}], type:"boolean_basic_operator"}], paramsKeyMap:{LEFTHAND:0, OPERATOR:1, RIGHTHAND:2}, "class":"boolean_compare", isNotFor:[], func:function(b, a) {
+}, isPrimitive:!0}, boolean_basic_operator:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["=", "EQUAL"], [">", "GREATER"], ["<", "LESS"], ["\u2265", "GREATER_OR_EQUAL"], ["\u2264", "LESS_OR_EQUAL"]], value:"EQUAL", fontSize:11, noArrow:!0}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"text", params:["10"]}, "EQUAL", {type:"text", params:["10"]}], type:"boolean_basic_operator"}, defs:[{params:[{type:"text", 
+params:["10"]}, "EQUAL", {type:"text", params:["10"]}], type:"boolean_basic_operator"}, {params:[{type:"text", params:["10"]}, "GREATER", {type:"text", params:["10"]}], type:"boolean_basic_operator"}, {params:[{type:"text", params:["10"]}, "LESS", {type:"text", params:["10"]}], type:"boolean_basic_operator"}, {params:[{type:"text", params:["10"]}, "GREATER_OR_EQUAL", {type:"text", params:["10"]}], type:"boolean_basic_operator"}, {params:[{type:"text", params:["10"]}, "LESS_OR_EQUAL", {type:"text", 
+params:["10"]}], type:"boolean_basic_operator"}], paramsKeyMap:{LEFTHAND:0, OPERATOR:1, RIGHTHAND:2}, "class":"boolean_compare", isNotFor:[], func:function(b, a) {
   var c = a.getField("OPERATOR", a), d = a.getStringValue("LEFTHAND", a), e = a.getStringValue("RIGHTHAND", a);
   switch(c) {
     case "EQUAL":
@@ -16239,14 +16223,14 @@ defs:[{params:[{type:"text", params:["10"]}, "EQUAL", {type:"text", params:["10"
     case "LESS_OR_EQUAL":
       return Number(d) <= Number(e);
   }
-}}, show:{color:"#EC4466", skeleton:"basic", statements:[], template:"\ubaa8\uc591 \ubcf4\uc774\uae30 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null], type:"show"}, "class":"visibility", isNotFor:[], func:function(b, a) {
+}}, show:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null], type:"show"}, "class":"visibility", isNotFor:[], func:function(b, a) {
   b.setVisible(!0);
   return a.callReturn();
-}}, hide:{color:"#EC4466", skeleton:"basic", statements:[], template:"\ubaa8\uc591 \uc228\uae30\uae30 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null], type:"hide"}, "class":"visibility", isNotFor:[], func:function(b, a) {
+}}, hide:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null], type:"hide"}, "class":"visibility", isNotFor:[], func:function(b, a) {
   b.setVisible(!1);
   return a.callReturn();
-}}, dialog_time:{color:"#EC4466", skeleton:"basic", statements:[], template:"%1 \uc744(\ub97c) %2 \ucd08 \ub3d9\uc548 %3 %4", params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["\ub9d0\ud558\uae30", "speak"]], value:"speak", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["\uc548\ub155!"]}, {type:"number", params:["4"]}, null, null], type:"dialog_time"}, 
-paramsKeyMap:{VALUE:0, SECOND:1, OPTION:2}, "class":"say", isNotFor:["textBox"], func:function(b, a) {
+}}, dialog_time:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["\ub9d0\ud558\uae30", "speak"]], value:"speak", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["\uc548\ub155!"]}, {type:"number", params:["4"]}, null, null], type:"dialog_time"}, paramsKeyMap:{VALUE:0, SECOND:1, OPTION:2}, "class":"say", 
+isNotFor:["textBox"], func:function(b, a) {
   if (!a.isStart) {
     var c = a.getNumberValue("SECOND", a), d = a.getStringValue("VALUE", a), e = a.getField("OPTION", a);
     a.isStart = !0;
@@ -16260,104 +16244,104 @@ paramsKeyMap:{VALUE:0, SECOND:1, OPTION:2}, "class":"say", isNotFor:["textBox"],
     }, 1E3 * c);
   }
   return 0 == a.timeFlag ? (delete a.timeFlag, delete a.isStart, b.dialog && b.dialog.remove(), a.callReturn()) : a;
-}}, dialog:{color:"#EC4466", skeleton:"basic", statements:[], template:"%1 \uc744(\ub97c) %2 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["\ub9d0\ud558\uae30", "speak"]], value:"speak", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["\uc548\ub155!"]}, null, null], type:"dialog"}, paramsKeyMap:{VALUE:0, OPTION:1}, "class":"say", isNotFor:["textBox"], func:function(b, a) {
+}}, dialog:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["\ub9d0\ud558\uae30", "speak"]], value:"speak", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["\uc548\ub155!"]}, null, null], type:"dialog"}, paramsKeyMap:{VALUE:0, OPTION:1}, "class":"say", isNotFor:["textBox"], func:function(b, a) {
   var c = a.getStringValue("VALUE", a);
   c || "number" == typeof c || (c = "    ");
   var d = a.getField("OPTION", a), c = Entry.convertToRoundedDecimals(c, 3);
   new Entry.Dialog(b, c, d);
   b.syncDialogVisible(b.getVisible());
   return a.callReturn();
-}}, remove_dialog:{color:"#EC4466", skeleton:"basic", statements:[], template:"\ub9d0\ud558\uae30 \uc9c0\uc6b0\uae30 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null], type:"remove_dialog"}, "class":"say", isNotFor:["textBox"], func:function(b, a) {
+}}, remove_dialog:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null], type:"remove_dialog"}, "class":"say", isNotFor:["textBox"], func:function(b, a) {
   b.dialog && b.dialog.remove();
   return a.callReturn();
-}}, change_to_nth_shape:{color:"#EC4466", skeleton:"basic", statements:[], template:"%1 \ubaa8\uc591\uc73c\ub85c \ubc14\uafb8\uae30 %2", params:[{type:"DropdownDynamic", value:null, menuName:"pictures", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, null], type:"change_to_nth_shape"}, paramsKeyMap:{VALUE:0}, "class":"shape", isNotFor:[], func:function(b, a) {
+}}, change_to_nth_shape:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"pictures", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, null], type:"change_to_nth_shape"}, paramsKeyMap:{VALUE:0}, "class":"shape", isNotFor:[], func:function(b, a) {
   var c = a.getField("VALUE", a), c = b.parent.getPicture(c);
   b.setImage(c);
   return a.callReturn();
-}}, change_to_next_shape:{color:"#EC4466", skeleton:"basic", statements:[], template:"%1 \ubaa8\uc591\uc73c\ub85c \ubc14\uafb8\uae30 %2", params:[{type:"Dropdown", options:[["\ub2e4\uc74c", "next"], ["\uc774\uc804", "prev"]], value:"next", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, null], type:"change_to_next_shape"}, paramsKeyMap:{DRIECTION:0}, "class":"shape", isNotFor:["textBox"], func:function(b, a) {
+}}, change_to_next_shape:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\ub2e4\uc74c", "next"], ["\uc774\uc804", "prev"]], value:"next", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, null], type:"change_to_next_shape"}, paramsKeyMap:{DRIECTION:0}, "class":"shape", isNotFor:["textBox"], func:function(b, a) {
   var c;
   c = a.fields && "prev" === a.getStringField("DRIECTION") ? b.parent.getPrevPicture(b.picture.id) : b.parent.getNextPicture(b.picture.id);
   b.setImage(c);
   return a.callReturn();
-}}, set_effect_volume:{color:"#EC4466", skeleton:"basic", statements:[], template:"%1 \ud6a8\uacfc\ub97c %2 \ub9cc\ud07c \uc8fc\uae30 %3", params:[{type:"Dropdown", options:[["\uc0c9\uae54", "color"], ["\ubc1d\uae30", "brightness"], ["\ubd88\ud22c\uba85\ub3c4", "opacity"]], value:"color", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["10"]}, null], type:"set_effect_volume"}, 
-paramsKeyMap:{EFFECT:0, VALUE:1}, "class":"effect", isNotFor:["textBox"], func:function(b, a) {
+}}, set_effect_volume:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc0c9\uae54", "color"], ["\ubc1d\uae30", "brightness"], ["\ubd88\ud22c\uba85\ub3c4", "opacity"]], value:"color", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["10"]}, null], type:"set_effect_volume"}, paramsKeyMap:{EFFECT:0, VALUE:1}, "class":"effect", 
+isNotFor:["textBox"], func:function(b, a) {
   var c = a.getField("EFFECT", a), d = a.getNumberValue("VALUE", a);
   "color" == c ? b.effect.hue = d + b.effect.hue : "lens" != c && "swriling" != c && "pixel" != c && "mosaic" != c && ("brightness" == c ? b.effect.brightness = d + b.effect.brightness : "blur" != c && "opacity" == c && (b.effect.alpha += d / 100));
   b.applyFilter();
   return a.callReturn();
-}}, set_effect:{color:"#EC4466", skeleton:"basic", statements:[], template:"%1 \ud6a8\uacfc\ub97c %2 (\uc73c)\ub85c \uc815\ud558\uae30 %3", params:[{type:"Dropdown", options:[["\uc0c9\uae54", "color"], ["\ubc1d\uae30", "brightness"], ["\ubd88\ud22c\uba85\ub3c4", "opacity"]], value:"color", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["100"]}, null], type:"set_effect"}, 
-paramsKeyMap:{EFFECT:0, VALUE:1}, "class":"effect", isNotFor:["textBox"], func:function(b, a) {
+}}, set_effect:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc0c9\uae54", "color"], ["\ubc1d\uae30", "brightness"], ["\ubd88\ud22c\uba85\ub3c4", "opacity"]], value:"color", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["100"]}, null], type:"set_effect"}, paramsKeyMap:{EFFECT:0, VALUE:1}, "class":"effect", isNotFor:["textBox"], 
+func:function(b, a) {
   var c = a.getField("EFFECT", a), d = a.getNumberValue("VALUE", a);
   "color" == c ? b.effect.hue = d : "lens" != c && "swriling" != c && "pixel" != c && "mosaic" != c && ("brightness" == c ? b.effect.brightness = d : "blur" != c && "opacity" == c && (b.effect.alpha = d / 100));
   b.applyFilter();
   return a.callReturn();
-}}, erase_all_effects:{color:"#EC4466", skeleton:"basic", statements:[], template:"\ud6a8\uacfc \ubaa8\ub450 \uc9c0\uc6b0\uae30 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null], type:"erase_all_effects"}, "class":"effect", isNotFor:["textBox"], func:function(b, a) {
+}}, erase_all_effects:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null], type:"erase_all_effects"}, "class":"effect", isNotFor:["textBox"], func:function(b, a) {
   b.resetFilter();
   return a.callReturn();
-}}, change_scale_percent:{color:"#EC4466", skeleton:"basic", statements:[], template:"\ud06c\uae30\ub97c %1 \ub9cc\ud07c \ubc14\uafb8\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"change_scale_percent"}, paramsKeyMap:{VALUE:0}, "class":"scale", isNotFor:[], func:function(b, a) {
+}}, change_scale_percent:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"change_scale_percent"}, paramsKeyMap:{VALUE:0}, "class":"scale", isNotFor:[], func:function(b, a) {
   var c = (a.getNumberValue("VALUE", a) + 100) / 100;
   b.setScaleX(b.getScaleX() * c);
   b.setScaleY(b.getScaleY() * c);
   return a.callReturn();
-}}, set_scale_percent:{color:"#EC4466", skeleton:"basic", statements:[], template:"\ud06c\uae30\ub97c %1  (\uc73c)\ub85c \uc815\ud558\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["100"]}, null], type:"set_scale_percent"}, paramsKeyMap:{VALUE:0}, "class":"scale", isNotFor:[], func:function(b, a) {
+}}, set_scale_percent:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["100"]}, null], type:"set_scale_percent"}, paramsKeyMap:{VALUE:0}, "class":"scale", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a) / 100, d = b.snapshot_;
   b.setScaleX(c * d.scaleX);
   b.setScaleY(c * d.scaleY);
   return a.callReturn();
-}}, change_scale_size:{color:"#EC4466", skeleton:"basic", statements:[], template:"\ud06c\uae30\ub97c %1 \ub9cc\ud07c \ubc14\uafb8\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"change_scale_size"}, paramsKeyMap:{VALUE:0}, "class":"scale", isNotFor:[], func:function(b, a) {
+}}, change_scale_size:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"change_scale_size"}, paramsKeyMap:{VALUE:0}, "class":"scale", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setSize(b.getSize() + c);
   return a.callReturn();
-}}, set_scale_size:{color:"#EC4466", skeleton:"basic", statements:[], template:"\ud06c\uae30\ub97c %1  (\uc73c)\ub85c \uc815\ud558\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["100"]}, null], type:"set_scale_size"}, paramsKeyMap:{VALUE:0}, "class":"scale", isNotFor:[], func:function(b, a) {
+}}, set_scale_size:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["100"]}, null], type:"set_scale_size"}, paramsKeyMap:{VALUE:0}, "class":"scale", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setSize(c);
   return a.callReturn();
-}}, flip_y:{color:"#EC4466", skeleton:"basic", statements:[], template:"\uc88c\uc6b0 \ubaa8\uc591 \ub4a4\uc9d1\uae30 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null], type:"flip_y"}, "class":"flip", isNotFor:[], func:function(b, a) {
+}}, flip_y:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null], type:"flip_y"}, "class":"flip", isNotFor:[], func:function(b, a) {
   b.setScaleX(-1 * b.getScaleX());
   return a.callReturn();
-}}, flip_x:{color:"#EC4466", skeleton:"basic", statements:[], template:"\uc0c1\ud558 \ubaa8\uc591 \ub4a4\uc9d1\uae30 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null], type:"flip_x"}, "class":"flip", isNotFor:[], func:function(b, a) {
+}}, flip_x:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null], type:"flip_x"}, "class":"flip", isNotFor:[], func:function(b, a) {
   b.setScaleY(-1 * b.getScaleY());
   return a.callReturn();
-}}, set_object_order:{color:"#EC4466", skeleton:"basic", statements:[], template:"%1 \ubc88\uc9f8\ub85c \uc62c\ub77c\uc624\uae30 %2", params:[{type:"DropdownDynamic", value:null, menuName:"objectSequence", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, null], type:"set_object_order"}, paramsKeyMap:{VALUE:0}, "class":"z-index", isNotFor:[], func:function(b, a) {
+}}, set_object_order:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"objectSequence", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, null], type:"set_object_order"}, paramsKeyMap:{VALUE:0}, "class":"z-index", isNotFor:[], func:function(b, a) {
   var c = a.getField("VALUE", a), d = Entry.container.getCurrentObjects().indexOf(b.parent);
   if (-1 < d) {
     return Entry.container.moveElementByBlock(d, c), a.callReturn();
   }
   throw Error("object is not available");
-}}, get_pictures:{color:"#EC4466", skeleton:"basic_string_field", statements:[], template:"%1  ", params:[{type:"DropdownDynamic", value:null, menuName:"pictures", fontSize:11, options:[["\uc5d4\ud2b8\ub9ac\ubd07_\uac77\uae301", "vx80"], ["\uc5d4\ud2b8\ub9ac\ubd07_\uac77\uae301", "vx80"], ["\uc5d4\ud2b8\ub9ac\ubd07_\uac77\uae302", "4t48"]]}], events:{}, def:{params:[null]}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
+}}, get_pictures:{color:"#EC4466", skeleton:"basic_string_field", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"pictures", fontSize:11, options:[["\uc5d4\ud2b8\ub9ac\ubd07_\uac77\uae301", "vx80"], ["\uc5d4\ud2b8\ub9ac\ubd07_\uac77\uae301", "vx80"], ["\uc5d4\ud2b8\ub9ac\ubd07_\uac77\uae302", "4t48"]]}], events:{}, def:{params:[null]}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
   return a.getStringField("VALUE");
-}}, change_to_some_shape:{color:"#EC4466", skeleton:"basic", statements:[], template:"%1 \ubaa8\uc591\uc73c\ub85c \ubc14\uafb8\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"get_pictures", id:"z4jm"}, null], type:"change_to_some_shape", id:"0x2t"}, paramsKeyMap:{VALUE:0}, "class":"shape", isNotFor:["textBox"], func:function(b, a) {
+}}, change_to_some_shape:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"get_pictures", id:"z4jm"}, null], type:"change_to_some_shape", id:"0x2t"}, paramsKeyMap:{VALUE:0}, "class":"shape", isNotFor:["textBox"], func:function(b, a) {
   var c = a.getStringValue("VALUE");
   Entry.parseNumber(c);
   c = b.parent.getPicture(c);
   b.setImage(c);
   return a.callReturn();
-}}, add_effect_amount:{color:"#EC4466", skeleton:"basic", statements:[], template:"%1 \ud6a8\uacfc\ub97c %2 \ub9cc\ud07c \uc8fc\uae30 %3", params:[{type:"Dropdown", options:[["\uc0c9\uae54", "color"], ["\ubc1d\uae30", "brightness"], ["\ud22c\uba85\ub3c4", "transparency"]], value:"color", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["10"]}, null], type:"add_effect_amount"}, 
-paramsKeyMap:{EFFECT:0, VALUE:1}, "class":"effect", isNotFor:["textBox"], func:function(b, a) {
+}}, add_effect_amount:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc0c9\uae54", "color"], ["\ubc1d\uae30", "brightness"], ["\ud22c\uba85\ub3c4", "transparency"]], value:"color", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["10"]}, null], type:"add_effect_amount"}, paramsKeyMap:{EFFECT:0, VALUE:1}, "class":"effect", 
+isNotFor:["textBox"], func:function(b, a) {
   var c = a.getField("EFFECT", a), d = a.getNumberValue("VALUE", a);
   "color" == c ? b.effect.hsv = d + b.effect.hsv : "brightness" == c ? b.effect.brightness = d + b.effect.brightness : "transparency" == c && (b.effect.alpha -= d / 100);
   b.applyFilter();
   return a.callReturn();
-}}, change_effect_amount:{color:"#EC4466", skeleton:"basic", statements:[], template:"%1 \ud6a8\uacfc\ub97c %2 (\uc73c)\ub85c \uc815\ud558\uae30 %3", params:[{type:"Dropdown", options:[["\uc0c9\uae54", "color"], ["\ubc1d\uae30", "brightness"], ["\ud22c\uba85\ub3c4", "transparency"]], value:"color", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["100"]}, null], 
-type:"change_effect_amount"}, paramsKeyMap:{EFFECT:0, VALUE:1}, "class":"effect", isNotFor:["textBox"], func:function(b, a) {
+}}, change_effect_amount:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc0c9\uae54", "color"], ["\ubc1d\uae30", "brightness"], ["\ud22c\uba85\ub3c4", "transparency"]], value:"color", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["100"]}, null], type:"change_effect_amount"}, paramsKeyMap:{EFFECT:0, VALUE:1}, "class":"effect", 
+isNotFor:["textBox"], func:function(b, a) {
   var c = a.getField("EFFECT", a), d = a.getNumberValue("VALUE", a);
   "color" == c ? b.effect.hsv = d : "brightness" == c ? b.effect.brightness = d : "transparency" == c && (b.effect.alpha = 1 - d / 100);
   b.applyFilter();
   return a.callReturn();
-}}, set_effect_amount:{color:"#EC4466", skeleton:"basic", statements:[], template:"%1 \ud6a8\uacfc\ub97c %2 \ub9cc\ud07c \uc8fc\uae30 %3", params:[{type:"Dropdown", options:[["\uc0c9\uae54", "color"], ["\ubc1d\uae30", "brightness"], ["\ud22c\uba85\ub3c4", "transparency"]], value:"color", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["10"]}, null], type:"set_effect_amount"}, 
-paramsKeyMap:{EFFECT:0, VALUE:1}, "class":"effect", isNotFor:["textBox"], func:function(b, a) {
+}}, set_effect_amount:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc0c9\uae54", "color"], ["\ubc1d\uae30", "brightness"], ["\ud22c\uba85\ub3c4", "transparency"]], value:"color", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["10"]}, null], type:"set_effect_amount"}, paramsKeyMap:{EFFECT:0, VALUE:1}, "class":"effect", 
+isNotFor:["textBox"], func:function(b, a) {
   var c = a.getField("EFFECT", a), d = a.getNumberValue("VALUE", a);
   "color" == c ? b.effect.hue = d + b.effect.hue : "brightness" == c ? b.effect.brightness = d + b.effect.brightness : "transparency" == c && (b.effect.alpha -= d / 100);
   b.applyFilter();
   return a.callReturn();
-}}, set_entity_effect:{color:"#EC4466", skeleton:"basic", statements:[], template:"%1 \ud6a8\uacfc\ub97c %2 (\uc73c)\ub85c \uc815\ud558\uae30 %3", params:[{type:"Dropdown", options:[["\uc0c9\uae54", "color"], ["\ubc1d\uae30", "brightness"], ["\ud22c\uba85\ub3c4", "transparency"]], value:"color", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["100"]}, null], 
-type:"set_entity_effect"}, paramsKeyMap:{EFFECT:0, VALUE:1}, "class":"effect", isNotFor:["textBox"], func:function(b, a) {
+}}, set_entity_effect:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc0c9\uae54", "color"], ["\ubc1d\uae30", "brightness"], ["\ud22c\uba85\ub3c4", "transparency"]], value:"color", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["100"]}, null], type:"set_entity_effect"}, paramsKeyMap:{EFFECT:0, VALUE:1}, "class":"effect", 
+isNotFor:["textBox"], func:function(b, a) {
   var c = a.getField("EFFECT", a), d = a.getNumberValue("VALUE", a);
   "color" == c ? b.effect.hue = d : "brightness" == c ? b.effect.brightness = d : "transparency" == c && (b.effect.alpha = 1 - d / 100);
   b.applyFilter();
   return a.callReturn();
-}}, change_object_index:{color:"#EC4466", skeleton:"basic", statements:[], template:"%1 \ubcf4\ub0b4\uae30 %2", params:[{type:"Dropdown", options:[["\ub9e8 \uc55e\uc73c\ub85c", "FRONT"], ["\uc55e\uc73c\ub85c", "FORWARD"], ["\ub4a4\ub85c", "BACKWARD"], ["\ub9e8 \ub4a4\ub85c", "BACK"]], value:"FRONT", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, null], type:"change_object_index"}, paramsKeyMap:{LOCATION:0}, "class":"z-index", 
-isNotFor:[], func:function(b, a) {
+}}, change_object_index:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\ub9e8 \uc55e\uc73c\ub85c", "FRONT"], ["\uc55e\uc73c\ub85c", "FORWARD"], ["\ub4a4\ub85c", "BACKWARD"], ["\ub9e8 \ub4a4\ub85c", "BACK"]], value:"FRONT", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, null], type:"change_object_index"}, paramsKeyMap:{LOCATION:0}, "class":"z-index", isNotFor:[], func:function(b, 
+a) {
   var c, d = a.getField("LOCATION", a), e = Entry.container.getCurrentObjects(), f = e.indexOf(b.parent), e = e.length - 1;
   if (0 > f) {
     throw Error("object is not available for current scene");
@@ -16377,24 +16361,24 @@ isNotFor:[], func:function(b, a) {
   }
   Entry.container.moveElementByBlock(f, c);
   return a.callReturn();
-}}, move_direction:{color:"#A751E3", skeleton:"basic", statements:[], template:"\uc774\ub3d9 \ubc29\ud5a5\uc73c\ub85c %1 \ub9cc\ud07c \uc6c0\uc9c1\uc774\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"move_direction"}, paramsKeyMap:{VALUE:0}, "class":"walk", isNotFor:[], func:function(b, a) {
+}}, move_direction:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"move_direction"}, paramsKeyMap:{VALUE:0}, "class":"walk", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setX(b.getX() + c * Math.cos((b.getRotation() + b.getDirection() - 90) / 180 * Math.PI));
   b.setY(b.getY() - c * Math.sin((b.getRotation() + b.getDirection() - 90) / 180 * Math.PI));
   b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY());
   return a.callReturn();
-}}, move_x:{color:"#A751E3", skeleton:"basic", statements:[], template:"x \uc88c\ud45c\ub97c %1 \ub9cc\ud07c \ubc14\uafb8\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"move_x"}, paramsKeyMap:{VALUE:0}, "class":"move_relative", isNotFor:[], func:function(b, a) {
+}}, move_x:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"move_x"}, paramsKeyMap:{VALUE:0}, "class":"move_relative", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setX(b.getX() + c);
   b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY());
   return a.callReturn();
-}}, move_y:{color:"#A751E3", skeleton:"basic", statements:[], template:"y \uc88c\ud45c\ub97c %1 \ub9cc\ud07c \ubc14\uafb8\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"move_y"}, paramsKeyMap:{VALUE:0}, "class":"move_relative", isNotFor:[], func:function(b, a) {
+}}, move_y:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"move_y"}, paramsKeyMap:{VALUE:0}, "class":"move_relative", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setY(b.getY() + c);
   b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY());
   return a.callReturn();
-}}, locate_xy_time:{color:"#A751E3", skeleton:"basic", statements:[], template:"%1 \ucd08 \ub3d9\uc548 x: %2 y: %3 \uc704\uce58\ub85c \uc774\ub3d9\ud558\uae30 %4", params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["2"]}, {type:"number", params:["10"]}, {type:"number", params:["10"]}, null], type:"locate_xy_time"}, 
-paramsKeyMap:{VALUE1:0, VALUE2:1, VALUE3:2}, "class":"move_absolute", isNotFor:[], func:function(b, a) {
+}}, locate_xy_time:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["2"]}, {type:"number", params:["10"]}, {type:"number", params:["10"]}, null], type:"locate_xy_time"}, paramsKeyMap:{VALUE1:0, VALUE2:1, VALUE3:2}, "class":"move_absolute", isNotFor:[], 
+func:function(b, a) {
   if (!a.isStart) {
     var c;
     c = a.getNumberValue("VALUE1", a);
@@ -16417,49 +16401,48 @@ paramsKeyMap:{VALUE1:0, VALUE2:1, VALUE3:2}, "class":"move_absolute", isNotFor:[
   delete a.isStart;
   delete a.frameCount;
   return a.callReturn();
-}}, rotate_by_angle:{color:"#A751E3", skeleton:"basic", statements:[], template:"\uc624\ube0c\uc81d\ud2b8\ub97c %1 \ub9cc\ud07c \ud68c\uc804\ud558\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["90"]}, null], type:"rotate_by_angle"}, paramsKeyMap:{VALUE:0}, "class":"rotate", isNotFor:[], func:function(b, a) {
+}}, rotate_by_angle:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["90"]}, null], type:"rotate_by_angle"}, paramsKeyMap:{VALUE:0}, "class":"rotate", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setRotation(b.getRotation() + c);
   return a.callReturn();
-}}, rotate_by_angle_dropdown:{color:"#A751E3", skeleton:"basic", statements:[], template:"%1 \ub9cc\ud07c \ud68c\uc804\ud558\uae30 %2", params:[{type:"Dropdown", options:[["45", "45"], ["90", "90"], ["135", "135"], ["180", "180"]], value:"45", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:["45", null], type:"rotate_by_angle_dropdown"}, paramsKeyMap:{VALUE:0}, "class":"ebs", isNotFor:[], func:function(b, a) {
+}}, rotate_by_angle_dropdown:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["45", "45"], ["90", "90"], ["135", "135"], ["180", "180"]], value:"45", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:["45", null], type:"rotate_by_angle_dropdown"}, paramsKeyMap:{VALUE:0}, "class":"ebs", isNotFor:[], func:function(b, a) {
   var c = a.getField("VALUE", a);
   b.setRotation(b.getRotation() + Number(c));
   return a.callReturn();
-}}, see_angle:{color:"#A751E3", skeleton:"basic", statements:[], template:"\uc774\ub3d9 \ubc29\ud5a5\uc744 %1 (\uc73c)\ub85c \uc815\ud558\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["90"]}, null], type:"see_angle"}, paramsKeyMap:{VALUE:0}, "class":"rotate", isNotFor:[], func:function(b, a) {
+}}, see_angle:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["90"]}, null], type:"see_angle"}, paramsKeyMap:{VALUE:0}, "class":"rotate", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setDirection(c);
   return a.callReturn();
-}}, see_direction:{color:"#A751E3", skeleton:"basic", statements:[], template:"%1 \ucabd \ubcf4\uae30 %2", params:[{type:"DropdownDynamic", value:null, menuName:"sprites", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[null, null]}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
+}}, see_direction:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"sprites", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[null, null]}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
   var c = a.getField("VALUE", a), d = Entry.container.getEntity(c), c = d.getX() - b.getX(), d = d.getY() - b.getY();
   0 <= c ? b.setRotation(Math.atan(d / c) / Math.PI * 180 + 90) : b.setRotation(Math.atan(d / c) / Math.PI * 180 + 270);
   return a.callReturn();
-}}, locate_xy:{color:"#A751E3", skeleton:"basic", statements:[], template:"x: %1 y: %2 \uc704\uce58\ub85c \uc774\ub3d9\ud558\uae30 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["0"]}, {type:"number", params:["0"]}, null], type:"locate_xy"}, paramsKeyMap:{VALUE1:0, VALUE2:1}, "class":"move_absolute", isNotFor:[], func:function(b, 
-a) {
+}}, locate_xy:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["0"]}, {type:"number", params:["0"]}, null], type:"locate_xy"}, paramsKeyMap:{VALUE1:0, VALUE2:1}, "class":"move_absolute", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE1", a);
   b.setX(c);
   c = a.getNumberValue("VALUE2", a);
   b.setY(c);
   b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY());
   return a.callReturn();
-}}, locate_x:{color:"#A751E3", skeleton:"basic", statements:[], template:"x: %1 \uc704\uce58\ub85c \uc774\ub3d9\ud558\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"locate_x"}, paramsKeyMap:{VALUE:0}, "class":"move_absolute", isNotFor:[], func:function(b, a) {
+}}, locate_x:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"locate_x"}, paramsKeyMap:{VALUE:0}, "class":"move_absolute", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setX(c);
   b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY());
   return a.callReturn();
-}}, locate_y:{color:"#A751E3", skeleton:"basic", statements:[], template:"y: %1 \uc704\uce58\ub85c \uc774\ub3d9\ud558\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"locate_y"}, paramsKeyMap:{VALUE:0}, "class":"move_absolute", isNotFor:[], func:function(b, a) {
+}}, locate_y:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"locate_y"}, paramsKeyMap:{VALUE:0}, "class":"move_absolute", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setY(c);
   b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY());
   return a.callReturn();
-}}, locate:{color:"#A751E3", skeleton:"basic", statements:[], template:"%1 \uc704\uce58\ub85c \uc774\ub3d9\ud558\uae30 %2", params:[{type:"DropdownDynamic", value:null, menuName:"spritesWithMouse", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[null, null], type:"locate"}, paramsKeyMap:{VALUE:0}, "class":"move_absolute", isNotFor:[], func:function(b, a) {
+}}, locate:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"spritesWithMouse", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[null, null], type:"locate"}, paramsKeyMap:{VALUE:0}, "class":"move_absolute", isNotFor:[], func:function(b, a) {
   var c = a.getField("VALUE", a), d;
   "mouse" == c ? (c = Entry.stage.mouseCoordinate.x, d = Entry.stage.mouseCoordinate.y) : (d = Entry.container.getEntity(c), c = d.getX(), d = d.getY());
   b.setX(Number(c));
   b.setY(Number(d));
   b.brush && !b.brush.stop && b.brush.lineTo(c, -1 * d);
   return a.callReturn();
-}}, move_xy_time:{color:"#A751E3", skeleton:"basic", statements:[], template:"%1 \ucd08 \ub3d9\uc548 x: %2 y: %3 \ub9cc\ud07c \uc6c0\uc9c1\uc774\uae30 %4", params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["2"]}, {type:"number", params:["10"]}, {type:"number", params:["10"]}, null], type:"move_xy_time"}, 
-paramsKeyMap:{VALUE1:0, VALUE2:1, VALUE3:2}, "class":"move_relative", isNotFor:[], func:function(b, a) {
+}}, move_xy_time:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["2"]}, {type:"number", params:["10"]}, {type:"number", params:["10"]}, null], type:"move_xy_time"}, paramsKeyMap:{VALUE1:0, VALUE2:1, VALUE3:2}, "class":"move_relative", isNotFor:[], 
+func:function(b, a) {
   if (!a.isStart) {
     var c;
     c = a.getNumberValue("VALUE1", a);
@@ -16475,8 +16458,7 @@ paramsKeyMap:{VALUE1:0, VALUE2:1, VALUE3:2}, "class":"move_relative", isNotFor:[
   delete a.isStart;
   delete a.frameCount;
   return a.callReturn();
-}}, rotate_by_angle_time:{color:"#A751E3", skeleton:"basic", statements:[], template:"\uc624\ube0c\uc81d\ud2b8\ub97c %1 \ucd08 \ub3d9\uc548 %2 \ub9cc\ud07c \ud68c\uc804\ud558\uae30 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Angle"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["2"]}, {type:"number", params:["2"]}, null], type:"rotate_by_angle_time"}, paramsKeyMap:{VALUE:1}, "class":"rotate", isNotFor:[], 
-func:function(b, a) {
+}}, rotate_by_angle_time:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Angle"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["2"]}, {type:"number", params:["2"]}, null], type:"rotate_by_angle_time"}, paramsKeyMap:{VALUE:1}, "class":"rotate", isNotFor:[], func:function(b, a) {
   if (!a.isStart) {
     var c;
     c = a.getNumberValue("VALUE", a);
@@ -16491,7 +16473,7 @@ func:function(b, a) {
   delete a.isStart;
   delete a.frameCount;
   return a.callReturn();
-}}, bounce_wall:{color:"#A751E3", skeleton:"basic", statements:[], template:"\ud654\uba74 \ub05d\uc5d0 \ub2ff\uc73c\uba74 \ud295\uae30\uae30 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[null], type:"bounce_wall"}, "class":"walk", isNotFor:[], func:function(b, a) {
+}}, bounce_wall:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[null], type:"bounce_wall"}, "class":"walk", isNotFor:[], func:function(b, a) {
   var c = b.parent.getRotateMethod(), d = "free" == c ? (b.getRotation() + b.getDirection()).mod(360) : b.getDirection(), e = Entry.Utils.COLLISION.NONE;
   if (90 > d && 0 <= d || 360 > d && 270 <= d) {
     var e = b.collision == Entry.Utils.COLLISION.UP, f = ndgmr.checkPixelCollision(Entry.stage.wall.up, b.object, 0, !1);
@@ -16507,13 +16489,13 @@ func:function(b, a) {
   e && (b.collision = Entry.Utils.COLLISION.NONE), d && e && (d = !1), d && ("free" == c ? b.setRotation(-b.getRotation() - 2 * b.getDirection()) : b.setDirection(-b.getDirection() + 360), b.collision = Entry.Utils.COLLISION.RIGHT))) : 180 > d && 0 <= d && (e = b.collision == Entry.Utils.COLLISION.RIGHT, d = ndgmr.checkPixelCollision(Entry.stage.wall.right, b.object, 0, !1), !d && e && (b.collision = Entry.Utils.COLLISION.NONE), d && e && (d = !1), d ? ("free" == c ? b.setRotation(-b.getRotation() - 
   2 * b.getDirection()) : b.setDirection(-b.getDirection() + 360), b.collision = Entry.Utils.COLLISION.RIGHT) : (e = b.collision == Entry.Utils.COLLISION.LEFT, d = ndgmr.checkPixelCollision(Entry.stage.wall.left, b.object, 0, !1), !d && e && (b.collision = Entry.Utils.COLLISION.NONE), d && e && (d = !1), d && ("free" == c ? b.setRotation(-b.getRotation() - 2 * b.getDirection()) : b.setDirection(-b.getDirection() + 360), b.collision = Entry.Utils.COLLISION.LEFT)));
   return a.callReturn();
-}}, flip_arrow_horizontal:{color:"#A751E3", skeleton:"basic", statements:[], template:"\ud654\uc0b4\ud45c \ubc29\ud5a5 \uc88c\uc6b0 \ub4a4\uc9d1\uae30 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[null]}, func:function(b, a) {
+}}, flip_arrow_horizontal:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[null]}, func:function(b, a) {
   b.setDirection(b.getDirection() + 180);
   return a.callReturn();
-}}, flip_arrow_vertical:{color:"#A751E3", skeleton:"basic", statements:[], template:"\ud654\uc0b4\ud45c \ubc29\ud5a5 \uc0c1\ud558 \ub4a4\uc9d1\uae30 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[null]}, func:function(b, a) {
+}}, flip_arrow_vertical:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[null]}, func:function(b, a) {
   b.setDirection(b.getDirection() + 180);
   return a.callReturn();
-}}, see_angle_object:{color:"#A751E3", skeleton:"basic", statements:[], template:"%1 \ucabd \ubc14\ub77c\ubcf4\uae30 %2", params:[{type:"DropdownDynamic", value:null, menuName:"spritesWithMouse", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[null, null], type:"see_angle_object"}, paramsKeyMap:{VALUE:0}, "class":"rotate_absolute", isNotFor:[], func:function(b, a) {
+}}, see_angle_object:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"spritesWithMouse", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[null, null], type:"see_angle_object"}, paramsKeyMap:{VALUE:0}, "class":"rotate_absolute", isNotFor:[], func:function(b, a) {
   var c = a.getField("VALUE", a), d = b.getX(), e = b.getY();
   if (b.parent.id == c) {
     return a.callReturn();
@@ -16523,16 +16505,15 @@ func:function(b, a) {
   d = b.getDirection() + b.getRotation();
   b.setRotation(b.getRotation() + e - d);
   return a.callReturn();
-}}, see_angle_direction:{color:"#A751E3", skeleton:"basic", statements:[], template:"\uc624\ube0c\uc81d\ud2b8\ub97c %1 (\uc73c)\ub85c \uc815\ud558\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["90"]}, null], type:"see_angle_direction"}, paramsKeyMap:{VALUE:0}, "class":"rotate", isNotFor:[], func:function(b, a) {
+}}, see_angle_direction:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["90"]}, null], type:"see_angle_direction"}, paramsKeyMap:{VALUE:0}, "class":"rotate", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a), d = b.getDirection() + b.getRotation();
   b.setRotation(b.getRotation() + c - d);
   return a.callReturn();
-}}, rotate_direction:{color:"#A751E3", skeleton:"basic", statements:[], template:"\uc774\ub3d9 \ubc29\ud5a5\uc744 %1 \ub9cc\ud07c \ud68c\uc804\ud558\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["90"]}, null], type:"rotate_direction"}, paramsKeyMap:{VALUE:0}, "class":"rotate", isNotFor:[], func:function(b, a) {
+}}, rotate_direction:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["90"]}, null], type:"rotate_direction"}, paramsKeyMap:{VALUE:0}, "class":"rotate", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setDirection(c + b.getDirection());
   return a.callReturn();
-}}, locate_object_time:{color:"#A751E3", skeleton:"basic", statements:[], template:"%1 \ucd08 \ub3d9\uc548 %2 \uc704\uce58\ub85c \uc774\ub3d9\ud558\uae30 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"DropdownDynamic", value:null, menuName:"spritesWithMouse", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["2"]}, null, null], type:"locate_object_time"}, paramsKeyMap:{VALUE:0, TARGET:1}, "class":"move_absolute", 
-isNotFor:[], func:function(b, a) {
+}}, locate_object_time:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"DropdownDynamic", value:null, menuName:"spritesWithMouse", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["2"]}, null, null], type:"locate_object_time"}, paramsKeyMap:{VALUE:0, TARGET:1}, "class":"move_absolute", isNotFor:[], func:function(b, a) {
   if (!a.isStart) {
     var c, d, e;
     d = a.getField("TARGET", a);
@@ -16551,31 +16532,29 @@ isNotFor:[], func:function(b, a) {
   delete a.isStart;
   delete a.frameCount;
   return a.callReturn();
-}}, rotate_absolute:{color:"#A751E3", skeleton:"basic", statements:[], template:"\ubc29\ud5a5\uc744 %1 (\uc73c)\ub85c \uc815\ud558\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"angle"}, null], type:"rotate_absolute"}, paramsKeyMap:{VALUE:0}, "class":"rotate_absolute", isNotFor:[], func:function(b, a) {
+}}, rotate_absolute:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"angle"}, null], type:"rotate_absolute"}, paramsKeyMap:{VALUE:0}, "class":"rotate_absolute", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setRotation(c);
   return a.callReturn();
-}}, rotate_relative:{color:"#A751E3", skeleton:"basic", statements:[], template:"\ubc29\ud5a5\uc744 %1 \ub9cc\ud07c \ud68c\uc804\ud558\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"angle"}, null], type:"rotate_relative"}, paramsKeyMap:{VALUE:0}, "class":"rotate", isNotFor:[], func:function(b, a) {
+}}, rotate_relative:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"angle"}, null], type:"rotate_relative"}, paramsKeyMap:{VALUE:0}, "class":"rotate", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setRotation(c + b.getRotation());
   return a.callReturn();
-}}, direction_absolute:{color:"#A751E3", skeleton:"basic", statements:[], template:"\uc774\ub3d9 \ubc29\ud5a5\uc744 %1 (\uc73c)\ub85c \uc815\ud558\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"angle"}, null], type:"direction_absolute"}, paramsKeyMap:{VALUE:0}, "class":"rotate_absolute", isNotFor:[], func:function(b, a) {
+}}, direction_absolute:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"angle"}, null], type:"direction_absolute"}, paramsKeyMap:{VALUE:0}, "class":"rotate_absolute", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setDirection(c);
   return a.callReturn();
-}}, direction_relative:{color:"#A751E3", skeleton:"basic", statements:[], template:"\uc774\ub3d9 \ubc29\ud5a5\uc744 %1 \ub9cc\ud07c \ud68c\uc804\ud558\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"angle"}, null], type:"direction_relative"}, paramsKeyMap:{VALUE:0}, "class":"rotate", isNotFor:[], func:function(b, a) {
+}}, direction_relative:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"angle"}, null], type:"direction_relative"}, paramsKeyMap:{VALUE:0}, "class":"rotate", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setDirection(c + b.getDirection());
   return a.callReturn();
-}}, move_to_angle:{color:"#A751E3", skeleton:"basic", statements:[], template:"%1 \ubc29\ud5a5\uc73c\ub85c %2 \ub9cc\ud07c \uc6c0\uc9c1\uc774\uae30 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"angle"}, {type:"number", params:["10"]}, null], type:"move_to_angle"}, paramsKeyMap:{ANGLE:0, VALUE:1}, "class":"move_rotate", isNotFor:[], func:function(b, 
-a) {
+}}, move_to_angle:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"angle"}, {type:"number", params:["10"]}, null], type:"move_to_angle"}, paramsKeyMap:{ANGLE:0, VALUE:1}, "class":"move_rotate", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a), d = a.getNumberValue("ANGLE", a);
   b.setX(b.getX() + c * Math.cos((d - 90) / 180 * Math.PI));
   b.setY(b.getY() - c * Math.sin((d - 90) / 180 * Math.PI));
   b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY());
   return a.callReturn();
-}}, rotate_by_time:{color:"#A751E3", skeleton:"basic", statements:[], template:"%1 \ucd08 \ub3d9\uc548 \ubc29\ud5a5\uc744 %2 \ub9cc\ud07c \ud68c\uc804\ud558\uae30 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["2"]}, {type:"angle"}, null], type:"rotate_by_time"}, paramsKeyMap:{VALUE:0, ANGLE:1}, "class":"rotate", isNotFor:[], 
-func:function(b, a) {
+}}, rotate_by_time:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["2"]}, {type:"angle"}, null], type:"rotate_by_time"}, paramsKeyMap:{VALUE:0, ANGLE:1}, "class":"rotate", isNotFor:[], func:function(b, a) {
   if (!a.isStart) {
     var c;
     c = a.getNumberValue("VALUE", a);
@@ -16590,8 +16569,7 @@ func:function(b, a) {
   delete a.isStart;
   delete a.frameCount;
   return a.callReturn();
-}}, direction_relative_duration:{color:"#A751E3", skeleton:"basic", statements:[], template:"%1 \ucd08 \ub3d9\uc548 \uc774\ub3d9 \ubc29\ud5a5 %2 \ub9cc\ud07c \ud68c\uc804\ud558\uae30 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["2"]}, {type:"angle"}, null], type:"direction_relative_duration"}, paramsKeyMap:{DURATION:0, AMOUNT:1}, 
-"class":"rotate", isNotFor:[""], func:function(b, a) {
+}}, direction_relative_duration:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["2"]}, {type:"angle"}, null], type:"direction_relative_duration"}, paramsKeyMap:{DURATION:0, AMOUNT:1}, "class":"rotate", isNotFor:[""], func:function(b, a) {
   if (!a.isStart) {
     var c;
     c = a.getNumberValue("DURATION", a);
@@ -16607,27 +16585,27 @@ func:function(b, a) {
   delete a.frameCount;
   delete a.dDirection;
   return a.callReturn();
-}}, neobot_sensor_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], template:"%1  \uac12", params:[{type:"Dropdown", options:[["1\ubc88 \ud3ec\ud2b8", "1"], ["2\ubc88 \ud3ec\ud2b8", "2"], ["3\ubc88 \ud3ec\ud2b8", "3"], ["\ub9ac\ubaa8\ucee8", "4"]], value:"1", fontSize:11}], events:{}, def:{params:[null], type:"neobot_sensor_value"}, paramsKeyMap:{PORT:0}, "class":"neobot_value", isNotFor:["neobot"], func:function(b, a) {
+}}, neobot_sensor_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["1\ubc88 \ud3ec\ud2b8", "1"], ["2\ubc88 \ud3ec\ud2b8", "2"], ["3\ubc88 \ud3ec\ud2b8", "3"], ["\ub9ac\ubaa8\ucee8", "4"]], value:"1", fontSize:11}], events:{}, def:{params:[null], type:"neobot_sensor_value"}, paramsKeyMap:{PORT:0}, "class":"neobot_value", isNotFor:["neobot"], func:function(b, a) {
   var c = a.getStringField("PORT");
   return Entry.hw.portData[c];
-}}, neobot_turn_left:{color:"#00979D", skeleton:"basic", statements:[], template:"\uc67c\ucabd\ubaa8\ud130\ub97c %1 %2 \ud68c\uc804 %3", params:[{type:"Dropdown", options:[["\uc55e\uc73c\ub85c", "1"], ["\ub4a4\ub85c", "-1"]], value:"1", fontSize:11}, {type:"Dropdown", options:[["\ub290\ub9ac\uac8c", "1"], ["\ubcf4\ud1b5", "2"], ["\ube60\ub974\uac8c", "3"]], value:"1", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, 
-null], type:"neobot_turn_left"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"neobot_motor", isNotFor:["neobot"], func:function(b, a) {
+}}, neobot_turn_left:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc55e\uc73c\ub85c", "1"], ["\ub4a4\ub85c", "-1"]], value:"1", fontSize:11}, {type:"Dropdown", options:[["\ub290\ub9ac\uac8c", "1"], ["\ubcf4\ud1b5", "2"], ["\ube60\ub974\uac8c", "3"]], value:"1", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"neobot_turn_left"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, 
+"class":"neobot_motor", isNotFor:["neobot"], func:function(b, a) {
   var c = a.getNumberField("VALUE"), d = a.getNumberField("DIRECTION");
   Entry.hw.sendQueue.LMOT = c * d;
   return a.callReturn();
-}}, neobot_stop_left:{color:"#00979D", skeleton:"basic", statements:[], template:"\uc67c\ucabd\ubaa8\ud130 \uc815\uc9c0 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"neobot_stop_left"}, "class":"neobot_motor", isNotFor:["neobot"], func:function(b, a) {
+}}, neobot_stop_left:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"neobot_stop_left"}, "class":"neobot_motor", isNotFor:["neobot"], func:function(b, a) {
   Entry.hw.sendQueue.LMOT = 0;
   return a.callReturn();
-}}, neobot_turn_right:{color:"#00979D", skeleton:"basic", statements:[], template:"\uc624\ub978\ucabd\ubaa8\ud130\ub97c %1 %2 \ud68c\uc804 %3", params:[{type:"Dropdown", options:[["\uc55e\uc73c\ub85c", "1"], ["\ub4a4\ub85c", "-1"]], value:"1", fontSize:11}, {type:"Dropdown", options:[["\ub290\ub9ac\uac8c", "1"], ["\ubcf4\ud1b5", "2"], ["\ube60\ub974\uac8c", "3"]], value:"1", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, 
-null, null], type:"neobot_turn_right"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"neobot_motor", isNotFor:["neobot"], func:function(b, a) {
+}}, neobot_turn_right:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc55e\uc73c\ub85c", "1"], ["\ub4a4\ub85c", "-1"]], value:"1", fontSize:11}, {type:"Dropdown", options:[["\ub290\ub9ac\uac8c", "1"], ["\ubcf4\ud1b5", "2"], ["\ube60\ub974\uac8c", "3"]], value:"1", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"neobot_turn_right"}, paramsKeyMap:{DIRECTION:0, 
+VALUE:1}, "class":"neobot_motor", isNotFor:["neobot"], func:function(b, a) {
   var c = a.getNumberField("VALUE"), d = a.getNumberField("DIRECTION");
   Entry.hw.sendQueue.RMOT = c * d;
   return a.callReturn();
-}}, neobot_stop_right:{color:"#00979D", skeleton:"basic", statements:[], template:"\uc624\ub978\ucabd\ubaa8\ud130 \uc815\uc9c0 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"neobot_stop_right"}, "class":"neobot_motor", isNotFor:["neobot"], func:function(b, a) {
+}}, neobot_stop_right:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"neobot_stop_right"}, "class":"neobot_motor", isNotFor:["neobot"], func:function(b, a) {
   Entry.hw.sendQueue.RMOT = 0;
   return a.callReturn();
-}}, neobot_run_motor:{color:"#00979D", skeleton:"basic", statements:[], template:"%1 \ubaa8\ud130\ub97c  %2 \ucd08\uac04 %3 %4 %5", params:[{type:"Dropdown", options:[["\uc591\ucabd", "1"], ["\uc67c\ucabd", "2"], ["\uc624\ub978\ucabd", "3"]], value:"1", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["\ub290\ub9ac\uac8c", "1"], ["\ubcf4\ud1b5", "2"], ["\ube60\ub974\uac8c", "3"]], value:"1", fontSize:11}, {type:"Dropdown", options:[["\uc804\uc9c4", "1"], ["\ud6c4\uc9c4", 
-"2"], ["\uc88c\ud68c\uc804", "3"], ["\uc6b0\ud68c\uc804", "4"]], value:"1", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["1"]}, null, null, null], type:"neobot_run_motor"}, paramsKeyMap:{TYPE:0, DURATION:1, VALUE:2, DIRECTION:3}, "class":"neobot_motor", isNotFor:["neobot"], func:function(b, a) {
+}}, neobot_run_motor:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc591\ucabd", "1"], ["\uc67c\ucabd", "2"], ["\uc624\ub978\ucabd", "3"]], value:"1", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["\ub290\ub9ac\uac8c", "1"], ["\ubcf4\ud1b5", "2"], ["\ube60\ub974\uac8c", "3"]], value:"1", fontSize:11}, {type:"Dropdown", options:[["\uc804\uc9c4", "1"], ["\ud6c4\uc9c4", "2"], ["\uc88c\ud68c\uc804", "3"], ["\uc6b0\ud68c\uc804", 
+"4"]], value:"1", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["1"]}, null, null, null], type:"neobot_run_motor"}, paramsKeyMap:{TYPE:0, DURATION:1, VALUE:2, DIRECTION:3}, "class":"neobot_motor", isNotFor:["neobot"], func:function(b, a) {
   if (a.isStart) {
     if (1 == a.timeFlag) {
       var c = a.getNumberField("TYPE"), d = a.getNumberField("VALUE");
@@ -16664,20 +16642,20 @@ null, null], type:"neobot_turn_right"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "cl
     a.timeFlag = 0;
   }, c);
   return a;
-}}, neobot_servo_1:{color:"#00979D", skeleton:"basic", statements:[], template:"SERVO1\uc5d0 \uc5f0\uacb0\ub41c \uc11c\ubcf4\ubaa8\ud130\ub97c %1 \uc18d\ub3c4\ub85c %2 \ub85c \uc774\ub3d9 %3", params:[{type:"Dropdown", options:[["\ube60\ub978", "3"], ["\ubcf4\ud1b5", "2"], ["\ub290\ub9b0", "1"]], value:"3", fontSize:11}, {type:"Dropdown", options:[["0\ub3c4", "0"], ["10\ub3c4", "1"], ["20\ub3c4", "2"], ["30\ub3c4", "3"], ["40\ub3c4", "4"], ["50\ub3c4", "5"], ["60\ub3c4", "6"], ["70\ub3c4", "7"], 
-["80\ub3c4", "8"], ["90\ub3c4", "9"], ["100\ub3c4", "10"], ["110\ub3c4", "11"], ["120\ub3c4", "12"], ["130\ub3c4", "13"], ["140\ub3c4", "14"], ["150\ub3c4", "15"], ["160\ub3c4", "16"]], value:"0", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"neobot_servo_1"}, paramsKeyMap:{SPEED:0, VALUE:1}, "class":"neobot_servo", isNotFor:["neobot"], func:function(b, a) {
+}}, neobot_servo_1:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\ube60\ub978", "3"], ["\ubcf4\ud1b5", "2"], ["\ub290\ub9b0", "1"]], value:"3", fontSize:11}, {type:"Dropdown", options:[["0\ub3c4", "0"], ["10\ub3c4", "1"], ["20\ub3c4", "2"], ["30\ub3c4", "3"], ["40\ub3c4", "4"], ["50\ub3c4", "5"], ["60\ub3c4", "6"], ["70\ub3c4", "7"], ["80\ub3c4", "8"], ["90\ub3c4", "9"], ["100\ub3c4", "10"], ["110\ub3c4", "11"], ["120\ub3c4", "12"], ["130\ub3c4", "13"], ["140\ub3c4", 
+"14"], ["150\ub3c4", "15"], ["160\ub3c4", "16"]], value:"0", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"neobot_servo_1"}, paramsKeyMap:{SPEED:0, VALUE:1}, "class":"neobot_servo", isNotFor:["neobot"], func:function(b, a) {
   var c = a.getNumberField("VALUE"), d = a.getNumberField("SPEED");
   Entry.hw.sendQueue.SERVO1 = c;
   Entry.hw.sendQueue.SERVO1_SPEED = d;
   return a.callReturn();
-}}, neobot_servo_2:{color:"#00979D", skeleton:"basic", statements:[], template:"SERVO2\uc5d0 \uc5f0\uacb0\ub41c \uc11c\ubcf4\ubaa8\ud130\ub97c %1 \uc18d\ub3c4\ub85c %2 \ub85c \uc774\ub3d9 %3", params:[{type:"Dropdown", options:[["\ube60\ub978", "3"], ["\ubcf4\ud1b5", "2"], ["\ub290\ub9b0", "1"]], value:"3", fontSize:11}, {type:"Dropdown", options:[["0\ub3c4", "0"], ["10\ub3c4", "1"], ["20\ub3c4", "2"], ["30\ub3c4", "3"], ["40\ub3c4", "4"], ["50\ub3c4", "5"], ["60\ub3c4", "6"], ["70\ub3c4", "7"], 
-["80\ub3c4", "8"], ["90\ub3c4", "9"], ["100\ub3c4", "10"], ["110\ub3c4", "11"], ["120\ub3c4", "12"], ["130\ub3c4", "13"], ["140\ub3c4", "14"], ["150\ub3c4", "15"], ["160\ub3c4", "16"]], value:"0", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"neobot_servo_2"}, paramsKeyMap:{SPEED:0, VALUE:1}, "class":"neobot_servo", isNotFor:["neobot"], func:function(b, a) {
+}}, neobot_servo_2:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\ube60\ub978", "3"], ["\ubcf4\ud1b5", "2"], ["\ub290\ub9b0", "1"]], value:"3", fontSize:11}, {type:"Dropdown", options:[["0\ub3c4", "0"], ["10\ub3c4", "1"], ["20\ub3c4", "2"], ["30\ub3c4", "3"], ["40\ub3c4", "4"], ["50\ub3c4", "5"], ["60\ub3c4", "6"], ["70\ub3c4", "7"], ["80\ub3c4", "8"], ["90\ub3c4", "9"], ["100\ub3c4", "10"], ["110\ub3c4", "11"], ["120\ub3c4", "12"], ["130\ub3c4", "13"], ["140\ub3c4", 
+"14"], ["150\ub3c4", "15"], ["160\ub3c4", "16"]], value:"0", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"neobot_servo_2"}, paramsKeyMap:{SPEED:0, VALUE:1}, "class":"neobot_servo", isNotFor:["neobot"], func:function(b, a) {
   var c = a.getNumberField("VALUE"), d = a.getNumberField("SPEED");
   Entry.hw.sendQueue.SERVO2 = c;
   Entry.hw.sendQueue.SERVO2_SPEED = d;
   return a.callReturn();
-}}, neobot_play_note_for:{color:"#00979D", skeleton:"basic", statements:[], template:"\uba5c\ub85c\ub514 %1 \uc744(\ub97c) %2 \uc625\ud0c0\ube0c\ub85c %3 \uae38\uc774\ub9cc\ud07c \uc18c\ub9ac\ub0b4\uae30 %4", params:[{type:"Dropdown", options:[["\ub3c4", "1"], ["\ub808", "2"], ["\ubbf8", "3"], ["\ud30c", "4"], ["\uc194", "5"], ["\ub77c", "6"], ["\uc2dc", "7"], ["\ub3c4", "8"]], value:"1", fontSize:11}, {type:"Dropdown", options:[["1", "0"], ["2", "1"], ["3", "2"]], value:"0", fontSize:11}, {type:"Dropdown", 
-options:[["2\ubd84\uc74c\ud45c", "2"], ["4\ubd84\uc74c\ud45c", "4"], ["8\ubd84\uc74c\ud45c", "8"]], value:"2", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null, null], type:"neobot_play_note_for"}, paramsKeyMap:{NOTE:0, OCTAVE:1, DURATION:2}, "class":"neobot_note", isNotFor:["neobot"], func:function(b, a) {
+}}, neobot_play_note_for:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\ub3c4", "1"], ["\ub808", "2"], ["\ubbf8", "3"], ["\ud30c", "4"], ["\uc194", "5"], ["\ub77c", "6"], ["\uc2dc", "7"], ["\ub3c4", "8"]], value:"1", fontSize:11}, {type:"Dropdown", options:[["1", "0"], ["2", "1"], ["3", "2"]], value:"0", fontSize:11}, {type:"Dropdown", options:[["2\ubd84\uc74c\ud45c", "2"], ["4\ubd84\uc74c\ud45c", "4"], ["8\ubd84\uc74c\ud45c", "8"]], value:"2", fontSize:11}, 
+{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null, null], type:"neobot_play_note_for"}, paramsKeyMap:{NOTE:0, OCTAVE:1, DURATION:2}, "class":"neobot_note", isNotFor:["neobot"], func:function(b, a) {
   var c = Entry.hw.sendQueue;
   if (a.isStart) {
     if (1 == a.timeFlag) {
@@ -16700,21 +16678,20 @@ options:[["2\ubd84\uc74c\ud45c", "2"], ["4\ubd84\uc74c\ud45c", "4"], ["8\ubd84\u
     a.timeFlag = 0;
   }, 1 / f * 2E3);
   return a;
-}}, neobot_set_sensor_value:{color:"#00979D", skeleton:"basic", statements:[], template:"%1 \ubc88 \ud3ec\ud2b8\uc758 \uac12\uc744 %2 %3", params:[{type:"Dropdown", options:[["1", "O_1"], ["2", "O_2"]], value:"O_1", fontSize:11}, {type:"Dropdown", options:[["\ucf1c\uae30", "1"], ["\ub044\uae30", "0"]], value:"1", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"neobot_set_sensor_value"}, paramsKeyMap:{PORT:0, 
-VALUE:1}, "class":"neobot_set_value", isNotFor:["neobot"], func:function(b, a) {
+}}, neobot_set_sensor_value:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["1", "O_1"], ["2", "O_2"]], value:"O_1", fontSize:11}, {type:"Dropdown", options:[["\ucf1c\uae30", "1"], ["\ub044\uae30", "0"]], value:"1", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"neobot_set_sensor_value"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"neobot_set_value", isNotFor:["neobot"], 
+func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getStringField("PORT", a), e = a.getNumberField("VALUE", a);
   c[d] = e;
   return a.callReturn();
-}}, robotis_openCM70_cm_custom_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], template:"\uc9c1\uc811\uc785\ub825 \uc8fc\uc18c ( %1 ) %2 \uac12", params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["BYTE", "BYTE"], ["WORD", "WORD"], ["DWORD", "DWORD"]], value:"BYTE", fontSize:11}], events:{}, def:{params:[{type:"number", params:["0"]}, null], type:"robotis_openCM70_cm_custom_value"}, paramsKeyMap:{VALUE:0, SIZE:1}, "class":"robotis_openCM70_custom", isNotFor:["robotis_openCM70"], 
-func:function(b, a) {
+}}, robotis_openCM70_cm_custom_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["BYTE", "BYTE"], ["WORD", "WORD"], ["DWORD", "DWORD"]], value:"BYTE", fontSize:11}], events:{}, def:{params:[{type:"number", params:["0"]}, null], type:"robotis_openCM70_cm_custom_value"}, paramsKeyMap:{VALUE:0, SIZE:1}, "class":"robotis_openCM70_custom", isNotFor:["robotis_openCM70"], func:function(b, a) {
   var c = Entry.Robotis_openCM70.INSTRUCTION.READ, d = 0, e = 0, f = 0, d = a.getStringField("SIZE");
   "BYTE" == d ? e = 1 : "WORD" == d ? e = 2 : "DWORD" == d && (e = 4);
   f = d = a.getNumberValue("VALUE");
   Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, e]]);
   Entry.Robotis_carCont.update();
   return Entry.hw.portData[f];
-}}, robotis_openCM70_sensor_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], template:"\uc81c\uc5b4\uae30 %1 \uac12", params:[{type:"Dropdown", options:[["\ucd5c\uc885 \uc18c\ub9ac \uac10\uc9c0 \ud69f\uc218", "CM_SOUND_DETECTED"], ["\uc2e4\uc2dc\uac04 \uc18c\ub9ac \uac10\uc9c0 \ud69f\uc218", "CM_SOUND_DETECTING"], ["\uc0ac\uc6a9\uc790 \ubc84\ud2bc \uc0c1\ud0dc", "CM_USER_BUTTON"]], value:"CM_SOUND_DETECTED", fontSize:11}], events:{}, def:{params:[null], type:"robotis_openCM70_sensor_value"}, 
-paramsKeyMap:{SENSOR:0}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
+}}, robotis_openCM70_sensor_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["\ucd5c\uc885 \uc18c\ub9ac \uac10\uc9c0 \ud69f\uc218", "CM_SOUND_DETECTED"], ["\uc2e4\uc2dc\uac04 \uc18c\ub9ac \uac10\uc9c0 \ud69f\uc218", "CM_SOUND_DETECTING"], ["\uc0ac\uc6a9\uc790 \ubc84\ud2bc \uc0c1\ud0dc", "CM_USER_BUTTON"]], value:"CM_SOUND_DETECTED", fontSize:11}], events:{}, def:{params:[null], type:"robotis_openCM70_sensor_value"}, paramsKeyMap:{SENSOR:0}, 
+"class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
   var c = Entry.Robotis_openCM70.INSTRUCTION.READ, d = 0, e = 0, f = 0, g = 0, h = a.getStringField("SENSOR");
   "CM_SOUND_DETECTED" == h ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1]) : "CM_SOUND_DETECTING" == h ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[0], 
   e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[1]) : "CM_USER_BUTTON" == h && (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1]);
@@ -16722,7 +16699,7 @@ paramsKeyMap:{SENSOR:0}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openC
   Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, g]]);
   Entry.Robotis_carCont.update();
   return Entry.hw.portData[f];
-}}, robotis_openCM70_aux_sensor_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], template:"%1   %2 \uac12", params:[{type:"Dropdown", options:[["3", "PORT_3"], ["4", "PORT_4"], ["5", "PORT_5"], ["6", "PORT_6"]], value:"PORT_3", fontSize:11}, {type:"Dropdown", options:[["\uc11c\ubcf4\ubaa8\ud130 \uc704\uce58", "AUX_SERVO_POSITION"], ["\uc801\uc678\uc120\uc13c\uc11c", "AUX_IR"], ["\uc811\ucd09\uc13c\uc11c", "AUX_TOUCH"], ["\uc870\ub3c4\uc13c\uc11c(CDS)", "AUX_BRIGHTNESS"], ["\uc628\uc2b5\ub3c4\uc13c\uc11c(\uc2b5\ub3c4)", 
+}}, robotis_openCM70_aux_sensor_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["3", "PORT_3"], ["4", "PORT_4"], ["5", "PORT_5"], ["6", "PORT_6"]], value:"PORT_3", fontSize:11}, {type:"Dropdown", options:[["\uc11c\ubcf4\ubaa8\ud130 \uc704\uce58", "AUX_SERVO_POSITION"], ["\uc801\uc678\uc120\uc13c\uc11c", "AUX_IR"], ["\uc811\ucd09\uc13c\uc11c", "AUX_TOUCH"], ["\uc870\ub3c4\uc13c\uc11c(CDS)", "AUX_BRIGHTNESS"], ["\uc628\uc2b5\ub3c4\uc13c\uc11c(\uc2b5\ub3c4)", 
 "AUX_HYDRO_THEMO_HUMIDITY"], ["\uc628\uc2b5\ub3c4\uc13c\uc11c(\uc628\ub3c4)", "AUX_HYDRO_THEMO_TEMPER"], ["\uc628\ub3c4\uc13c\uc11c", "AUX_TEMPERATURE"], ["\ucd08\uc74c\ud30c\uc13c\uc11c", "AUX_ULTRASONIC"], ["\uc790\uc11d\uc13c\uc11c", "AUX_MAGNETIC"], ["\ub3d9\uc791\uac10\uc9c0\uc13c\uc11c", "AUX_MOTION_DETECTION"], ["\uceec\ub7ec\uc13c\uc11c", "AUX_COLOR"], ["\uc0ac\uc6a9\uc790 \uc7a5\uce58", "AUX_CUSTOM"]], value:"AUX_SERVO_POSITION", fontSize:11}], events:{}, def:{params:[null, null], type:"robotis_openCM70_aux_sensor_value"}, 
 paramsKeyMap:{PORT:0, SENSOR:1}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
   var c = Entry.Robotis_openCM70.INSTRUCTION.READ, d = 0, e = 0, f = 0, g = 0, h = a.getStringField("PORT"), k = a.getStringField("SENSOR"), l = 0;
@@ -16739,64 +16716,63 @@ paramsKeyMap:{PORT:0, SENSOR:1}, "class":"robotis_openCM70_cm", isNotFor:["robot
   Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, g]]);
   Entry.Robotis_carCont.update();
   return Entry.hw.portData[f];
-}}, robotis_openCM70_cm_buzzer_index:{color:"#00979D", skeleton:"basic", statements:[], template:"\uc81c\uc5b4\uae30 \uc74c\uacc4\uac12 %1 \uc744(\ub97c) %2 \ucd08 \ub3d9\uc548 \uc5f0\uc8fc %3", params:[{type:"Dropdown", options:[["\ub77c(0)", "0"], ["\ub77c#(1)", "1"], ["\uc2dc(2)", "2"], ["\ub3c4(3)", "3"], ["\ub3c4#(4)", "4"], ["\ub808(5)", "5"], ["\ub808#(6)", "6"], ["\ubbf8(7)", "7"], ["\ud30c(8)", "8"], ["\ud30c#(9)", "9"], ["\uc194(10)", "10"], ["\uc194#(11)", "11"], ["\ub77c(12)", "12"], 
-["\ub77c#(13)", "13"], ["\uc2dc(14)", "14"], ["\ub3c4(15)", "15"], ["\ub3c4#(16)", "16"], ["\ub808(17)", "17"], ["\ub808#(18)", "18"], ["\ubbf8(19)", "19"], ["\ud30c(20)", "20"], ["\ud30c#(21)", "21"], ["\uc194(22)", "22"], ["\uc194#(23)", "23"], ["\ub77c(24)", "24"], ["\ub77c#(25)", "25"], ["\uc2dc(26)", "26"], ["\ub3c4(27)", "27"], ["\ub3c4#(28)", "28"], ["\ub808(29)", "29"], ["\ub808#(30)", "30"], ["\ubbf8(31)", "31"], ["\ud30c(32)", "32"], ["\ud30c#(33)", "33"], ["\uc194(34)", "34"], ["\uc194#(35)", 
-"35"], ["\ub77c(36)", "36"], ["\ub77c#(37)", "37"], ["\uc2dc(38)", "38"], ["\ub3c4(39)", "39"], ["\ub3c4#(40)", "40"], ["\ub808(41)", "41"], ["\ub808#(42)", "42"], ["\ubbf8(43)", "43"], ["\ud30c(44)", "44"], ["\ud30c#(45)", "45"], ["\uc194(46)", "46"], ["\uc194#(47)", "47"], ["\ub77c(48)", "48"], ["\ub77c#(49)", "49"], ["\uc2dc(50)", "50"], ["\ub3c4(51)", "51"]], value:"0", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", 
-size:12}], events:{}, def:{params:[null, {type:"number", params:["1"]}, null], type:"robotis_openCM70_cm_buzzer_index"}, paramsKeyMap:{CM_BUZZER_INDEX:0, CM_BUZZER_TIME:1}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
+}}, robotis_openCM70_cm_buzzer_index:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\ub77c(0)", "0"], ["\ub77c#(1)", "1"], ["\uc2dc(2)", "2"], ["\ub3c4(3)", "3"], ["\ub3c4#(4)", "4"], ["\ub808(5)", "5"], ["\ub808#(6)", "6"], ["\ubbf8(7)", "7"], ["\ud30c(8)", "8"], ["\ud30c#(9)", "9"], ["\uc194(10)", "10"], ["\uc194#(11)", "11"], ["\ub77c(12)", "12"], ["\ub77c#(13)", "13"], ["\uc2dc(14)", "14"], ["\ub3c4(15)", "15"], ["\ub3c4#(16)", "16"], ["\ub808(17)", "17"], 
+["\ub808#(18)", "18"], ["\ubbf8(19)", "19"], ["\ud30c(20)", "20"], ["\ud30c#(21)", "21"], ["\uc194(22)", "22"], ["\uc194#(23)", "23"], ["\ub77c(24)", "24"], ["\ub77c#(25)", "25"], ["\uc2dc(26)", "26"], ["\ub3c4(27)", "27"], ["\ub3c4#(28)", "28"], ["\ub808(29)", "29"], ["\ub808#(30)", "30"], ["\ubbf8(31)", "31"], ["\ud30c(32)", "32"], ["\ud30c#(33)", "33"], ["\uc194(34)", "34"], ["\uc194#(35)", "35"], ["\ub77c(36)", "36"], ["\ub77c#(37)", "37"], ["\uc2dc(38)", "38"], ["\ub3c4(39)", "39"], ["\ub3c4#(40)", 
+"40"], ["\ub808(41)", "41"], ["\ub808#(42)", "42"], ["\ubbf8(43)", "43"], ["\ud30c(44)", "44"], ["\ud30c#(45)", "45"], ["\uc194(46)", "46"], ["\uc194#(47)", "47"], ["\ub77c(48)", "48"], ["\ub77c#(49)", "49"], ["\uc2dc(50)", "50"], ["\ub3c4(51)", "51"]], value:"0", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["1"]}, null], type:"robotis_openCM70_cm_buzzer_index"}, 
+paramsKeyMap:{CM_BUZZER_INDEX:0, CM_BUZZER_TIME:1}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
   var c = a.getField("CM_BUZZER_INDEX", a), d = a.getNumberValue("CM_BUZZER_TIME", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, h = 0, k = 0, l = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[1], h = parseInt(10 * d);
   50 < h && (h = 50);
   k = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[0];
   l = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[1];
   return Entry.Robotis_carCont.postCallReturn(a, [[e, f, g, h], [e, k, l, c]], 1E3 * d);
-}}, robotis_openCM70_cm_buzzer_melody:{color:"#00979D", skeleton:"basic", statements:[], template:"\uc81c\uc5b4\uae30 \uba5c\ub85c\ub514 %1 \ubc88 \uc5f0\uc8fc %2", params:[{type:"Dropdown", options:[["0", "0"], ["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"], ["9", "9"], ["10", "10"], ["11", "11"], ["12", "12"], ["13", "13"], ["14", "14"], ["15", "15"], ["16", "16"], ["17", "17"], ["18", "18"], ["19", "19"], ["20", "20"], ["21", "21"], ["22", "22"], 
-["23", "23"], ["24", "24"]], value:"0", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null], type:"robotis_openCM70_cm_buzzer_melody"}, paramsKeyMap:{CM_BUZZER_MELODY:0}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
+}}, robotis_openCM70_cm_buzzer_melody:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["0", "0"], ["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"], ["9", "9"], ["10", "10"], ["11", "11"], ["12", "12"], ["13", "13"], ["14", "14"], ["15", "15"], ["16", "16"], ["17", "17"], ["18", "18"], ["19", "19"], ["20", "20"], ["21", "21"], ["22", "22"], ["23", "23"], ["24", "24"]], value:"0", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", 
+size:12}], events:{}, def:{params:[null, null], type:"robotis_openCM70_cm_buzzer_melody"}, paramsKeyMap:{CM_BUZZER_MELODY:0}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
   var c = a.getField("CM_BUZZER_MELODY", a), d = Entry.Robotis_openCM70.INSTRUCTION.WRITE, e = 0, f = 0, g = 0, h = 0, e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[0], f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[1], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[0], h = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[1];
   return Entry.Robotis_carCont.postCallReturn(a, [[d, e, f, 255], [d, g, h, c]], 1E3);
-}}, robotis_openCM70_cm_sound_detected_clear:{color:"#00979D", skeleton:"basic", statements:[], template:"\ucd5c\uc885\uc18c\ub9ac\uac10\uc9c0\ud69f\uc218 \ucd08\uae30\ud654 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"robotis_openCM70_cm_sound_detected_clear"}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
+}}, robotis_openCM70_cm_sound_detected_clear:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"robotis_openCM70_cm_sound_detected_clear"}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
   var c = Entry.Robotis_openCM70.INSTRUCTION.WRITE, d = 0, e = 0, d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1];
   return Entry.Robotis_carCont.postCallReturn(a, [[c, d, e, 0]], Entry.Robotis_openCM70.delay);
-}}, robotis_openCM70_cm_led:{color:"#00979D", skeleton:"basic", statements:[], template:"\uc81c\uc5b4\uae30 %1 LED %2 %3", params:[{type:"Dropdown", options:[["\ube68\uac04\uc0c9", "CM_LED_R"], ["\ub179\uc0c9", "CM_LED_G"], ["\ud30c\ub780\uc0c9", "CM_LED_B"]], value:"CM_LED_R", fontSize:11}, {type:"Dropdown", options:[["\ucf1c\uae30", "1"], ["\ub044\uae30", "0"]], value:"1", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, 
-null, null], type:"robotis_openCM70_cm_led"}, paramsKeyMap:{CM_LED:0, VALUE:1}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
+}}, robotis_openCM70_cm_led:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\ube68\uac04\uc0c9", "CM_LED_R"], ["\ub179\uc0c9", "CM_LED_G"], ["\ud30c\ub780\uc0c9", "CM_LED_B"]], value:"CM_LED_R", fontSize:11}, {type:"Dropdown", options:[["\ucf1c\uae30", "1"], ["\ub044\uae30", "0"]], value:"1", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"robotis_openCM70_cm_led"}, 
+paramsKeyMap:{CM_LED:0, VALUE:1}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
   var c = a.getField("CM_LED", a), d = a.getField("VALUE", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0;
   "CM_LED_R" == c ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_R[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_R[1]) : "CM_LED_G" == c ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_G[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_G[1]) : "CM_LED_B" == c && (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_B[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_B[1]);
   return Entry.Robotis_carCont.postCallReturn(a, [[e, f, g, d]], Entry.Robotis_openCM70.delay);
-}}, robotis_openCM70_cm_motion:{color:"#00979D", skeleton:"basic", statements:[], template:"\ubaa8\uc158 %1 \ubc88 \uc2e4\ud589 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["1"]}, null], type:"robotis_openCM70_cm_motion"}, paramsKeyMap:{VALUE:0}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
+}}, robotis_openCM70_cm_motion:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["1"]}, null], type:"robotis_openCM70_cm_motion"}, paramsKeyMap:{VALUE:0}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
   var c = Entry.Robotis_openCM70.INSTRUCTION.WRITE, d = 0, e = 0, f = 0, d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_MOTION[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_MOTION[1], f = a.getNumberValue("VALUE", a);
   return Entry.Robotis_carCont.postCallReturn(a, [[c, d, e, f]], Entry.Robotis_openCM70.delay);
-}}, robotis_openCM70_aux_motor_speed:{color:"#00979D", skeleton:"basic", statements:[], template:"%1 \uac10\uc18d\ubaa8\ud130 \uc18d\ub3c4\ub97c %2 , \ucd9c\ub825\uac12\uc744 %3 (\uc73c)\ub85c \uc815\ud558\uae30 %4", params:[{type:"Dropdown", options:[["1", "1"], ["2", "2"]], value:"1", fontSize:11}, {type:"Dropdown", options:[["\uc2dc\uacc4\ubc29\ud5a5", "CW"], ["\ubc18\uc2dc\uacc4\ubc29\ud5a5", "CCW"]], value:"CW", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", 
-size:12}], events:{}, def:{params:[null, null, {type:"number", params:["500"]}, null], type:"robotis_openCM70_aux_motor_speed"}, paramsKeyMap:{PORT:0, DIRECTION_ANGLE:1, VALUE:2}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
+}}, robotis_openCM70_aux_motor_speed:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["1", "1"], ["2", "2"]], value:"1", fontSize:11}, {type:"Dropdown", options:[["\uc2dc\uacc4\ubc29\ud5a5", "CW"], ["\ubc18\uc2dc\uacc4\ubc29\ud5a5", "CCW"]], value:"CW", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, {type:"number", params:["500"]}, null], 
+type:"robotis_openCM70_aux_motor_speed"}, paramsKeyMap:{PORT:0, DIRECTION_ANGLE:1, VALUE:2}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
   var c = a.getField("PORT", a), d = a.getField("DIRECTION_ANGLE", a), e = a.getNumberValue("VALUE"), f = Entry.Robotis_openCM70.INSTRUCTION.WRITE, g = 0, h = 0, g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTOR_SPEED[0], h = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTOR_SPEED[1];
   "CW" == d ? (e += 1024, 2047 < e && (e = 2047)) : 1023 < e && (e = 1023);
   return Entry.Robotis_carCont.postCallReturn(a, [[f, g + (c - 1) * h, h, e]], Entry.Robotis_openCM70.delay);
-}}, robotis_openCM70_aux_servo_mode:{color:"#00979D", skeleton:"basic", statements:[], template:"%1 \uc11c\ubcf4\ubaa8\ud130 \ubaa8\ub4dc\ub97c %2 (\uc73c)\ub85c \uc815\ud558\uae30 %3", params:[{type:"Dropdown", options:[["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"]], value:"3", fontSize:11}, {type:"Dropdown", options:[["\ud68c\uc804\ubaa8\ub4dc", "0"], ["\uad00\uc808\ubaa8\ub4dc", "1"]], value:"0", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], 
-events:{}, def:{params:[null, null, null], type:"robotis_openCM70_aux_servo_mode"}, paramsKeyMap:{PORT:0, MODE:1}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
+}}, robotis_openCM70_aux_servo_mode:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"]], value:"3", fontSize:11}, {type:"Dropdown", options:[["\ud68c\uc804\ubaa8\ub4dc", "0"], ["\uad00\uc808\ubaa8\ub4dc", "1"]], value:"0", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"robotis_openCM70_aux_servo_mode"}, paramsKeyMap:{PORT:0, 
+MODE:1}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
   var c = a.getField("PORT", a), d = a.getField("MODE", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_MODE[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_MODE[1];
   return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
-}}, robotis_openCM70_aux_servo_speed:{color:"#00979D", skeleton:"basic", statements:[], template:"%1 \uc11c\ubcf4\ubaa8\ud130 \uc18d\ub3c4\ub97c %2 , \ucd9c\ub825\uac12\uc744 %3 (\uc73c)\ub85c \uc815\ud558\uae30 %4", params:[{type:"Dropdown", options:[["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"]], value:"3", fontSize:11}, {type:"Dropdown", options:[["\uc2dc\uacc4\ubc29\ud5a5", "CW"], ["\ubc18\uc2dc\uacc4\ubc29\ud5a5", "CCW"]], value:"CW", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", 
-img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, {type:"number", params:["500"]}, null], type:"robotis_openCM70_aux_servo_speed"}, paramsKeyMap:{PORT:0, DIRECTION_ANGLE:1, VALUE:2}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
+}}, robotis_openCM70_aux_servo_speed:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"]], value:"3", fontSize:11}, {type:"Dropdown", options:[["\uc2dc\uacc4\ubc29\ud5a5", "CW"], ["\ubc18\uc2dc\uacc4\ubc29\ud5a5", "CCW"]], value:"CW", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, {type:"number", 
+params:["500"]}, null], type:"robotis_openCM70_aux_servo_speed"}, paramsKeyMap:{PORT:0, DIRECTION_ANGLE:1, VALUE:2}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
   var c = a.getField("PORT", a), d = a.getField("DIRECTION_ANGLE", a), e = a.getNumberValue("VALUE"), f = Entry.Robotis_openCM70.INSTRUCTION.WRITE, g = 0, h = 0, g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_SPEED[0], h = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_SPEED[1];
   "CW" == d ? (e += 1024, 2047 < e && (e = 2047)) : 1023 < e && (e = 1023);
   return Entry.Robotis_carCont.postCallReturn(a, [[f, g + (c - 1) * h, h, e]], Entry.Robotis_openCM70.delay);
-}}, robotis_openCM70_aux_servo_position:{color:"#00979D", skeleton:"basic", statements:[], template:"%1 \uc11c\ubcf4\ubaa8\ud130 \uc704\uce58\ub97c %2 (\uc73c)\ub85c \uc815\ud558\uae30 %3", params:[{type:"Dropdown", options:[["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"]], value:"3", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["512"]}, null], type:"robotis_openCM70_aux_servo_position"}, 
-paramsKeyMap:{PORT:0, VALUE:1}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
+}}, robotis_openCM70_aux_servo_position:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"]], value:"3", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["512"]}, null], type:"robotis_openCM70_aux_servo_position"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"robotis_openCM70_cm", 
+isNotFor:["robotis_openCM70"], func:function(b, a) {
   var c = a.getField("PORT", a), d = a.getNumberValue("VALUE"), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1];
   1023 < d ? d = 1023 : 0 > d && (d = 0);
   return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
-}}, robotis_openCM70_aux_led_module:{color:"#00979D", skeleton:"basic", statements:[], template:"%1 LED \ubaa8\ub4c8\uc744 %2 (\uc73c)\ub85c \uc815\ud558\uae30 %3", params:[{type:"Dropdown", options:[["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"]], value:"3", fontSize:11}, {type:"Dropdown", options:[["\uc591 \ucabd LED\ub044\uae30", "0"], ["\uc624\ub978\ucabd LED\ucf1c\uae30", "1"], ["\uc67c\ucabd LED\ucf1c\uae30", "2"], ["\uc591 \ucabd LED\ucf1c\uae30", "3"]], value:"0", fontSize:11}, {type:"Indicator", 
-img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"robotis_openCM70_aux_led_module"}, paramsKeyMap:{PORT:0, LED_MODULE:1}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
+}}, robotis_openCM70_aux_led_module:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"]], value:"3", fontSize:11}, {type:"Dropdown", options:[["\uc591 \ucabd LED\ub044\uae30", "0"], ["\uc624\ub978\ucabd LED\ucf1c\uae30", "1"], ["\uc67c\ucabd LED\ucf1c\uae30", "2"], ["\uc591 \ucabd LED\ucf1c\uae30", "3"]], value:"0", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, 
+def:{params:[null, null, null], type:"robotis_openCM70_aux_led_module"}, paramsKeyMap:{PORT:0, LED_MODULE:1}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
   var c = a.getField("PORT", a), d = a.getField("LED_MODULE", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_LED_MODULE[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_LED_MODULE[1];
   return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
-}}, robotis_openCM70_aux_custom:{color:"#00979D", skeleton:"basic", statements:[], template:"%1 \uc0ac\uc6a9\uc790 \uc7a5\uce58\ub97c %2 (\uc73c)\ub85c \uc815\ud558\uae30 %3", params:[{type:"Dropdown", options:[["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"]], value:"3", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["0"]}, null], type:"robotis_openCM70_aux_custom"}, 
-paramsKeyMap:{PORT:0, VALUE:1}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
+}}, robotis_openCM70_aux_custom:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"]], value:"3", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["0"]}, null], type:"robotis_openCM70_aux_custom"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], 
+func:function(b, a) {
   var c = a.getField("PORT", a), d = a.getNumberValue("VALUE"), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1];
   return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
-}}, robotis_openCM70_cm_custom:{color:"#00979D", skeleton:"basic", statements:[], template:"\uc9c1\uc811\uc785\ub825 \uc8fc\uc18c ( %1 ) (\uc744)\ub97c %2 (\uc73c)\ub85c \uc815\ud558\uae30 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["0"]}, {type:"number", params:["0"]}, null], type:"robotis_openCM70_cm_custom"}, paramsKeyMap:{ADDRESS:0, 
-VALUE:1}, "class":"robotis_openCM70_custom", isNotFor:["robotis_openCM70"], func:function(b, a) {
+}}, robotis_openCM70_cm_custom:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["0"]}, {type:"number", params:["0"]}, null], type:"robotis_openCM70_cm_custom"}, paramsKeyMap:{ADDRESS:0, VALUE:1}, "class":"robotis_openCM70_custom", isNotFor:["robotis_openCM70"], func:function(b, a) {
   var c = Entry.Robotis_openCM70.INSTRUCTION.WRITE, d = 0, e = 0, d = a.getNumberValue("ADDRESS"), e = a.getNumberValue("VALUE");
   return Entry.Robotis_carCont.postCallReturn(a, [[c, d, 65535 < e ? 4 : 255 < e ? 2 : 1, e]], Entry.Robotis_openCM70.delay);
-}}, robotis_carCont_sensor_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], template:"%1   \uac12", params:[{type:"Dropdown", options:[["\uc67c\ucabd \uc811\ucd09 \uc13c\uc11c", "CM_SPRING_LEFT"], ["\uc624\ub978\ucabd \uc811\ucd09 \uc13c\uc11c", "CM_SPRING_RIGHT"], ["\uc120\ud0dd \ubc84\ud2bc \uc0c1\ud0dc", "CM_SWITCH"], ["\ucd5c\uc885 \uc18c\ub9ac \uac10\uc9c0 \ud69f\uc218", "CM_SOUND_DETECTED"], ["\uc2e4\uc2dc\uac04 \uc18c\ub9ac \uac10\uc9c0 \ud69f\uc218", "CM_SOUND_DETECTING"], 
-["\uc67c\ucabd \uc801\uc678\uc120 \uc13c\uc11c", "CM_IR_LEFT"], ["\uc624\ub978\ucabd \uc801\uc678\uc120 \uc13c\uc11c", "CM_IR_RIGHT"], ["\uc67c\ucabd \uc801\uc678\uc120 \uc13c\uc11c \uce98\ub9ac\ube0c\ub808\uc774\uc158 \uac12", "CM_CALIBRATION_LEFT"], ["\uc624\ub978\ucabd \uc801\uc678\uc120 \uc13c\uc11c \uce98\ub9ac\ube0c\ub808\uc774\uc158 \uac12", "CM_CALIBRATION_RIGHT"]], value:"CM_SPRING_LEFT", fontSize:11}], events:{}, def:{params:[null], type:"robotis_carCont_sensor_value"}, paramsKeyMap:{SENSOR:0}, 
-"class":"robotis_carCont_cm", isNotFor:["robotis_carCont"], func:function(b, a) {
+}}, robotis_carCont_sensor_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd \uc811\ucd09 \uc13c\uc11c", "CM_SPRING_LEFT"], ["\uc624\ub978\ucabd \uc811\ucd09 \uc13c\uc11c", "CM_SPRING_RIGHT"], ["\uc120\ud0dd \ubc84\ud2bc \uc0c1\ud0dc", "CM_SWITCH"], ["\ucd5c\uc885 \uc18c\ub9ac \uac10\uc9c0 \ud69f\uc218", "CM_SOUND_DETECTED"], ["\uc2e4\uc2dc\uac04 \uc18c\ub9ac \uac10\uc9c0 \ud69f\uc218", "CM_SOUND_DETECTING"], ["\uc67c\ucabd \uc801\uc678\uc120 \uc13c\uc11c", 
+"CM_IR_LEFT"], ["\uc624\ub978\ucabd \uc801\uc678\uc120 \uc13c\uc11c", "CM_IR_RIGHT"], ["\uc67c\ucabd \uc801\uc678\uc120 \uc13c\uc11c \uce98\ub9ac\ube0c\ub808\uc774\uc158 \uac12", "CM_CALIBRATION_LEFT"], ["\uc624\ub978\ucabd \uc801\uc678\uc120 \uc13c\uc11c \uce98\ub9ac\ube0c\ub808\uc774\uc158 \uac12", "CM_CALIBRATION_RIGHT"]], value:"CM_SPRING_LEFT", fontSize:11}], events:{}, def:{params:[null], type:"robotis_carCont_sensor_value"}, paramsKeyMap:{SENSOR:0}, "class":"robotis_carCont_cm", isNotFor:["robotis_carCont"], 
+func:function(b, a) {
   var c = Entry.Robotis_carCont.INSTRUCTION.READ, d = 0, e = 0, f = 0, g = 0, h = a.getStringField("SENSOR");
   "CM_SPRING_LEFT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[2], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[3]) : "CM_SPRING_RIGHT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[2], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[3]) : 
   "CM_SWITCH" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[1]) : "CM_SOUND_DETECTED" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1]) : 
@@ -16807,44 +16783,43 @@ VALUE:1}, "class":"robotis_openCM70_custom", isNotFor:["robotis_openCM70"], func
   Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, g]]);
   Entry.Robotis_carCont.update();
   return Entry.hw.portData[f];
-}}, robotis_carCont_cm_led:{color:"#00979D", skeleton:"basic", statements:[], template:"4\ubc88 LED %1 ,  1\ubc88 LED %2 %3", params:[{type:"Dropdown", options:[["\ucf1c\uae30", "1"], ["\ub044\uae30", "0"]], value:"1", fontSize:11}, {type:"Dropdown", options:[["\ucf1c\uae30", "1"], ["\ub044\uae30", "0"]], value:"1", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"robotis_carCont_cm_led"}, paramsKeyMap:{VALUE_LEFT:0, 
-VALUE_RIGHT:1}, "class":"robotis_carCont_cm", isNotFor:["robotis_carCont"], func:function(b, a) {
+}}, robotis_carCont_cm_led:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\ucf1c\uae30", "1"], ["\ub044\uae30", "0"]], value:"1", fontSize:11}, {type:"Dropdown", options:[["\ucf1c\uae30", "1"], ["\ub044\uae30", "0"]], value:"1", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"robotis_carCont_cm_led"}, paramsKeyMap:{VALUE_LEFT:0, VALUE_RIGHT:1}, "class":"robotis_carCont_cm", 
+isNotFor:["robotis_carCont"], func:function(b, a) {
   var c = a.getField("VALUE_LEFT", a), d = a.getField("VALUE_RIGHT", a), e = Entry.Robotis_carCont.INSTRUCTION.WRITE, f = 0, g = 0, h = 0, f = Entry.Robotis_carCont.CONTROL_TABLE.CM_LED[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_LED[1];
   1 == c && 1 == d ? h = 9 : 1 == c && 0 == d && (h = 8);
   0 == c && 1 == d && (h = 1);
   return Entry.Robotis_carCont.postCallReturn(a, [[e, f, g, h]], Entry.Robotis_carCont.delay);
-}}, robotis_carCont_cm_sound_detected_clear:{color:"#00979D", skeleton:"basic", statements:[], template:"\ucd5c\uc885\uc18c\ub9ac\uac10\uc9c0\ud69f\uc218 \ucd08\uae30\ud654 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"robotis_carCont_cm_sound_detected_clear"}, "class":"robotis_carCont_cm", isNotFor:["robotis_carCont"], func:function(b, a) {
+}}, robotis_carCont_cm_sound_detected_clear:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"robotis_carCont_cm_sound_detected_clear"}, "class":"robotis_carCont_cm", isNotFor:["robotis_carCont"], func:function(b, a) {
   var c = Entry.Robotis_carCont.INSTRUCTION.WRITE, d = 0, e = 0, d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1];
   return Entry.Robotis_carCont.postCallReturn(a, [[c, d, e, 0]], Entry.Robotis_carCont.delay);
-}}, robotis_carCont_aux_motor_speed:{color:"#00979D", skeleton:"basic", statements:[], template:"%1 \uac10\uc18d\ubaa8\ud130 \uc18d\ub3c4\ub97c %2 , \ucd9c\ub825\uac12\uc744 %3 (\uc73c)\ub85c \uc815\ud558\uae30 %4", params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"]], value:"LEFT", fontSize:11}, {type:"Dropdown", options:[["\uc2dc\uacc4\ubc29\ud5a5", "CW"], ["\ubc18\uc2dc\uacc4\ubc29\ud5a5", "CCW"]], value:"CW", fontSize:11}, {type:"Block", accept:"stringMagnet"}, 
-{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, {type:"number", params:["500"]}, null], type:"robotis_carCont_aux_motor_speed"}, paramsKeyMap:{DIRECTION:0, DIRECTION_ANGLE:1, VALUE:2}, "class":"robotis_carCont_cm", isNotFor:["robotis_carCont"], func:function(b, a) {
+}}, robotis_carCont_aux_motor_speed:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"]], value:"LEFT", fontSize:11}, {type:"Dropdown", options:[["\uc2dc\uacc4\ubc29\ud5a5", "CW"], ["\ubc18\uc2dc\uacc4\ubc29\ud5a5", "CCW"]], value:"CW", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, 
+{type:"number", params:["500"]}, null], type:"robotis_carCont_aux_motor_speed"}, paramsKeyMap:{DIRECTION:0, DIRECTION_ANGLE:1, VALUE:2}, "class":"robotis_carCont_cm", isNotFor:["robotis_carCont"], func:function(b, a) {
   var c = a.getField("DIRECTION", a), d = a.getField("DIRECTION_ANGLE", a), e = a.getNumberValue("VALUE"), f = Entry.Robotis_carCont.INSTRUCTION.WRITE, g = 0, h = 0;
   "LEFT" == c ? (g = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_LEFT[0], h = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_LEFT[1]) : (g = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_RIGHT[0], h = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_RIGHT[1]);
   "CW" == d ? (e += 1024, 2047 < e && (e = 2047)) : 1023 < e && (e = 1023);
   return Entry.Robotis_carCont.postCallReturn(a, [[f, g, h, e]], Entry.Robotis_carCont.delay);
-}}, robotis_carCont_cm_calibration:{color:"#00979D", skeleton:"basic", statements:[], template:"%1 \uc801\uc678\uc120 \uc13c\uc11c \uce98\ub9ac\ube0c\ub808\uc774\uc158 \uac12\uc744 %2 (\uc73c)\ub85c \uc815\ud558\uae30 %3", params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"number", 
-params:["0"]}, null], type:"robotis_carCont_cm_calibration"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"robotis_carCont_cm", isNotFor:["robotis_carCont"], func:function(b, a) {
+}}, robotis_carCont_cm_calibration:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["0"]}, null], type:"robotis_carCont_cm_calibration"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"robotis_carCont_cm", 
+isNotFor:["robotis_carCont"], func:function(b, a) {
   var c = a.getField("DIRECTION", a), d = a.getNumberValue("VALUE"), e = Entry.Robotis_carCont.INSTRUCTION.WRITE, f = 0, g = 0;
   "LEFT" == c ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[1]) : (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[1]);
   return Entry.Robotis_carCont.postCallReturn(a, [[e, f, g, d]], Entry.Robotis_carCont.delay);
-}}, when_scene_start:{color:"#3BBD70", skeleton:"basic_event", statements:[], template:"%1 \uc7a5\uba74\uc774 \uc2dc\uc791\ub418\uc5c8\uc744\ub54c", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_scene_1_2.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null], type:"when_scene_start"}, "class":"scene", isNotFor:["scene"], func:function(b, a) {
+}}, when_scene_start:{color:"#3BBD70", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_scene_1_2.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null], type:"when_scene_start"}, "class":"scene", isNotFor:["scene"], func:function(b, a) {
   return a.callReturn();
-}, event:"when_scene_start"}, start_scene:{color:"#3BBD70", skeleton:"basic_without_next", statements:[], template:"%1 \uc2dc\uc791\ud558\uae30 %2", params:[{type:"DropdownDynamic", value:null, menuName:"scenes", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/start_03.png", size:12}], events:{}, def:{params:[null, null], type:"start_scene"}, paramsKeyMap:{VALUE:0}, "class":"scene", isNotFor:["scene"], func:function(b, a) {
+}, event:"when_scene_start"}, start_scene:{color:"#3BBD70", skeleton:"basic_without_next", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"scenes", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/start_03.png", size:12}], events:{}, def:{params:[null, null], type:"start_scene"}, paramsKeyMap:{VALUE:0}, "class":"scene", isNotFor:["scene"], func:function(b, a) {
   var c = a.getField("VALUE", a);
   if (c = Entry.scene.getSceneById(c)) {
     Entry.scene.selectScene(c), Entry.engine.fireEvent("when_scene_start");
   }
   return null;
-}}, start_neighbor_scene:{color:"#3BBD70", skeleton:"basic_without_next", statements:[], template:"%1 \uc7a5\uba74 \uc2dc\uc791\ud558\uae30 %2", params:[{type:"Dropdown", options:[["\ub2e4\uc74c", "next"], ["\uc774\uc804", "pre"]], value:"next", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/start_03.png", size:12}], events:{}, def:{params:[null, null], type:"start_neighbor_scene"}, paramsKeyMap:{OPERATOR:0}, "class":"scene", isNotFor:["scene"], func:function(b, a) {
+}}, start_neighbor_scene:{color:"#3BBD70", skeleton:"basic_without_next", statements:[], params:[{type:"Dropdown", options:[["\ub2e4\uc74c", "next"], ["\uc774\uc804", "pre"]], value:"next", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/start_03.png", size:12}], events:{}, def:{params:[null, null], type:"start_neighbor_scene"}, paramsKeyMap:{OPERATOR:0}, "class":"scene", isNotFor:["scene"], func:function(b, a) {
   var c = Entry.scene.selectedScene, d = Entry.scene.getScenes(), c = d.indexOf(c);
   "next" == a.getField("OPERATOR", a) ? c + 1 < d.length && (d = Entry.scene.getSceneById(d[c + 1].id)) && (Entry.scene.selectScene(d), Entry.engine.fireEvent("when_scene_start")) : 0 < c && (d = Entry.scene.getSceneById(d[c - 1].id)) && (Entry.scene.selectScene(d), Entry.engine.fireEvent("when_scene_start"));
   return null;
-}}, sound_something:{color:"#A4D01D", skeleton:"basic", statements:[], template:"\uc18c\ub9ac %1 \uc7ac\uc0dd\ud558\uae30 %2", params:[{type:"DropdownDynamic", value:null, menuName:"sounds", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[null, null], type:"sound_something"}, paramsKeyMap:{VALUE:0}, "class":"sound", isNotFor:[], func:function(b, a) {
+}}, sound_something:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"sounds", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[null, null], type:"sound_something"}, paramsKeyMap:{VALUE:0}, "class":"sound", isNotFor:[], func:function(b, a) {
   var c = a.getField("VALUE", a);
   Entry.isExist(c, "id", b.parent.sounds) && createjs.Sound.play(c);
   return a.callReturn();
-}}, sound_something_second:{color:"#A4D01D", skeleton:"basic", statements:[], template:"\uc18c\ub9ac %1 %2 \ucd08 \uc7ac\uc0dd\ud558\uae30 %3", params:[{type:"DropdownDynamic", value:null, menuName:"sounds", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["1"]}, null], type:"sound_something_second"}, paramsKeyMap:{VALUE:0, SECOND:1}, "class":"sound", isNotFor:[], 
-func:function(b, a) {
+}}, sound_something_second:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"sounds", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["1"]}, null], type:"sound_something_second"}, paramsKeyMap:{VALUE:0, SECOND:1}, "class":"sound", isNotFor:[], func:function(b, a) {
   var c = a.getField("VALUE", a), d = a.getNumberValue("SECOND", a);
   if (Entry.isExist(c, "id", b.parent.sounds)) {
     var e = createjs.Sound.play(c);
@@ -16853,7 +16828,7 @@ func:function(b, a) {
     }, 1E3 * d);
   }
   return a.callReturn();
-}}, sound_something_wait:{color:"#A4D01D", skeleton:"basic", statements:[], template:"\uc18c\ub9ac  %1 \uc7ac\uc0dd\ud558\uace0 \uae30\ub2e4\ub9ac\uae30 %2", params:[{type:"DropdownDynamic", value:null, menuName:"sounds", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[null, null], type:"sound_something_wait"}, paramsKeyMap:{VALUE:0}, "class":"sound", isNotFor:[], func:function(b, a) {
+}}, sound_something_wait:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"sounds", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[null, null], type:"sound_something_wait"}, paramsKeyMap:{VALUE:0}, "class":"sound", isNotFor:[], func:function(b, a) {
   if (a.isPlay) {
     if (1 == a.playState) {
       return a;
@@ -16869,8 +16844,7 @@ func:function(b, a) {
     a.playState = 0;
   }, 1E3 * d.duration));
   return a;
-}}, sound_something_second_wait:{color:"#A4D01D", skeleton:"basic", statements:[], template:"\uc18c\ub9ac %1 %2 \ucd08 \uc7ac\uc0dd\ud558\uace0 \uae30\ub2e4\ub9ac\uae30 %3", params:[{type:"DropdownDynamic", value:null, menuName:"sounds", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["1"]}, null], type:"sound_something_second_wait"}, paramsKeyMap:{VALUE:0, SECOND:1}, 
-"class":"sound", isNotFor:[], func:function(b, a) {
+}}, sound_something_second_wait:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"sounds", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["1"]}, null], type:"sound_something_second_wait"}, paramsKeyMap:{VALUE:0, SECOND:1}, "class":"sound", isNotFor:[], func:function(b, a) {
   if (a.isPlay) {
     if (1 == a.playState) {
       return a;
@@ -16892,33 +16866,32 @@ func:function(b, a) {
     });
   }
   return a;
-}}, sound_volume_change:{color:"#A4D01D", skeleton:"basic", statements:[], template:"\uc18c\ub9ac \ud06c\uae30\ub97c %1 % \ub9cc\ud07c \ubc14\uafb8\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"sound_volume_change"}, paramsKeyMap:{VALUE:0}, "class":"sound_volume", isNotFor:[], func:function(b, a) {
+}}, sound_volume_change:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"sound_volume_change"}, paramsKeyMap:{VALUE:0}, "class":"sound_volume", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a) / 100, c = c + createjs.Sound.getVolume();
   1 < c && (c = 1);
   0 > c && (c = 0);
   createjs.Sound.setVolume(c);
   return a.callReturn();
-}}, sound_volume_set:{color:"#A4D01D", skeleton:"basic", statements:[], template:"\uc18c\ub9ac \ud06c\uae30\ub97c %1 % \ub85c \uc815\ud558\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"sound_volume_set"}, paramsKeyMap:{VALUE:0}, "class":"sound_volume", isNotFor:[], func:function(b, a) {
+}}, sound_volume_set:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"sound_volume_set"}, paramsKeyMap:{VALUE:0}, "class":"sound_volume", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a) / 100;
   1 < c && (c = 1);
   0 > c && (c = 0);
   createjs.Sound.setVolume(c);
   return a.callReturn();
-}}, sound_silent_all:{color:"#A4D01D", skeleton:"basic", statements:[], template:"\ubaa8\ub4e0 \uc18c\ub9ac \uba48\ucd94\uae30 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[null], type:"sound_silent_all"}, "class":"sound_stop", isNotFor:[], func:function(b, a) {
+}}, sound_silent_all:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[null], type:"sound_silent_all"}, "class":"sound_stop", isNotFor:[], func:function(b, a) {
   createjs.Sound.stop();
   return a.callReturn();
-}}, get_sounds:{color:"#A4D01D", skeleton:"basic_string_field", statements:[], template:"%1  ", params:[{type:"DropdownDynamic", value:null, menuName:"sounds", fontSize:11}], events:{}, def:{params:[null]}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
+}}, get_sounds:{color:"#A4D01D", skeleton:"basic_string_field", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"sounds", fontSize:11}], events:{}, def:{params:[null]}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
   return a.getStringField("VALUE");
-}}, sound_something_with_block:{color:"#A4D01D", skeleton:"basic", statements:[], template:"\uc18c\ub9ac %1 \uc7ac\uc0dd\ud558\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds"}, null], type:"sound_something_with_block"}, paramsKeyMap:{VALUE:0}, "class":"sound_play", isNotFor:[], func:function(b, a) {
+}}, sound_something_with_block:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds"}, null], type:"sound_something_with_block"}, paramsKeyMap:{VALUE:0}, "class":"sound_play", isNotFor:[], func:function(b, a) {
   var c = a.getStringValue("VALUE", a);
   (c = b.parent.getSound(c)) && createjs.Sound.play(c.id);
   return a.callReturn();
-}}, sound_something_second_with_block:{color:"#A4D01D", skeleton:"basic", statements:[], template:"\uc18c\ub9ac %1   %2 \ucd08 \uc7ac\uc0dd\ud558\uae30 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds", id:"95dw"}, {type:"number", params:["1"]}, null], type:"sound_something_second_with_block"}, paramsKeyMap:{VALUE:0, SECOND:1}, "class":"sound_play", 
-isNotFor:[], func:function(b, a) {
+}}, sound_something_second_with_block:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds", id:"95dw"}, {type:"number", params:["1"]}, null], type:"sound_something_second_with_block"}, paramsKeyMap:{VALUE:0, SECOND:1}, "class":"sound_play", isNotFor:[], func:function(b, a) {
   var c = a.getStringValue("VALUE", a), d = a.getNumberValue("SECOND", a);
   (c = b.parent.getSound(c)) && createjs.Sound.play(c.id, {startTime:0, duration:1E3 * d});
   return a.callReturn();
-}}, sound_something_wait_with_block:{color:"#A4D01D", skeleton:"basic", statements:[], template:"\uc18c\ub9ac  %1 \uc7ac\uc0dd\ud558\uace0 \uae30\ub2e4\ub9ac\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds"}, null], type:"sound_something_wait_with_block"}, paramsKeyMap:{VALUE:0}, "class":"sound_wait", isNotFor:[], func:function(b, a) {
+}}, sound_something_wait_with_block:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds"}, null], type:"sound_something_wait_with_block"}, paramsKeyMap:{VALUE:0}, "class":"sound_wait", isNotFor:[], func:function(b, a) {
   if (a.isPlay) {
     if (1 == a.playState) {
       return a;
@@ -16936,8 +16909,7 @@ isNotFor:[], func:function(b, a) {
     }, 1E3 * c.duration);
   }
   return a;
-}}, sound_something_second_wait_with_block:{color:"#A4D01D", skeleton:"basic", statements:[], template:"\uc18c\ub9ac %1   %2 \ucd08 \uc7ac\uc0dd\ud558\uace0 \uae30\ub2e4\ub9ac\uae30 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds"}, {type:"number", params:["1"]}, null], type:"sound_something_second_wait_with_block"}, paramsKeyMap:{VALUE:0, 
-SECOND:1}, "class":"sound_wait", isNotFor:[], func:function(b, a) {
+}}, sound_something_second_wait_with_block:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds"}, {type:"number", params:["1"]}, null], type:"sound_something_second_wait_with_block"}, paramsKeyMap:{VALUE:0, SECOND:1}, "class":"sound_wait", isNotFor:[], func:function(b, a) {
   if (a.isPlay) {
     if (1 == a.playState) {
       return a;
@@ -16959,16 +16931,16 @@ SECOND:1}, "class":"sound_wait", isNotFor:[], func:function(b, a) {
     });
   }
   return a;
-}}, sound_from_to:{color:"#A4D01D", skeleton:"basic", statements:[], template:"\uc18c\ub9ac %1 %2 \ucd08 \ubd80\ud130 %3 \ucd08\uae4c\uc9c0 \uc7ac\uc0dd\ud558\uae30 %4", params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds"}, {type:"text", params:["1"]}, {type:"text", params:["10"]}, null], type:"sound_from_to"}, 
-paramsKeyMap:{VALUE:0, START:1, END:2}, "class":"sound_play", isNotFor:[""], func:function(b, a) {
+}}, sound_from_to:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds"}, {type:"text", params:["1"]}, {type:"text", params:["10"]}, null], type:"sound_from_to"}, paramsKeyMap:{VALUE:0, START:1, END:2}, "class":"sound_play", isNotFor:[""], func:function(b, 
+a) {
   var c = a.getStringValue("VALUE", a);
   if (c = b.parent.getSound(c)) {
     var d = 1E3 * a.getNumberValue("START", a), e = 1E3 * a.getNumberValue("END", a);
     createjs.Sound.play(c.id, {startTime:Math.min(d, e), duration:Math.max(d, e) - Math.min(d, e)});
   }
   return a.callReturn();
-}}, sound_from_to_and_wait:{color:"#A4D01D", skeleton:"basic", statements:[], template:"\uc18c\ub9ac %1 %2 \ucd08 \ubd80\ud130 %3 \ucd08\uae4c\uc9c0 \uc7ac\uc0dd\ud558\uace0 \uae30\ub2e4\ub9ac\uae30 %4", params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds"}, {type:"text", params:["1"]}, {type:"text", params:["10"]}, 
-null], type:"sound_from_to_and_wait"}, paramsKeyMap:{VALUE:0, START:1, END:2}, "class":"sound_wait", isNotFor:[""], func:function(b, a) {
+}}, sound_from_to_and_wait:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds"}, {type:"text", params:["1"]}, {type:"text", params:["10"]}, null], type:"sound_from_to_and_wait"}, paramsKeyMap:{VALUE:0, START:1, END:2}, "class":"sound_wait", isNotFor:[""], 
+func:function(b, a) {
   if (a.isPlay) {
     if (1 == a.playState) {
       return a;
@@ -16988,24 +16960,24 @@ null], type:"sound_from_to_and_wait"}, paramsKeyMap:{VALUE:0, START:1, END:2}, "
     }, d);
   }
   return a;
-}}, when_run_button_click:{color:"#3BBD70", skeleton:"basic_event", statements:[], template:"%1 \uc2dc\uc791\ud558\uae30 \ubc84\ud2bc\uc744 \ud074\ub9ad\ud588\uc744 \ub54c", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_play.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null], type:"when_run_button_click"}, "class":"event", isNotFor:[], func:function(b, a) {
+}}, when_run_button_click:{color:"#3BBD70", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_play.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null], type:"when_run_button_click"}, "class":"event", isNotFor:[], func:function(b, a) {
   return a.callReturn();
-}, event:"start"}, press_some_key:{color:"#3BBD70", skeleton:"basic_event", statements:[], template:"%1 %2 \ud0a4\ub97c \ub20c\ub800\uc744 \ub54c %3", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_keyboard.png", size:17, position:{x:0, y:-2}}, {type:"Dropdown", options:[["q", "81"], ["w", "87"], ["e", "69"], ["r", "82"], ["a", "65"], ["s", "83"], ["d", "68"], ["\uc704\ucabd \ud654\uc0b4\ud45c", "38"], ["\uc544\ub798\ucabd \ud654\uc0b4\ud45c", "40"], ["\uc67c\ucabd \ud654\uc0b4\ud45c", 
-"37"], ["\uc624\ub978\ucabd \ud654\uc0b4\ud45c", "39"], ["\uc5d4\ud130", "13"], ["\uc2a4\ud398\uc774\uc2a4", "32"]], value:"81", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/start_03.png", size:12}], events:{}, def:{params:[null, null, null]}, paramsKeyMap:{VALUE:1}, func:function(b, a) {
+}, event:"start"}, press_some_key:{color:"#3BBD70", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_keyboard.png", size:17, position:{x:0, y:-2}}, {type:"Dropdown", options:[["q", "81"], ["w", "87"], ["e", "69"], ["r", "82"], ["a", "65"], ["s", "83"], ["d", "68"], ["\uc704\ucabd \ud654\uc0b4\ud45c", "38"], ["\uc544\ub798\ucabd \ud654\uc0b4\ud45c", "40"], ["\uc67c\ucabd \ud654\uc0b4\ud45c", "37"], ["\uc624\ub978\ucabd \ud654\uc0b4\ud45c", 
+"39"], ["\uc5d4\ud130", "13"], ["\uc2a4\ud398\uc774\uc2a4", "32"]], value:"81", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/start_03.png", size:12}], events:{}, def:{params:[null, null, null]}, paramsKeyMap:{VALUE:1}, func:function(b, a) {
   return a.callReturn();
-}}, when_some_key_pressed:{color:"#3BBD70", skeleton:"basic_event", statements:[], template:"%1 %2 \ud0a4\ub97c \ub20c\ub800\uc744 \ub54c", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_keyboard.png", size:17, position:{x:0, y:-2}}, {type:"Keyboard", value:81}], events:{}, def:{params:[null, "81"], type:"when_some_key_pressed"}, paramsKeyMap:{VALUE:1}, "class":"event", isNotFor:[], func:function(b, a) {
+}}, when_some_key_pressed:{color:"#3BBD70", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_keyboard.png", size:17, position:{x:0, y:-2}}, {type:"Keyboard", value:81}], events:{}, def:{params:[null, "81"], type:"when_some_key_pressed"}, paramsKeyMap:{VALUE:1}, "class":"event", isNotFor:[], func:function(b, a) {
   return a.callReturn();
-}, event:"keyPress"}, mouse_clicked:{color:"#3BBD70", skeleton:"basic_event", statements:[], template:"%1 \ub9c8\uc6b0\uc2a4\ub97c \ud074\ub9ad\ud588\uc744 \ub54c", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_mouse.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null], type:"mouse_clicked"}, "class":"event", isNotFor:[], func:function(b, a) {
+}, event:"keyPress"}, mouse_clicked:{color:"#3BBD70", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_mouse.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null], type:"mouse_clicked"}, "class":"event", isNotFor:[], func:function(b, a) {
   return a.callReturn();
-}, event:"mouse_clicked"}, mouse_click_cancled:{color:"#3BBD70", skeleton:"basic_event", statements:[], template:"%1 \ub9c8\uc6b0\uc2a4 \ud074\ub9ad\uc744 \ud574\uc81c\ud588\uc744 \ub54c", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_mouse.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null], type:"mouse_click_cancled"}, "class":"event", isNotFor:[], func:function(b, a) {
+}, event:"mouse_clicked"}, mouse_click_cancled:{color:"#3BBD70", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_mouse.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null], type:"mouse_click_cancled"}, "class":"event", isNotFor:[], func:function(b, a) {
   return a.callReturn();
-}, event:"mouse_click_cancled"}, when_object_click:{color:"#3BBD70", skeleton:"basic_event", statements:[], template:"%1 \uc624\ube0c\uc81d\ud2b8\ub97c \ud074\ub9ad\ud588\uc744 \ub54c", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_mouse.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null], type:"when_object_click"}, "class":"event", isNotFor:[], func:function(b, a) {
+}, event:"mouse_click_cancled"}, when_object_click:{color:"#3BBD70", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_mouse.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null], type:"when_object_click"}, "class":"event", isNotFor:[], func:function(b, a) {
   return a.callReturn();
-}, event:"when_object_click"}, when_object_click_canceled:{color:"#3BBD70", skeleton:"basic_event", statements:[], template:"%1 \uc624\ube0c\uc81d\ud2b8 \ud074\ub9ad\uc744 \ud574\uc81c\ud588\uc744 \ub54c", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_mouse.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null], type:"when_object_click_canceled"}, "class":"event", isNotFor:[], func:function(b, a) {
+}, event:"when_object_click"}, when_object_click_canceled:{color:"#3BBD70", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_mouse.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null], type:"when_object_click_canceled"}, "class":"event", isNotFor:[], func:function(b, a) {
   return a.callReturn();
-}, event:"when_object_click_canceled"}, when_some_key_click:{color:"#3BBD70", skeleton:"basic_event", statements:[], template:"%1 \ud0a4\ub97c \ub20c\ub800\uc744 \ub54c", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_keyboard.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null]}, func:function(b, a) {
+}, event:"when_object_click_canceled"}, when_some_key_click:{color:"#3BBD70", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_keyboard.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null]}, func:function(b, a) {
   return a.callReturn();
-}, event:"keyPress"}, when_message_cast:{color:"#3BBD70", skeleton:"basic_event", statements:[], template:"%1 %2 \uc2e0\ud638\ub97c \ubc1b\uc558\uc744 \ub54c", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_signal.png", size:17, position:{x:0, y:-2}}, {type:"DropdownDynamic", value:null, menuName:"messages", fontSize:11}], events:{dataAdd:[function(b) {
+}, event:"keyPress"}, when_message_cast:{color:"#3BBD70", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_signal.png", size:17, position:{x:0, y:-2}}, {type:"DropdownDynamic", value:null, menuName:"messages", fontSize:11}], events:{dataAdd:[function(b) {
   var a = Entry.variableContainer;
   a && a.addRef("_messageRefs", b);
 }], viewDestroy:[function(b) {
@@ -17013,7 +16985,7 @@ null], type:"sound_from_to_and_wait"}, paramsKeyMap:{VALUE:0, START:1, END:2}, "
   a && a.removeRef("_messageRefs", b);
 }]}, def:{params:[null, null], type:"when_message_cast"}, paramsKeyMap:{VALUE:1}, "class":"message", isNotFor:["message"], func:function(b, a) {
   return a.callReturn();
-}, event:"when_message_cast"}, message_cast:{color:"#3BBD70", skeleton:"basic", statements:[], template:"%1 \uc2e0\ud638 \ubcf4\ub0b4\uae30 %2", params:[{type:"DropdownDynamic", value:null, menuName:"messages", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/start_03.png", size:12}], events:{dataAdd:[function(b) {
+}, event:"when_message_cast"}, message_cast:{color:"#3BBD70", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"messages", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/start_03.png", size:12}], events:{dataAdd:[function(b) {
   var a = Entry.variableContainer;
   a && a.addRef("_messageRefs", b);
 }], viewDestroy:[function(b) {
@@ -17026,7 +16998,7 @@ null], type:"sound_from_to_and_wait"}, paramsKeyMap:{VALUE:0, START:1, END:2}, "
   }
   Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["when_message_cast", c]);
   return a.callReturn();
-}}, message_cast_wait:{color:"#3BBD70", skeleton:"basic", statements:[], template:"%1 \uc2e0\ud638 \ubcf4\ub0b4\uace0 \uae30\ub2e4\ub9ac\uae30 %2", params:[{type:"DropdownDynamic", value:null, menuName:"messages", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/start_03.png", size:12}], events:{dataAdd:[function(b) {
+}}, message_cast_wait:{color:"#3BBD70", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"messages", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/start_03.png", size:12}], events:{dataAdd:[function(b) {
   var a = Entry.variableContainer;
   a && a.addRef("_messageRefs", b);
 }], dataDestroy:[function(b) {
@@ -17051,28 +17023,28 @@ null], type:"sound_from_to_and_wait"}, paramsKeyMap:{VALUE:0, START:1, END:2}, "
   }
   a.runningScript = c;
   return a;
-}}, text:{color:"#FFD974", skeleton:"basic_string_field", statements:[], template:"%1", params:[{type:"TextInput", value:10}], events:{}, def:{params:[], type:"text"}, paramsKeyMap:{NAME:0}, func:function(b, a) {
+}}, text:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"TextInput", value:10}], events:{}, def:{params:[], type:"text"}, paramsKeyMap:{NAME:0}, func:function(b, a) {
   return a.getField("NAME", a);
-}, isPrimitive:!0}, text_write:{color:"#FFCA36", skeleton:"basic", statements:[], template:"%1 \ub77c\uace0 \uae00\uc4f0\uae30", params:[{type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"text"}], type:"text_write"}, paramsKeyMap:{VALUE:0}, "class":"text", isNotFor:["sprite"], func:function(b, a) {
+}, isPrimitive:!0}, text_write:{color:"#FFCA36", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"text"}], type:"text_write"}, paramsKeyMap:{VALUE:0}, "class":"text", isNotFor:["sprite"], func:function(b, a) {
   var c = a.getStringValue("VALUE", a), c = Entry.convertToRoundedDecimals(c, 3);
   b.setText(c);
   return a.callReturn();
-}}, text_append:{color:"#FFCA36", skeleton:"basic", statements:[], template:"%1 \ub77c\uace0 \ub4a4\uc5d0 \uc774\uc5b4\uc4f0\uae30", params:[{type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"text"}], type:"text_append"}, paramsKeyMap:{VALUE:0}, "class":"text", isNotFor:["sprite"], func:function(b, a) {
+}}, text_append:{color:"#FFCA36", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"text"}], type:"text_append"}, paramsKeyMap:{VALUE:0}, "class":"text", isNotFor:["sprite"], func:function(b, a) {
   var c = a.getStringValue("VALUE", a);
   b.setText(Entry.convertToRoundedDecimals(b.getText(), 3) + Entry.convertToRoundedDecimals(c, 3));
   return a.callReturn();
-}}, text_prepend:{color:"#FFCA36", skeleton:"basic", statements:[], template:"%1 \ub77c\uace0 \uc55e\uc5d0 \ucd94\uac00\ud558\uae30", params:[{type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"text"}], type:"text_prepend"}, paramsKeyMap:{VALUE:0}, "class":"text", isNotFor:["sprite"], func:function(b, a) {
+}}, text_prepend:{color:"#FFCA36", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"text"}], type:"text_prepend"}, paramsKeyMap:{VALUE:0}, "class":"text", isNotFor:["sprite"], func:function(b, a) {
   var c = a.getStringValue("VALUE", a);
   b.setText(Entry.convertToRoundedDecimals(c, 3) + Entry.convertToRoundedDecimals(b.getText(), 3));
   return a.callReturn();
-}}, text_flush:{color:"#FFCA36", skeleton:"basic", statements:[], template:"\ud14d\uc2a4\ud2b8 \ubaa8\ub450 \uc9c0\uc6b0\uae30", params:[], events:{}, def:{params:[], type:"text_flush"}, "class":"text", isNotFor:["sprite"], func:function(b, a) {
+}}, text_flush:{color:"#FFCA36", skeleton:"basic", statements:[], params:[], events:{}, def:{params:[], type:"text_flush"}, "class":"text", isNotFor:["sprite"], func:function(b, a) {
   b.setText("");
   return a.callReturn();
-}}, variableAddButton:{skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"\ubcc0\uc218 \ucd94\uac00", color:"#333", align:"center"}], events:{mousedown:[function() {
+}}, variableAddButton:{skeleton:"basic_button", color:"#eee", params:[{type:"Text", text:"\ubcc0\uc218 \ucd94\uac00", color:"#333", align:"center"}], events:{mousedown:[function() {
   Entry.variableContainer.openVariableAddPanel("variable");
-}]}}, listAddButton:{skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"\ub9ac\uc2a4\ud2b8 \ucd94\uac00", color:"#333", align:"center"}], events:{mousedown:[function() {
+}]}}, listAddButton:{skeleton:"basic_button", color:"#eee", params:[{type:"Text", text:"\ub9ac\uc2a4\ud2b8 \ucd94\uac00", color:"#333", align:"center"}], events:{mousedown:[function() {
   Entry.variableContainer.openVariableAddPanel("list");
-}]}}, change_variable:{color:"#E457DC", skeleton:"basic", statements:[], template:"%1 \uc5d0 %2 \ub9cc\ud07c \ub354\ud558\uae30 %3", params:[{type:"DropdownDynamic", value:null, menuName:"variables", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{dataAdd:[function(b) {
+}]}}, change_variable:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"variables", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{dataAdd:[function(b) {
   var a = Entry.variableContainer;
   a && a.addRef("_variableRefs", b);
 }], dataDestroy:[function(b) {
@@ -17087,7 +17059,7 @@ null], type:"sound_from_to_and_wait"}, paramsKeyMap:{VALUE:0, START:1, END:2}, "
   e = Entry.getMaxFloatPoint([d, c.getValue()]);
   c.setValue((d + c.getValue()).toFixed(e));
   return a.callReturn();
-}}, set_variable:{color:"#E457DC", skeleton:"basic", statements:[], template:"%1 \ub97c %2 \ub85c \uc815\ud558\uae30 %3", params:[{type:"DropdownDynamic", value:null, menuName:"variables", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{dataAdd:[function(b) {
+}}, set_variable:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"variables", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{dataAdd:[function(b) {
   var a = Entry.variableContainer;
   a && a.addRef("_variableRefs", b);
 }], dataDestroy:[function(b) {
@@ -17097,7 +17069,7 @@ null], type:"sound_from_to_and_wait"}, paramsKeyMap:{VALUE:0, START:1, END:2}, "
   var c = a.getField("VARIABLE", a), d = a.getValue("VALUE", a);
   Entry.variableContainer.getVariable(c, b).setValue(d);
   return a.callReturn();
-}}, show_variable:{color:"#E457DC", skeleton:"basic", statements:[], template:"\ubcc0\uc218 %1 \ubcf4\uc774\uae30 %2", params:[{type:"DropdownDynamic", value:null, menuName:"variables", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{dataAdd:[function(b) {
+}}, show_variable:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"variables", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{dataAdd:[function(b) {
   var a = Entry.variableContainer;
   a && a.addRef("_variableRefs", b);
 }], dataDestroy:[function(b) {
@@ -17108,7 +17080,7 @@ null], type:"sound_from_to_and_wait"}, paramsKeyMap:{VALUE:0, START:1, END:2}, "
   c.setVisible(!0);
   c.updateView();
   return a.callReturn();
-}}, hide_variable:{color:"#E457DC", skeleton:"basic", statements:[], template:"\ubcc0\uc218 %1 \uc228\uae30\uae30 %2", params:[{type:"DropdownDynamic", value:null, menuName:"variables", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{dataAdd:[function(b) {
+}}, hide_variable:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"variables", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{dataAdd:[function(b) {
   var a = Entry.variableContainer;
   a && a.addRef("_variableRefs", b);
 }], dataDestroy:[function(b) {
@@ -17118,7 +17090,7 @@ null], type:"sound_from_to_and_wait"}, paramsKeyMap:{VALUE:0, START:1, END:2}, "
   var c = a.getField("VARIABLE", a);
   Entry.variableContainer.getVariable(c, b).setVisible(!1);
   return a.callReturn();
-}}, get_variable:{color:"#E457DC", skeleton:"basic_string_field", statements:[], template:"%1 \uac12", params:[{type:"DropdownDynamic", value:null, menuName:"variables", fontSize:11}], events:{dataAdd:[function(b) {
+}}, get_variable:{color:"#E457DC", skeleton:"basic_string_field", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"variables", fontSize:11}], events:{dataAdd:[function(b) {
   var a = Entry.variableContainer;
   a && a.addRef("_variableRefs", b);
 }], dataDestroy:[function(b) {
@@ -17127,7 +17099,7 @@ null], type:"sound_from_to_and_wait"}, paramsKeyMap:{VALUE:0, START:1, END:2}, "
 }]}, def:{params:[null], type:"get_variable"}, paramsKeyMap:{VARIABLE:0}, "class":"variable", isNotFor:["variable", "variableNotExist"], func:function(b, a) {
   var c = a.getField("VARIABLE", a);
   return Entry.variableContainer.getVariable(c, b).getValue();
-}}, ask_and_wait:{color:"#E457DC", skeleton:"basic", statements:[], template:"%1 \uc744(\ub97c) \ubb3b\uace0 \ub300\ub2f5 \uae30\ub2e4\ub9ac\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{viewAdd:[function() {
+}}, ask_and_wait:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{viewAdd:[function() {
   Entry.container && Entry.container.showProjectAnswer();
 }], viewDestroy:[function(b) {
   Entry.container && Entry.container.hideProjectAnswer(b);
@@ -17152,13 +17124,13 @@ null], type:"sound_from_to_and_wait"}, paramsKeyMap:{VALUE:0, START:1, END:2}, "
   c.sprite = b;
   a.isInit = !0;
   return a;
-}}, get_canvas_input_value:{color:"#E457DC", skeleton:"basic_string_field", statements:[], template:"%1  ", params:[{type:"Text", text:"\ub300\ub2f5", color:"#fff"}], events:{viewAdd:[function() {
+}}, get_canvas_input_value:{color:"#E457DC", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:"\ub300\ub2f5", color:"#fff"}], events:{viewAdd:[function() {
   Entry.container && Entry.container.showProjectAnswer();
 }], viewDestroy:[function(b) {
   Entry.container && Entry.container.hideProjectAnswer(b);
 }]}, def:{params:[null], type:"get_canvas_input_value"}, "class":"ask", isNotFor:[], func:function(b, a) {
   return Entry.container.getInputValue();
-}}, add_value_to_list:{color:"#E457DC", skeleton:"basic", statements:[], template:"%1 \ud56d\ubaa9\uc744 %2 \uc5d0 \ucd94\uac00\ud558\uae30 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{dataAdd:[function(b) {
+}}, add_value_to_list:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{dataAdd:[function(b) {
   var a = Entry.variableContainer;
   a && a.addRef("_variableRefs", b);
 }], dataDestroy:[function(b) {
@@ -17170,8 +17142,7 @@ null], type:"sound_from_to_and_wait"}, paramsKeyMap:{VALUE:0, START:1, END:2}, "
   c.array_.push({data:d});
   c.updateView();
   return a.callReturn();
-}}, remove_value_from_list:{color:"#E457DC", skeleton:"basic", statements:[], template:"%1 \ubc88\uc9f8 \ud56d\ubaa9\uc744 %2 \uc5d0\uc11c \uc0ad\uc81c\ud558\uae30 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["1"]}, null, null], type:"remove_value_from_list"}, paramsKeyMap:{VALUE:0, LIST:1}, 
-"class":"list", isNotFor:["list", "listNotExist"], func:function(b, a) {
+}}, remove_value_from_list:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["1"]}, null, null], type:"remove_value_from_list"}, paramsKeyMap:{VALUE:0, LIST:1}, "class":"list", isNotFor:["list", "listNotExist"], func:function(b, a) {
   var c = a.getField("LIST", a), d = a.getValue("VALUE", a), c = Entry.variableContainer.getList(c, b);
   if (!c.array_ || isNaN(d) || d > c.array_.length) {
     throw Error("can not remove value from array");
@@ -17179,8 +17150,8 @@ null], type:"sound_from_to_and_wait"}, paramsKeyMap:{VALUE:0, START:1, END:2}, "
   c.array_.splice(d - 1, 1);
   c.updateView();
   return a.callReturn();
-}}, insert_value_to_list:{color:"#E457DC", skeleton:"basic", statements:[], template:"%1 \uc744(\ub97c) %2 \uc758 %3 \ubc88\uc9f8\uc5d0 \ub123\uae30 %4", params:[{type:"Block", accept:"stringMagnet"}, {type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["10"]}, null, {type:"text", params:["1"]}, null], type:"insert_value_to_list"}, 
-paramsKeyMap:{DATA:0, LIST:1, INDEX:2}, "class":"list", isNotFor:["list", "listNotExist"], func:function(b, a) {
+}}, insert_value_to_list:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["10"]}, null, {type:"text", params:["1"]}, null], type:"insert_value_to_list"}, paramsKeyMap:{DATA:0, LIST:1, INDEX:2}, "class":"list", isNotFor:["list", 
+"listNotExist"], func:function(b, a) {
   var c = a.getField("LIST", a), d = a.getValue("DATA", a), e = a.getValue("INDEX", a), c = Entry.variableContainer.getList(c, b);
   if (!c.array_ || isNaN(e) || 0 == e || e > c.array_.length + 1) {
     throw Error("can not insert value to array");
@@ -17188,8 +17159,8 @@ paramsKeyMap:{DATA:0, LIST:1, INDEX:2}, "class":"list", isNotFor:["list", "listN
   c.array_.splice(e - 1, 0, {data:d});
   c.updateView();
   return a.callReturn();
-}}, change_value_list_index:{color:"#E457DC", skeleton:"basic", statements:[], template:"%1    %2 \ubc88\uc9f8 \ud56d\ubaa9\uc744 %3 (\uc73c)\ub85c \ubc14\uafb8\uae30 %4", params:[{type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["1"]}, {type:"text", params:["10"]}, null], 
-type:"change_value_list_index"}, paramsKeyMap:{LIST:0, INDEX:1, DATA:2}, "class":"list", isNotFor:["list", "listNotExist"], func:function(b, a) {
+}}, change_value_list_index:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["1"]}, {type:"text", params:["10"]}, null], type:"change_value_list_index"}, paramsKeyMap:{LIST:0, INDEX:1, DATA:2}, "class":"list", 
+isNotFor:["list", "listNotExist"], func:function(b, a) {
   var c = a.getField("LIST", a), d = a.getValue("DATA", a), e = a.getValue("INDEX", a), c = Entry.variableContainer.getList(c, b);
   if (!c.array_ || isNaN(e) || e > c.array_.length) {
     throw Error("can not insert value to array");
@@ -17197,33 +17168,33 @@ type:"change_value_list_index"}, paramsKeyMap:{LIST:0, INDEX:1, DATA:2}, "class"
   c.array_[e - 1].data = d;
   c.updateView();
   return a.callReturn();
-}}, value_of_index_from_list:{color:"#E457DC", skeleton:"basic_string_field", statements:[], template:"%1 \uc758 %2 \ubc88\uc9f8 \ud56d\ubaa9", params:[{type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[null, {type:"number", params:["1"]}], type:"value_of_index_from_list"}, paramsKeyMap:{LIST:0, INDEX:1}, "class":"list_element", isNotFor:["list", "listNotExist"], func:function(b, a) {
+}}, value_of_index_from_list:{color:"#E457DC", skeleton:"basic_string_field", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[null, {type:"number", params:["1"]}], type:"value_of_index_from_list"}, paramsKeyMap:{LIST:0, INDEX:1}, "class":"list_element", isNotFor:["list", "listNotExist"], func:function(b, a) {
   var c = a.getField("LIST", a), d = a.getValue("INDEX", a), c = Entry.variableContainer.getList(c, b), d = Entry.getListRealIndex(d, c);
   if (!c.array_ || isNaN(d) || d > c.array_.length) {
     throw Error("can not insert value to array");
   }
   return c.array_[d - 1].data;
-}}, length_of_list:{color:"#E457DC", skeleton:"basic_string_field", statements:[], template:"%1  \ud56d\ubaa9 \uc218", params:[{type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}], events:{}, def:{params:[null], type:"length_of_list"}, paramsKeyMap:{LIST:0}, "class":"list", isNotFor:["list", "listNotExist"], func:function(b, a) {
+}}, length_of_list:{color:"#E457DC", skeleton:"basic_string_field", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}], events:{}, def:{params:[null], type:"length_of_list"}, paramsKeyMap:{LIST:0}, "class":"list", isNotFor:["list", "listNotExist"], func:function(b, a) {
   var c = a.getField("LIST", a);
   return Entry.variableContainer.getList(c).array_.length;
-}}, show_list:{color:"#E457DC", skeleton:"basic", statements:[], template:"\ub9ac\uc2a4\ud2b8 %1 \ubcf4\uc774\uae30 %2", params:[{type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{}, def:{params:[null, null], type:"show_list"}, paramsKeyMap:{LIST:0}, "class":"list_visibility", isNotFor:["list", "listNotExist"], func:function(b, a) {
+}}, show_list:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{}, def:{params:[null, null], type:"show_list"}, paramsKeyMap:{LIST:0}, "class":"list_visibility", isNotFor:["list", "listNotExist"], func:function(b, a) {
   var c = a.getField("LIST", a);
   Entry.variableContainer.getList(c).setVisible(!0);
   return a.callReturn();
-}}, hide_list:{color:"#E457DC", skeleton:"basic", statements:[], template:"\ub9ac\uc2a4\ud2b8 %1 \uc228\uae30\uae30 %2", params:[{type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{}, def:{params:[null, null], type:"hide_list"}, paramsKeyMap:{LIST:0}, "class":"list_visibility", isNotFor:["list", "listNotExist"], func:function(b, a) {
+}}, hide_list:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{}, def:{params:[null, null], type:"hide_list"}, paramsKeyMap:{LIST:0}, "class":"list_visibility", isNotFor:["list", "listNotExist"], func:function(b, a) {
   var c = a.getField("LIST", a);
   Entry.variableContainer.getList(c).setVisible(!1);
   return a.callReturn();
-}}, options_for_list:{color:"#E457DC", skeleton:"basic_string_field", statements:[], template:"%1  ", params:[{type:"Dropdown", options:[["\uccab\ubc88\uc9f8", "FIRST"], ["\ub9c8\uc9c0\ub9c9", "LAST"], ["\ubb34\uc791\uc704", "RANDOM"]], value:"FIRST", fontSize:11}], events:{}, def:{params:[null]}, paramsKeyMap:{OPERATOR:0}, func:function(b, a) {
+}}, options_for_list:{color:"#E457DC", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["\uccab\ubc88\uc9f8", "FIRST"], ["\ub9c8\uc9c0\ub9c9", "LAST"], ["\ubb34\uc791\uc704", "RANDOM"]], value:"FIRST", fontSize:11}], events:{}, def:{params:[null]}, paramsKeyMap:{OPERATOR:0}, func:function(b, a) {
   return a.getField("OPERATOR", a);
-}}, set_visible_answer:{color:"#E457DC", skeleton:"basic", statements:[], template:"\ub300\ub2f5 %1 %2", params:[{type:"Dropdown", options:[["\ubcf4\uc774\uae30", "SHOW"], ["\uc228\uae30\uae30", "HIDE"]], value:"SHOW", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{viewAdd:[function(b) {
+}}, set_visible_answer:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\ubcf4\uc774\uae30", "SHOW"], ["\uc228\uae30\uae30", "HIDE"]], value:"SHOW", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{viewAdd:[function(b) {
   Entry.container && Entry.container.showProjectAnswer();
 }], viewDestroy:[function(b) {
   Entry.container && Entry.container.hideProjectAnswer(b);
 }]}, def:{params:["HIDE", null], type:"set_visible_answer"}, paramsKeyMap:{BOOL:0}, "class":"ask", isNotFor:[""], func:function(b, a) {
   "HIDE" == a.getField("BOOL", a) ? Entry.container.inputValue.setVisible(!1) : Entry.container.inputValue.setVisible(!0);
   return a.callReturn();
-}}, is_included_in_list:{color:"#E457DC", skeleton:"basic_boolean_field", statements:[], template:"%1 \uc5d0 %2 \uc774 \ud3ec\ud568\ub418\uc5b4 \uc788\ub294\uac00?", params:[{type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[null, {type:"text", params:["10"]}], type:"is_included_in_list", id:"otu1"}, paramsKeyMap:{LIST:0, DATA:1}, "class":"list", isNotFor:["list", "listNotExist"], func:function(b, a) {
+}}, is_included_in_list:{color:"#E457DC", skeleton:"basic_boolean_field", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[null, {type:"text", params:["10"]}], type:"is_included_in_list", id:"otu1"}, paramsKeyMap:{LIST:0, DATA:1}, "class":"list", isNotFor:["list", "listNotExist"], func:function(b, a) {
   var c = a.getField("LIST", a), d = a.getStringValue("DATA", a), c = Entry.variableContainer.getList(c);
   if (!c) {
     return !1;
@@ -17234,89 +17205,85 @@ type:"change_value_list_index"}, paramsKeyMap:{LIST:0, INDEX:1, DATA:2}, "class"
     }
   }
   return !1;
-}}, xbot_digitalInput:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], template:"%1", params:[{type:"Dropdown", options:[["D2", "D2"], ["D3", "D3"], ["D11", "D11"]], value:"D2", fontSize:11}], events:{}, def:{params:[null], type:"xbot_digitalInput"}, paramsKeyMap:{DEVICE:0}, "class":"xbot_sensor", isNotFor:["xbot_epor_edge"], func:function(b, a) {
+}}, xbot_digitalInput:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[["D2", "D2"], ["D3", "D3"], ["D11", "D11"]], value:"D2", fontSize:11}], events:{}, def:{params:[null], type:"xbot_digitalInput"}, paramsKeyMap:{DEVICE:0}, "class":"xbot_sensor", isNotFor:["xbot_epor_edge"], func:function(b, a) {
   var c = Entry.hw.portData, d = a.getField("DEVICE");
   return c[d];
-}}, xbot_analogValue:{color:"#00979D", skeleton:"basic_string_field", statements:[], template:"%1", params:[{type:"Dropdown", options:[["\uad11 \uc13c\uc11c", "light"], ["\ub9c8\uc774\ud06c \uc13c\uc11c", "mic"], ["\uc544\ub0a0\ub85c\uadf8 0\ubc88 \ud540", "adc0"], ["\uc544\ub0a0\ub85c\uadf8 1\ubc88 \ud540", "adc1"], ["\uc544\ub0a0\ub85c\uadf8 2\ubc88 \ud540", "adc2"], ["\uc544\ub0a0\ub85c\uadf8 3\ubc88 \ud540", "adc3"]], value:"light", fontSize:11}], events:{}, def:{params:[null], type:"xbot_analogValue"}, 
-paramsKeyMap:{DEVICE:0}, "class":"xbot_sensor", isNotFor:["xbot_epor_edge"], func:function(b, a) {
+}}, xbot_analogValue:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["\uad11 \uc13c\uc11c", "light"], ["\ub9c8\uc774\ud06c \uc13c\uc11c", "mic"], ["\uc544\ub0a0\ub85c\uadf8 0\ubc88 \ud540", "adc0"], ["\uc544\ub0a0\ub85c\uadf8 1\ubc88 \ud540", "adc1"], ["\uc544\ub0a0\ub85c\uadf8 2\ubc88 \ud540", "adc2"], ["\uc544\ub0a0\ub85c\uadf8 3\ubc88 \ud540", "adc3"]], value:"light", fontSize:11}], events:{}, def:{params:[null], type:"xbot_analogValue"}, paramsKeyMap:{DEVICE:0}, 
+"class":"xbot_sensor", isNotFor:["xbot_epor_edge"], func:function(b, a) {
   var c = Entry.hw.portData, d = a.getField("DEVICE");
   return c[d];
-}}, xbot_digitalOutput:{color:"#00979D", skeleton:"basic", statements:[], template:"\ub514\uc9c0\ud138 %1 \ud540, \ucd9c\ub825 \uac12 %2 %3", params:[{type:"Dropdown", options:[["LED", "D13"], ["D4", "D4"], ["D7", "D7"], ["D12 ", "D12"]], value:"D13", fontSize:11}, {type:"Dropdown", options:[["\ub192\uc74c", "HIGH"], ["\ub0ae\uc74c", "LOW"]], value:"HIGH", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"xbot_digitalOutput"}, 
-paramsKeyMap:{DEVICE:0, VALUE:1}, "class":"xbot_sensor", isNotFor:["xbot_epor_edge"], func:function(b, a) {
+}}, xbot_digitalOutput:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["LED", "D13"], ["D4", "D4"], ["D7", "D7"], ["D12 ", "D12"]], value:"D13", fontSize:11}, {type:"Dropdown", options:[["\ub192\uc74c", "HIGH"], ["\ub0ae\uc74c", "LOW"]], value:"HIGH", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"xbot_digitalOutput"}, paramsKeyMap:{DEVICE:0, VALUE:1}, "class":"xbot_sensor", 
+isNotFor:["xbot_epor_edge"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getStringField("VALUE", a);
   c.D13 = "D13" == d && "HIGH" == e ? 1 : 0;
   c.D4 = "D4" == d && "HIGH" == e ? 1 : 0;
   c.D7 = "D7" == d && "HIGH" == e ? 1 : 0;
   c.D12 = "D12" == d && "HIGH" == e ? 1 : 0;
   return a.callReturn();
-}}, xbot_analogOutput:{color:"#00979D", skeleton:"basic", statements:[], template:"\uc544\ub0a0\ub85c\uadf8 %1 %2 %3", params:[{type:"Dropdown", options:[["D5", "analogD5"], ["D6", "analogD6"]], value:"analogD5", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["255"]}, null], type:"xbot_analogOutput"}, paramsKeyMap:{DEVICE:0, VALUE:1}, "class":"xbot_sensor", 
-isNotFor:["xbot_epor_edge"], func:function(b, a) {
+}}, xbot_analogOutput:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["D5", "analogD5"], ["D6", "analogD6"]], value:"analogD5", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["255"]}, null], type:"xbot_analogOutput"}, paramsKeyMap:{DEVICE:0, VALUE:1}, "class":"xbot_sensor", isNotFor:["xbot_epor_edge"], func:function(b, 
+a) {
   var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getNumberValue("VALUE", a);
   "analogD5" == d ? c.analogD5 = e : "analogD6" == d && (c.analogD6 = e);
   return a.callReturn();
-}}, xbot_servo:{color:"#00979D", skeleton:"basic", statements:[], template:"\uc11c\ubcf4 \ubaa8\ud130 %1 , \uac01\ub3c4 %2 %3", params:[{type:"Dropdown", options:[["\uba38\ub9ac(D8)", "head"], ["\uc624\ub978 \ud314(D9)", "right"], ["\uc67c \ud314(D10)", "left"]], value:"head", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["90"]}, null], type:"xbot_servo", 
-id:"bcuz"}, paramsKeyMap:{DEVICE:0, VALUE:1}, "class":"xbot_motor", isNotFor:["xbot_epor_edge"], func:function(b, a) {
+}}, xbot_servo:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uba38\ub9ac(D8)", "head"], ["\uc624\ub978 \ud314(D9)", "right"], ["\uc67c \ud314(D10)", "left"]], value:"head", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["90"]}, null], type:"xbot_servo", id:"bcuz"}, paramsKeyMap:{DEVICE:0, VALUE:1}, "class":"xbot_motor", 
+isNotFor:["xbot_epor_edge"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getNumberValue("VALUE", a);
   "head" == d ? c.head = e : "right" == d ? c.armR = e : "left" == d && (c.armL = e);
   return a.callReturn();
-}}, xbot_oneWheel:{color:"#00979D", skeleton:"basic", statements:[], template:"\ubc14\ud034(DC) \ubaa8\ud130 %1 , \uc18d\ub3c4 %2 %3", params:[{type:"Dropdown", options:[["\uc624\ub978\ucabd", "rightWheel"], ["\uc67c\ucabd", "leftWheel"], ["\uc591\ucabd", "bothWheel"]], value:"rightWheel", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["0"]}, null], type:"xbot_oneWheel"}, 
-paramsKeyMap:{DEVICE:0, VALUE:1}, "class":"xbot_motor", isNotFor:["xbot_epor_edge"], func:function(b, a) {
+}}, xbot_oneWheel:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc624\ub978\ucabd", "rightWheel"], ["\uc67c\ucabd", "leftWheel"], ["\uc591\ucabd", "bothWheel"]], value:"rightWheel", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["0"]}, null], type:"xbot_oneWheel"}, paramsKeyMap:{DEVICE:0, VALUE:1}, "class":"xbot_motor", 
+isNotFor:["xbot_epor_edge"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getNumberValue("VALUE", a);
   "rightWheel" == d ? c.rightWheel = e : "leftWheel" == d ? c.leftWheel = e : c.rightWheel = c.leftWheel = e;
   return a.callReturn();
-}}, xbot_twoWheel:{color:"#00979D", skeleton:"basic", statements:[], template:"\ubc14\ud034(DC) \ubaa8\ud130 \uc624\ub978\ucabd(2) \uc18d\ub3c4: %1 \uc67c\ucabd(1) \uc18d\ub3c4: %2 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["0"]}, {type:"text", params:["0"]}, null], type:"xbot_twoWheel"}, paramsKeyMap:{rightWheel:0, leftWheel:1}, 
-"class":"xbot_motor", isNotFor:["xbot_epor_edge"], func:function(b, a) {
+}}, xbot_twoWheel:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["0"]}, {type:"text", params:["0"]}, null], type:"xbot_twoWheel"}, paramsKeyMap:{rightWheel:0, leftWheel:1}, "class":"xbot_motor", isNotFor:["xbot_epor_edge"], func:function(b, a) {
   var c = Entry.hw.sendQueue;
   c.rightWheel = a.getNumberValue("rightWheel");
   c.leftWheel = a.getNumberValue("leftWheel");
   return a.callReturn();
-}}, xbot_rgb:{color:"#00979D", skeleton:"basic", statements:[], template:"RGB LED \ucf1c\uae30 R \uac12 %1 G \uac12 %2 B \uac12 %3 %4", params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["255"]}, {type:"text", params:["255"]}, {type:"text", params:["255"]}, null], type:"xbot_rgb"}, paramsKeyMap:{ledR:0, 
-ledG:1, ledB:2}, "class":"xbot_rgb", isNotFor:["xbot_epor_edge"], func:function(b, a) {
+}}, xbot_rgb:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["255"]}, {type:"text", params:["255"]}, {type:"text", params:["255"]}, null], type:"xbot_rgb"}, paramsKeyMap:{ledR:0, ledG:1, ledB:2}, "class":"xbot_rgb", isNotFor:["xbot_epor_edge"], 
+func:function(b, a) {
   var c = Entry.hw.sendQueue;
   c.ledR = a.getNumberValue("ledR");
   c.ledG = a.getNumberValue("ledG");
   c.ledB = a.getNumberValue("ledB");
   return a.callReturn();
-}}, xbot_rgb_picker:{color:"#00979D", skeleton:"basic", statements:[], template:"RGB LED \uc0c9 %1 \ub85c \uc815\ud558\uae30 %2", params:[{type:"Color"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"xbot_rgb_picker"}, paramsKeyMap:{VALUE:0}, "class":"xbot_rgb", isNotFor:["xbot_epor_edge"], func:function(b, a) {
+}}, xbot_rgb_picker:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Color"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"xbot_rgb_picker"}, paramsKeyMap:{VALUE:0}, "class":"xbot_rgb", isNotFor:["xbot_epor_edge"], func:function(b, a) {
   var c = a.getStringField("VALUE"), d = Entry.hw.sendQueue;
   d.ledR = parseInt(.3 * parseInt(c.substr(1, 2), 16));
   d.ledG = parseInt(.3 * parseInt(c.substr(3, 2), 16));
   d.ledB = parseInt(.3 * parseInt(c.substr(5, 2), 16));
   return a.callReturn();
-}}, xbot_buzzer:{color:"#00979D", skeleton:"basic", statements:[], template:"%1   %2 \uc74c\uc744 %3 \ucd08 \uc5f0\uc8fc\ud558\uae30 %4", params:[{type:"Dropdown", options:[["\ub3c4", "C"], ["\ub808", "D"], ["\ubbf8", "E"], ["\ud30c", "F"], ["\uc194", "G"], ["\ub77c", "A"], ["\uc2dc", "B"]], value:"C", fontSize:11}, {type:"Dropdown", options:[["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"]], value:"2", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", 
-img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, "4", {type:"text", params:["0.5"]}, null], type:"xbot_buzzer"}, paramsKeyMap:{NOTE:0, OCTAVE:1, VALUE:2}, "class":"xbot_sensor", isNotFor:["xbot_epor_edge"], func:function(b, a) {
+}}, xbot_buzzer:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\ub3c4", "C"], ["\ub808", "D"], ["\ubbf8", "E"], ["\ud30c", "F"], ["\uc194", "G"], ["\ub77c", "A"], ["\uc2dc", "B"]], value:"C", fontSize:11}, {type:"Dropdown", options:[["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"]], value:"2", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, 
+def:{params:[null, "4", {type:"text", params:["0.5"]}, null], type:"xbot_buzzer"}, paramsKeyMap:{NOTE:0, OCTAVE:1, VALUE:2}, "class":"xbot_sensor", isNotFor:["xbot_epor_edge"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getStringField("NOTE", a), e = a.getStringField("OCTAVE", a), f = a.getNumberValue("VALUE", a), d = d + e;
   c.note = "C2" == d ? 65 : "D2" == d ? 73 : "E2" == d ? 82 : "F2" == d ? 87 : "G2" == d ? 98 : "A2" == d ? 110 : "B2" == d ? 123 : "C3" == d ? 131 : "D3" == d ? 147 : "E3" == d ? 165 : "F3" == d ? 175 : "G3" == d ? 196 : "A3" == d ? 220 : "B3" == d ? 247 : "C4" == d ? 262 : "D4" == d ? 294 : "E4" == d ? 330 : "F4" == d ? 349 : "G4" == d ? 392 : "A4" == d ? 440 : "B4" == d ? 494 : "C5" == d ? 523 : "D5" == d ? 587 : "E5" == d ? 659 : "F5" == d ? 698 : "G5" == d ? 784 : "A5" == d ? 880 : "B5" == d ? 
   988 : "C6" == d ? 1047 : "D6" == d ? 1175 : "E6" == d ? 1319 : "F6" == d ? 1397 : "G6" == d ? 1568 : "A6" == d ? 1760 : "B6" == d ? 1976 : "C7" == d ? 2093 : "D7" == d ? 2349 : "E7" == d ? 2637 : "F7" == d ? 2794 : "G7" == d ? 3136 : "A7" == d ? 3520 : "B7" == d ? 3951 : 262;
   c.duration = 40 * f;
   return a.callReturn();
-}}, xbot_lcd:{color:"#00979D", skeleton:"basic", statements:[], template:"LCD %1 \ubc88\uc9f8 \uc904 ,  \ucd9c\ub825 \uac12 %2 %3", params:[{type:"Dropdown", options:[["0", "0"], ["1", "1"]], value:"0", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["Hello"]}, null], type:"xbot_lcd"}, paramsKeyMap:{LINE:0, VALUE:1}, "class":"xbot_sensor", isNotFor:["xbot_epor_edge"], 
-func:function(b, a) {
+}}, xbot_lcd:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["0", "0"], ["1", "1"]], value:"0", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["Hello"]}, null], type:"xbot_lcd"}, paramsKeyMap:{LINE:0, VALUE:1}, "class":"xbot_sensor", isNotFor:["xbot_epor_edge"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getNumberField("LINE", a), e = a.getStringValue("VALUE", a);
   0 == d ? (c.lcdNum = 0, c.lcdTxt = e) : 1 == d && (c.lcdNum = 1, c.lcdTxt = e);
   return a.callReturn();
-}}, run:{skeleton:"basic", color:"#3BBD70", contents:["this is", "basic block"]}, mutant:{skeleton:"basic", event:"start", color:"#3BBD70", template:"test mutant block", params:[], changeEvent:{_listeners:[]}}, jr_start:{skeleton:"pebble_event", event:"start", color:"#3BBD70", template:"%1", params:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_play_image.png", highlightColor:"#3BBD70", position:{x:0, y:0}, size:22}]}, jr_repeat:{skeleton:"pebble_loop", color:"#127CDB", template:"%1 \ubc18\ubcf5", 
-params:[{type:"Text", text:""}, {type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:3, fontSize:14, roundValue:3}, {type:"Text", text:"\ubc18\ubcf5"}], statements:[]}, jr_item:{skeleton:"pebble_basic", color:"#F46C6C", template:"\uaf43 \ubaa8\uc73c\uae30 %1", params:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_item_image.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}]}, cparty_jr_item:{skeleton:"pebble_basic", 
-color:"#8ABC1D", template:"%1 %2", params:[{type:"Text", text:"\uc5f0\ud544 \uc90d\uae30"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/cpartyjr/pen.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}]}, jr_north:{skeleton:"pebble_basic", color:"#A751E3", template:"%1 %2", params:[{type:"Text", text:"  \uc704\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_up_image.png", position:{x:83, y:0}, size:22}]}, jr_east:{skeleton:"pebble_basic", color:"#A751E3", template:"%1 %2", 
-params:[{type:"Text", text:"\uc624\ub978\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_right_image.png", position:{x:83, y:0}, size:22}]}, jr_south:{skeleton:"pebble_basic", color:"#A751E3", template:"%1 %2", params:[{type:"Text", text:"  \uc544\ub798\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_down_image.png", position:{x:83, y:0}, size:22}]}, jr_west:{skeleton:"pebble_basic", color:"#A751E3", template:"%1 %2", params:[{type:"Text", text:"  \uc67c\ucabd"}, 
-{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_left_image.png", position:{x:83, y:0}, size:22}]}, jr_start_basic:{skeleton:"basic_event", event:"start", color:"#3BBD70", template:"%1 %2", params:[{type:"Indicator", boxMultiplier:2, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}, "\uc2dc\uc791\ud558\uae30\ub97c \ud074\ub9ad\ud588\uc744\ub54c"]}, jr_go_straight:{skeleton:"basic", color:"#A751E3", template:"%1 %2", params:["\uc55e\uc73c\ub85c \uac00\uae30", 
-{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}]}, jr_turn_left:{skeleton:"basic", color:"#A751E3", template:"%1 %2", params:["\uc67c\ucabd\uc73c\ub85c \ub3cc\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_l.png", size:24}]}, jr_turn_right:{skeleton:"basic", color:"#A751E3", template:"%1 %2", params:["\uc624\ub978\ucabd\uc73c\ub85c \ub3cc\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_r.png", size:24}]}, jr_go_slow:{skeleton:"basic", 
-color:"#f46c6c", template:"%1 %2", params:["\ucc9c\ucc9c\ud788 \uac00\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_slow.png", size:24}]}, jr_repeat_until_dest:{skeleton:"basic_loop", color:"#498DEB", template:"%1 %2 %3 %4", syntax:["BasicWhile", "true"], params:["", {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_goal_image.png", size:18}, "\ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, 
-jr_if_construction:{skeleton:"basic_loop", color:"#498DEB", template:"%1 %2 %3 %4", params:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_construction_image.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, jr_if_speed:{skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_speed_image.png", 
-size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, maze_step_start:{skeleton:"basic_event", mode:"maze", event:"start", color:"#3BBD70", template:"%1 \uc2dc\uc791\ud558\uae30\ub97c \ud074\ub9ad\ud588\uc744 \ub54c", syntax:["Program"], params:[{type:"Indicator", boxMultiplier:2, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}]}, maze_step_jump:{skeleton:"basic", mode:"maze", color:"#FF6E4B", 
-template:"\ub6f0\uc5b4\ub118\uae30%1", params:[{type:"Image", img:"/img/assets/week/blocks/jump.png", size:24}], syntax:["Scope", "jump"]}, maze_step_for:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"%1 \ubc88 \ubc18\ubcf5\ud558\uae30%2", syntax:["BasicIteration"], params:[{type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, 
-test:{skeleton:"basic_boolean_field", mode:"maze", color:"#127CDB", template:"%1 this is test block %2", params:[{type:"Angle", value:"90"}, {type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}]}, maze_repeat_until_1:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"%1 \ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5%2", syntax:["BasicWhile", "true"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", 
-size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, maze_repeat_until_2:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ubaa8\ub4e0 %1 \ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5%2", syntax:["BasicWhile", "true"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, maze_step_if_1:{skeleton:"basic_loop", 
-mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", syntax:["BasicIf", "front == wall"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}]}, maze_step_if_2:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", syntax:["BasicIf", "front == bee"], params:[{type:"Image", img:"/img/assets/ntry/bitmap/maze2/obstacle_01.png", 
-size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}]}, maze_call_function:{skeleton:"basic", mode:"maze", color:"#B57242", template:"\uc57d\uc18d \ubd88\ub7ec\uc624\uae30%1", syntax:["Scope", "promise"], params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}]}, maze_define_function:{skeleton:"basic_define", mode:"maze", color:"#B57242", event:"define", template:"\uc57d\uc18d\ud558\uae30%1", syntax:["BasicFunction"], params:[{type:"Image", 
-img:"/img/assets/week/blocks/function.png", size:24}], statements:[{accept:"basic"}]}, maze_step_if_3:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", syntax:["BasicIf", "front == banana"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_3.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}]}, maze_step_if_4:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", 
-template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", syntax:["BasicIf", "front == wall"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_2.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}]}, maze_step_move_step:{skeleton:"basic", mode:"maze", color:"#A751E3", template:"\uc55e\uc73c\ub85c \ud55c \uce78 \uc774\ub3d9%1", syntax:["Scope", "move"], params:[{type:"Image", img:"/img/assets/week/blocks/moveStep.png", 
-size:24}]}, maze_step_rotate_left:{skeleton:"basic", mode:"maze", color:"#A751E3", template:"\uc67c\ucabd\uc73c\ub85c \ud68c\uc804%1", syntax:["Scope", "left"], params:[{type:"Image", img:"/img/assets/week/blocks/turnL.png", size:24}]}, maze_step_rotate_right:{skeleton:"basic", mode:"maze", color:"#A751E3", template:"\uc624\ub978\ucabd\uc73c\ub85c \ud68c\uc804%1", syntax:["Scope", "right"], params:[{type:"Image", img:"/img/assets/week/blocks/turnR.png", size:24}]}, test_wrapper:{skeleton:"basic", 
-mode:"maze", color:"#3BBD70", template:"%1 this is test block %2", params:[{type:"Block", accept:"basic_boolean_field", value:[{type:"test", params:[30, 50]}]}, {type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}]}, basic_button:{skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"basic button", color:"#333", align:"center"}]}, dplay_get_number_sensor_value:{parent:"arduino_get_number_sensor_value", isNotFor:["dplay"], 
-"class":"arduino_value"}, dplay_get_digital_value:{parent:"arduino_get_digital_value", isNotFor:["dplay"], "class":"arduino_value"}, dplay_toggle_led:{parent:"arduino_toggle_led", isNotFor:["dplay"], "class":"arduino_set"}, dplay_toggle_pwm:{parent:"arduino_toggle_pwm", isNotFor:["dplay"], "class":"arduino_set"}, dplay_convert_scale:{parent:"arduino_convert_scale", isNotFor:["dplay"], "class":"arduino"}, nemoino_get_number_sensor_value:{parent:"arduino_get_number_sensor_value", isNotFor:["nemoino"], 
-"class":"arduino_value"}, nemoino_get_digital_value:{parent:"arduino_get_digital_value", isNotFor:["nemoino"], "class":"arduino_value"}, nemoino_toggle_led:{parent:"arduino_toggle_led", isNotFor:["nemoino"], "class":"arduino_set"}, nemoino_toggle_pwm:{parent:"arduino_toggle_pwm", isNotFor:["nemoino"], "class":"arduino_set"}, nemoino_convert_scale:{parent:"arduino_convert_scale", isNotFor:["nemoino"], "class":"arduino"}, sensorBoard_get_number_sensor_value:{parent:"arduino_get_number_sensor_value", 
-isNotFor:["sensorBoard"], "class":"arduino_value"}, sensorBoard_get_digital_value:{parent:"arduino_get_digital_value", isNotFor:["sensorBoard"], "class":"arduino_value"}, sensorBoard_toggle_led:{parent:"arduino_toggle_led", isNotFor:["sensorBoard"], "class":"arduino_set"}, sensorBoard_toggle_pwm:{parent:"arduino_toggle_pwm", isNotFor:["sensorBoard"], "class":"arduino_set"}, sensorBoard_convert_scale:{parent:"arduino_convert_scale", isNotFor:["sensorBoard"], "class":"arduino"}, CODEino_get_number_sensor_value:{parent:"arduino_get_number_sensor_value", 
-isNotFor:["CODEino"], "class":"arduino_value"}, CODEino_get_digital_value:{parent:"arduino_get_digital_value", isNotFor:["CODEino"], "class":"arduino_value"}, CODEino_toggle_led:{parent:"arduino_toggle_led", isNotFor:["CODEino"], "class":"arduino_set"}, CODEino_toggle_pwm:{parent:"arduino_toggle_pwm", isNotFor:["CODEino"], "class":"arduino_set"}, CODEino_convert_scale:{parent:"arduino_convert_scale", isNotFor:["CODEino"], "class":"arduino"}};
+}}, run:{skeleton:"basic", color:"#3BBD70", contents:["this is", "basic block"]}, mutant:{skeleton:"basic", event:"start", color:"#3BBD70", params:[], changeEvent:{_listeners:[]}}, jr_start:{skeleton:"pebble_event", event:"start", color:"#3BBD70", params:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_play_image.png", highlightColor:"#3BBD70", position:{x:0, y:0}, size:22}]}, jr_repeat:{skeleton:"pebble_loop", color:"#127CDB", params:[{type:"Text", text:""}, {type:"Dropdown", options:[[1, 
+1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:3, fontSize:14, roundValue:3}, {type:"Text", text:"\ubc18\ubcf5"}], statements:[]}, jr_item:{skeleton:"pebble_basic", color:"#F46C6C", params:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_item_image.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}]}, cparty_jr_item:{skeleton:"pebble_basic", color:"#8ABC1D", params:[{type:"Text", text:"\uc5f0\ud544 \uc90d\uae30"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/cpartyjr/pen.png", 
+highlightColor:"#FFF", position:{x:83, y:0}, size:22}]}, jr_north:{skeleton:"pebble_basic", color:"#A751E3", params:[{type:"Text", text:"  \uc704\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_up_image.png", position:{x:83, y:0}, size:22}]}, jr_east:{skeleton:"pebble_basic", color:"#A751E3", params:[{type:"Text", text:"\uc624\ub978\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_right_image.png", position:{x:83, y:0}, size:22}]}, jr_south:{skeleton:"pebble_basic", 
+color:"#A751E3", params:[{type:"Text", text:"  \uc544\ub798\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_down_image.png", position:{x:83, y:0}, size:22}]}, jr_west:{skeleton:"pebble_basic", color:"#A751E3", params:[{type:"Text", text:"  \uc67c\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_left_image.png", position:{x:83, y:0}, size:22}]}, jr_start_basic:{skeleton:"basic_event", event:"start", color:"#3BBD70", params:[{type:"Indicator", boxMultiplier:2, img:"/img/assets/block_icon/start_icon_play.png", 
+highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}, "\uc2dc\uc791\ud558\uae30\ub97c \ud074\ub9ad\ud588\uc744\ub54c"]}, jr_go_straight:{skeleton:"basic", color:"#A751E3", params:["\uc55e\uc73c\ub85c \uac00\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}]}, jr_turn_left:{skeleton:"basic", color:"#A751E3", params:["\uc67c\ucabd\uc73c\ub85c \ub3cc\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_l.png", size:24}]}, jr_turn_right:{skeleton:"basic", 
+color:"#A751E3", params:["\uc624\ub978\ucabd\uc73c\ub85c \ub3cc\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_r.png", size:24}]}, jr_go_slow:{skeleton:"basic", color:"#f46c6c", params:["\ucc9c\ucc9c\ud788 \uac00\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_slow.png", size:24}]}, jr_repeat_until_dest:{skeleton:"basic_loop", color:"#498DEB", syntax:["BasicWhile", "true"], params:["", {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_goal_image.png", size:18}, 
+"\ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, jr_if_construction:{skeleton:"basic_loop", color:"#498DEB", params:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_construction_image.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, jr_if_speed:{skeleton:"basic_loop", color:"#498DEB", 
+params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_speed_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, maze_step_start:{skeleton:"basic_event", mode:"maze", event:"start", color:"#3BBD70", syntax:["Program"], params:[{type:"Indicator", boxMultiplier:2, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}]}, maze_step_jump:{skeleton:"basic", mode:"maze", color:"#FF6E4B", 
+params:[{type:"Image", img:"/img/assets/week/blocks/jump.png", size:24}], syntax:["Scope", "jump"]}, maze_step_for:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicIteration"], params:[{type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, test:{skeleton:"basic_boolean_field", mode:"maze", color:"#127CDB", 
+params:[{type:"Angle", value:"90"}, {type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}]}, maze_repeat_until_1:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicWhile", "true"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, maze_repeat_until_2:{skeleton:"basic_loop", mode:"maze", 
+color:"#498DEB", syntax:["BasicWhile", "true"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, maze_step_if_1:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicIf", "front == wall"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}]}, 
+maze_step_if_2:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicIf", "front == bee"], params:[{type:"Image", img:"/img/assets/ntry/bitmap/maze2/obstacle_01.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}]}, maze_call_function:{skeleton:"basic", mode:"maze", color:"#B57242", syntax:["Scope", "promise"], params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}]}, maze_define_function:{skeleton:"basic_define", 
+mode:"maze", color:"#B57242", event:"define", syntax:["BasicFunction"], params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], statements:[{accept:"basic"}]}, maze_step_if_3:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicIf", "front == banana"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_3.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}]}, maze_step_if_4:{skeleton:"basic_loop", 
+mode:"maze", color:"#498DEB", syntax:["BasicIf", "front == wall"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_2.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}]}, maze_step_move_step:{skeleton:"basic", mode:"maze", color:"#A751E3", syntax:["Scope", "move"], params:[{type:"Image", img:"/img/assets/week/blocks/moveStep.png", size:24}]}, maze_step_rotate_left:{skeleton:"basic", mode:"maze", color:"#A751E3", syntax:["Scope", 
+"left"], params:[{type:"Image", img:"/img/assets/week/blocks/turnL.png", size:24}]}, maze_step_rotate_right:{skeleton:"basic", mode:"maze", color:"#A751E3", syntax:["Scope", "right"], params:[{type:"Image", img:"/img/assets/week/blocks/turnR.png", size:24}]}, test_wrapper:{skeleton:"basic", mode:"maze", color:"#3BBD70", params:[{type:"Block", accept:"basic_boolean_field", value:[{type:"test", params:[30, 50]}]}, {type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 
+8], [9, 9], [10, 10]], value:1}]}, basic_button:{skeleton:"basic_button", color:"#eee", params:[{type:"Text", text:"basic button", color:"#333", align:"center"}]}, dplay_get_number_sensor_value:{parent:"arduino_get_number_sensor_value", isNotFor:["dplay"], "class":"arduino_value"}, dplay_get_digital_value:{parent:"arduino_get_digital_value", isNotFor:["dplay"], "class":"arduino_value"}, dplay_toggle_led:{parent:"arduino_toggle_led", isNotFor:["dplay"], "class":"arduino_set"}, dplay_toggle_pwm:{parent:"arduino_toggle_pwm", 
+isNotFor:["dplay"], "class":"arduino_set"}, dplay_convert_scale:{parent:"arduino_convert_scale", isNotFor:["dplay"], "class":"arduino"}, nemoino_get_number_sensor_value:{parent:"arduino_get_number_sensor_value", isNotFor:["nemoino"], "class":"arduino_value"}, nemoino_get_digital_value:{parent:"arduino_get_digital_value", isNotFor:["nemoino"], "class":"arduino_value"}, nemoino_toggle_led:{parent:"arduino_toggle_led", isNotFor:["nemoino"], "class":"arduino_set"}, nemoino_toggle_pwm:{parent:"arduino_toggle_pwm", 
+isNotFor:["nemoino"], "class":"arduino_set"}, nemoino_convert_scale:{parent:"arduino_convert_scale", isNotFor:["nemoino"], "class":"arduino"}, sensorBoard_get_number_sensor_value:{parent:"arduino_get_number_sensor_value", isNotFor:["sensorBoard"], "class":"arduino_value"}, sensorBoard_get_digital_value:{parent:"arduino_get_digital_value", isNotFor:["sensorBoard"], "class":"arduino_value"}, sensorBoard_toggle_led:{parent:"arduino_toggle_led", isNotFor:["sensorBoard"], "class":"arduino_set"}, sensorBoard_toggle_pwm:{parent:"arduino_toggle_pwm", 
+isNotFor:["sensorBoard"], "class":"arduino_set"}, sensorBoard_convert_scale:{parent:"arduino_convert_scale", isNotFor:["sensorBoard"], "class":"arduino"}, CODEino_get_number_sensor_value:{parent:"arduino_get_number_sensor_value", isNotFor:["CODEino"], "class":"arduino_value"}, CODEino_get_digital_value:{parent:"arduino_get_digital_value", isNotFor:["CODEino"], "class":"arduino_value"}, CODEino_toggle_led:{parent:"arduino_toggle_led", isNotFor:["CODEino"], "class":"arduino_set"}, CODEino_toggle_pwm:{parent:"arduino_toggle_pwm", 
+isNotFor:["CODEino"], "class":"arduino_set"}, CODEino_convert_scale:{parent:"arduino_convert_scale", isNotFor:["CODEino"], "class":"arduino"}};
 (function() {
   for (var b in Entry.block) {
     var a = Entry.block[b];
@@ -17820,7 +17787,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
       case Entry.Workspace.MODE_BOARD:
       ;
       case Entry.Workspace.MODE_OVERLAYBOARD:
-        for (var d = /(%\d)/mi, e = b.template.split(d), f = b.params, g = 0;g < e.length;g++) {
+        for (var d = /(%\d)/mi, e = (b.template ? b.template : Lang.template[this.block.type]).split(d), f = b.params, g = 0;g < e.length;g++) {
           var h = e[g].trim();
           if (0 !== h.length) {
             if (d.test(h)) {
