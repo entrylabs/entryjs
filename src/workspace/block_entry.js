@@ -1,12 +1,15 @@
 if (typeof Entry !== "object")
     var Entry = {};
 
+if (typeof exports == "object") {
+    var Lang = require('../../extern/lang/ko.js').Lang;
+}
+
 Entry.block = {
     "albert_hand_found": {
         "color": "#00979D",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "손 찾음?",
         "params": [],
         "events": {},
         "def": {
@@ -24,7 +27,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1",
         "params": [
             {
                 "type": "Dropdown",
@@ -67,7 +69,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "앞으로 %1 초 이동하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -125,7 +126,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "뒤로 %1 초 이동하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -185,7 +185,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 으로 %2 초 돌기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -261,7 +260,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "왼쪽 바퀴 %1 오른쪽 바퀴 %2 만큼 바꾸기 %3",
         "params": [
             {
                 "type": "Block",
@@ -311,7 +309,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "왼쪽 바퀴 %1 오른쪽 바퀴 %2 (으)로 정하기 %3",
         "params": [
             {
                 "type": "Block",
@@ -359,7 +356,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 바퀴 %2 만큼 바꾸기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -418,7 +414,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 바퀴 %2 (으)로 정하기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -477,7 +472,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "정지하기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -502,13 +496,12 @@ Entry.block = {
             sq.leftWheel = 0;
             sq.rightWheel = 0;
             return script.callReturn();
-            }
+        }
     },
     "albert_set_pad_size_to": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "패드 크기를 폭 %1 높이 %2 (으)로 정하기 %3",
         "params": [
             {
                 "type": "Block",
@@ -551,13 +544,12 @@ Entry.block = {
             sq.padWidth = script.getNumberValue('WIDTH');
             sq.padHeight = script.getNumberValue('HEIGHT');
             return script.callReturn();
-            }
+        }
     },
     "albert_set_eye_to": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 눈을 %2 으로 정하기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -619,7 +611,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 눈 끄기 %2",
         "params": [
             {
                 "type": "Dropdown",
@@ -665,7 +656,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "몸통 LED %1 %2",
         "params": [
             {
                 "type": "Dropdown",
@@ -704,7 +694,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "앞쪽 LED %1 %2",
         "params": [
             {
                 "type": "Dropdown",
@@ -743,7 +732,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "삐 소리내기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -787,7 +775,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "버저 음을 %1 만큼 바꾸기 %2",
         "params": [
             {
                 "type": "Block",
@@ -827,7 +814,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "버저 음을 %1 (으)로 정하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -866,7 +852,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "버저 끄기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -892,7 +877,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 %2 음을 %3 박자 연주하기 %4",
         "params": [
             {
                 "type": "Dropdown",
@@ -971,9 +955,9 @@ Entry.block = {
                 sq.buzzer = 0;
                 sq.note = note;
                 if (timeValue > 100) {
-                var timer1 = setTimeout(function() {
-                    sq.note = 0;
-                    Entry.Albert.removeTimeout(timer1);
+                    var timer1 = setTimeout(function() {
+                        sq.note = 0;
+                        Entry.Albert.removeTimeout(timer1);
                     }, timeValue-100);
                     Entry.Albert.timeouts.push(timer1);
                 }
@@ -998,7 +982,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 박자 쉬기 %2",
         "params": [
             {
                 "type": "Block",
@@ -1055,7 +1038,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "연주 속도를 %1 만큼 바꾸기 %2",
         "params": [
             {
                 "type": "Block",
@@ -1093,7 +1075,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "연주 속도를 %1 BPM으로 정하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -1131,7 +1112,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "앞으로 이동하기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -1171,7 +1151,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "뒤로 이동하기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -1213,7 +1192,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 으로 돌기 %2",
         "params": [
             {
                 "type": "Dropdown",
@@ -1271,7 +1249,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 %2 으로 정하기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -1330,7 +1307,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 %2",
         "params": [
             {
                 "type": "Dropdown",
@@ -1371,7 +1347,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 %2 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -1412,22 +1387,21 @@ Entry.block = {
                     sq.leftWheel + value : pd.leftWheel + value;
             } else if (direction == 'RIGHT')
                 sq.rightWheel = sq.rightWheel != undefined ?
-                    sq.rightWheel + value : pd.rightWheel + value;
-            else {
-                sq.leftWheel = sq.leftWheel != undefined ?
-                    sq.leftWheel + value : pd.leftWheel + value;
-                sq.rightWheel = sq.rightWheel != undefined ?
-                    sq.rightWheel + value : pd.rightWheel + value;
-            }
+                sq.rightWheel + value : pd.rightWheel + value;
+                else {
+                    sq.leftWheel = sq.leftWheel != undefined ?
+                        sq.leftWheel + value : pd.leftWheel + value;
+                        sq.rightWheel = sq.rightWheel != undefined ?
+                            sq.rightWheel + value : pd.rightWheel + value;
+                }
 
-            return script.callReturn();
+                return script.callReturn();
         }
     },
     "albert_set_wheels_to": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 %2 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -1476,7 +1450,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1",
         "params": [
             {
                 "type": "TextInput",
@@ -1498,7 +1471,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "신호 %1 보내기",
         "params": [
             {
                 "type": "Block",
@@ -1525,7 +1497,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "신호 %1 의 숫자 결과값",
         "params": [
             {
                 "type": "Block",
@@ -1553,7 +1524,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "신호 %1 의 글자 결과값",
         "params": [
             {
                 "type": "Block",
@@ -1581,7 +1551,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1  ",
         "params": [
             {
                 "type": "Dropdown",
@@ -1612,7 +1581,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1  ",
         "params": [
             {
                 "type": "Dropdown",
@@ -1651,7 +1619,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1  ",
         "params": [
             {
                 "type": "Dropdown",
@@ -1682,7 +1649,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "아날로그 %1 번 센서값  ",
         "params": [
             {
                 "type": "Block",
@@ -1712,7 +1678,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "디지털 %1 번 센서값  ",
         "params": [
             {
                 "type": "Block",
@@ -1742,7 +1707,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "디지털 %1 번 핀 %2 %3",
         "params": [
             {
                 "type": "Block",
@@ -1792,7 +1756,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "디지털 %1 번 핀을 %2 (으)로 정하기 %3",
         "params": [
             {
                 "type": "Block",
@@ -1842,7 +1805,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 바꾼값  ",
         "params": [
             {
                 "type": "Block",
@@ -1934,7 +1896,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1  센서값",
         "params": [
             {
                 "type": "Dropdown",
@@ -1966,7 +1927,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "%1  버튼을 눌렀는가?",
         "params": [
             {
                 "type": "Dropdown",
@@ -1998,7 +1958,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1  LED %2   %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -2040,13 +1999,12 @@ Entry.block = {
         "func": function (sprite, script) {
             Entry.hw.setDigitalPortValue(script.getField("PORT"),
                                          script.getNumberField("OPERATOR"));
-            return script.callReturn();
+                                         return script.callReturn();
         }
     },
     "arduino_download_connector": {
         "skeleton": "basic_button",
         "color": "#eee",
-        "template": "%1",
         "params": [
             {
                 "type": "Text",
@@ -2064,7 +2022,6 @@ Entry.block = {
     "arduino_download_source": {
         "skeleton": "basic_button",
         "color": "#eee",
-        "template": "%1",
         "params": [
             {
                 "type": "Text",
@@ -2082,7 +2039,6 @@ Entry.block = {
     "arduino_connected": {
         "skeleton": "basic_button",
         "color": "#eee",
-        "template": "%1",
         "params": [
             {
                 "type": "Text",
@@ -2100,7 +2056,6 @@ Entry.block = {
     "arduino_reconnect": {
         "skeleton": "basic_button",
         "color": "#eee",
-        "template": "%1",
         "params": [
             {
                 "type": "Text",
@@ -2119,7 +2074,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1  ",
         "params": [
             {
                 "type": "Dropdown",
@@ -2151,7 +2105,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "  %1  센서값 ",
         "params": [
             {
                 "type": "Dropdown",
@@ -2186,7 +2139,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "소리센서  %1  ",
         "params": [
             {
                 "type": "Dropdown",
@@ -2219,7 +2171,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "빛센서  %1  ",
         "params": [
             {
                 "type": "Dropdown",
@@ -2252,7 +2203,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": " 보드의  %1  ",
         "params": [
             {
                 "type": "Dropdown",
@@ -2289,7 +2239,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": " 3축 가속도센서  %1  ",
         "params": [
             {
                 "type": "Dropdown",
@@ -2341,7 +2290,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": " 3축 가속도센서  %1 축의 센서값 ",
         "params": [
             {
                 "type": "Dropdown",
@@ -2393,7 +2341,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1  값",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -2412,15 +2359,14 @@ Entry.block = {
         "class": "condition",
         "isNotFor": [ "bitbrick" ],
         "func": function (sprite, script) {
-          var port = script.getStringField("PORT");
-          return Entry.hw.portData[port].value;
+            var port = script.getStringField("PORT");
+            return Entry.hw.portData[port].value;
         }
     },
     "bitbrick_is_touch_pressed": {
         "color": "#00979D",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "버튼 %1 이(가) 눌렸는가?",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -2439,14 +2385,13 @@ Entry.block = {
         "class": "condition",
         "isNotFor": [ "bitbrick" ],
         "func": function (sprite, script) {
-          return Entry.hw.portData[script.getStringField("PORT")].value === 0;
+            return Entry.hw.portData[script.getStringField("PORT")].value === 0;
         }
     },
     "bitbrick_turn_off_color_led": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "컬러 LED 끄기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -2463,17 +2408,16 @@ Entry.block = {
         "class": "condition",
         "isNotFor": [ "bitbrick" ],
         "func": function (sprite, script) {
-          Entry.hw.sendQueue["LEDR"] = 0;
-          Entry.hw.sendQueue["LEDG"] = 0;
-          Entry.hw.sendQueue["LEDB"] = 0;
-          return script.callReturn();
+            Entry.hw.sendQueue["LEDR"] = 0;
+            Entry.hw.sendQueue["LEDG"] = 0;
+            Entry.hw.sendQueue["LEDB"] = 0;
+            return script.callReturn();
         }
     },
     "bitbrick_turn_on_color_led_by_rgb": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "컬러 LED 켜기 R %1 G %2 B %3 %4",
         "params": [
             {
                 "type": "Block",
@@ -2522,23 +2466,22 @@ Entry.block = {
         "func": function (sprite, script) {
             var red = script.getNumberValue("rValue"),
                 green = script.getNumberValue("gValue"),
-                blue = script.getNumberValue("bValue"),
-                min = 0,
-                max = 255,
-                adjustor = Entry.adjustValueWithMaxMin,
-                sq = Entry.hw.sendQueue;
+                    blue = script.getNumberValue("bValue"),
+                        min = 0,
+                            max = 255,
+                                adjustor = Entry.adjustValueWithMaxMin,
+                                    sq = Entry.hw.sendQueue;
 
-            sq["LEDR"] = adjustor(red, min, max);
-            sq["LEDG"] = adjustor(green, min, max);
-            sq["LEDB"] = adjustor(blue, min, max);
-            return script.callReturn();
+                                    sq["LEDR"] = adjustor(red, min, max);
+                                    sq["LEDG"] = adjustor(green, min, max);
+                                    sq["LEDB"] = adjustor(blue, min, max);
+                                    return script.callReturn();
         }
     },
     "bitbrick_turn_on_color_led_by_picker": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "컬러 LED 색  %1 로 정하기 %2",
         "params": [
             {
                 "type": "Color"
@@ -2571,7 +2514,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "컬러 LED 켜기 색 %1 로 정하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -2628,7 +2570,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "버저음  %1 내기 %2",
         "params": [
             {
                 "type": "Block",
@@ -2673,7 +2614,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "모든 모터 끄기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -2704,7 +2644,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "DC 모터 %1  속도 %2 %3",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -2746,14 +2685,13 @@ Entry.block = {
 
             Entry.hw.sendQueue[script.getStringField("PORT")] =
                 value + 128;
-            return script.callReturn();
+                return script.callReturn();
         }
     },
     "bitbrick_dc_direction_speed": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "DC 모터 %1   %2  방향  속력 %3 %4",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -2807,14 +2745,13 @@ Entry.block = {
 
             Entry.hw.sendQueue[script.getStringField("PORT")] =
                 isFront ? value + 128 : 128 - value;
-            return script.callReturn();
+                return script.callReturn();
         }
     },
     "bitbrick_servomotor_angle": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "서보 모터 %1  각도 %2 %3",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -2861,7 +2798,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "변환 %1 값 %2 ~ %3 에서 %4 ~ %5",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -2944,7 +2880,6 @@ Entry.block = {
         "color": "#FF9E20",
         "skeleton": "basic",
         "statements": [],
-        "template": "그리기 시작하기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -2976,7 +2911,6 @@ Entry.block = {
         "color": "#FF9E20",
         "skeleton": "basic",
         "statements": [],
-        "template": "그리기 멈추기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -3002,7 +2936,6 @@ Entry.block = {
         "color": "#FF9E20",
         "skeleton": "basic",
         "statements": [],
-        "template": "붓의 색을 %1 (으)로 정하기 %2",
         "params": [
             {
                 "type": "Color"
@@ -3047,7 +2980,6 @@ Entry.block = {
         "color": "#FF9E20",
         "skeleton": "basic",
         "statements": [],
-        "template": "붓의 색을 무작위로 정하기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -3083,7 +3015,6 @@ Entry.block = {
         "color": "#FF9E20",
         "skeleton": "basic",
         "statements": [],
-        "template": "붓의 굵기를 %1 만큼 바꾸기 %2",
         "params": [
             {
                 "type": "Block",
@@ -3136,7 +3067,6 @@ Entry.block = {
         "color": "#FF9E20",
         "skeleton": "basic",
         "statements": [],
-        "template": "붓의 굵기를 %1 (으)로 정하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -3186,7 +3116,6 @@ Entry.block = {
         "color": "#FF9E20",
         "skeleton": "basic",
         "statements": [],
-        "template": "붓의 불투명도를 %1 % 만큼 바꾸기 %2",
         "params": [
             {
                 "type": "Block",
@@ -3238,7 +3167,6 @@ Entry.block = {
         "color": "#FF9E20",
         "skeleton": "basic",
         "statements": [],
-        "template": "붓의 불투명도를 %1 % 로 정하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -3290,7 +3218,6 @@ Entry.block = {
         "color": "#FF9E20",
         "skeleton": "basic",
         "statements": [],
-        "template": "모든 붓 지우기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -3327,7 +3254,6 @@ Entry.block = {
         "color": "#FF9E20",
         "skeleton": "basic",
         "statements": [],
-        "template": "도장찍기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -3352,7 +3278,6 @@ Entry.block = {
         "color": "#FF9E20",
         "skeleton": "basic",
         "statements": [],
-        "template": "붓의 투명도를 %1 % 만큼 바꾸기 %2",
         "params": [
             {
                 "type": "Block",
@@ -3404,7 +3329,6 @@ Entry.block = {
         "color": "#FF9E20",
         "skeleton": "basic",
         "statements": [],
-        "template": "붓의 투명도를 %1 % 로 정하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -3456,7 +3380,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1",
         "params": [
             {
                 "type": "TextInput",
@@ -3479,7 +3402,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1",
         "params": [
             {
                 "type": "Angle"
@@ -3500,7 +3422,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1",
         "params": [
             {
                 "type": "Text",
@@ -3523,7 +3444,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1",
         "params": [
             {
                 "type": "Text",
@@ -3546,7 +3466,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1",
         "params": [
             {
                 "type": "Text",
@@ -3566,7 +3485,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1  ",
         "params": [
             {
                 "type": "Dropdown",
@@ -3600,7 +3518,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -3629,15 +3546,15 @@ Entry.block = {
             if (targetId == 'mouse') {
                 var mousePos = Entry.stage.mouseCoordinate;
                 return Math.sqrt(
-                        Math.pow(sprite.getX() - mousePos.x, 2) +
+                    Math.pow(sprite.getX() - mousePos.x, 2) +
                         Math.pow(sprite.getY() - mousePos.y, 2)
-                    );
+                );
             } else {
                 var targetEntity = Entry.container.getEntity(targetId);
                 return Math.sqrt(
-                        Math.pow(sprite.getX() - targetEntity.getX(), 2) +
+                    Math.pow(sprite.getX() - targetEntity.getX(), 2) +
                         Math.pow(sprite.getY() - targetEntity.getY(), 2)
-                    );
+                );
             }
         }
     },
@@ -3645,7 +3562,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2 %3",
         "params": [
             {
                 "type": "Text",
@@ -3690,7 +3606,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2 %3",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -3765,7 +3680,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2 %3",
         "params": [
             {
                 "type": "Block",
@@ -3886,7 +3800,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2 %3",
         "params": [
             {
                 "type": "Block",
@@ -3920,7 +3833,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2 %3",
         "params": [
             {
                 "type": "Block",
@@ -3954,7 +3866,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2 %3",
         "params": [
             {
                 "type": "Block",
@@ -3988,7 +3899,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2 %3",
         "params": [
             {
                 "type": "Block",
@@ -4022,7 +3932,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2 %3 %4",
         "params": [
             {
                 "type": "Block",
@@ -4075,7 +3984,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2 %3 %4",
         "params": [
             {
                 "type": "Block",
@@ -4128,7 +4036,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2 %3  ",
         "params": [
             {
                 "type": "Block",
@@ -4186,8 +4093,8 @@ Entry.block = {
             var operator = script.getField("VALUE", script);
             var xRangeCheckList = ['asin_radian', 'acos_radian'];
             if ((xRangeCheckList.indexOf(operator) > -1) &&
-                   (value > 1 || value < -1))
-                    throw new Error('x range exceeded');
+                (value > 1 || value < -1))
+            throw new Error('x range exceeded');
 
             var needToConvertList = ['sin', 'cos', 'tan'];
             if (operator.indexOf('_'))
@@ -4233,7 +4140,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2 %3 %4",
         "params": [
             {
                 "type": "Block",
@@ -4293,7 +4199,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2  ",
         "params": [
             {
                 "type": "Text",
@@ -4345,7 +4250,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -4383,7 +4287,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1",
         "params": [
             {
                 "type": "Text",
@@ -4418,7 +4321,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 %2 %3",
         "params": [
             {
                 "type": "Text",
@@ -4476,7 +4378,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2",
         "params": [
             {
                 "type": "Text",
@@ -4501,7 +4402,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2",
         "params": [
             {
                 "type": "Text",
@@ -4540,7 +4440,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2 %3 %4",
         "params": [
             {
                 "type": "Block",
@@ -4596,7 +4495,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2",
         "params": [
             {
                 "type": "Block",
@@ -4632,7 +4530,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2 %3 %4 %5 %6",
         "params": [
             {
                 "type": "Block",
@@ -4705,7 +4602,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2 %3 %4 %5 %6",
         "params": [
             {
                 "type": "Block",
@@ -4775,7 +4671,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2 %3 %4",
         "params": [
             {
                 "type": "Block",
@@ -4834,7 +4729,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2 %3 %4",
         "params": [
             {
                 "type": "Block",
@@ -4888,7 +4782,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2 %3 %4",
         "params": [
             {
                 "type": "Block",
@@ -4942,7 +4835,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2",
         "params": [
             {
                 "type": "Text",
@@ -4972,7 +4864,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 %2 %3 %4 %5",
         "params": [
             {
                 "type": "Block",
@@ -5042,7 +4933,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 %2 %3",
         "params": [
             {
                 "type": "Text",
@@ -5126,7 +5016,6 @@ Entry.block = {
         "color": "#498deb",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 초 기다리기 %2",
         "params": [
             {
                 "type": "Block",
@@ -5183,7 +5072,6 @@ Entry.block = {
                 "accept": "basic"
             }
         ],
-        "template": "%1 번 반복하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -5240,7 +5128,6 @@ Entry.block = {
                 "accept": "basic"
             }
         ],
-        "template": "계속 반복하기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -5268,7 +5155,6 @@ Entry.block = {
         "color": "#498deb",
         "skeleton": "basic",
         "statements": [],
-        "template": "반복 중단하기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -5293,7 +5179,6 @@ Entry.block = {
         "color": "#498deb",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 이(가) 될 때까지 기다리기 %2",
         "params": [
             {
                 "type": "Block",
@@ -5337,7 +5222,6 @@ Entry.block = {
                 "accept": "basic"
             }
         ],
-        "template": "만일 %1 이라면 %2",
         "params": [
             {
                 "type": "Block",
@@ -5392,7 +5276,6 @@ Entry.block = {
                 "accept": "basic"
             }
         ],
-        "template": "만일 %1 이라면 %2 %3 아니면",
         "params": [
             {
                 "type": "Block",
@@ -5443,7 +5326,6 @@ Entry.block = {
         "color": "#498deb",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 의 복제본 만들기 %2",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -5487,7 +5369,6 @@ Entry.block = {
         "color": "#498deb",
         "skeleton": "basic_without_next",
         "statements": [],
-        "template": "이 복제본 삭제하기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -5513,7 +5394,6 @@ Entry.block = {
         "color": "#498deb",
         "skeleton": "basic_event",
         "statements": [],
-        "template": "%1 복제본이 처음 생성되었을때",
         "params": [
             {
                 "type": "Indicator",
@@ -5541,7 +5421,6 @@ Entry.block = {
         "color": "#498deb",
         "skeleton": "basic",
         "statements": [],
-        "template": "프로그램 끝내기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -5565,7 +5444,6 @@ Entry.block = {
                 "accept": "basic"
             }
         ],
-        "template": "%1 %2  반복하기 %3",
         "params": [
             {
                 "type": "Block",
@@ -5621,7 +5499,6 @@ Entry.block = {
         "color": "#498deb",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 멈추기 %2",
         "params": [
             {
                 "type": "Dropdown",
@@ -5674,7 +5551,6 @@ Entry.block = {
         "color": "#498deb",
         "skeleton": "basic_without_next",
         "statements": [],
-        "template": "처음부터 다시 실행하기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -5698,7 +5574,6 @@ Entry.block = {
         "color": "#498deb",
         "skeleton": "basic",
         "statements": [],
-        "template": "모든 복제본 삭제하기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -5729,7 +5604,6 @@ Entry.block = {
         "isNotFor": [
             "functionInit"
         ],
-        "template": "%1",
         "params": [
             {
                 "type": "Text",
@@ -5750,7 +5624,6 @@ Entry.block = {
         "skeleton": "basic_param",
         "isNotFor": [ "functionEdit" ],
         "color": "#f9c535",
-        "template": "%1%2",
         "params": [
             {
                 "type": "TextInput",
@@ -5768,7 +5641,6 @@ Entry.block = {
             "functionEdit"
         ],
         "color": "#ffd974",
-        "template": "%1%2",
         "params": [
             {
                 "type": "Block",
@@ -5785,7 +5657,6 @@ Entry.block = {
         "skeleton": "basic_param",
         "isNotFor": [ "functionEdit" ],
         "color": "#aeb8ff",
-        "template": "%1%2",
         "params": [
             {
                 "type": "Block",
@@ -5801,7 +5672,6 @@ Entry.block = {
     "function_param_string": {
         "skeleton": "basic_string_field",
         "color": "#ffd974",
-        "template": "문자/숫자값",
         func: function() {
             return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
         }
@@ -5809,7 +5679,6 @@ Entry.block = {
     "function_param_boolean": {
         "skeleton": "basic_boolean_field",
         "color": "#aeb8ff",
-        "template": "판단값",
         func: function() {
             return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
         }
@@ -5818,7 +5687,6 @@ Entry.block = {
         "skeleton": "basic",
         "color": "#cc7337",
         "event": "funcDef",
-        "template": "함수 정의하기 %1 %2",
         "params": [
             {
                 "type": "Block",
@@ -5839,7 +5707,6 @@ Entry.block = {
     "function_general": {
         "skeleton": "basic",
         "color": "#cc7337",
-        "template": "함수",
         "params": [],
         "events": {
             "dataAdd": [
@@ -5888,7 +5755,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "손 찾음?",
         "params": [],
         "events": {},
         "def": {
@@ -5906,7 +5772,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1",
         "params": [
             {
                 "type": "Dropdown",
@@ -5948,7 +5813,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "말판 앞으로 한 칸 이동하기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -5978,56 +5842,56 @@ Entry.block = {
             } else if (script.isMoving) {
                 switch(script.boardState) {
                     case 1: {
-                    if(script.count < 2) {
-                    if(pd.leftFloor < 50 && pd.rightFloor < 50)
-                        script.count ++;
-                    else
-                        script.count = 0;
+                        if(script.count < 2) {
+                            if(pd.leftFloor < 50 && pd.rightFloor < 50)
+                                script.count ++;
+                            else
+                                script.count = 0;
+                            var diff = pd.leftFloor - pd.rightFloor;
+                            sq.leftWheel = 45 + diff * 0.25;
+                            sq.rightWheel = 45 - diff * 0.25;
+                        } else {
+                            script.count = 0;
+                            script.boardState = 2;
+                        }
+                        break;
+                    }
+                case 2: {
                     var diff = pd.leftFloor - pd.rightFloor;
                     sq.leftWheel = 45 + diff * 0.25;
                     sq.rightWheel = 45 - diff * 0.25;
-                    } else {
-                        script.count = 0;
-                        script.boardState = 2;
-                    }
+                    script.boardState = 3;
+                    var timer = setTimeout(function() {
+                        script.boardState = 4;
+                        Entry.Hamster.removeTimeout(timer);
+                    }, 250);
+                    Entry.Hamster.timeouts.push(timer);
                     break;
                 }
-            case 2: {
-            var diff = pd.leftFloor - pd.rightFloor;
-            sq.leftWheel = 45 + diff * 0.25;
-            sq.rightWheel = 45 - diff * 0.25;
-            script.boardState = 3;
-            var timer = setTimeout(function() {
-            script.boardState = 4;
-            Entry.Hamster.removeTimeout(timer);
-            }, 250);
-            Entry.Hamster.timeouts.push(timer);
-            break;
-            }
             case 3: {
-            var diff = pd.leftFloor - pd.rightFloor;
-            sq.leftWheel = 45 + diff * 0.25;
-            sq.rightWheel = 45 - diff * 0.25;
-            break;
+                var diff = pd.leftFloor - pd.rightFloor;
+                sq.leftWheel = 45 + diff * 0.25;
+                sq.rightWheel = 45 - diff * 0.25;
+                break;
             }
-            case 4: {
+        case 4: {
             sq.leftWheel = 0;
             sq.rightWheel = 0;
             script.boardState = 0;
             script.isMoving = false;
             break;
-            }
-            }
-            return script;
+        }
+                }
+                return script;
             } else {
-            delete script.isStart;
-            delete script.isMoving;
-            delete script.count;
-            delete script.boardState;
-            Entry.engine.isContinue = false;
-            sq.leftWheel = 0;
-            sq.rightWheel = 0;
-            return script.callReturn();
+                delete script.isStart;
+                delete script.isMoving;
+                delete script.count;
+                delete script.boardState;
+                Entry.engine.isContinue = false;
+                sq.leftWheel = 0;
+                sq.rightWheel = 0;
+                return script.callReturn();
             }
         }
     },
@@ -6035,7 +5899,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "말판 %1 으로 한 번 돌기 %2",
         "params": [
             {
                 "type": "Dropdown",
@@ -6066,121 +5929,121 @@ Entry.block = {
             var sq = Entry.hw.sendQueue;
             var pd = Entry.hw.portData;
             if (!script.isStart) {
-            script.isStart = true;
-            script.isMoving = true;
-            script.count = 0;
-            script.boardState = 1;
-            var direction = script.getField("DIRECTION", script);
-            if (direction == 'LEFT') {
-            script.isLeft = true;
-            sq.leftWheel = -45;
-            sq.rightWheel = 45;
-            } else {
-            script.isLeft = false;
-            sq.leftWheel = 45;
-            sq.rightWheel = -45;
-            }
-            Entry.Hamster.setLineTracerMode(sq, 0);
-            return script;
+                script.isStart = true;
+                script.isMoving = true;
+                script.count = 0;
+                script.boardState = 1;
+                var direction = script.getField("DIRECTION", script);
+                if (direction == 'LEFT') {
+                    script.isLeft = true;
+                    sq.leftWheel = -45;
+                    sq.rightWheel = 45;
+                } else {
+                    script.isLeft = false;
+                    sq.leftWheel = 45;
+                    sq.rightWheel = -45;
+                }
+                Entry.Hamster.setLineTracerMode(sq, 0);
+                return script;
             } else if (script.isMoving) {
-            if(script.isLeft) {
-            switch(script.boardState) {
-            case 1: {
-            if(script.count < 2) {
-            if(pd.leftFloor > 50)
-            script.count ++;
-            } else {
-            script.count = 0;
-            script.boardState = 2;
-            }
-            break;
-            }
-            case 2: {
-            if(pd.leftFloor < 20) {
-            script.boardState = 3;
-            }
-            break;
-            }
-            case 3: {
-            if(script.count < 2) {
-            if(pd.leftFloor < 20)
-            script.count ++;
-            } else {
-            script.count = 0;
-            script.boardState = 4;
-            }
-            break;
-            }
+                if(script.isLeft) {
+                    switch(script.boardState) {
+                        case 1: {
+                            if(script.count < 2) {
+                                if(pd.leftFloor > 50)
+                                    script.count ++;
+                            } else {
+                                script.count = 0;
+                                script.boardState = 2;
+                            }
+                            break;
+                        }
+                    case 2: {
+                        if(pd.leftFloor < 20) {
+                            script.boardState = 3;
+                        }
+                        break;
+                    }
+                case 3: {
+                    if(script.count < 2) {
+                        if(pd.leftFloor < 20)
+                            script.count ++;
+                    } else {
+                        script.count = 0;
+                        script.boardState = 4;
+                    }
+                    break;
+                }
             case 4: {
-            if(pd.leftFloor > 50) {
-            script.boardState = 5;
+                if(pd.leftFloor > 50) {
+                    script.boardState = 5;
+                }
+                break;
             }
-            break;
-            }
-            case 5: {
+        case 5: {
             var diff = pd.leftFloor - pd.rightFloor;
             if(diff > -15) {
-            sq.leftWheel = 0;
-            sq.rightWheel = 0;
-            script.boardState = 0;
-            script.isMoving = false;
+                sq.leftWheel = 0;
+                sq.rightWheel = 0;
+                script.boardState = 0;
+                script.isMoving = false;
             } else {
-            sq.leftWheel = diff * 0.5;
-            sq.rightWheel = -diff * 0.5;
+                sq.leftWheel = diff * 0.5;
+                sq.rightWheel = -diff * 0.5;
             }
             break;
-            }
-            }
-            } else {
-            switch(script.boardState) {
-            case 1: {
-            if(script.count < 2) {
-            if(pd.rightFloor > 50)
-            script.count ++;
-            } else {
-            script.count = 0;
-            script.boardState = 2;
-            }
-            break;
-            }
-            case 2: {
-            if(pd.rightFloor < 20) {
-            script.boardState = 3;
-            }
-            break;
-            }
-            case 3: {
-            if(script.count < 2) {
-            if(pd.rightFloor < 20)
-            script.count ++;
-            } else {
-            script.count = 0;
-            script.boardState = 4;
-            }
-            break;
-            }
+        }
+                    }
+                } else {
+                    switch(script.boardState) {
+                        case 1: {
+                            if(script.count < 2) {
+                                if(pd.rightFloor > 50)
+                                    script.count ++;
+                            } else {
+                                script.count = 0;
+                                script.boardState = 2;
+                            }
+                            break;
+                        }
+                    case 2: {
+                        if(pd.rightFloor < 20) {
+                            script.boardState = 3;
+                        }
+                        break;
+                    }
+                case 3: {
+                    if(script.count < 2) {
+                        if(pd.rightFloor < 20)
+                            script.count ++;
+                    } else {
+                        script.count = 0;
+                        script.boardState = 4;
+                    }
+                    break;
+                }
             case 4: {
-            if(pd.rightFloor > 50) {
-            script.boardState = 5;
+                if(pd.rightFloor > 50) {
+                    script.boardState = 5;
+                }
+                break;
             }
-            break;
-            }
-            case 5: {
+        case 5: {
             var diff = pd.rightFloor - pd.leftFloor;
             if(diff > -15) {
-            sq.leftWheel = 0;
-            sq.rightWheel = 0;
-            script.boardState = 0;
-            script.isMoving = false;
+                sq.leftWheel = 0;
+                sq.rightWheel = 0;
+                script.boardState = 0;
+                script.isMoving = false;
             } else {
-            sq.leftWheel = -diff * 0.5;
-            sq.rightWheel = diff * 0.5;
+                sq.leftWheel = -diff * 0.5;
+                sq.rightWheel = diff * 0.5;
             }
             break;
-            }
-            }
-            }
-            return script;
+        }
+                    }
+                }
+                return script;
             } else {
                 delete script.isStart;
                 delete script.isMoving;
@@ -6198,7 +6061,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "앞으로 %1 초 이동하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -6257,7 +6119,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "뒤로 %1 초 이동하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -6288,18 +6149,18 @@ Entry.block = {
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
             if (!script.isStart) {
-            script.isStart = true;
-            script.timeFlag = 1;
-            sq.leftWheel = -30;
-            sq.rightWheel = -30;
-            Entry.Hamster.setLineTracerMode(sq, 0);
-            var timeValue = script.getNumberValue("VALUE") * 1000;
-            var timer = setTimeout(function() {
-                script.timeFlag = 0;
-                Entry.Hamster.removeTimeout(timer);
-            }, timeValue);
-            Entry.Hamster.timeouts.push(timer);
-            return script;
+                script.isStart = true;
+                script.timeFlag = 1;
+                sq.leftWheel = -30;
+                sq.rightWheel = -30;
+                Entry.Hamster.setLineTracerMode(sq, 0);
+                var timeValue = script.getNumberValue("VALUE") * 1000;
+                var timer = setTimeout(function() {
+                    script.timeFlag = 0;
+                    Entry.Hamster.removeTimeout(timer);
+                }, timeValue);
+                Entry.Hamster.timeouts.push(timer);
+                return script;
             } else if (script.timeFlag == 1) {
                 return script;
             } else {
@@ -6316,7 +6177,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 으로 %2 초 돌기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -6358,24 +6218,24 @@ Entry.block = {
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
             if (!script.isStart) {
-            script.isStart = true;
-            script.timeFlag = 1;
-            var direction = script.getField("DIRECTION", script);
-            if (direction == 'LEFT') {
-                sq.leftWheel = -30;
-                sq.rightWheel = 30;
-            } else {
-                sq.leftWheel = 30;
-                sq.rightWheel = -30;
-            }
-            Entry.Hamster.setLineTracerMode(sq, 0);
-            var timeValue = script.getNumberValue("VALUE") * 1000;
-            var timer = setTimeout(function() {
-                script.timeFlag = 0;
-                Entry.Hamster.removeTimeout(timer);
-            }, timeValue);
-            Entry.Hamster.timeouts.push(timer);
-            return script;
+                script.isStart = true;
+                script.timeFlag = 1;
+                var direction = script.getField("DIRECTION", script);
+                if (direction == 'LEFT') {
+                    sq.leftWheel = -30;
+                    sq.rightWheel = 30;
+                } else {
+                    sq.leftWheel = 30;
+                    sq.rightWheel = -30;
+                }
+                Entry.Hamster.setLineTracerMode(sq, 0);
+                var timeValue = script.getNumberValue("VALUE") * 1000;
+                var timer = setTimeout(function() {
+                    script.timeFlag = 0;
+                    Entry.Hamster.removeTimeout(timer);
+                }, timeValue);
+                Entry.Hamster.timeouts.push(timer);
+                return script;
             } else if (script.timeFlag == 1) {
                 return script;
             } else {
@@ -6392,7 +6252,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "왼쪽 바퀴 %1 오른쪽 바퀴 %2 만큼 바꾸기 %3",
         "params": [
             {
                 "type": "Block",
@@ -6443,7 +6302,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "왼쪽 바퀴 %1 오른쪽 바퀴 %2 (으)로 정하기 %3",
         "params": [
             {
                 "type": "Block",
@@ -6492,7 +6350,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 바퀴 %2 만큼 바꾸기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -6552,7 +6409,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 바퀴 %2 (으)로 정하기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -6612,7 +6468,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 선을 %2 바닥 센서로 따라가기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -6670,7 +6525,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 선을 따라 %2 교차로까지 이동하기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -6722,23 +6576,23 @@ Entry.block = {
             if (color == 'WHITE') mode += 7;
 
             if (!script.isStart) {
-            script.isStart = true;
-            sq.leftWheel = 0;
-            sq.rightWheel = 0;
-            Entry.Hamster.setLineTracerMode(sq, mode);
-            return script;
+                script.isStart = true;
+                sq.leftWheel = 0;
+                sq.rightWheel = 0;
+                Entry.Hamster.setLineTracerMode(sq, mode);
+                return script;
             } else {
-            var hamster = Entry.Hamster;
-            if (pd.lineTracerStateId != hamster.lineTracerStateId) {
-            hamster.lineTracerStateId = pd.lineTracerStateId;
-            if (pd.lineTracerState == 0x40) {
-            delete script.isStart;
-            Entry.engine.isContinue = false;
-            hamster.setLineTracerMode(sq, 0);
-            return script.callReturn();
-            }
-            }
-            return script;
+                var hamster = Entry.Hamster;
+                if (pd.lineTracerStateId != hamster.lineTracerStateId) {
+                    hamster.lineTracerStateId = pd.lineTracerStateId;
+                    if (pd.lineTracerState == 0x40) {
+                        delete script.isStart;
+                        Entry.engine.isContinue = false;
+                        hamster.setLineTracerMode(sq, 0);
+                        return script.callReturn();
+                    }
+                }
+                return script;
             }
         }
     },
@@ -6746,7 +6600,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "선 따라가기 속도를 %1 (으)로 정하기 %2",
         "params": [
             {
                 "type": "Dropdown",
@@ -6789,7 +6642,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "정지하기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -6816,7 +6668,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 LED를 %2 으로 정하기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -6878,7 +6729,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 LED 끄기 %2",
         "params": [
             {
                 "type": "Dropdown",
@@ -6924,7 +6774,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "삐 소리내기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -6968,7 +6817,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "버저 음을 %1 만큼 바꾸기 %2",
         "params": [
             {
                 "type": "Block",
@@ -7008,7 +6856,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "버저 음을 %1 (으)로 정하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -7047,7 +6894,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "버저 끄기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -7073,7 +6919,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 %2 음을 %3 박자 연주하기 %4",
         "params": [
             {
                 "type": "Dropdown",
@@ -7141,37 +6986,37 @@ Entry.block = {
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
             if (!script.isStart) {
-            var note = script.getNumberField("NOTE", script);
-            var octave = script.getNumberField("OCTAVE", script);
-            var beat = script.getNumberValue("VALUE", script);
-            var tempo = Entry.Hamster.tempo;
-            note += (octave-1)*12;
-            var timeValue = beat*60*1000/tempo;
-            script.isStart = true;
-            script.timeFlag = 1;
-            sq.buzzer = 0;
-            sq.note = note;
-            if (timeValue > 100) {
-            var timer1 = setTimeout(function() {
-            sq.note = 0;
-            Entry.Hamster.removeTimeout(timer1);
-            }, timeValue-100);
-            Entry.Hamster.timeouts.push(timer1);
-            }
-            var timer2 = setTimeout(function() {
-            script.timeFlag = 0;
-            Entry.Hamster.removeTimeout(timer2);
-            }, timeValue);
-            Entry.Hamster.timeouts.push(timer2);
-            return script;
+                var note = script.getNumberField("NOTE", script);
+                var octave = script.getNumberField("OCTAVE", script);
+                var beat = script.getNumberValue("VALUE", script);
+                var tempo = Entry.Hamster.tempo;
+                note += (octave-1)*12;
+                var timeValue = beat*60*1000/tempo;
+                script.isStart = true;
+                script.timeFlag = 1;
+                sq.buzzer = 0;
+                sq.note = note;
+                if (timeValue > 100) {
+                    var timer1 = setTimeout(function() {
+                        sq.note = 0;
+                        Entry.Hamster.removeTimeout(timer1);
+                    }, timeValue-100);
+                    Entry.Hamster.timeouts.push(timer1);
+                }
+                var timer2 = setTimeout(function() {
+                    script.timeFlag = 0;
+                    Entry.Hamster.removeTimeout(timer2);
+                }, timeValue);
+                Entry.Hamster.timeouts.push(timer2);
+                return script;
             } else if (script.timeFlag == 1) {
-            return script;
+                return script;
             } else {
-            delete script.isStart;
-            delete script.timeFlag;
-            Entry.engine.isContinue = false;
-            sq.note = 0;
-            return script.callReturn();
+                delete script.isStart;
+                delete script.timeFlag;
+                Entry.engine.isContinue = false;
+                sq.note = 0;
+                return script.callReturn();
             }
         }
     },
@@ -7179,7 +7024,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 박자 쉬기 %2",
         "params": [
             {
                 "type": "Block",
@@ -7210,25 +7054,25 @@ Entry.block = {
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
             if (!script.isStart) {
-            script.isStart = true;
-            script.timeFlag = 1;
-            var timeValue = script.getNumberValue('VALUE');
-            timeValue = timeValue*60*1000/Entry.Hamster.tempo;
-            sq.buzzer = 0;
-            sq.note = 0;
-            var timer = setTimeout(function() {
-            script.timeFlag = 0;
-            Entry.Hamster.removeTimeout(timer);
-            }, timeValue);
-            Entry.Hamster.timeouts.push(timer);
-            return script;
+                script.isStart = true;
+                script.timeFlag = 1;
+                var timeValue = script.getNumberValue('VALUE');
+                timeValue = timeValue*60*1000/Entry.Hamster.tempo;
+                sq.buzzer = 0;
+                sq.note = 0;
+                var timer = setTimeout(function() {
+                    script.timeFlag = 0;
+                    Entry.Hamster.removeTimeout(timer);
+                }, timeValue);
+                Entry.Hamster.timeouts.push(timer);
+                return script;
             } else if (script.timeFlag == 1) {
-            return script;
+                return script;
             } else {
-            delete script.isStart;
-            delete script.timeFlag;
-            Entry.engine.isContinue = false;
-            return script.callReturn();
+                delete script.isStart;
+                delete script.timeFlag;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
             }
         }
     },
@@ -7236,7 +7080,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "연주 속도를 %1 만큼 바꾸기 %2",
         "params": [
             {
                 "type": "Block",
@@ -7274,7 +7117,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "연주 속도를 %1 BPM으로 정하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -7312,7 +7154,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "포트 %1 를 %2 으로 정하기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -7358,12 +7199,12 @@ Entry.block = {
             var port = script.getField("PORT", script);
             var mode = Number(script.getField("MODE", script));
             if (port == 'A') {
-            sq.ioModeA = mode;
+                sq.ioModeA = mode;
             } else if (port == 'B') {
-            sq.ioModeB = mode;
+                sq.ioModeB = mode;
             } else {
-            sq.ioModeA = mode;
-            sq.ioModeB = mode;
+                sq.ioModeA = mode;
+                sq.ioModeB = mode;
             }
             return script.callReturn();
         }
@@ -7372,7 +7213,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "출력 %1 를 %2 만큼 바꾸기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -7417,12 +7257,12 @@ Entry.block = {
             var port = script.getField('PORT');
             var value = script.getNumberValue('VALUE');
             if (port == 'A') {
-            sq.outputA = sq.outputA != undefined ? sq.outputA + value : value;
+                sq.outputA = sq.outputA != undefined ? sq.outputA + value : value;
             } else if (port == 'B') {
-            sq.outputB = sq.outputB != undefined ? sq.outputB + value : value;
+                sq.outputB = sq.outputB != undefined ? sq.outputB + value : value;
             } else {
-            sq.outputA = sq.outputA != undefined ? sq.outputA + value : value;
-            sq.outputB = sq.outputB != undefined ? sq.outputB + value : value;
+                sq.outputA = sq.outputA != undefined ? sq.outputA + value : value;
+                sq.outputB = sq.outputB != undefined ? sq.outputB + value : value;
             }
             return script.callReturn();
         }
@@ -7431,7 +7271,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "출력 %1 를 %2 (으)로 정하기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -7476,12 +7315,12 @@ Entry.block = {
             var port = script.getField('PORT');
             var value = script.getNumberValue('VALUE');
             if (port == 'A') {
-            sq.outputA = value;
+                sq.outputA = value;
             } else if (port == 'B') {
-            sq.outputB = value;
+                sq.outputB = value;
             } else {
-            sq.outputA = value;
-            sq.outputB = value;
+                sq.outputA = value;
+                sq.outputB = value;
             }
             return script.callReturn();
         }
@@ -7490,7 +7329,6 @@ Entry.block = {
         "color": "#AEB8FF",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "%1",
         "params": [
             {
                 "type": "Text",
@@ -7506,14 +7344,13 @@ Entry.block = {
         "class": "boolean_input",
         "isNotFor": [],
         "func": function (sprite, script) {
-                return Entry.stage.isClick;
+            return Entry.stage.isClick;
         }
     },
     "is_press_some_key": {
         "color": "#AEB8FF",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "%1 %2",
         "params": [
             {
                 "type": "Keyboard",
@@ -7536,15 +7373,14 @@ Entry.block = {
         "class": "boolean_input",
         "isNotFor": [],
         "func": function (sprite, script) {
-                var keycode = Number(script.getField("VALUE", script));
-                return Entry.pressedKeys.indexOf(keycode) >= 0;
+            var keycode = Number(script.getField("VALUE", script));
+            return Entry.pressedKeys.indexOf(keycode) >= 0;
         }
     },
     "reach_something": {
         "color": "#AEB8FF",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "%1 %2",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -7569,91 +7405,90 @@ Entry.block = {
         "class": "boolean_collision",
         "isNotFor": [],
         "func": function (sprite, script) {
-                if (!sprite.getVisible())
-                    return false;
-                var targetSpriteId = script.getField("VALUE", script);
-                var reg = /wall/;
-                var ath = 0.2;
-                var object = sprite.object
-                var isWall = reg.test(targetSpriteId);
-                var collision = ndgmr.checkPixelCollision;
-                if (isWall) {
-                    var wall = Entry.stage.wall;
-                    switch(targetSpriteId) {
-                        case 'wall':
-                            if (collision(object,wall.up,ath,true) ||
-                                collision(object,wall.down,ath,true) ||
-                                collision(object,wall.left,ath,true) ||
+            if (!sprite.getVisible())
+                return false;
+            var targetSpriteId = script.getField("VALUE", script);
+            var reg = /wall/;
+            var ath = 0.2;
+            var object = sprite.object
+            var isWall = reg.test(targetSpriteId);
+            var collision = ndgmr.checkPixelCollision;
+            if (isWall) {
+                var wall = Entry.stage.wall;
+                switch(targetSpriteId) {
+                    case 'wall':
+                        if (collision(object,wall.up,ath,true) ||
+                            collision(object,wall.down,ath,true) ||
+                            collision(object,wall.left,ath,true) ||
                                 collision(object,wall.right,ath,true))
                                 return true;
-                            else
-                                return false;
-                        case 'wall_up':
-                            if (collision(object,wall.up,ath,true))
-                                return true;
-                            else
-                                return false;
-                        case 'wall_down':
-                            if (collision(object,wall.down,ath,true))
-                                return true;
-                            else
-                                return false;
-                        case 'wall_right':
-                            if (collision(object,wall.right,ath,true))
-                                return true;
-                            else
-                                return false;
-                        case 'wall_left':
-                            if (collision(object,wall.left,ath,true))
-                                return true;
-                            else
-                                return false;
+                                else
+                                    return false;
+                                case 'wall_up':
+                                    if (collision(object,wall.up,ath,true))
+                                        return true;
+                                    else
+                                        return false;
+                                    case 'wall_down':
+                                        if (collision(object,wall.down,ath,true))
+                                            return true;
+                                        else
+                                            return false;
+                                        case 'wall_right':
+                                            if (collision(object,wall.right,ath,true))
+                                                return true;
+                                            else
+                                                return false;
+                                            case 'wall_left':
+                                                if (collision(object,wall.left,ath,true))
+                                                    return true;
+                                                else
+                                                    return false;
+                }
+            } else if (targetSpriteId == 'mouse') {
+                var stage = Entry.stage.canvas;
+                var pt = object.globalToLocal(stage.mouseX, stage.mouseY);
+                return object.hitTest(pt.x, pt.y);
+            } else {
+                var targetSprite = Entry.container.getEntity(targetSpriteId);
+                if (targetSprite.type == "textBox" || sprite.type == 'textBox') {
+                    var targetBound = targetSprite.object.getTransformedBounds();
+                    var bound = object.getTransformedBounds();
+                    if (Entry.checkCollisionRect(bound, targetBound))
+                        return true;
+                    var clonedEntities = targetSprite.parent.clonedEntities;
+                    for (var i=0, len=clonedEntities.length; i<len; i++) {
+                        var entity = clonedEntities[i];
+                        if(entity.isStamp)
+                            continue;
+                        if (!entity.getVisible())
+                            continue;
+                        if (Entry.checkCollisionRect(bound, entity.object.getTransformedBounds()))
+                            return true;
                     }
-                } else if (targetSpriteId == 'mouse') {
-                    var stage = Entry.stage.canvas;
-                    var pt = object.globalToLocal(stage.mouseX, stage.mouseY);
-                    return object.hitTest(pt.x, pt.y);
                 } else {
-                    var targetSprite = Entry.container.getEntity(targetSpriteId);
-                    if (targetSprite.type == "textBox" || sprite.type == 'textBox') {
-                        var targetBound = targetSprite.object.getTransformedBounds();
-                        var bound = object.getTransformedBounds();
-                        if (Entry.checkCollisionRect(bound, targetBound))
+                    if (targetSprite.getVisible() &&
+                        collision(object,targetSprite.object,ath,true))
+                    return true;
+                    var clonedEntities = targetSprite.parent.clonedEntities;
+                    for (var i=0, len=clonedEntities.length; i<len; i++) {
+                        var entity = clonedEntities[i];
+                        if(entity.isStamp)
+                            continue;
+                        if (!entity.getVisible())
+                            continue;
+                        if (collision(object,entity.object,ath,true))
                             return true;
-                        var clonedEntities = targetSprite.parent.clonedEntities;
-                        for (var i=0, len=clonedEntities.length; i<len; i++) {
-                            var entity = clonedEntities[i];
-                            if(entity.isStamp)
-                                continue;
-                            if (!entity.getVisible())
-                                continue;
-                            if (Entry.checkCollisionRect(bound, entity.object.getTransformedBounds()))
-                                return true;
-                        }
-                    } else {
-                        if (targetSprite.getVisible() &&
-                            collision(object,targetSprite.object,ath,true))
-                            return true;
-                        var clonedEntities = targetSprite.parent.clonedEntities;
-                        for (var i=0, len=clonedEntities.length; i<len; i++) {
-                            var entity = clonedEntities[i];
-                            if(entity.isStamp)
-                                continue;
-                            if (!entity.getVisible())
-                                continue;
-                            if (collision(object,entity.object,ath,true))
-                                return true;
-                        }
                     }
                 }
-                return false;
+            }
+            return false;
         }
     },
     "boolean_comparison": {
         "color": "#AEB8FF",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "%1 %2 %3",
         "params": [
             {
                 "type": "Block",
@@ -7700,7 +7535,6 @@ Entry.block = {
         "color": "#AEB8FF",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "%1 %2 %3",
         "params": [
             {
                 "type": "Block",
@@ -7747,7 +7581,6 @@ Entry.block = {
         "color": "#AEB8FF",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "%1 %2 %3",
         "params": [
             {
                 "type": "Block",
@@ -7794,7 +7627,6 @@ Entry.block = {
         "color": "#AEB8FF",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "%1 %2 %3",
         "params": [
             {
                 "type": "Block",
@@ -7841,7 +7673,6 @@ Entry.block = {
         "color": "#AEB8FF",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "%1 %2 %3",
         "params": [
             {
                 "type": "Block",
@@ -7884,7 +7715,6 @@ Entry.block = {
         "color": "#AEB8FF",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "%1 %2 %3",
         "params": [
             {
                 "type": "Block",
@@ -7929,7 +7759,6 @@ Entry.block = {
         "color": "#AEB8FF",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "%1 %2 %3",
         "params": [
             {
                 "type": "Block",
@@ -7974,7 +7803,6 @@ Entry.block = {
         "color": "#AEB8FF",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "%1 %2",
         "params": [
             {
                 "type": "Block",
@@ -8009,7 +7837,6 @@ Entry.block = {
         "color": "#AEB8FF",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "%1",
         "params": [
             {
                 "type": "Dropdown",
@@ -8037,7 +7864,6 @@ Entry.block = {
         "color": "#AEB8FF",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "%1  ",
         "params": [
             {
                 "type": "Text",
@@ -8059,7 +7885,6 @@ Entry.block = {
         "color": "#AEB8FF",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "%1  ",
         "params": [
             {
                 "type": "Text",
@@ -8083,7 +7908,6 @@ Entry.block = {
         "color": "#AEB8FF",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "%1 %2 %3",
         "params": [
             {
                 "type": "Block",
@@ -8224,7 +8048,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "모양 보이기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -8248,7 +8071,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "모양 숨기기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -8272,7 +8094,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 을(를) %2 초 동안 %3 %4",
         "params": [
             {
                 "type": "Block",
@@ -8348,7 +8169,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 을(를) %2 %3",
         "params": [
             {
                 "type": "Block",
@@ -8402,7 +8222,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "말하기 지우기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -8426,7 +8245,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 모양으로 바꾸기 %2",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -8461,7 +8279,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 모양으로 바꾸기 %2",
         "params": [
             {
                 "type": "Dropdown",
@@ -8503,7 +8320,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 효과를 %2 만큼 주기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -8566,7 +8382,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 효과를 %2 (으)로 정하기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -8629,7 +8444,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "효과 모두 지우기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -8653,7 +8467,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "크기를 %1 만큼 바꾸기 %2",
         "params": [
             {
                 "type": "Block",
@@ -8692,7 +8505,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "크기를 %1  (으)로 정하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -8732,7 +8544,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "크기를 %1 만큼 바꾸기 %2",
         "params": [
             {
                 "type": "Block",
@@ -8770,7 +8581,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "크기를 %1  (으)로 정하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -8808,7 +8618,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "좌우 모양 뒤집기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -8832,7 +8641,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "상하 모양 뒤집기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -8858,7 +8666,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 번째로 올라오기 %2",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -8898,7 +8705,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1  ",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -8920,14 +8726,13 @@ Entry.block = {
             "VALUE": 0
         },
         "func": function (sprite, script) {
-    return script.getStringField("VALUE");
-}
+            return script.getStringField("VALUE");
+        }
     },
     "change_to_some_shape": {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 모양으로 바꾸기 %2",
         "params": [
             {
                 "type": "Block",
@@ -8969,7 +8774,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 효과를 %2 만큼 주기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -9027,7 +8831,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 효과를 %2 (으)로 정하기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -9085,7 +8888,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 효과를 %2 만큼 주기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -9143,7 +8945,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 효과를 %2 (으)로 정하기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -9201,7 +9002,6 @@ Entry.block = {
         "color": "#EC4466",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 보내기 %2",
         "params": [
             {
                 "type": "Dropdown",
@@ -9264,7 +9064,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "이동 방향으로 %1 만큼 움직이기 %2",
         "params": [
             {
                 "type": "Block",
@@ -9306,7 +9105,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "x 좌표를 %1 만큼 바꾸기 %2",
         "params": [
             {
                 "type": "Block",
@@ -9347,7 +9145,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "y 좌표를 %1 만큼 바꾸기 %2",
         "params": [
             {
                 "type": "Block",
@@ -9388,7 +9185,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 초 동안 x: %2 y: %3 위치로 이동하기 %4",
         "params": [
             {
                 "type": "Block",
@@ -9466,7 +9262,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "오브젝트를 %1 만큼 회전하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -9504,7 +9299,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 만큼 회전하기 %2",
         "params": [
             {
                 "type": "Dropdown",
@@ -9543,7 +9337,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "이동 방향을 %1 (으)로 정하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -9581,7 +9374,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 쪽 보기 %2",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -9619,7 +9411,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "x: %1 y: %2 위치로 이동하기 %3",
         "params": [
             {
                 "type": "Block",
@@ -9671,7 +9462,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "x: %1 위치로 이동하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -9712,7 +9502,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "y: %1 위치로 이동하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -9754,7 +9543,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 위치로 이동하기 %2",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -9801,7 +9589,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 초 동안 x: %2 y: %3 만큼 움직이기 %4",
         "params": [
             {
                 "type": "Block",
@@ -9877,7 +9664,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "오브젝트를 %1 초 동안 %2 만큼 회전하기 %3",
         "params": [
             {
                 "type": "Block",
@@ -9936,7 +9722,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "화면 끝에 닿으면 튕기기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -9956,11 +9741,11 @@ Entry.block = {
 
             var method = sprite.parent.getRotateMethod();
             /*
-            var bound = sprite.object.getTransformedBounds();
-            var size = {};
-            size.width = bound.width * Math.sqrt(1.0 + (bound.height/bound.width) * (bound.height/bound.width));
-            size.height = bound.height * Math.sqrt(1.0 + (bound.width/bound.height) * (bound.width/bound.height));
-            */
+               var bound = sprite.object.getTransformedBounds();
+               var size = {};
+               size.width = bound.width * Math.sqrt(1.0 + (bound.height/bound.width) * (bound.height/bound.width));
+               size.height = bound.height * Math.sqrt(1.0 + (bound.width/bound.height) * (bound.width/bound.height));
+               */
 
             if (method == 'free')
                 var angle = (sprite.getRotation() + sprite.getDirection()).mod(360);
@@ -10123,7 +9908,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "화살표 방향 좌우 뒤집기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -10144,7 +9928,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "화살표 방향 상하 뒤집기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -10165,7 +9948,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 쪽 바라보기 %2",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -10226,7 +10008,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "오브젝트를 %1 (으)로 정하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -10265,7 +10046,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "이동 방향을 %1 만큼 회전하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -10303,7 +10083,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 초 동안 %2 위치로 이동하기 %3",
         "params": [
             {
                 "type": "Block",
@@ -10396,7 +10175,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "방향을 %1 (으)로 정하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -10433,7 +10211,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "방향을 %1 만큼 회전하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -10470,7 +10247,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "이동 방향을 %1 (으)로 정하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -10507,7 +10283,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "이동 방향을 %1 만큼 회전하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -10544,7 +10319,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 방향으로 %2 만큼 움직이기 %3",
         "params": [
             {
                 "type": "Block",
@@ -10595,7 +10369,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 초 동안 방향을 %2 만큼 회전하기 %3",
         "params": [
             {
                 "type": "Block",
@@ -10655,7 +10428,6 @@ Entry.block = {
         "color": "#A751E3",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 초 동안 이동 방향 %2 만큼 회전하기 %3",
         "params": [
             {
                 "type": "Block",
@@ -10716,7 +10488,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1  값",
         "params": [
             {
                 "type": "Dropdown",
@@ -10749,7 +10520,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "왼쪽모터를 %1 %2 회전 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -10798,7 +10568,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "왼쪽모터 정지 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -10822,7 +10591,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "오른쪽모터를 %1 %2 회전 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -10871,7 +10639,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "오른쪽모터 정지 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -10895,7 +10662,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 모터를  %2 초간 %3 %4 %5",
         "params": [
             {
                 "type": "Dropdown",
@@ -10975,21 +10741,21 @@ Entry.block = {
                 var direction = script.getNumberField("DIRECTION");
                 switch (direction) {
                     case 1:
-                    Entry.hw.sendQueue["LMOT"] = value;
-                    Entry.hw.sendQueue["RMOT"] = value;
-                    break;
+                        Entry.hw.sendQueue["LMOT"] = value;
+                        Entry.hw.sendQueue["RMOT"] = value;
+                        break;
                     case 2:
-                    Entry.hw.sendQueue["LMOT"] = value * -1;
-                    Entry.hw.sendQueue["RMOT"] = value * -1;
-                    break;
+                        Entry.hw.sendQueue["LMOT"] = value * -1;
+                        Entry.hw.sendQueue["RMOT"] = value * -1;
+                        break;
                     case 3:
-                    Entry.hw.sendQueue["LMOT"] = value;
-                    Entry.hw.sendQueue["RMOT"] = value * -1;
-                    break;
+                        Entry.hw.sendQueue["LMOT"] = value;
+                        Entry.hw.sendQueue["RMOT"] = value * -1;
+                        break;
                     case 4:
-                    Entry.hw.sendQueue["LMOT"] = value * -1;
-                    Entry.hw.sendQueue["RMOT"] = value;
-                    break;
+                        Entry.hw.sendQueue["LMOT"] = value * -1;
+                        Entry.hw.sendQueue["RMOT"] = value;
+                        break;
                 }
 
                 if(type === 2)  {
@@ -11013,7 +10779,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "SERVO1에 연결된 서보모터를 %1 속도로 %2 로 이동 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -11078,7 +10843,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "SERVO2에 연결된 서보모터를 %1 속도로 %2 로 이동 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -11143,7 +10907,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "멜로디 %1 을(를) %2 옥타브로 %3 길이만큼 소리내기 %4",
         "params": [
             {
                 "type": "Dropdown",
@@ -11232,7 +10995,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 번 포트의 값을 %2 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -11282,7 +11044,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "직접입력 주소 ( %1 ) %2 값",
         "params": [
             {
                 "type": "Block",
@@ -11317,19 +11078,18 @@ Entry.block = {
         "class": "robotis_openCM70_custom",
         "isNotFor": [ "robotis_openCM70" ],
         "func": function (b, a) {
-          var c = Entry.Robotis_openCM70.INSTRUCTION.READ, d = 0, e = 0, f = 0, d = a.getStringField("SIZE");
-          "BYTE" == d ? e = 1 : "WORD" == d ? e = 2 : "DWORD" == d && (e = 4);
-          f = d = a.getNumberValue("VALUE");
-          Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, e]]);
-          Entry.Robotis_carCont.update();
-          return Entry.hw.portData[f];
+            var c = Entry.Robotis_openCM70.INSTRUCTION.READ, d = 0, e = 0, f = 0, d = a.getStringField("SIZE");
+            "BYTE" == d ? e = 1 : "WORD" == d ? e = 2 : "DWORD" == d && (e = 4);
+            f = d = a.getNumberValue("VALUE");
+            Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, e]]);
+            Entry.Robotis_carCont.update();
+            return Entry.hw.portData[f];
         }
     },
     "robotis_openCM70_sensor_value": {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "제어기 %1 값",
         "params": [
             {
                 "type": "Dropdown",
@@ -11353,20 +11113,19 @@ Entry.block = {
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
         "func": function (b, a) {
-          var c = Entry.Robotis_openCM70.INSTRUCTION.READ, d = 0, e = 0, f = 0, g = 0, h = a.getStringField("SENSOR");
-          "CM_SOUND_DETECTED" == h ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1]) : "CM_SOUND_DETECTING" == h ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[0],
-          e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[1]) : "CM_USER_BUTTON" == h && (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1]);
-          f += 0 * g;
-          Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, g]]);
-          Entry.Robotis_carCont.update();
-          return Entry.hw.portData[f];
+            var c = Entry.Robotis_openCM70.INSTRUCTION.READ, d = 0, e = 0, f = 0, g = 0, h = a.getStringField("SENSOR");
+            "CM_SOUND_DETECTED" == h ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1]) : "CM_SOUND_DETECTING" == h ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[0],
+                                                                                                                                                                                                                                                                                                                                   e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[1]) : "CM_USER_BUTTON" == h && (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1]);
+                                                                                                                                                                                                                                                                                                                                   f += 0 * g;
+                                                                                                                                                                                                                                                                                                                                   Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, g]]);
+                                                                                                                                                                                                                                                                                                                                   Entry.Robotis_carCont.update();
+                                                                                                                                                                                                                                                                                                                                   return Entry.hw.portData[f];
         }
     },
     "robotis_openCM70_aux_sensor_value": {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1   %2 값",
         "params": [
             {
                 "type": "Dropdown",
@@ -11411,27 +11170,26 @@ Entry.block = {
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
         "func": function (b, a) {
-              var c = Entry.Robotis_openCM70.INSTRUCTION.READ, d = 0, e = 0, f = 0, g = 0, h = a.getStringField("PORT"), k = a.getStringField("SENSOR"), l = 0;
-              "PORT_3" == h ? l = 2 : "PORT_4" == h ? l = 3 : "PORT_5" == h ? l = 4 : "PORT_6" == h && (l = 5);
-              "AUX_SERVO_POSITION" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1]) : "AUX_IR" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[1]) :
-              "AUX_TOUCH" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[1]) : "AUX_TEMPERATURE" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[1]) :
-              "AUX_BRIGHTNESS" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[1]) : "AUX_HYDRO_THEMO_HUMIDITY" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[0],
-              e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[1]) : "AUX_HYDRO_THEMO_TEMPER" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[1]) : "AUX_ULTRASONIC" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[1],
-              d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[1]) : "AUX_MAGNETIC" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[1]) : "AUX_MOTION_DETECTION" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[1],
-              d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[1]) : "AUX_COLOR" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[1]) : "AUX_CUSTOM" == k && (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1],
-              d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1]);
-              f += l * g;
-              0 != l && (e = 6 * g);
-              Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, g]]);
-              Entry.Robotis_carCont.update();
-              return Entry.hw.portData[f];
+            var c = Entry.Robotis_openCM70.INSTRUCTION.READ, d = 0, e = 0, f = 0, g = 0, h = a.getStringField("PORT"), k = a.getStringField("SENSOR"), l = 0;
+            "PORT_3" == h ? l = 2 : "PORT_4" == h ? l = 3 : "PORT_5" == h ? l = 4 : "PORT_6" == h && (l = 5);
+            "AUX_SERVO_POSITION" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1]) : "AUX_IR" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[1]) :
+                "AUX_TOUCH" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[1]) : "AUX_TEMPERATURE" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[1]) :
+                    "AUX_BRIGHTNESS" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[1]) : "AUX_HYDRO_THEMO_HUMIDITY" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[0],
+                                                                                                                                                                                                                                                                                                                                  e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[1]) : "AUX_HYDRO_THEMO_TEMPER" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[1]) : "AUX_ULTRASONIC" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[1],
+                                                                                                                                                                                                                                                                                                                                      d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[1]) : "AUX_MAGNETIC" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[1]) : "AUX_MOTION_DETECTION" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[1],
+                                                                                                                                                                                                                                                                                                                                          d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[1]) : "AUX_COLOR" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[1]) : "AUX_CUSTOM" == k && (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1],
+                                                                                                                                                                                                                                                                                                                                              d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1]);
+                                                                                                                                                                                                                                                                                                                                              f += l * g;
+                                                                                                                                                                                                                                                                                                                                              0 != l && (e = 6 * g);
+                                                                                                                                                                                                                                                                                                                                              Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, g]]);
+                                                                                                                                                                                                                                                                                                                                              Entry.Robotis_carCont.update();
+                                                                                                                                                                                                                                                                                                                                              return Entry.hw.portData[f];
         }
     },
     "robotis_openCM70_cm_buzzer_index": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "제어기 음계값 %1 을(를) %2 초 동안 연주 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -11521,18 +11279,17 @@ Entry.block = {
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
         "func": function (b, a) {
-              var c = a.getField("CM_BUZZER_INDEX", a), d = a.getNumberValue("CM_BUZZER_TIME", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, h = 0, k = 0, l = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[1], h = parseInt(10 * d);
-              50 < h && (h = 50);
-              k = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[0];
-              l = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[1];
-              return Entry.Robotis_carCont.postCallReturn(a, [[e, f, g, h], [e, k, l, c]], 1E3 * d);
+            var c = a.getField("CM_BUZZER_INDEX", a), d = a.getNumberValue("CM_BUZZER_TIME", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, h = 0, k = 0, l = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[1], h = parseInt(10 * d);
+            50 < h && (h = 50);
+            k = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[0];
+            l = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[1];
+            return Entry.Robotis_carCont.postCallReturn(a, [[e, f, g, h], [e, k, l, c]], 1E3 * d);
         }
     },
     "robotis_openCM70_cm_buzzer_melody": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "제어기 멜로디 %1 번 연주 %2",
         "params": [
             {
                 "type": "Dropdown",
@@ -11583,15 +11340,14 @@ Entry.block = {
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
         "func": function (b, a) {
-              var c = a.getField("CM_BUZZER_MELODY", a), d = Entry.Robotis_openCM70.INSTRUCTION.WRITE, e = 0, f = 0, g = 0, h = 0, e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[0], f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[1], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[0], h = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[1];
-              return Entry.Robotis_carCont.postCallReturn(a, [[d, e, f, 255], [d, g, h, c]], 1E3);
+            var c = a.getField("CM_BUZZER_MELODY", a), d = Entry.Robotis_openCM70.INSTRUCTION.WRITE, e = 0, f = 0, g = 0, h = 0, e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[0], f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[1], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[0], h = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[1];
+            return Entry.Robotis_carCont.postCallReturn(a, [[d, e, f, 255], [d, g, h, c]], 1E3);
         }
     },
     "robotis_openCM70_cm_sound_detected_clear": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "최종소리감지횟수 초기화 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -11607,15 +11363,14 @@ Entry.block = {
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
         "func": function (b, a) {
-              var c = Entry.Robotis_openCM70.INSTRUCTION.WRITE, d = 0, e = 0, d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1];
-              return Entry.Robotis_carCont.postCallReturn(a, [[c, d, e, 0]], Entry.Robotis_openCM70.delay);
+            var c = Entry.Robotis_openCM70.INSTRUCTION.WRITE, d = 0, e = 0, d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1];
+            return Entry.Robotis_carCont.postCallReturn(a, [[c, d, e, 0]], Entry.Robotis_openCM70.delay);
         }
     },
     "robotis_openCM70_cm_led": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "제어기 %1 LED %2 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -11654,16 +11409,15 @@ Entry.block = {
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
         "func": function (b, a) {
-              var c = a.getField("CM_LED", a), d = a.getField("VALUE", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0;
-              "CM_LED_R" == c ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_R[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_R[1]) : "CM_LED_G" == c ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_G[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_G[1]) : "CM_LED_B" == c && (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_B[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_B[1]);
-              return Entry.Robotis_carCont.postCallReturn(a, [[e, f, g, d]], Entry.Robotis_openCM70.delay);
+            var c = a.getField("CM_LED", a), d = a.getField("VALUE", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0;
+            "CM_LED_R" == c ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_R[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_R[1]) : "CM_LED_G" == c ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_G[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_G[1]) : "CM_LED_B" == c && (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_B[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_B[1]);
+            return Entry.Robotis_carCont.postCallReturn(a, [[e, f, g, d]], Entry.Robotis_openCM70.delay);
         }
     },
     "robotis_openCM70_cm_motion": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "모션 %1 번 실행 %2",
         "params": [
             {
                 "type": "Block",
@@ -11692,15 +11446,14 @@ Entry.block = {
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
         "func": function (b, a) {
-              var c = Entry.Robotis_openCM70.INSTRUCTION.WRITE, d = 0, e = 0, f = 0, d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_MOTION[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_MOTION[1], f = a.getNumberValue("VALUE", a);
-              return Entry.Robotis_carCont.postCallReturn(a, [[c, d, e, f]], Entry.Robotis_openCM70.delay);
+            var c = Entry.Robotis_openCM70.INSTRUCTION.WRITE, d = 0, e = 0, f = 0, d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_MOTION[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_MOTION[1], f = a.getNumberValue("VALUE", a);
+            return Entry.Robotis_carCont.postCallReturn(a, [[c, d, e, f]], Entry.Robotis_openCM70.delay);
         }
     },
     "robotis_openCM70_aux_motor_speed": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 감속모터 속도를 %2 , 출력값을 %3 (으)로 정하기 %4",
         "params": [
             {
                 "type": "Dropdown",
@@ -11760,7 +11513,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 서보모터 모드를 %2 (으)로 정하기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -11800,15 +11552,14 @@ Entry.block = {
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
         "func": function (b, a) {
-              var c = a.getField("PORT", a), d = a.getField("MODE", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_MODE[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_MODE[1];
-              return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
+            var c = a.getField("PORT", a), d = a.getField("MODE", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_MODE[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_MODE[1];
+            return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
         }
     },
     "robotis_openCM70_aux_servo_speed": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 서보모터 속도를 %2 , 출력값을 %3 (으)로 정하기 %4",
         "params": [
             {
                 "type": "Dropdown",
@@ -11861,16 +11612,15 @@ Entry.block = {
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
         "func": function (b, a) {
-              var c = a.getField("PORT", a), d = a.getField("DIRECTION_ANGLE", a), e = a.getNumberValue("VALUE"), f = Entry.Robotis_openCM70.INSTRUCTION.WRITE, g = 0, h = 0, g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_SPEED[0], h = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_SPEED[1];
-              "CW" == d ? (e += 1024, 2047 < e && (e = 2047)) : 1023 < e && (e = 1023);
-              return Entry.Robotis_carCont.postCallReturn(a, [[f, g + (c - 1) * h, h, e]], Entry.Robotis_openCM70.delay);
+            var c = a.getField("PORT", a), d = a.getField("DIRECTION_ANGLE", a), e = a.getNumberValue("VALUE"), f = Entry.Robotis_openCM70.INSTRUCTION.WRITE, g = 0, h = 0, g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_SPEED[0], h = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_SPEED[1];
+            "CW" == d ? (e += 1024, 2047 < e && (e = 2047)) : 1023 < e && (e = 1023);
+            return Entry.Robotis_carCont.postCallReturn(a, [[f, g + (c - 1) * h, h, e]], Entry.Robotis_openCM70.delay);
         }
     },
     "robotis_openCM70_aux_servo_position": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 서보모터 위치를 %2 (으)로 정하기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -11912,16 +11662,15 @@ Entry.block = {
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
         "func": function (b, a) {
-              var c = a.getField("PORT", a), d = a.getNumberValue("VALUE"), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1];
-              1023 < d ? d = 1023 : 0 > d && (d = 0);
-              return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
+            var c = a.getField("PORT", a), d = a.getNumberValue("VALUE"), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1];
+            1023 < d ? d = 1023 : 0 > d && (d = 0);
+            return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
         }
     },
     "robotis_openCM70_aux_led_module": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 LED 모듈을 %2 (으)로 정하기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -11963,15 +11712,14 @@ Entry.block = {
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
         "func": function (b, a) {
-              var c = a.getField("PORT", a), d = a.getField("LED_MODULE", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_LED_MODULE[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_LED_MODULE[1];
-              return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
+            var c = a.getField("PORT", a), d = a.getField("LED_MODULE", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_LED_MODULE[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_LED_MODULE[1];
+            return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
         }
     },
     "robotis_openCM70_aux_custom": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 사용자 장치를 %2 (으)로 정하기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -12013,15 +11761,14 @@ Entry.block = {
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
         "func": function (b, a) {
-              var c = a.getField("PORT", a), d = a.getNumberValue("VALUE"), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1];
-              return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
+            var c = a.getField("PORT", a), d = a.getNumberValue("VALUE"), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1];
+            return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
         }
     },
     "robotis_openCM70_cm_custom": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "직접입력 주소 ( %1 ) (을)를 %2 (으)로 정하기 %3",
         "params": [
             {
                 "type": "Block",
@@ -12059,15 +11806,14 @@ Entry.block = {
         "class": "robotis_openCM70_custom",
         "isNotFor": [ "robotis_openCM70" ],
         "func": function (b, a) {
-              var c = Entry.Robotis_openCM70.INSTRUCTION.WRITE, d = 0, e = 0, d = a.getNumberValue("ADDRESS"), e = a.getNumberValue("VALUE");
-              return Entry.Robotis_carCont.postCallReturn(a, [[c, d, 65535 < e ? 4 : 255 < e ? 2 : 1, e]], Entry.Robotis_openCM70.delay);
+            var c = Entry.Robotis_openCM70.INSTRUCTION.WRITE, d = 0, e = 0, d = a.getNumberValue("ADDRESS"), e = a.getNumberValue("VALUE");
+            return Entry.Robotis_carCont.postCallReturn(a, [[c, d, 65535 < e ? 4 : 255 < e ? 2 : 1, e]], Entry.Robotis_openCM70.delay);
         }
     },
     "robotis_carCont_sensor_value": {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1   값",
         "params": [
             {
                 "type": "Dropdown",
@@ -12097,23 +11843,22 @@ Entry.block = {
         "class": "robotis_carCont_cm",
         "isNotFor": [ "robotis_carCont" ],
         "func": function (b, a) {
-              var c = Entry.Robotis_carCont.INSTRUCTION.READ, d = 0, e = 0, f = 0, g = 0, h = a.getStringField("SENSOR");
-              "CM_SPRING_LEFT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[2], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[3]) : "CM_SPRING_RIGHT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[2], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[3]) :
-              "CM_SWITCH" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[1]) : "CM_SOUND_DETECTED" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1]) :
-              "CM_SOUND_DETECTING" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[1]) : "CM_IR_LEFT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[2], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[3]) :
-              "CM_IR_RIGHT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[2], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[3]) : "CM_CALIBRATION_LEFT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[1]) :
-              "CM_CALIBRATION_RIGHT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[1]) : "CM_BUTTON_STATUS" == h && (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[0],
-              e = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[1]);
-              Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, g]]);
-              Entry.Robotis_carCont.update();
-              return Entry.hw.portData[f];
+            var c = Entry.Robotis_carCont.INSTRUCTION.READ, d = 0, e = 0, f = 0, g = 0, h = a.getStringField("SENSOR");
+            "CM_SPRING_LEFT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[2], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[3]) : "CM_SPRING_RIGHT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[2], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[3]) :
+                "CM_SWITCH" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[1]) : "CM_SOUND_DETECTED" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1]) :
+                    "CM_SOUND_DETECTING" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[1]) : "CM_IR_LEFT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[2], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[3]) :
+                        "CM_IR_RIGHT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[2], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[3]) : "CM_CALIBRATION_LEFT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[1]) :
+                            "CM_CALIBRATION_RIGHT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[1]) : "CM_BUTTON_STATUS" == h && (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[0],
+                                                                                                                                                                                                                                                                                                                                                             e = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[1]);
+                                                                                                                                                                                                                                                                                                                                                             Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, g]]);
+                                                                                                                                                                                                                                                                                                                                                             Entry.Robotis_carCont.update();
+                                                                                                                                                                                                                                                                                                                                                             return Entry.hw.portData[f];
         }
     },
     "robotis_carCont_cm_led": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "4번 LED %1 ,  1번 LED %2 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -12161,7 +11906,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "최종소리감지횟수 초기화 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -12177,15 +11921,14 @@ Entry.block = {
         "class": "robotis_carCont_cm",
         "isNotFor": [ "robotis_carCont" ],
         "func": function (b, a) {
-              var c = Entry.Robotis_carCont.INSTRUCTION.WRITE, d = 0, e = 0, d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1];
-              return Entry.Robotis_carCont.postCallReturn(a, [[c, d, e, 0]], Entry.Robotis_carCont.delay);
+            var c = Entry.Robotis_carCont.INSTRUCTION.WRITE, d = 0, e = 0, d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1];
+            return Entry.Robotis_carCont.postCallReturn(a, [[c, d, e, 0]], Entry.Robotis_carCont.delay);
         }
     },
     "robotis_carCont_aux_motor_speed": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 감속모터 속도를 %2 , 출력값을 %3 (으)로 정하기 %4",
         "params": [
             {
                 "type": "Dropdown",
@@ -12236,17 +11979,16 @@ Entry.block = {
         "class": "robotis_carCont_cm",
         "isNotFor": [ "robotis_carCont" ],
         "func": function (b, a) {
-              var c = a.getField("DIRECTION", a), d = a.getField("DIRECTION_ANGLE", a), e = a.getNumberValue("VALUE"), f = Entry.Robotis_carCont.INSTRUCTION.WRITE, g = 0, h = 0;
-              "LEFT" == c ? (g = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_LEFT[0], h = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_LEFT[1]) : (g = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_RIGHT[0], h = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_RIGHT[1]);
-              "CW" == d ? (e += 1024, 2047 < e && (e = 2047)) : 1023 < e && (e = 1023);
-              return Entry.Robotis_carCont.postCallReturn(a, [[f, g, h, e]], Entry.Robotis_carCont.delay);
-            }
+            var c = a.getField("DIRECTION", a), d = a.getField("DIRECTION_ANGLE", a), e = a.getNumberValue("VALUE"), f = Entry.Robotis_carCont.INSTRUCTION.WRITE, g = 0, h = 0;
+            "LEFT" == c ? (g = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_LEFT[0], h = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_LEFT[1]) : (g = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_RIGHT[0], h = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_RIGHT[1]);
+            "CW" == d ? (e += 1024, 2047 < e && (e = 2047)) : 1023 < e && (e = 1023);
+            return Entry.Robotis_carCont.postCallReturn(a, [[f, g, h, e]], Entry.Robotis_carCont.delay);
+        }
     },
     "robotis_carCont_cm_calibration": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 적외선 센서 캘리브레이션 값을 %2 (으)로 정하기 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -12286,16 +12028,15 @@ Entry.block = {
         "class": "robotis_carCont_cm",
         "isNotFor": [ "robotis_carCont" ],
         "func": function (b, a) {
-              var c = a.getField("DIRECTION", a), d = a.getNumberValue("VALUE"), e = Entry.Robotis_carCont.INSTRUCTION.WRITE, f = 0, g = 0;
-              "LEFT" == c ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[1]) : (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[1]);
-              return Entry.Robotis_carCont.postCallReturn(a, [[e, f, g, d]], Entry.Robotis_carCont.delay);
+            var c = a.getField("DIRECTION", a), d = a.getNumberValue("VALUE"), e = Entry.Robotis_carCont.INSTRUCTION.WRITE, f = 0, g = 0;
+            "LEFT" == c ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[1]) : (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[1]);
+            return Entry.Robotis_carCont.postCallReturn(a, [[e, f, g, d]], Entry.Robotis_carCont.delay);
         }
     },
     "when_scene_start": {
         "color": "#3BBD70",
         "skeleton": "basic_event",
         "statements": [],
-        "template": "%1 장면이 시작되었을때",
         "params": [
             {
                 "type": "Indicator",
@@ -12323,7 +12064,6 @@ Entry.block = {
         "color": "#3BBD70",
         "skeleton": "basic_without_next",
         "statements": [],
-        "template": "%1 시작하기 %2",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -12361,7 +12101,6 @@ Entry.block = {
         "color": "#3BBD70",
         "skeleton": "basic_without_next",
         "statements": [],
-        "template": "%1 장면 시작하기 %2",
         "params": [
             {
                 "type": "Dropdown",
@@ -12417,7 +12156,6 @@ Entry.block = {
         "color": "#A4D01D",
         "skeleton": "basic",
         "statements": [],
-        "template": "소리 %1 재생하기 %2",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -12454,7 +12192,6 @@ Entry.block = {
         "color": "#A4D01D",
         "skeleton": "basic",
         "statements": [],
-        "template": "소리 %1 %2 초 재생하기 %3",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -12509,7 +12246,6 @@ Entry.block = {
         "color": "#A4D01D",
         "skeleton": "basic",
         "statements": [],
-        "template": "소리  %1 재생하고 기다리기 %2",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -12561,7 +12297,6 @@ Entry.block = {
         "color": "#A4D01D",
         "skeleton": "basic",
         "statements": [],
-        "template": "소리 %1 %2 초 재생하고 기다리기 %3",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -12628,7 +12363,6 @@ Entry.block = {
         "color": "#A4D01D",
         "skeleton": "basic",
         "statements": [],
-        "template": "소리 크기를 %1 % 만큼 바꾸기 %2",
         "params": [
             {
                 "type": "Block",
@@ -12671,7 +12405,6 @@ Entry.block = {
         "color": "#A4D01D",
         "skeleton": "basic",
         "statements": [],
-        "template": "소리 크기를 %1 % 로 정하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -12713,7 +12446,6 @@ Entry.block = {
         "color": "#A4D01D",
         "skeleton": "basic",
         "statements": [],
-        "template": "모든 소리 멈추기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -12737,7 +12469,6 @@ Entry.block = {
         "color": "#A4D01D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1  ",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -12761,7 +12492,6 @@ Entry.block = {
         "color": "#A4D01D",
         "skeleton": "basic",
         "statements": [],
-        "template": "소리 %1 재생하기 %2",
         "params": [
             {
                 "type": "Block",
@@ -12802,7 +12532,6 @@ Entry.block = {
         "color": "#A4D01D",
         "skeleton": "basic",
         "statements": [],
-        "template": "소리 %1   %2 초 재생하기 %3",
         "params": [
             {
                 "type": "Block",
@@ -12847,11 +12576,11 @@ Entry.block = {
             if (sound) {
                 var instance = createjs.Sound.play(sound.id, {startTime: 0, duration: timeValue * 1000});
                 /*
-                var instance = createjs.Sound.play(sound.id);
-                setTimeout(function() {
-                    instance.stop();
-                }, timeValue * 1000);
-                */
+                   var instance = createjs.Sound.play(sound.id);
+                   setTimeout(function() {
+                   instance.stop();
+                   }, timeValue * 1000);
+                   */
             }
             return script.callReturn();
         }
@@ -12860,7 +12589,6 @@ Entry.block = {
         "color": "#A4D01D",
         "skeleton": "basic",
         "statements": [],
-        "template": "소리  %1 재생하고 기다리기 %2",
         "params": [
             {
                 "type": "Block",
@@ -12913,7 +12641,6 @@ Entry.block = {
         "color": "#A4D01D",
         "skeleton": "basic",
         "statements": [],
-        "template": "소리 %1   %2 초 재생하고 기다리기 %3",
         "params": [
             {
                 "type": "Block",
@@ -12979,7 +12706,6 @@ Entry.block = {
         "color": "#A4D01D",
         "skeleton": "basic",
         "statements": [],
-        "template": "소리 %1 %2 초 부터 %3 초까지 재생하기 %4",
         "params": [
             {
                 "type": "Block",
@@ -13043,7 +12769,6 @@ Entry.block = {
         "color": "#A4D01D",
         "skeleton": "basic",
         "statements": [],
-        "template": "소리 %1 %2 초 부터 %3 초까지 재생하고 기다리기 %4",
         "params": [
             {
                 "type": "Block",
@@ -13124,7 +12849,6 @@ Entry.block = {
         "color": "#3BBD70",
         "skeleton": "basic_event",
         "statements": [],
-        "template": "%1 시작하기 버튼을 클릭했을 때",
         "params": [
             {
                 "type": "Indicator",
@@ -13152,7 +12876,6 @@ Entry.block = {
         "color": "#3BBD70",
         "skeleton": "basic_event",
         "statements": [],
-        "template": "%1 %2 키를 눌렀을 때 %3",
         "params": [
             {
                 "type": "Indicator",
@@ -13204,7 +12927,6 @@ Entry.block = {
         "color": "#3BBD70",
         "skeleton": "basic_event",
         "statements": [],
-        "template": "%1 %2 키를 눌렀을 때",
         "params": [
             {
                 "type": "Indicator",
@@ -13239,7 +12961,6 @@ Entry.block = {
         "color": "#3BBD70",
         "skeleton": "basic_event",
         "statements": [],
-        "template": "%1 마우스를 클릭했을 때",
         "params": [
             {
                 "type": "Indicator",
@@ -13267,7 +12988,6 @@ Entry.block = {
         "color": "#3BBD70",
         "skeleton": "basic_event",
         "statements": [],
-        "template": "%1 마우스 클릭을 해제했을 때",
         "params": [
             {
                 "type": "Indicator",
@@ -13295,7 +13015,6 @@ Entry.block = {
         "color": "#3BBD70",
         "skeleton": "basic_event",
         "statements": [],
-        "template": "%1 오브젝트를 클릭했을 때",
         "params": [
             {
                 "type": "Indicator",
@@ -13323,7 +13042,6 @@ Entry.block = {
         "color": "#3BBD70",
         "skeleton": "basic_event",
         "statements": [],
-        "template": "%1 오브젝트 클릭을 해제했을 때",
         "params": [
             {
                 "type": "Indicator",
@@ -13351,7 +13069,6 @@ Entry.block = {
         "color": "#3BBD70",
         "skeleton": "basic_event",
         "statements": [],
-        "template": "%1 키를 눌렀을 때",
         "params": [
             {
                 "type": "Indicator",
@@ -13376,7 +13093,6 @@ Entry.block = {
         "color": "#3BBD70",
         "skeleton": "basic_event",
         "statements": [],
-        "template": "%1 %2 신호를 받았을 때",
         "params": [
             {
                 "type": "Indicator",
@@ -13426,7 +13142,6 @@ Entry.block = {
         "color": "#3BBD70",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 신호 보내기 %2",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -13473,15 +13188,14 @@ Entry.block = {
                 throw new Error('value can not be null or undefined');
 
             Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent,
-                                      ["when_message_cast", value]);
-            return script.callReturn();
+                                                         ["when_message_cast", value]);
+                                                         return script.callReturn();
         }
     },
     "message_cast_wait": {
         "color": "#3BBD70",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 신호 보내고 기다리기 %2",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -13558,7 +13272,6 @@ Entry.block = {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1",
         "params": [
             {
                 "type": "TextInput",
@@ -13582,7 +13295,6 @@ Entry.block = {
         "color": "#FFCA36",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 라고 글쓰기",
         "params": [
             {
                 "type": "Block",
@@ -13614,7 +13326,6 @@ Entry.block = {
         "color": "#FFCA36",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 라고 뒤에 이어쓰기",
         "params": [
             {
                 "type": "Block",
@@ -13638,15 +13349,14 @@ Entry.block = {
         "func": function (sprite, script) {
             var text = script.getStringValue("VALUE", script);
             sprite.setText(Entry.convertToRoundedDecimals(sprite.getText(),3) +
-                          Entry.convertToRoundedDecimals(text, 3));
-            return script.callReturn();
+                           Entry.convertToRoundedDecimals(text, 3));
+                           return script.callReturn();
         }
     },
     "text_prepend": {
         "color": "#FFCA36",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 라고 앞에 추가하기",
         "params": [
             {
                 "type": "Block",
@@ -13670,15 +13380,14 @@ Entry.block = {
         "func": function (sprite, script) {
             var text = script.getStringValue("VALUE", script);
             sprite.setText(Entry.convertToRoundedDecimals(text, 3) +
-                          Entry.convertToRoundedDecimals(sprite.getText(), 3));
-            return script.callReturn();
+                           Entry.convertToRoundedDecimals(sprite.getText(), 3));
+                           return script.callReturn();
         }
     },
     "text_flush": {
         "color": "#FFCA36",
         "skeleton": "basic",
         "statements": [],
-        "template": "텍스트 모두 지우기",
         "params": [],
         "events": {},
         "def": {
@@ -13695,7 +13404,6 @@ Entry.block = {
     "variableAddButton": {
         "skeleton": "basic_button",
         "color": "#eee",
-        "template": "%1",
         "params": [
             {
                 "type": "Text",
@@ -13715,7 +13423,6 @@ Entry.block = {
     "listAddButton": {
         "skeleton": "basic_button",
         "color": "#eee",
-        "template": "%1",
         "params": [
             {
                 "type": "Text",
@@ -13736,7 +13443,6 @@ Entry.block = {
         "color": "#E457DC",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 에 %2 만큼 더하기 %3",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -13803,7 +13509,6 @@ Entry.block = {
         "color": "#E457DC",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 를 %2 로 정하기 %3",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -13864,7 +13569,6 @@ Entry.block = {
         "color": "#E457DC",
         "skeleton": "basic",
         "statements": [],
-        "template": "변수 %1 보이기 %2",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -13913,7 +13617,6 @@ Entry.block = {
         "color": "#E457DC",
         "skeleton": "basic",
         "statements": [],
-        "template": "변수 %1 숨기기 %2",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -13961,7 +13664,6 @@ Entry.block = {
         "color": "#E457DC",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 값",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -14003,7 +13705,6 @@ Entry.block = {
         "color": "#E457DC",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 을(를) 묻고 대답 기다리기 %2",
         "params": [
             {
                 "type": "Block",
@@ -14045,43 +13746,42 @@ Entry.block = {
         "func": function (sprite, script) {
             var inputModel = Entry.container.inputValue,
                 inputView = Entry.stage.inputField,
-                message = script.getValue("VALUE", script);
+                    message = script.getValue("VALUE", script);
 
-            if (!message)
-                throw new Error('message can not be empty');
+                    if (!message)
+                        throw new Error('message can not be empty');
 
-            if (inputModel.sprite == sprite &&
-                inputView && !inputView._isHidden) {
-                return script;
-            } else if (inputModel.sprite != sprite && script.isInit) {
-                if(sprite.dialog)
-                    sprite.dialog.remove();
-                delete script.isInit;
-                return script.callReturn();
-            } else if (inputModel.complete &&
-                       inputModel.sprite == sprite &&
-                       inputView._isHidden && script.isInit) {
-                if(sprite.dialog)
-                    sprite.dialog.remove();
-                delete inputModel.complete;
-                delete script.isInit;
-                return script.callReturn();
-            } else {
-                message = Entry.convertToRoundedDecimals(message, 3);
-                new Entry.Dialog(sprite, message, 'speak');
-                Entry.stage.showInputField();
-                inputModel.script = script;
-                inputModel.sprite = sprite;
-                script.isInit = true;
-                return script;
-            }
+                    if (inputModel.sprite == sprite &&
+                        inputView && !inputView._isHidden) {
+                            return script;
+                        } else if (inputModel.sprite != sprite && script.isInit) {
+                            if(sprite.dialog)
+                                sprite.dialog.remove();
+                            delete script.isInit;
+                            return script.callReturn();
+                        } else if (inputModel.complete &&
+                                   inputModel.sprite == sprite &&
+                                   inputView._isHidden && script.isInit) {
+                                       if(sprite.dialog)
+                                           sprite.dialog.remove();
+                                       delete inputModel.complete;
+                                       delete script.isInit;
+                                       return script.callReturn();
+                                   } else {
+                                       message = Entry.convertToRoundedDecimals(message, 3);
+                                       new Entry.Dialog(sprite, message, 'speak');
+                                       Entry.stage.showInputField();
+                                       inputModel.script = script;
+                                       inputModel.sprite = sprite;
+                                       script.isInit = true;
+                                       return script;
+                                   }
         }
     },
     "get_canvas_input_value": {
         "color": "#E457DC",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1  ",
         "params": [
             {
                 "type": "Text",
@@ -14115,7 +13815,6 @@ Entry.block = {
         "color": "#E457DC",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 항목을 %2 에 추가하기 %3",
         "params": [
             {
                 "type": "Block",
@@ -14180,7 +13879,6 @@ Entry.block = {
         "color": "#E457DC",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 번째 항목을 %2 에서 삭제하기 %3",
         "params": [
             {
                 "type": "Block",
@@ -14234,7 +13932,6 @@ Entry.block = {
         "color": "#E457DC",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 을(를) %2 의 %3 번째에 넣기 %4",
         "params": [
             {
                 "type": "Block",
@@ -14297,7 +13994,6 @@ Entry.block = {
         "color": "#E457DC",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1    %2 번째 항목을 %3 (으)로 바꾸기 %4",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -14360,7 +14056,6 @@ Entry.block = {
         "color": "#E457DC",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1 의 %2 번째 항목",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -14406,7 +14101,6 @@ Entry.block = {
         "color": "#E457DC",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1  항목 수",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -14436,7 +14130,6 @@ Entry.block = {
         "color": "#E457DC",
         "skeleton": "basic",
         "statements": [],
-        "template": "리스트 %1 보이기 %2",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -14472,7 +14165,6 @@ Entry.block = {
         "color": "#E457DC",
         "skeleton": "basic",
         "statements": [],
-        "template": "리스트 %1 숨기기 %2",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -14508,7 +14200,6 @@ Entry.block = {
         "color": "#E457DC",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1  ",
         "params": [
             {
                 "type": "Dropdown",
@@ -14536,7 +14227,6 @@ Entry.block = {
         "color": "#E457DC",
         "skeleton": "basic",
         "statements": [],
-        "template": "대답 %1 %2",
         "params": [
             {
                 "type": "Dropdown",
@@ -14587,7 +14277,6 @@ Entry.block = {
         "color": "#E457DC",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "%1 에 %2 이 포함되어 있는가?",
         "params": [
             {
                 "type": "DropdownDynamic",
@@ -14637,7 +14326,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "%1",
         "params": [
             {
                 "type": "Dropdown",
@@ -14661,15 +14349,14 @@ Entry.block = {
         "class": "xbot_sensor",
         "isNotFor": [ "xbot_epor_edge" ],
         "func": function (b, a) {
-          var c = Entry.hw.portData, d = a.getField("DEVICE");
-          return c[d];
+            var c = Entry.hw.portData, d = a.getField("DEVICE");
+            return c[d];
         }
     },
     "xbot_analogValue": {
         "color": "#00979D",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template": "%1",
         "params": [
             {
                 "type": "Dropdown",
@@ -14696,15 +14383,14 @@ Entry.block = {
         "class": "xbot_sensor",
         "isNotFor": [ "xbot_epor_edge" ],
         "func": function (b, a) {
-          var c = Entry.hw.portData, d = a.getField("DEVICE");
-          return c[d];
+            var c = Entry.hw.portData, d = a.getField("DEVICE");
+            return c[d];
         }
     },
     "xbot_digitalOutput": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "디지털 %1 핀, 출력 값 %2 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -14744,19 +14430,18 @@ Entry.block = {
         "class": "xbot_sensor",
         "isNotFor": [ "xbot_epor_edge" ],
         "func": function (b, a) {
-          var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getStringField("VALUE", a);
-          c.D13 = "D13" == d && "HIGH" == e ? 1 : 0;
-          c.D4 = "D4" == d && "HIGH" == e ? 1 : 0;
-          c.D7 = "D7" == d && "HIGH" == e ? 1 : 0;
-          c.D12 = "D12" == d && "HIGH" == e ? 1 : 0;
-          return a.callReturn();
+            var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getStringField("VALUE", a);
+            c.D13 = "D13" == d && "HIGH" == e ? 1 : 0;
+            c.D4 = "D4" == d && "HIGH" == e ? 1 : 0;
+            c.D7 = "D7" == d && "HIGH" == e ? 1 : 0;
+            c.D12 = "D12" == d && "HIGH" == e ? 1 : 0;
+            return a.callReturn();
         }
     },
     "xbot_analogOutput": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "아날로그 %1 %2 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -14796,16 +14481,15 @@ Entry.block = {
         "class": "xbot_sensor",
         "isNotFor": [ "xbot_epor_edge" ],
         "func": function (b, a) {
-          var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getNumberValue("VALUE", a);
-          "analogD5" == d ? c.analogD5 = e : "analogD6" == d && (c.analogD6 = e);
-          return a.callReturn();
+            var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getNumberValue("VALUE", a);
+            "analogD5" == d ? c.analogD5 = e : "analogD6" == d && (c.analogD6 = e);
+            return a.callReturn();
         }
     },
     "xbot_servo": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "서보 모터 %1 , 각도 %2 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -14847,16 +14531,15 @@ Entry.block = {
         "class": "xbot_motor",
         "isNotFor": [ "xbot_epor_edge" ],
         "func": function (b, a) {
-          var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getNumberValue("VALUE", a);
-          "head" == d ? c.head = e : "right" == d ? c.armR = e : "left" == d && (c.armL = e);
-          return a.callReturn();
+            var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getNumberValue("VALUE", a);
+            "head" == d ? c.head = e : "right" == d ? c.armR = e : "left" == d && (c.armL = e);
+            return a.callReturn();
         }
     },
     "xbot_oneWheel": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "바퀴(DC) 모터 %1 , 속도 %2 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -14897,16 +14580,15 @@ Entry.block = {
         "class": "xbot_motor",
         "isNotFor": [ "xbot_epor_edge" ],
         "func": function (b, a) {
-          var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getNumberValue("VALUE", a);
-          "rightWheel" == d ? c.rightWheel = e : "leftWheel" == d ? c.leftWheel = e : c.rightWheel = c.leftWheel = e;
-          return a.callReturn();
+            var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getNumberValue("VALUE", a);
+            "rightWheel" == d ? c.rightWheel = e : "leftWheel" == d ? c.leftWheel = e : c.rightWheel = c.leftWheel = e;
+            return a.callReturn();
         }
     },
     "xbot_twoWheel": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "바퀴(DC) 모터 오른쪽(2) 속도: %1 왼쪽(1) 속도: %2 %3",
         "params": [
             {
                 "type": "Block",
@@ -14944,17 +14626,16 @@ Entry.block = {
         "class": "xbot_motor",
         "isNotFor": [ "xbot_epor_edge" ],
         "func": function (b, a) {
-          var c = Entry.hw.sendQueue;
-          c.rightWheel = a.getNumberValue("rightWheel");
-          c.leftWheel = a.getNumberValue("leftWheel");
-          return a.callReturn();
+            var c = Entry.hw.sendQueue;
+            c.rightWheel = a.getNumberValue("rightWheel");
+            c.leftWheel = a.getNumberValue("leftWheel");
+            return a.callReturn();
         }
     },
     "xbot_rgb": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "RGB LED 켜기 R 값 %1 G 값 %2 B 값 %3 %4",
         "params": [
             {
                 "type": "Block",
@@ -15001,18 +14682,17 @@ Entry.block = {
         "class": "xbot_rgb",
         "isNotFor": [ "xbot_epor_edge" ],
         "func": function (b, a) {
-          var c = Entry.hw.sendQueue;
-          c.ledR = a.getNumberValue("ledR");
-          c.ledG = a.getNumberValue("ledG");
-          c.ledB = a.getNumberValue("ledB");
-          return a.callReturn();
+            var c = Entry.hw.sendQueue;
+            c.ledR = a.getNumberValue("ledR");
+            c.ledG = a.getNumberValue("ledG");
+            c.ledB = a.getNumberValue("ledB");
+            return a.callReturn();
         }
     },
     "xbot_rgb_picker": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "RGB LED 색 %1 로 정하기 %2",
         "params": [
             {
                 "type": "Color"
@@ -15034,18 +14714,17 @@ Entry.block = {
         "class": "xbot_rgb",
         "isNotFor": [ "xbot_epor_edge" ],
         "func": function (b, a) {
-          var c = a.getStringField("VALUE"), d = Entry.hw.sendQueue;
-          d.ledR = parseInt(.3 * parseInt(c.substr(1, 2), 16));
-          d.ledG = parseInt(.3 * parseInt(c.substr(3, 2), 16));
-          d.ledB = parseInt(.3 * parseInt(c.substr(5, 2), 16));
-          return a.callReturn();
+            var c = a.getStringField("VALUE"), d = Entry.hw.sendQueue;
+            d.ledR = parseInt(.3 * parseInt(c.substr(1, 2), 16));
+            d.ledG = parseInt(.3 * parseInt(c.substr(3, 2), 16));
+            d.ledB = parseInt(.3 * parseInt(c.substr(5, 2), 16));
+            return a.callReturn();
         }
     },
     "xbot_buzzer": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1   %2 음을 %3 초 연주하기 %4",
         "params": [
             {
                 "type": "Dropdown",
@@ -15105,18 +14784,17 @@ Entry.block = {
         "class": "xbot_sensor",
         "isNotFor": [ "xbot_epor_edge" ],
         "func": function (b, a) {
-          var c = Entry.hw.sendQueue, d = a.getStringField("NOTE", a), e = a.getStringField("OCTAVE", a), f = a.getNumberValue("VALUE", a), d = d + e;
-          c.note = "C2" == d ? 65 : "D2" == d ? 73 : "E2" == d ? 82 : "F2" == d ? 87 : "G2" == d ? 98 : "A2" == d ? 110 : "B2" == d ? 123 : "C3" == d ? 131 : "D3" == d ? 147 : "E3" == d ? 165 : "F3" == d ? 175 : "G3" == d ? 196 : "A3" == d ? 220 : "B3" == d ? 247 : "C4" == d ? 262 : "D4" == d ? 294 : "E4" == d ? 330 : "F4" == d ? 349 : "G4" == d ? 392 : "A4" == d ? 440 : "B4" == d ? 494 : "C5" == d ? 523 : "D5" == d ? 587 : "E5" == d ? 659 : "F5" == d ? 698 : "G5" == d ? 784 : "A5" == d ? 880 : "B5" == d ?
-          988 : "C6" == d ? 1047 : "D6" == d ? 1175 : "E6" == d ? 1319 : "F6" == d ? 1397 : "G6" == d ? 1568 : "A6" == d ? 1760 : "B6" == d ? 1976 : "C7" == d ? 2093 : "D7" == d ? 2349 : "E7" == d ? 2637 : "F7" == d ? 2794 : "G7" == d ? 3136 : "A7" == d ? 3520 : "B7" == d ? 3951 : 262;
-          c.duration = 40 * f;
-          return a.callReturn();
+            var c = Entry.hw.sendQueue, d = a.getStringField("NOTE", a), e = a.getStringField("OCTAVE", a), f = a.getNumberValue("VALUE", a), d = d + e;
+            c.note = "C2" == d ? 65 : "D2" == d ? 73 : "E2" == d ? 82 : "F2" == d ? 87 : "G2" == d ? 98 : "A2" == d ? 110 : "B2" == d ? 123 : "C3" == d ? 131 : "D3" == d ? 147 : "E3" == d ? 165 : "F3" == d ? 175 : "G3" == d ? 196 : "A3" == d ? 220 : "B3" == d ? 247 : "C4" == d ? 262 : "D4" == d ? 294 : "E4" == d ? 330 : "F4" == d ? 349 : "G4" == d ? 392 : "A4" == d ? 440 : "B4" == d ? 494 : "C5" == d ? 523 : "D5" == d ? 587 : "E5" == d ? 659 : "F5" == d ? 698 : "G5" == d ? 784 : "A5" == d ? 880 : "B5" == d ?
+                988 : "C6" == d ? 1047 : "D6" == d ? 1175 : "E6" == d ? 1319 : "F6" == d ? 1397 : "G6" == d ? 1568 : "A6" == d ? 1760 : "B6" == d ? 1976 : "C7" == d ? 2093 : "D7" == d ? 2349 : "E7" == d ? 2637 : "F7" == d ? 2794 : "G7" == d ? 3136 : "A7" == d ? 3520 : "B7" == d ? 3951 : 262;
+                c.duration = 40 * f;
+                return a.callReturn();
         }
     },
     "xbot_lcd": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "LCD %1 번째 줄 ,  출력 값 %2 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -15156,9 +14834,9 @@ Entry.block = {
         "class": "xbot_sensor",
         "isNotFor": [ "xbot_epor_edge" ],
         "func": function (b, a) {
-          var c = Entry.hw.sendQueue, d = a.getNumberField("LINE", a), e = a.getStringValue("VALUE", a);
-          0 == d ? (c.lcdNum = 0, c.lcdTxt = e) : 1 == d && (c.lcdNum = 1, c.lcdTxt = e);
-          return a.callReturn();
+            var c = Entry.hw.sendQueue, d = a.getNumberField("LINE", a), e = a.getStringValue("VALUE", a);
+            0 == d ? (c.lcdNum = 0, c.lcdTxt = e) : 1 == d && (c.lcdNum = 1, c.lcdTxt = e);
+            return a.callReturn();
         }
     },
     "run": {
@@ -15173,7 +14851,6 @@ Entry.block = {
         "skeleton": "basic",
         "event": "start",
         "color": "#3BBD70",
-        "template": "test mutant block",
         "params": [],
         "changeEvent": {
             "_listeners": []
@@ -15183,7 +14860,6 @@ Entry.block = {
         "skeleton": "pebble_event",
         "event": "start",
         "color": "#3BBD70",
-        "template": "%1",
         "params": [
             {
                 "type": "Indicator",
@@ -15200,7 +14876,6 @@ Entry.block = {
     "jr_repeat": {
         "skeleton": "pebble_loop",
         "color": "#127CDB",
-        "template": "%1 반복",
         "params": [
             {
                 "type": "Text",
@@ -15234,7 +14909,6 @@ Entry.block = {
     "jr_item": {
         "skeleton": "pebble_basic",
         "color": "#F46C6C",
-        "template": "꽃 모으기 %1",
         "params": [
             {
                 "type": "Indicator",
@@ -15251,7 +14925,6 @@ Entry.block = {
     "cparty_jr_item": {
         "skeleton": "pebble_basic",
         "color": "#8ABC1D",
-        "template": "%1 %2",
         "params": [
             {
                 "type": "Text",
@@ -15272,7 +14945,6 @@ Entry.block = {
     "jr_north": {
         "skeleton": "pebble_basic",
         "color": "#A751E3",
-        "template": "%1 %2",
         "params": [
             {
                 "type": "Text",
@@ -15292,7 +14964,6 @@ Entry.block = {
     "jr_east": {
         "skeleton": "pebble_basic",
         "color": "#A751E3",
-        "template": "%1 %2",
         "params": [
             {
                 "type": "Text",
@@ -15312,7 +14983,6 @@ Entry.block = {
     "jr_south": {
         "skeleton": "pebble_basic",
         "color": "#A751E3",
-        "template": "%1 %2",
         "params": [
             {
                 "type": "Text",
@@ -15332,7 +15002,6 @@ Entry.block = {
     "jr_west": {
         "skeleton": "pebble_basic",
         "color": "#A751E3",
-        "template": "%1 %2",
         "params": [
             {
                 "type": "Text",
@@ -15353,7 +15022,6 @@ Entry.block = {
         "skeleton": "basic_event",
         "event": "start",
         "color": "#3BBD70",
-        "template": "%1 %2",
         "params": [
             {
                 "type": "Indicator",
@@ -15372,7 +15040,6 @@ Entry.block = {
     "jr_go_straight": {
         "skeleton": "basic",
         "color": "#A751E3",
-        "template": "%1 %2",
         "params": [
             "앞으로 가기",
             {
@@ -15385,7 +15052,6 @@ Entry.block = {
     "jr_turn_left": {
         "skeleton": "basic",
         "color": "#A751E3",
-        "template": "%1 %2",
         "params": [
             "왼쪽으로 돌기",
             {
@@ -15398,7 +15064,6 @@ Entry.block = {
     "jr_turn_right": {
         "skeleton": "basic",
         "color": "#A751E3",
-        "template": "%1 %2",
         "params": [
             "오른쪽으로 돌기",
             {
@@ -15411,7 +15076,6 @@ Entry.block = {
     "jr_go_slow": {
         "skeleton": "basic",
         "color": "#f46c6c",
-        "template": "%1 %2",
         "params": [
             "천천히 가기",
             {
@@ -15424,7 +15088,6 @@ Entry.block = {
     "jr_repeat_until_dest": {
         "skeleton": "basic_loop",
         "color": "#498DEB",
-        "template": "%1 %2 %3 %4",
         "syntax": [
             "BasicWhile",
             "true"
@@ -15452,7 +15115,6 @@ Entry.block = {
     "jr_if_construction": {
         "skeleton": "basic_loop",
         "color": "#498DEB",
-        "template": "%1 %2 %3 %4",
         "params": [
             "만약",
             {
@@ -15476,7 +15138,6 @@ Entry.block = {
     "jr_if_speed": {
         "skeleton": "basic_loop",
         "color": "#498DEB",
-        "template": "만약 %1 앞에 있다면 %2",
         "params": [
             {
                 "type": "Image",
@@ -15500,7 +15161,6 @@ Entry.block = {
         "mode": "maze",
         "event": "start",
         "color": "#3BBD70",
-        "template": "%1 시작하기를 클릭했을 때",
         "syntax": [
             "Program"
         ],
@@ -15522,7 +15182,6 @@ Entry.block = {
         "skeleton": "basic",
         "mode": "maze",
         "color": "#FF6E4B",
-        "template": "뛰어넘기%1",
         "params": [
             {
                 "type": "Image",
@@ -15539,7 +15198,6 @@ Entry.block = {
         "skeleton": "basic_loop",
         "mode": "maze",
         "color": "#498DEB",
-        "template": "%1 번 반복하기%2",
         "syntax": [
             "BasicIteration"
         ],
@@ -15607,7 +15265,6 @@ Entry.block = {
         "skeleton": "basic_boolean_field",
         "mode": "maze",
         "color": "#127CDB",
-        "template": "%1 this is test block %2",
         "params": [
             {
                 "type": "Angle",
@@ -15635,7 +15292,6 @@ Entry.block = {
         "skeleton": "basic_loop",
         "mode": "maze",
         "color": "#498DEB",
-        "template": "%1 만날 때 까지 반복%2",
         "syntax": [
             "BasicWhile",
             "true"
@@ -15662,7 +15318,6 @@ Entry.block = {
         "skeleton": "basic_loop",
         "mode": "maze",
         "color": "#498DEB",
-        "template": "모든 %1 만날 때 까지 반복%2",
         "syntax": [
             "BasicWhile",
             "true"
@@ -15689,7 +15344,6 @@ Entry.block = {
         "skeleton": "basic_loop",
         "mode": "maze",
         "color": "#498DEB",
-        "template": "만약 앞에 %1 있다면%2",
         "syntax": [
             "BasicIf",
             "front == wall"
@@ -15716,7 +15370,6 @@ Entry.block = {
         "skeleton": "basic_loop",
         "mode": "maze",
         "color": "#498DEB",
-        "template": "만약 앞에 %1 있다면%2",
         "syntax": [
             "BasicIf",
             "front == bee"
@@ -15743,7 +15396,6 @@ Entry.block = {
         "skeleton": "basic",
         "mode": "maze",
         "color": "#B57242",
-        "template": "약속 불러오기%1",
         "syntax": [
             "Scope",
             "promise"
@@ -15761,7 +15413,6 @@ Entry.block = {
         "mode": "maze",
         "color": "#B57242",
         "event": "define",
-        "template": "약속하기%1",
         "syntax": [
             "BasicFunction"
         ],
@@ -15782,7 +15433,6 @@ Entry.block = {
         "skeleton": "basic_loop",
         "mode": "maze",
         "color": "#498DEB",
-        "template": "만약 앞에 %1 있다면%2",
         "syntax": [
             "BasicIf",
             "front == banana"
@@ -15809,7 +15459,6 @@ Entry.block = {
         "skeleton": "basic_loop",
         "mode": "maze",
         "color": "#498DEB",
-        "template": "만약 앞에 %1 있다면%2",
         "syntax": [
             "BasicIf",
             "front == wall"
@@ -15836,7 +15485,6 @@ Entry.block = {
         "skeleton": "basic",
         "mode": "maze",
         "color": "#A751E3",
-        "template": "앞으로 한 칸 이동%1",
         "syntax": [
             "Scope",
             "move"
@@ -15853,7 +15501,6 @@ Entry.block = {
         "skeleton": "basic",
         "mode": "maze",
         "color": "#A751E3",
-        "template": "왼쪽으로 회전%1",
         "syntax": [
             "Scope",
             "left"
@@ -15870,7 +15517,6 @@ Entry.block = {
         "skeleton": "basic",
         "mode": "maze",
         "color": "#A751E3",
-        "template": "오른쪽으로 회전%1",
         "syntax": [
             "Scope",
             "right"
@@ -15887,7 +15533,6 @@ Entry.block = {
         "skeleton": "basic",
         "mode": "maze",
         "color": "#3BBD70",
-        "template": "%1 this is test block %2",
         "params": [
             {
                 "type": "Block",
@@ -15923,7 +15568,6 @@ Entry.block = {
     "basic_button": {
         "skeleton": "basic_button",
         "color": "#eee",
-        "template": "%1",
         "params": [
             {
                 "type": "Text",
@@ -15932,11 +15576,165 @@ Entry.block = {
                 "align": "center"
             }
         ]
+    },
+    "dplay_get_number_sensor_value": {
+        "parent": "arduino_get_number_sensor_value",
+        "isNotFor": [
+            "dplay"
+        ],
+        "class": "arduino_value"
+    },
+    "dplay_get_digital_value": {
+        "parent": "arduino_get_digital_value",
+        "isNotFor": [
+            "dplay"
+        ],
+        "class": "arduino_value"
+    },
+    "dplay_toggle_led": {
+        "parent": "arduino_toggle_led",
+        "isNotFor": [
+            "dplay"
+        ],
+        "class": "arduino_set"
+    },
+    "dplay_toggle_pwm": {
+        "parent": "arduino_toggle_pwm",
+        "isNotFor": [
+            "dplay"
+        ],
+        "class": "arduino_set"
+    },
+    "dplay_convert_scale": {
+        "parent": "arduino_convert_scale",
+        "isNotFor": [
+            "dplay"
+        ],
+        "class": "arduino"
+    },
+    "nemoino_get_number_sensor_value": {
+        "parent": "arduino_get_number_sensor_value",
+        "isNotFor": [
+            "nemoino"
+        ],
+        "class": "arduino_value"
+    },
+    "nemoino_get_digital_value": {
+        "parent": "arduino_get_digital_value",
+        "isNotFor": [
+            "nemoino"
+        ],
+        "class": "arduino_value"
+    },
+    "nemoino_toggle_led": {
+        "parent": "arduino_toggle_led",
+        "isNotFor": [
+            "nemoino"
+        ],
+        "class": "arduino_set"
+    },
+    "nemoino_toggle_pwm": {
+        "parent": "arduino_toggle_pwm",
+        "isNotFor": [
+            "nemoino"
+        ],
+        "class": "arduino_set"
+    },
+    "nemoino_convert_scale": {
+        "parent": "arduino_convert_scale",
+        "isNotFor": [
+            "nemoino"
+        ],
+        "class": "arduino"
+    },
+    "sensorBoard_get_number_sensor_value": {
+        "parent": "arduino_get_number_sensor_value",
+        "isNotFor": [
+            "sensorBoard"
+        ],
+        "class": "arduino_value"
+    },
+    "sensorBoard_get_digital_value": {
+        "parent": "arduino_get_digital_value",
+        "isNotFor": [
+            "sensorBoard"
+        ],
+        "class": "arduino_value"
+    },
+    "sensorBoard_toggle_led": {
+        "parent": "arduino_toggle_led",
+        "isNotFor": [
+            "sensorBoard"
+        ],
+        "class": "arduino_set"
+    },
+    "sensorBoard_toggle_pwm": {
+        "parent": "arduino_toggle_pwm",
+        "isNotFor": [
+            "sensorBoard"
+        ],
+        "class": "arduino_set"
+    },
+    "sensorBoard_convert_scale": {
+        "parent": "arduino_convert_scale",
+        "isNotFor": [
+            "sensorBoard"
+        ],
+        "class": "arduino"
+    },
+    "CODEino_get_number_sensor_value": {
+        "parent": "arduino_get_number_sensor_value",
+        "isNotFor": [
+            "CODEino"
+        ],
+        "class": "arduino_value"
+    },
+    "CODEino_get_digital_value": {
+        "parent": "arduino_get_digital_value",
+        "isNotFor": [
+            "CODEino"
+        ],
+        "class": "arduino_value"
+    },
+    "CODEino_toggle_led": {
+        "parent": "arduino_toggle_led",
+        "isNotFor": [
+            "CODEino"
+        ],
+        "class": "arduino_set"
+    },
+    "CODEino_toggle_pwm": {
+        "parent": "arduino_toggle_pwm",
+        "isNotFor": [
+            "CODEino"
+        ],
+        "class": "arduino_set"
+    },
+    "CODEino_convert_scale": {
+        "parent": "arduino_convert_scale",
+        "isNotFor": [
+            "CODEino"
+        ],
+        "class": "arduino"
     }
 };
 
+(function() {
+    for (var type in Entry.block) {
+        var block = Entry.block[type];
+        if (block.parent) {
+            var f = function() {};
+            f.prototype = Entry.block[block.parent];
+            var schema = new f();
+            for (var key in block) {
+                schema[key] = block[key];
+            }
+            Entry.block[type] = schema;
+        }
+    }
+})();
 
-
-
-if (typeof exports == "object")
+if (typeof exports == "object") {
     exports.block = Entry.block;
+}
+
