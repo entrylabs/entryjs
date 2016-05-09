@@ -3,21 +3,90 @@
 Entry.Arduino = {
     name: 'arduino',
     setZero: function() {
-        for (var port = 0; port < 14; port++) {
-          Entry.hw.sendQueue[port] = 0;
+        Entry.hw.sendQueue.readablePorts = [];
+        for (var port = 0; port < 20; port++) {
+            Entry.hw.sendQueue[port] = 0;
+            Entry.hw.sendQueue.readablePorts.push(port);
         }
         Entry.hw.update();
+    },
+    monitorTemplate: {
+        imgPath: "hw/arduino.png",
+        width: 605,
+        height: 434,
+        listPorts: {
+            "2":{name: Lang.Hw.port_en + " 2 " + Lang.Hw.port_ko, type: "input", pos: {x : 0, y: 0}},
+            "3":{name: Lang.Hw.port_en + " 3 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "4":{name: Lang.Hw.port_en + " 4 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "5":{name: Lang.Hw.port_en + " 5 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "6":{name: Lang.Hw.port_en + " 6 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "7":{name: Lang.Hw.port_en + " 7 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "8":{name: Lang.Hw.port_en + " 8 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "9":{name: Lang.Hw.port_en + " 9 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "10":{name: Lang.Hw.port_en + " 10 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "11":{name: Lang.Hw.port_en + " 11 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "12":{name: Lang.Hw.port_en + " 12 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "13":{name: Lang.Hw.port_en + " 13 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "a0":{name: Lang.Hw.port_en + " A0 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "a1":{name: Lang.Hw.port_en + " A1 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "a2":{name: Lang.Hw.port_en + " A2 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "a3":{name: Lang.Hw.port_en + " A3 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "a4":{name: Lang.Hw.port_en + " A4 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "a5":{name: Lang.Hw.port_en + " A5 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}}
+        },
+        mode : 'both'
+
     }
 };
 
 Entry.SensorBoard = {
     name: 'sensorBoard',
+    setZero: Entry.Arduino.setZero,
+    monitorTemplate: {
+        imgPath: "hw/sensorBoard.png",
+        width: 400,
+        height: 400,
+        listPorts: {
+            "2":{name: Lang.Hw.port_en + " 2 " + Lang.Hw.port_ko, type: "input", pos: {x : 0, y: 0}},
+            "3":{name: Lang.Hw.port_en + " 3 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "4":{name: Lang.Hw.port_en + " 4 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "5":{name: Lang.Hw.port_en + " 5 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "a3":{name: Lang.Hw.port_en + " A3 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "a4":{name: Lang.Hw.port_en + " A4 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "a5":{name: Lang.Hw.port_en + " A5 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "6":{name: Lang.Hw.port_en + " 6 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "7":{name: Lang.Hw.port_en + " 7 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "12":{name: Lang.Hw.port_en + " 12 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "13":{name: Lang.Hw.port_en + " 13 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}}
+        },
+        ports : {
+            "0":{name: Lang.Hw.light + " " + Lang.Hw.sensor + "2", type: "input",pos: {x : 116, y: 330}},
+            "slider":{ name: Lang.Blocks.CODEino_sensor_name_2 , type: "input",pos: {x : 230, y: 47}},
+            "1":{name: Lang.Hw.temp, type: "input",pos: {x : 310, y: 332}},
+            "8":{name: Lang.Hw.right_ko + Lang.Hw.switch_ + Lang.Hw.right_en, type: "input",pos: {x : 273, y: 205}},
+            "9":{name: Lang.Hw.left_ko + Lang.Hw.switch_ + Lang.Hw.left_en, type: "input",pos: {x : 112, y: 155}},
+            "10":{name: Lang.Hw.up_ko + Lang.Hw.switch_ + Lang.Hw.up_en, type: "input",pos: {x : 188, y: 83}},
+            "11":{name: Lang.Hw.down_ko + Lang.Hw.switch_ + Lang.Hw.down_en, type: "input",pos: {x : 196, y: 281}}
+      },
+      mode : 'both'
+    }
+};
+
+Entry.dplay = {
+    name: 'dplay',
+    setZero: Entry.Arduino.setZero
+};
+
+Entry.nemoino = {
+    name: 'nemoino',
     setZero: Entry.Arduino.setZero
 };
 
 Entry.CODEino = {
     name: 'CODEino',
-    setZero: Entry.Arduino.setZero
+    setZero: Entry.Arduino.setZero,
+    monitorTemplate: Entry.Arduino.monitorTemplate
+
 };
 
 Blockly.Blocks.arduino_text = {
@@ -615,4 +684,111 @@ Entry.block.CODEino_get_accelerometer_value = function (sprite, script) {
     result = Math.min(value5, result);
     result = Math.max(value4, result);
     return Math.round(result);
+};
+
+Blockly.Blocks.dplay_get_switch_status = {
+  init: function() {
+    this.setColour("#00979D");
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.dplay_switch)
+        .appendField(new Blockly.FieldDropdown([
+          [Lang.Blocks.dplay_string_1,"ON"],
+          [Lang.Blocks.dplay_string_2,"OFF"]
+          ]), "STATUS")
+        .appendField(' ');
+    this.setInputsInline(true);
+    this.setOutput(true, 'Boolean');
+  }
+};
+
+Entry.block.dplay_get_switch_status = function (sprite, script) {
+    var value1 = script.getField("STATUS", script);
+    var value2 = 5;
+    if (value1 == "ON") return Entry.hw.getAnalogPortValue(value2) > 1000 ? 1 : 0;
+    else return Entry.hw.getAnalogPortValue(value2) < 1000 ? 1 : 0;
+};
+
+Blockly.Blocks.dplay_DCmotor = {
+  init: function() {
+    this.setColour("#00979D");
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldDropdown([
+          ['왼쪽',"3"],
+          ['오른쪽',"6"]
+          ]), "PORT");
+    this.appendDummyInput()
+        .appendField('DC모터');
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldDropdown([
+          ['정방향',"FRONT"],
+          ['역방향',"REAR"],
+          ['정지',"OFF"]
+          ]), "OPERATOR")
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/hardware_03.png', '*'));
+    this.appendDummyInput()
+        .appendField('동작');
+    this.setInputsInline(true);
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+  }
+};
+
+Entry.block.dplay_DCmotor = function (sprite, script) {
+    var port1 = script.getField("PORT");
+    var port2 = 0;
+    if (port1 == "3") port2 = 5;
+    else if (port1 == "6") value2 = 11;
+    var operator = script.getField("OPERATOR");
+    var value1 = 0;
+    var value2 = 0;
+    if (operator == "FRONT") {
+        value1 = 255;
+        value2 = 0;
+    }
+    else if (operator == "REAR") {
+        value1 = 0;
+        value2 = 255;
+    }
+    else if (operator == "OFF") {
+        value1 = 0;
+        value2 = 0;
+    }
+    Entry.hw.setDigitalPortValue(port1, value1);
+    Entry.hw.setDigitalPortValue(port2, value2);
+    return script.callReturn();
+};
+
+Blockly.Blocks.dplay_led = {
+  init: function() {
+    this.setColour("#00979D");
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldDropdown([
+          ['초록',"2"],
+          ['노랑',"4"],
+          ['빨강',"7"]
+          ]), "PORT");
+    this.appendDummyInput()
+        .appendField('LED');
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldDropdown([
+          ['켜짐',"ON"],
+          ['꺼짐',"OFF"]
+          ]), "OPERATOR")
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/hardware_03.png', '*'));
+    this.setInputsInline(true);
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+  }
+};
+
+Entry.block.dplay_led = function (sprite, script) {
+    var port1 = script.getField("PORT");
+    var port = 2;
+    if (port1 == "2") port = 2;
+    else if (port1 == "4") port = 4;
+    else if (port1 == "7") port = 7;
+    var operator = script.getField("OPERATOR");
+    var value = operator == "ON" ? 255 : 0;
+    Entry.hw.setDigitalPortValue(port, value);
+    return script.callReturn();
 };
