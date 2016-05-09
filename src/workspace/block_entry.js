@@ -2008,7 +2008,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Text",
-                "text": "연결 프로그램 다운로드",
+                "text": Lang.Blocks.ARDUINO_download_connector,
                 "color": "#333",
                 "align": "center"
             }
@@ -2025,7 +2025,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Text",
-                "text": "엔트리 아두이노 소스",
+                "text": Lang.Blocks.ARDUINO_download_source,
                 "color": "#333",
                 "align": "center"
             }
@@ -3520,6 +3520,11 @@ Entry.block = {
         "statements": [],
         "params": [
             {
+                "type": "Text",
+                "text": Lang.Blocks.CALC_distance_something_1,
+                "color": "#3D3D3D"
+            },
+            {
                 "type": "DropdownDynamic",
                 "value": null,
                 "menuName": "spritesWithMouse",
@@ -3527,17 +3532,17 @@ Entry.block = {
             },
             {
                 "type": "Text",
-                "text": "까지의 거리",
+                "text": Lang.Blocks.CALC_distance_something_2,
                 "color": "#3D3D3D"
             }
         ],
         "events": {},
         "def": {
-            "params": [ null, null ],
+            "params": [ null, null, null ],
             "type": "distance_something"
         },
         "paramsKeyMap": {
-            "VALUE": 0
+            "VALUE": 1
         },
         "class": "calc_distance",
         "isNotFor": [],
@@ -3565,7 +3570,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Text",
-                "text": "마우스",
+                "text": Lang.Blocks.CALC_coordinate_mouse_1,
                 "color": "#3D3D3D"
             },
             {
@@ -3579,7 +3584,7 @@ Entry.block = {
             },
             {
                 "type": "Text",
-                "text": "좌표",
+                "text": Lang.Blocks.CALC_coordinate_mouse_2,
                 "color": "#3D3D3D"
             }
         ],
@@ -3608,6 +3613,11 @@ Entry.block = {
         "statements": [],
         "params": [
             {
+                "type": "Text",
+                "text": Lang.Blocks.CALC_coordinate_object_1,
+                "color": "#3D3D3D"
+            },
+            {
                 "type": "DropdownDynamic",
                 "value": null,
                 "menuName": "spritesWithSelf",
@@ -3615,19 +3625,19 @@ Entry.block = {
             },
             {
                 "type": "Text",
-                "text": "의",
+                "text": Lang.Blocks.CALC_coordinate_object_2,
                 "color": "#3D3D3D"
             },
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "x 좌푯값", "x" ],
-                    [ "y 좌푯값", "y" ],
-                    [ "방향", "rotation" ],
-                    [ "이동방향", "direction" ],
-                    [ "크기", "size" ],
-                    [ "모양 번호", "picture_index" ],
-                    [ "모양 이름", "picture_name" ]
+                    [Lang.Blocks.CALC_coordinate_x_value,"x"],
+                    [Lang.Blocks.CALC_coordinate_y_value, "y"],
+                    [Lang.Blocks.CALC_coordinate_rotation_value, "rotation"],
+                    [Lang.Blocks.CALC_coordinate_direction_value, "direction"],
+                    [Lang.Blocks.CALC_coordinate_size_value, "size"],
+                    [Lang.Blocks.CALC_picture_index, "picture_index"],
+                    [Lang.Blocks.CALC_picture_name, "picture_name"]
                 ],
                 "value": "x",
                 "fontSize": 11
@@ -3635,12 +3645,12 @@ Entry.block = {
         ],
         "events": {},
         "def": {
-            "params": [ null, null, null ],
+            "params": [ null, null, null, null ],
             "type": "coordinate_object"
         },
         "paramsKeyMap": {
-            "VALUE": 0,
-            "COORDINATE": 2
+            "VALUE": 1,
+            "COORDINATE": 3
         },
         "class": "calc",
         "isNotFor": [],
@@ -4038,33 +4048,38 @@ Entry.block = {
         "statements": [],
         "params": [
             {
+                "type": "Text",
+                "text": Lang.Blocks.CALC_calc_operation_of_1,
+                "color": "#3D3D3D"
+            },
+            {
                 "type": "Block",
                 "accept": "stringMagnet"
             },
             {
                 "type": "Text",
-                "text": "의",
+                "text": Lang.Blocks.CALC_calc_operation_of_2,
                 "color": "#3D3D3D"
             },
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "제곱", "square" ],
-                    [ "루트", "root" ],
-                    [ "사인값", "sin" ],
-                    [ "코사인값", "cos" ],
-                    [ "탄젠트값", "tan" ],
-                    [ "아크사인값", "asin_radian" ],
-                    [ "아크코사인값", "acos_radian" ],
-                    [ "아크탄젠트값", "atan_radian" ],
-                    [ "로그값", "log" ],
-                    [ "자연로그값", "ln" ],
-                    [ "소수점 부분", "unnatural" ],
-                    [ "소수점 버림값", "floor" ],
-                    [ "소수점 올림값", "ceil" ],
-                    [ "반올림값", "round" ],
-                    [ "펙토리얼값", "factorial" ],
-                    [ "절댓값", "abs" ]
+                    [Lang.Blocks.CALC_calc_operation_square,"square"],
+                    [Lang.Blocks.CALC_calc_operation_root, "root"],
+                    [Lang.Blocks.CALC_calc_operation_sin, "sin"],
+                    [Lang.Blocks.CALC_calc_operation_cos,"cos"],
+                    [Lang.Blocks.CALC_calc_operation_tan,"tan"],
+                    [Lang.Blocks.CALC_calc_operation_asin, "asin_radian"],
+                    [Lang.Blocks.CALC_calc_operation_acos,"acos_radian"],
+                    [Lang.Blocks.CALC_calc_operation_atan,"atan_radian"],
+                    [Lang.Blocks.CALC_calc_operation_log,"log"],
+                    [Lang.Blocks.CALC_calc_operation_ln,"ln"],
+                    [Lang.Blocks.CALC_calc_operation_unnatural,"unnatural"],
+                    [Lang.Blocks.CALC_calc_operation_floor,"floor"],
+                    [Lang.Blocks.CALC_calc_operation_ceil,"ceil"],
+                    [Lang.Blocks.CALC_calc_operation_round,"round"],
+                    [Lang.Blocks.CALC_calc_operation_factorial,"factorial"],
+                    [Lang.Blocks.CALC_calc_operation_abs,"abs"]
                 ],
                 "value": "square",
                 "fontSize": 11
@@ -4073,6 +4088,7 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
+                null,
                 {
                     "type": "number",
                     "params": [ "10" ]
@@ -4083,8 +4099,8 @@ Entry.block = {
             "type": "calc_operation"
         },
         "paramsKeyMap": {
-            "LEFTHAND": 0,
-            "VALUE": 2
+            "LEFTHAND": 1,
+            "VALUE": 3
         },
         "class": "calc",
         "isNotFor": [],
@@ -4142,12 +4158,8 @@ Entry.block = {
         "statements": [],
         "params": [
             {
-                "type": "Block",
-                "accept": "stringMagnet"
-            },
-            {
                 "type": "Text",
-                "text": "부터",
+                "text": Lang.Blocks.CALC_calc_rand_1,
                 "color": "#3D3D3D"
             },
             {
@@ -4156,13 +4168,23 @@ Entry.block = {
             },
             {
                 "type": "Text",
-                "text": "사이의 무작위 수",
+                "text": Lang.Blocks.CALC_calc_rand_2,
+                "color": "#3D3D3D"
+            },
+            {
+                "type": "Block",
+                "accept": "stringMagnet"
+            },
+            {
+                "type": "Text",
+                "text": Lang.Blocks.CALC_calc_rand_3,
                 "color": "#3D3D3D"
             }
         ],
         "events": {},
         "def": {
             "params": [
+                null,
                 {
                     "type": "number",
                     "params": [ "0" ]
@@ -4177,8 +4199,8 @@ Entry.block = {
             "type": "calc_rand"
         },
         "paramsKeyMap": {
-            "LEFTHAND": 0,
-            "RIGHTHAND": 2
+            "LEFTHAND": 1,
+            "RIGHTHAND": 3
         },
         "class": "calc",
         "isNotFor": [],
@@ -4202,26 +4224,31 @@ Entry.block = {
         "params": [
             {
                 "type": "Text",
-                "text": "현재",
+                "text": Lang.Blocks.CALC_get_date_1,
                 "color": "#3D3D3D"
             },
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "연도", "YEAR" ],
-                    [ "월", "MONTH" ],
-                    [ "일", "DAY" ],
-                    [ "시각(시)", "HOUR" ],
-                    [ "시각(분)", "MINUTE" ],
-                    [ "시각(초)", "SECOND" ]
+                    [Lang.Blocks.CALC_get_date_year,"YEAR"],
+                    [Lang.Blocks.CALC_get_date_month,"MONTH"],
+                    [Lang.Blocks.CALC_get_date_day,"DAY"],
+                    [Lang.Blocks.CALC_get_date_hour,"HOUR"],
+                    [Lang.Blocks.CALC_get_date_minute,"MINUTE"],
+                    [Lang.Blocks.CALC_get_date_second,"SECOND"]
                 ],
                 "value": "YEAR",
                 "fontSize": 11
+            },
+            {
+                "type": "Text",
+                "text": Lang.Blocks.CALC_get_date_2,
+                "color": "#3D3D3D"
             }
         ],
         "events": {},
         "def": {
-            "params": [ null, "YEAR" ],
+            "params": [ null, "YEAR", null ],
             "type": "get_date"
         },
         "paramsKeyMap": {
@@ -4252,6 +4279,11 @@ Entry.block = {
         "statements": [],
         "params": [
             {
+                "type": "Text",
+                "text": Lang.Blocks.CALC_get_sound_duration_1,
+                "color": "#3D3D3D"
+            },
+            {
                 "type": "DropdownDynamic",
                 "value": null,
                 "menuName": "sounds",
@@ -4259,17 +4291,17 @@ Entry.block = {
             },
             {
                 "type": "Text",
-                "text": "소리의 길이",
+                "text": Lang.Blocks.CALC_get_sound_duration_2,
                 "color": "#3D3D3D"
             }
         ],
         "events": {},
         "def": {
-            "params": [ null, null ],
+            "params": [ null, null, null ],
             "type": "get_sound_duration"
         },
         "paramsKeyMap": {
-            "VALUE": 0
+            "VALUE": 1
         },
         "class": "calc_duration",
         "isNotFor": [],
@@ -4324,17 +4356,22 @@ Entry.block = {
         "params": [
             {
                 "type": "Text",
-                "text": "초시계",
+                "text": Lang.Blocks.CALC_timer_visible_1,
                 "color": "#3D3D3D"
             },
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "보이기", "SHOW" ],
-                    [ "숨기기", "HIDE" ]
+                    [Lang.Blocks.CALC_timer_visible_show,"SHOW"],
+                    [Lang.Blocks.CALC_timer_visible_hide,"HIDE"]
                 ],
                 "value": "SHOW",
                 "fontSize": 11
+            },
+            {
+                "type": "Text",
+                "text": Lang.Blocks.CALC_timer_visible_2,
+                "color": "#3D3D3D"
             },
             {
                 "type": "Indicator",
@@ -4355,7 +4392,7 @@ Entry.block = {
             ]
         },
         "def": {
-            "params": [ null, "HIDE", null ],
+            "params": [ null, "HIDE", null, null ],
             "type": "set_visible_project_timer"
         },
         "paramsKeyMap": {
@@ -4405,7 +4442,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Text",
-                "text": "초시계 값",
+                "text": Lang.Blocks.CALC_get_timer_value,
                 "color": "#3D3D3D"
             },
             {
@@ -4442,12 +4479,8 @@ Entry.block = {
         "statements": [],
         "params": [
             {
-                "type": "Block",
-                "accept": "stringMagnet"
-            },
-            {
                 "type": "Text",
-                "text": "의",
+                "text": Lang.Blocks.CALC_char_at_1,
                 "color": "#3D3D3D"
             },
             {
@@ -4456,16 +4489,26 @@ Entry.block = {
             },
             {
                 "type": "Text",
-                "text": "번째 글자",
+                "text": Lang.Blocks.CALC_char_at_2,
+                "color": "#3D3D3D"
+            },
+            {
+                "type": "Block",
+                "accept": "stringMagnet"
+            },
+            {
+                "type": "Text",
+                "text": Lang.Blocks.CALC_char_at_3,
                 "color": "#3D3D3D"
             }
         ],
         "events": {},
         "def": {
             "params": [
+                null,
                 {
                     "type": "text",
-                    "params": [ "안녕 엔트리!" ]
+                    "params": [ Lang.Blocks.hi_entry ]
                 },
                 null,
                 {
@@ -4477,8 +4520,8 @@ Entry.block = {
             "type": "char_at"
         },
         "paramsKeyMap": {
-            "LEFTHAND": 0,
-            "RIGHTHAND": 2
+            "LEFTHAND": 1,
+            "RIGHTHAND": 3
         },
         "class": "calc_string",
         "isNotFor": [],
@@ -4497,28 +4540,34 @@ Entry.block = {
         "statements": [],
         "params": [
             {
+                "type": "Text",
+                "text": Lang.Blocks.CALC_length_of_string_1,
+                "color": "#3D3D3D"
+            },
+            {
                 "type": "Block",
                 "accept": "stringMagnet"
             },
             {
                 "type": "Text",
-                "text": "의 글자 수",
+                "text": Lang.Blocks.CALC_length_of_string_2,
                 "color": "#3D3D3D"
             }
         ],
         "events": {},
         "def": {
             "params": [
+                null,
                 {
                     "type": "text",
-                    "params": [ "엔트리" ]
+                    "params": [ Lang.Blocks.entry ]
                 },
                 null
             ],
             "type": "length_of_string"
         },
         "paramsKeyMap": {
-            "STRING": 0
+            "STRING": 1
         },
         "class": "calc_string",
         "isNotFor": [],
@@ -4532,12 +4581,8 @@ Entry.block = {
         "statements": [],
         "params": [
             {
-                "type": "Block",
-                "accept": "stringMagnet"
-            },
-            {
                 "type": "Text",
-                "text": "의",
+                "text": Lang.Blocks.CALC_substring_1,
                 "color": "#3D3D3D"
             },
             {
@@ -4546,7 +4591,7 @@ Entry.block = {
             },
             {
                 "type": "Text",
-                "text": "번째 글자부터",
+                "text": Lang.Blocks.CALC_substring_2,
                 "color": "#3D3D3D"
             },
             {
@@ -4555,16 +4600,26 @@ Entry.block = {
             },
             {
                 "type": "Text",
-                "text": "번째 글자까지의 글자",
+                "text": Lang.Blocks.CALC_substring_3,
+                "color": "#3D3D3D"
+            },
+            {
+                "type": "Block",
+                "accept": "stringMagnet"
+            },
+            {
+                "type": "Text",
+                "text": Lang.Blocks.CALC_substring_4,
                 "color": "#3D3D3D"
             }
         ],
         "events": {},
         "def": {
             "params": [
+                null,
                 {
                     "type": "text",
-                    "params": [ "안녕 엔트리!" ]
+                    "params": [ Lang.Blocks.hi_entry ]
                 },
                 null,
                 {
@@ -4581,9 +4636,9 @@ Entry.block = {
             "type": "substring"
         },
         "paramsKeyMap": {
-            "STRING": 0,
-            "START": 2,
-            "END": 4
+            "STRING": 1,
+            "START": 3,
+            "END": 5
         },
         "class": "calc_string",
         "isNotFor": [],
@@ -4604,12 +4659,8 @@ Entry.block = {
         "statements": [],
         "params": [
             {
-                "type": "Block",
-                "accept": "stringMagnet"
-            },
-            {
                 "type": "Text",
-                "text": "의",
+                "text": Lang.Blocks.CALC_replace_string_1,
                 "color": "#3D3D3D"
             },
             {
@@ -4618,7 +4669,7 @@ Entry.block = {
             },
             {
                 "type": "Text",
-                "text": "을(를)",
+                "text": Lang.Blocks.CALC_replace_string_2,
                 "color": "#3D3D3D"
             },
             {
@@ -4627,35 +4678,45 @@ Entry.block = {
             },
             {
                 "type": "Text",
-                "text": "로 바꾸기",
+                "text": Lang.Blocks.CALC_replace_string_3,
+                "color": "#3D3D3D"
+            },
+            {
+                "type": "Block",
+                "accept": "stringMagnet"
+            },
+            {
+                "type": "Text",
+                "text": Lang.Blocks.CALC_replace_string_4,
                 "color": "#3D3D3D"
             }
         ],
         "events": {},
         "def": {
             "params": [
+                null,
                 {
                     "type": "text",
-                    "params": [ "안녕 엔트리!" ]
+                    "params": [ Lang.Blocks.hi_entry ]
                 },
                 null,
                 {
                     "type": "text",
-                    "params": [ "안녕" ]
+                    "params": [ Lang.Blocks.hello ]
                 },
                 null,
                 {
                     "type": "text",
-                    "params": [ "반가워" ]
+                    "params": [ Lang.Blocks.nice ]
                 },
                 null
             ],
             "type": "replace_string"
         },
         "paramsKeyMap": {
-            "STRING": 0,
-            "OLD_WORD": 2,
-            "NEW_WORD": 4
+            "STRING": 1,
+            "OLD_WORD": 3,
+            "NEW_WORD": 5
         },
         "class": "calc_string",
         "isNotFor": [],
@@ -4673,38 +4734,38 @@ Entry.block = {
         "statements": [],
         "params": [
             {
+                "type": "Text",
+                "text": Lang.Blocks.CALC_change_string_case_1,
+                "color": "#3D3D3D"
+            },
+            {
                 "type": "Block",
                 "accept": "stringMagnet"
             },
             {
                 "type": "Text",
-                "text": "의",
+                "text": Lang.Blocks.CALC_change_string_case_2,
                 "color": "#3D3D3D"
             },
             {
                 "type": "Dropdown",
                 "options": [
-                    [
-                        "대문자",
-                        "toUpperCase"
-                    ],
-                    [
-                        "소문자",
-                        "toLowerCase"
-                    ]
+                    [Lang.Blocks.CALC_change_string_case_sub_1,"toUpperCase"],
+                    [Lang.Blocks.CALC_change_string_case_sub_2,"toLowerCase"]
                 ],
                 "value": "toUpperCase",
                 "fontSize": 11
             },
             {
                 "type": "Text",
-                "text": " ",
+                "text": Lang.Blocks.CALC_change_string_case_3,
                 "color": "#3D3D3D"
             }
         ],
         "events": {},
         "def": {
             "params": [
+                null,
                 {
                     "type": "text",
                     "params": [ "Hello Entry!" ]
@@ -4716,8 +4777,8 @@ Entry.block = {
             "type": "change_string_case"
         },
         "paramsKeyMap": {
-            "STRING": 0,
-            "CASE": 2
+            "STRING": 1,
+            "CASE": 3
         },
         "class": "calc_string",
         "isNotFor": [],
@@ -4731,12 +4792,8 @@ Entry.block = {
         "statements": [],
         "params": [
             {
-                "type": "Block",
-                "accept": "stringMagnet"
-            },
-            {
                 "type": "Text",
-                "text": "에서",
+                "text": Lang.Blocks.CALC_index_of_string_1,
                 "color": "#3D3D3D"
             },
             {
@@ -4745,29 +4802,39 @@ Entry.block = {
             },
             {
                 "type": "Text",
-                "text": "의 시작 위치",
+                "text": Lang.Blocks.CALC_index_of_string_2,
+                "color": "#3D3D3D"
+            },
+            {
+                "type": "Block",
+                "accept": "stringMagnet"
+            },
+            {
+                "type": "Text",
+                "text": Lang.Blocks.CALC_index_of_string_3,
                 "color": "#3D3D3D"
             }
         ],
         "events": {},
         "def": {
             "params": [
+                null,
                 {
                     "type": "text",
-                    "params": [ "안녕 엔트리!" ]
+                    "params": [ Lang.Blocks.hi_entry ]
                 },
                 null,
                 {
                     "type": "text",
-                    "params": [ "엔트리" ]
+                    "params": [ Lang.Blocks.entry ]
                 },
                 null
             ],
             "type": "index_of_string"
         },
         "paramsKeyMap": {
-            "LEFTHAND": 0,
-            "RIGHTHAND": 2
+            "LEFTHAND": 1,
+            "RIGHTHAND": 3
         },
         "class": "calc_string",
         "isNotFor": [],
@@ -4784,12 +4851,8 @@ Entry.block = {
         "statements": [],
         "params": [
             {
-                "type": "Block",
-                "accept": "stringMagnet"
-            },
-            {
                 "type": "Text",
-                "text": "과(와)",
+                "text": Lang.Blocks.VARIABLE_combine_something_1,
                 "color": "#3D3D3D"
             },
             {
@@ -4798,29 +4861,39 @@ Entry.block = {
             },
             {
                 "type": "Text",
-                "text": "를 합치기",
+                "text": Lang.Blocks.VARIABLE_combine_something_2,
+                "color": "#3D3D3D"
+            },
+            {
+                "type": "Block",
+                "accept": "stringMagnet"
+            },
+            {
+                "type": "Text",
+                "text": Lang.Blocks.VARIABLE_combine_something_3,
                 "color": "#3D3D3D"
             }
         ],
         "events": {},
         "def": {
             "params": [
+                null,
                 {
                     "type": "text",
-                    "params": [ "안녕!" ]
+                    "params": [ Lang.Blocks.block_hi ]
                 },
                 null,
                 {
                     "type": "text",
-                    "params": [ "엔트리" ]
+                    "params": [ Lang.Blocks.entry ]
                 },
                 null
             ],
             "type": "combine_something"
         },
         "paramsKeyMap": {
-            "VALUE1": 0,
-            "VALUE2": 2
+            "VALUE1": 1,
+            "VALUE2": 3
         },
         "class": "calc_string",
         "isNotFor": [],
@@ -4838,7 +4911,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Text",
-                "text": "소릿값",
+                "text": Lang.Blocks.CALC_get_sound_volume,
                 "color": "#3D3D3D"
             },
             {
@@ -4866,12 +4939,8 @@ Entry.block = {
         "statements": [],
         "params": [
             {
-                "type": "Block",
-                "accept": "stringMagnet"
-            },
-            {
                 "type": "Text",
-                "text": "/",
+                "text": Lang.Blocks.CALC_quotient_and_mod_1,
                 "color": "#3D3D3D"
             },
             {
@@ -4880,14 +4949,23 @@ Entry.block = {
             },
             {
                 "type": "Text",
-                "text": "의",
+                "text": Lang.Blocks.CALC_quotient_and_mod_2,
+                "color": "#3D3D3D"
+            },
+            {
+                "type": "Block",
+                "accept": "stringMagnet"
+            },
+            {
+                "type": "Text",
+                "text": Lang.Blocks.CALC_quotient_and_mod_3,
                 "color": "#3D3D3D"
             },
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "몫", "QUOTIENT" ],
-                    [ "나머지", "MOD" ]
+                      [Lang.Blocks.CALC_quotient_and_mod_sub_1,"QUOTIENT"],
+                      [Lang.Blocks.CALC_quotient_and_mod_sub_2,"MOD"]
                 ],
                 "value": "QUOTIENT",
                 "fontSize": 11
@@ -4896,6 +4974,7 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
+                null,
                 {
                     "type": "text",
                     "params": [ "10" ]
@@ -4911,9 +4990,9 @@ Entry.block = {
             "type": "quotient_and_mod"
         },
         "paramsKeyMap": {
-            "LEFTHAND": 0,
-            "RIGHTHAND": 2,
-            "OPERATOR": 4
+            "LEFTHAND": 1,
+            "RIGHTHAND": 3,
+            "OPERATOR": 5
         },
         "class": "calc",
         "isNotFor": [ "" ],
@@ -4936,18 +5015,23 @@ Entry.block = {
         "params": [
             {
                 "type": "Text",
-                "text": "초시계",
+                "text": Lang.Blocks.CALC_choose_project_timer_action_1,
                 "color": "#3D3D3D"
             },
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "시작하기", "START" ],
-                    [ "정지하기", "STOP" ],
-                    [ "초기화하기", "RESET" ]
+                    [Lang.Blocks.CALC_choose_project_timer_action_sub_1,"START"],
+                    [Lang.Blocks.CALC_choose_project_timer_action_sub_2,"STOP"],
+                    [Lang.Blocks.CALC_choose_project_timer_action_sub_3,"RESET"]
                 ],
                 "value": "START",
                 "fontSize": 11
+            },
+            {
+                "type": "Text",
+                "text": Lang.Blocks.CALC_choose_project_timer_action_2,
+                "color": "#3D3D3D"
             },
             {
                 "type": "Indicator",
@@ -4971,6 +5055,7 @@ Entry.block = {
             "params": [
                 null,
                 "START",
+                null,
                 null
             ],
             "type": "choose_project_timer_action"
@@ -5452,8 +5537,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "이 될 때까지", "until" ],
-                    [ "인 동안", "while" ]
+                    [ Lang.Blocks.FLOW_repeat_while_true_until, "until" ],
+                    [ Lang.Blocks.FLOW_repeat_while_true_while, "while" ]
                 ],
                 "value": "until",
                 "fontSize": 11
@@ -5503,10 +5588,10 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "모든", "all" ],
-                    [ "자신의", "thisOnly" ],
-                    [ "이", "thisThread" ],
-                    [ "자신의 다른", "otherThread" ]
+                    [ Lang.Blocks.FLOW_stop_object_all, "all" ],
+                    [ Lang.Blocks.FLOW_stop_object_this_object, "thisOnly" ],
+                    [ Lang.Blocks.FLOW_stop_object_this_thread, "thisThread" ],
+                    [ Lang.Blocks.FLOW_stop_object_other_thread, "otherThread" ]
                 ],
                 "value": "all",
                 "fontSize": 11
@@ -5607,7 +5692,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Text",
-                "text": "함수 추가",
+                "text": Lang.Workspace.function_create,
                 "color": "#333",
                 "align": "center"
             }
@@ -7332,7 +7417,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Text",
-                "text": "마우스를 클릭했는가?",
+                "text": Lang.Blocks.JUDGEMENT_is_clicked,
                 "color": "#3D3D3D"
             }
         ],
@@ -7358,7 +7443,7 @@ Entry.block = {
             },
             {
                 "type": "Text",
-                "text": "키가 눌러져 있는가?",
+                "text": Lang.Blocks.JUDGEMENT_is_press_some_key_2,
                 "color": "#3D3D3D"
             }
         ],
@@ -7383,6 +7468,11 @@ Entry.block = {
         "statements": [],
         "params": [
             {
+                "type": "Text",
+                "text": Lang.Blocks.JUDGEMENT_reach_something_1,
+                "color": "#3D3D3D"
+            },
+            {
                 "type": "DropdownDynamic",
                 "value": null,
                 "menuName": "collision",
@@ -7390,13 +7480,13 @@ Entry.block = {
             },
             {
                 "type": "Text",
-                "text": "에 닿았는가?",
+                "text": Lang.Blocks.JUDGEMENT_reach_something_2,
                 "color": "#3D3D3D"
             }
         ],
         "events": {},
         "def": {
-            "params": [ null, null ],
+            "params": [ null, null, null ],
             "type": "reach_something"
         },
         "paramsKeyMap": {
@@ -7681,8 +7771,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "그리고", "AND" ],
-                    [ "또는", "OR" ]
+                    [ Lang.Blocks.JUDGEMENT_boolean_and, "AND" ],
+                    [ Lang.Blocks.JUDGEMENT_boolean_or, "OR" ]
                 ],
                 "value": "AND",
                 "fontSize": 11
@@ -7722,7 +7812,7 @@ Entry.block = {
             },
             {
                 "type": "Text",
-                "text": "그리고",
+                "text": Lang.Blocks.JUDGEMENT_boolean_and,
                 "color": "#3D3D3D"
             },
             {
@@ -7766,7 +7856,7 @@ Entry.block = {
             },
             {
                 "type": "Text",
-                "text": "또는",
+                "text": Lang.Blocks.JUDGEMENT_boolean_or,
                 "color": "#3D3D3D"
             },
             {
@@ -7805,18 +7895,24 @@ Entry.block = {
         "statements": [],
         "params": [
             {
+                "type": "Text",
+                "text": Lang.Blocks.JUDGEMENT_boolean_not_1,
+                "color": "#3D3D3D"
+            },
+            {
                 "type": "Block",
                 "accept": "booleanMagnet"
             },
             {
                 "type": "Text",
-                "text": "(이)가 아니다",
+                "text": Lang.Blocks.JUDGEMENT_boolean_not_2,
                 "color": "#3D3D3D"
             }
         ],
         "events": {},
         "def": {
             "params": [
+                null,
                 {
                     "type": "True"
                 },
@@ -7825,7 +7921,7 @@ Entry.block = {
             "type": "boolean_not"
         },
         "paramsKeyMap": {
-            "VALUE": 0
+            "VALUE": 1
         },
         "class": "boolean",
         "isNotFor": [],
@@ -7867,7 +7963,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Text",
-                "text": "참",
+                "text": Lang.Blocks.JUDGEMENT_true,
                 "color": "#3D3D3D"
             }
         ],
@@ -7888,7 +7984,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Text",
-                "text": "거짓",
+                "text": Lang.Blocks.JUDGEMENT_false,
                 "color": "#3D3D3D"
             }
         ],
@@ -8106,7 +8202,7 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "말하기", "speak" ]
+                    [ Lang.Blocks.speak, "speak" ]
                 ],
                 "value": "speak",
                 "fontSize": 11
@@ -8122,7 +8218,7 @@ Entry.block = {
             "params": [
                 {
                     "type": "text",
-                    "params": [ "안녕!" ]
+                    "params": [ Lang.Blocks.block_hi ]
                 },
                 {
                     "type": "number",
@@ -8177,7 +8273,7 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "말하기", "speak" ]
+                    [ Lang.Blocks.speak, "speak" ]
                 ],
                 "value": "speak",
                 "fontSize": 11
@@ -8193,7 +8289,7 @@ Entry.block = {
             "params": [
                 {
                     "type": "text",
-                    "params": [ "안녕!" ]
+                    "params": [ Lang.Blocks.block_hi ]
                 },
                 null,
                 null
@@ -8283,8 +8379,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "다음", "next" ],
-                    [ "이전", "prev" ]
+                    [ Lang.Blocks.LOOKS_change_shape_next, "next" ],
+                    [ Lang.Blocks.LOOKS_change_shape_prev, "prev" ]
                 ],
                 "value": "next",
                 "fontSize": 11
@@ -8778,9 +8874,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "색깔", "color" ],
-                    [ "밝기", "brightness" ],
-                    [ "투명도", "transparency" ]
+                    [ Lang.Blocks.color, "color" ],
+                    [ Lang.Blocks.brightness, "brightness" ],
+                    [ Lang.Blocks.transparency, "transparency" ]
                 ],
                 "value": "color",
                 "fontSize": 11
@@ -8835,9 +8931,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "색깔", "color" ],
-                    [ "밝기", "brightness" ],
-                    [ "투명도", "transparency" ]
+                    [ Lang.Blocks.color, "color" ],
+                    [ Lang.Blocks.brightness, "brightness" ],
+                    [ Lang.Blocks.transparency, "transparency" ]
                 ],
                 "value": "color",
                 "fontSize": 11
@@ -9006,10 +9102,10 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "맨 앞으로", "FRONT" ],
-                    [ "앞으로", "FORWARD" ],
-                    [ "뒤로", "BACKWARD" ],
-                    [ "맨 뒤로", "BACK" ]
+                    [ Lang.Blocks.LOOKS_change_object_index_sub_1, "FRONT" ],
+                    [ Lang.Blocks.LOOKS_change_object_index_sub_2, "FORWARD" ],
+                    [ Lang.Blocks.LOOKS_change_object_index_sub_3, "BACKWARD" ],
+                    [ Lang.Blocks.LOOKS_change_object_index_sub_4, "BACK" ]
                 ],
                 "value": "FRONT",
                 "fontSize": 11
@@ -12105,8 +12201,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "다음", "next" ],
-                    [ "이전", "pre" ]
+                    [ Lang.Blocks.SCENE_start_scene_next, "next" ],
+                    [ Lang.Blocks.SCENE_start_scene_pre, "pre" ]
                 ],
                 "value": "next",
                 "fontSize": 11
@@ -13732,7 +13828,7 @@ Entry.block = {
             "params": [
                 {
                     "type": "text",
-                    "params": [ "안녕!" ]
+                    "params": [ Lang.Blocks.block_hi ]
                 },
                 null
             ],
@@ -13785,7 +13881,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Text",
-                "text": "대답",
+                "text": Lang.Blocks.VARIABLE_get_canvas_input_value,
                 "color": "#fff"
             }
         ],
@@ -14231,8 +14327,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "보이기", "SHOW" ],
-                    [ "숨기기", "HIDE" ]
+                    [Lang.Blocks.CALC_timer_visible_show,"SHOW"],
+                    [Lang.Blocks.CALC_timer_visible_hide,"HIDE"]
                 ],
                 "value": "SHOW",
                 "fontSize": 11

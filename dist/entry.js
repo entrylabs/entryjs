@@ -10339,10 +10339,10 @@ Entry.popupHelper.prototype.hide = function() {
   this.body_.addClass("hiddenPopup");
 };
 Entry.getStartProject = function(b) {
-  return {category:"\uae30\ud0c0", scenes:[{name:"\uc7a5\uba74 1", id:"7dwq"}], variables:[{name:"\ucd08\uc2dc\uacc4", id:"brih", visible:!1, value:"0", variableType:"timer", x:150, y:-70, array:[], object:null, isCloud:!1}, {name:"\ub300\ub2f5", id:"1vu8", visible:!1, value:"0", variableType:"answer", x:150, y:-100, array:[], object:null, isCloud:!1}], objects:[{id:"7y0y", name:"\uc5d4\ud2b8\ub9ac\ubd07", script:[[{type:"length_of_string", x:200, y:140, params:[{type:"length_of_string"}]}], [{type:"when_run_button_click", 
-  x:40, y:240}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"repeat_basic", statements:[[{type:"move_direction"}, {type:"move_x"}, {type:"move_y"}, {type:"stop_repeat"}]]}, {type:"stop_repeat"}, {type:"move_direction"}]], selectedPictureId:"vx80", objectType:"sprite", rotateMethod:"free", scene:"7dwq", sprite:{sounds:[{duration:1.3, ext:".mp3", id:"8el5", fileurl:b + "media/bark.mp3", name:"\uac15\uc544\uc9c0 \uc9d6\ub294\uc18c\ub9ac"}], pictures:[{id:"vx80", fileurl:b + 
-  "media/entrybot1.png", name:"\uc5d4\ud2b8\ub9ac\ubd07_\uac77\uae301", scale:100, dimension:{width:284, height:350}}, {id:"vx80", fileurl:b + "media/entrybot1.png", name:Lang.Blocks.walking_entryBot + "1", scale:100, dimension:{width:284, height:350}}, {id:"4t48", fileurl:b + "media/entrybot2.png", name:Lang.Blocks.walking_entryBot + "2", scale:100, dimension:{width:284, height:350}}]}, entity:{x:0, y:0, regX:142, regY:175, scaleX:.3154574132492113, scaleY:.3154574132492113, rotation:0, direction:90, 
-  width:284, height:350, visible:!0}, lock:!1, active:!0}], speed:60};
+  return {category:"\uae30\ud0c0", scenes:[{name:"\uc7a5\uba74 1", id:"7dwq"}], variables:[{name:"\ucd08\uc2dc\uacc4", id:"brih", visible:!1, value:"0", variableType:"timer", x:150, y:-70, array:[], object:null, isCloud:!1}, {name:"\ub300\ub2f5", id:"1vu8", visible:!1, value:"0", variableType:"answer", x:150, y:-100, array:[], object:null, isCloud:!1}], objects:[{id:"7y0y", name:"\uc5d4\ud2b8\ub9ac\ubd07", script:[[{type:"length_of_string", x:200, y:140}], [{type:"when_run_button_click", x:40, y:240}, 
+  {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"repeat_basic", statements:[[{type:"move_direction"}, {type:"move_x"}, {type:"move_y"}, {type:"stop_repeat"}]]}, {type:"stop_repeat"}, {type:"move_direction"}]], selectedPictureId:"vx80", objectType:"sprite", rotateMethod:"free", scene:"7dwq", sprite:{sounds:[{duration:1.3, ext:".mp3", id:"8el5", fileurl:b + "media/bark.mp3", name:"\uac15\uc544\uc9c0 \uc9d6\ub294\uc18c\ub9ac"}], pictures:[{id:"vx80", fileurl:b + "media/entrybot1.png", 
+  name:"\uc5d4\ud2b8\ub9ac\ubd07_\uac77\uae301", scale:100, dimension:{width:284, height:350}}, {id:"vx80", fileurl:b + "media/entrybot1.png", name:Lang.Blocks.walking_entryBot + "1", scale:100, dimension:{width:284, height:350}}, {id:"4t48", fileurl:b + "media/entrybot2.png", name:Lang.Blocks.walking_entryBot + "2", scale:100, dimension:{width:284, height:350}}]}, entity:{x:0, y:0, regX:142, regY:175, scaleX:.3154574132492113, scaleY:.3154574132492113, rotation:0, direction:90, width:284, height:350, 
+  visible:!0}, lock:!1, active:!0}], speed:60};
 };
 Entry.PropertyPanel = function() {
   this.modes = {};
@@ -15263,9 +15263,9 @@ a) {
 OPERATOR:1}, "class":"sensorBoard", isNotFor:["sensorBoard"], func:function(b, a) {
   Entry.hw.setDigitalPortValue(a.getField("PORT"), a.getNumberField("OPERATOR"));
   return a.callReturn();
-}}, arduino_download_connector:{skeleton:"basic_button", color:"#eee", params:[{type:"Text", text:"\uc5f0\uacb0 \ud504\ub85c\uadf8\ub7a8 \ub2e4\uc6b4\ub85c\ub4dc", color:"#333", align:"center"}], events:{mousedown:[null]}}, arduino_download_source:{skeleton:"basic_button", color:"#eee", params:[{type:"Text", text:"\uc5d4\ud2b8\ub9ac \uc544\ub450\uc774\ub178 \uc18c\uc2a4", color:"#333", align:"center"}], events:{mousedown:[null]}}, arduino_connected:{skeleton:"basic_button", color:"#eee", params:[{type:"Text", 
-text:"\uc5f0\uacb0 \ub428", color:"#333", align:"center"}], events:{mousedown:[null]}}, arduino_reconnect:{skeleton:"basic_button", color:"#eee", params:[{type:"Text", text:"\ub2e4\uc2dc \uc5f0\uacb0\ud558\uae30", color:"#333", align:"center"}], events:{mousedown:[null]}}, CODEino_get_sensor_number:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["0", "A0"], ["1", "A1"], ["2", "A2"], ["3", "A3"], ["4", "A4"], ["5", "A5"], ["6", "A6"]], value:"A0", 
-fontSize:11}], events:{}, def:{params:[null]}, paramsKeyMap:{PORT:0}, func:function(b, a) {
+}}, arduino_download_connector:{skeleton:"basic_button", color:"#eee", params:[{type:"Text", text:Lang.Blocks.ARDUINO_download_connector, color:"#333", align:"center"}], events:{mousedown:[null]}}, arduino_download_source:{skeleton:"basic_button", color:"#eee", params:[{type:"Text", text:Lang.Blocks.ARDUINO_download_source, color:"#333", align:"center"}], events:{mousedown:[null]}}, arduino_connected:{skeleton:"basic_button", color:"#eee", params:[{type:"Text", text:"\uc5f0\uacb0 \ub428", color:"#333", 
+align:"center"}], events:{mousedown:[null]}}, arduino_reconnect:{skeleton:"basic_button", color:"#eee", params:[{type:"Text", text:"\ub2e4\uc2dc \uc5f0\uacb0\ud558\uae30", color:"#333", align:"center"}], events:{mousedown:[null]}}, CODEino_get_sensor_number:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["0", "A0"], ["1", "A1"], ["2", "A2"], ["3", "A3"], ["4", "A4"], ["5", "A5"], ["6", "A6"]], value:"A0", fontSize:11}], events:{}, def:{params:[null]}, 
+paramsKeyMap:{PORT:0}, func:function(b, a) {
   return a.getStringField("PORT");
 }}, CODEino_get_named_sensor_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["\uc18c\ub9ac", "0"], ["\ube5b", "1"], ["\uc2ac\ub77c\uc774\ub354", "2"], ["\uc800\ud56d-A", "3"], ["\uc800\ud56d-B", "4"], ["\uc800\ud56d-C", "5"], ["\uc800\ud56d-D", "6"]], value:"0", fontSize:11}], events:{}, def:{params:[null], type:"CODEino_get_named_sensor_value"}, paramsKeyMap:{PORT:0}, "class":"CODEino", isNotFor:["CODEino"], func:function(b, a) {
   return Entry.hw.getAnalogPortValue(a.getField("PORT", a));
@@ -15461,17 +15461,17 @@ paramsKeyMap:{PORT:0, VALUE2:1, VALUE3:2, VALUE4:3, VALUE5:4}, "class":"conditio
   return parseFloat(b.getRotation().toFixed(1));
 }}, get_rotation_direction:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["\ubc29\ud5a5\uac12", "ROTATION"], ["\uc774\ub3d9 \ubc29\ud5a5\uac12", "DIRECTION"]], value:"ROTATION", fontSize:11}], events:{}, def:{params:[null], type:"get_rotation_direction"}, paramsKeyMap:{OPERATOR:0}, "class":"calc", isNotFor:[], func:function(b, a) {
   return "DIRECTION" == a.getField("OPERATOR", a).toUpperCase() ? parseFloat(b.getDirection().toFixed(1)) : parseFloat(b.getRotation().toFixed(1));
-}}, distance_something:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"spritesWithMouse", fontSize:11}, {type:"Text", text:"\uae4c\uc9c0\uc758 \uac70\ub9ac", color:"#3D3D3D"}], events:{}, def:{params:[null, null], type:"distance_something"}, paramsKeyMap:{VALUE:0}, "class":"calc_distance", isNotFor:[], func:function(b, a) {
+}}, distance_something:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_distance_something_1, color:"#3D3D3D"}, {type:"DropdownDynamic", value:null, menuName:"spritesWithMouse", fontSize:11}, {type:"Text", text:Lang.Blocks.CALC_distance_something_2, color:"#3D3D3D"}], events:{}, def:{params:[null, null, null], type:"distance_something"}, paramsKeyMap:{VALUE:1}, "class":"calc_distance", isNotFor:[], func:function(b, a) {
   var c = a.getField("VALUE", a);
   if ("mouse" == c) {
     return c = Entry.stage.mouseCoordinate, Math.sqrt(Math.pow(b.getX() - c.x, 2) + Math.pow(b.getY() - c.y, 2));
   }
   c = Entry.container.getEntity(c);
   return Math.sqrt(Math.pow(b.getX() - c.getX(), 2) + Math.pow(b.getY() - c.getY(), 2));
-}}, coordinate_mouse:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:"\ub9c8\uc6b0\uc2a4", color:"#3D3D3D"}, {type:"Dropdown", options:[["x", "x"], ["y", "y"]], value:"x", fontSize:11}, {type:"Text", text:"\uc88c\ud45c", color:"#3D3D3D"}], events:{}, def:{params:[null, null, null], type:"coordinate_mouse"}, paramsKeyMap:{VALUE:1}, "class":"calc", isNotFor:[], func:function(b, a) {
+}}, coordinate_mouse:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_coordinate_mouse_1, color:"#3D3D3D"}, {type:"Dropdown", options:[["x", "x"], ["y", "y"]], value:"x", fontSize:11}, {type:"Text", text:Lang.Blocks.CALC_coordinate_mouse_2, color:"#3D3D3D"}], events:{}, def:{params:[null, null, null], type:"coordinate_mouse"}, paramsKeyMap:{VALUE:1}, "class":"calc", isNotFor:[], func:function(b, a) {
   return "x" === a.getField("VALUE", a) ? Number(Entry.stage.mouseCoordinate.x) : Number(Entry.stage.mouseCoordinate.y);
-}}, coordinate_object:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"spritesWithSelf", fontSize:11}, {type:"Text", text:"\uc758", color:"#3D3D3D"}, {type:"Dropdown", options:[["x \uc88c\ud46f\uac12", "x"], ["y \uc88c\ud46f\uac12", "y"], ["\ubc29\ud5a5", "rotation"], ["\uc774\ub3d9\ubc29\ud5a5", "direction"], ["\ud06c\uae30", "size"], ["\ubaa8\uc591 \ubc88\ud638", "picture_index"], ["\ubaa8\uc591 \uc774\ub984", "picture_name"]], 
-value:"x", fontSize:11}], events:{}, def:{params:[null, null, null], type:"coordinate_object"}, paramsKeyMap:{VALUE:0, COORDINATE:2}, "class":"calc", isNotFor:[], func:function(b, a) {
+}}, coordinate_object:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_coordinate_object_1, color:"#3D3D3D"}, {type:"DropdownDynamic", value:null, menuName:"spritesWithSelf", fontSize:11}, {type:"Text", text:Lang.Blocks.CALC_coordinate_object_2, color:"#3D3D3D"}, {type:"Dropdown", options:[[Lang.Blocks.CALC_coordinate_x_value, "x"], [Lang.Blocks.CALC_coordinate_y_value, "y"], [Lang.Blocks.CALC_coordinate_rotation_value, "rotation"], [Lang.Blocks.CALC_coordinate_direction_value, 
+"direction"], [Lang.Blocks.CALC_coordinate_size_value, "size"], [Lang.Blocks.CALC_picture_index, "picture_index"], [Lang.Blocks.CALC_picture_name, "picture_name"]], value:"x", fontSize:11}], events:{}, def:{params:[null, null, null, null], type:"coordinate_object"}, paramsKeyMap:{VALUE:1, COORDINATE:3}, "class":"calc", isNotFor:[], func:function(b, a) {
   var c = a.getField("VALUE", a), c = "self" == c ? b : Entry.container.getEntity(c);
   switch(a.getField("COORDINATE", a)) {
     case "x":
@@ -15512,9 +15512,9 @@ type:"calc_basic"}, {params:[{type:"number", params:["10"]}, "MINUS", {type:"num
 }}, calc_share:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"/", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uc758 \ubaab", color:"#3D3D3D"}], events:{}, def:{params:[{type:"number", params:["10"]}, null, {type:"number", params:["10"]}, null], type:"calc_share"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"calc", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("LEFTHAND", a), d = a.getNumberValue("RIGHTHAND", a);
   return Math.floor(c / d);
-}}, calc_operation:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uc758", color:"#3D3D3D"}, {type:"Dropdown", options:[["\uc81c\uacf1", "square"], ["\ub8e8\ud2b8", "root"], ["\uc0ac\uc778\uac12", "sin"], ["\ucf54\uc0ac\uc778\uac12", "cos"], ["\ud0c4\uc820\ud2b8\uac12", "tan"], ["\uc544\ud06c\uc0ac\uc778\uac12", "asin_radian"], ["\uc544\ud06c\ucf54\uc0ac\uc778\uac12", "acos_radian"], ["\uc544\ud06c\ud0c4\uc820\ud2b8\uac12", 
-"atan_radian"], ["\ub85c\uadf8\uac12", "log"], ["\uc790\uc5f0\ub85c\uadf8\uac12", "ln"], ["\uc18c\uc218\uc810 \ubd80\ubd84", "unnatural"], ["\uc18c\uc218\uc810 \ubc84\ub9bc\uac12", "floor"], ["\uc18c\uc218\uc810 \uc62c\ub9bc\uac12", "ceil"], ["\ubc18\uc62c\ub9bc\uac12", "round"], ["\ud399\ud1a0\ub9ac\uc5bc\uac12", "factorial"], ["\uc808\ub313\uac12", "abs"]], value:"square", fontSize:11}], events:{}, def:{params:[{type:"number", params:["10"]}, null, null], type:"calc_operation"}, paramsKeyMap:{LEFTHAND:0, 
-VALUE:2}, "class":"calc", isNotFor:[], func:function(b, a) {
+}}, calc_operation:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_calc_operation_of_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_calc_operation_of_2, color:"#3D3D3D"}, {type:"Dropdown", options:[[Lang.Blocks.CALC_calc_operation_square, "square"], [Lang.Blocks.CALC_calc_operation_root, "root"], [Lang.Blocks.CALC_calc_operation_sin, "sin"], [Lang.Blocks.CALC_calc_operation_cos, "cos"], [Lang.Blocks.CALC_calc_operation_tan, 
+"tan"], [Lang.Blocks.CALC_calc_operation_asin, "asin_radian"], [Lang.Blocks.CALC_calc_operation_acos, "acos_radian"], [Lang.Blocks.CALC_calc_operation_atan, "atan_radian"], [Lang.Blocks.CALC_calc_operation_log, "log"], [Lang.Blocks.CALC_calc_operation_ln, "ln"], [Lang.Blocks.CALC_calc_operation_unnatural, "unnatural"], [Lang.Blocks.CALC_calc_operation_floor, "floor"], [Lang.Blocks.CALC_calc_operation_ceil, "ceil"], [Lang.Blocks.CALC_calc_operation_round, "round"], [Lang.Blocks.CALC_calc_operation_factorial, 
+"factorial"], [Lang.Blocks.CALC_calc_operation_abs, "abs"]], value:"square", fontSize:11}], events:{}, def:{params:[null, {type:"number", params:["10"]}, null, null], type:"calc_operation"}, paramsKeyMap:{LEFTHAND:1, VALUE:3}, "class":"calc", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("LEFTHAND", a), d = a.getField("VALUE", a);
   if (-1 < ["asin_radian", "acos_radian"].indexOf(d) && (1 < c || -1 > c)) {
     throw Error("x range exceeded");
@@ -15553,14 +15553,15 @@ VALUE:2}, "class":"calc", isNotFor:[], func:function(b, a) {
       e = Math[d](c);
   }
   return Math.round(1E3 * e) / 1E3;
-}}, calc_rand:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\ubd80\ud130", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uc0ac\uc774\uc758 \ubb34\uc791\uc704 \uc218", color:"#3D3D3D"}], events:{}, def:{params:[{type:"number", params:["0"]}, null, {type:"number", params:["10"]}, null], type:"calc_rand"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"calc", isNotFor:[], func:function(b, 
-a) {
+}}, calc_rand:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_calc_rand_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_calc_rand_2, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_calc_rand_3, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"number", params:["0"]}, null, {type:"number", params:["10"]}, null], type:"calc_rand"}, paramsKeyMap:{LEFTHAND:1, 
+RIGHTHAND:3}, "class":"calc", isNotFor:[], func:function(b, a) {
   var c = a.getStringValue("LEFTHAND", a), d = a.getStringValue("RIGHTHAND", a), e = Math.min(c, d), f = Math.max(c, d), c = Entry.isFloat(c);
   return Entry.isFloat(d) || c ? (Math.random() * (f - e) + e).toFixed(2) : Math.floor(Math.random() * (f - e + 1) + e);
-}}, get_date:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:"\ud604\uc7ac", color:"#3D3D3D"}, {type:"Dropdown", options:[["\uc5f0\ub3c4", "YEAR"], ["\uc6d4", "MONTH"], ["\uc77c", "DAY"], ["\uc2dc\uac01(\uc2dc)", "HOUR"], ["\uc2dc\uac01(\ubd84)", "MINUTE"], ["\uc2dc\uac01(\ucd08)", "SECOND"]], value:"YEAR", fontSize:11}], events:{}, def:{params:[null, "YEAR"], type:"get_date"}, paramsKeyMap:{VALUE:1}, "class":"calc_date", isNotFor:[], func:function(b, a) {
+}}, get_date:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_get_date_1, color:"#3D3D3D"}, {type:"Dropdown", options:[[Lang.Blocks.CALC_get_date_year, "YEAR"], [Lang.Blocks.CALC_get_date_month, "MONTH"], [Lang.Blocks.CALC_get_date_day, "DAY"], [Lang.Blocks.CALC_get_date_hour, "HOUR"], [Lang.Blocks.CALC_get_date_minute, "MINUTE"], [Lang.Blocks.CALC_get_date_second, "SECOND"]], value:"YEAR", fontSize:11}, {type:"Text", text:Lang.Blocks.CALC_get_date_2, 
+color:"#3D3D3D"}], events:{}, def:{params:[null, "YEAR", null], type:"get_date"}, paramsKeyMap:{VALUE:1}, "class":"calc_date", isNotFor:[], func:function(b, a) {
   var c = a.getField("VALUE", a), d = new Date;
   return "YEAR" == c ? d.getFullYear() : "MONTH" == c ? d.getMonth() + 1 : "DAY" == c ? d.getDate() : "HOUR" == c ? d.getHours() : "MINUTE" == c ? d.getMinutes() : d.getSeconds();
-}}, get_sound_duration:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"sounds", fontSize:11}, {type:"Text", text:"\uc18c\ub9ac\uc758 \uae38\uc774", color:"#3D3D3D"}], events:{}, def:{params:[null, null], type:"get_sound_duration"}, paramsKeyMap:{VALUE:0}, "class":"calc_duration", isNotFor:[], func:function(b, a) {
+}}, get_sound_duration:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_get_sound_duration_1, color:"#3D3D3D"}, {type:"DropdownDynamic", value:null, menuName:"sounds", fontSize:11}, {type:"Text", text:Lang.Blocks.CALC_get_sound_duration_2, color:"#3D3D3D"}], events:{}, def:{params:[null, null, null], type:"get_sound_duration"}, paramsKeyMap:{VALUE:1}, "class":"calc_duration", isNotFor:[], func:function(b, a) {
   for (var c = a.getField("VALUE", a), d = b.parent.sounds, e = 0;e < d.length;e++) {
     if (d[e].id == c) {
       return d[e].duration;
@@ -15573,66 +15574,67 @@ a) {
 }]}, def:{params:[null], type:"reset_project_timer"}, "class":"calc_timer", isNotFor:[], func:function(b, a) {
   Entry.engine.updateProjectTimer(0);
   return a.callReturn();
-}}, set_visible_project_timer:{color:"#FFD974", skeleton:"basic", statements:[], params:[{type:"Text", text:"\ucd08\uc2dc\uacc4", color:"#3D3D3D"}, {type:"Dropdown", options:[["\ubcf4\uc774\uae30", "SHOW"], ["\uc228\uae30\uae30", "HIDE"]], value:"SHOW", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/calc_01.png", size:12}], events:{viewAdd:[function() {
+}}, set_visible_project_timer:{color:"#FFD974", skeleton:"basic", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_timer_visible_1, color:"#3D3D3D"}, {type:"Dropdown", options:[[Lang.Blocks.CALC_timer_visible_show, "SHOW"], [Lang.Blocks.CALC_timer_visible_hide, "HIDE"]], value:"SHOW", fontSize:11}, {type:"Text", text:Lang.Blocks.CALC_timer_visible_2, color:"#3D3D3D"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/calc_01.png", size:12}], events:{viewAdd:[function() {
   Entry.engine && Entry.engine.showProjectTimer();
 }], viewDestroy:[function(b) {
   Entry.engine && Entry.engine.hideProjectTimer(b);
-}]}, def:{params:[null, "HIDE", null], type:"set_visible_project_timer"}, paramsKeyMap:{ACTION:1}, "class":"calc_timer", isNotFor:[], func:function(b, a) {
+}]}, def:{params:[null, "HIDE", null, null], type:"set_visible_project_timer"}, paramsKeyMap:{ACTION:1}, "class":"calc_timer", isNotFor:[], func:function(b, a) {
   var c = a.getField("ACTION", a), d = Entry.engine.projectTimer;
   "SHOW" == c ? d.setVisible(!0) : d.setVisible(!1);
   return a.callReturn();
 }}, timer_variable:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:"\ucd08\uc2dc\uacc4 \uac12", color:"#3D3D3D"}, {type:"Text", text:" ", color:"#3D3D3D"}], events:{}, def:{params:[null, null]}, func:function(b, a) {
   return Entry.container.inputValue.getValue();
-}}, get_project_timer_value:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:"\ucd08\uc2dc\uacc4 \uac12", color:"#3D3D3D"}, {type:"Text", text:" ", color:"#3D3D3D"}], events:{viewAdd:[function() {
+}}, get_project_timer_value:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_get_timer_value, color:"#3D3D3D"}, {type:"Text", text:" ", color:"#3D3D3D"}], events:{viewAdd:[function() {
   Entry.engine && Entry.engine.showProjectTimer();
 }], viewDestroy:[function(b) {
   Entry.engine && Entry.engine.hideProjectTimer(b);
 }]}, def:{params:[null, null], type:"get_project_timer_value"}, "class":"calc_timer", isNotFor:[], func:function(b, a) {
   return Entry.engine.projectTimer.getValue();
-}}, char_at:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uc758", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\ubc88\uc9f8 \uae00\uc790", color:"#3D3D3D"}], events:{}, def:{params:[{type:"text", params:["\uc548\ub155 \uc5d4\ud2b8\ub9ac!"]}, null, {type:"number", params:["1"]}, null], type:"char_at"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"calc_string", isNotFor:[], func:function(b, 
-a) {
+}}, char_at:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_char_at_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_char_at_2, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_char_at_3, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"text", params:[Lang.Blocks.hi_entry]}, null, {type:"number", params:["1"]}, null], type:"char_at"}, paramsKeyMap:{LEFTHAND:1, 
+RIGHTHAND:3}, "class":"calc_string", isNotFor:[], func:function(b, a) {
   var c = a.getStringValue("LEFTHAND", a), d = a.getNumberValue("RIGHTHAND", a) - 1;
   if (0 > d || d > c.length - 1) {
     throw Error();
   }
   return c[d];
-}}, length_of_string:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uc758 \uae00\uc790 \uc218", color:"#3D3D3D"}], events:{}, def:{params:[{type:"text", params:["\uc5d4\ud2b8\ub9ac"]}, null], type:"length_of_string"}, paramsKeyMap:{STRING:0}, "class":"calc_string", isNotFor:[], func:function(b, a) {
+}}, length_of_string:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_length_of_string_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_length_of_string_2, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"text", params:[Lang.Blocks.entry]}, null], type:"length_of_string"}, paramsKeyMap:{STRING:1}, "class":"calc_string", isNotFor:[], func:function(b, a) {
   return a.getStringValue("STRING", a).length;
-}}, substring:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uc758", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\ubc88\uc9f8 \uae00\uc790\ubd80\ud130", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\ubc88\uc9f8 \uae00\uc790\uae4c\uc9c0\uc758 \uae00\uc790", color:"#3D3D3D"}], events:{}, def:{params:[{type:"text", params:["\uc548\ub155 \uc5d4\ud2b8\ub9ac!"]}, 
-null, {type:"number", params:["2"]}, null, {type:"number", params:["5"]}, null], type:"substring"}, paramsKeyMap:{STRING:0, START:2, END:4}, "class":"calc_string", isNotFor:[], func:function(b, a) {
+}}, substring:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_substring_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_substring_2, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_substring_3, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_substring_4, color:"#3D3D3D"}], events:{}, def:{params:[null, 
+{type:"text", params:[Lang.Blocks.hi_entry]}, null, {type:"number", params:["2"]}, null, {type:"number", params:["5"]}, null], type:"substring"}, paramsKeyMap:{STRING:1, START:3, END:5}, "class":"calc_string", isNotFor:[], func:function(b, a) {
   var c = a.getStringValue("STRING", a), d = a.getNumberValue("START", a) - 1, e = a.getNumberValue("END", a) - 1, f = c.length - 1;
   if (0 > d || 0 > e || d > f || e > f) {
     throw Error();
   }
   return c.substring(Math.min(d, e), Math.max(d, e) + 1);
-}}, replace_string:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uc758", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uc744(\ub97c)", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\ub85c \ubc14\uafb8\uae30", color:"#3D3D3D"}], events:{}, def:{params:[{type:"text", params:["\uc548\ub155 \uc5d4\ud2b8\ub9ac!"]}, null, {type:"text", params:["\uc548\ub155"]}, 
-null, {type:"text", params:["\ubc18\uac00\uc6cc"]}, null], type:"replace_string"}, paramsKeyMap:{STRING:0, OLD_WORD:2, NEW_WORD:4}, "class":"calc_string", isNotFor:[], func:function(b, a) {
+}}, replace_string:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_replace_string_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_replace_string_2, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_replace_string_3, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_replace_string_4, color:"#3D3D3D"}], events:{}, 
+def:{params:[null, {type:"text", params:[Lang.Blocks.hi_entry]}, null, {type:"text", params:[Lang.Blocks.hello]}, null, {type:"text", params:[Lang.Blocks.nice]}, null], type:"replace_string"}, paramsKeyMap:{STRING:1, OLD_WORD:3, NEW_WORD:5}, "class":"calc_string", isNotFor:[], func:function(b, a) {
   return a.getStringValue("STRING", a).replace(new RegExp(a.getStringValue("OLD_WORD", a), "gm"), a.getStringValue("NEW_WORD", a));
-}}, change_string_case:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uc758", color:"#3D3D3D"}, {type:"Dropdown", options:[["\ub300\ubb38\uc790", "toUpperCase"], ["\uc18c\ubb38\uc790", "toLowerCase"]], value:"toUpperCase", fontSize:11}, {type:"Text", text:" ", color:"#3D3D3D"}], events:{}, def:{params:[{type:"text", params:["Hello Entry!"]}, null, null, null], type:"change_string_case"}, paramsKeyMap:{STRING:0, CASE:2}, 
-"class":"calc_string", isNotFor:[], func:function(b, a) {
+}}, change_string_case:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_change_string_case_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_change_string_case_2, color:"#3D3D3D"}, {type:"Dropdown", options:[[Lang.Blocks.CALC_change_string_case_sub_1, "toUpperCase"], [Lang.Blocks.CALC_change_string_case_sub_2, "toLowerCase"]], value:"toUpperCase", fontSize:11}, {type:"Text", text:Lang.Blocks.CALC_change_string_case_3, 
+color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"text", params:["Hello Entry!"]}, null, null, null], type:"change_string_case"}, paramsKeyMap:{STRING:1, CASE:3}, "class":"calc_string", isNotFor:[], func:function(b, a) {
   return a.getStringValue("STRING", a)[a.getField("CASE", a)]();
-}}, index_of_string:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uc5d0\uc11c", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uc758 \uc2dc\uc791 \uc704\uce58", color:"#3D3D3D"}], events:{}, def:{params:[{type:"text", params:["\uc548\ub155 \uc5d4\ud2b8\ub9ac!"]}, null, {type:"text", params:["\uc5d4\ud2b8\ub9ac"]}, null], type:"index_of_string"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, 
-"class":"calc_string", isNotFor:[], func:function(b, a) {
+}}, index_of_string:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_index_of_string_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_index_of_string_2, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_index_of_string_3, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"text", params:[Lang.Blocks.hi_entry]}, null, {type:"text", params:[Lang.Blocks.entry]}, 
+null], type:"index_of_string"}, paramsKeyMap:{LEFTHAND:1, RIGHTHAND:3}, "class":"calc_string", isNotFor:[], func:function(b, a) {
   var c = a.getStringValue("LEFTHAND", a), d = a.getStringValue("RIGHTHAND", a), c = c.indexOf(d);
   return -1 < c ? c + 1 : 0;
-}}, combine_something:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uacfc(\uc640)", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\ub97c \ud569\uce58\uae30", color:"#3D3D3D"}], events:{}, def:{params:[{type:"text", params:["\uc548\ub155!"]}, null, {type:"text", params:["\uc5d4\ud2b8\ub9ac"]}, null], type:"combine_something"}, paramsKeyMap:{VALUE1:0, VALUE2:2}, "class":"calc_string", 
-isNotFor:[], func:function(b, a) {
+}}, combine_something:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.VARIABLE_combine_something_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.VARIABLE_combine_something_2, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.VARIABLE_combine_something_3, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"text", params:[Lang.Blocks.block_hi]}, null, {type:"text", 
+params:[Lang.Blocks.entry]}, null], type:"combine_something"}, paramsKeyMap:{VALUE1:1, VALUE2:3}, "class":"calc_string", isNotFor:[], func:function(b, a) {
   var c = a.getStringValue("VALUE1", a), d = a.getStringValue("VALUE2", a);
   return c + d;
-}}, get_sound_volume:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:"\uc18c\ub9bf\uac12", color:"#3D3D3D"}, {type:"Text", text:" ", color:"#3D3D3D"}], events:{}, def:{params:[null, null], type:"get_sound_volume"}, "class":"calc", isNotFor:[""], func:function(b, a) {
+}}, get_sound_volume:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_get_sound_volume, color:"#3D3D3D"}, {type:"Text", text:" ", color:"#3D3D3D"}], events:{}, def:{params:[null, null], type:"get_sound_volume"}, "class":"calc", isNotFor:[""], func:function(b, a) {
   return 100 * createjs.Sound.getVolume();
-}}, quotient_and_mod:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"/", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uc758", color:"#3D3D3D"}, {type:"Dropdown", options:[["\ubaab", "QUOTIENT"], ["\ub098\uba38\uc9c0", "MOD"]], value:"QUOTIENT", fontSize:11}], events:{}, def:{params:[{type:"text", params:["10"]}, null, {type:"text", params:["10"]}, null, null], type:"quotient_and_mod"}, 
-paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2, OPERATOR:4}, "class":"calc", isNotFor:[""], func:function(b, a) {
+}}, quotient_and_mod:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_quotient_and_mod_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_quotient_and_mod_2, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_quotient_and_mod_3, color:"#3D3D3D"}, {type:"Dropdown", options:[[Lang.Blocks.CALC_quotient_and_mod_sub_1, "QUOTIENT"], [Lang.Blocks.CALC_quotient_and_mod_sub_2, 
+"MOD"]], value:"QUOTIENT", fontSize:11}], events:{}, def:{params:[null, {type:"text", params:["10"]}, null, {type:"text", params:["10"]}, null, null], type:"quotient_and_mod"}, paramsKeyMap:{LEFTHAND:1, RIGHTHAND:3, OPERATOR:5}, "class":"calc", isNotFor:[""], func:function(b, a) {
   var c = a.getNumberValue("LEFTHAND", a), d = a.getNumberValue("RIGHTHAND", a);
   if (isNaN(c) || isNaN(d)) {
     throw Error();
   }
   return "QUOTIENT" == a.getField("OPERATOR", a) ? Math.floor(c / d) : c % d;
-}}, choose_project_timer_action:{color:"#FFD974", skeleton:"basic", statements:[], params:[{type:"Text", text:"\ucd08\uc2dc\uacc4", color:"#3D3D3D"}, {type:"Dropdown", options:[["\uc2dc\uc791\ud558\uae30", "START"], ["\uc815\uc9c0\ud558\uae30", "STOP"], ["\ucd08\uae30\ud654\ud558\uae30", "RESET"]], value:"START", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/calc_01.png", size:12}], events:{viewAdd:[function() {
+}}, choose_project_timer_action:{color:"#FFD974", skeleton:"basic", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_choose_project_timer_action_1, color:"#3D3D3D"}, {type:"Dropdown", options:[[Lang.Blocks.CALC_choose_project_timer_action_sub_1, "START"], [Lang.Blocks.CALC_choose_project_timer_action_sub_2, "STOP"], [Lang.Blocks.CALC_choose_project_timer_action_sub_3, "RESET"]], value:"START", fontSize:11}, {type:"Text", text:Lang.Blocks.CALC_choose_project_timer_action_2, color:"#3D3D3D"}, 
+{type:"Indicator", img:"/lib/entryjs/images/block_icon/calc_01.png", size:12}], events:{viewAdd:[function() {
   Entry.engine && Entry.engine.showProjectTimer();
 }], dataDestroy:[function(b) {
   Entry.engine && Entry.engine.hideProjectTimer(b);
-}]}, def:{params:[null, "START", null], type:"choose_project_timer_action"}, paramsKeyMap:{ACTION:1}, "class":"calc_timer", isNotFor:[""], func:function(b, a) {
+}]}, def:{params:[null, "START", null, null], type:"choose_project_timer_action"}, paramsKeyMap:{ACTION:1}, "class":"calc_timer", isNotFor:[""], func:function(b, a) {
   var c = a.getField("ACTION"), d = Entry.engine, e = d.projectTimer;
   "START" == c ? e.isInit ? e.isInit && e.isPaused && (e.pauseStart && (e.pausedTime += (new Date).getTime() - e.pauseStart), delete e.pauseStart, e.isPaused = !1) : d.startProjectTimer() : "STOP" == c ? e.isInit && !e.isPaused && (e.isPaused = !0, e.pauseStart = (new Date).getTime()) : "RESET" == c && e.isInit && (e.setValue(0), e.start = (new Date).getTime(), e.pausedTime = 0, delete e.pauseStart);
   return a.callReturn();
@@ -15697,12 +15699,13 @@ paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2, OPERATOR:4}, "class":"calc", isNotFor:[""
   return a.callReturn();
 }, event:"when_clone_start"}, stop_run:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null]}, func:function(b, a) {
   return Entry.engine.toggleStop();
-}}, repeat_while_true:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Dropdown", options:[["\uc774 \ub420 \ub54c\uae4c\uc9c0", "until"], ["\uc778 \ub3d9\uc548", "while"]], value:"until", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"True"}, null, null], type:"repeat_while_true"}, paramsKeyMap:{BOOL:0, OPTION:1}, statementsKeyMap:{DO:0}, "class":"repeat", 
-isNotFor:[], func:function(b, a) {
+}}, repeat_while_true:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Dropdown", options:[[Lang.Blocks.FLOW_repeat_while_true_until, "until"], [Lang.Blocks.FLOW_repeat_while_true_while, "while"]], value:"until", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"True"}, null, null], type:"repeat_while_true"}, paramsKeyMap:{BOOL:0, OPTION:1}, statementsKeyMap:{DO:0}, 
+"class":"repeat", isNotFor:[], func:function(b, a) {
   var c = a.getBooleanValue("BOOL", a);
   "until" == a.getField("OPTION", a) && (c = !c);
   return (a.isLooped = c) ? a.getStatement("DO", a) : a.callReturn();
-}}, stop_object:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\ubaa8\ub4e0", "all"], ["\uc790\uc2e0\uc758", "thisOnly"], ["\uc774", "thisThread"], ["\uc790\uc2e0\uc758 \ub2e4\ub978", "otherThread"]], value:"all", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null, null], type:"stop_object"}, paramsKeyMap:{TARGET:0}, "class":"terminate", isNotFor:[], func:function(b, a) {
+}}, stop_object:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.FLOW_stop_object_all, "all"], [Lang.Blocks.FLOW_stop_object_this_object, "thisOnly"], [Lang.Blocks.FLOW_stop_object_this_thread, "thisThread"], [Lang.Blocks.FLOW_stop_object_other_thread, "otherThread"]], value:"all", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null, null], type:"stop_object"}, paramsKeyMap:{TARGET:0}, 
+"class":"terminate", isNotFor:[], func:function(b, a) {
   var c = a.getField("TARGET", a), d = Entry.container;
   switch(c) {
     case "all":
@@ -15724,7 +15727,7 @@ isNotFor:[], func:function(b, a) {
   });
   c = null;
   return a.callReturn();
-}}, functionAddButton:{skeleton:"basic_button", color:"#eee", isNotFor:["functionInit"], params:[{type:"Text", text:"\ud568\uc218 \ucd94\uac00", color:"#333", align:"center"}], events:{mousedown:[function() {
+}}, functionAddButton:{skeleton:"basic_button", color:"#eee", isNotFor:["functionInit"], params:[{type:"Text", text:Lang.Workspace.function_create, color:"#333", align:"center"}], events:{mousedown:[function() {
   Entry.variableContainer.createFunction();
 }]}}, function_field_label:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#f9c535", params:[{type:"TextInput", value:"\ud568\uc218"}, {type:"Output", accept:"paramMagnet"}]}, function_field_string:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#ffd974", params:[{type:"Block", accept:"stringMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}]}, function_field_boolean:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#aeb8ff", params:[{type:"Block", accept:"booleanMagnet", 
 restore:!0}, {type:"Output", accept:"paramMagnet"}]}, function_param_string:{skeleton:"basic_string_field", color:"#ffd974", func:function() {
@@ -16112,12 +16115,12 @@ a) {
   var c = Entry.hw.sendQueue, d = a.getField("PORT"), e = a.getNumberValue("VALUE");
   "A" == d ? c.outputA = e : ("B" != d && (c.outputA = e), c.outputB = e);
   return a.callReturn();
-}}, is_clicked:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Text", text:"\ub9c8\uc6b0\uc2a4\ub97c \ud074\ub9ad\ud588\ub294\uac00?", color:"#3D3D3D"}], events:{}, def:{params:[null], type:"is_clicked"}, "class":"boolean_input", isNotFor:[], func:function(b, a) {
+}}, is_clicked:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Text", text:Lang.Blocks.JUDGEMENT_is_clicked, color:"#3D3D3D"}], events:{}, def:{params:[null], type:"is_clicked"}, "class":"boolean_input", isNotFor:[], func:function(b, a) {
   return Entry.stage.isClick;
-}}, is_press_some_key:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Keyboard", value:81}, {type:"Text", text:"\ud0a4\uac00 \ub20c\ub7ec\uc838 \uc788\ub294\uac00?", color:"#3D3D3D"}], events:{}, def:{params:[null, null], type:"is_press_some_key"}, paramsKeyMap:{VALUE:0}, "class":"boolean_input", isNotFor:[], func:function(b, a) {
+}}, is_press_some_key:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Keyboard", value:81}, {type:"Text", text:Lang.Blocks.JUDGEMENT_is_press_some_key_2, color:"#3D3D3D"}], events:{}, def:{params:[null, null], type:"is_press_some_key"}, paramsKeyMap:{VALUE:0}, "class":"boolean_input", isNotFor:[], func:function(b, a) {
   var c = Number(a.getField("VALUE", a));
   return 0 <= Entry.pressedKeys.indexOf(c);
-}}, reach_something:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"collision", fontSize:11}, {type:"Text", text:"\uc5d0 \ub2ff\uc558\ub294\uac00?", color:"#3D3D3D"}], events:{}, def:{params:[null, null], type:"reach_something"}, paramsKeyMap:{VALUE:0}, "class":"boolean_collision", isNotFor:[], func:function(b, a) {
+}}, reach_something:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Text", text:Lang.Blocks.JUDGEMENT_reach_something_1, color:"#3D3D3D"}, {type:"DropdownDynamic", value:null, menuName:"collision", fontSize:11}, {type:"Text", text:Lang.Blocks.JUDGEMENT_reach_something_2, color:"#3D3D3D"}], events:{}, def:{params:[null, null, null], type:"reach_something"}, paramsKeyMap:{VALUE:0}, "class":"boolean_collision", isNotFor:[], func:function(b, a) {
   if (!b.getVisible()) {
     return !1;
   }
@@ -16193,22 +16196,22 @@ a) {
 }}, boolean_smaller:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"<", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"number", params:["10"]}, null, {type:"number", params:["10"]}], type:"boolean_smaller"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"boolean_compare", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("LEFTHAND", a), d = a.getNumberValue("RIGHTHAND", a);
   return c < d;
-}}, boolean_and_or:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Dropdown", options:[["\uadf8\ub9ac\uace0", "AND"], ["\ub610\ub294", "OR"]], value:"AND", fontSize:11}, {type:"Block", accept:"booleanMagnet"}], events:{}, def:{params:[null]}, paramsKeyMap:{LEFTHAND:0, OPERATOR:1, RIGHTHAND:2}, func:function(b, a) {
+}}, boolean_and_or:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Dropdown", options:[[Lang.Blocks.JUDGEMENT_boolean_and, "AND"], [Lang.Blocks.JUDGEMENT_boolean_or, "OR"]], value:"AND", fontSize:11}, {type:"Block", accept:"booleanMagnet"}], events:{}, def:{params:[null]}, paramsKeyMap:{LEFTHAND:0, OPERATOR:1, RIGHTHAND:2}, func:function(b, a) {
   var c = a.getField("OPERATOR", a), d = a.getBooleanValue("LEFTHAND", a), e = a.getBooleanValue("RIGHTHAND", a);
   return "AND" == c ? d && e : d || e;
-}}, boolean_and:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Text", text:"\uadf8\ub9ac\uace0", color:"#3D3D3D"}, {type:"Block", accept:"booleanMagnet"}], events:{}, def:{params:[{type:"True"}, null, {type:"True"}], type:"boolean_and"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"boolean", isNotFor:[], func:function(b, a) {
+}}, boolean_and:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Text", text:Lang.Blocks.JUDGEMENT_boolean_and, color:"#3D3D3D"}, {type:"Block", accept:"booleanMagnet"}], events:{}, def:{params:[{type:"True"}, null, {type:"True"}], type:"boolean_and"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"boolean", isNotFor:[], func:function(b, a) {
   var c = a.getBooleanValue("LEFTHAND", a), d = a.getBooleanValue("RIGHTHAND", a);
   return c && d;
-}}, boolean_or:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Text", text:"\ub610\ub294", color:"#3D3D3D"}, {type:"Block", accept:"booleanMagnet"}], events:{}, def:{params:[{type:"True"}, null, {type:"False"}], type:"boolean_or"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"boolean", isNotFor:[], func:function(b, a) {
+}}, boolean_or:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Text", text:Lang.Blocks.JUDGEMENT_boolean_or, color:"#3D3D3D"}, {type:"Block", accept:"booleanMagnet"}], events:{}, def:{params:[{type:"True"}, null, {type:"False"}], type:"boolean_or"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"boolean", isNotFor:[], func:function(b, a) {
   var c = a.getBooleanValue("LEFTHAND", a), d = a.getBooleanValue("RIGHTHAND", a);
   return c || d;
-}}, boolean_not:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Text", text:"(\uc774)\uac00 \uc544\ub2c8\ub2e4", color:"#3D3D3D"}], events:{}, def:{params:[{type:"True"}, null], type:"boolean_not"}, paramsKeyMap:{VALUE:0}, "class":"boolean", isNotFor:[], func:function(b, a) {
+}}, boolean_not:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Text", text:Lang.Blocks.JUDGEMENT_boolean_not_1, color:"#3D3D3D"}, {type:"Block", accept:"booleanMagnet"}, {type:"Text", text:Lang.Blocks.JUDGEMENT_boolean_not_2, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"True"}, null], type:"boolean_not"}, paramsKeyMap:{VALUE:1}, "class":"boolean", isNotFor:[], func:function(b, a) {
   return !a.getBooleanValue("VALUE");
 }}, true_or_false:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[["\ucc38", "true"], ["\uac70\uc9d3", "false"]], value:"true", fontSize:11}], events:{}, def:{params:[null]}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
   return "true" == a.children[0].textContent;
-}}, True:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Text", text:"\ucc38", color:"#3D3D3D"}], events:{}, def:{params:[null], type:"True"}, func:function(b, a) {
+}}, True:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Text", text:Lang.Blocks.JUDGEMENT_true, color:"#3D3D3D"}], events:{}, def:{params:[null], type:"True"}, func:function(b, a) {
   return !0;
-}, isPrimitive:!0}, False:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Text", text:"\uac70\uc9d3", color:"#3D3D3D"}], events:{}, def:{params:[null], type:"False"}, func:function(b, a) {
+}, isPrimitive:!0}, False:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Text", text:Lang.Blocks.JUDGEMENT_false, color:"#3D3D3D"}], events:{}, def:{params:[null], type:"False"}, func:function(b, a) {
   return !1;
 }, isPrimitive:!0}, boolean_basic_operator:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["=", "EQUAL"], [">", "GREATER"], ["<", "LESS"], ["\u2265", "GREATER_OR_EQUAL"], ["\u2264", "LESS_OR_EQUAL"]], value:"EQUAL", fontSize:11, noArrow:!0}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"text", params:["10"]}, "EQUAL", {type:"text", params:["10"]}], type:"boolean_basic_operator"}, defs:[{params:[{type:"text", 
 params:["10"]}, "EQUAL", {type:"text", params:["10"]}], type:"boolean_basic_operator"}, {params:[{type:"text", params:["10"]}, "GREATER", {type:"text", params:["10"]}], type:"boolean_basic_operator"}, {params:[{type:"text", params:["10"]}, "LESS", {type:"text", params:["10"]}], type:"boolean_basic_operator"}, {params:[{type:"text", params:["10"]}, "GREATER_OR_EQUAL", {type:"text", params:["10"]}], type:"boolean_basic_operator"}, {params:[{type:"text", params:["10"]}, "LESS_OR_EQUAL", {type:"text", 
@@ -16232,7 +16235,7 @@ params:["10"]}], type:"boolean_basic_operator"}], paramsKeyMap:{LEFTHAND:0, OPER
 }}, hide:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null], type:"hide"}, "class":"visibility", isNotFor:[], func:function(b, a) {
   b.setVisible(!1);
   return a.callReturn();
-}}, dialog_time:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["\ub9d0\ud558\uae30", "speak"]], value:"speak", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["\uc548\ub155!"]}, {type:"number", params:["4"]}, null, null], type:"dialog_time"}, paramsKeyMap:{VALUE:0, SECOND:1, OPTION:2}, "class":"say", 
+}}, dialog_time:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[[Lang.Blocks.speak, "speak"]], value:"speak", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"text", params:[Lang.Blocks.block_hi]}, {type:"number", params:["4"]}, null, null], type:"dialog_time"}, paramsKeyMap:{VALUE:0, SECOND:1, OPTION:2}, "class":"say", 
 isNotFor:["textBox"], func:function(b, a) {
   if (!a.isStart) {
     var c = a.getNumberValue("SECOND", a), d = a.getStringValue("VALUE", a), e = a.getField("OPTION", a);
@@ -16247,7 +16250,7 @@ isNotFor:["textBox"], func:function(b, a) {
     }, 1E3 * c);
   }
   return 0 == a.timeFlag ? (delete a.timeFlag, delete a.isStart, b.dialog && b.dialog.remove(), a.callReturn()) : a;
-}}, dialog:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["\ub9d0\ud558\uae30", "speak"]], value:"speak", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["\uc548\ub155!"]}, null, null], type:"dialog"}, paramsKeyMap:{VALUE:0, OPTION:1}, "class":"say", isNotFor:["textBox"], func:function(b, a) {
+}}, dialog:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[[Lang.Blocks.speak, "speak"]], value:"speak", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"text", params:[Lang.Blocks.block_hi]}, null, null], type:"dialog"}, paramsKeyMap:{VALUE:0, OPTION:1}, "class":"say", isNotFor:["textBox"], func:function(b, a) {
   var c = a.getStringValue("VALUE", a);
   c || "number" == typeof c || (c = "    ");
   var d = a.getField("OPTION", a), c = Entry.convertToRoundedDecimals(c, 3);
@@ -16261,7 +16264,7 @@ isNotFor:["textBox"], func:function(b, a) {
   var c = a.getField("VALUE", a), c = b.parent.getPicture(c);
   b.setImage(c);
   return a.callReturn();
-}}, change_to_next_shape:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\ub2e4\uc74c", "next"], ["\uc774\uc804", "prev"]], value:"next", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, null], type:"change_to_next_shape"}, paramsKeyMap:{DRIECTION:0}, "class":"shape", isNotFor:["textBox"], func:function(b, a) {
+}}, change_to_next_shape:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.LOOKS_change_shape_next, "next"], [Lang.Blocks.LOOKS_change_shape_prev, "prev"]], value:"next", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, null], type:"change_to_next_shape"}, paramsKeyMap:{DRIECTION:0}, "class":"shape", isNotFor:["textBox"], func:function(b, a) {
   var c;
   c = a.fields && "prev" === a.getStringField("DRIECTION") ? b.parent.getPrevPicture(b.picture.id) : b.parent.getNextPicture(b.picture.id);
   b.setImage(c);
@@ -16319,14 +16322,14 @@ func:function(b, a) {
   c = b.parent.getPicture(c);
   b.setImage(c);
   return a.callReturn();
-}}, add_effect_amount:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc0c9\uae54", "color"], ["\ubc1d\uae30", "brightness"], ["\ud22c\uba85\ub3c4", "transparency"]], value:"color", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["10"]}, null], type:"add_effect_amount"}, paramsKeyMap:{EFFECT:0, VALUE:1}, "class":"effect", 
-isNotFor:["textBox"], func:function(b, a) {
+}}, add_effect_amount:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.transparency, "transparency"]], value:"color", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["10"]}, null], type:"add_effect_amount"}, paramsKeyMap:{EFFECT:0, VALUE:1}, 
+"class":"effect", isNotFor:["textBox"], func:function(b, a) {
   var c = a.getField("EFFECT", a), d = a.getNumberValue("VALUE", a);
   "color" == c ? b.effect.hsv = d + b.effect.hsv : "brightness" == c ? b.effect.brightness = d + b.effect.brightness : "transparency" == c && (b.effect.alpha -= d / 100);
   b.applyFilter();
   return a.callReturn();
-}}, change_effect_amount:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc0c9\uae54", "color"], ["\ubc1d\uae30", "brightness"], ["\ud22c\uba85\ub3c4", "transparency"]], value:"color", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["100"]}, null], type:"change_effect_amount"}, paramsKeyMap:{EFFECT:0, VALUE:1}, "class":"effect", 
-isNotFor:["textBox"], func:function(b, a) {
+}}, change_effect_amount:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.transparency, "transparency"]], value:"color", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["100"]}, null], type:"change_effect_amount"}, paramsKeyMap:{EFFECT:0, VALUE:1}, 
+"class":"effect", isNotFor:["textBox"], func:function(b, a) {
   var c = a.getField("EFFECT", a), d = a.getNumberValue("VALUE", a);
   "color" == c ? b.effect.hsv = d : "brightness" == c ? b.effect.brightness = d : "transparency" == c && (b.effect.alpha = 1 - d / 100);
   b.applyFilter();
@@ -16343,8 +16346,8 @@ isNotFor:["textBox"], func:function(b, a) {
   "color" == c ? b.effect.hue = d : "brightness" == c ? b.effect.brightness = d : "transparency" == c && (b.effect.alpha = 1 - d / 100);
   b.applyFilter();
   return a.callReturn();
-}}, change_object_index:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\ub9e8 \uc55e\uc73c\ub85c", "FRONT"], ["\uc55e\uc73c\ub85c", "FORWARD"], ["\ub4a4\ub85c", "BACKWARD"], ["\ub9e8 \ub4a4\ub85c", "BACK"]], value:"FRONT", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, null], type:"change_object_index"}, paramsKeyMap:{LOCATION:0}, "class":"z-index", isNotFor:[], func:function(b, 
-a) {
+}}, change_object_index:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.LOOKS_change_object_index_sub_1, "FRONT"], [Lang.Blocks.LOOKS_change_object_index_sub_2, "FORWARD"], [Lang.Blocks.LOOKS_change_object_index_sub_3, "BACKWARD"], [Lang.Blocks.LOOKS_change_object_index_sub_4, "BACK"]], value:"FRONT", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, null], type:"change_object_index"}, 
+paramsKeyMap:{LOCATION:0}, "class":"z-index", isNotFor:[], func:function(b, a) {
   var c, d = a.getField("LOCATION", a), e = Entry.container.getCurrentObjects(), f = e.indexOf(b.parent), e = e.length - 1;
   if (0 > f) {
     throw Error("object is not available for current scene");
@@ -16814,7 +16817,7 @@ isNotFor:["robotis_carCont"], func:function(b, a) {
     Entry.scene.selectScene(c), Entry.engine.fireEvent("when_scene_start");
   }
   return null;
-}}, start_neighbor_scene:{color:"#3BBD70", skeleton:"basic_without_next", statements:[], params:[{type:"Dropdown", options:[["\ub2e4\uc74c", "next"], ["\uc774\uc804", "pre"]], value:"next", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/start_03.png", size:12}], events:{}, def:{params:[null, null], type:"start_neighbor_scene"}, paramsKeyMap:{OPERATOR:0}, "class":"scene", isNotFor:["scene"], func:function(b, a) {
+}}, start_neighbor_scene:{color:"#3BBD70", skeleton:"basic_without_next", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.SCENE_start_scene_next, "next"], [Lang.Blocks.SCENE_start_scene_pre, "pre"]], value:"next", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/start_03.png", size:12}], events:{}, def:{params:[null, null], type:"start_neighbor_scene"}, paramsKeyMap:{OPERATOR:0}, "class":"scene", isNotFor:["scene"], func:function(b, a) {
   var c = Entry.scene.selectedScene, d = Entry.scene.getScenes(), c = d.indexOf(c);
   "next" == a.getField("OPERATOR", a) ? c + 1 < d.length && (d = Entry.scene.getSceneById(d[c + 1].id)) && (Entry.scene.selectScene(d), Entry.engine.fireEvent("when_scene_start")) : 0 < c && (d = Entry.scene.getSceneById(d[c - 1].id)) && (Entry.scene.selectScene(d), Entry.engine.fireEvent("when_scene_start"));
   return null;
@@ -17106,7 +17109,7 @@ func:function(b, a) {
   Entry.container && Entry.container.showProjectAnswer();
 }], viewDestroy:[function(b) {
   Entry.container && Entry.container.hideProjectAnswer(b);
-}]}, def:{params:[{type:"text", params:["\uc548\ub155!"]}, null], type:"ask_and_wait"}, paramsKeyMap:{VALUE:0}, "class":"ask", isNotFor:[], func:function(b, a) {
+}]}, def:{params:[{type:"text", params:[Lang.Blocks.block_hi]}, null], type:"ask_and_wait"}, paramsKeyMap:{VALUE:0}, "class":"ask", isNotFor:[], func:function(b, a) {
   var c = Entry.container.inputValue, d = Entry.stage.inputField, e = a.getValue("VALUE", a);
   if (!e) {
     throw Error("message can not be empty");
@@ -17127,7 +17130,7 @@ func:function(b, a) {
   c.sprite = b;
   a.isInit = !0;
   return a;
-}}, get_canvas_input_value:{color:"#E457DC", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:"\ub300\ub2f5", color:"#fff"}], events:{viewAdd:[function() {
+}}, get_canvas_input_value:{color:"#E457DC", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.VARIABLE_get_canvas_input_value, color:"#fff"}], events:{viewAdd:[function() {
   Entry.container && Entry.container.showProjectAnswer();
 }], viewDestroy:[function(b) {
   Entry.container && Entry.container.hideProjectAnswer(b);
@@ -17190,7 +17193,7 @@ isNotFor:["list", "listNotExist"], func:function(b, a) {
   return a.callReturn();
 }}, options_for_list:{color:"#E457DC", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["\uccab\ubc88\uc9f8", "FIRST"], ["\ub9c8\uc9c0\ub9c9", "LAST"], ["\ubb34\uc791\uc704", "RANDOM"]], value:"FIRST", fontSize:11}], events:{}, def:{params:[null]}, paramsKeyMap:{OPERATOR:0}, func:function(b, a) {
   return a.getField("OPERATOR", a);
-}}, set_visible_answer:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\ubcf4\uc774\uae30", "SHOW"], ["\uc228\uae30\uae30", "HIDE"]], value:"SHOW", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{viewAdd:[function(b) {
+}}, set_visible_answer:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.CALC_timer_visible_show, "SHOW"], [Lang.Blocks.CALC_timer_visible_hide, "HIDE"]], value:"SHOW", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{viewAdd:[function(b) {
   Entry.container && Entry.container.showProjectAnswer();
 }], viewDestroy:[function(b) {
   Entry.container && Entry.container.hideProjectAnswer(b);
