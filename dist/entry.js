@@ -10294,7 +10294,6 @@ Entry.BlockToPyParser = function() {
     if (!a._schema || !a._schema.syntax) {
       return "";
     }
-    console.log("block._schema", a._schema);
     for (var b = /(%\d)/mi, d = /(\$\d)/mi, e = a._schema.syntax.py[0].split(b), f = a._schema.params, g = "", h = 0;h < e.length;h++) {
       var k = e[h];
       if (0 !== k.length) {
