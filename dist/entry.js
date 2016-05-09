@@ -1262,7 +1262,7 @@ Blockly.Blocks.start_drawing = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.start_drawing()\n"]}};
+}, syntax:{js:[], py:["self.start_drawing()"]}};
 Entry.block.start_drawing = function(b, a) {
   b.brush ? b.brush.stop = !1 : Entry.setBasicBrush(b);
   Entry.stage.sortZorder();
@@ -1275,7 +1275,7 @@ Blockly.Blocks.stop_drawing = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.stop_drawing()\n"]}};
+}, syntax:{js:[], py:["self.stop_drawing()"]}};
 Entry.block.stop_drawing = function(b, a) {
   b.brush && b.shape && (b.brush.stop = !0);
   return a.callReturn();
@@ -1288,7 +1288,7 @@ Blockly.Blocks.set_color = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.set_brush_color(%1)\n"]}};
+}, syntax:{js:[], py:["self.set_brush_color(%1)"]}};
 Entry.block.set_color = function(b, a) {
   var c = a.getField("VALUE", a);
   b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
@@ -1301,7 +1301,7 @@ Blockly.Blocks.set_random_color = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.set_brush_random_color()\n"]}};
+}, syntax:{js:[], py:["self.set_brush_random_color()"]}};
 Entry.block.set_random_color = function(b, a) {
   b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
   if (b.brush) {
@@ -1321,7 +1321,7 @@ Blockly.Blocks.change_thickness = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.change_brush_thickness(%1)\n"]}};
+}, syntax:{js:[], py:["self.change_brush_thickness(%1)"]}};
 Entry.block.change_thickness = function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
@@ -1336,7 +1336,7 @@ Blockly.Blocks.set_thickness = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.set_brush_thickness(%1)\n"]}};
+}, syntax:{js:[], py:["self.set_brush_thickness(%1)"]}};
 Entry.block.set_thickness = function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
@@ -1351,7 +1351,7 @@ Blockly.Blocks.change_opacity = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.change_brush_opacity(%1)\n"]}};
+}, syntax:{js:[], py:["self.change_brush_opacity(%1)"]}};
 Entry.block.change_opacity = function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
@@ -1367,7 +1367,7 @@ Blockly.Blocks.set_opacity = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.set_brush_opacity(%1)\n"]}};
+}, syntax:{js:[], py:["self.set_brush_opacity(%1)"]}};
 Entry.block.set_opacity = function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
@@ -1380,7 +1380,7 @@ Blockly.Blocks.brush_erase_all = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.erase_all_brush()\n"]}};
+}, syntax:{js:[], py:["self.erase_all_brush()"]}};
 Entry.block.brush_erase_all = function(b, a) {
   var c = b.brush;
   if (c) {
@@ -1401,7 +1401,7 @@ Blockly.Blocks.brush_stamp = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.stamp()\n"]}};
+}, syntax:{js:[], py:["self.stamp()"]}};
 Entry.block.brush_stamp = function(b, a) {
   b.parent.addStampEntity(b);
   return a.callReturn();
@@ -1414,7 +1414,7 @@ Blockly.Blocks.change_brush_transparency = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.change_brush_transparency(%1)\n"]}};
+}, syntax:{js:[], py:["self.change_brush_transparency(%1)"]}};
 Entry.block.change_brush_transparency = function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
@@ -1430,7 +1430,7 @@ Blockly.Blocks.set_brush_tranparency = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.set_brush_transparency(%1)\n"]}};
+}, syntax:{js:[], py:["self.set_brush_transparency(%1)"]}};
 Entry.block.set_brush_tranparency = function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
@@ -1461,7 +1461,7 @@ Blockly.Blocks.get_x_coordinate = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.CALC_get_x_coordinate, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:["Entry.get_x()\n"]}};
+}, syntax:{js:[], py:["Entry.get_x()"]}};
 Entry.block.get_x_coordinate = function(b, a) {
   return b.getX();
 };
@@ -1470,7 +1470,7 @@ Blockly.Blocks.get_y_coordinate = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.CALC_get_y_coordinate, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:["Entry.get_y()\n"]}};
+}, syntax:{js:[], py:["Entry.get_y()"]}};
 Entry.block.get_y_coordinate = function(b, a) {
   return b.getY();
 };
@@ -1489,7 +1489,7 @@ Blockly.Blocks.get_rotation_direction = {init:function() {
   this.appendDummyInput().appendField(" ");
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:["Entry.get_direction()\n"]}};
+}, syntax:{js:[], py:["Entry.get_direction()"]}};
 Entry.block.get_rotation_direction = function(b, a) {
   return "DIRECTION" == a.getField("OPERATOR", a).toUpperCase() ? parseFloat(b.getDirection().toFixed(1)) : parseFloat(b.getRotation().toFixed(1));
 };
@@ -1498,7 +1498,7 @@ Blockly.Blocks.distance_something = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.CALC_distance_something_1, calcFontColor).appendField(new Blockly.FieldDropdownDynamic("spritesWithMouse", null, !0, calcArrowColor), "VALUE").appendField(Lang.Blocks.CALC_distance_something_2, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:["Entry.get_distance(%1)\n"]}};
+}, syntax:{js:[], py:["Entry.get_distance(%1)"]}};
 Entry.block.distance_something = function(b, a) {
   var c = a.getField("VALUE", a);
   if ("mouse" == c) {
@@ -1512,7 +1512,7 @@ Blockly.Blocks.coordinate_mouse = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.CALC_coordinate_mouse_1, calcFontColor).appendField(new Blockly.FieldDropdown([["x", "x"], ["y", "y"]], null, !0, calcArrowColor), "VALUE").appendField(Lang.Blocks.CALC_coordinate_mouse_2, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:['Entry.get_mouse_coordinate("%1")\n']}};
+}, syntax:{js:[], py:['Entry.get_mouse_coordinate("%1")']}};
 Entry.block.coordinate_mouse = function(b, a) {
   return "x" === a.getField("VALUE", a) ? Number(Entry.stage.mouseCoordinate.x) : Number(Entry.stage.mouseCoordinate.y);
 };
@@ -1522,7 +1522,7 @@ Blockly.Blocks.coordinate_object = {init:function() {
   [Lang.Blocks.CALC_coordinate_size_value, "size"], [Lang.Blocks.CALC_picture_index, "picture_index"], [Lang.Blocks.CALC_picture_name, "picture_name"]], null, !0, calcArrowColor), "COORDINATE").appendField(Lang.Blocks.CALC_coordinate_object_3, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:['Entry.get_object_coordinate("%1", "%2")\n']}};
+}, syntax:{js:[], py:['Entry.get_object_coordinate("%1", "%2")']}};
 Entry.block.coordinate_object = function(b, a) {
   var c = a.getField("VALUE", a), c = "self" == c ? b : Entry.container.getEntity(c);
   switch(a.getField("COORDINATE", a)) {
@@ -1641,7 +1641,7 @@ Blockly.Blocks.calc_operation = {init:function() {
   this.setOutput(!0, "Number");
   this.appendDummyInput().appendField(" ");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:['Entry.calculate(%1, "%2")\n']}};
+}, syntax:{js:[], py:['Entry.calculate(%1, "%2")']}};
 Entry.block.calc_operation = function(b, a) {
   var c = a.getNumberValue("LEFTHAND", a), d = a.getField("VALUE", a);
   if (-1 < ["asin_radian", "acos_radian"].indexOf(d) && (1 < c || -1 > c)) {
@@ -1691,7 +1691,7 @@ Blockly.Blocks.calc_rand = {init:function() {
   this.setOutput(!0, "Number");
   this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_calc_rand_3, calcFontColor);
   this.setInputsInline(!0);
-}, syntax:{js:[], py:["random.randrange(%1, %2)\n"]}};
+}, syntax:{js:[], py:["random.randrange(%1, %2)"]}};
 Entry.block.calc_rand = function(b, a) {
   var c = a.getStringValue("LEFTHAND", a), d = a.getStringValue("RIGHTHAND", a), e = Math.min(c, d), f = Math.max(c, d), c = Entry.isFloat(c);
   return Entry.isFloat(d) || c ? (Math.random() * (f - e) + e).toFixed(2) : Math.floor(Math.random() * (f - e + 1) + e);
@@ -1702,7 +1702,7 @@ Blockly.Blocks.get_date = {init:function() {
   this.appendDummyInput().appendField(" ").appendField(Lang.Blocks.CALC_get_date_2, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:['Entry.get_date_time("%1")\n']}};
+}, syntax:{js:[], py:['Entry.get_date_time("%1")']}};
 Entry.block.get_date = function(b, a) {
   var c = a.getField("VALUE", a), d = new Date;
   return "YEAR" == c ? d.getFullYear() : "MONTH" == c ? d.getMonth() + 1 : "DAY" == c ? d.getDate() : "HOUR" == c ? d.getHours() : "MINUTE" == c ? d.getMinutes() : d.getSeconds();
@@ -1714,7 +1714,7 @@ Blockly.Blocks.get_sound_duration = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.CALC_get_sound_duration_2, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:["Entry.get_sound_duration(%1)\n"]}};
+}, syntax:{js:[], py:["Entry.get_sound_duration(%1)"]}};
 Entry.block.get_sound_duration = function(b, a) {
   for (var c = a.getField("VALUE", a), d = b.parent.sounds, e = 0;e < d.length;e++) {
     if (d[e].id == c) {
@@ -1749,7 +1749,7 @@ Blockly.Blocks.set_visible_project_timer = {init:function() {
   Entry.engine && Entry.engine.showProjectTimer();
 }, whenRemove:function(b) {
   Entry.engine && Entry.engine.hideProjectTimer(b);
-}, syntax:{js:[], py:['Entry.show_timer("%1")\n']}};
+}, syntax:{js:[], py:['Entry.show_timer("%1")']}};
 Entry.block.set_visible_project_timer = function(b, a) {
   var c = a.getField("ACTION", a), d = Entry.engine.projectTimer;
   "SHOW" == c ? d.setVisible(!0) : d.setVisible(!1);
@@ -1773,7 +1773,7 @@ Blockly.Blocks.get_project_timer_value = {init:function() {
   Entry.engine && Entry.engine.showProjectTimer();
 }, whenRemove:function(b) {
   Entry.engine && Entry.engine.hideProjectTimer(b);
-}, syntax:{js:[], py:["Entry.get_timer_value()\n"]}};
+}, syntax:{js:[], py:["Entry.get_timer_value()"]}};
 Entry.block.get_project_timer_value = function(b, a) {
   return Entry.engine.projectTimer.getValue();
 };
@@ -1816,7 +1816,7 @@ Blockly.Blocks.substring = {init:function() {
   this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_substring_4, calcFontColor);
   this.setOutput(!0, "String");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:['"%1"[%2:%3]\n']}};
+}, syntax:{js:[], py:['"%1"[%2:%3]']}};
 Entry.block.substring = function(b, a) {
   var c = a.getStringValue("STRING", a), d = a.getNumberValue("START", a) - 1, e = a.getNumberValue("END", a) - 1, f = c.length - 1;
   if (0 > d || 0 > e || d > f || e > f) {
@@ -1835,7 +1835,7 @@ Blockly.Blocks.replace_string = {init:function() {
   this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_replace_string_4, calcFontColor);
   this.setOutput(!0, "String");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:['"%1".replace("%2", "%3")\n']}};
+}, syntax:{js:[], py:['"%1".replace("%2", "%3")']}};
 Entry.block.replace_string = function(b, a) {
   return a.getStringValue("STRING", a).replace(new RegExp(a.getStringValue("OLD_WORD", a), "gm"), a.getStringValue("NEW_WORD", a));
 };
@@ -1848,7 +1848,7 @@ Blockly.Blocks.change_string_case = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.CALC_change_string_case_3, calcFontColor);
   this.setOutput(!0, "String");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:['Entry.change_string_case("%1", "%2")\n']}};
+}, syntax:{js:[], py:['Entry.change_string_case("%1", "%2")']}};
 Entry.block.change_string_case = function(b, a) {
   return a.getStringValue("STRING", a)[a.getField("CASE", a)]();
 };
@@ -1861,7 +1861,7 @@ Blockly.Blocks.index_of_string = {init:function() {
   this.setOutput(!0, "Number");
   this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_index_of_string_3, calcFontColor);
   this.setInputsInline(!0);
-}, syntax:{js:[], py:['"%1".index(%2)\n']}};
+}, syntax:{js:[], py:['"%1".index(%2)']}};
 Entry.block.index_of_string = function(b, a) {
   var c = a.getStringValue("LEFTHAND", a), d = a.getStringValue("RIGHTHAND", a), c = c.indexOf(d);
   return -1 < c ? c + 1 : 0;
@@ -1875,7 +1875,7 @@ Blockly.Blocks.combine_something = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_combine_something_3, calcFontColor);
   this.setInputsInline(!0);
   this.setOutput(!0, "String");
-}, syntax:{js:[], py:['"%1".index(%2)\n']}};
+}, syntax:{js:[], py:['"%1".index(%2)']}};
 Entry.block.combine_something = function(b, a) {
   var c = a.getStringValue("VALUE1", a), d = a.getStringValue("VALUE2", a);
   return c + d;
@@ -1885,7 +1885,7 @@ Blockly.Blocks.get_sound_volume = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.CALC_get_sound_volume, calcFontColor).appendField(" ", calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:["Entry.get_sound_volume()\n"]}};
+}, syntax:{js:[], py:["Entry.get_sound_volume()"]}};
 Entry.block.get_sound_volume = function(b, a) {
   return 100 * createjs.Sound.getVolume();
 };
@@ -1897,7 +1897,7 @@ Blockly.Blocks.quotient_and_mod = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.CALC_quotient_and_mod_4, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:['Entry.get_quotient_remainder(%1, %2, "%3"\n']}};
+}, syntax:{js:[], py:['Entry.get_quotient_remainder(%1, %2, "%3"']}};
 Entry.block.quotient_and_mod = function(b, a) {
   var c = a.getNumberValue("LEFTHAND", a), d = a.getNumberValue("RIGHTHAND", a);
   if (isNaN(c) || isNaN(d)) {
@@ -1916,7 +1916,7 @@ Blockly.Blocks.choose_project_timer_action = {init:function() {
   Entry.engine && Entry.engine.showProjectTimer();
 }, whenRemove:function(b) {
   Entry.engine && Entry.engine.hideProjectTimer(b);
-}, syntax:{js:[], py:['Entry.act_timer("%1")\n']}};
+}, syntax:{js:[], py:['Entry.act_timer("%1")']}};
 Entry.block.choose_project_timer_action = function(b, a) {
   var c = a.getField("ACTION"), d = Entry.engine, e = d.projectTimer;
   "START" == c ? e.isInit ? e.isInit && e.isPaused && (e.pauseStart && (e.pausedTime += (new Date).getTime() - e.pauseStart), delete e.pauseStart, e.isPaused = !1) : d.startProjectTimer() : "STOP" == c ? e.isInit && !e.isPaused && (e.isPaused = !0, e.pauseStart = (new Date).getTime()) : "RESET" == c && e.isInit && (e.setValue(0), e.start = (new Date).getTime(), e.pausedTime = 0, delete e.pauseStart);
@@ -1930,7 +1930,7 @@ Blockly.Blocks.wait_second = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.sleep_seconds(%1)\n"]}};
+}, syntax:{js:[], py:["self.sleep_seconds(%1)"]}};
 Entry.block.wait_second = function(b, a) {
   if (a.isStart) {
     if (1 == a.timeFlag) {
@@ -1958,7 +1958,7 @@ Blockly.Blocks.repeat_basic = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["for i in range(%1):\n$1\n"]}};
+}, syntax:{js:[], py:["for i in range(%1):\n$1"]}};
 Entry.block.repeat_basic = function(b, a) {
   var c;
   if (!a.isLooped) {
@@ -1982,7 +1982,7 @@ Blockly.Blocks.repeat_inf = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["while True:\n$1\n"]}};
+}, syntax:{js:[], py:["while True:\n$1"]}};
 Entry.block.repeat_inf = function(b, a) {
   a.isLooped = !0;
   return a.getStatement("DO");
@@ -1993,7 +1993,7 @@ Blockly.Blocks.stop_repeat = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["break\n"]}};
+}, syntax:{js:[], py:["break"]}};
 Entry.block.stop_repeat = function(b, a) {
   return this.executor.break();
 };
@@ -2005,7 +2005,7 @@ Blockly.Blocks.wait_until_true = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["while !%1:\n"]}};
+}, syntax:{js:[], py:["while !%1:"]}};
 Entry.block.wait_until_true = function(b, a) {
   return a.getBooleanValue("BOOL", a) ? a.callReturn() : a;
 };
@@ -2018,7 +2018,7 @@ Blockly.Blocks._if = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["if %1:\n$1\n"]}};
+}, syntax:{js:[], py:["if %1:\n$1"]}};
 Entry.block._if = function(b, a) {
   return a.isLooped ? (delete a.isLooped, a.callReturn()) : a.getBooleanValue("BOOL", a) ? (a.isLooped = !0, a.getStatement("STACK", a)) : a.callReturn();
 };
@@ -2033,7 +2033,7 @@ Blockly.Blocks.if_else = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["if %1:\n $1\nelse:\n$2\n"]}};
+}, syntax:{js:[], py:["if %1:\n $1\nelse:\n$2"]}};
 Entry.block.if_else = function(b, a) {
   if (a.isLooped) {
     return delete a.isLooped, a.callReturn();
@@ -2050,7 +2050,7 @@ Blockly.Blocks.create_clone = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["Entry.create_clone(%1)\n"]}};
+}, syntax:{js:[], py:["Entry.create_clone(%1)"]}};
 Entry.block.create_clone = function(b, a) {
   var c = a.getField("VALUE", a), d = a.callReturn();
   "self" == c ? b.parent.addCloneEntity(b.parent, b, null) : Entry.container.getObject(c).addCloneEntity(b.parent, null, null);
@@ -2061,7 +2061,7 @@ Blockly.Blocks.delete_clone = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.FLOW_delete_clone).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/flow_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
-}, syntax:{js:[], py:["self.delete_clone()\n"]}};
+}, syntax:{js:[], py:["self.delete_clone()"]}};
 Entry.block.delete_clone = function(b, a) {
   if (!b.isClone) {
     return a.callReturn();
@@ -2073,7 +2073,7 @@ Blockly.Blocks.when_clone_start = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_clone.png", "*", "start")).appendField(Lang.Blocks.FLOW_when_clone_start);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["Entry.isClonedFirst()\n"]}};
+}, syntax:{js:[], py:["Entry.isClonedFirst()"]}};
 Entry.block.when_clone_start = function(b, a) {
   return a.callReturn();
 };
@@ -2095,7 +2095,7 @@ Blockly.Blocks.repeat_while_true = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:['Entry.repeat(%1, "%2")\n']}};
+}, syntax:{js:[], py:['Entry.repeat(%1, "%2")']}};
 Entry.block.repeat_while_true = function(b, a) {
   var c = a.getBooleanValue("BOOL", a);
   "until" == a.getField("OPTION", a) && (c = !c);
@@ -2109,7 +2109,7 @@ Blockly.Blocks.stop_object = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["Entry.stop(%1)\n"]}};
+}, syntax:{js:[], py:["Entry.stop(%1)"]}};
 Entry.block.stop_object = function(b, a) {
   var c = a.getField("TARGET", a), d = Entry.container;
   switch(c) {
@@ -2128,7 +2128,7 @@ Blockly.Blocks.restart_project = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.FLOW_restart).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/flow_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
-}, syntax:{js:[], py:["Entry.restart()\n"]}};
+}, syntax:{js:[], py:["Entry.restart()"]}};
 Entry.block.restart_project = function(b, a) {
   Entry.engine.toggleStop();
   Entry.engine.toggleRun();
@@ -2139,7 +2139,7 @@ Blockly.Blocks.remove_all_clones = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["Entry.remove_all_clones()\n"]}};
+}, syntax:{js:[], py:["Entry.remove_all_clones()"]}};
 Entry.block.remove_all_clones = function(b, a) {
   var c = b.parent.getClonedEntities();
   c.map(function(a) {
@@ -2943,7 +2943,7 @@ Blockly.Blocks.is_clicked = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.JUDGEMENT_is_clicked, "#3D3D3D");
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:["Entry.is_mouse_clicked()\n"]}};
+}, syntax:{js:[], py:["Entry.is_mouse_clicked()"]}};
 Entry.block.is_clicked = function(b, a) {
   return Entry.stage.isClick;
 };
@@ -2953,7 +2953,7 @@ Blockly.Blocks.is_press_some_key = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldKeydownInput("81"), "VALUE").appendField(Lang.Blocks.JUDGEMENT_is_press_some_key_2, "#3D3D3D");
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:["Entry.is_key_pressed(%1)\n"]}};
+}, syntax:{js:[], py:["Entry.is_key_pressed(%1)"]}};
 Entry.block.is_press_some_key = function(b, a) {
   var c = Number(a.getField("VALUE", a));
   return 0 <= Entry.pressedKeys.indexOf(c);
@@ -2965,7 +2965,7 @@ Blockly.Blocks.reach_something = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.JUDGEMENT_reach_something_2, "#3D3D3D");
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:["Entry.is_reached(%1)\n"]}};
+}, syntax:{js:[], py:["Entry.is_reached(%1)"]}};
 Entry.block.reach_something = function(b, a) {
   if (!b.getVisible()) {
     return !1;
@@ -3184,7 +3184,7 @@ Blockly.Blocks.show = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.show()\n"]}};
+}, syntax:{js:[], py:["self.show()"]}};
 Entry.block.show = function(b, a) {
   b.setVisible(!0);
   return a.callReturn();
@@ -3195,7 +3195,7 @@ Blockly.Blocks.hide = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.hide()\n"]}};
+}, syntax:{js:[], py:["self.hide()"]}};
 Entry.block.hide = function(b, a) {
   b.setVisible(!1);
   return a.callReturn();
@@ -3212,7 +3212,7 @@ Blockly.Blocks.dialog_time = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:['self.dialog_by_seconds(%1, %2, "%3")\n']}};
+}, syntax:{js:[], py:['self.dialog_by_seconds(%1, %2, "%3")']}};
 Entry.block.dialog_time = function(b, a) {
   if (!a.isStart) {
     var c = a.getNumberValue("SECOND", a), d = a.getStringValue("VALUE", a), e = a.getField("OPTION", a);
@@ -3238,7 +3238,7 @@ Blockly.Blocks.dialog = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.dialog(%1)\n"]}};
+}, syntax:{js:[], py:["self.dialog(%1)"]}};
 Entry.block.dialog = function(b, a) {
   var c = a.getStringValue("VALUE", a);
   c || "number" == typeof c || (c = "    ");
@@ -3253,7 +3253,7 @@ Blockly.Blocks.remove_dialog = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.remove_dialog()\n"]}};
+}, syntax:{js:[], py:["self.remove_dialog()"]}};
 Entry.block.remove_dialog = function(b, a) {
   b.dialog && b.dialog.remove();
   return a.callReturn();
@@ -3278,7 +3278,7 @@ Blockly.Blocks.change_to_next_shape = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.change_shape_to_next()\n"]}};
+}, syntax:{js:[], py:["self.change_shape_to_next()"]}};
 Entry.block.change_to_next_shape = function(b, a) {
   var c;
   c = a.fields && "prev" === a.getStringField("DRIECTION") ? b.parent.getPrevPicture(b.picture.id) : b.parent.getNextPicture(b.picture.id);
@@ -3295,7 +3295,7 @@ Blockly.Blocks.set_effect_volume = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.add_effect(%1, %2)\n"]}};
+}, syntax:{js:[], py:["self.add_effect(%1, %2)"]}};
 Entry.block.set_effect_volume = function(b, a) {
   var c = a.getField("EFFECT", a), d = a.getNumberValue("VALUE", a);
   "color" == c ? b.effect.hue = d + b.effect.hue : "lens" != c && "swriling" != c && "pixel" != c && "mosaic" != c && ("brightness" == c ? b.effect.brightness = d + b.effect.brightness : "blur" != c && "opacity" == c && (b.effect.alpha += d / 100));
@@ -3312,7 +3312,7 @@ Blockly.Blocks.set_effect = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.set_effect(%1, %2)\n"]}};
+}, syntax:{js:[], py:["self.set_effect(%1, %2)"]}};
 Entry.block.set_effect = function(b, a) {
   var c = a.getField("EFFECT", a), d = a.getNumberValue("VALUE", a);
   "color" == c ? b.effect.hue = d : "lens" != c && "swriling" != c && "pixel" != c && "mosaic" != c && ("brightness" == c ? b.effect.brightness = d : "blur" != c && "opacity" == c && (b.effect.alpha = d / 100));
@@ -3325,7 +3325,7 @@ Blockly.Blocks.erase_all_effects = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.remove_effect_all()\n"]}};
+}, syntax:{js:[], py:["self.remove_effect_all()"]}};
 Entry.block.erase_all_effects = function(b, a) {
   b.resetFilter();
   return a.callReturn();
@@ -3368,7 +3368,7 @@ Blockly.Blocks.change_scale_size = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.change_size(%1)\n"]}};
+}, syntax:{js:[], py:["self.change_size(%1)"]}};
 Entry.block.change_scale_size = function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setSize(b.getSize() + c);
@@ -3382,7 +3382,7 @@ Blockly.Blocks.set_scale_size = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.set_size(%1)\n"]}};
+}, syntax:{js:[], py:["self.set_size(%1)"]}};
 Entry.block.set_scale_size = function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setSize(c);
@@ -3394,7 +3394,7 @@ Blockly.Blocks.flip_y = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.flip_horizontally()\n"]}};
+}, syntax:{js:[], py:["self.flip_horizontally()"]}};
 Entry.block.flip_y = function(b, a) {
   b.setScaleX(-1 * b.getScaleX());
   return a.callReturn();
@@ -3405,7 +3405,7 @@ Blockly.Blocks.flip_x = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.flip_vertically()\n"]}};
+}, syntax:{js:[], py:["self.flip_vertically()"]}};
 Entry.block.flip_x = function(b, a) {
   b.setScaleY(-1 * b.getScaleY());
   return a.callReturn();
@@ -3445,7 +3445,7 @@ Blockly.Blocks.change_to_some_shape = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.change_shape_to(%1)\n"]}};
+}, syntax:{js:[], py:["self.change_shape_to(%1)"]}};
 Entry.block.change_to_some_shape = function(b, a) {
   var c = a.getStringValue("VALUE");
   Entry.parseNumber(c);
@@ -3463,7 +3463,7 @@ Blockly.Blocks.add_effect_amount = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:['self.add_effect_by_amount("%1", %2)\n']}};
+}, syntax:{js:[], py:['self.add_effect_by_amount("%1", %2)']}};
 Entry.block.add_effect_amount = function(b, a) {
   var c = a.getField("EFFECT", a), d = a.getNumberValue("VALUE", a);
   "color" == c ? b.effect.hsv = d + b.effect.hsv : "brightness" == c ? b.effect.brightness = d + b.effect.brightness : "transparency" == c && (b.effect.alpha -= d / 100);
@@ -3480,7 +3480,7 @@ Blockly.Blocks.change_effect_amount = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:['self.set_effect_by_amount("%1", %2)\n']}};
+}, syntax:{js:[], py:['self.set_effect_by_amount("%1", %2)']}};
 Entry.block.change_effect_amount = function(b, a) {
   var c = a.getField("EFFECT", a), d = a.getNumberValue("VALUE", a);
   "color" == c ? b.effect.hsv = d : "brightness" == c ? b.effect.brightness = d : "transparency" == c && (b.effect.alpha = 1 - d / 100);
@@ -3528,7 +3528,7 @@ Blockly.Blocks.change_object_index = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:['self.locate_to("%1")\n']}};
+}, syntax:{js:[], py:['self.locate_to("%1")']}};
 Entry.block.change_object_index = function(b, a) {
   var c, d = a.getField("LOCATION", a), e = Entry.container.getCurrentObjects(), f = e.indexOf(b.parent), e = e.length - 1;
   if (0 > f) {
@@ -3558,7 +3558,7 @@ Blockly.Blocks.move_direction = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.move_to_direction(%1)\n"]}};
+}, syntax:{js:[], py:["self.move_to_direction(%1)"]}};
 Entry.block.move_direction = function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setX(b.getX() + c * Math.cos((b.getRotation() + b.getDirection() - 90) / 180 * Math.PI));
@@ -3574,7 +3574,7 @@ Blockly.Blocks.move_x = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.change_x(%1)\n"]}};
+}, syntax:{js:[], py:["self.change_x(%1)"]}};
 Entry.block.move_x = function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setX(b.getX() + c);
@@ -3589,7 +3589,7 @@ Blockly.Blocks.move_y = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.change_y(%1)\n"]}};
+}, syntax:{js:[], py:["self.change_y(%1)"]}};
 Entry.block.move_y = function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setY(b.getY() + c);
@@ -3608,7 +3608,7 @@ Blockly.Blocks.locate_xy_time = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.move_xy_by_seconds(%1, %2, %3)\n"]}};
+}, syntax:{js:[], py:["self.move_xy_by_seconds(%1, %2, %3)"]}};
 Entry.block.locate_xy_time = function(b, a) {
   if (!a.isStart) {
     var c;
@@ -3698,7 +3698,7 @@ Blockly.Blocks.locate_xy = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.move_xy(%1, %2)\n"]}};
+}, syntax:{js:[], py:["self.move_xy(%1, %2)"]}};
 Entry.block.locate_xy = function(b, a) {
   var c = a.getNumberValue("VALUE1", a);
   b.setX(c);
@@ -3715,7 +3715,7 @@ Blockly.Blocks.locate_x = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.move_x(%1)\n"]}};
+}, syntax:{js:[], py:["self.move_x(%1)"]}};
 Entry.block.locate_x = function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setX(c);
@@ -3730,7 +3730,7 @@ Blockly.Blocks.locate_y = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.move_y(%1)\n"]}};
+}, syntax:{js:[], py:["self.move_y(%1)"]}};
 Entry.block.locate_y = function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setY(c);
@@ -3745,7 +3745,7 @@ Blockly.Blocks.locate = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.move_at(%1)\n"]}};
+}, syntax:{js:[], py:["self.move_at(%1)"]}};
 Entry.block.locate = function(b, a) {
   var c = a.getField("VALUE", a), d;
   "mouse" == c ? (c = Entry.stage.mouseCoordinate.x, d = Entry.stage.mouseCoordinate.y) : (d = Entry.container.getEntity(c), c = d.getX(), d = d.getY());
@@ -3766,7 +3766,7 @@ Blockly.Blocks.move_xy_time = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.move_xy_by_seconds(%1, %2, %3)\n"]}};
+}, syntax:{js:[], py:["self.move_xy_by_seconds(%1, %2, %3)"]}};
 Entry.block.move_xy_time = function(b, a) {
   if (!a.isStart) {
     var c;
@@ -3837,7 +3837,7 @@ Blockly.Blocks.bounce_wall = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.on_bounce_at_wall()\n"]}};
+}, syntax:{js:[], py:["self.on_bounce_at_wall()"]}};
 Entry.block.bounce_wall = function(b, a) {
   var c = b.parent.getRotateMethod(), d = "free" == c ? (b.getRotation() + b.getDirection()).mod(360) : b.getDirection(), e = Entry.Utils.COLLISION.NONE;
   if (90 > d && 0 <= d || 360 > d && 270 <= d) {
@@ -3885,7 +3885,7 @@ Blockly.Blocks.see_angle_object = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.look_at(%1)\n"]}};
+}, syntax:{js:[], py:["self.look_at(%1)"]}};
 Entry.block.see_angle_object = function(b, a) {
   var c = a.getField("VALUE", a), d = b.getX(), e = b.getY();
   if (b.parent.id == c) {
@@ -3935,7 +3935,7 @@ Blockly.Blocks.locate_object_time = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.move_at_by_seconds(%1, %2)\n"]}};
+}, syntax:{js:[], py:["self.move_at_by_seconds(%1, %2)"]}};
 Entry.block.locate_object_time = function(b, a) {
   if (!a.isStart) {
     var c, d, e;
@@ -3964,7 +3964,7 @@ Blockly.Blocks.rotate_absolute = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.set_direction(%1)\n"]}};
+}, syntax:{js:[], py:["self.set_direction(%1)"]}};
 Entry.block.rotate_absolute = function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setRotation(c);
@@ -3978,7 +3978,7 @@ Blockly.Blocks.rotate_relative = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.rotate_direction(%1)\n"]}};
+}, syntax:{js:[], py:["self.rotate_direction(%1)"]}};
 Entry.block.rotate_relative = function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setRotation(c + b.getRotation());
@@ -3992,7 +3992,7 @@ Blockly.Blocks.direction_absolute = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.set_moving_direction(%1)\n"]}};
+}, syntax:{js:[], py:["self.set_moving_direction(%1)"]}};
 Entry.block.direction_absolute = function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setDirection(c);
@@ -4006,7 +4006,7 @@ Blockly.Blocks.direction_relative = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.rotate_moving_direction(%1)\n"]}};
+}, syntax:{js:[], py:["self.rotate_moving_direction(%1)"]}};
 Entry.block.direction_relative = function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setDirection(c + b.getDirection());
@@ -4022,7 +4022,7 @@ Blockly.Blocks.move_to_angle = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.move_to_by(%1, %2)\n"]}};
+}, syntax:{js:[], py:["self.move_to_by(%1, %2)"]}};
 Entry.block.move_to_angle = function(b, a) {
   var c = a.getNumberValue("VALUE", a), d = a.getNumberValue("ANGLE", a);
   b.setX(b.getX() + c * Math.cos((d - 90) / 180 * Math.PI));
@@ -4041,7 +4041,7 @@ Blockly.Blocks.rotate_by_time = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.rotate_direction_by_seconds(%1, %2)\n"]}};
+}, syntax:{js:[], py:["self.rotate_direction_by_seconds(%1, %2)"]}};
 Entry.block.rotate_by_time = function(b, a) {
   if (!a.isStart) {
     var c;
@@ -4068,7 +4068,7 @@ Blockly.Blocks.direction_relative_duration = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.rotate_moving_direction_by_seconds(%1, %2)\n"]}};
+}, syntax:{js:[], py:["self.rotate_moving_direction_by_seconds(%1, %2)"]}};
 Entry.block.direction_relative_duration = function(b, a) {
   if (!a.isStart) {
     var c;
@@ -4658,7 +4658,7 @@ Blockly.Blocks.when_scene_start = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_scene_1_2.png", "*", "start")).appendField(Lang.Blocks.SCENE_when_scene_start);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.on_start_scene()\n"]}};
+}, syntax:{js:[], py:["self.on_start_scene()"]}};
 Entry.block.when_scene_start = function(b, a) {
   return a.callReturn();
 };
@@ -4668,7 +4668,7 @@ Blockly.Blocks.start_scene = {init:function() {
   this.setInputsInline(!0);
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
-}, syntax:{js:[], py:["Entry.on_start_scene(%1)\n"]}};
+}, syntax:{js:[], py:["Entry.on_start_scene(%1)"]}};
 Entry.block.start_scene = function(b, a) {
   var c = a.getField("VALUE", a);
   if (c = Entry.scene.getSceneById(c)) {
@@ -4682,7 +4682,7 @@ Blockly.Blocks.start_neighbor_scene = {init:function() {
   this.setInputsInline(!0);
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
-}, syntax:{js:[], py:['self.start_neighbor_scene("%1")\n']}};
+}, syntax:{js:[], py:['self.start_neighbor_scene("%1")']}};
 Entry.block.start_neighbor_scene = function(b, a) {
   var c = Entry.scene.selectedScene, d = Entry.scene.getScenes(), c = d.indexOf(c);
   "next" == a.getField("OPERATOR", a) ? c + 1 < d.length && (d = Entry.scene.getSceneById(d[c + 1].id)) && (Entry.scene.selectScene(d), Entry.engine.fireEvent("when_scene_start")) : 0 < c && (d = Entry.scene.getSceneById(d[c - 1].id)) && (Entry.scene.selectScene(d), Entry.engine.fireEvent("when_scene_start"));
@@ -4791,7 +4791,7 @@ Blockly.Blocks.sound_volume_change = {init:function() {
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-}, syntax:{js:[], py:["Entry.change_volume_by_percent(%1)\n"]}};
+}, syntax:{js:[], py:["Entry.change_volume_by_percent(%1)"]}};
 Entry.block.sound_volume_change = function(b, a) {
   var c = a.getNumberValue("VALUE", a) / 100, c = c + createjs.Sound.getVolume();
   1 < c && (c = 1);
@@ -4807,7 +4807,7 @@ Blockly.Blocks.sound_volume_set = {init:function() {
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-}, syntax:{js:[], py:["Entry.set_volume_by_percent(%1)\n"]}};
+}, syntax:{js:[], py:["Entry.set_volume_by_percent(%1)"]}};
 Entry.block.sound_volume_set = function(b, a) {
   var c = a.getNumberValue("VALUE", a) / 100;
   1 < c && (c = 1);
@@ -4821,7 +4821,7 @@ Blockly.Blocks.sound_silent_all = {init:function() {
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-}, syntax:{js:[], py:["Entry.stop_all_sound()\n"]}};
+}, syntax:{js:[], py:["Entry.stop_all_sound()"]}};
 Entry.block.sound_silent_all = function(b, a) {
   createjs.Sound.stop();
   return a.callReturn();
@@ -4845,7 +4845,7 @@ Blockly.Blocks.sound_something_with_block = {init:function() {
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-}, syntax:{js:[], py:["Entry.play_sound(%1)\n"]}};
+}, syntax:{js:[], py:["Entry.play_sound(%1)"]}};
 Entry.block.sound_something_with_block = function(b, a) {
   var c = a.getStringValue("VALUE", a);
   (c = b.parent.getSound(c)) && createjs.Sound.play(c.id);
@@ -4861,7 +4861,7 @@ Blockly.Blocks.sound_something_second_with_block = {init:function() {
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-}, syntax:{js:[], py:["Entry.play_sound_by_seconds(%1, %2)\n"]}};
+}, syntax:{js:[], py:["Entry.play_sound_by_seconds(%1, %2)"]}};
 Entry.block.sound_something_second_with_block = function(b, a) {
   var c = a.getStringValue("VALUE", a), d = a.getNumberValue("SECOND", a);
   (c = b.parent.getSound(c)) && createjs.Sound.play(c.id, {startTime:0, duration:1E3 * d});
@@ -4875,7 +4875,7 @@ Blockly.Blocks.sound_something_wait_with_block = {init:function() {
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-}, syntax:{js:[], py:["Entry.play_sound_and_wait(%1)\n"]}};
+}, syntax:{js:[], py:["Entry.play_sound_and_wait(%1)"]}};
 Entry.block.sound_something_wait_with_block = function(b, a) {
   if (a.isPlay) {
     if (1 == a.playState) {
@@ -4905,7 +4905,7 @@ Blockly.Blocks.sound_something_second_wait_with_block = {init:function() {
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-}, syntax:{js:[], py:["Entry.play_sound_by_seconds_and_wait(%1, %2)\n"]}};
+}, syntax:{js:[], py:["Entry.play_sound_by_seconds_and_wait(%1, %2)"]}};
 Entry.block.sound_something_second_wait_with_block = function(b, a) {
   if (a.isPlay) {
     if (1 == a.playState) {
@@ -4941,7 +4941,7 @@ Blockly.Blocks.sound_from_to = {init:function() {
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-}, syntax:{js:[], py:["Entry.play_sound_by_duration(%1, %2, %3)\n"]}};
+}, syntax:{js:[], py:["Entry.play_sound_by_duration(%1, %2, %3)"]}};
 Entry.block.sound_from_to = function(b, a) {
   var c = a.getStringValue("VALUE", a);
   if (c = b.parent.getSound(c)) {
@@ -4962,7 +4962,7 @@ Blockly.Blocks.sound_from_to_and_wait = {init:function() {
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-}, syntax:{js:[], py:["Entry.play_sound_by_duration_and_wait(%1, %2, %3)\n"]}};
+}, syntax:{js:[], py:["Entry.play_sound_by_duration_and_wait(%1, %2, %3)"]}};
 Entry.block.sound_from_to_and_wait = function(b, a) {
   if (a.isPlay) {
     if (1 == a.playState) {
@@ -4989,7 +4989,7 @@ Blockly.Blocks.when_run_button_click = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_play.png", "*", "start")).appendField(Lang.Blocks.START_when_run_button_click);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["Entry.on_start_program()\n"]}};
+}, syntax:{js:[], py:["Entry.on_start_program()"]}};
 Entry.block.when_run_button_click = function(b, a) {
   return a.callReturn();
 };
@@ -4999,7 +4999,7 @@ Blockly.Blocks.press_some_key = {init:function() {
   "13"], [Lang.Blocks.START_press_some_key_space, "32"]]), "VALUE").appendField(Lang.Blocks.START_press_some_key_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["Entry.is_key_pressed()\n"]}};
+}, syntax:{js:[], py:["Entry.is_key_pressed()"]}};
 Entry.block.press_some_key = function(b, a) {
   return a.callReturn();
 };
@@ -5008,7 +5008,7 @@ Blockly.Blocks.when_some_key_pressed = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_keyboard.png", "*", "start")).appendField(Lang.Blocks.START_press_some_key_1).appendField(new Blockly.FieldKeydownInput("81"), "VALUE").appendField(Lang.Blocks.START_press_some_key_2);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["Entry.on_key_press(%1)\n"]}};
+}, syntax:{js:[], py:["Entry.on_key_press(%1)"]}};
 Entry.block.when_some_key_pressed = function(b, a) {
   return a.callReturn();
 };
@@ -5017,7 +5017,7 @@ Blockly.Blocks.mouse_clicked = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_mouse.png", "*", "start")).appendField(Lang.Blocks.START_mouse_clicked);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["Entry.on_mouse_down()\n"]}};
+}, syntax:{js:[], py:["Entry.on_mouse_down()"]}};
 Entry.block.mouse_clicked = function(b, a) {
   return a.callReturn();
 };
@@ -5026,7 +5026,7 @@ Blockly.Blocks.mouse_click_cancled = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_mouse.png", "*", "start")).appendField(Lang.Blocks.START_mouse_click_cancled);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["Entry.on_mouse_up()\n"]}};
+}, syntax:{js:[], py:["Entry.on_mouse_up()"]}};
 Entry.block.mouse_click_cancled = function(b, a) {
   return a.callReturn();
 };
@@ -5035,7 +5035,7 @@ Blockly.Blocks.when_object_click = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_mouse.png", "*", "start")).appendField(Lang.Blocks.START_when_object_click);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.on_mouse_down()\n"]}};
+}, syntax:{js:[], py:["self.on_mouse_down()"]}};
 Entry.block.when_object_click = function(b, a) {
   return a.callReturn();
 };
@@ -5044,7 +5044,7 @@ Blockly.Blocks.when_object_click_canceled = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_mouse.png", "*", "start")).appendField(Lang.Blocks.START_when_object_click_canceled);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.on_mouse_up()\n"]}};
+}, syntax:{js:[], py:["self.on_mouse_up()"]}};
 Entry.block.when_object_click_canceled = function(b, a) {
   return a.callReturn();
 };
@@ -5053,7 +5053,7 @@ Blockly.Blocks.when_some_key_click = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_keyboard.png", "*", "start")).appendField(Lang.Blocks.START_when_some_key_click);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["Entry.on_key_down(%1)\n"]}};
+}, syntax:{js:[], py:["Entry.on_key_down(%1)"]}};
 Entry.block.when_some_key_click = function(b, a) {
   return a.callReturn();
 };
@@ -5062,7 +5062,7 @@ Blockly.Blocks.when_message_cast = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_signal.png", "*", "start")).appendField(Lang.Blocks.START_when_message_cast_1).appendField(new Blockly.FieldDropdownDynamic("messages"), "VALUE").appendField(Lang.Blocks.START_when_message_cast_2);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.on_message(%1)\n"]}, whenAdd:function(b) {
+}, syntax:{js:[], py:["self.on_message(%1)"]}, whenAdd:function(b) {
   var a = Entry.variableContainer;
   a && a.addRef("_messageRefs", b);
 }, whenRemove:function(b) {
@@ -5079,7 +5079,7 @@ Blockly.Blocks.message_cast = {init:function() {
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-}, syntax:{js:[], py:["self.send_message(%1)\n"]}, whenAdd:function(b) {
+}, syntax:{js:[], py:["self.send_message(%1)"]}, whenAdd:function(b) {
   var a = Entry.variableContainer;
   a && a.addRef("_messageRefs", b);
 }, whenRemove:function(b) {
@@ -5100,7 +5100,7 @@ Blockly.Blocks.message_cast_wait = {init:function() {
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-}, syntax:{js:[], py:["self.wait_after_message(%1)\n"]}, whenAdd:function(b) {
+}, syntax:{js:[], py:["self.wait_after_message(%1"]}, whenAdd:function(b) {
   var a = Entry.variableContainer;
   a && a.addRef("_messageRefs", b);
 }, whenRemove:function(b) {
@@ -9780,7 +9780,7 @@ Entry.PyBlockAssembler = function(b) {
         if (arguments && arguments.length) {
           for (var e in arguments) {
             var f = arguments[e], g;
-            "UnaryExpression" == f.type ? f.prefix && (g = f.operator.concat(f.argument.value)) : "Literal" == f.type && (g = f.value);
+            "UnaryExpression" == f.type ? f.prefix && (g = f.operator.concat(f.argument.value)) : "Literal" == f.type && (g = String(f.value));
             b.push(g);
           }
         }
@@ -9789,21 +9789,26 @@ Entry.PyBlockAssembler = function(b) {
           f = b[e], g = "string" === typeof f ? "text" : "number", console.log("type", g), f = {type:g, params:[f]}, d.push(f);
         }
         e = a.expression.callee;
-        var h = String(e.object.name).concat(".").concat(e.property.name), h = this.getBlock(h);
+        if (e.object.name && e.property.name) {
+          var h = String(e.object.name).concat(".").concat(e.property.name)
+        } else {
+          "__pythonRuntime" == String(e.object.object.name) && "functions" == String(e.object.property.name) && (h = String(e.property.name));
+        }
+        h = this.getBlock(h);
         b = {type:h, params:d};
         console.log("ExpressionStatement result", b);
         break;
       case "WhileStatement":
         console.log("WhileStatement unit", a);
-        f = a.test;
-        "Literal" == f.type && f.value && (h = "while True:\n$1\n");
+        b = a.test;
+        "Literal" == b.type && b.value && (h = "while True:\n$1\n");
         h = this.getBlock(h);
-        f = [];
-        b = a.body.body;
-        for (e in b) {
-          a = this.assemble(b[e]), f.push(a);
+        b = [];
+        f = a.body.body;
+        for (e in f) {
+          a = this.assemble(f[e]), b.push(a);
         }
-        b = {type:h, statements:[f]};
+        b = {type:h, statements:[b]};
         console.log("WhileStatement result", b);
         break;
       case "BlockStatement":
@@ -9822,34 +9827,35 @@ Entry.PyBlockAssembler = function(b) {
         for (e in b) {
           f = b[e], g = "string" === typeof f ? "text" : "number", console.log("type", g), f = {type:g, params:[f]}, d.push(f);
         }
-        f = a.body[1].consequent;
-        console.log("consequent", f);
-        b = f.body[0].body;
-        console.log("body", b);
-        b.shift();
-        f = [];
-        for (e in b) {
-          console.log("body[index]", b[e]), a = this.assemble(b[e]), f.push(a);
+        b = a.body[1].consequent;
+        console.log("consequent", b);
+        f = b.body[0].body;
+        console.log("body", f);
+        f.shift();
+        b = [];
+        for (e in f) {
+          console.log("body[index]", f[e]), a = this.assemble(f[e]), b.push(a);
         }
-        b = {type:h, params:d, statements:[f]};
+        b = {type:h, params:d, statements:[b]};
         console.log("BlockStatement result", b);
         break;
       case "IfStatement":
         console.log("IfStatement unit", a);
-        f = a.test;
-        "Literal" == f.type && f.value && (h = "if %1:\n$1\n");
+        b = a.test;
+        "Literal" == b.type && b.value && (h = "if %1:\n$1\n");
         h = this.getBlock(h);
         console.log("block", h);
-        f = a.consequent;
-        b = f.body;
-        f = [];
-        for (e in b) {
-          a = this.assemble(b[e]), f.push(a);
+        b = a.consequent;
+        f = b.body;
+        b = [];
+        for (e in f) {
+          a = this.assemble(f[e]), b.push(a);
         }
-        b = {type:h, params:d, statements:[f]};
+        b = {type:h, params:d, statements:[b]};
         console.log("IfStatement result", b);
+        break;
       case "BreakStatement":
-        console.log("BreakStatement unit", a), h = this.getBlock("break\n"), console.log("block", h), b = {type:h}, console.log("BreakStatement result", b);
+        console.log("BreakStatement unit", a), h = this.getBlock("break"), console.log("block", h), b = {type:h}, console.log("BreakStatement result", b);
     }
     return b;
   };
@@ -10221,8 +10227,9 @@ Entry.BlockToPyParser = function() {
     }
     var b = "";
     a = a.getThreads();
+    console.log("threads", a.length);
     for (var d = 0;d < a.length;d++) {
-      b += this.Thread(a[d]);
+      b += this.Thread(a[d]) + "\n", console.log("textCode", b);
     }
     return b;
   };
@@ -10233,9 +10240,9 @@ Entry.BlockToPyParser = function() {
     var b = "";
     a = a.getBlocks();
     for (var d = 0;d < a.length;d++) {
-      b += this.Block(a[d]);
+      b += this.Block(a[d]) + "\n";
     }
-    return b + "\n";
+    return b;
   };
   b.Block = function(a) {
     if (!a._schema || !a._schema.syntax) {
@@ -10296,10 +10303,11 @@ Entry.BlockToPyParser = function() {
     return a;
   };
   b.indent = function(a) {
+    console.log("indent textCode", a);
     var b = "\t";
     a = a.split("\n");
     a.pop();
-    return b += a.join("\n\t") + "\n";
+    return b += a.join("\n\t");
   };
 })(Entry.BlockToPyParser.prototype);
 Entry.PyToBlockParser = function(b) {
@@ -10307,14 +10315,23 @@ Entry.PyToBlockParser = function(b) {
 };
 (function(b) {
   b.Program = function(a) {
-    if ("Program" == a.type) {
-      var b = [], d = [], e = a.body, f;
-      for (f in e) {
-        a = e[f], a = this[a.type](a), console.log("checkitout", a), a = this._assembler.assemble(a), d.push(a);
+    var b = [], d;
+    for (d in a) {
+      if ("Program" != a[d].type) {
+        return;
       }
-      b.push(d);
-      return b;
+      var e = [], f = a[d].body;
+      console.log("nodes", f);
+      for (d in f) {
+        var g = f[d], g = this[g.type](g);
+        console.log("checkitout", g);
+        g = this._assembler.assemble(g);
+        e.push(g);
+      }
+      console.log("thread", e);
+      b.push(e);
     }
+    return b;
   };
   b.Identifier = function(a) {
     console.log("Identifier", a);
@@ -10888,21 +10905,32 @@ Entry.Parser = function(b, a, c) {
       case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
         try {
           var d = (new Entry.JsAstGenerator).generate(a), b = this._parser.Program(d);
-        } catch (e) {
-          this.codeMirror && (e instanceof SyntaxError ? (a = {from:{line:e.loc.line - 1, ch:e.loc.column - 2}, to:{line:e.loc.line - 1, ch:e.loc.column + 1}}, e.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : (a = this.getLineNumber(e.node.start, e.node.end), a.message = e.message, a.severity = "error", this.codeMirror.markText(a.from, a.to, {className:"CodeMirror-lint-mark-error", __annotation:a, clearOnEnter:!0})), Entry.toast.alert("Error", e.message)), b = [];
+        } catch (h) {
+          this.codeMirror && (h instanceof SyntaxError ? (b = {from:{line:h.loc.line - 1, ch:h.loc.column - 2}, to:{line:h.loc.line - 1, ch:h.loc.column + 1}}, h.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : (b = this.getLineNumber(h.node.start, h.node.end), b.message = h.message, b.severity = "error", this.codeMirror.markText(b.from, b.to, {className:"CodeMirror-lint-mark-error", __annotation:b, clearOnEnter:!0})), Entry.toast.alert("Error", h.message)), b = [];
         }
         break;
       case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
         try {
-          d = (new Entry.PyAstGenerator).generate(a), b = this._parser.Program(d), console.log("result", b);
-        } catch (e) {
-          this.codeMirror && (e instanceof SyntaxError ? (a = {from:{line:e.loc.line - 1, ch:e.loc.column - 2}, to:{line:e.loc.line - 1, ch:e.loc.column + 1}}, e.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : (a = this.getLineNumber(e.node.start, e.node.end), a.message = e.message, a.severity = "error", this.codeMirror.markText(a.from, a.to, {className:"CodeMirror-lint-mark-error", __annotation:a, clearOnEnter:!0})), Entry.toast.alert("Error", e.message)), b = [];
+          var e = new Entry.PyAstGenerator;
+          console.log("code", a);
+          var f = a.split("\n\n");
+          f.splice(f.length - 1, 1);
+          console.log("threaded", f);
+          a = [];
+          for (var g in f) {
+            d = e.generate(f[g]), a.push(d);
+          }
+          console.log("astArr", a);
+          b = this._parser.Program(a);
+          console.log("result", b);
+        } catch (h) {
+          this.codeMirror && (h instanceof SyntaxError ? (b = {from:{line:h.loc.line - 1, ch:h.loc.column - 2}, to:{line:h.loc.line - 1, ch:h.loc.column + 1}}, h.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : (b = this.getLineNumber(h.node.start, h.node.end), b.message = h.message, b.severity = "error", this.codeMirror.markText(b.from, b.to, {className:"CodeMirror-lint-mark-error", __annotation:b, clearOnEnter:!0})), Entry.toast.alert("Error", h.message)), b = [];
         }
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
-        a = this._parser.Code(a);
-        a = a.match(/(.*{.*[\S|\s]+?}|.+)/g);
-        b = Array.isArray(a) ? a.reduce(function(a, b, c) {
+        b = this._parser.Code(a);
+        b = b.match(/(.*{.*[\S|\s]+?}|.+)/g);
+        b = Array.isArray(b) ? b.reduce(function(a, b, c) {
           var d = "";
           1 === c && (a += "\n");
           d = -1 < b.indexOf("function") ? b + a : a + b;
@@ -10910,12 +10938,7 @@ Entry.Parser = function(b, a, c) {
         }) : "";
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
-        a = this._parser.Code(a), a = a.match(/(.*{.*[\S|\s]+?}|.+)/g), b = Array.isArray(a) ? a.reduce(function(a, b, c) {
-          var d = "";
-          1 === c && (a += "\n");
-          d = -1 < b.indexOf("function") ? b + a : a + b;
-          return d + "\n";
-        }) : "";
+        b = this._parser.Code(a);
     }
     return b;
   };

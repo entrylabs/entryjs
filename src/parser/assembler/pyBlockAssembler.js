@@ -30,7 +30,7 @@ Entry.PyBlockAssembler = function(blockSyntax) {
 		                	if(arg.prefix)
 		                		a = arg.operator.concat(arg.argument.value)
 		                } else if(arg.type == 'Literal') {
-		                	a = arg.value;
+		                	a = String(arg.value);
 		                }
 
 		                args.push(a);
@@ -52,7 +52,12 @@ Entry.PyBlockAssembler = function(blockSyntax) {
 		        }
 
 		        var callee = unit.expression.callee;
-            	var targetSyntax = String(callee.object.name).concat(".").concat(callee.property.name);
+
+		        if(callee.object.name && callee.property.name)
+		        	var targetSyntax = String(callee.object.name).concat(".").concat(callee.property.name);
+		        else if(String(callee.object.object.name) == '__pythonRuntime' && String(callee.object.property.name) == 'functions')
+		       		var targetSyntax = String(callee.property.name);
+		       	
 		        var block = this.getBlock(targetSyntax);
                 
                 result = { type: block, params: params };
@@ -91,7 +96,7 @@ Entry.PyBlockAssembler = function(blockSyntax) {
             	var block = this.getBlock(targetSyntax);
 
             	console.log("block", block);
-            	
+
             	var args = [];
             	var params = [];
             	var arguments = unit.body[0].declarations[0].init.arguments;
@@ -165,12 +170,12 @@ Entry.PyBlockAssembler = function(blockSyntax) {
 		        result = { type: block, params: params, statements: [statements] };
 
 		        console.log("IfStatement result", result);
-
+		        break;
         	} 
         	case 'BreakStatement' : {
             	console.log("BreakStatement unit", unit);
 
-            	var targetSyntax = String("break\n");
+            	var targetSyntax = String("break");
 
             	var block = this.getBlock(targetSyntax);
 
@@ -179,6 +184,7 @@ Entry.PyBlockAssembler = function(blockSyntax) {
             	result = { type: block };
 
             	console.log("BreakStatement result", result);
+            	break;
             }
         }
         	

@@ -19,9 +19,14 @@ Entry.BlockToPyParser = function() {
         var textCode = "",
             threads = code.getThreads();
 
+            console.log("threads", threads.length);
+
         for (var i = 0; i < threads.length; i++) {
             var thread = threads[i];
-            textCode += this.Thread(thread);
+
+            textCode += this.Thread(thread) + '\n';
+
+            console.log("textCode", textCode);
         }
 
         return textCode;
@@ -30,14 +35,14 @@ Entry.BlockToPyParser = function() {
     p.Thread = function(thread) {
         if (thread instanceof Entry.Block)
             return this.Block(thread);
-        var code = "",
+        var block = "",
             blocks = thread.getBlocks();
 
         for (var i = 0; i < blocks.length; i++) {
-            var block = blocks[i];
-            code += this.Block(block);
+            var b = blocks[i];
+            block += (this.Block(b) + '\n');
         }
-        return code + '\n';
+        return block;
     };
 
     p.Block = function(block) {
@@ -160,10 +165,11 @@ Entry.BlockToPyParser = function() {
     };
 
     p.indent = function(textCode) {
+        console.log("indent textCode", textCode);
         var result = "\t";
         var indentedCode = textCode.split("\n");
         indentedCode.pop();
-        result += indentedCode.join("\n\t") + "\n";
+        result += indentedCode.join("\n\t");
         return result;
     };
 

@@ -225,9 +225,19 @@ Entry.Parser = function(mode, type, cm) {
             case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
                 try {
                     var pyAstGenerator = new Entry.PyAstGenerator();
-                    var astTree = pyAstGenerator.generate(code);
+                    console.log("code", code);
+                    var threaded = code.split('\n\n');
+                    threaded.splice(threaded.length-1, 1);
+                    console.log("threaded", threaded);
+                    var astArr = [];
+                    for(var index in threaded) {
+                        var astTree = pyAstGenerator.generate(threaded[index]);
+                        astArr.push(astTree);
+                    }
 
-                    result = this._parser.Program(astTree);
+                    console.log("astArr", astArr);
+
+                    result = this._parser.Program(astArr);
                     console.log("result", result);
                 } catch(error) {
                     if (this.codeMirror) {
@@ -282,8 +292,14 @@ Entry.Parser = function(mode, type, cm) {
 
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
                 var textCode = this._parser.Code(code);
-                var textArr = textCode.match(/(.*{.*[\S|\s]+?}|.+)/g);
-                if(Array.isArray(textArr)) {
+                //var textArr = textCode.match(/(.*{.*[\S|\s]+?}|.+)/g);
+               /* var textArr = textCode.split("\n\n");
+
+                console.log("textArr", textArr);*/
+
+                result = textCode;
+
+                /*if(Array.isArray(textArr)) {
                     result = textArr.reduce(function (prev, current, index) {
                         var temp = '';
 
@@ -300,7 +316,7 @@ Entry.Parser = function(mode, type, cm) {
                     });
                 } else {
                     result = '';
-                }
+                }*/
 
                 break;
         }

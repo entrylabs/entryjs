@@ -10,7 +10,7 @@ Blockly.Blocks.when_run_button_click = {
     this.setInputsInline(true);
     this.setNextStatement(true);
   },
-  syntax: {js: [], py: ["Entry.on_start_program()\n"]}
+  syntax: {js: [], py: ["Entry.on_start_program()"]}
 };
 
 Entry.block.when_run_button_click = function (sprite, script) {
@@ -44,7 +44,7 @@ Blockly.Blocks.press_some_key = {
         this.setInputsInline(true);
         this.setNextStatement(true);
     },
-    syntax: {js: [], py: ["Entry.is_key_pressed()\n"]}
+    syntax: {js: [], py: ["Entry.is_key_pressed()"]}
 };
 
 Entry.block.press_some_key = function (sprite, script) {
@@ -62,7 +62,7 @@ Blockly.Blocks.when_some_key_pressed = {
     this.setInputsInline(true);
     this.setNextStatement(true);
   },
-  syntax: {js: [], py: ["Entry.on_key_press(%1)\n"]}
+  syntax: {js: [], py: ["Entry.on_key_press(%1)"]}
 };
 
 Entry.block.when_some_key_pressed = function (sprite, script) {
@@ -79,7 +79,7 @@ Blockly.Blocks["mouse_clicked"] = {
         this.setInputsInline(true);
         this.setNextStatement(true);
     },
-    syntax: {js: [], py: ["Entry.on_mouse_down()\n"]}
+    syntax: {js: [], py: ["Entry.on_mouse_down()"]}
 };
 
 Entry.block.mouse_clicked = function (sprite, script) {
@@ -96,7 +96,7 @@ Blockly.Blocks.mouse_click_cancled = {
         this.setInputsInline(true);
         this.setNextStatement(true);
     },
-    syntax: {js: [], py: ["Entry.on_mouse_up()\n"]}
+    syntax: {js: [], py: ["Entry.on_mouse_up()"]}
 };
 
 Entry.block.mouse_click_cancled = function (sprite, script) {
@@ -113,7 +113,7 @@ Blockly.Blocks.when_object_click = {
     this.setInputsInline(true);
     this.setNextStatement(true);
   },
-  syntax: {js: [], py: ["self.on_mouse_down()\n"]}
+  syntax: {js: [], py: ["self.on_mouse_down()"]}
 };
 
 Entry.block.when_object_click = function (sprite, script) {
@@ -130,7 +130,7 @@ Blockly.Blocks.when_object_click_canceled = {
     this.setInputsInline(true);
     this.setNextStatement(true);
   },
-  syntax: {js: [], py: ["self.on_mouse_up()\n"]}
+  syntax: {js: [], py: ["self.on_mouse_up()"]}
 };
 
 Entry.block.when_object_click_canceled = function (sprite, script) {
@@ -147,7 +147,7 @@ Blockly.Blocks.when_some_key_click = {
     this.setInputsInline(true);
     this.setNextStatement(true);
   },
-  syntax: {js: [], py: ["Entry.on_key_down(%1)\n"]}
+  syntax: {js: [], py: ["Entry.on_key_down(%1)"]}
 };
 
 Entry.block.when_some_key_click = function (sprite, script) {
@@ -166,7 +166,7 @@ Blockly.Blocks.when_message_cast = {
     this.setInputsInline(true);
     this.setNextStatement(true);
   },
-  syntax: {js: [], py: ["self.on_message(%1)\n"]},
+  syntax: {js: [], py: ["self.on_message(%1)"]},
     whenAdd: function (block) {
         var vc = Entry.variableContainer;
         if (vc) vc.addRef('_messageRefs', block);
@@ -195,7 +195,7 @@ Blockly.Blocks.message_cast = {
     this.setNextStatement(true);
     this.setPreviousStatement(true);
   },
-  syntax: {js: [], py: ["self.send_message(%1)\n"]},
+  syntax: {js: [], py: ["self.send_message(%1)"]},
     whenAdd: function (block) {
         var vc = Entry.variableContainer;
         if (vc) vc.addRef('_messageRefs', block);
@@ -232,7 +232,7 @@ Blockly.Blocks.message_cast_wait = {
     this.setNextStatement(true);
     this.setPreviousStatement(true);
   },
-  syntax: {js: [], py: ["self.wait_after_message(%1)\n"]},
+  syntax: {js: [], py: ["self.wait_after_message(%1"]},
     whenAdd: function (block) {
         var vc = Entry.variableContainer;
         if (vc) vc.addRef('_messageRefs', block);

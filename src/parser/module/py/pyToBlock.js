@@ -12,24 +12,32 @@ Entry.PyToBlockParser = function(blockSyntax) {
 };
 
 (function(p){
-    p.Program = function(node) {
-        if(node.type != 'Program') return;
+    p.Program = function(astArr) {
         var code = [];
-        var thread = []; 
+        
 
-        var nodes = node.body;
+        for(var index in astArr) {
+            if(astArr[index].type != 'Program') return;
+            var thread = []; 
+            var nodes = astArr[index].body;
 
-        for(var index in nodes) {
-            var node = nodes[index];
-            var unit = this[node.type](node);
-            console.log("checkitout", unit);
+            console.log("nodes", nodes);
+
+            for(var index in nodes) {
+                var node = nodes[index];
+                var unit = this[node.type](node);
+                console.log("checkitout", unit);
+                
+                var block = this._assembler.assemble(unit);
+                thread.push(block);   
+            }
+
+            console.log("thread", thread);
+            code.push(thread);
             
-            var block = this._assembler.assemble(unit);
-
-            thread.push(block);
         }
 
-        code.push(thread);
+        
 
         return code;
     };

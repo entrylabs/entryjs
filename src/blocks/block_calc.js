@@ -43,7 +43,7 @@ Blockly.Blocks.get_x_coordinate = {
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
   },
-  syntax: {js: [], py: ["Entry.get_x()\n"]}
+  syntax: {js: [], py: ["Entry.get_x()"]}
 };
 
 Entry.block.get_x_coordinate = function (sprite, script) {
@@ -60,7 +60,7 @@ Blockly.Blocks.get_y_coordinate = {
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
   },
-  syntax: {js: [], py: ["Entry.get_y()\n"]}
+  syntax: {js: [], py: ["Entry.get_y()"]}
 };
 
 Entry.block.get_y_coordinate = function (sprite, script) {
@@ -96,7 +96,7 @@ Blockly.Blocks.get_rotation_direction = {
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
   },
-  syntax: {js: [], py: ["Entry.get_direction()\n"]}
+  syntax: {js: [], py: ["Entry.get_direction()"]}
 };
 
 Entry.block.get_rotation_direction = function (sprite, script) {
@@ -118,7 +118,7 @@ Blockly.Blocks.distance_something = {
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
   },
-  syntax: {js: [], py: ["Entry.get_distance(%1)\n"]}
+  syntax: {js: [], py: ["Entry.get_distance(%1)"]}
 };
 
 Entry.block.distance_something = function (sprite, script) {
@@ -149,7 +149,7 @@ Blockly.Blocks.coordinate_mouse = {
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
   },
-  syntax: {js: [], py: ["Entry.get_mouse_coordinate(\"%1\")\n"]}
+  syntax: {js: [], py: ["Entry.get_mouse_coordinate(\"%1\")"]}
 };
 
 Entry.block.coordinate_mouse = function (sprite, script) {
@@ -182,7 +182,7 @@ Blockly.Blocks.coordinate_object = {
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
   },
-  syntax: {js: [], py: ["Entry.get_object_coordinate(\"%1\", \"%2\")\n"]}
+  syntax: {js: [], py: ["Entry.get_object_coordinate(\"%1\", \"%2\")"]}
 };
 
 Entry.block.coordinate_object = function (sprite, script) {
@@ -416,7 +416,7 @@ Blockly.Blocks.calc_operation = {
     .appendField(" ");
     this.setInputsInline(true);
   },
-  syntax: {js: [], py: ["Entry.calculate(%1, \"%2\")\n"]}
+  syntax: {js: [], py: ["Entry.calculate(%1, \"%2\")"]}
 };
 
 Entry.block.calc_operation = function (sprite, script) {
@@ -484,7 +484,7 @@ Blockly.Blocks.calc_rand = {
     .appendField(Lang.Blocks.CALC_calc_rand_3, calcFontColor);
     this.setInputsInline(true);
   },
-  syntax: {js: [], py: ["random.randrange(%1, %2)\n"]}
+  syntax: {js: [], py: ["random.randrange(%1, %2)"]}
 };
 
 Entry.block.calc_rand = function (sprite, script) {
@@ -521,7 +521,7 @@ Blockly.Blocks.get_date = {
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
   },
-  syntax: {js: [], py: ["Entry.get_date_time(\"%1\")\n"]}
+  syntax: {js: [], py: ["Entry.get_date_time(\"%1\")"]}
 };
 
 Entry.block.get_date = function (sprite, script) {
@@ -554,7 +554,7 @@ Blockly.Blocks.get_sound_duration = {
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
   },
-  syntax: {js: [], py: ["Entry.get_sound_duration(%1)\n"]}
+  syntax: {js: [], py: ["Entry.get_sound_duration(%1)"]}
 
 };
 
@@ -613,7 +613,7 @@ Blockly.Blocks.set_visible_project_timer = {
   whenRemove: function (removeBlock) {
       if (Entry.engine) Entry.engine.hideProjectTimer(removeBlock);
   },
-  syntax: {js: [], py: ["Entry.show_timer(\"%1\")\n"]}
+  syntax: {js: [], py: ["Entry.show_timer(\"%1\")"]}
 };
 
 Entry.block.set_visible_project_timer = function (sprite, script) {
@@ -659,7 +659,7 @@ Blockly.Blocks.get_project_timer_value = {
   whenRemove: function (removeBlock) {
       if (Entry.engine) Entry.engine.hideProjectTimer(removeBlock);
   },
-  syntax: {js: [], py: ["Entry.get_timer_value()\n"]}
+  syntax: {js: [], py: ["Entry.get_timer_value()"]}
 
 };
 
@@ -734,7 +734,7 @@ Blockly.Blocks.substring = {
     this.setOutput(true, 'String');
     this.setInputsInline(true);
   },
-  syntax: {js: [], py: ["\"%1\"[%2:%3]\n"]}
+  syntax: {js: [], py: ["\"%1\"[%2:%3]"]}
 };
 
 Entry.block.substring = function (sprite, script) {
@@ -768,7 +768,7 @@ Blockly.Blocks.replace_string = {
     this.setOutput(true, 'String');
     this.setInputsInline(true);
   },
-  syntax: {js: [], py: ["\"%1\".replace(\"%2\", \"%3\")\n"]}
+  syntax: {js: [], py: ["\"%1\".replace(\"%2\", \"%3\")"]}
 };
 
 Entry.block.replace_string = function (sprite, script) {
@@ -798,7 +798,7 @@ Blockly.Blocks.change_string_case = {
     this.setOutput(true, 'String');
     this.setInputsInline(true);
   },
-  syntax: {js: [], py: ["Entry.change_string_case(\"%1\", \"%2\")\n"]}
+  syntax: {js: [], py: ["Entry.change_string_case(\"%1\", \"%2\")"]}
 };
 
 Entry.block.change_string_case = function (sprite, script) {
@@ -821,7 +821,7 @@ Blockly.Blocks.index_of_string = {
     .appendField(Lang.Blocks.CALC_index_of_string_3, calcFontColor);
     this.setInputsInline(true);
   },
-  syntax: {js: [], py: ["\"%1\".index(%2)\n"]}
+  syntax: {js: [], py: ["\"%1\".index(%2)"]}
 };
 
 Entry.block.index_of_string = function (sprite, script) {
@@ -848,7 +848,7 @@ Blockly.Blocks.combine_something = {
     this.setInputsInline(true);
     this.setOutput(true, 'String');
   },
-  syntax: {js: [], py: ["\"%1\".index(%2)\n"]}
+  syntax: {js: [], py: ["\"%1\".index(%2)"]}
 };
 
 Entry.block.combine_something = function (sprite, script) {
@@ -867,7 +867,7 @@ Blockly.Blocks.get_sound_volume = {
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
   },
-  syntax: {js: [], py: ["Entry.get_sound_volume()\n"]}
+  syntax: {js: [], py: ["Entry.get_sound_volume()"]}
 };
 
 Entry.block.get_sound_volume = function (sprite, script) {
@@ -913,7 +913,7 @@ Blockly.Blocks.quotient_and_mod = {
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
   },
-  syntax: {js: [], py: ["Entry.get_quotient_remainder(%1, %2, \"%3\"\n"]}
+  syntax: {js: [], py: ["Entry.get_quotient_remainder(%1, %2, \"%3\""]}
 
 };
 
@@ -951,7 +951,7 @@ Blockly.Blocks.choose_project_timer_action = {
   whenRemove: function (removeBlock) {
       if (Entry.engine) Entry.engine.hideProjectTimer(removeBlock);
   },
-  syntax: {js: [], py: ["Entry.act_timer(\"%1\")\n"]}
+  syntax: {js: [], py: ["Entry.act_timer(\"%1\")"]}
 };
 
 Entry.block.choose_project_timer_action = function (sprite, script) {
