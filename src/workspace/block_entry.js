@@ -1,6 +1,10 @@
 if (typeof Entry !== "object")
     var Entry = {};
 
+if (typeof exports == "object") {
+    var Lang = require('../../extern/lang/ko.js').Lang;
+}
+
 Entry.block = {
     "albert_hand_found": {
         "color": "#00979D",
@@ -12866,7 +12870,8 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.callReturn();
         },
-        "event": "start"
+        "event": "start",
+        "syntax": {"js": [], "py": ["Entry.on_start_program()"]}
     },
     "press_some_key": {
         "color": "#3BBD70",
@@ -15730,5 +15735,7 @@ Entry.block = {
     }
 })();
 
-if (typeof exports == "object")
+if (typeof exports == "object") {
     exports.block = Entry.block;
+}
+
