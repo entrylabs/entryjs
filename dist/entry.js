@@ -14896,6 +14896,9 @@ Entry.block.basic_button = {skeleton:"basic_button", color:"#eee", template:"%1"
 if ("object" !== typeof Entry) {
   var Entry = {}
 }
+if ("object" == typeof exports) {
+  var Lang = require("../../extern/lang/ko.js").Lang
+}
 Entry.block = {albert_hand_found:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], params:[], events:{}, def:{params:[], type:"albert_hand_found"}, "class":"albert_sensor", isNotFor:["albert"], func:function(b, a) {
   var c = Entry.hw.portData;
   return 40 < c.leftProximity || 40 < c.rightProximity;
