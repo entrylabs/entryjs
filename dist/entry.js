@@ -1,4 +1,4 @@
-var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:2, TEXT_ALIGNS:["center", "left", "right"], clipboard:null, loadProject:function(b) {
+Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:2, TEXT_ALIGNS:["center", "left", "right"], clipboard:null, loadProject:function(b) {
   b || (b = Entry.getStartProject(Entry.mediaFilePath));
   "workspace" == this.type && Entry.stateManager.startIgnore();
   Entry.projectId = b._id;
@@ -848,8 +848,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(c, d);
+  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
   return a.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1943,10 +1943,10 @@ Entry.block.wait_second = function(b, a) {
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
+  var c = a.getNumberValue("SECOND", a);
   setTimeout(function() {
     a.timeFlag = 0;
-  }, c);
+  }, 60 / (Entry.FPS || 60) * c * 1E3);
   return a;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -10401,17 +10401,8 @@ Entry.PyToBlockParser = function(b) {
     for (e in a.params) {
       d.push(a.params[e]);
     }
-<<<<<<< HEAD
     a = this[a.body](a);
     return {id:b, params:d, body:a};
-=======
-    b = this.modes[a];
-    b.tabDom.addClass("selected");
-    b.contentDom.removeClass("entryHidden");
-    b.obj.resize && b.obj.resize();
-    b.obj.visible = !0;
-    this.selected = a;
->>>>>>> refac/entry-block
   };
   b.ExpressionStatement = function(a) {
     var b = this[a.expression.type](a.expression);
@@ -10613,81 +10604,6 @@ Entry.PyToBlockParser = function(b) {
         var e = a.elements[d], e = this[e.type](e);
         b.push(e);
       }
-<<<<<<< HEAD
-=======
-    });
-    this.canvas_ = c;
-    this.stage.initStage(this.canvas_);
-    c = Entry.createElement("div");
-    this.propertyPanel.generateView(b, a);
-    this.containerView = c;
-    this.container.generateView(this.containerView, a);
-    this.propertyPanel.addMode("object", this.container);
-    this.helper.generateView(this.containerView, a);
-    this.propertyPanel.addMode("helper", this.helper);
-    c = Entry.createElement("div");
-    b.appendChild(c);
-    this.playgroundView = c;
-    this.playground.generateView(this.playgroundView, a);
-    this.propertyPanel.select("object");
-    this.helper.bindWorkspace(this.playground.mainWorkspace);
-  }
-};
-Entry.start = function(b) {
-  this.FPS || (this.FPS = 60);
-  Entry.assert("number" == typeof this.FPS, "FPS must be number");
-  Entry.engine.start(this.FPS);
-};
-Entry.parseOptions = function(b) {
-  this.type = b.type;
-  this.projectSaveable = b.projectsaveable;
-  void 0 === this.projectSaveable && (this.projectSaveable = !0);
-  this.objectAddable = b.objectaddable;
-  void 0 === this.objectAddable && (this.objectAddable = !0);
-  this.objectEditable = b.objectEditable;
-  void 0 === this.objectEditable && (this.objectEditable = !0);
-  this.objectEditable || (this.objectAddable = !1);
-  this.objectDeletable = b.objectdeletable;
-  void 0 === this.objectDeletable && (this.objectDeletable = !0);
-  this.soundEditable = b.soundeditable;
-  void 0 === this.soundEditable && (this.soundEditable = !0);
-  this.pictureEditable = b.pictureeditable;
-  void 0 === this.pictureEditable && (this.pictureEditable = !0);
-  this.sceneEditable = b.sceneEditable;
-  void 0 === this.sceneEditable && (this.sceneEditable = !0);
-  this.functionEnable = b.functionEnable;
-  void 0 === this.functionEnable && (this.functionEnable = !0);
-  this.messageEnable = b.messageEnable;
-  void 0 === this.messageEnable && (this.messageEnable = !0);
-  this.variableEnable = b.variableEnable;
-  void 0 === this.variableEnable && (this.variableEnable = !0);
-  this.listEnable = b.listEnable;
-  void 0 === this.listEnable && (this.listEnable = !0);
-  this.hasVariableManager = b.hasvariablemanager;
-  this.variableEnable || this.messageEnable || this.listEnable || this.functionEnable ? void 0 === this.hasVariableManager && (this.hasVariableManager = !0) : this.hasVariableManager = !1;
-  this.isForLecture = b.isForLecture;
-};
-Entry.initFonts = function(b) {
-  this.fonts = b;
-  b || (this.fonts = []);
-};
-Entry.Reporter = function(b) {
-  this.projectId = this.userId = null;
-  this.isRealTime = b;
-  this.activities = [];
-};
-Entry.Reporter.prototype.start = function(b, a, c) {
-  this.isRealTime && (-1 < window.location.href.indexOf("localhost") ? this.io = io("localhost:7000") : this.io = io("play04.play-entry.com:7000"), this.io.emit("activity", {message:"start", userId:a, projectId:b, time:c}));
-  this.userId = a;
-  this.projectId = b;
-};
-Entry.Reporter.prototype.report = function(b) {
-  if (!this.isRealTime || this.io) {
-    var a = [], c;
-    for (c in b.params) {
-      var d = b.params[c];
-      "object" !== typeof d ? a.push(d) : d.id && a.push(d.id);
->>>>>>> refac/entry-block
     }
     return {type:a.type, elements:b};
   };
@@ -11297,6 +11213,7 @@ Entry.PropertyPanel = function() {
     b.tabDom.addClass("selected");
     b.contentDom.removeClass("entryHidden");
     b.obj.resize && b.obj.resize();
+    b.obj.visible = !0;
     this.selected = a;
   };
   b.initializeSplitter = function(a) {
@@ -11429,13 +11346,15 @@ Entry.createDom = function(b, a) {
     this.propertyPanel.generateView(b, a);
     this.containerView = c;
     this.container.generateView(this.containerView, a);
+    this.propertyPanel.addMode("object", this.container);
+    this.helper.generateView(this.containerView, a);
+    this.propertyPanel.addMode("helper", this.helper);
     c = Entry.createElement("div");
     b.appendChild(c);
     this.playgroundView = c;
     this.playground.generateView(this.playgroundView, a);
-    this.propertyPanel.addMode("object", this.container);
-    this.propertyPanel.addMode("helper", this.helper);
     this.propertyPanel.select("object");
+    this.helper.bindWorkspace(this.playground.mainWorkspace);
   }
 };
 Entry.start = function(b) {
@@ -11714,7 +11633,6 @@ Entry.Scene.prototype.resize = function() {
     }
   }
 };
-<<<<<<< HEAD
 Entry.Scene.prototype.getNextScene = function() {
   var b = this.getScenes();
   return b[b.indexOf(this.selectedScene) + 1];
@@ -11744,23 +11662,6 @@ p.init = function(b, a, c) {
         this.values[c.getAttribute("name")] = d;
       } else {
         "FIELD" == c.tagName.toUpperCase() ? (this.fields || (this.fields = {}), this.fields[c.getAttribute("name")] = c.textContent) : "STATEMENT" == c.tagName.toUpperCase() && (this.statements || (this.statements = {}), d = new Entry.Script(this.entity), this.register && (d.register = this.register), d.init(c.childNodes[0], null, this), d.key = c.getAttribute("name"), this.statements[c.getAttribute("name")] = d);
-=======
-(function(b) {
-  b.simulate = function(a) {
-    a.sensorList && (this.sensorList = a.sensorList);
-    a.portList && (this.portList = a.portList);
-    a.init.call(this);
-    a.whenAdd && (this.events.blockViewAdd || (this.events.blockViewAdd = []), this.events.blockViewAdd.push(a.whenAdd));
-    a.whenRemove && (this.events.blockViewDestroy || (this.events.blockViewDestroy = []), this.events.blockViewDestroy.push(a.whenRemove));
-  };
-  b.toJSON = function() {
-    function a(b) {
-      if (b && (b = b.params)) {
-        for (var c = 0;c < b.length;c++) {
-          var d = b[c];
-          d && (delete d.index, a(d));
-        }
->>>>>>> refac/entry-block
       }
     }
   }
@@ -12384,6 +12285,8 @@ Entry.BlockMockup = function(b, a, c) {
 };
 (function(b) {
   b.simulate = function(a) {
+    a.sensorList && (this.sensorList = a.sensorList);
+    a.portList && (this.portList = a.portList);
     a.init.call(this);
     a.whenAdd && (this.events.blockViewAdd || (this.events.blockViewAdd = []), this.events.blockViewAdd.push(a.whenAdd));
     a.whenRemove && (this.events.blockViewDestroy || (this.events.blockViewDestroy = []), this.events.blockViewDestroy.push(a.whenRemove));
@@ -12698,7 +12601,6 @@ Entry.addEventListener = function(b, a) {
   a instanceof Function && this.events_[b].push(a);
   return !0;
 };
-<<<<<<< HEAD
 Entry.dispatchEvent = function(b, a) {
   this.events_ || (this.events_ = {});
   if (this.events_[b]) {
@@ -12712,24 +12614,6 @@ Entry.removeEventListener = function(b, a) {
     for (var c = 0, d = this.events_[b].length;c < d;c++) {
       if (this.events_[b][c] === a) {
         this.events_[b].splice(c, 1);
-=======
-Entry.Func.generateWsBlock = function(b) {
-  console.log("adsf");
-  b = b ? b : this.targetFunc;
-  for (var a = b.content.getEventMap("funcDef")[0].params[0], c = 0, d = 0, e = [], f = "", g = b.hashMap, h = b.paramMap;a;) {
-    var k = a.params[0];
-    switch(a.type) {
-      case "function_field_label":
-        f = f + " " + k;
-        break;
-      case "function_field_boolean":
-        Entry.Mutator.mutate(k.type, {template:Lang.Blocks.FUNCTION_logical_variable + " " + (c ? c : "")});
-        g[k.type] = !1;
-        h[k.type] = c + d;
-        c++;
-        e.push({type:"Block", accept:"booleanMagnet"});
-        f += " %" + (c + d);
->>>>>>> refac/entry-block
         break;
       }
     }
@@ -12869,7 +12753,6 @@ Entry.factorials = [];
 Entry.factorial = function(b) {
   return 0 === b || 1 == b ? 1 : 0 < Entry.factorials[b] ? Entry.factorials[b] : Entry.factorials[b] = Entry.factorial(b - 1) * b;
 };
-<<<<<<< HEAD
 Entry.getListRealIndex = function(b, a) {
   if (isNaN(b)) {
     switch(b) {
@@ -12882,12 +12765,6 @@ Entry.getListRealIndex = function(b, a) {
       case "RANDOM":
         b = Math.floor(Math.random() * a.array_.length) + 1;
     }
-=======
-p.banHW = function() {
-  var b = this.hwInfo, a;
-  for (a in b) {
-    Entry.playground.mainWorkspace.blockMenu.banClass(b[a].name);
->>>>>>> refac/entry-block
   }
   return b;
 };
@@ -13207,42 +13084,12 @@ Entry.Func.prototype.init = function(b) {
   this.content = Blockly.Xml.textToDom(b.content);
   this.block = Blockly.Xml.textToDom("<xml>" + b.block + "</xml>").childNodes[0];
 };
-<<<<<<< HEAD
 Entry.Func.edit = function(b) {
   this.cancelEdit();
   this.targetFunc = b;
   this.initEditView(b.content);
   this.bindFuncChangeEvent();
   this.updateMenu();
-=======
-Entry.VariableContainer.prototype.renderMessageReference = function(b) {
-  for (var a = this, c = this._messageRefs, d = b.id, e = [], f = 0;f < c.length;f++) {
-    -1 < c[f].block.params.indexOf(d) && e.push(c[f]);
-  }
-  c = Entry.createElement("ul");
-  c.addClass("entryVariableListCallerListWorkspace");
-  for (f in e) {
-    var d = e[f], g = Entry.createElement("li");
-    g.addClass("entryVariableListCallerWorkspace");
-    g.appendChild(d.object.thumbnailView_.cloneNode());
-    var h = Entry.createElement("div");
-    h.addClass("entryVariableListCallerNameWorkspace");
-    h.innerHTML = d.object.name + " : " + Lang.Blocks["START_" + d.block.type];
-    g.appendChild(h);
-    g.caller = d;
-    g.message = b;
-    g.bindOnClick(function(b) {
-      Entry.playground.object != this.caller.object && (Entry.container.selectObject(), Entry.container.selectObject(this.caller.object.id, !0), a.select(null), a.select(this.message));
-      Entry.playground.toggleOnVariableView();
-      Entry.playground.changeViewMode("variable");
-    });
-    c.appendChild(g);
-  }
-  0 === e.length && (g = Entry.createElement("li"), g.addClass("entryVariableListCallerWorkspace"), g.addClass("entryVariableListCallerNoneWorkspace"), g.innerHTML = Lang.Workspace.no_use, c.appendChild(g));
-  b.callerListElement = c;
-  this.listView_.insertBefore(c, b.listElement);
-  this.listView_.insertBefore(b.listElement, c);
->>>>>>> refac/entry-block
 };
 Entry.Func.initEditView = function(b) {
   this.menuCode || this.setupMenuCode();
@@ -13378,9 +13225,9 @@ Entry.Func.prototype.generateBlock = function(b) {
   this.description = b.description;
 };
 Entry.Func.generateWsBlock = function(b) {
+  console.log("adsf");
   b = b ? b : this.targetFunc;
-  var a = b.content.getEventMap("funcDef")[0].params[0], c = 0, d = 0, e = [], f = "", g = b.hashMap, h = b.paramMap;
-  for (this.unbindFuncChangeEvent();a;) {
+  for (var a = b.content.getEventMap("funcDef")[0].params[0], c = 0, d = 0, e = [], f = "", g = b.hashMap, h = b.paramMap;a;) {
     var k = a.params[0];
     switch(a.type) {
       case "function_field_label":
@@ -13532,7 +13379,6 @@ Entry.HWMonitor = function(b) {
     if ("list" == d) {
       e = this._listPortViews;
     } else {
-<<<<<<< HEAD
       if ("both" == d) {
         if (e = this._listPortViews, this._portViews) {
           for (var f in this._portViews) {
@@ -13541,67 +13387,6 @@ Entry.HWMonitor = function(b) {
         }
       } else {
         e = this._portViews;
-=======
-      c > b && (a.length = b);
-    }
-  }
-  this.updateListSettingView();
-};
-Entry.VariableContainer.prototype.updateViews = function() {
-  var b = this.lists_;
-  this.variables_.map(function(a) {
-    a.updateView();
-  });
-  b.map(function(a) {
-    a.updateView();
-  });
-};
-Entry.VariableContainer.prototype.updateSelectedVariable = function(b, a) {
-  b ? "variable" == b.type ? (this.selectedVariable = b, this.updateVariableSettingView(b)) : "slide" == b.type ? (this.selectedVariable = b, this.updateVariableSettingView(b)) : "list" == b.type && (this.selectedList = b, this.updateListSettingView(b)) : (this.selectedVariable = null, "variable" == (a || "variable") ? this.variableSettingView.addClass("entryRemove") : this.listSettingView.addClass("entryRemove"));
-};
-Entry.VariableContainer.prototype.removeLocalVariables = function(b) {
-  var a = [], c = this;
-  this.mapVariable(function(b, c) {
-    b.object_ && b.object_ == c && a.push(b);
-  }, b);
-  a.map(function(a) {
-    c.removeVariable(a);
-  });
-};
-Entry.VariableContainer.prototype.updateCloudVariables = function() {
-  var b = Entry.projectId;
-  if (Entry.cloudSavable && b) {
-    var a = Entry.variableContainer, b = a.variables_.filter(function(a) {
-      return a.isCloud_;
-    }), b = b.map(function(a) {
-      return a.toJSON();
-    }), a = a.lists_.filter(function(a) {
-      return a.isCloud_;
-    }), a = a.map(function(a) {
-      return a.toJSON();
-    });
-    $.ajax({url:"/api/project/variable/" + Entry.projectId, type:"PUT", data:{variables:b, lists:a}}).done(function() {
-    });
-  }
-};
-Entry.VariableContainer.prototype.addRef = function(b, a) {
-  if (this.view_ && Entry.playground.mainWorkspace.getMode() === Entry.Workspace.MODE_BOARD) {
-    var c = {object:a.getCode().object, block:a};
-    a.funcBlock && (c.funcBlock = a.funcBlock, delete a.funcBlock);
-    this[b].push(c);
-    if ("_functionRefs" == b) {
-      for (var d = a.type.substr(5), d = Entry.variableContainer.functions_[d].content.getBlockList(), e = 0;e < d.length;e++) {
-        a = d[e];
-        var f = a.events;
-        f && f.viewAdd && f.viewAdd.forEach(function(b) {
-          a.getCode().object = c.object;
-          b && (a.funcBlock = c.block, b(a));
-        });
-        f && f.dataAdd && f.dataAdd.forEach(function(b) {
-          a.getCode().object = c.object;
-          b && (a.funcBlock = c.block, b(a));
-        });
->>>>>>> refac/entry-block
       }
     }
     if (b) {
@@ -13838,7 +13623,7 @@ p.checkDevice = function(b) {
 p.banHW = function() {
   var b = this.hwInfo, a;
   for (a in b) {
-    Entry.playground.blockMenu.banClass(b[a].name);
+    Entry.playground.mainWorkspace.blockMenu.banClass(b[a].name);
   }
 };
 Entry.BlockModel = function() {
@@ -14049,7 +13834,6 @@ Entry.Variable.prototype.setValue = function(b) {
   if ("slide" != this.type) {
     this.value_ = b;
   } else {
-<<<<<<< HEAD
     var a = Entry.isFloat(this.minValue_), c = Entry.isFloat(this.maxValue_);
     this.value_ = b < this.minValue_ ? this.minValue_ : b > this.maxValue_ ? this.maxValue_ : b;
     a || c || (this.viewValue_ = this.value_, this.value_ = Math.floor(this.value_));
@@ -14294,7 +14078,7 @@ Entry.VariableContainer.prototype.select = function(b) {
   b && (b.listElement.addClass("selected"), this.selected = b, b instanceof Entry.Variable ? (this.renderVariableReference(b), b.object_ && Entry.container.selectObject(b.object_, !0)) : b instanceof Entry.Func ? this.renderFunctionReference(b) : this.renderMessageReference(b));
 };
 Entry.VariableContainer.prototype.renderMessageReference = function(b) {
-  for (var a = this, c = this._messageRefs, d = b.id_, e = [], f = 0;f < c.length;f++) {
+  for (var a = this, c = this._messageRefs, d = b.id, e = [], f = 0;f < c.length;f++) {
     -1 < c[f].block.params.indexOf(d) && e.push(c[f]);
   }
   c = Entry.createElement("ul");
@@ -14355,7 +14139,1574 @@ Entry.VariableContainer.prototype.renderVariableReference = function(b) {
 Entry.VariableContainer.prototype.renderFunctionReference = function(b) {
   for (var a = this, c = this._functionRefs, d = [], e = 0;e < c.length;e++) {
     d.push(c[e]);
-=======
+  }
+  c = Entry.createElement("ul");
+  c.addClass("entryVariableListCallerListWorkspace");
+  for (e in d) {
+    var f = d[e], g = Entry.createElement("li");
+    g.addClass("entryVariableListCallerWorkspace");
+    g.appendChild(f.object.thumbnailView_.cloneNode());
+    var h = Entry.createElement("div");
+    h.addClass("entryVariableListCallerNameWorkspace");
+    h.innerHTML = f.object.name;
+    g.appendChild(h);
+    g.caller = f;
+    g.bindOnClick(function(c) {
+      Entry.playground.object != this.caller.object && (Entry.container.selectObject(), Entry.container.selectObject(this.caller.object.id, !0), a.select(null), a.select(b));
+      c = this.caller.block;
+      Entry.playground.toggleOnVariableView();
+      c.view.getBoard().activateBlock(c);
+      Entry.playground.changeViewMode("variable");
+    });
+    c.appendChild(g);
+  }
+  0 === d.length && (g = Entry.createElement("li"), g.addClass("entryVariableListCallerWorkspace"), g.addClass("entryVariableListCallerNoneWorkspace"), g.innerHTML = Lang.Workspace.no_use, c.appendChild(g));
+  b.callerListElement = c;
+  this.listView_.insertBefore(c, b.listElement);
+  this.listView_.insertBefore(b.listElement, c);
+};
+Entry.VariableContainer.prototype.updateList = function() {
+  if (this.listView_) {
+    this.variableSettingView.addClass("entryRemove");
+    for (this.listSettingView.addClass("entryRemove");this.listView_.firstChild;) {
+      this.listView_.removeChild(this.listView_.firstChild);
+    }
+    var b = this.viewMode_, a = [];
+    if ("all" == b || "message" == b) {
+      "message" == b && this.listView_.appendChild(this.messageAddButton_);
+      for (var c in this.messages_) {
+        var d = this.messages_[c];
+        a.push(d);
+        var e = d.listElement;
+        this.listView_.appendChild(e);
+        d.callerListElement && this.listView_.appendChild(d.callerListElement);
+      }
+    }
+    if ("all" == b || "variable" == b) {
+      if ("variable" == b) {
+        e = this.variableAddPanel.info;
+        e.object && !Entry.playground.object && (e.object = null);
+        this.listView_.appendChild(this.variableAddButton_);
+        this.listView_.appendChild(this.variableAddPanel.view);
+        this.variableSplitters.top.innerHTML = Lang.Workspace.Variable_used_at_all_objects;
+        this.listView_.appendChild(this.variableSplitters.top);
+        for (c in this.variables_) {
+          d = this.variables_[c], d.object_ || (a.push(d), e = d.listElement, this.listView_.appendChild(e), d.callerListElement && this.listView_.appendChild(d.callerListElement));
+        }
+        this.variableSplitters.bottom.innerHTML = Lang.Workspace.Variable_used_at_special_object;
+        this.listView_.appendChild(this.variableSplitters.bottom);
+        for (c in this.variables_) {
+          d = this.variables_[c], d.object_ && (a.push(d), e = d.listElement, this.listView_.appendChild(e), d.callerListElement && this.listView_.appendChild(d.callerListElement));
+        }
+        this.updateVariableAddView("variable");
+      } else {
+        for (c in this.variables_) {
+          d = this.variables_[c], a.push(d), e = d.listElement, this.listView_.appendChild(e), d.callerListElement && this.listView_.appendChild(d.callerListElement);
+        }
+      }
+    }
+    if ("all" == b || "list" == b) {
+      if ("list" == b) {
+        e = this.listAddPanel.info;
+        e.object && !Entry.playground.object && (e.object = null);
+        this.listView_.appendChild(this.listAddButton_);
+        this.listView_.appendChild(this.listAddPanel.view);
+        this.variableSplitters.top.innerHTML = Lang.Workspace.List_used_all_objects;
+        this.listView_.appendChild(this.variableSplitters.top);
+        this.updateVariableAddView("list");
+        for (c in this.lists_) {
+          d = this.lists_[c], d.object_ || (a.push(d), e = d.listElement, this.listView_.appendChild(e), d.callerListElement && this.listView_.appendChild(d.callerListElement));
+        }
+        this.variableSplitters.bottom.innerHTML = Lang.Workspace.list_used_specific_objects;
+        this.listView_.appendChild(this.variableSplitters.bottom);
+        for (c in this.lists_) {
+          d = this.lists_[c], d.object_ && (a.push(d), e = d.listElement, this.listView_.appendChild(e), d.callerListElement && this.listView_.appendChild(d.callerListElement));
+        }
+        this.updateVariableAddView("variable");
+      } else {
+        for (c in this.lists_) {
+          d = this.lists_[c], a.push(d), e = d.listElement, this.listView_.appendChild(e), d.callerListElement && this.listView_.appendChild(d.callerListElement);
+        }
+      }
+    }
+    if ("all" == b || "func" == b) {
+      for (c in "func" == b && this.listView_.appendChild(this.functionAddButton_), this.functions_) {
+        b = this.functions_[c], a.push(b), e = b.listElement, this.listView_.appendChild(e), b.callerListElement && this.listView_.appendChild(b.callerListElement);
+      }
+    }
+    this.listView_.appendChild(this.variableSettingView);
+    this.listView_.appendChild(this.listSettingView);
+  }
+};
+Entry.VariableContainer.prototype.setMessages = function(b) {
+  for (var a in b) {
+    var c = b[a];
+    c.id || (c.id = Entry.generateHash());
+    this.createMessageView(c);
+    this.messages_.push(c);
+  }
+  Entry.playground.reloadPlayground();
+  this.updateList();
+};
+Entry.VariableContainer.prototype.setVariables = function(b) {
+  for (var a in b) {
+    var c = new Entry.Variable(b[a]), d = c.getType();
+    "variable" == d || "slide" == d ? (c.generateView(this.variables_.length), this.createVariableView(c), this.variables_.push(c)) : "list" == d ? (c.generateView(this.lists_.length), this.createListView(c), this.lists_.push(c)) : "timer" == d ? this.generateTimer(c) : "answer" == d && this.generateAnswer(c);
+  }
+  Entry.isEmpty(Entry.engine.projectTimer) && Entry.variableContainer.generateTimer();
+  Entry.isEmpty(Entry.container.inputValue) && Entry.variableContainer.generateAnswer();
+  Entry.playground.reloadPlayground();
+  this.updateList();
+};
+Entry.VariableContainer.prototype.setFunctions = function(b) {
+  for (var a in b) {
+    var c = new Entry.Func(b[a]);
+    c.generateBlock();
+    this.createFunctionView(c);
+    this.functions_[c.id] = c;
+  }
+  this.updateList();
+};
+Entry.VariableContainer.prototype.getFunction = function(b) {
+  return this.functions_[b];
+};
+Entry.VariableContainer.prototype.getVariable = function(b, a) {
+  var c = Entry.findObjsByKey(this.variables_, "id_", b)[0];
+  a && a.isClone && c.object_ && (c = Entry.findObjsByKey(a.variables, "id_", b)[0]);
+  return c;
+};
+Entry.VariableContainer.prototype.getList = function(b, a) {
+  var c = Entry.findObjsByKey(this.lists_, "id_", b)[0];
+  a && a.isClone && c.object_ && (c = Entry.findObjsByKey(a.lists, "id_", b)[0]);
+  return c;
+};
+Entry.VariableContainer.prototype.createFunction = function() {
+  if (!Entry.Func.isEdit) {
+    var b = new Entry.Func;
+    Entry.Func.edit(b);
+  }
+};
+Entry.VariableContainer.prototype.addFunction = function(b) {
+};
+Entry.VariableContainer.prototype.removeFunction = function(b) {
+  delete this.functions_[b.id];
+  this.updateList();
+};
+Entry.VariableContainer.prototype.checkListPosition = function(b, a) {
+  var c = b.x_ + b.width_, d = -b.y_, e = -b.y_ + -b.height_;
+  return a.x > b.x_ && a.x < c && a.y < d && a.y > e ? !0 : !1;
+};
+Entry.VariableContainer.prototype.getListById = function(b) {
+  var a = this.lists_, c = [];
+  if (0 < a.length) {
+    for (var d = 0;d < a.length;d++) {
+      this.checkListPosition(a[d], b) && c.push(a[d]);
+    }
+    return c;
+  }
+  return !1;
+};
+Entry.VariableContainer.prototype.editFunction = function(b, a) {
+};
+Entry.VariableContainer.prototype.saveFunction = function(b) {
+  this.functions_[b.id] || (this.functions_[b.id] = b, this.createFunctionView(b));
+  b.listElement.nameField.innerHTML = b.description;
+  this.updateList();
+};
+Entry.VariableContainer.prototype.createFunctionView = function(b) {
+  var a = this, c = Entry.createElement("li");
+  c.addClass("entryVariableListElementWorkspace");
+  c.addClass("entryFunctionElementWorkspace");
+  c.bindOnClick(function(c) {
+    c.stopPropagation();
+    a.select(b);
+  });
+  var d = Entry.createElement("button");
+  d.addClass("entryVariableListElementDeleteWorkspace");
+  d.bindOnClick(function(c) {
+    c.stopPropagation();
+    a.removeFunction(b);
+    a.selected = null;
+  });
+  var e = Entry.createElement("button");
+  e.addClass("entryVariableListElementEditWorkspace");
+  var f = this._getBlockMenu();
+  e.bindOnClick(function(a) {
+    a.stopPropagation();
+    Entry.Func.edit(b);
+    Entry.playground && (Entry.playground.changeViewMode("code"), "func" != f.lastSelector && f.selectMenu("func"));
+  });
+  var g = Entry.createElement("div");
+  g.addClass("entryVariableFunctionElementNameWorkspace");
+  g.innerHTML = b.description;
+  c.nameField = g;
+  c.appendChild(g);
+  c.appendChild(e);
+  c.appendChild(d);
+  b.listElement = c;
+};
+Entry.VariableContainer.prototype.checkAllVariableName = function(b, a) {
+  a = this[a];
+  for (var c = 0;c < a.length;c++) {
+    if (a[c].name_ == b) {
+      return !0;
+    }
+  }
+  return !1;
+};
+Entry.VariableContainer.prototype.addVariable = function(b) {
+  if (!b) {
+    var a = this.variableAddPanel;
+    b = a.view.name.value.trim();
+    b && 0 !== b.length || (b = Lang.Workspace.variable);
+    b = this.checkAllVariableName(b, "variables_") ? Entry.getOrderedName(b, this.variables_, "name_") : b;
+    var c = a.info;
+    b = {name:b, isCloud:c.isCloud, object:c.object, variableType:"variable"};
+    a.view.addClass("entryRemove");
+    this.resetVariableAddPanel("variable");
+  }
+  b = new Entry.Variable(b);
+  Entry.stateManager && Entry.stateManager.addCommand("add variable", this, this.removeVariable, b);
+  b.generateView(this.variables_.length);
+  this.createVariableView(b);
+  this.variables_.unshift(b);
+  Entry.playground.reloadPlayground();
+  this.updateList();
+  b.listElement.nameField.focus();
+  return new Entry.State(this, this.removeVariable, b);
+};
+Entry.VariableContainer.prototype.removeVariable = function(b) {
+  var a = this.variables_.indexOf(b), c = b.toJSON();
+  this.selected == b && this.select(null);
+  b.remove();
+  this.variables_.splice(a, 1);
+  Entry.stateManager && Entry.stateManager.addCommand("remove variable", this, this.addVariable, c);
+  Entry.playground.reloadPlayground();
+  this.updateList();
+  return new Entry.State(this, this.addVariable, c);
+};
+Entry.VariableContainer.prototype.changeVariableName = function(b, a) {
+  b.name_ != a && (Entry.isExist(a, "name_", this.variables_) ? (b.listElement.nameField.value = b.name_, Entry.toast.alert(Lang.Workspace.variable_rename_failed, Lang.Workspace.variable_dup)) : 10 < a.length ? (b.listElement.nameField.value = b.name_, Entry.toast.alert(Lang.Workspace.variable_rename_failed, Lang.Workspace.variable_too_long)) : (b.name_ = a, b.updateView(), Entry.playground.reloadPlayground(), Entry.toast.success(Lang.Workspace.variable_rename, Lang.Workspace.variable_rename_ok)));
+};
+Entry.VariableContainer.prototype.changeListName = function(b, a) {
+  b.name_ != a && (Entry.isExist(a, "name_", this.lists_) ? (b.listElement.nameField.value = b.name_, Entry.toast.alert(Lang.Workspace.list_rename_failed, Lang.Workspace.list_dup)) : 10 < a.length ? (b.listElement.nameField.value = b.name_, Entry.toast.alert(Lang.Workspace.list_rename_failed, Lang.Workspace.list_too_long)) : (b.name_ = a, b.updateView(), Entry.playground.reloadPlayground(), Entry.toast.success(Lang.Workspace.list_rename, Lang.Workspace.list_rename_ok)));
+};
+Entry.VariableContainer.prototype.removeList = function(b) {
+  var a = this.lists_.indexOf(b), c = b.toJSON();
+  Entry.stateManager && Entry.stateManager.addCommand("remove list", this, this.addList, c);
+  this.selected == b && this.select(null);
+  b.remove();
+  this.lists_.splice(a, 1);
+  Entry.playground.reloadPlayground();
+  this.updateList();
+  return new Entry.State(this, this.addList, c);
+};
+Entry.VariableContainer.prototype.createVariableView = function(b) {
+  var a = this, c = Entry.createElement("li"), d = Entry.createElement("div");
+  d.addClass("entryVariableListElementWrapperWorkspace");
+  c.appendChild(d);
+  c.addClass("entryVariableListElementWorkspace");
+  b.object_ ? c.addClass("entryVariableLocalElementWorkspace") : b.isCloud_ ? c.addClass("entryVariableCloudElementWorkspace") : c.addClass("entryVariableGlobalElementWorkspace");
+  c.bindOnClick(function(c) {
+    a.select(b);
+  });
+  var e = Entry.createElement("button");
+  e.addClass("entryVariableListElementDeleteWorkspace");
+  e.bindOnClick(function(c) {
+    c.stopPropagation();
+    a.removeVariable(b);
+    a.selectedVariable = null;
+    a.variableSettingView.addClass("entryRemove");
+  });
+  var f = Entry.createElement("button");
+  f.addClass("entryVariableListElementEditWorkspace");
+  f.bindOnClick(function(c) {
+    c.stopPropagation();
+    h.removeAttribute("disabled");
+    g.removeClass("entryRemove");
+    this.addClass("entryRemove");
+    a.updateSelectedVariable(b);
+    h.focus();
+  });
+  c.editButton = f;
+  var g = Entry.createElement("button");
+  g.addClass("entryVariableListElementEditWorkspace");
+  g.addClass("entryRemove");
+  g.bindOnClick(function(b) {
+    b.stopPropagation();
+    h.blur();
+    h.setAttribute("disabled", "disabled");
+    f.removeClass("entryRemove");
+    this.addClass("entryRemove");
+    a.updateSelectedVariable(null, "variable");
+  });
+  c.editSaveButton = g;
+  var h = Entry.createElement("input");
+  h.addClass("entryVariableListElementNameWorkspace");
+  h.setAttribute("disabled", "disabled");
+  h.value = b.name_;
+  h.bindOnClick(function(a) {
+    a.stopPropagation();
+  });
+  h.onblur = function(c) {
+    (c = this.value.trim()) && 0 !== c.length ? a.changeVariableName(b, this.value) : (Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.variable_can_not_space), this.value = b.getName());
+  };
+  h.onkeydown = function(a) {
+    13 == a.keyCode && this.blur();
+  };
+  c.nameField = h;
+  d.appendChild(h);
+  d.appendChild(f);
+  d.appendChild(g);
+  d.appendChild(e);
+  b.listElement = c;
+};
+Entry.VariableContainer.prototype.addMessage = function(b) {
+  b.id || (b.id = Entry.generateHash());
+  Entry.stateManager && Entry.stateManager.addCommand("add message", this, this.removeMessage, b);
+  this.createMessageView(b);
+  this.messages_.unshift(b);
+  Entry.playground.reloadPlayground();
+  this.updateList();
+  b.listElement.nameField.focus();
+  return new Entry.State(this, this.removeMessage, b);
+};
+Entry.VariableContainer.prototype.removeMessage = function(b) {
+  this.selected == b && this.select(null);
+  Entry.stateManager && Entry.stateManager.addCommand("remove message", this, this.addMessage, b);
+  var a = this.messages_.indexOf(b);
+  this.messages_.splice(a, 1);
+  this.updateList();
+  Entry.playground.reloadPlayground();
+  return new Entry.State(this, this.addMessage, b);
+};
+Entry.VariableContainer.prototype.changeMessageName = function(b, a) {
+  b.name != a && (Entry.isExist(a, "name", this.messages_) ? (b.listElement.nameField.value = b.name, Entry.toast.alert(Lang.Workspace.message_rename_failed, Lang.Workspace.message_dup)) : 10 < a.length ? (b.listElement.nameField.value = b.name, Entry.toast.alert(Lang.Workspace.message_rename_failed, Lang.Workspace.message_too_long)) : (b.name = a, Entry.playground.reloadPlayground(), Entry.toast.success(Lang.Workspace.message_rename, Lang.Workspace.message_rename_ok)));
+};
+Entry.VariableContainer.prototype.createMessageView = function(b) {
+  var a = this, c = Entry.createElement("li");
+  c.addClass("entryVariableListElementWorkspace");
+  c.addClass("entryMessageElementWorkspace");
+  c.bindOnClick(function(c) {
+    a.select(b);
+  });
+  var d = Entry.createElement("button");
+  d.addClass("entryVariableListElementDeleteWorkspace");
+  d.bindOnClick(function(c) {
+    c.stopPropagation();
+    a.removeMessage(b);
+  });
+  var e = Entry.createElement("button");
+  e.addClass("entryVariableListElementEditWorkspace");
+  e.bindOnClick(function(a) {
+    a.stopPropagation();
+    g.removeAttribute("disabled");
+    g.focus();
+    f.removeClass("entryRemove");
+    this.addClass("entryRemove");
+  });
+  var f = Entry.createElement("button");
+  f.addClass("entryVariableListElementEditWorkspace");
+  f.addClass("entryRemove");
+  f.bindOnClick(function(a) {
+    a.stopPropagation();
+    g.blur();
+    e.removeClass("entryRemove");
+    this.addClass("entryRemove");
+  });
+  var g = Entry.createElement("input");
+  g.addClass("entryVariableListElementNameWorkspace");
+  g.value = b.name;
+  g.bindOnClick(function(a) {
+    a.stopPropagation();
+  });
+  g.onblur = function(c) {
+    (c = this.value.trim()) && 0 !== c.length ? (a.changeMessageName(b, this.value), e.removeClass("entryRemove"), f.addClass("entryRemove"), g.setAttribute("disabled", "disabled")) : (Entry.toast.alert(Lang.Msgs.warn, Lang.Msgs.sign_can_not_space), this.value = b.name);
+  };
+  g.onkeydown = function(a) {
+    13 == a.keyCode && this.blur();
+  };
+  c.nameField = g;
+  c.appendChild(g);
+  c.appendChild(e);
+  c.appendChild(f);
+  c.appendChild(d);
+  b.listElement = c;
+};
+Entry.VariableContainer.prototype.addList = function(b) {
+  if (!b) {
+    var a = this.listAddPanel;
+    b = a.view.name.value.trim();
+    b && 0 !== b.length || (b = Lang.Workspace.list);
+    var c = a.info;
+    b = this.checkAllVariableName(b, "lists_") ? Entry.getOrderedName(b, this.lists_, "name_") : b;
+    b = {name:b, isCloud:c.isCloud, object:c.object, variableType:"list"};
+    a.view.addClass("entryRemove");
+    this.resetVariableAddPanel("list");
+  }
+  b = new Entry.Variable(b);
+  Entry.stateManager && Entry.stateManager.addCommand("add list", this, this.removeList, b);
+  b.generateView(this.lists_.length);
+  this.createListView(b);
+  this.lists_.unshift(b);
+  Entry.playground.reloadPlayground();
+  this.updateList();
+  b.listElement.nameField.focus();
+  return new Entry.State(this, this.removelist, b);
+};
+Entry.VariableContainer.prototype.createListView = function(b) {
+  var a = this, c = Entry.createElement("li"), d = Entry.createElement("div");
+  d.addClass("entryVariableListElementWrapperWorkspace");
+  c.appendChild(d);
+  c.addClass("entryVariableListElementWorkspace");
+  b.object_ ? c.addClass("entryListLocalElementWorkspace") : b.isCloud_ ? c.addClass("entryListCloudElementWorkspace") : c.addClass("entryListGlobalElementWorkspace");
+  c.bindOnClick(function(c) {
+    a.select(b);
+  });
+  var e = Entry.createElement("button");
+  e.addClass("entryVariableListElementDeleteWorkspace");
+  e.bindOnClick(function(c) {
+    c.stopPropagation();
+    a.removeList(b);
+    a.selectedList = null;
+    a.listSettingView.addClass("entryRemove");
+  });
+  var f = Entry.createElement("button");
+  f.addClass("entryVariableListElementEditWorkspace");
+  f.bindOnClick(function(c) {
+    c.stopPropagation();
+    h.removeAttribute("disabled");
+    g.removeClass("entryRemove");
+    this.addClass("entryRemove");
+    a.updateSelectedVariable(b);
+    h.focus();
+  });
+  c.editButton = f;
+  var g = Entry.createElement("button");
+  g.addClass("entryVariableListElementEditWorkspace");
+  g.addClass("entryRemove");
+  g.bindOnClick(function(c) {
+    c.stopPropagation();
+    h.blur();
+    h.setAttribute("disabled", "disabled");
+    f.removeClass("entryRemove");
+    this.addClass("entryRemove");
+    a.select(b);
+    a.updateSelectedVariable(null, "list");
+  });
+  c.editSaveButton = g;
+  var h = Entry.createElement("input");
+  h.setAttribute("disabled", "disabled");
+  h.addClass("entryVariableListElementNameWorkspace");
+  h.value = b.name_;
+  h.bindOnClick(function(a) {
+    a.stopPropagation();
+  });
+  h.onblur = function(c) {
+    (c = this.value.trim()) && 0 !== c.length ? a.changeListName(b, this.value) : (Entry.toast.alert(Lang.Msgs.warn, Lang.Msgs.list_can_not_space), this.value = b.getName());
+  };
+  h.onkeydown = function(a) {
+    13 == a.keyCode && this.blur();
+  };
+  c.nameField = h;
+  d.appendChild(h);
+  d.appendChild(f);
+  d.appendChild(g);
+  d.appendChild(e);
+  b.listElement = c;
+};
+Entry.VariableContainer.prototype.mapVariable = function(b, a) {
+  for (var c = this.variables_.length, d = 0;d < c;d++) {
+    b(this.variables_[d], a);
+  }
+};
+Entry.VariableContainer.prototype.mapList = function(b, a) {
+  for (var c = this.lists_.length, d = 0;d < c;d++) {
+    b(this.lists_[d], a);
+  }
+};
+Entry.VariableContainer.prototype.getVariableJSON = function() {
+  for (var b = [], a = 0;a < this.variables_.length;a++) {
+    b.push(this.variables_[a].toJSON());
+  }
+  for (a = 0;a < this.lists_.length;a++) {
+    b.push(this.lists_[a].toJSON());
+  }
+  Entry.engine.projectTimer && b.push(Entry.engine.projectTimer);
+  a = Entry.container.inputValue;
+  Entry.isEmpty(a) || b.push(a);
+  return b;
+};
+Entry.VariableContainer.prototype.getMessageJSON = function() {
+  for (var b = [], a = 0;a < this.messages_.length;a++) {
+    b.push({id:this.messages_[a].id, name:this.messages_[a].name});
+  }
+  return b;
+};
+Entry.VariableContainer.prototype.getFunctionJSON = function() {
+  var b = [], a;
+  for (a in this.functions_) {
+    var c = this.functions_[a], c = {id:c.id, content:JSON.stringify(c.content.toJSON())};
+    b.push(c);
+  }
+  return b;
+};
+Entry.VariableContainer.prototype.resetVariableAddPanel = function(b) {
+  b = b || "variable";
+  var a = "variable" == b ? this.variableAddPanel : this.listAddPanel, c = a.info;
+  c.isCloud = !1;
+  c.object = null;
+  a.view.name.value = "";
+  a.isOpen = !1;
+  this.updateVariableAddView(b);
+};
+Entry.VariableContainer.prototype.generateVariableAddView = function() {
+  var b = this, a = Entry.createElement("li");
+  this.variableAddPanel.view = a;
+  this.variableAddPanel.isOpen = !1;
+  a.addClass("entryVariableAddSpaceWorkspace");
+  a.addClass("entryRemove");
+  var c = Entry.createElement("div");
+  c.addClass("entryVariableAddSpaceNameWrapperWorkspace");
+  a.appendChild(c);
+  var d = Entry.createElement("input");
+  d.addClass("entryVariableAddSpaceInputWorkspace");
+  d.setAttribute("placeholder", Lang.Workspace.Variable_placeholder_name);
+  d.variableContainer = this;
+  d.onkeypress = function(a) {
+    13 == a.keyCode && (Entry.variableContainer.addVariable(), b.updateSelectedVariable(b.variables_[0]), a = b.variables_[0].listElement, a.editButton.addClass("entryRemove"), a.editSaveButton.removeClass("entryRemove"), a.nameField.removeAttribute("disabled"), a.nameField.focus());
+  };
+  this.variableAddPanel.view.name = d;
+  c.appendChild(d);
+  c = Entry.createElement("div");
+  c.addClass("entryVariableAddSpaceGlobalWrapperWorkspace");
+  c.bindOnClick(function(a) {
+    b.variableAddPanel.info.object = null;
+    b.updateVariableAddView("variable");
+  });
+  a.appendChild(c);
+  d = Entry.createElement("span");
+  d.innerHTML = Lang.Workspace.Variable_use_all_objects;
+  c.appendChild(d);
+  d = Entry.createElement("span");
+  d.addClass("entryVariableAddSpaceCheckWorkspace");
+  this.variableAddPanel.view.globalCheck = d;
+  this.variableAddPanel.info.object || d.addClass("entryVariableAddChecked");
+  c.appendChild(d);
+  c = Entry.createElement("div");
+  c.addClass("entryVariableAddSpaceLocalWrapperWorkspace");
+  c.bindOnClick(function(a) {
+    Entry.playground.object && (a = b.variableAddPanel.info, a.object = Entry.playground.object.id, a.isCloud = !1, b.updateVariableAddView("variable"));
+  });
+  a.appendChild(c);
+  d = Entry.createElement("span");
+  d.innerHTML = Lang.Workspace.Variable_use_this_object;
+  c.appendChild(d);
+  d = Entry.createElement("span");
+  d.addClass("entryVariableAddSpaceCheckWorkspace");
+  this.variableAddPanel.view.localCheck = d;
+  this.variableAddPanel.info.object && d.addClass("entryVariableAddChecked");
+  c.appendChild(d);
+  c = Entry.createElement("div");
+  a.cloudWrapper = c;
+  c.addClass("entryVariableAddSpaceCloudWrapperWorkspace");
+  c.bindOnClick(function(a) {
+    a = b.variableAddPanel.info;
+    a.object || (a.isCloud = !a.isCloud, b.updateVariableAddView("variable"));
+  });
+  a.appendChild(c);
+  d = Entry.createElement("span");
+  d.addClass("entryVariableAddSpaceCloudSpanWorkspace");
+  d.innerHTML = Lang.Workspace.Variable_create_cloud;
+  c.appendChild(d);
+  d = Entry.createElement("span");
+  this.variableAddPanel.view.cloudCheck = d;
+  d.addClass("entryVariableAddSpaceCheckWorkspace");
+  d.addClass("entryVariableAddSpaceCloudCheckWorkspace");
+  this.variableAddPanel.info.isCloud && d.addClass("entryVariableAddChecked");
+  c.appendChild(d);
+  c = Entry.createElement("div");
+  c.addClass("entryVariableAddSpaceButtonWrapperWorkspace");
+  a.appendChild(c);
+  a = Entry.createElement("span");
+  a.addClass("entryVariableAddSpaceCancelWorkspace");
+  a.addClass("entryVariableAddSpaceButtonWorkspace");
+  a.innerHTML = Lang.Buttons.cancel;
+  a.bindOnClick(function(a) {
+    b.variableAddPanel.view.addClass("entryRemove");
+    b.resetVariableAddPanel("variable");
+  });
+  c.appendChild(a);
+  a = Entry.createElement("span");
+  a.addClass("entryVariableAddSpaceConfirmWorkspace");
+  a.addClass("entryVariableAddSpaceButtonWorkspace");
+  a.innerHTML = Lang.Buttons.save;
+  a.variableContainer = this;
+  a.bindOnClick(function(a) {
+    Entry.variableContainer.addVariable();
+    b.updateSelectedVariable(b.variables_[0]);
+    a = b.variables_[0].listElement;
+    a.editButton.addClass("entryRemove");
+    a.editSaveButton.removeClass("entryRemove");
+    a.nameField.removeAttribute("disabled");
+    a.nameField.focus();
+  });
+  c.appendChild(a);
+};
+Entry.VariableContainer.prototype.generateListAddView = function() {
+  var b = this, a = Entry.createElement("li");
+  this.listAddPanel.view = a;
+  this.listAddPanel.isOpen = !1;
+  a.addClass("entryVariableAddSpaceWorkspace");
+  a.addClass("entryRemove");
+  var c = Entry.createElement("div");
+  c.addClass("entryVariableAddSpaceNameWrapperWorkspace");
+  c.addClass("entryListAddSpaceNameWrapperWorkspace");
+  a.appendChild(c);
+  var d = Entry.createElement("input");
+  d.addClass("entryVariableAddSpaceInputWorkspace");
+  d.setAttribute("placeholder", Lang.Workspace.list_name);
+  this.listAddPanel.view.name = d;
+  d.variableContainer = this;
+  d.onkeypress = function(a) {
+    13 == a.keyCode && (b.addList(), a = b.lists_[0], b.updateSelectedVariable(a), a = a.listElement, a.editButton.addClass("entryRemove"), a.editSaveButton.removeClass("entryRemove"), a.nameField.removeAttribute("disabled"), a.nameField.focus());
+  };
+  c.appendChild(d);
+  c = Entry.createElement("div");
+  c.addClass("entryVariableAddSpaceGlobalWrapperWorkspace");
+  c.bindOnClick(function(a) {
+    b.listAddPanel.info.object = null;
+    b.updateVariableAddView("list");
+  });
+  a.appendChild(c);
+  d = Entry.createElement("span");
+  d.innerHTML = Lang.Workspace.use_all_objects;
+  c.appendChild(d);
+  d = Entry.createElement("span");
+  d.addClass("entryVariableAddSpaceCheckWorkspace");
+  this.listAddPanel.view.globalCheck = d;
+  this.listAddPanel.info.object || d.addClass("entryVariableAddChecked");
+  c.appendChild(d);
+  c = Entry.createElement("div");
+  c.addClass("entryVariableAddSpaceLocalWrapperWorkspace");
+  c.bindOnClick(function(a) {
+    Entry.playground.object && (a = b.listAddPanel.info, a.object = Entry.playground.object.id, a.isCloud = !1, b.updateVariableAddView("list"));
+  });
+  a.appendChild(c);
+  d = Entry.createElement("span");
+  d.innerHTML = Lang.Workspace.Variable_use_this_object;
+  c.appendChild(d);
+  d = Entry.createElement("span");
+  d.addClass("entryVariableAddSpaceCheckWorkspace");
+  this.listAddPanel.view.localCheck = d;
+  this.variableAddPanel.info.object && addVariableLocalCheck.addClass("entryVariableAddChecked");
+  c.appendChild(d);
+  c = Entry.createElement("div");
+  a.cloudWrapper = c;
+  c.addClass("entryVariableAddSpaceCloudWrapperWorkspace");
+  c.bindOnClick(function(a) {
+    a = b.listAddPanel.info;
+    a.object || (a.isCloud = !a.isCloud, b.updateVariableAddView("list"));
+  });
+  a.appendChild(c);
+  d = Entry.createElement("span");
+  d.addClass("entryVariableAddSpaceCloudSpanWorkspace");
+  d.innerHTML = Lang.Workspace.List_create_cloud;
+  c.appendChild(d);
+  d = Entry.createElement("span");
+  this.listAddPanel.view.cloudCheck = d;
+  d.addClass("entryVariableAddSpaceCheckWorkspace");
+  d.addClass("entryVariableAddSpaceCloudCheckWorkspace");
+  this.listAddPanel.info.isCloud && d.addClass("entryVariableAddChecked");
+  c.appendChild(d);
+  c = Entry.createElement("div");
+  c.addClass("entryVariableAddSpaceButtonWrapperWorkspace");
+  a.appendChild(c);
+  a = Entry.createElement("span");
+  a.addClass("entryVariableAddSpaceCancelWorkspace");
+  a.addClass("entryVariableAddSpaceButtonWorkspace");
+  a.innerHTML = Lang.Buttons.cancel;
+  a.bindOnClick(function(a) {
+    b.listAddPanel.view.addClass("entryRemove");
+    b.resetVariableAddPanel("list");
+  });
+  c.appendChild(a);
+  a = Entry.createElement("span");
+  a.addClass("entryVariableAddSpaceConfirmWorkspace");
+  a.addClass("entryVariableAddSpaceButtonWorkspace");
+  a.innerHTML = Lang.Buttons.save;
+  a.variableContainer = this;
+  a.bindOnClick(function(a) {
+    b.addList();
+    a = b.lists_[0];
+    b.updateSelectedVariable(a);
+    a = a.listElement;
+    a.editButton.addClass("entryRemove");
+    a.editSaveButton.removeClass("entryRemove");
+    a.nameField.removeAttribute("disabled");
+    a.nameField.focus();
+  });
+  c.appendChild(a);
+};
+Entry.VariableContainer.prototype.generateVariableSplitterView = function() {
+  var b = Entry.createElement("li");
+  b.addClass("entryVariableSplitterWorkspace");
+  var a = Entry.createElement("li");
+  a.addClass("entryVariableSplitterWorkspace");
+  this.variableSplitters = {top:b, bottom:a};
+};
+Entry.VariableContainer.prototype.openVariableAddPanel = function(b) {
+  b = b ? b : "variable";
+  Entry.playground.toggleOnVariableView();
+  Entry.playground.changeViewMode("variable");
+  "variable" == b ? this.variableAddPanel.isOpen = !0 : this.listAddPanel.isOpen = !0;
+  this.selectFilter(b);
+  this.updateVariableAddView(b);
+};
+Entry.VariableContainer.prototype.getMenuXml = function(b) {
+  for (var a = [], c = 0 !== this.variables_.length, d = 0 !== this.lists_.length, e, f = 0, g;g = b[f];f++) {
+    var h = g.tagName;
+    h && "BLOCK" == h.toUpperCase() ? (e = g.getAttribute("bCategory"), !c && "variable" == e || !d && "list" == e || a.push(g)) : !h || "SPLITTER" != h.toUpperCase() && "BTN" != h.toUpperCase() || !c && "variable" == e || (d || "list" != e) && a.push(g);
+  }
+  return a;
+};
+Entry.VariableContainer.prototype.addCloneLocalVariables = function(b) {
+  var a = [], c = this;
+  this.mapVariable(function(b, c) {
+    if (b.object_ && b.object_ == c.objectId) {
+      var f = b.toJSON();
+      f.originId = f.id;
+      f.id = Entry.generateHash();
+      f.object = c.newObjectId;
+      delete f.x;
+      delete f.y;
+      a.push(f);
+      c.json.script = c.json.script.replace(new RegExp(f.originId, "g"), f.id);
+    }
+  }, b);
+  a.map(function(a) {
+    c.addVariable(a);
+  });
+};
+Entry.VariableContainer.prototype.generateTimer = function(b) {
+  b || (b = {}, b.id = Entry.generateHash(), b.name = Lang.Workspace.Variable_Timer, b.value = 0, b.variableType = "timer", b.visible = !1, b.x = 150, b.y = -70, b = new Entry.Variable(b));
+  b.generateView();
+  b.tick = null;
+  Entry.engine.projectTimer = b;
+  Entry.addEventListener("stop", function() {
+    Entry.engine.stopProjectTimer();
+  });
+};
+Entry.VariableContainer.prototype.generateAnswer = function(b) {
+  b || (b = new Entry.Variable({id:Entry.generateHash(), name:Lang.Blocks.VARIABLE_get_canvas_input_value, value:0, variableType:"answer", visible:!1, x:150, y:-100}));
+  b.generateView();
+  Entry.container.inputValue = b;
+};
+Entry.VariableContainer.prototype.generateVariableSettingView = function() {
+  var b = this, a = Entry.createElement("div");
+  a.bindOnClick(function(a) {
+    a.stopPropagation();
+  });
+  this.variableSettingView = a;
+  a.addClass("entryVariableSettingWorkspace");
+  this.listView_.appendChild(a);
+  a.addClass("entryRemove");
+  var c = Entry.createElement("div");
+  c.addClass("entryVariableSettingVisibleWrapperWorkspace");
+  c.bindOnClick(function(a) {
+    a = b.selectedVariable;
+    var c = b.variableSettingView.visibleCheck;
+    a.setVisible(!a.isVisible());
+    a.isVisible() ? c.addClass("entryVariableSettingChecked") : c.removeClass("entryVariableSettingChecked");
+  });
+  a.appendChild(c);
+  var d = Entry.createElement("span");
+  d.innerHTML = Lang.Workspace.show_variable;
+  c.appendChild(d);
+  d = Entry.createElement("span");
+  d.addClass("entryVariableSettingCheckWorkspace");
+  a.visibleCheck = d;
+  c.appendChild(d);
+  c = Entry.createElement("div");
+  c.addClass("entryVariableSettingInitValueWrapperWorkspace");
+  a.appendChild(c);
+  d = Entry.createElement("span");
+  d.innerHTML = Lang.Workspace.default_value;
+  c.appendChild(d);
+  d = Entry.createElement("input");
+  d.addClass("entryVariableSettingInitValueInputWorkspace");
+  a.initValueInput = d;
+  d.value = 0;
+  d.onkeyup = function(a) {
+    b.selectedVariable.setValue(this.value);
+  };
+  d.onblur = function(a) {
+    b.selectedVariable.setValue(this.value);
+  };
+  a.initValueInput = d;
+  c.appendChild(d);
+  c = Entry.createElement("div");
+  c.addClass("entryVariableSettingSplitterWorkspace");
+  a.appendChild(c);
+  c = Entry.createElement("div");
+  c.addClass("entryVariableSettingSlideWrapperWorkspace");
+  a.appendChild(c);
+  d = Entry.createElement("span");
+  d.innerHTML = Lang.Workspace.slide;
+  c.appendChild(d);
+  d = Entry.createElement("span");
+  d.addClass("entryVariableSettingCheckWorkspace");
+  a.slideCheck = d;
+  c.appendChild(d);
+  c.bindOnClick(function(a) {
+    var c;
+    a = b.selectedVariable;
+    var d = b.variables_, f = a.getType();
+    "variable" == f ? (c = a.toJSON(), c.variableType = "slide", c = new Entry.Variable(c), d.splice(d.indexOf(a), 0, c), 0 > c.getValue() && c.setValue(0), 100 < c.getValue() && c.setValue(100), e.removeAttribute("disabled"), g.removeAttribute("disabled")) : "slide" == f && (c = a.toJSON(), c.variableType = "variable", c = new Entry.Variable(c), d.splice(d.indexOf(a), 0, c), e.setAttribute("disabled", "disabled"), g.setAttribute("disabled", "disabled"));
+    b.createVariableView(c);
+    b.removeVariable(a);
+    b.updateSelectedVariable(c);
+    c.generateView();
+  });
+  c = Entry.createElement("div");
+  a.minMaxWrapper = c;
+  c.addClass("entryVariableSettingMinMaxWrapperWorkspace");
+  a.appendChild(c);
+  d = Entry.createElement("span");
+  d.innerHTML = Lang.Workspace.min_value;
+  c.appendChild(d);
+  var e = Entry.createElement("input");
+  e.addClass("entryVariableSettingMinValueInputWorkspace");
+  d = b.selectedVariable;
+  e.value = d && "slide" == d.type ? d.minValue_ : 0;
+  e.onblur = function(a) {
+    isNaN(this.value) || (a = b.selectedVariable, a.setMinValue(this.value), b.updateVariableSettingView(a));
+  };
+  a.minValueInput = e;
+  c.appendChild(e);
+  var f = Entry.createElement("span");
+  f.addClass("entryVariableSettingMaxValueSpanWorkspace");
+  f.innerHTML = Lang.Workspace.max_value;
+  c.appendChild(f);
+  var g = Entry.createElement("input");
+  g.addClass("entryVariableSettingMaxValueInputWorkspace");
+  g.value = d && "slide" == d.type ? d.maxValue_ : 100;
+  g.onblur = function(a) {
+    isNaN(this.value) || (a = b.selectedVariable, a.setMaxValue(this.value), b.updateVariableSettingView(a));
+  };
+  a.maxValueInput = g;
+  c.appendChild(g);
+};
+Entry.VariableContainer.prototype.updateVariableSettingView = function(b) {
+  var a = this.variableSettingView, c = a.visibleCheck, d = a.initValueInput, e = a.slideCheck, f = a.minValueInput, g = a.maxValueInput, h = a.minMaxWrapper;
+  c.removeClass("entryVariableSettingChecked");
+  b.isVisible() && c.addClass("entryVariableSettingChecked");
+  e.removeClass("entryVariableSettingChecked");
+  "slide" == b.getType() ? (e.addClass("entryVariableSettingChecked"), f.removeAttribute("disabled"), g.removeAttribute("disabled"), f.value = b.getMinValue(), g.value = b.getMaxValue(), h.removeClass("entryVariableMinMaxDisabledWorkspace")) : (h.addClass("entryVariableMinMaxDisabledWorkspace"), f.setAttribute("disabled", "disabled"), g.setAttribute("disabled", "disabled"));
+  d.value = b.getValue();
+  b.listElement.appendChild(a);
+  a.removeClass("entryRemove");
+};
+Entry.VariableContainer.prototype.generateListSettingView = function() {
+  var b = this, a = Entry.createElement("div");
+  a.bindOnClick(function(a) {
+    a.stopPropagation();
+  });
+  this.listSettingView = a;
+  a.addClass("entryListSettingWorkspace");
+  this.listView_.appendChild(a);
+  a.addClass("entryRemove");
+  var c = Entry.createElement("div");
+  c.addClass("entryListSettingVisibleWrapperWorkspace");
+  c.bindOnClick(function(a) {
+    a = b.selectedList;
+    var c = b.listSettingView.visibleCheck;
+    a.setVisible(!a.isVisible());
+    a.isVisible() ? c.addClass("entryListSettingCheckedWorkspace") : c.removeClass("entryListSettingCheckedWorkspace");
+  });
+  a.appendChild(c);
+  var d = Entry.createElement("span");
+  d.innerHTML = Lang.Workspace.show_list_workspace;
+  c.appendChild(d);
+  d = Entry.createElement("span");
+  d.addClass("entryListSettingCheckWorkspace");
+  a.visibleCheck = d;
+  c.appendChild(d);
+  d = Entry.createElement("div");
+  d.addClass("entryListSettingLengthWrapperWorkspace");
+  c = Entry.createElement("span");
+  c.addClass("entryListSettingLengthSpanWorkspace");
+  c.innerHTML = Lang.Workspace.number_of_list;
+  d.appendChild(c);
+  a.appendChild(d);
+  c = Entry.createElement("div");
+  c.addClass("entryListSettingLengthControllerWorkspace");
+  d.appendChild(c);
+  d = Entry.createElement("span");
+  d.addClass("entryListSettingMinusWorkspace");
+  d.bindOnClick(function(a) {
+    b.selectedList.array_.pop();
+    b.updateListSettingView(b.selectedList);
+  });
+  c.appendChild(d);
+  d = Entry.createElement("input");
+  d.addClass("entryListSettingLengthInputWorkspace");
+  d.onblur = function() {
+    b.setListLength(this.value);
+  };
+  d.onkeypress = function(a) {
+    13 == a.keyCode && this.blur();
+  };
+  a.lengthInput = d;
+  c.appendChild(d);
+  d = Entry.createElement("span");
+  d.addClass("entryListSettingPlusWorkspace");
+  d.bindOnClick(function(a) {
+    b.selectedList.array_.push({data:0});
+    b.updateListSettingView(b.selectedList);
+  });
+  c.appendChild(d);
+  c = Entry.createElement("div");
+  a.seperator = c;
+  a.appendChild(c);
+  c.addClass("entryListSettingSeperatorWorkspace");
+  c = Entry.createElement("div");
+  c.addClass("entryListSettingListValuesWorkspace");
+  a.listValues = c;
+  a.appendChild(c);
+};
+Entry.VariableContainer.prototype.updateListSettingView = function(b) {
+  var a = this;
+  b = b || this.selectedList;
+  var c = this.listSettingView, d = c.listValues, e = c.visibleCheck, f = c.lengthInput, g = c.seperator;
+  e.removeClass("entryListSettingCheckedWorkspace");
+  b.isVisible() && e.addClass("entryListSettingCheckedWorkspace");
+  f.value = b.array_.length;
+  for (b.listElement.appendChild(c);d.firstChild;) {
+    d.removeChild(d.firstChild);
+  }
+  var h = b.array_;
+  0 === h.length ? g.addClass("entryRemove") : g.removeClass("entryRemove");
+  for (e = 0;e < h.length;e++) {
+    (function(c) {
+      var e = Entry.createElement("div");
+      e.addClass("entryListSettingValueWrapperWorkspace");
+      var f = Entry.createElement("span");
+      f.addClass("entryListSettingValueNumberSpanWorkspace");
+      f.innerHTML = c + 1;
+      e.appendChild(f);
+      f = Entry.createElement("input");
+      f.value = h[c].data;
+      f.onblur = function() {
+        h[c].data = this.value;
+        b.updateView();
+      };
+      f.onkeypress = function(a) {
+        13 == a.keyCode && this.blur();
+      };
+      f.addClass("entryListSettingEachInputWorkspace");
+      e.appendChild(f);
+      f = Entry.createElement("span");
+      f.bindOnClick(function() {
+        h.splice(c, 1);
+        a.updateListSettingView();
+      });
+      f.addClass("entryListSettingValueRemoveWorkspace");
+      e.appendChild(f);
+      d.appendChild(e);
+    })(e);
+  }
+  b.updateView();
+  c.removeClass("entryRemove");
+};
+Entry.VariableContainer.prototype.setListLength = function(b) {
+  b = Number(b);
+  var a = this.selectedList.array_;
+  if (!isNaN(b)) {
+    var c = a.length;
+    if (c < b) {
+      for (b -= c, c = 0;c < b;c++) {
+        a.push({data:0});
+      }
+    } else {
+      c > b && (a.length = b);
+    }
+  }
+  this.updateListSettingView();
+};
+Entry.VariableContainer.prototype.updateViews = function() {
+  var b = this.lists_;
+  this.variables_.map(function(a) {
+    a.updateView();
+  });
+  b.map(function(a) {
+    a.updateView();
+  });
+};
+Entry.VariableContainer.prototype.updateSelectedVariable = function(b, a) {
+  b ? "variable" == b.type ? (this.selectedVariable = b, this.updateVariableSettingView(b)) : "slide" == b.type ? (this.selectedVariable = b, this.updateVariableSettingView(b)) : "list" == b.type && (this.selectedList = b, this.updateListSettingView(b)) : (this.selectedVariable = null, "variable" == (a || "variable") ? this.variableSettingView.addClass("entryRemove") : this.listSettingView.addClass("entryRemove"));
+};
+Entry.VariableContainer.prototype.removeLocalVariables = function(b) {
+  var a = [], c = this;
+  this.mapVariable(function(b, c) {
+    b.object_ && b.object_ == c && a.push(b);
+  }, b);
+  a.map(function(a) {
+    c.removeVariable(a);
+  });
+};
+Entry.VariableContainer.prototype.updateCloudVariables = function() {
+  var b = Entry.projectId;
+  if (Entry.cloudSavable && b) {
+    var a = Entry.variableContainer, b = a.variables_.filter(function(a) {
+      return a.isCloud_;
+    }), b = b.map(function(a) {
+      return a.toJSON();
+    }), a = a.lists_.filter(function(a) {
+      return a.isCloud_;
+    }), a = a.map(function(a) {
+      return a.toJSON();
+    });
+    $.ajax({url:"/api/project/variable/" + Entry.projectId, type:"PUT", data:{variables:b, lists:a}}).done(function() {
+    });
+  }
+};
+Entry.VariableContainer.prototype.addRef = function(b, a) {
+  if (this.view_ && Entry.playground.mainWorkspace.getMode() === Entry.Workspace.MODE_BOARD) {
+    var c = {object:a.getCode().object, block:a};
+    a.funcBlock && (c.funcBlock = a.funcBlock, delete a.funcBlock);
+    this[b].push(c);
+    if ("_functionRefs" == b) {
+      for (var d = a.type.substr(5), d = Entry.variableContainer.functions_[d].content.getBlockList(), e = 0;e < d.length;e++) {
+        a = d[e];
+        var f = a.events;
+        f && f.viewAdd && f.viewAdd.forEach(function(b) {
+          a.getCode().object = c.object;
+          b && (a.funcBlock = c.block, b(a));
+        });
+        f && f.dataAdd && f.dataAdd.forEach(function(b) {
+          a.getCode().object = c.object;
+          b && (a.funcBlock = c.block, b(a));
+        });
+      }
+    }
+    return c;
+  }
+};
+Entry.VariableContainer.prototype.removeRef = function(b, a) {
+  if (Entry.playground.mainWorkspace.getMode() === Entry.Workspace.MODE_BOARD) {
+    for (var c = this[b], d = 0;d < c.length;d++) {
+      if (c[d].block == a) {
+        c.splice(d, 1);
+        break;
+      }
+    }
+    if ("_functionRefs" == b) {
+      for (d = a.type.substr(5), c = Entry.variableContainer.functions_[d].content.getBlockList(), d = 0;d < c.length;d++) {
+        a = c[d];
+        var e = a.events;
+        e && e.viewDestroy && e.viewDestroy.forEach(function(b) {
+          b && b(a);
+        });
+        e && e.dataDestroy && e.dataDestroy.forEach(function(b) {
+          b && b(a);
+        });
+      }
+    }
+  }
+};
+Entry.VariableContainer.prototype._getBlockMenu = function() {
+  return Entry.playground.mainWorkspace.getBlockMenu();
+};
+Entry.block.run = {skeleton:"basic", color:"#3BBD70", contents:["this is", "basic block"], func:function() {
+}};
+Entry.block.mutant = {skeleton:"basic", event:"start", color:"#3BBD70", template:"test mutant block", params:[], func:function() {
+}, changeEvent:new Entry.Event};
+Entry.block.jr_start = {skeleton:"pebble_event", event:"start", color:"#3BBD70", template:"%1", params:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_play_image.png", highlightColor:"#3BBD70", position:{x:0, y:0}, size:22}], func:function() {
+  var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a;
+  for (a in b) {
+    this._unit = b[a];
+  }
+  Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
+}};
+Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", template:"%1 \ubc18\ubcf5", params:[{type:"Text", text:Lang.Menus.repeat_0}, {type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:3, fontSize:14, roundValue:3}, {type:"Text", text:Lang.Menus.repeat_1}], statements:[], func:function() {
+  if (void 0 === this.repeatCount) {
+    return this.repeatCount = this.block.params[0], Entry.STATIC.CONTINUE;
+  }
+  if (0 < this.repeatCount) {
+    this.repeatCount--;
+    var b = this.block.statements[0];
+    if (0 !== b.getBlocks().length) {
+      return this.executor.stepInto(b), Entry.STATIC.CONTINUE;
+    }
+  } else {
+    delete this.repeatCount;
+  }
+}};
+Entry.block.jr_item = {skeleton:"pebble_basic", color:"#F46C6C", template:"\uaf43 \ubaa8\uc73c\uae30 %1", params:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_item_image.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var b = this;
+    Ntry.dispatchEvent("unitAction", Ntry.STATIC.GET_ITEM, function() {
+      Ntry.dispatchEvent("getItem");
+      b.isAction = !1;
+    });
+    return Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.cparty_jr_item = {skeleton:"pebble_basic", color:"#8ABC1D", template:"%1 %2", params:[{type:"Text", text:Lang.Menus.pick_up_pencil}, {type:"Indicator", img:"/img/assets/ntry/bitmap/cpartyjr/pen.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var b = this;
+    Ntry.dispatchEvent("unitAction", Ntry.STATIC.GET_ITEM, function() {
+      Ntry.dispatchEvent("getItem");
+      b.isAction = !1;
+    });
+    return Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.jr_north = {skeleton:"pebble_basic", color:"#A751E3", template:"%1 %2", params:[{type:"Text", text:Lang.Menus.go_up}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_up_image.png", position:{x:83, y:0}, size:22}], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var b = Ntry.STATIC, a = this, c = function() {
+      window.setTimeout(function() {
+        Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
+          a.isAction = !1;
+        });
+      }, 3);
+    }, d;
+    switch(Ntry.unitComp.direction) {
+      case Ntry.STATIC.EAST:
+        d = b.TURN_LEFT;
+        break;
+      case Ntry.STATIC.SOUTH:
+        d = b.HALF_ROTATION;
+        break;
+      case Ntry.STATIC.WEST:
+        d = b.TURN_RIGHT;
+        break;
+      default:
+        c();
+    }
+    d && Ntry.dispatchEvent("unitAction", d, c);
+    return Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.jr_east = {skeleton:"pebble_basic", color:"#A751E3", template:"%1 %2", params:[{type:"Text", text:Lang.Menus.go_right}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_right_image.png", position:{x:83, y:0}, size:22}], func:function() {
+  var b = Ntry.STATIC;
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var a = this, c = function() {
+      window.setTimeout(function() {
+        Ntry.dispatchEvent("unitAction", b.WALK, function() {
+          a.isAction = !1;
+        });
+      }, 3);
+    }, d;
+    switch(Ntry.unitComp.direction) {
+      case b.SOUTH:
+        d = b.TURN_LEFT;
+        break;
+      case b.WEST:
+        d = b.HALF_ROTATION;
+        break;
+      case b.NORTH:
+        d = b.TURN_RIGHT;
+        break;
+      default:
+        c();
+    }
+    d && Ntry.dispatchEvent("unitAction", d, c);
+    return Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.jr_south = {skeleton:"pebble_basic", color:"#A751E3", template:"%1 %2", params:[{type:"Text", text:Lang.Menus.go_down}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_down_image.png", position:{x:83, y:0}, size:22}], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var b = Ntry.STATIC, a = this, c = function() {
+      window.setTimeout(function() {
+        Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
+          a.isAction = !1;
+        });
+      }, 3);
+    }, d;
+    switch(Ntry.unitComp.direction) {
+      case b.EAST:
+        d = b.TURN_RIGHT;
+        break;
+      case b.NORTH:
+        d = b.HALF_ROTATION;
+        break;
+      case b.WEST:
+        d = b.TURN_LEFT;
+        break;
+      default:
+        c();
+    }
+    d && Ntry.dispatchEvent("unitAction", d, c);
+    return Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", template:"%1 %2", params:[{type:"Text", text:Lang.Menus.go_left}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_left_image.png", position:{x:83, y:0}, size:22}], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var b = Ntry.STATIC, a = this, c = function() {
+      window.setTimeout(function() {
+        Ntry.dispatchEvent("unitAction", b.WALK, function() {
+          a.isAction = !1;
+        });
+      }, 3);
+    }, d;
+    switch(Ntry.unitComp.direction) {
+      case b.SOUTH:
+        d = b.TURN_RIGHT;
+        break;
+      case b.EAST:
+        d = b.HALF_ROTATION;
+        break;
+      case b.NORTH:
+        d = b.TURN_LEFT;
+        break;
+      default:
+        c();
+    }
+    d && Ntry.dispatchEvent("unitAction", d, c);
+    return Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.jr_start_basic = {skeleton:"basic_event", event:"start", color:"#3BBD70", template:"%1 %2", params:[{type:"Indicator", boxMultiplier:2, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}, Lang.Menus.maze_when_run], func:function() {
+  var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a;
+  for (a in b) {
+    this._unit = b[a];
+  }
+  Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
+}};
+Entry.block.jr_go_straight = {skeleton:"basic", color:"#A751E3", template:"%1 %2", params:[Lang.Menus.go_forward, {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var b = this;
+    Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
+      b.isAction = !1;
+    });
+    return Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.jr_turn_left = {skeleton:"basic", color:"#A751E3", template:"%1 %2", params:[Lang.Menus.jr_turn_left, {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_l.png", size:24}], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var b = this;
+    Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, function() {
+      b.isAction = !1;
+    });
+    return Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.jr_turn_right = {skeleton:"basic", color:"#A751E3", template:"%1 %2", params:[Lang.Menus.jr_turn_right, {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_r.png", size:24}], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var b = this;
+    Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, function() {
+      b.isAction = !1;
+    });
+    return Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.jr_go_slow = {skeleton:"basic", color:"#f46c6c", template:"%1 %2", params:[Lang.Menus.go_slow, {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_slow.png", size:24}], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var b = this;
+    Ntry.dispatchEvent("unitAction", Ntry.STATIC.GO_SLOW, function() {
+      b.isAction = !1;
+    });
+    return Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.jr_repeat_until_dest = {skeleton:"basic_loop", color:"#498DEB", template:"%1 %2 %3 %4", syntax:["BasicWhile", "true"], params:[Lang.Menus.repeat_until_reach_2, {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_goal_image.png", size:18}, Lang.Menus.repeat_until_reach_1, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
+  var b = this.block.statements[0];
+  if (0 !== b.getBlocks().length) {
+    return this.executor.stepInto(b), Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", template:"%1 %2 %3 %4", params:[Lang.Menus.jr_if_1, {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_construction_image.png", size:18}, Lang.Menus.jr_if_2, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
+  if (!this.isContinue) {
+    var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a, c;
+    for (c in b) {
+      a = b[c];
+    }
+    b = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.UNIT);
+    a = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.GRID);
+    a = {x:a.x, y:a.y};
+    Ntry.addVectorByDirection(a, b.direction, 1);
+    a = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:a.x, y:a.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_REPAIR});
+    this.isContinue = !0;
+    b = this.block.statements[0];
+    if (0 !== a.length && 0 !== b.getBlocks().length) {
+      return this.executor.stepInto(b), Entry.STATIC.CONTINUE;
+    }
+  }
+}};
+Entry.block.jr_if_speed = {skeleton:"basic_loop", color:"#498DEB", template:Lang.Menus.jr_if_1 + " %1 " + Lang.Menus.jr_if_2 + " %2", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_speed_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
+  if (!this.isContinue) {
+    var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a, c;
+    for (c in b) {
+      a = b[c];
+    }
+    b = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.UNIT);
+    a = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.GRID);
+    a = {x:a.x, y:a.y};
+    Ntry.addVectorByDirection(a, b.direction, 1);
+    a = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:a.x, y:a.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_SLOW});
+    this.isContinue = !0;
+    b = this.block.statements[0];
+    if (0 !== a.length && 0 !== b.getBlocks().length) {
+      return this.executor.stepInto(b), Entry.STATIC.CONTINUE;
+    }
+  }
+}};
+Entry.block.maze_step_start = {skeleton:"basic_event", mode:"maze", event:"start", color:"#3BBD70", template:"%1 \uc2dc\uc791\ud558\uae30\ub97c \ud074\ub9ad\ud588\uc744 \ub54c", syntax:["Program"], params:[{type:"Indicator", boxMultiplier:2, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}], func:function() {
+  var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a;
+  for (a in b) {
+    this._unit = b[a];
+  }
+  Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
+}};
+Entry.block.maze_step_jump = {skeleton:"basic", mode:"maze", color:"#FF6E4B", template:"\ub6f0\uc5b4\ub118\uae30%1", params:[{type:"Image", img:"/img/assets/week/blocks/jump.png", size:24}], syntax:["Scope", "jump"], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var b = this;
+    Ntry.dispatchEvent("unitAction", Ntry.STATIC.JUMP, function() {
+      b.isAction = !1;
+    });
+    return Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.maze_step_for = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"%1 \ubc88 \ubc18\ubcf5\ud558\uae30%2", syntax:["BasicIteration"], params:[{type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
+  if (void 0 === this.repeatCount) {
+    return this.repeatCount = this.block.params[0], Entry.STATIC.CONTINUE;
+  }
+  if (0 < this.repeatCount) {
+    this.repeatCount--;
+    var b = this.block.statements[0];
+    if (0 !== b.getBlocks().length) {
+      return this.executor.stepInto(b), Entry.STATIC.CONTINUE;
+    }
+  } else {
+    delete this.repeatCount;
+  }
+}};
+Entry.block.test = {skeleton:"basic_boolean_field", mode:"maze", color:"#127CDB", template:"%1 this is test block %2", params:[{type:"Angle", value:"90"}, {type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}], func:function() {
+}};
+Entry.block.maze_repeat_until_1 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"%1 \ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5%2", syntax:["BasicWhile", "true"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
+  var b = this.block.statements[0];
+  if (0 !== b.getBlocks().length) {
+    return this.executor.stepInto(b), Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.maze_repeat_until_2 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ubaa8\ub4e0 %1 \ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5%2", syntax:["BasicWhile", "true"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
+  var b = this.block.statements[0];
+  if (0 !== b.getBlocks().length) {
+    return this.executor.stepInto(b), Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.maze_step_if_1 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", syntax:["BasicIf", 'front == "wall"'], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}], func:function() {
+  if (!this.isContinue) {
+    var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a, c;
+    for (c in b) {
+      a = b[c];
+    }
+    b = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.UNIT);
+    a = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.GRID);
+    a = {x:a.x, y:a.y};
+    Ntry.addVectorByDirection(a, b.direction, 1);
+    c = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:a.x, y:a.y});
+    b = this.block.statements[0];
+    if (0 === c.length) {
+      return this.executor.stepInto(b), Entry.STATIC.CONTINUE;
+    }
+    a = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:a.x, y:a.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.WALL});
+    this.isContinue = !0;
+    if (0 !== a.length && 0 !== b.getBlocks().length) {
+      return this.executor.stepInto(b), Entry.STATIC.CONTINUE;
+    }
+  }
+}};
+Entry.block.maze_step_if_2 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", syntax:["BasicIf", 'front == "bee"'], params:[{type:"Image", img:"/img/assets/ntry/bitmap/maze2/obstacle_01.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}], func:function() {
+  if (!this.isContinue) {
+    var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a, c;
+    for (c in b) {
+      a = b[c];
+    }
+    b = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.UNIT);
+    a = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.GRID);
+    a = {x:a.x, y:a.y};
+    Ntry.addVectorByDirection(a, b.direction, 1);
+    a = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:a.x, y:a.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_BEE});
+    this.isContinue = !0;
+    b = this.block.statements[0];
+    if (0 !== a.length && 0 !== b.getBlocks().length) {
+      return this.executor.stepInto(b), Entry.STATIC.CONTINUE;
+    }
+  }
+}};
+Entry.block.maze_call_function = {skeleton:"basic", mode:"maze", color:"#B57242", template:"\uc57d\uc18d \ubd88\ub7ec\uc624\uae30%1", syntax:["Scope", "promise"], params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], func:function() {
+  if (!this.funcExecutor) {
+    var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.CODE), a;
+    for (a in b) {
+      this.funcExecutor = new Entry.Executor(b[a].components[Ntry.STATIC.CODE].code.getEventMap("define")[0]);
+    }
+  }
+  this.funcExecutor.execute();
+  if (null !== this.funcExecutor.scope.block) {
+    return Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.maze_define_function = {skeleton:"basic_define", mode:"maze", color:"#B57242", event:"define", template:"\uc57d\uc18d\ud558\uae30%1", syntax:["BasicFunction"], params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], statements:[{accept:"basic"}], func:function(b) {
+  if (!this.executed && (b = this.block.statements[0], 0 !== b.getBlocks().length)) {
+    return this.executor.stepInto(b), this.executed = !0, Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.maze_step_if_3 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", syntax:["BasicIf", 'front == "banana"'], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_3.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}], func:function() {
+  if (!this.isContinue) {
+    var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a, c;
+    for (c in b) {
+      a = b[c];
+    }
+    b = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.UNIT);
+    a = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.GRID);
+    a = {x:a.x, y:a.y};
+    Ntry.addVectorByDirection(a, b.direction, 1);
+    a = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:a.x, y:a.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_BANANA});
+    this.isContinue = !0;
+    b = this.block.statements[0];
+    if (0 !== a.length && 0 !== b.getBlocks().length) {
+      return this.executor.stepInto(b), Entry.STATIC.CONTINUE;
+    }
+  }
+}};
+Entry.block.maze_step_if_4 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", syntax:["BasicIf", 'front == "wall"'], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_2.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}], func:function() {
+  if (!this.isContinue) {
+    var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a, c;
+    for (c in b) {
+      a = b[c];
+    }
+    b = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.UNIT);
+    a = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.GRID);
+    a = {x:a.x, y:a.y};
+    Ntry.addVectorByDirection(a, b.direction, 1);
+    a = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:a.x, y:a.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.WALL});
+    this.isContinue = !0;
+    b = this.block.statements[0];
+    if (0 !== a.length && 0 !== b.getBlocks().length) {
+      return this.executor.stepInto(b), Entry.STATIC.CONTINUE;
+    }
+  }
+}};
+Entry.block.maze_step_move_step = {skeleton:"basic", mode:"maze", color:"#A751E3", template:"\uc55e\uc73c\ub85c \ud55c \uce78 \uc774\ub3d9%1", syntax:["Scope", "move"], params:[{type:"Image", img:"/img/assets/week/blocks/moveStep.png", size:24}], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var b = this;
+    Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
+      b.isAction = !1;
+    });
+    return Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.maze_step_rotate_left = {skeleton:"basic", mode:"maze", color:"#A751E3", template:"\uc67c\ucabd\uc73c\ub85c \ud68c\uc804%1", syntax:["Scope", "left"], params:[{type:"Image", img:"/img/assets/week/blocks/turnL.png", size:24}], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var b = this;
+    Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, function() {
+      b.isAction = !1;
+    });
+    return Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.maze_step_rotate_right = {skeleton:"basic", mode:"maze", color:"#A751E3", template:"\uc624\ub978\ucabd\uc73c\ub85c \ud68c\uc804%1", syntax:["Scope", "right"], params:[{type:"Image", img:"/img/assets/week/blocks/turnR.png", size:24}], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
     this.isAction = this.isContinue = !0;
     var b = this;
     Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, function() {
@@ -14707,8 +16058,8 @@ size:12}], events:{}, def:{params:[null, null, null]}, paramsKeyMap:{DIRECTION:0
   return Entry.hw.getDigitalPortValue(c);
 }}, arduino_toggle_led:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["\ucf1c\uae30", "on"], ["\ub044\uae30", "off"]], value:"on", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"arduino_get_port_number"}, null, null], type:"arduino_toggle_led"}, paramsKeyMap:{VALUE:0, OPERATOR:1}, "class":"arduino_set", isNotFor:["arduino"], func:function(b, 
 a) {
-  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(c, d);
+  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
   return a.callReturn();
 }}, arduino_toggle_pwm:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"arduino_get_pwm_port_number"}, {type:"arduino_text", params:["255"]}, null], type:"arduino_toggle_pwm"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"arduino_set", isNotFor:["arduino"], func:function(b, a) {
   var c = a.getNumberValue("PORT"), d = a.getNumberValue("VALUE"), d = Math.round(d), d = Math.max(d, 0), d = Math.min(d, 255);
@@ -15120,10 +16471,10 @@ paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2, OPERATOR:4}, "class":"calc", isNotFor:[""
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
+  var c = a.getNumberValue("SECOND", a);
   setTimeout(function() {
     a.timeFlag = 0;
-  }, c);
+  }, 60 / (Entry.FPS || 60) * c * 1E3);
   return a;
 }}, repeat_basic:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"repeat_basic"}, paramsKeyMap:{VALUE:0}, statementsKeyMap:{DO:0}, "class":"repeat", isNotFor:[], func:function(b, a) {
   var c;
@@ -15592,102 +16943,34 @@ a) {
 }}, reach_something:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"collision", fontSize:11}, {type:"Text", text:"\uc5d0 \ub2ff\uc558\ub294\uac00?", color:"#3D3D3D"}], events:{}, def:{params:[null, null], type:"reach_something"}, paramsKeyMap:{VALUE:0}, "class":"boolean_collision", isNotFor:[], func:function(b, a) {
   if (!b.getVisible()) {
     return !1;
->>>>>>> refac/entry-block
   }
-  c = Entry.createElement("ul");
-  c.addClass("entryVariableListCallerListWorkspace");
-  for (e in d) {
-    var f = d[e], g = Entry.createElement("li");
-    g.addClass("entryVariableListCallerWorkspace");
-    g.appendChild(f.object.thumbnailView_.cloneNode());
-    var h = Entry.createElement("div");
-    h.addClass("entryVariableListCallerNameWorkspace");
-    h.innerHTML = f.object.name;
-    g.appendChild(h);
-    g.caller = f;
-    g.bindOnClick(function(c) {
-      Entry.playground.object != this.caller.object && (Entry.container.selectObject(), Entry.container.selectObject(this.caller.object.id, !0), a.select(null), a.select(b));
-      c = this.caller.block;
-      Entry.playground.toggleOnVariableView();
-      c.view.getBoard().activateBlock(c);
-      Entry.playground.changeViewMode("variable");
-    });
-    c.appendChild(g);
-  }
-  0 === d.length && (g = Entry.createElement("li"), g.addClass("entryVariableListCallerWorkspace"), g.addClass("entryVariableListCallerNoneWorkspace"), g.innerHTML = Lang.Workspace.no_use, c.appendChild(g));
-  b.callerListElement = c;
-  this.listView_.insertBefore(c, b.listElement);
-  this.listView_.insertBefore(b.listElement, c);
-};
-Entry.VariableContainer.prototype.updateList = function() {
-  if (this.listView_) {
-    this.variableSettingView.addClass("entryRemove");
-    for (this.listSettingView.addClass("entryRemove");this.listView_.firstChild;) {
-      this.listView_.removeChild(this.listView_.firstChild);
-    }
-    var b = this.viewMode_, a = [];
-    if ("all" == b || "message" == b) {
-      "message" == b && this.listView_.appendChild(this.messageAddButton_);
-      for (var c in this.messages_) {
-        var d = this.messages_[c];
-        a.push(d);
-        var e = d.listElement;
-        this.listView_.appendChild(e);
-        d.callerListElement && this.listView_.appendChild(d.callerListElement);
-      }
-    }
-    if ("all" == b || "variable" == b) {
-      if ("variable" == b) {
-        e = this.variableAddPanel.info;
-        e.object && !Entry.playground.object && (e.object = null);
-        this.listView_.appendChild(this.variableAddButton_);
-        this.listView_.appendChild(this.variableAddPanel.view);
-        this.variableSplitters.top.innerHTML = Lang.Workspace.Variable_used_at_all_objects;
-        this.listView_.appendChild(this.variableSplitters.top);
-        for (c in this.variables_) {
-          d = this.variables_[c], d.object_ || (a.push(d), e = d.listElement, this.listView_.appendChild(e), d.callerListElement && this.listView_.appendChild(d.callerListElement));
+  var c = a.getField("VALUE", a), d = b.object, e = /wall/.test(c), f = ndgmr.checkPixelCollision;
+  if (e) {
+    switch(e = Entry.stage.wall, c) {
+      case "wall":
+        if (f(d, e.up, .2, !0) || f(d, e.down, .2, !0) || f(d, e.left, .2, !0) || f(d, e.right, .2, !0)) {
+          return !0;
         }
-        this.variableSplitters.bottom.innerHTML = Lang.Workspace.Variable_used_at_special_object;
-        this.listView_.appendChild(this.variableSplitters.bottom);
-        for (c in this.variables_) {
-          d = this.variables_[c], d.object_ && (a.push(d), e = d.listElement, this.listView_.appendChild(e), d.callerListElement && this.listView_.appendChild(d.callerListElement));
+        break;
+      case "wall_up":
+        if (f(d, e.up, .2, !0)) {
+          return !0;
         }
-        this.updateVariableAddView("variable");
-      } else {
-        for (c in this.variables_) {
-          d = this.variables_[c], a.push(d), e = d.listElement, this.listView_.appendChild(e), d.callerListElement && this.listView_.appendChild(d.callerListElement);
+        break;
+      case "wall_down":
+        if (f(d, e.down, .2, !0)) {
+          return !0;
         }
-      }
-    }
-    if ("all" == b || "list" == b) {
-      if ("list" == b) {
-        e = this.listAddPanel.info;
-        e.object && !Entry.playground.object && (e.object = null);
-        this.listView_.appendChild(this.listAddButton_);
-        this.listView_.appendChild(this.listAddPanel.view);
-        this.variableSplitters.top.innerHTML = Lang.Workspace.List_used_all_objects;
-        this.listView_.appendChild(this.variableSplitters.top);
-        this.updateVariableAddView("list");
-        for (c in this.lists_) {
-          d = this.lists_[c], d.object_ || (a.push(d), e = d.listElement, this.listView_.appendChild(e), d.callerListElement && this.listView_.appendChild(d.callerListElement));
+        break;
+      case "wall_right":
+        if (f(d, e.right, .2, !0)) {
+          return !0;
         }
-        this.variableSplitters.bottom.innerHTML = Lang.Workspace.list_used_specific_objects;
-        this.listView_.appendChild(this.variableSplitters.bottom);
-        for (c in this.lists_) {
-          d = this.lists_[c], d.object_ && (a.push(d), e = d.listElement, this.listView_.appendChild(e), d.callerListElement && this.listView_.appendChild(d.callerListElement));
+        break;
+      case "wall_left":
+        if (f(d, e.left, .2, !0)) {
+          return !0;
         }
-<<<<<<< HEAD
-        this.updateVariableAddView("variable");
-      } else {
-        for (c in this.lists_) {
-          d = this.lists_[c], a.push(d), e = d.listElement, this.listView_.appendChild(e), d.callerListElement && this.listView_.appendChild(d.callerListElement);
-        }
-      }
-    }
-    if ("all" == b || "func" == b) {
-      for (c in "func" == b && this.listView_.appendChild(this.functionAddButton_), this.functions_) {
-        b = this.functions_[c], a.push(b), e = b.listElement, this.listView_.appendChild(e), b.callerListElement && this.listView_.appendChild(b.callerListElement);
-=======
       ;
     }
   } else {
@@ -15717,80 +17000,9 @@ Entry.VariableContainer.prototype.updateList = function() {
         if (h = c[e], !h.isStamp && h.getVisible() && f(d, h.object, .2, !0)) {
           return !0;
         }
->>>>>>> refac/entry-block
       }
     }
-    this.listView_.appendChild(this.variableSettingView);
-    this.listView_.appendChild(this.listSettingView);
   }
-<<<<<<< HEAD
-};
-Entry.VariableContainer.prototype.setMessages = function(b) {
-  for (var a in b) {
-    var c = b[a];
-    c.id || (c.id = Entry.generateHash());
-    this.createMessageView(c);
-    this.messages_.push(c);
-  }
-  Entry.playground.reloadPlayground();
-  this.updateList();
-};
-Entry.VariableContainer.prototype.setVariables = function(b) {
-  for (var a in b) {
-    var c = new Entry.Variable(b[a]), d = c.getType();
-    "variable" == d || "slide" == d ? (c.generateView(this.variables_.length), this.createVariableView(c), this.variables_.push(c)) : "list" == d ? (c.generateView(this.lists_.length), this.createListView(c), this.lists_.push(c)) : "timer" == d ? this.generateTimer(c) : "answer" == d && this.generateAnswer(c);
-  }
-  Entry.isEmpty(Entry.engine.projectTimer) && Entry.variableContainer.generateTimer();
-  Entry.isEmpty(Entry.container.inputValue) && Entry.variableContainer.generateAnswer();
-  Entry.playground.reloadPlayground();
-  this.updateList();
-};
-Entry.VariableContainer.prototype.setFunctions = function(b) {
-  for (var a in b) {
-    var c = new Entry.Func(b[a]);
-    c.generateBlock();
-    this.createFunctionView(c);
-    this.functions_[c.id] = c;
-  }
-  this.updateList();
-};
-Entry.VariableContainer.prototype.getFunction = function(b) {
-  return this.functions_[b];
-};
-Entry.VariableContainer.prototype.getVariable = function(b, a) {
-  var c = Entry.findObjsByKey(this.variables_, "id_", b)[0];
-  a && a.isClone && c.object_ && (c = Entry.findObjsByKey(a.variables, "id_", b)[0]);
-  return c;
-};
-Entry.VariableContainer.prototype.getList = function(b, a) {
-  var c = Entry.findObjsByKey(this.lists_, "id_", b)[0];
-  a && a.isClone && c.object_ && (c = Entry.findObjsByKey(a.lists, "id_", b)[0]);
-  return c;
-};
-Entry.VariableContainer.prototype.createFunction = function() {
-  if (!Entry.Func.isEdit) {
-    var b = new Entry.Func;
-    Entry.Func.edit(b);
-  }
-};
-Entry.VariableContainer.prototype.addFunction = function(b) {
-};
-Entry.VariableContainer.prototype.removeFunction = function(b) {
-  delete this.functions_[b.id];
-  this.updateList();
-};
-Entry.VariableContainer.prototype.checkListPosition = function(b, a) {
-  var c = b.x_ + b.width_, d = -b.y_, e = -b.y_ + -b.height_;
-  return a.x > b.x_ && a.x < c && a.y < d && a.y > e ? !0 : !1;
-};
-Entry.VariableContainer.prototype.getListById = function(b) {
-  var a = this.lists_, c = [];
-  if (0 < a.length) {
-    for (var d = 0;d < a.length;d++) {
-      this.checkListPosition(a[d], b) && c.push(a[d]);
-    }
-    return c;
-=======
   return !1;
 }}, boolean_comparison:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["=", "EQUAL"], ["<", "SMALLER"], [">", "BIGGER"]], value:"EQUAL", fontSize:11}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[null], type:"boolean_comparison"}, paramsKeyMap:{LEFTHAND:0, OPERATOR:1, RIGHTHAND:2}, func:function(b, a) {
   var c = a.getField("OPERATOR", a), d = a.getNumberValue("LEFTHAND", a), e = a.getNumberValue("RIGHTHAND", a);
@@ -15959,324 +17171,20 @@ a) {
   var c, d = a.getField("LOCATION", a), e = Entry.container.getCurrentObjects(), f = e.indexOf(b.parent), e = e.length - 1;
   if (0 > f) {
     throw Error("object is not available for current scene");
->>>>>>> refac/entry-block
   }
-  return !1;
-};
-Entry.VariableContainer.prototype.editFunction = function(b, a) {
-};
-Entry.VariableContainer.prototype.saveFunction = function(b) {
-  this.functions_[b.id] || (this.functions_[b.id] = b, this.createFunctionView(b));
-  b.listElement.nameField.innerHTML = b.description;
-  this.updateList();
-};
-Entry.VariableContainer.prototype.createFunctionView = function(b) {
-  var a = this, c = Entry.createElement("li");
-  c.addClass("entryVariableListElementWorkspace");
-  c.addClass("entryFunctionElementWorkspace");
-  c.bindOnClick(function(c) {
-    c.stopPropagation();
-    a.select(b);
-  });
-  var d = Entry.createElement("button");
-  d.addClass("entryVariableListElementDeleteWorkspace");
-  d.bindOnClick(function(c) {
-    c.stopPropagation();
-    a.removeFunction(b);
-    a.selected = null;
-  });
-  var e = Entry.createElement("button");
-  e.addClass("entryVariableListElementEditWorkspace");
-  var f = this._getBlockMenu();
-  e.bindOnClick(function(a) {
-    a.stopPropagation();
-    Entry.Func.edit(b);
-    Entry.playground && (Entry.playground.changeViewMode("code"), "func" != f.lastSelector && f.selectMenu("func"));
-  });
-  var g = Entry.createElement("div");
-  g.addClass("entryVariableFunctionElementNameWorkspace");
-  g.innerHTML = b.description;
-  c.nameField = g;
-  c.appendChild(g);
-  c.appendChild(e);
-  c.appendChild(d);
-  b.listElement = c;
-};
-Entry.VariableContainer.prototype.checkAllVariableName = function(b, a) {
-  a = this[a];
-  for (var c = 0;c < a.length;c++) {
-    if (a[c].name_ == b) {
-      return !0;
-    }
+  switch(d) {
+    case "FRONT":
+      c = 0;
+      break;
+    case "FORWARD":
+      c = Math.max(0, f - 1);
+      break;
+    case "BACKWARD":
+      c = Math.min(e, f + 1);
+      break;
+    case "BACK":
+      c = e;
   }
-<<<<<<< HEAD
-  return !1;
-};
-Entry.VariableContainer.prototype.addVariable = function(b) {
-  if (!b) {
-    var a = this.variableAddPanel;
-    b = a.view.name.value.trim();
-    b && 0 !== b.length || (b = Lang.Workspace.variable);
-    b = this.checkAllVariableName(b, "variables_") ? Entry.getOrderedName(b, this.variables_, "name_") : b;
-    var c = a.info;
-    b = {name:b, isCloud:c.isCloud, object:c.object, variableType:"variable"};
-    a.view.addClass("entryRemove");
-    this.resetVariableAddPanel("variable");
-  }
-  b = new Entry.Variable(b);
-  Entry.stateManager && Entry.stateManager.addCommand("add variable", this, this.removeVariable, b);
-  b.generateView(this.variables_.length);
-  this.createVariableView(b);
-  this.variables_.unshift(b);
-  Entry.playground.reloadPlayground();
-  this.updateList();
-  b.listElement.nameField.focus();
-  return new Entry.State(this, this.removeVariable, b);
-};
-Entry.VariableContainer.prototype.removeVariable = function(b) {
-  var a = this.variables_.indexOf(b), c = b.toJSON();
-  this.selected == b && this.select(null);
-  b.remove();
-  this.variables_.splice(a, 1);
-  Entry.stateManager && Entry.stateManager.addCommand("remove variable", this, this.addVariable, c);
-  Entry.playground.reloadPlayground();
-  this.updateList();
-  return new Entry.State(this, this.addVariable, c);
-};
-Entry.VariableContainer.prototype.changeVariableName = function(b, a) {
-  b.name_ != a && (Entry.isExist(a, "name_", this.variables_) ? (b.listElement.nameField.value = b.name_, Entry.toast.alert(Lang.Workspace.variable_rename_failed, Lang.Workspace.variable_dup)) : 10 < a.length ? (b.listElement.nameField.value = b.name_, Entry.toast.alert(Lang.Workspace.variable_rename_failed, Lang.Workspace.variable_too_long)) : (b.name_ = a, b.updateView(), Entry.playground.reloadPlayground(), Entry.toast.success(Lang.Workspace.variable_rename, Lang.Workspace.variable_rename_ok)));
-};
-Entry.VariableContainer.prototype.changeListName = function(b, a) {
-  b.name_ != a && (Entry.isExist(a, "name_", this.lists_) ? (b.listElement.nameField.value = b.name_, Entry.toast.alert(Lang.Workspace.list_rename_failed, Lang.Workspace.list_dup)) : 10 < a.length ? (b.listElement.nameField.value = b.name_, Entry.toast.alert(Lang.Workspace.list_rename_failed, Lang.Workspace.list_too_long)) : (b.name_ = a, b.updateView(), Entry.playground.reloadPlayground(), Entry.toast.success(Lang.Workspace.list_rename, Lang.Workspace.list_rename_ok)));
-};
-Entry.VariableContainer.prototype.removeList = function(b) {
-  var a = this.lists_.indexOf(b), c = b.toJSON();
-  Entry.stateManager && Entry.stateManager.addCommand("remove list", this, this.addList, c);
-  this.selected == b && this.select(null);
-  b.remove();
-  this.lists_.splice(a, 1);
-  Entry.playground.reloadPlayground();
-  this.updateList();
-  return new Entry.State(this, this.addList, c);
-};
-Entry.VariableContainer.prototype.createVariableView = function(b) {
-  var a = this, c = Entry.createElement("li"), d = Entry.createElement("div");
-  d.addClass("entryVariableListElementWrapperWorkspace");
-  c.appendChild(d);
-  c.addClass("entryVariableListElementWorkspace");
-  b.object_ ? c.addClass("entryVariableLocalElementWorkspace") : b.isCloud_ ? c.addClass("entryVariableCloudElementWorkspace") : c.addClass("entryVariableGlobalElementWorkspace");
-  c.bindOnClick(function(c) {
-    a.select(b);
-  });
-  var e = Entry.createElement("button");
-  e.addClass("entryVariableListElementDeleteWorkspace");
-  e.bindOnClick(function(c) {
-    c.stopPropagation();
-    a.removeVariable(b);
-    a.selectedVariable = null;
-    a.variableSettingView.addClass("entryRemove");
-  });
-  var f = Entry.createElement("button");
-  f.addClass("entryVariableListElementEditWorkspace");
-  f.bindOnClick(function(c) {
-    c.stopPropagation();
-    h.removeAttribute("disabled");
-    g.removeClass("entryRemove");
-    this.addClass("entryRemove");
-    a.updateSelectedVariable(b);
-    h.focus();
-  });
-  c.editButton = f;
-  var g = Entry.createElement("button");
-  g.addClass("entryVariableListElementEditWorkspace");
-  g.addClass("entryRemove");
-  g.bindOnClick(function(b) {
-    b.stopPropagation();
-    h.blur();
-    h.setAttribute("disabled", "disabled");
-    f.removeClass("entryRemove");
-    this.addClass("entryRemove");
-    a.updateSelectedVariable(null, "variable");
-  });
-  c.editSaveButton = g;
-  var h = Entry.createElement("input");
-  h.addClass("entryVariableListElementNameWorkspace");
-  h.setAttribute("disabled", "disabled");
-  h.value = b.name_;
-  h.bindOnClick(function(a) {
-    a.stopPropagation();
-  });
-  h.onblur = function(c) {
-    (c = this.value.trim()) && 0 !== c.length ? a.changeVariableName(b, this.value) : (Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.variable_can_not_space), this.value = b.getName());
-  };
-  h.onkeydown = function(a) {
-    13 == a.keyCode && this.blur();
-  };
-  c.nameField = h;
-  d.appendChild(h);
-  d.appendChild(f);
-  d.appendChild(g);
-  d.appendChild(e);
-  b.listElement = c;
-};
-Entry.VariableContainer.prototype.addMessage = function(b) {
-  b.id || (b.id = Entry.generateHash());
-  Entry.stateManager && Entry.stateManager.addCommand("add message", this, this.removeMessage, b);
-  this.createMessageView(b);
-  this.messages_.unshift(b);
-  Entry.playground.reloadPlayground();
-  this.updateList();
-  b.listElement.nameField.focus();
-  return new Entry.State(this, this.removeMessage, b);
-};
-Entry.VariableContainer.prototype.removeMessage = function(b) {
-  this.selected == b && this.select(null);
-  Entry.stateManager && Entry.stateManager.addCommand("remove message", this, this.addMessage, b);
-  var a = this.messages_.indexOf(b);
-  this.messages_.splice(a, 1);
-  this.updateList();
-  Entry.playground.reloadPlayground();
-  return new Entry.State(this, this.addMessage, b);
-};
-Entry.VariableContainer.prototype.changeMessageName = function(b, a) {
-  b.name != a && (Entry.isExist(a, "name", this.messages_) ? (b.listElement.nameField.value = b.name, Entry.toast.alert(Lang.Workspace.message_rename_failed, Lang.Workspace.message_dup)) : 10 < a.length ? (b.listElement.nameField.value = b.name, Entry.toast.alert(Lang.Workspace.message_rename_failed, Lang.Workspace.message_too_long)) : (b.name = a, Entry.playground.reloadPlayground(), Entry.toast.success(Lang.Workspace.message_rename, Lang.Workspace.message_rename_ok)));
-};
-Entry.VariableContainer.prototype.createMessageView = function(b) {
-  var a = this, c = Entry.createElement("li");
-  c.addClass("entryVariableListElementWorkspace");
-  c.addClass("entryMessageElementWorkspace");
-  c.bindOnClick(function(c) {
-    a.select(b);
-  });
-  var d = Entry.createElement("button");
-  d.addClass("entryVariableListElementDeleteWorkspace");
-  d.bindOnClick(function(c) {
-    c.stopPropagation();
-    a.removeMessage(b);
-  });
-  var e = Entry.createElement("button");
-  e.addClass("entryVariableListElementEditWorkspace");
-  e.bindOnClick(function(a) {
-    a.stopPropagation();
-    g.removeAttribute("disabled");
-    g.focus();
-    f.removeClass("entryRemove");
-    this.addClass("entryRemove");
-  });
-  var f = Entry.createElement("button");
-  f.addClass("entryVariableListElementEditWorkspace");
-  f.addClass("entryRemove");
-  f.bindOnClick(function(a) {
-    a.stopPropagation();
-    g.blur();
-    e.removeClass("entryRemove");
-    this.addClass("entryRemove");
-  });
-  var g = Entry.createElement("input");
-  g.addClass("entryVariableListElementNameWorkspace");
-  g.value = b.name;
-  g.bindOnClick(function(a) {
-    a.stopPropagation();
-  });
-  g.onblur = function(c) {
-    (c = this.value.trim()) && 0 !== c.length ? (a.changeMessageName(b, this.value), e.removeClass("entryRemove"), f.addClass("entryRemove"), g.setAttribute("disabled", "disabled")) : (Entry.toast.alert(Lang.Msgs.warn, Lang.Msgs.sign_can_not_space), this.value = b.name);
-  };
-  g.onkeydown = function(a) {
-    13 == a.keyCode && this.blur();
-  };
-  c.nameField = g;
-  c.appendChild(g);
-  c.appendChild(e);
-  c.appendChild(f);
-  c.appendChild(d);
-  b.listElement = c;
-};
-Entry.VariableContainer.prototype.addList = function(b) {
-  if (!b) {
-    var a = this.listAddPanel;
-    b = a.view.name.value.trim();
-    b && 0 !== b.length || (b = Lang.Workspace.list);
-    var c = a.info;
-    b = this.checkAllVariableName(b, "lists_") ? Entry.getOrderedName(b, this.lists_, "name_") : b;
-    b = {name:b, isCloud:c.isCloud, object:c.object, variableType:"list"};
-    a.view.addClass("entryRemove");
-    this.resetVariableAddPanel("list");
-  }
-  b = new Entry.Variable(b);
-  Entry.stateManager && Entry.stateManager.addCommand("add list", this, this.removeList, b);
-  b.generateView(this.lists_.length);
-  this.createListView(b);
-  this.lists_.unshift(b);
-  Entry.playground.reloadPlayground();
-  this.updateList();
-  b.listElement.nameField.focus();
-  return new Entry.State(this, this.removelist, b);
-};
-Entry.VariableContainer.prototype.createListView = function(b) {
-  var a = this, c = Entry.createElement("li"), d = Entry.createElement("div");
-  d.addClass("entryVariableListElementWrapperWorkspace");
-  c.appendChild(d);
-  c.addClass("entryVariableListElementWorkspace");
-  b.object_ ? c.addClass("entryListLocalElementWorkspace") : b.isCloud_ ? c.addClass("entryListCloudElementWorkspace") : c.addClass("entryListGlobalElementWorkspace");
-  c.bindOnClick(function(c) {
-    a.select(b);
-  });
-  var e = Entry.createElement("button");
-  e.addClass("entryVariableListElementDeleteWorkspace");
-  e.bindOnClick(function(c) {
-    c.stopPropagation();
-    a.removeList(b);
-    a.selectedList = null;
-    a.listSettingView.addClass("entryRemove");
-  });
-  var f = Entry.createElement("button");
-  f.addClass("entryVariableListElementEditWorkspace");
-  f.bindOnClick(function(c) {
-    c.stopPropagation();
-    h.removeAttribute("disabled");
-    g.removeClass("entryRemove");
-    this.addClass("entryRemove");
-    a.updateSelectedVariable(b);
-    h.focus();
-  });
-  c.editButton = f;
-  var g = Entry.createElement("button");
-  g.addClass("entryVariableListElementEditWorkspace");
-  g.addClass("entryRemove");
-  g.bindOnClick(function(c) {
-    c.stopPropagation();
-    h.blur();
-    h.setAttribute("disabled", "disabled");
-    f.removeClass("entryRemove");
-    this.addClass("entryRemove");
-    a.select(b);
-    a.updateSelectedVariable(null, "list");
-  });
-  c.editSaveButton = g;
-  var h = Entry.createElement("input");
-  h.setAttribute("disabled", "disabled");
-  h.addClass("entryVariableListElementNameWorkspace");
-  h.value = b.name_;
-  h.bindOnClick(function(a) {
-    a.stopPropagation();
-  });
-  h.onblur = function(c) {
-    (c = this.value.trim()) && 0 !== c.length ? a.changeListName(b, this.value) : (Entry.toast.alert(Lang.Msgs.warn, Lang.Msgs.list_can_not_space), this.value = b.getName());
-  };
-  h.onkeydown = function(a) {
-    13 == a.keyCode && this.blur();
-  };
-  c.nameField = h;
-  d.appendChild(h);
-  d.appendChild(f);
-  d.appendChild(g);
-  d.appendChild(e);
-  b.listElement = c;
-};
-Entry.VariableContainer.prototype.mapVariable = function(b, a) {
-  for (var c = this.variables_.length, d = 0;d < c;d++) {
-    b(this.variables_[d], a);
-=======
   Entry.container.moveElementByBlock(f, c);
   return a.callReturn();
 }}, move_direction:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"move_direction"}, paramsKeyMap:{VALUE:0}, "class":"walk", isNotFor:[], func:function(b, a) {
@@ -16369,625 +17277,25 @@ func:function(b, a) {
     a.frameCount = Math.floor(c * Entry.FPS);
     a.dX = d / a.frameCount;
     a.dY = e / a.frameCount;
->>>>>>> refac/entry-block
   }
-};
-Entry.VariableContainer.prototype.mapList = function(b, a) {
-  for (var c = this.lists_.length, d = 0;d < c;d++) {
-    b(this.lists_[d], a);
+  if (0 != a.frameCount) {
+    return b.setX(b.getX() + a.dX), b.setY(b.getY() + a.dY), a.frameCount--, b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY()), a;
   }
-};
-Entry.VariableContainer.prototype.getVariableJSON = function() {
-  for (var b = [], a = 0;a < this.variables_.length;a++) {
-    b.push(this.variables_[a].toJSON());
-  }
-  for (a = 0;a < this.lists_.length;a++) {
-    b.push(this.lists_[a].toJSON());
-  }
-  Entry.engine.projectTimer && b.push(Entry.engine.projectTimer);
-  a = Entry.container.inputValue;
-  Entry.isEmpty(a) || b.push(a);
-  return b;
-};
-Entry.VariableContainer.prototype.getMessageJSON = function() {
-  for (var b = [], a = 0;a < this.messages_.length;a++) {
-    b.push({id:this.messages_[a].id, name:this.messages_[a].name});
-  }
-  return b;
-};
-Entry.VariableContainer.prototype.getFunctionJSON = function() {
-  var b = [], a;
-  for (a in this.functions_) {
-    var c = this.functions_[a], c = {id:c.id, content:JSON.stringify(c.content.toJSON())};
-    b.push(c);
-  }
-  return b;
-};
-Entry.VariableContainer.prototype.resetVariableAddPanel = function(b) {
-  b = b || "variable";
-  var a = "variable" == b ? this.variableAddPanel : this.listAddPanel, c = a.info;
-  c.isCloud = !1;
-  c.object = null;
-  a.view.name.value = "";
-  a.isOpen = !1;
-  this.updateVariableAddView(b);
-};
-Entry.VariableContainer.prototype.generateVariableAddView = function() {
-  var b = this, a = Entry.createElement("li");
-  this.variableAddPanel.view = a;
-  this.variableAddPanel.isOpen = !1;
-  a.addClass("entryVariableAddSpaceWorkspace");
-  a.addClass("entryRemove");
-  var c = Entry.createElement("div");
-  c.addClass("entryVariableAddSpaceNameWrapperWorkspace");
-  a.appendChild(c);
-  var d = Entry.createElement("input");
-  d.addClass("entryVariableAddSpaceInputWorkspace");
-  d.setAttribute("placeholder", Lang.Workspace.Variable_placeholder_name);
-  d.variableContainer = this;
-  d.onkeypress = function(a) {
-    13 == a.keyCode && (Entry.variableContainer.addVariable(), b.updateSelectedVariable(b.variables_[0]), a = b.variables_[0].listElement, a.editButton.addClass("entryRemove"), a.editSaveButton.removeClass("entryRemove"), a.nameField.removeAttribute("disabled"), a.nameField.focus());
-  };
-  this.variableAddPanel.view.name = d;
-  c.appendChild(d);
-  c = Entry.createElement("div");
-  c.addClass("entryVariableAddSpaceGlobalWrapperWorkspace");
-  c.bindOnClick(function(a) {
-    b.variableAddPanel.info.object = null;
-    b.updateVariableAddView("variable");
-  });
-  a.appendChild(c);
-  d = Entry.createElement("span");
-  d.innerHTML = Lang.Workspace.Variable_use_all_objects;
-  c.appendChild(d);
-  d = Entry.createElement("span");
-  d.addClass("entryVariableAddSpaceCheckWorkspace");
-  this.variableAddPanel.view.globalCheck = d;
-  this.variableAddPanel.info.object || d.addClass("entryVariableAddChecked");
-  c.appendChild(d);
-  c = Entry.createElement("div");
-  c.addClass("entryVariableAddSpaceLocalWrapperWorkspace");
-  c.bindOnClick(function(a) {
-    Entry.playground.object && (a = b.variableAddPanel.info, a.object = Entry.playground.object.id, a.isCloud = !1, b.updateVariableAddView("variable"));
-  });
-  a.appendChild(c);
-  d = Entry.createElement("span");
-  d.innerHTML = Lang.Workspace.Variable_use_this_object;
-  c.appendChild(d);
-  d = Entry.createElement("span");
-  d.addClass("entryVariableAddSpaceCheckWorkspace");
-  this.variableAddPanel.view.localCheck = d;
-  this.variableAddPanel.info.object && d.addClass("entryVariableAddChecked");
-  c.appendChild(d);
-  c = Entry.createElement("div");
-  a.cloudWrapper = c;
-  c.addClass("entryVariableAddSpaceCloudWrapperWorkspace");
-  c.bindOnClick(function(a) {
-    a = b.variableAddPanel.info;
-    a.object || (a.isCloud = !a.isCloud, b.updateVariableAddView("variable"));
-  });
-  a.appendChild(c);
-  d = Entry.createElement("span");
-  d.addClass("entryVariableAddSpaceCloudSpanWorkspace");
-  d.innerHTML = Lang.Workspace.Variable_create_cloud;
-  c.appendChild(d);
-  d = Entry.createElement("span");
-  this.variableAddPanel.view.cloudCheck = d;
-  d.addClass("entryVariableAddSpaceCheckWorkspace");
-  d.addClass("entryVariableAddSpaceCloudCheckWorkspace");
-  this.variableAddPanel.info.isCloud && d.addClass("entryVariableAddChecked");
-  c.appendChild(d);
-  c = Entry.createElement("div");
-  c.addClass("entryVariableAddSpaceButtonWrapperWorkspace");
-  a.appendChild(c);
-  a = Entry.createElement("span");
-  a.addClass("entryVariableAddSpaceCancelWorkspace");
-  a.addClass("entryVariableAddSpaceButtonWorkspace");
-  a.innerHTML = Lang.Buttons.cancel;
-  a.bindOnClick(function(a) {
-    b.variableAddPanel.view.addClass("entryRemove");
-    b.resetVariableAddPanel("variable");
-  });
-  c.appendChild(a);
-  a = Entry.createElement("span");
-  a.addClass("entryVariableAddSpaceConfirmWorkspace");
-  a.addClass("entryVariableAddSpaceButtonWorkspace");
-  a.innerHTML = Lang.Buttons.save;
-  a.variableContainer = this;
-  a.bindOnClick(function(a) {
-    Entry.variableContainer.addVariable();
-    b.updateSelectedVariable(b.variables_[0]);
-    a = b.variables_[0].listElement;
-    a.editButton.addClass("entryRemove");
-    a.editSaveButton.removeClass("entryRemove");
-    a.nameField.removeAttribute("disabled");
-    a.nameField.focus();
-  });
-  c.appendChild(a);
-};
-Entry.VariableContainer.prototype.generateListAddView = function() {
-  var b = this, a = Entry.createElement("li");
-  this.listAddPanel.view = a;
-  this.listAddPanel.isOpen = !1;
-  a.addClass("entryVariableAddSpaceWorkspace");
-  a.addClass("entryRemove");
-  var c = Entry.createElement("div");
-  c.addClass("entryVariableAddSpaceNameWrapperWorkspace");
-  c.addClass("entryListAddSpaceNameWrapperWorkspace");
-  a.appendChild(c);
-  var d = Entry.createElement("input");
-  d.addClass("entryVariableAddSpaceInputWorkspace");
-  d.setAttribute("placeholder", Lang.Workspace.list_name);
-  this.listAddPanel.view.name = d;
-  d.variableContainer = this;
-  d.onkeypress = function(a) {
-    13 == a.keyCode && (b.addList(), a = b.lists_[0], b.updateSelectedVariable(a), a = a.listElement, a.editButton.addClass("entryRemove"), a.editSaveButton.removeClass("entryRemove"), a.nameField.removeAttribute("disabled"), a.nameField.focus());
-  };
-  c.appendChild(d);
-  c = Entry.createElement("div");
-  c.addClass("entryVariableAddSpaceGlobalWrapperWorkspace");
-  c.bindOnClick(function(a) {
-    b.listAddPanel.info.object = null;
-    b.updateVariableAddView("list");
-  });
-  a.appendChild(c);
-  d = Entry.createElement("span");
-  d.innerHTML = Lang.Workspace.use_all_objects;
-  c.appendChild(d);
-  d = Entry.createElement("span");
-  d.addClass("entryVariableAddSpaceCheckWorkspace");
-  this.listAddPanel.view.globalCheck = d;
-  this.listAddPanel.info.object || d.addClass("entryVariableAddChecked");
-  c.appendChild(d);
-  c = Entry.createElement("div");
-  c.addClass("entryVariableAddSpaceLocalWrapperWorkspace");
-  c.bindOnClick(function(a) {
-    Entry.playground.object && (a = b.listAddPanel.info, a.object = Entry.playground.object.id, a.isCloud = !1, b.updateVariableAddView("list"));
-  });
-  a.appendChild(c);
-  d = Entry.createElement("span");
-  d.innerHTML = Lang.Workspace.Variable_use_this_object;
-  c.appendChild(d);
-  d = Entry.createElement("span");
-  d.addClass("entryVariableAddSpaceCheckWorkspace");
-  this.listAddPanel.view.localCheck = d;
-  this.variableAddPanel.info.object && addVariableLocalCheck.addClass("entryVariableAddChecked");
-  c.appendChild(d);
-  c = Entry.createElement("div");
-  a.cloudWrapper = c;
-  c.addClass("entryVariableAddSpaceCloudWrapperWorkspace");
-  c.bindOnClick(function(a) {
-    a = b.listAddPanel.info;
-    a.object || (a.isCloud = !a.isCloud, b.updateVariableAddView("list"));
-  });
-  a.appendChild(c);
-  d = Entry.createElement("span");
-  d.addClass("entryVariableAddSpaceCloudSpanWorkspace");
-  d.innerHTML = Lang.Workspace.List_create_cloud;
-  c.appendChild(d);
-  d = Entry.createElement("span");
-  this.listAddPanel.view.cloudCheck = d;
-  d.addClass("entryVariableAddSpaceCheckWorkspace");
-  d.addClass("entryVariableAddSpaceCloudCheckWorkspace");
-  this.listAddPanel.info.isCloud && d.addClass("entryVariableAddChecked");
-  c.appendChild(d);
-  c = Entry.createElement("div");
-  c.addClass("entryVariableAddSpaceButtonWrapperWorkspace");
-  a.appendChild(c);
-  a = Entry.createElement("span");
-  a.addClass("entryVariableAddSpaceCancelWorkspace");
-  a.addClass("entryVariableAddSpaceButtonWorkspace");
-  a.innerHTML = Lang.Buttons.cancel;
-  a.bindOnClick(function(a) {
-    b.listAddPanel.view.addClass("entryRemove");
-    b.resetVariableAddPanel("list");
-  });
-  c.appendChild(a);
-  a = Entry.createElement("span");
-  a.addClass("entryVariableAddSpaceConfirmWorkspace");
-  a.addClass("entryVariableAddSpaceButtonWorkspace");
-  a.innerHTML = Lang.Buttons.save;
-  a.variableContainer = this;
-  a.bindOnClick(function(a) {
-    b.addList();
-    a = b.lists_[0];
-    b.updateSelectedVariable(a);
-    a = a.listElement;
-    a.editButton.addClass("entryRemove");
-    a.editSaveButton.removeClass("entryRemove");
-    a.nameField.removeAttribute("disabled");
-    a.nameField.focus();
-  });
-  c.appendChild(a);
-};
-Entry.VariableContainer.prototype.generateVariableSplitterView = function() {
-  var b = Entry.createElement("li");
-  b.addClass("entryVariableSplitterWorkspace");
-  var a = Entry.createElement("li");
-  a.addClass("entryVariableSplitterWorkspace");
-  this.variableSplitters = {top:b, bottom:a};
-};
-Entry.VariableContainer.prototype.openVariableAddPanel = function(b) {
-  b = b ? b : "variable";
-  Entry.playground.toggleOnVariableView();
-  Entry.playground.changeViewMode("variable");
-  "variable" == b ? this.variableAddPanel.isOpen = !0 : this.listAddPanel.isOpen = !0;
-  this.selectFilter(b);
-  this.updateVariableAddView(b);
-};
-Entry.VariableContainer.prototype.getMenuXml = function(b) {
-  for (var a = [], c = 0 !== this.variables_.length, d = 0 !== this.lists_.length, e, f = 0, g;g = b[f];f++) {
-    var h = g.tagName;
-    h && "BLOCK" == h.toUpperCase() ? (e = g.getAttribute("bCategory"), !c && "variable" == e || !d && "list" == e || a.push(g)) : !h || "SPLITTER" != h.toUpperCase() && "BTN" != h.toUpperCase() || !c && "variable" == e || (d || "list" != e) && a.push(g);
-  }
-<<<<<<< HEAD
-  return a;
-};
-Entry.VariableContainer.prototype.addCloneLocalVariables = function(b) {
-  var a = [], c = this;
-  this.mapVariable(function(b, c) {
-    if (b.object_ && b.object_ == c.objectId) {
-      var f = b.toJSON();
-      f.originId = f.id;
-      f.id = Entry.generateHash();
-      f.object = c.newObjectId;
-      delete f.x;
-      delete f.y;
-      a.push(f);
-      c.json.script = c.json.script.replace(new RegExp(f.originId, "g"), f.id);
-    }
-  }, b);
-  a.map(function(a) {
-    c.addVariable(a);
-  });
-};
-Entry.VariableContainer.prototype.generateTimer = function(b) {
-  b || (b = {}, b.id = Entry.generateHash(), b.name = Lang.Workspace.Variable_Timer, b.value = 0, b.variableType = "timer", b.visible = !1, b.x = 150, b.y = -70, b = new Entry.Variable(b));
-  b.generateView();
-  b.tick = null;
-  Entry.engine.projectTimer = b;
-  Entry.addEventListener("stop", function() {
-    Entry.engine.stopProjectTimer();
-  });
-};
-Entry.VariableContainer.prototype.generateAnswer = function(b) {
-  b || (b = new Entry.Variable({id:Entry.generateHash(), name:Lang.Blocks.VARIABLE_get_canvas_input_value, value:0, variableType:"answer", visible:!1, x:150, y:-100}));
-  b.generateView();
-  Entry.container.inputValue = b;
-};
-Entry.VariableContainer.prototype.generateVariableSettingView = function() {
-  var b = this, a = Entry.createElement("div");
-  a.bindOnClick(function(a) {
-    a.stopPropagation();
-  });
-  this.variableSettingView = a;
-  a.addClass("entryVariableSettingWorkspace");
-  this.listView_.appendChild(a);
-  a.addClass("entryRemove");
-  var c = Entry.createElement("div");
-  c.addClass("entryVariableSettingVisibleWrapperWorkspace");
-  c.bindOnClick(function(a) {
-    a = b.selectedVariable;
-    var c = b.variableSettingView.visibleCheck;
-    a.setVisible(!a.isVisible());
-    a.isVisible() ? c.addClass("entryVariableSettingChecked") : c.removeClass("entryVariableSettingChecked");
-  });
-  a.appendChild(c);
-  var d = Entry.createElement("span");
-  d.innerHTML = Lang.Workspace.show_variable;
-  c.appendChild(d);
-  d = Entry.createElement("span");
-  d.addClass("entryVariableSettingCheckWorkspace");
-  a.visibleCheck = d;
-  c.appendChild(d);
-  c = Entry.createElement("div");
-  c.addClass("entryVariableSettingInitValueWrapperWorkspace");
-  a.appendChild(c);
-  d = Entry.createElement("span");
-  d.innerHTML = Lang.Workspace.default_value;
-  c.appendChild(d);
-  d = Entry.createElement("input");
-  d.addClass("entryVariableSettingInitValueInputWorkspace");
-  a.initValueInput = d;
-  d.value = 0;
-  d.onkeyup = function(a) {
-    b.selectedVariable.setValue(this.value);
-  };
-  d.onblur = function(a) {
-    b.selectedVariable.setValue(this.value);
-  };
-  a.initValueInput = d;
-  c.appendChild(d);
-  c = Entry.createElement("div");
-  c.addClass("entryVariableSettingSplitterWorkspace");
-  a.appendChild(c);
-  c = Entry.createElement("div");
-  c.addClass("entryVariableSettingSlideWrapperWorkspace");
-  a.appendChild(c);
-  d = Entry.createElement("span");
-  d.innerHTML = Lang.Workspace.slide;
-  c.appendChild(d);
-  d = Entry.createElement("span");
-  d.addClass("entryVariableSettingCheckWorkspace");
-  a.slideCheck = d;
-  c.appendChild(d);
-  c.bindOnClick(function(a) {
-=======
   delete a.isStart;
   delete a.frameCount;
   return a.callReturn();
 }}, rotate_by_angle_time:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Angle"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["2"]}, {type:"number", params:["2"]}, null], type:"rotate_by_angle_time"}, paramsKeyMap:{VALUE:1}, "class":"rotate", isNotFor:[], func:function(b, a) {
   if (!a.isStart) {
->>>>>>> refac/entry-block
     var c;
-    a = b.selectedVariable;
-    var d = b.variables_, f = a.getType();
-    "variable" == f ? (c = a.toJSON(), c.variableType = "slide", c = new Entry.Variable(c), d.splice(d.indexOf(a), 0, c), 0 > c.getValue() && c.setValue(0), 100 < c.getValue() && c.setValue(100), e.removeAttribute("disabled"), g.removeAttribute("disabled")) : "slide" == f && (c = a.toJSON(), c.variableType = "variable", c = new Entry.Variable(c), d.splice(d.indexOf(a), 0, c), e.setAttribute("disabled", "disabled"), g.setAttribute("disabled", "disabled"));
-    b.createVariableView(c);
-    b.removeVariable(a);
-    b.updateSelectedVariable(c);
-    c.generateView();
-  });
-  c = Entry.createElement("div");
-  a.minMaxWrapper = c;
-  c.addClass("entryVariableSettingMinMaxWrapperWorkspace");
-  a.appendChild(c);
-  d = Entry.createElement("span");
-  d.innerHTML = Lang.Workspace.min_value;
-  c.appendChild(d);
-  var e = Entry.createElement("input");
-  e.addClass("entryVariableSettingMinValueInputWorkspace");
-  d = b.selectedVariable;
-  e.value = d && "slide" == d.type ? d.minValue_ : 0;
-  e.onblur = function(a) {
-    isNaN(this.value) || (a = b.selectedVariable, a.setMinValue(this.value), b.updateVariableSettingView(a));
-  };
-  a.minValueInput = e;
-  c.appendChild(e);
-  var f = Entry.createElement("span");
-  f.addClass("entryVariableSettingMaxValueSpanWorkspace");
-  f.innerHTML = Lang.Workspace.max_value;
-  c.appendChild(f);
-  var g = Entry.createElement("input");
-  g.addClass("entryVariableSettingMaxValueInputWorkspace");
-  g.value = d && "slide" == d.type ? d.maxValue_ : 100;
-  g.onblur = function(a) {
-    isNaN(this.value) || (a = b.selectedVariable, a.setMaxValue(this.value), b.updateVariableSettingView(a));
-  };
-  a.maxValueInput = g;
-  c.appendChild(g);
-};
-Entry.VariableContainer.prototype.updateVariableSettingView = function(b) {
-  var a = this.variableSettingView, c = a.visibleCheck, d = a.initValueInput, e = a.slideCheck, f = a.minValueInput, g = a.maxValueInput, h = a.minMaxWrapper;
-  c.removeClass("entryVariableSettingChecked");
-  b.isVisible() && c.addClass("entryVariableSettingChecked");
-  e.removeClass("entryVariableSettingChecked");
-  "slide" == b.getType() ? (e.addClass("entryVariableSettingChecked"), f.removeAttribute("disabled"), g.removeAttribute("disabled"), f.value = b.getMinValue(), g.value = b.getMaxValue(), h.removeClass("entryVariableMinMaxDisabledWorkspace")) : (h.addClass("entryVariableMinMaxDisabledWorkspace"), f.setAttribute("disabled", "disabled"), g.setAttribute("disabled", "disabled"));
-  d.value = b.getValue();
-  b.listElement.appendChild(a);
-  a.removeClass("entryRemove");
-};
-Entry.VariableContainer.prototype.generateListSettingView = function() {
-  var b = this, a = Entry.createElement("div");
-  a.bindOnClick(function(a) {
-    a.stopPropagation();
-  });
-  this.listSettingView = a;
-  a.addClass("entryListSettingWorkspace");
-  this.listView_.appendChild(a);
-  a.addClass("entryRemove");
-  var c = Entry.createElement("div");
-  c.addClass("entryListSettingVisibleWrapperWorkspace");
-  c.bindOnClick(function(a) {
-    a = b.selectedList;
-    var c = b.listSettingView.visibleCheck;
-    a.setVisible(!a.isVisible());
-    a.isVisible() ? c.addClass("entryListSettingCheckedWorkspace") : c.removeClass("entryListSettingCheckedWorkspace");
-  });
-  a.appendChild(c);
-  var d = Entry.createElement("span");
-  d.innerHTML = Lang.Workspace.show_list_workspace;
-  c.appendChild(d);
-  d = Entry.createElement("span");
-  d.addClass("entryListSettingCheckWorkspace");
-  a.visibleCheck = d;
-  c.appendChild(d);
-  d = Entry.createElement("div");
-  d.addClass("entryListSettingLengthWrapperWorkspace");
-  c = Entry.createElement("span");
-  c.addClass("entryListSettingLengthSpanWorkspace");
-  c.innerHTML = Lang.Workspace.number_of_list;
-  d.appendChild(c);
-  a.appendChild(d);
-  c = Entry.createElement("div");
-  c.addClass("entryListSettingLengthControllerWorkspace");
-  d.appendChild(c);
-  d = Entry.createElement("span");
-  d.addClass("entryListSettingMinusWorkspace");
-  d.bindOnClick(function(a) {
-    b.selectedList.array_.pop();
-    b.updateListSettingView(b.selectedList);
-  });
-  c.appendChild(d);
-  d = Entry.createElement("input");
-  d.addClass("entryListSettingLengthInputWorkspace");
-  d.onblur = function() {
-    b.setListLength(this.value);
-  };
-  d.onkeypress = function(a) {
-    13 == a.keyCode && this.blur();
-  };
-  a.lengthInput = d;
-  c.appendChild(d);
-  d = Entry.createElement("span");
-  d.addClass("entryListSettingPlusWorkspace");
-  d.bindOnClick(function(a) {
-    b.selectedList.array_.push({data:0});
-    b.updateListSettingView(b.selectedList);
-  });
-  c.appendChild(d);
-  c = Entry.createElement("div");
-  a.seperator = c;
-  a.appendChild(c);
-  c.addClass("entryListSettingSeperatorWorkspace");
-  c = Entry.createElement("div");
-  c.addClass("entryListSettingListValuesWorkspace");
-  a.listValues = c;
-  a.appendChild(c);
-};
-Entry.VariableContainer.prototype.updateListSettingView = function(b) {
-  var a = this;
-  b = b || this.selectedList;
-  var c = this.listSettingView, d = c.listValues, e = c.visibleCheck, f = c.lengthInput, g = c.seperator;
-  e.removeClass("entryListSettingCheckedWorkspace");
-  b.isVisible() && e.addClass("entryListSettingCheckedWorkspace");
-  f.value = b.array_.length;
-  for (b.listElement.appendChild(c);d.firstChild;) {
-    d.removeChild(d.firstChild);
+    c = a.getNumberValue("VALUE", a);
+    var d = a.getNumberField("VALUE", a);
+    a.isStart = !0;
+    a.frameCount = Math.floor(c * Entry.FPS);
+    a.dAngle = d / a.frameCount;
   }
-  var h = b.array_;
-  0 === h.length ? g.addClass("entryRemove") : g.removeClass("entryRemove");
-  for (e = 0;e < h.length;e++) {
-    (function(c) {
-      var e = Entry.createElement("div");
-      e.addClass("entryListSettingValueWrapperWorkspace");
-      var f = Entry.createElement("span");
-      f.addClass("entryListSettingValueNumberSpanWorkspace");
-      f.innerHTML = c + 1;
-      e.appendChild(f);
-      f = Entry.createElement("input");
-      f.value = h[c].data;
-      f.onblur = function() {
-        h[c].data = this.value;
-        b.updateView();
-      };
-      f.onkeypress = function(a) {
-        13 == a.keyCode && this.blur();
-      };
-      f.addClass("entryListSettingEachInputWorkspace");
-      e.appendChild(f);
-      f = Entry.createElement("span");
-      f.bindOnClick(function() {
-        h.splice(c, 1);
-        a.updateListSettingView();
-      });
-      f.addClass("entryListSettingValueRemoveWorkspace");
-      e.appendChild(f);
-      d.appendChild(e);
-    })(e);
+  if (0 != a.frameCount) {
+    return b.setRotation(b.getRotation() + a.dAngle), a.frameCount--, a;
   }
-<<<<<<< HEAD
-  b.updateView();
-  c.removeClass("entryRemove");
-};
-Entry.VariableContainer.prototype.setListLength = function(b) {
-  b = Number(b);
-  var a = this.selectedList.array_;
-  if (!isNaN(b)) {
-    var c = a.length;
-    if (c < b) {
-      for (b -= c, c = 0;c < b;c++) {
-        a.push({data:0});
-      }
-    } else {
-      c > b && (a.length = b);
-    }
-  }
-  this.updateListSettingView();
-};
-Entry.VariableContainer.prototype.updateViews = function() {
-  var b = this.lists_;
-  this.variables_.map(function(a) {
-    a.updateView();
-  });
-  b.map(function(a) {
-    a.updateView();
-  });
-};
-Entry.VariableContainer.prototype.updateSelectedVariable = function(b, a) {
-  b ? "variable" == b.type ? (this.selectedVariable = b, this.updateVariableSettingView(b)) : "slide" == b.type ? (this.selectedVariable = b, this.updateVariableSettingView(b)) : "list" == b.type && (this.selectedList = b, this.updateListSettingView(b)) : (this.selectedVariable = null, "variable" == (a || "variable") ? this.variableSettingView.addClass("entryRemove") : this.listSettingView.addClass("entryRemove"));
-};
-Entry.VariableContainer.prototype.removeLocalVariables = function(b) {
-  var a = [], c = this;
-  this.mapVariable(function(b, c) {
-    b.object_ && b.object_ == c && a.push(b);
-  }, b);
-  a.map(function(a) {
-    c.removeVariable(a);
-  });
-};
-Entry.VariableContainer.prototype.updateCloudVariables = function() {
-  var b = Entry.projectId;
-  if (Entry.cloudSavable && b) {
-    var a = Entry.variableContainer, b = a.variables_.filter(function(a) {
-      return a.isCloud_;
-    }), b = b.map(function(a) {
-      return a.toJSON();
-    }), a = a.lists_.filter(function(a) {
-      return a.isCloud_;
-    }), a = a.map(function(a) {
-      return a.toJSON();
-    });
-    $.ajax({url:"/api/project/variable/" + Entry.projectId, type:"PUT", data:{variables:b, lists:a}}).done(function() {
-    });
-  }
-};
-Entry.VariableContainer.prototype.addRef = function(b, a) {
-  if (Entry.playground.mainWorkspace.getMode() === Entry.Workspace.MODE_BOARD) {
-    var c = {object:a.getCode().object, block:a};
-    a.funcBlock && (c.funcBlock = a.funcBlock, delete a.funcBlock);
-    this[b].push(c);
-    if ("_functionRefs" == b) {
-      for (var d = a.type.substr(5), d = Entry.variableContainer.functions_[d].content.getBlockList(), e = 0;e < d.length;e++) {
-        a = d[e];
-        var f = a.events;
-        f && f.viewAdd && f.viewAdd.forEach(function(b) {
-          a.getCode().object = c.object;
-          b && (a.funcBlock = c.block, b(a));
-        });
-        f && f.dataAdd && f.dataAdd.forEach(function(b) {
-          a.getCode().object = c.object;
-          b && (a.funcBlock = c.block, b(a));
-        });
-      }
-    }
-    return c;
-  }
-};
-Entry.VariableContainer.prototype.removeRef = function(b, a) {
-  if (Entry.playground.mainWorkspace.getMode() === Entry.Workspace.MODE_BOARD) {
-    for (var c = this[b], d = 0;d < c.length;d++) {
-      if (c[d].block == a) {
-        c.splice(d, 1);
-        break;
-      }
-    }
-    if ("_functionRefs" == b) {
-      for (d = a.type.substr(5), c = Entry.variableContainer.functions_[d].content.getBlockList(), d = 0;d < c.length;d++) {
-        a = c[d];
-        var e = a.events;
-        e && e.viewDestroy && e.viewDestroy.forEach(function(b) {
-          b && b(a);
-        });
-        e && e.dataDestroy && e.dataDestroy.forEach(function(b) {
-          b && b(a);
-        });
-      }
-    }
-  }
-};
-Entry.VariableContainer.prototype._getBlockMenu = function() {
-  return Entry.playground.mainWorkspace.getBlockMenu();
-};
-Entry.block.run = {skeleton:"basic", color:"#3BBD70", contents:["this is", "basic block"], func:function() {
-}};
-Entry.block.mutant = {skeleton:"basic", event:"start", color:"#3BBD70", template:"test mutant block", params:[], func:function() {
-}, changeEvent:new Entry.Event};
-Entry.block.jr_start = {skeleton:"pebble_event", event:"start", color:"#3BBD70", template:"%1", params:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_play_image.png", highlightColor:"#3BBD70", position:{x:0, y:0}, size:22}], func:function() {
-  var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a;
-  for (a in b) {
-    this._unit = b[a];
-=======
   delete a.isStart;
   delete a.frameCount;
   return a.callReturn();
@@ -17095,21 +17403,10 @@ Entry.block.jr_start = {skeleton:"pebble_event", event:"start", color:"#3BBD70",
     a.isStart = !0;
     a.frameCount = Math.floor(c * Entry.FPS);
     a.dDirection = d / a.frameCount;
->>>>>>> refac/entry-block
   }
-  Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
-}};
-Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", template:"%1 \ubc18\ubcf5", params:[{type:"Text", text:Lang.Menus.repeat_0}, {type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:3, fontSize:14, roundValue:3}, {type:"Text", text:Lang.Menus.repeat_1}], statements:[], func:function() {
-  if (void 0 === this.repeatCount) {
-    return this.repeatCount = this.block.params[0], Entry.STATIC.CONTINUE;
+  if (0 != a.frameCount) {
+    return b.setDirection(b.getDirection() + a.dDirection), a.frameCount--, a;
   }
-<<<<<<< HEAD
-  if (0 < this.repeatCount) {
-    this.repeatCount--;
-    var b = this.block.statements[0];
-    if (0 !== b.getBlocks().length) {
-      return this.executor.stepInto(b), Entry.STATIC.CONTINUE;
-=======
   delete a.isStart;
   delete a.frameCount;
   delete a.dDirection;
@@ -17156,35 +17453,14 @@ VALUE:1}, "class":"neobot_motor", isNotFor:["neobot"], func:function(b, a) {
       }
       2 === c ? Entry.hw.sendQueue.RMOT = 0 : 3 === c && (Entry.hw.sendQueue.LMOT = 0);
       return a;
->>>>>>> refac/entry-block
     }
-  } else {
-    delete this.repeatCount;
+    delete a.timeFlag;
+    delete a.isStart;
+    Entry.engine.isContinue = !1;
+    Entry.hw.sendQueue.LMOT = 0;
+    Entry.hw.sendQueue.RMOT = 0;
+    return a.callReturn();
   }
-}};
-Entry.block.jr_item = {skeleton:"pebble_basic", color:"#F46C6C", template:"\uaf43 \ubaa8\uc73c\uae30 %1", params:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_item_image.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}], func:function() {
-  if (this.isContinue) {
-    if (this.isAction) {
-      return Entry.STATIC.CONTINUE;
-    }
-    delete this.isAction;
-    delete this.isContinue;
-  } else {
-    this.isAction = this.isContinue = !0;
-    var b = this;
-    Ntry.dispatchEvent("unitAction", Ntry.STATIC.GET_ITEM, function() {
-      Ntry.dispatchEvent("getItem");
-      b.isAction = !1;
-    });
-    return Entry.STATIC.CONTINUE;
-  }
-<<<<<<< HEAD
-}};
-Entry.block.cparty_jr_item = {skeleton:"pebble_basic", color:"#8ABC1D", template:"%1 %2", params:[{type:"Text", text:Lang.Menus.pick_up_pencil}, {type:"Indicator", img:"/img/assets/ntry/bitmap/cpartyjr/pen.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}], func:function() {
-  if (this.isContinue) {
-    if (this.isAction) {
-      return Entry.STATIC.CONTINUE;
-=======
   a.isStart = !0;
   a.timeFlag = 1;
   c = 1E3 * a.getNumberValue("DURATION");
@@ -17210,93 +17486,12 @@ Entry.block.cparty_jr_item = {skeleton:"pebble_basic", color:"#8ABC1D", template
   if (a.isStart) {
     if (1 == a.timeFlag) {
       return a;
->>>>>>> refac/entry-block
     }
-    delete this.isAction;
-    delete this.isContinue;
-  } else {
-    this.isAction = this.isContinue = !0;
-    var b = this;
-    Ntry.dispatchEvent("unitAction", Ntry.STATIC.GET_ITEM, function() {
-      Ntry.dispatchEvent("getItem");
-      b.isAction = !1;
-    });
-    return Entry.STATIC.CONTINUE;
+    delete a.timeFlag;
+    delete a.isStart;
+    Entry.engine.isContinue = !1;
+    return a.callReturn();
   }
-<<<<<<< HEAD
-}};
-Entry.block.jr_north = {skeleton:"pebble_basic", color:"#A751E3", template:"%1 %2", params:[{type:"Text", text:Lang.Menus.go_up}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_up_image.png", position:{x:83, y:0}, size:22}], func:function() {
-  if (this.isContinue) {
-    if (this.isAction) {
-      return Entry.STATIC.CONTINUE;
-    }
-    delete this.isAction;
-    delete this.isContinue;
-  } else {
-    this.isAction = this.isContinue = !0;
-    var b = Ntry.STATIC, a = this, c = function() {
-      window.setTimeout(function() {
-        Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
-          a.isAction = !1;
-        });
-      }, 3);
-    }, d;
-    switch(Ntry.unitComp.direction) {
-      case Ntry.STATIC.EAST:
-        d = b.TURN_LEFT;
-        break;
-      case Ntry.STATIC.SOUTH:
-        d = b.HALF_ROTATION;
-        break;
-      case Ntry.STATIC.WEST:
-        d = b.TURN_RIGHT;
-        break;
-      default:
-        c();
-    }
-    d && Ntry.dispatchEvent("unitAction", d, c);
-    return Entry.STATIC.CONTINUE;
-  }
-}};
-Entry.block.jr_east = {skeleton:"pebble_basic", color:"#A751E3", template:"%1 %2", params:[{type:"Text", text:Lang.Menus.go_right}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_right_image.png", position:{x:83, y:0}, size:22}], func:function() {
-  var b = Ntry.STATIC;
-  if (this.isContinue) {
-    if (this.isAction) {
-      return Entry.STATIC.CONTINUE;
-    }
-    delete this.isAction;
-    delete this.isContinue;
-  } else {
-    this.isAction = this.isContinue = !0;
-    var a = this, c = function() {
-      window.setTimeout(function() {
-        Ntry.dispatchEvent("unitAction", b.WALK, function() {
-          a.isAction = !1;
-        });
-      }, 3);
-    }, d;
-    switch(Ntry.unitComp.direction) {
-      case b.SOUTH:
-        d = b.TURN_LEFT;
-        break;
-      case b.WEST:
-        d = b.HALF_ROTATION;
-        break;
-      case b.NORTH:
-        d = b.TURN_RIGHT;
-        break;
-      default:
-        c();
-    }
-    d && Ntry.dispatchEvent("unitAction", d, c);
-    return Entry.STATIC.CONTINUE;
-  }
-}};
-Entry.block.jr_south = {skeleton:"pebble_basic", color:"#A751E3", template:"%1 %2", params:[{type:"Text", text:Lang.Menus.go_down}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_down_image.png", position:{x:83, y:0}, size:22}], func:function() {
-  if (this.isContinue) {
-    if (this.isAction) {
-      return Entry.STATIC.CONTINUE;
-=======
   var d = a.getNumberField("NOTE", a), e = a.getNumberField("OCTAVE", a), f = a.getNumberField("DURATION", a);
   a.note = d;
   a.isStart = !0;
@@ -17463,42 +17658,11 @@ isNotFor:["robotis_carCont"], func:function(b, a) {
   if (a.isPlay) {
     if (1 == a.playState) {
       return a;
->>>>>>> refac/entry-block
     }
-    delete this.isAction;
-    delete this.isContinue;
-  } else {
-    this.isAction = this.isContinue = !0;
-    var b = Ntry.STATIC, a = this, c = function() {
-      window.setTimeout(function() {
-        Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
-          a.isAction = !1;
-        });
-      }, 3);
-    }, d;
-    switch(Ntry.unitComp.direction) {
-      case b.EAST:
-        d = b.TURN_RIGHT;
-        break;
-      case b.NORTH:
-        d = b.HALF_ROTATION;
-        break;
-      case b.WEST:
-        d = b.TURN_LEFT;
-        break;
-      default:
-        c();
-    }
-    d && Ntry.dispatchEvent("unitAction", d, c);
-    return Entry.STATIC.CONTINUE;
+    delete a.playState;
+    delete a.isPlay;
+    return a.callReturn();
   }
-<<<<<<< HEAD
-}};
-Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", template:"%1 %2", params:[{type:"Text", text:Lang.Menus.go_left}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_left_image.png", position:{x:83, y:0}, size:22}], func:function() {
-  if (this.isContinue) {
-    if (this.isAction) {
-      return Entry.STATIC.CONTINUE;
-=======
   a.isPlay = !0;
   a.playState = 1;
   var c = a.getField("VALUE", a), d = b.parent.getSound(c);
@@ -17510,65 +17674,23 @@ Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", template:"%1 %2
   if (a.isPlay) {
     if (1 == a.playState) {
       return a;
->>>>>>> refac/entry-block
     }
-    delete this.isAction;
-    delete this.isContinue;
-  } else {
-    this.isAction = this.isContinue = !0;
-    var b = Ntry.STATIC, a = this, c = function() {
-      window.setTimeout(function() {
-        Ntry.dispatchEvent("unitAction", b.WALK, function() {
-          a.isAction = !1;
-        });
-      }, 3);
-    }, d;
-    switch(Ntry.unitComp.direction) {
-      case b.SOUTH:
-        d = b.TURN_RIGHT;
-        break;
-      case b.EAST:
-        d = b.HALF_ROTATION;
-        break;
-      case b.NORTH:
-        d = b.TURN_LEFT;
-        break;
-      default:
-        c();
-    }
-    d && Ntry.dispatchEvent("unitAction", d, c);
-    return Entry.STATIC.CONTINUE;
+    delete a.isPlay;
+    delete a.playState;
+    return a.callReturn();
   }
-}};
-Entry.block.jr_start_basic = {skeleton:"basic_event", event:"start", color:"#3BBD70", template:"%1 %2", params:[{type:"Indicator", boxMultiplier:2, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}, Lang.Menus.maze_when_run], func:function() {
-  var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a;
-  for (a in b) {
-    this._unit = b[a];
-  }
-  Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
-}};
-Entry.block.jr_go_straight = {skeleton:"basic", color:"#A751E3", template:"%1 %2", params:[Lang.Menus.go_forward, {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}], func:function() {
-  if (this.isContinue) {
-    if (this.isAction) {
-      return Entry.STATIC.CONTINUE;
-    }
-    delete this.isAction;
-    delete this.isContinue;
-  } else {
-    this.isAction = this.isContinue = !0;
-    var b = this;
-    Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
-      b.isAction = !1;
+  a.isPlay = !0;
+  a.playState = 1;
+  var c = a.getField("VALUE", a);
+  if (Entry.isExist(c, "id", b.parent.sounds)) {
+    var d = createjs.Sound.play(c), c = a.getNumberValue("SECOND", a);
+    setTimeout(function() {
+      d.stop();
+      a.playState = 0;
+    }, 1E3 * c);
+    d.addEventListener("complete", function(a) {
     });
-    return Entry.STATIC.CONTINUE;
   }
-<<<<<<< HEAD
-}};
-Entry.block.jr_turn_left = {skeleton:"basic", color:"#A751E3", template:"%1 %2", params:[Lang.Menus.jr_turn_left, {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_l.png", size:24}], func:function() {
-  if (this.isContinue) {
-    if (this.isAction) {
-      return Entry.STATIC.CONTINUE;
-=======
   return a;
 }}, sound_volume_change:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"sound_volume_change"}, paramsKeyMap:{VALUE:0}, "class":"sound_volume", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a) / 100, c = c + createjs.Sound.getVolume();
@@ -17599,82 +17721,41 @@ Entry.block.jr_turn_left = {skeleton:"basic", color:"#A751E3", template:"%1 %2",
   if (a.isPlay) {
     if (1 == a.playState) {
       return a;
->>>>>>> refac/entry-block
     }
-    delete this.isAction;
-    delete this.isContinue;
-  } else {
-    this.isAction = this.isContinue = !0;
-    var b = this;
-    Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, function() {
-      b.isAction = !1;
-    });
-    return Entry.STATIC.CONTINUE;
+    delete a.playState;
+    delete a.isPlay;
+    return a.callReturn();
   }
-<<<<<<< HEAD
-}};
-Entry.block.jr_turn_right = {skeleton:"basic", color:"#A751E3", template:"%1 %2", params:[Lang.Menus.jr_turn_right, {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_r.png", size:24}], func:function() {
-  if (this.isContinue) {
-    if (this.isAction) {
-      return Entry.STATIC.CONTINUE;
-=======
+  a.isPlay = !0;
+  a.playState = 1;
+  var c = a.getStringValue("VALUE", a);
+  if (c = b.parent.getSound(c)) {
+    createjs.Sound.play(c.id), setTimeout(function() {
+      a.playState = 0;
+    }, 1E3 * c.duration);
+  }
   return a;
 }}, sound_something_second_wait_with_block:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds"}, {type:"number", params:["1"]}, null], type:"sound_something_second_wait_with_block"}, paramsKeyMap:{VALUE:0, SECOND:1}, "class":"sound_wait", isNotFor:[], func:function(b, a) {
   if (a.isPlay) {
     if (1 == a.playState) {
       return a;
->>>>>>> refac/entry-block
     }
-    delete this.isAction;
-    delete this.isContinue;
-  } else {
-    this.isAction = this.isContinue = !0;
-    var b = this;
-    Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, function() {
-      b.isAction = !1;
+    delete a.isPlay;
+    delete a.playState;
+    return a.callReturn();
+  }
+  a.isPlay = !0;
+  a.playState = 1;
+  var c = a.getStringValue("VALUE", a);
+  if (c = b.parent.getSound(c)) {
+    var d = createjs.Sound.play(c.id), c = a.getNumberValue("SECOND", a);
+    setTimeout(function() {
+      d.stop();
+      a.playState = 0;
+    }, 1E3 * c);
+    d.addEventListener("complete", function(a) {
     });
-    return Entry.STATIC.CONTINUE;
   }
-}};
-Entry.block.jr_go_slow = {skeleton:"basic", color:"#f46c6c", template:"%1 %2", params:[Lang.Menus.go_slow, {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_slow.png", size:24}], func:function() {
-  if (this.isContinue) {
-    if (this.isAction) {
-      return Entry.STATIC.CONTINUE;
-    }
-    delete this.isAction;
-    delete this.isContinue;
-  } else {
-    this.isAction = this.isContinue = !0;
-    var b = this;
-    Ntry.dispatchEvent("unitAction", Ntry.STATIC.GO_SLOW, function() {
-      b.isAction = !1;
-    });
-    return Entry.STATIC.CONTINUE;
-  }
-<<<<<<< HEAD
-}};
-Entry.block.jr_repeat_until_dest = {skeleton:"basic_loop", color:"#498DEB", template:"%1 %2 %3 %4", syntax:["BasicWhile", "true"], params:[Lang.Menus.repeat_until_reach_2, {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_goal_image.png", size:18}, Lang.Menus.repeat_until_reach_1, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
-  var b = this.block.statements[0];
-  if (0 !== b.getBlocks().length) {
-    return this.executor.stepInto(b), Entry.STATIC.CONTINUE;
-  }
-}};
-Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", template:"%1 %2 %3 %4", params:[Lang.Menus.jr_if_1, {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_construction_image.png", size:18}, Lang.Menus.jr_if_2, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
-  if (!this.isContinue) {
-    var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a, c;
-    for (c in b) {
-      a = b[c];
-    }
-    b = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.UNIT);
-    a = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.GRID);
-    a = {x:a.x, y:a.y};
-    Ntry.addVectorByDirection(a, b.direction, 1);
-    a = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:a.x, y:a.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_REPAIR});
-    this.isContinue = !0;
-    b = this.block.statements[0];
-    if (0 !== a.length && 0 !== b.getBlocks().length) {
-      return this.executor.stepInto(b), Entry.STATIC.CONTINUE;
-=======
   return a;
 }}, sound_from_to:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds"}, {type:"text", params:["1"]}, {type:"text", params:["10"]}, null], type:"sound_from_to"}, paramsKeyMap:{VALUE:0, START:1, END:2}, "class":"sound_play", isNotFor:[""], func:function(b, 
 a) {
@@ -17689,41 +17770,11 @@ func:function(b, a) {
   if (a.isPlay) {
     if (1 == a.playState) {
       return a;
->>>>>>> refac/entry-block
     }
+    delete a.isPlay;
+    delete a.playState;
+    return a.callReturn();
   }
-<<<<<<< HEAD
-}};
-Entry.block.jr_if_speed = {skeleton:"basic_loop", color:"#498DEB", template:Lang.Menus.jr_if_1 + " %1 " + Lang.Menus.jr_if_2 + " %2", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_speed_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
-  if (!this.isContinue) {
-    var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a, c;
-    for (c in b) {
-      a = b[c];
-    }
-    b = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.UNIT);
-    a = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.GRID);
-    a = {x:a.x, y:a.y};
-    Ntry.addVectorByDirection(a, b.direction, 1);
-    a = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:a.x, y:a.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_SLOW});
-    this.isContinue = !0;
-    b = this.block.statements[0];
-    if (0 !== a.length && 0 !== b.getBlocks().length) {
-      return this.executor.stepInto(b), Entry.STATIC.CONTINUE;
-    }
-  }
-}};
-Entry.block.maze_step_start = {skeleton:"basic_event", mode:"maze", event:"start", color:"#3BBD70", template:"%1 \uc2dc\uc791\ud558\uae30\ub97c \ud074\ub9ad\ud588\uc744 \ub54c", syntax:["Program"], params:[{type:"Indicator", boxMultiplier:2, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}], func:function() {
-  var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a;
-  for (a in b) {
-    this._unit = b[a];
-  }
-  Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
-}};
-Entry.block.maze_step_jump = {skeleton:"basic", mode:"maze", color:"#FF6E4B", template:"\ub6f0\uc5b4\ub118\uae30%1", params:[{type:"Image", img:"/img/assets/week/blocks/jump.png", size:24}], syntax:["Scope", "jump"], func:function() {
-  if (this.isContinue) {
-    if (this.isAction) {
-      return Entry.STATIC.CONTINUE;
-=======
   a.isPlay = !0;
   a.playState = 1;
   var c = a.getStringValue("VALUE", a);
@@ -17784,47 +17835,18 @@ Entry.block.maze_step_jump = {skeleton:"basic", mode:"maze", color:"#FF6E4B", te
     for (var c = a.runningScript, d = c.length, e = 0;e < d;e++) {
       var f = c.shift();
       f && !f.isEnd() && c.push(f);
->>>>>>> refac/entry-block
     }
-    delete this.isAction;
-    delete this.isContinue;
-  } else {
-    this.isAction = this.isContinue = !0;
-    var b = this;
-    Ntry.dispatchEvent("unitAction", Ntry.STATIC.JUMP, function() {
-      b.isAction = !1;
-    });
-    return Entry.STATIC.CONTINUE;
+    return c.length ? a : a.callReturn();
   }
-}};
-Entry.block.maze_step_for = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"%1 \ubc88 \ubc18\ubcf5\ud558\uae30%2", syntax:["BasicIteration"], params:[{type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
-  if (void 0 === this.repeatCount) {
-    return this.repeatCount = this.block.params[0], Entry.STATIC.CONTINUE;
+  c = a.getField("VALUE", a);
+  f = Entry.isExist(c, "id", Entry.variableContainer.messages_);
+  if ("null" == c || !f) {
+    throw Error("value can not be null or undefined");
   }
-  if (0 < this.repeatCount) {
-    this.repeatCount--;
-    var b = this.block.statements[0];
-    if (0 !== b.getBlocks().length) {
-      return this.executor.stepInto(b), Entry.STATIC.CONTINUE;
-    }
-  } else {
-    delete this.repeatCount;
+  d = Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["when_message_cast", c]);
+  for (c = [];d.length;) {
+    (f = d.shift()) && (c = c.concat(f));
   }
-<<<<<<< HEAD
-}};
-Entry.block.test = {skeleton:"basic_boolean_field", mode:"maze", color:"#127CDB", template:"%1 this is test block %2", params:[{type:"Angle", value:"90"}, {type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}], func:function() {
-}};
-Entry.block.maze_repeat_until_1 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"%1 \ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5%2", syntax:["BasicWhile", "true"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
-  var b = this.block.statements[0];
-  if (0 !== b.getBlocks().length) {
-    return this.executor.stepInto(b), Entry.STATIC.CONTINUE;
-  }
-}};
-Entry.block.maze_repeat_until_2 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ubaa8\ub4e0 %1 \ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5%2", syntax:["BasicWhile", "true"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
-  var b = this.block.statements[0];
-  if (0 !== b.getBlocks().length) {
-    return this.executor.stepInto(b), Entry.STATIC.CONTINUE;
-=======
   a.runningScript = c;
   return a;
 }}, text:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"TextInput", value:10}], events:{}, def:{params:[], type:"text"}, paramsKeyMap:{NAME:0}, func:function(b, a) {
@@ -17911,118 +17933,16 @@ Entry.block.maze_repeat_until_2 = {skeleton:"basic_loop", mode:"maze", color:"#4
   var c = Entry.container.inputValue, d = Entry.stage.inputField, e = a.getValue("VALUE", a);
   if (!e) {
     throw Error("message can not be empty");
->>>>>>> refac/entry-block
   }
-}};
-Entry.block.maze_step_if_1 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", syntax:["BasicIf", 'front == "wall"'], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}], func:function() {
-  if (!this.isContinue) {
-    var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a, c;
-    for (c in b) {
-      a = b[c];
-    }
-    b = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.UNIT);
-    a = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.GRID);
-    a = {x:a.x, y:a.y};
-    Ntry.addVectorByDirection(a, b.direction, 1);
-    c = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:a.x, y:a.y});
-    b = this.block.statements[0];
-    if (0 === c.length) {
-      return this.executor.stepInto(b), Entry.STATIC.CONTINUE;
-    }
-    a = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:a.x, y:a.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.WALL});
-    this.isContinue = !0;
-    if (0 !== a.length && 0 !== b.getBlocks().length) {
-      return this.executor.stepInto(b), Entry.STATIC.CONTINUE;
-    }
+  if (c.sprite == b && d && !d._isHidden) {
+    return a;
   }
-}};
-Entry.block.maze_step_if_2 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", syntax:["BasicIf", 'front == "bee"'], params:[{type:"Image", img:"/img/assets/ntry/bitmap/maze2/obstacle_01.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}], func:function() {
-  if (!this.isContinue) {
-    var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a, c;
-    for (c in b) {
-      a = b[c];
-    }
-    b = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.UNIT);
-    a = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.GRID);
-    a = {x:a.x, y:a.y};
-    Ntry.addVectorByDirection(a, b.direction, 1);
-    a = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:a.x, y:a.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_BEE});
-    this.isContinue = !0;
-    b = this.block.statements[0];
-    if (0 !== a.length && 0 !== b.getBlocks().length) {
-      return this.executor.stepInto(b), Entry.STATIC.CONTINUE;
-    }
+  if (c.sprite != b && a.isInit) {
+    return b.dialog && b.dialog.remove(), delete a.isInit, a.callReturn();
   }
-}};
-Entry.block.maze_call_function = {skeleton:"basic", mode:"maze", color:"#B57242", template:"\uc57d\uc18d \ubd88\ub7ec\uc624\uae30%1", syntax:["Scope", "promise"], params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], func:function() {
-  if (!this.funcExecutor) {
-    var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.CODE), a;
-    for (a in b) {
-      this.funcExecutor = new Entry.Executor(b[a].components[Ntry.STATIC.CODE].code.getEventMap("define")[0]);
-    }
+  if (c.complete && c.sprite == b && d._isHidden && a.isInit) {
+    return b.dialog && b.dialog.remove(), delete c.complete, delete a.isInit, a.callReturn();
   }
-<<<<<<< HEAD
-  this.funcExecutor.execute();
-  if (null !== this.funcExecutor.scope.block) {
-    return Entry.STATIC.CONTINUE;
-  }
-}};
-Entry.block.maze_define_function = {skeleton:"basic_define", mode:"maze", color:"#B57242", event:"define", template:"\uc57d\uc18d\ud558\uae30%1", syntax:["BasicFunction"], params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], statements:[{accept:"basic"}], func:function(b) {
-  if (!this.executed && (b = this.block.statements[0], 0 !== b.getBlocks().length)) {
-    return this.executor.stepInto(b), this.executed = !0, Entry.STATIC.CONTINUE;
-  }
-}};
-Entry.block.maze_step_if_3 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", syntax:["BasicIf", 'front == "banana"'], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_3.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}], func:function() {
-  if (!this.isContinue) {
-    var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a, c;
-    for (c in b) {
-      a = b[c];
-    }
-    b = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.UNIT);
-    a = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.GRID);
-    a = {x:a.x, y:a.y};
-    Ntry.addVectorByDirection(a, b.direction, 1);
-    a = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:a.x, y:a.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_BANANA});
-    this.isContinue = !0;
-    b = this.block.statements[0];
-    if (0 !== a.length && 0 !== b.getBlocks().length) {
-      return this.executor.stepInto(b), Entry.STATIC.CONTINUE;
-    }
-  }
-}};
-Entry.block.maze_step_if_4 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", syntax:["BasicIf", 'front == "wall"'], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_2.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}], func:function() {
-  if (!this.isContinue) {
-    var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a, c;
-    for (c in b) {
-      a = b[c];
-    }
-    b = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.UNIT);
-    a = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.GRID);
-    a = {x:a.x, y:a.y};
-    Ntry.addVectorByDirection(a, b.direction, 1);
-    a = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:a.x, y:a.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.WALL});
-    this.isContinue = !0;
-    b = this.block.statements[0];
-    if (0 !== a.length && 0 !== b.getBlocks().length) {
-      return this.executor.stepInto(b), Entry.STATIC.CONTINUE;
-    }
-  }
-}};
-Entry.block.maze_step_move_step = {skeleton:"basic", mode:"maze", color:"#A751E3", template:"\uc55e\uc73c\ub85c \ud55c \uce78 \uc774\ub3d9%1", syntax:["Scope", "move"], params:[{type:"Image", img:"/img/assets/week/blocks/moveStep.png", size:24}], func:function() {
-  if (this.isContinue) {
-    if (this.isAction) {
-      return Entry.STATIC.CONTINUE;
-    }
-    delete this.isAction;
-    delete this.isContinue;
-  } else {
-    this.isAction = this.isContinue = !0;
-    var b = this;
-    Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
-      b.isAction = !1;
-    });
-    return Entry.STATIC.CONTINUE;
-=======
   e = Entry.convertToRoundedDecimals(e, 3);
   new Entry.Dialog(b, e, "speak");
   Entry.stage.showInputField();
@@ -18104,47 +18024,12 @@ isNotFor:["list", "listNotExist"], func:function(b, a) {
   var c = a.getField("LIST", a), d = a.getStringValue("DATA", a), c = Entry.variableContainer.getList(c);
   if (!c) {
     return !1;
->>>>>>> refac/entry-block
   }
-}};
-Entry.block.maze_step_rotate_left = {skeleton:"basic", mode:"maze", color:"#A751E3", template:"\uc67c\ucabd\uc73c\ub85c \ud68c\uc804%1", syntax:["Scope", "left"], params:[{type:"Image", img:"/img/assets/week/blocks/turnL.png", size:24}], func:function() {
-  if (this.isContinue) {
-    if (this.isAction) {
-      return Entry.STATIC.CONTINUE;
+  for (var c = c.array_, e = 0, f = c.length;e < f;e++) {
+    if (c[e].data.toString() == d.toString()) {
+      return !0;
     }
-    delete this.isAction;
-    delete this.isContinue;
-  } else {
-    this.isAction = this.isContinue = !0;
-    var b = this;
-    Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, function() {
-      b.isAction = !1;
-    });
-    return Entry.STATIC.CONTINUE;
   }
-}};
-Entry.block.maze_step_rotate_right = {skeleton:"basic", mode:"maze", color:"#A751E3", template:"\uc624\ub978\ucabd\uc73c\ub85c \ud68c\uc804%1", syntax:["Scope", "right"], params:[{type:"Image", img:"/img/assets/week/blocks/turnR.png", size:24}], func:function() {
-  if (this.isContinue) {
-    if (this.isAction) {
-      return Entry.STATIC.CONTINUE;
-    }
-    delete this.isAction;
-    delete this.isContinue;
-  } else {
-    this.isAction = this.isContinue = !0;
-    var b = this;
-    Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, function() {
-      b.isAction = !1;
-    });
-    return Entry.STATIC.CONTINUE;
-  }
-<<<<<<< HEAD
-}};
-Entry.block.test_wrapper = {skeleton:"basic", mode:"maze", color:"#3BBD70", template:"%1 this is test block %2", params:[{type:"Block", accept:"basic_boolean_field", value:[{type:"test", params:[30, 50]}]}, {type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}], func:function() {
-}};
-Entry.block.basic_button = {skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"basic button", color:"#333", align:"center"}], func:function() {
-}};
-=======
   return !1;
 }}, xbot_digitalInput:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[["D2", "D2"], ["D3", "D3"], ["D11", "D11"]], value:"D2", fontSize:11}], events:{}, def:{params:[null], type:"xbot_digitalInput"}, paramsKeyMap:{DEVICE:0}, "class":"xbot_sensor", isNotFor:["xbot_epor_edge"], func:function(b, a) {
   var c = Entry.hw.portData, d = a.getField("DEVICE");
@@ -18241,7 +18126,6 @@ isNotFor:["CODEino"], "class":"arduino_set"}, CODEino_convert_scale:{parent:"ard
   }
 })();
 "object" == typeof exports && (exports.block = Entry.block);
->>>>>>> refac/entry-block
 Entry.BlockMenu = function(b, a, c, d) {
   Entry.Model(this, !1);
   this._align = a || "CENTER";
@@ -22242,31 +22126,11 @@ Entry.Playground.prototype.generateCodeView = function(b) {
   b = Entry.Dom(b);
   a = Entry.Dom("div", {parent:b, id:"entryWorkspaceBoard", class:"entryWorkspaceBoard"});
   b = Entry.Dom("div", {parent:b, id:"entryWorkspaceBlockMenu", class:"entryWorkspaceBlockMenu"});
-<<<<<<< HEAD
-  (new Entry.BlockDriver).convert();
-  var c = Entry.block;
-  c.when_run_button_click.event = "start";
-  c.when_some_key_pressed.event = "keyPress";
-  c.when_some_key_click.event = "keyPress";
-  c.when_message_cast.event = "when_message_cast";
-  c.when_scene_start.event = "when_scene_start";
-  c.when_clone_start.event = "when_clone_start";
-  c.mouse_clicked.event = "mouse_clicked";
-  c.mouse_click_cancled.event = "mouse_click_cancled";
-  c.when_object_click.event = "when_object_click";
-  c.when_object_click_canceled.event = "when_object_click_canceled";
-  c.if_else.template = "\ub9cc\uc77c %1 \uc774\ub77c\uba74 %2 %3 \uc544\ub2c8\uba74";
-  c.if_else.params.push({type:"LineBreak"});
   this.mainWorkspace = new Entry.Workspace({blockMenu:{dom:b, align:"LEFT", categoryData:EntryStatic.getAllBlocks(), scroll:!0}, board:{dom:a}, vimBoard:{dom:a}});
   this.blockMenu = this.mainWorkspace.blockMenu;
   this.board = this.mainWorkspace.board;
   this.vimBoard = this.mainWorkspace.vimBoard;
-=======
-  this.mainWorkspace = new Entry.Workspace({blockMenu:{dom:b, align:"LEFT", categoryData:EntryStatic.getAllBlocks(), scroll:!0}, board:{dom:a}});
-  this.blockMenu = this.mainWorkspace.blockMenu;
-  this.board = this.mainWorkspace.board;
   Entry.hw && Entry.hw.banHW();
->>>>>>> refac/entry-block
 };
 Entry.Playground.prototype.generatePictureView = function(b) {
   if ("workspace" == Entry.type) {
