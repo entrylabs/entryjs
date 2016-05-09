@@ -1033,7 +1033,7 @@ Entry.Container.prototype.initYoutube = function(youtubeHash) {
 };
 
 Entry.Container.prototype.initTvcast = function(tvcast) {
-    this.tvcast = tvcast;   
+    this.tvcast = tvcast;
     this.youtubeTab.removeClass('entryRemove');
     var view = this._view;
     var width = view.style.width.substring(0,

@@ -502,7 +502,7 @@ Entry.block = {
             sq.leftWheel = 0;
             sq.rightWheel = 0;
             return script.callReturn();
-            }
+        }
     },
     "albert_set_pad_size_to": {
         "color": "#00979D",
@@ -551,7 +551,7 @@ Entry.block = {
             sq.padWidth = script.getNumberValue('WIDTH');
             sq.padHeight = script.getNumberValue('HEIGHT');
             return script.callReturn();
-            }
+        }
     },
     "albert_set_eye_to": {
         "color": "#00979D",
@@ -971,9 +971,9 @@ Entry.block = {
                 sq.buzzer = 0;
                 sq.note = note;
                 if (timeValue > 100) {
-                var timer1 = setTimeout(function() {
-                    sq.note = 0;
-                    Entry.Albert.removeTimeout(timer1);
+                    var timer1 = setTimeout(function() {
+                        sq.note = 0;
+                        Entry.Albert.removeTimeout(timer1);
                     }, timeValue-100);
                     Entry.Albert.timeouts.push(timer1);
                 }
@@ -1412,15 +1412,15 @@ Entry.block = {
                     sq.leftWheel + value : pd.leftWheel + value;
             } else if (direction == 'RIGHT')
                 sq.rightWheel = sq.rightWheel != undefined ?
-                    sq.rightWheel + value : pd.rightWheel + value;
-            else {
-                sq.leftWheel = sq.leftWheel != undefined ?
-                    sq.leftWheel + value : pd.leftWheel + value;
-                sq.rightWheel = sq.rightWheel != undefined ?
-                    sq.rightWheel + value : pd.rightWheel + value;
-            }
+                sq.rightWheel + value : pd.rightWheel + value;
+                else {
+                    sq.leftWheel = sq.leftWheel != undefined ?
+                        sq.leftWheel + value : pd.leftWheel + value;
+                        sq.rightWheel = sq.rightWheel != undefined ?
+                            sq.rightWheel + value : pd.rightWheel + value;
+                }
 
-            return script.callReturn();
+                return script.callReturn();
         }
     },
     "albert_set_wheels_to": {
@@ -2040,7 +2040,7 @@ Entry.block = {
         "func": function (sprite, script) {
             Entry.hw.setDigitalPortValue(script.getField("PORT"),
                                          script.getNumberField("OPERATOR"));
-            return script.callReturn();
+                                         return script.callReturn();
         }
     },
     "arduino_download_connector": {
@@ -2412,8 +2412,8 @@ Entry.block = {
         "class": "condition",
         "isNotFor": [ "bitbrick" ],
         "func": function (sprite, script) {
-          var port = script.getStringField("PORT");
-          return Entry.hw.portData[port].value;
+            var port = script.getStringField("PORT");
+            return Entry.hw.portData[port].value;
         }
     },
     "bitbrick_is_touch_pressed": {
@@ -2439,7 +2439,7 @@ Entry.block = {
         "class": "condition",
         "isNotFor": [ "bitbrick" ],
         "func": function (sprite, script) {
-          return Entry.hw.portData[script.getStringField("PORT")].value === 0;
+            return Entry.hw.portData[script.getStringField("PORT")].value === 0;
         }
     },
     "bitbrick_turn_off_color_led": {
@@ -2463,10 +2463,10 @@ Entry.block = {
         "class": "condition",
         "isNotFor": [ "bitbrick" ],
         "func": function (sprite, script) {
-          Entry.hw.sendQueue["LEDR"] = 0;
-          Entry.hw.sendQueue["LEDG"] = 0;
-          Entry.hw.sendQueue["LEDB"] = 0;
-          return script.callReturn();
+            Entry.hw.sendQueue["LEDR"] = 0;
+            Entry.hw.sendQueue["LEDG"] = 0;
+            Entry.hw.sendQueue["LEDB"] = 0;
+            return script.callReturn();
         }
     },
     "bitbrick_turn_on_color_led_by_rgb": {
@@ -2522,16 +2522,16 @@ Entry.block = {
         "func": function (sprite, script) {
             var red = script.getNumberValue("rValue"),
                 green = script.getNumberValue("gValue"),
-                blue = script.getNumberValue("bValue"),
-                min = 0,
-                max = 255,
-                adjustor = Entry.adjustValueWithMaxMin,
-                sq = Entry.hw.sendQueue;
+                    blue = script.getNumberValue("bValue"),
+                        min = 0,
+                            max = 255,
+                                adjustor = Entry.adjustValueWithMaxMin,
+                                    sq = Entry.hw.sendQueue;
 
-            sq["LEDR"] = adjustor(red, min, max);
-            sq["LEDG"] = adjustor(green, min, max);
-            sq["LEDB"] = adjustor(blue, min, max);
-            return script.callReturn();
+                                    sq["LEDR"] = adjustor(red, min, max);
+                                    sq["LEDG"] = adjustor(green, min, max);
+                                    sq["LEDB"] = adjustor(blue, min, max);
+                                    return script.callReturn();
         }
     },
     "bitbrick_turn_on_color_led_by_picker": {
@@ -2746,7 +2746,7 @@ Entry.block = {
 
             Entry.hw.sendQueue[script.getStringField("PORT")] =
                 value + 128;
-            return script.callReturn();
+                return script.callReturn();
         }
     },
     "bitbrick_dc_direction_speed": {
@@ -2807,7 +2807,7 @@ Entry.block = {
 
             Entry.hw.sendQueue[script.getStringField("PORT")] =
                 isFront ? value + 128 : 128 - value;
-            return script.callReturn();
+                return script.callReturn();
         }
     },
     "bitbrick_servomotor_angle": {
@@ -3629,15 +3629,15 @@ Entry.block = {
             if (targetId == 'mouse') {
                 var mousePos = Entry.stage.mouseCoordinate;
                 return Math.sqrt(
-                        Math.pow(sprite.getX() - mousePos.x, 2) +
+                    Math.pow(sprite.getX() - mousePos.x, 2) +
                         Math.pow(sprite.getY() - mousePos.y, 2)
-                    );
+                );
             } else {
                 var targetEntity = Entry.container.getEntity(targetId);
                 return Math.sqrt(
-                        Math.pow(sprite.getX() - targetEntity.getX(), 2) +
+                    Math.pow(sprite.getX() - targetEntity.getX(), 2) +
                         Math.pow(sprite.getY() - targetEntity.getY(), 2)
-                    );
+                );
             }
         }
     },
@@ -4186,8 +4186,8 @@ Entry.block = {
             var operator = script.getField("VALUE", script);
             var xRangeCheckList = ['asin_radian', 'acos_radian'];
             if ((xRangeCheckList.indexOf(operator) > -1) &&
-                   (value > 1 || value < -1))
-                    throw new Error('x range exceeded');
+                (value > 1 || value < -1))
+            throw new Error('x range exceeded');
 
             var needToConvertList = ['sin', 'cos', 'tan'];
             if (operator.indexOf('_'))
@@ -5978,56 +5978,56 @@ Entry.block = {
             } else if (script.isMoving) {
                 switch(script.boardState) {
                     case 1: {
-                    if(script.count < 2) {
-                    if(pd.leftFloor < 50 && pd.rightFloor < 50)
-                        script.count ++;
-                    else
-                        script.count = 0;
+                        if(script.count < 2) {
+                            if(pd.leftFloor < 50 && pd.rightFloor < 50)
+                                script.count ++;
+                            else
+                                script.count = 0;
+                            var diff = pd.leftFloor - pd.rightFloor;
+                            sq.leftWheel = 45 + diff * 0.25;
+                            sq.rightWheel = 45 - diff * 0.25;
+                        } else {
+                            script.count = 0;
+                            script.boardState = 2;
+                        }
+                        break;
+                    }
+                case 2: {
                     var diff = pd.leftFloor - pd.rightFloor;
                     sq.leftWheel = 45 + diff * 0.25;
                     sq.rightWheel = 45 - diff * 0.25;
-                    } else {
-                        script.count = 0;
-                        script.boardState = 2;
-                    }
+                    script.boardState = 3;
+                    var timer = setTimeout(function() {
+                        script.boardState = 4;
+                        Entry.Hamster.removeTimeout(timer);
+                    }, 250);
+                    Entry.Hamster.timeouts.push(timer);
                     break;
                 }
-            case 2: {
-            var diff = pd.leftFloor - pd.rightFloor;
-            sq.leftWheel = 45 + diff * 0.25;
-            sq.rightWheel = 45 - diff * 0.25;
-            script.boardState = 3;
-            var timer = setTimeout(function() {
-            script.boardState = 4;
-            Entry.Hamster.removeTimeout(timer);
-            }, 250);
-            Entry.Hamster.timeouts.push(timer);
-            break;
-            }
             case 3: {
-            var diff = pd.leftFloor - pd.rightFloor;
-            sq.leftWheel = 45 + diff * 0.25;
-            sq.rightWheel = 45 - diff * 0.25;
-            break;
+                var diff = pd.leftFloor - pd.rightFloor;
+                sq.leftWheel = 45 + diff * 0.25;
+                sq.rightWheel = 45 - diff * 0.25;
+                break;
             }
-            case 4: {
+        case 4: {
             sq.leftWheel = 0;
             sq.rightWheel = 0;
             script.boardState = 0;
             script.isMoving = false;
             break;
-            }
-            }
-            return script;
+        }
+                }
+                return script;
             } else {
-            delete script.isStart;
-            delete script.isMoving;
-            delete script.count;
-            delete script.boardState;
-            Entry.engine.isContinue = false;
-            sq.leftWheel = 0;
-            sq.rightWheel = 0;
-            return script.callReturn();
+                delete script.isStart;
+                delete script.isMoving;
+                delete script.count;
+                delete script.boardState;
+                Entry.engine.isContinue = false;
+                sq.leftWheel = 0;
+                sq.rightWheel = 0;
+                return script.callReturn();
             }
         }
     },
@@ -6066,121 +6066,121 @@ Entry.block = {
             var sq = Entry.hw.sendQueue;
             var pd = Entry.hw.portData;
             if (!script.isStart) {
-            script.isStart = true;
-            script.isMoving = true;
-            script.count = 0;
-            script.boardState = 1;
-            var direction = script.getField("DIRECTION", script);
-            if (direction == 'LEFT') {
-            script.isLeft = true;
-            sq.leftWheel = -45;
-            sq.rightWheel = 45;
-            } else {
-            script.isLeft = false;
-            sq.leftWheel = 45;
-            sq.rightWheel = -45;
-            }
-            Entry.Hamster.setLineTracerMode(sq, 0);
-            return script;
+                script.isStart = true;
+                script.isMoving = true;
+                script.count = 0;
+                script.boardState = 1;
+                var direction = script.getField("DIRECTION", script);
+                if (direction == 'LEFT') {
+                    script.isLeft = true;
+                    sq.leftWheel = -45;
+                    sq.rightWheel = 45;
+                } else {
+                    script.isLeft = false;
+                    sq.leftWheel = 45;
+                    sq.rightWheel = -45;
+                }
+                Entry.Hamster.setLineTracerMode(sq, 0);
+                return script;
             } else if (script.isMoving) {
-            if(script.isLeft) {
-            switch(script.boardState) {
-            case 1: {
-            if(script.count < 2) {
-            if(pd.leftFloor > 50)
-            script.count ++;
-            } else {
-            script.count = 0;
-            script.boardState = 2;
-            }
-            break;
-            }
-            case 2: {
-            if(pd.leftFloor < 20) {
-            script.boardState = 3;
-            }
-            break;
-            }
-            case 3: {
-            if(script.count < 2) {
-            if(pd.leftFloor < 20)
-            script.count ++;
-            } else {
-            script.count = 0;
-            script.boardState = 4;
-            }
-            break;
-            }
+                if(script.isLeft) {
+                    switch(script.boardState) {
+                        case 1: {
+                            if(script.count < 2) {
+                                if(pd.leftFloor > 50)
+                                    script.count ++;
+                            } else {
+                                script.count = 0;
+                                script.boardState = 2;
+                            }
+                            break;
+                        }
+                    case 2: {
+                        if(pd.leftFloor < 20) {
+                            script.boardState = 3;
+                        }
+                        break;
+                    }
+                case 3: {
+                    if(script.count < 2) {
+                        if(pd.leftFloor < 20)
+                            script.count ++;
+                    } else {
+                        script.count = 0;
+                        script.boardState = 4;
+                    }
+                    break;
+                }
             case 4: {
-            if(pd.leftFloor > 50) {
-            script.boardState = 5;
+                if(pd.leftFloor > 50) {
+                    script.boardState = 5;
+                }
+                break;
             }
-            break;
-            }
-            case 5: {
+        case 5: {
             var diff = pd.leftFloor - pd.rightFloor;
             if(diff > -15) {
-            sq.leftWheel = 0;
-            sq.rightWheel = 0;
-            script.boardState = 0;
-            script.isMoving = false;
+                sq.leftWheel = 0;
+                sq.rightWheel = 0;
+                script.boardState = 0;
+                script.isMoving = false;
             } else {
-            sq.leftWheel = diff * 0.5;
-            sq.rightWheel = -diff * 0.5;
+                sq.leftWheel = diff * 0.5;
+                sq.rightWheel = -diff * 0.5;
             }
             break;
-            }
-            }
-            } else {
-            switch(script.boardState) {
-            case 1: {
-            if(script.count < 2) {
-            if(pd.rightFloor > 50)
-            script.count ++;
-            } else {
-            script.count = 0;
-            script.boardState = 2;
-            }
-            break;
-            }
-            case 2: {
-            if(pd.rightFloor < 20) {
-            script.boardState = 3;
-            }
-            break;
-            }
-            case 3: {
-            if(script.count < 2) {
-            if(pd.rightFloor < 20)
-            script.count ++;
-            } else {
-            script.count = 0;
-            script.boardState = 4;
-            }
-            break;
-            }
+        }
+                    }
+                } else {
+                    switch(script.boardState) {
+                        case 1: {
+                            if(script.count < 2) {
+                                if(pd.rightFloor > 50)
+                                    script.count ++;
+                            } else {
+                                script.count = 0;
+                                script.boardState = 2;
+                            }
+                            break;
+                        }
+                    case 2: {
+                        if(pd.rightFloor < 20) {
+                            script.boardState = 3;
+                        }
+                        break;
+                    }
+                case 3: {
+                    if(script.count < 2) {
+                        if(pd.rightFloor < 20)
+                            script.count ++;
+                    } else {
+                        script.count = 0;
+                        script.boardState = 4;
+                    }
+                    break;
+                }
             case 4: {
-            if(pd.rightFloor > 50) {
-            script.boardState = 5;
+                if(pd.rightFloor > 50) {
+                    script.boardState = 5;
+                }
+                break;
             }
-            break;
-            }
-            case 5: {
+        case 5: {
             var diff = pd.rightFloor - pd.leftFloor;
             if(diff > -15) {
-            sq.leftWheel = 0;
-            sq.rightWheel = 0;
-            script.boardState = 0;
-            script.isMoving = false;
+                sq.leftWheel = 0;
+                sq.rightWheel = 0;
+                script.boardState = 0;
+                script.isMoving = false;
             } else {
-            sq.leftWheel = -diff * 0.5;
-            sq.rightWheel = diff * 0.5;
+                sq.leftWheel = -diff * 0.5;
+                sq.rightWheel = diff * 0.5;
             }
             break;
-            }
-            }
-            }
-            return script;
+        }
+                    }
+                }
+                return script;
             } else {
                 delete script.isStart;
                 delete script.isMoving;
@@ -6288,18 +6288,18 @@ Entry.block = {
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
             if (!script.isStart) {
-            script.isStart = true;
-            script.timeFlag = 1;
-            sq.leftWheel = -30;
-            sq.rightWheel = -30;
-            Entry.Hamster.setLineTracerMode(sq, 0);
-            var timeValue = script.getNumberValue("VALUE") * 1000;
-            var timer = setTimeout(function() {
-                script.timeFlag = 0;
-                Entry.Hamster.removeTimeout(timer);
-            }, timeValue);
-            Entry.Hamster.timeouts.push(timer);
-            return script;
+                script.isStart = true;
+                script.timeFlag = 1;
+                sq.leftWheel = -30;
+                sq.rightWheel = -30;
+                Entry.Hamster.setLineTracerMode(sq, 0);
+                var timeValue = script.getNumberValue("VALUE") * 1000;
+                var timer = setTimeout(function() {
+                    script.timeFlag = 0;
+                    Entry.Hamster.removeTimeout(timer);
+                }, timeValue);
+                Entry.Hamster.timeouts.push(timer);
+                return script;
             } else if (script.timeFlag == 1) {
                 return script;
             } else {
@@ -6358,24 +6358,24 @@ Entry.block = {
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
             if (!script.isStart) {
-            script.isStart = true;
-            script.timeFlag = 1;
-            var direction = script.getField("DIRECTION", script);
-            if (direction == 'LEFT') {
-                sq.leftWheel = -30;
-                sq.rightWheel = 30;
-            } else {
-                sq.leftWheel = 30;
-                sq.rightWheel = -30;
-            }
-            Entry.Hamster.setLineTracerMode(sq, 0);
-            var timeValue = script.getNumberValue("VALUE") * 1000;
-            var timer = setTimeout(function() {
-                script.timeFlag = 0;
-                Entry.Hamster.removeTimeout(timer);
-            }, timeValue);
-            Entry.Hamster.timeouts.push(timer);
-            return script;
+                script.isStart = true;
+                script.timeFlag = 1;
+                var direction = script.getField("DIRECTION", script);
+                if (direction == 'LEFT') {
+                    sq.leftWheel = -30;
+                    sq.rightWheel = 30;
+                } else {
+                    sq.leftWheel = 30;
+                    sq.rightWheel = -30;
+                }
+                Entry.Hamster.setLineTracerMode(sq, 0);
+                var timeValue = script.getNumberValue("VALUE") * 1000;
+                var timer = setTimeout(function() {
+                    script.timeFlag = 0;
+                    Entry.Hamster.removeTimeout(timer);
+                }, timeValue);
+                Entry.Hamster.timeouts.push(timer);
+                return script;
             } else if (script.timeFlag == 1) {
                 return script;
             } else {
@@ -6722,23 +6722,23 @@ Entry.block = {
             if (color == 'WHITE') mode += 7;
 
             if (!script.isStart) {
-            script.isStart = true;
-            sq.leftWheel = 0;
-            sq.rightWheel = 0;
-            Entry.Hamster.setLineTracerMode(sq, mode);
-            return script;
+                script.isStart = true;
+                sq.leftWheel = 0;
+                sq.rightWheel = 0;
+                Entry.Hamster.setLineTracerMode(sq, mode);
+                return script;
             } else {
-            var hamster = Entry.Hamster;
-            if (pd.lineTracerStateId != hamster.lineTracerStateId) {
-            hamster.lineTracerStateId = pd.lineTracerStateId;
-            if (pd.lineTracerState == 0x40) {
-            delete script.isStart;
-            Entry.engine.isContinue = false;
-            hamster.setLineTracerMode(sq, 0);
-            return script.callReturn();
-            }
-            }
-            return script;
+                var hamster = Entry.Hamster;
+                if (pd.lineTracerStateId != hamster.lineTracerStateId) {
+                    hamster.lineTracerStateId = pd.lineTracerStateId;
+                    if (pd.lineTracerState == 0x40) {
+                        delete script.isStart;
+                        Entry.engine.isContinue = false;
+                        hamster.setLineTracerMode(sq, 0);
+                        return script.callReturn();
+                    }
+                }
+                return script;
             }
         }
     },
@@ -7141,37 +7141,37 @@ Entry.block = {
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
             if (!script.isStart) {
-            var note = script.getNumberField("NOTE", script);
-            var octave = script.getNumberField("OCTAVE", script);
-            var beat = script.getNumberValue("VALUE", script);
-            var tempo = Entry.Hamster.tempo;
-            note += (octave-1)*12;
-            var timeValue = beat*60*1000/tempo;
-            script.isStart = true;
-            script.timeFlag = 1;
-            sq.buzzer = 0;
-            sq.note = note;
-            if (timeValue > 100) {
-            var timer1 = setTimeout(function() {
-            sq.note = 0;
-            Entry.Hamster.removeTimeout(timer1);
-            }, timeValue-100);
-            Entry.Hamster.timeouts.push(timer1);
-            }
-            var timer2 = setTimeout(function() {
-            script.timeFlag = 0;
-            Entry.Hamster.removeTimeout(timer2);
-            }, timeValue);
-            Entry.Hamster.timeouts.push(timer2);
-            return script;
+                var note = script.getNumberField("NOTE", script);
+                var octave = script.getNumberField("OCTAVE", script);
+                var beat = script.getNumberValue("VALUE", script);
+                var tempo = Entry.Hamster.tempo;
+                note += (octave-1)*12;
+                var timeValue = beat*60*1000/tempo;
+                script.isStart = true;
+                script.timeFlag = 1;
+                sq.buzzer = 0;
+                sq.note = note;
+                if (timeValue > 100) {
+                    var timer1 = setTimeout(function() {
+                        sq.note = 0;
+                        Entry.Hamster.removeTimeout(timer1);
+                    }, timeValue-100);
+                    Entry.Hamster.timeouts.push(timer1);
+                }
+                var timer2 = setTimeout(function() {
+                    script.timeFlag = 0;
+                    Entry.Hamster.removeTimeout(timer2);
+                }, timeValue);
+                Entry.Hamster.timeouts.push(timer2);
+                return script;
             } else if (script.timeFlag == 1) {
-            return script;
+                return script;
             } else {
-            delete script.isStart;
-            delete script.timeFlag;
-            Entry.engine.isContinue = false;
-            sq.note = 0;
-            return script.callReturn();
+                delete script.isStart;
+                delete script.timeFlag;
+                Entry.engine.isContinue = false;
+                sq.note = 0;
+                return script.callReturn();
             }
         }
     },
@@ -7210,25 +7210,25 @@ Entry.block = {
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
             if (!script.isStart) {
-            script.isStart = true;
-            script.timeFlag = 1;
-            var timeValue = script.getNumberValue('VALUE');
-            timeValue = timeValue*60*1000/Entry.Hamster.tempo;
-            sq.buzzer = 0;
-            sq.note = 0;
-            var timer = setTimeout(function() {
-            script.timeFlag = 0;
-            Entry.Hamster.removeTimeout(timer);
-            }, timeValue);
-            Entry.Hamster.timeouts.push(timer);
-            return script;
+                script.isStart = true;
+                script.timeFlag = 1;
+                var timeValue = script.getNumberValue('VALUE');
+                timeValue = timeValue*60*1000/Entry.Hamster.tempo;
+                sq.buzzer = 0;
+                sq.note = 0;
+                var timer = setTimeout(function() {
+                    script.timeFlag = 0;
+                    Entry.Hamster.removeTimeout(timer);
+                }, timeValue);
+                Entry.Hamster.timeouts.push(timer);
+                return script;
             } else if (script.timeFlag == 1) {
-            return script;
+                return script;
             } else {
-            delete script.isStart;
-            delete script.timeFlag;
-            Entry.engine.isContinue = false;
-            return script.callReturn();
+                delete script.isStart;
+                delete script.timeFlag;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
             }
         }
     },
@@ -7358,12 +7358,12 @@ Entry.block = {
             var port = script.getField("PORT", script);
             var mode = Number(script.getField("MODE", script));
             if (port == 'A') {
-            sq.ioModeA = mode;
+                sq.ioModeA = mode;
             } else if (port == 'B') {
-            sq.ioModeB = mode;
+                sq.ioModeB = mode;
             } else {
-            sq.ioModeA = mode;
-            sq.ioModeB = mode;
+                sq.ioModeA = mode;
+                sq.ioModeB = mode;
             }
             return script.callReturn();
         }
@@ -7417,12 +7417,12 @@ Entry.block = {
             var port = script.getField('PORT');
             var value = script.getNumberValue('VALUE');
             if (port == 'A') {
-            sq.outputA = sq.outputA != undefined ? sq.outputA + value : value;
+                sq.outputA = sq.outputA != undefined ? sq.outputA + value : value;
             } else if (port == 'B') {
-            sq.outputB = sq.outputB != undefined ? sq.outputB + value : value;
+                sq.outputB = sq.outputB != undefined ? sq.outputB + value : value;
             } else {
-            sq.outputA = sq.outputA != undefined ? sq.outputA + value : value;
-            sq.outputB = sq.outputB != undefined ? sq.outputB + value : value;
+                sq.outputA = sq.outputA != undefined ? sq.outputA + value : value;
+                sq.outputB = sq.outputB != undefined ? sq.outputB + value : value;
             }
             return script.callReturn();
         }
@@ -7476,12 +7476,12 @@ Entry.block = {
             var port = script.getField('PORT');
             var value = script.getNumberValue('VALUE');
             if (port == 'A') {
-            sq.outputA = value;
+                sq.outputA = value;
             } else if (port == 'B') {
-            sq.outputB = value;
+                sq.outputB = value;
             } else {
-            sq.outputA = value;
-            sq.outputB = value;
+                sq.outputA = value;
+                sq.outputB = value;
             }
             return script.callReturn();
         }
@@ -7506,7 +7506,7 @@ Entry.block = {
         "class": "boolean_input",
         "isNotFor": [],
         "func": function (sprite, script) {
-                return Entry.stage.isClick;
+            return Entry.stage.isClick;
         }
     },
     "is_press_some_key": {
@@ -7536,8 +7536,8 @@ Entry.block = {
         "class": "boolean_input",
         "isNotFor": [],
         "func": function (sprite, script) {
-                var keycode = Number(script.getField("VALUE", script));
-                return Entry.pressedKeys.indexOf(keycode) >= 0;
+            var keycode = Number(script.getField("VALUE", script));
+            return Entry.pressedKeys.indexOf(keycode) >= 0;
         }
     },
     "reach_something": {
@@ -7569,84 +7569,84 @@ Entry.block = {
         "class": "boolean_collision",
         "isNotFor": [],
         "func": function (sprite, script) {
-                if (!sprite.getVisible())
-                    return false;
-                var targetSpriteId = script.getField("VALUE", script);
-                var reg = /wall/;
-                var ath = 0.2;
-                var object = sprite.object
-                var isWall = reg.test(targetSpriteId);
-                var collision = ndgmr.checkPixelCollision;
-                if (isWall) {
-                    var wall = Entry.stage.wall;
-                    switch(targetSpriteId) {
-                        case 'wall':
-                            if (collision(object,wall.up,ath,true) ||
-                                collision(object,wall.down,ath,true) ||
-                                collision(object,wall.left,ath,true) ||
+            if (!sprite.getVisible())
+                return false;
+            var targetSpriteId = script.getField("VALUE", script);
+            var reg = /wall/;
+            var ath = 0.2;
+            var object = sprite.object
+            var isWall = reg.test(targetSpriteId);
+            var collision = ndgmr.checkPixelCollision;
+            if (isWall) {
+                var wall = Entry.stage.wall;
+                switch(targetSpriteId) {
+                    case 'wall':
+                        if (collision(object,wall.up,ath,true) ||
+                            collision(object,wall.down,ath,true) ||
+                            collision(object,wall.left,ath,true) ||
                                 collision(object,wall.right,ath,true))
                                 return true;
-                            else
-                                return false;
-                        case 'wall_up':
-                            if (collision(object,wall.up,ath,true))
-                                return true;
-                            else
-                                return false;
-                        case 'wall_down':
-                            if (collision(object,wall.down,ath,true))
-                                return true;
-                            else
-                                return false;
-                        case 'wall_right':
-                            if (collision(object,wall.right,ath,true))
-                                return true;
-                            else
-                                return false;
-                        case 'wall_left':
-                            if (collision(object,wall.left,ath,true))
-                                return true;
-                            else
-                                return false;
+                                else
+                                    return false;
+                                case 'wall_up':
+                                    if (collision(object,wall.up,ath,true))
+                                        return true;
+                                    else
+                                        return false;
+                                    case 'wall_down':
+                                        if (collision(object,wall.down,ath,true))
+                                            return true;
+                                        else
+                                            return false;
+                                        case 'wall_right':
+                                            if (collision(object,wall.right,ath,true))
+                                                return true;
+                                            else
+                                                return false;
+                                            case 'wall_left':
+                                                if (collision(object,wall.left,ath,true))
+                                                    return true;
+                                                else
+                                                    return false;
+                }
+            } else if (targetSpriteId == 'mouse') {
+                var stage = Entry.stage.canvas;
+                var pt = object.globalToLocal(stage.mouseX, stage.mouseY);
+                return object.hitTest(pt.x, pt.y);
+            } else {
+                var targetSprite = Entry.container.getEntity(targetSpriteId);
+                if (targetSprite.type == "textBox" || sprite.type == 'textBox') {
+                    var targetBound = targetSprite.object.getTransformedBounds();
+                    var bound = object.getTransformedBounds();
+                    if (Entry.checkCollisionRect(bound, targetBound))
+                        return true;
+                    var clonedEntities = targetSprite.parent.clonedEntities;
+                    for (var i=0, len=clonedEntities.length; i<len; i++) {
+                        var entity = clonedEntities[i];
+                        if(entity.isStamp)
+                            continue;
+                        if (!entity.getVisible())
+                            continue;
+                        if (Entry.checkCollisionRect(bound, entity.object.getTransformedBounds()))
+                            return true;
                     }
-                } else if (targetSpriteId == 'mouse') {
-                    var stage = Entry.stage.canvas;
-                    var pt = object.globalToLocal(stage.mouseX, stage.mouseY);
-                    return object.hitTest(pt.x, pt.y);
                 } else {
-                    var targetSprite = Entry.container.getEntity(targetSpriteId);
-                    if (targetSprite.type == "textBox" || sprite.type == 'textBox') {
-                        var targetBound = targetSprite.object.getTransformedBounds();
-                        var bound = object.getTransformedBounds();
-                        if (Entry.checkCollisionRect(bound, targetBound))
+                    if (targetSprite.getVisible() &&
+                        collision(object,targetSprite.object,ath,true))
+                    return true;
+                    var clonedEntities = targetSprite.parent.clonedEntities;
+                    for (var i=0, len=clonedEntities.length; i<len; i++) {
+                        var entity = clonedEntities[i];
+                        if(entity.isStamp)
+                            continue;
+                        if (!entity.getVisible())
+                            continue;
+                        if (collision(object,entity.object,ath,true))
                             return true;
-                        var clonedEntities = targetSprite.parent.clonedEntities;
-                        for (var i=0, len=clonedEntities.length; i<len; i++) {
-                            var entity = clonedEntities[i];
-                            if(entity.isStamp)
-                                continue;
-                            if (!entity.getVisible())
-                                continue;
-                            if (Entry.checkCollisionRect(bound, entity.object.getTransformedBounds()))
-                                return true;
-                        }
-                    } else {
-                        if (targetSprite.getVisible() &&
-                            collision(object,targetSprite.object,ath,true))
-                            return true;
-                        var clonedEntities = targetSprite.parent.clonedEntities;
-                        for (var i=0, len=clonedEntities.length; i<len; i++) {
-                            var entity = clonedEntities[i];
-                            if(entity.isStamp)
-                                continue;
-                            if (!entity.getVisible())
-                                continue;
-                            if (collision(object,entity.object,ath,true))
-                                return true;
-                        }
                     }
                 }
-                return false;
+            }
+            return false;
         }
     },
     "boolean_comparison": {
@@ -8920,8 +8920,8 @@ Entry.block = {
             "VALUE": 0
         },
         "func": function (sprite, script) {
-    return script.getStringField("VALUE");
-}
+            return script.getStringField("VALUE");
+        }
     },
     "change_to_some_shape": {
         "color": "#EC4466",
@@ -9956,11 +9956,11 @@ Entry.block = {
 
             var method = sprite.parent.getRotateMethod();
             /*
-            var bound = sprite.object.getTransformedBounds();
-            var size = {};
-            size.width = bound.width * Math.sqrt(1.0 + (bound.height/bound.width) * (bound.height/bound.width));
-            size.height = bound.height * Math.sqrt(1.0 + (bound.width/bound.height) * (bound.width/bound.height));
-            */
+               var bound = sprite.object.getTransformedBounds();
+               var size = {};
+               size.width = bound.width * Math.sqrt(1.0 + (bound.height/bound.width) * (bound.height/bound.width));
+               size.height = bound.height * Math.sqrt(1.0 + (bound.width/bound.height) * (bound.width/bound.height));
+               */
 
             if (method == 'free')
                 var angle = (sprite.getRotation() + sprite.getDirection()).mod(360);
@@ -10975,21 +10975,21 @@ Entry.block = {
                 var direction = script.getNumberField("DIRECTION");
                 switch (direction) {
                     case 1:
-                    Entry.hw.sendQueue["LMOT"] = value;
-                    Entry.hw.sendQueue["RMOT"] = value;
-                    break;
+                        Entry.hw.sendQueue["LMOT"] = value;
+                        Entry.hw.sendQueue["RMOT"] = value;
+                        break;
                     case 2:
-                    Entry.hw.sendQueue["LMOT"] = value * -1;
-                    Entry.hw.sendQueue["RMOT"] = value * -1;
-                    break;
+                        Entry.hw.sendQueue["LMOT"] = value * -1;
+                        Entry.hw.sendQueue["RMOT"] = value * -1;
+                        break;
                     case 3:
-                    Entry.hw.sendQueue["LMOT"] = value;
-                    Entry.hw.sendQueue["RMOT"] = value * -1;
-                    break;
+                        Entry.hw.sendQueue["LMOT"] = value;
+                        Entry.hw.sendQueue["RMOT"] = value * -1;
+                        break;
                     case 4:
-                    Entry.hw.sendQueue["LMOT"] = value * -1;
-                    Entry.hw.sendQueue["RMOT"] = value;
-                    break;
+                        Entry.hw.sendQueue["LMOT"] = value * -1;
+                        Entry.hw.sendQueue["RMOT"] = value;
+                        break;
                 }
 
                 if(type === 2)  {
@@ -11317,12 +11317,12 @@ Entry.block = {
         "class": "robotis_openCM70_custom",
         "isNotFor": [ "robotis_openCM70" ],
         "func": function (b, a) {
-          var c = Entry.Robotis_openCM70.INSTRUCTION.READ, d = 0, e = 0, f = 0, d = a.getStringField("SIZE");
-          "BYTE" == d ? e = 1 : "WORD" == d ? e = 2 : "DWORD" == d && (e = 4);
-          f = d = a.getNumberValue("VALUE");
-          Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, e]]);
-          Entry.Robotis_carCont.update();
-          return Entry.hw.portData[f];
+            var c = Entry.Robotis_openCM70.INSTRUCTION.READ, d = 0, e = 0, f = 0, d = a.getStringField("SIZE");
+            "BYTE" == d ? e = 1 : "WORD" == d ? e = 2 : "DWORD" == d && (e = 4);
+            f = d = a.getNumberValue("VALUE");
+            Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, e]]);
+            Entry.Robotis_carCont.update();
+            return Entry.hw.portData[f];
         }
     },
     "robotis_openCM70_sensor_value": {
@@ -11353,13 +11353,13 @@ Entry.block = {
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
         "func": function (b, a) {
-          var c = Entry.Robotis_openCM70.INSTRUCTION.READ, d = 0, e = 0, f = 0, g = 0, h = a.getStringField("SENSOR");
-          "CM_SOUND_DETECTED" == h ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1]) : "CM_SOUND_DETECTING" == h ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[0],
-          e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[1]) : "CM_USER_BUTTON" == h && (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1]);
-          f += 0 * g;
-          Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, g]]);
-          Entry.Robotis_carCont.update();
-          return Entry.hw.portData[f];
+            var c = Entry.Robotis_openCM70.INSTRUCTION.READ, d = 0, e = 0, f = 0, g = 0, h = a.getStringField("SENSOR");
+            "CM_SOUND_DETECTED" == h ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1]) : "CM_SOUND_DETECTING" == h ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[0],
+                                                                                                                                                                                                                                                                                                                                   e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[1]) : "CM_USER_BUTTON" == h && (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1]);
+                                                                                                                                                                                                                                                                                                                                   f += 0 * g;
+                                                                                                                                                                                                                                                                                                                                   Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, g]]);
+                                                                                                                                                                                                                                                                                                                                   Entry.Robotis_carCont.update();
+                                                                                                                                                                                                                                                                                                                                   return Entry.hw.portData[f];
         }
     },
     "robotis_openCM70_aux_sensor_value": {
@@ -11411,20 +11411,20 @@ Entry.block = {
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
         "func": function (b, a) {
-              var c = Entry.Robotis_openCM70.INSTRUCTION.READ, d = 0, e = 0, f = 0, g = 0, h = a.getStringField("PORT"), k = a.getStringField("SENSOR"), l = 0;
-              "PORT_3" == h ? l = 2 : "PORT_4" == h ? l = 3 : "PORT_5" == h ? l = 4 : "PORT_6" == h && (l = 5);
-              "AUX_SERVO_POSITION" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1]) : "AUX_IR" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[1]) :
-              "AUX_TOUCH" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[1]) : "AUX_TEMPERATURE" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[1]) :
-              "AUX_BRIGHTNESS" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[1]) : "AUX_HYDRO_THEMO_HUMIDITY" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[0],
-              e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[1]) : "AUX_HYDRO_THEMO_TEMPER" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[1]) : "AUX_ULTRASONIC" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[1],
-              d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[1]) : "AUX_MAGNETIC" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[1]) : "AUX_MOTION_DETECTION" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[1],
-              d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[1]) : "AUX_COLOR" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[1]) : "AUX_CUSTOM" == k && (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1],
-              d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1]);
-              f += l * g;
-              0 != l && (e = 6 * g);
-              Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, g]]);
-              Entry.Robotis_carCont.update();
-              return Entry.hw.portData[f];
+            var c = Entry.Robotis_openCM70.INSTRUCTION.READ, d = 0, e = 0, f = 0, g = 0, h = a.getStringField("PORT"), k = a.getStringField("SENSOR"), l = 0;
+            "PORT_3" == h ? l = 2 : "PORT_4" == h ? l = 3 : "PORT_5" == h ? l = 4 : "PORT_6" == h && (l = 5);
+            "AUX_SERVO_POSITION" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1]) : "AUX_IR" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[1]) :
+                "AUX_TOUCH" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[1]) : "AUX_TEMPERATURE" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[1]) :
+                    "AUX_BRIGHTNESS" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[1]) : "AUX_HYDRO_THEMO_HUMIDITY" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[0],
+                                                                                                                                                                                                                                                                                                                                  e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[1]) : "AUX_HYDRO_THEMO_TEMPER" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[1]) : "AUX_ULTRASONIC" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[1],
+                                                                                                                                                                                                                                                                                                                                      d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[1]) : "AUX_MAGNETIC" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[1]) : "AUX_MOTION_DETECTION" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[1],
+                                                                                                                                                                                                                                                                                                                                          d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[1]) : "AUX_COLOR" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[1]) : "AUX_CUSTOM" == k && (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1],
+                                                                                                                                                                                                                                                                                                                                              d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1]);
+                                                                                                                                                                                                                                                                                                                                              f += l * g;
+                                                                                                                                                                                                                                                                                                                                              0 != l && (e = 6 * g);
+                                                                                                                                                                                                                                                                                                                                              Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, g]]);
+                                                                                                                                                                                                                                                                                                                                              Entry.Robotis_carCont.update();
+                                                                                                                                                                                                                                                                                                                                              return Entry.hw.portData[f];
         }
     },
     "robotis_openCM70_cm_buzzer_index": {
@@ -11521,11 +11521,11 @@ Entry.block = {
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
         "func": function (b, a) {
-              var c = a.getField("CM_BUZZER_INDEX", a), d = a.getNumberValue("CM_BUZZER_TIME", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, h = 0, k = 0, l = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[1], h = parseInt(10 * d);
-              50 < h && (h = 50);
-              k = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[0];
-              l = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[1];
-              return Entry.Robotis_carCont.postCallReturn(a, [[e, f, g, h], [e, k, l, c]], 1E3 * d);
+            var c = a.getField("CM_BUZZER_INDEX", a), d = a.getNumberValue("CM_BUZZER_TIME", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, h = 0, k = 0, l = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[1], h = parseInt(10 * d);
+            50 < h && (h = 50);
+            k = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[0];
+            l = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[1];
+            return Entry.Robotis_carCont.postCallReturn(a, [[e, f, g, h], [e, k, l, c]], 1E3 * d);
         }
     },
     "robotis_openCM70_cm_buzzer_melody": {
@@ -11583,8 +11583,8 @@ Entry.block = {
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
         "func": function (b, a) {
-              var c = a.getField("CM_BUZZER_MELODY", a), d = Entry.Robotis_openCM70.INSTRUCTION.WRITE, e = 0, f = 0, g = 0, h = 0, e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[0], f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[1], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[0], h = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[1];
-              return Entry.Robotis_carCont.postCallReturn(a, [[d, e, f, 255], [d, g, h, c]], 1E3);
+            var c = a.getField("CM_BUZZER_MELODY", a), d = Entry.Robotis_openCM70.INSTRUCTION.WRITE, e = 0, f = 0, g = 0, h = 0, e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[0], f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[1], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[0], h = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[1];
+            return Entry.Robotis_carCont.postCallReturn(a, [[d, e, f, 255], [d, g, h, c]], 1E3);
         }
     },
     "robotis_openCM70_cm_sound_detected_clear": {
@@ -11607,8 +11607,8 @@ Entry.block = {
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
         "func": function (b, a) {
-              var c = Entry.Robotis_openCM70.INSTRUCTION.WRITE, d = 0, e = 0, d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1];
-              return Entry.Robotis_carCont.postCallReturn(a, [[c, d, e, 0]], Entry.Robotis_openCM70.delay);
+            var c = Entry.Robotis_openCM70.INSTRUCTION.WRITE, d = 0, e = 0, d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1];
+            return Entry.Robotis_carCont.postCallReturn(a, [[c, d, e, 0]], Entry.Robotis_openCM70.delay);
         }
     },
     "robotis_openCM70_cm_led": {
@@ -11654,9 +11654,9 @@ Entry.block = {
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
         "func": function (b, a) {
-              var c = a.getField("CM_LED", a), d = a.getField("VALUE", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0;
-              "CM_LED_R" == c ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_R[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_R[1]) : "CM_LED_G" == c ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_G[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_G[1]) : "CM_LED_B" == c && (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_B[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_B[1]);
-              return Entry.Robotis_carCont.postCallReturn(a, [[e, f, g, d]], Entry.Robotis_openCM70.delay);
+            var c = a.getField("CM_LED", a), d = a.getField("VALUE", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0;
+            "CM_LED_R" == c ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_R[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_R[1]) : "CM_LED_G" == c ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_G[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_G[1]) : "CM_LED_B" == c && (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_B[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_B[1]);
+            return Entry.Robotis_carCont.postCallReturn(a, [[e, f, g, d]], Entry.Robotis_openCM70.delay);
         }
     },
     "robotis_openCM70_cm_motion": {
@@ -11692,8 +11692,8 @@ Entry.block = {
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
         "func": function (b, a) {
-              var c = Entry.Robotis_openCM70.INSTRUCTION.WRITE, d = 0, e = 0, f = 0, d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_MOTION[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_MOTION[1], f = a.getNumberValue("VALUE", a);
-              return Entry.Robotis_carCont.postCallReturn(a, [[c, d, e, f]], Entry.Robotis_openCM70.delay);
+            var c = Entry.Robotis_openCM70.INSTRUCTION.WRITE, d = 0, e = 0, f = 0, d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_MOTION[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_MOTION[1], f = a.getNumberValue("VALUE", a);
+            return Entry.Robotis_carCont.postCallReturn(a, [[c, d, e, f]], Entry.Robotis_openCM70.delay);
         }
     },
     "robotis_openCM70_aux_motor_speed": {
@@ -11800,8 +11800,8 @@ Entry.block = {
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
         "func": function (b, a) {
-              var c = a.getField("PORT", a), d = a.getField("MODE", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_MODE[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_MODE[1];
-              return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
+            var c = a.getField("PORT", a), d = a.getField("MODE", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_MODE[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_MODE[1];
+            return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
         }
     },
     "robotis_openCM70_aux_servo_speed": {
@@ -11861,9 +11861,9 @@ Entry.block = {
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
         "func": function (b, a) {
-              var c = a.getField("PORT", a), d = a.getField("DIRECTION_ANGLE", a), e = a.getNumberValue("VALUE"), f = Entry.Robotis_openCM70.INSTRUCTION.WRITE, g = 0, h = 0, g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_SPEED[0], h = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_SPEED[1];
-              "CW" == d ? (e += 1024, 2047 < e && (e = 2047)) : 1023 < e && (e = 1023);
-              return Entry.Robotis_carCont.postCallReturn(a, [[f, g + (c - 1) * h, h, e]], Entry.Robotis_openCM70.delay);
+            var c = a.getField("PORT", a), d = a.getField("DIRECTION_ANGLE", a), e = a.getNumberValue("VALUE"), f = Entry.Robotis_openCM70.INSTRUCTION.WRITE, g = 0, h = 0, g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_SPEED[0], h = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_SPEED[1];
+            "CW" == d ? (e += 1024, 2047 < e && (e = 2047)) : 1023 < e && (e = 1023);
+            return Entry.Robotis_carCont.postCallReturn(a, [[f, g + (c - 1) * h, h, e]], Entry.Robotis_openCM70.delay);
         }
     },
     "robotis_openCM70_aux_servo_position": {
@@ -11912,9 +11912,9 @@ Entry.block = {
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
         "func": function (b, a) {
-              var c = a.getField("PORT", a), d = a.getNumberValue("VALUE"), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1];
-              1023 < d ? d = 1023 : 0 > d && (d = 0);
-              return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
+            var c = a.getField("PORT", a), d = a.getNumberValue("VALUE"), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1];
+            1023 < d ? d = 1023 : 0 > d && (d = 0);
+            return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
         }
     },
     "robotis_openCM70_aux_led_module": {
@@ -11963,8 +11963,8 @@ Entry.block = {
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
         "func": function (b, a) {
-              var c = a.getField("PORT", a), d = a.getField("LED_MODULE", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_LED_MODULE[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_LED_MODULE[1];
-              return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
+            var c = a.getField("PORT", a), d = a.getField("LED_MODULE", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_LED_MODULE[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_LED_MODULE[1];
+            return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
         }
     },
     "robotis_openCM70_aux_custom": {
@@ -12013,8 +12013,8 @@ Entry.block = {
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
         "func": function (b, a) {
-              var c = a.getField("PORT", a), d = a.getNumberValue("VALUE"), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1];
-              return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
+            var c = a.getField("PORT", a), d = a.getNumberValue("VALUE"), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1];
+            return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
         }
     },
     "robotis_openCM70_cm_custom": {
@@ -12059,8 +12059,8 @@ Entry.block = {
         "class": "robotis_openCM70_custom",
         "isNotFor": [ "robotis_openCM70" ],
         "func": function (b, a) {
-              var c = Entry.Robotis_openCM70.INSTRUCTION.WRITE, d = 0, e = 0, d = a.getNumberValue("ADDRESS"), e = a.getNumberValue("VALUE");
-              return Entry.Robotis_carCont.postCallReturn(a, [[c, d, 65535 < e ? 4 : 255 < e ? 2 : 1, e]], Entry.Robotis_openCM70.delay);
+            var c = Entry.Robotis_openCM70.INSTRUCTION.WRITE, d = 0, e = 0, d = a.getNumberValue("ADDRESS"), e = a.getNumberValue("VALUE");
+            return Entry.Robotis_carCont.postCallReturn(a, [[c, d, 65535 < e ? 4 : 255 < e ? 2 : 1, e]], Entry.Robotis_openCM70.delay);
         }
     },
     "robotis_carCont_sensor_value": {
@@ -12097,16 +12097,16 @@ Entry.block = {
         "class": "robotis_carCont_cm",
         "isNotFor": [ "robotis_carCont" ],
         "func": function (b, a) {
-              var c = Entry.Robotis_carCont.INSTRUCTION.READ, d = 0, e = 0, f = 0, g = 0, h = a.getStringField("SENSOR");
-              "CM_SPRING_LEFT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[2], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[3]) : "CM_SPRING_RIGHT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[2], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[3]) :
-              "CM_SWITCH" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[1]) : "CM_SOUND_DETECTED" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1]) :
-              "CM_SOUND_DETECTING" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[1]) : "CM_IR_LEFT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[2], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[3]) :
-              "CM_IR_RIGHT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[2], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[3]) : "CM_CALIBRATION_LEFT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[1]) :
-              "CM_CALIBRATION_RIGHT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[1]) : "CM_BUTTON_STATUS" == h && (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[0],
-              e = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[1]);
-              Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, g]]);
-              Entry.Robotis_carCont.update();
-              return Entry.hw.portData[f];
+            var c = Entry.Robotis_carCont.INSTRUCTION.READ, d = 0, e = 0, f = 0, g = 0, h = a.getStringField("SENSOR");
+            "CM_SPRING_LEFT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[2], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[3]) : "CM_SPRING_RIGHT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[2], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[3]) :
+                "CM_SWITCH" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[1]) : "CM_SOUND_DETECTED" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1]) :
+                    "CM_SOUND_DETECTING" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[1]) : "CM_IR_LEFT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[2], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[3]) :
+                        "CM_IR_RIGHT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[2], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[3]) : "CM_CALIBRATION_LEFT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[1]) :
+                            "CM_CALIBRATION_RIGHT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[1]) : "CM_BUTTON_STATUS" == h && (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[0],
+                                                                                                                                                                                                                                                                                                                                                             e = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[1]);
+                                                                                                                                                                                                                                                                                                                                                             Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, g]]);
+                                                                                                                                                                                                                                                                                                                                                             Entry.Robotis_carCont.update();
+                                                                                                                                                                                                                                                                                                                                                             return Entry.hw.portData[f];
         }
     },
     "robotis_carCont_cm_led": {
@@ -12177,8 +12177,8 @@ Entry.block = {
         "class": "robotis_carCont_cm",
         "isNotFor": [ "robotis_carCont" ],
         "func": function (b, a) {
-              var c = Entry.Robotis_carCont.INSTRUCTION.WRITE, d = 0, e = 0, d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1];
-              return Entry.Robotis_carCont.postCallReturn(a, [[c, d, e, 0]], Entry.Robotis_carCont.delay);
+            var c = Entry.Robotis_carCont.INSTRUCTION.WRITE, d = 0, e = 0, d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1];
+            return Entry.Robotis_carCont.postCallReturn(a, [[c, d, e, 0]], Entry.Robotis_carCont.delay);
         }
     },
     "robotis_carCont_aux_motor_speed": {
@@ -12236,11 +12236,11 @@ Entry.block = {
         "class": "robotis_carCont_cm",
         "isNotFor": [ "robotis_carCont" ],
         "func": function (b, a) {
-              var c = a.getField("DIRECTION", a), d = a.getField("DIRECTION_ANGLE", a), e = a.getNumberValue("VALUE"), f = Entry.Robotis_carCont.INSTRUCTION.WRITE, g = 0, h = 0;
-              "LEFT" == c ? (g = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_LEFT[0], h = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_LEFT[1]) : (g = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_RIGHT[0], h = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_RIGHT[1]);
-              "CW" == d ? (e += 1024, 2047 < e && (e = 2047)) : 1023 < e && (e = 1023);
-              return Entry.Robotis_carCont.postCallReturn(a, [[f, g, h, e]], Entry.Robotis_carCont.delay);
-            }
+            var c = a.getField("DIRECTION", a), d = a.getField("DIRECTION_ANGLE", a), e = a.getNumberValue("VALUE"), f = Entry.Robotis_carCont.INSTRUCTION.WRITE, g = 0, h = 0;
+            "LEFT" == c ? (g = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_LEFT[0], h = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_LEFT[1]) : (g = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_RIGHT[0], h = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_RIGHT[1]);
+            "CW" == d ? (e += 1024, 2047 < e && (e = 2047)) : 1023 < e && (e = 1023);
+            return Entry.Robotis_carCont.postCallReturn(a, [[f, g, h, e]], Entry.Robotis_carCont.delay);
+        }
     },
     "robotis_carCont_cm_calibration": {
         "color": "#00979D",
@@ -12286,9 +12286,9 @@ Entry.block = {
         "class": "robotis_carCont_cm",
         "isNotFor": [ "robotis_carCont" ],
         "func": function (b, a) {
-              var c = a.getField("DIRECTION", a), d = a.getNumberValue("VALUE"), e = Entry.Robotis_carCont.INSTRUCTION.WRITE, f = 0, g = 0;
-              "LEFT" == c ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[1]) : (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[1]);
-              return Entry.Robotis_carCont.postCallReturn(a, [[e, f, g, d]], Entry.Robotis_carCont.delay);
+            var c = a.getField("DIRECTION", a), d = a.getNumberValue("VALUE"), e = Entry.Robotis_carCont.INSTRUCTION.WRITE, f = 0, g = 0;
+            "LEFT" == c ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[1]) : (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[1]);
+            return Entry.Robotis_carCont.postCallReturn(a, [[e, f, g, d]], Entry.Robotis_carCont.delay);
         }
     },
     "when_scene_start": {
@@ -12847,11 +12847,11 @@ Entry.block = {
             if (sound) {
                 var instance = createjs.Sound.play(sound.id, {startTime: 0, duration: timeValue * 1000});
                 /*
-                var instance = createjs.Sound.play(sound.id);
-                setTimeout(function() {
-                    instance.stop();
-                }, timeValue * 1000);
-                */
+                   var instance = createjs.Sound.play(sound.id);
+                   setTimeout(function() {
+                   instance.stop();
+                   }, timeValue * 1000);
+                   */
             }
             return script.callReturn();
         }
@@ -13473,8 +13473,8 @@ Entry.block = {
                 throw new Error('value can not be null or undefined');
 
             Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent,
-                                      ["when_message_cast", value]);
-            return script.callReturn();
+                                                         ["when_message_cast", value]);
+                                                         return script.callReturn();
         }
     },
     "message_cast_wait": {
@@ -13638,8 +13638,8 @@ Entry.block = {
         "func": function (sprite, script) {
             var text = script.getStringValue("VALUE", script);
             sprite.setText(Entry.convertToRoundedDecimals(sprite.getText(),3) +
-                          Entry.convertToRoundedDecimals(text, 3));
-            return script.callReturn();
+                           Entry.convertToRoundedDecimals(text, 3));
+                           return script.callReturn();
         }
     },
     "text_prepend": {
@@ -13670,8 +13670,8 @@ Entry.block = {
         "func": function (sprite, script) {
             var text = script.getStringValue("VALUE", script);
             sprite.setText(Entry.convertToRoundedDecimals(text, 3) +
-                          Entry.convertToRoundedDecimals(sprite.getText(), 3));
-            return script.callReturn();
+                           Entry.convertToRoundedDecimals(sprite.getText(), 3));
+                           return script.callReturn();
         }
     },
     "text_flush": {
@@ -14045,36 +14045,36 @@ Entry.block = {
         "func": function (sprite, script) {
             var inputModel = Entry.container.inputValue,
                 inputView = Entry.stage.inputField,
-                message = script.getValue("VALUE", script);
+                    message = script.getValue("VALUE", script);
 
-            if (!message)
-                throw new Error('message can not be empty');
+                    if (!message)
+                        throw new Error('message can not be empty');
 
-            if (inputModel.sprite == sprite &&
-                inputView && !inputView._isHidden) {
-                return script;
-            } else if (inputModel.sprite != sprite && script.isInit) {
-                if(sprite.dialog)
-                    sprite.dialog.remove();
-                delete script.isInit;
-                return script.callReturn();
-            } else if (inputModel.complete &&
-                       inputModel.sprite == sprite &&
-                       inputView._isHidden && script.isInit) {
-                if(sprite.dialog)
-                    sprite.dialog.remove();
-                delete inputModel.complete;
-                delete script.isInit;
-                return script.callReturn();
-            } else {
-                message = Entry.convertToRoundedDecimals(message, 3);
-                new Entry.Dialog(sprite, message, 'speak');
-                Entry.stage.showInputField();
-                inputModel.script = script;
-                inputModel.sprite = sprite;
-                script.isInit = true;
-                return script;
-            }
+                    if (inputModel.sprite == sprite &&
+                        inputView && !inputView._isHidden) {
+                            return script;
+                        } else if (inputModel.sprite != sprite && script.isInit) {
+                            if(sprite.dialog)
+                                sprite.dialog.remove();
+                            delete script.isInit;
+                            return script.callReturn();
+                        } else if (inputModel.complete &&
+                                   inputModel.sprite == sprite &&
+                                   inputView._isHidden && script.isInit) {
+                                       if(sprite.dialog)
+                                           sprite.dialog.remove();
+                                       delete inputModel.complete;
+                                       delete script.isInit;
+                                       return script.callReturn();
+                                   } else {
+                                       message = Entry.convertToRoundedDecimals(message, 3);
+                                       new Entry.Dialog(sprite, message, 'speak');
+                                       Entry.stage.showInputField();
+                                       inputModel.script = script;
+                                       inputModel.sprite = sprite;
+                                       script.isInit = true;
+                                       return script;
+                                   }
         }
     },
     "get_canvas_input_value": {
@@ -14661,8 +14661,8 @@ Entry.block = {
         "class": "xbot_sensor",
         "isNotFor": [ "xbot_epor_edge" ],
         "func": function (b, a) {
-          var c = Entry.hw.portData, d = a.getField("DEVICE");
-          return c[d];
+            var c = Entry.hw.portData, d = a.getField("DEVICE");
+            return c[d];
         }
     },
     "xbot_analogValue": {
@@ -14696,8 +14696,8 @@ Entry.block = {
         "class": "xbot_sensor",
         "isNotFor": [ "xbot_epor_edge" ],
         "func": function (b, a) {
-          var c = Entry.hw.portData, d = a.getField("DEVICE");
-          return c[d];
+            var c = Entry.hw.portData, d = a.getField("DEVICE");
+            return c[d];
         }
     },
     "xbot_digitalOutput": {
@@ -14744,12 +14744,12 @@ Entry.block = {
         "class": "xbot_sensor",
         "isNotFor": [ "xbot_epor_edge" ],
         "func": function (b, a) {
-          var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getStringField("VALUE", a);
-          c.D13 = "D13" == d && "HIGH" == e ? 1 : 0;
-          c.D4 = "D4" == d && "HIGH" == e ? 1 : 0;
-          c.D7 = "D7" == d && "HIGH" == e ? 1 : 0;
-          c.D12 = "D12" == d && "HIGH" == e ? 1 : 0;
-          return a.callReturn();
+            var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getStringField("VALUE", a);
+            c.D13 = "D13" == d && "HIGH" == e ? 1 : 0;
+            c.D4 = "D4" == d && "HIGH" == e ? 1 : 0;
+            c.D7 = "D7" == d && "HIGH" == e ? 1 : 0;
+            c.D12 = "D12" == d && "HIGH" == e ? 1 : 0;
+            return a.callReturn();
         }
     },
     "xbot_analogOutput": {
@@ -14796,9 +14796,9 @@ Entry.block = {
         "class": "xbot_sensor",
         "isNotFor": [ "xbot_epor_edge" ],
         "func": function (b, a) {
-          var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getNumberValue("VALUE", a);
-          "analogD5" == d ? c.analogD5 = e : "analogD6" == d && (c.analogD6 = e);
-          return a.callReturn();
+            var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getNumberValue("VALUE", a);
+            "analogD5" == d ? c.analogD5 = e : "analogD6" == d && (c.analogD6 = e);
+            return a.callReturn();
         }
     },
     "xbot_servo": {
@@ -14847,9 +14847,9 @@ Entry.block = {
         "class": "xbot_motor",
         "isNotFor": [ "xbot_epor_edge" ],
         "func": function (b, a) {
-          var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getNumberValue("VALUE", a);
-          "head" == d ? c.head = e : "right" == d ? c.armR = e : "left" == d && (c.armL = e);
-          return a.callReturn();
+            var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getNumberValue("VALUE", a);
+            "head" == d ? c.head = e : "right" == d ? c.armR = e : "left" == d && (c.armL = e);
+            return a.callReturn();
         }
     },
     "xbot_oneWheel": {
@@ -14897,9 +14897,9 @@ Entry.block = {
         "class": "xbot_motor",
         "isNotFor": [ "xbot_epor_edge" ],
         "func": function (b, a) {
-          var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getNumberValue("VALUE", a);
-          "rightWheel" == d ? c.rightWheel = e : "leftWheel" == d ? c.leftWheel = e : c.rightWheel = c.leftWheel = e;
-          return a.callReturn();
+            var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getNumberValue("VALUE", a);
+            "rightWheel" == d ? c.rightWheel = e : "leftWheel" == d ? c.leftWheel = e : c.rightWheel = c.leftWheel = e;
+            return a.callReturn();
         }
     },
     "xbot_twoWheel": {
@@ -14944,10 +14944,10 @@ Entry.block = {
         "class": "xbot_motor",
         "isNotFor": [ "xbot_epor_edge" ],
         "func": function (b, a) {
-          var c = Entry.hw.sendQueue;
-          c.rightWheel = a.getNumberValue("rightWheel");
-          c.leftWheel = a.getNumberValue("leftWheel");
-          return a.callReturn();
+            var c = Entry.hw.sendQueue;
+            c.rightWheel = a.getNumberValue("rightWheel");
+            c.leftWheel = a.getNumberValue("leftWheel");
+            return a.callReturn();
         }
     },
     "xbot_rgb": {
@@ -15001,11 +15001,11 @@ Entry.block = {
         "class": "xbot_rgb",
         "isNotFor": [ "xbot_epor_edge" ],
         "func": function (b, a) {
-          var c = Entry.hw.sendQueue;
-          c.ledR = a.getNumberValue("ledR");
-          c.ledG = a.getNumberValue("ledG");
-          c.ledB = a.getNumberValue("ledB");
-          return a.callReturn();
+            var c = Entry.hw.sendQueue;
+            c.ledR = a.getNumberValue("ledR");
+            c.ledG = a.getNumberValue("ledG");
+            c.ledB = a.getNumberValue("ledB");
+            return a.callReturn();
         }
     },
     "xbot_rgb_picker": {
@@ -15034,11 +15034,11 @@ Entry.block = {
         "class": "xbot_rgb",
         "isNotFor": [ "xbot_epor_edge" ],
         "func": function (b, a) {
-          var c = a.getStringField("VALUE"), d = Entry.hw.sendQueue;
-          d.ledR = parseInt(.3 * parseInt(c.substr(1, 2), 16));
-          d.ledG = parseInt(.3 * parseInt(c.substr(3, 2), 16));
-          d.ledB = parseInt(.3 * parseInt(c.substr(5, 2), 16));
-          return a.callReturn();
+            var c = a.getStringField("VALUE"), d = Entry.hw.sendQueue;
+            d.ledR = parseInt(.3 * parseInt(c.substr(1, 2), 16));
+            d.ledG = parseInt(.3 * parseInt(c.substr(3, 2), 16));
+            d.ledB = parseInt(.3 * parseInt(c.substr(5, 2), 16));
+            return a.callReturn();
         }
     },
     "xbot_buzzer": {
@@ -15105,11 +15105,11 @@ Entry.block = {
         "class": "xbot_sensor",
         "isNotFor": [ "xbot_epor_edge" ],
         "func": function (b, a) {
-          var c = Entry.hw.sendQueue, d = a.getStringField("NOTE", a), e = a.getStringField("OCTAVE", a), f = a.getNumberValue("VALUE", a), d = d + e;
-          c.note = "C2" == d ? 65 : "D2" == d ? 73 : "E2" == d ? 82 : "F2" == d ? 87 : "G2" == d ? 98 : "A2" == d ? 110 : "B2" == d ? 123 : "C3" == d ? 131 : "D3" == d ? 147 : "E3" == d ? 165 : "F3" == d ? 175 : "G3" == d ? 196 : "A3" == d ? 220 : "B3" == d ? 247 : "C4" == d ? 262 : "D4" == d ? 294 : "E4" == d ? 330 : "F4" == d ? 349 : "G4" == d ? 392 : "A4" == d ? 440 : "B4" == d ? 494 : "C5" == d ? 523 : "D5" == d ? 587 : "E5" == d ? 659 : "F5" == d ? 698 : "G5" == d ? 784 : "A5" == d ? 880 : "B5" == d ?
-          988 : "C6" == d ? 1047 : "D6" == d ? 1175 : "E6" == d ? 1319 : "F6" == d ? 1397 : "G6" == d ? 1568 : "A6" == d ? 1760 : "B6" == d ? 1976 : "C7" == d ? 2093 : "D7" == d ? 2349 : "E7" == d ? 2637 : "F7" == d ? 2794 : "G7" == d ? 3136 : "A7" == d ? 3520 : "B7" == d ? 3951 : 262;
-          c.duration = 40 * f;
-          return a.callReturn();
+            var c = Entry.hw.sendQueue, d = a.getStringField("NOTE", a), e = a.getStringField("OCTAVE", a), f = a.getNumberValue("VALUE", a), d = d + e;
+            c.note = "C2" == d ? 65 : "D2" == d ? 73 : "E2" == d ? 82 : "F2" == d ? 87 : "G2" == d ? 98 : "A2" == d ? 110 : "B2" == d ? 123 : "C3" == d ? 131 : "D3" == d ? 147 : "E3" == d ? 165 : "F3" == d ? 175 : "G3" == d ? 196 : "A3" == d ? 220 : "B3" == d ? 247 : "C4" == d ? 262 : "D4" == d ? 294 : "E4" == d ? 330 : "F4" == d ? 349 : "G4" == d ? 392 : "A4" == d ? 440 : "B4" == d ? 494 : "C5" == d ? 523 : "D5" == d ? 587 : "E5" == d ? 659 : "F5" == d ? 698 : "G5" == d ? 784 : "A5" == d ? 880 : "B5" == d ?
+                988 : "C6" == d ? 1047 : "D6" == d ? 1175 : "E6" == d ? 1319 : "F6" == d ? 1397 : "G6" == d ? 1568 : "A6" == d ? 1760 : "B6" == d ? 1976 : "C7" == d ? 2093 : "D7" == d ? 2349 : "E7" == d ? 2637 : "F7" == d ? 2794 : "G7" == d ? 3136 : "A7" == d ? 3520 : "B7" == d ? 3951 : 262;
+                c.duration = 40 * f;
+                return a.callReturn();
         }
     },
     "xbot_lcd": {
@@ -15156,9 +15156,9 @@ Entry.block = {
         "class": "xbot_sensor",
         "isNotFor": [ "xbot_epor_edge" ],
         "func": function (b, a) {
-          var c = Entry.hw.sendQueue, d = a.getNumberField("LINE", a), e = a.getStringValue("VALUE", a);
-          0 == d ? (c.lcdNum = 0, c.lcdTxt = e) : 1 == d && (c.lcdNum = 1, c.lcdTxt = e);
-          return a.callReturn();
+            var c = Entry.hw.sendQueue, d = a.getNumberField("LINE", a), e = a.getStringValue("VALUE", a);
+            0 == d ? (c.lcdNum = 0, c.lcdTxt = e) : 1 == d && (c.lcdNum = 1, c.lcdTxt = e);
+            return a.callReturn();
         }
     },
     "run": {
@@ -15932,11 +15932,163 @@ Entry.block = {
                 "align": "center"
             }
         ]
+    },
+    "dplay_get_number_sensor_value": {
+        "parent": "arduino_get_number_sensor_value",
+        "isNotFor": [
+            "dplay"
+        ],
+        "class": "arduino_value"
+    },
+    "dplay_get_digital_value": {
+        "parent": "arduino_get_digital_value",
+        "isNotFor": [
+            "dplay"
+        ],
+        "class": "arduino_value"
+    },
+    "dplay_toggle_led": {
+        "parent": "arduino_toggle_led",
+        "isNotFor": [
+            "dplay"
+        ],
+        "class": "arduino_set"
+    },
+    "dplay_toggle_pwm": {
+        "parent": "arduino_toggle_pwm",
+        "isNotFor": [
+            "dplay"
+        ],
+        "class": "arduino_set"
+    },
+    "dplay_convert_scale": {
+        "parent": "arduino_convert_scale",
+        "isNotFor": [
+            "dplay"
+        ],
+        "class": "arduino"
+    },
+    "nemoino_get_number_sensor_value": {
+        "parent": "arduino_get_number_sensor_value",
+        "isNotFor": [
+            "nemoino"
+        ],
+        "class": "arduino_value"
+    },
+    "nemoino_get_digital_value": {
+        "parent": "arduino_get_digital_value",
+        "isNotFor": [
+            "nemoino"
+        ],
+        "class": "arduino_value"
+    },
+    "nemoino_toggle_led": {
+        "parent": "arduino_toggle_led",
+        "isNotFor": [
+            "nemoino"
+        ],
+        "class": "arduino_set"
+    },
+    "nemoino_toggle_pwm": {
+        "parent": "arduino_toggle_pwm",
+        "isNotFor": [
+            "nemoino"
+        ],
+        "class": "arduino_set"
+    },
+    "nemoino_convert_scale": {
+        "parent": "arduino_convert_scale",
+        "isNotFor": [
+            "nemoino"
+        ],
+        "class": "arduino"
+    },
+    "sensorBoard_get_number_sensor_value": {
+        "parent": "arduino_get_number_sensor_value",
+        "isNotFor": [
+            "sensorBoard"
+        ],
+        "class": "arduino_value"
+    },
+    "sensorBoard_get_digital_value": {
+        "parent": "arduino_get_digital_value",
+        "isNotFor": [
+            "sensorBoard"
+        ],
+        "class": "arduino_value"
+    },
+    "sensorBoard_toggle_led": {
+        "parent": "arduino_toggle_led",
+        "isNotFor": [
+            "sensorBoard"
+        ],
+        "class": "arduino_set"
+    },
+    "sensorBoard_toggle_pwm": {
+        "parent": "arduino_toggle_pwm",
+        "isNotFor": [
+            "sensorBoard"
+        ],
+        "class": "arduino_set"
+    },
+    "sensorBoard_convert_scale": {
+        "parent": "arduino_convert_scale",
+        "isNotFor": [
+            "sensorBoard"
+        ],
+        "class": "arduino"
+    },
+    "CODEino_get_number_sensor_value": {
+        "parent": "arduino_get_number_sensor_value",
+        "isNotFor": [
+            "CODEino"
+        ],
+        "class": "arduino_value"
+    },
+    "CODEino_get_digital_value": {
+        "parent": "arduino_get_digital_value",
+        "isNotFor": [
+            "CODEino"
+        ],
+        "class": "arduino_value"
+    },
+    "CODEino_toggle_led": {
+        "parent": "arduino_toggle_led",
+        "isNotFor": [
+            "CODEino"
+        ],
+        "class": "arduino_set"
+    },
+    "CODEino_toggle_pwm": {
+        "parent": "arduino_toggle_pwm",
+        "isNotFor": [
+            "CODEino"
+        ],
+        "class": "arduino_set"
+    },
+    "CODEino_convert_scale": {
+        "parent": "arduino_convert_scale",
+        "isNotFor": [
+            "CODEino"
+        ],
+        "class": "arduino"
     }
 };
 
-
-
+(function() {
+    for (var type in Entry.block) {
+        var block = Entry.block[type];
+        if (block.parent) {
+            var f = function() {};
+            f.prototype = Entry.block[block.parent];
+            var schema = new f();
+            for (var key in block) {
+                schema[key] = block[key];
+            }
+            Entry.block[type] = schema;
+        }
+    }
+})();
 
 if (typeof exports == "object")
     exports.block = Entry.block;

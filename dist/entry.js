@@ -848,8 +848,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
+  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(c, d);
   return a.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1943,10 +1943,10 @@ Entry.block.wait_second = function(b, a) {
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a);
+  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
   setTimeout(function() {
     a.timeFlag = 0;
-  }, 60 / (Entry.FPS || 60) * c * 1E3);
+  }, c);
   return a;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -12797,7 +12797,7 @@ p.checkDevice = function(b) {
 p.banHW = function() {
   var b = this.hwInfo, a;
   for (a in b) {
-    Entry.playground.blockMenu.banClass(b[a].name);
+    Entry.playground.mainWorkspace.blockMenu.banClass(b[a].name);
   }
 };
 Entry.BlockModel = function() {
@@ -15235,8 +15235,8 @@ value:"4", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/
   return Entry.hw.getDigitalPortValue(c);
 }}, arduino_toggle_led:{color:"#00979D", skeleton:"basic", statements:[], template:"\ub514\uc9c0\ud138 %1 \ubc88 \ud540 %2 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["\ucf1c\uae30", "on"], ["\ub044\uae30", "off"]], value:"on", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"arduino_get_port_number"}, null, null], type:"arduino_toggle_led"}, paramsKeyMap:{VALUE:0, OPERATOR:1}, "class":"arduino_set", 
 isNotFor:["arduino"], func:function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
+  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(c, d);
   return a.callReturn();
 }}, arduino_toggle_pwm:{color:"#00979D", skeleton:"basic", statements:[], template:"\ub514\uc9c0\ud138 %1 \ubc88 \ud540\uc744 %2 (\uc73c)\ub85c \uc815\ud558\uae30 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"arduino_get_pwm_port_number"}, {type:"arduino_text", params:["255"]}, null], type:"arduino_toggle_pwm"}, paramsKeyMap:{PORT:0, VALUE:1}, 
 "class":"arduino_set", isNotFor:["arduino"], func:function(b, a) {
@@ -15654,10 +15654,10 @@ type:"quotient_and_mod"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2, OPERATOR:4}, "c
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a);
+  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
   setTimeout(function() {
     a.timeFlag = 0;
-  }, 60 / (Entry.FPS || 60) * c * 1E3);
+  }, c);
   return a;
 }}, repeat_basic:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], template:"%1 \ubc88 \ubc18\ubcf5\ud558\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"repeat_basic"}, paramsKeyMap:{VALUE:0}, statementsKeyMap:{DO:0}, "class":"repeat", isNotFor:[], func:function(b, a) {
   var c;
@@ -17312,7 +17312,26 @@ size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statem
 img:"/img/assets/week/blocks/function.png", size:24}], statements:[{accept:"basic"}]}, maze_step_if_3:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", syntax:["BasicIf", "front == banana"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_3.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}]}, maze_step_if_4:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", 
 template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", syntax:["BasicIf", "front == wall"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_2.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}]}, maze_step_move_step:{skeleton:"basic", mode:"maze", color:"#A751E3", template:"\uc55e\uc73c\ub85c \ud55c \uce78 \uc774\ub3d9%1", syntax:["Scope", "move"], params:[{type:"Image", img:"/img/assets/week/blocks/moveStep.png", 
 size:24}]}, maze_step_rotate_left:{skeleton:"basic", mode:"maze", color:"#A751E3", template:"\uc67c\ucabd\uc73c\ub85c \ud68c\uc804%1", syntax:["Scope", "left"], params:[{type:"Image", img:"/img/assets/week/blocks/turnL.png", size:24}]}, maze_step_rotate_right:{skeleton:"basic", mode:"maze", color:"#A751E3", template:"\uc624\ub978\ucabd\uc73c\ub85c \ud68c\uc804%1", syntax:["Scope", "right"], params:[{type:"Image", img:"/img/assets/week/blocks/turnR.png", size:24}]}, test_wrapper:{skeleton:"basic", 
-mode:"maze", color:"#3BBD70", template:"%1 this is test block %2", params:[{type:"Block", accept:"basic_boolean_field", value:[{type:"test", params:[30, 50]}]}, {type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}]}, basic_button:{skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"basic button", color:"#333", align:"center"}]}};
+mode:"maze", color:"#3BBD70", template:"%1 this is test block %2", params:[{type:"Block", accept:"basic_boolean_field", value:[{type:"test", params:[30, 50]}]}, {type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}]}, basic_button:{skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"basic button", color:"#333", align:"center"}]}, dplay_get_number_sensor_value:{parent:"arduino_get_number_sensor_value", isNotFor:["dplay"], 
+"class":"arduino_value"}, dplay_get_digital_value:{parent:"arduino_get_digital_value", isNotFor:["dplay"], "class":"arduino_value"}, dplay_toggle_led:{parent:"arduino_toggle_led", isNotFor:["dplay"], "class":"arduino_set"}, dplay_toggle_pwm:{parent:"arduino_toggle_pwm", isNotFor:["dplay"], "class":"arduino_set"}, dplay_convert_scale:{parent:"arduino_convert_scale", isNotFor:["dplay"], "class":"arduino"}, nemoino_get_number_sensor_value:{parent:"arduino_get_number_sensor_value", isNotFor:["nemoino"], 
+"class":"arduino_value"}, nemoino_get_digital_value:{parent:"arduino_get_digital_value", isNotFor:["nemoino"], "class":"arduino_value"}, nemoino_toggle_led:{parent:"arduino_toggle_led", isNotFor:["nemoino"], "class":"arduino_set"}, nemoino_toggle_pwm:{parent:"arduino_toggle_pwm", isNotFor:["nemoino"], "class":"arduino_set"}, nemoino_convert_scale:{parent:"arduino_convert_scale", isNotFor:["nemoino"], "class":"arduino"}, sensorBoard_get_number_sensor_value:{parent:"arduino_get_number_sensor_value", 
+isNotFor:["sensorBoard"], "class":"arduino_value"}, sensorBoard_get_digital_value:{parent:"arduino_get_digital_value", isNotFor:["sensorBoard"], "class":"arduino_value"}, sensorBoard_toggle_led:{parent:"arduino_toggle_led", isNotFor:["sensorBoard"], "class":"arduino_set"}, sensorBoard_toggle_pwm:{parent:"arduino_toggle_pwm", isNotFor:["sensorBoard"], "class":"arduino_set"}, sensorBoard_convert_scale:{parent:"arduino_convert_scale", isNotFor:["sensorBoard"], "class":"arduino"}, CODEino_get_number_sensor_value:{parent:"arduino_get_number_sensor_value", 
+isNotFor:["CODEino"], "class":"arduino_value"}, CODEino_get_digital_value:{parent:"arduino_get_digital_value", isNotFor:["CODEino"], "class":"arduino_value"}, CODEino_toggle_led:{parent:"arduino_toggle_led", isNotFor:["CODEino"], "class":"arduino_set"}, CODEino_toggle_pwm:{parent:"arduino_toggle_pwm", isNotFor:["CODEino"], "class":"arduino_set"}, CODEino_convert_scale:{parent:"arduino_convert_scale", isNotFor:["CODEino"], "class":"arduino"}};
+(function() {
+  for (var b in Entry.block) {
+    var a = Entry.block[b];
+    if (a.parent) {
+      var c = function() {
+      };
+      c.prototype = Entry.block[a.parent];
+      var c = new c, d;
+      for (d in a) {
+        c[d] = a[d];
+      }
+      Entry.block[b] = c;
+    }
+  }
+})();
 "object" == typeof exports && (exports.block = Entry.block);
 Entry.BlockMenu = function(b, a, c, d) {
   Entry.Model(this, !1);
@@ -21277,6 +21296,7 @@ Entry.Playground.prototype.generateCodeView = function(b) {
   this.mainWorkspace = new Entry.Workspace({blockMenu:{dom:b, align:"LEFT", categoryData:EntryStatic.getAllBlocks(), scroll:!0}, board:{dom:a}});
   this.blockMenu = this.mainWorkspace.blockMenu;
   this.board = this.mainWorkspace.board;
+  Entry.hw && Entry.hw.banHW();
 };
 Entry.Playground.prototype.generatePictureView = function(b) {
   if ("workspace" == Entry.type) {

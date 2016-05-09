@@ -27,7 +27,7 @@ Entry.HW = function() {
         '13': Entry.CODEino,
         '15': Entry.dplay,
         '16': Entry.nemoino,
-        '17': Entry.Xbot,        
+        '17': Entry.Xbot,
         '24': Entry.Hamster,
         '25': Entry.Albert,
         '31': Entry.Bitbrick,
@@ -278,6 +278,6 @@ p.checkDevice = function(data) {
 p.banHW = function() {
     var hwOptions = this.hwInfo;
     for (var i in hwOptions)
-        Entry.playground.blockMenu.banClass(hwOptions[i].name);
+        Entry.playground.mainWorkspace.blockMenu.banClass(hwOptions[i].name);
 
 };
