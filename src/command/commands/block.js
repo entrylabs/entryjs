@@ -32,7 +32,7 @@ goog.require("Entry.Command");
         state: function(thread) {
             var blockId = thread[0].id;
             var block = this.editor.board.findById(blockId);
-            return [block.toJSON()];
+            return [block.thread.toJSON()];
         },
         log: function(block) {
         },

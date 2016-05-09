@@ -5961,7 +5961,7 @@ Entry.Commander = function(b) {
   b.destroyThread = {type:106, do:function(a) {
     this.editor.board.findById(a[0].id).destroy(!0, !0);
   }, state:function(a) {
-    return [this.editor.board.findById(a[0].id).toJSON()];
+    return [this.editor.board.findById(a[0].id).thread.toJSON()];
   }, log:function(a) {
   }, undo:"addThread"};
   b.destroyBlock = {type:106, do:function(a) {
@@ -19949,7 +19949,7 @@ Entry.Board = function(b) {
           }
           var f = this;
           Entry.ContextMenu.show([{text:"\ubd99\uc5ec\ub123\uae30", enable:!!Entry.clipboard, callback:function() {
-            Entry.do("cloneBlock", f.code).value.getFirstBlock().copyToClipboard();
+            Entry.do("addThread", Entry.clipboard).value.getFirstBlock().copyToClipboard();
           }}, {text:"\ube14\ub85d \uc815\ub9ac\ud558\uae30", callback:function() {
             f.alignThreads();
           }}, {text:"\ubaa8\ub4e0 \ucf54\ub4dc \uc0ad\uc81c\ud558\uae30", callback:function() {
@@ -21159,7 +21159,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     if (!Entry.Utils.isInInput(a)) {
       var e = this.selectedBlockView;
       e && !e.isInBlockMenu && e.block.isDeletable() && (8 == b || 46 == b ? (Entry.do("destroyBlock", e.block), a.preventDefault()) : d && (67 == b ? e.block.copyToClipboard() : 88 == b && (a = e.block, a.copyToClipboard(), a.destroy(!0, !0), e.getBoard().setSelectedBlock(null))));
-      d && 86 == b && (b = this.selectedBoard) && b instanceof Entry.Board && Entry.clipboard && Entry.do("cloneBlock", b.code).value.getFirstBlock().copyToClipboard();
+      d && 86 == b && (b = this.selectedBoard) && b instanceof Entry.Board && Entry.clipboard && Entry.do("addThread", Entry.clipboard).value.getFirstBlock().copyToClipboard();
     }
   };
   b._handleChangeBoard = function() {
