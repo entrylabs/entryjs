@@ -202,7 +202,7 @@ Entry.Board = function(option) {
                 text: '붙여넣기',
                 enable: !!Entry.clipboard,
                 callback: function(){
-                    Entry.do('cloneBlock', that.code).value
+                    Entry.do('addThread', Entry.clipboard).value
                         .getFirstBlock().copyToClipboard();
                 }
             };
