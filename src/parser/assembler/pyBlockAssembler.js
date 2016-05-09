@@ -36,13 +36,17 @@ Entry.PyBlockAssembler = function(blockSyntax) {
 		                args.push(a);
 		            }
         		}
+
+        		console.log("arg", arg);
 		        
 		        for(var index in args) {
 		            var arg = args[index];
 		            if(typeof arg === 'string')
 		            	var type = 'text';
 		            else
-		            	var type = 'number'
+		            	var type = 'number';
+
+		            console.log("type", type);
 		            var param = {type: type, params: [arg]};
 		            params.push(param);
 		        }
@@ -80,17 +84,55 @@ Entry.PyBlockAssembler = function(blockSyntax) {
             }
             case 'BlockStatement' : {
             	console.log("BlockStatement unit", unit);
-            	var property = consequent.body[0].declarations[0].init.callee.property;
+            	var property = unit.body[0].declarations[0].init.callee.property;
 		        if(property.name == 'range') {
 		        	var targetSyntax = String("for i in range");
             	}
             	var block = this.getBlock(targetSyntax);
 
+            	console.log("block", block);
+            	
+            	var args = [];
+            	var params = [];
+            	var arguments = unit.body[0].declarations[0].init.arguments;
+
+            	if(arguments && arguments.length){
+		            for(var index in arguments) {
+		                var arg = arguments[index];
+		                var a;
+		                if(arg.type == 'UnaryExpression') {
+		                	if(arg.prefix)
+		                		a = arg.operator.concat(arg.argument.value)
+		                } else if(arg.type == 'Literal') {
+		                	a = arg.value;
+		                }
+
+		                args.push(a);
+		            }
+        		}
+
+        		console.log("arg", arg);
+		        
+		        for(var index in args) {
+		            var arg = args[index];
+		            if(typeof arg === 'string')
+		            	var type = 'text';
+		            else
+		            	var type = 'number';
+
+		            console.log("type", type);
+		            var param = {type: type, params: [arg]};
+		            params.push(param);
+		        }
+
             	var consequent = unit.body[1].consequent;
-            	var body = consequent.body[0];
-            	bodies.shift();
+            	console.log("consequent", consequent);
+            	var body = consequent.body[0].body;
+            	console.log("body", body);
+            	body.shift();
             	var statements = [];
             	for(var index in body) {
+            		console.log("body[index]", body[index]);
             		var unit = this.assemble(body[index]);
             		statements.push(unit);
             	}
@@ -106,7 +148,7 @@ Entry.PyBlockAssembler = function(blockSyntax) {
             	var test = unit.test;
                 if(test.type == 'Literal') {
 		            if(test.value)
-		            	var targetSyntax = String("if %1:\n$1\n\n");
+		            	var targetSyntax = String("if %1:\n$1\n");
 		        }
 		        var block = this.getBlock(targetSyntax);
 		        console.log("block", block);
@@ -125,6 +167,19 @@ Entry.PyBlockAssembler = function(blockSyntax) {
 		        console.log("IfStatement result", result);
 
         	} 
+        	case 'BreakStatement' : {
+            	console.log("BreakStatement unit", unit);
+
+            	var targetSyntax = String("break\n");
+
+            	var block = this.getBlock(targetSyntax);
+
+            	console.log("block", block);
+
+            	result = { type: block };
+
+            	console.log("BreakStatement result", result);
+            }
         }
         	
         return result;

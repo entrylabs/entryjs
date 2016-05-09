@@ -2018,7 +2018,7 @@ Blockly.Blocks._if = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["if %1:\n$1\n\n"]}};
+}, syntax:{js:[], py:["if %1:\n$1\n"]}};
 Entry.block._if = function(b, a) {
   return a.isLooped ? (delete a.isLooped, a.callReturn()) : a.getBooleanValue("BOOL", a) ? (a.isLooped = !0, a.getStatement("STACK", a)) : a.callReturn();
 };
@@ -9774,65 +9774,82 @@ Entry.PyBlockAssembler = function(b) {
     switch(a.type) {
       case "ExpressionStatement":
         console.log("ExpressionStatement unit", a);
-        var d = [], e = [], arguments = a.expression.arguments;
+        b = [];
+        var d = [], arguments = a.expression.arguments;
         console.log("arguments", arguments);
         if (arguments && arguments.length) {
-          for (var f in arguments) {
-            var g = arguments[f], h;
-            "UnaryExpression" == g.type ? g.prefix && (h = g.operator.concat(g.argument.value)) : "Literal" == g.type && (h = g.value);
-            d.push(h);
+          for (var e in arguments) {
+            var f = arguments[e], g;
+            "UnaryExpression" == f.type ? f.prefix && (g = f.operator.concat(f.argument.value)) : "Literal" == f.type && (g = f.value);
+            b.push(g);
           }
         }
-        for (f in d) {
-          g = d[f], e.push({type:"string" === typeof g ? "text" : "number", params:[g]});
+        console.log("arg", f);
+        for (e in b) {
+          f = b[e], g = "string" === typeof f ? "text" : "number", console.log("type", g), f = {type:g, params:[f]}, d.push(f);
         }
-        f = a.expression.callee;
-        d = String(f.object.name).concat(".").concat(f.property.name);
-        h = this.getBlock(d);
-        b = {type:h, params:e};
+        e = a.expression.callee;
+        var h = String(e.object.name).concat(".").concat(e.property.name), h = this.getBlock(h);
+        b = {type:h, params:d};
         console.log("ExpressionStatement result", b);
         break;
       case "WhileStatement":
         console.log("WhileStatement unit", a);
-        h = a.test;
-        "Literal" == h.type && h.value && (d = "while True:\n$1\n");
-        h = this.getBlock(d);
-        d = [];
-        g = a.body.body;
-        for (f in g) {
-          a = this.assemble(g[f]), d.push(a);
+        f = a.test;
+        "Literal" == f.type && f.value && (h = "while True:\n$1\n");
+        h = this.getBlock(h);
+        f = [];
+        b = a.body.body;
+        for (e in b) {
+          a = this.assemble(b[e]), f.push(a);
         }
-        b = {type:h, statements:[d]};
+        b = {type:h, statements:[f]};
         console.log("WhileStatement result", b);
         break;
       case "BlockStatement":
         console.log("BlockStatement unit", a);
-        "range" == g.body[0].declarations[0].init.callee.property.name && (d = "for i in range");
-        h = this.getBlock(d);
-        g = a.body[1].consequent;
-        g = g.body[0];
-        bodies.shift();
+        "range" == a.body[0].declarations[0].init.callee.property.name && (h = "for i in range");
+        h = this.getBlock(h);
+        console.log("block", h);
+        b = [];
         d = [];
-        for (f in g) {
-          a = this.assemble(g[f]), d.push(a);
+        if ((arguments = a.body[0].declarations[0].init.arguments) && arguments.length) {
+          for (e in arguments) {
+            f = arguments[e], "UnaryExpression" == f.type ? f.prefix && (g = f.operator.concat(f.argument.value)) : "Literal" == f.type && (g = f.value), b.push(g);
+          }
         }
-        b = {type:h, params:e, statements:[d]};
+        console.log("arg", f);
+        for (e in b) {
+          f = b[e], g = "string" === typeof f ? "text" : "number", console.log("type", g), f = {type:g, params:[f]}, d.push(f);
+        }
+        f = a.body[1].consequent;
+        console.log("consequent", f);
+        b = f.body[0].body;
+        console.log("body", b);
+        b.shift();
+        f = [];
+        for (e in b) {
+          console.log("body[index]", b[e]), a = this.assemble(b[e]), f.push(a);
+        }
+        b = {type:h, params:d, statements:[f]};
         console.log("BlockStatement result", b);
         break;
       case "IfStatement":
         console.log("IfStatement unit", a);
-        h = a.test;
-        "Literal" == h.type && h.value && (d = "if %1:\n$1\n\n");
-        h = this.getBlock(d);
+        f = a.test;
+        "Literal" == f.type && f.value && (h = "if %1:\n$1\n");
+        h = this.getBlock(h);
         console.log("block", h);
-        g = a.consequent;
-        g = g.body;
-        d = [];
-        for (f in g) {
-          a = this.assemble(g[f]), d.push(a);
+        f = a.consequent;
+        b = f.body;
+        f = [];
+        for (e in b) {
+          a = this.assemble(b[e]), f.push(a);
         }
-        b = {type:h, params:e, statements:[d]};
+        b = {type:h, params:d, statements:[f]};
         console.log("IfStatement result", b);
+      case "BreakStatement":
+        console.log("BreakStatement unit", a), h = this.getBlock("break\n"), console.log("block", h), b = {type:h}, console.log("BreakStatement result", b);
     }
     return b;
   };
@@ -10368,7 +10385,9 @@ Entry.PyToBlockParser = function(b) {
   b.BreakStatement = function(a) {
     console.log("BreakStatement", a);
     var b;
-    b = null === a.label ? null : this[a.label.type](a.label);
+    console.log("node.label", a.label);
+    a.label && null !== a.label ? (console.log("node.label2", a.label), b = this[a.label.type](a.label)) : (console.log("node.lable1", a.label), b = null);
+    console.log("label", b);
     return {type:a.type, label:b};
   };
   b.ContinueStatement = function(a) {

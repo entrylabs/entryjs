@@ -185,10 +185,17 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.BreakStatement = function(node) {
         console.log("BreakStatement", node);
         var label;
-        if(node.label === null)
+        console.log("node.label", node.label);
+        if(!node.label || node.label === null){
+            console.log("node.lable1", node.label);
             label = null;
-        else 
+        }
+        else {
+            console.log("node.label2", node.label);
             label = this[node.label.type](node.label);
+        }
+
+        console.log("label", label);
 
         return {
             type: node.type,

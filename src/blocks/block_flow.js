@@ -159,7 +159,7 @@ Blockly.Blocks._if = {
         this.setPreviousStatement(true);
         this.setNextStatement(true);
     },
-    syntax: {js: [], py: ["if %1:\n$1\n\n"]}
+    syntax: {js: [], py: ["if %1:\n$1\n"]}
 };
 
 Entry.block._if = function (sprite, script) {
