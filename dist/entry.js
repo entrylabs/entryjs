@@ -19026,7 +19026,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     this.optionGroup.css({left:a.x, top:a.y});
   };
   b.applyValue = function(a) {
-    this.value != a && (this.setValue(a), this.textElement.textContent = this.getTextByValue(a), this.resize());
+    this.value != a && this.setValue(a);
+    this.textElement.textContent = this.getTextByValue(a);
+    this.resize();
   };
   b.getTextByValue = function(a) {
     if (!a || "null" === a) {
