@@ -260,6 +260,10 @@ Entry.createDom = function(container, option) {
         /** @type {!Element} */
         this.containerView = containerView;
         this.container.generateView(this.containerView, option);
+        this.propertyPanel.addMode("object", this.container);
+
+        this.helper.generateView(this.containerView, option);
+        this.propertyPanel.addMode("helper" , this.helper);
 
         var playgroundView = Entry.createElement('div');
         container.appendChild(playgroundView);
@@ -267,11 +271,11 @@ Entry.createDom = function(container, option) {
         this.playgroundView = playgroundView;
         this.playground.generateView(this.playgroundView, option);
 
-        this.propertyPanel.addMode("object", this.container);
-        this.propertyPanel.addMode("helper" , this.helper);
         // this.propertyPanel.addMode("youtube" , this.youtube);
 
+
         this.propertyPanel.select("object");
+        this.helper.bindWorkspace(this.playground.mainWorkspace);
     } else if (option == 'minimize') {
         var canvas = Entry.createElement('canvas');
         canvas.className = 'entryCanvasWorkspace';

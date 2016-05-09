@@ -83,6 +83,7 @@ Entry.RenderView = function(dom, align) {
 
         code.createView(this);
         this.align();
+        this.resize();
     };
 
     p.align = function() {
@@ -107,7 +108,8 @@ Entry.RenderView = function(dom, align) {
             var height = blockView.svgGroup.getBBox().height;
             marginFromTop += height + vPadding;
         }
-        this.height = this.svgGroup.getBBox().height;
+        this._bBox = this.svgGroup.getBBox();
+        this.height = this._bBox.height;
     };
 
     p.hide = function() {this.view.addClass('entryRemove');};
@@ -127,4 +129,10 @@ Entry.RenderView = function(dom, align) {
         this.svgGroup.appendChild(this.svgThreadGroup);
         this.svgGroup.appendChild(this.svgBlockGroup);
     };
+
+    p.resize = function() {
+        if (!this.svg || !this._bBox) return;
+        $(this.svg).css('height', this._bBox.height + 10);
+    };
+
 })(Entry.RenderView.prototype);

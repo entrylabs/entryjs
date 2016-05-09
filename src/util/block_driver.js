@@ -112,6 +112,10 @@ Entry.BlockMockup = function(blocklyInfo, def, blockType) {
 
 (function(p) {
     p.simulate = function(blocklyInfo) {
+        if (blocklyInfo.sensorList)
+            this.sensorList = blocklyInfo.sensorList;
+        if (blocklyInfo.portList)
+            this.portList = blocklyInfo.portList;
         blocklyInfo.init.call(this);
         if (blocklyInfo.whenAdd) {
             if (!this.events.blockViewAdd)
@@ -235,7 +239,9 @@ Entry.BlockMockup = function(blocklyInfo, def, blockType) {
                     this.definition.params.push(this.def.params[this.def.index[opt]])
                 } else
                     this.definition.params.push(undefined);
-            } else this.templates.push(field);
+            } else {
+                this.templates.push(field);
+            }
         } else {
             if (field.constructor == Blockly.FieldIcon) {
                 if (field.type === "start")
@@ -367,5 +373,6 @@ Entry.BlockMockup = function(blocklyInfo, def, blockType) {
         var map = this.statementsKeyMap;
         map[key] = Object.keys(map).length;
     };
+
 
 })(Entry.BlockMockup.prototype);

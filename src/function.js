@@ -321,6 +321,7 @@ Entry.Func.prototype.generateBlock = function(toSave) {
 };
 
 Entry.Func.generateWsBlock = function(targetFunc) {
+    console.log('adsf');
     targetFunc = targetFunc ? targetFunc : this.targetFunc;
     var defBlock = targetFunc.content.getEventMap("funcDef")[0];
     var outputBlock = defBlock.params[0];
@@ -330,7 +331,6 @@ Entry.Func.generateWsBlock = function(targetFunc) {
     var schemaTemplate = "";
     var hashMap = targetFunc.hashMap;
     var paramMap = targetFunc.paramMap;
-    this.unbindFuncChangeEvent();
     while(outputBlock) {
         var value = outputBlock.params[0];
         switch(outputBlock.type) {

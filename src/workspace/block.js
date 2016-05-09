@@ -382,15 +382,6 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         );
         this.destroy(animate, true);
         this.getCode().changeEvent.notify();
-        if (Entry.activityReporter) {
-            var data = [
-                id,
-                positionX,
-                positionY,
-                this.getCode().stringify()
-            ];
-            Entry.activityReporter.add(new Entry.Activity('destroyBlock', data));
-        }
         return this;
     };
 
@@ -494,6 +485,13 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         if (!pointer)
             pointer = [];
         return this.thread.pointer(pointer, this);
+    };
+
+    p.targetPointer = function() {
+        var pointer =  this.thread.pointer([], this);
+        if (pointer.length === 4 && pointer[3] === 0)
+            pointer.pop();
+        return pointer;
     };
 
     p.getBlockList = function() {

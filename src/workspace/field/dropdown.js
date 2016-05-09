@@ -207,8 +207,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     };
 
     p.applyValue = function(value) {
-        if (this.value == value) return;
-        this.setValue(value);
+        if (this.value != value)
+            this.setValue(value);
         this.textElement.textContent = this.getTextByValue(value);
         this.resize();
     };

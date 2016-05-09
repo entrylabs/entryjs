@@ -22,6 +22,8 @@ Entry.Commander = function(injectType) {
     Entry.undo = this.undo.bind(this);
 
     this.editor = {};
+
+    Entry.Command.editor = this.editor;
 };
 
 
@@ -29,17 +31,17 @@ Entry.Commander = function(injectType) {
     p.do = function(commandType) {
         var argumentArray = Array.prototype.slice.call(arguments);
         argumentArray.shift();
-        var commandFunc = Entry.Command[commandType];
+        var command = Entry.Command[commandType];
         if (Entry.stateManager) {
             Entry.stateManager.addCommand.apply(
                 Entry.stateManager,
-                [commandType, this, this.undo, commandType]
-                    .concat(commandFunc.state.apply(null, argumentArray))
+                [commandType, this, this.do, command.undo]
+                    .concat(command.state.apply(this, argumentArray))
             );
         }
         // TODO: activity reporter
         return {
-            value: Entry.Command[commandType].do.apply(Entry.Command, argumentArray),
+            value: Entry.Command[commandType].do.apply(this, argumentArray),
             isPass: this.isPass.bind(this)
         }
     };
@@ -51,11 +53,14 @@ Entry.Commander = function(injectType) {
         if (Entry.stateManager) {
             Entry.stateManager.addCommand.apply(
                 Entry.stateManager,
-                [commandType, this, this.redo, commandType]
-                    .concat(commandFunc.state.apply(null, argumentArray))
+                [commandType, this, this.do, commandFunc.undo]
+                    .concat(commandFunc.state.apply(this, argumentArray))
             );
         }
-        commandFunc.undo.apply(this, argumentArray);
+        return {
+            value: Entry.Command[commandType].do.apply(this, argumentArray),
+            isPass: this.isPass.bind(this)
+        }
     };
 
     p.redo = function() {
@@ -77,7 +82,9 @@ Entry.Commander = function(injectType) {
         this.editor[key] = object;
     };
 
-    p.isPass = function() {
-        Entry.stateManager.getLastCommand().isPass = true;
+    p.isPass = function(isPass) {
+        isPass = isPass === undefined ? true : isPass;
+        var lastCommand = Entry.stateManager.getLastCommand();
+        if (lastCommand) lastCommand.isPass = isPass;
     };
 })(Entry.Commander.prototype)

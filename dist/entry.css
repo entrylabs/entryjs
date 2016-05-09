@@ -2279,6 +2279,15 @@ svg .svgBlockGroup text {
 .art_project_name:hover {
   border: 1px solid #b4b4b4 !important;
 }
+.entryPauseButtonMinimize {
+  float: left;
+  background-image: url("../images/pause_btn.png");
+  width: auto;
+  background-position: left;
+  padding-left: 17px;
+  color: #6c5af2;
+  font-size: 9pt;
+}
 .entryFunctionEdit {
   position: absolute;
   width: 100%;
@@ -2501,7 +2510,6 @@ svg .svgBlockGroup text {
   position: absolute;
   overflow: visible;
   left: 50%;
-  padding-top: 20px;
 }
 #entryBlockHelperDescriptionWorkspace {
   position: absolute;
@@ -2649,9 +2657,6 @@ svg .svgBlockGroup text {
   overflow-y: auto;
   overflow-x: hidden;
 }
-#entryBlockHelperContentWorkspace.lecture {
-  top: 40px;
-}
 .entryBlockHelperIntro {
   background-image: url("../images/block_help_icon.png");
   background-repeat: no-repeat;
@@ -2674,10 +2679,10 @@ svg .svgBlockGroup text {
 }
 #entryBlockHelperBlockWorkspace {
   position: absolute;
-  width: 400px;
-  height: 160px;
-  top: 16px;
-  left: 50%;
+  width: 100%;
+  bottom: 0px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 #entryBlockHelperBlockWorkspace > svg {
   position: relative;
@@ -4600,6 +4605,16 @@ svg .svgBlockGroup text {
 .entryPlaygroundPictureElement:hover {
   background-color: #C0C0C0;
   cursor: move;
+}
+.entryPlaygroundPictureOrder,
+.entryPlaygroundSoundOrder {
+  width: 15px;
+  height: 100%;
+  float: left;
+  line-height: 57px;
+  font-size: 10px;
+  text-align: center;
+  background-color: #d8d8d8;
 }
 .entryPlaygroundPictureElement:hover .entryPlaygroundPictureOrder,
 .entryPlaygroundSoundElement:hover .entryPlaygroundSoundOrder {

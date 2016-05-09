@@ -140,7 +140,6 @@
     position: absolute;
     overflow: visible;
     left: 50%;
-    padding-top: 20px;
 }
 
 #entryBlockHelperDescriptionWorkspace {
@@ -252,10 +251,6 @@
     overflow-x: hidden;
 }
 
-#entryBlockHelperContentWorkspace.lecture {
-    top: 40px;
-}
-
 .entryBlockHelperIntro {
     .backgroundImage("block_help_icon.png");
     background-repeat: no-repeat;
@@ -280,10 +275,10 @@
 
 #entryBlockHelperBlockWorkspace {
     position: absolute;
-    width: 400px;
-    height: 160px;
-    top: 16px;
-    left: 50%;
+    width: 100%;
+    bottom: 0px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 #entryBlockHelperBlockWorkspace>svg {

@@ -178,7 +178,8 @@ Entry.BlockView.DRAG_RADIUS = 5;
             case Entry.Workspace.MODE_BOARD:
             case Entry.Workspace.MODE_OVERLAYBOARD:
                 var reg = /(%\d)/mi;
-                var templateParams = schema.template.split(reg);
+                var template = schema.template ? schema.template : Lang.template[this.block.type];
+                var templateParams = template.split(reg);
                 var params = schema.params;
                 for (var i=0; i<templateParams.length; i++) {
                     var param = templateParams[i].trim();
@@ -366,7 +367,6 @@ Entry.BlockView.DRAG_RADIUS = 5;
 
         var events = that.block.events;
         if (events && events.dblclick) {
-            console.log(events.dblclick);
             $(this.svgGroup).dblclick(function() {
                 events.dblclick.forEach(function(fn){
                     if (fn) fn(that);});
@@ -428,7 +428,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
                 text: '블록 복사 & 붙여넣기',
                 enable: this.copyable,
                 callback: function(){
-                    board.code.createThread(block.copy());
+                    Entry.do("cloneBlock", block);
                 }
             };
 
@@ -444,7 +444,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
                 text: '블록 삭제',
                 enable: block.isDeletable(),
                 callback: function(){
-                    that.block.doDestroy(true);
+                    Entry.do("destroyBlock", that.block);
                 }
             };
 
@@ -585,7 +585,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
                     var removed = board.workspace.blockMenu.terminateDrag();
                     if (!removed) {
                         block._updatePos();
-                        Entry.do("addBlock", block);
+                        //Entry.do("addBlock", block);
                     }
                 }
 
@@ -606,11 +606,11 @@ Entry.BlockView.DRAG_RADIUS = 5;
                             }
                         } else {
                             if (closeBlock) {
-                                Entry.do("insertBlock", block, closeBlock).isPass();
+                                Entry.do("insertBlock", block, closeBlock).isPass(fromBlockMenu);
                                 createjs.Sound.play('entryMagneting');
                                 ripple = true;
                             } else {
-                                Entry.do("moveBlock", block).isPass();
+                                Entry.do("moveBlock", block).isPass(fromBlockMenu);
                             }
                         }
                         break;
@@ -625,10 +625,10 @@ Entry.BlockView.DRAG_RADIUS = 5;
                         } else {
                             var parent = block.getThread().view.getParent();
 
-                            if (!(parent instanceof Entry.Code))
+                            if (!(parent instanceof Entry.Board)) {
+                                createjs.Sound.play('entryMagneting');
                                 Entry.do("insertBlock", block, parent);
-                            else
-                                this._moveTo(originPos.x, originPos.y, false);
+                            } else this._moveTo(originPos.x, originPos.y, false);
                         }
                         break;
                     case gs.REMOVE:

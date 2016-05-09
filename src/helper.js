@@ -88,9 +88,13 @@ p.renderBlock = function(type) {
     var code = this.code;
     this.code.clear();
 
-    this.code.createThread([{
-        type:type
-    }]);
+    var def = Entry.block[type].def;
+    def = def || {type:type};
+    this.code.createThread([def]);
+
+    this.code.board.align();
+    this.code.board.resize();
+
 
     var blockView = this.code.getThreads()[0].getFirstBlock().view;
     var bBox = blockView.svgGroup.getBBox();

@@ -107,16 +107,19 @@ Entry.Board = function(option) {
     };
 
     p.changeCode = function(code) {
-        if (this.codeListener)
+        if (this.code && this.codeListener)
             this.code.changeEvent.detach(this.codeListener);
+
         this.set({code: code});
+
         var that = this;
-        this.codeListener = this.code.changeEvent.attach(
-            this,
-            function() {that.changeEvent.notify();}
-        );
-        code.createView(this);
-        this.generateCodeMagnetMap(code);
+        if (code) {
+            this.codeListener = this.code.changeEvent.attach(
+                this, function() {that.changeEvent.notify();}
+            );
+            code.createView(this);
+            this.generateCodeMagnetMap(code);
+        }
         this.scroller.resizeScrollBar();
     };
 
@@ -282,8 +285,10 @@ Entry.Board = function(option) {
         if (!selected) return;
 
         if (event.keyCode == 46) {
-            if (selected.block.doDestroy(false))
+            if (selected.block) {
+                Entry.do("destroyBlock", selected.block);
                 this.set({selectedBlockView:null});
+            }
         }
     };
 
@@ -298,6 +303,7 @@ Entry.Board = function(option) {
     };
 
     p.alignThreads = function() {
+        return;
         var domHeight = this.svgDom.height();
         var threads = this.code.getThreads();
 
@@ -806,8 +812,14 @@ Entry.Board = function(option) {
         if (typeof block === "string")
             block = this.findById(block);
         this.separate(block, count);
-        if (pointer.length === 4 && pointer[3] === 0) // is global
+        if (pointer.length === 3) // is global
             block.moveTo(pointer[0], pointer[1]);
+        else if (pointer.length === 4 && pointer[3] === 0) {
+            var targetThread = this.code.getThreads()[pointer[2]];
+            block.thread.cut(block);
+            targetThread.insertToTop(block);
+            block.getNextBlock().view.bindPrev();
+        }
         else {
             var targetObj;
             if (pointer instanceof Array)
@@ -828,6 +840,7 @@ Entry.Board = function(option) {
     };
 
     p.adjustThreadsPosition = function() {
+        return;
         var code = this.code;
         if (!code) return;
 
