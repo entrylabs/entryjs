@@ -325,7 +325,7 @@ Entry.skeleton.basic_boolean_field = {
         var height = blockView.contentHeight;
         height = Math.max(18, height + 2);
         width = Math.max(0, width - height + 9);
-        return "m %h,0 h %w l %h,%h -%h,%h H %h l -%h,-%h %h,-%h z "
+        return "m %h,0 h %w l %h,%h -%h,%h H %h l -%h,-%h %h,-%h z"
             .replace(/%wh/gi, height)
             .replace(/%w/gi, width)
             .replace(/%h/gi, height / 2);

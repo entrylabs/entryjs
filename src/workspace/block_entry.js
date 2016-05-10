@@ -5750,6 +5750,7 @@ Entry.block = {
     "function_param_string": {
         "skeleton": "basic_string_field",
         "color": "#ffd974",
+        "template": "%1 %2",
         func: function() {
             return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
         }
@@ -5757,6 +5758,7 @@ Entry.block = {
     "function_param_boolean": {
         "skeleton": "basic_boolean_field",
         "color": "#aeb8ff",
+        "template": "%1 %2",
         func: function() {
             return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
         }
@@ -15855,7 +15857,18 @@ Entry.block = {
                     "y": -2
                 }
             }
-        ]
+        ],
+        "func": function () {
+            var entities = Ntry.entityManager.getEntitiesByComponent(
+            Ntry.STATIC.UNIT);
+
+            for (var key in entities)
+                this._unit = entities[key];
+
+            Ntry.unitComp = Ntry.entityManager.getComponent(
+            this._unit.id, Ntry.STATIC.UNIT);
+
+        },
     },
     "maze_step_jump": {
         "skeleton": "basic",
@@ -16144,7 +16157,27 @@ Entry.block = {
                 "img": "/img/assets/week/blocks/moveStep.png",
                 "size": 24
             }
-        ]
+        ],
+        func: function() {
+            if (!this.isContinue) {
+
+                this.isContinue = true;
+                this.isAction = true;
+                var self = this;
+                var callBack = function() {
+                    self.isAction = false;
+                };
+                // turn direction
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, callBack);
+
+                return Entry.STATIC.CONTINUE;
+            } else if (this.isAction) {
+                return Entry.STATIC.CONTINUE;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
     },
     "maze_step_rotate_left": {
         "skeleton": "basic",

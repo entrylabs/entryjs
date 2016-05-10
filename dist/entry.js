@@ -12228,6 +12228,7 @@ Entry.Func = function(b) {
   a.prototype = Entry.block.function_general;
   a = new a;
   a.changeEvent = new Entry.Event;
+  a.template = Lang.template.function_general;
   Entry.block["func_" + this.id] = a;
   if (b) {
     b = this.content._blockMap;
@@ -12366,21 +12367,23 @@ Entry.Func.requestParamBlock = function(b) {
     default:
       return null;
   }
-  b = b + "Param_" + a;
-  c = Entry.Func.createParamBlock(b, c);
-  Entry.block[b] = c;
-  return b;
+  a = b + "Param_" + a;
+  b = Entry.Func.createParamBlock(a, c, b);
+  Entry.block[a] = b;
+  return a;
 };
 Entry.Func.registerParamBlock = function(b) {
-  "string" === b.substr(0, 6) ? Entry.Func.createParamBlock(b, Entry.block.function_param_string) : "boolean" === b.substr(0, 7) && Entry.Func.createParamBlock(b, Entry.block.function_param_boolean);
+  "string" === b.substr(0, 6) ? Entry.Func.createParamBlock(b, Entry.block.function_param_string, b) : "boolean" === b.substr(0, 7) && Entry.Func.createParamBlock(b, Entry.block.function_param_boolean, b);
 };
-Entry.Func.createParamBlock = function(b, a) {
-  var c = function() {
+Entry.Func.createParamBlock = function(b, a, c) {
+  var d = function() {
   };
-  c.prototype = a;
-  c = new c;
-  c.changeEvent = new Entry.Event;
-  return Entry.block[b] = c;
+  c = "string" === c ? "function_param_string" : "function_param_boolean";
+  d.prototype = a;
+  d = new d;
+  d.changeEvent = new Entry.Event;
+  d.template = Lang.template[c];
+  return Entry.block[b] = d;
 };
 Entry.Func.updateMenu = function() {
   var b = Entry.playground.mainWorkspace.getBlockMenu();
@@ -15732,9 +15735,9 @@ params:[Lang.Blocks.entry]}, null], type:"combine_something"}, paramsKeyMap:{VAL
 }}, functionAddButton:{skeleton:"basic_button", color:"#eee", isNotFor:["functionInit"], params:[{type:"Text", text:Lang.Workspace.function_create, color:"#333", align:"center"}], events:{mousedown:[function() {
   Entry.variableContainer.createFunction();
 }]}}, function_field_label:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#f9c535", params:[{type:"TextInput", value:Lang.Blocks.FUNCTION_explanation_1}, {type:"Output", accept:"paramMagnet"}]}, function_field_string:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#ffd974", params:[{type:"Block", accept:"stringMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}]}, function_field_boolean:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#aeb8ff", params:[{type:"Block", 
-accept:"booleanMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}]}, function_param_string:{skeleton:"basic_string_field", color:"#ffd974", func:function() {
+accept:"booleanMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}]}, function_param_string:{skeleton:"basic_string_field", color:"#ffd974", template:"%1 %2", func:function() {
   return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
-}}, function_param_boolean:{skeleton:"basic_boolean_field", color:"#aeb8ff", func:function() {
+}}, function_param_boolean:{skeleton:"basic_boolean_field", color:"#aeb8ff", template:"%1 %2", func:function() {
   return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
 }}, function_create:{skeleton:"basic", color:"#cc7337", event:"funcDef", params:[{type:"Block", accept:"paramMagnet", value:{type:"function_field_label"}}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/function_03.png", size:12}], func:function() {
 }}, function_general:{skeleton:"basic", color:"#cc7337", params:[], events:{dataAdd:[function(b) {
@@ -17281,19 +17284,38 @@ color:"#A751E3", params:[{type:"Text", text:"  \uc544\ub798\ucabd"}, {type:"Indi
 highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}, "\uc2dc\uc791\ud558\uae30\ub97c \ud074\ub9ad\ud588\uc744\ub54c"]}, jr_go_straight:{skeleton:"basic", color:"#A751E3", params:["\uc55e\uc73c\ub85c \uac00\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}]}, jr_turn_left:{skeleton:"basic", color:"#A751E3", params:["\uc67c\ucabd\uc73c\ub85c \ub3cc\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_l.png", size:24}]}, jr_turn_right:{skeleton:"basic", 
 color:"#A751E3", params:["\uc624\ub978\ucabd\uc73c\ub85c \ub3cc\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_r.png", size:24}]}, jr_go_slow:{skeleton:"basic", color:"#f46c6c", params:["\ucc9c\ucc9c\ud788 \uac00\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_slow.png", size:24}]}, jr_repeat_until_dest:{skeleton:"basic_loop", color:"#498DEB", syntax:["BasicWhile", "true"], params:["", {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_goal_image.png", size:18}, 
 "\ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, jr_if_construction:{skeleton:"basic_loop", color:"#498DEB", params:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_construction_image.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, jr_if_speed:{skeleton:"basic_loop", color:"#498DEB", 
-params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_speed_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, maze_step_start:{skeleton:"basic_event", mode:"maze", event:"start", color:"#3BBD70", syntax:["Program"], params:[{type:"Indicator", boxMultiplier:2, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}]}, maze_step_jump:{skeleton:"basic", mode:"maze", color:"#FF6E4B", 
-params:[{type:"Image", img:"/img/assets/week/blocks/jump.png", size:24}], syntax:["Scope", "jump"]}, maze_step_for:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicIteration"], params:[{type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, test:{skeleton:"basic_boolean_field", mode:"maze", color:"#127CDB", 
-params:[{type:"Angle", value:"90"}, {type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}]}, maze_repeat_until_1:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicWhile", "true"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, maze_repeat_until_2:{skeleton:"basic_loop", mode:"maze", 
-color:"#498DEB", syntax:["BasicWhile", "true"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, maze_step_if_1:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicIf", "front == wall"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}]}, 
-maze_step_if_2:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicIf", "front == bee"], params:[{type:"Image", img:"/img/assets/ntry/bitmap/maze2/obstacle_01.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}]}, maze_call_function:{skeleton:"basic", mode:"maze", color:"#B57242", syntax:["Scope", "promise"], params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}]}, maze_define_function:{skeleton:"basic_define", 
-mode:"maze", color:"#B57242", event:"define", syntax:["BasicFunction"], params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], statements:[{accept:"basic"}]}, maze_step_if_3:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicIf", "front == banana"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_3.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}]}, maze_step_if_4:{skeleton:"basic_loop", 
-mode:"maze", color:"#498DEB", syntax:["BasicIf", "front == wall"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_2.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}]}, maze_step_move_step:{skeleton:"basic", mode:"maze", color:"#A751E3", syntax:["Scope", "move"], params:[{type:"Image", img:"/img/assets/week/blocks/moveStep.png", size:24}]}, maze_step_rotate_left:{skeleton:"basic", mode:"maze", color:"#A751E3", syntax:["Scope", 
-"left"], params:[{type:"Image", img:"/img/assets/week/blocks/turnL.png", size:24}]}, maze_step_rotate_right:{skeleton:"basic", mode:"maze", color:"#A751E3", syntax:["Scope", "right"], params:[{type:"Image", img:"/img/assets/week/blocks/turnR.png", size:24}]}, test_wrapper:{skeleton:"basic", mode:"maze", color:"#3BBD70", params:[{type:"Block", accept:"basic_boolean_field", value:[{type:"test", params:[30, 50]}]}, {type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 
-8], [9, 9], [10, 10]], value:1}]}, basic_button:{skeleton:"basic_button", color:"#eee", params:[{type:"Text", text:"basic button", color:"#333", align:"center"}]}, dplay_get_number_sensor_value:{parent:"arduino_get_number_sensor_value", isNotFor:["dplay"], "class":"arduino_value"}, dplay_get_digital_value:{parent:"arduino_get_digital_value", isNotFor:["dplay"], "class":"arduino_value"}, dplay_toggle_led:{parent:"arduino_toggle_led", isNotFor:["dplay"], "class":"arduino_set"}, dplay_toggle_pwm:{parent:"arduino_toggle_pwm", 
-isNotFor:["dplay"], "class":"arduino_set"}, dplay_convert_scale:{parent:"arduino_convert_scale", isNotFor:["dplay"], "class":"arduino"}, nemoino_get_number_sensor_value:{parent:"arduino_get_number_sensor_value", isNotFor:["nemoino"], "class":"arduino_value"}, nemoino_get_digital_value:{parent:"arduino_get_digital_value", isNotFor:["nemoino"], "class":"arduino_value"}, nemoino_toggle_led:{parent:"arduino_toggle_led", isNotFor:["nemoino"], "class":"arduino_set"}, nemoino_toggle_pwm:{parent:"arduino_toggle_pwm", 
-isNotFor:["nemoino"], "class":"arduino_set"}, nemoino_convert_scale:{parent:"arduino_convert_scale", isNotFor:["nemoino"], "class":"arduino"}, sensorBoard_get_number_sensor_value:{parent:"arduino_get_number_sensor_value", isNotFor:["sensorBoard"], "class":"arduino_value"}, sensorBoard_get_digital_value:{parent:"arduino_get_digital_value", isNotFor:["sensorBoard"], "class":"arduino_value"}, sensorBoard_toggle_led:{parent:"arduino_toggle_led", isNotFor:["sensorBoard"], "class":"arduino_set"}, sensorBoard_toggle_pwm:{parent:"arduino_toggle_pwm", 
-isNotFor:["sensorBoard"], "class":"arduino_set"}, sensorBoard_convert_scale:{parent:"arduino_convert_scale", isNotFor:["sensorBoard"], "class":"arduino"}, CODEino_get_number_sensor_value:{parent:"arduino_get_number_sensor_value", isNotFor:["CODEino"], "class":"arduino_value"}, CODEino_get_digital_value:{parent:"arduino_get_digital_value", isNotFor:["CODEino"], "class":"arduino_value"}, CODEino_toggle_led:{parent:"arduino_toggle_led", isNotFor:["CODEino"], "class":"arduino_set"}, CODEino_toggle_pwm:{parent:"arduino_toggle_pwm", 
-isNotFor:["CODEino"], "class":"arduino_set"}, CODEino_convert_scale:{parent:"arduino_convert_scale", isNotFor:["CODEino"], "class":"arduino"}};
+params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_speed_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, maze_step_start:{skeleton:"basic_event", mode:"maze", event:"start", color:"#3BBD70", syntax:["Program"], params:[{type:"Indicator", boxMultiplier:2, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}], func:function() {
+  var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a;
+  for (a in b) {
+    this._unit = b[a];
+  }
+  Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
+}}, maze_step_jump:{skeleton:"basic", mode:"maze", color:"#FF6E4B", params:[{type:"Image", img:"/img/assets/week/blocks/jump.png", size:24}], syntax:["Scope", "jump"]}, maze_step_for:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicIteration"], params:[{type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, 
+test:{skeleton:"basic_boolean_field", mode:"maze", color:"#127CDB", params:[{type:"Angle", value:"90"}, {type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}]}, maze_repeat_until_1:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicWhile", "true"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, 
+maze_repeat_until_2:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicWhile", "true"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, maze_step_if_1:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicIf", "front == wall"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", 
+size:24}], statements:[{accept:"basic"}]}, maze_step_if_2:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicIf", "front == bee"], params:[{type:"Image", img:"/img/assets/ntry/bitmap/maze2/obstacle_01.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}]}, maze_call_function:{skeleton:"basic", mode:"maze", color:"#B57242", syntax:["Scope", "promise"], params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}]}, 
+maze_define_function:{skeleton:"basic_define", mode:"maze", color:"#B57242", event:"define", syntax:["BasicFunction"], params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], statements:[{accept:"basic"}]}, maze_step_if_3:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicIf", "front == banana"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_3.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}]}, 
+maze_step_if_4:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicIf", "front == wall"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_2.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}]}, maze_step_move_step:{skeleton:"basic", mode:"maze", color:"#A751E3", syntax:["Scope", "move"], params:[{type:"Image", img:"/img/assets/week/blocks/moveStep.png", size:24}], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var b = this;
+    Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
+      b.isAction = !1;
+    });
+    return Entry.STATIC.CONTINUE;
+  }
+}}, maze_step_rotate_left:{skeleton:"basic", mode:"maze", color:"#A751E3", syntax:["Scope", "left"], params:[{type:"Image", img:"/img/assets/week/blocks/turnL.png", size:24}]}, maze_step_rotate_right:{skeleton:"basic", mode:"maze", color:"#A751E3", syntax:["Scope", "right"], params:[{type:"Image", img:"/img/assets/week/blocks/turnR.png", size:24}]}, test_wrapper:{skeleton:"basic", mode:"maze", color:"#3BBD70", params:[{type:"Block", accept:"basic_boolean_field", value:[{type:"test", params:[30, 50]}]}, 
+{type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}]}, basic_button:{skeleton:"basic_button", color:"#eee", params:[{type:"Text", text:"basic button", color:"#333", align:"center"}]}, dplay_get_number_sensor_value:{parent:"arduino_get_number_sensor_value", isNotFor:["dplay"], "class":"arduino_value"}, dplay_get_digital_value:{parent:"arduino_get_digital_value", isNotFor:["dplay"], "class":"arduino_value"}, dplay_toggle_led:{parent:"arduino_toggle_led", 
+isNotFor:["dplay"], "class":"arduino_set"}, dplay_toggle_pwm:{parent:"arduino_toggle_pwm", isNotFor:["dplay"], "class":"arduino_set"}, dplay_convert_scale:{parent:"arduino_convert_scale", isNotFor:["dplay"], "class":"arduino"}, nemoino_get_number_sensor_value:{parent:"arduino_get_number_sensor_value", isNotFor:["nemoino"], "class":"arduino_value"}, nemoino_get_digital_value:{parent:"arduino_get_digital_value", isNotFor:["nemoino"], "class":"arduino_value"}, nemoino_toggle_led:{parent:"arduino_toggle_led", 
+isNotFor:["nemoino"], "class":"arduino_set"}, nemoino_toggle_pwm:{parent:"arduino_toggle_pwm", isNotFor:["nemoino"], "class":"arduino_set"}, nemoino_convert_scale:{parent:"arduino_convert_scale", isNotFor:["nemoino"], "class":"arduino"}, sensorBoard_get_number_sensor_value:{parent:"arduino_get_number_sensor_value", isNotFor:["sensorBoard"], "class":"arduino_value"}, sensorBoard_get_digital_value:{parent:"arduino_get_digital_value", isNotFor:["sensorBoard"], "class":"arduino_value"}, sensorBoard_toggle_led:{parent:"arduino_toggle_led", 
+isNotFor:["sensorBoard"], "class":"arduino_set"}, sensorBoard_toggle_pwm:{parent:"arduino_toggle_pwm", isNotFor:["sensorBoard"], "class":"arduino_set"}, sensorBoard_convert_scale:{parent:"arduino_convert_scale", isNotFor:["sensorBoard"], "class":"arduino"}, CODEino_get_number_sensor_value:{parent:"arduino_get_number_sensor_value", isNotFor:["CODEino"], "class":"arduino_value"}, CODEino_get_digital_value:{parent:"arduino_get_digital_value", isNotFor:["CODEino"], "class":"arduino_value"}, CODEino_toggle_led:{parent:"arduino_toggle_led", 
+isNotFor:["CODEino"], "class":"arduino_set"}, CODEino_toggle_pwm:{parent:"arduino_toggle_pwm", isNotFor:["CODEino"], "class":"arduino_set"}, CODEino_convert_scale:{parent:"arduino_convert_scale", isNotFor:["CODEino"], "class":"arduino"}};
 (function() {
   for (var b in Entry.block) {
     var a = Entry.block[b];
@@ -20361,7 +20383,7 @@ Entry.skeleton.basic_boolean_field = {path:function(b) {
   b = b.contentHeight;
   b = Math.max(18, b + 2);
   a = Math.max(0, a - b + 9);
-  return "m %h,0 h %w l %h,%h -%h,%h H %h l -%h,-%h %h,-%h z ".replace(/%wh/gi, b).replace(/%w/gi, a).replace(/%h/gi, b / 2);
+  return "m %h,0 h %w l %h,%h -%h,%h H %h l -%h,-%h %h,-%h z".replace(/%wh/gi, b).replace(/%w/gi, a).replace(/%h/gi, b / 2);
 }, color:"#000", outerLine:!0, box:function(b) {
   return {offsetX:0, offsetY:0, width:(b ? b.contentWidth : 5) + 8, height:Math.max((b ? b.contentHeight : 18) + 2, 18), marginBottom:0};
 }, magnets:function() {
