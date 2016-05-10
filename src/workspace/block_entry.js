@@ -5713,7 +5713,11 @@ Entry.block = {
                 "type": "Output",
                 "accept": "paramMagnet"
             }
-        ]
+        ],
+        "def": {
+            "params": [ "이름" ],
+            "type": "function_field_label"
+        }
     },
     "function_field_string": {
         "skeleton": "basic_param",
@@ -5729,7 +5733,16 @@ Entry.block = {
                 "type": "Output",
                 "accept": "paramMagnet"
             }
-        ]
+        ],
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "문자/숫자값" ]
+                }
+            ],
+            "type": "function_field_string"
+        }
     },
     "function_field_boolean": {
         "skeleton": "basic_param",
@@ -5745,7 +5758,16 @@ Entry.block = {
                 "type": "Output",
                 "accept": "paramMagnet"
             }
-        ]
+        ],
+        "def": {
+            "params": [
+                {
+                    "type": "True",
+                    "params": [ "판단값" ]
+                }
+            ],
+            "type": "function_field_boolean"
+        }
     },
     "function_param_string": {
         "skeleton": "basic_string_field",
