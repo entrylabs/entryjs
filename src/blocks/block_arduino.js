@@ -686,14 +686,60 @@ Entry.block.CODEino_get_accelerometer_value = function (sprite, script) {
     return Math.round(result);
 };
 
+Blockly.Blocks.dplay_select_led = {
+  init: function() {
+    this.setColour("#00979D");
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.ARDUINO_num_pin_1);
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldDropdown([
+          ['7',"7"],
+          ['8',"8"],
+          ['9',"9"],
+          ['10',"10"]
+          ]), "PORT")
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.dplay_num_pin_1);
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldDropdown([
+          [Lang.Blocks.ARDUINO_on,"on"],
+          [Lang.Blocks.ARDUINO_off,"off"]
+          ]), "OPERATOR")
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/hardware_03.png', '*'));
+    this.setInputsInline(true);
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+  }
+};
+
+Entry.block.dplay_select_led = function (sprite, script) {
+    var port1 = script.getField("PORT");
+    var port = 7;
+    if (port1 == "7") port = 7;
+    else if (port1 == "8") port = 8;
+    else if (port1 == "9") port = 9;
+    else if (port1 == "10") port = 10;
+    var operator = script.getField("OPERATOR");
+    var value = operator == "on" ? 255 : 0;
+    Entry.hw.setDigitalPortValue(port, value);
+    return script.callReturn();
+};
+
 Blockly.Blocks.dplay_get_switch_status = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
-        .appendField(Lang.Blocks.dplay_switch)
+        .appendField("디지털 ");
+    this.appendDummyInput()
         .appendField(new Blockly.FieldDropdown([
-          [Lang.Blocks.dplay_string_1,"ON"],
-          [Lang.Blocks.dplay_string_2,"OFF"]
+          ['2',"2"],
+          ['4',"4"]
+          ]), "PORT")
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.dplay_num_pin_2)
+        .appendField(new Blockly.FieldDropdown([
+          [Lang.Blocks.dplay_string_5,"ON"],
+          [Lang.Blocks.dplay_string_6,"OFF"]
           ]), "STATUS")
         .appendField(' ');
     this.setInputsInline(true);
@@ -702,14 +748,91 @@ Blockly.Blocks.dplay_get_switch_status = {
 };
 
 Entry.block.dplay_get_switch_status = function (sprite, script) {
+    var port1 = script.getField("PORT");
+    var port = 2;
+    if (port1 == "2") port = 2;
+    else if (port1 == "4") port = 4;
+    var value1 = script.getField("STATUS");
+    if (value1 == "OFF") return Entry.hw.getDigitalPortValue(port) == 1 ? 1 : 0;
+    else return Entry.hw.getDigitalPortValue(port) == 0 ? 1 : 0;
+};
+
+Blockly.Blocks.dplay_get_light_status = {
+  init: function() {
+    this.setColour("#00979D");
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.dplay_light)
+        .appendField(new Blockly.FieldDropdown([
+          [Lang.Blocks.dplay_string_3,"BRIGHT"],
+          [Lang.Blocks.dplay_string_4,"DARK"]
+          ]), "STATUS")
+        .appendField(' ');
+    this.setInputsInline(true);
+    this.setOutput(true, 'Boolean');
+  }
+};
+
+Entry.block.dplay_get_light_status = function (sprite, script) {
     var value1 = script.getField("STATUS", script);
-    var value2 = 5;
-    if (value1 == "ON") return Entry.hw.getAnalogPortValue(value2) > 1000 ? 1 : 0;
-    else return Entry.hw.getAnalogPortValue(value2) < 1000 ? 1 : 0;
+    var value2 = 1;
+    if (value1 == "DARK") return Entry.hw.getAnalogPortValue(value2) > 800 ? 1 : 0;
+    else return Entry.hw.getAnalogPortValue(value2) < 800 ? 1 : 0;
+};
+
+Blockly.Blocks.dplay_get_value = {
+  init: function() {
+    this.setColour("#00979D");
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.dplay_num_pin_3);
+    this.appendValueInput("VALUE")
+        .setCheck(["Number", "String", null]);
+    this.appendDummyInput()
+        .appendField("번 ");
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldDropdown([
+          ['가변저항',"ADJU"],
+          ['빛센서',"LIGHT"],
+          ['온도센서',"TEMP"],
+          ['조이스틱 X',"JOYS"],
+          ['조이스틱 Y',"JOYS"],
+          ['적외선',"INFR"]
+          ]), "OPERATOR")
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.dplay_num_pin_5)
+    this.setInputsInline(true);
+    this.setOutput(true, 'Number');
+  }
+};
+
+Entry.block.dplay_get_value = function (sprite, script) {
+    var signal = script.getValue("VALUE", script);
+    return Entry.hw.getAnalogPortValue(signal[1]);
+};
+
+Blockly.Blocks.dplay_get_tilt = {
+  init: function() {
+    this.setColour("#00979D");
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.dplay_tilt)
+        .appendField(new Blockly.FieldDropdown([
+          ['왼쪽 기울임',"LEFT"],
+          ['오른쪽 기울임',"LIGHT"]
+          ]), "STATUS")
+        .appendField(' ');
+    this.setInputsInline(true);
+    this.setOutput(true, 'Boolean');
+  }
+};
+
+Entry.block.dplay_get_tilt = function (sprite, script) {
+    var value1 = script.getField("STATUS", script);
+    var value2 = 12;
+    if (value1 == "LIGHT") return Entry.hw.getDigitalPortValue(value2) == 1 ? 1 : 0;
+    else return Entry.hw.getDigitalPortValue(value2) == 0 ? 1 : 0;
 };
 
 Blockly.Blocks.dplay_DCmotor = {
-  init: function() {
+    init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
         .appendField(new Blockly.FieldDropdown([
@@ -717,7 +840,7 @@ Blockly.Blocks.dplay_DCmotor = {
           ['오른쪽',"6"]
           ]), "PORT");
     this.appendDummyInput()
-        .appendField('DC모터');
+        .appendField(' DC모터 상태를');
     this.appendDummyInput()
         .appendField(new Blockly.FieldDropdown([
           ['정방향',"FRONT"],
@@ -725,8 +848,6 @@ Blockly.Blocks.dplay_DCmotor = {
           ['정지',"OFF"]
           ]), "OPERATOR")
         .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/hardware_03.png', '*'));
-    this.appendDummyInput()
-        .appendField('동작');
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -758,22 +879,24 @@ Entry.block.dplay_DCmotor = function (sprite, script) {
     return script.callReturn();
 };
 
-Blockly.Blocks.dplay_led = {
+Blockly.Blocks.dplay_buzzer = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
+        .appendField('부저를 ');
+    this.appendDummyInput()
         .appendField(new Blockly.FieldDropdown([
-          ['초록',"2"],
-          ['노랑',"4"],
-          ['빨강',"7"]
+          ['도',"1"],
+          ['레',"2"],
+          ['미',"3"]
           ]), "PORT");
     this.appendDummyInput()
-        .appendField('LED');
+        .appendField('로');
+    this.appendValueInput("VALUE")
+        .setCheck(["Number", "String", null]);
     this.appendDummyInput()
-        .appendField(new Blockly.FieldDropdown([
-          ['켜짐',"ON"],
-          ['꺼짐',"OFF"]
-          ]), "OPERATOR")
+        .appendField('박자로 연주하기');
+    this.appendDummyInput()
         .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
@@ -781,14 +904,43 @@ Blockly.Blocks.dplay_led = {
   }
 };
 
-Entry.block.dplay_led = function (sprite, script) {
+Entry.block.dplay_buzzer = function (sprite, script) {
     var port1 = script.getField("PORT");
     var port = 2;
-    if (port1 == "2") port = 2;
-    else if (port1 == "4") port = 4;
-    else if (port1 == "7") port = 7;
-    var operator = script.getField("OPERATOR");
-    var value = operator == "ON" ? 255 : 0;
+    if (port1 == "1") port = 2;
+    else if (port1 == "2") port = 4;
+    else if (port1 == "3") port = 7;
+    var value = script.getNumberValue("VALUE");
+    value = Math.round(value);
+    value = Math.max(value, 0);
+    value = Math.min(value, 100);
+    Entry.hw.setDigitalPortValue(port, value);
+    return script.callReturn();
+};
+
+Blockly.Blocks.dplay_servo = {
+  init: function() {
+    this.setColour("#00979D");
+    this.appendDummyInput()
+        .appendField('서보모터 각도를');
+    this.appendValueInput("VALUE")
+        .setCheck(["Number", "String"]);
+    this.appendDummyInput()
+        .appendField('로 이동');
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/hardware_03.png', '*'));
+    this.setInputsInline(true);
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+  }
+};
+
+Entry.block.dplay_servo = function (sprite, script) {
+    var port = 9;
+    var value = script.getNumberValue("VALUE");
+    value = Math.round(value);
+    value = Math.max(value, 0);
+    value = Math.min(value, 180);
     Entry.hw.setDigitalPortValue(port, value);
     return script.callReturn();
 };
