@@ -303,7 +303,6 @@ Entry.Board = function(option) {
     };
 
     p.alignThreads = function() {
-        return;
         var domHeight = this.svgDom.height();
         var threads = this.code.getThreads();
 
