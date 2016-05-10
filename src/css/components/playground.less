@@ -707,3 +707,170 @@
     color: #294117;
 }
 
+.entryPlayground_text_buttons {
+    display: inline-block;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.entryPlayground_text_buttons > li {
+    float: left;
+    width: 32px;
+    height: 32px;
+    margin-left: 2px;
+    cursor: pointer;
+}
+
+.entryPlaygroundTextAlignLeft {
+    .backgroundImage("text_align_left_off.png");
+}
+.entryPlaygroundTextAlignLeft.toggle {
+    .backgroundImage("text_align_left_on.png");
+}
+
+.entryPlaygroundTextAlignCenter {
+    .backgroundImage("text_align_center_off.png");
+}
+.entryPlaygroundTextAlignCenter.toggle {
+    .backgroundImage("text_align_center_on.png");
+}
+
+.entryPlaygroundTextAlignRight {
+    .backgroundImage("text_align_right_off.png");
+}
+.entryPlaygroundTextAlignRight.toggle {
+    .backgroundImage("text_align_right_on.png");
+}
+
+.entryPlayground_fgColorDiv {
+    position: absolute;
+    width: 15px;
+    height: 4px;
+    margin-top: -15px;
+    margin-left: 345px;
+}
+
+.entryPlayground_bgColorDiv {
+    position: absolute;
+    width: 15px;
+    height: 4px;
+    margin-top: -15px;
+    margin-left: 379px;
+}
+.entryPlayground_textBox {
+    margin-top: 5px;
+    height: 33px;
+    width: 400px;
+}
+.entryPlayground_textArea {
+    margin-top: 5px;
+    height: 120px;
+    width: 400px;
+    resize: none;
+}
+
+.entryPlaygroundFontSizeWrapper {
+    width: 400px;
+    height: 39px;
+}
+
+.entryPlaygroundFontSizeLabel {
+    display: inline-block;
+    float: right;
+    font-size: 9px;
+    font-family: notoSansMedium;
+    color: #444;
+    line-height: 39px;
+}
+
+.entryPlaygroundFontSizeSlider {
+    display: inline-block;
+    float: right;
+    width: 96px;
+    height: 3px;
+    margin: 18px 0px 18px 4px;
+    background-color: #cfcfcf;
+    border-radius: 1.5px;
+}
+
+.entryPlaygroundFontSizeIndicator {
+    height: 100%;
+    width: 45%;
+    background-color: #643cd9;
+}
+
+.entryPlaygroundFontSizeKnob {
+    width: 16px; height: 16px;
+    position: relative;
+    margin-top: -10px;
+    margin-left: -7px;
+    .backgroundImage("text_size_knob.png");
+    cursor: pointer;
+}
+
+.entryPlaygroundTextColoursWrapper {
+    width : 260px;
+    height: 226px;
+    z-index: 10;
+    cursor: pointer;
+    margin-top: -5px;
+    margin-left: 335px;
+    padding: 20px 5px;
+    position: absolute;
+    .backgroundImage("text_color_bg.png");
+    background-repeat: no-repeat;
+    background-size: 260px 226px;
+}
+.entryPlaygroundTextBackgroundsWrapper {
+    width : 260px;
+    height: 226px;
+    z-index: 10;
+    cursor: pointer;
+    margin-top: -5px;
+    margin-left: 369px;
+    padding: 20px 5px;
+    position: absolute;
+    .backgroundImage("text_color_bg_1.png");
+    background-repeat: no-repeat;
+    background-size: 260px 226px;
+}
+
+
+.entryPlaygroundLinebreakWrapper {
+    position: fixed;
+    top: 351px;
+}
+
+.entryPlaygroundLinebreakButtons {
+    display: inline;
+    font-size:0;
+    img {
+        cursor: pointer;
+    }
+}
+
+.entryPlaygroundLinebreakHorizontal {
+    display: block;
+    border-top: 1px solid #808080;
+    margin: 0 0 12px 0;
+    padding: 0;
+    width: 260px;
+}
+
+.entryPlaygroundLinebreakDescription {
+    margin-top: 12px;
+    p {
+        color: #8888;
+        font-size: 11px;
+        margin-bottom: 5px;
+    }
+
+    ul {
+        padding-left: 20px;
+        li {
+            color: #B4B4B5;
+            font-size: 11px;
+        }
+    }
+}
