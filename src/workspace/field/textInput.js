@@ -28,7 +28,7 @@ Entry.FieldTextInput = function(content, blockView, index) {
 Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
 
 (function(p) {
-    var X_PADDING = 8,
+    var X_PADDING = 6,
         TEXT_Y_PADDING = 4,
         CONTENT_HEIGHT = 16;
 
@@ -59,8 +59,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
             height: CONTENT_HEIGHT,
             y: y,
             rx: 3, ry: 3,
-            fill: "#fff",
-            'fill-opacity': 0.4
+            fill: "transparent"
         });
 
         this.svgGroup.appendChild(this.textElement);
@@ -139,7 +138,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     };
 
     p.getTextWidth = function() {
-         return this.textElement.getComputedTextLength() + X_PADDING;
+        return this.textElement.getComputedTextLength() + X_PADDING + 2;
     };
 
 })(Entry.FieldTextInput.prototype);
