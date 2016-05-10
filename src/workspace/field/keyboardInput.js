@@ -63,6 +63,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
                 x: 0, y: y,
                 width: width,
                 height: CONTENT_HEIGHT,
+                rx: 3, ry: 3,
                 fill: "#fff",
                 'fill-opacity': 0.4
             });
