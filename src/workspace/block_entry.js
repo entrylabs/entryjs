@@ -5781,6 +5781,9 @@ Entry.block = {
                 "size": 12
             }
         ],
+        paramsKeyMap:{
+            FIELD: 0
+        },
         func: function() {
         }
     },
