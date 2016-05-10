@@ -17799,10 +17799,10 @@ Entry.BlockView.DRAG_RADIUS = 5;
       g = this.getBoard().suffix, this.pathGroup.attr({filter:"url(#entryBlockShadowFilter_" + g + ")"});
     } else {
       if (this.magnet.string || this.magnet.bool) {
-        f.stroke = Entry.Utils.colorDarken(this._schema.color, .9);
+        f.stroke = Entry.Utils.colorDarken(this._schema.color, .65);
       }
     }
-    e.outerLine && (f.strokeWidth = "0.5");
+    e.outerLine && (f["stroke-width"] = "0.7");
     this._path.attr(f);
     this._moveTo(this.x, this.y, !1);
     this._startContentRender(b);
