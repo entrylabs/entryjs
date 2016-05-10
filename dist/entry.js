@@ -16127,7 +16127,7 @@ isNotFor:["hamster"], func:function(b, a) {
 }}, is_press_some_key:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Keyboard", value:81}, {type:"Text", text:Lang.Blocks.JUDGEMENT_is_press_some_key_2, color:"#3D3D3D"}], events:{}, def:{params:[null, null], type:"is_press_some_key"}, paramsKeyMap:{VALUE:0}, "class":"boolean_input", isNotFor:[], func:function(b, a) {
   var c = Number(a.getField("VALUE", a));
   return 0 <= Entry.pressedKeys.indexOf(c);
-}}, reach_something:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Text", text:Lang.Blocks.JUDGEMENT_reach_something_1, color:"#3D3D3D"}, {type:"DropdownDynamic", value:null, menuName:"collision", fontSize:11}, {type:"Text", text:Lang.Blocks.JUDGEMENT_reach_something_2, color:"#3D3D3D"}], events:{}, def:{params:[null, null, null], type:"reach_something"}, paramsKeyMap:{VALUE:0}, "class":"boolean_collision", isNotFor:[], func:function(b, a) {
+}}, reach_something:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Text", text:Lang.Blocks.JUDGEMENT_reach_something_1, color:"#3D3D3D"}, {type:"DropdownDynamic", value:null, menuName:"collision", fontSize:11}, {type:"Text", text:Lang.Blocks.JUDGEMENT_reach_something_2, color:"#3D3D3D"}], events:{}, def:{params:[null, null, null], type:"reach_something"}, paramsKeyMap:{VALUE:1}, "class":"boolean_collision", isNotFor:[], func:function(b, a) {
   if (!b.getVisible()) {
     return !1;
   }

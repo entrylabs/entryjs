@@ -7488,7 +7488,7 @@ Entry.block = {
             "type": "reach_something"
         },
         "paramsKeyMap": {
-            "VALUE": 0
+            "VALUE": 1
         },
         "class": "boolean_collision",
         "isNotFor": [],
