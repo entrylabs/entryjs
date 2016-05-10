@@ -113,14 +113,15 @@ Entry.PARAM = -1;
 
     p.tick = function() {
         var executors = this.executors;
-        for (var i = 0; i < executors.length; i++) {
-            var executor = executors[i];
+        this.executors = [];
+        while (executors.length) {
+            var executor = executors.shift();
             executor.execute();
             if (executor.isEnd()) {
-                executors.splice(i, 1);
-                i--;
                 if (executors.length === 0)
                     this.executeEndEvent.notify();
+            } else {
+                this.executors.push(executor);
             }
         }
     };
