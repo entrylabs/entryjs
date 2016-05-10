@@ -848,8 +848,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
+  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(c, d);
   return a.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1943,10 +1943,10 @@ Entry.block.wait_second = function(b, a) {
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a);
+  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
   setTimeout(function() {
     a.timeFlag = 0;
-  }, 60 / (Entry.FPS || 60) * c * 1E3);
+  }, c);
   return a;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -12228,6 +12228,7 @@ Entry.Func = function(b) {
   a.prototype = Entry.block.function_general;
   a = new a;
   a.changeEvent = new Entry.Event;
+  a.template = Lang.template.function_general;
   Entry.block["func_" + this.id] = a;
   if (b) {
     b = this.content._blockMap;
@@ -12366,21 +12367,23 @@ Entry.Func.requestParamBlock = function(b) {
     default:
       return null;
   }
-  b = b + "Param_" + a;
-  c = Entry.Func.createParamBlock(b, c);
-  Entry.block[b] = c;
-  return b;
+  a = b + "Param_" + a;
+  b = Entry.Func.createParamBlock(a, c, b);
+  Entry.block[a] = b;
+  return a;
 };
 Entry.Func.registerParamBlock = function(b) {
-  "string" === b.substr(0, 6) ? Entry.Func.createParamBlock(b, Entry.block.function_param_string) : "boolean" === b.substr(0, 7) && Entry.Func.createParamBlock(b, Entry.block.function_param_boolean);
+  "string" === b.substr(0, 6) ? Entry.Func.createParamBlock(b, Entry.block.function_param_string, b) : "boolean" === b.substr(0, 7) && Entry.Func.createParamBlock(b, Entry.block.function_param_boolean, b);
 };
-Entry.Func.createParamBlock = function(b, a) {
-  var c = function() {
+Entry.Func.createParamBlock = function(b, a, c) {
+  var d = function() {
   };
-  c.prototype = a;
-  c = new c;
-  c.changeEvent = new Entry.Event;
-  return Entry.block[b] = c;
+  c = "string" === c ? "function_param_string" : "function_param_boolean";
+  d.prototype = a;
+  d = new d;
+  d.changeEvent = new Entry.Event;
+  d.template = Lang.template[c];
+  return Entry.block[b] = d;
 };
 Entry.Func.updateMenu = function() {
   var b = Entry.playground.mainWorkspace.getBlockMenu();
@@ -14902,8 +14905,8 @@ if ("object" == typeof exports) {
 Entry.block = {albert_hand_found:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], params:[], events:{}, def:{params:[], type:"albert_hand_found"}, "class":"albert_sensor", isNotFor:["albert"], func:function(b, a) {
   var c = Entry.hw.portData;
   return 40 < c.leftProximity || 40 < c.rightProximity;
-}}, albert_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd \uadfc\uc811 \uc13c\uc11c", "leftProximity"], ["\uc624\ub978\ucabd \uadfc\uc811 \uc13c\uc11c", "rightProximity"], ["\ubc1d\uae30", "light"], ["\ubc30\ud130\ub9ac", "battery"], ["\uc2e0\ud638 \uc138\uae30", "signalStrength"], ["\uc55e\ucabd OID", "frontOid"], ["\ub4a4\ucabd OID", "backOid"], ["x \uc704\uce58", "positionX"], ["y \uc704\uce58", "positionY"], ["\ubc29\ud5a5", 
-"orientation"]], value:"leftProximity", fontSize:11}], events:{}, def:{params:[null], type:"albert_value", id:"nw7o"}, paramsKeyMap:{DEVICE:0}, "class":"albert_sensor", isNotFor:["albert"], func:function(b, a) {
+}}, albert_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.ALBERT_sensor_leftProximity, "leftProximity"], [Lang.Blocks.ALBERT_sensor_rightProximity, "rightProximity"], [Lang.Blocks.ALBERT_sensor_light, "light"], [Lang.Blocks.ALBERT_sensor_battery, "battery"], [Lang.Blocks.ALBERT_sensor_signalStrength, "signalStrength"], [Lang.Blocks.ALBERT_sensor_frontOid, "frontOid"], [Lang.Blocks.ALBERT_sensor_backOid, "backOid"], [Lang.Blocks.ALBERT_sensor_positionX, 
+"positionX"], [Lang.Blocks.ALBERT_sensor_positionY, "positionY"], [Lang.Blocks.ALBERT_sensor_orientation, "orientation"]], value:"leftProximity", fontSize:11}], events:{}, def:{params:[null], type:"albert_value"}, paramsKeyMap:{DEVICE:0}, "class":"albert_sensor", isNotFor:["albert"], func:function(b, a) {
   var c = Entry.hw.portData, d = a.getField("DEVICE");
   return c[d];
 }}, albert_move_forward_for_secs:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["1"]}, null], type:"albert_move_forward_for_secs"}, paramsKeyMap:{VALUE:0}, "class":"albert_wheel", isNotFor:["albert"], func:function(b, a) {
@@ -14952,7 +14955,7 @@ Entry.block = {albert_hand_found:{color:"#00979D", skeleton:"basic_boolean_field
   }, c);
   Entry.Albert.timeouts.push(d);
   return a;
-}}, albert_turn_for_secs:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["1"]}, null], type:"albert_turn_for_secs", id:"como"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"albert_wheel", isNotFor:["albert"], 
+}}, albert_turn_for_secs:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["1"]}, null], type:"albert_turn_for_secs", id:"como"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"albert_wheel", isNotFor:["albert"], 
 func:function(b, a) {
   var c = Entry.hw.sendQueue;
   if (a.isStart) {
@@ -14985,12 +14988,12 @@ func:function(b, a) {
   c.leftWheel = a.getNumberValue("LEFT");
   c.rightWheel = a.getNumberValue("RIGHT");
   return a.callReturn();
-}}, albert_change_wheel_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "BOTH"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["10"]}, null], type:"albert_change_wheel_by"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"albert_wheel", 
+}}, albert_change_wheel_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["10"]}, null], type:"albert_change_wheel_by"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"albert_wheel", 
 isNotFor:["albert"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getField("DIRECTION"), e = a.getNumberValue("VALUE");
   "LEFT" == d ? c.leftWheel = void 0 != c.leftWheel ? c.leftWheel + e : e : ("RIGHT" != d && (c.leftWheel = void 0 != c.leftWheel ? c.leftWheel + e : e), c.rightWheel = void 0 != c.rightWheel ? c.rightWheel + e : e);
   return a.callReturn();
-}}, albert_set_wheel_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "BOTH"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["30"]}, null], type:"albert_set_wheel_to"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"albert_wheel", 
+}}, albert_set_wheel_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["30"]}, null], type:"albert_set_wheel_to"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"albert_wheel", 
 isNotFor:["albert"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getField("DIRECTION"), e = a.getNumberValue("VALUE");
   "LEFT" == d ? c.leftWheel = e : ("RIGHT" != d && (c.leftWheel = e), c.rightWheel = e);
@@ -15005,12 +15008,12 @@ isNotFor:["albert"], func:function(b, a) {
   c.padWidth = a.getNumberValue("WIDTH");
   c.padHeight = a.getNumberValue("HEIGHT");
   return a.callReturn();
-}}, albert_set_eye_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "BOTH"]], value:"LEFT", fontSize:11}, {type:"Dropdown", options:[["\ube68\uac04\uc0c9", "4"], ["\ub178\ub780\uc0c9", "6"], ["\ucd08\ub85d\uc0c9", "2"], ["\ud558\ub298\uc0c9", "3"], ["\ud30c\ub780\uc0c9", "1"], ["\ubcf4\ub77c\uc0c9", "5"], ["\ud558\uc580\uc0c9", "7"]], value:"4", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", 
-size:12}], events:{}, def:{params:[null, null, null], type:"albert_set_eye_to"}, paramsKeyMap:{DIRECTION:0, COLOR:1}, "class":"albert_led", isNotFor:["albert"], func:function(b, a) {
+}}, albert_set_eye_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]], value:"LEFT", fontSize:11}, {type:"Dropdown", options:[[Lang.General.red, "4"], [Lang.General.yellow, "6"], [Lang.General.green, "2"], [Lang.Blocks.ALBERT_color_cyan, "3"], [Lang.General.blue, "1"], [Lang.Blocks.ALBERT_color_magenta, "5"], [Lang.General.white, "7"]], value:"4", fontSize:11}, {type:"Indicator", 
+img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"albert_set_eye_to"}, paramsKeyMap:{DIRECTION:0, COLOR:1}, "class":"albert_led", isNotFor:["albert"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a), e = Number(a.getField("COLOR", a));
   "LEFT" == d ? c.leftEye = e : ("RIGHT" != d && (c.leftEye = e), c.rightEye = e);
   return a.callReturn();
-}}, albert_clear_eye:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "BOTH"]], value:"LEFT", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null], type:"albert_clear_eye"}, paramsKeyMap:{DIRECTION:0}, "class":"albert_led", isNotFor:["albert"], func:function(b, a) {
+}}, albert_clear_eye:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]], value:"LEFT", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null], type:"albert_clear_eye"}, paramsKeyMap:{DIRECTION:0}, "class":"albert_led", isNotFor:["albert"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a);
   "LEFT" == d ? c.leftEye = 0 : ("RIGHT" != d && (c.leftEye = 0), c.rightEye = 0);
   return a.callReturn();
@@ -15059,8 +15062,9 @@ size:12}], events:{}, def:{params:[null, null, null], type:"albert_set_eye_to"},
   c.buzzer = 0;
   c.note = 0;
   return a.callReturn();
-}}, albert_play_note_for:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\ub3c4", "4"], ["\ub3c4#", "5"], ["\ub808", "6"], ["\ubbf8b", "7"], ["\ubbf8", "8"], ["\ud30c", "9"], ["\ud30c#", "10"], ["\uc194", "11"], ["\uc194#", "12"], ["\ub77c", "13"], ["\uc2dcb", "14"], ["\uc2dc", "15"]], value:"4", fontSize:11}, {type:"Dropdown", options:[["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"]], value:"1", fontSize:11}, {type:"Block", 
-accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, "4", {type:"text", params:["0.5"]}, null], type:"albert_play_note_for"}, paramsKeyMap:{NOTE:0, OCTAVE:1, VALUE:2}, "class":"albert_buzzer", isNotFor:["albert"], func:function(b, a) {
+}}, albert_play_note_for:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.note_c + "", "4"], [Lang.General.note_c + "#", "5"], [Lang.General.note_d + "", "6"], [Lang.General.note_e + "b", "7"], [Lang.General.note_e + "", "8"], [Lang.General.note_f + "", "9"], [Lang.General.note_f + "#", "10"], [Lang.General.note_g + "", "11"], [Lang.General.note_g + "#", "12"], [Lang.General.note_a + "", "13"], [Lang.General.note_b + "b", "14"], [Lang.General.note_b + 
+"", "15"]], value:"4", fontSize:11}, {type:"Dropdown", options:[["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"]], value:"1", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, "4", {type:"text", params:["0.5"]}, null], type:"albert_play_note_for"}, paramsKeyMap:{NOTE:0, OCTAVE:1, VALUE:2}, "class":"albert_buzzer", isNotFor:["albert"], func:function(b, 
+a) {
   var c = Entry.hw.sendQueue;
   if (a.isStart) {
     if (1 == a.timeFlag) {
@@ -15233,10 +15237,10 @@ size:12}], events:{}, def:{params:[null, null, null]}, paramsKeyMap:{DIRECTION:0
 }}, arduino_get_digital_value:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"arduino_get_port_number"}], type:"arduino_get_digital_value"}, paramsKeyMap:{VALUE:0}, "class":"arduino_value", isNotFor:["arduino"], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   return Entry.hw.getDigitalPortValue(c);
-}}, arduino_toggle_led:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["\ucf1c\uae30", "on"], ["\ub044\uae30", "off"]], value:"on", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"arduino_get_port_number"}, null, null], type:"arduino_toggle_led"}, paramsKeyMap:{VALUE:0, OPERATOR:1}, "class":"arduino_set", isNotFor:["arduino"], func:function(b, 
-a) {
-  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
+}}, arduino_toggle_led:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[[Lang.Blocks.ARDUINO_on, "on"], [Lang.Blocks.ARDUINO_off, "off"]], value:"on", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"arduino_get_port_number"}, null, null], type:"arduino_toggle_led"}, paramsKeyMap:{VALUE:0, OPERATOR:1}, "class":"arduino_set", isNotFor:["arduino"], 
+func:function(b, a) {
+  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(c, d);
   return a.callReturn();
 }}, arduino_toggle_pwm:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"arduino_get_pwm_port_number"}, {type:"arduino_text", params:["255"]}, null], type:"arduino_toggle_pwm"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"arduino_set", isNotFor:["arduino"], func:function(b, a) {
   var c = a.getNumberValue("PORT"), d = a.getNumberValue("VALUE"), d = Math.round(d), d = Math.max(d, 0), d = Math.min(d, 255);
@@ -15267,17 +15271,18 @@ OPERATOR:1}, "class":"sensorBoard", isNotFor:["sensorBoard"], func:function(b, a
 align:"center"}], events:{mousedown:[null]}}, arduino_reconnect:{skeleton:"basic_button", color:"#eee", params:[{type:"Text", text:"\ub2e4\uc2dc \uc5f0\uacb0\ud558\uae30", color:"#333", align:"center"}], events:{mousedown:[null]}}, CODEino_get_sensor_number:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["0", "A0"], ["1", "A1"], ["2", "A2"], ["3", "A3"], ["4", "A4"], ["5", "A5"], ["6", "A6"]], value:"A0", fontSize:11}], events:{}, def:{params:[null]}, 
 paramsKeyMap:{PORT:0}, func:function(b, a) {
   return a.getStringField("PORT");
-}}, CODEino_get_named_sensor_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["\uc18c\ub9ac", "0"], ["\ube5b", "1"], ["\uc2ac\ub77c\uc774\ub354", "2"], ["\uc800\ud56d-A", "3"], ["\uc800\ud56d-B", "4"], ["\uc800\ud56d-C", "5"], ["\uc800\ud56d-D", "6"]], value:"0", fontSize:11}], events:{}, def:{params:[null], type:"CODEino_get_named_sensor_value"}, paramsKeyMap:{PORT:0}, "class":"CODEino", isNotFor:["CODEino"], func:function(b, a) {
+}}, CODEino_get_named_sensor_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.CODEino_sensor_name_0, "0"], [Lang.Blocks.CODEino_sensor_name_1, "1"], [Lang.Blocks.CODEino_sensor_name_2, "2"], [Lang.Blocks.CODEino_sensor_name_3, "3"], [Lang.Blocks.CODEino_sensor_name_4, "4"], [Lang.Blocks.CODEino_sensor_name_5, "5"], [Lang.Blocks.CODEino_sensor_name_6, "6"]], value:"0", fontSize:11}], events:{}, def:{params:[null], type:"CODEino_get_named_sensor_value"}, 
+paramsKeyMap:{PORT:0}, "class":"CODEino", isNotFor:["CODEino"], func:function(b, a) {
   return Entry.hw.getAnalogPortValue(a.getField("PORT", a));
-}}, CODEino_get_sound_status:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[["\uc18c\ub9ac\ud07c", "GREAT"], ["\uc18c\ub9ac\uc791\uc74c", "SMALL"]], value:"GREAT", fontSize:11}], events:{}, def:{params:[null], type:"CODEino_get_sound_status"}, paramsKeyMap:{STATUS:0}, "class":"CODEino", isNotFor:["CODEino"], func:function(b, a) {
+}}, CODEino_get_sound_status:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.CODEino_string_11, "GREAT"], [Lang.Blocks.CODEino_string_12, "SMALL"]], value:"GREAT", fontSize:11}], events:{}, def:{params:[null], type:"CODEino_get_sound_status"}, paramsKeyMap:{STATUS:0}, "class":"CODEino", isNotFor:["CODEino"], func:function(b, a) {
   return "GREAT" == a.getField("STATUS", a) ? 600 < Entry.hw.getAnalogPortValue(0) ? 1 : 0 : 600 > Entry.hw.getAnalogPortValue(0) ? 1 : 0;
-}}, CODEino_get_light_status:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[["\ubc1d\uc74c", "BRIGHT"], ["\uc5b4\ub450\uc6c0", "DARK"]], value:"BRIGHT", fontSize:11}], events:{}, def:{params:[null], type:"CODEino_get_light_status"}, paramsKeyMap:{STATUS:0}, "class":"CODEino", isNotFor:["CODEino"], func:function(b, a) {
+}}, CODEino_get_light_status:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.CODEino_string_14, "BRIGHT"], [Lang.Blocks.CODEino_string_15, "DARK"]], value:"BRIGHT", fontSize:11}], events:{}, def:{params:[null], type:"CODEino_get_light_status"}, paramsKeyMap:{STATUS:0}, "class":"CODEino", isNotFor:["CODEino"], func:function(b, a) {
   return "DARK" == a.getField("STATUS", a) ? 800 < Entry.hw.getAnalogPortValue(1) ? 1 : 0 : 800 > Entry.hw.getAnalogPortValue(1) ? 1 : 0;
-}}, CODEino_is_button_pressed:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[["\ubc84\ud2bc\ub204\ub984", "4"], ["A \uc5f0\uacb0\ub428", "17"], ["B \uc5f0\uacb0\ub428", "18"], ["C \uc5f0\uacb0\ub428", "19"], ["D \uc5f0\uacb0\ub428", "20"]], value:"4", fontSize:11}], events:{}, def:{params:[null], type:"CODEino_is_button_pressed"}, paramsKeyMap:{PORT:0}, "class":"CODEino", isNotFor:["CODEino"], func:function(b, a) {
+}}, CODEino_is_button_pressed:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.CODEino_string_3, "4"], [Lang.Blocks.CODEino_string_4, "17"], [Lang.Blocks.CODEino_string_5, "18"], [Lang.Blocks.CODEino_string_6, "19"], [Lang.Blocks.CODEino_string_7, "20"]], value:"4", fontSize:11}], events:{}, def:{params:[null], type:"CODEino_is_button_pressed"}, paramsKeyMap:{PORT:0}, "class":"CODEino", isNotFor:["CODEino"], func:function(b, a) {
   var c = a.getNumberField("PORT", a);
   return 14 < c ? !Entry.hw.getAnalogPortValue(c - 14) : !Entry.hw.getDigitalPortValue(c);
-}}, CODEino_get_accelerometer_direction:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd \uae30\uc6b8\uc784", "LEFT"], ["\uc624\ub978\ucabd \uae30\uc6b8\uc784", "RIGHT"], ["\uc704\ucabd \uae30\uc6b8\uc784", "FRONT"], ["\uc544\ub798\ucabd \uae30\uc6b8\uc784", "REAR"], ["\ub4a4\uc9d1\ud798", "REVERSE"]], value:"LEFT", fontSize:11}], events:{}, def:{params:[null], type:"CODEino_get_accelerometer_direction"}, paramsKeyMap:{DIRECTION:0}, 
-"class":"CODEino", isNotFor:["CODEino"], func:function(b, a) {
+}}, CODEino_get_accelerometer_direction:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.CODEino_string_16, "LEFT"], [Lang.Blocks.CODEino_string_17, "RIGHT"], [Lang.Blocks.CODEino_string_18, "FRONT"], [Lang.Blocks.CODEino_string_19, "REAR"], [Lang.Blocks.CODEino_string_20, "REVERSE"]], value:"LEFT", fontSize:11}], events:{}, def:{params:[null], type:"CODEino_get_accelerometer_direction"}, paramsKeyMap:{DIRECTION:0}, "class":"CODEino", 
+isNotFor:["CODEino"], func:function(b, a) {
   var c = a.getField("DIRECTION", a), d = 0;
   "LEFT" == c || "RIGHT" == c ? d = 3 : "FRONT" == c || "REAR" == c ? d = 4 : "REVERSE" == c && (d = 5);
   d = Entry.hw.getAnalogPortValue(d);
@@ -15357,8 +15362,8 @@ paramsKeyMap:{PORT:0}, func:function(b, a) {
   var c = a.getNumberValue("VALUE"), c = Math.min(c, Entry.Bitbrick.dcMaxValue), c = Math.max(c, Entry.Bitbrick.dcMinValue);
   Entry.hw.sendQueue[a.getStringField("PORT")] = c + 128;
   return a.callReturn();
-}}, bitbrick_dc_direction_speed:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, fontSize:11}, {type:"Dropdown", options:[["\uc2dc\uacc4", "CW"], ["\ubc18\uc2dc\uacc4", "CCW"]], value:"CW", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, {type:"text", params:["100"]}, null], type:"bitbrick_dc_direction_speed"}, paramsKeyMap:{PORT:0, 
-DIRECTION:1, VALUE:2}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
+}}, bitbrick_dc_direction_speed:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, fontSize:11}, {type:"Dropdown", options:[[Lang.Blocks.BITBRICK_dc_direction_cw, "CW"], [Lang.Blocks.BITBRICK_dc_direction_ccw, "CCW"]], value:"CW", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, {type:"text", params:["100"]}, null], type:"bitbrick_dc_direction_speed"}, 
+paramsKeyMap:{PORT:0, DIRECTION:1, VALUE:2}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
   var c = "CW" === a.getStringField("DIRECTION"), d = a.getNumberValue("VALUE"), d = Math.min(d, Entry.Bitbrick.dcMaxValue), d = Math.max(d, 0);
   Entry.hw.sendQueue[a.getStringField("PORT")] = c ? d + 128 : 128 - d;
   return a.callReturn();
@@ -15453,13 +15458,13 @@ paramsKeyMap:{PORT:0, VALUE2:1, VALUE3:2, VALUE4:3, VALUE5:4}, "class":"conditio
   return a.getField("NUM", a);
 }, isPrimitive:!0}, angle:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Angle"}], events:{}, def:{params:[null]}, paramsKeyMap:{ANGLE:0}, func:function(b, a) {
   return a.getNumberField("ANGLE");
-}}, get_x_coordinate:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:"X \uc88c\ud46f\uac12", color:"#3D3D3D"}], events:{}, def:{params:[null], type:"get_x_coordinate"}, "class":"calc", isNotFor:[], func:function(b, a) {
+}}, get_x_coordinate:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_get_x_coordinate, color:"#3D3D3D"}], events:{}, def:{params:[null], type:"get_x_coordinate"}, "class":"calc", isNotFor:[], func:function(b, a) {
   return b.getX();
-}}, get_y_coordinate:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:"Y \uc88c\ud46f\uac12", color:"#3D3D3D"}], events:{}, def:{params:[null], type:"get_y_coordinate"}, "class":"calc", isNotFor:[], func:function(b, a) {
+}}, get_y_coordinate:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_get_y_coordinate, color:"#3D3D3D"}], events:{}, def:{params:[null], type:"get_y_coordinate"}, "class":"calc", isNotFor:[], func:function(b, a) {
   return b.getY();
-}}, get_angle:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:"\uac01\ub3c4\uac12", color:"#3D3D3D"}], events:{}, def:{params:[null]}, func:function(b, a) {
+}}, get_angle:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_get_angle, color:"#3D3D3D"}], events:{}, def:{params:[null]}, func:function(b, a) {
   return parseFloat(b.getRotation().toFixed(1));
-}}, get_rotation_direction:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["\ubc29\ud5a5\uac12", "ROTATION"], ["\uc774\ub3d9 \ubc29\ud5a5\uac12", "DIRECTION"]], value:"ROTATION", fontSize:11}], events:{}, def:{params:[null], type:"get_rotation_direction"}, paramsKeyMap:{OPERATOR:0}, "class":"calc", isNotFor:[], func:function(b, a) {
+}}, get_rotation_direction:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.CALC_rotation_value, "ROTATION"], [Lang.Blocks.CALC_direction_value, "DIRECTION"]], value:"ROTATION", fontSize:11}], events:{}, def:{params:[null], type:"get_rotation_direction"}, paramsKeyMap:{OPERATOR:0}, "class":"calc", isNotFor:[], func:function(b, a) {
   return "DIRECTION" == a.getField("OPERATOR", a).toUpperCase() ? parseFloat(b.getDirection().toFixed(1)) : parseFloat(b.getRotation().toFixed(1));
 }}, distance_something:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_distance_something_1, color:"#3D3D3D"}, {type:"DropdownDynamic", value:null, menuName:"spritesWithMouse", fontSize:11}, {type:"Text", text:Lang.Blocks.CALC_distance_something_2, color:"#3D3D3D"}], events:{}, def:{params:[null, null, null], type:"distance_something"}, paramsKeyMap:{VALUE:1}, "class":"calc_distance", isNotFor:[], func:function(b, a) {
   var c = a.getField("VALUE", a);
@@ -15506,7 +15511,7 @@ type:"calc_basic"}, {params:[{type:"number", params:["10"]}, "MINUS", {type:"num
 }}, calc_divide:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"/", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[null]}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, func:function(b, a) {
   var c = a.getNumberValue("LEFTHAND", a), d = a.getNumberValue("RIGHTHAND", a);
   return c / d;
-}}, calc_mod:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"/", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uc758 \ub098\uba38\uc9c0", color:"#3D3D3D"}], events:{}, def:{params:[{type:"number", params:["10"]}, null, {type:"number", params:["10"]}, null], type:"calc_mod"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"calc", isNotFor:[], func:function(b, a) {
+}}, calc_mod:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"/", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_calc_mod_3, color:"#3D3D3D"}], events:{}, def:{params:[{type:"number", params:["10"]}, null, {type:"number", params:["10"]}, null], type:"calc_mod"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"calc", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("LEFTHAND", a), d = a.getNumberValue("RIGHTHAND", a);
   return c % d;
 }}, calc_share:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"/", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uc758 \ubaab", color:"#3D3D3D"}], events:{}, def:{params:[{type:"number", params:["10"]}, null, {type:"number", params:["10"]}, null], type:"calc_share"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"calc", isNotFor:[], func:function(b, a) {
@@ -15623,7 +15628,7 @@ params:[Lang.Blocks.entry]}, null], type:"combine_something"}, paramsKeyMap:{VAL
 }}, get_sound_volume:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_get_sound_volume, color:"#3D3D3D"}, {type:"Text", text:" ", color:"#3D3D3D"}], events:{}, def:{params:[null, null], type:"get_sound_volume"}, "class":"calc", isNotFor:[""], func:function(b, a) {
   return 100 * createjs.Sound.getVolume();
 }}, quotient_and_mod:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_quotient_and_mod_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_quotient_and_mod_2, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_quotient_and_mod_3, color:"#3D3D3D"}, {type:"Dropdown", options:[[Lang.Blocks.CALC_quotient_and_mod_sub_1, "QUOTIENT"], [Lang.Blocks.CALC_quotient_and_mod_sub_2, 
-"MOD"]], value:"QUOTIENT", fontSize:11}], events:{}, def:{params:[null, {type:"text", params:["10"]}, null, {type:"text", params:["10"]}, null, null], type:"quotient_and_mod"}, paramsKeyMap:{LEFTHAND:1, RIGHTHAND:3, OPERATOR:5}, "class":"calc", isNotFor:[""], func:function(b, a) {
+"MOD"]], value:"QUOTIENT", fontSize:11}], events:{}, def:{params:[null, {type:"text", params:["10"]}, null, {type:"text", params:["10"]}, null, null], type:"quotient_and_mod"}, paramsKeyMap:{LEFTHAND:1, RIGHTHAND:3, OPERATOR:5}, "class":"calc", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("LEFTHAND", a), d = a.getNumberValue("RIGHTHAND", a);
   if (isNaN(c) || isNaN(d)) {
     throw Error();
@@ -15634,7 +15639,7 @@ params:[Lang.Blocks.entry]}, null], type:"combine_something"}, paramsKeyMap:{VAL
   Entry.engine && Entry.engine.showProjectTimer();
 }], dataDestroy:[function(b) {
   Entry.engine && Entry.engine.hideProjectTimer(b);
-}]}, def:{params:[null, "START", null, null], type:"choose_project_timer_action"}, paramsKeyMap:{ACTION:1}, "class":"calc_timer", isNotFor:[""], func:function(b, a) {
+}]}, def:{params:[null, "START", null, null], type:"choose_project_timer_action"}, paramsKeyMap:{ACTION:1}, "class":"calc_timer", isNotFor:[], func:function(b, a) {
   var c = a.getField("ACTION"), d = Entry.engine, e = d.projectTimer;
   "START" == c ? e.isInit ? e.isInit && e.isPaused && (e.pauseStart && (e.pausedTime += (new Date).getTime() - e.pauseStart), delete e.pauseStart, e.isPaused = !1) : d.startProjectTimer() : "STOP" == c ? e.isInit && !e.isPaused && (e.isPaused = !0, e.pauseStart = (new Date).getTime()) : "RESET" == c && e.isInit && (e.setValue(0), e.start = (new Date).getTime(), e.pausedTime = 0, delete e.pauseStart);
   return a.callReturn();
@@ -15650,10 +15655,10 @@ params:[Lang.Blocks.entry]}, null], type:"combine_something"}, paramsKeyMap:{VAL
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a);
+  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
   setTimeout(function() {
     a.timeFlag = 0;
-  }, 60 / (Entry.FPS || 60) * c * 1E3);
+  }, c);
   return a;
 }}, repeat_basic:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"repeat_basic"}, paramsKeyMap:{VALUE:0}, statementsKeyMap:{DO:0}, "class":"repeat", isNotFor:[], func:function(b, a) {
   var c;
@@ -15686,7 +15691,7 @@ params:[Lang.Blocks.entry]}, null], type:"combine_something"}, paramsKeyMap:{VAL
   var c = a.getBooleanValue("BOOL", a);
   a.isLooped = !0;
   return c ? a.getStatement("STACK_IF", a) : a.getStatement("STACK_ELSE", a);
-}}, create_clone:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"clone", fontSize:11, options:[["\uc790\uc2e0", "self"], ["\uc5d4\ud2b8\ub9ac\ubd07", "7y0y"]]}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null, null], type:"create_clone"}, paramsKeyMap:{VALUE:0}, "class":"clone", isNotFor:[], func:function(b, a) {
+}}, create_clone:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"clone", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null, null], type:"create_clone"}, paramsKeyMap:{VALUE:0}, "class":"clone", isNotFor:[], func:function(b, a) {
   var c = a.getField("VALUE", a), d = a.callReturn();
   "self" == c ? b.parent.addCloneEntity(b.parent, b, null) : Entry.container.getObject(c).addCloneEntity(b.parent, null, null);
   return d;
@@ -15729,10 +15734,10 @@ params:[Lang.Blocks.entry]}, null], type:"combine_something"}, paramsKeyMap:{VAL
   return a.callReturn();
 }}, functionAddButton:{skeleton:"basic_button", color:"#eee", isNotFor:["functionInit"], params:[{type:"Text", text:Lang.Workspace.function_create, color:"#333", align:"center"}], events:{mousedown:[function() {
   Entry.variableContainer.createFunction();
-}]}}, function_field_label:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#f9c535", params:[{type:"TextInput", value:"\ud568\uc218"}, {type:"Output", accept:"paramMagnet"}]}, function_field_string:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#ffd974", params:[{type:"Block", accept:"stringMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}]}, function_field_boolean:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#aeb8ff", params:[{type:"Block", accept:"booleanMagnet", 
-restore:!0}, {type:"Output", accept:"paramMagnet"}]}, function_param_string:{skeleton:"basic_string_field", color:"#ffd974", func:function() {
+}]}}, function_field_label:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#f9c535", params:[{type:"TextInput", value:Lang.Blocks.FUNCTION_explanation_1}, {type:"Output", accept:"paramMagnet"}]}, function_field_string:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#ffd974", params:[{type:"Block", accept:"stringMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}]}, function_field_boolean:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#aeb8ff", params:[{type:"Block", 
+accept:"booleanMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}]}, function_param_string:{skeleton:"basic_string_field", color:"#ffd974", template:"%1 %2", func:function() {
   return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
-}}, function_param_boolean:{skeleton:"basic_boolean_field", color:"#aeb8ff", func:function() {
+}}, function_param_boolean:{skeleton:"basic_boolean_field", color:"#aeb8ff", template:"%1 %2", func:function() {
   return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
 }}, function_create:{skeleton:"basic", color:"#cc7337", event:"funcDef", params:[{type:"Block", accept:"paramMagnet", value:{type:"function_field_label"}}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/function_03.png", size:12}], func:function() {
 }}, function_general:{skeleton:"basic", color:"#cc7337", params:[], events:{dataAdd:[function(b) {
@@ -15759,8 +15764,8 @@ restore:!0}, {type:"Output", accept:"paramMagnet"}]}, function_param_string:{ske
 }}, hamster_hand_found:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], params:[], events:{}, def:{params:[], type:"hamster_hand_found"}, "class":"hamster_sensor", isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.portData;
   return 50 < c.leftProximity || 50 < c.rightProximity;
-}}, hamster_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd \uadfc\uc811 \uc13c\uc11c", "leftProximity"], ["\uc624\ub978\ucabd \uadfc\uc811 \uc13c\uc11c", "rightProximity"], ["\uc67c\ucabd \ubc14\ub2e5 \uc13c\uc11c", "leftFloor"], ["\uc624\ub978\ucabd \ubc14\ub2e5 \uc13c\uc11c", "rightFloor"], ["x\ucd95 \uac00\uc18d\ub3c4", "accelerationX"], ["y\ucd95 \uac00\uc18d\ub3c4", "accelerationY"], ["z\ucd95 \uac00\uc18d\ub3c4", "accelerationZ"], 
-["\ubc1d\uae30", "light"], ["\uc628\ub3c4", "temperature"], ["\uc2e0\ud638 \uc138\uae30", "signalStrength"], ["\uc785\ub825 A", "inputA"], ["\uc785\ub825 B", "inputB"]], value:"leftProximity", fontSize:11}], events:{}, def:{params:[null], type:"hamster_value"}, paramsKeyMap:{DEVICE:0}, "class":"hamster_sensor", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.HAMSTER_sensor_leftProximity, "leftProximity"], [Lang.Blocks.HAMSTER_sensor_rightProximity, "rightProximity"], [Lang.Blocks.HAMSTER_sensor_leftFloor, "leftFloor"], [Lang.Blocks.HAMSTER_sensor_rightFloor, "rightFloor"], [Lang.Blocks.HAMSTER_sensor_accelerationX, "accelerationX"], [Lang.Blocks.HAMSTER_sensor_accelerationY, "accelerationY"], [Lang.Blocks.HAMSTER_sensor_accelerationZ, 
+"accelerationZ"], [Lang.Blocks.HAMSTER_sensor_light, "light"], [Lang.Blocks.HAMSTER_sensor_temperature, "temperature"], [Lang.Blocks.HAMSTER_sensor_signalStrength, "signalStrength"], [Lang.Blocks.HAMSTER_sensor_inputA, "inputA"], [Lang.Blocks.HAMSTER_sensor_inputB, "inputB"]], value:"leftProximity", fontSize:11}], events:{}, def:{params:[null], type:"hamster_value"}, paramsKeyMap:{DEVICE:0}, "class":"hamster_sensor", isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.portData, d = a.getField("DEVICE");
   return c[d];
 }}, hamster_move_forward_once:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"hamster_move_forward_once"}, "class":"hamster_board", isNotFor:["hamster"], func:function(b, a) {
@@ -15809,7 +15814,7 @@ restore:!0}, {type:"Output", accept:"paramMagnet"}]}, function_param_string:{ske
   c.rightWheel = 45;
   Entry.Hamster.setLineTracerMode(c, 0);
   return a;
-}}, hamster_turn_once:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"]], value:"LEFT", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null], type:"hamster_turn_once"}, paramsKeyMap:{DIRECTION:0}, "class":"hamster_board", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_turn_once:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"]], value:"LEFT", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null], type:"hamster_turn_once"}, paramsKeyMap:{DIRECTION:0}, "class":"hamster_board", isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = Entry.hw.portData;
   if (a.isStart) {
     if (a.isMoving) {
@@ -15915,7 +15920,7 @@ restore:!0}, {type:"Output", accept:"paramMagnet"}]}, function_param_string:{ske
   }, c);
   Entry.Hamster.timeouts.push(d);
   return a;
-}}, hamster_turn_for_secs:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["1"]}, null], type:"hamster_turn_for_secs"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"hamster_wheel", isNotFor:["hamster"], 
+}}, hamster_turn_for_secs:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["1"]}, null], type:"hamster_turn_for_secs"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"hamster_wheel", isNotFor:["hamster"], 
 func:function(b, a) {
   var c = Entry.hw.sendQueue;
   if (a.isStart) {
@@ -15951,19 +15956,19 @@ func:function(b, a) {
   c.rightWheel = a.getNumberValue("RIGHT");
   Entry.Hamster.setLineTracerMode(c, 0);
   return a.callReturn();
-}}, hamster_change_wheel_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "BOTH"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["10"]}, null], type:"hamster_change_wheel_by"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"hamster_wheel", 
+}}, hamster_change_wheel_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["10"]}, null], type:"hamster_change_wheel_by"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"hamster_wheel", 
 isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getField("DIRECTION"), e = a.getNumberValue("VALUE");
   "LEFT" == d ? c.leftWheel = void 0 != c.leftWheel ? c.leftWheel + e : e : ("RIGHT" != d && (c.leftWheel = void 0 != c.leftWheel ? c.leftWheel + e : e), c.rightWheel = void 0 != c.rightWheel ? c.rightWheel + e : e);
   Entry.Hamster.setLineTracerMode(c, 0);
   return a.callReturn();
-}}, hamster_set_wheel_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "BOTH"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["30"]}, null], type:"hamster_set_wheel_to"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"hamster_wheel", 
+}}, hamster_set_wheel_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["30"]}, null], type:"hamster_set_wheel_to"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"hamster_wheel", 
 isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getField("DIRECTION"), e = a.getNumberValue("VALUE");
   "LEFT" == d ? c.leftWheel = e : ("RIGHT" != d && (c.leftWheel = e), c.rightWheel = e);
   Entry.Hamster.setLineTracerMode(c, 0);
   return a.callReturn();
-}}, hamster_follow_line_using:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uac80\uc740\uc0c9", "BLACK"], ["\ud558\uc580\uc0c9", "WHITE"]], value:"BLACK", fontSize:11}, {type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "BOTH"]], value:"LEFT", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"hamster_follow_line_using"}, 
+}}, hamster_follow_line_using:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.HAMSTER_color_black, "BLACK"], [Lang.General.white, "WHITE"]], value:"BLACK", fontSize:11}, {type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]], value:"LEFT", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"hamster_follow_line_using"}, 
 paramsKeyMap:{COLOR:0, DIRECTION:1}, "class":"hamster_wheel", isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getField("COLOR"), e = a.getField("DIRECTION"), f = 1;
   "RIGHT" == e ? f = 2 : "BOTH" == e && (f = 3);
@@ -15972,8 +15977,8 @@ paramsKeyMap:{COLOR:0, DIRECTION:1}, "class":"hamster_wheel", isNotFor:["hamster
   c.rightWheel = 0;
   Entry.Hamster.setLineTracerMode(c, f);
   return a.callReturn();
-}}, hamster_follow_line_until:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uac80\uc740\uc0c9", "BLACK"], ["\ud558\uc580\uc0c9", "WHITE"]], value:"BLACK", fontSize:11}, {type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc55e\ucabd", "FRONT"], ["\ub4a4\ucabd", "REAR"]], value:"LEFT", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], 
-type:"hamster_follow_line_until"}, paramsKeyMap:{COLOR:0, DIRECTION:1}, "class":"hamster_wheel", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_follow_line_until:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.HAMSTER_color_black, "BLACK"], [Lang.General.white, "WHITE"]], value:"BLACK", fontSize:11}, {type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.Blocks.HAMSTER_front, "FRONT"], [Lang.Blocks.HAMSTER_rear, "REAR"]], value:"LEFT", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, 
+def:{params:[null, null, null], type:"hamster_follow_line_until"}, paramsKeyMap:{COLOR:0, DIRECTION:1}, "class":"hamster_wheel", isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = Entry.hw.portData, e = a.getField("COLOR"), f = a.getField("DIRECTION"), g = 4;
   "RIGHT" == f ? g = 5 : "FRONT" == f ? g = 6 : "REAR" == f && (g = 7);
   "WHITE" == e && (g += 7);
@@ -15994,12 +15999,12 @@ type:"hamster_follow_line_until"}, paramsKeyMap:{COLOR:0, DIRECTION:1}, "class":
   c.rightWheel = 0;
   Entry.Hamster.setLineTracerMode(c, 0);
   return a.callReturn();
-}}, hamster_set_led_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "BOTH"]], value:"LEFT", fontSize:11}, {type:"Dropdown", options:[["\ube68\uac04\uc0c9", "4"], ["\ub178\ub780\uc0c9", "6"], ["\ucd08\ub85d\uc0c9", "2"], ["\ud558\ub298\uc0c9", "3"], ["\ud30c\ub780\uc0c9", "1"], ["\ubcf4\ub77c\uc0c9", "5"], ["\ud558\uc580\uc0c9", "7"]], value:"4", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", 
-size:12}], events:{}, def:{params:[null, null, null], type:"hamster_set_led_to"}, paramsKeyMap:{DIRECTION:0, COLOR:1}, "class":"hamster_led", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_set_led_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]], value:"LEFT", fontSize:11}, {type:"Dropdown", options:[[Lang.General.red, "4"], [Lang.General.yellow, "6"], [Lang.General.green, "2"], [Lang.Blocks.HAMSTER_color_cyan, "3"], [Lang.General.blue, "1"], [Lang.Blocks.HAMSTER_color_magenta, "5"], [Lang.General.white, "7"]], value:"4", fontSize:11}, {type:"Indicator", 
+img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"hamster_set_led_to"}, paramsKeyMap:{DIRECTION:0, COLOR:1}, "class":"hamster_led", isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a), e = Number(a.getField("COLOR", a));
   "LEFT" == d ? c.leftLed = e : ("RIGHT" != d && (c.leftLed = e), c.rightLed = e);
   return a.callReturn();
-}}, hamster_clear_led:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "BOTH"]], value:"LEFT", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null], type:"hamster_clear_led"}, paramsKeyMap:{DIRECTION:0}, "class":"hamster_led", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_clear_led:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]], value:"LEFT", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null], type:"hamster_clear_led"}, paramsKeyMap:{DIRECTION:0}, "class":"hamster_led", isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a);
   "LEFT" == d ? c.leftLed = 0 : ("RIGHT" != d && (c.leftLed = 0), c.rightLed = 0);
   return a.callReturn();
@@ -16040,8 +16045,9 @@ size:12}], events:{}, def:{params:[null, null, null], type:"hamster_set_led_to"}
   c.buzzer = 0;
   c.note = 0;
   return a.callReturn();
-}}, hamster_play_note_for:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\ub3c4", "4"], ["\ub3c4#", "5"], ["\ub808", "6"], ["\ubbf8b", "7"], ["\ubbf8", "8"], ["\ud30c", "9"], ["\ud30c#", "10"], ["\uc194", "11"], ["\uc194#", "12"], ["\ub77c", "13"], ["\uc2dcb", "14"], ["\uc2dc", "15"]], value:"4", fontSize:11}, {type:"Dropdown", options:[["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"]], value:"1", fontSize:11}, {type:"Block", 
-accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, "4", {type:"text", params:["0.5"]}, null], type:"hamster_play_note_for"}, paramsKeyMap:{NOTE:0, OCTAVE:1, VALUE:2}, "class":"hamster_buzzer", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_play_note_for:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.note_c + "", "4"], [Lang.General.note_c + "#", "5"], [Lang.General.note_d + "", "6"], [Lang.General.note_e + "b", "7"], [Lang.General.note_e + "", "8"], [Lang.General.note_f + "", "9"], [Lang.General.note_f + "#", "10"], [Lang.General.note_g + "", "11"], [Lang.General.note_g + "#", "12"], [Lang.General.note_a + "", "13"], [Lang.General.note_b + "b", "14"], [Lang.General.note_b + 
+"", "15"]], value:"4", fontSize:11}, {type:"Dropdown", options:[["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"]], value:"1", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, "4", {type:"text", params:["0.5"]}, null], type:"hamster_play_note_for"}, paramsKeyMap:{NOTE:0, OCTAVE:1, VALUE:2}, "class":"hamster_buzzer", isNotFor:["hamster"], func:function(b, 
+a) {
   var c = Entry.hw.sendQueue;
   if (a.isStart) {
     if (1 == a.timeFlag) {
@@ -16101,17 +16107,18 @@ accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/h
   Entry.Hamster.tempo = a.getNumberValue("VALUE");
   1 > Entry.Hamster.tempo && (Entry.Hamster.tempo = 1);
   return a.callReturn();
-}}, hamster_set_port_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["A", "A"], ["B", "B"], ["A\uc640 B", "AB"]], value:"A", fontSize:11}, {type:"Dropdown", options:[["\uc544\ub0a0\ub85c\uadf8 \uc785\ub825", "0"], ["\ub514\uc9c0\ud138 \uc785\ub825", "1"], ["\uc11c\ubcf4 \ucd9c\ub825", "8"], ["PWM \ucd9c\ub825", "9"], ["\ub514\uc9c0\ud138 \ucd9c\ub825", "10"]], value:"0", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", 
-size:12}], events:{}, def:{params:[null, null, null], type:"hamster_set_port_to"}, paramsKeyMap:{PORT:0, MODE:1}, "class":"hamster_port", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_set_port_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.HAMSTER_port_a, "A"], [Lang.Blocks.HAMSTER_port_b, "B"], [Lang.Blocks.HAMSTER_port_ab, "AB"]], value:"A", fontSize:11}, {type:"Dropdown", options:[[Lang.Blocks.HAMSTER_analog_input, "0"], [Lang.Blocks.HAMSTER_digital_input, "1"], [Lang.Blocks.HAMSTER_servo_output, "8"], [Lang.Blocks.HAMSTER_pwm_output, "9"], [Lang.Blocks.HAMSTER_digital_output, "10"]], value:"0", fontSize:11}, 
+{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"hamster_set_port_to"}, paramsKeyMap:{PORT:0, MODE:1}, "class":"hamster_port", isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getField("PORT", a), e = Number(a.getField("MODE", a));
   "A" == d ? c.ioModeA = e : ("B" != d && (c.ioModeA = e), c.ioModeB = e);
   return a.callReturn();
-}}, hamster_change_output_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["A", "A"], ["B", "B"], ["A\uc640 B", "AB"]], value:"A", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["10"]}, null], type:"hamster_change_output_by"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"hamster_port", isNotFor:["hamster"], func:function(b, 
-a) {
+}}, hamster_change_output_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.HAMSTER_port_a, "A"], [Lang.Blocks.HAMSTER_port_b, "B"], [Lang.Blocks.HAMSTER_port_ab, "AB"]], value:"A", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["10"]}, null], type:"hamster_change_output_by"}, paramsKeyMap:{PORT:0, VALUE:1}, 
+"class":"hamster_port", isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getField("PORT"), e = a.getNumberValue("VALUE");
   "A" == d ? c.outputA = void 0 != c.outputA ? c.outputA + e : e : ("B" != d && (c.outputA = void 0 != c.outputA ? c.outputA + e : e), c.outputB = void 0 != c.outputB ? c.outputB + e : e);
   return a.callReturn();
-}}, hamster_set_output_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["A", "A"], ["B", "B"], ["A\uc640 B", "AB"]], value:"A", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["100"]}, null], type:"hamster_set_output_to"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"hamster_port", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_set_output_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.HAMSTER_port_a, "A"], [Lang.Blocks.HAMSTER_port_b, "B"], [Lang.Blocks.HAMSTER_port_ab, "AB"]], value:"A", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["100"]}, null], type:"hamster_set_output_to"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"hamster_port", 
+isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getField("PORT"), e = a.getNumberValue("VALUE");
   "A" == d ? c.outputA = e : ("B" != d && (c.outputA = e), c.outputB = e);
   return a.callReturn();
@@ -16207,7 +16214,7 @@ a) {
   return c || d;
 }}, boolean_not:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Text", text:Lang.Blocks.JUDGEMENT_boolean_not_1, color:"#3D3D3D"}, {type:"Block", accept:"booleanMagnet"}, {type:"Text", text:Lang.Blocks.JUDGEMENT_boolean_not_2, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"True"}, null], type:"boolean_not"}, paramsKeyMap:{VALUE:1}, "class":"boolean", isNotFor:[], func:function(b, a) {
   return !a.getBooleanValue("VALUE");
-}}, true_or_false:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[["\ucc38", "true"], ["\uac70\uc9d3", "false"]], value:"true", fontSize:11}], events:{}, def:{params:[null]}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
+}}, true_or_false:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.JUDGEMENT_true, "true"], [Lang.Blocks.JUDGEMENT_false, "false"]], value:"true", fontSize:11}], events:{}, def:{params:[null]}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
   return "true" == a.children[0].textContent;
 }}, True:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Text", text:Lang.Blocks.JUDGEMENT_true, color:"#3D3D3D"}], events:{}, def:{params:[null], type:"True"}, func:function(b, a) {
   return !0;
@@ -16269,13 +16276,13 @@ isNotFor:["textBox"], func:function(b, a) {
   c = a.fields && "prev" === a.getStringField("DRIECTION") ? b.parent.getPrevPicture(b.picture.id) : b.parent.getNextPicture(b.picture.id);
   b.setImage(c);
   return a.callReturn();
-}}, set_effect_volume:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc0c9\uae54", "color"], ["\ubc1d\uae30", "brightness"], ["\ubd88\ud22c\uba85\ub3c4", "opacity"]], value:"color", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["10"]}, null], type:"set_effect_volume"}, paramsKeyMap:{EFFECT:0, VALUE:1}, "class":"effect", 
+}}, set_effect_volume:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.opacity, "opacity"]], value:"color", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["10"]}, null], type:"set_effect_volume"}, paramsKeyMap:{EFFECT:0, VALUE:1}, "class":"effect", 
 isNotFor:["textBox"], func:function(b, a) {
   var c = a.getField("EFFECT", a), d = a.getNumberValue("VALUE", a);
   "color" == c ? b.effect.hue = d + b.effect.hue : "lens" != c && "swriling" != c && "pixel" != c && "mosaic" != c && ("brightness" == c ? b.effect.brightness = d + b.effect.brightness : "blur" != c && "opacity" == c && (b.effect.alpha += d / 100));
   b.applyFilter();
   return a.callReturn();
-}}, set_effect:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc0c9\uae54", "color"], ["\ubc1d\uae30", "brightness"], ["\ubd88\ud22c\uba85\ub3c4", "opacity"]], value:"color", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["100"]}, null], type:"set_effect"}, paramsKeyMap:{EFFECT:0, VALUE:1}, "class":"effect", isNotFor:["textBox"], 
+}}, set_effect:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.opacity, "opacity"]], value:"color", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["100"]}, null], type:"set_effect"}, paramsKeyMap:{EFFECT:0, VALUE:1}, "class":"effect", isNotFor:["textBox"], 
 func:function(b, a) {
   var c = a.getField("EFFECT", a), d = a.getNumberValue("VALUE", a);
   "color" == c ? b.effect.hue = d : "lens" != c && "swriling" != c && "pixel" != c && "mosaic" != c && ("brightness" == c ? b.effect.brightness = d : "blur" != c && "opacity" == c && (b.effect.alpha = d / 100));
@@ -16314,9 +16321,9 @@ func:function(b, a) {
     return Entry.container.moveElementByBlock(d, c), a.callReturn();
   }
   throw Error("object is not available");
-}}, get_pictures:{color:"#EC4466", skeleton:"basic_string_field", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"pictures", fontSize:11, options:[["\uc5d4\ud2b8\ub9ac\ubd07_\uac77\uae301", "vx80"], ["\uc5d4\ud2b8\ub9ac\ubd07_\uac77\uae301", "vx80"], ["\uc5d4\ud2b8\ub9ac\ubd07_\uac77\uae302", "4t48"]]}], events:{}, def:{params:[null]}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
+}}, get_pictures:{color:"#EC4466", skeleton:"basic_string_field", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"pictures", fontSize:11}], events:{}, def:{params:[null]}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
   return a.getStringField("VALUE");
-}}, change_to_some_shape:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"get_pictures", id:"z4jm"}, null], type:"change_to_some_shape", id:"0x2t"}, paramsKeyMap:{VALUE:0}, "class":"shape", isNotFor:["textBox"], func:function(b, a) {
+}}, change_to_some_shape:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"get_pictures", id:"z4jm"}, null], type:"change_to_some_shape"}, paramsKeyMap:{VALUE:0}, "class":"shape", isNotFor:["textBox"], func:function(b, a) {
   var c = a.getStringValue("VALUE");
   Entry.parseNumber(c);
   c = b.parent.getPicture(c);
@@ -16334,14 +16341,14 @@ func:function(b, a) {
   "color" == c ? b.effect.hsv = d : "brightness" == c ? b.effect.brightness = d : "transparency" == c && (b.effect.alpha = 1 - d / 100);
   b.applyFilter();
   return a.callReturn();
-}}, set_effect_amount:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc0c9\uae54", "color"], ["\ubc1d\uae30", "brightness"], ["\ud22c\uba85\ub3c4", "transparency"]], value:"color", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["10"]}, null], type:"set_effect_amount"}, paramsKeyMap:{EFFECT:0, VALUE:1}, "class":"effect", 
-isNotFor:["textBox"], func:function(b, a) {
+}}, set_effect_amount:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.transparency, "transparency"]], value:"color", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["10"]}, null], type:"set_effect_amount"}, paramsKeyMap:{EFFECT:0, VALUE:1}, 
+"class":"effect", isNotFor:["textBox"], func:function(b, a) {
   var c = a.getField("EFFECT", a), d = a.getNumberValue("VALUE", a);
   "color" == c ? b.effect.hue = d + b.effect.hue : "brightness" == c ? b.effect.brightness = d + b.effect.brightness : "transparency" == c && (b.effect.alpha -= d / 100);
   b.applyFilter();
   return a.callReturn();
-}}, set_entity_effect:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc0c9\uae54", "color"], ["\ubc1d\uae30", "brightness"], ["\ud22c\uba85\ub3c4", "transparency"]], value:"color", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["100"]}, null], type:"set_entity_effect"}, paramsKeyMap:{EFFECT:0, VALUE:1}, "class":"effect", 
-isNotFor:["textBox"], func:function(b, a) {
+}}, set_entity_effect:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.transparency, "transparency"]], value:"color", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["100"]}, null], type:"set_entity_effect"}, paramsKeyMap:{EFFECT:0, VALUE:1}, 
+"class":"effect", isNotFor:["textBox"], func:function(b, a) {
   var c = a.getField("EFFECT", a), d = a.getNumberValue("VALUE", a);
   "color" == c ? b.effect.hue = d : "brightness" == c ? b.effect.brightness = d : "transparency" == c && (b.effect.alpha = 1 - d / 100);
   b.applyFilter();
@@ -16575,7 +16582,7 @@ func:function(b, a) {
   delete a.isStart;
   delete a.frameCount;
   return a.callReturn();
-}}, direction_relative_duration:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["2"]}, {type:"angle"}, null], type:"direction_relative_duration"}, paramsKeyMap:{DURATION:0, AMOUNT:1}, "class":"rotate", isNotFor:[""], func:function(b, a) {
+}}, direction_relative_duration:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["2"]}, {type:"angle"}, null], type:"direction_relative_duration"}, paramsKeyMap:{DURATION:0, AMOUNT:1}, "class":"rotate", isNotFor:[], func:function(b, a) {
   if (!a.isStart) {
     var c;
     c = a.getNumberValue("DURATION", a);
@@ -16696,8 +16703,8 @@ func:function(b, a) {
   Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, e]]);
   Entry.Robotis_carCont.update();
   return Entry.hw.portData[f];
-}}, robotis_openCM70_sensor_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["\ucd5c\uc885 \uc18c\ub9ac \uac10\uc9c0 \ud69f\uc218", "CM_SOUND_DETECTED"], ["\uc2e4\uc2dc\uac04 \uc18c\ub9ac \uac10\uc9c0 \ud69f\uc218", "CM_SOUND_DETECTING"], ["\uc0ac\uc6a9\uc790 \ubc84\ud2bc \uc0c1\ud0dc", "CM_USER_BUTTON"]], value:"CM_SOUND_DETECTED", fontSize:11}], events:{}, def:{params:[null], type:"robotis_openCM70_sensor_value"}, paramsKeyMap:{SENSOR:0}, 
-"class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
+}}, robotis_openCM70_sensor_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.robotis_cm_sound_detected, "CM_SOUND_DETECTED"], [Lang.Blocks.robotis_cm_sound_detecting, "CM_SOUND_DETECTING"], [Lang.Blocks.robotis_cm_user_button, "CM_USER_BUTTON"]], value:"CM_SOUND_DETECTED", fontSize:11}], events:{}, def:{params:[null], type:"robotis_openCM70_sensor_value"}, paramsKeyMap:{SENSOR:0}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], 
+func:function(b, a) {
   var c = Entry.Robotis_openCM70.INSTRUCTION.READ, d = 0, e = 0, f = 0, g = 0, h = a.getStringField("SENSOR");
   "CM_SOUND_DETECTED" == h ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1]) : "CM_SOUND_DETECTING" == h ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[0], 
   e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[1]) : "CM_USER_BUTTON" == h && (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1]);
@@ -16705,9 +16712,9 @@ func:function(b, a) {
   Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, g]]);
   Entry.Robotis_carCont.update();
   return Entry.hw.portData[f];
-}}, robotis_openCM70_aux_sensor_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["3", "PORT_3"], ["4", "PORT_4"], ["5", "PORT_5"], ["6", "PORT_6"]], value:"PORT_3", fontSize:11}, {type:"Dropdown", options:[["\uc11c\ubcf4\ubaa8\ud130 \uc704\uce58", "AUX_SERVO_POSITION"], ["\uc801\uc678\uc120\uc13c\uc11c", "AUX_IR"], ["\uc811\ucd09\uc13c\uc11c", "AUX_TOUCH"], ["\uc870\ub3c4\uc13c\uc11c(CDS)", "AUX_BRIGHTNESS"], ["\uc628\uc2b5\ub3c4\uc13c\uc11c(\uc2b5\ub3c4)", 
-"AUX_HYDRO_THEMO_HUMIDITY"], ["\uc628\uc2b5\ub3c4\uc13c\uc11c(\uc628\ub3c4)", "AUX_HYDRO_THEMO_TEMPER"], ["\uc628\ub3c4\uc13c\uc11c", "AUX_TEMPERATURE"], ["\ucd08\uc74c\ud30c\uc13c\uc11c", "AUX_ULTRASONIC"], ["\uc790\uc11d\uc13c\uc11c", "AUX_MAGNETIC"], ["\ub3d9\uc791\uac10\uc9c0\uc13c\uc11c", "AUX_MOTION_DETECTION"], ["\uceec\ub7ec\uc13c\uc11c", "AUX_COLOR"], ["\uc0ac\uc6a9\uc790 \uc7a5\uce58", "AUX_CUSTOM"]], value:"AUX_SERVO_POSITION", fontSize:11}], events:{}, def:{params:[null, null], type:"robotis_openCM70_aux_sensor_value"}, 
-paramsKeyMap:{PORT:0, SENSOR:1}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
+}}, robotis_openCM70_aux_sensor_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["3", "PORT_3"], ["4", "PORT_4"], ["5", "PORT_5"], ["6", "PORT_6"]], value:"PORT_3", fontSize:11}, {type:"Dropdown", options:[[Lang.Blocks.robotis_aux_servo_position, "AUX_SERVO_POSITION"], [Lang.Blocks.robotis_aux_ir, "AUX_IR"], [Lang.Blocks.robotis_aux_touch, "AUX_TOUCH"], [Lang.Blocks.robotis_aux_brightness, "AUX_BRIGHTNESS"], [Lang.Blocks.robotis_aux_hydro_themo_humidity, 
+"AUX_HYDRO_THEMO_HUMIDITY"], [Lang.Blocks.robotis_aux_hydro_themo_temper, "AUX_HYDRO_THEMO_TEMPER"], [Lang.Blocks.robotis_aux_temperature, "AUX_TEMPERATURE"], [Lang.Blocks.robotis_aux_ultrasonic, "AUX_ULTRASONIC"], [Lang.Blocks.robotis_aux_magnetic, "AUX_MAGNETIC"], [Lang.Blocks.robotis_aux_motion_detection, "AUX_MOTION_DETECTION"], [Lang.Blocks.robotis_aux_color, "AUX_COLOR"], [Lang.Blocks.robotis_aux_custom, "AUX_CUSTOM"]], value:"AUX_SERVO_POSITION", fontSize:11}], events:{}, def:{params:[null, 
+null], type:"robotis_openCM70_aux_sensor_value"}, paramsKeyMap:{PORT:0, SENSOR:1}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
   var c = Entry.Robotis_openCM70.INSTRUCTION.READ, d = 0, e = 0, f = 0, g = 0, h = a.getStringField("PORT"), k = a.getStringField("SENSOR"), l = 0;
   "PORT_3" == h ? l = 2 : "PORT_4" == h ? l = 3 : "PORT_5" == h ? l = 4 : "PORT_6" == h && (l = 5);
   "AUX_SERVO_POSITION" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1]) : "AUX_IR" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[1]) : 
@@ -16722,10 +16729,11 @@ paramsKeyMap:{PORT:0, SENSOR:1}, "class":"robotis_openCM70_cm", isNotFor:["robot
   Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, g]]);
   Entry.Robotis_carCont.update();
   return Entry.hw.portData[f];
-}}, robotis_openCM70_cm_buzzer_index:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\ub77c(0)", "0"], ["\ub77c#(1)", "1"], ["\uc2dc(2)", "2"], ["\ub3c4(3)", "3"], ["\ub3c4#(4)", "4"], ["\ub808(5)", "5"], ["\ub808#(6)", "6"], ["\ubbf8(7)", "7"], ["\ud30c(8)", "8"], ["\ud30c#(9)", "9"], ["\uc194(10)", "10"], ["\uc194#(11)", "11"], ["\ub77c(12)", "12"], ["\ub77c#(13)", "13"], ["\uc2dc(14)", "14"], ["\ub3c4(15)", "15"], ["\ub3c4#(16)", "16"], ["\ub808(17)", "17"], 
-["\ub808#(18)", "18"], ["\ubbf8(19)", "19"], ["\ud30c(20)", "20"], ["\ud30c#(21)", "21"], ["\uc194(22)", "22"], ["\uc194#(23)", "23"], ["\ub77c(24)", "24"], ["\ub77c#(25)", "25"], ["\uc2dc(26)", "26"], ["\ub3c4(27)", "27"], ["\ub3c4#(28)", "28"], ["\ub808(29)", "29"], ["\ub808#(30)", "30"], ["\ubbf8(31)", "31"], ["\ud30c(32)", "32"], ["\ud30c#(33)", "33"], ["\uc194(34)", "34"], ["\uc194#(35)", "35"], ["\ub77c(36)", "36"], ["\ub77c#(37)", "37"], ["\uc2dc(38)", "38"], ["\ub3c4(39)", "39"], ["\ub3c4#(40)", 
-"40"], ["\ub808(41)", "41"], ["\ub808#(42)", "42"], ["\ubbf8(43)", "43"], ["\ud30c(44)", "44"], ["\ud30c#(45)", "45"], ["\uc194(46)", "46"], ["\uc194#(47)", "47"], ["\ub77c(48)", "48"], ["\ub77c#(49)", "49"], ["\uc2dc(50)", "50"], ["\ub3c4(51)", "51"]], value:"0", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["1"]}, null], type:"robotis_openCM70_cm_buzzer_index"}, 
-paramsKeyMap:{CM_BUZZER_INDEX:0, CM_BUZZER_TIME:1}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
+}}, robotis_openCM70_cm_buzzer_index:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.note_a + "(0)", "0"], [Lang.General.note_a + "#(1)", "1"], [Lang.General.note_b + "(2)", "2"], [Lang.General.note_c + "(3)", "3"], [Lang.General.note_c + "#(4)", "4"], [Lang.General.note_d + "(5)", "5"], [Lang.General.note_d + "#(6)", "6"], [Lang.General.note_e + "(7)", "7"], [Lang.General.note_f + "(8)", "8"], [Lang.General.note_f + "#(9)", "9"], [Lang.General.note_g + 
+"(10)", "10"], [Lang.General.note_g + "#(11)", "11"], [Lang.General.note_a + "(12)", "12"], [Lang.General.note_a + "#(13)", "13"], [Lang.General.note_b + "(14)", "14"], [Lang.General.note_c + "(15)", "15"], [Lang.General.note_c + "#(16)", "16"], [Lang.General.note_d + "(17)", "17"], [Lang.General.note_d + "#(18)", "18"], [Lang.General.note_e + "(19)", "19"], [Lang.General.note_f + "(20)", "20"], [Lang.General.note_f + "#(21)", "21"], [Lang.General.note_g + "(22)", "22"], [Lang.General.note_g + "#(23)", 
+"23"], [Lang.General.note_a + "(24)", "24"], [Lang.General.note_a + "#(25)", "25"], [Lang.General.note_b + "(26)", "26"], [Lang.General.note_c + "(27)", "27"], [Lang.General.note_c + "#(28)", "28"], [Lang.General.note_d + "(29)", "29"], [Lang.General.note_d + "#(30)", "30"], [Lang.General.note_e + "(31)", "31"], [Lang.General.note_f + "(32)", "32"], [Lang.General.note_f + "#(33)", "33"], [Lang.General.note_g + "(34)", "34"], [Lang.General.note_g + "#(35)", "35"], [Lang.General.note_a + "(36)", "36"], 
+[Lang.General.note_a + "#(37)", "37"], [Lang.General.note_b + "(38)", "38"], [Lang.General.note_c + "(39)", "39"], [Lang.General.note_c + "#(40)", "40"], [Lang.General.note_d + "(41)", "41"], [Lang.General.note_d + "#(42)", "42"], [Lang.General.note_e + "(43)", "43"], [Lang.General.note_f + "(44)", "44"], [Lang.General.note_f + "#(45)", "45"], [Lang.General.note_g + "(46)", "46"], [Lang.General.note_g + "#(47)", "47"], [Lang.General.note_a + "(48)", "48"], [Lang.General.note_a + "#(49)", "49"], [Lang.General.note_b + 
+"(50)", "50"], [Lang.General.note_c + "(51)", "51"]], value:"0", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["1"]}, null], type:"robotis_openCM70_cm_buzzer_index"}, paramsKeyMap:{CM_BUZZER_INDEX:0, CM_BUZZER_TIME:1}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
   var c = a.getField("CM_BUZZER_INDEX", a), d = a.getNumberValue("CM_BUZZER_TIME", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, h = 0, k = 0, l = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[1], h = parseInt(10 * d);
   50 < h && (h = 50);
   k = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[0];
@@ -16738,47 +16746,46 @@ size:12}], events:{}, def:{params:[null, null], type:"robotis_openCM70_cm_buzzer
 }}, robotis_openCM70_cm_sound_detected_clear:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"robotis_openCM70_cm_sound_detected_clear"}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
   var c = Entry.Robotis_openCM70.INSTRUCTION.WRITE, d = 0, e = 0, d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1];
   return Entry.Robotis_carCont.postCallReturn(a, [[c, d, e, 0]], Entry.Robotis_openCM70.delay);
-}}, robotis_openCM70_cm_led:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\ube68\uac04\uc0c9", "CM_LED_R"], ["\ub179\uc0c9", "CM_LED_G"], ["\ud30c\ub780\uc0c9", "CM_LED_B"]], value:"CM_LED_R", fontSize:11}, {type:"Dropdown", options:[["\ucf1c\uae30", "1"], ["\ub044\uae30", "0"]], value:"1", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"robotis_openCM70_cm_led"}, 
-paramsKeyMap:{CM_LED:0, VALUE:1}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
+}}, robotis_openCM70_cm_led:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.robotis_common_red_color, "CM_LED_R"], [Lang.Blocks.robotis_common_green_color, "CM_LED_G"], [Lang.Blocks.robotis_common_blue_color, "CM_LED_B"]], value:"CM_LED_R", fontSize:11}, {type:"Dropdown", options:[[Lang.Blocks.robotis_common_on, "1"], [Lang.Blocks.robotis_common_off, "0"]], value:"1", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", 
+size:12}], events:{}, def:{params:[null, null, null], type:"robotis_openCM70_cm_led"}, paramsKeyMap:{CM_LED:0, VALUE:1}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
   var c = a.getField("CM_LED", a), d = a.getField("VALUE", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0;
   "CM_LED_R" == c ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_R[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_R[1]) : "CM_LED_G" == c ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_G[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_G[1]) : "CM_LED_B" == c && (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_B[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_B[1]);
   return Entry.Robotis_carCont.postCallReturn(a, [[e, f, g, d]], Entry.Robotis_openCM70.delay);
 }}, robotis_openCM70_cm_motion:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["1"]}, null], type:"robotis_openCM70_cm_motion"}, paramsKeyMap:{VALUE:0}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
   var c = Entry.Robotis_openCM70.INSTRUCTION.WRITE, d = 0, e = 0, f = 0, d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_MOTION[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_MOTION[1], f = a.getNumberValue("VALUE", a);
   return Entry.Robotis_carCont.postCallReturn(a, [[c, d, e, f]], Entry.Robotis_openCM70.delay);
-}}, robotis_openCM70_aux_motor_speed:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["1", "1"], ["2", "2"]], value:"1", fontSize:11}, {type:"Dropdown", options:[["\uc2dc\uacc4\ubc29\ud5a5", "CW"], ["\ubc18\uc2dc\uacc4\ubc29\ud5a5", "CCW"]], value:"CW", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, {type:"number", params:["500"]}, null], 
-type:"robotis_openCM70_aux_motor_speed"}, paramsKeyMap:{PORT:0, DIRECTION_ANGLE:1, VALUE:2}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
+}}, robotis_openCM70_aux_motor_speed:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.robotis_common_port_1, "1"], [Lang.Blocks.robotis_common_port_2, "2"]], value:"1", fontSize:11}, {type:"Dropdown", options:[[Lang.Blocks.robotis_common_clockwhise, "CW"], [Lang.Blocks.robotis_common_counter_clockwhise, "CCW"]], value:"CW", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", 
+size:12}], events:{}, def:{params:[null, null, {type:"number", params:["500"]}, null], type:"robotis_openCM70_aux_motor_speed"}, paramsKeyMap:{PORT:0, DIRECTION_ANGLE:1, VALUE:2}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
   var c = a.getField("PORT", a), d = a.getField("DIRECTION_ANGLE", a), e = a.getNumberValue("VALUE"), f = Entry.Robotis_openCM70.INSTRUCTION.WRITE, g = 0, h = 0, g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTOR_SPEED[0], h = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTOR_SPEED[1];
   "CW" == d ? (e += 1024, 2047 < e && (e = 2047)) : 1023 < e && (e = 1023);
   return Entry.Robotis_carCont.postCallReturn(a, [[f, g + (c - 1) * h, h, e]], Entry.Robotis_openCM70.delay);
-}}, robotis_openCM70_aux_servo_mode:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"]], value:"3", fontSize:11}, {type:"Dropdown", options:[["\ud68c\uc804\ubaa8\ub4dc", "0"], ["\uad00\uc808\ubaa8\ub4dc", "1"]], value:"0", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"robotis_openCM70_aux_servo_mode"}, paramsKeyMap:{PORT:0, 
-MODE:1}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
+}}, robotis_openCM70_aux_servo_mode:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.robotis_common_port_3, "3"], [Lang.Blocks.robotis_common_port_4, "4"], [Lang.Blocks.robotis_common_port_5, "5"], [Lang.Blocks.robotis_common_port_6, "6"]], value:"3", fontSize:11}, {type:"Dropdown", options:[[Lang.Blocks.robotis_common_wheel_mode, "0"], [Lang.Blocks.robotis_common_joint_mode, "1"]], value:"0", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", 
+size:12}], events:{}, def:{params:[null, null, null], type:"robotis_openCM70_aux_servo_mode"}, paramsKeyMap:{PORT:0, MODE:1}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
   var c = a.getField("PORT", a), d = a.getField("MODE", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_MODE[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_MODE[1];
   return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
-}}, robotis_openCM70_aux_servo_speed:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"]], value:"3", fontSize:11}, {type:"Dropdown", options:[["\uc2dc\uacc4\ubc29\ud5a5", "CW"], ["\ubc18\uc2dc\uacc4\ubc29\ud5a5", "CCW"]], value:"CW", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, {type:"number", 
-params:["500"]}, null], type:"robotis_openCM70_aux_servo_speed"}, paramsKeyMap:{PORT:0, DIRECTION_ANGLE:1, VALUE:2}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
+}}, robotis_openCM70_aux_servo_speed:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.robotis_common_port_3, "3"], [Lang.Blocks.robotis_common_port_4, "4"], [Lang.Blocks.robotis_common_port_5, "5"], [Lang.Blocks.robotis_common_port_6, "6"]], value:"3", fontSize:11}, {type:"Dropdown", options:[[Lang.Blocks.robotis_common_clockwhise, "CW"], [Lang.Blocks.robotis_common_counter_clockwhise, "CCW"]], value:"CW", fontSize:11}, {type:"Block", accept:"stringMagnet"}, 
+{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, {type:"number", params:["500"]}, null], type:"robotis_openCM70_aux_servo_speed"}, paramsKeyMap:{PORT:0, DIRECTION_ANGLE:1, VALUE:2}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
   var c = a.getField("PORT", a), d = a.getField("DIRECTION_ANGLE", a), e = a.getNumberValue("VALUE"), f = Entry.Robotis_openCM70.INSTRUCTION.WRITE, g = 0, h = 0, g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_SPEED[0], h = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_SPEED[1];
   "CW" == d ? (e += 1024, 2047 < e && (e = 2047)) : 1023 < e && (e = 1023);
   return Entry.Robotis_carCont.postCallReturn(a, [[f, g + (c - 1) * h, h, e]], Entry.Robotis_openCM70.delay);
-}}, robotis_openCM70_aux_servo_position:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"]], value:"3", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["512"]}, null], type:"robotis_openCM70_aux_servo_position"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"robotis_openCM70_cm", 
-isNotFor:["robotis_openCM70"], func:function(b, a) {
+}}, robotis_openCM70_aux_servo_position:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.robotis_common_port_3, "3"], [Lang.Blocks.robotis_common_port_4, "4"], [Lang.Blocks.robotis_common_port_5, "5"], [Lang.Blocks.robotis_common_port_6, "6"]], value:"3", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["512"]}, 
+null], type:"robotis_openCM70_aux_servo_position"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
   var c = a.getField("PORT", a), d = a.getNumberValue("VALUE"), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1];
   1023 < d ? d = 1023 : 0 > d && (d = 0);
   return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
-}}, robotis_openCM70_aux_led_module:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"]], value:"3", fontSize:11}, {type:"Dropdown", options:[["\uc591 \ucabd LED\ub044\uae30", "0"], ["\uc624\ub978\ucabd LED\ucf1c\uae30", "1"], ["\uc67c\ucabd LED\ucf1c\uae30", "2"], ["\uc591 \ucabd LED\ucf1c\uae30", "3"]], value:"0", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, 
-def:{params:[null, null, null], type:"robotis_openCM70_aux_led_module"}, paramsKeyMap:{PORT:0, LED_MODULE:1}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
+}}, robotis_openCM70_aux_led_module:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.robotis_common_port_3, "3"], [Lang.Blocks.robotis_common_port_4, "4"], [Lang.Blocks.robotis_common_port_5, "5"], [Lang.Blocks.robotis_common_port_6, "6"]], value:"3", fontSize:11}, {type:"Dropdown", options:[[Lang.Blocks.robotis_cm_led_both + Lang.Blocks.robotis_common_off, "0"], [Lang.Blocks.robotis_cm_led_right + Lang.Blocks.robotis_common_on, "1"], [Lang.Blocks.robotis_cm_led_left + 
+Lang.Blocks.robotis_common_on, "2"], [Lang.Blocks.robotis_cm_led_both + Lang.Blocks.robotis_common_on, "3"]], value:"0", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"robotis_openCM70_aux_led_module"}, paramsKeyMap:{PORT:0, LED_MODULE:1}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
   var c = a.getField("PORT", a), d = a.getField("LED_MODULE", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_LED_MODULE[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_LED_MODULE[1];
   return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
-}}, robotis_openCM70_aux_custom:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"]], value:"3", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["0"]}, null], type:"robotis_openCM70_aux_custom"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], 
-func:function(b, a) {
+}}, robotis_openCM70_aux_custom:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.robotis_common_port_3, "3"], [Lang.Blocks.robotis_common_port_4, "4"], [Lang.Blocks.robotis_common_port_5, "5"], [Lang.Blocks.robotis_common_port_6, "6"]], value:"3", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["0"]}, null], 
+type:"robotis_openCM70_aux_custom"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
   var c = a.getField("PORT", a), d = a.getNumberValue("VALUE"), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1];
   return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
 }}, robotis_openCM70_cm_custom:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["0"]}, {type:"number", params:["0"]}, null], type:"robotis_openCM70_cm_custom"}, paramsKeyMap:{ADDRESS:0, VALUE:1}, "class":"robotis_openCM70_custom", isNotFor:["robotis_openCM70"], func:function(b, a) {
   var c = Entry.Robotis_openCM70.INSTRUCTION.WRITE, d = 0, e = 0, d = a.getNumberValue("ADDRESS"), e = a.getNumberValue("VALUE");
   return Entry.Robotis_carCont.postCallReturn(a, [[c, d, 65535 < e ? 4 : 255 < e ? 2 : 1, e]], Entry.Robotis_openCM70.delay);
-}}, robotis_carCont_sensor_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd \uc811\ucd09 \uc13c\uc11c", "CM_SPRING_LEFT"], ["\uc624\ub978\ucabd \uc811\ucd09 \uc13c\uc11c", "CM_SPRING_RIGHT"], ["\uc120\ud0dd \ubc84\ud2bc \uc0c1\ud0dc", "CM_SWITCH"], ["\ucd5c\uc885 \uc18c\ub9ac \uac10\uc9c0 \ud69f\uc218", "CM_SOUND_DETECTED"], ["\uc2e4\uc2dc\uac04 \uc18c\ub9ac \uac10\uc9c0 \ud69f\uc218", "CM_SOUND_DETECTING"], ["\uc67c\ucabd \uc801\uc678\uc120 \uc13c\uc11c", 
-"CM_IR_LEFT"], ["\uc624\ub978\ucabd \uc801\uc678\uc120 \uc13c\uc11c", "CM_IR_RIGHT"], ["\uc67c\ucabd \uc801\uc678\uc120 \uc13c\uc11c \uce98\ub9ac\ube0c\ub808\uc774\uc158 \uac12", "CM_CALIBRATION_LEFT"], ["\uc624\ub978\ucabd \uc801\uc678\uc120 \uc13c\uc11c \uce98\ub9ac\ube0c\ub808\uc774\uc158 \uac12", "CM_CALIBRATION_RIGHT"]], value:"CM_SPRING_LEFT", fontSize:11}], events:{}, def:{params:[null], type:"robotis_carCont_sensor_value"}, paramsKeyMap:{SENSOR:0}, "class":"robotis_carCont_cm", isNotFor:["robotis_carCont"], 
-func:function(b, a) {
+}}, robotis_carCont_sensor_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.robotis_cm_spring_left, "CM_SPRING_LEFT"], [Lang.Blocks.robotis_cm_spring_right, "CM_SPRING_RIGHT"], [Lang.Blocks.robotis_cm_switch, "CM_SWITCH"], [Lang.Blocks.robotis_cm_sound_detected, "CM_SOUND_DETECTED"], [Lang.Blocks.robotis_cm_sound_detecting, "CM_SOUND_DETECTING"], [Lang.Blocks.robotis_cm_ir_left, "CM_IR_LEFT"], [Lang.Blocks.robotis_cm_ir_right, "CM_IR_RIGHT"], 
+[Lang.Blocks.robotis_cm_calibration_left, "CM_CALIBRATION_LEFT"], [Lang.Blocks.robotis_cm_calibration_right, "CM_CALIBRATION_RIGHT"]], value:"CM_SPRING_LEFT", fontSize:11}], events:{}, def:{params:[null], type:"robotis_carCont_sensor_value"}, paramsKeyMap:{SENSOR:0}, "class":"robotis_carCont_cm", isNotFor:["robotis_carCont"], func:function(b, a) {
   var c = Entry.Robotis_carCont.INSTRUCTION.READ, d = 0, e = 0, f = 0, g = 0, h = a.getStringField("SENSOR");
   "CM_SPRING_LEFT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[2], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[3]) : "CM_SPRING_RIGHT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[2], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[3]) : 
   "CM_SWITCH" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[1]) : "CM_SOUND_DETECTED" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1]) : 
@@ -16789,8 +16796,8 @@ func:function(b, a) {
   Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, g]]);
   Entry.Robotis_carCont.update();
   return Entry.hw.portData[f];
-}}, robotis_carCont_cm_led:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\ucf1c\uae30", "1"], ["\ub044\uae30", "0"]], value:"1", fontSize:11}, {type:"Dropdown", options:[["\ucf1c\uae30", "1"], ["\ub044\uae30", "0"]], value:"1", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"robotis_carCont_cm_led"}, paramsKeyMap:{VALUE_LEFT:0, VALUE_RIGHT:1}, "class":"robotis_carCont_cm", 
-isNotFor:["robotis_carCont"], func:function(b, a) {
+}}, robotis_carCont_cm_led:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.robotis_common_on, "1"], [Lang.Blocks.robotis_common_off, "0"]], value:"1", fontSize:11}, {type:"Dropdown", options:[[Lang.Blocks.robotis_common_on, "1"], [Lang.Blocks.robotis_common_off, "0"]], value:"1", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"robotis_carCont_cm_led"}, 
+paramsKeyMap:{VALUE_LEFT:0, VALUE_RIGHT:1}, "class":"robotis_carCont_cm", isNotFor:["robotis_carCont"], func:function(b, a) {
   var c = a.getField("VALUE_LEFT", a), d = a.getField("VALUE_RIGHT", a), e = Entry.Robotis_carCont.INSTRUCTION.WRITE, f = 0, g = 0, h = 0, f = Entry.Robotis_carCont.CONTROL_TABLE.CM_LED[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_LED[1];
   1 == c && 1 == d ? h = 9 : 1 == c && 0 == d && (h = 8);
   0 == c && 1 == d && (h = 1);
@@ -16798,13 +16805,13 @@ isNotFor:["robotis_carCont"], func:function(b, a) {
 }}, robotis_carCont_cm_sound_detected_clear:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"robotis_carCont_cm_sound_detected_clear"}, "class":"robotis_carCont_cm", isNotFor:["robotis_carCont"], func:function(b, a) {
   var c = Entry.Robotis_carCont.INSTRUCTION.WRITE, d = 0, e = 0, d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1];
   return Entry.Robotis_carCont.postCallReturn(a, [[c, d, e, 0]], Entry.Robotis_carCont.delay);
-}}, robotis_carCont_aux_motor_speed:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"]], value:"LEFT", fontSize:11}, {type:"Dropdown", options:[["\uc2dc\uacc4\ubc29\ud5a5", "CW"], ["\ubc18\uc2dc\uacc4\ubc29\ud5a5", "CCW"]], value:"CW", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, 
-{type:"number", params:["500"]}, null], type:"robotis_carCont_aux_motor_speed"}, paramsKeyMap:{DIRECTION:0, DIRECTION_ANGLE:1, VALUE:2}, "class":"robotis_carCont_cm", isNotFor:["robotis_carCont"], func:function(b, a) {
+}}, robotis_carCont_aux_motor_speed:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"]], value:"LEFT", fontSize:11}, {type:"Dropdown", options:[[Lang.Blocks.robotis_common_clockwhise, "CW"], [Lang.Blocks.robotis_common_counter_clockwhise, "CCW"]], value:"CW", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, 
+def:{params:[null, null, {type:"number", params:["500"]}, null], type:"robotis_carCont_aux_motor_speed"}, paramsKeyMap:{DIRECTION:0, DIRECTION_ANGLE:1, VALUE:2}, "class":"robotis_carCont_cm", isNotFor:["robotis_carCont"], func:function(b, a) {
   var c = a.getField("DIRECTION", a), d = a.getField("DIRECTION_ANGLE", a), e = a.getNumberValue("VALUE"), f = Entry.Robotis_carCont.INSTRUCTION.WRITE, g = 0, h = 0;
   "LEFT" == c ? (g = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_LEFT[0], h = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_LEFT[1]) : (g = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_RIGHT[0], h = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_RIGHT[1]);
   "CW" == d ? (e += 1024, 2047 < e && (e = 2047)) : 1023 < e && (e = 1023);
   return Entry.Robotis_carCont.postCallReturn(a, [[f, g, h, e]], Entry.Robotis_carCont.delay);
-}}, robotis_carCont_cm_calibration:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["0"]}, null], type:"robotis_carCont_cm_calibration"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"robotis_carCont_cm", 
+}}, robotis_carCont_cm_calibration:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["0"]}, null], type:"robotis_carCont_cm_calibration"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"robotis_carCont_cm", 
 isNotFor:["robotis_carCont"], func:function(b, a) {
   var c = a.getField("DIRECTION", a), d = a.getNumberValue("VALUE"), e = Entry.Robotis_carCont.INSTRUCTION.WRITE, f = 0, g = 0;
   "LEFT" == c ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[1]) : (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[1]);
@@ -16937,7 +16944,7 @@ isNotFor:["robotis_carCont"], func:function(b, a) {
     });
   }
   return a;
-}}, sound_from_to:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds"}, {type:"text", params:["1"]}, {type:"text", params:["10"]}, null], type:"sound_from_to"}, paramsKeyMap:{VALUE:0, START:1, END:2}, "class":"sound_play", isNotFor:[""], func:function(b, 
+}}, sound_from_to:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds"}, {type:"text", params:["1"]}, {type:"text", params:["10"]}, null], type:"sound_from_to"}, paramsKeyMap:{VALUE:0, START:1, END:2}, "class":"sound_play", isNotFor:[], func:function(b, 
 a) {
   var c = a.getStringValue("VALUE", a);
   if (c = b.parent.getSound(c)) {
@@ -16945,7 +16952,7 @@ a) {
     createjs.Sound.play(c.id, {startTime:Math.min(d, e), duration:Math.max(d, e) - Math.min(d, e)});
   }
   return a.callReturn();
-}}, sound_from_to_and_wait:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds"}, {type:"text", params:["1"]}, {type:"text", params:["10"]}, null], type:"sound_from_to_and_wait"}, paramsKeyMap:{VALUE:0, START:1, END:2}, "class":"sound_wait", isNotFor:[""], 
+}}, sound_from_to_and_wait:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds"}, {type:"text", params:["1"]}, {type:"text", params:["10"]}, null], type:"sound_from_to_and_wait"}, paramsKeyMap:{VALUE:0, START:1, END:2}, "class":"sound_wait", isNotFor:[], 
 func:function(b, a) {
   if (a.isPlay) {
     if (1 == a.playState) {
@@ -17046,9 +17053,9 @@ func:function(b, a) {
 }}, text_flush:{color:"#FFCA36", skeleton:"basic", statements:[], params:[], events:{}, def:{params:[], type:"text_flush"}, "class":"text", isNotFor:["sprite"], func:function(b, a) {
   b.setText("");
   return a.callReturn();
-}}, variableAddButton:{skeleton:"basic_button", color:"#eee", params:[{type:"Text", text:"\ubcc0\uc218 \ucd94\uac00", color:"#333", align:"center"}], events:{mousedown:[function() {
+}}, variableAddButton:{skeleton:"basic_button", color:"#eee", params:[{type:"Text", text:Lang.Workspace.variable_create, color:"#333", align:"center"}], events:{mousedown:[function() {
   Entry.variableContainer.openVariableAddPanel("variable");
-}]}}, listAddButton:{skeleton:"basic_button", color:"#eee", params:[{type:"Text", text:"\ub9ac\uc2a4\ud2b8 \ucd94\uac00", color:"#333", align:"center"}], events:{mousedown:[function() {
+}]}}, listAddButton:{skeleton:"basic_button", color:"#eee", params:[{type:"Text", text:Lang.Workspace.list_create, color:"#333", align:"center"}], events:{mousedown:[function() {
   Entry.variableContainer.openVariableAddPanel("list");
 }]}}, change_variable:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"variables", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{dataAdd:[function(b) {
   var a = Entry.variableContainer;
@@ -17197,7 +17204,7 @@ isNotFor:["list", "listNotExist"], func:function(b, a) {
   Entry.container && Entry.container.showProjectAnswer();
 }], viewDestroy:[function(b) {
   Entry.container && Entry.container.hideProjectAnswer(b);
-}]}, def:{params:["HIDE", null], type:"set_visible_answer"}, paramsKeyMap:{BOOL:0}, "class":"ask", isNotFor:[""], func:function(b, a) {
+}]}, def:{params:["HIDE", null], type:"set_visible_answer"}, paramsKeyMap:{BOOL:0}, "class":"ask", isNotFor:[], func:function(b, a) {
   "HIDE" == a.getField("BOOL", a) ? Entry.container.inputValue.setVisible(!1) : Entry.container.inputValue.setVisible(!0);
   return a.callReturn();
 }}, is_included_in_list:{color:"#E457DC", skeleton:"basic_boolean_field", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[null, {type:"text", params:["10"]}], type:"is_included_in_list", id:"otu1"}, paramsKeyMap:{LIST:0, DATA:1}, "class":"list", isNotFor:["list", "listNotExist"], func:function(b, a) {
@@ -17211,15 +17218,15 @@ isNotFor:["list", "listNotExist"], func:function(b, a) {
     }
   }
   return !1;
-}}, xbot_digitalInput:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[["D2", "D2"], ["D3", "D3"], ["D11", "D11"]], value:"D2", fontSize:11}], events:{}, def:{params:[null], type:"xbot_digitalInput"}, paramsKeyMap:{DEVICE:0}, "class":"xbot_sensor", isNotFor:["xbot_epor_edge"], func:function(b, a) {
+}}, xbot_digitalInput:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.XBOT_D2_digitalInput, "D2"], [Lang.Blocks.XBOT_D3_digitalInput, "D3"], [Lang.Blocks.XBOT_D11_digitalInput, "D11"]], value:"D2", fontSize:11}], events:{}, def:{params:[null], type:"xbot_digitalInput"}, paramsKeyMap:{DEVICE:0}, "class":"xbot_sensor", isNotFor:["xbot_epor_edge"], func:function(b, a) {
   var c = Entry.hw.portData, d = a.getField("DEVICE");
   return c[d];
-}}, xbot_analogValue:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["\uad11 \uc13c\uc11c", "light"], ["\ub9c8\uc774\ud06c \uc13c\uc11c", "mic"], ["\uc544\ub0a0\ub85c\uadf8 0\ubc88 \ud540", "adc0"], ["\uc544\ub0a0\ub85c\uadf8 1\ubc88 \ud540", "adc1"], ["\uc544\ub0a0\ub85c\uadf8 2\ubc88 \ud540", "adc2"], ["\uc544\ub0a0\ub85c\uadf8 3\ubc88 \ud540", "adc3"]], value:"light", fontSize:11}], events:{}, def:{params:[null], type:"xbot_analogValue"}, paramsKeyMap:{DEVICE:0}, 
+}}, xbot_analogValue:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.XBOT_CDS, "light"], [Lang.Blocks.XBOT_MIC, "mic"], [Lang.Blocks.XBOT_analog0, "adc0"], [Lang.Blocks.XBOT_analog1, "adc1"], [Lang.Blocks.XBOT_analog2, "adc2"], [Lang.Blocks.XBOT_analog3, "adc3"]], value:"light", fontSize:11}], events:{}, def:{params:[null], type:"xbot_analogValue"}, paramsKeyMap:{DEVICE:0}, "class":"xbot_sensor", isNotFor:["xbot_epor_edge"], func:function(b, 
+a) {
+  var c = Entry.hw.portData, d = a.getField("DEVICE");
+  return c[d];
+}}, xbot_digitalOutput:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["LED", "D13"], ["D4", "D4"], ["D7", "D7"], ["D12 ", "D12"]], value:"D13", fontSize:11}, {type:"Dropdown", options:[[Lang.Blocks.XBOT_High, "HIGH"], [Lang.Blocks.XBOT_Low, "LOW"]], value:"HIGH", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"xbot_digitalOutput"}, paramsKeyMap:{DEVICE:0, VALUE:1}, 
 "class":"xbot_sensor", isNotFor:["xbot_epor_edge"], func:function(b, a) {
-  var c = Entry.hw.portData, d = a.getField("DEVICE");
-  return c[d];
-}}, xbot_digitalOutput:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["LED", "D13"], ["D4", "D4"], ["D7", "D7"], ["D12 ", "D12"]], value:"D13", fontSize:11}, {type:"Dropdown", options:[["\ub192\uc74c", "HIGH"], ["\ub0ae\uc74c", "LOW"]], value:"HIGH", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"xbot_digitalOutput"}, paramsKeyMap:{DEVICE:0, VALUE:1}, "class":"xbot_sensor", 
-isNotFor:["xbot_epor_edge"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getStringField("VALUE", a);
   c.D13 = "D13" == d && "HIGH" == e ? 1 : 0;
   c.D4 = "D4" == d && "HIGH" == e ? 1 : 0;
@@ -17231,13 +17238,13 @@ a) {
   var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getNumberValue("VALUE", a);
   "analogD5" == d ? c.analogD5 = e : "analogD6" == d && (c.analogD6 = e);
   return a.callReturn();
-}}, xbot_servo:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uba38\ub9ac(D8)", "head"], ["\uc624\ub978 \ud314(D9)", "right"], ["\uc67c \ud314(D10)", "left"]], value:"head", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["90"]}, null], type:"xbot_servo", id:"bcuz"}, paramsKeyMap:{DEVICE:0, VALUE:1}, "class":"xbot_motor", 
-isNotFor:["xbot_epor_edge"], func:function(b, a) {
+}}, xbot_servo:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.XBOT_Head, "head"], [Lang.Blocks.XBOT_ArmR, "right"], [Lang.Blocks.XBOT_ArmL, "left"]], value:"head", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["90"]}, null], type:"xbot_servo"}, paramsKeyMap:{DEVICE:0, VALUE:1}, "class":"xbot_motor", isNotFor:["xbot_epor_edge"], 
+func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getNumberValue("VALUE", a);
   "head" == d ? c.head = e : "right" == d ? c.armR = e : "left" == d && (c.armL = e);
   return a.callReturn();
-}}, xbot_oneWheel:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc624\ub978\ucabd", "rightWheel"], ["\uc67c\ucabd", "leftWheel"], ["\uc591\ucabd", "bothWheel"]], value:"rightWheel", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["0"]}, null], type:"xbot_oneWheel"}, paramsKeyMap:{DEVICE:0, VALUE:1}, "class":"xbot_motor", 
-isNotFor:["xbot_epor_edge"], func:function(b, a) {
+}}, xbot_oneWheel:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.XBOT_rightWheel, "rightWheel"], [Lang.Blocks.XBOT_leftWheel, "leftWheel"], [Lang.Blocks.XBOT_bothWheel, "bothWheel"]], value:"rightWheel", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["0"]}, null], type:"xbot_oneWheel"}, paramsKeyMap:{DEVICE:0, 
+VALUE:1}, "class":"xbot_motor", isNotFor:["xbot_epor_edge"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getNumberValue("VALUE", a);
   "rightWheel" == d ? c.rightWheel = e : "leftWheel" == d ? c.leftWheel = e : c.rightWheel = c.leftWheel = e;
   return a.callReturn();
@@ -17259,13 +17266,13 @@ func:function(b, a) {
   d.ledG = parseInt(.3 * parseInt(c.substr(3, 2), 16));
   d.ledB = parseInt(.3 * parseInt(c.substr(5, 2), 16));
   return a.callReturn();
-}}, xbot_buzzer:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\ub3c4", "C"], ["\ub808", "D"], ["\ubbf8", "E"], ["\ud30c", "F"], ["\uc194", "G"], ["\ub77c", "A"], ["\uc2dc", "B"]], value:"C", fontSize:11}, {type:"Dropdown", options:[["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"]], value:"2", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, 
-def:{params:[null, "4", {type:"text", params:["0.5"]}, null], type:"xbot_buzzer"}, paramsKeyMap:{NOTE:0, OCTAVE:1, VALUE:2}, "class":"xbot_sensor", isNotFor:["xbot_epor_edge"], func:function(b, a) {
-  var c = Entry.hw.sendQueue, d = a.getStringField("NOTE", a), e = a.getStringField("OCTAVE", a), f = a.getNumberValue("VALUE", a), d = d + e;
+}}, xbot_buzzer:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.XBOT_c, "C"], [Lang.Blocks.XBOT_d, "D"], [Lang.Blocks.XBOT_e, "E"], [Lang.Blocks.XBOT_f, "F"], [Lang.Blocks.XBOT_g, "G"], [Lang.Blocks.XBOT_a, "A"], [Lang.Blocks.XBOT_b, "B"]], value:"C", fontSize:11}, {type:"Dropdown", options:[["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"]], value:"2", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", 
+size:12}], events:{}, def:{params:[null, "4", {type:"text", params:["0.5"]}, null], type:"xbot_buzzer"}, paramsKeyMap:{NOTE:0, OCTAVE:1, VALUE:2}, "class":"xbot_sensor", isNotFor:["xbot_epor_edge"], func:function(b, a) {
+  var c = Entry.hw.sendQueue, d = b.getStringField("NOTE", b), e = b.getStringField("OCTAVE", b), f = b.getNumberValue("VALUE", b), d = d + e;
   c.note = "C2" == d ? 65 : "D2" == d ? 73 : "E2" == d ? 82 : "F2" == d ? 87 : "G2" == d ? 98 : "A2" == d ? 110 : "B2" == d ? 123 : "C3" == d ? 131 : "D3" == d ? 147 : "E3" == d ? 165 : "F3" == d ? 175 : "G3" == d ? 196 : "A3" == d ? 220 : "B3" == d ? 247 : "C4" == d ? 262 : "D4" == d ? 294 : "E4" == d ? 330 : "F4" == d ? 349 : "G4" == d ? 392 : "A4" == d ? 440 : "B4" == d ? 494 : "C5" == d ? 523 : "D5" == d ? 587 : "E5" == d ? 659 : "F5" == d ? 698 : "G5" == d ? 784 : "A5" == d ? 880 : "B5" == d ? 
   988 : "C6" == d ? 1047 : "D6" == d ? 1175 : "E6" == d ? 1319 : "F6" == d ? 1397 : "G6" == d ? 1568 : "A6" == d ? 1760 : "B6" == d ? 1976 : "C7" == d ? 2093 : "D7" == d ? 2349 : "E7" == d ? 2637 : "F7" == d ? 2794 : "G7" == d ? 3136 : "A7" == d ? 3520 : "B7" == d ? 3951 : 262;
   c.duration = 40 * f;
-  return a.callReturn();
+  return b.callReturn();
 }}, xbot_lcd:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["0", "0"], ["1", "1"]], value:"0", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["Hello"]}, null], type:"xbot_lcd"}, paramsKeyMap:{LINE:0, VALUE:1}, "class":"xbot_sensor", isNotFor:["xbot_epor_edge"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getNumberField("LINE", a), e = a.getStringValue("VALUE", a);
   0 == d ? (c.lcdNum = 0, c.lcdTxt = e) : 1 == d && (c.lcdNum = 1, c.lcdTxt = e);
@@ -17277,19 +17284,38 @@ color:"#A751E3", params:[{type:"Text", text:"  \uc544\ub798\ucabd"}, {type:"Indi
 highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}, "\uc2dc\uc791\ud558\uae30\ub97c \ud074\ub9ad\ud588\uc744\ub54c"]}, jr_go_straight:{skeleton:"basic", color:"#A751E3", params:["\uc55e\uc73c\ub85c \uac00\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}]}, jr_turn_left:{skeleton:"basic", color:"#A751E3", params:["\uc67c\ucabd\uc73c\ub85c \ub3cc\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_l.png", size:24}]}, jr_turn_right:{skeleton:"basic", 
 color:"#A751E3", params:["\uc624\ub978\ucabd\uc73c\ub85c \ub3cc\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_r.png", size:24}]}, jr_go_slow:{skeleton:"basic", color:"#f46c6c", params:["\ucc9c\ucc9c\ud788 \uac00\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_slow.png", size:24}]}, jr_repeat_until_dest:{skeleton:"basic_loop", color:"#498DEB", syntax:["BasicWhile", "true"], params:["", {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_goal_image.png", size:18}, 
 "\ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, jr_if_construction:{skeleton:"basic_loop", color:"#498DEB", params:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_construction_image.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, jr_if_speed:{skeleton:"basic_loop", color:"#498DEB", 
-params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_speed_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, maze_step_start:{skeleton:"basic_event", mode:"maze", event:"start", color:"#3BBD70", syntax:["Program"], params:[{type:"Indicator", boxMultiplier:2, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}]}, maze_step_jump:{skeleton:"basic", mode:"maze", color:"#FF6E4B", 
-params:[{type:"Image", img:"/img/assets/week/blocks/jump.png", size:24}], syntax:["Scope", "jump"]}, maze_step_for:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicIteration"], params:[{type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, test:{skeleton:"basic_boolean_field", mode:"maze", color:"#127CDB", 
-params:[{type:"Angle", value:"90"}, {type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}]}, maze_repeat_until_1:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicWhile", "true"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, maze_repeat_until_2:{skeleton:"basic_loop", mode:"maze", 
-color:"#498DEB", syntax:["BasicWhile", "true"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, maze_step_if_1:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicIf", "front == wall"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}]}, 
-maze_step_if_2:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicIf", "front == bee"], params:[{type:"Image", img:"/img/assets/ntry/bitmap/maze2/obstacle_01.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}]}, maze_call_function:{skeleton:"basic", mode:"maze", color:"#B57242", syntax:["Scope", "promise"], params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}]}, maze_define_function:{skeleton:"basic_define", 
-mode:"maze", color:"#B57242", event:"define", syntax:["BasicFunction"], params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], statements:[{accept:"basic"}]}, maze_step_if_3:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicIf", "front == banana"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_3.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}]}, maze_step_if_4:{skeleton:"basic_loop", 
-mode:"maze", color:"#498DEB", syntax:["BasicIf", "front == wall"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_2.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}]}, maze_step_move_step:{skeleton:"basic", mode:"maze", color:"#A751E3", syntax:["Scope", "move"], params:[{type:"Image", img:"/img/assets/week/blocks/moveStep.png", size:24}]}, maze_step_rotate_left:{skeleton:"basic", mode:"maze", color:"#A751E3", syntax:["Scope", 
-"left"], params:[{type:"Image", img:"/img/assets/week/blocks/turnL.png", size:24}]}, maze_step_rotate_right:{skeleton:"basic", mode:"maze", color:"#A751E3", syntax:["Scope", "right"], params:[{type:"Image", img:"/img/assets/week/blocks/turnR.png", size:24}]}, test_wrapper:{skeleton:"basic", mode:"maze", color:"#3BBD70", params:[{type:"Block", accept:"basic_boolean_field", value:[{type:"test", params:[30, 50]}]}, {type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 
-8], [9, 9], [10, 10]], value:1}]}, basic_button:{skeleton:"basic_button", color:"#eee", params:[{type:"Text", text:"basic button", color:"#333", align:"center"}]}, dplay_get_number_sensor_value:{parent:"arduino_get_number_sensor_value", isNotFor:["dplay"], "class":"arduino_value"}, dplay_get_digital_value:{parent:"arduino_get_digital_value", isNotFor:["dplay"], "class":"arduino_value"}, dplay_toggle_led:{parent:"arduino_toggle_led", isNotFor:["dplay"], "class":"arduino_set"}, dplay_toggle_pwm:{parent:"arduino_toggle_pwm", 
-isNotFor:["dplay"], "class":"arduino_set"}, dplay_convert_scale:{parent:"arduino_convert_scale", isNotFor:["dplay"], "class":"arduino"}, nemoino_get_number_sensor_value:{parent:"arduino_get_number_sensor_value", isNotFor:["nemoino"], "class":"arduino_value"}, nemoino_get_digital_value:{parent:"arduino_get_digital_value", isNotFor:["nemoino"], "class":"arduino_value"}, nemoino_toggle_led:{parent:"arduino_toggle_led", isNotFor:["nemoino"], "class":"arduino_set"}, nemoino_toggle_pwm:{parent:"arduino_toggle_pwm", 
-isNotFor:["nemoino"], "class":"arduino_set"}, nemoino_convert_scale:{parent:"arduino_convert_scale", isNotFor:["nemoino"], "class":"arduino"}, sensorBoard_get_number_sensor_value:{parent:"arduino_get_number_sensor_value", isNotFor:["sensorBoard"], "class":"arduino_value"}, sensorBoard_get_digital_value:{parent:"arduino_get_digital_value", isNotFor:["sensorBoard"], "class":"arduino_value"}, sensorBoard_toggle_led:{parent:"arduino_toggle_led", isNotFor:["sensorBoard"], "class":"arduino_set"}, sensorBoard_toggle_pwm:{parent:"arduino_toggle_pwm", 
-isNotFor:["sensorBoard"], "class":"arduino_set"}, sensorBoard_convert_scale:{parent:"arduino_convert_scale", isNotFor:["sensorBoard"], "class":"arduino"}, CODEino_get_number_sensor_value:{parent:"arduino_get_number_sensor_value", isNotFor:["CODEino"], "class":"arduino_value"}, CODEino_get_digital_value:{parent:"arduino_get_digital_value", isNotFor:["CODEino"], "class":"arduino_value"}, CODEino_toggle_led:{parent:"arduino_toggle_led", isNotFor:["CODEino"], "class":"arduino_set"}, CODEino_toggle_pwm:{parent:"arduino_toggle_pwm", 
-isNotFor:["CODEino"], "class":"arduino_set"}, CODEino_convert_scale:{parent:"arduino_convert_scale", isNotFor:["CODEino"], "class":"arduino"}};
+params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_speed_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, maze_step_start:{skeleton:"basic_event", mode:"maze", event:"start", color:"#3BBD70", syntax:["Program"], params:[{type:"Indicator", boxMultiplier:2, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}], func:function() {
+  var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a;
+  for (a in b) {
+    this._unit = b[a];
+  }
+  Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
+}}, maze_step_jump:{skeleton:"basic", mode:"maze", color:"#FF6E4B", params:[{type:"Image", img:"/img/assets/week/blocks/jump.png", size:24}], syntax:["Scope", "jump"]}, maze_step_for:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicIteration"], params:[{type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, 
+test:{skeleton:"basic_boolean_field", mode:"maze", color:"#127CDB", params:[{type:"Angle", value:"90"}, {type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}]}, maze_repeat_until_1:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicWhile", "true"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, 
+maze_repeat_until_2:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicWhile", "true"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, maze_step_if_1:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicIf", "front == wall"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", 
+size:24}], statements:[{accept:"basic"}]}, maze_step_if_2:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicIf", "front == bee"], params:[{type:"Image", img:"/img/assets/ntry/bitmap/maze2/obstacle_01.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}]}, maze_call_function:{skeleton:"basic", mode:"maze", color:"#B57242", syntax:["Scope", "promise"], params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}]}, 
+maze_define_function:{skeleton:"basic_define", mode:"maze", color:"#B57242", event:"define", syntax:["BasicFunction"], params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], statements:[{accept:"basic"}]}, maze_step_if_3:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicIf", "front == banana"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_3.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}]}, 
+maze_step_if_4:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicIf", "front == wall"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_2.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}]}, maze_step_move_step:{skeleton:"basic", mode:"maze", color:"#A751E3", syntax:["Scope", "move"], params:[{type:"Image", img:"/img/assets/week/blocks/moveStep.png", size:24}], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var b = this;
+    Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
+      b.isAction = !1;
+    });
+    return Entry.STATIC.CONTINUE;
+  }
+}}, maze_step_rotate_left:{skeleton:"basic", mode:"maze", color:"#A751E3", syntax:["Scope", "left"], params:[{type:"Image", img:"/img/assets/week/blocks/turnL.png", size:24}]}, maze_step_rotate_right:{skeleton:"basic", mode:"maze", color:"#A751E3", syntax:["Scope", "right"], params:[{type:"Image", img:"/img/assets/week/blocks/turnR.png", size:24}]}, test_wrapper:{skeleton:"basic", mode:"maze", color:"#3BBD70", params:[{type:"Block", accept:"basic_boolean_field", value:[{type:"test", params:[30, 50]}]}, 
+{type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}]}, basic_button:{skeleton:"basic_button", color:"#eee", params:[{type:"Text", text:"basic button", color:"#333", align:"center"}]}, dplay_get_number_sensor_value:{parent:"arduino_get_number_sensor_value", isNotFor:["dplay"], "class":"arduino_value"}, dplay_get_digital_value:{parent:"arduino_get_digital_value", isNotFor:["dplay"], "class":"arduino_value"}, dplay_toggle_led:{parent:"arduino_toggle_led", 
+isNotFor:["dplay"], "class":"arduino_set"}, dplay_toggle_pwm:{parent:"arduino_toggle_pwm", isNotFor:["dplay"], "class":"arduino_set"}, dplay_convert_scale:{parent:"arduino_convert_scale", isNotFor:["dplay"], "class":"arduino"}, nemoino_get_number_sensor_value:{parent:"arduino_get_number_sensor_value", isNotFor:["nemoino"], "class":"arduino_value"}, nemoino_get_digital_value:{parent:"arduino_get_digital_value", isNotFor:["nemoino"], "class":"arduino_value"}, nemoino_toggle_led:{parent:"arduino_toggle_led", 
+isNotFor:["nemoino"], "class":"arduino_set"}, nemoino_toggle_pwm:{parent:"arduino_toggle_pwm", isNotFor:["nemoino"], "class":"arduino_set"}, nemoino_convert_scale:{parent:"arduino_convert_scale", isNotFor:["nemoino"], "class":"arduino"}, sensorBoard_get_number_sensor_value:{parent:"arduino_get_number_sensor_value", isNotFor:["sensorBoard"], "class":"arduino_value"}, sensorBoard_get_digital_value:{parent:"arduino_get_digital_value", isNotFor:["sensorBoard"], "class":"arduino_value"}, sensorBoard_toggle_led:{parent:"arduino_toggle_led", 
+isNotFor:["sensorBoard"], "class":"arduino_set"}, sensorBoard_toggle_pwm:{parent:"arduino_toggle_pwm", isNotFor:["sensorBoard"], "class":"arduino_set"}, sensorBoard_convert_scale:{parent:"arduino_convert_scale", isNotFor:["sensorBoard"], "class":"arduino"}, CODEino_get_number_sensor_value:{parent:"arduino_get_number_sensor_value", isNotFor:["CODEino"], "class":"arduino_value"}, CODEino_get_digital_value:{parent:"arduino_get_digital_value", isNotFor:["CODEino"], "class":"arduino_value"}, CODEino_toggle_led:{parent:"arduino_toggle_led", 
+isNotFor:["CODEino"], "class":"arduino_set"}, CODEino_toggle_pwm:{parent:"arduino_toggle_pwm", isNotFor:["CODEino"], "class":"arduino_set"}, CODEino_convert_scale:{parent:"arduino_convert_scale", isNotFor:["CODEino"], "class":"arduino"}};
 (function() {
   for (var b in Entry.block) {
     var a = Entry.block[b];
@@ -19186,7 +19212,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     this.textElement = this.svgGroup.elem("text").attr({x:4, y:4, "font-size":"9pt"});
     this.textElement.textContent = Entry.getKeyCodeMap()[this.getValue()];
     var a = this.getTextWidth(), b = this.position && this.position.y ? this.position.y : 0;
-    this._header = this.svgGroup.elem("rect", {x:0, y:b - 8, width:a, height:16, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
+    this._header = this.svgGroup.elem("rect", {x:0, y:b - 8, width:a, height:16, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
     this._bindRenderOptions();
     this.box.set({x:0, y:0, width:a, height:16});
@@ -20363,7 +20389,7 @@ Entry.skeleton.basic_boolean_field = {path:function(b) {
   b = b.contentHeight;
   b = Math.max(18, b + 2);
   a = Math.max(0, a - b + 9);
-  return "m %h,0 h %w l %h,%h -%h,%h H %h l -%h,-%h %h,-%h z ".replace(/%wh/gi, b).replace(/%w/gi, a).replace(/%h/gi, b / 2);
+  return "m %h,0 h %w l %h,%h -%h,%h H %h l -%h,-%h %h,-%h z".replace(/%wh/gi, b).replace(/%w/gi, a).replace(/%h/gi, b / 2);
 }, color:"#000", outerLine:!0, box:function(b) {
   return {offsetX:0, offsetY:0, width:(b ? b.contentWidth : 5) + 8, height:Math.max((b ? b.contentHeight : 18) + 2, 18), marginBottom:0};
 }, magnets:function() {

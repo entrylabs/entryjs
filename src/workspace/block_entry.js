@@ -31,16 +31,16 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽 근접 센서", "leftProximity" ],
-                    [ "오른쪽 근접 센서", "rightProximity" ],
-                    [ "밝기", "light" ],
-                    [ "배터리", "battery" ],
-                    [ "신호 세기", "signalStrength" ],
-                    [ "앞쪽 OID", "frontOid" ],
-                    [ "뒤쪽 OID", "backOid" ],
-                    [ "x 위치", "positionX" ],
-                    [ "y 위치", "positionY" ],
-                    [ "방향", "orientation" ]
+                    [Lang.Blocks.ALBERT_sensor_leftProximity ,"leftProximity"],
+                    [Lang.Blocks.ALBERT_sensor_rightProximity,"rightProximity"],
+                    [Lang.Blocks.ALBERT_sensor_light,"light"],
+                    [Lang.Blocks.ALBERT_sensor_battery,"battery"],
+                    [Lang.Blocks.ALBERT_sensor_signalStrength,"signalStrength"],
+                    [Lang.Blocks.ALBERT_sensor_frontOid,"frontOid"],
+                    [Lang.Blocks.ALBERT_sensor_backOid,"backOid"],
+                    [Lang.Blocks.ALBERT_sensor_positionX,"positionX"],
+                    [Lang.Blocks.ALBERT_sensor_positionY,"positionY"],
+                    [Lang.Blocks.ALBERT_sensor_orientation,"orientation"]
                 ],
                 "value": "leftProximity",
                 "fontSize": 11
@@ -51,8 +51,7 @@ Entry.block = {
             "params": [
                 null
             ],
-            "type": "albert_value",
-            "id": "nw7o"
+            "type": "albert_value"
         },
         "paramsKeyMap": {
             "DEVICE": 0
@@ -189,8 +188,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽", "LEFT" ],
-                    [ "오른쪽", "RIGHT" ]
+                    [Lang.General.left,"LEFT"],
+                    [Lang.General.right,"RIGHT"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -360,9 +359,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽", "LEFT" ],
-                    [ "오른쪽", "RIGHT" ],
-                    [ "양쪽", "BOTH" ]
+                    [Lang.General.left,"LEFT"],
+                    [Lang.General.right,"RIGHT"],
+                    [Lang.General.both,"BOTH"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -418,9 +417,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽", "LEFT" ],
-                    [ "오른쪽", "RIGHT" ],
-                    [ "양쪽", "BOTH" ]
+                    [Lang.General.left,"LEFT"],
+                    [Lang.General.right,"RIGHT"],
+                    [Lang.General.both,"BOTH"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -554,9 +553,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽", "LEFT" ],
-                    [ "오른쪽", "RIGHT" ],
-                    [ "양쪽", "BOTH" ]
+                    [Lang.General.left,"LEFT"],
+                    [Lang.General.right,"RIGHT"],
+                    [Lang.General.both,"BOTH"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -564,13 +563,13 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "빨간색", "4" ],
-                    [ "노란색", "6" ],
-                    [ "초록색", "2" ],
-                    [ "하늘색", "3" ],
-                    [ "파란색", "1" ],
-                    [ "보라색", "5" ],
-                    [ "하얀색", "7" ]
+                    [Lang.General.red,"4"],
+                    [Lang.General.yellow,"6"],
+                    [Lang.General.green,"2"],
+                    [Lang.Blocks.ALBERT_color_cyan,"3"],
+                    [Lang.General.blue,"1"],
+                    [Lang.Blocks.ALBERT_color_magenta,"5"],
+                    [Lang.General.white,"7"]
                 ],
                 "value": "4",
                 "fontSize": 11
@@ -615,9 +614,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽", "LEFT" ],
-                    [ "오른쪽", "RIGHT" ],
-                    [ "양쪽", "BOTH" ]
+                    [Lang.General.left,"LEFT"],
+                    [Lang.General.right,"RIGHT"],
+                    [Lang.General.both,"BOTH"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -881,18 +880,18 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "도", "4" ],
-                    [ "도#", "5" ],
-                    [ "레", "6" ],
-                    [ "미b", "7" ],
-                    [ "미", "8" ],
-                    [ "파", "9" ],
-                    [ "파#", "10" ],
-                    [ "솔", "11" ],
-                    [ "솔#", "12" ],
-                    [ "라", "13" ],
-                    [ "시b", "14" ],
-                    [ "시", "15" ]
+                    [Lang.General.note_c + '',"4"],
+                    [Lang.General.note_c + '#',"5"],
+                    [Lang.General.note_d + '',"6"],
+                    [Lang.General.note_e + 'b',"7"],
+                    [Lang.General.note_e + '',"8"],
+                    [Lang.General.note_f + '',"9"],
+                    [Lang.General.note_f + '#',"10"],
+                    [Lang.General.note_g + '',"11"],
+                    [Lang.General.note_g + '#',"12"],
+                    [Lang.General.note_a + '',"13"],
+                    [Lang.General.note_b + 'b',"14"],
+                    [Lang.General.note_b + '',"15"]
                 ],
                 "value": "4",
                 "fontSize": 11
@@ -1715,8 +1714,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "켜기", "on" ],
-                    [ "끄기", "off" ]
+                    [Lang.Blocks.ARDUINO_on,"on"],
+                    [Lang.Blocks.ARDUINO_off,"off"]
                 ],
                 "value": "on",
                 "fontSize": 11
@@ -2109,13 +2108,13 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "소리", "0" ],
-                    [ "빛", "1" ],
-                    [ "슬라이더", "2" ],
-                    [ "저항-A", "3" ],
-                    [ "저항-B", "4" ],
-                    [ "저항-C", "5" ],
-                    [ "저항-D", "6" ]
+                    [Lang.Blocks.CODEino_sensor_name_0,"0"],
+                    [Lang.Blocks.CODEino_sensor_name_1,"1"],
+                    [Lang.Blocks.CODEino_sensor_name_2,"2"],
+                    [Lang.Blocks.CODEino_sensor_name_3,"3"],
+                    [Lang.Blocks.CODEino_sensor_name_4,"4"],
+                    [Lang.Blocks.CODEino_sensor_name_5,"5"],
+                    [Lang.Blocks.CODEino_sensor_name_6,"6"]
                 ],
                 "value": "0",
                 "fontSize": 11
@@ -2143,8 +2142,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "소리큼", "GREAT" ],
-                    [ "소리작음", "SMALL" ]
+                    [Lang.Blocks.CODEino_string_11,"GREAT"],
+                    [Lang.Blocks.CODEino_string_12,"SMALL"]
                 ],
                 "value": "GREAT",
                 "fontSize": 11
@@ -2175,8 +2174,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "밝음", "BRIGHT" ],
-                    [ "어두움", "DARK" ]
+                    [Lang.Blocks.CODEino_string_14,"BRIGHT"],
+                    [Lang.Blocks.CODEino_string_15,"DARK"]
                 ],
                 "value": "BRIGHT",
                 "fontSize": 11
@@ -2207,11 +2206,11 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "버튼누름", "4" ],
-                    [ "A 연결됨", "17" ],
-                    [ "B 연결됨", "18" ],
-                    [ "C 연결됨", "19" ],
-                    [ "D 연결됨", "20" ]
+                    [Lang.Blocks.CODEino_string_3,"4"],
+                    [Lang.Blocks.CODEino_string_4,"17"],
+                    [Lang.Blocks.CODEino_string_5,"18"],
+                    [Lang.Blocks.CODEino_string_6,"19"],
+                    [Lang.Blocks.CODEino_string_7,"20"]
                 ],
                 "value": "4",
                 "fontSize": 11
@@ -2243,11 +2242,11 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽 기울임", "LEFT" ],
-                    [ "오른쪽 기울임", "RIGHT" ],
-                    [ "위쪽 기울임", "FRONT" ],
-                    [ "아래쪽 기울임", "REAR" ],
-                    [ "뒤집힘", "REVERSE" ]
+                    [Lang.Blocks.CODEino_string_16, "LEFT"],
+                    [Lang.Blocks.CODEino_string_17, "RIGHT"],
+                    [Lang.Blocks.CODEino_string_18, "FRONT"],
+                    [Lang.Blocks.CODEino_string_19, "REAR"],
+                    [Lang.Blocks.CODEino_string_20, "REVERSE"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -2466,16 +2465,16 @@ Entry.block = {
         "func": function (sprite, script) {
             var red = script.getNumberValue("rValue"),
                 green = script.getNumberValue("gValue"),
-                    blue = script.getNumberValue("bValue"),
-                        min = 0,
-                            max = 255,
-                                adjustor = Entry.adjustValueWithMaxMin,
-                                    sq = Entry.hw.sendQueue;
+                blue = script.getNumberValue("bValue"),
+                min = 0,
+                max = 255,
+                adjustor = Entry.adjustValueWithMaxMin,
+                sq = Entry.hw.sendQueue;
 
-                                    sq["LEDR"] = adjustor(red, min, max);
-                                    sq["LEDG"] = adjustor(green, min, max);
-                                    sq["LEDB"] = adjustor(blue, min, max);
-                                    return script.callReturn();
+                sq["LEDR"] = adjustor(red, min, max);
+                sq["LEDG"] = adjustor(green, min, max);
+                sq["LEDB"] = adjustor(blue, min, max);
+                return script.callReturn();
         }
     },
     "bitbrick_turn_on_color_led_by_picker": {
@@ -2685,7 +2684,7 @@ Entry.block = {
 
             Entry.hw.sendQueue[script.getStringField("PORT")] =
                 value + 128;
-                return script.callReturn();
+            return script.callReturn();
         }
     },
     "bitbrick_dc_direction_speed": {
@@ -2701,8 +2700,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "시계", "CW" ],
-                    [ "반시계", "CCW" ]
+                    [Lang.Blocks.BITBRICK_dc_direction_cw,"CW"],
+                    [Lang.Blocks.BITBRICK_dc_direction_ccw,"CCW"]
                 ],
                 "value": "CW",
                 "fontSize": 11
@@ -2745,7 +2744,7 @@ Entry.block = {
 
             Entry.hw.sendQueue[script.getStringField("PORT")] =
                 isFront ? value + 128 : 128 - value;
-                return script.callReturn();
+            return script.callReturn();
         }
     },
     "bitbrick_servomotor_angle": {
@@ -3425,7 +3424,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Text",
-                "text": "X 좌푯값",
+                "text": Lang.Blocks.CALC_get_x_coordinate,
                 "color": "#3D3D3D"
             }
         ],
@@ -3447,7 +3446,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Text",
-                "text": "Y 좌푯값",
+                "text": Lang.Blocks.CALC_get_y_coordinate,
                 "color": "#3D3D3D"
             }
         ],
@@ -3469,7 +3468,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Text",
-                "text": "각도값",
+                "text": Lang.Blocks.CALC_get_angle,
                 "color": "#3D3D3D"
             }
         ],
@@ -3489,8 +3488,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "방향값", "ROTATION" ],
-                    [ "이동 방향값", "DIRECTION" ]
+                    [Lang.Blocks.CALC_rotation_value,"ROTATION"],
+                    [Lang.Blocks.CALC_direction_value,"DIRECTION"]
                 ],
                 "value": "ROTATION",
                 "fontSize": 11
@@ -3958,7 +3957,7 @@ Entry.block = {
             },
             {
                 "type": "Text",
-                "text": "의 나머지",
+                "text": Lang.Blocks.CALC_calc_mod_3,
                 "color": "#3D3D3D"
             }
         ],
@@ -4110,7 +4109,7 @@ Entry.block = {
             var xRangeCheckList = ['asin_radian', 'acos_radian'];
             if ((xRangeCheckList.indexOf(operator) > -1) &&
                 (value > 1 || value < -1))
-            throw new Error('x range exceeded');
+                throw new Error('x range exceeded');
 
             var needToConvertList = ['sin', 'cos', 'tan'];
             if (operator.indexOf('_'))
@@ -4842,7 +4841,7 @@ Entry.block = {
             var str = script.getStringValue("LEFTHAND", script);
             var target = script.getStringValue("RIGHTHAND", script);
             var index = str.indexOf(target);
-            return index > -1?index+1:0;
+            return index > -1 ? index + 1 : 0;
         }
     },
     "combine_something": {
@@ -4995,7 +4994,7 @@ Entry.block = {
             "OPERATOR": 5
         },
         "class": "calc",
-        "isNotFor": [ "" ],
+        "isNotFor": [],
         "func": function (sprite, script) {
             var left = script.getNumberValue("LEFTHAND", script);
             var right = script.getNumberValue("RIGHTHAND", script);
@@ -5064,7 +5063,7 @@ Entry.block = {
             "ACTION": 1
         },
         "class": "calc_timer",
-        "isNotFor": [ "" ],
+        "isNotFor": [],
         "func": function (sprite, script) {
             var action = script.getField('ACTION');
             var engine = Entry.engine;
@@ -5416,11 +5415,7 @@ Entry.block = {
                 "type": "DropdownDynamic",
                 "value": null,
                 "menuName": "clone",
-                "fontSize": 11,
-                "options": [
-                    [ "자신", "self" ],
-                    [ "엔트리봇", "7y0y" ]
-                ]
+                "fontSize": 11
             },
             {
                 "type": "Indicator",
@@ -5712,7 +5707,7 @@ Entry.block = {
         "params": [
             {
                 "type": "TextInput",
-                "value": "함수"
+                "value": Lang.Blocks.FUNCTION_explanation_1
             },
             {
                 "type": "Output",
@@ -5722,9 +5717,7 @@ Entry.block = {
     },
     "function_field_string": {
         "skeleton": "basic_param",
-        "isNotFor": [
-            "functionEdit"
-        ],
+        "isNotFor": [ "functionEdit" ],
         "color": "#ffd974",
         "params": [
             {
@@ -5757,6 +5750,7 @@ Entry.block = {
     "function_param_string": {
         "skeleton": "basic_string_field",
         "color": "#ffd974",
+        "template": "%1 %2",
         func: function() {
             return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
         }
@@ -5764,6 +5758,7 @@ Entry.block = {
     "function_param_boolean": {
         "skeleton": "basic_boolean_field",
         "color": "#aeb8ff",
+        "template": "%1 %2",
         func: function() {
             return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
         }
@@ -5861,18 +5856,18 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽 근접 센서", "leftProximity" ],
-                    [ "오른쪽 근접 센서", "rightProximity" ],
-                    [ "왼쪽 바닥 센서", "leftFloor" ],
-                    [ "오른쪽 바닥 센서", "rightFloor" ],
-                    [ "x축 가속도", "accelerationX" ],
-                    [ "y축 가속도", "accelerationY" ],
-                    [ "z축 가속도", "accelerationZ" ],
-                    [ "밝기", "light" ],
-                    [ "온도", "temperature" ],
-                    [ "신호 세기", "signalStrength" ],
-                    [ "입력 A", "inputA" ],
-                    [ "입력 B", "inputB" ]
+                    [Lang.Blocks.HAMSTER_sensor_leftProximity, "leftProximity"],
+                    [Lang.Blocks.HAMSTER_sensor_rightProximity, "rightProximity"],
+                    [Lang.Blocks.HAMSTER_sensor_leftFloor, "leftFloor"],
+                    [Lang.Blocks.HAMSTER_sensor_rightFloor, "rightFloor"],
+                    [Lang.Blocks.HAMSTER_sensor_accelerationX, "accelerationX"],
+                    [Lang.Blocks.HAMSTER_sensor_accelerationY, "accelerationY"],
+                    [Lang.Blocks.HAMSTER_sensor_accelerationZ, "accelerationZ"],
+                    [Lang.Blocks.HAMSTER_sensor_light, "light"],
+                    [Lang.Blocks.HAMSTER_sensor_temperature, "temperature"],
+                    [Lang.Blocks.HAMSTER_sensor_signalStrength, "signalStrength"],
+                    [Lang.Blocks.HAMSTER_sensor_inputA, "inputA"],
+                    [Lang.Blocks.HAMSTER_sensor_inputB, "inputB"]
                 ],
                 "value": "leftProximity",
                 "fontSize": 11
@@ -5988,8 +5983,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽", "LEFT" ],
-                    [ "오른쪽", "RIGHT" ]
+                    [Lang.General.left,"LEFT"],
+                    [Lang.General.right,"RIGHT"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -6266,8 +6261,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽", "LEFT" ],
-                    [ "오른쪽", "RIGHT" ]
+                    [Lang.General.left,"LEFT"],
+                    [Lang.General.right,"RIGHT"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -6439,9 +6434,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽", "LEFT" ],
-                    [ "오른쪽", "RIGHT" ],
-                    [ "양쪽", "BOTH" ]
+                    [Lang.General.left,"LEFT"],
+                    [Lang.General.right,"RIGHT"],
+                    [Lang.General.both,"BOTH"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -6498,9 +6493,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽", "LEFT" ],
-                    [ "오른쪽", "RIGHT" ],
-                    [ "양쪽", "BOTH" ]
+                    [Lang.General.left,"LEFT"],
+                    [Lang.General.right,"RIGHT"],
+                    [Lang.General.both,"BOTH"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -6557,8 +6552,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "검은색", "BLACK" ],
-                    [ "하얀색", "WHITE" ]
+                    [Lang.Blocks.HAMSTER_color_black,"BLACK"],
+                    [Lang.General.white,"WHITE"]
                 ],
                 "value": "BLACK",
                 "fontSize": 11
@@ -6566,9 +6561,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽", "LEFT" ],
-                    [ "오른쪽", "RIGHT" ],
-                    [ "양쪽", "BOTH" ]
+                    [Lang.General.left,"LEFT"],
+                    [Lang.General.right,"RIGHT"],
+                    [Lang.General.both,"BOTH"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -6614,8 +6609,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "검은색", "BLACK" ],
-                    [ "하얀색", "WHITE" ]
+                    [Lang.Blocks.HAMSTER_color_black,"BLACK"],
+                    [Lang.General.white,"WHITE"]
                 ],
                 "value": "BLACK",
                 "fontSize": 11
@@ -6623,10 +6618,10 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽", "LEFT" ],
-                    [ "오른쪽", "RIGHT" ],
-                    [ "앞쪽", "FRONT" ],
-                    [ "뒤쪽", "REAR" ]
+                    [Lang.General.left,"LEFT"],
+                    [Lang.General.right,"RIGHT"],
+                    [Lang.Blocks.HAMSTER_front,"FRONT"],
+                    [Lang.Blocks.HAMSTER_rear,"REAR"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -6757,9 +6752,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽", "LEFT" ],
-                    [ "오른쪽", "RIGHT" ],
-                    [ "양쪽", "BOTH" ]
+                    [Lang.General.left,"LEFT"],
+                    [Lang.General.right,"RIGHT"],
+                    [Lang.General.both,"BOTH"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -6767,13 +6762,13 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "빨간색", "4" ],
-                    [ "노란색", "6" ],
-                    [ "초록색", "2" ],
-                    [ "하늘색", "3" ],
-                    [ "파란색", "1" ],
-                    [ "보라색", "5" ],
-                    [ "하얀색", "7" ]
+                    [Lang.General.red,"4"],
+                    [Lang.General.yellow,"6"],
+                    [Lang.General.green,"2"],
+                    [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                    [Lang.General.blue,"1"],
+                    [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                    [Lang.General.white,"7"]
                 ],
                 "value": "4",
                 "fontSize": 11
@@ -6818,9 +6813,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽", "LEFT" ],
-                    [ "오른쪽", "RIGHT" ],
-                    [ "양쪽", "BOTH" ]
+                    [Lang.General.left,"LEFT"],
+                    [Lang.General.right,"RIGHT"],
+                    [Lang.General.both,"BOTH"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -7008,18 +7003,18 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "도", "4" ],
-                    [ "도#", "5" ],
-                    [ "레", "6" ],
-                    [ "미b", "7" ],
-                    [ "미", "8" ],
-                    [ "파", "9" ],
-                    [ "파#", "10" ],
-                    [ "솔", "11" ],
-                    [ "솔#", "12" ],
-                    [ "라", "13" ],
-                    [ "시b", "14" ],
-                    [ "시", "15" ]
+                    [Lang.General.note_c + '',"4"],
+                    [Lang.General.note_c + '#',"5"],
+                    [Lang.General.note_d + '',"6"],
+                    [Lang.General.note_e + 'b',"7"],
+                    [Lang.General.note_e + '',"8"],
+                    [Lang.General.note_f + '',"9"],
+                    [Lang.General.note_f + '#',"10"],
+                    [Lang.General.note_g + '',"11"],
+                    [Lang.General.note_g + '#',"12"],
+                    [Lang.General.note_a + '',"13"],
+                    [Lang.General.note_b + 'b',"14"],
+                    [Lang.General.note_b + '',"15"]
                 ],
                 "value": "4",
                 "fontSize": 11
@@ -7243,9 +7238,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "A", "A" ],
-                    [ "B", "B" ],
-                    [ "A와 B", "AB" ]
+                    [Lang.Blocks.HAMSTER_port_a, "A"],
+                    [Lang.Blocks.HAMSTER_port_b, "B"],
+                    [Lang.Blocks.HAMSTER_port_ab, "AB"]
                 ],
                 "value": "A",
                 "fontSize": 11
@@ -7253,11 +7248,11 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "아날로그 입력", "0" ],
-                    [ "디지털 입력", "1" ],
-                    [ "서보 출력", "8" ],
-                    [ "PWM 출력", "9" ],
-                    [ "디지털 출력", "10" ]
+                    [Lang.Blocks.HAMSTER_analog_input, "0"],
+                    [Lang.Blocks.HAMSTER_digital_input, "1"],
+                    [Lang.Blocks.HAMSTER_servo_output, "8"],
+                    [Lang.Blocks.HAMSTER_pwm_output, "9"],
+                    [Lang.Blocks.HAMSTER_digital_output, "10"]
                 ],
                 "value": "0",
                 "fontSize": 11
@@ -7302,9 +7297,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "A", "A" ],
-                    [ "B", "B" ],
-                    [ "A와 B", "AB" ]
+                    [Lang.Blocks.HAMSTER_port_a, "A"],
+                    [Lang.Blocks.HAMSTER_port_b, "B"],
+                    [Lang.Blocks.HAMSTER_port_ab, "AB"]
                 ],
                 "value": "A",
                 "fontSize": 11
@@ -7360,9 +7355,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "A", "A" ],
-                    [ "B", "B" ],
-                    [ "A와 B", "AB" ]
+                    [Lang.Blocks.HAMSTER_port_a, "A"],
+                    [Lang.Blocks.HAMSTER_port_b, "B"],
+                    [Lang.Blocks.HAMSTER_port_ab, "AB"]
                 ],
                 "value": "A",
                 "fontSize": 11
@@ -7512,28 +7507,29 @@ Entry.block = {
                             collision(object,wall.left,ath,true) ||
                                 collision(object,wall.right,ath,true))
                                 return true;
+                        else
+                            return false;
+
+                        case 'wall_up':
+                            if (collision(object,wall.up,ath,true))
+                                return true;
+                            else
+                                return false;
+                            case 'wall_down':
+                                if (collision(object,wall.down,ath,true))
+                                    return true;
                                 else
                                     return false;
-                                case 'wall_up':
-                                    if (collision(object,wall.up,ath,true))
-                                        return true;
-                                    else
-                                        return false;
-                                    case 'wall_down':
-                                        if (collision(object,wall.down,ath,true))
-                                            return true;
-                                        else
-                                            return false;
-                                        case 'wall_right':
-                                            if (collision(object,wall.right,ath,true))
-                                                return true;
-                                            else
-                                                return false;
-                                            case 'wall_left':
-                                                if (collision(object,wall.left,ath,true))
-                                                    return true;
-                                                else
-                                                    return false;
+                            case 'wall_right':
+                                if (collision(object,wall.right,ath,true))
+                                    return true;
+                                else
+                                    return false;
+                            case 'wall_left':
+                                if (collision(object,wall.left,ath,true))
+                                    return true;
+                                else
+                                    return false;
                 }
             } else if (targetSpriteId == 'mouse') {
                 var stage = Entry.stage.canvas;
@@ -7867,13 +7863,9 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
-                {
-                    "type": "True"
-                },
+                { "type": "True" },
                 null,
-                {
-                    "type": "False"
-                }
+                { "type": "False" }
             ],
             "type": "boolean_or"
         },
@@ -7913,9 +7905,7 @@ Entry.block = {
         "def": {
             "params": [
                 null,
-                {
-                    "type": "True"
-                },
+                { "type": "True" },
                 null
             ],
             "type": "boolean_not"
@@ -7937,8 +7927,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "참", "true" ],
-                    [ "거짓", "false" ]
+                    [Lang.Blocks.JUDGEMENT_true,"true"],
+                    [Lang.Blocks.JUDGEMENT_false, "false"]
                 ],
                 "value": "true",
                 "fontSize": 11
@@ -8420,9 +8410,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "색깔", "color" ],
-                    [ "밝기", "brightness" ],
-                    [ "불투명도", "opacity" ]
+                    [Lang.Blocks.color, "color"],
+                    [Lang.Blocks.brightness, "brightness"],
+                    [Lang.Blocks.opacity, "opacity"]
                 ],
                 "value": "color",
                 "fontSize": 11
@@ -8482,9 +8472,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "색깔", "color" ],
-                    [ "밝기", "brightness" ],
-                    [ "불투명도", "opacity" ]
+                    [Lang.Blocks.color, "color"],
+                    [Lang.Blocks.brightness, "brightness"],
+                    [Lang.Blocks.opacity, "opacity"]
                 ],
                 "value": "color",
                 "fontSize": 11
@@ -8806,12 +8796,7 @@ Entry.block = {
                 "type": "DropdownDynamic",
                 "value": null,
                 "menuName": "pictures",
-                "fontSize": 11,
-                "options": [
-                    [ "엔트리봇_걷기1", "vx80" ],
-                    [ "엔트리봇_걷기1", "vx80" ],
-                    [ "엔트리봇_걷기2", "4t48" ]
-                ]
+                "fontSize": 11
             }
         ],
         "events": {},
@@ -8849,8 +8834,7 @@ Entry.block = {
                 },
                 null
             ],
-            "type": "change_to_some_shape",
-            "id": "0x2t"
+            "type": "change_to_some_shape"
         },
         "paramsKeyMap": {
             "VALUE": 0
@@ -8988,9 +8972,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "색깔", "color" ],
-                    [ "밝기", "brightness" ],
-                    [ "투명도", "transparency" ]
+                    [Lang.Blocks.color, "color"],
+                    [Lang.Blocks.brightness, "brightness"],
+                    [Lang.Blocks.transparency, "transparency"]
                 ],
                 "value": "color",
                 "fontSize": 11
@@ -9045,9 +9029,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "색깔", "color" ],
-                    [ "밝기", "brightness" ],
-                    [ "투명도", "transparency" ]
+                    [Lang.Blocks.color, "color"],
+                    [Lang.Blocks.brightness, "brightness"],
+                    [Lang.Blocks.transparency, "transparency"]
                 ],
                 "value": "color",
                 "fontSize": 11
@@ -9765,9 +9749,7 @@ Entry.block = {
                 "type": "Block",
                 "accept": "stringMagnet"
             },
-            {
-                "type": "Angle"
-            },
+            { "type": "Angle" },
             {
                 "type": "Indicator",
                 "img": "/lib/entryjs/images/block_icon/moving_03.png",
@@ -10285,9 +10267,7 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
-                {
-                    "type": "angle"
-                },
+                { "type": "angle" },
                 null
             ],
             "type": "rotate_absolute"
@@ -10321,9 +10301,7 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
-                {
-                    "type": "angle"
-                },
+                { "type": "angle" },
                 null
             ],
             "type": "rotate_relative"
@@ -10357,9 +10335,7 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
-                {
-                    "type": "angle"
-                },
+                { "type": "angle" },
                 null
             ],
             "type": "direction_absolute"
@@ -10393,9 +10369,7 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
-                {
-                    "type": "angle"
-                },
+                { "type": "angle" },
                 null
             ],
             "type": "direction_relative"
@@ -10433,9 +10407,7 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
-                {
-                    "type": "angle"
-                },
+                { "type": "angle" },
                 {
                     "type": "number",
                     "params": [ "10" ]
@@ -10546,9 +10518,7 @@ Entry.block = {
                     "type": "text",
                     "params": [ "2" ]
                 },
-                {
-                    "type": "angle"
-                },
+                { "type": "angle" },
                 null
             ],
             "type": "direction_relative_duration"
@@ -10558,7 +10528,7 @@ Entry.block = {
             "AMOUNT": 1
         },
         "class": "rotate",
-        "isNotFor": [ "" ],
+        "isNotFor": [],
         "func": function (sprite, script) {
             if (!script.isStart) {
                 var timeValue;
@@ -11173,13 +11143,36 @@ Entry.block = {
         },
         "class": "robotis_openCM70_custom",
         "isNotFor": [ "robotis_openCM70" ],
-        "func": function (b, a) {
-            var c = Entry.Robotis_openCM70.INSTRUCTION.READ, d = 0, e = 0, f = 0, d = a.getStringField("SIZE");
-            "BYTE" == d ? e = 1 : "WORD" == d ? e = 2 : "DWORD" == d && (e = 4);
-            f = d = a.getNumberValue("VALUE");
-            Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, e]]);
+        "func": function (sprite, script) {
+              // instruction / address / length / value / default length
+            var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.READ;
+            var data_address = 0;
+            var data_length = 0;
+            var data_value = 0;
+
+            var data_default_address = 0;
+            var data_default_length = 0;
+
+            var size = script.getStringField("SIZE");
+
+            if (size == 'BYTE') {
+                data_length = 1;
+            } else if (size == 'WORD') {
+                data_length = 2;
+            } else if (size == 'DWORD') {
+                data_length = 4;
+            }
+
+            data_address = script.getNumberValue('VALUE');
+
+            data_default_address = data_address;
+            data_default_length = data_length;
+
+            Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
+            // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
             Entry.Robotis_carCont.update();
-            return Entry.hw.portData[f];
+
+            return Entry.hw.portData[data_default_address];
         }
     },
     "robotis_openCM70_sensor_value": {
@@ -11190,9 +11183,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "최종 소리 감지 횟수", "CM_SOUND_DETECTED" ],
-                    [ "실시간 소리 감지 횟수", "CM_SOUND_DETECTING" ],
-                    [ "사용자 버튼 상태", "CM_USER_BUTTON" ]
+                    [ Lang.Blocks.robotis_cm_sound_detected, "CM_SOUND_DETECTED" ],
+                    [ Lang.Blocks.robotis_cm_sound_detecting, "CM_SOUND_DETECTING" ],
+                    [ Lang.Blocks.robotis_cm_user_button, "CM_USER_BUTTON" ]
                 ],
                 "value": "CM_SOUND_DETECTED",
                 "fontSize": 11
@@ -11208,14 +11201,43 @@ Entry.block = {
         },
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
-        "func": function (b, a) {
-            var c = Entry.Robotis_openCM70.INSTRUCTION.READ, d = 0, e = 0, f = 0, g = 0, h = a.getStringField("SENSOR");
-            "CM_SOUND_DETECTED" == h ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1]) : "CM_SOUND_DETECTING" == h ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[0],
-                                                                                                                                                                                                                                                                                                                                   e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[1]) : "CM_USER_BUTTON" == h && (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1]);
-                                                                                                                                                                                                                                                                                                                                   f += 0 * g;
-                                                                                                                                                                                                                                                                                                                                   Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, g]]);
-                                                                                                                                                                                                                                                                                                                                   Entry.Robotis_carCont.update();
-                                                                                                                                                                                                                                                                                                                                   return Entry.hw.portData[f];
+        "func": function (sprite, script) {
+            var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.READ;
+            var data_address = 0;
+            var data_length = 0;
+            var data_value = 0;
+
+            var data_default_address = 0;
+            var data_default_length = 0;
+
+            var sensor = script.getStringField("SENSOR");
+
+            var increase = 0;
+
+            if (sensor == 'CM_SOUND_DETECTED') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1];
+            } else if (sensor == 'CM_SOUND_DETECTING') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[1];
+            } else if (sensor == 'CM_USER_BUTTON') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1];
+            }
+
+            data_default_address = data_default_address + increase * data_default_length;
+
+            Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
+            // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
+            Entry.Robotis_carCont.update();
+
+            return Entry.hw.portData[data_default_address];
         }
     },
     "robotis_openCM70_aux_sensor_value": {
@@ -11237,18 +11259,18 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "서보모터 위치", "AUX_SERVO_POSITION" ],
-                    [ "적외선센서", "AUX_IR" ],
-                    [ "접촉센서", "AUX_TOUCH" ],
-                    [ "조도센서(CDS)", "AUX_BRIGHTNESS" ],
-                    [ "온습도센서(습도)", "AUX_HYDRO_THEMO_HUMIDITY" ],
-                    [ "온습도센서(온도)", "AUX_HYDRO_THEMO_TEMPER" ],
-                    [ "온도센서", "AUX_TEMPERATURE" ],
-                    [ "초음파센서", "AUX_ULTRASONIC" ],
-                    [ "자석센서", "AUX_MAGNETIC" ],
-                    [ "동작감지센서", "AUX_MOTION_DETECTION" ],
-                    [ "컬러센서", "AUX_COLOR" ],
-                    [ "사용자 장치", "AUX_CUSTOM" ]
+                    [ Lang.Blocks.robotis_aux_servo_position, "AUX_SERVO_POSITION" ],
+                    [ Lang.Blocks.robotis_aux_ir, "AUX_IR" ],
+                    [ Lang.Blocks.robotis_aux_touch, "AUX_TOUCH" ],
+                    [ Lang.Blocks.robotis_aux_brightness, "AUX_BRIGHTNESS" ],
+                    [ Lang.Blocks.robotis_aux_hydro_themo_humidity, "AUX_HYDRO_THEMO_HUMIDITY" ],
+                    [ Lang.Blocks.robotis_aux_hydro_themo_temper, "AUX_HYDRO_THEMO_TEMPER" ],
+                    [ Lang.Blocks.robotis_aux_temperature, "AUX_TEMPERATURE" ],
+                    [ Lang.Blocks.robotis_aux_ultrasonic, "AUX_ULTRASONIC" ],
+                    [ Lang.Blocks.robotis_aux_magnetic, "AUX_MAGNETIC" ],
+                    [ Lang.Blocks.robotis_aux_motion_detection, "AUX_MOTION_DETECTION" ],
+                    [ Lang.Blocks.robotis_aux_color, "AUX_COLOR" ],
+                    [ Lang.Blocks.robotis_aux_custom, "AUX_CUSTOM" ]
                 ],
                 "value": "AUX_SERVO_POSITION",
                 "fontSize": 11
@@ -11265,21 +11287,102 @@ Entry.block = {
         },
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
-        "func": function (b, a) {
-            var c = Entry.Robotis_openCM70.INSTRUCTION.READ, d = 0, e = 0, f = 0, g = 0, h = a.getStringField("PORT"), k = a.getStringField("SENSOR"), l = 0;
-            "PORT_3" == h ? l = 2 : "PORT_4" == h ? l = 3 : "PORT_5" == h ? l = 4 : "PORT_6" == h && (l = 5);
-            "AUX_SERVO_POSITION" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1]) : "AUX_IR" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[1]) :
-                "AUX_TOUCH" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[1]) : "AUX_TEMPERATURE" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[1]) :
-                    "AUX_BRIGHTNESS" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[1]) : "AUX_HYDRO_THEMO_HUMIDITY" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[0],
-                                                                                                                                                                                                                                                                                                                                  e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[1]) : "AUX_HYDRO_THEMO_TEMPER" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[1]) : "AUX_ULTRASONIC" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[1],
-                                                                                                                                                                                                                                                                                                                                      d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[1]) : "AUX_MAGNETIC" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[1]) : "AUX_MOTION_DETECTION" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[1],
-                                                                                                                                                                                                                                                                                                                                          d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[1]) : "AUX_COLOR" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[1]) : "AUX_CUSTOM" == k && (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1],
-                                                                                                                                                                                                                                                                                                                                              d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1]);
-                                                                                                                                                                                                                                                                                                                                              f += l * g;
-                                                                                                                                                                                                                                                                                                                                              0 != l && (e = 6 * g);
-                                                                                                                                                                                                                                                                                                                                              Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, g]]);
-                                                                                                                                                                                                                                                                                                                                              Entry.Robotis_carCont.update();
-                                                                                                                                                                                                                                                                                                                                              return Entry.hw.portData[f];
+        "func": function (sprite, script) {
+            // instruction / address / length / value / default length
+            var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.READ;
+            var data_address = 0;
+            var data_length = 0;
+            var data_value = 0;
+
+            var data_default_address = 0;
+            var data_default_length = 0;
+
+            var port = script.getStringField("PORT");
+            var sensor = script.getStringField("SENSOR");
+
+            var increase = 0;
+            if (port == 'PORT_3') {
+                increase = 2;
+            } else if (port == 'PORT_4') {
+                increase = 3;
+            } else if (port == 'PORT_5') {
+                increase = 4;
+            } else if (port == 'PORT_6') {
+                increase = 5;
+            }
+
+            if (sensor == 'AUX_SERVO_POSITION') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1];
+            } else if (sensor == 'AUX_IR') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[1];
+            } else if (sensor == 'AUX_TOUCH') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[1];
+            } else if (sensor == 'AUX_TEMPERATURE') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[1];
+            } else if (sensor == 'AUX_BRIGHTNESS') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[1];
+            } else if (sensor == 'AUX_HYDRO_THEMO_HUMIDITY') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[1];
+            } else if (sensor == 'AUX_HYDRO_THEMO_TEMPER') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[1];
+            } else if (sensor == 'AUX_ULTRASONIC') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[1];
+            } else if (sensor == 'AUX_MAGNETIC') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[1];
+            } else if (sensor == 'AUX_MOTION_DETECTION') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[1];
+            } else if (sensor == 'AUX_COLOR') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[1];
+            } else if (sensor == 'AUX_CUSTOM') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1];
+            }
+
+            data_default_address = data_default_address + increase * data_default_length;
+            if (increase != 0) {
+                data_length = 6 * data_default_length;
+            }
+
+            Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
+            // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
+            Entry.Robotis_carCont.update();
+
+            return Entry.hw.portData[data_default_address];
         }
     },
     "robotis_openCM70_cm_buzzer_index": {
@@ -11290,58 +11393,58 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "라(0)", "0" ],
-                    [ "라#(1)", "1" ],
-                    [ "시(2)", "2" ],
-                    [ "도(3)", "3" ],
-                    [ "도#(4)", "4" ],
-                    [ "레(5)", "5" ],
-                    [ "레#(6)", "6" ],
-                    [ "미(7)", "7" ],
-                    [ "파(8)", "8" ],
-                    [ "파#(9)", "9" ],
-                    [ "솔(10)", "10" ],
-                    [ "솔#(11)", "11" ],
-                    [ "라(12)", "12" ],
-                    [ "라#(13)", "13" ],
-                    [ "시(14)", "14" ],
-                    [ "도(15)", "15" ],
-                    [ "도#(16)", "16" ],
-                    [ "레(17)", "17" ],
-                    [ "레#(18)", "18" ],
-                    [ "미(19)", "19" ],
-                    [ "파(20)", "20" ],
-                    [ "파#(21)", "21" ],
-                    [ "솔(22)", "22" ],
-                    [ "솔#(23)", "23" ],
-                    [ "라(24)", "24" ],
-                    [ "라#(25)", "25" ],
-                    [ "시(26)", "26" ],
-                    [ "도(27)", "27" ],
-                    [ "도#(28)", "28" ],
-                    [ "레(29)", "29" ],
-                    [ "레#(30)", "30" ],
-                    [ "미(31)", "31" ],
-                    [ "파(32)", "32" ],
-                    [ "파#(33)", "33" ],
-                    [ "솔(34)", "34" ],
-                    [ "솔#(35)", "35" ],
-                    [ "라(36)", "36" ],
-                    [ "라#(37)", "37" ],
-                    [ "시(38)", "38" ],
-                    [ "도(39)", "39" ],
-                    [ "도#(40)", "40" ],
-                    [ "레(41)", "41" ],
-                    [ "레#(42)", "42" ],
-                    [ "미(43)", "43" ],
-                    [ "파(44)", "44" ],
-                    [ "파#(45)", "45" ],
-                    [ "솔(46)", "46" ],
-                    [ "솔#(47)", "47" ],
-                    [ "라(48)", "48" ],
-                    [ "라#(49)", "49" ],
-                    [ "시(50)", "50" ],
-                    [ "도(51)", "51" ]
+                    [Lang.General.note_a + '(0)',"0"],
+                    [Lang.General.note_a + '#(1)',"1"],
+                    [Lang.General.note_b + '(2)',"2"],
+                    [Lang.General.note_c + '(3)',"3"],
+                    [Lang.General.note_c + '#(4)',"4"],
+                    [Lang.General.note_d + '(5)',"5"],
+                    [Lang.General.note_d + '#(6)',"6"],
+                    [Lang.General.note_e + '(7)',"7"],
+                    [Lang.General.note_f + '(8)',"8"],
+                    [Lang.General.note_f + '#(9)',"9"],
+                    [Lang.General.note_g + '(10)',"10"],
+                    [Lang.General.note_g + '#(11)',"11"],
+                    [Lang.General.note_a + '(12)',"12"],
+                    [Lang.General.note_a + '#(13)',"13"],
+                    [Lang.General.note_b + '(14)',"14"],
+                    [Lang.General.note_c + '(15)',"15"],
+                    [Lang.General.note_c + '#(16)',"16"],
+                    [Lang.General.note_d + '(17)',"17"],
+                    [Lang.General.note_d + '#(18)',"18"],
+                    [Lang.General.note_e + '(19)',"19"],
+                    [Lang.General.note_f + '(20)',"20"],
+                    [Lang.General.note_f + '#(21)',"21"],
+                    [Lang.General.note_g + '(22)',"22"],
+                    [Lang.General.note_g + '#(23)',"23"],
+                    [Lang.General.note_a + '(24)',"24"],
+                    [Lang.General.note_a + '#(25)',"25"],
+                    [Lang.General.note_b + '(26)',"26"],
+                    [Lang.General.note_c + '(27)',"27"],
+                    [Lang.General.note_c + '#(28)',"28"],
+                    [Lang.General.note_d + '(29)',"29"],
+                    [Lang.General.note_d + '#(30)',"30"],
+                    [Lang.General.note_e + '(31)',"31"],
+                    [Lang.General.note_f + '(32)',"32"],
+                    [Lang.General.note_f + '#(33)',"33"],
+                    [Lang.General.note_g + '(34)',"34"],
+                    [Lang.General.note_g + '#(35)',"35"],
+                    [Lang.General.note_a + '(36)',"36"],
+                    [Lang.General.note_a + '#(37)',"37"],
+                    [Lang.General.note_b + '(38)',"38"],
+                    [Lang.General.note_c + '(39)',"39"],
+                    [Lang.General.note_c + '#(40)',"40"],
+                    [Lang.General.note_d + '(41)',"41"],
+                    [Lang.General.note_d + '#(42)',"42"],
+                    [Lang.General.note_e + '(43)',"43"],
+                    [Lang.General.note_f + '(44)',"44"],
+                    [Lang.General.note_f + '#(45)',"45"],
+                    [Lang.General.note_g + '(46)',"46"],
+                    [Lang.General.note_g + '#(47)',"47"],
+                    [Lang.General.note_a + '(48)',"48"],
+                    [Lang.General.note_a + '#(49)',"49"],
+                    [Lang.General.note_b + '(50)',"50"],
+                    [Lang.General.note_c + '(51)',"51"]
                 ],
                 "value": "0",
                 "fontSize": 11
@@ -11374,12 +11477,34 @@ Entry.block = {
         },
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
-        "func": function (b, a) {
-            var c = a.getField("CM_BUZZER_INDEX", a), d = a.getNumberValue("CM_BUZZER_TIME", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, h = 0, k = 0, l = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[1], h = parseInt(10 * d);
-            50 < h && (h = 50);
-            k = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[0];
-            l = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[1];
-            return Entry.Robotis_carCont.postCallReturn(a, [[e, f, g, h], [e, k, l, c]], 1E3 * d);
+        "func": function (sprite, script) {
+            // instruction / address / length / value / default length
+            var cmBuzzerIndex = script.getField("CM_BUZZER_INDEX", script);
+            var cmBuzzerTime = script.getNumberValue("CM_BUZZER_TIME", script);
+
+            var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+            var data_address_1 = 0;
+            var data_length_1 = 0;
+            var data_value_1 = 0;
+            var data_address_2 = 0;
+            var data_length_2 = 0;
+            var data_value_2 = 0;
+
+            data_address_1 = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[0];
+            data_length_1 = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[1];
+            // data_value_1 = cmBuzzerTime * 10;
+            // TODO 텍스트 입력으로 바꾸고 최대는 5초 : 0.5 초 하려면 5를 입력  - console.log(parseInt(0.59 * 10)); max 는 5초
+            data_value_1 = parseInt(cmBuzzerTime * 10);
+            if (data_value_1 > 50) {
+                data_value_1 = 50;
+            }
+
+            data_address_2 = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[0];
+            data_length_2 = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[1];
+            data_value_2 = cmBuzzerIndex;
+
+            var data_sendqueue = [[data_instruction, data_address_1, data_length_1, data_value_1], [data_instruction, data_address_2, data_length_2, data_value_2]];
+            return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, cmBuzzerTime * 1000);
         }
     },
     "robotis_openCM70_cm_buzzer_melody": {
@@ -11435,9 +11560,28 @@ Entry.block = {
         },
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
-        "func": function (b, a) {
-            var c = a.getField("CM_BUZZER_MELODY", a), d = Entry.Robotis_openCM70.INSTRUCTION.WRITE, e = 0, f = 0, g = 0, h = 0, e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[0], f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[1], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[0], h = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[1];
-            return Entry.Robotis_carCont.postCallReturn(a, [[d, e, f, 255], [d, g, h, c]], 1E3);
+        "func": function (sprite, script) {
+            // instruction / address / length / value / default length
+            var cmBuzzerMelody = script.getField("CM_BUZZER_MELODY", script);
+
+            var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+            var data_address_1 = 0;
+            var data_length_1 = 0;
+            var data_value_1 = 0;
+            var data_address_2 = 0;
+            var data_length_2 = 0;
+            var data_value_2 = 0;
+
+            data_address_1 = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[0];
+            data_length_1 = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[1];
+            data_value_1 = 255;
+
+            data_address_2 = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[0];
+            data_length_2 = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[1];
+            data_value_2 = cmBuzzerMelody;
+
+            var data_sendqueue = [[data_instruction, data_address_1, data_length_1, data_value_1], [data_instruction, data_address_2, data_length_2, data_value_2]];
+            return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, 1000);
         }
     },
     "robotis_openCM70_cm_sound_detected_clear": {
@@ -11458,9 +11602,20 @@ Entry.block = {
         },
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
-        "func": function (b, a) {
-            var c = Entry.Robotis_openCM70.INSTRUCTION.WRITE, d = 0, e = 0, d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1];
-            return Entry.Robotis_carCont.postCallReturn(a, [[c, d, e, 0]], Entry.Robotis_openCM70.delay);
+        "func": function (sprite, script) {
+            // instruction / address / length / value / default length
+
+            var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+            var data_address = 0;
+            var data_length = 0;
+            var data_value = 0;
+
+            data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0];
+            data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1];
+            data_value = 0;
+
+            var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
+            return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
         }
     },
     "robotis_openCM70_cm_led": {
@@ -11471,9 +11626,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "빨간색", "CM_LED_R" ],
-                    [ "녹색", "CM_LED_G" ],
-                    [ "파란색", "CM_LED_B" ]
+                    [Lang.Blocks.robotis_common_red_color,"CM_LED_R"],
+                    [Lang.Blocks.robotis_common_green_color,"CM_LED_G"],
+                    [Lang.Blocks.robotis_common_blue_color,"CM_LED_B"],
                 ],
                 "value": "CM_LED_R",
                 "fontSize": 11
@@ -11481,8 +11636,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "켜기", "1" ],
-                    [ "끄기", "0" ]
+                    [Lang.Blocks.robotis_common_on,"1"],
+                    [Lang.Blocks.robotis_common_off,"0"]
                 ],
                 "value": "1",
                 "fontSize": 11
@@ -11504,10 +11659,31 @@ Entry.block = {
         },
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
-        "func": function (b, a) {
-            var c = a.getField("CM_LED", a), d = a.getField("VALUE", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0;
-            "CM_LED_R" == c ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_R[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_R[1]) : "CM_LED_G" == c ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_G[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_G[1]) : "CM_LED_B" == c && (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_B[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_B[1]);
-            return Entry.Robotis_carCont.postCallReturn(a, [[e, f, g, d]], Entry.Robotis_openCM70.delay);
+        "func": function (sprite, script) {
+            // instruction / address / length / value / default length
+            var cmLed = script.getField("CM_LED", script);
+            var value = script.getField("VALUE", script);
+
+            var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+            var data_address = 0;
+            var data_length = 0;
+            var data_value = 0;
+
+            if (cmLed == 'CM_LED_R') {
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_R[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_R[1];
+            } else if (cmLed == 'CM_LED_G') {
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_G[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_G[1];
+            } else if (cmLed == 'CM_LED_B') {
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_B[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_B[1];
+            }
+
+            data_value = value;
+
+            var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
+            return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
         }
     },
     "robotis_openCM70_cm_motion": {
@@ -11541,9 +11717,19 @@ Entry.block = {
         },
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
-        "func": function (b, a) {
-            var c = Entry.Robotis_openCM70.INSTRUCTION.WRITE, d = 0, e = 0, f = 0, d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_MOTION[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_MOTION[1], f = a.getNumberValue("VALUE", a);
-            return Entry.Robotis_carCont.postCallReturn(a, [[c, d, e, f]], Entry.Robotis_openCM70.delay);
+        "func": function (sprite, script) {
+            // instruction / address / length / value / default length
+            var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+            var data_address = 0;
+            var data_length = 0;
+            var data_value = 0;
+
+            data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_MOTION[0];
+            data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_MOTION[1];
+            data_value = script.getNumberValue("VALUE", script);
+
+            var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
+            return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
         }
     },
     "robotis_openCM70_aux_motor_speed": {
@@ -11554,8 +11740,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "1", "1" ],
-                    [ "2", "2" ]
+                    [Lang.Blocks.robotis_common_port_1,"1"],
+                    [Lang.Blocks.robotis_common_port_2,"2"]
                 ],
                 "value": "1",
                 "fontSize": 11
@@ -11563,8 +11749,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "시계방향", "CW" ],
-                    [ "반시계방향", "CCW" ]
+                    [Lang.Blocks.robotis_common_clockwhise,"CW"],
+                    [Lang.Blocks.robotis_common_counter_clockwhise,"CCW"]
                 ],
                 "value": "CW",
                 "fontSize": 11
@@ -11599,10 +11785,37 @@ Entry.block = {
         },
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
-        "func": function (b, a) {
-            var c = a.getField("PORT", a), d = a.getField("DIRECTION_ANGLE", a), e = a.getNumberValue("VALUE"), f = Entry.Robotis_openCM70.INSTRUCTION.WRITE, g = 0, h = 0, g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTOR_SPEED[0], h = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTOR_SPEED[1];
-            "CW" == d ? (e += 1024, 2047 < e && (e = 2047)) : 1023 < e && (e = 1023);
-            return Entry.Robotis_carCont.postCallReturn(a, [[f, g + (c - 1) * h, h, e]], Entry.Robotis_openCM70.delay);
+        "func": function (sprite, script) {
+            // instruction / address / length / value / default length
+            var port = script.getField("PORT", script);
+            var directionAngle = script.getField("DIRECTION_ANGLE", script);
+            var value = script.getNumberValue('VALUE');
+
+            var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+            var data_address = 0;
+            var data_length = 0;
+            var data_value = 0;
+
+            data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTOR_SPEED[0];
+            data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTOR_SPEED[1];
+
+            data_address = data_address + (port - 1) * data_length;
+
+            if (directionAngle == 'CW') {
+                value = value + 1024;
+                if (value > 2047) {
+                    value = 2047;
+                }
+            } else {
+                if (value > 1023) {
+                    value = 1023;
+                }
+            }
+
+            data_value = value;
+
+            var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
+            return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
         }
     },
     "robotis_openCM70_aux_servo_mode": {
@@ -11613,10 +11826,10 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "3", "3" ],
-                    [ "4", "4" ],
-                    [ "5", "5" ],
-                    [ "6", "6" ]
+                    [Lang.Blocks.robotis_common_port_3,"3"],
+                    [Lang.Blocks.robotis_common_port_4,"4"],
+                    [Lang.Blocks.robotis_common_port_5,"5"],
+                    [Lang.Blocks.robotis_common_port_6,"6"]
                 ],
                 "value": "3",
                 "fontSize": 11
@@ -11624,8 +11837,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "회전모드", "0" ],
-                    [ "관절모드", "1" ]
+                    [Lang.Blocks.robotis_common_wheel_mode,"0"],
+                    [Lang.Blocks.robotis_common_joint_mode,"1"]
                 ],
                 "value": "0",
                 "fontSize": 11
@@ -11647,9 +11860,24 @@ Entry.block = {
         },
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
-        "func": function (b, a) {
-            var c = a.getField("PORT", a), d = a.getField("MODE", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_MODE[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_MODE[1];
-            return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
+        "func": function (sprite, script) {
+            // instruction / address / length / value / default length
+            var port = script.getField("PORT", script);
+            var mode = script.getField("MODE", script);
+
+            var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+            var data_address = 0;
+            var data_length = 0;
+            var data_value = 0;
+
+            data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_MODE[0];
+            data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_MODE[1];
+
+            data_address = data_address + (port - 1) * data_length;
+            data_value = mode;
+
+            var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
+            return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
         }
     },
     "robotis_openCM70_aux_servo_speed": {
@@ -11660,10 +11888,10 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "3", "3" ],
-                    [ "4", "4" ],
-                    [ "5", "5" ],
-                    [ "6", "6" ]
+                    [Lang.Blocks.robotis_common_port_3,"3"],
+                    [Lang.Blocks.robotis_common_port_4,"4"],
+                    [Lang.Blocks.robotis_common_port_5,"5"],
+                    [Lang.Blocks.robotis_common_port_6,"6"]
                 ],
                 "value": "3",
                 "fontSize": 11
@@ -11671,8 +11899,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "시계방향", "CW" ],
-                    [ "반시계방향", "CCW" ]
+                    [Lang.Blocks.robotis_common_clockwhise,"CW"],
+                    [Lang.Blocks.robotis_common_counter_clockwhise,"CCW"]
                 ],
                 "value": "CW",
                 "fontSize": 11
@@ -11707,10 +11935,37 @@ Entry.block = {
         },
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
-        "func": function (b, a) {
-            var c = a.getField("PORT", a), d = a.getField("DIRECTION_ANGLE", a), e = a.getNumberValue("VALUE"), f = Entry.Robotis_openCM70.INSTRUCTION.WRITE, g = 0, h = 0, g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_SPEED[0], h = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_SPEED[1];
-            "CW" == d ? (e += 1024, 2047 < e && (e = 2047)) : 1023 < e && (e = 1023);
-            return Entry.Robotis_carCont.postCallReturn(a, [[f, g + (c - 1) * h, h, e]], Entry.Robotis_openCM70.delay);
+        "func": function (sprite, script) {
+            // instruction / address / length / value / default length
+            var port = script.getField("PORT", script);
+            var directionAngle = script.getField("DIRECTION_ANGLE", script);
+            var value = script.getNumberValue('VALUE');
+
+            var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+            var data_address = 0;
+            var data_length = 0;
+            var data_value = 0;
+
+            data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_SPEED[0];
+            data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_SPEED[1];
+
+            data_address = data_address + (port - 1) * data_length;
+
+            if (directionAngle == 'CW') {
+                value = value + 1024;
+                if (value > 2047) {
+                    value = 2047;
+                }
+            } else {
+                if (value > 1023) {
+                    value = 1023;
+                }
+            }
+
+            data_value = value;
+
+            var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
+            return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
         }
     },
     "robotis_openCM70_aux_servo_position": {
@@ -11721,10 +11976,10 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "3", "3" ],
-                    [ "4", "4" ],
-                    [ "5", "5" ],
-                    [ "6", "6" ]
+                    [Lang.Blocks.robotis_common_port_3,"3"],
+                    [Lang.Blocks.robotis_common_port_4,"4"],
+                    [Lang.Blocks.robotis_common_port_5,"5"],
+                    [Lang.Blocks.robotis_common_port_6,"6"]
                 ],
                 "value": "3",
                 "fontSize": 11
@@ -11757,10 +12012,31 @@ Entry.block = {
         },
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
-        "func": function (b, a) {
-            var c = a.getField("PORT", a), d = a.getNumberValue("VALUE"), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1];
-            1023 < d ? d = 1023 : 0 > d && (d = 0);
-            return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
+        "func": function (sprite, script) {
+            // instruction / address / length / value / default length
+            var port = script.getField("PORT", script);
+            var value = script.getNumberValue('VALUE');
+
+            var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+            var data_address = 0;
+            var data_length = 0;
+            var data_value = 0;
+
+            data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0];
+            data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1];
+
+            data_address = data_address + (port - 1) * data_length;
+
+            if (value > 1023) {
+                value = 1023;
+            } else if (value < 0) {
+                value = 0;
+            }
+
+            data_value = value;
+
+            var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
+            return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
         }
     },
     "robotis_openCM70_aux_led_module": {
@@ -11771,10 +12047,10 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "3", "3" ],
-                    [ "4", "4" ],
-                    [ "5", "5" ],
-                    [ "6", "6" ]
+                    [Lang.Blocks.robotis_common_port_3,"3"],
+                    [Lang.Blocks.robotis_common_port_4,"4"],
+                    [Lang.Blocks.robotis_common_port_5,"5"],
+                    [Lang.Blocks.robotis_common_port_6,"6"]
                 ],
                 "value": "3",
                 "fontSize": 11
@@ -11782,10 +12058,10 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "양 쪽 LED끄기", "0" ],
-                    [ "오른쪽 LED켜기", "1" ],
-                    [ "왼쪽 LED켜기", "2" ],
-                    [ "양 쪽 LED켜기", "3" ]
+                    [Lang.Blocks.robotis_cm_led_both + Lang.Blocks.robotis_common_off,"0"],
+                    [Lang.Blocks.robotis_cm_led_right + Lang.Blocks.robotis_common_on,"1"],
+                    [Lang.Blocks.robotis_cm_led_left + Lang.Blocks.robotis_common_on,"2"],
+                    [Lang.Blocks.robotis_cm_led_both + Lang.Blocks.robotis_common_on,"3"]
                 ],
                 "value": "0",
                 "fontSize": 11
@@ -11807,9 +12083,24 @@ Entry.block = {
         },
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
-        "func": function (b, a) {
-            var c = a.getField("PORT", a), d = a.getField("LED_MODULE", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_LED_MODULE[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_LED_MODULE[1];
-            return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
+        "func": function (sprite, script) {
+            // instruction / address / length / value / default length
+            var port = script.getField("PORT", script);
+            var ledModule = script.getField("LED_MODULE", script);
+
+            var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+            var data_address = 0;
+            var data_length = 0;
+            var data_value = 0;
+
+            data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_LED_MODULE[0];
+            data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_LED_MODULE[1];
+
+            data_address = data_address + (port - 1) * data_length;
+            data_value = ledModule;
+
+            var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
+            return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
         }
     },
     "robotis_openCM70_aux_custom": {
@@ -11820,10 +12111,10 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "3", "3" ],
-                    [ "4", "4" ],
-                    [ "5", "5" ],
-                    [ "6", "6" ]
+                    [Lang.Blocks.robotis_common_port_3,"3"],
+                    [Lang.Blocks.robotis_common_port_4,"4"],
+                    [Lang.Blocks.robotis_common_port_5,"5"],
+                    [Lang.Blocks.robotis_common_port_6,"6"]
                 ],
                 "value": "3",
                 "fontSize": 11
@@ -11856,9 +12147,24 @@ Entry.block = {
         },
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
-        "func": function (b, a) {
-            var c = a.getField("PORT", a), d = a.getNumberValue("VALUE"), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1];
-            return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
+        "func": function (sprite, script) {
+            // instruction / address / length / value / default length
+            var port = script.getField("PORT", script);
+            var value = script.getNumberValue('VALUE');
+
+            var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+            var data_address = 0;
+            var data_length = 0;
+            var data_value = 0;
+
+            data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0];
+            data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1];
+
+            data_address = data_address + (port - 1) * data_length;
+            data_value = value;
+
+            var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
+            return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
         }
     },
     "robotis_openCM70_cm_custom": {
@@ -11901,9 +12207,25 @@ Entry.block = {
         },
         "class": "robotis_openCM70_custom",
         "isNotFor": [ "robotis_openCM70" ],
-        "func": function (b, a) {
-            var c = Entry.Robotis_openCM70.INSTRUCTION.WRITE, d = 0, e = 0, d = a.getNumberValue("ADDRESS"), e = a.getNumberValue("VALUE");
-            return Entry.Robotis_carCont.postCallReturn(a, [[c, d, 65535 < e ? 4 : 255 < e ? 2 : 1, e]], Entry.Robotis_openCM70.delay);
+        "func": function (sprite, script) {
+              // instruction / address / length / value / default length
+            var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+            var data_address = 0;
+            var data_length = 0;
+            var data_value = 0;
+
+              data_address = script.getNumberValue('ADDRESS');
+            data_value = script.getNumberValue('VALUE');
+            if (data_value > 65535) {
+                data_length = 4;
+            } else if (data_value > 255) {
+                data_length = 2;
+            } else {
+                data_length = 1;
+            }
+
+            var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
+            return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
         }
     },
     "robotis_carCont_sensor_value": {
@@ -11914,15 +12236,15 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽 접촉 센서", "CM_SPRING_LEFT" ],
-                    [ "오른쪽 접촉 센서", "CM_SPRING_RIGHT" ],
-                    [ "선택 버튼 상태", "CM_SWITCH" ],
-                    [ "최종 소리 감지 횟수", "CM_SOUND_DETECTED" ],
-                    [ "실시간 소리 감지 횟수", "CM_SOUND_DETECTING" ],
-                    [ "왼쪽 적외선 센서", "CM_IR_LEFT" ],
-                    [ "오른쪽 적외선 센서", "CM_IR_RIGHT" ],
-                    [ "왼쪽 적외선 센서 캘리브레이션 값", "CM_CALIBRATION_LEFT" ],
-                    [ "오른쪽 적외선 센서 캘리브레이션 값", "CM_CALIBRATION_RIGHT" ]
+                    [Lang.Blocks.robotis_cm_spring_left,"CM_SPRING_LEFT"],
+                    [Lang.Blocks.robotis_cm_spring_right,"CM_SPRING_RIGHT"],
+                    [Lang.Blocks.robotis_cm_switch,"CM_SWITCH"],
+                    [Lang.Blocks.robotis_cm_sound_detected,"CM_SOUND_DETECTED"],
+                    [Lang.Blocks.robotis_cm_sound_detecting,"CM_SOUND_DETECTING"],
+                    [Lang.Blocks.robotis_cm_ir_left,"CM_IR_LEFT"],
+                    [Lang.Blocks.robotis_cm_ir_right,"CM_IR_RIGHT"],
+                    [Lang.Blocks.robotis_cm_calibration_left,"CM_CALIBRATION_LEFT"],
+                    [Lang.Blocks.robotis_cm_calibration_right,"CM_CALIBRATION_RIGHT"],
                 ],
                 "value": "CM_SPRING_LEFT",
                 "fontSize": 11
@@ -11938,17 +12260,75 @@ Entry.block = {
         },
         "class": "robotis_carCont_cm",
         "isNotFor": [ "robotis_carCont" ],
-        "func": function (b, a) {
-            var c = Entry.Robotis_carCont.INSTRUCTION.READ, d = 0, e = 0, f = 0, g = 0, h = a.getStringField("SENSOR");
-            "CM_SPRING_LEFT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[2], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[3]) : "CM_SPRING_RIGHT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[2], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[3]) :
-                "CM_SWITCH" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[1]) : "CM_SOUND_DETECTED" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1]) :
-                    "CM_SOUND_DETECTING" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[1]) : "CM_IR_LEFT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[2], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[3]) :
-                        "CM_IR_RIGHT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[2], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[3]) : "CM_CALIBRATION_LEFT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[1]) :
-                            "CM_CALIBRATION_RIGHT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[1]) : "CM_BUTTON_STATUS" == h && (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[0],
-                                                                                                                                                                                                                                                                                                                                                             e = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[1]);
-                                                                                                                                                                                                                                                                                                                                                             Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, g]]);
-                                                                                                                                                                                                                                                                                                                                                             Entry.Robotis_carCont.update();
-                                                                                                                                                                                                                                                                                                                                                             return Entry.hw.portData[f];
+        "func": function (sprite, script) {
+            // instruction / address / length / value / default length
+            var data_instruction = Entry.Robotis_carCont.INSTRUCTION.READ;
+            var data_address = 0;
+            var data_length = 0;
+            var data_value = 0;
+
+            var data_default_address = 0;
+            var data_default_length = 0;
+
+              var sensor = script.getStringField("SENSOR");
+
+              if (sensor == 'CM_SPRING_LEFT') {
+                  data_default_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[0];
+                data_default_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[1];
+                  data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[2];
+                data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[3];
+              } else if (sensor == 'CM_SPRING_RIGHT') {
+                data_default_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[0];
+                data_default_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[1];
+                data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[2];
+                data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[3];
+              } else if (sensor == 'CM_SWITCH') {
+                data_default_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[0];
+                data_default_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[1];
+                data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[0];
+                data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[1];
+              } else if (sensor == 'CM_SOUND_DETECTED') {
+                data_default_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0];
+                data_default_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1];
+                data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0];
+                data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1];
+              } else if (sensor == 'CM_SOUND_DETECTING') {
+                data_default_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[0];
+                data_default_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[1];
+                data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[0];
+                data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[1];
+              } else if (sensor == 'CM_IR_LEFT') {
+                data_default_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[0];
+                data_default_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[1];
+                data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[2];
+                data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[3];
+              } else if (sensor == 'CM_IR_RIGHT') {
+                data_default_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[0];
+                data_default_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[1];
+                data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[2];
+                data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[3];
+              } else if (sensor == 'CM_CALIBRATION_LEFT') {
+                data_default_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[0];
+                data_default_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[1];
+                data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[0];
+                data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[1];
+              } else if (sensor == 'CM_CALIBRATION_RIGHT') {
+                data_default_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[0];
+                data_default_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[1];
+                data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[0];
+                data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[1];
+              } else if (sensor == 'CM_BUTTON_STATUS') {
+                data_default_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[0];
+                data_default_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[1];
+                data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[0];
+                data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[1];
+              }
+
+            Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
+            // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
+            Entry.Robotis_carCont.update();
+
+            return Entry.hw.portData[data_default_address];
         }
     },
     "robotis_carCont_cm_led": {
@@ -11959,8 +12339,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "켜기", "1" ],
-                    [ "끄기", "0" ]
+                    [Lang.Blocks.robotis_common_on,"1"],
+                    [Lang.Blocks.robotis_common_off,"0"]
                 ],
                 "value": "1",
                 "fontSize": 11
@@ -11968,8 +12348,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "켜기", "1" ],
-                    [ "끄기", "0" ]
+                    [Lang.Blocks.robotis_common_on,"1"],
+                    [Lang.Blocks.robotis_common_off,"0"]
                 ],
                 "value": "1",
                 "fontSize": 11
@@ -11991,11 +12371,29 @@ Entry.block = {
         },
         "class": "robotis_carCont_cm",
         "isNotFor": [ "robotis_carCont" ],
-        "func": function (b, a) {
-            var c = a.getField("VALUE_LEFT", a), d = a.getField("VALUE_RIGHT", a), e = Entry.Robotis_carCont.INSTRUCTION.WRITE, f = 0, g = 0, h = 0, f = Entry.Robotis_carCont.CONTROL_TABLE.CM_LED[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_LED[1];
-            1 == c && 1 == d ? h = 9 : 1 == c && 0 == d && (h = 8);
-            0 == c && 1 == d && (h = 1);
-            return Entry.Robotis_carCont.postCallReturn(a, [[e, f, g, h]], Entry.Robotis_carCont.delay);
+        "func": function (sprite, script) {
+            // instruction / address / length / value / default length
+            var value_left = script.getField("VALUE_LEFT", script);
+            var value_right = script.getField("VALUE_RIGHT", script);
+
+            var data_instruction = Entry.Robotis_carCont.INSTRUCTION.WRITE;
+            var data_address = 0;
+            var data_length = 0;
+            var data_value = 0;
+
+            data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_LED[0];
+            data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_LED[1];
+
+            if (value_left == 1 && value_right == 1) {
+                data_value = 9;
+            } else if (value_left == 1 && value_right == 0) {
+                data_value = 8;
+            } if (value_left == 0 && value_right == 1) {
+                data_value = 1;
+            }
+
+            var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
+            return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_carCont.delay);
         }
     },
     "robotis_carCont_cm_sound_detected_clear": {
@@ -12016,9 +12414,20 @@ Entry.block = {
         },
         "class": "robotis_carCont_cm",
         "isNotFor": [ "robotis_carCont" ],
-        "func": function (b, a) {
-            var c = Entry.Robotis_carCont.INSTRUCTION.WRITE, d = 0, e = 0, d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1];
-            return Entry.Robotis_carCont.postCallReturn(a, [[c, d, e, 0]], Entry.Robotis_carCont.delay);
+        "func": function (sprite, script) {
+            // instruction / address / length / value / default length
+
+            var data_instruction = Entry.Robotis_carCont.INSTRUCTION.WRITE;
+            var data_address = 0;
+            var data_length = 0;
+            var data_value = 0;
+
+            data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0];
+            data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1];
+            data_value = 0;
+
+            var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
+            return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_carCont.delay);
         }
     },
     "robotis_carCont_aux_motor_speed": {
@@ -12029,8 +12438,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽", "LEFT" ],
-                    [ "오른쪽", "RIGHT" ]
+                    [Lang.General.left,"LEFT"],
+                    [Lang.General.right,"RIGHT"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -12038,8 +12447,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "시계방향", "CW" ],
-                    [ "반시계방향", "CCW" ]
+                    [Lang.Blocks.robotis_common_clockwhise,"CW"],
+                    [Lang.Blocks.robotis_common_counter_clockwhise,"CCW"]
                 ],
                 "value": "CW",
                 "fontSize": 11
@@ -12074,11 +12483,40 @@ Entry.block = {
         },
         "class": "robotis_carCont_cm",
         "isNotFor": [ "robotis_carCont" ],
-        "func": function (b, a) {
-            var c = a.getField("DIRECTION", a), d = a.getField("DIRECTION_ANGLE", a), e = a.getNumberValue("VALUE"), f = Entry.Robotis_carCont.INSTRUCTION.WRITE, g = 0, h = 0;
-            "LEFT" == c ? (g = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_LEFT[0], h = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_LEFT[1]) : (g = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_RIGHT[0], h = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_RIGHT[1]);
-            "CW" == d ? (e += 1024, 2047 < e && (e = 2047)) : 1023 < e && (e = 1023);
-            return Entry.Robotis_carCont.postCallReturn(a, [[f, g, h, e]], Entry.Robotis_carCont.delay);
+        "func": function (sprite, script) {
+            // instruction / address / length / value / default length
+            var direction = script.getField("DIRECTION", script);
+            var directionAngle = script.getField("DIRECTION_ANGLE", script);
+            var value = script.getNumberValue('VALUE');
+
+            var data_instruction = Entry.Robotis_carCont.INSTRUCTION.WRITE;
+            var data_address = 0;
+            var data_length = 0;
+            var data_value = 0;
+
+            if (direction == 'LEFT') {
+                data_address = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_LEFT[0];
+                data_length = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_LEFT[1];
+            } else {
+                data_address = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_RIGHT[0];
+                data_length = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_RIGHT[1];
+            }
+
+            if (directionAngle == 'CW') {
+                value = value + 1024;
+                if (value > 2047) {
+                    value = 2047;
+                }
+            } else {
+                if (value > 1023) {
+                    value = 1023;
+                }
+            }
+
+            data_value = value;
+
+            var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
+            return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_carCont.delay);
         }
     },
     "robotis_carCont_cm_calibration": {
@@ -12089,8 +12527,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽", "LEFT" ],
-                    [ "오른쪽", "RIGHT" ]
+                    [Lang.General.left,"LEFT"],
+                    [Lang.General.right,"RIGHT"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -12123,10 +12561,32 @@ Entry.block = {
         },
         "class": "robotis_carCont_cm",
         "isNotFor": [ "robotis_carCont" ],
-        "func": function (b, a) {
-            var c = a.getField("DIRECTION", a), d = a.getNumberValue("VALUE"), e = Entry.Robotis_carCont.INSTRUCTION.WRITE, f = 0, g = 0;
-            "LEFT" == c ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[1]) : (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[1]);
-            return Entry.Robotis_carCont.postCallReturn(a, [[e, f, g, d]], Entry.Robotis_carCont.delay);
+        "func": function (sprite, script) {
+            // instruction / address / length / value / default length
+            var direction = script.getField("DIRECTION", script);
+            var value = script.getNumberValue('VALUE');
+
+            var data_instruction = Entry.Robotis_carCont.INSTRUCTION.WRITE;
+            var data_address = 0;
+            var data_length = 0;
+            var data_value = 0;
+
+            if (direction == 'LEFT') {
+                data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[0];
+                data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[1];
+            } else {
+                data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[0];
+                data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[1];
+            }
+
+            data_value = value;
+
+            var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
+            return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_carCont.delay);
+
+            // Entry.hw.sendQueue['ROBOTIS_DATA'] = [[data_instruction, data_address, data_length, data_value]];
+            // update();
+            // return script.callReturn();
         }
     },
     "when_scene_start": {
@@ -12845,7 +13305,7 @@ Entry.block = {
             "END": 2
         },
         "class": "sound_play",
-        "isNotFor": [ "" ],
+        "isNotFor": [],
         "func": function (sprite, script) {
             var soundId = script.getStringValue("VALUE", script);
             var sound = sprite.parent.getSound(soundId);
@@ -12908,7 +13368,7 @@ Entry.block = {
             "END": 2
         },
         "class": "sound_wait",
-        "isNotFor": [ "" ],
+        "isNotFor": [],
         "func": function (sprite, script) {
             if (!script.isPlay) {
                 script.isPlay = true;
@@ -13503,7 +13963,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Text",
-                "text": "변수 추가",
+                "text": Lang.Workspace.variable_create,
                 "color": "#333",
                 "align": "center"
             }
@@ -13522,7 +13982,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Text",
-                "text": "리스트 추가",
+                "text": Lang.Workspace.list_create,
                 "color": "#333",
                 "align": "center"
             }
@@ -14359,7 +14819,7 @@ Entry.block = {
             "BOOL": 0
         },
         "class": "ask",
-        "isNotFor": [ "" ],
+        "isNotFor": [],
         "func": function (sprite, script) {
             var bool = script.getField("BOOL", script);
             if (bool == 'HIDE')
@@ -14426,9 +14886,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "D2", "D2" ],
-                    [ "D3", "D3" ],
-                    [ "D11", "D11" ]
+                    [Lang.Blocks.XBOT_D2_digitalInput, "D2"],
+                    [Lang.Blocks.XBOT_D3_digitalInput, "D3"],
+                    [Lang.Blocks.XBOT_D11_digitalInput, "D11"]
                 ],
                 "value": "D2",
                 "fontSize": 11
@@ -14444,9 +14904,10 @@ Entry.block = {
         },
         "class": "xbot_sensor",
         "isNotFor": [ "xbot_epor_edge" ],
-        "func": function (b, a) {
-            var c = Entry.hw.portData, d = a.getField("DEVICE");
-            return c[d];
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var dev = script.getField('DEVICE');
+            return pd[dev];
         }
     },
     "xbot_analogValue": {
@@ -14457,12 +14918,12 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "광 센서", "light" ],
-                    [ "마이크 센서", "mic" ],
-                    [ "아날로그 0번 핀", "adc0" ],
-                    [ "아날로그 1번 핀", "adc1" ],
-                    [ "아날로그 2번 핀", "adc2" ],
-                    [ "아날로그 3번 핀", "adc3" ]
+                    [Lang.Blocks.XBOT_CDS, "light"],
+                    [Lang.Blocks.XBOT_MIC, "mic"],
+                    [Lang.Blocks.XBOT_analog0, "adc0"],
+                    [Lang.Blocks.XBOT_analog1, "adc1"],
+                    [Lang.Blocks.XBOT_analog2, "adc2"],
+                    [Lang.Blocks.XBOT_analog3, "adc3"],
                 ],
                 "value": "light",
                 "fontSize": 11
@@ -14478,9 +14939,10 @@ Entry.block = {
         },
         "class": "xbot_sensor",
         "isNotFor": [ "xbot_epor_edge" ],
-        "func": function (b, a) {
-            var c = Entry.hw.portData, d = a.getField("DEVICE");
-            return c[d];
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var dev = script.getField('DEVICE');
+            return pd[dev];
         }
     },
     "xbot_digitalOutput": {
@@ -14502,8 +14964,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "높음", "HIGH" ],
-                    [ "낮음", "LOW" ]
+                    [Lang.Blocks.XBOT_High, "HIGH"],
+                    [Lang.Blocks.XBOT_Low, "LOW"],
                 ],
                 "value": "HIGH",
                 "fontSize": 11
@@ -14525,13 +14987,36 @@ Entry.block = {
         },
         "class": "xbot_sensor",
         "isNotFor": [ "xbot_epor_edge" ],
-        "func": function (b, a) {
-            var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getStringField("VALUE", a);
-            c.D13 = "D13" == d && "HIGH" == e ? 1 : 0;
-            c.D4 = "D4" == d && "HIGH" == e ? 1 : 0;
-            c.D7 = "D7" == d && "HIGH" == e ? 1 : 0;
-            c.D12 = "D12" == d && "HIGH" == e ? 1 : 0;
-            return a.callReturn();
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var dev = script.getStringField("DEVICE", script);
+            var value = script.getStringField('VALUE', script);
+
+            if (dev == 'D13' && value == 'HIGH') {
+                sq.D13 = 1;
+            } else {
+                sq.D13 = 0;
+            }
+
+            if (dev == 'D4' && value == 'HIGH') {
+                sq.D4 = 1;
+            } else {
+                sq.D4 = 0;
+            }
+
+            if (dev == 'D7' && value == 'HIGH') {
+                sq.D7 = 1;
+            } else {
+                sq.D7 = 0;
+            }
+
+            if (dev == 'D12' && value == 'HIGH') {
+                sq.D12 = 1;
+            } else {
+                sq.D12 = 0;
+            }
+            //sq.D13 = 1;
+            return script.callReturn();
         }
     },
     "xbot_analogOutput": {
@@ -14576,10 +15061,17 @@ Entry.block = {
         },
         "class": "xbot_sensor",
         "isNotFor": [ "xbot_epor_edge" ],
-        "func": function (b, a) {
-            var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getNumberValue("VALUE", a);
-            "analogD5" == d ? c.analogD5 = e : "analogD6" == d && (c.analogD6 = e);
-            return a.callReturn();
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var dev = script.getStringField("DEVICE", script);
+            var value = script.getNumberValue("VALUE", script);
+
+            if (dev == 'analogD5') {
+                sq.analogD5 = value;
+            } else if(dev == 'analogD6') {
+                sq.analogD6 = value;
+            }
+            return script.callReturn();
         }
     },
     "xbot_servo": {
@@ -14590,9 +15082,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "머리(D8)", "head" ],
-                    [ "오른 팔(D9)", "right" ],
-                    [ "왼 팔(D10)", "left" ]
+                    [Lang.Blocks.XBOT_Head,"head"],
+                    [Lang.Blocks.XBOT_ArmR, "right"],
+                    [Lang.Blocks.XBOT_ArmL, "left"]
                 ],
                 "value": "head",
                 "fontSize": 11
@@ -14617,8 +15109,7 @@ Entry.block = {
                 },
                 null
             ],
-            "type": "xbot_servo",
-            "id": "bcuz"
+            "type": "xbot_servo"
         },
         "paramsKeyMap": {
             "DEVICE": 0,
@@ -14626,10 +15117,20 @@ Entry.block = {
         },
         "class": "xbot_motor",
         "isNotFor": [ "xbot_epor_edge" ],
-        "func": function (b, a) {
-            var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getNumberValue("VALUE", a);
-            "head" == d ? c.head = e : "right" == d ? c.armR = e : "left" == d && (c.armL = e);
-            return a.callReturn();
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var mtype = script.getStringField("DEVICE", script);
+            var angle = script.getNumberValue("VALUE", script);
+
+            if(mtype == 'head') {
+                sq.head = angle;
+            } else if(mtype == 'right') {
+                sq.armR = angle;
+            } else if(mtype == 'left') {
+                sq.armL = angle;
+            }
+
+            return script.callReturn();
         }
     },
     "xbot_oneWheel": {
@@ -14640,9 +15141,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "오른쪽", "rightWheel" ],
-                    [ "왼쪽", "leftWheel" ],
-                    [ "양쪽", "bothWheel" ]
+                    [Lang.Blocks.XBOT_rightWheel,"rightWheel"],
+                    [Lang.Blocks.XBOT_leftWheel, "leftWheel"],
+                    [Lang.Blocks.XBOT_bothWheel, "bothWheel"]
                 ],
                 "value": "rightWheel",
                 "fontSize": 11
@@ -14675,10 +15176,20 @@ Entry.block = {
         },
         "class": "xbot_motor",
         "isNotFor": [ "xbot_epor_edge" ],
-        "func": function (b, a) {
-            var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getNumberValue("VALUE", a);
-            "rightWheel" == d ? c.rightWheel = e : "leftWheel" == d ? c.leftWheel = e : c.rightWheel = c.leftWheel = e;
-            return a.callReturn();
+        "func": function (sprite, script) {
+            //console.log('xbot_move_forward_for_secs');
+            var sq = Entry.hw.sendQueue;
+            var dir = script.getStringField("DEVICE", script);
+            var speed =script.getNumberValue('VALUE', script);
+
+            if (dir == 'rightWheel')
+                sq.rightWheel = speed;
+            else if (dir == 'leftWheel')
+                sq.leftWheel = speed;
+            else
+                sq.rightWheel = sq.leftWheel = speed;
+
+            return script.callReturn();
         }
     },
     "xbot_twoWheel": {
@@ -14721,11 +15232,14 @@ Entry.block = {
         },
         "class": "xbot_motor",
         "isNotFor": [ "xbot_epor_edge" ],
-        "func": function (b, a) {
-            var c = Entry.hw.sendQueue;
-            c.rightWheel = a.getNumberValue("rightWheel");
-            c.leftWheel = a.getNumberValue("leftWheel");
-            return a.callReturn();
+        "func": function (sprite, script) {
+            //console.log('xbot_move_forward_for_secs');
+            var sq = Entry.hw.sendQueue;
+
+            sq.rightWheel = script.getNumberValue('rightWheel');
+            sq.leftWheel = script.getNumberValue('leftWheel');
+
+            return script.callReturn();
         }
     },
     "xbot_rgb": {
@@ -14777,12 +15291,15 @@ Entry.block = {
         },
         "class": "xbot_rgb",
         "isNotFor": [ "xbot_epor_edge" ],
-        "func": function (b, a) {
-            var c = Entry.hw.sendQueue;
-            c.ledR = a.getNumberValue("ledR");
-            c.ledG = a.getNumberValue("ledG");
-            c.ledB = a.getNumberValue("ledB");
-            return a.callReturn();
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+
+            sq.ledR = script.getNumberValue('ledR');
+            sq.ledG = script.getNumberValue('ledG');
+            sq.ledB = script.getNumberValue('ledB');
+
+            //console.log('ledR' + sq.ledR + ' ledG ' + sq.ledG +' ledB ' + sq.ledB);
+            return script.callReturn();
         }
     },
     "xbot_rgb_picker": {
@@ -14809,12 +15326,15 @@ Entry.block = {
         },
         "class": "xbot_rgb",
         "isNotFor": [ "xbot_epor_edge" ],
-        "func": function (b, a) {
-            var c = a.getStringField("VALUE"), d = Entry.hw.sendQueue;
-            d.ledR = parseInt(.3 * parseInt(c.substr(1, 2), 16));
-            d.ledG = parseInt(.3 * parseInt(c.substr(3, 2), 16));
-            d.ledB = parseInt(.3 * parseInt(c.substr(5, 2), 16));
-            return a.callReturn();
+        "func": function (sprite, script) {
+            var port = script.getStringField("VALUE");
+            var sq = Entry.hw.sendQueue;
+
+            sq.ledR = parseInt(parseInt(port.substr(1,2), 16) * 0.3);
+            sq.ledG =  parseInt(parseInt(port.substr(3,2), 16) * 0.3);
+            sq.ledB = parseInt(parseInt(port.substr(5,2), 16) * 0.3);
+
+            return script.callReturn();
         }
     },
     "xbot_buzzer": {
@@ -14825,13 +15345,13 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "도", "C" ],
-                    [ "레", "D" ],
-                    [ "미", "E" ],
-                    [ "파", "F" ],
-                    [ "솔", "G" ],
-                    [ "라", "A" ],
-                    [ "시", "B" ]
+                    [Lang.Blocks.XBOT_c ,"C"],
+                    [Lang.Blocks.XBOT_d ,"D"],
+                    [Lang.Blocks.XBOT_e ,"E"],
+                    [Lang.Blocks.XBOT_f ,"F"],
+                    [Lang.Blocks.XBOT_g ,"G"],
+                    [Lang.Blocks.XBOT_a ,"A"],
+                    [Lang.Blocks.XBOT_b ,"B"]
                 ],
                 "value": "C",
                 "fontSize": 11
@@ -14879,12 +15399,66 @@ Entry.block = {
         },
         "class": "xbot_sensor",
         "isNotFor": [ "xbot_epor_edge" ],
-        "func": function (b, a) {
-            var c = Entry.hw.sendQueue, d = a.getStringField("NOTE", a), e = a.getStringField("OCTAVE", a), f = a.getNumberValue("VALUE", a), d = d + e;
-            c.note = "C2" == d ? 65 : "D2" == d ? 73 : "E2" == d ? 82 : "F2" == d ? 87 : "G2" == d ? 98 : "A2" == d ? 110 : "B2" == d ? 123 : "C3" == d ? 131 : "D3" == d ? 147 : "E3" == d ? 165 : "F3" == d ? 175 : "G3" == d ? 196 : "A3" == d ? 220 : "B3" == d ? 247 : "C4" == d ? 262 : "D4" == d ? 294 : "E4" == d ? 330 : "F4" == d ? 349 : "G4" == d ? 392 : "A4" == d ? 440 : "B4" == d ? 494 : "C5" == d ? 523 : "D5" == d ? 587 : "E5" == d ? 659 : "F5" == d ? 698 : "G5" == d ? 784 : "A5" == d ? 880 : "B5" == d ?
-                988 : "C6" == d ? 1047 : "D6" == d ? 1175 : "E6" == d ? 1319 : "F6" == d ? 1397 : "G6" == d ? 1568 : "A6" == d ? 1760 : "B6" == d ? 1976 : "C7" == d ? 2093 : "D7" == d ? 2349 : "E7" == d ? 2637 : "F7" == d ? 2794 : "G7" == d ? 3136 : "A7" == d ? 3520 : "B7" == d ? 3951 : 262;
-                c.duration = 40 * f;
-                return a.callReturn();
+        "func": function (script, sprite) {
+            var sq = Entry.hw.sendQueue;
+            var note = script.getStringField("NOTE", script);
+            var octave = script.getStringField("OCTAVE", script);
+            var duration = script.getNumberValue("VALUE", script);
+
+
+            var noteOctave = note + octave; // 'C'+ 2 = "C2"
+            //console.log('xbot_buzzer noteOctave' + note + ' ' + octave + ' ' + duration);
+
+            if(noteOctave == "C2") sq.note = 65;
+            else if(noteOctave == "D2") sq.note = 73;
+            else if(noteOctave == "E2") sq.note = 82;
+            else if(noteOctave == "F2") sq.note = 87;
+            else if(noteOctave == "G2") sq.note = 98;
+            else if(noteOctave == "A2") sq.note = 110;
+            else if(noteOctave == "B2") sq.note = 123;
+            else if(noteOctave == "C3") sq.note = 131;
+            else if(noteOctave == "D3") sq.note = 147;
+            else if(noteOctave == "E3") sq.note = 165;
+            else if(noteOctave == "F3") sq.note = 175;
+            else if(noteOctave == "G3") sq.note = 196;
+            else if(noteOctave == "A3") sq.note = 220;
+            else if(noteOctave == "B3") sq.note = 247;
+            else if(noteOctave == "C4") sq.note = 262;
+            else if(noteOctave == "D4") sq.note = 294;
+            else if(noteOctave == "E4") sq.note = 330;
+            else if(noteOctave == "F4") sq.note = 349;
+            else if(noteOctave == "G4") sq.note = 392;
+            else if(noteOctave == "A4") sq.note = 440;
+            else if(noteOctave == "B4") sq.note = 494;
+            else if(noteOctave == "C5") sq.note = 523;
+            else if(noteOctave == "D5") sq.note = 587;
+            else if(noteOctave == "E5") sq.note = 659;
+            else if(noteOctave == "F5") sq.note = 698;
+            else if(noteOctave == "G5") sq.note = 784;
+            else if(noteOctave == "A5") sq.note = 880;
+            else if(noteOctave == "B5") sq.note = 988;
+            else if(noteOctave == "C6") sq.note = 1047;
+            else if(noteOctave == "D6") sq.note = 1175;
+            else if(noteOctave == "E6") sq.note = 1319;
+            else if(noteOctave == "F6") sq.note = 1397;
+            else if(noteOctave == "G6") sq.note = 1568;
+            else if(noteOctave == "A6") sq.note = 1760;
+            else if(noteOctave == "B6") sq.note = 1976;
+            else if(noteOctave == "C7") sq.note = 2093;
+            else if(noteOctave == "D7") sq.note = 2349;
+            else if(noteOctave == "E7") sq.note = 2637;
+            else if(noteOctave == "F7") sq.note = 2794;
+            else if(noteOctave == "G7") sq.note = 3136;
+            else if(noteOctave == "A7") sq.note = 3520;
+            else if(noteOctave == "B7") sq.note = 3951;
+            else sq.note = 262;
+
+            //sq.duration = 200;
+
+            duration *= 40; //  convert to mSec
+            sq.duration =  duration;
+
+            return script.callReturn();
         }
     },
     "xbot_lcd": {
@@ -14929,10 +15503,21 @@ Entry.block = {
         },
         "class": "xbot_sensor",
         "isNotFor": [ "xbot_epor_edge" ],
-        "func": function (b, a) {
-            var c = Entry.hw.sendQueue, d = a.getNumberField("LINE", a), e = a.getStringValue("VALUE", a);
-            0 == d ? (c.lcdNum = 0, c.lcdTxt = e) : 1 == d && (c.lcdNum = 1, c.lcdTxt = e);
-            return a.callReturn();
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var line = script.getNumberField("LINE", script);
+            var str =  script.getStringValue("VALUE", script);
+
+            if (line == 0) {
+                sq.lcdNum = 0;
+                sq.lcdTxt = str;
+            } else if (line == 1)
+            {
+                sq.lcdNum = 1;
+                sq.lcdTxt = str;
+            }
+            //console.log('ledR' + sq.ledR + ' ledG ' + sq.ledG +' ledB ' + sq.ledB);
+            return script.callReturn();
         }
     },
     "run": {
@@ -15272,7 +15857,18 @@ Entry.block = {
                     "y": -2
                 }
             }
-        ]
+        ],
+        "func": function () {
+            var entities = Ntry.entityManager.getEntitiesByComponent(
+            Ntry.STATIC.UNIT);
+
+            for (var key in entities)
+                this._unit = entities[key];
+
+            Ntry.unitComp = Ntry.entityManager.getComponent(
+            this._unit.id, Ntry.STATIC.UNIT);
+
+        },
     },
     "maze_step_jump": {
         "skeleton": "basic",
@@ -15302,46 +15898,16 @@ Entry.block = {
                 "type": "Dropdown",
                 "key": "REPEAT",
                 "options": [
-                    [
-                        1,
-                        1
-                    ],
-                    [
-                        2,
-                        2
-                    ],
-                    [
-                        3,
-                        3
-                    ],
-                    [
-                        4,
-                        4
-                    ],
-                    [
-                        5,
-                        5
-                    ],
-                    [
-                        6,
-                        6
-                    ],
-                    [
-                        7,
-                        7
-                    ],
-                    [
-                        8,
-                        8
-                    ],
-                    [
-                        9,
-                        9
-                    ],
-                    [
-                        10,
-                        10
-                    ]
+                    [ 1, 1 ],
+                    [ 2, 2 ],
+                    [ 3, 3 ],
+                    [ 4, 4 ],
+                    [ 5, 5 ],
+                    [ 6, 6 ],
+                    [ 7, 7 ],
+                    [ 8, 8 ],
+                    [ 9, 9 ],
+                    [ 10, 10 ]
                 ],
                 "value": 1
             },
@@ -15591,7 +16157,27 @@ Entry.block = {
                 "img": "/img/assets/week/blocks/moveStep.png",
                 "size": 24
             }
-        ]
+        ],
+        func: function() {
+            if (!this.isContinue) {
+
+                this.isContinue = true;
+                this.isAction = true;
+                var self = this;
+                var callBack = function() {
+                    self.isAction = false;
+                };
+                // turn direction
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, callBack);
+
+                return Entry.STATIC.CONTINUE;
+            } else if (this.isAction) {
+                return Entry.STATIC.CONTINUE;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
     },
     "maze_step_rotate_left": {
         "skeleton": "basic",

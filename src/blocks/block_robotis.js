@@ -18,14 +18,14 @@ Entry.Robotis_carCont = {
         CM_IR_RIGHT: [93, 2, 91, 4],
         CM_CALIBRATION_LEFT: [95, 2],
         CM_CALIBRATION_RIGHT: [97, 2],
-        
+
         AUX_MOTOR_SPEED_LEFT: [152, 2],// car_cont
         AUX_MOTOR_SPEED_RIGHT: [154, 2],
     },
     setZero: function() {
         // instruction / address / length / value / default length
         this.setRobotisData([
-            [Entry.Robotis_carCont.INSTRUCTION.WRITE, 152, 2, 0], 
+            [Entry.Robotis_carCont.INSTRUCTION.WRITE, 152, 2, 0],
             [Entry.Robotis_carCont.INSTRUCTION.WRITE, 154, 2, 0]
         ]);
         Entry.hw.sendQueue['setZero'] = [1];
@@ -68,7 +68,7 @@ Entry.Robotis_carCont = {
     },
     wait: function(sq, ms) {
         Entry.hw.socket.send(JSON.stringify(sq));
-    
+
         var start = new Date().getTime();
         var end = start;
         while(end < start + ms) {//wait XX ms
@@ -105,31 +105,31 @@ Entry.Robotis_openCM70 = {
         CM_SOUND_DETECTING: [87, 1],
         CM_USER_BUTTON: [26, 1],
         CM_MOTION: [66, 1],
-        
+
         AUX_SERVO_POSITION: [152, 2],
         AUX_IR: [168, 2],
         AUX_TOUCH: [202, 1],
-        AUX_TEMPERATURE: [234, 1], 
+        AUX_TEMPERATURE: [234, 1],
         AUX_ULTRASONIC: [242, 1],
         AUX_MAGNETIC: [250, 1],
-        AUX_MOTION_DETECTION: [258, 1], 
+        AUX_MOTION_DETECTION: [258, 1],
         AUX_COLOR: [266, 1],
         AUX_CUSTOM: [216, 2],
         AUX_BRIGHTNESS: [288, 2],
         AUX_HYDRO_THEMO_HUMIDITY: [274, 1],
         AUX_HYDRO_THEMO_TEMPER: [282, 1],
-        
+
         AUX_SERVO_MODE: [126, 1],
         AUX_SERVO_SPEED: [136, 2],
         AUX_MOTOR_SPEED: [136, 2],
-        AUX_LED_MODULE: [210, 1], 
+        AUX_LED_MODULE: [210, 1],
     },
     setZero: function() {
         // instruction / address / length / value / default length
         Entry.Robotis_carCont.setRobotisData([
-            [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 136, 2, 0], 
-            [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 138, 2, 0], 
-            [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 140, 2, 0], 
+            [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 136, 2, 0],
+            [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 138, 2, 0],
+            [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 140, 2, 0],
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 142, 2, 0],
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 144, 2, 0],
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 146, 2, 0],
@@ -152,7 +152,7 @@ Blockly.Blocks.robotis_openCM70_cm_custom_value = {
         this.setColour("#00979D");
         this.appendDummyInput().appendField(Lang.Blocks.robotis_cm_custom);
         this.appendDummyInput().appendField('(');
-        this.appendValueInput("VALUE").setCheck(["Number", "String"]);        
+        this.appendValueInput("VALUE").setCheck(["Number", "String"]);
         this.appendDummyInput().appendField(')');
         this.appendDummyInput().appendField(new Blockly.FieldDropdown([
             ["BYTE", "BYTE"],
@@ -172,7 +172,7 @@ Entry.block.robotis_openCM70_cm_custom_value = function (sprite, script) {
     var data_length = 0;
     var data_value = 0;
 
-    var data_default_address = 0;    
+    var data_default_address = 0;
     var data_default_length = 0;
 
     var size = script.getStringField("SIZE");
@@ -184,16 +184,16 @@ Entry.block.robotis_openCM70_cm_custom_value = function (sprite, script) {
     } else if (size == 'DWORD') {
         data_length = 4;
     }
-    
+
     data_address = script.getNumberValue('VALUE');
 
-    data_default_address = data_address;    
+    data_default_address = data_address;
     data_default_length = data_length;
-    
+
     Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
     // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
     Entry.Robotis_carCont.update();
-    
+
     return Entry.hw.portData[data_default_address];
 };
 
@@ -211,7 +211,7 @@ Blockly.Blocks.robotis_openCM70_sensor_value = {
         list.push([Lang.Blocks.robotis_cm_sound_detected,"CM_SOUND_DETECTED"]);
         list.push([Lang.Blocks.robotis_cm_sound_detecting,"CM_SOUND_DETECTING"]);
         list.push([Lang.Blocks.robotis_cm_user_button, "CM_USER_BUTTON"]);
-        
+
         return list;
     }
 };
@@ -223,11 +223,11 @@ Entry.block.robotis_openCM70_sensor_value = function (sprite, script) {
     var data_length = 0;
     var data_value = 0;
 
-    var data_default_address = 0;    
+    var data_default_address = 0;
     var data_default_length = 0;
 
     var sensor = script.getStringField("SENSOR");
-      
+
      var increase = 0;
 
     if (sensor == 'CM_SOUND_DETECTED') {
@@ -246,13 +246,13 @@ Entry.block.robotis_openCM70_sensor_value = function (sprite, script) {
         data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0];
         data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1];
     }
-    
+
     data_default_address = data_default_address + increase * data_default_length;
-      
+
     Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
     // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
     Entry.Robotis_carCont.update();
-    
+
     return Entry.hw.portData[data_default_address];
 };
 
@@ -273,7 +273,7 @@ Blockly.Blocks.robotis_openCM70_aux_sensor_value = {
         list.push([Lang.Blocks.robotis_common_port_4,"PORT_4"]);
         list.push([Lang.Blocks.robotis_common_port_5,"PORT_5"]);
         list.push([Lang.Blocks.robotis_common_port_6,"PORT_6"]);
-          
+
         return list;
       },
     sensorList: function() {
@@ -289,8 +289,8 @@ Blockly.Blocks.robotis_openCM70_aux_sensor_value = {
         list.push([Lang.Blocks.robotis_aux_magnetic,"AUX_MAGNETIC"]);
         list.push([Lang.Blocks.robotis_aux_motion_detection,"AUX_MOTION_DETECTION"]);
         list.push([Lang.Blocks.robotis_aux_color,"AUX_COLOR"]);
-        list.push([Lang.Blocks.robotis_aux_custom,"AUX_CUSTOM"]);            
-        
+        list.push([Lang.Blocks.robotis_aux_custom,"AUX_CUSTOM"]);
+
         return list;
     }
 };
@@ -302,10 +302,10 @@ Entry.block.robotis_openCM70_aux_sensor_value = function (sprite, script) {
     var data_length = 0;
     var data_value = 0;
 
-    var data_default_address = 0;    
+    var data_default_address = 0;
     var data_default_length = 0;
 
-    var port = script.getStringField("PORT");    
+    var port = script.getStringField("PORT");
     var sensor = script.getStringField("SENSOR");
 
     var increase = 0;
@@ -380,16 +380,16 @@ Entry.block.robotis_openCM70_aux_sensor_value = function (sprite, script) {
         data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0];
         data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1];
     }
-    
+
     data_default_address = data_default_address + increase * data_default_length;
     if (increase != 0) {
         data_length = 6 * data_default_length;
     }
-    
+
     Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
     // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
     Entry.Robotis_carCont.update();
-    
+
     return Entry.hw.portData[data_default_address];
 };
 
@@ -480,7 +480,7 @@ Entry.block.robotis_openCM70_cm_buzzer_index = function (sprite, script) {
     // instruction / address / length / value / default length
     var cmBuzzerIndex = script.getField("CM_BUZZER_INDEX", script);
     var cmBuzzerTime = script.getNumberValue("CM_BUZZER_TIME", script);
-    
+
     var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
     var data_address_1 = 0;
     var data_length_1 = 0;
@@ -488,7 +488,7 @@ Entry.block.robotis_openCM70_cm_buzzer_index = function (sprite, script) {
     var data_address_2 = 0;
     var data_length_2 = 0;
     var data_value_2 = 0;
-    
+
     data_address_1 = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[0];
     data_length_1 = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[1];
     // data_value_1 = cmBuzzerTime * 10;
@@ -497,7 +497,7 @@ Entry.block.robotis_openCM70_cm_buzzer_index = function (sprite, script) {
     if (data_value_1 > 50) {
         data_value_1 = 50;
     }
-    
+
     data_address_2 = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[0];
     data_length_2 = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[1];
     data_value_2 = cmBuzzerIndex;
@@ -551,7 +551,7 @@ Blockly.Blocks.robotis_openCM70_cm_buzzer_melody = {
 Entry.block.robotis_openCM70_cm_buzzer_melody = function (sprite, script) {
     // instruction / address / length / value / default length
     var cmBuzzerMelody = script.getField("CM_BUZZER_MELODY", script);
-    
+
     var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
     var data_address_1 = 0;
     var data_length_1 = 0;
@@ -559,11 +559,11 @@ Entry.block.robotis_openCM70_cm_buzzer_melody = function (sprite, script) {
     var data_address_2 = 0;
     var data_length_2 = 0;
     var data_value_2 = 0;
-    
+
     data_address_1 = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[0];
     data_length_1 = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[1];
     data_value_1 = 255;
-    
+
     data_address_2 = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[0];
     data_length_2 = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[1];
     data_value_2 = cmBuzzerMelody;
@@ -586,16 +586,16 @@ Blockly.Blocks.robotis_openCM70_cm_sound_detected_clear = {
 
 Entry.block.robotis_openCM70_cm_sound_detected_clear = function (sprite, script) {
     // instruction / address / length / value / default length
-    
+
     var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
     var data_address = 0;
     var data_length = 0;
-    var data_value = 0;    
-    
+    var data_value = 0;
+
     data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0];
     data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1];
-    data_value = 0;        
-    
+    data_value = 0;
+
     var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
     return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
 };
@@ -626,12 +626,12 @@ Entry.block.robotis_openCM70_cm_led = function (sprite, script) {
     // instruction / address / length / value / default length
     var cmLed = script.getField("CM_LED", script);
     var value = script.getField("VALUE", script);
-    
+
     var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
     var data_address = 0;
     var data_length = 0;
     var data_value = 0;
-    
+
     if (cmLed == 'CM_LED_R') {
         data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_R[0];
         data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_R[1];
@@ -642,12 +642,12 @@ Entry.block.robotis_openCM70_cm_led = function (sprite, script) {
         data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_B[0];
         data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_B[1];
     }
-    
+
     data_value = value;
 
     var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
     return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
-    
+
 };
 
 Blockly.Blocks.robotis_openCM70_cm_motion = {
@@ -670,14 +670,14 @@ Entry.block.robotis_openCM70_cm_motion = function (sprite, script) {
     var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
     var data_address = 0;
     var data_length = 0;
-    var data_value = 0;    
-    
+    var data_value = 0;
+
     data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_MOTION[0];
     data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_MOTION[1];
     data_value = script.getNumberValue("VALUE", script);
 
     var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
-    return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);    
+    return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
 };
 
 Blockly.Blocks.robotis_openCM70_aux_motor_speed = {
@@ -710,17 +710,17 @@ Entry.block.robotis_openCM70_aux_motor_speed = function (sprite, script) {
     var port = script.getField("PORT", script);
     var directionAngle = script.getField("DIRECTION_ANGLE", script);
     var value = script.getNumberValue('VALUE');
-    
+
     var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
     var data_address = 0;
     var data_length = 0;
     var data_value = 0;
-    
+
     data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTOR_SPEED[0];
     data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTOR_SPEED[1];
-    
+
     data_address = data_address + (port - 1) * data_length;
-    
+
     if (directionAngle == 'CW') {
         value = value + 1024;
         if (value > 2047) {
@@ -731,9 +731,9 @@ Entry.block.robotis_openCM70_aux_motor_speed = function (sprite, script) {
             value = 1023;
         }
     }
-    
+
     data_value = value;
-    
+
     var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
     return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
 };
@@ -766,18 +766,18 @@ Entry.block.robotis_openCM70_aux_servo_mode = function (sprite, script) {
     // instruction / address / length / value / default length
     var port = script.getField("PORT", script);
     var mode = script.getField("MODE", script);
-    
+
     var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
     var data_address = 0;
     var data_length = 0;
     var data_value = 0;
-    
+
     data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_MODE[0];
     data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_MODE[1];
-    
+
     data_address = data_address + (port - 1) * data_length;
     data_value = mode;
-    
+
     var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
     return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
 };
@@ -814,17 +814,17 @@ Entry.block.robotis_openCM70_aux_servo_speed = function (sprite, script) {
     var port = script.getField("PORT", script);
     var directionAngle = script.getField("DIRECTION_ANGLE", script);
     var value = script.getNumberValue('VALUE');
-    
+
     var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
     var data_address = 0;
     var data_length = 0;
     var data_value = 0;
-    
+
     data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_SPEED[0];
     data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_SPEED[1];
-    
+
     data_address = data_address + (port - 1) * data_length;
-    
+
     if (directionAngle == 'CW') {
         value = value + 1024;
         if (value > 2047) {
@@ -835,9 +835,9 @@ Entry.block.robotis_openCM70_aux_servo_speed = function (sprite, script) {
             value = 1023;
         }
     }
-    
+
     data_value = value;
-    
+
     var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
     return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
 };
@@ -868,25 +868,25 @@ Entry.block.robotis_openCM70_aux_servo_position = function (sprite, script) {
     // instruction / address / length / value / default length
     var port = script.getField("PORT", script);
     var value = script.getNumberValue('VALUE');
-    
+
     var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
     var data_address = 0;
     var data_length = 0;
     var data_value = 0;
-    
+
     data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0];
     data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1];
-    
+
     data_address = data_address + (port - 1) * data_length;
-    
+
     if (value > 1023) {
         value = 1023;
     } else if (value < 0) {
         value = 0;
     }
-    
+
     data_value = value;
-    
+
     var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
     return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
 };
@@ -921,18 +921,18 @@ Entry.block.robotis_openCM70_aux_led_module = function (sprite, script) {
     // instruction / address / length / value / default length
     var port = script.getField("PORT", script);
     var ledModule = script.getField("LED_MODULE", script);
-    
+
     var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
     var data_address = 0;
     var data_length = 0;
     var data_value = 0;
-    
+
     data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_LED_MODULE[0];
     data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_LED_MODULE[1];
-    
+
     data_address = data_address + (port - 1) * data_length;
     data_value = ledModule;
-    
+
     var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
     return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
 };
@@ -963,18 +963,18 @@ Entry.block.robotis_openCM70_aux_custom = function (sprite, script) {
     // instruction / address / length / value / default length
     var port = script.getField("PORT", script);
     var value = script.getNumberValue('VALUE');
-    
+
     var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
     var data_address = 0;
     var data_length = 0;
     var data_value = 0;
-    
+
     data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0];
     data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1];
-    
+
     data_address = data_address + (port - 1) * data_length;
     data_value = value;
-    
+
     var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
     return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
 };
@@ -984,7 +984,7 @@ Blockly.Blocks.robotis_openCM70_cm_custom = {
         this.setColour("#00979D");
         this.appendDummyInput().appendField(Lang.Blocks.robotis_cm_custom);
         this.appendDummyInput().appendField('(');
-        this.appendValueInput("ADDRESS").setCheck(["Number", "String"]);        
+        this.appendValueInput("ADDRESS").setCheck(["Number", "String"]);
         this.appendDummyInput().appendField(')');
         this.appendDummyInput().appendField(Lang.Blocks.robotis_common_case_01);
           this.appendValueInput("VALUE").setCheck(["Number", "String"]);
@@ -1048,9 +1048,9 @@ Entry.block.robotis_carCont_sensor_value = function (sprite, script) {
     var data_length = 0;
     var data_value = 0;
 
-    var data_default_address = 0;    
+    var data_default_address = 0;
     var data_default_length = 0;
-    
+
       var sensor = script.getStringField("SENSOR");
 
       if (sensor == 'CM_SPRING_LEFT') {
@@ -1104,11 +1104,11 @@ Entry.block.robotis_carCont_sensor_value = function (sprite, script) {
         data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[0];
         data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[1];
       }
-      
+
     Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
     // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
     Entry.Robotis_carCont.update();
-    
+
     return Entry.hw.portData[data_default_address];
 };
 
@@ -1138,23 +1138,23 @@ Entry.block.robotis_carCont_cm_led = function (sprite, script) {
     // instruction / address / length / value / default length
     var value_left = script.getField("VALUE_LEFT", script);
     var value_right = script.getField("VALUE_RIGHT", script);
-    
+
     var data_instruction = Entry.Robotis_carCont.INSTRUCTION.WRITE;
     var data_address = 0;
     var data_length = 0;
     var data_value = 0;
-    
+
     data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_LED[0];
     data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_LED[1];
-    
+
     if (value_left == 1 && value_right == 1) {
-        data_value = 9;        
+        data_value = 9;
     } else if (value_left == 1 && value_right == 0) {
-        data_value = 8;        
+        data_value = 8;
     } if (value_left == 0 && value_right == 1) {
-        data_value = 1;        
+        data_value = 1;
     }
-    
+
     var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
     return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_carCont.delay);
 };
@@ -1173,16 +1173,16 @@ Blockly.Blocks.robotis_carCont_cm_sound_detected_clear = {
 
 Entry.block.robotis_carCont_cm_sound_detected_clear = function (sprite, script) {
     // instruction / address / length / value / default length
-    
+
     var data_instruction = Entry.Robotis_carCont.INSTRUCTION.WRITE;
     var data_address = 0;
     var data_length = 0;
-    var data_value = 0;    
-    
+    var data_value = 0;
+
     data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0];
     data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1];
-    data_value = 0;        
-    
+    data_value = 0;
+
     var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
     return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_carCont.delay);
 };
@@ -1217,12 +1217,12 @@ Entry.block.robotis_carCont_aux_motor_speed = function (sprite, script) {
     var direction = script.getField("DIRECTION", script);
     var directionAngle = script.getField("DIRECTION_ANGLE", script);
     var value = script.getNumberValue('VALUE');
-    
+
     var data_instruction = Entry.Robotis_carCont.INSTRUCTION.WRITE;
     var data_address = 0;
     var data_length = 0;
     var data_value = 0;
-    
+
     if (direction == 'LEFT') {
         data_address = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_LEFT[0];
         data_length = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_LEFT[1];
@@ -1230,7 +1230,7 @@ Entry.block.robotis_carCont_aux_motor_speed = function (sprite, script) {
         data_address = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_RIGHT[0];
         data_length = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_RIGHT[1];
     }
-    
+
     if (directionAngle == 'CW') {
         value = value + 1024;
         if (value > 2047) {
@@ -1241,9 +1241,9 @@ Entry.block.robotis_carCont_aux_motor_speed = function (sprite, script) {
             value = 1023;
         }
     }
-    
+
     data_value = value;
-    
+
     var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
     return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_carCont.delay);
 };
@@ -1272,12 +1272,12 @@ Entry.block.robotis_carCont_cm_calibration = function (sprite, script) {
     // instruction / address / length / value / default length
     var direction = script.getField("DIRECTION", script);
     var value = script.getNumberValue('VALUE');
-    
+
     var data_instruction = Entry.Robotis_carCont.INSTRUCTION.WRITE;
     var data_address = 0;
     var data_length = 0;
     var data_value = 0;
-    
+
     if (direction == 'LEFT') {
         data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[0];
         data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[1];
@@ -1285,12 +1285,12 @@ Entry.block.robotis_carCont_cm_calibration = function (sprite, script) {
         data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[0];
         data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[1];
     }
-    
+
     data_value = value;
-    
+
     var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
     return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_carCont.delay);
-    
+
     // Entry.hw.sendQueue['ROBOTIS_DATA'] = [[data_instruction, data_address, data_length, data_value]];
     // update();
     // return script.callReturn();
