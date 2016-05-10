@@ -316,7 +316,7 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
     this.blockMenu = this.mainWorkspace.blockMenu;
     this.board = this.mainWorkspace.board;
 
-    if (Entry.hw) Entry.hw.banHW();
+    if (Entry.hw) this.updateHW();
 };
 
 /**
@@ -1593,22 +1593,24 @@ Entry.Playground.prototype.getViewMode = function() {
 
 Entry.Playground.prototype.updateHW = function() {
     var self = Entry.playground;
-    if (!self.blockMenu)
-        return;
+    var blockMenu = self.mainWorkspace.blockMenu;
+    if (!blockMenu) return;
+
+
     var hw = Entry.hw;
     if (hw && hw.connected) {
-        self.blockMenu.unbanClass("arduinoConnected");
-        self.blockMenu.banClass("arduinoDisconnected");
+        blockMenu.unbanClass("arduinoConnected");
+        blockMenu.banClass("arduinoDisconnected");
 
         hw.banHW();
         if (hw.hwModule)
-            self.blockMenu.unbanClass(hw.hwModule.name);
+            blockMenu.unbanClass(hw.hwModule.name);
     } else {
-        self.blockMenu.banClass("arduinoConnected");
-        self.blockMenu.unbanClass("arduinoDisconnected");
+        blockMenu.banClass("arduinoConnected");
+        blockMenu.unbanClass("arduinoDisconnected");
         Entry.hw.banHW();
     }
-    if (self.object) self.blockMenu.redraw();
+    if (self.object) blockMenu.reDraw();
 };
 
 Entry.Playground.prototype.toggleLineBreak = function(isLineBreak) {

@@ -2003,6 +2003,7 @@ Entry.block = {
     },
     "arduino_download_connector": {
         "skeleton": "basic_button",
+        "isNotFor": ["arduinoDisconnected"],
         "color": "#eee",
         "params": [
             {
@@ -2020,6 +2021,7 @@ Entry.block = {
     },
     "arduino_download_source": {
         "skeleton": "basic_button",
+        "isNotFor": ["arduinoDisconnected"],
         "color": "#eee",
         "params": [
             {
@@ -2038,10 +2040,11 @@ Entry.block = {
     "arduino_connected": {
         "skeleton": "basic_button",
         "color": "#eee",
+        "isNotFor": ["arduinoConnected"],
         "params": [
             {
                 "type": "Text",
-                "text": "연결 됨",
+                "text": Lang.Blocks.ARDUINO_connected,
                 "color": "#333",
                 "align": "center"
             }
@@ -2055,10 +2058,11 @@ Entry.block = {
     "arduino_reconnect": {
         "skeleton": "basic_button",
         "color": "#eee",
+        "isNotFor": ["arduinoDisconnected"],
         "params": [
             {
                 "type": "Text",
-                "text": "다시 연결하기",
+                "text": Lang.Blocks.ARDUINO_reconnect,
                 "color": "#333",
                 "align": "center"
             }

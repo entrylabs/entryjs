@@ -15267,9 +15267,9 @@ func:function(b, a) {
 OPERATOR:1}, "class":"sensorBoard", isNotFor:["sensorBoard"], func:function(b, a) {
   Entry.hw.setDigitalPortValue(a.getField("PORT"), a.getNumberField("OPERATOR"));
   return a.callReturn();
-}}, arduino_download_connector:{skeleton:"basic_button", color:"#eee", params:[{type:"Text", text:Lang.Blocks.ARDUINO_download_connector, color:"#333", align:"center"}], events:{mousedown:[null]}}, arduino_download_source:{skeleton:"basic_button", color:"#eee", params:[{type:"Text", text:Lang.Blocks.ARDUINO_download_source, color:"#333", align:"center"}], events:{mousedown:[null]}}, arduino_connected:{skeleton:"basic_button", color:"#eee", params:[{type:"Text", text:"\uc5f0\uacb0 \ub428", color:"#333", 
-align:"center"}], events:{mousedown:[null]}}, arduino_reconnect:{skeleton:"basic_button", color:"#eee", params:[{type:"Text", text:"\ub2e4\uc2dc \uc5f0\uacb0\ud558\uae30", color:"#333", align:"center"}], events:{mousedown:[null]}}, CODEino_get_sensor_number:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["0", "A0"], ["1", "A1"], ["2", "A2"], ["3", "A3"], ["4", "A4"], ["5", "A5"], ["6", "A6"]], value:"A0", fontSize:11}], events:{}, def:{params:[null]}, 
-paramsKeyMap:{PORT:0}, func:function(b, a) {
+}}, arduino_download_connector:{skeleton:"basic_button", isNotFor:["arduinoDisconnected"], color:"#eee", params:[{type:"Text", text:Lang.Blocks.ARDUINO_download_connector, color:"#333", align:"center"}], events:{mousedown:[null]}}, arduino_download_source:{skeleton:"basic_button", isNotFor:["arduinoDisconnected"], color:"#eee", params:[{type:"Text", text:Lang.Blocks.ARDUINO_download_source, color:"#333", align:"center"}], events:{mousedown:[null]}}, arduino_connected:{skeleton:"basic_button", color:"#eee", 
+isNotFor:["arduinoConnected"], params:[{type:"Text", text:Lang.Blocks.ARDUINO_connected, color:"#333", align:"center"}], events:{mousedown:[null]}}, arduino_reconnect:{skeleton:"basic_button", color:"#eee", isNotFor:["arduinoDisconnected"], params:[{type:"Text", text:Lang.Blocks.ARDUINO_reconnect, color:"#333", align:"center"}], events:{mousedown:[null]}}, CODEino_get_sensor_number:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["0", "A0"], ["1", 
+"A1"], ["2", "A2"], ["3", "A3"], ["4", "A4"], ["5", "A5"], ["6", "A6"]], value:"A0", fontSize:11}], events:{}, def:{params:[null]}, paramsKeyMap:{PORT:0}, func:function(b, a) {
   return a.getStringField("PORT");
 }}, CODEino_get_named_sensor_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.CODEino_sensor_name_0, "0"], [Lang.Blocks.CODEino_sensor_name_1, "1"], [Lang.Blocks.CODEino_sensor_name_2, "2"], [Lang.Blocks.CODEino_sensor_name_3, "3"], [Lang.Blocks.CODEino_sensor_name_4, "4"], [Lang.Blocks.CODEino_sensor_name_5, "5"], [Lang.Blocks.CODEino_sensor_name_6, "6"]], value:"0", fontSize:11}], events:{}, def:{params:[null], type:"CODEino_get_named_sensor_value"}, 
 paramsKeyMap:{PORT:0}, "class":"CODEino", isNotFor:["CODEino"], func:function(b, a) {
@@ -17855,7 +17855,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
     !0 !== a && (a = !1);
     for (var b = 0, d = 0, e = 0, f = 0, g = 0, h = 0, k = 0;k < this._contents.length;k++) {
       var l = this._contents[k];
-      l instanceof Entry.FieldLineBreak ? (this._alignStatement(a, f), l.align(f), f++, d = l.box.y, b = 8) : (l.align(b, d, a), k !== this._contents.length - 1 && (b += Entry.BlockView.PARAM_SPACE));
+      l instanceof Entry.FieldLineBreak ? (this._alignStatement(a, f), l.align(f), f++, d = l.box.y, b = 8) : (l.align(b, d, a), k === this._contents.length - 1 || 0 == k && l instanceof Entry.FieldText && 0 == l._text.length || (b += Entry.BlockView.PARAM_SPACE));
       l = l.box;
       0 !== f ? h = Math.max(1E3 * Math.round(l.height), h) : e = Math.max(l.height, e);
       b += l.width;
@@ -20388,14 +20388,14 @@ Entry.skeleton.basic_boolean_field = {path:function(b) {
   var a = b.contentWidth;
   b = b.contentHeight;
   b = Math.max(18, b + 2);
-  a = Math.max(0, a - b + 9);
+  a = Math.max(0, a - b + 19);
   return "m %h,0 h %w l %h,%h -%h,%h H %h l -%h,-%h %h,-%h z".replace(/%wh/gi, b).replace(/%w/gi, a).replace(/%h/gi, b / 2);
 }, color:"#000", outerLine:!0, box:function(b) {
-  return {offsetX:0, offsetY:0, width:(b ? b.contentWidth : 5) + 8, height:Math.max((b ? b.contentHeight : 18) + 2, 18), marginBottom:0};
+  return {offsetX:0, offsetY:0, width:(b ? b.contentWidth : 5) + 19, height:Math.max((b ? b.contentHeight : 18) + 2, 18), marginBottom:0};
 }, magnets:function() {
   return {bool:{}};
 }, contentPos:function(b) {
-  return {x:4, y:Math.max(b.contentHeight, 16) / 2 + 1};
+  return {x:10, y:Math.max(b.contentHeight, 16) / 2 + 1};
 }};
 Entry.skeleton.basic_param = {path:function(b) {
   var a = b.contentWidth;
@@ -21318,7 +21318,7 @@ Entry.Playground.prototype.generateCodeView = function(b) {
   this.mainWorkspace = new Entry.Workspace({blockMenu:{dom:b, align:"LEFT", categoryData:EntryStatic.getAllBlocks(), scroll:!0}, board:{dom:a}});
   this.blockMenu = this.mainWorkspace.blockMenu;
   this.board = this.mainWorkspace.board;
-  Entry.hw && Entry.hw.banHW();
+  Entry.hw && this.updateHW();
 };
 Entry.Playground.prototype.generatePictureView = function(b) {
   if ("workspace" == Entry.type) {
@@ -22058,11 +22058,11 @@ Entry.Playground.prototype.getViewMode = function() {
   return this.viewMode_;
 };
 Entry.Playground.prototype.updateHW = function() {
-  var b = Entry.playground;
-  if (b.blockMenu) {
-    var a = Entry.hw;
-    a && a.connected ? (b.blockMenu.unbanClass("arduinoConnected"), b.blockMenu.banClass("arduinoDisconnected"), a.banHW(), a.hwModule && b.blockMenu.unbanClass(a.hwModule.name)) : (b.blockMenu.banClass("arduinoConnected"), b.blockMenu.unbanClass("arduinoDisconnected"), Entry.hw.banHW());
-    b.object && b.blockMenu.redraw();
+  var b = Entry.playground, a = b.mainWorkspace.blockMenu;
+  if (a) {
+    var c = Entry.hw;
+    c && c.connected ? (a.unbanClass("arduinoConnected"), a.banClass("arduinoDisconnected"), c.banHW(), c.hwModule && a.unbanClass(c.hwModule.name)) : (a.banClass("arduinoConnected"), a.unbanClass("arduinoDisconnected"), Entry.hw.banHW());
+    b.object && a.reDraw();
   }
 };
 Entry.Playground.prototype.toggleLineBreak = function(b) {
