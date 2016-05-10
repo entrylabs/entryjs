@@ -5257,7 +5257,7 @@ Entry.block = {
         "class": "repeat",
         "isNotFor": [],
         "func": function (sprite, script) {
-            return this.executor.break();
+            return this.executor.breakLoop();
         }
     },
     "wait_until_true": {

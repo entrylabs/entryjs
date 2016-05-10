@@ -15674,7 +15674,7 @@ params:[Lang.Blocks.entry]}, null], type:"combine_something"}, paramsKeyMap:{VAL
   a.isLooped = !0;
   return a.getStatement("DO");
 }}, stop_repeat:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null], type:"stop_repeat"}, "class":"repeat", isNotFor:[], func:function(b, a) {
-  return this.executor.break();
+  return this.executor.breakLoop();
 }}, wait_until_true:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"True"}, null], type:"wait_until_true"}, paramsKeyMap:{BOOL:0}, "class":"wait", isNotFor:[], func:function(b, a) {
   return a.getBooleanValue("BOOL", a) ? a.callReturn() : a;
 }}, _if:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"True"}, null], type:"_if"}, paramsKeyMap:{BOOL:0}, statementsKeyMap:{STACK:0}, "class":"condition", isNotFor:[], func:function(b, a) {
@@ -18482,6 +18482,12 @@ Entry.Executor = function(b, a) {
   };
   b.break = function() {
     this._callStack.length && (this.scope = this._callStack.pop());
+    return Entry.STATIC.PASS;
+  };
+  b.breakLoop = function() {
+    for (this.scope = this._callStack.pop();this._callStack.length && "repeat" !== Entry.block[this.scope.block.type].class;) {
+      this.scope = this._callStack.pop();
+    }
     return Entry.STATIC.PASS;
   };
   b.end = function() {
