@@ -5618,12 +5618,15 @@ Entry.block = {
                 case 'thisOnly':
                     sprite.parent.script.clearExecutorsByEntity(sprite);
                     return this.die();
+                case 'thisObject':
+                    sprite.parent.script.clearExecutors();
+                return this.die();
                 case 'thisThread':
                     return this.die();
                 case 'otherThread':
                     sprite.parent.script.clearExecutors();
                     sprite.parent.script.addExecutor(this.executor);
-                    return;
+                    return script.callReturn();
             }
         }
     },
