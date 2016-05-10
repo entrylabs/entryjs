@@ -306,12 +306,12 @@ Entry.PARAM = -1;
         return block;
     };
 
-    p.getBlockList = function() {
+    p.getBlockList = function(excludePrimitive) {
         var threads = this.getThreads();
         var blocks = [];
 
         for (var i = 0; i < threads.length; i ++)
-            blocks = blocks.concat(threads[i].getBlockList());
+            blocks = blocks.concat(threads[i].getBlockList(excludePrimitive));
 
         return blocks;
     };

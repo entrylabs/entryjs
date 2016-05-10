@@ -256,10 +256,10 @@ Entry.Thread = function(thread, code, parent) {
         return this.parent.pointer(pointer);
     };
 
-    p.getBlockList = function() {
+    p.getBlockList = function(excludePrimitive) {
         var blocks = [];
         for (var i = 0; i < this._data.length; i++)
-            blocks = blocks.concat(this._data[i].getBlockList());
+            blocks = blocks.concat(this._data[i].getBlockList(excludePrimitive));
 
         return blocks;
     };

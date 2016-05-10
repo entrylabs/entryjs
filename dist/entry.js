@@ -18413,11 +18413,11 @@ Entry.PARAM = -1;
     }
     return d;
   };
-  b.getBlockList = function() {
-    for (var a = this.getThreads(), b = [], d = 0;d < a.length;d++) {
-      b = b.concat(a[d].getBlockList());
+  b.getBlockList = function(a) {
+    for (var b = this.getThreads(), d = [], e = 0;e < b.length;e++) {
+      d = d.concat(b[e].getBlockList(a));
     }
-    return b;
+    return d;
   };
 })(Entry.Code.prototype);
 Entry.CodeView = function(b, a) {
@@ -20614,11 +20614,11 @@ Entry.Thread = function(b, a, c) {
     this.parent instanceof Entry.Block && a.unshift(this.parent.indexOfStatements(this));
     return this._code === this.parent ? (a.unshift(this._code.indexOf(this)), d = this._data[0], a.unshift(d.y), a.unshift(d.x), a) : this.parent.pointer(a);
   };
-  b.getBlockList = function() {
-    for (var a = [], b = 0;b < this._data.length;b++) {
-      a = a.concat(this._data[b].getBlockList());
+  b.getBlockList = function(a) {
+    for (var b = [], d = 0;d < this._data.length;d++) {
+      b = b.concat(this._data[d].getBlockList(a));
     }
-    return a;
+    return b;
   };
 })(Entry.Thread.prototype);
 Entry.Block = function(b, a) {
@@ -20888,19 +20888,22 @@ Entry.Block.MAGNET_OFFSET = .4;
     4 === a.length && 0 === a[3] && a.pop();
     return a;
   };
-  b.getBlockList = function() {
-    var a = [];
-    a.push(this);
-    for (var b = this.params, d = 0;d < b.length;d++) {
-      var e = b[d];
-      e && e.constructor == Entry.Block && (a = a.concat(e.getBlockList()));
+  b.getBlockList = function(a) {
+    var b = [];
+    if (a && this._schema.isPrimitive) {
+      return b;
     }
-    if (b = this.statements) {
-      for (d = 0;d < b.length;d++) {
-        a = a.concat(b[d].getBlockList());
+    b.push(this);
+    for (var d = this.params, e = 0;e < d.length;e++) {
+      var f = d[e];
+      f && f.constructor == Entry.Block && (b = b.concat(f.getBlockList(a)));
+    }
+    if (d = this.statements) {
+      for (e = 0;e < d.length;e++) {
+        b = b.concat(d[e].getBlockList(a));
       }
     }
-    return a;
+    return b;
   };
 })(Entry.Block.prototype);
 Entry.ThreadView = function(b, a) {

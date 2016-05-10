@@ -495,22 +495,26 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         return pointer;
     };
 
-    p.getBlockList = function() {
+    p.getBlockList = function(excludePrimitive) {
         var blocks = [];
+
+        if (excludePrimitive && this._schema.isPrimitive)
+            return blocks;
+
         blocks.push(this);
 
         var params = this.params;
         for (var k = 0; k < params.length; k++) {
             var param = params[k];
             if (param && param.constructor == Entry.Block) {
-                blocks = blocks.concat(param.getBlockList());
+                blocks = blocks.concat(param.getBlockList(excludePrimitive));
             }
         }
 
         var statements = this.statements;
         if (statements) {
             for (var j = 0; j < statements.length; j++) {
-                blocks = blocks.concat(statements[j].getBlockList());
+                blocks = blocks.concat(statements[j].getBlockList(excludePrimitive));
             }
         }
         return blocks;
