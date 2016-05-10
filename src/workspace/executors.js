@@ -56,6 +56,17 @@ Entry.Executor = function(block, entity) {
         return Entry.STATIC.PASS;
     };
 
+    p.breakLoop = function() {
+        this.scope = this._callStack.pop();
+        while (this._callStack.length) {
+            var schema = Entry.block[this.scope.block.type];
+            if (schema.class === "repeat")
+                break;
+            this.scope = this._callStack.pop();
+        }
+        return Entry.STATIC.PASS;
+    };
+
     p.end = function() {
          this.scope.block === null;
     };

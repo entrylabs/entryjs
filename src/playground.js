@@ -1208,7 +1208,7 @@ Entry.Playground.prototype.setMenu = function(objectType) {
     blockMenu.unbanClass(this.currentObjectType);
     blockMenu.banClass(objectType);
     blockMenu.setMenu();
-    blockMenu.selectMenu(0);
+    blockMenu.selectMenu(0, true);
     this.currentObjectType = objectType;
 };
 
