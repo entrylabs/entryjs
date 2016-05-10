@@ -95,7 +95,8 @@ Entry.Block.MAGNET_OFFSET = 0.4;
 
         var params = this._schema.params;
         for (var i = 0; params && i < params.length; i++) {
-            var value = thisParams[i] ? thisParams[i] : params[i].value;
+            var value = (thisParams[i] === undefined || thisParams[i] === null ) ?
+                    params[i].value : thisParams[i];
 
             var paramInjected = thisParams[i] || i<thisParams.length;
 
