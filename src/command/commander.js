@@ -84,7 +84,9 @@ Entry.Commander = function(injectType) {
 
     p.isPass = function(isPass) {
         isPass = isPass === undefined ? true : isPass;
-        var lastCommand = Entry.stateManager.getLastCommand();
-        if (lastCommand) lastCommand.isPass = isPass;
+        if (Entry.stateManager) {
+            var lastCommand = Entry.stateManager.getLastCommand();
+            if (lastCommand) lastCommand.isPass = isPass;
+        }
     };
 })(Entry.Commander.prototype)

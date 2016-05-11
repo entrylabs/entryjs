@@ -848,8 +848,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(c, d);
+  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
   return a.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1943,10 +1943,10 @@ Entry.block.wait_second = function(b, a) {
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
+  var c = a.getNumberValue("SECOND", a);
   setTimeout(function() {
     a.timeFlag = 0;
-  }, c);
+  }, 60 / (Entry.FPS || 60) * c * 1E3);
   return a;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -5945,8 +5945,10 @@ Entry.Commander = function(b) {
   };
   b.isPass = function(a) {
     a = void 0 === a ? !0 : a;
-    var b = Entry.stateManager.getLastCommand();
-    b && (b.isPass = a);
+    if (Entry.stateManager) {
+      var b = Entry.stateManager.getLastCommand();
+      b && (b.isPass = a);
+    }
   };
 })(Entry.Commander.prototype);
 (function(b) {
@@ -15243,8 +15245,8 @@ size:12}], events:{}, def:{params:[null, null, null]}, paramsKeyMap:{DIRECTION:0
   return Entry.hw.getDigitalPortValue(c);
 }}, arduino_toggle_led:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[[Lang.Blocks.ARDUINO_on, "on"], [Lang.Blocks.ARDUINO_off, "off"]], value:"on", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"arduino_get_port_number"}, null, null], type:"arduino_toggle_led"}, paramsKeyMap:{VALUE:0, OPERATOR:1}, "class":"arduino_set", isNotFor:["arduino"], 
 func:function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(c, d);
+  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
   return a.callReturn();
 }}, arduino_toggle_pwm:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"arduino_get_pwm_port_number"}, {type:"arduino_text", params:["255"]}, null], type:"arduino_toggle_pwm"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"arduino_set", isNotFor:["arduino"], func:function(b, a) {
   var c = a.getNumberValue("PORT"), d = a.getNumberValue("VALUE"), d = Math.round(d), d = Math.max(d, 0), d = Math.min(d, 255);
@@ -15659,10 +15661,10 @@ params:[Lang.Blocks.entry]}, null], type:"combine_something"}, paramsKeyMap:{VAL
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
+  var c = a.getNumberValue("SECOND", a);
   setTimeout(function() {
     a.timeFlag = 0;
-  }, c);
+  }, 60 / (Entry.FPS || 60) * c * 1E3);
   return a;
 }}, repeat_basic:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"repeat_basic"}, paramsKeyMap:{VALUE:0}, statementsKeyMap:{DO:0}, "class":"repeat", isNotFor:[], func:function(b, a) {
   var c;
@@ -17293,8 +17295,9 @@ highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}, "\uc2dc\uc791\ud558\ua
 color:"#A751E3", params:["\uc624\ub978\ucabd\uc73c\ub85c \ub3cc\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_r.png", size:24}]}, jr_go_slow:{skeleton:"basic", color:"#f46c6c", params:["\ucc9c\ucc9c\ud788 \uac00\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_slow.png", size:24}]}, jr_repeat_until_dest:{skeleton:"basic_loop", color:"#498DEB", syntax:["BasicWhile", "true"], params:["", {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_goal_image.png", size:18}, 
 "\ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, jr_if_construction:{skeleton:"basic_loop", color:"#498DEB", params:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_construction_image.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, jr_if_speed:{skeleton:"basic_loop", color:"#498DEB", 
 params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_speed_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, maze_step_start:{skeleton:"basic_event", mode:"maze", event:"start", color:"#3BBD70", syntax:["Program"], params:[{type:"Indicator", boxMultiplier:2, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}], func:function() {
-  var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a;
-  for (a in b) {
+  var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+  console.log("hi");
+  for (var a in b) {
     this._unit = b[a];
   }
   Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
@@ -17304,9 +17307,10 @@ maze_repeat_until_2:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax
 size:24}], statements:[{accept:"basic"}]}, maze_step_if_2:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicIf", "front == bee"], params:[{type:"Image", img:"/img/assets/ntry/bitmap/maze2/obstacle_01.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}]}, maze_call_function:{skeleton:"basic", mode:"maze", color:"#B57242", syntax:["Scope", "promise"], params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}]}, 
 maze_define_function:{skeleton:"basic_define", mode:"maze", color:"#B57242", event:"define", syntax:["BasicFunction"], params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], statements:[{accept:"basic"}]}, maze_step_if_3:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicIf", "front == banana"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_3.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}]}, 
 maze_step_if_4:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicIf", "front == wall"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_2.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}]}, maze_step_move_step:{skeleton:"basic", mode:"maze", color:"#A751E3", syntax:["Scope", "move"], params:[{type:"Image", img:"/img/assets/week/blocks/moveStep.png", size:24}], func:function() {
+  console.log("hiii");
   if (this.isContinue) {
     if (this.isAction) {
-      return Entry.STATIC.CONTINUE;
+      return Entry.STATIC.BREAK;
     }
     delete this.isAction;
     delete this.isContinue;
@@ -17316,7 +17320,7 @@ maze_step_if_4:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["Ba
     Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
       b.isAction = !1;
     });
-    return Entry.STATIC.CONTINUE;
+    return Entry.STATIC.BREAK;
   }
 }}, maze_step_rotate_left:{skeleton:"basic", mode:"maze", color:"#A751E3", syntax:["Scope", "left"], params:[{type:"Image", img:"/img/assets/week/blocks/turnL.png", size:24}]}, maze_step_rotate_right:{skeleton:"basic", mode:"maze", color:"#A751E3", syntax:["Scope", "right"], params:[{type:"Image", img:"/img/assets/week/blocks/turnR.png", size:24}]}, test_wrapper:{skeleton:"basic", mode:"maze", color:"#3BBD70", params:[{type:"Block", accept:"basic_boolean_field", value:[{type:"test", params:[30, 50]}]}, 
 {type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}]}, basic_button:{skeleton:"basic_button", color:"#eee", params:[{type:"Text", text:"basic button", color:"#333", align:"center"}]}, dplay_get_number_sensor_value:{parent:"arduino_get_number_sensor_value", isNotFor:["dplay"], "class":"arduino_value"}, dplay_get_digital_value:{parent:"arduino_get_digital_value", isNotFor:["dplay"], "class":"arduino_value"}, dplay_toggle_led:{parent:"arduino_toggle_led", 

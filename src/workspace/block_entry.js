@@ -15942,6 +15942,8 @@ Entry.block = {
             var entities = Ntry.entityManager.getEntitiesByComponent(
             Ntry.STATIC.UNIT);
 
+            console.log('hi');
+
             for (var key in entities)
                 this._unit = entities[key];
 
@@ -16239,6 +16241,8 @@ Entry.block = {
             }
         ],
         func: function() {
+
+            console.log('hiii');
             if (!this.isContinue) {
 
                 this.isContinue = true;
@@ -16250,9 +16254,9 @@ Entry.block = {
                 // turn direction
                 Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, callBack);
 
-                return Entry.STATIC.CONTINUE;
+                return Entry.STATIC.BREAK;
             } else if (this.isAction) {
-                return Entry.STATIC.CONTINUE;
+                return Entry.STATIC.BREAK;
             } else {
                 delete this.isAction;
                 delete this.isContinue;
