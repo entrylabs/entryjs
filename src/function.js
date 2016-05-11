@@ -43,6 +43,8 @@ Entry.Func = function(func) {
     }
 
     Entry.Func.registerFunction(this);
+
+    Entry.Func.updateMenu();
 };
 
 Entry.Func.threads = {};
@@ -169,7 +171,6 @@ Entry.Func.cancelEdit = function() {
     delete this.targetFunc;
     this.updateMenu();
     Entry.variableContainer.updateList();
-    console.log('adf');
     var workspace = Entry.playground.mainWorkspace;
     workspace.setMode(Entry.Workspace.MODE_BOARD);
 };
