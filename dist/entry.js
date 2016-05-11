@@ -17381,11 +17381,12 @@ Entry.BlockMenu = function(b, a, c, d) {
     this.blockMenuContainer = Entry.Dom("div", {"class":"blockMenuContainer", parent:b});
     this.svgDom = Entry.Dom($('<svg id="' + this._svgId + '" class="blockMenu" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this.blockMenuContainer});
     this.svgDom.mouseenter(function(a) {
+      d._scroller && d._scroller.setOpacity(1);
       a = d.workspace.selectedBlockView;
-      !Entry.playground || Entry.playground.resizing || a && a.dragMode === Entry.DRAG_MODE_DRAG || (Entry.playground.focusBlockMenu = !0, a = d.svgGroup.getBBox(), a = a.width + a.x + 64, a > Entry.interfaceState.menuWidth && (this.widthBackup = Entry.interfaceState.menuWidth - 64, $(this).stop().animate({width:a - 62}, 200)));
+      !Entry.playground || Entry.playground.resizing || a && a.dragMode === Entry.DRAG_MODE_DRAG || (Entry.playground.focusBlockMenu = !0, a = d.svgGroup.getBBox(), a = a.width + a.x + 64, d._expandWidth = a, a > Entry.interfaceState.menuWidth && (this.widthBackup = Entry.interfaceState.menuWidth - 64, $(this).stop().animate({width:a - 62}, 200)));
     });
     this.svgDom.mouseleave(function(a) {
-      Entry.playground && !Entry.playground.resizing && ((a = this.widthBackup) && $(this).stop().animate({width:a}, 200), delete this.widthBackup, delete Entry.playground.focusBlockMenu);
+      Entry.playground && !Entry.playground.resizing && ((a = this.widthBackup) && $(this).stop().animate({width:a}, 200), delete d._expandWidth, delete this.widthBackup, delete Entry.playground.focusBlockMenu);
     });
   };
   b.changeCode = function(a) {
@@ -17575,9 +17576,13 @@ Entry.BlockMenu = function(b, a, c, d) {
     }
   };
   b._addControl = function(a) {
-    var b = this;
+    var b = this, d = this.svgDom;
     a.on("wheel", function() {
       b._mouseWheel.apply(b, arguments);
+    });
+    d.on("mouseout", function(a) {
+      var d = b.offset, g = b._expandWidth || b._svgWidth;
+      (d.left > a.clientX - 2 || d.top > a.clientY - 2 || d.left + g - 2 < a.clientX) && b._scroller.setOpacity(0);
     });
   };
   b._mouseWheel = function(a) {
@@ -17597,6 +17602,7 @@ Entry.BlockMenu = function(b, a, c, d) {
   };
   b._handleDragBlock = function() {
     this._boardBlockView = null;
+    this._scroller && this._scroller.setOpacity(0);
   };
   b._captureKeyEvent = function(a) {
     var b = a.keyCode, d = Entry.type;
@@ -17647,10 +17653,12 @@ Entry.BlockMenuScroller = function(b) {
   this.svgGroup = null;
   this.vRatio = this.vY = this.vWidth = this.hX = 0;
   this._visible = !0;
+  this._opacity = -1;
   this.mouseHandler = function() {
     a.onMouseDown.apply(a, arguments);
   };
   this.createScrollBar();
+  this.setOpacity(0);
   this._addControl();
   Entry.windowResized && Entry.windowResized.attach(this, this.resizeScrollBar);
 };
@@ -17683,6 +17691,9 @@ Entry.BlockMenuScroller.RADIUS = 7;
   };
   b.setVisible = function(a) {
     a != this.isVisible() && (this._visible = a, this.svgGroup.attr({display:!0 === a ? "block" : "none"}));
+  };
+  b.setOpacity = function(a) {
+    this._opacity != a && (this.vScrollbar.attr({opacity:a}), this._opacity = a);
   };
   b.isVisible = function() {
     return this._visible;

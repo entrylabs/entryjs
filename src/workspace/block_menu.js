@@ -96,12 +96,15 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         );
 
         this.svgDom.mouseenter(function(e) {
+            if (that._scroller) that._scroller.setOpacity(1);
+
             var selectedBlockView = that.workspace.selectedBlockView;
             if (!Entry.playground || Entry.playground.resizing ||
                 (selectedBlockView && selectedBlockView.dragMode === Entry.DRAG_MODE_DRAG)) return;
             Entry.playground.focusBlockMenu = true;
             var bBox = that.svgGroup.getBBox();
             var expandWidth = bBox.width + bBox.x + 64;
+            that._expandWidth = expandWidth;
             if (expandWidth > Entry.interfaceState.menuWidth) {
                 this.widthBackup = Entry.interfaceState.menuWidth - 64;
                 $(this).stop().animate({
@@ -118,6 +121,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
                 $(this).stop().animate({
                     width: widthBackup
                 }, 200);
+            delete that._expandWidth;
             delete this.widthBackup;
             delete Entry.playground.focusBlockMenu;
         });
@@ -481,8 +485,18 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     p._addControl = function(dom) {
         var that = this;
+        var svgDom = this.svgDom;
         dom.on('wheel', function(){
             that._mouseWheel.apply(that, arguments);
+        });
+
+        svgDom.on('mouseout', function(e){
+            var offset = that.offset;
+            var width = that._expandWidth || that._svgWidth;
+
+            if (offset.left > e.clientX -2 || offset.top > e.clientY -2 ||
+                (offset.left + width -2 < e.clientX ))
+                that._scroller.setOpacity(0);
         });
     };
 
@@ -510,6 +524,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     p._handleDragBlock = function() {
         this._boardBlockView = null;
+        if (this._scroller) this._scroller.setOpacity(0);
     };
 
     p._captureKeyEvent = function(e) {
