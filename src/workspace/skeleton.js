@@ -289,7 +289,7 @@ Entry.skeleton.basic_string_field = {
         var width = blockView.contentWidth;
         var height = blockView.contentHeight;
         height = Math.max(18, height + 2);
-        width = Math.max(0, width - height + 4);
+        width = Math.max(0, width - height + 12);
         return "m %h,0 h %w a %h,%h 0 1,1 0,%wh H %h A %h,%h 0 1,1 %h,0 z"
             .replace(/%wh/gi, height)
             .replace(/%w/gi, width)
@@ -302,7 +302,7 @@ Entry.skeleton.basic_string_field = {
         var height = blockView ? blockView.contentHeight : 18;
         return {
             offsetX: 0, offsetY: 0,
-            width: width + 4,
+            width: width + 12,
             height: Math.max(height + 2, 18),
             marginBottom: 0
         };
@@ -315,7 +315,7 @@ Entry.skeleton.basic_string_field = {
     contentPos: function(blockView) {
         // apply scale required.
         var height = Math.max(blockView.contentHeight, 16);
-        return {x: 2, y: height / 2 + 1};
+        return {x: 6, y: height / 2 + 1};
     }
 };
 
