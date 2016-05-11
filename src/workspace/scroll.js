@@ -25,8 +25,10 @@ Entry.Scroller = function(board, horizontal, vertical) {
     this.vY = 0;
     this.vRatio = 0;
     this._visible = true;
+    this._opacity = -1;
 
     this.createScrollBar();
+    this.setOpacity(0);
 
     if (Entry.windowResized)
         Entry.windowResized.attach(this, this.resizeScrollBar);
@@ -260,5 +262,13 @@ Entry.Scroller.RADIUS = 7;
 
     p.isVisible = function() {
         return this._visible;
+    };
+
+    p.setOpacity = function(value) {
+        if (this._opacity == value) return;
+        this.hScrollbar.attr({ opacity: value });
+        this.vScrollbar.attr({ opacity: value });
+
+        this._opacity = value;
     };
 })(Entry.Scroller.prototype);

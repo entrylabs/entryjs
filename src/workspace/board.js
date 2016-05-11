@@ -30,6 +30,7 @@ Entry.Board = function(option) {
     this.changeEvent = new Entry.Event(this);
     this.scroller = new Entry.Scroller(this, true, true);
 
+
     Entry.Utils.disableContextmenu(this.svgDom);
 
     this._addControl();
@@ -164,6 +165,12 @@ Entry.Board = function(option) {
         dom.on('wheel', function(){
             that.mouseWheel.apply(that, arguments);
         });
+
+        var scroller = that.scroller;
+        if (scroller) {
+            dom.mouseenter(function(e) {scroller.setOpacity(1);});
+            dom.mouseleave(function(e) {scroller.setOpacity(0);});
+        }
     };
 
     p.onMouseDown = function(e) {

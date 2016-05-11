@@ -118,7 +118,6 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             if (that._scroller)
                 that._scroller.setOpacity(0);
 
-
             var widthBackup = this.widthBackup;
             if (widthBackup)
                 $(this).stop().animate({
