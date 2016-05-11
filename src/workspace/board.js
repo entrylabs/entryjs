@@ -202,7 +202,7 @@ Entry.Board = function(option) {
                 text: '붙여넣기',
                 enable: !!Entry.clipboard,
                 callback: function(){
-                    Entry.do('cloneBlock', that.code).value
+                    Entry.do('addThread', Entry.clipboard).value
                         .getFirstBlock().copyToClipboard();
                 }
             };
@@ -303,7 +303,6 @@ Entry.Board = function(option) {
     };
 
     p.alignThreads = function() {
-        return;
         var domHeight = this.svgDom.height();
         var threads = this.code.getThreads();
 

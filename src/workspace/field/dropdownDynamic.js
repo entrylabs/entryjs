@@ -32,7 +32,7 @@ Entry.FieldDropdownDynamic = function(content, blockView, index) {
     this._FONT_SIZE =
         content.fontSize || blockView.getSkeleton().fontSize || 12;
 
-    this._ROUND = content.roundValue || 0;
+    this._ROUND = content.roundValue || 3;
     this.renderStart(blockView);
 };
 

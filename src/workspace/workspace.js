@@ -200,7 +200,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         if (ctrlKey && keyCode == 86) { //paste
             var board = this.selectedBoard;
             if (board && board instanceof Entry.Board && Entry.clipboard)
-                Entry.do('cloneBlock', board.code).value
+                Entry.do('addThread', Entry.clipboard).value
                     .getFirstBlock().copyToClipboard();
         }
     };

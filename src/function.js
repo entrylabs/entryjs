@@ -26,9 +26,11 @@ Entry.Func = function(func) {
     this.paramMap = {};
 
     var blockSchema = function () {};
-    blockSchema.prototype = Entry.block.function_general;
+    var blockPrototype = Entry.block.function_general;
+    blockSchema.prototype = blockPrototype;
     blockSchema = new blockSchema();
     blockSchema.changeEvent = new Entry.Event();
+    blockSchema.template = Lang.template.function_general;
 
     Entry.block["func_" + this.id] = blockSchema;
 
@@ -258,24 +260,26 @@ Entry.Func.requestParamBlock = function(type) {
     }
 
     var blockType = type + "Param_" + id;
-    var blockSchema = Entry.Func.createParamBlock(blockType, blockPrototype);
+    var blockSchema = Entry.Func.createParamBlock(blockType, blockPrototype, type);
     Entry.block[blockType] = blockSchema;
     return blockType;
 };
 
 Entry.Func.registerParamBlock = function(type) {
     if (type.substr(0,6) === "string") {
-        Entry.Func.createParamBlock(type, Entry.block.function_param_string);
+        Entry.Func.createParamBlock(type, Entry.block.function_param_string, type);
     } else if (type.substr(0,7) === "boolean") {
-        Entry.Func.createParamBlock(type, Entry.block.function_param_boolean);
+        Entry.Func.createParamBlock(type, Entry.block.function_param_boolean, type);
     }
 };
 
-Entry.Func.createParamBlock = function(type, blockPrototype) {
+Entry.Func.createParamBlock = function(type, blockPrototype, originalType) {
     var blockSchema = function () {};
+    originalType = originalType === "string" ? "function_param_string" : "function_param_boolean";
     blockSchema.prototype = blockPrototype;
     blockSchema = new blockSchema();
     blockSchema.changeEvent = new Entry.Event();
+    blockSchema.template = Lang.template[originalType];
 
     Entry.block[type] = blockSchema;
     return blockSchema;

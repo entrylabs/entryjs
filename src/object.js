@@ -229,7 +229,7 @@ Entry.EntryObject.prototype.generateView = function() {
                 self.editObjectValues(false);
             }
 
-                
+
         };
 
         this.nameView_.value = this.name;
@@ -339,7 +339,7 @@ Entry.EntryObject.prototype.generateView = function() {
         xInput.onkeypress = function (e) {
             if (e.keyCode == 13) {
                 thisPointer.editObjectValues(false);
-            }               
+            }
         };
 
         xInput.onblur = function (bool) {
@@ -503,11 +503,11 @@ Entry.EntryObject.prototype.generateView = function() {
         this.updateThumbnailView();
         this.updateCoordinateView();
         this.updateRotateMethodView();
-        this.updateInputViews();    
+        this.updateInputViews();
 
         this.updateCoordinateView(true);
         this.updateRotationView(true);
-    
+
 
         return this.view_;
     } else if (Entry.type == "phone") {
@@ -1447,7 +1447,7 @@ Entry.EntryObject.prototype.editObjectValues = function(click) {
     }
 
     if (click) {
-        
+
         $(inputs).removeClass('selectedNotEditingObject');
 
         for(var i=0; i<inputs.length; i++){
@@ -1459,14 +1459,14 @@ Entry.EntryObject.prototype.editObjectValues = function(click) {
         for(var i=0; i<inputs.length; i++){
             inputs[i].blur(true);
         }
-        
+
         this.blurAllInput();
         this.isEditing = false;
     }
 };
 
 Entry.EntryObject.prototype.blurAllInput = function() {
-    var inputs = document.getElementsByClassName('selectedEditingObject');            
+    var inputs = document.getElementsByClassName('selectedEditingObject');
     $(inputs).removeClass('selectedEditingObject');
 
     inputs = [
@@ -1487,7 +1487,7 @@ Entry.EntryObject.prototype.blurAllInput = function() {
 //             this.coordinateView_.yInput_, this.rotateInput_,
 //             this.directionInput_, this.coordinateView_.sizeInput_
 //         ];
-//     for(var i=0; i<inputs.length; i++){     
+//     for(var i=0; i<inputs.length; i++){
 //         inputs[i].setAttribute('disabled', 'disabled');
 //     }
 // };

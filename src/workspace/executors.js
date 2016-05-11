@@ -14,6 +14,8 @@ Entry.Executor = function(block, entity) {
 
 (function(p) {
     p.execute = function() {
+        if (this.isEnd())
+            return;
         while (true) {
             var returnVal = this.scope.block._schema.func.call(this.scope, this.entity, this.scope);
             if (returnVal === undefined || returnVal === null || returnVal === Entry.STATIC.PASS) {
@@ -53,6 +55,18 @@ Entry.Executor = function(block, entity) {
     p.break = function() {
         if (this._callStack.length)
             this.scope = this._callStack.pop();
+        return Entry.STATIC.PASS;
+    };
+
+    p.breakLoop = function() {
+        if (this._callStack.length)
+            this.scope = this._callStack.pop();
+        while (this._callStack.length) {
+            var schema = Entry.block[this.scope.block.type];
+            if (schema.class === "repeat")
+                break;
+            this.scope = this._callStack.pop();
+        }
         return Entry.STATIC.PASS;
     };
 

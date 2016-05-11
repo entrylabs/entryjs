@@ -62,6 +62,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
         y -= CONTENT_HEIGHT/2;
         this._header = this.svgGroup.elem('rect', {
                 x: 0, y: y,
+                rx: 3, ry: 3,
                 width: width,
                 height: CONTENT_HEIGHT, 'rx':3, 'ry': 3,
                 fill: "#fff",

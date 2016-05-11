@@ -16,6 +16,18 @@ Entry.PyBlockAssembler = function(blockSyntax) {
         switch(unit.type) {
             case 'ExpressionStatement' : {
             	console.log("ExpressionStatement unit", unit);
+
+            	var callee = unit.expression.callee;
+
+		        if(callee.object.name && callee.property.name)
+		        	var targetSyntax = String(callee.object.name).concat(".").concat(callee.property.name);
+		        else if(String(callee.object.object.name) == '__pythonRuntime' && String(callee.object.property.name) == 'functions')
+		       		var targetSyntax = String(callee.property.name);
+		       	
+		        var block = this.getBlock(targetSyntax);
+		        var paramsType = Entry.BlockTemplate.prototype.getParamsType(block);
+		        console.log("paramsType", paramsType);
+
             	var args = [];
             	var params = [];
             	var arguments = unit.expression.arguments;
@@ -30,7 +42,7 @@ Entry.PyBlockAssembler = function(blockSyntax) {
 		                	if(arg.prefix)
 		                		a = arg.operator.concat(arg.argument.value)
 		                } else if(arg.type == 'Literal') {
-		                	a = String(arg.value);
+		                	a = arg.value;
 		                }
 
 		                args.push(a);
@@ -47,19 +59,14 @@ Entry.PyBlockAssembler = function(blockSyntax) {
 		            	var type = 'number';
 
 		            console.log("type", type);
-		            var param = {type: type, params: [arg]};
+		            if(paramsType[index] == "Block")
+		            	var param = { type: type, params: [arg] };
+		            else
+		            	var param = arg;
+
 		            params.push(param);
 		        }
 
-		        var callee = unit.expression.callee;
-
-		        if(callee.object.name && callee.property.name)
-		        	var targetSyntax = String(callee.object.name).concat(".").concat(callee.property.name);
-		        else if(String(callee.object.object.name) == '__pythonRuntime' && String(callee.object.property.name) == 'functions')
-		       		var targetSyntax = String(callee.property.name);
-		       	
-		        var block = this.getBlock(targetSyntax);
-                
                 result = { type: block, params: params };
                 console.log("ExpressionStatement result", result);
                 break;
@@ -126,7 +133,7 @@ Entry.PyBlockAssembler = function(blockSyntax) {
 		            	var type = 'number';
 
 		            console.log("type", type);
-		            var param = {type: type, params: [arg]};
+		            var param = { type: type, params: [arg] };
 		            params.push(param);
 		        }
 

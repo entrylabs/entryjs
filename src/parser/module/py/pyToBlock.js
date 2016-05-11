@@ -15,7 +15,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.Program = function(astArr) {
         var code = [];
         
-
         for(var index in astArr) {
             if(astArr[index].type != 'Program') return;
             var thread = []; 
@@ -33,12 +32,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
 
             console.log("thread", thread);
-            code.push(thread);
-            
+            code.push(thread);    
         }
-
-        
-
         return code;
     };
 

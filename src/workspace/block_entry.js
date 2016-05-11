@@ -21,7 +21,8 @@ Entry.block = {
         "func": function (sprite, script) {
             var pd = Entry.hw.portData
             return pd.leftProximity > 40 || pd.rightProximity > 40;
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "albert_value": {
         "color": "#00979D",
@@ -31,16 +32,16 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽 근접 센서", "leftProximity" ],
-                    [ "오른쪽 근접 센서", "rightProximity" ],
-                    [ "밝기", "light" ],
-                    [ "배터리", "battery" ],
-                    [ "신호 세기", "signalStrength" ],
-                    [ "앞쪽 OID", "frontOid" ],
-                    [ "뒤쪽 OID", "backOid" ],
-                    [ "x 위치", "positionX" ],
-                    [ "y 위치", "positionY" ],
-                    [ "방향", "orientation" ]
+                    [Lang.Blocks.ALBERT_sensor_leftProximity ,"leftProximity"],
+                    [Lang.Blocks.ALBERT_sensor_rightProximity,"rightProximity"],
+                    [Lang.Blocks.ALBERT_sensor_light,"light"],
+                    [Lang.Blocks.ALBERT_sensor_battery,"battery"],
+                    [Lang.Blocks.ALBERT_sensor_signalStrength,"signalStrength"],
+                    [Lang.Blocks.ALBERT_sensor_frontOid,"frontOid"],
+                    [Lang.Blocks.ALBERT_sensor_backOid,"backOid"],
+                    [Lang.Blocks.ALBERT_sensor_positionX,"positionX"],
+                    [Lang.Blocks.ALBERT_sensor_positionY,"positionY"],
+                    [Lang.Blocks.ALBERT_sensor_orientation,"orientation"]
                 ],
                 "value": "leftProximity",
                 "fontSize": 11
@@ -51,8 +52,7 @@ Entry.block = {
             "params": [
                 null
             ],
-            "type": "albert_value",
-            "id": "nw7o"
+            "type": "albert_value"
         },
         "paramsKeyMap": {
             "DEVICE": 0
@@ -63,7 +63,8 @@ Entry.block = {
             var pd = Entry.hw.portData;
             var dev = script.getField('DEVICE');
             return pd[dev];
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "albert_move_forward_for_secs": {
         "color": "#00979D",
@@ -120,7 +121,8 @@ Entry.block = {
                 sq.rightWheel = 0;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "albert_move_backward_for_secs": {
         "color": "#00979D",
@@ -179,7 +181,8 @@ Entry.block = {
                 sq.rightWheel = 0;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "albert_turn_for_secs": {
         "color": "#00979D",
@@ -189,8 +192,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽", "LEFT" ],
-                    [ "오른쪽", "RIGHT" ]
+                    [Lang.General.left,"LEFT"],
+                    [Lang.General.right,"RIGHT"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -254,7 +257,8 @@ Entry.block = {
                 sq.rightWheel = 0;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "albert_change_both_wheels_by": {
         "color": "#00979D",
@@ -303,7 +307,8 @@ Entry.block = {
             sq.leftWheel = sq.leftWheel != undefined ? sq.leftWheel + left : left;
             sq.rightWheel = sq.rightWheel != undefined ? sq.rightWheel + right : right;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "albert_set_both_wheels_to": {
         "color": "#00979D",
@@ -350,7 +355,8 @@ Entry.block = {
             sq.leftWheel = script.getNumberValue('LEFT');
             sq.rightWheel = script.getNumberValue('RIGHT');
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "albert_change_wheel_by": {
         "color": "#00979D",
@@ -360,9 +366,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽", "LEFT" ],
-                    [ "오른쪽", "RIGHT" ],
-                    [ "양쪽", "BOTH" ]
+                    [Lang.General.left,"LEFT"],
+                    [Lang.General.right,"RIGHT"],
+                    [Lang.General.both,"BOTH"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -408,7 +414,8 @@ Entry.block = {
                 sq.rightWheel = sq.rightWheel != undefined ? sq.rightWheel + value : value;
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "albert_set_wheel_to": {
         "color": "#00979D",
@@ -418,9 +425,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽", "LEFT" ],
-                    [ "오른쪽", "RIGHT" ],
-                    [ "양쪽", "BOTH" ]
+                    [Lang.General.left,"LEFT"],
+                    [Lang.General.right,"RIGHT"],
+                    [Lang.General.both,"BOTH"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -466,7 +473,8 @@ Entry.block = {
                 sq.rightWheel = value;
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "albert_stop": {
         "color": "#00979D",
@@ -496,7 +504,8 @@ Entry.block = {
             sq.leftWheel = 0;
             sq.rightWheel = 0;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "albert_set_pad_size_to": {
         "color": "#00979D",
@@ -544,7 +553,8 @@ Entry.block = {
             sq.padWidth = script.getNumberValue('WIDTH');
             sq.padHeight = script.getNumberValue('HEIGHT');
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "albert_set_eye_to": {
         "color": "#00979D",
@@ -554,9 +564,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽", "LEFT" ],
-                    [ "오른쪽", "RIGHT" ],
-                    [ "양쪽", "BOTH" ]
+                    [Lang.General.left,"LEFT"],
+                    [Lang.General.right,"RIGHT"],
+                    [Lang.General.both,"BOTH"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -564,13 +574,13 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "빨간색", "4" ],
-                    [ "노란색", "6" ],
-                    [ "초록색", "2" ],
-                    [ "하늘색", "3" ],
-                    [ "파란색", "1" ],
-                    [ "보라색", "5" ],
-                    [ "하얀색", "7" ]
+                    [Lang.General.red,"4"],
+                    [Lang.General.yellow,"6"],
+                    [Lang.General.green,"2"],
+                    [Lang.Blocks.ALBERT_color_cyan,"3"],
+                    [Lang.General.blue,"1"],
+                    [Lang.Blocks.ALBERT_color_magenta,"5"],
+                    [Lang.General.white,"7"]
                 ],
                 "value": "4",
                 "fontSize": 11
@@ -605,7 +615,8 @@ Entry.block = {
                 sq.rightEye = color;
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "albert_clear_eye": {
         "color": "#00979D",
@@ -615,9 +626,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽", "LEFT" ],
-                    [ "오른쪽", "RIGHT" ],
-                    [ "양쪽", "BOTH" ]
+                    [Lang.General.left,"LEFT"],
+                    [Lang.General.right,"RIGHT"],
+                    [Lang.General.both,"BOTH"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -650,7 +661,8 @@ Entry.block = {
                 sq.rightEye = 0;
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "albert_body_led": {
         "color": "#00979D",
@@ -688,7 +700,8 @@ Entry.block = {
             if (state == 'ON') sq.bodyLed = 1;
             else sq.bodyLed = 0;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "albert_front_led": {
         "color": "#00979D",
@@ -726,7 +739,8 @@ Entry.block = {
             if (state == 'ON') sq.frontLed = 1;
             else sq.frontLed = 0;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "albert_beep": {
         "color": "#00979D",
@@ -769,7 +783,8 @@ Entry.block = {
                 sq.buzzer = 0;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "albert_change_buzzer_by": {
         "color": "#00979D",
@@ -808,7 +823,8 @@ Entry.block = {
             sq.buzzer = sq.buzzer != undefined ? sq.buzzer + value : value;
             sq.note = 0;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "albert_set_buzzer_to": {
         "color": "#00979D",
@@ -846,7 +862,8 @@ Entry.block = {
             sq.buzzer = script.getNumberValue('VALUE');
             sq.note = 0;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "albert_clear_buzzer": {
         "color": "#00979D",
@@ -871,7 +888,8 @@ Entry.block = {
             sq.buzzer = 0;
             sq.note = 0;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "albert_play_note_for": {
         "color": "#00979D",
@@ -881,18 +899,18 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "도", "4" ],
-                    [ "도#", "5" ],
-                    [ "레", "6" ],
-                    [ "미b", "7" ],
-                    [ "미", "8" ],
-                    [ "파", "9" ],
-                    [ "파#", "10" ],
-                    [ "솔", "11" ],
-                    [ "솔#", "12" ],
-                    [ "라", "13" ],
-                    [ "시b", "14" ],
-                    [ "시", "15" ]
+                    [Lang.General.note_c + '',"4"],
+                    [Lang.General.note_c + '#',"5"],
+                    [Lang.General.note_d + '',"6"],
+                    [Lang.General.note_e + 'b',"7"],
+                    [Lang.General.note_e + '',"8"],
+                    [Lang.General.note_f + '',"9"],
+                    [Lang.General.note_f + '#',"10"],
+                    [Lang.General.note_g + '',"11"],
+                    [Lang.General.note_g + '#',"12"],
+                    [Lang.General.note_a + '',"13"],
+                    [Lang.General.note_b + 'b',"14"],
+                    [Lang.General.note_b + '',"15"]
                 ],
                 "value": "4",
                 "fontSize": 11
@@ -976,7 +994,8 @@ Entry.block = {
                 sq.note = 0;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "albert_rest_for": {
         "color": "#00979D",
@@ -1032,7 +1051,8 @@ Entry.block = {
                 Entry.engine.isContinue = false;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "albert_change_tempo_by": {
         "color": "#00979D",
@@ -1069,7 +1089,8 @@ Entry.block = {
             Entry.Albert.tempo += script.getNumberValue('VALUE');
             if (Entry.Albert.tempo < 1) Entry.Albert.tempo = 1;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "albert_set_tempo_to": {
         "color": "#00979D",
@@ -1106,7 +1127,8 @@ Entry.block = {
             Entry.Albert.tempo = script.getNumberValue('VALUE');
             if (Entry.Albert.tempo < 1) Entry.Albert.tempo = 1;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "albert_move_forward": {
         "color": "#00979D",
@@ -1145,7 +1167,8 @@ Entry.block = {
                 sq.rightWheel = 0;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "albert_move_backward": {
         "color": "#00979D",
@@ -1186,7 +1209,8 @@ Entry.block = {
                 sq.rightWheel = 0;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "albert_turn_around": {
         "color": "#00979D",
@@ -1243,7 +1267,8 @@ Entry.block = {
                 sq.rightWheel = 0;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "albert_set_led_to": {
         "color": "#00979D",
@@ -1301,7 +1326,8 @@ Entry.block = {
                 sq.rightEye = color;
 
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "albert_clear_led": {
         "color": "#00979D",
@@ -1341,7 +1367,8 @@ Entry.block = {
             else sq.rightEye = 0;
 
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "albert_change_wheels_by": {
         "color": "#00979D",
@@ -1396,7 +1423,8 @@ Entry.block = {
                 }
 
                 return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "albert_set_wheels_to": {
         "color": "#00979D",
@@ -1444,7 +1472,8 @@ Entry.block = {
             }
 
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "arduino_text": {
         "color": "#00979D",
@@ -1465,7 +1494,8 @@ Entry.block = {
         },
         "func": function (sprite, script) {
             return script.getStringField("NAME");
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "arduino_send": {
         "color": "#00979D",
@@ -1491,7 +1521,8 @@ Entry.block = {
             xmlHttp.send(String(signal));
             Entry.assert(xmlHttp.status == 200, "arduino is not connected");
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "arduino_get_number": {
         "color": "#00979D",
@@ -1518,7 +1549,8 @@ Entry.block = {
             Entry.assert(xmlHttp.status == 200, "arduino is not connected");
             var data = xmlHttp.responseText;
             return Number(data);
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "arduino_get_string": {
         "color": "#00979D",
@@ -1545,7 +1577,8 @@ Entry.block = {
             Entry.assert(xmlHttp.status == 200, "arduino is not connected");
             var data = xmlHttp.responseText;
             return data;
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "arduino_get_sensor_number": {
         "color": "#00979D",
@@ -1575,7 +1608,8 @@ Entry.block = {
         },
         "func": function (sprite, script) {
             return script.getStringField("PORT");
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "arduino_get_port_number": {
         "color": "#00979D",
@@ -1613,7 +1647,8 @@ Entry.block = {
         },
         "func": function (sprite, script) {
             return script.getStringField("PORT");
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "arduino_get_pwm_port_number": {
         "color": "#00979D",
@@ -1643,7 +1678,8 @@ Entry.block = {
         },
         "func": function (sprite, script) {
             return script.getStringField("PORT");
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "arduino_get_number_sensor_value": {
         "color": "#00979D",
@@ -1672,7 +1708,8 @@ Entry.block = {
         "func": function (sprite, script) {
             var signal = script.getValue("VALUE", script);
             return Entry.hw.getAnalogPortValue(signal[1]);
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "arduino_get_digital_value": {
         "color": "#00979D",
@@ -1701,7 +1738,8 @@ Entry.block = {
         "func": function (sprite, script) {
             var signal = script.getNumberValue("VALUE", script);
             return Entry.hw.getDigitalPortValue(signal);
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "arduino_toggle_led": {
         "color": "#00979D",
@@ -1715,8 +1753,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "켜기", "on" ],
-                    [ "끄기", "off" ]
+                    [Lang.Blocks.ARDUINO_on,"on"],
+                    [Lang.Blocks.ARDUINO_off,"off"]
                 ],
                 "value": "on",
                 "fontSize": 11
@@ -1750,7 +1788,8 @@ Entry.block = {
             var value = operator == "on" ? 255 : 0;
             Entry.hw.setDigitalPortValue(port, value);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "arduino_toggle_pwm": {
         "color": "#00979D",
@@ -1799,7 +1838,8 @@ Entry.block = {
             value = Math.min(value, 255);
             Entry.hw.setDigitalPortValue(port, value);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "arduino_convert_scale": {
         "color": "#00979D",
@@ -1890,7 +1930,8 @@ Entry.block = {
             result = Math.min(value5, result);
             result = Math.max(value4, result);
             return Math.round(result);
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "sensorBoard_get_named_sensor_value": {
         "color": "#00979D",
@@ -1921,7 +1962,8 @@ Entry.block = {
         "isNotFor": [ "sensorBoard" ],
         "func": function (sprite, script) {
             return Entry.hw.getAnalogPortValue(script.getField("PORT", script));
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "sensorBoard_is_button_pressed": {
         "color": "#00979D",
@@ -1952,7 +1994,8 @@ Entry.block = {
         "isNotFor": [ "sensorBoard" ],
         "func": function (sprite, script) {
             return Entry.hw.getDigitalPortValue(script.getNumberField("PORT", script));
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "sensorBoard_led": {
         "color": "#00979D",
@@ -2000,15 +2043,17 @@ Entry.block = {
             Entry.hw.setDigitalPortValue(script.getField("PORT"),
                                          script.getNumberField("OPERATOR"));
                                          return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "arduino_download_connector": {
         "skeleton": "basic_button",
+        "isNotFor": ["arduinoDisconnected"],
         "color": "#eee",
         "params": [
             {
                 "type": "Text",
-                "text": "연결 프로그램 다운로드",
+                "text": Lang.Blocks.ARDUINO_download_connector,
                 "color": "#333",
                 "align": "center"
             }
@@ -2021,11 +2066,12 @@ Entry.block = {
     },
     "arduino_download_source": {
         "skeleton": "basic_button",
+        "isNotFor": ["arduinoDisconnected"],
         "color": "#eee",
         "params": [
             {
                 "type": "Text",
-                "text": "엔트리 아두이노 소스",
+                "text": Lang.Blocks.ARDUINO_download_source,
                 "color": "#333",
                 "align": "center"
             }
@@ -2039,10 +2085,11 @@ Entry.block = {
     "arduino_connected": {
         "skeleton": "basic_button",
         "color": "#eee",
+        "isNotFor": ["arduinoConnected"],
         "params": [
             {
                 "type": "Text",
-                "text": "연결 됨",
+                "text": Lang.Blocks.ARDUINO_connected,
                 "color": "#333",
                 "align": "center"
             }
@@ -2056,10 +2103,11 @@ Entry.block = {
     "arduino_reconnect": {
         "skeleton": "basic_button",
         "color": "#eee",
+        "isNotFor": ["arduinoDisconnected"],
         "params": [
             {
                 "type": "Text",
-                "text": "다시 연결하기",
+                "text": Lang.Blocks.ARDUINO_reconnect,
                 "color": "#333",
                 "align": "center"
             }
@@ -2099,7 +2147,8 @@ Entry.block = {
         },
         "func": function (sprite, script) {
             return script.getStringField("PORT");
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "CODEino_get_named_sensor_value": {
         "color": "#00979D",
@@ -2109,13 +2158,13 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "소리", "0" ],
-                    [ "빛", "1" ],
-                    [ "슬라이더", "2" ],
-                    [ "저항-A", "3" ],
-                    [ "저항-B", "4" ],
-                    [ "저항-C", "5" ],
-                    [ "저항-D", "6" ]
+                    [Lang.Blocks.CODEino_sensor_name_0,"0"],
+                    [Lang.Blocks.CODEino_sensor_name_1,"1"],
+                    [Lang.Blocks.CODEino_sensor_name_2,"2"],
+                    [Lang.Blocks.CODEino_sensor_name_3,"3"],
+                    [Lang.Blocks.CODEino_sensor_name_4,"4"],
+                    [Lang.Blocks.CODEino_sensor_name_5,"5"],
+                    [Lang.Blocks.CODEino_sensor_name_6,"6"]
                 ],
                 "value": "0",
                 "fontSize": 11
@@ -2133,7 +2182,8 @@ Entry.block = {
         "isNotFor": [ "CODEino" ],
         "func": function (sprite, script) {
             return Entry.hw.getAnalogPortValue(script.getField("PORT", script));
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "CODEino_get_sound_status": {
         "color": "#00979D",
@@ -2143,8 +2193,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "소리큼", "GREAT" ],
-                    [ "소리작음", "SMALL" ]
+                    [Lang.Blocks.CODEino_string_11,"GREAT"],
+                    [Lang.Blocks.CODEino_string_12,"SMALL"]
                 ],
                 "value": "GREAT",
                 "fontSize": 11
@@ -2165,7 +2215,8 @@ Entry.block = {
             var value2 = 0;
             if (value1 == "GREAT") return Entry.hw.getAnalogPortValue(value2) > 600 ? 1 : 0;
             else return Entry.hw.getAnalogPortValue(value2) < 600 ? 1 : 0;
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "CODEino_get_light_status": {
         "color": "#00979D",
@@ -2175,8 +2226,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "밝음", "BRIGHT" ],
-                    [ "어두움", "DARK" ]
+                    [Lang.Blocks.CODEino_string_14,"BRIGHT"],
+                    [Lang.Blocks.CODEino_string_15,"DARK"]
                 ],
                 "value": "BRIGHT",
                 "fontSize": 11
@@ -2197,7 +2248,8 @@ Entry.block = {
             var value2 = 1;
             if (value1 == "DARK") return Entry.hw.getAnalogPortValue(value2) > 800 ? 1 : 0;
             else return Entry.hw.getAnalogPortValue(value2) < 800 ? 1 : 0;
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "CODEino_is_button_pressed": {
         "color": "#00979D",
@@ -2207,11 +2259,11 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "버튼누름", "4" ],
-                    [ "A 연결됨", "17" ],
-                    [ "B 연결됨", "18" ],
-                    [ "C 연결됨", "19" ],
-                    [ "D 연결됨", "20" ]
+                    [Lang.Blocks.CODEino_string_3,"4"],
+                    [Lang.Blocks.CODEino_string_4,"17"],
+                    [Lang.Blocks.CODEino_string_5,"18"],
+                    [Lang.Blocks.CODEino_string_6,"19"],
+                    [Lang.Blocks.CODEino_string_7,"20"]
                 ],
                 "value": "4",
                 "fontSize": 11
@@ -2233,7 +2285,8 @@ Entry.block = {
                 value = value - 14;
                 return !Entry.hw.getAnalogPortValue(value);
             } else return !Entry.hw.getDigitalPortValue(value);
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "CODEino_get_accelerometer_direction": {
         "color": "#00979D",
@@ -2243,11 +2296,11 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽 기울임", "LEFT" ],
-                    [ "오른쪽 기울임", "RIGHT" ],
-                    [ "위쪽 기울임", "FRONT" ],
-                    [ "아래쪽 기울임", "REAR" ],
-                    [ "뒤집힘", "REVERSE" ]
+                    [Lang.Blocks.CODEino_string_16, "LEFT"],
+                    [Lang.Blocks.CODEino_string_17, "RIGHT"],
+                    [Lang.Blocks.CODEino_string_18, "FRONT"],
+                    [Lang.Blocks.CODEino_string_19, "REAR"],
+                    [Lang.Blocks.CODEino_string_20, "REVERSE"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -2284,7 +2337,8 @@ Entry.block = {
             if (value1 == "LEFT" || value1 == "REAR") return result < -30 ? 1 : 0;
             else if (value1 == "RIGHT" || value1 == "FRONT") return result > 30 ? 1 : 0;
             else if (value1 == "REVERSE") return result < -50 ? 1 : 0;
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "CODEino_get_accelerometer_value": {
         "color": "#00979D",
@@ -2335,7 +2389,8 @@ Entry.block = {
             result = Math.min(value5, result);
             result = Math.max(value4, result);
             return Math.round(result);
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "bitbrick_sensor_value": {
         "color": "#00979D",
@@ -2361,7 +2416,8 @@ Entry.block = {
         "func": function (sprite, script) {
             var port = script.getStringField("PORT");
             return Entry.hw.portData[port].value;
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "bitbrick_is_touch_pressed": {
         "color": "#00979D",
@@ -2386,7 +2442,8 @@ Entry.block = {
         "isNotFor": [ "bitbrick" ],
         "func": function (sprite, script) {
             return Entry.hw.portData[script.getStringField("PORT")].value === 0;
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "bitbrick_turn_off_color_led": {
         "color": "#00979D",
@@ -2412,7 +2469,8 @@ Entry.block = {
             Entry.hw.sendQueue["LEDG"] = 0;
             Entry.hw.sendQueue["LEDB"] = 0;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "bitbrick_turn_on_color_led_by_rgb": {
         "color": "#00979D",
@@ -2466,17 +2524,18 @@ Entry.block = {
         "func": function (sprite, script) {
             var red = script.getNumberValue("rValue"),
                 green = script.getNumberValue("gValue"),
-                    blue = script.getNumberValue("bValue"),
-                        min = 0,
-                            max = 255,
-                                adjustor = Entry.adjustValueWithMaxMin,
-                                    sq = Entry.hw.sendQueue;
+                blue = script.getNumberValue("bValue"),
+                min = 0,
+                max = 255,
+                adjustor = Entry.adjustValueWithMaxMin,
+                sq = Entry.hw.sendQueue;
 
-                                    sq["LEDR"] = adjustor(red, min, max);
-                                    sq["LEDG"] = adjustor(green, min, max);
-                                    sq["LEDB"] = adjustor(blue, min, max);
-                                    return script.callReturn();
-        }
+                sq["LEDR"] = adjustor(red, min, max);
+                sq["LEDG"] = adjustor(green, min, max);
+                sq["LEDB"] = adjustor(blue, min, max);
+                return script.callReturn();
+        },
+        "syntax": {"js": [], "py": []}
     },
     "bitbrick_turn_on_color_led_by_picker": {
         "color": "#00979D",
@@ -2508,7 +2567,8 @@ Entry.block = {
             Entry.hw.sendQueue["LEDG"] = parseInt(port.substr(3,2), 16);
             Entry.hw.sendQueue["LEDB"] = parseInt(port.substr(5,2), 16);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "bitbrick_turn_on_color_led_by_value": {
         "color": "#00979D",
@@ -2564,7 +2624,8 @@ Entry.block = {
             Entry.hw.sendQueue["LEDG"] = green;
             Entry.hw.sendQueue["LEDB"] = blue;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "bitbrick_buzzer": {
         "color": "#00979D",
@@ -2608,7 +2669,8 @@ Entry.block = {
                 delete script.isStart;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "bitbrick_turn_off_all_motors": {
         "color": "#00979D",
@@ -2638,7 +2700,8 @@ Entry.block = {
                 sq[dc[1]] = 128;
             });
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "bitbrick_dc_speed": {
         "color": "#00979D",
@@ -2685,8 +2748,9 @@ Entry.block = {
 
             Entry.hw.sendQueue[script.getStringField("PORT")] =
                 value + 128;
-                return script.callReturn();
-        }
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": []}
     },
     "bitbrick_dc_direction_speed": {
         "color": "#00979D",
@@ -2701,8 +2765,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "시계", "CW" ],
-                    [ "반시계", "CCW" ]
+                    [Lang.Blocks.BITBRICK_dc_direction_cw,"CW"],
+                    [Lang.Blocks.BITBRICK_dc_direction_ccw,"CCW"]
                 ],
                 "value": "CW",
                 "fontSize": 11
@@ -2745,8 +2809,9 @@ Entry.block = {
 
             Entry.hw.sendQueue[script.getStringField("PORT")] =
                 isFront ? value + 128 : 128 - value;
-                return script.callReturn();
-        }
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": []}
     },
     "bitbrick_servomotor_angle": {
         "color": "#00979D",
@@ -2792,7 +2857,8 @@ Entry.block = {
             value = Math.max(value, Entry.Bitbrick.servoMinValue);
             Entry.hw.sendQueue[script.getStringField("PORT")] = value;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "bitbrick_convert_scale": {
         "color": "#00979D",
@@ -2874,7 +2940,8 @@ Entry.block = {
             result = Math.min(value5, result);
             result = Math.max(value4, result);
             return Math.round(result);
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "start_drawing": {
         "color": "#FF9E20",
@@ -2905,7 +2972,8 @@ Entry.block = {
             sprite.brush.moveTo(sprite.getX(), sprite.getY()*-1);
 
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "stop_drawing": {
         "color": "#FF9E20",
@@ -2930,7 +2998,8 @@ Entry.block = {
                 sprite.brush.stop = true;
 
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "set_color": {
         "color": "#FF9E20",
@@ -2974,7 +3043,8 @@ Entry.block = {
             }
 
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "set_random_color": {
         "color": "#FF9E20",
@@ -3009,7 +3079,8 @@ Entry.block = {
                 sprite.brush.moveTo(sprite.getX(), sprite.getY()*-1);
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "change_thickness": {
         "color": "#FF9E20",
@@ -3061,7 +3132,8 @@ Entry.block = {
             }
 
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "set_thickness": {
         "color": "#FF9E20",
@@ -3110,7 +3182,8 @@ Entry.block = {
             }
 
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "change_opacity": {
         "color": "#FF9E20",
@@ -3161,7 +3234,8 @@ Entry.block = {
             }
 
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "set_opacity": {
         "color": "#FF9E20",
@@ -3212,7 +3286,8 @@ Entry.block = {
 
             return script.callReturn();
 
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "brush_erase_all": {
         "color": "#FF9E20",
@@ -3248,7 +3323,8 @@ Entry.block = {
             stampEntities = null;
 
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "brush_stamp": {
         "color": "#FF9E20",
@@ -3272,7 +3348,8 @@ Entry.block = {
             sprite.parent.addStampEntity(sprite);
 
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "change_brush_transparency": {
         "color": "#FF9E20",
@@ -3323,7 +3400,8 @@ Entry.block = {
             }
 
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "set_brush_tranparency": {
         "color": "#FF9E20",
@@ -3374,7 +3452,8 @@ Entry.block = {
 
             return script.callReturn();
 
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "number": {
         "color": "#FFD974",
@@ -3396,7 +3475,8 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getField('NUM', script);
         },
-        "isPrimitive": true
+        "isPrimitive": true,
+        "syntax": {"js": [], "py": ["%1"]}
     },
     "angle": {
         "color": "#FFD974",
@@ -3416,7 +3496,8 @@ Entry.block = {
         },
         "func": function (sprite, script) {
             return script.getNumberField("ANGLE");
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "get_x_coordinate": {
         "color": "#FFD974",
@@ -3425,7 +3506,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Text",
-                "text": "X 좌푯값",
+                "text": Lang.Blocks.CALC_get_x_coordinate,
                 "color": "#3D3D3D"
             }
         ],
@@ -3438,7 +3519,8 @@ Entry.block = {
         "isNotFor": [],
         "func": function (sprite, script) {
             return sprite.getX();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "get_y_coordinate": {
         "color": "#FFD974",
@@ -3447,7 +3529,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Text",
-                "text": "Y 좌푯값",
+                "text": Lang.Blocks.CALC_get_y_coordinate,
                 "color": "#3D3D3D"
             }
         ],
@@ -3460,7 +3542,8 @@ Entry.block = {
         "isNotFor": [],
         "func": function (sprite, script) {
             return sprite.getY();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "get_angle": {
         "color": "#FFD974",
@@ -3469,7 +3552,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Text",
-                "text": "각도값",
+                "text": Lang.Blocks.CALC_get_angle,
                 "color": "#3D3D3D"
             }
         ],
@@ -3479,7 +3562,8 @@ Entry.block = {
         },
         "func": function (sprite, script) {
             return parseFloat(sprite.getRotation().toFixed(1));
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "get_rotation_direction": {
         "color": "#FFD974",
@@ -3489,8 +3573,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "방향값", "ROTATION" ],
-                    [ "이동 방향값", "DIRECTION" ]
+                    [Lang.Blocks.CALC_rotation_value,"ROTATION"],
+                    [Lang.Blocks.CALC_direction_value,"DIRECTION"]
                 ],
                 "value": "ROTATION",
                 "fontSize": 11
@@ -3512,13 +3596,19 @@ Entry.block = {
                 return parseFloat(sprite.getDirection().toFixed(1));
             else
                 return parseFloat(sprite.getRotation().toFixed(1));
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "distance_something": {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
+            {
+                "type": "Text",
+                "text": Lang.Blocks.CALC_distance_something_1,
+                "color": "#3D3D3D"
+            },
             {
                 "type": "DropdownDynamic",
                 "value": null,
@@ -3527,17 +3617,17 @@ Entry.block = {
             },
             {
                 "type": "Text",
-                "text": "까지의 거리",
+                "text": Lang.Blocks.CALC_distance_something_2,
                 "color": "#3D3D3D"
             }
         ],
         "events": {},
         "def": {
-            "params": [ null, null ],
+            "params": [ null, null, null ],
             "type": "distance_something"
         },
         "paramsKeyMap": {
-            "VALUE": 0
+            "VALUE": 1
         },
         "class": "calc_distance",
         "isNotFor": [],
@@ -3556,7 +3646,8 @@ Entry.block = {
                         Math.pow(sprite.getY() - targetEntity.getY(), 2)
                 );
             }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "coordinate_mouse": {
         "color": "#FFD974",
@@ -3565,7 +3656,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Text",
-                "text": "마우스",
+                "text": Lang.Blocks.CALC_coordinate_mouse_1,
                 "color": "#3D3D3D"
             },
             {
@@ -3579,7 +3670,7 @@ Entry.block = {
             },
             {
                 "type": "Text",
-                "text": "좌표",
+                "text": Lang.Blocks.CALC_coordinate_mouse_2,
                 "color": "#3D3D3D"
             }
         ],
@@ -3600,13 +3691,19 @@ Entry.block = {
             } else {
                 return Number(Entry.stage.mouseCoordinate.y);
             }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "coordinate_object": {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
+            {
+                "type": "Text",
+                "text": Lang.Blocks.CALC_coordinate_object_1,
+                "color": "#3D3D3D"
+            },
             {
                 "type": "DropdownDynamic",
                 "value": null,
@@ -3615,19 +3712,19 @@ Entry.block = {
             },
             {
                 "type": "Text",
-                "text": "의",
+                "text": Lang.Blocks.CALC_coordinate_object_2,
                 "color": "#3D3D3D"
             },
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "x 좌푯값", "x" ],
-                    [ "y 좌푯값", "y" ],
-                    [ "방향", "rotation" ],
-                    [ "이동방향", "direction" ],
-                    [ "크기", "size" ],
-                    [ "모양 번호", "picture_index" ],
-                    [ "모양 이름", "picture_name" ]
+                    [Lang.Blocks.CALC_coordinate_x_value,"x"],
+                    [Lang.Blocks.CALC_coordinate_y_value, "y"],
+                    [Lang.Blocks.CALC_coordinate_rotation_value, "rotation"],
+                    [Lang.Blocks.CALC_coordinate_direction_value, "direction"],
+                    [Lang.Blocks.CALC_coordinate_size_value, "size"],
+                    [Lang.Blocks.CALC_picture_index, "picture_index"],
+                    [Lang.Blocks.CALC_picture_name, "picture_name"]
                 ],
                 "value": "x",
                 "fontSize": 11
@@ -3635,12 +3732,12 @@ Entry.block = {
         ],
         "events": {},
         "def": {
-            "params": [ null, null, null ],
+            "params": [ null, null, null, null ],
             "type": "coordinate_object"
         },
         "paramsKeyMap": {
-            "VALUE": 0,
-            "COORDINATE": 2
+            "VALUE": 1,
+            "COORDINATE": 3
         },
         "class": "calc",
         "isNotFor": [],
@@ -3674,7 +3771,8 @@ Entry.block = {
                     var picture = pictures[pictures.indexOf(targetEntity.picture)];
                     return picture.name;
             }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "calc_basic": {
         "color": "#FFD974",
@@ -3794,7 +3892,8 @@ Entry.block = {
                 return leftValue * rightValue;
             else
                 return leftValue / rightValue;
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "calc_plus": {
         "color": "#FFD974",
@@ -3827,7 +3926,8 @@ Entry.block = {
             var leftValue = script.getNumberValue("LEFTHAND", script);
             var rightValue = script.getNumberValue("RIGHTHAND", script);
             return leftValue + rightValue;
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "calc_minus": {
         "color": "#FFD974",
@@ -3860,7 +3960,8 @@ Entry.block = {
             var leftValue = script.getNumberValue("LEFTHAND", script);
             var rightValue = script.getNumberValue("RIGHTHAND", script);
             return leftValue - rightValue;
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "calc_times": {
         "color": "#FFD974",
@@ -3893,7 +3994,8 @@ Entry.block = {
             var leftValue = script.getNumberValue("LEFTHAND", script);
             var rightValue = script.getNumberValue("RIGHTHAND", script);
             return leftValue * rightValue;
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "calc_divide": {
         "color": "#FFD974",
@@ -3926,7 +4028,8 @@ Entry.block = {
             var leftValue = script.getNumberValue("LEFTHAND", script);
             var rightValue = script.getNumberValue("RIGHTHAND", script);
             return leftValue / rightValue;
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "calc_mod": {
         "color": "#FFD974",
@@ -3948,7 +4051,7 @@ Entry.block = {
             },
             {
                 "type": "Text",
-                "text": "의 나머지",
+                "text": Lang.Blocks.CALC_calc_mod_3,
                 "color": "#3D3D3D"
             }
         ],
@@ -3978,7 +4081,8 @@ Entry.block = {
             var leftValue = script.getNumberValue("LEFTHAND", script);
             var rightValue = script.getNumberValue("RIGHTHAND", script);
             return leftValue % rightValue;
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "calc_share": {
         "color": "#FFD974",
@@ -4030,7 +4134,8 @@ Entry.block = {
             var leftValue = script.getNumberValue("LEFTHAND", script);
             var rightValue = script.getNumberValue("RIGHTHAND", script);
             return Math.floor(leftValue/rightValue);
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "calc_operation": {
         "color": "#FFD974",
@@ -4038,33 +4143,38 @@ Entry.block = {
         "statements": [],
         "params": [
             {
+                "type": "Text",
+                "text": Lang.Blocks.CALC_calc_operation_of_1,
+                "color": "#3D3D3D"
+            },
+            {
                 "type": "Block",
                 "accept": "stringMagnet"
             },
             {
                 "type": "Text",
-                "text": "의",
+                "text": Lang.Blocks.CALC_calc_operation_of_2,
                 "color": "#3D3D3D"
             },
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "제곱", "square" ],
-                    [ "루트", "root" ],
-                    [ "사인값", "sin" ],
-                    [ "코사인값", "cos" ],
-                    [ "탄젠트값", "tan" ],
-                    [ "아크사인값", "asin_radian" ],
-                    [ "아크코사인값", "acos_radian" ],
-                    [ "아크탄젠트값", "atan_radian" ],
-                    [ "로그값", "log" ],
-                    [ "자연로그값", "ln" ],
-                    [ "소수점 부분", "unnatural" ],
-                    [ "소수점 버림값", "floor" ],
-                    [ "소수점 올림값", "ceil" ],
-                    [ "반올림값", "round" ],
-                    [ "펙토리얼값", "factorial" ],
-                    [ "절댓값", "abs" ]
+                    [Lang.Blocks.CALC_calc_operation_square,"square"],
+                    [Lang.Blocks.CALC_calc_operation_root, "root"],
+                    [Lang.Blocks.CALC_calc_operation_sin, "sin"],
+                    [Lang.Blocks.CALC_calc_operation_cos,"cos"],
+                    [Lang.Blocks.CALC_calc_operation_tan,"tan"],
+                    [Lang.Blocks.CALC_calc_operation_asin, "asin_radian"],
+                    [Lang.Blocks.CALC_calc_operation_acos,"acos_radian"],
+                    [Lang.Blocks.CALC_calc_operation_atan,"atan_radian"],
+                    [Lang.Blocks.CALC_calc_operation_log,"log"],
+                    [Lang.Blocks.CALC_calc_operation_ln,"ln"],
+                    [Lang.Blocks.CALC_calc_operation_unnatural,"unnatural"],
+                    [Lang.Blocks.CALC_calc_operation_floor,"floor"],
+                    [Lang.Blocks.CALC_calc_operation_ceil,"ceil"],
+                    [Lang.Blocks.CALC_calc_operation_round,"round"],
+                    [Lang.Blocks.CALC_calc_operation_factorial,"factorial"],
+                    [Lang.Blocks.CALC_calc_operation_abs,"abs"]
                 ],
                 "value": "square",
                 "fontSize": 11
@@ -4073,6 +4183,7 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
+                null,
                 {
                     "type": "number",
                     "params": [ "10" ]
@@ -4083,8 +4194,8 @@ Entry.block = {
             "type": "calc_operation"
         },
         "paramsKeyMap": {
-            "LEFTHAND": 0,
-            "VALUE": 2
+            "LEFTHAND": 1,
+            "VALUE": 3
         },
         "class": "calc",
         "isNotFor": [],
@@ -4094,7 +4205,7 @@ Entry.block = {
             var xRangeCheckList = ['asin_radian', 'acos_radian'];
             if ((xRangeCheckList.indexOf(operator) > -1) &&
                 (value > 1 || value < -1))
-            throw new Error('x range exceeded');
+                throw new Error('x range exceeded');
 
             var needToConvertList = ['sin', 'cos', 'tan'];
             if (operator.indexOf('_'))
@@ -4134,7 +4245,8 @@ Entry.block = {
                     returnVal = Math[operator](value);
             }
             return Math.round(returnVal*1000)/1000;
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "calc_rand": {
         "color": "#FFD974",
@@ -4142,12 +4254,8 @@ Entry.block = {
         "statements": [],
         "params": [
             {
-                "type": "Block",
-                "accept": "stringMagnet"
-            },
-            {
                 "type": "Text",
-                "text": "부터",
+                "text": Lang.Blocks.CALC_calc_rand_1,
                 "color": "#3D3D3D"
             },
             {
@@ -4156,13 +4264,23 @@ Entry.block = {
             },
             {
                 "type": "Text",
-                "text": "사이의 무작위 수",
+                "text": Lang.Blocks.CALC_calc_rand_2,
+                "color": "#3D3D3D"
+            },
+            {
+                "type": "Block",
+                "accept": "stringMagnet"
+            },
+            {
+                "type": "Text",
+                "text": Lang.Blocks.CALC_calc_rand_3,
                 "color": "#3D3D3D"
             }
         ],
         "events": {},
         "def": {
             "params": [
+                null,
                 {
                     "type": "number",
                     "params": [ "0" ]
@@ -4177,8 +4295,8 @@ Entry.block = {
             "type": "calc_rand"
         },
         "paramsKeyMap": {
-            "LEFTHAND": 0,
-            "RIGHTHAND": 2
+            "LEFTHAND": 1,
+            "RIGHTHAND": 3
         },
         "class": "calc",
         "isNotFor": [],
@@ -4193,7 +4311,8 @@ Entry.block = {
                 return  (Math.random() * (right - left) + left).toFixed(2);
             else
                 return  Math.floor((Math.random() * (right - left +1) + left));
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "get_date": {
         "color": "#FFD974",
@@ -4202,26 +4321,31 @@ Entry.block = {
         "params": [
             {
                 "type": "Text",
-                "text": "현재",
+                "text": Lang.Blocks.CALC_get_date_1,
                 "color": "#3D3D3D"
             },
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "연도", "YEAR" ],
-                    [ "월", "MONTH" ],
-                    [ "일", "DAY" ],
-                    [ "시각(시)", "HOUR" ],
-                    [ "시각(분)", "MINUTE" ],
-                    [ "시각(초)", "SECOND" ]
+                    [Lang.Blocks.CALC_get_date_year,"YEAR"],
+                    [Lang.Blocks.CALC_get_date_month,"MONTH"],
+                    [Lang.Blocks.CALC_get_date_day,"DAY"],
+                    [Lang.Blocks.CALC_get_date_hour,"HOUR"],
+                    [Lang.Blocks.CALC_get_date_minute,"MINUTE"],
+                    [Lang.Blocks.CALC_get_date_second,"SECOND"]
                 ],
                 "value": "YEAR",
                 "fontSize": 11
+            },
+            {
+                "type": "Text",
+                "text": Lang.Blocks.CALC_get_date_2,
+                "color": "#3D3D3D"
             }
         ],
         "events": {},
         "def": {
-            "params": [ null, "YEAR" ],
+            "params": [ null, "YEAR", null ],
             "type": "get_date"
         },
         "paramsKeyMap": {
@@ -4244,13 +4368,19 @@ Entry.block = {
                 return dateTime.getMinutes();
             else
                 return dateTime.getSeconds();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "get_sound_duration": {
         "color": "#FFD974",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
+            {
+                "type": "Text",
+                "text": Lang.Blocks.CALC_get_sound_duration_1,
+                "color": "#3D3D3D"
+            },
             {
                 "type": "DropdownDynamic",
                 "value": null,
@@ -4259,17 +4389,17 @@ Entry.block = {
             },
             {
                 "type": "Text",
-                "text": "소리의 길이",
+                "text": Lang.Blocks.CALC_get_sound_duration_2,
                 "color": "#3D3D3D"
             }
         ],
         "events": {},
         "def": {
-            "params": [ null, null ],
+            "params": [ null, null, null ],
             "type": "get_sound_duration"
         },
         "paramsKeyMap": {
-            "VALUE": 0
+            "VALUE": 1
         },
         "class": "calc_duration",
         "isNotFor": [],
@@ -4281,7 +4411,8 @@ Entry.block = {
                 if (soundsArr[i].id == soundId)
                     return soundsArr[i].duration;
             }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "reset_project_timer": {
         "color": "#FFD974",
@@ -4315,7 +4446,8 @@ Entry.block = {
         "func": function (sprite, script) {
             Entry.engine.updateProjectTimer(0);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "set_visible_project_timer": {
         "color": "#FFD974",
@@ -4324,17 +4456,22 @@ Entry.block = {
         "params": [
             {
                 "type": "Text",
-                "text": "초시계",
+                "text": Lang.Blocks.CALC_timer_visible_1,
                 "color": "#3D3D3D"
             },
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "보이기", "SHOW" ],
-                    [ "숨기기", "HIDE" ]
+                    [Lang.Blocks.CALC_timer_visible_show,"SHOW"],
+                    [Lang.Blocks.CALC_timer_visible_hide,"HIDE"]
                 ],
                 "value": "SHOW",
                 "fontSize": 11
+            },
+            {
+                "type": "Text",
+                "text": Lang.Blocks.CALC_timer_visible_2,
+                "color": "#3D3D3D"
             },
             {
                 "type": "Indicator",
@@ -4355,7 +4492,7 @@ Entry.block = {
             ]
         },
         "def": {
-            "params": [ null, "HIDE", null ],
+            "params": [ null, "HIDE", null, null ],
             "type": "set_visible_project_timer"
         },
         "paramsKeyMap": {
@@ -4372,7 +4509,8 @@ Entry.block = {
                 timer.setVisible(false);
 
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "timer_variable": {
         "color": "#FFD974",
@@ -4396,7 +4534,8 @@ Entry.block = {
         },
         "func": function (sprite, script) {
             return Entry.container.inputValue.getValue();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "get_project_timer_value": {
         "color": "#FFD974",
@@ -4405,7 +4544,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Text",
-                "text": "초시계 값",
+                "text": Lang.Blocks.CALC_get_timer_value,
                 "color": "#3D3D3D"
             },
             {
@@ -4434,7 +4573,8 @@ Entry.block = {
         "isNotFor": [],
         "func": function (sprite, script) {
             return Entry.engine.projectTimer.getValue();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "char_at": {
         "color": "#FFD974",
@@ -4442,12 +4582,8 @@ Entry.block = {
         "statements": [],
         "params": [
             {
-                "type": "Block",
-                "accept": "stringMagnet"
-            },
-            {
                 "type": "Text",
-                "text": "의",
+                "text": Lang.Blocks.CALC_char_at_1,
                 "color": "#3D3D3D"
             },
             {
@@ -4456,16 +4592,26 @@ Entry.block = {
             },
             {
                 "type": "Text",
-                "text": "번째 글자",
+                "text": Lang.Blocks.CALC_char_at_2,
+                "color": "#3D3D3D"
+            },
+            {
+                "type": "Block",
+                "accept": "stringMagnet"
+            },
+            {
+                "type": "Text",
+                "text": Lang.Blocks.CALC_char_at_3,
                 "color": "#3D3D3D"
             }
         ],
         "events": {},
         "def": {
             "params": [
+                null,
                 {
                     "type": "text",
-                    "params": [ "안녕 엔트리!" ]
+                    "params": [ Lang.Blocks.hi_entry ]
                 },
                 null,
                 {
@@ -4477,8 +4623,8 @@ Entry.block = {
             "type": "char_at"
         },
         "paramsKeyMap": {
-            "LEFTHAND": 0,
-            "RIGHTHAND": 2
+            "LEFTHAND": 1,
+            "RIGHTHAND": 3
         },
         "class": "calc_string",
         "isNotFor": [],
@@ -4489,7 +4635,8 @@ Entry.block = {
                 throw new Error();
             else
                 return str[index];
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "length_of_string": {
         "color": "#FFD974",
@@ -4497,34 +4644,41 @@ Entry.block = {
         "statements": [],
         "params": [
             {
+                "type": "Text",
+                "text": Lang.Blocks.CALC_length_of_string_1,
+                "color": "#3D3D3D"
+            },
+            {
                 "type": "Block",
                 "accept": "stringMagnet"
             },
             {
                 "type": "Text",
-                "text": "의 글자 수",
+                "text": Lang.Blocks.CALC_length_of_string_2,
                 "color": "#3D3D3D"
             }
         ],
         "events": {},
         "def": {
             "params": [
+                null,
                 {
                     "type": "text",
-                    "params": [ "엔트리" ]
+                    "params": [ Lang.Blocks.entry ]
                 },
                 null
             ],
             "type": "length_of_string"
         },
         "paramsKeyMap": {
-            "STRING": 0
+            "STRING": 1
         },
         "class": "calc_string",
         "isNotFor": [],
         "func": function (sprite, script) {
             return script.getStringValue("STRING", script).length;
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "substring": {
         "color": "#FFD974",
@@ -4532,12 +4686,8 @@ Entry.block = {
         "statements": [],
         "params": [
             {
-                "type": "Block",
-                "accept": "stringMagnet"
-            },
-            {
                 "type": "Text",
-                "text": "의",
+                "text": Lang.Blocks.CALC_substring_1,
                 "color": "#3D3D3D"
             },
             {
@@ -4546,7 +4696,7 @@ Entry.block = {
             },
             {
                 "type": "Text",
-                "text": "번째 글자부터",
+                "text": Lang.Blocks.CALC_substring_2,
                 "color": "#3D3D3D"
             },
             {
@@ -4555,16 +4705,26 @@ Entry.block = {
             },
             {
                 "type": "Text",
-                "text": "번째 글자까지의 글자",
+                "text": Lang.Blocks.CALC_substring_3,
+                "color": "#3D3D3D"
+            },
+            {
+                "type": "Block",
+                "accept": "stringMagnet"
+            },
+            {
+                "type": "Text",
+                "text": Lang.Blocks.CALC_substring_4,
                 "color": "#3D3D3D"
             }
         ],
         "events": {},
         "def": {
             "params": [
+                null,
                 {
                     "type": "text",
-                    "params": [ "안녕 엔트리!" ]
+                    "params": [ Lang.Blocks.hi_entry ]
                 },
                 null,
                 {
@@ -4581,9 +4741,9 @@ Entry.block = {
             "type": "substring"
         },
         "paramsKeyMap": {
-            "STRING": 0,
-            "START": 2,
-            "END": 4
+            "STRING": 1,
+            "START": 3,
+            "END": 5
         },
         "class": "calc_string",
         "isNotFor": [],
@@ -4596,7 +4756,8 @@ Entry.block = {
                 throw new Error();
             else
                 return str.substring(Math.min(start, end), Math.max(start, end)+1);
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "replace_string": {
         "color": "#FFD974",
@@ -4604,12 +4765,8 @@ Entry.block = {
         "statements": [],
         "params": [
             {
-                "type": "Block",
-                "accept": "stringMagnet"
-            },
-            {
                 "type": "Text",
-                "text": "의",
+                "text": Lang.Blocks.CALC_replace_string_1,
                 "color": "#3D3D3D"
             },
             {
@@ -4618,7 +4775,7 @@ Entry.block = {
             },
             {
                 "type": "Text",
-                "text": "을(를)",
+                "text": Lang.Blocks.CALC_replace_string_2,
                 "color": "#3D3D3D"
             },
             {
@@ -4627,35 +4784,45 @@ Entry.block = {
             },
             {
                 "type": "Text",
-                "text": "로 바꾸기",
+                "text": Lang.Blocks.CALC_replace_string_3,
+                "color": "#3D3D3D"
+            },
+            {
+                "type": "Block",
+                "accept": "stringMagnet"
+            },
+            {
+                "type": "Text",
+                "text": Lang.Blocks.CALC_replace_string_4,
                 "color": "#3D3D3D"
             }
         ],
         "events": {},
         "def": {
             "params": [
+                null,
                 {
                     "type": "text",
-                    "params": [ "안녕 엔트리!" ]
+                    "params": [ Lang.Blocks.hi_entry ]
                 },
                 null,
                 {
                     "type": "text",
-                    "params": [ "안녕" ]
+                    "params": [ Lang.Blocks.hello ]
                 },
                 null,
                 {
                     "type": "text",
-                    "params": [ "반가워" ]
+                    "params": [ Lang.Blocks.nice ]
                 },
                 null
             ],
             "type": "replace_string"
         },
         "paramsKeyMap": {
-            "STRING": 0,
-            "OLD_WORD": 2,
-            "NEW_WORD": 4
+            "STRING": 1,
+            "OLD_WORD": 3,
+            "NEW_WORD": 5
         },
         "class": "calc_string",
         "isNotFor": [],
@@ -4665,7 +4832,8 @@ Entry.block = {
                     new RegExp(script.getStringValue("OLD_WORD", script), 'gm'),
                     script.getStringValue("NEW_WORD", script)
                 );
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "change_string_case": {
         "color": "#FFD974",
@@ -4673,38 +4841,38 @@ Entry.block = {
         "statements": [],
         "params": [
             {
+                "type": "Text",
+                "text": Lang.Blocks.CALC_change_string_case_1,
+                "color": "#3D3D3D"
+            },
+            {
                 "type": "Block",
                 "accept": "stringMagnet"
             },
             {
                 "type": "Text",
-                "text": "의",
+                "text": Lang.Blocks.CALC_change_string_case_2,
                 "color": "#3D3D3D"
             },
             {
                 "type": "Dropdown",
                 "options": [
-                    [
-                        "대문자",
-                        "toUpperCase"
-                    ],
-                    [
-                        "소문자",
-                        "toLowerCase"
-                    ]
+                    [Lang.Blocks.CALC_change_string_case_sub_1,"toUpperCase"],
+                    [Lang.Blocks.CALC_change_string_case_sub_2,"toLowerCase"]
                 ],
                 "value": "toUpperCase",
                 "fontSize": 11
             },
             {
                 "type": "Text",
-                "text": " ",
+                "text": Lang.Blocks.CALC_change_string_case_3,
                 "color": "#3D3D3D"
             }
         ],
         "events": {},
         "def": {
             "params": [
+                null,
                 {
                     "type": "text",
                     "params": [ "Hello Entry!" ]
@@ -4716,14 +4884,15 @@ Entry.block = {
             "type": "change_string_case"
         },
         "paramsKeyMap": {
-            "STRING": 0,
-            "CASE": 2
+            "STRING": 1,
+            "CASE": 3
         },
         "class": "calc_string",
         "isNotFor": [],
         "func": function (sprite, script) {
             return script.getStringValue("STRING", script)[script.getField("CASE", script)]();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "index_of_string": {
         "color": "#FFD974",
@@ -4731,12 +4900,8 @@ Entry.block = {
         "statements": [],
         "params": [
             {
-                "type": "Block",
-                "accept": "stringMagnet"
-            },
-            {
                 "type": "Text",
-                "text": "에서",
+                "text": Lang.Blocks.CALC_index_of_string_1,
                 "color": "#3D3D3D"
             },
             {
@@ -4745,29 +4910,39 @@ Entry.block = {
             },
             {
                 "type": "Text",
-                "text": "의 시작 위치",
+                "text": Lang.Blocks.CALC_index_of_string_2,
+                "color": "#3D3D3D"
+            },
+            {
+                "type": "Block",
+                "accept": "stringMagnet"
+            },
+            {
+                "type": "Text",
+                "text": Lang.Blocks.CALC_index_of_string_3,
                 "color": "#3D3D3D"
             }
         ],
         "events": {},
         "def": {
             "params": [
+                null,
                 {
                     "type": "text",
-                    "params": [ "안녕 엔트리!" ]
+                    "params": [ Lang.Blocks.hi_entry ]
                 },
                 null,
                 {
                     "type": "text",
-                    "params": [ "엔트리" ]
+                    "params": [ Lang.Blocks.entry ]
                 },
                 null
             ],
             "type": "index_of_string"
         },
         "paramsKeyMap": {
-            "LEFTHAND": 0,
-            "RIGHTHAND": 2
+            "LEFTHAND": 1,
+            "RIGHTHAND": 3
         },
         "class": "calc_string",
         "isNotFor": [],
@@ -4775,8 +4950,9 @@ Entry.block = {
             var str = script.getStringValue("LEFTHAND", script);
             var target = script.getStringValue("RIGHTHAND", script);
             var index = str.indexOf(target);
-            return index > -1?index+1:0;
-        }
+            return index > -1 ? index + 1 : 0;
+        },
+        "syntax": {"js": [], "py": []}
     },
     "combine_something": {
         "color": "#FFD974",
@@ -4784,12 +4960,8 @@ Entry.block = {
         "statements": [],
         "params": [
             {
-                "type": "Block",
-                "accept": "stringMagnet"
-            },
-            {
                 "type": "Text",
-                "text": "과(와)",
+                "text": Lang.Blocks.VARIABLE_combine_something_1,
                 "color": "#3D3D3D"
             },
             {
@@ -4798,29 +4970,39 @@ Entry.block = {
             },
             {
                 "type": "Text",
-                "text": "를 합치기",
+                "text": Lang.Blocks.VARIABLE_combine_something_2,
+                "color": "#3D3D3D"
+            },
+            {
+                "type": "Block",
+                "accept": "stringMagnet"
+            },
+            {
+                "type": "Text",
+                "text": Lang.Blocks.VARIABLE_combine_something_3,
                 "color": "#3D3D3D"
             }
         ],
         "events": {},
         "def": {
             "params": [
+                null,
                 {
                     "type": "text",
-                    "params": [ "안녕!" ]
+                    "params": [ Lang.Blocks.block_hi ]
                 },
                 null,
                 {
                     "type": "text",
-                    "params": [ "엔트리" ]
+                    "params": [ Lang.Blocks.entry ]
                 },
                 null
             ],
             "type": "combine_something"
         },
         "paramsKeyMap": {
-            "VALUE1": 0,
-            "VALUE2": 2
+            "VALUE1": 1,
+            "VALUE2": 3
         },
         "class": "calc_string",
         "isNotFor": [],
@@ -4829,7 +5011,8 @@ Entry.block = {
             var rightValue = script.getStringValue("VALUE2", script);
 
             return leftValue + rightValue;
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "get_sound_volume": {
         "color": "#FFD974",
@@ -4838,7 +5021,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Text",
-                "text": "소릿값",
+                "text": Lang.Blocks.CALC_get_sound_volume,
                 "color": "#3D3D3D"
             },
             {
@@ -4858,7 +5041,8 @@ Entry.block = {
         ],
         "func": function (sprite, script) {
             return createjs.Sound.getVolume() * 100;
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "quotient_and_mod": {
         "color": "#FFD974",
@@ -4866,12 +5050,8 @@ Entry.block = {
         "statements": [],
         "params": [
             {
-                "type": "Block",
-                "accept": "stringMagnet"
-            },
-            {
                 "type": "Text",
-                "text": "/",
+                "text": Lang.Blocks.CALC_quotient_and_mod_1,
                 "color": "#3D3D3D"
             },
             {
@@ -4880,14 +5060,23 @@ Entry.block = {
             },
             {
                 "type": "Text",
-                "text": "의",
+                "text": Lang.Blocks.CALC_quotient_and_mod_2,
+                "color": "#3D3D3D"
+            },
+            {
+                "type": "Block",
+                "accept": "stringMagnet"
+            },
+            {
+                "type": "Text",
+                "text": Lang.Blocks.CALC_quotient_and_mod_3,
                 "color": "#3D3D3D"
             },
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "몫", "QUOTIENT" ],
-                    [ "나머지", "MOD" ]
+                      [Lang.Blocks.CALC_quotient_and_mod_sub_1,"QUOTIENT"],
+                      [Lang.Blocks.CALC_quotient_and_mod_sub_2,"MOD"]
                 ],
                 "value": "QUOTIENT",
                 "fontSize": 11
@@ -4896,6 +5085,7 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
+                null,
                 {
                     "type": "text",
                     "params": [ "10" ]
@@ -4911,12 +5101,12 @@ Entry.block = {
             "type": "quotient_and_mod"
         },
         "paramsKeyMap": {
-            "LEFTHAND": 0,
-            "RIGHTHAND": 2,
-            "OPERATOR": 4
+            "LEFTHAND": 1,
+            "RIGHTHAND": 3,
+            "OPERATOR": 5
         },
         "class": "calc",
-        "isNotFor": [ "" ],
+        "isNotFor": [],
         "func": function (sprite, script) {
             var left = script.getNumberValue("LEFTHAND", script);
             var right = script.getNumberValue("RIGHTHAND", script);
@@ -4927,7 +5117,8 @@ Entry.block = {
                 return Math.floor(left/right);
             else
                 return left % right;
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "choose_project_timer_action": {
         "color": "#FFD974",
@@ -4936,18 +5127,23 @@ Entry.block = {
         "params": [
             {
                 "type": "Text",
-                "text": "초시계",
+                "text": Lang.Blocks.CALC_choose_project_timer_action_1,
                 "color": "#3D3D3D"
             },
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "시작하기", "START" ],
-                    [ "정지하기", "STOP" ],
-                    [ "초기화하기", "RESET" ]
+                    [Lang.Blocks.CALC_choose_project_timer_action_sub_1,"START"],
+                    [Lang.Blocks.CALC_choose_project_timer_action_sub_2,"STOP"],
+                    [Lang.Blocks.CALC_choose_project_timer_action_sub_3,"RESET"]
                 ],
                 "value": "START",
                 "fontSize": 11
+            },
+            {
+                "type": "Text",
+                "text": Lang.Blocks.CALC_choose_project_timer_action_2,
+                "color": "#3D3D3D"
             },
             {
                 "type": "Indicator",
@@ -4971,6 +5167,7 @@ Entry.block = {
             "params": [
                 null,
                 "START",
+                null,
                 null
             ],
             "type": "choose_project_timer_action"
@@ -4979,7 +5176,7 @@ Entry.block = {
             "ACTION": 1
         },
         "class": "calc_timer",
-        "isNotFor": [ "" ],
+        "isNotFor": [],
         "func": function (sprite, script) {
             var action = script.getField('ACTION');
             var engine = Entry.engine;
@@ -5010,7 +5207,8 @@ Entry.block = {
 
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "wait_second": {
         "color": "#498deb",
@@ -5062,7 +5260,8 @@ Entry.block = {
                 Entry.engine.isContinue = false;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "repeat_basic": {
         "color": "#498deb",
@@ -5118,7 +5317,8 @@ Entry.block = {
                 delete script.iterCount;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "repeat_inf": {
         "color": "#498deb",
@@ -5149,7 +5349,8 @@ Entry.block = {
             //return script.getStatement("DO", script);
             script.isLooped = true;
             return script.getStatement('DO');
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "stop_repeat": {
         "color": "#498deb",
@@ -5172,8 +5373,9 @@ Entry.block = {
         "class": "repeat",
         "isNotFor": [],
         "func": function (sprite, script) {
-            return this.executor.break();
-        }
+            return this.executor.breakLoop();
+        },
+        "syntax": {"js": [], "py": []}
     },
     "wait_until_true": {
         "color": "#498deb",
@@ -5212,7 +5414,8 @@ Entry.block = {
             } else {
                 return script;
             }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "_if": {
         "color": "#498deb",
@@ -5263,7 +5466,8 @@ Entry.block = {
             } else {
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "if_else": {
         "color": "#498deb",
@@ -5320,7 +5524,8 @@ Entry.block = {
                 return script.getStatement("STACK_IF", script);
             else
                 return script.getStatement("STACK_ELSE", script);
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "create_clone": {
         "color": "#498deb",
@@ -5331,11 +5536,7 @@ Entry.block = {
                 "type": "DropdownDynamic",
                 "value": null,
                 "menuName": "clone",
-                "fontSize": 11,
-                "options": [
-                    [ "자신", "self" ],
-                    [ "엔트리봇", "7y0y" ]
-                ]
+                "fontSize": 11
             },
             {
                 "type": "Indicator",
@@ -5363,7 +5564,8 @@ Entry.block = {
                 object.addCloneEntity(sprite.parent, null, null);
             }
             return returnBlock;
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "delete_clone": {
         "color": "#498deb",
@@ -5388,7 +5590,8 @@ Entry.block = {
                 return script.callReturn();
             sprite.removeClone();
             return;
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "when_clone_start": {
         "color": "#498deb",
@@ -5415,7 +5618,8 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.callReturn();
         },
-        "event": "when_clone_start"
+        "event": "when_clone_start",
+        "syntax": {"js": [], "py": []}
     },
     "stop_run": {
         "color": "#498deb",
@@ -5434,7 +5638,8 @@ Entry.block = {
         },
         "func": function (sprite, script) {
             return Entry.engine.toggleStop();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "repeat_while_true": {
         "color": "#498deb",
@@ -5452,8 +5657,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "이 될 때까지", "until" ],
-                    [ "인 동안", "while" ]
+                    [ Lang.Blocks.FLOW_repeat_while_true_until, "until" ],
+                    [ Lang.Blocks.FLOW_repeat_while_true_while, "while" ]
                 ],
                 "value": "until",
                 "fontSize": 11
@@ -5493,7 +5698,8 @@ Entry.block = {
 
             return value ? script.getStatement("DO", script) :
                 script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "stop_object": {
         "color": "#498deb",
@@ -5503,10 +5709,10 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "모든", "all" ],
-                    [ "자신의", "thisOnly" ],
-                    [ "이", "thisThread" ],
-                    [ "자신의 다른", "otherThread" ]
+                    [ Lang.Blocks.FLOW_stop_object_all, "all" ],
+                    [ Lang.Blocks.FLOW_stop_object_this_object, "thisOnly" ],
+                    [ Lang.Blocks.FLOW_stop_object_this_thread, "thisThread" ],
+                    [ Lang.Blocks.FLOW_stop_object_other_thread, "otherThread" ]
                 ],
                 "value": "all",
                 "fontSize": 11
@@ -5538,14 +5744,18 @@ Entry.block = {
                 case 'thisOnly':
                     sprite.parent.script.clearExecutorsByEntity(sprite);
                     return this.die();
+                case 'thisObject':
+                    sprite.parent.script.clearExecutors();
+                return this.die();
                 case 'thisThread':
                     return this.die();
                 case 'otherThread':
                     sprite.parent.script.clearExecutors();
                     sprite.parent.script.addExecutor(this.executor);
-                    return;
+                    return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "restart_project": {
         "color": "#498deb",
@@ -5568,7 +5778,8 @@ Entry.block = {
         "func": function (sprite, script) {
             Entry.engine.toggleStop();
             Entry.engine.toggleRun();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "remove_all_clones": {
         "color": "#498deb",
@@ -5596,7 +5807,8 @@ Entry.block = {
             clonedEntities = null;
 
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "functionAddButton": {
         "skeleton": "basic_button",
@@ -5607,7 +5819,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Text",
-                "text": "함수 추가",
+                "text": Lang.Workspace.function_create,
                 "color": "#333",
                 "align": "center"
             }
@@ -5627,19 +5839,21 @@ Entry.block = {
         "params": [
             {
                 "type": "TextInput",
-                "value": "함수"
+                "value": Lang.Blocks.FUNCTION_explanation_1
             },
             {
                 "type": "Output",
                 "accept": "paramMagnet"
             }
-        ]
+        ],
+        "def": {
+            "params": [ "이름" ],
+            "type": "function_field_label"
+        }
     },
     "function_field_string": {
         "skeleton": "basic_param",
-        "isNotFor": [
-            "functionEdit"
-        ],
+        "isNotFor": [ "functionEdit" ],
         "color": "#ffd974",
         "params": [
             {
@@ -5651,7 +5865,16 @@ Entry.block = {
                 "type": "Output",
                 "accept": "paramMagnet"
             }
-        ]
+        ],
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "문자/숫자값" ]
+                }
+            ],
+            "type": "function_field_string"
+        }
     },
     "function_field_boolean": {
         "skeleton": "basic_param",
@@ -5667,21 +5890,34 @@ Entry.block = {
                 "type": "Output",
                 "accept": "paramMagnet"
             }
-        ]
+        ],
+        "def": {
+            "params": [
+                {
+                    "type": "True",
+                    "params": [ "판단값" ]
+                }
+            ],
+            "type": "function_field_boolean"
+        }
     },
     "function_param_string": {
         "skeleton": "basic_string_field",
         "color": "#ffd974",
+        "template": "%1 %2",
         func: function() {
             return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "function_param_boolean": {
         "skeleton": "basic_boolean_field",
         "color": "#aeb8ff",
+        "template": "%1 %2",
         func: function() {
             return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "function_create": {
         "skeleton": "basic",
@@ -5701,8 +5937,12 @@ Entry.block = {
                 "size": 12
             }
         ],
+        paramsKeyMap:{
+            FIELD: 0
+        },
         func: function() {
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "function_general": {
         "skeleton": "basic",
@@ -5749,7 +5989,8 @@ Entry.block = {
                 this.funcCode.removeExecutor(this.funcExecutor);
                 return Entry.STATIC.BREAK;
             }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "hamster_hand_found": {
         "color": "#00979D",
@@ -5776,18 +6017,18 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽 근접 센서", "leftProximity" ],
-                    [ "오른쪽 근접 센서", "rightProximity" ],
-                    [ "왼쪽 바닥 센서", "leftFloor" ],
-                    [ "오른쪽 바닥 센서", "rightFloor" ],
-                    [ "x축 가속도", "accelerationX" ],
-                    [ "y축 가속도", "accelerationY" ],
-                    [ "z축 가속도", "accelerationZ" ],
-                    [ "밝기", "light" ],
-                    [ "온도", "temperature" ],
-                    [ "신호 세기", "signalStrength" ],
-                    [ "입력 A", "inputA" ],
-                    [ "입력 B", "inputB" ]
+                    [Lang.Blocks.HAMSTER_sensor_leftProximity, "leftProximity"],
+                    [Lang.Blocks.HAMSTER_sensor_rightProximity, "rightProximity"],
+                    [Lang.Blocks.HAMSTER_sensor_leftFloor, "leftFloor"],
+                    [Lang.Blocks.HAMSTER_sensor_rightFloor, "rightFloor"],
+                    [Lang.Blocks.HAMSTER_sensor_accelerationX, "accelerationX"],
+                    [Lang.Blocks.HAMSTER_sensor_accelerationY, "accelerationY"],
+                    [Lang.Blocks.HAMSTER_sensor_accelerationZ, "accelerationZ"],
+                    [Lang.Blocks.HAMSTER_sensor_light, "light"],
+                    [Lang.Blocks.HAMSTER_sensor_temperature, "temperature"],
+                    [Lang.Blocks.HAMSTER_sensor_signalStrength, "signalStrength"],
+                    [Lang.Blocks.HAMSTER_sensor_inputA, "inputA"],
+                    [Lang.Blocks.HAMSTER_sensor_inputB, "inputB"]
                 ],
                 "value": "leftProximity",
                 "fontSize": 11
@@ -5807,7 +6048,8 @@ Entry.block = {
             var pd = Entry.hw.portData;
             var dev = script.getField('DEVICE');
             return pd[dev];
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "hamster_move_forward_once": {
         "color": "#00979D",
@@ -5893,7 +6135,8 @@ Entry.block = {
                 sq.rightWheel = 0;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "hamster_turn_once": {
         "color": "#00979D",
@@ -5903,8 +6146,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽", "LEFT" ],
-                    [ "오른쪽", "RIGHT" ]
+                    [Lang.General.left,"LEFT"],
+                    [Lang.General.right,"RIGHT"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -6055,7 +6298,8 @@ Entry.block = {
                 sq.rightWheel = 0;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "hamster_move_forward_for_secs": {
         "color": "#00979D",
@@ -6113,7 +6357,8 @@ Entry.block = {
                 sq.rightWheel = 0;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "hamster_move_backward_for_secs": {
         "color": "#00979D",
@@ -6171,7 +6416,8 @@ Entry.block = {
                 sq.rightWheel = 0;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "hamster_turn_for_secs": {
         "color": "#00979D",
@@ -6181,8 +6427,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽", "LEFT" ],
-                    [ "오른쪽", "RIGHT" ]
+                    [Lang.General.left,"LEFT"],
+                    [Lang.General.right,"RIGHT"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -6246,7 +6492,8 @@ Entry.block = {
                 sq.rightWheel = 0;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "hamster_change_both_wheels_by": {
         "color": "#00979D",
@@ -6296,7 +6543,8 @@ Entry.block = {
             sq.rightWheel = sq.rightWheel != undefined ? sq.rightWheel + right : right;
             Entry.Hamster.setLineTracerMode(sq, 0);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "hamster_set_both_wheels_to": {
         "color": "#00979D",
@@ -6344,7 +6592,8 @@ Entry.block = {
             sq.rightWheel = script.getNumberValue('RIGHT');
             Entry.Hamster.setLineTracerMode(sq, 0);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "hamster_change_wheel_by": {
         "color": "#00979D",
@@ -6354,9 +6603,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽", "LEFT" ],
-                    [ "오른쪽", "RIGHT" ],
-                    [ "양쪽", "BOTH" ]
+                    [Lang.General.left,"LEFT"],
+                    [Lang.General.right,"RIGHT"],
+                    [Lang.General.both,"BOTH"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -6403,7 +6652,8 @@ Entry.block = {
             }
             Entry.Hamster.setLineTracerMode(sq, 0);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "hamster_set_wheel_to": {
         "color": "#00979D",
@@ -6413,9 +6663,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽", "LEFT" ],
-                    [ "오른쪽", "RIGHT" ],
-                    [ "양쪽", "BOTH" ]
+                    [Lang.General.left,"LEFT"],
+                    [Lang.General.right,"RIGHT"],
+                    [Lang.General.both,"BOTH"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -6462,7 +6712,8 @@ Entry.block = {
             }
             Entry.Hamster.setLineTracerMode(sq, 0);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "hamster_follow_line_using": {
         "color": "#00979D",
@@ -6472,8 +6723,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "검은색", "BLACK" ],
-                    [ "하얀색", "WHITE" ]
+                    [Lang.Blocks.HAMSTER_color_black,"BLACK"],
+                    [Lang.General.white,"WHITE"]
                 ],
                 "value": "BLACK",
                 "fontSize": 11
@@ -6481,9 +6732,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽", "LEFT" ],
-                    [ "오른쪽", "RIGHT" ],
-                    [ "양쪽", "BOTH" ]
+                    [Lang.General.left,"LEFT"],
+                    [Lang.General.right,"RIGHT"],
+                    [Lang.General.both,"BOTH"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -6519,7 +6770,8 @@ Entry.block = {
             sq.rightWheel = 0;
             Entry.Hamster.setLineTracerMode(sq, mode);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "hamster_follow_line_until": {
         "color": "#00979D",
@@ -6529,8 +6781,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "검은색", "BLACK" ],
-                    [ "하얀색", "WHITE" ]
+                    [Lang.Blocks.HAMSTER_color_black,"BLACK"],
+                    [Lang.General.white,"WHITE"]
                 ],
                 "value": "BLACK",
                 "fontSize": 11
@@ -6538,10 +6790,10 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽", "LEFT" ],
-                    [ "오른쪽", "RIGHT" ],
-                    [ "앞쪽", "FRONT" ],
-                    [ "뒤쪽", "REAR" ]
+                    [Lang.General.left,"LEFT"],
+                    [Lang.General.right,"RIGHT"],
+                    [Lang.Blocks.HAMSTER_front,"FRONT"],
+                    [Lang.Blocks.HAMSTER_rear,"REAR"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -6594,7 +6846,8 @@ Entry.block = {
                 }
                 return script;
             }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "hamster_set_following_speed_to": {
         "color": "#00979D",
@@ -6636,7 +6889,8 @@ Entry.block = {
             var sq = Entry.hw.sendQueue;
             sq.lineTracerSpeed = Number(script.getField("SPEED", script));
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "hamster_stop": {
         "color": "#00979D",
@@ -6672,9 +6926,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽", "LEFT" ],
-                    [ "오른쪽", "RIGHT" ],
-                    [ "양쪽", "BOTH" ]
+                    [Lang.General.left,"LEFT"],
+                    [Lang.General.right,"RIGHT"],
+                    [Lang.General.both,"BOTH"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -6682,13 +6936,13 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "빨간색", "4" ],
-                    [ "노란색", "6" ],
-                    [ "초록색", "2" ],
-                    [ "하늘색", "3" ],
-                    [ "파란색", "1" ],
-                    [ "보라색", "5" ],
-                    [ "하얀색", "7" ]
+                    [Lang.General.red,"4"],
+                    [Lang.General.yellow,"6"],
+                    [Lang.General.green,"2"],
+                    [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                    [Lang.General.blue,"1"],
+                    [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                    [Lang.General.white,"7"]
                 ],
                 "value": "4",
                 "fontSize": 11
@@ -6723,7 +6977,8 @@ Entry.block = {
                 sq.rightLed = color;
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "hamster_clear_led": {
         "color": "#00979D",
@@ -6733,9 +6988,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽", "LEFT" ],
-                    [ "오른쪽", "RIGHT" ],
-                    [ "양쪽", "BOTH" ]
+                    [Lang.General.left,"LEFT"],
+                    [Lang.General.right,"RIGHT"],
+                    [Lang.General.both,"BOTH"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -6768,7 +7023,8 @@ Entry.block = {
                 sq.rightLed = 0;
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "hamster_beep": {
         "color": "#00979D",
@@ -6811,7 +7067,8 @@ Entry.block = {
                 sq.buzzer = 0;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "hamster_change_buzzer_by": {
         "color": "#00979D",
@@ -6850,7 +7107,8 @@ Entry.block = {
             sq.buzzer = sq.buzzer != undefined ? sq.buzzer + value : value;
             sq.note = 0;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "hamster_set_buzzer_to": {
         "color": "#00979D",
@@ -6888,7 +7146,8 @@ Entry.block = {
             sq.buzzer = script.getNumberValue('VALUE');
             sq.note = 0;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "hamster_clear_buzzer": {
         "color": "#00979D",
@@ -6913,7 +7172,8 @@ Entry.block = {
             sq.buzzer = 0;
             sq.note = 0;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "hamster_play_note_for": {
         "color": "#00979D",
@@ -6923,18 +7183,18 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "도", "4" ],
-                    [ "도#", "5" ],
-                    [ "레", "6" ],
-                    [ "미b", "7" ],
-                    [ "미", "8" ],
-                    [ "파", "9" ],
-                    [ "파#", "10" ],
-                    [ "솔", "11" ],
-                    [ "솔#", "12" ],
-                    [ "라", "13" ],
-                    [ "시b", "14" ],
-                    [ "시", "15" ]
+                    [Lang.General.note_c + '',"4"],
+                    [Lang.General.note_c + '#',"5"],
+                    [Lang.General.note_d + '',"6"],
+                    [Lang.General.note_e + 'b',"7"],
+                    [Lang.General.note_e + '',"8"],
+                    [Lang.General.note_f + '',"9"],
+                    [Lang.General.note_f + '#',"10"],
+                    [Lang.General.note_g + '',"11"],
+                    [Lang.General.note_g + '#',"12"],
+                    [Lang.General.note_a + '',"13"],
+                    [Lang.General.note_b + 'b',"14"],
+                    [Lang.General.note_b + '',"15"]
                 ],
                 "value": "4",
                 "fontSize": 11
@@ -7018,7 +7278,8 @@ Entry.block = {
                 sq.note = 0;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "hamster_rest_for": {
         "color": "#00979D",
@@ -7074,7 +7335,8 @@ Entry.block = {
                 Entry.engine.isContinue = false;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "hamster_change_tempo_by": {
         "color": "#00979D",
@@ -7111,7 +7373,8 @@ Entry.block = {
             Entry.Hamster.tempo += script.getNumberValue('VALUE');
             if (Entry.Hamster.tempo < 1) Entry.Hamster.tempo = 1;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "hamster_set_tempo_to": {
         "color": "#00979D",
@@ -7148,7 +7411,8 @@ Entry.block = {
             Entry.Hamster.tempo = script.getNumberValue('VALUE');
             if (Entry.Hamster.tempo < 1) Entry.Hamster.tempo = 1;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "hamster_set_port_to": {
         "color": "#00979D",
@@ -7158,9 +7422,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "A", "A" ],
-                    [ "B", "B" ],
-                    [ "A와 B", "AB" ]
+                    [Lang.Blocks.HAMSTER_port_a, "A"],
+                    [Lang.Blocks.HAMSTER_port_b, "B"],
+                    [Lang.Blocks.HAMSTER_port_ab, "AB"]
                 ],
                 "value": "A",
                 "fontSize": 11
@@ -7168,11 +7432,11 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "아날로그 입력", "0" ],
-                    [ "디지털 입력", "1" ],
-                    [ "서보 출력", "8" ],
-                    [ "PWM 출력", "9" ],
-                    [ "디지털 출력", "10" ]
+                    [Lang.Blocks.HAMSTER_analog_input, "0"],
+                    [Lang.Blocks.HAMSTER_digital_input, "1"],
+                    [Lang.Blocks.HAMSTER_servo_output, "8"],
+                    [Lang.Blocks.HAMSTER_pwm_output, "9"],
+                    [Lang.Blocks.HAMSTER_digital_output, "10"]
                 ],
                 "value": "0",
                 "fontSize": 11
@@ -7207,7 +7471,8 @@ Entry.block = {
                 sq.ioModeB = mode;
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "hamster_change_output_by": {
         "color": "#00979D",
@@ -7217,9 +7482,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "A", "A" ],
-                    [ "B", "B" ],
-                    [ "A와 B", "AB" ]
+                    [Lang.Blocks.HAMSTER_port_a, "A"],
+                    [Lang.Blocks.HAMSTER_port_b, "B"],
+                    [Lang.Blocks.HAMSTER_port_ab, "AB"]
                 ],
                 "value": "A",
                 "fontSize": 11
@@ -7265,7 +7530,8 @@ Entry.block = {
                 sq.outputB = sq.outputB != undefined ? sq.outputB + value : value;
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "hamster_set_output_to": {
         "color": "#00979D",
@@ -7275,9 +7541,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "A", "A" ],
-                    [ "B", "B" ],
-                    [ "A와 B", "AB" ]
+                    [Lang.Blocks.HAMSTER_port_a, "A"],
+                    [Lang.Blocks.HAMSTER_port_b, "B"],
+                    [Lang.Blocks.HAMSTER_port_ab, "AB"]
                 ],
                 "value": "A",
                 "fontSize": 11
@@ -7323,7 +7589,8 @@ Entry.block = {
                 sq.outputB = value;
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "is_clicked": {
         "color": "#AEB8FF",
@@ -7332,7 +7599,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Text",
-                "text": "마우스를 클릭했는가?",
+                "text": Lang.Blocks.JUDGEMENT_is_clicked,
                 "color": "#3D3D3D"
             }
         ],
@@ -7345,7 +7612,8 @@ Entry.block = {
         "isNotFor": [],
         "func": function (sprite, script) {
             return Entry.stage.isClick;
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "is_press_some_key": {
         "color": "#AEB8FF",
@@ -7358,7 +7626,7 @@ Entry.block = {
             },
             {
                 "type": "Text",
-                "text": "키가 눌러져 있는가?",
+                "text": Lang.Blocks.JUDGEMENT_is_press_some_key_2,
                 "color": "#3D3D3D"
             }
         ],
@@ -7375,13 +7643,19 @@ Entry.block = {
         "func": function (sprite, script) {
             var keycode = Number(script.getField("VALUE", script));
             return Entry.pressedKeys.indexOf(keycode) >= 0;
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "reach_something": {
         "color": "#AEB8FF",
         "skeleton": "basic_boolean_field",
         "statements": [],
         "params": [
+            {
+                "type": "Text",
+                "text": Lang.Blocks.JUDGEMENT_reach_something_1,
+                "color": "#3D3D3D"
+            },
             {
                 "type": "DropdownDynamic",
                 "value": null,
@@ -7390,17 +7664,17 @@ Entry.block = {
             },
             {
                 "type": "Text",
-                "text": "에 닿았는가?",
+                "text": Lang.Blocks.JUDGEMENT_reach_something_2,
                 "color": "#3D3D3D"
             }
         ],
         "events": {},
         "def": {
-            "params": [ null, null ],
+            "params": [ null, null, null ],
             "type": "reach_something"
         },
         "paramsKeyMap": {
-            "VALUE": 0
+            "VALUE": 1
         },
         "class": "boolean_collision",
         "isNotFor": [],
@@ -7422,28 +7696,29 @@ Entry.block = {
                             collision(object,wall.left,ath,true) ||
                                 collision(object,wall.right,ath,true))
                                 return true;
+                        else
+                            return false;
+
+                        case 'wall_up':
+                            if (collision(object,wall.up,ath,true))
+                                return true;
+                            else
+                                return false;
+                            case 'wall_down':
+                                if (collision(object,wall.down,ath,true))
+                                    return true;
                                 else
                                     return false;
-                                case 'wall_up':
-                                    if (collision(object,wall.up,ath,true))
-                                        return true;
-                                    else
-                                        return false;
-                                    case 'wall_down':
-                                        if (collision(object,wall.down,ath,true))
-                                            return true;
-                                        else
-                                            return false;
-                                        case 'wall_right':
-                                            if (collision(object,wall.right,ath,true))
-                                                return true;
-                                            else
-                                                return false;
-                                            case 'wall_left':
-                                                if (collision(object,wall.left,ath,true))
-                                                    return true;
-                                                else
-                                                    return false;
+                            case 'wall_right':
+                                if (collision(object,wall.right,ath,true))
+                                    return true;
+                                else
+                                    return false;
+                            case 'wall_left':
+                                if (collision(object,wall.left,ath,true))
+                                    return true;
+                                else
+                                    return false;
                 }
             } else if (targetSpriteId == 'mouse') {
                 var stage = Entry.stage.canvas;
@@ -7483,7 +7758,8 @@ Entry.block = {
                 }
             }
             return false;
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "boolean_comparison": {
         "color": "#AEB8FF",
@@ -7529,7 +7805,8 @@ Entry.block = {
                 return leftValue > rightValue;
             else
                 return leftValue < rightValue;
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "boolean_equal": {
         "color": "#AEB8FF",
@@ -7575,7 +7852,8 @@ Entry.block = {
             var leftValue = script.getStringValue("LEFTHAND", script);
             var rightValue = script.getStringValue("RIGHTHAND", script);
             return leftValue == rightValue;
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "boolean_bigger": {
         "color": "#AEB8FF",
@@ -7621,7 +7899,8 @@ Entry.block = {
             var leftValue = script.getNumberValue("LEFTHAND", script);
             var rightValue = script.getNumberValue("RIGHTHAND", script);
             return leftValue > rightValue;
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "boolean_smaller": {
         "color": "#AEB8FF",
@@ -7667,7 +7946,8 @@ Entry.block = {
             var leftValue = script.getNumberValue("LEFTHAND", script);
             var rightValue = script.getNumberValue("RIGHTHAND", script);
             return leftValue < rightValue;
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "boolean_and_or": {
         "color": "#AEB8FF",
@@ -7681,8 +7961,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "그리고", "AND" ],
-                    [ "또는", "OR" ]
+                    [ Lang.Blocks.JUDGEMENT_boolean_and, "AND" ],
+                    [ Lang.Blocks.JUDGEMENT_boolean_or, "OR" ]
                 ],
                 "value": "AND",
                 "fontSize": 11
@@ -7709,7 +7989,8 @@ Entry.block = {
                 return leftValue && rightValue;
             else
                 return leftValue || rightValue;
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "boolean_and": {
         "color": "#AEB8FF",
@@ -7722,7 +8003,7 @@ Entry.block = {
             },
             {
                 "type": "Text",
-                "text": "그리고",
+                "text": Lang.Blocks.JUDGEMENT_boolean_and,
                 "color": "#3D3D3D"
             },
             {
@@ -7753,7 +8034,8 @@ Entry.block = {
             var leftValue = script.getBooleanValue("LEFTHAND", script);
             var rightValue = script.getBooleanValue("RIGHTHAND", script);
             return leftValue && rightValue;
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "boolean_or": {
         "color": "#AEB8FF",
@@ -7766,7 +8048,7 @@ Entry.block = {
             },
             {
                 "type": "Text",
-                "text": "또는",
+                "text": Lang.Blocks.JUDGEMENT_boolean_or,
                 "color": "#3D3D3D"
             },
             {
@@ -7777,13 +8059,9 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
-                {
-                    "type": "True"
-                },
+                { "type": "True" },
                 null,
-                {
-                    "type": "False"
-                }
+                { "type": "False" }
             ],
             "type": "boolean_or"
         },
@@ -7797,7 +8075,8 @@ Entry.block = {
             var leftValue = script.getBooleanValue("LEFTHAND", script);
             var rightValue = script.getBooleanValue("RIGHTHAND", script);
             return leftValue || rightValue;
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "boolean_not": {
         "color": "#AEB8FF",
@@ -7805,33 +8084,38 @@ Entry.block = {
         "statements": [],
         "params": [
             {
+                "type": "Text",
+                "text": Lang.Blocks.JUDGEMENT_boolean_not_1,
+                "color": "#3D3D3D"
+            },
+            {
                 "type": "Block",
                 "accept": "booleanMagnet"
             },
             {
                 "type": "Text",
-                "text": "(이)가 아니다",
+                "text": Lang.Blocks.JUDGEMENT_boolean_not_2,
                 "color": "#3D3D3D"
             }
         ],
         "events": {},
         "def": {
             "params": [
-                {
-                    "type": "True"
-                },
+                null,
+                { "type": "True" },
                 null
             ],
             "type": "boolean_not"
         },
         "paramsKeyMap": {
-            "VALUE": 0
+            "VALUE": 1
         },
         "class": "boolean",
         "isNotFor": [],
         "func": function (sprite, script) {
             return !script.getBooleanValue("VALUE");
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "true_or_false": {
         "color": "#AEB8FF",
@@ -7841,8 +8125,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "참", "true" ],
-                    [ "거짓", "false" ]
+                    [Lang.Blocks.JUDGEMENT_true,"true"],
+                    [Lang.Blocks.JUDGEMENT_false, "false"]
                 ],
                 "value": "true",
                 "fontSize": 11
@@ -7858,7 +8142,8 @@ Entry.block = {
         "func": function (sprite, script) {
             var value = script.children[0].textContent;
             return value == "true";
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "True": {
         "color": "#AEB8FF",
@@ -7867,7 +8152,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Text",
-                "text": "참",
+                "text": Lang.Blocks.JUDGEMENT_true,
                 "color": "#3D3D3D"
             }
         ],
@@ -7879,7 +8164,8 @@ Entry.block = {
         "func": function (sprite, script) {
             return true;
         },
-        "isPrimitive": true
+        "isPrimitive": true,
+        "syntax": {"js": [], "py": []}
     },
     "False": {
         "color": "#AEB8FF",
@@ -7888,7 +8174,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Text",
-                "text": "거짓",
+                "text": Lang.Blocks.JUDGEMENT_false,
                 "color": "#3D3D3D"
             }
         ],
@@ -7902,7 +8188,8 @@ Entry.block = {
         "func": function (sprite, script) {
             return false;
         },
-        "isPrimitive": true
+        "isPrimitive": true,
+        "syntax": {"js": [], "py": []}
     },
     "boolean_basic_operator": {
         "color": "#AEB8FF",
@@ -8042,7 +8329,8 @@ Entry.block = {
                 case 'LESS_OR_EQUAL':
                     return Number(leftValue) <= Number(rightValue);
             }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "show": {
         "color": "#EC4466",
@@ -8065,7 +8353,8 @@ Entry.block = {
         "func": function (sprite, script) {
             sprite.setVisible(true);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["self.show()"]}
     },
     "hide": {
         "color": "#EC4466",
@@ -8088,7 +8377,8 @@ Entry.block = {
         "func": function (sprite, script) {
             sprite.setVisible(false);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["self.hide()"]}
     },
     "dialog_time": {
         "color": "#EC4466",
@@ -8106,7 +8396,7 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "말하기", "speak" ]
+                    [ Lang.Blocks.speak, "speak" ]
                 ],
                 "value": "speak",
                 "fontSize": 11
@@ -8122,7 +8412,7 @@ Entry.block = {
             "params": [
                 {
                     "type": "text",
-                    "params": [ "안녕!" ]
+                    "params": [ Lang.Blocks.block_hi ]
                 },
                 {
                     "type": "number",
@@ -8163,7 +8453,8 @@ Entry.block = {
                 return script.callReturn();
             } else
                 return script;
-        }
+        },
+        "syntax": {"js": [], "py": ["self.dialog_by_seconds(%1, %2, \"%3\")"]}
     },
     "dialog": {
         "color": "#EC4466",
@@ -8177,7 +8468,7 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "말하기", "speak" ]
+                    [ Lang.Blocks.speak, "speak" ]
                 ],
                 "value": "speak",
                 "fontSize": 11
@@ -8193,7 +8484,7 @@ Entry.block = {
             "params": [
                 {
                     "type": "text",
-                    "params": [ "안녕!" ]
+                    "params": [ Lang.Blocks.block_hi ]
                 },
                 null,
                 null
@@ -8216,7 +8507,8 @@ Entry.block = {
             new Entry.Dialog(sprite, message, mode);
             sprite.syncDialogVisible(sprite.getVisible());
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["self.dialog(%1)"]}
     },
     "remove_dialog": {
         "color": "#EC4466",
@@ -8239,7 +8531,8 @@ Entry.block = {
         "func": function (sprite, script) {
             if(sprite.dialog)   sprite.dialog.remove();
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["self.remove_dialog()"]}
     },
     "change_to_nth_shape": {
         "color": "#EC4466",
@@ -8273,7 +8566,8 @@ Entry.block = {
             var picture = sprite.parent.getPicture(imageId);
             sprite.setImage(picture);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "change_to_next_shape": {
         "color": "#EC4466",
@@ -8283,8 +8577,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "다음", "next" ],
-                    [ "이전", "prev" ]
+                    [ Lang.Blocks.LOOKS_change_shape_next, "next" ],
+                    [ Lang.Blocks.LOOKS_change_shape_prev, "prev" ]
                 ],
                 "value": "next",
                 "fontSize": 11
@@ -8314,7 +8608,8 @@ Entry.block = {
             }
             sprite.setImage(picture);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["self.change_to_shape(\"%1\")"]}
     },
     "set_effect_volume": {
         "color": "#EC4466",
@@ -8324,9 +8619,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "색깔", "color" ],
-                    [ "밝기", "brightness" ],
-                    [ "불투명도", "opacity" ]
+                    [Lang.Blocks.color, "color"],
+                    [Lang.Blocks.brightness, "brightness"],
+                    [Lang.Blocks.opacity, "opacity"]
                 ],
                 "value": "color",
                 "fontSize": 11
@@ -8376,7 +8671,8 @@ Entry.block = {
             }
             sprite.applyFilter();
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["self.add_effect(%1, %2)"]}
     },
     "set_effect": {
         "color": "#EC4466",
@@ -8386,9 +8682,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "색깔", "color" ],
-                    [ "밝기", "brightness" ],
-                    [ "불투명도", "opacity" ]
+                    [Lang.Blocks.color, "color"],
+                    [Lang.Blocks.brightness, "brightness"],
+                    [Lang.Blocks.opacity, "opacity"]
                 ],
                 "value": "color",
                 "fontSize": 11
@@ -8438,7 +8734,8 @@ Entry.block = {
             }
             sprite.applyFilter();
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["self.set_effect(%1, %2)"]}
     },
     "erase_all_effects": {
         "color": "#EC4466",
@@ -8461,7 +8758,8 @@ Entry.block = {
         "func": function (sprite, script) {
             sprite.resetFilter();
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["self.erase_effect_all()"]}
     },
     "change_scale_percent": {
         "color": "#EC4466",
@@ -8499,7 +8797,8 @@ Entry.block = {
             sprite.setScaleX(sprite.getScaleX() * scaleValue);
             sprite.setScaleY(sprite.getScaleY() * scaleValue);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "set_scale_percent": {
         "color": "#EC4466",
@@ -8538,7 +8837,8 @@ Entry.block = {
             sprite.setScaleX(scaleValue * snapshot.scaleX);
             sprite.setScaleY(scaleValue * snapshot.scaleY);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "change_scale_size": {
         "color": "#EC4466",
@@ -8575,7 +8875,8 @@ Entry.block = {
             var sizeValue = script.getNumberValue("VALUE", script);
             sprite.setSize(sprite.getSize() + sizeValue);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["self.change_scale_size(%1)"]}
     },
     "set_scale_size": {
         "color": "#EC4466",
@@ -8612,7 +8913,8 @@ Entry.block = {
             var sizeValue = script.getNumberValue("VALUE", script);
             sprite.setSize(sizeValue);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["self.set_size(%1)"]}
     },
     "flip_y": {
         "color": "#EC4466",
@@ -8635,7 +8937,8 @@ Entry.block = {
         "func": function (sprite, script) {
             sprite.setScaleX((-1)*sprite.getScaleX());
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["self.flip_y()"]}
     },
     "flip_x": {
         "color": "#EC4466",
@@ -8660,7 +8963,8 @@ Entry.block = {
         "func": function (sprite, script) {
             sprite.setScaleY((-1)*sprite.getScaleY());
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["self.flip_x()"]}
     },
     "set_object_order": {
         "color": "#EC4466",
@@ -8699,7 +9003,8 @@ Entry.block = {
                 return script.callReturn();
             } else
                 throw new Error('object is not available');
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "get_pictures": {
         "color": "#EC4466",
@@ -8710,12 +9015,7 @@ Entry.block = {
                 "type": "DropdownDynamic",
                 "value": null,
                 "menuName": "pictures",
-                "fontSize": 11,
-                "options": [
-                    [ "엔트리봇_걷기1", "vx80" ],
-                    [ "엔트리봇_걷기1", "vx80" ],
-                    [ "엔트리봇_걷기2", "4t48" ]
-                ]
+                "fontSize": 11
             }
         ],
         "events": {},
@@ -8727,7 +9027,8 @@ Entry.block = {
         },
         "func": function (sprite, script) {
             return script.getStringField("VALUE");
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "change_to_some_shape": {
         "color": "#EC4466",
@@ -8753,8 +9054,7 @@ Entry.block = {
                 },
                 null
             ],
-            "type": "change_to_some_shape",
-            "id": "0x2t"
+            "type": "change_to_some_shape"
         },
         "paramsKeyMap": {
             "VALUE": 0
@@ -8768,7 +9068,8 @@ Entry.block = {
 
             sprite.setImage(picture);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["self.change_to_some_shape(%1)"]}
     },
     "add_effect_amount": {
         "color": "#EC4466",
@@ -8778,9 +9079,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "색깔", "color" ],
-                    [ "밝기", "brightness" ],
-                    [ "투명도", "transparency" ]
+                    [ Lang.Blocks.color, "color" ],
+                    [ Lang.Blocks.brightness, "brightness" ],
+                    [ Lang.Blocks.transparency, "transparency" ]
                 ],
                 "value": "color",
                 "fontSize": 11
@@ -8825,7 +9126,8 @@ Entry.block = {
             }
             sprite.applyFilter();
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["self.add_effect_by_amount(\"%1\", %2)"]}
     },
     "change_effect_amount": {
         "color": "#EC4466",
@@ -8835,9 +9137,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "색깔", "color" ],
-                    [ "밝기", "brightness" ],
-                    [ "투명도", "transparency" ]
+                    [ Lang.Blocks.color, "color" ],
+                    [ Lang.Blocks.brightness, "brightness" ],
+                    [ Lang.Blocks.transparency, "transparency" ]
                 ],
                 "value": "color",
                 "fontSize": 11
@@ -8882,7 +9184,8 @@ Entry.block = {
             }
             sprite.applyFilter();
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["self.change_effect_by_amount(\"%1\", %2)"]}
     },
     "set_effect_amount": {
         "color": "#EC4466",
@@ -8892,9 +9195,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "색깔", "color" ],
-                    [ "밝기", "brightness" ],
-                    [ "투명도", "transparency" ]
+                    [Lang.Blocks.color, "color"],
+                    [Lang.Blocks.brightness, "brightness"],
+                    [Lang.Blocks.transparency, "transparency"]
                 ],
                 "value": "color",
                 "fontSize": 11
@@ -8939,7 +9242,8 @@ Entry.block = {
             }
             sprite.applyFilter();
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "set_entity_effect": {
         "color": "#EC4466",
@@ -8949,9 +9253,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "색깔", "color" ],
-                    [ "밝기", "brightness" ],
-                    [ "투명도", "transparency" ]
+                    [Lang.Blocks.color, "color"],
+                    [Lang.Blocks.brightness, "brightness"],
+                    [Lang.Blocks.transparency, "transparency"]
                 ],
                 "value": "color",
                 "fontSize": 11
@@ -8996,7 +9300,8 @@ Entry.block = {
             }
             sprite.applyFilter();
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "change_object_index": {
         "color": "#EC4466",
@@ -9006,10 +9311,10 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "맨 앞으로", "FRONT" ],
-                    [ "앞으로", "FORWARD" ],
-                    [ "뒤로", "BACKWARD" ],
-                    [ "맨 뒤로", "BACK" ]
+                    [ Lang.Blocks.LOOKS_change_object_index_sub_1, "FRONT" ],
+                    [ Lang.Blocks.LOOKS_change_object_index_sub_2, "FORWARD" ],
+                    [ Lang.Blocks.LOOKS_change_object_index_sub_3, "BACKWARD" ],
+                    [ Lang.Blocks.LOOKS_change_object_index_sub_4, "BACK" ]
                 ],
                 "value": "FRONT",
                 "fontSize": 11
@@ -9058,7 +9363,8 @@ Entry.block = {
 
             Entry.container.moveElementByBlock(currentIndex, targetIndex);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["self.locate_to(\"%1\")"]}
     },
     "move_direction": {
         "color": "#A751E3",
@@ -9099,7 +9405,8 @@ Entry.block = {
                 sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "move_x": {
         "color": "#A751E3",
@@ -9139,7 +9446,8 @@ Entry.block = {
                 sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "move_y": {
         "color": "#A751E3",
@@ -9179,7 +9487,8 @@ Entry.block = {
                 sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "locate_xy_time": {
         "color": "#A751E3",
@@ -9256,7 +9565,8 @@ Entry.block = {
                 delete script.frameCount;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "rotate_by_angle": {
         "color": "#A751E3",
@@ -9293,7 +9603,8 @@ Entry.block = {
             var value = script.getNumberValue("VALUE", script);
             sprite.setRotation(sprite.getRotation() + value);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "rotate_by_angle_dropdown": {
         "color": "#A751E3",
@@ -9331,7 +9642,8 @@ Entry.block = {
             var value = script.getField("VALUE", script);
             sprite.setRotation(sprite.getRotation() + Number(value));
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "see_angle": {
         "color": "#A751E3",
@@ -9368,7 +9680,8 @@ Entry.block = {
             var value = script.getNumberValue("VALUE", script);
             sprite.setDirection(value);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "see_direction": {
         "color": "#A751E3",
@@ -9405,7 +9718,8 @@ Entry.block = {
                 sprite.setRotation(Math.atan(deltaY / deltaX) / Math.PI * 180 + 270);
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "locate_xy": {
         "color": "#A751E3",
@@ -9456,7 +9770,8 @@ Entry.block = {
                 sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "locate_x": {
         "color": "#A751E3",
@@ -9496,7 +9811,8 @@ Entry.block = {
                 sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "locate_y": {
         "color": "#A751E3",
@@ -9537,7 +9853,8 @@ Entry.block = {
                 sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "locate": {
         "color": "#A751E3",
@@ -9583,7 +9900,8 @@ Entry.block = {
                 sprite.brush.lineTo(x, y*-1);
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "move_xy_time": {
         "color": "#A751E3",
@@ -9658,7 +9976,8 @@ Entry.block = {
                 delete script.frameCount;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "rotate_by_angle_time": {
         "color": "#A751E3",
@@ -9669,9 +9988,7 @@ Entry.block = {
                 "type": "Block",
                 "accept": "stringMagnet"
             },
-            {
-                "type": "Angle"
-            },
+            { "type": "Angle" },
             {
                 "type": "Indicator",
                 "img": "/lib/entryjs/images/block_icon/moving_03.png",
@@ -9716,7 +10033,8 @@ Entry.block = {
                 delete script.frameCount;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "bounce_wall": {
         "color": "#A751E3",
@@ -9902,7 +10220,8 @@ Entry.block = {
                 }
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "flip_arrow_horizontal": {
         "color": "#A751E3",
@@ -9922,7 +10241,8 @@ Entry.block = {
         "func": function (sprite, script) {
             sprite.setDirection(sprite.getDirection() + 180);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "flip_arrow_vertical": {
         "color": "#A751E3",
@@ -9942,7 +10262,8 @@ Entry.block = {
         "func": function (sprite, script) {
             sprite.setDirection(sprite.getDirection() + 180);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "see_angle_object": {
         "color": "#A751E3",
@@ -10002,7 +10323,8 @@ Entry.block = {
             var nativeDirection = sprite.getDirection() + sprite.getRotation();
             sprite.setRotation(sprite.getRotation() + value - nativeDirection);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "see_angle_direction": {
         "color": "#A751E3",
@@ -10040,7 +10362,8 @@ Entry.block = {
             var nativeDirection = sprite.getDirection() + sprite.getRotation();
             sprite.setRotation(sprite.getRotation() + value - nativeDirection);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "rotate_direction": {
         "color": "#A751E3",
@@ -10077,7 +10400,8 @@ Entry.block = {
             var value = script.getNumberValue("VALUE", script);
             sprite.setDirection(value + sprite.getDirection());
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "locate_object_time": {
         "color": "#A751E3",
@@ -10169,7 +10493,8 @@ Entry.block = {
                 delete script.frameCount;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "rotate_absolute": {
         "color": "#A751E3",
@@ -10189,9 +10514,7 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
-                {
-                    "type": "angle"
-                },
+                { "type": "angle" },
                 null
             ],
             "type": "rotate_absolute"
@@ -10205,7 +10528,8 @@ Entry.block = {
             var value = script.getNumberValue("VALUE", script);
             entity.setRotation(value);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "rotate_relative": {
         "color": "#A751E3",
@@ -10225,9 +10549,7 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
-                {
-                    "type": "angle"
-                },
+                { "type": "angle" },
                 null
             ],
             "type": "rotate_relative"
@@ -10241,7 +10563,8 @@ Entry.block = {
             var value = script.getNumberValue("VALUE", script);
             entity.setRotation(value + entity.getRotation());
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "direction_absolute": {
         "color": "#A751E3",
@@ -10261,9 +10584,7 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
-                {
-                    "type": "angle"
-                },
+                { "type": "angle" },
                 null
             ],
             "type": "direction_absolute"
@@ -10277,7 +10598,8 @@ Entry.block = {
             var value = script.getNumberValue("VALUE", script);
             entity.setDirection(value);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "direction_relative": {
         "color": "#A751E3",
@@ -10297,9 +10619,7 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
-                {
-                    "type": "angle"
-                },
+                { "type": "angle" },
                 null
             ],
             "type": "direction_relative"
@@ -10313,7 +10633,8 @@ Entry.block = {
             var value = script.getNumberValue("VALUE", script);
             entity.setDirection(value + entity.getDirection());
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "move_to_angle": {
         "color": "#A751E3",
@@ -10337,9 +10658,7 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
-                {
-                    "type": "angle"
-                },
+                { "type": "angle" },
                 {
                     "type": "number",
                     "params": [ "10" ]
@@ -10363,7 +10682,8 @@ Entry.block = {
                 sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "rotate_by_time": {
         "color": "#A751E3",
@@ -10422,7 +10742,8 @@ Entry.block = {
                 delete script.frameCount;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "direction_relative_duration": {
         "color": "#A751E3",
@@ -10450,9 +10771,7 @@ Entry.block = {
                     "type": "text",
                     "params": [ "2" ]
                 },
-                {
-                    "type": "angle"
-                },
+                { "type": "angle" },
                 null
             ],
             "type": "direction_relative_duration"
@@ -10462,7 +10781,7 @@ Entry.block = {
             "AMOUNT": 1
         },
         "class": "rotate",
-        "isNotFor": [ "" ],
+        "isNotFor": [],
         "func": function (sprite, script) {
             if (!script.isStart) {
                 var timeValue;
@@ -10482,7 +10801,8 @@ Entry.block = {
                 delete script.dDirection;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "neobot_sensor_value": {
         "color": "#00979D",
@@ -10514,7 +10834,8 @@ Entry.block = {
         "func": function (sprite, script) {
             var port = script.getStringField("PORT");
             return Entry.hw.portData[port];
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "neobot_turn_left": {
         "color": "#00979D",
@@ -10562,7 +10883,8 @@ Entry.block = {
             var direction = script.getNumberField("DIRECTION");
             Entry.hw.sendQueue["LMOT"] = port * direction;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "neobot_stop_left": {
         "color": "#00979D",
@@ -10585,7 +10907,8 @@ Entry.block = {
         "func": function (sprite, script) {
             Entry.hw.sendQueue["LMOT"] = 0;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "neobot_turn_right": {
         "color": "#00979D",
@@ -10633,7 +10956,8 @@ Entry.block = {
             var direction = script.getNumberField("DIRECTION");
             Entry.hw.sendQueue["RMOT"] = port * direction;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "neobot_stop_right": {
         "color": "#00979D",
@@ -10656,7 +10980,8 @@ Entry.block = {
         "func": function (sprite, script) {
             Entry.hw.sendQueue["RMOT"] = 0;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "neobot_run_motor": {
         "color": "#00979D",
@@ -10773,7 +11098,8 @@ Entry.block = {
                 Entry.hw.sendQueue["RMOT"] = 0;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "neobot_servo_1": {
         "color": "#00979D",
@@ -10837,7 +11163,8 @@ Entry.block = {
             Entry.hw.sendQueue["SERVO1"] = value;
             Entry.hw.sendQueue["SERVO1_SPEED"] = speed;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "neobot_servo_2": {
         "color": "#00979D",
@@ -10901,7 +11228,8 @@ Entry.block = {
             Entry.hw.sendQueue["SERVO2"] = value;
             Entry.hw.sendQueue["SERVO2_SPEED"] = speed;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "neobot_play_note_for": {
         "color": "#00979D",
@@ -10989,7 +11317,8 @@ Entry.block = {
                 return script.callReturn();
             }
 
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "neobot_set_sensor_value": {
         "color": "#00979D",
@@ -11038,7 +11367,8 @@ Entry.block = {
             var value = script.getNumberField("VALUE", script);
             sq[port] = value;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "robotis_openCM70_cm_custom_value": {
         "color": "#00979D",
@@ -11077,14 +11407,38 @@ Entry.block = {
         },
         "class": "robotis_openCM70_custom",
         "isNotFor": [ "robotis_openCM70" ],
-        "func": function (b, a) {
-            var c = Entry.Robotis_openCM70.INSTRUCTION.READ, d = 0, e = 0, f = 0, d = a.getStringField("SIZE");
-            "BYTE" == d ? e = 1 : "WORD" == d ? e = 2 : "DWORD" == d && (e = 4);
-            f = d = a.getNumberValue("VALUE");
-            Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, e]]);
+        "func": function (sprite, script) {
+              // instruction / address / length / value / default length
+            var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.READ;
+            var data_address = 0;
+            var data_length = 0;
+            var data_value = 0;
+
+            var data_default_address = 0;
+            var data_default_length = 0;
+
+            var size = script.getStringField("SIZE");
+
+            if (size == 'BYTE') {
+                data_length = 1;
+            } else if (size == 'WORD') {
+                data_length = 2;
+            } else if (size == 'DWORD') {
+                data_length = 4;
+            }
+
+            data_address = script.getNumberValue('VALUE');
+
+            data_default_address = data_address;
+            data_default_length = data_length;
+
+            Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
+            // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
             Entry.Robotis_carCont.update();
-            return Entry.hw.portData[f];
-        }
+
+            return Entry.hw.portData[data_default_address];
+        },
+        "syntax": {"js": [], "py": []}
     },
     "robotis_openCM70_sensor_value": {
         "color": "#00979D",
@@ -11094,9 +11448,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "최종 소리 감지 횟수", "CM_SOUND_DETECTED" ],
-                    [ "실시간 소리 감지 횟수", "CM_SOUND_DETECTING" ],
-                    [ "사용자 버튼 상태", "CM_USER_BUTTON" ]
+                    [ Lang.Blocks.robotis_cm_sound_detected, "CM_SOUND_DETECTED" ],
+                    [ Lang.Blocks.robotis_cm_sound_detecting, "CM_SOUND_DETECTING" ],
+                    [ Lang.Blocks.robotis_cm_user_button, "CM_USER_BUTTON" ]
                 ],
                 "value": "CM_SOUND_DETECTED",
                 "fontSize": 11
@@ -11112,15 +11466,45 @@ Entry.block = {
         },
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
-        "func": function (b, a) {
-            var c = Entry.Robotis_openCM70.INSTRUCTION.READ, d = 0, e = 0, f = 0, g = 0, h = a.getStringField("SENSOR");
-            "CM_SOUND_DETECTED" == h ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1]) : "CM_SOUND_DETECTING" == h ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[0],
-                                                                                                                                                                                                                                                                                                                                   e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[1]) : "CM_USER_BUTTON" == h && (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1]);
-                                                                                                                                                                                                                                                                                                                                   f += 0 * g;
-                                                                                                                                                                                                                                                                                                                                   Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, g]]);
-                                                                                                                                                                                                                                                                                                                                   Entry.Robotis_carCont.update();
-                                                                                                                                                                                                                                                                                                                                   return Entry.hw.portData[f];
-        }
+        "func": function (sprite, script) {
+            var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.READ;
+            var data_address = 0;
+            var data_length = 0;
+            var data_value = 0;
+
+            var data_default_address = 0;
+            var data_default_length = 0;
+
+            var sensor = script.getStringField("SENSOR");
+
+            var increase = 0;
+
+            if (sensor == 'CM_SOUND_DETECTED') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1];
+            } else if (sensor == 'CM_SOUND_DETECTING') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[1];
+            } else if (sensor == 'CM_USER_BUTTON') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1];
+            }
+
+            data_default_address = data_default_address + increase * data_default_length;
+
+            Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
+            // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
+            Entry.Robotis_carCont.update();
+
+            return Entry.hw.portData[data_default_address];
+        },
+        "syntax": {"js": [], "py": []}
     },
     "robotis_openCM70_aux_sensor_value": {
         "color": "#00979D",
@@ -11141,18 +11525,18 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "서보모터 위치", "AUX_SERVO_POSITION" ],
-                    [ "적외선센서", "AUX_IR" ],
-                    [ "접촉센서", "AUX_TOUCH" ],
-                    [ "조도센서(CDS)", "AUX_BRIGHTNESS" ],
-                    [ "온습도센서(습도)", "AUX_HYDRO_THEMO_HUMIDITY" ],
-                    [ "온습도센서(온도)", "AUX_HYDRO_THEMO_TEMPER" ],
-                    [ "온도센서", "AUX_TEMPERATURE" ],
-                    [ "초음파센서", "AUX_ULTRASONIC" ],
-                    [ "자석센서", "AUX_MAGNETIC" ],
-                    [ "동작감지센서", "AUX_MOTION_DETECTION" ],
-                    [ "컬러센서", "AUX_COLOR" ],
-                    [ "사용자 장치", "AUX_CUSTOM" ]
+                    [ Lang.Blocks.robotis_aux_servo_position, "AUX_SERVO_POSITION" ],
+                    [ Lang.Blocks.robotis_aux_ir, "AUX_IR" ],
+                    [ Lang.Blocks.robotis_aux_touch, "AUX_TOUCH" ],
+                    [ Lang.Blocks.robotis_aux_brightness, "AUX_BRIGHTNESS" ],
+                    [ Lang.Blocks.robotis_aux_hydro_themo_humidity, "AUX_HYDRO_THEMO_HUMIDITY" ],
+                    [ Lang.Blocks.robotis_aux_hydro_themo_temper, "AUX_HYDRO_THEMO_TEMPER" ],
+                    [ Lang.Blocks.robotis_aux_temperature, "AUX_TEMPERATURE" ],
+                    [ Lang.Blocks.robotis_aux_ultrasonic, "AUX_ULTRASONIC" ],
+                    [ Lang.Blocks.robotis_aux_magnetic, "AUX_MAGNETIC" ],
+                    [ Lang.Blocks.robotis_aux_motion_detection, "AUX_MOTION_DETECTION" ],
+                    [ Lang.Blocks.robotis_aux_color, "AUX_COLOR" ],
+                    [ Lang.Blocks.robotis_aux_custom, "AUX_CUSTOM" ]
                 ],
                 "value": "AUX_SERVO_POSITION",
                 "fontSize": 11
@@ -11169,22 +11553,104 @@ Entry.block = {
         },
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
-        "func": function (b, a) {
-            var c = Entry.Robotis_openCM70.INSTRUCTION.READ, d = 0, e = 0, f = 0, g = 0, h = a.getStringField("PORT"), k = a.getStringField("SENSOR"), l = 0;
-            "PORT_3" == h ? l = 2 : "PORT_4" == h ? l = 3 : "PORT_5" == h ? l = 4 : "PORT_6" == h && (l = 5);
-            "AUX_SERVO_POSITION" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1]) : "AUX_IR" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[1]) :
-                "AUX_TOUCH" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[1]) : "AUX_TEMPERATURE" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[1]) :
-                    "AUX_BRIGHTNESS" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[1]) : "AUX_HYDRO_THEMO_HUMIDITY" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[0],
-                                                                                                                                                                                                                                                                                                                                  e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[1]) : "AUX_HYDRO_THEMO_TEMPER" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[1]) : "AUX_ULTRASONIC" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[1],
-                                                                                                                                                                                                                                                                                                                                      d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[1]) : "AUX_MAGNETIC" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[1]) : "AUX_MOTION_DETECTION" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[1],
-                                                                                                                                                                                                                                                                                                                                          d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[1]) : "AUX_COLOR" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[1]) : "AUX_CUSTOM" == k && (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1],
-                                                                                                                                                                                                                                                                                                                                              d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1]);
-                                                                                                                                                                                                                                                                                                                                              f += l * g;
-                                                                                                                                                                                                                                                                                                                                              0 != l && (e = 6 * g);
-                                                                                                                                                                                                                                                                                                                                              Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, g]]);
-                                                                                                                                                                                                                                                                                                                                              Entry.Robotis_carCont.update();
-                                                                                                                                                                                                                                                                                                                                              return Entry.hw.portData[f];
-        }
+        "func": function (sprite, script) {
+            // instruction / address / length / value / default length
+            var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.READ;
+            var data_address = 0;
+            var data_length = 0;
+            var data_value = 0;
+
+            var data_default_address = 0;
+            var data_default_length = 0;
+
+            var port = script.getStringField("PORT");
+            var sensor = script.getStringField("SENSOR");
+
+            var increase = 0;
+            if (port == 'PORT_3') {
+                increase = 2;
+            } else if (port == 'PORT_4') {
+                increase = 3;
+            } else if (port == 'PORT_5') {
+                increase = 4;
+            } else if (port == 'PORT_6') {
+                increase = 5;
+            }
+
+            if (sensor == 'AUX_SERVO_POSITION') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1];
+            } else if (sensor == 'AUX_IR') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[1];
+            } else if (sensor == 'AUX_TOUCH') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[1];
+            } else if (sensor == 'AUX_TEMPERATURE') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[1];
+            } else if (sensor == 'AUX_BRIGHTNESS') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[1];
+            } else if (sensor == 'AUX_HYDRO_THEMO_HUMIDITY') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[1];
+            } else if (sensor == 'AUX_HYDRO_THEMO_TEMPER') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[1];
+            } else if (sensor == 'AUX_ULTRASONIC') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[1];
+            } else if (sensor == 'AUX_MAGNETIC') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[1];
+            } else if (sensor == 'AUX_MOTION_DETECTION') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[1];
+            } else if (sensor == 'AUX_COLOR') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[1];
+            } else if (sensor == 'AUX_CUSTOM') {
+                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0];
+                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1];
+            }
+
+            data_default_address = data_default_address + increase * data_default_length;
+            if (increase != 0) {
+                data_length = 6 * data_default_length;
+            }
+
+            Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
+            // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
+            Entry.Robotis_carCont.update();
+
+            return Entry.hw.portData[data_default_address];
+        },
+        "syntax": {"js": [], "py": []}
     },
     "robotis_openCM70_cm_buzzer_index": {
         "color": "#00979D",
@@ -11194,58 +11660,58 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "라(0)", "0" ],
-                    [ "라#(1)", "1" ],
-                    [ "시(2)", "2" ],
-                    [ "도(3)", "3" ],
-                    [ "도#(4)", "4" ],
-                    [ "레(5)", "5" ],
-                    [ "레#(6)", "6" ],
-                    [ "미(7)", "7" ],
-                    [ "파(8)", "8" ],
-                    [ "파#(9)", "9" ],
-                    [ "솔(10)", "10" ],
-                    [ "솔#(11)", "11" ],
-                    [ "라(12)", "12" ],
-                    [ "라#(13)", "13" ],
-                    [ "시(14)", "14" ],
-                    [ "도(15)", "15" ],
-                    [ "도#(16)", "16" ],
-                    [ "레(17)", "17" ],
-                    [ "레#(18)", "18" ],
-                    [ "미(19)", "19" ],
-                    [ "파(20)", "20" ],
-                    [ "파#(21)", "21" ],
-                    [ "솔(22)", "22" ],
-                    [ "솔#(23)", "23" ],
-                    [ "라(24)", "24" ],
-                    [ "라#(25)", "25" ],
-                    [ "시(26)", "26" ],
-                    [ "도(27)", "27" ],
-                    [ "도#(28)", "28" ],
-                    [ "레(29)", "29" ],
-                    [ "레#(30)", "30" ],
-                    [ "미(31)", "31" ],
-                    [ "파(32)", "32" ],
-                    [ "파#(33)", "33" ],
-                    [ "솔(34)", "34" ],
-                    [ "솔#(35)", "35" ],
-                    [ "라(36)", "36" ],
-                    [ "라#(37)", "37" ],
-                    [ "시(38)", "38" ],
-                    [ "도(39)", "39" ],
-                    [ "도#(40)", "40" ],
-                    [ "레(41)", "41" ],
-                    [ "레#(42)", "42" ],
-                    [ "미(43)", "43" ],
-                    [ "파(44)", "44" ],
-                    [ "파#(45)", "45" ],
-                    [ "솔(46)", "46" ],
-                    [ "솔#(47)", "47" ],
-                    [ "라(48)", "48" ],
-                    [ "라#(49)", "49" ],
-                    [ "시(50)", "50" ],
-                    [ "도(51)", "51" ]
+                    [Lang.General.note_a + '(0)',"0"],
+                    [Lang.General.note_a + '#(1)',"1"],
+                    [Lang.General.note_b + '(2)',"2"],
+                    [Lang.General.note_c + '(3)',"3"],
+                    [Lang.General.note_c + '#(4)',"4"],
+                    [Lang.General.note_d + '(5)',"5"],
+                    [Lang.General.note_d + '#(6)',"6"],
+                    [Lang.General.note_e + '(7)',"7"],
+                    [Lang.General.note_f + '(8)',"8"],
+                    [Lang.General.note_f + '#(9)',"9"],
+                    [Lang.General.note_g + '(10)',"10"],
+                    [Lang.General.note_g + '#(11)',"11"],
+                    [Lang.General.note_a + '(12)',"12"],
+                    [Lang.General.note_a + '#(13)',"13"],
+                    [Lang.General.note_b + '(14)',"14"],
+                    [Lang.General.note_c + '(15)',"15"],
+                    [Lang.General.note_c + '#(16)',"16"],
+                    [Lang.General.note_d + '(17)',"17"],
+                    [Lang.General.note_d + '#(18)',"18"],
+                    [Lang.General.note_e + '(19)',"19"],
+                    [Lang.General.note_f + '(20)',"20"],
+                    [Lang.General.note_f + '#(21)',"21"],
+                    [Lang.General.note_g + '(22)',"22"],
+                    [Lang.General.note_g + '#(23)',"23"],
+                    [Lang.General.note_a + '(24)',"24"],
+                    [Lang.General.note_a + '#(25)',"25"],
+                    [Lang.General.note_b + '(26)',"26"],
+                    [Lang.General.note_c + '(27)',"27"],
+                    [Lang.General.note_c + '#(28)',"28"],
+                    [Lang.General.note_d + '(29)',"29"],
+                    [Lang.General.note_d + '#(30)',"30"],
+                    [Lang.General.note_e + '(31)',"31"],
+                    [Lang.General.note_f + '(32)',"32"],
+                    [Lang.General.note_f + '#(33)',"33"],
+                    [Lang.General.note_g + '(34)',"34"],
+                    [Lang.General.note_g + '#(35)',"35"],
+                    [Lang.General.note_a + '(36)',"36"],
+                    [Lang.General.note_a + '#(37)',"37"],
+                    [Lang.General.note_b + '(38)',"38"],
+                    [Lang.General.note_c + '(39)',"39"],
+                    [Lang.General.note_c + '#(40)',"40"],
+                    [Lang.General.note_d + '(41)',"41"],
+                    [Lang.General.note_d + '#(42)',"42"],
+                    [Lang.General.note_e + '(43)',"43"],
+                    [Lang.General.note_f + '(44)',"44"],
+                    [Lang.General.note_f + '#(45)',"45"],
+                    [Lang.General.note_g + '(46)',"46"],
+                    [Lang.General.note_g + '#(47)',"47"],
+                    [Lang.General.note_a + '(48)',"48"],
+                    [Lang.General.note_a + '#(49)',"49"],
+                    [Lang.General.note_b + '(50)',"50"],
+                    [Lang.General.note_c + '(51)',"51"]
                 ],
                 "value": "0",
                 "fontSize": 11
@@ -11278,13 +11744,36 @@ Entry.block = {
         },
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
-        "func": function (b, a) {
-            var c = a.getField("CM_BUZZER_INDEX", a), d = a.getNumberValue("CM_BUZZER_TIME", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, h = 0, k = 0, l = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[1], h = parseInt(10 * d);
-            50 < h && (h = 50);
-            k = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[0];
-            l = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[1];
-            return Entry.Robotis_carCont.postCallReturn(a, [[e, f, g, h], [e, k, l, c]], 1E3 * d);
-        }
+        "func": function (sprite, script) {
+            // instruction / address / length / value / default length
+            var cmBuzzerIndex = script.getField("CM_BUZZER_INDEX", script);
+            var cmBuzzerTime = script.getNumberValue("CM_BUZZER_TIME", script);
+
+            var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+            var data_address_1 = 0;
+            var data_length_1 = 0;
+            var data_value_1 = 0;
+            var data_address_2 = 0;
+            var data_length_2 = 0;
+            var data_value_2 = 0;
+
+            data_address_1 = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[0];
+            data_length_1 = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[1];
+            // data_value_1 = cmBuzzerTime * 10;
+            // TODO 텍스트 입력으로 바꾸고 최대는 5초 : 0.5 초 하려면 5를 입력  - console.log(parseInt(0.59 * 10)); max 는 5초
+            data_value_1 = parseInt(cmBuzzerTime * 10);
+            if (data_value_1 > 50) {
+                data_value_1 = 50;
+            }
+
+            data_address_2 = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[0];
+            data_length_2 = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[1];
+            data_value_2 = cmBuzzerIndex;
+
+            var data_sendqueue = [[data_instruction, data_address_1, data_length_1, data_value_1], [data_instruction, data_address_2, data_length_2, data_value_2]];
+            return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, cmBuzzerTime * 1000);
+        },
+        "syntax": {"js": [], "py": []}
     },
     "robotis_openCM70_cm_buzzer_melody": {
         "color": "#00979D",
@@ -11339,10 +11828,30 @@ Entry.block = {
         },
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
-        "func": function (b, a) {
-            var c = a.getField("CM_BUZZER_MELODY", a), d = Entry.Robotis_openCM70.INSTRUCTION.WRITE, e = 0, f = 0, g = 0, h = 0, e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[0], f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[1], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[0], h = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[1];
-            return Entry.Robotis_carCont.postCallReturn(a, [[d, e, f, 255], [d, g, h, c]], 1E3);
-        }
+        "func": function (sprite, script) {
+            // instruction / address / length / value / default length
+            var cmBuzzerMelody = script.getField("CM_BUZZER_MELODY", script);
+
+            var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+            var data_address_1 = 0;
+            var data_length_1 = 0;
+            var data_value_1 = 0;
+            var data_address_2 = 0;
+            var data_length_2 = 0;
+            var data_value_2 = 0;
+
+            data_address_1 = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[0];
+            data_length_1 = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[1];
+            data_value_1 = 255;
+
+            data_address_2 = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[0];
+            data_length_2 = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[1];
+            data_value_2 = cmBuzzerMelody;
+
+            var data_sendqueue = [[data_instruction, data_address_1, data_length_1, data_value_1], [data_instruction, data_address_2, data_length_2, data_value_2]];
+            return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, 1000);
+        },
+        "syntax": {"js": [], "py": []}
     },
     "robotis_openCM70_cm_sound_detected_clear": {
         "color": "#00979D",
@@ -11362,10 +11871,22 @@ Entry.block = {
         },
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
-        "func": function (b, a) {
-            var c = Entry.Robotis_openCM70.INSTRUCTION.WRITE, d = 0, e = 0, d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1];
-            return Entry.Robotis_carCont.postCallReturn(a, [[c, d, e, 0]], Entry.Robotis_openCM70.delay);
-        }
+        "func": function (sprite, script) {
+            // instruction / address / length / value / default length
+
+            var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+            var data_address = 0;
+            var data_length = 0;
+            var data_value = 0;
+
+            data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0];
+            data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1];
+            data_value = 0;
+
+            var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
+            return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
+        },
+        "syntax": {"js": [], "py": []}
     },
     "robotis_openCM70_cm_led": {
         "color": "#00979D",
@@ -11375,9 +11896,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "빨간색", "CM_LED_R" ],
-                    [ "녹색", "CM_LED_G" ],
-                    [ "파란색", "CM_LED_B" ]
+                    [Lang.Blocks.robotis_common_red_color,"CM_LED_R"],
+                    [Lang.Blocks.robotis_common_green_color,"CM_LED_G"],
+                    [Lang.Blocks.robotis_common_blue_color,"CM_LED_B"],
                 ],
                 "value": "CM_LED_R",
                 "fontSize": 11
@@ -11385,8 +11906,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "켜기", "1" ],
-                    [ "끄기", "0" ]
+                    [Lang.Blocks.robotis_common_on,"1"],
+                    [Lang.Blocks.robotis_common_off,"0"]
                 ],
                 "value": "1",
                 "fontSize": 11
@@ -11408,11 +11929,33 @@ Entry.block = {
         },
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
-        "func": function (b, a) {
-            var c = a.getField("CM_LED", a), d = a.getField("VALUE", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0;
-            "CM_LED_R" == c ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_R[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_R[1]) : "CM_LED_G" == c ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_G[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_G[1]) : "CM_LED_B" == c && (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_B[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_B[1]);
-            return Entry.Robotis_carCont.postCallReturn(a, [[e, f, g, d]], Entry.Robotis_openCM70.delay);
-        }
+        "func": function (sprite, script) {
+            // instruction / address / length / value / default length
+            var cmLed = script.getField("CM_LED", script);
+            var value = script.getField("VALUE", script);
+
+            var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+            var data_address = 0;
+            var data_length = 0;
+            var data_value = 0;
+
+            if (cmLed == 'CM_LED_R') {
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_R[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_R[1];
+            } else if (cmLed == 'CM_LED_G') {
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_G[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_G[1];
+            } else if (cmLed == 'CM_LED_B') {
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_B[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_B[1];
+            }
+
+            data_value = value;
+
+            var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
+            return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
+        },
+        "syntax": {"js": [], "py": []}
     },
     "robotis_openCM70_cm_motion": {
         "color": "#00979D",
@@ -11445,10 +11988,21 @@ Entry.block = {
         },
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
-        "func": function (b, a) {
-            var c = Entry.Robotis_openCM70.INSTRUCTION.WRITE, d = 0, e = 0, f = 0, d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_MOTION[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_MOTION[1], f = a.getNumberValue("VALUE", a);
-            return Entry.Robotis_carCont.postCallReturn(a, [[c, d, e, f]], Entry.Robotis_openCM70.delay);
-        }
+        "func": function (sprite, script) {
+            // instruction / address / length / value / default length
+            var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+            var data_address = 0;
+            var data_length = 0;
+            var data_value = 0;
+
+            data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_MOTION[0];
+            data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_MOTION[1];
+            data_value = script.getNumberValue("VALUE", script);
+
+            var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
+            return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
+        },
+        "syntax": {"js": [], "py": []}
     },
     "robotis_openCM70_aux_motor_speed": {
         "color": "#00979D",
@@ -11458,8 +12012,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "1", "1" ],
-                    [ "2", "2" ]
+                    [Lang.Blocks.robotis_common_port_1,"1"],
+                    [Lang.Blocks.robotis_common_port_2,"2"]
                 ],
                 "value": "1",
                 "fontSize": 11
@@ -11467,8 +12021,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "시계방향", "CW" ],
-                    [ "반시계방향", "CCW" ]
+                    [Lang.Blocks.robotis_common_clockwhise,"CW"],
+                    [Lang.Blocks.robotis_common_counter_clockwhise,"CCW"]
                 ],
                 "value": "CW",
                 "fontSize": 11
@@ -11503,11 +12057,39 @@ Entry.block = {
         },
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
-        "func": function (b, a) {
-            var c = a.getField("PORT", a), d = a.getField("DIRECTION_ANGLE", a), e = a.getNumberValue("VALUE"), f = Entry.Robotis_openCM70.INSTRUCTION.WRITE, g = 0, h = 0, g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTOR_SPEED[0], h = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTOR_SPEED[1];
-            "CW" == d ? (e += 1024, 2047 < e && (e = 2047)) : 1023 < e && (e = 1023);
-            return Entry.Robotis_carCont.postCallReturn(a, [[f, g + (c - 1) * h, h, e]], Entry.Robotis_openCM70.delay);
-        }
+        "func": function (sprite, script) {
+            // instruction / address / length / value / default length
+            var port = script.getField("PORT", script);
+            var directionAngle = script.getField("DIRECTION_ANGLE", script);
+            var value = script.getNumberValue('VALUE');
+
+            var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+            var data_address = 0;
+            var data_length = 0;
+            var data_value = 0;
+
+            data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTOR_SPEED[0];
+            data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTOR_SPEED[1];
+
+            data_address = data_address + (port - 1) * data_length;
+
+            if (directionAngle == 'CW') {
+                value = value + 1024;
+                if (value > 2047) {
+                    value = 2047;
+                }
+            } else {
+                if (value > 1023) {
+                    value = 1023;
+                }
+            }
+
+            data_value = value;
+
+            var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
+            return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
+        },
+        "syntax": {"js": [], "py": []}
     },
     "robotis_openCM70_aux_servo_mode": {
         "color": "#00979D",
@@ -11517,10 +12099,10 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "3", "3" ],
-                    [ "4", "4" ],
-                    [ "5", "5" ],
-                    [ "6", "6" ]
+                    [Lang.Blocks.robotis_common_port_3,"3"],
+                    [Lang.Blocks.robotis_common_port_4,"4"],
+                    [Lang.Blocks.robotis_common_port_5,"5"],
+                    [Lang.Blocks.robotis_common_port_6,"6"]
                 ],
                 "value": "3",
                 "fontSize": 11
@@ -11528,8 +12110,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "회전모드", "0" ],
-                    [ "관절모드", "1" ]
+                    [Lang.Blocks.robotis_common_wheel_mode,"0"],
+                    [Lang.Blocks.robotis_common_joint_mode,"1"]
                 ],
                 "value": "0",
                 "fontSize": 11
@@ -11551,10 +12133,26 @@ Entry.block = {
         },
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
-        "func": function (b, a) {
-            var c = a.getField("PORT", a), d = a.getField("MODE", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_MODE[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_MODE[1];
-            return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
-        }
+        "func": function (sprite, script) {
+            // instruction / address / length / value / default length
+            var port = script.getField("PORT", script);
+            var mode = script.getField("MODE", script);
+
+            var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+            var data_address = 0;
+            var data_length = 0;
+            var data_value = 0;
+
+            data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_MODE[0];
+            data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_MODE[1];
+
+            data_address = data_address + (port - 1) * data_length;
+            data_value = mode;
+
+            var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
+            return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
+        },
+        "syntax": {"js": [], "py": []}
     },
     "robotis_openCM70_aux_servo_speed": {
         "color": "#00979D",
@@ -11564,10 +12162,10 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "3", "3" ],
-                    [ "4", "4" ],
-                    [ "5", "5" ],
-                    [ "6", "6" ]
+                    [Lang.Blocks.robotis_common_port_3,"3"],
+                    [Lang.Blocks.robotis_common_port_4,"4"],
+                    [Lang.Blocks.robotis_common_port_5,"5"],
+                    [Lang.Blocks.robotis_common_port_6,"6"]
                 ],
                 "value": "3",
                 "fontSize": 11
@@ -11575,8 +12173,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "시계방향", "CW" ],
-                    [ "반시계방향", "CCW" ]
+                    [Lang.Blocks.robotis_common_clockwhise,"CW"],
+                    [Lang.Blocks.robotis_common_counter_clockwhise,"CCW"]
                 ],
                 "value": "CW",
                 "fontSize": 11
@@ -11611,11 +12209,39 @@ Entry.block = {
         },
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
-        "func": function (b, a) {
-            var c = a.getField("PORT", a), d = a.getField("DIRECTION_ANGLE", a), e = a.getNumberValue("VALUE"), f = Entry.Robotis_openCM70.INSTRUCTION.WRITE, g = 0, h = 0, g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_SPEED[0], h = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_SPEED[1];
-            "CW" == d ? (e += 1024, 2047 < e && (e = 2047)) : 1023 < e && (e = 1023);
-            return Entry.Robotis_carCont.postCallReturn(a, [[f, g + (c - 1) * h, h, e]], Entry.Robotis_openCM70.delay);
-        }
+        "func": function (sprite, script) {
+            // instruction / address / length / value / default length
+            var port = script.getField("PORT", script);
+            var directionAngle = script.getField("DIRECTION_ANGLE", script);
+            var value = script.getNumberValue('VALUE');
+
+            var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+            var data_address = 0;
+            var data_length = 0;
+            var data_value = 0;
+
+            data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_SPEED[0];
+            data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_SPEED[1];
+
+            data_address = data_address + (port - 1) * data_length;
+
+            if (directionAngle == 'CW') {
+                value = value + 1024;
+                if (value > 2047) {
+                    value = 2047;
+                }
+            } else {
+                if (value > 1023) {
+                    value = 1023;
+                }
+            }
+
+            data_value = value;
+
+            var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
+            return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
+        },
+        "syntax": {"js": [], "py": []}
     },
     "robotis_openCM70_aux_servo_position": {
         "color": "#00979D",
@@ -11625,10 +12251,10 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "3", "3" ],
-                    [ "4", "4" ],
-                    [ "5", "5" ],
-                    [ "6", "6" ]
+                    [Lang.Blocks.robotis_common_port_3,"3"],
+                    [Lang.Blocks.robotis_common_port_4,"4"],
+                    [Lang.Blocks.robotis_common_port_5,"5"],
+                    [Lang.Blocks.robotis_common_port_6,"6"]
                 ],
                 "value": "3",
                 "fontSize": 11
@@ -11661,11 +12287,33 @@ Entry.block = {
         },
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
-        "func": function (b, a) {
-            var c = a.getField("PORT", a), d = a.getNumberValue("VALUE"), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1];
-            1023 < d ? d = 1023 : 0 > d && (d = 0);
-            return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
-        }
+        "func": function (sprite, script) {
+            // instruction / address / length / value / default length
+            var port = script.getField("PORT", script);
+            var value = script.getNumberValue('VALUE');
+
+            var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+            var data_address = 0;
+            var data_length = 0;
+            var data_value = 0;
+
+            data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0];
+            data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1];
+
+            data_address = data_address + (port - 1) * data_length;
+
+            if (value > 1023) {
+                value = 1023;
+            } else if (value < 0) {
+                value = 0;
+            }
+
+            data_value = value;
+
+            var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
+            return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
+        },
+        "syntax": {"js": [], "py": []}
     },
     "robotis_openCM70_aux_led_module": {
         "color": "#00979D",
@@ -11675,10 +12323,10 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "3", "3" ],
-                    [ "4", "4" ],
-                    [ "5", "5" ],
-                    [ "6", "6" ]
+                    [Lang.Blocks.robotis_common_port_3,"3"],
+                    [Lang.Blocks.robotis_common_port_4,"4"],
+                    [Lang.Blocks.robotis_common_port_5,"5"],
+                    [Lang.Blocks.robotis_common_port_6,"6"]
                 ],
                 "value": "3",
                 "fontSize": 11
@@ -11686,10 +12334,10 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "양 쪽 LED끄기", "0" ],
-                    [ "오른쪽 LED켜기", "1" ],
-                    [ "왼쪽 LED켜기", "2" ],
-                    [ "양 쪽 LED켜기", "3" ]
+                    [Lang.Blocks.robotis_cm_led_both + Lang.Blocks.robotis_common_off,"0"],
+                    [Lang.Blocks.robotis_cm_led_right + Lang.Blocks.robotis_common_on,"1"],
+                    [Lang.Blocks.robotis_cm_led_left + Lang.Blocks.robotis_common_on,"2"],
+                    [Lang.Blocks.robotis_cm_led_both + Lang.Blocks.robotis_common_on,"3"]
                 ],
                 "value": "0",
                 "fontSize": 11
@@ -11711,10 +12359,26 @@ Entry.block = {
         },
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
-        "func": function (b, a) {
-            var c = a.getField("PORT", a), d = a.getField("LED_MODULE", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_LED_MODULE[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_LED_MODULE[1];
-            return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
-        }
+        "func": function (sprite, script) {
+            // instruction / address / length / value / default length
+            var port = script.getField("PORT", script);
+            var ledModule = script.getField("LED_MODULE", script);
+
+            var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+            var data_address = 0;
+            var data_length = 0;
+            var data_value = 0;
+
+            data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_LED_MODULE[0];
+            data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_LED_MODULE[1];
+
+            data_address = data_address + (port - 1) * data_length;
+            data_value = ledModule;
+
+            var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
+            return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
+        },
+        "syntax": {"js": [], "py": []}
     },
     "robotis_openCM70_aux_custom": {
         "color": "#00979D",
@@ -11724,10 +12388,10 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "3", "3" ],
-                    [ "4", "4" ],
-                    [ "5", "5" ],
-                    [ "6", "6" ]
+                    [Lang.Blocks.robotis_common_port_3,"3"],
+                    [Lang.Blocks.robotis_common_port_4,"4"],
+                    [Lang.Blocks.robotis_common_port_5,"5"],
+                    [Lang.Blocks.robotis_common_port_6,"6"]
                 ],
                 "value": "3",
                 "fontSize": 11
@@ -11760,10 +12424,26 @@ Entry.block = {
         },
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
-        "func": function (b, a) {
-            var c = a.getField("PORT", a), d = a.getNumberValue("VALUE"), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1];
-            return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
-        }
+        "func": function (sprite, script) {
+            // instruction / address / length / value / default length
+            var port = script.getField("PORT", script);
+            var value = script.getNumberValue('VALUE');
+
+            var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+            var data_address = 0;
+            var data_length = 0;
+            var data_value = 0;
+
+            data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0];
+            data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1];
+
+            data_address = data_address + (port - 1) * data_length;
+            data_value = value;
+
+            var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
+            return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
+        },
+        "syntax": {"js": [], "py": []}
     },
     "robotis_openCM70_cm_custom": {
         "color": "#00979D",
@@ -11805,10 +12485,27 @@ Entry.block = {
         },
         "class": "robotis_openCM70_custom",
         "isNotFor": [ "robotis_openCM70" ],
-        "func": function (b, a) {
-            var c = Entry.Robotis_openCM70.INSTRUCTION.WRITE, d = 0, e = 0, d = a.getNumberValue("ADDRESS"), e = a.getNumberValue("VALUE");
-            return Entry.Robotis_carCont.postCallReturn(a, [[c, d, 65535 < e ? 4 : 255 < e ? 2 : 1, e]], Entry.Robotis_openCM70.delay);
-        }
+        "func": function (sprite, script) {
+              // instruction / address / length / value / default length
+            var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+            var data_address = 0;
+            var data_length = 0;
+            var data_value = 0;
+
+              data_address = script.getNumberValue('ADDRESS');
+            data_value = script.getNumberValue('VALUE');
+            if (data_value > 65535) {
+                data_length = 4;
+            } else if (data_value > 255) {
+                data_length = 2;
+            } else {
+                data_length = 1;
+            }
+
+            var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
+            return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
+        },
+        "syntax": {"js": [], "py": []}
     },
     "robotis_carCont_sensor_value": {
         "color": "#00979D",
@@ -11818,15 +12515,15 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽 접촉 센서", "CM_SPRING_LEFT" ],
-                    [ "오른쪽 접촉 센서", "CM_SPRING_RIGHT" ],
-                    [ "선택 버튼 상태", "CM_SWITCH" ],
-                    [ "최종 소리 감지 횟수", "CM_SOUND_DETECTED" ],
-                    [ "실시간 소리 감지 횟수", "CM_SOUND_DETECTING" ],
-                    [ "왼쪽 적외선 센서", "CM_IR_LEFT" ],
-                    [ "오른쪽 적외선 센서", "CM_IR_RIGHT" ],
-                    [ "왼쪽 적외선 센서 캘리브레이션 값", "CM_CALIBRATION_LEFT" ],
-                    [ "오른쪽 적외선 센서 캘리브레이션 값", "CM_CALIBRATION_RIGHT" ]
+                    [Lang.Blocks.robotis_cm_spring_left,"CM_SPRING_LEFT"],
+                    [Lang.Blocks.robotis_cm_spring_right,"CM_SPRING_RIGHT"],
+                    [Lang.Blocks.robotis_cm_switch,"CM_SWITCH"],
+                    [Lang.Blocks.robotis_cm_sound_detected,"CM_SOUND_DETECTED"],
+                    [Lang.Blocks.robotis_cm_sound_detecting,"CM_SOUND_DETECTING"],
+                    [Lang.Blocks.robotis_cm_ir_left,"CM_IR_LEFT"],
+                    [Lang.Blocks.robotis_cm_ir_right,"CM_IR_RIGHT"],
+                    [Lang.Blocks.robotis_cm_calibration_left,"CM_CALIBRATION_LEFT"],
+                    [Lang.Blocks.robotis_cm_calibration_right,"CM_CALIBRATION_RIGHT"],
                 ],
                 "value": "CM_SPRING_LEFT",
                 "fontSize": 11
@@ -11842,18 +12539,77 @@ Entry.block = {
         },
         "class": "robotis_carCont_cm",
         "isNotFor": [ "robotis_carCont" ],
-        "func": function (b, a) {
-            var c = Entry.Robotis_carCont.INSTRUCTION.READ, d = 0, e = 0, f = 0, g = 0, h = a.getStringField("SENSOR");
-            "CM_SPRING_LEFT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[2], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[3]) : "CM_SPRING_RIGHT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[2], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[3]) :
-                "CM_SWITCH" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[1]) : "CM_SOUND_DETECTED" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1]) :
-                    "CM_SOUND_DETECTING" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[1]) : "CM_IR_LEFT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[2], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[3]) :
-                        "CM_IR_RIGHT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[2], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[3]) : "CM_CALIBRATION_LEFT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[1]) :
-                            "CM_CALIBRATION_RIGHT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[1]) : "CM_BUTTON_STATUS" == h && (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[0],
-                                                                                                                                                                                                                                                                                                                                                             e = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[1]);
-                                                                                                                                                                                                                                                                                                                                                             Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, g]]);
-                                                                                                                                                                                                                                                                                                                                                             Entry.Robotis_carCont.update();
-                                                                                                                                                                                                                                                                                                                                                             return Entry.hw.portData[f];
-        }
+        "func": function (sprite, script) {
+            // instruction / address / length / value / default length
+            var data_instruction = Entry.Robotis_carCont.INSTRUCTION.READ;
+            var data_address = 0;
+            var data_length = 0;
+            var data_value = 0;
+
+            var data_default_address = 0;
+            var data_default_length = 0;
+
+              var sensor = script.getStringField("SENSOR");
+
+              if (sensor == 'CM_SPRING_LEFT') {
+                  data_default_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[0];
+                data_default_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[1];
+                  data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[2];
+                data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[3];
+              } else if (sensor == 'CM_SPRING_RIGHT') {
+                data_default_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[0];
+                data_default_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[1];
+                data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[2];
+                data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[3];
+              } else if (sensor == 'CM_SWITCH') {
+                data_default_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[0];
+                data_default_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[1];
+                data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[0];
+                data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[1];
+              } else if (sensor == 'CM_SOUND_DETECTED') {
+                data_default_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0];
+                data_default_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1];
+                data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0];
+                data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1];
+              } else if (sensor == 'CM_SOUND_DETECTING') {
+                data_default_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[0];
+                data_default_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[1];
+                data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[0];
+                data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[1];
+              } else if (sensor == 'CM_IR_LEFT') {
+                data_default_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[0];
+                data_default_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[1];
+                data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[2];
+                data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[3];
+              } else if (sensor == 'CM_IR_RIGHT') {
+                data_default_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[0];
+                data_default_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[1];
+                data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[2];
+                data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[3];
+              } else if (sensor == 'CM_CALIBRATION_LEFT') {
+                data_default_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[0];
+                data_default_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[1];
+                data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[0];
+                data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[1];
+              } else if (sensor == 'CM_CALIBRATION_RIGHT') {
+                data_default_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[0];
+                data_default_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[1];
+                data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[0];
+                data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[1];
+              } else if (sensor == 'CM_BUTTON_STATUS') {
+                data_default_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[0];
+                data_default_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[1];
+                data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[0];
+                data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[1];
+              }
+
+            Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
+            // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
+            Entry.Robotis_carCont.update();
+
+            return Entry.hw.portData[data_default_address];
+        },
+        "syntax": {"js": [], "py": []}
     },
     "robotis_carCont_cm_led": {
         "color": "#00979D",
@@ -11863,8 +12619,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "켜기", "1" ],
-                    [ "끄기", "0" ]
+                    [Lang.Blocks.robotis_common_on,"1"],
+                    [Lang.Blocks.robotis_common_off,"0"]
                 ],
                 "value": "1",
                 "fontSize": 11
@@ -11872,8 +12628,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "켜기", "1" ],
-                    [ "끄기", "0" ]
+                    [Lang.Blocks.robotis_common_on,"1"],
+                    [Lang.Blocks.robotis_common_off,"0"]
                 ],
                 "value": "1",
                 "fontSize": 11
@@ -11895,12 +12651,31 @@ Entry.block = {
         },
         "class": "robotis_carCont_cm",
         "isNotFor": [ "robotis_carCont" ],
-        "func": function (b, a) {
-            var c = a.getField("VALUE_LEFT", a), d = a.getField("VALUE_RIGHT", a), e = Entry.Robotis_carCont.INSTRUCTION.WRITE, f = 0, g = 0, h = 0, f = Entry.Robotis_carCont.CONTROL_TABLE.CM_LED[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_LED[1];
-            1 == c && 1 == d ? h = 9 : 1 == c && 0 == d && (h = 8);
-            0 == c && 1 == d && (h = 1);
-            return Entry.Robotis_carCont.postCallReturn(a, [[e, f, g, h]], Entry.Robotis_carCont.delay);
-        }
+        "func": function (sprite, script) {
+            // instruction / address / length / value / default length
+            var value_left = script.getField("VALUE_LEFT", script);
+            var value_right = script.getField("VALUE_RIGHT", script);
+
+            var data_instruction = Entry.Robotis_carCont.INSTRUCTION.WRITE;
+            var data_address = 0;
+            var data_length = 0;
+            var data_value = 0;
+
+            data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_LED[0];
+            data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_LED[1];
+
+            if (value_left == 1 && value_right == 1) {
+                data_value = 9;
+            } else if (value_left == 1 && value_right == 0) {
+                data_value = 8;
+            } if (value_left == 0 && value_right == 1) {
+                data_value = 1;
+            }
+
+            var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
+            return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_carCont.delay);
+        },
+        "syntax": {"js": [], "py": []}
     },
     "robotis_carCont_cm_sound_detected_clear": {
         "color": "#00979D",
@@ -11920,10 +12695,22 @@ Entry.block = {
         },
         "class": "robotis_carCont_cm",
         "isNotFor": [ "robotis_carCont" ],
-        "func": function (b, a) {
-            var c = Entry.Robotis_carCont.INSTRUCTION.WRITE, d = 0, e = 0, d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1];
-            return Entry.Robotis_carCont.postCallReturn(a, [[c, d, e, 0]], Entry.Robotis_carCont.delay);
-        }
+        "func": function (sprite, script) {
+            // instruction / address / length / value / default length
+
+            var data_instruction = Entry.Robotis_carCont.INSTRUCTION.WRITE;
+            var data_address = 0;
+            var data_length = 0;
+            var data_value = 0;
+
+            data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0];
+            data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1];
+            data_value = 0;
+
+            var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
+            return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_carCont.delay);
+        },
+        "syntax": {"js": [], "py": []}
     },
     "robotis_carCont_aux_motor_speed": {
         "color": "#00979D",
@@ -11933,8 +12720,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽", "LEFT" ],
-                    [ "오른쪽", "RIGHT" ]
+                    [Lang.General.left,"LEFT"],
+                    [Lang.General.right,"RIGHT"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -11942,8 +12729,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "시계방향", "CW" ],
-                    [ "반시계방향", "CCW" ]
+                    [Lang.Blocks.robotis_common_clockwhise,"CW"],
+                    [Lang.Blocks.robotis_common_counter_clockwhise,"CCW"]
                 ],
                 "value": "CW",
                 "fontSize": 11
@@ -11978,12 +12765,42 @@ Entry.block = {
         },
         "class": "robotis_carCont_cm",
         "isNotFor": [ "robotis_carCont" ],
-        "func": function (b, a) {
-            var c = a.getField("DIRECTION", a), d = a.getField("DIRECTION_ANGLE", a), e = a.getNumberValue("VALUE"), f = Entry.Robotis_carCont.INSTRUCTION.WRITE, g = 0, h = 0;
-            "LEFT" == c ? (g = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_LEFT[0], h = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_LEFT[1]) : (g = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_RIGHT[0], h = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_RIGHT[1]);
-            "CW" == d ? (e += 1024, 2047 < e && (e = 2047)) : 1023 < e && (e = 1023);
-            return Entry.Robotis_carCont.postCallReturn(a, [[f, g, h, e]], Entry.Robotis_carCont.delay);
-        }
+        "func": function (sprite, script) {
+            // instruction / address / length / value / default length
+            var direction = script.getField("DIRECTION", script);
+            var directionAngle = script.getField("DIRECTION_ANGLE", script);
+            var value = script.getNumberValue('VALUE');
+
+            var data_instruction = Entry.Robotis_carCont.INSTRUCTION.WRITE;
+            var data_address = 0;
+            var data_length = 0;
+            var data_value = 0;
+
+            if (direction == 'LEFT') {
+                data_address = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_LEFT[0];
+                data_length = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_LEFT[1];
+            } else {
+                data_address = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_RIGHT[0];
+                data_length = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_RIGHT[1];
+            }
+
+            if (directionAngle == 'CW') {
+                value = value + 1024;
+                if (value > 2047) {
+                    value = 2047;
+                }
+            } else {
+                if (value > 1023) {
+                    value = 1023;
+                }
+            }
+
+            data_value = value;
+
+            var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
+            return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_carCont.delay);
+        },
+        "syntax": {"js": [], "py": []}
     },
     "robotis_carCont_cm_calibration": {
         "color": "#00979D",
@@ -11993,8 +12810,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽", "LEFT" ],
-                    [ "오른쪽", "RIGHT" ]
+                    [Lang.General.left,"LEFT"],
+                    [Lang.General.right,"RIGHT"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -12027,11 +12844,34 @@ Entry.block = {
         },
         "class": "robotis_carCont_cm",
         "isNotFor": [ "robotis_carCont" ],
-        "func": function (b, a) {
-            var c = a.getField("DIRECTION", a), d = a.getNumberValue("VALUE"), e = Entry.Robotis_carCont.INSTRUCTION.WRITE, f = 0, g = 0;
-            "LEFT" == c ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[1]) : (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[1]);
-            return Entry.Robotis_carCont.postCallReturn(a, [[e, f, g, d]], Entry.Robotis_carCont.delay);
-        }
+        "func": function (sprite, script) {
+            // instruction / address / length / value / default length
+            var direction = script.getField("DIRECTION", script);
+            var value = script.getNumberValue('VALUE');
+
+            var data_instruction = Entry.Robotis_carCont.INSTRUCTION.WRITE;
+            var data_address = 0;
+            var data_length = 0;
+            var data_value = 0;
+
+            if (direction == 'LEFT') {
+                data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[0];
+                data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[1];
+            } else {
+                data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[0];
+                data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[1];
+            }
+
+            data_value = value;
+
+            var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
+            return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_carCont.delay);
+
+            // Entry.hw.sendQueue['ROBOTIS_DATA'] = [[data_instruction, data_address, data_length, data_value]];
+            // update();
+            // return script.callReturn();
+        },
+        "syntax": {"js": [], "py": []}
     },
     "when_scene_start": {
         "color": "#3BBD70",
@@ -12058,7 +12898,8 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.callReturn();
         },
-        "event": "when_scene_start"
+        "event": "when_scene_start",
+        "syntax": {"js": [], "py": []}
     },
     "start_scene": {
         "color": "#3BBD70",
@@ -12095,7 +12936,8 @@ Entry.block = {
                 Entry.engine.fireEvent('when_scene_start');
             }
             return null;
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "start_neighbor_scene": {
         "color": "#3BBD70",
@@ -12105,8 +12947,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "다음", "next" ],
-                    [ "이전", "pre" ]
+                    [ Lang.Blocks.SCENE_start_scene_next, "next" ],
+                    [ Lang.Blocks.SCENE_start_scene_pre, "pre" ]
                 ],
                 "value": "next",
                 "fontSize": 11
@@ -12150,7 +12992,8 @@ Entry.block = {
                 }
             }
             return null;
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "sound_something": {
         "color": "#A4D01D",
@@ -12186,7 +13029,8 @@ Entry.block = {
             if (isExist)
                 createjs.Sound.play(soundId);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "sound_something_second": {
         "color": "#A4D01D",
@@ -12240,7 +13084,8 @@ Entry.block = {
                 }, timeValue * 1000);
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "sound_something_wait": {
         "color": "#A4D01D",
@@ -12291,7 +13136,8 @@ Entry.block = {
                 delete script.isPlay;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "sound_something_second_wait": {
         "color": "#A4D01D",
@@ -12357,7 +13203,8 @@ Entry.block = {
                 delete script.playState;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "sound_volume_change": {
         "color": "#A4D01D",
@@ -12399,7 +13246,8 @@ Entry.block = {
                 value = 0;
             createjs.Sound.setVolume(value);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "sound_volume_set": {
         "color": "#A4D01D",
@@ -12440,7 +13288,8 @@ Entry.block = {
                 value = 0;
             createjs.Sound.setVolume(value);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "sound_silent_all": {
         "color": "#A4D01D",
@@ -12463,7 +13312,8 @@ Entry.block = {
         "func": function (sprite, script) {
             createjs.Sound.stop();
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "get_sounds": {
         "color": "#A4D01D",
@@ -12486,7 +13336,8 @@ Entry.block = {
         },
         "func": function (sprite, script) {
             return script.getStringField("VALUE");
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "sound_something_with_block": {
         "color": "#A4D01D",
@@ -12526,7 +13377,8 @@ Entry.block = {
                 createjs.Sound.play(sound.id);
 
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "sound_something_second_with_block": {
         "color": "#A4D01D",
@@ -12583,7 +13435,8 @@ Entry.block = {
                    */
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "sound_something_wait_with_block": {
         "color": "#A4D01D",
@@ -12635,7 +13488,8 @@ Entry.block = {
                 delete script.isPlay;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "sound_something_second_wait_with_block": {
         "color": "#A4D01D",
@@ -12700,7 +13554,8 @@ Entry.block = {
                 delete script.playState;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "sound_from_to": {
         "color": "#A4D01D",
@@ -12749,7 +13604,7 @@ Entry.block = {
             "END": 2
         },
         "class": "sound_play",
-        "isNotFor": [ "" ],
+        "isNotFor": [],
         "func": function (sprite, script) {
             var soundId = script.getStringValue("VALUE", script);
             var sound = sprite.parent.getSound(soundId);
@@ -12763,7 +13618,8 @@ Entry.block = {
                 });
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "sound_from_to_and_wait": {
         "color": "#A4D01D",
@@ -12812,7 +13668,7 @@ Entry.block = {
             "END": 2
         },
         "class": "sound_wait",
-        "isNotFor": [ "" ],
+        "isNotFor": [],
         "func": function (sprite, script) {
             if (!script.isPlay) {
                 script.isPlay = true;
@@ -12843,7 +13699,8 @@ Entry.block = {
                 delete script.playState;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "when_run_button_click": {
         "color": "#3BBD70",
@@ -12871,7 +13728,7 @@ Entry.block = {
             return script.callReturn();
         },
         "event": "start",
-        "syntax": {"js": [], "py": ["Entry.on_start_program()"]}
+        "syntax": {"js": [], "py": ["Entry.on_start_button_click()"]}
     },
     "press_some_key": {
         "color": "#3BBD70",
@@ -12922,7 +13779,8 @@ Entry.block = {
         },
         "func": function (sprite, script) {
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "when_some_key_pressed": {
         "color": "#3BBD70",
@@ -12956,7 +13814,8 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.callReturn();
         },
-        "event": "keyPress"
+        "event": "keyPress",
+        "syntax": {"js": [], "py": ["Entry.on_key_press(\"%1\")"]}
     },
     "mouse_clicked": {
         "color": "#3BBD70",
@@ -12983,7 +13842,8 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.callReturn();
         },
-        "event": "mouse_clicked"
+        "event": "mouse_clicked",
+        "syntax": {"js": [], "py": ["Entry.on_mouse_click_down()"]}
     },
     "mouse_click_cancled": {
         "color": "#3BBD70",
@@ -13010,7 +13870,8 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.callReturn();
         },
-        "event": "mouse_click_cancled"
+        "event": "mouse_click_cancled",
+        "syntax": {"js": [], "py": ["Entry.on_mouse_click_up()"]}
     },
     "when_object_click": {
         "color": "#3BBD70",
@@ -13037,7 +13898,8 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.callReturn();
         },
-        "event": "when_object_click"
+        "event": "when_object_click",
+        "syntax": {"js": [], "py": ["self.on_object_click_down()"]}
     },
     "when_object_click_canceled": {
         "color": "#3BBD70",
@@ -13064,7 +13926,8 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.callReturn();
         },
-        "event": "when_object_click_canceled"
+        "event": "when_object_click_canceled",
+        "syntax": {"js": [], "py": ["self.on_object_click_up()"]}
     },
     "when_some_key_click": {
         "color": "#3BBD70",
@@ -13088,7 +13951,8 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.callReturn();
         },
-        "event": "keyPress"
+        "event": "keyPress",
+        "syntax": {"js": [], "py": ["Entry.on_key_press_down(\"%1\")"]}
     },
     "when_message_cast": {
         "color": "#3BBD70",
@@ -13137,7 +14001,8 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.callReturn();
         },
-        "event": "when_message_cast"
+        "event": "when_message_cast",
+        "syntax": {"js": [], "py": []}
     },
     "message_cast": {
         "color": "#3BBD70",
@@ -13191,7 +14056,8 @@ Entry.block = {
             Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent,
                                                          ["when_message_cast", value]);
                                                          return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["self.cast_message(\"%1\")"]}
     },
     "message_cast_wait": {
         "color": "#3BBD70",
@@ -13267,7 +14133,8 @@ Entry.block = {
                 script.runningScript = runningScript;
                 return script;
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["self.message_cast_and_wait(\"%1\")"]}
     },
     "text": {
         "color": "#FFD974",
@@ -13290,7 +14157,8 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getField('NAME', script);
         },
-        "isPrimitive": true
+        "isPrimitive": true,
+        "syntax": {"js": [], "py": ["\"%1\""]}
     },
     "text_write": {
         "color": "#FFCA36",
@@ -13321,7 +14189,8 @@ Entry.block = {
             text = Entry.convertToRoundedDecimals(text, 3);
             sprite.setText(text);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "text_append": {
         "color": "#FFCA36",
@@ -13352,7 +14221,8 @@ Entry.block = {
             sprite.setText(Entry.convertToRoundedDecimals(sprite.getText(),3) +
                            Entry.convertToRoundedDecimals(text, 3));
                            return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "text_prepend": {
         "color": "#FFCA36",
@@ -13383,7 +14253,8 @@ Entry.block = {
             sprite.setText(Entry.convertToRoundedDecimals(text, 3) +
                            Entry.convertToRoundedDecimals(sprite.getText(), 3));
                            return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "text_flush": {
         "color": "#FFCA36",
@@ -13400,7 +14271,8 @@ Entry.block = {
         "func": function (sprite, script) {
             sprite.setText('');
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "variableAddButton": {
         "skeleton": "basic_button",
@@ -13408,7 +14280,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Text",
-                "text": "변수 추가",
+                "text": Lang.Workspace.variable_create,
                 "color": "#333",
                 "align": "center"
             }
@@ -13427,7 +14299,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Text",
-                "text": "리스트 추가",
+                "text": Lang.Workspace.list_create,
                 "color": "#333",
                 "align": "center"
             }
@@ -13504,7 +14376,8 @@ Entry.block = {
             fixed = Entry.getMaxFloatPoint([value, variable.getValue()]);
             variable.setValue((value + variable.getValue()).toFixed(fixed));
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "set_variable": {
         "color": "#E457DC",
@@ -13564,7 +14437,8 @@ Entry.block = {
             var variable = Entry.variableContainer.getVariable(variableId, sprite);
             variable.setValue(value);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "show_variable": {
         "color": "#E457DC",
@@ -13612,7 +14486,8 @@ Entry.block = {
             variable.setVisible(true);
             variable.updateView();
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "hide_variable": {
         "color": "#E457DC",
@@ -13659,7 +14534,8 @@ Entry.block = {
             var variable = Entry.variableContainer.getVariable(variableId, sprite);
             variable.setVisible(false);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "get_variable": {
         "color": "#E457DC",
@@ -13700,7 +14576,8 @@ Entry.block = {
             var variableId = script.getField("VARIABLE", script);
             var variable = Entry.variableContainer.getVariable(variableId, sprite);
             return variable.getValue();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "ask_and_wait": {
         "color": "#E457DC",
@@ -13733,7 +14610,7 @@ Entry.block = {
             "params": [
                 {
                     "type": "text",
-                    "params": [ "안녕!" ]
+                    "params": [ Lang.Blocks.block_hi ]
                 },
                 null
             ],
@@ -13777,7 +14654,8 @@ Entry.block = {
                                        script.isInit = true;
                                        return script;
                                    }
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "get_canvas_input_value": {
         "color": "#E457DC",
@@ -13786,7 +14664,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Text",
-                "text": "대답",
+                "text": Lang.Blocks.VARIABLE_get_canvas_input_value,
                 "color": "#fff"
             }
         ],
@@ -13810,7 +14688,8 @@ Entry.block = {
         "isNotFor": [],
         "func": function (sprite, script) {
             return Entry.container.getInputValue();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "add_value_to_list": {
         "color": "#E457DC",
@@ -13874,7 +14753,8 @@ Entry.block = {
             list.array_.push({'data' : value});
             list.updateView();
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "remove_value_from_list": {
         "color": "#E457DC",
@@ -13927,7 +14807,8 @@ Entry.block = {
 
             list.updateView();
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "insert_value_to_list": {
         "color": "#E457DC",
@@ -13989,7 +14870,8 @@ Entry.block = {
             list.array_.splice(index-1, 0, {'data': data});
             list.updateView();
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "change_value_list_index": {
         "color": "#E457DC",
@@ -14051,7 +14933,8 @@ Entry.block = {
             list.array_[index-1].data = data;
             list.updateView();
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "value_of_index_from_list": {
         "color": "#E457DC",
@@ -14096,7 +14979,8 @@ Entry.block = {
                 throw new Error('can not insert value to array');
 
             return list.array_[index-1].data
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "length_of_list": {
         "color": "#E457DC",
@@ -14125,7 +15009,8 @@ Entry.block = {
             var list = Entry.variableContainer.getList(listId);
 
             return list.array_.length;
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "show_list": {
         "color": "#E457DC",
@@ -14160,7 +15045,8 @@ Entry.block = {
 
             list.setVisible(true);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "hide_list": {
         "color": "#E457DC",
@@ -14195,7 +15081,8 @@ Entry.block = {
 
             list.setVisible(false);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "options_for_list": {
         "color": "#E457DC",
@@ -14222,7 +15109,8 @@ Entry.block = {
         },
         "func": function (sprite, script) {
             return script.getField("OPERATOR", script);
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "set_visible_answer": {
         "color": "#E457DC",
@@ -14232,8 +15120,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "보이기", "SHOW" ],
-                    [ "숨기기", "HIDE" ]
+                    [Lang.Blocks.CALC_timer_visible_show,"SHOW"],
+                    [Lang.Blocks.CALC_timer_visible_hide,"HIDE"]
                 ],
                 "value": "SHOW",
                 "fontSize": 11
@@ -14264,7 +15152,7 @@ Entry.block = {
             "BOOL": 0
         },
         "class": "ask",
-        "isNotFor": [ "" ],
+        "isNotFor": [],
         "func": function (sprite, script) {
             var bool = script.getField("BOOL", script);
             if (bool == 'HIDE')
@@ -14272,7 +15160,8 @@ Entry.block = {
             else
                 Entry.container.inputValue.setVisible(true);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "is_included_in_list": {
         "color": "#E457DC",
@@ -14321,7 +15210,8 @@ Entry.block = {
                     return true;
             }
             return false;
-        }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "xbot_digitalInput": {
         "color": "#00979D",
@@ -14331,9 +15221,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "D2", "D2" ],
-                    [ "D3", "D3" ],
-                    [ "D11", "D11" ]
+                    [Lang.Blocks.XBOT_D2_digitalInput, "D2"],
+                    [Lang.Blocks.XBOT_D3_digitalInput, "D3"],
+                    [Lang.Blocks.XBOT_D11_digitalInput, "D11"]
                 ],
                 "value": "D2",
                 "fontSize": 11
@@ -14349,10 +15239,12 @@ Entry.block = {
         },
         "class": "xbot_sensor",
         "isNotFor": [ "xbot_epor_edge" ],
-        "func": function (b, a) {
-            var c = Entry.hw.portData, d = a.getField("DEVICE");
-            return c[d];
-        }
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var dev = script.getField('DEVICE');
+            return pd[dev];
+        },
+        "syntax": {"js": [], "py": []}
     },
     "xbot_analogValue": {
         "color": "#00979D",
@@ -14362,12 +15254,12 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "광 센서", "light" ],
-                    [ "마이크 센서", "mic" ],
-                    [ "아날로그 0번 핀", "adc0" ],
-                    [ "아날로그 1번 핀", "adc1" ],
-                    [ "아날로그 2번 핀", "adc2" ],
-                    [ "아날로그 3번 핀", "adc3" ]
+                    [Lang.Blocks.XBOT_CDS, "light"],
+                    [Lang.Blocks.XBOT_MIC, "mic"],
+                    [Lang.Blocks.XBOT_analog0, "adc0"],
+                    [Lang.Blocks.XBOT_analog1, "adc1"],
+                    [Lang.Blocks.XBOT_analog2, "adc2"],
+                    [Lang.Blocks.XBOT_analog3, "adc3"],
                 ],
                 "value": "light",
                 "fontSize": 11
@@ -14383,10 +15275,12 @@ Entry.block = {
         },
         "class": "xbot_sensor",
         "isNotFor": [ "xbot_epor_edge" ],
-        "func": function (b, a) {
-            var c = Entry.hw.portData, d = a.getField("DEVICE");
-            return c[d];
-        }
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var dev = script.getField('DEVICE');
+            return pd[dev];
+        },
+        "syntax": {"js": [], "py": []}
     },
     "xbot_digitalOutput": {
         "color": "#00979D",
@@ -14407,8 +15301,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "높음", "HIGH" ],
-                    [ "낮음", "LOW" ]
+                    [Lang.Blocks.XBOT_High, "HIGH"],
+                    [Lang.Blocks.XBOT_Low, "LOW"],
                 ],
                 "value": "HIGH",
                 "fontSize": 11
@@ -14430,14 +15324,38 @@ Entry.block = {
         },
         "class": "xbot_sensor",
         "isNotFor": [ "xbot_epor_edge" ],
-        "func": function (b, a) {
-            var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getStringField("VALUE", a);
-            c.D13 = "D13" == d && "HIGH" == e ? 1 : 0;
-            c.D4 = "D4" == d && "HIGH" == e ? 1 : 0;
-            c.D7 = "D7" == d && "HIGH" == e ? 1 : 0;
-            c.D12 = "D12" == d && "HIGH" == e ? 1 : 0;
-            return a.callReturn();
-        }
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var dev = script.getStringField("DEVICE", script);
+            var value = script.getStringField('VALUE', script);
+
+            if (dev == 'D13' && value == 'HIGH') {
+                sq.D13 = 1;
+            } else {
+                sq.D13 = 0;
+            }
+
+            if (dev == 'D4' && value == 'HIGH') {
+                sq.D4 = 1;
+            } else {
+                sq.D4 = 0;
+            }
+
+            if (dev == 'D7' && value == 'HIGH') {
+                sq.D7 = 1;
+            } else {
+                sq.D7 = 0;
+            }
+
+            if (dev == 'D12' && value == 'HIGH') {
+                sq.D12 = 1;
+            } else {
+                sq.D12 = 0;
+            }
+            //sq.D13 = 1;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": []}
     },
     "xbot_analogOutput": {
         "color": "#00979D",
@@ -14481,11 +15399,19 @@ Entry.block = {
         },
         "class": "xbot_sensor",
         "isNotFor": [ "xbot_epor_edge" ],
-        "func": function (b, a) {
-            var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getNumberValue("VALUE", a);
-            "analogD5" == d ? c.analogD5 = e : "analogD6" == d && (c.analogD6 = e);
-            return a.callReturn();
-        }
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var dev = script.getStringField("DEVICE", script);
+            var value = script.getNumberValue("VALUE", script);
+
+            if (dev == 'analogD5') {
+                sq.analogD5 = value;
+            } else if(dev == 'analogD6') {
+                sq.analogD6 = value;
+            }
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": []}
     },
     "xbot_servo": {
         "color": "#00979D",
@@ -14495,9 +15421,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "머리(D8)", "head" ],
-                    [ "오른 팔(D9)", "right" ],
-                    [ "왼 팔(D10)", "left" ]
+                    [Lang.Blocks.XBOT_Head,"head"],
+                    [Lang.Blocks.XBOT_ArmR, "right"],
+                    [Lang.Blocks.XBOT_ArmL, "left"]
                 ],
                 "value": "head",
                 "fontSize": 11
@@ -14522,8 +15448,7 @@ Entry.block = {
                 },
                 null
             ],
-            "type": "xbot_servo",
-            "id": "bcuz"
+            "type": "xbot_servo"
         },
         "paramsKeyMap": {
             "DEVICE": 0,
@@ -14531,11 +15456,22 @@ Entry.block = {
         },
         "class": "xbot_motor",
         "isNotFor": [ "xbot_epor_edge" ],
-        "func": function (b, a) {
-            var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getNumberValue("VALUE", a);
-            "head" == d ? c.head = e : "right" == d ? c.armR = e : "left" == d && (c.armL = e);
-            return a.callReturn();
-        }
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var mtype = script.getStringField("DEVICE", script);
+            var angle = script.getNumberValue("VALUE", script);
+
+            if(mtype == 'head') {
+                sq.head = angle;
+            } else if(mtype == 'right') {
+                sq.armR = angle;
+            } else if(mtype == 'left') {
+                sq.armL = angle;
+            }
+
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": []}
     },
     "xbot_oneWheel": {
         "color": "#00979D",
@@ -14545,9 +15481,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "오른쪽", "rightWheel" ],
-                    [ "왼쪽", "leftWheel" ],
-                    [ "양쪽", "bothWheel" ]
+                    [Lang.Blocks.XBOT_rightWheel,"rightWheel"],
+                    [Lang.Blocks.XBOT_leftWheel, "leftWheel"],
+                    [Lang.Blocks.XBOT_bothWheel, "bothWheel"]
                 ],
                 "value": "rightWheel",
                 "fontSize": 11
@@ -14580,11 +15516,22 @@ Entry.block = {
         },
         "class": "xbot_motor",
         "isNotFor": [ "xbot_epor_edge" ],
-        "func": function (b, a) {
-            var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getNumberValue("VALUE", a);
-            "rightWheel" == d ? c.rightWheel = e : "leftWheel" == d ? c.leftWheel = e : c.rightWheel = c.leftWheel = e;
-            return a.callReturn();
-        }
+        "func": function (sprite, script) {
+            //console.log('xbot_move_forward_for_secs');
+            var sq = Entry.hw.sendQueue;
+            var dir = script.getStringField("DEVICE", script);
+            var speed =script.getNumberValue('VALUE', script);
+
+            if (dir == 'rightWheel')
+                sq.rightWheel = speed;
+            else if (dir == 'leftWheel')
+                sq.leftWheel = speed;
+            else
+                sq.rightWheel = sq.leftWheel = speed;
+
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": []}
     },
     "xbot_twoWheel": {
         "color": "#00979D",
@@ -14626,12 +15573,16 @@ Entry.block = {
         },
         "class": "xbot_motor",
         "isNotFor": [ "xbot_epor_edge" ],
-        "func": function (b, a) {
-            var c = Entry.hw.sendQueue;
-            c.rightWheel = a.getNumberValue("rightWheel");
-            c.leftWheel = a.getNumberValue("leftWheel");
-            return a.callReturn();
-        }
+        "func": function (sprite, script) {
+            //console.log('xbot_move_forward_for_secs');
+            var sq = Entry.hw.sendQueue;
+
+            sq.rightWheel = script.getNumberValue('rightWheel');
+            sq.leftWheel = script.getNumberValue('leftWheel');
+
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": []}
     },
     "xbot_rgb": {
         "color": "#00979D",
@@ -14682,13 +15633,17 @@ Entry.block = {
         },
         "class": "xbot_rgb",
         "isNotFor": [ "xbot_epor_edge" ],
-        "func": function (b, a) {
-            var c = Entry.hw.sendQueue;
-            c.ledR = a.getNumberValue("ledR");
-            c.ledG = a.getNumberValue("ledG");
-            c.ledB = a.getNumberValue("ledB");
-            return a.callReturn();
-        }
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+
+            sq.ledR = script.getNumberValue('ledR');
+            sq.ledG = script.getNumberValue('ledG');
+            sq.ledB = script.getNumberValue('ledB');
+
+            //console.log('ledR' + sq.ledR + ' ledG ' + sq.ledG +' ledB ' + sq.ledB);
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": []}
     },
     "xbot_rgb_picker": {
         "color": "#00979D",
@@ -14714,13 +15669,17 @@ Entry.block = {
         },
         "class": "xbot_rgb",
         "isNotFor": [ "xbot_epor_edge" ],
-        "func": function (b, a) {
-            var c = a.getStringField("VALUE"), d = Entry.hw.sendQueue;
-            d.ledR = parseInt(.3 * parseInt(c.substr(1, 2), 16));
-            d.ledG = parseInt(.3 * parseInt(c.substr(3, 2), 16));
-            d.ledB = parseInt(.3 * parseInt(c.substr(5, 2), 16));
-            return a.callReturn();
-        }
+        "func": function (sprite, script) {
+            var port = script.getStringField("VALUE");
+            var sq = Entry.hw.sendQueue;
+
+            sq.ledR = parseInt(parseInt(port.substr(1,2), 16) * 0.3);
+            sq.ledG =  parseInt(parseInt(port.substr(3,2), 16) * 0.3);
+            sq.ledB = parseInt(parseInt(port.substr(5,2), 16) * 0.3);
+
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": []}
     },
     "xbot_buzzer": {
         "color": "#00979D",
@@ -14730,13 +15689,13 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "도", "C" ],
-                    [ "레", "D" ],
-                    [ "미", "E" ],
-                    [ "파", "F" ],
-                    [ "솔", "G" ],
-                    [ "라", "A" ],
-                    [ "시", "B" ]
+                    [Lang.Blocks.XBOT_c ,"C"],
+                    [Lang.Blocks.XBOT_d ,"D"],
+                    [Lang.Blocks.XBOT_e ,"E"],
+                    [Lang.Blocks.XBOT_f ,"F"],
+                    [Lang.Blocks.XBOT_g ,"G"],
+                    [Lang.Blocks.XBOT_a ,"A"],
+                    [Lang.Blocks.XBOT_b ,"B"]
                 ],
                 "value": "C",
                 "fontSize": 11
@@ -14784,13 +15743,68 @@ Entry.block = {
         },
         "class": "xbot_sensor",
         "isNotFor": [ "xbot_epor_edge" ],
-        "func": function (b, a) {
-            var c = Entry.hw.sendQueue, d = a.getStringField("NOTE", a), e = a.getStringField("OCTAVE", a), f = a.getNumberValue("VALUE", a), d = d + e;
-            c.note = "C2" == d ? 65 : "D2" == d ? 73 : "E2" == d ? 82 : "F2" == d ? 87 : "G2" == d ? 98 : "A2" == d ? 110 : "B2" == d ? 123 : "C3" == d ? 131 : "D3" == d ? 147 : "E3" == d ? 165 : "F3" == d ? 175 : "G3" == d ? 196 : "A3" == d ? 220 : "B3" == d ? 247 : "C4" == d ? 262 : "D4" == d ? 294 : "E4" == d ? 330 : "F4" == d ? 349 : "G4" == d ? 392 : "A4" == d ? 440 : "B4" == d ? 494 : "C5" == d ? 523 : "D5" == d ? 587 : "E5" == d ? 659 : "F5" == d ? 698 : "G5" == d ? 784 : "A5" == d ? 880 : "B5" == d ?
-                988 : "C6" == d ? 1047 : "D6" == d ? 1175 : "E6" == d ? 1319 : "F6" == d ? 1397 : "G6" == d ? 1568 : "A6" == d ? 1760 : "B6" == d ? 1976 : "C7" == d ? 2093 : "D7" == d ? 2349 : "E7" == d ? 2637 : "F7" == d ? 2794 : "G7" == d ? 3136 : "A7" == d ? 3520 : "B7" == d ? 3951 : 262;
-                c.duration = 40 * f;
-                return a.callReturn();
-        }
+        "func": function (script, sprite) {
+            var sq = Entry.hw.sendQueue;
+            var note = script.getStringField("NOTE", script);
+            var octave = script.getStringField("OCTAVE", script);
+            var duration = script.getNumberValue("VALUE", script);
+
+
+            var noteOctave = note + octave; // 'C'+ 2 = "C2"
+            //console.log('xbot_buzzer noteOctave' + note + ' ' + octave + ' ' + duration);
+
+            if(noteOctave == "C2") sq.note = 65;
+            else if(noteOctave == "D2") sq.note = 73;
+            else if(noteOctave == "E2") sq.note = 82;
+            else if(noteOctave == "F2") sq.note = 87;
+            else if(noteOctave == "G2") sq.note = 98;
+            else if(noteOctave == "A2") sq.note = 110;
+            else if(noteOctave == "B2") sq.note = 123;
+            else if(noteOctave == "C3") sq.note = 131;
+            else if(noteOctave == "D3") sq.note = 147;
+            else if(noteOctave == "E3") sq.note = 165;
+            else if(noteOctave == "F3") sq.note = 175;
+            else if(noteOctave == "G3") sq.note = 196;
+            else if(noteOctave == "A3") sq.note = 220;
+            else if(noteOctave == "B3") sq.note = 247;
+            else if(noteOctave == "C4") sq.note = 262;
+            else if(noteOctave == "D4") sq.note = 294;
+            else if(noteOctave == "E4") sq.note = 330;
+            else if(noteOctave == "F4") sq.note = 349;
+            else if(noteOctave == "G4") sq.note = 392;
+            else if(noteOctave == "A4") sq.note = 440;
+            else if(noteOctave == "B4") sq.note = 494;
+            else if(noteOctave == "C5") sq.note = 523;
+            else if(noteOctave == "D5") sq.note = 587;
+            else if(noteOctave == "E5") sq.note = 659;
+            else if(noteOctave == "F5") sq.note = 698;
+            else if(noteOctave == "G5") sq.note = 784;
+            else if(noteOctave == "A5") sq.note = 880;
+            else if(noteOctave == "B5") sq.note = 988;
+            else if(noteOctave == "C6") sq.note = 1047;
+            else if(noteOctave == "D6") sq.note = 1175;
+            else if(noteOctave == "E6") sq.note = 1319;
+            else if(noteOctave == "F6") sq.note = 1397;
+            else if(noteOctave == "G6") sq.note = 1568;
+            else if(noteOctave == "A6") sq.note = 1760;
+            else if(noteOctave == "B6") sq.note = 1976;
+            else if(noteOctave == "C7") sq.note = 2093;
+            else if(noteOctave == "D7") sq.note = 2349;
+            else if(noteOctave == "E7") sq.note = 2637;
+            else if(noteOctave == "F7") sq.note = 2794;
+            else if(noteOctave == "G7") sq.note = 3136;
+            else if(noteOctave == "A7") sq.note = 3520;
+            else if(noteOctave == "B7") sq.note = 3951;
+            else sq.note = 262;
+
+            //sq.duration = 200;
+
+            duration *= 40; //  convert to mSec
+            sq.duration =  duration;
+
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": []}
     },
     "xbot_lcd": {
         "color": "#00979D",
@@ -14834,11 +15848,23 @@ Entry.block = {
         },
         "class": "xbot_sensor",
         "isNotFor": [ "xbot_epor_edge" ],
-        "func": function (b, a) {
-            var c = Entry.hw.sendQueue, d = a.getNumberField("LINE", a), e = a.getStringValue("VALUE", a);
-            0 == d ? (c.lcdNum = 0, c.lcdTxt = e) : 1 == d && (c.lcdNum = 1, c.lcdTxt = e);
-            return a.callReturn();
-        }
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var line = script.getNumberField("LINE", script);
+            var str =  script.getStringValue("VALUE", script);
+
+            if (line == 0) {
+                sq.lcdNum = 0;
+                sq.lcdTxt = str;
+            } else if (line == 1)
+            {
+                sq.lcdNum = 1;
+                sq.lcdTxt = str;
+            }
+            //console.log('ledR' + sq.ledR + ' ledG ' + sq.ledG +' ledB ' + sq.ledB);
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": []}
     },
     "run": {
         "skeleton": "basic",
@@ -15177,7 +16203,19 @@ Entry.block = {
                     "y": -2
                 }
             }
-        ]
+        ],
+        "func": function () {
+            var entities = Ntry.entityManager.getEntitiesByComponent(
+            Ntry.STATIC.UNIT);
+
+            for (var key in entities)
+                this._unit = entities[key];
+
+            Ntry.unitComp = Ntry.entityManager.getComponent(
+            this._unit.id, Ntry.STATIC.UNIT);
+
+        },
+        "syntax": {"js": [], "py": []}
     },
     "maze_step_jump": {
         "skeleton": "basic",
@@ -15207,46 +16245,16 @@ Entry.block = {
                 "type": "Dropdown",
                 "key": "REPEAT",
                 "options": [
-                    [
-                        1,
-                        1
-                    ],
-                    [
-                        2,
-                        2
-                    ],
-                    [
-                        3,
-                        3
-                    ],
-                    [
-                        4,
-                        4
-                    ],
-                    [
-                        5,
-                        5
-                    ],
-                    [
-                        6,
-                        6
-                    ],
-                    [
-                        7,
-                        7
-                    ],
-                    [
-                        8,
-                        8
-                    ],
-                    [
-                        9,
-                        9
-                    ],
-                    [
-                        10,
-                        10
-                    ]
+                    [ 1, 1 ],
+                    [ 2, 2 ],
+                    [ 3, 3 ],
+                    [ 4, 4 ],
+                    [ 5, 5 ],
+                    [ 6, 6 ],
+                    [ 7, 7 ],
+                    [ 8, 8 ],
+                    [ 9, 9 ],
+                    [ 10, 10 ]
                 ],
                 "value": 1
             },
@@ -15496,7 +16504,28 @@ Entry.block = {
                 "img": "/img/assets/week/blocks/moveStep.png",
                 "size": 24
             }
-        ]
+        ],
+        func: function() {
+            if (!this.isContinue) {
+
+                this.isContinue = true;
+                this.isAction = true;
+                var self = this;
+                var callBack = function() {
+                    self.isAction = false;
+                };
+                // turn direction
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, callBack);
+
+                return Entry.STATIC.CONTINUE;
+            } else if (this.isAction) {
+                return Entry.STATIC.CONTINUE;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        },
+        "syntax": {"js": [], "py": []}
     },
     "maze_step_rotate_left": {
         "skeleton": "basic",

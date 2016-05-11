@@ -145,10 +145,10 @@ Entry.BlockView.DRAG_RADIUS = 5;
                 filter: 'url(#entryBlockShadowFilter_' + suffix + ')'
             });
         } else if (this.magnet.string || this.magnet.bool)
-            pathStyle.stroke = Entry.Utils.colorDarken(this._schema.color, 0.9);
+            pathStyle.stroke = Entry.Utils.colorDarken(this._schema.color, 0.65);
 
         if (skeleton.outerLine) {
-            pathStyle.strokeWidth = "0.5";
+            pathStyle['stroke-width'] = "0.7";
         }
         this._path.attr(pathStyle);
 
@@ -242,7 +242,8 @@ Entry.BlockView.DRAG_RADIUS = 5;
             } else {
                 c.align(cursor.x, cursor.y, animate);
                 // space between content
-                if (i !== this._contents.length - 1)
+                if (i !== this._contents.length - 1 &&
+                    (i != 0 || !(c instanceof Entry.FieldText && c._text.length == 0)))
                     cursor.x += Entry.BlockView.PARAM_SPACE;
             }
 

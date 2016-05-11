@@ -184,7 +184,7 @@ Blockly.Blocks.change_to_next_shape = {
         this.setPreviousStatement(true);
         this.setNextStatement(true);
     },
-  syntax: {js: [], py: ["self.change_shape_to_next()"]}
+  syntax: {js: [], py: ["self.change_to_shape(\"%1\")"]}
 };
 
 Entry.block.change_to_next_shape = function (sprite, script) {

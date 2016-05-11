@@ -46,11 +46,6 @@ Entry.getStartProject = function(mediaFilePath) {
                             type: "length_of_string",
                             x: 200,
                             y: 140,
-                            params: [
-                                {
-                                    type: "length_of_string"
-                                }
-                            ]
                         }
                     ],
                     [

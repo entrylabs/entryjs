@@ -5,8 +5,10 @@
 
 goog.provide("Entry.BlockToPyParser");
 
+goog.require("Entry.KeyboardCodeMap");
+
 Entry.BlockToPyParser = function() {
-    //Construtor
+
 };
 
 (function(p){
@@ -29,138 +31,149 @@ Entry.BlockToPyParser = function() {
             console.log("textCode", textCode);
         }
 
+        console.log("textCode in", textCode);
+
         return textCode;
     };
 
     p.Thread = function(thread) {
         if (thread instanceof Entry.Block)
             return this.Block(thread);
-        var block = "",
+        var result = "",
             blocks = thread.getBlocks();
 
         for (var i = 0; i < blocks.length; i++) {
-            var b = blocks[i];
-            block += (this.Block(b) + '\n');
+            var block = blocks[i];
+            result += (this.Block(block) + '\n');
         }
-        return block;
+        return result;
     };
 
     p.Block = function(block) {
         if(!block._schema || !block._schema.syntax)
             return "";
         var syntax = block._schema.syntax.py[0];
-        var breg = /(%\d)/mi;
-        var sreg = /(\$\d)/mi;
-        var btokens = syntax.split(breg);
-
+        if(!syntax || syntax == null)
+            return "";
+        var blockReg = /(%\d)/mi;
+        var statementReg = /(\$\d)/mi;
+        var blockTokens = syntax.split(blockReg);
         var schemaParams = block._schema.params;
+        var dataParams = block.data.params;
+
+        console.log("block", block);
+        console.log("schemaParams", schemaParams);
+        console.log("dataParams", dataParams);
 
         var result = "";
-        for (var i=0; i<btokens.length; i++) {
-            var token = btokens[i];
-            if (token.length === 0) continue;
-            if (breg.test(token)) {
-                var paramIndex = Number(token.split('%')[1]) - 1;
-                //console.log("schema param", schemaParams[paramIndex]);
-                result += this['Field' + schemaParams[paramIndex].type](
-                    block.params[paramIndex], schemaParams[paramIndex]);
-            } else if (sreg.test(token)) {
-                var stokens = token.split(sreg);
+        for (var i=0; i<blockTokens.length; i++) {
+            var blockToken = blockTokens[i];
+            console.log("blockToken", blockToken);
+            if (blockToken.length === 0) continue;
+            if (blockReg.test(blockToken)) {
+                var index = Number(blockToken.split('%')[1]) - 1;
+                console.log("schemaParams[index].type", schemaParams[index].type);
+                if(schemaParams[index].type == "Block") {
+                    result += this.Block(dataParams[index]);
+                } 
+                else {
+                    if(schemaParams[index].type == "Indicator")
+                        index++;
 
-                for (var j=0; j<stokens.length; j++) {
-                    var token2 = stokens[j];
-                    if (token2.length === 0) continue;
-                    if (sreg.test(token2)) {
-                        var paramIndex = Number(token2.split('$')[1]) - 1;
-                        result += this.indent(this.Thread(block.statements[paramIndex]));
-                    } else result += token2;
+                    result += this['Field' + schemaParams[index].type](dataParams[index]);
+                }
+            } else if (statementReg.test(blockToken)) {
+                var statements = blockToken.split(statementReg);
+                for (var j=0; j<statements.length; j++) {
+                    var statementToken = statements[j];
+                    if (statementToken.length === 0) continue;
+                    if (statements.test(statementToken)) {
+                        var index = Number(statementToken.split('$')[1]) - 1;
+                        result += this.indent(this.Thread(block.statements[index]));
+                    } else result += statementToken;
                 }
             } else
-                result += token;
+                result += blockToken;
         }
-
         return result;
     };
 
     p.FieldAngle = function(param) {
-        //console.log("FieldAngle", param);
+        console.log("FieldAngle", param);
 
-        return this.Block(param);
-    };
-
-    p.FieldBlock = function(param) {
-        //console.log("FieldBlock", param);
-
-        return this.Block(param);
-    };
-
-    p.FieldColor = function(param) {
-        //console.log("FieldColor", param);
-
-        return "'" + param + "'";
-    };
-
-    p.FieldDropdown = function(param, schema) {
-        //console.log("FieldDropdown", param);
-        /*var value = param;
-        var options = schema.options;
-        for (var i=0, len=options.length; i<len; i++) {
-            var option = options[i];
-            if (option[1] == value){
-                console.log("option", option[0]);
-                return option[0];
-            }
-        }*/
         return param;
     };
 
-    p.FieldDropdownDynamic = function(param, schema) {
-        //console.log("FieldDropdownDynamic", param);
-        /*var value = param;
-        var options = schema.options;
-        for (var i=0, len=options.length; i<len; i++) {
-            var option = options[i];
-            if (option[1] == value){
-                console.log("option", option[0]);
-                return option[0];
-            }
-        }*/
+    p.FieldColor = function(param) {
+        console.log("FieldColor", param);
+
+        return param;
+    };
+
+    p.FieldDropdown = function(param) {
+        console.log("FieldDropdown", param);
+        
+        return param;
+    };
+
+    p.FieldDropdownDynamic = function(param) {
+        console.log("FieldDropdownDynamic", param);
+       
         return param;
     };
 
     p.FieldImage = function(param) {
-        //console.log("FieldImage", param);
-        return this.Block(param);
+        console.log("FieldImage", param);
+
+        return param;
     };
 
-    p.FieldIndicator = function(param, schema) {
-        //console.log("FieldIndicator", param);
-        //console.log("schema", schema);
+    p.FieldIndicator = function(param) {
+        console.log("FieldIndicator", param);
+
         return param;
     };
 
     p.FieldKeyboard = function(param) {
-        //console.log("FieldKeyboardInput", param);
-        return this.Block(param);
+        console.log("FieldKeyboardInput", param);
+
+        return param;
     };
 
     p.FieldOutput = function(param) {
-        //console.log("FieldOutput", param);
-        return this.Block(param);
-    };
+        console.log("FieldOutput", param);
 
-    p.FieldStatement = function(param) {
-        //console.log("FieldStatement", param);
-        return this.Block(param);
+        return param;
     };
 
     p.FieldText = function(param) {
-        //console.log("FieldText", param);
+        console.log("FieldText", param);
+
         return this.Block(param);
     };
 
     p.FieldTextInput = function(param) {
-        //console.log("FieldTextInput", param);
+        console.log("FieldTextInput", param);
+
+        return param;
+    };
+
+    p.FieldNumber = function(param) {
+        console.log("FieldNumber", param);
+
+        return param;
+    };
+
+    p.FieldKeyboard = function(param) {
+        console.log("FieldKeyboard Before", param);
+
+        param = Entry.KeyboardCodeMap.prototype.keyCodeToChar[param];
+
+        if(!param || param == null)
+            param = "Q";
+
+        console.log("FieldKeyboard After", param);
+
         return param;
     };
 
