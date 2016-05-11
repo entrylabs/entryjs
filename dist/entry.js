@@ -20301,9 +20301,7 @@ Entry.skeleton.basic_event = {path:function(b) {
 }, box:function(b) {
   return {offsetX:-19, offsetY:-7, width:b.contentWidth + 30, height:30, marginBottom:0};
 }, magnets:function(b) {
-  var a = b ? Math.max(b.height + b.offsetY + 7, 30) : 30;
-  console.log(b.height, b.offsetY);
-  return {next:{x:0, y:a + 1}};
+  return {next:{x:0, y:(b ? Math.max(b.height + b.offsetY + 7, 30) : 30) + 1}};
 }, contentPos:function(b) {
   return {x:1, y:15};
 }};

@@ -67,7 +67,6 @@ Entry.skeleton.basic_event = {
     magnets: function(blockView) {
         // apply scale required.
         var height = blockView ? Math.max(blockView.height + blockView.offsetY + 7, 30) : 30;
-        console.log(blockView.height, blockView.offsetY);
         return {
             next: {x: 0, y: height + 1}
         };
