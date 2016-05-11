@@ -17383,10 +17383,10 @@ Entry.BlockMenu = function(b, a, c, d) {
     this.svgDom.mouseenter(function(a) {
       d._scroller && d._scroller.setOpacity(1);
       a = d.workspace.selectedBlockView;
-      !Entry.playground || Entry.playground.resizing || a && a.dragMode === Entry.DRAG_MODE_DRAG || (Entry.playground.focusBlockMenu = !0, a = d.svgGroup.getBBox(), a = a.width + a.x + 64, d._expandWidth = a, a > Entry.interfaceState.menuWidth && (this.widthBackup = Entry.interfaceState.menuWidth - 64, $(this).stop().animate({width:a - 62}, 200)));
+      !Entry.playground || Entry.playground.resizing || a && a.dragMode === Entry.DRAG_MODE_DRAG || (Entry.playground.focusBlockMenu = !0, a = d.svgGroup.getBBox(), a = a.width + a.x + 64, a > Entry.interfaceState.menuWidth && (this.widthBackup = Entry.interfaceState.menuWidth - 64, $(this).stop().animate({width:a - 62}, 200)));
     });
     this.svgDom.mouseleave(function(a) {
-      Entry.playground && !Entry.playground.resizing && ((a = this.widthBackup) && $(this).stop().animate({width:a}, 200), delete d._expandWidth, delete this.widthBackup, delete Entry.playground.focusBlockMenu);
+      Entry.playground && !Entry.playground.resizing && (d._scroller && d._scroller.setOpacity(0), (a = this.widthBackup) && $(this).stop().animate({width:a}, 200), delete this.widthBackup, delete Entry.playground.focusBlockMenu);
     });
   };
   b.changeCode = function(a) {
@@ -17576,13 +17576,9 @@ Entry.BlockMenu = function(b, a, c, d) {
     }
   };
   b._addControl = function(a) {
-    var b = this, d = this.svgDom;
+    var b = this;
     a.on("wheel", function() {
       b._mouseWheel.apply(b, arguments);
-    });
-    d.on("mouseout", function(a) {
-      var d = b.offset, g = b._expandWidth || b._svgWidth;
-      (d.left > a.clientX - 2 || d.top > a.clientY - 2 || d.left + g - 2 < a.clientX) && b._scroller.setOpacity(0);
     });
   };
   b._mouseWheel = function(a) {
@@ -20187,16 +20183,15 @@ Entry.Board = function(b) {
     d += a.contentPos.y;
     for (var k = 0;k < g.length;k++) {
       var l = g[k];
-      if (l instanceof Entry.FieldBlock && l.acceptType === f) {
+      if (l instanceof Entry.FieldBlock) {
         var n = l._valueBlock;
-        if (!n.view.dragInstance) {
-          var m = b + l.box.x, q = d + l.box.y + a.contentHeight % 1E3 * -.5, l = d + l.box.y + l.box.height;
-          h.push({point:q, endPoint:l, startBlock:n, blocks:[]});
-          h.push({point:l, blocks:[]});
-          n = n.view;
-          n.absX = m;
-          n.zIndex = e;
-          h = h.concat(this._getFieldBlockMetaData(n, m + n.contentPos.x, q + n.contentPos.y, e + .01, f));
+        if (!n.view.dragInstance && (l.acceptType === f || "booleanMagnet" === l.acceptType)) {
+          var m = b + l.box.x, q = d + l.box.y + a.contentHeight % 1E3 * -.5, r = d + l.box.y + l.box.height;
+          l.acceptType === f && (h.push({point:q, endPoint:r, startBlock:n, blocks:[]}), h.push({point:r, blocks:[]}));
+          l = n.view;
+          l.absX = m;
+          l.zIndex = e;
+          h = h.concat(this._getFieldBlockMetaData(l, m + l.contentPos.x, q + l.contentPos.y, e + .01, f));
         }
       }
     }

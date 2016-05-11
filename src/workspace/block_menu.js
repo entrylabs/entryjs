@@ -104,7 +104,6 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             Entry.playground.focusBlockMenu = true;
             var bBox = that.svgGroup.getBBox();
             var expandWidth = bBox.width + bBox.x + 64;
-            that._expandWidth = expandWidth;
             if (expandWidth > Entry.interfaceState.menuWidth) {
                 this.widthBackup = Entry.interfaceState.menuWidth - 64;
                 $(this).stop().animate({
@@ -116,12 +115,15 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         this.svgDom.mouseleave(function(e) {
             if (!Entry.playground || Entry.playground.resizing) return;
 
+            if (that._scroller)
+                that._scroller.setOpacity(0);
+
+
             var widthBackup = this.widthBackup;
             if (widthBackup)
                 $(this).stop().animate({
                     width: widthBackup
                 }, 200);
-            delete that._expandWidth;
             delete this.widthBackup;
             delete Entry.playground.focusBlockMenu;
         });
@@ -490,14 +492,14 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             that._mouseWheel.apply(that, arguments);
         });
 
-        svgDom.on('mouseout', function(e){
-            var offset = that.offset;
-            var width = that._expandWidth || that._svgWidth;
+        //svgDom.on('mouseout', function(e){
+            //var offset = that.offset;
+            //var width = that._expandWidth || that._svgWidth;
 
-            if (offset.left > e.clientX -2 || offset.top > e.clientY -2 ||
-                (offset.left + width -2 < e.clientX ))
-                that._scroller.setOpacity(0);
-        });
+            //if (offset.left > e.clientX -2 || offset.top > e.clientY -2 ||
+                //(offset.left + width -2 < e.clientX ))
+                //that._scroller.setOpacity(0);
+        //});
     };
 
     p._mouseWheel = function(e) {

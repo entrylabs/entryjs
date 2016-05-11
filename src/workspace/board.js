@@ -572,24 +572,27 @@ Entry.Board = function(option) {
             var content = contents[i];
             if (!(content instanceof Entry.FieldBlock))
                 continue;
-            if (content.acceptType !== targetType)
-                continue;
             var contentBlock = content._valueBlock;
             if (contentBlock.view.dragInstance)
                 continue;
+            if (content.acceptType !== targetType && content.acceptType !== "booleanMagnet") {
+                continue;
+            }
             var startX = cursorX + content.box.x;
             var startY = cursorY + content.box.y + (blockView.contentHeight % 1000) * -0.5;
             var endY = cursorY + content.box.y + content.box.height;
-            metaData.push({
-                point: startY,
-                endPoint: endY,
-                startBlock: contentBlock,
-                blocks: []
-            });
-            metaData.push({
-                point: endY,
-                blocks: []
-            });
+            if (content.acceptType === targetType) {
+                metaData.push({
+                    point: startY,
+                    endPoint: endY,
+                    startBlock: contentBlock,
+                    blocks: []
+                });
+                metaData.push({
+                    point: endY,
+                    blocks: []
+                });
+            }
             var contentBlockView = contentBlock.view;
             contentBlockView.absX = startX;
             contentBlockView.zIndex = zIndex;
