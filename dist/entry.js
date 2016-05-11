@@ -18018,6 +18018,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
     }
     this.destroyShadow();
     delete this.originPos;
+    this.dominate();
   };
   b._getCloseBlock = function() {
     if (this._skeleton.magnets) {
