@@ -169,6 +169,9 @@ Entry.Func.cancelEdit = function() {
     delete this.targetFunc;
     this.updateMenu();
     Entry.variableContainer.updateList();
+    console.log('adf');
+    var workspace = Entry.playground.mainWorkspace;
+    workspace.setMode(Entry.Workspace.MODE_BOARD);
 };
 
 Entry.Func.getMenuXml = function() {
@@ -325,7 +328,6 @@ Entry.Func.prototype.generateBlock = function(toSave) {
 };
 
 Entry.Func.generateWsBlock = function(targetFunc) {
-    console.log('adsf');
     targetFunc = targetFunc ? targetFunc : this.targetFunc;
     var defBlock = targetFunc.content.getEventMap("funcDef")[0];
     var outputBlock = defBlock.params[0];

@@ -12321,7 +12321,7 @@ Entry.Func.syncFuncName = function(b) {
   Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, a);
 };
 Entry.Func.cancelEdit = function() {
-  this.targetFunc && (Entry.Func.isEdit = !1, this.targetFunc.block || (this._targetFuncBlock.destroy(), delete Entry.variableContainer.functions_[this.targetFunc.id], delete Entry.variableContainer.selected), delete this.targetFunc, this.updateMenu(), Entry.variableContainer.updateList());
+  this.targetFunc && (Entry.Func.isEdit = !1, this.targetFunc.block || (this._targetFuncBlock.destroy(), delete Entry.variableContainer.functions_[this.targetFunc.id], delete Entry.variableContainer.selected), delete this.targetFunc, this.updateMenu(), Entry.variableContainer.updateList(), console.log("adf"), Entry.playground.mainWorkspace.setMode(Entry.Workspace.MODE_BOARD));
 };
 Entry.Func.getMenuXml = function() {
   var b = [];
@@ -12402,7 +12402,6 @@ Entry.Func.prototype.generateBlock = function(b) {
   this.description = b.description;
 };
 Entry.Func.generateWsBlock = function(b) {
-  console.log("adsf");
   b = b ? b : this.targetFunc;
   for (var a = b.content.getEventMap("funcDef")[0].params[0], c = 0, d = 0, e = [], f = "", g = b.hashMap, h = b.paramMap;a;) {
     var k = a.params[0];
@@ -19877,7 +19876,6 @@ Entry.Board = function(b) {
   Entry.documentMousedown && (Entry.documentMousedown.attach(this, this.setSelectedBlock), Entry.documentMousedown.attach(this, this._removeActivated));
   Entry.keyPressed && Entry.keyPressed.attach(this, this._keyboardControl);
   Entry.windowResized && Entry.windowResized.attach(this, this.updateOffset);
-  Entry.commander.setCurrentEditor("board", this);
 };
 (function(b) {
   b.schema = {code:null, dragBlock:null, magnetedBlockView:null, selectedBlockView:null};
@@ -21122,6 +21120,7 @@ Entry.Workspace = function(b) {
   this.mode = Entry.Workspace.MODE_BOARD;
   Entry.keyPressed && Entry.keyPressed.attach(this, this._keyboardControl);
   this.changeEvent = new Entry.Event(this);
+  Entry.commander.setCurrentEditor("board", this.board);
 };
 Entry.Workspace.MODE_BOARD = 0;
 Entry.Workspace.MODE_VIMBOARD = 1;
@@ -21165,9 +21164,10 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         } catch (e) {
           throw this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), Entry.dispatchEvent("setProgrammingMode", Entry.Workspace.MODE_VIMBOARD), e;
         }
+        Entry.commander.setCurrentEditor("board", this.board);
         break;
       case Entry.Workspace.MODE_OVERLAYBOARD:
-        this.overlayBoard || this.initOverlayBoard(), this.overlayBoard.show(), this.set({selectedBoard:this.overlayBoard});
+        this.overlayBoard || this.initOverlayBoard(), this.overlayBoard.show(), this.set({selectedBoard:this.overlayBoard}), Entry.commander.setCurrentEditor("board", this.overlayBoard);
     }
     this.changeEvent.notify(b);
   };

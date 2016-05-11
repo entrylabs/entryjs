@@ -41,8 +41,6 @@ Entry.Board = function(option) {
         Entry.keyPressed.attach(this, this._keyboardControl);
     if (Entry.windowResized)
         Entry.windowResized.attach(this, this.updateOffset);
-
-    Entry.commander.setCurrentEditor("board", this);
 };
 
 (function(p) {
