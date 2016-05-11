@@ -17105,7 +17105,7 @@ func:function(b, a) {
   var c = a.getField("VARIABLE", a);
   Entry.variableContainer.getVariable(c, b).setVisible(!1);
   return a.callReturn();
-}}, get_variable:{color:"#E457DC", skeleton:"basic_string_field", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"variables", fontSize:11}], events:{dataAdd:[function(b) {
+}}, get_variable:{color:"#E457DC", skeleton:"basic_string_field", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"variables", fontSize:11}, {type:"Text", text:Lang.Blocks.VARIABLE_get_variable_1, color:"white"}], events:{dataAdd:[function(b) {
   var a = Entry.variableContainer;
   a && a.addRef("_variableRefs", b);
 }], dataDestroy:[function(b) {
@@ -17183,13 +17183,14 @@ isNotFor:["list", "listNotExist"], func:function(b, a) {
   c.array_[e - 1].data = d;
   c.updateView();
   return a.callReturn();
-}}, value_of_index_from_list:{color:"#E457DC", skeleton:"basic_string_field", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[null, {type:"number", params:["1"]}], type:"value_of_index_from_list"}, paramsKeyMap:{LIST:0, INDEX:1}, "class":"list_element", isNotFor:["list", "listNotExist"], func:function(b, a) {
+}}, value_of_index_from_list:{color:"#E457DC", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.VARIABLE_value_of_index_from_list_1, color:"white"}, {type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Text", text:Lang.Blocks.VARIABLE_value_of_index_from_list_2, color:"white"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.VARIABLE_value_of_index_from_list_3, color:"white"}], events:{}, def:{params:[null, null, null, 
+{type:"number", params:["1"]}], type:"value_of_index_from_list"}, paramsKeyMap:{LIST:1, INDEX:3}, "class":"list_element", isNotFor:["list", "listNotExist"], func:function(b, a) {
   var c = a.getField("LIST", a), d = a.getValue("INDEX", a), c = Entry.variableContainer.getList(c, b), d = Entry.getListRealIndex(d, c);
   if (!c.array_ || isNaN(d) || d > c.array_.length) {
     throw Error("can not insert value to array");
   }
   return c.array_[d - 1].data;
-}}, length_of_list:{color:"#E457DC", skeleton:"basic_string_field", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}], events:{}, def:{params:[null], type:"length_of_list"}, paramsKeyMap:{LIST:0}, "class":"list", isNotFor:["list", "listNotExist"], func:function(b, a) {
+}}, length_of_list:{color:"#E457DC", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.VARIABLE_length_of_list_1, color:"white"}, {type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Text", text:Lang.Blocks.VARIABLE_length_of_list_2, color:"white"}], events:{}, def:{params:[null, null, null], type:"length_of_list"}, paramsKeyMap:{LIST:1}, "class":"list", isNotFor:["list", "listNotExist"], func:function(b, a) {
   var c = a.getField("LIST", a);
   return Entry.variableContainer.getList(c).array_.length;
 }}, show_list:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{}, def:{params:[null, null], type:"show_list"}, paramsKeyMap:{LIST:0}, "class":"list_visibility", isNotFor:["list", "listNotExist"], func:function(b, a) {
@@ -17209,7 +17210,8 @@ isNotFor:["list", "listNotExist"], func:function(b, a) {
 }]}, def:{params:["HIDE", null], type:"set_visible_answer"}, paramsKeyMap:{BOOL:0}, "class":"ask", isNotFor:[], func:function(b, a) {
   "HIDE" == a.getField("BOOL", a) ? Entry.container.inputValue.setVisible(!1) : Entry.container.inputValue.setVisible(!0);
   return a.callReturn();
-}}, is_included_in_list:{color:"#E457DC", skeleton:"basic_boolean_field", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[null, {type:"text", params:["10"]}], type:"is_included_in_list", id:"otu1"}, paramsKeyMap:{LIST:0, DATA:1}, "class":"list", isNotFor:["list", "listNotExist"], func:function(b, a) {
+}}, is_included_in_list:{color:"#E457DC", skeleton:"basic_boolean_field", statements:[], params:[{type:"Text", text:Lang.Blocks.VARIABLE_is_included_in_list_1, color:"white"}, {type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Text", text:Lang.Blocks.VARIABLE_is_included_in_list_2, color:"white"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.VARIABLE_is_included_in_list_3, color:"white"}], events:{}, def:{params:[null, null, null, {type:"text", params:["10"]}, 
+null], type:"is_included_in_list"}, paramsKeyMap:{LIST:1, DATA:3}, "class":"list", isNotFor:["list", "listNotExist"], func:function(b, a) {
   var c = a.getField("LIST", a), d = a.getStringValue("DATA", a), c = Entry.variableContainer.getList(c);
   if (!c) {
     return !1;

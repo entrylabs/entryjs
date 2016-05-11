@@ -14258,6 +14258,11 @@ Entry.block = {
                 "value": null,
                 "menuName": "variables",
                 "fontSize": 11
+            },
+            {
+                "type": "Text",
+                "text": Lang.Blocks.VARIABLE_get_variable_1,
+                "color": "white"
             }
         ],
         "events": {
@@ -14646,19 +14651,36 @@ Entry.block = {
         "statements": [],
         "params": [
             {
+                "type": "Text",
+                "text": Lang.Blocks.VARIABLE_value_of_index_from_list_1,
+                "color": "white"
+            },
+            {
                 "type": "DropdownDynamic",
                 "value": null,
                 "menuName": "lists",
                 "fontSize": 11
             },
             {
+                "type": "Text",
+                "text": Lang.Blocks.VARIABLE_value_of_index_from_list_2,
+                "color": "white"
+            },
+            {
                 "type": "Block",
                 "accept": "stringMagnet"
+            },
+            {
+                "type": "Text",
+                "text": Lang.Blocks.VARIABLE_value_of_index_from_list_3,
+                "color": "white"
             }
         ],
         "events": {},
         "def": {
             "params": [
+                null,
+                null,
                 null,
                 {
                     "type": "number",
@@ -14668,8 +14690,8 @@ Entry.block = {
             "type": "value_of_index_from_list"
         },
         "paramsKeyMap": {
-            "LIST": 0,
-            "INDEX": 1
+            "LIST": 1,
+            "INDEX": 3
         },
         "class": "list_element",
         "isNotFor": [ "list", "listNotExist" ],
@@ -14691,19 +14713,29 @@ Entry.block = {
         "statements": [],
         "params": [
             {
+                "type": "Text",
+                "text": Lang.Blocks.VARIABLE_length_of_list_1,
+                "color": "white"
+            },
+            {
                 "type": "DropdownDynamic",
                 "value": null,
                 "menuName": "lists",
                 "fontSize": 11
+            },
+            {
+                "type": "Text",
+                "text": Lang.Blocks.VARIABLE_length_of_list_2,
+                "color": "white"
             }
         ],
         "events": {},
         "def": {
-            "params": [ null ],
+            "params": [ null, null, null ],
             "type": "length_of_list"
         },
         "paramsKeyMap": {
-            "LIST": 0
+            "LIST": 1
         },
         "class": "list",
         "isNotFor": [ "list", "listNotExist" ],
@@ -14867,31 +14899,45 @@ Entry.block = {
         "statements": [],
         "params": [
             {
+                "type": "Text",
+                "text": Lang.Blocks.VARIABLE_is_included_in_list_1,
+                "color": "white"
+            },
+            {
                 "type": "DropdownDynamic",
                 "value": null,
                 "menuName": "lists",
                 "fontSize": 11
             },
             {
+                "type": "Text",
+                "text": Lang.Blocks.VARIABLE_is_included_in_list_2,
+                "color": "white"
+            },
+            {
                 "type": "Block",
                 "accept": "stringMagnet"
+            },
+            {
+                "type": "Text",
+                "text": Lang.Blocks.VARIABLE_is_included_in_list_3,
+                "color": "white"
             }
         ],
         "events": {},
         "def": {
             "params": [
-                null,
+                null, null, null,
                 {
                     "type": "text",
                     "params": [ "10" ]
-                }
+                }, null
             ],
-            "type": "is_included_in_list",
-            "id": "otu1"
+            "type": "is_included_in_list"
         },
         "paramsKeyMap": {
-            "LIST": 0,
-            "DATA": 1
+            "LIST": 1,
+            "DATA": 3
         },
         "class": "list",
         "isNotFor": [ "list", "listNotExist" ],
