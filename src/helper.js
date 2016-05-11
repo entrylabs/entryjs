@@ -84,7 +84,8 @@ p._updateSelectedBlock = function() {
 };
 
 p.renderBlock = function(type) {
-    if (!type || !this.visible) return;
+    var description = Lang.Helper[type];
+    if (!type || !this.visible || !description) return;
     var code = this.code;
     this.code.clear();
 
@@ -102,7 +103,7 @@ p.renderBlock = function(type) {
     var blockHeight = bBox.height;
     var offsetX =blockView.getSkeleton().box(blockView).offsetX;
     if (isNaN(offsetX)) offsetX = 0;
-    this.blockHelperDescription_.innerHTML = Lang.Helper[type];
+    this.blockHelperDescription_.innerHTML = description;
     this._renderView.align();
 
     $(this.blockHelperDescription_).css({
