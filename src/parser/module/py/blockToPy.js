@@ -73,13 +73,14 @@ Entry.BlockToPyParser = function() {
             if (blockReg.test(blockToken)) {
                 var index = Number(blockToken.split('%')[1]) - 1;
                 console.log("schemaParams[index].type", schemaParams[index].type);
+                if(schemaParams[index].type == "Indicator") {
+                    index++;    
+                }
+
                 if(schemaParams[index].type == "Block") {
                     result += this.Block(dataParams[index]);
                 } 
                 else {
-                    if(schemaParams[index].type == "Indicator")
-                        index++;
-
                     result += this['Field' + schemaParams[index].type](dataParams[index]);
                 }
             } else if (statementReg.test(blockToken)) {

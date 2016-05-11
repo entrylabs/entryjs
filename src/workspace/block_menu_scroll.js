@@ -21,12 +21,14 @@ Entry.BlockMenuScroller = function(board) {
     this.vY = 0;
     this.vRatio = 0;
     this._visible = true;
+    this._opacity = -1;
 
     this.mouseHandler = function() {
         that.onMouseDown.apply(that, arguments);
     };
 
     this.createScrollBar();
+    this.setOpacity(0);
     this._addControl();
 
     if (Entry.windowResized)
@@ -97,7 +99,14 @@ Entry.BlockMenuScroller.RADIUS = 7;
         this.svgGroup.attr({
             display: visible === true ? 'block' : 'none'
         });
+    };
 
+    p.setOpacity = function(value) {
+        if (this._opacity == value) return;
+        this.vScrollbar.attr({
+            opacity: value
+        });
+        this._opacity = value;
     };
 
     p.isVisible = function() {return this._visible;};

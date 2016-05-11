@@ -243,7 +243,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
                 c.align(cursor.x, cursor.y, animate);
                 // space between content
                 if (i !== this._contents.length - 1 &&
-                    (i != 0 || !(c instanceof Entry.FieldText && c._text.length == 0)))
+                    (!(c instanceof Entry.FieldText && c._text.length == 0)))
                     cursor.x += Entry.BlockView.PARAM_SPACE;
             }
 
@@ -652,6 +652,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
 
         this.destroyShadow();
         delete this.originPos;
+        this.dominate();
         return;
     };
 

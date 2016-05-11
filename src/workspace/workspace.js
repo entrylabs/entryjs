@@ -52,6 +52,8 @@ Entry.Workspace = function(options) {
 
     // view state change event
     this.changeEvent = new Entry.Event(this);
+
+    Entry.commander.setCurrentEditor("board", this.board);
 };
 
 Entry.Workspace.MODE_BOARD = 0; 
@@ -109,13 +111,15 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     Entry.dispatchEvent('setProgrammingMode', Entry.Workspace.MODE_VIMBOARD);
                     throw e;
                 }
+                Entry.commander.setCurrentEditor("board", this.board);
                 break;
             case Entry.Workspace.MODE_OVERLAYBOARD:
                 if (!this.overlayBoard)
                     this.initOverlayBoard();
                 this.overlayBoard.show();
                 this.set({selectedBoard:this.overlayBoard});
-                this.mode = mode;
+                Entry.commander.setCurrentEditor("board", this.overlayBoard);
+
                 break;
         }
 

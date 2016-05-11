@@ -30,6 +30,7 @@ Entry.Board = function(option) {
     this.changeEvent = new Entry.Event(this);
     this.scroller = new Entry.Scroller(this, true, true);
 
+
     Entry.Utils.disableContextmenu(this.svgDom);
 
     this._addControl();
@@ -41,8 +42,6 @@ Entry.Board = function(option) {
         Entry.keyPressed.attach(this, this._keyboardControl);
     if (Entry.windowResized)
         Entry.windowResized.attach(this, this.updateOffset);
-
-    Entry.commander.setCurrentEditor("board", this);
 };
 
 (function(p) {
@@ -166,6 +165,12 @@ Entry.Board = function(option) {
         dom.on('wheel', function(){
             that.mouseWheel.apply(that, arguments);
         });
+
+        var scroller = that.scroller;
+        if (scroller) {
+            dom.mouseenter(function(e) {scroller.setOpacity(1);});
+            dom.mouseleave(function(e) {scroller.setOpacity(0);});
+        }
     };
 
     p.onMouseDown = function(e) {
@@ -471,13 +476,14 @@ Entry.Board = function(option) {
             var block = blocks[i];
             var blockView = block.view;
             blockView.zIndex = zIndex;
-            if (blockView.dragInstance)
+            if (blockView.dragInstance) {
                 break;
+            }
             cursorY += blockView.y;
             cursorX += blockView.x;
             var endPoint = cursorY + 1;
             if (blockView.magnet.next) {
-                endPoint += blockView.magnet.next.y;
+                endPoint += blockView.height;
                 metaData.push({
                     point: cursorY,
                     endPoint: endPoint,
@@ -499,7 +505,7 @@ Entry.Board = function(option) {
                     statement.absX = cursorX + statement.x;
                     metaData.push({
                         point: statement.y + cursorY - 30,
-                        endPoint: statement.y + cursorY + statement.height,
+                        endPoint: statement.y + cursorY,
                         startBlock: statement,
                         blocks: []
                     });
@@ -574,24 +580,27 @@ Entry.Board = function(option) {
             var content = contents[i];
             if (!(content instanceof Entry.FieldBlock))
                 continue;
-            if (content.acceptType !== targetType)
-                continue;
             var contentBlock = content._valueBlock;
             if (contentBlock.view.dragInstance)
                 continue;
+            if (content.acceptType !== targetType && content.acceptType !== "booleanMagnet") {
+                continue;
+            }
             var startX = cursorX + content.box.x;
             var startY = cursorY + content.box.y + (blockView.contentHeight % 1000) * -0.5;
             var endY = cursorY + content.box.y + content.box.height;
-            metaData.push({
-                point: startY,
-                endPoint: endY,
-                startBlock: contentBlock,
-                blocks: []
-            });
-            metaData.push({
-                point: endY,
-                blocks: []
-            });
+            if (content.acceptType === targetType) {
+                metaData.push({
+                    point: startY,
+                    endPoint: endY,
+                    startBlock: contentBlock,
+                    blocks: []
+                });
+                metaData.push({
+                    point: endY,
+                    blocks: []
+                });
+            }
             var contentBlockView = contentBlock.view;
             contentBlockView.absX = startX;
             contentBlockView.zIndex = zIndex;
@@ -757,7 +766,9 @@ Entry.Board = function(option) {
     };
 
     p.dominate = function(thread) {
+        if (!thread) return;
         var block = thread.getFirstBlock();
+        if (!block) return;
         this.svgBlockGroup
             .appendChild(block.view.svgGroup);
         this.code.dominate(block.thread);

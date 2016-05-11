@@ -5,6 +5,8 @@
 
 goog.provide("Entry.PyBlockAssembler");
 
+goog.require("Entry.KeyboardCodeMap");
+
 Entry.PyBlockAssembler = function(blockSyntax) {
     this.blockSyntax = blockSyntax;
 };
@@ -51,18 +53,25 @@ Entry.PyBlockAssembler = function(blockSyntax) {
 
         		console.log("arg", arg);
 		        
-		        for(var index in args) {
+		        for(var index=0; index < args.length; index++) {
 		            var arg = args[index];
 		            if(typeof arg === 'string')
 		            	var type = 'text';
 		            else
 		            	var type = 'number';
 
-		            console.log("type", type);
-		            if(paramsType[index] == "Block")
+		            if(paramsType[index] == "Indicator"){
+		            	var param = null;
+		            	args.splice(index, 0, param);
+		            }
+		            else if(paramsType[index] == "Block")
 		            	var param = { type: type, params: [arg] };
-		            else
+		            else if(paramsType[index] == "Keyboard")
+		            	var param = Entry.KeyboardCodeMap.prototype.keyCharToCode[arg];	
+		            else	
 		            	var param = arg;
+
+		            console.log("param kkk", param);
 
 		            params.push(param);
 		        }
@@ -101,8 +110,9 @@ Entry.PyBlockAssembler = function(blockSyntax) {
 		        	var targetSyntax = String("for i in range");
             	}
             	var block = this.getBlock(targetSyntax);
-
             	console.log("block", block);
+            	var paramsType = Entry.BlockTemplate.prototype.getParamsType(block);
+		        console.log("paramsType", paramsType);
 
             	var args = [];
             	var params = [];
@@ -125,15 +135,26 @@ Entry.PyBlockAssembler = function(blockSyntax) {
 
         		console.log("arg", arg);
 		        
-		        for(var index in args) {
+		        for(var index=0; index < args.length; index++) {
 		            var arg = args[index];
 		            if(typeof arg === 'string')
 		            	var type = 'text';
 		            else
 		            	var type = 'number';
 
-		            console.log("type", type);
-		            var param = { type: type, params: [arg] };
+		            if(paramsType[index] == "Indicator"){
+		            	var param = null;
+		            	args.splice(index, 0, param);
+		            }
+		            else if(paramsType[index] == "Block")
+		            	var param = { type: type, params: [arg] };
+		            else if(paramsType[index] == "Keyboard")
+		            	var param = Entry.KeyboardCodeMap.prototype.keyCharToCode[arg];	
+		            else	
+		            	var param = arg;
+
+		            console.log("keyboard", param);
+
 		            params.push(param);
 		        }
 
@@ -160,7 +181,7 @@ Entry.PyBlockAssembler = function(blockSyntax) {
             	var test = unit.test;
                 if(test.type == 'Literal') {
 		            if(test.value)
-		            	var targetSyntax = String("if %1:\n$1\n");
+		            	var targetSyntax = String("if %1:\n$1");
 		        }
 		        var block = this.getBlock(targetSyntax);
 		        console.log("block", block);
