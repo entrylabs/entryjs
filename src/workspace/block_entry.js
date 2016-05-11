@@ -4450,7 +4450,7 @@ Entry.block = {
             },
             {
                 "type": "Text",
-                "text": " ",
+                "text": "",
                 "color": "#3D3D3D"
             }
         ],
@@ -4919,7 +4919,7 @@ Entry.block = {
             },
             {
                 "type": "Text",
-                "text": " ",
+                "text": "",
                 "color": "#3D3D3D"
             }
         ],

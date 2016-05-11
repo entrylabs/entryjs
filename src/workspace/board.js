@@ -757,7 +757,9 @@ Entry.Board = function(option) {
     };
 
     p.dominate = function(thread) {
+        if (!thread) return;
         var block = thread.getFirstBlock();
+        if (!block) return;
         this.svgBlockGroup
             .appendChild(block.view.svgGroup);
         this.code.dominate(block.thread);

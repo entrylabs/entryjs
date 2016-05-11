@@ -15589,7 +15589,7 @@ color:"#3D3D3D"}], events:{}, def:{params:[null, "YEAR", null], type:"get_date"}
   return a.callReturn();
 }}, timer_variable:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:"\ucd08\uc2dc\uacc4 \uac12", color:"#3D3D3D"}, {type:"Text", text:" ", color:"#3D3D3D"}], events:{}, def:{params:[null, null]}, func:function(b, a) {
   return Entry.container.inputValue.getValue();
-}}, get_project_timer_value:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_get_timer_value, color:"#3D3D3D"}, {type:"Text", text:" ", color:"#3D3D3D"}], events:{viewAdd:[function() {
+}}, get_project_timer_value:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_get_timer_value, color:"#3D3D3D"}, {type:"Text", text:"", color:"#3D3D3D"}], events:{viewAdd:[function() {
   Entry.engine && Entry.engine.showProjectTimer();
 }], viewDestroy:[function(b) {
   Entry.engine && Entry.engine.hideProjectTimer(b);
@@ -15625,7 +15625,7 @@ null], type:"index_of_string"}, paramsKeyMap:{LEFTHAND:1, RIGHTHAND:3}, "class":
 params:[Lang.Blocks.entry]}, null], type:"combine_something"}, paramsKeyMap:{VALUE1:1, VALUE2:3}, "class":"calc_string", isNotFor:[], func:function(b, a) {
   var c = a.getStringValue("VALUE1", a), d = a.getStringValue("VALUE2", a);
   return c + d;
-}}, get_sound_volume:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_get_sound_volume, color:"#3D3D3D"}, {type:"Text", text:" ", color:"#3D3D3D"}], events:{}, def:{params:[null, null], type:"get_sound_volume"}, "class":"calc", isNotFor:[""], func:function(b, a) {
+}}, get_sound_volume:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_get_sound_volume, color:"#3D3D3D"}, {type:"Text", text:"", color:"#3D3D3D"}], events:{}, def:{params:[null, null], type:"get_sound_volume"}, "class":"calc", isNotFor:[""], func:function(b, a) {
   return 100 * createjs.Sound.getVolume();
 }}, quotient_and_mod:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_quotient_and_mod_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_quotient_and_mod_2, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_quotient_and_mod_3, color:"#3D3D3D"}, {type:"Dropdown", options:[[Lang.Blocks.CALC_quotient_and_mod_sub_1, "QUOTIENT"], [Lang.Blocks.CALC_quotient_and_mod_sub_2, 
 "MOD"]], value:"QUOTIENT", fontSize:11}], events:{}, def:{params:[null, {type:"text", params:["10"]}, null, {type:"text", params:["10"]}, null, null], type:"quotient_and_mod"}, paramsKeyMap:{LEFTHAND:1, RIGHTHAND:3, OPERATOR:5}, "class":"calc", isNotFor:[], func:function(b, a) {
@@ -17857,7 +17857,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
     !0 !== a && (a = !1);
     for (var b = 0, d = 0, e = 0, f = 0, g = 0, h = 0, k = 0;k < this._contents.length;k++) {
       var l = this._contents[k];
-      l instanceof Entry.FieldLineBreak ? (this._alignStatement(a, f), l.align(f), f++, d = l.box.y, b = 8) : (l.align(b, d, a), k === this._contents.length - 1 || 0 == k && l instanceof Entry.FieldText && 0 == l._text.length || (b += Entry.BlockView.PARAM_SPACE));
+      l instanceof Entry.FieldLineBreak ? (this._alignStatement(a, f), l.align(f), f++, d = l.box.y, b = 8) : (l.align(b, d, a), k === this._contents.length - 1 || l instanceof Entry.FieldText && 0 == l._text.length || (b += Entry.BlockView.PARAM_SPACE));
       l = l.box;
       0 !== f ? h = Math.max(1E3 * Math.round(l.height), h) : e = Math.max(l.height, e);
       b += l.width;
@@ -18018,6 +18018,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
     }
     this.destroyShadow();
     delete this.originPos;
+    this.dominate();
   };
   b._getCloseBlock = function() {
     if (this._skeleton.magnets) {
@@ -20245,9 +20246,7 @@ Entry.Board = function(b) {
     }
   };
   b.dominate = function(a) {
-    a = a.getFirstBlock();
-    this.svgBlockGroup.appendChild(a.view.svgGroup);
-    this.code.dominate(a.thread);
+    a && (a = a.getFirstBlock()) && (this.svgBlockGroup.appendChild(a.view.svgGroup), this.code.dominate(a.thread));
   };
   b.setPatternRectFill = function(a) {
     this.patternRect.attr({fill:a});
@@ -20383,14 +20382,14 @@ Entry.skeleton.basic_string_field = {path:function(b) {
   var a = b.contentWidth;
   b = b.contentHeight;
   b = Math.max(18, b + 2);
-  a = Math.max(0, a - b + 4);
+  a = Math.max(0, a - b + 12);
   return "m %h,0 h %w a %h,%h 0 1,1 0,%wh H %h A %h,%h 0 1,1 %h,0 z".replace(/%wh/gi, b).replace(/%w/gi, a).replace(/%h/gi, b / 2);
 }, color:"#000", outerLine:!0, box:function(b) {
-  return {offsetX:0, offsetY:0, width:(b ? b.contentWidth : 5) + 4, height:Math.max((b ? b.contentHeight : 18) + 2, 18), marginBottom:0};
+  return {offsetX:0, offsetY:0, width:(b ? b.contentWidth : 5) + 12, height:Math.max((b ? b.contentHeight : 18) + 2, 18), marginBottom:0};
 }, magnets:function() {
   return {string:{}};
 }, contentPos:function(b) {
-  return {x:2, y:Math.max(b.contentHeight, 16) / 2 + 1};
+  return {x:6, y:Math.max(b.contentHeight, 16) / 2 + 1};
 }};
 Entry.skeleton.basic_boolean_field = {path:function(b) {
   var a = b.contentWidth;
