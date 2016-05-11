@@ -3412,7 +3412,8 @@ Entry.block = {
         ],
         "events": {},
         "def": {
-            "params": [ null ]
+            "params": [ null ],
+            "type": "angle"
         },
         "paramsKeyMap": {
             "ANGLE": 0
@@ -13067,7 +13068,8 @@ Entry.block = {
         ],
         "events": {},
         "def": {
-            "params": [ null ]
+            "params": [ null ],
+            "type": "get_sounds"
         },
         "paramsKeyMap": {
             "VALUE": 0
