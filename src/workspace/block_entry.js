@@ -15942,15 +15942,12 @@ Entry.block = {
             var entities = Ntry.entityManager.getEntitiesByComponent(
             Ntry.STATIC.UNIT);
 
-            console.log('hi');
-
             for (var key in entities)
                 this._unit = entities[key];
 
             Ntry.unitComp = Ntry.entityManager.getComponent(
             this._unit.id, Ntry.STATIC.UNIT);
-
-        },
+        }
     },
     "maze_step_jump": {
         "skeleton": "basic",
@@ -15963,10 +15960,26 @@ Entry.block = {
                 "size": 24
             }
         ],
-        "syntax": [
-            "Scope",
-            "jump"
-        ]
+        "syntax": [ "Scope", "jump" ],
+        func: function() {
+            if (!this.isContinue) {
+                this.isContinue = true;
+                this.isAction = true;
+                var self = this;
+                var callBack = function() {
+                    self.isAction = false;
+                };
+
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.JUMP, callBack);
+
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
     },
     "maze_step_for": {
         "skeleton": "basic_loop",
@@ -16003,7 +16016,22 @@ Entry.block = {
             {
                 "accept": "basic"
             }
-        ]
+        ],
+        func: function() {
+            if (this.repeatCount === undefined) {
+                this.repeatCount = this.block.params[0];
+                return Entry.STATIC.BREAK;
+            } else if (this.repeatCount > 0) {
+                this.repeatCount--;
+                var statement = this.block.statements[0];
+                if (statement.getBlocks().length === 0)
+                    return;
+                this.executor.stepInto(statement);
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.repeatCount;
+            }
+        }
     },
     "test": {
         "skeleton": "basic_boolean_field",
@@ -16056,7 +16084,15 @@ Entry.block = {
             {
                 "accept": "basic"
             }
-        ]
+        ],
+        func: function() {
+            var statement = this.block.statements[0];
+            if (statement.getBlocks().length === 0)
+                return;
+
+            this.executor.stepInto(statement);
+            return Entry.STATIC.BREAK;
+        }
     },
     "maze_repeat_until_2": {
         "skeleton": "basic_loop",
@@ -16108,7 +16144,62 @@ Entry.block = {
             {
                 "accept": "basic"
             }
-        ]
+        ],
+        func: function() {
+            if (this.isContinue)
+                return;
+            var entities =
+                Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+
+            var entity;
+            for (var key in entities)
+                entity = entities[key];
+
+            var unitComp = Ntry.entityManager.getComponent(
+                entity.id, Ntry.STATIC.UNIT);
+            var gridComp = Ntry.entityManager.getComponent(
+                entity.id, Ntry.STATIC.GRID);
+
+            var grid = {x: gridComp.x, y: gridComp.y};
+            Ntry.addVectorByDirection(grid, unitComp.direction, 1);
+
+            var existEntities = Ntry.entityManager.find(
+            {
+                type: Ntry.STATIC.GRID,
+                x: grid.x,
+                y: grid.y
+            });
+
+            var statement = this.block.statements[0];
+
+            if (existEntities.length === 0) {
+                this.executor.stepInto(statement);
+                return Entry.STATIC.BREAK;
+            }
+
+            var fitEntities = Ntry.entityManager.find(
+                {
+                    type: Ntry.STATIC.GRID,
+                    x: grid.x,
+                    y: grid.y
+                },
+                {
+                    type: Ntry.STATIC.TILE,
+                    tileType: Ntry.STATIC.WALL
+                }
+            );
+
+            this.isContinue = true;
+
+            if (fitEntities.length === 0) {
+                return;
+            } else if (statement.getBlocks().length === 0)
+                return;
+            else {
+                this.executor.stepInto(statement);
+                return Entry.STATIC.BREAK;
+            }
+        }
     },
     "maze_step_if_2": {
         "skeleton": "basic_loop",
@@ -16134,7 +16225,49 @@ Entry.block = {
             {
                 "accept": "basic"
             }
-        ]
+        ],
+        func: function() {
+            if (this.isContinue) return;
+
+            var entities =
+                Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+
+            var entity;
+            for (var key in entities)
+                entity = entities[key];
+
+            var unitComp = Ntry.entityManager.getComponent(
+                entity.id, Ntry.STATIC.UNIT);
+            var gridComp = Ntry.entityManager.getComponent(
+                entity.id, Ntry.STATIC.GRID);
+
+            var grid = {x: gridComp.x, y: gridComp.y};
+            Ntry.addVectorByDirection(grid, unitComp.direction, 1);
+
+            var fitEntities = Ntry.entityManager.find(
+                {
+                    type: Ntry.STATIC.GRID,
+                    x: grid.x,
+                    y: grid.y
+                },
+                {
+                    type: Ntry.STATIC.TILE,
+                    tileType: Ntry.STATIC.OBSTACLE_BEE
+                }
+            );
+
+            this.isContinue = true;
+
+            var statement = this.block.statements[0];
+            if (fitEntities.length === 0) {
+                return;
+            } else if (statement.getBlocks().length === 0)
+                return;
+            else {
+                this.executor.stepInto(statement);
+                return Entry.STATIC.BREAK;
+            }
+        }
     },
     "maze_call_function": {
         "skeleton": "basic",
@@ -16150,7 +16283,26 @@ Entry.block = {
                 "img": "/img/assets/week/blocks/function.png",
                 "size": 24
             }
-        ]
+        ],
+        func: function() {
+            if (!this.funcExecutor) {
+                var codes =
+                    Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.CODE);
+
+                for (var key in codes) {
+                    var code = codes[key].components[Ntry.STATIC.CODE].code;
+                    this.funcExecutor = new Entry.Executor(
+                        code.getEventMap("define")[0]
+                    );
+                }
+            }
+
+            this.funcExecutor.execute();
+            if (this.funcExecutor.scope.block === null)
+                return;
+            else
+                return Entry.STATIC.BREAK;
+        }
     },
     "maze_define_function": {
         "skeleton": "basic_define",
@@ -16171,7 +16323,17 @@ Entry.block = {
             {
                 "accept": "basic"
             }
-        ]
+        ],
+        func: function(executor) {
+            if (this.executed)
+                return;
+            var statement = this.block.statements[0];
+            if (statement.getBlocks().length === 0)
+                return;
+            this.executor.stepInto(statement);
+            this.executed = true;
+            return Entry.STATIC.BREAK;
+        }
     },
     "maze_step_if_3": {
         "skeleton": "basic_loop",
@@ -16197,7 +16359,49 @@ Entry.block = {
             {
                 "accept": "basic"
             }
-        ]
+        ],
+        func: function() {
+            if (this.isContinue) return;
+
+            var entities =
+                Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+
+            var entity;
+            for (var key in entities)
+                entity = entities[key];
+
+            var unitComp = Ntry.entityManager.getComponent(
+                entity.id, Ntry.STATIC.UNIT);
+            var gridComp = Ntry.entityManager.getComponent(
+                entity.id, Ntry.STATIC.GRID);
+
+            var grid = {x: gridComp.x, y: gridComp.y};
+            Ntry.addVectorByDirection(grid, unitComp.direction, 1);
+
+            var fitEntities = Ntry.entityManager.find(
+                {
+                    type: Ntry.STATIC.GRID,
+                    x: grid.x,
+                    y: grid.y
+                },
+                {
+                    type: Ntry.STATIC.TILE,
+                    tileType: Ntry.STATIC.OBSTACLE_BANANA
+                }
+            );
+
+            this.isContinue = true;
+
+            var statement = this.block.statements[0];
+            if (fitEntities.length === 0) {
+                return;
+            } else if (statement.getBlocks().length === 0)
+                return;
+            else {
+                this.executor.stepInto(statement);
+                return Entry.STATIC.BREAK;
+            }
+        }
     },
     "maze_step_if_4": {
         "skeleton": "basic_loop",
@@ -16223,7 +16427,49 @@ Entry.block = {
             {
                 "accept": "basic"
             }
-        ]
+        ],
+    func: function() {
+            if (this.isContinue) return;
+
+            var entities =
+                Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+
+            var entity;
+            for (var key in entities)
+                entity = entities[key];
+
+            var unitComp = Ntry.entityManager.getComponent(
+                entity.id, Ntry.STATIC.UNIT);
+            var gridComp = Ntry.entityManager.getComponent(
+                entity.id, Ntry.STATIC.GRID);
+
+            var grid = {x: gridComp.x, y: gridComp.y};
+            Ntry.addVectorByDirection(grid, unitComp.direction, 1);
+
+            var fitEntities = Ntry.entityManager.find(
+                {
+                    type: Ntry.STATIC.GRID,
+                    x: grid.x,
+                    y: grid.y
+                },
+                {
+                    type: Ntry.STATIC.TILE,
+                    tileType: Ntry.STATIC.WALL
+                }
+            );
+
+            this.isContinue = true;
+
+            var statement = this.block.statements[0];
+            if (fitEntities.length === 0) {
+                return;
+            } else if (statement.getBlocks().length === 0)
+                return;
+            else {
+                this.executor.stepInto(statement);
+                return Entry.STATIC.BREAK;
+            }
+        }
     },
     "maze_step_move_step": {
         "skeleton": "basic",
@@ -16241,10 +16487,7 @@ Entry.block = {
             }
         ],
         func: function() {
-
-            console.log('hiii');
             if (!this.isContinue) {
-
                 this.isContinue = true;
                 this.isAction = true;
                 var self = this;
@@ -16277,7 +16520,28 @@ Entry.block = {
                 "img": "/img/assets/week/blocks/turnL.png",
                 "size": 24
             }
-        ]
+        ],
+        func: function() {
+            if (!this.isContinue) {
+
+                this.isContinue = true;
+                this.isAction = true;
+                var self = this;
+                var callBack = function() {
+                    self.isAction = false;
+                };
+
+                // turn direction
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, callBack);
+
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
     },
     "maze_step_rotate_right": {
         "skeleton": "basic",
@@ -16293,7 +16557,28 @@ Entry.block = {
                 "img": "/img/assets/week/blocks/turnR.png",
                 "size": 24
             }
-        ]
+        ],
+        func: function() {
+            if (!this.isContinue) {
+
+                this.isContinue = true;
+                this.isAction = true;
+                var self = this;
+                var callBack = function() {
+                    self.isAction = false;
+                };
+
+                // turn direction
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, callBack);
+
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
     },
     "test_wrapper": {
         "skeleton": "basic",
