@@ -96,6 +96,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         );
 
         this.svgDom.mouseenter(function(e) {
+            if (that._scroller) that._scroller.setOpacity(1);
+
             var selectedBlockView = that.workspace.selectedBlockView;
             if (!Entry.playground || Entry.playground.resizing ||
                 (selectedBlockView && selectedBlockView.dragMode === Entry.DRAG_MODE_DRAG)) return;
@@ -112,6 +114,10 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
         this.svgDom.mouseleave(function(e) {
             if (!Entry.playground || Entry.playground.resizing) return;
+
+            if (that._scroller)
+                that._scroller.setOpacity(0);
+
 
             var widthBackup = this.widthBackup;
             if (widthBackup)
@@ -481,9 +487,19 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     p._addControl = function(dom) {
         var that = this;
+        var svgDom = this.svgDom;
         dom.on('wheel', function(){
             that._mouseWheel.apply(that, arguments);
         });
+
+        //svgDom.on('mouseout', function(e){
+            //var offset = that.offset;
+            //var width = that._expandWidth || that._svgWidth;
+
+            //if (offset.left > e.clientX -2 || offset.top > e.clientY -2 ||
+                //(offset.left + width -2 < e.clientX ))
+                //that._scroller.setOpacity(0);
+        //});
     };
 
     p._mouseWheel = function(e) {
@@ -510,6 +526,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     p._handleDragBlock = function() {
         this._boardBlockView = null;
+        if (this._scroller) this._scroller.setOpacity(0);
     };
 
     p._captureKeyEvent = function(e) {
