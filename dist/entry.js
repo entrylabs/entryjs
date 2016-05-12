@@ -848,8 +848,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
+  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(c, d);
   return a.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1943,10 +1943,10 @@ Entry.block.wait_second = function(b, a) {
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a);
+  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
   setTimeout(function() {
     a.timeFlag = 0;
-  }, 60 / (Entry.FPS || 60) * c * 1E3);
+  }, c);
   return a;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -10345,10 +10345,9 @@ Entry.popupHelper.prototype.hide = function() {
   this.body_.addClass("hiddenPopup");
 };
 Entry.getStartProject = function(b) {
-  return {category:"\uae30\ud0c0", scenes:[{name:"\uc7a5\uba74 1", id:"7dwq"}], variables:[{name:"\ucd08\uc2dc\uacc4", id:"brih", visible:!1, value:"0", variableType:"timer", x:150, y:-70, array:[], object:null, isCloud:!1}, {name:"\ub300\ub2f5", id:"1vu8", visible:!1, value:"0", variableType:"answer", x:150, y:-100, array:[], object:null, isCloud:!1}], objects:[{id:"7y0y", name:"\uc5d4\ud2b8\ub9ac\ubd07", script:[[{type:"length_of_string", x:200, y:140}], [{type:"when_run_button_click", x:40, y:240}, 
-  {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"repeat_basic", statements:[[{type:"move_direction"}, {type:"move_x"}, {type:"move_y"}, {type:"stop_repeat"}]]}, {type:"stop_repeat"}, {type:"move_direction"}]], selectedPictureId:"vx80", objectType:"sprite", rotateMethod:"free", scene:"7dwq", sprite:{sounds:[{duration:1.3, ext:".mp3", id:"8el5", fileurl:b + "media/bark.mp3", name:"\uac15\uc544\uc9c0 \uc9d6\ub294\uc18c\ub9ac"}], pictures:[{id:"vx80", fileurl:b + "media/entrybot1.png", 
-  name:"\uc5d4\ud2b8\ub9ac\ubd07_\uac77\uae301", scale:100, dimension:{width:284, height:350}}, {id:"vx80", fileurl:b + "media/entrybot1.png", name:Lang.Blocks.walking_entryBot + "1", scale:100, dimension:{width:284, height:350}}, {id:"4t48", fileurl:b + "media/entrybot2.png", name:Lang.Blocks.walking_entryBot + "2", scale:100, dimension:{width:284, height:350}}]}, entity:{x:0, y:0, regX:142, regY:175, scaleX:.3154574132492113, scaleY:.3154574132492113, rotation:0, direction:90, width:284, height:350, 
-  visible:!0}, lock:!1, active:!0}], speed:60};
+  return {category:"\uae30\ud0c0", scenes:[{name:"\uc7a5\uba74 1", id:"7dwq"}], variables:[{name:"\ucd08\uc2dc\uacc4", id:"brih", visible:!1, value:"0", variableType:"timer", x:150, y:-70, array:[], object:null, isCloud:!1}, {name:"\ub300\ub2f5", id:"1vu8", visible:!1, value:"0", variableType:"answer", x:150, y:-100, array:[], object:null, isCloud:!1}], objects:[{id:"7y0y", name:"\uc5d4\ud2b8\ub9ac\ubd07", script:[[{type:"when_run_button_click", x:40, y:50}, {type:"repeat_basic", statements:[[{type:"move_direction"}]]}]], 
+  selectedPictureId:"vx80", objectType:"sprite", rotateMethod:"free", scene:"7dwq", sprite:{sounds:[{duration:1.3, ext:".mp3", id:"8el5", fileurl:b + "media/bark.mp3", name:"\uac15\uc544\uc9c0 \uc9d6\ub294\uc18c\ub9ac"}], pictures:[{id:"vx80", fileurl:b + "media/entrybot1.png", name:Lang.Blocks.walking_entryBot + "1", scale:100, dimension:{width:284, height:350}}, {id:"4t48", fileurl:b + "media/entrybot2.png", name:Lang.Blocks.walking_entryBot + "2", scale:100, dimension:{width:284, height:350}}]}, 
+  entity:{x:0, y:0, regX:142, regY:175, scaleX:.3154574132492113, scaleY:.3154574132492113, rotation:0, direction:90, width:284, height:350, visible:!0}, lock:!1, active:!0}], speed:60};
 };
 Entry.PropertyPanel = function() {
   this.modes = {};
@@ -12226,7 +12225,7 @@ Entry.Model = function(b, a) {
 })(Entry.Model);
 Entry.Func = function(b) {
   this.id = b ? b.id : Entry.generateHash();
-  this.content = b ? new Entry.Code(b.content) : new Entry.Code([[{type:"function_create", x:40, y:40}]]);
+  this.content = b ? new Entry.Code(b.content) : new Entry.Code([[{type:"function_create", deletable:!1, x:40, y:40}]]);
   this.block = null;
   this.hashMap = {};
   this.paramMap = {};
@@ -15253,8 +15252,8 @@ size:12}], events:{}, def:{params:[null, null, null]}, paramsKeyMap:{DIRECTION:0
   return Entry.hw.getDigitalPortValue(c);
 }}, arduino_toggle_led:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[[Lang.Blocks.ARDUINO_on, "on"], [Lang.Blocks.ARDUINO_off, "off"]], value:"on", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"arduino_get_port_number"}, null, null], type:"arduino_toggle_led"}, paramsKeyMap:{VALUE:0, OPERATOR:1}, "class":"arduino_set", isNotFor:["arduino"], 
 func:function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
+  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(c, d);
   return a.callReturn();
 }}, arduino_toggle_pwm:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"arduino_get_pwm_port_number"}, {type:"arduino_text", params:["255"]}, null], type:"arduino_toggle_pwm"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"arduino_set", isNotFor:["arduino"], func:function(b, a) {
   var c = a.getNumberValue("PORT"), d = a.getNumberValue("VALUE"), d = Math.round(d), d = Math.max(d, 0), d = Math.min(d, 255);
@@ -15670,10 +15669,10 @@ params:[Lang.Blocks.entry]}, null], type:"combine_something"}, paramsKeyMap:{VAL
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a);
+  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
   setTimeout(function() {
     a.timeFlag = 0;
-  }, 60 / (Entry.FPS || 60) * c * 1E3);
+  }, c);
   return a;
 }}, repeat_basic:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"repeat_basic"}, paramsKeyMap:{VALUE:0}, statementsKeyMap:{DO:0}, "class":"repeat", isNotFor:[], func:function(b, a) {
   var c;
@@ -15751,8 +15750,9 @@ params:[Lang.Blocks.entry]}, null], type:"combine_something"}, paramsKeyMap:{VAL
   return a.callReturn();
 }}, functionAddButton:{skeleton:"basic_button", color:"#eee", isNotFor:["functionInit"], params:[{type:"Text", text:Lang.Workspace.function_create, color:"#333", align:"center"}], events:{mousedown:[function() {
   Entry.variableContainer.createFunction();
-}]}}, function_field_label:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#f9c535", params:[{type:"TextInput", value:Lang.Blocks.FUNCTION_explanation_1}, {type:"Output", accept:"paramMagnet"}], def:{params:["\uc774\ub984"], type:"function_field_label"}}, function_field_string:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#ffd974", params:[{type:"Block", accept:"stringMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}], def:{params:[{type:"text", params:["\ubb38\uc790/\uc22b\uc790\uac12"]}], 
-type:"function_field_string"}}, function_field_boolean:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#aeb8ff", params:[{type:"Block", accept:"booleanMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}], def:{params:[{type:"True", params:["\ud310\ub2e8\uac12"]}], type:"function_field_boolean"}}, function_param_string:{skeleton:"basic_string_field", color:"#ffd974", template:"%1 %2", events:{viewAdd:[function() {
+}]}}, function_field_label:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#f9c535", params:[{type:"TextInput", value:Lang.Blocks.FUNCTION_explanation_1}, {type:"Output", accept:"paramMagnet"}], paramsKeyMap:{NAME:0, NEXT:1}, def:{params:["\uc774\ub984"], type:"function_field_label"}}, function_field_string:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#ffd974", params:[{type:"Block", accept:"stringMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}], paramsKeyMap:{PARAM:0, 
+NEXT:1}, def:{params:[{type:"text", params:["\ubb38\uc790/\uc22b\uc790\uac12"]}], type:"function_field_string"}}, function_field_boolean:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#aeb8ff", params:[{type:"Block", accept:"booleanMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}], paramsKeyMap:{PARAM:0, NEXT:1}, def:{params:[{type:"True", params:["\ud310\ub2e8\uac12"]}], type:"function_field_boolean"}}, function_param_string:{skeleton:"basic_string_field", color:"#ffd974", 
+template:"%1 %2", events:{viewAdd:[function() {
   Entry.Func.refreshMenuCode();
 }]}, func:function() {
   return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
@@ -19475,9 +19475,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     this._attachDisposeEvent();
     this.optionGroup = Entry.Dom("ul", {class:"entry-widget-dropdown", parent:$("body")});
     for (var b = this._contents.options, b = this._contents.options, d = 0, e = b.length;d < e;d++) {
-      var f = b[d], g = f[0], f = f[1], h = Entry.Dom("li", {class:"rect", parent:this.optionGroup}), k = "";
-      this.getValue() == f && (k += "\u2713  ");
-      h.text(k += g);
+      var f = b[d], g = f[0], f = f[1], h = Entry.Dom("li", {class:"rect", parent:this.optionGroup}), k = Entry.Dom("span", {class:"left", parent:h});
+      Entry.Dom("span", {class:"right", parent:h}).text(g);
+      this.getValue() == f && k.text("\u2713");
       (function(b, c) {
         b.bind("mousedown touchstart", function(a) {
           a.stopPropagation();
@@ -19521,7 +19521,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         return f[0];
       }
     }
-    return a;
+    return Lang.Blocks.no_target;
   };
 })(Entry.FieldDropdown.prototype);
 Entry.FieldDropdownDynamic = function(b, a, c) {
@@ -19555,9 +19555,9 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
     var b = Entry.container.getDropdownList(this._contents.menuName);
     this._contents.options = b;
     for (var d = 0;d < b.length;d++) {
-      var e = b[d], f = e[0], e = e[1], g = Entry.Dom("li", {class:"rect", parent:this.optionGroup}), h = "";
-      this.getValue() == e && (h += "\u2713  ");
-      g.text(h += f);
+      var e = b[d], f = e[0], e = e[1], g = Entry.Dom("li", {class:"rect", parent:this.optionGroup}), h = Entry.Dom("span", {class:"left", parent:g});
+      Entry.Dom("span", {class:"right", parent:g}).text(f);
+      this.getValue() == e && h.text("\u2713");
       (function(b, c) {
         b.mousedown(function(a) {
           a.stopPropagation();
@@ -21422,11 +21422,17 @@ Entry.FieldTrashcan = function(b) {
   b._generateView = function() {
     this.svgGroup = this.board.svg.elem("g");
     this.renderStart();
+    this._addControl();
   };
   b.renderStart = function() {
     var a = Entry.mediaFilePath + "delete_";
     this.trashcanTop = this.svgGroup.elem("image", {href:a + "cover.png", width:60, height:20});
     this.svgGroup.elem("image", {href:a + "body.png", y:20, width:60, height:60});
+  };
+  b._addControl = function() {
+    $(this.svgGroup).bind("mousedown", function(a) {
+      Entry.Utils.isRightButton(a) && (a.stopPropagation(), $("#entryWorkspaceBoard").css("background", "white"));
+    });
   };
   b.updateDragBlock = function() {
     var a = this.board.dragBlock, b = this.dragBlockObserver;

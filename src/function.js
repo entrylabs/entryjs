@@ -16,6 +16,7 @@ Entry.Func = function(func) {
         [
             {
                 type: "function_create",
+                deletable: false,
                 x: 40, y: 40
             }
         ]

@@ -17,6 +17,7 @@ Entry.FieldTrashcan = function(board) {
     p._generateView = function() {
         this.svgGroup = this.board.svg.elem("g");
         this.renderStart();
+        this._addControl();
     };
 
     p.renderStart = function() {
@@ -33,6 +34,17 @@ Entry.FieldTrashcan = function(board) {
             width: 60,
             height: 60
         });
+    };
+
+    p._addControl = function() {
+        var that = this;
+        $(this.svgGroup).bind( 'mousedown', function(e) {
+            if (Entry.Utils.isRightButton(e)) {
+                e.stopPropagation();
+                $('#entryWorkspaceBoard').css('background', 'white');
+            }
+        });
+
     };
 
     p.updateDragBlock = function() {

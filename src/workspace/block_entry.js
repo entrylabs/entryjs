@@ -5737,6 +5737,10 @@ Entry.block = {
                 "accept": "paramMagnet"
             }
         ],
+        paramsKeyMap:{
+            NAME: 0,
+            NEXT: 1
+        },
         "def": {
             "params": [ "이름" ],
             "type": "function_field_label"
@@ -5757,6 +5761,10 @@ Entry.block = {
                 "accept": "paramMagnet"
             }
         ],
+        paramsKeyMap:{
+            PARAM: 0,
+            NEXT: 1
+        },
         "def": {
             "params": [
                 {
@@ -5782,6 +5790,10 @@ Entry.block = {
                 "accept": "paramMagnet"
             }
         ],
+        paramsKeyMap:{
+            PARAM: 0,
+            NEXT: 1
+        },
         "def": {
             "params": [
                 {
