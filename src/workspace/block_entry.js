@@ -5817,7 +5817,8 @@ Entry.block = {
                 "type": "Block",
                 "accept": "paramMagnet",
                 "value": {
-                    "type": "function_field_label"
+                    "type": "function_field_label",
+                    "params": [Lang.Blocks.FUNC]
                 }
             },
             {
@@ -5835,7 +5836,13 @@ Entry.block = {
     "function_general": {
         "skeleton": "basic",
         "color": "#cc7337",
-        "params": [],
+        "params": [
+            {
+                "type": "Indicator",
+                "img": "/lib/entryjs/images/block_icon/function_03.png",
+                "size": 12
+            }
+        ],
         "events": {
             "dataAdd": [
                 function(block) {
