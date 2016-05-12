@@ -12410,6 +12410,7 @@ Entry.Func.prototype.generateBlock = function(b) {
   this.description = b.description;
 };
 Entry.Func.generateWsBlock = function(b) {
+  this.unbindFuncChangeEvent();
   b = b ? b : this.targetFunc;
   for (var a = b.content.getEventMap("funcDef")[0].params[0], c = 0, d = 0, e = [], f = "", g = b.hashMap, h = b.paramMap;a;) {
     var k = a.params[0];
@@ -12435,13 +12436,13 @@ Entry.Func.generateWsBlock = function(b) {
   e.push({type:"Indicator", img:"/lib/entryjs/images/block_icon/function_03.png", size:12});
   Entry.Mutator.mutate("func_" + b.id, {params:e, template:f});
   for (var l in g) {
-    g[l] ? (b = -1 < l.indexOf("string") ? Lang.Blocks.FUNCTION_character_variable : Lang.Blocks.FUNCTION_logical_variable, Entry.Mutator.mutate(l, {template:b})) : g[l] = !0;
+    g[l] ? (a = -1 < l.indexOf("string") ? Lang.Blocks.FUNCTION_character_variable : Lang.Blocks.FUNCTION_logical_variable, Entry.Mutator.mutate(l, {template:a})) : g[l] = !0;
   }
-  this.refreshMenuCode();
+  this.bindFuncChangeEvent(b);
 };
 Entry.Func.bindFuncChangeEvent = function(b) {
   b = b ? b : this.targetFunc;
-  this._funcChangeEvent || (this._funcChangeEvent = b.content.getEventMap("funcDef")[0].view._contents[1].changeEvent.attach(this, this.generateWsBlock));
+  !this._funcChangeEvent && b.content.getEventMap("funcDef")[0].view && (this._funcChangeEvent = b.content.getEventMap("funcDef")[0].view._contents[1].changeEvent.attach(this, this.generateWsBlock));
 };
 Entry.Func.unbindFuncChangeEvent = function() {
   this._funcChangeEvent && this._funcChangeEvent.destroy();
@@ -15751,9 +15752,13 @@ params:[Lang.Blocks.entry]}, null], type:"combine_something"}, paramsKeyMap:{VAL
 }}, functionAddButton:{skeleton:"basic_button", color:"#eee", isNotFor:["functionInit"], params:[{type:"Text", text:Lang.Workspace.function_create, color:"#333", align:"center"}], events:{mousedown:[function() {
   Entry.variableContainer.createFunction();
 }]}}, function_field_label:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#f9c535", params:[{type:"TextInput", value:Lang.Blocks.FUNCTION_explanation_1}, {type:"Output", accept:"paramMagnet"}], def:{params:["\uc774\ub984"], type:"function_field_label"}}, function_field_string:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#ffd974", params:[{type:"Block", accept:"stringMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}], def:{params:[{type:"text", params:["\ubb38\uc790/\uc22b\uc790\uac12"]}], 
-type:"function_field_string"}}, function_field_boolean:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#aeb8ff", params:[{type:"Block", accept:"booleanMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}], def:{params:[{type:"True", params:["\ud310\ub2e8\uac12"]}], type:"function_field_boolean"}}, function_param_string:{skeleton:"basic_string_field", color:"#ffd974", template:"%1 %2", func:function() {
+type:"function_field_string"}}, function_field_boolean:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#aeb8ff", params:[{type:"Block", accept:"booleanMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}], def:{params:[{type:"True", params:["\ud310\ub2e8\uac12"]}], type:"function_field_boolean"}}, function_param_string:{skeleton:"basic_string_field", color:"#ffd974", template:"%1 %2", events:{viewAdd:[function() {
+  Entry.Func.refreshMenuCode();
+}]}, func:function() {
   return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
-}}, function_param_boolean:{skeleton:"basic_boolean_field", color:"#aeb8ff", template:"%1 %2", func:function() {
+}}, function_param_boolean:{skeleton:"basic_boolean_field", color:"#aeb8ff", template:"%1 %2", events:{viewAdd:[function() {
+  Entry.Func.refreshMenuCode();
+}]}, func:function() {
   return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
 }}, function_create:{skeleton:"basic", color:"#cc7337", event:"funcDef", params:[{type:"Block", accept:"paramMagnet", value:{type:"function_field_label", params:[Lang.Blocks.FUNC]}}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/function_03.png", size:12}], paramsKeyMap:{FIELD:0}, func:function() {
 }}, function_general:{skeleton:"basic", color:"#cc7337", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/function_03.png", size:12}], events:{dataAdd:[function(b) {

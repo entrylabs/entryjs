@@ -337,6 +337,7 @@ Entry.Func.prototype.generateBlock = function(toSave) {
 };
 
 Entry.Func.generateWsBlock = function(targetFunc) {
+    this.unbindFuncChangeEvent();
     targetFunc = targetFunc ? targetFunc : this.targetFunc;
     var defBlock = targetFunc.content.getEventMap("funcDef")[0];
     var outputBlock = defBlock.params[0];
@@ -411,13 +412,12 @@ Entry.Func.generateWsBlock = function(targetFunc) {
         }
     }
 
-    this.refreshMenuCode();
-
+    this.bindFuncChangeEvent(targetFunc);
 };
 
 Entry.Func.bindFuncChangeEvent = function(targetFunc) {
     targetFunc = targetFunc ? targetFunc : this.targetFunc;
-    if (!this._funcChangeEvent)
+    if (!this._funcChangeEvent && targetFunc.content.getEventMap("funcDef")[0].view)
         this._funcChangeEvent = targetFunc.content
             .getEventMap("funcDef")[0].view._contents[1]
             .changeEvent.attach(this, this.generateWsBlock);
