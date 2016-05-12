@@ -221,6 +221,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
                 return option[0];
         }
         //no match found
-        return value;
+        return Lang.Blocks.no_target;
     };
 })(Entry.FieldDropdown.prototype);
