@@ -14911,7 +14911,7 @@ if ("object" !== typeof Entry) {
 if ("object" == typeof exports) {
   var Lang = require("../../extern/lang/ko.js").Lang
 }
-Entry.block = {albert_hand_found:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], params:[], events:{}, def:{params:[], type:"albert_hand_found"}, "class":"albert_sensor", isNotFor:["albert"], func:function(b, a) {
+Entry.block = {albert_hand_found:{color:"#00979D", fontColor:"#fff", skeleton:"basic_boolean_field", statements:[], params:[], events:{}, def:{params:[], type:"albert_hand_found"}, "class":"albert_sensor", isNotFor:["albert"], func:function(b, a) {
   var c = Entry.hw.portData;
   return 40 < c.leftProximity || 40 < c.rightProximity;
 }}, albert_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.ALBERT_sensor_leftProximity, "leftProximity"], [Lang.Blocks.ALBERT_sensor_rightProximity, "rightProximity"], [Lang.Blocks.ALBERT_sensor_light, "light"], [Lang.Blocks.ALBERT_sensor_battery, "battery"], [Lang.Blocks.ALBERT_sensor_signalStrength, "signalStrength"], [Lang.Blocks.ALBERT_sensor_frontOid, "frontOid"], [Lang.Blocks.ALBERT_sensor_backOid, "backOid"], [Lang.Blocks.ALBERT_sensor_positionX, 
@@ -15240,10 +15240,10 @@ size:12}], events:{}, def:{params:[null, null, null]}, paramsKeyMap:{DIRECTION:0
   return a.getStringField("PORT");
 }}, arduino_get_pwm_port_number:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["3", "3"], ["5", "5"], ["6", "6"], ["9", "9"], ["10", "10"], ["11", "11"]], value:"3", fontSize:11}], events:{}, def:{params:[null]}, paramsKeyMap:{PORT:0}, func:function(b, a) {
   return a.getStringField("PORT");
-}}, arduino_get_number_sensor_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"arduino_get_sensor_number"}], type:"arduino_get_number_sensor_value"}, paramsKeyMap:{VALUE:0}, "class":"arduino_value", isNotFor:["arduino"], func:function(b, a) {
+}}, arduino_get_number_sensor_value:{color:"#00979D", fontColor:"#fff", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"arduino_get_sensor_number"}], type:"arduino_get_number_sensor_value"}, paramsKeyMap:{VALUE:0}, "class":"arduino_value", isNotFor:["arduino"], func:function(b, a) {
   var c = a.getValue("VALUE", a);
   return Entry.hw.getAnalogPortValue(c[1]);
-}}, arduino_get_digital_value:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"arduino_get_port_number"}], type:"arduino_get_digital_value"}, paramsKeyMap:{VALUE:0}, "class":"arduino_value", isNotFor:["arduino"], func:function(b, a) {
+}}, arduino_get_digital_value:{color:"#00979D", fontColor:"#fff", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"arduino_get_port_number"}], type:"arduino_get_digital_value"}, paramsKeyMap:{VALUE:0}, "class":"arduino_value", isNotFor:["arduino"], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   return Entry.hw.getDigitalPortValue(c);
 }}, arduino_toggle_led:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[[Lang.Blocks.ARDUINO_on, "on"], [Lang.Blocks.ARDUINO_off, "off"]], value:"on", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"arduino_get_port_number"}, null, null], type:"arduino_toggle_led"}, paramsKeyMap:{VALUE:0, OPERATOR:1}, "class":"arduino_set", isNotFor:["arduino"], 
@@ -15255,8 +15255,8 @@ func:function(b, a) {
   var c = a.getNumberValue("PORT"), d = a.getNumberValue("VALUE"), d = Math.round(d), d = Math.max(d, 0), d = Math.min(d, 255);
   Entry.hw.setDigitalPortValue(c, d);
   return a.callReturn();
-}}, arduino_convert_scale:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"arduino_get_number_sensor_value", params:[{type:"arduino_get_sensor_number", id:"bl5e"}]}, {type:"number", params:["0"]}, {type:"number", params:["1023"]}, {type:"number", params:["0"]}, 
-{type:"number", params:["100"]}], type:"arduino_convert_scale"}, paramsKeyMap:{VALUE1:0, VALUE2:1, VALUE3:2, VALUE4:3, VALUE5:4}, "class":"arduino", isNotFor:["arduino"], func:function(b, a) {
+}}, arduino_convert_scale:{color:"#00979D", fontColor:"#fff", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"arduino_get_number_sensor_value", params:[{type:"arduino_get_sensor_number", id:"bl5e"}]}, {type:"number", params:["0"]}, {type:"number", params:["1023"]}, {type:"number", 
+params:["0"]}, {type:"number", params:["100"]}], type:"arduino_convert_scale"}, paramsKeyMap:{VALUE1:0, VALUE2:1, VALUE3:2, VALUE4:3, VALUE5:4}, "class":"arduino", isNotFor:["arduino"], func:function(b, a) {
   var c = a.getNumberValue("VALUE1", a), d = a.getNumberValue("VALUE2", a), e = a.getNumberValue("VALUE3", a), f = a.getNumberValue("VALUE4", a), g = a.getNumberValue("VALUE5", a);
   if (d > e) {
     var h = d, d = e, e = h
@@ -15268,9 +15268,9 @@ func:function(b, a) {
   c = Math.min(g, c);
   c = Math.max(f, c);
   return Math.round(c);
-}}, sensorBoard_get_named_sensor_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["\uc18c\ub9ac", "0"], ["\ube5b \uac10\uc9c0", "1"], ["\uc2ac\ub77c\uc774\ub354", "2"], ["\uc628\ub3c4", "3"]], value:"0", fontSize:11}], events:{}, def:{params:[null], type:"sensorBoard_get_named_sensor_value"}, paramsKeyMap:{PORT:0}, "class":"sensorBoard", isNotFor:["sensorBoard"], func:function(b, a) {
+}}, sensorBoard_get_named_sensor_value:{color:"#00979D", fontColor:"#fff", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["\uc18c\ub9ac", "0"], ["\ube5b \uac10\uc9c0", "1"], ["\uc2ac\ub77c\uc774\ub354", "2"], ["\uc628\ub3c4", "3"]], value:"0", fontSize:11}], events:{}, def:{params:[null], type:"sensorBoard_get_named_sensor_value"}, paramsKeyMap:{PORT:0}, "class":"sensorBoard", isNotFor:["sensorBoard"], func:function(b, a) {
   return Entry.hw.getAnalogPortValue(a.getField("PORT", a));
-}}, sensorBoard_is_button_pressed:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[["\ube68\uac04", "8"], ["\ud30c\ub780", "9"], ["\ub178\ub780", "10"], ["\ucd08\ub85d", "11"]], value:"8", fontSize:11}], events:{}, def:{params:[null], type:"sensorBoard_is_button_pressed"}, paramsKeyMap:{PORT:0}, "class":"sensorBoard", isNotFor:["sensorBoard"], func:function(b, a) {
+}}, sensorBoard_is_button_pressed:{color:"#00979D", fontColor:"#fff", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[["\ube68\uac04", "8"], ["\ud30c\ub780", "9"], ["\ub178\ub780", "10"], ["\ucd08\ub85d", "11"]], value:"8", fontSize:11}], events:{}, def:{params:[null], type:"sensorBoard_is_button_pressed"}, paramsKeyMap:{PORT:0}, "class":"sensorBoard", isNotFor:["sensorBoard"], func:function(b, a) {
   return Entry.hw.getDigitalPortValue(a.getNumberField("PORT", a));
 }}, sensorBoard_led:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\ube68\uac04", "2"], ["\ucd08\ub85d", "3"], ["\ud30c\ub780", "4"], ["\ud770\uc0c9", "5"]], value:"2", fontSize:11}, {type:"Dropdown", options:[["\ucf1c\uae30", "255"], ["\ub044\uae30", "0"]], value:"255", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"sensorBoard_led"}, paramsKeyMap:{PORT:0, 
 OPERATOR:1}, "class":"sensorBoard", isNotFor:["sensorBoard"], func:function(b, a) {
@@ -15280,18 +15280,19 @@ OPERATOR:1}, "class":"sensorBoard", isNotFor:["sensorBoard"], func:function(b, a
 isNotFor:["arduinoConnected"], params:[{type:"Text", text:Lang.Blocks.ARDUINO_connected, color:"#333", align:"center"}], events:{mousedown:[null]}}, arduino_reconnect:{skeleton:"basic_button", color:"#eee", isNotFor:["arduinoDisconnected"], params:[{type:"Text", text:Lang.Blocks.ARDUINO_reconnect, color:"#333", align:"center"}], events:{mousedown:[null]}}, CODEino_get_sensor_number:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["0", "A0"], ["1", 
 "A1"], ["2", "A2"], ["3", "A3"], ["4", "A4"], ["5", "A5"], ["6", "A6"]], value:"A0", fontSize:11}], events:{}, def:{params:[null]}, paramsKeyMap:{PORT:0}, func:function(b, a) {
   return a.getStringField("PORT");
-}}, CODEino_get_named_sensor_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.CODEino_sensor_name_0, "0"], [Lang.Blocks.CODEino_sensor_name_1, "1"], [Lang.Blocks.CODEino_sensor_name_2, "2"], [Lang.Blocks.CODEino_sensor_name_3, "3"], [Lang.Blocks.CODEino_sensor_name_4, "4"], [Lang.Blocks.CODEino_sensor_name_5, "5"], [Lang.Blocks.CODEino_sensor_name_6, "6"]], value:"0", fontSize:11}], events:{}, def:{params:[null], type:"CODEino_get_named_sensor_value"}, 
-paramsKeyMap:{PORT:0}, "class":"CODEino", isNotFor:["CODEino"], func:function(b, a) {
+}}, CODEino_get_named_sensor_value:{color:"#00979D", fontColor:"#fff", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.CODEino_sensor_name_0, "0"], [Lang.Blocks.CODEino_sensor_name_1, "1"], [Lang.Blocks.CODEino_sensor_name_2, "2"], [Lang.Blocks.CODEino_sensor_name_3, "3"], [Lang.Blocks.CODEino_sensor_name_4, "4"], [Lang.Blocks.CODEino_sensor_name_5, "5"], [Lang.Blocks.CODEino_sensor_name_6, "6"]], value:"0", fontSize:11}], events:{}, def:{params:[null], 
+type:"CODEino_get_named_sensor_value"}, paramsKeyMap:{PORT:0}, "class":"CODEino", isNotFor:["CODEino"], func:function(b, a) {
   return Entry.hw.getAnalogPortValue(a.getField("PORT", a));
-}}, CODEino_get_sound_status:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.CODEino_string_11, "GREAT"], [Lang.Blocks.CODEino_string_12, "SMALL"]], value:"GREAT", fontSize:11}], events:{}, def:{params:[null], type:"CODEino_get_sound_status"}, paramsKeyMap:{STATUS:0}, "class":"CODEino", isNotFor:["CODEino"], func:function(b, a) {
+}}, CODEino_get_sound_status:{color:"#00979D", fontColor:"#fff", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.CODEino_string_11, "GREAT"], [Lang.Blocks.CODEino_string_12, "SMALL"]], value:"GREAT", fontSize:11}], events:{}, def:{params:[null], type:"CODEino_get_sound_status"}, paramsKeyMap:{STATUS:0}, "class":"CODEino", isNotFor:["CODEino"], func:function(b, a) {
   return "GREAT" == a.getField("STATUS", a) ? 600 < Entry.hw.getAnalogPortValue(0) ? 1 : 0 : 600 > Entry.hw.getAnalogPortValue(0) ? 1 : 0;
-}}, CODEino_get_light_status:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.CODEino_string_14, "BRIGHT"], [Lang.Blocks.CODEino_string_15, "DARK"]], value:"BRIGHT", fontSize:11}], events:{}, def:{params:[null], type:"CODEino_get_light_status"}, paramsKeyMap:{STATUS:0}, "class":"CODEino", isNotFor:["CODEino"], func:function(b, a) {
+}}, CODEino_get_light_status:{color:"#00979D", fontColor:"#fff", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.CODEino_string_14, "BRIGHT"], [Lang.Blocks.CODEino_string_15, "DARK"]], value:"BRIGHT", fontSize:11}], events:{}, def:{params:[null], type:"CODEino_get_light_status"}, paramsKeyMap:{STATUS:0}, "class":"CODEino", isNotFor:["CODEino"], func:function(b, a) {
   return "DARK" == a.getField("STATUS", a) ? 800 < Entry.hw.getAnalogPortValue(1) ? 1 : 0 : 800 > Entry.hw.getAnalogPortValue(1) ? 1 : 0;
-}}, CODEino_is_button_pressed:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.CODEino_string_3, "4"], [Lang.Blocks.CODEino_string_4, "17"], [Lang.Blocks.CODEino_string_5, "18"], [Lang.Blocks.CODEino_string_6, "19"], [Lang.Blocks.CODEino_string_7, "20"]], value:"4", fontSize:11}], events:{}, def:{params:[null], type:"CODEino_is_button_pressed"}, paramsKeyMap:{PORT:0}, "class":"CODEino", isNotFor:["CODEino"], func:function(b, a) {
+}}, CODEino_is_button_pressed:{color:"#00979D", fontColor:"#fff", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.CODEino_string_3, "4"], [Lang.Blocks.CODEino_string_4, "17"], [Lang.Blocks.CODEino_string_5, "18"], [Lang.Blocks.CODEino_string_6, "19"], [Lang.Blocks.CODEino_string_7, "20"]], value:"4", fontSize:11}], events:{}, def:{params:[null], type:"CODEino_is_button_pressed"}, paramsKeyMap:{PORT:0}, "class":"CODEino", isNotFor:["CODEino"], func:function(b, 
+a) {
   var c = a.getNumberField("PORT", a);
   return 14 < c ? !Entry.hw.getAnalogPortValue(c - 14) : !Entry.hw.getDigitalPortValue(c);
-}}, CODEino_get_accelerometer_direction:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.CODEino_string_16, "LEFT"], [Lang.Blocks.CODEino_string_17, "RIGHT"], [Lang.Blocks.CODEino_string_18, "FRONT"], [Lang.Blocks.CODEino_string_19, "REAR"], [Lang.Blocks.CODEino_string_20, "REVERSE"]], value:"LEFT", fontSize:11}], events:{}, def:{params:[null], type:"CODEino_get_accelerometer_direction"}, paramsKeyMap:{DIRECTION:0}, "class":"CODEino", 
-isNotFor:["CODEino"], func:function(b, a) {
+}}, CODEino_get_accelerometer_direction:{color:"#00979D", fontColor:"#fff", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.CODEino_string_16, "LEFT"], [Lang.Blocks.CODEino_string_17, "RIGHT"], [Lang.Blocks.CODEino_string_18, "FRONT"], [Lang.Blocks.CODEino_string_19, "REAR"], [Lang.Blocks.CODEino_string_20, "REVERSE"]], value:"LEFT", fontSize:11}], events:{}, def:{params:[null], type:"CODEino_get_accelerometer_direction"}, paramsKeyMap:{DIRECTION:0}, 
+"class":"CODEino", isNotFor:["CODEino"], func:function(b, a) {
   var c = a.getField("DIRECTION", a), d = 0;
   "LEFT" == c || "RIGHT" == c ? d = 3 : "FRONT" == c || "REAR" == c ? d = 4 : "REVERSE" == c && (d = 5);
   d = Entry.hw.getAnalogPortValue(d);
@@ -15320,10 +15321,10 @@ isNotFor:["CODEino"], func:function(b, a) {
   g = Math.min(f, g);
   g = Math.max(e, g);
   return Math.round(g);
-}}, bitbrick_sensor_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"DropdownDynamic", value:null, fontSize:11}], events:{}, def:{params:[null], type:"bitbrick_sensor_value"}, paramsKeyMap:{PORT:0}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
+}}, bitbrick_sensor_value:{color:"#00979D", fontColor:"#fff", skeleton:"basic_string_field", statements:[], params:[{type:"DropdownDynamic", value:null, fontSize:11}], events:{}, def:{params:[null], type:"bitbrick_sensor_value"}, paramsKeyMap:{PORT:0}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
   var c = a.getStringField("PORT");
   return Entry.hw.portData[c].value;
-}}, bitbrick_is_touch_pressed:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], params:[{type:"DropdownDynamic", value:null, fontSize:11}], events:{}, def:{params:[null], type:"bitbrick_is_touch_pressed"}, paramsKeyMap:{PORT:0}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
+}}, bitbrick_is_touch_pressed:{color:"#00979D", fontColor:"#fff", skeleton:"basic_boolean_field", statements:[], params:[{type:"DropdownDynamic", value:null, fontSize:11}], events:{}, def:{params:[null], type:"bitbrick_is_touch_pressed"}, paramsKeyMap:{PORT:0}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
   return 0 === Entry.hw.portData[a.getStringField("PORT")].value;
 }}, bitbrick_turn_off_color_led:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"bitbrick_turn_off_color_led", id:"i3je"}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
   Entry.hw.sendQueue.LEDR = 0;
@@ -15380,7 +15381,7 @@ paramsKeyMap:{PORT:0, DIRECTION:1, VALUE:2}, "class":"condition", isNotFor:["bit
   var c = a.getNumberValue("VALUE") + 1, c = Math.min(c, Entry.Bitbrick.servoMaxValue), c = Math.max(c, Entry.Bitbrick.servoMinValue);
   Entry.hw.sendQueue[a.getStringField("PORT")] = c;
   return a.callReturn();
-}}, bitbrick_convert_scale:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"DropdownDynamic", value:null, fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[null, {type:"number", params:["0"]}, {type:"number", params:["1023"]}, {type:"number", params:["-100"]}, {type:"number", params:["100"]}], type:"bitbrick_convert_scale"}, 
+}}, bitbrick_convert_scale:{color:"#00979D", fontColor:"#fff", skeleton:"basic_string_field", statements:[], params:[{type:"DropdownDynamic", value:null, fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[null, {type:"number", params:["0"]}, {type:"number", params:["1023"]}, {type:"number", params:["-100"]}, {type:"number", params:["100"]}], type:"bitbrick_convert_scale"}, 
 paramsKeyMap:{PORT:0, VALUE2:1, VALUE3:2, VALUE4:3, VALUE5:4}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
   var c = a.getNumberField("PORT"), d = Entry.hw.portData[c].value, c = a.getNumberValue("VALUE2", a), e = a.getNumberValue("VALUE3", a), f = a.getNumberValue("VALUE4", a), g = a.getNumberValue("VALUE5", a);
   if (f > g) {
@@ -15772,7 +15773,7 @@ type:"function_field_string"}}, function_field_boolean:{skeleton:"basic_param", 
   if (!this.funcExecutor.isEnd()) {
     return this.funcCode.removeExecutor(this.funcExecutor), Entry.STATIC.BREAK;
   }
-}}, hamster_hand_found:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], params:[], events:{}, def:{params:[], type:"hamster_hand_found"}, "class":"hamster_sensor", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_hand_found:{color:"#00979D", fontColor:"#fff", skeleton:"basic_boolean_field", statements:[], params:[], events:{}, def:{params:[], type:"hamster_hand_found"}, "class":"hamster_sensor", isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.portData;
   return 50 < c.leftProximity || 50 < c.rightProximity;
 }}, hamster_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.HAMSTER_sensor_leftProximity, "leftProximity"], [Lang.Blocks.HAMSTER_sensor_rightProximity, "rightProximity"], [Lang.Blocks.HAMSTER_sensor_leftFloor, "leftFloor"], [Lang.Blocks.HAMSTER_sensor_rightFloor, "rightFloor"], [Lang.Blocks.HAMSTER_sensor_accelerationX, "accelerationX"], [Lang.Blocks.HAMSTER_sensor_accelerationY, "accelerationY"], [Lang.Blocks.HAMSTER_sensor_accelerationZ, 
@@ -16609,7 +16610,7 @@ func:function(b, a) {
   delete a.frameCount;
   delete a.dDirection;
   return a.callReturn();
-}}, neobot_sensor_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["1\ubc88 \ud3ec\ud2b8", "1"], ["2\ubc88 \ud3ec\ud2b8", "2"], ["3\ubc88 \ud3ec\ud2b8", "3"], ["\ub9ac\ubaa8\ucee8", "4"]], value:"1", fontSize:11}], events:{}, def:{params:[null], type:"neobot_sensor_value"}, paramsKeyMap:{PORT:0}, "class":"neobot_value", isNotFor:["neobot"], func:function(b, a) {
+}}, neobot_sensor_value:{color:"#00979D", skeleton:"basic_string_field", fontColor:"#fff", statements:[], params:[{type:"Dropdown", options:[["1\ubc88 \ud3ec\ud2b8", "1"], ["2\ubc88 \ud3ec\ud2b8", "2"], ["3\ubc88 \ud3ec\ud2b8", "3"], ["\ub9ac\ubaa8\ucee8", "4"]], value:"1", fontSize:11}], events:{}, def:{params:[null], type:"neobot_sensor_value"}, paramsKeyMap:{PORT:0}, "class":"neobot_value", isNotFor:["neobot"], func:function(b, a) {
   var c = a.getStringField("PORT");
   return Entry.hw.portData[c];
 }}, neobot_turn_left:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc55e\uc73c\ub85c", "1"], ["\ub4a4\ub85c", "-1"]], value:"1", fontSize:11}, {type:"Dropdown", options:[["\ub290\ub9ac\uac8c", "1"], ["\ubcf4\ud1b5", "2"], ["\ube60\ub974\uac8c", "3"]], value:"1", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"neobot_turn_left"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, 
@@ -16707,15 +16708,15 @@ func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getStringField("PORT", a), e = a.getNumberField("VALUE", a);
   c[d] = e;
   return a.callReturn();
-}}, robotis_openCM70_cm_custom_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["BYTE", "BYTE"], ["WORD", "WORD"], ["DWORD", "DWORD"]], value:"BYTE", fontSize:11}], events:{}, def:{params:[{type:"number", params:["0"]}, null], type:"robotis_openCM70_cm_custom_value"}, paramsKeyMap:{VALUE:0, SIZE:1}, "class":"robotis_openCM70_custom", isNotFor:["robotis_openCM70"], func:function(b, a) {
+}}, robotis_openCM70_cm_custom_value:{color:"#00979D", fontColor:"#fff", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["BYTE", "BYTE"], ["WORD", "WORD"], ["DWORD", "DWORD"]], value:"BYTE", fontSize:11}], events:{}, def:{params:[{type:"number", params:["0"]}, null], type:"robotis_openCM70_cm_custom_value"}, paramsKeyMap:{VALUE:0, SIZE:1}, "class":"robotis_openCM70_custom", isNotFor:["robotis_openCM70"], func:function(b, a) {
   var c = Entry.Robotis_openCM70.INSTRUCTION.READ, d = 0, e = 0, f = 0, d = a.getStringField("SIZE");
   "BYTE" == d ? e = 1 : "WORD" == d ? e = 2 : "DWORD" == d && (e = 4);
   f = d = a.getNumberValue("VALUE");
   Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, e]]);
   Entry.Robotis_carCont.update();
   return Entry.hw.portData[f];
-}}, robotis_openCM70_sensor_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.robotis_cm_sound_detected, "CM_SOUND_DETECTED"], [Lang.Blocks.robotis_cm_sound_detecting, "CM_SOUND_DETECTING"], [Lang.Blocks.robotis_cm_user_button, "CM_USER_BUTTON"]], value:"CM_SOUND_DETECTED", fontSize:11}], events:{}, def:{params:[null], type:"robotis_openCM70_sensor_value"}, paramsKeyMap:{SENSOR:0}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], 
-func:function(b, a) {
+}}, robotis_openCM70_sensor_value:{color:"#00979D", fontColor:"#fff", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.robotis_cm_sound_detected, "CM_SOUND_DETECTED"], [Lang.Blocks.robotis_cm_sound_detecting, "CM_SOUND_DETECTING"], [Lang.Blocks.robotis_cm_user_button, "CM_USER_BUTTON"]], value:"CM_SOUND_DETECTED", fontSize:11}], events:{}, def:{params:[null], type:"robotis_openCM70_sensor_value"}, paramsKeyMap:{SENSOR:0}, "class":"robotis_openCM70_cm", 
+isNotFor:["robotis_openCM70"], func:function(b, a) {
   var c = Entry.Robotis_openCM70.INSTRUCTION.READ, d = 0, e = 0, f = 0, g = 0, h = a.getStringField("SENSOR");
   "CM_SOUND_DETECTED" == h ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1]) : "CM_SOUND_DETECTING" == h ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[0], 
   e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[1]) : "CM_USER_BUTTON" == h && (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1]);
@@ -16795,8 +16796,8 @@ type:"robotis_openCM70_aux_custom"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"ro
 }}, robotis_openCM70_cm_custom:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["0"]}, {type:"number", params:["0"]}, null], type:"robotis_openCM70_cm_custom"}, paramsKeyMap:{ADDRESS:0, VALUE:1}, "class":"robotis_openCM70_custom", isNotFor:["robotis_openCM70"], func:function(b, a) {
   var c = Entry.Robotis_openCM70.INSTRUCTION.WRITE, d = 0, e = 0, d = a.getNumberValue("ADDRESS"), e = a.getNumberValue("VALUE");
   return Entry.Robotis_carCont.postCallReturn(a, [[c, d, 65535 < e ? 4 : 255 < e ? 2 : 1, e]], Entry.Robotis_openCM70.delay);
-}}, robotis_carCont_sensor_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.robotis_cm_spring_left, "CM_SPRING_LEFT"], [Lang.Blocks.robotis_cm_spring_right, "CM_SPRING_RIGHT"], [Lang.Blocks.robotis_cm_switch, "CM_SWITCH"], [Lang.Blocks.robotis_cm_sound_detected, "CM_SOUND_DETECTED"], [Lang.Blocks.robotis_cm_sound_detecting, "CM_SOUND_DETECTING"], [Lang.Blocks.robotis_cm_ir_left, "CM_IR_LEFT"], [Lang.Blocks.robotis_cm_ir_right, "CM_IR_RIGHT"], 
-[Lang.Blocks.robotis_cm_calibration_left, "CM_CALIBRATION_LEFT"], [Lang.Blocks.robotis_cm_calibration_right, "CM_CALIBRATION_RIGHT"]], value:"CM_SPRING_LEFT", fontSize:11}], events:{}, def:{params:[null], type:"robotis_carCont_sensor_value"}, paramsKeyMap:{SENSOR:0}, "class":"robotis_carCont_cm", isNotFor:["robotis_carCont"], func:function(b, a) {
+}}, robotis_carCont_sensor_value:{color:"#00979D", fontColor:"#fff", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.robotis_cm_spring_left, "CM_SPRING_LEFT"], [Lang.Blocks.robotis_cm_spring_right, "CM_SPRING_RIGHT"], [Lang.Blocks.robotis_cm_switch, "CM_SWITCH"], [Lang.Blocks.robotis_cm_sound_detected, "CM_SOUND_DETECTED"], [Lang.Blocks.robotis_cm_sound_detecting, "CM_SOUND_DETECTING"], [Lang.Blocks.robotis_cm_ir_left, "CM_IR_LEFT"], [Lang.Blocks.robotis_cm_ir_right, 
+"CM_IR_RIGHT"], [Lang.Blocks.robotis_cm_calibration_left, "CM_CALIBRATION_LEFT"], [Lang.Blocks.robotis_cm_calibration_right, "CM_CALIBRATION_RIGHT"]], value:"CM_SPRING_LEFT", fontSize:11}], events:{}, def:{params:[null], type:"robotis_carCont_sensor_value"}, paramsKeyMap:{SENSOR:0}, "class":"robotis_carCont_cm", isNotFor:["robotis_carCont"], func:function(b, a) {
   var c = Entry.Robotis_carCont.INSTRUCTION.READ, d = 0, e = 0, f = 0, g = 0, h = a.getStringField("SENSOR");
   "CM_SPRING_LEFT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[2], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[3]) : "CM_SPRING_RIGHT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[2], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[3]) : 
   "CM_SWITCH" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[1]) : "CM_SOUND_DETECTED" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1]) : 
@@ -19824,7 +19825,7 @@ Entry.FieldText = function(b, a, c) {
   this._index = c;
   this.box = new Entry.BoxModel;
   this._fontSize = b.fontSize || a.getSkeleton().fontSize || 12;
-  this._color = b.color || a.getSkeleton().color || "white";
+  this._color = b.color || this._block._schema.fontColor || a.getSkeleton().color || "white";
   this._align = b.align || "left";
   this._text = this.getValue() || b.text;
   this.setValue(null);

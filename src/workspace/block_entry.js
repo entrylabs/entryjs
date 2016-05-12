@@ -8,6 +8,7 @@ if (typeof exports == "object") {
 Entry.block = {
     "albert_hand_found": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_boolean_field",
         "statements": [],
         "params": [],
@@ -1646,6 +1647,7 @@ Entry.block = {
     },
     "arduino_get_number_sensor_value": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -1675,6 +1677,7 @@ Entry.block = {
     },
     "arduino_get_digital_value": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_boolean_field",
         "statements": [],
         "params": [
@@ -1802,6 +1805,7 @@ Entry.block = {
     },
     "arduino_convert_scale": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -1893,6 +1897,7 @@ Entry.block = {
     },
     "sensorBoard_get_named_sensor_value": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -1924,6 +1929,7 @@ Entry.block = {
     },
     "sensorBoard_is_button_pressed": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_boolean_field",
         "statements": [],
         "params": [
@@ -2106,6 +2112,7 @@ Entry.block = {
     },
     "CODEino_get_named_sensor_value": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -2140,6 +2147,7 @@ Entry.block = {
     },
     "CODEino_get_sound_status": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_boolean_field",
         "statements": [],
         "params": [
@@ -2172,6 +2180,7 @@ Entry.block = {
     },
     "CODEino_get_light_status": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_boolean_field",
         "statements": [],
         "params": [
@@ -2204,6 +2213,7 @@ Entry.block = {
     },
     "CODEino_is_button_pressed": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_boolean_field",
         "statements": [],
         "params": [
@@ -2240,6 +2250,7 @@ Entry.block = {
     },
     "CODEino_get_accelerometer_direction": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_boolean_field",
         "statements": [],
         "params": [
@@ -2342,6 +2353,7 @@ Entry.block = {
     },
     "bitbrick_sensor_value": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -2368,6 +2380,7 @@ Entry.block = {
     },
     "bitbrick_is_touch_pressed": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_boolean_field",
         "statements": [],
         "params": [
@@ -2799,6 +2812,7 @@ Entry.block = {
     },
     "bitbrick_convert_scale": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -5866,6 +5880,7 @@ Entry.block = {
     },
     "hamster_hand_found": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_boolean_field",
         "statements": [],
         "params": [],
@@ -10586,6 +10601,7 @@ Entry.block = {
     "neobot_sensor_value": {
         "color": "#00979D",
         "skeleton": "basic_string_field",
+        "fontColor": "#fff",
         "statements": [],
         "params": [
             {
@@ -11141,6 +11157,7 @@ Entry.block = {
     },
     "robotis_openCM70_cm_custom_value": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -11210,6 +11227,7 @@ Entry.block = {
     },
     "robotis_openCM70_sensor_value": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -12263,6 +12281,7 @@ Entry.block = {
     },
     "robotis_carCont_sensor_value": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
