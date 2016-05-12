@@ -5796,6 +5796,13 @@ Entry.block = {
         "skeleton": "basic_string_field",
         "color": "#ffd974",
         "template": "%1 %2",
+        "events": {
+            "viewAdd": [
+                function() {
+                    Entry.Func.refreshMenuCode();
+                }
+            ]
+        },
         func: function() {
             return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
         }
@@ -5804,6 +5811,13 @@ Entry.block = {
         "skeleton": "basic_boolean_field",
         "color": "#aeb8ff",
         "template": "%1 %2",
+        "events": {
+            "viewAdd": [
+                function() {
+                    Entry.Func.refreshMenuCode();
+                }
+            ]
+        },
         func: function() {
             return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
         }
