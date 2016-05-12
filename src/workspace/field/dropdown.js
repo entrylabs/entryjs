@@ -137,6 +137,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             parent: $('body')
         });
 
+        this.optionGroup.bind('mousedown touchstart', function(e) {
+            e.stopPropagation();
+        });
+
         var options = this._contents.options;
 
         var OPTION_X_PADDING = 30;

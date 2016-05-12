@@ -19473,6 +19473,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     this.destroyOption();
     this._attachDisposeEvent();
     this.optionGroup = Entry.Dom("ul", {class:"entry-widget-dropdown", parent:$("body")});
+    this.optionGroup.bind("mousedown touchstart", function(a) {
+      a.stopPropagation();
+    });
     for (var b = this._contents.options, b = this._contents.options, d = 0, e = b.length;d < e;d++) {
       var f = b[d], g = f[0], f = f[1], h = Entry.Dom("li", {class:"rect", parent:this.optionGroup}), k = Entry.Dom("span", {class:"left", parent:h});
       Entry.Dom("span", {class:"right", parent:h}).text(g);
@@ -19551,6 +19554,9 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
     this.destroyOption();
     this._attachDisposeEvent();
     this.optionGroup = Entry.Dom("ul", {class:"entry-widget-dropdown", parent:$("body")});
+    this.optionGroup.bind("mousedown touchstart", function(a) {
+      a.stopPropagation();
+    });
     var b = Entry.container.getDropdownList(this._contents.menuName);
     this._contents.options = b;
     for (var d = 0;d < b.length;d++) {
@@ -20072,7 +20078,9 @@ Entry.GlobalSvg = {};
     var a = this._view, b = a.getAbsoluteCoordinate(), a = a.getBoard().offset;
     this.left = b.x + a.left - this._offsetX;
     this.top = b.y + a.top - this._offsetY;
-    this.svgDom.css({left:this.left, top:this.top});
+    b = this.svgDom[0];
+    b.style.left = this.left + "px";
+    b.style.top = this.top + "px";
   };
   b.terminateDrag = function(a) {
     var b = Entry.mouseCoordinate;
