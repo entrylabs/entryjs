@@ -191,6 +191,7 @@ Entry.Utils.hslToHex = function(color) {
 
 
 Entry.Utils.bindGlobalEvent = function(options) {
+    var doc = $(document);
     if (options === undefined)
         options = [
             'resize',
@@ -201,24 +202,37 @@ Entry.Utils.bindGlobalEvent = function(options) {
             'dispose'
         ];
 
-    if (!Entry.windowReszied && options.indexOf('resize') > -1) {
+    if (options.indexOf('resize') > -1) {
+        if (Entry.windowReszied) {
+            $(window).off('resize');
+            Entry.windowReszied.clear()
+        }
         Entry.windowResized = new Entry.Event(window);
         $(window).on('resize', (function(e) {
             Entry.windowResized.notify(e);
         }));
     }
 
-    if (!Entry.documentMousedown && options.indexOf('mousedown') > -1) {
+    if (options.indexOf('mousedown') > -1) {
+        if (Entry.documentMousedown) {
+            doc.off('mousedown');
+            Entry.documentMousedown.clear()
+        }
         Entry.documentMousedown = new Entry.Event(window);
-        $(document).on('mousedown', (function(e) {
+        doc.on('mousedown', (function(e) {
             Entry.documentMousedown.notify(e);
         }));
     }
 
-    if (!Entry.documentMousemove && options.indexOf('mousemove') > -1) {
+    if (options.indexOf('mousemove') > -1) {
+        if (Entry.documentMousemove) {
+            doc.off('touchmove mousemove');
+            Entry.documentMousemove.clear()
+        }
+
         Entry.mouseCoordinate = {};
         Entry.documentMousemove = new Entry.Event(window);
-        $(document).on('touchmove mousemove', (function(e) {
+        doc.on('touchmove mousemove', (function(e) {
             if (e.originalEvent && e.originalEvent.touches)
                 e = e.originalEvent.touches[0];
             Entry.documentMousemove.notify(e);
@@ -227,10 +241,14 @@ Entry.Utils.bindGlobalEvent = function(options) {
         }));
     }
 
-    if (!Entry.keyPressed && options.indexOf('keydown') > -1) {
+    if (options.indexOf('keydown') > -1) {
+        if (Entry.keyPressed)  {
+            doc.off('keydown');
+            Entry.keyPressed.clear()
+        }
         Entry.pressedKeys = [];
         Entry.keyPressed = new Entry.Event(window);
-        $(document).on('keydown', (function(e) {
+        doc.on('keydown', (function(e) {
             var keyCode = e.keyCode;
             if (Entry.pressedKeys.indexOf(keyCode) < 0)
                 Entry.pressedKeys.push(keyCode);
@@ -238,9 +256,13 @@ Entry.Utils.bindGlobalEvent = function(options) {
         }));
     }
 
-    if (!Entry.keyUpped && options.indexOf('keyup') > -1) {
+    if (options.indexOf('keyup') > -1) {
+        if (Entry.keyUpped) {
+            doc.off('keyup');
+            Entry.keyUpped.clear()
+        }
         Entry.keyUpped = new Entry.Event(window);
-        $(document).on('keyup', (function(e) {
+        doc.on('keyup', (function(e) {
             var keyCode = e.keyCode;
             var index = Entry.pressedKeys.indexOf(keyCode);
             if (index > -1) Entry.pressedKeys.splice(index,1);
@@ -248,7 +270,8 @@ Entry.Utils.bindGlobalEvent = function(options) {
         }));
     }
 
-    if (!Entry.disposeEvent && options.indexOf('dispose') > -1) {
+    if (options.indexOf('dispose') > -1) {
+        if (Entry.disposeEvent) Entry.disposeEvent.clear()
         Entry.disposeEvent = new Entry.Event(window);
         if (Entry.documentMousedown)
             Entry.documentMousedown.attach(this, function(e) {

@@ -16032,7 +16032,10 @@ Entry.block = {
         "skeleton": "basic",
         "color": "#A751E3",
         "params": [
-            "앞으로 가기",
+            {
+                text: "앞으로 가기",
+                type: "Text"
+            },
             {
                 "type": "Image",
                 "img": "/img/assets/ntry/bitmap/jr/cparty_go_straight.png",
