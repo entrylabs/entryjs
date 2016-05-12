@@ -328,7 +328,35 @@ Entry.Func.generateBlock = function(func) {
         template: blockSchema.template,
         params: blockSchema.params
     }
-    return {block: block, description: blockSchema.template};
+
+    var reg = /(%\d)/mi;
+    var templateParams = blockSchema.template.split(reg);
+    var description = "";
+    var booleanIndex = 0;
+    var stringIndex = 0;
+    for (var i in templateParams) {
+        var templateChunk = templateParams[i];
+        if (reg.test(templateChunk)) {
+            var paramIndex = Number(templateChunk.split('%')[1]) - 1;
+            var param = blockSchema.params[paramIndex];
+            if (param.type === "Indicator") {
+            } else if (param.accept === "booleanMagnet") {
+                description +=
+                    Lang.template.function_param_boolean +
+                    booleanIndex ? booleanIndex : "";
+                booleanIndex++;
+            } else {
+                description += Lang.General.param_string +
+                    stringIndex ? stringIndex : "";
+                stringIndex++;
+            }
+        } else {
+            description += templateChunk
+        }
+
+    }
+
+    return {block: block, description: description};
 };
 
 Entry.Func.prototype.generateBlock = function(toSave) {
