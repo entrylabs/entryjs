@@ -76,19 +76,25 @@ Entry.BlockToPyParser = function() {
                 if(schemaParams[index].type == "Indicator") {
                     index++;    
                 }
-
                 if(schemaParams[index].type == "Block") {
                     result += this.Block(dataParams[index]);
                 } 
                 else {
-                    result += this['Field' + schemaParams[index].type](dataParams[index]);
+                    var param = this['Field' + schemaParams[index].type](dataParams[index]);
+                    if(param == null)
+                        if(schemaParams[index].text)
+                            param = schemaParams[index].text;
+                        else
+                            param = null;
+
+                    result += param;
                 }
             } else if (statementReg.test(blockToken)) {
                 var statements = blockToken.split(statementReg);
                 for (var j=0; j<statements.length; j++) {
                     var statementToken = statements[j];
                     if (statementToken.length === 0) continue;
-                    if (statements.test(statementToken)) {
+                    if (statementReg.test(statementToken)) {
                         var index = Number(statementToken.split('$')[1]) - 1;
                         result += this.indent(this.Thread(block.statements[index]));
                     } else result += statementToken;
@@ -150,7 +156,7 @@ Entry.BlockToPyParser = function() {
     p.FieldText = function(param) {
         console.log("FieldText", param);
 
-        return this.Block(param);
+        return param;
     };
 
     p.FieldTextInput = function(param) {

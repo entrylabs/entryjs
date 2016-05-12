@@ -3,17 +3,15 @@
  */
 "use strict";
 
-goog.provide("Entry.BlockTemplate");
+goog.provide("Entry.BlockInfoExtractor");
 
-Entry.BlockTemplate = function(blockType) {
+Entry.BlockInfoExtractor = function(blockType) {
     
 };
 
 (function(p){
 	p.getParamsType = function(blockType) {
 		var targetBlock =  Entry.block[blockType];
-		console.log("targetBlock", targetBlock);
-
 		var params = targetBlock.params;
 		var paramsType = [];
 
@@ -25,4 +23,4 @@ Entry.BlockTemplate = function(blockType) {
 		return paramsType;
 	}
 
-})(Entry.BlockTemplate.prototype);
+})(Entry.BlockInfoExtractor.prototype);

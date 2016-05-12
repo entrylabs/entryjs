@@ -101,7 +101,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     if (this.overlayBoard) this.overlayBoard.hide();
                     this.board.show();
                     this.set({selectedBoard:this.board});
-                    this.textToCode();
+                    this.textToCode(oldMode);
+                    if (this.vimBoard) this.vimBoard.hide();
+                    if (this.overlayBoard) this.overlayBoard.hide();
                     this.blockMenu.renderBlock();
                     this.textType = message;
                     this.mode = mode;
@@ -139,12 +141,15 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         this.blockMenu.changeCode(code);
     };
 
-    p.textToCode = function() {
-        if (this.mode != Entry.Workspace.MODE_VIMBOARD) return;
+    p.textToCode = function(mode) {
+        if (mode != Entry.Workspace.MODE_VIMBOARD) return;
         var changedCode = this.vimBoard.textToCode();
-        console.log("changedCode", changedCode);
-        this.board.code.load(changedCode);
-        this.board.code.createView(this.board);
+        var board = this.board;
+        var code = board.code;
+
+        code.load(changedCode);
+        code.createView(board);
+       
         this.board.alignThreads();
         this.board.reDraw();
     };

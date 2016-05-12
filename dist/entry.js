@@ -2033,7 +2033,7 @@ Blockly.Blocks.if_else = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["if %1:\n $1\nelse:\n$2"]}};
+}, syntax:{js:[], py:["if %1:\n$1\nelse:\n$2"]}};
 Entry.block.if_else = function(b, a) {
   if (a.isLooped) {
     return delete a.isLooped, a.callReturn();
@@ -9816,20 +9816,18 @@ Entry.Painter.prototype.selectToolbox = function(b) {
       this.toggleCoordinator();
   }
 };
-Entry.BlockTemplate = function(b) {
+Entry.BlockInfoExtractor = function(b) {
 };
 (function(b) {
   b.getParamsType = function(a) {
-    a = Entry.block[a];
-    console.log("targetBlock", a);
-    a = a.params;
+    a = Entry.block[a].params;
     var b = [], d;
     for (d in a) {
       b.push(a[d].type);
     }
     return b;
   };
-})(Entry.BlockTemplate.prototype);
+})(Entry.BlockInfoExtractor.prototype);
 Entry.JsAstGenerator = function() {
 };
 (function(b) {
@@ -10207,85 +10205,101 @@ Entry.PyBlockAssembler = function(b) {
         } else {
           "__pythonRuntime" == String(d.object.object.name) && "functions" == String(d.object.property.name) && (e = String(d.property.name));
         }
-        e = this.getBlock(e);
-        b = Entry.BlockTemplate.prototype.getParamsType(e);
-        console.log("paramsType", b);
-        var f = [], d = [], arguments = a.expression.arguments;
-        console.log("arguments", arguments);
+        var f = this.getBlock(e);
+        b = Entry.BlockInfoExtractor.prototype.getParamsType(f);
+        e = [];
+        arguments = a.expression.arguments;
+        console.log("argument origin", arguments);
         if (arguments && arguments.length) {
-          for (var g in arguments) {
-            var h = arguments[g], k;
-            "UnaryExpression" == h.type ? h.prefix && (k = h.operator.concat(h.argument.value)) : "Literal" == h.type && (k = h.value);
-            f.push(k);
+          for (d = 0;d < arguments.length;d++) {
+            console.log("index arg", d, arguments[d]);
+            if ("Indicator" == b[d]) {
+              var g = null;
+              arguments.splice(d, 0, g);
+            } else {
+              g = "Block" == b[d] ? this.assemble(arguments[d]) : "Keyboard" == b[d] ? Entry.KeyboardCodeMap.prototype.keyCharToCode[arguments[d].value] : arguments[d].value;
+            }
+            e.push(g);
           }
         }
-        console.log("arg", h);
-        for (g = 0;g < f.length;g++) {
-          h = f[g], k = "string" === typeof h ? "text" : "number", "Indicator" == b[g] ? (h = null, f.splice(g, 0, h)) : h = "Block" == b[g] ? {type:k, params:[h]} : "Keyboard" == b[g] ? Entry.KeyboardCodeMap.prototype.keyCharToCode[h] : h, console.log("param kkk", h), d.push(h);
-        }
-        b = {type:e, params:d};
+        b = {type:f, params:e};
         console.log("ExpressionStatement result", b);
         break;
       case "WhileStatement":
         console.log("WhileStatement unit", a);
-        h = a.test;
-        "Literal" == h.type && h.value && (e = "while True:\n$1\n");
-        e = this.getBlock(e);
-        h = [];
-        k = a.body.body;
-        for (g in k) {
-          a = this.assemble(k[g]), h.push(a);
+        f = a.test;
+        e = [];
+        g = this.assemble(f);
+        e.push(g);
+        f = this.getBlock("while True:\n$1\n");
+        g = [];
+        b = a.body.body;
+        for (d in b) {
+          a = this.assemble(b[d]), g.push(a);
         }
-        b = {type:e, statements:[h]};
+        b = {type:f, statements:[g]};
         console.log("WhileStatement result", b);
         break;
       case "BlockStatement":
         console.log("BlockStatement unit", a);
         "range" == a.body[0].declarations[0].init.callee.property.name && (e = "for i in range");
-        e = this.getBlock(e);
-        console.log("block", e);
-        b = Entry.BlockTemplate.prototype.getParamsType(e);
-        console.log("paramsType", b);
-        f = [];
-        d = [];
+        f = this.getBlock(e);
+        b = Entry.BlockInfoExtractor.prototype.getParamsType(f);
+        e = [];
         if ((arguments = a.body[0].declarations[0].init.arguments) && arguments.length) {
-          for (g in arguments) {
-            h = arguments[g], "UnaryExpression" == h.type ? h.prefix && (k = h.operator.concat(h.argument.value)) : "Literal" == h.type && (k = h.value), f.push(k);
+          for (d = 0;d < arguments.length;d++) {
+            "Indicator" == b[d] ? (g = null, arguments.splice(d, 0, g)) : g = "Block" == b[d] ? this.assemble(arguments[d]) : "Keyboard" == b[d] ? Entry.KeyboardCodeMap.prototype.keyCharToCode[arguments[d].value] : arguments[d].value, e.push(g);
           }
         }
-        console.log("arg", h);
-        for (g = 0;g < f.length;g++) {
-          h = f[g], k = "string" === typeof h ? "text" : "number", "Indicator" == b[g] ? (h = null, f.splice(g, 0, h)) : h = "Block" == b[g] ? {type:k, params:[h]} : "Keyboard" == b[g] ? Entry.KeyboardCodeMap.prototype.keyCharToCode[h] : h, console.log("keyboard", h), d.push(h);
+        var h = a.body[1].consequent;
+        b = h.body[0].body;
+        b.shift();
+        g = [];
+        for (d in b) {
+          a = this.assemble(b[d]), g.push(a);
         }
-        h = a.body[1].consequent;
-        console.log("consequent", h);
-        k = h.body[0].body;
-        console.log("body", k);
-        k.shift();
-        h = [];
-        for (g in k) {
-          console.log("body[index]", k[g]), a = this.assemble(k[g]), h.push(a);
-        }
-        b = {type:e, params:d, statements:[h]};
+        b = {type:f, params:e, statements:[g]};
         console.log("BlockStatement result", b);
         break;
       case "IfStatement":
         console.log("IfStatement unit", a);
-        h = a.test;
-        "Literal" == h.type && h.value && (e = "if %1:\n$1");
-        e = this.getBlock(e);
-        console.log("block", e);
-        h = a.consequent;
-        k = h.body;
-        h = [];
-        for (g in k) {
-          a = this.assemble(k[g]), h.push(a);
+        f = a.test;
+        e = [];
+        g = this.assemble(f);
+        e.push(g);
+        var h = a.consequent, g = a.alternate, f = this.getBlock(null == g ? "if %1:\n$1" : "if %1:\n$1\nelse:\n$2"), k = [], l = [];
+        if (null != h) {
+          b = h.body;
+          for (d in b) {
+            a = this.assemble(b[d]), k.push(a);
+          }
+          b = {type:f, params:e, statements:[k]};
         }
-        b = {type:e, params:d, statements:[h]};
+        if (null != g) {
+          b = g.body;
+          for (d in b) {
+            a = this.assemble(b[d]), l.push(a);
+          }
+          b = {type:f, params:e, statements:[k, l]};
+        }
         console.log("IfStatement result", b);
         break;
       case "BreakStatement":
-        console.log("BreakStatement unit", a), e = this.getBlock("break"), console.log("block", e), b = {type:e}, console.log("BreakStatement result", b);
+        console.log("BreakStatement unit", a);
+        f = this.getBlock("break");
+        b = {type:f};
+        console.log("BreakStatement result", b);
+        break;
+      case "Literal":
+        console.log("Literal unit", a);
+        g = a.value;
+        console.log("arg", g);
+        !0 === g ? (e = "True", f = this.getBlock(e), b = {type:f}) : !1 === g ? (e = "False", f = this.getBlock(e), b = {type:f}) : (e = "string" === typeof g ? '"%1"' : "%1", f = this.getBlock(e), b = {type:f, params:[g]});
+        console.log("targetSyntax", e);
+        console.log("Literal result", b);
+        break;
+      case "UnaryExpression":
+        console.log("UnaryExpression unit", a), a.prefix && (g = a.operator.concat(a.argument.value)), f = this.getBlock("string" === typeof g ? '"%1"' : "%1"), b = {type:f, params:[g]}, console.log("UnaryExpression result", b);
     }
     return b;
   };
@@ -10340,14 +10354,17 @@ Entry.BlockToPyParser = function() {
       console.log("blockToken", l);
       if (0 !== l.length) {
         if (d.test(l)) {
-          var n = Number(l.split("%")[1]) - 1;
-          console.log("schemaParams[index].type", f[n].type);
-          "Indicator" == f[n].type && n++;
-          h = "Block" == f[n].type ? h + this.Block(g[n]) : h + this["Field" + f[n].type](g[n]);
+          if (l = Number(l.split("%")[1]) - 1, console.log("schemaParams[index].type", f[l].type), "Indicator" == f[l].type && l++, "Block" == f[l].type) {
+            h += this.Block(g[l]);
+          } else {
+            var n = this["Field" + f[l].type](g[l]);
+            null == n && (n = f[l].text ? f[l].text : null);
+            h += n;
+          }
         } else {
           if (e.test(l)) {
-            for (var l = l.split(e), m = 0;m < l.length;m++) {
-              n = l[m], 0 !== n.length && (l.test(n) ? (n = Number(n.split("$")[1]) - 1, h += this.indent(this.Thread(a.statements[n]))) : h += n);
+            for (var n = l.split(e), m = 0;m < n.length;m++) {
+              l = n[m], 0 !== l.length && (e.test(l) ? (l = Number(l.split("$")[1]) - 1, h += this.indent(this.Thread(a.statements[l]))) : h += l);
             }
           } else {
             h += l;
@@ -10391,7 +10408,7 @@ Entry.BlockToPyParser = function() {
   };
   b.FieldText = function(a) {
     console.log("FieldText", a);
-    return this.Block(a);
+    return a;
   };
   b.FieldTextInput = function(a) {
     console.log("FieldTextInput", a);
@@ -16579,7 +16596,7 @@ color:"#3D3D3D"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/calc_01
   var c = a.getBooleanValue("BOOL", a);
   a.isLooped = !0;
   return c ? a.getStatement("STACK_IF", a) : a.getStatement("STACK_ELSE", a);
-}, syntax:{js:[], py:[]}}, create_clone:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"clone", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null, null], type:"create_clone"}, paramsKeyMap:{VALUE:0}, "class":"clone", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["if %1:\n$1\nelse:\n$2"]}}, create_clone:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"clone", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null, null], type:"create_clone"}, paramsKeyMap:{VALUE:0}, "class":"clone", isNotFor:[], func:function(b, a) {
   var c = a.getField("VALUE", a), d = a.callReturn();
   "self" == c ? b.parent.addCloneEntity(b.parent, b, null) : Entry.container.getObject(c).addCloneEntity(b.parent, null, null);
   return d;
@@ -18186,19 +18203,134 @@ img:"/img/assets/ntry/bitmap/jr/cparty_rotate_l.png", size:24}]}, jr_turn_right:
 "true"], params:["", {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_goal_image.png", size:18}, "\ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, jr_if_construction:{skeleton:"basic_loop", color:"#498DEB", params:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_construction_image.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", 
 size:24}], statements:[{accept:"basic"}]}, jr_if_speed:{skeleton:"basic_loop", color:"#498DEB", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_speed_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, maze_step_start:{skeleton:"basic_event", mode:"maze", event:"start", color:"#3BBD70", syntax:["Program"], params:[{type:"Indicator", boxMultiplier:2, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", 
 size:17, position:{x:0, y:-2}}], func:function() {
-  var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
-  console.log("hi");
-  for (var a in b) {
+  var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a;
+  for (a in b) {
     this._unit = b[a];
   }
   Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
-}, syntax:{js:[], py:[]}}, maze_step_jump:{skeleton:"basic", mode:"maze", color:"#FF6E4B", params:[{type:"Image", img:"/img/assets/week/blocks/jump.png", size:24}], syntax:["Scope", "jump"]}, maze_step_for:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicIteration"], params:[{type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, 
-test:{skeleton:"basic_boolean_field", mode:"maze", color:"#127CDB", params:[{type:"Angle", value:"90"}, {type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}]}, maze_repeat_until_1:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicWhile", "true"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, 
-maze_repeat_until_2:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicWhile", "true"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, maze_step_if_1:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicIf", "front == wall"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", 
-size:24}], statements:[{accept:"basic"}]}, maze_step_if_2:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicIf", "front == bee"], params:[{type:"Image", img:"/img/assets/ntry/bitmap/maze2/obstacle_01.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}]}, maze_call_function:{skeleton:"basic", mode:"maze", color:"#B57242", syntax:["Scope", "promise"], params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}]}, 
-maze_define_function:{skeleton:"basic_define", mode:"maze", color:"#B57242", event:"define", syntax:["BasicFunction"], params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], statements:[{accept:"basic"}]}, maze_step_if_3:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicIf", "front == banana"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_3.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}]}, 
-maze_step_if_4:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicIf", "front == wall"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_2.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}]}, maze_step_move_step:{skeleton:"basic", mode:"maze", color:"#A751E3", syntax:["Scope", "move"], params:[{type:"Image", img:"/img/assets/week/blocks/moveStep.png", size:24}], func:function() {
-  console.log("hiii");
+}, syntax:{js:[], py:[]}}, maze_step_jump:{skeleton:"basic", mode:"maze", color:"#FF6E4B", params:[{type:"Image", img:"/img/assets/week/blocks/jump.png", size:24}], syntax:["Scope", "jump"], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.BREAK;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var b = this;
+    Ntry.dispatchEvent("unitAction", Ntry.STATIC.JUMP, function() {
+      b.isAction = !1;
+    });
+    return Entry.STATIC.BREAK;
+  }
+}}, maze_step_for:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicIteration"], params:[{type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
+  if (void 0 === this.repeatCount) {
+    return this.repeatCount = this.block.params[0], Entry.STATIC.BREAK;
+  }
+  if (0 < this.repeatCount) {
+    this.repeatCount--;
+    var b = this.block.statements[0];
+    if (0 !== b.getBlocks().length) {
+      return this.executor.stepInto(b), Entry.STATIC.BREAK;
+    }
+  } else {
+    delete this.repeatCount;
+  }
+}}, test:{skeleton:"basic_boolean_field", mode:"maze", color:"#127CDB", params:[{type:"Angle", value:"90"}, {type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}]}, maze_repeat_until_1:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicWhile", "true"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], 
+func:function() {
+  var b = this.block.statements[0];
+  if (0 !== b.getBlocks().length) {
+    return this.executor.stepInto(b), Entry.STATIC.BREAK;
+  }
+}}, maze_repeat_until_2:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicWhile", "true"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, maze_step_if_1:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicIf", "front == wall"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", 
+size:24}], statements:[{accept:"basic"}], func:function() {
+  if (!this.isContinue) {
+    var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a, c;
+    for (c in b) {
+      a = b[c];
+    }
+    b = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.UNIT);
+    a = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.GRID);
+    a = {x:a.x, y:a.y};
+    Ntry.addVectorByDirection(a, b.direction, 1);
+    c = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:a.x, y:a.y});
+    b = this.block.statements[0];
+    if (0 === c.length) {
+      return this.executor.stepInto(b), Entry.STATIC.BREAK;
+    }
+    a = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:a.x, y:a.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.WALL});
+    this.isContinue = !0;
+    if (0 !== a.length && 0 !== b.getBlocks().length) {
+      return this.executor.stepInto(b), Entry.STATIC.BREAK;
+    }
+  }
+}}, maze_step_if_2:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicIf", "front == bee"], params:[{type:"Image", img:"/img/assets/ntry/bitmap/maze2/obstacle_01.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}], func:function() {
+  if (!this.isContinue) {
+    var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a, c;
+    for (c in b) {
+      a = b[c];
+    }
+    b = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.UNIT);
+    a = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.GRID);
+    a = {x:a.x, y:a.y};
+    Ntry.addVectorByDirection(a, b.direction, 1);
+    a = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:a.x, y:a.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_BEE});
+    this.isContinue = !0;
+    b = this.block.statements[0];
+    if (0 !== a.length && 0 !== b.getBlocks().length) {
+      return this.executor.stepInto(b), Entry.STATIC.BREAK;
+    }
+  }
+}}, maze_call_function:{skeleton:"basic", mode:"maze", color:"#B57242", syntax:["Scope", "promise"], params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], func:function() {
+  if (!this.funcExecutor) {
+    var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.CODE), a;
+    for (a in b) {
+      this.funcExecutor = new Entry.Executor(b[a].components[Ntry.STATIC.CODE].code.getEventMap("define")[0]);
+    }
+  }
+  this.funcExecutor.execute();
+  if (null !== this.funcExecutor.scope.block) {
+    return Entry.STATIC.BREAK;
+  }
+}}, maze_define_function:{skeleton:"basic_define", mode:"maze", color:"#B57242", event:"define", syntax:["BasicFunction"], params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], statements:[{accept:"basic"}], func:function(b) {
+  if (!this.executed && (b = this.block.statements[0], 0 !== b.getBlocks().length)) {
+    return this.executor.stepInto(b), this.executed = !0, Entry.STATIC.BREAK;
+  }
+}}, maze_step_if_3:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicIf", "front == banana"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_3.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}], func:function() {
+  if (!this.isContinue) {
+    var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a, c;
+    for (c in b) {
+      a = b[c];
+    }
+    b = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.UNIT);
+    a = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.GRID);
+    a = {x:a.x, y:a.y};
+    Ntry.addVectorByDirection(a, b.direction, 1);
+    a = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:a.x, y:a.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_BANANA});
+    this.isContinue = !0;
+    b = this.block.statements[0];
+    if (0 !== a.length && 0 !== b.getBlocks().length) {
+      return this.executor.stepInto(b), Entry.STATIC.BREAK;
+    }
+  }
+}}, maze_step_if_4:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicIf", "front == wall"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_2.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}], func:function() {
+  if (!this.isContinue) {
+    var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a, c;
+    for (c in b) {
+      a = b[c];
+    }
+    b = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.UNIT);
+    a = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.GRID);
+    a = {x:a.x, y:a.y};
+    Ntry.addVectorByDirection(a, b.direction, 1);
+    a = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:a.x, y:a.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.WALL});
+    this.isContinue = !0;
+    b = this.block.statements[0];
+    if (0 !== a.length && 0 !== b.getBlocks().length) {
+      return this.executor.stepInto(b), Entry.STATIC.BREAK;
+    }
+  }
+}}, maze_step_move_step:{skeleton:"basic", mode:"maze", color:"#A751E3", syntax:["Scope", "move"], params:[{type:"Image", img:"/img/assets/week/blocks/moveStep.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.BREAK;
@@ -18213,12 +18345,41 @@ maze_step_if_4:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["Ba
     });
     return Entry.STATIC.BREAK;
   }
-}, syntax:{js:[], py:[]}}, maze_step_rotate_left:{skeleton:"basic", mode:"maze", color:"#A751E3", syntax:["Scope", "left"], params:[{type:"Image", img:"/img/assets/week/blocks/turnL.png", size:24}]}, maze_step_rotate_right:{skeleton:"basic", mode:"maze", color:"#A751E3", syntax:["Scope", "right"], params:[{type:"Image", img:"/img/assets/week/blocks/turnR.png", size:24}]}, test_wrapper:{skeleton:"basic", mode:"maze", color:"#3BBD70", params:[{type:"Block", accept:"basic_boolean_field", value:[{type:"test", 
-params:[30, 50]}]}, {type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}]}, basic_button:{skeleton:"basic_button", color:"#eee", params:[{type:"Text", text:"basic button", color:"#333", align:"center"}]}, dplay_get_number_sensor_value:{parent:"arduino_get_number_sensor_value", isNotFor:["dplay"], "class":"arduino_value"}, dplay_get_digital_value:{parent:"arduino_get_digital_value", isNotFor:["dplay"], "class":"arduino_value"}, dplay_toggle_led:{parent:"arduino_toggle_led", 
-isNotFor:["dplay"], "class":"arduino_set"}, dplay_toggle_pwm:{parent:"arduino_toggle_pwm", isNotFor:["dplay"], "class":"arduino_set"}, dplay_convert_scale:{parent:"arduino_convert_scale", isNotFor:["dplay"], "class":"arduino"}, nemoino_get_number_sensor_value:{parent:"arduino_get_number_sensor_value", isNotFor:["nemoino"], "class":"arduino_value"}, nemoino_get_digital_value:{parent:"arduino_get_digital_value", isNotFor:["nemoino"], "class":"arduino_value"}, nemoino_toggle_led:{parent:"arduino_toggle_led", 
-isNotFor:["nemoino"], "class":"arduino_set"}, nemoino_toggle_pwm:{parent:"arduino_toggle_pwm", isNotFor:["nemoino"], "class":"arduino_set"}, nemoino_convert_scale:{parent:"arduino_convert_scale", isNotFor:["nemoino"], "class":"arduino"}, sensorBoard_get_number_sensor_value:{parent:"arduino_get_number_sensor_value", isNotFor:["sensorBoard"], "class":"arduino_value"}, sensorBoard_get_digital_value:{parent:"arduino_get_digital_value", isNotFor:["sensorBoard"], "class":"arduino_value"}, sensorBoard_toggle_led:{parent:"arduino_toggle_led", 
-isNotFor:["sensorBoard"], "class":"arduino_set"}, sensorBoard_toggle_pwm:{parent:"arduino_toggle_pwm", isNotFor:["sensorBoard"], "class":"arduino_set"}, sensorBoard_convert_scale:{parent:"arduino_convert_scale", isNotFor:["sensorBoard"], "class":"arduino"}, CODEino_get_number_sensor_value:{parent:"arduino_get_number_sensor_value", isNotFor:["CODEino"], "class":"arduino_value"}, CODEino_get_digital_value:{parent:"arduino_get_digital_value", isNotFor:["CODEino"], "class":"arduino_value"}, CODEino_toggle_led:{parent:"arduino_toggle_led", 
-isNotFor:["CODEino"], "class":"arduino_set"}, CODEino_toggle_pwm:{parent:"arduino_toggle_pwm", isNotFor:["CODEino"], "class":"arduino_set"}, CODEino_convert_scale:{parent:"arduino_convert_scale", isNotFor:["CODEino"], "class":"arduino"}};
+}, syntax:{js:[], py:[]}}, maze_step_rotate_left:{skeleton:"basic", mode:"maze", color:"#A751E3", syntax:["Scope", "left"], params:[{type:"Image", img:"/img/assets/week/blocks/turnL.png", size:24}], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.BREAK;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var b = this;
+    Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, function() {
+      b.isAction = !1;
+    });
+    return Entry.STATIC.BREAK;
+  }
+}}, maze_step_rotate_right:{skeleton:"basic", mode:"maze", color:"#A751E3", syntax:["Scope", "right"], params:[{type:"Image", img:"/img/assets/week/blocks/turnR.png", size:24}], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.BREAK;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var b = this;
+    Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, function() {
+      b.isAction = !1;
+    });
+    return Entry.STATIC.BREAK;
+  }
+}}, test_wrapper:{skeleton:"basic", mode:"maze", color:"#3BBD70", params:[{type:"Block", accept:"basic_boolean_field", value:[{type:"test", params:[30, 50]}]}, {type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}]}, basic_button:{skeleton:"basic_button", color:"#eee", params:[{type:"Text", text:"basic button", color:"#333", align:"center"}]}, dplay_get_number_sensor_value:{parent:"arduino_get_number_sensor_value", isNotFor:["dplay"], 
+"class":"arduino_value"}, dplay_get_digital_value:{parent:"arduino_get_digital_value", isNotFor:["dplay"], "class":"arduino_value"}, dplay_toggle_led:{parent:"arduino_toggle_led", isNotFor:["dplay"], "class":"arduino_set"}, dplay_toggle_pwm:{parent:"arduino_toggle_pwm", isNotFor:["dplay"], "class":"arduino_set"}, dplay_convert_scale:{parent:"arduino_convert_scale", isNotFor:["dplay"], "class":"arduino"}, nemoino_get_number_sensor_value:{parent:"arduino_get_number_sensor_value", isNotFor:["nemoino"], 
+"class":"arduino_value"}, nemoino_get_digital_value:{parent:"arduino_get_digital_value", isNotFor:["nemoino"], "class":"arduino_value"}, nemoino_toggle_led:{parent:"arduino_toggle_led", isNotFor:["nemoino"], "class":"arduino_set"}, nemoino_toggle_pwm:{parent:"arduino_toggle_pwm", isNotFor:["nemoino"], "class":"arduino_set"}, nemoino_convert_scale:{parent:"arduino_convert_scale", isNotFor:["nemoino"], "class":"arduino"}, sensorBoard_get_number_sensor_value:{parent:"arduino_get_number_sensor_value", 
+isNotFor:["sensorBoard"], "class":"arduino_value"}, sensorBoard_get_digital_value:{parent:"arduino_get_digital_value", isNotFor:["sensorBoard"], "class":"arduino_value"}, sensorBoard_toggle_led:{parent:"arduino_toggle_led", isNotFor:["sensorBoard"], "class":"arduino_set"}, sensorBoard_toggle_pwm:{parent:"arduino_toggle_pwm", isNotFor:["sensorBoard"], "class":"arduino_set"}, sensorBoard_convert_scale:{parent:"arduino_convert_scale", isNotFor:["sensorBoard"], "class":"arduino"}, CODEino_get_number_sensor_value:{parent:"arduino_get_number_sensor_value", 
+isNotFor:["CODEino"], "class":"arduino_value"}, CODEino_get_digital_value:{parent:"arduino_get_digital_value", isNotFor:["CODEino"], "class":"arduino_value"}, CODEino_toggle_led:{parent:"arduino_toggle_led", isNotFor:["CODEino"], "class":"arduino_set"}, CODEino_toggle_pwm:{parent:"arduino_toggle_pwm", isNotFor:["CODEino"], "class":"arduino_set"}, CODEino_convert_scale:{parent:"arduino_convert_scale", isNotFor:["CODEino"], "class":"arduino"}};
 (function() {
   for (var b in Entry.block) {
     var a = Entry.block[b];
@@ -22103,7 +22264,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         break;
       case Entry.Workspace.MODE_BOARD:
         try {
-          this.vimBoard && this.vimBoard.hide(), this.overlayBoard && this.overlayBoard.hide(), this.board.show(), this.set({selectedBoard:this.board}), this.textToCode(), this.blockMenu.renderBlock(), this.textType = b, this.mode = a;
+          this.vimBoard && this.vimBoard.hide(), this.overlayBoard && this.overlayBoard.hide(), this.board.show(), this.set({selectedBoard:this.board}), this.textToCode(d), this.vimBoard && this.vimBoard.hide(), this.overlayBoard && this.overlayBoard.hide(), this.blockMenu.renderBlock(), this.textType = b, this.mode = a;
         } catch (e) {
           throw this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), Entry.dispatchEvent("setProgrammingMode", Entry.Workspace.MODE_VIMBOARD), e;
         }
@@ -22123,12 +22284,12 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
   b.changeBlockMenuCode = function(a) {
     this.blockMenu.changeCode(a);
   };
-  b.textToCode = function() {
-    if (this.mode == Entry.Workspace.MODE_VIMBOARD) {
-      var a = this.vimBoard.textToCode();
-      console.log("changedCode", a);
-      this.board.code.load(a);
-      this.board.code.createView(this.board);
+  b.textToCode = function(a) {
+    if (a == Entry.Workspace.MODE_VIMBOARD) {
+      a = this.vimBoard.textToCode();
+      var b = this.board, d = b.code;
+      d.load(a);
+      d.createView(b);
       this.board.alignThreads();
       this.board.reDraw();
     }

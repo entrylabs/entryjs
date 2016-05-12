@@ -20,61 +20,35 @@ Entry.PyBlockAssembler = function(blockSyntax) {
             	console.log("ExpressionStatement unit", unit);
 
             	var callee = unit.expression.callee;
-
 		        if(callee.object.name && callee.property.name)
 		        	var targetSyntax = String(callee.object.name).concat(".").concat(callee.property.name);
 		        else if(String(callee.object.object.name) == '__pythonRuntime' && String(callee.object.property.name) == 'functions')
 		       		var targetSyntax = String(callee.property.name);
 		       	
 		        var block = this.getBlock(targetSyntax);
-		        var paramsType = Entry.BlockTemplate.prototype.getParamsType(block);
-		        console.log("paramsType", paramsType);
-
-            	var args = [];
+		        var paramsType = Entry.BlockInfoExtractor.prototype.getParamsType(block);
             	var params = [];
             	var arguments = unit.expression.arguments;
 
-            	console.log("arguments", arguments);
+            	console.log("argument origin", arguments);
      
      			if(arguments && arguments.length){
-		            for(var index in arguments) {
-		                var arg = arguments[index];
-		                var a;
-		                if(arg.type == 'UnaryExpression') {
-		                	if(arg.prefix)
-		                		a = arg.operator.concat(arg.argument.value)
-		                } else if(arg.type == 'Literal') {
-		                	a = arg.value;
-		                }
+		            for(var index = 0; index < arguments.length; index++) {
+		            	console.log("index arg", index, arguments[index]);
+		                if(paramsType[index] == "Indicator"){
+			            	var param = null;
+			            	arguments.splice(index, 0, param);
+			            }
+			            else if(paramsType[index] == "Block")
+			            	var param = this.assemble(arguments[index]);
+			            else if(paramsType[index] == "Keyboard")
+			            	var param = Entry.KeyboardCodeMap.prototype.keyCharToCode[arguments[index].value];	
+			            else	
+			            	var param = arguments[index].value;
 
-		                args.push(a);
+		            	params.push(param);
 		            }
         		}
-
-        		console.log("arg", arg);
-		        
-		        for(var index=0; index < args.length; index++) {
-		            var arg = args[index];
-		            if(typeof arg === 'string')
-		            	var type = 'text';
-		            else
-		            	var type = 'number';
-
-		            if(paramsType[index] == "Indicator"){
-		            	var param = null;
-		            	args.splice(index, 0, param);
-		            }
-		            else if(paramsType[index] == "Block")
-		            	var param = { type: type, params: [arg] };
-		            else if(paramsType[index] == "Keyboard")
-		            	var param = Entry.KeyboardCodeMap.prototype.keyCharToCode[arg];	
-		            else	
-		            	var param = arg;
-
-		            console.log("param kkk", param);
-
-		            params.push(param);
-		        }
 
                 result = { type: block, params: params };
                 console.log("ExpressionStatement result", result);
@@ -82,15 +56,15 @@ Entry.PyBlockAssembler = function(blockSyntax) {
             }
             case 'WhileStatement' : {
             	console.log("WhileStatement unit", unit);
+            	
             	var test = unit.test;
-                if(test.type == 'Literal') {
-		            if(test.value)
-		            	var targetSyntax = String("while True:\n$1\n");
-		        }
+                var params = [];
+                var param = this.assemble(test);
+            	params.push(param);
 
+		    	var targetSyntax = String("while True:\n$1\n");
 		        var block = this.getBlock(targetSyntax);
 		        var statements = [];
-
 		        var body = unit.body.body;
 		        
 		        for(var index in body) {
@@ -100,6 +74,7 @@ Entry.PyBlockAssembler = function(blockSyntax) {
 		        }
 
 		        result = { type: block, statements: [statements] };
+		        
 		        console.log("WhileStatement result", result);
                 break;
             }
@@ -110,62 +85,32 @@ Entry.PyBlockAssembler = function(blockSyntax) {
 		        	var targetSyntax = String("for i in range");
             	}
             	var block = this.getBlock(targetSyntax);
-            	console.log("block", block);
-            	var paramsType = Entry.BlockTemplate.prototype.getParamsType(block);
-		        console.log("paramsType", paramsType);
-
-            	var args = [];
+            	var paramsType = Entry.BlockInfoExtractor.prototype.getParamsType(block);
             	var params = [];
             	var arguments = unit.body[0].declarations[0].init.arguments;
 
             	if(arguments && arguments.length){
-		            for(var index in arguments) {
-		                var arg = arguments[index];
-		                var a;
-		                if(arg.type == 'UnaryExpression') {
-		                	if(arg.prefix)
-		                		a = arg.operator.concat(arg.argument.value)
-		                } else if(arg.type == 'Literal') {
-		                	a = arg.value;
-		                }
+		            for(var index = 0; index < arguments.length; index++) {
+		                if(paramsType[index] == "Indicator"){
+			            	var param = null;
+			            	arguments.splice(index, 0, param);
+			            }
+			            else if(paramsType[index] == "Block")
+			            	var param = this.assemble(arguments[index]);
+			            else if(paramsType[index] == "Keyboard")
+			            	var param = Entry.KeyboardCodeMap.prototype.keyCharToCode[arguments[index].value];	
+			            else	
+			            	var param = arguments[index].value;
 
-		                args.push(a);
+		            	params.push(param);
 		            }
         		}
-
-        		console.log("arg", arg);
-		        
-		        for(var index=0; index < args.length; index++) {
-		            var arg = args[index];
-		            if(typeof arg === 'string')
-		            	var type = 'text';
-		            else
-		            	var type = 'number';
-
-		            if(paramsType[index] == "Indicator"){
-		            	var param = null;
-		            	args.splice(index, 0, param);
-		            }
-		            else if(paramsType[index] == "Block")
-		            	var param = { type: type, params: [arg] };
-		            else if(paramsType[index] == "Keyboard")
-		            	var param = Entry.KeyboardCodeMap.prototype.keyCharToCode[arg];	
-		            else	
-		            	var param = arg;
-
-		            console.log("keyboard", param);
-
-		            params.push(param);
-		        }
-
+		
             	var consequent = unit.body[1].consequent;
-            	console.log("consequent", consequent);
             	var body = consequent.body[0].body;
-            	console.log("body", body);
             	body.shift();
             	var statements = [];
             	for(var index in body) {
-            		console.log("body[index]", body[index]);
             		var unit = this.assemble(body[index]);
             		statements.push(unit);
             	}
@@ -177,25 +122,42 @@ Entry.PyBlockAssembler = function(blockSyntax) {
             }
         	case 'IfStatement' : {
             	console.log("IfStatement unit", unit);
-
+            	
             	var test = unit.test;
-                if(test.type == 'Literal') {
-		            if(test.value)
-		            	var targetSyntax = String("if %1:\n$1");
-		        }
-		        var block = this.getBlock(targetSyntax);
-		        console.log("block", block);
+                var params = [];
+                var param = this.assemble(test);
+            	params.push(param);
+                		            
+              	var consequent = unit.consequent;
+		        var alternate = unit.alternate;
 
-		        var consequent = unit.consequent;
-		        var body = consequent.body;
+		        if(alternate == null) {
+		    		var targetSyntax = String("if %1:\n$1");
+		        	var block = this.getBlock(targetSyntax);
+		       	} else {
+		       		var targetSyntax = String("if %1:\n$1\nelse:\n$2");
+		        	var block = this.getBlock(targetSyntax);
+		       	}
+		        
+		        var ifStatements = [];
+		        var elseStatements = [];
+		        if(consequent != null) {
+		        	var body = consequent.body;
+	            	for(var index in body) {
+	            		var unit = this.assemble(body[index]);
+	            		ifStatements.push(unit);
+	            	}
+	            	result = { type: block, params: params, statements: [ifStatements] };
+	            }
 
-		        var statements = [];
-            	for(var index in body) {
-            		var unit = this.assemble(body[index]);
-            		statements.push(unit);
-            	}
-
-		        result = { type: block, params: params, statements: [statements] };
+            	if(alternate != null) {
+            		var body = alternate.body;
+	            	for(var index in body) {
+	            		var unit = this.assemble(body[index]);
+	            		elseStatements.push(unit);
+	            	}
+	            	result = { type: block, params: params, statements: [ifStatements, elseStatements] };
+	            }
 
 		        console.log("IfStatement result", result);
 		        break;
@@ -204,14 +166,61 @@ Entry.PyBlockAssembler = function(blockSyntax) {
             	console.log("BreakStatement unit", unit);
 
             	var targetSyntax = String("break");
-
             	var block = this.getBlock(targetSyntax);
-
-            	console.log("block", block);
 
             	result = { type: block };
 
             	console.log("BreakStatement result", result);
+            	break;
+            }
+            case 'Literal' : {
+            	console.log("Literal unit", unit);
+            	
+            	var arg = unit.value;
+            	console.log("arg", arg);
+            	if(arg === true) {
+            		var targetSyntax = String("True");
+            		var block = this.getBlock(targetSyntax);
+            		result = { type: block };
+            	}
+            	else if(arg === false) {
+            		var targetSyntax = String("False"); 
+            		var block = this.getBlock(targetSyntax);
+            		result = { type: block};
+            	}
+            	else if(typeof arg === 'string'){
+	           		var targetSyntax = String("\"%1\"");
+	           		var block = this.getBlock(targetSyntax);
+	           		result = { type: block, params: [arg] };
+            	}
+	        	else {
+	           		var targetSyntax = String("%1");
+	           		var block = this.getBlock(targetSyntax);
+	           		result = { type: block, params: [arg] };
+	        	}
+            	
+            	console.log("targetSyntax", targetSyntax);
+	            
+            	console.log("Literal result", result);
+            	break;
+            }
+            case 'UnaryExpression' : {
+            	console.log("UnaryExpression unit", unit);
+            	
+            	if(unit.prefix){
+		        	var arg = unit.operator.concat(unit.argument.value);
+            	}
+
+            	if(typeof arg === 'string')
+	           		var targetSyntax = String("\"%1\"");
+	        	else
+	           		var targetSyntax = String("%1");
+
+	           	var block = this.getBlock(targetSyntax);
+
+	           	result = { type: block, params: [arg] };
+
+            	console.log("UnaryExpression result", result);
             	break;
             }
         }
