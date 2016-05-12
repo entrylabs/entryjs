@@ -848,8 +848,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(c, d);
+  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
   return a.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1943,10 +1943,10 @@ Entry.block.wait_second = function(b, a) {
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
+  var c = a.getNumberValue("SECOND", a);
   setTimeout(function() {
     a.timeFlag = 0;
-  }, c);
+  }, 60 / (Entry.FPS || 60) * c * 1E3);
   return a;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -12225,7 +12225,7 @@ Entry.Model = function(b, a) {
 })(Entry.Model);
 Entry.Func = function(b) {
   this.id = b ? b.id : Entry.generateHash();
-  this.content = b ? new Entry.Code(b.content) : new Entry.Code([[{type:"function_create", x:40, y:40}]]);
+  this.content = b ? new Entry.Code(b.content) : new Entry.Code([[{type:"function_create", deletable:!1, x:40, y:40}]]);
   this.block = null;
   this.hashMap = {};
   this.paramMap = {};
@@ -12401,7 +12401,12 @@ Entry.Func.prototype.edit = function() {
 };
 Entry.Func.generateBlock = function(b) {
   b = Entry.block["func_" + b.id];
-  return {block:{template:b.template, params:b.params}, description:b.template};
+  var a = {template:b.template, params:b.params}, c = /(%\d)/mi, d = b.template.split(c), e = "", f = 0, g = 0, h;
+  for (h in d) {
+    var k = d[h];
+    c.test(k) ? (k = Number(k.split("%")[1]) - 1, k = b.params[k], "Indicator" !== k.type && ("booleanMagnet" === k.accept ? (e += Lang.template.function_param_boolean + (f ? f : ""), f++) : (e += Lang.General.param_string + (g ? g : ""), g++))) : e += k;
+  }
+  return {block:a, description:e};
 };
 Entry.Func.prototype.generateBlock = function(b) {
   b = Entry.Func.generateBlock(this);
@@ -15252,8 +15257,8 @@ size:12}], events:{}, def:{params:[null, null, null]}, paramsKeyMap:{DIRECTION:0
   return Entry.hw.getDigitalPortValue(c);
 }}, arduino_toggle_led:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[[Lang.Blocks.ARDUINO_on, "on"], [Lang.Blocks.ARDUINO_off, "off"]], value:"on", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"arduino_get_port_number"}, null, null], type:"arduino_toggle_led"}, paramsKeyMap:{VALUE:0, OPERATOR:1}, "class":"arduino_set", isNotFor:["arduino"], 
 func:function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(c, d);
+  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
   return a.callReturn();
 }}, arduino_toggle_pwm:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"arduino_get_pwm_port_number"}, {type:"arduino_text", params:["255"]}, null], type:"arduino_toggle_pwm"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"arduino_set", isNotFor:["arduino"], func:function(b, a) {
   var c = a.getNumberValue("PORT"), d = a.getNumberValue("VALUE"), d = Math.round(d), d = Math.max(d, 0), d = Math.min(d, 255);
@@ -15669,10 +15674,10 @@ params:[Lang.Blocks.entry]}, null], type:"combine_something"}, paramsKeyMap:{VAL
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
+  var c = a.getNumberValue("SECOND", a);
   setTimeout(function() {
     a.timeFlag = 0;
-  }, c);
+  }, 60 / (Entry.FPS || 60) * c * 1E3);
   return a;
 }}, repeat_basic:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"repeat_basic"}, paramsKeyMap:{VALUE:0}, statementsKeyMap:{DO:0}, "class":"repeat", isNotFor:[], func:function(b, a) {
   var c;
@@ -15750,8 +15755,9 @@ params:[Lang.Blocks.entry]}, null], type:"combine_something"}, paramsKeyMap:{VAL
   return a.callReturn();
 }}, functionAddButton:{skeleton:"basic_button", color:"#eee", isNotFor:["functionInit"], params:[{type:"Text", text:Lang.Workspace.function_create, color:"#333", align:"center"}], events:{mousedown:[function() {
   Entry.variableContainer.createFunction();
-}]}}, function_field_label:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#f9c535", params:[{type:"TextInput", value:Lang.Blocks.FUNCTION_explanation_1}, {type:"Output", accept:"paramMagnet"}], def:{params:["\uc774\ub984"], type:"function_field_label"}}, function_field_string:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#ffd974", params:[{type:"Block", accept:"stringMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}], def:{params:[{type:"text", params:["\ubb38\uc790/\uc22b\uc790\uac12"]}], 
-type:"function_field_string"}}, function_field_boolean:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#aeb8ff", params:[{type:"Block", accept:"booleanMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}], def:{params:[{type:"True", params:["\ud310\ub2e8\uac12"]}], type:"function_field_boolean"}}, function_param_string:{skeleton:"basic_string_field", color:"#ffd974", template:"%1 %2", events:{viewAdd:[function() {
+}]}}, function_field_label:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#f9c535", params:[{type:"TextInput", value:Lang.Blocks.FUNCTION_explanation_1}, {type:"Output", accept:"paramMagnet"}], paramsKeyMap:{NAME:0, NEXT:1}, def:{params:["\uc774\ub984"], type:"function_field_label"}}, function_field_string:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#ffd974", params:[{type:"Block", accept:"stringMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}], paramsKeyMap:{PARAM:0, 
+NEXT:1}, def:{params:[{type:"text", params:["\ubb38\uc790/\uc22b\uc790\uac12"]}], type:"function_field_string"}}, function_field_boolean:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#aeb8ff", params:[{type:"Block", accept:"booleanMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}], paramsKeyMap:{PARAM:0, NEXT:1}, def:{params:[{type:"True", params:["\ud310\ub2e8\uac12"]}], type:"function_field_boolean"}}, function_param_string:{skeleton:"basic_string_field", color:"#ffd974", 
+template:"%1 %2", events:{viewAdd:[function() {
   Entry.Func.refreshMenuCode();
 }]}, func:function() {
   return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
