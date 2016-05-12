@@ -5658,10 +5658,10 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ Lang.Blocks.FLOW_repeat_while_true_until, "until" ],
+                    /*[ Lang.Blocks.FLOW_repeat_while_true_until, "until" ],*/
                     [ Lang.Blocks.FLOW_repeat_while_true_while, "while" ]
                 ],
-                "value": "until",
+                "value": "while",
                 "fontSize": 11
             },
             {
@@ -5700,7 +5700,7 @@ Entry.block = {
             return value ? script.getStatement("DO", script) :
                 script.callReturn();
         },
-        "syntax": {"js": [], "py": ["if '''condition''' :\nWhile '''boolean''' :\n$1\n"]}
+        "syntax": {"js": [], "py": ["while (%1)==True :\n$1"]}
     },
     "stop_object": {
         "color": "#498deb",

@@ -6,7 +6,6 @@
 goog.provide("Entry.BlockToPyParser");
 
 goog.require("Entry.KeyboardCodeMap");
-goog.require("Entry.ParticularBlock");
 
 Entry.BlockToPyParser = function() {
 
@@ -67,12 +66,7 @@ Entry.BlockToPyParser = function() {
         console.log("dataParams", dataParams);
 
         var result = "";
-        if(Entry.ParticularBlock.prototype.isParticularBlock(block))
-        {
-            result = Entry.ParticularBlock.prototype[block.data.type](block);
-            return result;
-        }
-
+        
         for (var i=0; i<blockTokens.length; i++) {
             var blockToken = blockTokens[i];
             console.log("blockToken", blockToken);

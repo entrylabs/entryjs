@@ -10181,6 +10181,7 @@ Entry.JsToBlockParser = function(b) {
   };
 })(Entry.JsToBlockParser.prototype);
 Entry.ParticularBlock = function() {
+  this.blockToPyParser = new Entry.BlockToPyParser;
 };
 (function(b) {
   b.isParticularBlock = function(a) {
@@ -10192,24 +10193,18 @@ Entry.ParticularBlock = function() {
     if (!b || null == b) {
       return "";
     }
-    b.indexOf("condition");
-    b.indexOf("boolean");
-    b = a._schema.params;
-    a = a.data.params;
-    for (var d in b) {
-      if ("Indicator" == b[d].type && d++, "Block" == b[d].type) {
-        result += a[d].text;
-      } else {
-        if ("DropdownDynamic" == b[d].type) {
-          console.log("data param", a[d]);
-          var e = "null" == a[d] ? "none" : this.dropdownDynamicValueConvertor(a[d], b[d]);
-        } else {
-          e = this["Field" + b[d].type](a[d]), null == e && (e = b[d].text ? b[d].text : null);
-        }
-        result += e;
-      }
-    }
-    return result;
+    var d = b.indexOf("<if_cond>");
+    b.indexOf("<while_cond>");
+    var e = a._schema.params, f = a.data.params;
+    a = 0;
+    var g;
+    g = "" + ('mode = "' + f[1] + '"\n');
+    console.log("iffifififi", b.substring(0, d));
+    g += b.substring(0, d);
+    g += 'mode == "until" :\n\twhile ';
+    "Indicator" == e[a].type && a++;
+    "Block" == e[a].type ? g += f[a].text : ("DropdownDynamic" == e[a].type ? (console.log("data param", f[a]), b = "null" == f[a] ? "none" : this.dropdownDynamicValueConvertor(f[a], e[a])) : (b = this["Field" + e[a].type](f[a]), null == b && (b = e[a].text ? e[a].text : null)), g += b);
+    return g;
   };
 })(Entry.ParticularBlock.prototype);
 Entry.KeyboardCodeMap = function() {
@@ -10263,11 +10258,7 @@ Entry.BlockToPyParser = function() {
     console.log("block", a);
     console.log("schemaParams", f);
     console.log("dataParams", g);
-    var h = "";
-    if (Entry.ParticularBlock.prototype.isParticularBlock(a)) {
-      return h = Entry.ParticularBlock.prototype[a.data.type](a);
-    }
-    for (var k = 0;k < b.length;k++) {
+    for (var h = "", k = 0;k < b.length;k++) {
       var l = b[k];
       console.log("blockToken", l);
       if (0 !== l.length) {
@@ -16677,13 +16668,13 @@ color:"#3D3D3D"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/calc_01
   return a.callReturn();
 }, event:"when_clone_start", syntax:{js:[], py:["Entry.on_clone_create()"]}}, stop_run:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null]}, func:function(b, a) {
   return Entry.engine.toggleStop();
-}, syntax:{js:[], py:[]}}, repeat_while_true:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Dropdown", options:[[Lang.Blocks.FLOW_repeat_while_true_until, "until"], [Lang.Blocks.FLOW_repeat_while_true_while, "while"]], value:"until", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"True"}, null, null], type:"repeat_while_true"}, paramsKeyMap:{BOOL:0, 
-OPTION:1}, statementsKeyMap:{DO:0}, "class":"repeat", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:[]}}, repeat_while_true:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Dropdown", options:[[Lang.Blocks.FLOW_repeat_while_true_while, "while"]], value:"while", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"True"}, null, null], type:"repeat_while_true"}, paramsKeyMap:{BOOL:0, OPTION:1}, statementsKeyMap:{DO:0}, "class":"repeat", 
+isNotFor:[], func:function(b, a) {
   var c = a.getBooleanValue("BOOL", a);
   "until" == a.getField("OPTION", a) && (c = !c);
   return (a.isLooped = c) ? a.getStatement("DO", a) : a.callReturn();
-}, syntax:{js:[], py:["if '''condition''' :\nWhile '''boolean''' :\n$1\n"]}}, stop_object:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.FLOW_stop_object_all, "all"], [Lang.Blocks.FLOW_stop_object_this_object, "thisOnly"], [Lang.Blocks.FLOW_stop_object_this_thread, "thisThread"], [Lang.Blocks.FLOW_stop_object_other_thread, "otherThread"]], value:"all", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], 
-events:{}, def:{params:[null, null], type:"stop_object"}, paramsKeyMap:{TARGET:0}, "class":"terminate", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["while (%1)==True :\n$1"]}}, stop_object:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.FLOW_stop_object_all, "all"], [Lang.Blocks.FLOW_stop_object_this_object, "thisOnly"], [Lang.Blocks.FLOW_stop_object_this_thread, "thisThread"], [Lang.Blocks.FLOW_stop_object_other_thread, "otherThread"]], value:"all", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null, 
+null], type:"stop_object"}, paramsKeyMap:{TARGET:0}, "class":"terminate", isNotFor:[], func:function(b, a) {
   var c = a.getField("TARGET", a), d = Entry.container;
   switch(c) {
     case "all":
