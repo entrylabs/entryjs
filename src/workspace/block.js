@@ -292,13 +292,13 @@ Entry.Block.MAGNET_OFFSET = 0.4;
     // command func
     p.doAdd = function() {
         var id = this.id;
-        if (Entry.activityReporter) {
-            var data = [
-                id,
-                this.getCode().stringify()
-            ];
-            Entry.activityReporter.add(new Entry.Activity('addBlock', data));
-        }
+        //if (Entry.activityReporter) {
+            //var data = [
+                //id,
+                //this.getCode().stringify()
+            //];
+            //Entry.activityReporter.add(new Entry.Activity('addBlock', data));
+        //}
         this.getCode().changeEvent.notify();
     };
 
@@ -309,15 +309,15 @@ Entry.Block.MAGNET_OFFSET = 0.4;
 
         this._updatePos();
         this.getCode().changeEvent.notify();
-        if (Entry.activityReporter) {
-            var data = [
-                id,
-                moveX,
-                moveY,
-                this.getCode().stringify()
-            ];
-            Entry.activityReporter.add(new Entry.Activity('moveBlock', data));
-        }
+        //if (Entry.activityReporter) {
+            //var data = [
+                //id,
+                //moveX,
+                //moveY,
+                //this.getCode().stringify()
+            //];
+            //Entry.activityReporter.add(new Entry.Activity('moveBlock', data));
+        //}
     };
 
     p.doSeparate = function() {
@@ -326,15 +326,15 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         var positionY = this.y;
 
         this.separate();
-        if (Entry.activityReporter) {
-            var data = [
-                id,
-                positionX,
-                positionY,
-                this.getCode().stringify()
-            ];
-            Entry.activityReporter.add(new Entry.Activity('seperateBlock', data));
-        }
+        //if (Entry.activityReporter) {
+            //var data = [
+                //id,
+                //positionX,
+                //positionY,
+                //this.getCode().stringify()
+            //];
+            //Entry.activityReporter.add(new Entry.Activity('seperateBlock', data));
+        //}
     };
 
     p.doInsert = function(targetBlock) {
@@ -342,20 +342,20 @@ Entry.Block.MAGNET_OFFSET = 0.4;
             this.insert(targetBlock);
         else
             this.replace(targetBlock);
-        if (Entry.activityReporter) {
-            var id = this.id,
-                targetId = targetBlock.id,
-                positionX = this.x,
-                positionY = this.y,
-                data = [
-                targetId,
-                id,
-                positionX,
-                positionY,
-                this.getCode().stringify()
-            ];
-            Entry.activityReporter.add(new Entry.Activity('insertBlock', data));
-        }
+        //if (Entry.activityReporter) {
+            //var id = this.id,
+                //targetId = targetBlock.id,
+                //positionX = this.x,
+                //positionY = this.y,
+                //data = [
+                    //targetId,
+                    //id,
+                    //positionX,
+                    //positionY,
+                    //this.getCode().stringify()
+                //];
+            //Entry.activityReporter.add(new Entry.Activity('insertBlock', data));
+        //}
     };
 
     p.doDestroy = function(animate) {
@@ -365,15 +365,15 @@ Entry.Block.MAGNET_OFFSET = 0.4;
 
         this.destroy(animate);
         this.getCode().changeEvent.notify();
-        if (Entry.activityReporter) {
-            var data = [
-                id,
-                positionX,
-                positionY,
-                this.getCode().stringify()
-            ];
-            Entry.activityReporter.add(new Entry.Activity('destroyBlock', data));
-        }
+        //if (Entry.activityReporter) {
+            //var data = [
+                //id,
+                //positionX,
+                //positionY,
+                //this.getCode().stringify()
+            //];
+            //Entry.activityReporter.add(new Entry.Activity('destroyBlock', data));
+        //}
         return this;
     };
 
