@@ -17,7 +17,7 @@ Entry.Executor = function(block, entity) {
         if (this.isEnd())
             return;
         while (true) {
-            var returnVal = this.scope.block._schema.func.call(this.scope, this.entity, this.scope);
+            var returnVal = this.scope.block.getSchema().func.call(this.scope, this.entity, this.scope);
             if (returnVal === undefined || returnVal === null || returnVal === Entry.STATIC.PASS) {
                 this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this);
                 if (this.scope.block === null) {

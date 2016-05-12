@@ -848,8 +848,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(c, d);
+  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
   return a.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1943,10 +1943,10 @@ Entry.block.wait_second = function(b, a) {
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
+  var c = a.getNumberValue("SECOND", a);
   setTimeout(function() {
     a.timeFlag = 0;
-  }, c);
+  }, 60 / (Entry.FPS || 60) * c * 1E3);
   return a;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -12248,7 +12248,8 @@ Entry.Func = function(b) {
 };
 Entry.Func.threads = {};
 Entry.Func.registerFunction = function(b) {
-  this._targetFuncBlock = Entry.playground.mainWorkspace.getBlockMenu().getCategoryCodes("func").createThread([{type:"func_" + b.id}]);
+  var a = Entry.playground.mainWorkspace;
+  a && (this._targetFuncBlock = a.getBlockMenu().getCategoryCodes("func").createThread([{type:"func_" + b.id}]));
 };
 Entry.Func.executeFunction = function(b) {
   var a = this.threads[b];
@@ -12349,18 +12350,17 @@ Entry.Func.syncFunc = function() {
   }
 };
 Entry.Func.setupMenuCode = function() {
-  var b = Entry.playground.mainWorkspace.getBlockMenu().getCategoryCodes("func");
-  this._fieldLabel = b.createThread([{type:"function_field_label"}]).getFirstBlock();
-  this._fieldString = b.createThread([{type:"function_field_string", params:[{type:this.requestParamBlock("string")}]}]).getFirstBlock();
-  this._fieldBoolean = b.createThread([{type:"function_field_boolean", params:[{type:this.requestParamBlock("boolean")}]}]).getFirstBlock();
-  this.menuCode = b;
+  var b = Entry.playground.mainWorkspace;
+  b && (b = b.getBlockMenu().getCategoryCodes("func"), this._fieldLabel = b.createThread([{type:"function_field_label"}]).getFirstBlock(), this._fieldString = b.createThread([{type:"function_field_string", params:[{type:this.requestParamBlock("string")}]}]).getFirstBlock(), this._fieldBoolean = b.createThread([{type:"function_field_boolean", params:[{type:this.requestParamBlock("boolean")}]}]).getFirstBlock(), this.menuCode = b);
 };
 Entry.Func.refreshMenuCode = function() {
-  this.menuCode || this.setupMenuCode();
-  var b = Entry.block[this._fieldString.params[0].type].changeEvent._listeners.length;
-  2 < b && this._fieldString.params[0].changeType(this.requestParamBlock("string"));
-  b = Entry.block[this._fieldBoolean.params[0].type].changeEvent._listeners.length;
-  2 < b && this._fieldBoolean.params[0].changeType(this.requestParamBlock("boolean"));
+  if (Entry.playground.mainWorkspace) {
+    this.menuCode || this.setupMenuCode();
+    var b = Entry.block[this._fieldString.params[0].type].changeEvent._listeners.length;
+    2 < b && this._fieldString.params[0].changeType(this.requestParamBlock("string"));
+    b = Entry.block[this._fieldBoolean.params[0].type].changeEvent._listeners.length;
+    2 < b && this._fieldBoolean.params[0].changeType(this.requestParamBlock("boolean"));
+  }
 };
 Entry.Func.requestParamBlock = function(b) {
   var a = Entry.generateHash(), c;
@@ -12393,8 +12393,8 @@ Entry.Func.createParamBlock = function(b, a, c) {
   return Entry.block[b] = d;
 };
 Entry.Func.updateMenu = function() {
-  var b = Entry.playground.mainWorkspace.getBlockMenu();
-  this.targetFunc ? (this.menuCode || this.setupMenuCode(), b.banClass("functionInit"), b.unbanClass("functionEdit")) : (b.unbanClass("functionInit"), b.banClass("functionEdit"));
+  var b = Entry.playground.mainWorkspace;
+  b && (b = b.getBlockMenu(), this.targetFunc ? (this.menuCode || this.setupMenuCode(), b.banClass("functionInit"), b.unbanClass("functionEdit")) : (b.unbanClass("functionInit"), b.banClass("functionEdit")));
 };
 Entry.Func.prototype.edit = function() {
   Entry.Func.isEdit || (Entry.Func.isEdit = !0, Entry.Func.svg ? this.parentView.appendChild(this.svg) : Entry.Func.initEditView());
@@ -13497,36 +13497,39 @@ Entry.VariableContainer.prototype.saveFunction = function(b) {
   this.updateList();
 };
 Entry.VariableContainer.prototype.createFunctionView = function(b) {
-  var a = this, c = Entry.createElement("li");
-  c.addClass("entryVariableListElementWorkspace");
-  c.addClass("entryFunctionElementWorkspace");
-  c.bindOnClick(function(c) {
-    c.stopPropagation();
-    a.select(b);
-  });
-  var d = Entry.createElement("button");
-  d.addClass("entryVariableListElementDeleteWorkspace");
-  d.bindOnClick(function(c) {
-    c.stopPropagation();
-    a.removeFunction(b);
-    a.selected = null;
-  });
-  var e = Entry.createElement("button");
-  e.addClass("entryVariableListElementEditWorkspace");
-  var f = this._getBlockMenu();
-  e.bindOnClick(function(a) {
-    a.stopPropagation();
-    Entry.Func.edit(b);
-    Entry.playground && (Entry.playground.changeViewMode("code"), "func" != f.lastSelector && f.selectMenu("func"));
-  });
-  var g = Entry.createElement("div");
-  g.addClass("entryVariableFunctionElementNameWorkspace");
-  g.innerHTML = b.description;
-  c.nameField = g;
-  c.appendChild(g);
-  c.appendChild(e);
-  c.appendChild(d);
-  b.listElement = c;
+  var a = this;
+  if (this.view_) {
+    var c = Entry.createElement("li");
+    c.addClass("entryVariableListElementWorkspace");
+    c.addClass("entryFunctionElementWorkspace");
+    c.bindOnClick(function(c) {
+      c.stopPropagation();
+      a.select(b);
+    });
+    var d = Entry.createElement("button");
+    d.addClass("entryVariableListElementDeleteWorkspace");
+    d.bindOnClick(function(c) {
+      c.stopPropagation();
+      a.removeFunction(b);
+      a.selected = null;
+    });
+    var e = Entry.createElement("button");
+    e.addClass("entryVariableListElementEditWorkspace");
+    var f = this._getBlockMenu();
+    e.bindOnClick(function(a) {
+      a.stopPropagation();
+      Entry.Func.edit(b);
+      Entry.playground && (Entry.playground.changeViewMode("code"), "func" != f.lastSelector && f.selectMenu("func"));
+    });
+    var g = Entry.createElement("div");
+    g.addClass("entryVariableFunctionElementNameWorkspace");
+    g.innerHTML = b.description;
+    c.nameField = g;
+    c.appendChild(g);
+    c.appendChild(e);
+    c.appendChild(d);
+    b.listElement = c;
+  }
 };
 Entry.VariableContainer.prototype.checkAllVariableName = function(b, a) {
   a = this[a];
@@ -15245,8 +15248,8 @@ size:12}], events:{}, def:{params:[null, null, null]}, paramsKeyMap:{DIRECTION:0
   return Entry.hw.getDigitalPortValue(c);
 }}, arduino_toggle_led:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[[Lang.Blocks.ARDUINO_on, "on"], [Lang.Blocks.ARDUINO_off, "off"]], value:"on", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"arduino_get_port_number"}, null, null], type:"arduino_toggle_led"}, paramsKeyMap:{VALUE:0, OPERATOR:1}, "class":"arduino_set", isNotFor:["arduino"], 
 func:function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(c, d);
+  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
   return a.callReturn();
 }}, arduino_toggle_pwm:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"arduino_get_pwm_port_number"}, {type:"arduino_text", params:["255"]}, null], type:"arduino_toggle_pwm"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"arduino_set", isNotFor:["arduino"], func:function(b, a) {
   var c = a.getNumberValue("PORT"), d = a.getNumberValue("VALUE"), d = Math.round(d), d = Math.max(d, 0), d = Math.min(d, 255);
@@ -15661,10 +15664,10 @@ params:[Lang.Blocks.entry]}, null], type:"combine_something"}, paramsKeyMap:{VAL
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
+  var c = a.getNumberValue("SECOND", a);
   setTimeout(function() {
     a.timeFlag = 0;
-  }, c);
+  }, 60 / (Entry.FPS || 60) * c * 1E3);
   return a;
 }}, repeat_basic:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"repeat_basic"}, paramsKeyMap:{VALUE:0}, statementsKeyMap:{DO:0}, "class":"repeat", isNotFor:[], func:function(b, a) {
   var c;
@@ -18805,7 +18808,7 @@ Entry.Executor = function(b, a) {
   b.execute = function() {
     if (!this.isEnd()) {
       for (;;) {
-        var a = this.scope.block._schema.func.call(this.scope, this.entity, this.scope);
+        var a = this.scope.block.getSchema().func.call(this.scope, this.entity, this.scope);
         if (void 0 === a || null === a || a === Entry.STATIC.PASS) {
           if (this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this), null === this.scope.block) {
             if (this._callStack.length) {
@@ -20983,13 +20986,17 @@ Entry.Block.MAGNET_OFFSET = .4;
   b.load = function(a) {
     a.id || (a.id = Entry.Utils.generateId());
     this.set(a);
-    this.getSchema();
+    this.loadSchema();
   };
   b.changeSchema = function(a) {
     this.set({params:[]});
-    this.getSchema();
+    this.loadSchema();
   };
   b.getSchema = function() {
+    this._schema || this.loadSchema();
+    return this._schema;
+  };
+  b.loadSchema = function() {
     if (this._schema = Entry.block[this.type]) {
       !this._schemaChangeEvent && this._schema.changeEvent && (this._schemaChangeEvent = this._schema.changeEvent.attach(this, this.changeSchema));
       var a = this._schema.events;
@@ -21018,7 +21025,7 @@ Entry.Block.MAGNET_OFFSET = .4;
   b.changeType = function(a) {
     this._schemaChangeEvent && this._schemaChangeEvent.destroy();
     this.set({type:a});
-    this.getSchema();
+    this.loadSchema();
     this.view && this.view.changeType(a);
   };
   b.setThread = function(a) {

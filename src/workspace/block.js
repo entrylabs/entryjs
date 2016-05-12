@@ -57,15 +57,21 @@ Entry.Block.MAGNET_OFFSET = 0.4;
             block.id = Entry.Utils.generateId();
 
         this.set(block);
-        this.getSchema();
+        this.loadSchema();
     };
 
     p.changeSchema = function(diff) {
         this.set({params: []});
-        this.getSchema();
+        this.loadSchema();
     };
 
-    p.getSchema = function() {
+    p.getSchema = function() { // for lazy loading
+        if (!this._schema)
+            this.loadSchema();
+        return this._schema;
+    };
+
+    p.loadSchema = function() {
         var that = this;
         this._schema = Entry.block[this.type];
 
@@ -122,7 +128,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         if (this._schemaChangeEvent)
             this._schemaChangeEvent.destroy();
         this.set({type: type});
-        this.getSchema();
+        this.loadSchema();
         if (this.view)
             this.view.changeType(type);
     };
