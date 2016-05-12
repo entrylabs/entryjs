@@ -1930,7 +1930,7 @@ Blockly.Blocks.wait_second = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.sleep_seconds(%1)"]}};
+}, syntax:{js:[], py:["Entry.wait_seconds(%1)"]}};
 Entry.block.wait_second = function(b, a) {
   if (a.isStart) {
     if (1 == a.timeFlag) {
@@ -2005,7 +2005,7 @@ Blockly.Blocks.wait_until_true = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["while !%1:"]}};
+}, syntax:{js:[], py:["Entry.wait_for_true(%1)"]}};
 Entry.block.wait_until_true = function(b, a) {
   return a.getBooleanValue("BOOL", a) ? a.callReturn() : a;
 };
@@ -2061,7 +2061,7 @@ Blockly.Blocks.delete_clone = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.FLOW_delete_clone).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/flow_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
-}, syntax:{js:[], py:["self.delete_clone()"]}};
+}, syntax:{js:[], py:["self.remove_clone()"]}};
 Entry.block.delete_clone = function(b, a) {
   if (!b.isClone) {
     return a.callReturn();
@@ -2073,7 +2073,7 @@ Blockly.Blocks.when_clone_start = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_clone.png", "*", "start")).appendField(Lang.Blocks.FLOW_when_clone_start);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["Entry.isClonedFirst()"]}};
+}, syntax:{js:[], py:["Entry.on_clone_create()"]}};
 Entry.block.when_clone_start = function(b, a) {
   return a.callReturn();
 };
@@ -2095,7 +2095,7 @@ Blockly.Blocks.repeat_while_true = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:['Entry.repeat(%1, "%2")']}};
+}, syntax:{js:[], py:["if condition :\nwhile boolean :\n$1\n"]}};
 Entry.block.repeat_while_true = function(b, a) {
   var c = a.getBooleanValue("BOOL", a);
   "until" == a.getField("OPTION", a) && (c = !c);
@@ -4658,7 +4658,7 @@ Blockly.Blocks.when_scene_start = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_scene_1_2.png", "*", "start")).appendField(Lang.Blocks.SCENE_when_scene_start);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.on_start_scene()"]}};
+}, syntax:{js:[], py:["Entry.on_start_scene()"]}};
 Entry.block.when_scene_start = function(b, a) {
   return a.callReturn();
 };
@@ -4682,7 +4682,7 @@ Blockly.Blocks.start_neighbor_scene = {init:function() {
   this.setInputsInline(!0);
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
-}, syntax:{js:[], py:['self.start_neighbor_scene("%1")']}};
+}, syntax:{js:[], py:['Entry.start_neighbor_scene("%1")']}};
 Entry.block.start_neighbor_scene = function(b, a) {
   var c = Entry.scene.selectedScene, d = Entry.scene.getScenes(), c = d.indexOf(c);
   "next" == a.getField("OPERATOR", a) ? c + 1 < d.length && (d = Entry.scene.getSceneById(d[c + 1].id)) && (Entry.scene.selectScene(d), Entry.engine.fireEvent("when_scene_start")) : 0 < c && (d = Entry.scene.getSceneById(d[c - 1].id)) && (Entry.scene.selectScene(d), Entry.engine.fireEvent("when_scene_start"));
@@ -5035,7 +5035,7 @@ Blockly.Blocks.when_object_click = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_mouse.png", "*", "start")).appendField(Lang.Blocks.START_when_object_click);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.on_object_click_down()"]}};
+}, syntax:{js:[], py:["Entry.on_object_click_down()"]}};
 Entry.block.when_object_click = function(b, a) {
   return a.callReturn();
 };
@@ -5044,7 +5044,7 @@ Blockly.Blocks.when_object_click_canceled = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_mouse.png", "*", "start")).appendField(Lang.Blocks.START_when_object_click_canceled);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.on_object_click_up()"]}};
+}, syntax:{js:[], py:["Entry.on_object_click_up()"]}};
 Entry.block.when_object_click_canceled = function(b, a) {
   return a.callReturn();
 };
@@ -5062,7 +5062,7 @@ Blockly.Blocks.when_message_cast = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_signal.png", "*", "start")).appendField(Lang.Blocks.START_when_message_cast_1).appendField(new Blockly.FieldDropdownDynamic("messages"), "VALUE").appendField(Lang.Blocks.START_when_message_cast_2);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.on_message(%1)"]}, whenAdd:function(b) {
+}, syntax:{js:[], py:['Entry.on_signal_receive("%1")']}, whenAdd:function(b) {
   var a = Entry.variableContainer;
   a && a.addRef("_messageRefs", b);
 }, whenRemove:function(b) {
@@ -5079,7 +5079,7 @@ Blockly.Blocks.message_cast = {init:function() {
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-}, syntax:{js:[], py:['self.cast_message("%1")']}, whenAdd:function(b) {
+}, syntax:{js:[], py:['Entry.send_signal("%1")']}, whenAdd:function(b) {
   var a = Entry.variableContainer;
   a && a.addRef("_messageRefs", b);
 }, whenRemove:function(b) {
@@ -5100,7 +5100,7 @@ Blockly.Blocks.message_cast_wait = {init:function() {
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-}, syntax:{js:[], py:['self.message_cast_and_wait("%1")']}, whenAdd:function(b) {
+}, syntax:{js:[], py:['Entry.send_signal_and_wait("%1")']}, whenAdd:function(b) {
   var a = Entry.variableContainer;
   a && a.addRef("_messageRefs", b);
 }, whenRemove:function(b) {
@@ -10180,6 +10180,38 @@ Entry.JsToBlockParser = function(b) {
     }
   };
 })(Entry.JsToBlockParser.prototype);
+Entry.ParticularBlock = function() {
+};
+(function(b) {
+  b.isParticularBlock = function(a) {
+    return "repeat_while_true" == a.data.type ? !0 : !1;
+  };
+  b.repeat_while_true = function(a) {
+    console.log("particular block", a);
+    var b = a._schema.syntax.py[0];
+    if (!b || null == b) {
+      return "";
+    }
+    b.indexOf("condition");
+    b.indexOf("boolean");
+    b = a._schema.params;
+    a = a.data.params;
+    for (var d in b) {
+      if ("Indicator" == b[d].type && d++, "Block" == b[d].type) {
+        result += a[d].text;
+      } else {
+        if ("DropdownDynamic" == b[d].type) {
+          console.log("data param", a[d]);
+          var e = "null" == a[d] ? "none" : this.dropdownDynamicValueConvertor(a[d], b[d]);
+        } else {
+          e = this["Field" + b[d].type](a[d]), null == e && (e = b[d].text ? b[d].text : null);
+        }
+        result += e;
+      }
+    }
+    return result;
+  };
+})(Entry.ParticularBlock.prototype);
 Entry.KeyboardCodeMap = function() {
 };
 (function(b) {
@@ -10189,6 +10221,167 @@ Entry.KeyboardCodeMap = function() {
   b.keyCharToCode = {Backspace:8, Tab:9, Enter:13, Shift:16, Ctrl:17, Alt:18, "Pause/Break":19, "Caps Lock":20, Esc:27, Space:32, "Page Up":33, "Page Down":34, End:35, Home:36, Left:37, Up:38, Right:39, Down:40, Insert:45, Delete:46, 0:48, 1:49, 2:50, 3:51, 4:52, 5:53, 6:54, 7:55, 8:56, 9:57, A:65, B:66, C:67, D:68, E:69, F:70, G:71, H:72, I:73, J:74, K:75, L:76, M:77, N:78, O:79, P:80, Q:81, R:82, S:83, T:84, U:85, V:86, W:87, X:88, Y:89, Z:90, Windows:91, "Right Click":93, "Numpad 0":96, "Numpad 1":97, 
   "Numpad 2":98, "Numpad 3":99, "Numpad 4":100, "Numpad 5":101, "Numpad 6":102, "Numpad 7":103, "Numpad 8":104, "Numpad 9":105, "Numpad *":106, "Numpad +":107, "Numpad -":109, "Numpad .":110, "Numpad /":111, F1:112, F2:113, F3:114, F4:115, F5:116, F6:117, F7:118, F8:119, F9:120, F10:121, F11:122, F12:123, "Num Lock":144, "Scroll Lock":145, "My Computer":182, "My Calculator":183, ";":186, "=":187, ",":188, "-":189, ".":190, "/":191, "`":192, "[":219, "\\":220, "]":221, "'":222};
 })(Entry.KeyboardCodeMap.prototype);
+Entry.BlockToPyParser = function() {
+};
+(function(b) {
+  b.Code = function(a) {
+    if (a instanceof Entry.Thread) {
+      return this.Thread(a);
+    }
+    if (a instanceof Entry.Block) {
+      return this.Block(a);
+    }
+    var b = "";
+    a = a.getThreads();
+    console.log("threads", a.length);
+    for (var d = 0;d < a.length;d++) {
+      b += this.Thread(a[d]) + "\n", console.log("textCode", b);
+    }
+    console.log("textCode in", b);
+    return b;
+  };
+  b.Thread = function(a) {
+    if (a instanceof Entry.Block) {
+      return this.Block(a);
+    }
+    var b = "";
+    a = a.getBlocks();
+    for (var d = 0;d < a.length;d++) {
+      b += this.Block(a[d]) + "\n";
+    }
+    return b;
+  };
+  b.Block = function(a) {
+    if (!a._schema || !a._schema.syntax) {
+      return "";
+    }
+    var b = a._schema.syntax.py[0];
+    if (!b || null == b) {
+      return "";
+    }
+    var d = /(%\d)/mi, e = /(\$\d)/mi, b = b.split(d), f = a._schema.params, g = a.data.params;
+    console.log("block", a);
+    console.log("schemaParams", f);
+    console.log("dataParams", g);
+    var h = "";
+    if (Entry.ParticularBlock.prototype.isParticularBlock(a)) {
+      return h = Entry.ParticularBlock.prototype[a.data.type](a);
+    }
+    for (var k = 0;k < b.length;k++) {
+      var l = b[k];
+      console.log("blockToken", l);
+      if (0 !== l.length) {
+        if (d.test(l)) {
+          if (l = Number(l.split("%")[1]) - 1, console.log("schemaParams[index].type", f[l].type), "Indicator" == f[l].type && l++, "Block" == f[l].type) {
+            h += this.Block(g[l]);
+          } else {
+            if ("DropdownDynamic" == f[l].type) {
+              console.log("data param", g[l]);
+              var n = "null" == g[l] ? "none" : this.dropdownDynamicValueConvertor(g[l], f[l]);
+            } else {
+              n = this["Field" + f[l].type](g[l]), null == n && (n = f[l].text ? f[l].text : null);
+            }
+            h += n;
+          }
+        } else {
+          if (e.test(l)) {
+            for (var n = l.split(e), m = 0;m < n.length;m++) {
+              l = n[m], 0 !== l.length && (e.test(l) ? (l = Number(l.split("$")[1]) - 1, h += this.indent(this.Thread(a.statements[l]))) : h += l);
+            }
+          } else {
+            h += l;
+          }
+        }
+      }
+    }
+    return h;
+  };
+  b.FieldAngle = function(a) {
+    console.log("FieldAngle", a);
+    return a;
+  };
+  b.FieldColor = function(a) {
+    console.log("FieldColor", a);
+    return a;
+  };
+  b.FieldDropdown = function(a) {
+    console.log("FieldDropdown", a);
+    return a;
+  };
+  b.FieldDropdownDynamic = function(a) {
+    console.log("FieldDropdownDynamic", a);
+    return "FieldDropdownDynamic";
+  };
+  b.FieldImage = function(a) {
+    console.log("FieldImage", a);
+    return a;
+  };
+  b.FieldIndicator = function(a) {
+    console.log("FieldIndicator", a);
+    return a;
+  };
+  b.FieldKeyboard = function(a) {
+    console.log("FieldKeyboardInput", a);
+    return a;
+  };
+  b.FieldOutput = function(a) {
+    console.log("FieldOutput", a);
+    return a;
+  };
+  b.FieldText = function(a) {
+    console.log("FieldText", a);
+    return a;
+  };
+  b.FieldTextInput = function(a) {
+    console.log("FieldTextInput", a);
+    return a;
+  };
+  b.FieldNumber = function(a) {
+    console.log("FieldNumber", a);
+    return a;
+  };
+  b.FieldKeyboard = function(a) {
+    console.log("FieldKeyboard Before", a);
+    (a = Entry.KeyboardCodeMap.prototype.keyCodeToChar[a]) && null != a || (a = "Q");
+    console.log("FieldKeyboard After", a);
+    return a;
+  };
+  b.indent = function(a) {
+    console.log("indent textCode", a);
+    var b = "\t";
+    a = a.split("\n");
+    a.pop();
+    return b += a.join("\n\t");
+  };
+  b.dropdownDynamicValueConvertor = function(a, b) {
+    console.log("dropdownDynamicValueConvertor", a, b);
+    var d = b.options, e = null, f;
+    for (f in d) {
+      var g = d[f];
+      if (a == g[1]) {
+        e = g[0];
+        break;
+      }
+    }
+    return e;
+  };
+})(Entry.BlockToPyParser.prototype);
+Entry.ValueConvertor = function() {
+};
+(function(b) {
+  b.convertText = function(a) {
+    console.log("text", a);
+    var b = "";
+    switch(a) {
+      case "none":
+        b = null;
+        break;
+      default:
+        b = a;
+    }
+    return b;
+  };
+})(Entry.ValueConvertor.prototype);
 Entry.PyBlockAssembler = function(b) {
   this.blockSyntax = b;
 };
@@ -10217,7 +10410,7 @@ Entry.PyBlockAssembler = function(b) {
               var g = null;
               arguments.splice(d, 0, g);
             } else {
-              g = "Block" == b[d] ? this.assemble(arguments[d]) : "Keyboard" == b[d] ? Entry.KeyboardCodeMap.prototype.keyCharToCode[arguments[d].value] : arguments[d].value;
+              "Block" == b[d] ? g = this.assemble(arguments[d]) : "Keyboard" == b[d] ? g = Entry.KeyboardCodeMap.prototype.keyCharToCode[arguments[d].value] : (g = arguments[d].value, g = Entry.ValueConvertor.prototype.convertText(g));
             }
             e.push(g);
           }
@@ -10231,7 +10424,7 @@ Entry.PyBlockAssembler = function(b) {
         e = [];
         g = this.assemble(f);
         e.push(g);
-        f = this.getBlock("while True:\n$1\n");
+        f = this.getBlock("while True:\n$1");
         g = [];
         b = a.body.body;
         for (d in b) {
@@ -10248,7 +10441,7 @@ Entry.PyBlockAssembler = function(b) {
         e = [];
         if ((arguments = a.body[0].declarations[0].init.arguments) && arguments.length) {
           for (d = 0;d < arguments.length;d++) {
-            "Indicator" == b[d] ? (g = null, arguments.splice(d, 0, g)) : g = "Block" == b[d] ? this.assemble(arguments[d]) : "Keyboard" == b[d] ? Entry.KeyboardCodeMap.prototype.keyCharToCode[arguments[d].value] : arguments[d].value, e.push(g);
+            "Indicator" == b[d] ? (g = null, arguments.splice(d, 0, g)) : "Block" == b[d] ? g = this.assemble(arguments[d]) : "Keyboard" == b[d] ? g = Entry.KeyboardCodeMap.prototype.keyCharToCode[arguments[d].value] : (g = arguments[d].value, g = Entry.ValueConvertor.prototype.convertText(g)), e.push(g);
           }
         }
         var h = a.body[1].consequent;
@@ -10294,12 +10487,12 @@ Entry.PyBlockAssembler = function(b) {
         console.log("Literal unit", a);
         g = a.value;
         console.log("arg", g);
-        !0 === g ? (e = "True", f = this.getBlock(e), b = {type:f}) : !1 === g ? (e = "False", f = this.getBlock(e), b = {type:f}) : (e = "string" === typeof g ? '"%1"' : "%1", f = this.getBlock(e), b = {type:f, params:[g]});
+        !0 === g ? (e = "True", f = this.getBlock(e), b = {type:f}) : !1 === g ? (e = "False", f = this.getBlock(e), b = {type:f}) : ("string" === typeof g ? (g = Entry.ValueConvertor.prototype.convertText(g), e = '"%1"') : e = "%1", f = this.getBlock(e), b = {type:f, params:[g]});
         console.log("targetSyntax", e);
         console.log("Literal result", b);
         break;
       case "UnaryExpression":
-        console.log("UnaryExpression unit", a), a.prefix && (g = a.operator.concat(a.argument.value)), f = this.getBlock("string" === typeof g ? '"%1"' : "%1"), b = {type:f, params:[g]}, console.log("UnaryExpression result", b);
+        console.log("UnaryExpression unit", a), a.prefix && (g = a.operator.concat(a.argument.value)), "string" === typeof g ? (g = Entry.ValueConvertor.prototype.convertText(g), e = '"%1"') : e = "%1", f = this.getBlock(e), b = {type:f, params:[g]}, console.log("UnaryExpression result", b);
     }
     return b;
   };
@@ -10307,131 +10500,6 @@ Entry.PyBlockAssembler = function(b) {
     return this.blockSyntax[a];
   };
 })(Entry.PyBlockAssembler.prototype);
-Entry.BlockToPyParser = function() {
-};
-(function(b) {
-  b.Code = function(a) {
-    if (a instanceof Entry.Thread) {
-      return this.Thread(a);
-    }
-    if (a instanceof Entry.Block) {
-      return this.Block(a);
-    }
-    var b = "";
-    a = a.getThreads();
-    console.log("threads", a.length);
-    for (var d = 0;d < a.length;d++) {
-      b += this.Thread(a[d]) + "\n", console.log("textCode", b);
-    }
-    console.log("textCode in", b);
-    return b;
-  };
-  b.Thread = function(a) {
-    if (a instanceof Entry.Block) {
-      return this.Block(a);
-    }
-    var b = "";
-    a = a.getBlocks();
-    for (var d = 0;d < a.length;d++) {
-      b += this.Block(a[d]) + "\n";
-    }
-    return b;
-  };
-  b.Block = function(a) {
-    if (!a._schema || !a._schema.syntax) {
-      return "";
-    }
-    var b = a._schema.syntax.py[0];
-    if (!b || null == b) {
-      return "";
-    }
-    var d = /(%\d)/mi, e = /(\$\d)/mi, b = b.split(d), f = a._schema.params, g = a.data.params;
-    console.log("block", a);
-    console.log("schemaParams", f);
-    console.log("dataParams", g);
-    for (var h = "", k = 0;k < b.length;k++) {
-      var l = b[k];
-      console.log("blockToken", l);
-      if (0 !== l.length) {
-        if (d.test(l)) {
-          if (l = Number(l.split("%")[1]) - 1, console.log("schemaParams[index].type", f[l].type), "Indicator" == f[l].type && l++, "Block" == f[l].type) {
-            h += this.Block(g[l]);
-          } else {
-            var n = this["Field" + f[l].type](g[l]);
-            null == n && (n = f[l].text ? f[l].text : null);
-            h += n;
-          }
-        } else {
-          if (e.test(l)) {
-            for (var n = l.split(e), m = 0;m < n.length;m++) {
-              l = n[m], 0 !== l.length && (e.test(l) ? (l = Number(l.split("$")[1]) - 1, h += this.indent(this.Thread(a.statements[l]))) : h += l);
-            }
-          } else {
-            h += l;
-          }
-        }
-      }
-    }
-    return h;
-  };
-  b.FieldAngle = function(a) {
-    console.log("FieldAngle", a);
-    return a;
-  };
-  b.FieldColor = function(a) {
-    console.log("FieldColor", a);
-    return a;
-  };
-  b.FieldDropdown = function(a) {
-    console.log("FieldDropdown", a);
-    return a;
-  };
-  b.FieldDropdownDynamic = function(a) {
-    console.log("FieldDropdownDynamic", a);
-    return a;
-  };
-  b.FieldImage = function(a) {
-    console.log("FieldImage", a);
-    return a;
-  };
-  b.FieldIndicator = function(a) {
-    console.log("FieldIndicator", a);
-    return a;
-  };
-  b.FieldKeyboard = function(a) {
-    console.log("FieldKeyboardInput", a);
-    return a;
-  };
-  b.FieldOutput = function(a) {
-    console.log("FieldOutput", a);
-    return a;
-  };
-  b.FieldText = function(a) {
-    console.log("FieldText", a);
-    return a;
-  };
-  b.FieldTextInput = function(a) {
-    console.log("FieldTextInput", a);
-    return a;
-  };
-  b.FieldNumber = function(a) {
-    console.log("FieldNumber", a);
-    return a;
-  };
-  b.FieldKeyboard = function(a) {
-    console.log("FieldKeyboard Before", a);
-    (a = Entry.KeyboardCodeMap.prototype.keyCodeToChar[a]) && null != a || (a = "Q");
-    console.log("FieldKeyboard After", a);
-    return a;
-  };
-  b.indent = function(a) {
-    console.log("indent textCode", a);
-    var b = "\t";
-    a = a.split("\n");
-    a.pop();
-    return b += a.join("\n\t");
-  };
-})(Entry.BlockToPyParser.prototype);
 Entry.PyToBlockParser = function(b) {
   this._assembler = new Entry.PyBlockAssembler(b);
 };
@@ -16565,7 +16633,7 @@ color:"#3D3D3D"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/calc_01
     a.timeFlag = 0;
   }, 60 / (Entry.FPS || 60) * c * 1E3);
   return a;
-}, syntax:{js:[], py:[]}}, repeat_basic:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"repeat_basic"}, paramsKeyMap:{VALUE:0}, statementsKeyMap:{DO:0}, "class":"repeat", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["Entry.wait_seconds(%1)"]}}, repeat_basic:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"repeat_basic"}, paramsKeyMap:{VALUE:0}, statementsKeyMap:{DO:0}, "class":"repeat", isNotFor:[], func:function(b, a) {
   var c;
   if (!a.isLooped) {
     a.isLooped = !0;
@@ -16580,14 +16648,14 @@ color:"#3D3D3D"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/calc_01
   }
   a.iterCount--;
   return a.getStatement("DO", a);
-}, syntax:{js:[], py:[]}}, repeat_inf:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null], type:"repeat_inf"}, statementsKeyMap:{DO:0}, "class":"repeat", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["for i in range(%1):\n$1"]}}, repeat_inf:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null], type:"repeat_inf"}, statementsKeyMap:{DO:0}, "class":"repeat", isNotFor:[], func:function(b, a) {
   a.isLooped = !0;
   return a.getStatement("DO");
-}, syntax:{js:[], py:[]}}, stop_repeat:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null], type:"stop_repeat"}, "class":"repeat", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["while True:\n$1"]}}, stop_repeat:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null], type:"stop_repeat"}, "class":"repeat", isNotFor:[], func:function(b, a) {
   return this.executor.breakLoop();
-}, syntax:{js:[], py:[]}}, wait_until_true:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"True"}, null], type:"wait_until_true"}, paramsKeyMap:{BOOL:0}, "class":"wait", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["break"]}}, wait_until_true:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"True"}, null], type:"wait_until_true"}, paramsKeyMap:{BOOL:0}, "class":"wait", isNotFor:[], func:function(b, a) {
   return a.getBooleanValue("BOOL", a) ? a.callReturn() : a;
-}, syntax:{js:[], py:[]}}, _if:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"True"}, null], type:"_if"}, paramsKeyMap:{BOOL:0}, statementsKeyMap:{STACK:0}, "class":"condition", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["Entry.wait_for_true(%1)"]}}, _if:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"True"}, null], type:"_if"}, paramsKeyMap:{BOOL:0}, statementsKeyMap:{STACK:0}, "class":"condition", isNotFor:[], func:function(b, a) {
   return a.isLooped ? (delete a.isLooped, a.callReturn()) : a.getBooleanValue("BOOL", a) ? (a.isLooped = !0, a.getStatement("STACK", a)) : a.callReturn();
 }, syntax:{js:[], py:["if %1:\n$1"]}}, if_else:{color:"#498deb", skeleton:"basic_double_loop", statements:[{accept:"basic"}, {accept:"basic"}], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}, {type:"LineBreak"}], events:{}, def:{params:[{type:"True"}, null], type:"if_else"}, paramsKeyMap:{BOOL:0}, statementsKeyMap:{STACK_IF:0, STACK_ELSE:1}, "class":"condition", isNotFor:[], func:function(b, a) {
   if (a.isLooped) {
@@ -16600,22 +16668,22 @@ color:"#3D3D3D"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/calc_01
   var c = a.getField("VALUE", a), d = a.callReturn();
   "self" == c ? b.parent.addCloneEntity(b.parent, b, null) : Entry.container.getObject(c).addCloneEntity(b.parent, null, null);
   return d;
-}, syntax:{js:[], py:[]}}, delete_clone:{color:"#498deb", skeleton:"basic_without_next", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null], type:"delete_clone"}, "class":"clone", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["Entry.create_clone(%1)"]}}, delete_clone:{color:"#498deb", skeleton:"basic_without_next", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null], type:"delete_clone"}, "class":"clone", isNotFor:[], func:function(b, a) {
   if (!b.isClone) {
     return a.callReturn();
   }
   b.removeClone();
-}, syntax:{js:[], py:[]}}, when_clone_start:{color:"#498deb", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_clone.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null], type:"when_clone_start"}, "class":"clone", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["self.remove_clone()"]}}, when_clone_start:{color:"#498deb", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_clone.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null], type:"when_clone_start"}, "class":"clone", isNotFor:[], func:function(b, a) {
   return a.callReturn();
-}, event:"when_clone_start", syntax:{js:[], py:[]}}, stop_run:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null]}, func:function(b, a) {
+}, event:"when_clone_start", syntax:{js:[], py:["Entry.on_clone_create()"]}}, stop_run:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null]}, func:function(b, a) {
   return Entry.engine.toggleStop();
 }, syntax:{js:[], py:[]}}, repeat_while_true:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Dropdown", options:[[Lang.Blocks.FLOW_repeat_while_true_until, "until"], [Lang.Blocks.FLOW_repeat_while_true_while, "while"]], value:"until", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"True"}, null, null], type:"repeat_while_true"}, paramsKeyMap:{BOOL:0, 
 OPTION:1}, statementsKeyMap:{DO:0}, "class":"repeat", isNotFor:[], func:function(b, a) {
   var c = a.getBooleanValue("BOOL", a);
   "until" == a.getField("OPTION", a) && (c = !c);
   return (a.isLooped = c) ? a.getStatement("DO", a) : a.callReturn();
-}, syntax:{js:[], py:[]}}, stop_object:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.FLOW_stop_object_all, "all"], [Lang.Blocks.FLOW_stop_object_this_object, "thisOnly"], [Lang.Blocks.FLOW_stop_object_this_thread, "thisThread"], [Lang.Blocks.FLOW_stop_object_other_thread, "otherThread"]], value:"all", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null, null], type:"stop_object"}, 
-paramsKeyMap:{TARGET:0}, "class":"terminate", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["if '''condition''' :\nWhile '''boolean''' :\n$1\n"]}}, stop_object:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.FLOW_stop_object_all, "all"], [Lang.Blocks.FLOW_stop_object_this_object, "thisOnly"], [Lang.Blocks.FLOW_stop_object_this_thread, "thisThread"], [Lang.Blocks.FLOW_stop_object_other_thread, "otherThread"]], value:"all", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], 
+events:{}, def:{params:[null, null], type:"stop_object"}, paramsKeyMap:{TARGET:0}, "class":"terminate", isNotFor:[], func:function(b, a) {
   var c = a.getField("TARGET", a), d = Entry.container;
   switch(c) {
     case "all":
@@ -16629,17 +16697,17 @@ paramsKeyMap:{TARGET:0}, "class":"terminate", isNotFor:[], func:function(b, a) {
     case "otherThread":
       return b.parent.script.clearExecutors(), b.parent.script.addExecutor(this.executor), a.callReturn();
   }
-}, syntax:{js:[], py:[]}}, restart_project:{color:"#498deb", skeleton:"basic_without_next", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null], type:"restart_project"}, "class":"terminate", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["Entry.stop(%1)"]}}, restart_project:{color:"#498deb", skeleton:"basic_without_next", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null], type:"restart_project"}, "class":"terminate", isNotFor:[], func:function(b, a) {
   Entry.engine.toggleStop();
   Entry.engine.toggleRun();
-}, syntax:{js:[], py:[]}}, remove_all_clones:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null], type:"remove_all_clones"}, "class":"clone", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["Entry.restart()"]}}, remove_all_clones:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null], type:"remove_all_clones"}, "class":"clone", isNotFor:[], func:function(b, a) {
   var c = b.parent.getClonedEntities();
   c.map(function(a) {
     a.removeClone();
   });
   c = null;
   return a.callReturn();
-}, syntax:{js:[], py:[]}}, functionAddButton:{skeleton:"basic_button", color:"#eee", isNotFor:["functionInit"], params:[{type:"Text", text:Lang.Workspace.function_create, color:"#333", align:"center"}], events:{mousedown:[function() {
+}, syntax:{js:[], py:["Entry.remove_all_clones()"]}}, functionAddButton:{skeleton:"basic_button", color:"#eee", isNotFor:["functionInit"], params:[{type:"Text", text:Lang.Workspace.function_create, color:"#333", align:"center"}], events:{mousedown:[function() {
   Entry.variableContainer.createFunction();
 }]}}, function_field_label:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#f9c535", params:[{type:"TextInput", value:Lang.Blocks.FUNCTION_explanation_1}, {type:"Output", accept:"paramMagnet"}], def:{params:["\uc774\ub984"], type:"function_field_label"}}, function_field_string:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#ffd974", params:[{type:"Block", accept:"stringMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}], def:{params:[{type:"text", params:["\ubb38\uc790/\uc22b\uc790\uac12"]}], 
 type:"function_field_string"}}, function_field_boolean:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#aeb8ff", params:[{type:"Block", accept:"booleanMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}], def:{params:[{type:"True", params:["\ud310\ub2e8\uac12"]}], type:"function_field_boolean"}}, function_param_string:{skeleton:"basic_string_field", color:"#ffd974", template:"%1 %2", func:function() {
@@ -17730,17 +17798,18 @@ size:12}], events:{}, def:{params:[null, null, {type:"number", params:["500"]}, 
   return Entry.Robotis_carCont.postCallReturn(a, [[e, f, g, d]], Entry.Robotis_carCont.delay);
 }, syntax:{js:[], py:[]}}, when_scene_start:{color:"#3BBD70", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_scene_1_2.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null], type:"when_scene_start"}, "class":"scene", isNotFor:["scene"], func:function(b, a) {
   return a.callReturn();
-}, event:"when_scene_start", syntax:{js:[], py:[]}}, start_scene:{color:"#3BBD70", skeleton:"basic_without_next", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"scenes", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/start_03.png", size:12}], events:{}, def:{params:[null, null], type:"start_scene"}, paramsKeyMap:{VALUE:0}, "class":"scene", isNotFor:["scene"], func:function(b, a) {
+}, event:"when_scene_start", syntax:{js:[], py:["Entry.on_scene_start()"]}}, start_scene:{color:"#3BBD70", skeleton:"basic_without_next", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"scenes", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/start_03.png", size:12}], events:{}, def:{params:[null, null], type:"start_scene"}, paramsKeyMap:{VALUE:0}, "class":"scene", isNotFor:["scene"], func:function(b, a) {
   var c = a.getField("VALUE", a);
   if (c = Entry.scene.getSceneById(c)) {
     Entry.scene.selectScene(c), Entry.engine.fireEvent("when_scene_start");
   }
   return null;
-}, syntax:{js:[], py:[]}}, start_neighbor_scene:{color:"#3BBD70", skeleton:"basic_without_next", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.SCENE_start_scene_next, "next"], [Lang.Blocks.SCENE_start_scene_pre, "pre"]], value:"next", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/start_03.png", size:12}], events:{}, def:{params:[null, null], type:"start_neighbor_scene"}, paramsKeyMap:{OPERATOR:0}, "class":"scene", isNotFor:["scene"], func:function(b, a) {
+}, syntax:{js:[], py:['Entry.start_scene("%1")']}}, start_neighbor_scene:{color:"#3BBD70", skeleton:"basic_without_next", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.SCENE_start_scene_next, "next"], [Lang.Blocks.SCENE_start_scene_pre, "pre"]], value:"next", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/start_03.png", size:12}], events:{}, def:{params:[null, null], type:"start_neighbor_scene"}, paramsKeyMap:{OPERATOR:0}, "class":"scene", isNotFor:["scene"], 
+func:function(b, a) {
   var c = Entry.scene.selectedScene, d = Entry.scene.getScenes(), c = d.indexOf(c);
   "next" == a.getField("OPERATOR", a) ? c + 1 < d.length && (d = Entry.scene.getSceneById(d[c + 1].id)) && (Entry.scene.selectScene(d), Entry.engine.fireEvent("when_scene_start")) : 0 < c && (d = Entry.scene.getSceneById(d[c - 1].id)) && (Entry.scene.selectScene(d), Entry.engine.fireEvent("when_scene_start"));
   return null;
-}, syntax:{js:[], py:[]}}, sound_something:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"sounds", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[null, null], type:"sound_something"}, paramsKeyMap:{VALUE:0}, "class":"sound", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:['Entry.start_neighbor_scene("%1")']}}, sound_something:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"sounds", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[null, null], type:"sound_something"}, paramsKeyMap:{VALUE:0}, "class":"sound", isNotFor:[], func:function(b, a) {
   var c = a.getField("VALUE", a);
   Entry.isExist(c, "id", b.parent.sounds) && createjs.Sound.play(c);
   return a.callReturn();
@@ -17900,9 +17969,9 @@ isNotFor:[], func:function(b, a) {
   return a.callReturn();
 }, event:"mouse_click_cancled", syntax:{js:[], py:["Entry.on_mouse_click_up()"]}}, when_object_click:{color:"#3BBD70", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_mouse.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null], type:"when_object_click"}, "class":"event", isNotFor:[], func:function(b, a) {
   return a.callReturn();
-}, event:"when_object_click", syntax:{js:[], py:["self.on_object_click_down()"]}}, when_object_click_canceled:{color:"#3BBD70", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_mouse.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null], type:"when_object_click_canceled"}, "class":"event", isNotFor:[], func:function(b, a) {
+}, event:"when_object_click", syntax:{js:[], py:["Entry.on_object_click_down()"]}}, when_object_click_canceled:{color:"#3BBD70", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_mouse.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null], type:"when_object_click_canceled"}, "class":"event", isNotFor:[], func:function(b, a) {
   return a.callReturn();
-}, event:"when_object_click_canceled", syntax:{js:[], py:["self.on_object_click_up()"]}}, when_some_key_click:{color:"#3BBD70", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_keyboard.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null]}, func:function(b, a) {
+}, event:"when_object_click_canceled", syntax:{js:[], py:["Entry.on_object_click_up()"]}}, when_some_key_click:{color:"#3BBD70", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_keyboard.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null]}, func:function(b, a) {
   return a.callReturn();
 }, event:"keyPress", syntax:{js:[], py:['Entry.on_key_press_down("%1")']}}, when_message_cast:{color:"#3BBD70", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_signal.png", size:17, position:{x:0, y:-2}}, {type:"DropdownDynamic", value:null, menuName:"messages", fontSize:11}], events:{dataAdd:[function(b) {
   var a = Entry.variableContainer;
@@ -17912,7 +17981,7 @@ isNotFor:[], func:function(b, a) {
   a && a.removeRef("_messageRefs", b);
 }]}, def:{params:[null, null], type:"when_message_cast"}, paramsKeyMap:{VALUE:1}, "class":"message", isNotFor:["message"], func:function(b, a) {
   return a.callReturn();
-}, event:"when_message_cast", syntax:{js:[], py:[]}}, message_cast:{color:"#3BBD70", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"messages", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/start_03.png", size:12}], events:{dataAdd:[function(b) {
+}, event:"when_message_cast", syntax:{js:[], py:['Entry.on_signal_receive("%1")']}}, message_cast:{color:"#3BBD70", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"messages", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/start_03.png", size:12}], events:{dataAdd:[function(b) {
   var a = Entry.variableContainer;
   a && a.addRef("_messageRefs", b);
 }], viewDestroy:[function(b) {
@@ -17925,7 +17994,7 @@ isNotFor:[], func:function(b, a) {
   }
   Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["when_message_cast", c]);
   return a.callReturn();
-}, syntax:{js:[], py:['self.cast_message("%1")']}}, message_cast_wait:{color:"#3BBD70", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"messages", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/start_03.png", size:12}], events:{dataAdd:[function(b) {
+}, syntax:{js:[], py:['Entry.send_signal("%1")']}}, message_cast_wait:{color:"#3BBD70", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"messages", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/start_03.png", size:12}], events:{dataAdd:[function(b) {
   var a = Entry.variableContainer;
   a && a.addRef("_messageRefs", b);
 }], dataDestroy:[function(b) {
@@ -17950,7 +18019,7 @@ isNotFor:[], func:function(b, a) {
   }
   a.runningScript = c;
   return a;
-}, syntax:{js:[], py:['self.message_cast_and_wait("%1")']}}, text:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"TextInput", value:10}], events:{}, def:{params:[], type:"text"}, paramsKeyMap:{NAME:0}, func:function(b, a) {
+}, syntax:{js:[], py:['Entry.send_signal_and_wait("%1")']}}, text:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"TextInput", value:10}], events:{}, def:{params:[], type:"text"}, paramsKeyMap:{NAME:0}, func:function(b, a) {
   return a.getField("NAME", a);
 }, isPrimitive:!0, syntax:{js:[], py:['"%1"']}}, text_write:{color:"#FFCA36", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"text"}], type:"text_write"}, paramsKeyMap:{VALUE:0}, "class":"text", isNotFor:["sprite"], func:function(b, a) {
   var c = a.getStringValue("VALUE", a), c = Entry.convertToRoundedDecimals(c, 3);

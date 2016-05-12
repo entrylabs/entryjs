@@ -9,7 +9,7 @@ Blockly.Blocks.when_scene_start = {
     this.setInputsInline(true);
     this.setNextStatement(true);
   },
-  syntax: {js: [], py: ["self.on_start_scene()"]}
+  syntax: {js: [], py: ["Entry.on_start_scene()"]}
 };
 
 Entry.block.when_scene_start = function (sprite, script) {
@@ -57,7 +57,7 @@ Blockly.Blocks.start_neighbor_scene = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
   },
-  syntax: {js: [], py: ["self.start_neighbor_scene(\"%1\")"]}
+  syntax: {js: [], py: ["Entry.start_neighbor_scene(\"%1\")"]}
 };
 
 Entry.block.start_neighbor_scene = function (sprite, script) {

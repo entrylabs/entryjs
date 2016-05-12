@@ -6,6 +6,7 @@
 goog.provide("Entry.PyBlockAssembler");
 
 goog.require("Entry.KeyboardCodeMap");
+goog.require("Entry.ValueConvertor");
 
 Entry.PyBlockAssembler = function(blockSyntax) {
     this.blockSyntax = blockSyntax;
@@ -39,12 +40,16 @@ Entry.PyBlockAssembler = function(blockSyntax) {
 			            	var param = null;
 			            	arguments.splice(index, 0, param);
 			            }
-			            else if(paramsType[index] == "Block")
+			            else if(paramsType[index] == "Block") {
 			            	var param = this.assemble(arguments[index]);
-			            else if(paramsType[index] == "Keyboard")
+			            }
+			            else if(paramsType[index] == "Keyboard") {
 			            	var param = Entry.KeyboardCodeMap.prototype.keyCharToCode[arguments[index].value];	
-			            else	
+			            }
+			            else {	
 			            	var param = arguments[index].value;
+			            	param = Entry.ValueConvertor.prototype.convertText(param);
+			            }
 
 		            	params.push(param);
 		            }
@@ -62,7 +67,7 @@ Entry.PyBlockAssembler = function(blockSyntax) {
                 var param = this.assemble(test);
             	params.push(param);
 
-		    	var targetSyntax = String("while True:\n$1\n");
+		    	var targetSyntax = String("while True:\n$1");
 		        var block = this.getBlock(targetSyntax);
 		        var statements = [];
 		        var body = unit.body.body;
@@ -95,12 +100,16 @@ Entry.PyBlockAssembler = function(blockSyntax) {
 			            	var param = null;
 			            	arguments.splice(index, 0, param);
 			            }
-			            else if(paramsType[index] == "Block")
+			            else if(paramsType[index] == "Block") {
 			            	var param = this.assemble(arguments[index]);
-			            else if(paramsType[index] == "Keyboard")
+			            }
+			            else if(paramsType[index] == "Keyboard") {
 			            	var param = Entry.KeyboardCodeMap.prototype.keyCharToCode[arguments[index].value];	
-			            else	
+			            }
+			            else {	
 			            	var param = arguments[index].value;
+			            	param = Entry.ValueConvertor.prototype.convertText(param);
+			            }
 
 		            	params.push(param);
 		            }
@@ -189,6 +198,7 @@ Entry.PyBlockAssembler = function(blockSyntax) {
             		result = { type: block};
             	}
             	else if(typeof arg === 'string'){
+            		arg = Entry.ValueConvertor.prototype.convertText(arg);
 	           		var targetSyntax = String("\"%1\"");
 	           		var block = this.getBlock(targetSyntax);
 	           		result = { type: block, params: [arg] };
@@ -211,10 +221,13 @@ Entry.PyBlockAssembler = function(blockSyntax) {
 		        	var arg = unit.operator.concat(unit.argument.value);
             	}
 
-            	if(typeof arg === 'string')
+            	if(typeof arg === 'string'){
+            		arg = Entry.ValueConvertor.prototype.convertText(arg);
 	           		var targetSyntax = String("\"%1\"");
-	        	else
+            	}
+	        	else {
 	           		var targetSyntax = String("%1");
+	        	}
 
 	           	var block = this.getBlock(targetSyntax);
 

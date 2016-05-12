@@ -15,7 +15,7 @@ Blockly.Blocks.wait_second = {
     this.setPreviousStatement(true);
     this.setNextStatement(true);
   },
-  syntax: {js: [], py: ["self.sleep_seconds(%1)"]}
+  syntax: {js: [], py: ["Entry.wait_seconds(%1)"]}
 
 };
 
@@ -131,7 +131,7 @@ Blockly.Blocks.wait_until_true = {
         this.setPreviousStatement(true);
         this.setNextStatement(true);
     },
-    syntax: {js: [], py: ["while !%1:"]}
+    syntax: {js: [], py: ["Entry.wait_for_true(%1)"]}
 };
 
 Entry.block.wait_until_true = function (sprite, script) {
@@ -248,7 +248,7 @@ Blockly.Blocks.delete_clone = {
         this.setInputsInline(true);
         this.setPreviousStatement(true);
     },
-    syntax: {js: [], py: ["self.delete_clone()"]}
+    syntax: {js: [], py: ["self.remove_clone()"]}
 };
 
 Entry.block.delete_clone = function (sprite, script) {
@@ -267,7 +267,7 @@ Blockly.Blocks.when_clone_start = {
         this.setInputsInline(true);
         this.setNextStatement(true);
     },
-    syntax: {js: [], py: ["Entry.isClonedFirst()"]}
+    syntax: {js: [], py: ["Entry.on_clone_create()"]}
 };
 
 Entry.block.when_clone_start = function (sprite, script) {
@@ -330,7 +330,7 @@ Blockly.Blocks.repeat_while_true = {
             this.setNextStatement(true);
         }
     },
-    syntax: {js: [], py: ["Entry.repeat(%1, \"%2\")"]}
+    syntax: {js: [], py: ["if condition :\nwhile boolean :\n$1\n"]}
 };
 
 Entry.block.repeat_while_true = function (sprite, script) {

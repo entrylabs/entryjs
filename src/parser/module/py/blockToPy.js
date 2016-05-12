@@ -6,6 +6,7 @@
 goog.provide("Entry.BlockToPyParser");
 
 goog.require("Entry.KeyboardCodeMap");
+goog.require("Entry.ParticularBlock");
 
 Entry.BlockToPyParser = function() {
 
@@ -66,6 +67,12 @@ Entry.BlockToPyParser = function() {
         console.log("dataParams", dataParams);
 
         var result = "";
+        if(Entry.ParticularBlock.prototype.isParticularBlock(block))
+        {
+            result = Entry.ParticularBlock.prototype[block.data.type](block);
+            return result;
+        }
+
         for (var i=0; i<blockTokens.length; i++) {
             var blockToken = blockTokens[i];
             console.log("blockToken", blockToken);
@@ -80,13 +87,23 @@ Entry.BlockToPyParser = function() {
                     result += this.Block(dataParams[index]);
                 } 
                 else {
-                    var param = this['Field' + schemaParams[index].type](dataParams[index]);
-                    if(param == null)
-                        if(schemaParams[index].text)
-                            param = schemaParams[index].text;
-                        else
-                            param = null;
+                    if(schemaParams[index].type == "DropdownDynamic"){
+                        console.log("data param", dataParams[index]);
+                        if(dataParams[index] == "null")
+                            var param = "none";
+                        else 
+                            var param = this.dropdownDynamicValueConvertor(dataParams[index], schemaParams[index]);
+                    }
+                    else {
+                        var param = this['Field' + schemaParams[index].type](dataParams[index]);
 
+                        if(param == null) {
+                            if(schemaParams[index].text)
+                                param = schemaParams[index].text;
+                            else
+                                param = null;
+                        }
+                    } 
                     result += param;
                 }
             } else if (statementReg.test(blockToken)) {
@@ -99,8 +116,9 @@ Entry.BlockToPyParser = function() {
                         result += this.indent(this.Thread(block.statements[index]));
                     } else result += statementToken;
                 }
-            } else
+            } else {
                 result += blockToken;
+            }
         }
         return result;
     };
@@ -126,7 +144,7 @@ Entry.BlockToPyParser = function() {
     p.FieldDropdownDynamic = function(param) {
         console.log("FieldDropdownDynamic", param);
        
-        return param;
+        return "FieldDropdownDynamic";
     };
 
     p.FieldImage = function(param) {
@@ -191,6 +209,22 @@ Entry.BlockToPyParser = function() {
         indentedCode.pop();
         result += indentedCode.join("\n\t");
         return result;
+    };
+
+    p.dropdownDynamicValueConvertor = function(id, param) {
+        console.log("dropdownDynamicValueConvertor", id, param);
+        var options = param.options;
+        var result = null;
+        for(var index in options) {
+            var option = options[index];
+            if(id == option[1]) {
+                result = option[0];
+                break;
+            }
+        }
+
+        return result;
+
     };
 
 })(Entry.BlockToPyParser.prototype);
