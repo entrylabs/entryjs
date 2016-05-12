@@ -15310,7 +15310,7 @@ a) {
   if ("REVERSE" == c) {
     return -50 > d ? 1 : 0;
   }
-}}, CODEino_get_accelerometer_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["X", "3"], ["Y", "4"], ["Z", "5"]], value:"3", fontSize:11}], events:{}, def:{params:[null], type:"CODEino_get_accelerometer_value"}, paramsKeyMap:{PORT:0}, "class":"CODEino", isNotFor:["CODEino"], func:function(b, a) {
+}}, CODEino_get_accelerometer_value:{color:"#00979D", fontColor:"#fff", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["X", "3"], ["Y", "4"], ["Z", "5"]], value:"3", fontSize:11}], events:{}, def:{params:[null], type:"CODEino_get_accelerometer_value"}, paramsKeyMap:{PORT:0}, "class":"CODEino", isNotFor:["CODEino"], func:function(b, a) {
   var c = 265, d = 402, e = -90, f = 90, g = Entry.hw.getAnalogPortValue(a.getField("PORT", a));
   if (c > d) {
     var h = c, c = d, d = h
@@ -16724,7 +16724,7 @@ isNotFor:["robotis_openCM70"], func:function(b, a) {
   Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, g]]);
   Entry.Robotis_carCont.update();
   return Entry.hw.portData[f];
-}}, robotis_openCM70_aux_sensor_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["3", "PORT_3"], ["4", "PORT_4"], ["5", "PORT_5"], ["6", "PORT_6"]], value:"PORT_3", fontSize:11}, {type:"Dropdown", options:[[Lang.Blocks.robotis_aux_servo_position, "AUX_SERVO_POSITION"], [Lang.Blocks.robotis_aux_ir, "AUX_IR"], [Lang.Blocks.robotis_aux_touch, "AUX_TOUCH"], [Lang.Blocks.robotis_aux_brightness, "AUX_BRIGHTNESS"], [Lang.Blocks.robotis_aux_hydro_themo_humidity, 
+}}, robotis_openCM70_aux_sensor_value:{color:"#00979D", fontColor:"#fff", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["3", "PORT_3"], ["4", "PORT_4"], ["5", "PORT_5"], ["6", "PORT_6"]], value:"PORT_3", fontSize:11}, {type:"Dropdown", options:[[Lang.Blocks.robotis_aux_servo_position, "AUX_SERVO_POSITION"], [Lang.Blocks.robotis_aux_ir, "AUX_IR"], [Lang.Blocks.robotis_aux_touch, "AUX_TOUCH"], [Lang.Blocks.robotis_aux_brightness, "AUX_BRIGHTNESS"], [Lang.Blocks.robotis_aux_hydro_themo_humidity, 
 "AUX_HYDRO_THEMO_HUMIDITY"], [Lang.Blocks.robotis_aux_hydro_themo_temper, "AUX_HYDRO_THEMO_TEMPER"], [Lang.Blocks.robotis_aux_temperature, "AUX_TEMPERATURE"], [Lang.Blocks.robotis_aux_ultrasonic, "AUX_ULTRASONIC"], [Lang.Blocks.robotis_aux_magnetic, "AUX_MAGNETIC"], [Lang.Blocks.robotis_aux_motion_detection, "AUX_MOTION_DETECTION"], [Lang.Blocks.robotis_aux_color, "AUX_COLOR"], [Lang.Blocks.robotis_aux_custom, "AUX_CUSTOM"]], value:"AUX_SERVO_POSITION", fontSize:11}], events:{}, def:{params:[null, 
 null], type:"robotis_openCM70_aux_sensor_value"}, paramsKeyMap:{PORT:0, SENSOR:1}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
   var c = Entry.Robotis_openCM70.INSTRUCTION.READ, d = 0, e = 0, f = 0, g = 0, h = a.getStringField("PORT"), k = a.getStringField("SENSOR"), l = 0;

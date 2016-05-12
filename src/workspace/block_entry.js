@@ -2302,6 +2302,7 @@ Entry.block = {
     },
     "CODEino_get_accelerometer_value": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -11293,6 +11294,7 @@ Entry.block = {
     },
     "robotis_openCM70_aux_sensor_value": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
