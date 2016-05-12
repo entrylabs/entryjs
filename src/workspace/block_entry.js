@@ -13923,7 +13923,8 @@ Entry.block = {
         "def": {
             "params": [
                 {
-                    "type": "text"
+                    "type": "text",
+                    "params": [ Lang.Blocks.entry ]
                 }
             ],
             "type": "text_write"
@@ -13954,7 +13955,8 @@ Entry.block = {
         "def": {
             "params": [
                 {
-                    "type": "text"
+                    "type": "text",
+                    "params": [ Lang.Blocks.entry ]
                 }
             ],
             "type": "text_append"
@@ -13985,7 +13987,8 @@ Entry.block = {
         "def": {
             "params": [
                 {
-                    "type": "text"
+                    "type": "text",
+                    "params": [ Lang.Blocks.entry ]
                 }
             ],
             "type": "text_prepend"
