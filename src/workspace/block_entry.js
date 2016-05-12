@@ -15632,7 +15632,16 @@ Entry.block = {
                 },
                 "size": 22
             }
-        ]
+        ],
+        func: function() {
+            var entities =
+                Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+
+            for (var key in entities) this._unit = entities[key];
+
+            Ntry.unitComp =
+                Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
+        }
     },
     "jr_repeat": {
         "skeleton": "pebble_loop",
@@ -15665,7 +15674,24 @@ Entry.block = {
                 "text": "반복"
             }
         ],
-        "statements": []
+        statements: [
+            { accept: "pebble_basic" }
+        ],
+        func: function() {
+            if (this.repeatCount === undefined) {
+                this.repeatCount = this.block.params[1];
+                return Entry.STATIC.BREAK;
+            } else if (this.repeatCount > 0) {
+                this.repeatCount--;
+                var statement = this.block.statements[0];
+                if (statement.getBlocks().length === 0)
+                    return;
+                this.executor.stepInto(statement);
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.repeatCount;
+            }
+        }
     },
     "jr_item": {
         "skeleton": "pebble_basic",
@@ -15681,7 +15707,25 @@ Entry.block = {
                 },
                 "size": 22
             }
-        ]
+        ],
+        func: function() {
+            if (!this.isContinue) {
+                this.isContinue = true;
+                this.isAction = true;
+                var self = this;
+                var callBack = function() {
+                    Ntry.dispatchEvent("getItem");
+                    self.isAction = false;
+                };
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.GET_ITEM , callBack);
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
     },
     "cparty_jr_item": {
         "skeleton": "pebble_basic",
@@ -15720,7 +15764,45 @@ Entry.block = {
                 },
                 "size": 22
             }
-        ]
+        ],
+        func: function() {
+            if (!this.isContinue) {
+                this.isContinue = true;
+                this.isAction = true;
+                var STATIC = Ntry.STATIC;
+                var self = this;
+                var callBack = function() {
+                    window.setTimeout(
+                        function() { Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
+                            self.isAction = false;
+                            }
+                        );}, 3);
+                };
+                var actionType;
+                switch (Ntry.unitComp.direction) {
+                    case Ntry.STATIC.EAST:
+                        actionType = STATIC.TURN_LEFT;
+                        break;
+                    case Ntry.STATIC.SOUTH:
+                        actionType = STATIC.HALF_ROTATION;
+                        break;
+                    case Ntry.STATIC.WEST:
+                        actionType = STATIC.TURN_RIGHT;
+                        break;
+                    default:
+                        callBack();
+                        break;
+                }
+                if (actionType)
+                    Ntry.dispatchEvent("unitAction", actionType, callBack);
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
     },
     "jr_east": {
         "skeleton": "pebble_basic",
@@ -15739,7 +15821,50 @@ Entry.block = {
                 },
                 "size": 22
             }
-        ]
+        ],
+        func: function() {
+            var STATIC = Ntry.STATIC;
+
+             if (!this.isContinue) {
+                this.isContinue = true;
+                this.isAction = true;
+                var self = this;
+                var callBack = function() {
+                    window.setTimeout(
+                        function() {
+                            Ntry.dispatchEvent(
+                                "unitAction",
+                                STATIC.WALK,
+                                function() { self.isAction = false; } );},
+                        3);
+                };
+
+                // turn direction
+                var actionType;
+                switch (Ntry.unitComp.direction) {
+                    case STATIC.SOUTH:
+                        actionType = STATIC.TURN_LEFT;
+                        break;
+                    case STATIC.WEST:
+                        actionType = STATIC.HALF_ROTATION;
+                        break;
+                    case STATIC.NORTH:
+                        actionType = STATIC.TURN_RIGHT;
+                        break;
+                    default:
+                        callBack();
+                        break;
+                }
+                if (actionType)
+                    Ntry.dispatchEvent("unitAction", actionType, callBack);
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
     },
     "jr_south": {
         "skeleton": "pebble_basic",
@@ -15758,7 +15883,50 @@ Entry.block = {
                 },
                 "size": 22
             }
-        ]
+        ],
+        func: function() {
+             if (!this.isContinue) {
+
+                this.isContinue = true;
+                this.isAction = true;
+                var STATIC = Ntry.STATIC;
+                var self = this;
+                var callBack = function() {
+                    window.setTimeout(
+                        function() {
+                            Ntry.dispatchEvent(
+                                "unitAction",
+                                Ntry.STATIC.WALK,
+                                function() { self.isAction = false; } );},
+                    3);
+                };
+
+                // turn direction
+                var actionType;
+                switch (Ntry.unitComp.direction) {
+                    case STATIC.EAST:
+                        actionType = STATIC.TURN_RIGHT;
+                        break;
+                    case STATIC.NORTH:
+                        actionType = STATIC.HALF_ROTATION;
+                        break;
+                    case STATIC.WEST:
+                        actionType = STATIC.TURN_LEFT;
+                        break;
+                    default:
+                        callBack();
+                        break;
+                }
+                if (actionType)
+                    Ntry.dispatchEvent("unitAction", actionType, callBack);
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
     },
     "jr_west": {
         "skeleton": "pebble_basic",
@@ -15777,7 +15945,48 @@ Entry.block = {
                 },
                 "size": 22
             }
-        ]
+        ],
+        func: function() {
+            if (!this.isContinue) {
+                this.isContinue = true;
+                this.isAction = true;
+                var STATIC = Ntry.STATIC;
+                var self = this;
+                var callBack = function() {
+                    window.setTimeout(
+                        function() { Ntry.dispatchEvent(
+                            "unitAction",
+                            STATIC.WALK,
+                            function() { self.isAction = false; } );},
+                    3);
+                };
+
+                // turn direction
+                var actionType;
+                switch (Ntry.unitComp.direction) {
+                    case STATIC.SOUTH:
+                        actionType = STATIC.TURN_RIGHT;
+                        break;
+                    case STATIC.EAST:
+                        actionType = STATIC.HALF_ROTATION;
+                        break;
+                    case STATIC.NORTH:
+                        actionType = STATIC.TURN_LEFT;
+                        break;
+                    default:
+                        callBack();
+                        break;
+                }
+                if (actionType)
+                    Ntry.dispatchEvent("unitAction", actionType, callBack);
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
     },
     "jr_start_basic": {
         "skeleton": "basic_event",

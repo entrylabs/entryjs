@@ -17287,14 +17287,175 @@ size:12}], events:{}, def:{params:[null, "4", {type:"text", params:["0.5"]}, nul
   var c = Entry.hw.sendQueue, d = a.getNumberField("LINE", a), e = a.getStringValue("VALUE", a);
   0 == d ? (c.lcdNum = 0, c.lcdTxt = e) : 1 == d && (c.lcdNum = 1, c.lcdTxt = e);
   return a.callReturn();
-}}, run:{skeleton:"basic", color:"#3BBD70", contents:["this is", "basic block"]}, mutant:{skeleton:"basic", event:"start", color:"#3BBD70", params:[], changeEvent:{_listeners:[]}}, jr_start:{skeleton:"pebble_event", event:"start", color:"#3BBD70", params:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_play_image.png", highlightColor:"#3BBD70", position:{x:0, y:0}, size:22}]}, jr_repeat:{skeleton:"pebble_loop", color:"#127CDB", params:[{type:"Text", text:""}, {type:"Dropdown", options:[[1, 
-1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:3, fontSize:14, roundValue:3}, {type:"Text", text:"\ubc18\ubcf5"}], statements:[]}, jr_item:{skeleton:"pebble_basic", color:"#F46C6C", params:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_item_image.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}]}, cparty_jr_item:{skeleton:"pebble_basic", color:"#8ABC1D", params:[{type:"Text", text:"\uc5f0\ud544 \uc90d\uae30"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/cpartyjr/pen.png", 
-highlightColor:"#FFF", position:{x:83, y:0}, size:22}]}, jr_north:{skeleton:"pebble_basic", color:"#A751E3", params:[{type:"Text", text:"  \uc704\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_up_image.png", position:{x:83, y:0}, size:22}]}, jr_east:{skeleton:"pebble_basic", color:"#A751E3", params:[{type:"Text", text:"\uc624\ub978\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_right_image.png", position:{x:83, y:0}, size:22}]}, jr_south:{skeleton:"pebble_basic", 
-color:"#A751E3", params:[{type:"Text", text:"  \uc544\ub798\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_down_image.png", position:{x:83, y:0}, size:22}]}, jr_west:{skeleton:"pebble_basic", color:"#A751E3", params:[{type:"Text", text:"  \uc67c\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_left_image.png", position:{x:83, y:0}, size:22}]}, jr_start_basic:{skeleton:"basic_event", event:"start", color:"#3BBD70", params:[{type:"Indicator", boxMultiplier:2, img:"/img/assets/block_icon/start_icon_play.png", 
-highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}, "\uc2dc\uc791\ud558\uae30\ub97c \ud074\ub9ad\ud588\uc744\ub54c"]}, jr_go_straight:{skeleton:"basic", color:"#A751E3", params:["\uc55e\uc73c\ub85c \uac00\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}]}, jr_turn_left:{skeleton:"basic", color:"#A751E3", params:["\uc67c\ucabd\uc73c\ub85c \ub3cc\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_l.png", size:24}]}, jr_turn_right:{skeleton:"basic", 
-color:"#A751E3", params:["\uc624\ub978\ucabd\uc73c\ub85c \ub3cc\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_r.png", size:24}]}, jr_go_slow:{skeleton:"basic", color:"#f46c6c", params:["\ucc9c\ucc9c\ud788 \uac00\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_slow.png", size:24}]}, jr_repeat_until_dest:{skeleton:"basic_loop", color:"#498DEB", syntax:["BasicWhile", "true"], params:["", {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_goal_image.png", size:18}, 
-"\ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, jr_if_construction:{skeleton:"basic_loop", color:"#498DEB", params:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_construction_image.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, jr_if_speed:{skeleton:"basic_loop", color:"#498DEB", 
-params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_speed_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, maze_step_start:{skeleton:"basic_event", mode:"maze", event:"start", color:"#3BBD70", syntax:["Program"], params:[{type:"Indicator", boxMultiplier:2, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}], func:function() {
+}}, run:{skeleton:"basic", color:"#3BBD70", contents:["this is", "basic block"]}, mutant:{skeleton:"basic", event:"start", color:"#3BBD70", params:[], changeEvent:{_listeners:[]}}, jr_start:{skeleton:"pebble_event", event:"start", color:"#3BBD70", params:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_play_image.png", highlightColor:"#3BBD70", position:{x:0, y:0}, size:22}], func:function() {
+  var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a;
+  for (a in b) {
+    this._unit = b[a];
+  }
+  Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
+}}, jr_repeat:{skeleton:"pebble_loop", color:"#127CDB", params:[{type:"Text", text:""}, {type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:3, fontSize:14, roundValue:3}, {type:"Text", text:"\ubc18\ubcf5"}], statements:[{accept:"pebble_basic"}], func:function() {
+  if (void 0 === this.repeatCount) {
+    return this.repeatCount = this.block.params[1], Entry.STATIC.BREAK;
+  }
+  if (0 < this.repeatCount) {
+    this.repeatCount--;
+    var b = this.block.statements[0];
+    if (0 !== b.getBlocks().length) {
+      return this.executor.stepInto(b), Entry.STATIC.BREAK;
+    }
+  } else {
+    delete this.repeatCount;
+  }
+}}, jr_item:{skeleton:"pebble_basic", color:"#F46C6C", params:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_item_image.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.BREAK;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var b = this;
+    Ntry.dispatchEvent("unitAction", Ntry.STATIC.GET_ITEM, function() {
+      Ntry.dispatchEvent("getItem");
+      b.isAction = !1;
+    });
+    return Entry.STATIC.BREAK;
+  }
+}}, cparty_jr_item:{skeleton:"pebble_basic", color:"#8ABC1D", params:[{type:"Text", text:"\uc5f0\ud544 \uc90d\uae30"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/cpartyjr/pen.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}]}, jr_north:{skeleton:"pebble_basic", color:"#A751E3", params:[{type:"Text", text:"  \uc704\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_up_image.png", position:{x:83, y:0}, size:22}], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.BREAK;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var b = Ntry.STATIC, a = this, c = function() {
+      window.setTimeout(function() {
+        Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
+          a.isAction = !1;
+        });
+      }, 3);
+    }, d;
+    switch(Ntry.unitComp.direction) {
+      case Ntry.STATIC.EAST:
+        d = b.TURN_LEFT;
+        break;
+      case Ntry.STATIC.SOUTH:
+        d = b.HALF_ROTATION;
+        break;
+      case Ntry.STATIC.WEST:
+        d = b.TURN_RIGHT;
+        break;
+      default:
+        c();
+    }
+    d && Ntry.dispatchEvent("unitAction", d, c);
+    return Entry.STATIC.BREAK;
+  }
+}}, jr_east:{skeleton:"pebble_basic", color:"#A751E3", params:[{type:"Text", text:"\uc624\ub978\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_right_image.png", position:{x:83, y:0}, size:22}], func:function() {
+  var b = Ntry.STATIC;
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.BREAK;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var a = this, c = function() {
+      window.setTimeout(function() {
+        Ntry.dispatchEvent("unitAction", b.WALK, function() {
+          a.isAction = !1;
+        });
+      }, 3);
+    }, d;
+    switch(Ntry.unitComp.direction) {
+      case b.SOUTH:
+        d = b.TURN_LEFT;
+        break;
+      case b.WEST:
+        d = b.HALF_ROTATION;
+        break;
+      case b.NORTH:
+        d = b.TURN_RIGHT;
+        break;
+      default:
+        c();
+    }
+    d && Ntry.dispatchEvent("unitAction", d, c);
+    return Entry.STATIC.BREAK;
+  }
+}}, jr_south:{skeleton:"pebble_basic", color:"#A751E3", params:[{type:"Text", text:"  \uc544\ub798\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_down_image.png", position:{x:83, y:0}, size:22}], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.BREAK;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var b = Ntry.STATIC, a = this, c = function() {
+      window.setTimeout(function() {
+        Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
+          a.isAction = !1;
+        });
+      }, 3);
+    }, d;
+    switch(Ntry.unitComp.direction) {
+      case b.EAST:
+        d = b.TURN_RIGHT;
+        break;
+      case b.NORTH:
+        d = b.HALF_ROTATION;
+        break;
+      case b.WEST:
+        d = b.TURN_LEFT;
+        break;
+      default:
+        c();
+    }
+    d && Ntry.dispatchEvent("unitAction", d, c);
+    return Entry.STATIC.BREAK;
+  }
+}}, jr_west:{skeleton:"pebble_basic", color:"#A751E3", params:[{type:"Text", text:"  \uc67c\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_left_image.png", position:{x:83, y:0}, size:22}], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.BREAK;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var b = Ntry.STATIC, a = this, c = function() {
+      window.setTimeout(function() {
+        Ntry.dispatchEvent("unitAction", b.WALK, function() {
+          a.isAction = !1;
+        });
+      }, 3);
+    }, d;
+    switch(Ntry.unitComp.direction) {
+      case b.SOUTH:
+        d = b.TURN_RIGHT;
+        break;
+      case b.EAST:
+        d = b.HALF_ROTATION;
+        break;
+      case b.NORTH:
+        d = b.TURN_LEFT;
+        break;
+      default:
+        c();
+    }
+    d && Ntry.dispatchEvent("unitAction", d, c);
+    return Entry.STATIC.BREAK;
+  }
+}}, jr_start_basic:{skeleton:"basic_event", event:"start", color:"#3BBD70", params:[{type:"Indicator", boxMultiplier:2, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}, "\uc2dc\uc791\ud558\uae30\ub97c \ud074\ub9ad\ud588\uc744\ub54c"]}, jr_go_straight:{skeleton:"basic", color:"#A751E3", params:["\uc55e\uc73c\ub85c \uac00\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}]}, jr_turn_left:{skeleton:"basic", 
+color:"#A751E3", params:["\uc67c\ucabd\uc73c\ub85c \ub3cc\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_l.png", size:24}]}, jr_turn_right:{skeleton:"basic", color:"#A751E3", params:["\uc624\ub978\ucabd\uc73c\ub85c \ub3cc\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_r.png", size:24}]}, jr_go_slow:{skeleton:"basic", color:"#f46c6c", params:["\ucc9c\ucc9c\ud788 \uac00\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_slow.png", size:24}]}, 
+jr_repeat_until_dest:{skeleton:"basic_loop", color:"#498DEB", syntax:["BasicWhile", "true"], params:["", {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_goal_image.png", size:18}, "\ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, jr_if_construction:{skeleton:"basic_loop", color:"#498DEB", params:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_construction_image.png", size:18}, 
+"\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, jr_if_speed:{skeleton:"basic_loop", color:"#498DEB", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_speed_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, maze_step_start:{skeleton:"basic_event", mode:"maze", event:"start", color:"#3BBD70", syntax:["Program"], params:[{type:"Indicator", 
+boxMultiplier:2, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}], func:function() {
   var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a;
   for (a in b) {
     this._unit = b[a];
@@ -20957,30 +21118,21 @@ Entry.Block.MAGNET_OFFSET = .4;
     return this.thread.getCode();
   };
   b.doAdd = function() {
-    var a = this.id;
-    Entry.activityReporter && (a = [a, this.getCode().stringify()], Entry.activityReporter.add(new Entry.Activity("addBlock", a)));
     this.getCode().changeEvent.notify();
   };
   b.doMove = function() {
-    var a = this.id, b = this.view.x - this.x, d = this.view.y - this.y;
     this._updatePos();
     this.getCode().changeEvent.notify();
-    Entry.activityReporter && (a = [a, b, d, this.getCode().stringify()], Entry.activityReporter.add(new Entry.Activity("moveBlock", a)));
   };
   b.doSeparate = function() {
-    var a = this.id, b = this.x, d = this.y;
     this.separate();
-    Entry.activityReporter && (a = [a, b, d, this.getCode().stringify()], Entry.activityReporter.add(new Entry.Activity("seperateBlock", a)));
   };
   b.doInsert = function(a) {
     "basic" === this.getBlockType() ? this.insert(a) : this.replace(a);
-    Entry.activityReporter && (a = [a.id, this.id, this.x, this.y, this.getCode().stringify()], Entry.activityReporter.add(new Entry.Activity("insertBlock", a)));
   };
   b.doDestroy = function(a) {
-    var b = this.id, d = this.x, e = this.y;
     this.destroy(a);
     this.getCode().changeEvent.notify();
-    Entry.activityReporter && (a = [b, d, e, this.getCode().stringify()], Entry.activityReporter.add(new Entry.Activity("destroyBlock", a)));
     return this;
   };
   b.doDestroyBelow = function(a) {
