@@ -39,46 +39,20 @@ Entry.getStartProject = function(mediaFilePath) {
             {
                 "id" : "7y0y",
                 "name" : "엔트리봇",
-                //TODO restore original script
                 "script" : [
-                    [
-                        {
-                            type: "length_of_string",
-                            x: 200,
-                            y: 140,
-                        }
-                    ],
                     [
                         {
                             type: "when_run_button_click",
                             x: 40,
-                            y: 240
-                        },
-                        {
-                            type: "move_direction"
-                        },
-                        {
-                            type: "stop_repeat"
-                        },
-                        {
-                            type: "move_direction"
+                            y: 50
                         },
                         {
                             type: "repeat_basic",
                             statements: [
                                 [
-                                    {type: "move_direction"},
-                                    {type: "move_x"},
-                                    {type: "move_y"},
-                                    {type: "stop_repeat"}
+                                    {type: "move_direction"}
                                 ]
                             ]
-                        },
-                        {
-                            type: "stop_repeat"
-                        },
-                        {
-                            type: "move_direction"
                         }
                     ]
                 ],
@@ -97,16 +71,6 @@ Entry.getStartProject = function(mediaFilePath) {
                         }
                     ],
                     "pictures" : [
-                        {
-                            "id" : "vx80",
-                            "fileurl" : mediaFilePath + "media/entrybot1.png",
-                            "name" : "엔트리봇_걷기1",
-                            "scale" : 100,
-                            "dimension" : {
-                                "width" : 284,
-                                "height" : 350
-                            }
-                        },
                         {
                             "id" : "vx80",
                             "fileurl" : mediaFilePath + "media/entrybot1.png",
@@ -148,5 +112,4 @@ Entry.getStartProject = function(mediaFilePath) {
         ],
         "speed" : 60
     };
-
 };

@@ -5665,9 +5665,6 @@ svg .svgBlockGroup text {
   right: 17px;
   border: 1px solid gray;
 }
-.entryVariableAddSpaceCheckWorkspace.entryVariableAddChecked {
-  background-color: gray;
-}
 .entryVariableAddSpaceLocalWrapperWorkspace {
   color: #5e5e5e;
   font-size: 11px;
@@ -5750,7 +5747,8 @@ svg .svgBlockGroup text {
 }
 .entryVariableAddSpaceCheckWorkspace.entryVariableAddChecked,
 .entryVariableSettingCheckWorkspace.entryVariableSettingChecked {
-  background-color: gray;
+  background-image: url("../images/check_on.png");
+  background-repeat: no-repeat;
 }
 .entryVariableSettingInitValueWrapperWorkspace,
 .entryVariableSettingSlideWrapperWorkspace,
@@ -5820,8 +5818,9 @@ svg .svgBlockGroup text {
   border: 1px solid gray;
   color: #5e5e5e;
 }
-.entryListSettingCheckedWorkspace {
-  background-color: gray;
+.entryListSettingCheckWorkspace.entryListSettingCheckedWorkspace {
+  background-image: url("../images/check_on.png");
+  background-repeat: no-repeat;
 }
 .entryListSettingLengthWrapperWorkspace {
   margin-top: 15px;
