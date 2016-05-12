@@ -80,11 +80,17 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
                 class: 'rect',
                 parent: this.optionGroup
             });
+            var left = Entry.Dom('span', {
+                class: 'left',
+                parent: element
+            });
 
-            var str = '';
-            if (this.getValue() == value) str += '\u2713  ';
+            Entry.Dom('span', {
+                class: 'right',
+                parent: element
+            }).text(text);
 
-            element.text(str += text);
+            if (this.getValue() == value) left.text('\u2713');
 
 
             (function(elem, value) {

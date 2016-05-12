@@ -19475,9 +19475,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     this._attachDisposeEvent();
     this.optionGroup = Entry.Dom("ul", {class:"entry-widget-dropdown", parent:$("body")});
     for (var b = this._contents.options, b = this._contents.options, d = 0, e = b.length;d < e;d++) {
-      var f = b[d], g = f[0], f = f[1], h = Entry.Dom("li", {class:"rect", parent:this.optionGroup}), k = "";
-      this.getValue() == f && (k += "\u2713  ");
-      h.text(k += g);
+      var f = b[d], g = f[0], f = f[1], h = Entry.Dom("li", {class:"rect", parent:this.optionGroup}), k = Entry.Dom("span", {class:"left", parent:h});
+      Entry.Dom("span", {class:"right", parent:h}).text(g);
+      this.getValue() == f && k.text("\u2713");
       (function(b, c) {
         b.bind("mousedown touchstart", function(a) {
           a.stopPropagation();
@@ -19555,9 +19555,9 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
     var b = Entry.container.getDropdownList(this._contents.menuName);
     this._contents.options = b;
     for (var d = 0;d < b.length;d++) {
-      var e = b[d], f = e[0], e = e[1], g = Entry.Dom("li", {class:"rect", parent:this.optionGroup}), h = "";
-      this.getValue() == e && (h += "\u2713  ");
-      g.text(h += f);
+      var e = b[d], f = e[0], e = e[1], g = Entry.Dom("li", {class:"rect", parent:this.optionGroup}), h = Entry.Dom("span", {class:"left", parent:g});
+      Entry.Dom("span", {class:"right", parent:g}).text(f);
+      this.getValue() == e && h.text("\u2713");
       (function(b, c) {
         b.mousedown(function(a) {
           a.stopPropagation();

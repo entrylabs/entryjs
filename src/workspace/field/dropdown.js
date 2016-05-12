@@ -154,10 +154,17 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
                 parent: this.optionGroup
             });
 
-            var str = '';
-            if (this.getValue() == value) str += '\u2713  ';
+            var left = Entry.Dom('span', {
+                class: 'left',
+                parent: element
+            });
 
-            element.text(str += text);
+            Entry.Dom('span', {
+                class: 'right',
+                parent: element
+            }).text(text);
+
+            if (this.getValue() == value) left.text('\u2713');
 
             (function(elem, value) {
                 //prevent propagation to document

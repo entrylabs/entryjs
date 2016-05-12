@@ -596,7 +596,7 @@ svg .svgBlockGroup text {
   border: 1px gray solid;
   margin: 0;
   padding: 0;
-  text-align: center;
+  text-align: left;
   font-size: 9pt;
   color: #000;
   z-index: 1001;
@@ -604,8 +604,15 @@ svg .svgBlockGroup text {
 }
 .entry-widget-dropdown .rect {
   height: 20px;
-  padding: 3px 15px;
+  padding: 3px 19px 3px 6px;
   width: 100%;
+}
+.entry-widget-dropdown .rect .left {
+  display: inline-block;
+  width: 13px;
+}
+.entry-widget-dropdown .rect .right {
+  display: inline-block;
 }
 .entry-widget-dropdown .rect:hover {
   background-color: #127cdb;
