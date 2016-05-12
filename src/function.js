@@ -50,7 +50,9 @@ Entry.Func = function(func) {
 Entry.Func.threads = {};
 
 Entry.Func.registerFunction = function(func) {
-    var blockMenu = Entry.playground.mainWorkspace.getBlockMenu();
+    var workspace = Entry.playground.mainWorkspace;
+    if (!workspace) return;
+    var blockMenu = workspace.getBlockMenu();
     var menuCode = blockMenu.getCategoryCodes("func");
     this._targetFuncBlock = menuCode.createThread([{
         type: "func_" + func.id
@@ -216,7 +218,9 @@ Entry.Func.syncFunc = function() {
 };
 
 Entry.Func.setupMenuCode = function() {
-    var blockMenu = Entry.playground.mainWorkspace.getBlockMenu();
+    var workspace = Entry.playground.mainWorkspace;
+    if (!workspace) return;
+    var blockMenu = workspace.getBlockMenu();
     var menuCode = blockMenu.getCategoryCodes("func");
     this._fieldLabel = menuCode.createThread([{
         type: "function_field_label"
@@ -237,6 +241,8 @@ Entry.Func.setupMenuCode = function() {
 }
 
 Entry.Func.refreshMenuCode = function() {
+    var workspace = Entry.playground.mainWorkspace;
+    if (!workspace) return;
     if (!this.menuCode)
         this.setupMenuCode();
     var stringType = this._fieldString.params[0].type;
@@ -290,7 +296,9 @@ Entry.Func.createParamBlock = function(type, blockPrototype, originalType) {
 }
 
 Entry.Func.updateMenu = function() {
-    var blockMenu = Entry.playground.mainWorkspace.getBlockMenu();
+    var workspace = Entry.playground.mainWorkspace;
+    if (!workspace) return;
+    var blockMenu = workspace.getBlockMenu();
     if (this.targetFunc) {
         if (!this.menuCode)
             this.setupMenuCode();
