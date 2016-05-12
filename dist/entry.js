@@ -21422,11 +21422,17 @@ Entry.FieldTrashcan = function(b) {
   b._generateView = function() {
     this.svgGroup = this.board.svg.elem("g");
     this.renderStart();
+    this._addControl();
   };
   b.renderStart = function() {
     var a = Entry.mediaFilePath + "delete_";
     this.trashcanTop = this.svgGroup.elem("image", {href:a + "cover.png", width:60, height:20});
     this.svgGroup.elem("image", {href:a + "body.png", y:20, width:60, height:60});
+  };
+  b._addControl = function() {
+    $(this.svgGroup).bind("mousedown", function(a) {
+      Entry.Utils.isRightButton(a) && (a.stopPropagation(), $("#entryWorkspaceBoard").css("background", "white"));
+    });
   };
   b.updateDragBlock = function() {
     var a = this.board.dragBlock, b = this.dragBlockObserver;
