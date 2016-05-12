@@ -16025,8 +16025,21 @@ Entry.block = {
                     "y": -2
                 }
             },
-            "시작하기를 클릭했을때"
-        ]
+            {
+                text: "시작하기를 클릭했을때",
+                type: "Text"
+            }
+        ],
+        func: function() {
+            var entities = Ntry.entityManager.getEntitiesByComponent(
+            Ntry.STATIC.UNIT);
+
+            for (var key in entities)
+                this._unit = entities[key];
+
+            Ntry.unitComp = Ntry.entityManager.getComponent(
+            this._unit.id, Ntry.STATIC.UNIT);
+        }
     },
     "jr_go_straight": {
         "skeleton": "basic",
@@ -16041,43 +16054,135 @@ Entry.block = {
                 "img": "/img/assets/ntry/bitmap/jr/cparty_go_straight.png",
                 "size": 24
             }
-        ]
+        ],
+        func: function() {
+            if (!this.isContinue) {
+
+                this.isContinue = true;
+                this.isAction = true;
+                var self = this;
+                var callBack = function() {
+                    self.isAction = false;
+                };
+                // turn direction
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, callBack);
+
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
     },
     "jr_turn_left": {
         "skeleton": "basic",
         "color": "#A751E3",
         "params": [
-            "왼쪽으로 돌기",
+            {
+                text: "왼쪽으로 돌기",
+                type: "Text"
+            },
             {
                 "type": "Image",
                 "img": "/img/assets/ntry/bitmap/jr/cparty_rotate_l.png",
                 "size": 24
             }
-        ]
+        ],
+        func: function() {
+            if (!this.isContinue) {
+
+                this.isContinue = true;
+                this.isAction = true;
+                var self = this;
+                var callBack = function() {
+                    self.isAction = false;
+                };
+
+                // turn direction
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, callBack);
+
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
     },
     "jr_turn_right": {
         "skeleton": "basic",
         "color": "#A751E3",
         "params": [
-            "오른쪽으로 돌기",
+            {
+                text: "오른쪽으로 돌기",
+                type: "Text"
+            },
             {
                 "type": "Image",
                 "img": "/img/assets/ntry/bitmap/jr/cparty_rotate_r.png",
                 "size": 24
             }
-        ]
+        ],
+        func: function() {
+            if (!this.isContinue) {
+
+                this.isContinue = true;
+                this.isAction = true;
+                var self = this;
+                var callBack = function() {
+                    self.isAction = false;
+                };
+
+                // turn direction
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, callBack);
+
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
     },
     "jr_go_slow": {
         "skeleton": "basic",
         "color": "#f46c6c",
         "params": [
-            "천천히 가기",
+            {
+                text: "천천히 가기",
+                type: "Text"
+            },
             {
                 "type": "Image",
                 "img": "/img/assets/ntry/bitmap/jr/cparty_go_slow.png",
                 "size": 24
             }
-        ]
+        ],
+        func: function() {
+            if (!this.isContinue) {
+
+                this.isContinue = true;
+                this.isAction = true;
+                var self = this;
+                var callBack = function() {
+                    self.isAction = false;
+                };
+
+                // turn direction
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.GO_SLOW, callBack);
+
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
     },
     "jr_repeat_until_dest": {
         "skeleton": "basic_loop",
@@ -16087,13 +16192,15 @@ Entry.block = {
             "true"
         ],
         "params": [
-            "",
             {
                 "type": "Image",
                 "img": "/img/assets/ntry/bitmap/jr/jr_goal_image.png",
                 "size": 18
             },
-            "만날 때 까지 반복하기",
+            {
+                text: "만날 때 까지 반복하기",
+                type: "Text"
+            },
             {
                 "type": "Image",
                 "img": "/img/assets/week/blocks/for.png",
@@ -16104,19 +16211,33 @@ Entry.block = {
             {
                 "accept": "basic"
             }
-        ]
+        ],
+        func: function() {
+            var statement = this.block.statements[0];
+            if (statement.getBlocks().length === 0)
+                return;
+
+            this.executor.stepInto(statement);
+            return Entry.STATIC.BREAK;
+        }
     },
     "jr_if_construction": {
         "skeleton": "basic_loop",
         "color": "#498DEB",
         "params": [
-            "만약",
+            {
+                text: "만약",
+                type: "Text"
+            },
             {
                 "type": "Image",
                 "img": "/img/assets/ntry/bitmap/jr/jr_construction_image.png",
                 "size": 18
             },
-            "앞에 있다면",
+            {
+                text: "앞에 있다면",
+                type: "Text"
+            },
             {
                 "type": "Image",
                 "img": "/img/assets/week/blocks/for.png",
@@ -16127,7 +16248,47 @@ Entry.block = {
             {
                 "accept": "basic"
             }
-        ]
+        ],
+        func: function() {
+            if (this.isContinue)
+                return;
+            var entities = Ntry.entityManager.getEntitiesByComponent(
+            Ntry.STATIC.UNIT);
+
+            var entity;
+            for (var key in entities)
+                entity = entities[key];
+
+            var unitComp = Ntry.entityManager.getComponent(
+                entity.id, Ntry.STATIC.UNIT);
+            var gridComp = Ntry.entityManager.getComponent(
+                entity.id, Ntry.STATIC.GRID);
+
+            var grid = {x: gridComp.x, y: gridComp.y};
+            Ntry.addVectorByDirection(grid, unitComp.direction, 1);
+
+            var fitEntities = Ntry.entityManager.find(
+                {
+                    type: Ntry.STATIC.GRID,
+                    x: grid.x,
+                    y: grid.y
+                },
+                {
+                    type: Ntry.STATIC.TILE,
+                    tileType: Ntry.STATIC.OBSTACLE_REPAIR
+                }
+            );
+
+            this.isContinue = true;
+
+            var statement = this.block.statements[0];
+            if (fitEntities.length === 0) return;
+            else if (statement.getBlocks().length === 0) return;
+            else {
+                this.executor.stepInto(statement);
+                return Entry.STATIC.BREAK;
+            }
+        }
     },
     "jr_if_speed": {
         "skeleton": "basic_loop",
@@ -16148,7 +16309,47 @@ Entry.block = {
             {
                 "accept": "basic"
             }
-        ]
+        ],
+        func: function()  {
+            if (this.isContinue)
+                return;
+            var entities = Ntry.entityManager.getEntitiesByComponent(
+            Ntry.STATIC.UNIT);
+
+            var entity;
+            for (var key in entities)
+                entity = entities[key];
+
+            var unitComp = Ntry.entityManager.getComponent(
+                entity.id, Ntry.STATIC.UNIT);
+            var gridComp = Ntry.entityManager.getComponent(
+                entity.id, Ntry.STATIC.GRID);
+
+            var grid = {x: gridComp.x, y: gridComp.y};
+            Ntry.addVectorByDirection(grid, unitComp.direction, 1);
+
+            var fitEntities = Ntry.entityManager.find(
+                {
+                    type: Ntry.STATIC.GRID,
+                    x: grid.x,
+                    y: grid.y
+                },
+                {
+                    type: Ntry.STATIC.TILE,
+                    tileType: Ntry.STATIC.OBSTACLE_SLOW
+                }
+            );
+
+            this.isContinue = true;
+
+            var statement = this.block.statements[0];
+            if (fitEntities.length === 0) return;
+            else if(statement.getBlocks().length === 0) return;
+            else {
+                this.executor.stepInto(statement);
+                return Entry.STATIC.BREAK;
+            }
+        }
     },
     "maze_step_start": {
         "skeleton": "basic_event",
