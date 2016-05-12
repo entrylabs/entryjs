@@ -18640,13 +18640,13 @@ Entry.PARAM = -1;
   b.addExecutor = function(a) {
     this.executors.push(a);
   };
-  b.createThread = function(a) {
+  b.createThread = function(a, b) {
     if (!(a instanceof Array)) {
       return console.error("blocks must be array");
     }
-    a = new Entry.Thread(a, this);
-    this._data.push(a);
-    return a;
+    var d = new Entry.Thread(a, this);
+    void 0 === b ? this._data.push(d) : this._data.insert(d, b);
+    return d;
   };
   b.cloneThread = function(a, b) {
     var d = a.clone(this, b);

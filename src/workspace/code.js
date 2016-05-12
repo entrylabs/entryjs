@@ -152,12 +152,14 @@ Entry.PARAM = -1;
         this.executors.push(executor);
     };
 
-    p.createThread = function(blocks) {
+    p.createThread = function(blocks, index) {
         if (!(blocks instanceof Array))
             return console.error("blocks must be array");
 
         var thread = new Entry.Thread(blocks, this);
-        this._data.push(thread);
+        if (index === undefined) this._data.push(thread);
+        else this._data.insert(thread, index);
+
         return thread;
     };
 
