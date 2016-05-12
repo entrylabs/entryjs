@@ -383,6 +383,13 @@ Entry.Func.generateWsBlock = function(targetFunc) {
         }
         outputBlock = outputBlock.getOutputBlock();
     }
+    booleanIndex++;
+    schemaTemplate += " %" + (booleanIndex + stringIndex);
+    schemaParams.push({
+        "type": "Indicator",
+        "img": "/lib/entryjs/images/block_icon/function_03.png",
+        "size": 12
+    });
     Entry.Mutator.mutate(
         "func_" + targetFunc.id,
         {params: schemaParams, template: schemaTemplate}

@@ -5835,7 +5835,13 @@ Entry.block = {
     "function_general": {
         "skeleton": "basic",
         "color": "#cc7337",
-        "params": [],
+        "params": [
+            {
+                "type": "Indicator",
+                "img": "/lib/entryjs/images/block_icon/function_03.png",
+                "size": 12
+            }
+        ],
         "events": {
             "dataAdd": [
                 function(block) {
