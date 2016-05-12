@@ -15755,7 +15755,7 @@ type:"function_field_string"}}, function_field_boolean:{skeleton:"basic_param", 
   return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
 }}, function_param_boolean:{skeleton:"basic_boolean_field", color:"#aeb8ff", template:"%1 %2", func:function() {
   return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
-}}, function_create:{skeleton:"basic", color:"#cc7337", event:"funcDef", params:[{type:"Block", accept:"paramMagnet", value:{type:"function_field_label"}}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/function_03.png", size:12}], paramsKeyMap:{FIELD:0}, func:function() {
+}}, function_create:{skeleton:"basic", color:"#cc7337", event:"funcDef", params:[{type:"Block", accept:"paramMagnet", value:{type:"function_field_label", params:[Lang.Blocks.FUNC]}}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/function_03.png", size:12}], paramsKeyMap:{FIELD:0}, func:function() {
 }}, function_general:{skeleton:"basic", color:"#cc7337", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/function_03.png", size:12}], events:{dataAdd:[function(b) {
   var a = Entry.variableContainer;
   a && a.addRef("_functionRefs", b);
