@@ -343,11 +343,11 @@ Entry.Func.generateBlock = function(func) {
             } else if (param.accept === "booleanMagnet") {
                 description +=
                     Lang.template.function_param_boolean +
-                    booleanIndex ? booleanIndex : "";
+                    (booleanIndex ? booleanIndex : "");
                 booleanIndex++;
             } else {
                 description += Lang.General.param_string +
-                    stringIndex ? stringIndex : "";
+                    (stringIndex ? stringIndex : "");
                 stringIndex++;
             }
         } else {
