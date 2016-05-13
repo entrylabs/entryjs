@@ -16,6 +16,7 @@ Entry.Func = function(func) {
         [
             {
                 type: "function_create",
+                deletable: false,
                 x: 40, y: 40
             }
         ]
@@ -50,7 +51,9 @@ Entry.Func = function(func) {
 Entry.Func.threads = {};
 
 Entry.Func.registerFunction = function(func) {
-    var blockMenu = Entry.playground.mainWorkspace.getBlockMenu();
+    var workspace = Entry.playground.mainWorkspace;
+    if (!workspace) return;
+    var blockMenu = workspace.getBlockMenu();
     var menuCode = blockMenu.getCategoryCodes("func");
     this._targetFuncBlock = menuCode.createThread([{
         type: "func_" + func.id
@@ -216,7 +219,9 @@ Entry.Func.syncFunc = function() {
 };
 
 Entry.Func.setupMenuCode = function() {
-    var blockMenu = Entry.playground.mainWorkspace.getBlockMenu();
+    var workspace = Entry.playground.mainWorkspace;
+    if (!workspace) return;
+    var blockMenu = workspace.getBlockMenu();
     var menuCode = blockMenu.getCategoryCodes("func");
     this._fieldLabel = menuCode.createThread([{
         type: "function_field_label"
@@ -237,6 +242,8 @@ Entry.Func.setupMenuCode = function() {
 }
 
 Entry.Func.refreshMenuCode = function() {
+    var workspace = Entry.playground.mainWorkspace;
+    if (!workspace) return;
     if (!this.menuCode)
         this.setupMenuCode();
     var stringType = this._fieldString.params[0].type;
@@ -290,7 +297,9 @@ Entry.Func.createParamBlock = function(type, blockPrototype, originalType) {
 }
 
 Entry.Func.updateMenu = function() {
-    var blockMenu = Entry.playground.mainWorkspace.getBlockMenu();
+    var workspace = Entry.playground.mainWorkspace;
+    if (!workspace) return;
+    var blockMenu = workspace.getBlockMenu();
     if (this.targetFunc) {
         if (!this.menuCode)
             this.setupMenuCode();
@@ -319,7 +328,35 @@ Entry.Func.generateBlock = function(func) {
         template: blockSchema.template,
         params: blockSchema.params
     }
-    return {block: block, description: blockSchema.template};
+
+    var reg = /(%\d)/mi;
+    var templateParams = blockSchema.template.split(reg);
+    var description = "";
+    var booleanIndex = 0;
+    var stringIndex = 0;
+    for (var i in templateParams) {
+        var templateChunk = templateParams[i];
+        if (reg.test(templateChunk)) {
+            var paramIndex = Number(templateChunk.split('%')[1]) - 1;
+            var param = blockSchema.params[paramIndex];
+            if (param.type === "Indicator") {
+            } else if (param.accept === "booleanMagnet") {
+                description +=
+                    Lang.template.function_param_boolean +
+                    (booleanIndex ? booleanIndex : "");
+                booleanIndex++;
+            } else {
+                description += Lang.General.param_string +
+                    (stringIndex ? stringIndex : "");
+                stringIndex++;
+            }
+        } else {
+            description += templateChunk
+        }
+
+    }
+
+    return {block: block, description: description};
 };
 
 Entry.Func.prototype.generateBlock = function(toSave) {
@@ -329,6 +366,7 @@ Entry.Func.prototype.generateBlock = function(toSave) {
 };
 
 Entry.Func.generateWsBlock = function(targetFunc) {
+    this.unbindFuncChangeEvent();
     targetFunc = targetFunc ? targetFunc : this.targetFunc;
     var defBlock = targetFunc.content.getEventMap("funcDef")[0];
     var outputBlock = defBlock.params[0];
@@ -375,6 +413,13 @@ Entry.Func.generateWsBlock = function(targetFunc) {
         }
         outputBlock = outputBlock.getOutputBlock();
     }
+    booleanIndex++;
+    schemaTemplate += " %" + (booleanIndex + stringIndex);
+    schemaParams.push({
+        "type": "Indicator",
+        "img": "/lib/entryjs/images/block_icon/function_03.png",
+        "size": 12
+    });
     Entry.Mutator.mutate(
         "func_" + targetFunc.id,
         {params: schemaParams, template: schemaTemplate}
@@ -396,13 +441,12 @@ Entry.Func.generateWsBlock = function(targetFunc) {
         }
     }
 
-    this.refreshMenuCode();
-
+    this.bindFuncChangeEvent(targetFunc);
 };
 
 Entry.Func.bindFuncChangeEvent = function(targetFunc) {
     targetFunc = targetFunc ? targetFunc : this.targetFunc;
-    if (!this._funcChangeEvent)
+    if (!this._funcChangeEvent && targetFunc.content.getEventMap("funcDef")[0].view)
         this._funcChangeEvent = targetFunc.content
             .getEventMap("funcDef")[0].view._contents[1]
             .changeEvent.attach(this, this.generateWsBlock);

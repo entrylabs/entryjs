@@ -717,6 +717,7 @@ Entry.VariableContainer.prototype.saveFunction = function(func) {
  */
 Entry.VariableContainer.prototype.createFunctionView = function(func) {
     var that = this;
+    if (!this.view_) return;
     var view = Entry.createElement('li');
     view.addClass('entryVariableListElementWorkspace');
     view.addClass('entryFunctionElementWorkspace');

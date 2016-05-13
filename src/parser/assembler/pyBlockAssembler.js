@@ -6,7 +6,9 @@
 goog.provide("Entry.PyBlockAssembler");
 
 goog.require("Entry.KeyboardCodeMap");
-goog.require("Entry.ValueConvertor");
+goog.require("Entry.VariableConvertor");
+goog.require("Entry.ParamTypeMap");
+goog.require("Entry.BlockTypeConvertor");
 
 Entry.PyBlockAssembler = function(blockSyntax) {
     this.blockSyntax = blockSyntax;
@@ -28,6 +30,7 @@ Entry.PyBlockAssembler = function(blockSyntax) {
 		       	
 		        var block = this.getBlock(targetSyntax);
 		        var paramsType = Entry.BlockInfoExtractor.prototype.getParamsType(block);
+		        var defParamsType = Entry.BlockInfoExtractor.prototype.getDefParamsType(block);
             	var params = [];
             	var arguments = unit.expression.arguments;
 
@@ -48,8 +51,24 @@ Entry.PyBlockAssembler = function(blockSyntax) {
 			            }
 			            else {	
 			            	var param = arguments[index].value;
-			            	param = Entry.ValueConvertor.prototype.convertText(param);
+			            	var paramType = Entry.ParamTypeMap.prototype.getDropdownDynamicType[block];
+			            	console.log("dd convertor", param, paramType);
+
+			            	param = Entry.VariableConvertor.prototype.convert(paramType, param);
 			            }
+
+			 			var defParamType = defParamsType[index];
+			 			console.log("defParamType", defParamType);
+			 			var convertedBlockType = Entry.BlockTypeConvertor.prototype.convert(defParamType);
+			 			param.type = convertedBlockType;
+
+			 			console.log("convertedBlockType", convertedBlockType);
+			 			console.log("block", block);
+			 			if(convertedBlockType == "get_pictures") {
+			 				param.params[0] = Entry.VariableConvertor.prototype.convert("picture", param.params[0]);
+			 			}
+
+			            console.log("param", param);
 
 		            	params.push(param);
 		            }
@@ -108,7 +127,9 @@ Entry.PyBlockAssembler = function(blockSyntax) {
 			            }
 			            else {	
 			            	var param = arguments[index].value;
-			            	param = Entry.ValueConvertor.prototype.convertText(param);
+			            	var paramType = Entry.ParamTypeMap.prototype.getDropdownDynamicType[block];
+			            	
+			            	param = Entry.VariableConvertor.prototype.convert(paramType, param);
 			            }
 
 		            	params.push(param);
@@ -198,7 +219,6 @@ Entry.PyBlockAssembler = function(blockSyntax) {
             		result = { type: block};
             	}
             	else if(typeof arg === 'string'){
-            		arg = Entry.ValueConvertor.prototype.convertText(arg);
 	           		var targetSyntax = String("\"%1\"");
 	           		var block = this.getBlock(targetSyntax);
 	           		result = { type: block, params: [arg] };
@@ -222,7 +242,6 @@ Entry.PyBlockAssembler = function(blockSyntax) {
             	}
 
             	if(typeof arg === 'string'){
-            		arg = Entry.ValueConvertor.prototype.convertText(arg);
 	           		var targetSyntax = String("\"%1\"");
             	}
 	        	else {

@@ -28,7 +28,7 @@ Blockly.Blocks.angle = {
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
   },
-  syntax: {js: [], py: ["%1"]}
+  syntax: {js: [], py: [" %1 "]}
 };
 
 Entry.block.angle = function (sprite, script) {

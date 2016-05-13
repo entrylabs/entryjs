@@ -59,7 +59,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
             height: CONTENT_HEIGHT,
             y: y,
             rx: 3, ry: 3,
-            fill: "transparent"
+            fill: "#fff",
+            'fill-opacity': 0.4
         });
 
         this.svgGroup.appendChild(this.textElement);

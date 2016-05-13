@@ -224,7 +224,7 @@ Blockly.Blocks.create_clone = {
         this.setPreviousStatement(true);
         this.setNextStatement(true);
     },
-    syntax: {js: [], py: ["Entry.create_clone(%1)"]}
+    syntax: {js: [], py: ["Entry.create_clone(\"%1\")"]}
 };
 
 Entry.block.create_clone = function (sprite, script) {
@@ -330,7 +330,7 @@ Blockly.Blocks.repeat_while_true = {
             this.setNextStatement(true);
         }
     },
-    syntax: {js: [], py: ["if condition :\nwhile boolean :\n$1\n"]}
+    syntax: {js: [], py: ["particular block"]}
 };
 
 Entry.block.repeat_while_true = function (sprite, script) {
@@ -363,7 +363,7 @@ Blockly.Blocks.stop_object = {
         this.setPreviousStatement(true);
         this.setNextStatement(true);
     },
-    syntax: {js: [], py: ["Entry.stop(%1)"]}
+    syntax: {js: [], py: ["Entry.stop(\"%1\")"]}
 };
 
 Entry.block.stop_object = function (sprite, script) {

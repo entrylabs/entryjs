@@ -1452,7 +1452,7 @@ Blockly.Blocks.angle = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldAngle("90"), "ANGLE");
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:["%1"]}};
+}, syntax:{js:[], py:[" %1 "]}};
 Entry.block.angle = function(b, a) {
   return a.getNumberField("ANGLE");
 };
@@ -2050,7 +2050,7 @@ Blockly.Blocks.create_clone = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["Entry.create_clone(%1)"]}};
+}, syntax:{js:[], py:['Entry.create_clone("%1")']}};
 Entry.block.create_clone = function(b, a) {
   var c = a.getField("VALUE", a), d = a.callReturn();
   "self" == c ? b.parent.addCloneEntity(b.parent, b, null) : Entry.container.getObject(c).addCloneEntity(b.parent, null, null);
@@ -2095,7 +2095,7 @@ Blockly.Blocks.repeat_while_true = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["if condition :\nwhile boolean :\n$1\n"]}};
+}, syntax:{js:[], py:["particular block"]}};
 Entry.block.repeat_while_true = function(b, a) {
   var c = a.getBooleanValue("BOOL", a);
   "until" == a.getField("OPTION", a) && (c = !c);
@@ -2109,7 +2109,7 @@ Blockly.Blocks.stop_object = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["Entry.stop(%1)"]}};
+}, syntax:{js:[], py:['Entry.stop("%1")']}};
 Entry.block.stop_object = function(b, a) {
   var c = a.getField("TARGET", a), d = Entry.container;
   switch(c) {
@@ -3212,7 +3212,7 @@ Blockly.Blocks.dialog_time = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:['self.dialog_by_seconds(%1, %2, "%3")']}};
+}, syntax:{js:[], py:['self.dialog_for_seconds(%1, %2, "%3")']}};
 Entry.block.dialog_time = function(b, a) {
   if (!a.isStart) {
     var c = a.getNumberValue("SECOND", a), d = a.getStringValue("VALUE", a), e = a.getField("OPTION", a);
@@ -3238,7 +3238,7 @@ Blockly.Blocks.dialog = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.dialog(%1)"]}};
+}, syntax:{js:[], py:['self.dialog(%1, "%2")']}};
 Entry.block.dialog = function(b, a) {
   var c = a.getStringValue("VALUE", a);
   c || "number" == typeof c || (c = "    ");
@@ -3278,7 +3278,7 @@ Blockly.Blocks.change_to_next_shape = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:['self.change_to_shape("%1")']}};
+}, syntax:{js:[], py:['self.change_to_adjacent_shape("%1")']}};
 Entry.block.change_to_next_shape = function(b, a) {
   var c;
   c = a.fields && "prev" === a.getStringField("DRIECTION") ? b.parent.getPrevPicture(b.picture.id) : b.parent.getNextPicture(b.picture.id);
@@ -3325,7 +3325,7 @@ Blockly.Blocks.erase_all_effects = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.remove_effect_all()"]}};
+}, syntax:{js:[], py:["self.remove_all_effects()"]}};
 Entry.block.erase_all_effects = function(b, a) {
   b.resetFilter();
   return a.callReturn();
@@ -3394,7 +3394,7 @@ Blockly.Blocks.flip_y = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.flip_horizontally()"]}};
+}, syntax:{js:[], py:["self.flip_horizontal()"]}};
 Entry.block.flip_y = function(b, a) {
   b.setScaleX(-1 * b.getScaleX());
   return a.callReturn();
@@ -3405,7 +3405,7 @@ Blockly.Blocks.flip_x = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.flip_vertically()"]}};
+}, syntax:{js:[], py:["self.flip_vertical()"]}};
 Entry.block.flip_x = function(b, a) {
   b.setScaleY(-1 * b.getScaleY());
   return a.callReturn();
@@ -3433,7 +3433,7 @@ Blockly.Blocks.get_pictures = {init:function() {
   this.appendDummyInput().appendField(" ");
   this.setOutput(!0, "String");
   this.setInputsInline(!0);
-}};
+}, syntax:{js:[], py:[]}};
 Entry.block.get_pictures = function(b, a) {
   return a.getStringField("VALUE");
 };
@@ -3445,7 +3445,7 @@ Blockly.Blocks.change_to_some_shape = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.change_shape_to(%1)"]}};
+}, syntax:{js:[], py:["self.change_to_some_shape(%1)"]}};
 Entry.block.change_to_some_shape = function(b, a) {
   var c = a.getStringValue("VALUE");
   Entry.parseNumber(c);
@@ -3463,7 +3463,7 @@ Blockly.Blocks.add_effect_amount = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:['self.add_effect_by_amount("%1", %2)']}};
+}, syntax:{js:[], py:['self.add_effect_by_cbt("%1", %2)']}};
 Entry.block.add_effect_amount = function(b, a) {
   var c = a.getField("EFFECT", a), d = a.getNumberValue("VALUE", a);
   "color" == c ? b.effect.hsv = d + b.effect.hsv : "brightness" == c ? b.effect.brightness = d + b.effect.brightness : "transparency" == c && (b.effect.alpha -= d / 100);
@@ -3480,7 +3480,7 @@ Blockly.Blocks.change_effect_amount = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:['self.set_effect_by_amount("%1", %2)']}};
+}, syntax:{js:[], py:['self.set_effect_by_cbt("%1", %2)']}};
 Entry.block.change_effect_amount = function(b, a) {
   var c = a.getField("EFFECT", a), d = a.getNumberValue("VALUE", a);
   "color" == c ? b.effect.hsv = d : "brightness" == c ? b.effect.brightness = d : "transparency" == c && (b.effect.alpha = 1 - d / 100);
@@ -3558,7 +3558,7 @@ Blockly.Blocks.move_direction = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.move_to_direction(%1)"]}};
+}, syntax:{js:[], py:["self.move_to_moving_direction(%1)"]}};
 Entry.block.move_direction = function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setX(b.getX() + c * Math.cos((b.getRotation() + b.getDirection() - 90) / 180 * Math.PI));
@@ -3589,7 +3589,7 @@ Blockly.Blocks.move_y = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.change_y(%1)"]}};
+}, syntax:{js:[], py:["self.move_y(%1)"]}};
 Entry.block.move_y = function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setY(b.getY() + c);
@@ -3608,7 +3608,7 @@ Blockly.Blocks.locate_xy_time = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.move_xy_by_seconds(%1, %2, %3)"]}};
+}, syntax:{js:[], py:["self.move_xy_for_seconds(%1, %2, %3)"]}};
 Entry.block.locate_xy_time = function(b, a) {
   if (!a.isStart) {
     var c;
@@ -3745,7 +3745,7 @@ Blockly.Blocks.locate = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.move_at(%1)"]}};
+}, syntax:{js:[], py:['self.move_to_object("%1")']}};
 Entry.block.locate = function(b, a) {
   var c = a.getField("VALUE", a), d;
   "mouse" == c ? (c = Entry.stage.mouseCoordinate.x, d = Entry.stage.mouseCoordinate.y) : (d = Entry.container.getEntity(c), c = d.getX(), d = d.getY());
@@ -3766,7 +3766,7 @@ Blockly.Blocks.move_xy_time = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.move_xy_by_seconds(%1, %2, %3)"]}};
+}, syntax:{js:[], py:["self.move_xy_for_seconds(%1, %2, %3)"]}};
 Entry.block.move_xy_time = function(b, a) {
   if (!a.isStart) {
     var c;
@@ -3885,7 +3885,7 @@ Blockly.Blocks.see_angle_object = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.look_at(%1)"]}};
+}, syntax:{js:[], py:['self.look_at_object("%1")']}};
 Entry.block.see_angle_object = function(b, a) {
   var c = a.getField("VALUE", a), d = b.getX(), e = b.getY();
   if (b.parent.id == c) {
@@ -3935,7 +3935,7 @@ Blockly.Blocks.locate_object_time = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.move_at_by_seconds(%1, %2)"]}};
+}, syntax:{js:[], py:['self.move_at_object_for_seconds(%1, "%2")']}};
 Entry.block.locate_object_time = function(b, a) {
   if (!a.isStart) {
     var c, d, e;
@@ -4022,7 +4022,7 @@ Blockly.Blocks.move_to_angle = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.move_to_by(%1, %2)"]}};
+}, syntax:{js:[], py:["self.move_to_direction_by_distance(%1, %2)"]}};
 Entry.block.move_to_angle = function(b, a) {
   var c = a.getNumberValue("VALUE", a), d = a.getNumberValue("ANGLE", a);
   b.setX(b.getX() + c * Math.cos((d - 90) / 180 * Math.PI));
@@ -4041,7 +4041,7 @@ Blockly.Blocks.rotate_by_time = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.rotate_direction_by_seconds(%1, %2)"]}};
+}, syntax:{js:[], py:["self.rotate_direction_for_seconds(%1, %2)"]}};
 Entry.block.rotate_by_time = function(b, a) {
   if (!a.isStart) {
     var c;
@@ -4068,7 +4068,7 @@ Blockly.Blocks.direction_relative_duration = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.rotate_moving_direction_by_seconds(%1, %2)"]}};
+}, syntax:{js:[], py:["self.rotate_moving_direction_for_seconds(%1, %2)"]}};
 Entry.block.direction_relative_duration = function(b, a) {
   if (!a.isStart) {
     var c;
@@ -9816,7 +9816,7 @@ Entry.Painter.prototype.selectToolbox = function(b) {
       this.toggleCoordinator();
   }
 };
-Entry.BlockInfoExtractor = function(b) {
+Entry.BlockInfoExtractor = function() {
 };
 (function(b) {
   b.getParamsType = function(a) {
@@ -9827,7 +9827,117 @@ Entry.BlockInfoExtractor = function(b) {
     }
     return b;
   };
+  b.getDefParamsType = function(a) {
+    a = Entry.block[a].def.params;
+    var b = [], d;
+    for (d in a) {
+      var e = a[d];
+      console.log("def p", e);
+      null === e ? b.push(null) : b.push(e.type);
+    }
+    console.log("final def p", b);
+    return b;
+  };
 })(Entry.BlockInfoExtractor.prototype);
+Entry.BlockTypeConvertor = function() {
+};
+(function(b) {
+  b.convert = function(a) {
+    console.log("type convertor", a);
+    var b = a;
+    switch(a) {
+      case "angle":
+        b = "angle";
+        break;
+      case "get_pictures":
+        b = "get_pictures";
+    }
+    return b;
+  };
+})(Entry.BlockTypeConvertor.prototype);
+Entry.VariableConvertor = function() {
+};
+(function(b) {
+  b.convert = function(a, b) {
+    console.log("convert", a, b);
+    var d = "";
+    switch(a) {
+      case "variable":
+        var e = Entry.variableContainer.messages_;
+        if (0 != e.length) {
+          for (var f in e) {
+            if (b == e[f].name) {
+              return d = e[f].id;
+            }
+          }
+        }
+        d = b;
+        break;
+      case "scene":
+        e = Entry.scene.scenes_;
+        if (0 != e.length) {
+          for (f in e) {
+            if (b == e[f].name) {
+              return d = e[f].id;
+            }
+          }
+        }
+        d = b;
+        break;
+      case "object":
+        if ("\uc790\uc2e0" == b) {
+          return "self";
+        }
+        if ("\ub9c8\uc6b0\uc2a4\ud3ec\uc778\ud130" == b) {
+          return "mouse";
+        }
+        d = Entry.container.objects_;
+        if (0 != d.length) {
+          for (f in d) {
+            if (b == d[f].name && d[f].isSelected_) {
+              return d = d[f].id;
+            }
+          }
+        }
+        d = b;
+        break;
+      case "picture":
+        d = Entry.container.objects_;
+        if (0 != d.length) {
+          for (f in d) {
+            if (d[f].isSelected_) {
+              var g = d[f].pictures;
+              for (e in g) {
+                if (b == g[e].name) {
+                  return d = g[e].id;
+                }
+              }
+            }
+          }
+        }
+        d = b;
+        break;
+      case "sound":
+        d = Entry.container.objects_;
+        if (0 != d.length) {
+          for (f in d) {
+            if (d[f].isSelected_) {
+              for (e in g = d[f].sounds, g) {
+                if (b == g[e].name) {
+                  return d = g[e].id;
+                }
+              }
+            }
+          }
+        }
+        d = b;
+        break;
+      default:
+        d = "none" == b ? null : b;
+    }
+    return d;
+  };
+})(Entry.VariableConvertor.prototype);
 Entry.JsAstGenerator = function() {
 };
 (function(b) {
@@ -9847,6 +9957,159 @@ Entry.PyAstGenerator = function() {
     }
   };
 })(Entry.PyAstGenerator.prototype);
+Entry.KeyboardCodeMap = function() {
+};
+(function(b) {
+  b.keyCodeToChar = {8:"Backspace", 9:"Tab", 13:"Enter", 16:"Shift", 17:"Ctrl", 18:"Alt", 19:"Pause/Break", 20:"Caps Lock", 27:"Esc", 32:"Space", 33:"Page Up", 34:"Page Down", 35:"End", 36:"Home", 37:"Left", 38:"Up", 39:"Right", 40:"Down", 45:"Insert", 46:"Delete", 48:"0", 49:"1", 50:"2", 51:"3", 52:"4", 53:"5", 54:"6", 55:"7", 56:"8", 57:"9", 65:"A", 66:"B", 67:"C", 68:"D", 69:"E", 70:"F", 71:"G", 72:"H", 73:"I", 74:"J", 75:"K", 76:"L", 77:"M", 78:"N", 79:"O", 80:"P", 81:"Q", 82:"R", 83:"S", 84:"T", 
+  85:"U", 86:"V", 87:"W", 88:"X", 89:"Y", 90:"Z", 91:"Windows", 93:"Right Click", 96:"Numpad 0", 97:"Numpad 1", 98:"Numpad 2", 99:"Numpad 3", 100:"Numpad 4", 101:"Numpad 5", 102:"Numpad 6", 103:"Numpad 7", 104:"Numpad 8", 105:"Numpad 9", 106:"Numpad *", 107:"Numpad +", 109:"Numpad -", 110:"Numpad .", 111:"Numpad /", 112:"F1", 113:"F2", 114:"F3", 115:"F4", 116:"F5", 117:"F6", 118:"F7", 119:"F8", 120:"F9", 121:"F10", 122:"F11", 123:"F12", 144:"Num Lock", 145:"Scroll Lock", 182:"My Computer", 183:"My Calculator", 
+  186:";", 187:"=", 188:",", 189:"-", 190:".", 191:"/", 192:"`", 219:"[", 220:"\\", 221:"]", 222:"'"};
+  b.keyCharToCode = {Backspace:8, Tab:9, Enter:13, Shift:16, Ctrl:17, Alt:18, "Pause/Break":19, "Caps Lock":20, Esc:27, Space:32, "Page Up":33, "Page Down":34, End:35, Home:36, Left:37, Up:38, Right:39, Down:40, Insert:45, Delete:46, 0:48, 1:49, 2:50, 3:51, 4:52, 5:53, 6:54, 7:55, 8:56, 9:57, A:65, B:66, C:67, D:68, E:69, F:70, G:71, H:72, I:73, J:74, K:75, L:76, M:77, N:78, O:79, P:80, Q:81, R:82, S:83, T:84, U:85, V:86, W:87, X:88, Y:89, Z:90, Windows:91, "Right Click":93, "Numpad 0":96, "Numpad 1":97, 
+  "Numpad 2":98, "Numpad 3":99, "Numpad 4":100, "Numpad 5":101, "Numpad 6":102, "Numpad 7":103, "Numpad 8":104, "Numpad 9":105, "Numpad *":106, "Numpad +":107, "Numpad -":109, "Numpad .":110, "Numpad /":111, F1:112, F2:113, F3:114, F4:115, F5:116, F6:117, F7:118, F8:119, F9:120, F10:121, F11:122, F12:123, "Num Lock":144, "Scroll Lock":145, "My Computer":182, "My Calculator":183, ";":186, "=":187, ",":188, "-":189, ".":190, "/":191, "`":192, "[":219, "\\":220, "]":221, "'":222};
+})(Entry.KeyboardCodeMap.prototype);
+Entry.ParamTypeMap = function() {
+};
+(function(b) {
+  b.getDropdownDynamicType = {when_message_cast:"variable", message_cast:"variable", message_cast_wait:"variable", start_scene:"scene", create_clone:"object", locate:"object", locate_object_time:"object", see_angle_object:"object", change_to_some_shape:"picture", sound_something_with_block:"sound", sound_something_second_with_block:"sound", sound_from_to:"sound", sound_something_wait_with_block:"sound", sound_something_second_wait_with_block:"sound", sound_from_to_and_wait:"sound"};
+})(Entry.ParamTypeMap.prototype);
+Entry.PyBlockAssembler = function(b) {
+  this.blockSyntax = b;
+};
+(function(b) {
+  b.assemble = function(a) {
+    console.log("unit", a);
+    var b;
+    switch(a.type) {
+      case "ExpressionStatement":
+        console.log("ExpressionStatement unit", a);
+        var d = a.expression.callee;
+        if (d.object.name && d.property.name) {
+          var e = String(d.object.name).concat(".").concat(d.property.name)
+        } else {
+          "__pythonRuntime" == String(d.object.object.name) && "functions" == String(d.object.property.name) && (e = String(d.property.name));
+        }
+        var f = this.getBlock(e);
+        b = Entry.BlockInfoExtractor.prototype.getParamsType(f);
+        var g = Entry.BlockInfoExtractor.prototype.getDefParamsType(f), e = [], arguments = a.expression.arguments;
+        console.log("argument origin", arguments);
+        if (arguments && arguments.length) {
+          for (d = 0;d < arguments.length;d++) {
+            console.log("index arg", d, arguments[d]);
+            if ("Indicator" == b[d]) {
+              var h = null;
+              arguments.splice(d, 0, h);
+            } else {
+              if ("Block" == b[d]) {
+                h = this.assemble(arguments[d]);
+              } else {
+                if ("Keyboard" == b[d]) {
+                  h = Entry.KeyboardCodeMap.prototype.keyCharToCode[arguments[d].value];
+                } else {
+                  var h = arguments[d].value, k = Entry.ParamTypeMap.prototype.getDropdownDynamicType[f];
+                  console.log("dd convertor", h, k);
+                  h = Entry.VariableConvertor.prototype.convert(k, h);
+                }
+              }
+            }
+            k = g[d];
+            console.log("defParamType", k);
+            k = Entry.BlockTypeConvertor.prototype.convert(k);
+            h.type = k;
+            console.log("convertedBlockType", k);
+            console.log("block", f);
+            "get_pictures" == k && (h.params[0] = Entry.VariableConvertor.prototype.convert("picture", h.params[0]));
+            console.log("param", h);
+            e.push(h);
+          }
+        }
+        b = {type:f, params:e};
+        console.log("ExpressionStatement result", b);
+        break;
+      case "WhileStatement":
+        console.log("WhileStatement unit", a);
+        f = a.test;
+        e = [];
+        h = this.assemble(f);
+        e.push(h);
+        f = this.getBlock("while True:\n$1");
+        h = [];
+        b = a.body.body;
+        for (d in b) {
+          a = this.assemble(b[d]), h.push(a);
+        }
+        b = {type:f, statements:[h]};
+        console.log("WhileStatement result", b);
+        break;
+      case "BlockStatement":
+        console.log("BlockStatement unit", a);
+        "range" == a.body[0].declarations[0].init.callee.property.name && (e = "for i in range");
+        f = this.getBlock(e);
+        b = Entry.BlockInfoExtractor.prototype.getParamsType(f);
+        e = [];
+        if ((arguments = a.body[0].declarations[0].init.arguments) && arguments.length) {
+          for (d = 0;d < arguments.length;d++) {
+            "Indicator" == b[d] ? (h = null, arguments.splice(d, 0, h)) : "Block" == b[d] ? h = this.assemble(arguments[d]) : "Keyboard" == b[d] ? h = Entry.KeyboardCodeMap.prototype.keyCharToCode[arguments[d].value] : (h = arguments[d].value, k = Entry.ParamTypeMap.prototype.getDropdownDynamicType[f], h = Entry.VariableConvertor.prototype.convert(k, h)), e.push(h);
+          }
+        }
+        var l = a.body[1].consequent;
+        b = l.body[0].body;
+        b.shift();
+        h = [];
+        for (d in b) {
+          a = this.assemble(b[d]), h.push(a);
+        }
+        b = {type:f, params:e, statements:[h]};
+        console.log("BlockStatement result", b);
+        break;
+      case "IfStatement":
+        console.log("IfStatement unit", a);
+        f = a.test;
+        e = [];
+        h = this.assemble(f);
+        e.push(h);
+        l = a.consequent;
+        h = a.alternate;
+        f = this.getBlock(null == h ? "if %1:\n$1" : "if %1:\n$1\nelse:\n$2");
+        g = [];
+        k = [];
+        if (null != l) {
+          b = l.body;
+          for (d in b) {
+            a = this.assemble(b[d]), g.push(a);
+          }
+          b = {type:f, params:e, statements:[g]};
+        }
+        if (null != h) {
+          b = h.body;
+          for (d in b) {
+            a = this.assemble(b[d]), k.push(a);
+          }
+          b = {type:f, params:e, statements:[g, k]};
+        }
+        console.log("IfStatement result", b);
+        break;
+      case "BreakStatement":
+        console.log("BreakStatement unit", a);
+        f = this.getBlock("break");
+        b = {type:f};
+        console.log("BreakStatement result", b);
+        break;
+      case "Literal":
+        console.log("Literal unit", a);
+        h = a.value;
+        console.log("arg", h);
+        !0 === h ? (e = "True", f = this.getBlock(e), b = {type:f}) : !1 === h ? (e = "False", f = this.getBlock(e), b = {type:f}) : (e = "string" === typeof h ? '"%1"' : "%1", f = this.getBlock(e), b = {type:f, params:[h]});
+        console.log("targetSyntax", e);
+        console.log("Literal result", b);
+        break;
+      case "UnaryExpression":
+        console.log("UnaryExpression unit", a), a.prefix && (h = a.operator.concat(a.argument.value)), f = this.getBlock("string" === typeof h ? '"%1"' : "%1"), b = {type:f, params:[h]}, console.log("UnaryExpression result", b);
+    }
+    return b;
+  };
+  b.getBlock = function(a) {
+    return this.blockSyntax[a];
+  };
+})(Entry.PyBlockAssembler.prototype);
 Entry.BlockToJsParser = function(b) {
   this.syntax = b;
   this._iterVariableCount = 0;
@@ -10180,42 +10443,6 @@ Entry.JsToBlockParser = function(b) {
     }
   };
 })(Entry.JsToBlockParser.prototype);
-Entry.ParticularBlock = function() {
-  this.blockToPyParser = new Entry.BlockToPyParser;
-};
-(function(b) {
-  b.isParticularBlock = function(a) {
-    return "repeat_while_true" == a.data.type ? !0 : !1;
-  };
-  b.repeat_while_true = function(a) {
-    console.log("particular block", a);
-    var b = a._schema.syntax.py[0];
-    if (!b || null == b) {
-      return "";
-    }
-    var d = b.indexOf("<if_cond>");
-    b.indexOf("<while_cond>");
-    var e = a._schema.params, f = a.data.params;
-    a = 0;
-    var g;
-    g = "" + ('mode = "' + f[1] + '"\n');
-    console.log("iffifififi", b.substring(0, d));
-    g += b.substring(0, d);
-    g += 'mode == "until" :\n\twhile ';
-    "Indicator" == e[a].type && a++;
-    "Block" == e[a].type ? g += f[a].text : ("DropdownDynamic" == e[a].type ? (console.log("data param", f[a]), b = "null" == f[a] ? "none" : this.dropdownDynamicValueConvertor(f[a], e[a])) : (b = this["Field" + e[a].type](f[a]), null == b && (b = e[a].text ? e[a].text : null)), g += b);
-    return g;
-  };
-})(Entry.ParticularBlock.prototype);
-Entry.KeyboardCodeMap = function() {
-};
-(function(b) {
-  b.keyCodeToChar = {8:"Backspace", 9:"Tab", 13:"Enter", 16:"Shift", 17:"Ctrl", 18:"Alt", 19:"Pause/Break", 20:"Caps Lock", 27:"Esc", 32:"Space", 33:"Page Up", 34:"Page Down", 35:"End", 36:"Home", 37:"Left", 38:"Up", 39:"Right", 40:"Down", 45:"Insert", 46:"Delete", 48:"0", 49:"1", 50:"2", 51:"3", 52:"4", 53:"5", 54:"6", 55:"7", 56:"8", 57:"9", 65:"A", 66:"B", 67:"C", 68:"D", 69:"E", 70:"F", 71:"G", 72:"H", 73:"I", 74:"J", 75:"K", 76:"L", 77:"M", 78:"N", 79:"O", 80:"P", 81:"Q", 82:"R", 83:"S", 84:"T", 
-  85:"U", 86:"V", 87:"W", 88:"X", 89:"Y", 90:"Z", 91:"Windows", 93:"Right Click", 96:"Numpad 0", 97:"Numpad 1", 98:"Numpad 2", 99:"Numpad 3", 100:"Numpad 4", 101:"Numpad 5", 102:"Numpad 6", 103:"Numpad 7", 104:"Numpad 8", 105:"Numpad 9", 106:"Numpad *", 107:"Numpad +", 109:"Numpad -", 110:"Numpad .", 111:"Numpad /", 112:"F1", 113:"F2", 114:"F3", 115:"F4", 116:"F5", 117:"F6", 118:"F7", 119:"F8", 120:"F9", 121:"F10", 122:"F11", 123:"F12", 144:"Num Lock", 145:"Scroll Lock", 182:"My Computer", 183:"My Calculator", 
-  186:";", 187:"=", 188:",", 189:"-", 190:".", 191:"/", 192:"`", 219:"[", 220:"\\", 221:"]", 222:"'"};
-  b.keyCharToCode = {Backspace:8, Tab:9, Enter:13, Shift:16, Ctrl:17, Alt:18, "Pause/Break":19, "Caps Lock":20, Esc:27, Space:32, "Page Up":33, "Page Down":34, End:35, Home:36, Left:37, Up:38, Right:39, Down:40, Insert:45, Delete:46, 0:48, 1:49, 2:50, 3:51, 4:52, 5:53, 6:54, 7:55, 8:56, 9:57, A:65, B:66, C:67, D:68, E:69, F:70, G:71, H:72, I:73, J:74, K:75, L:76, M:77, N:78, O:79, P:80, Q:81, R:82, S:83, T:84, U:85, V:86, W:87, X:88, Y:89, Z:90, Windows:91, "Right Click":93, "Numpad 0":96, "Numpad 1":97, 
-  "Numpad 2":98, "Numpad 3":99, "Numpad 4":100, "Numpad 5":101, "Numpad 6":102, "Numpad 7":103, "Numpad 8":104, "Numpad 9":105, "Numpad *":106, "Numpad +":107, "Numpad -":109, "Numpad .":110, "Numpad /":111, F1:112, F2:113, F3:114, F4:115, F5:116, F6:117, F7:118, F8:119, F9:120, F10:121, F11:122, F12:123, "Num Lock":144, "Scroll Lock":145, "My Computer":182, "My Calculator":183, ";":186, "=":187, ",":188, "-":189, ".":190, "/":191, "`":192, "[":219, "\\":220, "]":221, "'":222};
-})(Entry.KeyboardCodeMap.prototype);
 Entry.BlockToPyParser = function() {
 };
 (function(b) {
@@ -10264,7 +10491,7 @@ Entry.BlockToPyParser = function() {
       if (0 !== l.length) {
         if (d.test(l)) {
           if (l = Number(l.split("%")[1]) - 1, console.log("schemaParams[index].type", f[l].type), "Indicator" == f[l].type && l++, "Block" == f[l].type) {
-            h += this.Block(g[l]);
+            h += this.Block(g[l]).trim();
           } else {
             if ("DropdownDynamic" == f[l].type) {
               console.log("data param", g[l]);
@@ -10348,149 +10575,15 @@ Entry.BlockToPyParser = function() {
     console.log("dropdownDynamicValueConvertor", a, b);
     var d = b.options, e = null, f;
     for (f in d) {
-      var g = d[f];
-      if (a == g[1]) {
-        e = g[0];
-        break;
+      if (e = d[f], a == e[1]) {
+        return e = e[0];
       }
     }
+    e = a;
+    console.log("b to py dd", e);
     return e;
   };
 })(Entry.BlockToPyParser.prototype);
-Entry.ValueConvertor = function() {
-};
-(function(b) {
-  b.convertText = function(a) {
-    console.log("text", a);
-    var b = "";
-    switch(a) {
-      case "none":
-        b = null;
-        break;
-      default:
-        b = a;
-    }
-    return b;
-  };
-})(Entry.ValueConvertor.prototype);
-Entry.PyBlockAssembler = function(b) {
-  this.blockSyntax = b;
-};
-(function(b) {
-  b.assemble = function(a) {
-    console.log("unit", a);
-    var b;
-    switch(a.type) {
-      case "ExpressionStatement":
-        console.log("ExpressionStatement unit", a);
-        var d = a.expression.callee;
-        if (d.object.name && d.property.name) {
-          var e = String(d.object.name).concat(".").concat(d.property.name)
-        } else {
-          "__pythonRuntime" == String(d.object.object.name) && "functions" == String(d.object.property.name) && (e = String(d.property.name));
-        }
-        var f = this.getBlock(e);
-        b = Entry.BlockInfoExtractor.prototype.getParamsType(f);
-        e = [];
-        arguments = a.expression.arguments;
-        console.log("argument origin", arguments);
-        if (arguments && arguments.length) {
-          for (d = 0;d < arguments.length;d++) {
-            console.log("index arg", d, arguments[d]);
-            if ("Indicator" == b[d]) {
-              var g = null;
-              arguments.splice(d, 0, g);
-            } else {
-              "Block" == b[d] ? g = this.assemble(arguments[d]) : "Keyboard" == b[d] ? g = Entry.KeyboardCodeMap.prototype.keyCharToCode[arguments[d].value] : (g = arguments[d].value, g = Entry.ValueConvertor.prototype.convertText(g));
-            }
-            e.push(g);
-          }
-        }
-        b = {type:f, params:e};
-        console.log("ExpressionStatement result", b);
-        break;
-      case "WhileStatement":
-        console.log("WhileStatement unit", a);
-        f = a.test;
-        e = [];
-        g = this.assemble(f);
-        e.push(g);
-        f = this.getBlock("while True:\n$1");
-        g = [];
-        b = a.body.body;
-        for (d in b) {
-          a = this.assemble(b[d]), g.push(a);
-        }
-        b = {type:f, statements:[g]};
-        console.log("WhileStatement result", b);
-        break;
-      case "BlockStatement":
-        console.log("BlockStatement unit", a);
-        "range" == a.body[0].declarations[0].init.callee.property.name && (e = "for i in range");
-        f = this.getBlock(e);
-        b = Entry.BlockInfoExtractor.prototype.getParamsType(f);
-        e = [];
-        if ((arguments = a.body[0].declarations[0].init.arguments) && arguments.length) {
-          for (d = 0;d < arguments.length;d++) {
-            "Indicator" == b[d] ? (g = null, arguments.splice(d, 0, g)) : "Block" == b[d] ? g = this.assemble(arguments[d]) : "Keyboard" == b[d] ? g = Entry.KeyboardCodeMap.prototype.keyCharToCode[arguments[d].value] : (g = arguments[d].value, g = Entry.ValueConvertor.prototype.convertText(g)), e.push(g);
-          }
-        }
-        var h = a.body[1].consequent;
-        b = h.body[0].body;
-        b.shift();
-        g = [];
-        for (d in b) {
-          a = this.assemble(b[d]), g.push(a);
-        }
-        b = {type:f, params:e, statements:[g]};
-        console.log("BlockStatement result", b);
-        break;
-      case "IfStatement":
-        console.log("IfStatement unit", a);
-        f = a.test;
-        e = [];
-        g = this.assemble(f);
-        e.push(g);
-        var h = a.consequent, g = a.alternate, f = this.getBlock(null == g ? "if %1:\n$1" : "if %1:\n$1\nelse:\n$2"), k = [], l = [];
-        if (null != h) {
-          b = h.body;
-          for (d in b) {
-            a = this.assemble(b[d]), k.push(a);
-          }
-          b = {type:f, params:e, statements:[k]};
-        }
-        if (null != g) {
-          b = g.body;
-          for (d in b) {
-            a = this.assemble(b[d]), l.push(a);
-          }
-          b = {type:f, params:e, statements:[k, l]};
-        }
-        console.log("IfStatement result", b);
-        break;
-      case "BreakStatement":
-        console.log("BreakStatement unit", a);
-        f = this.getBlock("break");
-        b = {type:f};
-        console.log("BreakStatement result", b);
-        break;
-      case "Literal":
-        console.log("Literal unit", a);
-        g = a.value;
-        console.log("arg", g);
-        !0 === g ? (e = "True", f = this.getBlock(e), b = {type:f}) : !1 === g ? (e = "False", f = this.getBlock(e), b = {type:f}) : ("string" === typeof g ? (g = Entry.ValueConvertor.prototype.convertText(g), e = '"%1"') : e = "%1", f = this.getBlock(e), b = {type:f, params:[g]});
-        console.log("targetSyntax", e);
-        console.log("Literal result", b);
-        break;
-      case "UnaryExpression":
-        console.log("UnaryExpression unit", a), a.prefix && (g = a.operator.concat(a.argument.value)), "string" === typeof g ? (g = Entry.ValueConvertor.prototype.convertText(g), e = '"%1"') : e = "%1", f = this.getBlock(e), b = {type:f, params:[g]}, console.log("UnaryExpression result", b);
-    }
-    return b;
-  };
-  b.getBlock = function(a) {
-    return this.blockSyntax[a];
-  };
-})(Entry.PyBlockAssembler.prototype);
 Entry.PyToBlockParser = function(b) {
   this._assembler = new Entry.PyBlockAssembler(b);
 };
@@ -11299,10 +11392,9 @@ Entry.popupHelper.prototype.hide = function() {
   this.body_.addClass("hiddenPopup");
 };
 Entry.getStartProject = function(b) {
-  return {category:"\uae30\ud0c0", scenes:[{name:"\uc7a5\uba74 1", id:"7dwq"}], variables:[{name:"\ucd08\uc2dc\uacc4", id:"brih", visible:!1, value:"0", variableType:"timer", x:150, y:-70, array:[], object:null, isCloud:!1}, {name:"\ub300\ub2f5", id:"1vu8", visible:!1, value:"0", variableType:"answer", x:150, y:-100, array:[], object:null, isCloud:!1}], objects:[{id:"7y0y", name:"\uc5d4\ud2b8\ub9ac\ubd07", script:[[{type:"length_of_string", x:200, y:140}], [{type:"when_run_button_click", x:40, y:240}, 
-  {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"repeat_basic", statements:[[{type:"move_direction"}, {type:"move_x"}, {type:"move_y"}, {type:"stop_repeat"}]]}, {type:"stop_repeat"}, {type:"move_direction"}]], selectedPictureId:"vx80", objectType:"sprite", rotateMethod:"free", scene:"7dwq", sprite:{sounds:[{duration:1.3, ext:".mp3", id:"8el5", fileurl:b + "media/bark.mp3", name:"\uac15\uc544\uc9c0 \uc9d6\ub294\uc18c\ub9ac"}], pictures:[{id:"vx80", fileurl:b + "media/entrybot1.png", 
-  name:"\uc5d4\ud2b8\ub9ac\ubd07_\uac77\uae301", scale:100, dimension:{width:284, height:350}}, {id:"vx80", fileurl:b + "media/entrybot1.png", name:Lang.Blocks.walking_entryBot + "1", scale:100, dimension:{width:284, height:350}}, {id:"4t48", fileurl:b + "media/entrybot2.png", name:Lang.Blocks.walking_entryBot + "2", scale:100, dimension:{width:284, height:350}}]}, entity:{x:0, y:0, regX:142, regY:175, scaleX:.3154574132492113, scaleY:.3154574132492113, rotation:0, direction:90, width:284, height:350, 
-  visible:!0}, lock:!1, active:!0}], speed:60};
+  return {category:"\uae30\ud0c0", scenes:[{name:"\uc7a5\uba74 1", id:"7dwq"}], variables:[{name:"\ucd08\uc2dc\uacc4", id:"brih", visible:!1, value:"0", variableType:"timer", x:150, y:-70, array:[], object:null, isCloud:!1}, {name:"\ub300\ub2f5", id:"1vu8", visible:!1, value:"0", variableType:"answer", x:150, y:-100, array:[], object:null, isCloud:!1}], objects:[{id:"7y0y", name:"\uc5d4\ud2b8\ub9ac\ubd07", script:[[{type:"when_run_button_click", x:40, y:50}, {type:"repeat_basic", statements:[[{type:"move_direction"}]]}]], 
+  selectedPictureId:"vx80", objectType:"sprite", rotateMethod:"free", scene:"7dwq", sprite:{sounds:[{duration:1.3, ext:".mp3", id:"8el5", fileurl:b + "media/bark.mp3", name:"\uac15\uc544\uc9c0 \uc9d6\ub294\uc18c\ub9ac"}], pictures:[{id:"vx80", fileurl:b + "media/entrybot1.png", name:Lang.Blocks.walking_entryBot + "1", scale:100, dimension:{width:284, height:350}}, {id:"4t48", fileurl:b + "media/entrybot2.png", name:Lang.Blocks.walking_entryBot + "2", scale:100, dimension:{width:284, height:350}}]}, 
+  entity:{x:0, y:0, regX:142, regY:175, scaleX:.3154574132492113, scaleY:.3154574132492113, rotation:0, direction:90, width:284, height:350, visible:!0}, lock:!1, active:!0}], speed:60};
 };
 Entry.PropertyPanel = function() {
   this.modes = {};
@@ -12655,30 +12747,31 @@ Entry.Utils.hslToHex = function(b) {
   return "#" + [c(Math.round(255 * d).toString(16)), c(Math.round(b).toString(16)), c(Math.round(e).toString(16))].join("");
 };
 Entry.Utils.bindGlobalEvent = function(b) {
+  var a = $(document);
   void 0 === b && (b = "resize mousedown mousemove keydown keyup dispose".split(" "));
-  !Entry.windowReszied && -1 < b.indexOf("resize") && (Entry.windowResized = new Entry.Event(window), $(window).on("resize", function(a) {
+  -1 < b.indexOf("resize") && (Entry.windowReszied && ($(window).off("resize"), Entry.windowReszied.clear()), Entry.windowResized = new Entry.Event(window), $(window).on("resize", function(a) {
     Entry.windowResized.notify(a);
   }));
-  !Entry.documentMousedown && -1 < b.indexOf("mousedown") && (Entry.documentMousedown = new Entry.Event(window), $(document).on("mousedown", function(a) {
+  -1 < b.indexOf("mousedown") && (Entry.documentMousedown && (a.off("mousedown"), Entry.documentMousedown.clear()), Entry.documentMousedown = new Entry.Event(window), a.on("mousedown", function(a) {
     Entry.documentMousedown.notify(a);
   }));
-  !Entry.documentMousemove && -1 < b.indexOf("mousemove") && (Entry.mouseCoordinate = {}, Entry.documentMousemove = new Entry.Event(window), $(document).on("touchmove mousemove", function(a) {
+  -1 < b.indexOf("mousemove") && (Entry.documentMousemove && (a.off("touchmove mousemove"), Entry.documentMousemove.clear()), Entry.mouseCoordinate = {}, Entry.documentMousemove = new Entry.Event(window), a.on("touchmove mousemove", function(a) {
     a.originalEvent && a.originalEvent.touches && (a = a.originalEvent.touches[0]);
     Entry.documentMousemove.notify(a);
     Entry.mouseCoordinate.x = a.clientX;
     Entry.mouseCoordinate.y = a.clientY;
   }));
-  !Entry.keyPressed && -1 < b.indexOf("keydown") && (Entry.pressedKeys = [], Entry.keyPressed = new Entry.Event(window), $(document).on("keydown", function(a) {
+  -1 < b.indexOf("keydown") && (Entry.keyPressed && (a.off("keydown"), Entry.keyPressed.clear()), Entry.pressedKeys = [], Entry.keyPressed = new Entry.Event(window), a.on("keydown", function(a) {
     var b = a.keyCode;
     0 > Entry.pressedKeys.indexOf(b) && Entry.pressedKeys.push(b);
     Entry.keyPressed.notify(a);
   }));
-  !Entry.keyUpped && -1 < b.indexOf("keyup") && (Entry.keyUpped = new Entry.Event(window), $(document).on("keyup", function(a) {
+  -1 < b.indexOf("keyup") && (Entry.keyUpped && (a.off("keyup"), Entry.keyUpped.clear()), Entry.keyUpped = new Entry.Event(window), a.on("keyup", function(a) {
     var b = Entry.pressedKeys.indexOf(a.keyCode);
     -1 < b && Entry.pressedKeys.splice(b, 1);
     Entry.keyUpped.notify(a);
   }));
-  !Entry.disposeEvent && -1 < b.indexOf("dispose") && (Entry.disposeEvent = new Entry.Event(window), Entry.documentMousedown && Entry.documentMousedown.attach(this, function(a) {
+  -1 < b.indexOf("dispose") && (Entry.disposeEvent && Entry.disposeEvent.clear(), Entry.disposeEvent = new Entry.Event(window), Entry.documentMousedown && Entry.documentMousedown.attach(this, function(a) {
     Entry.disposeEvent.notify(a);
   }));
 };
@@ -13180,7 +13273,7 @@ Entry.Model = function(b, a) {
 })(Entry.Model);
 Entry.Func = function(b) {
   this.id = b ? b.id : Entry.generateHash();
-  this.content = b ? new Entry.Code(b.content) : new Entry.Code([[{type:"function_create", x:40, y:40}]]);
+  this.content = b ? new Entry.Code(b.content) : new Entry.Code([[{type:"function_create", deletable:!1, x:40, y:40}]]);
   this.block = null;
   this.hashMap = {};
   this.paramMap = {};
@@ -13203,7 +13296,8 @@ Entry.Func = function(b) {
 };
 Entry.Func.threads = {};
 Entry.Func.registerFunction = function(b) {
-  this._targetFuncBlock = Entry.playground.mainWorkspace.getBlockMenu().getCategoryCodes("func").createThread([{type:"func_" + b.id}]);
+  var a = Entry.playground.mainWorkspace;
+  a && (this._targetFuncBlock = a.getBlockMenu().getCategoryCodes("func").createThread([{type:"func_" + b.id}]));
 };
 Entry.Func.executeFunction = function(b) {
   var a = this.threads[b];
@@ -13304,18 +13398,17 @@ Entry.Func.syncFunc = function() {
   }
 };
 Entry.Func.setupMenuCode = function() {
-  var b = Entry.playground.mainWorkspace.getBlockMenu().getCategoryCodes("func");
-  this._fieldLabel = b.createThread([{type:"function_field_label"}]).getFirstBlock();
-  this._fieldString = b.createThread([{type:"function_field_string", params:[{type:this.requestParamBlock("string")}]}]).getFirstBlock();
-  this._fieldBoolean = b.createThread([{type:"function_field_boolean", params:[{type:this.requestParamBlock("boolean")}]}]).getFirstBlock();
-  this.menuCode = b;
+  var b = Entry.playground.mainWorkspace;
+  b && (b = b.getBlockMenu().getCategoryCodes("func"), this._fieldLabel = b.createThread([{type:"function_field_label"}]).getFirstBlock(), this._fieldString = b.createThread([{type:"function_field_string", params:[{type:this.requestParamBlock("string")}]}]).getFirstBlock(), this._fieldBoolean = b.createThread([{type:"function_field_boolean", params:[{type:this.requestParamBlock("boolean")}]}]).getFirstBlock(), this.menuCode = b);
 };
 Entry.Func.refreshMenuCode = function() {
-  this.menuCode || this.setupMenuCode();
-  var b = Entry.block[this._fieldString.params[0].type].changeEvent._listeners.length;
-  2 < b && this._fieldString.params[0].changeType(this.requestParamBlock("string"));
-  b = Entry.block[this._fieldBoolean.params[0].type].changeEvent._listeners.length;
-  2 < b && this._fieldBoolean.params[0].changeType(this.requestParamBlock("boolean"));
+  if (Entry.playground.mainWorkspace) {
+    this.menuCode || this.setupMenuCode();
+    var b = Entry.block[this._fieldString.params[0].type].changeEvent._listeners.length;
+    2 < b && this._fieldString.params[0].changeType(this.requestParamBlock("string"));
+    b = Entry.block[this._fieldBoolean.params[0].type].changeEvent._listeners.length;
+    2 < b && this._fieldBoolean.params[0].changeType(this.requestParamBlock("boolean"));
+  }
 };
 Entry.Func.requestParamBlock = function(b) {
   var a = Entry.generateHash(), c;
@@ -13348,15 +13441,20 @@ Entry.Func.createParamBlock = function(b, a, c) {
   return Entry.block[b] = d;
 };
 Entry.Func.updateMenu = function() {
-  var b = Entry.playground.mainWorkspace.getBlockMenu();
-  this.targetFunc ? (this.menuCode || this.setupMenuCode(), b.banClass("functionInit"), b.unbanClass("functionEdit")) : (b.unbanClass("functionInit"), b.banClass("functionEdit"));
+  var b = Entry.playground.mainWorkspace;
+  b && (b = b.getBlockMenu(), this.targetFunc ? (this.menuCode || this.setupMenuCode(), b.banClass("functionInit"), b.unbanClass("functionEdit")) : (b.unbanClass("functionInit"), b.banClass("functionEdit")));
 };
 Entry.Func.prototype.edit = function() {
   Entry.Func.isEdit || (Entry.Func.isEdit = !0, Entry.Func.svg ? this.parentView.appendChild(this.svg) : Entry.Func.initEditView());
 };
 Entry.Func.generateBlock = function(b) {
   b = Entry.block["func_" + b.id];
-  return {block:{template:b.template, params:b.params}, description:b.template};
+  var a = {template:b.template, params:b.params}, c = /(%\d)/mi, d = b.template.split(c), e = "", f = 0, g = 0, h;
+  for (h in d) {
+    var k = d[h];
+    c.test(k) ? (k = Number(k.split("%")[1]) - 1, k = b.params[k], "Indicator" !== k.type && ("booleanMagnet" === k.accept ? (e += Lang.template.function_param_boolean + (f ? f : ""), f++) : (e += Lang.General.param_string + (g ? g : ""), g++))) : e += k;
+  }
+  return {block:a, description:e};
 };
 Entry.Func.prototype.generateBlock = function(b) {
   b = Entry.Func.generateBlock(this);
@@ -13364,6 +13462,7 @@ Entry.Func.prototype.generateBlock = function(b) {
   this.description = b.description;
 };
 Entry.Func.generateWsBlock = function(b) {
+  this.unbindFuncChangeEvent();
   b = b ? b : this.targetFunc;
   for (var a = b.content.getEventMap("funcDef")[0].params[0], c = 0, d = 0, e = [], f = "", g = b.hashMap, h = b.paramMap;a;) {
     var k = a.params[0];
@@ -13384,15 +13483,18 @@ Entry.Func.generateWsBlock = function(b) {
     }
     a = a.getOutputBlock();
   }
+  c++;
+  f += " %" + (c + d);
+  e.push({type:"Indicator", img:"/lib/entryjs/images/block_icon/function_03.png", size:12});
   Entry.Mutator.mutate("func_" + b.id, {params:e, template:f});
   for (var l in g) {
-    g[l] ? (b = -1 < l.indexOf("string") ? Lang.Blocks.FUNCTION_character_variable : Lang.Blocks.FUNCTION_logical_variable, Entry.Mutator.mutate(l, {template:b})) : g[l] = !0;
+    g[l] ? (a = -1 < l.indexOf("string") ? Lang.Blocks.FUNCTION_character_variable : Lang.Blocks.FUNCTION_logical_variable, Entry.Mutator.mutate(l, {template:a})) : g[l] = !0;
   }
-  this.refreshMenuCode();
+  this.bindFuncChangeEvent(b);
 };
 Entry.Func.bindFuncChangeEvent = function(b) {
   b = b ? b : this.targetFunc;
-  this._funcChangeEvent || (this._funcChangeEvent = b.content.getEventMap("funcDef")[0].view._contents[1].changeEvent.attach(this, this.generateWsBlock));
+  !this._funcChangeEvent && b.content.getEventMap("funcDef")[0].view && (this._funcChangeEvent = b.content.getEventMap("funcDef")[0].view._contents[1].changeEvent.attach(this, this.generateWsBlock));
 };
 Entry.Func.unbindFuncChangeEvent = function() {
   this._funcChangeEvent && this._funcChangeEvent.destroy();
@@ -14452,36 +14554,39 @@ Entry.VariableContainer.prototype.saveFunction = function(b) {
   this.updateList();
 };
 Entry.VariableContainer.prototype.createFunctionView = function(b) {
-  var a = this, c = Entry.createElement("li");
-  c.addClass("entryVariableListElementWorkspace");
-  c.addClass("entryFunctionElementWorkspace");
-  c.bindOnClick(function(c) {
-    c.stopPropagation();
-    a.select(b);
-  });
-  var d = Entry.createElement("button");
-  d.addClass("entryVariableListElementDeleteWorkspace");
-  d.bindOnClick(function(c) {
-    c.stopPropagation();
-    a.removeFunction(b);
-    a.selected = null;
-  });
-  var e = Entry.createElement("button");
-  e.addClass("entryVariableListElementEditWorkspace");
-  var f = this._getBlockMenu();
-  e.bindOnClick(function(a) {
-    a.stopPropagation();
-    Entry.Func.edit(b);
-    Entry.playground && (Entry.playground.changeViewMode("code"), "func" != f.lastSelector && f.selectMenu("func"));
-  });
-  var g = Entry.createElement("div");
-  g.addClass("entryVariableFunctionElementNameWorkspace");
-  g.innerHTML = b.description;
-  c.nameField = g;
-  c.appendChild(g);
-  c.appendChild(e);
-  c.appendChild(d);
-  b.listElement = c;
+  var a = this;
+  if (this.view_) {
+    var c = Entry.createElement("li");
+    c.addClass("entryVariableListElementWorkspace");
+    c.addClass("entryFunctionElementWorkspace");
+    c.bindOnClick(function(c) {
+      c.stopPropagation();
+      a.select(b);
+    });
+    var d = Entry.createElement("button");
+    d.addClass("entryVariableListElementDeleteWorkspace");
+    d.bindOnClick(function(c) {
+      c.stopPropagation();
+      a.removeFunction(b);
+      a.selected = null;
+    });
+    var e = Entry.createElement("button");
+    e.addClass("entryVariableListElementEditWorkspace");
+    var f = this._getBlockMenu();
+    e.bindOnClick(function(a) {
+      a.stopPropagation();
+      Entry.Func.edit(b);
+      Entry.playground && (Entry.playground.changeViewMode("code"), "func" != f.lastSelector && f.selectMenu("func"));
+    });
+    var g = Entry.createElement("div");
+    g.addClass("entryVariableFunctionElementNameWorkspace");
+    g.innerHTML = b.description;
+    c.nameField = g;
+    c.appendChild(g);
+    c.appendChild(e);
+    c.appendChild(d);
+    b.listElement = c;
+  }
 };
 Entry.VariableContainer.prototype.checkAllVariableName = function(b, a) {
   a = this[a];
@@ -16421,7 +16526,7 @@ paramsKeyMap:{PORT:0, VALUE2:1, VALUE3:2, VALUE4:3, VALUE5:4}, "class":"conditio
   return a.getField("NUM", a);
 }, isPrimitive:!0, syntax:{js:[], py:["%1"]}}, angle:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Angle"}], events:{}, def:{params:[null], type:"angle"}, paramsKeyMap:{ANGLE:0}, func:function(b, a) {
   return a.getNumberField("ANGLE");
-}, syntax:{js:[], py:[]}}, get_x_coordinate:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_get_x_coordinate, color:"#3D3D3D"}], events:{}, def:{params:[null], type:"get_x_coordinate"}, "class":"calc", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:[" %1 "]}}, get_x_coordinate:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_get_x_coordinate, color:"#3D3D3D"}], events:{}, def:{params:[null], type:"get_x_coordinate"}, "class":"calc", isNotFor:[], func:function(b, a) {
   return b.getX();
 }, syntax:{js:[], py:[]}}, get_y_coordinate:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_get_y_coordinate, color:"#3D3D3D"}], events:{}, def:{params:[null], type:"get_y_coordinate"}, "class":"calc", isNotFor:[], func:function(b, a) {
   return b.getY();
@@ -16659,7 +16764,7 @@ color:"#3D3D3D"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/calc_01
   var c = a.getField("VALUE", a), d = a.callReturn();
   "self" == c ? b.parent.addCloneEntity(b.parent, b, null) : Entry.container.getObject(c).addCloneEntity(b.parent, null, null);
   return d;
-}, syntax:{js:[], py:["Entry.create_clone(%1)"]}}, delete_clone:{color:"#498deb", skeleton:"basic_without_next", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null], type:"delete_clone"}, "class":"clone", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:['Entry.create_clone("%1")']}}, delete_clone:{color:"#498deb", skeleton:"basic_without_next", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null], type:"delete_clone"}, "class":"clone", isNotFor:[], func:function(b, a) {
   if (!b.isClone) {
     return a.callReturn();
   }
@@ -16668,13 +16773,13 @@ color:"#3D3D3D"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/calc_01
   return a.callReturn();
 }, event:"when_clone_start", syntax:{js:[], py:["Entry.on_clone_create()"]}}, stop_run:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null]}, func:function(b, a) {
   return Entry.engine.toggleStop();
-}, syntax:{js:[], py:[]}}, repeat_while_true:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Dropdown", options:[[Lang.Blocks.FLOW_repeat_while_true_while, "while"]], value:"while", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"True"}, null, null], type:"repeat_while_true"}, paramsKeyMap:{BOOL:0, OPTION:1}, statementsKeyMap:{DO:0}, "class":"repeat", 
-isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:[]}}, repeat_while_true:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Dropdown", options:[[Lang.Blocks.FLOW_repeat_while_true_until, "until"], [Lang.Blocks.FLOW_repeat_while_true_while, "while"]], value:"until", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"True"}, null, null], type:"repeat_while_true"}, paramsKeyMap:{BOOL:0, 
+OPTION:1}, statementsKeyMap:{DO:0}, "class":"repeat", isNotFor:[], func:function(b, a) {
   var c = a.getBooleanValue("BOOL", a);
   "until" == a.getField("OPTION", a) && (c = !c);
   return (a.isLooped = c) ? a.getStatement("DO", a) : a.callReturn();
-}, syntax:{js:[], py:["while (%1)==True :\n$1"]}}, stop_object:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.FLOW_stop_object_all, "all"], [Lang.Blocks.FLOW_stop_object_this_object, "thisOnly"], [Lang.Blocks.FLOW_stop_object_this_thread, "thisThread"], [Lang.Blocks.FLOW_stop_object_other_thread, "otherThread"]], value:"all", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null, 
-null], type:"stop_object"}, paramsKeyMap:{TARGET:0}, "class":"terminate", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["particular block"]}}, stop_object:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.FLOW_stop_object_all, "all"], [Lang.Blocks.FLOW_stop_object_this_object, "thisOnly"], [Lang.Blocks.FLOW_stop_object_this_thread, "thisThread"], [Lang.Blocks.FLOW_stop_object_other_thread, "otherThread"]], value:"all", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null, null], 
+type:"stop_object"}, paramsKeyMap:{TARGET:0}, "class":"terminate", isNotFor:[], func:function(b, a) {
   var c = a.getField("TARGET", a), d = Entry.container;
   switch(c) {
     case "all":
@@ -16688,7 +16793,7 @@ null], type:"stop_object"}, paramsKeyMap:{TARGET:0}, "class":"terminate", isNotF
     case "otherThread":
       return b.parent.script.clearExecutors(), b.parent.script.addExecutor(this.executor), a.callReturn();
   }
-}, syntax:{js:[], py:["Entry.stop(%1)"]}}, restart_project:{color:"#498deb", skeleton:"basic_without_next", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null], type:"restart_project"}, "class":"terminate", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:['Entry.stop("%1")']}}, restart_project:{color:"#498deb", skeleton:"basic_without_next", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null], type:"restart_project"}, "class":"terminate", isNotFor:[], func:function(b, a) {
   Entry.engine.toggleStop();
   Entry.engine.toggleRun();
 }, syntax:{js:[], py:["Entry.restart()"]}}, remove_all_clones:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null], type:"remove_all_clones"}, "class":"clone", isNotFor:[], func:function(b, a) {
@@ -17225,7 +17330,7 @@ SECOND:1, OPTION:2}, "class":"say", isNotFor:["textBox"], func:function(b, a) {
     }, 1E3 * c);
   }
   return 0 == a.timeFlag ? (delete a.timeFlag, delete a.isStart, b.dialog && b.dialog.remove(), a.callReturn()) : a;
-}, syntax:{js:[], py:['self.dialog_by_seconds(%1, %2, "%3")']}}, dialog:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[[Lang.Blocks.speak, "speak"]], value:"speak", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"text", params:[Lang.Blocks.block_hi]}, null, null], type:"dialog"}, paramsKeyMap:{VALUE:0, OPTION:1}, "class":"say", isNotFor:["textBox"], 
+}, syntax:{js:[], py:['self.dialog_for_seconds(%1, %2, "%3")']}}, dialog:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[[Lang.Blocks.speak, "speak"]], value:"speak", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"text", params:[Lang.Blocks.block_hi]}, null, null], type:"dialog"}, paramsKeyMap:{VALUE:0, OPTION:1}, "class":"say", isNotFor:["textBox"], 
 func:function(b, a) {
   var c = a.getStringValue("VALUE", a);
   c || "number" == typeof c || (c = "    ");
@@ -17233,7 +17338,7 @@ func:function(b, a) {
   new Entry.Dialog(b, c, d);
   b.syncDialogVisible(b.getVisible());
   return a.callReturn();
-}, syntax:{js:[], py:["self.dialog(%1)"]}}, remove_dialog:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null], type:"remove_dialog"}, "class":"say", isNotFor:["textBox"], func:function(b, a) {
+}, syntax:{js:[], py:['self.dialog(%1, "%2")']}}, remove_dialog:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null], type:"remove_dialog"}, "class":"say", isNotFor:["textBox"], func:function(b, a) {
   b.dialog && b.dialog.remove();
   return a.callReturn();
 }, syntax:{js:[], py:["self.remove_dialog()"]}}, change_to_nth_shape:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"pictures", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, null], type:"change_to_nth_shape"}, paramsKeyMap:{VALUE:0}, "class":"shape", isNotFor:[], func:function(b, a) {
@@ -17245,7 +17350,7 @@ func:function(b, a) {
   c = a.fields && "prev" === a.getStringField("DRIECTION") ? b.parent.getPrevPicture(b.picture.id) : b.parent.getNextPicture(b.picture.id);
   b.setImage(c);
   return a.callReturn();
-}, syntax:{js:[], py:['self.change_to_shape("%1")']}}, set_effect_volume:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.opacity, "opacity"]], value:"color", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["10"]}, null], type:"set_effect_volume"}, 
+}, syntax:{js:[], py:['self.change_to_adjacent_shape("%1")']}}, set_effect_volume:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.opacity, "opacity"]], value:"color", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["10"]}, null], type:"set_effect_volume"}, 
 paramsKeyMap:{EFFECT:0, VALUE:1}, "class":"effect", isNotFor:["textBox"], func:function(b, a) {
   var c = a.getField("EFFECT", a), d = a.getNumberValue("VALUE", a);
   "color" == c ? b.effect.hue = d + b.effect.hue : "lens" != c && "swriling" != c && "pixel" != c && "mosaic" != c && ("brightness" == c ? b.effect.brightness = d + b.effect.brightness : "blur" != c && "opacity" == c && (b.effect.alpha += d / 100));
@@ -17260,7 +17365,7 @@ VALUE:1}, "class":"effect", isNotFor:["textBox"], func:function(b, a) {
 }, syntax:{js:[], py:["self.set_effect(%1, %2)"]}}, erase_all_effects:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null], type:"erase_all_effects"}, "class":"effect", isNotFor:["textBox"], func:function(b, a) {
   b.resetFilter();
   return a.callReturn();
-}, syntax:{js:[], py:["self.erase_effect_all()"]}}, change_scale_percent:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"change_scale_percent"}, paramsKeyMap:{VALUE:0}, "class":"scale", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["self.remove_all_effects()"]}}, change_scale_percent:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"change_scale_percent"}, paramsKeyMap:{VALUE:0}, "class":"scale", isNotFor:[], func:function(b, a) {
   var c = (a.getNumberValue("VALUE", a) + 100) / 100;
   b.setScaleX(b.getScaleX() * c);
   b.setScaleY(b.getScaleY() * c);
@@ -17274,17 +17379,17 @@ VALUE:1}, "class":"effect", isNotFor:["textBox"], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setSize(b.getSize() + c);
   return a.callReturn();
-}, syntax:{js:[], py:["self.change_scale_size(%1)"]}}, set_scale_size:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["100"]}, null], type:"set_scale_size"}, paramsKeyMap:{VALUE:0}, "class":"scale", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["self.change_size(%1)"]}}, set_scale_size:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["100"]}, null], type:"set_scale_size"}, paramsKeyMap:{VALUE:0}, "class":"scale", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setSize(c);
   return a.callReturn();
 }, syntax:{js:[], py:["self.set_size(%1)"]}}, flip_y:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null], type:"flip_y"}, "class":"flip", isNotFor:[], func:function(b, a) {
   b.setScaleX(-1 * b.getScaleX());
   return a.callReturn();
-}, syntax:{js:[], py:["self.flip_y()"]}}, flip_x:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null], type:"flip_x"}, "class":"flip", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["self.flip_vertical()"]}}, flip_x:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null], type:"flip_x"}, "class":"flip", isNotFor:[], func:function(b, a) {
   b.setScaleY(-1 * b.getScaleY());
   return a.callReturn();
-}, syntax:{js:[], py:["self.flip_x()"]}}, set_object_order:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"objectSequence", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, null], type:"set_object_order"}, paramsKeyMap:{VALUE:0}, "class":"z-index", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["self.flip_horizontal()"]}}, set_object_order:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"objectSequence", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, null], type:"set_object_order"}, paramsKeyMap:{VALUE:0}, "class":"z-index", isNotFor:[], func:function(b, a) {
   var c = a.getField("VALUE", a), d = Entry.container.getCurrentObjects().indexOf(b.parent);
   if (-1 < d) {
     return Entry.container.moveElementByBlock(d, c), a.callReturn();
@@ -17292,7 +17397,7 @@ VALUE:1}, "class":"effect", isNotFor:["textBox"], func:function(b, a) {
   throw Error("object is not available");
 }, syntax:{js:[], py:[]}}, get_pictures:{color:"#EC4466", skeleton:"basic_string_field", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"pictures", fontSize:11}], events:{}, def:{params:[null]}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
   return a.getStringField("VALUE");
-}, syntax:{js:[], py:[]}}, change_to_some_shape:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"get_pictures", id:"z4jm"}, null], type:"change_to_some_shape"}, paramsKeyMap:{VALUE:0}, "class":"shape", isNotFor:["textBox"], func:function(b, a) {
+}, syntax:{js:[], py:['"%1" ']}}, change_to_some_shape:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"get_pictures", id:"z4jm"}, null], type:"change_to_some_shape"}, paramsKeyMap:{VALUE:0}, "class":"shape", isNotFor:["textBox"], func:function(b, a) {
   var c = a.getStringValue("VALUE");
   Entry.parseNumber(c);
   c = b.parent.getPicture(c);
@@ -17304,14 +17409,14 @@ paramsKeyMap:{EFFECT:0, VALUE:1}, "class":"effect", isNotFor:["textBox"], func:f
   "color" == c ? b.effect.hsv = d + b.effect.hsv : "brightness" == c ? b.effect.brightness = d + b.effect.brightness : "transparency" == c && (b.effect.alpha -= d / 100);
   b.applyFilter();
   return a.callReturn();
-}, syntax:{js:[], py:['self.add_effect_by_amount("%1", %2)']}}, change_effect_amount:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.transparency, "transparency"]], value:"color", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["100"]}, null], 
+}, syntax:{js:[], py:['self.add_effect_by_cbt("%1", %2)']}}, change_effect_amount:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.transparency, "transparency"]], value:"color", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["100"]}, null], 
 type:"change_effect_amount"}, paramsKeyMap:{EFFECT:0, VALUE:1}, "class":"effect", isNotFor:["textBox"], func:function(b, a) {
   var c = a.getField("EFFECT", a), d = a.getNumberValue("VALUE", a);
   "color" == c ? b.effect.hsv = d : "brightness" == c ? b.effect.brightness = d : "transparency" == c && (b.effect.alpha = 1 - d / 100);
   b.applyFilter();
   return a.callReturn();
-}, syntax:{js:[], py:['self.change_effect_by_amount("%1", %2)']}}, set_effect_amount:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.transparency, "transparency"]], value:"color", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["10"]}, null], 
-type:"set_effect_amount"}, paramsKeyMap:{EFFECT:0, VALUE:1}, "class":"effect", isNotFor:["textBox"], func:function(b, a) {
+}, syntax:{js:[], py:['self.set_effect_by_cbt("%1", %2)']}}, set_effect_amount:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.transparency, "transparency"]], value:"color", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["10"]}, null], type:"set_effect_amount"}, 
+paramsKeyMap:{EFFECT:0, VALUE:1}, "class":"effect", isNotFor:["textBox"], func:function(b, a) {
   var c = a.getField("EFFECT", a), d = a.getNumberValue("VALUE", a);
   "color" == c ? b.effect.hue = d + b.effect.hue : "brightness" == c ? b.effect.brightness = d + b.effect.brightness : "transparency" == c && (b.effect.alpha -= d / 100);
   b.applyFilter();
@@ -17349,18 +17454,18 @@ null], type:"change_object_index"}, paramsKeyMap:{LOCATION:0}, "class":"z-index"
   b.setY(b.getY() - c * Math.sin((b.getRotation() + b.getDirection() - 90) / 180 * Math.PI));
   b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY());
   return a.callReturn();
-}, syntax:{js:[], py:[]}}, move_x:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"move_x"}, paramsKeyMap:{VALUE:0}, "class":"move_relative", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["self.move_to_moving_direction(%1)"]}}, move_x:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"move_x"}, paramsKeyMap:{VALUE:0}, "class":"move_relative", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setX(b.getX() + c);
   b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY());
   return a.callReturn();
-}, syntax:{js:[], py:[]}}, move_y:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"move_y"}, paramsKeyMap:{VALUE:0}, "class":"move_relative", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["self.change_x(%1)"]}}, move_y:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"move_y"}, paramsKeyMap:{VALUE:0}, "class":"move_relative", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setY(b.getY() + c);
   b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY());
   return a.callReturn();
-}, syntax:{js:[], py:[]}}, locate_xy_time:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["2"]}, {type:"number", params:["10"]}, {type:"number", params:["10"]}, null], type:"locate_xy_time"}, paramsKeyMap:{VALUE1:0, VALUE2:1, VALUE3:2}, "class":"move_absolute", 
-isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["self.change_y(%1)"]}}, locate_xy_time:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["2"]}, {type:"number", params:["10"]}, {type:"number", params:["10"]}, null], type:"locate_xy_time"}, paramsKeyMap:{VALUE1:0, VALUE2:1, 
+VALUE3:2}, "class":"move_absolute", isNotFor:[], func:function(b, a) {
   if (!a.isStart) {
     var c;
     c = a.getNumberValue("VALUE1", a);
@@ -17383,7 +17488,7 @@ isNotFor:[], func:function(b, a) {
   delete a.isStart;
   delete a.frameCount;
   return a.callReturn();
-}, syntax:{js:[], py:[]}}, rotate_by_angle:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["90"]}, null], type:"rotate_by_angle"}, paramsKeyMap:{VALUE:0}, "class":"rotate", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["self.move_xy_for_seconds(%1, %2, %3)"]}}, rotate_by_angle:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["90"]}, null], type:"rotate_by_angle"}, paramsKeyMap:{VALUE:0}, "class":"rotate", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setRotation(b.getRotation() + c);
   return a.callReturn();
@@ -17406,25 +17511,25 @@ isNotFor:[], func:function(b, a) {
   b.setY(c);
   b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY());
   return a.callReturn();
-}, syntax:{js:[], py:[]}}, locate_x:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"locate_x"}, paramsKeyMap:{VALUE:0}, "class":"move_absolute", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["self.move_xy(%1, %2)"]}}, locate_x:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"locate_x"}, paramsKeyMap:{VALUE:0}, "class":"move_absolute", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setX(c);
   b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY());
   return a.callReturn();
-}, syntax:{js:[], py:[]}}, locate_y:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"locate_y"}, paramsKeyMap:{VALUE:0}, "class":"move_absolute", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["self.move_x(%1)"]}}, locate_y:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"locate_y"}, paramsKeyMap:{VALUE:0}, "class":"move_absolute", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setY(c);
   b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY());
   return a.callReturn();
-}, syntax:{js:[], py:[]}}, locate:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"spritesWithMouse", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[null, null], type:"locate"}, paramsKeyMap:{VALUE:0}, "class":"move_absolute", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["self.move_y(%1)"]}}, locate:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"spritesWithMouse", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[null, null], type:"locate"}, paramsKeyMap:{VALUE:0}, "class":"move_absolute", isNotFor:[], func:function(b, a) {
   var c = a.getField("VALUE", a), d;
   "mouse" == c ? (c = Entry.stage.mouseCoordinate.x, d = Entry.stage.mouseCoordinate.y) : (d = Entry.container.getEntity(c), c = d.getX(), d = d.getY());
   b.setX(Number(c));
   b.setY(Number(d));
   b.brush && !b.brush.stop && b.brush.lineTo(c, -1 * d);
   return a.callReturn();
-}, syntax:{js:[], py:[]}}, move_xy_time:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["2"]}, {type:"number", params:["10"]}, {type:"number", params:["10"]}, null], type:"move_xy_time"}, paramsKeyMap:{VALUE1:0, VALUE2:1, VALUE3:2}, "class":"move_relative", 
-isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:['self.move_to_object("%1")']}}, move_xy_time:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["2"]}, {type:"number", params:["10"]}, {type:"number", params:["10"]}, null], type:"move_xy_time"}, paramsKeyMap:{VALUE1:0, VALUE2:1, 
+VALUE3:2}, "class":"move_relative", isNotFor:[], func:function(b, a) {
   if (!a.isStart) {
     var c;
     c = a.getNumberValue("VALUE1", a);
@@ -17440,7 +17545,7 @@ isNotFor:[], func:function(b, a) {
   delete a.isStart;
   delete a.frameCount;
   return a.callReturn();
-}, syntax:{js:[], py:[]}}, rotate_by_angle_time:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Angle"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["2"]}, {type:"number", params:["2"]}, null], type:"rotate_by_angle_time"}, paramsKeyMap:{VALUE:1}, "class":"rotate", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["self.move_xy_for_seconds(%1, %2, %3)"]}}, rotate_by_angle_time:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Angle"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["2"]}, {type:"number", params:["2"]}, null], type:"rotate_by_angle_time"}, paramsKeyMap:{VALUE:1}, "class":"rotate", isNotFor:[], func:function(b, a) {
   if (!a.isStart) {
     var c;
     c = a.getNumberValue("VALUE", a);
@@ -17471,7 +17576,7 @@ isNotFor:[], func:function(b, a) {
   e && (b.collision = Entry.Utils.COLLISION.NONE), d && e && (d = !1), d && ("free" == c ? b.setRotation(-b.getRotation() - 2 * b.getDirection()) : b.setDirection(-b.getDirection() + 360), b.collision = Entry.Utils.COLLISION.RIGHT))) : 180 > d && 0 <= d && (e = b.collision == Entry.Utils.COLLISION.RIGHT, d = ndgmr.checkPixelCollision(Entry.stage.wall.right, b.object, 0, !1), !d && e && (b.collision = Entry.Utils.COLLISION.NONE), d && e && (d = !1), d ? ("free" == c ? b.setRotation(-b.getRotation() - 
   2 * b.getDirection()) : b.setDirection(-b.getDirection() + 360), b.collision = Entry.Utils.COLLISION.RIGHT) : (e = b.collision == Entry.Utils.COLLISION.LEFT, d = ndgmr.checkPixelCollision(Entry.stage.wall.left, b.object, 0, !1), !d && e && (b.collision = Entry.Utils.COLLISION.NONE), d && e && (d = !1), d && ("free" == c ? b.setRotation(-b.getRotation() - 2 * b.getDirection()) : b.setDirection(-b.getDirection() + 360), b.collision = Entry.Utils.COLLISION.LEFT)));
   return a.callReturn();
-}, syntax:{js:[], py:[]}}, flip_arrow_horizontal:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[null]}, func:function(b, a) {
+}, syntax:{js:[], py:["self.on_bounce_at_wall()"]}}, flip_arrow_horizontal:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[null]}, func:function(b, a) {
   b.setDirection(b.getDirection() + 180);
   return a.callReturn();
 }, syntax:{js:[], py:[]}}, flip_arrow_vertical:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[null]}, func:function(b, a) {
@@ -17487,7 +17592,7 @@ isNotFor:[], func:function(b, a) {
   d = b.getDirection() + b.getRotation();
   b.setRotation(b.getRotation() + e - d);
   return a.callReturn();
-}, syntax:{js:[], py:[]}}, see_angle_direction:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["90"]}, null], type:"see_angle_direction"}, paramsKeyMap:{VALUE:0}, "class":"rotate", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:['self.look_at_object("%1")']}}, see_angle_direction:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["90"]}, null], type:"see_angle_direction"}, paramsKeyMap:{VALUE:0}, "class":"rotate", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a), d = b.getDirection() + b.getRotation();
   b.setRotation(b.getRotation() + c - d);
   return a.callReturn();
@@ -17514,29 +17619,29 @@ isNotFor:[], func:function(b, a) {
   delete a.isStart;
   delete a.frameCount;
   return a.callReturn();
-}, syntax:{js:[], py:[]}}, rotate_absolute:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"angle"}, null], type:"rotate_absolute"}, paramsKeyMap:{VALUE:0}, "class":"rotate_absolute", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:['self.move_at_object_for_seconds(%1, "%2")']}}, rotate_absolute:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"angle"}, null], type:"rotate_absolute"}, paramsKeyMap:{VALUE:0}, "class":"rotate_absolute", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setRotation(c);
   return a.callReturn();
-}, syntax:{js:[], py:[]}}, rotate_relative:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"angle"}, null], type:"rotate_relative"}, paramsKeyMap:{VALUE:0}, "class":"rotate", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["self.set_direction(%1)"]}}, rotate_relative:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"angle"}, null], type:"rotate_relative"}, paramsKeyMap:{VALUE:0}, "class":"rotate", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setRotation(c + b.getRotation());
   return a.callReturn();
-}, syntax:{js:[], py:[]}}, direction_absolute:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"angle"}, null], type:"direction_absolute"}, paramsKeyMap:{VALUE:0}, "class":"rotate_absolute", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["self.rotate_direction(%1)"]}}, direction_absolute:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"angle"}, null], type:"direction_absolute"}, paramsKeyMap:{VALUE:0}, "class":"rotate_absolute", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setDirection(c);
   return a.callReturn();
-}, syntax:{js:[], py:[]}}, direction_relative:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"angle"}, null], type:"direction_relative"}, paramsKeyMap:{VALUE:0}, "class":"rotate", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["self.set_moving_direction(%1)"]}}, direction_relative:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"angle"}, null], type:"direction_relative"}, paramsKeyMap:{VALUE:0}, "class":"rotate", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setDirection(c + b.getDirection());
   return a.callReturn();
-}, syntax:{js:[], py:[]}}, move_to_angle:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"angle"}, {type:"number", params:["10"]}, null], type:"move_to_angle"}, paramsKeyMap:{ANGLE:0, VALUE:1}, "class":"move_rotate", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["self.rotate_moving_direction(%1)"]}}, move_to_angle:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"angle"}, {type:"number", params:["10"]}, null], type:"move_to_angle"}, paramsKeyMap:{ANGLE:0, VALUE:1}, "class":"move_rotate", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a), d = a.getNumberValue("ANGLE", a);
   b.setX(b.getX() + c * Math.cos((d - 90) / 180 * Math.PI));
   b.setY(b.getY() - c * Math.sin((d - 90) / 180 * Math.PI));
   b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY());
   return a.callReturn();
-}, syntax:{js:[], py:[]}}, rotate_by_time:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["2"]}, {type:"angle"}, null], type:"rotate_by_time"}, paramsKeyMap:{VALUE:0, ANGLE:1}, "class":"rotate", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["self.move_to_direction_by_distance(%1, %2)"]}}, rotate_by_time:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["2"]}, {type:"angle"}, null], type:"rotate_by_time"}, paramsKeyMap:{VALUE:0, ANGLE:1}, "class":"rotate", isNotFor:[], func:function(b, a) {
   if (!a.isStart) {
     var c;
     c = a.getNumberValue("VALUE", a);
@@ -17551,7 +17656,8 @@ isNotFor:[], func:function(b, a) {
   delete a.isStart;
   delete a.frameCount;
   return a.callReturn();
-}, syntax:{js:[], py:[]}}, direction_relative_duration:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["2"]}, {type:"angle"}, null], type:"direction_relative_duration"}, paramsKeyMap:{DURATION:0, AMOUNT:1}, "class":"rotate", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["self.rotate_direction_for_seconds(%1, %2)"]}}, direction_relative_duration:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["2"]}, {type:"angle"}, null], type:"direction_relative_duration"}, paramsKeyMap:{DURATION:0, AMOUNT:1}, "class":"rotate", isNotFor:[], func:function(b, 
+a) {
   if (!a.isStart) {
     var c;
     c = a.getNumberValue("DURATION", a);
@@ -17567,7 +17673,7 @@ isNotFor:[], func:function(b, a) {
   delete a.frameCount;
   delete a.dDirection;
   return a.callReturn();
-}, syntax:{js:[], py:[]}}, neobot_sensor_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["1\ubc88 \ud3ec\ud2b8", "1"], ["2\ubc88 \ud3ec\ud2b8", "2"], ["3\ubc88 \ud3ec\ud2b8", "3"], ["\ub9ac\ubaa8\ucee8", "4"]], value:"1", fontSize:11}], events:{}, def:{params:[null], type:"neobot_sensor_value"}, paramsKeyMap:{PORT:0}, "class":"neobot_value", isNotFor:["neobot"], func:function(b, a) {
+}, syntax:{js:[], py:["self.rotate_moving_direction_for_seconds(%1, %2)"]}}, neobot_sensor_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["1\ubc88 \ud3ec\ud2b8", "1"], ["2\ubc88 \ud3ec\ud2b8", "2"], ["3\ubc88 \ud3ec\ud2b8", "3"], ["\ub9ac\ubaa8\ucee8", "4"]], value:"1", fontSize:11}], events:{}, def:{params:[null], type:"neobot_sensor_value"}, paramsKeyMap:{PORT:0}, "class":"neobot_value", isNotFor:["neobot"], func:function(b, a) {
   var c = a.getStringField("PORT");
   return Entry.hw.portData[c];
 }, syntax:{js:[], py:[]}}, neobot_turn_left:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc55e\uc73c\ub85c", "1"], ["\ub4a4\ub85c", "-1"]], value:"1", fontSize:11}, {type:"Dropdown", options:[["\ub290\ub9ac\uac8c", "1"], ["\ubcf4\ud1b5", "2"], ["\ube60\ub974\uac8c", "3"]], value:"1", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"neobot_turn_left"}, paramsKeyMap:{DIRECTION:0, 
@@ -19451,13 +19557,13 @@ Entry.PARAM = -1;
   b.addExecutor = function(a) {
     this.executors.push(a);
   };
-  b.createThread = function(a) {
+  b.createThread = function(a, b) {
     if (!(a instanceof Array)) {
       return console.error("blocks must be array");
     }
-    a = new Entry.Thread(a, this);
-    this._data.push(a);
-    return a;
+    var d = new Entry.Thread(a, this);
+    void 0 === b ? this._data.push(d) : this._data.insert(d, b);
+    return d;
   };
   b.cloneThread = function(a, b) {
     var d = a.clone(this, b);
@@ -19619,7 +19725,7 @@ Entry.Executor = function(b, a) {
   b.execute = function() {
     if (!this.isEnd()) {
       for (;;) {
-        var a = this.scope.block._schema.func.call(this.scope, this.entity, this.scope);
+        var a = this.scope.block.getSchema().func.call(this.scope, this.entity, this.scope);
         if (void 0 === a || null === a || a === Entry.STATIC.PASS) {
           if (this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this), null === this.scope.block) {
             if (this._callStack.length) {
@@ -20175,9 +20281,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     this._attachDisposeEvent();
     this.optionGroup = Entry.Dom("ul", {class:"entry-widget-dropdown", parent:$("body")});
     for (var b = this._contents.options, b = this._contents.options, d = 0, e = b.length;d < e;d++) {
-      var f = b[d], g = f[0], f = f[1], h = Entry.Dom("li", {class:"rect", parent:this.optionGroup}), k = "";
-      this.getValue() == f && (k += "\u2713  ");
-      h.text(k += g);
+      var f = b[d], g = f[0], f = f[1], h = Entry.Dom("li", {class:"rect", parent:this.optionGroup}), k = Entry.Dom("span", {class:"left", parent:h});
+      Entry.Dom("span", {class:"right", parent:h}).text(g);
+      this.getValue() == f && k.text("\u2713");
       (function(b, c) {
         b.bind("mousedown touchstart", function(a) {
           a.stopPropagation();
@@ -20221,7 +20327,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         return f[0];
       }
     }
-    return a;
+    return Lang.Blocks.no_target;
   };
 })(Entry.FieldDropdown.prototype);
 Entry.FieldDropdownDynamic = function(b, a, c) {
@@ -20257,9 +20363,9 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
     var b = Entry.container.getDropdownList(this._contents.menuName);
     this._contents.options = b;
     for (var d = 0;d < b.length;d++) {
-      var e = b[d], f = e[0], e = e[1], g = Entry.Dom("li", {class:"rect", parent:this.optionGroup}), h = "";
-      this.getValue() == e && (h += "\u2713  ");
-      g.text(h += f);
+      var e = b[d], f = e[0], e = e[1], g = Entry.Dom("li", {class:"rect", parent:this.optionGroup}), h = Entry.Dom("span", {class:"left", parent:g});
+      Entry.Dom("span", {class:"right", parent:g}).text(f);
+      this.getValue() == e && h.text("\u2713");
       (function(b, c) {
         b.mousedown(function(a) {
           a.stopPropagation();
@@ -20637,7 +20743,7 @@ Entry.FieldText = function(b, a, c) {
   this._index = c;
   this.box = new Entry.BoxModel;
   this._fontSize = b.fontSize || a.getSkeleton().fontSize || 12;
-  this._color = b.color || a.getSkeleton().color || "white";
+  this._color = b.color || this._block._schema.fontColor || a.getSkeleton().color || "white";
   this._align = b.align || "left";
   this._text = this.getValue() || b.text;
   this.setValue(null);
@@ -20678,7 +20784,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     this.textElement = this.svgGroup.elem("text", {x:3, y:4, "font-size":"9pt"});
     this.textElement.textContent = this.truncate();
     var a = this.getTextWidth(), b = this.position && this.position.y ? this.position.y : 0;
-    this._header = this.svgGroup.elem("rect", {width:a, height:16, y:b - 8, rx:3, ry:3, fill:"transparent"});
+    this._header = this.svgGroup.elem("rect", {width:a, height:16, y:b - 8, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
     this._bindRenderOptions();
     this.box.set({x:0, y:0, width:a, height:16});
@@ -21799,13 +21905,17 @@ Entry.Block.MAGNET_OFFSET = .4;
   b.load = function(a) {
     a.id || (a.id = Entry.Utils.generateId());
     this.set(a);
-    this.getSchema();
+    this.loadSchema();
   };
   b.changeSchema = function(a) {
     this.set({params:[]});
-    this.getSchema();
+    this.loadSchema();
   };
   b.getSchema = function() {
+    this._schema || this.loadSchema();
+    return this._schema;
+  };
+  b.loadSchema = function() {
     if (this._schema = Entry.block[this.type]) {
       !this._schemaChangeEvent && this._schema.changeEvent && (this._schemaChangeEvent = this._schema.changeEvent.attach(this, this.changeSchema));
       var a = this._schema.events;
@@ -21834,7 +21944,7 @@ Entry.Block.MAGNET_OFFSET = .4;
   b.changeType = function(a) {
     this._schemaChangeEvent && this._schemaChangeEvent.destroy();
     this.set({type:a});
-    this.getSchema();
+    this.loadSchema();
     this.view && this.view.changeType(a);
   };
   b.setThread = function(a) {
@@ -21934,30 +22044,21 @@ Entry.Block.MAGNET_OFFSET = .4;
     return this.thread.getCode();
   };
   b.doAdd = function() {
-    var a = this.id;
-    Entry.activityReporter && (a = [a, this.getCode().stringify()], Entry.activityReporter.add(new Entry.Activity("addBlock", a)));
     this.getCode().changeEvent.notify();
   };
   b.doMove = function() {
-    var a = this.id, b = this.view.x - this.x, d = this.view.y - this.y;
     this._updatePos();
     this.getCode().changeEvent.notify();
-    Entry.activityReporter && (a = [a, b, d, this.getCode().stringify()], Entry.activityReporter.add(new Entry.Activity("moveBlock", a)));
   };
   b.doSeparate = function() {
-    var a = this.id, b = this.x, d = this.y;
     this.separate();
-    Entry.activityReporter && (a = [a, b, d, this.getCode().stringify()], Entry.activityReporter.add(new Entry.Activity("seperateBlock", a)));
   };
   b.doInsert = function(a) {
     "basic" === this.getBlockType() ? this.insert(a) : this.replace(a);
-    Entry.activityReporter && (a = [a.id, this.id, this.x, this.y, this.getCode().stringify()], Entry.activityReporter.add(new Entry.Activity("insertBlock", a)));
   };
   b.doDestroy = function(a) {
-    var b = this.id, d = this.x, e = this.y;
     this.destroy(a);
     this.getCode().changeEvent.notify();
-    Entry.activityReporter && (a = [b, d, e, this.getCode().stringify()], Entry.activityReporter.add(new Entry.Activity("destroyBlock", a)));
     return this;
   };
   b.doDestroyBelow = function(a) {
@@ -22129,11 +22230,17 @@ Entry.FieldTrashcan = function(b) {
   b._generateView = function() {
     this.svgGroup = this.board.svg.elem("g");
     this.renderStart();
+    this._addControl();
   };
   b.renderStart = function() {
     var a = Entry.mediaFilePath + "delete_";
     this.trashcanTop = this.svgGroup.elem("image", {href:a + "cover.png", width:60, height:20});
     this.svgGroup.elem("image", {href:a + "body.png", y:20, width:60, height:60});
+  };
+  b._addControl = function() {
+    $(this.svgGroup).bind("mousedown", function(a) {
+      Entry.Utils.isRightButton(a) && (a.stopPropagation(), $("#entryWorkspaceBoard").css("background", "white"));
+    });
   };
   b.updateDragBlock = function() {
     var a = this.board.dragBlock, b = this.dragBlockObserver;

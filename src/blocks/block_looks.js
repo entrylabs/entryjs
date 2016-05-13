@@ -63,7 +63,7 @@ Blockly.Blocks.dialog_time = {
     this.setPreviousStatement(true);
     this.setNextStatement(true);
   },
-  syntax: {js: [], py: ["self.dialog_by_seconds(%1, %2, \"%3\")"]}
+  syntax: {js: [], py: ["self.dialog_for_seconds(%1, %2, \"%3\")"]}
 };
 
 Entry.block.dialog_time = function (sprite, script) {
@@ -111,7 +111,7 @@ Blockly.Blocks.dialog = {
     this.setPreviousStatement(true);
     this.setNextStatement(true);
   },
-  syntax: {js: [], py: ["self.dialog(%1)"]}
+  syntax: {js: [], py: ["self.dialog(%1, \"%2\")"]}
 };
 
 Entry.block.dialog = function (sprite, script) {
@@ -184,7 +184,7 @@ Blockly.Blocks.change_to_next_shape = {
         this.setPreviousStatement(true);
         this.setNextStatement(true);
     },
-  syntax: {js: [], py: ["self.change_to_shape(\"%1\")"]}
+  syntax: {js: [], py: ["self.change_to_adjacent_shape(\"%1\")"]}
 };
 
 Entry.block.change_to_next_shape = function (sprite, script) {
@@ -300,7 +300,7 @@ Blockly.Blocks.erase_all_effects = {
     this.setPreviousStatement(true);
     this.setNextStatement(true);
   },
-  syntax: {js: [], py: ["self.remove_effect_all()"]}
+  syntax: {js: [], py: ["self.remove_all_effects()"]}
 };
 
 Entry.block.erase_all_effects = function (sprite, script) {
@@ -417,7 +417,7 @@ Blockly.Blocks.flip_y = {
     this.setPreviousStatement(true);
     this.setNextStatement(true);
   },
-  syntax: {js: [], py: ["self.flip_horizontally()"]}
+  syntax: {js: [], py: ["self.flip_horizontal()"]}
 };
 
 Entry.block.flip_y = function(sprite, script) {
@@ -435,7 +435,7 @@ Blockly.Blocks.flip_x = {
     this.setPreviousStatement(true);
     this.setNextStatement(true);
   },
-  syntax: {js: [], py: ["self.flip_vertically()"]}
+  syntax: {js: [], py: ["self.flip_vertical()"]}
 };
 
 Entry.block.flip_x = function(sprite, script) {
@@ -482,7 +482,8 @@ Blockly.Blocks.get_pictures = {
         .appendField(' ');
     this.setOutput(true, 'String');
     this.setInputsInline(true);
-  }
+  },
+  syntax: {js: [], py: []}
 };
 
 Entry.block.get_pictures = function (sprite, script) {
@@ -503,7 +504,7 @@ Blockly.Blocks.change_to_some_shape = {
     this.setPreviousStatement(true);
     this.setNextStatement(true);
   },
-  syntax: {js: [], py: ["self.change_shape_to(%1)"]}
+  syntax: {js: [], py: ["self.change_to_some_shape(%1)"]}
 };
 
 Entry.block.change_to_some_shape = function (sprite, script) {
@@ -538,7 +539,7 @@ Blockly.Blocks.add_effect_amount = {
         this.setPreviousStatement(true);
         this.setNextStatement(true);
     },
-    syntax: {js: [], py: ["self.add_effect_by_amount(\"%1\", %2)"]}
+    syntax: {js: [], py: ["self.add_effect_by_cbt(\"%1\", %2)"]}
 };
 
 Entry.block.add_effect_amount = function (sprite, script) {
@@ -578,7 +579,7 @@ Blockly.Blocks.change_effect_amount = {
         this.setPreviousStatement(true);
         this.setNextStatement(true);
     },
-    syntax: {js: [], py: ["self.set_effect_by_amount(\"%1\", %2)"]}
+    syntax: {js: [], py: ["self.set_effect_by_cbt(\"%1\", %2)"]}
 };
 
 Entry.block.change_effect_amount = function (sprite, script) {

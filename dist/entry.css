@@ -596,7 +596,7 @@ svg .svgBlockGroup text {
   border: 1px gray solid;
   margin: 0;
   padding: 0;
-  text-align: center;
+  text-align: left;
   font-size: 9pt;
   color: #000;
   z-index: 1001;
@@ -604,8 +604,15 @@ svg .svgBlockGroup text {
 }
 .entry-widget-dropdown .rect {
   height: 20px;
-  padding: 3px 15px;
+  padding: 3px 19px 3px 6px;
   width: 100%;
+}
+.entry-widget-dropdown .rect .left {
+  display: inline-block;
+  width: 13px;
+}
+.entry-widget-dropdown .rect .right {
+  display: inline-block;
 }
 .entry-widget-dropdown .rect:hover {
   background-color: #127cdb;
@@ -5660,9 +5667,6 @@ svg .svgBlockGroup text {
   right: 17px;
   border: 1px solid gray;
 }
-.entryVariableAddSpaceCheckWorkspace.entryVariableAddChecked {
-  background-color: gray;
-}
 .entryVariableAddSpaceLocalWrapperWorkspace {
   color: #5e5e5e;
   font-size: 11px;
@@ -5745,7 +5749,8 @@ svg .svgBlockGroup text {
 }
 .entryVariableAddSpaceCheckWorkspace.entryVariableAddChecked,
 .entryVariableSettingCheckWorkspace.entryVariableSettingChecked {
-  background-color: gray;
+  background-image: url("../images/check_on.png");
+  background-repeat: no-repeat;
 }
 .entryVariableSettingInitValueWrapperWorkspace,
 .entryVariableSettingSlideWrapperWorkspace,
@@ -5815,8 +5820,9 @@ svg .svgBlockGroup text {
   border: 1px solid gray;
   color: #5e5e5e;
 }
-.entryListSettingCheckedWorkspace {
-  background-color: gray;
+.entryListSettingCheckWorkspace.entryListSettingCheckedWorkspace {
+  background-image: url("../images/check_on.png");
+  background-repeat: no-repeat;
 }
 .entryListSettingLengthWrapperWorkspace {
   margin-top: 15px;

@@ -78,7 +78,7 @@ Entry.BlockToPyParser = function() {
                     index++;    
                 }
                 if(schemaParams[index].type == "Block") {
-                    result += this.Block(dataParams[index]);
+                    result += this.Block(dataParams[index]).trim();
                 } 
                 else {
                     if(schemaParams[index].type == "DropdownDynamic"){
@@ -205,17 +205,21 @@ Entry.BlockToPyParser = function() {
         return result;
     };
 
-    p.dropdownDynamicValueConvertor = function(id, param) {
-        console.log("dropdownDynamicValueConvertor", id, param);
+    p.dropdownDynamicValueConvertor = function(value, param) {
+        console.log("dropdownDynamicValueConvertor", value, param);
         var options = param.options;
         var result = null;
         for(var index in options) {
             var option = options[index];
-            if(id == option[1]) {
+            if(value == option[1]) {
                 result = option[0];
-                break;
+                return result;
             }
         }
+
+        result = value;
+
+        console.log("b to py dd", result);
 
         return result;
 

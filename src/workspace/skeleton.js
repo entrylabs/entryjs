@@ -115,9 +115,9 @@ Entry.skeleton.basic_loop = {
     },
     statementPos: function(blockView) {
         var height = Math.max(30, blockView.contentHeight + 2) + 1;
-        return [{
-            x: 16, y: height
-        }];
+        return [
+            { x: 16, y: height }
+        ];
     },
     contentPos: function(blockView) {
         // apply scale required.
@@ -232,9 +232,9 @@ Entry.skeleton.pebble_loop = {
     },
     statementPos: function(blockView) {
         var height = Math.max(39, blockView.contentHeight + 2) + 1.5;
-        return [{
-            x: 0, y: height
-        }];
+        return [
+            { x: 0, y: height }
+        ];
     },
     contentPos: function() {
         // apply scale required.
