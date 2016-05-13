@@ -71,11 +71,11 @@ Entry.Executor = function(block, entity) {
     };
 
     p.end = function() {
-         this.scope.block === null;
+        this.scope.block = null;
     };
 
     p.isEnd = function() {
-         return this.scope.block === null;
+        return this.scope.block === null;
     };
 })(Entry.Executor.prototype);
 

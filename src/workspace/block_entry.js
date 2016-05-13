@@ -5487,7 +5487,7 @@ Entry.block = {
             if (!sprite.isClone)
                 return script.callReturn();
             sprite.removeClone();
-            return;
+            return this.die();
         }
     },
     "when_clone_start": {

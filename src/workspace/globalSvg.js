@@ -125,10 +125,9 @@ goog.provide('Entry.GlobalSvg');
         this.left = pos.x + offset.left - this._offsetX;
         this.top = pos.y + offset.top - this._offsetY;
 
-        this.svgDom.css({
-            left: that.left,
-            top: that.top
-        });
+        var dom = this.svgDom[0];
+        dom.style.left = this.left + 'px';
+        dom.style.top = this.top + 'px';
     };
 
     gs.terminateDrag = function(blockView) {
