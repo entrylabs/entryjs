@@ -7590,7 +7590,7 @@ Entry.EntityObject.prototype.removeClone = function() {
     Entry.stage.unloadEntity(this);
     var b = this.parent.clonedEntities.indexOf(this);
     this.parent.clonedEntities.splice(b, 1);
-    this.clearExecutor();
+    Entry.Utils.isFunction(this.clearExecutor) && this.clearExecutor();
   }
 };
 Entry.EntityObject.prototype.clearExecutor = function() {

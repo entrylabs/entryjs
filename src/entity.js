@@ -948,7 +948,8 @@ Entry.EntityObject.prototype.removeClone = function() {
         Entry.stage.unloadEntity(this);
         var index = this.parent.clonedEntities.indexOf(this);
         this.parent.clonedEntities.splice(index, 1);
-        this.clearExecutor();
+        if (Entry.Utils.isFunction(this.clearExecutor))
+            this.clearExecutor();
     }
 };
 
