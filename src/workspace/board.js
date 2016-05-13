@@ -27,6 +27,8 @@ Entry.Board = function(option) {
 
     this.updateOffset();
 
+    this._initContextOptions();
+
     this.changeEvent = new Entry.Event(this);
     this.scroller = new Entry.Scroller(this, true, true);
 
@@ -202,35 +204,14 @@ Entry.Board = function(option) {
             if (!this.visible) return;
             var that = this;
 
+            var options = [];
 
-            var paste = {
-                text: '붙여넣기',
-                enable: !!Entry.clipboard,
-                callback: function(){
-                    Entry.do('addThread', Entry.clipboard).value
-                        .getFirstBlock().copyToClipboard();
-                }
-            };
+            for (var i=0; i<this._contextOptions.length; i++) {
+                if (this._contextOptions[i].activated)
+                    options.push(this._contextOptions[i].option);
+            }
 
-            var align = {
-                text: '블록 정리하기',
-                callback: function(){
-                    that.alignThreads();
-                }
-            };
-
-            var remove = {
-                text: '모든 코드 삭제하기',
-                callback: function(){
-                    that.code.clear();
-                }
-            };
-
-            Entry.ContextMenu.show([
-                paste,
-                align,
-                remove
-            ]);
+            Entry.ContextMenu.show(options);
         }
 
         var board = this;
@@ -878,4 +859,50 @@ Entry.Board = function(option) {
         }
     };
 
+    p._initContextOptions = function() {
+        this._contextOptions = [
+            {
+                activated: true,
+                option: {
+                    text: '붙여넣기',
+                    enable: !!Entry.clipboard,
+                    callback: function(){
+                        Entry.do('addThread', Entry.clipboard).value
+                            .getFirstBlock().copyToClipboard();
+                    }
+                }
+            },
+            {
+                activated: true,
+                option: {
+                    text: '블록 정리하기',
+                    callback: function(){
+                        that.alignThreads();
+                    }
+                }
+            },
+            {
+                activated: true,
+                option: {
+                    text: '모든 코드 삭제하기',
+                    callback: function(){
+                        that.code.clear();
+                    }
+                }
+            }
+        ];
+    };
+
+    p.activateContextOption = function(option) {
+        this._contextOptions[option].activated = true;
+    };
+
+    p.deActivateContextOption = function(option) {
+        this._contextOptions[option].activated = false;
+    };
+
 })(Entry.Board.prototype);
+
+Entry.Board.OPTION_PASTE = 0;
+Entry.Board.OPTION_ALIGN = 1;
+Entry.Board.OPTION_CLEAR = 2;

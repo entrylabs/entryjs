@@ -20321,6 +20321,7 @@ Entry.Board = function(b) {
   Entry.ANIMATION_DURATION = 200;
   Entry.BOARD_PADDING = 100;
   this.updateOffset();
+  this._initContextOptions();
   this.changeEvent = new Entry.Event(this);
   this.scroller = new Entry.Scroller(this, !0, !0);
   Entry.Utils.disableContextmenu(this.svgDom);
@@ -20413,13 +20414,13 @@ Entry.Board = function(b) {
       a.stopPropagation && a.stopPropagation();
       a.preventDefault && a.preventDefault();
       a = a.originalEvent && a.originalEvent.touches ? a.originalEvent.touches[0] : a;
-      var c = g.dragInstance;
-      g.scroller.scroll(a.pageX - c.offsetX, a.pageY - c.offsetY);
+      var c = f.dragInstance;
+      f.scroller.scroll(a.pageX - c.offsetX, a.pageY - c.offsetY);
       c.set({offsetX:a.pageX, offsetY:a.pageY});
     }
     function d(a) {
       $(document).unbind(".entryBoard");
-      delete g.dragInstance;
+      delete f.dragInstance;
     }
     if (this.workspace.getMode() != Entry.Workspace.MODE_VIMBOARD) {
       a.stopPropagation && a.stopPropagation();
@@ -20438,17 +20439,14 @@ Entry.Board = function(b) {
           if (!this.visible) {
             return;
           }
-          var f = this;
-          Entry.ContextMenu.show([{text:"\ubd99\uc5ec\ub123\uae30", enable:!!Entry.clipboard, callback:function() {
-            Entry.do("addThread", Entry.clipboard).value.getFirstBlock().copyToClipboard();
-          }}, {text:"\ube14\ub85d \uc815\ub9ac\ud558\uae30", callback:function() {
-            f.alignThreads();
-          }}, {text:"\ubaa8\ub4e0 \ucf54\ub4dc \uc0ad\uc81c\ud558\uae30", callback:function() {
-            f.code.clear();
-          }}]);
+          a = [];
+          for (e = 0;e < this._contextOptions.length;e++) {
+            this._contextOptions[e].activated && a.push(this._contextOptions[e].option);
+          }
+          Entry.ContextMenu.show(a);
         }
       }
-      var g = this;
+      var f = this;
     }
   };
   b.mouseWheel = function(a) {
@@ -20735,7 +20733,25 @@ Entry.Board = function(b) {
   };
   b.adjustThreadsPosition = function() {
   };
+  b._initContextOptions = function() {
+    this._contextOptions = [{activated:!0, option:{text:"\ubd99\uc5ec\ub123\uae30", enable:!!Entry.clipboard, callback:function() {
+      Entry.do("addThread", Entry.clipboard).value.getFirstBlock().copyToClipboard();
+    }}}, {activated:!0, option:{text:"\ube14\ub85d \uc815\ub9ac\ud558\uae30", callback:function() {
+      that.alignThreads();
+    }}}, {activated:!0, option:{text:"\ubaa8\ub4e0 \ucf54\ub4dc \uc0ad\uc81c\ud558\uae30", callback:function() {
+      that.code.clear();
+    }}}];
+  };
+  b.activateContextOption = function(a) {
+    this._contextOptions[a].activated = !0;
+  };
+  b.deActivateContextOption = function(a) {
+    this._contextOptions[a].activated = !1;
+  };
 })(Entry.Board.prototype);
+Entry.Board.OPTION_PASTE = 0;
+Entry.Board.OPTION_ALIGN = 1;
+Entry.Board.OPTION_CLEAR = 2;
 Entry.skeleton = function() {
 };
 Entry.skeleton.basic = {path:function(b) {
