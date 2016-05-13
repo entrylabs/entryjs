@@ -19339,7 +19339,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
   b.replace = function(a) {
     "string" === typeof a && (a = this._createBlockByType(a));
     var b = this._valueBlock;
-    Entry.block[b.type].isPrimitive ? (b.doNotSplice = !0, b.destroy()) : (this._destroyObservers(), b.view._toGlobalCoordinate(), this.separate(b), b.view.bumpAway(30, 150));
+    Entry.block[b.type].isPrimitive ? (b.doNotSplice = !0, b.destroy()) : "paramMagnet" === this.acceptType ? (this._destroyObservers(), b.view._toGlobalCoordinate(), a.getTerminateOutputBlock().view._contents[1].replace(b)) : (this._destroyObservers(), b.view._toGlobalCoordinate(), this.separate(b), b.view.bumpAway(30, 150));
     this.updateValueBlock(a);
     a.view._toLocalCoordinate(this.svgGroup);
     this.calcWH();
@@ -19940,7 +19940,7 @@ Entry.FieldText = function(b, a, c) {
   this._index = c;
   this.box = new Entry.BoxModel;
   this._fontSize = b.fontSize || a.getSkeleton().fontSize || 12;
-  this._color = b.color || this._block._schema.fontColor || a.getSkeleton().color || "white";
+  this._color = b.color || this._block.getSchema().fontColor || a.getSkeleton().color || "white";
   this._align = b.align || "left";
   this._text = this.getValue() || b.text;
   this.setValue(null);

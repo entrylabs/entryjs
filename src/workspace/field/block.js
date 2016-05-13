@@ -227,6 +227,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         if (Entry.block[valueBlockType].isPrimitive) {
             valueBlock.doNotSplice = true;
             valueBlock.destroy();
+        } else if (this.acceptType === "paramMagnet") {
+            this._destroyObservers();
+            valueBlock.view._toGlobalCoordinate();
+            block.getTerminateOutputBlock().view._contents[1].replace(
+                valueBlock
+            );
         } else {
             this._destroyObservers();
             valueBlock.view._toGlobalCoordinate();
