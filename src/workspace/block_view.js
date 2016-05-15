@@ -457,15 +457,8 @@ Entry.BlockView.DRAG_RADIUS = 5;
 
         if(board.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD) {
             if(e) {
-                var dragEnd = new MouseEvent('dragStart', {
-                    'view': window,
-                    'bubbles': true,
-                    'cancelable': true,
-                    'clientX' : event.clientX,
-                    'clientY' : event.clientY
-                });
-
-                document.getElementsByClassName('CodeMirror')[0].dispatchEvent(dragEnd);
+                document.getElementsByClassName('CodeMirror')[0]
+                    .dispatchEvent(Entry.Utils.createMouseEvent('dragStart', event));
             }
         }
 
@@ -547,13 +540,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
 
     p.vimBoardEvent = function(event, type, block) {
         if (event) {
-            var dragEvent = new MouseEvent(type, {
-                'view': window,
-                'bubbles': true,
-                'cancelable': true,
-                'clientX' : event.clientX,
-                'clientY' : event.clientY
-            });
+            var dragEvent = Entry.Utils.createMouseEvent(type, event);
 
             if (block) dragEvent.block = block;
 
@@ -1004,5 +991,6 @@ Entry.BlockView.DRAG_RADIUS = 5;
     p.getParam = function(index) {
         return this._paramMap[index];
     };
+
 
 })(Entry.BlockView.prototype);

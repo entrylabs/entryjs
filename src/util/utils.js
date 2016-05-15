@@ -1091,3 +1091,13 @@ Entry.Utils.COLLISION = {
     LEFT: 3,
     DOWN: 4
 };
+
+Entry.Utils.createMouseEvent = function(type, event) {
+    var e = document.createEvent('MouseEvent');
+    e.initMouseEvent(
+        type,true,true,window,0,0,0,
+        event.clientX, event.clientY,
+        false,false,false,false,0,null
+    );
+    return e;
+};

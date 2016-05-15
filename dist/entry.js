@@ -12151,6 +12151,11 @@ Entry.Utils.addBlockPattern = function(b, a) {
   return d;
 };
 Entry.Utils.COLLISION = {NONE:0, UP:1, RIGHT:2, LEFT:3, DOWN:4};
+Entry.Utils.createMouseEvent = function(b, a) {
+  var c = document.createEvent("MouseEvent");
+  c.initMouseEvent(b, !0, !0, window, 0, 0, 0, a.clientX, a.clientY, !1, !1, !1, !1, 0, null);
+  return c;
+};
 Entry.Model = function(b, a) {
   var c = Entry.Model;
   c.generateSchema(b);
@@ -18421,11 +18426,11 @@ Entry.BlockView.DRAG_RADIUS = 5;
         }
       }
       var m = this;
-      e.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD && a && (a = new MouseEvent("dragStart", {view:window, bubbles:!0, cancelable:!0, clientX:event.clientX, clientY:event.clientY}), document.getElementsByClassName("CodeMirror")[0].dispatchEvent(a));
+      e.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD && a && document.getElementsByClassName("CodeMirror")[0].dispatchEvent(Entry.Utils.createMouseEvent("dragStart", event));
     }
   };
   b.vimBoardEvent = function(a, b, d) {
-    a && (a = new MouseEvent(b, {view:window, bubbles:!0, cancelable:!0, clientX:a.clientX, clientY:a.clientY}), d && (a.block = d), document.getElementsByClassName("CodeMirror")[0].dispatchEvent(a));
+    a && (a = Entry.Utils.createMouseEvent(b, a), d && (a.block = d), document.getElementsByClassName("CodeMirror")[0].dispatchEvent(a));
   };
   b.terminateDrag = function(a) {
     var b = this.getBoard(), d = this.dragMode, e = this.block, f = b.workspace.getMode();
@@ -21529,15 +21534,17 @@ Entry.Vim = function(b) {
     function b(a) {
       var c = e.getCodeToText(a.block);
       e.codeMirror.display.dragFunctions.leave(a);
-      a = new MouseEvent("mousedown", {view:window, bubbles:!0, cancelable:!0, clientX:a.clientX, clientY:a.clientY});
-      e.codeMirror.display.scroller.dispatchEvent(a);
-      var c = c.split("\n"), d = c.length - 1, k = 0;
+      var d = Entry.Utils.createMouseEvent("mousedown", a);
+      e.codeMirror.display.scroller.dispatchEvent(d);
+      var c = c.split("\n"), k = c.length - 1, l = 0;
       c.forEach(function(a, b) {
         e.codeMirror.replaceSelection(a);
-        k = e.doc.getCursor().line;
-        e.codeMirror.indentLine(k);
-        0 !== b && d === b || e.codeMirror.replaceSelection("\n");
+        l = e.doc.getCursor().line;
+        e.codeMirror.indentLine(l);
+        0 !== b && k === b || e.codeMirror.replaceSelection("\n");
       });
+      a = Entry.Utils.createMouseEvent("mouseup", a);
+      e.codeMirror.display.scroller.dispatchEvent(a);
     }
     function d(a) {
       e.codeMirror.display.dragFunctions.over(a);
