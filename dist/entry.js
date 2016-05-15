@@ -10230,7 +10230,9 @@ Entry.Parser = function(b, a, c) {
         d.push(a.type);
       });
     });
-    b.forEach(function(a, b) {
+    b instanceof Entry.Code ? b.getBlockList().forEach(function(a) {
+      a.type !== NtryData.START && -1 === d.indexOf(a.type) && d.push(a.type);
+    }) : b.forEach(function(a, b) {
       a.forEach(function(a, b) {
         a.type !== NtryData.START && -1 === d.indexOf(a.type) && d.push(a.type);
       });
@@ -18186,7 +18188,6 @@ Entry.BlockView = function(b, a, c) {
   this._paramMap = {};
   d.magnets && d.magnets(this).next && (this.svgGroup.nextMagnet = this.block, this._nextGroup = this.svgGroup.elem("g"), this._observers.push(this.observe(this, "_updateMagnet", ["contentHeight"])));
   this.isInBlockMenu = this.getBoard() instanceof Entry.BlockMenu;
-  d.morph && this._observers.push(this.block.observe(this, "_renderPath", d.morph, !1));
   var e = this;
   this.mouseHandler = function() {
     var a = e.block.events;
@@ -20840,12 +20841,7 @@ Entry.skeleton.pebble_loop = {fontSize:16, dropdownHeight:23, path:function(b) {
   return {x:-46, y:25};
 }};
 Entry.skeleton.pebble_basic = {fontSize:15, morph:["prev", "next"], path:function(b) {
-  var a = b.block;
-  b = a.getPrevBlock();
-  a = a.getNextBlock();
-  b = b && "pebble_basic" === b._schema.skeleton;
-  a = a && "pebble_basic" === a._schema.skeleton;
-  return "m 0,9 a 9,9 0 0,0 9,-9 h 28 " + (b ? "l 25,0 0,25" : "q 25,0 25,25") + (a ? "l 0,25 -25,0" : "q 0,25 -25,25") + "h -28 a 9,9 0 0,1 -18,0 h -28 " + (a ? "l -25,0 0,-25" : "q -25,0 -25,-25") + (b ? "l 0,-25 25,0" : "q 0,-25 25,-25") + "h 28 a 9,9 0 0,0 9,9 z";
+  return "m 0,9 a 9,9 0 0,0 9,-9 h 28 q 25,0 25,25q 0,25 -25,25h -28 a 9,9 0 0,1 -18,0 h -28 q -25,0 -25,-25q 0,-25 25,-25h 28 a 9,9 0 0,0 9,9 z";
 }, magnets:function(b) {
   return {previous:{x:0, y:0}, next:{x:0, y:(b ? Math.max(b.height, 51) : 51) + b.offsetY}};
 }, box:function() {

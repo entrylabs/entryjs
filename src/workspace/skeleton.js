@@ -248,20 +248,30 @@ Entry.skeleton.pebble_basic = {
         "prev", "next"
     ],
     path: function(blockView) {
-        var block = blockView.block;
-        var prev = block.getPrevBlock();
-        var next = block.getNextBlock();
-        var isPrevSame = prev && prev._schema.skeleton === "pebble_basic";
-        var isNextSame = next && next._schema.skeleton === "pebble_basic";
-
         return "m 0,9 a 9,9 0 0,0 9,-9 h 28 " +
-            (isPrevSame ? "l 25,0 0,25" : "q 25,0 25,25") +
-            (isNextSame ? "l 0,25 -25,0" : "q 0,25 -25,25") +
+            "q 25,0 25,25" +
+            "q 0,25 -25,25" +
             "h -28 a 9,9 0 0,1 -18,0 h -28 " +
-            (isNextSame ? "l -25,0 0,-25" : "q -25,0 -25,-25") +
-            (isPrevSame ? "l 0,-25 25,0" : "q 0,-25 25,-25") +
+            "q -25,0 -25,-25" +
+            "q 0,-25 25,-25" +
             "h 28 a 9,9 0 0,0 9,9 z";
     },
+    //path: function(blockView) {
+        //var block = blockView.block;
+        //var prev = block.getPrevBlock();
+        //var next = block.getNextBlock();
+        //var isPrevSame = prev && prev._schema.skeleton === "pebble_basic";
+        //var isNextSame = next && next._schema.skeleton === "pebble_basic";
+
+
+        //return "m 0,9 a 9,9 0 0,0 9,-9 h 28 " +
+            //(isPrevSame ? "l 25,0 0,25" : "q 25,0 25,25") +
+            //(isNextSame ? "l 0,25 -25,0" : "q 0,25 -25,25") +
+            //"h -28 a 9,9 0 0,1 -18,0 h -28 " +
+            //(isNextSame ? "l -25,0 0,-25" : "q -25,0 -25,-25") +
+            //(isPrevSame ? "l 0,-25 25,0" : "q 0,-25 25,-25") +
+            //"h 28 a 9,9 0 0,0 9,9 z";
+    //},
     magnets: function(blockView) {
         // apply scale required.
         var height = blockView ? Math.max(blockView.height, 51) : 51;

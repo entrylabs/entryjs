@@ -34,8 +34,8 @@ Entry.BlockView = function(block, board, mode) {
 
     this.isInBlockMenu = this.getBoard() instanceof Entry.BlockMenu;
 
-    if (skeleton.morph)
-        this._observers.push(this.block.observe(this, "_renderPath", skeleton.morph, false));
+    //if (skeleton.morph)
+        //this._observers.push(this.block.observe(this, "_renderPath", skeleton.morph, false));
 
     var that = this;
     this.mouseHandler = function() {
