@@ -14377,17 +14377,16 @@ Entry.VariableContainer.prototype.addRef = function(b, a) {
     a.funcBlock && (c.funcBlock = a.funcBlock, delete a.funcBlock);
     this[b].push(c);
     if ("_functionRefs" == b) {
-      for (var d = a.type.substr(5), d = Entry.variableContainer.functions_[d].content.getBlockList(), e = 0;e < d.length;e++) {
-        a = d[e];
-        var f = a.events;
-        f && f.viewAdd && f.viewAdd.forEach(function(b) {
+      for (var d = a.type.substr(5), e = Entry.variableContainer.functions_[d].content.getBlockList(), f = 0;f < e.length;f++) {
+        a = e[f];
+        var g = a.events;
+        -1 < a.type.indexOf("func_") && a.type.substr(5) == d || (g && g.viewAdd && g.viewAdd.forEach(function(b) {
           a.getCode().object = c.object;
           b && (a.funcBlock = c.block, b(a));
-        });
-        f && f.dataAdd && f.dataAdd.forEach(function(b) {
+        }), g && g.dataAdd && g.dataAdd.forEach(function(b) {
           a.getCode().object = c.object;
           b && (a.funcBlock = c.block, b(a));
-        });
+        }));
       }
     }
     return c;
@@ -14402,15 +14401,14 @@ Entry.VariableContainer.prototype.removeRef = function(b, a) {
       }
     }
     if ("_functionRefs" == b) {
-      for (d = a.type.substr(5), c = Entry.variableContainer.functions_[d].content.getBlockList(), d = 0;d < c.length;d++) {
-        a = c[d];
-        var e = a.events;
-        e && e.viewDestroy && e.viewDestroy.forEach(function(b) {
+      for (var c = a.type.substr(5), e = Entry.variableContainer.functions_[c].content.getBlockList(), d = 0;d < e.length;d++) {
+        a = e[d];
+        var f = a.events;
+        -1 < a.type.indexOf("func_") && a.type.substr(5) == c || (f && f.viewDestroy && f.viewDestroy.forEach(function(b) {
           b && b(a);
-        });
-        e && e.dataDestroy && e.dataDestroy.forEach(function(b) {
+        }), f && f.dataDestroy && f.dataDestroy.forEach(function(b) {
           b && b(a);
-        });
+        }));
       }
     }
   }
@@ -20739,12 +20737,13 @@ Entry.Board = function(b) {
   b.adjustThreadsPosition = function() {
   };
   b._initContextOptions = function() {
+    var a = this;
     this._contextOptions = [{activated:!0, option:{text:"\ubd99\uc5ec\ub123\uae30", enable:!!Entry.clipboard, callback:function() {
       Entry.do("addThread", Entry.clipboard).value.getFirstBlock().copyToClipboard();
     }}}, {activated:!0, option:{text:"\ube14\ub85d \uc815\ub9ac\ud558\uae30", callback:function() {
-      that.alignThreads();
+      a.alignThreads();
     }}}, {activated:!0, option:{text:"\ubaa8\ub4e0 \ucf54\ub4dc \uc0ad\uc81c\ud558\uae30", callback:function() {
-      that.code.clear();
+      a.code.clear();
     }}}];
   };
   b.activateContextOption = function(a) {

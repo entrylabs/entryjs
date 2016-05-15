@@ -860,6 +860,7 @@ Entry.Board = function(option) {
     };
 
     p._initContextOptions = function() {
+        var that = this;
         this._contextOptions = [
             {
                 activated: true,
