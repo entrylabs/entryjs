@@ -320,6 +320,7 @@ Entry.Func.prototype.edit = function() {
     else {
         this.parentView.appendChild(this.svg);
     }
+    Entry.playground.mainWorkspace.blockMenu.reDraw();
 };
 
 Entry.Func.generateBlock = function(func) {
