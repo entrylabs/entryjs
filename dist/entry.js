@@ -20213,14 +20213,13 @@ Entry.Scroller = function(b, a, c) {
   this._horizontal = void 0 === a ? !0 : a;
   this._vertical = void 0 === c ? !0 : c;
   this.board = b;
-  this.board.changeEvent.attach(this, this.resizeScrollBar);
   this.svgGroup = null;
   this.vRatio = this.vY = this.vWidth = this.hRatio = this.hX = this.hWidth = 0;
   this._visible = !0;
   this._opacity = -1;
   this.createScrollBar();
   this.setOpacity(0);
-  Entry.windowResized && Entry.windowResized.attach(this, this.resizeScrollBar);
+  this._bindEvent();
 };
 Entry.Scroller.RADIUS = 7;
 (function(b) {
@@ -20277,19 +20276,6 @@ Entry.Scroller.RADIUS = 7;
     });
     this.resizeScrollBar();
   };
-  b.resizeScrollBar = function() {
-    if (this._visible) {
-      var a = this.board, b = a.svgBlockGroup.getBoundingClientRect(), d = a.svgDom, e = d.width(), d = d.height(), f = b.left - a.offset.left, a = b.top - a.offset.top, g = b.width, b = b.height;
-      if (this._horizontal) {
-        var h = -g + Entry.BOARD_PADDING, k = e - Entry.BOARD_PADDING, g = (e + 2 * Entry.Scroller.RADIUS) * g / (k - h + g);
-        isNaN(g) && (g = 0);
-        this.hX = (f - h) / (k - h) * (e - g - 2 * Entry.Scroller.RADIUS);
-        this.hScrollbar.attr({width:g, x:this.hX, y:d - 2 * Entry.Scroller.RADIUS});
-        this.hRatio = (e - g - 2 * Entry.Scroller.RADIUS) / (k - h);
-      }
-      this._vertical && (f = -b + Entry.BOARD_PADDING, g = d - Entry.BOARD_PADDING, b = (d + 2 * Entry.Scroller.RADIUS) * b / (g - f + b), this.vY = (a - f) / (g - f) * (d - b - 2 * Entry.Scroller.RADIUS), this.vScrollbar.attr({height:b, y:this.vY, x:e - 2 * Entry.Scroller.RADIUS}), this.vRatio = (d - b - 2 * Entry.Scroller.RADIUS) / (g - f));
-    }
-  };
   b.updateScrollBar = function(a, b) {
     this._horizontal && (this.hX += a * this.hRatio, this.hScrollbar.attr({x:this.hX}));
     this._vertical && (this.vY += b * this.vRatio, this.vScrollbar.attr({y:this.vY}));
@@ -20317,6 +20303,24 @@ Entry.Scroller.RADIUS = 7;
   b.setOpacity = function(a) {
     this._opacity != a && (this.hScrollbar.attr({opacity:a}), this.vScrollbar.attr({opacity:a}), this._opacity = a);
   };
+  b.resizeScrollBar = function() {
+    if (this._visible) {
+      var a = this.board, b = a.svgBlockGroup.getBoundingClientRect(), d = a.svgDom, e = d.width(), d = d.height(), f = b.left - a.offset.left, a = b.top - a.offset.top, g = b.width, b = b.height;
+      if (this._horizontal) {
+        var h = -g + Entry.BOARD_PADDING, k = e - Entry.BOARD_PADDING, g = (e + 2 * Entry.Scroller.RADIUS) * g / (k - h + g);
+        isNaN(g) && (g = 0);
+        this.hX = (f - h) / (k - h) * (e - g - 2 * Entry.Scroller.RADIUS);
+        this.hScrollbar.attr({width:g, x:this.hX, y:d - 2 * Entry.Scroller.RADIUS});
+        this.hRatio = (e - g - 2 * Entry.Scroller.RADIUS) / (k - h);
+      }
+      this._vertical && (f = -b + Entry.BOARD_PADDING, g = d - Entry.BOARD_PADDING, b = (d + 2 * Entry.Scroller.RADIUS) * b / (g - f + b), this.vY = (a - f) / (g - f) * (d - b - 2 * Entry.Scroller.RADIUS), this.vScrollbar.attr({height:b, y:this.vY, x:e - 2 * Entry.Scroller.RADIUS}), this.vRatio = (d - b - 2 * Entry.Scroller.RADIUS) / (g - f));
+    }
+  };
+  b._bindEvent = function() {
+    var a = _.debounce(this.resizeScrollBar, 10);
+    this.board.changeEvent.attach(this, a);
+    Entry.windowResized && Entry.windowResized.attach(this, a);
+  };
 })(Entry.Scroller.prototype);
 Entry.Board = function(b) {
   Entry.Model(this, !1);
@@ -20330,9 +20334,7 @@ Entry.Board = function(b) {
   this.scroller = new Entry.Scroller(this, !0, !0);
   Entry.Utils.disableContextmenu(this.svgDom);
   this._addControl();
-  Entry.documentMousedown && (Entry.documentMousedown.attach(this, this.setSelectedBlock), Entry.documentMousedown.attach(this, this._removeActivated));
-  Entry.keyPressed && Entry.keyPressed.attach(this, this._keyboardControl);
-  Entry.windowResized && Entry.windowResized.attach(this, this.updateOffset);
+  this._bindEvent();
 };
 (function(b) {
   b.schema = {code:null, dragBlock:null, magnetedBlockView:null, selectedBlockView:null};
@@ -20752,6 +20754,14 @@ Entry.Board = function(b) {
   };
   b.deActivateContextOption = function(a) {
     this._contextOptions[a].activated = !1;
+  };
+  b._bindEvent = function() {
+    Entry.documentMousedown && (Entry.documentMousedown.attach(this, this.setSelectedBlock), Entry.documentMousedown.attach(this, this._removeActivated));
+    Entry.keyPressed && Entry.keyPressed.attach(this, this._keyboardControl);
+    if (Entry.windowResized) {
+      var a = _.debounce(this.updateOffset, 10)
+    }
+    Entry.windowResized.attach(this, a);
   };
 })(Entry.Board.prototype);
 Entry.Board.OPTION_PASTE = 0;
