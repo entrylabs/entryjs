@@ -57,13 +57,13 @@ p.initSocket = function() {
         var socket, socketSecurity;
         var protocol = '';
         if(location.protocol.indexOf('https') > -1) {
-            socketSecurity = new WebSocket("wss://localhost:23518");
+            socketSecurity = new WebSocket("wss://hardware.play-entry.org:23518");
         } else {
             try{
                 socket = new WebSocket("ws://localhost:23518");
             } catch(e) {}
             try{
-                socketSecurity = new WebSocket("wss://localhost:23518");
+                socketSecurity = new WebSocket("wss://hardware.play-entry.org:23518");
             } catch(e) {
             }
         }

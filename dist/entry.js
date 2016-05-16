@@ -12914,14 +12914,14 @@ p.initSocket = function() {
     } else {
       var a = this, b, c;
       if (-1 < location.protocol.indexOf("https")) {
-        c = new WebSocket("wss://localhost:23518");
+        c = new WebSocket("wss://hardware.play-entry.org:23518");
       } else {
         try {
           b = new WebSocket("ws://localhost:23518");
         } catch (d) {
         }
         try {
-          c = new WebSocket("wss://localhost:23518");
+          c = new WebSocket("wss://hardware.play-entry.org:23518");
         } catch (d) {
         }
       }
