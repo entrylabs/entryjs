@@ -19203,7 +19203,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     this._block.view.alignContent();
   };
   b.getTextWidth = function() {
-    return this.textElement.getComputedTextLength() + 8;
+    return this.textElement ? this.textElement.getComputedTextLength() + 8 : 8;
   };
   b.getText = function() {
     return this.getValue() + "\u00b0";
@@ -19216,7 +19216,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
     this.svgOptionGroup && (this.svgOptionGroup.remove(), delete this.svgOptionGroup);
     this.textElement.textContent = this.getText();
-    this.resize();
   };
 })(Entry.FieldAngle.prototype);
 Entry.FieldBlock = function(b, a, c, d, e) {
