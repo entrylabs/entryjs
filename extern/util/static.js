@@ -1623,7 +1623,7 @@ EntryStatic.blockInfo = {
     },
     "neobot_play_note_for": {
         "isNotFor": ['neobot'],
-        "xml": "<block type='neobot_play_note_for'></block>",
+        "xml": "<block type='neobot_play_note_for'><field name='NOTE'>1</field><field name='OCTAVE'>2</field><field name='DURATION'>4</field></block>",
         "class": "neobot_note"
     },
     "bitbrick_sensor_value": {
