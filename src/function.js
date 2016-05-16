@@ -309,6 +309,7 @@ Entry.Func.updateMenu = function() {
         blockMenu.unbanClass("functionInit");
         blockMenu.banClass("functionEdit");
     }
+    blockMenu.reDraw();
 };
 
 Entry.Func.prototype.edit = function() {
@@ -320,7 +321,6 @@ Entry.Func.prototype.edit = function() {
     else {
         this.parentView.appendChild(this.svg);
     }
-    Entry.playground.mainWorkspace.blockMenu.reDraw();
 };
 
 Entry.Func.generateBlock = function(func) {

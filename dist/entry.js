@@ -12405,10 +12405,10 @@ Entry.Func.createParamBlock = function(b, a, c) {
 };
 Entry.Func.updateMenu = function() {
   var b = Entry.playground.mainWorkspace;
-  b && (b = b.getBlockMenu(), this.targetFunc ? (this.menuCode || this.setupMenuCode(), b.banClass("functionInit"), b.unbanClass("functionEdit")) : (b.unbanClass("functionInit"), b.banClass("functionEdit")));
+  b && (b = b.getBlockMenu(), this.targetFunc ? (this.menuCode || this.setupMenuCode(), b.banClass("functionInit"), b.unbanClass("functionEdit")) : (b.unbanClass("functionInit"), b.banClass("functionEdit")), b.reDraw());
 };
 Entry.Func.prototype.edit = function() {
-  Entry.Func.isEdit || (Entry.Func.isEdit = !0, Entry.Func.svg ? this.parentView.appendChild(this.svg) : Entry.Func.initEditView(), Entry.playground.mainWorkspace.blockMenu.reDraw());
+  Entry.Func.isEdit || (Entry.Func.isEdit = !0, Entry.Func.svg ? this.parentView.appendChild(this.svg) : Entry.Func.initEditView());
 };
 Entry.Func.generateBlock = function(b) {
   b = Entry.block["func_" + b.id];
