@@ -1288,7 +1288,7 @@ Blockly.Blocks.set_color = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.set_brush_color(%1)"]}};
+}, syntax:{js:[], py:['self.set_brush_color("%1")']}};
 Entry.block.set_color = function(b, a) {
   var c = a.getField("VALUE", a);
   b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
@@ -1301,7 +1301,7 @@ Blockly.Blocks.set_random_color = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.set_brush_random_color()"]}};
+}, syntax:{js:[], py:["self.set_brush_color_random()"]}};
 Entry.block.set_random_color = function(b, a) {
   b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
   if (b.brush) {
@@ -1414,7 +1414,7 @@ Blockly.Blocks.change_brush_transparency = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.change_brush_transparency(%1)"]}};
+}, syntax:{js:[], py:["self.change_brush_transparency_by_percent(%1)"]}};
 Entry.block.change_brush_transparency = function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
@@ -1430,7 +1430,7 @@ Blockly.Blocks.set_brush_tranparency = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.set_brush_transparency(%1)"]}};
+}, syntax:{js:[], py:["self.set_brush_transparency_by_percent(%1)"]}};
 Entry.block.set_brush_tranparency = function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
@@ -4821,7 +4821,7 @@ Blockly.Blocks.sound_silent_all = {init:function() {
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-}, syntax:{js:[], py:["Entry.stop_all_sound()"]}};
+}, syntax:{js:[], py:["Entry.stop_all_sounds()"]}};
 Entry.block.sound_silent_all = function(b, a) {
   createjs.Sound.stop();
   return a.callReturn();
@@ -4845,7 +4845,7 @@ Blockly.Blocks.sound_something_with_block = {init:function() {
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-}, syntax:{js:[], py:["Entry.play_sound(%1)"]}};
+}, syntax:{js:[], py:['Entry.play_sound("%1")']}};
 Entry.block.sound_something_with_block = function(b, a) {
   var c = a.getStringValue("VALUE", a);
   (c = b.parent.getSound(c)) && createjs.Sound.play(c.id);
@@ -4861,7 +4861,7 @@ Blockly.Blocks.sound_something_second_with_block = {init:function() {
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-}, syntax:{js:[], py:["Entry.play_sound_by_seconds(%1, %2)"]}};
+}, syntax:{js:[], py:['Entry.play_sound_for_seconds("%1", %2)']}};
 Entry.block.sound_something_second_with_block = function(b, a) {
   var c = a.getStringValue("VALUE", a), d = a.getNumberValue("SECOND", a);
   (c = b.parent.getSound(c)) && createjs.Sound.play(c.id, {startTime:0, duration:1E3 * d});
@@ -4875,7 +4875,7 @@ Blockly.Blocks.sound_something_wait_with_block = {init:function() {
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-}, syntax:{js:[], py:["Entry.play_sound_and_wait(%1)"]}};
+}, syntax:{js:[], py:['Entry.play_sound_and_wait("%1")']}};
 Entry.block.sound_something_wait_with_block = function(b, a) {
   if (a.isPlay) {
     if (1 == a.playState) {
@@ -4905,7 +4905,7 @@ Blockly.Blocks.sound_something_second_wait_with_block = {init:function() {
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-}, syntax:{js:[], py:["Entry.play_sound_by_seconds_and_wait(%1, %2)"]}};
+}, syntax:{js:[], py:['Entry.play_sound_for_seconds_and_wait("%1", %2)']}};
 Entry.block.sound_something_second_wait_with_block = function(b, a) {
   if (a.isPlay) {
     if (1 == a.playState) {
@@ -4941,7 +4941,7 @@ Blockly.Blocks.sound_from_to = {init:function() {
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-}, syntax:{js:[], py:["Entry.play_sound_by_duration(%1, %2, %3)"]}};
+}, syntax:{js:[], py:['Entry.play_sound_from_to_seconds("%1", %2, %3)']}};
 Entry.block.sound_from_to = function(b, a) {
   var c = a.getStringValue("VALUE", a);
   if (c = b.parent.getSound(c)) {
@@ -4962,7 +4962,7 @@ Blockly.Blocks.sound_from_to_and_wait = {init:function() {
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-}, syntax:{js:[], py:["Entry.play_sound_by_duration_and_wait(%1, %2, %3)"]}};
+}, syntax:{js:[], py:['Entry.play_sound_from_to_seconds_and_wait("%1", %2, %3)']}};
 Entry.block.sound_from_to_and_wait = function(b, a) {
   if (a.isPlay) {
     if (1 == a.playState) {
@@ -9816,45 +9816,6 @@ Entry.Painter.prototype.selectToolbox = function(b) {
       this.toggleCoordinator();
   }
 };
-Entry.BlockInfoExtractor = function() {
-};
-(function(b) {
-  b.getParamsType = function(a) {
-    a = Entry.block[a].params;
-    var b = [], d;
-    for (d in a) {
-      b.push(a[d].type);
-    }
-    return b;
-  };
-  b.getDefParamsType = function(a) {
-    a = Entry.block[a].def.params;
-    var b = [], d;
-    for (d in a) {
-      var e = a[d];
-      console.log("def p", e);
-      null === e ? b.push(null) : b.push(e.type);
-    }
-    console.log("final def p", b);
-    return b;
-  };
-})(Entry.BlockInfoExtractor.prototype);
-Entry.BlockTypeConvertor = function() {
-};
-(function(b) {
-  b.convert = function(a) {
-    console.log("type convertor", a);
-    var b = a;
-    switch(a) {
-      case "angle":
-        b = "angle";
-        break;
-      case "get_pictures":
-        b = "get_pictures";
-    }
-    return b;
-  };
-})(Entry.BlockTypeConvertor.prototype);
 Entry.VariableConvertor = function() {
 };
 (function(b) {
@@ -9938,6 +9899,29 @@ Entry.VariableConvertor = function() {
     return d;
   };
 })(Entry.VariableConvertor.prototype);
+Entry.BlockMetaExtractor = function() {
+};
+(function(b) {
+  b.getParamsType = function(a) {
+    a = Entry.block[a].params;
+    var b = [], d;
+    for (d in a) {
+      b.push(a[d].type);
+    }
+    return b;
+  };
+  b.getDefParamsType = function(a) {
+    a = Entry.block[a].def.params;
+    var b = [], d;
+    for (d in a) {
+      var e = a[d];
+      console.log("def p", e);
+      null === e ? b.push(null) : b.push(e.type);
+    }
+    console.log("final def p", b);
+    return b;
+  };
+})(Entry.BlockMetaExtractor.prototype);
 Entry.JsAstGenerator = function() {
 };
 (function(b) {
@@ -9957,6 +9941,11 @@ Entry.PyAstGenerator = function() {
     }
   };
 })(Entry.PyAstGenerator.prototype);
+Entry.BlockVariableMap = function() {
+};
+(function(b) {
+  b.getDropdownDynamicType = {when_message_cast:"variable", message_cast:"variable", message_cast_wait:"variable", start_scene:"scene", create_clone:"object", locate:"object", locate_object_time:"object", see_angle_object:"object", change_to_some_shape:"picture", sound_something_with_block:"sound", sound_something_second_with_block:"sound", sound_from_to:"sound", sound_something_wait_with_block:"sound", sound_something_second_wait_with_block:"sound", sound_from_to_and_wait:"sound"};
+})(Entry.BlockVariableMap.prototype);
 Entry.KeyboardCodeMap = function() {
 };
 (function(b) {
@@ -9966,145 +9955,143 @@ Entry.KeyboardCodeMap = function() {
   b.keyCharToCode = {Backspace:8, Tab:9, Enter:13, Shift:16, Ctrl:17, Alt:18, "Pause/Break":19, "Caps Lock":20, Esc:27, Space:32, "Page Up":33, "Page Down":34, End:35, Home:36, Left:37, Up:38, Right:39, Down:40, Insert:45, Delete:46, 0:48, 1:49, 2:50, 3:51, 4:52, 5:53, 6:54, 7:55, 8:56, 9:57, A:65, B:66, C:67, D:68, E:69, F:70, G:71, H:72, I:73, J:74, K:75, L:76, M:77, N:78, O:79, P:80, Q:81, R:82, S:83, T:84, U:85, V:86, W:87, X:88, Y:89, Z:90, Windows:91, "Right Click":93, "Numpad 0":96, "Numpad 1":97, 
   "Numpad 2":98, "Numpad 3":99, "Numpad 4":100, "Numpad 5":101, "Numpad 6":102, "Numpad 7":103, "Numpad 8":104, "Numpad 9":105, "Numpad *":106, "Numpad +":107, "Numpad -":109, "Numpad .":110, "Numpad /":111, F1:112, F2:113, F3:114, F4:115, F5:116, F6:117, F7:118, F8:119, F9:120, F10:121, F11:122, F12:123, "Num Lock":144, "Scroll Lock":145, "My Computer":182, "My Calculator":183, ";":186, "=":187, ",":188, "-":189, ".":190, "/":191, "`":192, "[":219, "\\":220, "]":221, "'":222};
 })(Entry.KeyboardCodeMap.prototype);
-Entry.ParamTypeMap = function() {
-};
-(function(b) {
-  b.getDropdownDynamicType = {when_message_cast:"variable", message_cast:"variable", message_cast_wait:"variable", start_scene:"scene", create_clone:"object", locate:"object", locate_object_time:"object", see_angle_object:"object", change_to_some_shape:"picture", sound_something_with_block:"sound", sound_something_second_with_block:"sound", sound_from_to:"sound", sound_something_wait_with_block:"sound", sound_something_second_wait_with_block:"sound", sound_from_to_and_wait:"sound"};
-})(Entry.ParamTypeMap.prototype);
 Entry.PyBlockAssembler = function(b) {
   this.blockSyntax = b;
 };
 (function(b) {
-  b.assemble = function(a) {
+  b.assemble = function(a, b, d, e) {
     console.log("unit", a);
-    var b;
+    var f;
     switch(a.type) {
       case "ExpressionStatement":
-        console.log("ExpressionStatement unit", a);
-        var d = a.expression.callee;
-        if (d.object.name && d.property.name) {
-          var e = String(d.object.name).concat(".").concat(d.property.name)
+        console.log("ExpressionStatement unit", a, b, d, e);
+        var g = a.expression.callee;
+        if (g.object.name && g.property.name) {
+          var h = String(g.object.name).concat(".").concat(g.property.name)
         } else {
-          "__pythonRuntime" == String(d.object.object.name) && "functions" == String(d.object.property.name) && (e = String(d.property.name));
+          "__pythonRuntime" == String(g.object.object.name) && "functions" == String(g.object.property.name) && (h = String(g.property.name));
         }
-        var f = this.getBlock(e);
-        b = Entry.BlockInfoExtractor.prototype.getParamsType(f);
-        var g = Entry.BlockInfoExtractor.prototype.getDefParamsType(f), e = [], arguments = a.expression.arguments;
+        var h = this.getBlock(h), k = Entry.BlockMetaExtractor.prototype.getParamsType(h);
+        f = Entry.BlockMetaExtractor.prototype.getDefParamsType(h);
+        var l = 0, n = [], arguments = a.expression.arguments;
         console.log("argument origin", arguments);
         if (arguments && arguments.length) {
-          for (d = 0;d < arguments.length;d++) {
-            console.log("index arg", d, arguments[d]);
-            if ("Indicator" == b[d]) {
-              var h = null;
-              arguments.splice(d, 0, h);
+          for (g = 0;g < arguments.length;g++) {
+            console.log("meta", g, arguments[g], k[g], f[g]);
+            if ("Indicator" == k[g]) {
+              l = null, arguments.splice(g, 0, l);
             } else {
-              if ("Block" == b[d]) {
-                h = this.assemble(arguments[d]);
+              if ("Block" == k[g]) {
+                l = g, l = this.assemble(arguments[g], h, f, l);
               } else {
-                if ("Keyboard" == b[d]) {
-                  h = Entry.KeyboardCodeMap.prototype.keyCharToCode[arguments[d].value];
+                if ("Keyboard" == k[g]) {
+                  l = Entry.KeyboardCodeMap.prototype.keyCharToCode[arguments[g].value];
                 } else {
-                  var h = arguments[d].value, k = Entry.ParamTypeMap.prototype.getDropdownDynamicType[f];
-                  console.log("dd convertor", h, k);
-                  h = Entry.VariableConvertor.prototype.convert(k, h);
+                  l = arguments[g].value;
+                  b && null != b || (b = h);
+                  var m = Entry.BlockVariableMap.prototype.getDropdownDynamicType[b];
+                  console.log("variable convertor", l, m);
+                  l = Entry.VariableConvertor.prototype.convert(m, l);
                 }
               }
             }
-            k = g[d];
-            console.log("defParamType", k);
-            k = Entry.BlockTypeConvertor.prototype.convert(k);
-            h.type = k;
-            console.log("convertedBlockType", k);
-            console.log("block", f);
-            "get_pictures" == k && (h.params[0] = Entry.VariableConvertor.prototype.convert("picture", h.params[0]));
-            console.log("param", h);
-            e.push(h);
+            console.log("param", l);
+            n.push(l);
           }
         }
-        b = {type:f, params:e};
-        console.log("ExpressionStatement result", b);
+        f = {type:h, params:n};
+        console.log("ExpressionStatement result", f);
         break;
       case "WhileStatement":
         console.log("WhileStatement unit", a);
-        f = a.test;
-        e = [];
-        h = this.assemble(f);
-        e.push(h);
-        f = this.getBlock("while True:\n$1");
-        h = [];
-        b = a.body.body;
-        for (d in b) {
-          a = this.assemble(b[d]), h.push(a);
+        h = this.getBlock("while True:\n$1");
+        Entry.BlockMetaExtractor.prototype.getParamsType(h);
+        f = Entry.BlockMetaExtractor.prototype.getDefParamsType(h);
+        l = a.test;
+        n = [];
+        l = this.assemble(l, h, f, 0);
+        n.push(l);
+        k = [];
+        f = a.body.body;
+        for (g in f) {
+          a = this.assemble(f[g]), k.push(a);
         }
-        b = {type:f, statements:[h]};
-        console.log("WhileStatement result", b);
+        f = {type:h, statements:[k]};
+        console.log("WhileStatement result", f);
         break;
       case "BlockStatement":
         console.log("BlockStatement unit", a);
-        "range" == a.body[0].declarations[0].init.callee.property.name && (e = "for i in range");
-        f = this.getBlock(e);
-        b = Entry.BlockInfoExtractor.prototype.getParamsType(f);
-        e = [];
+        "range" == a.body[0].declarations[0].init.callee.property.name && (h = "for i in range");
+        h = this.getBlock(h);
+        k = Entry.BlockMetaExtractor.prototype.getParamsType(h);
+        f = Entry.BlockMetaExtractor.prototype.getDefParamsType(h);
+        n = [];
         if ((arguments = a.body[0].declarations[0].init.arguments) && arguments.length) {
-          for (d = 0;d < arguments.length;d++) {
-            "Indicator" == b[d] ? (h = null, arguments.splice(d, 0, h)) : "Block" == b[d] ? h = this.assemble(arguments[d]) : "Keyboard" == b[d] ? h = Entry.KeyboardCodeMap.prototype.keyCharToCode[arguments[d].value] : (h = arguments[d].value, k = Entry.ParamTypeMap.prototype.getDropdownDynamicType[f], h = Entry.VariableConvertor.prototype.convert(k, h)), e.push(h);
+          for (g = 0;g < arguments.length;g++) {
+            "Indicator" == k[g] ? (l = null, arguments.splice(g, 0, l)) : "Block" == k[g] ? (l = g, l = this.assemble(arguments[g], h, f, l)) : "Keyboard" == k[g] ? l = Entry.KeyboardCodeMap.prototype.keyCharToCode[arguments[g].value] : (l = arguments[g].value, m = Entry.ParamTypeMap.prototype.getDropdownDynamicType[block], l = Entry.VariableConvertor.prototype.convert(m, l)), n.push(l);
           }
         }
-        var l = a.body[1].consequent;
-        b = l.body[0].body;
-        b.shift();
-        h = [];
-        for (d in b) {
-          a = this.assemble(b[d]), h.push(a);
+        m = a.body[1].consequent;
+        f = m.body[0].body;
+        f.shift();
+        k = [];
+        for (g in f) {
+          a = this.assemble(f[g]), k.push(a);
         }
-        b = {type:f, params:e, statements:[h]};
-        console.log("BlockStatement result", b);
+        f = {type:h, params:n, statements:[k]};
+        console.log("BlockStatement result", f);
         break;
       case "IfStatement":
         console.log("IfStatement unit", a);
-        f = a.test;
-        e = [];
-        h = this.assemble(f);
-        e.push(h);
-        l = a.consequent;
-        h = a.alternate;
-        f = this.getBlock(null == h ? "if %1:\n$1" : "if %1:\n$1\nelse:\n$2");
-        g = [];
-        k = [];
-        if (null != l) {
-          b = l.body;
-          for (d in b) {
-            a = this.assemble(b[d]), g.push(a);
+        m = a.consequent;
+        k = a.alternate;
+        l = a.test;
+        n = [];
+        h = this.getBlock(null == k ? "if %1:\n$1" : "if %1:\n$1\nelse:\n$2");
+        console.log("if block type", h);
+        Entry.BlockMetaExtractor.prototype.getParamsType(h);
+        Entry.BlockMetaExtractor.prototype.getDefParamsType(h);
+        l = this.assemble(l, h, defParamsType, 0);
+        n.push(l);
+        var l = [], q = [];
+        if (null != m) {
+          f = m.body;
+          for (g in f) {
+            a = this.assemble(f[g]), l.push(a);
           }
-          b = {type:f, params:e, statements:[g]};
+          f = {type:h, params:n, statements:[l]};
         }
-        if (null != h) {
-          b = h.body;
-          for (d in b) {
-            a = this.assemble(b[d]), k.push(a);
+        if (null != k) {
+          f = k.body;
+          for (g in f) {
+            a = this.assemble(f[g]), q.push(a);
           }
-          b = {type:f, params:e, statements:[g, k]};
+          f = {type:h, params:n, statements:[l, q]};
         }
-        console.log("IfStatement result", b);
+        console.log("IfStatement result", f);
         break;
       case "BreakStatement":
         console.log("BreakStatement unit", a);
-        f = this.getBlock("break");
-        b = {type:f};
-        console.log("BreakStatement result", b);
+        h = this.getBlock("break");
+        f = {type:h};
+        console.log("BreakStatement result", f);
         break;
       case "Literal":
-        console.log("Literal unit", a);
-        h = a.value;
-        console.log("arg", h);
-        !0 === h ? (e = "True", f = this.getBlock(e), b = {type:f}) : !1 === h ? (e = "False", f = this.getBlock(e), b = {type:f}) : (e = "string" === typeof h ? '"%1"' : "%1", f = this.getBlock(e), b = {type:f, params:[h]});
-        console.log("targetSyntax", e);
-        console.log("Literal result", b);
+        console.log("Literal unit", a, b, d, e);
+        h = d[e];
+        l = a.value;
+        console.log("arg", l);
+        b && null != b || (b = h);
+        m = Entry.BlockVariableMap.prototype.getDropdownDynamicType[b];
+        console.log("literal variable convertor", l, m);
+        l = Entry.VariableConvertor.prototype.convert(m, l);
+        f = {type:h, params:[l]};
+        console.log("Literal result", f);
         break;
       case "UnaryExpression":
-        console.log("UnaryExpression unit", a), a.prefix && (h = a.operator.concat(a.argument.value)), f = this.getBlock("string" === typeof h ? '"%1"' : "%1"), b = {type:f, params:[h]}, console.log("UnaryExpression result", b);
+        console.log("UnaryExpression unit", a, b, d, e), h = d[e], a.prefix && (l = a.operator.concat(a.argument.value)), b && null != b || (b = h), m = Entry.BlockVariableMap.prototype.getDropdownDynamicType[b], console.log("literal variable convertor", l, m), l = Entry.VariableConvertor.prototype.convert(m, l), f = {type:h, params:[l]}, console.log("UnaryExpression result", f);
     }
-    return b;
+    return f;
   };
   b.getBlock = function(a) {
     return this.blockSyntax[a];
@@ -10575,7 +10562,11 @@ Entry.BlockToPyParser = function() {
     console.log("dropdownDynamicValueConvertor", a, b);
     var d = b.options, e = null, f;
     for (f in d) {
-      if (e = d[f], a == e[1]) {
+      e = d[f];
+      if ("null" == e[1]) {
+        return e = "none";
+      }
+      if (a == e[1]) {
         return e = e[0];
       }
     }
@@ -16456,15 +16447,15 @@ paramsKeyMap:{PORT:0, VALUE2:1, VALUE3:2, VALUE4:3, VALUE5:4}, "class":"conditio
   Entry.stage.sortZorder();
   b.brush.moveTo(b.getX(), -1 * b.getY());
   return a.callReturn();
-}, syntax:{js:[], py:[]}}, stop_drawing:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[null], type:"stop_drawing"}, "class":"brush_control", isNotFor:["textBox"], func:function(b, a) {
+}, syntax:{js:[], py:["self.start_drawing()"]}}, stop_drawing:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[null], type:"stop_drawing"}, "class":"brush_control", isNotFor:["textBox"], func:function(b, a) {
   b.brush && b.shape && (b.brush.stop = !0);
   return a.callReturn();
-}, syntax:{js:[], py:[]}}, set_color:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Color"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[null], type:"set_color"}, paramsKeyMap:{VALUE:0}, "class":"brush_color", isNotFor:["textBox"], func:function(b, a) {
+}, syntax:{js:[], py:["self.stop_drawing()"]}}, set_color:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Color"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[null], type:"set_color"}, paramsKeyMap:{VALUE:0}, "class":"brush_color", isNotFor:["textBox"], func:function(b, a) {
   var c = a.getField("VALUE", a);
   b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
   b.brush && (c = Entry.hex2rgb(c), b.brush.rgb = c, b.brush.endStroke(), b.brush.beginStroke("rgba(" + c.r + "," + c.g + "," + c.b + "," + b.brush.opacity / 100 + ")"), b.brush.moveTo(b.getX(), -1 * b.getY()));
   return a.callReturn();
-}, syntax:{js:[], py:[]}}, set_random_color:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[null], type:"set_random_color"}, "class":"brush_color", isNotFor:["textBox"], func:function(b, a) {
+}, syntax:{js:[], py:['self.set_brush_color("%1")']}}, set_random_color:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[null], type:"set_random_color"}, "class":"brush_color", isNotFor:["textBox"], func:function(b, a) {
   b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
   if (b.brush) {
     var c = Entry.generateRgb();
@@ -16474,17 +16465,17 @@ paramsKeyMap:{PORT:0, VALUE2:1, VALUE3:2, VALUE4:3, VALUE5:4}, "class":"conditio
     b.brush.moveTo(b.getX(), -1 * b.getY());
   }
   return a.callReturn();
-}, syntax:{js:[], py:[]}}, change_thickness:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["1"]}, null], type:"change_thickness"}, paramsKeyMap:{VALUE:0}, "class":"brush_thickness", isNotFor:["textBox"], func:function(b, a) {
+}, syntax:{js:[], py:["self.set_brush_color_random()"]}}, change_thickness:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["1"]}, null], type:"change_thickness"}, paramsKeyMap:{VALUE:0}, "class":"brush_thickness", isNotFor:["textBox"], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
   b.brush && (b.brush.thickness += c, 1 > b.brush.thickness && (b.brush.thickness = 1), b.brush.setStrokeStyle(b.brush.thickness), b.brush.moveTo(b.getX(), -1 * b.getY()));
   return a.callReturn();
-}, syntax:{js:[], py:[]}}, set_thickness:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["1"]}, null], type:"set_thickness"}, paramsKeyMap:{VALUE:0}, "class":"brush_thickness", isNotFor:["textBox"], func:function(b, a) {
+}, syntax:{js:[], py:["self.change_brush_thickness(%1)"]}}, set_thickness:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["1"]}, null], type:"set_thickness"}, paramsKeyMap:{VALUE:0}, "class":"brush_thickness", isNotFor:["textBox"], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
   b.brush && (b.brush.thickness = c, b.brush.setStrokeStyle(b.brush.thickness), b.brush.moveTo(b.getX(), -1 * b.getY()));
   return a.callReturn();
-}, syntax:{js:[], py:[]}}, change_opacity:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"change_opacity"}, paramsKeyMap:{VALUE:0}, "class":"brush_opacity", isNotFor:["textBox"], func:function(b, a) {
+}, syntax:{js:[], py:["self.set_brush_thickness(%1)"]}}, change_opacity:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"change_opacity"}, paramsKeyMap:{VALUE:0}, "class":"brush_opacity", isNotFor:["textBox"], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
   c = Entry.adjustValueWithMaxMin(b.brush.opacity + c, 0, 100);
@@ -16508,21 +16499,21 @@ paramsKeyMap:{PORT:0, VALUE2:1, VALUE3:2, VALUE4:3, VALUE5:4}, "class":"conditio
   });
   c = null;
   return a.callReturn();
-}, syntax:{js:[], py:[]}}, brush_stamp:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[null], type:"brush_stamp"}, "class":"stamp", isNotFor:["textBox"], func:function(b, a) {
+}, syntax:{js:[], py:["self.erase_all_brush()"]}}, brush_stamp:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[null], type:"brush_stamp"}, "class":"stamp", isNotFor:["textBox"], func:function(b, a) {
   b.parent.addStampEntity(b);
   return a.callReturn();
-}, syntax:{js:[], py:[]}}, change_brush_transparency:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"change_brush_transparency"}, paramsKeyMap:{VALUE:0}, "class":"brush_opacity", isNotFor:["textBox"], func:function(b, a) {
+}, syntax:{js:[], py:["self.stamp()"]}}, change_brush_transparency:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"change_brush_transparency"}, paramsKeyMap:{VALUE:0}, "class":"brush_opacity", isNotFor:["textBox"], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
   c = Entry.adjustValueWithMaxMin(b.brush.opacity - c, 0, 100);
   b.brush && (b.brush.opacity = c, b.brush.endStroke(), c = b.brush.rgb, b.brush.beginStroke("rgba(" + c.r + "," + c.g + "," + c.b + "," + b.brush.opacity / 100 + ")"), b.brush.moveTo(b.getX(), -1 * b.getY()));
   return a.callReturn();
-}, syntax:{js:[], py:[]}}, set_brush_tranparency:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["50"]}, null], type:"set_brush_tranparency"}, paramsKeyMap:{VALUE:0}, "class":"brush_opacity", isNotFor:["textBox"], func:function(b, a) {
+}, syntax:{js:[], py:["self.change_brush_transparency_by_percent(%1)"]}}, set_brush_tranparency:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["50"]}, null], type:"set_brush_tranparency"}, paramsKeyMap:{VALUE:0}, "class":"brush_opacity", isNotFor:["textBox"], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
   b.brush && (b.brush.opacity = Entry.adjustValueWithMaxMin(c, 0, 100), b.brush.endStroke(), c = b.brush.rgb, b.brush.beginStroke("rgba(" + c.r + "," + c.g + "," + c.b + "," + (1 - b.brush.opacity / 100) + ")"), b.brush.moveTo(b.getX(), -1 * b.getY()));
   return a.callReturn();
-}, syntax:{js:[], py:[]}}, number:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"TextInput", value:10}], events:{}, def:{params:[]}, paramsKeyMap:{NUM:0}, func:function(b, a) {
+}, syntax:{js:[], py:["self.set_brush_transparency_by_percent(%1)"]}}, number:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"TextInput", value:10}], events:{}, def:{params:[]}, paramsKeyMap:{NUM:0}, func:function(b, a) {
   return a.getField("NUM", a);
 }, isPrimitive:!0, syntax:{js:[], py:["%1"]}}, angle:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Angle"}], events:{}, def:{params:[null], type:"angle"}, paramsKeyMap:{ANGLE:0}, func:function(b, a) {
   return a.getNumberField("ANGLE");
@@ -17963,27 +17954,27 @@ func:function(b, a) {
   0 > c && (c = 0);
   createjs.Sound.setVolume(c);
   return a.callReturn();
-}, syntax:{js:[], py:[]}}, sound_volume_set:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"sound_volume_set"}, paramsKeyMap:{VALUE:0}, "class":"sound_volume", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["Entry.change_volume_by_percent(%1)"]}}, sound_volume_set:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"sound_volume_set"}, paramsKeyMap:{VALUE:0}, "class":"sound_volume", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a) / 100;
   1 < c && (c = 1);
   0 > c && (c = 0);
   createjs.Sound.setVolume(c);
   return a.callReturn();
-}, syntax:{js:[], py:[]}}, sound_silent_all:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[null], type:"sound_silent_all"}, "class":"sound_stop", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["Entry.set_volume_by_percent(%1)"]}}, sound_silent_all:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[null], type:"sound_silent_all"}, "class":"sound_stop", isNotFor:[], func:function(b, a) {
   createjs.Sound.stop();
   return a.callReturn();
-}, syntax:{js:[], py:[]}}, get_sounds:{color:"#A4D01D", skeleton:"basic_string_field", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"sounds", fontSize:11}], events:{}, def:{params:[null], type:"get_sounds"}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
+}, syntax:{js:[], py:["Entry.stop_all_sounds()"]}}, get_sounds:{color:"#A4D01D", skeleton:"basic_string_field", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"sounds", fontSize:11}], events:{}, def:{params:[null], type:"get_sounds"}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
   return a.getStringField("VALUE");
-}, syntax:{js:[], py:[]}}, sound_something_with_block:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds"}, null], type:"sound_something_with_block"}, paramsKeyMap:{VALUE:0}, "class":"sound_play", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:[' "%1"']}}, sound_something_with_block:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds"}, null], type:"sound_something_with_block"}, paramsKeyMap:{VALUE:0}, "class":"sound_play", isNotFor:[], func:function(b, a) {
   var c = a.getStringValue("VALUE", a);
   (c = b.parent.getSound(c)) && createjs.Sound.play(c.id);
   return a.callReturn();
-}, syntax:{js:[], py:[]}}, sound_something_second_with_block:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds", id:"95dw"}, {type:"number", params:["1"]}, null], type:"sound_something_second_with_block"}, paramsKeyMap:{VALUE:0, SECOND:1}, "class":"sound_play", isNotFor:[], func:function(b, 
-a) {
+}, syntax:{js:[], py:['Entry.play_sound("%1")']}}, sound_something_second_with_block:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds", id:"95dw"}, {type:"number", params:["1"]}, null], type:"sound_something_second_with_block"}, paramsKeyMap:{VALUE:0, SECOND:1}, "class":"sound_play", isNotFor:[], 
+func:function(b, a) {
   var c = a.getStringValue("VALUE", a), d = a.getNumberValue("SECOND", a);
   (c = b.parent.getSound(c)) && createjs.Sound.play(c.id, {startTime:0, duration:1E3 * d});
   return a.callReturn();
-}, syntax:{js:[], py:[]}}, sound_something_wait_with_block:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds"}, null], type:"sound_something_wait_with_block"}, paramsKeyMap:{VALUE:0}, "class":"sound_wait", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:['Entry.play_sound_for_seconds("%1", %2)']}}, sound_something_wait_with_block:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds"}, null], type:"sound_something_wait_with_block"}, paramsKeyMap:{VALUE:0}, "class":"sound_wait", isNotFor:[], func:function(b, a) {
   if (a.isPlay) {
     if (1 == a.playState) {
       return a;
@@ -18001,8 +17992,8 @@ a) {
     }, 1E3 * c.duration);
   }
   return a;
-}, syntax:{js:[], py:[]}}, sound_something_second_wait_with_block:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds"}, {type:"number", params:["1"]}, null], type:"sound_something_second_wait_with_block"}, paramsKeyMap:{VALUE:0, SECOND:1}, "class":"sound_wait", isNotFor:[], func:function(b, 
-a) {
+}, syntax:{js:[], py:['Entry.play_sound_and_wait("%1")']}}, sound_something_second_wait_with_block:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds"}, {type:"number", params:["1"]}, null], type:"sound_something_second_wait_with_block"}, paramsKeyMap:{VALUE:0, SECOND:1}, "class":"sound_wait", 
+isNotFor:[], func:function(b, a) {
   if (a.isPlay) {
     if (1 == a.playState) {
       return a;
@@ -18024,16 +18015,16 @@ a) {
     });
   }
   return a;
-}, syntax:{js:[], py:[]}}, sound_from_to:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds"}, {type:"text", params:["1"]}, {type:"text", params:["10"]}, null], type:"sound_from_to"}, paramsKeyMap:{VALUE:0, START:1, END:2}, "class":"sound_play", isNotFor:[], 
-func:function(b, a) {
+}, syntax:{js:[], py:['Entry.play_sound_for_seconds_and_wait("%1", %2)']}}, sound_from_to:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds"}, {type:"text", params:["1"]}, {type:"text", params:["10"]}, null], type:"sound_from_to"}, paramsKeyMap:{VALUE:0, 
+START:1, END:2}, "class":"sound_play", isNotFor:[], func:function(b, a) {
   var c = a.getStringValue("VALUE", a);
   if (c = b.parent.getSound(c)) {
     var d = 1E3 * a.getNumberValue("START", a), e = 1E3 * a.getNumberValue("END", a);
     createjs.Sound.play(c.id, {startTime:Math.min(d, e), duration:Math.max(d, e) - Math.min(d, e)});
   }
   return a.callReturn();
-}, syntax:{js:[], py:[]}}, sound_from_to_and_wait:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds"}, {type:"text", params:["1"]}, {type:"text", params:["10"]}, null], type:"sound_from_to_and_wait"}, paramsKeyMap:{VALUE:0, START:1, END:2}, "class":"sound_wait", 
-isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:['Entry.play_sound_from_to_seconds("%1", %2, %3)']}}, sound_from_to_and_wait:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds"}, {type:"text", params:["1"]}, {type:"text", params:["10"]}, null], type:"sound_from_to_and_wait"}, paramsKeyMap:{VALUE:0, 
+START:1, END:2}, "class":"sound_wait", isNotFor:[], func:function(b, a) {
   if (a.isPlay) {
     if (1 == a.playState) {
       return a;
@@ -18053,7 +18044,7 @@ isNotFor:[], func:function(b, a) {
     }, d);
   }
   return a;
-}, syntax:{js:[], py:[]}}, when_run_button_click:{color:"#3BBD70", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_play.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null], type:"when_run_button_click"}, "class":"event", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:['Entry.play_sound_from_to_seconds_and_wait("%1", %2, %3)']}}, when_run_button_click:{color:"#3BBD70", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_play.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null], type:"when_run_button_click"}, "class":"event", isNotFor:[], func:function(b, a) {
   return a.callReturn();
 }, event:"start", syntax:{js:[], py:["Entry.on_start_button_click()"]}}, press_some_key:{color:"#3BBD70", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_keyboard.png", size:17, position:{x:0, y:-2}}, {type:"Dropdown", options:[["q", "81"], ["w", "87"], ["e", "69"], ["r", "82"], ["a", "65"], ["s", "83"], ["d", "68"], ["\uc704\ucabd \ud654\uc0b4\ud45c", "38"], ["\uc544\ub798\ucabd \ud654\uc0b4\ud45c", "40"], ["\uc67c\ucabd \ud654\uc0b4\ud45c", 
 "37"], ["\uc624\ub978\ucabd \ud654\uc0b4\ud45c", "39"], ["\uc5d4\ud130", "13"], ["\uc2a4\ud398\uc774\uc2a4", "32"]], value:"81", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/start_03.png", size:12}], events:{}, def:{params:[null, null, null]}, paramsKeyMap:{VALUE:1}, func:function(b, a) {
@@ -20191,6 +20182,7 @@ Entry.FieldColor = function(b, a, c) {
 Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
 (function(b) {
   b.renderStart = function() {
+    this.svgGroup && $(this.svgGroup).remove();
     this.svgGroup = this._blockView.contentSvgGroup.elem("g", {class:"entry-field-color"});
     var a = this._position, b;
     a ? (b = a.x || 0, a = a.y || 0) : (b = 0, a = -8);

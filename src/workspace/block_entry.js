@@ -2973,7 +2973,7 @@ Entry.block = {
 
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": []}
+        "syntax": {"js": [], "py": ["self.start_drawing()"]}
     },
     "stop_drawing": {
         "color": "#FF9E20",
@@ -2999,7 +2999,7 @@ Entry.block = {
 
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": []}
+        "syntax": {"js": [], "py": ["self.stop_drawing()"]}
     },
     "set_color": {
         "color": "#FF9E20",
@@ -3044,7 +3044,7 @@ Entry.block = {
 
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": []}
+        "syntax": {"js": [], "py": ["self.set_brush_color(\"%1\")"]}
     },
     "set_random_color": {
         "color": "#FF9E20",
@@ -3080,7 +3080,7 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": []}
+        "syntax": {"js": [], "py": ["self.set_brush_color_random()"]}
     },
     "change_thickness": {
         "color": "#FF9E20",
@@ -3133,7 +3133,7 @@ Entry.block = {
 
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": []}
+        "syntax": {"js": [], "py": ["self.change_brush_thickness(%1)"]}
     },
     "set_thickness": {
         "color": "#FF9E20",
@@ -3183,7 +3183,7 @@ Entry.block = {
 
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": []}
+        "syntax": {"js": [], "py": ["self.set_brush_thickness(%1)"]}
     },
     "change_opacity": {
         "color": "#FF9E20",
@@ -3324,7 +3324,7 @@ Entry.block = {
 
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": []}
+        "syntax": {"js": [], "py": ["self.erase_all_brush()"]}
     },
     "brush_stamp": {
         "color": "#FF9E20",
@@ -3349,7 +3349,7 @@ Entry.block = {
 
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": []}
+        "syntax": {"js": [], "py": ["self.stamp()"]}
     },
     "change_brush_transparency": {
         "color": "#FF9E20",
@@ -3401,7 +3401,7 @@ Entry.block = {
 
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": []}
+        "syntax": {"js": [], "py": ["self.change_brush_transparency_by_percent(%1)"]}
     },
     "set_brush_tranparency": {
         "color": "#FF9E20",
@@ -3453,7 +3453,7 @@ Entry.block = {
             return script.callReturn();
 
         },
-        "syntax": {"js": [], "py": []}
+        "syntax": {"js": [], "py": ["self.set_brush_transparency_by_percent(%1)"]}
     },
     "number": {
         "color": "#FFD974",
@@ -13248,7 +13248,7 @@ Entry.block = {
             createjs.Sound.setVolume(value);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": []}
+        "syntax": {"js": [], "py": ["Entry.change_volume_by_percent(%1)"]}
     },
     "sound_volume_set": {
         "color": "#A4D01D",
@@ -13290,7 +13290,7 @@ Entry.block = {
             createjs.Sound.setVolume(value);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": []}
+        "syntax": {"js": [], "py": ["Entry.set_volume_by_percent(%1)"]}
     },
     "sound_silent_all": {
         "color": "#A4D01D",
@@ -13314,7 +13314,7 @@ Entry.block = {
             createjs.Sound.stop();
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": []}
+        "syntax": {"js": [], "py": ["Entry.stop_all_sounds()"]}
     },
     "get_sounds": {
         "color": "#A4D01D",
@@ -13339,7 +13339,7 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getStringField("VALUE");
         },
-        "syntax": {"js": [], "py": []}
+        "syntax": {"js": [], "py": [" \"%1\""]}
     },
     "sound_something_with_block": {
         "color": "#A4D01D",
@@ -13380,7 +13380,7 @@ Entry.block = {
 
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": []}
+        "syntax": {"js": [], "py": ["Entry.play_sound(\"%1\")"]}
     },
     "sound_something_second_with_block": {
         "color": "#A4D01D",
@@ -13438,7 +13438,7 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": []}
+        "syntax": {"js": [], "py": ["Entry.play_sound_for_seconds(\"%1\", %2)"]}
     },
     "sound_something_wait_with_block": {
         "color": "#A4D01D",
@@ -13491,7 +13491,7 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": []}
+        "syntax": {"js": [], "py": ["Entry.play_sound_and_wait(\"%1\")"]}
     },
     "sound_something_second_wait_with_block": {
         "color": "#A4D01D",
@@ -13557,7 +13557,7 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": []}
+        "syntax": {"js": [], "py": ["Entry.play_sound_for_seconds_and_wait(\"%1\", %2)"]}
     },
     "sound_from_to": {
         "color": "#A4D01D",
@@ -13621,7 +13621,7 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": []}
+        "syntax": {"js": [], "py": ["Entry.play_sound_from_to_seconds(\"%1\", %2, %3)"]}
     },
     "sound_from_to_and_wait": {
         "color": "#A4D01D",
@@ -13702,7 +13702,7 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": []}
+        "syntax": {"js": [], "py": ["Entry.play_sound_from_to_seconds_and_wait(\"%1\", %2, %3)"]}
     },
     "when_run_button_click": {
         "color": "#3BBD70",

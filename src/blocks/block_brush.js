@@ -65,7 +65,7 @@ Blockly.Blocks.set_color = {
     this.setPreviousStatement(true);
     this.setNextStatement(true);
   },
-  syntax: {js: [], py: ["self.set_brush_color(%1)"]}
+  syntax: {js: [], py: ["self.set_brush_color(\"%1\")"]}
 };
 
 Entry.block.set_color = function (sprite, script) {
@@ -99,7 +99,7 @@ Blockly.Blocks.set_random_color = {
     this.setPreviousStatement(true);
     this.setNextStatement(true);
   },
-  syntax: {js: [], py: ["self.set_brush_random_color()"]}
+  syntax: {js: [], py: ["self.set_brush_color_random()"]}
 };
 
 Entry.block.set_random_color = function (sprite, script) {
@@ -336,7 +336,7 @@ Blockly.Blocks.change_brush_transparency = {
     this.setPreviousStatement(true);
     this.setNextStatement(true);
   },
-  syntax: {js: [], py: ["self.change_brush_transparency(%1)"]}
+  syntax: {js: [], py: ["self.change_brush_transparency_by_percent(%1)"]}
 };
 
 Entry.block.change_brush_transparency = function (sprite, script) {
@@ -373,7 +373,7 @@ Blockly.Blocks.set_brush_tranparency = {
     this.setPreviousStatement(true);
     this.setNextStatement(true);
   },
-  syntax: {js: [], py: ["self.set_brush_transparency(%1)"]}
+  syntax: {js: [], py: ["self.set_brush_transparency_by_percent(%1)"]}
 };
 
 Entry.block.set_brush_tranparency = function (sprite, script) {

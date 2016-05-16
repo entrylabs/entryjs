@@ -33,6 +33,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
         HEIGHT = 16;
 
     p.renderStart = function() {
+        if (this.svgGroup) $(this.svgGroup).remove();
         var blockView = this._blockView;
         var that = this;
         var contents = this._contents;

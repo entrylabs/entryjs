@@ -7,20 +7,19 @@ goog.provide("Entry.PyBlockAssembler");
 
 goog.require("Entry.KeyboardCodeMap");
 goog.require("Entry.VariableConvertor");
-goog.require("Entry.ParamTypeMap");
-goog.require("Entry.BlockTypeConvertor");
+goog.require("Entry.BlockVariableMap");
 
 Entry.PyBlockAssembler = function(blockSyntax) {
     this.blockSyntax = blockSyntax;
 };
 
 (function(p){
-	p.assemble = function(unit) {
+	p.assemble = function(unit, rootBlockType, paramsType, paramIndex) {
 		console.log("unit", unit);
         var result;
         switch(unit.type) {
             case 'ExpressionStatement' : {
-            	console.log("ExpressionStatement unit", unit);
+            	console.log("ExpressionStatement unit", unit, rootBlockType, paramsType, paramIndex)
 
             	var callee = unit.expression.callee;
 		        if(callee.object.name && callee.property.name)
@@ -28,9 +27,10 @@ Entry.PyBlockAssembler = function(blockSyntax) {
 		        else if(String(callee.object.object.name) == '__pythonRuntime' && String(callee.object.property.name) == 'functions')
 		       		var targetSyntax = String(callee.property.name);
 		       	
-		        var block = this.getBlock(targetSyntax);
-		        var paramsType = Entry.BlockInfoExtractor.prototype.getParamsType(block);
-		        var defParamsType = Entry.BlockInfoExtractor.prototype.getDefParamsType(block);
+		        var blockType = this.getBlock(targetSyntax);
+		        var blockParamsType = Entry.BlockMetaExtractor.prototype.getParamsType(blockType);
+		        var blockDefParamsType = Entry.BlockMetaExtractor.prototype.getDefParamsType(blockType);
+		        var blockParamIndex = 0;
             	var params = [];
             	var arguments = unit.expression.arguments;
 
@@ -38,56 +38,66 @@ Entry.PyBlockAssembler = function(blockSyntax) {
      
      			if(arguments && arguments.length){
 		            for(var index = 0; index < arguments.length; index++) {
-		            	console.log("index arg", index, arguments[index]);
-		                if(paramsType[index] == "Indicator"){
+		            	console.log("meta", index, arguments[index], blockParamsType[index], blockDefParamsType[index]);
+		                if(blockParamsType[index] == "Indicator"){
 			            	var param = null;
 			            	arguments.splice(index, 0, param);
 			            }
-			            else if(paramsType[index] == "Block") {
-			            	var param = this.assemble(arguments[index]);
+			            else if(blockParamsType[index] == "Block") {
+			            	blockParamIndex = index;
+			            	var param = this.assemble(arguments[index], blockType, blockDefParamsType, blockParamIndex);
 			            }
-			            else if(paramsType[index] == "Keyboard") {
+			            else if(blockParamsType[index] == "Keyboard") {
 			            	var param = Entry.KeyboardCodeMap.prototype.keyCharToCode[arguments[index].value];	
 			            }
 			            else {	
-			            	var param = arguments[index].value;
-			            	var paramType = Entry.ParamTypeMap.prototype.getDropdownDynamicType[block];
-			            	console.log("dd convertor", param, paramType);
+			            	var arg = arguments[index].value;
 
-			            	param = Entry.VariableConvertor.prototype.convert(paramType, param);
+			            	if(!rootBlockType || rootBlockType == null)
+			            		rootBlockType = blockType;
+
+			            	var paramType = Entry.BlockVariableMap.prototype.getDropdownDynamicType[rootBlockType];
+			            	console.log("variable convertor", arg, paramType);
+
+			            	var param = Entry.VariableConvertor.prototype.convert(paramType, arg);
+			            	
 			            }
 
-			 			var defParamType = defParamsType[index];
+			 			/*var defParamType = blockDefParamsType[index];
 			 			console.log("defParamType", defParamType);
 			 			var convertedBlockType = Entry.BlockTypeConvertor.prototype.convert(defParamType);
 			 			param.type = convertedBlockType;
 
 			 			console.log("convertedBlockType", convertedBlockType);
-			 			console.log("block", block);
+			 			console.log("blockType", blockType);
 			 			if(convertedBlockType == "get_pictures") {
 			 				param.params[0] = Entry.VariableConvertor.prototype.convert("picture", param.params[0]);
 			 			}
-
+*/
 			            console.log("param", param);
 
 		            	params.push(param);
 		            }
         		}
 
-                result = { type: block, params: params };
+                result = { type: blockType, params: params };
                 console.log("ExpressionStatement result", result);
                 break;
             }
             case 'WhileStatement' : {
             	console.log("WhileStatement unit", unit);
             	
+            	var targetSyntax = String("while True:\n$1");
+		        var blockType = this.getBlock(targetSyntax);
+		        var blockParamsType = Entry.BlockMetaExtractor.prototype.getParamsType(blockType);
+		        var blockDefParamsType = Entry.BlockMetaExtractor.prototype.getDefParamsType(blockType);
+		        var blockParamIndex = 0;
+
             	var test = unit.test;
                 var params = [];
-                var param = this.assemble(test);
+                var param = this.assemble(test, blockType, blockDefParamsType, blockParamIndex);
             	params.push(param);
 
-		    	var targetSyntax = String("while True:\n$1");
-		        var block = this.getBlock(targetSyntax);
 		        var statements = [];
 		        var body = unit.body.body;
 		        
@@ -97,7 +107,7 @@ Entry.PyBlockAssembler = function(blockSyntax) {
 		        	statements.push(unit);
 		        }
 
-		        result = { type: block, statements: [statements] };
+		        result = { type: blockType, statements: [statements] };
 		        
 		        console.log("WhileStatement result", result);
                 break;
@@ -108,21 +118,24 @@ Entry.PyBlockAssembler = function(blockSyntax) {
 		        if(property.name == 'range') {
 		        	var targetSyntax = String("for i in range");
             	}
-            	var block = this.getBlock(targetSyntax);
-            	var paramsType = Entry.BlockInfoExtractor.prototype.getParamsType(block);
+            	var blockType = this.getBlock(targetSyntax);
+            	var blockParamsType = Entry.BlockMetaExtractor.prototype.getParamsType(blockType);
+		        var blockDefParamsType = Entry.BlockMetaExtractor.prototype.getDefParamsType(blockType);
+		        var blockParamIndex = 0;
             	var params = [];
             	var arguments = unit.body[0].declarations[0].init.arguments;
 
             	if(arguments && arguments.length){
 		            for(var index = 0; index < arguments.length; index++) {
-		                if(paramsType[index] == "Indicator"){
+		                if(blockParamsType[index] == "Indicator"){
 			            	var param = null;
 			            	arguments.splice(index, 0, param);
 			            }
-			            else if(paramsType[index] == "Block") {
-			            	var param = this.assemble(arguments[index]);
+			            else if(blockParamsType[index] == "Block") {
+			            	blockParamIndex = index;
+			            	var param = this.assemble(arguments[index], blockType, blockDefParamsType, blockParamIndex);
 			            }
-			            else if(paramsType[index] == "Keyboard") {
+			            else if(blockParamsType[index] == "Keyboard") {
 			            	var param = Entry.KeyboardCodeMap.prototype.keyCharToCode[arguments[index].value];	
 			            }
 			            else {	
@@ -145,30 +158,34 @@ Entry.PyBlockAssembler = function(blockSyntax) {
             		statements.push(unit);
             	}
 
-		        result = { type: block, params: params, statements: [statements] };
+		        result = { type: blockType, params: params, statements: [statements] };
 
 		        console.log("BlockStatement result", result);
                 break;
             }
         	case 'IfStatement' : {
             	console.log("IfStatement unit", unit);
-            	
-            	var test = unit.test;
-                var params = [];
-                var param = this.assemble(test);
-            	params.push(param);
-                		            
-              	var consequent = unit.consequent;
+            	var consequent = unit.consequent;
 		        var alternate = unit.alternate;
+            	var test = unit.test;
+            	
+                var params = [];
 
-		        if(alternate == null) {
+                if(alternate == null) {
 		    		var targetSyntax = String("if %1:\n$1");
-		        	var block = this.getBlock(targetSyntax);
+		        	var blockType = this.getBlock(targetSyntax);
 		       	} else {
 		       		var targetSyntax = String("if %1:\n$1\nelse:\n$2");
-		        	var block = this.getBlock(targetSyntax);
+		        	var blockType = this.getBlock(targetSyntax);
 		       	}
-		        
+		       	console.log("if block type", blockType);
+
+                var blockParamsType = Entry.BlockMetaExtractor.prototype.getParamsType(blockType);
+		        var blockDefParamsType = Entry.BlockMetaExtractor.prototype.getDefParamsType(blockType);
+		        var blockParamIndex = 0;
+                var param = this.assemble(test, blockType, defParamsType, blockParamIndex);
+            	params.push(param);
+    
 		        var ifStatements = [];
 		        var elseStatements = [];
 		        if(consequent != null) {
@@ -177,7 +194,7 @@ Entry.PyBlockAssembler = function(blockSyntax) {
 	            		var unit = this.assemble(body[index]);
 	            		ifStatements.push(unit);
 	            	}
-	            	result = { type: block, params: params, statements: [ifStatements] };
+	            	result = { type: blockType, params: params, statements: [ifStatements] };
 	            }
 
             	if(alternate != null) {
@@ -186,7 +203,7 @@ Entry.PyBlockAssembler = function(blockSyntax) {
 	            		var unit = this.assemble(body[index]);
 	            		elseStatements.push(unit);
 	            	}
-	            	result = { type: block, params: params, statements: [ifStatements, elseStatements] };
+	            	result = { type: blockType, params: params, statements: [ifStatements, elseStatements] };
 	            }
 
 		        console.log("IfStatement result", result);
@@ -196,63 +213,88 @@ Entry.PyBlockAssembler = function(blockSyntax) {
             	console.log("BreakStatement unit", unit);
 
             	var targetSyntax = String("break");
-            	var block = this.getBlock(targetSyntax);
+            	var blockType = this.getBlock(targetSyntax);
 
-            	result = { type: block };
+            	result = { type: blockType };
 
             	console.log("BreakStatement result", result);
             	break;
             }
             case 'Literal' : {
-            	console.log("Literal unit", unit);
-            	
+            	console.log("Literal unit", unit, rootBlockType, paramsType, paramIndex);
+            	var blockType = paramsType[paramIndex];
             	var arg = unit.value;
             	console.log("arg", arg);
-            	if(arg === true) {
+
+            	if(!rootBlockType || rootBlockType == null)
+			    	rootBlockType = blockType;
+
+            	var paramType = Entry.BlockVariableMap.prototype.getDropdownDynamicType[rootBlockType];
+            	console.log("literal variable convertor", arg, paramType);
+
+            	var param = Entry.VariableConvertor.prototype.convert(paramType, arg);
+
+            	result = { type: blockType, params: [param] };
+
+            	console.log("Literal result", result);
+
+            	/*if(arg === true) {
             		var targetSyntax = String("True");
-            		var block = this.getBlock(targetSyntax);
-            		result = { type: block };
+            		var blockType = this.getBlock(targetSyntax);
+            		result = { type: blockType };
             	}
             	else if(arg === false) {
             		var targetSyntax = String("False"); 
-            		var block = this.getBlock(targetSyntax);
-            		result = { type: block};
+            		var blockType = this.getBlock(targetSyntax);
+            		result = { type: blockType};
             	}
             	else if(typeof arg === 'string'){
 	           		var targetSyntax = String("\"%1\"");
-	           		var block = this.getBlock(targetSyntax);
-	           		result = { type: block, params: [arg] };
+	           		var blockType = this.getBlock(targetSyntax);
+	           		result = { type: blockType, params: [arg] };
             	}
 	        	else {
 	           		var targetSyntax = String("%1");
-	           		var block = this.getBlock(targetSyntax);
-	           		result = { type: block, params: [arg] };
-	        	}
+	           		var blockType = this.getBlock(targetSyntax);
+	           		result = { type: blockType, params: [arg] };
+	        	}*/
             	
-            	console.log("targetSyntax", targetSyntax);
+            	//console.log("targetSyntax", targetSyntax);
 	            
-            	console.log("Literal result", result);
+            	
             	break;
             }
             case 'UnaryExpression' : {
-            	console.log("UnaryExpression unit", unit);
+            	console.log("UnaryExpression unit", unit, rootBlockType, paramsType, paramIndex);
+            	var blockType = paramsType[paramIndex];
             	
             	if(unit.prefix){
 		        	var arg = unit.operator.concat(unit.argument.value);
             	}
 
-            	if(typeof arg === 'string'){
+            	if(!rootBlockType || rootBlockType == null)
+			    	rootBlockType = blockType;
+
+            	var paramType = Entry.BlockVariableMap.prototype.getDropdownDynamicType[rootBlockType];
+            	console.log("literal variable convertor", arg, paramType);
+
+            	var param = Entry.VariableConvertor.prototype.convert(paramType, arg);
+
+				result = { type: blockType, params: [param] };
+
+            	console.log("UnaryExpression result", result);
+            	
+
+            	/*if(typeof arg === 'string'){
 	           		var targetSyntax = String("\"%1\"");
             	}
 	        	else {
 	           		var targetSyntax = String("%1");
 	        	}
 
-	           	var block = this.getBlock(targetSyntax);
+	           	var block = this.getBlock(targetSyntax);*/
 
-	           	result = { type: block, params: [arg] };
-
-            	console.log("UnaryExpression result", result);
+	           	
             	break;
             }
         }

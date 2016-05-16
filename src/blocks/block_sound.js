@@ -216,7 +216,7 @@ Blockly.Blocks.sound_silent_all = {
     this.setNextStatement(true);
     this.setPreviousStatement(true);
   },
-  syntax: {js: [], py: ["Entry.stop_all_sound()"]}
+  syntax: {js: [], py: ["Entry.stop_all_sounds()"]}
 };
 
 Entry.block.sound_silent_all = function (sprite, script) {
@@ -256,7 +256,7 @@ Blockly.Blocks.sound_something_with_block = {
     this.setNextStatement(true);
     this.setPreviousStatement(true);
   },
-  syntax: {js: [], py: ["Entry.play_sound(%1)"]}
+  syntax: {js: [], py: ["Entry.play_sound(\"%1\")"]}
 };
 
 Entry.block.sound_something_with_block = function (sprite, script) {
@@ -288,7 +288,7 @@ Blockly.Blocks.sound_something_second_with_block = {
     this.setNextStatement(true);
     this.setPreviousStatement(true);
   },
-  syntax: {js: [], py: ["Entry.play_sound_by_seconds(%1, %2)"]}
+  syntax: {js: [], py: ["Entry.play_sound_for_seconds(\"%1\", %2)"]}
 };
 
 Entry.block.sound_something_second_with_block = function (sprite, script) {
@@ -322,7 +322,7 @@ Blockly.Blocks.sound_something_wait_with_block = {
     this.setNextStatement(true);
     this.setPreviousStatement(true);
   },
-  syntax: {js: [], py: ["Entry.play_sound_and_wait(%1)"]}
+  syntax: {js: [], py: ["Entry.play_sound_and_wait(\"%1\")"]}
 };
 
 Entry.block.sound_something_wait_with_block = function (sprite, script) {
@@ -366,7 +366,7 @@ Blockly.Blocks.sound_something_second_wait_with_block = {
     this.setNextStatement(true);
     this.setPreviousStatement(true);
   },
-  syntax: {js: [], py: ["Entry.play_sound_by_seconds_and_wait(%1, %2)"]}
+  syntax: {js: [], py: ["Entry.play_sound_for_seconds_and_wait(\"%1\", %2)"]}
 };
 
 Entry.block.sound_something_second_wait_with_block = function (sprite, script) {
@@ -417,7 +417,7 @@ Blockly.Blocks.sound_from_to = {
     this.setNextStatement(true);
     this.setPreviousStatement(true);
   },
-  syntax: {js: [], py: ["Entry.play_sound_by_duration(%1, %2, %3)"]}
+  syntax: {js: [], py: ["Entry.play_sound_from_to_seconds(\"%1\", %2, %3)"]}
 };
 
 Entry.block.sound_from_to = function (sprite, script) {
@@ -459,7 +459,7 @@ Blockly.Blocks.sound_from_to_and_wait = {
     this.setNextStatement(true);
     this.setPreviousStatement(true);
   },
-  syntax: {js: [], py: ["Entry.play_sound_by_duration_and_wait(%1, %2, %3)"]}
+  syntax: {js: [], py: ["Entry.play_sound_from_to_seconds_and_wait(\"%1\", %2, %3)"]}
 };
 
 Entry.block.sound_from_to_and_wait = function (sprite, script) {

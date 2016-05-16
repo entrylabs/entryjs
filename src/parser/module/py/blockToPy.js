@@ -211,6 +211,11 @@ Entry.BlockToPyParser = function() {
         var result = null;
         for(var index in options) {
             var option = options[index];
+            if(option[1] == "null") {
+                result = "none";
+                return result;
+            }
+
             if(value == option[1]) {
                 result = option[0];
                 return result;
