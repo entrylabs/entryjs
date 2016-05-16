@@ -275,7 +275,15 @@ EntryStatic.getAllBlocks = function() {
                 "dplay_get_digital_value",
                 "dplay_toggle_led",
                 "dplay_toggle_pwm",
-                "dplay_convert_scale",                
+                "dplay_convert_scale",
+                "dplay_get_value",
+                "dplay_get_switch_status",
+                "dplay_get_tilt",
+                "dplay_get_light_status",
+                "dplay_select_led",
+                "dplay_DCmotor",
+                "dplay_buzzer",
+                "dplay_servo",
                 //nemoino
                 "nemoino_get_number_sensor_value",
                 "nemoino_get_digital_value",
@@ -410,15 +418,15 @@ EntryStatic.getAllBlocks = function() {
                 "xbot_oneWheel",
                 "xbot_twoWheel",
                 "xbot_lcd"
-                //end of XBOT Blocks added                
+                //end of XBOT Blocks added
             ]
         }
     ]
 }
 
 EntryStatic.blockInfo = {
-    
-    //XBOT Blocks added    
+
+    //XBOT Blocks added
     "xbot_servo": {
         "isNotFor": ['xbot_epor_edge'],
         "xml": "<block type='xbot_servo'><value name='VALUE'><block type='text'><field name='NAME'>90</field></block></value></block>",
@@ -481,7 +489,7 @@ EntryStatic.blockInfo = {
         "xml": "<block type='xbot_analogOutput'><value name='VALUE'><block type='text'><field name='NAME'>255</field></block></value></block>",
         "class": "xbot_sensor"
     },
-    //end of XBOT Blocks added   
+    //end of XBOT Blocks added
 
     "when_run_button_click": {
         "xml": "<block type='when_run_button_click'></block>",
@@ -1994,6 +2002,54 @@ EntryStatic.blockInfo = {
         "usage": ["arduino"],
         "class": "CODEino"
     },
+    "dplay_get_tilt": {
+        "xml": "<block type='dplay_get_tilt'></block>",
+        "isNotFor": ["dplay"],
+        "usage": ["arduino"],
+        "class": "dplay_set"
+    },
+    "dplay_get_value": {
+        "xml": "<block type='dplay_get_value'><value name='VALUE'><block type='arduino_get_sensor_number'></block></value></block>",
+        "isNotFor": ['dplay'],
+        "usage": ["arduino"],
+        "class": "dplay_set"
+    },
+    "dplay_get_light_status": {
+        "xml": "<block type='dplay_get_light_status'></block>",
+        "isNotFor": ["dplay"],
+        "usage": ["arduino"],
+        "class": "dplay_set"
+    },
+    "dplay_get_switch_status": {
+        "xml": "<block type='dplay_get_switch_status'></block>",
+        "isNotFor": ["dplay"],
+        "usage": ["arduino"],
+        "class": "dplay_set"
+    },
+    "dplay_buzzer": {
+          "xml": "<block type='dplay_buzzer'><value name='VALUE'><block type='arduino_text'><field name='NAME'>0</field></block></value></block>",
+          "isNotFor": ['dplay'],
+          "usage": ["arduino"],
+          "class": "dplay"
+    },
+    "dplay_select_led": {
+        "xml": "<block type='dplay_select_led'><block type='arduino_get_port_number'></block></block>",
+        "isNotFor": ['dplay'],
+        "usage": ["arduino"],
+        "class": "dplay"
+    },
+    "dplay_DCmotor": {
+          "xml": "<block type='dplay_DCmotor'></block>",
+          "isNotFor": ['dplay'],
+          "usage": ["arduino"],
+          "class": "dplay"
+    },
+    "dplay_servo": {
+        "xml": "<block type='dplay_servo'><value name='VALUE'><block type='arduino_text'><field name='NAME'>255</field></block></value></block>",
+        "isNotFor": ['dplay'],
+        "usage": ["arduino"],
+        "class": "dplay"
+    },   
     "direction_relative_duration": {
         "isNotFor": [""],
         "xml": "<block type='direction_relative_duration'><value name='DURATION'><block type='text'><field name='NAME'>2</field></block></value><value name='AMOUNT'><block type='angle'></block></value></block>",
