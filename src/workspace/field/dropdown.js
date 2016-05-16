@@ -44,7 +44,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         if (this instanceof Entry.FieldDropdownDynamic) this._updateValue();
 
         var blockView = this._blockView;
-        var X_PADDING = 18;
+        var X_PADDING = 16;
         var that = this;
         var contents = this._contents;
 
@@ -68,7 +68,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         var width =
             this.textElement.getComputedTextLength() + X_PADDING;
 
-        if (this._noArrow) width -= 14;
+        if (this._noArrow) width -= 12;
 
 
         var CONTENT_HEIGHT = this._CONTENT_HEIGHT;
