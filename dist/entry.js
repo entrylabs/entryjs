@@ -11627,13 +11627,17 @@ Entry.Utils.isPointInMatrix = function(b, a, c) {
   return d - c <= a.x && d + b.width + c >= a.x && e - c <= a.y && e + b.height + c >= a.y;
 };
 Entry.Utils.colorDarken = function(b, a) {
-  var c, d, e;
-  7 === b.length ? (c = parseInt(b.substr(1, 2), 16), d = parseInt(b.substr(3, 2), 16), e = parseInt(b.substr(5, 2), 16)) : (c = parseInt(b.substr(1, 2), 16), d = parseInt(b.substr(2, 2), 16), e = parseInt(b.substr(3, 2), 16));
+  function c(a) {
+    2 != a.length && (a = "0" + a);
+    return a;
+  }
+  var d, e, f;
+  7 === b.length ? (d = parseInt(b.substr(1, 2), 16), e = parseInt(b.substr(3, 2), 16), f = parseInt(b.substr(5, 2), 16)) : (d = parseInt(b.substr(1, 2), 16), e = parseInt(b.substr(2, 2), 16), f = parseInt(b.substr(3, 2), 16));
   a = void 0 === a ? .7 : a;
-  c = Math.floor(c * a).toString(16);
-  d = Math.floor(d * a).toString(16);
-  e = Math.floor(e * a).toString(16);
-  return "#" + c + d + e;
+  d = c(Math.floor(d * a).toString(16));
+  e = c(Math.floor(e * a).toString(16));
+  f = c(Math.floor(f * a).toString(16));
+  return "#" + d + e + f;
 };
 Entry.Utils.colorLighten = function(b, a) {
   a = 0 === a ? 0 : a || 20;
