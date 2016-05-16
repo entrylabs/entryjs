@@ -128,7 +128,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
         }
 
         var fillColor = this._schema.color;
-        if (!this.block.isDeletable())
+        if (this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN)
             fillColor = Entry.Utils.colorLighten(fillColor);
         this._fillColor = fillColor;
         var pathStyle = {
@@ -923,11 +923,10 @@ Entry.BlockView.DRAG_RADIUS = 5;
 
     p._updateColor = function() {
         var fillColor = this._schema.color;
-        if (!this.block.isDeletable())
+        if (this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN)
             fillColor = Entry.Utils.colorLighten(fillColor);
+        this._fillColor = fillColor;
         this._path.attr({fill:fillColor});
-        //update block inner images
-
         this._updateContents();
     };
 
