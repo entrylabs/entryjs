@@ -6035,6 +6035,13 @@ Entry.Commander = function(b) {
   }, log:function(a) {
     return [a.id, a.toJSON()];
   }, undo:"scrollBoard"};
+  b.setFieldValue = {type:106, do:function(a, b, d, e, f) {
+    b.setValue(f, !0);
+  }, state:function(a, b, d, e, f) {
+    return [a, b, d, f, e];
+  }, log:function(a, b) {
+    return [a.id, b];
+  }, undo:"setFieldValue"};
 })(Entry.Command);
 (function(b) {
   b.selectObject = {type:201, do:function(a) {
@@ -7135,7 +7142,7 @@ Entry.Engine.prototype.raiseEventOnEntity = function(b, a) {
 };
 Entry.Engine.prototype.captureKeyEvent = function(b) {
   var a = b.keyCode, c = Entry.type;
-  b.ctrlKey && "workspace" == c ? 83 == a ? (b.preventDefault(), Entry.dispatchEvent("saveWorkspace")) : 82 == a ? (b.preventDefault(), Entry.engine.run()) : 90 == a && (b.preventDefault(), Entry.dispatchEvent(b.shiftKey ? "redo" : "undo")) : Entry.engine.isState("run") && Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["keyPress", a]);
+  b.ctrlKey && "workspace" == c ? 83 == a ? (b.preventDefault(), Entry.dispatchEvent("saveWorkspace")) : 82 == a ? (b.preventDefault(), Entry.engine.run()) : 90 == a && (b.preventDefault(), console.log("engine"), Entry.dispatchEvent(b.shiftKey ? "redo" : "undo")) : Entry.engine.isState("run") && Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["keyPress", a]);
   Entry.engine.isState("stop") && "workspace" === c && 37 <= a && 40 >= a && Entry.stage.moveSprite(b);
 };
 Entry.Engine.prototype.raiseKeyEvent = function(b, a) {
@@ -7707,7 +7714,6 @@ p.bindWorkspace = function(b) {
 p._updateSelectedBlock = function() {
   var b = this.workspace.selectedBlockView;
   if (b && this.visible && b != this._blockView) {
-    this.first && (this.blockHelperContent_.removeClass("entryBlockHelperIntro"), this.first = !1);
     var a = b.block.type;
     this._blockView = b;
     this.renderBlock(a);
@@ -7715,7 +7721,8 @@ p._updateSelectedBlock = function() {
 };
 p.renderBlock = function(b) {
   var a = Lang.Helper[b];
-  if (b && this.visible && a) {
+  if (b && this.visible && a && !Entry.block[b].isPrimitive) {
+    this.first && (this.blockHelperContent_.removeClass("entryBlockHelperIntro"), this.first = !1);
     this.code.clear();
     var c = Entry.block[b].def, c = c || {type:b};
     this.code.createThread([c]);
@@ -11500,7 +11507,7 @@ Entry.BlockMockup = function(b, a, c) {
   };
   b.appendValueInput = function(a) {
     this.def && this.def.index && (void 0 !== this.def.index[a] ? this.definition.params.push(this.def.params[this.def.index[a]]) : this.definition.params.push(null));
-    this.params.push({type:"Block", accept:"stringMagnet"});
+    this.params.push({type:"Block", accept:"string"});
     this._addToParamsKeyMap(a);
     this.templates.push(this.getFieldCount());
     return this;
@@ -11511,7 +11518,7 @@ Entry.BlockMockup = function(b, a, c) {
   };
   b.setCheck = function(a) {
     var b = this.params;
-    "Boolean" === a && (b[b.length - 1].accept = "booleanMagnet");
+    "Boolean" === a && (b[b.length - 1].accept = "boolean");
   };
   b.appendField = function(a, b) {
     if (!a) {
@@ -12859,7 +12866,7 @@ Entry.Variable = function(b) {
   this.isCloud_ = b.isCloud || !1;
   var a = Entry.parseNumber(b.value);
   this.value_ = "number" == typeof a ? a : b.value ? b.value : 0;
-  "slide" == this.type && (this.minValue_ = b.minValue ? b.minValue : 0, this.maxValue_ = b.maxValue ? b.maxValue : 100);
+  "slide" == this.type && (this.minValue_ = Number(b.minValue ? b.minValue : 0), this.maxValue_ = Number(b.maxValue ? b.maxValue : 100));
   b.isClone || (this.visible_ = b.visible || "boolean" == typeof b.visible ? b.visible : !0, this.x_ = b.x ? b.x : null, this.y_ = b.y ? b.y : null, "list" == this.type && (this.width_ = b.width ? b.width : 100, this.height_ = b.height ? b.height : 120, this.array_ = b.array ? b.array : [], this.scrollPosition = 0), this.BORDER = 6, this.FONT = "10pt NanumGothic");
 };
 Entry.Variable.prototype.generateView = function(b) {
@@ -13038,8 +13045,9 @@ Entry.Variable.prototype.setValue = function(b) {
     this.value_ = b;
   } else {
     var a = Entry.isFloat(this.minValue_), c = Entry.isFloat(this.maxValue_);
+    b = Number(b);
     this.value_ = b < this.minValue_ ? this.minValue_ : b > this.maxValue_ ? this.maxValue_ : b;
-    a || c || (this.viewValue_ = this.value_, this.value_ = Math.floor(this.value_));
+    a || c ? delete this.viewValue_ : this.value_ = this.viewValue_ = this.value_;
   }
   this.isCloud_ && Entry.variableContainer.updateCloudVariables();
   this.updateView();
@@ -13142,7 +13150,7 @@ Entry.Variable.prototype.updateSlideValueByView = function() {
   0 > b && (b = 0);
   1 < b && (b = 1);
   var a = parseFloat(this.minValue_), c = parseFloat(this.maxValue_), b = (a + Number(Math.abs(c - a) * b)).toFixed(2), b = parseFloat(b);
-  b < a ? this.setValue(this.minValue_) : b > c ? this.setValue(this.maxValue_) : this.setValue(b);
+  b < a ? this.setValue(this.minValue_) : b > c ? this.setValue(this.maxValue_) : this.setValue(Math.round(b));
 };
 Entry.Variable.prototype.getMinValue = function() {
   return this.minValue_;
@@ -14936,7 +14944,7 @@ Entry.block = {albert_hand_found:{color:"#00979D", fontColor:"#fff", skeleton:"b
 "positionX"], [Lang.Blocks.ALBERT_sensor_positionY, "positionY"], [Lang.Blocks.ALBERT_sensor_orientation, "orientation"]], value:"leftProximity", fontSize:11}], events:{}, def:{params:[null], type:"albert_value"}, paramsKeyMap:{DEVICE:0}, "class":"albert_sensor", isNotFor:["albert"], func:function(b, a) {
   var c = Entry.hw.portData, d = a.getField("DEVICE");
   return c[d];
-}}, albert_move_forward_for_secs:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["1"]}, null], type:"albert_move_forward_for_secs"}, paramsKeyMap:{VALUE:0}, "class":"albert_wheel", isNotFor:["albert"], func:function(b, a) {
+}}, albert_move_forward_for_secs:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["1"]}, null], type:"albert_move_forward_for_secs"}, paramsKeyMap:{VALUE:0}, "class":"albert_wheel", isNotFor:["albert"], func:function(b, a) {
   var c = Entry.hw.sendQueue;
   if (a.isStart) {
     if (1 == a.timeFlag) {
@@ -14959,7 +14967,7 @@ Entry.block = {albert_hand_found:{color:"#00979D", fontColor:"#fff", skeleton:"b
   }, c);
   Entry.Albert.timeouts.push(d);
   return a;
-}}, albert_move_backward_for_secs:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["1"]}, null], type:"albert_move_backward_for_secs"}, paramsKeyMap:{VALUE:0}, "class":"albert_wheel", isNotFor:["albert"], func:function(b, a) {
+}}, albert_move_backward_for_secs:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["1"]}, null], type:"albert_move_backward_for_secs"}, paramsKeyMap:{VALUE:0}, "class":"albert_wheel", isNotFor:["albert"], func:function(b, a) {
   var c = Entry.hw.sendQueue;
   if (a.isStart) {
     if (1 == a.timeFlag) {
@@ -14982,7 +14990,7 @@ Entry.block = {albert_hand_found:{color:"#00979D", fontColor:"#fff", skeleton:"b
   }, c);
   Entry.Albert.timeouts.push(d);
   return a;
-}}, albert_turn_for_secs:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["1"]}, null], type:"albert_turn_for_secs", id:"como"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"albert_wheel", isNotFor:["albert"], 
+}}, albert_turn_for_secs:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["1"]}, null], type:"albert_turn_for_secs", id:"como"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"albert_wheel", isNotFor:["albert"], 
 func:function(b, a) {
   var c = Entry.hw.sendQueue;
   if (a.isStart) {
@@ -15005,22 +15013,22 @@ func:function(b, a) {
   }, c);
   Entry.Albert.timeouts.push(d);
   return a;
-}}, albert_change_both_wheels_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["10"]}, {type:"text", params:["10"]}, null], type:"albert_change_both_wheels_by"}, paramsKeyMap:{LEFT:0, RIGHT:1}, "class":"albert_wheel", isNotFor:["albert"], func:function(b, a) {
+}}, albert_change_both_wheels_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["10"]}, {type:"text", params:["10"]}, null], type:"albert_change_both_wheels_by"}, paramsKeyMap:{LEFT:0, RIGHT:1}, "class":"albert_wheel", isNotFor:["albert"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getNumberValue("LEFT"), e = a.getNumberValue("RIGHT");
   c.leftWheel = void 0 != c.leftWheel ? c.leftWheel + d : d;
   c.rightWheel = void 0 != c.rightWheel ? c.rightWheel + e : e;
   return a.callReturn();
-}}, albert_set_both_wheels_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["30"]}, {type:"text", params:["30"]}, null], type:"albert_set_both_wheels_to"}, paramsKeyMap:{LEFT:0, RIGHT:1}, "class":"albert_wheel", isNotFor:["albert"], func:function(b, a) {
+}}, albert_set_both_wheels_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["30"]}, {type:"text", params:["30"]}, null], type:"albert_set_both_wheels_to"}, paramsKeyMap:{LEFT:0, RIGHT:1}, "class":"albert_wheel", isNotFor:["albert"], func:function(b, a) {
   var c = Entry.hw.sendQueue;
   c.leftWheel = a.getNumberValue("LEFT");
   c.rightWheel = a.getNumberValue("RIGHT");
   return a.callReturn();
-}}, albert_change_wheel_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["10"]}, null], type:"albert_change_wheel_by"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"albert_wheel", 
+}}, albert_change_wheel_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["10"]}, null], type:"albert_change_wheel_by"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"albert_wheel", 
 isNotFor:["albert"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getField("DIRECTION"), e = a.getNumberValue("VALUE");
   "LEFT" == d ? c.leftWheel = void 0 != c.leftWheel ? c.leftWheel + e : e : ("RIGHT" != d && (c.leftWheel = void 0 != c.leftWheel ? c.leftWheel + e : e), c.rightWheel = void 0 != c.rightWheel ? c.rightWheel + e : e);
   return a.callReturn();
-}}, albert_set_wheel_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["30"]}, null], type:"albert_set_wheel_to"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"albert_wheel", 
+}}, albert_set_wheel_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["30"]}, null], type:"albert_set_wheel_to"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"albert_wheel", 
 isNotFor:["albert"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getField("DIRECTION"), e = a.getNumberValue("VALUE");
   "LEFT" == d ? c.leftWheel = e : ("RIGHT" != d && (c.leftWheel = e), c.rightWheel = e);
@@ -15030,7 +15038,7 @@ isNotFor:["albert"], func:function(b, a) {
   c.leftWheel = 0;
   c.rightWheel = 0;
   return a.callReturn();
-}}, albert_set_pad_size_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["108"]}, {type:"text", params:["76"]}, null], type:"albert_set_pad_size_to", id:"5mhg"}, paramsKeyMap:{WIDTH:0, HEIGHT:1}, "class":"albert_wheel", isNotFor:["albert"], func:function(b, a) {
+}}, albert_set_pad_size_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["108"]}, {type:"text", params:["76"]}, null], type:"albert_set_pad_size_to", id:"5mhg"}, paramsKeyMap:{WIDTH:0, HEIGHT:1}, "class":"albert_wheel", isNotFor:["albert"], func:function(b, a) {
   var c = Entry.hw.sendQueue;
   c.padWidth = a.getNumberValue("WIDTH");
   c.padHeight = a.getNumberValue("HEIGHT");
@@ -15074,12 +15082,12 @@ img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:
   }, 200);
   Entry.Albert.timeouts.push(d);
   return a;
-}}, albert_change_buzzer_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["10"]}, null], type:"albert_change_buzzer_by"}, paramsKeyMap:{VALUE:0}, "class":"albert_buzzer", isNotFor:["albert"], func:function(b, a) {
+}}, albert_change_buzzer_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["10"]}, null], type:"albert_change_buzzer_by"}, paramsKeyMap:{VALUE:0}, "class":"albert_buzzer", isNotFor:["albert"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getNumberValue("VALUE");
   c.buzzer = void 0 != c.buzzer ? c.buzzer + d : d;
   c.note = 0;
   return a.callReturn();
-}}, albert_set_buzzer_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["1000"]}, null], type:"albert_set_buzzer_to"}, paramsKeyMap:{VALUE:0}, "class":"albert_buzzer", isNotFor:["albert"], func:function(b, a) {
+}}, albert_set_buzzer_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["1000"]}, null], type:"albert_set_buzzer_to"}, paramsKeyMap:{VALUE:0}, "class":"albert_buzzer", isNotFor:["albert"], func:function(b, a) {
   var c = Entry.hw.sendQueue;
   c.buzzer = a.getNumberValue("VALUE");
   c.note = 0;
@@ -15090,8 +15098,7 @@ img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:
   c.note = 0;
   return a.callReturn();
 }}, albert_play_note_for:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.note_c + "", "4"], [Lang.General.note_c + "#", "5"], [Lang.General.note_d + "", "6"], [Lang.General.note_e + "b", "7"], [Lang.General.note_e + "", "8"], [Lang.General.note_f + "", "9"], [Lang.General.note_f + "#", "10"], [Lang.General.note_g + "", "11"], [Lang.General.note_g + "#", "12"], [Lang.General.note_a + "", "13"], [Lang.General.note_b + "b", "14"], [Lang.General.note_b + 
-"", "15"]], value:"4", fontSize:11}, {type:"Dropdown", options:[["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"]], value:"1", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, "4", {type:"text", params:["0.5"]}, null], type:"albert_play_note_for"}, paramsKeyMap:{NOTE:0, OCTAVE:1, VALUE:2}, "class":"albert_buzzer", isNotFor:["albert"], func:function(b, 
-a) {
+"", "15"]], value:"4", fontSize:11}, {type:"Dropdown", options:[["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"]], value:"1", fontSize:11}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, "4", {type:"text", params:["0.5"]}, null], type:"albert_play_note_for"}, paramsKeyMap:{NOTE:0, OCTAVE:1, VALUE:2}, "class":"albert_buzzer", isNotFor:["albert"], func:function(b, a) {
   var c = Entry.hw.sendQueue;
   if (a.isStart) {
     if (1 == a.timeFlag) {
@@ -15121,7 +15128,7 @@ a) {
   }, f);
   Entry.Albert.timeouts.push(k);
   return a;
-}}, albert_rest_for:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["0.25"]}, null], type:"albert_rest_for"}, paramsKeyMap:{VALUE:0}, "class":"albert_buzzer", isNotFor:["albert"], func:function(b, a) {
+}}, albert_rest_for:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["0.25"]}, null], type:"albert_rest_for"}, paramsKeyMap:{VALUE:0}, "class":"albert_buzzer", isNotFor:["albert"], func:function(b, a) {
   var c = Entry.hw.sendQueue;
   if (a.isStart) {
     if (1 == a.timeFlag) {
@@ -15143,11 +15150,11 @@ a) {
   }, d);
   Entry.Albert.timeouts.push(e);
   return a;
-}}, albert_change_tempo_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["20"]}, null], type:"albert_change_tempo_by"}, paramsKeyMap:{VALUE:0}, "class":"albert_buzzer", isNotFor:["albert"], func:function(b, a) {
+}}, albert_change_tempo_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["20"]}, null], type:"albert_change_tempo_by"}, paramsKeyMap:{VALUE:0}, "class":"albert_buzzer", isNotFor:["albert"], func:function(b, a) {
   Entry.Albert.tempo += a.getNumberValue("VALUE");
   1 > Entry.Albert.tempo && (Entry.Albert.tempo = 1);
   return a.callReturn();
-}}, albert_set_tempo_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["60"]}, null], type:"albert_set_tempo_to"}, paramsKeyMap:{VALUE:0}, "class":"albert_buzzer", isNotFor:["albert"], func:function(b, a) {
+}}, albert_set_tempo_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["60"]}, null], type:"albert_set_tempo_to"}, paramsKeyMap:{VALUE:0}, "class":"albert_buzzer", isNotFor:["albert"], func:function(b, a) {
   Entry.Albert.tempo = a.getNumberValue("VALUE");
   1 > Entry.Albert.tempo && (Entry.Albert.tempo = 1);
   return a.callReturn();
@@ -15224,29 +15231,29 @@ size:12}], events:{}, def:{params:[null, null, null]}, paramsKeyMap:{DIRECTION:0
   var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a);
   "FRONT" == d ? (c.leftEye = 0, c.rightEye = 0) : "LEFT" == d ? c.leftEye = 0 : c.rightEye = 0;
   return a.callReturn();
-}}, albert_change_wheels_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "FRONT"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null]}, paramsKeyMap:{DIRECTION:0, VALUE:1}, func:function(b, a) {
+}}, albert_change_wheels_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "FRONT"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null]}, paramsKeyMap:{DIRECTION:0, VALUE:1}, func:function(b, a) {
   var c = Entry.hw.sendQueue, d = Entry.hw.portData, e = a.getField("DIRECTION"), f = a.getNumberValue("VALUE");
   "LEFT" == e ? c.leftWheel = void 0 != c.leftWheel ? c.leftWheel + f : d.leftWheel + f : ("RIGHT" != e && (c.leftWheel = void 0 != c.leftWheel ? c.leftWheel + f : d.leftWheel + f), c.rightWheel = void 0 != c.rightWheel ? c.rightWheel + f : d.rightWheel + f);
   return a.callReturn();
-}}, albert_set_wheels_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "FRONT"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null]}, paramsKeyMap:{DIRECTION:0, VALUE:1}, func:function(b, a) {
+}}, albert_set_wheels_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "FRONT"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null]}, paramsKeyMap:{DIRECTION:0, VALUE:1}, func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getField("DIRECTION"), e = a.getNumberValue("VALUE");
   "LEFT" == d ? c.leftWheel = e : ("RIGHT" != d && (c.leftWheel = e), c.rightWheel = e);
   return a.callReturn();
 }}, arduino_text:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"TextInput", value:10}], events:{}, def:{params:[]}, paramsKeyMap:{NAME:0}, func:function(b, a) {
   return a.getStringField("NAME");
-}}, arduino_send:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[]}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
+}}, arduino_send:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}], events:{}, def:{params:[]}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
   var c = a.getValue("VALUE", a), d = new XMLHttpRequest;
   d.open("POST", "http://localhost:23518/arduino/", !1);
   d.send(String(c));
   Entry.assert(200 == d.status, "arduino is not connected");
   return a.callReturn();
-}}, arduino_get_number:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[]}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
+}}, arduino_get_number:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"string"}], events:{}, def:{params:[]}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
   var c = a.getValue("VALUE", a), d = new XMLHttpRequest;
   d.open("POST", "http://localhost:23518/arduino/", !1);
   d.send(String(c));
   Entry.assert(200 == d.status, "arduino is not connected");
   return Number(d.responseText);
-}}, arduino_get_string:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[]}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
+}}, arduino_get_string:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"string"}], events:{}, def:{params:[]}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
   var c = a.getValue("VALUE", a), d = new XMLHttpRequest;
   d.open("POST", "http://localhost:23518/arduino/", !1);
   d.send(String(c));
@@ -15258,23 +15265,23 @@ size:12}], events:{}, def:{params:[null, null, null]}, paramsKeyMap:{DIRECTION:0
   return a.getStringField("PORT");
 }}, arduino_get_pwm_port_number:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["3", "3"], ["5", "5"], ["6", "6"], ["9", "9"], ["10", "10"], ["11", "11"]], value:"3", fontSize:11}], events:{}, def:{params:[null]}, paramsKeyMap:{PORT:0}, func:function(b, a) {
   return a.getStringField("PORT");
-}}, arduino_get_number_sensor_value:{color:"#00979D", fontColor:"#fff", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"arduino_get_sensor_number"}], type:"arduino_get_number_sensor_value"}, paramsKeyMap:{VALUE:0}, "class":"arduino_value", isNotFor:["arduino"], func:function(b, a) {
+}}, arduino_get_number_sensor_value:{color:"#00979D", fontColor:"#fff", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"string"}], events:{}, def:{params:[{type:"arduino_get_sensor_number"}], type:"arduino_get_number_sensor_value"}, paramsKeyMap:{VALUE:0}, "class":"arduino_value", isNotFor:["arduino"], func:function(b, a) {
   var c = a.getValue("VALUE", a);
   return Entry.hw.getAnalogPortValue(c[1]);
-}}, arduino_get_digital_value:{color:"#00979D", fontColor:"#fff", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"arduino_get_port_number"}], type:"arduino_get_digital_value"}, paramsKeyMap:{VALUE:0}, "class":"arduino_value", isNotFor:["arduino"], func:function(b, a) {
+}}, arduino_get_digital_value:{color:"#00979D", fontColor:"#fff", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"string"}], events:{}, def:{params:[{type:"arduino_get_port_number"}], type:"arduino_get_digital_value"}, paramsKeyMap:{VALUE:0}, "class":"arduino_value", isNotFor:["arduino"], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   return Entry.hw.getDigitalPortValue(c);
-}}, arduino_toggle_led:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[[Lang.Blocks.ARDUINO_on, "on"], [Lang.Blocks.ARDUINO_off, "off"]], value:"on", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"arduino_get_port_number"}, null, null], type:"arduino_toggle_led"}, paramsKeyMap:{VALUE:0, OPERATOR:1}, "class":"arduino_set", isNotFor:["arduino"], 
-func:function(b, a) {
+}}, arduino_toggle_led:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Dropdown", options:[[Lang.Blocks.ARDUINO_on, "on"], [Lang.Blocks.ARDUINO_off, "off"]], value:"on", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"arduino_get_port_number"}, null, null], type:"arduino_toggle_led"}, paramsKeyMap:{VALUE:0, OPERATOR:1}, "class":"arduino_set", isNotFor:["arduino"], func:function(b, 
+a) {
   var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
   Entry.hw.setDigitalPortValue(c, d);
   return a.callReturn();
-}}, arduino_toggle_pwm:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"arduino_get_pwm_port_number"}, {type:"arduino_text", params:["255"]}, null], type:"arduino_toggle_pwm"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"arduino_set", isNotFor:["arduino"], func:function(b, a) {
+}}, arduino_toggle_pwm:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"arduino_get_pwm_port_number"}, {type:"arduino_text", params:["255"]}, null], type:"arduino_toggle_pwm"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"arduino_set", isNotFor:["arduino"], func:function(b, a) {
   var c = a.getNumberValue("PORT"), d = a.getNumberValue("VALUE"), d = Math.round(d), d = Math.max(d, 0), d = Math.min(d, 255);
   Entry.hw.setDigitalPortValue(c, d);
   return a.callReturn();
-}}, arduino_convert_scale:{color:"#00979D", fontColor:"#fff", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"arduino_get_number_sensor_value", params:[{type:"arduino_get_sensor_number", id:"bl5e"}]}, {type:"number", params:["0"]}, {type:"number", params:["1023"]}, {type:"number", 
-params:["0"]}, {type:"number", params:["100"]}], type:"arduino_convert_scale"}, paramsKeyMap:{VALUE1:0, VALUE2:1, VALUE3:2, VALUE4:3, VALUE5:4}, "class":"arduino", isNotFor:["arduino"], func:function(b, a) {
+}}, arduino_convert_scale:{color:"#00979D", fontColor:"#fff", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"string"}, {type:"Block", accept:"string"}, {type:"Block", accept:"string"}, {type:"Block", accept:"string"}, {type:"Block", accept:"string"}], events:{}, def:{params:[{type:"arduino_get_number_sensor_value", params:[{type:"arduino_get_sensor_number", id:"bl5e"}]}, {type:"number", params:["0"]}, {type:"number", params:["1023"]}, {type:"number", params:["0"]}, {type:"number", 
+params:["100"]}], type:"arduino_convert_scale"}, paramsKeyMap:{VALUE1:0, VALUE2:1, VALUE3:2, VALUE4:3, VALUE5:4}, "class":"arduino", isNotFor:["arduino"], func:function(b, a) {
   var c = a.getNumberValue("VALUE1", a), d = a.getNumberValue("VALUE2", a), e = a.getNumberValue("VALUE3", a), f = a.getNumberValue("VALUE4", a), g = a.getNumberValue("VALUE5", a);
   if (d > e) {
     var h = d, d = e, e = h
@@ -15353,8 +15360,8 @@ a) {
   Entry.hw.sendQueue.LEDG = 0;
   Entry.hw.sendQueue.LEDB = 0;
   return a.callReturn();
-}}, bitbrick_turn_on_color_led_by_rgb:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["255"]}, {type:"text", params:["255"]}, {type:"text", params:["255"]}, null], type:"bitbrick_turn_on_color_led_by_rgb"}, paramsKeyMap:{rValue:0, gValue:1, bValue:2}, 
-"class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
+}}, bitbrick_turn_on_color_led_by_rgb:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Block", accept:"string"}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["255"]}, {type:"text", params:["255"]}, {type:"text", params:["255"]}, null], type:"bitbrick_turn_on_color_led_by_rgb"}, paramsKeyMap:{rValue:0, gValue:1, bValue:2}, "class":"condition", 
+isNotFor:["bitbrick"], func:function(b, a) {
   var c = a.getNumberValue("rValue"), d = a.getNumberValue("gValue"), e = a.getNumberValue("bValue"), f = Entry.adjustValueWithMaxMin, g = Entry.hw.sendQueue;
   g.LEDR = f(c, 0, 255);
   g.LEDG = f(d, 0, 255);
@@ -15366,14 +15373,14 @@ a) {
   Entry.hw.sendQueue.LEDG = parseInt(c.substr(3, 2), 16);
   Entry.hw.sendQueue.LEDB = parseInt(c.substr(5, 2), 16);
   return a.callReturn();
-}}, bitbrick_turn_on_color_led_by_value:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["0"]}, null], type:"bitbrick_turn_on_color_led_by_value"}, paramsKeyMap:{VALUE:0}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
+}}, bitbrick_turn_on_color_led_by_value:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["0"]}, null], type:"bitbrick_turn_on_color_led_by_value"}, paramsKeyMap:{VALUE:0}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
   var c = a.getNumberValue("VALUE"), d, e, f, c = c % 200;
   67 > c ? (d = 200 - 3 * c, e = 3 * c, f = 0) : 134 > c ? (c -= 67, d = 0, e = 200 - 3 * c, f = 3 * c) : 201 > c && (c -= 134, d = 3 * c, e = 0, f = 200 - 3 * c);
   Entry.hw.sendQueue.LEDR = d;
   Entry.hw.sendQueue.LEDG = e;
   Entry.hw.sendQueue.LEDB = f;
   return a.callReturn();
-}}, bitbrick_buzzer:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["60"]}, null], type:"bitbrick_buzzer"}, paramsKeyMap:{VALUE:0}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
+}}, bitbrick_buzzer:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["60"]}, null], type:"bitbrick_buzzer"}, paramsKeyMap:{VALUE:0}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
   if (a.isStart) {
     return Entry.hw.sendQueue.buzzer = 0, delete a.isStart, a.callReturn();
   }
@@ -15390,21 +15397,21 @@ a) {
     c[a[1]] = 128;
   });
   return a.callReturn();
-}}, bitbrick_dc_speed:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["60"]}, null], type:"bitbrick_dc_speed"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
+}}, bitbrick_dc_speed:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, fontSize:11}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["60"]}, null], type:"bitbrick_dc_speed"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
   var c = a.getNumberValue("VALUE"), c = Math.min(c, Entry.Bitbrick.dcMaxValue), c = Math.max(c, Entry.Bitbrick.dcMinValue);
   Entry.hw.sendQueue[a.getStringField("PORT")] = c + 128;
   return a.callReturn();
-}}, bitbrick_dc_direction_speed:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, fontSize:11}, {type:"Dropdown", options:[[Lang.Blocks.BITBRICK_dc_direction_cw, "CW"], [Lang.Blocks.BITBRICK_dc_direction_ccw, "CCW"]], value:"CW", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, {type:"text", params:["100"]}, null], type:"bitbrick_dc_direction_speed"}, 
+}}, bitbrick_dc_direction_speed:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, fontSize:11}, {type:"Dropdown", options:[[Lang.Blocks.BITBRICK_dc_direction_cw, "CW"], [Lang.Blocks.BITBRICK_dc_direction_ccw, "CCW"]], value:"CW", fontSize:11}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, {type:"text", params:["100"]}, null], type:"bitbrick_dc_direction_speed"}, 
 paramsKeyMap:{PORT:0, DIRECTION:1, VALUE:2}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
   var c = "CW" === a.getStringField("DIRECTION"), d = a.getNumberValue("VALUE"), d = Math.min(d, Entry.Bitbrick.dcMaxValue), d = Math.max(d, 0);
   Entry.hw.sendQueue[a.getStringField("PORT")] = c ? d + 128 : 128 - d;
   return a.callReturn();
-}}, bitbrick_servomotor_angle:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["100"]}, null], type:"bitbrick_servomotor_angle"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
+}}, bitbrick_servomotor_angle:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, fontSize:11}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["100"]}, null], type:"bitbrick_servomotor_angle"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
   var c = a.getNumberValue("VALUE") + 1, c = Math.min(c, Entry.Bitbrick.servoMaxValue), c = Math.max(c, Entry.Bitbrick.servoMinValue);
   Entry.hw.sendQueue[a.getStringField("PORT")] = c;
   return a.callReturn();
-}}, bitbrick_convert_scale:{color:"#00979D", fontColor:"#fff", skeleton:"basic_string_field", statements:[], params:[{type:"DropdownDynamic", value:null, fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[null, {type:"number", params:["0"]}, {type:"number", params:["1023"]}, {type:"number", params:["-100"]}, {type:"number", params:["100"]}], type:"bitbrick_convert_scale"}, 
-paramsKeyMap:{PORT:0, VALUE2:1, VALUE3:2, VALUE4:3, VALUE5:4}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
+}}, bitbrick_convert_scale:{color:"#00979D", fontColor:"#fff", skeleton:"basic_string_field", statements:[], params:[{type:"DropdownDynamic", value:null, fontSize:11}, {type:"Block", accept:"string"}, {type:"Block", accept:"string"}, {type:"Block", accept:"string"}, {type:"Block", accept:"string"}], events:{}, def:{params:[null, {type:"number", params:["0"]}, {type:"number", params:["1023"]}, {type:"number", params:["-100"]}, {type:"number", params:["100"]}], type:"bitbrick_convert_scale"}, paramsKeyMap:{PORT:0, 
+VALUE2:1, VALUE3:2, VALUE4:3, VALUE5:4}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
   var c = a.getNumberField("PORT"), d = Entry.hw.portData[c].value, c = a.getNumberValue("VALUE2", a), e = a.getNumberValue("VALUE3", a), f = a.getNumberValue("VALUE4", a), g = a.getNumberValue("VALUE5", a);
   if (f > g) {
     var h = f, f = g, g = h
@@ -15438,23 +15445,23 @@ paramsKeyMap:{PORT:0, VALUE2:1, VALUE3:2, VALUE4:3, VALUE5:4}, "class":"conditio
     b.brush.moveTo(b.getX(), -1 * b.getY());
   }
   return a.callReturn();
-}}, change_thickness:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["1"]}, null], type:"change_thickness"}, paramsKeyMap:{VALUE:0}, "class":"brush_thickness", isNotFor:["textBox"], func:function(b, a) {
+}}, change_thickness:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["1"]}, null], type:"change_thickness"}, paramsKeyMap:{VALUE:0}, "class":"brush_thickness", isNotFor:["textBox"], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
   b.brush && (b.brush.thickness += c, 1 > b.brush.thickness && (b.brush.thickness = 1), b.brush.setStrokeStyle(b.brush.thickness), b.brush.moveTo(b.getX(), -1 * b.getY()));
   return a.callReturn();
-}}, set_thickness:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["1"]}, null], type:"set_thickness"}, paramsKeyMap:{VALUE:0}, "class":"brush_thickness", isNotFor:["textBox"], func:function(b, a) {
+}}, set_thickness:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["1"]}, null], type:"set_thickness"}, paramsKeyMap:{VALUE:0}, "class":"brush_thickness", isNotFor:["textBox"], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
   b.brush && (b.brush.thickness = c, b.brush.setStrokeStyle(b.brush.thickness), b.brush.moveTo(b.getX(), -1 * b.getY()));
   return a.callReturn();
-}}, change_opacity:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"change_opacity"}, paramsKeyMap:{VALUE:0}, "class":"brush_opacity", isNotFor:["textBox"], func:function(b, a) {
+}}, change_opacity:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"change_opacity"}, paramsKeyMap:{VALUE:0}, "class":"brush_opacity", isNotFor:["textBox"], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
   c = Entry.adjustValueWithMaxMin(b.brush.opacity + c, 0, 100);
   b.brush && (b.brush.opacity = c, b.brush.endStroke(), c = b.brush.rgb, b.brush.beginStroke("rgba(" + c.r + "," + c.g + "," + c.b + "," + b.brush.opacity / 100 + ")"), b.brush.moveTo(b.getX(), -1 * b.getY()));
   return a.callReturn();
-}}, set_opacity:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["50"]}, null], type:"set_opacity"}, paramsKeyMap:{VALUE:0}, "class":"brush_opacity", isNotFor:["textBox"], func:function(b, a) {
+}}, set_opacity:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["50"]}, null], type:"set_opacity"}, paramsKeyMap:{VALUE:0}, "class":"brush_opacity", isNotFor:["textBox"], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
   b.brush && (b.brush.opacity = Entry.adjustValueWithMaxMin(c, 0, 100), b.brush.endStroke(), c = b.brush.rgb, b.brush.beginStroke("rgba(" + c.r + "," + c.g + "," + c.b + "," + b.brush.opacity / 100 + ")"), b.brush.moveTo(b.getX(), -1 * b.getY()));
@@ -15475,13 +15482,13 @@ paramsKeyMap:{PORT:0, VALUE2:1, VALUE3:2, VALUE4:3, VALUE5:4}, "class":"conditio
 }}, brush_stamp:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[null], type:"brush_stamp"}, "class":"stamp", isNotFor:["textBox"], func:function(b, a) {
   b.parent.addStampEntity(b);
   return a.callReturn();
-}}, change_brush_transparency:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"change_brush_transparency"}, paramsKeyMap:{VALUE:0}, "class":"brush_opacity", isNotFor:["textBox"], func:function(b, a) {
+}}, change_brush_transparency:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"change_brush_transparency"}, paramsKeyMap:{VALUE:0}, "class":"brush_opacity", isNotFor:["textBox"], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
   c = Entry.adjustValueWithMaxMin(b.brush.opacity - c, 0, 100);
   b.brush && (b.brush.opacity = c, b.brush.endStroke(), c = b.brush.rgb, b.brush.beginStroke("rgba(" + c.r + "," + c.g + "," + c.b + "," + b.brush.opacity / 100 + ")"), b.brush.moveTo(b.getX(), -1 * b.getY()));
   return a.callReturn();
-}}, set_brush_tranparency:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["50"]}, null], type:"set_brush_tranparency"}, paramsKeyMap:{VALUE:0}, "class":"brush_opacity", isNotFor:["textBox"], func:function(b, a) {
+}}, set_brush_tranparency:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["50"]}, null], type:"set_brush_tranparency"}, paramsKeyMap:{VALUE:0}, "class":"brush_opacity", isNotFor:["textBox"], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
   b.brush && (b.brush.opacity = Entry.adjustValueWithMaxMin(c, 0, 100), b.brush.endStroke(), c = b.brush.rgb, b.brush.beginStroke("rgba(" + c.r + "," + c.g + "," + c.b + "," + (1 - b.brush.opacity / 100) + ")"), b.brush.moveTo(b.getX(), -1 * b.getY()));
@@ -15527,29 +15534,29 @@ paramsKeyMap:{PORT:0, VALUE2:1, VALUE3:2, VALUE4:3, VALUE5:4}, "class":"conditio
     case "picture_name":
       return d = c.parent, d = d.pictures, d[d.indexOf(c.picture)].name;
   }
-}}, calc_basic:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["+", "PLUS"], ["-", "MINUS"], ["x", "MULTI"], ["/", "DIVIDE"]], value:"PLUS", fontSize:11, noArrow:!0}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"number", params:["10"]}, "PLUS", {type:"number", params:["10"]}], type:"calc_basic"}, defs:[{params:[{type:"number", params:["10"]}, "PLUS", {type:"number", params:["10"]}], 
-type:"calc_basic"}, {params:[{type:"number", params:["10"]}, "MINUS", {type:"number", params:["10"]}], type:"calc_basic"}, {params:[{type:"number", params:["10"]}, "MULTI", {type:"number", params:["10"]}], type:"calc_basic"}, {params:[{type:"number", params:["10"]}, "DIVIDE", {type:"number", params:["10"]}], type:"calc_basic"}], paramsKeyMap:{LEFTHAND:0, OPERATOR:1, RIGHTHAND:2}, "class":"calc", isNotFor:[], func:function(b, a) {
+}}, calc_basic:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"string"}, {type:"Dropdown", options:[["+", "PLUS"], ["-", "MINUS"], ["x", "MULTI"], ["/", "DIVIDE"]], value:"PLUS", fontSize:11, noArrow:!0}, {type:"Block", accept:"string"}], events:{}, def:{params:[{type:"number", params:["10"]}, "PLUS", {type:"number", params:["10"]}], type:"calc_basic"}, defs:[{params:[{type:"number", params:["10"]}, "PLUS", {type:"number", params:["10"]}], type:"calc_basic"}, 
+{params:[{type:"number", params:["10"]}, "MINUS", {type:"number", params:["10"]}], type:"calc_basic"}, {params:[{type:"number", params:["10"]}, "MULTI", {type:"number", params:["10"]}], type:"calc_basic"}, {params:[{type:"number", params:["10"]}, "DIVIDE", {type:"number", params:["10"]}], type:"calc_basic"}], paramsKeyMap:{LEFTHAND:0, OPERATOR:1, RIGHTHAND:2}, "class":"calc", isNotFor:[], func:function(b, a) {
   var c = a.getField("OPERATOR", a), d = a.getNumberValue("LEFTHAND", a), e = a.getNumberValue("RIGHTHAND", a);
   return "PLUS" == c ? d + e : "MINUS" == c ? d - e : "MULTI" == c ? d * e : d / e;
-}}, calc_plus:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"+", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[null]}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, func:function(b, a) {
+}}, calc_plus:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"string"}, {type:"Text", text:"+", color:"#3D3D3D"}, {type:"Block", accept:"string"}], events:{}, def:{params:[null]}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, func:function(b, a) {
   var c = a.getNumberValue("LEFTHAND", a), d = a.getNumberValue("RIGHTHAND", a);
   return c + d;
-}}, calc_minus:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"-", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[null]}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, func:function(b, a) {
+}}, calc_minus:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"string"}, {type:"Text", text:"-", color:"#3D3D3D"}, {type:"Block", accept:"string"}], events:{}, def:{params:[null]}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, func:function(b, a) {
   var c = a.getNumberValue("LEFTHAND", a), d = a.getNumberValue("RIGHTHAND", a);
   return c - d;
-}}, calc_times:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"x", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[null]}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, func:function(b, a) {
+}}, calc_times:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"string"}, {type:"Text", text:"x", color:"#3D3D3D"}, {type:"Block", accept:"string"}], events:{}, def:{params:[null]}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, func:function(b, a) {
   var c = a.getNumberValue("LEFTHAND", a), d = a.getNumberValue("RIGHTHAND", a);
   return c * d;
-}}, calc_divide:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"/", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[null]}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, func:function(b, a) {
+}}, calc_divide:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"string"}, {type:"Text", text:"/", color:"#3D3D3D"}, {type:"Block", accept:"string"}], events:{}, def:{params:[null]}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, func:function(b, a) {
   var c = a.getNumberValue("LEFTHAND", a), d = a.getNumberValue("RIGHTHAND", a);
   return c / d;
-}}, calc_mod:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"/", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_calc_mod_3, color:"#3D3D3D"}], events:{}, def:{params:[{type:"number", params:["10"]}, null, {type:"number", params:["10"]}, null], type:"calc_mod"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"calc", isNotFor:[], func:function(b, a) {
+}}, calc_mod:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"string"}, {type:"Text", text:"/", color:"#3D3D3D"}, {type:"Block", accept:"string"}, {type:"Text", text:Lang.Blocks.CALC_calc_mod_3, color:"#3D3D3D"}], events:{}, def:{params:[{type:"number", params:["10"]}, null, {type:"number", params:["10"]}, null], type:"calc_mod"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"calc", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("LEFTHAND", a), d = a.getNumberValue("RIGHTHAND", a);
   return c % d;
-}}, calc_share:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"/", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uc758 \ubaab", color:"#3D3D3D"}], events:{}, def:{params:[{type:"number", params:["10"]}, null, {type:"number", params:["10"]}, null], type:"calc_share"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"calc", isNotFor:[], func:function(b, a) {
+}}, calc_share:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"string"}, {type:"Text", text:"/", color:"#3D3D3D"}, {type:"Block", accept:"string"}, {type:"Text", text:"\uc758 \ubaab", color:"#3D3D3D"}], events:{}, def:{params:[{type:"number", params:["10"]}, null, {type:"number", params:["10"]}, null], type:"calc_share"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"calc", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("LEFTHAND", a), d = a.getNumberValue("RIGHTHAND", a);
   return Math.floor(c / d);
-}}, calc_operation:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_calc_operation_of_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_calc_operation_of_2, color:"#3D3D3D"}, {type:"Dropdown", options:[[Lang.Blocks.CALC_calc_operation_square, "square"], [Lang.Blocks.CALC_calc_operation_root, "root"], [Lang.Blocks.CALC_calc_operation_sin, "sin"], [Lang.Blocks.CALC_calc_operation_cos, "cos"], [Lang.Blocks.CALC_calc_operation_tan, 
+}}, calc_operation:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_calc_operation_of_1, color:"#3D3D3D"}, {type:"Block", accept:"string"}, {type:"Text", text:Lang.Blocks.CALC_calc_operation_of_2, color:"#3D3D3D"}, {type:"Dropdown", options:[[Lang.Blocks.CALC_calc_operation_square, "square"], [Lang.Blocks.CALC_calc_operation_root, "root"], [Lang.Blocks.CALC_calc_operation_sin, "sin"], [Lang.Blocks.CALC_calc_operation_cos, "cos"], [Lang.Blocks.CALC_calc_operation_tan, 
 "tan"], [Lang.Blocks.CALC_calc_operation_asin, "asin_radian"], [Lang.Blocks.CALC_calc_operation_acos, "acos_radian"], [Lang.Blocks.CALC_calc_operation_atan, "atan_radian"], [Lang.Blocks.CALC_calc_operation_log, "log"], [Lang.Blocks.CALC_calc_operation_ln, "ln"], [Lang.Blocks.CALC_calc_operation_unnatural, "unnatural"], [Lang.Blocks.CALC_calc_operation_floor, "floor"], [Lang.Blocks.CALC_calc_operation_ceil, "ceil"], [Lang.Blocks.CALC_calc_operation_round, "round"], [Lang.Blocks.CALC_calc_operation_factorial, 
 "factorial"], [Lang.Blocks.CALC_calc_operation_abs, "abs"]], value:"square", fontSize:11}], events:{}, def:{params:[null, {type:"number", params:["10"]}, null, null], type:"calc_operation"}, paramsKeyMap:{LEFTHAND:1, VALUE:3}, "class":"calc", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("LEFTHAND", a), d = a.getField("VALUE", a);
@@ -15590,7 +15597,7 @@ type:"calc_basic"}, {params:[{type:"number", params:["10"]}, "MINUS", {type:"num
       e = Math[d](c);
   }
   return Math.round(1E3 * e) / 1E3;
-}}, calc_rand:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_calc_rand_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_calc_rand_2, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_calc_rand_3, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"number", params:["0"]}, null, {type:"number", params:["10"]}, null], type:"calc_rand"}, paramsKeyMap:{LEFTHAND:1, 
+}}, calc_rand:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_calc_rand_1, color:"#3D3D3D"}, {type:"Block", accept:"string"}, {type:"Text", text:Lang.Blocks.CALC_calc_rand_2, color:"#3D3D3D"}, {type:"Block", accept:"string"}, {type:"Text", text:Lang.Blocks.CALC_calc_rand_3, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"number", params:["0"]}, null, {type:"number", params:["10"]}, null], type:"calc_rand"}, paramsKeyMap:{LEFTHAND:1, 
 RIGHTHAND:3}, "class":"calc", isNotFor:[], func:function(b, a) {
   var c = a.getStringValue("LEFTHAND", a), d = a.getStringValue("RIGHTHAND", a), e = Math.min(c, d), f = Math.max(c, d), c = Entry.isFloat(c);
   return Entry.isFloat(d) || c ? (Math.random() * (f - e) + e).toFixed(2) : Math.floor(Math.random() * (f - e + 1) + e);
@@ -15627,39 +15634,39 @@ color:"#3D3D3D"}], events:{}, def:{params:[null, "YEAR", null], type:"get_date"}
   Entry.engine && Entry.engine.hideProjectTimer(b);
 }]}, def:{params:[null, null], type:"get_project_timer_value"}, "class":"calc_timer", isNotFor:[], func:function(b, a) {
   return Entry.engine.projectTimer.getValue();
-}}, char_at:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_char_at_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_char_at_2, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_char_at_3, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"text", params:[Lang.Blocks.hi_entry]}, null, {type:"number", params:["1"]}, null], type:"char_at"}, paramsKeyMap:{LEFTHAND:1, 
+}}, char_at:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_char_at_1, color:"#3D3D3D"}, {type:"Block", accept:"string"}, {type:"Text", text:Lang.Blocks.CALC_char_at_2, color:"#3D3D3D"}, {type:"Block", accept:"string"}, {type:"Text", text:Lang.Blocks.CALC_char_at_3, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"text", params:[Lang.Blocks.hi_entry]}, null, {type:"number", params:["1"]}, null], type:"char_at"}, paramsKeyMap:{LEFTHAND:1, 
 RIGHTHAND:3}, "class":"calc_string", isNotFor:[], func:function(b, a) {
   var c = a.getStringValue("LEFTHAND", a), d = a.getNumberValue("RIGHTHAND", a) - 1;
   if (0 > d || d > c.length - 1) {
     throw Error();
   }
   return c[d];
-}}, length_of_string:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_length_of_string_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_length_of_string_2, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"text", params:[Lang.Blocks.entry]}, null], type:"length_of_string"}, paramsKeyMap:{STRING:1}, "class":"calc_string", isNotFor:[], func:function(b, a) {
+}}, length_of_string:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_length_of_string_1, color:"#3D3D3D"}, {type:"Block", accept:"string"}, {type:"Text", text:Lang.Blocks.CALC_length_of_string_2, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"text", params:[Lang.Blocks.entry]}, null], type:"length_of_string"}, paramsKeyMap:{STRING:1}, "class":"calc_string", isNotFor:[], func:function(b, a) {
   return a.getStringValue("STRING", a).length;
-}}, substring:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_substring_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_substring_2, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_substring_3, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_substring_4, color:"#3D3D3D"}], events:{}, def:{params:[null, 
-{type:"text", params:[Lang.Blocks.hi_entry]}, null, {type:"number", params:["2"]}, null, {type:"number", params:["5"]}, null], type:"substring"}, paramsKeyMap:{STRING:1, START:3, END:5}, "class":"calc_string", isNotFor:[], func:function(b, a) {
+}}, substring:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_substring_1, color:"#3D3D3D"}, {type:"Block", accept:"string"}, {type:"Text", text:Lang.Blocks.CALC_substring_2, color:"#3D3D3D"}, {type:"Block", accept:"string"}, {type:"Text", text:Lang.Blocks.CALC_substring_3, color:"#3D3D3D"}, {type:"Block", accept:"string"}, {type:"Text", text:Lang.Blocks.CALC_substring_4, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"text", params:[Lang.Blocks.hi_entry]}, 
+null, {type:"number", params:["2"]}, null, {type:"number", params:["5"]}, null], type:"substring"}, paramsKeyMap:{STRING:1, START:3, END:5}, "class":"calc_string", isNotFor:[], func:function(b, a) {
   var c = a.getStringValue("STRING", a), d = a.getNumberValue("START", a) - 1, e = a.getNumberValue("END", a) - 1, f = c.length - 1;
   if (0 > d || 0 > e || d > f || e > f) {
     throw Error();
   }
   return c.substring(Math.min(d, e), Math.max(d, e) + 1);
-}}, replace_string:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_replace_string_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_replace_string_2, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_replace_string_3, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_replace_string_4, color:"#3D3D3D"}], events:{}, 
-def:{params:[null, {type:"text", params:[Lang.Blocks.hi_entry]}, null, {type:"text", params:[Lang.Blocks.hello]}, null, {type:"text", params:[Lang.Blocks.nice]}, null], type:"replace_string"}, paramsKeyMap:{STRING:1, OLD_WORD:3, NEW_WORD:5}, "class":"calc_string", isNotFor:[], func:function(b, a) {
+}}, replace_string:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_replace_string_1, color:"#3D3D3D"}, {type:"Block", accept:"string"}, {type:"Text", text:Lang.Blocks.CALC_replace_string_2, color:"#3D3D3D"}, {type:"Block", accept:"string"}, {type:"Text", text:Lang.Blocks.CALC_replace_string_3, color:"#3D3D3D"}, {type:"Block", accept:"string"}, {type:"Text", text:Lang.Blocks.CALC_replace_string_4, color:"#3D3D3D"}], events:{}, def:{params:[null, 
+{type:"text", params:[Lang.Blocks.hi_entry]}, null, {type:"text", params:[Lang.Blocks.hello]}, null, {type:"text", params:[Lang.Blocks.nice]}, null], type:"replace_string"}, paramsKeyMap:{STRING:1, OLD_WORD:3, NEW_WORD:5}, "class":"calc_string", isNotFor:[], func:function(b, a) {
   return a.getStringValue("STRING", a).replace(new RegExp(a.getStringValue("OLD_WORD", a), "gm"), a.getStringValue("NEW_WORD", a));
-}}, change_string_case:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_change_string_case_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_change_string_case_2, color:"#3D3D3D"}, {type:"Dropdown", options:[[Lang.Blocks.CALC_change_string_case_sub_1, "toUpperCase"], [Lang.Blocks.CALC_change_string_case_sub_2, "toLowerCase"]], value:"toUpperCase", fontSize:11}, {type:"Text", text:Lang.Blocks.CALC_change_string_case_3, 
+}}, change_string_case:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_change_string_case_1, color:"#3D3D3D"}, {type:"Block", accept:"string"}, {type:"Text", text:Lang.Blocks.CALC_change_string_case_2, color:"#3D3D3D"}, {type:"Dropdown", options:[[Lang.Blocks.CALC_change_string_case_sub_1, "toUpperCase"], [Lang.Blocks.CALC_change_string_case_sub_2, "toLowerCase"]], value:"toUpperCase", fontSize:11}, {type:"Text", text:Lang.Blocks.CALC_change_string_case_3, 
 color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"text", params:["Hello Entry!"]}, null, null, null], type:"change_string_case"}, paramsKeyMap:{STRING:1, CASE:3}, "class":"calc_string", isNotFor:[], func:function(b, a) {
   return a.getStringValue("STRING", a)[a.getField("CASE", a)]();
-}}, index_of_string:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_index_of_string_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_index_of_string_2, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_index_of_string_3, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"text", params:[Lang.Blocks.hi_entry]}, null, {type:"text", params:[Lang.Blocks.entry]}, 
+}}, index_of_string:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_index_of_string_1, color:"#3D3D3D"}, {type:"Block", accept:"string"}, {type:"Text", text:Lang.Blocks.CALC_index_of_string_2, color:"#3D3D3D"}, {type:"Block", accept:"string"}, {type:"Text", text:Lang.Blocks.CALC_index_of_string_3, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"text", params:[Lang.Blocks.hi_entry]}, null, {type:"text", params:[Lang.Blocks.entry]}, 
 null], type:"index_of_string"}, paramsKeyMap:{LEFTHAND:1, RIGHTHAND:3}, "class":"calc_string", isNotFor:[], func:function(b, a) {
   var c = a.getStringValue("LEFTHAND", a), d = a.getStringValue("RIGHTHAND", a), c = c.indexOf(d);
   return -1 < c ? c + 1 : 0;
-}}, combine_something:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.VARIABLE_combine_something_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.VARIABLE_combine_something_2, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.VARIABLE_combine_something_3, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"text", params:[Lang.Blocks.block_hi]}, null, {type:"text", 
-params:[Lang.Blocks.entry]}, null], type:"combine_something"}, paramsKeyMap:{VALUE1:1, VALUE2:3}, "class":"calc_string", isNotFor:[], func:function(b, a) {
+}}, combine_something:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.VARIABLE_combine_something_1, color:"#3D3D3D"}, {type:"Block", accept:"string"}, {type:"Text", text:Lang.Blocks.VARIABLE_combine_something_2, color:"#3D3D3D"}, {type:"Block", accept:"string"}, {type:"Text", text:Lang.Blocks.VARIABLE_combine_something_3, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"text", params:[Lang.Blocks.block_hi]}, null, {type:"text", params:[Lang.Blocks.entry]}, 
+null], type:"combine_something"}, paramsKeyMap:{VALUE1:1, VALUE2:3}, "class":"calc_string", isNotFor:[], func:function(b, a) {
   var c = a.getStringValue("VALUE1", a), d = a.getStringValue("VALUE2", a);
   return c + d;
 }}, get_sound_volume:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_get_sound_volume, color:"#3D3D3D"}, {type:"Text", text:"", color:"#3D3D3D"}], events:{}, def:{params:[null, null], type:"get_sound_volume"}, "class":"calc", isNotFor:[""], func:function(b, a) {
   return 100 * createjs.Sound.getVolume();
-}}, quotient_and_mod:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_quotient_and_mod_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_quotient_and_mod_2, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_quotient_and_mod_3, color:"#3D3D3D"}, {type:"Dropdown", options:[[Lang.Blocks.CALC_quotient_and_mod_sub_1, "QUOTIENT"], [Lang.Blocks.CALC_quotient_and_mod_sub_2, 
+}}, quotient_and_mod:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_quotient_and_mod_1, color:"#3D3D3D"}, {type:"Block", accept:"string"}, {type:"Text", text:Lang.Blocks.CALC_quotient_and_mod_2, color:"#3D3D3D"}, {type:"Block", accept:"string"}, {type:"Text", text:Lang.Blocks.CALC_quotient_and_mod_3, color:"#3D3D3D"}, {type:"Dropdown", options:[[Lang.Blocks.CALC_quotient_and_mod_sub_1, "QUOTIENT"], [Lang.Blocks.CALC_quotient_and_mod_sub_2, 
 "MOD"]], value:"QUOTIENT", fontSize:11}], events:{}, def:{params:[null, {type:"text", params:["10"]}, null, {type:"text", params:["10"]}, null, null], type:"quotient_and_mod"}, paramsKeyMap:{LEFTHAND:1, RIGHTHAND:3, OPERATOR:5}, "class":"calc", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("LEFTHAND", a), d = a.getNumberValue("RIGHTHAND", a);
   if (isNaN(c) || isNaN(d)) {
@@ -15675,7 +15682,7 @@ params:[Lang.Blocks.entry]}, null], type:"combine_something"}, paramsKeyMap:{VAL
   var c = a.getField("ACTION"), d = Entry.engine, e = d.projectTimer;
   "START" == c ? e.isInit ? e.isInit && e.isPaused && (e.pauseStart && (e.pausedTime += (new Date).getTime() - e.pauseStart), delete e.pauseStart, e.isPaused = !1) : d.startProjectTimer() : "STOP" == c ? e.isInit && !e.isPaused && (e.isPaused = !0, e.pauseStart = (new Date).getTime()) : "RESET" == c && e.isInit && (e.setValue(0), e.start = (new Date).getTime(), e.pausedTime = 0, delete e.pauseStart);
   return a.callReturn();
-}}, wait_second:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["2"]}, null], type:"wait_second"}, paramsKeyMap:{SECOND:0}, "class":"delay", isNotFor:[], func:function(b, a) {
+}}, wait_second:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["2"]}, null], type:"wait_second"}, paramsKeyMap:{SECOND:0}, "class":"delay", isNotFor:[], func:function(b, a) {
   if (a.isStart) {
     if (1 == a.timeFlag) {
       return a;
@@ -15692,7 +15699,7 @@ params:[Lang.Blocks.entry]}, null], type:"combine_something"}, paramsKeyMap:{VAL
     a.timeFlag = 0;
   }, c);
   return a;
-}}, repeat_basic:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"repeat_basic"}, paramsKeyMap:{VALUE:0}, statementsKeyMap:{DO:0}, "class":"repeat", isNotFor:[], func:function(b, a) {
+}}, repeat_basic:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"repeat_basic"}, paramsKeyMap:{VALUE:0}, statementsKeyMap:{DO:0}, "class":"repeat", isNotFor:[], func:function(b, a) {
   var c;
   if (!a.isLooped) {
     a.isLooped = !0;
@@ -15712,11 +15719,11 @@ params:[Lang.Blocks.entry]}, null], type:"combine_something"}, paramsKeyMap:{VAL
   return a.getStatement("DO");
 }}, stop_repeat:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null], type:"stop_repeat"}, "class":"repeat", isNotFor:[], func:function(b, a) {
   return this.executor.breakLoop();
-}}, wait_until_true:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"True"}, null], type:"wait_until_true"}, paramsKeyMap:{BOOL:0}, "class":"wait", isNotFor:[], func:function(b, a) {
+}}, wait_until_true:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Block", accept:"boolean"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"True"}, null], type:"wait_until_true"}, paramsKeyMap:{BOOL:0}, "class":"wait", isNotFor:[], func:function(b, a) {
   return a.getBooleanValue("BOOL", a) ? a.callReturn() : a;
-}}, _if:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"True"}, null], type:"_if"}, paramsKeyMap:{BOOL:0}, statementsKeyMap:{STACK:0}, "class":"condition", isNotFor:[], func:function(b, a) {
+}}, _if:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], params:[{type:"Block", accept:"boolean"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"True"}, null], type:"_if"}, paramsKeyMap:{BOOL:0}, statementsKeyMap:{STACK:0}, "class":"condition", isNotFor:[], func:function(b, a) {
   return a.isLooped ? (delete a.isLooped, a.callReturn()) : a.getBooleanValue("BOOL", a) ? (a.isLooped = !0, a.getStatement("STACK", a)) : a.callReturn();
-}}, if_else:{color:"#498deb", skeleton:"basic_double_loop", statements:[{accept:"basic"}, {accept:"basic"}], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}, {type:"LineBreak"}], events:{}, def:{params:[{type:"True"}, null], type:"if_else"}, paramsKeyMap:{BOOL:0}, statementsKeyMap:{STACK_IF:0, STACK_ELSE:1}, "class":"condition", isNotFor:[], func:function(b, a) {
+}}, if_else:{color:"#498deb", skeleton:"basic_double_loop", statements:[{accept:"basic"}, {accept:"basic"}], params:[{type:"Block", accept:"boolean"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}, {type:"LineBreak"}], events:{}, def:{params:[{type:"True"}, null], type:"if_else"}, paramsKeyMap:{BOOL:0}, statementsKeyMap:{STACK_IF:0, STACK_ELSE:1}, "class":"condition", isNotFor:[], func:function(b, a) {
   if (a.isLooped) {
     return delete a.isLooped, a.callReturn();
   }
@@ -15737,7 +15744,7 @@ params:[Lang.Blocks.entry]}, null], type:"combine_something"}, paramsKeyMap:{VAL
   return a.callReturn();
 }, event:"when_clone_start"}, stop_run:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null]}, func:function(b, a) {
   return Entry.engine.toggleStop();
-}}, repeat_while_true:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Dropdown", options:[[Lang.Blocks.FLOW_repeat_while_true_until, "until"], [Lang.Blocks.FLOW_repeat_while_true_while, "while"]], value:"until", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"True"}, null, null], type:"repeat_while_true"}, paramsKeyMap:{BOOL:0, OPTION:1}, statementsKeyMap:{DO:0}, 
+}}, repeat_while_true:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], params:[{type:"Block", accept:"boolean"}, {type:"Dropdown", options:[[Lang.Blocks.FLOW_repeat_while_true_until, "until"], [Lang.Blocks.FLOW_repeat_while_true_while, "while"]], value:"until", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"True"}, null, null], type:"repeat_while_true"}, paramsKeyMap:{BOOL:0, OPTION:1}, statementsKeyMap:{DO:0}, 
 "class":"repeat", isNotFor:[], func:function(b, a) {
   var c = a.getBooleanValue("BOOL", a);
   "until" == a.getField("OPTION", a) && (c = !c);
@@ -15769,9 +15776,8 @@ params:[Lang.Blocks.entry]}, null], type:"combine_something"}, paramsKeyMap:{VAL
   return a.callReturn();
 }}, functionAddButton:{skeleton:"basic_button", color:"#eee", isNotFor:["functionInit"], params:[{type:"Text", text:Lang.Workspace.function_create, color:"#333", align:"center"}], events:{mousedown:[function() {
   Entry.variableContainer.createFunction();
-}]}}, function_field_label:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#f9c535", params:[{type:"TextInput", value:Lang.Blocks.FUNCTION_explanation_1}, {type:"Output", accept:"paramMagnet"}], paramsKeyMap:{NAME:0, NEXT:1}, def:{params:["\uc774\ub984"], type:"function_field_label"}}, function_field_string:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#ffd974", params:[{type:"Block", accept:"stringMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}], paramsKeyMap:{PARAM:0, 
-NEXT:1}, def:{params:[{type:"text", params:["\ubb38\uc790/\uc22b\uc790\uac12"]}], type:"function_field_string"}}, function_field_boolean:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#aeb8ff", params:[{type:"Block", accept:"booleanMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}], paramsKeyMap:{PARAM:0, NEXT:1}, def:{params:[{type:"True", params:["\ud310\ub2e8\uac12"]}], type:"function_field_boolean"}}, function_param_string:{skeleton:"basic_string_field", color:"#ffd974", 
-template:"%1 %2", events:{viewAdd:[function() {
+}]}}, function_field_label:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#f9c535", params:[{type:"TextInput", value:Lang.Blocks.FUNCTION_explanation_1}, {type:"Output", accept:"param"}], paramsKeyMap:{NAME:0, NEXT:1}, def:{params:["\uc774\ub984"], type:"function_field_label"}}, function_field_string:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#ffd974", params:[{type:"Block", accept:"string", restore:!0}, {type:"Output", accept:"param"}], paramsKeyMap:{PARAM:0, NEXT:1}, 
+def:{params:[{type:"text", params:["\ubb38\uc790/\uc22b\uc790\uac12"]}], type:"function_field_string"}}, function_field_boolean:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#aeb8ff", params:[{type:"Block", accept:"boolean", restore:!0}, {type:"Output", accept:"param"}], paramsKeyMap:{PARAM:0, NEXT:1}, def:{params:[{type:"True", params:["\ud310\ub2e8\uac12"]}], type:"function_field_boolean"}}, function_param_string:{skeleton:"basic_string_field", color:"#ffd974", template:"%1 %2", events:{viewAdd:[function() {
   Entry.Func.refreshMenuCode();
 }]}, func:function() {
   return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
@@ -15779,7 +15785,7 @@ template:"%1 %2", events:{viewAdd:[function() {
   Entry.Func.refreshMenuCode();
 }]}, func:function() {
   return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
-}}, function_create:{skeleton:"basic", color:"#cc7337", event:"funcDef", params:[{type:"Block", accept:"paramMagnet", value:{type:"function_field_label", params:[Lang.Blocks.FUNC]}}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/function_03.png", size:12}], paramsKeyMap:{FIELD:0}, func:function() {
+}}, function_create:{skeleton:"basic", color:"#cc7337", event:"funcDef", params:[{type:"Block", accept:"param", value:{type:"function_field_label", params:[Lang.Blocks.FUNC]}}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/function_03.png", size:12}], paramsKeyMap:{FIELD:0}, func:function() {
 }}, function_general:{skeleton:"basic", color:"#cc7337", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/function_03.png", size:12}], events:{dataAdd:[function(b) {
   var a = Entry.variableContainer;
   a && a.addRef("_functionRefs", b);
@@ -15912,7 +15918,7 @@ template:"%1 %2", events:{viewAdd:[function() {
   "LEFT" == a.getField("DIRECTION", a) ? (a.isLeft = !0, c.leftWheel = -45, c.rightWheel = 45) : (a.isLeft = !1, c.leftWheel = 45, c.rightWheel = -45);
   Entry.Hamster.setLineTracerMode(c, 0);
   return a;
-}}, hamster_move_forward_for_secs:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["1"]}, null], type:"hamster_move_forward_for_secs"}, paramsKeyMap:{VALUE:0}, "class":"hamster_wheel", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_move_forward_for_secs:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["1"]}, null], type:"hamster_move_forward_for_secs"}, paramsKeyMap:{VALUE:0}, "class":"hamster_wheel", isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue;
   if (a.isStart) {
     if (1 == a.timeFlag) {
@@ -15936,7 +15942,7 @@ template:"%1 %2", events:{viewAdd:[function() {
   }, c);
   Entry.Hamster.timeouts.push(d);
   return a;
-}}, hamster_move_backward_for_secs:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["1"]}, null], type:"hamster_move_backward_for_secs"}, paramsKeyMap:{VALUE:0}, "class":"hamster_wheel", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_move_backward_for_secs:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["1"]}, null], type:"hamster_move_backward_for_secs"}, paramsKeyMap:{VALUE:0}, "class":"hamster_wheel", isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue;
   if (a.isStart) {
     if (1 == a.timeFlag) {
@@ -15960,8 +15966,8 @@ template:"%1 %2", events:{viewAdd:[function() {
   }, c);
   Entry.Hamster.timeouts.push(d);
   return a;
-}}, hamster_turn_for_secs:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["1"]}, null], type:"hamster_turn_for_secs"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"hamster_wheel", isNotFor:["hamster"], 
-func:function(b, a) {
+}}, hamster_turn_for_secs:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["1"]}, null], type:"hamster_turn_for_secs"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"hamster_wheel", isNotFor:["hamster"], func:function(b, 
+a) {
   var c = Entry.hw.sendQueue;
   if (a.isStart) {
     if (1 == a.timeFlag) {
@@ -15984,25 +15990,25 @@ func:function(b, a) {
   }, c);
   Entry.Hamster.timeouts.push(d);
   return a;
-}}, hamster_change_both_wheels_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["10"]}, {type:"text", params:["10"]}, null], type:"hamster_change_both_wheels_by"}, paramsKeyMap:{LEFT:0, RIGHT:1}, "class":"hamster_wheel", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_change_both_wheels_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["10"]}, {type:"text", params:["10"]}, null], type:"hamster_change_both_wheels_by"}, paramsKeyMap:{LEFT:0, RIGHT:1}, "class":"hamster_wheel", isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getNumberValue("LEFT"), e = a.getNumberValue("RIGHT");
   c.leftWheel = void 0 != c.leftWheel ? c.leftWheel + d : d;
   c.rightWheel = void 0 != c.rightWheel ? c.rightWheel + e : e;
   Entry.Hamster.setLineTracerMode(c, 0);
   return a.callReturn();
-}}, hamster_set_both_wheels_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["30"]}, {type:"text", params:["30"]}, null], type:"hamster_set_both_wheels_to"}, paramsKeyMap:{LEFT:0, RIGHT:1}, "class":"hamster_wheel", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_set_both_wheels_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["30"]}, {type:"text", params:["30"]}, null], type:"hamster_set_both_wheels_to"}, paramsKeyMap:{LEFT:0, RIGHT:1}, "class":"hamster_wheel", isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue;
   c.leftWheel = a.getNumberValue("LEFT");
   c.rightWheel = a.getNumberValue("RIGHT");
   Entry.Hamster.setLineTracerMode(c, 0);
   return a.callReturn();
-}}, hamster_change_wheel_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["10"]}, null], type:"hamster_change_wheel_by"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"hamster_wheel", 
+}}, hamster_change_wheel_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["10"]}, null], type:"hamster_change_wheel_by"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"hamster_wheel", 
 isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getField("DIRECTION"), e = a.getNumberValue("VALUE");
   "LEFT" == d ? c.leftWheel = void 0 != c.leftWheel ? c.leftWheel + e : e : ("RIGHT" != d && (c.leftWheel = void 0 != c.leftWheel ? c.leftWheel + e : e), c.rightWheel = void 0 != c.rightWheel ? c.rightWheel + e : e);
   Entry.Hamster.setLineTracerMode(c, 0);
   return a.callReturn();
-}}, hamster_set_wheel_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["30"]}, null], type:"hamster_set_wheel_to"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"hamster_wheel", 
+}}, hamster_set_wheel_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["30"]}, null], type:"hamster_set_wheel_to"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"hamster_wheel", 
 isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getField("DIRECTION"), e = a.getNumberValue("VALUE");
   "LEFT" == d ? c.leftWheel = e : ("RIGHT" != d && (c.leftWheel = e), c.rightWheel = e);
@@ -16070,12 +16076,12 @@ img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:
   }, 200);
   Entry.Hamster.timeouts.push(d);
   return a;
-}}, hamster_change_buzzer_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["10"]}, null], type:"hamster_change_buzzer_by"}, paramsKeyMap:{VALUE:0}, "class":"hamster_buzzer", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_change_buzzer_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["10"]}, null], type:"hamster_change_buzzer_by"}, paramsKeyMap:{VALUE:0}, "class":"hamster_buzzer", isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getNumberValue("VALUE");
   c.buzzer = void 0 != c.buzzer ? c.buzzer + d : d;
   c.note = 0;
   return a.callReturn();
-}}, hamster_set_buzzer_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["1000"]}, null], type:"hamster_set_buzzer_to"}, paramsKeyMap:{VALUE:0}, "class":"hamster_buzzer", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_set_buzzer_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["1000"]}, null], type:"hamster_set_buzzer_to"}, paramsKeyMap:{VALUE:0}, "class":"hamster_buzzer", isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue;
   c.buzzer = a.getNumberValue("VALUE");
   c.note = 0;
@@ -16086,7 +16092,7 @@ img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:
   c.note = 0;
   return a.callReturn();
 }}, hamster_play_note_for:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.note_c + "", "4"], [Lang.General.note_c + "#", "5"], [Lang.General.note_d + "", "6"], [Lang.General.note_e + "b", "7"], [Lang.General.note_e + "", "8"], [Lang.General.note_f + "", "9"], [Lang.General.note_f + "#", "10"], [Lang.General.note_g + "", "11"], [Lang.General.note_g + "#", "12"], [Lang.General.note_a + "", "13"], [Lang.General.note_b + "b", "14"], [Lang.General.note_b + 
-"", "15"]], value:"4", fontSize:11}, {type:"Dropdown", options:[["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"]], value:"1", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, "4", {type:"text", params:["0.5"]}, null], type:"hamster_play_note_for"}, paramsKeyMap:{NOTE:0, OCTAVE:1, VALUE:2}, "class":"hamster_buzzer", isNotFor:["hamster"], func:function(b, 
+"", "15"]], value:"4", fontSize:11}, {type:"Dropdown", options:[["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"]], value:"1", fontSize:11}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, "4", {type:"text", params:["0.5"]}, null], type:"hamster_play_note_for"}, paramsKeyMap:{NOTE:0, OCTAVE:1, VALUE:2}, "class":"hamster_buzzer", isNotFor:["hamster"], func:function(b, 
 a) {
   var c = Entry.hw.sendQueue;
   if (a.isStart) {
@@ -16117,7 +16123,7 @@ a) {
   }, f);
   Entry.Hamster.timeouts.push(k);
   return a;
-}}, hamster_rest_for:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["0.25"]}, null], type:"hamster_rest_for"}, paramsKeyMap:{VALUE:0}, "class":"hamster_buzzer", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_rest_for:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["0.25"]}, null], type:"hamster_rest_for"}, paramsKeyMap:{VALUE:0}, "class":"hamster_buzzer", isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue;
   if (a.isStart) {
     if (1 == a.timeFlag) {
@@ -16139,11 +16145,11 @@ a) {
   }, d);
   Entry.Hamster.timeouts.push(e);
   return a;
-}}, hamster_change_tempo_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["20"]}, null], type:"hamster_change_tempo_by"}, paramsKeyMap:{VALUE:0}, "class":"hamster_buzzer", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_change_tempo_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["20"]}, null], type:"hamster_change_tempo_by"}, paramsKeyMap:{VALUE:0}, "class":"hamster_buzzer", isNotFor:["hamster"], func:function(b, a) {
   Entry.Hamster.tempo += a.getNumberValue("VALUE");
   1 > Entry.Hamster.tempo && (Entry.Hamster.tempo = 1);
   return a.callReturn();
-}}, hamster_set_tempo_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["60"]}, null], type:"hamster_set_tempo_to"}, paramsKeyMap:{VALUE:0}, "class":"hamster_buzzer", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_set_tempo_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["60"]}, null], type:"hamster_set_tempo_to"}, paramsKeyMap:{VALUE:0}, "class":"hamster_buzzer", isNotFor:["hamster"], func:function(b, a) {
   Entry.Hamster.tempo = a.getNumberValue("VALUE");
   1 > Entry.Hamster.tempo && (Entry.Hamster.tempo = 1);
   return a.callReturn();
@@ -16152,12 +16158,12 @@ a) {
   var c = Entry.hw.sendQueue, d = a.getField("PORT", a), e = Number(a.getField("MODE", a));
   "A" == d ? c.ioModeA = e : ("B" != d && (c.ioModeA = e), c.ioModeB = e);
   return a.callReturn();
-}}, hamster_change_output_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.HAMSTER_port_a, "A"], [Lang.Blocks.HAMSTER_port_b, "B"], [Lang.Blocks.HAMSTER_port_ab, "AB"]], value:"A", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["10"]}, null], type:"hamster_change_output_by"}, paramsKeyMap:{PORT:0, VALUE:1}, 
-"class":"hamster_port", isNotFor:["hamster"], func:function(b, a) {
+}}, hamster_change_output_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.HAMSTER_port_a, "A"], [Lang.Blocks.HAMSTER_port_b, "B"], [Lang.Blocks.HAMSTER_port_ab, "AB"]], value:"A", fontSize:11}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["10"]}, null], type:"hamster_change_output_by"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"hamster_port", 
+isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getField("PORT"), e = a.getNumberValue("VALUE");
   "A" == d ? c.outputA = void 0 != c.outputA ? c.outputA + e : e : ("B" != d && (c.outputA = void 0 != c.outputA ? c.outputA + e : e), c.outputB = void 0 != c.outputB ? c.outputB + e : e);
   return a.callReturn();
-}}, hamster_set_output_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.HAMSTER_port_a, "A"], [Lang.Blocks.HAMSTER_port_b, "B"], [Lang.Blocks.HAMSTER_port_ab, "AB"]], value:"A", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["100"]}, null], type:"hamster_set_output_to"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"hamster_port", 
+}}, hamster_set_output_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.HAMSTER_port_a, "A"], [Lang.Blocks.HAMSTER_port_b, "B"], [Lang.Blocks.HAMSTER_port_ab, "AB"]], value:"A", fontSize:11}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["100"]}, null], type:"hamster_set_output_to"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"hamster_port", 
 isNotFor:["hamster"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getField("PORT"), e = a.getNumberValue("VALUE");
   "A" == d ? c.outputA = e : ("B" != d && (c.outputA = e), c.outputB = e);
@@ -16231,28 +16237,28 @@ isNotFor:["hamster"], func:function(b, a) {
     }
   }
   return !1;
-}}, boolean_comparison:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["=", "EQUAL"], ["<", "SMALLER"], [">", "BIGGER"]], value:"EQUAL", fontSize:11}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[null], type:"boolean_comparison"}, paramsKeyMap:{LEFTHAND:0, OPERATOR:1, RIGHTHAND:2}, func:function(b, a) {
+}}, boolean_comparison:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"string"}, {type:"Dropdown", options:[["=", "EQUAL"], ["<", "SMALLER"], [">", "BIGGER"]], value:"EQUAL", fontSize:11}, {type:"Block", accept:"string"}], events:{}, def:{params:[null], type:"boolean_comparison"}, paramsKeyMap:{LEFTHAND:0, OPERATOR:1, RIGHTHAND:2}, func:function(b, a) {
   var c = a.getField("OPERATOR", a), d = a.getNumberValue("LEFTHAND", a), e = a.getNumberValue("RIGHTHAND", a);
   return "EQUAL" == c ? d == e : "BIGGER" == c ? d > e : d < e;
-}}, boolean_equal:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"=", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"number", params:["10"]}, null, {type:"number", params:["10"]}], type:"boolean_equal"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"boolean_compare", isNotFor:[], func:function(b, a) {
+}}, boolean_equal:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"string"}, {type:"Text", text:"=", color:"#3D3D3D"}, {type:"Block", accept:"string"}], events:{}, def:{params:[{type:"number", params:["10"]}, null, {type:"number", params:["10"]}], type:"boolean_equal"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"boolean_compare", isNotFor:[], func:function(b, a) {
   var c = a.getStringValue("LEFTHAND", a), d = a.getStringValue("RIGHTHAND", a);
   return c == d;
-}}, boolean_bigger:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:">", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"number", params:["10"]}, null, {type:"number", params:["10"]}], type:"boolean_bigger"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"boolean_compare", isNotFor:[], func:function(b, a) {
+}}, boolean_bigger:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"string"}, {type:"Text", text:">", color:"#3D3D3D"}, {type:"Block", accept:"string"}], events:{}, def:{params:[{type:"number", params:["10"]}, null, {type:"number", params:["10"]}], type:"boolean_bigger"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"boolean_compare", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("LEFTHAND", a), d = a.getNumberValue("RIGHTHAND", a);
   return c > d;
-}}, boolean_smaller:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"<", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"number", params:["10"]}, null, {type:"number", params:["10"]}], type:"boolean_smaller"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"boolean_compare", isNotFor:[], func:function(b, a) {
+}}, boolean_smaller:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"string"}, {type:"Text", text:"<", color:"#3D3D3D"}, {type:"Block", accept:"string"}], events:{}, def:{params:[{type:"number", params:["10"]}, null, {type:"number", params:["10"]}], type:"boolean_smaller"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"boolean_compare", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("LEFTHAND", a), d = a.getNumberValue("RIGHTHAND", a);
   return c < d;
-}}, boolean_and_or:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Dropdown", options:[[Lang.Blocks.JUDGEMENT_boolean_and, "AND"], [Lang.Blocks.JUDGEMENT_boolean_or, "OR"]], value:"AND", fontSize:11}, {type:"Block", accept:"booleanMagnet"}], events:{}, def:{params:[null]}, paramsKeyMap:{LEFTHAND:0, OPERATOR:1, RIGHTHAND:2}, func:function(b, a) {
+}}, boolean_and_or:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"boolean"}, {type:"Dropdown", options:[[Lang.Blocks.JUDGEMENT_boolean_and, "AND"], [Lang.Blocks.JUDGEMENT_boolean_or, "OR"]], value:"AND", fontSize:11}, {type:"Block", accept:"boolean"}], events:{}, def:{params:[null]}, paramsKeyMap:{LEFTHAND:0, OPERATOR:1, RIGHTHAND:2}, func:function(b, a) {
   var c = a.getField("OPERATOR", a), d = a.getBooleanValue("LEFTHAND", a), e = a.getBooleanValue("RIGHTHAND", a);
   return "AND" == c ? d && e : d || e;
-}}, boolean_and:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Text", text:Lang.Blocks.JUDGEMENT_boolean_and, color:"#3D3D3D"}, {type:"Block", accept:"booleanMagnet"}], events:{}, def:{params:[{type:"True"}, null, {type:"True"}], type:"boolean_and"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"boolean", isNotFor:[], func:function(b, a) {
+}}, boolean_and:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"boolean"}, {type:"Text", text:Lang.Blocks.JUDGEMENT_boolean_and, color:"#3D3D3D"}, {type:"Block", accept:"boolean"}], events:{}, def:{params:[{type:"True"}, null, {type:"True"}], type:"boolean_and"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"boolean", isNotFor:[], func:function(b, a) {
   var c = a.getBooleanValue("LEFTHAND", a), d = a.getBooleanValue("RIGHTHAND", a);
   return c && d;
-}}, boolean_or:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Text", text:Lang.Blocks.JUDGEMENT_boolean_or, color:"#3D3D3D"}, {type:"Block", accept:"booleanMagnet"}], events:{}, def:{params:[{type:"True"}, null, {type:"False"}], type:"boolean_or"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"boolean", isNotFor:[], func:function(b, a) {
+}}, boolean_or:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"boolean"}, {type:"Text", text:Lang.Blocks.JUDGEMENT_boolean_or, color:"#3D3D3D"}, {type:"Block", accept:"boolean"}], events:{}, def:{params:[{type:"True"}, null, {type:"False"}], type:"boolean_or"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"boolean", isNotFor:[], func:function(b, a) {
   var c = a.getBooleanValue("LEFTHAND", a), d = a.getBooleanValue("RIGHTHAND", a);
   return c || d;
-}}, boolean_not:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Text", text:Lang.Blocks.JUDGEMENT_boolean_not_1, color:"#3D3D3D"}, {type:"Block", accept:"booleanMagnet"}, {type:"Text", text:Lang.Blocks.JUDGEMENT_boolean_not_2, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"True"}, null], type:"boolean_not"}, paramsKeyMap:{VALUE:1}, "class":"boolean", isNotFor:[], func:function(b, a) {
+}}, boolean_not:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Text", text:Lang.Blocks.JUDGEMENT_boolean_not_1, color:"#3D3D3D"}, {type:"Block", accept:"boolean"}, {type:"Text", text:Lang.Blocks.JUDGEMENT_boolean_not_2, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"True"}, null], type:"boolean_not"}, paramsKeyMap:{VALUE:1}, "class":"boolean", isNotFor:[], func:function(b, a) {
   return !a.getBooleanValue("VALUE");
 }}, true_or_false:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.JUDGEMENT_true, "true"], [Lang.Blocks.JUDGEMENT_false, "false"]], value:"true", fontSize:11}], events:{}, def:{params:[null]}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
   return "true" == a.children[0].textContent;
@@ -16260,7 +16266,7 @@ isNotFor:["hamster"], func:function(b, a) {
   return !0;
 }, isPrimitive:!0}, False:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Text", text:Lang.Blocks.JUDGEMENT_false, color:"#3D3D3D"}], events:{}, def:{params:[null], type:"False"}, func:function(b, a) {
   return !1;
-}, isPrimitive:!0}, boolean_basic_operator:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["=", "EQUAL"], [">", "GREATER"], ["<", "LESS"], ["\u2265", "GREATER_OR_EQUAL"], ["\u2264", "LESS_OR_EQUAL"]], value:"EQUAL", fontSize:11, noArrow:!0}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"text", params:["10"]}, "EQUAL", {type:"text", params:["10"]}], type:"boolean_basic_operator"}, defs:[{params:[{type:"text", 
+}, isPrimitive:!0}, boolean_basic_operator:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"string"}, {type:"Dropdown", options:[["=", "EQUAL"], [">", "GREATER"], ["<", "LESS"], ["\u2265", "GREATER_OR_EQUAL"], ["\u2264", "LESS_OR_EQUAL"]], value:"EQUAL", fontSize:11, noArrow:!0}, {type:"Block", accept:"string"}], events:{}, def:{params:[{type:"text", params:["10"]}, "EQUAL", {type:"text", params:["10"]}], type:"boolean_basic_operator"}, defs:[{params:[{type:"text", 
 params:["10"]}, "EQUAL", {type:"text", params:["10"]}], type:"boolean_basic_operator"}, {params:[{type:"text", params:["10"]}, "GREATER", {type:"text", params:["10"]}], type:"boolean_basic_operator"}, {params:[{type:"text", params:["10"]}, "LESS", {type:"text", params:["10"]}], type:"boolean_basic_operator"}, {params:[{type:"text", params:["10"]}, "GREATER_OR_EQUAL", {type:"text", params:["10"]}], type:"boolean_basic_operator"}, {params:[{type:"text", params:["10"]}, "LESS_OR_EQUAL", {type:"text", 
 params:["10"]}], type:"boolean_basic_operator"}], paramsKeyMap:{LEFTHAND:0, OPERATOR:1, RIGHTHAND:2}, "class":"boolean_compare", isNotFor:[], func:function(b, a) {
   var c = a.getField("OPERATOR", a), d = a.getStringValue("LEFTHAND", a), e = a.getStringValue("RIGHTHAND", a);
@@ -16282,7 +16288,7 @@ params:["10"]}], type:"boolean_basic_operator"}], paramsKeyMap:{LEFTHAND:0, OPER
 }}, hide:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null], type:"hide"}, "class":"visibility", isNotFor:[], func:function(b, a) {
   b.setVisible(!1);
   return a.callReturn();
-}}, dialog_time:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[[Lang.Blocks.speak, "speak"]], value:"speak", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"text", params:[Lang.Blocks.block_hi]}, {type:"number", params:["4"]}, null, null], type:"dialog_time"}, paramsKeyMap:{VALUE:0, SECOND:1, OPTION:2}, "class":"say", 
+}}, dialog_time:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Block", accept:"string"}, {type:"Dropdown", options:[[Lang.Blocks.speak, "speak"]], value:"speak", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"text", params:[Lang.Blocks.block_hi]}, {type:"number", params:["4"]}, null, null], type:"dialog_time"}, paramsKeyMap:{VALUE:0, SECOND:1, OPTION:2}, "class":"say", 
 isNotFor:["textBox"], func:function(b, a) {
   if (!a.isStart) {
     var c = a.getNumberValue("SECOND", a), d = a.getStringValue("VALUE", a), e = a.getField("OPTION", a);
@@ -16297,7 +16303,7 @@ isNotFor:["textBox"], func:function(b, a) {
     }, 1E3 * c);
   }
   return 0 == a.timeFlag ? (delete a.timeFlag, delete a.isStart, b.dialog && b.dialog.remove(), a.callReturn()) : a;
-}}, dialog:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[[Lang.Blocks.speak, "speak"]], value:"speak", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"text", params:[Lang.Blocks.block_hi]}, null, null], type:"dialog"}, paramsKeyMap:{VALUE:0, OPTION:1}, "class":"say", isNotFor:["textBox"], func:function(b, a) {
+}}, dialog:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Dropdown", options:[[Lang.Blocks.speak, "speak"]], value:"speak", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"text", params:[Lang.Blocks.block_hi]}, null, null], type:"dialog"}, paramsKeyMap:{VALUE:0, OPTION:1}, "class":"say", isNotFor:["textBox"], func:function(b, a) {
   var c = a.getStringValue("VALUE", a);
   c || "number" == typeof c || (c = "    ");
   var d = a.getField("OPTION", a), c = Entry.convertToRoundedDecimals(c, 3);
@@ -16316,13 +16322,13 @@ isNotFor:["textBox"], func:function(b, a) {
   c = a.fields && "prev" === a.getStringField("DRIECTION") ? b.parent.getPrevPicture(b.picture.id) : b.parent.getNextPicture(b.picture.id);
   b.setImage(c);
   return a.callReturn();
-}}, set_effect_volume:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.opacity, "opacity"]], value:"color", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["10"]}, null], type:"set_effect_volume"}, paramsKeyMap:{EFFECT:0, VALUE:1}, "class":"effect", 
+}}, set_effect_volume:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.opacity, "opacity"]], value:"color", fontSize:11}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["10"]}, null], type:"set_effect_volume"}, paramsKeyMap:{EFFECT:0, VALUE:1}, "class":"effect", 
 isNotFor:["textBox"], func:function(b, a) {
   var c = a.getField("EFFECT", a), d = a.getNumberValue("VALUE", a);
   "color" == c ? b.effect.hue = d + b.effect.hue : "lens" != c && "swriling" != c && "pixel" != c && "mosaic" != c && ("brightness" == c ? b.effect.brightness = d + b.effect.brightness : "blur" != c && "opacity" == c && (b.effect.alpha += d / 100));
   b.applyFilter();
   return a.callReturn();
-}}, set_effect:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.opacity, "opacity"]], value:"color", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["100"]}, null], type:"set_effect"}, paramsKeyMap:{EFFECT:0, VALUE:1}, "class":"effect", isNotFor:["textBox"], 
+}}, set_effect:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.opacity, "opacity"]], value:"color", fontSize:11}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["100"]}, null], type:"set_effect"}, paramsKeyMap:{EFFECT:0, VALUE:1}, "class":"effect", isNotFor:["textBox"], 
 func:function(b, a) {
   var c = a.getField("EFFECT", a), d = a.getNumberValue("VALUE", a);
   "color" == c ? b.effect.hue = d : "lens" != c && "swriling" != c && "pixel" != c && "mosaic" != c && ("brightness" == c ? b.effect.brightness = d : "blur" != c && "opacity" == c && (b.effect.alpha = d / 100));
@@ -16331,21 +16337,21 @@ func:function(b, a) {
 }}, erase_all_effects:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null], type:"erase_all_effects"}, "class":"effect", isNotFor:["textBox"], func:function(b, a) {
   b.resetFilter();
   return a.callReturn();
-}}, change_scale_percent:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"change_scale_percent"}, paramsKeyMap:{VALUE:0}, "class":"scale", isNotFor:[], func:function(b, a) {
+}}, change_scale_percent:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"change_scale_percent"}, paramsKeyMap:{VALUE:0}, "class":"scale", isNotFor:[], func:function(b, a) {
   var c = (a.getNumberValue("VALUE", a) + 100) / 100;
   b.setScaleX(b.getScaleX() * c);
   b.setScaleY(b.getScaleY() * c);
   return a.callReturn();
-}}, set_scale_percent:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["100"]}, null], type:"set_scale_percent"}, paramsKeyMap:{VALUE:0}, "class":"scale", isNotFor:[], func:function(b, a) {
+}}, set_scale_percent:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["100"]}, null], type:"set_scale_percent"}, paramsKeyMap:{VALUE:0}, "class":"scale", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a) / 100, d = b.snapshot_;
   b.setScaleX(c * d.scaleX);
   b.setScaleY(c * d.scaleY);
   return a.callReturn();
-}}, change_scale_size:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"change_scale_size"}, paramsKeyMap:{VALUE:0}, "class":"scale", isNotFor:[], func:function(b, a) {
+}}, change_scale_size:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"change_scale_size"}, paramsKeyMap:{VALUE:0}, "class":"scale", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setSize(b.getSize() + c);
   return a.callReturn();
-}}, set_scale_size:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["100"]}, null], type:"set_scale_size"}, paramsKeyMap:{VALUE:0}, "class":"scale", isNotFor:[], func:function(b, a) {
+}}, set_scale_size:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["100"]}, null], type:"set_scale_size"}, paramsKeyMap:{VALUE:0}, "class":"scale", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setSize(c);
   return a.callReturn();
@@ -16363,32 +16369,32 @@ func:function(b, a) {
   throw Error("object is not available");
 }}, get_pictures:{color:"#EC4466", skeleton:"basic_string_field", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"pictures", fontSize:11}], events:{}, def:{params:[null]}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
   return a.getStringField("VALUE");
-}}, change_to_some_shape:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"get_pictures", id:"z4jm"}, null], type:"change_to_some_shape"}, paramsKeyMap:{VALUE:0}, "class":"shape", isNotFor:["textBox"], func:function(b, a) {
+}}, change_to_some_shape:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"get_pictures", id:"z4jm"}, null], type:"change_to_some_shape"}, paramsKeyMap:{VALUE:0}, "class":"shape", isNotFor:["textBox"], func:function(b, a) {
   var c = a.getStringValue("VALUE");
   Entry.parseNumber(c);
   c = b.parent.getPicture(c);
   b.setImage(c);
   return a.callReturn();
-}}, add_effect_amount:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.transparency, "transparency"]], value:"color", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["10"]}, null], type:"add_effect_amount"}, paramsKeyMap:{EFFECT:0, VALUE:1}, 
-"class":"effect", isNotFor:["textBox"], func:function(b, a) {
+}}, add_effect_amount:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.transparency, "transparency"]], value:"color", fontSize:11}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["10"]}, null], type:"add_effect_amount"}, paramsKeyMap:{EFFECT:0, VALUE:1}, "class":"effect", 
+isNotFor:["textBox"], func:function(b, a) {
   var c = a.getField("EFFECT", a), d = a.getNumberValue("VALUE", a);
   "color" == c ? b.effect.hsv = d + b.effect.hsv : "brightness" == c ? b.effect.brightness = d + b.effect.brightness : "transparency" == c && (b.effect.alpha -= d / 100);
   b.applyFilter();
   return a.callReturn();
-}}, change_effect_amount:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.transparency, "transparency"]], value:"color", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["100"]}, null], type:"change_effect_amount"}, paramsKeyMap:{EFFECT:0, VALUE:1}, 
+}}, change_effect_amount:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.transparency, "transparency"]], value:"color", fontSize:11}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["100"]}, null], type:"change_effect_amount"}, paramsKeyMap:{EFFECT:0, VALUE:1}, 
 "class":"effect", isNotFor:["textBox"], func:function(b, a) {
   var c = a.getField("EFFECT", a), d = a.getNumberValue("VALUE", a);
   "color" == c ? b.effect.hsv = d : "brightness" == c ? b.effect.brightness = d : "transparency" == c && (b.effect.alpha = 1 - d / 100);
   b.applyFilter();
   return a.callReturn();
-}}, set_effect_amount:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.transparency, "transparency"]], value:"color", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["10"]}, null], type:"set_effect_amount"}, paramsKeyMap:{EFFECT:0, VALUE:1}, 
-"class":"effect", isNotFor:["textBox"], func:function(b, a) {
+}}, set_effect_amount:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.transparency, "transparency"]], value:"color", fontSize:11}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["10"]}, null], type:"set_effect_amount"}, paramsKeyMap:{EFFECT:0, VALUE:1}, "class":"effect", 
+isNotFor:["textBox"], func:function(b, a) {
   var c = a.getField("EFFECT", a), d = a.getNumberValue("VALUE", a);
   "color" == c ? b.effect.hue = d + b.effect.hue : "brightness" == c ? b.effect.brightness = d + b.effect.brightness : "transparency" == c && (b.effect.alpha -= d / 100);
   b.applyFilter();
   return a.callReturn();
-}}, set_entity_effect:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.transparency, "transparency"]], value:"color", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["100"]}, null], type:"set_entity_effect"}, paramsKeyMap:{EFFECT:0, VALUE:1}, 
-"class":"effect", isNotFor:["textBox"], func:function(b, a) {
+}}, set_entity_effect:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.transparency, "transparency"]], value:"color", fontSize:11}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["100"]}, null], type:"set_entity_effect"}, paramsKeyMap:{EFFECT:0, VALUE:1}, "class":"effect", 
+isNotFor:["textBox"], func:function(b, a) {
   var c = a.getField("EFFECT", a), d = a.getNumberValue("VALUE", a);
   "color" == c ? b.effect.hue = d : "brightness" == c ? b.effect.brightness = d : "transparency" == c && (b.effect.alpha = 1 - d / 100);
   b.applyFilter();
@@ -16414,24 +16420,24 @@ paramsKeyMap:{LOCATION:0}, "class":"z-index", isNotFor:[], func:function(b, a) {
   }
   Entry.container.moveElementByBlock(f, c);
   return a.callReturn();
-}}, move_direction:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"move_direction"}, paramsKeyMap:{VALUE:0}, "class":"walk", isNotFor:[], func:function(b, a) {
+}}, move_direction:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"move_direction"}, paramsKeyMap:{VALUE:0}, "class":"walk", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setX(b.getX() + c * Math.cos((b.getRotation() + b.getDirection() - 90) / 180 * Math.PI));
   b.setY(b.getY() - c * Math.sin((b.getRotation() + b.getDirection() - 90) / 180 * Math.PI));
   b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY());
   return a.callReturn();
-}}, move_x:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"move_x"}, paramsKeyMap:{VALUE:0}, "class":"move_relative", isNotFor:[], func:function(b, a) {
+}}, move_x:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"move_x"}, paramsKeyMap:{VALUE:0}, "class":"move_relative", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setX(b.getX() + c);
   b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY());
   return a.callReturn();
-}}, move_y:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"move_y"}, paramsKeyMap:{VALUE:0}, "class":"move_relative", isNotFor:[], func:function(b, a) {
+}}, move_y:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"move_y"}, paramsKeyMap:{VALUE:0}, "class":"move_relative", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setY(b.getY() + c);
   b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY());
   return a.callReturn();
-}}, locate_xy_time:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["2"]}, {type:"number", params:["10"]}, {type:"number", params:["10"]}, null], type:"locate_xy_time"}, paramsKeyMap:{VALUE1:0, VALUE2:1, VALUE3:2}, "class":"move_absolute", isNotFor:[], 
-func:function(b, a) {
+}}, locate_xy_time:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Block", accept:"string"}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["2"]}, {type:"number", params:["10"]}, {type:"number", params:["10"]}, null], type:"locate_xy_time"}, paramsKeyMap:{VALUE1:0, VALUE2:1, VALUE3:2}, "class":"move_absolute", isNotFor:[], func:function(b, 
+a) {
   if (!a.isStart) {
     var c;
     c = a.getNumberValue("VALUE1", a);
@@ -16454,7 +16460,7 @@ func:function(b, a) {
   delete a.isStart;
   delete a.frameCount;
   return a.callReturn();
-}}, rotate_by_angle:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["90"]}, null], type:"rotate_by_angle"}, paramsKeyMap:{VALUE:0}, "class":"rotate", isNotFor:[], func:function(b, a) {
+}}, rotate_by_angle:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["90"]}, null], type:"rotate_by_angle"}, paramsKeyMap:{VALUE:0}, "class":"rotate", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setRotation(b.getRotation() + c);
   return a.callReturn();
@@ -16462,7 +16468,7 @@ func:function(b, a) {
   var c = a.getField("VALUE", a);
   b.setRotation(b.getRotation() + Number(c));
   return a.callReturn();
-}}, see_angle:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["90"]}, null], type:"see_angle"}, paramsKeyMap:{VALUE:0}, "class":"rotate", isNotFor:[], func:function(b, a) {
+}}, see_angle:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["90"]}, null], type:"see_angle"}, paramsKeyMap:{VALUE:0}, "class":"rotate", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setDirection(c);
   return a.callReturn();
@@ -16470,19 +16476,19 @@ func:function(b, a) {
   var c = a.getField("VALUE", a), d = Entry.container.getEntity(c), c = d.getX() - b.getX(), d = d.getY() - b.getY();
   0 <= c ? b.setRotation(Math.atan(d / c) / Math.PI * 180 + 90) : b.setRotation(Math.atan(d / c) / Math.PI * 180 + 270);
   return a.callReturn();
-}}, locate_xy:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["0"]}, {type:"number", params:["0"]}, null], type:"locate_xy"}, paramsKeyMap:{VALUE1:0, VALUE2:1}, "class":"move_absolute", isNotFor:[], func:function(b, a) {
+}}, locate_xy:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["0"]}, {type:"number", params:["0"]}, null], type:"locate_xy"}, paramsKeyMap:{VALUE1:0, VALUE2:1}, "class":"move_absolute", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE1", a);
   b.setX(c);
   c = a.getNumberValue("VALUE2", a);
   b.setY(c);
   b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY());
   return a.callReturn();
-}}, locate_x:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"locate_x"}, paramsKeyMap:{VALUE:0}, "class":"move_absolute", isNotFor:[], func:function(b, a) {
+}}, locate_x:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"locate_x"}, paramsKeyMap:{VALUE:0}, "class":"move_absolute", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setX(c);
   b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY());
   return a.callReturn();
-}}, locate_y:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"locate_y"}, paramsKeyMap:{VALUE:0}, "class":"move_absolute", isNotFor:[], func:function(b, a) {
+}}, locate_y:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"locate_y"}, paramsKeyMap:{VALUE:0}, "class":"move_absolute", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setY(c);
   b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY());
@@ -16494,8 +16500,8 @@ func:function(b, a) {
   b.setY(Number(d));
   b.brush && !b.brush.stop && b.brush.lineTo(c, -1 * d);
   return a.callReturn();
-}}, move_xy_time:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["2"]}, {type:"number", params:["10"]}, {type:"number", params:["10"]}, null], type:"move_xy_time"}, paramsKeyMap:{VALUE1:0, VALUE2:1, VALUE3:2}, "class":"move_relative", isNotFor:[], 
-func:function(b, a) {
+}}, move_xy_time:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Block", accept:"string"}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["2"]}, {type:"number", params:["10"]}, {type:"number", params:["10"]}, null], type:"move_xy_time"}, paramsKeyMap:{VALUE1:0, VALUE2:1, VALUE3:2}, "class":"move_relative", isNotFor:[], func:function(b, 
+a) {
   if (!a.isStart) {
     var c;
     c = a.getNumberValue("VALUE1", a);
@@ -16511,7 +16517,7 @@ func:function(b, a) {
   delete a.isStart;
   delete a.frameCount;
   return a.callReturn();
-}}, rotate_by_angle_time:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Angle"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["2"]}, {type:"number", params:["2"]}, null], type:"rotate_by_angle_time"}, paramsKeyMap:{VALUE:1}, "class":"rotate", isNotFor:[], func:function(b, a) {
+}}, rotate_by_angle_time:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Angle"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["2"]}, {type:"number", params:["2"]}, null], type:"rotate_by_angle_time"}, paramsKeyMap:{VALUE:1}, "class":"rotate", isNotFor:[], func:function(b, a) {
   if (!a.isStart) {
     var c;
     c = a.getNumberValue("VALUE", a);
@@ -16558,15 +16564,15 @@ func:function(b, a) {
   d = b.getDirection() + b.getRotation();
   b.setRotation(b.getRotation() + e - d);
   return a.callReturn();
-}}, see_angle_direction:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["90"]}, null], type:"see_angle_direction"}, paramsKeyMap:{VALUE:0}, "class":"rotate", isNotFor:[], func:function(b, a) {
+}}, see_angle_direction:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["90"]}, null], type:"see_angle_direction"}, paramsKeyMap:{VALUE:0}, "class":"rotate", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a), d = b.getDirection() + b.getRotation();
   b.setRotation(b.getRotation() + c - d);
   return a.callReturn();
-}}, rotate_direction:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["90"]}, null], type:"rotate_direction"}, paramsKeyMap:{VALUE:0}, "class":"rotate", isNotFor:[], func:function(b, a) {
+}}, rotate_direction:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["90"]}, null], type:"rotate_direction"}, paramsKeyMap:{VALUE:0}, "class":"rotate", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setDirection(c + b.getDirection());
   return a.callReturn();
-}}, locate_object_time:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"DropdownDynamic", value:null, menuName:"spritesWithMouse", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["2"]}, null, null], type:"locate_object_time"}, paramsKeyMap:{VALUE:0, TARGET:1}, "class":"move_absolute", isNotFor:[], func:function(b, a) {
+}}, locate_object_time:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"DropdownDynamic", value:null, menuName:"spritesWithMouse", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["2"]}, null, null], type:"locate_object_time"}, paramsKeyMap:{VALUE:0, TARGET:1}, "class":"move_absolute", isNotFor:[], func:function(b, a) {
   if (!a.isStart) {
     var c, d, e;
     d = a.getField("TARGET", a);
@@ -16585,29 +16591,29 @@ func:function(b, a) {
   delete a.isStart;
   delete a.frameCount;
   return a.callReturn();
-}}, rotate_absolute:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"angle"}, null], type:"rotate_absolute"}, paramsKeyMap:{VALUE:0}, "class":"rotate_absolute", isNotFor:[], func:function(b, a) {
+}}, rotate_absolute:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"angle"}, null], type:"rotate_absolute"}, paramsKeyMap:{VALUE:0}, "class":"rotate_absolute", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setRotation(c);
   return a.callReturn();
-}}, rotate_relative:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"angle"}, null], type:"rotate_relative"}, paramsKeyMap:{VALUE:0}, "class":"rotate", isNotFor:[], func:function(b, a) {
+}}, rotate_relative:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"angle"}, null], type:"rotate_relative"}, paramsKeyMap:{VALUE:0}, "class":"rotate", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setRotation(c + b.getRotation());
   return a.callReturn();
-}}, direction_absolute:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"angle"}, null], type:"direction_absolute"}, paramsKeyMap:{VALUE:0}, "class":"rotate_absolute", isNotFor:[], func:function(b, a) {
+}}, direction_absolute:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"angle"}, null], type:"direction_absolute"}, paramsKeyMap:{VALUE:0}, "class":"rotate_absolute", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setDirection(c);
   return a.callReturn();
-}}, direction_relative:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"angle"}, null], type:"direction_relative"}, paramsKeyMap:{VALUE:0}, "class":"rotate", isNotFor:[], func:function(b, a) {
+}}, direction_relative:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"angle"}, null], type:"direction_relative"}, paramsKeyMap:{VALUE:0}, "class":"rotate", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a);
   b.setDirection(c + b.getDirection());
   return a.callReturn();
-}}, move_to_angle:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"angle"}, {type:"number", params:["10"]}, null], type:"move_to_angle"}, paramsKeyMap:{ANGLE:0, VALUE:1}, "class":"move_rotate", isNotFor:[], func:function(b, a) {
+}}, move_to_angle:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"angle"}, {type:"number", params:["10"]}, null], type:"move_to_angle"}, paramsKeyMap:{ANGLE:0, VALUE:1}, "class":"move_rotate", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a), d = a.getNumberValue("ANGLE", a);
   b.setX(b.getX() + c * Math.cos((d - 90) / 180 * Math.PI));
   b.setY(b.getY() - c * Math.sin((d - 90) / 180 * Math.PI));
   b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY());
   return a.callReturn();
-}}, rotate_by_time:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["2"]}, {type:"angle"}, null], type:"rotate_by_time"}, paramsKeyMap:{VALUE:0, ANGLE:1}, "class":"rotate", isNotFor:[], func:function(b, a) {
+}}, rotate_by_time:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["2"]}, {type:"angle"}, null], type:"rotate_by_time"}, paramsKeyMap:{VALUE:0, ANGLE:1}, "class":"rotate", isNotFor:[], func:function(b, a) {
   if (!a.isStart) {
     var c;
     c = a.getNumberValue("VALUE", a);
@@ -16622,7 +16628,7 @@ func:function(b, a) {
   delete a.isStart;
   delete a.frameCount;
   return a.callReturn();
-}}, direction_relative_duration:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["2"]}, {type:"angle"}, null], type:"direction_relative_duration"}, paramsKeyMap:{DURATION:0, AMOUNT:1}, "class":"rotate", isNotFor:[], func:function(b, a) {
+}}, direction_relative_duration:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["2"]}, {type:"angle"}, null], type:"direction_relative_duration"}, paramsKeyMap:{DURATION:0, AMOUNT:1}, "class":"rotate", isNotFor:[], func:function(b, a) {
   if (!a.isStart) {
     var c;
     c = a.getNumberValue("DURATION", a);
@@ -16657,8 +16663,8 @@ VALUE:1}, "class":"neobot_motor", isNotFor:["neobot"], func:function(b, a) {
 }}, neobot_stop_right:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"neobot_stop_right"}, "class":"neobot_motor", isNotFor:["neobot"], func:function(b, a) {
   Entry.hw.sendQueue.RMOT = 0;
   return a.callReturn();
-}}, neobot_run_motor:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc591\ucabd", "1"], ["\uc67c\ucabd", "2"], ["\uc624\ub978\ucabd", "3"]], value:"1", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["\ub290\ub9ac\uac8c", "1"], ["\ubcf4\ud1b5", "2"], ["\ube60\ub974\uac8c", "3"]], value:"1", fontSize:11}, {type:"Dropdown", options:[["\uc804\uc9c4", "1"], ["\ud6c4\uc9c4", "2"], ["\uc88c\ud68c\uc804", "3"], ["\uc6b0\ud68c\uc804", 
-"4"]], value:"1", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["1"]}, null, null, null], type:"neobot_run_motor"}, paramsKeyMap:{TYPE:0, DURATION:1, VALUE:2, DIRECTION:3}, "class":"neobot_motor", isNotFor:["neobot"], func:function(b, a) {
+}}, neobot_run_motor:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc591\ucabd", "1"], ["\uc67c\ucabd", "2"], ["\uc624\ub978\ucabd", "3"]], value:"1", fontSize:11}, {type:"Block", accept:"string"}, {type:"Dropdown", options:[["\ub290\ub9ac\uac8c", "1"], ["\ubcf4\ud1b5", "2"], ["\ube60\ub974\uac8c", "3"]], value:"1", fontSize:11}, {type:"Dropdown", options:[["\uc804\uc9c4", "1"], ["\ud6c4\uc9c4", "2"], ["\uc88c\ud68c\uc804", "3"], ["\uc6b0\ud68c\uc804", "4"]], 
+value:"1", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["1"]}, null, null, null], type:"neobot_run_motor"}, paramsKeyMap:{TYPE:0, DURATION:1, VALUE:2, DIRECTION:3}, "class":"neobot_motor", isNotFor:["neobot"], func:function(b, a) {
   if (a.isStart) {
     if (1 == a.timeFlag) {
       var c = a.getNumberField("TYPE"), d = a.getNumberField("VALUE");
@@ -16736,7 +16742,7 @@ func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getStringField("PORT", a), e = a.getNumberField("VALUE", a);
   c[d] = e;
   return a.callReturn();
-}}, robotis_openCM70_cm_custom_value:{color:"#00979D", fontColor:"#fff", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["BYTE", "BYTE"], ["WORD", "WORD"], ["DWORD", "DWORD"]], value:"BYTE", fontSize:11}], events:{}, def:{params:[{type:"number", params:["0"]}, null], type:"robotis_openCM70_cm_custom_value"}, paramsKeyMap:{VALUE:0, SIZE:1}, "class":"robotis_openCM70_custom", isNotFor:["robotis_openCM70"], func:function(b, a) {
+}}, robotis_openCM70_cm_custom_value:{color:"#00979D", fontColor:"#fff", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"string"}, {type:"Dropdown", options:[["BYTE", "BYTE"], ["WORD", "WORD"], ["DWORD", "DWORD"]], value:"BYTE", fontSize:11}], events:{}, def:{params:[{type:"number", params:["0"]}, null], type:"robotis_openCM70_cm_custom_value"}, paramsKeyMap:{VALUE:0, SIZE:1}, "class":"robotis_openCM70_custom", isNotFor:["robotis_openCM70"], func:function(b, a) {
   var c = Entry.Robotis_openCM70.INSTRUCTION.READ, d = 0, e = 0, f = 0, d = a.getStringField("SIZE");
   "BYTE" == d ? e = 1 : "WORD" == d ? e = 2 : "DWORD" == d && (e = 4);
   f = d = a.getNumberValue("VALUE");
@@ -16773,7 +16779,7 @@ null], type:"robotis_openCM70_aux_sensor_value"}, paramsKeyMap:{PORT:0, SENSOR:1
 "(10)", "10"], [Lang.General.note_g + "#(11)", "11"], [Lang.General.note_a + "(12)", "12"], [Lang.General.note_a + "#(13)", "13"], [Lang.General.note_b + "(14)", "14"], [Lang.General.note_c + "(15)", "15"], [Lang.General.note_c + "#(16)", "16"], [Lang.General.note_d + "(17)", "17"], [Lang.General.note_d + "#(18)", "18"], [Lang.General.note_e + "(19)", "19"], [Lang.General.note_f + "(20)", "20"], [Lang.General.note_f + "#(21)", "21"], [Lang.General.note_g + "(22)", "22"], [Lang.General.note_g + "#(23)", 
 "23"], [Lang.General.note_a + "(24)", "24"], [Lang.General.note_a + "#(25)", "25"], [Lang.General.note_b + "(26)", "26"], [Lang.General.note_c + "(27)", "27"], [Lang.General.note_c + "#(28)", "28"], [Lang.General.note_d + "(29)", "29"], [Lang.General.note_d + "#(30)", "30"], [Lang.General.note_e + "(31)", "31"], [Lang.General.note_f + "(32)", "32"], [Lang.General.note_f + "#(33)", "33"], [Lang.General.note_g + "(34)", "34"], [Lang.General.note_g + "#(35)", "35"], [Lang.General.note_a + "(36)", "36"], 
 [Lang.General.note_a + "#(37)", "37"], [Lang.General.note_b + "(38)", "38"], [Lang.General.note_c + "(39)", "39"], [Lang.General.note_c + "#(40)", "40"], [Lang.General.note_d + "(41)", "41"], [Lang.General.note_d + "#(42)", "42"], [Lang.General.note_e + "(43)", "43"], [Lang.General.note_f + "(44)", "44"], [Lang.General.note_f + "#(45)", "45"], [Lang.General.note_g + "(46)", "46"], [Lang.General.note_g + "#(47)", "47"], [Lang.General.note_a + "(48)", "48"], [Lang.General.note_a + "#(49)", "49"], [Lang.General.note_b + 
-"(50)", "50"], [Lang.General.note_c + "(51)", "51"]], value:"0", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["1"]}, null], type:"robotis_openCM70_cm_buzzer_index"}, paramsKeyMap:{CM_BUZZER_INDEX:0, CM_BUZZER_TIME:1}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
+"(50)", "50"], [Lang.General.note_c + "(51)", "51"]], value:"0", fontSize:11}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["1"]}, null], type:"robotis_openCM70_cm_buzzer_index"}, paramsKeyMap:{CM_BUZZER_INDEX:0, CM_BUZZER_TIME:1}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
   var c = a.getField("CM_BUZZER_INDEX", a), d = a.getNumberValue("CM_BUZZER_TIME", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, h = 0, k = 0, l = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[1], h = parseInt(10 * d);
   50 < h && (h = 50);
   k = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[0];
@@ -16791,11 +16797,11 @@ size:12}], events:{}, def:{params:[null, null, null], type:"robotis_openCM70_cm_
   var c = a.getField("CM_LED", a), d = a.getField("VALUE", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0;
   "CM_LED_R" == c ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_R[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_R[1]) : "CM_LED_G" == c ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_G[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_G[1]) : "CM_LED_B" == c && (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_B[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_B[1]);
   return Entry.Robotis_carCont.postCallReturn(a, [[e, f, g, d]], Entry.Robotis_openCM70.delay);
-}}, robotis_openCM70_cm_motion:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["1"]}, null], type:"robotis_openCM70_cm_motion"}, paramsKeyMap:{VALUE:0}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
+}}, robotis_openCM70_cm_motion:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["1"]}, null], type:"robotis_openCM70_cm_motion"}, paramsKeyMap:{VALUE:0}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
   var c = Entry.Robotis_openCM70.INSTRUCTION.WRITE, d = 0, e = 0, f = 0, d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_MOTION[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_MOTION[1], f = a.getNumberValue("VALUE", a);
   return Entry.Robotis_carCont.postCallReturn(a, [[c, d, e, f]], Entry.Robotis_openCM70.delay);
-}}, robotis_openCM70_aux_motor_speed:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.robotis_common_port_1, "1"], [Lang.Blocks.robotis_common_port_2, "2"]], value:"1", fontSize:11}, {type:"Dropdown", options:[[Lang.Blocks.robotis_common_clockwhise, "CW"], [Lang.Blocks.robotis_common_counter_clockwhise, "CCW"]], value:"CW", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", 
-size:12}], events:{}, def:{params:[null, null, {type:"number", params:["500"]}, null], type:"robotis_openCM70_aux_motor_speed"}, paramsKeyMap:{PORT:0, DIRECTION_ANGLE:1, VALUE:2}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
+}}, robotis_openCM70_aux_motor_speed:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.robotis_common_port_1, "1"], [Lang.Blocks.robotis_common_port_2, "2"]], value:"1", fontSize:11}, {type:"Dropdown", options:[[Lang.Blocks.robotis_common_clockwhise, "CW"], [Lang.Blocks.robotis_common_counter_clockwhise, "CCW"]], value:"CW", fontSize:11}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], 
+events:{}, def:{params:[null, null, {type:"number", params:["500"]}, null], type:"robotis_openCM70_aux_motor_speed"}, paramsKeyMap:{PORT:0, DIRECTION_ANGLE:1, VALUE:2}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
   var c = a.getField("PORT", a), d = a.getField("DIRECTION_ANGLE", a), e = a.getNumberValue("VALUE"), f = Entry.Robotis_openCM70.INSTRUCTION.WRITE, g = 0, h = 0, g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTOR_SPEED[0], h = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTOR_SPEED[1];
   "CW" == d ? (e += 1024, 2047 < e && (e = 2047)) : 1023 < e && (e = 1023);
   return Entry.Robotis_carCont.postCallReturn(a, [[f, g + (c - 1) * h, h, e]], Entry.Robotis_openCM70.delay);
@@ -16803,13 +16809,13 @@ size:12}], events:{}, def:{params:[null, null, {type:"number", params:["500"]}, 
 size:12}], events:{}, def:{params:[null, null, null], type:"robotis_openCM70_aux_servo_mode"}, paramsKeyMap:{PORT:0, MODE:1}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
   var c = a.getField("PORT", a), d = a.getField("MODE", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_MODE[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_MODE[1];
   return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
-}}, robotis_openCM70_aux_servo_speed:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.robotis_common_port_3, "3"], [Lang.Blocks.robotis_common_port_4, "4"], [Lang.Blocks.robotis_common_port_5, "5"], [Lang.Blocks.robotis_common_port_6, "6"]], value:"3", fontSize:11}, {type:"Dropdown", options:[[Lang.Blocks.robotis_common_clockwhise, "CW"], [Lang.Blocks.robotis_common_counter_clockwhise, "CCW"]], value:"CW", fontSize:11}, {type:"Block", accept:"stringMagnet"}, 
+}}, robotis_openCM70_aux_servo_speed:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.robotis_common_port_3, "3"], [Lang.Blocks.robotis_common_port_4, "4"], [Lang.Blocks.robotis_common_port_5, "5"], [Lang.Blocks.robotis_common_port_6, "6"]], value:"3", fontSize:11}, {type:"Dropdown", options:[[Lang.Blocks.robotis_common_clockwhise, "CW"], [Lang.Blocks.robotis_common_counter_clockwhise, "CCW"]], value:"CW", fontSize:11}, {type:"Block", accept:"string"}, 
 {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, {type:"number", params:["500"]}, null], type:"robotis_openCM70_aux_servo_speed"}, paramsKeyMap:{PORT:0, DIRECTION_ANGLE:1, VALUE:2}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
   var c = a.getField("PORT", a), d = a.getField("DIRECTION_ANGLE", a), e = a.getNumberValue("VALUE"), f = Entry.Robotis_openCM70.INSTRUCTION.WRITE, g = 0, h = 0, g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_SPEED[0], h = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_SPEED[1];
   "CW" == d ? (e += 1024, 2047 < e && (e = 2047)) : 1023 < e && (e = 1023);
   return Entry.Robotis_carCont.postCallReturn(a, [[f, g + (c - 1) * h, h, e]], Entry.Robotis_openCM70.delay);
-}}, robotis_openCM70_aux_servo_position:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.robotis_common_port_3, "3"], [Lang.Blocks.robotis_common_port_4, "4"], [Lang.Blocks.robotis_common_port_5, "5"], [Lang.Blocks.robotis_common_port_6, "6"]], value:"3", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["512"]}, 
-null], type:"robotis_openCM70_aux_servo_position"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
+}}, robotis_openCM70_aux_servo_position:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.robotis_common_port_3, "3"], [Lang.Blocks.robotis_common_port_4, "4"], [Lang.Blocks.robotis_common_port_5, "5"], [Lang.Blocks.robotis_common_port_6, "6"]], value:"3", fontSize:11}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["512"]}, null], 
+type:"robotis_openCM70_aux_servo_position"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
   var c = a.getField("PORT", a), d = a.getNumberValue("VALUE"), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1];
   1023 < d ? d = 1023 : 0 > d && (d = 0);
   return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
@@ -16817,11 +16823,11 @@ null], type:"robotis_openCM70_aux_servo_position"}, paramsKeyMap:{PORT:0, VALUE:
 Lang.Blocks.robotis_common_on, "2"], [Lang.Blocks.robotis_cm_led_both + Lang.Blocks.robotis_common_on, "3"]], value:"0", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"robotis_openCM70_aux_led_module"}, paramsKeyMap:{PORT:0, LED_MODULE:1}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
   var c = a.getField("PORT", a), d = a.getField("LED_MODULE", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_LED_MODULE[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_LED_MODULE[1];
   return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
-}}, robotis_openCM70_aux_custom:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.robotis_common_port_3, "3"], [Lang.Blocks.robotis_common_port_4, "4"], [Lang.Blocks.robotis_common_port_5, "5"], [Lang.Blocks.robotis_common_port_6, "6"]], value:"3", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["0"]}, null], 
-type:"robotis_openCM70_aux_custom"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
+}}, robotis_openCM70_aux_custom:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.robotis_common_port_3, "3"], [Lang.Blocks.robotis_common_port_4, "4"], [Lang.Blocks.robotis_common_port_5, "5"], [Lang.Blocks.robotis_common_port_6, "6"]], value:"3", fontSize:11}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["0"]}, null], type:"robotis_openCM70_aux_custom"}, 
+paramsKeyMap:{PORT:0, VALUE:1}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
   var c = a.getField("PORT", a), d = a.getNumberValue("VALUE"), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1];
   return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
-}}, robotis_openCM70_cm_custom:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["0"]}, {type:"number", params:["0"]}, null], type:"robotis_openCM70_cm_custom"}, paramsKeyMap:{ADDRESS:0, VALUE:1}, "class":"robotis_openCM70_custom", isNotFor:["robotis_openCM70"], func:function(b, a) {
+}}, robotis_openCM70_cm_custom:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["0"]}, {type:"number", params:["0"]}, null], type:"robotis_openCM70_cm_custom"}, paramsKeyMap:{ADDRESS:0, VALUE:1}, "class":"robotis_openCM70_custom", isNotFor:["robotis_openCM70"], func:function(b, a) {
   var c = Entry.Robotis_openCM70.INSTRUCTION.WRITE, d = 0, e = 0, d = a.getNumberValue("ADDRESS"), e = a.getNumberValue("VALUE");
   return Entry.Robotis_carCont.postCallReturn(a, [[c, d, 65535 < e ? 4 : 255 < e ? 2 : 1, e]], Entry.Robotis_openCM70.delay);
 }}, robotis_carCont_sensor_value:{color:"#00979D", fontColor:"#fff", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.robotis_cm_spring_left, "CM_SPRING_LEFT"], [Lang.Blocks.robotis_cm_spring_right, "CM_SPRING_RIGHT"], [Lang.Blocks.robotis_cm_switch, "CM_SWITCH"], [Lang.Blocks.robotis_cm_sound_detected, "CM_SOUND_DETECTED"], [Lang.Blocks.robotis_cm_sound_detecting, "CM_SOUND_DETECTING"], [Lang.Blocks.robotis_cm_ir_left, "CM_IR_LEFT"], [Lang.Blocks.robotis_cm_ir_right, 
@@ -16845,13 +16851,13 @@ paramsKeyMap:{VALUE_LEFT:0, VALUE_RIGHT:1}, "class":"robotis_carCont_cm", isNotF
 }}, robotis_carCont_cm_sound_detected_clear:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"robotis_carCont_cm_sound_detected_clear"}, "class":"robotis_carCont_cm", isNotFor:["robotis_carCont"], func:function(b, a) {
   var c = Entry.Robotis_carCont.INSTRUCTION.WRITE, d = 0, e = 0, d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1];
   return Entry.Robotis_carCont.postCallReturn(a, [[c, d, e, 0]], Entry.Robotis_carCont.delay);
-}}, robotis_carCont_aux_motor_speed:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"]], value:"LEFT", fontSize:11}, {type:"Dropdown", options:[[Lang.Blocks.robotis_common_clockwhise, "CW"], [Lang.Blocks.robotis_common_counter_clockwhise, "CCW"]], value:"CW", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, 
-def:{params:[null, null, {type:"number", params:["500"]}, null], type:"robotis_carCont_aux_motor_speed"}, paramsKeyMap:{DIRECTION:0, DIRECTION_ANGLE:1, VALUE:2}, "class":"robotis_carCont_cm", isNotFor:["robotis_carCont"], func:function(b, a) {
+}}, robotis_carCont_aux_motor_speed:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"]], value:"LEFT", fontSize:11}, {type:"Dropdown", options:[[Lang.Blocks.robotis_common_clockwhise, "CW"], [Lang.Blocks.robotis_common_counter_clockwhise, "CCW"]], value:"CW", fontSize:11}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, 
+null, {type:"number", params:["500"]}, null], type:"robotis_carCont_aux_motor_speed"}, paramsKeyMap:{DIRECTION:0, DIRECTION_ANGLE:1, VALUE:2}, "class":"robotis_carCont_cm", isNotFor:["robotis_carCont"], func:function(b, a) {
   var c = a.getField("DIRECTION", a), d = a.getField("DIRECTION_ANGLE", a), e = a.getNumberValue("VALUE"), f = Entry.Robotis_carCont.INSTRUCTION.WRITE, g = 0, h = 0;
   "LEFT" == c ? (g = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_LEFT[0], h = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_LEFT[1]) : (g = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_RIGHT[0], h = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_RIGHT[1]);
   "CW" == d ? (e += 1024, 2047 < e && (e = 2047)) : 1023 < e && (e = 1023);
   return Entry.Robotis_carCont.postCallReturn(a, [[f, g, h, e]], Entry.Robotis_carCont.delay);
-}}, robotis_carCont_cm_calibration:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["0"]}, null], type:"robotis_carCont_cm_calibration"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"robotis_carCont_cm", 
+}}, robotis_carCont_cm_calibration:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["0"]}, null], type:"robotis_carCont_cm_calibration"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"robotis_carCont_cm", 
 isNotFor:["robotis_carCont"], func:function(b, a) {
   var c = a.getField("DIRECTION", a), d = a.getNumberValue("VALUE"), e = Entry.Robotis_carCont.INSTRUCTION.WRITE, f = 0, g = 0;
   "LEFT" == c ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[1]) : (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[1]);
@@ -16872,7 +16878,7 @@ isNotFor:["robotis_carCont"], func:function(b, a) {
   var c = a.getField("VALUE", a);
   Entry.isExist(c, "id", b.parent.sounds) && createjs.Sound.play(c);
   return a.callReturn();
-}}, sound_something_second:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"sounds", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["1"]}, null], type:"sound_something_second"}, paramsKeyMap:{VALUE:0, SECOND:1}, "class":"sound", isNotFor:[], func:function(b, a) {
+}}, sound_something_second:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"sounds", fontSize:11}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["1"]}, null], type:"sound_something_second"}, paramsKeyMap:{VALUE:0, SECOND:1}, "class":"sound", isNotFor:[], func:function(b, a) {
   var c = a.getField("VALUE", a), d = a.getNumberValue("SECOND", a);
   if (Entry.isExist(c, "id", b.parent.sounds)) {
     var e = createjs.Sound.play(c);
@@ -16897,7 +16903,7 @@ isNotFor:["robotis_carCont"], func:function(b, a) {
     a.playState = 0;
   }, 1E3 * d.duration));
   return a;
-}}, sound_something_second_wait:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"sounds", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["1"]}, null], type:"sound_something_second_wait"}, paramsKeyMap:{VALUE:0, SECOND:1}, "class":"sound", isNotFor:[], func:function(b, a) {
+}}, sound_something_second_wait:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"sounds", fontSize:11}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["1"]}, null], type:"sound_something_second_wait"}, paramsKeyMap:{VALUE:0, SECOND:1}, "class":"sound", isNotFor:[], func:function(b, a) {
   if (a.isPlay) {
     if (1 == a.playState) {
       return a;
@@ -16919,13 +16925,13 @@ isNotFor:["robotis_carCont"], func:function(b, a) {
     });
   }
   return a;
-}}, sound_volume_change:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"sound_volume_change"}, paramsKeyMap:{VALUE:0}, "class":"sound_volume", isNotFor:[], func:function(b, a) {
+}}, sound_volume_change:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"sound_volume_change"}, paramsKeyMap:{VALUE:0}, "class":"sound_volume", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a) / 100, c = c + createjs.Sound.getVolume();
   1 < c && (c = 1);
   0 > c && (c = 0);
   createjs.Sound.setVolume(c);
   return a.callReturn();
-}}, sound_volume_set:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"sound_volume_set"}, paramsKeyMap:{VALUE:0}, "class":"sound_volume", isNotFor:[], func:function(b, a) {
+}}, sound_volume_set:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"sound_volume_set"}, paramsKeyMap:{VALUE:0}, "class":"sound_volume", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("VALUE", a) / 100;
   1 < c && (c = 1);
   0 > c && (c = 0);
@@ -16936,15 +16942,15 @@ isNotFor:["robotis_carCont"], func:function(b, a) {
   return a.callReturn();
 }}, get_sounds:{color:"#A4D01D", skeleton:"basic_string_field", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"sounds", fontSize:11}], events:{}, def:{params:[null], type:"get_sounds"}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
   return a.getStringField("VALUE");
-}}, sound_something_with_block:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds"}, null], type:"sound_something_with_block"}, paramsKeyMap:{VALUE:0}, "class":"sound_play", isNotFor:[], func:function(b, a) {
+}}, sound_something_with_block:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds"}, null], type:"sound_something_with_block"}, paramsKeyMap:{VALUE:0}, "class":"sound_play", isNotFor:[], func:function(b, a) {
   var c = a.getStringValue("VALUE", a);
   (c = b.parent.getSound(c)) && createjs.Sound.play(c.id);
   return a.callReturn();
-}}, sound_something_second_with_block:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds", id:"95dw"}, {type:"number", params:["1"]}, null], type:"sound_something_second_with_block"}, paramsKeyMap:{VALUE:0, SECOND:1}, "class":"sound_play", isNotFor:[], func:function(b, a) {
+}}, sound_something_second_with_block:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds", id:"95dw"}, {type:"number", params:["1"]}, null], type:"sound_something_second_with_block"}, paramsKeyMap:{VALUE:0, SECOND:1}, "class":"sound_play", isNotFor:[], func:function(b, a) {
   var c = a.getStringValue("VALUE", a), d = a.getNumberValue("SECOND", a);
   (c = b.parent.getSound(c)) && createjs.Sound.play(c.id, {startTime:0, duration:1E3 * d});
   return a.callReturn();
-}}, sound_something_wait_with_block:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds"}, null], type:"sound_something_wait_with_block"}, paramsKeyMap:{VALUE:0}, "class":"sound_wait", isNotFor:[], func:function(b, a) {
+}}, sound_something_wait_with_block:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds"}, null], type:"sound_something_wait_with_block"}, paramsKeyMap:{VALUE:0}, "class":"sound_wait", isNotFor:[], func:function(b, a) {
   if (a.isPlay) {
     if (1 == a.playState) {
       return a;
@@ -16962,7 +16968,7 @@ isNotFor:["robotis_carCont"], func:function(b, a) {
     }, 1E3 * c.duration);
   }
   return a;
-}}, sound_something_second_wait_with_block:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds"}, {type:"number", params:["1"]}, null], type:"sound_something_second_wait_with_block"}, paramsKeyMap:{VALUE:0, SECOND:1}, "class":"sound_wait", isNotFor:[], func:function(b, a) {
+}}, sound_something_second_wait_with_block:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds"}, {type:"number", params:["1"]}, null], type:"sound_something_second_wait_with_block"}, paramsKeyMap:{VALUE:0, SECOND:1}, "class":"sound_wait", isNotFor:[], func:function(b, a) {
   if (a.isPlay) {
     if (1 == a.playState) {
       return a;
@@ -16984,16 +16990,15 @@ isNotFor:["robotis_carCont"], func:function(b, a) {
     });
   }
   return a;
-}}, sound_from_to:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds"}, {type:"text", params:["1"]}, {type:"text", params:["10"]}, null], type:"sound_from_to"}, paramsKeyMap:{VALUE:0, START:1, END:2}, "class":"sound_play", isNotFor:[], func:function(b, 
-a) {
+}}, sound_from_to:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Block", accept:"string"}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds"}, {type:"text", params:["1"]}, {type:"text", params:["10"]}, null], type:"sound_from_to"}, paramsKeyMap:{VALUE:0, START:1, END:2}, "class":"sound_play", isNotFor:[], func:function(b, a) {
   var c = a.getStringValue("VALUE", a);
   if (c = b.parent.getSound(c)) {
     var d = 1E3 * a.getNumberValue("START", a), e = 1E3 * a.getNumberValue("END", a);
     createjs.Sound.play(c.id, {startTime:Math.min(d, e), duration:Math.max(d, e) - Math.min(d, e)});
   }
   return a.callReturn();
-}}, sound_from_to_and_wait:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds"}, {type:"text", params:["1"]}, {type:"text", params:["10"]}, null], type:"sound_from_to_and_wait"}, paramsKeyMap:{VALUE:0, START:1, END:2}, "class":"sound_wait", isNotFor:[], 
-func:function(b, a) {
+}}, sound_from_to_and_wait:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Block", accept:"string"}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds"}, {type:"text", params:["1"]}, {type:"text", params:["10"]}, null], type:"sound_from_to_and_wait"}, paramsKeyMap:{VALUE:0, START:1, END:2}, "class":"sound_wait", isNotFor:[], func:function(b, 
+a) {
   if (a.isPlay) {
     if (1 == a.playState) {
       return a;
@@ -17018,7 +17023,7 @@ func:function(b, a) {
 }, event:"start"}, press_some_key:{color:"#3BBD70", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_keyboard.png", size:17, position:{x:0, y:-2}}, {type:"Dropdown", options:[["q", "81"], ["w", "87"], ["e", "69"], ["r", "82"], ["a", "65"], ["s", "83"], ["d", "68"], ["\uc704\ucabd \ud654\uc0b4\ud45c", "38"], ["\uc544\ub798\ucabd \ud654\uc0b4\ud45c", "40"], ["\uc67c\ucabd \ud654\uc0b4\ud45c", "37"], ["\uc624\ub978\ucabd \ud654\uc0b4\ud45c", 
 "39"], ["\uc5d4\ud130", "13"], ["\uc2a4\ud398\uc774\uc2a4", "32"]], value:"81", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/start_03.png", size:12}], events:{}, def:{params:[null, null, null]}, paramsKeyMap:{VALUE:1}, func:function(b, a) {
   return a.callReturn();
-}}, when_some_key_pressed:{color:"#3BBD70", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_keyboard.png", size:17, position:{x:0, y:-2}}, {type:"Keyboard", value:81}], events:{}, def:{params:[null, "81"], type:"when_some_key_pressed"}, paramsKeyMap:{VALUE:1}, "class":"event", isNotFor:[], func:function(b, a) {
+}}, when_some_key_pressed:{color:"#3BBD70", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_keyboard.png", size:17, position:{x:0, y:-2}}, {type:"Keyboard", value:"81"}], events:{}, def:{params:[null, "81"], type:"when_some_key_pressed"}, paramsKeyMap:{VALUE:1}, "class":"event", isNotFor:[], func:function(b, a) {
   return a.callReturn();
 }, event:"keyPress"}, mouse_clicked:{color:"#3BBD70", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_mouse.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null], type:"mouse_clicked"}, "class":"event", isNotFor:[], func:function(b, a) {
   return a.callReturn();
@@ -17078,15 +17083,15 @@ func:function(b, a) {
   return a;
 }}, text:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"TextInput", value:10}], events:{}, def:{params:[], type:"text"}, paramsKeyMap:{NAME:0}, func:function(b, a) {
   return a.getField("NAME", a);
-}, isPrimitive:!0}, text_write:{color:"#FFCA36", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"text", params:[Lang.Blocks.entry]}], type:"text_write"}, paramsKeyMap:{VALUE:0}, "class":"text", isNotFor:["sprite"], func:function(b, a) {
+}, isPrimitive:!0}, text_write:{color:"#FFCA36", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}], events:{}, def:{params:[{type:"text", params:[Lang.Blocks.entry]}], type:"text_write"}, paramsKeyMap:{VALUE:0}, "class":"text", isNotFor:["sprite"], func:function(b, a) {
   var c = a.getStringValue("VALUE", a), c = Entry.convertToRoundedDecimals(c, 3);
   b.setText(c);
   return a.callReturn();
-}}, text_append:{color:"#FFCA36", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"text", params:[Lang.Blocks.entry]}], type:"text_append"}, paramsKeyMap:{VALUE:0}, "class":"text", isNotFor:["sprite"], func:function(b, a) {
+}}, text_append:{color:"#FFCA36", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}], events:{}, def:{params:[{type:"text", params:[Lang.Blocks.entry]}], type:"text_append"}, paramsKeyMap:{VALUE:0}, "class":"text", isNotFor:["sprite"], func:function(b, a) {
   var c = a.getStringValue("VALUE", a);
   b.setText(Entry.convertToRoundedDecimals(b.getText(), 3) + Entry.convertToRoundedDecimals(c, 3));
   return a.callReturn();
-}}, text_prepend:{color:"#FFCA36", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"text", params:[Lang.Blocks.entry]}], type:"text_prepend"}, paramsKeyMap:{VALUE:0}, "class":"text", isNotFor:["sprite"], func:function(b, a) {
+}}, text_prepend:{color:"#FFCA36", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}], events:{}, def:{params:[{type:"text", params:[Lang.Blocks.entry]}], type:"text_prepend"}, paramsKeyMap:{VALUE:0}, "class":"text", isNotFor:["sprite"], func:function(b, a) {
   var c = a.getStringValue("VALUE", a);
   b.setText(Entry.convertToRoundedDecimals(c, 3) + Entry.convertToRoundedDecimals(b.getText(), 3));
   return a.callReturn();
@@ -17097,7 +17102,7 @@ func:function(b, a) {
   Entry.variableContainer.openVariableAddPanel("variable");
 }]}}, listAddButton:{skeleton:"basic_button", color:"#eee", params:[{type:"Text", text:Lang.Workspace.list_create, color:"#333", align:"center"}], events:{mousedown:[function() {
   Entry.variableContainer.openVariableAddPanel("list");
-}]}}, change_variable:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"variables", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{dataAdd:[function(b) {
+}]}}, change_variable:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"variables", fontSize:11}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{dataAdd:[function(b) {
   var a = Entry.variableContainer;
   a && a.addRef("_variableRefs", b);
 }], dataDestroy:[function(b) {
@@ -17112,7 +17117,7 @@ func:function(b, a) {
   e = Entry.getMaxFloatPoint([d, c.getValue()]);
   c.setValue((d + c.getValue()).toFixed(e));
   return a.callReturn();
-}}, set_variable:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"variables", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{dataAdd:[function(b) {
+}}, set_variable:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"variables", fontSize:11}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{dataAdd:[function(b) {
   var a = Entry.variableContainer;
   a && a.addRef("_variableRefs", b);
 }], dataDestroy:[function(b) {
@@ -17152,7 +17157,7 @@ func:function(b, a) {
 }]}, def:{params:[null], type:"get_variable"}, paramsKeyMap:{VARIABLE:0}, "class":"variable", isNotFor:["variable", "variableNotExist"], func:function(b, a) {
   var c = a.getField("VARIABLE", a);
   return Entry.variableContainer.getVariable(c, b).getValue();
-}}, ask_and_wait:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{viewAdd:[function() {
+}}, ask_and_wait:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{viewAdd:[function() {
   Entry.container && Entry.container.showProjectAnswer();
 }], viewDestroy:[function(b) {
   Entry.container && Entry.container.hideProjectAnswer(b);
@@ -17183,7 +17188,7 @@ func:function(b, a) {
   Entry.container && Entry.container.hideProjectAnswer(b);
 }]}, def:{params:[null], type:"get_canvas_input_value"}, "class":"ask", isNotFor:[], func:function(b, a) {
   return Entry.container.getInputValue();
-}}, add_value_to_list:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{dataAdd:[function(b) {
+}}, add_value_to_list:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{dataAdd:[function(b) {
   var a = Entry.variableContainer;
   a && a.addRef("_variableRefs", b);
 }], dataDestroy:[function(b) {
@@ -17195,7 +17200,7 @@ func:function(b, a) {
   c.array_.push({data:d});
   c.updateView();
   return a.callReturn();
-}}, remove_value_from_list:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["1"]}, null, null], type:"remove_value_from_list"}, paramsKeyMap:{VALUE:0, LIST:1}, "class":"list", isNotFor:["list", "listNotExist"], func:function(b, a) {
+}}, remove_value_from_list:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["1"]}, null, null], type:"remove_value_from_list"}, paramsKeyMap:{VALUE:0, LIST:1}, "class":"list", isNotFor:["list", "listNotExist"], func:function(b, a) {
   var c = a.getField("LIST", a), d = a.getValue("VALUE", a), c = Entry.variableContainer.getList(c, b);
   if (!c.array_ || isNaN(d) || d > c.array_.length) {
     throw Error("can not remove value from array");
@@ -17203,7 +17208,7 @@ func:function(b, a) {
   c.array_.splice(d - 1, 1);
   c.updateView();
   return a.callReturn();
-}}, insert_value_to_list:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["10"]}, null, {type:"text", params:["1"]}, null], type:"insert_value_to_list"}, paramsKeyMap:{DATA:0, LIST:1, INDEX:2}, "class":"list", isNotFor:["list", 
+}}, insert_value_to_list:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["10"]}, null, {type:"text", params:["1"]}, null], type:"insert_value_to_list"}, paramsKeyMap:{DATA:0, LIST:1, INDEX:2}, "class":"list", isNotFor:["list", 
 "listNotExist"], func:function(b, a) {
   var c = a.getField("LIST", a), d = a.getValue("DATA", a), e = a.getValue("INDEX", a), c = Entry.variableContainer.getList(c, b);
   if (!c.array_ || isNaN(e) || 0 == e || e > c.array_.length + 1) {
@@ -17212,8 +17217,8 @@ func:function(b, a) {
   c.array_.splice(e - 1, 0, {data:d});
   c.updateView();
   return a.callReturn();
-}}, change_value_list_index:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["1"]}, {type:"text", params:["10"]}, null], type:"change_value_list_index"}, paramsKeyMap:{LIST:0, INDEX:1, DATA:2}, "class":"list", 
-isNotFor:["list", "listNotExist"], func:function(b, a) {
+}}, change_value_list_index:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Block", accept:"string"}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["1"]}, {type:"text", params:["10"]}, null], type:"change_value_list_index"}, paramsKeyMap:{LIST:0, INDEX:1, DATA:2}, "class":"list", isNotFor:["list", 
+"listNotExist"], func:function(b, a) {
   var c = a.getField("LIST", a), d = a.getValue("DATA", a), e = a.getValue("INDEX", a), c = Entry.variableContainer.getList(c, b);
   if (!c.array_ || isNaN(e) || e > c.array_.length) {
     throw Error("can not insert value to array");
@@ -17221,8 +17226,8 @@ isNotFor:["list", "listNotExist"], func:function(b, a) {
   c.array_[e - 1].data = d;
   c.updateView();
   return a.callReturn();
-}}, value_of_index_from_list:{color:"#E457DC", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.VARIABLE_value_of_index_from_list_1, color:"white"}, {type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Text", text:Lang.Blocks.VARIABLE_value_of_index_from_list_2, color:"white"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.VARIABLE_value_of_index_from_list_3, color:"white"}], events:{}, def:{params:[null, null, null, 
-{type:"number", params:["1"]}], type:"value_of_index_from_list"}, paramsKeyMap:{LIST:1, INDEX:3}, "class":"list_element", isNotFor:["list", "listNotExist"], func:function(b, a) {
+}}, value_of_index_from_list:{color:"#E457DC", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.VARIABLE_value_of_index_from_list_1, color:"white"}, {type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Text", text:Lang.Blocks.VARIABLE_value_of_index_from_list_2, color:"white"}, {type:"Block", accept:"string"}, {type:"Text", text:Lang.Blocks.VARIABLE_value_of_index_from_list_3, color:"white"}], events:{}, def:{params:[null, null, null, {type:"number", 
+params:["1"]}], type:"value_of_index_from_list"}, paramsKeyMap:{LIST:1, INDEX:3}, "class":"list_element", isNotFor:["list", "listNotExist"], func:function(b, a) {
   var c = a.getField("LIST", a), d = a.getValue("INDEX", a), c = Entry.variableContainer.getList(c, b), d = Entry.getListRealIndex(d, c);
   if (!c.array_ || isNaN(d) || d > c.array_.length) {
     throw Error("can not insert value to array");
@@ -17248,7 +17253,7 @@ isNotFor:["list", "listNotExist"], func:function(b, a) {
 }]}, def:{params:["HIDE", null], type:"set_visible_answer"}, paramsKeyMap:{BOOL:0}, "class":"ask", isNotFor:[], func:function(b, a) {
   "HIDE" == a.getField("BOOL", a) ? Entry.container.inputValue.setVisible(!1) : Entry.container.inputValue.setVisible(!0);
   return a.callReturn();
-}}, is_included_in_list:{color:"#E457DC", skeleton:"basic_boolean_field", statements:[], params:[{type:"Text", text:Lang.Blocks.VARIABLE_is_included_in_list_1, color:"white"}, {type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Text", text:Lang.Blocks.VARIABLE_is_included_in_list_2, color:"white"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.VARIABLE_is_included_in_list_3, color:"white"}], events:{}, def:{params:[null, null, null, {type:"text", params:["10"]}, 
+}}, is_included_in_list:{color:"#E457DC", skeleton:"basic_boolean_field", statements:[], params:[{type:"Text", text:Lang.Blocks.VARIABLE_is_included_in_list_1, color:"white"}, {type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Text", text:Lang.Blocks.VARIABLE_is_included_in_list_2, color:"white"}, {type:"Block", accept:"string"}, {type:"Text", text:Lang.Blocks.VARIABLE_is_included_in_list_3, color:"white"}], events:{}, def:{params:[null, null, null, {type:"text", params:["10"]}, 
 null], type:"is_included_in_list"}, paramsKeyMap:{LIST:1, DATA:3}, "class":"list", isNotFor:["list", "listNotExist"], func:function(b, a) {
   var c = a.getField("LIST", a), d = a.getStringValue("DATA", a), c = Entry.variableContainer.getList(c);
   if (!c) {
@@ -17275,28 +17280,27 @@ a) {
   c.D7 = "D7" == d && "HIGH" == e ? 1 : 0;
   c.D12 = "D12" == d && "HIGH" == e ? 1 : 0;
   return a.callReturn();
-}}, xbot_analogOutput:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["D5", "analogD5"], ["D6", "analogD6"]], value:"analogD5", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["255"]}, null], type:"xbot_analogOutput"}, paramsKeyMap:{DEVICE:0, VALUE:1}, "class":"xbot_sensor", isNotFor:["xbot_epor_edge"], func:function(b, 
-a) {
+}}, xbot_analogOutput:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["D5", "analogD5"], ["D6", "analogD6"]], value:"analogD5", fontSize:11}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["255"]}, null], type:"xbot_analogOutput"}, paramsKeyMap:{DEVICE:0, VALUE:1}, "class":"xbot_sensor", isNotFor:["xbot_epor_edge"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getNumberValue("VALUE", a);
   "analogD5" == d ? c.analogD5 = e : "analogD6" == d && (c.analogD6 = e);
   return a.callReturn();
-}}, xbot_servo:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.XBOT_Head, "head"], [Lang.Blocks.XBOT_ArmR, "right"], [Lang.Blocks.XBOT_ArmL, "left"]], value:"head", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["90"]}, null], type:"xbot_servo"}, paramsKeyMap:{DEVICE:0, VALUE:1}, "class":"xbot_motor", isNotFor:["xbot_epor_edge"], 
+}}, xbot_servo:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.XBOT_Head, "head"], [Lang.Blocks.XBOT_ArmR, "right"], [Lang.Blocks.XBOT_ArmL, "left"]], value:"head", fontSize:11}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["90"]}, null], type:"xbot_servo"}, paramsKeyMap:{DEVICE:0, VALUE:1}, "class":"xbot_motor", isNotFor:["xbot_epor_edge"], 
 func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getNumberValue("VALUE", a);
   "head" == d ? c.head = e : "right" == d ? c.armR = e : "left" == d && (c.armL = e);
   return a.callReturn();
-}}, xbot_oneWheel:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.XBOT_rightWheel, "rightWheel"], [Lang.Blocks.XBOT_leftWheel, "leftWheel"], [Lang.Blocks.XBOT_bothWheel, "bothWheel"]], value:"rightWheel", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["0"]}, null], type:"xbot_oneWheel"}, paramsKeyMap:{DEVICE:0, 
-VALUE:1}, "class":"xbot_motor", isNotFor:["xbot_epor_edge"], func:function(b, a) {
+}}, xbot_oneWheel:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.XBOT_rightWheel, "rightWheel"], [Lang.Blocks.XBOT_leftWheel, "leftWheel"], [Lang.Blocks.XBOT_bothWheel, "bothWheel"]], value:"rightWheel", fontSize:11}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["0"]}, null], type:"xbot_oneWheel"}, paramsKeyMap:{DEVICE:0, VALUE:1}, 
+"class":"xbot_motor", isNotFor:["xbot_epor_edge"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getNumberValue("VALUE", a);
   "rightWheel" == d ? c.rightWheel = e : "leftWheel" == d ? c.leftWheel = e : c.rightWheel = c.leftWheel = e;
   return a.callReturn();
-}}, xbot_twoWheel:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["0"]}, {type:"text", params:["0"]}, null], type:"xbot_twoWheel"}, paramsKeyMap:{rightWheel:0, leftWheel:1}, "class":"xbot_motor", isNotFor:["xbot_epor_edge"], func:function(b, a) {
+}}, xbot_twoWheel:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["0"]}, {type:"text", params:["0"]}, null], type:"xbot_twoWheel"}, paramsKeyMap:{rightWheel:0, leftWheel:1}, "class":"xbot_motor", isNotFor:["xbot_epor_edge"], func:function(b, a) {
   var c = Entry.hw.sendQueue;
   c.rightWheel = a.getNumberValue("rightWheel");
   c.leftWheel = a.getNumberValue("leftWheel");
   return a.callReturn();
-}}, xbot_rgb:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["255"]}, {type:"text", params:["255"]}, {type:"text", params:["255"]}, null], type:"xbot_rgb"}, paramsKeyMap:{ledR:0, ledG:1, ledB:2}, "class":"xbot_rgb", isNotFor:["xbot_epor_edge"], 
-func:function(b, a) {
+}}, xbot_rgb:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"string"}, {type:"Block", accept:"string"}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["255"]}, {type:"text", params:["255"]}, {type:"text", params:["255"]}, null], type:"xbot_rgb"}, paramsKeyMap:{ledR:0, ledG:1, ledB:2}, "class":"xbot_rgb", isNotFor:["xbot_epor_edge"], func:function(b, 
+a) {
   var c = Entry.hw.sendQueue;
   c.ledR = a.getNumberValue("ledR");
   c.ledG = a.getNumberValue("ledG");
@@ -17308,14 +17312,14 @@ func:function(b, a) {
   d.ledG = parseInt(.3 * parseInt(c.substr(3, 2), 16));
   d.ledB = parseInt(.3 * parseInt(c.substr(5, 2), 16));
   return a.callReturn();
-}}, xbot_buzzer:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.XBOT_c, "C"], [Lang.Blocks.XBOT_d, "D"], [Lang.Blocks.XBOT_e, "E"], [Lang.Blocks.XBOT_f, "F"], [Lang.Blocks.XBOT_g, "G"], [Lang.Blocks.XBOT_a, "A"], [Lang.Blocks.XBOT_b, "B"]], value:"C", fontSize:11}, {type:"Dropdown", options:[["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"]], value:"2", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", 
+}}, xbot_buzzer:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.XBOT_c, "C"], [Lang.Blocks.XBOT_d, "D"], [Lang.Blocks.XBOT_e, "E"], [Lang.Blocks.XBOT_f, "F"], [Lang.Blocks.XBOT_g, "G"], [Lang.Blocks.XBOT_a, "A"], [Lang.Blocks.XBOT_b, "B"]], value:"C", fontSize:11}, {type:"Dropdown", options:[["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"]], value:"2", fontSize:11}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", 
 size:12}], events:{}, def:{params:[null, "4", {type:"text", params:["0.5"]}, null], type:"xbot_buzzer"}, paramsKeyMap:{NOTE:0, OCTAVE:1, VALUE:2}, "class":"xbot_sensor", isNotFor:["xbot_epor_edge"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = b.getStringField("NOTE", b), e = b.getStringField("OCTAVE", b), f = b.getNumberValue("VALUE", b), d = d + e;
   c.note = "C2" == d ? 65 : "D2" == d ? 73 : "E2" == d ? 82 : "F2" == d ? 87 : "G2" == d ? 98 : "A2" == d ? 110 : "B2" == d ? 123 : "C3" == d ? 131 : "D3" == d ? 147 : "E3" == d ? 165 : "F3" == d ? 175 : "G3" == d ? 196 : "A3" == d ? 220 : "B3" == d ? 247 : "C4" == d ? 262 : "D4" == d ? 294 : "E4" == d ? 330 : "F4" == d ? 349 : "G4" == d ? 392 : "A4" == d ? 440 : "B4" == d ? 494 : "C5" == d ? 523 : "D5" == d ? 587 : "E5" == d ? 659 : "F5" == d ? 698 : "G5" == d ? 784 : "A5" == d ? 880 : "B5" == d ? 
   988 : "C6" == d ? 1047 : "D6" == d ? 1175 : "E6" == d ? 1319 : "F6" == d ? 1397 : "G6" == d ? 1568 : "A6" == d ? 1760 : "B6" == d ? 1976 : "C7" == d ? 2093 : "D7" == d ? 2349 : "E7" == d ? 2637 : "F7" == d ? 2794 : "G7" == d ? 3136 : "A7" == d ? 3520 : "B7" == d ? 3951 : 262;
   c.duration = 40 * f;
   return b.callReturn();
-}}, xbot_lcd:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["0", "0"], ["1", "1"]], value:"0", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["Hello"]}, null], type:"xbot_lcd"}, paramsKeyMap:{LINE:0, VALUE:1}, "class":"xbot_sensor", isNotFor:["xbot_epor_edge"], func:function(b, a) {
+}}, xbot_lcd:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["0", "0"], ["1", "1"]], value:"0", fontSize:11}, {type:"Block", accept:"string"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["Hello"]}, null], type:"xbot_lcd"}, paramsKeyMap:{LINE:0, VALUE:1}, "class":"xbot_sensor", isNotFor:["xbot_epor_edge"], func:function(b, a) {
   var c = Entry.hw.sendQueue, d = a.getNumberField("LINE", a), e = a.getStringValue("VALUE", a);
   0 == d ? (c.lcdNum = 0, c.lcdTxt = e) : 1 == d && (c.lcdNum = 1, c.lcdTxt = e);
   return a.callReturn();
@@ -18217,7 +18221,6 @@ Entry.BlockView = function(b, a, c) {
   this._observers.push(a.code.observe(this, "_setBoard", ["board"], !1));
   this.dragMode = Entry.DRAG_MODE_NONE;
   Entry.Utils.disableContextmenu(this.svgGroup.node);
-  this._targetType = this._getTargetType();
   (a = b.events.viewAdd) && !this.isInBlockMenu && a.forEach(function(a) {
     Entry.Utils.isFunction(a) && a(b);
   });
@@ -18252,7 +18255,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
     if (this.magnet.next || this._skeleton.nextShadow) {
       g = this.getBoard().suffix, this.pathGroup.attr({filter:"url(#entryBlockShadowFilter_" + g + ")"});
     } else {
-      if (this.magnet.string || this.magnet.bool) {
+      if (this.magnet.string || this.magnet.boolean) {
         f.stroke = Entry.Utils.colorDarken(this._schema.color, .65);
       }
     }
@@ -18381,7 +18384,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
       d = a.originalEvent && a.originalEvent.touches ? a.originalEvent.touches[0] : a;
       var f = m.mouseDownCoordinate, f = Math.sqrt(Math.pow(d.pageX - f.x, 2) + Math.pow(d.pageY - f.y, 2));
       (m.dragMode == Entry.DRAG_MODE_DRAG || f > Entry.BlockView.DRAG_RADIUS) && m.movable && (m.isInBlockMenu ? e.cloneToGlobal(a) : (a = !1, m.dragMode != Entry.DRAG_MODE_DRAG && (m._toGlobalCoordinate(), m.dragMode = Entry.DRAG_MODE_DRAG, m.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(m, c), a = !0), this.animating && this.set({animating:!1}), 0 === m.dragInstance.height && m.dragInstance.set({height:-1 + m.height}), c = m.dragInstance, m._moveBy(d.pageX - c.offsetX, d.pageY - 
-      c.offsetY, !1), c.set({offsetX:d.pageX, offsetY:d.pageY}), Entry.GlobalSvg.position(), (d = m._getCloseBlock()) ? e.setMagnetedBlock(d.view) : e.setMagnetedBlock(null), m.originPos || (m.originPos = {x:m.x, y:m.y}), a && e.generateCodeMagnetMap()));
+      c.offsetY, !1), c.set({offsetX:d.pageX, offsetY:d.pageY}), Entry.GlobalSvg.position(), m._updateCloseBlock(), m.originPos || (m.originPos = {x:m.x, y:m.y}), a && e.generateCodeMagnetMap()));
     }
     function d(a) {
       $(document).unbind(".block");
@@ -18448,23 +18451,24 @@ Entry.BlockView.DRAG_RADIUS = 5;
       b instanceof Entry.BlockMenu ? (b.terminateDrag(), this.vimBoardEvent(a, "dragEnd", e)) : b.clear();
     } else {
       if (d === Entry.DRAG_MODE_DRAG) {
-        (f = this.dragInstance && this.dragInstance.isNew) && (b.workspace.blockMenu.terminateDrag() || e._updatePos());
+        (d = this.dragInstance && this.dragInstance.isNew) && (b.workspace.blockMenu.terminateDrag() || e._updatePos());
         var g = Entry.GlobalSvg;
         a = !1;
-        d = this.block.getPrevBlock(this.block);
+        f = this.block.getPrevBlock(this.block);
         a = !1;
         switch(Entry.GlobalSvg.terminateDrag(this)) {
           case g.DONE:
-            g = this._getCloseBlock();
-            d && !g ? Entry.do("separateBlock", e) : d || g || f ? g ? (Entry.do("insertBlock", e, g).isPass(f), createjs.Sound.play("entryMagneting"), a = !0) : Entry.do("moveBlock", e).isPass(f) : e.getThread().view.isGlobal() ? Entry.do("moveBlock", e) : Entry.do("separateBlock", e);
+            g = b.magnetedBlockView;
+            g instanceof Entry.BlockView && (g = g.block);
+            f && !g ? Entry.do("separateBlock", e) : f || g || d ? g ? ("next" === g.view.magneting ? (a = e.getLastBlock(), Entry.do("insertBlock", g, a).isPass(d)) : Entry.do("insertBlock", e, g).isPass(d), createjs.Sound.play("entryMagneting"), a = !0) : Entry.do("moveBlock", e).isPass(d) : e.getThread().view.isGlobal() ? Entry.do("moveBlock", e) : Entry.do("separateBlock", e);
             break;
           case g.RETURN:
             e = this.block;
-            f = this.originPos;
-            d ? (this.set({animating:!1}), createjs.Sound.play("entryMagneting"), this.bindPrev(d), e.insert(d)) : (d = e.getThread().view.getParent(), d instanceof Entry.Board ? this._moveTo(f.x, f.y, !1) : (createjs.Sound.play("entryMagneting"), Entry.do("insertBlock", e, d)));
+            d = this.originPos;
+            f ? (this.set({animating:!1}), createjs.Sound.play("entryMagneting"), this.bindPrev(f), e.insert(f)) : (f = e.getThread().view.getParent(), f instanceof Entry.Board ? this._moveTo(d.x, d.y, !1) : (createjs.Sound.play("entryMagneting"), Entry.do("insertBlock", e, f)));
             break;
           case g.REMOVE:
-            createjs.Sound.play("entryDelete"), f ? this.block.destroy(!1, !0) : this.block.doDestroyBelow(!1);
+            createjs.Sound.play("entryDelete"), d ? this.block.destroy(!1, !0) : this.block.doDestroyBelow(!1);
         }
         b.setMagnetedBlock(null);
         a && Entry.ConnectionRipple.setView(e.view).dispose();
@@ -18474,12 +18478,15 @@ Entry.BlockView.DRAG_RADIUS = 5;
     delete this.originPos;
     this.dominate();
   };
-  b._getCloseBlock = function() {
+  b._updateCloseBlock = function() {
+    var a = this.getBoard(), b;
     if (this._skeleton.magnets) {
-      var a = this._targetType;
-      if (a) {
-        return this.getBoard().getNearestMagnet(this.x, this.y, a);
+      for (var d in this.magnet) {
+        if (b = "next" === d ? this.getBoard().getNearestMagnet(this.x, this.y + this.getBelowHeight(), d) : this.getBoard().getNearestMagnet(this.x, this.y, d)) {
+          return a.setMagnetedBlock(b.view, d);
+        }
       }
+      a.setMagnetedBlock(null);
     }
   };
   b.dominate = function() {
@@ -18531,14 +18538,21 @@ Entry.BlockView.DRAG_RADIUS = 5;
     if (this._board.dragBlock && this._board.dragBlock.dragInstance) {
       var a = this.svgGroup;
       if (this.magnet.next) {
-        if (this.magneting) {
-          var a = this._board.dragBlock.getShadow(), b = this.getAbsoluteCoordinate(), d = this.magnet.next, b = "translate(" + (b.x + d.x) + "," + (b.y + d.y) + ")";
-          $(a).attr({transform:b, display:"block"});
-          this._clonedShadow = a;
+        if (a = this.magneting) {
+          var b = this._board.dragBlock.getShadow(), d = this.getAbsoluteCoordinate(), e;
+          if ("previous" === a) {
+            e = this.magnet.next, e = "translate(" + (d.x + e.x) + "," + (d.y + e.y) + ")";
+          } else {
+            if ("next" === a) {
+              e = this.magnet.previous;
+              var f = this._board.dragBlock.getBelowHeight();
+              e = "translate(" + (d.x + e.x) + "," + (d.y + e.y - f) + ")";
+            }
+          }
+          $(b).attr({transform:e, display:"block"});
+          this._clonedShadow = b;
           this.background && (this.background.remove(), this.nextBackground.remove(), delete this.background, delete this.nextBackground);
-          a = this._board.dragBlock.getBelowHeight() + this.offsetY;
-          this.originalHeight = this.offsetY;
-          this.set({offsetY:a});
+          "previous" === a && (a = this._board.dragBlock.getBelowHeight() + this.offsetY, this.originalHeight = this.offsetY, this.set({offsetY:a}));
         } else {
           this._clonedShadow && (this._clonedShadow.attr({display:"none"}), delete this._clonedShadow), a = this.originalHeight, void 0 !== a && (this.background && (this.background.remove(), this.nextBackground.remove(), delete this.background, delete this.nextBackground), this.set({offsetY:a}), delete this.originalHeight);
         }
@@ -18616,10 +18630,6 @@ Entry.BlockView.DRAG_RADIUS = 5;
     a.x += this.x;
     a.y += this.y;
     return a;
-  };
-  b._getTargetType = function() {
-    var a = this._skeleton.magnets ? this._skeleton.magnets(this) : {};
-    return a = a.previous ? "nextMagnet" : a.string ? "stringMagnet" : a.bool ? "booleanMagnet" : a.param ? "paramMagnet" : null;
   };
   b.getBelowHeight = function() {
     return this.block.getThread().view.requestPartHeight(this);
@@ -19049,10 +19059,15 @@ Entry.Field = function() {
   b.destroy = function() {
     this.destroyOption();
   };
+  b.command = function() {
+    this._startValue && (this._startValue === this.getValue() || this._blockView.isInBlockMenu || Entry.do("setFieldValue", this._block, this, this.pointer(), this._startValue, this.getValue()));
+    delete this._startValue;
+  };
   b.destroyOption = function() {
     this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
     this.disposeEvent && (Entry.disposeEvent.detach(this.disposeEvent), delete this.documentDownEvent);
     this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
+    this.command();
   };
   b._attachDisposeEvent = function(a) {
     var b = this;
@@ -19090,9 +19105,8 @@ Entry.Field = function() {
   b.getValue = function() {
     return this._block.params[this._index];
   };
-  b.setValue = function(a) {
-    this.value = a;
-    this._block.params[this._index] = a;
+  b.setValue = function(a, b) {
+    this.value != a && (this.value = a, this._block.params[this._index] = a, b && this._blockView.reDraw());
   };
   b._isEditable = function() {
     if (this._block.view.dragMode == Entry.DRAG_MODE_DRAG) {
@@ -19116,8 +19130,14 @@ Entry.Field = function() {
   b._bindRenderOptions = function() {
     var a = this;
     $(this.svgGroup).bind("mouseup touchend", function(b) {
-      a._isEditable() && a.renderOptions();
+      a._isEditable() && (a.destroyOption(), a._startValue = a.getValue(), a.renderOptions());
     });
+  };
+  b.pointer = function(a) {
+    a = a || [];
+    a.unshift(this._index);
+    a.unshift(Entry.PARAM);
+    return this._block.pointer(a);
   };
 })(Entry.Field.prototype);
 Entry.FieldAngle = function(b, a, c) {
@@ -19147,7 +19167,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
   };
   b.renderOptions = function() {
     var a = this;
-    this.destroyOption();
     this._attachDisposeEvent(function() {
       a.applyValue();
       a.destroyOption();
@@ -19221,6 +19240,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
     this.svgOptionGroup && (this.svgOptionGroup.remove(), delete this.svgOptionGroup);
     this.textElement.textContent = this.getText();
+    this.command();
   };
 })(Entry.FieldAngle.prototype);
 Entry.FieldBlock = function(b, a, c, d, e) {
@@ -19277,13 +19297,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
       a = this._originBlock.type, delete this._originBlock;
     } else {
       switch(this.acceptType) {
-        case "booleanMagnet":
+        case "boolean":
           a = "True";
           break;
-        case "stringMagnet":
+        case "string":
           a = "text";
           break;
-        case "paramMagnet":
+        case "param":
           a = "function_field_label";
       }
     }
@@ -19350,7 +19370,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
   b.replace = function(a) {
     "string" === typeof a && (a = this._createBlockByType(a));
     var b = this._valueBlock;
-    Entry.block[b.type].isPrimitive ? (b.doNotSplice = !0, b.destroy()) : "paramMagnet" === this.acceptType ? (this._destroyObservers(), b.view._toGlobalCoordinate(), a.getTerminateOutputBlock().view._contents[1].replace(b)) : (this._destroyObservers(), b.view._toGlobalCoordinate(), this.separate(b), b.view.bumpAway(30, 150));
+    Entry.block[b.type].isPrimitive ? (b.doNotSplice = !0, b.destroy()) : "param" === this.acceptType ? (this._destroyObservers(), b.view._toGlobalCoordinate(), a.getTerminateOutputBlock().view._contents[1].replace(b)) : (this._destroyObservers(), b.view._toGlobalCoordinate(), this.separate(b), b.view.bumpAway(30, 150));
     this.updateValueBlock(a);
     a.view._toLocalCoordinate(this.svgGroup);
     this.calcWH();
@@ -19401,6 +19421,7 @@ Entry.FieldColor = function(b, a, c) {
 Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
 (function(b) {
   b.renderStart = function() {
+    this.svgGroup && $(this.svgGroup).remove();
     this.svgGroup = this._blockView.contentSvgGroup.elem("g", {class:"entry-field-color"});
     var a = this._position, b;
     a ? (b = a.x || 0, a = a.y || 0) : (b = 0, a = -8);
@@ -19410,7 +19431,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
   };
   b.renderOptions = function() {
     var a = this;
-    this.destroyOption();
     this._attachDisposeEvent();
     var b = Entry.FieldColor.getWidgetColorList();
     this.optionGroup = Entry.Dom("table", {class:"entry-widget-color-table", parent:$("body")});
@@ -19487,7 +19507,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
   };
   b.renderOptions = function() {
     var a = this;
-    this.destroyOption();
     this._attachDisposeEvent();
     this.optionGroup = Entry.Dom("ul", {class:"entry-widget-dropdown", parent:$("body")});
     this.optionGroup.bind("mousedown touchstart", function(a) {
@@ -19568,7 +19587,6 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
   };
   b.renderOptions = function() {
     var a = this;
-    this.destroyOption();
     this._attachDisposeEvent();
     this.optionGroup = Entry.Dom("ul", {class:"entry-widget-dropdown", parent:$("body")});
     this.optionGroup.bind("mousedown touchstart", function(a) {
@@ -19664,10 +19682,9 @@ Entry.FieldKeyboard = function(b, a, c) {
   this.position = b.position;
   this._contents = b;
   this._index = c;
-  this.setValue(this.getValue());
+  this.setValue(String(this.getValue()));
   this._optionVisible = !1;
   this.renderStart(a);
-  Entry.keyPressed && (this.keyPressed = Entry.keyPressed.attach(this, this._keyboardControl));
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
 (function(b) {
@@ -19683,7 +19700,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     this.box.set({x:0, y:0, width:a, height:16});
   };
   b.renderOptions = function() {
-    this.destroyOption();
+    Entry.keyPressed && (this.keyPressed = Entry.keyPressed.attach(this, this._keyboardControl));
     this._optionVisible = !0;
     this._attachDisposeEvent();
     var a = this.getAbsolutePosFromDocument();
@@ -19696,6 +19713,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     this.disposeEvent && (Entry.disposeEvent.detach(this.disposeEvent), delete this.disposeEvent);
     this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
     this._optionVisible = !1;
+    this.command();
+    this.keyPressed && (Entry.keyPressed.detach(this.keyPressed), delete this.keyPressed);
   };
   b._keyboardControl = function(a) {
     a.stopPropagation();
@@ -19706,8 +19725,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     }
   };
   b.applyValue = function(a, b) {
+    this.setValue(String(b));
     this.destroyOption();
-    this.getValue() != b && (this.setValue(b), this.textElement.textContent = a, this.resize());
+    this.textElement.textContent = a;
+    this.resize();
   };
   b.resize = function() {
     var a = this.getTextWidth();
@@ -20005,7 +20026,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
   };
   b.renderOptions = function() {
     var a = this;
-    this.destroyOption();
     this._attachDisposeEvent(function() {
       a.applyValue();
       a.destroyOption();
@@ -20333,7 +20353,7 @@ Entry.Scroller.RADIUS = 7;
 Entry.Board = function(b) {
   Entry.Model(this, !1);
   this.createView(b);
-  this._magnetMap = null;
+  this._magnetMap = {};
   Entry.ANIMATION_DURATION = 200;
   Entry.BOARD_PADDING = 100;
   this.updateOffset();
@@ -20344,6 +20364,9 @@ Entry.Board = function(b) {
   this._addControl();
   this._bindEvent();
 };
+Entry.Board.OPTION_PASTE = 0;
+Entry.Board.OPTION_ALIGN = 1;
+Entry.Board.OPTION_CLEAR = 2;
 (function(b) {
   b.schema = {code:null, dragBlock:null, magnetedBlockView:null, selectedBlockView:null};
   b.createView = function(a) {
@@ -20389,7 +20412,7 @@ Entry.Board = function(b) {
     this.svgGroup.appendChild(this.svgThreadGroup);
     this.svgGroup.appendChild(this.svgBlockGroup);
   };
-  b.setMagnetedBlock = function(a) {
+  b.setMagnetedBlock = function(a, b) {
     if (this.magnetedBlockView) {
       if (this.magnetedBlockView === a) {
         return;
@@ -20397,7 +20420,7 @@ Entry.Board = function(b) {
       this.magnetedBlockView.set({magneting:!1});
     }
     this.set({magnetedBlockView:a});
-    a && (a.set({magneting:!0}), a.dominate());
+    a && (a.set({magneting:b}), a.dominate());
   };
   b.getCode = function() {
     return this.code;
@@ -20454,6 +20477,7 @@ Entry.Board = function(b) {
             return;
           }
           a = [];
+          this._contextOptions[Entry.Board.OPTION_PASTE].option.enable = !!Entry.clipboard;
           for (e = 0;e < this._contextOptions.length;e++) {
             this._contextOptions[e].activated && a.push(this._contextOptions[e].option);
           }
@@ -20542,37 +20566,42 @@ Entry.Board = function(b) {
   b.generateCodeMagnetMap = function() {
     var a = this.code;
     if (a && this.dragBlock) {
-      a = this._getCodeBlocks(a, this.dragBlock._targetType);
-      a.sort(function(a, b) {
-        return a.point - b.point;
-      });
-      a.unshift({point:-Number.MAX_VALUE, blocks:[]});
-      for (var b = 1;b < a.length;b++) {
-        var d = a[b], e = d, f = d.startBlock;
-        if (f) {
-          for (var g = d.endPoint, h = b;g > e.point && (e.blocks.push(f), h++, e = a[h], e);) {
+      for (var b in this.dragBlock.magnet) {
+        var d = this._getCodeBlocks(a, b);
+        d.sort(function(a, b) {
+          return a.point - b.point;
+        });
+        d.unshift({point:-Number.MAX_VALUE, blocks:[]});
+        for (var e = 1;e < d.length;e++) {
+          var f = d[e], g = f, h = f.startBlock;
+          if (h) {
+            for (var k = f.endPoint, l = e;k > g.point && (g.blocks.push(h), l++, g = d[l], g);) {
+            }
+            delete f.startBlock;
           }
-          delete d.startBlock;
+          f.endPoint = Number.MAX_VALUE;
+          d[e - 1].endPoint = f.point;
         }
-        d.endPoint = Number.MAX_VALUE;
-        a[b - 1].endPoint = d.point;
+        this._magnetMap[b] = d;
       }
-      this._magnetMap = a;
     }
   };
   b._getCodeBlocks = function(a, b) {
     var d = a.getThreads(), e = [], f;
     switch(b) {
-      case "nextMagnet":
+      case "previous":
         f = this._getNextMagnets;
         break;
-      case "stringMagnet":
+      case "next":
+        f = this._getPreviousMagnets;
+        break;
+      case "string":
         f = this._getFieldMagnets;
         break;
-      case "booleanMagnet":
+      case "boolean":
         f = this._getFieldMagnets;
         break;
-      case "paramMagnet":
+      case "param":
         f = this._getOutputMagnets;
         break;
       default:
@@ -20613,6 +20642,21 @@ Entry.Board = function(b) {
     }
     return g.concat(h);
   };
+  b._getPreviousMagnets = function(a, b, d, e) {
+    var f = a.getBlocks();
+    a = [];
+    d || (d = {x:0, y:0});
+    e = d.x;
+    d = d.y;
+    var f = f[0], g = f.view;
+    g.zIndex = b;
+    if (g.dragInstance) {
+      return [];
+    }
+    d += g.y - 15;
+    e += g.x;
+    return g.magnet.previous ? (b = d + 1 + g.height, a.push({point:d, endPoint:b, startBlock:f, blocks:[]}), a.push({point:b, blocks:[]}), g.absX = e, a) : [];
+  };
   b._getFieldMagnets = function(a, b, d, e) {
     var f = a.getBlocks(), g = [], h = [];
     d || (d = {x:0, y:0});
@@ -20644,7 +20688,7 @@ Entry.Board = function(b) {
       var l = g[k];
       if (l instanceof Entry.FieldBlock) {
         var n = l._valueBlock;
-        if (!n.view.dragInstance && (l.acceptType === f || "booleanMagnet" === l.acceptType)) {
+        if (!n.view.dragInstance && (l.acceptType === f || "boolean" === l.acceptType)) {
           var m = b + l.box.x, q = d + l.box.y + a.contentHeight % 1E3 * -.5, r = d + l.box.y + l.box.height;
           l.acceptType === f && (h.push({point:q, endPoint:r, startBlock:n, blocks:[]}), h.push({point:r, blocks:[]}));
           l = n.view;
@@ -20691,10 +20735,10 @@ Entry.Board = function(b) {
     return h;
   };
   b.getNearestMagnet = function(a, b, d) {
-    var e = this._magnetMap;
+    var e = this._magnetMap[d];
     if (e && 0 !== e.length) {
-      var f = 0, g = e.length - 1, h, k = null, l = "nextMagnet" === d ? b - 15 : b;
-      for (b = "nextMagnet" === d ? 20 : 0;f <= g;) {
+      var f = 0, g = e.length - 1, h, k = null, l = "previous" === d ? b - 15 : b;
+      for (b = "previous" === d ? 20 : 0;f <= g;) {
         if (h = (f + g) / 2 | 0, d = e[h], l < d.point) {
           g = h - 1;
         } else {
@@ -20772,9 +20816,6 @@ Entry.Board = function(b) {
     Entry.windowResized.attach(this, a);
   };
 })(Entry.Board.prototype);
-Entry.Board.OPTION_PASTE = 0;
-Entry.Board.OPTION_ALIGN = 1;
-Entry.Board.OPTION_CLEAR = 2;
 Entry.skeleton = function() {
 };
 Entry.skeleton.basic = {path:function(b) {
@@ -20889,7 +20930,7 @@ Entry.skeleton.basic_boolean_field = {path:function(b) {
 }, color:"#000", outerLine:!0, box:function(b) {
   return {offsetX:0, offsetY:0, width:(b ? b.contentWidth : 5) + 19, height:Math.max((b ? b.contentHeight : 18) + 2, 18), marginBottom:0};
 }, magnets:function() {
-  return {bool:{}};
+  return {boolean:{}};
 }, contentPos:function(b) {
   return {x:10, y:Math.max(b.contentHeight, 16) / 2 + 1};
 }};
@@ -21374,7 +21415,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
       return null;
     }
     var a = Entry.skeleton[this._schema.skeleton].magnets(this.view);
-    return a.next || a.previous ? "basic" : a.bool || a.string ? "field" : a.output ? "output" : null;
+    return a.next || a.previous ? "basic" : a.boolean || a.string ? "field" : a.output ? "output" : null;
   };
   b.indexOfStatements = function(a) {
     return this.statements.indexOf(a);

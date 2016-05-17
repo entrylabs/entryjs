@@ -77,7 +77,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
 
     p.renderOptions = function() {
         var that = this;
-        this.destroyOption();
 
         var blockView = this._blockView;
 

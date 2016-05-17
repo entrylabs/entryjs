@@ -72,7 +72,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -129,7 +129,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -197,7 +197,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -263,11 +263,11 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -312,11 +312,11 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -369,7 +369,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -427,7 +427,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -505,11 +505,11 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -778,7 +778,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -817,7 +817,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -913,7 +913,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -985,7 +985,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -1041,7 +1041,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -1078,7 +1078,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -1360,7 +1360,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -1415,7 +1415,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -1474,7 +1474,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             }
         ],
         "events": {},
@@ -1500,7 +1500,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             }
         ],
         "events": {},
@@ -1527,7 +1527,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             }
         ],
         "events": {},
@@ -1653,7 +1653,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             }
         ],
         "events": {},
@@ -1683,7 +1683,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             }
         ],
         "events": {},
@@ -1712,7 +1712,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Dropdown",
@@ -1761,11 +1761,11 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -1811,23 +1811,23 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             }
         ],
         "events": {},
@@ -2440,15 +2440,15 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -2536,7 +2536,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -2592,7 +2592,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -2671,7 +2671,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -2728,7 +2728,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -2779,7 +2779,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -2826,19 +2826,19 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             }
         ],
         "events": {},
@@ -3038,7 +3038,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -3090,7 +3090,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -3139,7 +3139,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -3190,7 +3190,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -3301,7 +3301,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -3352,7 +3352,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -3714,7 +3714,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Dropdown",
@@ -3730,7 +3730,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             }
         ],
         "events": {},
@@ -3834,7 +3834,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Text",
@@ -3843,7 +3843,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             }
         ],
         "events": {},
@@ -3867,7 +3867,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Text",
@@ -3876,7 +3876,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             }
         ],
         "events": {},
@@ -3900,7 +3900,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Text",
@@ -3909,7 +3909,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             }
         ],
         "events": {},
@@ -3933,7 +3933,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Text",
@@ -3942,7 +3942,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             }
         ],
         "events": {},
@@ -3966,7 +3966,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Text",
@@ -3975,7 +3975,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Text",
@@ -4018,7 +4018,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Text",
@@ -4027,7 +4027,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Text",
@@ -4075,7 +4075,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Text",
@@ -4185,7 +4185,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Text",
@@ -4194,7 +4194,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Text",
@@ -4506,7 +4506,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Text",
@@ -4515,7 +4515,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Text",
@@ -4567,7 +4567,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Text",
@@ -4608,7 +4608,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Text",
@@ -4617,7 +4617,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Text",
@@ -4626,7 +4626,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Text",
@@ -4686,7 +4686,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Text",
@@ -4695,7 +4695,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Text",
@@ -4704,7 +4704,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Text",
@@ -4761,7 +4761,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Text",
@@ -4819,7 +4819,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Text",
@@ -4828,7 +4828,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Text",
@@ -4878,7 +4878,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Text",
@@ -4887,7 +4887,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Text",
@@ -4966,7 +4966,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Text",
@@ -4975,7 +4975,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Text",
@@ -5125,7 +5125,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -5181,7 +5181,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -5288,7 +5288,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "booleanMagnet"
+                "accept": "boolean"
             },
             {
                 "type": "Indicator",
@@ -5331,7 +5331,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "booleanMagnet"
+                "accept": "boolean"
             },
             {
                 "type": "Indicator",
@@ -5385,7 +5385,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "booleanMagnet"
+                "accept": "boolean"
             },
             {
                 "type": "Indicator",
@@ -5549,7 +5549,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "booleanMagnet"
+                "accept": "boolean"
             },
             {
                 "type": "Dropdown",
@@ -5736,7 +5736,7 @@ Entry.block = {
             },
             {
                 "type": "Output",
-                "accept": "paramMagnet"
+                "accept": "param"
             }
         ],
         paramsKeyMap:{
@@ -5755,12 +5755,12 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet",
+                "accept": "string",
                 "restore": true
             },
             {
                 "type": "Output",
-                "accept": "paramMagnet"
+                "accept": "param"
             }
         ],
         paramsKeyMap:{
@@ -5784,12 +5784,12 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "booleanMagnet",
+                "accept": "boolean",
                 "restore": true
             },
             {
                 "type": "Output",
-                "accept": "paramMagnet"
+                "accept": "param"
             }
         ],
         paramsKeyMap:{
@@ -5843,7 +5843,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "paramMagnet",
+                "accept": "param",
                 "value": {
                     "type": "function_field_label",
                     "params": [Lang.Blocks.FUNC]
@@ -6228,7 +6228,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -6286,7 +6286,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -6353,7 +6353,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -6419,11 +6419,11 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -6469,11 +6469,11 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -6527,7 +6527,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -6586,7 +6586,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -6984,7 +6984,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -7023,7 +7023,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -7119,7 +7119,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -7191,7 +7191,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -7247,7 +7247,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -7284,7 +7284,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -7390,7 +7390,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -7448,7 +7448,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -7662,7 +7662,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Dropdown",
@@ -7676,7 +7676,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             }
         ],
         "events": {},
@@ -7708,7 +7708,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Text",
@@ -7717,7 +7717,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             }
         ],
         "events": {},
@@ -7754,7 +7754,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Text",
@@ -7763,7 +7763,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             }
         ],
         "events": {},
@@ -7800,7 +7800,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Text",
@@ -7809,7 +7809,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             }
         ],
         "events": {},
@@ -7846,7 +7846,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "booleanMagnet"
+                "accept": "boolean"
             },
             {
                 "type": "Dropdown",
@@ -7859,7 +7859,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "booleanMagnet"
+                "accept": "boolean"
             }
         ],
         "events": {},
@@ -7888,7 +7888,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "booleanMagnet"
+                "accept": "boolean"
             },
             {
                 "type": "Text",
@@ -7897,7 +7897,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "booleanMagnet"
+                "accept": "boolean"
             }
         ],
         "events": {},
@@ -7932,7 +7932,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "booleanMagnet"
+                "accept": "boolean"
             },
             {
                 "type": "Text",
@@ -7941,7 +7941,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "booleanMagnet"
+                "accept": "boolean"
             }
         ],
         "events": {},
@@ -7977,7 +7977,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "booleanMagnet"
+                "accept": "boolean"
             },
             {
                 "type": "Text",
@@ -8081,7 +8081,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Dropdown",
@@ -8098,7 +8098,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             }
         ],
         "events": {},
@@ -8267,11 +8267,11 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Dropdown",
@@ -8342,7 +8342,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Dropdown",
@@ -8503,7 +8503,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -8565,7 +8565,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -8640,7 +8640,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -8678,7 +8678,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -8717,7 +8717,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -8754,7 +8754,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -8901,7 +8901,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -8951,7 +8951,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -9008,7 +9008,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -9065,7 +9065,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -9122,7 +9122,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -9231,7 +9231,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -9272,7 +9272,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -9312,7 +9312,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -9352,15 +9352,15 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -9429,7 +9429,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -9504,7 +9504,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -9578,11 +9578,11 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -9629,7 +9629,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -9669,7 +9669,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -9756,15 +9756,15 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -9831,7 +9831,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             { "type": "Angle" },
             {
@@ -10173,7 +10173,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -10211,7 +10211,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -10248,7 +10248,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "DropdownDynamic",
@@ -10340,7 +10340,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -10374,7 +10374,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -10408,7 +10408,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -10442,7 +10442,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -10476,11 +10476,11 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -10524,11 +10524,11 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -10583,11 +10583,11 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -10826,7 +10826,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Dropdown",
@@ -11199,7 +11199,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Dropdown",
@@ -11539,7 +11539,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -11781,7 +11781,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -11845,7 +11845,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -11995,7 +11995,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -12074,7 +12074,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -12209,7 +12209,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -12262,11 +12262,11 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -12544,7 +12544,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -12624,7 +12624,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -12846,7 +12846,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -12951,7 +12951,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -13011,7 +13011,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -13053,7 +13053,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -13141,7 +13141,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -13181,11 +13181,11 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -13238,7 +13238,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -13290,11 +13290,11 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -13355,15 +13355,15 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -13418,15 +13418,15 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -13585,7 +13585,7 @@ Entry.block = {
             },
             {
                 "type": "Keyboard",
-                "value": 81
+                "value": '81'
             }
         ],
         "events": {},
@@ -13944,7 +13944,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             }
         ],
         "events": {},
@@ -13976,7 +13976,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             }
         ],
         "events": {},
@@ -14008,7 +14008,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             }
         ],
         "events": {},
@@ -14101,7 +14101,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -14167,7 +14167,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -14362,7 +14362,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -14472,7 +14472,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "DropdownDynamic",
@@ -14536,7 +14536,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "DropdownDynamic",
@@ -14589,7 +14589,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "DropdownDynamic",
@@ -14599,7 +14599,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -14657,11 +14657,11 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -14729,7 +14729,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Text",
@@ -14977,7 +14977,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Text",
@@ -15174,7 +15174,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -15230,7 +15230,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -15289,7 +15289,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -15338,11 +15338,11 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -15388,15 +15388,15 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -15510,7 +15510,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",
@@ -15616,7 +15616,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "stringMagnet"
+                "accept": "string"
             },
             {
                 "type": "Indicator",

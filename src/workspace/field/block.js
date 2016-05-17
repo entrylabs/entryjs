@@ -128,13 +128,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
             delete this._originBlock;
         } else {
             switch (this.acceptType) {
-                case "booleanMagnet":
+                case "boolean":
                     blockType = "True";
                     break;
-                case "stringMagnet":
+                case "string":
                     blockType = "text";
                     break;
-                case "paramMagnet":
+                case "param":
                     blockType = "function_field_label";
                     break;
             }
@@ -227,7 +227,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         if (Entry.block[valueBlockType].isPrimitive) {
             valueBlock.doNotSplice = true;
             valueBlock.destroy();
-        } else if (this.acceptType === "paramMagnet") {
+        } else if (this.acceptType === "param") {
             this._destroyObservers();
             valueBlock.view._toGlobalCoordinate();
             block.getTerminateOutputBlock().view._contents[1].replace(
