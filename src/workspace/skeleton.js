@@ -344,7 +344,7 @@ Entry.skeleton.basic_boolean_field = {
     },
     magnets: function() {
         return {
-            bool: {}
+            boolean: {}
         };
     },
     contentPos: function(blockView) {

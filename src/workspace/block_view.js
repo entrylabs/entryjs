@@ -64,7 +64,6 @@ Entry.BlockView = function(block, board, mode) {
 
     this.dragMode = Entry.DRAG_MODE_NONE;
     Entry.Utils.disableContextmenu(this.svgGroup.node);
-    this._targetType = this._getTargetType();
     var events = block.events.viewAdd;
     if (events && !this.isInBlockMenu) {
         events.forEach(function(fn) {
@@ -655,9 +654,13 @@ Entry.BlockView.DRAG_RADIUS = 5;
 
     p._getCloseBlock = function() {
         if (!this._skeleton.magnets) return;
-        var targetType = this._targetType;
-        if (!targetType) return;
-        return this.getBoard().getNearestMagnet(this.x, this.y, targetType);
+        for (var type in this.magnet) {
+            var magnet = this.magnet[type];
+            var closeBlock = this.getBoard().getNearestMagnet(
+                this.x, this.y, type);
+            if (closeBlock)
+                return closeBlock;
+        }
     };
 
     p.dominate = function() {
@@ -907,18 +910,6 @@ Entry.BlockView.DRAG_RADIUS = 5;
         pos.x += this.x;
         pos.y += this.y;
         return pos;
-    };
-
-    p._getTargetType = function() {
-        var targetType = this._skeleton.magnets ? this._skeleton.magnets(this) : {};
-
-        if (targetType.previous) targetType = 'nextMagnet';
-        else if (targetType.string) targetType = 'stringMagnet';
-        else if (targetType.bool) targetType = 'booleanMagnet';
-        else if (targetType.param) targetType = 'paramMagnet';
-        else targetType = null;
-
-        return targetType;
     };
 
     p.getBelowHeight = function() {
