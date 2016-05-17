@@ -576,8 +576,8 @@ Entry.BlockView.DRAG_RADIUS = 5;
                 var ripple = false;
                 switch (Entry.GlobalSvg.terminateDrag(this)) {
                     case gs.DONE:
-                        var closeBlock = board.magnetedBlockView ?
-                            board.magnetedBlockView.block : null;
+                        var closeBlock = board.magnetedBlockView;
+                        if (closeBlock instanceof Entry.BlockView) closeBlock = closeBlock.block;
                         if (prevBlock && !closeBlock) {
                             Entry.do("separateBlock", block);
                         } else if (!prevBlock && !closeBlock && !fromBlockMenu) {

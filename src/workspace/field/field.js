@@ -127,6 +127,7 @@ Entry.Field = function() {};
     };
 
     p.setValue = function(value) {
+        if (this.value == value) return;
         this.value = value;
         this._block.params[this._index] = value;
     };

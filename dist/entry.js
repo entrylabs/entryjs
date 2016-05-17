@@ -18450,7 +18450,8 @@ Entry.BlockView.DRAG_RADIUS = 5;
         a = !1;
         switch(Entry.GlobalSvg.terminateDrag(this)) {
           case g.DONE:
-            g = b.magnetedBlockView ? b.magnetedBlockView.block : null;
+            g = b.magnetedBlockView;
+            g instanceof Entry.BlockView && (g = g.block);
             f && !g ? Entry.do("separateBlock", e) : f || g || d ? g ? ("next" === g.view.magneting ? (a = e.getLastBlock(), Entry.do("insertBlock", g, a).isPass(d)) : Entry.do("insertBlock", e, g).isPass(d), createjs.Sound.play("entryMagneting"), a = !0) : Entry.do("moveBlock", e).isPass(d) : e.getThread().view.isGlobal() ? Entry.do("moveBlock", e) : Entry.do("separateBlock", e);
             break;
           case g.RETURN:
@@ -19092,8 +19093,7 @@ Entry.Field = function() {
     return this._block.params[this._index];
   };
   b.setValue = function(a) {
-    this.value = a;
-    this._block.params[this._index] = a;
+    this.value != a && (this.value = a, this._block.params[this._index] = a);
   };
   b._isEditable = function() {
     if (this._block.view.dragMode == Entry.DRAG_MODE_DRAG) {
