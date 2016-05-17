@@ -7707,7 +7707,6 @@ p.bindWorkspace = function(b) {
 p._updateSelectedBlock = function() {
   var b = this.workspace.selectedBlockView;
   if (b && this.visible && b != this._blockView) {
-    this.first && (this.blockHelperContent_.removeClass("entryBlockHelperIntro"), this.first = !1);
     var a = b.block.type;
     this._blockView = b;
     this.renderBlock(a);
@@ -7715,7 +7714,8 @@ p._updateSelectedBlock = function() {
 };
 p.renderBlock = function(b) {
   var a = Lang.Helper[b];
-  if (b && this.visible && a) {
+  if (b && this.visible && a && !Entry.block[b].isPrimitive) {
+    this.first && (this.blockHelperContent_.removeClass("entryBlockHelperIntro"), this.first = !1);
     this.code.clear();
     var c = Entry.block[b].def, c = c || {type:b};
     this.code.createThread([c]);
@@ -17015,7 +17015,7 @@ a) {
 }, event:"start"}, press_some_key:{color:"#3BBD70", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_keyboard.png", size:17, position:{x:0, y:-2}}, {type:"Dropdown", options:[["q", "81"], ["w", "87"], ["e", "69"], ["r", "82"], ["a", "65"], ["s", "83"], ["d", "68"], ["\uc704\ucabd \ud654\uc0b4\ud45c", "38"], ["\uc544\ub798\ucabd \ud654\uc0b4\ud45c", "40"], ["\uc67c\ucabd \ud654\uc0b4\ud45c", "37"], ["\uc624\ub978\ucabd \ud654\uc0b4\ud45c", 
 "39"], ["\uc5d4\ud130", "13"], ["\uc2a4\ud398\uc774\uc2a4", "32"]], value:"81", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/start_03.png", size:12}], events:{}, def:{params:[null, null, null]}, paramsKeyMap:{VALUE:1}, func:function(b, a) {
   return a.callReturn();
-}}, when_some_key_pressed:{color:"#3BBD70", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_keyboard.png", size:17, position:{x:0, y:-2}}, {type:"Keyboard", value:81}], events:{}, def:{params:[null, "81"], type:"when_some_key_pressed"}, paramsKeyMap:{VALUE:1}, "class":"event", isNotFor:[], func:function(b, a) {
+}}, when_some_key_pressed:{color:"#3BBD70", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_keyboard.png", size:17, position:{x:0, y:-2}}, {type:"Keyboard", value:"81"}], events:{}, def:{params:[null, "81"], type:"when_some_key_pressed"}, paramsKeyMap:{VALUE:1}, "class":"event", isNotFor:[], func:function(b, a) {
   return a.callReturn();
 }, event:"keyPress"}, mouse_clicked:{color:"#3BBD70", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_mouse.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null], type:"mouse_clicked"}, "class":"event", isNotFor:[], func:function(b, a) {
   return a.callReturn();
@@ -18247,7 +18247,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
     if (this.magnet.next || this._skeleton.nextShadow) {
       g = this.getBoard().suffix, this.pathGroup.attr({filter:"url(#entryBlockShadowFilter_" + g + ")"});
     } else {
-      if (this.magnet.string || this.magnet.bool) {
+      if (this.magnet.string || this.magnet.boolean) {
         f.stroke = Entry.Utils.colorDarken(this._schema.color, .65);
       }
     }
@@ -19657,7 +19657,7 @@ Entry.FieldKeyboard = function(b, a, c) {
   this.position = b.position;
   this._contents = b;
   this._index = c;
-  this.setValue(this.getValue());
+  this.setValue(String(this.getValue()));
   this._optionVisible = !1;
   this.renderStart(a);
   Entry.keyPressed && (this.keyPressed = Entry.keyPressed.attach(this, this._keyboardControl));
@@ -19700,7 +19700,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
   };
   b.applyValue = function(a, b) {
     this.destroyOption();
-    this.getValue() != b && (this.setValue(b), this.textElement.textContent = a, this.resize());
+    this.getValue() != b && (this.setValue(String(b)), this.textElement.textContent = a, this.resize());
   };
   b.resize = function() {
     var a = this.getTextWidth();

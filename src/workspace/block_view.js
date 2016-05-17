@@ -140,7 +140,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
             this.pathGroup.attr({
                 filter: 'url(#entryBlockShadowFilter_' + suffix + ')'
             });
-        } else if (this.magnet.string || this.magnet.bool)
+        } else if (this.magnet.string || this.magnet.boolean)
             pathStyle.stroke = Entry.Utils.colorDarken(this._schema.color, 0.65);
 
         if (skeleton.outerLine) {

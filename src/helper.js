@@ -73,11 +73,6 @@ p._updateSelectedBlock = function() {
     var blockView = this.workspace.selectedBlockView;
     if (!blockView || !this.visible || blockView == this._blockView) return;
 
-    if (this.first) {
-        this.blockHelperContent_.removeClass('entryBlockHelperIntro');
-        this.first = false;
-    }
-
     var type = blockView.block.type;
     this._blockView = blockView;
     this.renderBlock(type);
@@ -85,7 +80,13 @@ p._updateSelectedBlock = function() {
 
 p.renderBlock = function(type) {
     var description = Lang.Helper[type];
-    if (!type || !this.visible || !description) return;
+    if (!type || !this.visible || !description || Entry.block[type].isPrimitive) return;
+
+    if (this.first) {
+        this.blockHelperContent_.removeClass('entryBlockHelperIntro');
+        this.first = false;
+    }
+
     var code = this.code;
     this.code.clear();
 

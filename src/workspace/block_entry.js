@@ -13585,7 +13585,7 @@ Entry.block = {
             },
             {
                 "type": "Keyboard",
-                "value": 81
+                "value": '81'
             }
         ],
         "events": {},
