@@ -7707,7 +7707,6 @@ p.bindWorkspace = function(b) {
 p._updateSelectedBlock = function() {
   var b = this.workspace.selectedBlockView;
   if (b && this.visible && b != this._blockView) {
-    this.first && (this.blockHelperContent_.removeClass("entryBlockHelperIntro"), this.first = !1);
     var a = b.block.type;
     this._blockView = b;
     this.renderBlock(a);
@@ -7715,7 +7714,8 @@ p._updateSelectedBlock = function() {
 };
 p.renderBlock = function(b) {
   var a = Lang.Helper[b];
-  if (b && this.visible && a) {
+  if (b && this.visible && a && !Entry.block[b].isPrimitive) {
+    this.first && (this.blockHelperContent_.removeClass("entryBlockHelperIntro"), this.first = !1);
     this.code.clear();
     var c = Entry.block[b].def, c = c || {type:b};
     this.code.createThread([c]);
