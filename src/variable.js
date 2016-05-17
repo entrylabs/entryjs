@@ -365,11 +365,10 @@ Entry.Variable.prototype.updateView = function() {
             this.valueView_.y = 1;
             if (this.isNumber()) {
                 this.valueView_.text = this.getValue().toFixed(2).replace('.00', '');
-            }
-            else {
+            } else {
                 this.valueView_.text = this.getValue();
-
             }
+
             var width = this.textView_.getMeasuredWidth() + this.valueView_.getMeasuredWidth() + 26;
             width = Math.max(width, 90);
             this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1")
@@ -563,7 +562,7 @@ Entry.Variable.prototype.setValue = function(value) {
 
         if (!isMinFloat && !isMaxFloat) {
             this.viewValue_ = this.value_;
-            this.value_ = Math.floor(this.value_);
+            this.value_ = this.value_;
         } else delete this.viewValue_;
     }
 
@@ -792,7 +791,7 @@ Entry.Variable.prototype.updateSlideValueByView = function() {
     value = parseFloat(value);
     if (value < minValue) this.setValue(this.minValue_);
     else if (value > maxValue) this.setValue(this.maxValue_);
-    else this.setValue(value);
+    else this.setValue(Math.round(value));
 };
 
 Entry.Variable.prototype.getMinValue = function() {

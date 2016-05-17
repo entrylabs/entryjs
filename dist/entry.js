@@ -13039,7 +13039,7 @@ Entry.Variable.prototype.setValue = function(b) {
   } else {
     var a = Entry.isFloat(this.minValue_), c = Entry.isFloat(this.maxValue_);
     this.value_ = b < this.minValue_ ? this.minValue_ : b > this.maxValue_ ? this.maxValue_ : b;
-    a || c ? delete this.viewValue_ : (this.viewValue_ = this.value_, this.value_ = Math.floor(this.value_));
+    a || c ? delete this.viewValue_ : this.value_ = this.viewValue_ = this.value_;
   }
   this.isCloud_ && Entry.variableContainer.updateCloudVariables();
   this.updateView();
@@ -13142,7 +13142,7 @@ Entry.Variable.prototype.updateSlideValueByView = function() {
   0 > b && (b = 0);
   1 < b && (b = 1);
   var a = parseFloat(this.minValue_), c = parseFloat(this.maxValue_), b = (a + Number(Math.abs(c - a) * b)).toFixed(2), b = parseFloat(b);
-  b < a ? this.setValue(this.minValue_) : b > c ? this.setValue(this.maxValue_) : this.setValue(b);
+  b < a ? this.setValue(this.minValue_) : b > c ? this.setValue(this.maxValue_) : this.setValue(Math.round(b));
 };
 Entry.Variable.prototype.getMinValue = function() {
   return this.minValue_;
