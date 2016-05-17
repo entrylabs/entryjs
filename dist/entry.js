@@ -3098,7 +3098,7 @@ Blockly.Blocks.boolean_and = {init:function() {
   this.appendValueInput("RIGHTHAND").setCheck("Boolean");
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
-}, syntax:{py:["(%1) && (%3)"]}};
+}, syntax:{py:["%1 && %3"]}};
 Entry.block.boolean_and = function(b, a) {
   var c = a.getBooleanValue("LEFTHAND", a), d = a.getBooleanValue("RIGHTHAND", a);
   return c && d;
@@ -3110,7 +3110,7 @@ Blockly.Blocks.boolean_or = {init:function() {
   this.appendValueInput("RIGHTHAND").setCheck("Boolean");
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
-}, syntax:{py:["(%1) || (%3)"]}};
+}, syntax:{py:["%1 || %3"]}};
 Entry.block.boolean_or = function(b, a) {
   var c = a.getBooleanValue("LEFTHAND", a), d = a.getBooleanValue("RIGHTHAND", a);
   return c || d;
@@ -3123,7 +3123,7 @@ Blockly.Blocks.boolean_not = {init:function() {
   this.appendDummyInput();
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
-}, syntax:{py:["!(%2)"]}};
+}, syntax:{py:["!%2"]}};
 Entry.block.boolean_not = function(b, a) {
   return !a.getBooleanValue("VALUE");
 };
@@ -3162,7 +3162,7 @@ Blockly.Blocks.boolean_basic_operator = {init:function() {
   this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:["(%1) %b (%3)"]}};
+}, syntax:{js:[], py:["%1 %2 %3"]}};
 Entry.block.boolean_basic_operator = function(b, a) {
   var c = a.getField("OPERATOR", a), d = a.getStringValue("LEFTHAND", a), e = a.getStringValue("RIGHTHAND", a);
   switch(c) {
@@ -10959,6 +10959,40 @@ Entry.AssemblerObjectConvertor = function() {
     return d;
   };
 })(Entry.AssemblerObjectConvertor.prototype);
+Entry.AssemblerValueConvertor = function() {
+};
+(function(b) {
+  b.binaryOperatorValueConvertor = function(a) {
+    console.log("binaryOperatorValueConvertor", a);
+    switch(a) {
+      case "==":
+        a = "EQUAL";
+        break;
+      case ">":
+        a = "GREATER";
+        break;
+      case "<":
+        a = "LESS";
+        break;
+      case ">=":
+        a = "GREATER_OR_EQUAL";
+        break;
+      case "<=":
+        a = "LESS_OR_EQUAL";
+        break;
+      case "&&":
+        a = null;
+        break;
+      case "||":
+        a = null;
+        break;
+      case "!":
+        a = null;
+        break;
+    }
+    return a;
+  };
+})(Entry.AssemblerValueConvertor.prototype);
 Entry.BlockMetaExtractor = function() {
 };
 (function(b) {
@@ -11001,10 +11035,26 @@ Entry.PyAstGenerator = function() {
     }
   };
 })(Entry.PyAstGenerator.prototype);
+Entry.ParticularBlockProcessing = function() {
+};
+(function(b) {
+  b.isParticularBlock = function(a) {
+    console.log("isParticularBlock", a);
+    var b = !1;
+    switch(a) {
+      case "reach_something":
+        b = !0;
+        break;
+      default:
+        b = !1;
+    }
+    return b;
+  };
+})(Entry.ParticularBlockProcessing.prototype);
 Entry.BlockVariableMap = function() {
 };
 (function(b) {
-  b.getDropdownDynamicType = {when_message_cast:"variable", message_cast:"variable", message_cast_wait:"variable", start_scene:"scene", create_clone:"object", locate:"object", locate_object_time:"object", see_angle_object:"object", change_to_some_shape:"picture", sound_something_with_block:"sound", sound_something_second_with_block:"sound", sound_from_to:"sound", sound_something_wait_with_block:"sound", sound_something_second_wait_with_block:"sound", sound_from_to_and_wait:"sound"};
+  b.getDropdownDynamicType = {when_message_cast:"variable", message_cast:"variable", message_cast_wait:"variable", start_scene:"scene", create_clone:"object", locate:"object", locate_object_time:"object", see_angle_object:"object", reach_something:"object", change_to_some_shape:"picture", sound_something_with_block:"sound", sound_something_second_with_block:"sound", sound_from_to:"sound", sound_something_wait_with_block:"sound", sound_something_second_wait_with_block:"sound", sound_from_to_and_wait:"sound"};
 })(Entry.BlockVariableMap.prototype);
 Entry.KeyboardCodeMap = function() {
 };
@@ -11025,131 +11075,181 @@ Entry.PyBlockAssembler = function(b) {
     switch(a.type) {
       case "ExpressionStatement":
         console.log("ExpressionStatement unit", a, b, d, e);
-        var g = a.expression.callee;
-        if (g.object.name && g.property.name) {
-          var h = String(g.object.name).concat(".").concat(g.property.name)
-        } else {
-          "__pythonRuntime" == String(g.object.object.name) && "functions" == String(g.object.property.name) && (h = String(g.property.name));
+        var g = a.expression, h = g.callee;
+        if (h) {
+          var k = this.assemble(g)
         }
-        var h = this.getBlock(h), k = Entry.BlockMetaExtractor.prototype.getParamsType(h);
-        f = Entry.BlockMetaExtractor.prototype.getDefParamsType(h);
-        var l = 0, n = [], arguments = a.expression.arguments;
+        if ((h = g.operator) && null != h) {
+          console.log("operator", h);
+          var l, n = this.getBlock("&&" == h ? "(%1) and (%3)" : "||" == h ? "(%1) or (%3)" : "(%1 %2 %3)");
+          l = Entry.BlockMetaExtractor.prototype.getParamsType(n);
+          f = Entry.BlockMetaExtractor.prototype.getDefParamsType(n);
+          var m = 0, k = [];
+          console.log("blockType", n);
+          if (m = g.left) {
+            m = this.assemble(m, n, f, 0), console.log("leftExpression", m), k.push(m);
+          }
+          console.log("before cv operator", h);
+          0 != h.length && (console.log("opoopop", h), h = String(h), h = Entry.AssemblerValueConvertor.prototype.binaryOperatorValueConvertor(h), console.log("cv operator", h), k.push(h));
+          if (h = g.right) {
+            m = this.assemble(h, n, f, 2), console.log("rightExpression", m), k.push(m);
+          }
+        }
+        h = g.value;
+        if (1 == h) {
+          n = this.getBlock("True");
+          Entry.BlockMetaExtractor.prototype.getParamsType(n);
+          f = Entry.BlockMetaExtractor.prototype.getDefParamsType(n);
+          f = this.assemble(g, n, f, 0);
+          break;
+        } else {
+          if (0 == h) {
+            n = this.getBlock("False");
+            Entry.BlockMetaExtractor.prototype.getParamsType(n);
+            f = Entry.BlockMetaExtractor.prototype.getDefParamsType(n);
+            f = this.assemble(g, n, f, 0);
+            break;
+          }
+        }
+        f = {type:n, params:k};
+        console.log("ExpressionStatement result", f);
+        break;
+      case "CallExpression":
+        console.log("CallExpression unit", a, b, d, e);
+        h = a.callee;
+        l = this.assemble(h);
+        n = this.getBlock(l);
+        l = Entry.BlockMetaExtractor.prototype.getParamsType(n);
+        f = Entry.BlockMetaExtractor.prototype.getDefParamsType(n);
+        k = [];
+        arguments = g.arguments;
         console.log("argument origin", arguments);
         if (arguments && arguments.length) {
-          for (g = 0;g < arguments.length;g++) {
-            console.log("meta", g, arguments[g], k[g], f[g]);
-            if ("Indicator" == k[g]) {
-              l = null, arguments.splice(g, 0, l);
+          for (h = 0;h < arguments.length;h++) {
+            console.log("meta", h, arguments[h], l[h], f[h]);
+            if ("Indicator" == l[h]) {
+              m = null, arguments.splice(h, 0, m);
             } else {
-              if ("Block" == k[g]) {
-                l = g, l = this.assemble(arguments[g], h, f, l);
+              if ("Block" == l[h]) {
+                m = h, m = this.assemble(arguments[h], n, f, m);
               } else {
-                if ("Keyboard" == k[g]) {
-                  l = Entry.KeyboardCodeMap.prototype.keyCharToCode[arguments[g].value];
+                if ("Keyboard" == l[h]) {
+                  m = Entry.KeyboardCodeMap.prototype.keyCharToCode[arguments[h].value];
                 } else {
-                  l = arguments[g].value;
-                  b && null != b || (b = h);
-                  var m = Entry.BlockVariableMap.prototype.getDropdownDynamicType[b];
-                  console.log("variable convertor", l, m);
-                  l = Entry.AssemblerObjectConvertor.prototype.convert(m, l);
+                  if (m = arguments[h].value, b && null != b || (b = n), g = Entry.BlockVariableMap.prototype.getDropdownDynamicType[b], console.log("variable convertor", m, g), m = Entry.AssemblerObjectConvertor.prototype.convert(g, m), Entry.ParticularBlockProcessing.prototype.isParticularBlock(n)) {
+                    k.push(null);
+                    k.push(m);
+                    k.push(null);
+                    break;
+                  }
                 }
               }
             }
-            console.log("param", l);
-            n.push(l);
+            console.log("param", m);
+            k.push(m);
           }
         }
-        f = {type:h, params:n};
-        console.log("ExpressionStatement result", f);
+        f = k;
+        break;
+      case "MemberExpression":
+        console.log("MemberExpression unit", a, b, d, e);
+        a.object.name && a.property.name ? l = String(a.object.name).concat(".").concat(a.property.name) : "__pythonRuntime" == String(a.object.object.name) && "functions" == String(a.object.property.name) && (l = String(a.property.name));
+        f = l;
         break;
       case "WhileStatement":
         console.log("WhileStatement unit", a);
-        h = this.getBlock("while True:\n$1");
-        Entry.BlockMetaExtractor.prototype.getParamsType(h);
-        f = Entry.BlockMetaExtractor.prototype.getDefParamsType(h);
-        l = a.test;
-        n = [];
-        l = this.assemble(l, h, f, 0);
-        n.push(l);
+        n = this.getBlock("while True:\n$1");
+        Entry.BlockMetaExtractor.prototype.getParamsType(n);
+        f = Entry.BlockMetaExtractor.prototype.getDefParamsType(n);
+        m = a.test;
         k = [];
+        m = this.assemble(m, n, f, 0);
+        k.push(m);
+        g = [];
         f = a.body.body;
-        for (g in f) {
-          a = this.assemble(f[g]), k.push(a);
+        for (h in f) {
+          a = this.assemble(f[h]), g.push(a);
         }
-        f = {type:h, statements:[k]};
+        f = {type:n, statements:[g]};
         console.log("WhileStatement result", f);
         break;
       case "BlockStatement":
         console.log("BlockStatement unit", a);
-        "range" == a.body[0].declarations[0].init.callee.property.name && (h = "for i in range");
-        h = this.getBlock(h);
-        k = Entry.BlockMetaExtractor.prototype.getParamsType(h);
-        f = Entry.BlockMetaExtractor.prototype.getDefParamsType(h);
-        n = [];
+        "range" == a.body[0].declarations[0].init.callee.property.name && (l = "for i in range");
+        n = this.getBlock(l);
+        l = Entry.BlockMetaExtractor.prototype.getParamsType(n);
+        f = Entry.BlockMetaExtractor.prototype.getDefParamsType(n);
+        k = [];
         if ((arguments = a.body[0].declarations[0].init.arguments) && arguments.length) {
-          for (g = 0;g < arguments.length;g++) {
-            "Indicator" == k[g] ? (l = null, arguments.splice(g, 0, l)) : "Block" == k[g] ? (l = g, l = this.assemble(arguments[g], h, f, l)) : "Keyboard" == k[g] ? l = Entry.KeyboardCodeMap.prototype.keyCharToCode[arguments[g].value] : (l = arguments[g].value, m = Entry.ParamTypeMap.prototype.getDropdownDynamicType[block], l = Entry.AssemblerObjectConvertor.prototype.convert(m, l)), n.push(l);
+          for (h = 0;h < arguments.length;h++) {
+            "Indicator" == l[h] ? (m = null, arguments.splice(h, 0, m)) : "Block" == l[h] ? (m = h, m = this.assemble(arguments[h], n, f, m)) : "Keyboard" == l[h] ? m = Entry.KeyboardCodeMap.prototype.keyCharToCode[arguments[h].value] : (m = arguments[h].value, g = Entry.ParamTypeMap.prototype.getDropdownDynamicType[block], m = Entry.AssemblerObjectConvertor.prototype.convert(g, m)), k.push(m);
           }
         }
-        m = a.body[1].consequent;
-        f = m.body[0].body;
+        l = a.body[1].consequent;
+        f = l.body[0].body;
         f.shift();
-        k = [];
-        for (g in f) {
-          a = this.assemble(f[g]), k.push(a);
+        g = [];
+        for (h in f) {
+          a = this.assemble(f[h]), g.push(a);
         }
-        f = {type:h, params:n, statements:[k]};
+        f = {type:n, params:k, statements:[g]};
         console.log("BlockStatement result", f);
         break;
       case "IfStatement":
         console.log("IfStatement unit", a);
-        m = a.consequent;
-        k = a.alternate;
-        l = a.test;
-        n = [];
-        h = this.getBlock(null == k ? "if %1:\n$1" : "if %1:\n$1\nelse:\n$2");
-        console.log("if block type", h);
-        Entry.BlockMetaExtractor.prototype.getParamsType(h);
-        Entry.BlockMetaExtractor.prototype.getDefParamsType(h);
-        l = this.assemble(l, h, defParamsType, 0);
-        n.push(l);
-        var l = [], q = [];
-        if (null != m) {
-          f = m.body;
-          for (g in f) {
-            a = this.assemble(f[g]), l.push(a);
+        l = a.consequent;
+        g = a.alternate;
+        m = a.test;
+        k = [];
+        n = this.getBlock(null == g ? "if %1:\n$1" : "if %1:\n$1\nelse:\n$2");
+        console.log("if block type", n);
+        Entry.BlockMetaExtractor.prototype.getParamsType(n);
+        Entry.BlockMetaExtractor.prototype.getDefParamsType(n);
+        m = this.assemble(m, n, defParamsType, 0);
+        k.push(m);
+        var m = [], q = [];
+        if (null != l) {
+          f = l.body;
+          for (h in f) {
+            a = this.assemble(f[h]), m.push(a);
           }
-          f = {type:h, params:n, statements:[l]};
+          f = {type:n, params:k, statements:[m]};
         }
-        if (null != k) {
-          f = k.body;
-          for (g in f) {
-            a = this.assemble(f[g]), q.push(a);
+        if (null != g) {
+          f = g.body;
+          for (h in f) {
+            a = this.assemble(f[h]), q.push(a);
           }
-          f = {type:h, params:n, statements:[l, q]};
+          f = {type:n, params:k, statements:[m, q]};
         }
         console.log("IfStatement result", f);
         break;
       case "BreakStatement":
         console.log("BreakStatement unit", a);
-        h = this.getBlock("break");
-        f = {type:h};
+        n = this.getBlock("break");
+        f = {type:n};
         console.log("BreakStatement result", f);
         break;
       case "Literal":
         console.log("Literal unit", a, b, d, e);
-        h = d[e];
-        l = a.value;
-        console.log("arg", l);
-        b && null != b || (b = h);
-        m = Entry.BlockVariableMap.prototype.getDropdownDynamicType[b];
-        console.log("literal variable convertor", l, m);
-        l = Entry.AssemblerObjectConvertor.prototype.convert(m, l);
-        f = {type:h, params:[l]};
+        if ("True" == b || "False" == b) {
+          f = {type:b};
+          break;
+        }
+        n = d[e];
+        console.log("literal block type", n);
+        m = a.value;
+        console.log("arg", m);
+        b && null != b || (b = n);
+        g = Entry.BlockVariableMap.prototype.getDropdownDynamicType[b];
+        console.log("literal variable convertor", m, g);
+        m = Entry.AssemblerObjectConvertor.prototype.convert(g, m);
+        console.log("literal param result", m);
+        f = 1 == m ? {type:n} : {type:n, params:[m]};
         console.log("Literal result", f);
         break;
       case "UnaryExpression":
-        console.log("UnaryExpression unit", a, b, d, e), h = d[e], a.prefix && (l = a.operator.concat(a.argument.value)), b && null != b || (b = h), m = Entry.BlockVariableMap.prototype.getDropdownDynamicType[b], console.log("literal variable convertor", l, m), l = Entry.AssemblerObjectConvertor.prototype.convert(m, l), f = {type:h, params:[l]}, console.log("UnaryExpression result", f);
+        console.log("UnaryExpression unit", a, b, d, e), n = d[e], a.prefix && (m = a.operator.concat(a.argument.value)), b && null != b || (b = n), g = Entry.BlockVariableMap.prototype.getDropdownDynamicType[b], console.log("literal variable convertor", m, g), m = Entry.AssemblerObjectConvertor.prototype.convert(g, m), f = {type:n, params:[m]}, console.log("UnaryExpression result", f);
     }
     return f;
   };
@@ -11204,9 +11304,6 @@ Entry.ParserValueConvertor = function() {
         break;
       case "\ub610\ub294":
         a = "||";
-        break;
-      case "(\uc774)\uac00 \uc544\ub2c8\ub2e4":
-        a = "!=";
         break;
     }
     console.log("booleanOperatorConvertor result", a);
@@ -12383,7 +12480,7 @@ Entry.Parser = function(b, a, c) {
       for (d in b) {
         var e = b[d], f = null;
         e.syntax && e.syntax.py && (f = e.syntax.py);
-        f && (f = String(f), f.match(/\(.*\)/) && (e = f.indexOf("("), f = f.substring(0, e)), a[f] = d);
+        f && (f = String(f), f.match(/.*\..*\)/) && (e = f.indexOf("("), f = f.substring(0, e)), a[f] = d);
       }
       return a;
     }
@@ -17339,12 +17436,12 @@ isNotFor:[], func:function(b, a) {
 }, syntax:{js:[], py:[]}}, boolean_and:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Text", text:Lang.Blocks.JUDGEMENT_boolean_and, color:"#3D3D3D"}, {type:"Block", accept:"booleanMagnet"}], events:{}, def:{params:[{type:"True"}, null, {type:"True"}], type:"boolean_and"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"boolean", isNotFor:[], func:function(b, a) {
   var c = a.getBooleanValue("LEFTHAND", a), d = a.getBooleanValue("RIGHTHAND", a);
   return c && d;
-}, syntax:{js:[], py:["(%1) && (%3)"]}}, boolean_or:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Text", text:Lang.Blocks.JUDGEMENT_boolean_or, color:"#3D3D3D"}, {type:"Block", accept:"booleanMagnet"}], events:{}, def:{params:[{type:"True"}, null, {type:"False"}], type:"boolean_or"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"boolean", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["(%1) and (%3)"]}}, boolean_or:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Text", text:Lang.Blocks.JUDGEMENT_boolean_or, color:"#3D3D3D"}, {type:"Block", accept:"booleanMagnet"}], events:{}, def:{params:[{type:"True"}, null, {type:"False"}], type:"boolean_or"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"boolean", isNotFor:[], func:function(b, a) {
   var c = a.getBooleanValue("LEFTHAND", a), d = a.getBooleanValue("RIGHTHAND", a);
   return c || d;
-}, syntax:{js:[], py:["(%1) || (%3)"]}}, boolean_not:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Text", text:Lang.Blocks.JUDGEMENT_boolean_not_1, color:"#3D3D3D"}, {type:"Block", accept:"booleanMagnet"}, {type:"Text", text:Lang.Blocks.JUDGEMENT_boolean_not_2, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"True"}, null], type:"boolean_not"}, paramsKeyMap:{VALUE:1}, "class":"boolean", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["(%1) or (%3)"]}}, boolean_not:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Text", text:Lang.Blocks.JUDGEMENT_boolean_not_1, color:"#3D3D3D"}, {type:"Block", accept:"booleanMagnet"}, {type:"Text", text:Lang.Blocks.JUDGEMENT_boolean_not_2, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"True"}, null], type:"boolean_not"}, paramsKeyMap:{VALUE:1}, "class":"boolean", isNotFor:[], func:function(b, a) {
   return !a.getBooleanValue("VALUE");
-}, syntax:{js:[], py:["!(%2)"]}}, true_or_false:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.JUDGEMENT_true, "true"], [Lang.Blocks.JUDGEMENT_false, "false"]], value:"true", fontSize:11}], events:{}, def:{params:[null]}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
+}, syntax:{js:[], py:["(not %2)"]}}, true_or_false:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.JUDGEMENT_true, "true"], [Lang.Blocks.JUDGEMENT_false, "false"]], value:"true", fontSize:11}], events:{}, def:{params:[null]}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
   return "true" == a.children[0].textContent;
 }, syntax:{js:[], py:[]}}, True:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Text", text:Lang.Blocks.JUDGEMENT_true, color:"#3D3D3D"}], events:{}, def:{params:[null], type:"True"}, func:function(b, a) {
   return !0;
@@ -17366,7 +17463,7 @@ defs:[{params:[{type:"text", params:["10"]}, "EQUAL", {type:"text", params:["10"
     case "LESS_OR_EQUAL":
       return Number(d) <= Number(e);
   }
-}, syntax:{js:[], py:["(%1) %2 (%3)"]}}, show:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null], type:"show"}, "class":"visibility", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["(%1 %2 %3)"]}}, show:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null], type:"show"}, "class":"visibility", isNotFor:[], func:function(b, a) {
   b.setVisible(!0);
   return a.callReturn();
 }, syntax:{js:[], py:["self.show()"]}}, hide:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null], type:"hide"}, "class":"visibility", isNotFor:[], func:function(b, a) {

@@ -74,10 +74,6 @@ Entry.ParserValueConvertor = function() {
                 result = "||";
                 break;
             }
-            case '(이)가 아니다' : {
-                result = "!=";
-                break;
-            }
             default: {
                 result = operator;
             }

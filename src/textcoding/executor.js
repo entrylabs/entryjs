@@ -454,7 +454,7 @@ Entry.Parser = function(mode, type, cm) {
                 continue;
 
             syntax = String(syntax);
-            if(syntax.match(/\(.*\)/)) {
+            if(syntax.match(/.*\..*\)/)) {
                 var index = syntax.indexOf('(');
                 
                 syntax = syntax.substring(0, index);

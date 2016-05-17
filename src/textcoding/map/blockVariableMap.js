@@ -19,6 +19,7 @@ Entry.BlockVariableMap = function() {
                       "locate" : "object",
                       "locate_object_time" : "object",
                       "see_angle_object" : "object",
+                      "reach_something" : "object",
                       "change_to_some_shape" : "picture",
                       "sound_something_with_block" : "sound",
                       "sound_something_second_with_block" : "sound",
