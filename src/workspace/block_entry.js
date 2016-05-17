@@ -17091,6 +17091,14 @@ Entry.block = {
         "isNotFor": [
             "dplay"
         ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_sensor_number"
+                }
+            ],
+            "type": "dplay_get_number_sensor_value"
+        },
         "class": "arduino_value"
     },
     "dplay_get_digital_value": {
@@ -17098,6 +17106,14 @@ Entry.block = {
         "isNotFor": [
             "dplay"
         ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_port_number"
+                }
+            ],
+            "type": "dplay_get_digital_value"
+        },
         "class": "arduino_value"
     },
     "dplay_toggle_led": {
@@ -17105,6 +17121,16 @@ Entry.block = {
         "isNotFor": [
             "dplay"
         ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_port_number"
+                },
+                null,
+                null
+            ],
+            "type": "dplay_toggle_led"
+        },
         "class": "arduino_set"
     },
     "dplay_toggle_pwm": {
@@ -17112,6 +17138,19 @@ Entry.block = {
         "isNotFor": [
             "dplay"
         ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_pwm_port_number"
+                },
+                {
+                    "type": "arduino_text",
+                    "params": [ "255" ]
+                },
+                null
+            ],
+            "type": "dplay_toggle_pwm"
+        },
         "class": "arduino_set"
     },
     "dplay_convert_scale": {
@@ -17119,10 +17158,41 @@ Entry.block = {
         "isNotFor": [
             "dplay"
         ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_number_sensor_value",
+                    "params": [
+                        {
+                            "type": "arduino_get_sensor_number",
+                            "id": "bl5e"
+                        }
+                    ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "1023" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "100" ]
+                }
+            ],
+            "type": "dplay_convert_scale"
+        },
         "class": "arduino"
     },
     "dplay_get_value": {
         "color": "#00979D",
+        "fontColor": "#FFF",
         "skeleton": "basic_string_field",
         "statements": [],
         "template": "아날로그 %1 번  %2 센서값",
@@ -17164,6 +17234,7 @@ Entry.block = {
     },
     "dplay_get_tilt": {
         "color": "#00979D",
+        "fontColor": "#FFF",
         "skeleton": "basic_boolean_field",
         "statements": [],
         "template": "기울기센서 상태가 %1  ",
@@ -17196,6 +17267,7 @@ Entry.block = {
     },
     "dplay_DCmotor": {
         "color": "#00979D",
+        "fontColor": "#FFF",
         "skeleton": "basic",
         "statements": [],
         "template": "%1  DC모터 상태를 %2 %3",
@@ -17260,6 +17332,7 @@ Entry.block = {
     },
     "dplay_buzzer": {
         "color": "#00979D",
+        "fontColor": "#FFF",
         "skeleton": "basic",
         "statements": [],
         "template": "부저를  %1 로 %2 박자로 연주하기 %3",
@@ -17312,6 +17385,7 @@ Entry.block = {
     },
     "dplay_servo": {
         "color": "#00979D",
+        "fontColor": "#FFF",
         "skeleton": "basic",
         "statements": [],
         "template": "서보모터 각도를 %1 로 이동 %2",
@@ -17350,6 +17424,7 @@ Entry.block = {
     },
     "dplay_select_led": {
         "color": "#00979D",
+        "fontColor": "#FFF",
         "skeleton": "basic",
         "statements": [],
         "template": "디지털 %1 LED 상태를 %2 %3",
@@ -17403,6 +17478,7 @@ Entry.block = {
     },
     "dplay_get_switch_status": {
         "color": "#00979D",
+        "fontColor": "#FFF",
         "skeleton": "basic_boolean_field",
         "statements": [],
         "template": "디지털  %1 번 스위치가 %2  ",
@@ -17445,11 +17521,52 @@ Entry.block = {
             else return Entry.hw.getDigitalPortValue(port) == 0 ? 1 : 0;
         }
     },
+    "dplay_get_light_status": {
+        "color": "#00979D",
+        "fontColor": "#FFF",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "template": "빛센서가  %1  ",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["밝음", "BRIGHT"],
+                ["어두움", "DARK"]
+            ],
+            "value": "BRIGHT",
+            "fontSize": 11
+        }],
+        "events": {},
+        "def": {
+            "params": [null],
+            "type": "dplay_get_light_status",
+            "id": "do3r"
+        },
+        "paramsKeyMap": {
+            "STATUS": 0
+        },
+        "class": "dplay_set",
+        "isNotFor": ["dplay"],
+        "func": function (sprite, script) {
+            var value1 = script.getField("STATUS", script);
+            var value2 = 1;
+            if (value1 == "DARK") return Entry.hw.getAnalogPortValue(value2) > 800 ? 1 : 0;
+            else return Entry.hw.getAnalogPortValue(value2) < 800 ? 1 : 0;
+        }
+    },
     "nemoino_get_number_sensor_value": {
         "parent": "arduino_get_number_sensor_value",
         "isNotFor": [
             "nemoino"
         ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_sensor_number"
+                }
+            ],
+            "type": "nemoino_get_number_sensor_value"
+        },
         "class": "arduino_value"
     },
     "nemoino_get_digital_value": {
@@ -17457,6 +17574,14 @@ Entry.block = {
         "isNotFor": [
             "nemoino"
         ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_port_number"
+                }
+            ],
+            "type": "nemoino_get_digital_value"
+        },
         "class": "arduino_value"
     },
     "nemoino_toggle_led": {
@@ -17464,6 +17589,16 @@ Entry.block = {
         "isNotFor": [
             "nemoino"
         ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_port_number"
+                },
+                null,
+                null
+            ],
+            "type": "nemoino_toggle_led"
+        },
         "class": "arduino_set"
     },
     "nemoino_toggle_pwm": {
@@ -17471,6 +17606,19 @@ Entry.block = {
         "isNotFor": [
             "nemoino"
         ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_pwm_port_number"
+                },
+                {
+                    "type": "arduino_text",
+                    "params": [ "255" ]
+                },
+                null
+            ],
+            "type": "nemoino_toggle_pwm"
+        },
         "class": "arduino_set"
     },
     "nemoino_convert_scale": {
@@ -17478,6 +17626,36 @@ Entry.block = {
         "isNotFor": [
             "nemoino"
         ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_number_sensor_value",
+                    "params": [
+                        {
+                            "type": "arduino_get_sensor_number",
+                            "id": "bl5e"
+                        }
+                    ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "1023" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "100" ]
+                }
+            ],
+            "type": "nemoino_convert_scale"
+        },
         "class": "arduino"
     },
     "sensorBoard_get_number_sensor_value": {
@@ -17485,6 +17663,14 @@ Entry.block = {
         "isNotFor": [
             "sensorBoard"
         ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_sensor_number"
+                }
+            ],
+            "type": "sensorBoard_get_number_sensor_value"
+        },
         "class": "arduino_value"
     },
     "sensorBoard_get_digital_value": {
@@ -17492,6 +17678,14 @@ Entry.block = {
         "isNotFor": [
             "sensorBoard"
         ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_port_number"
+                }
+            ],
+            "type": "sensorBoard_get_digital_value"
+        },
         "class": "arduino_value"
     },
     "sensorBoard_toggle_led": {
@@ -17499,6 +17693,16 @@ Entry.block = {
         "isNotFor": [
             "sensorBoard"
         ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_port_number"
+                },
+                null,
+                null
+            ],
+            "type": "sensorBoard_toggle_led"
+        },
         "class": "arduino_set"
     },
     "sensorBoard_toggle_pwm": {
@@ -17506,6 +17710,19 @@ Entry.block = {
         "isNotFor": [
             "sensorBoard"
         ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_pwm_port_number"
+                },
+                {
+                    "type": "arduino_text",
+                    "params": [ "255" ]
+                },
+                null
+            ],
+            "type": "sensorBoard_toggle_pwm"
+        },
         "class": "arduino_set"
     },
     "sensorBoard_convert_scale": {
@@ -17513,6 +17730,36 @@ Entry.block = {
         "isNotFor": [
             "sensorBoard"
         ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_number_sensor_value",
+                    "params": [
+                        {
+                            "type": "arduino_get_sensor_number",
+                            "id": "bl5e"
+                        }
+                    ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "1023" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "100" ]
+                }
+            ],
+            "type": "sensorBoard_convert_scale"
+        },
         "class": "arduino"
     },
     "CODEino_get_number_sensor_value": {
@@ -17520,6 +17767,14 @@ Entry.block = {
         "isNotFor": [
             "CODEino"
         ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_sensor_number"
+                }
+            ],
+            "type": "CODEino_get_number_sensor_value"
+        },
         "class": "arduino_value"
     },
     "CODEino_get_digital_value": {
@@ -17527,6 +17782,14 @@ Entry.block = {
         "isNotFor": [
             "CODEino"
         ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_port_number"
+                }
+            ],
+            "type": "CODEino_get_digital_value"
+        },
         "class": "arduino_value"
     },
     "CODEino_toggle_led": {
@@ -17534,6 +17797,16 @@ Entry.block = {
         "isNotFor": [
             "CODEino"
         ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_port_number"
+                },
+                null,
+                null
+            ],
+            "type": "CODEino_toggle_led"
+        },
         "class": "arduino_set"
     },
     "CODEino_toggle_pwm": {
@@ -17541,6 +17814,19 @@ Entry.block = {
         "isNotFor": [
             "CODEino"
         ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_pwm_port_number"
+                },
+                {
+                    "type": "arduino_text",
+                    "params": [ "255" ]
+                },
+                null
+            ],
+            "type": "CODEino_toggle_pwm"
+        },
         "class": "arduino_set"
     },
     "CODEino_convert_scale": {
@@ -17548,6 +17834,36 @@ Entry.block = {
         "isNotFor": [
             "CODEino"
         ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_number_sensor_value",
+                    "params": [
+                        {
+                            "type": "arduino_get_sensor_number",
+                            "id": "bl5e"
+                        }
+                    ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "1023" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "100" ]
+                }
+            ],
+            "type": "CODEino_convert_scale"
+        },
         "class": "arduino"
     }
 };
