@@ -20558,7 +20558,7 @@ Entry.Board = function(b) {
   b._getCodeBlocks = function(a, b) {
     var d = a.getThreads(), e = [], f;
     switch(b) {
-      case "next":
+      case "previous":
         f = this._getNextMagnets;
         break;
       case "string":
@@ -20688,8 +20688,8 @@ Entry.Board = function(b) {
   b.getNearestMagnet = function(a, b, d) {
     var e = this._magnetMap[d];
     if (e && 0 !== e.length) {
-      var f = 0, g = e.length - 1, h, k = null, l = "next" === d ? b - 15 : b;
-      for (b = "next" === d ? 20 : 0;f <= g;) {
+      var f = 0, g = e.length - 1, h, k = null, l = "previous" === d ? b - 15 : b;
+      for (b = "previous" === d ? 20 : 0;f <= g;) {
         if (h = (f + g) / 2 | 0, d = e[h], l < d.point) {
           g = h - 1;
         } else {
@@ -21369,7 +21369,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
       return null;
     }
     var a = Entry.skeleton[this._schema.skeleton].magnets(this.view);
-    return a.next || a.previous ? "basic" : a.bool || a.string ? "field" : a.output ? "output" : null;
+    return a.next || a.previous ? "basic" : a.boolean || a.string ? "field" : a.output ? "output" : null;
   };
   b.indexOfStatements = function(a) {
     return this.statements.indexOf(a);

@@ -482,7 +482,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         var magnet = skeleton.magnets(this.view);
         if (magnet.next || magnet.previous)
             return "basic";
-        else if (magnet.bool || magnet.string)
+        else if (magnet.boolean || magnet.string)
             return "field";
         else if (magnet.output)
             return "output";

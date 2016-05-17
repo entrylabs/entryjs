@@ -415,7 +415,7 @@ Entry.Board = function(option) {
         var blocks = [];
         var func;
         switch (targetType) {
-            case "next":
+            case "previous":
                 func = this._getNextMagnets;
                 break;
             case "string":
@@ -712,8 +712,8 @@ Entry.Board = function(option) {
             index,
             pointData,
             result = null,
-            searchValue = targetType === "next" ? y - 15 : y,
-            leftOffset = targetType === "next" ? 20 : 0;
+            searchValue = targetType === "previous" ? y - 15 : y,
+            leftOffset = targetType === "previous" ? 20 : 0;
         while (minIndex <= maxIndex) {
             index = (minIndex + maxIndex) / 2 | 0;
             pointData = targetArray[index];
