@@ -18,9 +18,11 @@ Entry.Parser = function(mode, syntax, cm) {
 
     if (mode === "maze") {
         this._stageId = Number(Ntry.configManager.getConfig('stageId'));
-        var configCode = NtryData.config[this._stageId].availableCode;
-        var playerCode = NtryData.player[this._stageId].code;
-        this.setAvailableCode(configCode, playerCode);
+        if (typeof NtryData == "object") {
+            var configCode = NtryData.config[this._stageId].availableCode;
+            var playerCode = NtryData.player[this._stageId].code;
+            this.setAvailableCode(configCode, playerCode);
+        }
     }
     this.mappingSyntax(mode);
 
