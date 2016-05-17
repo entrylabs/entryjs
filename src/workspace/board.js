@@ -39,6 +39,10 @@ Entry.Board = function(option) {
     this._bindEvent();
 };
 
+Entry.Board.OPTION_PASTE = 0;
+Entry.Board.OPTION_ALIGN = 1;
+Entry.Board.OPTION_CLEAR = 2;
+
 (function(p) {
     p.schema = {
         code: null,
@@ -198,6 +202,8 @@ Entry.Board = function(option) {
             var that = this;
 
             var options = [];
+
+        this._contextOptions[Entry.Board.OPTION_PASTE].option.enable = !!Entry.clipboard;
 
             for (var i=0; i<this._contextOptions.length; i++) {
                 if (this._contextOptions[i].activated)
@@ -910,6 +916,3 @@ Entry.Board = function(option) {
 
 })(Entry.Board.prototype);
 
-Entry.Board.OPTION_PASTE = 0;
-Entry.Board.OPTION_ALIGN = 1;
-Entry.Board.OPTION_CLEAR = 2;

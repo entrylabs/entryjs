@@ -20337,6 +20337,9 @@ Entry.Board = function(b) {
   this._addControl();
   this._bindEvent();
 };
+Entry.Board.OPTION_PASTE = 0;
+Entry.Board.OPTION_ALIGN = 1;
+Entry.Board.OPTION_CLEAR = 2;
 (function(b) {
   b.schema = {code:null, dragBlock:null, magnetedBlockView:null, selectedBlockView:null};
   b.createView = function(a) {
@@ -20447,6 +20450,7 @@ Entry.Board = function(b) {
             return;
           }
           a = [];
+          this._contextOptions[Entry.Board.OPTION_PASTE].option.enable = !!Entry.clipboard;
           for (e = 0;e < this._contextOptions.length;e++) {
             this._contextOptions[e].activated && a.push(this._contextOptions[e].option);
           }
@@ -20767,9 +20771,6 @@ Entry.Board = function(b) {
     Entry.windowResized.attach(this, a);
   };
 })(Entry.Board.prototype);
-Entry.Board.OPTION_PASTE = 0;
-Entry.Board.OPTION_ALIGN = 1;
-Entry.Board.OPTION_CLEAR = 2;
 Entry.skeleton = function() {
 };
 Entry.skeleton.basic = {path:function(b) {
