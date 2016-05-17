@@ -25,8 +25,6 @@ Entry.FieldKeyboard = function(content, blockView, index) {
     this._optionVisible = false;
 
     this.renderStart(blockView);
-    if (Entry.keyPressed)
-        this.keyPressed = Entry.keyPressed.attach(this, this._keyboardControl);
 };
 
 Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
@@ -81,8 +79,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     };
 
     p.renderOptions = function() {
+        if (Entry.keyPressed)
+            this.keyPressed = Entry.keyPressed.attach(this, this._keyboardControl);
         var that = this;
-        this.destroyOption();
         this._optionVisible = true;
 
         var blockView = this._blockView;
@@ -115,6 +114,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
         }
 
         this._optionVisible = false;
+        this.command();
+        if (this.keyPressed) {
+            Entry.keyPressed.detach(this.keyPressed);
+            delete this.keyPressed;
+        }
     };
 
     p._keyboardControl = function(event) {
@@ -127,9 +131,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     };
 
     p.applyValue = function(text, value) {
-        this.destroyOption();
-        if (this.getValue() == value) return;
         this.setValue(String(value));
+        this.destroyOption();
         this.textElement.textContent = text;
         this.resize();
     };

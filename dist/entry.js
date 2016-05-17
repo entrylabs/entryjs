@@ -6035,6 +6035,13 @@ Entry.Commander = function(b) {
   }, log:function(a) {
     return [a.id, a.toJSON()];
   }, undo:"scrollBoard"};
+  b.setFieldValue = {type:106, do:function(a, b, d, e, f) {
+    b.setValue(f, !0);
+  }, state:function(a, b, d, e, f) {
+    return [a, b, d, f, e];
+  }, log:function(a, b) {
+    return [a.id, b];
+  }, undo:"setFieldValue"};
 })(Entry.Command);
 (function(b) {
   b.selectObject = {type:201, do:function(a) {
@@ -7135,7 +7142,7 @@ Entry.Engine.prototype.raiseEventOnEntity = function(b, a) {
 };
 Entry.Engine.prototype.captureKeyEvent = function(b) {
   var a = b.keyCode, c = Entry.type;
-  b.ctrlKey && "workspace" == c ? 83 == a ? (b.preventDefault(), Entry.dispatchEvent("saveWorkspace")) : 82 == a ? (b.preventDefault(), Entry.engine.run()) : 90 == a && (b.preventDefault(), Entry.dispatchEvent(b.shiftKey ? "redo" : "undo")) : Entry.engine.isState("run") && Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["keyPress", a]);
+  b.ctrlKey && "workspace" == c ? 83 == a ? (b.preventDefault(), Entry.dispatchEvent("saveWorkspace")) : 82 == a ? (b.preventDefault(), Entry.engine.run()) : 90 == a && (b.preventDefault(), console.log("engine"), Entry.dispatchEvent(b.shiftKey ? "redo" : "undo")) : Entry.engine.isState("run") && Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["keyPress", a]);
   Entry.engine.isState("stop") && "workspace" === c && 37 <= a && 40 >= a && Entry.stage.moveSprite(b);
 };
 Entry.Engine.prototype.raiseKeyEvent = function(b, a) {
@@ -19052,10 +19059,15 @@ Entry.Field = function() {
   b.destroy = function() {
     this.destroyOption();
   };
+  b.command = function() {
+    this._startValue && (this._startValue === this.getValue() || this._blockView.isInBlockMenu || Entry.do("setFieldValue", this._block, this, this.pointer(), this._startValue, this.getValue()));
+    delete this._startValue;
+  };
   b.destroyOption = function() {
     this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
     this.disposeEvent && (Entry.disposeEvent.detach(this.disposeEvent), delete this.documentDownEvent);
     this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
+    this.command();
   };
   b._attachDisposeEvent = function(a) {
     var b = this;
@@ -19093,8 +19105,8 @@ Entry.Field = function() {
   b.getValue = function() {
     return this._block.params[this._index];
   };
-  b.setValue = function(a) {
-    this.value != a && (this.value = a, this._block.params[this._index] = a);
+  b.setValue = function(a, b) {
+    this.value != a && (this.value = a, this._block.params[this._index] = a, b && this._blockView.reDraw());
   };
   b._isEditable = function() {
     if (this._block.view.dragMode == Entry.DRAG_MODE_DRAG) {
@@ -19118,8 +19130,14 @@ Entry.Field = function() {
   b._bindRenderOptions = function() {
     var a = this;
     $(this.svgGroup).bind("mouseup touchend", function(b) {
-      a._isEditable() && a.renderOptions();
+      a._isEditable() && (a.destroyOption(), a._startValue = a.getValue(), a.renderOptions());
     });
+  };
+  b.pointer = function(a) {
+    a = a || [];
+    a.unshift(this._index);
+    a.unshift(Entry.PARAM);
+    return this._block.pointer(a);
   };
 })(Entry.Field.prototype);
 Entry.FieldAngle = function(b, a, c) {
@@ -19149,7 +19167,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
   };
   b.renderOptions = function() {
     var a = this;
-    this.destroyOption();
     this._attachDisposeEvent(function() {
       a.applyValue();
       a.destroyOption();
@@ -19223,6 +19240,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
     this.svgOptionGroup && (this.svgOptionGroup.remove(), delete this.svgOptionGroup);
     this.textElement.textContent = this.getText();
+    this.command();
   };
 })(Entry.FieldAngle.prototype);
 Entry.FieldBlock = function(b, a, c, d, e) {
@@ -19403,6 +19421,7 @@ Entry.FieldColor = function(b, a, c) {
 Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
 (function(b) {
   b.renderStart = function() {
+    this.svgGroup && $(this.svgGroup).remove();
     this.svgGroup = this._blockView.contentSvgGroup.elem("g", {class:"entry-field-color"});
     var a = this._position, b;
     a ? (b = a.x || 0, a = a.y || 0) : (b = 0, a = -8);
@@ -19412,7 +19431,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
   };
   b.renderOptions = function() {
     var a = this;
-    this.destroyOption();
     this._attachDisposeEvent();
     var b = Entry.FieldColor.getWidgetColorList();
     this.optionGroup = Entry.Dom("table", {class:"entry-widget-color-table", parent:$("body")});
@@ -19489,7 +19507,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
   };
   b.renderOptions = function() {
     var a = this;
-    this.destroyOption();
     this._attachDisposeEvent();
     this.optionGroup = Entry.Dom("ul", {class:"entry-widget-dropdown", parent:$("body")});
     this.optionGroup.bind("mousedown touchstart", function(a) {
@@ -19570,7 +19587,6 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
   };
   b.renderOptions = function() {
     var a = this;
-    this.destroyOption();
     this._attachDisposeEvent();
     this.optionGroup = Entry.Dom("ul", {class:"entry-widget-dropdown", parent:$("body")});
     this.optionGroup.bind("mousedown touchstart", function(a) {
@@ -19669,7 +19685,6 @@ Entry.FieldKeyboard = function(b, a, c) {
   this.setValue(String(this.getValue()));
   this._optionVisible = !1;
   this.renderStart(a);
-  Entry.keyPressed && (this.keyPressed = Entry.keyPressed.attach(this, this._keyboardControl));
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
 (function(b) {
@@ -19685,7 +19700,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     this.box.set({x:0, y:0, width:a, height:16});
   };
   b.renderOptions = function() {
-    this.destroyOption();
+    Entry.keyPressed && (this.keyPressed = Entry.keyPressed.attach(this, this._keyboardControl));
     this._optionVisible = !0;
     this._attachDisposeEvent();
     var a = this.getAbsolutePosFromDocument();
@@ -19698,6 +19713,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     this.disposeEvent && (Entry.disposeEvent.detach(this.disposeEvent), delete this.disposeEvent);
     this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
     this._optionVisible = !1;
+    this.command();
+    this.keyPressed && (Entry.keyPressed.detach(this.keyPressed), delete this.keyPressed);
   };
   b._keyboardControl = function(a) {
     a.stopPropagation();
@@ -19708,8 +19725,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     }
   };
   b.applyValue = function(a, b) {
+    this.setValue(String(b));
     this.destroyOption();
-    this.getValue() != b && (this.setValue(String(b)), this.textElement.textContent = a, this.resize());
+    this.textElement.textContent = a;
+    this.resize();
   };
   b.resize = function() {
     var a = this.getTextWidth();
@@ -20007,7 +20026,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
   };
   b.renderOptions = function() {
     var a = this;
-    this.destroyOption();
     this._attachDisposeEvent(function() {
       a.applyValue();
       a.destroyOption();

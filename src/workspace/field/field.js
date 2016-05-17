@@ -17,6 +17,21 @@ Entry.Field = function() {};
         this.destroyOption();
     };
 
+    p.command = function() {
+        if (this._startValue) {
+            if (this._startValue !== this.getValue() && !this._blockView.isInBlockMenu) {
+                Entry.do(
+                    'setFieldValue',
+                    this._block, this,
+                    this.pointer(),
+                    this._startValue,
+                    this.getValue()
+                );
+            }
+        };
+        delete this._startValue;
+    };
+
     p.destroyOption = function() {
         if (this.documentDownEvent) {
             Entry.documentMousedown.detach(this.documentDownEvent);
@@ -32,6 +47,8 @@ Entry.Field = function() {};
             this.optionGroup.remove();
             delete this.optionGroup;
         }
+
+        this.command();
     };
 
     p._attachDisposeEvent = function(func) {
@@ -126,10 +143,11 @@ Entry.Field = function() {};
         return this._block.params[this._index];
     };
 
-    p.setValue = function(value) {
+    p.setValue = function(value, reDraw) {
         if (this.value == value) return;
         this.value = value;
         this._block.params[this._index] = value;
+        if (reDraw) this._blockView.reDraw();
     };
 
     p._isEditable = function() {
@@ -156,9 +174,23 @@ Entry.Field = function() {};
 
     p._bindRenderOptions = function() {
         var that = this;
+
         $(this.svgGroup).bind('mouseup touchend', function(e){
-            if (that._isEditable()) that.renderOptions();
+            if (that._isEditable()) {
+                that.destroyOption();
+                that._startValue = that.getValue();
+                that.renderOptions();
+            }
         });
     };
+
+    p.pointer = function(pointer) {
+        pointer = pointer || [];
+        pointer.unshift(this._index);
+        pointer.unshift(Entry.PARAM);
+        return this._block.pointer(pointer);
+    };
+
+
 
 })(Entry.Field.prototype);
