@@ -1,4 +1,4 @@
-Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:2, TEXT_ALIGNS:["center", "left", "right"], clipboard:null, loadProject:function(b) {
+var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:2, TEXT_ALIGNS:["center", "left", "right"], clipboard:null, loadProject:function(b) {
   b || (b = Entry.getStartProject(Entry.mediaFilePath));
   "workspace" == this.type && Entry.stateManager.startIgnore();
   Entry.projectId = b._id;
@@ -356,7 +356,7 @@ Blockly.Blocks.albert_set_eye_to = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.albert_set_eye_to = function(b, a) {
-  var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a), e = Number(a.getField("COLOR", a));
+  var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a), e = +a.getField("COLOR", a);
   "LEFT" == d ? c.leftEye = e : ("RIGHT" != d && (c.leftEye = e), c.rightEye = e);
   return a.callReturn();
 };
@@ -667,7 +667,7 @@ Blockly.Blocks.albert_set_led_to = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.albert_set_led_to = function(b, a) {
-  var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a), e = Number(a.getField("COLOR", a));
+  var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a), e = +a.getField("COLOR", a);
   "FRONT" == d ? (c.leftEye = e, c.rightEye = e) : "LEFT" == d ? c.leftEye = e : c.rightEye = e;
   return a.callReturn();
 };
@@ -766,7 +766,7 @@ Entry.block.arduino_get_number = function(b, a) {
   d.open("POST", "http://localhost:23518/arduino/", !1);
   d.send(String(c));
   Entry.assert(200 == d.status, "arduino is not connected");
-  return Number(d.responseText);
+  return +d.responseText;
 };
 Blockly.Blocks.arduino_get_number = {init:function() {
   this.setColour("#00979D");
@@ -848,8 +848,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
+  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(c, d);
   return a.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1514,7 +1514,7 @@ Blockly.Blocks.coordinate_mouse = {init:function() {
   this.setInputsInline(!0);
 }};
 Entry.block.coordinate_mouse = function(b, a) {
-  return "x" === a.getField("VALUE", a) ? Number(Entry.stage.mouseCoordinate.x) : Number(Entry.stage.mouseCoordinate.y);
+  return "x" === a.getField("VALUE", a) ? +Entry.stage.mouseCoordinate.x : +Entry.stage.mouseCoordinate.y;
 };
 Blockly.Blocks.coordinate_object = {init:function() {
   this.setColour(calcBlockColor);
@@ -1538,7 +1538,7 @@ Entry.block.coordinate_object = function(b, a) {
       var d = c.parent, d = d.pictures;
       return d.indexOf(c.picture) + 1;
     case "size":
-      return Number(c.getSize().toFixed(1));
+      return +c.getSize().toFixed(1);
     case "picture_name":
       return d = c.parent, d = d.pictures, d[d.indexOf(c.picture)].name;
   }
@@ -1943,10 +1943,10 @@ Entry.block.wait_second = function(b, a) {
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a);
+  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
   setTimeout(function() {
     a.timeFlag = 0;
-  }, 60 / (Entry.FPS || 60) * c * 1E3);
+  }, c);
   return a;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -2681,7 +2681,7 @@ Blockly.Blocks.hamster_set_following_speed_to = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_set_following_speed_to = function(b, a) {
-  Entry.hw.sendQueue.lineTracerSpeed = Number(a.getField("SPEED", a));
+  Entry.hw.sendQueue.lineTracerSpeed = +a.getField("SPEED", a);
   return a.callReturn();
 };
 Blockly.Blocks.hamster_stop = {init:function() {
@@ -2707,7 +2707,7 @@ Blockly.Blocks.hamster_set_led_to = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_set_led_to = function(b, a) {
-  var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a), e = Number(a.getField("COLOR", a));
+  var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a), e = +a.getField("COLOR", a);
   "LEFT" == d ? c.leftLed = e : ("RIGHT" != d && (c.leftLed = e), c.rightLed = e);
   return a.callReturn();
 };
@@ -2906,7 +2906,7 @@ Blockly.Blocks.hamster_set_port_to = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_set_port_to = function(b, a) {
-  var c = Entry.hw.sendQueue, d = a.getField("PORT", a), e = Number(a.getField("MODE", a));
+  var c = Entry.hw.sendQueue, d = a.getField("PORT", a), e = +a.getField("MODE", a);
   "A" == d ? c.ioModeA = e : ("B" != d && (c.ioModeA = e), c.ioModeB = e);
   return a.callReturn();
 };
@@ -2955,7 +2955,7 @@ Blockly.Blocks.is_press_some_key = {init:function() {
   this.setInputsInline(!0);
 }};
 Entry.block.is_press_some_key = function(b, a) {
-  var c = Number(a.getField("VALUE", a));
+  var c = +a.getField("VALUE", a);
   return 0 <= Entry.pressedKeys.indexOf(c);
 };
 Blockly.Blocks.reach_something = {init:function() {
@@ -3169,13 +3169,13 @@ Entry.block.boolean_basic_operator = function(b, a) {
     case "EQUAL":
       return d == e;
     case "GREATER":
-      return Number(d) > Number(e);
+      return +d > +e;
     case "LESS":
-      return Number(d) < Number(e);
+      return +d < +e;
     case "GREATER_OR_EQUAL":
-      return Number(d) >= Number(e);
+      return +d >= +e;
     case "LESS_OR_EQUAL":
-      return Number(d) <= Number(e);
+      return +d <= +e;
   }
 };
 Blockly.Blocks.show = {init:function() {
@@ -3657,7 +3657,7 @@ Blockly.Blocks.rotate_by_angle_dropdown = {init:function() {
 }};
 Entry.block.rotate_by_angle_dropdown = function(b, a) {
   var c = a.getField("VALUE", a);
-  b.setRotation(b.getRotation() + Number(c));
+  b.setRotation(b.getRotation() + +c);
   return a.callReturn();
 };
 Blockly.Blocks.see_angle = {init:function() {
@@ -3749,8 +3749,8 @@ Blockly.Blocks.locate = {init:function() {
 Entry.block.locate = function(b, a) {
   var c = a.getField("VALUE", a), d;
   "mouse" == c ? (c = Entry.stage.mouseCoordinate.x, d = Entry.stage.mouseCoordinate.y) : (d = Entry.container.getEntity(c), c = d.getX(), d = d.getY());
-  b.setX(Number(c));
-  b.setY(Number(d));
+  b.setX(+c);
+  b.setY(+d);
   b.brush && !b.brush.stop && b.brush.lineTo(c, -1 * d);
   return a.callReturn();
 };
@@ -3946,7 +3946,7 @@ Entry.block.locate_object_time = function(b, a) {
     if (0 != c) {
       "mouse" == d ? (d = e.x - b.getX(), e = e.y - b.getY()) : (e = Entry.container.getEntity(d), d = e.getX() - b.getX(), e = e.getY() - b.getY()), a.isStart = !0, a.frameCount = c, a.dX = d / a.frameCount, a.dY = e / a.frameCount;
     } else {
-      return "mouse" == d ? (d = Number(e.x), e = Number(e.y)) : (e = Entry.container.getEntity(d), d = e.getX(), e = e.getY()), b.setX(d), b.setY(e), b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY()), a.callReturn();
+      return "mouse" == d ? (d = +e.x, e = +e.y) : (e = Entry.container.getEntity(d), d = e.getX(), e = e.getY()), b.setX(d), b.setY(e), b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY()), a.callReturn();
     }
   }
   if (0 != a.frameCount) {
@@ -4086,16 +4086,16 @@ Entry.block.direction_relative_duration = function(b, a) {
   delete a.dDirection;
   return a.callReturn();
 };
-Entry.Neobot = {name:"neobot", PORT_MAP:{1:0, 2:0, 3:0, SERVO1:0, SERVO2:0, SERVO1_SPEED:3, SERVO2_SPEED:3, LMOT:0, RMOT:0, note:0, octave:0, duration:0, sound_check:0, O_1:0, O_2:0}, setZero:function() {
-  for (var b in Entry.Neobot.PORT_MAP) {
-    Entry.hw.sendQueue[b] = Entry.Neobot.PORT_MAP[b];
+Entry.Neobot = {name:"neobot", LOCAL_MAP:["IN1", "IN2", "IN3", "IR", "BAT"], REMOTE_MAP:"OUT1 OUT2 OUT3 DCR DCL SND FND OPT".split(" "), setZero:function() {
+  for (var b in Entry.Neobot.REMOTE_MAP) {
+    Entry.hw.sendQueue[Entry.Neobot.REMOTE_MAP[b]] = 0;
   }
   Entry.hw.update();
-}, name:"neobot", monitorTemplate:{imgPath:"hw/neobot.png", width:268, height:270, ports:{1:{name:Lang.Hw.port_en + " 1 " + Lang.Hw.port_ko, type:"input", pos:{x:78, y:9}}, 2:{name:Lang.Hw.port_en + " 2 " + Lang.Hw.port_ko, type:"input", pos:{x:115, y:9}}, 3:{name:Lang.Hw.port_en + " 3 " + Lang.Hw.port_ko, type:"input", pos:{x:153, y:9}}, LMOT:{name:Lang.Hw.left + " " + Lang.Hw.motor, type:"output", pos:{x:78, y:259}}, RMOT:{name:Lang.Hw.right + " " + Lang.Hw.motor, type:"output", pos:{x:191, y:259}}, 
-note:{name:Lang.Hw.buzzer, type:"output", pos:{x:98, y:184}}, SERVO1:{name:Lang.Hw.sub + " " + Lang.Hw.motor + " 1", type:"output", pos:{x:115, y:259}}, SERVO2:{name:Lang.Hw.sub + " " + Lang.Hw.motor + " 2", type:"output", pos:{x:191, y:9}}}}};
+}, name:"neobot", monitorTemplate:{imgPath:"hw/neobot.png", width:700, height:700, listPorts:{IR:{name:"\ub9ac\ubaa8\ucee8", type:"input", pos:{x:0, y:0}}, BAT:{name:"\ubca0\ud130\ub9ac", type:"input", pos:{x:0, y:0}}, SND:{name:Lang.Hw.buzzer, type:"output", pos:{x:0, y:0}}, FND:{name:"FND", type:"output", pos:{x:0, y:0}}}, ports:{IN1:{name:"IN1", type:"input", pos:{x:270, y:200}}, IN2:{name:"IN2", type:"input", pos:{x:325, y:200}}, IN3:{name:"IN3", type:"input", pos:{x:325, y:500}}, DCL:{name:"L-Motor", 
+type:"output", pos:{x:270, y:500}}, DCR:{name:"R-Motor", type:"output", pos:{x:435, y:500}}, OUT1:{name:"OUT1", type:"output", pos:{x:380, y:200}}, OUT2:{name:"OUT2", type:"output", pos:{x:435, y:200}}, OUT3:{name:"OUT3", type:"output", pos:{x:380, y:500}}}, mode:"both"}};
 Blockly.Blocks.neobot_sensor_value = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["1\ubc88 \ud3ec\ud2b8", "1"], ["2\ubc88 \ud3ec\ud2b8", "2"], ["3\ubc88 \ud3ec\ud2b8", "3"], ["\ub9ac\ubaa8\ucee8", "4"]]), "PORT").appendField(" \uac12");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["1\ubc88 \ud3ec\ud2b8", "IN1"], ["2\ubc88 \ud3ec\ud2b8", "IN2"], ["3\ubc88 \ud3ec\ud2b8", "IN3"], ["\ub9ac\ubaa8\ucee8", "IR"], ["\ubc30\ud130\ub9ac", "BAT"]]), "PORT").appendField(" \uac12");
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
 }};
@@ -4103,131 +4103,143 @@ Entry.block.neobot_sensor_value = function(b, a) {
   var c = a.getStringField("PORT");
   return Entry.hw.portData[c];
 };
-Blockly.Blocks.neobot_turn_left = {init:function() {
+Blockly.Blocks.neobot_left_motor = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("\uc67c\ucabd\ubaa8\ud130\ub97c").appendField(new Blockly.FieldDropdown([["\uc55e\uc73c\ub85c", "1"], ["\ub4a4\ub85c", "-1"]]), "DIRECTION").appendField(new Blockly.FieldDropdown([["\ub290\ub9ac\uac8c", "1"], ["\ubcf4\ud1b5", "2"], ["\ube60\ub974\uac8c", "3"]]), "VALUE").appendField("\ud68c\uc804").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField("\uc67c\ucabd\ubaa8\ud130\ub97c").appendField(new Blockly.FieldDropdown([["\uc55e\uc73c\ub85c", "16"], ["\ub4a4\ub85c", "32"]]), "DIRECTION").appendField(new Blockly.FieldDropdown([["0", "0"], ["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"], ["9", "9"], ["10", "10"], ["11", "11"], ["12", "12"], ["13", "13"], ["14", "14"], ["15", "15"]]), "SPEED").appendField("\uc758 \uc18d\ub3c4\ub85c \ud68c\uc804").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 
+  "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
 }};
-Entry.block.neobot_turn_left = function(b, a) {
-  var c = a.getNumberField("VALUE"), d = a.getNumberField("DIRECTION");
-  Entry.hw.sendQueue.LMOT = c * d;
+Entry.block.neobot_left_motor = function(b, a) {
+  var c = a.getNumberField("SPEED"), d = a.getNumberField("DIRECTION");
+  Entry.hw.sendQueue.DCL = c + d;
   return a.callReturn();
 };
-Blockly.Blocks.neobot_stop_left = {init:function() {
+Blockly.Blocks.neobot_stop_left_motor = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField("\uc67c\ucabd\ubaa8\ud130 \uc815\uc9c0").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
 }};
-Entry.block.neobot_stop_left = function(b, a) {
-  Entry.hw.sendQueue.LMOT = 0;
+Entry.block.neobot_stop_left_motor = function(b, a) {
+  Entry.hw.sendQueue.DCL = 0;
   return a.callReturn();
 };
-Blockly.Blocks.neobot_turn_right = {init:function() {
+Blockly.Blocks.neobot_right_motor = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("\uc624\ub978\ucabd\ubaa8\ud130\ub97c").appendField(new Blockly.FieldDropdown([["\uc55e\uc73c\ub85c", "1"], ["\ub4a4\ub85c", "-1"]]), "DIRECTION").appendField(new Blockly.FieldDropdown([["\ub290\ub9ac\uac8c", "1"], ["\ubcf4\ud1b5", "2"], ["\ube60\ub974\uac8c", "3"]]), "VALUE").appendField("\ud68c\uc804").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField("\uc624\ub978\ucabd\ubaa8\ud130\ub97c").appendField(new Blockly.FieldDropdown([["\uc55e\uc73c\ub85c", "16"], ["\ub4a4\ub85c", "32"]]), "DIRECTION").appendField(new Blockly.FieldDropdown([["0", "0"], ["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"], ["9", "9"], ["10", "10"], ["11", "11"], ["12", "12"], ["13", "13"], ["14", "14"], ["15", "15"]]), "SPEED").appendField("\uc758 \uc18d\ub3c4\ub85c \ud68c\uc804").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 
+  "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
 }};
-Entry.block.neobot_turn_right = function(b, a) {
-  var c = a.getNumberField("VALUE"), d = a.getNumberField("DIRECTION");
-  Entry.hw.sendQueue.RMOT = c * d;
+Entry.block.neobot_right_motor = function(b, a) {
+  var c = a.getNumberField("SPEED"), d = a.getNumberField("DIRECTION");
+  Entry.hw.sendQueue.DCR = c + d;
   return a.callReturn();
 };
-Blockly.Blocks.neobot_stop_right = {init:function() {
+Blockly.Blocks.neobot_stop_right_motor = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField("\uc624\ub978\ucabd\ubaa8\ud130 \uc815\uc9c0").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
 }};
-Entry.block.neobot_stop_right = function(b, a) {
-  Entry.hw.sendQueue.RMOT = 0;
+Entry.block.neobot_stop_right_motor = function(b, a) {
+  Entry.hw.sendQueue.DCR = 0;
   return a.callReturn();
 };
-Blockly.Blocks.neobot_run_motor = {init:function() {
+Blockly.Blocks.neobot_all_motor = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["\uc591\ucabd", "1"], ["\uc67c\ucabd", "2"], ["\uc624\ub978\ucabd", "3"]]), "TYPE").appendField("\ubaa8\ud130\ub97c ");
-  this.appendValueInput("DURATION").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("\ucd08\uac04").appendField(new Blockly.FieldDropdown([["\ub290\ub9ac\uac8c", "1"], ["\ubcf4\ud1b5", "2"], ["\ube60\ub974\uac8c", "3"]]), "VALUE").appendField(new Blockly.FieldDropdown([["\uc804\uc9c4", "1"], ["\ud6c4\uc9c4", "2"], ["\uc88c\ud68c\uc804", "3"], ["\uc6b0\ud68c\uc804", "4"]]), "DIRECTION").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField("\uc591\ucabd \ubaa8\ud130\ub97c ");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["0", "0"], ["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"], ["9", "9"], ["10", "10"], ["11", "11"], ["12", "12"], ["13", "13"], ["14", "14"], ["15", "15"]]), "SPEED").appendField(" \uc758 \uc18d\ub3c4\ub85c ").appendField(new Blockly.FieldDropdown([["\uc804\uc9c4", "1"], ["\ud6c4\uc9c4", "2"], ["\uc81c\uc790\ub9ac \uc88c\ud68c\uc804", "3"], ["\uc81c\uc790\ub9ac \uc6b0\ud68c\uc804", "4"], 
+  ["\uc88c\ud68c\uc804", "5"], ["\uc6b0\ud68c\uc804", "6"]]), "DIRECTION").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
 }};
-Entry.block.neobot_run_motor = function(b, a) {
-  if (a.isStart) {
-    if (1 == a.timeFlag) {
-      var c = a.getNumberField("TYPE"), d = a.getNumberField("VALUE");
-      switch(a.getNumberField("DIRECTION")) {
-        case 1:
-          Entry.hw.sendQueue.LMOT = d;
-          Entry.hw.sendQueue.RMOT = d;
-          break;
-        case 2:
-          Entry.hw.sendQueue.LMOT = -1 * d;
-          Entry.hw.sendQueue.RMOT = -1 * d;
-          break;
-        case 3:
-          Entry.hw.sendQueue.LMOT = d;
-          Entry.hw.sendQueue.RMOT = -1 * d;
-          break;
-        case 4:
-          Entry.hw.sendQueue.LMOT = -1 * d, Entry.hw.sendQueue.RMOT = d;
-      }
-      2 === c ? Entry.hw.sendQueue.RMOT = 0 : 3 === c && (Entry.hw.sendQueue.LMOT = 0);
-      return a;
-    }
-    delete a.timeFlag;
-    delete a.isStart;
-    Entry.engine.isContinue = !1;
-    Entry.hw.sendQueue.LMOT = 0;
-    Entry.hw.sendQueue.RMOT = 0;
-    return a.callReturn();
+Entry.block.neobot_all_motor = function(b, a) {
+  a.getNumberField("TYPE");
+  var c = a.getNumberField("SPEED");
+  switch(a.getNumberField("DIRECTION")) {
+    case 1:
+      Entry.hw.sendQueue.DCL = 16 + c;
+      Entry.hw.sendQueue.DCR = 16 + c;
+      break;
+    case 2:
+      Entry.hw.sendQueue.DCL = 32 + c;
+      Entry.hw.sendQueue.DCR = 32 + c;
+      break;
+    case 3:
+      Entry.hw.sendQueue.DCL = 32 + c;
+      Entry.hw.sendQueue.DCR = 16 + c;
+      break;
+    case 4:
+      Entry.hw.sendQueue.DCL = 16 + c;
+      Entry.hw.sendQueue.DCR = 32 + c;
+      break;
+    case 5:
+      Entry.hw.sendQueue.DCL = 0;
+      Entry.hw.sendQueue.DCR = 16 + c;
+      break;
+    case 6:
+      Entry.hw.sendQueue.DCL = 16 + c, Entry.hw.sendQueue.DCR = 0;
   }
-  a.isStart = !0;
-  a.timeFlag = 1;
-  c = 1E3 * a.getNumberValue("DURATION");
-  setTimeout(function() {
-    a.timeFlag = 0;
-  }, c);
-  return a;
-};
-Blockly.Blocks.neobot_servo_1 = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField("SERVO1\uc5d0 \uc5f0\uacb0\ub41c \uc11c\ubcf4\ubaa8\ud130\ub97c").appendField(new Blockly.FieldDropdown([["\ube60\ub978", "3"], ["\ubcf4\ud1b5", "2"], ["\ub290\ub9b0", "1"]]), "SPEED").appendField("\uc18d\ub3c4\ub85c").appendField(new Blockly.FieldDropdown([["0\ub3c4", "0"], ["10\ub3c4", "1"], ["20\ub3c4", "2"], ["30\ub3c4", "3"], ["40\ub3c4", "4"], ["50\ub3c4", "5"], ["60\ub3c4", "6"], ["70\ub3c4", "7"], ["80\ub3c4", "8"], ["90\ub3c4", "9"], ["100\ub3c4", "10"], 
-  ["110\ub3c4", "11"], ["120\ub3c4", "12"], ["130\ub3c4", "13"], ["140\ub3c4", "14"], ["150\ub3c4", "15"], ["160\ub3c4", "16"]]), "VALUE").appendField("\ub85c \uc774\ub3d9").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.neobot_servo_1 = function(b, a) {
-  var c = a.getNumberField("VALUE"), d = a.getNumberField("SPEED");
-  Entry.hw.sendQueue.SERVO1 = c;
-  Entry.hw.sendQueue.SERVO1_SPEED = d;
   return a.callReturn();
 };
-Blockly.Blocks.neobot_servo_2 = {init:function() {
+Blockly.Blocks.neobot_set_servo = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("SERVO2\uc5d0 \uc5f0\uacb0\ub41c \uc11c\ubcf4\ubaa8\ud130\ub97c").appendField(new Blockly.FieldDropdown([["\ube60\ub978", "3"], ["\ubcf4\ud1b5", "2"], ["\ub290\ub9b0", "1"]]), "SPEED").appendField("\uc18d\ub3c4\ub85c").appendField(new Blockly.FieldDropdown([["0\ub3c4", "0"], ["10\ub3c4", "1"], ["20\ub3c4", "2"], ["30\ub3c4", "3"], ["40\ub3c4", "4"], ["50\ub3c4", "5"], ["60\ub3c4", "6"], ["70\ub3c4", "7"], ["80\ub3c4", "8"], ["90\ub3c4", "9"], ["100\ub3c4", "10"], 
-  ["110\ub3c4", "11"], ["120\ub3c4", "12"], ["130\ub3c4", "13"], ["140\ub3c4", "14"], ["150\ub3c4", "15"], ["160\ub3c4", "16"]]), "VALUE").appendField("\ub85c \uc774\ub3d9").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["OUT1", "1"], ["OUT2", "2"], ["OUT3", "3"]]), "PORT").appendField("\ud3ec\ud2b8\uc758 \uc11c\ubcf4\ubaa8\ud130\ub97c").appendField(new Blockly.FieldDropdown([["0\ub3c4", "0"], ["10\ub3c4", "10"], ["20\ub3c4", "20"], ["30\ub3c4", "30"], ["40\ub3c4", "40"], ["50\ub3c4", "50"], ["60\ub3c4", "60"], ["70\ub3c4", "70"], ["80\ub3c4", "80"], ["90\ub3c4", "90"], ["100\ub3c4", "100"], ["110\ub3c4", "110"], ["120\ub3c4", "120"], ["130\ub3c4", 
+  "130"], ["140\ub3c4", "140"], ["150\ub3c4", "150"], ["160\ub3c4", "160"], ["170\ub3c4", "170"], ["180\ub3c4", "180"]]), "DEGREE").appendField(" \uc774\ub3d9").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
 }};
-Entry.block.neobot_servo_2 = function(b, a) {
-  var c = a.getNumberField("VALUE"), d = a.getNumberField("SPEED");
-  Entry.hw.sendQueue.SERVO2 = c;
-  Entry.hw.sendQueue.SERVO2_SPEED = d;
+Entry.block.neobot_set_servo = function(b, a) {
+  var c = a.getNumberField("PORT"), d = a.getNumberField("DEGREE");
+  Entry.hw.sendQueue["OUT" + c] = d;
+  3 === c && (c = 4);
+  Entry.hw.sendQueue.OPT |= c;
+  return a.callReturn();
+};
+Blockly.Blocks.neobot_set_output = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["OUT1", "1"], ["OUT2", "2"], ["OUT3", "3"]]), "PORT").appendField("\ubc88 \ud3ec\ud2b8\uc758 \uac12\uc744");
+  this.appendValueInput("VALUE").setCheck(["Number"]);
+  this.appendDummyInput().appendField("\ub9cc\ud07c \ucd9c\ub825").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.neobot_set_output = function(b, a) {
+  var c = a.getStringField("PORT", a), d = a.getNumberValue("VALUE", a), e = c;
+  0 > d ? d = 0 : 255 < d && (d = 255);
+  3 === e && (e = 4);
+  Entry.hw.sendQueue["OUT" + c] = d;
+  Entry.hw.sendQueue.OPT &= ~e;
+  return a.callReturn();
+};
+Blockly.Blocks.neobot_set_fnd = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("FND\uc5d0");
+  this.appendValueInput("VALUE").setCheck(["Number"]);
+  this.appendDummyInput().appendField("\ucd9c\ub825").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.neobot_set_fnd = function(b, a) {
+  var c = a.getNumberValue("VALUE", a);
+  255 < c ? c = 255 : 0 > c && (c = 0);
+  Entry.hw.sendQueue.FND = c;
   return a.callReturn();
 };
 Blockly.Blocks.neobot_play_note_for = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("\uba5c\ub85c\ub514").appendField(new Blockly.FieldDropdown([[Lang.General.note_c + "", "1"], [Lang.General.note_d + "", "2"], [Lang.General.note_e + "", "3"], [Lang.General.note_f + "", "4"], [Lang.General.note_g + "", "5"], [Lang.General.note_a + "", "6"], [Lang.General.note_b + "", "7"], [Lang.General.note_c + "", "8"]]), "NOTE").appendField("\uc744(\ub97c)").appendField(new Blockly.FieldDropdown([["1", "0"], ["2", "1"], ["3", "2"]]), "OCTAVE").appendField("\uc625\ud0c0\ube0c\ub85c").appendField(new Blockly.FieldDropdown([["2\ubd84\uc74c\ud45c", 
-  "2"], ["4\ubd84\uc74c\ud45c", "4"], ["8\ubd84\uc74c\ud45c", "8"]]), "DURATION");
+  this.appendDummyInput().appendField("\uba5c\ub85c\ub514").appendField(new Blockly.FieldDropdown([["\ubb34\uc74c", "0"], [Lang.General.note_c, "1"], [Lang.General.note_c + "#", "2"], [Lang.General.note_d, "3"], [Lang.General.note_d + "#", "4"], [Lang.General.note_e, "5"], [Lang.General.note_f, "6"], [Lang.General.note_f + "#", "7"], [Lang.General.note_g, "8"], [Lang.General.note_g + "#", "9"], [Lang.General.note_a, "10"], [Lang.General.note_a + "#", "11"], [Lang.General.note_b, "12"]]), "NOTE").appendField("\uc744(\ub97c)").appendField(new Blockly.FieldDropdown([["1", 
+  "0"], ["2", "1"], ["3", "2"], ["4", "3"], ["5", "4"], ["6", "5"]]), "OCTAVE").appendField("\uc625\ud0c0\ube0c\ub85c").appendField(new Blockly.FieldDropdown([["2\ubd84\uc74c\ud45c", "2"], ["4\ubd84\uc74c\ud45c", "4"], ["8\ubd84\uc74c\ud45c", "8"], ["16\ubd84\uc74c\ud45c", "16"]]), "DURATION");
   this.appendDummyInput().appendField("\uae38\uc774\ub9cc\ud07c \uc18c\ub9ac\ub0b4\uae30").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
@@ -4241,34 +4253,19 @@ Entry.block.neobot_play_note_for = function(b, a) {
     }
     delete a.timeFlag;
     delete a.isStart;
+    Entry.hw.sendQueue.SND = 0;
     Entry.engine.isContinue = !1;
     return a.callReturn();
   }
-  var d = a.getNumberField("NOTE", a), e = a.getNumberField("OCTAVE", a), f = a.getNumberField("DURATION", a);
-  a.note = d;
+  var d = a.getNumberField("NOTE", a), e = a.getNumberField("OCTAVE", a), f = a.getNumberField("DURATION", a), d = d + 12 * e;
   a.isStart = !0;
   a.timeFlag = 1;
-  c.note = d;
-  c.octave = e;
-  c.duration = f;
-  c.sound_check = (1E5 * Math.random()).toFixed(0);
+  65 < d && (d = 65);
+  c.SND = d;
   setTimeout(function() {
     a.timeFlag = 0;
   }, 1 / f * 2E3);
   return a;
-};
-Blockly.Blocks.neobot_set_sensor_value = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["1", "O_1"], ["2", "O_2"]]), "PORT").appendField("\ubc88 \ud3ec\ud2b8\uc758 \uac12\uc744").appendField(new Blockly.FieldDropdown([["\ucf1c\uae30", "1"], ["\ub044\uae30", "0"]]), "VALUE");
-  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.neobot_set_sensor_value = function(b, a) {
-  var c = Entry.hw.sendQueue, d = a.getStringField("PORT", a), e = a.getNumberField("VALUE", a);
-  c[d] = e;
-  return a.callReturn();
 };
 Entry.Robotis_carCont = {INSTRUCTION:{NONE:0, WRITE:3, READ:2}, CONTROL_TABLE:{CM_LED:[67, 1], CM_SPRING_RIGHT:[69, 1, 69, 2], CM_SPRING_LEFT:[70, 1, 69, 2], CM_SWITCH:[71, 1], CM_SOUND_DETECTED:[86, 1], CM_SOUND_DETECTING:[87, 1], CM_IR_LEFT:[91, 2, 91, 4], CM_IR_RIGHT:[93, 2, 91, 4], CM_CALIBRATION_LEFT:[95, 2], CM_CALIBRATION_RIGHT:[97, 2], AUX_MOTOR_SPEED_LEFT:[152, 2], AUX_MOTOR_SPEED_RIGHT:[154, 2]}, setZero:function() {
   this.setRobotisData([[Entry.Robotis_carCont.INSTRUCTION.WRITE, 152, 2, 0], [Entry.Robotis_carCont.INSTRUCTION.WRITE, 154, 2, 0]]);
@@ -8061,7 +8058,7 @@ Entry.EntryObject.prototype.generateView = function() {
       13 == a.keyCode && c.editObjectValues(!1);
     };
     g.onblur = function(a) {
-      isNaN(g.value) || c.entity.setX(Number(g.value));
+      isNaN(g.value) || c.entity.setX(+g.value);
       c.updateCoordinateView();
       Entry.stage.updateObject();
     };
@@ -8069,7 +8066,7 @@ Entry.EntryObject.prototype.generateView = function() {
       13 == a.keyCode && c.editObjectValues(!1);
     };
     k.onblur = function(a) {
-      isNaN(k.value) || c.entity.setY(Number(k.value));
+      isNaN(k.value) || c.entity.setY(+k.value);
       c.updateCoordinateView();
       Entry.stage.updateObject();
     };
@@ -8077,7 +8074,7 @@ Entry.EntryObject.prototype.generateView = function() {
       13 == a.keyCode && c.editObjectValues(!1);
     };
     n.onblur = function(a) {
-      isNaN(n.value) || c.entity.setSize(Number(n.value));
+      isNaN(n.value) || c.entity.setSize(+n.value);
       c.updateCoordinateView();
       Entry.stage.updateObject();
     };
@@ -8121,7 +8118,7 @@ Entry.EntryObject.prototype.generateView = function() {
     m.onblur = function(a) {
       a = m.value;
       -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da")));
-      isNaN(a) || c.entity.setRotation(Number(a));
+      isNaN(a) || c.entity.setRotation(+a);
       c.updateRotationView();
       Entry.stage.updateObject();
     };
@@ -8131,7 +8128,7 @@ Entry.EntryObject.prototype.generateView = function() {
     q.onblur = function(a) {
       a = q.value;
       -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da")));
-      isNaN(a) || c.entity.setDirection(Number(a));
+      isNaN(a) || c.entity.setDirection(+a);
       c.updateRotationView();
       Entry.stage.updateObject();
     };
@@ -8203,24 +8200,24 @@ Entry.EntryObject.prototype.generateView = function() {
       }
     }), this.view_.appendChild(d), d = Entry.createElement("div"), d.addClass("entryObjectInformationWorkspace"), d.object = this, this.isInformationToggle = !1, b.appendChild(d), this.informationView_ = d, d = Entry.createElement("div"), d.addClass("entryObjectRotateLabelWrapperWorkspace"), this.view_.appendChild(d), this.rotateLabelWrapperView_ = d, e = Entry.createElement("span"), e.addClass("entryObjectRotateSpanWorkspace"), e.innerHTML = Lang.Workspace.rotation + " : ", m = Entry.createElement("input"), 
     m.addClass("entryObjectRotateInputWorkspace"), this.rotateSpan_ = e, this.rotateInput_ = m, h = Entry.createElement("span"), h.addClass("entryObjectDirectionSpanWorkspace"), h.innerHTML = Lang.Workspace.direction + " : ", q = Entry.createElement("input"), q.addClass("entryObjectDirectionInputWorkspace"), this.directionInput_ = q, d.appendChild(e), d.appendChild(m), d.appendChild(h), d.appendChild(q), d.rotateInput_ = m, d.directionInput_ = q, c = this, m.onkeypress = function(a) {
-      13 == a.keyCode && (a = m.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || c.entity.setRotation(Number(a)), c.updateRotationView(), m.blur());
+      13 == a.keyCode && (a = m.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || c.entity.setRotation(+a), c.updateRotationView(), m.blur());
     }, m.onblur = function(a) {
       c.entity.setRotation(c.entity.getRotation());
       Entry.stage.updateObject();
     }, q.onkeypress = function(a) {
-      13 == a.keyCode && (a = q.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || c.entity.setDirection(Number(a)), c.updateRotationView(), q.blur());
+      13 == a.keyCode && (a = q.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || c.entity.setDirection(+a), c.updateRotationView(), q.blur());
     }, q.onblur = function(a) {
       c.entity.setDirection(c.entity.getDirection());
       Entry.stage.updateObject();
     }, b = Entry.createElement("div"), b.addClass("entryObjectRotationWrapperWorkspace"), b.object = this, this.view_.appendChild(b), d = Entry.createElement("span"), d.addClass("entryObjectCoordinateWorkspace"), b.appendChild(d), e = Entry.createElement("span"), e.addClass("entryObjectCoordinateSpanWorkspace"), e.innerHTML = "X:", g = Entry.createElement("input"), g.addClass("entryObjectCoordinateInputWorkspace"), h = Entry.createElement("span"), h.addClass("entryObjectCoordinateSpanWorkspace"), 
     h.innerHTML = "Y:", k = Entry.createElement("input"), k.addClass("entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right"), l = Entry.createElement("span"), l.addClass("entryObjectCoordinateSpanWorkspace"), l.innerHTML = Lang.Workspace.Size, n = Entry.createElement("input"), n.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size"), d.appendChild(e), d.appendChild(g), d.appendChild(h), d.appendChild(k), d.appendChild(l), d.appendChild(n), 
     d.xInput_ = g, d.yInput_ = k, d.sizeInput_ = n, this.coordinateView_ = d, c = this, g.onkeypress = function(a) {
-      13 == a.keyCode && (isNaN(g.value) || c.entity.setX(Number(g.value)), c.updateCoordinateView(), c.blur());
+      13 == a.keyCode && (isNaN(g.value) || c.entity.setX(+g.value), c.updateCoordinateView(), c.blur());
     }, g.onblur = function(a) {
       c.entity.setX(c.entity.getX());
       Entry.stage.updateObject();
     }, k.onkeypress = function(a) {
-      13 == a.keyCode && (isNaN(k.value) || c.entity.setY(Number(k.value)), c.updateCoordinateView(), c.blur());
+      13 == a.keyCode && (isNaN(k.value) || c.entity.setY(+k.value), c.updateCoordinateView(), c.blur());
     }, k.onblur = function(a) {
       c.entity.setY(c.entity.getY());
       Entry.stage.updateObject();
@@ -10155,7 +10152,7 @@ Entry.Parser = function(b, a, c) {
   this.codeMirror = c;
   this._lang = a || "js";
   this.availableCode = [];
-  "maze" === b && (this._stageId = Number(Ntry.configManager.getConfig("stageId")), this.setAvailableCode(NtryData.config[this._stageId].availableCode, NtryData.player[this._stageId].code));
+  "maze" === b && (this._stageId = +Ntry.configManager.getConfig("stageId"), this.setAvailableCode(NtryData.config[this._stageId].availableCode, NtryData.player[this._stageId].code));
   this.mappingSyntax(b);
   switch(this._lang) {
     case "js":
@@ -10826,7 +10823,7 @@ p = Entry.Script.prototype;
 p.init = function(b, a, c) {
   Entry.assert("BLOCK" == b.tagName.toUpperCase(), b.tagName);
   this.type = b.getAttribute("type");
-  this.id = Number(b.getAttribute("id"));
+  this.id = +b.getAttribute("id");
   b.getElementsByTagName("mutation").length && b.getElementsByTagName("mutation")[0].hasAttribute("hashid") && (this.hashId = b.childNodes[0].getAttribute("hashid"));
   "REPEAT" == this.type.substr(0, 6).toUpperCase() && (this.isRepeat = !0);
   a instanceof Entry.Script && (this.previousScript = a, a.parentScript && (this.parentScript = a.parentScript));
@@ -10890,7 +10887,7 @@ p.getValue = function(b) {
   return this.values[b].run();
 };
 p.getNumberValue = function(b) {
-  return Number(this.values[b].run());
+  return +this.values[b].run();
 };
 p.getStringValue = function(b) {
   return String(this.values[b].run());
@@ -10905,7 +10902,7 @@ p.getStringField = function(b) {
   return String(this.fields[b]);
 };
 p.getNumberField = function(b) {
-  return Number(this.fields[b]);
+  return +this.fields[b];
 };
 p.callReturn = function() {
   return this.nextScript ? this.nextScript : this.parentScript ? this.parentScript : null;
@@ -11852,7 +11849,7 @@ Entry.getElementsByClassName = function(b) {
   return a;
 };
 Entry.parseNumber = function(b) {
-  return "string" != typeof b || isNaN(Number(b)) ? "number" != typeof b || isNaN(Number(b)) ? !1 : b : Number(b);
+  return "string" != typeof b || isNaN(+b) ? "number" != typeof b || isNaN(+b) ? !1 : b : +b;
 };
 Entry.countStringLength = function(b) {
   var a, c = 0;
@@ -11918,7 +11915,7 @@ Entry.computeInputWidth = function(b) {
   document.body.appendChild(a);
   b = a.offsetWidth;
   document.body.removeChild(a);
-  return Number(b + 10) + "px";
+  return +(b + 10) + "px";
 };
 Entry.isArrowOrBackspace = function(b) {
   return -1 < [37, 38, 39, 40, 8].indexOf(b);
@@ -12083,7 +12080,7 @@ Entry.getMaxFloatPoint = function(b) {
   return Math.min(a, 20);
 };
 Entry.convertToRoundedDecimals = function(b, a) {
-  return isNaN(b) || !this.isFloat(b) ? b : Number(Math.round(b + "e" + a) + "e-" + a);
+  return isNaN(b) || !this.isFloat(b) ? b : +(Math.round(b + "e" + a) + "e-" + a);
 };
 Entry.attachEventListener = function(b, a, c) {
   setTimeout(function() {
@@ -12415,7 +12412,7 @@ Entry.Func.generateBlock = function(b) {
   var a = {template:b.template, params:b.params}, c = /(%\d)/mi, d = b.template.split(c), e = "", f = 0, g = 0, h;
   for (h in d) {
     var k = d[h];
-    c.test(k) ? (k = Number(k.split("%")[1]) - 1, k = b.params[k], "Indicator" !== k.type && ("booleanMagnet" === k.accept ? (e += Lang.template.function_param_boolean + (f ? f : ""), f++) : (e += Lang.General.param_string + (g ? g : ""), g++))) : e += k;
+    c.test(k) ? (k = +k.split("%")[1] - 1, k = b.params[k], "Indicator" !== k.type && ("booleanMagnet" === k.accept ? (e += Lang.template.function_param_boolean + (f ? f : ""), f++) : (e += Lang.General.param_string + (g ? g : ""), g++))) : e += k;
   }
   return {block:a, description:e};
 };
@@ -12708,14 +12705,14 @@ p.initSocket = function() {
     } else {
       var b = this, a, c;
       if (-1 < location.protocol.indexOf("https")) {
-        c = new WebSocket("wss://localhost:23518");
+        c = new WebSocket("wss://hardware.play-entry.org:23518");
       } else {
         try {
           a = new WebSocket("ws://localhost:23518");
         } catch (d) {
         }
         try {
-          c = new WebSocket("wss://localhost:23518");
+          c = new WebSocket("wss://hardware.play-entry.org:23518");
         } catch (d) {
         }
       }
@@ -12793,7 +12790,7 @@ p.removePortReadable = function(b) {
     var a, c;
     for (c in this.sendQueue.readablePorts) {
       if (this.sendQueue.readablePorts[c] == b) {
-        a = Number(c);
+        a = +c;
         break;
       }
     }
@@ -13028,7 +13025,7 @@ Entry.Variable.prototype.getId = function() {
   return this.id_;
 };
 Entry.Variable.prototype.getValue = function() {
-  return this.isNumber() ? Number(this.value_) : this.value_;
+  return this.isNumber() ? +this.value_ : this.value_;
 };
 Entry.Variable.prototype.isNumber = function() {
   return isNaN(this.value_) ? !1 : !0;
@@ -13141,7 +13138,7 @@ Entry.Variable.prototype.updateSlideValueByView = function() {
   var b = Math.max(this.valueSetter_.graphics.command.x - 10, 0) / this.maxWidth;
   0 > b && (b = 0);
   1 < b && (b = 1);
-  var a = parseFloat(this.minValue_), c = parseFloat(this.maxValue_), b = (a + Number(Math.abs(c - a) * b)).toFixed(2), b = parseFloat(b);
+  var a = parseFloat(this.minValue_), c = parseFloat(this.maxValue_), b = (a + Math.abs(c - a) * b).toFixed(2), b = parseFloat(b);
   b < a ? this.setValue(this.minValue_) : b > c ? this.setValue(this.maxValue_) : this.setValue(b);
 };
 Entry.Variable.prototype.getMinValue = function() {
@@ -14326,7 +14323,7 @@ Entry.VariableContainer.prototype.updateListSettingView = function(b) {
   c.removeClass("entryRemove");
 };
 Entry.VariableContainer.prototype.setListLength = function(b) {
-  b = Number(b);
+  b = +b;
   var a = this.selectedList.array_;
   if (!isNaN(b)) {
     var c = a.length;
@@ -14923,2865 +14920,6 @@ Entry.block.test_wrapper = {skeleton:"basic", mode:"maze", color:"#3BBD70", temp
 }};
 Entry.block.basic_button = {skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"basic button", color:"#333", align:"center"}], func:function() {
 }};
-if ("object" !== typeof Entry) {
-  var Entry = {}
-}
-if ("object" == typeof exports) {
-  var Lang = require("../../extern/lang/ko.js").Lang
-}
-Entry.block = {albert_hand_found:{color:"#00979D", fontColor:"#fff", skeleton:"basic_boolean_field", statements:[], params:[], events:{}, def:{params:[], type:"albert_hand_found"}, "class":"albert_sensor", isNotFor:["albert"], func:function(b, a) {
-  var c = Entry.hw.portData;
-  return 40 < c.leftProximity || 40 < c.rightProximity;
-}}, albert_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.ALBERT_sensor_leftProximity, "leftProximity"], [Lang.Blocks.ALBERT_sensor_rightProximity, "rightProximity"], [Lang.Blocks.ALBERT_sensor_light, "light"], [Lang.Blocks.ALBERT_sensor_battery, "battery"], [Lang.Blocks.ALBERT_sensor_signalStrength, "signalStrength"], [Lang.Blocks.ALBERT_sensor_frontOid, "frontOid"], [Lang.Blocks.ALBERT_sensor_backOid, "backOid"], [Lang.Blocks.ALBERT_sensor_positionX, 
-"positionX"], [Lang.Blocks.ALBERT_sensor_positionY, "positionY"], [Lang.Blocks.ALBERT_sensor_orientation, "orientation"]], value:"leftProximity", fontSize:11}], events:{}, def:{params:[null], type:"albert_value"}, paramsKeyMap:{DEVICE:0}, "class":"albert_sensor", isNotFor:["albert"], func:function(b, a) {
-  var c = Entry.hw.portData, d = a.getField("DEVICE");
-  return c[d];
-}}, albert_move_forward_for_secs:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["1"]}, null], type:"albert_move_forward_for_secs"}, paramsKeyMap:{VALUE:0}, "class":"albert_wheel", isNotFor:["albert"], func:function(b, a) {
-  var c = Entry.hw.sendQueue;
-  if (a.isStart) {
-    if (1 == a.timeFlag) {
-      return a;
-    }
-    delete a.isStart;
-    delete a.timeFlag;
-    Entry.engine.isContinue = !1;
-    c.leftWheel = 0;
-    c.rightWheel = 0;
-    return a.callReturn();
-  }
-  a.isStart = !0;
-  a.timeFlag = 1;
-  c.leftWheel = 30;
-  c.rightWheel = 30;
-  var c = 1E3 * a.getNumberValue("VALUE"), d = setTimeout(function() {
-    a.timeFlag = 0;
-    Entry.Albert.removeTimeout(d);
-  }, c);
-  Entry.Albert.timeouts.push(d);
-  return a;
-}}, albert_move_backward_for_secs:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["1"]}, null], type:"albert_move_backward_for_secs"}, paramsKeyMap:{VALUE:0}, "class":"albert_wheel", isNotFor:["albert"], func:function(b, a) {
-  var c = Entry.hw.sendQueue;
-  if (a.isStart) {
-    if (1 == a.timeFlag) {
-      return a;
-    }
-    delete a.isStart;
-    delete a.timeFlag;
-    Entry.engine.isContinue = !1;
-    c.leftWheel = 0;
-    c.rightWheel = 0;
-    return a.callReturn();
-  }
-  a.isStart = !0;
-  a.timeFlag = 1;
-  c.leftWheel = -30;
-  c.rightWheel = -30;
-  var c = 1E3 * a.getNumberValue("VALUE"), d = setTimeout(function() {
-    a.timeFlag = 0;
-    Entry.Albert.removeTimeout(d);
-  }, c);
-  Entry.Albert.timeouts.push(d);
-  return a;
-}}, albert_turn_for_secs:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["1"]}, null], type:"albert_turn_for_secs", id:"como"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"albert_wheel", isNotFor:["albert"], 
-func:function(b, a) {
-  var c = Entry.hw.sendQueue;
-  if (a.isStart) {
-    if (1 == a.timeFlag) {
-      return a;
-    }
-    delete a.isStart;
-    delete a.timeFlag;
-    Entry.engine.isContinue = !1;
-    c.leftWheel = 0;
-    c.rightWheel = 0;
-    return a.callReturn();
-  }
-  a.isStart = !0;
-  a.timeFlag = 1;
-  "LEFT" == a.getField("DIRECTION", a) ? (c.leftWheel = -30, c.rightWheel = 30) : (c.leftWheel = 30, c.rightWheel = -30);
-  var c = 1E3 * a.getNumberValue("VALUE"), d = setTimeout(function() {
-    a.timeFlag = 0;
-    Entry.Albert.removeTimeout(d);
-  }, c);
-  Entry.Albert.timeouts.push(d);
-  return a;
-}}, albert_change_both_wheels_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["10"]}, {type:"text", params:["10"]}, null], type:"albert_change_both_wheels_by"}, paramsKeyMap:{LEFT:0, RIGHT:1}, "class":"albert_wheel", isNotFor:["albert"], func:function(b, a) {
-  var c = Entry.hw.sendQueue, d = a.getNumberValue("LEFT"), e = a.getNumberValue("RIGHT");
-  c.leftWheel = void 0 != c.leftWheel ? c.leftWheel + d : d;
-  c.rightWheel = void 0 != c.rightWheel ? c.rightWheel + e : e;
-  return a.callReturn();
-}}, albert_set_both_wheels_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["30"]}, {type:"text", params:["30"]}, null], type:"albert_set_both_wheels_to"}, paramsKeyMap:{LEFT:0, RIGHT:1}, "class":"albert_wheel", isNotFor:["albert"], func:function(b, a) {
-  var c = Entry.hw.sendQueue;
-  c.leftWheel = a.getNumberValue("LEFT");
-  c.rightWheel = a.getNumberValue("RIGHT");
-  return a.callReturn();
-}}, albert_change_wheel_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["10"]}, null], type:"albert_change_wheel_by"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"albert_wheel", 
-isNotFor:["albert"], func:function(b, a) {
-  var c = Entry.hw.sendQueue, d = a.getField("DIRECTION"), e = a.getNumberValue("VALUE");
-  "LEFT" == d ? c.leftWheel = void 0 != c.leftWheel ? c.leftWheel + e : e : ("RIGHT" != d && (c.leftWheel = void 0 != c.leftWheel ? c.leftWheel + e : e), c.rightWheel = void 0 != c.rightWheel ? c.rightWheel + e : e);
-  return a.callReturn();
-}}, albert_set_wheel_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["30"]}, null], type:"albert_set_wheel_to"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"albert_wheel", 
-isNotFor:["albert"], func:function(b, a) {
-  var c = Entry.hw.sendQueue, d = a.getField("DIRECTION"), e = a.getNumberValue("VALUE");
-  "LEFT" == d ? c.leftWheel = e : ("RIGHT" != d && (c.leftWheel = e), c.rightWheel = e);
-  return a.callReturn();
-}}, albert_stop:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"albert_stop", id:"4adb"}, "class":"albert_wheel", isNotFor:["albert"], func:function(b, a) {
-  var c = Entry.hw.sendQueue;
-  c.leftWheel = 0;
-  c.rightWheel = 0;
-  return a.callReturn();
-}}, albert_set_pad_size_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["108"]}, {type:"text", params:["76"]}, null], type:"albert_set_pad_size_to", id:"5mhg"}, paramsKeyMap:{WIDTH:0, HEIGHT:1}, "class":"albert_wheel", isNotFor:["albert"], func:function(b, a) {
-  var c = Entry.hw.sendQueue;
-  c.padWidth = a.getNumberValue("WIDTH");
-  c.padHeight = a.getNumberValue("HEIGHT");
-  return a.callReturn();
-}}, albert_set_eye_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]], value:"LEFT", fontSize:11}, {type:"Dropdown", options:[[Lang.General.red, "4"], [Lang.General.yellow, "6"], [Lang.General.green, "2"], [Lang.Blocks.ALBERT_color_cyan, "3"], [Lang.General.blue, "1"], [Lang.Blocks.ALBERT_color_magenta, "5"], [Lang.General.white, "7"]], value:"4", fontSize:11}, {type:"Indicator", 
-img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"albert_set_eye_to"}, paramsKeyMap:{DIRECTION:0, COLOR:1}, "class":"albert_led", isNotFor:["albert"], func:function(b, a) {
-  var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a), e = Number(a.getField("COLOR", a));
-  "LEFT" == d ? c.leftEye = e : ("RIGHT" != d && (c.leftEye = e), c.rightEye = e);
-  return a.callReturn();
-}}, albert_clear_eye:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]], value:"LEFT", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null], type:"albert_clear_eye"}, paramsKeyMap:{DIRECTION:0}, "class":"albert_led", isNotFor:["albert"], func:function(b, a) {
-  var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a);
-  "LEFT" == d ? c.leftEye = 0 : ("RIGHT" != d && (c.leftEye = 0), c.rightEye = 0);
-  return a.callReturn();
-}}, albert_body_led:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\ucf1c\uae30", "ON"], ["\ub044\uae30", "OFF"]], value:"ON", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null], type:"albert_body_led"}, paramsKeyMap:{STATE:0}, "class":"albert_led", isNotFor:["albert"], func:function(b, a) {
-  var c = Entry.hw.sendQueue;
-  "ON" == a.getField("STATE", a) ? c.bodyLed = 1 : c.bodyLed = 0;
-  return a.callReturn();
-}}, albert_front_led:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\ucf1c\uae30", "ON"], ["\ub044\uae30", "OFF"]], value:"ON", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null], type:"albert_front_led"}, paramsKeyMap:{STATE:0}, "class":"albert_led", isNotFor:["albert"], func:function(b, a) {
-  var c = Entry.hw.sendQueue;
-  "ON" == a.getField("STATE", a) ? c.frontLed = 1 : c.frontLed = 0;
-  return a.callReturn();
-}}, albert_beep:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"albert_beep"}, "class":"albert_buzzer", isNotFor:["albert"], func:function(b, a) {
-  var c = Entry.hw.sendQueue;
-  if (a.isStart) {
-    if (1 == a.timeFlag) {
-      return a;
-    }
-    delete a.isStart;
-    delete a.timeFlag;
-    Entry.engine.isContinue = !1;
-    c.buzzer = 0;
-    return a.callReturn();
-  }
-  a.isStart = !0;
-  a.timeFlag = 1;
-  c.buzzer = 440;
-  c.note = 0;
-  var d = setTimeout(function() {
-    a.timeFlag = 0;
-    Entry.Albert.removeTimeout(d);
-  }, 200);
-  Entry.Albert.timeouts.push(d);
-  return a;
-}}, albert_change_buzzer_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["10"]}, null], type:"albert_change_buzzer_by"}, paramsKeyMap:{VALUE:0}, "class":"albert_buzzer", isNotFor:["albert"], func:function(b, a) {
-  var c = Entry.hw.sendQueue, d = a.getNumberValue("VALUE");
-  c.buzzer = void 0 != c.buzzer ? c.buzzer + d : d;
-  c.note = 0;
-  return a.callReturn();
-}}, albert_set_buzzer_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["1000"]}, null], type:"albert_set_buzzer_to"}, paramsKeyMap:{VALUE:0}, "class":"albert_buzzer", isNotFor:["albert"], func:function(b, a) {
-  var c = Entry.hw.sendQueue;
-  c.buzzer = a.getNumberValue("VALUE");
-  c.note = 0;
-  return a.callReturn();
-}}, albert_clear_buzzer:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"albert_clear_buzzer"}, "class":"albert_buzzer", isNotFor:["albert"], func:function(b, a) {
-  var c = Entry.hw.sendQueue;
-  c.buzzer = 0;
-  c.note = 0;
-  return a.callReturn();
-}}, albert_play_note_for:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.note_c + "", "4"], [Lang.General.note_c + "#", "5"], [Lang.General.note_d + "", "6"], [Lang.General.note_e + "b", "7"], [Lang.General.note_e + "", "8"], [Lang.General.note_f + "", "9"], [Lang.General.note_f + "#", "10"], [Lang.General.note_g + "", "11"], [Lang.General.note_g + "#", "12"], [Lang.General.note_a + "", "13"], [Lang.General.note_b + "b", "14"], [Lang.General.note_b + 
-"", "15"]], value:"4", fontSize:11}, {type:"Dropdown", options:[["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"]], value:"1", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, "4", {type:"text", params:["0.5"]}, null], type:"albert_play_note_for"}, paramsKeyMap:{NOTE:0, OCTAVE:1, VALUE:2}, "class":"albert_buzzer", isNotFor:["albert"], func:function(b, 
-a) {
-  var c = Entry.hw.sendQueue;
-  if (a.isStart) {
-    if (1 == a.timeFlag) {
-      return a;
-    }
-    delete a.isStart;
-    delete a.timeFlag;
-    Entry.engine.isContinue = !1;
-    c.note = 0;
-    return a.callReturn();
-  }
-  var d = a.getNumberField("NOTE", a), e = a.getNumberField("OCTAVE", a), f = a.getNumberValue("VALUE", a), g = Entry.Albert.tempo, f = 6E4 * f / g;
-  a.isStart = !0;
-  a.timeFlag = 1;
-  c.buzzer = 0;
-  c.note = d + 12 * (e - 1);
-  if (100 < f) {
-    var h = setTimeout(function() {
-      c.note = 0;
-      Entry.Albert.removeTimeout(h);
-    }, f - 100);
-    Entry.Albert.timeouts.push(h);
-  }
-  var k = setTimeout(function() {
-    a.timeFlag = 0;
-    Entry.Albert.removeTimeout(k);
-  }, f);
-  Entry.Albert.timeouts.push(k);
-  return a;
-}}, albert_rest_for:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["0.25"]}, null], type:"albert_rest_for"}, paramsKeyMap:{VALUE:0}, "class":"albert_buzzer", isNotFor:["albert"], func:function(b, a) {
-  var c = Entry.hw.sendQueue;
-  if (a.isStart) {
-    if (1 == a.timeFlag) {
-      return a;
-    }
-    delete a.isStart;
-    delete a.timeFlag;
-    Entry.engine.isContinue = !1;
-    return a.callReturn();
-  }
-  a.isStart = !0;
-  a.timeFlag = 1;
-  var d = a.getNumberValue("VALUE"), d = 6E4 * d / Entry.Albert.tempo;
-  c.buzzer = 0;
-  c.note = 0;
-  var e = setTimeout(function() {
-    a.timeFlag = 0;
-    Entry.Albert.removeTimeout(e);
-  }, d);
-  Entry.Albert.timeouts.push(e);
-  return a;
-}}, albert_change_tempo_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["20"]}, null], type:"albert_change_tempo_by"}, paramsKeyMap:{VALUE:0}, "class":"albert_buzzer", isNotFor:["albert"], func:function(b, a) {
-  Entry.Albert.tempo += a.getNumberValue("VALUE");
-  1 > Entry.Albert.tempo && (Entry.Albert.tempo = 1);
-  return a.callReturn();
-}}, albert_set_tempo_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["60"]}, null], type:"albert_set_tempo_to"}, paramsKeyMap:{VALUE:0}, "class":"albert_buzzer", isNotFor:["albert"], func:function(b, a) {
-  Entry.Albert.tempo = a.getNumberValue("VALUE");
-  1 > Entry.Albert.tempo && (Entry.Albert.tempo = 1);
-  return a.callReturn();
-}}, albert_move_forward:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null]}, func:function(b, a) {
-  var c = Entry.hw.sendQueue;
-  if (a.isStart) {
-    if (1 == a.timeFlag) {
-      return a;
-    }
-    delete a.timeFlag;
-    delete a.isStart;
-    Entry.engine.isContinue = !1;
-    c.leftWheel = 0;
-    c.rightWheel = 0;
-    return a.callReturn();
-  }
-  a.isStart = !0;
-  a.timeFlag = 1;
-  c.leftWheel = 30;
-  c.rightWheel = 30;
-  setTimeout(function() {
-    a.timeFlag = 0;
-  }, 1E3);
-  return a;
-}}, albert_move_backward:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null]}, func:function(b, a) {
-  var c = Entry.hw.sendQueue;
-  if (a.isStart) {
-    if (1 == a.timeFlag) {
-      return c.leftWheel = -30, c.rightWheel = -30, a;
-    }
-    delete a.timeFlag;
-    delete a.isStart;
-    Entry.engine.isContinue = !1;
-    c.leftWheel = 0;
-    c.rightWheel = 0;
-    return a.callReturn();
-  }
-  a.isStart = !0;
-  a.timeFlag = 1;
-  setTimeout(function() {
-    a.timeFlag = 0;
-  }, 1E3);
-  return a;
-}}, albert_turn_around:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"]], value:"LEFT", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null]}, paramsKeyMap:{DIRECTION:0}, func:function(b, a) {
-  var c = Entry.hw.sendQueue;
-  if (a.isStart) {
-    if (1 == a.timeFlag) {
-      return c.leftWheel = a.leftValue, c.rightWheel = a.rightValue, a;
-    }
-    delete a.timeFlag;
-    delete a.isStart;
-    delete a.leftValue;
-    delete a.rightValue;
-    Entry.engine.isContinue = !1;
-    c.leftWheel = 0;
-    c.rightWheel = 0;
-    return a.callReturn();
-  }
-  c = "LEFT" == a.getField("DIRECTION", a);
-  a.leftValue = c ? -30 : 30;
-  a.rightValue = c ? 30 : -30;
-  a.isStart = !0;
-  a.timeFlag = 1;
-  setTimeout(function() {
-    a.timeFlag = 0;
-  }, 1E3);
-  return a;
-}}, albert_set_led_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "FRONT"]], value:"LEFT", fontSize:11}, {type:"Dropdown", options:[["\ube68\uac04\uc0c9", "4"], ["\ub178\ub780\uc0c9", "6"], ["\ucd08\ub85d\uc0c9", "2"], ["\ud558\ub298\uc0c9", "3"], ["\ud30c\ub780\uc0c9", "1"], ["\ubcf4\ub77c\uc0c9", "5"], ["\ud558\uc580\uc0c9", "7"]], value:"4", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", 
-size:12}], events:{}, def:{params:[null, null, null]}, paramsKeyMap:{DIRECTION:0, COLOR:1}, func:function(b, a) {
-  var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a), e = Number(a.getField("COLOR", a));
-  "FRONT" == d ? (c.leftEye = e, c.rightEye = e) : "LEFT" == d ? c.leftEye = e : c.rightEye = e;
-  return a.callReturn();
-}}, albert_clear_led:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "FRONT"]], value:"LEFT", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null]}, paramsKeyMap:{DIRECTION:0}, func:function(b, a) {
-  var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a);
-  "FRONT" == d ? (c.leftEye = 0, c.rightEye = 0) : "LEFT" == d ? c.leftEye = 0 : c.rightEye = 0;
-  return a.callReturn();
-}}, albert_change_wheels_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "FRONT"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null]}, paramsKeyMap:{DIRECTION:0, VALUE:1}, func:function(b, a) {
-  var c = Entry.hw.sendQueue, d = Entry.hw.portData, e = a.getField("DIRECTION"), f = a.getNumberValue("VALUE");
-  "LEFT" == e ? c.leftWheel = void 0 != c.leftWheel ? c.leftWheel + f : d.leftWheel + f : ("RIGHT" != e && (c.leftWheel = void 0 != c.leftWheel ? c.leftWheel + f : d.leftWheel + f), c.rightWheel = void 0 != c.rightWheel ? c.rightWheel + f : d.rightWheel + f);
-  return a.callReturn();
-}}, albert_set_wheels_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "FRONT"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null]}, paramsKeyMap:{DIRECTION:0, VALUE:1}, func:function(b, a) {
-  var c = Entry.hw.sendQueue, d = a.getField("DIRECTION"), e = a.getNumberValue("VALUE");
-  "LEFT" == d ? c.leftWheel = e : ("RIGHT" != d && (c.leftWheel = e), c.rightWheel = e);
-  return a.callReturn();
-}}, arduino_text:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"TextInput", value:10}], events:{}, def:{params:[]}, paramsKeyMap:{NAME:0}, func:function(b, a) {
-  return a.getStringField("NAME");
-}}, arduino_send:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[]}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
-  var c = a.getValue("VALUE", a), d = new XMLHttpRequest;
-  d.open("POST", "http://localhost:23518/arduino/", !1);
-  d.send(String(c));
-  Entry.assert(200 == d.status, "arduino is not connected");
-  return a.callReturn();
-}}, arduino_get_number:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[]}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
-  var c = a.getValue("VALUE", a), d = new XMLHttpRequest;
-  d.open("POST", "http://localhost:23518/arduino/", !1);
-  d.send(String(c));
-  Entry.assert(200 == d.status, "arduino is not connected");
-  return Number(d.responseText);
-}}, arduino_get_string:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[]}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
-  var c = a.getValue("VALUE", a), d = new XMLHttpRequest;
-  d.open("POST", "http://localhost:23518/arduino/", !1);
-  d.send(String(c));
-  Entry.assert(200 == d.status, "arduino is not connected");
-  return d.responseText;
-}}, arduino_get_sensor_number:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["0", "A0"], ["1", "A1"], ["2", "A2"], ["3", "A3"], ["4", "A4"], ["5", "A5"]], value:"A0", fontSize:11}], events:{}, def:{params:[null]}, paramsKeyMap:{PORT:0}, func:function(b, a) {
-  return a.getStringField("PORT");
-}}, arduino_get_port_number:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["0", "0"], ["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"], ["9", "9"], ["10", "10"], ["11", "11"], ["12", "12"], ["13", "13"]], value:"0", fontSize:11}], events:{}, def:{params:[null]}, paramsKeyMap:{PORT:0}, func:function(b, a) {
-  return a.getStringField("PORT");
-}}, arduino_get_pwm_port_number:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["3", "3"], ["5", "5"], ["6", "6"], ["9", "9"], ["10", "10"], ["11", "11"]], value:"3", fontSize:11}], events:{}, def:{params:[null]}, paramsKeyMap:{PORT:0}, func:function(b, a) {
-  return a.getStringField("PORT");
-}}, arduino_get_number_sensor_value:{color:"#00979D", fontColor:"#fff", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"arduino_get_sensor_number"}], type:"arduino_get_number_sensor_value"}, paramsKeyMap:{VALUE:0}, "class":"arduino_value", isNotFor:["arduino"], func:function(b, a) {
-  var c = a.getValue("VALUE", a);
-  return Entry.hw.getAnalogPortValue(c[1]);
-}}, arduino_get_digital_value:{color:"#00979D", fontColor:"#fff", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"arduino_get_port_number"}], type:"arduino_get_digital_value"}, paramsKeyMap:{VALUE:0}, "class":"arduino_value", isNotFor:["arduino"], func:function(b, a) {
-  var c = a.getNumberValue("VALUE", a);
-  return Entry.hw.getDigitalPortValue(c);
-}}, arduino_toggle_led:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[[Lang.Blocks.ARDUINO_on, "on"], [Lang.Blocks.ARDUINO_off, "off"]], value:"on", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"arduino_get_port_number"}, null, null], type:"arduino_toggle_led"}, paramsKeyMap:{VALUE:0, OPERATOR:1}, "class":"arduino_set", isNotFor:["arduino"], 
-func:function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
-  return a.callReturn();
-}}, arduino_toggle_pwm:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"arduino_get_pwm_port_number"}, {type:"arduino_text", params:["255"]}, null], type:"arduino_toggle_pwm"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"arduino_set", isNotFor:["arduino"], func:function(b, a) {
-  var c = a.getNumberValue("PORT"), d = a.getNumberValue("VALUE"), d = Math.round(d), d = Math.max(d, 0), d = Math.min(d, 255);
-  Entry.hw.setDigitalPortValue(c, d);
-  return a.callReturn();
-}}, arduino_convert_scale:{color:"#00979D", fontColor:"#fff", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"arduino_get_number_sensor_value", params:[{type:"arduino_get_sensor_number", id:"bl5e"}]}, {type:"number", params:["0"]}, {type:"number", params:["1023"]}, {type:"number", 
-params:["0"]}, {type:"number", params:["100"]}], type:"arduino_convert_scale"}, paramsKeyMap:{VALUE1:0, VALUE2:1, VALUE3:2, VALUE4:3, VALUE5:4}, "class":"arduino", isNotFor:["arduino"], func:function(b, a) {
-  var c = a.getNumberValue("VALUE1", a), d = a.getNumberValue("VALUE2", a), e = a.getNumberValue("VALUE3", a), f = a.getNumberValue("VALUE4", a), g = a.getNumberValue("VALUE5", a);
-  if (d > e) {
-    var h = d, d = e, e = h
-  }
-  f > g && (h = f, f = g, g = h);
-  c -= d;
-  c *= (g - f) / (e - d);
-  c += f;
-  c = Math.min(g, c);
-  c = Math.max(f, c);
-  return Math.round(c);
-}}, sensorBoard_get_named_sensor_value:{color:"#00979D", fontColor:"#fff", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["\uc18c\ub9ac", "0"], ["\ube5b \uac10\uc9c0", "1"], ["\uc2ac\ub77c\uc774\ub354", "2"], ["\uc628\ub3c4", "3"]], value:"0", fontSize:11}], events:{}, def:{params:[null], type:"sensorBoard_get_named_sensor_value"}, paramsKeyMap:{PORT:0}, "class":"sensorBoard", isNotFor:["sensorBoard"], func:function(b, a) {
-  return Entry.hw.getAnalogPortValue(a.getField("PORT", a));
-}}, sensorBoard_is_button_pressed:{color:"#00979D", fontColor:"#fff", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[["\ube68\uac04", "8"], ["\ud30c\ub780", "9"], ["\ub178\ub780", "10"], ["\ucd08\ub85d", "11"]], value:"8", fontSize:11}], events:{}, def:{params:[null], type:"sensorBoard_is_button_pressed"}, paramsKeyMap:{PORT:0}, "class":"sensorBoard", isNotFor:["sensorBoard"], func:function(b, a) {
-  return Entry.hw.getDigitalPortValue(a.getNumberField("PORT", a));
-}}, sensorBoard_led:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\ube68\uac04", "2"], ["\ucd08\ub85d", "3"], ["\ud30c\ub780", "4"], ["\ud770\uc0c9", "5"]], value:"2", fontSize:11}, {type:"Dropdown", options:[["\ucf1c\uae30", "255"], ["\ub044\uae30", "0"]], value:"255", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"sensorBoard_led"}, paramsKeyMap:{PORT:0, 
-OPERATOR:1}, "class":"sensorBoard", isNotFor:["sensorBoard"], func:function(b, a) {
-  Entry.hw.setDigitalPortValue(a.getField("PORT"), a.getNumberField("OPERATOR"));
-  return a.callReturn();
-}}, arduino_download_connector:{skeleton:"basic_button", isNotFor:["arduinoDisconnected"], color:"#eee", params:[{type:"Text", text:Lang.Blocks.ARDUINO_download_connector, color:"#333", align:"center"}], events:{mousedown:[function() {
-  Entry.hw.downloadConnector();
-}]}}, arduino_download_source:{skeleton:"basic_button", isNotFor:["arduinoDisconnected"], color:"#eee", params:[{type:"Text", text:Lang.Blocks.ARDUINO_download_source, color:"#333", align:"center"}], events:{mousedown:[function() {
-  Entry.hw.downloadSource();
-}]}}, arduino_connected:{skeleton:"basic_button", color:"#eee", isNotFor:["arduinoConnected"], params:[{type:"Text", text:Lang.Blocks.ARDUINO_connected, color:"#333", align:"center"}], events:{}}, arduino_reconnect:{skeleton:"basic_button", color:"#eee", isNotFor:["arduinoDisconnected"], params:[{type:"Text", text:Lang.Blocks.ARDUINO_reconnect, color:"#333", align:"center"}], events:{mousedown:[function() {
-  Entry.hw.retryConnect();
-}]}}, CODEino_get_sensor_number:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["0", "A0"], ["1", "A1"], ["2", "A2"], ["3", "A3"], ["4", "A4"], ["5", "A5"], ["6", "A6"]], value:"A0", fontSize:11}], events:{}, def:{params:[null]}, paramsKeyMap:{PORT:0}, func:function(b, a) {
-  return a.getStringField("PORT");
-}}, CODEino_get_named_sensor_value:{color:"#00979D", fontColor:"#fff", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.CODEino_sensor_name_0, "0"], [Lang.Blocks.CODEino_sensor_name_1, "1"], [Lang.Blocks.CODEino_sensor_name_2, "2"], [Lang.Blocks.CODEino_sensor_name_3, "3"], [Lang.Blocks.CODEino_sensor_name_4, "4"], [Lang.Blocks.CODEino_sensor_name_5, "5"], [Lang.Blocks.CODEino_sensor_name_6, "6"]], value:"0", fontSize:11}], events:{}, def:{params:[null], 
-type:"CODEino_get_named_sensor_value"}, paramsKeyMap:{PORT:0}, "class":"CODEino", isNotFor:["CODEino"], func:function(b, a) {
-  return Entry.hw.getAnalogPortValue(a.getField("PORT", a));
-}}, CODEino_get_sound_status:{color:"#00979D", fontColor:"#fff", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.CODEino_string_11, "GREAT"], [Lang.Blocks.CODEino_string_12, "SMALL"]], value:"GREAT", fontSize:11}], events:{}, def:{params:[null], type:"CODEino_get_sound_status"}, paramsKeyMap:{STATUS:0}, "class":"CODEino", isNotFor:["CODEino"], func:function(b, a) {
-  return "GREAT" == a.getField("STATUS", a) ? 600 < Entry.hw.getAnalogPortValue(0) ? 1 : 0 : 600 > Entry.hw.getAnalogPortValue(0) ? 1 : 0;
-}}, CODEino_get_light_status:{color:"#00979D", fontColor:"#fff", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.CODEino_string_14, "BRIGHT"], [Lang.Blocks.CODEino_string_15, "DARK"]], value:"BRIGHT", fontSize:11}], events:{}, def:{params:[null], type:"CODEino_get_light_status"}, paramsKeyMap:{STATUS:0}, "class":"CODEino", isNotFor:["CODEino"], func:function(b, a) {
-  return "DARK" == a.getField("STATUS", a) ? 800 < Entry.hw.getAnalogPortValue(1) ? 1 : 0 : 800 > Entry.hw.getAnalogPortValue(1) ? 1 : 0;
-}}, CODEino_is_button_pressed:{color:"#00979D", fontColor:"#fff", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.CODEino_string_3, "4"], [Lang.Blocks.CODEino_string_4, "17"], [Lang.Blocks.CODEino_string_5, "18"], [Lang.Blocks.CODEino_string_6, "19"], [Lang.Blocks.CODEino_string_7, "20"]], value:"4", fontSize:11}], events:{}, def:{params:[null], type:"CODEino_is_button_pressed"}, paramsKeyMap:{PORT:0}, "class":"CODEino", isNotFor:["CODEino"], func:function(b, 
-a) {
-  var c = a.getNumberField("PORT", a);
-  return 14 < c ? !Entry.hw.getAnalogPortValue(c - 14) : !Entry.hw.getDigitalPortValue(c);
-}}, CODEino_get_accelerometer_direction:{color:"#00979D", fontColor:"#fff", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.CODEino_string_16, "LEFT"], [Lang.Blocks.CODEino_string_17, "RIGHT"], [Lang.Blocks.CODEino_string_18, "FRONT"], [Lang.Blocks.CODEino_string_19, "REAR"], [Lang.Blocks.CODEino_string_20, "REVERSE"]], value:"LEFT", fontSize:11}], events:{}, def:{params:[null], type:"CODEino_get_accelerometer_direction"}, paramsKeyMap:{DIRECTION:0}, 
-"class":"CODEino", isNotFor:["CODEino"], func:function(b, a) {
-  var c = a.getField("DIRECTION", a), d = 0;
-  "LEFT" == c || "RIGHT" == c ? d = 3 : "FRONT" == c || "REAR" == c ? d = 4 : "REVERSE" == c && (d = 5);
-  d = Entry.hw.getAnalogPortValue(d);
-  d = 180 / 137 * (d - 265);
-  d += -90;
-  d = Math.min(90, d);
-  d = Math.max(-90, d);
-  d = Math.round(d);
-  if ("LEFT" == c || "REAR" == c) {
-    return -30 > d ? 1 : 0;
-  }
-  if ("RIGHT" == c || "FRONT" == c) {
-    return 30 < d ? 1 : 0;
-  }
-  if ("REVERSE" == c) {
-    return -50 > d ? 1 : 0;
-  }
-}}, CODEino_get_accelerometer_value:{color:"#00979D", fontColor:"#fff", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["X", "3"], ["Y", "4"], ["Z", "5"]], value:"3", fontSize:11}], events:{}, def:{params:[null], type:"CODEino_get_accelerometer_value"}, paramsKeyMap:{PORT:0}, "class":"CODEino", isNotFor:["CODEino"], func:function(b, a) {
-  var c = 265, d = 402, e = -90, f = 90, g = Entry.hw.getAnalogPortValue(a.getField("PORT", a));
-  if (c > d) {
-    var h = c, c = d, d = h
-  }
-  e > f && (h = e, e = f, f = h);
-  g = (f - e) / (d - c) * (g - c);
-  g += e;
-  g = Math.min(f, g);
-  g = Math.max(e, g);
-  return Math.round(g);
-}}, bitbrick_sensor_value:{color:"#00979D", fontColor:"#fff", skeleton:"basic_string_field", statements:[], params:[{type:"DropdownDynamic", value:null, fontSize:11}], events:{}, def:{params:[null], type:"bitbrick_sensor_value"}, paramsKeyMap:{PORT:0}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
-  var c = a.getStringField("PORT");
-  return Entry.hw.portData[c].value;
-}}, bitbrick_is_touch_pressed:{color:"#00979D", fontColor:"#fff", skeleton:"basic_boolean_field", statements:[], params:[{type:"DropdownDynamic", value:null, fontSize:11}], events:{}, def:{params:[null], type:"bitbrick_is_touch_pressed"}, paramsKeyMap:{PORT:0}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
-  return 0 === Entry.hw.portData[a.getStringField("PORT")].value;
-}}, bitbrick_turn_off_color_led:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"bitbrick_turn_off_color_led", id:"i3je"}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
-  Entry.hw.sendQueue.LEDR = 0;
-  Entry.hw.sendQueue.LEDG = 0;
-  Entry.hw.sendQueue.LEDB = 0;
-  return a.callReturn();
-}}, bitbrick_turn_on_color_led_by_rgb:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["255"]}, {type:"text", params:["255"]}, {type:"text", params:["255"]}, null], type:"bitbrick_turn_on_color_led_by_rgb"}, paramsKeyMap:{rValue:0, gValue:1, bValue:2}, 
-"class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
-  var c = a.getNumberValue("rValue"), d = a.getNumberValue("gValue"), e = a.getNumberValue("bValue"), f = Entry.adjustValueWithMaxMin, g = Entry.hw.sendQueue;
-  g.LEDR = f(c, 0, 255);
-  g.LEDG = f(d, 0, 255);
-  g.LEDB = f(e, 0, 255);
-  return a.callReturn();
-}}, bitbrick_turn_on_color_led_by_picker:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Color"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"bitbrick_turn_on_color_led_by_picker"}, paramsKeyMap:{VALUE:0}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
-  var c = a.getStringField("VALUE");
-  Entry.hw.sendQueue.LEDR = parseInt(c.substr(1, 2), 16);
-  Entry.hw.sendQueue.LEDG = parseInt(c.substr(3, 2), 16);
-  Entry.hw.sendQueue.LEDB = parseInt(c.substr(5, 2), 16);
-  return a.callReturn();
-}}, bitbrick_turn_on_color_led_by_value:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["0"]}, null], type:"bitbrick_turn_on_color_led_by_value"}, paramsKeyMap:{VALUE:0}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
-  var c = a.getNumberValue("VALUE"), d, e, f, c = c % 200;
-  67 > c ? (d = 200 - 3 * c, e = 3 * c, f = 0) : 134 > c ? (c -= 67, d = 0, e = 200 - 3 * c, f = 3 * c) : 201 > c && (c -= 134, d = 3 * c, e = 0, f = 200 - 3 * c);
-  Entry.hw.sendQueue.LEDR = d;
-  Entry.hw.sendQueue.LEDG = e;
-  Entry.hw.sendQueue.LEDB = f;
-  return a.callReturn();
-}}, bitbrick_buzzer:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["60"]}, null], type:"bitbrick_buzzer"}, paramsKeyMap:{VALUE:0}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
-  if (a.isStart) {
-    return Entry.hw.sendQueue.buzzer = 0, delete a.isStart, a.callReturn();
-  }
-  var c = a.getNumberValue("VALUE");
-  Entry.hw.sendQueue.buzzer = c;
-  a.isStart = !0;
-  return a;
-}}, bitbrick_turn_off_all_motors:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"bitbrick_turn_off_all_motors"}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
-  var c = Entry.hw.sendQueue, d = Entry.Bitbrick;
-  d.servoList().map(function(a) {
-    c[a[1]] = 0;
-  });
-  d.dcList().map(function(a) {
-    c[a[1]] = 128;
-  });
-  return a.callReturn();
-}}, bitbrick_dc_speed:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["60"]}, null], type:"bitbrick_dc_speed"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
-  var c = a.getNumberValue("VALUE"), c = Math.min(c, Entry.Bitbrick.dcMaxValue), c = Math.max(c, Entry.Bitbrick.dcMinValue);
-  Entry.hw.sendQueue[a.getStringField("PORT")] = c + 128;
-  return a.callReturn();
-}}, bitbrick_dc_direction_speed:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, fontSize:11}, {type:"Dropdown", options:[[Lang.Blocks.BITBRICK_dc_direction_cw, "CW"], [Lang.Blocks.BITBRICK_dc_direction_ccw, "CCW"]], value:"CW", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, {type:"text", params:["100"]}, null], type:"bitbrick_dc_direction_speed"}, 
-paramsKeyMap:{PORT:0, DIRECTION:1, VALUE:2}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
-  var c = "CW" === a.getStringField("DIRECTION"), d = a.getNumberValue("VALUE"), d = Math.min(d, Entry.Bitbrick.dcMaxValue), d = Math.max(d, 0);
-  Entry.hw.sendQueue[a.getStringField("PORT")] = c ? d + 128 : 128 - d;
-  return a.callReturn();
-}}, bitbrick_servomotor_angle:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["100"]}, null], type:"bitbrick_servomotor_angle"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
-  var c = a.getNumberValue("VALUE") + 1, c = Math.min(c, Entry.Bitbrick.servoMaxValue), c = Math.max(c, Entry.Bitbrick.servoMinValue);
-  Entry.hw.sendQueue[a.getStringField("PORT")] = c;
-  return a.callReturn();
-}}, bitbrick_convert_scale:{color:"#00979D", fontColor:"#fff", skeleton:"basic_string_field", statements:[], params:[{type:"DropdownDynamic", value:null, fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[null, {type:"number", params:["0"]}, {type:"number", params:["1023"]}, {type:"number", params:["-100"]}, {type:"number", params:["100"]}], type:"bitbrick_convert_scale"}, 
-paramsKeyMap:{PORT:0, VALUE2:1, VALUE3:2, VALUE4:3, VALUE5:4}, "class":"condition", isNotFor:["bitbrick"], func:function(b, a) {
-  var c = a.getNumberField("PORT"), d = Entry.hw.portData[c].value, c = a.getNumberValue("VALUE2", a), e = a.getNumberValue("VALUE3", a), f = a.getNumberValue("VALUE4", a), g = a.getNumberValue("VALUE5", a);
-  if (f > g) {
-    var h = f, f = g, g = h
-  }
-  d -= c;
-  d *= (g - f) / (e - c);
-  d += f;
-  d = Math.min(g, d);
-  d = Math.max(f, d);
-  return Math.round(d);
-}}, start_drawing:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[null], type:"start_drawing"}, "class":"brush_control", isNotFor:["textBox"], func:function(b, a) {
-  b.brush ? b.brush.stop = !1 : Entry.setBasicBrush(b);
-  Entry.stage.sortZorder();
-  b.brush.moveTo(b.getX(), -1 * b.getY());
-  return a.callReturn();
-}}, stop_drawing:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[null], type:"stop_drawing"}, "class":"brush_control", isNotFor:["textBox"], func:function(b, a) {
-  b.brush && b.shape && (b.brush.stop = !0);
-  return a.callReturn();
-}}, set_color:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Color"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[null], type:"set_color"}, paramsKeyMap:{VALUE:0}, "class":"brush_color", isNotFor:["textBox"], func:function(b, a) {
-  var c = a.getField("VALUE", a);
-  b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
-  b.brush && (c = Entry.hex2rgb(c), b.brush.rgb = c, b.brush.endStroke(), b.brush.beginStroke("rgba(" + c.r + "," + c.g + "," + c.b + "," + b.brush.opacity / 100 + ")"), b.brush.moveTo(b.getX(), -1 * b.getY()));
-  return a.callReturn();
-}}, set_random_color:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[null], type:"set_random_color"}, "class":"brush_color", isNotFor:["textBox"], func:function(b, a) {
-  b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
-  if (b.brush) {
-    var c = Entry.generateRgb();
-    b.brush.rgb = c;
-    b.brush.endStroke();
-    b.brush.beginStroke("rgba(" + c.r + "," + c.g + "," + c.b + "," + b.brush.opacity / 100 + ")");
-    b.brush.moveTo(b.getX(), -1 * b.getY());
-  }
-  return a.callReturn();
-}}, change_thickness:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["1"]}, null], type:"change_thickness"}, paramsKeyMap:{VALUE:0}, "class":"brush_thickness", isNotFor:["textBox"], func:function(b, a) {
-  var c = a.getNumberValue("VALUE", a);
-  b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
-  b.brush && (b.brush.thickness += c, 1 > b.brush.thickness && (b.brush.thickness = 1), b.brush.setStrokeStyle(b.brush.thickness), b.brush.moveTo(b.getX(), -1 * b.getY()));
-  return a.callReturn();
-}}, set_thickness:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["1"]}, null], type:"set_thickness"}, paramsKeyMap:{VALUE:0}, "class":"brush_thickness", isNotFor:["textBox"], func:function(b, a) {
-  var c = a.getNumberValue("VALUE", a);
-  b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
-  b.brush && (b.brush.thickness = c, b.brush.setStrokeStyle(b.brush.thickness), b.brush.moveTo(b.getX(), -1 * b.getY()));
-  return a.callReturn();
-}}, change_opacity:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"change_opacity"}, paramsKeyMap:{VALUE:0}, "class":"brush_opacity", isNotFor:["textBox"], func:function(b, a) {
-  var c = a.getNumberValue("VALUE", a);
-  b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
-  c = Entry.adjustValueWithMaxMin(b.brush.opacity + c, 0, 100);
-  b.brush && (b.brush.opacity = c, b.brush.endStroke(), c = b.brush.rgb, b.brush.beginStroke("rgba(" + c.r + "," + c.g + "," + c.b + "," + b.brush.opacity / 100 + ")"), b.brush.moveTo(b.getX(), -1 * b.getY()));
-  return a.callReturn();
-}}, set_opacity:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["50"]}, null], type:"set_opacity"}, paramsKeyMap:{VALUE:0}, "class":"brush_opacity", isNotFor:["textBox"], func:function(b, a) {
-  var c = a.getNumberValue("VALUE", a);
-  b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
-  b.brush && (b.brush.opacity = Entry.adjustValueWithMaxMin(c, 0, 100), b.brush.endStroke(), c = b.brush.rgb, b.brush.beginStroke("rgba(" + c.r + "," + c.g + "," + c.b + "," + b.brush.opacity / 100 + ")"), b.brush.moveTo(b.getX(), -1 * b.getY()));
-  return a.callReturn();
-}}, brush_erase_all:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[null], type:"brush_erase_all"}, "class":"brush_clear", isNotFor:["textBox"], func:function(b, a) {
-  var c = b.brush;
-  if (c) {
-    var d = c._stroke.style, e = c._strokeStyle.width;
-    c.clear().setStrokeStyle(e).beginStroke(d);
-    c.moveTo(b.getX(), -1 * b.getY());
-  }
-  c = b.parent.getStampEntities();
-  c.map(function(a) {
-    a.removeClone();
-  });
-  c = null;
-  return a.callReturn();
-}}, brush_stamp:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[null], type:"brush_stamp"}, "class":"stamp", isNotFor:["textBox"], func:function(b, a) {
-  b.parent.addStampEntity(b);
-  return a.callReturn();
-}}, change_brush_transparency:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"change_brush_transparency"}, paramsKeyMap:{VALUE:0}, "class":"brush_opacity", isNotFor:["textBox"], func:function(b, a) {
-  var c = a.getNumberValue("VALUE", a);
-  b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
-  c = Entry.adjustValueWithMaxMin(b.brush.opacity - c, 0, 100);
-  b.brush && (b.brush.opacity = c, b.brush.endStroke(), c = b.brush.rgb, b.brush.beginStroke("rgba(" + c.r + "," + c.g + "," + c.b + "," + b.brush.opacity / 100 + ")"), b.brush.moveTo(b.getX(), -1 * b.getY()));
-  return a.callReturn();
-}}, set_brush_tranparency:{color:"#FF9E20", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/brush_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["50"]}, null], type:"set_brush_tranparency"}, paramsKeyMap:{VALUE:0}, "class":"brush_opacity", isNotFor:["textBox"], func:function(b, a) {
-  var c = a.getNumberValue("VALUE", a);
-  b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
-  b.brush && (b.brush.opacity = Entry.adjustValueWithMaxMin(c, 0, 100), b.brush.endStroke(), c = b.brush.rgb, b.brush.beginStroke("rgba(" + c.r + "," + c.g + "," + c.b + "," + (1 - b.brush.opacity / 100) + ")"), b.brush.moveTo(b.getX(), -1 * b.getY()));
-  return a.callReturn();
-}}, number:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"TextInput", value:10}], events:{}, def:{params:[]}, paramsKeyMap:{NUM:0}, func:function(b, a) {
-  return a.getField("NUM", a);
-}, isPrimitive:!0}, angle:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Angle"}], events:{}, def:{params:[null], type:"angle"}, paramsKeyMap:{ANGLE:0}, func:function(b, a) {
-  return a.getNumberField("ANGLE");
-}}, get_x_coordinate:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_get_x_coordinate, color:"#3D3D3D"}], events:{}, def:{params:[null], type:"get_x_coordinate"}, "class":"calc", isNotFor:[], func:function(b, a) {
-  return b.getX();
-}}, get_y_coordinate:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_get_y_coordinate, color:"#3D3D3D"}], events:{}, def:{params:[null], type:"get_y_coordinate"}, "class":"calc", isNotFor:[], func:function(b, a) {
-  return b.getY();
-}}, get_angle:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_get_angle, color:"#3D3D3D"}], events:{}, def:{params:[null]}, func:function(b, a) {
-  return parseFloat(b.getRotation().toFixed(1));
-}}, get_rotation_direction:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.CALC_rotation_value, "ROTATION"], [Lang.Blocks.CALC_direction_value, "DIRECTION"]], value:"ROTATION", fontSize:11}], events:{}, def:{params:[null], type:"get_rotation_direction"}, paramsKeyMap:{OPERATOR:0}, "class":"calc", isNotFor:[], func:function(b, a) {
-  return "DIRECTION" == a.getField("OPERATOR", a).toUpperCase() ? parseFloat(b.getDirection().toFixed(1)) : parseFloat(b.getRotation().toFixed(1));
-}}, distance_something:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_distance_something_1, color:"#3D3D3D"}, {type:"DropdownDynamic", value:null, menuName:"spritesWithMouse", fontSize:11}, {type:"Text", text:Lang.Blocks.CALC_distance_something_2, color:"#3D3D3D"}], events:{}, def:{params:[null, null, null], type:"distance_something"}, paramsKeyMap:{VALUE:1}, "class":"calc_distance", isNotFor:[], func:function(b, a) {
-  var c = a.getField("VALUE", a);
-  if ("mouse" == c) {
-    return c = Entry.stage.mouseCoordinate, Math.sqrt(Math.pow(b.getX() - c.x, 2) + Math.pow(b.getY() - c.y, 2));
-  }
-  c = Entry.container.getEntity(c);
-  return Math.sqrt(Math.pow(b.getX() - c.getX(), 2) + Math.pow(b.getY() - c.getY(), 2));
-}}, coordinate_mouse:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_coordinate_mouse_1, color:"#3D3D3D"}, {type:"Dropdown", options:[["x", "x"], ["y", "y"]], value:"x", fontSize:11}, {type:"Text", text:Lang.Blocks.CALC_coordinate_mouse_2, color:"#3D3D3D"}], events:{}, def:{params:[null, null, null], type:"coordinate_mouse"}, paramsKeyMap:{VALUE:1}, "class":"calc", isNotFor:[], func:function(b, a) {
-  return "x" === a.getField("VALUE", a) ? Number(Entry.stage.mouseCoordinate.x) : Number(Entry.stage.mouseCoordinate.y);
-}}, coordinate_object:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_coordinate_object_1, color:"#3D3D3D"}, {type:"DropdownDynamic", value:null, menuName:"spritesWithSelf", fontSize:11}, {type:"Text", text:Lang.Blocks.CALC_coordinate_object_2, color:"#3D3D3D"}, {type:"Dropdown", options:[[Lang.Blocks.CALC_coordinate_x_value, "x"], [Lang.Blocks.CALC_coordinate_y_value, "y"], [Lang.Blocks.CALC_coordinate_rotation_value, "rotation"], [Lang.Blocks.CALC_coordinate_direction_value, 
-"direction"], [Lang.Blocks.CALC_coordinate_size_value, "size"], [Lang.Blocks.CALC_picture_index, "picture_index"], [Lang.Blocks.CALC_picture_name, "picture_name"]], value:"x", fontSize:11}], events:{}, def:{params:[null, null, null, null], type:"coordinate_object"}, paramsKeyMap:{VALUE:1, COORDINATE:3}, "class":"calc", isNotFor:[], func:function(b, a) {
-  var c = a.getField("VALUE", a), c = "self" == c ? b : Entry.container.getEntity(c);
-  switch(a.getField("COORDINATE", a)) {
-    case "x":
-      return c.getX();
-    case "y":
-      return c.getY();
-    case "rotation":
-      return c.getRotation();
-    case "direction":
-      return c.getDirection();
-    case "picture_index":
-      var d = c.parent, d = d.pictures;
-      return d.indexOf(c.picture) + 1;
-    case "size":
-      return Number(c.getSize().toFixed(1));
-    case "picture_name":
-      return d = c.parent, d = d.pictures, d[d.indexOf(c.picture)].name;
-  }
-}}, calc_basic:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["+", "PLUS"], ["-", "MINUS"], ["x", "MULTI"], ["/", "DIVIDE"]], value:"PLUS", fontSize:11, noArrow:!0}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"number", params:["10"]}, "PLUS", {type:"number", params:["10"]}], type:"calc_basic"}, defs:[{params:[{type:"number", params:["10"]}, "PLUS", {type:"number", params:["10"]}], 
-type:"calc_basic"}, {params:[{type:"number", params:["10"]}, "MINUS", {type:"number", params:["10"]}], type:"calc_basic"}, {params:[{type:"number", params:["10"]}, "MULTI", {type:"number", params:["10"]}], type:"calc_basic"}, {params:[{type:"number", params:["10"]}, "DIVIDE", {type:"number", params:["10"]}], type:"calc_basic"}], paramsKeyMap:{LEFTHAND:0, OPERATOR:1, RIGHTHAND:2}, "class":"calc", isNotFor:[], func:function(b, a) {
-  var c = a.getField("OPERATOR", a), d = a.getNumberValue("LEFTHAND", a), e = a.getNumberValue("RIGHTHAND", a);
-  return "PLUS" == c ? d + e : "MINUS" == c ? d - e : "MULTI" == c ? d * e : d / e;
-}}, calc_plus:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"+", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[null]}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, func:function(b, a) {
-  var c = a.getNumberValue("LEFTHAND", a), d = a.getNumberValue("RIGHTHAND", a);
-  return c + d;
-}}, calc_minus:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"-", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[null]}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, func:function(b, a) {
-  var c = a.getNumberValue("LEFTHAND", a), d = a.getNumberValue("RIGHTHAND", a);
-  return c - d;
-}}, calc_times:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"x", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[null]}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, func:function(b, a) {
-  var c = a.getNumberValue("LEFTHAND", a), d = a.getNumberValue("RIGHTHAND", a);
-  return c * d;
-}}, calc_divide:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"/", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[null]}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, func:function(b, a) {
-  var c = a.getNumberValue("LEFTHAND", a), d = a.getNumberValue("RIGHTHAND", a);
-  return c / d;
-}}, calc_mod:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"/", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_calc_mod_3, color:"#3D3D3D"}], events:{}, def:{params:[{type:"number", params:["10"]}, null, {type:"number", params:["10"]}, null], type:"calc_mod"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"calc", isNotFor:[], func:function(b, a) {
-  var c = a.getNumberValue("LEFTHAND", a), d = a.getNumberValue("RIGHTHAND", a);
-  return c % d;
-}}, calc_share:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"/", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:"\uc758 \ubaab", color:"#3D3D3D"}], events:{}, def:{params:[{type:"number", params:["10"]}, null, {type:"number", params:["10"]}, null], type:"calc_share"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"calc", isNotFor:[], func:function(b, a) {
-  var c = a.getNumberValue("LEFTHAND", a), d = a.getNumberValue("RIGHTHAND", a);
-  return Math.floor(c / d);
-}}, calc_operation:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_calc_operation_of_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_calc_operation_of_2, color:"#3D3D3D"}, {type:"Dropdown", options:[[Lang.Blocks.CALC_calc_operation_square, "square"], [Lang.Blocks.CALC_calc_operation_root, "root"], [Lang.Blocks.CALC_calc_operation_sin, "sin"], [Lang.Blocks.CALC_calc_operation_cos, "cos"], [Lang.Blocks.CALC_calc_operation_tan, 
-"tan"], [Lang.Blocks.CALC_calc_operation_asin, "asin_radian"], [Lang.Blocks.CALC_calc_operation_acos, "acos_radian"], [Lang.Blocks.CALC_calc_operation_atan, "atan_radian"], [Lang.Blocks.CALC_calc_operation_log, "log"], [Lang.Blocks.CALC_calc_operation_ln, "ln"], [Lang.Blocks.CALC_calc_operation_unnatural, "unnatural"], [Lang.Blocks.CALC_calc_operation_floor, "floor"], [Lang.Blocks.CALC_calc_operation_ceil, "ceil"], [Lang.Blocks.CALC_calc_operation_round, "round"], [Lang.Blocks.CALC_calc_operation_factorial, 
-"factorial"], [Lang.Blocks.CALC_calc_operation_abs, "abs"]], value:"square", fontSize:11}], events:{}, def:{params:[null, {type:"number", params:["10"]}, null, null], type:"calc_operation"}, paramsKeyMap:{LEFTHAND:1, VALUE:3}, "class":"calc", isNotFor:[], func:function(b, a) {
-  var c = a.getNumberValue("LEFTHAND", a), d = a.getField("VALUE", a);
-  if (-1 < ["asin_radian", "acos_radian"].indexOf(d) && (1 < c || -1 > c)) {
-    throw Error("x range exceeded");
-  }
-  d.indexOf("_") && (d = d.split("_")[0]);
-  -1 < ["sin", "cos", "tan"].indexOf(d) && (c = Entry.toRadian(c));
-  var e = 0;
-  switch(d) {
-    case "square":
-      e = c * c;
-      break;
-    case "factorial":
-      e = Entry.factorial(c);
-      break;
-    case "root":
-      e = Math.sqrt(c);
-      break;
-    case "log":
-      e = Math.log(c) / Math.LN10;
-      break;
-    case "ln":
-      e = Math.log(c);
-      break;
-    case "asin":
-    ;
-    case "acos":
-    ;
-    case "atan":
-      e = Entry.toDegrees(Math[d](c));
-      break;
-    case "unnatural":
-      e = c - Math.floor(c);
-      0 > c && (e = 1 - e);
-      break;
-    default:
-      e = Math[d](c);
-  }
-  return Math.round(1E3 * e) / 1E3;
-}}, calc_rand:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_calc_rand_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_calc_rand_2, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_calc_rand_3, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"number", params:["0"]}, null, {type:"number", params:["10"]}, null], type:"calc_rand"}, paramsKeyMap:{LEFTHAND:1, 
-RIGHTHAND:3}, "class":"calc", isNotFor:[], func:function(b, a) {
-  var c = a.getStringValue("LEFTHAND", a), d = a.getStringValue("RIGHTHAND", a), e = Math.min(c, d), f = Math.max(c, d), c = Entry.isFloat(c);
-  return Entry.isFloat(d) || c ? (Math.random() * (f - e) + e).toFixed(2) : Math.floor(Math.random() * (f - e + 1) + e);
-}}, get_date:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_get_date_1, color:"#3D3D3D"}, {type:"Dropdown", options:[[Lang.Blocks.CALC_get_date_year, "YEAR"], [Lang.Blocks.CALC_get_date_month, "MONTH"], [Lang.Blocks.CALC_get_date_day, "DAY"], [Lang.Blocks.CALC_get_date_hour, "HOUR"], [Lang.Blocks.CALC_get_date_minute, "MINUTE"], [Lang.Blocks.CALC_get_date_second, "SECOND"]], value:"YEAR", fontSize:11}, {type:"Text", text:Lang.Blocks.CALC_get_date_2, 
-color:"#3D3D3D"}], events:{}, def:{params:[null, "YEAR", null], type:"get_date"}, paramsKeyMap:{VALUE:1}, "class":"calc_date", isNotFor:[], func:function(b, a) {
-  var c = a.getField("VALUE", a), d = new Date;
-  return "YEAR" == c ? d.getFullYear() : "MONTH" == c ? d.getMonth() + 1 : "DAY" == c ? d.getDate() : "HOUR" == c ? d.getHours() : "MINUTE" == c ? d.getMinutes() : d.getSeconds();
-}}, get_sound_duration:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_get_sound_duration_1, color:"#3D3D3D"}, {type:"DropdownDynamic", value:null, menuName:"sounds", fontSize:11}, {type:"Text", text:Lang.Blocks.CALC_get_sound_duration_2, color:"#3D3D3D"}], events:{}, def:{params:[null, null, null], type:"get_sound_duration"}, paramsKeyMap:{VALUE:1}, "class":"calc_duration", isNotFor:[], func:function(b, a) {
-  for (var c = a.getField("VALUE", a), d = b.parent.sounds, e = 0;e < d.length;e++) {
-    if (d[e].id == c) {
-      return d[e].duration;
-    }
-  }
-}}, reset_project_timer:{color:"#FFD974", skeleton:"basic", statements:[], params:[{type:"Text", text:"\ucd08\uc2dc\uacc4 \ucd08\uae30\ud654", color:"#3D3D3D"}], events:{viewAdd:[function() {
-  Entry.engine && Entry.engine.showProjectTimer();
-}], viewDestroy:[function(b) {
-  Entry.engine && Entry.engine.hideProjectTimer(b);
-}]}, def:{params:[null], type:"reset_project_timer"}, "class":"calc_timer", isNotFor:[], func:function(b, a) {
-  Entry.engine.updateProjectTimer(0);
-  return a.callReturn();
-}}, set_visible_project_timer:{color:"#FFD974", skeleton:"basic", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_timer_visible_1, color:"#3D3D3D"}, {type:"Dropdown", options:[[Lang.Blocks.CALC_timer_visible_show, "SHOW"], [Lang.Blocks.CALC_timer_visible_hide, "HIDE"]], value:"SHOW", fontSize:11}, {type:"Text", text:Lang.Blocks.CALC_timer_visible_2, color:"#3D3D3D"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/calc_01.png", size:12}], events:{viewAdd:[function() {
-  Entry.engine && Entry.engine.showProjectTimer();
-}], viewDestroy:[function(b) {
-  Entry.engine && Entry.engine.hideProjectTimer(b);
-}]}, def:{params:[null, "HIDE", null, null], type:"set_visible_project_timer"}, paramsKeyMap:{ACTION:1}, "class":"calc_timer", isNotFor:[], func:function(b, a) {
-  var c = a.getField("ACTION", a), d = Entry.engine.projectTimer;
-  "SHOW" == c ? d.setVisible(!0) : d.setVisible(!1);
-  return a.callReturn();
-}}, timer_variable:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:"\ucd08\uc2dc\uacc4 \uac12", color:"#3D3D3D"}, {type:"Text", text:" ", color:"#3D3D3D"}], events:{}, def:{params:[null, null]}, func:function(b, a) {
-  return Entry.container.inputValue.getValue();
-}}, get_project_timer_value:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_get_timer_value, color:"#3D3D3D"}, {type:"Text", text:"", color:"#3D3D3D"}], events:{viewAdd:[function() {
-  Entry.engine && Entry.engine.showProjectTimer();
-}], viewDestroy:[function(b) {
-  Entry.engine && Entry.engine.hideProjectTimer(b);
-}]}, def:{params:[null, null], type:"get_project_timer_value"}, "class":"calc_timer", isNotFor:[], func:function(b, a) {
-  return Entry.engine.projectTimer.getValue();
-}}, char_at:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_char_at_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_char_at_2, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_char_at_3, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"text", params:[Lang.Blocks.hi_entry]}, null, {type:"number", params:["1"]}, null], type:"char_at"}, paramsKeyMap:{LEFTHAND:1, 
-RIGHTHAND:3}, "class":"calc_string", isNotFor:[], func:function(b, a) {
-  var c = a.getStringValue("LEFTHAND", a), d = a.getNumberValue("RIGHTHAND", a) - 1;
-  if (0 > d || d > c.length - 1) {
-    throw Error();
-  }
-  return c[d];
-}}, length_of_string:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_length_of_string_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_length_of_string_2, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"text", params:[Lang.Blocks.entry]}, null], type:"length_of_string"}, paramsKeyMap:{STRING:1}, "class":"calc_string", isNotFor:[], func:function(b, a) {
-  return a.getStringValue("STRING", a).length;
-}}, substring:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_substring_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_substring_2, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_substring_3, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_substring_4, color:"#3D3D3D"}], events:{}, def:{params:[null, 
-{type:"text", params:[Lang.Blocks.hi_entry]}, null, {type:"number", params:["2"]}, null, {type:"number", params:["5"]}, null], type:"substring"}, paramsKeyMap:{STRING:1, START:3, END:5}, "class":"calc_string", isNotFor:[], func:function(b, a) {
-  var c = a.getStringValue("STRING", a), d = a.getNumberValue("START", a) - 1, e = a.getNumberValue("END", a) - 1, f = c.length - 1;
-  if (0 > d || 0 > e || d > f || e > f) {
-    throw Error();
-  }
-  return c.substring(Math.min(d, e), Math.max(d, e) + 1);
-}}, replace_string:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_replace_string_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_replace_string_2, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_replace_string_3, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_replace_string_4, color:"#3D3D3D"}], events:{}, 
-def:{params:[null, {type:"text", params:[Lang.Blocks.hi_entry]}, null, {type:"text", params:[Lang.Blocks.hello]}, null, {type:"text", params:[Lang.Blocks.nice]}, null], type:"replace_string"}, paramsKeyMap:{STRING:1, OLD_WORD:3, NEW_WORD:5}, "class":"calc_string", isNotFor:[], func:function(b, a) {
-  return a.getStringValue("STRING", a).replace(new RegExp(a.getStringValue("OLD_WORD", a), "gm"), a.getStringValue("NEW_WORD", a));
-}}, change_string_case:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_change_string_case_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_change_string_case_2, color:"#3D3D3D"}, {type:"Dropdown", options:[[Lang.Blocks.CALC_change_string_case_sub_1, "toUpperCase"], [Lang.Blocks.CALC_change_string_case_sub_2, "toLowerCase"]], value:"toUpperCase", fontSize:11}, {type:"Text", text:Lang.Blocks.CALC_change_string_case_3, 
-color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"text", params:["Hello Entry!"]}, null, null, null], type:"change_string_case"}, paramsKeyMap:{STRING:1, CASE:3}, "class":"calc_string", isNotFor:[], func:function(b, a) {
-  return a.getStringValue("STRING", a)[a.getField("CASE", a)]();
-}}, index_of_string:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_index_of_string_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_index_of_string_2, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_index_of_string_3, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"text", params:[Lang.Blocks.hi_entry]}, null, {type:"text", params:[Lang.Blocks.entry]}, 
-null], type:"index_of_string"}, paramsKeyMap:{LEFTHAND:1, RIGHTHAND:3}, "class":"calc_string", isNotFor:[], func:function(b, a) {
-  var c = a.getStringValue("LEFTHAND", a), d = a.getStringValue("RIGHTHAND", a), c = c.indexOf(d);
-  return -1 < c ? c + 1 : 0;
-}}, combine_something:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.VARIABLE_combine_something_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.VARIABLE_combine_something_2, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.VARIABLE_combine_something_3, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"text", params:[Lang.Blocks.block_hi]}, null, {type:"text", 
-params:[Lang.Blocks.entry]}, null], type:"combine_something"}, paramsKeyMap:{VALUE1:1, VALUE2:3}, "class":"calc_string", isNotFor:[], func:function(b, a) {
-  var c = a.getStringValue("VALUE1", a), d = a.getStringValue("VALUE2", a);
-  return c + d;
-}}, get_sound_volume:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_get_sound_volume, color:"#3D3D3D"}, {type:"Text", text:"", color:"#3D3D3D"}], events:{}, def:{params:[null, null], type:"get_sound_volume"}, "class":"calc", isNotFor:[""], func:function(b, a) {
-  return 100 * createjs.Sound.getVolume();
-}}, quotient_and_mod:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_quotient_and_mod_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_quotient_and_mod_2, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_quotient_and_mod_3, color:"#3D3D3D"}, {type:"Dropdown", options:[[Lang.Blocks.CALC_quotient_and_mod_sub_1, "QUOTIENT"], [Lang.Blocks.CALC_quotient_and_mod_sub_2, 
-"MOD"]], value:"QUOTIENT", fontSize:11}], events:{}, def:{params:[null, {type:"text", params:["10"]}, null, {type:"text", params:["10"]}, null, null], type:"quotient_and_mod"}, paramsKeyMap:{LEFTHAND:1, RIGHTHAND:3, OPERATOR:5}, "class":"calc", isNotFor:[], func:function(b, a) {
-  var c = a.getNumberValue("LEFTHAND", a), d = a.getNumberValue("RIGHTHAND", a);
-  if (isNaN(c) || isNaN(d)) {
-    throw Error();
-  }
-  return "QUOTIENT" == a.getField("OPERATOR", a) ? Math.floor(c / d) : c % d;
-}}, choose_project_timer_action:{color:"#FFD974", skeleton:"basic", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_choose_project_timer_action_1, color:"#3D3D3D"}, {type:"Dropdown", options:[[Lang.Blocks.CALC_choose_project_timer_action_sub_1, "START"], [Lang.Blocks.CALC_choose_project_timer_action_sub_2, "STOP"], [Lang.Blocks.CALC_choose_project_timer_action_sub_3, "RESET"]], value:"START", fontSize:11}, {type:"Text", text:Lang.Blocks.CALC_choose_project_timer_action_2, color:"#3D3D3D"}, 
-{type:"Indicator", img:"/lib/entryjs/images/block_icon/calc_01.png", size:12}], events:{viewAdd:[function() {
-  Entry.engine && Entry.engine.showProjectTimer();
-}], dataDestroy:[function(b) {
-  Entry.engine && Entry.engine.hideProjectTimer(b);
-}]}, def:{params:[null, "START", null, null], type:"choose_project_timer_action"}, paramsKeyMap:{ACTION:1}, "class":"calc_timer", isNotFor:[], func:function(b, a) {
-  var c = a.getField("ACTION"), d = Entry.engine, e = d.projectTimer;
-  "START" == c ? e.isInit ? e.isInit && e.isPaused && (e.pauseStart && (e.pausedTime += (new Date).getTime() - e.pauseStart), delete e.pauseStart, e.isPaused = !1) : d.startProjectTimer() : "STOP" == c ? e.isInit && !e.isPaused && (e.isPaused = !0, e.pauseStart = (new Date).getTime()) : "RESET" == c && e.isInit && (e.setValue(0), e.start = (new Date).getTime(), e.pausedTime = 0, delete e.pauseStart);
-  return a.callReturn();
-}}, wait_second:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["2"]}, null], type:"wait_second"}, paramsKeyMap:{SECOND:0}, "class":"delay", isNotFor:[], func:function(b, a) {
-  if (a.isStart) {
-    if (1 == a.timeFlag) {
-      return a;
-    }
-    delete a.timeFlag;
-    delete a.isStart;
-    Entry.engine.isContinue = !1;
-    return a.callReturn();
-  }
-  a.isStart = !0;
-  a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a);
-  setTimeout(function() {
-    a.timeFlag = 0;
-  }, 60 / (Entry.FPS || 60) * c * 1E3);
-  return a;
-}}, repeat_basic:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"repeat_basic"}, paramsKeyMap:{VALUE:0}, statementsKeyMap:{DO:0}, "class":"repeat", isNotFor:[], func:function(b, a) {
-  var c;
-  if (!a.isLooped) {
-    a.isLooped = !0;
-    c = a.getNumberValue("VALUE", a);
-    if (0 > c) {
-      throw Error(Lang.Blocks.FLOW_repeat_basic_errorMsg);
-    }
-    a.iterCount = Math.floor(c);
-  }
-  if (0 == a.iterCount || 0 > a.iterCount) {
-    return delete a.isLooped, delete a.iterCount, a.callReturn();
-  }
-  a.iterCount--;
-  return a.getStatement("DO", a);
-}}, repeat_inf:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null], type:"repeat_inf"}, statementsKeyMap:{DO:0}, "class":"repeat", isNotFor:[], func:function(b, a) {
-  a.isLooped = !0;
-  return a.getStatement("DO");
-}}, stop_repeat:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null], type:"stop_repeat"}, "class":"repeat", isNotFor:[], func:function(b, a) {
-  return this.executor.breakLoop();
-}}, wait_until_true:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"True"}, null], type:"wait_until_true"}, paramsKeyMap:{BOOL:0}, "class":"wait", isNotFor:[], func:function(b, a) {
-  return a.getBooleanValue("BOOL", a) ? a.callReturn() : a;
-}}, _if:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"True"}, null], type:"_if"}, paramsKeyMap:{BOOL:0}, statementsKeyMap:{STACK:0}, "class":"condition", isNotFor:[], func:function(b, a) {
-  return a.isLooped ? (delete a.isLooped, a.callReturn()) : a.getBooleanValue("BOOL", a) ? (a.isLooped = !0, a.getStatement("STACK", a)) : a.callReturn();
-}}, if_else:{color:"#498deb", skeleton:"basic_double_loop", statements:[{accept:"basic"}, {accept:"basic"}], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}, {type:"LineBreak"}], events:{}, def:{params:[{type:"True"}, null], type:"if_else"}, paramsKeyMap:{BOOL:0}, statementsKeyMap:{STACK_IF:0, STACK_ELSE:1}, "class":"condition", isNotFor:[], func:function(b, a) {
-  if (a.isLooped) {
-    return delete a.isLooped, a.callReturn();
-  }
-  var c = a.getBooleanValue("BOOL", a);
-  a.isLooped = !0;
-  return c ? a.getStatement("STACK_IF", a) : a.getStatement("STACK_ELSE", a);
-}}, create_clone:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"clone", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null, null], type:"create_clone"}, paramsKeyMap:{VALUE:0}, "class":"clone", isNotFor:[], func:function(b, a) {
-  var c = a.getField("VALUE", a), d = a.callReturn();
-  "self" == c ? b.parent.addCloneEntity(b.parent, b, null) : Entry.container.getObject(c).addCloneEntity(b.parent, null, null);
-  return d;
-}}, delete_clone:{color:"#498deb", skeleton:"basic_without_next", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null], type:"delete_clone"}, "class":"clone", isNotFor:[], func:function(b, a) {
-  if (!b.isClone) {
-    return a.callReturn();
-  }
-  b.removeClone();
-  return this.die();
-}}, when_clone_start:{color:"#498deb", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_clone.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null], type:"when_clone_start"}, "class":"clone", isNotFor:[], func:function(b, a) {
-  return a.callReturn();
-}, event:"when_clone_start"}, stop_run:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null]}, func:function(b, a) {
-  return Entry.engine.toggleStop();
-}}, repeat_while_true:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Dropdown", options:[[Lang.Blocks.FLOW_repeat_while_true_until, "until"], [Lang.Blocks.FLOW_repeat_while_true_while, "while"]], value:"until", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"True"}, null, null], type:"repeat_while_true"}, paramsKeyMap:{BOOL:0, OPTION:1}, statementsKeyMap:{DO:0}, 
-"class":"repeat", isNotFor:[], func:function(b, a) {
-  var c = a.getBooleanValue("BOOL", a);
-  "until" == a.getField("OPTION", a) && (c = !c);
-  return (a.isLooped = c) ? a.getStatement("DO", a) : a.callReturn();
-}}, stop_object:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.FLOW_stop_object_all, "all"], [Lang.Blocks.FLOW_stop_object_this_object, "thisOnly"], [Lang.Blocks.FLOW_stop_object_this_thread, "thisThread"], [Lang.Blocks.FLOW_stop_object_other_thread, "otherThread"]], value:"all", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null, null], type:"stop_object"}, paramsKeyMap:{TARGET:0}, 
-"class":"terminate", isNotFor:[], func:function(b, a) {
-  var c = a.getField("TARGET", a), d = Entry.container;
-  switch(c) {
-    case "all":
-      return d.clearRunningState(), this.die();
-    case "thisOnly":
-      return b.parent.script.clearExecutorsByEntity(b), this.die();
-    case "thisObject":
-      return b.parent.script.clearExecutors(), this.die();
-    case "thisThread":
-      return this.die();
-    case "otherThread":
-      return b.parent.script.clearExecutors(), b.parent.script.addExecutor(this.executor), a.callReturn();
-  }
-}}, restart_project:{color:"#498deb", skeleton:"basic_without_next", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null], type:"restart_project"}, "class":"terminate", isNotFor:[], func:function(b, a) {
-  Entry.engine.toggleStop();
-  Entry.engine.toggleRun();
-}}, remove_all_clones:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null], type:"remove_all_clones"}, "class":"clone", isNotFor:[], func:function(b, a) {
-  var c = b.parent.getClonedEntities();
-  c.map(function(a) {
-    a.removeClone();
-  });
-  c = null;
-  return a.callReturn();
-}}, functionAddButton:{skeleton:"basic_button", color:"#eee", isNotFor:["functionInit"], params:[{type:"Text", text:Lang.Workspace.function_create, color:"#333", align:"center"}], events:{mousedown:[function() {
-  Entry.variableContainer.createFunction();
-}]}}, function_field_label:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#f9c535", params:[{type:"TextInput", value:Lang.Blocks.FUNCTION_explanation_1}, {type:"Output", accept:"paramMagnet"}], paramsKeyMap:{NAME:0, NEXT:1}, def:{params:["\uc774\ub984"], type:"function_field_label"}}, function_field_string:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#ffd974", params:[{type:"Block", accept:"stringMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}], paramsKeyMap:{PARAM:0, 
-NEXT:1}, def:{params:[{type:"text", params:["\ubb38\uc790/\uc22b\uc790\uac12"]}], type:"function_field_string"}}, function_field_boolean:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#aeb8ff", params:[{type:"Block", accept:"booleanMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}], paramsKeyMap:{PARAM:0, NEXT:1}, def:{params:[{type:"True", params:["\ud310\ub2e8\uac12"]}], type:"function_field_boolean"}}, function_param_string:{skeleton:"basic_string_field", color:"#ffd974", 
-template:"%1 %2", events:{viewAdd:[function() {
-  Entry.Func.refreshMenuCode();
-}]}, func:function() {
-  return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
-}}, function_param_boolean:{skeleton:"basic_boolean_field", color:"#aeb8ff", template:"%1 %2", events:{viewAdd:[function() {
-  Entry.Func.refreshMenuCode();
-}]}, func:function() {
-  return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
-}}, function_create:{skeleton:"basic", color:"#cc7337", event:"funcDef", params:[{type:"Block", accept:"paramMagnet", value:{type:"function_field_label", params:[Lang.Blocks.FUNC]}}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/function_03.png", size:12}], paramsKeyMap:{FIELD:0}, func:function() {
-}}, function_general:{skeleton:"basic", color:"#cc7337", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/function_03.png", size:12}], events:{dataAdd:[function(b) {
-  var a = Entry.variableContainer;
-  a && a.addRef("_functionRefs", b);
-}], dataDestroy:[function(b) {
-  var a = Entry.variableContainer;
-  a && a.removeRef("_functionRefs", b);
-}], dblclick:[function(b) {
-  b.getBoard().workspace.getMode() === Entry.Workspace.MODE_BOARD && (b = b.block.type.substr(5), Entry.Func.edit(Entry.variableContainer.functions_[b]));
-}]}, func:function(b) {
-  if (!this.initiated) {
-    this.initiated = !0;
-    var a = Entry.variableContainer.getFunction(this.block.type.substr(5, 9));
-    this.funcCode = a.content;
-    this.funcExecutor = this.funcCode.raiseEvent("funcDef", b)[0];
-    this.funcExecutor.register.params = this.getParams();
-    this.funcExecutor.register.paramMap = a.paramMap;
-  }
-  this.funcExecutor.execute();
-  if (!this.funcExecutor.isEnd()) {
-    return this.funcCode.removeExecutor(this.funcExecutor), Entry.STATIC.BREAK;
-  }
-}}, hamster_hand_found:{color:"#00979D", fontColor:"#fff", skeleton:"basic_boolean_field", statements:[], params:[], events:{}, def:{params:[], type:"hamster_hand_found"}, "class":"hamster_sensor", isNotFor:["hamster"], func:function(b, a) {
-  var c = Entry.hw.portData;
-  return 50 < c.leftProximity || 50 < c.rightProximity;
-}}, hamster_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.HAMSTER_sensor_leftProximity, "leftProximity"], [Lang.Blocks.HAMSTER_sensor_rightProximity, "rightProximity"], [Lang.Blocks.HAMSTER_sensor_leftFloor, "leftFloor"], [Lang.Blocks.HAMSTER_sensor_rightFloor, "rightFloor"], [Lang.Blocks.HAMSTER_sensor_accelerationX, "accelerationX"], [Lang.Blocks.HAMSTER_sensor_accelerationY, "accelerationY"], [Lang.Blocks.HAMSTER_sensor_accelerationZ, 
-"accelerationZ"], [Lang.Blocks.HAMSTER_sensor_light, "light"], [Lang.Blocks.HAMSTER_sensor_temperature, "temperature"], [Lang.Blocks.HAMSTER_sensor_signalStrength, "signalStrength"], [Lang.Blocks.HAMSTER_sensor_inputA, "inputA"], [Lang.Blocks.HAMSTER_sensor_inputB, "inputB"]], value:"leftProximity", fontSize:11}], events:{}, def:{params:[null], type:"hamster_value"}, paramsKeyMap:{DEVICE:0}, "class":"hamster_sensor", isNotFor:["hamster"], func:function(b, a) {
-  var c = Entry.hw.portData, d = a.getField("DEVICE");
-  return c[d];
-}}, hamster_move_forward_once:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"hamster_move_forward_once"}, "class":"hamster_board", isNotFor:["hamster"], func:function(b, a) {
-  var c = Entry.hw.sendQueue, d = Entry.hw.portData;
-  if (a.isStart) {
-    if (a.isMoving) {
-      switch(a.boardState) {
-        case 1:
-          2 > a.count ? (50 > d.leftFloor && 50 > d.rightFloor ? a.count++ : a.count = 0, d = d.leftFloor - d.rightFloor, c.leftWheel = 45 + .25 * d, c.rightWheel = 45 - .25 * d) : (a.count = 0, a.boardState = 2);
-          break;
-        case 2:
-          d = d.leftFloor - d.rightFloor;
-          c.leftWheel = 45 + .25 * d;
-          c.rightWheel = 45 - .25 * d;
-          a.boardState = 3;
-          var e = setTimeout(function() {
-            a.boardState = 4;
-            Entry.Hamster.removeTimeout(e);
-          }, 250);
-          Entry.Hamster.timeouts.push(e);
-          break;
-        case 3:
-          d = d.leftFloor - d.rightFloor;
-          c.leftWheel = 45 + .25 * d;
-          c.rightWheel = 45 - .25 * d;
-          break;
-        case 4:
-          c.leftWheel = 0, c.rightWheel = 0, a.boardState = 0, a.isMoving = !1;
-      }
-      return a;
-    }
-    delete a.isStart;
-    delete a.isMoving;
-    delete a.count;
-    delete a.boardState;
-    Entry.engine.isContinue = !1;
-    c.leftWheel = 0;
-    c.rightWheel = 0;
-    return a.callReturn();
-  }
-  a.isStart = !0;
-  a.isMoving = !0;
-  a.count = 0;
-  a.boardState = 1;
-  c.leftWheel = 45;
-  c.rightWheel = 45;
-  Entry.Hamster.setLineTracerMode(c, 0);
-  return a;
-}}, hamster_turn_once:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"]], value:"LEFT", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null], type:"hamster_turn_once"}, paramsKeyMap:{DIRECTION:0}, "class":"hamster_board", isNotFor:["hamster"], func:function(b, a) {
-  var c = Entry.hw.sendQueue, d = Entry.hw.portData;
-  if (a.isStart) {
-    if (a.isMoving) {
-      if (a.isLeft) {
-        switch(a.boardState) {
-          case 1:
-            2 > a.count ? 50 < d.leftFloor && a.count++ : (a.count = 0, a.boardState = 2);
-            break;
-          case 2:
-            20 > d.leftFloor && (a.boardState = 3);
-            break;
-          case 3:
-            2 > a.count ? 20 > d.leftFloor && a.count++ : (a.count = 0, a.boardState = 4);
-            break;
-          case 4:
-            50 < d.leftFloor && (a.boardState = 5);
-            break;
-          case 5:
-            d = d.leftFloor - d.rightFloor, -15 < d ? (c.leftWheel = 0, c.rightWheel = 0, a.boardState = 0, a.isMoving = !1) : (c.leftWheel = .5 * d, c.rightWheel = .5 * -d);
-        }
-      } else {
-        switch(a.boardState) {
-          case 1:
-            2 > a.count ? 50 < d.rightFloor && a.count++ : (a.count = 0, a.boardState = 2);
-            break;
-          case 2:
-            20 > d.rightFloor && (a.boardState = 3);
-            break;
-          case 3:
-            2 > a.count ? 20 > d.rightFloor && a.count++ : (a.count = 0, a.boardState = 4);
-            break;
-          case 4:
-            50 < d.rightFloor && (a.boardState = 5);
-            break;
-          case 5:
-            d = d.rightFloor - d.leftFloor, -15 < d ? (c.leftWheel = 0, c.rightWheel = 0, a.boardState = 0, a.isMoving = !1) : (c.leftWheel = .5 * -d, c.rightWheel = .5 * d);
-        }
-      }
-      return a;
-    }
-    delete a.isStart;
-    delete a.isMoving;
-    delete a.count;
-    delete a.boardState;
-    delete a.isLeft;
-    Entry.engine.isContinue = !1;
-    c.leftWheel = 0;
-    c.rightWheel = 0;
-    return a.callReturn();
-  }
-  a.isStart = !0;
-  a.isMoving = !0;
-  a.count = 0;
-  a.boardState = 1;
-  "LEFT" == a.getField("DIRECTION", a) ? (a.isLeft = !0, c.leftWheel = -45, c.rightWheel = 45) : (a.isLeft = !1, c.leftWheel = 45, c.rightWheel = -45);
-  Entry.Hamster.setLineTracerMode(c, 0);
-  return a;
-}}, hamster_move_forward_for_secs:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["1"]}, null], type:"hamster_move_forward_for_secs"}, paramsKeyMap:{VALUE:0}, "class":"hamster_wheel", isNotFor:["hamster"], func:function(b, a) {
-  var c = Entry.hw.sendQueue;
-  if (a.isStart) {
-    if (1 == a.timeFlag) {
-      return a;
-    }
-    delete a.isStart;
-    delete a.timeFlag;
-    Entry.engine.isContinue = !1;
-    c.leftWheel = 0;
-    c.rightWheel = 0;
-    return a.callReturn();
-  }
-  a.isStart = !0;
-  a.timeFlag = 1;
-  c.leftWheel = 30;
-  c.rightWheel = 30;
-  Entry.Hamster.setLineTracerMode(c, 0);
-  var c = 1E3 * a.getNumberValue("VALUE"), d = setTimeout(function() {
-    a.timeFlag = 0;
-    Entry.Hamster.removeTimeout(d);
-  }, c);
-  Entry.Hamster.timeouts.push(d);
-  return a;
-}}, hamster_move_backward_for_secs:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["1"]}, null], type:"hamster_move_backward_for_secs"}, paramsKeyMap:{VALUE:0}, "class":"hamster_wheel", isNotFor:["hamster"], func:function(b, a) {
-  var c = Entry.hw.sendQueue;
-  if (a.isStart) {
-    if (1 == a.timeFlag) {
-      return a;
-    }
-    delete a.isStart;
-    delete a.timeFlag;
-    Entry.engine.isContinue = !1;
-    c.leftWheel = 0;
-    c.rightWheel = 0;
-    return a.callReturn();
-  }
-  a.isStart = !0;
-  a.timeFlag = 1;
-  c.leftWheel = -30;
-  c.rightWheel = -30;
-  Entry.Hamster.setLineTracerMode(c, 0);
-  var c = 1E3 * a.getNumberValue("VALUE"), d = setTimeout(function() {
-    a.timeFlag = 0;
-    Entry.Hamster.removeTimeout(d);
-  }, c);
-  Entry.Hamster.timeouts.push(d);
-  return a;
-}}, hamster_turn_for_secs:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["1"]}, null], type:"hamster_turn_for_secs"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"hamster_wheel", isNotFor:["hamster"], 
-func:function(b, a) {
-  var c = Entry.hw.sendQueue;
-  if (a.isStart) {
-    if (1 == a.timeFlag) {
-      return a;
-    }
-    delete a.isStart;
-    delete a.timeFlag;
-    Entry.engine.isContinue = !1;
-    c.leftWheel = 0;
-    c.rightWheel = 0;
-    return a.callReturn();
-  }
-  a.isStart = !0;
-  a.timeFlag = 1;
-  "LEFT" == a.getField("DIRECTION", a) ? (c.leftWheel = -30, c.rightWheel = 30) : (c.leftWheel = 30, c.rightWheel = -30);
-  Entry.Hamster.setLineTracerMode(c, 0);
-  var c = 1E3 * a.getNumberValue("VALUE"), d = setTimeout(function() {
-    a.timeFlag = 0;
-    Entry.Hamster.removeTimeout(d);
-  }, c);
-  Entry.Hamster.timeouts.push(d);
-  return a;
-}}, hamster_change_both_wheels_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["10"]}, {type:"text", params:["10"]}, null], type:"hamster_change_both_wheels_by"}, paramsKeyMap:{LEFT:0, RIGHT:1}, "class":"hamster_wheel", isNotFor:["hamster"], func:function(b, a) {
-  var c = Entry.hw.sendQueue, d = a.getNumberValue("LEFT"), e = a.getNumberValue("RIGHT");
-  c.leftWheel = void 0 != c.leftWheel ? c.leftWheel + d : d;
-  c.rightWheel = void 0 != c.rightWheel ? c.rightWheel + e : e;
-  Entry.Hamster.setLineTracerMode(c, 0);
-  return a.callReturn();
-}}, hamster_set_both_wheels_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["30"]}, {type:"text", params:["30"]}, null], type:"hamster_set_both_wheels_to"}, paramsKeyMap:{LEFT:0, RIGHT:1}, "class":"hamster_wheel", isNotFor:["hamster"], func:function(b, a) {
-  var c = Entry.hw.sendQueue;
-  c.leftWheel = a.getNumberValue("LEFT");
-  c.rightWheel = a.getNumberValue("RIGHT");
-  Entry.Hamster.setLineTracerMode(c, 0);
-  return a.callReturn();
-}}, hamster_change_wheel_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["10"]}, null], type:"hamster_change_wheel_by"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"hamster_wheel", 
-isNotFor:["hamster"], func:function(b, a) {
-  var c = Entry.hw.sendQueue, d = a.getField("DIRECTION"), e = a.getNumberValue("VALUE");
-  "LEFT" == d ? c.leftWheel = void 0 != c.leftWheel ? c.leftWheel + e : e : ("RIGHT" != d && (c.leftWheel = void 0 != c.leftWheel ? c.leftWheel + e : e), c.rightWheel = void 0 != c.rightWheel ? c.rightWheel + e : e);
-  Entry.Hamster.setLineTracerMode(c, 0);
-  return a.callReturn();
-}}, hamster_set_wheel_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["30"]}, null], type:"hamster_set_wheel_to"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"hamster_wheel", 
-isNotFor:["hamster"], func:function(b, a) {
-  var c = Entry.hw.sendQueue, d = a.getField("DIRECTION"), e = a.getNumberValue("VALUE");
-  "LEFT" == d ? c.leftWheel = e : ("RIGHT" != d && (c.leftWheel = e), c.rightWheel = e);
-  Entry.Hamster.setLineTracerMode(c, 0);
-  return a.callReturn();
-}}, hamster_follow_line_using:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.HAMSTER_color_black, "BLACK"], [Lang.General.white, "WHITE"]], value:"BLACK", fontSize:11}, {type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]], value:"LEFT", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"hamster_follow_line_using"}, 
-paramsKeyMap:{COLOR:0, DIRECTION:1}, "class":"hamster_wheel", isNotFor:["hamster"], func:function(b, a) {
-  var c = Entry.hw.sendQueue, d = a.getField("COLOR"), e = a.getField("DIRECTION"), f = 1;
-  "RIGHT" == e ? f = 2 : "BOTH" == e && (f = 3);
-  "WHITE" == d && (f += 7);
-  c.leftWheel = 0;
-  c.rightWheel = 0;
-  Entry.Hamster.setLineTracerMode(c, f);
-  return a.callReturn();
-}}, hamster_follow_line_until:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.HAMSTER_color_black, "BLACK"], [Lang.General.white, "WHITE"]], value:"BLACK", fontSize:11}, {type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.Blocks.HAMSTER_front, "FRONT"], [Lang.Blocks.HAMSTER_rear, "REAR"]], value:"LEFT", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, 
-def:{params:[null, null, null], type:"hamster_follow_line_until"}, paramsKeyMap:{COLOR:0, DIRECTION:1}, "class":"hamster_wheel", isNotFor:["hamster"], func:function(b, a) {
-  var c = Entry.hw.sendQueue, d = Entry.hw.portData, e = a.getField("COLOR"), f = a.getField("DIRECTION"), g = 4;
-  "RIGHT" == f ? g = 5 : "FRONT" == f ? g = 6 : "REAR" == f && (g = 7);
-  "WHITE" == e && (g += 7);
-  if (a.isStart) {
-    if (e = Entry.Hamster, d.lineTracerStateId != e.lineTracerStateId && (e.lineTracerStateId = d.lineTracerStateId, 64 == d.lineTracerState)) {
-      return delete a.isStart, Entry.engine.isContinue = !1, e.setLineTracerMode(c, 0), a.callReturn();
-    }
-  } else {
-    a.isStart = !0, c.leftWheel = 0, c.rightWheel = 0, Entry.Hamster.setLineTracerMode(c, g);
-  }
-  return a;
-}}, hamster_set_following_speed_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"]], value:"1", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:["5", null], type:"hamster_set_following_speed_to"}, paramsKeyMap:{SPEED:0}, "class":"hamster_wheel", isNotFor:["hamster"], func:function(b, a) {
-  Entry.hw.sendQueue.lineTracerSpeed = Number(a.getField("SPEED", a));
-  return a.callReturn();
-}}, hamster_stop:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"hamster_stop"}, "class":"hamster_wheel", isNotFor:["hamster"], func:function(b, a) {
-  var c = Entry.hw.sendQueue;
-  c.leftWheel = 0;
-  c.rightWheel = 0;
-  Entry.Hamster.setLineTracerMode(c, 0);
-  return a.callReturn();
-}}, hamster_set_led_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]], value:"LEFT", fontSize:11}, {type:"Dropdown", options:[[Lang.General.red, "4"], [Lang.General.yellow, "6"], [Lang.General.green, "2"], [Lang.Blocks.HAMSTER_color_cyan, "3"], [Lang.General.blue, "1"], [Lang.Blocks.HAMSTER_color_magenta, "5"], [Lang.General.white, "7"]], value:"4", fontSize:11}, {type:"Indicator", 
-img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"hamster_set_led_to"}, paramsKeyMap:{DIRECTION:0, COLOR:1}, "class":"hamster_led", isNotFor:["hamster"], func:function(b, a) {
-  var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a), e = Number(a.getField("COLOR", a));
-  "LEFT" == d ? c.leftLed = e : ("RIGHT" != d && (c.leftLed = e), c.rightLed = e);
-  return a.callReturn();
-}}, hamster_clear_led:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]], value:"LEFT", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null], type:"hamster_clear_led"}, paramsKeyMap:{DIRECTION:0}, "class":"hamster_led", isNotFor:["hamster"], func:function(b, a) {
-  var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a);
-  "LEFT" == d ? c.leftLed = 0 : ("RIGHT" != d && (c.leftLed = 0), c.rightLed = 0);
-  return a.callReturn();
-}}, hamster_beep:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"hamster_beep"}, "class":"hamster_buzzer", isNotFor:["hamster"], func:function(b, a) {
-  var c = Entry.hw.sendQueue;
-  if (a.isStart) {
-    if (1 == a.timeFlag) {
-      return a;
-    }
-    delete a.isStart;
-    delete a.timeFlag;
-    Entry.engine.isContinue = !1;
-    c.buzzer = 0;
-    return a.callReturn();
-  }
-  a.isStart = !0;
-  a.timeFlag = 1;
-  c.buzzer = 440;
-  c.note = 0;
-  var d = setTimeout(function() {
-    a.timeFlag = 0;
-    Entry.Hamster.removeTimeout(d);
-  }, 200);
-  Entry.Hamster.timeouts.push(d);
-  return a;
-}}, hamster_change_buzzer_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["10"]}, null], type:"hamster_change_buzzer_by"}, paramsKeyMap:{VALUE:0}, "class":"hamster_buzzer", isNotFor:["hamster"], func:function(b, a) {
-  var c = Entry.hw.sendQueue, d = a.getNumberValue("VALUE");
-  c.buzzer = void 0 != c.buzzer ? c.buzzer + d : d;
-  c.note = 0;
-  return a.callReturn();
-}}, hamster_set_buzzer_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["1000"]}, null], type:"hamster_set_buzzer_to"}, paramsKeyMap:{VALUE:0}, "class":"hamster_buzzer", isNotFor:["hamster"], func:function(b, a) {
-  var c = Entry.hw.sendQueue;
-  c.buzzer = a.getNumberValue("VALUE");
-  c.note = 0;
-  return a.callReturn();
-}}, hamster_clear_buzzer:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"hamster_clear_buzzer"}, "class":"hamster_buzzer", isNotFor:["hamster"], func:function(b, a) {
-  var c = Entry.hw.sendQueue;
-  c.buzzer = 0;
-  c.note = 0;
-  return a.callReturn();
-}}, hamster_play_note_for:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.note_c + "", "4"], [Lang.General.note_c + "#", "5"], [Lang.General.note_d + "", "6"], [Lang.General.note_e + "b", "7"], [Lang.General.note_e + "", "8"], [Lang.General.note_f + "", "9"], [Lang.General.note_f + "#", "10"], [Lang.General.note_g + "", "11"], [Lang.General.note_g + "#", "12"], [Lang.General.note_a + "", "13"], [Lang.General.note_b + "b", "14"], [Lang.General.note_b + 
-"", "15"]], value:"4", fontSize:11}, {type:"Dropdown", options:[["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"]], value:"1", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, "4", {type:"text", params:["0.5"]}, null], type:"hamster_play_note_for"}, paramsKeyMap:{NOTE:0, OCTAVE:1, VALUE:2}, "class":"hamster_buzzer", isNotFor:["hamster"], func:function(b, 
-a) {
-  var c = Entry.hw.sendQueue;
-  if (a.isStart) {
-    if (1 == a.timeFlag) {
-      return a;
-    }
-    delete a.isStart;
-    delete a.timeFlag;
-    Entry.engine.isContinue = !1;
-    c.note = 0;
-    return a.callReturn();
-  }
-  var d = a.getNumberField("NOTE", a), e = a.getNumberField("OCTAVE", a), f = a.getNumberValue("VALUE", a), g = Entry.Hamster.tempo, f = 6E4 * f / g;
-  a.isStart = !0;
-  a.timeFlag = 1;
-  c.buzzer = 0;
-  c.note = d + 12 * (e - 1);
-  if (100 < f) {
-    var h = setTimeout(function() {
-      c.note = 0;
-      Entry.Hamster.removeTimeout(h);
-    }, f - 100);
-    Entry.Hamster.timeouts.push(h);
-  }
-  var k = setTimeout(function() {
-    a.timeFlag = 0;
-    Entry.Hamster.removeTimeout(k);
-  }, f);
-  Entry.Hamster.timeouts.push(k);
-  return a;
-}}, hamster_rest_for:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["0.25"]}, null], type:"hamster_rest_for"}, paramsKeyMap:{VALUE:0}, "class":"hamster_buzzer", isNotFor:["hamster"], func:function(b, a) {
-  var c = Entry.hw.sendQueue;
-  if (a.isStart) {
-    if (1 == a.timeFlag) {
-      return a;
-    }
-    delete a.isStart;
-    delete a.timeFlag;
-    Entry.engine.isContinue = !1;
-    return a.callReturn();
-  }
-  a.isStart = !0;
-  a.timeFlag = 1;
-  var d = a.getNumberValue("VALUE"), d = 6E4 * d / Entry.Hamster.tempo;
-  c.buzzer = 0;
-  c.note = 0;
-  var e = setTimeout(function() {
-    a.timeFlag = 0;
-    Entry.Hamster.removeTimeout(e);
-  }, d);
-  Entry.Hamster.timeouts.push(e);
-  return a;
-}}, hamster_change_tempo_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["20"]}, null], type:"hamster_change_tempo_by"}, paramsKeyMap:{VALUE:0}, "class":"hamster_buzzer", isNotFor:["hamster"], func:function(b, a) {
-  Entry.Hamster.tempo += a.getNumberValue("VALUE");
-  1 > Entry.Hamster.tempo && (Entry.Hamster.tempo = 1);
-  return a.callReturn();
-}}, hamster_set_tempo_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["60"]}, null], type:"hamster_set_tempo_to"}, paramsKeyMap:{VALUE:0}, "class":"hamster_buzzer", isNotFor:["hamster"], func:function(b, a) {
-  Entry.Hamster.tempo = a.getNumberValue("VALUE");
-  1 > Entry.Hamster.tempo && (Entry.Hamster.tempo = 1);
-  return a.callReturn();
-}}, hamster_set_port_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.HAMSTER_port_a, "A"], [Lang.Blocks.HAMSTER_port_b, "B"], [Lang.Blocks.HAMSTER_port_ab, "AB"]], value:"A", fontSize:11}, {type:"Dropdown", options:[[Lang.Blocks.HAMSTER_analog_input, "0"], [Lang.Blocks.HAMSTER_digital_input, "1"], [Lang.Blocks.HAMSTER_servo_output, "8"], [Lang.Blocks.HAMSTER_pwm_output, "9"], [Lang.Blocks.HAMSTER_digital_output, "10"]], value:"0", fontSize:11}, 
-{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"hamster_set_port_to"}, paramsKeyMap:{PORT:0, MODE:1}, "class":"hamster_port", isNotFor:["hamster"], func:function(b, a) {
-  var c = Entry.hw.sendQueue, d = a.getField("PORT", a), e = Number(a.getField("MODE", a));
-  "A" == d ? c.ioModeA = e : ("B" != d && (c.ioModeA = e), c.ioModeB = e);
-  return a.callReturn();
-}}, hamster_change_output_by:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.HAMSTER_port_a, "A"], [Lang.Blocks.HAMSTER_port_b, "B"], [Lang.Blocks.HAMSTER_port_ab, "AB"]], value:"A", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["10"]}, null], type:"hamster_change_output_by"}, paramsKeyMap:{PORT:0, VALUE:1}, 
-"class":"hamster_port", isNotFor:["hamster"], func:function(b, a) {
-  var c = Entry.hw.sendQueue, d = a.getField("PORT"), e = a.getNumberValue("VALUE");
-  "A" == d ? c.outputA = void 0 != c.outputA ? c.outputA + e : e : ("B" != d && (c.outputA = void 0 != c.outputA ? c.outputA + e : e), c.outputB = void 0 != c.outputB ? c.outputB + e : e);
-  return a.callReturn();
-}}, hamster_set_output_to:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.HAMSTER_port_a, "A"], [Lang.Blocks.HAMSTER_port_b, "B"], [Lang.Blocks.HAMSTER_port_ab, "AB"]], value:"A", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["100"]}, null], type:"hamster_set_output_to"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"hamster_port", 
-isNotFor:["hamster"], func:function(b, a) {
-  var c = Entry.hw.sendQueue, d = a.getField("PORT"), e = a.getNumberValue("VALUE");
-  "A" == d ? c.outputA = e : ("B" != d && (c.outputA = e), c.outputB = e);
-  return a.callReturn();
-}}, is_clicked:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Text", text:Lang.Blocks.JUDGEMENT_is_clicked, color:"#3D3D3D"}], events:{}, def:{params:[null], type:"is_clicked"}, "class":"boolean_input", isNotFor:[], func:function(b, a) {
-  return Entry.stage.isClick;
-}}, is_press_some_key:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Keyboard", value:81}, {type:"Text", text:Lang.Blocks.JUDGEMENT_is_press_some_key_2, color:"#3D3D3D"}], events:{}, def:{params:[null, null], type:"is_press_some_key"}, paramsKeyMap:{VALUE:0}, "class":"boolean_input", isNotFor:[], func:function(b, a) {
-  var c = Number(a.getField("VALUE", a));
-  return 0 <= Entry.pressedKeys.indexOf(c);
-}}, reach_something:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Text", text:Lang.Blocks.JUDGEMENT_reach_something_1, color:"#3D3D3D"}, {type:"DropdownDynamic", value:null, menuName:"collision", fontSize:11}, {type:"Text", text:Lang.Blocks.JUDGEMENT_reach_something_2, color:"#3D3D3D"}], events:{}, def:{params:[null, null, null], type:"reach_something"}, paramsKeyMap:{VALUE:1}, "class":"boolean_collision", isNotFor:[], func:function(b, a) {
-  if (!b.getVisible()) {
-    return !1;
-  }
-  var c = a.getField("VALUE", a), d = b.object, e = /wall/.test(c), f = ndgmr.checkPixelCollision;
-  if (e) {
-    switch(e = Entry.stage.wall, c) {
-      case "wall":
-        if (f(d, e.up, .2, !0) || f(d, e.down, .2, !0) || f(d, e.left, .2, !0) || f(d, e.right, .2, !0)) {
-          return !0;
-        }
-        break;
-      case "wall_up":
-        if (f(d, e.up, .2, !0)) {
-          return !0;
-        }
-        break;
-      case "wall_down":
-        if (f(d, e.down, .2, !0)) {
-          return !0;
-        }
-        break;
-      case "wall_right":
-        if (f(d, e.right, .2, !0)) {
-          return !0;
-        }
-        break;
-      case "wall_left":
-        if (f(d, e.left, .2, !0)) {
-          return !0;
-        }
-      ;
-    }
-  } else {
-    if ("mouse" == c) {
-      return f = Entry.stage.canvas, f = d.globalToLocal(f.mouseX, f.mouseY), d.hitTest(f.x, f.y);
-    }
-    c = Entry.container.getEntity(c);
-    if ("textBox" == c.type || "textBox" == b.type) {
-      f = c.object.getTransformedBounds();
-      d = d.getTransformedBounds();
-      if (Entry.checkCollisionRect(d, f)) {
-        return !0;
-      }
-      for (var c = c.parent.clonedEntities, e = 0, g = c.length;e < g;e++) {
-        var h = c[e];
-        if (!h.isStamp && h.getVisible() && Entry.checkCollisionRect(d, h.object.getTransformedBounds())) {
-          return !0;
-        }
-      }
-    } else {
-      if (c.getVisible() && f(d, c.object, .2, !0)) {
-        return !0;
-      }
-      c = c.parent.clonedEntities;
-      e = 0;
-      for (g = c.length;e < g;e++) {
-        if (h = c[e], !h.isStamp && h.getVisible() && f(d, h.object, .2, !0)) {
-          return !0;
-        }
-      }
-    }
-  }
-  return !1;
-}}, boolean_comparison:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["=", "EQUAL"], ["<", "SMALLER"], [">", "BIGGER"]], value:"EQUAL", fontSize:11}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[null], type:"boolean_comparison"}, paramsKeyMap:{LEFTHAND:0, OPERATOR:1, RIGHTHAND:2}, func:function(b, a) {
-  var c = a.getField("OPERATOR", a), d = a.getNumberValue("LEFTHAND", a), e = a.getNumberValue("RIGHTHAND", a);
-  return "EQUAL" == c ? d == e : "BIGGER" == c ? d > e : d < e;
-}}, boolean_equal:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"=", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"number", params:["10"]}, null, {type:"number", params:["10"]}], type:"boolean_equal"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"boolean_compare", isNotFor:[], func:function(b, a) {
-  var c = a.getStringValue("LEFTHAND", a), d = a.getStringValue("RIGHTHAND", a);
-  return c == d;
-}}, boolean_bigger:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:">", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"number", params:["10"]}, null, {type:"number", params:["10"]}], type:"boolean_bigger"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"boolean_compare", isNotFor:[], func:function(b, a) {
-  var c = a.getNumberValue("LEFTHAND", a), d = a.getNumberValue("RIGHTHAND", a);
-  return c > d;
-}}, boolean_smaller:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"<", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"number", params:["10"]}, null, {type:"number", params:["10"]}], type:"boolean_smaller"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"boolean_compare", isNotFor:[], func:function(b, a) {
-  var c = a.getNumberValue("LEFTHAND", a), d = a.getNumberValue("RIGHTHAND", a);
-  return c < d;
-}}, boolean_and_or:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Dropdown", options:[[Lang.Blocks.JUDGEMENT_boolean_and, "AND"], [Lang.Blocks.JUDGEMENT_boolean_or, "OR"]], value:"AND", fontSize:11}, {type:"Block", accept:"booleanMagnet"}], events:{}, def:{params:[null]}, paramsKeyMap:{LEFTHAND:0, OPERATOR:1, RIGHTHAND:2}, func:function(b, a) {
-  var c = a.getField("OPERATOR", a), d = a.getBooleanValue("LEFTHAND", a), e = a.getBooleanValue("RIGHTHAND", a);
-  return "AND" == c ? d && e : d || e;
-}}, boolean_and:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Text", text:Lang.Blocks.JUDGEMENT_boolean_and, color:"#3D3D3D"}, {type:"Block", accept:"booleanMagnet"}], events:{}, def:{params:[{type:"True"}, null, {type:"True"}], type:"boolean_and"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"boolean", isNotFor:[], func:function(b, a) {
-  var c = a.getBooleanValue("LEFTHAND", a), d = a.getBooleanValue("RIGHTHAND", a);
-  return c && d;
-}}, boolean_or:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Text", text:Lang.Blocks.JUDGEMENT_boolean_or, color:"#3D3D3D"}, {type:"Block", accept:"booleanMagnet"}], events:{}, def:{params:[{type:"True"}, null, {type:"False"}], type:"boolean_or"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"boolean", isNotFor:[], func:function(b, a) {
-  var c = a.getBooleanValue("LEFTHAND", a), d = a.getBooleanValue("RIGHTHAND", a);
-  return c || d;
-}}, boolean_not:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Text", text:Lang.Blocks.JUDGEMENT_boolean_not_1, color:"#3D3D3D"}, {type:"Block", accept:"booleanMagnet"}, {type:"Text", text:Lang.Blocks.JUDGEMENT_boolean_not_2, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"True"}, null], type:"boolean_not"}, paramsKeyMap:{VALUE:1}, "class":"boolean", isNotFor:[], func:function(b, a) {
-  return !a.getBooleanValue("VALUE");
-}}, true_or_false:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.JUDGEMENT_true, "true"], [Lang.Blocks.JUDGEMENT_false, "false"]], value:"true", fontSize:11}], events:{}, def:{params:[null]}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
-  return "true" == a.children[0].textContent;
-}}, True:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Text", text:Lang.Blocks.JUDGEMENT_true, color:"#3D3D3D"}], events:{}, def:{params:[null], type:"True"}, func:function(b, a) {
-  return !0;
-}, isPrimitive:!0}, False:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Text", text:Lang.Blocks.JUDGEMENT_false, color:"#3D3D3D"}], events:{}, def:{params:[null], type:"False"}, func:function(b, a) {
-  return !1;
-}, isPrimitive:!0}, boolean_basic_operator:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["=", "EQUAL"], [">", "GREATER"], ["<", "LESS"], ["\u2265", "GREATER_OR_EQUAL"], ["\u2264", "LESS_OR_EQUAL"]], value:"EQUAL", fontSize:11, noArrow:!0}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"text", params:["10"]}, "EQUAL", {type:"text", params:["10"]}], type:"boolean_basic_operator"}, defs:[{params:[{type:"text", 
-params:["10"]}, "EQUAL", {type:"text", params:["10"]}], type:"boolean_basic_operator"}, {params:[{type:"text", params:["10"]}, "GREATER", {type:"text", params:["10"]}], type:"boolean_basic_operator"}, {params:[{type:"text", params:["10"]}, "LESS", {type:"text", params:["10"]}], type:"boolean_basic_operator"}, {params:[{type:"text", params:["10"]}, "GREATER_OR_EQUAL", {type:"text", params:["10"]}], type:"boolean_basic_operator"}, {params:[{type:"text", params:["10"]}, "LESS_OR_EQUAL", {type:"text", 
-params:["10"]}], type:"boolean_basic_operator"}], paramsKeyMap:{LEFTHAND:0, OPERATOR:1, RIGHTHAND:2}, "class":"boolean_compare", isNotFor:[], func:function(b, a) {
-  var c = a.getField("OPERATOR", a), d = a.getStringValue("LEFTHAND", a), e = a.getStringValue("RIGHTHAND", a);
-  switch(c) {
-    case "EQUAL":
-      return d == e;
-    case "GREATER":
-      return Number(d) > Number(e);
-    case "LESS":
-      return Number(d) < Number(e);
-    case "GREATER_OR_EQUAL":
-      return Number(d) >= Number(e);
-    case "LESS_OR_EQUAL":
-      return Number(d) <= Number(e);
-  }
-}}, show:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null], type:"show"}, "class":"visibility", isNotFor:[], func:function(b, a) {
-  b.setVisible(!0);
-  return a.callReturn();
-}}, hide:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null], type:"hide"}, "class":"visibility", isNotFor:[], func:function(b, a) {
-  b.setVisible(!1);
-  return a.callReturn();
-}}, dialog_time:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[[Lang.Blocks.speak, "speak"]], value:"speak", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"text", params:[Lang.Blocks.block_hi]}, {type:"number", params:["4"]}, null, null], type:"dialog_time"}, paramsKeyMap:{VALUE:0, SECOND:1, OPTION:2}, "class":"say", 
-isNotFor:["textBox"], func:function(b, a) {
-  if (!a.isStart) {
-    var c = a.getNumberValue("SECOND", a), d = a.getStringValue("VALUE", a), e = a.getField("OPTION", a);
-    a.isStart = !0;
-    a.timeFlag = 1;
-    d || "number" == typeof d || (d = "    ");
-    d = Entry.convertToRoundedDecimals(d, 3);
-    new Entry.Dialog(b, d, e);
-    b.syncDialogVisible(b.getVisible());
-    setTimeout(function() {
-      a.timeFlag = 0;
-    }, 1E3 * c);
-  }
-  return 0 == a.timeFlag ? (delete a.timeFlag, delete a.isStart, b.dialog && b.dialog.remove(), a.callReturn()) : a;
-}}, dialog:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[[Lang.Blocks.speak, "speak"]], value:"speak", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"text", params:[Lang.Blocks.block_hi]}, null, null], type:"dialog"}, paramsKeyMap:{VALUE:0, OPTION:1}, "class":"say", isNotFor:["textBox"], func:function(b, a) {
-  var c = a.getStringValue("VALUE", a);
-  c || "number" == typeof c || (c = "    ");
-  var d = a.getField("OPTION", a), c = Entry.convertToRoundedDecimals(c, 3);
-  new Entry.Dialog(b, c, d);
-  b.syncDialogVisible(b.getVisible());
-  return a.callReturn();
-}}, remove_dialog:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null], type:"remove_dialog"}, "class":"say", isNotFor:["textBox"], func:function(b, a) {
-  b.dialog && b.dialog.remove();
-  return a.callReturn();
-}}, change_to_nth_shape:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"pictures", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, null], type:"change_to_nth_shape"}, paramsKeyMap:{VALUE:0}, "class":"shape", isNotFor:[], func:function(b, a) {
-  var c = a.getField("VALUE", a), c = b.parent.getPicture(c);
-  b.setImage(c);
-  return a.callReturn();
-}}, change_to_next_shape:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.LOOKS_change_shape_next, "next"], [Lang.Blocks.LOOKS_change_shape_prev, "prev"]], value:"next", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, null], type:"change_to_next_shape"}, paramsKeyMap:{DRIECTION:0}, "class":"shape", isNotFor:["textBox"], func:function(b, a) {
-  var c;
-  c = a.fields && "prev" === a.getStringField("DRIECTION") ? b.parent.getPrevPicture(b.picture.id) : b.parent.getNextPicture(b.picture.id);
-  b.setImage(c);
-  return a.callReturn();
-}}, set_effect_volume:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.opacity, "opacity"]], value:"color", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["10"]}, null], type:"set_effect_volume"}, paramsKeyMap:{EFFECT:0, VALUE:1}, "class":"effect", 
-isNotFor:["textBox"], func:function(b, a) {
-  var c = a.getField("EFFECT", a), d = a.getNumberValue("VALUE", a);
-  "color" == c ? b.effect.hue = d + b.effect.hue : "lens" != c && "swriling" != c && "pixel" != c && "mosaic" != c && ("brightness" == c ? b.effect.brightness = d + b.effect.brightness : "blur" != c && "opacity" == c && (b.effect.alpha += d / 100));
-  b.applyFilter();
-  return a.callReturn();
-}}, set_effect:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.opacity, "opacity"]], value:"color", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["100"]}, null], type:"set_effect"}, paramsKeyMap:{EFFECT:0, VALUE:1}, "class":"effect", isNotFor:["textBox"], 
-func:function(b, a) {
-  var c = a.getField("EFFECT", a), d = a.getNumberValue("VALUE", a);
-  "color" == c ? b.effect.hue = d : "lens" != c && "swriling" != c && "pixel" != c && "mosaic" != c && ("brightness" == c ? b.effect.brightness = d : "blur" != c && "opacity" == c && (b.effect.alpha = d / 100));
-  b.applyFilter();
-  return a.callReturn();
-}}, erase_all_effects:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null], type:"erase_all_effects"}, "class":"effect", isNotFor:["textBox"], func:function(b, a) {
-  b.resetFilter();
-  return a.callReturn();
-}}, change_scale_percent:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"change_scale_percent"}, paramsKeyMap:{VALUE:0}, "class":"scale", isNotFor:[], func:function(b, a) {
-  var c = (a.getNumberValue("VALUE", a) + 100) / 100;
-  b.setScaleX(b.getScaleX() * c);
-  b.setScaleY(b.getScaleY() * c);
-  return a.callReturn();
-}}, set_scale_percent:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["100"]}, null], type:"set_scale_percent"}, paramsKeyMap:{VALUE:0}, "class":"scale", isNotFor:[], func:function(b, a) {
-  var c = a.getNumberValue("VALUE", a) / 100, d = b.snapshot_;
-  b.setScaleX(c * d.scaleX);
-  b.setScaleY(c * d.scaleY);
-  return a.callReturn();
-}}, change_scale_size:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"change_scale_size"}, paramsKeyMap:{VALUE:0}, "class":"scale", isNotFor:[], func:function(b, a) {
-  var c = a.getNumberValue("VALUE", a);
-  b.setSize(b.getSize() + c);
-  return a.callReturn();
-}}, set_scale_size:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["100"]}, null], type:"set_scale_size"}, paramsKeyMap:{VALUE:0}, "class":"scale", isNotFor:[], func:function(b, a) {
-  var c = a.getNumberValue("VALUE", a);
-  b.setSize(c);
-  return a.callReturn();
-}}, flip_y:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null], type:"flip_y"}, "class":"flip", isNotFor:[], func:function(b, a) {
-  b.setScaleX(-1 * b.getScaleX());
-  return a.callReturn();
-}}, flip_x:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null], type:"flip_x"}, "class":"flip", isNotFor:[], func:function(b, a) {
-  b.setScaleY(-1 * b.getScaleY());
-  return a.callReturn();
-}}, set_object_order:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"objectSequence", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, null], type:"set_object_order"}, paramsKeyMap:{VALUE:0}, "class":"z-index", isNotFor:[], func:function(b, a) {
-  var c = a.getField("VALUE", a), d = Entry.container.getCurrentObjects().indexOf(b.parent);
-  if (-1 < d) {
-    return Entry.container.moveElementByBlock(d, c), a.callReturn();
-  }
-  throw Error("object is not available");
-}}, get_pictures:{color:"#EC4466", skeleton:"basic_string_field", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"pictures", fontSize:11}], events:{}, def:{params:[null]}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
-  return a.getStringField("VALUE");
-}}, change_to_some_shape:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[{type:"get_pictures", id:"z4jm"}, null], type:"change_to_some_shape"}, paramsKeyMap:{VALUE:0}, "class":"shape", isNotFor:["textBox"], func:function(b, a) {
-  var c = a.getStringValue("VALUE");
-  Entry.parseNumber(c);
-  c = b.parent.getPicture(c);
-  b.setImage(c);
-  return a.callReturn();
-}}, add_effect_amount:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.transparency, "transparency"]], value:"color", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["10"]}, null], type:"add_effect_amount"}, paramsKeyMap:{EFFECT:0, VALUE:1}, 
-"class":"effect", isNotFor:["textBox"], func:function(b, a) {
-  var c = a.getField("EFFECT", a), d = a.getNumberValue("VALUE", a);
-  "color" == c ? b.effect.hsv = d + b.effect.hsv : "brightness" == c ? b.effect.brightness = d + b.effect.brightness : "transparency" == c && (b.effect.alpha -= d / 100);
-  b.applyFilter();
-  return a.callReturn();
-}}, change_effect_amount:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.transparency, "transparency"]], value:"color", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["100"]}, null], type:"change_effect_amount"}, paramsKeyMap:{EFFECT:0, VALUE:1}, 
-"class":"effect", isNotFor:["textBox"], func:function(b, a) {
-  var c = a.getField("EFFECT", a), d = a.getNumberValue("VALUE", a);
-  "color" == c ? b.effect.hsv = d : "brightness" == c ? b.effect.brightness = d : "transparency" == c && (b.effect.alpha = 1 - d / 100);
-  b.applyFilter();
-  return a.callReturn();
-}}, set_effect_amount:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.transparency, "transparency"]], value:"color", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["10"]}, null], type:"set_effect_amount"}, paramsKeyMap:{EFFECT:0, VALUE:1}, 
-"class":"effect", isNotFor:["textBox"], func:function(b, a) {
-  var c = a.getField("EFFECT", a), d = a.getNumberValue("VALUE", a);
-  "color" == c ? b.effect.hue = d + b.effect.hue : "brightness" == c ? b.effect.brightness = d + b.effect.brightness : "transparency" == c && (b.effect.alpha -= d / 100);
-  b.applyFilter();
-  return a.callReturn();
-}}, set_entity_effect:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.transparency, "transparency"]], value:"color", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["100"]}, null], type:"set_entity_effect"}, paramsKeyMap:{EFFECT:0, VALUE:1}, 
-"class":"effect", isNotFor:["textBox"], func:function(b, a) {
-  var c = a.getField("EFFECT", a), d = a.getNumberValue("VALUE", a);
-  "color" == c ? b.effect.hue = d : "brightness" == c ? b.effect.brightness = d : "transparency" == c && (b.effect.alpha = 1 - d / 100);
-  b.applyFilter();
-  return a.callReturn();
-}}, change_object_index:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.LOOKS_change_object_index_sub_1, "FRONT"], [Lang.Blocks.LOOKS_change_object_index_sub_2, "FORWARD"], [Lang.Blocks.LOOKS_change_object_index_sub_3, "BACKWARD"], [Lang.Blocks.LOOKS_change_object_index_sub_4, "BACK"]], value:"FRONT", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null, null], type:"change_object_index"}, 
-paramsKeyMap:{LOCATION:0}, "class":"z-index", isNotFor:[], func:function(b, a) {
-  var c, d = a.getField("LOCATION", a), e = Entry.container.getCurrentObjects(), f = e.indexOf(b.parent), e = e.length - 1;
-  if (0 > f) {
-    throw Error("object is not available for current scene");
-  }
-  switch(d) {
-    case "FRONT":
-      c = 0;
-      break;
-    case "FORWARD":
-      c = Math.max(0, f - 1);
-      break;
-    case "BACKWARD":
-      c = Math.min(e, f + 1);
-      break;
-    case "BACK":
-      c = e;
-  }
-  Entry.container.moveElementByBlock(f, c);
-  return a.callReturn();
-}}, move_direction:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"move_direction"}, paramsKeyMap:{VALUE:0}, "class":"walk", isNotFor:[], func:function(b, a) {
-  var c = a.getNumberValue("VALUE", a);
-  b.setX(b.getX() + c * Math.cos((b.getRotation() + b.getDirection() - 90) / 180 * Math.PI));
-  b.setY(b.getY() - c * Math.sin((b.getRotation() + b.getDirection() - 90) / 180 * Math.PI));
-  b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY());
-  return a.callReturn();
-}}, move_x:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"move_x"}, paramsKeyMap:{VALUE:0}, "class":"move_relative", isNotFor:[], func:function(b, a) {
-  var c = a.getNumberValue("VALUE", a);
-  b.setX(b.getX() + c);
-  b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY());
-  return a.callReturn();
-}}, move_y:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"move_y"}, paramsKeyMap:{VALUE:0}, "class":"move_relative", isNotFor:[], func:function(b, a) {
-  var c = a.getNumberValue("VALUE", a);
-  b.setY(b.getY() + c);
-  b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY());
-  return a.callReturn();
-}}, locate_xy_time:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["2"]}, {type:"number", params:["10"]}, {type:"number", params:["10"]}, null], type:"locate_xy_time"}, paramsKeyMap:{VALUE1:0, VALUE2:1, VALUE3:2}, "class":"move_absolute", isNotFor:[], 
-func:function(b, a) {
-  if (!a.isStart) {
-    var c;
-    c = a.getNumberValue("VALUE1", a);
-    a.isStart = !0;
-    a.frameCount = Math.floor(c * Entry.FPS);
-    a.x = a.getNumberValue("VALUE2", a);
-    a.y = a.getNumberValue("VALUE3", a);
-  }
-  if (0 != a.frameCount) {
-    c = a.x - b.getX();
-    var d = a.y - b.getY();
-    c /= a.frameCount;
-    d /= a.frameCount;
-    b.setX(b.getX() + c);
-    b.setY(b.getY() + d);
-    a.frameCount--;
-    b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY());
-    return a;
-  }
-  delete a.isStart;
-  delete a.frameCount;
-  return a.callReturn();
-}}, rotate_by_angle:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["90"]}, null], type:"rotate_by_angle"}, paramsKeyMap:{VALUE:0}, "class":"rotate", isNotFor:[], func:function(b, a) {
-  var c = a.getNumberValue("VALUE", a);
-  b.setRotation(b.getRotation() + c);
-  return a.callReturn();
-}}, rotate_by_angle_dropdown:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["45", "45"], ["90", "90"], ["135", "135"], ["180", "180"]], value:"45", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:["45", null], type:"rotate_by_angle_dropdown"}, paramsKeyMap:{VALUE:0}, "class":"ebs", isNotFor:[], func:function(b, a) {
-  var c = a.getField("VALUE", a);
-  b.setRotation(b.getRotation() + Number(c));
-  return a.callReturn();
-}}, see_angle:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["90"]}, null], type:"see_angle"}, paramsKeyMap:{VALUE:0}, "class":"rotate", isNotFor:[], func:function(b, a) {
-  var c = a.getNumberValue("VALUE", a);
-  b.setDirection(c);
-  return a.callReturn();
-}}, see_direction:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"sprites", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[null, null]}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
-  var c = a.getField("VALUE", a), d = Entry.container.getEntity(c), c = d.getX() - b.getX(), d = d.getY() - b.getY();
-  0 <= c ? b.setRotation(Math.atan(d / c) / Math.PI * 180 + 90) : b.setRotation(Math.atan(d / c) / Math.PI * 180 + 270);
-  return a.callReturn();
-}}, locate_xy:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["0"]}, {type:"number", params:["0"]}, null], type:"locate_xy"}, paramsKeyMap:{VALUE1:0, VALUE2:1}, "class":"move_absolute", isNotFor:[], func:function(b, a) {
-  var c = a.getNumberValue("VALUE1", a);
-  b.setX(c);
-  c = a.getNumberValue("VALUE2", a);
-  b.setY(c);
-  b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY());
-  return a.callReturn();
-}}, locate_x:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"locate_x"}, paramsKeyMap:{VALUE:0}, "class":"move_absolute", isNotFor:[], func:function(b, a) {
-  var c = a.getNumberValue("VALUE", a);
-  b.setX(c);
-  b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY());
-  return a.callReturn();
-}}, locate_y:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"locate_y"}, paramsKeyMap:{VALUE:0}, "class":"move_absolute", isNotFor:[], func:function(b, a) {
-  var c = a.getNumberValue("VALUE", a);
-  b.setY(c);
-  b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY());
-  return a.callReturn();
-}}, locate:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"spritesWithMouse", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[null, null], type:"locate"}, paramsKeyMap:{VALUE:0}, "class":"move_absolute", isNotFor:[], func:function(b, a) {
-  var c = a.getField("VALUE", a), d;
-  "mouse" == c ? (c = Entry.stage.mouseCoordinate.x, d = Entry.stage.mouseCoordinate.y) : (d = Entry.container.getEntity(c), c = d.getX(), d = d.getY());
-  b.setX(Number(c));
-  b.setY(Number(d));
-  b.brush && !b.brush.stop && b.brush.lineTo(c, -1 * d);
-  return a.callReturn();
-}}, move_xy_time:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["2"]}, {type:"number", params:["10"]}, {type:"number", params:["10"]}, null], type:"move_xy_time"}, paramsKeyMap:{VALUE1:0, VALUE2:1, VALUE3:2}, "class":"move_relative", isNotFor:[], 
-func:function(b, a) {
-  if (!a.isStart) {
-    var c;
-    c = a.getNumberValue("VALUE1", a);
-    var d = a.getNumberValue("VALUE2", a), e = a.getNumberValue("VALUE3", a);
-    a.isStart = !0;
-    a.frameCount = Math.floor(c * Entry.FPS);
-    a.dX = d / a.frameCount;
-    a.dY = e / a.frameCount;
-  }
-  if (0 != a.frameCount) {
-    return b.setX(b.getX() + a.dX), b.setY(b.getY() + a.dY), a.frameCount--, b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY()), a;
-  }
-  delete a.isStart;
-  delete a.frameCount;
-  return a.callReturn();
-}}, rotate_by_angle_time:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Angle"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["2"]}, {type:"number", params:["2"]}, null], type:"rotate_by_angle_time"}, paramsKeyMap:{VALUE:1}, "class":"rotate", isNotFor:[], func:function(b, a) {
-  if (!a.isStart) {
-    var c;
-    c = a.getNumberValue("VALUE", a);
-    var d = a.getNumberField("VALUE", a);
-    a.isStart = !0;
-    a.frameCount = Math.floor(c * Entry.FPS);
-    a.dAngle = d / a.frameCount;
-  }
-  if (0 != a.frameCount) {
-    return b.setRotation(b.getRotation() + a.dAngle), a.frameCount--, a;
-  }
-  delete a.isStart;
-  delete a.frameCount;
-  return a.callReturn();
-}}, bounce_wall:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[null], type:"bounce_wall"}, "class":"walk", isNotFor:[], func:function(b, a) {
-  var c = b.parent.getRotateMethod(), d = "free" == c ? (b.getRotation() + b.getDirection()).mod(360) : b.getDirection(), e = Entry.Utils.COLLISION.NONE;
-  if (90 > d && 0 <= d || 360 > d && 270 <= d) {
-    var e = b.collision == Entry.Utils.COLLISION.UP, f = ndgmr.checkPixelCollision(Entry.stage.wall.up, b.object, 0, !1);
-    !f && e && (b.collision = Entry.Utils.COLLISION.NONE);
-    f && e && (f = !1);
-    f ? ("free" == c ? b.setRotation(-b.getRotation() - 2 * b.getDirection() + 180) : b.setDirection(-b.getDirection() + 180), b.collision = Entry.Utils.COLLISION.UP) : (e = b.collision == Entry.Utils.COLLISION.DOWN, f = ndgmr.checkPixelCollision(Entry.stage.wall.down, b.object, 0, !1), !f && e && (b.collision = Entry.Utils.COLLISION.NONE), f && e && (f = !1), f && ("free" == c ? b.setRotation(-b.getRotation() - 2 * b.getDirection() + 180) : b.setDirection(-b.getDirection() + 180), b.collision = 
-    Entry.Utils.COLLISION.DOWN));
-  } else {
-    270 > d && 90 <= d && (e = b.collision == Entry.Utils.COLLISION.DOWN, f = ndgmr.checkPixelCollision(Entry.stage.wall.down, b.object, 0, !1), !f && e && (b.collision = Entry.Utils.COLLISION.NONE), f && e && (f = !1), f ? ("free" == c ? b.setRotation(-b.getRotation() - 2 * b.getDirection() + 180) : b.setDirection(-b.getDirection() + 180), b.collision = Entry.Utils.COLLISION.DOWN) : (e = b.collision == Entry.Utils.COLLISION.UP, f = ndgmr.checkPixelCollision(Entry.stage.wall.up, b.object, 0, !1), 
-    !f && e && (b.collision = Entry.Utils.COLLISION.NONE), f && e && (f = !1), f && ("free" == c ? b.setRotation(-b.getRotation() - 2 * b.getDirection() + 180) : b.setDirection(-b.getDirection() + 180), b.collision = Entry.Utils.COLLISION.UP)));
-  }
-  360 > d && 180 <= d ? (e = b.collision == Entry.Utils.COLLISION.LEFT, d = ndgmr.checkPixelCollision(Entry.stage.wall.left, b.object, 0, !1), !d && e && (b.collision = Entry.Utils.COLLISION.NONE), d && e && (d = !1), d ? ("free" == c ? b.setRotation(-b.getRotation() - 2 * b.getDirection()) : b.setDirection(-b.getDirection() + 360), b.collision = Entry.Utils.COLLISION.LEFT) : (e = b.collision == Entry.Utils.COLLISION.RIGHT, d = ndgmr.checkPixelCollision(Entry.stage.wall.right, b.object, 0, !1), !d && 
-  e && (b.collision = Entry.Utils.COLLISION.NONE), d && e && (d = !1), d && ("free" == c ? b.setRotation(-b.getRotation() - 2 * b.getDirection()) : b.setDirection(-b.getDirection() + 360), b.collision = Entry.Utils.COLLISION.RIGHT))) : 180 > d && 0 <= d && (e = b.collision == Entry.Utils.COLLISION.RIGHT, d = ndgmr.checkPixelCollision(Entry.stage.wall.right, b.object, 0, !1), !d && e && (b.collision = Entry.Utils.COLLISION.NONE), d && e && (d = !1), d ? ("free" == c ? b.setRotation(-b.getRotation() - 
-  2 * b.getDirection()) : b.setDirection(-b.getDirection() + 360), b.collision = Entry.Utils.COLLISION.RIGHT) : (e = b.collision == Entry.Utils.COLLISION.LEFT, d = ndgmr.checkPixelCollision(Entry.stage.wall.left, b.object, 0, !1), !d && e && (b.collision = Entry.Utils.COLLISION.NONE), d && e && (d = !1), d && ("free" == c ? b.setRotation(-b.getRotation() - 2 * b.getDirection()) : b.setDirection(-b.getDirection() + 360), b.collision = Entry.Utils.COLLISION.LEFT)));
-  return a.callReturn();
-}}, flip_arrow_horizontal:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[null]}, func:function(b, a) {
-  b.setDirection(b.getDirection() + 180);
-  return a.callReturn();
-}}, flip_arrow_vertical:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[null]}, func:function(b, a) {
-  b.setDirection(b.getDirection() + 180);
-  return a.callReturn();
-}}, see_angle_object:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"spritesWithMouse", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[null, null], type:"see_angle_object"}, paramsKeyMap:{VALUE:0}, "class":"rotate_absolute", isNotFor:[], func:function(b, a) {
-  var c = a.getField("VALUE", a), d = b.getX(), e = b.getY();
-  if (b.parent.id == c) {
-    return a.callReturn();
-  }
-  "mouse" == c ? (c = Entry.stage.mouseCoordinate.y, d = Entry.stage.mouseCoordinate.x - d, e = c - e) : (c = Entry.container.getEntity(c), d = c.getX() - d, e = c.getY() - e);
-  e = 0 === d && 0 === e ? b.getDirection() + b.getRotation() : 0 <= d ? -Math.atan(e / d) / Math.PI * 180 + 90 : -Math.atan(e / d) / Math.PI * 180 + 270;
-  d = b.getDirection() + b.getRotation();
-  b.setRotation(b.getRotation() + e - d);
-  return a.callReturn();
-}}, see_angle_direction:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["90"]}, null], type:"see_angle_direction"}, paramsKeyMap:{VALUE:0}, "class":"rotate", isNotFor:[], func:function(b, a) {
-  var c = a.getNumberValue("VALUE", a), d = b.getDirection() + b.getRotation();
-  b.setRotation(b.getRotation() + c - d);
-  return a.callReturn();
-}}, rotate_direction:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["90"]}, null], type:"rotate_direction"}, paramsKeyMap:{VALUE:0}, "class":"rotate", isNotFor:[], func:function(b, a) {
-  var c = a.getNumberValue("VALUE", a);
-  b.setDirection(c + b.getDirection());
-  return a.callReturn();
-}}, locate_object_time:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"DropdownDynamic", value:null, menuName:"spritesWithMouse", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["2"]}, null, null], type:"locate_object_time"}, paramsKeyMap:{VALUE:0, TARGET:1}, "class":"move_absolute", isNotFor:[], func:function(b, a) {
-  if (!a.isStart) {
-    var c, d, e;
-    d = a.getField("TARGET", a);
-    c = a.getNumberValue("VALUE", a);
-    c = Math.floor(c * Entry.FPS);
-    e = Entry.stage.mouseCoordinate;
-    if (0 != c) {
-      "mouse" == d ? (d = e.x - b.getX(), e = e.y - b.getY()) : (e = Entry.container.getEntity(d), d = e.getX() - b.getX(), e = e.getY() - b.getY()), a.isStart = !0, a.frameCount = c, a.dX = d / a.frameCount, a.dY = e / a.frameCount;
-    } else {
-      return "mouse" == d ? (d = Number(e.x), e = Number(e.y)) : (e = Entry.container.getEntity(d), d = e.getX(), e = e.getY()), b.setX(d), b.setY(e), b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY()), a.callReturn();
-    }
-  }
-  if (0 != a.frameCount) {
-    return b.setX(b.getX() + a.dX), b.setY(b.getY() + a.dY), a.frameCount--, b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY()), a;
-  }
-  delete a.isStart;
-  delete a.frameCount;
-  return a.callReturn();
-}}, rotate_absolute:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"angle"}, null], type:"rotate_absolute"}, paramsKeyMap:{VALUE:0}, "class":"rotate_absolute", isNotFor:[], func:function(b, a) {
-  var c = a.getNumberValue("VALUE", a);
-  b.setRotation(c);
-  return a.callReturn();
-}}, rotate_relative:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"angle"}, null], type:"rotate_relative"}, paramsKeyMap:{VALUE:0}, "class":"rotate", isNotFor:[], func:function(b, a) {
-  var c = a.getNumberValue("VALUE", a);
-  b.setRotation(c + b.getRotation());
-  return a.callReturn();
-}}, direction_absolute:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"angle"}, null], type:"direction_absolute"}, paramsKeyMap:{VALUE:0}, "class":"rotate_absolute", isNotFor:[], func:function(b, a) {
-  var c = a.getNumberValue("VALUE", a);
-  b.setDirection(c);
-  return a.callReturn();
-}}, direction_relative:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"angle"}, null], type:"direction_relative"}, paramsKeyMap:{VALUE:0}, "class":"rotate", isNotFor:[], func:function(b, a) {
-  var c = a.getNumberValue("VALUE", a);
-  b.setDirection(c + b.getDirection());
-  return a.callReturn();
-}}, move_to_angle:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"angle"}, {type:"number", params:["10"]}, null], type:"move_to_angle"}, paramsKeyMap:{ANGLE:0, VALUE:1}, "class":"move_rotate", isNotFor:[], func:function(b, a) {
-  var c = a.getNumberValue("VALUE", a), d = a.getNumberValue("ANGLE", a);
-  b.setX(b.getX() + c * Math.cos((d - 90) / 180 * Math.PI));
-  b.setY(b.getY() - c * Math.sin((d - 90) / 180 * Math.PI));
-  b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY());
-  return a.callReturn();
-}}, rotate_by_time:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["2"]}, {type:"angle"}, null], type:"rotate_by_time"}, paramsKeyMap:{VALUE:0, ANGLE:1}, "class":"rotate", isNotFor:[], func:function(b, a) {
-  if (!a.isStart) {
-    var c;
-    c = a.getNumberValue("VALUE", a);
-    var d = a.getNumberValue("ANGLE", a);
-    a.isStart = !0;
-    a.frameCount = Math.floor(c * Entry.FPS);
-    a.dAngle = d / a.frameCount;
-  }
-  if (0 != a.frameCount) {
-    return b.setRotation(b.getRotation() + a.dAngle), a.frameCount--, a;
-  }
-  delete a.isStart;
-  delete a.frameCount;
-  return a.callReturn();
-}}, direction_relative_duration:{color:"#A751E3", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/moving_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["2"]}, {type:"angle"}, null], type:"direction_relative_duration"}, paramsKeyMap:{DURATION:0, AMOUNT:1}, "class":"rotate", isNotFor:[], func:function(b, a) {
-  if (!a.isStart) {
-    var c;
-    c = a.getNumberValue("DURATION", a);
-    var d = a.getNumberValue("AMOUNT", a);
-    a.isStart = !0;
-    a.frameCount = Math.floor(c * Entry.FPS);
-    a.dDirection = d / a.frameCount;
-  }
-  if (0 != a.frameCount) {
-    return b.setDirection(b.getDirection() + a.dDirection), a.frameCount--, a;
-  }
-  delete a.isStart;
-  delete a.frameCount;
-  delete a.dDirection;
-  return a.callReturn();
-}}, neobot_sensor_value:{color:"#00979D", skeleton:"basic_string_field", fontColor:"#fff", statements:[], params:[{type:"Dropdown", options:[["1\ubc88 \ud3ec\ud2b8", "1"], ["2\ubc88 \ud3ec\ud2b8", "2"], ["3\ubc88 \ud3ec\ud2b8", "3"], ["\ub9ac\ubaa8\ucee8", "4"]], value:"1", fontSize:11}], events:{}, def:{params:[null], type:"neobot_sensor_value"}, paramsKeyMap:{PORT:0}, "class":"neobot_value", isNotFor:["neobot"], func:function(b, a) {
-  var c = a.getStringField("PORT");
-  return Entry.hw.portData[c];
-}}, neobot_turn_left:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc55e\uc73c\ub85c", "1"], ["\ub4a4\ub85c", "-1"]], value:"1", fontSize:11}, {type:"Dropdown", options:[["\ub290\ub9ac\uac8c", "1"], ["\ubcf4\ud1b5", "2"], ["\ube60\ub974\uac8c", "3"]], value:"1", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"neobot_turn_left"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, 
-"class":"neobot_motor", isNotFor:["neobot"], func:function(b, a) {
-  var c = a.getNumberField("VALUE"), d = a.getNumberField("DIRECTION");
-  Entry.hw.sendQueue.LMOT = c * d;
-  return a.callReturn();
-}}, neobot_stop_left:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"neobot_stop_left"}, "class":"neobot_motor", isNotFor:["neobot"], func:function(b, a) {
-  Entry.hw.sendQueue.LMOT = 0;
-  return a.callReturn();
-}}, neobot_turn_right:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc55e\uc73c\ub85c", "1"], ["\ub4a4\ub85c", "-1"]], value:"1", fontSize:11}, {type:"Dropdown", options:[["\ub290\ub9ac\uac8c", "1"], ["\ubcf4\ud1b5", "2"], ["\ube60\ub974\uac8c", "3"]], value:"1", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"neobot_turn_right"}, paramsKeyMap:{DIRECTION:0, 
-VALUE:1}, "class":"neobot_motor", isNotFor:["neobot"], func:function(b, a) {
-  var c = a.getNumberField("VALUE"), d = a.getNumberField("DIRECTION");
-  Entry.hw.sendQueue.RMOT = c * d;
-  return a.callReturn();
-}}, neobot_stop_right:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"neobot_stop_right"}, "class":"neobot_motor", isNotFor:["neobot"], func:function(b, a) {
-  Entry.hw.sendQueue.RMOT = 0;
-  return a.callReturn();
-}}, neobot_run_motor:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\uc591\ucabd", "1"], ["\uc67c\ucabd", "2"], ["\uc624\ub978\ucabd", "3"]], value:"1", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["\ub290\ub9ac\uac8c", "1"], ["\ubcf4\ud1b5", "2"], ["\ube60\ub974\uac8c", "3"]], value:"1", fontSize:11}, {type:"Dropdown", options:[["\uc804\uc9c4", "1"], ["\ud6c4\uc9c4", "2"], ["\uc88c\ud68c\uc804", "3"], ["\uc6b0\ud68c\uc804", 
-"4"]], value:"1", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["1"]}, null, null, null], type:"neobot_run_motor"}, paramsKeyMap:{TYPE:0, DURATION:1, VALUE:2, DIRECTION:3}, "class":"neobot_motor", isNotFor:["neobot"], func:function(b, a) {
-  if (a.isStart) {
-    if (1 == a.timeFlag) {
-      var c = a.getNumberField("TYPE"), d = a.getNumberField("VALUE");
-      switch(a.getNumberField("DIRECTION")) {
-        case 1:
-          Entry.hw.sendQueue.LMOT = d;
-          Entry.hw.sendQueue.RMOT = d;
-          break;
-        case 2:
-          Entry.hw.sendQueue.LMOT = -1 * d;
-          Entry.hw.sendQueue.RMOT = -1 * d;
-          break;
-        case 3:
-          Entry.hw.sendQueue.LMOT = d;
-          Entry.hw.sendQueue.RMOT = -1 * d;
-          break;
-        case 4:
-          Entry.hw.sendQueue.LMOT = -1 * d, Entry.hw.sendQueue.RMOT = d;
-      }
-      2 === c ? Entry.hw.sendQueue.RMOT = 0 : 3 === c && (Entry.hw.sendQueue.LMOT = 0);
-      return a;
-    }
-    delete a.timeFlag;
-    delete a.isStart;
-    Entry.engine.isContinue = !1;
-    Entry.hw.sendQueue.LMOT = 0;
-    Entry.hw.sendQueue.RMOT = 0;
-    return a.callReturn();
-  }
-  a.isStart = !0;
-  a.timeFlag = 1;
-  c = 1E3 * a.getNumberValue("DURATION");
-  setTimeout(function() {
-    a.timeFlag = 0;
-  }, c);
-  return a;
-}}, neobot_servo_1:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\ube60\ub978", "3"], ["\ubcf4\ud1b5", "2"], ["\ub290\ub9b0", "1"]], value:"3", fontSize:11}, {type:"Dropdown", options:[["0\ub3c4", "0"], ["10\ub3c4", "1"], ["20\ub3c4", "2"], ["30\ub3c4", "3"], ["40\ub3c4", "4"], ["50\ub3c4", "5"], ["60\ub3c4", "6"], ["70\ub3c4", "7"], ["80\ub3c4", "8"], ["90\ub3c4", "9"], ["100\ub3c4", "10"], ["110\ub3c4", "11"], ["120\ub3c4", "12"], ["130\ub3c4", "13"], ["140\ub3c4", 
-"14"], ["150\ub3c4", "15"], ["160\ub3c4", "16"]], value:"0", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"neobot_servo_1"}, paramsKeyMap:{SPEED:0, VALUE:1}, "class":"neobot_servo", isNotFor:["neobot"], func:function(b, a) {
-  var c = a.getNumberField("VALUE"), d = a.getNumberField("SPEED");
-  Entry.hw.sendQueue.SERVO1 = c;
-  Entry.hw.sendQueue.SERVO1_SPEED = d;
-  return a.callReturn();
-}}, neobot_servo_2:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\ube60\ub978", "3"], ["\ubcf4\ud1b5", "2"], ["\ub290\ub9b0", "1"]], value:"3", fontSize:11}, {type:"Dropdown", options:[["0\ub3c4", "0"], ["10\ub3c4", "1"], ["20\ub3c4", "2"], ["30\ub3c4", "3"], ["40\ub3c4", "4"], ["50\ub3c4", "5"], ["60\ub3c4", "6"], ["70\ub3c4", "7"], ["80\ub3c4", "8"], ["90\ub3c4", "9"], ["100\ub3c4", "10"], ["110\ub3c4", "11"], ["120\ub3c4", "12"], ["130\ub3c4", "13"], ["140\ub3c4", 
-"14"], ["150\ub3c4", "15"], ["160\ub3c4", "16"]], value:"0", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"neobot_servo_2"}, paramsKeyMap:{SPEED:0, VALUE:1}, "class":"neobot_servo", isNotFor:["neobot"], func:function(b, a) {
-  var c = a.getNumberField("VALUE"), d = a.getNumberField("SPEED");
-  Entry.hw.sendQueue.SERVO2 = c;
-  Entry.hw.sendQueue.SERVO2_SPEED = d;
-  return a.callReturn();
-}}, neobot_play_note_for:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["\ub3c4", "1"], ["\ub808", "2"], ["\ubbf8", "3"], ["\ud30c", "4"], ["\uc194", "5"], ["\ub77c", "6"], ["\uc2dc", "7"], ["\ub3c4", "8"]], value:"1", fontSize:11}, {type:"Dropdown", options:[["1", "0"], ["2", "1"], ["3", "2"]], value:"0", fontSize:11}, {type:"Dropdown", options:[["2\ubd84\uc74c\ud45c", "2"], ["4\ubd84\uc74c\ud45c", "4"], ["8\ubd84\uc74c\ud45c", "8"]], value:"2", fontSize:11}, 
-{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null, null], type:"neobot_play_note_for"}, paramsKeyMap:{NOTE:0, OCTAVE:1, DURATION:2}, "class":"neobot_note", isNotFor:["neobot"], func:function(b, a) {
-  var c = Entry.hw.sendQueue;
-  if (a.isStart) {
-    if (1 == a.timeFlag) {
-      return a;
-    }
-    delete a.timeFlag;
-    delete a.isStart;
-    Entry.engine.isContinue = !1;
-    return a.callReturn();
-  }
-  var d = a.getNumberField("NOTE", a), e = a.getNumberField("OCTAVE", a), f = a.getNumberField("DURATION", a);
-  a.note = d;
-  a.isStart = !0;
-  a.timeFlag = 1;
-  c.note = d;
-  c.octave = e;
-  c.duration = f;
-  c.sound_check = (1E5 * Math.random()).toFixed(0);
-  setTimeout(function() {
-    a.timeFlag = 0;
-  }, 1 / f * 2E3);
-  return a;
-}}, neobot_set_sensor_value:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["1", "O_1"], ["2", "O_2"]], value:"O_1", fontSize:11}, {type:"Dropdown", options:[["\ucf1c\uae30", "1"], ["\ub044\uae30", "0"]], value:"1", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"neobot_set_sensor_value"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"neobot_set_value", isNotFor:["neobot"], 
-func:function(b, a) {
-  var c = Entry.hw.sendQueue, d = a.getStringField("PORT", a), e = a.getNumberField("VALUE", a);
-  c[d] = e;
-  return a.callReturn();
-}}, robotis_openCM70_cm_custom_value:{color:"#00979D", fontColor:"#fff", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["BYTE", "BYTE"], ["WORD", "WORD"], ["DWORD", "DWORD"]], value:"BYTE", fontSize:11}], events:{}, def:{params:[{type:"number", params:["0"]}, null], type:"robotis_openCM70_cm_custom_value"}, paramsKeyMap:{VALUE:0, SIZE:1}, "class":"robotis_openCM70_custom", isNotFor:["robotis_openCM70"], func:function(b, a) {
-  var c = Entry.Robotis_openCM70.INSTRUCTION.READ, d = 0, e = 0, f = 0, d = a.getStringField("SIZE");
-  "BYTE" == d ? e = 1 : "WORD" == d ? e = 2 : "DWORD" == d && (e = 4);
-  f = d = a.getNumberValue("VALUE");
-  Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, e]]);
-  Entry.Robotis_carCont.update();
-  return Entry.hw.portData[f];
-}}, robotis_openCM70_sensor_value:{color:"#00979D", fontColor:"#fff", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.robotis_cm_sound_detected, "CM_SOUND_DETECTED"], [Lang.Blocks.robotis_cm_sound_detecting, "CM_SOUND_DETECTING"], [Lang.Blocks.robotis_cm_user_button, "CM_USER_BUTTON"]], value:"CM_SOUND_DETECTED", fontSize:11}], events:{}, def:{params:[null], type:"robotis_openCM70_sensor_value"}, paramsKeyMap:{SENSOR:0}, "class":"robotis_openCM70_cm", 
-isNotFor:["robotis_openCM70"], func:function(b, a) {
-  var c = Entry.Robotis_openCM70.INSTRUCTION.READ, d = 0, e = 0, f = 0, g = 0, h = a.getStringField("SENSOR");
-  "CM_SOUND_DETECTED" == h ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1]) : "CM_SOUND_DETECTING" == h ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[0], 
-  e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[1]) : "CM_USER_BUTTON" == h && (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1]);
-  f += 0 * g;
-  Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, g]]);
-  Entry.Robotis_carCont.update();
-  return Entry.hw.portData[f];
-}}, robotis_openCM70_aux_sensor_value:{color:"#00979D", fontColor:"#fff", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["3", "PORT_3"], ["4", "PORT_4"], ["5", "PORT_5"], ["6", "PORT_6"]], value:"PORT_3", fontSize:11}, {type:"Dropdown", options:[[Lang.Blocks.robotis_aux_servo_position, "AUX_SERVO_POSITION"], [Lang.Blocks.robotis_aux_ir, "AUX_IR"], [Lang.Blocks.robotis_aux_touch, "AUX_TOUCH"], [Lang.Blocks.robotis_aux_brightness, "AUX_BRIGHTNESS"], [Lang.Blocks.robotis_aux_hydro_themo_humidity, 
-"AUX_HYDRO_THEMO_HUMIDITY"], [Lang.Blocks.robotis_aux_hydro_themo_temper, "AUX_HYDRO_THEMO_TEMPER"], [Lang.Blocks.robotis_aux_temperature, "AUX_TEMPERATURE"], [Lang.Blocks.robotis_aux_ultrasonic, "AUX_ULTRASONIC"], [Lang.Blocks.robotis_aux_magnetic, "AUX_MAGNETIC"], [Lang.Blocks.robotis_aux_motion_detection, "AUX_MOTION_DETECTION"], [Lang.Blocks.robotis_aux_color, "AUX_COLOR"], [Lang.Blocks.robotis_aux_custom, "AUX_CUSTOM"]], value:"AUX_SERVO_POSITION", fontSize:11}], events:{}, def:{params:[null, 
-null], type:"robotis_openCM70_aux_sensor_value"}, paramsKeyMap:{PORT:0, SENSOR:1}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
-  var c = Entry.Robotis_openCM70.INSTRUCTION.READ, d = 0, e = 0, f = 0, g = 0, h = a.getStringField("PORT"), k = a.getStringField("SENSOR"), l = 0;
-  "PORT_3" == h ? l = 2 : "PORT_4" == h ? l = 3 : "PORT_5" == h ? l = 4 : "PORT_6" == h && (l = 5);
-  "AUX_SERVO_POSITION" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1]) : "AUX_IR" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[1]) : 
-  "AUX_TOUCH" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[1]) : "AUX_TEMPERATURE" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[1]) : 
-  "AUX_BRIGHTNESS" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[1]) : "AUX_HYDRO_THEMO_HUMIDITY" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[0], 
-  e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[1]) : "AUX_HYDRO_THEMO_TEMPER" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[1]) : "AUX_ULTRASONIC" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[1], 
-  d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[1]) : "AUX_MAGNETIC" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[1]) : "AUX_MOTION_DETECTION" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[1], 
-  d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[1]) : "AUX_COLOR" == k ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[1]) : "AUX_CUSTOM" == k && (f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1], 
-  d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1]);
-  f += l * g;
-  0 != l && (e = 6 * g);
-  Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, g]]);
-  Entry.Robotis_carCont.update();
-  return Entry.hw.portData[f];
-}}, robotis_openCM70_cm_buzzer_index:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.note_a + "(0)", "0"], [Lang.General.note_a + "#(1)", "1"], [Lang.General.note_b + "(2)", "2"], [Lang.General.note_c + "(3)", "3"], [Lang.General.note_c + "#(4)", "4"], [Lang.General.note_d + "(5)", "5"], [Lang.General.note_d + "#(6)", "6"], [Lang.General.note_e + "(7)", "7"], [Lang.General.note_f + "(8)", "8"], [Lang.General.note_f + "#(9)", "9"], [Lang.General.note_g + 
-"(10)", "10"], [Lang.General.note_g + "#(11)", "11"], [Lang.General.note_a + "(12)", "12"], [Lang.General.note_a + "#(13)", "13"], [Lang.General.note_b + "(14)", "14"], [Lang.General.note_c + "(15)", "15"], [Lang.General.note_c + "#(16)", "16"], [Lang.General.note_d + "(17)", "17"], [Lang.General.note_d + "#(18)", "18"], [Lang.General.note_e + "(19)", "19"], [Lang.General.note_f + "(20)", "20"], [Lang.General.note_f + "#(21)", "21"], [Lang.General.note_g + "(22)", "22"], [Lang.General.note_g + "#(23)", 
-"23"], [Lang.General.note_a + "(24)", "24"], [Lang.General.note_a + "#(25)", "25"], [Lang.General.note_b + "(26)", "26"], [Lang.General.note_c + "(27)", "27"], [Lang.General.note_c + "#(28)", "28"], [Lang.General.note_d + "(29)", "29"], [Lang.General.note_d + "#(30)", "30"], [Lang.General.note_e + "(31)", "31"], [Lang.General.note_f + "(32)", "32"], [Lang.General.note_f + "#(33)", "33"], [Lang.General.note_g + "(34)", "34"], [Lang.General.note_g + "#(35)", "35"], [Lang.General.note_a + "(36)", "36"], 
-[Lang.General.note_a + "#(37)", "37"], [Lang.General.note_b + "(38)", "38"], [Lang.General.note_c + "(39)", "39"], [Lang.General.note_c + "#(40)", "40"], [Lang.General.note_d + "(41)", "41"], [Lang.General.note_d + "#(42)", "42"], [Lang.General.note_e + "(43)", "43"], [Lang.General.note_f + "(44)", "44"], [Lang.General.note_f + "#(45)", "45"], [Lang.General.note_g + "(46)", "46"], [Lang.General.note_g + "#(47)", "47"], [Lang.General.note_a + "(48)", "48"], [Lang.General.note_a + "#(49)", "49"], [Lang.General.note_b + 
-"(50)", "50"], [Lang.General.note_c + "(51)", "51"]], value:"0", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["1"]}, null], type:"robotis_openCM70_cm_buzzer_index"}, paramsKeyMap:{CM_BUZZER_INDEX:0, CM_BUZZER_TIME:1}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
-  var c = a.getField("CM_BUZZER_INDEX", a), d = a.getNumberValue("CM_BUZZER_TIME", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, h = 0, k = 0, l = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[1], h = parseInt(10 * d);
-  50 < h && (h = 50);
-  k = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[0];
-  l = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[1];
-  return Entry.Robotis_carCont.postCallReturn(a, [[e, f, g, h], [e, k, l, c]], 1E3 * d);
-}}, robotis_openCM70_cm_buzzer_melody:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["0", "0"], ["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"], ["9", "9"], ["10", "10"], ["11", "11"], ["12", "12"], ["13", "13"], ["14", "14"], ["15", "15"], ["16", "16"], ["17", "17"], ["18", "18"], ["19", "19"], ["20", "20"], ["21", "21"], ["22", "22"], ["23", "23"], ["24", "24"]], value:"0", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", 
-size:12}], events:{}, def:{params:[null, null], type:"robotis_openCM70_cm_buzzer_melody"}, paramsKeyMap:{CM_BUZZER_MELODY:0}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
-  var c = a.getField("CM_BUZZER_MELODY", a), d = Entry.Robotis_openCM70.INSTRUCTION.WRITE, e = 0, f = 0, g = 0, h = 0, e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[0], f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[1], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[0], h = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[1];
-  return Entry.Robotis_carCont.postCallReturn(a, [[d, e, f, 255], [d, g, h, c]], 1E3);
-}}, robotis_openCM70_cm_sound_detected_clear:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"robotis_openCM70_cm_sound_detected_clear"}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
-  var c = Entry.Robotis_openCM70.INSTRUCTION.WRITE, d = 0, e = 0, d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1];
-  return Entry.Robotis_carCont.postCallReturn(a, [[c, d, e, 0]], Entry.Robotis_openCM70.delay);
-}}, robotis_openCM70_cm_led:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.robotis_common_red_color, "CM_LED_R"], [Lang.Blocks.robotis_common_green_color, "CM_LED_G"], [Lang.Blocks.robotis_common_blue_color, "CM_LED_B"]], value:"CM_LED_R", fontSize:11}, {type:"Dropdown", options:[[Lang.Blocks.robotis_common_on, "1"], [Lang.Blocks.robotis_common_off, "0"]], value:"1", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", 
-size:12}], events:{}, def:{params:[null, null, null], type:"robotis_openCM70_cm_led"}, paramsKeyMap:{CM_LED:0, VALUE:1}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
-  var c = a.getField("CM_LED", a), d = a.getField("VALUE", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0;
-  "CM_LED_R" == c ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_R[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_R[1]) : "CM_LED_G" == c ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_G[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_G[1]) : "CM_LED_B" == c && (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_B[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_B[1]);
-  return Entry.Robotis_carCont.postCallReturn(a, [[e, f, g, d]], Entry.Robotis_openCM70.delay);
-}}, robotis_openCM70_cm_motion:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["1"]}, null], type:"robotis_openCM70_cm_motion"}, paramsKeyMap:{VALUE:0}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
-  var c = Entry.Robotis_openCM70.INSTRUCTION.WRITE, d = 0, e = 0, f = 0, d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_MOTION[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_MOTION[1], f = a.getNumberValue("VALUE", a);
-  return Entry.Robotis_carCont.postCallReturn(a, [[c, d, e, f]], Entry.Robotis_openCM70.delay);
-}}, robotis_openCM70_aux_motor_speed:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.robotis_common_port_1, "1"], [Lang.Blocks.robotis_common_port_2, "2"]], value:"1", fontSize:11}, {type:"Dropdown", options:[[Lang.Blocks.robotis_common_clockwhise, "CW"], [Lang.Blocks.robotis_common_counter_clockwhise, "CCW"]], value:"CW", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", 
-size:12}], events:{}, def:{params:[null, null, {type:"number", params:["500"]}, null], type:"robotis_openCM70_aux_motor_speed"}, paramsKeyMap:{PORT:0, DIRECTION_ANGLE:1, VALUE:2}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
-  var c = a.getField("PORT", a), d = a.getField("DIRECTION_ANGLE", a), e = a.getNumberValue("VALUE"), f = Entry.Robotis_openCM70.INSTRUCTION.WRITE, g = 0, h = 0, g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTOR_SPEED[0], h = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTOR_SPEED[1];
-  "CW" == d ? (e += 1024, 2047 < e && (e = 2047)) : 1023 < e && (e = 1023);
-  return Entry.Robotis_carCont.postCallReturn(a, [[f, g + (c - 1) * h, h, e]], Entry.Robotis_openCM70.delay);
-}}, robotis_openCM70_aux_servo_mode:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.robotis_common_port_3, "3"], [Lang.Blocks.robotis_common_port_4, "4"], [Lang.Blocks.robotis_common_port_5, "5"], [Lang.Blocks.robotis_common_port_6, "6"]], value:"3", fontSize:11}, {type:"Dropdown", options:[[Lang.Blocks.robotis_common_wheel_mode, "0"], [Lang.Blocks.robotis_common_joint_mode, "1"]], value:"0", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", 
-size:12}], events:{}, def:{params:[null, null, null], type:"robotis_openCM70_aux_servo_mode"}, paramsKeyMap:{PORT:0, MODE:1}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
-  var c = a.getField("PORT", a), d = a.getField("MODE", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_MODE[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_MODE[1];
-  return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
-}}, robotis_openCM70_aux_servo_speed:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.robotis_common_port_3, "3"], [Lang.Blocks.robotis_common_port_4, "4"], [Lang.Blocks.robotis_common_port_5, "5"], [Lang.Blocks.robotis_common_port_6, "6"]], value:"3", fontSize:11}, {type:"Dropdown", options:[[Lang.Blocks.robotis_common_clockwhise, "CW"], [Lang.Blocks.robotis_common_counter_clockwhise, "CCW"]], value:"CW", fontSize:11}, {type:"Block", accept:"stringMagnet"}, 
-{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, {type:"number", params:["500"]}, null], type:"robotis_openCM70_aux_servo_speed"}, paramsKeyMap:{PORT:0, DIRECTION_ANGLE:1, VALUE:2}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
-  var c = a.getField("PORT", a), d = a.getField("DIRECTION_ANGLE", a), e = a.getNumberValue("VALUE"), f = Entry.Robotis_openCM70.INSTRUCTION.WRITE, g = 0, h = 0, g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_SPEED[0], h = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_SPEED[1];
-  "CW" == d ? (e += 1024, 2047 < e && (e = 2047)) : 1023 < e && (e = 1023);
-  return Entry.Robotis_carCont.postCallReturn(a, [[f, g + (c - 1) * h, h, e]], Entry.Robotis_openCM70.delay);
-}}, robotis_openCM70_aux_servo_position:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.robotis_common_port_3, "3"], [Lang.Blocks.robotis_common_port_4, "4"], [Lang.Blocks.robotis_common_port_5, "5"], [Lang.Blocks.robotis_common_port_6, "6"]], value:"3", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["512"]}, 
-null], type:"robotis_openCM70_aux_servo_position"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
-  var c = a.getField("PORT", a), d = a.getNumberValue("VALUE"), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1];
-  1023 < d ? d = 1023 : 0 > d && (d = 0);
-  return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
-}}, robotis_openCM70_aux_led_module:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.robotis_common_port_3, "3"], [Lang.Blocks.robotis_common_port_4, "4"], [Lang.Blocks.robotis_common_port_5, "5"], [Lang.Blocks.robotis_common_port_6, "6"]], value:"3", fontSize:11}, {type:"Dropdown", options:[[Lang.Blocks.robotis_cm_led_both + Lang.Blocks.robotis_common_off, "0"], [Lang.Blocks.robotis_cm_led_right + Lang.Blocks.robotis_common_on, "1"], [Lang.Blocks.robotis_cm_led_left + 
-Lang.Blocks.robotis_common_on, "2"], [Lang.Blocks.robotis_cm_led_both + Lang.Blocks.robotis_common_on, "3"]], value:"0", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"robotis_openCM70_aux_led_module"}, paramsKeyMap:{PORT:0, LED_MODULE:1}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
-  var c = a.getField("PORT", a), d = a.getField("LED_MODULE", a), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_LED_MODULE[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_LED_MODULE[1];
-  return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
-}}, robotis_openCM70_aux_custom:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.robotis_common_port_3, "3"], [Lang.Blocks.robotis_common_port_4, "4"], [Lang.Blocks.robotis_common_port_5, "5"], [Lang.Blocks.robotis_common_port_6, "6"]], value:"3", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["0"]}, null], 
-type:"robotis_openCM70_aux_custom"}, paramsKeyMap:{PORT:0, VALUE:1}, "class":"robotis_openCM70_cm", isNotFor:["robotis_openCM70"], func:function(b, a) {
-  var c = a.getField("PORT", a), d = a.getNumberValue("VALUE"), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, f = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1];
-  return Entry.Robotis_carCont.postCallReturn(a, [[e, f + (c - 1) * g, g, d]], Entry.Robotis_openCM70.delay);
-}}, robotis_openCM70_cm_custom:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["0"]}, {type:"number", params:["0"]}, null], type:"robotis_openCM70_cm_custom"}, paramsKeyMap:{ADDRESS:0, VALUE:1}, "class":"robotis_openCM70_custom", isNotFor:["robotis_openCM70"], func:function(b, a) {
-  var c = Entry.Robotis_openCM70.INSTRUCTION.WRITE, d = 0, e = 0, d = a.getNumberValue("ADDRESS"), e = a.getNumberValue("VALUE");
-  return Entry.Robotis_carCont.postCallReturn(a, [[c, d, 65535 < e ? 4 : 255 < e ? 2 : 1, e]], Entry.Robotis_openCM70.delay);
-}}, robotis_carCont_sensor_value:{color:"#00979D", fontColor:"#fff", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.robotis_cm_spring_left, "CM_SPRING_LEFT"], [Lang.Blocks.robotis_cm_spring_right, "CM_SPRING_RIGHT"], [Lang.Blocks.robotis_cm_switch, "CM_SWITCH"], [Lang.Blocks.robotis_cm_sound_detected, "CM_SOUND_DETECTED"], [Lang.Blocks.robotis_cm_sound_detecting, "CM_SOUND_DETECTING"], [Lang.Blocks.robotis_cm_ir_left, "CM_IR_LEFT"], [Lang.Blocks.robotis_cm_ir_right, 
-"CM_IR_RIGHT"], [Lang.Blocks.robotis_cm_calibration_left, "CM_CALIBRATION_LEFT"], [Lang.Blocks.robotis_cm_calibration_right, "CM_CALIBRATION_RIGHT"]], value:"CM_SPRING_LEFT", fontSize:11}], events:{}, def:{params:[null], type:"robotis_carCont_sensor_value"}, paramsKeyMap:{SENSOR:0}, "class":"robotis_carCont_cm", isNotFor:["robotis_carCont"], func:function(b, a) {
-  var c = Entry.Robotis_carCont.INSTRUCTION.READ, d = 0, e = 0, f = 0, g = 0, h = a.getStringField("SENSOR");
-  "CM_SPRING_LEFT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[2], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[3]) : "CM_SPRING_RIGHT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[2], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[3]) : 
-  "CM_SWITCH" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[1]) : "CM_SOUND_DETECTED" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1]) : 
-  "CM_SOUND_DETECTING" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[1]) : "CM_IR_LEFT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[2], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[3]) : 
-  "CM_IR_RIGHT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[2], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[3]) : "CM_CALIBRATION_LEFT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[1]) : 
-  "CM_CALIBRATION_RIGHT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[1]) : "CM_BUTTON_STATUS" == h && (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[0], 
-  e = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[1]);
-  Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, g]]);
-  Entry.Robotis_carCont.update();
-  return Entry.hw.portData[f];
-}}, robotis_carCont_cm_led:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.robotis_common_on, "1"], [Lang.Blocks.robotis_common_off, "0"]], value:"1", fontSize:11}, {type:"Dropdown", options:[[Lang.Blocks.robotis_common_on, "1"], [Lang.Blocks.robotis_common_off, "0"]], value:"1", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"robotis_carCont_cm_led"}, 
-paramsKeyMap:{VALUE_LEFT:0, VALUE_RIGHT:1}, "class":"robotis_carCont_cm", isNotFor:["robotis_carCont"], func:function(b, a) {
-  var c = a.getField("VALUE_LEFT", a), d = a.getField("VALUE_RIGHT", a), e = Entry.Robotis_carCont.INSTRUCTION.WRITE, f = 0, g = 0, h = 0, f = Entry.Robotis_carCont.CONTROL_TABLE.CM_LED[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_LED[1];
-  1 == c && 1 == d ? h = 9 : 1 == c && 0 == d && (h = 8);
-  0 == c && 1 == d && (h = 1);
-  return Entry.Robotis_carCont.postCallReturn(a, [[e, f, g, h]], Entry.Robotis_carCont.delay);
-}}, robotis_carCont_cm_sound_detected_clear:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"robotis_carCont_cm_sound_detected_clear"}, "class":"robotis_carCont_cm", isNotFor:["robotis_carCont"], func:function(b, a) {
-  var c = Entry.Robotis_carCont.INSTRUCTION.WRITE, d = 0, e = 0, d = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1];
-  return Entry.Robotis_carCont.postCallReturn(a, [[c, d, e, 0]], Entry.Robotis_carCont.delay);
-}}, robotis_carCont_aux_motor_speed:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"]], value:"LEFT", fontSize:11}, {type:"Dropdown", options:[[Lang.Blocks.robotis_common_clockwhise, "CW"], [Lang.Blocks.robotis_common_counter_clockwhise, "CCW"]], value:"CW", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, 
-def:{params:[null, null, {type:"number", params:["500"]}, null], type:"robotis_carCont_aux_motor_speed"}, paramsKeyMap:{DIRECTION:0, DIRECTION_ANGLE:1, VALUE:2}, "class":"robotis_carCont_cm", isNotFor:["robotis_carCont"], func:function(b, a) {
-  var c = a.getField("DIRECTION", a), d = a.getField("DIRECTION_ANGLE", a), e = a.getNumberValue("VALUE"), f = Entry.Robotis_carCont.INSTRUCTION.WRITE, g = 0, h = 0;
-  "LEFT" == c ? (g = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_LEFT[0], h = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_LEFT[1]) : (g = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_RIGHT[0], h = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_RIGHT[1]);
-  "CW" == d ? (e += 1024, 2047 < e && (e = 2047)) : 1023 < e && (e = 1023);
-  return Entry.Robotis_carCont.postCallReturn(a, [[f, g, h, e]], Entry.Robotis_carCont.delay);
-}}, robotis_carCont_cm_calibration:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"]], value:"LEFT", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["0"]}, null], type:"robotis_carCont_cm_calibration"}, paramsKeyMap:{DIRECTION:0, VALUE:1}, "class":"robotis_carCont_cm", 
-isNotFor:["robotis_carCont"], func:function(b, a) {
-  var c = a.getField("DIRECTION", a), d = a.getNumberValue("VALUE"), e = Entry.Robotis_carCont.INSTRUCTION.WRITE, f = 0, g = 0;
-  "LEFT" == c ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[1]) : (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[1]);
-  return Entry.Robotis_carCont.postCallReturn(a, [[e, f, g, d]], Entry.Robotis_carCont.delay);
-}}, when_scene_start:{color:"#3BBD70", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_scene_1_2.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null], type:"when_scene_start"}, "class":"scene", isNotFor:["scene"], func:function(b, a) {
-  return a.callReturn();
-}, event:"when_scene_start"}, start_scene:{color:"#3BBD70", skeleton:"basic_without_next", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"scenes", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/start_03.png", size:12}], events:{}, def:{params:[null, null], type:"start_scene"}, paramsKeyMap:{VALUE:0}, "class":"scene", isNotFor:["scene"], func:function(b, a) {
-  var c = a.getField("VALUE", a);
-  if (c = Entry.scene.getSceneById(c)) {
-    Entry.scene.selectScene(c), Entry.engine.fireEvent("when_scene_start");
-  }
-  return null;
-}}, start_neighbor_scene:{color:"#3BBD70", skeleton:"basic_without_next", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.SCENE_start_scene_next, "next"], [Lang.Blocks.SCENE_start_scene_pre, "pre"]], value:"next", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/start_03.png", size:12}], events:{}, def:{params:[null, null], type:"start_neighbor_scene"}, paramsKeyMap:{OPERATOR:0}, "class":"scene", isNotFor:["scene"], func:function(b, a) {
-  var c = Entry.scene.selectedScene, d = Entry.scene.getScenes(), c = d.indexOf(c);
-  "next" == a.getField("OPERATOR", a) ? c + 1 < d.length && (d = Entry.scene.getSceneById(d[c + 1].id)) && (Entry.scene.selectScene(d), Entry.engine.fireEvent("when_scene_start")) : 0 < c && (d = Entry.scene.getSceneById(d[c - 1].id)) && (Entry.scene.selectScene(d), Entry.engine.fireEvent("when_scene_start"));
-  return null;
-}}, sound_something:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"sounds", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[null, null], type:"sound_something"}, paramsKeyMap:{VALUE:0}, "class":"sound", isNotFor:[], func:function(b, a) {
-  var c = a.getField("VALUE", a);
-  Entry.isExist(c, "id", b.parent.sounds) && createjs.Sound.play(c);
-  return a.callReturn();
-}}, sound_something_second:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"sounds", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["1"]}, null], type:"sound_something_second"}, paramsKeyMap:{VALUE:0, SECOND:1}, "class":"sound", isNotFor:[], func:function(b, a) {
-  var c = a.getField("VALUE", a), d = a.getNumberValue("SECOND", a);
-  if (Entry.isExist(c, "id", b.parent.sounds)) {
-    var e = createjs.Sound.play(c);
-    setTimeout(function() {
-      e.stop();
-    }, 1E3 * d);
-  }
-  return a.callReturn();
-}}, sound_something_wait:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"sounds", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[null, null], type:"sound_something_wait"}, paramsKeyMap:{VALUE:0}, "class":"sound", isNotFor:[], func:function(b, a) {
-  if (a.isPlay) {
-    if (1 == a.playState) {
-      return a;
-    }
-    delete a.playState;
-    delete a.isPlay;
-    return a.callReturn();
-  }
-  a.isPlay = !0;
-  a.playState = 1;
-  var c = a.getField("VALUE", a), d = b.parent.getSound(c);
-  Entry.isExist(c, "id", b.parent.sounds) && (createjs.Sound.play(c), setTimeout(function() {
-    a.playState = 0;
-  }, 1E3 * d.duration));
-  return a;
-}}, sound_something_second_wait:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"sounds", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["1"]}, null], type:"sound_something_second_wait"}, paramsKeyMap:{VALUE:0, SECOND:1}, "class":"sound", isNotFor:[], func:function(b, a) {
-  if (a.isPlay) {
-    if (1 == a.playState) {
-      return a;
-    }
-    delete a.isPlay;
-    delete a.playState;
-    return a.callReturn();
-  }
-  a.isPlay = !0;
-  a.playState = 1;
-  var c = a.getField("VALUE", a);
-  if (Entry.isExist(c, "id", b.parent.sounds)) {
-    var d = createjs.Sound.play(c), c = a.getNumberValue("SECOND", a);
-    setTimeout(function() {
-      d.stop();
-      a.playState = 0;
-    }, 1E3 * c);
-    d.addEventListener("complete", function(a) {
-    });
-  }
-  return a;
-}}, sound_volume_change:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"sound_volume_change"}, paramsKeyMap:{VALUE:0}, "class":"sound_volume", isNotFor:[], func:function(b, a) {
-  var c = a.getNumberValue("VALUE", a) / 100, c = c + createjs.Sound.getVolume();
-  1 < c && (c = 1);
-  0 > c && (c = 0);
-  createjs.Sound.setVolume(c);
-  return a.callReturn();
-}}, sound_volume_set:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["10"]}, null], type:"sound_volume_set"}, paramsKeyMap:{VALUE:0}, "class":"sound_volume", isNotFor:[], func:function(b, a) {
-  var c = a.getNumberValue("VALUE", a) / 100;
-  1 < c && (c = 1);
-  0 > c && (c = 0);
-  createjs.Sound.setVolume(c);
-  return a.callReturn();
-}}, sound_silent_all:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[null], type:"sound_silent_all"}, "class":"sound_stop", isNotFor:[], func:function(b, a) {
-  createjs.Sound.stop();
-  return a.callReturn();
-}}, get_sounds:{color:"#A4D01D", skeleton:"basic_string_field", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"sounds", fontSize:11}], events:{}, def:{params:[null], type:"get_sounds"}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
-  return a.getStringField("VALUE");
-}}, sound_something_with_block:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds"}, null], type:"sound_something_with_block"}, paramsKeyMap:{VALUE:0}, "class":"sound_play", isNotFor:[], func:function(b, a) {
-  var c = a.getStringValue("VALUE", a);
-  (c = b.parent.getSound(c)) && createjs.Sound.play(c.id);
-  return a.callReturn();
-}}, sound_something_second_with_block:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds", id:"95dw"}, {type:"number", params:["1"]}, null], type:"sound_something_second_with_block"}, paramsKeyMap:{VALUE:0, SECOND:1}, "class":"sound_play", isNotFor:[], func:function(b, a) {
-  var c = a.getStringValue("VALUE", a), d = a.getNumberValue("SECOND", a);
-  (c = b.parent.getSound(c)) && createjs.Sound.play(c.id, {startTime:0, duration:1E3 * d});
-  return a.callReturn();
-}}, sound_something_wait_with_block:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds"}, null], type:"sound_something_wait_with_block"}, paramsKeyMap:{VALUE:0}, "class":"sound_wait", isNotFor:[], func:function(b, a) {
-  if (a.isPlay) {
-    if (1 == a.playState) {
-      return a;
-    }
-    delete a.playState;
-    delete a.isPlay;
-    return a.callReturn();
-  }
-  a.isPlay = !0;
-  a.playState = 1;
-  var c = a.getStringValue("VALUE", a);
-  if (c = b.parent.getSound(c)) {
-    createjs.Sound.play(c.id), setTimeout(function() {
-      a.playState = 0;
-    }, 1E3 * c.duration);
-  }
-  return a;
-}}, sound_something_second_wait_with_block:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds"}, {type:"number", params:["1"]}, null], type:"sound_something_second_wait_with_block"}, paramsKeyMap:{VALUE:0, SECOND:1}, "class":"sound_wait", isNotFor:[], func:function(b, a) {
-  if (a.isPlay) {
-    if (1 == a.playState) {
-      return a;
-    }
-    delete a.isPlay;
-    delete a.playState;
-    return a.callReturn();
-  }
-  a.isPlay = !0;
-  a.playState = 1;
-  var c = a.getStringValue("VALUE", a);
-  if (c = b.parent.getSound(c)) {
-    var d = createjs.Sound.play(c.id), c = a.getNumberValue("SECOND", a);
-    setTimeout(function() {
-      d.stop();
-      a.playState = 0;
-    }, 1E3 * c);
-    d.addEventListener("complete", function(a) {
-    });
-  }
-  return a;
-}}, sound_from_to:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds"}, {type:"text", params:["1"]}, {type:"text", params:["10"]}, null], type:"sound_from_to"}, paramsKeyMap:{VALUE:0, START:1, END:2}, "class":"sound_play", isNotFor:[], func:function(b, 
-a) {
-  var c = a.getStringValue("VALUE", a);
-  if (c = b.parent.getSound(c)) {
-    var d = 1E3 * a.getNumberValue("START", a), e = 1E3 * a.getNumberValue("END", a);
-    createjs.Sound.play(c.id, {startTime:Math.min(d, e), duration:Math.max(d, e) - Math.min(d, e)});
-  }
-  return a.callReturn();
-}}, sound_from_to_and_wait:{color:"#A4D01D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/sound_03.png", size:12}], events:{}, def:{params:[{type:"get_sounds"}, {type:"text", params:["1"]}, {type:"text", params:["10"]}, null], type:"sound_from_to_and_wait"}, paramsKeyMap:{VALUE:0, START:1, END:2}, "class":"sound_wait", isNotFor:[], 
-func:function(b, a) {
-  if (a.isPlay) {
-    if (1 == a.playState) {
-      return a;
-    }
-    delete a.isPlay;
-    delete a.playState;
-    return a.callReturn();
-  }
-  a.isPlay = !0;
-  a.playState = 1;
-  var c = a.getStringValue("VALUE", a);
-  if (c = b.parent.getSound(c)) {
-    var d = 1E3 * a.getNumberValue("START", a), e = 1E3 * a.getNumberValue("END", a), f = Math.min(d, e), d = Math.max(d, e) - f;
-    createjs.Sound.play(c.id, {startTime:f, duration:d});
-    setTimeout(function() {
-      a.playState = 0;
-    }, d);
-  }
-  return a;
-}}, when_run_button_click:{color:"#3BBD70", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_play.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null], type:"when_run_button_click"}, "class":"event", isNotFor:[], func:function(b, a) {
-  return a.callReturn();
-}, event:"start"}, press_some_key:{color:"#3BBD70", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_keyboard.png", size:17, position:{x:0, y:-2}}, {type:"Dropdown", options:[["q", "81"], ["w", "87"], ["e", "69"], ["r", "82"], ["a", "65"], ["s", "83"], ["d", "68"], ["\uc704\ucabd \ud654\uc0b4\ud45c", "38"], ["\uc544\ub798\ucabd \ud654\uc0b4\ud45c", "40"], ["\uc67c\ucabd \ud654\uc0b4\ud45c", "37"], ["\uc624\ub978\ucabd \ud654\uc0b4\ud45c", 
-"39"], ["\uc5d4\ud130", "13"], ["\uc2a4\ud398\uc774\uc2a4", "32"]], value:"81", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/start_03.png", size:12}], events:{}, def:{params:[null, null, null]}, paramsKeyMap:{VALUE:1}, func:function(b, a) {
-  return a.callReturn();
-}}, when_some_key_pressed:{color:"#3BBD70", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_keyboard.png", size:17, position:{x:0, y:-2}}, {type:"Keyboard", value:81}], events:{}, def:{params:[null, "81"], type:"when_some_key_pressed"}, paramsKeyMap:{VALUE:1}, "class":"event", isNotFor:[], func:function(b, a) {
-  return a.callReturn();
-}, event:"keyPress"}, mouse_clicked:{color:"#3BBD70", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_mouse.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null], type:"mouse_clicked"}, "class":"event", isNotFor:[], func:function(b, a) {
-  return a.callReturn();
-}, event:"mouse_clicked"}, mouse_click_cancled:{color:"#3BBD70", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_mouse.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null], type:"mouse_click_cancled"}, "class":"event", isNotFor:[], func:function(b, a) {
-  return a.callReturn();
-}, event:"mouse_click_cancled"}, when_object_click:{color:"#3BBD70", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_mouse.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null], type:"when_object_click"}, "class":"event", isNotFor:[], func:function(b, a) {
-  return a.callReturn();
-}, event:"when_object_click"}, when_object_click_canceled:{color:"#3BBD70", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_mouse.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null], type:"when_object_click_canceled"}, "class":"event", isNotFor:[], func:function(b, a) {
-  return a.callReturn();
-}, event:"when_object_click_canceled"}, when_some_key_click:{color:"#3BBD70", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_keyboard.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null]}, func:function(b, a) {
-  return a.callReturn();
-}, event:"keyPress"}, when_message_cast:{color:"#3BBD70", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_signal.png", size:17, position:{x:0, y:-2}}, {type:"DropdownDynamic", value:null, menuName:"messages", fontSize:11}], events:{dataAdd:[function(b) {
-  var a = Entry.variableContainer;
-  a && a.addRef("_messageRefs", b);
-}], viewDestroy:[function(b) {
-  var a = Entry.variableContainer;
-  a && a.removeRef("_messageRefs", b);
-}]}, def:{params:[null, null], type:"when_message_cast"}, paramsKeyMap:{VALUE:1}, "class":"message", isNotFor:["message"], func:function(b, a) {
-  return a.callReturn();
-}, event:"when_message_cast"}, message_cast:{color:"#3BBD70", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"messages", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/start_03.png", size:12}], events:{dataAdd:[function(b) {
-  var a = Entry.variableContainer;
-  a && a.addRef("_messageRefs", b);
-}], viewDestroy:[function(b) {
-  var a = Entry.variableContainer;
-  a && a.removeRef("_messageRefs", b);
-}]}, def:{params:[null, null], type:"message_cast"}, paramsKeyMap:{VALUE:0}, "class":"message", isNotFor:["message"], func:function(b, a) {
-  var c = a.getField("VALUE", a), d = Entry.isExist(c, "id", Entry.variableContainer.messages_);
-  if ("null" == c || !d) {
-    throw Error("value can not be null or undefined");
-  }
-  Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["when_message_cast", c]);
-  return a.callReturn();
-}}, message_cast_wait:{color:"#3BBD70", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"messages", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/start_03.png", size:12}], events:{dataAdd:[function(b) {
-  var a = Entry.variableContainer;
-  a && a.addRef("_messageRefs", b);
-}], dataDestroy:[function(b) {
-  var a = Entry.variableContainer;
-  a && a.removeRef("_messageRefs", b);
-}]}, def:{params:[null, null], type:"message_cast_wait"}, paramsKeyMap:{VALUE:0}, "class":"message", isNotFor:["message"], func:function(b, a) {
-  if (a.runningScript) {
-    for (var c = a.runningScript, d = c.length, e = 0;e < d;e++) {
-      var f = c.shift();
-      f && !f.isEnd() && c.push(f);
-    }
-    return c.length ? a : a.callReturn();
-  }
-  c = a.getField("VALUE", a);
-  f = Entry.isExist(c, "id", Entry.variableContainer.messages_);
-  if ("null" == c || !f) {
-    throw Error("value can not be null or undefined");
-  }
-  d = Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["when_message_cast", c]);
-  for (c = [];d.length;) {
-    (f = d.shift()) && (c = c.concat(f));
-  }
-  a.runningScript = c;
-  return a;
-}}, text:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"TextInput", value:10}], events:{}, def:{params:[], type:"text"}, paramsKeyMap:{NAME:0}, func:function(b, a) {
-  return a.getField("NAME", a);
-}, isPrimitive:!0}, text_write:{color:"#FFCA36", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"text", params:[Lang.Blocks.entry]}], type:"text_write"}, paramsKeyMap:{VALUE:0}, "class":"text", isNotFor:["sprite"], func:function(b, a) {
-  var c = a.getStringValue("VALUE", a), c = Entry.convertToRoundedDecimals(c, 3);
-  b.setText(c);
-  return a.callReturn();
-}}, text_append:{color:"#FFCA36", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"text", params:[Lang.Blocks.entry]}], type:"text_append"}, paramsKeyMap:{VALUE:0}, "class":"text", isNotFor:["sprite"], func:function(b, a) {
-  var c = a.getStringValue("VALUE", a);
-  b.setText(Entry.convertToRoundedDecimals(b.getText(), 3) + Entry.convertToRoundedDecimals(c, 3));
-  return a.callReturn();
-}}, text_prepend:{color:"#FFCA36", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"text", params:[Lang.Blocks.entry]}], type:"text_prepend"}, paramsKeyMap:{VALUE:0}, "class":"text", isNotFor:["sprite"], func:function(b, a) {
-  var c = a.getStringValue("VALUE", a);
-  b.setText(Entry.convertToRoundedDecimals(c, 3) + Entry.convertToRoundedDecimals(b.getText(), 3));
-  return a.callReturn();
-}}, text_flush:{color:"#FFCA36", skeleton:"basic", statements:[], params:[], events:{}, def:{params:[], type:"text_flush"}, "class":"text", isNotFor:["sprite"], func:function(b, a) {
-  b.setText("");
-  return a.callReturn();
-}}, variableAddButton:{skeleton:"basic_button", color:"#eee", params:[{type:"Text", text:Lang.Workspace.variable_create, color:"#333", align:"center"}], events:{mousedown:[function() {
-  Entry.variableContainer.openVariableAddPanel("variable");
-}]}}, listAddButton:{skeleton:"basic_button", color:"#eee", params:[{type:"Text", text:Lang.Workspace.list_create, color:"#333", align:"center"}], events:{mousedown:[function() {
-  Entry.variableContainer.openVariableAddPanel("list");
-}]}}, change_variable:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"variables", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{dataAdd:[function(b) {
-  var a = Entry.variableContainer;
-  a && a.addRef("_variableRefs", b);
-}], dataDestroy:[function(b) {
-  var a = Entry.variableContainer;
-  a && a.removeRef("_variableRefs", b);
-}]}, def:{params:[null, {type:"text", params:["10"]}, null], type:"change_variable"}, paramsKeyMap:{VARIABLE:0, VALUE:1}, "class":"variable", isNotFor:["variable", "variableNotExist"], func:function(b, a) {
-  var c = a.getField("VARIABLE", a), d = a.getNumberValue("VALUE", a), e = 0, d = Entry.parseNumber(d);
-  if (0 == d && "boolean" == typeof d) {
-    throw Error("Type is not correct");
-  }
-  c = Entry.variableContainer.getVariable(c, b);
-  e = Entry.getMaxFloatPoint([d, c.getValue()]);
-  c.setValue((d + c.getValue()).toFixed(e));
-  return a.callReturn();
-}}, set_variable:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"variables", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{dataAdd:[function(b) {
-  var a = Entry.variableContainer;
-  a && a.addRef("_variableRefs", b);
-}], dataDestroy:[function(b) {
-  var a = Entry.variableContainer;
-  a && a.removeRef("_variableRefs", b);
-}]}, def:{params:[null, {type:"text", params:["10"]}, null], type:"set_variable"}, paramsKeyMap:{VARIABLE:0, VALUE:1}, "class":"variable", isNotFor:["variable", "variableNotExist"], func:function(b, a) {
-  var c = a.getField("VARIABLE", a), d = a.getValue("VALUE", a);
-  Entry.variableContainer.getVariable(c, b).setValue(d);
-  return a.callReturn();
-}}, show_variable:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"variables", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{dataAdd:[function(b) {
-  var a = Entry.variableContainer;
-  a && a.addRef("_variableRefs", b);
-}], dataDestroy:[function(b) {
-  var a = Entry.variableContainer;
-  a && a.removeRef("_variableRefs", b);
-}]}, def:{params:[null, null], type:"show_variable"}, paramsKeyMap:{VARIABLE:0}, "class":"variable_visibility", isNotFor:["variable", "variableNotExist"], func:function(b, a) {
-  var c = a.getField("VARIABLE", a), c = Entry.variableContainer.getVariable(c, b);
-  c.setVisible(!0);
-  c.updateView();
-  return a.callReturn();
-}}, hide_variable:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"variables", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{dataAdd:[function(b) {
-  var a = Entry.variableContainer;
-  a && a.addRef("_variableRefs", b);
-}], dataDestroy:[function(b) {
-  var a = Entry.variableContainer;
-  a && a.removeRef("_variableRefs", b);
-}]}, def:{params:[null, null], type:"hide_variable"}, paramsKeyMap:{VARIABLE:0}, "class":"variable_visibility", isNotFor:["variable", "variableNotExist"], func:function(b, a) {
-  var c = a.getField("VARIABLE", a);
-  Entry.variableContainer.getVariable(c, b).setVisible(!1);
-  return a.callReturn();
-}}, get_variable:{color:"#E457DC", skeleton:"basic_string_field", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"variables", fontSize:11}, {type:"Text", text:Lang.Blocks.VARIABLE_get_variable_1, color:"white"}], events:{dataAdd:[function(b) {
-  var a = Entry.variableContainer;
-  a && a.addRef("_variableRefs", b);
-}], dataDestroy:[function(b) {
-  var a = Entry.variableContainer;
-  a && a.removeRef("_variableRefs", b);
-}]}, def:{params:[null], type:"get_variable"}, paramsKeyMap:{VARIABLE:0}, "class":"variable", isNotFor:["variable", "variableNotExist"], func:function(b, a) {
-  var c = a.getField("VARIABLE", a);
-  return Entry.variableContainer.getVariable(c, b).getValue();
-}}, ask_and_wait:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{viewAdd:[function() {
-  Entry.container && Entry.container.showProjectAnswer();
-}], viewDestroy:[function(b) {
-  Entry.container && Entry.container.hideProjectAnswer(b);
-}]}, def:{params:[{type:"text", params:[Lang.Blocks.block_hi]}, null], type:"ask_and_wait"}, paramsKeyMap:{VALUE:0}, "class":"ask", isNotFor:[], func:function(b, a) {
-  var c = Entry.container.inputValue, d = Entry.stage.inputField, e = a.getValue("VALUE", a);
-  if (!e) {
-    throw Error("message can not be empty");
-  }
-  if (c.sprite == b && d && !d._isHidden) {
-    return a;
-  }
-  if (c.sprite != b && a.isInit) {
-    return b.dialog && b.dialog.remove(), delete a.isInit, a.callReturn();
-  }
-  if (c.complete && c.sprite == b && d._isHidden && a.isInit) {
-    return b.dialog && b.dialog.remove(), delete c.complete, delete a.isInit, a.callReturn();
-  }
-  e = Entry.convertToRoundedDecimals(e, 3);
-  new Entry.Dialog(b, e, "speak");
-  Entry.stage.showInputField();
-  c.script = a;
-  c.sprite = b;
-  a.isInit = !0;
-  return a;
-}}, get_canvas_input_value:{color:"#E457DC", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.VARIABLE_get_canvas_input_value, color:"#fff"}], events:{viewAdd:[function() {
-  Entry.container && Entry.container.showProjectAnswer();
-}], viewDestroy:[function(b) {
-  Entry.container && Entry.container.hideProjectAnswer(b);
-}]}, def:{params:[null], type:"get_canvas_input_value"}, "class":"ask", isNotFor:[], func:function(b, a) {
-  return Entry.container.getInputValue();
-}}, add_value_to_list:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{dataAdd:[function(b) {
-  var a = Entry.variableContainer;
-  a && a.addRef("_variableRefs", b);
-}], dataDestroy:[function(b) {
-  var a = Entry.variableContainer;
-  a && a.removeRef("_variableRefs", b);
-}]}, def:{params:[{type:"text", params:["10"]}, null, null], type:"add_value_to_list"}, paramsKeyMap:{VALUE:0, LIST:1}, "class":"list", isNotFor:["list", "listNotExist"], func:function(b, a) {
-  var c = a.getField("LIST", a), d = a.getValue("VALUE", a), c = Entry.variableContainer.getList(c, b);
-  c.array_ || (c.array_ = []);
-  c.array_.push({data:d});
-  c.updateView();
-  return a.callReturn();
-}}, remove_value_from_list:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["1"]}, null, null], type:"remove_value_from_list"}, paramsKeyMap:{VALUE:0, LIST:1}, "class":"list", isNotFor:["list", "listNotExist"], func:function(b, a) {
-  var c = a.getField("LIST", a), d = a.getValue("VALUE", a), c = Entry.variableContainer.getList(c, b);
-  if (!c.array_ || isNaN(d) || d > c.array_.length) {
-    throw Error("can not remove value from array");
-  }
-  c.array_.splice(d - 1, 1);
-  c.updateView();
-  return a.callReturn();
-}}, insert_value_to_list:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["10"]}, null, {type:"text", params:["1"]}, null], type:"insert_value_to_list"}, paramsKeyMap:{DATA:0, LIST:1, INDEX:2}, "class":"list", isNotFor:["list", 
-"listNotExist"], func:function(b, a) {
-  var c = a.getField("LIST", a), d = a.getValue("DATA", a), e = a.getValue("INDEX", a), c = Entry.variableContainer.getList(c, b);
-  if (!c.array_ || isNaN(e) || 0 == e || e > c.array_.length + 1) {
-    throw Error("can not insert value to array");
-  }
-  c.array_.splice(e - 1, 0, {data:d});
-  c.updateView();
-  return a.callReturn();
-}}, change_value_list_index:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["1"]}, {type:"text", params:["10"]}, null], type:"change_value_list_index"}, paramsKeyMap:{LIST:0, INDEX:1, DATA:2}, "class":"list", 
-isNotFor:["list", "listNotExist"], func:function(b, a) {
-  var c = a.getField("LIST", a), d = a.getValue("DATA", a), e = a.getValue("INDEX", a), c = Entry.variableContainer.getList(c, b);
-  if (!c.array_ || isNaN(e) || e > c.array_.length) {
-    throw Error("can not insert value to array");
-  }
-  c.array_[e - 1].data = d;
-  c.updateView();
-  return a.callReturn();
-}}, value_of_index_from_list:{color:"#E457DC", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.VARIABLE_value_of_index_from_list_1, color:"white"}, {type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Text", text:Lang.Blocks.VARIABLE_value_of_index_from_list_2, color:"white"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.VARIABLE_value_of_index_from_list_3, color:"white"}], events:{}, def:{params:[null, null, null, 
-{type:"number", params:["1"]}], type:"value_of_index_from_list"}, paramsKeyMap:{LIST:1, INDEX:3}, "class":"list_element", isNotFor:["list", "listNotExist"], func:function(b, a) {
-  var c = a.getField("LIST", a), d = a.getValue("INDEX", a), c = Entry.variableContainer.getList(c, b), d = Entry.getListRealIndex(d, c);
-  if (!c.array_ || isNaN(d) || d > c.array_.length) {
-    throw Error("can not insert value to array");
-  }
-  return c.array_[d - 1].data;
-}}, length_of_list:{color:"#E457DC", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.VARIABLE_length_of_list_1, color:"white"}, {type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Text", text:Lang.Blocks.VARIABLE_length_of_list_2, color:"white"}], events:{}, def:{params:[null, null, null], type:"length_of_list"}, paramsKeyMap:{LIST:1}, "class":"list", isNotFor:["list", "listNotExist"], func:function(b, a) {
-  var c = a.getField("LIST", a);
-  return Entry.variableContainer.getList(c).array_.length;
-}}, show_list:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{}, def:{params:[null, null], type:"show_list"}, paramsKeyMap:{LIST:0}, "class":"list_visibility", isNotFor:["list", "listNotExist"], func:function(b, a) {
-  var c = a.getField("LIST", a);
-  Entry.variableContainer.getList(c).setVisible(!0);
-  return a.callReturn();
-}}, hide_list:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{}, def:{params:[null, null], type:"hide_list"}, paramsKeyMap:{LIST:0}, "class":"list_visibility", isNotFor:["list", "listNotExist"], func:function(b, a) {
-  var c = a.getField("LIST", a);
-  Entry.variableContainer.getList(c).setVisible(!1);
-  return a.callReturn();
-}}, options_for_list:{color:"#E457DC", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["\uccab\ubc88\uc9f8", "FIRST"], ["\ub9c8\uc9c0\ub9c9", "LAST"], ["\ubb34\uc791\uc704", "RANDOM"]], value:"FIRST", fontSize:11}], events:{}, def:{params:[null]}, paramsKeyMap:{OPERATOR:0}, func:function(b, a) {
-  return a.getField("OPERATOR", a);
-}}, set_visible_answer:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.CALC_timer_visible_show, "SHOW"], [Lang.Blocks.CALC_timer_visible_hide, "HIDE"]], value:"SHOW", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{viewAdd:[function(b) {
-  Entry.container && Entry.container.showProjectAnswer();
-}], viewDestroy:[function(b) {
-  Entry.container && Entry.container.hideProjectAnswer(b);
-}]}, def:{params:["HIDE", null], type:"set_visible_answer"}, paramsKeyMap:{BOOL:0}, "class":"ask", isNotFor:[], func:function(b, a) {
-  "HIDE" == a.getField("BOOL", a) ? Entry.container.inputValue.setVisible(!1) : Entry.container.inputValue.setVisible(!0);
-  return a.callReturn();
-}}, is_included_in_list:{color:"#E457DC", skeleton:"basic_boolean_field", statements:[], params:[{type:"Text", text:Lang.Blocks.VARIABLE_is_included_in_list_1, color:"white"}, {type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Text", text:Lang.Blocks.VARIABLE_is_included_in_list_2, color:"white"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.VARIABLE_is_included_in_list_3, color:"white"}], events:{}, def:{params:[null, null, null, {type:"text", params:["10"]}, 
-null], type:"is_included_in_list"}, paramsKeyMap:{LIST:1, DATA:3}, "class":"list", isNotFor:["list", "listNotExist"], func:function(b, a) {
-  var c = a.getField("LIST", a), d = a.getStringValue("DATA", a), c = Entry.variableContainer.getList(c);
-  if (!c) {
-    return !1;
-  }
-  for (var c = c.array_, e = 0, f = c.length;e < f;e++) {
-    if (c[e].data.toString() == d.toString()) {
-      return !0;
-    }
-  }
-  return !1;
-}}, xbot_digitalInput:{color:"#00979D", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.XBOT_D2_digitalInput, "D2"], [Lang.Blocks.XBOT_D3_digitalInput, "D3"], [Lang.Blocks.XBOT_D11_digitalInput, "D11"]], value:"D2", fontSize:11}], events:{}, def:{params:[null], type:"xbot_digitalInput"}, paramsKeyMap:{DEVICE:0}, "class":"xbot_sensor", isNotFor:["xbot_epor_edge"], func:function(b, a) {
-  var c = Entry.hw.portData, d = a.getField("DEVICE");
-  return c[d];
-}}, xbot_analogValue:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.XBOT_CDS, "light"], [Lang.Blocks.XBOT_MIC, "mic"], [Lang.Blocks.XBOT_analog0, "adc0"], [Lang.Blocks.XBOT_analog1, "adc1"], [Lang.Blocks.XBOT_analog2, "adc2"], [Lang.Blocks.XBOT_analog3, "adc3"]], value:"light", fontSize:11}], events:{}, def:{params:[null], type:"xbot_analogValue"}, paramsKeyMap:{DEVICE:0}, "class":"xbot_sensor", isNotFor:["xbot_epor_edge"], func:function(b, 
-a) {
-  var c = Entry.hw.portData, d = a.getField("DEVICE");
-  return c[d];
-}}, xbot_digitalOutput:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["LED", "D13"], ["D4", "D4"], ["D7", "D7"], ["D12 ", "D12"]], value:"D13", fontSize:11}, {type:"Dropdown", options:[[Lang.Blocks.XBOT_High, "HIGH"], [Lang.Blocks.XBOT_Low, "LOW"]], value:"HIGH", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, null, null], type:"xbot_digitalOutput"}, paramsKeyMap:{DEVICE:0, VALUE:1}, 
-"class":"xbot_sensor", isNotFor:["xbot_epor_edge"], func:function(b, a) {
-  var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getStringField("VALUE", a);
-  c.D13 = "D13" == d && "HIGH" == e ? 1 : 0;
-  c.D4 = "D4" == d && "HIGH" == e ? 1 : 0;
-  c.D7 = "D7" == d && "HIGH" == e ? 1 : 0;
-  c.D12 = "D12" == d && "HIGH" == e ? 1 : 0;
-  return a.callReturn();
-}}, xbot_analogOutput:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["D5", "analogD5"], ["D6", "analogD6"]], value:"analogD5", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["255"]}, null], type:"xbot_analogOutput"}, paramsKeyMap:{DEVICE:0, VALUE:1}, "class":"xbot_sensor", isNotFor:["xbot_epor_edge"], func:function(b, 
-a) {
-  var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getNumberValue("VALUE", a);
-  "analogD5" == d ? c.analogD5 = e : "analogD6" == d && (c.analogD6 = e);
-  return a.callReturn();
-}}, xbot_servo:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.XBOT_Head, "head"], [Lang.Blocks.XBOT_ArmR, "right"], [Lang.Blocks.XBOT_ArmL, "left"]], value:"head", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["90"]}, null], type:"xbot_servo"}, paramsKeyMap:{DEVICE:0, VALUE:1}, "class":"xbot_motor", isNotFor:["xbot_epor_edge"], 
-func:function(b, a) {
-  var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getNumberValue("VALUE", a);
-  "head" == d ? c.head = e : "right" == d ? c.armR = e : "left" == d && (c.armL = e);
-  return a.callReturn();
-}}, xbot_oneWheel:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.XBOT_rightWheel, "rightWheel"], [Lang.Blocks.XBOT_leftWheel, "leftWheel"], [Lang.Blocks.XBOT_bothWheel, "bothWheel"]], value:"rightWheel", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["0"]}, null], type:"xbot_oneWheel"}, paramsKeyMap:{DEVICE:0, 
-VALUE:1}, "class":"xbot_motor", isNotFor:["xbot_epor_edge"], func:function(b, a) {
-  var c = Entry.hw.sendQueue, d = a.getStringField("DEVICE", a), e = a.getNumberValue("VALUE", a);
-  "rightWheel" == d ? c.rightWheel = e : "leftWheel" == d ? c.leftWheel = e : c.rightWheel = c.leftWheel = e;
-  return a.callReturn();
-}}, xbot_twoWheel:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["0"]}, {type:"text", params:["0"]}, null], type:"xbot_twoWheel"}, paramsKeyMap:{rightWheel:0, leftWheel:1}, "class":"xbot_motor", isNotFor:["xbot_epor_edge"], func:function(b, a) {
-  var c = Entry.hw.sendQueue;
-  c.rightWheel = a.getNumberValue("rightWheel");
-  c.leftWheel = a.getNumberValue("leftWheel");
-  return a.callReturn();
-}}, xbot_rgb:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[{type:"text", params:["255"]}, {type:"text", params:["255"]}, {type:"text", params:["255"]}, null], type:"xbot_rgb"}, paramsKeyMap:{ledR:0, ledG:1, ledB:2}, "class":"xbot_rgb", isNotFor:["xbot_epor_edge"], 
-func:function(b, a) {
-  var c = Entry.hw.sendQueue;
-  c.ledR = a.getNumberValue("ledR");
-  c.ledG = a.getNumberValue("ledG");
-  c.ledB = a.getNumberValue("ledB");
-  return a.callReturn();
-}}, xbot_rgb_picker:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Color"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null], type:"xbot_rgb_picker"}, paramsKeyMap:{VALUE:0}, "class":"xbot_rgb", isNotFor:["xbot_epor_edge"], func:function(b, a) {
-  var c = a.getStringField("VALUE"), d = Entry.hw.sendQueue;
-  d.ledR = parseInt(.3 * parseInt(c.substr(1, 2), 16));
-  d.ledG = parseInt(.3 * parseInt(c.substr(3, 2), 16));
-  d.ledB = parseInt(.3 * parseInt(c.substr(5, 2), 16));
-  return a.callReturn();
-}}, xbot_buzzer:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.XBOT_c, "C"], [Lang.Blocks.XBOT_d, "D"], [Lang.Blocks.XBOT_e, "E"], [Lang.Blocks.XBOT_f, "F"], [Lang.Blocks.XBOT_g, "G"], [Lang.Blocks.XBOT_a, "A"], [Lang.Blocks.XBOT_b, "B"]], value:"C", fontSize:11}, {type:"Dropdown", options:[["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"]], value:"2", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", 
-size:12}], events:{}, def:{params:[null, "4", {type:"text", params:["0.5"]}, null], type:"xbot_buzzer"}, paramsKeyMap:{NOTE:0, OCTAVE:1, VALUE:2}, "class":"xbot_sensor", isNotFor:["xbot_epor_edge"], func:function(b, a) {
-  var c = Entry.hw.sendQueue, d = b.getStringField("NOTE", b), e = b.getStringField("OCTAVE", b), f = b.getNumberValue("VALUE", b), d = d + e;
-  c.note = "C2" == d ? 65 : "D2" == d ? 73 : "E2" == d ? 82 : "F2" == d ? 87 : "G2" == d ? 98 : "A2" == d ? 110 : "B2" == d ? 123 : "C3" == d ? 131 : "D3" == d ? 147 : "E3" == d ? 165 : "F3" == d ? 175 : "G3" == d ? 196 : "A3" == d ? 220 : "B3" == d ? 247 : "C4" == d ? 262 : "D4" == d ? 294 : "E4" == d ? 330 : "F4" == d ? 349 : "G4" == d ? 392 : "A4" == d ? 440 : "B4" == d ? 494 : "C5" == d ? 523 : "D5" == d ? 587 : "E5" == d ? 659 : "F5" == d ? 698 : "G5" == d ? 784 : "A5" == d ? 880 : "B5" == d ? 
-  988 : "C6" == d ? 1047 : "D6" == d ? 1175 : "E6" == d ? 1319 : "F6" == d ? 1397 : "G6" == d ? 1568 : "A6" == d ? 1760 : "B6" == d ? 1976 : "C7" == d ? 2093 : "D7" == d ? 2349 : "E7" == d ? 2637 : "F7" == d ? 2794 : "G7" == d ? 3136 : "A7" == d ? 3520 : "B7" == d ? 3951 : 262;
-  c.duration = 40 * f;
-  return b.callReturn();
-}}, xbot_lcd:{color:"#00979D", skeleton:"basic", statements:[], params:[{type:"Dropdown", options:[["0", "0"], ["1", "1"]], value:"0", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, def:{params:[null, {type:"text", params:["Hello"]}, null], type:"xbot_lcd"}, paramsKeyMap:{LINE:0, VALUE:1}, "class":"xbot_sensor", isNotFor:["xbot_epor_edge"], func:function(b, a) {
-  var c = Entry.hw.sendQueue, d = a.getNumberField("LINE", a), e = a.getStringValue("VALUE", a);
-  0 == d ? (c.lcdNum = 0, c.lcdTxt = e) : 1 == d && (c.lcdNum = 1, c.lcdTxt = e);
-  return a.callReturn();
-}}, run:{skeleton:"basic", color:"#3BBD70", contents:["this is", "basic block"]}, mutant:{skeleton:"basic", event:"start", color:"#3BBD70", params:[], changeEvent:{_listeners:[]}}, jr_start:{skeleton:"pebble_event", event:"start", color:"#3BBD70", params:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_play_image.png", highlightColor:"#3BBD70", position:{x:0, y:0}, size:22}], func:function() {
-  var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a;
-  for (a in b) {
-    this._unit = b[a];
-  }
-  Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
-}}, jr_repeat:{skeleton:"pebble_loop", color:"#127CDB", params:[{type:"Text", text:""}, {type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:3, fontSize:14, roundValue:3}, {type:"Text", text:"\ubc18\ubcf5"}], statements:[{accept:"pebble_basic"}], func:function() {
-  if (void 0 === this.repeatCount) {
-    return this.repeatCount = this.block.params[1], Entry.STATIC.BREAK;
-  }
-  if (0 < this.repeatCount) {
-    this.repeatCount--;
-    var b = this.block.statements[0];
-    if (0 !== b.getBlocks().length) {
-      return this.executor.stepInto(b), Entry.STATIC.BREAK;
-    }
-  } else {
-    delete this.repeatCount;
-  }
-}}, jr_item:{skeleton:"pebble_basic", color:"#F46C6C", params:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_item_image.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}], func:function() {
-  if (this.isContinue) {
-    if (this.isAction) {
-      return Entry.STATIC.BREAK;
-    }
-    delete this.isAction;
-    delete this.isContinue;
-  } else {
-    this.isAction = this.isContinue = !0;
-    var b = this;
-    Ntry.dispatchEvent("unitAction", Ntry.STATIC.GET_ITEM, function() {
-      Ntry.dispatchEvent("getItem");
-      b.isAction = !1;
-    });
-    return Entry.STATIC.BREAK;
-  }
-}}, cparty_jr_item:{skeleton:"pebble_basic", color:"#8ABC1D", params:[{type:"Text", text:"\uc5f0\ud544 \uc90d\uae30"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/cpartyjr/pen.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}]}, jr_north:{skeleton:"pebble_basic", color:"#A751E3", params:[{type:"Text", text:"  \uc704\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_up_image.png", position:{x:83, y:0}, size:22}], func:function() {
-  if (this.isContinue) {
-    if (this.isAction) {
-      return Entry.STATIC.BREAK;
-    }
-    delete this.isAction;
-    delete this.isContinue;
-  } else {
-    this.isAction = this.isContinue = !0;
-    var b = Ntry.STATIC, a = this, c = function() {
-      window.setTimeout(function() {
-        Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
-          a.isAction = !1;
-        });
-      }, 3);
-    }, d;
-    switch(Ntry.unitComp.direction) {
-      case Ntry.STATIC.EAST:
-        d = b.TURN_LEFT;
-        break;
-      case Ntry.STATIC.SOUTH:
-        d = b.HALF_ROTATION;
-        break;
-      case Ntry.STATIC.WEST:
-        d = b.TURN_RIGHT;
-        break;
-      default:
-        c();
-    }
-    d && Ntry.dispatchEvent("unitAction", d, c);
-    return Entry.STATIC.BREAK;
-  }
-}}, jr_east:{skeleton:"pebble_basic", color:"#A751E3", params:[{type:"Text", text:"\uc624\ub978\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_right_image.png", position:{x:83, y:0}, size:22}], func:function() {
-  var b = Ntry.STATIC;
-  if (this.isContinue) {
-    if (this.isAction) {
-      return Entry.STATIC.BREAK;
-    }
-    delete this.isAction;
-    delete this.isContinue;
-  } else {
-    this.isAction = this.isContinue = !0;
-    var a = this, c = function() {
-      window.setTimeout(function() {
-        Ntry.dispatchEvent("unitAction", b.WALK, function() {
-          a.isAction = !1;
-        });
-      }, 3);
-    }, d;
-    switch(Ntry.unitComp.direction) {
-      case b.SOUTH:
-        d = b.TURN_LEFT;
-        break;
-      case b.WEST:
-        d = b.HALF_ROTATION;
-        break;
-      case b.NORTH:
-        d = b.TURN_RIGHT;
-        break;
-      default:
-        c();
-    }
-    d && Ntry.dispatchEvent("unitAction", d, c);
-    return Entry.STATIC.BREAK;
-  }
-}}, jr_south:{skeleton:"pebble_basic", color:"#A751E3", params:[{type:"Text", text:"  \uc544\ub798\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_down_image.png", position:{x:83, y:0}, size:22}], func:function() {
-  if (this.isContinue) {
-    if (this.isAction) {
-      return Entry.STATIC.BREAK;
-    }
-    delete this.isAction;
-    delete this.isContinue;
-  } else {
-    this.isAction = this.isContinue = !0;
-    var b = Ntry.STATIC, a = this, c = function() {
-      window.setTimeout(function() {
-        Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
-          a.isAction = !1;
-        });
-      }, 3);
-    }, d;
-    switch(Ntry.unitComp.direction) {
-      case b.EAST:
-        d = b.TURN_RIGHT;
-        break;
-      case b.NORTH:
-        d = b.HALF_ROTATION;
-        break;
-      case b.WEST:
-        d = b.TURN_LEFT;
-        break;
-      default:
-        c();
-    }
-    d && Ntry.dispatchEvent("unitAction", d, c);
-    return Entry.STATIC.BREAK;
-  }
-}}, jr_west:{skeleton:"pebble_basic", color:"#A751E3", params:[{type:"Text", text:"  \uc67c\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_left_image.png", position:{x:83, y:0}, size:22}], func:function() {
-  if (this.isContinue) {
-    if (this.isAction) {
-      return Entry.STATIC.BREAK;
-    }
-    delete this.isAction;
-    delete this.isContinue;
-  } else {
-    this.isAction = this.isContinue = !0;
-    var b = Ntry.STATIC, a = this, c = function() {
-      window.setTimeout(function() {
-        Ntry.dispatchEvent("unitAction", b.WALK, function() {
-          a.isAction = !1;
-        });
-      }, 3);
-    }, d;
-    switch(Ntry.unitComp.direction) {
-      case b.SOUTH:
-        d = b.TURN_RIGHT;
-        break;
-      case b.EAST:
-        d = b.HALF_ROTATION;
-        break;
-      case b.NORTH:
-        d = b.TURN_LEFT;
-        break;
-      default:
-        c();
-    }
-    d && Ntry.dispatchEvent("unitAction", d, c);
-    return Entry.STATIC.BREAK;
-  }
-}}, jr_start_basic:{skeleton:"basic_event", event:"start", color:"#3BBD70", params:[{type:"Indicator", boxMultiplier:2, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}, {text:"\uc2dc\uc791\ud558\uae30\ub97c \ud074\ub9ad\ud588\uc744\ub54c", type:"Text"}], func:function() {
-  var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a;
-  for (a in b) {
-    this._unit = b[a];
-  }
-  Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
-}}, jr_go_straight:{skeleton:"basic", color:"#A751E3", params:[{text:"\uc55e\uc73c\ub85c \uac00\uae30", type:"Text"}, {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}], func:function() {
-  if (this.isContinue) {
-    if (this.isAction) {
-      return Entry.STATIC.BREAK;
-    }
-    delete this.isAction;
-    delete this.isContinue;
-  } else {
-    this.isAction = this.isContinue = !0;
-    var b = this;
-    Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
-      b.isAction = !1;
-    });
-    return Entry.STATIC.BREAK;
-  }
-}}, jr_turn_left:{skeleton:"basic", color:"#A751E3", params:[{text:"\uc67c\ucabd\uc73c\ub85c \ub3cc\uae30", type:"Text"}, {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_l.png", size:24}], func:function() {
-  if (this.isContinue) {
-    if (this.isAction) {
-      return Entry.STATIC.BREAK;
-    }
-    delete this.isAction;
-    delete this.isContinue;
-  } else {
-    this.isAction = this.isContinue = !0;
-    var b = this;
-    Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, function() {
-      b.isAction = !1;
-    });
-    return Entry.STATIC.BREAK;
-  }
-}}, jr_turn_right:{skeleton:"basic", color:"#A751E3", params:[{text:"\uc624\ub978\ucabd\uc73c\ub85c \ub3cc\uae30", type:"Text"}, {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_r.png", size:24}], func:function() {
-  if (this.isContinue) {
-    if (this.isAction) {
-      return Entry.STATIC.BREAK;
-    }
-    delete this.isAction;
-    delete this.isContinue;
-  } else {
-    this.isAction = this.isContinue = !0;
-    var b = this;
-    Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, function() {
-      b.isAction = !1;
-    });
-    return Entry.STATIC.BREAK;
-  }
-}}, jr_go_slow:{skeleton:"basic", color:"#f46c6c", params:[{text:"\ucc9c\ucc9c\ud788 \uac00\uae30", type:"Text"}, {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_slow.png", size:24}], func:function() {
-  if (this.isContinue) {
-    if (this.isAction) {
-      return Entry.STATIC.BREAK;
-    }
-    delete this.isAction;
-    delete this.isContinue;
-  } else {
-    this.isAction = this.isContinue = !0;
-    var b = this;
-    Ntry.dispatchEvent("unitAction", Ntry.STATIC.GO_SLOW, function() {
-      b.isAction = !1;
-    });
-    return Entry.STATIC.BREAK;
-  }
-}}, jr_repeat_until_dest:{skeleton:"basic_loop", color:"#498DEB", syntax:["BasicWhile", "true"], params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_goal_image.png", size:18}, {text:"\ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30", type:"Text"}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
-  var b = this.block.statements[0];
-  if (0 !== b.getBlocks().length) {
-    return this.executor.stepInto(b), Entry.STATIC.BREAK;
-  }
-}}, jr_if_construction:{skeleton:"basic_loop", color:"#498DEB", params:[{text:"\ub9cc\uc57d", type:"Text"}, {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_construction_image.png", size:18}, {text:"\uc55e\uc5d0 \uc788\ub2e4\uba74", type:"Text"}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
-  if (!this.isContinue) {
-    var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a, c;
-    for (c in b) {
-      a = b[c];
-    }
-    b = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.UNIT);
-    a = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.GRID);
-    a = {x:a.x, y:a.y};
-    Ntry.addVectorByDirection(a, b.direction, 1);
-    a = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:a.x, y:a.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_REPAIR});
-    this.isContinue = !0;
-    b = this.block.statements[0];
-    if (0 !== a.length && 0 !== b.getBlocks().length) {
-      return this.executor.stepInto(b), Entry.STATIC.BREAK;
-    }
-  }
-}}, jr_if_speed:{skeleton:"basic_loop", color:"#498DEB", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_speed_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
-  if (!this.isContinue) {
-    var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a, c;
-    for (c in b) {
-      a = b[c];
-    }
-    b = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.UNIT);
-    a = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.GRID);
-    a = {x:a.x, y:a.y};
-    Ntry.addVectorByDirection(a, b.direction, 1);
-    a = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:a.x, y:a.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_SLOW});
-    this.isContinue = !0;
-    b = this.block.statements[0];
-    if (0 !== a.length && 0 !== b.getBlocks().length) {
-      return this.executor.stepInto(b), Entry.STATIC.BREAK;
-    }
-  }
-}}, maze_step_start:{skeleton:"basic_event", mode:"maze", event:"start", color:"#3BBD70", syntax:["Program"], params:[{type:"Indicator", boxMultiplier:2, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}], func:function() {
-  var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a;
-  for (a in b) {
-    this._unit = b[a];
-  }
-  Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
-}}, maze_step_jump:{skeleton:"basic", mode:"maze", color:"#FF6E4B", params:[{type:"Image", img:"/img/assets/week/blocks/jump.png", size:24}], syntax:["Scope", "jump"], func:function() {
-  if (this.isContinue) {
-    if (this.isAction) {
-      return Entry.STATIC.BREAK;
-    }
-    delete this.isAction;
-    delete this.isContinue;
-  } else {
-    this.isAction = this.isContinue = !0;
-    var b = this;
-    Ntry.dispatchEvent("unitAction", Ntry.STATIC.JUMP, function() {
-      b.isAction = !1;
-    });
-    return Entry.STATIC.BREAK;
-  }
-}}, maze_step_for:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicIteration"], params:[{type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
-  if (void 0 === this.repeatCount) {
-    return this.repeatCount = this.block.params[0], Entry.STATIC.BREAK;
-  }
-  if (0 < this.repeatCount) {
-    this.repeatCount--;
-    var b = this.block.statements[0];
-    if (0 !== b.getBlocks().length) {
-      return this.executor.stepInto(b), Entry.STATIC.BREAK;
-    }
-  } else {
-    delete this.repeatCount;
-  }
-}}, test:{skeleton:"basic_boolean_field", mode:"maze", color:"#127CDB", params:[{type:"Angle", value:"90"}, {type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}]}, maze_repeat_until_1:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicWhile", "true"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], 
-func:function() {
-  var b = this.block.statements[0];
-  if (0 !== b.getBlocks().length) {
-    return this.executor.stepInto(b), Entry.STATIC.BREAK;
-  }
-}}, maze_repeat_until_2:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicWhile", "true"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}]}, maze_step_if_1:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicIf", "front == wall"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", 
-size:24}], statements:[{accept:"basic"}], func:function() {
-  if (!this.isContinue) {
-    var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a, c;
-    for (c in b) {
-      a = b[c];
-    }
-    b = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.UNIT);
-    a = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.GRID);
-    a = {x:a.x, y:a.y};
-    Ntry.addVectorByDirection(a, b.direction, 1);
-    c = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:a.x, y:a.y});
-    b = this.block.statements[0];
-    if (0 === c.length) {
-      return this.executor.stepInto(b), Entry.STATIC.BREAK;
-    }
-    a = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:a.x, y:a.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.WALL});
-    this.isContinue = !0;
-    if (0 !== a.length && 0 !== b.getBlocks().length) {
-      return this.executor.stepInto(b), Entry.STATIC.BREAK;
-    }
-  }
-}}, maze_step_if_2:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicIf", "front == bee"], params:[{type:"Image", img:"/img/assets/ntry/bitmap/maze2/obstacle_01.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}], func:function() {
-  if (!this.isContinue) {
-    var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a, c;
-    for (c in b) {
-      a = b[c];
-    }
-    b = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.UNIT);
-    a = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.GRID);
-    a = {x:a.x, y:a.y};
-    Ntry.addVectorByDirection(a, b.direction, 1);
-    a = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:a.x, y:a.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_BEE});
-    this.isContinue = !0;
-    b = this.block.statements[0];
-    if (0 !== a.length && 0 !== b.getBlocks().length) {
-      return this.executor.stepInto(b), Entry.STATIC.BREAK;
-    }
-  }
-}}, maze_call_function:{skeleton:"basic", mode:"maze", color:"#B57242", syntax:["Scope", "promise"], params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], func:function() {
-  if (!this.funcExecutor) {
-    var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.CODE), a;
-    for (a in b) {
-      this.funcExecutor = new Entry.Executor(b[a].components[Ntry.STATIC.CODE].code.getEventMap("define")[0]);
-    }
-  }
-  this.funcExecutor.execute();
-  if (null !== this.funcExecutor.scope.block) {
-    return Entry.STATIC.BREAK;
-  }
-}}, maze_define_function:{skeleton:"basic_define", mode:"maze", color:"#B57242", event:"define", syntax:["BasicFunction"], params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], statements:[{accept:"basic"}], func:function(b) {
-  if (!this.executed && (b = this.block.statements[0], 0 !== b.getBlocks().length)) {
-    return this.executor.stepInto(b), this.executed = !0, Entry.STATIC.BREAK;
-  }
-}}, maze_step_if_3:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicIf", "front == banana"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_3.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}], func:function() {
-  if (!this.isContinue) {
-    var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a, c;
-    for (c in b) {
-      a = b[c];
-    }
-    b = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.UNIT);
-    a = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.GRID);
-    a = {x:a.x, y:a.y};
-    Ntry.addVectorByDirection(a, b.direction, 1);
-    a = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:a.x, y:a.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_BANANA});
-    this.isContinue = !0;
-    b = this.block.statements[0];
-    if (0 !== a.length && 0 !== b.getBlocks().length) {
-      return this.executor.stepInto(b), Entry.STATIC.BREAK;
-    }
-  }
-}}, maze_step_if_4:{skeleton:"basic_loop", mode:"maze", color:"#498DEB", syntax:["BasicIf", "front == wall"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_2.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}], func:function() {
-  if (!this.isContinue) {
-    var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a, c;
-    for (c in b) {
-      a = b[c];
-    }
-    b = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.UNIT);
-    a = Ntry.entityManager.getComponent(a.id, Ntry.STATIC.GRID);
-    a = {x:a.x, y:a.y};
-    Ntry.addVectorByDirection(a, b.direction, 1);
-    a = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:a.x, y:a.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.WALL});
-    this.isContinue = !0;
-    b = this.block.statements[0];
-    if (0 !== a.length && 0 !== b.getBlocks().length) {
-      return this.executor.stepInto(b), Entry.STATIC.BREAK;
-    }
-  }
-}}, maze_step_move_step:{skeleton:"basic", mode:"maze", color:"#A751E3", syntax:["Scope", "move"], params:[{type:"Image", img:"/img/assets/week/blocks/moveStep.png", size:24}], func:function() {
-  if (this.isContinue) {
-    if (this.isAction) {
-      return Entry.STATIC.BREAK;
-    }
-    delete this.isAction;
-    delete this.isContinue;
-  } else {
-    this.isAction = this.isContinue = !0;
-    var b = this;
-    Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
-      b.isAction = !1;
-    });
-    return Entry.STATIC.BREAK;
-  }
-}}, maze_step_rotate_left:{skeleton:"basic", mode:"maze", color:"#A751E3", syntax:["Scope", "left"], params:[{type:"Image", img:"/img/assets/week/blocks/turnL.png", size:24}], func:function() {
-  if (this.isContinue) {
-    if (this.isAction) {
-      return Entry.STATIC.BREAK;
-    }
-    delete this.isAction;
-    delete this.isContinue;
-  } else {
-    this.isAction = this.isContinue = !0;
-    var b = this;
-    Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, function() {
-      b.isAction = !1;
-    });
-    return Entry.STATIC.BREAK;
-  }
-}}, maze_step_rotate_right:{skeleton:"basic", mode:"maze", color:"#A751E3", syntax:["Scope", "right"], params:[{type:"Image", img:"/img/assets/week/blocks/turnR.png", size:24}], func:function() {
-  if (this.isContinue) {
-    if (this.isAction) {
-      return Entry.STATIC.BREAK;
-    }
-    delete this.isAction;
-    delete this.isContinue;
-  } else {
-    this.isAction = this.isContinue = !0;
-    var b = this;
-    Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, function() {
-      b.isAction = !1;
-    });
-    return Entry.STATIC.BREAK;
-  }
-}}, test_wrapper:{skeleton:"basic", mode:"maze", color:"#3BBD70", params:[{type:"Block", accept:"basic_boolean_field", value:[{type:"test", params:[30, 50]}]}, {type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}]}, basic_button:{skeleton:"basic_button", color:"#eee", params:[{type:"Text", text:"basic button", color:"#333", align:"center"}]}, dplay_get_number_sensor_value:{parent:"arduino_get_number_sensor_value", isNotFor:["dplay"], 
-"class":"arduino_value"}, dplay_get_digital_value:{parent:"arduino_get_digital_value", isNotFor:["dplay"], "class":"arduino_value"}, dplay_toggle_led:{parent:"arduino_toggle_led", isNotFor:["dplay"], "class":"arduino_set"}, dplay_toggle_pwm:{parent:"arduino_toggle_pwm", isNotFor:["dplay"], "class":"arduino_set"}, dplay_convert_scale:{parent:"arduino_convert_scale", isNotFor:["dplay"], "class":"arduino"}, nemoino_get_number_sensor_value:{parent:"arduino_get_number_sensor_value", isNotFor:["nemoino"], 
-"class":"arduino_value"}, nemoino_get_digital_value:{parent:"arduino_get_digital_value", isNotFor:["nemoino"], "class":"arduino_value"}, nemoino_toggle_led:{parent:"arduino_toggle_led", isNotFor:["nemoino"], "class":"arduino_set"}, nemoino_toggle_pwm:{parent:"arduino_toggle_pwm", isNotFor:["nemoino"], "class":"arduino_set"}, nemoino_convert_scale:{parent:"arduino_convert_scale", isNotFor:["nemoino"], "class":"arduino"}, sensorBoard_get_number_sensor_value:{parent:"arduino_get_number_sensor_value", 
-isNotFor:["sensorBoard"], "class":"arduino_value"}, sensorBoard_get_digital_value:{parent:"arduino_get_digital_value", isNotFor:["sensorBoard"], "class":"arduino_value"}, sensorBoard_toggle_led:{parent:"arduino_toggle_led", isNotFor:["sensorBoard"], "class":"arduino_set"}, sensorBoard_toggle_pwm:{parent:"arduino_toggle_pwm", isNotFor:["sensorBoard"], "class":"arduino_set"}, sensorBoard_convert_scale:{parent:"arduino_convert_scale", isNotFor:["sensorBoard"], "class":"arduino"}, CODEino_get_number_sensor_value:{parent:"arduino_get_number_sensor_value", 
-isNotFor:["CODEino"], "class":"arduino_value"}, CODEino_get_digital_value:{parent:"arduino_get_digital_value", isNotFor:["CODEino"], "class":"arduino_value"}, CODEino_toggle_led:{parent:"arduino_toggle_led", isNotFor:["CODEino"], "class":"arduino_set"}, CODEino_toggle_pwm:{parent:"arduino_toggle_pwm", isNotFor:["CODEino"], "class":"arduino_set"}, CODEino_convert_scale:{parent:"arduino_convert_scale", isNotFor:["CODEino"], "class":"arduino"}};
-(function() {
-  for (var b in Entry.block) {
-    var a = Entry.block[b];
-    if (a.parent) {
-      var c = function() {
-      };
-      c.prototype = Entry.block[a.parent];
-      var c = new c, d;
-      for (d in a) {
-        c[d] = a[d];
-      }
-      Entry.block[b] = c;
-    }
-  }
-})();
-"object" == typeof exports && (exports.block = Entry.block);
 Entry.BlockMenu = function(b, a, c, d) {
   Entry.Model(this, !1);
   this._align = a || "CENTER";
@@ -17951,7 +15089,7 @@ Entry.BlockMenu = function(b, a, c, d) {
     if (isNaN(a)) {
       return a;
     }
-    a = Number(a);
+    a = +a;
     for (var b = this._categories, d = this._categoryElems, e = 0;e < b.length;e++) {
       var f = b[e];
       if (!d[f].hasClass("entryRemove") && 0 === a--) {
@@ -18279,7 +15417,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
           var h = e[g].trim();
           if (0 !== h.length) {
             if (d.test(h)) {
-              var k = Number(h.split("%")[1]) - 1, h = f[k], h = new Entry["Field" + h.type](h, this, k, a, g);
+              var k = +h.split("%")[1] - 1, h = f[k], h = new Entry["Field" + h.type](h, this, k, a, g);
               this._contents.push(h);
               this._paramMap[k] = h;
             } else {
@@ -19014,10 +16152,10 @@ Entry.Scope = function(b, a) {
     return String(this.getValue(a, b));
   };
   b.getNumberValue = function(a, b) {
-    return Number(this.getValue(a));
+    return +this.getValue(a);
   };
   b.getBooleanValue = function(a, b) {
-    return Number(this.getValue(a, b)) ? !0 : !1;
+    return +this.getValue(a, b) ? !0 : !1;
   };
   b.getField = function(a, b) {
     return this.block.params[this._getParamIndex(a)];
@@ -19026,7 +16164,7 @@ Entry.Scope = function(b, a) {
     return String(this.getField(a));
   };
   b.getNumberField = function(a) {
-    return Number(this.getField(a));
+    return +this.getField(a);
   };
   b.getStatement = function(a, b) {
     return this.executor.stepInto(this.block.statements[this._getStatementIndex(a, b)]);
@@ -21640,7 +18778,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     return this.mode;
   };
   b.setMode = function(a, b) {
-    a = Number(a);
+    a = +a;
     var d = this.mode;
     this.mode = a;
     switch(a) {
@@ -21822,6 +18960,20 @@ Entry.Playground.prototype.generateCodeView = function(b) {
   b = Entry.Dom(b);
   a = Entry.Dom("div", {parent:b, id:"entryWorkspaceBoard", class:"entryWorkspaceBoard"});
   b = Entry.Dom("div", {parent:b, id:"entryWorkspaceBlockMenu", class:"entryWorkspaceBlockMenu"});
+  (new Entry.BlockDriver).convert();
+  var c = Entry.block;
+  c.when_run_button_click.event = "start";
+  c.when_some_key_pressed.event = "keyPress";
+  c.when_some_key_click.event = "keyPress";
+  c.when_message_cast.event = "when_message_cast";
+  c.when_scene_start.event = "when_scene_start";
+  c.when_clone_start.event = "when_clone_start";
+  c.mouse_clicked.event = "mouse_clicked";
+  c.mouse_click_cancled.event = "mouse_click_cancled";
+  c.when_object_click.event = "when_object_click";
+  c.when_object_click_canceled.event = "when_object_click_canceled";
+  c.if_else.template = "\ub9cc\uc77c %1 \uc774\ub77c\uba74 %2 %3 \uc544\ub2c8\uba74";
+  c.if_else.params.push({type:"LineBreak"});
   this.mainWorkspace = new Entry.Workspace({blockMenu:{dom:b, align:"LEFT", categoryData:EntryStatic.getAllBlocks(), scroll:!0}, board:{dom:a}});
   this.blockMenu = this.mainWorkspace.blockMenu;
   this.board = this.mainWorkspace.board;
@@ -22681,7 +19833,7 @@ Entry.Xml.getNumberValue = function(b, a, c) {
   }
   for (var d in c) {
     if (c[d].tagName && "VALUE" == c[d].tagName.toUpperCase() && c[d].getAttribute("name") == a) {
-      return Number(Entry.Xml.operate(b, c[d].children[0]));
+      return +Entry.Xml.operate(b, c[d].children[0]);
     }
   }
   return null;
@@ -22704,7 +19856,7 @@ Entry.Xml.getNumberField = function(b, a) {
   }
   for (var d in c) {
     if ("FIELD" == c[d].tagName.toUpperCase() && c[d].getAttribute("name") == b) {
-      return Number(c[d].textContent);
+      return +c[d].textContent;
     }
   }
 };
