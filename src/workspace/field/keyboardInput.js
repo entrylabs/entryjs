@@ -20,7 +20,7 @@ Entry.FieldKeyboard = function(content, blockView, index) {
     this.position = content.position;
     this._contents = content;
     this._index = index;
-    this.setValue(this.getValue());
+    this.setValue(String(this.getValue()));
 
     this._optionVisible = false;
 
@@ -129,7 +129,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     p.applyValue = function(text, value) {
         this.destroyOption();
         if (this.getValue() == value) return;
-        this.setValue(value);
+        this.setValue(String(value));
         this.textElement.textContent = text;
         this.resize();
     };
