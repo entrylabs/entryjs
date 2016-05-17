@@ -277,25 +277,25 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
         class: "entryWorkspaceBlockMenu"
     });
 
-    //new Entry.BlockDriver().convert();
-    ////attach event for event block
-    //var blocks = Entry.block;
+    new Entry.BlockDriver().convert();
+    //attach event for event block
+    var blocks = Entry.block;
 
-    //blocks.when_run_button_click.event = "start";
-    //blocks.when_some_key_pressed.event = "keyPress";
-    //blocks.when_some_key_click.event = "keyPress";
-    //blocks.when_message_cast.event = "when_message_cast";
-    //blocks.when_scene_start.event = "when_scene_start";
-    //blocks.when_clone_start.event = "when_clone_start";
-    //blocks.mouse_clicked.event = "mouse_clicked";
-    //blocks.mouse_click_cancled.event = "mouse_click_cancled";
-    //blocks.when_object_click.event = "when_object_click";
-    //blocks.when_object_click_canceled.event = "when_object_click_canceled";
+    blocks.when_run_button_click.event = "start";
+    blocks.when_some_key_pressed.event = "keyPress";
+    blocks.when_some_key_click.event = "keyPress";
+    blocks.when_message_cast.event = "when_message_cast";
+    blocks.when_scene_start.event = "when_scene_start";
+    blocks.when_clone_start.event = "when_clone_start";
+    blocks.mouse_clicked.event = "mouse_clicked";
+    blocks.mouse_click_cancled.event = "mouse_click_cancled";
+    blocks.when_object_click.event = "when_object_click";
+    blocks.when_object_click_canceled.event = "when_object_click_canceled";
 
-    //blocks.if_else.template = "만일 %1 이라면 %2 %3 아니면";
-    //blocks.if_else.params.push({
-        //type: 'LineBreak'
-    //});
+    blocks.if_else.template = "만일 %1 이라면 %2 %3 아니면";
+    blocks.if_else.params.push({
+        type: 'LineBreak'
+    });
 
     this.mainWorkspace = new Entry.Workspace(
         {
