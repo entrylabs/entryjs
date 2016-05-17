@@ -17121,6 +17121,330 @@ Entry.block = {
         ],
         "class": "arduino"
     },
+    "dplay_get_value": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "아날로그 %1 번  %2 센서값",
+        "params": [{
+            "type": "Block",
+            "accept": "stringMagnet"
+        }, {
+            "type": "Dropdown",
+            "options": [
+                ["가변저항", "ADJU"],
+                ["빛센서", "LIGHT"],
+                ["온도센서", "TEMP"],
+                ["조이스틱 X", "JOYS"],
+                ["조이스틱 Y", "JOYS"],
+                ["적외선", "INFR"]
+            ],
+            "value": "ADJU",
+            "fontSize": 11
+        }],
+        "events": {},
+        "def": {
+            "params": [{
+                "type": "arduino_get_sensor_number",
+                "id": "4rx2"
+            }, null],
+            "type": "dplay_get_value",
+            "id": "hh5b"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0,
+            "OPERATOR": 1
+        },
+        "class": "dplay_set",
+        "isNotFor": ["dplay"],
+        "func": function (sprite, script) {
+            var signal = script.getValue("VALUE", script);
+            return Entry.hw.getAnalogPortValue(signal[1]);
+        }
+    },
+    "dplay_get_tilt": {
+        "color": "#00979D",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "template": "기울기센서 상태가 %1  ",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["왼쪽", "LEFT"],
+                ["오른쪽", "LIGHT"]
+            ],
+            "value": "LEFT",
+            "fontSize": 11
+        }],
+        "events": {},
+        "def": {
+            "params": [null],
+            "type": "dplay_get_tilt",
+            "id": "edht"
+        },
+        "paramsKeyMap": {
+            "STATUS": 0
+        },
+        "class": "dplay_set",
+        "isNotFor": ["dplay"],
+        "func": function (sprite, script) {
+            var value1 = script.getField("STATUS", script);
+            var value2 = 12;
+            if (value1 == "LIGHT") return Entry.hw.getDigitalPortValue(value2) == 1 ? 1 : 0;
+            else return Entry.hw.getDigitalPortValue(value2) == 0 ? 1 : 0;
+        }
+    },
+    "dplay_DCmotor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "%1  DC모터 상태를 %2 %3",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["왼쪽", "3"],
+                ["오른쪽", "6"]
+            ],
+            "value": "3",
+            "fontSize": 11
+        }, {
+            "type": "Dropdown",
+            "options": [
+                ["정방향", "FRONT"],
+                ["역방향", "REAR"],
+                ["정지", "OFF"]
+            ],
+            "value": "FRONT",
+            "fontSize": 11
+        }, {
+            "type": "Indicator",
+            "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [null, null, null],
+            "type": "dplay_DCmotor",
+            "id": "7b8v"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "OPERATOR": 1
+        },
+        "class": "dplay",
+        "isNotFor": ["dplay"],
+        "func": function (sprite, script) {
+            var port1 = script.getField("PORT");
+            var port2 = 0;
+            if (port1 == "3") port2 = 5;
+            else if (port1 == "6") value2 = 11;
+            var operator = script.getField("OPERATOR");
+            var value1 = 0;
+            var value2 = 0;
+            if (operator == "FRONT") {
+                value1 = 255;
+                value2 = 0;
+            }
+            else if (operator == "REAR") {
+                value1 = 0;
+                value2 = 255;
+            }
+            else if (operator == "OFF") {
+                value1 = 0;
+                value2 = 0;
+            }
+            Entry.hw.setDigitalPortValue(port1, value1);
+            Entry.hw.setDigitalPortValue(port2, value2);
+            return script.callReturn();
+        }
+    },
+    "dplay_buzzer": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "부저를  %1 로 %2 박자로 연주하기 %3",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["도", "1"],
+                ["레", "2"],
+                ["미", "3"]
+            ],
+            "value": "1",
+            "fontSize": 11
+        }, {
+            "type": "Block",
+            "accept": "stringMagnet"
+        }, {
+            "type": "Indicator",
+            "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [null, {
+                "type": "arduino_text",
+                "params": ["0"],
+                "id": "04wh"
+            }, null],
+            "type": "dplay_buzzer",
+            "id": "rl5l"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "dplay",
+        "isNotFor": ["dplay"],
+        "func": function (sprite, script) {
+            var port1 = script.getField("PORT");
+            var port = 2;
+            if (port1 == "1") port = 2;
+            else if (port1 == "2") port = 4;
+            else if (port1 == "3") port = 7;
+            var value = script.getNumberValue("VALUE");
+            value = Math.round(value);
+            value = Math.max(value, 0);
+            value = Math.min(value, 100);
+            Entry.hw.setDigitalPortValue(port, value);
+            return script.callReturn();
+        }
+    },
+    "dplay_servo": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "서보모터 각도를 %1 로 이동 %2",
+        "params": [{
+            "type": "Block",
+            "accept": "stringMagnet"
+        }, {
+            "type": "Indicator",
+            "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [{
+                "type": "arduino_text",
+                "params": ["255"],
+                "id": "5ld8"
+            }, null],
+            "type": "dplay_servo",
+            "id": "lo2z"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "dplay",
+        "isNotFor": ["dplay"],
+        "func": function (sprite, script) {
+            var port = 9;
+            var value = script.getNumberValue("VALUE");
+            value = Math.round(value);
+            value = Math.max(value, 0);
+            value = Math.min(value, 180);
+            Entry.hw.setDigitalPortValue(port, value);
+            return script.callReturn();
+        }
+    },
+    "dplay_select_led": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "디지털 %1 LED 상태를 %2 %3",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["7", "7"],
+                ["8", "8"],
+                ["9", "9"],
+                ["10", "10"]
+            ],
+            "value": "7",
+            "fontSize": 11
+        }, {
+            "type": "Dropdown",
+            "options": [
+                ["켜기", "on"],
+                ["끄기", "off"]
+            ],
+            "value": "on",
+            "fontSize": 11
+        }, {
+            "type": "Indicator",
+            "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [null, null, null],
+            "type": "dplay_select_led",
+            "id": "9kmq"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "OPERATOR": 1
+        },
+        "class": "dplay",
+        "isNotFor": ["dplay"],
+        "func": function (sprite, script) {
+            var port1 = script.getField("PORT");
+            var port = 7;
+            if (port1 == "7") port = 7;
+            else if (port1 == "8") port = 8;
+            else if (port1 == "9") port = 9;
+            else if (port1 == "10") port = 10;
+            var operator = script.getField("OPERATOR");
+            var value = operator == "on" ? 255 : 0;
+            Entry.hw.setDigitalPortValue(port, value);
+            return script.callReturn();
+        }
+    },
+    "dplay_get_switch_status": {
+        "color": "#00979D",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "template": "디지털  %1 번 스위치가 %2  ",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["2", "2"],
+                ["4", "4"]
+            ],
+            "value": "2",
+            "fontSize": 11
+        }, {
+            "type": "Dropdown",
+            "options": [
+                ["눌림", "ON"],
+                ["열림", "OFF"]
+            ],
+            "value": "ON",
+            "fontSize": 11
+        }],
+        "events": {},
+        "def": {
+            "params": [null, null],
+            "type": "dplay_get_switch_status",
+            "id": "fik8"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "STATUS": 1
+        },
+        "class": "dplay_set",
+        "isNotFor": ["dplay"],
+        "func": function (sprite, script) {
+            var port1 = script.getField("PORT");
+            var port = 2;
+            if (port1 == "2") port = 2;
+            else if (port1 == "4") port = 4;
+            var value1 = script.getField("STATUS");
+            if (value1 == "OFF") return Entry.hw.getDigitalPortValue(port) == 1 ? 1 : 0;
+            else return Entry.hw.getDigitalPortValue(port) == 0 ? 1 : 0;
+        }
+    },
     "nemoino_get_number_sensor_value": {
         "parent": "arduino_get_number_sensor_value",
         "isNotFor": [

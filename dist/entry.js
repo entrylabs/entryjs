@@ -1036,6 +1036,123 @@ Entry.block.CODEino_get_accelerometer_value = function(b, a) {
   g = Math.max(e, g);
   return Math.round(g);
 };
+Blockly.Blocks.dplay_select_led = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.ARDUINO_num_pin_1);
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["7", "7"], ["8", "8"], ["9", "9"], ["10", "10"]]), "PORT");
+  this.appendDummyInput().appendField(Lang.Blocks.dplay_num_pin_1);
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.ARDUINO_on, "on"], [Lang.Blocks.ARDUINO_off, "off"]]), "OPERATOR").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.dplay_select_led = function(b, a) {
+  var c = a.getField("PORT"), d = 7;
+  "7" == c ? d = 7 : "8" == c ? d = 8 : "9" == c ? d = 9 : "10" == c && (d = 10);
+  c = "on" == a.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(d, c);
+  return a.callReturn();
+};
+Blockly.Blocks.dplay_get_switch_status = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\ub514\uc9c0\ud138 ");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["2", "2"], ["4", "4"]]), "PORT");
+  this.appendDummyInput().appendField(Lang.Blocks.dplay_num_pin_2).appendField(new Blockly.FieldDropdown([[Lang.Blocks.dplay_string_5, "ON"], [Lang.Blocks.dplay_string_6, "OFF"]]), "STATUS").appendField(" ");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Boolean");
+}};
+Entry.block.dplay_get_switch_status = function(b, a) {
+  var c = a.getField("PORT"), d = 2;
+  "2" == c ? d = 2 : "4" == c && (d = 4);
+  return "OFF" == a.getField("STATUS") ? 1 == Entry.hw.getDigitalPortValue(d) ? 1 : 0 : 0 == Entry.hw.getDigitalPortValue(d) ? 1 : 0;
+};
+Blockly.Blocks.dplay_get_light_status = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.dplay_light).appendField(new Blockly.FieldDropdown([[Lang.Blocks.dplay_string_3, "BRIGHT"], [Lang.Blocks.dplay_string_4, "DARK"]]), "STATUS").appendField(" ");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Boolean");
+}};
+Entry.block.dplay_get_light_status = function(b, a) {
+  return "DARK" == a.getField("STATUS", a) ? 800 < Entry.hw.getAnalogPortValue(1) ? 1 : 0 : 800 > Entry.hw.getAnalogPortValue(1) ? 1 : 0;
+};
+Blockly.Blocks.dplay_get_value = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.dplay_num_pin_3);
+  this.appendValueInput("VALUE").setCheck(["Number", "String", null]);
+  this.appendDummyInput().appendField("\ubc88 ");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["\uac00\ubcc0\uc800\ud56d", "ADJU"], ["\ube5b\uc13c\uc11c", "LIGHT"], ["\uc628\ub3c4\uc13c\uc11c", "TEMP"], ["\uc870\uc774\uc2a4\ud2f1 X", "JOYS"], ["\uc870\uc774\uc2a4\ud2f1 Y", "JOYS"], ["\uc801\uc678\uc120", "INFR"]]), "OPERATOR");
+  this.appendDummyInput().appendField(Lang.Blocks.dplay_num_pin_5);
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.dplay_get_value = function(b, a) {
+  var c = a.getValue("VALUE", a);
+  return Entry.hw.getAnalogPortValue(c[1]);
+};
+Blockly.Blocks.dplay_get_tilt = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.dplay_tilt).appendField(new Blockly.FieldDropdown([["\uc67c\ucabd \uae30\uc6b8\uc784", "LEFT"], ["\uc624\ub978\ucabd \uae30\uc6b8\uc784", "LIGHT"]]), "STATUS").appendField(" ");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Boolean");
+}};
+Entry.block.dplay_get_tilt = function(b, a) {
+  return "LIGHT" == a.getField("STATUS", a) ? 1 == Entry.hw.getDigitalPortValue(12) ? 1 : 0 : 0 == Entry.hw.getDigitalPortValue(12) ? 1 : 0;
+};
+Blockly.Blocks.dplay_DCmotor = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["\uc67c\ucabd", "3"], ["\uc624\ub978\ucabd", "6"]]), "PORT");
+  this.appendDummyInput().appendField(" DC\ubaa8\ud130 \uc0c1\ud0dc\ub97c");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["\uc815\ubc29\ud5a5", "FRONT"], ["\uc5ed\ubc29\ud5a5", "REAR"], ["\uc815\uc9c0", "OFF"]]), "OPERATOR").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.dplay_DCmotor = function(b, a) {
+  var c = a.getField("PORT"), d = 0;
+  "3" == c && (d = 5);
+  var e = a.getField("OPERATOR"), f = 0, g = 0;
+  "FRONT" == e ? (f = 255, g = 0) : "REAR" == e ? (f = 0, g = 255) : "OFF" == e && (g = f = 0);
+  Entry.hw.setDigitalPortValue(c, f);
+  Entry.hw.setDigitalPortValue(d, g);
+  return a.callReturn();
+};
+Blockly.Blocks.dplay_buzzer = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\ubd80\uc800\ub97c ");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["\ub3c4", "1"], ["\ub808", "2"], ["\ubbf8", "3"]]), "PORT");
+  this.appendDummyInput().appendField("\ub85c");
+  this.appendValueInput("VALUE").setCheck(["Number", "String", null]);
+  this.appendDummyInput().appendField("\ubc15\uc790\ub85c \uc5f0\uc8fc\ud558\uae30");
+  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.dplay_buzzer = function(b, a) {
+  var c = a.getField("PORT"), d = 2;
+  "1" == c ? d = 2 : "2" == c ? d = 4 : "3" == c && (d = 7);
+  c = a.getNumberValue("VALUE");
+  c = Math.round(c);
+  c = Math.max(c, 0);
+  c = Math.min(c, 100);
+  Entry.hw.setDigitalPortValue(d, c);
+  return a.callReturn();
+};
+Blockly.Blocks.dplay_servo = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc11c\ubcf4\ubaa8\ud130 \uac01\ub3c4\ub97c");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("\ub85c \uc774\ub3d9");
+  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.dplay_servo = function(b, a) {
+  var c = a.getNumberValue("VALUE"), c = Math.round(c), c = Math.max(c, 0), c = Math.min(c, 180);
+  Entry.hw.setDigitalPortValue(9, c);
+  return a.callReturn();
+};
 Entry.Bitbrick = {SENSOR_MAP:{1:"light", 2:"IR", 3:"touch", 4:"potentiometer", 5:"MIC", 21:"UserSensor", 11:"USER INPUT", 20:"LED", 19:"SERVO", 18:"DC"}, PORT_MAP:{buzzer:2, 5:4, 6:6, 7:8, 8:10, LEDR:12, LEDG:14, LEDB:16}, sensorList:function() {
   for (var b = [], a = Entry.hw.portData, c = 1;5 > c;c++) {
     var d = a[c];

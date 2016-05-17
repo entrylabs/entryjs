@@ -259,6 +259,12 @@ EntryStatic.getAllBlocks = function() {
             ]
         },
         {
+            category: "func",
+            blocks: [
+                "functionAddButton",
+            ]
+        },
+        {
             category: "arduino",
             blocks: [
                 "arduino_download_connector",
