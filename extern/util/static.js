@@ -290,15 +290,15 @@ EntryStatic.getAllBlocks = function() {
                 "nemoino_convert_scale",
                 //neobot
                 "neobot_sensor_value",
-                "neobot_turn_left",
-                "neobot_stop_left",
-                "neobot_turn_right",
-                "neobot_stop_right",
-                "neobot_run_motor",
-                "neobot_servo_1",
-                "neobot_servo_2",
+                "neobot_left_motor",
+                "neobot_stop_left_motor",
+                "neobot_right_motor",
+                "neobot_stop_right_motor",
+                "neobot_all_motor",
+                "neobot_set_servo",
+                "neobot_set_output",
+                "neobot_set_fnd",
                 "neobot_play_note_for",
-                "neobot_set_sensor_value",
                 "bitbrick_sensor_value",
                 "bitbrick_convert_scale",
                 "bitbrick_is_touch_pressed",
@@ -1587,50 +1587,50 @@ EntryStatic.blockInfo = {
         "xml": "<block type='neobot_sensor_value'></block>",
         "class": "neobot_value"
     },
-    "neobot_turn_left": {
+    "neobot_left_motor": {
         "isNotFor": ['neobot'],
-        "xml": "<block type='neobot_turn_left'></block>",
+        "xml": "<block type='neobot_left_motor'><field name='SPEED'>15</field></block>",
         "class": "neobot_motor"
     },
-    "neobot_stop_left": {
+    "neobot_stop_left_motor": {
         "isNotFor": ['neobot'],
-        "xml": "<block type='neobot_stop_left'></block>",
+        "xml": "<block type='neobot_stop_left_motor'></block>",
         "class": "neobot_motor"
     },
-    "neobot_turn_right": {
+    "neobot_right_motor": {
         "isNotFor": ['neobot'],
-        "xml": "<block type='neobot_turn_right'></block>",
+        "xml": "<block type='neobot_right_motor'><field name='SPEED'>15</field></block>",
         "class": "neobot_motor"
     },
-    "neobot_stop_right": {
+    "neobot_stop_right_motor": {
         "isNotFor": ['neobot'],
-        "xml": "<block type='neobot_stop_right'></block>",
+        "xml": "<block type='neobot_stop_right_motor'></block>",
         "class": "neobot_motor"
     },
-    "neobot_run_motor": {
+    "neobot_all_motor": {
         "isNotFor": ['neobot'],
-        "xml": "<block type='neobot_run_motor'><value name='DURATION'><block type='text'><field name='NAME'>1</field></block></value></block>",
+        "xml": "<block type='neobot_all_motor'><field name='SPEED'>15</field></block>",
         "class": "neobot_motor"
     },
-    "neobot_servo_1": {
+    "neobot_set_servo": {
         "isNotFor": ['neobot'],
-        "xml": "<block type='neobot_servo_1'></block>",
-        "class": "neobot_servo"
+        "xml": "<block type='neobot_set_servo'></block>",
+        "class": "neobot_output"
     },
-    "neobot_servo_2": {
+    "neobot_set_output": {
         "isNotFor": ['neobot'],
-        "xml": "<block type='neobot_servo_2'></block>",
-        "class": "neobot_servo"
+        "xml": "<block type='neobot_set_output'><value name='VALUE'><block type='number'><field name='NUM'>255</field></block></value></block>",
+        "class": "neobot_output"
+    },
+    "neobot_set_fnd": {
+        "isNotFor": ['neobot'],
+        "xml": "<block type='neobot_set_fnd'><value name='VALUE'><block type='number'><field name='NUM'>0</field></block></value></block>",
+        "class": "neobot_output"
     },
     "neobot_play_note_for": {
         "isNotFor": ['neobot'],
-        "xml": "<block type='neobot_play_note_for'></block>",
+        "xml": "<block type='neobot_play_note_for'><field name='NOTE'>1</field><field name='OCTAVE'>2</field><field name='DURATION'>4</field></block>",
         "class": "neobot_note"
-    },
-    "neobot_set_sensor_value": {
-        "isNotFor": ['neobot'],
-        "xml": "<block type='neobot_set_sensor_value'></block>",
-        "class": "neobot_set_value"
     },
     "bitbrick_sensor_value": {
         "isNotFor": ['bitbrick'],
