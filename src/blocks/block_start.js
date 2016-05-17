@@ -147,7 +147,7 @@ Blockly.Blocks.when_some_key_click = {
     this.setInputsInline(true);
     this.setNextStatement(true);
   },
-  syntax: {js: [], py: ["Entry.on_key_press_down(\"%1\")"]}
+  syntax: {js: [], py: ["Entry.on_key_press_down(%1)"]}
 };
 
 Entry.block.when_some_key_click = function (sprite, script) {
@@ -166,7 +166,7 @@ Blockly.Blocks.when_message_cast = {
     this.setInputsInline(true);
     this.setNextStatement(true);
   },
-  syntax: {js: [], py: ["Entry.on_signal_receive(\"%1\")"]},
+  syntax: {js: [], py: ["Entry.on_signal_receive(%1)"]},
     whenAdd: function (block) {
         var vc = Entry.variableContainer;
         if (vc) vc.addRef('_messageRefs', block);
@@ -195,7 +195,7 @@ Blockly.Blocks.message_cast = {
     this.setNextStatement(true);
     this.setPreviousStatement(true);
   },
-  syntax: {js: [], py: ["Entry.send_signal(\"%1\")"]},
+  syntax: {js: [], py: ["Entry.send_signal(%1)"]},
     whenAdd: function (block) {
         var vc = Entry.variableContainer;
         if (vc) vc.addRef('_messageRefs', block);
@@ -232,7 +232,7 @@ Blockly.Blocks.message_cast_wait = {
     this.setNextStatement(true);
     this.setPreviousStatement(true);
   },
-  syntax: {js: [], py: ["Entry.send_signal_and_wait(\"%1\")"]},
+  syntax: {js: [], py: ["Entry.send_signal_and_wait(%1)"]},
     whenAdd: function (block) {
         var vc = Entry.variableContainer;
         if (vc) vc.addRef('_messageRefs', block);

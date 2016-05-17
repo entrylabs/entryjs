@@ -65,7 +65,7 @@ Blockly.Blocks.set_color = {
     this.setPreviousStatement(true);
     this.setNextStatement(true);
   },
-  syntax: {js: [], py: ["self.set_brush_color(\"%1\")"]}
+  syntax: {js: [], py: ["self.set_brush_color(%1)"]}
 };
 
 Entry.block.set_color = function (sprite, script) {

@@ -339,7 +339,7 @@ Blockly.Blocks.locate = {
     this.setPreviousStatement(true);
     this.setNextStatement(true);
   },
-  syntax: {js: [], py: ["self.move_to_object(\"%1\")"]}
+  syntax: {js: [], py: ["self.move_to_object(%1)"]}
 };
 
 Entry.block.locate = function (sprite, script) {
@@ -727,7 +727,7 @@ Blockly.Blocks.see_angle_object = {
     this.setPreviousStatement(true);
     this.setNextStatement(true);
   },
-  syntax: {js: [], py: ["self.look_at_object(\"%1\")"]}
+  syntax: {js: [], py: ["self.look_at_object(%1)"]}
 };
 
 Entry.block.see_angle_object = function (sprite, script) {
@@ -827,7 +827,7 @@ Blockly.Blocks.locate_object_time = {
     this.setPreviousStatement(true);
     this.setNextStatement(true);
   },
-  syntax: {js: [], py: ["self.move_at_object_for_seconds(%1, \"%2\")"]}
+  syntax: {js: [], py: ["self.move_at_object_for_seconds(%1, %2)"]}
 };
 
 Entry.block.locate_object_time = function (sprite, script) {

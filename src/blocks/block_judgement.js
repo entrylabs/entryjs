@@ -26,7 +26,7 @@ Blockly.Blocks.is_press_some_key = {
         this.setOutput(true, 'Boolean');
         this.setInputsInline(true);
     },
-    syntax: {js: [], py: ["Entry.is_key_pressed(%1)"]}
+    syntax: {js: [], py: ["Entry.is_particular_key_pressed(%1)"]}
 };
 
 Entry.block.is_press_some_key = function (sprite, script) {
@@ -47,7 +47,7 @@ Blockly.Blocks.reach_something = {
         this.setOutput(true, 'Boolean');
         this.setInputsInline(true);
     },
-    syntax: {js: [], py: ["Entry.is_reached(%1)"]}
+    syntax: {js: [], py: ["Entry.is_reached_at(%1, %2, %3)"]}
 };
 
 Entry.block.reach_something = function (sprite, script) {
@@ -264,7 +264,7 @@ Blockly.Blocks.boolean_and = {
         this.setOutput(true, 'Boolean');
         this.setInputsInline(true);
     },
-    syntax: {py: ["%1 and %2"]}
+    syntax: {py: ["%1 %& %3"]}
 };
 
 Entry.block.boolean_and = function (sprite, script) {
@@ -285,7 +285,7 @@ Blockly.Blocks.boolean_or = {
         this.setOutput(true, 'Boolean');
         this.setInputsInline(true);
     },
-    syntax: {py: ["%1 or %2"]}
+    syntax: {py: ["%1 %| %3"]}
 };
 
 Entry.block.boolean_or = function (sprite, script) {
@@ -308,7 +308,7 @@ Blockly.Blocks.boolean_not = {
         this.setOutput(true, 'Boolean');
         this.setInputsInline(true);
     },
-    syntax: {py: ["%1 != True"]}
+    syntax: {py: ["%1 %! %2"]}
 };
 
 Entry.block.boolean_not = function (sprite, script) {
@@ -385,7 +385,7 @@ Blockly.Blocks.boolean_basic_operator = {
     this.setOutput(true, 'Boolean');
     this.setInputsInline(true);
   },
-  syntax: {js: [], py: ["%1 %2 %3"]}
+  syntax: {js: [], py: ["%1 %b %3"]}
 };
 
 Entry.block.boolean_basic_operator = function (sprite, script) {
