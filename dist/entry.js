@@ -13039,7 +13039,7 @@ Entry.Variable.prototype.setValue = function(b) {
   } else {
     var a = Entry.isFloat(this.minValue_), c = Entry.isFloat(this.maxValue_);
     this.value_ = b < this.minValue_ ? this.minValue_ : b > this.maxValue_ ? this.maxValue_ : b;
-    a || c || (this.viewValue_ = this.value_, this.value_ = Math.floor(this.value_));
+    a || c ? delete this.viewValue_ : (this.viewValue_ = this.value_, this.value_ = Math.floor(this.value_));
   }
   this.isCloud_ && Entry.variableContainer.updateCloudVariables();
   this.updateView();

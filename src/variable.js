@@ -564,7 +564,7 @@ Entry.Variable.prototype.setValue = function(value) {
         if (!isMinFloat && !isMaxFloat) {
             this.viewValue_ = this.value_;
             this.value_ = Math.floor(this.value_);
-        }
+        } else delete this.viewValue_;
     }
 
     if (this.isCloud_) Entry.variableContainer.updateCloudVariables();
