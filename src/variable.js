@@ -29,8 +29,8 @@ Entry.Variable = function(variable) {
         this.value_ = variable.value;
 
     if (this.type == 'slide') {
-        this.minValue_ = variable.minValue ? variable.minValue : 0;
-        this.maxValue_ = variable.maxValue ? variable.maxValue : 100;
+        this.minValue_ = Number(variable.minValue ? variable.minValue : 0);
+        this.maxValue_ = Number(variable.maxValue ? variable.maxValue : 100);
     }
 
     if (!variable.isClone) {
@@ -555,6 +555,7 @@ Entry.Variable.prototype.setValue = function(value) {
     else {
         var isMinFloat = Entry.isFloat(this.minValue_);
         var isMaxFloat = Entry.isFloat(this.maxValue_);
+        value = Number(value);
 
         if (value < this.minValue_) this.value_ = this.minValue_;
         else if (value > this.maxValue_) this.value_ = this.maxValue_;

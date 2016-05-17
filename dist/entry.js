@@ -12859,7 +12859,7 @@ Entry.Variable = function(b) {
   this.isCloud_ = b.isCloud || !1;
   var a = Entry.parseNumber(b.value);
   this.value_ = "number" == typeof a ? a : b.value ? b.value : 0;
-  "slide" == this.type && (this.minValue_ = b.minValue ? b.minValue : 0, this.maxValue_ = b.maxValue ? b.maxValue : 100);
+  "slide" == this.type && (this.minValue_ = Number(b.minValue ? b.minValue : 0), this.maxValue_ = Number(b.maxValue ? b.maxValue : 100));
   b.isClone || (this.visible_ = b.visible || "boolean" == typeof b.visible ? b.visible : !0, this.x_ = b.x ? b.x : null, this.y_ = b.y ? b.y : null, "list" == this.type && (this.width_ = b.width ? b.width : 100, this.height_ = b.height ? b.height : 120, this.array_ = b.array ? b.array : [], this.scrollPosition = 0), this.BORDER = 6, this.FONT = "10pt NanumGothic");
 };
 Entry.Variable.prototype.generateView = function(b) {
@@ -13038,6 +13038,7 @@ Entry.Variable.prototype.setValue = function(b) {
     this.value_ = b;
   } else {
     var a = Entry.isFloat(this.minValue_), c = Entry.isFloat(this.maxValue_);
+    b = Number(b);
     this.value_ = b < this.minValue_ ? this.minValue_ : b > this.maxValue_ ? this.maxValue_ : b;
     a || c ? delete this.viewValue_ : this.value_ = this.viewValue_ = this.value_;
   }
