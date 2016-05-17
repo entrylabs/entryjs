@@ -20,7 +20,7 @@ Entry.Board = function(option) {
 
     this.createView(option);
 
-    this._magnetMap = null;
+    this._magnetMap = {};
 
     Entry.ANIMATION_DURATION = 200;
     Entry.BOARD_PADDING = 100;
@@ -38,6 +38,10 @@ Entry.Board = function(option) {
     this._addControl();
     this._bindEvent();
 };
+
+Entry.Board.OPTION_PASTE = 0;
+Entry.Board.OPTION_ALIGN = 1;
+Entry.Board.OPTION_CLEAR = 2;
 
 (function(p) {
     p.schema = {
@@ -198,6 +202,8 @@ Entry.Board = function(option) {
             var that = this;
 
             var options = [];
+
+        this._contextOptions[Entry.Board.OPTION_PASTE].option.enable = !!Entry.clipboard;
 
             for (var i=0; i<this._contextOptions.length; i++) {
                 if (this._contextOptions[i].activated)
@@ -378,36 +384,36 @@ Entry.Board = function(option) {
         var code = this.code;
         if (!code || !this.dragBlock) return;
 
-        var targetType = this.dragBlock._targetType;
+        for (var targetType in this.dragBlock.magnet) {
+            var metaData = this._getCodeBlocks(code, targetType);
+            metaData.sort(function(a, b) {return a.point - b.point;});
 
-        var metaData = this._getCodeBlocks(code, targetType);
-        metaData.sort(function(a, b) {return a.point - b.point;});
-
-        metaData.unshift({
-            point: - Number.MAX_VALUE,
-            blocks: []
-        });
-        for (var i = 1; i < metaData.length; i++) {
-            var pointData = metaData[i];
-            var includeData = pointData;
-            var block = pointData.startBlock;
-            if (block) {
-                var limit = pointData.endPoint,
-                    index = i;
-                while (limit > includeData.point) {
-                    includeData.blocks.push(block);
-                    index++;
-                    includeData = metaData[index];
-                    if (!includeData)
-                        break;
+            metaData.unshift({
+                point: - Number.MAX_VALUE,
+                blocks: []
+            });
+            for (var i = 1; i < metaData.length; i++) {
+                var pointData = metaData[i];
+                var includeData = pointData;
+                var block = pointData.startBlock;
+                if (block) {
+                    var limit = pointData.endPoint,
+                        index = i;
+                    while (limit > includeData.point) {
+                        includeData.blocks.push(block);
+                        index++;
+                        includeData = metaData[index];
+                        if (!includeData)
+                            break;
+                    }
+                    delete pointData.startBlock;
                 }
-                delete pointData.startBlock;
+                pointData.endPoint = Number.MAX_VALUE;
+                metaData[i - 1].endPoint = pointData.point;
             }
-            pointData.endPoint = Number.MAX_VALUE;
-            metaData[i - 1].endPoint = pointData.point;
-        }
 
-        this._magnetMap = metaData;
+            this._magnetMap[targetType] = metaData;
+        }
     };
 
     p._getCodeBlocks = function(code, targetType) {
@@ -415,16 +421,16 @@ Entry.Board = function(option) {
         var blocks = [];
         var func;
         switch (targetType) {
-            case "nextMagnet":
+            case "previous":
                 func = this._getNextMagnets;
                 break;
-            case "stringMagnet":
+            case "string":
                 func = this._getFieldMagnets;
                 break;
-            case "booleanMagnet":
+            case "boolean":
                 func = this._getFieldMagnets;
                 break;
-            case "paramMagnet":
+            case "param":
                 func = this._getOutputMagnets;
                 break;
             default:
@@ -556,7 +562,7 @@ Entry.Board = function(option) {
             var contentBlock = content._valueBlock;
             if (contentBlock.view.dragInstance)
                 continue;
-            if (content.acceptType !== targetType && content.acceptType !== "booleanMagnet") {
+            if (content.acceptType !== targetType && content.acceptType !== "boolean") {
                 continue;
             }
             var startX = cursorX + content.box.x;
@@ -704,7 +710,7 @@ Entry.Board = function(option) {
 
 
     p.getNearestMagnet = function(x, y, targetType) {
-        var targetArray = this._magnetMap;
+        var targetArray = this._magnetMap[targetType];
         if (!targetArray || targetArray.length ===0) return;
 
         var minIndex = 0,
@@ -712,8 +718,8 @@ Entry.Board = function(option) {
             index,
             pointData,
             result = null,
-            searchValue = targetType === "nextMagnet" ? y - 15 : y,
-            leftOffset = targetType === "nextMagnet" ? 20 : 0;
+            searchValue = targetType === "previous" ? y - 15 : y,
+            leftOffset = targetType === "previous" ? 20 : 0;
         while (minIndex <= maxIndex) {
             index = (minIndex + maxIndex) / 2 | 0;
             pointData = targetArray[index];
@@ -910,6 +916,3 @@ Entry.Board = function(option) {
 
 })(Entry.Board.prototype);
 
-Entry.Board.OPTION_PASTE = 0;
-Entry.Board.OPTION_ALIGN = 1;
-Entry.Board.OPTION_CLEAR = 2;
