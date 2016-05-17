@@ -2021,7 +2021,9 @@ Entry.block = {
         ],
         "events": {
             "mousedown": [
-                null
+                function() {
+                    Entry.hw.downloadConnector();
+                }
             ]
         }
     },
@@ -2039,7 +2041,9 @@ Entry.block = {
         ],
         "events": {
             "mousedown": [
-                null
+                function() {
+                    Entry.hw.downloadSource();
+                }
             ]
         }
     },
@@ -2055,11 +2059,7 @@ Entry.block = {
                 "align": "center"
             }
         ],
-        "events": {
-            "mousedown": [
-                null
-            ]
-        }
+        "events": {}
     },
     "arduino_reconnect": {
         "skeleton": "basic_button",
@@ -2075,7 +2075,9 @@ Entry.block = {
         ],
         "events": {
             "mousedown": [
-                null
+                function() {
+                    Entry.hw.retryConnect();
+                }
             ]
         }
     },

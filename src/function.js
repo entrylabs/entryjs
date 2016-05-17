@@ -309,6 +309,7 @@ Entry.Func.updateMenu = function() {
         blockMenu.unbanClass("functionInit");
         blockMenu.banClass("functionEdit");
     }
+    blockMenu.reDraw();
 };
 
 Entry.Func.prototype.edit = function() {

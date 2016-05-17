@@ -35,6 +35,10 @@ Entry.Block = function(block, thread) {
 Entry.Block.MAGNET_RANGE = 10;
 Entry.Block.MAGNET_OFFSET = 0.4;
 
+Entry.Block.DELETABLE_TRUE = 1;
+Entry.Block.DELETABLE_FALSE = 2;
+Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
+
 (function(p) {
     p.schema = {
         id: null,
@@ -46,7 +50,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         view: null,
         thread: null,
         movable: null,
-        deletable: true,
+        deletable: Entry.Block.DELETABLE_TRUE,
         readOnly: null,
         copyable: true,
         events: {}
@@ -282,7 +286,9 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         this.set({deletable: deletable});
     };
 
-    p.isDeletable = function() {return this.deletable;};
+    p.isDeletable = function() {
+        return this.deletable === Entry.Block.DELETABLE_TRUE;
+    };
 
     p.isReadOnly = function() {return this.readOnly;};
 

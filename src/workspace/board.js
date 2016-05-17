@@ -36,14 +36,7 @@ Entry.Board = function(option) {
     Entry.Utils.disableContextmenu(this.svgDom);
 
     this._addControl();
-    if (Entry.documentMousedown) {
-        Entry.documentMousedown.attach(this, this.setSelectedBlock);
-        Entry.documentMousedown.attach(this, this._removeActivated);
-    }
-    if (Entry.keyPressed)
-        Entry.keyPressed.attach(this, this._keyboardControl);
-    if (Entry.windowResized)
-        Entry.windowResized.attach(this, this.updateOffset);
+    this._bindEvent();
 };
 
 (function(p) {
@@ -860,6 +853,7 @@ Entry.Board = function(option) {
     };
 
     p._initContextOptions = function() {
+        var that = this;
         this._contextOptions = [
             {
                 activated: true,
@@ -899,6 +893,19 @@ Entry.Board = function(option) {
 
     p.deActivateContextOption = function(option) {
         this._contextOptions[option].activated = false;
+    };
+
+    p._bindEvent = function() {
+    if (Entry.documentMousedown) {
+        Entry.documentMousedown.attach(this, this.setSelectedBlock);
+        Entry.documentMousedown.attach(this, this._removeActivated);
+    }
+    if (Entry.keyPressed)
+        Entry.keyPressed.attach(this, this._keyboardControl);
+
+    if (Entry.windowResized)
+        var dUpdateOffset = _.debounce(this.updateOffset, 10);
+        Entry.windowResized.attach(this, dUpdateOffset);
     };
 
 })(Entry.Board.prototype);

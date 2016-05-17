@@ -228,6 +228,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     };
 
     p.getTextWidth = function() {
+        if (!this.textElement) return X_PADDING;
         return this.textElement.getComputedTextLength() + X_PADDING;
     };
 
@@ -253,7 +254,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
             delete this.svgOptionGroup;
         }
         this.textElement.textContent = this.getText();
-        this.resize();
     };
 })(Entry.FieldAngle.prototype);
 
