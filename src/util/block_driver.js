@@ -196,7 +196,7 @@ Entry.BlockMockup = function(blocklyInfo, def, blockType) {
         }
         this.params.push({
             type: "Block",
-            accept: "stringMagnet"
+            accept: "string"
         });
 
         this._addToParamsKeyMap(key);
@@ -217,7 +217,7 @@ Entry.BlockMockup = function(blocklyInfo, def, blockType) {
         var params = this.params;
         if (accept === "Boolean")
             params[params.length - 1].accept =
-                "booleanMagnet";
+                "boolean";
     };
 
     p.appendField = function(field, opt) {

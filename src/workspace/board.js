@@ -126,7 +126,7 @@ Entry.Board = function(option) {
         this.svgGroup.appendChild(this.svgBlockGroup);
     };
 
-    p.setMagnetedBlock = function(block) {
+    p.setMagnetedBlock = function(block, magnetType) {
         if (this.magnetedBlockView) {
             if (this.magnetedBlockView === block)
                 return;
@@ -135,7 +135,7 @@ Entry.Board = function(option) {
         }
         this.set({magnetedBlockView: block});
         if (block) {
-            block.set({magneting: true});
+            block.set({magneting: magnetType});
             block.dominate();
         }
     };
@@ -418,6 +418,9 @@ Entry.Board = function(option) {
             case "previous":
                 func = this._getNextMagnets;
                 break;
+            case "next":
+                func = this._getPreviousMagnets;
+                break;
             case "string":
                 func = this._getFieldMagnets;
                 break;
@@ -500,6 +503,39 @@ Entry.Board = function(option) {
             }
         }
         return statementBlocks.concat(metaData);
+    };
+
+    p._getPreviousMagnets = function(thread, zIndex, offset, targetType) {
+        var blocks = thread.getBlocks();
+        var metaData = [];
+        if (!offset) offset = {x: 0, y: 0};
+        var cursorX = offset.x;
+        var cursorY = offset.y;
+
+        var block = blocks[0];
+        var blockView = block.view;
+        blockView.zIndex = zIndex;
+        if (blockView.dragInstance)
+            return [];
+        cursorY += blockView.y - 15;
+        cursorX += blockView.x;
+        var endPoint = cursorY + 1;
+        if (blockView.magnet.previous) {
+            endPoint += blockView.height;
+            metaData.push({
+                point: cursorY,
+                endPoint: endPoint,
+                startBlock: block,
+                blocks: []
+            });
+            metaData.push({
+                point: endPoint,
+                blocks: []
+            });
+            blockView.absX = cursorX;
+            return metaData;
+        }
+        return [];
     };
 
     p._getFieldMagnets = function(thread, zIndex, offset, targetType) {

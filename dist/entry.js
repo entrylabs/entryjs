@@ -11500,7 +11500,7 @@ Entry.BlockMockup = function(b, a, c) {
   };
   b.appendValueInput = function(a) {
     this.def && this.def.index && (void 0 !== this.def.index[a] ? this.definition.params.push(this.def.params[this.def.index[a]]) : this.definition.params.push(null));
-    this.params.push({type:"Block", accept:"stringMagnet"});
+    this.params.push({type:"Block", accept:"string"});
     this._addToParamsKeyMap(a);
     this.templates.push(this.getFieldCount());
     return this;
@@ -11511,7 +11511,7 @@ Entry.BlockMockup = function(b, a, c) {
   };
   b.setCheck = function(a) {
     var b = this.params;
-    "Boolean" === a && (b[b.length - 1].accept = "booleanMagnet");
+    "Boolean" === a && (b[b.length - 1].accept = "boolean");
   };
   b.appendField = function(a, b) {
     if (!a) {
@@ -18376,7 +18376,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
       d = a.originalEvent && a.originalEvent.touches ? a.originalEvent.touches[0] : a;
       var f = m.mouseDownCoordinate, f = Math.sqrt(Math.pow(d.pageX - f.x, 2) + Math.pow(d.pageY - f.y, 2));
       (m.dragMode == Entry.DRAG_MODE_DRAG || f > Entry.BlockView.DRAG_RADIUS) && m.movable && (m.isInBlockMenu ? e.cloneToGlobal(a) : (a = !1, m.dragMode != Entry.DRAG_MODE_DRAG && (m._toGlobalCoordinate(), m.dragMode = Entry.DRAG_MODE_DRAG, m.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(m, c), a = !0), this.animating && this.set({animating:!1}), 0 === m.dragInstance.height && m.dragInstance.set({height:-1 + m.height}), c = m.dragInstance, m._moveBy(d.pageX - c.offsetX, d.pageY - 
-      c.offsetY, !1), c.set({offsetX:d.pageX, offsetY:d.pageY}), Entry.GlobalSvg.position(), (d = m._getCloseBlock()) ? e.setMagnetedBlock(d.view) : e.setMagnetedBlock(null), m.originPos || (m.originPos = {x:m.x, y:m.y}), a && e.generateCodeMagnetMap()));
+      c.offsetY, !1), c.set({offsetX:d.pageX, offsetY:d.pageY}), Entry.GlobalSvg.position(), m._updateCloseBlock(), m.originPos || (m.originPos = {x:m.x, y:m.y}), a && e.generateCodeMagnetMap()));
     }
     function d(a) {
       $(document).unbind(".block");
@@ -18443,23 +18443,23 @@ Entry.BlockView.DRAG_RADIUS = 5;
       b instanceof Entry.BlockMenu ? (b.terminateDrag(), this.vimBoardEvent(a, "dragEnd", e)) : b.clear();
     } else {
       if (d === Entry.DRAG_MODE_DRAG) {
-        (f = this.dragInstance && this.dragInstance.isNew) && (b.workspace.blockMenu.terminateDrag() || e._updatePos());
+        (d = this.dragInstance && this.dragInstance.isNew) && (b.workspace.blockMenu.terminateDrag() || e._updatePos());
         var g = Entry.GlobalSvg;
         a = !1;
-        d = this.block.getPrevBlock(this.block);
+        f = this.block.getPrevBlock(this.block);
         a = !1;
         switch(Entry.GlobalSvg.terminateDrag(this)) {
           case g.DONE:
-            g = this._getCloseBlock();
-            d && !g ? Entry.do("separateBlock", e) : d || g || f ? g ? (Entry.do("insertBlock", e, g).isPass(f), createjs.Sound.play("entryMagneting"), a = !0) : Entry.do("moveBlock", e).isPass(f) : e.getThread().view.isGlobal() ? Entry.do("moveBlock", e) : Entry.do("separateBlock", e);
+            g = b.magnetedBlockView ? b.magnetedBlockView.block : null;
+            f && !g ? Entry.do("separateBlock", e) : f || g || d ? g ? ("next" === g.view.magneting ? (a = e.getLastBlock(), Entry.do("insertBlock", g, a).isPass(d)) : Entry.do("insertBlock", e, g).isPass(d), createjs.Sound.play("entryMagneting"), a = !0) : Entry.do("moveBlock", e).isPass(d) : e.getThread().view.isGlobal() ? Entry.do("moveBlock", e) : Entry.do("separateBlock", e);
             break;
           case g.RETURN:
             e = this.block;
-            f = this.originPos;
-            d ? (this.set({animating:!1}), createjs.Sound.play("entryMagneting"), this.bindPrev(d), e.insert(d)) : (d = e.getThread().view.getParent(), d instanceof Entry.Board ? this._moveTo(f.x, f.y, !1) : (createjs.Sound.play("entryMagneting"), Entry.do("insertBlock", e, d)));
+            d = this.originPos;
+            f ? (this.set({animating:!1}), createjs.Sound.play("entryMagneting"), this.bindPrev(f), e.insert(f)) : (f = e.getThread().view.getParent(), f instanceof Entry.Board ? this._moveTo(d.x, d.y, !1) : (createjs.Sound.play("entryMagneting"), Entry.do("insertBlock", e, f)));
             break;
           case g.REMOVE:
-            createjs.Sound.play("entryDelete"), f ? this.block.destroy(!1, !0) : this.block.doDestroyBelow(!1);
+            createjs.Sound.play("entryDelete"), d ? this.block.destroy(!1, !0) : this.block.doDestroyBelow(!1);
         }
         b.setMagnetedBlock(null);
         a && Entry.ConnectionRipple.setView(e.view).dispose();
@@ -18469,14 +18469,15 @@ Entry.BlockView.DRAG_RADIUS = 5;
     delete this.originPos;
     this.dominate();
   };
-  b._getCloseBlock = function() {
+  b._updateCloseBlock = function() {
+    var a = this.getBoard(), b;
     if (this._skeleton.magnets) {
-      for (var a in this.magnet) {
-        var b = this.getBoard().getNearestMagnet(this.x, this.y, a);
-        if (b) {
-          return b;
+      for (var d in this.magnet) {
+        if (b = "next" === d ? this.getBoard().getNearestMagnet(this.x, this.y + this.getBelowHeight(), d) : this.getBoard().getNearestMagnet(this.x, this.y, d)) {
+          return a.setMagnetedBlock(b.view, d);
         }
       }
+      a.setMagnetedBlock(null);
     }
   };
   b.dominate = function() {
@@ -18528,14 +18529,21 @@ Entry.BlockView.DRAG_RADIUS = 5;
     if (this._board.dragBlock && this._board.dragBlock.dragInstance) {
       var a = this.svgGroup;
       if (this.magnet.next) {
-        if (this.magneting) {
-          var a = this._board.dragBlock.getShadow(), b = this.getAbsoluteCoordinate(), d = this.magnet.next, b = "translate(" + (b.x + d.x) + "," + (b.y + d.y) + ")";
-          $(a).attr({transform:b, display:"block"});
-          this._clonedShadow = a;
+        if (a = this.magneting) {
+          var b = this._board.dragBlock.getShadow(), d = this.getAbsoluteCoordinate(), e;
+          if ("previous" === a) {
+            e = this.magnet.next, e = "translate(" + (d.x + e.x) + "," + (d.y + e.y) + ")";
+          } else {
+            if ("next" === a) {
+              e = this.magnet.previous;
+              var f = this._board.dragBlock.getBelowHeight();
+              e = "translate(" + (d.x + e.x) + "," + (d.y + e.y - f) + ")";
+            }
+          }
+          $(b).attr({transform:e, display:"block"});
+          this._clonedShadow = b;
           this.background && (this.background.remove(), this.nextBackground.remove(), delete this.background, delete this.nextBackground);
-          a = this._board.dragBlock.getBelowHeight() + this.offsetY;
-          this.originalHeight = this.offsetY;
-          this.set({offsetY:a});
+          "previous" === a && (a = this._board.dragBlock.getBelowHeight() + this.offsetY, this.originalHeight = this.offsetY, this.set({offsetY:a}));
         } else {
           this._clonedShadow && (this._clonedShadow.attr({display:"none"}), delete this._clonedShadow), a = this.originalHeight, void 0 !== a && (this.background && (this.background.remove(), this.nextBackground.remove(), delete this.background, delete this.nextBackground), this.set({offsetY:a}), delete this.originalHeight);
         }
@@ -20382,7 +20390,7 @@ Entry.Board = function(b) {
     this.svgGroup.appendChild(this.svgThreadGroup);
     this.svgGroup.appendChild(this.svgBlockGroup);
   };
-  b.setMagnetedBlock = function(a) {
+  b.setMagnetedBlock = function(a, b) {
     if (this.magnetedBlockView) {
       if (this.magnetedBlockView === a) {
         return;
@@ -20390,7 +20398,7 @@ Entry.Board = function(b) {
       this.magnetedBlockView.set({magneting:!1});
     }
     this.set({magnetedBlockView:a});
-    a && (a.set({magneting:!0}), a.dominate());
+    a && (a.set({magneting:b}), a.dominate());
   };
   b.getCode = function() {
     return this.code;
@@ -20561,6 +20569,9 @@ Entry.Board = function(b) {
       case "previous":
         f = this._getNextMagnets;
         break;
+      case "next":
+        f = this._getPreviousMagnets;
+        break;
       case "string":
         f = this._getFieldMagnets;
         break;
@@ -20607,6 +20618,21 @@ Entry.Board = function(b) {
       m.magnet.next && (d += m.magnet.next.y, k += m.magnet.next.x);
     }
     return g.concat(h);
+  };
+  b._getPreviousMagnets = function(a, b, d, e) {
+    var f = a.getBlocks();
+    a = [];
+    d || (d = {x:0, y:0});
+    e = d.x;
+    d = d.y;
+    var f = f[0], g = f.view;
+    g.zIndex = b;
+    if (g.dragInstance) {
+      return [];
+    }
+    d += g.y - 15;
+    e += g.x;
+    return g.magnet.previous ? (b = d + 1 + g.height, a.push({point:d, endPoint:b, startBlock:f, blocks:[]}), a.push({point:b, blocks:[]}), g.absX = e, a) : [];
   };
   b._getFieldMagnets = function(a, b, d, e) {
     var f = a.getBlocks(), g = [], h = [];
