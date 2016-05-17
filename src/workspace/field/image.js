@@ -37,7 +37,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldImage);
         if (this.svgGroup) this.svgGroup.remove();
 
         var block = this._block;
-        if(!block.isDeletable()) this._imgUrl = this._content.img.replace('.png', '_un.png');
+        if(this._block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN)
+            this._imgUrl = this._content.img.replace('.png', '_un.png');
         else this._imgUrl = this._content.img;
 
         this.svgGroup = this._blockView.contentSvgGroup.elem("g");

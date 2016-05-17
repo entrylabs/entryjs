@@ -19,7 +19,7 @@ Entry.FieldText = function(content, blockView, index) {
     this.box = box;
 
     this._fontSize = content.fontSize || blockView.getSkeleton().fontSize || 12;
-    this._color = content.color || this._block._schema.fontColor ||
+    this._color = content.color || this._block.getSchema().fontColor ||
         blockView.getSkeleton().color || 'white';
     this._align = content.align || 'left';
     this._text = this.getValue() || content.text;

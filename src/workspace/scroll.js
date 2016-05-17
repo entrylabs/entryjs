@@ -14,7 +14,6 @@ Entry.Scroller = function(board, horizontal, vertical) {
     this._vertical = vertical === undefined ? true : vertical;
 
     this.board = board;
-    this.board.changeEvent.attach(this, this.resizeScrollBar);
 
     this.svgGroup = null;
 
@@ -27,11 +26,13 @@ Entry.Scroller = function(board, horizontal, vertical) {
     this._visible = true;
     this._opacity = -1;
 
+
+
     this.createScrollBar();
     this.setOpacity(0);
 
-    if (Entry.windowResized)
-        Entry.windowResized.attach(this, this.resizeScrollBar);
+
+    this._bindEvent();
 };
 
 Entry.Scroller.RADIUS = 7;
@@ -152,59 +153,6 @@ Entry.Scroller.RADIUS = 7;
         this.resizeScrollBar();
     };
 
-    p.resizeScrollBar = function() {
-        if (!this._visible) return;
-
-        var board = this.board,
-            bRect = board.svgBlockGroup.getBoundingClientRect(),
-            svgDom = board.svgDom,
-            bWidth = svgDom.width(),
-            bHeight = svgDom.height(),
-            bBox = {
-                x: bRect.left - board.offset.left,
-                y: bRect.top - board.offset.top,
-                width: bRect.width,
-                height: bRect.height
-            };
-
-        // hScroll
-        if (this._horizontal) {
-            var hLimitA = - bBox.width + Entry.BOARD_PADDING,
-                hLimitB = bWidth - Entry.BOARD_PADDING;
-
-            var hWidth = (bWidth + 2 * Entry.Scroller.RADIUS) * bBox.width /
-                (hLimitB - hLimitA + bBox.width);
-            if (isNaN(hWidth)) hWidth = 0;
-            this.hX = (bBox.x - hLimitA) / (hLimitB - hLimitA) *
-                (bWidth - hWidth - 2 * Entry.Scroller.RADIUS);
-            this.hScrollbar.attr({
-                width: hWidth,
-                x: this.hX,
-                y: bHeight - 2 * Entry.Scroller.RADIUS
-            });
-
-            this.hRatio = (bWidth - hWidth - 2 * Entry.Scroller.RADIUS)/ (hLimitB - hLimitA);
-        }
-
-        // vScroll
-        if (this._vertical) {
-            var vLimitA = - bBox.height + Entry.BOARD_PADDING,
-                vLimitB = bHeight - Entry.BOARD_PADDING;
-
-            var vWidth = (bHeight + 2 * Entry.Scroller.RADIUS) * bBox.height /
-                (vLimitB - vLimitA + bBox.height);
-            this.vY = (bBox.y - vLimitA) / (vLimitB - vLimitA) *
-                (bHeight - vWidth - 2 * Entry.Scroller.RADIUS);
-            this.vScrollbar.attr({
-                height: vWidth,
-                y: this.vY,
-                x: bWidth - 2 * Entry.Scroller.RADIUS
-            });
-
-            this.vRatio = (bHeight - vWidth - 2 * Entry.Scroller.RADIUS)/ (vLimitB - vLimitA);
-        }
-    };
-
     p.updateScrollBar = function(dx, dy) {
         if (this._horizontal) {
             this.hX += dx * this.hRatio;
@@ -270,5 +218,65 @@ Entry.Scroller.RADIUS = 7;
         this.vScrollbar.attr({ opacity: value });
 
         this._opacity = value;
+    };
+
+    p.resizeScrollBar = function() {
+        if (!this._visible) return;
+
+        var board = this.board,
+            bRect = board.svgBlockGroup.getBoundingClientRect(),
+            svgDom = board.svgDom,
+            bWidth = svgDom.width(),
+            bHeight = svgDom.height(),
+            bBox = {
+                x: bRect.left - board.offset.left,
+                y: bRect.top - board.offset.top,
+                width: bRect.width,
+                height: bRect.height
+            };
+
+        // hScroll
+        if (this._horizontal) {
+            var hLimitA = - bBox.width + Entry.BOARD_PADDING,
+                hLimitB = bWidth - Entry.BOARD_PADDING;
+
+            var hWidth = (bWidth + 2 * Entry.Scroller.RADIUS) * bBox.width /
+                (hLimitB - hLimitA + bBox.width);
+            if (isNaN(hWidth)) hWidth = 0;
+            this.hX = (bBox.x - hLimitA) / (hLimitB - hLimitA) *
+                (bWidth - hWidth - 2 * Entry.Scroller.RADIUS);
+            this.hScrollbar.attr({
+                width: hWidth,
+                x: this.hX,
+                y: bHeight - 2 * Entry.Scroller.RADIUS
+            });
+
+            this.hRatio = (bWidth - hWidth - 2 * Entry.Scroller.RADIUS)/ (hLimitB - hLimitA);
+        }
+
+        // vScroll
+        if (this._vertical) {
+            var vLimitA = - bBox.height + Entry.BOARD_PADDING,
+                vLimitB = bHeight - Entry.BOARD_PADDING;
+
+            var vWidth = (bHeight + 2 * Entry.Scroller.RADIUS) * bBox.height /
+                (vLimitB - vLimitA + bBox.height);
+            this.vY = (bBox.y - vLimitA) / (vLimitB - vLimitA) *
+                (bHeight - vWidth - 2 * Entry.Scroller.RADIUS);
+            this.vScrollbar.attr({
+                height: vWidth,
+                y: this.vY,
+                x: bWidth - 2 * Entry.Scroller.RADIUS
+            });
+
+            this.vRatio = (bHeight - vWidth - 2 * Entry.Scroller.RADIUS)/ (vLimitB - vLimitA);
+        }
+    };
+
+    p._bindEvent = function() {
+        var dResizeScrollBar = _.debounce(this.resizeScrollBar, 10);
+        this.board.changeEvent.attach(this, dResizeScrollBar);
+        if (Entry.windowResized)
+            Entry.windowResized.attach(this, dResizeScrollBar);
     };
 })(Entry.Scroller.prototype);

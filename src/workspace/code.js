@@ -113,15 +113,15 @@ Entry.PARAM = -1;
 
     p.tick = function() {
         var executors = this.executors;
-        this.executors = [];
-        while (executors.length) {
-            var executor = executors.shift();
-            executor.execute();
+        for (var i = 0; i < executors.length; i++) {
+            var executor = executors[i];
+            if (!executor.isEnd())
+                executor.execute();
             if (executor.isEnd()) {
+                executors.splice(i, 1);
+                i--;
                 if (executors.length === 0)
                     this.executeEndEvent.notify();
-            } else {
-                this.executors.push(executor);
             }
         }
     };
@@ -137,15 +137,13 @@ Entry.PARAM = -1;
     };
 
     p.clearExecutorsByEntity = function(entity) {
-        var executors = [];
-        while (this.executors.length) {
-            var executor = this.executors.shift();
-            if (executor.entity !== entity)
-                executors.push(executor);
-            else
+        var executors = this.executors;
+        for (var i = 0; i < executors.length; i++) {
+            var executor = executors[i];
+            if (executor.entity === entity) {
                 executor.end();
+            }
         }
-        this.executors = executors;
     };
 
     p.addExecutor = function(executor) {

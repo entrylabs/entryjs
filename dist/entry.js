@@ -7590,7 +7590,7 @@ Entry.EntityObject.prototype.removeClone = function() {
     Entry.stage.unloadEntity(this);
     var b = this.parent.clonedEntities.indexOf(this);
     this.parent.clonedEntities.splice(b, 1);
-    this.clearExecutor();
+    Entry.Utils.isFunction(this.clearExecutor) && this.clearExecutor();
   }
 };
 Entry.EntityObject.prototype.clearExecutor = function() {
@@ -11280,7 +11280,9 @@ Entry.Parser = function(b, a, c) {
         d.push(a.type);
       });
     });
-    b.forEach(function(a, b) {
+    b instanceof Entry.Code ? b.getBlockList().forEach(function(a) {
+      a.type !== NtryData.START && -1 === d.indexOf(a.type) && d.push(a.type);
+    }) : b.forEach(function(a, b) {
       a.forEach(function(a, b) {
         a.type !== NtryData.START && -1 === d.indexOf(a.type) && d.push(a.type);
       });
@@ -12705,13 +12707,17 @@ Entry.Utils.isPointInMatrix = function(b, a, c) {
   return d - c <= a.x && d + b.width + c >= a.x && e - c <= a.y && e + b.height + c >= a.y;
 };
 Entry.Utils.colorDarken = function(b, a) {
-  var c, d, e;
-  7 === b.length ? (c = parseInt(b.substr(1, 2), 16), d = parseInt(b.substr(3, 2), 16), e = parseInt(b.substr(5, 2), 16)) : (c = parseInt(b.substr(1, 2), 16), d = parseInt(b.substr(2, 2), 16), e = parseInt(b.substr(3, 2), 16));
+  function c(a) {
+    2 != a.length && (a = "0" + a);
+    return a;
+  }
+  var d, e, f;
+  7 === b.length ? (d = parseInt(b.substr(1, 2), 16), e = parseInt(b.substr(3, 2), 16), f = parseInt(b.substr(5, 2), 16)) : (d = parseInt(b.substr(1, 2), 16), e = parseInt(b.substr(2, 2), 16), f = parseInt(b.substr(3, 2), 16));
   a = void 0 === a ? .7 : a;
-  c = Math.floor(c * a).toString(16);
-  d = Math.floor(d * a).toString(16);
-  e = Math.floor(e * a).toString(16);
-  return "#" + c + d + e;
+  d = c(Math.floor(d * a).toString(16));
+  e = c(Math.floor(e * a).toString(16));
+  f = c(Math.floor(f * a).toString(16));
+  return "#" + d + e + f;
 };
 Entry.Utils.colorLighten = function(b, a) {
   a = 0 === a ? 0 : a || 20;
@@ -13231,6 +13237,11 @@ Entry.Utils.addBlockPattern = function(b, a) {
   return d;
 };
 Entry.Utils.COLLISION = {NONE:0, UP:1, RIGHT:2, LEFT:3, DOWN:4};
+Entry.Utils.createMouseEvent = function(b, a) {
+  var c = document.createEvent("MouseEvent");
+  c.initMouseEvent(b, !0, !0, window, 0, 0, 0, a.clientX, a.clientY, !1, !1, !1, !1, 0, null);
+  return c;
+};
 Entry.Model = function(b, a) {
   var c = Entry.Model;
   c.generateSchema(b);
@@ -13474,7 +13485,7 @@ Entry.Func.createParamBlock = function(b, a, c) {
 };
 Entry.Func.updateMenu = function() {
   var b = Entry.playground.mainWorkspace;
-  b && (b = b.getBlockMenu(), this.targetFunc ? (this.menuCode || this.setupMenuCode(), b.banClass("functionInit"), b.unbanClass("functionEdit")) : (b.unbanClass("functionInit"), b.banClass("functionEdit")));
+  b && (b = b.getBlockMenu(), this.targetFunc ? (this.menuCode || this.setupMenuCode(), b.banClass("functionInit"), b.unbanClass("functionEdit")) : (b.unbanClass("functionInit"), b.banClass("functionEdit")), b.reDraw());
 };
 Entry.Func.prototype.edit = function() {
   Entry.Func.isEdit || (Entry.Func.isEdit = !0, Entry.Func.svg ? this.parentView.appendChild(this.svg) : Entry.Func.initEditView());
@@ -15452,17 +15463,16 @@ Entry.VariableContainer.prototype.addRef = function(b, a) {
     a.funcBlock && (c.funcBlock = a.funcBlock, delete a.funcBlock);
     this[b].push(c);
     if ("_functionRefs" == b) {
-      for (var d = a.type.substr(5), d = Entry.variableContainer.functions_[d].content.getBlockList(), e = 0;e < d.length;e++) {
-        a = d[e];
-        var f = a.events;
-        f && f.viewAdd && f.viewAdd.forEach(function(b) {
+      for (var d = a.type.substr(5), e = Entry.variableContainer.functions_[d].content.getBlockList(), f = 0;f < e.length;f++) {
+        a = e[f];
+        var g = a.events;
+        -1 < a.type.indexOf("func_") && a.type.substr(5) == d || (g && g.viewAdd && g.viewAdd.forEach(function(b) {
           a.getCode().object = c.object;
           b && (a.funcBlock = c.block, b(a));
-        });
-        f && f.dataAdd && f.dataAdd.forEach(function(b) {
+        }), g && g.dataAdd && g.dataAdd.forEach(function(b) {
           a.getCode().object = c.object;
           b && (a.funcBlock = c.block, b(a));
-        });
+        }));
       }
     }
     return c;
@@ -15477,15 +15487,14 @@ Entry.VariableContainer.prototype.removeRef = function(b, a) {
       }
     }
     if ("_functionRefs" == b) {
-      for (d = a.type.substr(5), c = Entry.variableContainer.functions_[d].content.getBlockList(), d = 0;d < c.length;d++) {
-        a = c[d];
-        var e = a.events;
-        e && e.viewDestroy && e.viewDestroy.forEach(function(b) {
+      for (var c = a.type.substr(5), e = Entry.variableContainer.functions_[c].content.getBlockList(), d = 0;d < e.length;d++) {
+        a = e[d];
+        var f = a.events;
+        -1 < a.type.indexOf("func_") && a.type.substr(5) == c || (f && f.viewDestroy && f.viewDestroy.forEach(function(b) {
           b && b(a);
-        });
-        e && e.dataDestroy && e.dataDestroy.forEach(function(b) {
+        }), f && f.dataDestroy && f.dataDestroy.forEach(function(b) {
           b && b(a);
-        });
+        }));
       }
     }
   }
@@ -16366,9 +16375,13 @@ isNotFor:["arduino"], func:function(b, a) {
 paramsKeyMap:{PORT:0, OPERATOR:1}, "class":"sensorBoard", isNotFor:["sensorBoard"], func:function(b, a) {
   Entry.hw.setDigitalPortValue(a.getField("PORT"), a.getNumberField("OPERATOR"));
   return a.callReturn();
-}, syntax:{js:[], py:[]}}, arduino_download_connector:{skeleton:"basic_button", isNotFor:["arduinoDisconnected"], color:"#eee", params:[{type:"Text", text:Lang.Blocks.ARDUINO_download_connector, color:"#333", align:"center"}], events:{mousedown:[null]}}, arduino_download_source:{skeleton:"basic_button", isNotFor:["arduinoDisconnected"], color:"#eee", params:[{type:"Text", text:Lang.Blocks.ARDUINO_download_source, color:"#333", align:"center"}], events:{mousedown:[null]}}, arduino_connected:{skeleton:"basic_button", 
-color:"#eee", isNotFor:["arduinoConnected"], params:[{type:"Text", text:Lang.Blocks.ARDUINO_connected, color:"#333", align:"center"}], events:{mousedown:[null]}}, arduino_reconnect:{skeleton:"basic_button", color:"#eee", isNotFor:["arduinoDisconnected"], params:[{type:"Text", text:Lang.Blocks.ARDUINO_reconnect, color:"#333", align:"center"}], events:{mousedown:[null]}}, CODEino_get_sensor_number:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["0", 
-"A0"], ["1", "A1"], ["2", "A2"], ["3", "A3"], ["4", "A4"], ["5", "A5"], ["6", "A6"]], value:"A0", fontSize:11}], events:{}, def:{params:[null]}, paramsKeyMap:{PORT:0}, func:function(b, a) {
+}, syntax:{js:[], py:[]}}, arduino_download_connector:{skeleton:"basic_button", isNotFor:["arduinoDisconnected"], color:"#eee", params:[{type:"Text", text:Lang.Blocks.ARDUINO_download_connector, color:"#333", align:"center"}], events:{mousedown:[function() {
+  Entry.hw.downloadConnector();
+}]}}, arduino_download_source:{skeleton:"basic_button", isNotFor:["arduinoDisconnected"], color:"#eee", params:[{type:"Text", text:Lang.Blocks.ARDUINO_download_source, color:"#333", align:"center"}], events:{mousedown:[function() {
+  Entry.hw.downloadSource();
+}]}}, arduino_connected:{skeleton:"basic_button", color:"#eee", isNotFor:["arduinoConnected"], params:[{type:"Text", text:Lang.Blocks.ARDUINO_connected, color:"#333", align:"center"}], events:{}}, arduino_reconnect:{skeleton:"basic_button", color:"#eee", isNotFor:["arduinoDisconnected"], params:[{type:"Text", text:Lang.Blocks.ARDUINO_reconnect, color:"#333", align:"center"}], events:{mousedown:[function() {
+  Entry.hw.retryConnect();
+}]}}, CODEino_get_sensor_number:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[["0", "A0"], ["1", "A1"], ["2", "A2"], ["3", "A3"], ["4", "A4"], ["5", "A5"], ["6", "A6"]], value:"A0", fontSize:11}], events:{}, def:{params:[null]}, paramsKeyMap:{PORT:0}, func:function(b, a) {
   return a.getStringField("PORT");
 }, syntax:{js:[], py:[]}}, CODEino_get_named_sensor_value:{color:"#00979D", skeleton:"basic_string_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.CODEino_sensor_name_0, "0"], [Lang.Blocks.CODEino_sensor_name_1, "1"], [Lang.Blocks.CODEino_sensor_name_2, "2"], [Lang.Blocks.CODEino_sensor_name_3, "3"], [Lang.Blocks.CODEino_sensor_name_4, "4"], [Lang.Blocks.CODEino_sensor_name_5, "5"], [Lang.Blocks.CODEino_sensor_name_6, "6"]], value:"0", fontSize:11}], events:{}, def:{params:[null], 
 type:"CODEino_get_named_sensor_value"}, paramsKeyMap:{PORT:0}, "class":"CODEino", isNotFor:["CODEino"], func:function(b, a) {
@@ -16801,6 +16814,7 @@ color:"#3D3D3D"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/calc_01
     return a.callReturn();
   }
   b.removeClone();
+  return this.die();
 }, syntax:{js:[], py:["self.remove_clone()"]}}, when_clone_start:{color:"#498deb", skeleton:"basic_event", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_clone.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null], type:"when_clone_start"}, "class":"clone", isNotFor:[], func:function(b, a) {
   return a.callReturn();
 }, event:"when_clone_start", syntax:{js:[], py:["Entry.on_clone_create()"]}}, stop_run:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null]}, func:function(b, a) {
@@ -19016,7 +19030,6 @@ Entry.BlockView = function(b, a, c) {
   this._paramMap = {};
   d.magnets && d.magnets(this).next && (this.svgGroup.nextMagnet = this.block, this._nextGroup = this.svgGroup.elem("g"), this._observers.push(this.observe(this, "_updateMagnet", ["contentHeight"])));
   this.isInBlockMenu = this.getBoard() instanceof Entry.BlockMenu;
-  d.morph && this._observers.push(this.block.observe(this, "_renderPath", d.morph, !1));
   var e = this;
   this.mouseHandler = function() {
     var a = e.block.events;
@@ -19067,7 +19080,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
       d._mouseEnable && d._changeFill(!1);
     }));
     var g = this._schema.color;
-    this.block.isDeletable() || (g = Entry.Utils.colorLighten(g));
+    this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN && (g = Entry.Utils.colorLighten(g));
     this._fillColor = g;
     f = {d:f, fill:g, class:"blockPath"};
     if (this.magnet.next || this._skeleton.nextShadow) {
@@ -19254,11 +19267,11 @@ Entry.BlockView.DRAG_RADIUS = 5;
         }
       }
       var m = this;
-      e.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD && a && (a = new MouseEvent("dragStart", {view:window, bubbles:!0, cancelable:!0, clientX:event.clientX, clientY:event.clientY}), document.getElementsByClassName("CodeMirror")[0].dispatchEvent(a));
+      e.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD && a && document.getElementsByClassName("CodeMirror")[0].dispatchEvent(Entry.Utils.createMouseEvent("dragStart", event));
     }
   };
   b.vimBoardEvent = function(a, b, d) {
-    a && (a = new MouseEvent(b, {view:window, bubbles:!0, cancelable:!0, clientX:a.clientX, clientY:a.clientY}), d && (a.block = d), document.getElementsByClassName("CodeMirror")[0].dispatchEvent(a));
+    a && (a = Entry.Utils.createMouseEvent(b, a), d && (a.block = d), document.getElementsByClassName("CodeMirror")[0].dispatchEvent(a));
   };
   b.terminateDrag = function(a) {
     var b = this.getBoard(), d = this.dragMode, e = this.block, f = b.workspace.getMode();
@@ -19451,7 +19464,8 @@ Entry.BlockView.DRAG_RADIUS = 5;
   };
   b._updateColor = function() {
     var a = this._schema.color;
-    this.block.isDeletable() || (a = Entry.Utils.colorLighten(a));
+    this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN && (a = Entry.Utils.colorLighten(a));
+    this._fillColor = a;
     this._path.attr({fill:a});
     this._updateContents();
   };
@@ -19566,11 +19580,10 @@ Entry.PARAM = -1;
     this._data.map(a);
   };
   b.tick = function() {
-    var a = this.executors;
-    for (this.executors = [];a.length;) {
-      var b = a.shift();
-      b.execute();
-      b.isEnd() ? 0 === a.length && this.executeEndEvent.notify() : this.executors.push(b);
+    for (var a = this.executors, b = 0;b < a.length;b++) {
+      var d = a[b];
+      d.isEnd() || d.execute();
+      d.isEnd() && (a.splice(b, 1), b--, 0 === a.length && this.executeEndEvent.notify());
     }
   };
   b.removeExecutor = function(a) {
@@ -19581,11 +19594,10 @@ Entry.PARAM = -1;
     this.executors = [];
   };
   b.clearExecutorsByEntity = function(a) {
-    for (var b = [];this.executors.length;) {
-      var d = this.executors.shift();
-      d.entity !== a ? b.push(d) : d.end();
+    for (var b = this.executors, d = 0;d < b.length;d++) {
+      var e = b[d];
+      e.entity === a && e.end();
     }
-    this.executors = b;
   };
   b.addExecutor = function(a) {
     this.executors.push(a);
@@ -19799,7 +19811,7 @@ Entry.Executor = function(b, a) {
     return Entry.STATIC.PASS;
   };
   b.end = function() {
-    null === this.scope.block;
+    this.scope.block = null;
   };
   b.isEnd = function() {
     return null === this.scope.block;
@@ -20030,7 +20042,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     this._block.view.alignContent();
   };
   b.getTextWidth = function() {
-    return this.textElement.getComputedTextLength() + 8;
+    return this.textElement ? this.textElement.getComputedTextLength() + 8 : 8;
   };
   b.getText = function() {
     return this.getValue() + "\u00b0";
@@ -20043,7 +20055,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
     this.svgOptionGroup && (this.svgOptionGroup.remove(), delete this.svgOptionGroup);
     this.textElement.textContent = this.getText();
-    this.resize();
   };
 })(Entry.FieldAngle.prototype);
 Entry.FieldBlock = function(b, a, c, d, e) {
@@ -20173,7 +20184,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
   b.replace = function(a) {
     "string" === typeof a && (a = this._createBlockByType(a));
     var b = this._valueBlock;
-    Entry.block[b.type].isPrimitive ? (b.doNotSplice = !0, b.destroy()) : (this._destroyObservers(), b.view._toGlobalCoordinate(), this.separate(b), b.view.bumpAway(30, 150));
+    Entry.block[b.type].isPrimitive ? (b.doNotSplice = !0, b.destroy()) : "paramMagnet" === this.acceptType ? (this._destroyObservers(), b.view._toGlobalCoordinate(), a.getTerminateOutputBlock().view._contents[1].replace(b)) : (this._destroyObservers(), b.view._toGlobalCoordinate(), this.separate(b), b.view.bumpAway(30, 150));
     this.updateValueBlock(a);
     a.view._toLocalCoordinate(this.svgGroup);
     this.calcWH();
@@ -20293,8 +20304,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     this.textElement.textContent = this.getTextByValue(this.getValue());
     var b = this.textElement.getBBox();
     this.textElement.attr({style:"white-space: pre; font-size:" + this._FONT_SIZE + "px", y:.25 * b.height});
-    b = this.textElement.getComputedTextLength() + 18;
-    this._noArrow && (b -= 14);
+    b = this.textElement.getComputedTextLength() + 16;
+    this._noArrow && (b -= 12);
     var d = this._CONTENT_HEIGHT;
     this._header = this.svgGroup.elem("rect", {width:b, height:d, y:-d / 2, rx:this._ROUND, ry:this._ROUND, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
@@ -20314,6 +20325,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     this.destroyOption();
     this._attachDisposeEvent();
     this.optionGroup = Entry.Dom("ul", {class:"entry-widget-dropdown", parent:$("body")});
+    this.optionGroup.bind("mousedown touchstart", function(a) {
+      a.stopPropagation();
+    });
     for (var b = this._contents.options, b = this._contents.options, d = 0, e = b.length;d < e;d++) {
       var f = b[d], g = f[0], f = f[1], h = Entry.Dom("li", {class:"rect", parent:this.optionGroup}), k = Entry.Dom("span", {class:"left", parent:h});
       Entry.Dom("span", {class:"right", parent:h}).text(g);
@@ -20394,6 +20408,9 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
     this.destroyOption();
     this._attachDisposeEvent();
     this.optionGroup = Entry.Dom("ul", {class:"entry-widget-dropdown", parent:$("body")});
+    this.optionGroup.bind("mousedown touchstart", function(a) {
+      a.stopPropagation();
+    });
     var b = Entry.container.getDropdownList(this._contents.menuName);
     this._contents.options = b;
     for (var d = 0;d < b.length;d++) {
@@ -20432,7 +20449,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldImage);
 (function(b) {
   b.renderStart = function() {
     this.svgGroup && this.svgGroup.remove();
-    this._block.isDeletable() ? this._imgUrl = this._content.img : this._imgUrl = this._content.img.replace(".png", "_un.png");
+    this._imgUrl = this._block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN ? this._content.img.replace(".png", "_un.png") : this._content.img;
     this.svgGroup = this._blockView.contentSvgGroup.elem("g");
     this._imgElement = this.svgGroup.elem("image", {href:this._imgUrl, x:0, y:-.5 * this._size, width:this._size, height:this._size});
     this.box.set({x:this._size, y:0, width:this._size, height:this._size});
@@ -20443,7 +20460,7 @@ Entry.FieldIndicator = function(b, a, c) {
   this._blockView = a;
   this.box = new Entry.BoxModel;
   this._size = b.size;
-  this._block.isDeletable() ? this._imgUrl = b.img : this._imgUrl = b.img.replace(".png", "_un.png");
+  this._imgUrl = this._block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN ? b.img.replace(".png", "_un.png") : b.img;
   this._boxMultiplier = b.boxMultiplier || 2;
   this._highlightColor = b.highlightColor ? b.highlightColor : "#F59900";
   this._position = b.position;
@@ -20777,7 +20794,7 @@ Entry.FieldText = function(b, a, c) {
   this._index = c;
   this.box = new Entry.BoxModel;
   this._fontSize = b.fontSize || a.getSkeleton().fontSize || 12;
-  this._color = b.color || this._block._schema.fontColor || a.getSkeleton().color || "white";
+  this._color = b.color || this._block.getSchema().fontColor || a.getSkeleton().color || "white";
   this._align = b.align || "left";
   this._text = this.getValue() || b.text;
   this.setValue(null);
@@ -20915,7 +20932,9 @@ Entry.GlobalSvg = {};
     var a = this._view, b = a.getAbsoluteCoordinate(), a = a.getBoard().offset;
     this.left = b.x + a.left - this._offsetX;
     this.top = b.y + a.top - this._offsetY;
-    this.svgDom.css({left:this.left, top:this.top});
+    b = this.svgDom[0];
+    b.style.left = this.left + "px";
+    b.style.top = this.top + "px";
   };
   b.terminateDrag = function(a) {
     var b = Entry.mouseCoordinate;
@@ -21039,14 +21058,13 @@ Entry.Scroller = function(b, a, c) {
   this._horizontal = void 0 === a ? !0 : a;
   this._vertical = void 0 === c ? !0 : c;
   this.board = b;
-  this.board.changeEvent.attach(this, this.resizeScrollBar);
   this.svgGroup = null;
   this.vRatio = this.vY = this.vWidth = this.hRatio = this.hX = this.hWidth = 0;
   this._visible = !0;
   this._opacity = -1;
   this.createScrollBar();
   this.setOpacity(0);
-  Entry.windowResized && Entry.windowResized.attach(this, this.resizeScrollBar);
+  this._bindEvent();
 };
 Entry.Scroller.RADIUS = 7;
 (function(b) {
@@ -21103,19 +21121,6 @@ Entry.Scroller.RADIUS = 7;
     });
     this.resizeScrollBar();
   };
-  b.resizeScrollBar = function() {
-    if (this._visible) {
-      var a = this.board, b = a.svgBlockGroup.getBoundingClientRect(), d = a.svgDom, e = d.width(), d = d.height(), f = b.left - a.offset.left, a = b.top - a.offset.top, g = b.width, b = b.height;
-      if (this._horizontal) {
-        var h = -g + Entry.BOARD_PADDING, k = e - Entry.BOARD_PADDING, g = (e + 2 * Entry.Scroller.RADIUS) * g / (k - h + g);
-        isNaN(g) && (g = 0);
-        this.hX = (f - h) / (k - h) * (e - g - 2 * Entry.Scroller.RADIUS);
-        this.hScrollbar.attr({width:g, x:this.hX, y:d - 2 * Entry.Scroller.RADIUS});
-        this.hRatio = (e - g - 2 * Entry.Scroller.RADIUS) / (k - h);
-      }
-      this._vertical && (f = -b + Entry.BOARD_PADDING, g = d - Entry.BOARD_PADDING, b = (d + 2 * Entry.Scroller.RADIUS) * b / (g - f + b), this.vY = (a - f) / (g - f) * (d - b - 2 * Entry.Scroller.RADIUS), this.vScrollbar.attr({height:b, y:this.vY, x:e - 2 * Entry.Scroller.RADIUS}), this.vRatio = (d - b - 2 * Entry.Scroller.RADIUS) / (g - f));
-    }
-  };
   b.updateScrollBar = function(a, b) {
     this._horizontal && (this.hX += a * this.hRatio, this.hScrollbar.attr({x:this.hX}));
     this._vertical && (this.vY += b * this.vRatio, this.vScrollbar.attr({y:this.vY}));
@@ -21143,6 +21148,24 @@ Entry.Scroller.RADIUS = 7;
   b.setOpacity = function(a) {
     this._opacity != a && (this.hScrollbar.attr({opacity:a}), this.vScrollbar.attr({opacity:a}), this._opacity = a);
   };
+  b.resizeScrollBar = function() {
+    if (this._visible) {
+      var a = this.board, b = a.svgBlockGroup.getBoundingClientRect(), d = a.svgDom, e = d.width(), d = d.height(), f = b.left - a.offset.left, a = b.top - a.offset.top, g = b.width, b = b.height;
+      if (this._horizontal) {
+        var h = -g + Entry.BOARD_PADDING, k = e - Entry.BOARD_PADDING, g = (e + 2 * Entry.Scroller.RADIUS) * g / (k - h + g);
+        isNaN(g) && (g = 0);
+        this.hX = (f - h) / (k - h) * (e - g - 2 * Entry.Scroller.RADIUS);
+        this.hScrollbar.attr({width:g, x:this.hX, y:d - 2 * Entry.Scroller.RADIUS});
+        this.hRatio = (e - g - 2 * Entry.Scroller.RADIUS) / (k - h);
+      }
+      this._vertical && (f = -b + Entry.BOARD_PADDING, g = d - Entry.BOARD_PADDING, b = (d + 2 * Entry.Scroller.RADIUS) * b / (g - f + b), this.vY = (a - f) / (g - f) * (d - b - 2 * Entry.Scroller.RADIUS), this.vScrollbar.attr({height:b, y:this.vY, x:e - 2 * Entry.Scroller.RADIUS}), this.vRatio = (d - b - 2 * Entry.Scroller.RADIUS) / (g - f));
+    }
+  };
+  b._bindEvent = function() {
+    var a = _.debounce(this.resizeScrollBar, 10);
+    this.board.changeEvent.attach(this, a);
+    Entry.windowResized && Entry.windowResized.attach(this, a);
+  };
 })(Entry.Scroller.prototype);
 Entry.Board = function(b) {
   Entry.Model(this, !1);
@@ -21151,13 +21174,12 @@ Entry.Board = function(b) {
   Entry.ANIMATION_DURATION = 200;
   Entry.BOARD_PADDING = 100;
   this.updateOffset();
+  this._initContextOptions();
   this.changeEvent = new Entry.Event(this);
   this.scroller = new Entry.Scroller(this, !0, !0);
   Entry.Utils.disableContextmenu(this.svgDom);
   this._addControl();
-  Entry.documentMousedown && (Entry.documentMousedown.attach(this, this.setSelectedBlock), Entry.documentMousedown.attach(this, this._removeActivated));
-  Entry.keyPressed && Entry.keyPressed.attach(this, this._keyboardControl);
-  Entry.windowResized && Entry.windowResized.attach(this, this.updateOffset);
+  this._bindEvent();
 };
 (function(b) {
   b.schema = {code:null, dragBlock:null, magnetedBlockView:null, selectedBlockView:null};
@@ -21243,13 +21265,13 @@ Entry.Board = function(b) {
       a.stopPropagation && a.stopPropagation();
       a.preventDefault && a.preventDefault();
       a = a.originalEvent && a.originalEvent.touches ? a.originalEvent.touches[0] : a;
-      var c = g.dragInstance;
-      g.scroller.scroll(a.pageX - c.offsetX, a.pageY - c.offsetY);
+      var c = f.dragInstance;
+      f.scroller.scroll(a.pageX - c.offsetX, a.pageY - c.offsetY);
       c.set({offsetX:a.pageX, offsetY:a.pageY});
     }
     function d(a) {
       $(document).unbind(".entryBoard");
-      delete g.dragInstance;
+      delete f.dragInstance;
     }
     if (this.workspace.getMode() != Entry.Workspace.MODE_VIMBOARD) {
       a.stopPropagation && a.stopPropagation();
@@ -21268,17 +21290,14 @@ Entry.Board = function(b) {
           if (!this.visible) {
             return;
           }
-          var f = this;
-          Entry.ContextMenu.show([{text:"\ubd99\uc5ec\ub123\uae30", enable:!!Entry.clipboard, callback:function() {
-            Entry.do("addThread", Entry.clipboard).value.getFirstBlock().copyToClipboard();
-          }}, {text:"\ube14\ub85d \uc815\ub9ac\ud558\uae30", callback:function() {
-            f.alignThreads();
-          }}, {text:"\ubaa8\ub4e0 \ucf54\ub4dc \uc0ad\uc81c\ud558\uae30", callback:function() {
-            f.code.clear();
-          }}]);
+          a = [];
+          for (e = 0;e < this._contextOptions.length;e++) {
+            this._contextOptions[e].activated && a.push(this._contextOptions[e].option);
+          }
+          Entry.ContextMenu.show(a);
         }
       }
-      var g = this;
+      var f = this;
     }
   };
   b.mouseWheel = function(a) {
@@ -21565,7 +21584,34 @@ Entry.Board = function(b) {
   };
   b.adjustThreadsPosition = function() {
   };
+  b._initContextOptions = function() {
+    var a = this;
+    this._contextOptions = [{activated:!0, option:{text:"\ubd99\uc5ec\ub123\uae30", enable:!!Entry.clipboard, callback:function() {
+      Entry.do("addThread", Entry.clipboard).value.getFirstBlock().copyToClipboard();
+    }}}, {activated:!0, option:{text:"\ube14\ub85d \uc815\ub9ac\ud558\uae30", callback:function() {
+      a.alignThreads();
+    }}}, {activated:!0, option:{text:"\ubaa8\ub4e0 \ucf54\ub4dc \uc0ad\uc81c\ud558\uae30", callback:function() {
+      a.code.clear();
+    }}}];
+  };
+  b.activateContextOption = function(a) {
+    this._contextOptions[a].activated = !0;
+  };
+  b.deActivateContextOption = function(a) {
+    this._contextOptions[a].activated = !1;
+  };
+  b._bindEvent = function() {
+    Entry.documentMousedown && (Entry.documentMousedown.attach(this, this.setSelectedBlock), Entry.documentMousedown.attach(this, this._removeActivated));
+    Entry.keyPressed && Entry.keyPressed.attach(this, this._keyboardControl);
+    if (Entry.windowResized) {
+      var a = _.debounce(this.updateOffset, 10)
+    }
+    Entry.windowResized.attach(this, a);
+  };
 })(Entry.Board.prototype);
+Entry.Board.OPTION_PASTE = 0;
+Entry.Board.OPTION_ALIGN = 1;
+Entry.Board.OPTION_CLEAR = 2;
 Entry.skeleton = function() {
 };
 Entry.skeleton.basic = {path:function(b) {
@@ -21650,12 +21696,7 @@ Entry.skeleton.pebble_loop = {fontSize:16, dropdownHeight:23, path:function(b) {
   return {x:-46, y:25};
 }};
 Entry.skeleton.pebble_basic = {fontSize:15, morph:["prev", "next"], path:function(b) {
-  var a = b.block;
-  b = a.getPrevBlock();
-  a = a.getNextBlock();
-  b = b && "pebble_basic" === b._schema.skeleton;
-  a = a && "pebble_basic" === a._schema.skeleton;
-  return "m 0,9 a 9,9 0 0,0 9,-9 h 28 " + (b ? "l 25,0 0,25" : "q 25,0 25,25") + (a ? "l 0,25 -25,0" : "q 0,25 -25,25") + "h -28 a 9,9 0 0,1 -18,0 h -28 " + (a ? "l -25,0 0,-25" : "q -25,0 -25,-25") + (b ? "l 0,-25 25,0" : "q 0,-25 25,-25") + "h 28 a 9,9 0 0,0 9,9 z";
+  return "m 0,9 a 9,9 0 0,0 9,-9 h 28 q 25,0 25,25q 0,25 -25,25h -28 a 9,9 0 0,1 -18,0 h -28 q -25,0 -25,-25q 0,-25 25,-25h 28 a 9,9 0 0,0 9,9 z";
 }, magnets:function(b) {
   return {previous:{x:0, y:0}, next:{x:0, y:(b ? Math.max(b.height, 51) : 51) + b.offsetY}};
 }, box:function() {
@@ -21934,8 +21975,11 @@ Entry.Block = function(b, a) {
 };
 Entry.Block.MAGNET_RANGE = 10;
 Entry.Block.MAGNET_OFFSET = .4;
+Entry.Block.DELETABLE_TRUE = 1;
+Entry.Block.DELETABLE_FALSE = 2;
+Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
 (function(b) {
-  b.schema = {id:null, x:0, y:0, type:null, params:[], statements:[], view:null, thread:null, movable:null, deletable:!0, readOnly:null, copyable:!0, events:{}};
+  b.schema = {id:null, x:0, y:0, type:null, params:[], statements:[], view:null, thread:null, movable:null, deletable:Entry.Block.DELETABLE_TRUE, readOnly:null, copyable:!0, events:{}};
   b.load = function(a) {
     a.id || (a.id = Entry.Utils.generateId());
     this.set(a);
@@ -22069,7 +22113,7 @@ Entry.Block.MAGNET_OFFSET = .4;
     this.deletable != a && this.set({deletable:a});
   };
   b.isDeletable = function() {
-    return this.deletable;
+    return this.deletable === Entry.Block.DELETABLE_TRUE;
   };
   b.isReadOnly = function() {
     return this.readOnly;
@@ -22352,15 +22396,17 @@ Entry.Vim = function(b, a) {
     function b(a) {
       var c = e.getCodeToText(a.block);
       e.codeMirror.display.dragFunctions.leave(a);
-      a = new MouseEvent("mousedown", {view:window, bubbles:!0, cancelable:!0, clientX:a.clientX, clientY:a.clientY});
-      e.codeMirror.display.scroller.dispatchEvent(a);
-      var c = c.split("\n"), d = c.length - 1, k = 0;
+      var d = Entry.Utils.createMouseEvent("mousedown", a);
+      e.codeMirror.display.scroller.dispatchEvent(d);
+      var c = c.split("\n"), k = c.length - 1, l = 0;
       c.forEach(function(a, b) {
         e.codeMirror.replaceSelection(a);
-        k = e.doc.getCursor().line;
-        e.codeMirror.indentLine(k);
-        0 !== b && d === b || e.codeMirror.replaceSelection("\n");
+        l = e.doc.getCursor().line;
+        e.codeMirror.indentLine(l);
+        0 !== b && k === b || e.codeMirror.replaceSelection("\n");
       });
+      a = Entry.Utils.createMouseEvent("mouseup", a);
+      e.codeMirror.display.scroller.dispatchEvent(a);
     }
     function d(a) {
       e.codeMirror.display.dragFunctions.over(a);

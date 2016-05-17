@@ -501,15 +501,6 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         dom.on('wheel', function(){
             that._mouseWheel.apply(that, arguments);
         });
-
-        //svgDom.on('mouseout', function(e){
-            //var offset = that.offset;
-            //var width = that._expandWidth || that._svgWidth;
-
-            //if (offset.left > e.clientX -2 || offset.top > e.clientY -2 ||
-                //(offset.left + width -2 < e.clientX ))
-                //that._scroller.setOpacity(0);
-        //});
     };
 
     p._mouseWheel = function(e) {

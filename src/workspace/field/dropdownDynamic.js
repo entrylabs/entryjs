@@ -69,6 +69,10 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
             parent: $('body')
         });
 
+        this.optionGroup.bind('mousedown touchstart', function(e) {
+            e.stopPropagation();
+        });
+
         var options = Entry.container.getDropdownList(this._contents.menuName);
 
         this._contents.options = options;

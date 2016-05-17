@@ -53,9 +53,14 @@ Entry.Utils.colorDarken = function(color, factor) {
     }
 
     factor = factor === undefined ? 0.7 : factor;
-    r = Math.floor(r * factor).toString(16);
-    g = Math.floor(g * factor).toString(16);
-    b = Math.floor(b * factor).toString(16);
+    r = inspect(Math.floor(r * factor).toString(16));
+    g = inspect(Math.floor(g * factor).toString(16));
+    b = inspect(Math.floor(b * factor).toString(16));
+
+    function inspect(val) {
+        if (val.length != 2) val = '0' + val;
+        return val;
+    }
 
     return '#' + r + g + b;
 };
@@ -1090,4 +1095,14 @@ Entry.Utils.COLLISION = {
     RIGHT: 2,
     LEFT: 3,
     DOWN: 4
+};
+
+Entry.Utils.createMouseEvent = function(type, event) {
+    var e = document.createEvent('MouseEvent');
+    e.initMouseEvent(
+        type,true,true,window,0,0,0,
+        event.clientX, event.clientY,
+        false,false,false,false,0,null
+    );
+    return e;
 };

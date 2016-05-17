@@ -383,13 +383,21 @@ Entry.Parser = function(mode, type, cm) {
             });
         });
 
-        playerCode.forEach(function (items, i) {
-            items.forEach(function (item, i) {
-                if(item.type !== NtryData.START && availableList.indexOf(item.type) === -1) {
+        if (playerCode instanceof Entry.Code) {
+            var blocks = playerCode.getBlockList();
+            blocks.forEach(function(item){
+                if(item.type !== NtryData.START && availableList.indexOf(item.type) === -1)
                     availableList.push(item.type);
-                }
             });
-        });
+        } else {
+            playerCode.forEach(function (items, i) {
+                items.forEach(function (item, i) {
+                    if(item.type !== NtryData.START && availableList.indexOf(item.type) === -1) {
+                        availableList.push(item.type);
+                    }
+                });
+            });
+        }
 
         this.availableCode = this.availableCode.concat(availableList);
     };
