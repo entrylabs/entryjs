@@ -7762,7 +7762,7 @@ Entry.block = {
             }
             return false;
         },
-        "syntax": {"js": [], "py": ["Entry.is_reached_at(%1, %2, %3)"]}
+        "syntax": {"js": [], "py": ["Entry.is_reached_at(%2)"]}
     },
     "boolean_comparison": {
         "color": "#AEB8FF",
@@ -8038,7 +8038,7 @@ Entry.block = {
             var rightValue = script.getBooleanValue("RIGHTHAND", script);
             return leftValue && rightValue;
         },
-        "syntax": {"js": [], "py": ["%1 %& %3"]}
+        "syntax": {"js": [], "py": ["(%1) && (%3)"]}
     },
     "boolean_or": {
         "color": "#AEB8FF",
@@ -8079,7 +8079,7 @@ Entry.block = {
             var rightValue = script.getBooleanValue("RIGHTHAND", script);
             return leftValue || rightValue;
         },
-        "syntax": {"js": [], "py": ["%1 %| %3"]}
+        "syntax": {"js": [], "py": ["(%1) || (%3)"]}
     },
     "boolean_not": {
         "color": "#AEB8FF",
@@ -8118,7 +8118,7 @@ Entry.block = {
         "func": function (sprite, script) {
             return !script.getBooleanValue("VALUE");
         },
-        "syntax": {"js": [], "py": ["%b %3 %2"]}
+        "syntax": {"js": [], "py": ["!(%2)"]}
     },
     "true_or_false": {
         "color": "#AEB8FF",
@@ -8333,7 +8333,7 @@ Entry.block = {
                     return Number(leftValue) <= Number(rightValue);
             }
         },
-        "syntax": {"js": [], "py": ["%1 %b %3"]}
+        "syntax": {"js": [], "py": ["(%1) %2 (%3)"]}
     },
     "show": {
         "color": "#EC4466",
