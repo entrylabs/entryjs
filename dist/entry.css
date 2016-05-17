@@ -746,6 +746,12 @@
 .propertyTabgoal.selected {
   background-image: url("../../images/property/doneproject_on.png");
 }
+.propertyTabpdf {
+  background-image: url("../../images/property/pdf_off.png");
+}
+.propertyTabpdf {
+  background-image: url("../../images/property/pdf_on.png");
+}
 .propertyContent {
   position: absolute;
   top: 0;
@@ -3736,7 +3742,8 @@
     top: 100%;
   }
 }
-#entryBlockHelperWorkspace {
+#entryBlockHelperWorkspace,
+#entryPdfWorkspace {
   position: absolute;
   bottom: 0;
   width: 100%;
@@ -3764,6 +3771,10 @@
   -ms-animation-name: blockHelperDown;
   -o-animation-name: blockHelperDown;
   animation-name: blockHelperDown;
+}
+#entryPdfWorkspace iframe {
+  width: 100%;
+  height: 100%;
 }
 #entryBlockHelperHeaderWorkspace {
   position: absolute;
