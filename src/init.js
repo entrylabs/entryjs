@@ -137,7 +137,6 @@ Entry.initialize_ = function() {
      */
     this.helper = new Entry.Helper();
     this.youtube = new Entry.Youtube();
-    this.pdf = new Entry.Pdf();
     // this.tvCast = new Entry.TvCast();
     // this.doneProject = new Entry.DoneProject();
     /**
@@ -266,8 +265,6 @@ Entry.createDom = function(container, option) {
 
         this.propertyPanel.addMode("object", this.container);
         this.propertyPanel.addMode("helper" , this.helper);
-        if (Entry.isForLecture)
-            this.propertyPanel.addMode("pdf" , this.pdf);
         // this.propertyPanel.addMode("youtube" , this.youtube);
 
         this.propertyPanel.select("object");

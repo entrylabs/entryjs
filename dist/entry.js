@@ -10718,7 +10718,6 @@ Entry.initialize_ = function() {
   this.container = new Entry.Container;
   this.helper = new Entry.Helper;
   this.youtube = new Entry.Youtube;
-  this.pdf = new Entry.Pdf;
   this.variableContainer = new Entry.VariableContainer;
   if ("workspace" == this.type || "phone" == this.type) {
     this.stateManager = new Entry.StateManager;
@@ -10782,7 +10781,6 @@ Entry.createDom = function(a, b) {
     this.playground.generateView(this.playgroundView, b);
     this.propertyPanel.addMode("object", this.container);
     this.propertyPanel.addMode("helper", this.helper);
-    Entry.isForLecture && this.propertyPanel.addMode("pdf", this.pdf);
     this.propertyPanel.select("object");
   }
 };
