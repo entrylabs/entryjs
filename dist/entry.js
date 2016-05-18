@@ -15346,7 +15346,10 @@ Entry.BlockMenu = function(b, a, c, d) {
     }
   };
   b.offset = function() {
-    return !this._offset || 0 === this._offset.top && 0 === this._offset.left ? (this._offset = this.svgDom.offset(), this.offset()) : this._offset;
+    if (!this._offset || 0 === this._offset.top && 0 === this._offset.left) {
+      this._offset = this.svgDom.offset();
+    }
+    return this._offset;
   };
 })(Entry.BlockMenu.prototype);
 Entry.BlockMenuScroller = function(b) {
@@ -17613,16 +17616,16 @@ Entry.Scroller.RADIUS = 7;
 Entry.Board = function(b) {
   Entry.Model(this, !1);
   this.createView(b);
+  this.updateOffset();
   this._magnetMap = {};
   Entry.ANIMATION_DURATION = 200;
   Entry.BOARD_PADDING = 100;
-  this.updateOffset();
   this._initContextOptions();
   this.changeEvent = new Entry.Event(this);
-  this.scroller = new Entry.Scroller(this, !0, !0);
   Entry.Utils.disableContextmenu(this.svgDom);
   this._addControl();
   this._bindEvent();
+  this.scroller = new Entry.Scroller(this, !0, !0);
 };
 Entry.Board.OPTION_PASTE = 0;
 Entry.Board.OPTION_ALIGN = 1;
@@ -17998,7 +18001,7 @@ Entry.Board.OPTION_CLEAR = 2;
     var e = this._magnetMap[d];
     if (e && 0 !== e.length) {
       var f = 0, g = e.length - 1, h, k = null, l = "previous" === d ? b - 15 : b;
-      for (b = "previous" === d ? 20 : 0;f <= g;) {
+      for (b = -1 < ["previous", "string", "boolean"].indexOf(d) ? 20 : 0;f <= g;) {
         if (h = (f + g) / 2 | 0, d = e[h], l < d.point) {
           g = h - 1;
         } else {
@@ -18076,7 +18079,8 @@ Entry.Board.OPTION_CLEAR = 2;
     Entry.windowResized.attach(this, a);
   };
   b.offset = function() {
-    return !this._offset || 0 === this._offset.top && 0 === this._offset.left ? (this.updateOffset(), this.offset()) : this._offset;
+    (!this._offset || 0 === this._offset.top && 0 === this._offset.left) && this.updateOffset();
+    return this._offset;
   };
 })(Entry.Board.prototype);
 Entry.skeleton = function() {

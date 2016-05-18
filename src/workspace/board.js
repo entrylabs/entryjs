@@ -19,24 +19,24 @@ Entry.Board = function(option) {
     Entry.Model(this, false);
 
     this.createView(option);
+    this.updateOffset();
 
     this._magnetMap = {};
 
     Entry.ANIMATION_DURATION = 200;
     Entry.BOARD_PADDING = 100;
 
-    this.updateOffset();
 
     this._initContextOptions();
 
     this.changeEvent = new Entry.Event(this);
-    this.scroller = new Entry.Scroller(this, true, true);
 
 
     Entry.Utils.disableContextmenu(this.svgDom);
 
     this._addControl();
     this._bindEvent();
+    this.scroller = new Entry.Scroller(this, true, true);
 };
 
 Entry.Board.OPTION_PASTE = 0;
@@ -755,7 +755,7 @@ Entry.Board.OPTION_CLEAR = 2;
             pointData,
             result = null,
             searchValue = targetType === "previous" ? y - 15 : y,
-            leftOffset = targetType === "previous" ? 20 : 0;
+            leftOffset = ["previous", "string", "boolean"].indexOf(targetType) > - 1 ? 20 : 0;
         while (minIndex <= maxIndex) {
             index = (minIndex + maxIndex) / 2 | 0;
             pointData = targetArray[index];
@@ -953,7 +953,7 @@ Entry.Board.OPTION_CLEAR = 2;
     p.offset = function() {
         if (!this._offset || (this._offset.top === 0 && this._offset.left === 0))  {
             this.updateOffset();
-            return this.offset();
+            return this._offset;
         }
         return this._offset;
     };
