@@ -9,9 +9,11 @@
  */
 Entry.popupHelper = function(reset) {
     this.popupList = {};
+    this.lazyList = [];
     this.nowContent;
     if(reset) {
         window.popupHelper = null;
+        $('.entryPopup').remove();
     }
     Entry.assert(!window.popupHelper, 'Popup exist');    
 
@@ -83,7 +85,7 @@ Entry.popupHelper.prototype.addPopup = function(key, popupObject) {
 
     titleButton_.bindOnClick((function () {
         if(popupObject.closeEvent) {
-            popupObject.closeEvent(this);   
+            popupObject.closeEvent(this);
         } else {
             this.hide();
         }
@@ -129,10 +131,12 @@ Entry.popupHelper.prototype.remove = function(key) {
     if(this.window_.children().length > 0) {
         this.window_.children().remove();   
     }
-    this.window_.remove();
     delete this.popupList[key];
     this.nowContent = undefined;
     this.body_.addClass('hiddenPopup');
+    if(this.lazyList.length > 0) {
+        this.show(this.lazyList.shift());
+    }
 };
 
 /**
@@ -143,17 +147,33 @@ Entry.popupHelper.prototype.resize = function(e) {
     
 };
 
-Entry.popupHelper.prototype.show = function(key) {
-    if(this.window_.children().length > 0) {
-        this.window_.children().detach();   
+Entry.popupHelper.prototype.show = function(key, option) {
+    if(option && option.lazy) {
+        if(this.window_.children().length === 0) {
+            this.window_.append(this.popupList[key]);
+            this.nowContent = this.popupList[key];
+            this.body_.removeClass('hiddenPopup');
+        } else {
+            this.lazyList.push(key);
+        }
+    } else {
+        if(this.window_.children().length > 0) {
+            this.window_.children().detach();   
+        }
+        this.window_.append(this.popupList[key]);
+        this.nowContent = this.popupList[key];
+        this.body_.removeClass('hiddenPopup');
     }
-    this.window_.append(this.popupList[key]);
-    this.nowContent = this.popupList[key];
-    this.body_.removeClass('hiddenPopup');
 };
 
 
 Entry.popupHelper.prototype.hide = function() {
+    if(this.window_.children().length > 0) {
+        this.window_.children().detach();   
+    }
     this.nowContent = undefined;
     this.body_.addClass('hiddenPopup');
+    if(this.lazyList.length > 0) {
+        this.show(this.lazyList.shift());
+    }
 };

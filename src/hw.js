@@ -74,7 +74,9 @@ p.initSocket = function() {
 
                 socket.onopen = (function()
                 {
-                    this.popupHelper.show('entryHwLowVersion');
+                    this.popupHelper.show('entryHwLowVersion', {
+                        lazy: true
+                    });
                     hw.socketType = 'WebSocket';
                     hw.initHardware(socket);
                 }).bind(this);
@@ -157,9 +159,9 @@ p.setWarningPopup = function () {
                 parent: btnArea
             });
 
-            title.html('연결 프로그램 업데이트');
-            text.html('5월 30일 부터 구버전의 연결프로그램의 사용이 중단 됩니다.</br></br>하드웨어 연결 프로그램을 최신 버전으로 업데이트 해주시기 바랍니다.');
-            okBtn.html('확인');
+            title.html(Lang.Workspace.hardware_version_alert_title);
+            text.html(Lang.Workspace.hardware_version_alert_text);
+            okBtn.html(Lang.Buttons.confirm);
 
             
             close.bindOnClick(function () {

@@ -10509,8 +10509,9 @@ Entry.Popup.prototype.resize = function(b) {
 };
 Entry.popupHelper = function(b) {
   this.popupList = {};
+  this.lazyList = [];
   this.nowContent;
-  b && (window.popupHelper = null);
+  b && (window.popupHelper = null, $(".entryPopup").remove());
   Entry.assert(!window.popupHelper, "Popup exist");
   var a = ["confirm", "spinner"], c = ["entryPopupHelperTopSpan", "entryPopupHelperBottomSpan", "entryPopupHelperLeftSpan", "entryPopupHelperRightSpan"];
   this.body_ = Entry.Dom("div", {classes:["entryPopup", "hiddenPopup", "popupHelper"]});
@@ -10561,22 +10562,21 @@ Entry.popupHelper.prototype.setPopup = function(b) {
 };
 Entry.popupHelper.prototype.remove = function(b) {
   0 < this.window_.children().length && this.window_.children().remove();
-  this.window_.remove();
   delete this.popupList[b];
   this.nowContent = void 0;
   this.body_.addClass("hiddenPopup");
+  0 < this.lazyList.length && this.show(this.lazyList.shift());
 };
 Entry.popupHelper.prototype.resize = function(b) {
 };
-Entry.popupHelper.prototype.show = function(b) {
-  0 < this.window_.children().length && this.window_.children().detach();
-  this.window_.append(this.popupList[b]);
-  this.nowContent = this.popupList[b];
-  this.body_.removeClass("hiddenPopup");
+Entry.popupHelper.prototype.show = function(b, a) {
+  a && a.lazy ? 0 === this.window_.children().length ? (this.window_.append(this.popupList[b]), this.nowContent = this.popupList[b], this.body_.removeClass("hiddenPopup")) : this.lazyList.push(b) : (0 < this.window_.children().length && this.window_.children().detach(), this.window_.append(this.popupList[b]), this.nowContent = this.popupList[b], this.body_.removeClass("hiddenPopup"));
 };
 Entry.popupHelper.prototype.hide = function() {
+  0 < this.window_.children().length && this.window_.children().detach();
   this.nowContent = void 0;
   this.body_.addClass("hiddenPopup");
+  0 < this.lazyList.length && this.show(this.lazyList.shift());
 };
 Entry.getStartProject = function(b) {
   return {category:"\uae30\ud0c0", scenes:[{name:Lang.Blocks.SCENE + " 1", id:"7dwq"}], variables:[{name:Lang.Blocks.CALC_choose_project_timer_action_1, id:"brih", visible:!1, value:"0", variableType:"timer", x:150, y:-70, array:[], object:null, isCloud:!1}, {name:Lang.Blocks.VARIABLE_get_canvas_input_value, id:"1vu8", visible:!1, value:"0", variableType:"answer", x:150, y:-100, array:[], object:null, isCloud:!1}], objects:[{id:"7y0y", name:Lang.Blocks.entry_bot_name, script:'<xml><block type="when_run_button_click" x="136" y="47"><next><block type="repeat_basic"><value name="VALUE"><block type="number"><field name="NUM">10</field></block></value><statement name="DO"><block type="move_direction"><value name="VALUE"><block type="number"><field name="NUM">10</field></block></value></block></statement></block></next></block></xml>', 
@@ -12925,7 +12925,7 @@ p.initSocket = function() {
       } else {
         try {
           a = new WebSocket("ws://127.0.0.1:23518"), a.binaryType = "arraybuffer", a.onopen = function() {
-            this.popupHelper.show("entryHwLowVersion");
+            this.popupHelper.show("entryHwLowVersion", {lazy:!0});
             b.socketType = "WebSocket";
             b.initHardware(a);
           }.bind(this), a.onmessage = function(a) {
@@ -12963,9 +12963,9 @@ p.initSocket = function() {
 p.setWarningPopup = function() {
   this.popupHelper.addPopup("entryHwLowVersion", {setPopupLayout:function(b) {
     var a = Entry.Dom("div", {class:"contentArea"}), c = Entry.Dom("div", {class:"entryHwLowVersionTitle", parent:a}), d = Entry.Dom("div", {class:"entryHwLowVersionCloseBtn", parent:a}), e = Entry.Dom("div", {class:"entryHwLowVersionText", parent:a}), f = Entry.Dom("div", {class:"entryHwLowVersionBtnArea", parent:a}), f = Entry.Dom("div", {class:"entryHwLowVersionOkBtn", parent:f});
-    c.html("\uc5f0\uacb0 \ud504\ub85c\uadf8\ub7a8 \uc5c5\ub370\uc774\ud2b8");
-    e.html("5\uc6d4 30\uc77c \ubd80\ud130 \uad6c\ubc84\uc804\uc758 \uc5f0\uacb0\ud504\ub85c\uadf8\ub7a8\uc758 \uc0ac\uc6a9\uc774 \uc911\ub2e8 \ub429\ub2c8\ub2e4.</br></br>\ud558\ub4dc\uc6e8\uc5b4 \uc5f0\uacb0 \ud504\ub85c\uadf8\ub7a8\uc744 \ucd5c\uc2e0 \ubc84\uc804\uc73c\ub85c \uc5c5\ub370\uc774\ud2b8 \ud574\uc8fc\uc2dc\uae30 \ubc14\ub78d\ub2c8\ub2e4.");
-    f.html("\ud655\uc778");
+    c.html(Lang.Workspace.hardware_version_alert_title);
+    e.html(Lang.Workspace.hardware_version_alert_text);
+    f.html(Lang.Buttons.confirm);
     d.bindOnClick(function() {
       popupHelper.hide();
     });
