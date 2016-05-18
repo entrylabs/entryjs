@@ -583,7 +583,6 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     p.offset = function() {
         if (!this._offset || (this._offset.top === 0 && this._offset.left === 0))  {
             this._offset = this.svgDom.offset();
-            return this.offset();
         }
         return this._offset;
     };
