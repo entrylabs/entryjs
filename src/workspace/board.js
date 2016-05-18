@@ -589,7 +589,6 @@ Entry.Board.OPTION_CLEAR = 2;
     p._getFieldBlockMetaData = function(blockView, cursorX, cursorY, zIndex, targetType) {
         var contents = blockView._contents;
         var metaData = [];
-        cursorX += blockView.contentPos.x;
         cursorY += blockView.contentPos.y;
         for (var i = 0; i < contents.length; i++) {
             var content = contents[i];
