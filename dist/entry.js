@@ -15714,13 +15714,13 @@ null], type:"combine_something"}, paramsKeyMap:{VALUE1:1, VALUE2:3}, "class":"ca
 }}, wait_until_true:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Block", accept:"boolean"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"True"}, null], type:"wait_until_true"}, paramsKeyMap:{BOOL:0}, "class":"wait", isNotFor:[], func:function(b, a) {
   return a.getBooleanValue("BOOL", a) ? a.callReturn() : a;
 }}, _if:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], params:[{type:"Block", accept:"boolean"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"True"}, null], type:"_if"}, paramsKeyMap:{BOOL:0}, statementsKeyMap:{STACK:0}, "class":"condition", isNotFor:[], func:function(b, a) {
-  return a.isLooped ? (delete a.isLooped, a.callReturn()) : a.getBooleanValue("BOOL", a) ? (a.isLooped = !0, a.getStatement("STACK", a)) : a.callReturn();
+  return a.isCondition ? (delete a.isCondition, a.callReturn()) : a.getBooleanValue("BOOL", a) ? (a.isCondition = !0, a.getStatement("STACK", a)) : a.callReturn();
 }}, if_else:{color:"#498deb", skeleton:"basic_double_loop", statements:[{accept:"basic"}, {accept:"basic"}], params:[{type:"Block", accept:"boolean"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}, {type:"LineBreak"}], events:{}, def:{params:[{type:"True"}, null], type:"if_else"}, paramsKeyMap:{BOOL:0}, statementsKeyMap:{STACK_IF:0, STACK_ELSE:1}, "class":"condition", isNotFor:[], func:function(b, a) {
-  if (a.isLooped) {
-    return delete a.isLooped, a.callReturn();
+  if (a.isCondition) {
+    return delete a.isCondition, a.callReturn();
   }
   var c = a.getBooleanValue("BOOL", a);
-  a.isLooped = !0;
+  a.isCondition = !0;
   return c ? a.getStatement("STACK_IF", a) : a.getStatement("STACK_ELSE", a);
 }}, create_clone:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"DropdownDynamic", value:null, menuName:"clone", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[null, null], type:"create_clone"}, paramsKeyMap:{VALUE:0}, "class":"clone", isNotFor:[], func:function(b, a) {
   var c = a.getField("VALUE", a), d = a.callReturn();
