@@ -141,10 +141,10 @@ Entry.BlockView.DRAG_RADIUS = 5;
                 filter: 'url(#entryBlockShadowFilter_' + suffix + ')'
             });
         } else if (this.magnet.string || this.magnet.boolean)
-            pathStyle.stroke = Entry.Utils.colorDarken(this._schema.color, 0.65);
+            pathStyle.stroke = skeleton.outerLine;
 
         if (skeleton.outerLine) {
-            pathStyle['stroke-width'] = "0.7";
+            pathStyle['stroke-width'] = "0.6";
         }
         this._path.attr(pathStyle);
 
