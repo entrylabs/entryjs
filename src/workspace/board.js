@@ -17,9 +17,12 @@ goog.require("Entry.SVG");
  */
 Entry.Board = function(option) {
     Entry.Model(this, false);
+    this.changeEvent = new Entry.Event(this);
 
     this.createView(option);
     this.updateOffset();
+
+    this.scroller = new Entry.Scroller(this, true, true);
 
     this._magnetMap = {};
 
@@ -28,15 +31,10 @@ Entry.Board = function(option) {
 
 
     this._initContextOptions();
-
-    this.changeEvent = new Entry.Event(this);
-
-
     Entry.Utils.disableContextmenu(this.svgDom);
 
     this._addControl();
     this._bindEvent();
-    this.scroller = new Entry.Scroller(this, true, true);
 };
 
 Entry.Board.OPTION_PASTE = 0;
@@ -754,7 +752,7 @@ Entry.Board.OPTION_CLEAR = 2;
             pointData,
             result = null,
             searchValue = targetType === "previous" ? y - 15 : y,
-            leftOffset = ["previous", "string", "boolean"].indexOf(targetType) > - 1 ? 20 : 0;
+            leftOffset = ["previous", "next"].indexOf(targetType) > - 1 ? 20 : 0;
         while (minIndex <= maxIndex) {
             index = (minIndex + maxIndex) / 2 | 0;
             pointData = targetArray[index];
@@ -944,9 +942,10 @@ Entry.Board.OPTION_CLEAR = 2;
         if (Entry.keyPressed)
             Entry.keyPressed.attach(this, this._keyboardControl);
 
-        if (Entry.windowResized)
-            var dUpdateOffset = _.debounce(this.updateOffset, 10);
+        if (Entry.windowResized) {
+            var dUpdateOffset = _.debounce(this.updateOffset, 200);
             Entry.windowResized.attach(this, dUpdateOffset);
+        }
     };
 
     p.offset = function() {

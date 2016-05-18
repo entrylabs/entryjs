@@ -149,8 +149,6 @@ Entry.Scroller.RADIUS = 7;
                 e.stopPropagation();
             };
         }
-
-        this.resizeScrollBar();
     };
 
     p.updateScrollBar = function(dx, dy) {
@@ -274,7 +272,7 @@ Entry.Scroller.RADIUS = 7;
     };
 
     p._bindEvent = function() {
-        var dResizeScrollBar = _.debounce(this.resizeScrollBar, 10);
+        var dResizeScrollBar = _.debounce(this.resizeScrollBar, 200);
         this.board.changeEvent.attach(this, dResizeScrollBar);
         if (Entry.windowResized)
             Entry.windowResized.attach(this, dResizeScrollBar);
