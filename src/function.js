@@ -277,9 +277,9 @@ Entry.Func.requestParamBlock = function(type) {
 };
 
 Entry.Func.registerParamBlock = function(type) {
-    if (type.substr(0,6) === "string") {
+    if (type.indexOf("stringParam") > -1) {
         Entry.Func.createParamBlock(type, Entry.block.function_param_string, type);
-    } else if (type.substr(0,7) === "boolean") {
+    } else if (type.indexOf("booleanParam") > -1 ) {
         Entry.Func.createParamBlock(type, Entry.block.function_param_boolean, type);
     }
 };
