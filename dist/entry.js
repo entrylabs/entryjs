@@ -9495,6 +9495,7 @@ Entry.Pdf = function(a) {
 p = Entry.Pdf.prototype;
 p.generateView = function(a) {
   var b = Entry.createElement("div", "entryPdfWorkspace");
+  b.addClass("entryHidden");
   this._view = b;
   var c = "/pdfjs/web/viewer.html";
   a && "" != a && (c += "?file=" + a);
@@ -9506,6 +9507,12 @@ p.generateView = function(a) {
 };
 p.getView = function() {
   return this._view;
+};
+p.resize = function() {
+  var a = document.getElementById("entryContainerWorkspaceId"), b = document.getElementById("pdfViewIframe");
+  w = a.offsetWidth;
+  b.width = w + "px";
+  b.height = 9 * w / 16 + "px";
 };
 Entry.Playground = function() {
   this.menuBlocks_ = {};
@@ -16444,12 +16451,12 @@ Entry.Workspace = function(a, b) {
       a._stopEvent.notify(b);
     }, b.duration - 300);
   };
-  a.moveMouse = function(a, c) {
+  a.moveMouse = function(b, a) {
   };
-  a.generateImage = function(a) {
-    var c = this.getBoard().svgDom[0], d = c.clientWidth / 2, c = c.clientHeight / 2;
+  a.generateImage = function(b) {
+    var a = this.getBoard().svgDom[0], d = a.clientWidth / 2, a = a.clientHeight / 2;
     this.svgGroup = this._board.snap.group();
-    this.image = this.svgGroup.image(a, d, c, 30, 30);
+    this.image = this.svgGroup.image(b, d, a, 30, 30);
   };
 })(Entry.Workspace.prototype);
 Entry.Xml = {};
