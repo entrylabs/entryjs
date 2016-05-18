@@ -36,6 +36,12 @@ Entry.HW = function() {
         '71': Entry.Robotis_carCont,
         '72': Entry.Robotis_openCM70
     };
+    if(window.popupHelper) {
+        this.popupHelper = window.popupHelper;
+    } else {
+        this.popupHelper = new Entry.popupHelper();
+    }
+    this.setWarningPopup();
 };
 
 Entry.HW.TRIAL_LIMIT = 1;
@@ -56,44 +62,46 @@ p.initSocket = function() {
 
         var socket, socketSecurity;
         var protocol = '';
+        this.connected = false;
+        this.connectTrial++;
+
         if(location.protocol.indexOf('https') > -1) {
             socketSecurity = new WebSocket("wss://hardware.play-entry.org:23518");
         } else {
             try{
-                socket = new WebSocket("ws://localhost:23518");
+                socket = new WebSocket("ws://127.0.0.1:23518");
+                socket.binaryType = "arraybuffer";
+
+                socket.onopen = (function()
+                {
+                    this.popupHelper.show('entryHwLowVersion', {
+                        lazy: true
+                    });
+                    hw.socketType = 'WebSocket';
+                    hw.initHardware(socket);
+                }).bind(this);
+
+                socket.onmessage = function (evt)
+                {
+                    var data = JSON.parse(evt.data);
+                    hw.checkDevice(data);
+                    hw.updatePortData(data);
+                };
+
+                socket.onclose = function()
+                {
+                    if(hw.socketType === 'WebSocket') {
+                        this.socket = null;
+                        hw.initSocket();
+                    }
+                };
             } catch(e) {}
             try{
                 socketSecurity = new WebSocket("wss://hardware.play-entry.org:23518");
             } catch(e) {
             }
         }
-
-        this.connected = false;
-        socket.binaryType = "arraybuffer";
         socketSecurity.binaryType = "arraybuffer";
-        this.connectTrial++;
-
-        socket.onopen = function()
-        {
-            hw.socketType = 'WebSocket';
-            hw.initHardware(socket);
-        };
-
-        socket.onmessage = function (evt)
-        {
-            var data = JSON.parse(evt.data);
-            hw.checkDevice(data);
-            hw.updatePortData(data);
-        };
-
-        socket.onclose = function()
-        {
-            if(hw.socketType === 'WebSocket') {
-                this.socket = null;
-                hw.initSocket();
-            }
-        };
-
         socketSecurity.onopen = function()
         {
             hw.socketType = 'WebSocketSecurity';
@@ -118,6 +126,56 @@ p.initSocket = function() {
         Entry.dispatchEvent("hwChanged");
     } catch(e) {}
 };
+
+p.setWarningPopup = function () {
+    this.popupHelper.addPopup('entryHwLowVersion', {
+        setPopupLayout : function (popup) {
+            var content = Entry.Dom('div', {
+                class: 'contentArea'
+            });
+
+            var title = Entry.Dom('div', {
+                class : 'entryHwLowVersionTitle',
+                parent: content
+            });
+
+            var close = Entry.Dom('div', {
+                class : 'entryHwLowVersionCloseBtn',
+                parent: content
+            });
+
+            var text = Entry.Dom('div', {
+                class : 'entryHwLowVersionText',
+                parent: content
+            });
+
+            var btnArea = Entry.Dom('div', {
+                class : 'entryHwLowVersionBtnArea',
+                parent: content
+            });
+            
+            var okBtn = Entry.Dom('div', {
+                class : 'entryHwLowVersionOkBtn',
+                parent: btnArea
+            });
+
+            title.html(Lang.Workspace.hardware_version_alert_title);
+            text.html(Lang.Workspace.hardware_version_alert_text);
+            okBtn.html(Lang.Buttons.confirm);
+
+            
+            close.bindOnClick(function () {
+                popupHelper.hide();
+            });
+
+            okBtn.bindOnClick(function () {
+                popupHelper.hide();
+            });
+
+            popup.append(content);
+        }
+    });
+}
 
 p.retryConnect = function() {
     this.connectTrial = 0;
