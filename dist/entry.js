@@ -15077,6 +15077,7 @@ Entry.BlockMenu = function(b, a, c, d) {
   this._scroll && (this._scroller = new Entry.BlockMenuScroller(this), this._addControl(b));
   Entry.documentMousedown && Entry.documentMousedown.attach(this, this.setSelectedBlock);
   this._categoryCodes && Entry.keyPressed && Entry.keyPressed.attach(this, this._captureKeyEvent);
+  Entry.windowResized && (b = _.debounce(this.updateOffset, 200), Entry.windowResized.attach(this, b));
 };
 (function(b) {
   b.schema = {code:null, dragBlock:null, closeBlock:null, selectedBlockView:null};
@@ -15092,6 +15093,9 @@ Entry.BlockMenu = function(b, a, c, d) {
     });
     this.svgDom.mouseleave(function(a) {
       Entry.playground && !Entry.playground.resizing && (d._scroller && d._scroller.setOpacity(0), (a = this.widthBackup) && $(this).stop().animate({width:a}, 200), delete this.widthBackup, delete Entry.playground.focusBlockMenu);
+    });
+    $(window).scroll(function() {
+      d.updateOffset();
     });
   };
   b.changeCode = function(a) {
@@ -15345,10 +15349,11 @@ Entry.BlockMenu = function(b, a, c, d) {
       }
     }
   };
+  b.updateOffset = function() {
+    this._offset = this.svgDom.offset();
+  };
   b.offset = function() {
-    if (!this._offset || 0 === this._offset.top && 0 === this._offset.left) {
-      this._offset = this.svgDom.offset();
-    }
+    (!this._offset || 0 === this._offset.top && 0 === this._offset.left) && this.updateOffset();
     return this._offset;
   };
 })(Entry.BlockMenu.prototype);
@@ -17565,7 +17570,6 @@ Entry.Scroller.RADIUS = 7;
       }
       a.stopPropagation();
     });
-    this.resizeScrollBar();
   };
   b.updateScrollBar = function(a, b) {
     this._horizontal && (this.hX += a * this.hRatio, this.hScrollbar.attr({x:this.hX}));
@@ -17608,24 +17612,24 @@ Entry.Scroller.RADIUS = 7;
     }
   };
   b._bindEvent = function() {
-    var a = _.debounce(this.resizeScrollBar, 10);
+    var a = _.debounce(this.resizeScrollBar, 200);
     this.board.changeEvent.attach(this, a);
     Entry.windowResized && Entry.windowResized.attach(this, a);
   };
 })(Entry.Scroller.prototype);
 Entry.Board = function(b) {
   Entry.Model(this, !1);
+  this.changeEvent = new Entry.Event(this);
   this.createView(b);
   this.updateOffset();
+  this.scroller = new Entry.Scroller(this, !0, !0);
   this._magnetMap = {};
   Entry.ANIMATION_DURATION = 200;
   Entry.BOARD_PADDING = 100;
   this._initContextOptions();
-  this.changeEvent = new Entry.Event(this);
   Entry.Utils.disableContextmenu(this.svgDom);
   this._addControl();
   this._bindEvent();
-  this.scroller = new Entry.Scroller(this, !0, !0);
 };
 Entry.Board.OPTION_PASTE = 0;
 Entry.Board.OPTION_ALIGN = 1;
@@ -18000,7 +18004,7 @@ Entry.Board.OPTION_CLEAR = 2;
     var e = this._magnetMap[d];
     if (e && 0 !== e.length) {
       var f = 0, g = e.length - 1, h, k = null, l = "previous" === d ? b - 15 : b;
-      for (b = -1 < ["previous", "string", "boolean"].indexOf(d) ? 20 : 0;f <= g;) {
+      for (b = -1 < ["previous", "next"].indexOf(d) ? 20 : 0;f <= g;) {
         if (h = (f + g) / 2 | 0, d = e[h], l < d.point) {
           g = h - 1;
         } else {
@@ -18073,9 +18077,9 @@ Entry.Board.OPTION_CLEAR = 2;
     Entry.documentMousedown && (Entry.documentMousedown.attach(this, this.setSelectedBlock), Entry.documentMousedown.attach(this, this._removeActivated));
     Entry.keyPressed && Entry.keyPressed.attach(this, this._keyboardControl);
     if (Entry.windowResized) {
-      var a = _.debounce(this.updateOffset, 10)
+      var a = _.debounce(this.updateOffset, 200);
+      Entry.windowResized.attach(this, a);
     }
-    Entry.windowResized.attach(this, a);
   };
   b.offset = function() {
     (!this._offset || 0 === this._offset.top && 0 === this._offset.left) && this.updateOffset();

@@ -60,6 +60,10 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         Entry.documentMousedown.attach(this, this.setSelectedBlock);
     if (this._categoryCodes && Entry.keyPressed)
         Entry.keyPressed.attach(this, this._captureKeyEvent);
+    if (Entry.windowResized) {
+        var dUpdateOffset = _.debounce(this.updateOffset, 200);
+        Entry.windowResized.attach(this, dUpdateOffset);
+    }
 };
 
 (function(p) {
@@ -126,6 +130,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             delete Entry.playground.focusBlockMenu;
         });
 
+        $(window).scroll(function() {
+            that.updateOffset();
+        });
     };
 
     p.changeCode = function(code) {
@@ -580,9 +587,14 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         }
     };
 
+    p.updateOffset = function () {
+        this._offset = this.svgDom.offset();
+    };
+
+
     p.offset = function() {
         if (!this._offset || (this._offset.top === 0 && this._offset.left === 0))  {
-            this._offset = this.svgDom.offset();
+            this.updateOffset();
         }
         return this._offset;
     };
