@@ -28,3 +28,9 @@ node_modules
 
 # external libraries
 extern/closure-library
+
+.DS_Store
+
+*.map
+
+.vscode/*

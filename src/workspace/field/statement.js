@@ -3,67 +3,85 @@
 "use strict";
 
 goog.provide("Entry.FieldStatement");
-goog.provide("Entry.DummyBlock");
+
+goog.require("Entry.BlockView");
 
 /*
  *
  */
-Entry.FieldStatement = function(content, blockView) {
+Entry.FieldStatement = function(content, blockView, index) {
+    Entry.Model(this, false);
+
     this._blockView = blockView;
     this.block = blockView.block;
 
-    this.key = content.key;
+    this.view = this;
 
-    var box = new Entry.BoxModel();
-    this.box = box;
+    this._index = index;
 
     this.acceptType = content.accept;
 
     this.svgGroup = null;
-    this.dummyBlock = null;
+    this.statementSvgGroup = null;
+    this._thread = null;
 
-    if (content.alignX) this._alignX = content.alignX;
-    if (content.alignY) this._alignY = content.alignY;
+    this._position = content.position;
 
-    this.box.observe(blockView, "alignContent", ["height"]);
+    this.observe(blockView, "alignContent", ["height"], false);
+    this.observe(this, "_updateBG", ["magneting"], false);
 
     this.renderStart(blockView.getBoard());
-    this.block.observe(this, "_updateThread", ["thread"]);
 };
 
 (function(p) {
-    p.renderStart = function(board) {
-        this.svgGroup = this._blockView.contentSvgGroup.group();
-        this.box.set({
-            x: 46,
-            y: 0,
-            width: 20,
-            height: 20
-        });
-        this._thread = this._blockView.block.values[this.key];
-        this.dummyBlock = new Entry.DummyBlock(this, this._blockView);
-        this._thread.insertDummyBlock(this.dummyBlock);
-        this._thread.createView(board);
-        this._thread.changeEvent.attach(this, this.calcHeight);
-        this.calcHeight();
+    p.schema = {
+        x: 0,
+        y: 0,
+        width: 100,
+        height: 20,
+        magneting: false
     };
 
-    p.calcHeight = function() {
-        var block = this.dummyBlock,
-            height = - 1;
-        while (block) {
-            height += block.view.height + 1;
-            block = block.next;
+    p.magnet = {
+        next: {x: 0, y: 0}
+    };
+
+    p.renderStart = function(board) {
+        this.svgGroup = this._blockView.statementSvgGroup.elem('g');
+        this.statementSvgGroup = this.svgGroup.elem('g');
+        this._nextGroup = this.statementSvgGroup;
+        this._initThread(board);
+        this._board = board;
+    };
+
+    p._initThread = function(board) {
+        var thread = this.getValue();
+        this._thread = thread;
+        thread.createView(board);
+        thread.view.setParent(this);
+        var firstBlock = thread.getFirstBlock();
+        if (firstBlock) {
+            firstBlock.view._toLocalCoordinate(this.statementSvgGroup);
+            this.firstBlock = firstBlock;
         }
-        this.box.set({height: height});
+        thread.changeEvent.attach(this, this.calcHeight);
+        thread.changeEvent.attach(this, this.checkTopBlock);
+        this.calcHeight();
     };
 
     p.align = function(x, y, animate) {
         animate = animate === undefined ? true : animate;
         var svgGroup = this.svgGroup;
-        var x = this._alignX || 46;
-        var y = this._alignY || 14;
-        var transform = "t" + x + " " + y;
+        if (this._position) {
+            if (this._position.x)
+                x = this._position.x;
+            if (this._position.y)
+                y = this._position.y;
+        }
+
+        var transform = "translate(" + x + "," + y + ")";
+
+        this.set({x: x, y: y});
 
         if (animate)
             svgGroup.animate({
@@ -75,117 +93,109 @@ Entry.FieldStatement = function(content, blockView) {
             });
     };
 
-    p._updateThread = function() {
-        if (this._threadChangeEvent)
-            this._thread.changeEvent.detach(this._threadChangeEvent);
-        var thread = this.block.thread;
-        this._threadChangeEvent = this._thread.changeEvent.attach(this, function() {
-            thread.changeEvent.notify();
-        });
+    p.calcHeight = function() {
+        var height = this._thread.view.requestPartHeight(null);
+        this.set({height: height});
     };
 
-})(Entry.FieldStatement.prototype);
-
-Entry.DummyBlock = function(statementField, blockView) {
-    Entry.Model(this, false);
-
-    this.view = this;
-    this.originBlockView = blockView;
-    this._schema = {};
-    this._thread = statementField._thread;
-    this.statementField = statementField;
-
-    this.svgGroup = statementField.svgGroup.group();
-    this.svgGroup.block = this;
-
-    var acceptBox = Entry.skeleton[statementField.acceptType].box();
-
-    this.path = this.svgGroup.rect(
-        acceptBox.offsetX,
-        acceptBox.offsetY - 10,
-        acceptBox.width,
-        acceptBox.height
-    );
-    this.path.attr({
-        fill: "transparent"
-    });
-
-    this.prevObserver = blockView.observe(
-        this, "_align", ["x", "y"]
-    );
-
-    this.prevAnimatingObserver = blockView.observe(
-        this, "_inheritAnimate", ["animating"]
-    );
-
-    this.observe(this, "_updateBG", ["magneting"]);
-
-    this._align();
-};
-
-(function(p) {
-    p.schema = {
-        x: 0,
-        y: 0,
-        width: 0,
-        height: 0,
-        animating: false,
-        magneting: false
+    p.getValue = function() {
+        return this.block.statements[this._index];
     };
 
-    p._align = function(animate) {
-        this.set({
-            x: this.originBlockView.x,
-            y: this.originBlockView.y
-        });
-    };
-
-    p.insertAfter = function(blocks) {
-        this._thread.insertByBlock(this, blocks);
-        this.statementField.calcHeight();
-    };
-
-    p.createView = function() {
-    };
-
-    p.setThread = function() {
-    };
-
-    p.setPrev = function() {
-    };
-
-    p.setNext = function(block) {
-        this.next = block;
-    };
-
-    p.getBoard = function() {
-        return this.originBlockView.getBoard();
-    };
-
-    p._inheritAnimate = function() {
-        this.set({animating: this.originBlockView.animating});
-    };
-
-    p._updateBG = function() {
-        if (this.magneting) {
-            var dragThreadHeight = this.getBoard().dragBlock.dragInstance.height;
-            this.set({height: dragThreadHeight});
-            var shadow = this.getBoard().dragBlock.getShadow();
-            shadow.attr({transform: "t0 " + 0});
-            this.svgGroup.prepend(shadow);
-            this._clonedShadow = shadow;
-        } else {
-            if (this._clonedShadow) {
-                this._clonedShadow.remove();
-                delete this._clonedShadow;
-            }
-            this.set({height: 0});
-        }
-        this._thread.changeEvent.notify();
+    p.requestAbsoluteCoordinate = function() {
+        var pos = this._blockView.getAbsoluteCoordinate();
+        pos.x += this.x;
+        pos.y += this.y;
+        return pos;
     };
 
     p.dominate = function() {
-        this.originBlockView.dominate();
+        this._blockView.dominate();
     };
 
-})(Entry.DummyBlock.prototype);
+    p.destroy = function() {};
+
+    p._updateBG = function() {
+        if (!this._board.dragBlock || !this._board.dragBlock.dragInstance)
+            return;
+        var blockView = this;
+        var magneting = blockView.magneting;
+        var block = blockView.block;
+        var svgGroup = blockView.svgGroup;
+
+        if (magneting) {
+            var shadow = this._board.dragBlock.getShadow();
+            var pos = this.requestAbsoluteCoordinate();
+            var transform  = 'translate(' + pos.x + ',' + pos.y + ')';
+            $(shadow).attr({
+                transform: transform,
+                display: 'block'
+            });
+            this._clonedShadow = shadow;
+
+            if (blockView.background) {
+                blockView.background.remove();
+                blockView.nextBackground.remove();
+                delete blockView.background;
+                delete blockView.nextBackground;
+            }
+            var height = this._board.dragBlock.getBelowHeight();
+
+            this.statementSvgGroup.attr({
+                transform: 'translate(0,' + height + ')'
+            });
+
+            this.set({height: this.height + height});
+        } else {
+            if (this._clonedShadow) {
+                this._clonedShadow.attr({display: 'none'});
+                delete this._clonedShadow;
+            }
+
+            var height = blockView.originalHeight;
+            if (height !== undefined) {
+                if (blockView.background) {
+                    blockView.background.remove();
+                    blockView.nextBackground.remove();
+                    delete blockView.background;
+                    delete blockView.nextBackground;
+                }
+                delete blockView.originalHeight;
+            }
+            this.statementSvgGroup.attr({
+                transform: 'translate(0,0)'
+            });
+            this.calcHeight();
+        }
+        var changeEvent = blockView.block.thread.changeEvent;
+        if (changeEvent) changeEvent.notify();
+    };
+
+    p.insertTopBlock = function(newBlock) {
+        if (this._posObserver) this._posObserver.destroy();
+
+        var block = this.firstBlock;
+        this.firstBlock = newBlock;
+        if (newBlock) {
+            newBlock.doInsert(this._thread);
+
+        }
+        return block;
+    };
+
+    p.getNextBlock = function () {
+        return this.firstBlock;
+    };
+
+    p.checkTopBlock = function() {
+        var firstBlock = this._thread.getFirstBlock();
+        if (firstBlock && this.firstBlock !== firstBlock) {
+            this.firstBlock = firstBlock;
+            firstBlock.view.bindPrev(this);
+            firstBlock._updatePos();
+        } else if (!firstBlock){
+            this.firstBlock = null;
+        }
+    };
+
+})(Entry.FieldStatement.prototype);

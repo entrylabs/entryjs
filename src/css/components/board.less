@@ -1,0 +1,154 @@
+.entryBoard {
+    cursor: move;
+    position: absolute;
+    -ms-touch-action: none;
+}
+
+.entryOverlayBoard {
+    background: rgba(180,180,180,0.4);
+}
+
+.boardScrollbar {
+    opacity: 0.4;
+    cursor: move;
+    -ms-touch-action: none;
+}
+
+.boardScrollbar:hover {
+    opacity: 0.6;
+}
+
+.entry-widget-color-table {
+    border: 1px solid #666;
+    border-collapse: collapse;
+    z-index: 1001;
+    position: fixed;
+    .entry-widget-color-row {
+        border-bottom: 2px solid #666;
+    }
+
+    .entry-widget-color-cell {
+        height: 13px;
+        width: 15px;
+        margin: 0;
+        border: 0;
+        text-align: center;
+        vertical-align: middle;
+        border-right: 2px solid #666;
+        font-size: 1px;
+        cursor: pointer;
+    }
+}
+
+.entryBoardWrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+}
+
+.entryVimBoard {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+}
+
+.entryFunctionButton {
+    stroke: #555;
+    stroke-width: 3;
+    fill: transparent;
+    cursor: pointer;
+}
+
+.entryFunctionButton:hover {
+    stroke: #000;
+}
+
+.entryFunctionButtonText {
+    font-family: ng !important;
+    font-size: 13 !important;
+    text-anchor: middle;
+    fill: black;
+    cursor: pointer !important;
+}
+
+.entryWorkspaceBoard {
+    position: absolute;
+    left: 250px;
+    top: 8px;
+    bottom: 0px;
+    right: 0px;
+    overflow: hidden;
+    border: solid 1px #C4C4B9;
+    border-top-left-radius: 10px;
+    .backgroundImage("entry_bg.png");
+}
+
+.entryWorkspaceBoard.folding {
+    z-index: 300;
+    border-left: solid 1px #C4C4B9;
+    .animation-duration(0.7s);
+    .animation-name(foldBoard);
+    .animation-fill-mode(forwards);
+}
+
+@keyframes foldBoard {
+    from {}
+    to {left: 64px;}
+}
+
+@-ot-keyframes foldBoard {
+    from {}
+    to {left: 64px;}
+}
+
+@-ms-keyframes foldBoard {
+    from {}
+    to {left: 64px;}
+}
+
+@-moz-keyframes foldBoard {
+    from {}
+    to {left: 64px;}
+}
+
+@-webkit-keyframes foldBoard {
+    from {}
+    to {left: 64px;}
+}
+
+.entryWorkspaceBoard.foldOut {
+    z-index:300;
+    .animation-duration(0.7s);
+    .animation-name(foldOutBoard);
+    .animation-fill-mode(forwards);
+}
+
+@keyframes foldOutBoard {
+    from {left: 64px;}
+    to {}
+}
+
+@-o-keyframes foldOutBoard {
+    from {left: 64px;}
+    to {}
+}
+
+@-ms-keyframes foldOutBoard {
+    from {left: 64px;}
+    to {}
+}
+
+@-moz-keyframes foldOutBoard {
+    from {left: 64px;}
+    to {}
+}
+
+@-webkit-keyframes foldOutBoard {
+    from {left: 64px;}
+    to {}
+}
+

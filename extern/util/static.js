@@ -259,6 +259,12 @@ EntryStatic.getAllBlocks = function() {
             ]
         },
         {
+            category: "func",
+            blocks: [
+                "functionAddButton",
+            ]
+        },
+        {
             category: "arduino",
             blocks: [
                 "arduino_download_connector",
@@ -275,7 +281,7 @@ EntryStatic.getAllBlocks = function() {
                 "dplay_get_digital_value",
                 "dplay_toggle_led",
                 "dplay_toggle_pwm",
-                "dplay_convert_scale",                
+                "dplay_convert_scale",
                 //nemoino
                 "nemoino_get_number_sensor_value",
                 "nemoino_get_digital_value",
@@ -410,15 +416,15 @@ EntryStatic.getAllBlocks = function() {
                 "xbot_oneWheel",
                 "xbot_twoWheel",
                 "xbot_lcd"
-                //end of XBOT Blocks added                
+                //end of XBOT Blocks added
             ]
         }
     ]
 }
 
 EntryStatic.blockInfo = {
-    
-    //XBOT Blocks added    
+
+    //XBOT Blocks added
     "xbot_servo": {
         "isNotFor": ['xbot_epor_edge'],
         "xml": "<block type='xbot_servo'><value name='VALUE'><block type='text'><field name='NAME'>90</field></block></value></block>",
@@ -481,7 +487,7 @@ EntryStatic.blockInfo = {
         "xml": "<block type='xbot_analogOutput'><value name='VALUE'><block type='text'><field name='NAME'>255</field></block></value></block>",
         "class": "xbot_sensor"
     },
-    //end of XBOT Blocks added   
+    //end of XBOT Blocks added
 
     "when_run_button_click": {
         "xml": "<block type='when_run_button_click'></block>",
@@ -490,7 +496,7 @@ EntryStatic.blockInfo = {
         "usage": ["start"]
     },
     "when_some_key_pressed": {
-        "xml": "<block type='when_some_key_pressed'></block>",
+        "xml": "<block type='when_some_key_pressed'><field name='VALUE'>67</field></block>",
         "class": "event",
         "isNotFor": [],
         "usage": ["start"]
@@ -1018,7 +1024,7 @@ EntryStatic.blockInfo = {
         "usage": ["list"]
     },
     "boolean_basic_operator": {
-        "xml": "<block type='boolean_basic_operator'> <field name='OPERATOR'>EQUAL</field> <value name='LEFTHAND'> <block type='text'><field name='NAME'>10</field></block> </value> <value name='RIGHTHAND'> <block type='text'><field name='NAME'>10</field></block> </value> </block>",
+        "xml": "<block type='boolean_basic_operator'> <value name='LEFTHAND'> <block type='text'><field name='NAME'>10</field></block> </value><field name='OPERATOR'>EQUAL</field>  <value name='RIGHTHAND'> <block type='text'><field name='NAME'>10</field></block> </value> </block>",
         "xmls": [
             "<block type='boolean_basic_operator'> <field name='OPERATOR'>EQUAL</field> <value name='LEFTHAND'> <block type='text'><field name='NAME'>10</field></block> </value> <value name='RIGHTHAND'> <block type='text'><field name='NAME'>10</field></block> </value> </block>",
             "<block type='boolean_basic_operator'> <field name='OPERATOR'>GREATER</field> <value name='LEFTHAND'> <block type='text'><field name='NAME'>10</field></block> </value> <value name='RIGHTHAND'> <block type='text'><field name='NAME'>10</field></block> </value> </block>",

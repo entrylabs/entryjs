@@ -23,11 +23,8 @@ Entry.EntryObject = function(model) {
         if (!this.objectType)
             this.objectType = 'sprite';
 
-        /** @type {Blockly Xml} */
-        if (model.script)
-            this.script = Blockly.Xml.textToDom(model.script);
-        else
-            this.script = Blockly.Xml.textToDom('<xml></xml>');
+        var script = model.script ? model.script : [];
+        this.script = new Entry.Code(script, this);
 
         /** @type {Array.<picture object>} */
         this.pictures = model.sprite.pictures;
@@ -232,7 +229,7 @@ Entry.EntryObject.prototype.generateView = function() {
                 self.editObjectValues(false);
             }
 
-                
+
         };
 
         this.nameView_.value = this.name;
@@ -342,7 +339,7 @@ Entry.EntryObject.prototype.generateView = function() {
         xInput.onkeypress = function (e) {
             if (e.keyCode == 13) {
                 thisPointer.editObjectValues(false);
-            }               
+            }
         };
 
         xInput.onblur = function (bool) {
@@ -506,11 +503,11 @@ Entry.EntryObject.prototype.generateView = function() {
         this.updateThumbnailView();
         this.updateCoordinateView();
         this.updateRotateMethodView();
-        this.updateInputViews();    
+        this.updateInputViews();
 
         this.updateCoordinateView(true);
         this.updateRotationView(true);
-    
+
 
         return this.view_;
     } else if (Entry.type == "phone") {
@@ -838,13 +835,8 @@ Entry.EntryObject.prototype.setScript = function(script) {
  * Object script getter
  * @return {!xml script} script
  */
-Entry.EntryObject.prototype.getScriptText = function(script) {
-    var xmlText = Blockly.Xml.domToText(this.script);
-    xmlText = xmlText.replace(/\sxmlns=\"(.*?)\"/,"");
-    xmlText = xmlText.replace(/\sclass=\"(.*?)\"/g,'');
-    xmlText = xmlText.replace(/\sid=\"(.*?)\"/g,"");
-    xmlText = xmlText.replace(/\sinline=\"(.*?)\"/g,"");
-    return xmlText;
+Entry.EntryObject.prototype.getScriptText = function() {
+    return JSON.stringify(this.script.toJSON());
 };
 
 /**
@@ -1455,7 +1447,7 @@ Entry.EntryObject.prototype.editObjectValues = function(click) {
     }
 
     if (click) {
-        
+
         $(inputs).removeClass('selectedNotEditingObject');
 
         for(var i=0; i<inputs.length; i++){
@@ -1467,14 +1459,14 @@ Entry.EntryObject.prototype.editObjectValues = function(click) {
         for(var i=0; i<inputs.length; i++){
             inputs[i].blur(true);
         }
-        
+
         this.blurAllInput();
         this.isEditing = false;
     }
 };
 
 Entry.EntryObject.prototype.blurAllInput = function() {
-    var inputs = document.getElementsByClassName('selectedEditingObject');            
+    var inputs = document.getElementsByClassName('selectedEditingObject');
     $(inputs).removeClass('selectedEditingObject');
 
     inputs = [
@@ -1495,7 +1487,7 @@ Entry.EntryObject.prototype.blurAllInput = function() {
 //             this.coordinateView_.yInput_, this.rotateInput_,
 //             this.directionInput_, this.coordinateView_.sizeInput_
 //         ];
-//     for(var i=0; i<inputs.length; i++){     
+//     for(var i=0; i<inputs.length; i++){
 //         inputs[i].setAttribute('disabled', 'disabled');
 //     }
 // };
@@ -1543,4 +1535,8 @@ Entry.EntryObject.prototype.getStampEntities = function() {
             entities.push(entity);
     });
     return entities;
+};
+
+Entry.EntryObject.prototype.clearExecutor = function() {
+    this.script.clearExecutors();
 };

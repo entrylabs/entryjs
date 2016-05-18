@@ -1,0 +1,876 @@
+.entryPlayground_text_buttons {
+    display: inline-block;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.entryPlayground_text_buttons > li {
+    float: left;
+    width: 32px;
+    height: 32px;
+    margin-left: 2px;
+    cursor: pointer;
+}
+
+.entryPlaygroundTextAlignLeft {
+    .backgroundImage("text_align_left_off.png");
+}
+.entryPlaygroundTextAlignLeft.toggle {
+    .backgroundImage("text_align_left_on.png");
+}
+
+.entryPlaygroundTextAlignCenter {
+    .backgroundImage("text_align_center_off.png");
+}
+.entryPlaygroundTextAlignCenter.toggle {
+    .backgroundImage("text_align_center_on.png");
+}
+
+.entryPlaygroundTextAlignRight {
+    .backgroundImage("text_align_right_off.png");
+}
+.entryPlaygroundTextAlignRight.toggle {
+    .backgroundImage("text_align_right_on.png");
+}
+
+.entryPlayground_fgColorDiv {
+    position: absolute;
+    width: 15px;
+    height: 4px;
+    margin-top: -15px;
+    margin-left: 345px;
+}
+
+.entryPlayground_bgColorDiv {
+    position: absolute;
+    width: 15px;
+    height: 4px;
+    margin-top: -15px;
+    margin-left: 379px;
+}
+.entryPlayground_textBox {
+    margin-top: 5px;
+    height: 33px;
+    width: 400px;
+}
+.entryPlayground_textArea {
+    margin-top: 5px;
+    height: 120px;
+    width: 400px;
+    resize: none;
+}
+
+.entryPlaygroundFontSizeWrapper {
+    width: 400px;
+    height: 39px;
+}
+
+.entryPlaygroundFontSizeLabel {
+    display: inline-block;
+    float: right;
+    font-size: 9px;
+    font-family: notoSansMedium;
+    color: #444;
+    line-height: 39px;
+}
+
+.entryPlaygroundFontSizeSlider {
+    display: inline-block;
+    float: right;
+    width: 96px;
+    height: 3px;
+    margin: 18px 0px 18px 4px;
+    background-color: #cfcfcf;
+    border-radius: 1.5px;
+}
+
+#entryTextColourTable {
+    margin-top: 12px;
+    cursor: pointer;
+    border-collapse: collapse;
+}
+
+
+.entryTd {
+    width: 22px;
+    height: 22px;
+}
+
+.entryTdTransparent {
+    width: 20px;
+    height: 20px;
+    background-color: white;
+    background-image: -webkit-linear-gradient(135deg, transparent 11.5px, rgb(255,0,0) 13px, rgba(255,255,255,.5) 14.5px);
+    border: 1px solid;
+}
+
+.entryPlaygroundPainterTopMenuEdit>ul>li {
+    list-style-type: none;
+    width:120px;
+}
+
+.entryPlaygroundPainterTopMenuFile>ul>li {
+    list-style-type: none;
+    width:120px;
+}
+
+.entryPlaygroundPainterTopMenu>ul{
+    position:absolute;
+    top:5px;
+}
+.entryPainterTopMenuEditImport {
+    height: 40px;
+}
+
+.entryPlaygroundSoundLength {
+    float: right;
+    position: relative;
+    top: 20px;
+    right: 10px;
+    font-size: 9pt;
+}
+
+.entryPlaygroundDefaultWorkspace {
+    height: 100%;
+    background-color: #363C46;
+    color: white;
+}
+
+.entryPlaygroundWorkspace {
+    position: absolute;
+    top: 40px;
+    bottom: 0px;
+    left: 400.5px;
+    right: 0px;
+    background-color: #F5F5F5;
+    overflow: hidden;
+}
+
+.entryPlaygroundPhone {
+    width: 100%;
+    height: 500px;
+    background-color: #F5F5F5;
+}
+
+.entryPlaygroundResizeWorkspace {
+    position: absolute;
+    top: 45%;
+    height: 28px;
+    width: 11px;
+    left: 272px;
+    cursor: ew-resize;
+    border: solid 1px #afafaf;
+    border-left: none;
+    z-index: 250;
+    .backgroundImage("entry_scroll_02.png");
+}
+
+.entryPlaygroundTabWorkspace {
+    position: absolute;
+    /*margin-top: 1px;*/
+    top: 0;
+    height: 43px;
+    width: 100%;
+    background-color: #f1f1f1;
+}
+
+.entryPlaygroundTabWorkspace.entryRemove {
+    display: block !important;
+}
+
+.entryPlaygroundTabPhone {
+    width: 100%;
+    height: 43px;
+    position: relative;
+    background-color: #f1f1f1;
+}
+
+.entryTabListWorkspace {
+    list-style: none;
+    height: 44px;
+    padding: 0;
+    margin: 1px 0 0 0;
+    border-bottom: 2px solid #643cd9;
+}
+
+.entryTabListItemWorkspace {
+    float: left;
+    width: 59px;
+    height: 42px;
+    margin: 0 1px 0 1px;
+    cursor: pointer;
+    display:block;
+    padding: 10px 0 0 0;
+    text-align: center;
+    font-family: nanumBarunBold !important;
+    color: gray;
+    background-color: #e5e5e5;
+    border-top-right-radius: 7px;
+    border-top-left-radius: 7px;
+}
+
+.entryTabSelected {
+    color: white;
+    background-color: #6e5ae6;
+}
+
+.entryTabListItemWorkspace:hover {
+}
+
+#entrySoundTab {
+    .animation-delay(0.1s);
+}
+#entryPictureTab.hideTab, #entryTextTab.hideTab{
+    .animation-delay(0.2s);
+}
+#entrySoundTab.hideTab {
+    .animation-delay(0.1s);
+}
+#entryVariableTab.showTab {
+    .animation-delay(0.2s);
+}
+
+
+.hideTab {
+    .animation-duration(0.7s);
+    .animation-name(hideTab);
+    .animation-fill-mode(forwards);
+}
+
+@keyframes hideTab {
+    from {}
+    to {margin-top: 44px;opacity:0}
+}
+
+@-o-keyframes hideTab {
+    from {}
+    to {margin-top: 44px;opacity:0}
+}
+
+@-ms-keyframes hideTab {
+    from {}
+    to {margin-top: 44px;opacity:0}
+}
+
+@-moz-keyframes hideTab {
+    from {}
+    to {margin-top: 44px;opacity:0}
+}
+
+@-webkit-keyframes hideTab {
+    from {}
+    to {margin-top: 44px;opacity:0}
+}
+
+.showTab {
+    opacity: 0;
+    .animation-duration(0.7s);
+    .animation-name(showTab);
+    .animation-fill-mode(forwards);
+}
+
+@keyframes showTab {
+    from {margin-top: 44px;opacity:0}
+    to {opacity: 1}
+}
+
+@-o-keyframes showTab {
+    from {margin-top: 44px;opacity:0}
+    to {opacity: 1}
+}
+
+@-ms-keyframes showTab {
+    from {margin-top: 44px;opacity:0}
+    to {opacity: 1}
+}
+
+@-moz-keyframes showTab {
+    from {margin-top: 44px;opacity:0}
+    to {opacity: 1}
+}
+
+@-webkit-keyframes showTab {
+    from {margin-top: 44px;opacity:0}
+    to {opacity: 1}
+}
+
+.entryPlaygroundCurtainWorkspace {
+    position: absolute;
+    background-color: black;
+    color: white;
+    padding-top: 270px;
+    text-align: center;
+    font-size: 40px;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.5;
+    z-index: 5000;
+    cursor: pointer;
+}
+
+.entryPlaygroundCurtainPhone {
+    position: absolute;
+    background-color: rgba(0,0,0,0.8);
+    color: white;
+    padding-top: 100px;
+    text-align: center;
+    font-size: 17px;
+    height: 110%;
+    width: 100%;
+    opacity: 0.5;
+    z-index: 5000;
+    cursor: pointer;
+}
+
+
+.entryPlaygroundCodeWorkspace {
+    height: 100%;
+    background-color: #F5F5F5;
+}
+
+.entryPlaygroundCodeWorkspace.entryRemove {
+    display: block !important;
+    visibility: hidden;
+}
+
+.entryPlaygroundCodePhone {
+    position: relative;
+    height: 100%;
+    background-color: #F5F5F5;
+}
+
+.entryPlaygroundCodePhone.entryRemove {
+    display: block !important;
+    visibility: hidden;
+}
+
+.entryPlaygroundPictureWorkspace {
+    position: absolute;
+    top: 47px;
+    margin-left: 0;
+    height: 100%;
+    background-color: #ececec;
+}
+
+.entryPlaygroundPicturePhone {
+    margin-left: 0;
+    height: 100%;
+    background-color: #ececec;
+}
+
+.entryPlaygroundAddPicture {
+    position: absolute;
+    width: 240px;
+    height: 60px;
+    background-color: #e5e5e5;
+    cursor: pointer;
+    border-bottom: 1pt solid #ebeff1;
+}
+
+.entryPlaygroundAddPicturePhone {
+    position: relative;
+    padding: 0;
+    margin: 0;
+    height: 50px;
+    cursor: pointer;
+    border-bottom: 1pt solid #ebeff1;
+}
+
+.entryPlaygroundAddPictureInner {
+    display: block;
+    width: 141px;
+    height: 30px;
+    background-color: #eeeeee;
+    color: black;
+    text-align: center;
+    font-size: 11px;
+    line-height: 28px;
+    border: 1px solid #cccccc;
+    border-radius: 7px;
+    margin-top: 15px;
+    margin-left: 49.5px;
+}
+
+.entryPlaygroundAddPictureInnerPhone {
+    display: block;
+    height: 50px;
+    background-color: #CDCFC9;
+    color: #656565;
+    text-align: center;
+    font-size: 10.5pt;
+    line-height: 36px;
+    border: 2px dashed #737373;
+    width: 240px;
+    padding: 8px 10px 12px 10px;
+}
+
+.entryPlaygroundPictureList {
+    position: absolute;
+    padding: 0px;
+    margin: 0px;
+    width: 240px;
+    top: 60px;
+    margin-bottom: 47px;
+    bottom: 0px;
+    overflow: auto;
+    list-style: none;
+    background-color: #Cfcfcf;
+}
+
+.entryPlaygroundPictureListPhone {
+    position: relative;
+    padding: 0px;
+    margin: 0px;
+    width: 240px;
+    bottom: 0px;
+    overflow: auto;
+    list-style: none;
+    background-color: #Cfcfcf;
+}
+
+.entryPlaygroundPictureElement {
+    display: block;
+    background-color: #f4f4f4;
+    border-bottom: 1pt solid #ebeff1;
+    height: 60px;
+    color: #294117;
+    cursor: pointer;
+}
+
+.entryPlaygroundPictureElement:hover {
+    background-color: #C0C0C0;
+    cursor: move;
+}
+
+
+.entryPlaygroundPictureOrder,
+.entryPlaygroundSoundOrder {
+    width: 15px;
+    height: 100%;
+    float: left;
+    line-height: 57px;
+    font-size: 10px;
+    text-align: center;
+    background-color: #d8d8d8;
+}
+
+.entryPlaygroundPictureElement:hover .entryPlaygroundPictureOrder,
+.entryPlaygroundSoundElement:hover .entryPlaygroundSoundOrder {
+    background-color: #634cd9;
+    color: white;
+}
+
+.entryPictureSelected {
+    background-color: #c1c1c1;
+}
+
+.entryPlaygroundPictureThumbnail {
+    float: left;
+    position: relative;
+    height: 49px;
+    width: 49px;
+    top: 5px;
+    left: 10px;
+    border: 1px solid #bcc2c8;
+    background-color: #ccc;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.entryPlaygroundPictureName {
+    float: left;
+    position: relative;
+    top: 17px;
+    left: 17px;
+    width: 78px;
+    background-color: transparent;
+    font-size: 10pt;
+    text-overflow: ellipsis;
+    color: #294117;
+    cursor: text;
+    border: 1px solid transparent;
+}
+
+.entryPlaygroundPictureName:focus, .entryPlaygroundSoundName:focus {
+    border: 1px solid gray;
+    background-color: white;
+}
+
+.entryPlaygroundPictureName:hover, .entryPlaygroundSoundName:hover {
+    border: 1px solid gray;
+}
+
+.entryPlaygroundPictureSize {
+    float: right;
+    position: relative;
+    top: 21px;
+    right: 10px;
+    font-size: 8pt;
+}
+
+.entryPlaygroundTextWorkspace {
+    position: absolute;
+    top: 45px;
+    height: 100%;
+    width: 100%;
+    background-color: #ececec;
+    padding-left: 20px;
+    padding-top: 20px;
+}
+
+.entryTextHead {
+    font-size: 18px;
+}
+
+.entryTextEdit {
+    font-size: 17px;
+    width: 220px;
+    height: 30px;
+    border: 1px solid #808080;
+    border-radius: 3px;
+}
+
+#entryTextProperty {
+    width: 220px;
+    height: 32px;
+    margin-top: 12px;
+}
+
+.entryTextFontSelect {
+    display: inline-block;
+    width: 96px;
+    height: 32px;
+    border: 1px solid #808080;
+    border-radius: 4px;
+    background-color: white;
+    float: left;
+}
+
+.entryTextFontSelecter {
+    margin-top: 5px;
+    margin-left: 2px;
+}
+
+.entryFontToggle {
+    display: inline-block;
+    width: 96px;
+    width: 32px;
+    height: 32px;
+    float: right;
+}
+
+#entryFontColorToggle {
+    .backgroundImage("text_in_off.png");
+}
+
+#entryFontColorToggle.selected {
+    .backgroundImage("text_in_on.png");
+}
+
+#entryFontBGToggle {
+    margin-left: 6px;
+    .backgroundImage("text_out_off.png");
+}
+
+#entryFontBGToggle.selected {
+    .backgroundImage("text_out_on.png");
+}
+
+.entryPlaygroundSoundWorkspace {
+    position: absolute;
+    top: 47px;
+    margin-left: 0;
+    height: 100%;
+    background-color: #ececec;
+}
+
+.entryPlaygroundAddSound {
+    position: absolute;
+    height: 60px;
+    width: 240px;
+    background-color: #e5e5e5;
+    cursor: pointer;
+    border-bottom: 1pt solid #ebeff1;
+}
+
+.entryPlaygroundAddSoundPhone {
+    position: relative;
+    height: 50px;
+    cursor: pointer;
+    border-bottom: 1pt solid #ebeff1;
+}
+
+.entryPlaygroundAddSoundInner {
+    display: block;
+    width: 141px;
+    height: 30px;
+    background-color: #eeeeee;
+    color: black;
+    text-align: center;
+    font-size: 11px;
+    line-height: 28px;
+    border: 1px solid #cccccc;
+    border-radius: 7px;
+    margin-top: 15px;
+    margin-left: 49.5px;
+}
+
+.entryPlaygroundAddSoundInnerPhone {
+    display: block;
+    height: 40px;
+    background-color: #CDCFC9;
+    color: #656565;
+    text-align: center;
+    font-size: 10.5pt;
+    line-height: 36px;
+    margin: 10px;
+    border: 2px dashed #737373;
+    width: 220px;
+}
+
+.entryPlaygroundSoundList {
+    position: absolute;
+    padding: 0px;
+    margin: 0px;
+    width: 240px;
+    top: 60px;
+    margin-bottom: 47px;
+    bottom: 0px;
+    overflow: auto;
+    list-style: none;
+    background-color: #cfcfcf;
+}
+
+.entryPlaygroundSoundListPhone {
+    position: relative;
+    padding: 0px;
+    margin: 0px;
+    width: 240px;
+    bottom: 0px;
+    overflow: auto;
+    list-style: none;
+    background-color: #cfcfcf;
+}
+
+.entryPlaygroundSoundElement {
+    display: block;
+    background-color: #f4f4f4;
+    border-bottom: 1pt solid #ebeff1;
+    height: 60px;
+    color: #294117;
+    cursor: pointer;
+}
+
+.entryPlaygroundSoundElement:hover {
+    background-color: #c1c1c1;
+    cursor: move;
+}
+
+.entryPlaygroundSoundThumbnail {
+    float: left;
+    position: relative;
+    height: 49px;
+    width: 49px;
+    top: 5px;
+    left: 10px;
+    border: 1px solid #bcc2c8;
+    background-color: #ccc;
+    background-size: 32px 32px;
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: pointer;
+}
+
+.entryPlaygroundSoundThumbnail.entryPlaygroundSoundPlay {
+    .backgroundImage("workspace_sound_play.png");
+}
+
+.entryPlaygroundSoundThumbnail.entryPlaygroundSoundStop {
+    .backgroundImage("workspace_sound_stop.png");
+}
+
+.entryPlaygroundSoundName {
+    float: left;
+    position: relative;
+    top: 18px;
+    left: 17px;
+    width: 95px;
+    background-color: transparent;
+    font-size: 10pt;
+    border: 1px solid transparent;
+    text-overflow: ellipsis;
+    color: #294117;
+}
+
+.entryPlayground_text_buttons {
+    display: inline-block;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.entryPlayground_text_buttons > li {
+    float: left;
+    width: 32px;
+    height: 32px;
+    margin-left: 2px;
+    cursor: pointer;
+}
+
+.entryPlaygroundTextAlignLeft {
+    .backgroundImage("text_align_left_off.png");
+}
+.entryPlaygroundTextAlignLeft.toggle {
+    .backgroundImage("text_align_left_on.png");
+}
+
+.entryPlaygroundTextAlignCenter {
+    .backgroundImage("text_align_center_off.png");
+}
+.entryPlaygroundTextAlignCenter.toggle {
+    .backgroundImage("text_align_center_on.png");
+}
+
+.entryPlaygroundTextAlignRight {
+    .backgroundImage("text_align_right_off.png");
+}
+.entryPlaygroundTextAlignRight.toggle {
+    .backgroundImage("text_align_right_on.png");
+}
+
+.entryPlayground_fgColorDiv {
+    position: absolute;
+    width: 15px;
+    height: 4px;
+    margin-top: -15px;
+    margin-left: 345px;
+}
+
+.entryPlayground_bgColorDiv {
+    position: absolute;
+    width: 15px;
+    height: 4px;
+    margin-top: -15px;
+    margin-left: 379px;
+}
+.entryPlayground_textBox {
+    margin-top: 5px;
+    height: 33px;
+    width: 400px;
+}
+.entryPlayground_textArea {
+    margin-top: 5px;
+    height: 120px;
+    width: 400px;
+    resize: none;
+}
+
+.entryPlaygroundFontSizeWrapper {
+    width: 400px;
+    height: 39px;
+}
+
+.entryPlaygroundFontSizeLabel {
+    display: inline-block;
+    float: right;
+    font-size: 9px;
+    font-family: notoSansMedium;
+    color: #444;
+    line-height: 39px;
+}
+
+.entryPlaygroundFontSizeSlider {
+    display: inline-block;
+    float: right;
+    width: 96px;
+    height: 3px;
+    margin: 18px 0px 18px 4px;
+    background-color: #cfcfcf;
+    border-radius: 1.5px;
+}
+
+.entryPlaygroundFontSizeIndicator {
+    height: 100%;
+    width: 45%;
+    background-color: #643cd9;
+}
+
+.entryPlaygroundFontSizeKnob {
+    width: 16px; height: 16px;
+    position: relative;
+    margin-top: -10px;
+    margin-left: -7px;
+    .backgroundImage("text_size_knob.png");
+    cursor: pointer;
+}
+
+.entryPlaygroundTextColoursWrapper {
+    width : 260px;
+    height: 226px;
+    z-index: 10;
+    cursor: pointer;
+    margin-top: -5px;
+    margin-left: 335px;
+    padding: 20px 5px;
+    position: absolute;
+    .backgroundImage("text_color_bg.png");
+    background-repeat: no-repeat;
+    background-size: 260px 226px;
+}
+.entryPlaygroundTextBackgroundsWrapper {
+    width : 260px;
+    height: 226px;
+    z-index: 10;
+    cursor: pointer;
+    margin-top: -5px;
+    margin-left: 369px;
+    padding: 20px 5px;
+    position: absolute;
+    .backgroundImage("text_color_bg_1.png");
+    background-repeat: no-repeat;
+    background-size: 260px 226px;
+}
+
+
+.entryPlaygroundLinebreakWrapper {
+    position: fixed;
+    top: 351px;
+}
+
+.entryPlaygroundLinebreakButtons {
+    display: inline;
+    font-size:0;
+    img {
+        cursor: pointer;
+    }
+}
+
+.entryPlaygroundLinebreakHorizontal {
+    display: block;
+    border-top: 1px solid #808080;
+    margin: 0 0 12px 0;
+    padding: 0;
+    width: 260px;
+}
+
+.entryPlaygroundLinebreakDescription {
+    margin-top: 12px;
+    p {
+        color: #8888;
+        font-size: 11px;
+        margin-bottom: 5px;
+    }
+
+    ul {
+        padding-left: 20px;
+        li {
+            color: #B4B4B5;
+            font-size: 11px;
+        }
+    }
+}
