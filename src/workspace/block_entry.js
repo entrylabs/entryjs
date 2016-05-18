@@ -10639,180 +10639,204 @@ Entry.block = {
         "skeleton": "basic_string_field",
         "fontColor": "#fff",
         "statements": [],
-        "params": [
-            {
-                "type": "Dropdown",
-                "options": [
-                    [ "1번 포트", "1" ],
-                    [ "2번 포트", "2" ],
-                    [ "3번 포트", "3" ],
-                    [ "리모컨", "4" ]
-                ],
-                "value": "1",
-                "fontSize": 11
-            }
-        ],
+        "template": "%1  값",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["1번 포트", "IN1"],
+                ["2번 포트", "IN2"],
+                ["3번 포트", "IN3"],
+                ["리모컨", "IR"],
+                ["배터리", "BAT"]
+            ],
+            "value": "IN1",
+            "fontSize": 11
+        }],
         "events": {},
         "def": {
-            "params": [ null ],
-            "type": "neobot_sensor_value"
+            "params": [null],
+            "type": "neobot_sensor_value",
+            "id": "k9wp"
         },
         "paramsKeyMap": {
             "PORT": 0
         },
         "class": "neobot_value",
-        "isNotFor": [ "neobot" ],
+        "isNotFor": ["neobot"],
         "func": function (sprite, script) {
-            var port = script.getStringField("PORT");
+            var port = script.getStringField('PORT');
             return Entry.hw.portData[port];
         }
     },
-    "neobot_turn_left": {
+    "neobot_left_motor": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "params": [
-            {
-                "type": "Dropdown",
-                "options": [
-                    [ "앞으로", "1" ],
-                    [ "뒤로", "-1" ]
-                ],
-                "value": "1",
-                "fontSize": 11
-            },
-            {
-                "type": "Dropdown",
-                "options": [
-                    [ "느리게", "1" ],
-                    [ "보통", "2" ],
-                    [ "빠르게", "3" ]
-                ],
-                "value": "1",
-                "fontSize": 11
-            },
-            {
-                "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
-                "size": 12
-            }
-        ],
+        "template": "왼쪽모터를 %1 %2 의 속도로 회전 %3",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["앞으로", "16"],
+                ["뒤로", "32"]
+            ],
+            "value": "16",
+            "fontSize": 11
+        }, {
+            "type": "Dropdown",
+            "options": [
+                ["0", "0"],
+                ["1", "1"],
+                ["2", "2"],
+                ["3", "3"],
+                ["4", "4"],
+                ["5", "5"],
+                ["6", "6"],
+                ["7", "7"],
+                ["8", "8"],
+                ["9", "9"],
+                ["10", "10"],
+                ["11", "11"],
+                ["12", "12"],
+                ["13", "13"],
+                ["14", "14"],
+                ["15", "15"]
+            ],
+            "value": "0",
+            "fontSize": 11
+        }, {
+            "type": "Indicator",
+            "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+            "size": 12
+        }],
         "events": {},
         "def": {
-            "params": [ null, null, null ],
-            "type": "neobot_turn_left"
+            "params": [null, "15", null],
+            "type": "neobot_left_motor",
+            "id": "wguy"
         },
         "paramsKeyMap": {
             "DIRECTION": 0,
-            "VALUE": 1
+            "SPEED": 1
         },
         "class": "neobot_motor",
-        "isNotFor": [ "neobot" ],
+        "isNotFor": ["neobot"],
         "func": function (sprite, script) {
-            var port = script.getNumberField("VALUE");
-            var direction = script.getNumberField("DIRECTION");
-            Entry.hw.sendQueue["LMOT"] = port * direction;
+            var speed = script.getNumberField('SPEED');
+            var direction = script.getNumberField('DIRECTION');
+            Entry.hw.sendQueue['DCL'] = speed + direction;
             return script.callReturn();
         }
     },
-    "neobot_stop_left": {
+    "neobot_stop_left_motor": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "params": [
-            {
-                "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
-                "size": 12
-            }
-        ],
+        "template": "왼쪽모터 정지 %1",
+        "params": [{
+            "type": "Indicator",
+            "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+            "size": 12
+        }],
         "events": {},
         "def": {
-            "params": [ null ],
-            "type": "neobot_stop_left"
+            "params": [null],
+            "type": "neobot_stop_left_motor",
+            "id": "bq9n"
         },
         "class": "neobot_motor",
-        "isNotFor": [ "neobot" ],
+        "isNotFor": ["neobot"],
         "func": function (sprite, script) {
-            Entry.hw.sendQueue["LMOT"] = 0;
+            Entry.hw.sendQueue['DCL'] = 0;
             return script.callReturn();
         }
     },
-    "neobot_turn_right": {
+    "neobot_right_motor": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "params": [
-            {
-                "type": "Dropdown",
-                "options": [
-                    [ "앞으로", "1" ],
-                    [ "뒤로", "-1" ]
-                ],
-                "value": "1",
-                "fontSize": 11
-            },
-            {
-                "type": "Dropdown",
-                "options": [
-                    [ "느리게", "1" ],
-                    [ "보통", "2" ],
-                    [ "빠르게", "3" ]
-                ],
-                "value": "1",
-                "fontSize": 11
-            },
-            {
-                "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
-                "size": 12
-            }
-        ],
+        "template": "오른쪽모터를 %1 %2 의 속도로 회전 %3",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["앞으로", "16"],
+                ["뒤로", "32"]
+            ],
+            "value": "16",
+            "fontSize": 11
+        }, {
+            "type": "Dropdown",
+            "options": [
+                ["0", "0"],
+                ["1", "1"],
+                ["2", "2"],
+                ["3", "3"],
+                ["4", "4"],
+                ["5", "5"],
+                ["6", "6"],
+                ["7", "7"],
+                ["8", "8"],
+                ["9", "9"],
+                ["10", "10"],
+                ["11", "11"],
+                ["12", "12"],
+                ["13", "13"],
+                ["14", "14"],
+                ["15", "15"]
+            ],
+            "value": "0",
+            "fontSize": 11
+        }, {
+            "type": "Indicator",
+            "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+            "size": 12
+        }],
         "events": {},
         "def": {
-            "params": [ null, null, null ],
-            "type": "neobot_turn_right"
+            "params": [null, "15", null],
+            "type": "neobot_right_motor",
+            "id": "g15e"
         },
         "paramsKeyMap": {
             "DIRECTION": 0,
-            "VALUE": 1
+            "SPEED": 1
         },
         "class": "neobot_motor",
-        "isNotFor": [ "neobot" ],
+        "isNotFor": ["neobot"],
         "func": function (sprite, script) {
-            var port = script.getNumberField("VALUE");
-            var direction = script.getNumberField("DIRECTION");
-            Entry.hw.sendQueue["RMOT"] = port * direction;
+            var speed = script.getNumberField('SPEED');
+            var direction = script.getNumberField('DIRECTION');
+            Entry.hw.sendQueue['DCR'] = speed + direction;
             return script.callReturn();
         }
     },
-    "neobot_stop_right": {
+    "neobot_stop_right_motor": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "params": [
-            {
-                "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
-                "size": 12
-            }
-        ],
+        "template": "오른쪽모터 정지 %1",
+        "params": [{
+            "type": "Indicator",
+            "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+            "size": 12
+        }],
         "events": {},
         "def": {
-            "params": [ null ],
-            "type": "neobot_stop_right"
+            "params": [null],
+            "type": "neobot_stop_right_motor",
+            "id": "rkgh"
         },
         "class": "neobot_motor",
-        "isNotFor": [ "neobot" ],
+        "isNotFor": ["neobot"],
         "func": function (sprite, script) {
-            Entry.hw.sendQueue["RMOT"] = 0;
+            Entry.hw.sendQueue['DCR'] = 0;
             return script.callReturn();
         }
     },
-    "neobot_run_motor": {
+    "neobot_all_motor": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
+        "template": "양쪽 모터를 %1 의 속도로 %2",
         "params": [
             {
                 "type": "Dropdown",
@@ -10857,200 +10881,208 @@ Entry.block = {
         ],
         "events": {},
         "def": {
-            "params": [
-                null,
-                {
-                    "type": "text",
-                    "params": [ "1" ]
-                },
-                null,
-                null,
-                null
-            ],
-            "type": "neobot_run_motor"
-        },
-        "paramsKeyMap": {
-            "TYPE": 0,
-            "DURATION": 1,
-            "VALUE": 2,
-            "DIRECTION": 3
-        },
-        "class": "neobot_motor",
-        "isNotFor": [ "neobot" ],
-        "func": function (sprite, script) {
-            if (!script.isStart) {
-                script.isStart = true;
-                script.timeFlag = 1;
-                var timeValue = script.getNumberValue("DURATION") * 1000;
-                setTimeout(function() {
-                    script.timeFlag = 0;
-                }, timeValue);
-                return script;
-            } else if (script.timeFlag == 1) {
-                var type = script.getNumberField("TYPE");
-                var value = script.getNumberField("VALUE");
-                var direction = script.getNumberField("DIRECTION");
-                switch (direction) {
-                    case 1:
-                        Entry.hw.sendQueue["LMOT"] = value;
-                        Entry.hw.sendQueue["RMOT"] = value;
-                        break;
-                    case 2:
-                        Entry.hw.sendQueue["LMOT"] = value * -1;
-                        Entry.hw.sendQueue["RMOT"] = value * -1;
-                        break;
-                    case 3:
-                        Entry.hw.sendQueue["LMOT"] = value;
-                        Entry.hw.sendQueue["RMOT"] = value * -1;
-                        break;
-                    case 4:
-                        Entry.hw.sendQueue["LMOT"] = value * -1;
-                        Entry.hw.sendQueue["RMOT"] = value;
-                        break;
-                }
-
-                if(type === 2)  {
-                    Entry.hw.sendQueue["RMOT"] = 0;
-                } else if(type === 3) {
-                    Entry.hw.sendQueue["LMOT"] = 0;
-                }
-
-                return script;
-            } else {
-                delete script.timeFlag;
-                delete script.isStart;
-                Entry.engine.isContinue = false;
-                Entry.hw.sendQueue["LMOT"] = 0;
-                Entry.hw.sendQueue["RMOT"] = 0;
-                return script.callReturn();
-            }
-        }
-    },
-    "neobot_servo_1": {
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-            {
-                "type": "Dropdown",
-                "options": [
-                    [ "빠른", "3" ],
-                    [ "보통", "2" ],
-                    [ "느린", "1" ]
-                ],
-                "value": "3",
-                "fontSize": 11
-            },
-            {
-                "type": "Dropdown",
-                "options": [
-                    [ "0도", "0" ],
-                    [ "10도", "1" ],
-                    [ "20도", "2" ],
-                    [ "30도", "3" ],
-                    [ "40도", "4" ],
-                    [ "50도", "5" ],
-                    [ "60도", "6" ],
-                    [ "70도", "7" ],
-                    [ "80도", "8" ],
-                    [ "90도", "9" ],
-                    [ "100도", "10" ],
-                    [ "110도", "11" ],
-                    [ "120도", "12" ],
-                    [ "130도", "13" ],
-                    [ "140도", "14" ],
-                    [ "150도", "15" ],
-                    [ "160도", "16" ]
-                ],
-                "value": "0",
-                "fontSize": 11
-            },
-            {
-                "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
-                "size": 12
-            }
-        ],
-        "events": {},
-        "def": {
-            "params": [ null, null, null ],
-            "type": "neobot_servo_1"
+            "params": ["15", null, null],
+            "type": "neobot_all_motor",
+            "id": "kxpn"
         },
         "paramsKeyMap": {
             "SPEED": 0,
-            "VALUE": 1
+            "DIRECTION": 1
         },
-        "class": "neobot_servo",
-        "isNotFor": [ "neobot" ],
+        "class": "neobot_motor",
+        "isNotFor": ["neobot"],
         "func": function (sprite, script) {
-            var value = script.getNumberField("VALUE");
-            var speed = script.getNumberField("SPEED");
-            Entry.hw.sendQueue["SERVO1"] = value;
-            Entry.hw.sendQueue["SERVO1_SPEED"] = speed;
+            var type = script.getNumberField('TYPE');
+            var speed = script.getNumberField('SPEED');
+            var direction = script.getNumberField('DIRECTION');
+            switch (direction) {
+                case 1:
+                Entry.hw.sendQueue['DCL'] = 0x10 + speed;
+                Entry.hw.sendQueue['DCR'] = 0x10 + speed;
+                break;
+                case 2:
+                Entry.hw.sendQueue['DCL'] = 0x20 + speed;
+                Entry.hw.sendQueue['DCR'] = 0x20 + speed;
+                break;
+                case 3:
+                Entry.hw.sendQueue['DCL'] = 0x20 + speed;
+                Entry.hw.sendQueue['DCR'] = 0x10 + speed;
+                break;
+                case 4:
+                Entry.hw.sendQueue['DCL'] = 0x10 + speed;
+                Entry.hw.sendQueue['DCR'] = 0x20 + speed;
+                break;
+                case 5:
+                Entry.hw.sendQueue['DCL'] = 0;
+                Entry.hw.sendQueue['DCR'] = 0x10 + speed;
+                break;
+                case 6:
+                Entry.hw.sendQueue['DCL'] = 0x10 + speed;
+                Entry.hw.sendQueue['DCR'] = 0;
+                break;
+            }
             return script.callReturn();
         }
     },
-    "neobot_servo_2": {
+    "neobot_set_servo": {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "params": [
-            {
-                "type": "Dropdown",
-                "options": [
-                    [ "빠른", "3" ],
-                    [ "보통", "2" ],
-                    [ "느린", "1" ]
-                ],
-                "value": "3",
-                "fontSize": 11
-            },
-            {
-                "type": "Dropdown",
-                "options": [
-                    [ "0도", "0" ],
-                    [ "10도", "1" ],
-                    [ "20도", "2" ],
-                    [ "30도", "3" ],
-                    [ "40도", "4" ],
-                    [ "50도", "5" ],
-                    [ "60도", "6" ],
-                    [ "70도", "7" ],
-                    [ "80도", "8" ],
-                    [ "90도", "9" ],
-                    [ "100도", "10" ],
-                    [ "110도", "11" ],
-                    [ "120도", "12" ],
-                    [ "130도", "13" ],
-                    [ "140도", "14" ],
-                    [ "150도", "15" ],
-                    [ "160도", "16" ]
-                ],
-                "value": "0",
-                "fontSize": 11
-            },
-            {
-                "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
-                "size": 12
-            }
-        ],
+        "template": "%1 포트의 서보모터를 %2  이동 %3",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["OUT1", "1"],
+                ["OUT2", "2"],
+                ["OUT3", "3"]
+            ],
+            "value": "1",
+            "fontSize": 11
+        }, {
+            "type": "Dropdown",
+            "options": [
+                ["0도", "0"],
+                ["10도", "10"],
+                ["20도", "20"],
+                ["30도", "30"],
+                ["40도", "40"],
+                ["50도", "50"],
+                ["60도", "60"],
+                ["70도", "70"],
+                ["80도", "80"],
+                ["90도", "90"],
+                ["100도", "100"],
+                ["110도", "110"],
+                ["120도", "120"],
+                ["130도", "130"],
+                ["140도", "140"],
+                ["150도", "150"],
+                ["160도", "160"],
+                ["170도", "170"],
+                ["180도", "180"]
+            ],
+            "value": "0",
+            "fontSize": 11
+        }, {
+            "type": "Indicator",
+            "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+            "size": 12
+        }],
         "events": {},
         "def": {
-            "params": [ null, null, null ],
-            "type": "neobot_servo_2"
+            "params": [null, null, null],
+            "type": "neobot_set_servo",
+            "id": "eokl"
         },
         "paramsKeyMap": {
-            "SPEED": 0,
+            "PORT": 0,
+            "DEGREE": 1
+        },
+        "class": "neobot_output",
+        "isNotFor": ["neobot"],
+        "func": function (sprite, script) {
+            var port = script.getNumberField('PORT');
+            var degree = script.getNumberField('DEGREE');
+            Entry.hw.sendQueue['OUT' + port] = degree;
+            var option = port;
+            if(option === 3) {
+                option = 4;
+            }
+            Entry.hw.sendQueue['OPT'] = Entry.hw.sendQueue['OPT'] | option;
+            return script.callReturn();
+        }
+    },
+    "neobot_set_output": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "%1 번 포트의 값을 %2 만큼 출력 %3",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["OUT1", "1"],
+                ["OUT2", "2"],
+                ["OUT3", "3"]
+            ],
+            "value": "1",
+            "fontSize": 11
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [null, {
+                "type": "number",
+                "params": ["255"],
+                "id": "dg6t"
+            }, null],
+            "type": "neobot_set_output",
+            "id": "au77"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
             "VALUE": 1
         },
-        "class": "neobot_servo",
-        "isNotFor": [ "neobot" ],
+        "class": "neobot_output",
+        "isNotFor": ["neobot"],
         "func": function (sprite, script) {
-            var value = script.getNumberField("VALUE");
-            var speed = script.getNumberField("SPEED");
-            Entry.hw.sendQueue["SERVO2"] = value;
-            Entry.hw.sendQueue["SERVO2_SPEED"] = speed;
+            var port = script.getStringField('PORT', script);
+            var value = script.getNumberValue('VALUE', script);
+            var option = port;
+            if(value < 0) {
+                value = 0;
+            } else if (value > 255) {
+                value = 255;
+            }
+            if(option === 3) {
+                option = 4;
+            }
+            Entry.hw.sendQueue['OUT' + port] = value;
+            Entry.hw.sendQueue['OPT'] = Entry.hw.sendQueue['OPT'] & (~option);
+            return script.callReturn();
+        }
+    },
+    "neobot_set_fnd": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "FND에 %1 출력 %2",
+        "params": [{
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [{
+                "type": "number",
+                "params": ["0"],
+                "id": "4z3f"
+            }, null],
+            "type": "neobot_set_fnd",
+            "id": "oj82"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "neobot_output",
+        "isNotFor": ["neobot"],
+        "func": function (sprite, script) {
+            var value = script.getNumberValue('VALUE', script);
+            if(value > 255) {
+                value = 255;
+            } else if(value < 0) {
+                value = 0;
+            }
+            Entry.hw.sendQueue['FND'] = value;
             return script.callReturn();
         }
     },
@@ -11058,52 +11090,58 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "params": [
-            {
-                "type": "Dropdown",
-                "options": [
-                    [ "도", "1" ],
-                    [ "레", "2" ],
-                    [ "미", "3" ],
-                    [ "파", "4" ],
-                    [ "솔", "5" ],
-                    [ "라", "6" ],
-                    [ "시", "7" ],
-                    [ "도", "8" ]
-                ],
-                "value": "1",
-                "fontSize": 11
-            },
-            {
-                "type": "Dropdown",
-                "options": [
-                    [ "1", "0" ],
-                    [ "2", "1" ],
-                    [ "3", "2" ]
-                ],
-                "value": "0",
-                "fontSize": 11
-            },
-            {
-                "type": "Dropdown",
-                "options": [
-                    [ "2분음표", "2" ],
-                    [ "4분음표", "4" ],
-                    [ "8분음표", "8" ]
-                ],
-                "value": "2",
-                "fontSize": 11
-            },
-            {
-                "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
-                "size": 12
-            }
-        ],
+        "template": "멜로디 %1 을(를) %2 옥타브로 %3 길이만큼 소리내기 %4",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["무음", "0"],
+                ["도", "1"],
+                ["도#", "2"],
+                ["레", "3"],
+                ["레#", "4"],
+                ["미", "5"],
+                ["파", "6"],
+                ["파#", "7"],
+                ["솔", "8"],
+                ["솔#", "9"],
+                ["라", "10"],
+                ["라#", "11"],
+                ["시", "12"]
+            ],
+            "value": "0",
+            "fontSize": 11
+        }, {
+            "type": "Dropdown",
+            "options": [
+                ["1", "0"],
+                ["2", "1"],
+                ["3", "2"],
+                ["4", "3"],
+                ["5", "4"],
+                ["6", "5"]
+            ],
+            "value": "0",
+            "fontSize": 11
+        }, {
+            "type": "Dropdown",
+            "options": [
+                ["2분음표", "2"],
+                ["4분음표", "4"],
+                ["8분음표", "8"],
+                ["16분음표", "16"]
+            ],
+            "value": "2",
+            "fontSize": 11
+        }, {
+            "type": "Indicator",
+            "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+            "size": 12
+        }],
         "events": {},
         "def": {
-            "params": [ null, null, null, null ],
-            "type": "neobot_play_note_for"
+            "params": ["1", "2", "4", null],
+            "type": "neobot_play_note_for",
+            "id": "ldg8"
         },
         "paramsKeyMap": {
             "NOTE": 0,
@@ -11111,7 +11149,7 @@ Entry.block = {
             "DURATION": 2
         },
         "class": "neobot_note",
-        "isNotFor": [ "neobot" ],
+        "isNotFor": ["neobot"],
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
 
@@ -11119,14 +11157,14 @@ Entry.block = {
                 var note = script.getNumberField("NOTE", script);
                 var octave = script.getNumberField("OCTAVE", script);
                 var duration = script.getNumberField("DURATION", script);
-                script.note = note;
+                var value = note + (12 * octave);
 
                 script.isStart = true;
                 script.timeFlag = 1;
-                sq.note = note;
-                sq.octave = octave;
-                sq.duration = duration;
-                sq.sound_check = (Math.random() * 100000).toFixed(0);
+                if(value > 65) {
+                    value = 65;
+                }
+                sq.SND = value;
                 setTimeout(function() {
                     script.timeFlag = 0;
                 }, 1 / duration * 2000);
@@ -11136,59 +11174,11 @@ Entry.block = {
             } else {
                 delete script.timeFlag;
                 delete script.isStart;
+                Entry.hw.sendQueue['SND'] = 0;
                 Entry.engine.isContinue = false;
                 return script.callReturn();
             }
 
-        }
-    },
-    "neobot_set_sensor_value": {
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-            {
-                "type": "Dropdown",
-                "options": [
-                    [ "1", "O_1" ],
-                    [ "2", "O_2" ]
-                ],
-                "value": "O_1",
-                "fontSize": 11
-            },
-            {
-                "type": "Dropdown",
-                "options": [
-                    [ "켜기", "1" ],
-                    [ "끄기", "0" ]
-                ],
-                "value": "1",
-                "fontSize": 11
-            },
-            {
-                "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
-                "size": 12
-            }
-        ],
-        "events": {},
-        "def": {
-            "params": [ null, null, null ],
-            "type": "neobot_set_sensor_value"
-        },
-        "paramsKeyMap": {
-            "PORT": 0,
-            "VALUE": 1
-        },
-        "class": "neobot_set_value",
-        "isNotFor": [ "neobot" ],
-        "func": function (sprite, script) {
-            var sq = Entry.hw.sendQueue;
-
-            var port = script.getStringField("PORT", script);
-            var value = script.getNumberField("VALUE", script);
-            sq[port] = value;
-            return script.callReturn();
         }
     },
     "robotis_openCM70_cm_custom_value": {
@@ -17105,6 +17095,14 @@ Entry.block = {
         "isNotFor": [
             "dplay"
         ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_sensor_number"
+                }
+            ],
+            "type": "dplay_get_number_sensor_value"
+        },
         "class": "arduino_value"
     },
     "dplay_get_digital_value": {
@@ -17112,6 +17110,14 @@ Entry.block = {
         "isNotFor": [
             "dplay"
         ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_port_number"
+                }
+            ],
+            "type": "dplay_get_digital_value"
+        },
         "class": "arduino_value"
     },
     "dplay_toggle_led": {
@@ -17119,6 +17125,16 @@ Entry.block = {
         "isNotFor": [
             "dplay"
         ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_port_number"
+                },
+                null,
+                null
+            ],
+            "type": "dplay_toggle_led"
+        },
         "class": "arduino_set"
     },
     "dplay_toggle_pwm": {
@@ -17126,6 +17142,19 @@ Entry.block = {
         "isNotFor": [
             "dplay"
         ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_pwm_port_number"
+                },
+                {
+                    "type": "arduino_text",
+                    "params": [ "255" ]
+                },
+                null
+            ],
+            "type": "dplay_toggle_pwm"
+        },
         "class": "arduino_set"
     },
     "dplay_convert_scale": {
@@ -17133,13 +17162,415 @@ Entry.block = {
         "isNotFor": [
             "dplay"
         ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_number_sensor_value",
+                    "params": [
+                        {
+                            "type": "arduino_get_sensor_number",
+                            "id": "bl5e"
+                        }
+                    ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "1023" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "100" ]
+                }
+            ],
+            "type": "dplay_convert_scale"
+        },
         "class": "arduino"
+    },
+    "dplay_get_value": {
+        "color": "#00979D",
+        "fontColor": "#FFF",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "아날로그 %1 번  %2 센서값",
+        "params": [{
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Dropdown",
+            "options": [
+                ["가변저항", "ADJU"],
+                ["빛센서", "LIGHT"],
+                ["온도센서", "TEMP"],
+                ["조이스틱 X", "JOYS"],
+                ["조이스틱 Y", "JOYS"],
+                ["적외선", "INFR"]
+            ],
+            "value": "ADJU",
+            "fontSize": 11
+        }],
+        "events": {},
+        "def": {
+            "params": [{
+                "type": "arduino_get_sensor_number",
+                "id": "4rx2"
+            }, null],
+            "type": "dplay_get_value",
+            "id": "hh5b"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0,
+            "OPERATOR": 1
+        },
+        "class": "dplay_set",
+        "isNotFor": ["dplay"],
+        "func": function (sprite, script) {
+            var signal = script.getValue("VALUE", script);
+            return Entry.hw.getAnalogPortValue(signal[1]);
+        }
+    },
+    "dplay_get_tilt": {
+        "color": "#00979D",
+        "fontColor": "#FFF",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "template": "기울기센서 상태가 %1  ",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["왼쪽", "LEFT"],
+                ["오른쪽", "LIGHT"]
+            ],
+            "value": "LEFT",
+            "fontSize": 11
+        }],
+        "events": {},
+        "def": {
+            "params": [null],
+            "type": "dplay_get_tilt",
+            "id": "edht"
+        },
+        "paramsKeyMap": {
+            "STATUS": 0
+        },
+        "class": "dplay_set",
+        "isNotFor": ["dplay"],
+        "func": function (sprite, script) {
+            var value1 = script.getField("STATUS", script);
+            var value2 = 12;
+            if (value1 == "LIGHT") return Entry.hw.getDigitalPortValue(value2) == 1 ? 1 : 0;
+            else return Entry.hw.getDigitalPortValue(value2) == 0 ? 1 : 0;
+        }
+    },
+    "dplay_DCmotor": {
+        "color": "#00979D",
+        "fontColor": "#FFF",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "%1  DC모터 상태를 %2 %3",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["왼쪽", "3"],
+                ["오른쪽", "6"]
+            ],
+            "value": "3",
+            "fontSize": 11
+        }, {
+            "type": "Dropdown",
+            "options": [
+                ["정방향", "FRONT"],
+                ["역방향", "REAR"],
+                ["정지", "OFF"]
+            ],
+            "value": "FRONT",
+            "fontSize": 11
+        }, {
+            "type": "Indicator",
+            "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [null, null, null],
+            "type": "dplay_DCmotor",
+            "id": "7b8v"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "OPERATOR": 1
+        },
+        "class": "dplay",
+        "isNotFor": ["dplay"],
+        "func": function (sprite, script) {
+            var port1 = script.getField("PORT");
+            var port2 = 0;
+            if (port1 == "3") port2 = 5;
+            else if (port1 == "6") value2 = 11;
+            var operator = script.getField("OPERATOR");
+            var value1 = 0;
+            var value2 = 0;
+            if (operator == "FRONT") {
+                value1 = 255;
+                value2 = 0;
+            }
+            else if (operator == "REAR") {
+                value1 = 0;
+                value2 = 255;
+            }
+            else if (operator == "OFF") {
+                value1 = 0;
+                value2 = 0;
+            }
+            Entry.hw.setDigitalPortValue(port1, value1);
+            Entry.hw.setDigitalPortValue(port2, value2);
+            return script.callReturn();
+        }
+    },
+    "dplay_buzzer": {
+        "color": "#00979D",
+        "fontColor": "#FFF",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "부저를  %1 로 %2 박자로 연주하기 %3",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["도", "1"],
+                ["레", "2"],
+                ["미", "3"]
+            ],
+            "value": "1",
+            "fontSize": 11
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [null, {
+                "type": "arduino_text",
+                "params": ["0"],
+                "id": "04wh"
+            }, null],
+            "type": "dplay_buzzer",
+            "id": "rl5l"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "dplay",
+        "isNotFor": ["dplay"],
+        "func": function (sprite, script) {
+            var port1 = script.getField("PORT");
+            var port = 2;
+            if (port1 == "1") port = 2;
+            else if (port1 == "2") port = 4;
+            else if (port1 == "3") port = 7;
+            var value = script.getNumberValue("VALUE");
+            value = Math.round(value);
+            value = Math.max(value, 0);
+            value = Math.min(value, 100);
+            Entry.hw.setDigitalPortValue(port, value);
+            return script.callReturn();
+        }
+    },
+    "dplay_servo": {
+        "color": "#00979D",
+        "fontColor": "#FFF",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "서보모터 각도를 %1 로 이동 %2",
+        "params": [{
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [{
+                "type": "arduino_text",
+                "params": ["255"],
+                "id": "5ld8"
+            }, null],
+            "type": "dplay_servo",
+            "id": "lo2z"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "dplay",
+        "isNotFor": ["dplay"],
+        "func": function (sprite, script) {
+            var port = 9;
+            var value = script.getNumberValue("VALUE");
+            value = Math.round(value);
+            value = Math.max(value, 0);
+            value = Math.min(value, 180);
+            Entry.hw.setDigitalPortValue(port, value);
+            return script.callReturn();
+        }
+    },
+    "dplay_select_led": {
+        "color": "#00979D",
+        "fontColor": "#FFF",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "디지털 %1 LED 상태를 %2 %3",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["7", "7"],
+                ["8", "8"],
+                ["9", "9"],
+                ["10", "10"]
+            ],
+            "value": "7",
+            "fontSize": 11
+        }, {
+            "type": "Dropdown",
+            "options": [
+                ["켜기", "on"],
+                ["끄기", "off"]
+            ],
+            "value": "on",
+            "fontSize": 11
+        }, {
+            "type": "Indicator",
+            "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [null, null, null],
+            "type": "dplay_select_led",
+            "id": "9kmq"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "OPERATOR": 1
+        },
+        "class": "dplay",
+        "isNotFor": ["dplay"],
+        "func": function (sprite, script) {
+            var port1 = script.getField("PORT");
+            var port = 7;
+            if (port1 == "7") port = 7;
+            else if (port1 == "8") port = 8;
+            else if (port1 == "9") port = 9;
+            else if (port1 == "10") port = 10;
+            var operator = script.getField("OPERATOR");
+            var value = operator == "on" ? 255 : 0;
+            Entry.hw.setDigitalPortValue(port, value);
+            return script.callReturn();
+        }
+    },
+    "dplay_get_switch_status": {
+        "color": "#00979D",
+        "fontColor": "#FFF",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "template": "디지털  %1 번 스위치가 %2  ",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["2", "2"],
+                ["4", "4"]
+            ],
+            "value": "2",
+            "fontSize": 11
+        }, {
+            "type": "Dropdown",
+            "options": [
+                ["눌림", "ON"],
+                ["열림", "OFF"]
+            ],
+            "value": "ON",
+            "fontSize": 11
+        }],
+        "events": {},
+        "def": {
+            "params": [null, null],
+            "type": "dplay_get_switch_status",
+            "id": "fik8"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "STATUS": 1
+        },
+        "class": "dplay_set",
+        "isNotFor": ["dplay"],
+        "func": function (sprite, script) {
+            var port1 = script.getField("PORT");
+            var port = 2;
+            if (port1 == "2") port = 2;
+            else if (port1 == "4") port = 4;
+            var value1 = script.getField("STATUS");
+            if (value1 == "OFF") return Entry.hw.getDigitalPortValue(port) == 1 ? 1 : 0;
+            else return Entry.hw.getDigitalPortValue(port) == 0 ? 1 : 0;
+        }
+    },
+    "dplay_get_light_status": {
+        "color": "#00979D",
+        "fontColor": "#FFF",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "template": "빛센서가  %1  ",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["밝음", "BRIGHT"],
+                ["어두움", "DARK"]
+            ],
+            "value": "BRIGHT",
+            "fontSize": 11
+        }],
+        "events": {},
+        "def": {
+            "params": [null],
+            "type": "dplay_get_light_status",
+            "id": "do3r"
+        },
+        "paramsKeyMap": {
+            "STATUS": 0
+        },
+        "class": "dplay_set",
+        "isNotFor": ["dplay"],
+        "func": function (sprite, script) {
+            var value1 = script.getField("STATUS", script);
+            var value2 = 1;
+            if (value1 == "DARK") return Entry.hw.getAnalogPortValue(value2) > 800 ? 1 : 0;
+            else return Entry.hw.getAnalogPortValue(value2) < 800 ? 1 : 0;
+        }
     },
     "nemoino_get_number_sensor_value": {
         "parent": "arduino_get_number_sensor_value",
         "isNotFor": [
             "nemoino"
         ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_sensor_number"
+                }
+            ],
+            "type": "nemoino_get_number_sensor_value"
+        },
         "class": "arduino_value"
     },
     "nemoino_get_digital_value": {
@@ -17147,6 +17578,14 @@ Entry.block = {
         "isNotFor": [
             "nemoino"
         ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_port_number"
+                }
+            ],
+            "type": "nemoino_get_digital_value"
+        },
         "class": "arduino_value"
     },
     "nemoino_toggle_led": {
@@ -17154,6 +17593,16 @@ Entry.block = {
         "isNotFor": [
             "nemoino"
         ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_port_number"
+                },
+                null,
+                null
+            ],
+            "type": "nemoino_toggle_led"
+        },
         "class": "arduino_set"
     },
     "nemoino_toggle_pwm": {
@@ -17161,6 +17610,19 @@ Entry.block = {
         "isNotFor": [
             "nemoino"
         ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_pwm_port_number"
+                },
+                {
+                    "type": "arduino_text",
+                    "params": [ "255" ]
+                },
+                null
+            ],
+            "type": "nemoino_toggle_pwm"
+        },
         "class": "arduino_set"
     },
     "nemoino_convert_scale": {
@@ -17168,6 +17630,36 @@ Entry.block = {
         "isNotFor": [
             "nemoino"
         ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_number_sensor_value",
+                    "params": [
+                        {
+                            "type": "arduino_get_sensor_number",
+                            "id": "bl5e"
+                        }
+                    ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "1023" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "100" ]
+                }
+            ],
+            "type": "nemoino_convert_scale"
+        },
         "class": "arduino"
     },
     "sensorBoard_get_number_sensor_value": {
@@ -17175,6 +17667,14 @@ Entry.block = {
         "isNotFor": [
             "sensorBoard"
         ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_sensor_number"
+                }
+            ],
+            "type": "sensorBoard_get_number_sensor_value"
+        },
         "class": "arduino_value"
     },
     "sensorBoard_get_digital_value": {
@@ -17182,6 +17682,14 @@ Entry.block = {
         "isNotFor": [
             "sensorBoard"
         ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_port_number"
+                }
+            ],
+            "type": "sensorBoard_get_digital_value"
+        },
         "class": "arduino_value"
     },
     "sensorBoard_toggle_led": {
@@ -17189,6 +17697,16 @@ Entry.block = {
         "isNotFor": [
             "sensorBoard"
         ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_port_number"
+                },
+                null,
+                null
+            ],
+            "type": "sensorBoard_toggle_led"
+        },
         "class": "arduino_set"
     },
     "sensorBoard_toggle_pwm": {
@@ -17196,6 +17714,19 @@ Entry.block = {
         "isNotFor": [
             "sensorBoard"
         ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_pwm_port_number"
+                },
+                {
+                    "type": "arduino_text",
+                    "params": [ "255" ]
+                },
+                null
+            ],
+            "type": "sensorBoard_toggle_pwm"
+        },
         "class": "arduino_set"
     },
     "sensorBoard_convert_scale": {
@@ -17203,6 +17734,36 @@ Entry.block = {
         "isNotFor": [
             "sensorBoard"
         ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_number_sensor_value",
+                    "params": [
+                        {
+                            "type": "arduino_get_sensor_number",
+                            "id": "bl5e"
+                        }
+                    ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "1023" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "100" ]
+                }
+            ],
+            "type": "sensorBoard_convert_scale"
+        },
         "class": "arduino"
     },
     "CODEino_get_number_sensor_value": {
@@ -17210,6 +17771,14 @@ Entry.block = {
         "isNotFor": [
             "CODEino"
         ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_sensor_number"
+                }
+            ],
+            "type": "CODEino_get_number_sensor_value"
+        },
         "class": "arduino_value"
     },
     "CODEino_get_digital_value": {
@@ -17217,6 +17786,14 @@ Entry.block = {
         "isNotFor": [
             "CODEino"
         ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_port_number"
+                }
+            ],
+            "type": "CODEino_get_digital_value"
+        },
         "class": "arduino_value"
     },
     "CODEino_toggle_led": {
@@ -17224,6 +17801,16 @@ Entry.block = {
         "isNotFor": [
             "CODEino"
         ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_port_number"
+                },
+                null,
+                null
+            ],
+            "type": "CODEino_toggle_led"
+        },
         "class": "arduino_set"
     },
     "CODEino_toggle_pwm": {
@@ -17231,6 +17818,19 @@ Entry.block = {
         "isNotFor": [
             "CODEino"
         ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_pwm_port_number"
+                },
+                {
+                    "type": "arduino_text",
+                    "params": [ "255" ]
+                },
+                null
+            ],
+            "type": "CODEino_toggle_pwm"
+        },
         "class": "arduino_set"
     },
     "CODEino_convert_scale": {
@@ -17238,6 +17838,36 @@ Entry.block = {
         "isNotFor": [
             "CODEino"
         ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_number_sensor_value",
+                    "params": [
+                        {
+                            "type": "arduino_get_sensor_number",
+                            "id": "bl5e"
+                        }
+                    ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "1023" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "100" ]
+                }
+            ],
+            "type": "CODEino_convert_scale"
+        },
         "class": "arduino"
     }
 };

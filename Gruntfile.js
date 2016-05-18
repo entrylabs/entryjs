@@ -75,7 +75,7 @@ module.exports = function(grunt) {
                 }
             },
             targetName: {
-                src: ['src/entry.js', 'src/**/*.js'],
+                src: ['src/entry.js', 'src/**/*.js', '!src/workspace/block_entry.js'],
                 dest: 'dist/entry.js'
             },
             dist: {
