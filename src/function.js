@@ -341,7 +341,7 @@ Entry.Func.generateBlock = function(func) {
             var paramIndex = Number(templateChunk.split('%')[1]) - 1;
             var param = blockSchema.params[paramIndex];
             if (param.type === "Indicator") {
-            } else if (param.accept === "booleanMagnet") {
+            } else if (param.accept === "boolean") {
                 description +=
                     Lang.template.function_param_boolean +
                     (booleanIndex ? booleanIndex : "");
@@ -393,7 +393,7 @@ Entry.Func.generateWsBlock = function(targetFunc) {
                 booleanIndex++;
                 schemaParams.push({
                     type: "Block",
-                    accept: "booleanMagnet"
+                    accept: "boolean"
                 });
                 schemaTemplate += " %" + (booleanIndex + stringIndex);
                 break;
@@ -408,7 +408,7 @@ Entry.Func.generateWsBlock = function(targetFunc) {
                 schemaTemplate += " %" + (booleanIndex + stringIndex);
                 schemaParams.push({
                     type: "Block",
-                    accept: "stringMagnet"
+                    accept: "string"
                 });
                 break;
         }
