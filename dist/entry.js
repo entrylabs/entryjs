@@ -12916,11 +12916,22 @@ p.initSocket = function() {
       this.isFirstConnect || Entry.toast.alert(Lang.Menus.connect_hw, Lang.Menus.connect_fail, !1), this.isFirstConnect = !1;
     } else {
       var a = this, b, c;
+      this.connected = !1;
+      this.connectTrial++;
       if (-1 < location.protocol.indexOf("https")) {
         c = new WebSocket("wss://hardware.play-entry.org:23518");
       } else {
         try {
-          b = new WebSocket("ws://localhost:23518");
+          b = new WebSocket("ws://127.0.0.1:23518"), b.binaryType = "arraybuffer", b.onopen = function() {
+            a.socketType = "WebSocket";
+            a.initHardware(b);
+          }, b.onmessage = function(b) {
+            b = JSON.parse(b.data);
+            a.checkDevice(b);
+            a.updatePortData(b);
+          }, b.onclose = function() {
+            "WebSocket" === a.socketType && (this.socket = null, a.initSocket());
+          };
         } catch (d) {
         }
         try {
@@ -12928,22 +12939,7 @@ p.initSocket = function() {
         } catch (d) {
         }
       }
-      this.connected = !1;
-      b.binaryType = "arraybuffer";
       c.binaryType = "arraybuffer";
-      this.connectTrial++;
-      b.onopen = function() {
-        a.socketType = "WebSocket";
-        a.initHardware(b);
-      };
-      b.onmessage = function(b) {
-        b = JSON.parse(b.data);
-        a.checkDevice(b);
-        a.updatePortData(b);
-      };
-      b.onclose = function() {
-        "WebSocket" === a.socketType && (this.socket = null, a.initSocket());
-      };
       c.onopen = function() {
         a.socketType = "WebSocketSecurity";
         a.initHardware(c);

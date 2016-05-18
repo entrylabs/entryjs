@@ -56,44 +56,43 @@ p.initSocket = function() {
 
         var socket, socketSecurity;
         var protocol = '';
+        this.connected = false;
+        this.connectTrial++;
+
         if(location.protocol.indexOf('https') > -1) {
             socketSecurity = new WebSocket("wss://hardware.play-entry.org:23518");
         } else {
             try{
-                socket = new WebSocket("ws://localhost:23518");
+                socket = new WebSocket("ws://127.0.0.1:23518");
+                socket.binaryType = "arraybuffer";
+
+                socket.onopen = function()
+                {
+                    hw.socketType = 'WebSocket';
+                    hw.initHardware(socket);
+                };
+
+                socket.onmessage = function (evt)
+                {
+                    var data = JSON.parse(evt.data);
+                    hw.checkDevice(data);
+                    hw.updatePortData(data);
+                };
+
+                socket.onclose = function()
+                {
+                    if(hw.socketType === 'WebSocket') {
+                        this.socket = null;
+                        hw.initSocket();
+                    }
+                };
             } catch(e) {}
             try{
                 socketSecurity = new WebSocket("wss://hardware.play-entry.org:23518");
             } catch(e) {
             }
         }
-
-        this.connected = false;
-        socket.binaryType = "arraybuffer";
         socketSecurity.binaryType = "arraybuffer";
-        this.connectTrial++;
-
-        socket.onopen = function()
-        {
-            hw.socketType = 'WebSocket';
-            hw.initHardware(socket);
-        };
-
-        socket.onmessage = function (evt)
-        {
-            var data = JSON.parse(evt.data);
-            hw.checkDevice(data);
-            hw.updatePortData(data);
-        };
-
-        socket.onclose = function()
-        {
-            if(hw.socketType === 'WebSocket') {
-                this.socket = null;
-                hw.initSocket();
-            }
-        };
-
         socketSecurity.onopen = function()
         {
             hw.socketType = 'WebSocketSecurity';
