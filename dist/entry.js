@@ -6035,6 +6035,13 @@ Entry.Commander = function(b) {
   }, log:function(a) {
     return [a.id, a.toJSON()];
   }, undo:"scrollBoard"};
+  b.setFieldValue = {type:106, do:function(a, b, d, e, f) {
+    b.setValue(f, !0);
+  }, state:function(a, b, d, e, f) {
+    return [a, b, d, f, e];
+  }, log:function(a, b) {
+    return [a.id, b];
+  }, undo:"setFieldValue"};
 })(Entry.Command);
 (function(b) {
   b.selectObject = {type:201, do:function(a) {
@@ -7135,7 +7142,7 @@ Entry.Engine.prototype.raiseEventOnEntity = function(b, a) {
 };
 Entry.Engine.prototype.captureKeyEvent = function(b) {
   var a = b.keyCode, c = Entry.type;
-  b.ctrlKey && "workspace" == c ? 83 == a ? (b.preventDefault(), Entry.dispatchEvent("saveWorkspace")) : 82 == a ? (b.preventDefault(), Entry.engine.run()) : 90 == a && (b.preventDefault(), Entry.dispatchEvent(b.shiftKey ? "redo" : "undo")) : Entry.engine.isState("run") && Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["keyPress", a]);
+  b.ctrlKey && "workspace" == c ? 83 == a ? (b.preventDefault(), Entry.dispatchEvent("saveWorkspace")) : 82 == a ? (b.preventDefault(), Entry.engine.run()) : 90 == a && (b.preventDefault(), console.log("engine"), Entry.dispatchEvent(b.shiftKey ? "redo" : "undo")) : Entry.engine.isState("run") && Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["keyPress", a]);
   Entry.engine.isState("stop") && "workspace" === c && 37 <= a && 40 >= a && Entry.stage.moveSprite(b);
 };
 Entry.Engine.prototype.raiseKeyEvent = function(b, a) {
@@ -10155,7 +10162,7 @@ Entry.Parser = function(b, a, c) {
   this.codeMirror = c;
   this._lang = a || "js";
   this.availableCode = [];
-  "maze" === b && (this._stageId = Number(Ntry.configManager.getConfig("stageId")), this.setAvailableCode(NtryData.config[this._stageId].availableCode, NtryData.player[this._stageId].code));
+  "maze" === b && (this._stageId = Number(Ntry.configManager.getConfig("stageId")), "object" == typeof NtryData && this.setAvailableCode(NtryData.config[this._stageId].availableCode, NtryData.player[this._stageId].code));
   this.mappingSyntax(b);
   switch(this._lang) {
     case "js":
@@ -12859,7 +12866,7 @@ Entry.Variable = function(b) {
   this.isCloud_ = b.isCloud || !1;
   var a = Entry.parseNumber(b.value);
   this.value_ = "number" == typeof a ? a : b.value ? b.value : 0;
-  "slide" == this.type && (this.minValue_ = b.minValue ? b.minValue : 0, this.maxValue_ = b.maxValue ? b.maxValue : 100);
+  "slide" == this.type && (this.minValue_ = Number(b.minValue ? b.minValue : 0), this.maxValue_ = Number(b.maxValue ? b.maxValue : 100));
   b.isClone || (this.visible_ = b.visible || "boolean" == typeof b.visible ? b.visible : !0, this.x_ = b.x ? b.x : null, this.y_ = b.y ? b.y : null, "list" == this.type && (this.width_ = b.width ? b.width : 100, this.height_ = b.height ? b.height : 120, this.array_ = b.array ? b.array : [], this.scrollPosition = 0), this.BORDER = 6, this.FONT = "10pt NanumGothic");
 };
 Entry.Variable.prototype.generateView = function(b) {
@@ -13034,13 +13041,7 @@ Entry.Variable.prototype.isNumber = function() {
   return isNaN(this.value_) ? !1 : !0;
 };
 Entry.Variable.prototype.setValue = function(b) {
-  if ("slide" != this.type) {
-    this.value_ = b;
-  } else {
-    var a = Entry.isFloat(this.minValue_), c = Entry.isFloat(this.maxValue_);
-    this.value_ = b < this.minValue_ ? this.minValue_ : b > this.maxValue_ ? this.maxValue_ : b;
-    a || c || (this.viewValue_ = this.value_, this.value_ = Math.floor(this.value_));
-  }
+  "slide" != this.type ? this.value_ = b : (b = Number(b), this.value_ = b < this.minValue_ ? this.minValue_ : b > this.maxValue_ ? this.maxValue_ : b, this.isFloatPoint() ? delete this.viewValue_ : this.viewValue_ = this.value_);
   this.isCloud_ && Entry.variableContainer.updateCloudVariables();
   this.updateView();
 };
@@ -13142,7 +13143,9 @@ Entry.Variable.prototype.updateSlideValueByView = function() {
   0 > b && (b = 0);
   1 < b && (b = 1);
   var a = parseFloat(this.minValue_), c = parseFloat(this.maxValue_), b = (a + Number(Math.abs(c - a) * b)).toFixed(2), b = parseFloat(b);
-  b < a ? this.setValue(this.minValue_) : b > c ? this.setValue(this.maxValue_) : this.setValue(b);
+  b < a ? b = this.minValue_ : b > c && (b = this.maxValue_);
+  this.isFloatPoint() || (this.viewValue_ = b, b = Math.round(b));
+  this.setValue(b);
 };
 Entry.Variable.prototype.getMinValue = function() {
   return this.minValue_;
@@ -13151,6 +13154,7 @@ Entry.Variable.prototype.setMinValue = function(b) {
   this.minValue_ = b;
   this.value_ < b && (this.value_ = b);
   this.updateView();
+  this.isMinFloat = Entry.isFloat(this.minValue_);
 };
 Entry.Variable.prototype.getMaxValue = function() {
   return this.maxValue_;
@@ -13159,6 +13163,10 @@ Entry.Variable.prototype.setMaxValue = function(b) {
   this.maxValue_ = b;
   this.value_ > b && (this.value_ = b);
   this.updateView();
+  this.isMaxFloat = Entry.isFloat(this.maxValue_);
+};
+Entry.Variable.prototype.isFloatPoint = function() {
+  return this.isMaxFloat || this.isMinFloat;
 };
 Entry.VariableContainer = function() {
   this.variables_ = [];
@@ -18248,10 +18256,10 @@ Entry.BlockView.DRAG_RADIUS = 5;
       g = this.getBoard().suffix, this.pathGroup.attr({filter:"url(#entryBlockShadowFilter_" + g + ")"});
     } else {
       if (this.magnet.string || this.magnet.boolean) {
-        f.stroke = Entry.Utils.colorDarken(this._schema.color, .65);
+        f.stroke = e.outerLine;
       }
     }
-    e.outerLine && (f["stroke-width"] = "0.7");
+    e.outerLine && (f["stroke-width"] = "0.6");
     this._path.attr(f);
     this._moveTo(this.x, this.y, !1);
     this._startContentRender(b);
@@ -18450,7 +18458,8 @@ Entry.BlockView.DRAG_RADIUS = 5;
         a = !1;
         switch(Entry.GlobalSvg.terminateDrag(this)) {
           case g.DONE:
-            g = b.magnetedBlockView ? b.magnetedBlockView.block : null;
+            g = b.magnetedBlockView;
+            g instanceof Entry.BlockView && (g = g.block);
             f && !g ? Entry.do("separateBlock", e) : f || g || d ? g ? ("next" === g.view.magneting ? (a = e.getLastBlock(), Entry.do("insertBlock", g, a).isPass(d)) : Entry.do("insertBlock", e, g).isPass(d), createjs.Sound.play("entryMagneting"), a = !0) : Entry.do("moveBlock", e).isPass(d) : e.getThread().view.isGlobal() ? Entry.do("moveBlock", e) : Entry.do("separateBlock", e);
             break;
           case g.RETURN:
@@ -19050,10 +19059,15 @@ Entry.Field = function() {
   b.destroy = function() {
     this.destroyOption();
   };
+  b.command = function() {
+    this._startValue && (this._startValue === this.getValue() || this._blockView.isInBlockMenu || Entry.do("setFieldValue", this._block, this, this.pointer(), this._startValue, this.getValue()));
+    delete this._startValue;
+  };
   b.destroyOption = function() {
     this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
     this.disposeEvent && (Entry.disposeEvent.detach(this.disposeEvent), delete this.documentDownEvent);
     this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
+    this.command();
   };
   b._attachDisposeEvent = function(a) {
     var b = this;
@@ -19091,9 +19105,8 @@ Entry.Field = function() {
   b.getValue = function() {
     return this._block.params[this._index];
   };
-  b.setValue = function(a) {
-    this.value = a;
-    this._block.params[this._index] = a;
+  b.setValue = function(a, b) {
+    this.value != a && (this.value = a, this._block.params[this._index] = a, b && this._blockView.reDraw());
   };
   b._isEditable = function() {
     if (this._block.view.dragMode == Entry.DRAG_MODE_DRAG) {
@@ -19117,8 +19130,14 @@ Entry.Field = function() {
   b._bindRenderOptions = function() {
     var a = this;
     $(this.svgGroup).bind("mouseup touchend", function(b) {
-      a._isEditable() && a.renderOptions();
+      a._isEditable() && (a.destroyOption(), a._startValue = a.getValue(), a.renderOptions());
     });
+  };
+  b.pointer = function(a) {
+    a = a || [];
+    a.unshift(this._index);
+    a.unshift(Entry.PARAM);
+    return this._block.pointer(a);
   };
 })(Entry.Field.prototype);
 Entry.FieldAngle = function(b, a, c) {
@@ -19148,7 +19167,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
   };
   b.renderOptions = function() {
     var a = this;
-    this.destroyOption();
     this._attachDisposeEvent(function() {
       a.applyValue();
       a.destroyOption();
@@ -19222,6 +19240,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
     this.svgOptionGroup && (this.svgOptionGroup.remove(), delete this.svgOptionGroup);
     this.textElement.textContent = this.getText();
+    this.command();
   };
 })(Entry.FieldAngle.prototype);
 Entry.FieldBlock = function(b, a, c, d, e) {
@@ -19402,6 +19421,7 @@ Entry.FieldColor = function(b, a, c) {
 Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
 (function(b) {
   b.renderStart = function() {
+    this.svgGroup && $(this.svgGroup).remove();
     this.svgGroup = this._blockView.contentSvgGroup.elem("g", {class:"entry-field-color"});
     var a = this._position, b;
     a ? (b = a.x || 0, a = a.y || 0) : (b = 0, a = -8);
@@ -19411,7 +19431,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
   };
   b.renderOptions = function() {
     var a = this;
-    this.destroyOption();
     this._attachDisposeEvent();
     var b = Entry.FieldColor.getWidgetColorList();
     this.optionGroup = Entry.Dom("table", {class:"entry-widget-color-table", parent:$("body")});
@@ -19488,7 +19507,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
   };
   b.renderOptions = function() {
     var a = this;
-    this.destroyOption();
     this._attachDisposeEvent();
     this.optionGroup = Entry.Dom("ul", {class:"entry-widget-dropdown", parent:$("body")});
     this.optionGroup.bind("mousedown touchstart", function(a) {
@@ -19569,7 +19587,6 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
   };
   b.renderOptions = function() {
     var a = this;
-    this.destroyOption();
     this._attachDisposeEvent();
     this.optionGroup = Entry.Dom("ul", {class:"entry-widget-dropdown", parent:$("body")});
     this.optionGroup.bind("mousedown touchstart", function(a) {
@@ -19668,7 +19685,6 @@ Entry.FieldKeyboard = function(b, a, c) {
   this.setValue(String(this.getValue()));
   this._optionVisible = !1;
   this.renderStart(a);
-  Entry.keyPressed && (this.keyPressed = Entry.keyPressed.attach(this, this._keyboardControl));
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
 (function(b) {
@@ -19684,7 +19700,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     this.box.set({x:0, y:0, width:a, height:16});
   };
   b.renderOptions = function() {
-    this.destroyOption();
+    Entry.keyPressed && (this.keyPressed = Entry.keyPressed.attach(this, this._keyboardControl));
     this._optionVisible = !0;
     this._attachDisposeEvent();
     var a = this.getAbsolutePosFromDocument();
@@ -19697,6 +19713,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     this.disposeEvent && (Entry.disposeEvent.detach(this.disposeEvent), delete this.disposeEvent);
     this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
     this._optionVisible = !1;
+    this.command();
+    this.keyPressed && (Entry.keyPressed.detach(this.keyPressed), delete this.keyPressed);
   };
   b._keyboardControl = function(a) {
     a.stopPropagation();
@@ -19707,8 +19725,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     }
   };
   b.applyValue = function(a, b) {
+    this.setValue(String(b));
     this.destroyOption();
-    this.getValue() != b && (this.setValue(String(b)), this.textElement.textContent = a, this.resize());
+    this.textElement.textContent = a;
+    this.resize();
   };
   b.resize = function() {
     var a = this.getTextWidth();
@@ -20006,7 +20026,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
   };
   b.renderOptions = function() {
     var a = this;
-    this.destroyOption();
     this._attachDisposeEvent(function() {
       a.applyValue();
       a.destroyOption();
@@ -20895,7 +20914,7 @@ Entry.skeleton.basic_string_field = {path:function(b) {
   b = Math.max(18, b + 2);
   a = Math.max(0, a - b + 12);
   return "m %h,0 h %w a %h,%h 0 1,1 0,%wh H %h A %h,%h 0 1,1 %h,0 z".replace(/%wh/gi, b).replace(/%w/gi, a).replace(/%h/gi, b / 2);
-}, color:"#000", outerLine:!0, box:function(b) {
+}, color:"#000", outerLine:"#768dce", box:function(b) {
   return {offsetX:0, offsetY:0, width:(b ? b.contentWidth : 5) + 12, height:Math.max((b ? b.contentHeight : 18) + 2, 18), marginBottom:0};
 }, magnets:function() {
   return {string:{}};
@@ -20908,7 +20927,7 @@ Entry.skeleton.basic_boolean_field = {path:function(b) {
   b = Math.max(18, b + 2);
   a = Math.max(0, a - b + 19);
   return "m %h,0 h %w l %h,%h -%h,%h H %h l -%h,-%h %h,-%h z".replace(/%wh/gi, b).replace(/%w/gi, a).replace(/%h/gi, b / 2);
-}, color:"#000", outerLine:!0, box:function(b) {
+}, color:"#000", outerLine:"#768dce", box:function(b) {
   return {offsetX:0, offsetY:0, width:(b ? b.contentWidth : 5) + 19, height:Math.max((b ? b.contentHeight : 18) + 2, 18), marginBottom:0};
 }, magnets:function() {
   return {boolean:{}};
@@ -20920,7 +20939,7 @@ Entry.skeleton.basic_param = {path:function(b) {
   (b = b._contents[b._contents.length - 1]) && (a -= b.box.width + Entry.BlockView.PARAM_SPACE - 2);
   a = Math.max(0, a);
   return "m 4,0 h 10 h %w l 2,2 0,3 3,0 1,1 0,12 -1,1 -3,0 0,3 -2,2h -%w h -10 l -2,-2 0,-3 3,0 1,-1 0,-12 -1,-1 -3,0 0,-3 2,-2".replace(/%w/gi, a);
-}, outerLine:!0, box:function(b) {
+}, outerLine:"#768dce", box:function(b) {
   return {offsetX:0, offsetY:0, width:(b ? b.contentWidth : 5) + 11, height:24, marginBottom:0};
 }, magnets:function() {
   return {param:{}};
