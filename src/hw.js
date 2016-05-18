@@ -36,6 +36,12 @@ Entry.HW = function() {
         '71': Entry.Robotis_carCont,
         '72': Entry.Robotis_openCM70
     };
+    if(window.popupHelper) {
+        this.popupHelper = window.popupHelper;
+    } else {
+        this.popupHelper = new Entry.popupHelper();
+    }
+    this.setWarningPopup();
 };
 
 Entry.HW.TRIAL_LIMIT = 1;
@@ -66,11 +72,12 @@ p.initSocket = function() {
                 socket = new WebSocket("ws://127.0.0.1:23518");
                 socket.binaryType = "arraybuffer";
 
-                socket.onopen = function()
+                socket.onopen = (function()
                 {
+                    this.popupHelper.show('entryHwLowVersion');
                     hw.socketType = 'WebSocket';
                     hw.initHardware(socket);
-                };
+                }).bind(this);
 
                 socket.onmessage = function (evt)
                 {
@@ -117,6 +124,56 @@ p.initSocket = function() {
         Entry.dispatchEvent("hwChanged");
     } catch(e) {}
 };
+
+p.setWarningPopup = function () {
+    this.popupHelper.addPopup('entryHwLowVersion', {
+        setPopupLayout : function (popup) {
+            var content = Entry.Dom('div', {
+                class: 'contentArea'
+            });
+
+            var title = Entry.Dom('div', {
+                class : 'entryHwLowVersionTitle',
+                parent: content
+            });
+
+            var close = Entry.Dom('div', {
+                class : 'entryHwLowVersionCloseBtn',
+                parent: content
+            });
+
+            var text = Entry.Dom('div', {
+                class : 'entryHwLowVersionText',
+                parent: content
+            });
+
+            var btnArea = Entry.Dom('div', {
+                class : 'entryHwLowVersionBtnArea',
+                parent: content
+            });
+            
+            var okBtn = Entry.Dom('div', {
+                class : 'entryHwLowVersionOkBtn',
+                parent: btnArea
+            });
+
+            title.html('연결 프로그램 업데이트');
+            text.html('5월 30일 부터 구버전의 연결프로그램의 사용이 중단 됩니다.</br></br>하드웨어 연결 프로그램을 최신 버전으로 업데이트 해주시기 바랍니다.');
+            okBtn.html('확인');
+
+            
+            close.bindOnClick(function () {
+                popupHelper.hide();
+            });
+
+            okBtn.bindOnClick(function () {
+                popupHelper.hide();
+            });
+
+            popup.append(content);
+        }
+    });
+}
 
 p.retryConnect = function() {
     this.connectTrial = 0;
