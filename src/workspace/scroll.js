@@ -175,8 +175,8 @@ Entry.Scroller.RADIUS = 7;
         var clientRect = this.board.svgBlockGroup.getBoundingClientRect(),
             svgDom = this.board.svgDom,
             bBox = {
-                x: clientRect.left - this.board.offset.left,
-                y: clientRect.top - this.board.offset.top,
+                x: clientRect.left - this.board.offset().left,
+                y: clientRect.top - this.board.offset().top,
                 width: clientRect.width,
                 height: clientRect.height
             };
@@ -229,8 +229,8 @@ Entry.Scroller.RADIUS = 7;
             bWidth = svgDom.width(),
             bHeight = svgDom.height(),
             bBox = {
-                x: bRect.left - board.offset.left,
-                y: bRect.top - board.offset.top,
+                x: bRect.left - board.offset().left,
+                y: bRect.top - board.offset().top,
                 width: bRect.width,
                 height: bRect.height
             };

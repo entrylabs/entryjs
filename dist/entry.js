@@ -17802,7 +17802,6 @@ Entry.BlockMenu = function(b, a, c, d) {
   this._svgId = "blockMenu" + (new Date).getTime();
   this._clearCategory();
   this._generateView(c);
-  this.offset = this.svgDom.offset();
   this._splitters = [];
   this.setWidth();
   this.svg = Entry.SVG(this._svgId);
@@ -17872,7 +17871,7 @@ Entry.BlockMenu = function(b, a, c, d) {
   b.cloneToGlobal = function(a) {
     if (!this._boardBlockView && null !== this.dragBlock) {
       var b = this.workspace, d = b.getMode(), e = this.dragBlock, f = this._svgWidth, g = b.selectedBoard;
-      !g || d != Entry.Workspace.MODE_BOARD && d != Entry.Workspace.MODE_OVERLAYBOARD ? Entry.GlobalSvg.setView(e, b.getMode()) && Entry.GlobalSvg.addControl(a) : g.code && (b = e.block, d = b.getThread(), b && d && (b = d.toJSON(!0), this._boardBlockView = Entry.do("addThread", b).value.getFirstBlock().view, this._boardBlockView._moveTo(e.x - f, e.y + (this.offset.top - g.offset.top), !1), this._boardBlockView.onMouseDown.call(this._boardBlockView, a), this._boardBlockView.dragInstance.set({isNew:!0})));
+      !g || d != Entry.Workspace.MODE_BOARD && d != Entry.Workspace.MODE_OVERLAYBOARD ? Entry.GlobalSvg.setView(e, b.getMode()) && Entry.GlobalSvg.addControl(a) : g.code && (b = e.block, d = b.getThread(), b && d && (b = d.toJSON(!0), this._boardBlockView = Entry.do("addThread", b).value.getFirstBlock().view, g = this.offset().top - g.offset().top, this._boardBlockView._moveTo(e.x - f, e.y + g, !1), this._boardBlockView.onMouseDown.call(this._boardBlockView, a), this._boardBlockView.dragInstance.set({isNew:!0})));
     }
   };
   b.terminateDrag = function() {
@@ -17881,7 +17880,7 @@ Entry.BlockMenu = function(b, a, c, d) {
       if (a) {
         this.workspace.getBoard();
         this._boardBlockView = null;
-        var b = Entry.GlobalSvg.left, d = Entry.GlobalSvg.width / 2, a = a.getBoard().offset.left;
+        var b = Entry.GlobalSvg.left, d = Entry.GlobalSvg.width / 2, a = a.getBoard().offset().left;
         return b < a - d;
       }
     }
@@ -17931,7 +17930,6 @@ Entry.BlockMenu = function(b, a, c, d) {
   b.setWidth = function() {
     this._svgWidth = this.blockMenuContainer.width();
     this.updateSplitters();
-    this.offset = this.svgDom.offset();
   };
   b.setMenu = function() {
     var a = this._categoryCodes, b = this._categoryElems, d;
@@ -18088,6 +18086,9 @@ Entry.BlockMenu = function(b, a, c, d) {
       }
     }
   };
+  b.offset = function() {
+    return !this._offset || 0 === this._offset.top && 0 === this._offset.left ? (this._offset = this.svgDom.offset(), this.offset()) : this._offset;
+  };
 })(Entry.BlockMenu.prototype);
 Entry.BlockMenuScroller = function(b) {
   var a = this;
@@ -18142,9 +18143,9 @@ Entry.BlockMenuScroller.RADIUS = 7;
     return this._visible;
   };
   b._updateRatio = function() {
-    var a = this.board, b = a.svgBlockGroup.getBoundingClientRect(), d = a.blockMenuContainer.height();
-    this.vRatio = a = (b.height + (b.top - a.offset.top) + 10) / d;
-    1 >= a ? this.setVisible(!1) : this.setVisible(!0);
+    var a = this.board, b = a.svgBlockGroup.getBoundingClientRect(), d = a.blockMenuContainer.height(), a = a.offset();
+    this.vRatio = b = (b.height + (b.top - a.top) + 10) / d;
+    1 >= b ? this.setVisible(!1) : this.setVisible(!0);
   };
   b._reset = function() {
     this.vY = 0;
@@ -20019,7 +20020,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     this.textElement = this.svgGroup.elem("text", {x:3, y:4, "font-size":"9pt"});
     this.textElement.textContent = this.truncate();
     var a = this.getTextWidth(), b = this.position && this.position.y ? this.position.y : 0;
-    this._header = this.svgGroup.elem("rect", {width:a, height:16, y:b - 8, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
+    this._header = this.svgGroup.elem("rect", {width:a, height:16, y:b - 8, rx:3, ry:3, fill:"transparent"});
     this.svgGroup.appendChild(this.textElement);
     this._bindRenderOptions();
     this.box.set({x:0, y:0, width:a, height:16});
@@ -20112,7 +20113,7 @@ Entry.GlobalSvg = {};
     this.svgDom.css("display", "none");
   };
   b.position = function() {
-    var a = this._view, b = a.getAbsoluteCoordinate(), a = a.getBoard().offset;
+    var a = this._view, b = a.getAbsoluteCoordinate(), a = a.getBoard().offset();
     this.left = b.x + a.left - this._offsetX;
     this.top = b.y + a.top - this._offsetY;
     b = this.svgDom[0];
@@ -20122,7 +20123,7 @@ Entry.GlobalSvg = {};
   b.terminateDrag = function(a) {
     var b = Entry.mouseCoordinate;
     a = a.getBoard().workspace.blockMenu;
-    var d = a.offset.left, e = a.offset.top, f = a.visible ? a.svgDom.width() : 0;
+    var d = a.offset().left, e = a.offset().top, f = a.visible ? a.svgDom.width() : 0;
     return b.y > e && b.x > d + f ? this.DONE : b.y > e && b.x > d && a.visible ? this.REMOVE : this.RETURN;
   };
   b.addControl = function(a) {
@@ -20310,7 +20311,7 @@ Entry.Scroller.RADIUS = 7;
   };
   b.scroll = function(a, b) {
     if (this.board.code) {
-      var d = this.board.svgBlockGroup.getBoundingClientRect(), e = this.board.svgDom, f = d.left - this.board.offset.left, g = d.top - this.board.offset.top, h = d.height;
+      var d = this.board.svgBlockGroup.getBoundingClientRect(), e = this.board.svgDom, f = d.left - this.board.offset().left, g = d.top - this.board.offset().top, h = d.height;
       a = Math.max(-d.width + Entry.BOARD_PADDING - f, a);
       b = Math.max(-h + Entry.BOARD_PADDING - g, b);
       a = Math.min(e.width() - Entry.BOARD_PADDING - f, a);
@@ -20333,7 +20334,7 @@ Entry.Scroller.RADIUS = 7;
   };
   b.resizeScrollBar = function() {
     if (this._visible) {
-      var a = this.board, b = a.svgBlockGroup.getBoundingClientRect(), d = a.svgDom, e = d.width(), d = d.height(), f = b.left - a.offset.left, a = b.top - a.offset.top, g = b.width, b = b.height;
+      var a = this.board, b = a.svgBlockGroup.getBoundingClientRect(), d = a.svgDom, e = d.width(), d = d.height(), f = b.left - a.offset().left, a = b.top - a.offset().top, g = b.width, b = b.height;
       if (this._horizontal) {
         var h = -g + Entry.BOARD_PADDING, k = e - Entry.BOARD_PADDING, g = (e + 2 * Entry.Scroller.RADIUS) * g / (k - h + g);
         isNaN(g) && (g = 0);
@@ -20531,8 +20532,8 @@ Entry.Board.OPTION_CLEAR = 2;
     this.svgThreadGroup.remove();
   };
   b.updateOffset = function() {
-    this.offset = this.svg.getBoundingClientRect();
-    var a = $(window), b = a.scrollTop(), a = a.scrollLeft(), d = this.offset;
+    this._offset = this.svg.getBoundingClientRect();
+    var a = $(window), b = a.scrollTop(), a = a.scrollLeft(), d = this._offset;
     this.relativeOffset = {top:d.top - b, left:d.left - a};
     this.btnWrapper && this.btnWrapper.attr({transform:"translate(" + (d.width / 2 - 65) + "," + (d.height - 200) + ")"});
   };
@@ -20814,6 +20815,9 @@ Entry.Board.OPTION_CLEAR = 2;
       var a = _.debounce(this.updateOffset, 10)
     }
     Entry.windowResized.attach(this, a);
+  };
+  b.offset = function() {
+    return !this._offset || 0 === this._offset.top && 0 === this._offset.left ? (this.updateOffset(), this.offset()) : this._offset;
   };
 })(Entry.Board.prototype);
 Entry.skeleton = function() {

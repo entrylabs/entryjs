@@ -322,11 +322,11 @@ Entry.Board.OPTION_CLEAR = 2;
     };
 
     p.updateOffset = function () {
-        this.offset = this.svg.getBoundingClientRect();
+        this._offset = this.svg.getBoundingClientRect();
         var w = $(window),
             scrollTop = w.scrollTop(),
             scrollLeft = w.scrollLeft(),
-            offset = this.offset;
+            offset = this._offset;
 
         this.relativeOffset = {
             top: offset.top - scrollTop,
@@ -938,17 +938,27 @@ Entry.Board.OPTION_CLEAR = 2;
     };
 
     p._bindEvent = function() {
-    if (Entry.documentMousedown) {
-        Entry.documentMousedown.attach(this, this.setSelectedBlock);
-        Entry.documentMousedown.attach(this, this._removeActivated);
-    }
-    if (Entry.keyPressed)
-        Entry.keyPressed.attach(this, this._keyboardControl);
+        if (Entry.documentMousedown) {
+            Entry.documentMousedown.attach(this, this.setSelectedBlock);
+            Entry.documentMousedown.attach(this, this._removeActivated);
+        }
+        if (Entry.keyPressed)
+            Entry.keyPressed.attach(this, this._keyboardControl);
 
-    if (Entry.windowResized)
-        var dUpdateOffset = _.debounce(this.updateOffset, 10);
-        Entry.windowResized.attach(this, dUpdateOffset);
+        if (Entry.windowResized)
+            var dUpdateOffset = _.debounce(this.updateOffset, 10);
+            Entry.windowResized.attach(this, dUpdateOffset);
     };
+
+    p.offset = function() {
+        if (!this._offset || (this._offset.top === 0 && this._offset.left === 0))  {
+            this.updateOffset();
+            return this.offset();
+        }
+        return this._offset;
+    };
+
+
 
 })(Entry.Board.prototype);
 

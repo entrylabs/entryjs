@@ -116,10 +116,10 @@ Entry.BlockMenuScroller.RADIUS = 7;
             bRect = board.svgBlockGroup.getBoundingClientRect(),
             svgDom = board.svgDom,
             realHeight = board.blockMenuContainer.height(),
-
+            offset = board.offset(),
             bBox = {
-                x: bRect.left - board.offset.left,
-                y: bRect.top - board.offset.top,
+                x: bRect.left - offset.left,
+                y: bRect.top - offset.top,
                 height: bRect.height
             };
 
