@@ -755,7 +755,7 @@ Entry.Board.OPTION_CLEAR = 2;
             pointData,
             result = null,
             searchValue = targetType === "previous" ? y - 15 : y,
-            leftOffset = targetType === "previous" ? 20 : 0;
+            leftOffset = ["previous", "string", "boolean"].indexOf(targetType) > - 1 ? 20 : 0;
         while (minIndex <= maxIndex) {
             index = (minIndex + maxIndex) / 2 | 0;
             pointData = targetArray[index];

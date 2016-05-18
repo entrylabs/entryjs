@@ -20739,7 +20739,7 @@ Entry.Board.OPTION_CLEAR = 2;
     var e = this._magnetMap[d];
     if (e && 0 !== e.length) {
       var f = 0, g = e.length - 1, h, k = null, l = "previous" === d ? b - 15 : b;
-      for (b = "previous" === d ? 20 : 0;f <= g;) {
+      for (b = -1 < ["previous", "string", "boolean"].indexOf(d) ? 20 : 0;f <= g;) {
         if (h = (f + g) / 2 | 0, d = e[h], l < d.point) {
           g = h - 1;
         } else {
