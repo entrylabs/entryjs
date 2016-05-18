@@ -75,7 +75,7 @@ Entry.FieldTrashcan = function(board) {
         var dragBlock = this.dragBlock;
         if (!dragBlock || !dragBlock.block.isDeletable()) return;
 
-        var boardOffset = this.board.offset;
+        var boardOffset = this.board.offset();
         var position = this.getPosition();
         var trashcanX = position.x + boardOffset.left;
         var trashcanY = position.y + boardOffset.top;

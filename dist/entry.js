@@ -18799,7 +18799,7 @@ Entry.FieldTrashcan = function(b) {
   b.checkBlock = function() {
     var a = this.dragBlock;
     if (a && a.block.isDeletable()) {
-      var b = this.board.offset, d = this.getPosition(), e = d.x + b.left, b = d.y + b.top, f, g;
+      var b = this.board.offset(), d = this.getPosition(), e = d.x + b.left, b = d.y + b.top, f, g;
       if (a = a.dragInstance) {
         f = a.offsetX, g = a.offsetY;
       }
