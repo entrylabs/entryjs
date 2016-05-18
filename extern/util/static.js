@@ -282,6 +282,14 @@ EntryStatic.getAllBlocks = function() {
                 "dplay_toggle_led",
                 "dplay_toggle_pwm",
                 "dplay_convert_scale",
+                "dplay_get_value",
+                "dplay_get_switch_status",
+                "dplay_get_tilt",
+                "dplay_get_light_status",
+                "dplay_select_led",
+                "dplay_DCmotor",
+                "dplay_buzzer",
+                "dplay_servo",
                 //nemoino
                 "nemoino_get_number_sensor_value",
                 "nemoino_get_digital_value",
@@ -290,15 +298,15 @@ EntryStatic.getAllBlocks = function() {
                 "nemoino_convert_scale",
                 //neobot
                 "neobot_sensor_value",
-                "neobot_turn_left",
-                "neobot_stop_left",
-                "neobot_turn_right",
-                "neobot_stop_right",
-                "neobot_run_motor",
-                "neobot_servo_1",
-                "neobot_servo_2",
+                "neobot_left_motor",
+                "neobot_stop_left_motor",
+                "neobot_right_motor",
+                "neobot_stop_right_motor",
+                "neobot_all_motor",
+                "neobot_set_servo",
+                "neobot_set_output",
+                "neobot_set_fnd",
                 "neobot_play_note_for",
-                "neobot_set_sensor_value",
                 "bitbrick_sensor_value",
                 "bitbrick_convert_scale",
                 "bitbrick_is_touch_pressed",
@@ -1587,50 +1595,50 @@ EntryStatic.blockInfo = {
         "xml": "<block type='neobot_sensor_value'></block>",
         "class": "neobot_value"
     },
-    "neobot_turn_left": {
+    "neobot_left_motor": {
         "isNotFor": ['neobot'],
-        "xml": "<block type='neobot_turn_left'></block>",
+        "xml": "<block type='neobot_left_motor'><field name='SPEED'>15</field></block>",
         "class": "neobot_motor"
     },
-    "neobot_stop_left": {
+    "neobot_stop_left_motor": {
         "isNotFor": ['neobot'],
-        "xml": "<block type='neobot_stop_left'></block>",
+        "xml": "<block type='neobot_stop_left_motor'></block>",
         "class": "neobot_motor"
     },
-    "neobot_turn_right": {
+    "neobot_right_motor": {
         "isNotFor": ['neobot'],
-        "xml": "<block type='neobot_turn_right'></block>",
+        "xml": "<block type='neobot_right_motor'><field name='SPEED'>15</field></block>",
         "class": "neobot_motor"
     },
-    "neobot_stop_right": {
+    "neobot_stop_right_motor": {
         "isNotFor": ['neobot'],
-        "xml": "<block type='neobot_stop_right'></block>",
+        "xml": "<block type='neobot_stop_right_motor'></block>",
         "class": "neobot_motor"
     },
-    "neobot_run_motor": {
+    "neobot_all_motor": {
         "isNotFor": ['neobot'],
-        "xml": "<block type='neobot_run_motor'><value name='DURATION'><block type='text'><field name='NAME'>1</field></block></value></block>",
+        "xml": "<block type='neobot_all_motor'><field name='SPEED'>15</field></block>",
         "class": "neobot_motor"
     },
-    "neobot_servo_1": {
+    "neobot_set_servo": {
         "isNotFor": ['neobot'],
-        "xml": "<block type='neobot_servo_1'></block>",
-        "class": "neobot_servo"
+        "xml": "<block type='neobot_set_servo'></block>",
+        "class": "neobot_output"
     },
-    "neobot_servo_2": {
+    "neobot_set_output": {
         "isNotFor": ['neobot'],
-        "xml": "<block type='neobot_servo_2'></block>",
-        "class": "neobot_servo"
+        "xml": "<block type='neobot_set_output'><value name='VALUE'><block type='number'><field name='NUM'>255</field></block></value></block>",
+        "class": "neobot_output"
+    },
+    "neobot_set_fnd": {
+        "isNotFor": ['neobot'],
+        "xml": "<block type='neobot_set_fnd'><value name='VALUE'><block type='number'><field name='NUM'>0</field></block></value></block>",
+        "class": "neobot_output"
     },
     "neobot_play_note_for": {
         "isNotFor": ['neobot'],
-        "xml": "<block type='neobot_play_note_for'></block>",
+        "xml": "<block type='neobot_play_note_for'><field name='NOTE'>1</field><field name='OCTAVE'>2</field><field name='DURATION'>4</field></block>",
         "class": "neobot_note"
-    },
-    "neobot_set_sensor_value": {
-        "isNotFor": ['neobot'],
-        "xml": "<block type='neobot_set_sensor_value'></block>",
-        "class": "neobot_set_value"
     },
     "bitbrick_sensor_value": {
         "isNotFor": ['bitbrick'],
@@ -2000,6 +2008,54 @@ EntryStatic.blockInfo = {
         "usage": ["arduino"],
         "class": "CODEino"
     },
+    "dplay_get_tilt": {
+        "xml": "<block type='dplay_get_tilt'></block>",
+        "isNotFor": ["dplay"],
+        "usage": ["arduino"],
+        "class": "dplay_set"
+    },
+    "dplay_get_value": {
+        "xml": "<block type='dplay_get_value'><value name='VALUE'><block type='arduino_get_sensor_number'></block></value></block>",
+        "isNotFor": ['dplay'],
+        "usage": ["arduino"],
+        "class": "dplay_set"
+    },
+    "dplay_get_light_status": {
+        "xml": "<block type='dplay_get_light_status'></block>",
+        "isNotFor": ["dplay"],
+        "usage": ["arduino"],
+        "class": "dplay_set"
+    },
+    "dplay_get_switch_status": {
+        "xml": "<block type='dplay_get_switch_status'></block>",
+        "isNotFor": ["dplay"],
+        "usage": ["arduino"],
+        "class": "dplay_set"
+    },
+    "dplay_buzzer": {
+          "xml": "<block type='dplay_buzzer'><value name='VALUE'><block type='arduino_text'><field name='NAME'>0</field></block></value></block>",
+          "isNotFor": ['dplay'],
+          "usage": ["arduino"],
+          "class": "dplay"
+    },
+    "dplay_select_led": {
+        "xml": "<block type='dplay_select_led'><block type='arduino_get_port_number'></block></block>",
+        "isNotFor": ['dplay'],
+        "usage": ["arduino"],
+        "class": "dplay"
+    },
+    "dplay_DCmotor": {
+          "xml": "<block type='dplay_DCmotor'></block>",
+          "isNotFor": ['dplay'],
+          "usage": ["arduino"],
+          "class": "dplay"
+    },
+    "dplay_servo": {
+        "xml": "<block type='dplay_servo'><value name='VALUE'><block type='arduino_text'><field name='NAME'>255</field></block></value></block>",
+        "isNotFor": ['dplay'],
+        "usage": ["arduino"],
+        "class": "dplay"
+    },   
     "direction_relative_duration": {
         "isNotFor": [""],
         "xml": "<block type='direction_relative_duration'><value name='DURATION'><block type='text'><field name='NAME'>2</field></block></value><value name='AMOUNT'><block type='angle'></block></value></block>",
