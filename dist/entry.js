@@ -17945,7 +17945,6 @@ Entry.Board.OPTION_CLEAR = 2;
   };
   b._getFieldBlockMetaData = function(a, b, d, e, f) {
     var g = a._contents, h = [];
-    b += a.contentPos.x;
     d += a.contentPos.y;
     for (var k = 0;k < g.length;k++) {
       var l = g[k];
@@ -18800,7 +18799,7 @@ Entry.FieldTrashcan = function(b) {
   b.checkBlock = function() {
     var a = this.dragBlock;
     if (a && a.block.isDeletable()) {
-      var b = this.board.offset, d = this.getPosition(), e = d.x + b.left, b = d.y + b.top, f, g;
+      var b = this.board.offset(), d = this.getPosition(), e = d.x + b.left, b = d.y + b.top, f, g;
       if (a = a.dragInstance) {
         f = a.offsetX, g = a.offsetY;
       }
