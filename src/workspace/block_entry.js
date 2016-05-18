@@ -15794,7 +15794,26 @@ Entry.block = {
                 },
                 "size": 22
             }
-        ]
+        ],
+        func: function() {
+            if (!this.isContinue) {
+                this.isContinue = true;
+                this.isAction = true;
+                var self = this;
+                var callBack = function() {
+                    Ntry.dispatchEvent("getItem");
+                    self.isAction = false;
+                };
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.GET_ITEM , callBack);
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+
+            }
+        }
     },
     "jr_north": {
         "skeleton": "pebble_basic",
