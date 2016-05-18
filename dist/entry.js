@@ -12512,7 +12512,7 @@ Entry.Func.requestParamBlock = function(b) {
   return a;
 };
 Entry.Func.registerParamBlock = function(b) {
-  "string" === b.substr(0, 6) ? Entry.Func.createParamBlock(b, Entry.block.function_param_string, b) : "boolean" === b.substr(0, 7) && Entry.Func.createParamBlock(b, Entry.block.function_param_boolean, b);
+  -1 < b.indexOf("stringParam") ? Entry.Func.createParamBlock(b, Entry.block.function_param_string, b) : -1 < b.indexOf("booleanParam") && Entry.Func.createParamBlock(b, Entry.block.function_param_boolean, b);
 };
 Entry.Func.createParamBlock = function(b, a, c) {
   var d = function() {
