@@ -9,9 +9,13 @@ Entry.Event = function(sender) {
 
 (function(p) {
     p.attach = function (obj, fn) {
+        var that = this;
         var listener = {
             obj: obj,
-            fn: fn
+            fn: fn,
+            destroy: function() {
+                that.detach(this);
+            }
         };
         this._listeners.push(listener);
         return listener;

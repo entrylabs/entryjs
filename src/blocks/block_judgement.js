@@ -29,7 +29,7 @@ Blockly.Blocks.is_press_some_key = {
 
 Entry.block.is_press_some_key = function (sprite, script) {
     var keycode = Number(script.getField("VALUE", script));
-    return Entry.engine.pressedKeys.indexOf(keycode) >= 0;
+    return Entry.pressedKeys.indexOf(keycode) >= 0;
 };
 
 // (▼) 에 닿았는가?

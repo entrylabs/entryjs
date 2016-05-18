@@ -29,8 +29,8 @@ Entry.Variable = function(variable) {
         this.value_ = variable.value;
 
     if (this.type == 'slide') {
-        this.minValue_ = variable.minValue ? variable.minValue : 0;
-        this.maxValue_ = variable.maxValue ? variable.maxValue : 100;
+        this.minValue_ = Number(variable.minValue ? variable.minValue : 0);
+        this.maxValue_ = Number(variable.maxValue ? variable.maxValue : 100);
     }
 
     if (!variable.isClone) {
@@ -365,11 +365,10 @@ Entry.Variable.prototype.updateView = function() {
             this.valueView_.y = 1;
             if (this.isNumber()) {
                 this.valueView_.text = this.getValue().toFixed(2).replace('.00', '');
-            }
-            else {
+            } else {
                 this.valueView_.text = this.getValue();
-
             }
+
             var width = this.textView_.getMeasuredWidth() + this.valueView_.getMeasuredWidth() + 26;
             width = Math.max(width, 90);
             this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1")
@@ -554,17 +553,15 @@ Entry.Variable.prototype.isNumber = function() {
 Entry.Variable.prototype.setValue = function(value) {
     if (this.type != 'slide') this.value_ = value;
     else {
-        var isMinFloat = Entry.isFloat(this.minValue_);
-        var isMaxFloat = Entry.isFloat(this.maxValue_);
+        value = Number(value);
 
         if (value < this.minValue_) this.value_ = this.minValue_;
         else if (value > this.maxValue_) this.value_ = this.maxValue_;
         else this.value_ = value;
 
-        if (!isMinFloat && !isMaxFloat) {
+        if (!this.isFloatPoint()) {
             this.viewValue_ = this.value_;
-            this.value_ = Math.floor(this.value_);
-        }
+        } else delete this.viewValue_;
     }
 
     if (this.isCloud_) Entry.variableContainer.updateCloudVariables();
@@ -790,9 +787,16 @@ Entry.Variable.prototype.updateSlideValueByView = function() {
     var value =
         (minValue + Number((Math.abs(maxValue - minValue) * ratio))).toFixed(2);
     value = parseFloat(value);
-    if (value < minValue) this.setValue(this.minValue_);
-    else if (value > maxValue) this.setValue(this.maxValue_);
-    else this.setValue(value);
+
+    if (value < minValue)
+        value = this.minValue_;
+    else if (value > maxValue)
+        value = this.maxValue_;
+    if (!this.isFloatPoint()) {
+        this.viewValue_ = value;
+        value = Math.round(value);
+    }
+    this.setValue(value);
 };
 
 Entry.Variable.prototype.getMinValue = function() {
@@ -804,6 +808,7 @@ Entry.Variable.prototype.setMinValue = function(minValue) {
     if (this.value_ < minValue)
         this.value_ = minValue;
     this.updateView();
+    this.isMinFloat = Entry.isFloat(this.minValue_);
 };
 
 Entry.Variable.prototype.getMaxValue = function() {
@@ -815,4 +820,9 @@ Entry.Variable.prototype.setMaxValue = function(maxValue) {
     if (this.value_ > maxValue)
         this.value_ = maxValue;
     this.updateView();
+    this.isMaxFloat = Entry.isFloat(this.maxValue_);
+};
+
+Entry.Variable.prototype.isFloatPoint = function() {
+    return this.isMaxFloat || this.isMinFloat;
 };
