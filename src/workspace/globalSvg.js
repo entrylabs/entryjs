@@ -121,7 +121,7 @@ goog.provide('Entry.GlobalSvg');
         var that = this;
         var blockView = this._view;
         var pos = blockView.getAbsoluteCoordinate();
-        var offset = blockView.getBoard().offset;
+        var offset = blockView.getBoard().offset();
         this.left = pos.x + offset.left - this._offsetX;
         this.top = pos.y + offset.top - this._offsetY;
 
@@ -133,8 +133,8 @@ goog.provide('Entry.GlobalSvg');
     gs.terminateDrag = function(blockView) {
         var mousePos = Entry.mouseCoordinate;
         var blockMenu = blockView.getBoard().workspace.blockMenu;
-        var bLeft = blockMenu.offset.left;
-        var bTop = blockMenu.offset.top;
+        var bLeft = blockMenu.offset().left;
+        var bTop = blockMenu.offset().top;
         var bWidth = blockMenu.visible ? blockMenu.svgDom.width() : 0;
         if (mousePos.y > bTop && mousePos.x > bLeft + bWidth)
             return this.DONE;
