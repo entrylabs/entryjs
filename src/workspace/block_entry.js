@@ -5358,13 +5358,13 @@ Entry.block = {
         "class": "condition",
         "isNotFor": [],
         "func": function (sprite, script) {
-            if (script.isLooped) {
-                delete script.isLooped;
+            if (script.isCondition) {
+                delete script.isCondition;
                 return script.callReturn();
             }
             var value = script.getBooleanValue("BOOL", script);
             if (value) {
-                script.isLooped = true;
+                script.isCondition = true;
                 return script.getStatement("STACK", script);
             } else {
                 return script.callReturn();
@@ -5416,12 +5416,12 @@ Entry.block = {
         "class": "condition",
         "isNotFor": [],
         "func": function (sprite, script) {
-            if (script.isLooped) {
-                delete script.isLooped;
+            if (script.isCondition) {
+                delete script.isCondition;
                 return script.callReturn();
             }
             var value = script.getBooleanValue("BOOL", script);
-            script.isLooped = true;
+            script.isCondition = true;
             if (value)
                 return script.getStatement("STACK_IF", script);
             else
