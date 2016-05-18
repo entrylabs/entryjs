@@ -13041,14 +13041,7 @@ Entry.Variable.prototype.isNumber = function() {
   return isNaN(this.value_) ? !1 : !0;
 };
 Entry.Variable.prototype.setValue = function(b) {
-  if ("slide" != this.type) {
-    this.value_ = b;
-  } else {
-    var a = Entry.isFloat(this.minValue_), c = Entry.isFloat(this.maxValue_);
-    b = Number(b);
-    this.value_ = b < this.minValue_ ? this.minValue_ : b > this.maxValue_ ? this.maxValue_ : b;
-    a || c ? delete this.viewValue_ : this.value_ = this.viewValue_ = this.value_;
-  }
+  "slide" != this.type ? this.value_ = b : (b = Number(b), this.value_ = b < this.minValue_ ? this.minValue_ : b > this.maxValue_ ? this.maxValue_ : b, this.isFloatPoint() ? delete this.viewValue_ : this.viewValue_ = this.value_);
   this.isCloud_ && Entry.variableContainer.updateCloudVariables();
   this.updateView();
 };
@@ -13150,7 +13143,9 @@ Entry.Variable.prototype.updateSlideValueByView = function() {
   0 > b && (b = 0);
   1 < b && (b = 1);
   var a = parseFloat(this.minValue_), c = parseFloat(this.maxValue_), b = (a + Number(Math.abs(c - a) * b)).toFixed(2), b = parseFloat(b);
-  b < a ? this.setValue(this.minValue_) : b > c ? this.setValue(this.maxValue_) : this.setValue(Math.round(b));
+  b < a ? b = this.minValue_ : b > c && (b = this.maxValue_);
+  this.isFloatPoint() || (this.viewValue_ = b, b = Math.round(b));
+  this.setValue(b);
 };
 Entry.Variable.prototype.getMinValue = function() {
   return this.minValue_;
@@ -13159,6 +13154,7 @@ Entry.Variable.prototype.setMinValue = function(b) {
   this.minValue_ = b;
   this.value_ < b && (this.value_ = b);
   this.updateView();
+  this.isMinFloat = Entry.isFloat(this.minValue_);
 };
 Entry.Variable.prototype.getMaxValue = function() {
   return this.maxValue_;
@@ -13167,6 +13163,10 @@ Entry.Variable.prototype.setMaxValue = function(b) {
   this.maxValue_ = b;
   this.value_ > b && (this.value_ = b);
   this.updateView();
+  this.isMaxFloat = Entry.isFloat(this.maxValue_);
+};
+Entry.Variable.prototype.isFloatPoint = function() {
+  return this.isMaxFloat || this.isMinFloat;
 };
 Entry.VariableContainer = function() {
   this.variables_ = [];

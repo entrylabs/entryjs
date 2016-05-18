@@ -553,17 +553,14 @@ Entry.Variable.prototype.isNumber = function() {
 Entry.Variable.prototype.setValue = function(value) {
     if (this.type != 'slide') this.value_ = value;
     else {
-        var isMinFloat = Entry.isFloat(this.minValue_);
-        var isMaxFloat = Entry.isFloat(this.maxValue_);
         value = Number(value);
 
         if (value < this.minValue_) this.value_ = this.minValue_;
         else if (value > this.maxValue_) this.value_ = this.maxValue_;
         else this.value_ = value;
 
-        if (!isMinFloat && !isMaxFloat) {
+        if (!this.isFloatPoint()) {
             this.viewValue_ = this.value_;
-            this.value_ = this.value_;
         } else delete this.viewValue_;
     }
 
@@ -790,9 +787,16 @@ Entry.Variable.prototype.updateSlideValueByView = function() {
     var value =
         (minValue + Number((Math.abs(maxValue - minValue) * ratio))).toFixed(2);
     value = parseFloat(value);
-    if (value < minValue) this.setValue(this.minValue_);
-    else if (value > maxValue) this.setValue(this.maxValue_);
-    else this.setValue(Math.round(value));
+
+    if (value < minValue)
+        value = this.minValue_;
+    else if (value > maxValue)
+        value = this.maxValue_;
+    if (!this.isFloatPoint()) {
+        this.viewValue_ = value;
+        value = Math.round(value);
+    }
+    this.setValue(value);
 };
 
 Entry.Variable.prototype.getMinValue = function() {
@@ -804,6 +808,7 @@ Entry.Variable.prototype.setMinValue = function(minValue) {
     if (this.value_ < minValue)
         this.value_ = minValue;
     this.updateView();
+    this.isMinFloat = Entry.isFloat(this.minValue_);
 };
 
 Entry.Variable.prototype.getMaxValue = function() {
@@ -815,4 +820,9 @@ Entry.Variable.prototype.setMaxValue = function(maxValue) {
     if (this.value_ > maxValue)
         this.value_ = maxValue;
     this.updateView();
+    this.isMaxFloat = Entry.isFloat(this.maxValue_);
+};
+
+Entry.Variable.prototype.isFloatPoint = function() {
+    return this.isMaxFloat || this.isMinFloat;
 };
