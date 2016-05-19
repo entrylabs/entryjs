@@ -3,6 +3,9 @@ if (typeof Entry !== "object")
 
 if (typeof exports == "object") {
     var Lang = require('../../extern/lang/ko.js').Lang;
+    if (typeof Entry !== "object")
+        var Entry = {};
+    Entry.Bitbrick = {};
 }
 
 Entry.block = {
