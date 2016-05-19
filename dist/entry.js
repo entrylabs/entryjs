@@ -16854,6 +16854,8 @@ Entry.FieldDropdownDynamic = function(b, a, c) {
   this.svgGroup = null;
   this._contents = b;
   this._index = c;
+  c = this._contents.menuName;
+  Entry.Utils.isFunction(c) ? this._menuGenerator = c : this._menuName = c;
   this._CONTENT_HEIGHT = b.dropdownHeight || a.getSkeleton().dropdownHeight || 16;
   this._FONT_SIZE = b.fontSize || a.getSkeleton().fontSize || 12;
   this._ROUND = b.roundValue || 3;
@@ -16864,7 +16866,7 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
   b.constructor = Entry.FieldDropDownDynamic;
   b._updateValue = function() {
     var a = [];
-    Entry.container && (a = Entry.container.getDropdownList(this._contents.menuName));
+    Entry.container && (a = this._menuName ? Entry.container.getDropdownList(this._menuName) : this._menuGenerator());
     this._contents.options = a;
     var a = this._contents.options, b = this.getValue();
     b && "null" != b || (b = 0 !== a.length ? a[0][1] : null);
@@ -16877,7 +16879,8 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
     this.optionGroup.bind("mousedown touchstart", function(a) {
       a.stopPropagation();
     });
-    var b = Entry.container.getDropdownList(this._contents.menuName);
+    var b;
+    b = this._menuName ? Entry.container.getDropdownList(this._contents.menuName) : this._menuGenerator();
     this._contents.options = b;
     for (var d = 0;d < b.length;d++) {
       var e = b[d], f = e[0], e = e[1], g = Entry.Dom("li", {class:"rect", parent:this.optionGroup}), h = Entry.Dom("span", {class:"left", parent:g});
