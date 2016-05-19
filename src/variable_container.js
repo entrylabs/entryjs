@@ -1504,7 +1504,6 @@ Entry.VariableContainer.prototype.generateVariableAddView = function() {
         view.editButton.addClass('entryRemove');
         view.editSaveButton.removeClass('entryRemove');
         view.nameField.removeAttribute('disabled');
-        view.nameField.focus();
     });
     addSpaceButtonWrapper.appendChild(addSpaceConfirmButton);
 };
@@ -1640,7 +1639,6 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
         view.editButton.addClass('entryRemove');
         view.editSaveButton.removeClass('entryRemove');
         view.nameField.removeAttribute('disabled');
-        view.nameField.focus();
     });
     addSpaceButtonWrapper.appendChild(addSpaceConfirmButton);
 };

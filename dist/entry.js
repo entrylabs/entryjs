@@ -14098,7 +14098,6 @@ Entry.VariableContainer.prototype.generateVariableAddView = function() {
     a.editButton.addClass("entryRemove");
     a.editSaveButton.removeClass("entryRemove");
     a.nameField.removeAttribute("disabled");
-    a.nameField.focus();
   });
   c.appendChild(a);
 };
@@ -14193,7 +14192,6 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
     a.editButton.addClass("entryRemove");
     a.editSaveButton.removeClass("entryRemove");
     a.nameField.removeAttribute("disabled");
-    a.nameField.focus();
   });
   c.appendChild(a);
 };
