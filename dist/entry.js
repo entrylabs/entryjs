@@ -12300,6 +12300,13 @@ Entry.Utils.xmlToJsonData = function(b) {
   }
   return a;
 };
+Entry.Utils.stopProjectWithToast = function(b, a) {
+  a = a || "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec \ubc1c\uc0dd";
+  Entry.toast && Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.check_runtime_error, !0);
+  Entry.engine && Entry.engine.toggleStop();
+  "workspace" === Entry.type && (Entry.container.selectObject(b.getCode().object.id), b.view.getBoard().activateBlock(b));
+  throw Error(a);
+};
 Entry.Model = function(b, a) {
   var c = Entry.Model;
   c.generateSchema(b);
@@ -13717,7 +13724,6 @@ Entry.VariableContainer.prototype.addVariable = function(b) {
   this.variables_.unshift(b);
   Entry.playground.reloadPlayground();
   this.updateList();
-  b.listElement.nameField.focus();
   return new Entry.State(this, this.removeVariable, b);
 };
 Entry.VariableContainer.prototype.removeVariable = function(b) {
@@ -13813,7 +13819,6 @@ Entry.VariableContainer.prototype.addMessage = function(b) {
   this.messages_.unshift(b);
   Entry.playground.reloadPlayground();
   this.updateList();
-  b.listElement.nameField.focus();
   return new Entry.State(this, this.removeMessage, b);
 };
 Entry.VariableContainer.prototype.removeMessage = function(b) {
@@ -13896,7 +13901,6 @@ Entry.VariableContainer.prototype.addList = function(b) {
   this.lists_.unshift(b);
   Entry.playground.reloadPlayground();
   this.updateList();
-  b.listElement.nameField.focus();
   return new Entry.State(this, this.removelist, b);
 };
 Entry.VariableContainer.prototype.createListView = function(b) {
@@ -14019,7 +14023,7 @@ Entry.VariableContainer.prototype.generateVariableAddView = function() {
   d.setAttribute("placeholder", Lang.Workspace.Variable_placeholder_name);
   d.variableContainer = this;
   d.onkeypress = function(a) {
-    13 == a.keyCode && (Entry.variableContainer.addVariable(), b.updateSelectedVariable(b.variables_[0]), a = b.variables_[0].listElement, a.editButton.addClass("entryRemove"), a.editSaveButton.removeClass("entryRemove"), a.nameField.removeAttribute("disabled"), a.nameField.focus());
+    13 == a.keyCode && (Entry.variableContainer.addVariable(), b.updateSelectedVariable(b.variables_[0]), a = b.variables_[0].listElement, a.editButton.addClass("entryRemove"), a.editSaveButton.removeClass("entryRemove"), a.nameField.removeAttribute("disabled"));
   };
   this.variableAddPanel.view.name = d;
   c.appendChild(d);
@@ -14094,7 +14098,6 @@ Entry.VariableContainer.prototype.generateVariableAddView = function() {
     a.editButton.addClass("entryRemove");
     a.editSaveButton.removeClass("entryRemove");
     a.nameField.removeAttribute("disabled");
-    a.nameField.focus();
   });
   c.appendChild(a);
 };
@@ -14114,7 +14117,7 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
   this.listAddPanel.view.name = d;
   d.variableContainer = this;
   d.onkeypress = function(a) {
-    13 == a.keyCode && (b.addList(), a = b.lists_[0], b.updateSelectedVariable(a), a = a.listElement, a.editButton.addClass("entryRemove"), a.editSaveButton.removeClass("entryRemove"), a.nameField.removeAttribute("disabled"), a.nameField.focus());
+    13 == a.keyCode && (b.addList(), a = b.lists_[0], b.updateSelectedVariable(a), a = a.listElement, a.editButton.addClass("entryRemove"), a.editSaveButton.removeClass("entryRemove"), a.nameField.removeAttribute("disabled"));
   };
   c.appendChild(d);
   c = Entry.createElement("div");
@@ -14189,7 +14192,6 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
     a.editButton.addClass("entryRemove");
     a.editSaveButton.removeClass("entryRemove");
     a.nameField.removeAttribute("disabled");
-    a.nameField.focus();
   });
   c.appendChild(a);
 };
@@ -16230,11 +16232,17 @@ Entry.Executor = function(b, a) {
   b.execute = function() {
     if (!this.isEnd()) {
       for (;;) {
-        var a = this.scope.block.getSchema().func.call(this.scope, this.entity, this.scope);
+        try {
+          var a = this.scope.block.getSchema().func.call(this.scope, this.entity, this.scope);
+        } catch (b) {
+          Entry.Utils.stopProjectWithToast(this.scope.block, "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec");
+        }
         if (void 0 === a || null === a || a === Entry.STATIC.PASS) {
           if (this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this), null === this.scope.block) {
             if (this._callStack.length) {
-              if (a = this.scope, this.scope = this._callStack.pop(), this.scope.isLooped !== a.isLooped) {
+              var c = this.scope;
+              this.scope = this._callStack.pop();
+              if (this.scope.isLooped !== c.isLooped) {
                 break;
               }
             } else {
@@ -19481,9 +19489,7 @@ Entry.Playground.prototype.injectObject = function(b) {
   }
 };
 Entry.Playground.prototype.injectCode = function() {
-  var b = this.object.script;
-  this.mainWorkspace.changeBoardCode(b);
-  b.board.adjustThreadsPosition();
+  this.mainWorkspace.changeBoardCode(this.object.script);
 };
 Entry.Playground.prototype.adjustScroll = function(b, a) {
   var c = Blockly.mainWorkspace.scrollbar.vScroll;

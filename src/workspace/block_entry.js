@@ -13213,8 +13213,12 @@ Entry.block = {
             var soundId = script.getStringValue("VALUE", script);
             var sound = sprite.parent.getSound(soundId);
 
-            if (sound)
-                createjs.Sound.play(sound.id);
+            if (sound) createjs.Sound.play(sound.id);
+            //else
+                //Entry.engine.stopProjectWithToast(
+                    //this.block,
+                    //'소리를 찾지 못했습니다.'
+                //);
 
             return script.callReturn();
         }
