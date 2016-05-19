@@ -1130,3 +1130,22 @@ Entry.Utils.xmlToJsonData = function(xml) {
     }
     return result;
 };
+
+Entry.Utils.stopProjectWithToast = function(block, message) {
+    message = message || '런타임 에러 발생';
+    if (Entry.toast)
+        Entry.toast.alert(
+            Lang.Msgs.warn,
+            Lang.Workspace.check_runtime_error,
+            true
+        );
+
+    if (Entry.engine)
+        Entry.engine.toggleStop();
+
+    if (Entry.type === 'workspace') {
+        Entry.container.selectObject(block.getCode().object.id);
+        block.view.getBoard().activateBlock(block);
+    }
+    throw new Error(message);
+};
