@@ -43,7 +43,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldIndicator);
         this.svgGroup = this._blockView.contentSvgGroup.elem("g");
 
         this._imgElement = this.svgGroup.elem("image", {
-            href: this._imgUrl,
+            href: Entry.mediaFilePath + this._imgUrl,
             x: this._position ? this._size * -1 : 0,
             y: this._size * -1,
             width: this._size * 2,

@@ -76,7 +76,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -133,7 +133,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -201,7 +201,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -271,7 +271,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -320,7 +320,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -373,7 +373,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -431,7 +431,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -475,7 +475,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -513,7 +513,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -577,7 +577,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -624,7 +624,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -668,7 +668,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -706,7 +706,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -735,7 +735,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -782,7 +782,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -821,7 +821,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -855,7 +855,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -917,7 +917,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -989,7 +989,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -1045,7 +1045,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -1082,7 +1082,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -1115,7 +1115,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -1154,7 +1154,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -1204,7 +1204,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -1276,7 +1276,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -1320,7 +1320,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -1364,7 +1364,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -1419,7 +1419,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -1725,7 +1725,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -1769,7 +1769,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -1986,7 +1986,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -2363,7 +2363,9 @@ Entry.block = {
             {
                 "type": "DropdownDynamic",
                 "value": null,
-                "fontSize": 11
+                "fontSize": 11,
+                menuName: Entry.Bitbrick.sensorList
+
             }
         ],
         "events": {},
@@ -2390,7 +2392,8 @@ Entry.block = {
             {
                 "type": "DropdownDynamic",
                 "value": null,
-                "fontSize": 11
+                "fontSize": 11,
+                menuName: Entry.Bitbrick.touchList
             }
         ],
         "events": {},
@@ -2414,7 +2417,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -2452,7 +2455,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -2507,7 +2510,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -2540,7 +2543,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -2596,7 +2599,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -2636,7 +2639,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -2667,7 +2670,8 @@ Entry.block = {
             {
                 "type": "DropdownDynamic",
                 "value": null,
-                "fontSize": 11
+                "fontSize": 11,
+                menuName: Entry.Bitbrick.dcList
             },
             {
                 "type": "Block",
@@ -2675,7 +2679,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -2715,7 +2719,8 @@ Entry.block = {
             {
                 "type": "DropdownDynamic",
                 "value": null,
-                "fontSize": 11
+                "fontSize": 11,
+                menuName: Entry.Bitbrick.dcList
             },
             {
                 "type": "Dropdown",
@@ -2732,7 +2737,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -2775,7 +2780,8 @@ Entry.block = {
             {
                 "type": "DropdownDynamic",
                 "value": null,
-                "fontSize": 11
+                "fontSize": 11,
+                menuName: Entry.Bitbrick.servoList
             },
             {
                 "type": "Block",
@@ -2783,7 +2789,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -2822,7 +2828,8 @@ Entry.block = {
             {
                 "type": "DropdownDynamic",
                 "value": null,
-                "fontSize": 11
+                "fontSize": 11,
+                menuName: Entry.Bitbrick.sensorList
             },
             {
                 "type": "Block",
@@ -2903,7 +2910,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/brush_03.png",
+                "img": "block_icon/brush_03.png",
                 "size": 12
             }
         ],
@@ -2934,7 +2941,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/brush_03.png",
+                "img": "block_icon/brush_03.png",
                 "size": 12
             }
         ],
@@ -2962,7 +2969,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/brush_03.png",
+                "img": "block_icon/brush_03.png",
                 "size": 12
             }
         ],
@@ -3003,7 +3010,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/brush_03.png",
+                "img": "block_icon/brush_03.png",
                 "size": 12
             }
         ],
@@ -3042,7 +3049,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/brush_03.png",
+                "img": "block_icon/brush_03.png",
                 "size": 12
             }
         ],
@@ -3094,7 +3101,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/brush_03.png",
+                "img": "block_icon/brush_03.png",
                 "size": 12
             }
         ],
@@ -3143,7 +3150,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/brush_03.png",
+                "img": "block_icon/brush_03.png",
                 "size": 12
             }
         ],
@@ -3194,7 +3201,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/brush_03.png",
+                "img": "block_icon/brush_03.png",
                 "size": 12
             }
         ],
@@ -3241,7 +3248,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/brush_03.png",
+                "img": "block_icon/brush_03.png",
                 "size": 12
             }
         ],
@@ -3277,7 +3284,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/brush_03.png",
+                "img": "block_icon/brush_03.png",
                 "size": 12
             }
         ],
@@ -3305,7 +3312,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/brush_03.png",
+                "img": "block_icon/brush_03.png",
                 "size": 12
             }
         ],
@@ -3356,7 +3363,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/brush_03.png",
+                "img": "block_icon/brush_03.png",
                 "size": 12
             }
         ],
@@ -4396,7 +4403,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/calc_01.png",
+                "img": "block_icon/calc_01.png",
                 "size": 12
             }
         ],
@@ -5056,7 +5063,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/calc_01.png",
+                "img": "block_icon/calc_01.png",
                 "size": 12
             }
         ],
@@ -5129,7 +5136,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/flow_03.png",
+                "img": "block_icon/flow_03.png",
                 "size": 12
             }
         ],
@@ -5185,7 +5192,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/flow_03.png",
+                "img": "block_icon/flow_03.png",
                 "size": 12
             }
         ],
@@ -5237,7 +5244,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/flow_03.png",
+                "img": "block_icon/flow_03.png",
                 "size": 12
             }
         ],
@@ -5264,7 +5271,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/flow_03.png",
+                "img": "block_icon/flow_03.png",
                 "size": 12
             }
         ],
@@ -5292,7 +5299,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/flow_03.png",
+                "img": "block_icon/flow_03.png",
                 "size": 12
             }
         ],
@@ -5335,7 +5342,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/flow_03.png",
+                "img": "block_icon/flow_03.png",
                 "size": 12
             }
         ],
@@ -5389,7 +5396,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/flow_03.png",
+                "img": "block_icon/flow_03.png",
                 "size": 12
             },
             {
@@ -5441,7 +5448,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/flow_03.png",
+                "img": "block_icon/flow_03.png",
                 "size": 12
             }
         ],
@@ -5474,7 +5481,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/flow_03.png",
+                "img": "block_icon/flow_03.png",
                 "size": 12
             }
         ],
@@ -5499,7 +5506,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/start_icon_clone.png",
+                "img": "block_icon/start_icon_clone.png",
                 "size": 17,
                 "position": {
                     "x": 0,
@@ -5526,7 +5533,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/flow_03.png",
+                "img": "block_icon/flow_03.png",
                 "size": 12
             }
         ],
@@ -5562,7 +5569,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/flow_03.png",
+                "img": "block_icon/flow_03.png",
                 "size": 12
             }
         ],
@@ -5615,7 +5622,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/flow_03.png",
+                "img": "block_icon/flow_03.png",
                 "size": 12
             }
         ],
@@ -5659,7 +5666,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/flow_03.png",
+                "img": "block_icon/flow_03.png",
                 "size": 12
             }
         ],
@@ -5682,7 +5689,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/flow_03.png",
+                "img": "block_icon/flow_03.png",
                 "size": 12
             }
         ],
@@ -5851,7 +5858,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/function_03.png",
+                "img": "block_icon/function_03.png",
                 "size": 12
             }
         ],
@@ -5867,7 +5874,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/function_03.png",
+                "img": "block_icon/function_03.png",
                 "size": 12
             }
         ],
@@ -5980,7 +5987,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -6075,7 +6082,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -6232,7 +6239,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -6290,7 +6297,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -6357,7 +6364,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -6427,7 +6434,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -6477,7 +6484,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -6531,7 +6538,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -6590,7 +6597,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -6654,7 +6661,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -6712,7 +6719,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -6782,7 +6789,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -6809,7 +6816,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -6859,7 +6866,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -6906,7 +6913,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -6941,7 +6948,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -6988,7 +6995,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -7027,7 +7034,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -7061,7 +7068,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -7123,7 +7130,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -7195,7 +7202,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -7251,7 +7258,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -7288,7 +7295,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -7343,7 +7350,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -7394,7 +7401,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -7452,7 +7459,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -8221,7 +8228,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/looks_03.png",
+                "img": "block_icon/looks_03.png",
                 "size": 12
             }
         ],
@@ -8244,7 +8251,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/looks_03.png",
+                "img": "block_icon/looks_03.png",
                 "size": 12
             }
         ],
@@ -8283,7 +8290,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/looks_03.png",
+                "img": "block_icon/looks_03.png",
                 "size": 12
             }
         ],
@@ -8354,7 +8361,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/looks_03.png",
+                "img": "block_icon/looks_03.png",
                 "size": 12
             }
         ],
@@ -8395,7 +8402,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/looks_03.png",
+                "img": "block_icon/looks_03.png",
                 "size": 12
             }
         ],
@@ -8424,7 +8431,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/looks_03.png",
+                "img": "block_icon/looks_03.png",
                 "size": 12
             }
         ],
@@ -8461,7 +8468,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/looks_03.png",
+                "img": "block_icon/looks_03.png",
                 "size": 12
             }
         ],
@@ -8507,7 +8514,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/looks_03.png",
+                "img": "block_icon/looks_03.png",
                 "size": 12
             }
         ],
@@ -8569,7 +8576,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/looks_03.png",
+                "img": "block_icon/looks_03.png",
                 "size": 12
             }
         ],
@@ -8617,7 +8624,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/looks_03.png",
+                "img": "block_icon/looks_03.png",
                 "size": 12
             }
         ],
@@ -8644,7 +8651,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/looks_03.png",
+                "img": "block_icon/looks_03.png",
                 "size": 12
             }
         ],
@@ -8682,7 +8689,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/looks_03.png",
+                "img": "block_icon/looks_03.png",
                 "size": 12
             }
         ],
@@ -8721,7 +8728,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/looks_03.png",
+                "img": "block_icon/looks_03.png",
                 "size": 12
             }
         ],
@@ -8758,7 +8765,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/looks_03.png",
+                "img": "block_icon/looks_03.png",
                 "size": 12
             }
         ],
@@ -8791,7 +8798,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/looks_03.png",
+                "img": "block_icon/looks_03.png",
                 "size": 12
             }
         ],
@@ -8814,7 +8821,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/looks_03.png",
+                "img": "block_icon/looks_03.png",
                 "size": 12
             }
         ],
@@ -8845,7 +8852,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/looks_03.png",
+                "img": "block_icon/looks_03.png",
                 "size": 12
             }
         ],
@@ -8905,7 +8912,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/looks_03.png",
+                "img": "block_icon/looks_03.png",
                 "size": 12
             }
         ],
@@ -8955,7 +8962,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/looks_03.png",
+                "img": "block_icon/looks_03.png",
                 "size": 12
             }
         ],
@@ -9012,7 +9019,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/looks_03.png",
+                "img": "block_icon/looks_03.png",
                 "size": 12
             }
         ],
@@ -9069,7 +9076,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/looks_03.png",
+                "img": "block_icon/looks_03.png",
                 "size": 12
             }
         ],
@@ -9126,7 +9133,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/looks_03.png",
+                "img": "block_icon/looks_03.png",
                 "size": 12
             }
         ],
@@ -9180,7 +9187,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/looks_03.png",
+                "img": "block_icon/looks_03.png",
                 "size": 12
             }
         ],
@@ -9235,7 +9242,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/moving_03.png",
+                "img": "block_icon/moving_03.png",
                 "size": 12
             }
         ],
@@ -9276,7 +9283,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/moving_03.png",
+                "img": "block_icon/moving_03.png",
                 "size": 12
             }
         ],
@@ -9316,7 +9323,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/moving_03.png",
+                "img": "block_icon/moving_03.png",
                 "size": 12
             }
         ],
@@ -9364,7 +9371,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/moving_03.png",
+                "img": "block_icon/moving_03.png",
                 "size": 12
             }
         ],
@@ -9433,7 +9440,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/moving_03.png",
+                "img": "block_icon/moving_03.png",
                 "size": 12
             }
         ],
@@ -9477,7 +9484,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/moving_03.png",
+                "img": "block_icon/moving_03.png",
                 "size": 12
             }
         ],
@@ -9508,7 +9515,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/moving_03.png",
+                "img": "block_icon/moving_03.png",
                 "size": 12
             }
         ],
@@ -9547,7 +9554,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/moving_03.png",
+                "img": "block_icon/moving_03.png",
                 "size": 12
             }
         ],
@@ -9586,7 +9593,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/moving_03.png",
+                "img": "block_icon/moving_03.png",
                 "size": 12
             }
         ],
@@ -9633,7 +9640,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/moving_03.png",
+                "img": "block_icon/moving_03.png",
                 "size": 12
             }
         ],
@@ -9673,7 +9680,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/moving_03.png",
+                "img": "block_icon/moving_03.png",
                 "size": 12
             }
         ],
@@ -9716,7 +9723,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/moving_03.png",
+                "img": "block_icon/moving_03.png",
                 "size": 12
             }
         ],
@@ -9768,7 +9775,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/moving_03.png",
+                "img": "block_icon/moving_03.png",
                 "size": 12
             }
         ],
@@ -9836,7 +9843,7 @@ Entry.block = {
             { "type": "Angle" },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/moving_03.png",
+                "img": "block_icon/moving_03.png",
                 "size": 12
             }
         ],
@@ -9887,7 +9894,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/moving_03.png",
+                "img": "block_icon/moving_03.png",
                 "size": 12
             }
         ],
@@ -10073,7 +10080,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/moving_03.png",
+                "img": "block_icon/moving_03.png",
                 "size": 12
             }
         ],
@@ -10093,7 +10100,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/moving_03.png",
+                "img": "block_icon/moving_03.png",
                 "size": 12
             }
         ],
@@ -10119,7 +10126,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/moving_03.png",
+                "img": "block_icon/moving_03.png",
                 "size": 12
             }
         ],
@@ -10177,7 +10184,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/moving_03.png",
+                "img": "block_icon/moving_03.png",
                 "size": 12
             }
         ],
@@ -10215,7 +10222,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/moving_03.png",
+                "img": "block_icon/moving_03.png",
                 "size": 12
             }
         ],
@@ -10258,7 +10265,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/moving_03.png",
+                "img": "block_icon/moving_03.png",
                 "size": 12
             }
         ],
@@ -10344,7 +10351,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/moving_03.png",
+                "img": "block_icon/moving_03.png",
                 "size": 12
             }
         ],
@@ -10378,7 +10385,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/moving_03.png",
+                "img": "block_icon/moving_03.png",
                 "size": 12
             }
         ],
@@ -10412,7 +10419,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/moving_03.png",
+                "img": "block_icon/moving_03.png",
                 "size": 12
             }
         ],
@@ -10446,7 +10453,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/moving_03.png",
+                "img": "block_icon/moving_03.png",
                 "size": 12
             }
         ],
@@ -10484,7 +10491,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/moving_03.png",
+                "img": "block_icon/moving_03.png",
                 "size": 12
             }
         ],
@@ -10532,7 +10539,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/moving_03.png",
+                "img": "block_icon/moving_03.png",
                 "size": 12
             }
         ],
@@ -10591,7 +10598,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/moving_03.png",
+                "img": "block_icon/moving_03.png",
                 "size": 12
             }
         ],
@@ -10655,8 +10662,7 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [null],
-            "type": "neobot_sensor_value",
-            "id": "k9wp"
+            "type": "neobot_sensor_value"
         },
         "paramsKeyMap": {
             "PORT": 0
@@ -10705,7 +10711,7 @@ Entry.block = {
             "fontSize": 11
         }, {
             "type": "Indicator",
-            "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+            "img": "block_icon/hardware_03.png",
             "size": 12
         }],
         "events": {},
@@ -10734,7 +10740,7 @@ Entry.block = {
         "template": "왼쪽모터 정지 %1",
         "params": [{
             "type": "Indicator",
-            "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+            "img": "block_icon/hardware_03.png",
             "size": 12
         }],
         "events": {},
@@ -10787,7 +10793,7 @@ Entry.block = {
             "fontSize": 11
         }, {
             "type": "Indicator",
-            "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+            "img": "block_icon/hardware_03.png",
             "size": 12
         }],
         "events": {},
@@ -10816,7 +10822,7 @@ Entry.block = {
         "template": "오른쪽모터 정지 %1",
         "params": [{
             "type": "Indicator",
-            "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+            "img": "block_icon/hardware_03.png",
             "size": 12
         }],
         "events": {},
@@ -10875,7 +10881,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -10965,7 +10971,7 @@ Entry.block = {
             "fontSize": 11
         }, {
             "type": "Indicator",
-            "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+            "img": "block_icon/hardware_03.png",
             "size": 12
         }],
         "events": {},
@@ -11011,7 +11017,7 @@ Entry.block = {
             "accept": "string"
         }, {
             "type": "Indicator",
-            "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+            "img": "block_icon/hardware_03.png",
             "size": 12
         }],
         "events": {},
@@ -11057,7 +11063,7 @@ Entry.block = {
             "accept": "string"
         }, {
             "type": "Indicator",
-            "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+            "img": "block_icon/hardware_03.png",
             "size": 12
         }],
         "events": {},
@@ -11134,7 +11140,7 @@ Entry.block = {
             "fontSize": 11
         }, {
             "type": "Indicator",
-            "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+            "img": "block_icon/hardware_03.png",
             "size": 12
         }],
         "events": {},
@@ -11533,7 +11539,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -11624,7 +11630,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -11669,7 +11675,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -11722,7 +11728,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -11775,7 +11781,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -11839,7 +11845,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -11923,7 +11929,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -11989,7 +11995,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -12068,7 +12074,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -12146,7 +12152,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -12203,7 +12209,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -12260,7 +12266,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -12435,7 +12441,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -12482,7 +12488,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -12538,7 +12544,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -12618,7 +12624,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -12675,7 +12681,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/start_icon_scene_1_2.png",
+                "img": "block_icon/start_icon_scene_1_2.png",
                 "size": 17,
                 "position": {
                     "x": 0,
@@ -12708,7 +12714,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/start_03.png",
+                "img": "block_icon/start_03.png",
                 "size": 12
             }
         ],
@@ -12748,7 +12754,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/start_03.png",
+                "img": "block_icon/start_03.png",
                 "size": 12
             }
         ],
@@ -12800,7 +12806,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/sound_03.png",
+                "img": "block_icon/sound_03.png",
                 "size": 12
             }
         ],
@@ -12840,7 +12846,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/sound_03.png",
+                "img": "block_icon/sound_03.png",
                 "size": 12
             }
         ],
@@ -12890,7 +12896,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/sound_03.png",
+                "img": "block_icon/sound_03.png",
                 "size": 12
             }
         ],
@@ -12945,7 +12951,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/sound_03.png",
+                "img": "block_icon/sound_03.png",
                 "size": 12
             }
         ],
@@ -13005,7 +13011,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/sound_03.png",
+                "img": "block_icon/sound_03.png",
                 "size": 12
             }
         ],
@@ -13047,7 +13053,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/sound_03.png",
+                "img": "block_icon/sound_03.png",
                 "size": 12
             }
         ],
@@ -13084,7 +13090,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/sound_03.png",
+                "img": "block_icon/sound_03.png",
                 "size": 12
             }
         ],
@@ -13135,7 +13141,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/sound_03.png",
+                "img": "block_icon/sound_03.png",
                 "size": 12
             }
         ],
@@ -13179,7 +13185,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/sound_03.png",
+                "img": "block_icon/sound_03.png",
                 "size": 12
             }
         ],
@@ -13232,7 +13238,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/sound_03.png",
+                "img": "block_icon/sound_03.png",
                 "size": 12
             }
         ],
@@ -13288,7 +13294,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/sound_03.png",
+                "img": "block_icon/sound_03.png",
                 "size": 12
             }
         ],
@@ -13357,7 +13363,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/sound_03.png",
+                "img": "block_icon/sound_03.png",
                 "size": 12
             }
         ],
@@ -13420,7 +13426,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/sound_03.png",
+                "img": "block_icon/sound_03.png",
                 "size": 12
             }
         ],
@@ -13488,7 +13494,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/start_icon_play.png",
+                "img": "block_icon/start_icon_play.png",
                 "size": 17,
                 "position": {
                     "x": 0,
@@ -13515,7 +13521,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/start_icon_keyboard.png",
+                "img": "block_icon/start_icon_keyboard.png",
                 "size": 17,
                 "position": {
                     "x": 0,
@@ -13544,7 +13550,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/start_03.png",
+                "img": "block_icon/start_03.png",
                 "size": 12
             }
         ],
@@ -13566,7 +13572,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/start_icon_keyboard.png",
+                "img": "block_icon/start_icon_keyboard.png",
                 "size": 17,
                 "position": {
                     "x": 0,
@@ -13600,7 +13606,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/start_icon_mouse.png",
+                "img": "block_icon/start_icon_mouse.png",
                 "size": 17,
                 "position": {
                     "x": 0,
@@ -13627,7 +13633,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/start_icon_mouse.png",
+                "img": "block_icon/start_icon_mouse.png",
                 "size": 17,
                 "position": {
                     "x": 0,
@@ -13654,7 +13660,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/start_icon_mouse.png",
+                "img": "block_icon/start_icon_mouse.png",
                 "size": 17,
                 "position": {
                     "x": 0,
@@ -13681,7 +13687,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/start_icon_mouse.png",
+                "img": "block_icon/start_icon_mouse.png",
                 "size": 17,
                 "position": {
                     "x": 0,
@@ -13708,7 +13714,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/start_icon_keyboard.png",
+                "img": "block_icon/start_icon_keyboard.png",
                 "size": 17,
                 "position": {
                     "x": 0,
@@ -13732,7 +13738,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/start_icon_signal.png",
+                "img": "block_icon/start_icon_signal.png",
                 "size": 17,
                 "position": {
                     "x": 0,
@@ -13787,7 +13793,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/start_03.png",
+                "img": "block_icon/start_03.png",
                 "size": 12
             }
         ],
@@ -13841,7 +13847,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/start_03.png",
+                "img": "block_icon/start_03.png",
                 "size": 12
             }
         ],
@@ -14095,7 +14101,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/variable_03.png",
+                "img": "block_icon/variable_03.png",
                 "size": 12
             }
         ],
@@ -14161,7 +14167,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/variable_03.png",
+                "img": "block_icon/variable_03.png",
                 "size": 12
             }
         ],
@@ -14217,7 +14223,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/variable_03.png",
+                "img": "block_icon/variable_03.png",
                 "size": 12
             }
         ],
@@ -14265,7 +14271,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/variable_03.png",
+                "img": "block_icon/variable_03.png",
                 "size": 12
             }
         ],
@@ -14356,7 +14362,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/variable_03.png",
+                "img": "block_icon/variable_03.png",
                 "size": 12
             }
         ],
@@ -14472,7 +14478,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/variable_03.png",
+                "img": "block_icon/variable_03.png",
                 "size": 12
             }
         ],
@@ -14536,7 +14542,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/variable_03.png",
+                "img": "block_icon/variable_03.png",
                 "size": 12
             }
         ],
@@ -14593,7 +14599,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/variable_03.png",
+                "img": "block_icon/variable_03.png",
                 "size": 12
             }
         ],
@@ -14655,7 +14661,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/variable_03.png",
+                "img": "block_icon/variable_03.png",
                 "size": 12
             }
         ],
@@ -14810,7 +14816,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/variable_03.png",
+                "img": "block_icon/variable_03.png",
                 "size": 12
             }
         ],
@@ -14845,7 +14851,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/variable_03.png",
+                "img": "block_icon/variable_03.png",
                 "size": 12
             }
         ],
@@ -14910,7 +14916,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/variable_03.png",
+                "img": "block_icon/variable_03.png",
                 "size": 12
             }
         ],
@@ -15101,7 +15107,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -15168,7 +15174,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -15224,7 +15230,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -15283,7 +15289,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -15336,7 +15342,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -15390,7 +15396,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -15441,7 +15447,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -15504,7 +15510,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -15610,7 +15616,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+                "img": "block_icon/hardware_03.png",
                 "size": 12
             }
         ],
@@ -17321,7 +17327,7 @@ Entry.block = {
             "fontSize": 11
         }, {
             "type": "Indicator",
-            "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+            "img": "block_icon/hardware_03.png",
             "size": 12
         }],
         "events": {},
@@ -17381,7 +17387,7 @@ Entry.block = {
             "accept": "string"
         }, {
             "type": "Indicator",
-            "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+            "img": "block_icon/hardware_03.png",
             "size": 12
         }],
         "events": {},
@@ -17425,7 +17431,7 @@ Entry.block = {
             "accept": "string"
         }, {
             "type": "Indicator",
-            "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+            "img": "block_icon/hardware_03.png",
             "size": 12
         }],
         "events": {},
@@ -17479,7 +17485,7 @@ Entry.block = {
             "fontSize": 11
         }, {
             "type": "Indicator",
-            "img": "/lib/entryjs/images/block_icon/hardware_03.png",
+            "img": "block_icon/hardware_03.png",
             "size": 12
         }],
         "events": {},
