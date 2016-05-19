@@ -2363,7 +2363,9 @@ Entry.block = {
             {
                 "type": "DropdownDynamic",
                 "value": null,
-                "fontSize": 11
+                "fontSize": 11,
+                menuName: Entry.Bitbrick.sensorList
+
             }
         ],
         "events": {},
@@ -2390,7 +2392,8 @@ Entry.block = {
             {
                 "type": "DropdownDynamic",
                 "value": null,
-                "fontSize": 11
+                "fontSize": 11,
+                menuName: Entry.Bitbrick.touchList
             }
         ],
         "events": {},
@@ -2667,7 +2670,8 @@ Entry.block = {
             {
                 "type": "DropdownDynamic",
                 "value": null,
-                "fontSize": 11
+                "fontSize": 11,
+                menuName: Entry.Bitbrick.dcList
             },
             {
                 "type": "Block",
@@ -2715,7 +2719,8 @@ Entry.block = {
             {
                 "type": "DropdownDynamic",
                 "value": null,
-                "fontSize": 11
+                "fontSize": 11,
+                menuName: Entry.Bitbrick.dcList
             },
             {
                 "type": "Dropdown",
@@ -2775,7 +2780,8 @@ Entry.block = {
             {
                 "type": "DropdownDynamic",
                 "value": null,
-                "fontSize": 11
+                "fontSize": 11,
+                menuName: Entry.Bitbrick.servoList
             },
             {
                 "type": "Block",
@@ -2822,7 +2828,8 @@ Entry.block = {
             {
                 "type": "DropdownDynamic",
                 "value": null,
-                "fontSize": 11
+                "fontSize": 11,
+                menuName: Entry.Bitbrick.sensorList
             },
             {
                 "type": "Block",
@@ -10655,8 +10662,7 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [null],
-            "type": "neobot_sensor_value",
-            "id": "k9wp"
+            "type": "neobot_sensor_value"
         },
         "paramsKeyMap": {
             "PORT": 0
