@@ -1106,3 +1106,27 @@ Entry.Utils.createMouseEvent = function(type, event) {
     );
     return e;
 };
+
+Entry.Utils.xmlToJsonData = function(xml) {
+    xml = $.parseXML(xml);
+    var result = [];
+    var categories = xml.childNodes[0].childNodes;
+    for (var i in categories) {
+        var category = categories[i];
+        if (!category.tagName)
+            continue;
+        var data = {
+            category: category.getAttribute("id"),
+            blocks: []
+        };
+        var blocks = category.childNodes;
+        for (var i in blocks) {
+            var block = blocks[i];
+            if (!block.tagName)
+                continue;
+            data.blocks.push(block.getAttribute("type"));
+        }
+        result.push(data);
+    }
+    return result;
+};

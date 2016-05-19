@@ -17888,6 +17888,36 @@ Entry.block = {
             "type": "CODEino_convert_scale"
         },
         "class": "arduino"
+    },
+    "ebs_if": {
+        "parent": "_if",
+        "def": {
+            type: "_if",
+            params: [
+                {
+                    type: 'reach_something',
+                    params: [
+                        null,
+                        "wall"
+                    ]
+                }
+            ]
+        }
+    },
+    "ebs_if2": {
+        "parent": "_if",
+        "def": {
+            type: "_if",
+            params: [
+                {
+                    type: 'reach_something',
+                    params: [
+                        null,
+                        "cwz5"
+                    ]
+                }
+            ]
+        }
     }
 };
 

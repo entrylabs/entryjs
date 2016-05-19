@@ -12283,6 +12283,23 @@ Entry.Utils.createMouseEvent = function(b, a) {
   c.initMouseEvent(b, !0, !0, window, 0, 0, 0, a.clientX, a.clientY, !1, !1, !1, !1, 0, null);
   return c;
 };
+Entry.Utils.xmlToJsonData = function(b) {
+  b = $.parseXML(b);
+  var a = [];
+  b = b.childNodes[0].childNodes;
+  for (var c in b) {
+    var d = b[c];
+    if (d.tagName) {
+      var e = {category:d.getAttribute("id"), blocks:[]}, d = d.childNodes;
+      for (c in d) {
+        var f = d[c];
+        f.tagName && e.blocks.push(f.getAttribute("type"));
+      }
+      a.push(e);
+    }
+  }
+  return a;
+};
 Entry.Model = function(b, a) {
   var c = Entry.Model;
   c.generateSchema(b);
