@@ -804,7 +804,6 @@ Entry.VariableContainer.prototype.addVariable = function(variable) {
     Entry.playground.reloadPlayground();
 
     this.updateList();
-    variable.listElement.nameField.focus();
     return new Entry.State(this,
                            this.removeVariable,
                            variable);
@@ -1023,7 +1022,6 @@ Entry.VariableContainer.prototype.addMessage = function(message) {
     this.messages_.unshift(message);
     Entry.playground.reloadPlayground();
     this.updateList();
-    message.listElement.nameField.focus();
     return new Entry.State(this,
                            this.removeMessage,
                            message);
@@ -1187,7 +1185,6 @@ Entry.VariableContainer.prototype.addList = function(list) {
     Entry.playground.reloadPlayground();
 
     this.updateList();
-    list.listElement.nameField.focus();
     return new Entry.State(this,
                            this.removelist,
                            list);
@@ -1401,7 +1398,6 @@ Entry.VariableContainer.prototype.generateVariableAddView = function() {
             view.editButton.addClass('entryRemove');
             view.editSaveButton.removeClass('entryRemove');
             view.nameField.removeAttribute('disabled');
-            view.nameField.focus();
         }
     };
     this.variableAddPanel.view.name = addSpaceInput;
@@ -1540,7 +1536,6 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
             view.editButton.addClass('entryRemove');
             view.editSaveButton.removeClass('entryRemove');
             view.nameField.removeAttribute('disabled');
-            view.nameField.focus();
         }
     };
     addSpaceNameWrapper.appendChild(addSpaceInput);

@@ -13724,7 +13724,6 @@ Entry.VariableContainer.prototype.addVariable = function(b) {
   this.variables_.unshift(b);
   Entry.playground.reloadPlayground();
   this.updateList();
-  b.listElement.nameField.focus();
   return new Entry.State(this, this.removeVariable, b);
 };
 Entry.VariableContainer.prototype.removeVariable = function(b) {
@@ -13820,7 +13819,6 @@ Entry.VariableContainer.prototype.addMessage = function(b) {
   this.messages_.unshift(b);
   Entry.playground.reloadPlayground();
   this.updateList();
-  b.listElement.nameField.focus();
   return new Entry.State(this, this.removeMessage, b);
 };
 Entry.VariableContainer.prototype.removeMessage = function(b) {
@@ -13903,7 +13901,6 @@ Entry.VariableContainer.prototype.addList = function(b) {
   this.lists_.unshift(b);
   Entry.playground.reloadPlayground();
   this.updateList();
-  b.listElement.nameField.focus();
   return new Entry.State(this, this.removelist, b);
 };
 Entry.VariableContainer.prototype.createListView = function(b) {
@@ -14026,7 +14023,7 @@ Entry.VariableContainer.prototype.generateVariableAddView = function() {
   d.setAttribute("placeholder", Lang.Workspace.Variable_placeholder_name);
   d.variableContainer = this;
   d.onkeypress = function(a) {
-    13 == a.keyCode && (Entry.variableContainer.addVariable(), b.updateSelectedVariable(b.variables_[0]), a = b.variables_[0].listElement, a.editButton.addClass("entryRemove"), a.editSaveButton.removeClass("entryRemove"), a.nameField.removeAttribute("disabled"), a.nameField.focus());
+    13 == a.keyCode && (Entry.variableContainer.addVariable(), b.updateSelectedVariable(b.variables_[0]), a = b.variables_[0].listElement, a.editButton.addClass("entryRemove"), a.editSaveButton.removeClass("entryRemove"), a.nameField.removeAttribute("disabled"));
   };
   this.variableAddPanel.view.name = d;
   c.appendChild(d);
@@ -14121,7 +14118,7 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
   this.listAddPanel.view.name = d;
   d.variableContainer = this;
   d.onkeypress = function(a) {
-    13 == a.keyCode && (b.addList(), a = b.lists_[0], b.updateSelectedVariable(a), a = a.listElement, a.editButton.addClass("entryRemove"), a.editSaveButton.removeClass("entryRemove"), a.nameField.removeAttribute("disabled"), a.nameField.focus());
+    13 == a.keyCode && (b.addList(), a = b.lists_[0], b.updateSelectedVariable(a), a = a.listElement, a.editButton.addClass("entryRemove"), a.editSaveButton.removeClass("entryRemove"), a.nameField.removeAttribute("disabled"));
   };
   c.appendChild(d);
   c = Entry.createElement("div");
@@ -19493,9 +19490,7 @@ Entry.Playground.prototype.injectObject = function(b) {
   }
 };
 Entry.Playground.prototype.injectCode = function() {
-  var b = this.object.script;
-  this.mainWorkspace.changeBoardCode(b);
-  b.board.adjustThreadsPosition();
+  this.mainWorkspace.changeBoardCode(this.object.script);
 };
 Entry.Playground.prototype.adjustScroll = function(b, a) {
   var c = Blockly.mainWorkspace.scrollbar.vScroll;
