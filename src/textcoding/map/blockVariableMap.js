@@ -4,9 +4,9 @@
  */
 "use strict";
 
-goog.provide("Entry.BlockVariableMap");
+goog.provide("Entry.BlockObjectMap");
 
-Entry.BlockVariableMap = function() {
+Entry.BlockObjectMap = function() {
 
 };
 
@@ -28,4 +28,4 @@ Entry.BlockVariableMap = function() {
                       "sound_something_second_wait_with_block" : "sound",
                       "sound_from_to_and_wait" : "sound"
                     };
-})(Entry.BlockVariableMap.prototype);
+})(Entry.BlockObjectMap.prototype);

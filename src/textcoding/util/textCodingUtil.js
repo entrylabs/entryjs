@@ -36,7 +36,4 @@ Entry.TextCodingUtil = function() {
         
         return false;
     };
-
-    
-
 })(Entry.TextCodingUtil.prototype);

@@ -10959,6 +10959,19 @@ Entry.AssemblerObjectConvertor = function() {
     return d;
   };
 })(Entry.AssemblerObjectConvertor.prototype);
+Entry.AssemblerTypeConvertor = function() {
+};
+(function(b) {
+  b.convert = function(a) {
+    console.log("AssemblerTypeConvertor", a);
+    switch(a) {
+      case "__pythonRuntime.functions.range":
+        a = "repeat_basic";
+        break;
+    }
+    return a;
+  };
+})(Entry.AssemblerTypeConvertor.prototype);
 Entry.AssemblerValueConvertor = function() {
 };
 (function(b) {
@@ -11051,11 +11064,11 @@ Entry.ParticularBlockProcessing = function() {
     return b;
   };
 })(Entry.ParticularBlockProcessing.prototype);
-Entry.BlockVariableMap = function() {
+Entry.BlockObjectMap = function() {
 };
 (function(b) {
   b.getDropdownDynamicType = {when_message_cast:"variable", message_cast:"variable", message_cast_wait:"variable", start_scene:"scene", create_clone:"object", locate:"object", locate_object_time:"object", see_angle_object:"object", reach_something:"object", change_to_some_shape:"picture", sound_something_with_block:"sound", sound_something_second_with_block:"sound", sound_from_to:"sound", sound_something_wait_with_block:"sound", sound_something_second_wait_with_block:"sound", sound_from_to_and_wait:"sound"};
-})(Entry.BlockVariableMap.prototype);
+})(Entry.BlockObjectMap.prototype);
 Entry.KeyboardCodeMap = function() {
 };
 (function(b) {
@@ -11065,198 +11078,6 @@ Entry.KeyboardCodeMap = function() {
   b.keyCharToCode = {Backspace:8, Tab:9, Enter:13, Shift:16, Ctrl:17, Alt:18, "Pause/Break":19, "Caps Lock":20, Esc:27, Space:32, "Page Up":33, "Page Down":34, End:35, Home:36, Left:37, Up:38, Right:39, Down:40, Insert:45, Delete:46, 0:48, 1:49, 2:50, 3:51, 4:52, 5:53, 6:54, 7:55, 8:56, 9:57, A:65, B:66, C:67, D:68, E:69, F:70, G:71, H:72, I:73, J:74, K:75, L:76, M:77, N:78, O:79, P:80, Q:81, R:82, S:83, T:84, U:85, V:86, W:87, X:88, Y:89, Z:90, Windows:91, "Right Click":93, "Numpad 0":96, "Numpad 1":97, 
   "Numpad 2":98, "Numpad 3":99, "Numpad 4":100, "Numpad 5":101, "Numpad 6":102, "Numpad 7":103, "Numpad 8":104, "Numpad 9":105, "Numpad *":106, "Numpad +":107, "Numpad -":109, "Numpad .":110, "Numpad /":111, F1:112, F2:113, F3:114, F4:115, F5:116, F6:117, F7:118, F8:119, F9:120, F10:121, F11:122, F12:123, "Num Lock":144, "Scroll Lock":145, "My Computer":182, "My Calculator":183, ";":186, "=":187, ",":188, "-":189, ".":190, "/":191, "`":192, "[":219, "\\":220, "]":221, "'":222};
 })(Entry.KeyboardCodeMap.prototype);
-Entry.PyBlockAssembler = function(b) {
-  this.blockSyntax = b;
-};
-(function(b) {
-  b.assemble = function(a, b, d, e) {
-    console.log("unit", a);
-    var f;
-    switch(a.type) {
-      case "ExpressionStatement":
-        console.log("ExpressionStatement unit", a, b, d, e);
-        var g = a.expression, h = g.callee;
-        if (h) {
-          var k = this.assemble(g)
-        }
-        if ((h = g.operator) && null != h) {
-          console.log("operator", h);
-          var l, n = this.getBlock("&&" == h ? "(%1) and (%3)" : "||" == h ? "(%1) or (%3)" : "(%1 %2 %3)");
-          l = Entry.BlockMetaExtractor.prototype.getParamsType(n);
-          f = Entry.BlockMetaExtractor.prototype.getDefParamsType(n);
-          var m = 0, k = [];
-          console.log("blockType", n);
-          if (m = g.left) {
-            m = this.assemble(m, n, f, 0), console.log("leftExpression", m), k.push(m);
-          }
-          console.log("before cv operator", h);
-          0 != h.length && (console.log("opoopop", h), h = String(h), h = Entry.AssemblerValueConvertor.prototype.binaryOperatorValueConvertor(h), console.log("cv operator", h), k.push(h));
-          if (h = g.right) {
-            m = this.assemble(h, n, f, 2), console.log("rightExpression", m), k.push(m);
-          }
-        }
-        h = g.value;
-        if (1 == h) {
-          n = this.getBlock("True");
-          Entry.BlockMetaExtractor.prototype.getParamsType(n);
-          f = Entry.BlockMetaExtractor.prototype.getDefParamsType(n);
-          f = this.assemble(g, n, f, 0);
-          break;
-        } else {
-          if (0 == h) {
-            n = this.getBlock("False");
-            Entry.BlockMetaExtractor.prototype.getParamsType(n);
-            f = Entry.BlockMetaExtractor.prototype.getDefParamsType(n);
-            f = this.assemble(g, n, f, 0);
-            break;
-          }
-        }
-        f = {type:n, params:k};
-        console.log("ExpressionStatement result", f);
-        break;
-      case "CallExpression":
-        console.log("CallExpression unit", a, b, d, e);
-        h = a.callee;
-        l = this.assemble(h);
-        n = this.getBlock(l);
-        l = Entry.BlockMetaExtractor.prototype.getParamsType(n);
-        f = Entry.BlockMetaExtractor.prototype.getDefParamsType(n);
-        k = [];
-        arguments = g.arguments;
-        console.log("argument origin", arguments);
-        if (arguments && arguments.length) {
-          for (h = 0;h < arguments.length;h++) {
-            console.log("meta", h, arguments[h], l[h], f[h]);
-            if ("Indicator" == l[h]) {
-              m = null, arguments.splice(h, 0, m);
-            } else {
-              if ("Block" == l[h]) {
-                m = h, m = this.assemble(arguments[h], n, f, m);
-              } else {
-                if ("Keyboard" == l[h]) {
-                  m = Entry.KeyboardCodeMap.prototype.keyCharToCode[arguments[h].value];
-                } else {
-                  if (m = arguments[h].value, b && null != b || (b = n), g = Entry.BlockVariableMap.prototype.getDropdownDynamicType[b], console.log("variable convertor", m, g), m = Entry.AssemblerObjectConvertor.prototype.convert(g, m), Entry.ParticularBlockProcessing.prototype.isParticularBlock(n)) {
-                    k.push(null);
-                    k.push(m);
-                    k.push(null);
-                    break;
-                  }
-                }
-              }
-            }
-            console.log("param", m);
-            k.push(m);
-          }
-        }
-        f = k;
-        break;
-      case "MemberExpression":
-        console.log("MemberExpression unit", a, b, d, e);
-        a.object.name && a.property.name ? l = String(a.object.name).concat(".").concat(a.property.name) : "__pythonRuntime" == String(a.object.object.name) && "functions" == String(a.object.property.name) && (l = String(a.property.name));
-        f = l;
-        break;
-      case "WhileStatement":
-        console.log("WhileStatement unit", a);
-        n = this.getBlock("while True:\n$1");
-        Entry.BlockMetaExtractor.prototype.getParamsType(n);
-        f = Entry.BlockMetaExtractor.prototype.getDefParamsType(n);
-        m = a.test;
-        k = [];
-        m = this.assemble(m, n, f, 0);
-        k.push(m);
-        g = [];
-        f = a.body.body;
-        for (h in f) {
-          a = this.assemble(f[h]), g.push(a);
-        }
-        f = {type:n, statements:[g]};
-        console.log("WhileStatement result", f);
-        break;
-      case "BlockStatement":
-        console.log("BlockStatement unit", a);
-        "range" == a.body[0].declarations[0].init.callee.property.name && (l = "for i in range");
-        n = this.getBlock(l);
-        l = Entry.BlockMetaExtractor.prototype.getParamsType(n);
-        f = Entry.BlockMetaExtractor.prototype.getDefParamsType(n);
-        k = [];
-        if ((arguments = a.body[0].declarations[0].init.arguments) && arguments.length) {
-          for (h = 0;h < arguments.length;h++) {
-            "Indicator" == l[h] ? (m = null, arguments.splice(h, 0, m)) : "Block" == l[h] ? (m = h, m = this.assemble(arguments[h], n, f, m)) : "Keyboard" == l[h] ? m = Entry.KeyboardCodeMap.prototype.keyCharToCode[arguments[h].value] : (m = arguments[h].value, g = Entry.ParamTypeMap.prototype.getDropdownDynamicType[block], m = Entry.AssemblerObjectConvertor.prototype.convert(g, m)), k.push(m);
-          }
-        }
-        l = a.body[1].consequent;
-        f = l.body[0].body;
-        f.shift();
-        g = [];
-        for (h in f) {
-          a = this.assemble(f[h]), g.push(a);
-        }
-        f = {type:n, params:k, statements:[g]};
-        console.log("BlockStatement result", f);
-        break;
-      case "IfStatement":
-        console.log("IfStatement unit", a);
-        l = a.consequent;
-        g = a.alternate;
-        m = a.test;
-        k = [];
-        n = this.getBlock(null == g ? "if %1:\n$1" : "if %1:\n$1\nelse:\n$2");
-        console.log("if block type", n);
-        Entry.BlockMetaExtractor.prototype.getParamsType(n);
-        Entry.BlockMetaExtractor.prototype.getDefParamsType(n);
-        m = this.assemble(m, n, defParamsType, 0);
-        k.push(m);
-        var m = [], q = [];
-        if (null != l) {
-          f = l.body;
-          for (h in f) {
-            a = this.assemble(f[h]), m.push(a);
-          }
-          f = {type:n, params:k, statements:[m]};
-        }
-        if (null != g) {
-          f = g.body;
-          for (h in f) {
-            a = this.assemble(f[h]), q.push(a);
-          }
-          f = {type:n, params:k, statements:[m, q]};
-        }
-        console.log("IfStatement result", f);
-        break;
-      case "BreakStatement":
-        console.log("BreakStatement unit", a);
-        n = this.getBlock("break");
-        f = {type:n};
-        console.log("BreakStatement result", f);
-        break;
-      case "Literal":
-        console.log("Literal unit", a, b, d, e);
-        if ("True" == b || "False" == b) {
-          f = {type:b};
-          break;
-        }
-        n = d[e];
-        console.log("literal block type", n);
-        m = a.value;
-        console.log("arg", m);
-        b && null != b || (b = n);
-        g = Entry.BlockVariableMap.prototype.getDropdownDynamicType[b];
-        console.log("literal variable convertor", m, g);
-        m = Entry.AssemblerObjectConvertor.prototype.convert(g, m);
-        console.log("literal param result", m);
-        f = 1 == m ? {type:n} : {type:n, params:[m]};
-        console.log("Literal result", f);
-        break;
-      case "UnaryExpression":
-        console.log("UnaryExpression unit", a, b, d, e), n = d[e], a.prefix && (m = a.operator.concat(a.argument.value)), b && null != b || (b = n), g = Entry.BlockVariableMap.prototype.getDropdownDynamicType[b], console.log("literal variable convertor", m, g), m = Entry.AssemblerObjectConvertor.prototype.convert(g, m), f = {type:n, params:[m]}, console.log("UnaryExpression result", f);
-    }
-    return f;
-  };
-  b.getBlock = function(a) {
-    return this.blockSyntax[a];
-  };
-})(Entry.PyBlockAssembler.prototype);
 Entry.ParserValueConvertor = function() {
 };
 (function(b) {
@@ -11643,6 +11464,458 @@ Entry.JsToBlockParser = function(b) {
     }
   };
 })(Entry.JsToBlockParser.prototype);
+Entry.TextCodingUtil = function() {
+};
+(function(b) {
+  b.indent = function(a) {
+    console.log("indent textCode", a);
+    var b = "\t";
+    a = a.split("\n");
+    a.pop();
+    return b += a.join("\n\t");
+  };
+  b.isNumeric = function(a) {
+    return a.match(/^-?\d+$|^-\d+$/) || a.match(/^-?\d+\.\d+$/) ? !0 : !1;
+  };
+  b.isBinaryOperator = function(a) {
+    return "==" == a || ">" == a || "<" == a || ">=" == a || "<=" == a ? !0 : !1;
+  };
+})(Entry.TextCodingUtil.prototype);
+Entry.PyBlockAssembler = function(b) {
+  this.blockSyntax = b;
+  this._blockStatmentIndex = 0;
+  this._blockStatments = [];
+};
+(function(b) {
+  b.ExpressionStatement = function(a) {
+    console.log("ExpressionStatement component", a);
+    var b = {};
+    if (a = a.expression) {
+      var d = this[a.type](a);
+      b.type = d.type;
+      b.params = d.params;
+      result = b;
+    }
+    a.operator && (result = this.binaryTestExpression(a));
+    b = a.value;
+    if (1 == b || 0 == b) {
+      result = this.unaryTestExpression(a);
+    }
+    console.log("ExpressionStatement result", result);
+    return result;
+  };
+  b.CallExpression = function(a) {
+    console.log("CallExpression component", a);
+    var b;
+    b = {};
+    var d = a.callee, d = this[d.type](d);
+    console.log("CallExpression calleeData", d, "calleeData typeof", typeof d);
+    var e = "object" != typeof d.object ? String(d.object).concat(".").concat(String(d.property)) : String(d.object.object).concat(".").concat(String(d.object.property)).concat(".").concat(String(d.property));
+    console.log("CallExpression syntax", e);
+    d = this.getBlockType(e);
+    console.log("CallExpression type1", d);
+    d || (d = Entry.AssemblerTypeConvertor.prototype.convert(e));
+    console.log("CallExpression type2", d);
+    e = Entry.block[d].params;
+    console.log("CallExpression blockParams", e);
+    var f = Entry.block[d].def.params;
+    console.log("CallExpression blockDefParams", f);
+    var arguments = a.arguments, g = [], h;
+    for (h in arguments) {
+      var k = arguments[h], k = this[k.type](k);
+      console.log("CallExpression arg", k);
+      for (var l in e) {
+        var n = e[l].type;
+        if (f[l]) {
+          var m = "";
+          null != f[l] && void 0 != f[l].type && (m = f[l].type);
+          n = String(n).concat(m);
+          console.log("CallExpression paramType", n);
+          n = this[n](e[l], f[l], k);
+          console.log("CallExpression paramData", n);
+          n ? g.push(n) : g.push(null);
+        }
+      }
+    }
+    console.log("CallExpression params", g);
+    b.type = d;
+    b.params = g;
+    console.log("CallExpression result", b);
+    return b;
+  };
+  b.Indicator = function(a, b, d) {
+  };
+  b.MemberExpression = function(a) {
+    console.log("MemberExpression component", a);
+    var b = {}, d = a.object;
+    a = a.property;
+    d = this[d.type](d);
+    a = this[a.type](a);
+    console.log("MemberExpression objectData", d);
+    console.log("MemberExpression structure", a);
+    b.object = d;
+    b.property = a;
+    console.log("MemberExpression result", b);
+    return b;
+  };
+  b.Literal = function(a) {
+    console.log("Literal component", a);
+    a = a.value;
+    console.log("Literal result", a);
+    return a;
+  };
+  b.Identifier = function(a) {
+    console.log("Identifiler component", a);
+    a = a.name;
+    console.log("Identifiler result", a);
+    return a;
+  };
+  b.WhileStatement = function(a) {
+    console.log("WhileStatement component", a);
+    var b = this.getBlockType("while True:\n$1"), d = this.assemble(a.test);
+    [].push(d);
+    var d = [], e = a.body.body, f;
+    for (f in e) {
+      a = this.assemble(e[f]), d.push(a);
+    }
+    result = {type:b, statements:[d]};
+    console.log("WhileStatement result", result);
+    return result;
+  };
+  b.BlockStatement = function(a) {
+    console.log("BlockStatement component", a);
+    this._blockStatmentIndex = 0;
+    this._blockStatments = [];
+    var b = {};
+    a = a.body;
+    for (var d in a) {
+      var e = a[d];
+      console.log("BlockStatement body", e, "i", d);
+      e = this[e.type](e);
+      console.log("BlockStatement bodyData", e, "i", d);
+      if (e.declarations) {
+        console.log("BlockStatement statements type params bodyData", d, e);
+        var e = e.declarations, f;
+        for (f in e) {
+          var g = e[f];
+          g.init.type && (b.type = g.init.type);
+          g.init.params && (b.params = g.init.params);
+          console.log("BlockStatement structure", b, "j", f);
+        }
+      } else {
+        0 == this._blockStatmentIndex && this._blockStatments.push(e);
+      }
+    }
+    b.statements = [this._blockStatments];
+    console.log("BlockStatement result", b);
+    this._blockStatmentIndex++;
+    return b;
+  };
+  b.IfStatement = function(a) {
+    console.log("IfStatement component", a);
+    var b = {}, d = [], e = [], f = [], g = [], h = a.test, k = a.alternate, l = a.consequent;
+    a = this.getBlockType(null == k ? "if %1:\n$1" : "if %1:\n$1\nelse:\n$2");
+    var n;
+    null != h && (n = this[h.type](h), console.log("IfStatement arg", n));
+    h = Entry.block[a].params;
+    console.log("IfStatement blockParams", h);
+    var m = Entry.block[a].def.params;
+    console.log("IfStatement blockDefParams", m);
+    console.log("IfStatement arg", n);
+    for (var q in h) {
+      var r = h[q].type;
+      if (m[q]) {
+        var u = "";
+        console.log("shit", m[q]);
+        null != m[q] && void 0 !== m[q].type && (u = m[q].type);
+        r = String(r).concat(u);
+        console.log("IfStatement paramType", r);
+        r = this[r](h[q], m[q], n);
+        console.log("IfStatement paramData", r);
+        r ? d.push(r) : d.push(null);
+      }
+    }
+    if (null != l) {
+      for (var t in l.body) {
+        n = l.body[t], n = this[n.type](n), console.log("IfStatement consequent bodyData", n), e.push(n);
+      }
+    }
+    if (null != k) {
+      for (t in k.body) {
+        n = k.body[t], n = this[n.type](n), console.log("IfStatement alternate bodyData", n), f.push(n);
+      }
+    }
+    0 != e.length && g.push(e);
+    0 != f.length && g.push(f);
+    b.type = a;
+    0 != d.length && (b.params = d);
+    0 != g.length && (b.statements = g);
+    console.log("IfStatement result", b);
+    return b;
+  };
+  b.DropdownDynamic = function(a, b, d) {
+    var e;
+    a = a.options;
+    for (var f in a) {
+      if (console.log("options", a), d == a[f][0]) {
+        console.log("options[i][0]", a[f][0]);
+        e = a[f][1];
+        break;
+      }
+    }
+    console.log("param", e);
+    return e;
+  };
+  b.Keyboard = function(a, b, d) {
+    return Entry.KeyboardCodeMap.prototype.keyCharToCode[d];
+  };
+  b.Blocktext = function(a, b, d) {
+    a = b.type;
+    b = [];
+    b.push(d);
+    return {type:a, params:b};
+  };
+  b.Blocknumber = function(a, b, d) {
+    a = b.type;
+    b = [];
+    b.push(d);
+    return {type:a, params:b};
+  };
+  b.BlockTrue = function(a, b, d) {
+    a = b.type;
+    [].push(d);
+    return {type:a};
+  };
+  b.VariableDeclaration = function(a) {
+    console.log("VariableDeclaration component", a);
+    var b = {}, d = [];
+    a = a.declarations;
+    for (var e in a) {
+      var f = a[e], f = this[f.type](f);
+      console.log("VariableDeclaration declarationData", f);
+      d.push(f);
+    }
+    b.declarations = d;
+    console.log("VariableDeclaration result", b);
+    return b;
+  };
+  b.VariableDeclarator = function(a) {
+    console.log("VariableDeclarator component", a);
+    var b = {}, d = a.id, e = this[d.type](d);
+    console.log("VariableDeclarator idData", e);
+    a = a.init;
+    a = this[a.type](a);
+    console.log("VariableDeclarator initData", a);
+    b.id = d;
+    b.init = a;
+    console.log("VariableDeclarator result", b);
+    return b;
+  };
+  b.BreakStatement = function(a) {
+    console.log("BreakStatement component", a);
+    result = {type:this.getBlockType("break")};
+    console.log("BreakStatement result", result);
+    return result;
+  };
+  b.UnaryExpression = function(a) {
+    console.log("UnaryExpression component", a);
+    var b = [];
+    a.prefix && (a = a.operator.concat(a.argument.value), b.push(a));
+    result.params = b;
+    console.log("UnaryExpression result", result);
+    return result;
+  };
+  b.BinaryExpression = function(a) {
+    console.log("BinaryExpression component", a);
+    var b = [], d, e = a.left;
+    e.type ? ((d = this[e.type](e)) && b.push(d), console.log("BinaryExpression param", d)) : (e = a.left, this(e));
+    if (d = a.operator) {
+      console.log("BinaryExpression operator", d), (d = String(d)) && b.push(d);
+    }
+    d = a.right;
+    e.type ? ((d = this[d.type](d)) && b.push(d), console.log("BinaryExpression param", d)) : (d = a.right, this(d));
+    console.log("BinaryExpression params", b);
+    console.log("BinaryExpression result", b);
+    return b;
+  };
+  b.binaryTestExpression = function(a) {
+    var b, d = a.operator;
+    if (d && null != d) {
+      console.log("operator", d);
+      b = this.getBlockType("&&" == d ? "%1 and %3" : "||" == d ? "%1 or %3" : "%1 %2 %3");
+      var e = [], f;
+      console.log("blockType", b);
+      console.log("expression ex", a);
+      f = a.left;
+      f.left ? (f = this.binaryTestExpression(f)) && e.push(f) : f.type && (blockParamIndex = 0, f = this.assemble(f, b), e.push(f));
+      console.log("before cv operator", d);
+      0 != d.length && (console.log("opoopop", d), d = String(d), d = Entry.AssemblerValueConvertor.prototype.binaryOperatorValueConvertor(d), console.log("cv operator", d), e.push(d));
+      a = a.right;
+      a.left ? (f = this.binaryTestExpression(a)) && e.push(f) : a.type && (blockParamIndex = 2, f = this.assemble(a), console.log("rightExpression", f), e.push(f));
+      b = {type:b, params:e};
+    }
+    return b;
+  };
+  b.unaryTestExpression = function(a) {
+    var b = a.value;
+    console.log("if value", b);
+    var d = [];
+    1 == b ? (blockType = this.getBlockType("True"), d = [], a = this.assemble(a), d.push(a)) : 0 == b && (d = [], a = this.assemble(a), d.push(a));
+    return d;
+  };
+  b.arguments = function(a) {
+    console.log("arguments component", a);
+    var b = [], d, arguments = a.arguments, e;
+    for (e in arguments) {
+      if ("Indicator" == blockParamsType[e]) {
+        d = null, arguments.splice(e, 0, d);
+      } else {
+        if ("Block" == blockParamsType[e]) {
+          blockParamIndex = e, d = this.assemble(arguments[e]);
+        } else {
+          if ("Keyboard" == blockParamsType[e]) {
+            d = Entry.KeyboardCodeMap.prototype.keyCharToCode[arguments[e].value];
+          } else {
+            if (Entry.ParticularBlockProcessing.prototype.isParticularBlock(blockType)) {
+              b.push(null);
+              b.push(d);
+              b.push(null);
+              break;
+            }
+          }
+        }
+      }
+      b.push(d);
+    }
+    return b;
+  };
+  b.getBlockType = function(a) {
+    return this.blockSyntax[a];
+  };
+})(Entry.PyBlockAssembler.prototype);
+Entry.BlockToPyParser = function() {
+};
+(function(b) {
+  b.Code = function(a) {
+    if (a instanceof Entry.Thread) {
+      return this.Thread(a);
+    }
+    if (a instanceof Entry.Block) {
+      return this.Block(a);
+    }
+    var b = "";
+    a = a.getThreads();
+    console.log("threads", a.length);
+    for (var d = 0;d < a.length;d++) {
+      b += this.Thread(a[d]) + "\n", console.log("textCode", b);
+    }
+    console.log("textCode in", b);
+    return b;
+  };
+  b.Thread = function(a) {
+    if (a instanceof Entry.Block) {
+      return this.Block(a);
+    }
+    var b = "";
+    a = a.getBlocks();
+    for (var d = 0;d < a.length;d++) {
+      b += this.Block(a[d]) + "\n";
+    }
+    return b;
+  };
+  b.Block = function(a) {
+    if (!a._schema || !a._schema.syntax) {
+      return "";
+    }
+    var b = a._schema.syntax.py[0];
+    if (!b || null == b) {
+      return "";
+    }
+    var d = /(%.)/mi, e = /(\$.)/mi, b = b.split(d), f = a._schema.params, g = a.data.params;
+    console.log("block", a);
+    console.log("schemaParams", f);
+    console.log("dataParams", g);
+    for (var h = "", k = 0;k < b.length;k++) {
+      var l = b[k];
+      console.log("blockToken", l);
+      if (0 !== l.length) {
+        if (d.test(l)) {
+          if (console.log("blockParam", l.split("%")[1]), l = l.split("%")[1], l = "t" == l || "n" == l || "p" == l || "s" == l || "a" == l ? Number(0) : "b" == l || "&" == l || "|" == l ? Number(1) : "!" == l ? Number(2) : Number(l) - 1, console.log("schemaParams[index].type", f[l].type), "Indicator" == f[l].type && l++, "Block" == f[l].type) {
+            h += this.Block(g[l]).trim();
+          } else {
+            console.log("data param", g[l]);
+            var n = this["Field" + f[l].type](g[l], f[l]);
+            null == n && (n = f[l].text ? f[l].text : null);
+            console.log("param first Result", n);
+            n = Entry.ParserValueConvertor.prototype.binaryOperatorValueConvertor(n);
+            n = String(n);
+            Entry.TextCodingUtil.prototype.isNumeric(n) || Entry.TextCodingUtil.prototype.isBinaryOperator(n) || (n = String('"' + n + '"'));
+            h += n;
+          }
+        } else {
+          if (e.test(l)) {
+            for (var n = l.split(e), m = 0;m < n.length;m++) {
+              l = n[m], 0 !== l.length && (e.test(l) ? (l = Number(l.split("$")[1]) - 1, h += Entry.TextCodingUtil.prototype.indent(this.Thread(a.statements[l]))) : h += l);
+            }
+          } else {
+            h += l;
+          }
+        }
+      }
+    }
+    return h;
+  };
+  b.FieldAngle = function(a) {
+    console.log("FieldAngle", a);
+    return a;
+  };
+  b.FieldColor = function(a) {
+    console.log("FieldColor", a);
+    return a;
+  };
+  b.FieldDropdown = function(a) {
+    console.log("FieldDropdown", a);
+    return a;
+  };
+  b.FieldDropdownDynamic = function(a, b) {
+    console.log("FieldDropdownDynamic", a);
+    return a = "null" == a ? "none" : Entry.ParserValueConvertor.prototype.dropdownDynamicValueConvertor(a, b);
+  };
+  b.FieldImage = function(a) {
+    console.log("FieldImage", a);
+    return a;
+  };
+  b.FieldIndicator = function(a) {
+    console.log("FieldIndicator", a);
+    return a;
+  };
+  b.FieldKeyboard = function(a) {
+    console.log("FieldKeyboardInput", a);
+    return a;
+  };
+  b.FieldOutput = function(a) {
+    console.log("FieldOutput", a);
+    return a;
+  };
+  b.FieldText = function(a) {
+    console.log("FieldText", a);
+    return a;
+  };
+  b.FieldTextInput = function(a) {
+    console.log("FieldTextInput", a);
+    return a;
+  };
+  b.FieldNumber = function(a) {
+    console.log("FieldNumber", a);
+    return a;
+  };
+  b.FieldKeyboard = function(a) {
+    console.log("FieldKeyboard Before", a);
+    (a = Entry.KeyboardCodeMap.prototype.keyCodeToChar[a]) && null != a || (a = "Q");
+    console.log("FieldKeyboard After", a);
+    return a;
+  };
+})(Entry.BlockToPyParser.prototype);
 Entry.PyToBlockParser = function(b) {
   this._assembler = new Entry.PyBlockAssembler(b);
 };
@@ -11658,7 +11931,7 @@ Entry.PyToBlockParser = function(b) {
       for (d in f) {
         var g = f[d], g = this[g.type](g);
         console.log("checkitout", g);
-        g = this._assembler.assemble(g);
+        g = this._assembler[g.type](g);
         e.push(g);
       }
       console.log("thread", e);
@@ -11669,6 +11942,11 @@ Entry.PyToBlockParser = function(b) {
   b.Identifier = function(a) {
     console.log("Identifier", a);
     return {type:a.type, name:a.name};
+  };
+  b.FunctionDeclaration = function(a) {
+    console.log("FunctionDeclaration", a);
+    var b = this[a.id.type](a.id);
+    return {type:a.type, id:b};
   };
   b.Literal = function(a) {
     console.log("Literal", a);
@@ -11871,7 +12149,7 @@ Entry.PyToBlockParser = function(b) {
   };
   b.VariableDeclarator = function(a) {
     console.log("VariableDeclarator", a);
-    var b = a.id, d;
+    var b = this[a.id.type](a.id), d;
     d = null === a.init ? null : this[a.init.type](a.init);
     console.log("id", b);
     console.log("init", d);
@@ -11956,7 +12234,7 @@ Entry.PyToBlockParser = function(b) {
         b = null;
     }
     var d = this[a.argument.type](a.argument);
-    return {operator:b, prefix:a.prefix, argument:d};
+    return {type:a.type, operator:b, prefix:a.prefix, argument:d};
   };
   b.BinaryExpression = function(a) {
     console.log("BinaryExpression", a);
@@ -12031,9 +12309,8 @@ Entry.PyToBlockParser = function(b) {
       default:
         b = null;
     }
-    var d = this[a.left.type](a.left);
-    a = this[a.right.type](a.right);
-    return {operator:b, left:d, right:a};
+    var d = this[a.left.type](a.left), e = this[a.right.type](a.right);
+    return {type:a.type, operator:b, left:d, right:e};
   };
   b.AssignmentExpression = function(a) {
     console.log("AssignmentExpression", a);
@@ -12077,8 +12354,8 @@ Entry.PyToBlockParser = function(b) {
     }
     var d;
     d = a.left;
-    a = this[a.right.type](a.right);
-    return {operator:b, left:d, right:a};
+    var e = this[a.right.type](a.right);
+    return {type:a.type, operator:b, left:d, right:e};
   };
   b.LogicalExpression = function(a) {
     console.log("LogicalExpression", a);
@@ -12093,9 +12370,8 @@ Entry.PyToBlockParser = function(b) {
       default:
         b = null;
     }
-    var d = this[a.left.type](a.left);
-    a = this[a.right.type](a.right);
-    return {operator:b, left:d, right:a};
+    var d = this[a.left.type](a.left), e = this[a.right.type](a.right);
+    return {type:a.type, operator:b, left:d, right:e};
   };
   b.MemberExpression = function(a) {
     console.log("MemberExpression", a);
@@ -12111,7 +12387,7 @@ Entry.PyToBlockParser = function(b) {
       var e = a.arguments[d], e = this[e.type](e);
       (void 0).push(e);
     }
-    return {callee:b, arguments:void 0};
+    return {type:a.type, callee:b, arguments:void 0};
   };
   b.CallExpression = function(a) {
     console.log("CallExpression", a);
@@ -12134,149 +12410,9 @@ Entry.PyToBlockParser = function(b) {
       var d = a.expressions[b], d = this[d.type](d);
       (void 0).push(d);
     }
-    return {expressions:void 0};
+    return {type:a.type, expressions:void 0};
   };
 })(Entry.PyToBlockParser.prototype);
-Entry.TextCodingUtil = function() {
-};
-(function(b) {
-  b.indent = function(a) {
-    console.log("indent textCode", a);
-    var b = "\t";
-    a = a.split("\n");
-    a.pop();
-    return b += a.join("\n\t");
-  };
-  b.isNumeric = function(a) {
-    return a.match(/^-?\d+$|^-\d+$/) || a.match(/^-?\d+\.\d+$/) ? !0 : !1;
-  };
-  b.isBinaryOperator = function(a) {
-    return "==" == a || ">" == a || "<" == a || ">=" == a || "<=" == a ? !0 : !1;
-  };
-})(Entry.TextCodingUtil.prototype);
-Entry.BlockToPyParser = function() {
-};
-(function(b) {
-  b.Code = function(a) {
-    if (a instanceof Entry.Thread) {
-      return this.Thread(a);
-    }
-    if (a instanceof Entry.Block) {
-      return this.Block(a);
-    }
-    var b = "";
-    a = a.getThreads();
-    console.log("threads", a.length);
-    for (var d = 0;d < a.length;d++) {
-      b += this.Thread(a[d]) + "\n", console.log("textCode", b);
-    }
-    console.log("textCode in", b);
-    return b;
-  };
-  b.Thread = function(a) {
-    if (a instanceof Entry.Block) {
-      return this.Block(a);
-    }
-    var b = "";
-    a = a.getBlocks();
-    for (var d = 0;d < a.length;d++) {
-      b += this.Block(a[d]) + "\n";
-    }
-    return b;
-  };
-  b.Block = function(a) {
-    if (!a._schema || !a._schema.syntax) {
-      return "";
-    }
-    var b = a._schema.syntax.py[0];
-    if (!b || null == b) {
-      return "";
-    }
-    var d = /(%.)/mi, e = /(\$.)/mi, b = b.split(d), f = a._schema.params, g = a.data.params;
-    console.log("block", a);
-    console.log("schemaParams", f);
-    console.log("dataParams", g);
-    for (var h = "", k = 0;k < b.length;k++) {
-      var l = b[k];
-      console.log("blockToken", l);
-      if (0 !== l.length) {
-        if (d.test(l)) {
-          if (console.log("blockParam", l.split("%")[1]), l = l.split("%")[1], l = "t" == l || "n" == l || "p" == l || "s" == l || "a" == l ? Number(0) : "b" == l || "&" == l || "|" == l ? Number(1) : "!" == l ? Number(2) : Number(l) - 1, console.log("schemaParams[index].type", f[l].type), "Indicator" == f[l].type && l++, "Block" == f[l].type) {
-            h += this.Block(g[l]).trim();
-          } else {
-            console.log("data param", g[l]);
-            var n = this["Field" + f[l].type](g[l], f[l]);
-            null == n && (n = f[l].text ? f[l].text : null);
-            console.log("param first Result", n);
-            n = Entry.ParserValueConvertor.prototype.binaryOperatorValueConvertor(n);
-            n = String(n);
-            Entry.TextCodingUtil.prototype.isNumeric(n) || Entry.TextCodingUtil.prototype.isBinaryOperator(n) || (n = String('"' + n + '"'));
-            h += n;
-          }
-        } else {
-          if (e.test(l)) {
-            for (var n = l.split(e), m = 0;m < n.length;m++) {
-              l = n[m], 0 !== l.length && (e.test(l) ? (l = Number(l.split("$")[1]) - 1, h += Entry.TextCodingUtil.prototype.indent(this.Thread(a.statements[l]))) : h += l);
-            }
-          } else {
-            h += l;
-          }
-        }
-      }
-    }
-    return h;
-  };
-  b.FieldAngle = function(a) {
-    console.log("FieldAngle", a);
-    return a;
-  };
-  b.FieldColor = function(a) {
-    console.log("FieldColor", a);
-    return a;
-  };
-  b.FieldDropdown = function(a) {
-    console.log("FieldDropdown", a);
-    return a;
-  };
-  b.FieldDropdownDynamic = function(a, b) {
-    console.log("FieldDropdownDynamic", a);
-    return a = "null" == a ? "none" : Entry.ParserValueConvertor.prototype.dropdownDynamicValueConvertor(a, b);
-  };
-  b.FieldImage = function(a) {
-    console.log("FieldImage", a);
-    return a;
-  };
-  b.FieldIndicator = function(a) {
-    console.log("FieldIndicator", a);
-    return a;
-  };
-  b.FieldKeyboard = function(a) {
-    console.log("FieldKeyboardInput", a);
-    return a;
-  };
-  b.FieldOutput = function(a) {
-    console.log("FieldOutput", a);
-    return a;
-  };
-  b.FieldText = function(a) {
-    console.log("FieldText", a);
-    return a;
-  };
-  b.FieldTextInput = function(a) {
-    console.log("FieldTextInput", a);
-    return a;
-  };
-  b.FieldNumber = function(a) {
-    console.log("FieldNumber", a);
-    return a;
-  };
-  b.FieldKeyboard = function(a) {
-    console.log("FieldKeyboard Before", a);
-    (a = Entry.KeyboardCodeMap.prototype.keyCodeToChar[a]) && null != a || (a = "Q");
-    console.log("FieldKeyboard After", a);
-    return a;
-  };
-})(Entry.BlockToPyParser.prototype);
 Entry.Parser = function(b, a, c) {
   this._mode = b;
   this.syntax = {};
@@ -17436,10 +17572,10 @@ isNotFor:[], func:function(b, a) {
 }, syntax:{js:[], py:[]}}, boolean_and:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Text", text:Lang.Blocks.JUDGEMENT_boolean_and, color:"#3D3D3D"}, {type:"Block", accept:"booleanMagnet"}], events:{}, def:{params:[{type:"True"}, null, {type:"True"}], type:"boolean_and"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"boolean", isNotFor:[], func:function(b, a) {
   var c = a.getBooleanValue("LEFTHAND", a), d = a.getBooleanValue("RIGHTHAND", a);
   return c && d;
-}, syntax:{js:[], py:["(%1) and (%3)"]}}, boolean_or:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Text", text:Lang.Blocks.JUDGEMENT_boolean_or, color:"#3D3D3D"}, {type:"Block", accept:"booleanMagnet"}], events:{}, def:{params:[{type:"True"}, null, {type:"False"}], type:"boolean_or"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"boolean", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["%1 and %3"]}}, boolean_or:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Block", accept:"booleanMagnet"}, {type:"Text", text:Lang.Blocks.JUDGEMENT_boolean_or, color:"#3D3D3D"}, {type:"Block", accept:"booleanMagnet"}], events:{}, def:{params:[{type:"True"}, null, {type:"False"}], type:"boolean_or"}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, "class":"boolean", isNotFor:[], func:function(b, a) {
   var c = a.getBooleanValue("LEFTHAND", a), d = a.getBooleanValue("RIGHTHAND", a);
   return c || d;
-}, syntax:{js:[], py:["(%1) or (%3)"]}}, boolean_not:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Text", text:Lang.Blocks.JUDGEMENT_boolean_not_1, color:"#3D3D3D"}, {type:"Block", accept:"booleanMagnet"}, {type:"Text", text:Lang.Blocks.JUDGEMENT_boolean_not_2, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"True"}, null], type:"boolean_not"}, paramsKeyMap:{VALUE:1}, "class":"boolean", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["%1 or %3"]}}, boolean_not:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Text", text:Lang.Blocks.JUDGEMENT_boolean_not_1, color:"#3D3D3D"}, {type:"Block", accept:"booleanMagnet"}, {type:"Text", text:Lang.Blocks.JUDGEMENT_boolean_not_2, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"True"}, null], type:"boolean_not"}, paramsKeyMap:{VALUE:1}, "class":"boolean", isNotFor:[], func:function(b, a) {
   return !a.getBooleanValue("VALUE");
 }, syntax:{js:[], py:["(not %2)"]}}, true_or_false:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.JUDGEMENT_true, "true"], [Lang.Blocks.JUDGEMENT_false, "false"]], value:"true", fontSize:11}], events:{}, def:{params:[null]}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
   return "true" == a.children[0].textContent;
@@ -17463,7 +17599,7 @@ defs:[{params:[{type:"text", params:["10"]}, "EQUAL", {type:"text", params:["10"
     case "LESS_OR_EQUAL":
       return Number(d) <= Number(e);
   }
-}, syntax:{js:[], py:["(%1 %2 %3)"]}}, show:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null], type:"show"}, "class":"visibility", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["%1 %2 %3"]}}, show:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null], type:"show"}, "class":"visibility", isNotFor:[], func:function(b, a) {
   b.setVisible(!0);
   return a.callReturn();
 }, syntax:{js:[], py:["self.show()"]}}, hide:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null], type:"hide"}, "class":"visibility", isNotFor:[], func:function(b, a) {

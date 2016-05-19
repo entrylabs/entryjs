@@ -24,10 +24,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             for(var index in nodes) {
                 var node = nodes[index];
-                var unit = this[node.type](node);
-                console.log("checkitout", unit);
+                var component = this[node.type](node);
+                console.log("checkitout", component);
                 
-                var block = this._assembler.assemble(unit);
+                var block = this._assembler[component.type](component);
                 thread.push(block);   
             }
 
@@ -44,6 +44,17 @@ Entry.PyToBlockParser = function(blockSyntax) {
             type: node.type,
             name: name
         };
+    };
+
+    p.FunctionDeclaration = function(node) {
+        console.log("FunctionDeclaration", node);
+
+        var id = this[node.id.type](node.id);
+
+        return {
+            type : node.type,
+            id : id
+        }
     };
 
     p.Literal = function(node) {
@@ -90,6 +101,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.Function = function(node) {
         console.log("Function", node);
+
         var id = this[node.id](node);
         
         var params = [];
@@ -482,7 +494,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.VariableDeclarator = function(node) {
         console.log("VariableDeclarator", node);
-        var id = node.id;
+        var id = this[node.id.type](node.id);
         
         var init;
         if(node.init === null)
@@ -626,6 +638,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var prefix = node.prefix;
 
         return {
+            type : node.type,
             operator: operator,
             prefix: prefix,
             argument: argument
@@ -711,6 +724,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var right = this[node.right.type](node.right);
 
         return {
+            type : node.type,
             operator: operator,
             left: left,
             right: right
@@ -774,6 +788,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var right = this[node.right.type](node.right);
 
         return {
+            type : node.type,
             operator: operator,
             left: left,
             right: right
@@ -799,6 +814,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var right = this[node.right.type](node.right);
 
         return {
+            type : node.type,
             operator: operator,
             left: left,
             right: right
@@ -834,6 +850,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
 
         return {
+            type : node.type,
             callee: callee,
             arguments: args
         };
@@ -878,6 +895,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
 
         return {
+            type : node.type,
             expressions: expressions
         };
     };
