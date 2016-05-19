@@ -16599,7 +16599,15 @@ Entry.block = {
             {
                 "accept": "basic"
             }
-        ]
+        ],
+        func: function() {
+            var statement = this.block.statements[0];
+            if (statement.getBlocks().length === 0)
+                return;
+
+            this.executor.stepInto(statement);
+            return Entry.STATIC.BREAK;
+        }
     },
     "maze_step_if_1": {
         "skeleton": "basic_loop",
