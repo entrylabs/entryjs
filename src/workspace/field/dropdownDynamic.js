@@ -19,7 +19,13 @@ Entry.FieldDropdownDynamic = function(content, blockView, index) {
 
     this._contents = content;
     this._index = index;
+    this._arrowColor = content.arrowColor;
 
+    var menuName = this._contents.menuName;
+
+    if (Entry.Utils.isFunction(menuName))
+        this._menuGenerator = menuName;
+    else this._menuName = menuName;
 
     this._CONTENT_HEIGHT =
         content.dropdownHeight || blockView.getSkeleton().dropdownHeight || 16;
@@ -38,8 +44,14 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
 
     p._updateValue = function() {
         var options = [];
-        if (Entry.container)
-            options = Entry.container.getDropdownList(this._contents.menuName);
+        if (Entry.container) {
+            if (this._menuName)
+                options = Entry.container.getDropdownList(this._menuName);
+            else
+                options = this._menuGenerator();
+
+        }
+
 
         this._contents.options = options;
         var options = this._contents.options;
@@ -67,7 +79,10 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
             e.stopPropagation();
         });
 
-        var options = Entry.container.getDropdownList(this._contents.menuName);
+        var options;
+        if (this._menuName)
+            options = Entry.container.getDropdownList(this._contents.menuName);
+        else options = this._menuGenerator();
         this._contents.options = options;
 
         var OPTION_X_PADDING = 30;

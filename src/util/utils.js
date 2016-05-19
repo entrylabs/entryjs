@@ -1106,3 +1106,46 @@ Entry.Utils.createMouseEvent = function(type, event) {
     );
     return e;
 };
+
+Entry.Utils.xmlToJsonData = function(xml) {
+    xml = $.parseXML(xml);
+    var result = [];
+    var categories = xml.childNodes[0].childNodes;
+    for (var i in categories) {
+        var category = categories[i];
+        if (!category.tagName)
+            continue;
+        var data = {
+            category: category.getAttribute("id"),
+            blocks: []
+        };
+        var blocks = category.childNodes;
+        for (var i in blocks) {
+            var block = blocks[i];
+            if (!block.tagName)
+                continue;
+            data.blocks.push(block.getAttribute("type"));
+        }
+        result.push(data);
+    }
+    return result;
+};
+
+Entry.Utils.stopProjectWithToast = function(block, message) {
+    message = message || '런타임 에러 발생';
+    if (Entry.toast)
+        Entry.toast.alert(
+            Lang.Msgs.warn,
+            Lang.Workspace.check_runtime_error,
+            true
+        );
+
+    if (Entry.engine)
+        Entry.engine.toggleStop();
+
+    if (Entry.type === 'workspace') {
+        Entry.container.selectObject(block.getCode().object.id);
+        block.view.getBoard().activateBlock(block);
+    }
+    throw new Error(message);
+};
