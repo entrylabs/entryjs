@@ -15669,7 +15669,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
       d = a.originalEvent && a.originalEvent.touches ? a.originalEvent.touches[0] : a;
       var f = m.mouseDownCoordinate, f = Math.sqrt(Math.pow(d.pageX - f.x, 2) + Math.pow(d.pageY - f.y, 2));
       (m.dragMode == Entry.DRAG_MODE_DRAG || f > Entry.BlockView.DRAG_RADIUS) && m.movable && (m.isInBlockMenu ? e.cloneToGlobal(a) : (a = !1, m.dragMode != Entry.DRAG_MODE_DRAG && (m._toGlobalCoordinate(), m.dragMode = Entry.DRAG_MODE_DRAG, m.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(m, c), a = !0), this.animating && this.set({animating:!1}), 0 === m.dragInstance.height && m.dragInstance.set({height:-1 + m.height}), c = m.dragInstance, m._moveBy(d.pageX - c.offsetX, d.pageY - 
-      c.offsetY, !1), c.set({offsetX:d.pageX, offsetY:d.pageY}), Entry.GlobalSvg.position(), m._updateCloseBlock(), m.originPos || (m.originPos = {x:m.x, y:m.y}), a && e.generateCodeMagnetMap()));
+      c.offsetY, !1), c.set({offsetX:d.pageX, offsetY:d.pageY}), Entry.GlobalSvg.position(), m.originPos || (m.originPos = {x:m.x, y:m.y}), a && e.generateCodeMagnetMap(), m._updateCloseBlock()));
     }
     function d(a) {
       $(document).unbind(".block");
@@ -15680,7 +15680,6 @@ Entry.BlockView.DRAG_RADIUS = 5;
       delete this.mouseDownCoordinate;
       delete m.dragInstance;
     }
-    console.log(this.block.pointer());
     a.stopPropagation && a.stopPropagation();
     a.preventDefault && a.preventDefault();
     this._changeFill(!1);
@@ -17685,7 +17684,7 @@ Entry.Board.OPTION_CLEAR = 2;
     var b = this;
     a && (this.codeListener = this.code.changeEvent.attach(this, function() {
       b.changeEvent.notify();
-    }), a.createView(this), this.generateCodeMagnetMap(a));
+    }), a.createView(this));
     this.scroller.resizeScrollBar();
   };
   b.bindCodeView = function(a) {

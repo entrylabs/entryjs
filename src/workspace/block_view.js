@@ -379,7 +379,6 @@ Entry.BlockView.DRAG_RADIUS = 5;
     };
 
     p.onMouseDown = function(e) {
-        console.log(this.block.pointer());
         if (e.stopPropagation) e.stopPropagation();
         if (e.preventDefault) e.preventDefault();
 
@@ -512,11 +511,11 @@ Entry.BlockView.DRAG_RADIUS = 5;
                     });
 
                     Entry.GlobalSvg.position();
-                    blockView._updateCloseBlock();
                     if (!blockView.originPos)
                         blockView.originPos = {x: blockView.x, y: blockView.y};
                     if (isFirst)
                         board.generateCodeMagnetMap();
+                    blockView._updateCloseBlock();
                 } else {
                     board.cloneToGlobal(e);
                 }
