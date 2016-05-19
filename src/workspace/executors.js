@@ -17,7 +17,12 @@ Entry.Executor = function(block, entity) {
         if (this.isEnd())
             return;
         while (true) {
-            var returnVal = this.scope.block.getSchema().func.call(this.scope, this.entity, this.scope);
+            try {
+                var returnVal = this.scope.block.getSchema().func.call(this.scope, this.entity, this.scope);
+            } catch(e) {
+                Entry.Utils.stopProjectWithToast(this.scope.block, '런타임 에러');
+            }
+
             if (returnVal === undefined || returnVal === null || returnVal === Entry.STATIC.PASS) {
                 this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this);
                 if (this.scope.block === null) {
