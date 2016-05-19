@@ -16861,6 +16861,7 @@ Entry.FieldDropdownDynamic = function(b, a, c) {
   this.svgGroup = null;
   this._contents = b;
   this._index = c;
+  this._arrowColor = b.arrowColor;
   c = this._contents.menuName;
   Entry.Utils.isFunction(c) ? this._menuGenerator = c : this._menuName = c;
   this._CONTENT_HEIGHT = b.dropdownHeight || a.getSkeleton().dropdownHeight || 16;

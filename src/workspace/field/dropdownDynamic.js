@@ -19,6 +19,7 @@ Entry.FieldDropdownDynamic = function(content, blockView, index) {
 
     this._contents = content;
     this._index = index;
+    this._arrowColor = content.arrowColor;
 
     var menuName = this._contents.menuName;
 
