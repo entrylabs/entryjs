@@ -15744,7 +15744,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/img/assets/ntry/bitmap/jr/block_play_image.png",
+                "img": "../../../img/assets/ntry/bitmap/jr/block_play_image.png",
                 "highlightColor": "#3BBD70",
                 "position": {
                     "x": 0,
@@ -15819,7 +15819,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/img/assets/ntry/bitmap/jr/block_item_image.png",
+                "img": "../../../img/assets/ntry/bitmap/jr/block_item_image.png",
                 "highlightColor": "#FFF",
                 "position": {
                     "x": 83,
@@ -15857,7 +15857,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/img/assets/ntry/bitmap/cpartyjr/pen.png",
+                "img": "../../../img/assets/ntry/bitmap/cpartyjr/pen.png",
                 "highlightColor": "#FFF",
                 "position": {
                     "x": 83,
@@ -15896,7 +15896,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/img/assets/ntry/bitmap/jr/block_up_image.png",
+                "img": "../../../img/assets/ntry/bitmap/jr/block_up_image.png",
                 "position": {
                     "x": 83,
                     "y": 0
@@ -15953,7 +15953,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/img/assets/ntry/bitmap/jr/block_right_image.png",
+                "img": "../../../img/assets/ntry/bitmap/jr/block_right_image.png",
                 "position": {
                     "x": 83,
                     "y": 0
@@ -16015,7 +16015,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/img/assets/ntry/bitmap/jr/block_down_image.png",
+                "img": "../../../img/assets/ntry/bitmap/jr/block_down_image.png",
                 "position": {
                     "x": 83,
                     "y": 0
@@ -16077,7 +16077,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/img/assets/ntry/bitmap/jr/block_left_image.png",
+                "img": "../../../img/assets/ntry/bitmap/jr/block_left_image.png",
                 "position": {
                     "x": 83,
                     "y": 0
@@ -16169,7 +16169,7 @@ Entry.block = {
             },
             {
                 "type": "Image",
-                "img": "/img/assets/ntry/bitmap/jr/cparty_go_straight.png",
+                "img": "../../../img/assets/ntry/bitmap/jr/cparty_go_straight.png",
                 "size": 24
             }
         ],
@@ -16204,7 +16204,7 @@ Entry.block = {
             },
             {
                 "type": "Image",
-                "img": "/img/assets/ntry/bitmap/jr/cparty_rotate_l.png",
+                "img": "../../../img/assets/ntry/bitmap/jr/cparty_rotate_l.png",
                 "size": 24
             }
         ],
@@ -16240,7 +16240,7 @@ Entry.block = {
             },
             {
                 "type": "Image",
-                "img": "/img/assets/ntry/bitmap/jr/cparty_rotate_r.png",
+                "img": "../../../img/assets/ntry/bitmap/jr/cparty_rotate_r.png",
                 "size": 24
             }
         ],
@@ -16276,7 +16276,7 @@ Entry.block = {
             },
             {
                 "type": "Image",
-                "img": "/img/assets/ntry/bitmap/jr/cparty_go_slow.png",
+                "img": "../../../img/assets/ntry/bitmap/jr/cparty_go_slow.png",
                 "size": 24
             }
         ],
@@ -16312,7 +16312,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Image",
-                "img": "/img/assets/ntry/bitmap/jr/jr_goal_image.png",
+                "img": "../../../img/assets/ntry/bitmap/jr/jr_goal_image.png",
                 "size": 18
             },
             {
@@ -16349,7 +16349,7 @@ Entry.block = {
             },
             {
                 "type": "Image",
-                "img": "/img/assets/ntry/bitmap/jr/jr_construction_image.png",
+                "img": "../../../img/assets/ntry/bitmap/jr/jr_construction_image.png",
                 "size": 18
             },
             {
@@ -16414,7 +16414,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Image",
-                "img": "/img/assets/ntry/bitmap/jr/jr_speed_image.png",
+                "img": "../../../img/assets/ntry/bitmap/jr/jr_speed_image.png",
                 "size": 18
             },
             {
@@ -16772,7 +16772,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Image",
-                "img": "/img/assets/ntry/bitmap/maze2/obstacle_01.png",
+                "img": "../../../img/assets/ntry/bitmap/maze2/obstacle_01.png",
                 "size": 18
             },
             {
