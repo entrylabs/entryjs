@@ -6,6 +6,7 @@ if (typeof exports == "object") {
     if (typeof Entry !== "object")
         var Entry = {};
     Entry.Bitbrick = {};
+    Entry.block = {};
 }
 
 Entry.block.ARROW_COLOR_START = '#2f975a';
