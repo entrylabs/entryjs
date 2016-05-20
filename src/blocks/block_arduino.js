@@ -42,7 +42,7 @@ Entry.Arduino = {
 Entry.SensorBoard = {
     name: 'sensorBoard',
     setZero: Entry.Arduino.setZero,
-    monitorTemplate: {
+/*    monitorTemplate: {
         imgPath: "hw/sensorBoard.png",
         width: 400,
         height: 400,
@@ -69,7 +69,7 @@ Entry.SensorBoard = {
             "11":{name: Lang.Hw.down_ko + Lang.Hw.switch_ + Lang.Hw.down_en, type: "input",pos: {x : 196, y: 281}}
       },
       mode : 'both'
-    }
+    }*/
 };
 
 Entry.dplay = {
@@ -440,7 +440,7 @@ Blockly.Blocks.sensorBoard_is_button_pressed = {
         .appendField(new Blockly.FieldDropdown([
           ['빨간',"8"],
           ['파란',"9"],
-          ['노란',"10"],
+          ['노랑',"10"],
           ['초록',"11"]
           ]), "PORT")
     this.appendDummyInput()
@@ -463,7 +463,7 @@ Blockly.Blocks.sensorBoard_led = {
           ['빨간',"2"],
           ['초록',"3"],
           ['파란',"4"],
-          ['흰색',"5"]
+          ['노랑',"5"]
           ]), "PORT")
         .appendField(' LED')
         .appendField(new Blockly.FieldDropdown([
