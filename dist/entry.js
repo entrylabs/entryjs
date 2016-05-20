@@ -12868,6 +12868,7 @@ Entry.HW = function() {
   this.socketType = this.hwModule = this.selectedDevice = null;
   Entry.addEventListener("stop", this.setZero);
   this.hwInfo = {11:Entry.Arduino, 12:Entry.SensorBoard, 13:Entry.CODEino, 15:Entry.dplay, 16:Entry.nemoino, 17:Entry.Xbot, 24:Entry.Hamster, 25:Entry.Albert, 31:Entry.Bitbrick, 42:Entry.Arduino, 51:Entry.Neobot, 71:Entry.Robotis_carCont, 72:Entry.Robotis_openCM70};
+  this.checkAlertMsg = !1;
 };
 Entry.HW.TRIAL_LIMIT = 1;
 p = Entry.HW.prototype;
@@ -12877,11 +12878,22 @@ p.initSocket = function() {
       this.isFirstConnect || Entry.toast.alert(Lang.Menus.connect_hw, Lang.Menus.connect_fail, !1), this.isFirstConnect = !1;
     } else {
       var b = this, a, c;
+      this.connected = !1;
+      this.connectTrial++;
       if (-1 < location.protocol.indexOf("https")) {
         c = new WebSocket("wss://hardware.play-entry.org:23518");
       } else {
         try {
-          a = new WebSocket("ws://localhost:23518");
+          a = new WebSocket("ws://127.0.0.1:23518"), a.binaryType = "arraybuffer", a.onopen = function() {
+            b.socketType = "WebSocket";
+            b.initHardware(a);
+          }.bind(this), a.onmessage = function(a) {
+            a = JSON.parse(a.data);
+            b.checkDevice(a);
+            b.updatePortData(a);
+          }.bind(this), a.onclose = function() {
+            "WebSocket" === b.socketType && (this.socket = null, b.initSocket());
+          };
         } catch (d) {
         }
         try {
@@ -12889,22 +12901,7 @@ p.initSocket = function() {
         } catch (d) {
         }
       }
-      this.connected = !1;
-      a.binaryType = "arraybuffer";
       c.binaryType = "arraybuffer";
-      this.connectTrial++;
-      a.onopen = function() {
-        b.socketType = "WebSocket";
-        b.initHardware(a);
-      };
-      a.onmessage = function(a) {
-        a = JSON.parse(a.data);
-        b.checkDevice(a);
-        b.updatePortData(a);
-      };
-      a.onclose = function() {
-        "WebSocket" === b.socketType && (this.socket = null, b.initSocket());
-      };
       c.onopen = function() {
         b.socketType = "WebSocketSecurity";
         b.initHardware(c);
@@ -12971,7 +12968,7 @@ p.removePortReadable = function(b) {
   }
 };
 p.update = function() {
-  this.socket && 1 == this.socket.readyState && this.socket.send(JSON.stringify(this.sendQueue));
+  this.socket && 1 == this.socket.readyState && (this.checkAlertMsg || (alert(Lang.Workspace.hardware_version_alert_text), this.checkAlertMsg = !0), this.socket.send(JSON.stringify(this.sendQueue)));
 };
 p.updatePortData = function(b) {
   this.portData = b;
