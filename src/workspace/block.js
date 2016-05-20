@@ -511,6 +511,9 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     p.getBlockList = function(excludePrimitive) {
         var blocks = [];
 
+        if (!this._schema)
+            return [];
+
         if (excludePrimitive && this._schema.isPrimitive)
             return blocks;
 

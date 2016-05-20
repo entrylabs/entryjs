@@ -48,6 +48,41 @@ Entry.skeleton.basic = {
     }
 };
 
+Entry.skeleton.basic_create = {
+    path: function(blockView) {
+        var width = blockView.contentWidth;
+        var height = blockView.contentHeight;
+        height = Math.max(30, height + 2);
+        width = Math.max(0, width + 9 - height / 2);
+        return "m -8,0 l 16,0 h %w a %h,%h 0 0,1 0,%wh h -%w l -8,8 -8,-8 v -%wh z"
+            .replace(/%wh/gi, height)
+            .replace(/%w/gi, width)
+            .replace(/%h/gi, height / 2);
+    },
+    box: function(blockView) {
+        var width = blockView ? blockView.contentWidth : 150;
+        var height = blockView ? blockView.contentHeight : 28;
+        return {
+            offsetX: -8, offsetY: 0,
+            width: width + 30,
+            height: Math.max(30, height + 2),
+            marginBottom: 0
+        };
+    },
+    magnets: function(blockView) {
+        // apply scale required.
+        var height = blockView ? Math.max(blockView.height, 30) : 30;
+        return {
+            next: {x: 0, y: height + 1 + blockView.offsetY}
+        };
+    },
+    contentPos: function(blockView) {
+        // apply scale required.
+        var height = Math.max(blockView.contentHeight, 28);
+        return {x: 14, y: height / 2 + 1};
+    }
+};
+
 Entry.skeleton.basic_event = {
     path: function(blockView) {
         var width = blockView.contentWidth;
