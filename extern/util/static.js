@@ -2055,7 +2055,7 @@ EntryStatic.blockInfo = {
         "isNotFor": ['dplay'],
         "usage": ["arduino"],
         "class": "dplay"
-    },   
+    },
     "direction_relative_duration": {
         "isNotFor": [""],
         "xml": "<block type='direction_relative_duration'><value name='DURATION'><block type='text'><field name='NAME'>2</field></block></value><value name='AMOUNT'><block type='angle'></block></value></block>",
@@ -2430,3 +2430,13 @@ EntryStatic.getName = function(str, type) {
         return dict[str] ? dict[str] : str;
     }
 };
+
+EntryStatic.ARROW_COLOR_START = '#2f975a';
+EntryStatic.ARROW_COLOR_FLOW = '#3a71bc';
+EntryStatic.ARROW_COLOR_MOVING = '#8641b6';
+EntryStatic.ARROW_COLOR_LOOKS = '#d8234e';
+EntryStatic.ARROW_COLOR_SOUNDS = '#83a617';
+EntryStatic.ARROW_COLOR_JUDGE = '#89a1f7';
+EntryStatic.ARROW_COLOR_CALC = '#e8b349';
+EntryStatic.ARROW_COLOR_VARIABLE = '#ce38ce';
+EntryStatic.ARROW_COLOR_HW = '#097e84';
