@@ -5847,7 +5847,7 @@ Entry.block = {
         }
     },
     "function_create": {
-        "skeleton": "basic",
+        "skeleton": "basic_create",
         "color": "#cc7337",
         "event": "funcDef",
         "params": [

@@ -15751,7 +15751,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
           case g.DONE:
             g = b.magnetedBlockView;
             g instanceof Entry.BlockView && (g = g.block);
-            f && !g ? Entry.do("separateBlock", e) : f || g || d ? g ? ("next" === g.view.magneting ? (a = e.getLastBlock(), Entry.do("insertBlock", g, a).isPass(d)) : Entry.do("insertBlock", e, g).isPass(d), createjs.Sound.play("entryMagneting"), a = !0) : Entry.do("moveBlock", e).isPass(d) : e.getThread().view.isGlobal() ? Entry.do("moveBlock", e) : Entry.do("separateBlock", e);
+            f && !g ? Entry.do("separateBlock", e) : f || g || d ? g ? ("next" === g.view.magneting ? (a = e.getLastBlock(), b.separate(e), Entry.do("insertBlock", g, a).isPass(d)) : Entry.do("insertBlock", e, g).isPass(d), createjs.Sound.play("entryMagneting"), a = !0) : Entry.do("moveBlock", e).isPass(d) : e.getThread().view.isGlobal() ? Entry.do("moveBlock", e) : Entry.do("separateBlock", e);
             break;
           case g.RETURN:
             e = this.block;
@@ -18130,6 +18130,19 @@ Entry.skeleton.basic = {path:function(b) {
   return {offsetX:-8, offsetY:0, width:(b ? b.contentWidth : 150) + 30, height:Math.max(30, (b ? b.contentHeight : 28) + 2), marginBottom:0};
 }, magnets:function(b) {
   return {previous:{x:0, y:0}, next:{x:0, y:(b ? Math.max(b.height, 30) : 30) + 1 + b.offsetY}};
+}, contentPos:function(b) {
+  return {x:14, y:Math.max(b.contentHeight, 28) / 2 + 1};
+}};
+Entry.skeleton.basic_create = {path:function(b) {
+  var a = b.contentWidth;
+  b = b.contentHeight;
+  b = Math.max(30, b + 2);
+  a = Math.max(0, a + 9 - b / 2);
+  return "m -8,0 l 16,0 h %w a %h,%h 0 0,1 0,%wh h -%w l -8,8 -8,-8 v -%wh z".replace(/%wh/gi, b).replace(/%w/gi, a).replace(/%h/gi, b / 2);
+}, box:function(b) {
+  return {offsetX:-8, offsetY:0, width:(b ? b.contentWidth : 150) + 30, height:Math.max(30, (b ? b.contentHeight : 28) + 2), marginBottom:0};
+}, magnets:function(b) {
+  return {next:{x:0, y:(b ? Math.max(b.height, 30) : 30) + 1 + b.offsetY}};
 }, contentPos:function(b) {
   return {x:14, y:Math.max(b.contentHeight, 28) / 2 + 1};
 }};
