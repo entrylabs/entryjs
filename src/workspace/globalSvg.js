@@ -132,11 +132,12 @@ goog.provide('Entry.GlobalSvg');
 
     gs.terminateDrag = function(blockView) {
         var mousePos = Entry.mouseCoordinate;
-        var blockMenu = blockView.getBoard().workspace.blockMenu;
+        var board = blockView.getBoard();
+        var blockMenu =board.workspace.blockMenu;
         var bLeft = blockMenu.offset().left;
         var bTop = blockMenu.offset().top;
         var bWidth = blockMenu.visible ? blockMenu.svgDom.width() : 0;
-        if (mousePos.y > bTop && mousePos.x > bLeft + bWidth)
+        if (mousePos.y > (board.offset().top - 20) && mousePos.x > bLeft + bWidth)
             return this.DONE;
         else if (mousePos.y > bTop && mousePos.x > bLeft && blockMenu.visible)
             return this.REMOVE;
