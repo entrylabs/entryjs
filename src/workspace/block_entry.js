@@ -16135,7 +16135,7 @@ Entry.block = {
             {
                 "type": "Indicator",
                 "boxMultiplier": 2,
-                "img": "/img/assets/block_icon/start_icon_play.png",
+                "img": "../../../img/assets/block_icon/start_icon_play.png",
                 "highlightColor": "#3BBD70",
                 "size": 17,
                 "position": {
