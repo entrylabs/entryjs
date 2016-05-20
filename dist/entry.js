@@ -12593,7 +12593,7 @@ Entry.Func.generateWsBlock = function(b) {
   }
   c++;
   f += " %" + (c + d);
-  e.push({type:"Indicator", img:"/lib/entryjs/images/block_icon/function_03.png", size:12});
+  e.push({type:"Indicator", img:"block_icon/function_03.png", size:12});
   Entry.Mutator.mutate("func_" + b.id, {params:e, template:f});
   for (var l in g) {
     g[l] ? (a = -1 < l.indexOf("string") ? Lang.Blocks.FUNCTION_character_variable : Lang.Blocks.FUNCTION_logical_variable, Entry.Mutator.mutate(l, {template:a})) : g[l] = !0;
