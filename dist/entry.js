@@ -11480,6 +11480,36 @@ Entry.TextCodingUtil = function() {
   b.isBinaryOperator = function(a) {
     return "==" == a || ">" == a || "<" == a || ">=" == a || "<=" == a ? !0 : !1;
   };
+  b.binaryOperatorConvert = function(a) {
+    console.log("binaryOperatorConvert", a);
+    switch(a) {
+      case "==":
+        a = "EQUAL";
+        break;
+      case ">":
+        a = "GREATER";
+        break;
+      case "<":
+        a = "LESS";
+        break;
+      case ">=":
+        a = "GREATER_OR_EQUAL";
+        break;
+      case "<=":
+        a = "LESS_OR_EQUAL";
+        break;
+      case "&&":
+        a = null;
+        break;
+      case "||":
+        a = null;
+        break;
+      case "!":
+        a = null;
+        break;
+    }
+    return a;
+  };
 })(Entry.TextCodingUtil.prototype);
 Entry.PyBlockAssembler = function(b) {
   this.blockSyntax = b;
@@ -11496,13 +11526,57 @@ Entry.PyBlockAssembler = function(b) {
       b.params = d.params;
       result = b;
     }
-    a.operator && (result = this.binaryTestExpression(a));
+    b = a.operator;
+    console.log("ExpressionStatement expression operator", a, oprator);
+    b && (result = this.binaryTestExpression(a));
     b = a.value;
     if (1 == b || 0 == b) {
       result = this.unaryTestExpression(a);
     }
     console.log("ExpressionStatement result", result);
     return result;
+  };
+  b.LogicalExpression = function(a) {
+    console.log("LogicalExpression component", a);
+    var b, d = {}, e = String(a.operator);
+    switch(e) {
+      case "&&":
+        var f = "%1 and %3";
+        break;
+      case "||":
+        f = "%1 or %3";
+        break;
+      default:
+        f = "%1 %2 %3";
+    }
+    var f = this.getBlockType(f), g = Entry.block[f].params;
+    console.log("LogicalExpression paramsMeta", g);
+    var h = [], e = a.left;
+    if (e.type && "Literal" == e.type) {
+      var k = this[e.type](g[0], e);
+      console.log("left", k);
+      h.push(k);
+    }
+    e = String(a.operator);
+    console.log("LogicalExpression operator", e);
+    e = Entry.TextCodingUtil.prototype.binaryOperatorConvert(e);
+    h.push(e);
+    console.log("operator", e);
+    a = a.right;
+    if (a.type && "Literal" == a.type) {
+      var l = this[a.type](g[2], a);
+      console.log("right", k);
+      h.push(l);
+    }
+    console.log("LogicalExpression leftData", k);
+    console.log("LogicalExpression operator", e);
+    console.log("LogicalExpression rightData", l);
+    console.log("LogicalExpression result", b);
+    d.type = f;
+    d.params = h;
+    b = d;
+    console.log("LogicalExpression result", b);
+    return b;
   };
   b.CallExpression = function(a) {
     console.log("CallExpression component", a);
@@ -11517,31 +11591,76 @@ Entry.PyBlockAssembler = function(b) {
     d || (d = Entry.AssemblerTypeConvertor.prototype.convert(e));
     console.log("CallExpression type2", d);
     e = Entry.block[d].params;
-    console.log("CallExpression blockParams", e);
-    var f = Entry.block[d].def.params;
-    console.log("CallExpression blockDefParams", f);
-    var arguments = a.arguments, g = [], h;
-    for (h in arguments) {
-      var k = arguments[h], k = this[k.type](k);
-      console.log("CallExpression arg", k);
-      for (var l in e) {
-        var n = e[l].type;
-        if (f[l]) {
-          var m = "";
-          null != f[l] && void 0 != f[l].type && (m = f[l].type);
-          n = String(n).concat(m);
-          console.log("CallExpression paramType", n);
-          n = this[n](e[l], f[l], k);
-          console.log("CallExpression paramData", n);
-          n ? g.push(n) : g.push(null);
-        }
+    console.log("CallExpression paramsMeta", e);
+    var arguments = a.arguments, f = [], g;
+    for (g in arguments) {
+      var h = arguments[g];
+      console.log("CallExpression argument", h);
+      if ("Literal" == h.type) {
+        var k = e[g];
+        "Indicator" == k.type ? (h = null, f.push(h), g--) : (h = this[h.type](k, h), f.push(h));
+        g == arguments.length - 1 && (console.log("CallExpression in1"), g < e.length && (console.log("CallExpression in2"), f.push(null)));
+        console.log("CallExpression i", g);
       }
     }
-    console.log("CallExpression params", g);
+    console.log("CallExpression params", f);
     b.type = d;
-    b.params = g;
+    b.params = f;
     console.log("CallExpression result", b);
     return b;
+  };
+  b.ParamColor = function(a, b) {
+    console.log("ParamColor paramMeta value", a, b);
+    console.log("ParamColor result", b);
+    return b;
+  };
+  b.ParamDropdown = function(a, b) {
+    console.log("ParamDropdown paramMeta value", a, b);
+    console.log("ParamDropdownDynamic result", b);
+    return b;
+  };
+  b.ParamDropdownDynamic = function(a, b) {
+    console.log("ParamDropdownDynamic paramMeta value", a, b);
+    var d;
+    if ("mouse" == b) {
+      return "mouse";
+    }
+    var e = a.options, f;
+    for (f in e) {
+      if (console.log("options", e), b == e[f][0]) {
+        console.log("options[i][0]", e[f][0]);
+        d = e[f][1];
+        break;
+      }
+    }
+    console.log("ParamDropdownDynamic result", d);
+    return d;
+  };
+  b.ParamKeyboard = function(a, b) {
+    console.log("ParamKeyboard paramMeta value", a, b);
+    var d;
+    d = Entry.KeyboardCodeMap.prototype.keyCharToCode[b];
+    console.log("ParamKeyboard result", d);
+    return d;
+  };
+  b.ParamBlock = function(a, b) {
+    console.log("ParamBlock paramMeta value", a, b);
+    var d = {}, e = [], f = typeof b;
+    console.log("ParamBlock valueType", f);
+    switch(f) {
+      case "number":
+        d.type = "number";
+        e.push(b);
+        d.params = e;
+        break;
+      case "boolean":
+        1 == b ? d.type = "True" : 0 == b && (d.type = "False");
+        break;
+      default:
+        d.type = "text", e.push(b), d.params = e;
+    }
+    console.log("ParamBlock result", d);
+    return d;
   };
   b.Indicator = function(a, b, d) {
   };
@@ -11558,12 +11677,6 @@ Entry.PyBlockAssembler = function(b) {
     console.log("MemberExpression result", b);
     return b;
   };
-  b.Literal = function(a) {
-    console.log("Literal component", a);
-    a = a.value;
-    console.log("Literal result", a);
-    return a;
-  };
   b.Identifier = function(a) {
     console.log("Identifiler component", a);
     a = a.name;
@@ -11572,15 +11685,27 @@ Entry.PyBlockAssembler = function(b) {
   };
   b.WhileStatement = function(a) {
     console.log("WhileStatement component", a);
-    var b = this.getBlockType("while True:\n$1"), d = this.assemble(a.test);
-    [].push(d);
-    var d = [], e = a.body.body, f;
-    for (f in e) {
-      a = this.assemble(e[f]), d.push(a);
+    var b = {}, d = this.getBlockType("while True:\n$1"), e = a.test;
+    if (null != e) {
+      var f = Entry.block[d].params;
+      console.log("WhileStatement paramsMeta", f);
+      var g = [];
+      e.type = "Literal";
+      f = f[0];
+      e = "Indicator" == f.type ? null : this[e.type](f, e);
+      g.push(e);
     }
-    result = {type:b, statements:[d]};
-    console.log("WhileStatement result", result);
-    return result;
+    e = [];
+    a = a.body.body;
+    for (var h in a) {
+      f = a[h], f = this[f.type](f), e.push(f);
+    }
+    b.type = d;
+    b.params = g;
+    b.statements = [];
+    b.statements.push(e);
+    console.log("WhileStatement result", b);
+    return b;
   };
   b.BlockStatement = function(a) {
     console.log("BlockStatement component", a);
@@ -11599,7 +11724,7 @@ Entry.PyBlockAssembler = function(b) {
         for (f in e) {
           var g = e[f];
           g.init.type && (b.type = g.init.type);
-          g.init.params && (b.params = g.init.params);
+          g.init.params && (console.log("BlockStatement params", g.init.params), b.params = g.init.params);
           console.log("BlockStatement structure", b, "j", f);
         }
       } else {
@@ -11611,38 +11736,42 @@ Entry.PyBlockAssembler = function(b) {
     this._blockStatmentIndex++;
     return b;
   };
+  b.Literal = function(a, b) {
+    console.log("Literal paramMeta component", a, b);
+    var d;
+    if (b.value) {
+      d = this["Param" + a.type](a, b.value);
+    } else {
+      if (b.operator) {
+        d = this[b.left.type](b.left);
+        var e = b.operator, f = this[b.right.type](b.right);
+        d = String(d).concat(String(e)).concat(String(f));
+      }
+    }
+    console.log("Literal result", d);
+    return d;
+  };
   b.IfStatement = function(a) {
     console.log("IfStatement component", a);
     var b = {}, d = [], e = [], f = [], g = [], h = a.test, k = a.alternate, l = a.consequent;
     a = this.getBlockType(null == k ? "if %1:\n$1" : "if %1:\n$1\nelse:\n$2");
-    var n;
-    null != h && (n = this[h.type](h), console.log("IfStatement arg", n));
-    h = Entry.block[a].params;
-    console.log("IfStatement blockParams", h);
-    var m = Entry.block[a].def.params;
-    console.log("IfStatement blockDefParams", m);
-    console.log("IfStatement arg", n);
-    for (var q in h) {
-      var r = h[q].type;
-      if (m[q]) {
-        var u = "";
-        console.log("shit", m[q]);
-        null != m[q] && void 0 !== m[q].type && (u = m[q].type);
-        r = String(r).concat(u);
-        console.log("IfStatement paramType", r);
-        r = this[r](h[q], m[q], n);
-        console.log("IfStatement paramData", r);
-        r ? d.push(r) : d.push(null);
-      }
+    if (null != h) {
+      var n = Entry.block[a].params;
+      console.log("IfStatement paramsMeta", n);
+      d = [];
+      h.type = "Literal";
+      n = n[0];
+      h = "Indicator" == n.type ? null : this[h.type](n, h);
+      d.push(h);
     }
     if (null != l) {
-      for (var t in l.body) {
-        n = l.body[t], n = this[n.type](n), console.log("IfStatement consequent bodyData", n), e.push(n);
+      for (var m in l.body) {
+        h = l.body[m], h = this[h.type](h), console.log("IfStatement consequent bodyData", h), e.push(h);
       }
     }
     if (null != k) {
-      for (t in k.body) {
-        n = k.body[t], n = this[n.type](n), console.log("IfStatement alternate bodyData", n), f.push(n);
+      for (m in k.body) {
+        h = k.body[m], h = this[h.type](h), console.log("IfStatement alternate bodyData", h), f.push(h);
       }
     }
     0 != e.length && g.push(e);
@@ -11652,39 +11781,6 @@ Entry.PyBlockAssembler = function(b) {
     0 != g.length && (b.statements = g);
     console.log("IfStatement result", b);
     return b;
-  };
-  b.DropdownDynamic = function(a, b, d) {
-    var e;
-    a = a.options;
-    for (var f in a) {
-      if (console.log("options", a), d == a[f][0]) {
-        console.log("options[i][0]", a[f][0]);
-        e = a[f][1];
-        break;
-      }
-    }
-    console.log("param", e);
-    return e;
-  };
-  b.Keyboard = function(a, b, d) {
-    return Entry.KeyboardCodeMap.prototype.keyCharToCode[d];
-  };
-  b.Blocktext = function(a, b, d) {
-    a = b.type;
-    b = [];
-    b.push(d);
-    return {type:a, params:b};
-  };
-  b.Blocknumber = function(a, b, d) {
-    a = b.type;
-    b = [];
-    b.push(d);
-    return {type:a, params:b};
-  };
-  b.BlockTrue = function(a, b, d) {
-    a = b.type;
-    [].push(d);
-    return {type:a};
   };
   b.VariableDeclaration = function(a) {
     console.log("VariableDeclaration component", a);
@@ -11713,9 +11809,11 @@ Entry.PyBlockAssembler = function(b) {
   };
   b.BreakStatement = function(a) {
     console.log("BreakStatement component", a);
-    result = {type:this.getBlockType("break")};
-    console.log("BreakStatement result", result);
-    return result;
+    a = {};
+    var b = this.getBlockType("break");
+    a.type = b;
+    console.log("BreakStatement result", a);
+    return a;
   };
   b.UnaryExpression = function(a) {
     console.log("UnaryExpression component", a);
