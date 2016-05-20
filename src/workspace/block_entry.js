@@ -6,17 +6,8 @@ if (typeof exports == "object") {
     if (typeof Entry !== "object")
         var Entry = {};
     Entry.Bitbrick = {};
+    EntryStatic = {};
 }
-
-Entry.block.ARROW_COLOR_START = '#2f975a';
-Entry.block.ARROW_COLOR_FLOW = '#3a71bc';
-Entry.block.ARROW_COLOR_MOVING = '#8641b6';
-Entry.block.ARROW_COLOR_LOOKS = '#d8234e';
-Entry.block.ARROW_COLOR_SOUNDS = '#83a617';
-Entry.block.ARROW_COLOR_JUDGE = '#89a1f7';
-Entry.block.ARROW_COLOR_CALC = '#e8b349';
-Entry.block.ARROW_COLOR_VARIABLE = '#ce38ce';
-Entry.block.ARROW_COLOR_HW = '#097e84';
 
 Entry.block = {
     "albert_hand_found": {
@@ -1577,7 +1568,7 @@ Entry.block = {
                 ],
                 "value": "A0",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_HW
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
             }
         ],
         "events": {},
@@ -1616,7 +1607,7 @@ Entry.block = {
                 ],
                 "value": "0",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_HW
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
             }
         ],
         "events": {},
@@ -1647,7 +1638,7 @@ Entry.block = {
                 ],
                 "value": "3",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_HW
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
             }
         ],
         "events": {},
@@ -1738,7 +1729,7 @@ Entry.block = {
                 ],
                 "value": "on",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_HW
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
             },
             {
                 "type": "Indicator",
@@ -2381,7 +2372,7 @@ Entry.block = {
                 "type": "DropdownDynamic",
                 "value": null,
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_HW,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW,
                 menuName: Entry.Bitbrick.sensorList
 
             }
@@ -3575,7 +3566,7 @@ Entry.block = {
                 "value": null,
                 "menuName": "spritesWithMouse",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_CALC
+                'arrowColor': EntryStatic.ARROW_COLOR_CALC
             },
             {
                 "type": "Text",
@@ -3628,7 +3619,7 @@ Entry.block = {
                 ],
                 "value": "x",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_CALC
+                'arrowColor': EntryStatic.ARROW_COLOR_CALC
             },
             {
                 "type": "Text",
@@ -3670,7 +3661,7 @@ Entry.block = {
                 "value": null,
                 "menuName": "spritesWithSelf",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_CALC
+                'arrowColor': EntryStatic.ARROW_COLOR_CALC
             },
             {
                 "type": "Text",
@@ -3690,7 +3681,7 @@ Entry.block = {
                 ],
                 "value": "x",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_CALC
+                'arrowColor': EntryStatic.ARROW_COLOR_CALC
             }
         ],
         "events": {},
@@ -4133,7 +4124,7 @@ Entry.block = {
                 ],
                 "value": "square",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_CALC
+                'arrowColor': EntryStatic.ARROW_COLOR_CALC
             }
         ],
         "events": {},
@@ -4290,7 +4281,7 @@ Entry.block = {
                 ],
                 "value": "YEAR",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_CALC
+                'arrowColor': EntryStatic.ARROW_COLOR_CALC
             },
             {
                 "type": "Text",
@@ -4340,7 +4331,7 @@ Entry.block = {
                 "value": null,
                 "menuName": "sounds",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_CALC
+                'arrowColor': EntryStatic.ARROW_COLOR_CALC
             },
             {
                 "type": "Text",
@@ -4808,7 +4799,7 @@ Entry.block = {
                 ],
                 "value": "toUpperCase",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_CALC
+                'arrowColor': EntryStatic.ARROW_COLOR_CALC
             },
             {
                 "type": "Text",
@@ -5023,7 +5014,7 @@ Entry.block = {
                 ],
                 "value": "QUOTIENT",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_CALC
+                'arrowColor': EntryStatic.ARROW_COLOR_CALC
             }
         ],
         "events": {},
@@ -5082,7 +5073,7 @@ Entry.block = {
                 ],
                 "value": "START",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_CALC
+                'arrowColor': EntryStatic.ARROW_COLOR_CALC
             },
             {
                 "type": "Text",
@@ -5473,7 +5464,7 @@ Entry.block = {
                 "value": null,
                 "menuName": "clone",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_FLOW
+                'arrowColor': EntryStatic.ARROW_COLOR_FLOW
             },
             {
                 "type": "Indicator",
@@ -5595,7 +5586,7 @@ Entry.block = {
                 ],
                 "value": "until",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_FLOW
+                'arrowColor': EntryStatic.ARROW_COLOR_FLOW
             },
             {
                 "type": "Indicator",
@@ -5649,7 +5640,7 @@ Entry.block = {
                 ],
                 "value": "all",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_FLOW
+                'arrowColor': EntryStatic.ARROW_COLOR_FLOW
             },
             {
                 "type": "Indicator",
@@ -7594,7 +7585,7 @@ Entry.block = {
                 "value": null,
                 "menuName": "collision",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_JUDGE
+                'arrowColor': EntryStatic.ARROW_COLOR_JUDGE
             },
             {
                 "type": "Text",
@@ -8319,7 +8310,7 @@ Entry.block = {
                 ],
                 "value": "speak",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_LOOKS
+                'arrowColor': EntryStatic.ARROW_COLOR_LOOKS
             },
             {
                 "type": "Indicator",
@@ -8391,7 +8382,7 @@ Entry.block = {
                 ],
                 "value": "speak",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_LOOKS
+                'arrowColor': EntryStatic.ARROW_COLOR_LOOKS
             },
             {
                 "type": "Indicator",
@@ -8499,7 +8490,7 @@ Entry.block = {
                 ],
                 "value": "next",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_LOOKS
+                'arrowColor': EntryStatic.ARROW_COLOR_LOOKS
             },
             {
                 "type": "Indicator",
@@ -8923,7 +8914,7 @@ Entry.block = {
                 "value": null,
                 "menuName": "pictures",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_LOOKS
+                'arrowColor': EntryStatic.ARROW_COLOR_LOOKS
             }
         ],
         "events": {},
@@ -8991,7 +8982,7 @@ Entry.block = {
                 ],
                 "value": "color",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_LOOKS
+                'arrowColor': EntryStatic.ARROW_COLOR_LOOKS
             },
             {
                 "type": "Block",
@@ -9049,7 +9040,7 @@ Entry.block = {
                 ],
                 "value": "color",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_LOOKS
+                'arrowColor': EntryStatic.ARROW_COLOR_LOOKS
             },
             {
                 "type": "Block",
@@ -9222,7 +9213,7 @@ Entry.block = {
                 ],
                 "value": "FRONT",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_LOOKS
+                'arrowColor': EntryStatic.ARROW_COLOR_LOOKS
             },
             {
                 "type": "Indicator",
@@ -9759,7 +9750,7 @@ Entry.block = {
                 "value": null,
                 "menuName": "spritesWithMouse",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_MOVING
+                'arrowColor': EntryStatic.ARROW_COLOR_MOVING
             },
             {
                 "type": "Indicator",
@@ -10163,7 +10154,7 @@ Entry.block = {
                 "value": null,
                 "menuName": "spritesWithMouse",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_MOVING
+                'arrowColor': EntryStatic.ARROW_COLOR_MOVING
             },
             {
                 "type": "Indicator",
@@ -10303,7 +10294,7 @@ Entry.block = {
                 "value": null,
                 "menuName": "spritesWithMouse",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_MOVING
+                'arrowColor': EntryStatic.ARROW_COLOR_MOVING
             },
             {
                 "type": "Indicator",
@@ -10729,7 +10720,7 @@ Entry.block = {
             ],
             "value": "16",
             "fontSize": 11,
-            'arrowColor': Entry.block.ARROW_COLOR_HW
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
         }, {
             "type": "Dropdown",
             "options": [
@@ -10752,7 +10743,7 @@ Entry.block = {
             ],
             "value": "0",
             "fontSize": 11,
-            'arrowColor': Entry.block.ARROW_COLOR_HW
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
         }, {
             "type": "Indicator",
             "img": "block_icon/hardware_03.png",
@@ -10812,7 +10803,7 @@ Entry.block = {
             ],
             "value": "16",
             "fontSize": 11,
-            'arrowColor': Entry.block.ARROW_COLOR_HW
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
         }, {
             "type": "Dropdown",
             "options": [
@@ -10835,7 +10826,7 @@ Entry.block = {
             ],
             "value": "0",
             "fontSize": 11,
-            'arrowColor': Entry.block.ARROW_COLOR_HW
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
         }, {
             "type": "Indicator",
             "img": "block_icon/hardware_03.png",
@@ -10897,7 +10888,7 @@ Entry.block = {
                 ],
                 "value": "1",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_HW
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
             },
             {
                 "type": "Block",
@@ -10912,7 +10903,7 @@ Entry.block = {
                 ],
                 "value": "1",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_HW
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
             },
             {
                 "type": "Dropdown",
@@ -10924,7 +10915,7 @@ Entry.block = {
                 ],
                 "value": "1",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_HW
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
             },
             {
                 "type": "Indicator",
@@ -10990,7 +10981,7 @@ Entry.block = {
             ],
             "value": "1",
             "fontSize": 11,
-            'arrowColor': Entry.block.ARROW_COLOR_HW
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
         }, {
             "type": "Dropdown",
             "options": [
@@ -11016,7 +11007,7 @@ Entry.block = {
             ],
             "value": "0",
             "fontSize": 11,
-            'arrowColor': Entry.block.ARROW_COLOR_HW
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
         }, {
             "type": "Indicator",
             "img": "block_icon/hardware_03.png",
@@ -11059,7 +11050,7 @@ Entry.block = {
             ],
             "value": "1",
             "fontSize": 11,
-            'arrowColor': Entry.block.ARROW_COLOR_HW
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
         }, {
             "type": "Block",
             "accept": "string"
@@ -12757,7 +12748,7 @@ Entry.block = {
                 "value": null,
                 "menuName": "scenes",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_START
+                'arrowColor': EntryStatic.ARROW_COLOR_START
             },
             {
                 "type": "Indicator",
@@ -12798,7 +12789,7 @@ Entry.block = {
                 ],
                 "value": "next",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_START
+                'arrowColor': EntryStatic.ARROW_COLOR_START
             },
             {
                 "type": "Indicator",
@@ -13164,7 +13155,7 @@ Entry.block = {
                 "value": null,
                 "menuName": "sounds",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_SOUNDS
+                'arrowColor': EntryStatic.ARROW_COLOR_SOUNDS
             }
         ],
         "events": {},
@@ -13803,7 +13794,7 @@ Entry.block = {
                 "value": null,
                 "menuName": "messages",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_START
+                'arrowColor': EntryStatic.ARROW_COLOR_START
             }
         ],
         "events": {
@@ -13844,7 +13835,7 @@ Entry.block = {
                 "value": null,
                 "menuName": "messages",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_START
+                'arrowColor': EntryStatic.ARROW_COLOR_START
             },
             {
                 "type": "Indicator",
@@ -13899,7 +13890,7 @@ Entry.block = {
                 "value": null,
                 "menuName": "messages",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_START
+                'arrowColor': EntryStatic.ARROW_COLOR_START
             },
             {
                 "type": "Indicator",
@@ -14150,7 +14141,7 @@ Entry.block = {
                 "value": null,
                 "menuName": "variables",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_VARIABLE
+                'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE
             },
             {
                 "type": "Block",
@@ -14217,7 +14208,7 @@ Entry.block = {
                 "value": null,
                 "menuName": "variables",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_VARIABLE
+                'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE
             },
             {
                 "type": "Block",
@@ -14278,7 +14269,7 @@ Entry.block = {
                 "value": null,
                 "menuName": "variables",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_VARIABLE
+                'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE
             },
             {
                 "type": "Indicator",
@@ -14327,7 +14318,7 @@ Entry.block = {
                 "value": null,
                 "menuName": "variables",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_VARIABLE
+                'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE
             },
             {
                 "type": "Indicator",
@@ -14375,7 +14366,7 @@ Entry.block = {
                 "value": null,
                 "menuName": "variables",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_VARIABLE
+                'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE
             },
             {
                 "type": "Text",
@@ -14536,7 +14527,7 @@ Entry.block = {
                 "value": null,
                 "menuName": "lists",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_VARIABLE
+                'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE
             },
             {
                 "type": "Indicator",
@@ -14601,7 +14592,7 @@ Entry.block = {
                 "value": null,
                 "menuName": "lists",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_VARIABLE
+                'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE
             },
             {
                 "type": "Indicator",
@@ -14655,7 +14646,7 @@ Entry.block = {
                 "value": null,
                 "menuName": "lists",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_VARIABLE
+                'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE
             },
             {
                 "type": "Block",
@@ -14714,7 +14705,7 @@ Entry.block = {
                 "value": null,
                 "menuName": "lists",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_VARIABLE
+                'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE
             },
             {
                 "type": "Block",
@@ -14782,7 +14773,7 @@ Entry.block = {
                 "value": null,
                 "menuName": "lists",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_VARIABLE
+                'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE
             },
             {
                 "type": "Text",
@@ -14845,7 +14836,7 @@ Entry.block = {
                 "value": null,
                 "menuName": "lists",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_VARIABLE
+                'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE
             },
             {
                 "type": "Text",
@@ -14880,7 +14871,7 @@ Entry.block = {
                 "value": null,
                 "menuName": "lists",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_VARIABLE
+                'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE
             },
             {
                 "type": "Indicator",
@@ -14916,7 +14907,7 @@ Entry.block = {
                 "value": null,
                 "menuName": "lists",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_VARIABLE
+                'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE
             },
             {
                 "type": "Indicator",
@@ -14982,7 +14973,7 @@ Entry.block = {
                 ],
                 "value": "SHOW",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_VARIABLE
+                'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE
             },
             {
                 "type": "Indicator",
@@ -15035,7 +15026,7 @@ Entry.block = {
                 "value": null,
                 "menuName": "lists",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_VARIABLE
+                'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE
             },
             {
                 "type": "Text",
@@ -15098,7 +15089,7 @@ Entry.block = {
                 ],
                 "value": "D2",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_HW
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
             }
         ],
         "events": {},
@@ -15354,7 +15345,7 @@ Entry.block = {
                 ],
                 "value": "rightWheel",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_HW
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
             },
             {
                 "type": "Block",
@@ -15682,7 +15673,7 @@ Entry.block = {
                 ],
                 "value": "0",
                 "fontSize": 11,
-                'arrowColor': Entry.block.ARROW_COLOR_HW
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
             },
             {
                 "type": "Block",
@@ -17321,7 +17312,7 @@ Entry.block = {
             ],
             "value": "ADJU",
             "fontSize": 11,
-            'arrowColor': Entry.block.ARROW_COLOR_HW
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
         }],
         "events": {},
         "def": {
@@ -17356,7 +17347,7 @@ Entry.block = {
             ],
             "value": "LEFT",
             "fontSize": 11,
-            'arrowColor': Entry.block.ARROW_COLOR_HW
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
         }],
         "events": {},
         "def": {
@@ -17389,7 +17380,7 @@ Entry.block = {
             ],
             "value": "3",
             "fontSize": 11,
-            'arrowColor': Entry.block.ARROW_COLOR_HW
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
         }, {
             "type": "Dropdown",
             "options": [
@@ -17399,7 +17390,7 @@ Entry.block = {
             ],
             "value": "FRONT",
             "fontSize": 11,
-            'arrowColor': Entry.block.ARROW_COLOR_HW
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
         }, {
             "type": "Indicator",
             "img": "block_icon/hardware_03.png",
@@ -17456,7 +17447,7 @@ Entry.block = {
             ],
             "value": "1",
             "fontSize": 11,
-            'arrowColor': Entry.block.ARROW_COLOR_HW
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
         }, {
             "type": "Block",
             "accept": "string"
@@ -17548,7 +17539,7 @@ Entry.block = {
             ],
             "value": "7",
             "fontSize": 11,
-            'arrowColor': Entry.block.ARROW_COLOR_HW
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
         }, {
             "type": "Dropdown",
             "options": [
@@ -17557,7 +17548,7 @@ Entry.block = {
             ],
             "value": "on",
             "fontSize": 11,
-            'arrowColor': Entry.block.ARROW_COLOR_HW
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
         }, {
             "type": "Indicator",
             "img": "block_icon/hardware_03.png",
@@ -17601,7 +17592,7 @@ Entry.block = {
             ],
             "value": "2",
             "fontSize": 11,
-            'arrowColor': Entry.block.ARROW_COLOR_HW
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
         }, {
             "type": "Dropdown",
             "options": [
@@ -17610,7 +17601,7 @@ Entry.block = {
             ],
             "value": "ON",
             "fontSize": 11,
-            'arrowColor': Entry.block.ARROW_COLOR_HW
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
         }],
         "events": {},
         "def": {
@@ -17647,7 +17638,7 @@ Entry.block = {
             ],
             "value": "BRIGHT",
             "fontSize": 11,
-            'arrowColor': Entry.block.ARROW_COLOR_HW
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
         }],
         "events": {},
         "def": {
