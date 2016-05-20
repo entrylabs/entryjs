@@ -16,6 +16,7 @@ Entry.Func = function(func) {
         [
             {
                 type: "function_create",
+                copyable: false,
                 deletable: false,
                 x: 40, y: 40
             }
@@ -418,7 +419,7 @@ Entry.Func.generateWsBlock = function(targetFunc) {
     schemaTemplate += " %" + (booleanIndex + stringIndex);
     schemaParams.push({
         "type": "Indicator",
-        "img": "/lib/entryjs/images/block_icon/function_03.png",
+        "img": "block_icon/function_03.png",
         "size": 12
     });
     Entry.Mutator.mutate(
