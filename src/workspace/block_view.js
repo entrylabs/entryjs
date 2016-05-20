@@ -589,6 +589,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
                             if (closeBlock) {
                                 if (closeBlock.view.magneting === "next") {
                                     var lastBlock = block.getLastBlock();
+                                    board.separate(block);
                                     Entry.do("insertBlock", closeBlock, lastBlock).isPass(fromBlockMenu);
                                 } else {
                                     Entry.do("insertBlock", block, closeBlock).isPass(fromBlockMenu);
