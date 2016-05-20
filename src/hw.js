@@ -215,7 +215,7 @@ p.closeConnection = function() {
 };
 
 p.downloadConnector = function() {
-    var url = "http://github.com/entrylabs/entry-hw/releases/download/1.5.1/Entry_HW_1.5.1_Setup.exe";
+    var url = "http://download.play-entry.org/apps/Entry_HW_1.5.2_Setup.exe";
     var win = window.open(url, '_blank');
     win.focus();
 };
