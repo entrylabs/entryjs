@@ -4,14 +4,14 @@
  */
 "use strict";
 
-goog.provide("Entry.BlockObjectMap");
+goog.provide("Entry.ParticularParamTypeMap");
 
-Entry.BlockObjectMap = function() {
+Entry.ParticularBlockTypeMap = function() {
 
 };
 
 (function(p) {
-    p.getDropdownDynamicType = {"when_message_cast" : "variable", 
+    /*p.getType = {"when_message_cast" : "variable", 
                       "message_cast" : "variable",
                       "message_cast_wait" : "variable",
                       "start_scene" : "scene", 
@@ -27,5 +27,5 @@ Entry.BlockObjectMap = function() {
                       "sound_something_wait_with_block" : "sound",
                       "sound_something_second_wait_with_block" : "sound",
                       "sound_from_to_and_wait" : "sound"
-                    };
-})(Entry.BlockObjectMap.prototype);
+                    };*/
+})(Entry.ParticularParamTypeMap.prototype); 

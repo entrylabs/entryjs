@@ -10,7 +10,7 @@ Entry.ParticularBlockProcessing = function() {
 };
 
 (function(p){
-    p.isParticularBlock = function(blockType) {
+    /*p.isParticularBlock = function(blockType) {
     	console.log("isParticularBlock", blockType);
     	var result = false;
     	switch(blockType) {
@@ -25,6 +25,6 @@ Entry.ParticularBlockProcessing = function() {
         }
         
         return result;
-    };
+    };*/
 
 })(Entry.ParticularBlockProcessing.prototype);

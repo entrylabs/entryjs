@@ -10,7 +10,7 @@ Entry.AssemblerValueConvertor = function() {
 };
 
 (function(p) {
-	p.binaryOperatorValueConvertor = function(operator) {
+	/*p.binaryOperatorValueConvertor = function(operator) {
         console.log("binaryOperatorValueConvertor", operator);
         var result;
         switch(operator) {
@@ -51,6 +51,6 @@ Entry.AssemblerValueConvertor = function() {
             }
         }
         return result;
-    };
+    };*/
 
 })(Entry.AssemblerValueConvertor.prototype);

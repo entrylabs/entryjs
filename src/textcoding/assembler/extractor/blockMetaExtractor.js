@@ -10,7 +10,7 @@ Entry.BlockMetaExtractor = function() {
 };
 
 (function(p){
-	p.getParamsType = function(blockType) {
+	/*p.getParamsType = function(blockType) {
 		var targetBlock =  Entry.block[blockType];
 		var params = targetBlock.params;
 		var paramsType = [];
@@ -41,6 +41,6 @@ Entry.BlockMetaExtractor = function() {
 		console.log("final def p", paramsType);
 
 		return paramsType; 
-	};
+	};*/
 
 })(Entry.BlockMetaExtractor.prototype);

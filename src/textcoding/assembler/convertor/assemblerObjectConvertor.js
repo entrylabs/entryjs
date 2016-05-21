@@ -10,7 +10,7 @@ Entry.AssemblerObjectConvertor = function() {
 };
 
 (function(p) {
-	p.convert = function(type, param) {
+	/*p.convert = function(type, param) {
 		console.log("convert",type, param);
 		var result = "";
     	switch(type) {
@@ -119,5 +119,5 @@ Entry.AssemblerObjectConvertor = function() {
     	}
 
     	return result;
-	};
+	};*/
 })(Entry.AssemblerObjectConvertor.prototype);
