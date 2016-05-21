@@ -26,136 +26,46 @@ Entry.PyBlockAssembler = function(blockSyntax) {
 
     	var expression = component.expression;
     	
-    	if(expression) {
+    	if(expression.type == "Literal") {
+    		var paramMeta = { type: "Block", accept: "booleanMagnet" };
+    		var expressionData = this[expression.type](paramMeta, expression);
+
+    		structure.type = expressionData.type;
+
+    		result = structure;
+    		console.log("ExpressionStatement type literal", result);
+    	}
+    	else {
     		var expressionData = this[expression.type](expression);
 
     		structure.type = expressionData.type;
     		structure.params = expressionData.params;
     			
     		result = structure;
-    		
-    	}
+    		console.log("ExpressionStatement type not literal", result);
+    	} 
 
-    	var operator = expression.operator;
-    	console.log("ExpressionStatement expression operator", expression, oprator);
-    	if(operator) {
+    	
+/*
+    	if(expression.operator)
+    	{	
+    		var operator = expression.operator;
+    		console.log("ExpressionStatement expression operator", expression, operator);
+    	}*/
+    	/*if(operator) {
     		result = this.binaryTestExpression(expression);
     	}
 
     	var value = expression.value;
     	if(value == true || value == false) {
     		result = this.unaryTestExpression(expression);
-    	}
+    	}*/
 
         console.log("ExpressionStatement result", result);
         return result;
     };
 
-    p.LogicalExpression = function(component) {
-    	console.log("LogicalExpression component", component);
-    	var result;
-    	var structure = {};
-
-		var operator = String(component.operator);
-
-		switch(operator){
-            case '&&': 
-                var syntax = String("%1 and %3");
-                break;
-            case '||': 
-                var syntax = String("%1 or %3");
-                break;
-            default: 
-                var syntax = String("%1 %2 %3");
-                break;
-        }
-
-        /*if(operator == "&&") {
-			var syntax = String("%1 and %3");
-		} else if(operator == "||") {
-			var syntax = String("%1 or %3");
-		} else {
-			var syntax = String("%1 %2 %3");
-		}*/
-    	
-
-    	var type = this.getBlockType(syntax);
-
-       	var paramsMeta = Entry.block[type].params;
-       	console.log("LogicalExpression paramsMeta", paramsMeta);
-    	
-    	var params = [];
-
-        var left = component.left;
-        if(left.type) {
-        	if(left.type == "Literal") {
-		        var leftData = this[left.type](paramsMeta[0], left);
-		        console.log("left", leftData);
-		        params.push(leftData);
-		    }
-	    }
-
-        operator = String(component.operator);
-        console.log("LogicalExpression operator", operator);
-		operator = Entry.TextCodingUtil.prototype.binaryOperatorConvert(operator);
-		params.push(operator);
-		console.log("operator", operator);
-
-
-        var right = component.right;
-        if(right.type) {
-        	if(right.type == "Literal") {
-		        var rightData = this[right.type](paramsMeta[2], right);
-		        console.log("right", leftData);
-		        params.push(rightData);
-		    }
-		}
-
-        console.log("LogicalExpression leftData", leftData);
-        console.log("LogicalExpression operator", operator);
-        console.log("LogicalExpression rightData", rightData);
-
-        console.log("LogicalExpression result", result);
-
-        structure.type = type;
-        structure.params = params;
-
-		/*if(left.left) {
-			var param = this.binaryTestExpression(left);
-			if(param) {
-				params.push(param);
-			}
-		} else if(left.type) {
-			blockParamIndex = 0;
-			var param = this.assemble(left, type);
-			params.push(param);
-		} 
-
-		if(operator.length != 0) {
-			operator = Entry.TextCodingUtil.prototype.binaryOperatorValueConvertor(operator);
-			var param = operator;
-			params.push(param);
-		}
-
-		var right = expression.right;
-		if(right.left) {
-			var param = this.binaryTestExpression(right);
-			if(param) {
-				params.push(param);
-			}
-		} else if(right.type) {
-			blockParamIndex = 2;
-			var param = this.assemble(right);
-			if(param)
-				params.push(param);
-		}*/
-    	
-    	result = structure;
-
-    	console.log("LogicalExpression result", result);
-
-    	return result;
-    };
+    
 
     p.CallExpression = function(component) {
     	console.log("CallExpression component", component);
@@ -305,6 +215,9 @@ Entry.PyBlockAssembler = function(blockSyntax) {
 		
 		var type;
 		var params = [];
+
+		
+
 		var valueType = typeof value;
 		console.log("ParamBlock valueType", valueType);
 		switch(valueType) {
@@ -316,15 +229,15 @@ Entry.PyBlockAssembler = function(blockSyntax) {
 			case 'boolean': 
 				if(value == true) {
 					structure.type = "True";
-				} else if(value == false) {
-					structure.type = "False";	
+				}
+				else if(value == false) {
+					structure.type = "False";
 				}
 				break;
 			default: 
 				structure.type = "text";
 				params.push(value);
-				structure.params = params;
-				break;
+				structure.params = params;		
 		}
 
 		result = structure;
@@ -384,36 +297,44 @@ Entry.PyBlockAssembler = function(blockSyntax) {
     	var result;
     	var structure = {};
     	
-    	var syntax = String("while True:\n$1");
-        var type = this.getBlockType(syntax);
-       
     	var test = component.test;
         
-       	
-       	if(test != null){
-       		var paramsMeta = Entry.block[type].params;
-	    	console.log("WhileStatement paramsMeta", paramsMeta);
-	    	    	
-	    	var params = [];
+        var syntax;
+        var type;
 
-    		if(test.type = "Literal") {
-    			var paramMeta = paramsMeta[0];
-    			if(paramMeta.type == "Indicator") {
-    				var param = null;
-    			}
-    			else {
-    				var param = this[test.type](paramMeta, test);
-    			}
-    			params.push(param);	 
+       
+       	if(test.value == true) {
+       		syntax = String("while True:\n$1");
+        	type = this.getBlockType(syntax);
+       	} else if(test.value == false) {
+
+       	} else {
+
+       	}
+
+       	console.log("WhileStatement type", type);
+
+   		var paramsMeta = Entry.block[type].params;
+    	console.log("WhileStatement paramsMeta", paramsMeta);
+    	    	
+    	var params = [];
+    	if(test) {
+			if(test.type = "Literal") {
+				var paramMeta = paramsMeta[0];
+				if(paramMeta.type == "Indicator") {
+					var param = null;
+				}
+				else {
+					var param = this[test.type](paramMeta, test);
+				}
+				params.push(param);	 
 	    		   		
-    		}
-    		else {
-    			//To Do : when argument.type is not "Literal"
-    		}
-	    	
+			}
+			else {
+				//To Do : when argument.type is not "Literal"
+			}
+    	}
 				
-	    }
-
         var statements = [];
         var bodies = component.body.body;
         
@@ -488,16 +409,18 @@ Entry.PyBlockAssembler = function(blockSyntax) {
     p.Literal = function(paramMeta, component) {
 		console.log("Literal paramMeta component", paramMeta, component);
 		var result;
+
+		var value = component.value;
 		
-		if(component.value)
-			var param = this['Param'+paramMeta.type](paramMeta, component.value);
-		else if (component.operator) {
+		var param = this['Param'+paramMeta.type](paramMeta, value);
+		
+		/*else if (component.operator) {
 			var left = this[component.left.type](component.left);
 			var operator = component.operator;
 			var right = this[component.right.type](component.right);
 
 			var param = String(left).concat(String(operator)).concat(String(right));
-		}
+		}*/
 
 
 		result = param;
@@ -678,662 +601,209 @@ Entry.PyBlockAssembler = function(blockSyntax) {
     	return result;
     };
 
-    p.BinaryExpression = function(component) {
-    	console.log("BinaryExpression component", component);
+    p.LogicalExpression = function(component) {
+    	console.log("LogicalExpression component", component);
     	var result;
     	var structure = {};
+
+		var operator = String(component.operator);
+
+		switch(operator){
+            case '&&': 
+                var syntax = String("%1 and %3");
+                break;
+            case '||': 
+                var syntax = String("%1 or %3");
+                break;
+            default: 
+                var syntax = String("%1 and %3");
+                break;
+        }
+    	
+
+    	var type = this.getBlockType(syntax);
+
+       	var paramsMeta = Entry.block[type].params;
+       	console.log("LogicalExpression paramsMeta", paramsMeta);
+
 
     	var params = [];
     	var param;
     	   
         var left = component.left;
 		if(left.type) {
-			param = this[left.type](left);
-			if(param) 
-				params.push(param);
-			
-			console.log("BinaryExpression param", param);
+			if(left.type == "Literal") {
+				param = this[left.type](paramsMeta[0], left);
+				console.log("LogicalExpression left Literal param", param);
+				if(param) 
+					params.push(param);
+			} else {
+				param = this[left.type](left);
+				if(param) 
+					params.push(param);
+			}
+			console.log("LogicalExpression left param", param);
 		} else {
 			left = component.left;
-			this(left);
+			this[left.type](left);
 		}
 
-		var operator = component.operator;
+		operator = String(component.operator);
+		console.log("LogicalExpression operator", operator);
+		if(operator) {
+			operator = Entry.TextCodingUtil.prototype.logicalExpressionConvert(operator);
+			param = operator;
+			params.push(param);
+		}
+
+		var right = component.right;
+		if(right.type) {
+			if(right.type == "Literal") {
+				param = this[right.type](paramsMeta[2], right);
+				console.log("LogicalExpression right Literal param", param);
+				if(param) 
+					params.push(param);
+			} else {
+				param = this[right.type](right);
+				if(param) 
+					params.push(param);
+			}
+			
+			console.log("LogicalExpression right param", param);
+		} else {
+			right = component.right;
+			this[right.type](right);
+		}
+
+        structure.type = type;
+        structure.params = params;
+
+		/*if(left.left) {
+			var param = this.binaryTestExpression(left);
+			if(param) {
+				params.push(param);
+			}
+		} else if(left.type) {
+			blockParamIndex = 0;
+			var param = this.assemble(left, type);
+			params.push(param);
+		} 
+
+		if(operator.length != 0) {
+			operator = Entry.TextCodingUtil.prototype.binaryOperatorValueConvertor(operator);
+			var param = operator;
+			params.push(param);
+		}
+
+		var right = expression.right;
+		if(right.left) {
+			var param = this.binaryTestExpression(right);
+			if(param) {
+				params.push(param);
+			}
+		} else if(right.type) {
+			blockParamIndex = 2;
+			var param = this.assemble(right);
+			if(param)
+				params.push(param);
+		}*/
+    	
+    	result = structure;
+
+    	console.log("LogicalExpression result", result);
+
+    	return result;
+    };
+
+    p.BinaryExpression = function(component) {
+    	console.log("BinaryExpression component", component);
+    	
+    	var result;
+    	var structure = {};
+    	structure.params = [];
+
+		var operator = String(component.operator);
+
+		console.log("BinaryExpression operator", operator);
+		if(operator)
+        	var syntax = String("(%1 %2 %3)");
+        
+        
+        console.log("BinaryExpression syntax", syntax);
+
+    	var type = this.getBlockType(syntax);
+
+    	console.log("BinaryExpression type", type);
+
+       	var paramsMeta = Entry.block[type].params;
+       	console.log("BinaryExpression paramsMeta", paramsMeta);
+
+
+    	var params = [];
+    	var param;
+    	   
+        var left = component.left;
+		if(left.type) {
+			if(left.type == "Literal") {
+				param = this[left.type](paramsMeta[0], left);
+				console.log("BinaryExpression left Literal param", param);
+				if(param) 
+					params.push(param);
+			} else {
+				param = this[left.type](left);
+				if(param) 
+					params.push(param);
+			}
+			console.log("BinaryExpression left param", param);
+		} else {
+			left = component.left;
+			this[left.type](left);
+		}
+
+		operator = String(component.operator);
 		if(operator) {
 			console.log("BinaryExpression operator", operator);
-			param = String(operator);
+			operator = Entry.TextCodingUtil.prototype.binaryOperatorConvert(operator);
+			param = operator;
 			if(param)
 				params.push(param);
 		}
 
 		var right = component.right;
-		if(left.type) {
-			param = this[right.type](right);
-			if(param) 
-				params.push(param);
+		if(right.type) {
+			if(right.type == "Literal") {
+				param = this[right.type](paramsMeta[2], right);
+				console.log("BinaryExpression right Literal param", param);
+				if(param) 
+					params.push(param);
+			} else {
+				param = this[right.type](right);
+				if(param) 
+					params.push(param);
+			}
 			
-			console.log("BinaryExpression param", param);
+			console.log("BinaryExpression right param", param);
 		} else {
 			right = component.right;
-			this(right);
+			this[right.type](right);
 		}
-
 
 		console.log("BinaryExpression params", params);
 		//result = { type: blockType, params: params };
-		result = params;
+
+		structure.type = type;
+		structure.params = params;
+
+		result = structure;
     	
     	console.log("BinaryExpression result", result);
     	return result;
     };
 
 
-    p.binaryTestExpression = function(expression) {
-    	var result;
-    	var operator = expression.operator;
-    	if(operator && operator != null) {
-    		console.log("operator", operator);
-
-    		if(operator == "&&") {
-    			var targetSyntax = "%1 and %3";
-    		} else if(operator == "||") {
-    			var targetSyntax = "%1 or %3";
-    		} else {
-    			var targetSyntax = "%1 %2 %3";
-    		}
-
-    		var blockType = this.getBlockType(targetSyntax);
-	        //var blockParamsType = Entry.BlockMetaExtractor.prototype.getParamsType(blockType);
-	        //var blockDefParamsType = Entry.BlockMetaExtractor.prototype.getDefParamsType(blockType);
-    		//var blockParamIndex = 0;
-            var params = [];
-            var param;
-            console.log("blockType", blockType);
-            console.log("expression ex", expression);
-            
-
-            var leftExpression = expression.left;
-    		if(leftExpression.left) {
-    			param = this.binaryTestExpression(leftExpression);
-    			if(param) {
-    				params.push(param);
-    			}
-    		} else if(leftExpression.type) {
-    			blockParamIndex = 0;
-    			param = this.assemble(leftExpression, blockType);
-    			params.push(param);
-    		} 
-
-    		console.log("before cv operator", operator);
-    		if(operator.length != 0) {
-    			console.log("opoopop", operator);
-    			operator = String(operator);
-    			operator = Entry.AssemblerValueConvertor.prototype.binaryOperatorValueConvertor(operator);
-    			console.log("cv operator", operator);
-    			param = operator;
-    			params.push(param);
-    		}
-
-    		var rightExpression = expression.right;
-    		if(rightExpression.left) {
-    			param = this.binaryTestExpression(rightExpression);
-    			if(param) {
-    				params.push(param);
-    			}
-    		} else if(rightExpression.type) {
-    			blockParamIndex = 2;
-    			param = this.assemble(rightExpression);
-    			console.log("rightExpression", param);
-    			
-    			params.push(param);
-    		}
-
-    		result = { type: blockType, params: params };
-    	}
-
-    	return result;
-    };
-
-    p.unaryTestExpression = function(expression) {
-    	var value = expression.value;
-
-    	console.log("if value", value);
-
-    	var targetSyntax;
-
-		//var blockType ;
-    	//var blockParamsType;
-    	//var blockDefParamsType;
-		//var blockParamIndex = 0;
-		var param;
-		var params = [];
-    	
-		if(value == true) {
-			targetSyntax = "True";
-
-			blockType = this.getBlockType(targetSyntax);
-        	//blockParamsType = Entry.BlockMetaExtractor.prototype.getParamsType(uTestBlockType);
-        	//blockDefParamsType = Entry.BlockMetaExtractor.prototype.getDefParamsType(uTestBlockType);
-			//blockParamIndex = 0;
-			params = [];
-
-			param = this.assemble(expression);
-			
-			params.push(param);
-			
-		} else if(value == false) {
-			targetSyntax = "False";
-
-			//uTestBlockType = this.getBlockType(targetSyntax);
-        	//uTestBlockParamsType = Entry.BlockMetaExtractor.prototype.getParamsType(uTestBlockType);
-        	//uTestBlockDefParamsType = Entry.BlockMetaExtractor.prototype.getDefParamsType(uTestBlockType);
-			//uTestBlockParamIndex = 0;
-			params = [];
-
-			param = this.assemble(expression);
-		
-			params.push(param);
-		} 
-		return params;
-    };
-
-
-
-    p.arguments = function(component) {
-    	console.log("arguments component", component);
-    	var result;
-
-    	var params = [];
-    	var param;
-    	
-    	var arguments = component.arguments;
-
-        for(var index in arguments) {
-            if(blockParamsType[index] == "Indicator"){
-            	param = null;
-            	arguments.splice(index, 0, param);
-            }
-            else if(blockParamsType[index] == "Block") {
-            	blockParamIndex = index;
-            	param = this.assemble(arguments[index]);
-            }
-            else if(blockParamsType[index] == "Keyboard") {
-            	 param = Entry.KeyboardCodeMap.prototype.keyCharToCode[arguments[index].value];	
-            }
-            else {	
-            	var arg = arguments[index].value;
-
-            	var isParticularBlock = Entry.ParticularBlockProcessing.prototype.isParticularBlock(blockType);
-	            if(isParticularBlock) {
-	            	params.push(null);
-	            	params.push(param);
-	            	params.push(null);
-	            	break;
-	            } 
-            	
-            }
-	        params.push(param);     
-        }
-		return params;
-	}
-
     p.getBlockType = function(syntax) {
         return this.blockSyntax[syntax];
     };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //old
-    /*(function(p){
-	p.assemble = function(component) {
-		console.log("component", component);
-        var result;
-        switch(component.type) {
-            case 'ExpressionStatement' : {
-            	console.log("ExpressionStatement component", component);
-            	var reusult;
-
-            	var expression = component.expression;
-            	
-            	if(expression) {
-            		result = this.assemble(expression);
-            	}
-
-            	var operator = expression.operator;
-            	if(operator && operator != null) {
-            		result = this.binaryTestExpression(expression);
-            	}
-
-	        	var value = expression.value;
-	        	if(value == true || value ==false) {
-	        		result = this.unaryTestExpression(expression);
-	        	}
-
-                console.log("ExpressionStatement result", result);
-                break;
-            }
-            case 'CallExpression' : {
-            	console.log("CallExpression component", component);
-            	var result;
-
-            	var callee = component.callee;
-
-            	var syntax = this.assemble(callee);
-            	var type = this.getBlockType(syntax);
-            	
-		        console.log("CallExpression type", type);
-            	
-            	var paramsSchema = Entry.block[type].params;
-            	console.log("paramsSchema", paramsSchema);
-            	var defParams = Entry.block[type].def.params;
-            	console.log("defParams", defParams);
-
-            	var arguments = component.arguments;
-            	var params = [];
-            	for(var i in arguments) {
-            		var argument = this.assemble(arguments[i]);
-            		for(var j in paramsSchema){
-	            		if(paramsSchema[j].type == "DropdownDynamic") {
-	            			var options = paramsSchema[j].options;
-	            			for(var k in options) {
-	            				console.log("options", options);
-	            				if(argument == options[k][0]){
-	            					console.log("options[k][0]", options[k][0]);
-	            					var param = options[k][1];
-	            					break;
-	            				}
-	            			}
-	            			console.log("param", param);
-	            			params.push(param);
-	            		} else if(paramsSchema[j].type == "Block") {
-	            				var dParams = defParams[j].params;
-	            				for(var k in dParams) {
-	            					var dParam = dParams[k];
-	            					
-	            				}
-	            				var param = {type : defParams[j].type, params: }
-
-	            		}
-	            	}
-	            	
-	            }
-
-
-
-            	   
-        		result = { type: blockType, params: params };
-
-        		console.log("CallExpression result", result);
-            	break;
-            }
-            case 'MemberExpression' : {
-            	console.log("MemberExpression component", component);
-
-            	var result;
-            	var objectName = this.assemble(component.object);
-            	var propertyName = this.assemble(component.property);
-            	
-            	result = String(objectName).concat(".").concat(propertyName);
-            	
-            	
-            	
-
-            	console.log("MemberExpression result", result);
-		       
-
-            	break;
-            }
-            case 'Literal' : {
-            	console.log("Literal component", component);
-            	var result;
-            	
-            	var value = component.value;
-            	
-
-
-
-            	result = value;
-            	console.log("Literal result", result);
-            	
-            	break;
-            }
-            case 'Identifier' : {
-            	console.log("Identifiler component", component);
-            	var result;
-            	result = component.name;
-
-            	break;
-            }
-            case 'WhileStatement' : {
-            	console.log("WhileStatement component", component);
-            	
-            	var targetSyntax = String("while True:\n$1");
-		        var blockType = this.getBlockType(targetSyntax);
-		        
-            	var test = component.test;
-                var params = [];
-                var param = this.assemble(test);
-            	params.push(param);
-
-		        var statements = [];
-		        var body = component.body.body;
-		        
-		        for(var index in body) {
-		        	var b = body[index];
-		        	var component = this.assemble(b);
-		        	statements.push(component);
-		        }
-
-		        result = { type: blockType, statements: [statements] };
-		        
-		        console.log("WhileStatement result", result); 
-                break;
-            }
-            case 'BlockStatement' : {
-            	console.log("BlockStatement component", component);
-            	var init = component.body[0].declarations[0].init;
-		        if(init) {
-		        	result = this.assemble(init);
-		        	console.log("result", result);
-            	}
-		
-            	var consequent = component.body[1].consequent;
-            	var body = consequent.body[0].body;
-            	body.shift();
-            	var statements = [];
-            	for(var index in body) {
-            		console.log("body[index].type", body[index].type);
-            		var component = this.assemble(body[index]);
-            		statements.push(component);
-            	}
-
-            	var statementsArr = [];
-            	statementsArr.push(statements);
-
-		        result.statements = statementsArr;
-
-		        console.log("BlockStatement result", result);
-                break;
-            }
-        	case 'IfStatement' : {
-            	console.log("IfStatement component", component);
-            	var consequent = component.consequent;
-		        var alternate = component.alternate;
-            	var test = component.test;
-            	
-                var params = [];
-
-                if(alternate == null) {
-		    		var targetSyntax = String("if %1:\n$1");
-		        	var blockType = this.getBlockType(targetSyntax);
-		       	} else {
-		       		var targetSyntax = String("if %1:\n$1\nelse:\n$2");
-		        	var blockType = this.getBlockType(targetSyntax);
-		       	}
-
-		       	var operator = expression.operator;
-            	if(operator && operator != null) {
-            		params = this.binaryTestExpression(expression);
-            	}
-
-	        	var value = test.value;
-	        	if(value == true || value ==false) {
-	        		params = this.unaryTestExpression(test);
-	        	}
-
-		        var ifStatements = [];
-		        var elseStatements = [];
-		        if(consequent != null) {
-		        	var body = consequent.body;
-	            	for(var index in body) {
-	            		var component = this.assemble(body[index]);
-	            		ifStatements.push(component);
-	            	}
-	            	result = { type: blockType, params: params, statements: [ifStatements] };
-	            }
-
-            	if(alternate != null) {
-            		var body = alternate.body;
-	            	for(var index in body) {
-	            		var component = this.assemble(body[index]);
-	            		elseStatements.push(component);
-	            	}
-	            	result = { type: blockType, params: params, statements: [ifStatements, elseStatements] };
-	            }
-
-		        console.log("IfStatement result", result);
-		        break;
-        	} 
-        	case 'BreakStatement' : {
-            	console.log("BreakStatement component", component);
-
-            	var targetSyntax = String("break");
-            	var blockType = this.getBlockType(targetSyntax);
-
-            	result = { type: blockType };
-
-            	console.log("BreakStatement result", result);
-            	break;
-            }
-            case 'UnaryExpression' : {
-            	console.log("UnaryExpression component", component, blockType, paramsType, paramIndex);
-            	
-            	var blockType;
-            	var param;
-            	var arg;
-            	if(component.prefix){
-		        	arg = component.operator.concat(component.argument.value);
-            	}
-
-				if(paramIndex) {
-	            	blockType = paramsType[paramIndex];
-
-	            	var paramType = Entry.BlockObjectMap.prototype.getDropdownDynamicType[blockType];
-	            	console.log("literal variable convertor", arg, paramType);
-
-	            	param = Entry.AssemblerObjectConvertor.prototype.convert(paramType, arg);
-	            } else {
-	            	blockType = "text";
-	            	param = arg;
-	            }
-
-				result = { type: type, params: [param] };
-
-            	console.log("UnaryExpression result", result);
-	           	
-            	break;
-            }
-        }
-        	
-        return result;
-    };
-
-    p.binaryTestExpression = function(expression) {
-    	var result;
-    	var operator = expression.operator;
-    	if(operator && operator != null) {
-    		console.log("operator", operator);
-
-    		if(operator == "&&") {
-    			var targetSyntax = "%1 and %3";
-    		} else if(operator == "||") {
-    			var targetSyntax = "%1 or %3";
-    		} else {
-    			var targetSyntax = "%1 %2 %3";
-    		}
-
-    		var blockType = this.getBlockType(targetSyntax);
-	        
-            var params = [];
-            var param;
-            console.log("blockType", blockType);
-            console.log("expression ex", expression);
-            
-
-            var leftExpression = expression.left;
-    		if(leftExpression.left) {
-    			param = this.binaryTestExpression(leftExpression);
-    			if(param) {
-    				params.push(param);
-    			}
-    		} else if(leftExpression.type) {
-    			blockParamIndex = 0;
-    			param = this.assemble(leftExpression, blockType);
-    			params.push(param);
-    		} 
-
-    		console.log("before cv operator", operator);
-    		if(operator.length != 0) {
-    			console.log("opoopop", operator);
-    			operator = String(operator);
-    			operator = Entry.AssemblerValueConvertor.prototype.binaryOperatorValueConvertor(operator);
-    			console.log("cv operator", operator);
-    			param = operator;
-    			params.push(param);
-    		}
-
-    		var rightExpression = expression.right;
-    		if(rightExpression.left) {
-    			param = this.binaryTestExpression(rightExpression);
-    			if(param) {
-    				params.push(param);
-    			}
-    		} else if(rightExpression.type) {
-    			blockParamIndex = 2;
-    			param = this.assemble(rightExpression);
-    			console.log("rightExpression", param);
-    			
-    			params.push(param);
-    		}
-
-    		result = { type: blockType, params: params };
-    	}
-
-    	return result;
-    };
-
-    p.unaryTestExpression = function(expression) {
-    	var value = expression.value;
-
-    	console.log("if value", value);
-
-    	var targetSyntax;
-
-		
-		var param;
-		var params = [];
-    	
-		if(value == true) {
-			targetSyntax = "True";
-
-			blockType = this.getBlockType(targetSyntax);
-        	
-			params = [];
-
-			param = this.assemble(expression);
-			
-			params.push(param);
-			
-		} else if(value == false) {
-			targetSyntax = "False";
-
-			
-			params = [];
-
-			param = this.assemble(expression);
-		
-			params.push(param);
-		} 
-		return params;
-    };
-
-    p.arguments = function(component) {
-    	console.log("arguments component", component);
-    	var result;
-
-    	var params = [];
-    	var param;
-    	
-    	var arguments = component.arguments;
-
-        for(var index in arguments) {
-            if(blockParamsType[index] == "Indicator"){
-            	param = null;
-            	arguments.splice(index, 0, param);
-            }
-            else if(blockParamsType[index] == "Block") {
-            	blockParamIndex = index;
-            	param = this.assemble(arguments[index]);
-            }
-            else if(blockParamsType[index] == "Keyboard") {
-            	 param = Entry.KeyboardCodeMap.prototype.keyCharToCode[arguments[index].value];	
-            }
-            else {	
-            	var arg = arguments[index].value;
-
-            	var isParticularBlock = Entry.ParticularBlockProcessing.prototype.isParticularBlock(blockType);
-	            if(isParticularBlock) {
-	            	params.push(null);
-	            	params.push(param);
-	            	params.push(null);
-	            	break;
-	            } 
-            	
-            }
-	        params.push(param);     
-        }
-		return params;
-	}
-
-    p.getBlockType = function(syntax) {
-        return this.blockSyntax[syntax];
-    };*/
+    
     
 })(Entry.PyBlockAssembler.prototype);

@@ -8333,7 +8333,7 @@ Entry.block = {
                     return Number(leftValue) <= Number(rightValue);
             }
         },
-        "syntax": {"js": [], "py": ["%1 %2 %3"]}
+        "syntax": {"js": [], "py": ["(%1 %2 %3)"]}
     },
     "show": {
         "color": "#EC4466",

@@ -61,15 +61,22 @@ Entry.TextCodingUtil = function() {
                 result = "LESS_OR_EQUAL";
                 break;
             }
+            default: {
+                result = operator;
+            }
+        }
+        return result;
+    };
+
+    p.logicalExpressionConvert = function(operator) {
+        console.log("logicalExpressionConvert", operator);
+        var result;
+        switch(operator) {
             case '&&': {
                 result = null;
                 break;
             }
             case '||': {
-                result = null;
-                break;
-            }
-            case '!': {
                 result = null;
                 break;
             }

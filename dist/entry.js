@@ -11498,13 +11498,16 @@ Entry.TextCodingUtil = function() {
       case "<=":
         a = "LESS_OR_EQUAL";
         break;
+    }
+    return a;
+  };
+  b.logicalExpressionConvert = function(a) {
+    console.log("logicalExpressionConvert", a);
+    switch(a) {
       case "&&":
         a = null;
         break;
       case "||":
-        a = null;
-        break;
-      case "!":
         a = null;
         break;
     }
@@ -11520,63 +11523,10 @@ Entry.PyBlockAssembler = function(b) {
   b.ExpressionStatement = function(a) {
     console.log("ExpressionStatement component", a);
     var b = {};
-    if (a = a.expression) {
-      var d = this[a.type](a);
-      b.type = d.type;
-      b.params = d.params;
-      result = b;
-    }
-    b = a.operator;
-    console.log("ExpressionStatement expression operator", a, oprator);
-    b && (result = this.binaryTestExpression(a));
-    b = a.value;
-    if (1 == b || 0 == b) {
-      result = this.unaryTestExpression(a);
-    }
+    a = a.expression;
+    "Literal" == a.type ? (a = this[a.type]({type:"Block", accept:"booleanMagnet"}, a), b.type = a.type, result = b, console.log("ExpressionStatement type literal", result)) : (a = this[a.type](a), b.type = a.type, b.params = a.params, result = b, console.log("ExpressionStatement type not literal", result));
     console.log("ExpressionStatement result", result);
     return result;
-  };
-  b.LogicalExpression = function(a) {
-    console.log("LogicalExpression component", a);
-    var b, d = {}, e = String(a.operator);
-    switch(e) {
-      case "&&":
-        var f = "%1 and %3";
-        break;
-      case "||":
-        f = "%1 or %3";
-        break;
-      default:
-        f = "%1 %2 %3";
-    }
-    var f = this.getBlockType(f), g = Entry.block[f].params;
-    console.log("LogicalExpression paramsMeta", g);
-    var h = [], e = a.left;
-    if (e.type && "Literal" == e.type) {
-      var k = this[e.type](g[0], e);
-      console.log("left", k);
-      h.push(k);
-    }
-    e = String(a.operator);
-    console.log("LogicalExpression operator", e);
-    e = Entry.TextCodingUtil.prototype.binaryOperatorConvert(e);
-    h.push(e);
-    console.log("operator", e);
-    a = a.right;
-    if (a.type && "Literal" == a.type) {
-      var l = this[a.type](g[2], a);
-      console.log("right", k);
-      h.push(l);
-    }
-    console.log("LogicalExpression leftData", k);
-    console.log("LogicalExpression operator", e);
-    console.log("LogicalExpression rightData", l);
-    console.log("LogicalExpression result", b);
-    d.type = f;
-    d.params = h;
-    b = d;
-    console.log("LogicalExpression result", b);
-    return b;
   };
   b.CallExpression = function(a) {
     console.log("CallExpression component", a);
@@ -11685,25 +11635,22 @@ Entry.PyBlockAssembler = function(b) {
   };
   b.WhileStatement = function(a) {
     console.log("WhileStatement component", a);
-    var b = {}, d = this.getBlockType("while True:\n$1"), e = a.test;
-    if (null != e) {
-      var f = Entry.block[d].params;
-      console.log("WhileStatement paramsMeta", f);
-      var g = [];
-      e.type = "Literal";
-      f = f[0];
-      e = "Indicator" == f.type ? null : this[e.type](f, e);
-      g.push(e);
-    }
-    e = [];
+    var b = {}, d = a.test, e;
+    1 == d.value && (e = this.getBlockType("while True:\n$1"));
+    console.log("WhileStatement type", e);
+    var f = Entry.block[e].params;
+    console.log("WhileStatement paramsMeta", f);
+    var g = [];
+    d && (d.type = "Literal", f = f[0], d = "Indicator" == f.type ? null : this[d.type](f, d), g.push(d));
+    d = [];
     a = a.body.body;
     for (var h in a) {
-      f = a[h], f = this[f.type](f), e.push(f);
+      f = a[h], f = this[f.type](f), d.push(f);
     }
-    b.type = d;
+    b.type = e;
     b.params = g;
     b.statements = [];
-    b.statements.push(e);
+    b.statements.push(d);
     console.log("WhileStatement result", b);
     return b;
   };
@@ -11739,15 +11686,7 @@ Entry.PyBlockAssembler = function(b) {
   b.Literal = function(a, b) {
     console.log("Literal paramMeta component", a, b);
     var d;
-    if (b.value) {
-      d = this["Param" + a.type](a, b.value);
-    } else {
-      if (b.operator) {
-        d = this[b.left.type](b.left);
-        var e = b.operator, f = this[b.right.type](b.right);
-        d = String(d).concat(String(e)).concat(String(f));
-      }
-    }
+    d = this["Param" + a.type](a, b.value);
     console.log("Literal result", d);
     return d;
   };
@@ -11823,68 +11762,56 @@ Entry.PyBlockAssembler = function(b) {
     console.log("UnaryExpression result", result);
     return result;
   };
+  b.LogicalExpression = function(a) {
+    console.log("LogicalExpression component", a);
+    var b = {}, d = String(a.operator);
+    switch(d) {
+      case "&&":
+        var e = "%1 and %3";
+        break;
+      case "||":
+        e = "%1 or %3";
+        break;
+      default:
+        e = "%1 and %3";
+    }
+    var e = this.getBlockType(e), f = Entry.block[e].params;
+    console.log("LogicalExpression paramsMeta", f);
+    var g = [], d = a.left;
+    d.type ? ("Literal" == d.type ? (d = this[d.type](f[0], d), console.log("LogicalExpression left Literal param", d)) : d = this[d.type](d), d && g.push(d), console.log("LogicalExpression left param", d)) : (d = a.left, this[d.type](d));
+    d = String(a.operator);
+    console.log("LogicalExpression operator", d);
+    d && (d = Entry.TextCodingUtil.prototype.logicalExpressionConvert(d), g.push(d));
+    d = a.right;
+    d.type ? ("Literal" == d.type ? (d = this[d.type](f[2], d), console.log("LogicalExpression right Literal param", d)) : d = this[d.type](d), d && g.push(d), console.log("LogicalExpression right param", d)) : (d = a.right, this[d.type](d));
+    b.type = e;
+    b.params = g;
+    console.log("LogicalExpression result", b);
+    return b;
+  };
   b.BinaryExpression = function(a) {
     console.log("BinaryExpression component", a);
-    var b = [], d, e = a.left;
-    e.type ? ((d = this[e.type](e)) && b.push(d), console.log("BinaryExpression param", d)) : (e = a.left, this(e));
-    if (d = a.operator) {
-      console.log("BinaryExpression operator", d), (d = String(d)) && b.push(d);
+    var b = {params:[]}, d = String(a.operator);
+    console.log("BinaryExpression operator", d);
+    if (d) {
+      var e = "(%1 %2 %3)"
+    }
+    console.log("BinaryExpression syntax", e);
+    e = this.getBlockType(e);
+    console.log("BinaryExpression type", e);
+    var f = Entry.block[e].params;
+    console.log("BinaryExpression paramsMeta", f);
+    var g = [], d = a.left;
+    d.type ? ("Literal" == d.type ? (d = this[d.type](f[0], d), console.log("BinaryExpression left Literal param", d)) : d = this[d.type](d), d && g.push(d), console.log("BinaryExpression left param", d)) : (d = a.left, this[d.type](d));
+    if (d = String(a.operator)) {
+      console.log("BinaryExpression operator", d), (d = Entry.TextCodingUtil.prototype.binaryOperatorConvert(d)) && g.push(d);
     }
     d = a.right;
-    e.type ? ((d = this[d.type](d)) && b.push(d), console.log("BinaryExpression param", d)) : (d = a.right, this(d));
-    console.log("BinaryExpression params", b);
+    d.type ? ("Literal" == d.type ? (d = this[d.type](f[2], d), console.log("BinaryExpression right Literal param", d)) : d = this[d.type](d), d && g.push(d), console.log("BinaryExpression right param", d)) : (d = a.right, this[d.type](d));
+    console.log("BinaryExpression params", g);
+    b.type = e;
+    b.params = g;
     console.log("BinaryExpression result", b);
-    return b;
-  };
-  b.binaryTestExpression = function(a) {
-    var b, d = a.operator;
-    if (d && null != d) {
-      console.log("operator", d);
-      b = this.getBlockType("&&" == d ? "%1 and %3" : "||" == d ? "%1 or %3" : "%1 %2 %3");
-      var e = [], f;
-      console.log("blockType", b);
-      console.log("expression ex", a);
-      f = a.left;
-      f.left ? (f = this.binaryTestExpression(f)) && e.push(f) : f.type && (blockParamIndex = 0, f = this.assemble(f, b), e.push(f));
-      console.log("before cv operator", d);
-      0 != d.length && (console.log("opoopop", d), d = String(d), d = Entry.AssemblerValueConvertor.prototype.binaryOperatorValueConvertor(d), console.log("cv operator", d), e.push(d));
-      a = a.right;
-      a.left ? (f = this.binaryTestExpression(a)) && e.push(f) : a.type && (blockParamIndex = 2, f = this.assemble(a), console.log("rightExpression", f), e.push(f));
-      b = {type:b, params:e};
-    }
-    return b;
-  };
-  b.unaryTestExpression = function(a) {
-    var b = a.value;
-    console.log("if value", b);
-    var d = [];
-    1 == b ? (blockType = this.getBlockType("True"), d = [], a = this.assemble(a), d.push(a)) : 0 == b && (d = [], a = this.assemble(a), d.push(a));
-    return d;
-  };
-  b.arguments = function(a) {
-    console.log("arguments component", a);
-    var b = [], d, arguments = a.arguments, e;
-    for (e in arguments) {
-      if ("Indicator" == blockParamsType[e]) {
-        d = null, arguments.splice(e, 0, d);
-      } else {
-        if ("Block" == blockParamsType[e]) {
-          blockParamIndex = e, d = this.assemble(arguments[e]);
-        } else {
-          if ("Keyboard" == blockParamsType[e]) {
-            d = Entry.KeyboardCodeMap.prototype.keyCharToCode[arguments[e].value];
-          } else {
-            if (Entry.ParticularBlockProcessing.prototype.isParticularBlock(blockType)) {
-              b.push(null);
-              b.push(d);
-              b.push(null);
-              break;
-            }
-          }
-        }
-      }
-      b.push(d);
-    }
     return b;
   };
   b.getBlockType = function(a) {
@@ -17697,7 +17624,7 @@ defs:[{params:[{type:"text", params:["10"]}, "EQUAL", {type:"text", params:["10"
     case "LESS_OR_EQUAL":
       return Number(d) <= Number(e);
   }
-}, syntax:{js:[], py:["%1 %2 %3"]}}, show:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null], type:"show"}, "class":"visibility", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["(%1 %2 %3)"]}}, show:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null], type:"show"}, "class":"visibility", isNotFor:[], func:function(b, a) {
   b.setVisible(!0);
   return a.callReturn();
 }, syntax:{js:[], py:["self.show()"]}}, hide:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null], type:"hide"}, "class":"visibility", isNotFor:[], func:function(b, a) {
