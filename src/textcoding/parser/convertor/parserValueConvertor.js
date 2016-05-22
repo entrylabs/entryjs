@@ -1,7 +1,7 @@
 /*
  *
  */
-"use strict";
+/*"use strict";
 
 goog.provide("Entry.ParserValueConvertor");
 
@@ -74,6 +74,22 @@ Entry.ParserValueConvertor = function() {
                 result = "||";
                 break;
             }
+            case 'PLUS': {
+                result = "+";
+                break;
+            }
+            case 'MINUS': {
+                result = "-";
+                break;
+            }
+            case 'MULTI': {
+                result = "*";
+                break;
+            }
+            case 'DIVIDE': {
+                result = "/";
+                break;
+            }
             default: {
                 result = operator;
             }
@@ -82,4 +98,4 @@ Entry.ParserValueConvertor = function() {
         console.log("booleanOperatorConvertor result", result);
         return result;
     }; 
-})(Entry.ParserValueConvertor.prototype);
+})(Entry.ParserValueConvertor.prototype);*/

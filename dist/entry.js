@@ -10883,15 +10883,6 @@ Entry.AssemblerObjectConvertor = function() {
 Entry.AssemblerTypeConvertor = function() {
 };
 (function(b) {
-  b.convert = function(a) {
-    console.log("AssemblerTypeConvertor", a);
-    switch(a) {
-      case "__pythonRuntime.functions.range":
-        a = "repeat_basic";
-        break;
-    }
-    return a;
-  };
 })(Entry.AssemblerTypeConvertor.prototype);
 Entry.AssemblerValueConvertor = function() {
 };
@@ -10938,59 +10929,6 @@ Entry.ParticularBlockTypeMap = function() {
 };
 (function(b) {
 })(Entry.ParticularParamTypeMap.prototype);
-Entry.ParserValueConvertor = function() {
-};
-(function(b) {
-  b.dropdownDynamicValueConvertor = function(a, b) {
-    console.log("dropdownDynamicValueConvertor", a, b);
-    var d = b.options, e = null, f;
-    for (f in d) {
-      e = d[f];
-      if ("null" == e[1]) {
-        return e = "none";
-      }
-      if ("mouse" == a || "wall" == a || "wall_up" == a || "wall_down" == a || "wall_right" == a || "wall_left" == a) {
-        return a;
-      }
-      console.log("value", a, "option[1]", e[1], "option[0]", e[0]);
-      if (a == e[1]) {
-        return e = e[0];
-      }
-    }
-    e = a;
-    console.log("b to py dd", e);
-    return e;
-  };
-  b.binaryOperatorValueConvertor = function(a) {
-    console.log("booleanOperatorValueConvertor", a);
-    switch(a) {
-      case "EQUAL":
-        console.log("EQUAL");
-        a = "==";
-        break;
-      case "GREATER":
-        a = ">";
-        break;
-      case "LESS":
-        a = "<";
-        break;
-      case "GREATER_OR_EQUAL":
-        a = ">=";
-        break;
-      case "LESS_OR_EQUAL":
-        a = "<=";
-        break;
-      case "\uadf8\ub9ac\uace0":
-        a = "&&";
-        break;
-      case "\ub610\ub294":
-        a = "||";
-        break;
-    }
-    console.log("booleanOperatorConvertor result", a);
-    return a;
-  };
-})(Entry.ParserValueConvertor.prototype);
 Entry.BlockToJsParser = function(b) {
   this.syntax = b;
   this._iterVariableCount = 0;
@@ -11338,7 +11276,7 @@ Entry.TextCodingUtil = function() {
     return a.match(/^-?\d+$|^-\d+$/) || a.match(/^-?\d+\.\d+$/) ? !0 : !1;
   };
   b.isBinaryOperator = function(a) {
-    return "==" == a || ">" == a || "<" == a || ">=" == a || "<=" == a ? !0 : !1;
+    return "==" == a || ">" == a || "<" == a || ">=" == a || "<=" == a || "+" == a || "-" == a || "*" == a || "/" == a ? !0 : !1;
   };
   b.binaryOperatorConvert = function(a) {
     console.log("binaryOperatorConvert", a);
@@ -11357,6 +11295,18 @@ Entry.TextCodingUtil = function() {
         break;
       case "<=":
         a = "LESS_OR_EQUAL";
+        break;
+      case "+":
+        a = "PLUS";
+        break;
+      case "-":
+        a = "MINUS";
+        break;
+      case "*":
+        a = "MULTIFLY";
+        break;
+      case "/":
+        a = "DIVIDE";
         break;
     }
     return a;
@@ -11423,6 +11373,67 @@ Entry.TextCodingUtil = function() {
     }
     return a;
   };
+  b.dropdownDynamicValueConvertor = function(a, b) {
+    console.log("dropdownDynamicValueConvertor", a, b);
+    var d = b.options, e = null, f;
+    for (f in d) {
+      e = d[f];
+      if ("null" == e[1]) {
+        return e = "none";
+      }
+      if ("mouse" == a || "wall" == a || "wall_up" == a || "wall_down" == a || "wall_right" == a || "wall_left" == a) {
+        return a;
+      }
+      console.log("value", a, "option[1]", e[1], "option[0]", e[0]);
+      if (a == e[1]) {
+        return e = e[0];
+      }
+    }
+    e = a;
+    console.log("b to py dd", e);
+    return e;
+  };
+  b.binaryOperatorValueConvertor = function(a) {
+    console.log("booleanOperatorValueConvertor", a);
+    switch(a) {
+      case "EQUAL":
+        console.log("EQUAL");
+        a = "==";
+        break;
+      case "GREATER":
+        a = ">";
+        break;
+      case "LESS":
+        a = "<";
+        break;
+      case "GREATER_OR_EQUAL":
+        a = ">=";
+        break;
+      case "LESS_OR_EQUAL":
+        a = "<=";
+        break;
+      case "\uadf8\ub9ac\uace0":
+        a = "&&";
+        break;
+      case "\ub610\ub294":
+        a = "||";
+        break;
+      case "PLUS":
+        a = "+";
+        break;
+      case "MINUS":
+        a = "-";
+        break;
+      case "MULTI":
+        a = "*";
+        break;
+      case "DIVIDE":
+        a = "/";
+        break;
+    }
+    console.log("booleanOperatorConvertor result", a);
+    return a;
+  };
 })(Entry.TextCodingUtil.prototype);
 Entry.PyBlockAssembler = function(b) {
   this.blockSyntax = b;
@@ -11430,6 +11441,25 @@ Entry.PyBlockAssembler = function(b) {
   this._blockStatments = [];
 };
 (function(b) {
+  b.Program = function(a) {
+    var b = [], d;
+    for (d in a) {
+      if ("Program" != a[d].type) {
+        return;
+      }
+      var e = [], f = a[d].body;
+      console.log("nodes", f);
+      for (d in f) {
+        var g = f[d], g = this[g.type](g);
+        console.log("checkitout", g);
+        g = this._assembler[g.type](g);
+        e.push(g);
+      }
+      console.log("thread", e);
+      b.push(e);
+    }
+    return b;
+  };
   b.ExpressionStatement = function(a) {
     console.log("ExpressionStatement component", a);
     var b = {};
@@ -11781,6 +11811,141 @@ Entry.PyBlockAssembler = function(b) {
   b.getBlockType = function(a) {
     return this.blockSyntax[a];
   };
+  b.FunctionDeclaration = function(a) {
+    console.log("FunctionDeclaration component", a);
+    console.log("FunctionDeclaration result", void 0);
+    return a;
+  };
+  b.RegExp = function(a) {
+    console.log("RegExp", a);
+    console.log("RegExp result", void 0);
+    return a;
+  };
+  b.Function = function(a) {
+    console.log("Function", a);
+    console.log("Function result", void 0);
+    return a;
+  };
+  b.EmptyStatement = function(a) {
+    console.log("EmptyStatement", a);
+    console.log("EmptyStatement result", void 0);
+    return a;
+  };
+  b.DebuggerStatement = function(a) {
+    console.log("DebuggerStatement", a);
+    console.log("DebuggerStatement result", void 0);
+    return a;
+  };
+  b.WithStatement = function(a) {
+    console.log("WithStatement", a);
+    console.log("WithStatement result", void 0);
+    return a;
+  };
+  b.ReturnStaement = function(a) {
+    console.log("ReturnStaement", a);
+    console.log("ReturnStaement result", void 0);
+    return a;
+  };
+  b.LabeledStatement = function(a) {
+    console.log("LabeledStatement", a);
+    console.log("LabeledStatement result", void 0);
+    return a;
+  };
+  b.BreakStatement = function(a) {
+    console.log("BreakStatement", a);
+    console.log("BreakStatement result", void 0);
+    return a;
+  };
+  b.ContinueStatement = function(a) {
+    console.log("ContinueStatement", a);
+    console.log("ContinueStatement result", void 0);
+    return a;
+  };
+  b.SwitchStatement = function(a) {
+    console.log("SwitchStatement", a);
+    console.log("SwitchStatement result", void 0);
+    return a;
+  };
+  b.SwitchCase = function(a) {
+    console.log("SwitchCase", a);
+    console.log("SwitchCase result", void 0);
+    return a;
+  };
+  b.ThrowStatement = function(a) {
+    console.log("ThrowStatement", a);
+    console.log("ThrowStatement result", void 0);
+    return a;
+  };
+  b.TryStatement = function(a) {
+    console.log("TryStatement", a);
+    console.log("TryStatement result", void 0);
+    return a;
+  };
+  b.CatchClause = function(a) {
+    console.log("CatchClause", a);
+    console.log("CatchClause result", void 0);
+    return a;
+  };
+  b.DoWhileStatement = function(a) {
+    console.log("DoWhileStatement", a);
+    console.log("DoWhileStatement result", void 0);
+    return a;
+  };
+  b.ForInStatement = function(a) {
+    console.log("ForInStatement", a);
+    console.log("ForInStatement result", void 0);
+    return a;
+  };
+  b.FunctionDeclaration = function(a) {
+    console.log("FunctionDeclaration", a);
+    console.log("FunctionDeclaration result", void 0);
+    return a;
+  };
+  b.ThisExpression = function(a) {
+    console.log("ThisExpression", a);
+    console.log("ThisExpression result", void 0);
+    return a;
+  };
+  b.ArrayExpression = function(a) {
+    console.log("ArrayExpression", a);
+    console.log("ArrayExpression result", void 0);
+    return a;
+  };
+  b.ObjectExpression = function(a) {
+    console.log("ObjectExpression", a);
+    console.log("ObjectExpression result", void 0);
+    return a;
+  };
+  b.Property = function(a) {
+    console.log("Property", a);
+    console.log("Property result", void 0);
+    return a;
+  };
+  b.FunctionExpression = function(a) {
+    console.log("FunctionExpression", a);
+    console.log("FunctionExpression result", void 0);
+    return a;
+  };
+  b.UpdateExpression = function(a) {
+    console.log("UpdateExpression", a);
+    console.log("UpdateExpression result", void 0);
+    return a;
+  };
+  b.ConditionalExpression = function(a) {
+    console.log("ConditionalExpression", a);
+    console.log("ConditionalExpression result", void 0);
+    return a;
+  };
+  b.NewExpression = function(a) {
+    console.log("NewExpression", a);
+    console.log("NewExpression result", void 0);
+    return a;
+  };
+  b.SequenceExpression = function(a) {
+    console.log("SequenceExpression", a);
+    console.log("SequenceExpression result", void 0);
+    return a;
+  };
 })(Entry.PyBlockAssembler.prototype);
 Entry.BlockToPyParser = function() {
 };
@@ -11829,14 +11994,14 @@ Entry.BlockToPyParser = function() {
       console.log("blockToken", l);
       if (0 !== l.length) {
         if (d.test(l)) {
-          if (console.log("blockParam", l.split("%")[1]), l = l.split("%")[1], l = "t" == l || "n" == l || "p" == l || "s" == l || "a" == l ? Number(0) : "b" == l || "&" == l || "|" == l ? Number(1) : "!" == l ? Number(2) : Number(l) - 1, console.log("schemaParams[index].type", f[l].type), "Indicator" == f[l].type && l++, "Block" == f[l].type) {
+          if (console.log("blockParam", l.split("%")[1]), l = l.split("%")[1], l = "t" == l || "n" == l || "p" == l || "s" == l || "a" == l ? Number(0) : Number(l) - 1, console.log("schemaParams[index].type", f[l].type), "Indicator" == f[l].type && l++, "Block" == f[l].type) {
             h += this.Block(g[l]).trim();
           } else {
             console.log("data param", g[l]);
             var n = this["Field" + f[l].type](g[l], f[l]);
             null == n && (n = f[l].text ? f[l].text : null);
             console.log("param first Result", n);
-            n = Entry.ParserValueConvertor.prototype.binaryOperatorValueConvertor(n);
+            n = Entry.TextCodingUtil.prototype.binaryOperatorValueConvertor(n);
             n = String(n);
             Entry.TextCodingUtil.prototype.isNumeric(n) || Entry.TextCodingUtil.prototype.isBinaryOperator(n) || (n = String('"' + n + '"'));
             h += n;
@@ -11868,7 +12033,7 @@ Entry.BlockToPyParser = function() {
   };
   b.FieldDropdownDynamic = function(a, b) {
     console.log("FieldDropdownDynamic", a);
-    return a = "null" == a ? "none" : Entry.ParserValueConvertor.prototype.dropdownDynamicValueConvertor(a, b);
+    return a = "null" == a ? "none" : Entry.TextCodingUtil.prototype.dropdownDynamicValueConvertor(a, b);
   };
   b.FieldImage = function(a) {
     console.log("FieldImage", a);
@@ -11906,6 +12071,802 @@ Entry.BlockToPyParser = function() {
   };
 })(Entry.BlockToPyParser.prototype);
 Entry.PyToBlockParser = function(b) {
+  this.blockSyntax = b;
+  this._blockStatmentIndex = 0;
+  this._blockStatments = [];
+};
+(function(b) {
+  b.Program = function(a) {
+    var b = [], d;
+    for (d in a) {
+      if ("Program" != a[d].type) {
+        return;
+      }
+      var e = [], f = a[d].body;
+      console.log("nodes", f);
+      for (d in f) {
+        var g = f[d], g = this[g.type](g);
+        e.push(g);
+      }
+      console.log("thread", e);
+      b.push(e);
+    }
+    return b;
+  };
+  b.ExpressionStatement = function(a) {
+    console.log("ExpressionStatement component", a);
+    var b = {};
+    a = a.expression;
+    "Literal" == a.type ? (a = this[a.type](a, {type:"Block", accept:"booleanMagnet"}), b.type = a.type, result = b, console.log("ExpressionStatement type literal", result)) : (a = this[a.type](a), b.type = a.type, b.params = a.params, result = b, console.log("ExpressionStatement type not literal", result));
+    console.log("ExpressionStatement result", result);
+    return result;
+  };
+  b.AssignmentExpression = function(a) {
+    console.log("AssignmentExpression component", a);
+    var b = [], d;
+    d = a.left;
+    d.type ? ("Literal" == d.type ? (d = this[d.type](d, paramsMeta[0]), console.log("AssignmentExpression left Literal param", d)) : d = this[d.type](d), d && b.push(d), console.log("AssignmentExpression left param", d)) : (d = a.left, this[d.type](d));
+    operator = String(a.operator);
+    console.log("AssignmentExpression operator", operator);
+    operator && (d = operator = Entry.TextCodingUtil.prototype.logicalExpressionConvert(operator), b.push(d));
+    d = a.right;
+    d.type ? ("Literal" == d.type ? (d = this[d.type](paramsMeta[2], d), console.log("AssignmentExpression right Literal param", d)) : d = this[d.type](d), d && b.push(d), console.log("AssignmentExpression right param", d)) : (d = a.right, this[d.type](d));
+    console.log("AssignmentExpression params", b);
+    console.log("AssignmentExpression result", result);
+    return result;
+  };
+  b.CallExpression = function(a) {
+    console.log("CallExpression component", a);
+    var b;
+    b = {};
+    var d = a.callee, d = this[d.type](d), arguments = a.arguments;
+    console.log("CallExpression calleeData", d, "calleeData typeof", typeof d);
+    var e = "object" != typeof d.object ? String(d.object).concat(".").concat(String(d.property)) : String(d.object.object).concat(".").concat(String(d.object.property)).concat(".").concat(String(d.property));
+    console.log("CallExpression syntax", e);
+    d = this.getBlockType(e);
+    console.log("CallExpression type1", d);
+    d || ("__pythonRuntime.functions.range" == e ? d = this.getBlockType("for i in range(%1):\n$1") : "__pythonRuntime.ops.add" == e ? "number" == typeof arguments[0].value ? (d = this.getBlockType("(%1 %2 %3)"), argumentData = {raw:"PLUS", type:"Literal", value:"PLUS"}, arguments.splice(1, 0, argumentData)) : "string" == typeof arguments[0].value && (d = this.getBlockType("%2 + %4")) : "__pythonRuntime.ops.multiply" == e ? (d = this.getBlockType("(%1 %c %3)"), argumentData = {raw:"MULTI", type:"Literal", 
+    value:"MULTI"}, arguments.splice(1, 0, argumentData)) : "__pythonRuntime.functions.len" == e && (d = this.getBlockType("len(%2)")));
+    console.log("CallExpression type2", d);
+    e = Entry.block[d].params;
+    console.log("CallExpression paramsMeta", e);
+    var f = [];
+    console.log("CallExpression componet.arguments", arguments);
+    console.log("CallExpression paramsMeta", e);
+    for (var g in e) {
+      var h = e[g].type;
+      "Indicator" == h ? (h = {raw:null, type:"Literal", value:null}, g < arguments.length && arguments.splice(g, 0, h)) : "Text" == h && (h = {raw:"", type:"Literal", value:""}, g < arguments.length && arguments.splice(g, 0, h));
+    }
+    for (var k in arguments) {
+      g = arguments[k], console.log("CallExpression argument", g), "Literal" == g.type && (console.log("CallExpression argument index", g.type, k), g = this[g.type](g, e[k], d, k), f.push(g), console.log("CallExpression i", k));
+    }
+    console.log("CallExpression params", f);
+    b.type = d;
+    b.params = f;
+    console.log("CallExpression result", b);
+    return b;
+  };
+  b.Literal = function(a, b, d, e) {
+    console.log("Literal component paramMeta bockType particularIndex", a, b, d, e);
+    var f = a.value;
+    if (b) {
+      if ("Indicator" == b.type) {
+        return null;
+      }
+      if ("Text" == b.type) {
+        return "";
+      }
+    }
+    void 0 != f && null != f ? (console.log("Literal value", f), a = b ? d ? this["Param" + b.type](f, b, d, e) : this["Param" + b.type](f, b) : f) : (b = [], d = this[a.left.type](a.left), b.push(d), b.push(a.operator), a = this[a.right.type](a.right), b.push(a), a = b);
+    console.log("Literal result", a);
+    return a;
+  };
+  b.ParamColor = function(a, b) {
+    console.log("ParamColor value, paramMeta", a, b);
+    console.log("ParamColor result", a);
+    return a;
+  };
+  b.ParamDropdown = function(a, b) {
+    console.log("ParamDropdown value, paramMeta", a, b);
+    console.log("ParamDropdownDynamic result", a);
+    return a;
+  };
+  b.ParamDropdownDynamic = function(a, b) {
+    console.log("ParamDropdownDynamic value, paramMeta", a, b);
+    var d;
+    if ("mouse" == a || "wall" == a || "wall_up" == a || "wall_down" == a || "wall_right" == a || "wall_left" == a) {
+      return a;
+    }
+    var e = b.options;
+    console.log("ParamDropdownDynamic options", e);
+    for (var f in e) {
+      if (console.log("options", e), a == e[f][0]) {
+        console.log("options[i][0]", e[f][0]);
+        d = e[f][1];
+        break;
+      }
+    }
+    console.log("ParamDropdownDynamic result", d);
+    return d;
+  };
+  b.ParamKeyboard = function(a, b) {
+    console.log("ParamKeyboard value, paramMeta", a, b);
+    var d;
+    d = Entry.KeyboardCodeMap.prototype.keyCharToCode[a];
+    console.log("ParamKeyboard result", d);
+    return d;
+  };
+  b.ParamBlock = function(a, b, d, e) {
+    console.log("ParamBlock value, paramMeta blockType particularIndex", a, b, d, e);
+    var f = {}, g = [];
+    d = Entry.TextCodingUtil.prototype.particularParam(d);
+    if (null != d) {
+      var h = d[e];
+      if (h) {
+        h = d[e];
+        console.log("ParamBlock particularType", h);
+        e = h;
+        f.type = e;
+        d = Entry.block[e].params;
+        console.log("ParamBlock particular block paramsMeta", b);
+        var k, l;
+        for (l in d) {
+          b = d[l];
+          b = b.options;
+          for (var n in b) {
+            h = b[n], a == h[0] && (k = h[1]);
+          }
+        }
+        g.push(k);
+        f.params = g;
+      } else {
+        switch(e = typeof a, e) {
+          case "number":
+            f.type = "number";
+            g.push(a);
+            f.params = g;
+            break;
+          case "boolean":
+            1 == a ? f.type = "True" : 0 == a && (f.type = "False");
+            break;
+          default:
+            f.type = "text", g.push(a), f.params = g;
+        }
+      }
+    } else {
+      switch(e = typeof a, e) {
+        case "number":
+          f.type = "number";
+          g.push(a);
+          f.params = g;
+          break;
+        case "boolean":
+          1 == a ? f.type = "True" : 0 == a && (f.type = "False");
+          break;
+        default:
+          f.type = "text", g.push(a), f.params = g;
+      }
+    }
+    console.log("ParamBlock valueType", e);
+    console.log("ParamBlock result", f);
+    return f;
+  };
+  b.Indicator = function(a, b, d) {
+  };
+  b.MemberExpression = function(a) {
+    console.log("MemberExpression component", a);
+    var b = {}, d = a.object;
+    a = a.property;
+    d = this[d.type](d);
+    a = this[a.type](a);
+    console.log("MemberExpression objectData", d);
+    console.log("MemberExpression structure", a);
+    b.object = d;
+    b.property = a;
+    console.log("MemberExpression result", b);
+    return b;
+  };
+  b.Identifier = function(a) {
+    console.log("Identifiler component", a);
+    a = a.name;
+    console.log("Identifiler result", a);
+    return a;
+  };
+  b.WhileStatement = function(a) {
+    console.log("WhileStatement component", a);
+    var b = {}, d = a.test, e;
+    1 == d.value && (e = this.getBlockType("while True:\n$1"));
+    console.log("WhileStatement type", e);
+    var f = Entry.block[e].params;
+    console.log("WhileStatement paramsMeta", f);
+    var g = [];
+    d && (d.type = "Literal", f = f[0], d = "Indicator" == f.type ? null : this[d.type](d, f), g.push(d));
+    d = [];
+    a = a.body.body;
+    for (var h in a) {
+      f = a[h], f = this[f.type](f), d.push(f);
+    }
+    b.type = e;
+    b.params = g;
+    b.statements = [];
+    b.statements.push(d);
+    console.log("WhileStatement result", b);
+    return b;
+  };
+  b.BlockStatement = function(a) {
+    this._blockStatments = [];
+    var b = {};
+    a = a.body;
+    console.log("block body", a);
+    for (var d in a) {
+      var e = a[d];
+      console.log("BlockStatement body", e);
+      if ("ExpressionStatement" == e.type) {
+        e = this[e.type](e), console.log("bodyData", e), this._blockStatments.push(e);
+      } else {
+        if ("ForStatement" != e.type) {
+          if (e = this[e.type](e), e.type && (this._blockStatments.push(e), console.log("body block", e)), e.declarations) {
+            e = e.declarations[0], b.params = e.init.params, b.type = e.init.type, console.log("BlockStatement structure", b);
+          } else {
+            if ("ForInStatement" != e && e.type && (console.log("final", e), e.body)) {
+              e = this[e.type](e);
+              a = e.body.body;
+              for (var f in a) {
+                e = a[f], b = this[e.type](e), console.log("Ex stmtData big", b), b.type && (this._blockStatments.push(b), console.log("BlockStatement stmtData", b, "index", this._blockStatmentIndex));
+              }
+              this._blockStatments.splice(0, this._blockStatments.length / 2);
+              return;
+            }
+          }
+        }
+      }
+    }
+    console.log("BlockStatement structure", b);
+    console.log("BlockStatement statements", this._blockStatments, "global index", this._blockStatmentIndex);
+    console.log("BlockStatement total index", this._blockStatmentIndex, "structure", b, "stmt", this._blockStatments);
+    this._blockStatmentIndex++;
+    b.statements = [this._blockStatments];
+    console.log("BlockStatement statement result", b, "index", this._blockStatmentIndex);
+    return b;
+  };
+  b.IfStatement = function(a) {
+    console.log("IfStatement component", a);
+    var b = {statements:[]}, d, e = [], f = a.test, g = a.alternate;
+    a = a.consequent;
+    if (null != f) {
+      if (e = [], f.type = "Literal", f.value) {
+        d = this.getBlockType(null == g ? "if %1:\n$1" : "if %1:\n$1\nelse:\n$2"), b.type = d, d = Entry.block[d].params, console.log("IfStatement paramsMeta", d), f = this[f.type](f, d[0]), e.push(f), console.log("IfStatement param", f), e.push(null);
+      } else {
+        d = this[f.left.type](f.left);
+        var h = f.operator, f = this[f.right.type](f.right), f = d.concat(" ").concat(h).concat(" ").concat(f);
+        b.test = f;
+      }
+    }
+    null != a && (a = this[a.type](a), console.log("IfStatement consequentData", a), a && b.statements.push(a.statements[0]));
+    null != g && (g = this[g.type](g), console.log("IfStatement alternateData", g), g && b.statements.push(g.statements[0]));
+    console.log("IfStatement params", e);
+    b.params = e;
+    console.log("IfStatement result", b);
+    return b;
+  };
+  b.VariableDeclaration = function(a) {
+    console.log("VariableDeclaration component", a);
+    var b = {declarations:[]};
+    a = a.declarations;
+    for (var d in a) {
+      var e = a[d], e = this[e.type](e);
+      console.log("VariableDeclaration declarationData", e);
+      b.declarations.push(e);
+    }
+    console.log("VariableDeclaration result", b);
+    return b;
+  };
+  b.VariableDeclarator = function(a) {
+    console.log("VariableDeclarator component", a);
+    var b = {}, d = a.id, d = this[d.type](d);
+    console.log("VariableDeclarator idData", d);
+    b.id = d;
+    a = a.init;
+    a = this[a.type](a);
+    b.init = a;
+    console.log("VariableDeclarator initData", a);
+    console.log("VariableDeclarator result", b);
+    return b;
+  };
+  b.BreakStatement = function(a) {
+    console.log("BreakStatement component", a);
+    a = {};
+    var b = this.getBlockType("break");
+    a.type = b;
+    console.log("BreakStatement result", a);
+    return a;
+  };
+  b.UnaryExpression = function(a) {
+    console.log("UnaryExpression component", a);
+    var b = [];
+    a.prefix && (a = a.operator.concat(a.argument.value), b.push(a));
+    result.params = b;
+    console.log("UnaryExpression result", result);
+    return result;
+  };
+  b.LogicalExpression = function(a) {
+    console.log("LogicalExpression component", a);
+    var b = {}, d = String(a.operator);
+    switch(d) {
+      case "&&":
+        var e = "%1 and %3";
+        break;
+      case "||":
+        e = "%1 or %3";
+        break;
+      default:
+        e = "%1 and %3";
+    }
+    var e = this.getBlockType(e), f = Entry.block[e].params;
+    console.log("LogicalExpression paramsMeta", f);
+    var g = [], d = a.left;
+    d.type ? ("Literal" == d.type ? (d = this[d.type](d, f[0]), console.log("LogicalExpression left Literal param", d)) : d = this[d.type](d), d && g.push(d), console.log("LogicalExpression left param", d)) : (d = a.left, this[d.type](d));
+    d = String(a.operator);
+    console.log("LogicalExpression operator", d);
+    d && (d = Entry.TextCodingUtil.prototype.logicalExpressionConvert(d), g.push(d));
+    d = a.right;
+    d.type ? ("Literal" == d.type ? (d = this[d.type](d, f[2]), console.log("LogicalExpression right Literal param", d)) : d = this[d.type](d), d && g.push(d), console.log("LogicalExpression right param", d)) : (d = a.right, this[d.type](d));
+    b.type = e;
+    b.params = g;
+    console.log("LogicalExpression result", b);
+    return b;
+  };
+  b.BinaryExpression = function(a) {
+    console.log("BinaryExpression component", a);
+    var b = {params:[]}, d = String(a.operator);
+    switch(d) {
+      case "==":
+        var e = "%1 %2 %3";
+        break;
+      case "!=":
+        e = "%2 != True";
+        break;
+      case "<":
+        e = "%1 %2 %3";
+        break;
+      case "<=":
+        e = "%1 %2 %3";
+        break;
+      case ">":
+        e = "%1 %2 %3";
+        break;
+      case ">=":
+        e = "%1 %2 %3";
+        break;
+      case "+":
+        e = "(%1 %2 %3)";
+        break;
+      case "-":
+        e = "(%1 %2 %3)";
+        break;
+      case "*":
+        e = "(%1 %2 %3)";
+        break;
+      case "/":
+        e = "(%1 %2 %3)";
+    }
+    console.log("BinaryExpression operator", d);
+    console.log("BinaryExpression syntax", e);
+    e = this.getBlockType(e);
+    console.log("BinaryExpression type", e);
+    var f = Entry.block[e].params;
+    console.log("BinaryExpression paramsMeta", f);
+    var g = [], h = a.left;
+    console.log("BinaryExpression left", h);
+    h.type ? ("Literal" == h.type ? (d = this[h.type](h, f[0]), console.log("BinaryExpression left Literal param", d)) : d = this[h.type](h), d && g.push(d), console.log("BinaryExpression left param", d)) : (h = a.left, this[h.type](h));
+    if (d = String(a.operator)) {
+      console.log("BinaryExpression operator", d), (d = Entry.TextCodingUtil.prototype.binaryOperatorConvert(d)) && g.push(d);
+    }
+    d = a.right;
+    d.type ? ("Literal" == d.type ? (d = this[d.type](d, f[2]), console.log("BinaryExpression right Literal param", d)) : d = this[d.type](d), d && g.push(d), console.log("BinaryExpression right param", d)) : (d = a.right, this[d.type](d));
+    "boolean_not" == e && (g = [""], g[1] = this[h.type](h, f[1]), g[2] = "");
+    console.log("BinaryExpression params", g);
+    b.type = e;
+    b.params = g;
+    console.log("BinaryExpression result", b);
+    return b;
+  };
+  b.ForStatement = function(a) {
+    console.log("ForStatement component", a);
+    var b = {statements:[]}, d = a.body;
+    console.log("ForStatement body", d);
+    this[d.type](d);
+    b.body = b.bodyData;
+    console.log("ForStatement statements", b.statements);
+    if (d = a.init) {
+      var e = this[d.type](d)
+    }
+    b.init = e;
+    console.log("ForStatement init", b.init);
+    e = a.test;
+    console.log("ForStatement test type", e.type);
+    if (e) {
+      var f = this[e.type](e)
+    }
+    b.test = f;
+    console.log("ForStatement test", b.test);
+    if (f = a.update) {
+      var g = this[f.type](f)
+    }
+    console.log("ForStatement updateData", g);
+    b.update = g;
+    console.log("ForStatement update", b.update);
+    console.log("ForStatement result", b);
+    return a;
+  };
+  b.ForInStatement = function(a) {
+    console.log("ForInStatement component", a);
+    var b = {statements:[]}, d = a.body;
+    console.log("ForInStatement body", d);
+    this[d.type](d);
+    b.body = b.bodyData;
+    if (d = a.left) {
+      var e = this[d.type](d)
+    }
+    b.left = e;
+    if (e = a.right) {
+      var f = this[e.type](e)
+    }
+    b.right = f;
+    console.log("ForInStatement result", b);
+    return a;
+  };
+  b.UpdateExpression = function(a) {
+    console.log("UpdateExpression", a);
+    var b = {}, d = a.argument;
+    if (d) {
+      var e = this[d.type](d)
+    }
+    b.argument = e;
+    b.operator = a.operator;
+    b.prefix = a.prefix;
+    console.log("UpdateExpression result", b);
+    return b;
+  };
+  b.getBlockType = function(a) {
+    return this.blockSyntax[a];
+  };
+  b.FunctionDeclaration = function(a) {
+    console.log("FunctionDeclaration component", a);
+    console.log("FunctionDeclaration result", void 0);
+    return a;
+  };
+  b.RegExp = function(a) {
+    console.log("RegExp", a);
+    console.log("RegExp result", void 0);
+    return a;
+  };
+  b.Function = function(a) {
+    console.log("Function", a);
+    console.log("Function result", void 0);
+    return a;
+  };
+  b.EmptyStatement = function(a) {
+    console.log("EmptyStatement", a);
+    console.log("EmptyStatement result", void 0);
+    return a;
+  };
+  b.DebuggerStatement = function(a) {
+    console.log("DebuggerStatement", a);
+    console.log("DebuggerStatement result", void 0);
+    return a;
+  };
+  b.WithStatement = function(a) {
+    console.log("WithStatement", a);
+    console.log("WithStatement result", void 0);
+    return a;
+  };
+  b.ReturnStaement = function(a) {
+    console.log("ReturnStaement", a);
+    console.log("ReturnStaement result", void 0);
+    return a;
+  };
+  b.LabeledStatement = function(a) {
+    console.log("LabeledStatement", a);
+    console.log("LabeledStatement result", void 0);
+    return a;
+  };
+  b.BreakStatement = function(a) {
+    console.log("BreakStatement", a);
+    console.log("BreakStatement result", void 0);
+    return a;
+  };
+  b.ContinueStatement = function(a) {
+    console.log("ContinueStatement", a);
+    console.log("ContinueStatement result", void 0);
+    return a;
+  };
+  b.SwitchStatement = function(a) {
+    console.log("SwitchStatement", a);
+    console.log("SwitchStatement result", void 0);
+    return a;
+  };
+  b.SwitchCase = function(a) {
+    console.log("SwitchCase", a);
+    console.log("SwitchCase result", void 0);
+    return a;
+  };
+  b.ThrowStatement = function(a) {
+    console.log("ThrowStatement", a);
+    console.log("ThrowStatement result", void 0);
+    return a;
+  };
+  b.TryStatement = function(a) {
+    console.log("TryStatement", a);
+    console.log("TryStatement result", void 0);
+    return a;
+  };
+  b.CatchClause = function(a) {
+    console.log("CatchClause", a);
+    console.log("CatchClause result", void 0);
+    return a;
+  };
+  b.DoWhileStatement = function(a) {
+    console.log("DoWhileStatement", a);
+    console.log("DoWhileStatement result", void 0);
+    return a;
+  };
+  b.FunctionDeclaration = function(a) {
+    console.log("FunctionDeclaration", a);
+    console.log("FunctionDeclaration result", void 0);
+    return a;
+  };
+  b.ThisExpression = function(a) {
+    console.log("ThisExpression", a);
+    console.log("ThisExpression result", void 0);
+    return a;
+  };
+  b.ArrayExpression = function(a) {
+    console.log("ArrayExpression", a);
+    console.log("ArrayExpression result", void 0);
+    return a;
+  };
+  b.ObjectExpression = function(a) {
+    console.log("ObjectExpression", a);
+    console.log("ObjectExpression result", void 0);
+    return a;
+  };
+  b.Property = function(a) {
+    console.log("Property", a);
+    console.log("Property result", void 0);
+    return a;
+  };
+  b.FunctionExpression = function(a) {
+    console.log("FunctionExpression", a);
+    console.log("FunctionExpression result", void 0);
+    return a;
+  };
+  b.ConditionalExpression = function(a) {
+    console.log("ConditionalExpression", a);
+    console.log("ConditionalExpression result", void 0);
+    return a;
+  };
+  b.NewExpression = function(a) {
+    console.log("NewExpression", a);
+    console.log("NewExpression result", void 0);
+    return a;
+  };
+  b.SequenceExpression = function(a) {
+    console.log("SequenceExpression", a);
+    console.log("SequenceExpression result", void 0);
+    return a;
+  };
+})(Entry.PyToBlockParser.prototype);
+Entry.Parser = function(b, a, c) {
+  this._mode = b;
+  this.syntax = {};
+  this.codeMirror = c;
+  this._lang = d || "js";
+  this._type = a;
+  this.availableCode = [];
+  "maze" === b ? (this._stageId = Number(Ntry.configManager.getConfig("stageId")), this.setAvailableCode(NtryData.config[this._stageId].availableCode, NtryData.player[this._stageId].code)) : b === Entry.Vim.WORKSPACE_MODE && this.mappingSyntax(Entry.Vim.WORKSPACE_MODE);
+  this.syntax.js = this.mappingSyntaxJs(b);
+  this.syntax.py = this.mappingSyntaxPy(b);
+  console.log("py syntax", this.syntax.py);
+  switch(this._lang) {
+    case "js":
+      this._parser = new Entry.JsToBlockParser(this.syntax);
+      var d = this.syntax, e = {}, f;
+      for (f in d.Scope) {
+        e[f + "();\n"] = d.Scope[f];
+      }
+      "BasicIf" in d && (e.front = "BasicIf");
+      CodeMirror.commands.javascriptComplete = function(a) {
+        CodeMirror.showHint(a, null, {globalScope:e});
+      };
+      c.on("keyup", function(a, b) {
+        !a.state.completionActive && 65 <= b.keyCode && 95 >= b.keyCode && CodeMirror.showHint(a, null, {completeSingle:!1, globalScope:e});
+      });
+      break;
+    case "py":
+      this._parser = new Entry.PyToBlockParser(this.syntax);
+      d = this.syntax;
+      e = {};
+      for (f in d.Scope) {
+        e[f + "();\n"] = d.Scope[f];
+      }
+      "BasicIf" in d && (e.front = "BasicIf");
+      CodeMirror.commands.javascriptComplete = function(a) {
+        CodeMirror.showHint(a, null, {globalScope:e});
+      };
+      c.on("keyup", function(a, b) {
+        !a.state.completionActive && 65 <= b.keyCode && 95 >= b.keyCode && CodeMirror.showHint(a, null, {completeSingle:!1, globalScope:e});
+      });
+      break;
+    case "blockJs":
+      this._parser = new Entry.BlockToJsParser(this.syntax);
+      d = this.syntax;
+      break;
+    case "blockPy":
+      this._parser = new Entry.BlockToPyParser(this.syntax), d = this.syntax;
+  }
+};
+(function(b) {
+  b.setParser = function(a, b, d) {
+    a === Entry.Vim.MAZE_MODE && (this._stageId = Number(Ntry.configManager.getConfig("stageId")), this.setAvailableCode(NtryData.config[this._stageId].availableCode, NtryData.player[this._stageId].code));
+    this.mappingSyntax(a);
+    this._type = b;
+    switch(b) {
+      case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
+        this._parser = new Entry.JsToBlockParser(this.syntax.js);
+        break;
+      case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
+        this._parser = new Entry.PyToBlockParser(this.syntax.py);
+        break;
+      case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
+        this._parser = new Entry.BlockToJsParser(this.syntax);
+        a = this.syntax;
+        var e = {}, f;
+        for (f in a.Scope) {
+          e[f + "();\n"] = a.Scope[f];
+        }
+        "BasicIf" in a && (e.front = "BasicIf");
+        d.setOption("mode", {name:"javascript", globalVars:!0});
+        CodeMirror.commands.autoCompletion = function(a) {
+          CodeMirror.showHint(a, null, {globalScope:e});
+        };
+        d.on("keyup", function(a, b) {
+          !a.state.completionActive && 65 <= b.keyCode && 95 >= b.keyCode && CodeMirror.showHint(a, null, {completeSingle:!1, globalScope:e});
+        });
+        break;
+      case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
+        this._parser = new Entry.BlockToPyParser;
+        a = this.syntax;
+        e = {};
+        for (f in a.Scope) {
+          e[f + "();\n"] = a.Scope[f];
+        }
+        "BasicIf" in a && (e.front = "BasicIf");
+        d.setOption("mode", {name:"python", globalVars:!0});
+        CodeMirror.commands.autocomplete = function(a) {
+          CodeMirror.showHint(a, null, {globalScope:e});
+        };
+        d.on("keyup", function(a, b) {
+          !a.state.completionActive && 65 <= b.keyCode && 95 >= b.keyCode && CodeMirror.showHint(a, null, {completeSingle:!1, globalScope:e});
+        });
+    }
+  };
+  b.parse = function(a) {
+    console.log("PARSER TYPE", this._type);
+    var b = null;
+    switch(this._type) {
+      case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
+        try {
+          var d = (new Entry.JsAstGenerator).generate(a), b = this._parser.Program(d);
+        } catch (h) {
+          this.codeMirror && (h instanceof SyntaxError ? (b = {from:{line:h.loc.line - 1, ch:h.loc.column - 2}, to:{line:h.loc.line - 1, ch:h.loc.column + 1}}, h.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : (b = this.getLineNumber(h.node.start, h.node.end), b.message = h.message, b.severity = "error", this.codeMirror.markText(b.from, b.to, {className:"CodeMirror-lint-mark-error", __annotation:b, clearOnEnter:!0})), Entry.toast.alert("Error", h.message)), b = [];
+        }
+        break;
+      case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
+        try {
+          var e = new Entry.PyAstGenerator;
+          console.log("code", a);
+          var f = a.split("\n\n");
+          f.splice(f.length - 1, 1);
+          console.log("threaded", f);
+          a = [];
+          for (var g in f) {
+            d = e.generate(f[g]), a.push(d);
+          }
+          console.log("astArr", a);
+          b = this._parser.Program(a);
+          console.log("result", b);
+        } catch (h) {
+          this.codeMirror && (h instanceof SyntaxError ? (b = {from:{line:h.loc.line - 1, ch:h.loc.column - 2}, to:{line:h.loc.line - 1, ch:h.loc.column + 1}}, h.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : (b = this.getLineNumber(h.node.start, h.node.end), b.message = h.message, b.severity = "error", this.codeMirror.markText(b.from, b.to, {className:"CodeMirror-lint-mark-error", __annotation:b, clearOnEnter:!0})), Entry.toast.alert("Error", h.message)), b = [];
+        }
+        break;
+      case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
+        b = this._parser.Code(a);
+        b = b.match(/(.*{.*[\S|\s]+?}|.+)/g);
+        b = Array.isArray(b) ? b.reduce(function(a, b, c) {
+          var d = "";
+          1 === c && (a += "\n");
+          d = -1 < b.indexOf("function") ? b + a : a + b;
+          return d + "\n";
+        }) : "";
+        break;
+      case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
+        b = this._parser.Code(a);
+    }
+    return b;
+  };
+  b.getLineNumber = function(a, b) {
+    var d = this.codeMirror.getValue(), e = {from:{}, to:{}}, f = d.substring(0, a).split(/\n/gi);
+    e.from.line = f.length - 1;
+    e.from.ch = f[f.length - 1].length;
+    d = d.substring(0, b).split(/\n/gi);
+    e.to.line = d.length - 1;
+    e.to.ch = d[d.length - 1].length;
+    return e;
+  };
+  b.mappingSyntax = function(a) {
+    for (var b = Object.keys(Entry.block), d = 0;d < b.length;d++) {
+      var e = b[d], f = Entry.block[e];
+      if (f.mode === a && -1 < this.availableCode.indexOf(e) && (f = f.syntax)) {
+        for (var g = this.syntax, h = 0;h < f.length;h++) {
+          var k = f[h];
+          if (h === f.length - 2 && "function" === typeof f[h + 1]) {
+            g[k] = f[h + 1];
+            break;
+          }
+          g[k] || (g[k] = {});
+          h === f.length - 1 ? g[k] = e : g = g[k];
+        }
+      }
+    }
+  };
+  b.setAvailableCode = function(a, b) {
+    var d = [];
+    a.forEach(function(a, b) {
+      a.forEach(function(a, b) {
+        d.push(a.type);
+      });
+    });
+    b instanceof Entry.Code ? b.getBlockList().forEach(function(a) {
+      a.type !== NtryData.START && -1 === d.indexOf(a.type) && d.push(a.type);
+    }) : b.forEach(function(a, b) {
+      a.forEach(function(a, b) {
+        a.type !== NtryData.START && -1 === d.indexOf(a.type) && d.push(a.type);
+      });
+    });
+    this.availableCode = this.availableCode.concat(d);
+  };
+  b.mappingSyntaxJs = function(a) {
+    for (var b = Object.keys(Entry.block), d = 0;d < b.length;d++) {
+      var e = b[d], f = Entry.block[e];
+      if (f.mode === a && -1 < this.availableCode.indexOf(e) && (f = f.syntax)) {
+        for (var g = this.syntax, h = 0;h < f.length;h++) {
+          var k = f[h];
+          if (h === f.length - 2 && "function" === typeof f[h + 1]) {
+            g[k] = f[h + 1];
+            break;
+          }
+          g[k] || (g[k] = {});
+          h === f.length - 1 ? g[k] = e : g = g[k];
+        }
+      }
+    }
+    return g;
+  };
+  b.mappingSyntaxPy = function(a) {
+    if (a == Entry.Vim.WORKSPACE_MODE) {
+      a = {};
+      var b = Entry.block, d;
+      for (d in b) {
+        var e = b[d], f = null;
+        e.syntax && e.syntax.py && (f = e.syntax.py);
+        f && (f = String(f), f.match(/.*\..*\)/) && (e = f.indexOf("("), f = f.substring(0, e)), a[f] = d);
+      }
+      return a;
+    }
+  };
+})(Entry.Parser.prototype);
+Entry.PyToBlockParserTemp = function(b) {
   this._assembler = new Entry.PyBlockAssembler(b);
 };
 (function(b) {
@@ -12135,7 +13096,7 @@ Entry.PyToBlockParser = function(b) {
   };
   b.ThisExpression = function(a) {
     console.log("ThisExpression", a);
-    return {type:a.type, type:a.type};
+    return {type:a.type};
   };
   b.ArrayExpression = function(a) {
     console.log("ArrayExpression", a);
@@ -12390,216 +13351,7 @@ Entry.PyToBlockParser = function(b) {
     }
     return {type:a.type, expressions:void 0};
   };
-})(Entry.PyToBlockParser.prototype);
-Entry.Parser = function(b, a, c) {
-  this._mode = b;
-  this.syntax = {};
-  this.codeMirror = c;
-  this._lang = d || "js";
-  this._type = a;
-  this.availableCode = [];
-  "maze" === b ? (this._stageId = Number(Ntry.configManager.getConfig("stageId")), this.setAvailableCode(NtryData.config[this._stageId].availableCode, NtryData.player[this._stageId].code)) : b === Entry.Vim.WORKSPACE_MODE && this.mappingSyntax(Entry.Vim.WORKSPACE_MODE);
-  this.syntax.js = this.mappingSyntaxJs(b);
-  this.syntax.py = this.mappingSyntaxPy(b);
-  console.log("py syntax", this.syntax.py);
-  switch(this._lang) {
-    case "js":
-      this._parser = new Entry.JsToBlockParser(this.syntax);
-      var d = this.syntax, e = {}, f;
-      for (f in d.Scope) {
-        e[f + "();\n"] = d.Scope[f];
-      }
-      "BasicIf" in d && (e.front = "BasicIf");
-      CodeMirror.commands.javascriptComplete = function(a) {
-        CodeMirror.showHint(a, null, {globalScope:e});
-      };
-      c.on("keyup", function(a, b) {
-        !a.state.completionActive && 65 <= b.keyCode && 95 >= b.keyCode && CodeMirror.showHint(a, null, {completeSingle:!1, globalScope:e});
-      });
-      break;
-    case "py":
-      this._parser = new Entry.PyToBlockParser(this.syntax);
-      d = this.syntax;
-      e = {};
-      for (f in d.Scope) {
-        e[f + "();\n"] = d.Scope[f];
-      }
-      "BasicIf" in d && (e.front = "BasicIf");
-      CodeMirror.commands.javascriptComplete = function(a) {
-        CodeMirror.showHint(a, null, {globalScope:e});
-      };
-      c.on("keyup", function(a, b) {
-        !a.state.completionActive && 65 <= b.keyCode && 95 >= b.keyCode && CodeMirror.showHint(a, null, {completeSingle:!1, globalScope:e});
-      });
-      break;
-    case "blockJs":
-      this._parser = new Entry.BlockToJsParser(this.syntax);
-      d = this.syntax;
-      break;
-    case "blockPy":
-      this._parser = new Entry.BlockToPyParser(this.syntax), d = this.syntax;
-  }
-};
-(function(b) {
-  b.setParser = function(a, b, d) {
-    a === Entry.Vim.MAZE_MODE && (this._stageId = Number(Ntry.configManager.getConfig("stageId")), this.setAvailableCode(NtryData.config[this._stageId].availableCode, NtryData.player[this._stageId].code));
-    this.mappingSyntax(a);
-    this._type = b;
-    switch(b) {
-      case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
-        this._parser = new Entry.JsToBlockParser(this.syntax.js);
-        break;
-      case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
-        this._parser = new Entry.PyToBlockParser(this.syntax.py);
-        break;
-      case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
-        this._parser = new Entry.BlockToJsParser(this.syntax);
-        a = this.syntax;
-        var e = {}, f;
-        for (f in a.Scope) {
-          e[f + "();\n"] = a.Scope[f];
-        }
-        "BasicIf" in a && (e.front = "BasicIf");
-        d.setOption("mode", {name:"javascript", globalVars:!0});
-        CodeMirror.commands.autoCompletion = function(a) {
-          CodeMirror.showHint(a, null, {globalScope:e});
-        };
-        d.on("keyup", function(a, b) {
-          !a.state.completionActive && 65 <= b.keyCode && 95 >= b.keyCode && CodeMirror.showHint(a, null, {completeSingle:!1, globalScope:e});
-        });
-        break;
-      case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
-        this._parser = new Entry.BlockToPyParser;
-        a = this.syntax;
-        e = {};
-        for (f in a.Scope) {
-          e[f + "();\n"] = a.Scope[f];
-        }
-        "BasicIf" in a && (e.front = "BasicIf");
-        d.setOption("mode", {name:"python", globalVars:!0});
-        CodeMirror.commands.autocomplete = function(a) {
-          CodeMirror.showHint(a, null, {globalScope:e});
-        };
-        d.on("keyup", function(a, b) {
-          !a.state.completionActive && 65 <= b.keyCode && 95 >= b.keyCode && CodeMirror.showHint(a, null, {completeSingle:!1, globalScope:e});
-        });
-    }
-  };
-  b.parse = function(a) {
-    console.log("PARSER TYPE", this._type);
-    var b = null;
-    switch(this._type) {
-      case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
-        try {
-          var d = (new Entry.JsAstGenerator).generate(a), b = this._parser.Program(d);
-        } catch (h) {
-          this.codeMirror && (h instanceof SyntaxError ? (b = {from:{line:h.loc.line - 1, ch:h.loc.column - 2}, to:{line:h.loc.line - 1, ch:h.loc.column + 1}}, h.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : (b = this.getLineNumber(h.node.start, h.node.end), b.message = h.message, b.severity = "error", this.codeMirror.markText(b.from, b.to, {className:"CodeMirror-lint-mark-error", __annotation:b, clearOnEnter:!0})), Entry.toast.alert("Error", h.message)), b = [];
-        }
-        break;
-      case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
-        try {
-          var e = new Entry.PyAstGenerator;
-          console.log("code", a);
-          var f = a.split("\n\n");
-          f.splice(f.length - 1, 1);
-          console.log("threaded", f);
-          a = [];
-          for (var g in f) {
-            d = e.generate(f[g]), a.push(d);
-          }
-          console.log("astArr", a);
-          b = this._parser.Program(a);
-          console.log("result", b);
-        } catch (h) {
-          this.codeMirror && (h instanceof SyntaxError ? (b = {from:{line:h.loc.line - 1, ch:h.loc.column - 2}, to:{line:h.loc.line - 1, ch:h.loc.column + 1}}, h.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : (b = this.getLineNumber(h.node.start, h.node.end), b.message = h.message, b.severity = "error", this.codeMirror.markText(b.from, b.to, {className:"CodeMirror-lint-mark-error", __annotation:b, clearOnEnter:!0})), Entry.toast.alert("Error", h.message)), b = [];
-        }
-        break;
-      case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
-        b = this._parser.Code(a);
-        b = b.match(/(.*{.*[\S|\s]+?}|.+)/g);
-        b = Array.isArray(b) ? b.reduce(function(a, b, c) {
-          var d = "";
-          1 === c && (a += "\n");
-          d = -1 < b.indexOf("function") ? b + a : a + b;
-          return d + "\n";
-        }) : "";
-        break;
-      case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
-        b = this._parser.Code(a);
-    }
-    return b;
-  };
-  b.getLineNumber = function(a, b) {
-    var d = this.codeMirror.getValue(), e = {from:{}, to:{}}, f = d.substring(0, a).split(/\n/gi);
-    e.from.line = f.length - 1;
-    e.from.ch = f[f.length - 1].length;
-    d = d.substring(0, b).split(/\n/gi);
-    e.to.line = d.length - 1;
-    e.to.ch = d[d.length - 1].length;
-    return e;
-  };
-  b.mappingSyntax = function(a) {
-    for (var b = Object.keys(Entry.block), d = 0;d < b.length;d++) {
-      var e = b[d], f = Entry.block[e];
-      if (f.mode === a && -1 < this.availableCode.indexOf(e) && (f = f.syntax)) {
-        for (var g = this.syntax, h = 0;h < f.length;h++) {
-          var k = f[h];
-          if (h === f.length - 2 && "function" === typeof f[h + 1]) {
-            g[k] = f[h + 1];
-            break;
-          }
-          g[k] || (g[k] = {});
-          h === f.length - 1 ? g[k] = e : g = g[k];
-        }
-      }
-    }
-  };
-  b.setAvailableCode = function(a, b) {
-    var d = [];
-    a.forEach(function(a, b) {
-      a.forEach(function(a, b) {
-        d.push(a.type);
-      });
-    });
-    b instanceof Entry.Code ? b.getBlockList().forEach(function(a) {
-      a.type !== NtryData.START && -1 === d.indexOf(a.type) && d.push(a.type);
-    }) : b.forEach(function(a, b) {
-      a.forEach(function(a, b) {
-        a.type !== NtryData.START && -1 === d.indexOf(a.type) && d.push(a.type);
-      });
-    });
-    this.availableCode = this.availableCode.concat(d);
-  };
-  b.mappingSyntaxJs = function(a) {
-    for (var b = Object.keys(Entry.block), d = 0;d < b.length;d++) {
-      var e = b[d], f = Entry.block[e];
-      if (f.mode === a && -1 < this.availableCode.indexOf(e) && (f = f.syntax)) {
-        for (var g = this.syntax, h = 0;h < f.length;h++) {
-          var k = f[h];
-          if (h === f.length - 2 && "function" === typeof f[h + 1]) {
-            g[k] = f[h + 1];
-            break;
-          }
-          g[k] || (g[k] = {});
-          h === f.length - 1 ? g[k] = e : g = g[k];
-        }
-      }
-    }
-    return g;
-  };
-  b.mappingSyntaxPy = function(a) {
-    if (a == Entry.Vim.WORKSPACE_MODE) {
-      a = {};
-      var b = Entry.block, d;
-      for (d in b) {
-        var e = b[d], f = null;
-        e.syntax && e.syntax.py && (f = e.syntax.py);
-        f && (f = String(f), f.match(/.*\..*\)/) && (e = f.indexOf("("), f = f.substring(0, e)), a[f] = d);
-      }
-      return a;
-    }
-  };
-})(Entry.Parser.prototype);
+})(Entry.PyToBlockParserTemp.prototype);
 Entry.Toast = function() {
   this.toasts_ = [];
   var b = document.getElementById("entryToastContainer");
@@ -16808,9 +17560,10 @@ a) {
   }
   c = Entry.container.getEntity(c);
   return Math.sqrt(Math.pow(b.getX() - c.getX(), 2) + Math.pow(b.getY() - c.getY(), 2));
-}, syntax:{js:[], py:[]}}, coordinate_mouse:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_coordinate_mouse_1, color:"#3D3D3D"}, {type:"Dropdown", options:[["x", "x"], ["y", "y"]], value:"x", fontSize:11}, {type:"Text", text:Lang.Blocks.CALC_coordinate_mouse_2, color:"#3D3D3D"}], events:{}, def:{params:[null, null, null], type:"coordinate_mouse"}, paramsKeyMap:{VALUE:1}, "class":"calc", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["Entry.get_distance(%2)"]}}, coordinate_mouse:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_coordinate_mouse_1, color:"#3D3D3D"}, {type:"Dropdown", options:[["x", "x"], ["y", "y"]], value:"x", fontSize:11}, {type:"Text", text:Lang.Blocks.CALC_coordinate_mouse_2, color:"#3D3D3D"}], events:{}, def:{params:[null, null, null], type:"coordinate_mouse"}, paramsKeyMap:{VALUE:1}, "class":"calc", isNotFor:[], func:function(b, 
+a) {
   return "x" === a.getField("VALUE", a) ? Number(Entry.stage.mouseCoordinate.x) : Number(Entry.stage.mouseCoordinate.y);
-}, syntax:{js:[], py:[]}}, coordinate_object:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_coordinate_object_1, color:"#3D3D3D"}, {type:"DropdownDynamic", value:null, menuName:"spritesWithSelf", fontSize:11}, {type:"Text", text:Lang.Blocks.CALC_coordinate_object_2, color:"#3D3D3D"}, {type:"Dropdown", options:[[Lang.Blocks.CALC_coordinate_x_value, "x"], [Lang.Blocks.CALC_coordinate_y_value, "y"], [Lang.Blocks.CALC_coordinate_rotation_value, 
+}, syntax:{js:[], py:["Entry.get_mouse_coordinate_value(%2)"]}}, coordinate_object:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_coordinate_object_1, color:"#3D3D3D"}, {type:"DropdownDynamic", value:null, menuName:"spritesWithSelf", fontSize:11}, {type:"Text", text:Lang.Blocks.CALC_coordinate_object_2, color:"#3D3D3D"}, {type:"Dropdown", options:[[Lang.Blocks.CALC_coordinate_x_value, "x"], [Lang.Blocks.CALC_coordinate_y_value, "y"], [Lang.Blocks.CALC_coordinate_rotation_value, 
 "rotation"], [Lang.Blocks.CALC_coordinate_direction_value, "direction"], [Lang.Blocks.CALC_coordinate_size_value, "size"], [Lang.Blocks.CALC_picture_index, "picture_index"], [Lang.Blocks.CALC_picture_name, "picture_name"]], value:"x", fontSize:11}], events:{}, def:{params:[null, null, null, null], type:"coordinate_object"}, paramsKeyMap:{VALUE:1, COORDINATE:3}, "class":"calc", isNotFor:[], func:function(b, a) {
   var c = a.getField("VALUE", a), c = "self" == c ? b : Entry.container.getEntity(c);
   switch(a.getField("COORDINATE", a)) {
@@ -16830,11 +17583,11 @@ a) {
     case "picture_name":
       return d = c.parent, d = d.pictures, d[d.indexOf(c.picture)].name;
   }
-}, syntax:{js:[], py:[]}}, calc_basic:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["+", "PLUS"], ["-", "MINUS"], ["x", "MULTI"], ["/", "DIVIDE"]], value:"PLUS", fontSize:11, noArrow:!0}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"number", params:["10"]}, "PLUS", {type:"number", params:["10"]}], type:"calc_basic"}, defs:[{params:[{type:"number", params:["10"]}, "PLUS", {type:"number", 
-params:["10"]}], type:"calc_basic"}, {params:[{type:"number", params:["10"]}, "MINUS", {type:"number", params:["10"]}], type:"calc_basic"}, {params:[{type:"number", params:["10"]}, "MULTI", {type:"number", params:["10"]}], type:"calc_basic"}, {params:[{type:"number", params:["10"]}, "DIVIDE", {type:"number", params:["10"]}], type:"calc_basic"}], paramsKeyMap:{LEFTHAND:0, OPERATOR:1, RIGHTHAND:2}, "class":"calc", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["Entry.object_coordinate_value(%2, %4)"]}}, calc_basic:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["+", "PLUS"], ["-", "MINUS"], ["x", "MULTI"], ["/", "DIVIDE"]], value:"PLUS", fontSize:11, noArrow:!0}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[{type:"number", params:["10"]}, "PLUS", {type:"number", params:["10"]}], type:"calc_basic"}, defs:[{params:[{type:"number", 
+params:["10"]}, "PLUS", {type:"number", params:["10"]}], type:"calc_basic"}, {params:[{type:"number", params:["10"]}, "MINUS", {type:"number", params:["10"]}], type:"calc_basic"}, {params:[{type:"number", params:["10"]}, "MULTI", {type:"number", params:["10"]}], type:"calc_basic"}, {params:[{type:"number", params:["10"]}, "DIVIDE", {type:"number", params:["10"]}], type:"calc_basic"}], paramsKeyMap:{LEFTHAND:0, OPERATOR:1, RIGHTHAND:2}, "class":"calc", isNotFor:[], func:function(b, a) {
   var c = a.getField("OPERATOR", a), d = a.getNumberValue("LEFTHAND", a), e = a.getNumberValue("RIGHTHAND", a);
   return "PLUS" == c ? d + e : "MINUS" == c ? d - e : "MULTI" == c ? d * e : d / e;
-}, syntax:{js:[], py:[]}}, calc_plus:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"+", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[null]}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, func:function(b, a) {
+}, syntax:{js:[], py:["(%1 %2 %3)"]}}, calc_plus:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"+", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[null]}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, func:function(b, a) {
   var c = a.getNumberValue("LEFTHAND", a), d = a.getNumberValue("RIGHTHAND", a);
   return c + d;
 }, syntax:{js:[], py:[]}}, calc_minus:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"-", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}], events:{}, def:{params:[null]}, paramsKeyMap:{LEFTHAND:0, RIGHTHAND:2}, func:function(b, a) {
@@ -16893,21 +17646,22 @@ params:["10"]}], type:"calc_basic"}, {params:[{type:"number", params:["10"]}, "M
       e = Math[d](c);
   }
   return Math.round(1E3 * e) / 1E3;
-}, syntax:{js:[], py:[]}}, calc_rand:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_calc_rand_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_calc_rand_2, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_calc_rand_3, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"number", params:["0"]}, null, {type:"number", params:["10"]}, null], type:"calc_rand"}, 
-paramsKeyMap:{LEFTHAND:1, RIGHTHAND:3}, "class":"calc", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["Entry.math_operation(%2, %4)"]}}, calc_rand:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_calc_rand_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_calc_rand_2, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_calc_rand_3, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"number", params:["0"]}, null, {type:"number", 
+params:["10"]}, null], type:"calc_rand"}, paramsKeyMap:{LEFTHAND:1, RIGHTHAND:3}, "class":"calc", isNotFor:[], func:function(b, a) {
   var c = a.getStringValue("LEFTHAND", a), d = a.getStringValue("RIGHTHAND", a), e = Math.min(c, d), f = Math.max(c, d), c = Entry.isFloat(c);
   return Entry.isFloat(d) || c ? (Math.random() * (f - e) + e).toFixed(2) : Math.floor(Math.random() * (f - e + 1) + e);
-}, syntax:{js:[], py:[]}}, get_date:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_get_date_1, color:"#3D3D3D"}, {type:"Dropdown", options:[[Lang.Blocks.CALC_get_date_year, "YEAR"], [Lang.Blocks.CALC_get_date_month, "MONTH"], [Lang.Blocks.CALC_get_date_day, "DAY"], [Lang.Blocks.CALC_get_date_hour, "HOUR"], [Lang.Blocks.CALC_get_date_minute, "MINUTE"], [Lang.Blocks.CALC_get_date_second, "SECOND"]], value:"YEAR", fontSize:11}, {type:"Text", 
-text:Lang.Blocks.CALC_get_date_2, color:"#3D3D3D"}], events:{}, def:{params:[null, "YEAR", null], type:"get_date"}, paramsKeyMap:{VALUE:1}, "class":"calc_date", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["random.randint(%2, %4)"]}}, get_date:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_get_date_1, color:"#3D3D3D"}, {type:"Dropdown", options:[[Lang.Blocks.CALC_get_date_year, "YEAR"], [Lang.Blocks.CALC_get_date_month, "MONTH"], [Lang.Blocks.CALC_get_date_day, "DAY"], [Lang.Blocks.CALC_get_date_hour, "HOUR"], [Lang.Blocks.CALC_get_date_minute, "MINUTE"], [Lang.Blocks.CALC_get_date_second, "SECOND"]], value:"YEAR", fontSize:11}, 
+{type:"Text", text:Lang.Blocks.CALC_get_date_2, color:"#3D3D3D"}], events:{}, def:{params:[null, "YEAR", null], type:"get_date"}, paramsKeyMap:{VALUE:1}, "class":"calc_date", isNotFor:[], func:function(b, a) {
   var c = a.getField("VALUE", a), d = new Date;
   return "YEAR" == c ? d.getFullYear() : "MONTH" == c ? d.getMonth() + 1 : "DAY" == c ? d.getDate() : "HOUR" == c ? d.getHours() : "MINUTE" == c ? d.getMinutes() : d.getSeconds();
-}, syntax:{js:[], py:[]}}, get_sound_duration:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_get_sound_duration_1, color:"#3D3D3D"}, {type:"DropdownDynamic", value:null, menuName:"sounds", fontSize:11}, {type:"Text", text:Lang.Blocks.CALC_get_sound_duration_2, color:"#3D3D3D"}], events:{}, def:{params:[null, null, null], type:"get_sound_duration"}, paramsKeyMap:{VALUE:1}, "class":"calc_duration", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["Entry.get_date_time(%2)"]}}, get_sound_duration:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_get_sound_duration_1, color:"#3D3D3D"}, {type:"DropdownDynamic", value:null, menuName:"sounds", fontSize:11}, {type:"Text", text:Lang.Blocks.CALC_get_sound_duration_2, color:"#3D3D3D"}], events:{}, def:{params:[null, null, null], type:"get_sound_duration"}, paramsKeyMap:{VALUE:1}, "class":"calc_duration", isNotFor:[], func:function(b, 
+a) {
   for (var c = a.getField("VALUE", a), d = b.parent.sounds, e = 0;e < d.length;e++) {
     if (d[e].id == c) {
       return d[e].duration;
     }
   }
-}, syntax:{js:[], py:[]}}, reset_project_timer:{color:"#FFD974", skeleton:"basic", statements:[], params:[{type:"Text", text:"\ucd08\uc2dc\uacc4 \ucd08\uae30\ud654", color:"#3D3D3D"}], events:{viewAdd:[function() {
+}, syntax:{js:[], py:["Entry.get_sound_duration(%2)"]}}, reset_project_timer:{color:"#FFD974", skeleton:"basic", statements:[], params:[{type:"Text", text:"\ucd08\uc2dc\uacc4 \ucd08\uae30\ud654", color:"#3D3D3D"}], events:{viewAdd:[function() {
   Entry.engine && Entry.engine.showProjectTimer();
 }], viewDestroy:[function(b) {
   Entry.engine && Entry.engine.hideProjectTimer(b);
@@ -16922,7 +17676,7 @@ text:Lang.Blocks.CALC_get_date_2, color:"#3D3D3D"}], events:{}, def:{params:[nul
   var c = a.getField("ACTION", a), d = Entry.engine.projectTimer;
   "SHOW" == c ? d.setVisible(!0) : d.setVisible(!1);
   return a.callReturn();
-}, syntax:{js:[], py:[]}}, timer_variable:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:"\ucd08\uc2dc\uacc4 \uac12", color:"#3D3D3D"}, {type:"Text", text:" ", color:"#3D3D3D"}], events:{}, def:{params:[null, null]}, func:function(b, a) {
+}, syntax:{js:[], py:["Entry.set_timer_visibility(%2)"]}}, timer_variable:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:"\ucd08\uc2dc\uacc4 \uac12", color:"#3D3D3D"}, {type:"Text", text:" ", color:"#3D3D3D"}], events:{}, def:{params:[null, null]}, func:function(b, a) {
   return Entry.container.inputValue.getValue();
 }, syntax:{js:[], py:[]}}, get_project_timer_value:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_get_timer_value, color:"#3D3D3D"}, {type:"Text", text:"", color:"#3D3D3D"}], events:{viewAdd:[function() {
   Entry.engine && Entry.engine.showProjectTimer();
@@ -16930,46 +17684,47 @@ text:Lang.Blocks.CALC_get_date_2, color:"#3D3D3D"}], events:{}, def:{params:[nul
   Entry.engine && Entry.engine.hideProjectTimer(b);
 }]}, def:{params:[null, null], type:"get_project_timer_value"}, "class":"calc_timer", isNotFor:[], func:function(b, a) {
   return Entry.engine.projectTimer.getValue();
-}, syntax:{js:[], py:[]}}, char_at:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_char_at_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_char_at_2, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_char_at_3, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"text", params:[Lang.Blocks.hi_entry]}, null, {type:"number", params:["1"]}, null], 
-type:"char_at"}, paramsKeyMap:{LEFTHAND:1, RIGHTHAND:3}, "class":"calc_string", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["Entry.get_timer_value()"]}}, char_at:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_char_at_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_char_at_2, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_char_at_3, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"text", params:[Lang.Blocks.hi_entry]}, null, {type:"number", 
+params:["1"]}, null], type:"char_at"}, paramsKeyMap:{LEFTHAND:1, RIGHTHAND:3}, "class":"calc_string", isNotFor:[], func:function(b, a) {
   var c = a.getStringValue("LEFTHAND", a), d = a.getNumberValue("RIGHTHAND", a) - 1;
   if (0 > d || d > c.length - 1) {
     throw Error();
   }
   return c[d];
-}, syntax:{js:[], py:[]}}, length_of_string:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_length_of_string_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_length_of_string_2, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"text", params:[Lang.Blocks.entry]}, null], type:"length_of_string"}, paramsKeyMap:{STRING:1}, "class":"calc_string", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["Entry.char_at(%2, %4)"]}}, length_of_string:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_length_of_string_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_length_of_string_2, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"text", params:[Lang.Blocks.entry]}, null], type:"length_of_string"}, paramsKeyMap:{STRING:1}, "class":"calc_string", isNotFor:[], func:function(b, 
+a) {
   return a.getStringValue("STRING", a).length;
-}, syntax:{js:[], py:[]}}, substring:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_substring_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_substring_2, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_substring_3, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_substring_4, color:"#3D3D3D"}], events:{}, 
-def:{params:[null, {type:"text", params:[Lang.Blocks.hi_entry]}, null, {type:"number", params:["2"]}, null, {type:"number", params:["5"]}, null], type:"substring"}, paramsKeyMap:{STRING:1, START:3, END:5}, "class":"calc_string", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["len(%2)"]}}, substring:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_substring_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_substring_2, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_substring_3, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_substring_4, color:"#3D3D3D"}], 
+events:{}, def:{params:[null, {type:"text", params:[Lang.Blocks.hi_entry]}, null, {type:"number", params:["2"]}, null, {type:"number", params:["5"]}, null], type:"substring"}, paramsKeyMap:{STRING:1, START:3, END:5}, "class":"calc_string", isNotFor:[], func:function(b, a) {
   var c = a.getStringValue("STRING", a), d = a.getNumberValue("START", a) - 1, e = a.getNumberValue("END", a) - 1, f = c.length - 1;
   if (0 > d || 0 > e || d > f || e > f) {
     throw Error();
   }
   return c.substring(Math.min(d, e), Math.max(d, e) + 1);
-}, syntax:{js:[], py:[]}}, replace_string:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_replace_string_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_replace_string_2, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_replace_string_3, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_replace_string_4, 
+}, syntax:{js:[], py:["Entry.substring(%2, %4, %6)"]}}, replace_string:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_replace_string_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_replace_string_2, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_replace_string_3, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_replace_string_4, 
 color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"text", params:[Lang.Blocks.hi_entry]}, null, {type:"text", params:[Lang.Blocks.hello]}, null, {type:"text", params:[Lang.Blocks.nice]}, null], type:"replace_string"}, paramsKeyMap:{STRING:1, OLD_WORD:3, NEW_WORD:5}, "class":"calc_string", isNotFor:[], func:function(b, a) {
   return a.getStringValue("STRING", a).replace(new RegExp(a.getStringValue("OLD_WORD", a), "gm"), a.getStringValue("NEW_WORD", a));
-}, syntax:{js:[], py:[]}}, change_string_case:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_change_string_case_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_change_string_case_2, color:"#3D3D3D"}, {type:"Dropdown", options:[[Lang.Blocks.CALC_change_string_case_sub_1, "toUpperCase"], [Lang.Blocks.CALC_change_string_case_sub_2, "toLowerCase"]], value:"toUpperCase", fontSize:11}, {type:"Text", 
-text:Lang.Blocks.CALC_change_string_case_3, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"text", params:["Hello Entry!"]}, null, null, null], type:"change_string_case"}, paramsKeyMap:{STRING:1, CASE:3}, "class":"calc_string", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["Entry.replce_string_with(%2, %4, %6)"]}}, change_string_case:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_change_string_case_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_change_string_case_2, color:"#3D3D3D"}, {type:"Dropdown", options:[[Lang.Blocks.CALC_change_string_case_sub_1, "toUpperCase"], [Lang.Blocks.CALC_change_string_case_sub_2, "toLowerCase"]], value:"toUpperCase", 
+fontSize:11}, {type:"Text", text:Lang.Blocks.CALC_change_string_case_3, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"text", params:["Hello Entry!"]}, null, null, null], type:"change_string_case"}, paramsKeyMap:{STRING:1, CASE:3}, "class":"calc_string", isNotFor:[], func:function(b, a) {
   return a.getStringValue("STRING", a)[a.getField("CASE", a)]();
-}, syntax:{js:[], py:[]}}, index_of_string:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_index_of_string_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_index_of_string_2, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_index_of_string_3, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"text", params:[Lang.Blocks.hi_entry]}, null, {type:"text", 
-params:[Lang.Blocks.entry]}, null], type:"index_of_string"}, paramsKeyMap:{LEFTHAND:1, RIGHTHAND:3}, "class":"calc_string", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["Entry.change_string_case(%2, %4)"]}}, index_of_string:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_index_of_string_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_index_of_string_2, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_index_of_string_3, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"text", params:[Lang.Blocks.hi_entry]}, 
+null, {type:"text", params:[Lang.Blocks.entry]}, null], type:"index_of_string"}, paramsKeyMap:{LEFTHAND:1, RIGHTHAND:3}, "class":"calc_string", isNotFor:[], func:function(b, a) {
   var c = a.getStringValue("LEFTHAND", a), d = a.getStringValue("RIGHTHAND", a), c = c.indexOf(d);
   return -1 < c ? c + 1 : 0;
-}, syntax:{js:[], py:[]}}, combine_something:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.VARIABLE_combine_something_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.VARIABLE_combine_something_2, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.VARIABLE_combine_something_3, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"text", params:[Lang.Blocks.block_hi]}, 
-null, {type:"text", params:[Lang.Blocks.entry]}, null], type:"combine_something"}, paramsKeyMap:{VALUE1:1, VALUE2:3}, "class":"calc_string", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["Entry.index_of_string(%2, %4)"]}}, combine_something:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.VARIABLE_combine_something_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.VARIABLE_combine_something_2, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.VARIABLE_combine_something_3, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"text", 
+params:[Lang.Blocks.block_hi]}, null, {type:"text", params:[Lang.Blocks.entry]}, null], type:"combine_something"}, paramsKeyMap:{VALUE1:1, VALUE2:3}, "class":"calc_string", isNotFor:[], func:function(b, a) {
   var c = a.getStringValue("VALUE1", a), d = a.getStringValue("VALUE2", a);
   return c + d;
-}, syntax:{js:[], py:[]}}, get_sound_volume:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_get_sound_volume, color:"#3D3D3D"}, {type:"Text", text:"", color:"#3D3D3D"}], events:{}, def:{params:[null, null], type:"get_sound_volume"}, "class":"calc", isNotFor:[""], func:function(b, a) {
+}, syntax:{js:[], py:["%2 + %4"]}}, get_sound_volume:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_get_sound_volume, color:"#3D3D3D"}, {type:"Text", text:"", color:"#3D3D3D"}], events:{}, def:{params:[null, null], type:"get_sound_volume"}, "class":"calc", isNotFor:[""], func:function(b, a) {
   return 100 * createjs.Sound.getVolume();
-}, syntax:{js:[], py:[]}}, quotient_and_mod:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_quotient_and_mod_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_quotient_and_mod_2, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_quotient_and_mod_3, color:"#3D3D3D"}, {type:"Dropdown", options:[[Lang.Blocks.CALC_quotient_and_mod_sub_1, "QUOTIENT"], [Lang.Blocks.CALC_quotient_and_mod_sub_2, 
-"MOD"]], value:"QUOTIENT", fontSize:11}], events:{}, def:{params:[null, {type:"text", params:["10"]}, null, {type:"text", params:["10"]}, null, null], type:"quotient_and_mod"}, paramsKeyMap:{LEFTHAND:1, RIGHTHAND:3, OPERATOR:5}, "class":"calc", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["Entry.get_sound_volume()"]}}, quotient_and_mod:{color:"#FFD974", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_quotient_and_mod_1, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_quotient_and_mod_2, color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.CALC_quotient_and_mod_3, color:"#3D3D3D"}, {type:"Dropdown", options:[[Lang.Blocks.CALC_quotient_and_mod_sub_1, 
+"QUOTIENT"], [Lang.Blocks.CALC_quotient_and_mod_sub_2, "MOD"]], value:"QUOTIENT", fontSize:11}], events:{}, def:{params:[null, {type:"text", params:["10"]}, null, {type:"text", params:["10"]}, null, null], type:"quotient_and_mod"}, paramsKeyMap:{LEFTHAND:1, RIGHTHAND:3, OPERATOR:5}, "class":"calc", isNotFor:[], func:function(b, a) {
   var c = a.getNumberValue("LEFTHAND", a), d = a.getNumberValue("RIGHTHAND", a);
   if (isNaN(c) || isNaN(d)) {
     throw Error();
   }
   return "QUOTIENT" == a.getField("OPERATOR", a) ? Math.floor(c / d) : c % d;
-}, syntax:{js:[], py:[]}}, choose_project_timer_action:{color:"#FFD974", skeleton:"basic", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_choose_project_timer_action_1, color:"#3D3D3D"}, {type:"Dropdown", options:[[Lang.Blocks.CALC_choose_project_timer_action_sub_1, "START"], [Lang.Blocks.CALC_choose_project_timer_action_sub_2, "STOP"], [Lang.Blocks.CALC_choose_project_timer_action_sub_3, "RESET"]], value:"START", fontSize:11}, {type:"Text", text:Lang.Blocks.CALC_choose_project_timer_action_2, 
+}, syntax:{js:[], py:["Entry.get_value_quotient_mod(%2, %4, %6)"]}}, choose_project_timer_action:{color:"#FFD974", skeleton:"basic", statements:[], params:[{type:"Text", text:Lang.Blocks.CALC_choose_project_timer_action_1, color:"#3D3D3D"}, {type:"Dropdown", options:[[Lang.Blocks.CALC_choose_project_timer_action_sub_1, "START"], [Lang.Blocks.CALC_choose_project_timer_action_sub_2, "STOP"], [Lang.Blocks.CALC_choose_project_timer_action_sub_3, "RESET"]], value:"START", fontSize:11}, {type:"Text", text:Lang.Blocks.CALC_choose_project_timer_action_2, 
 color:"#3D3D3D"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/calc_01.png", size:12}], events:{viewAdd:[function() {
   Entry.engine && Entry.engine.showProjectTimer();
 }], dataDestroy:[function(b) {
@@ -16978,7 +17733,7 @@ color:"#3D3D3D"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/calc_01
   var c = a.getField("ACTION"), d = Entry.engine, e = d.projectTimer;
   "START" == c ? e.isInit ? e.isInit && e.isPaused && (e.pauseStart && (e.pausedTime += (new Date).getTime() - e.pauseStart), delete e.pauseStart, e.isPaused = !1) : d.startProjectTimer() : "STOP" == c ? e.isInit && !e.isPaused && (e.isPaused = !0, e.pauseStart = (new Date).getTime()) : "RESET" == c && e.isInit && (e.setValue(0), e.start = (new Date).getTime(), e.pausedTime = 0, delete e.pauseStart);
   return a.callReturn();
-}, syntax:{js:[], py:[]}}, wait_second:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["2"]}, null], type:"wait_second"}, paramsKeyMap:{SECOND:0}, "class":"delay", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["Entry.choose_timer_action(%2)"]}}, wait_second:{color:"#498deb", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, def:{params:[{type:"number", params:["2"]}, null], type:"wait_second"}, paramsKeyMap:{SECOND:0}, "class":"delay", isNotFor:[], func:function(b, a) {
   if (a.isStart) {
     if (1 == a.timeFlag) {
       return a;
@@ -17555,7 +18310,7 @@ isNotFor:[], func:function(b, a) {
   return c || d;
 }, syntax:{js:[], py:["%1 or %3"]}}, boolean_not:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Text", text:Lang.Blocks.JUDGEMENT_boolean_not_1, color:"#3D3D3D"}, {type:"Block", accept:"booleanMagnet"}, {type:"Text", text:Lang.Blocks.JUDGEMENT_boolean_not_2, color:"#3D3D3D"}], events:{}, def:{params:[null, {type:"True"}, null], type:"boolean_not"}, paramsKeyMap:{VALUE:1}, "class":"boolean", isNotFor:[], func:function(b, a) {
   return !a.getBooleanValue("VALUE");
-}, syntax:{js:[], py:["(not %2)"]}}, true_or_false:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.JUDGEMENT_true, "true"], [Lang.Blocks.JUDGEMENT_false, "false"]], value:"true", fontSize:11}], events:{}, def:{params:[null]}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
+}, syntax:{js:[], py:["%2 != True"]}}, true_or_false:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Dropdown", options:[[Lang.Blocks.JUDGEMENT_true, "true"], [Lang.Blocks.JUDGEMENT_false, "false"]], value:"true", fontSize:11}], events:{}, def:{params:[null]}, paramsKeyMap:{VALUE:0}, func:function(b, a) {
   return "true" == a.children[0].textContent;
 }, syntax:{js:[], py:[]}}, True:{color:"#AEB8FF", skeleton:"basic_boolean_field", statements:[], params:[{type:"Text", text:Lang.Blocks.JUDGEMENT_true, color:"#3D3D3D"}], events:{}, def:{params:[null], type:"True"}, func:function(b, a) {
   return !0;
@@ -17577,7 +18332,7 @@ defs:[{params:[{type:"text", params:["10"]}, "EQUAL", {type:"text", params:["10"
     case "LESS_OR_EQUAL":
       return Number(d) <= Number(e);
   }
-}, syntax:{js:[], py:["(%1 %2 %3)"]}}, show:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null], type:"show"}, "class":"visibility", isNotFor:[], func:function(b, a) {
+}, syntax:{js:[], py:["%1 %2 %3"]}}, show:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null], type:"show"}, "class":"visibility", isNotFor:[], func:function(b, a) {
   b.setVisible(!0);
   return a.callReturn();
 }, syntax:{js:[], py:["self.show()"]}}, hide:{color:"#EC4466", skeleton:"basic", statements:[], params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/looks_03.png", size:12}], events:{}, def:{params:[null], type:"hide"}, "class":"visibility", isNotFor:[], func:function(b, a) {
@@ -18485,13 +19240,13 @@ START:1, END:2}, "class":"sound_wait", isNotFor:[], func:function(b, a) {
   c.sprite = b;
   a.isInit = !0;
   return a;
-}, syntax:{js:[], py:[]}}, get_canvas_input_value:{color:"#E457DC", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.VARIABLE_get_canvas_input_value, color:"#fff"}], events:{viewAdd:[function() {
+}, syntax:{js:[], py:["Entry.ask_and_wait(%1)"]}}, get_canvas_input_value:{color:"#E457DC", skeleton:"basic_string_field", statements:[], params:[{type:"Text", text:Lang.Blocks.VARIABLE_get_canvas_input_value, color:"#fff"}], events:{viewAdd:[function() {
   Entry.container && Entry.container.showProjectAnswer();
 }], viewDestroy:[function(b) {
   Entry.container && Entry.container.hideProjectAnswer(b);
 }]}, def:{params:[null], type:"get_canvas_input_value"}, "class":"ask", isNotFor:[], func:function(b, a) {
   return Entry.container.getInputValue();
-}, syntax:{js:[], py:[]}}, add_value_to_list:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{dataAdd:[function(b) {
+}, syntax:{js:[], py:["Entry.get_answer()"]}}, add_value_to_list:{color:"#E457DC", skeleton:"basic", statements:[], params:[{type:"Block", accept:"stringMagnet"}, {type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{dataAdd:[function(b) {
   var a = Entry.variableContainer;
   a && a.addRef("_variableRefs", b);
 }], dataDestroy:[function(b) {
@@ -18557,8 +19312,8 @@ null, null, {type:"number", params:["1"]}], type:"value_of_index_from_list"}, pa
 }]}, def:{params:["HIDE", null], type:"set_visible_answer"}, paramsKeyMap:{BOOL:0}, "class":"ask", isNotFor:[], func:function(b, a) {
   "HIDE" == a.getField("BOOL", a) ? Entry.container.inputValue.setVisible(!1) : Entry.container.inputValue.setVisible(!0);
   return a.callReturn();
-}, syntax:{js:[], py:[]}}, is_included_in_list:{color:"#E457DC", skeleton:"basic_boolean_field", statements:[], params:[{type:"Text", text:Lang.Blocks.VARIABLE_is_included_in_list_1, color:"white"}, {type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Text", text:Lang.Blocks.VARIABLE_is_included_in_list_2, color:"white"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.VARIABLE_is_included_in_list_3, color:"white"}], events:{}, def:{params:[null, null, 
-null, {type:"text", params:["10"]}, null], type:"is_included_in_list"}, paramsKeyMap:{LIST:1, DATA:3}, "class":"list", isNotFor:["list", "listNotExist"], func:function(b, a) {
+}, syntax:{js:[], py:["Entry.set_answer_visibility(%1)"]}}, is_included_in_list:{color:"#E457DC", skeleton:"basic_boolean_field", statements:[], params:[{type:"Text", text:Lang.Blocks.VARIABLE_is_included_in_list_1, color:"white"}, {type:"DropdownDynamic", value:null, menuName:"lists", fontSize:11}, {type:"Text", text:Lang.Blocks.VARIABLE_is_included_in_list_2, color:"white"}, {type:"Block", accept:"stringMagnet"}, {type:"Text", text:Lang.Blocks.VARIABLE_is_included_in_list_3, color:"white"}], events:{}, 
+def:{params:[null, null, null, {type:"text", params:["10"]}, null], type:"is_included_in_list"}, paramsKeyMap:{LIST:1, DATA:3}, "class":"list", isNotFor:["list", "listNotExist"], func:function(b, a) {
   var c = a.getField("LIST", a), d = a.getStringValue("DATA", a), c = Entry.variableContainer.getList(c);
   if (!c) {
     return !1;

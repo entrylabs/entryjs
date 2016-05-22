@@ -15,6 +15,31 @@ Entry.PyBlockAssembler = function(blockSyntax) {
 };
 
 (function(p){
+	p.Program = function(astArr) {
+        var code = [];
+        
+        for(var index in astArr) {
+            if(astArr[index].type != 'Program') return;
+            var thread = []; 
+            var nodes = astArr[index].body;
+
+            console.log("nodes", nodes);
+
+            for(var index in nodes) {
+                var node = nodes[index];
+                var component = this[node.type](node);
+                console.log("checkitout", component);
+                
+                var block = this._assembler[component.type](component);
+                thread.push(block);   
+            }
+
+            console.log("thread", thread);
+            code.push(thread);    
+        }
+        return code;
+    };
+
 	p.ExpressionStatement = function(component) {    
     	console.log("ExpressionStatement component", component);
     	var reusult;
@@ -73,6 +98,23 @@ Entry.PyBlockAssembler = function(blockSyntax) {
 
 		operator = String(component.operator);
 		console.log("AssignmentExpression operator", operator);
+
+		 switch(operator){
+            case "=": break;
+            case "+=": break;    
+            case "-=": break;              
+            case "*=": break;               
+            case "/=": break;                
+            case "%=": break;               
+            case "<<=": break;               
+            case ">>=": break;               
+            case "|=": break;              
+            case "^=": break;               
+            case "&=": break;              
+            default: 
+                operator = operator;
+        }
+
 		if(operator) {
 			operator = Entry.TextCodingUtil.prototype.logicalExpressionConvert(operator);
 			param = operator;
@@ -574,7 +616,7 @@ Entry.PyBlockAssembler = function(blockSyntax) {
 		    		console.log("IfStatement consequent bodyData", bodyData);
 		    		consequentStatements.push(bodyData);
 		    	} else {
-		    		
+
 		    	}
 
 	    	}
@@ -684,7 +726,20 @@ Entry.PyBlockAssembler = function(blockSyntax) {
     	var params = [];
     	var param;
     	if(component.prefix){
-        	var arg = component.operator.concat(component.argument.value);
+    		var operator = component.operator;
+    		var argument = component.argument;
+    		switch(operator){
+	            case "-": break;
+	            case "+": break;	                
+	            case "!": break;	                
+	            case "~": break;                
+	            case "typeof": break;	                
+	            case "void": break;	                
+	            case "delete": break;	                
+	            default: 
+	                operator = operator;
+	        }
+        	var arg = operator.concat(argument.value);
         	param  = arg;
         	params.push(param);
     	}
@@ -772,36 +827,6 @@ Entry.PyBlockAssembler = function(blockSyntax) {
 
         structure.type = type;
         structure.params = params;
-
-		/*if(left.left) {
-			var param = this.binaryTestExpression(left);
-			if(param) {
-				params.push(param);
-			}
-		} else if(left.type) {
-			blockParamIndex = 0;
-			var param = this.assemble(left, type);
-			params.push(param);
-		} 
-
-		if(operator.length != 0) {
-			operator = Entry.TextCodingUtil.prototype.binaryOperatorValueConvertor(operator);
-			var param = operator;
-			params.push(param);
-		}
-
-		var right = expression.right;
-		if(right.left) {
-			var param = this.binaryTestExpression(right);
-			if(param) {
-				params.push(param);
-			}
-		} else if(right.type) {
-			blockParamIndex = 2;
-			var param = this.assemble(right);
-			if(param)
-				params.push(param);
-		}*/
     	
     	result = structure;
 
@@ -818,6 +843,33 @@ Entry.PyBlockAssembler = function(blockSyntax) {
     	structure.params = [];
 
 		var operator = String(component.operator);
+
+		switch(operator){
+            case "==": break;               
+            case "!=": break;               
+            case "===": break;               
+            case "!==": break;               
+            case "<": break;              
+            case "<=": break;               
+            case ">": break;                
+            case ">=": break;              
+            case "<<": break;              
+            case ">>": break;               
+            case ">>>": break;                
+            case "+": break;               
+            case "-": break;
+            case "*": break;                 
+            case "/": break;                
+            case "%": break;                
+            case "|": break;               
+            case "^": break;                
+            case "|": break;
+            case "&": break;                
+            case "in": break;                 
+            case "instanceof": break;                  
+            default: 
+                operator = operator;
+        }
 
 		console.log("BinaryExpression operator", operator);
 		if(operator)
@@ -899,6 +951,225 @@ Entry.PyBlockAssembler = function(blockSyntax) {
     p.getBlockType = function(syntax) {
         return this.blockSyntax[syntax];
     };
+
+
     
+    ///////////////////////////////////////////////////////////
+    //Not Suported Syntax
+    ///////////////////////////////////////////////////////////
+    
+    p.FunctionDeclaration = function(component) {
+        console.log("FunctionDeclaration component", component);
+        var result;
+
+		console.log("FunctionDeclaration result", result);
+        return component;
+    };
+
+    p.RegExp = function(component) {
+    	console.log("RegExp", component);
+        var result;
+
+		console.log("RegExp result", result);
+        return component;
+    };
+
+    p.Function = function(component) {
+    	console.log("Function", component);
+        var result;
+
+		console.log("Function result", result);
+        return component;
+    };
+
+    p.EmptyStatement = function(component) {
+    	console.log("EmptyStatement", component);
+        var result;
+
+		console.log("EmptyStatement result", result);
+        return component;
+    };
+
+    p.DebuggerStatement = function(component) {
+    	console.log("DebuggerStatement", component);
+        var result;
+
+		console.log("DebuggerStatement result", result);
+        return component;
+    };
+
+    p.WithStatement = function(component) {
+    	console.log("WithStatement", component);
+        var result;
+
+		console.log("WithStatement result", result);
+        return component;
+    };
+    p.ReturnStaement = function(component) {
+    	console.log("ReturnStaement", component);
+        var result;
+
+		console.log("ReturnStaement result", result);
+        return component;
+    };
+
+    p.LabeledStatement = function(component) {
+    	console.log("LabeledStatement", component);
+        var result;
+
+		console.log("LabeledStatement result", result);
+        return component;
+    };
+
+    p.BreakStatement = function(component) {
+    	console.log("BreakStatement", component);
+        var result;
+
+		console.log("BreakStatement result", result);
+        return component;
+    };
+
+    p.ContinueStatement = function(component) {
+    	console.log("ContinueStatement", component);
+        var result;
+
+		console.log("ContinueStatement result", result);
+        return component;
+    };
+
+    p.SwitchStatement = function(component) {
+    	console.log("SwitchStatement", component);
+        var result;
+
+		console.log("SwitchStatement result", result);
+        return component;
+    };
+
+    p.SwitchCase = function(component) {
+    	console.log("SwitchCase", component);
+        var result;
+
+		console.log("SwitchCase result", result);
+        return component;
+    };
+
+    p.ThrowStatement = function(component) {
+    	console.log("ThrowStatement", component);
+        var result;
+
+		console.log("ThrowStatement result", result);
+        return component;
+    };
+
+    p.TryStatement = function(component) {
+    	console.log("TryStatement", component);
+        var result;
+
+		console.log("TryStatement result", result);
+        return component;
+    };
+    p.CatchClause = function(component) {
+    	console.log("CatchClause", component);
+        var result;
+
+		console.log("CatchClause result", result);
+        return component;
+    };
+
+    p.DoWhileStatement = function(component) {
+    	console.log("DoWhileStatement", component);
+        var result;
+
+		console.log("DoWhileStatement result", result);
+        return component;
+    };
+
+    p.ForInStatement = function(component) {
+    	console.log("ForInStatement", component);
+        var result;
+
+		console.log("ForInStatement result", result);
+        return component;
+    };
+
+    p.FunctionDeclaration = function(component) {
+    	console.log("FunctionDeclaration", component);
+        var result;
+
+		console.log("FunctionDeclaration result", result);
+        return component;
+    };
+
+    p.ThisExpression = function(component) {
+    	console.log("ThisExpression", component);
+        var result;
+
+		console.log("ThisExpression result", result);
+        return component;
+    };
+
+    p.ArrayExpression = function(component) {
+    	console.log("ArrayExpression", component);
+        var result;
+
+		console.log("ArrayExpression result", result);
+        return component;
+    };
+
+    p.ObjectExpression = function(component) {
+    	console.log("ObjectExpression", component);
+        var result;
+
+		console.log("ObjectExpression result", result);
+        return component;
+    };
+
+    p.Property = function(component) {
+    	console.log("Property", component);
+        var result;
+
+		console.log("Property result", result);
+        return component;
+    };
+
+    p.FunctionExpression = function(component) {
+    	console.log("FunctionExpression", component);
+        var result;
+
+		console.log("FunctionExpression result", result);
+        return component;
+    };
+
+    p.UpdateExpression = function(component) {
+    	console.log("UpdateExpression", component);
+        var result;
+
+		console.log("UpdateExpression result", result);
+        return component;
+    }; 
+
+    p.ConditionalExpression = function(component) {
+    	console.log("ConditionalExpression", component);
+        var result;
+
+		console.log("ConditionalExpression result", result);
+        return component;
+    };
+
+    p.NewExpression = function(component) {
+    	console.log("NewExpression", component);
+        var result;
+
+		console.log("NewExpression result", result);
+        return component;
+    };
+
+    p.SequenceExpression = function(component) {
+    	console.log("SequenceExpression", component);
+        var result;
+
+		console.log("SequenceExpression result", result);
+        return component;
+    };
     
 })(Entry.PyBlockAssembler.prototype);

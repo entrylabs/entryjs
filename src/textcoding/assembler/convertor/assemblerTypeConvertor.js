@@ -10,7 +10,7 @@ Entry.AssemblerTypeConvertor = function() {
 };
 
 (function(p) {
-	p.convert = function(syntax) {
+	/*p.convert = function(syntax) {
         console.log("AssemblerTypeConvertor", syntax);
         var result;
         switch(syntax) {
@@ -24,5 +24,5 @@ Entry.AssemblerTypeConvertor = function() {
             }
     	}
     	return result;
-	};
+	};*/
 })(Entry.AssemblerTypeConvertor.prototype);

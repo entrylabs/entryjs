@@ -7,7 +7,6 @@ goog.provide("Entry.BlockToPyParser");
 
 goog.require("Entry.KeyboardCodeMap");
 goog.require("Entry.TextCodingUtil");
-goog.require("Entry.ParserValueConvertor");
 
 Entry.BlockToPyParser = function() {
 
@@ -82,12 +81,6 @@ Entry.BlockToPyParser = function() {
                     blockParam == 's' ||
                     blockParam == 'a')
                     var index = Number(0);
-                else if(blockParam == 'b' || 
-                    blockParam == '&' ||
-                    blockParam == '|')
-                    var index = Number(1);
-                else if(blockParam == '!')
-                    var index = Number(2);
                 else
                     var index = Number(blockParam) - 1;
 
@@ -114,7 +107,7 @@ Entry.BlockToPyParser = function() {
                     console.log("param first Result", param); 
                      
                     
-                    param = Entry.ParserValueConvertor.prototype.binaryOperatorValueConvertor(param);   
+                    param = Entry.TextCodingUtil.prototype.binaryOperatorValueConvertor(param);   
                     param = String(param);
 
                     if(!Entry.TextCodingUtil.prototype.isNumeric(param) &&
@@ -164,7 +157,7 @@ Entry.BlockToPyParser = function() {
         if(dataParam == "null") {
             dataParam = "none";
         } else {
-            dataParam = Entry.ParserValueConvertor.prototype.dropdownDynamicValueConvertor(dataParam, schemaParam);
+            dataParam = Entry.TextCodingUtil.prototype.dropdownDynamicValueConvertor(dataParam, schemaParam);
         }                    
        
         return dataParam;
