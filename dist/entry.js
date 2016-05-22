@@ -12865,7 +12865,7 @@ Entry.HW = function() {
   this.socketType = this.hwModule = this.selectedDevice = null;
   Entry.addEventListener("stop", this.setZero);
   this.hwInfo = {11:Entry.Arduino, 12:Entry.SensorBoard, 13:Entry.CODEino, 15:Entry.dplay, 16:Entry.nemoino, 17:Entry.Xbot, 24:Entry.Hamster, 25:Entry.Albert, 31:Entry.Bitbrick, 42:Entry.Arduino, 51:Entry.Neobot, 71:Entry.Robotis_carCont, 72:Entry.Robotis_openCM70};
-  this.checkAlertMsg = !1;
+  this.checkOldHardwareProgram = this.checkFirstAlertMsg = !1;
 };
 Entry.HW.TRIAL_LIMIT = 1;
 p = Entry.HW.prototype;
@@ -12882,6 +12882,7 @@ p.initSocket = function() {
       } else {
         try {
           a = new WebSocket("ws://127.0.0.1:23518"), a.binaryType = "arraybuffer", a.onopen = function() {
+            this.checkOldHardwareProgram = !0;
             b.socketType = "WebSocket";
             b.initHardware(a);
           }.bind(this), a.onmessage = function(a) {
@@ -12965,7 +12966,7 @@ p.removePortReadable = function(b) {
   }
 };
 p.update = function() {
-  this.socket && 1 == this.socket.readyState && (this.checkAlertMsg || (alert(Lang.Workspace.hardware_version_alert_text), this.checkAlertMsg = !0), this.socket.send(JSON.stringify(this.sendQueue)));
+  this.socket && 1 == this.socket.readyState && (!this.checkFirstAlertMsg && this.checkOldHardwareProgram && (alert(Lang.Workspace.hardware_version_alert_text), this.checkFirstAlertMsg = !0), this.socket.send(JSON.stringify(this.sendQueue)));
 };
 p.updatePortData = function(b) {
   this.portData = b;

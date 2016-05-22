@@ -37,7 +37,8 @@ Entry.HW = function() {
         '72': Entry.Robotis_openCM70
     };
 
-    this.checkAlertMsg = false;
+    this.checkFirstAlertMsg = false;
+    this.checkOldHardwareProgram = false;
 };
 
 Entry.HW.TRIAL_LIMIT = 1;
@@ -70,6 +71,7 @@ p.initSocket = function() {
 
                 socket.onopen = (function()
                 {
+                    this.checkOldHardwareProgram = true;
                     hw.socketType = 'WebSocket';
                     hw.initHardware(socket);
                 }).bind(this);
@@ -200,9 +202,9 @@ p.update = function() {
         return;
     }
 
-    if(!this.checkAlertMsg) {
+    if(!this.checkFirstAlertMsg && this.checkOldHardwareProgram) {
         alert(Lang.Workspace.hardware_version_alert_text);
-        this.checkAlertMsg = true;
+        this.checkFirstAlertMsg = true;
     }
     this.socket.send(JSON.stringify(this.sendQueue));
 };
