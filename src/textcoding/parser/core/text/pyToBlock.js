@@ -612,7 +612,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 if(bodyData.type) {
                     this._blockStatments.push(bodyData);
                     console.log("body block", bodyData);
-                    
+
                 }
                 if(bodyData.declarations) {
                     var declaration = bodyData.declarations[0];
@@ -669,87 +669,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         return result;
 
-          /*console.log("BlockStatement component", component);
-        console.log("BlockStatement _blockStatmentIndex check", this._blockStatmentIndex);
-
-        this._blockStatmentIndex = 0;
-        this._blockStatments = [];
-        
-        var result;
-        var structure = {};
-
-        structure.statements = [];
-        
-        var bodies = component.body;
-        if(bodies.length != 0) {
-            for(var i in bodies) {
-                var body = bodies[i];
-
-                console.log("BlockStatement body", body, "i", i);
-                
-                var bodyData = this[body.type](body);
-
-
-                console.log("BlockStatement bodyData", bodyData, "i", i);
-                if(bodyData.type && bodyData.type != "ForStatement" && bodyData.type != "ForInStatement") {
-                    console.log("BlockStatement sssss", bodyData);
-                    if(this._blockStatmentIndex == 1)
-                    structure.statements.push(bodyData);
-                }
-                else if(bodyData.body) {
-                   console.log("BlockStatement statement _blockStatmentIndex", bodyData, this._blockStatmentIndex);
-                   
-                    if(this._blockStatmentIndex == 0) { 
-                        if(bodyData.body)
-                            var stmtData = this[bodyData.type](bodyData);
-                        else
-                            this._blockStatments.push(bodyData);         
-                                       
-                    }
-                    else {
-                        if(bodyData.body)
-                            var stmtData = this[bodyData.type](bodyData);          
-                            
-                    }
-                    /*if(bodyData.type != "ForInStatement" && bodyData.type != "ForStatement") {
-                        var stmtData = this[bodyData.type](bodyData);
-                        console.log("fucking shit stmtData", stmtData);
-                    }*/
-                    //structure.statements.push(stmtData);
-                   
-
-                    /*if(this._blockStatmentIndex == 0) {
-                        this._blockStatments.push(bodyData);
-                        
-                    }*/
-                    
-                /*} else {   
-                    console.log("BlockStatement declarations type params bodyData", i, bodyData);
-                    var declarations = bodyData.declarations;
-                    for(var j in declarations){
-                        var declaration = declarations[j];
-                        if(declaration.init.type) {
-                            structure.type = declaration.init.type;
-                        }
-                        if(declaration.init.params) {
-                            console.log("BlockStatement params", declaration.init.params);
-                            structure.params = declaration.init.params;
-                        }
-
-                        console.log("BlockStatement structure", structure, "j", j);
-                    }
-                    
-                    console.log("BlockStatement structure _blockStatmentIndex", bodyData, this._blockStatmentIndex);
-                }*/
-                //this._blockStatments.push(bodyData);
-
-            //}
-
-            //structure.statements = this._blockStatments;
-            
-        //}
-
-        //structure.statements.push(this._blockStatments);*/
+         
     };
 
     
