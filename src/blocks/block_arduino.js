@@ -858,7 +858,7 @@ Entry.block.dplay_DCmotor = function (sprite, script) {
     var port1 = script.getField("PORT");
     var port2 = 0;
     if (port1 == "3") port2 = 5;
-    else if (port1 == "6") value2 = 11;
+    else if (port1 == "6") port2 = 11;
     var operator = script.getField("OPERATOR");
     var value1 = 0;
     var value2 = 0;
