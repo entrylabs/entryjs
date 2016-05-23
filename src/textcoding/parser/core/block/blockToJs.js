@@ -44,10 +44,11 @@ Entry.BlockToJsParser = function(syntax) {
     };
 
     p.Block = function(block) {
-        var syntax = block._schema.syntax.js[0];
+        var syntax = block._schema.syntax;
         if (!syntax)
             return "";
         var syntaxType = syntax;
+        console.log("syntaxType", syntax);
         return this[syntaxType](block);
     };
 

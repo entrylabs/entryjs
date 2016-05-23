@@ -195,4 +195,18 @@ goog.require("Entry.Command");
         undo: "scrollBoard"
     };
 
+    c.setFieldValue = {
+        type: 106,
+        do: function(block, field, pointer, oldValue, newValue) {
+            field.setValue(newValue, true);
+        },
+        state: function(block, field, pointer, oldValue, newValue) {
+            return [block, field, pointer, newValue, oldValue];
+        },
+        log: function(block, newValue) {
+            return [block.id, newValue];
+        },
+        undo: "setFieldValue"
+    };
+
 })(Entry.Command);

@@ -77,7 +77,14 @@ Entry.Vim = function(dom, textType) {
         function eventDragEnd(e) {
             var textCode = _self.getCodeToText(e.block);
             _self.codeMirror.display.dragFunctions.leave(e);
-            var mousedown = Entry.Utils.createMouseEvent('mousedown', e);
+            var mousedown = new MouseEvent('mousedown', {
+                'view': window,
+                'bubbles': true,
+                'cancelable': true,
+                'clientX' : e.clientX,
+                'clientY' : e.clientY
+            });
+
             _self.codeMirror.display.scroller.dispatchEvent(mousedown);
             var testArr = textCode.split('\n');
             var max = testArr.length - 1;
@@ -91,8 +98,6 @@ Entry.Vim = function(dom, textType) {
                     _self.codeMirror.replaceSelection('\n');
                 }
             });
-            var mouseup = Entry.Utils.createMouseEvent('mouseup', e);
-            _self.codeMirror.display.scroller.dispatchEvent(mouseup);
         }
 
         function eventDragOver(e) {

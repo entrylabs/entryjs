@@ -306,7 +306,7 @@ Entry.skeleton.basic_string_field = {
             .replace(/%h/gi, height / 2);
     },
     color: "#000",
-    outerLine: true,
+    outerLine: '#768dce',
     box: function(blockView) {
         var width = blockView ? blockView.contentWidth : 5;
         var height = blockView ? blockView.contentHeight : 18;
@@ -341,7 +341,7 @@ Entry.skeleton.basic_boolean_field = {
             .replace(/%h/gi, height / 2);
     },
     color: "#000",
-    outerLine: true,
+    outerLine: '#768dce',
     box: function(blockView) {
         var width = blockView ? blockView.contentWidth : 5;
         var height = blockView ? blockView.contentHeight : 18;
@@ -354,7 +354,7 @@ Entry.skeleton.basic_boolean_field = {
     },
     magnets: function() {
         return {
-            bool: {}
+            boolean: {}
         };
     },
     contentPos: function(blockView) {
@@ -375,7 +375,7 @@ Entry.skeleton.basic_param = {
                 "h -%w h -10 l -2,-2 0,-3 3,0 1,-1 0,-12 -1,-1 -3,0 0,-3 2,-2")
             .replace(/%w/gi, width);
     },
-    outerLine: true,
+    outerLine: '#768dce',
     box: function(blockView) {
         var width = blockView ? blockView.contentWidth : 5;
         return {

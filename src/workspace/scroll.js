@@ -149,8 +149,6 @@ Entry.Scroller.RADIUS = 7;
                 e.stopPropagation();
             };
         }
-
-        this.resizeScrollBar();
     };
 
     p.updateScrollBar = function(dx, dy) {
@@ -175,8 +173,8 @@ Entry.Scroller.RADIUS = 7;
         var clientRect = this.board.svgBlockGroup.getBoundingClientRect(),
             svgDom = this.board.svgDom,
             bBox = {
-                x: clientRect.left - this.board.offset.left,
-                y: clientRect.top - this.board.offset.top,
+                x: clientRect.left - this.board.offset().left,
+                y: clientRect.top - this.board.offset().top,
                 width: clientRect.width,
                 height: clientRect.height
             };
@@ -229,8 +227,8 @@ Entry.Scroller.RADIUS = 7;
             bWidth = svgDom.width(),
             bHeight = svgDom.height(),
             bBox = {
-                x: bRect.left - board.offset.left,
-                y: bRect.top - board.offset.top,
+                x: bRect.left - board.offset().left,
+                y: bRect.top - board.offset().top,
                 width: bRect.width,
                 height: bRect.height
             };
@@ -274,7 +272,7 @@ Entry.Scroller.RADIUS = 7;
     };
 
     p._bindEvent = function() {
-        var dResizeScrollBar = _.debounce(this.resizeScrollBar, 10);
+        var dResizeScrollBar = _.debounce(this.resizeScrollBar, 200);
         this.board.changeEvent.attach(this, dResizeScrollBar);
         if (Entry.windowResized)
             Entry.windowResized.attach(this, dResizeScrollBar);

@@ -589,7 +589,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         return result;
     };
 
-    p.BlockStatement = function(component) {
+    p.BlockStatement = function(component) { 
         this._blockStatments = [];
 
         var result;

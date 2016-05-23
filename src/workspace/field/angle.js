@@ -83,7 +83,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
 
     p.renderOptions = function() {
         var that = this;
-        this.destroyOption();
 
         var blockView = this._block.view;
         var func = function() {
@@ -254,6 +253,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
             delete this.svgOptionGroup;
         }
         this.textElement.textContent = this.getText();
+        this.command();
     };
 })(Entry.FieldAngle.prototype);
 

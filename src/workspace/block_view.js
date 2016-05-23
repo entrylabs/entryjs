@@ -67,7 +67,6 @@ Entry.BlockView = function(block, board, mode) {
 
     this.dragMode = Entry.DRAG_MODE_NONE;
     Entry.Utils.disableContextmenu(this.svgGroup.node);
-    this._targetType = this._getTargetType();
     var events = block.events.viewAdd;
     if (events && !this.isInBlockMenu) {
         events.forEach(function(fn) {
@@ -144,11 +143,11 @@ Entry.BlockView.DRAG_RADIUS = 5;
             this.pathGroup.attr({
                 filter: 'url(#entryBlockShadowFilter_' + suffix + ')'
             });
-        } else if (this.magnet.string || this.magnet.bool)
-            pathStyle.stroke = Entry.Utils.colorDarken(this._schema.color, 0.65);
+        } else if (this.magnet.string || this.magnet.boolean)
+            pathStyle.stroke = skeleton.outerLine;
 
         if (skeleton.outerLine) {
-            pathStyle['stroke-width'] = "0.7";
+            pathStyle['stroke-width'] = "0.6";
         }
         this._path.attr(pathStyle);
 
@@ -516,10 +515,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
                     });
 
                     Entry.GlobalSvg.position();
-                    var magnetedBlock = blockView._getCloseBlock();
-                    if (magnetedBlock) {
-                        board.setMagnetedBlock(magnetedBlock.view);
-                    } else board.setMagnetedBlock(null);
+                    blockView._updateCloseBlock();
                     if (!blockView.originPos)
                         blockView.originPos = {x: blockView.x, y: blockView.y};
                     if (isFirst)
@@ -583,7 +579,8 @@ Entry.BlockView.DRAG_RADIUS = 5;
                 var ripple = false;
                 switch (Entry.GlobalSvg.terminateDrag(this)) {
                     case gs.DONE:
-                        var closeBlock = this._getCloseBlock();
+                        var closeBlock = board.magnetedBlockView;
+                        if (closeBlock instanceof Entry.BlockView) closeBlock = closeBlock.block;
                         if (prevBlock && !closeBlock) {
                             Entry.do("separateBlock", block);
                         } else if (!prevBlock && !closeBlock && !fromBlockMenu) {
@@ -594,7 +591,12 @@ Entry.BlockView.DRAG_RADIUS = 5;
                             }
                         } else {
                             if (closeBlock) {
-                                Entry.do("insertBlock", block, closeBlock).isPass(fromBlockMenu);
+                                if (closeBlock.view.magneting === "next") {
+                                    var lastBlock = block.getLastBlock();
+                                    Entry.do("insertBlock", closeBlock, lastBlock).isPass(fromBlockMenu);
+                                } else {
+                                    Entry.do("insertBlock", block, closeBlock).isPass(fromBlockMenu);
+                                }
                                 createjs.Sound.play('entryMagneting');
                                 ripple = true;
                             } else {
@@ -643,11 +645,23 @@ Entry.BlockView.DRAG_RADIUS = 5;
         return;
     };
 
-    p._getCloseBlock = function() {
+    p._updateCloseBlock = function() {
+        var board = this.getBoard(),
+            closeBlock;
         if (!this._skeleton.magnets) return;
-        var targetType = this._targetType;
-        if (!targetType) return;
-        return this.getBoard().getNearestMagnet(this.x, this.y, targetType);
+        for (var type in this.magnet) {
+            var magnet = this.magnet[type];
+            if (type === "next") {
+                closeBlock = this.getBoard().getNearestMagnet(
+                    this.x, this.y + this.getBelowHeight(), type);
+            } else {
+                closeBlock = this.getBoard().getNearestMagnet(
+                    this.x, this.y, type);
+            }
+            if (closeBlock)
+                return board.setMagnetedBlock(closeBlock.view, type);
+        }
+        board.setMagnetedBlock(null);
     };
 
     p.dominate = function() {
@@ -745,8 +759,15 @@ Entry.BlockView.DRAG_RADIUS = 5;
         if (magneting) {
             var shadow = this._board.dragBlock.getShadow();
             var pos = this.getAbsoluteCoordinate();
-            var magnet = this.magnet.next;
-            var transform  = 'translate(' + (pos.x + magnet.x) + ',' + (pos.y + magnet.y) + ')';
+            var magnet, transform;
+            if (magneting === "previous") {
+                magnet = this.magnet.next;
+                transform  = 'translate(' + (pos.x + magnet.x) + ',' + (pos.y + magnet.y) + ')';
+            } else if (magneting === "next") {
+                magnet = this.magnet.previous;
+                var dragHeight = this._board.dragBlock.getBelowHeight();
+                transform  = 'translate(' + (pos.x + magnet.x) + ',' + (pos.y + magnet.y - dragHeight) + ')';
+            }
             $(shadow).attr({
                 transform: transform,
                 display: 'block'
@@ -760,12 +781,15 @@ Entry.BlockView.DRAG_RADIUS = 5;
                 delete blockView.background;
                 delete blockView.nextBackground;
             }
-            var height = this._board.dragBlock.getBelowHeight() + this.offsetY;
 
-            blockView.originalHeight = blockView.offsetY;
-            blockView.set({
-                offsetY: height,
-            });
+            if (magneting === "previous") {
+                var height = this._board.dragBlock.getBelowHeight() + this.offsetY;
+
+                blockView.originalHeight = blockView.offsetY;
+                blockView.set({
+                    offsetY: height,
+                });
+            }
         } else {
             if (this._clonedShadow) {
                 this._clonedShadow.attr({display: 'none'});
@@ -897,18 +921,6 @@ Entry.BlockView.DRAG_RADIUS = 5;
         pos.x += this.x;
         pos.y += this.y;
         return pos;
-    };
-
-    p._getTargetType = function() {
-        var targetType = this._skeleton.magnets ? this._skeleton.magnets(this) : {};
-
-        if (targetType.previous) targetType = 'nextMagnet';
-        else if (targetType.string) targetType = 'stringMagnet';
-        else if (targetType.bool) targetType = 'booleanMagnet';
-        else if (targetType.param) targetType = 'paramMagnet';
-        else targetType = null;
-
-        return targetType;
     };
 
     p.getBelowHeight = function() {

@@ -59,8 +59,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
             height: CONTENT_HEIGHT,
             y: y,
             rx: 3, ry: 3,
-            fill: "#fff",
-            'fill-opacity': 0.4
+            fill: "transparent"
         });
 
         this.svgGroup.appendChild(this.textElement);
@@ -77,7 +76,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
 
     p.renderOptions = function() {
         var that = this;
-        this.destroyOption();
 
         var blockView = this._blockView;
 

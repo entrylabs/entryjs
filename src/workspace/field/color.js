@@ -70,7 +70,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
 
     p.renderOptions = function() {
         var that = this;
-        this.destroyOption();
 
         var blockView = this._block.view;
 

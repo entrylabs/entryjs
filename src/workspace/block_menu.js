@@ -31,7 +31,6 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     this._clearCategory();
     this._generateView(categoryData);
 
-    this.offset = this.svgDom.offset();
     this._splitters = [];
     this.setWidth();
 
@@ -61,6 +60,10 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         Entry.documentMousedown.attach(this, this.setSelectedBlock);
     if (this._categoryCodes && Entry.keyPressed)
         Entry.keyPressed.attach(this, this._captureKeyEvent);
+    if (Entry.windowResized) {
+        var dUpdateOffset = _.debounce(this.updateOffset, 200);
+        Entry.windowResized.attach(this, dUpdateOffset);
+    }
 };
 
 (function(p) {
@@ -127,6 +130,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             delete Entry.playground.focusBlockMenu;
         });
 
+        $(window).scroll(function() {
+            that.updateOffset();
+        });
     };
 
     p.changeCode = function(code) {
@@ -235,7 +241,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
                 this._boardBlockView = Entry.do("addThread", threadJSON).value
                     .getFirstBlock().view;
 
-                var distance = this.offset.top - board.offset.top;
+                var offset = this.offset();
+                var distance = offset.top - board.offset().top;
 
                 this._boardBlockView._moveTo(
                     blockView.x-svgWidth,
@@ -265,7 +272,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         //board block should be removed below the amount of range
         var blockLeft = Entry.GlobalSvg.left;
         var width = Entry.GlobalSvg.width/2;
-        var boardLeft = boardBlockView.getBoard().offset.left;
+        var boardLeft = boardBlockView.getBoard().offset().left;
         return blockLeft < boardLeft - width;
     };
 
@@ -339,7 +346,6 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     p.setWidth = function() {
         this._svgWidth = this.blockMenuContainer.width();
         this.updateSplitters();
-        this.offset = this.svgDom.offset();
     };
 
     p.setMenu = function() {
@@ -590,6 +596,18 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
                 });
             })(element, name);
         }
+    };
+
+    p.updateOffset = function () {
+        this._offset = this.svgDom.offset();
+    };
+
+
+    p.offset = function() {
+        if (!this._offset || (this._offset.top === 0 && this._offset.left === 0))  {
+            this.updateOffset();
+        }
+        return this._offset;
     };
 
 
