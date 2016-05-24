@@ -29,8 +29,6 @@ body {
 <!--underscore -->
 <script src="http://play-entry.com/lib/underscore/underscore.js"></script>
 
-<!--language-->
-
 <!--canvas input-->
 <script src="http://play-entry.com/lib/entryjs/extern/util/CanvasInput.js"></script>
 
@@ -46,11 +44,14 @@ body {
 <script src="http://play-entry.com/lib/entryjs/extern/util/ndgmr.Collision.js"></script>
 <script src="http://play-entry.com/lib/entryjs/extern/util/handle.js"></script>
 
+<!--language-->
+<script src="../extern/lang/ko.js"></script>
+
 <!--entryjs-->
 <script src="http://play-entry.com/lib/components-webfontloader/webfont.js"></script>
-<script src="../extern/util/ko.js"></script>
 <script src="../extern/util/static.js"></script>
 <script src="../dist/entry.min.js"></script>
+<script src="../src/workspace/block_entry.js"></script>
 
 <!--main script-->
 <script>
@@ -63,7 +64,6 @@ body {
             document.getElementById('workspace'),
             initOption
         );
-        Entry.playground.setBlockMenu();
         Entry.enableArduino();
         Entry.loadProject();
     });
