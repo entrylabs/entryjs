@@ -4410,7 +4410,8 @@ Entry.block = {
                     [Lang.Blocks.CALC_timer_visible_hide,"HIDE"]
                 ],
                 "value": "SHOW",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_CALC
             },
             {
                 "type": "Text",
