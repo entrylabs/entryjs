@@ -11409,7 +11409,7 @@ Entry.block = {
             sq[port] = value;
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["hw.neobot_set_sensor_value(%1, %2)"]}
+        "syntax": {"js": [], "py": [""]}
     },
     "robotis_openCM70_cm_custom_value": {
         "color": "#00979D",
@@ -15767,7 +15767,7 @@ Entry.block = {
 
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["hw.xbot_rgb_picker()"]}
+        "syntax": {"js": [], "py": ["hw.xbot_rgb_picker(%1)"]}
     },
     "xbot_buzzer": {
         "color": "#00979D",
