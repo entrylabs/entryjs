@@ -11695,7 +11695,7 @@ Entry.BlockToPyParser = function() {
     console.log("dataParams", g);
     for (var h = "", k = 0;k < b.length;k++) {
       var l = b[k];
-      console.log("blockToken", l);
+      console.log("blockToken check", l);
       if (0 !== l.length) {
         if (c.test(l)) {
           if (console.log("blockParam", l.split("%")[1]), l = l.split("%")[1], l = Number(l) - 1, f[l] && (console.log("schemaParams[index].type", f[l].type), "Indicator" != f[l].type)) {

@@ -70,7 +70,7 @@ Entry.BlockToPyParser = function() {
         
         for (var i=0; i<blockTokens.length; i++) { 
             var blockToken = blockTokens[i];
-            console.log("blockToken", blockToken);
+            console.log("blockToken check", blockToken);
             if (blockToken.length === 0) continue;
             if (blockReg.test(blockToken)) {
 
