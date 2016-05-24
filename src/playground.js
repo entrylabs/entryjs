@@ -838,7 +838,6 @@ Entry.Playground.prototype.injectObject = function(object) {
 Entry.Playground.prototype.injectCode = function() {
     var code = this.object.script;
     this.mainWorkspace.changeBoardCode(code);
-    code.board.adjustThreadsPosition();
 };
 
 Entry.Playground.prototype.adjustScroll = function(xc, yc) {

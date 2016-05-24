@@ -2472,7 +2472,7 @@ Entry.block = {
             Entry.hw.sendQueue["LEDB"] = 0;
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["hw.bitbrick_turn_off_color_led(%1)"]}
+        "syntax": {"js": [], "py": ["hw.bitbrick_turn_off_color_led()"]}
     },
     "bitbrick_turn_on_color_led_by_rgb": {
         "color": "#00979D",
@@ -2570,7 +2570,7 @@ Entry.block = {
             Entry.hw.sendQueue["LEDB"] = parseInt(port.substr(5,2), 16);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["hw.bitbrick_turn_on_color_led_by_picker()"]}
+        "syntax": {"js": [], "py": ["hw.bitbrick_turn_on_color_led_by_picker(%1)"]}
     },
     "bitbrick_turn_on_color_led_by_value": {
         "color": "#00979D",

@@ -382,7 +382,6 @@ Entry.BlockView.DRAG_RADIUS = 5;
     };
 
     p.onMouseDown = function(e) {
-        console.log(this.block.pointer());
         if (e.stopPropagation) e.stopPropagation();
         if (e.preventDefault) e.preventDefault();
 
@@ -515,11 +514,11 @@ Entry.BlockView.DRAG_RADIUS = 5;
                     });
 
                     Entry.GlobalSvg.position();
-                    blockView._updateCloseBlock();
                     if (!blockView.originPos)
                         blockView.originPos = {x: blockView.x, y: blockView.y};
                     if (isFirst)
                         board.generateCodeMagnetMap();
+                    blockView._updateCloseBlock();
                 } else {
                     board.cloneToGlobal(e);
                 }
@@ -593,12 +592,18 @@ Entry.BlockView.DRAG_RADIUS = 5;
                             if (closeBlock) {
                                 if (closeBlock.view.magneting === "next") {
                                     var lastBlock = block.getLastBlock();
+                                    this.dragMode = dragMode;
+                                    board.separate(block);
+                                    this.dragMode = Entry.DRAG_MODE_NONE;
                                     Entry.do("insertBlock", closeBlock, lastBlock).isPass(fromBlockMenu);
+                                    Entry.ConnectionRipple
+                                        .setView(closeBlock.view)
+                                        .dispose();
                                 } else {
                                     Entry.do("insertBlock", block, closeBlock).isPass(fromBlockMenu);
+                                    ripple = true;
                                 }
                                 createjs.Sound.play('entryMagneting');
-                                ripple = true;
                             } else {
                                 Entry.do("moveBlock", block).isPass(fromBlockMenu);
                             }

@@ -114,7 +114,6 @@ Entry.Board.OPTION_CLEAR = 2;
                 this, function() {that.changeEvent.notify();}
             );
             code.createView(this);
-            this.generateCodeMagnetMap(code);
         }
         this.scroller.resizeScrollBar();
     };

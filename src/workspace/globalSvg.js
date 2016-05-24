@@ -24,13 +24,12 @@ goog.provide('Entry.GlobalSvg');
         });
 
         this.svgDom = Entry.Dom(
-            $('<svg id="globalSvg" width="0" height="0"' +
+            $('<svg id="globalSvg" width="10" height="10"' +
               'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
             { parent: body }
         );
 
         this.svg = Entry.SVG('globalSvg');
-        this.width = 0;
         this.left = 0;
         this.top = 0;
         this._inited = true;
@@ -132,11 +131,12 @@ goog.provide('Entry.GlobalSvg');
 
     gs.terminateDrag = function(blockView) {
         var mousePos = Entry.mouseCoordinate;
-        var blockMenu = blockView.getBoard().workspace.blockMenu;
+        var board = blockView.getBoard();
+        var blockMenu =board.workspace.blockMenu;
         var bLeft = blockMenu.offset().left;
         var bTop = blockMenu.offset().top;
         var bWidth = blockMenu.visible ? blockMenu.svgDom.width() : 0;
-        if (mousePos.y > bTop && mousePos.x > bLeft + bWidth)
+        if (mousePos.y > (board.offset().top - 20) && mousePos.x > bLeft + bWidth)
             return this.DONE;
         else if (mousePos.y > bTop && mousePos.x > bLeft && blockMenu.visible)
             return this.REMOVE;
