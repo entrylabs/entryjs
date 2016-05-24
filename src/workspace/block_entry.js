@@ -22,7 +22,7 @@ Entry.block = {
             var pd = Entry.hw.portData
             return pd.leftProximity > 40 || pd.rightProximity > 40;
         },
-        "syntax": {"js": [], "py": ["hw.al_albert_hand_found()"]}
+        "syntax": {"js": [], "py": ["hw.albert_hand_found()"]}
     },
     "albert_value": {
         "color": "#00979D",
