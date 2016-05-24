@@ -119,6 +119,7 @@ goog.provide('Entry.GlobalSvg');
     gs.position = function() {
         var that = this;
         var blockView = this._view;
+        if (!blockView) return;
         var pos = blockView.getAbsoluteCoordinate();
         var offset = blockView.getBoard().offset();
         this.left = pos.x + offset.left - this._offsetX;
