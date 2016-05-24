@@ -32,6 +32,7 @@ Entry.Commander = function(injectType) {
         var argumentArray = Array.prototype.slice.call(arguments);
         argumentArray.shift();
         var command = Entry.Command[commandType];
+        console.log(command.log.apply(this, argumentArray));
         if (Entry.stateManager) {
             Entry.stateManager.addCommand.apply(
                 Entry.stateManager,

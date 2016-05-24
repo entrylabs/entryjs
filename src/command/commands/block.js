@@ -12,18 +12,21 @@ goog.require("Entry.Command");
             return this.editor.board.code.createThread(thread);
         },
         state: function(thread) {
-            if (thread.length > 0)
+            if (thread.length)
                 thread[0].id = Entry.Utils.generateId();
             return [thread];
         },
-        log: function(block) {
-            return [block.id, block.toJSON()];
+        log: function(thread) {
+            return [
+                c.addThread.type,
+                JSON.stringify(thread)
+            ];
         },
         undo: "destroyThread"
     };
 
     c.destroyThread = {
-        type: 106,
+        type: 102,
         do: function(thread) {
             var blockId = thread[0].id;
             var block = this.editor.board.findById(blockId);
@@ -34,13 +37,19 @@ goog.require("Entry.Command");
             var block = this.editor.board.findById(blockId);
             return [block.thread.toJSON()];
         },
-        log: function(block) {
+        log: function(thread) {
+            var blockId = thread[0].id;
+            var block = this.editor.board.findById(blockId);
+            return [
+                c.destroyThread.type,
+                block.id
+            ];
         },
         undo: "addThread"
     };
 
     c.destroyBlock = {
-        type: 106,
+        type: 103,
         do: function(block) {
             if (typeof block === "string")
                 block = this.editor.board.findById(block);
@@ -52,12 +61,18 @@ goog.require("Entry.Command");
             return [block.toJSON(), block.pointer()];
         },
         log: function(block) {
+            if (typeof block === "string")
+                block = this.editor.board.findById(block);
+            return [
+                c.destroyBlock.type,
+                block.id
+            ];
         },
         undo: "recoverBlock"
     };
 
     c.recoverBlock = {
-        type: 106,
+        type: 104,
         do: function(blockModel, pointer) {
             var block = this.editor.board.code.createThread([blockModel]).getFirstBlock();
             if (typeof block === "string")
@@ -69,13 +84,18 @@ goog.require("Entry.Command");
                 block = block.id;
             return [block];
         },
-        log: function(block) {
+        log: function(block, pointer) {
+            return [
+                c.recoverBlock.type,
+                pointer,
+                JSON.stringify(block.toJSON())
+            ];
         },
         undo: "destroyBlock"
     };
 
     c.insertBlock = {
-        type: 102,
+        type: 105,
         do: function(block, targetBlock, count) {
             if (typeof block === "string")
                 block = this.editor.board.findById(block);
@@ -94,13 +114,22 @@ goog.require("Entry.Command");
                 data.push(block.thread.getCount(block));
             return data;
         },
-        log: function(block) {
+        log: function(block, targetBlock, count) {
+            if (typeof block === "string")
+                block = this.editor.board.findById(block);
+            var thread = block.getThread();
+
+            return [
+                c.insertBlock.type,
+                block.id,
+                block.targetPointer()
+            ];
         },
         undo: "insertBlock"
     };
 
     c.separateBlock = {
-        type: 103,
+        type: 106,
         do: function(block) {
             if (block.view)
                 block.view._toGlobalCoordinate(Entry.DRAG_MODE_DRAG);
@@ -118,12 +147,22 @@ goog.require("Entry.Command");
             return data;
         },
         log: function(block) {
+            if (typeof block === "string")
+                block = this.editor.board.findById(block);
+            var thread = block.getThread();
+            var index = thread.indexOf(block);
+
+            return [
+                c.separateBlock.type,
+                block.id,
+                block.targetPointer()
+            ];
         },
         undo: "insertBlock"
     };
 
     c.moveBlock = {
-        type: 104,
+        type: 107,
         do: function(block, x, y) {
             if (x !== undefined) { // do from undo stack
                 block = this.editor.board.findById(block);
@@ -142,13 +181,18 @@ goog.require("Entry.Command");
             ];
         },
         log: function(block) {
-            return [block.id, block.toJSON()];
+            var thread = block.getThread();
+            return [
+                c.moveBlock.type,
+                block.id,
+                block.targetPointer()
+            ];
         },
         undo: "moveBlock"
     };
 
     c.cloneBlock = {
-        type: 105,
+        type: 108,
         do: function(block) {
             if (typeof block === "string")
                 block = this.editor.board.findById(block);
@@ -160,13 +204,19 @@ goog.require("Entry.Command");
             return [block];
         },
         log: function(block) {
-            return [block.id, block.toJSON()];
+            if (typeof block === "string")
+                block = this.editor.board.findById(block);
+            var thread = block.getThread();
+            return [
+                c.cloneBlock.type,
+                JSON.stringify(thread.toJSON())
+            ];
         },
         undo: "uncloneBlock"
     };
 
     c.uncloneBlock = {
-        type: 105,
+        type: 109,
         do: function(block) {
             var threads = this.editor.board.code.getThreads();
             var lastBlock = threads.pop().getFirstBlock();
@@ -176,35 +226,47 @@ goog.require("Entry.Command");
             return [block];
         },
         log: function(block) {
-            return [block.id, block.toJSON()];
+            var threads = this.editor.board.code.getThreads();
+            var thread = threads.pop();
+            return [
+                c.unclondeBlock.type,
+                block.id
+            ];
         },
         undo: "cloneBlock"
     };
 
     c.scrollBoard = {
-        type: 105,
+        type: 110,
         do: function(dx, dy) {
             this.editor.board.scroller._scroll(dx, dy);
         },
         state: function(dx, dy) {
             return [-dx, -dy];
         },
-        log: function(block) {
-            return [block.id, block.toJSON()];
+        log: function(dx, dy) {
+            return [
+                c.scrollBoard.type,
+                dx, dy
+            ];
         },
         undo: "scrollBoard"
     };
 
     c.setFieldValue = {
-        type: 106,
+        type: 111,
         do: function(block, field, pointer, oldValue, newValue) {
             field.setValue(newValue, true);
         },
         state: function(block, field, pointer, oldValue, newValue) {
             return [block, field, pointer, newValue, oldValue];
         },
-        log: function(block, newValue) {
-            return [block.id, newValue];
+        log: function(block, field, pointer, oldValue, newValue) {
+            return [
+                c.setFieldValue.type,
+                pointer,
+                newValue
+            ];
         },
         undo: "setFieldValue"
     };
