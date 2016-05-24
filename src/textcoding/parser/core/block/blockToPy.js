@@ -64,57 +64,50 @@ Entry.BlockToPyParser = function() {
 
         console.log("block", block);
         console.log("schemaParams", schemaParams);
-        console.log("dataParams", dataParams);
+        console.log("dataParams", dataParams); 
 
-        var result = "";
+        var result = "";    
         
-        for (var i=0; i<blockTokens.length; i++) {
+        for (var i=0; i<blockTokens.length; i++) { 
             var blockToken = blockTokens[i];
             console.log("blockToken", blockToken);
             if (blockToken.length === 0) continue;
             if (blockReg.test(blockToken)) {
+
                 console.log("blockParam", blockToken.split('%')[1]);
                 var blockParam = blockToken.split('%')[1];
-                if(blockParam == 't' ||
-                    blockParam == 'n' ||
-                    blockParam == 'p' ||
-                    blockParam == 's' ||
-                    blockParam == 'a')
-                    var index = Number(0);
-                else
-                    var index = Number(blockParam) - 1;
+                var index = Number(blockParam) - 1;
+                
+                if(schemaParams[index]) {
+                    console.log("schemaParams[index].type", schemaParams[index].type); 
+                    if(schemaParams[index].type == "Indicator") {
+                        index++;    
+                    } else if(schemaParams[index].type == "Block") {
+                        result += this.Block(dataParams[index]).trim();
+                    } else {
+                        console.log("data param", dataParams[index]);
+                        var param = this['Field' + schemaParams[index].type](dataParams[index], schemaParams[index]);
+                        
+                        if(param == null) {
+                            if(schemaParams[index].text) {
+                                param = schemaParams[index].text;
+                            }
+                            else
+                                param = null;  
+                        } 
 
-                console.log("schemaParams[index].type", schemaParams[index].type); 
+                        console.log("param first Result", param); 
+                         
+                        
+                        param = Entry.TextCodingUtil.prototype.binaryOperatorValueConvertor(param);   
+                        param = String(param);
 
-                if(schemaParams[index].type == "Indicator") {
-                    index++;    
-                }
-                if(schemaParams[index].type == "Block") {
-                    result += this.Block(dataParams[index]).trim();
-                } 
-                else {
-                    console.log("data param", dataParams[index]);
-                    var param = this['Field' + schemaParams[index].type](dataParams[index], schemaParams[index]);
-                    
-                    if(param == null) {
-                        if(schemaParams[index].text) {
-                            param = schemaParams[index].text;
-                        }
-                        else
-                            param = null;
-                    } 
-
-                    console.log("param first Result", param); 
-                     
-                    
-                    param = Entry.TextCodingUtil.prototype.binaryOperatorValueConvertor(param);   
-                    param = String(param);
-
-                    if(!Entry.TextCodingUtil.prototype.isNumeric(param) &&
-                       !Entry.TextCodingUtil.prototype.isBinaryOperator(param))
-                       param = String("\"" + param + "\"");  
-                   
-                    result += param;
+                        if(!Entry.TextCodingUtil.prototype.isNumeric(param) &&
+                           !Entry.TextCodingUtil.prototype.isBinaryOperator(param))
+                           param = String("\"" + param + "\"");  
+                       
+                        result += param;
+                    }
                 }
             } else if (statementReg.test(blockToken)) {
                 var statements = blockToken.split(statementReg);
@@ -127,6 +120,14 @@ Entry.BlockToPyParser = function() {
                     } else result += statementToken;
                 }
             } else {
+                var tagIndex = 0;
+                var bb = blockToken.search('#');
+                if(blockToken.search('#') != -1) {
+                    var tagIndex = blockToken.indexOf('#');
+                    blockToken = blockToken.substring(tagIndex+1);
+                    console.log("blockToken recheck", blockToken);
+                }
+
                 result += blockToken;
             }
         }

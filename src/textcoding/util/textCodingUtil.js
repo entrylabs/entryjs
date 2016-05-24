@@ -164,6 +164,11 @@ Entry.TextCodingUtil = function() {
                 result = {0: "get_sounds"};
                 break;
             }
+            case 'arduino_get_number_sensor_value': {
+                result = {0: "arduino_get_sensor_number"};
+                break;
+            }
+
             default: {
                 result = null;
             }

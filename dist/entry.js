@@ -11559,6 +11559,9 @@ Entry.TextCodingUtil = function() {
       case "sound_from_to_and_wait":
         a = {0:"get_sounds"};
         break;
+      case "arduino_get_number_sensor_value":
+        a = {0:"arduino_get_sensor_number"};
+        break;
       default:
         a = null;
     }
@@ -11673,17 +11676,19 @@ Entry.BlockToPyParser = function() {
       console.log("blockToken", l);
       if (0 !== l.length) {
         if (c.test(l)) {
-          if (console.log("blockParam", l.split("%")[1]), l = l.split("%")[1], l = "t" == l || "n" == l || "p" == l || "s" == l || "a" == l ? Number(0) : Number(l) - 1, console.log("schemaParams[index].type", f[l].type), "Indicator" == f[l].type && l++, "Block" == f[l].type) {
-            h += this.Block(g[l]).trim();
-          } else {
-            console.log("data param", g[l]);
-            var n = this["Field" + f[l].type](g[l], f[l]);
-            null == n && (n = f[l].text ? f[l].text : null);
-            console.log("param first Result", n);
-            n = Entry.TextCodingUtil.prototype.binaryOperatorValueConvertor(n);
-            n = String(n);
-            Entry.TextCodingUtil.prototype.isNumeric(n) || Entry.TextCodingUtil.prototype.isBinaryOperator(n) || (n = String('"' + n + '"'));
-            h += n;
+          if (console.log("blockParam", l.split("%")[1]), l = l.split("%")[1], l = Number(l) - 1, f[l] && (console.log("schemaParams[index].type", f[l].type), "Indicator" != f[l].type)) {
+            if ("Block" == f[l].type) {
+              h += this.Block(g[l]).trim();
+            } else {
+              console.log("data param", g[l]);
+              var n = this["Field" + f[l].type](g[l], f[l]);
+              null == n && (n = f[l].text ? f[l].text : null);
+              console.log("param first Result", n);
+              n = Entry.TextCodingUtil.prototype.binaryOperatorValueConvertor(n);
+              n = String(n);
+              Entry.TextCodingUtil.prototype.isNumeric(n) || Entry.TextCodingUtil.prototype.isBinaryOperator(n) || (n = String('"' + n + '"'));
+              h += n;
+            }
           }
         } else {
           if (e.test(l)) {
@@ -11691,7 +11696,7 @@ Entry.BlockToPyParser = function() {
               l = n[m], 0 !== l.length && (e.test(l) ? (l = Number(l.split("$")[1]) - 1, h += Entry.TextCodingUtil.prototype.indent(this.Thread(a.statements[l]))) : h += l);
             }
           } else {
-            h += l;
+            n = 0, l.search("#"), -1 != l.search("#") && (n = l.indexOf("#"), l = l.substring(n + 1), console.log("blockToken recheck", l)), h += l;
           }
         }
       }

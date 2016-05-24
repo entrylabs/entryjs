@@ -22,7 +22,7 @@ Entry.block = {
             var pd = Entry.hw.portData
             return pd.leftProximity > 40 || pd.rightProximity > 40;
         },
-        "syntax": {"js": [], "py": ["hw.Albert.hadn_found()"]}
+        "syntax": {"js": [], "py": ["hw.albert_hand_found()"]}
     },
     "albert_value": {
         "color": "#00979D",
@@ -64,7 +64,7 @@ Entry.block = {
             var dev = script.getField('DEVICE');
             return pd[dev];
         },
-        "syntax": {"js": [], "py": ["hw.Albert.value(%1)"]}
+        "syntax": {"js": [], "py": ["hw.albert_value(%1)"]}
     },
     "albert_move_forward_for_secs": {
         "color": "#00979D",
@@ -122,7 +122,7 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["hw.albert_move_forward_for_secs"]}
+        "syntax": {"js": [], "py": ["hw.albert_move_forward_for_secs(%1)"]}
     },
     "albert_move_backward_for_secs": {
         "color": "#00979D",
@@ -1495,7 +1495,7 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getStringField("NAME");
         },
-        "syntax": {"js": [], "py": ["hw.arduino_text()"]}
+        "syntax": {"js": [], "py": ["%1arduino_text#"]}
     },
     "arduino_send": {
         "color": "#00979D",
@@ -1609,7 +1609,7 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getStringField("PORT");
         },
-        "syntax": {"js": [], "py": ["hw.arduino_get_sensor_number(%1)"]}
+        "syntax": {"js": [], "py": ["%1arduino_get_sensor_number#"]}
     },
     "arduino_get_port_number": {
         "color": "#00979D",
@@ -1648,7 +1648,7 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getStringField("PORT");
         },
-        "syntax": {"js": [], "py": ["hw.arduino_get_sensor_number(%1)"]}
+        "syntax": {"js": [], "py": ["%1arduino_get_sensor_number#"]}
     },
     "arduino_get_pwm_port_number": {
         "color": "#00979D",
@@ -1679,7 +1679,7 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getStringField("PORT");
         },
-        "syntax": {"js": [], "py": ["hw.arduino_get_pwm_port_number(%1)"]}
+        "syntax": {"js": [], "py": ["%1arduino_get_pwm_port_number#"]}
     },
     "arduino_get_number_sensor_value": {
         "color": "#00979D",
@@ -3478,7 +3478,7 @@ Entry.block = {
             return script.getField('NUM', script);
         },
         "isPrimitive": true,
-        "syntax": {"js": [], "py": ["%n"]}
+        "syntax": {"js": [], "py": ["%1number#"]}
     },
     "angle": {
         "color": "#FFD974",
@@ -3500,7 +3500,7 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getNumberField("ANGLE");
         },
-        "syntax": {"js": [], "py": ["%a"]}
+        "syntax": {"js": [], "py": ["%1angle#"]}
     },
     "get_x_coordinate": {
         "color": "#FFD974",
@@ -9033,7 +9033,7 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getStringField("VALUE");
         },
-        "syntax": {"js": [], "py": ["%p"]}
+        "syntax": {"js": [], "py": ["%1get_pictures#"]}
     },
     "change_to_some_shape": {
         "color": "#EC4466",
@@ -13379,7 +13379,7 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getStringField("VALUE");
         },
-        "syntax": {"js": [], "py": ["%s"]}
+        "syntax": {"js": [], "py": ["%1get_sounds#"]}
     },
     "sound_something_with_block": {
         "color": "#A4D01D",
@@ -14200,7 +14200,7 @@ Entry.block = {
             return script.getField('NAME', script);
         },
         "isPrimitive": true,
-        "syntax": {"js": [], "py": ["%t"]}
+        "syntax": {"js": [], "py": ["%1text#"]}
     },
     "text_write": {
         "color": "#FFCA36",
@@ -16997,7 +16997,8 @@ Entry.block = {
             ],
             "type": "dplay_get_number_sensor_value"
         },
-        "class": "arduino_value"
+        "class": "arduino_value",
+        "syntax": {"js": [], "py": ["hw.dplay_get_number_sensor_value(%1)"]}
     },
     "dplay_get_digital_value": {
         "parent": "arduino_get_digital_value",
@@ -17012,7 +17013,8 @@ Entry.block = {
             ],
             "type": "dplay_get_digital_value"
         },
-        "class": "arduino_value"
+        "class": "arduino_value",
+        "syntax": {"js": [], "py": ["hw.dplay_get_digital_value(%1)"]}
     },
     "dplay_toggle_led": {
         "parent": "arduino_toggle_led",
@@ -17029,7 +17031,8 @@ Entry.block = {
             ],
             "type": "dplay_toggle_led"
         },
-        "class": "arduino_set"
+        "class": "arduino_set",
+        "syntax": {"js": [], "py": ["hw.dplay_toggle_led(%1, %2)"]}
     },
     "dplay_toggle_pwm": {
         "parent": "arduino_toggle_pwm",
@@ -17049,7 +17052,8 @@ Entry.block = {
             ],
             "type": "dplay_toggle_pwm"
         },
-        "class": "arduino_set"
+        "class": "arduino_set",
+        "syntax": {"js": [], "py": ["hw.dplay_toggle_pwm(%1, %2)"]}
     },
     "dplay_convert_scale": {
         "parent": "arduino_convert_scale",
@@ -17086,7 +17090,8 @@ Entry.block = {
             ],
             "type": "dplay_convert_scale"
         },
-        "class": "arduino"
+        "class": "arduino",
+        "syntax": {"js": [], "py": ["hw.dplay_convert_scale(%1, %2, %3, %4, %5)"]}
     },
     "dplay_get_value": {
         "color": "#00979D",
@@ -17128,7 +17133,8 @@ Entry.block = {
         "func": function (sprite, script) {
             var signal = script.getValue("VALUE", script);
             return Entry.hw.getAnalogPortValue(signal[1]);
-        }
+        },
+        "syntax": {"js": [], "py": ["hw.dplay_get_value(%1, %2)"]}
     },
     "dplay_get_tilt": {
         "color": "#00979D",
@@ -17161,7 +17167,8 @@ Entry.block = {
             var value2 = 12;
             if (value1 == "LIGHT") return Entry.hw.getDigitalPortValue(value2) == 1 ? 1 : 0;
             else return Entry.hw.getDigitalPortValue(value2) == 0 ? 1 : 0;
-        }
+        },
+        "syntax": {"js": [], "py": ["hw.dplay_get_tilt(%1)"]}
     },
     "dplay_DCmotor": {
         "color": "#00979D",
@@ -17226,7 +17233,8 @@ Entry.block = {
             Entry.hw.setDigitalPortValue(port1, value1);
             Entry.hw.setDigitalPortValue(port2, value2);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["hw.dplay_DCmotor(%1, %2)"]}
     },
     "dplay_buzzer": {
         "color": "#00979D",
@@ -17279,7 +17287,8 @@ Entry.block = {
             value = Math.min(value, 100);
             Entry.hw.setDigitalPortValue(port, value);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["hw.dplay_buzzer(%1, %2)"]}
     },
     "dplay_servo": {
         "color": "#00979D",
@@ -17318,7 +17327,8 @@ Entry.block = {
             value = Math.min(value, 180);
             Entry.hw.setDigitalPortValue(port, value);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["hw.dplay_servo(%1)"]}
     },
     "dplay_select_led": {
         "color": "#00979D",
@@ -17372,7 +17382,8 @@ Entry.block = {
             var value = operator == "on" ? 255 : 0;
             Entry.hw.setDigitalPortValue(port, value);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["hw.dplay_select_led(%1, %2)"]}
     },
     "dplay_get_switch_status": {
         "color": "#00979D",
@@ -17417,7 +17428,9 @@ Entry.block = {
             var value1 = script.getField("STATUS");
             if (value1 == "OFF") return Entry.hw.getDigitalPortValue(port) == 1 ? 1 : 0;
             else return Entry.hw.getDigitalPortValue(port) == 0 ? 1 : 0;
-        }
+        },
+        "syntax": {"js": [], "py": ["hw.dplay_get_switch_status(%1, %2)"]}
+
     },
     "dplay_get_light_status": {
         "color": "#00979D",
@@ -17450,7 +17463,8 @@ Entry.block = {
             var value2 = 1;
             if (value1 == "DARK") return Entry.hw.getAnalogPortValue(value2) > 800 ? 1 : 0;
             else return Entry.hw.getAnalogPortValue(value2) < 800 ? 1 : 0;
-        }
+        },
+        "syntax": {"js": [], "py": ["hw.dplay_get_light_status(%1)"]}
     },
     "nemoino_get_number_sensor_value": {
         "parent": "arduino_get_number_sensor_value",
@@ -17465,7 +17479,8 @@ Entry.block = {
             ],
             "type": "nemoino_get_number_sensor_value"
         },
-        "class": "arduino_value"
+        "class": "arduino_value",
+        "syntax": {"js": [], "py": ["hw.nemoino_get_number_sensor_value(%1)"]}
     },
     "nemoino_get_digital_value": {
         "parent": "arduino_get_digital_value",
@@ -17480,7 +17495,8 @@ Entry.block = {
             ],
             "type": "nemoino_get_digital_value"
         },
-        "class": "arduino_value"
+        "class": "arduino_value",
+        "syntax": {"js": [], "py": ["hw.nemoino_get_digital_value(%1)"]}
     },
     "nemoino_toggle_led": {
         "parent": "arduino_toggle_led",
@@ -17497,7 +17513,8 @@ Entry.block = {
             ],
             "type": "nemoino_toggle_led"
         },
-        "class": "arduino_set"
+        "class": "arduino_set",
+        "syntax": {"js": [], "py": ["hw.nemoino_toggle_led(%1, %2)"]}
     },
     "nemoino_toggle_pwm": {
         "parent": "arduino_toggle_pwm",
@@ -17517,7 +17534,8 @@ Entry.block = {
             ],
             "type": "nemoino_toggle_pwm"
         },
-        "class": "arduino_set"
+        "class": "arduino_set",
+        "syntax": {"js": [], "py": ["hw.nemoino_get_number_sensor_value(%1, %2)"]}
     },
     "nemoino_convert_scale": {
         "parent": "arduino_convert_scale",
@@ -17554,7 +17572,8 @@ Entry.block = {
             ],
             "type": "nemoino_convert_scale"
         },
-        "class": "arduino"
+        "class": "arduino",
+        "syntax": {"js": [], "py": ["hw.nemoino_convert_scale(%1, %2, %3, %4, %5)"]}
     },
     "sensorBoard_get_number_sensor_value": {
         "parent": "arduino_get_number_sensor_value",
@@ -17569,7 +17588,8 @@ Entry.block = {
             ],
             "type": "sensorBoard_get_number_sensor_value"
         },
-        "class": "arduino_value"
+        "class": "arduino_value",
+        "syntax": {"js": [], "py": ["hw.sensorBoard_get_number_sensor_value(%1)"]}
     },
     "sensorBoard_get_digital_value": {
         "parent": "arduino_get_digital_value",
@@ -17584,7 +17604,8 @@ Entry.block = {
             ],
             "type": "sensorBoard_get_digital_value"
         },
-        "class": "arduino_value"
+        "class": "arduino_value",
+        "syntax": {"js": [], "py": ["hw.sensorBoard_get_digital_value(%1)"]}
     },
     "sensorBoard_toggle_led": {
         "parent": "arduino_toggle_led",
@@ -17601,7 +17622,8 @@ Entry.block = {
             ],
             "type": "sensorBoard_toggle_led"
         },
-        "class": "arduino_set"
+        "class": "arduino_set",
+        "syntax": {"js": [], "py": ["hw.sensorBoard_toggle_led(%1, %2)"]}
     },
     "sensorBoard_toggle_pwm": {
         "parent": "arduino_toggle_pwm",
@@ -17621,7 +17643,8 @@ Entry.block = {
             ],
             "type": "sensorBoard_toggle_pwm"
         },
-        "class": "arduino_set"
+        "class": "arduino_set",
+        "syntax": {"js": [], "py": ["hw.sensorBoard_toggle_pwm(%1, %2)"]}
     },
     "sensorBoard_convert_scale": {
         "parent": "arduino_convert_scale",
@@ -17658,7 +17681,8 @@ Entry.block = {
             ],
             "type": "sensorBoard_convert_scale"
         },
-        "class": "arduino"
+        "class": "arduino",
+        "syntax": {"js": [], "py": ["hw.sensorBoard_convert_scale(%1, %2, %3, %4, %5)"]}
     },
     "CODEino_get_number_sensor_value": {
         "parent": "arduino_get_number_sensor_value",
@@ -17673,7 +17697,8 @@ Entry.block = {
             ],
             "type": "CODEino_get_number_sensor_value"
         },
-        "class": "arduino_value"
+        "class": "arduino_value",
+        "syntax": {"js": [], "py": ["hw.CODEino_get_number_sensor_value(%1)"]}
     },
     "CODEino_get_digital_value": {
         "parent": "arduino_get_digital_value",
@@ -17688,7 +17713,8 @@ Entry.block = {
             ],
             "type": "CODEino_get_digital_value"
         },
-        "class": "arduino_value"
+        "class": "arduino_value",
+        "syntax": {"js": [], "py": ["hw.CODEino_get_digital_value(%1)"]}
     },
     "CODEino_toggle_led": {
         "parent": "arduino_toggle_led",
@@ -17705,7 +17731,8 @@ Entry.block = {
             ],
             "type": "CODEino_toggle_led"
         },
-        "class": "arduino_set"
+        "class": "arduino_set",
+        "syntax": {"js": [], "py": ["hw.CODEino_toggle_led(%1, %2)"]}
     },
     "CODEino_toggle_pwm": {
         "parent": "arduino_toggle_pwm",
@@ -17725,7 +17752,8 @@ Entry.block = {
             ],
             "type": "CODEino_toggle_pwm"
         },
-        "class": "arduino_set"
+        "class": "arduino_set",
+        "syntax": {"js": [], "py": ["hw.CODEino_toggle_pwm(%1, %2)"]}
     },
     "CODEino_convert_scale": {
         "parent": "arduino_convert_scale",
@@ -17762,7 +17790,8 @@ Entry.block = {
             ],
             "type": "CODEino_convert_scale"
         },
-        "class": "arduino"
+        "class": "arduino",
+        "syntax": {"js": [], "py": ["hw.CODEino_convert_scale(%1, %2, %3, %4, %5)"]}
     }
 };
 
