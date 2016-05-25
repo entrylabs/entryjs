@@ -156,16 +156,14 @@ Entry.Parser = function(mode, type, cm) {
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
                 this._parser = new Entry.BlockToPyParser();
 
-                var syntax = this.syntax;
+                var syntax = this.syntax.py;
                 var assistScope = {};
 
-                for(var key in syntax.Scope ) {
-                    assistScope[key + '();\n'] = syntax.Scope[key];
+                for(var key in syntax) {
+                    assistScope[key + '();\n'] = syntax[key];
                 }
 
-                if('BasicIf' in syntax) {
-                    assistScope['front'] = 'BasicIf';
-                }
+                console.log("assistScope", assistScope);
 
                 cm.setOption("mode", {name: "python", globalVars: true});
 
@@ -175,6 +173,10 @@ Entry.Parser = function(mode, type, cm) {
 
                 cm.on("keyup", function (cm, event) {
                     if (!cm.state.completionActive &&  (event.keyCode >= 65 && event.keyCode <= 95))  {
+                        CodeMirror.showHint(cm, null, {completeSingle: false});
+                    }
+
+                    if(!cm.state.completionActive &&  (event.keyCode == 46)) {
                         CodeMirror.showHint(cm, null, {completeSingle: false, globalScope:assistScope});
                     }
                 });

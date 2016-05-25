@@ -12344,18 +12344,19 @@ Entry.Parser = function(b, a, d) {
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
         this._parser = new Entry.BlockToPyParser;
-        a = this.syntax;
+        a = this.syntax.py;
         e = {};
-        for (f in a.Scope) {
-          e[f + "();\n"] = a.Scope[f];
+        for (f in a) {
+          e[f + "();\n"] = a[f];
         }
-        "BasicIf" in a && (e.front = "BasicIf");
+        console.log("assistScope", e);
         c.setOption("mode", {name:"python", globalVars:!0});
         CodeMirror.commands.autocomplete = function(a) {
           CodeMirror.showHint(a, null, {globalScope:e});
         };
         c.on("keyup", function(a, b) {
-          !a.state.completionActive && 65 <= b.keyCode && 95 >= b.keyCode && CodeMirror.showHint(a, null, {completeSingle:!1, globalScope:e});
+          !a.state.completionActive && 65 <= b.keyCode && 95 >= b.keyCode && CodeMirror.showHint(a, null, {completeSingle:!1});
+          a.state.completionActive || 46 != b.keyCode || CodeMirror.showHint(a, null, {completeSingle:!1, globalScope:e});
         });
     }
   };
