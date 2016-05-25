@@ -27,7 +27,7 @@ Entry.HW = function() {
         '13': Entry.CODEino,
         '15': Entry.dplay,
         '16': Entry.nemoino,
-        '17': Entry.Xbot,        
+        '17': Entry.Xbot,
         '24': Entry.Hamster,
         '25': Entry.Albert,
         '31': Entry.Bitbrick,
@@ -36,6 +36,9 @@ Entry.HW = function() {
         '71': Entry.Robotis_carCont,
         '72': Entry.Robotis_openCM70
     };
+
+    this.checkFirstAlertMsg = false;
+    this.checkOldHardwareProgram = false;
 };
 
 Entry.HW.TRIAL_LIMIT = 1;
@@ -56,44 +59,44 @@ p.initSocket = function() {
 
         var socket, socketSecurity;
         var protocol = '';
+        this.connected = false;
+        this.connectTrial++;
+
         if(location.protocol.indexOf('https') > -1) {
-            socketSecurity = new WebSocket("wss://localhost:23518");
+            socketSecurity = new WebSocket("wss://hardware.play-entry.org:23518");
         } else {
             try{
-                socket = new WebSocket("ws://localhost:23518");
+                socket = new WebSocket("ws://127.0.0.1:23518");
+                socket.binaryType = "arraybuffer";
+
+                socket.onopen = (function()
+                {
+                    this.checkOldHardwareProgram = true;
+                    hw.socketType = 'WebSocket';
+                    hw.initHardware(socket);
+                }).bind(this);
+
+                socket.onmessage = (function (evt)
+                {
+                    var data = JSON.parse(evt.data);
+                    hw.checkDevice(data);
+                    hw.updatePortData(data);
+                }).bind(this);
+
+                socket.onclose = function()
+                {
+                    if(hw.socketType === 'WebSocket') {
+                        this.socket = null;
+                        hw.initSocket();
+                    }
+                };
             } catch(e) {}
             try{
-                socketSecurity = new WebSocket("wss://localhost:23518");
+                socketSecurity = new WebSocket("wss://hardware.play-entry.org:23518");
             } catch(e) {
             }
         }
-
-        this.connected = false;
-        socket.binaryType = "arraybuffer";
         socketSecurity.binaryType = "arraybuffer";
-        this.connectTrial++;
-
-        socket.onopen = function()
-        {
-            hw.socketType = 'WebSocket';
-            hw.initHardware(socket);
-        };
-
-        socket.onmessage = function (evt)
-        {
-            var data = JSON.parse(evt.data);
-            hw.checkDevice(data);
-            hw.updatePortData(data);
-        };
-
-        socket.onclose = function()
-        {
-            if(hw.socketType === 'WebSocket') {
-                this.socket = null;
-                hw.initSocket();
-            }
-        };
-
         socketSecurity.onopen = function()
         {
             hw.socketType = 'WebSocketSecurity';
@@ -199,6 +202,10 @@ p.update = function() {
         return;
     }
 
+    if(!this.checkFirstAlertMsg && this.checkOldHardwareProgram) {
+        alert(Lang.Workspace.hardware_version_alert_text);
+        this.checkFirstAlertMsg = true;
+    }
     this.socket.send(JSON.stringify(this.sendQueue));
 };
 
@@ -215,7 +222,7 @@ p.closeConnection = function() {
 };
 
 p.downloadConnector = function() {
-    var url = "http://github.com/entrylabs/entry-hw/releases/download/1.5.1/Entry_HW_1.5.1_Setup.exe";
+    var url = "http://download.play-entry.org/apps/Entry_HW_1.5.2.exe";
     var win = window.open(url, '_blank');
     win.focus();
 };
@@ -278,6 +285,6 @@ p.checkDevice = function(data) {
 p.banHW = function() {
     var hwOptions = this.hwInfo;
     for (var i in hwOptions)
-        Entry.playground.blockMenu.banClass(hwOptions[i].name);
+        Entry.playground.mainWorkspace.blockMenu.banClass(hwOptions[i].name);
 
 };

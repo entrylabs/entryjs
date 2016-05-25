@@ -1,4 +1,4 @@
-/**
+/*
  * @fileoverview Func object for entry function.
  */
 'use strict';
@@ -10,23 +10,55 @@ goog.require("Entry.Utils");
  * @param {variable model} variable
  * @constructor
  */
-Entry.Func = function() {
-    this.id = Entry.generateHash();
-    this.content = Blockly.Xml.textToDom(Entry.Func.CREATE_BLOCK);
+Entry.Func = function(func) {
+    this.id = func ? func.id : Entry.generateHash();
+    this.content = func ? new Entry.Code(func.content) : new Entry.Code([
+        [
+            {
+                type: "function_create",
+                copyable: false,
+                deletable: false,
+                x: 40, y: 40
+            }
+        ]
+    ]);
     this.block = null;
-    this.stringHash = {};
-    this.booleanHash = {};
+    this.hashMap = {};
+
+    this.paramMap = {};
+
+    var blockSchema = function () {};
+    var blockPrototype = Entry.block.function_general;
+    blockSchema.prototype = blockPrototype;
+    blockSchema = new blockSchema();
+    blockSchema.changeEvent = new Entry.Event();
+    blockSchema.template = Lang.template.function_general;
+
+    Entry.block["func_" + this.id] = blockSchema;
+
+    if (func) {
+        var blockMap = this.content._blockMap;
+        for (var key in blockMap) {
+            Entry.Func.registerParamBlock(blockMap[key].type);
+        }
+        Entry.Func.generateWsBlock(this);
+    }
+
+    Entry.Func.registerFunction(this);
+
+    Entry.Func.updateMenu();
 };
 
 Entry.Func.threads = {};
 
-Entry.Func.registerFunction = function(functionHash, entity) {
-    var threadHash = Entry.generateHash();
-    var func = Entry.variableContainer.getFunction(functionHash);
-    var script = new Entry.Script(entity);
-    script.init(func.content.childNodes[0]);
-    this.threads[threadHash] = script;
-    return threadHash;
+Entry.Func.registerFunction = function(func) {
+    var workspace = Entry.playground.mainWorkspace;
+    if (!workspace) return;
+    var blockMenu = workspace.getBlockMenu();
+    var menuCode = blockMenu.getCategoryCodes("func");
+    this._targetFuncBlock = menuCode.createThread([{
+        type: "func_" + func.id
+    }]);
 };
 
 Entry.Func.executeFunction = function(threadHash) {
@@ -52,138 +84,38 @@ Entry.Func.prototype.init = function(model) {
     this.block = Blockly.Xml.textToDom(xmlText).childNodes[0];
 };
 
-Entry.Func.CREATE_BTN =
-    '<xml><btn text="Lang.Workspace.create_function" ' +
-    'onclick="Entry.variableContainer.createFunction()"></btn></xml>';
-
-Entry.Func.createBtn = Entry.nodeListToArray(
-    Blockly.Xml.textToDom(Entry.Func.CREATE_BTN).childNodes);
-
-Entry.Func.FIELD_BLOCK =
-    '<xml><block type="function_field_label"></block>' +
-    '<block type="function_field_string"><value name="PARAM">' +
-    '<block type="function_param_string"><mutation hashid="#1"/></block></value></block>' +
-    '<block type="function_field_boolean"><value name="PARAM">' +
-    '<block type="function_param_boolean"><mutation hashid="#2"/></block></value></block>' +
-    '</xml>';
-
-Entry.Func.fieldBlocks = Entry.nodeListToArray(
-    Blockly.Xml.textToDom(Entry.Func.FIELD_BLOCK).childNodes);
-
-Entry.Func.CREATE_BLOCK =
-    '<xml><block type="function_create" deletable="false" x="28" y="28">' +
-    '</block></xml>';
-
 Entry.Func.edit = function(func) {
-    this.srcFName = "";
-    var fieldElement = $(func.content.innerHTML).find('field');
-
-    for(var i = 0; i < fieldElement.length; i++)
-        if($(fieldElement[i]).attr('name') === "NAME") {
-            this.srcFName+=$(fieldElement[i]).text();
-            this.srcFName+=' ';
-        }
-    this.srcFName = this.srcFName.trim();
-    
-    this.cancelEdit(); 
-    if (this.workspace)
-        this.workspace.visible = true;
-    this.initEditView();
+    this.cancelEdit();
     this.targetFunc = func;
-    this.workspace.clear();
-    Blockly.Xml.domToWorkspace(this.workspace, func.content);
+    this.initEditView(func.content);
+    this.bindFuncChangeEvent();
     this.updateMenu();
-    this.position_();
 };
 
-Entry.Func.initEditView = function() {
-    this.parentView = Entry.playground.blocklyView_;
-    if (!this.svg) {
-        this.svg = Blockly.createSvgElement('svg', {
-            'xmlns': 'http://www.w3.org/2000/svg',
-            'xmlns:html': 'http://www.w3.org/1999/xhtml',
-            'xmlns:xlink': 'http://www.w3.org/1999/xlink',
-            'version': '1.1',
-            'class': 'blocklySvg entryFunctionEdit'
-        });
-        this.workspace = new Blockly.Workspace();
-        this.workspace.visible = true;
-        var func = this;
+Entry.Func.initEditView = function(content) {
+    if (!this.menuCode)
+        this.setupMenuCode();
+    var workspace = Entry.playground.mainWorkspace;
+    workspace.setMode(Entry.Workspace.MODE_OVERLAYBOARD);
+    workspace.changeOverlayBoardCode(content);
+    this._workspaceStateEvent = workspace.changeEvent.attach(this, this.endEdit);
+};
 
-        this.generateButtons();
-
-        this.svg.appendChild(this.workspace.createDom());
-        this.workspace.scrollbar = new Blockly.ScrollbarPair(
-            this.workspace);
-        var scrollbar = this.workspace.scrollbar;
-        scrollbar.resize();
-
-        this.workspace.addTrashcan();
-
-        Blockly.bindEvent_(window, 'resize', scrollbar, scrollbar.resize);
-        document.addEventListener("blocklyWorkspaceChange", this.syncFunc, false);
-
-        var workspace = this.workspace;
-        Blockly.bindEvent_(this.svg, 'mousedown', null, function(e) {
-            workspace.dragMode = true;
-            workspace.startDragMouseX = e.clientX;
-            workspace.startDragMouseY = e.clientY;
-            workspace.startDragMetrics = workspace.getMetrics();
-            workspace.startScrollX = workspace.scrollX;
-            workspace.startScrollY = workspace.scrollY;
-        });
-        Blockly.bindEvent_(this.svg, 'mousemove', null, function(e) {
-            var hScroll = scrollbar.hScroll;
-            var vScroll = scrollbar.hScroll;
-            hScroll.svgGroup_.setAttribute('opacity', '1');
-            vScroll.svgGroup_.setAttribute('opacity', '1');
-            if (workspace.dragMode) {
-              Blockly.removeAllRanges();
-              var dx = e.clientX - workspace.startDragMouseX;
-              var dy = e.clientY - workspace.startDragMouseY;
-              var metrics = workspace.startDragMetrics;
-              var x = workspace.startScrollX + dx;
-              var y = workspace.startScrollY + dy;
-              x = Math.min(x, -metrics.contentLeft);
-              y = Math.min(y, -metrics.contentTop);
-              x = Math.max(x, metrics.viewWidth - metrics.contentLeft -
-                           metrics.contentWidth);
-              y = Math.max(y, metrics.viewHeight - metrics.contentTop -
-                           metrics.contentHeight);
-
-              // Move the scrollbars and the page will scroll automatically.
-              scrollbar.set(-x - metrics.contentLeft,
-                                      -y - metrics.contentTop);
-            }
-        });
-        Blockly.bindEvent_(this.svg, 'mouseup', null, function(e) {
-            workspace.dragMode = false;
-        });
+Entry.Func.endEdit = function(message) {
+    this.unbindFuncChangeEvent();
+    this._workspaceStateEvent.destroy();
+    delete this._workspaceStateEvent;
+    switch(message){
+        case "save":
+            this.save();
+        case "cancelEdit":
+            this.cancelEdit();
     }
-
-    Blockly.mainWorkspace.blockMenu.targetWorkspace = this.workspace;
-
-    this.doWhenInit();
-    this.parentView.appendChild(this.svg);
-};
+}
 
 Entry.Func.save = function() {
-    var dstFName = "";
-    this.targetFunc.content = Blockly.Xml.workspaceToDom(this.workspace);
     this.targetFunc.generateBlock(true);
     Entry.variableContainer.saveFunction(this.targetFunc);
-    var fieldElement = $(this.targetFunc.content.innerHTML).find('field');
-
-    for(var i = 0; i < fieldElement.length; i++)
-        if($(fieldElement[i]).attr('name') === "NAME") {
-            
-            dstFName+=$(fieldElement[i]).text();
-            dstFName+=' ';
-        }
-    dstFName = dstFName.trim();
-    this.syncFuncName(dstFName);
-
-    this.cancelEdit();
 };
 
 Entry.Func.syncFuncName = function(dstFName) {
@@ -193,7 +125,7 @@ Entry.Func.syncFuncName = function(dstFName) {
     var name ="";
     var blocks = [];
     blocks =  Blockly.mainWorkspace.getAllBlocks();
-    for(var i = 0; i < blocks.length; i++) { 
+    for(var i = 0; i < blocks.length; i++) {
         var block = blocks[i];
         if(block.type === "function_general") {
             var iList = [];
@@ -208,7 +140,7 @@ Entry.Func.syncFuncName = function(dstFName) {
             name = name.trim();
             if(name === this.srcFName && (this.srcFName.split(' ').length == dstFNameTokens.length)) {
                 for(var k=0; k < iList.length; k++) {
-                    var input = iList[k];             
+                    var input = iList[k];
                     if(input.fieldRow.length > 0 && (input.fieldRow[0] instanceof Blockly.FieldLabel) && (input.fieldRow[0].text_ != undefined)) {
                         if(dstFNameTokens[index] === undefined) {
                             iList.splice(k,1);
@@ -229,23 +161,22 @@ Entry.Func.syncFuncName = function(dstFName) {
     var updatedDom = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace)
     Blockly.mainWorkspace.clear();
     Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, updatedDom);
-}; 
+};
 
 Entry.Func.cancelEdit = function() {
-    if (!this.svg || !this.targetFunc)
+    if (!this.targetFunc)
         return;
-    this.workspace.visible = false;
-    this.parentView.removeChild(this.svg);
     Entry.Func.isEdit = false;
-    Blockly.mainWorkspace.blockMenu.targetWorkspace = Blockly.mainWorkspace;
     if (!this.targetFunc.block) {
+        this._targetFuncBlock.destroy();
         delete Entry.variableContainer.functions_[this.targetFunc.id];
         delete Entry.variableContainer.selected;
     }
     delete this.targetFunc;
     this.updateMenu();
-    this.doWhenCancel();
     Entry.variableContainer.updateList();
+    var workspace = Entry.playground.mainWorkspace;
+    workspace.setMode(Entry.Workspace.MODE_BOARD);
 };
 
 Entry.Func.getMenuXml = function() {
@@ -288,80 +219,98 @@ Entry.Func.syncFunc = function() {
     }
 };
 
-Entry.Func.updateMenu = function() {
-    if (Entry.playground.selectedMenu == 'func') {
-        Entry.playground.blockMenu.hide();
-        Entry.playground.blockMenu.show(Entry.Func.getMenuXml());
-        if (!Blockly.WidgetDiv.field_ && Entry.Func.targetFunc) {
-            var target = Entry.Func.targetFunc;
-            var xml = Blockly.Xml.workspaceToDom(Entry.Func.workspace);
-            var generals = xml.getElementsByClassName("function_general");
-            var hash = target.id;
-            var block;
-            generals = Entry.nodeListToArray(generals);
-            var currentGenerals = [];
-            var otherGenerals = {};
+Entry.Func.setupMenuCode = function() {
+    var workspace = Entry.playground.mainWorkspace;
+    if (!workspace) return;
+    var blockMenu = workspace.getBlockMenu();
+    var menuCode = blockMenu.getCategoryCodes("func");
+    this._fieldLabel = menuCode.createThread([{
+        type: "function_field_label"
+    }]).getFirstBlock();
+    this._fieldString = menuCode.createThread([{
+        type: "function_field_string",
+        params: [
+            {type: this.requestParamBlock("string")}
+        ]
+    }]).getFirstBlock();
+    this._fieldBoolean = menuCode.createThread([{
+        type: "function_field_boolean",
+        params: [
+            {type: this.requestParamBlock("boolean")}
+        ]
+    }]).getFirstBlock();
+    this.menuCode = menuCode;
+}
 
-            generals.map(function(b) {
-                var functionHash = b.getElementsByTagName("mutation")[0]
-                            .getAttribute('hashid');
-                if (functionHash == hash) currentGenerals.push(b);
-                else {
-                    if (!otherGenerals[functionHash])
-                        otherGenerals[functionHash] = [];
-                    otherGenerals[functionHash].push(b);
-                }
-            });
-            currentGenerals.map(function(b) {
-                block = Entry.Func.generateWsBlock(xml,
-                    Blockly.Xml.workspaceToDom(Entry.Func.workspace),
-                    hash).block;
-                var remainBlocks = [];
-                var flag = false;
-                while (b.firstChild) {
-                    var child = b.firstChild;
-                    var xmlTag = child.tagName;
-                    if (flag || xmlTag == 'NEXT') {
-                        flag = true;
-                        remainBlocks.push(child);
-                    }
-                    b.removeChild(child);
-                }
-                while (block.firstChild)
-                    b.appendChild(block.firstChild);
-                while(remainBlocks.length)
-                    b.appendChild(remainBlocks.shift());
-            });
+Entry.Func.refreshMenuCode = function() {
+    var workspace = Entry.playground.mainWorkspace;
+    if (!workspace) return;
+    if (!this.menuCode)
+        this.setupMenuCode();
+    var stringType = this._fieldString.params[0].type;
+    var referenceCount = Entry.block[stringType].changeEvent._listeners.length;
+    if (referenceCount > 2) // check new block type is used
+        this._fieldString.params[0].changeType(this.requestParamBlock("string"));
+    var booleanType = this._fieldBoolean.params[0].type;
+    referenceCount = Entry.block[booleanType].changeEvent._listeners.length;
+    if (referenceCount > 2)
+        this._fieldBoolean.params[0].changeType(this.requestParamBlock("boolean"));
+};
 
-            for (var hashKey in otherGenerals) {
-                var otherBlocks = otherGenerals[hashKey];
-                var funcContent = Entry.variableContainer.getFunction(hashKey).content;
-                otherBlocks.map(function(b) {
-                    block = Entry.Func.generateWsBlock(xml,
-                        funcContent,
-                        hashKey).block;
-                    var remainBlocks = [];
-                    var flag = false;
-                    while (b.firstChild) {
-                        var child = b.firstChild;
-                        var xmlTag = child.tagName;
-                        if (flag || xmlTag == 'NEXT') {
-                            flag = true;
-                            remainBlocks.push(child);
-                        }
-                        b.removeChild(child);
-                    }
-                    while (block.firstChild)
-                        b.appendChild(block.firstChild);
-                    while(remainBlocks.length)
-                        b.appendChild(remainBlocks.shift());
-                });
-            }
-
-            Entry.Func.workspace.clear();
-            Blockly.Xml.domToWorkspace(Entry.Func.workspace, xml);
-        }
+Entry.Func.requestParamBlock = function(type) {
+    var id = Entry.generateHash();
+    var blockPrototype;
+    switch (type) {
+        case "string":
+            blockPrototype = Entry.block.function_param_string;
+            break;
+        case "boolean":
+            blockPrototype = Entry.block.function_param_boolean;
+            break;
+        default:
+            return null;
     }
+
+    var blockType = type + "Param_" + id;
+    var blockSchema = Entry.Func.createParamBlock(blockType, blockPrototype, type);
+    Entry.block[blockType] = blockSchema;
+    return blockType;
+};
+
+Entry.Func.registerParamBlock = function(type) {
+    if (type.indexOf("stringParam") > -1) {
+        Entry.Func.createParamBlock(type, Entry.block.function_param_string, type);
+    } else if (type.indexOf("booleanParam") > -1 ) {
+        Entry.Func.createParamBlock(type, Entry.block.function_param_boolean, type);
+    }
+};
+
+Entry.Func.createParamBlock = function(type, blockPrototype, originalType) {
+    var blockSchema = function () {};
+    originalType = originalType === "string" ? "function_param_string" : "function_param_boolean";
+    blockSchema.prototype = blockPrototype;
+    blockSchema = new blockSchema();
+    blockSchema.changeEvent = new Entry.Event();
+    blockSchema.template = Lang.template[originalType];
+
+    Entry.block[type] = blockSchema;
+    return blockSchema;
+}
+
+Entry.Func.updateMenu = function() {
+    var workspace = Entry.playground.mainWorkspace;
+    if (!workspace) return;
+    var blockMenu = workspace.getBlockMenu();
+    if (this.targetFunc) {
+        if (!this.menuCode)
+            this.setupMenuCode();
+        blockMenu.banClass("functionInit");
+        blockMenu.unbanClass("functionEdit");
+    } else {
+        blockMenu.unbanClass("functionInit");
+        blockMenu.banClass("functionEdit");
+    }
+    blockMenu.reDraw();
 };
 
 Entry.Func.prototype.edit = function() {
@@ -375,236 +324,139 @@ Entry.Func.prototype.edit = function() {
     }
 };
 
-Entry.Func.generateBlock = function(func, content, id) {
-    var topBlocks = Entry.nodeListToArray(content.childNodes);
-    var createBlock;
-    for (var i in topBlocks)
-        if (topBlocks[i].getAttribute('type') == 'function_create')
-            createBlock = topBlocks[i];
-    var script = new Entry.Script();
-    script.init(createBlock);
-    var field = script;
-    if (field.values)
-        field = script.values.FIELD;
-    var mutationXml = '<mutation hashid="' + id + '">';
-    var fieldXml = '';
-    var description = '';
-    var stringCount = 0;
-    var booleanCount = 0;
-    func.stringHash = {};
-    func.booleanHash = {};
-    while(true) {
-        var type = field.type;
-        switch (type) {
-            case 'function_field_label':
-                mutationXml += '<field type="label" content="' +
-                    field.fields.NAME.replace("<", "&lt;").replace(">", "&gt;") + '"></field>';
-                description += field.fields.NAME;
-                break;
-            case 'function_field_boolean':
-                var hash = field.values.PARAM.hashId;
-                mutationXml += '<field type="boolean" hashid="' + hash +
-                               '"></field>';
-                fieldXml += '<value name="' + hash + '"><block type="True">' +
-                    '</block></value>';
-                func.booleanHash[hash] = booleanCount;
-                booleanCount++;
-                description += '논리값' + booleanCount;
-                break;
-            case 'function_field_string':
-                var hash = field.values.PARAM.hashId;
-                mutationXml += '<field type="string" hashid="' + hash +
-                               '"></field>';
-                fieldXml += '<value name="' + hash + '"><block type="text">' +
-                    '<field name="NAME">10</field></block></value>';
-                func.stringHash[hash] = stringCount;
-                stringCount++;
-                description += '문자값' + stringCount;
-                break;
-        }
-        if (field.values && field.values.NEXT) field = field.values.NEXT;
-        else break;
-        description += ' ';
+Entry.Func.generateBlock = function(func) {
+    var blockSchema = Entry.block["func_" + func.id];
+    var block = {
+        template: blockSchema.template,
+        params: blockSchema.params
     }
-    mutationXml += '</mutation>';
-    var blockText = '<xml><block type="function_general">' + mutationXml +
-        fieldXml + '</block></xml>';
-    var block = Blockly.Xml.textToDom(blockText).childNodes[0];
-    if (!description) description = "함수";
+
+    var reg = /(%\d)/mi;
+    var templateParams = blockSchema.template.split(reg);
+    var description = "";
+    var booleanIndex = 0;
+    var stringIndex = 0;
+    for (var i in templateParams) {
+        var templateChunk = templateParams[i];
+        if (reg.test(templateChunk)) {
+            var paramIndex = Number(templateChunk.split('%')[1]) - 1;
+            var param = blockSchema.params[paramIndex];
+            if (param.type === "Indicator") {
+            } else if (param.accept === "boolean") {
+                description +=
+                    Lang.template.function_param_boolean +
+                    (booleanIndex ? booleanIndex : "");
+                booleanIndex++;
+            } else {
+                description += Lang.General.param_string +
+                    (stringIndex ? stringIndex : "");
+                stringIndex++;
+            }
+        } else {
+            description += templateChunk
+        }
+
+    }
+
     return {block: block, description: description};
 };
 
 Entry.Func.prototype.generateBlock = function(toSave) {
-    var generatedInfo = Entry.Func.generateBlock(this, this.content, this.id);
+    var generatedInfo = Entry.Func.generateBlock(this);
     this.block = generatedInfo.block;
     this.description = generatedInfo.description;
 };
 
-/**
- * Update view when window resizing
- * @private
- */
-Entry.Func.prototype.syncViewSize_ = function() {
-  var rect = this.parentView.getBoundingClientRect();
-  this.svg.style.width = rect.width;
-  this.svg.style.height = rect.height;
-};
-
-Entry.Func.generateButtons = function() {
-    var func = this;
-    var btnWrapper = Blockly.createSvgElement('g', {}, this.svg);
-    this.btnWrapper = btnWrapper;
-    var saveText = Blockly.createSvgElement('text', {
-      'x': '27',
-      'y': '33',
-      'class': 'entryFunctionButtonText'
-      }, btnWrapper);
-    var saveTextNode = document.createTextNode(Lang.Buttons.save);
-    saveText.appendChild(saveTextNode);
-
-    var cancelText = Blockly.createSvgElement('text', {
-      'x': '102.5',
-      'y': '33',
-      'class': 'entryFunctionButtonText'
-      }, btnWrapper);
-    var cancelTextNode = document.createTextNode(Lang.Buttons.cancel);
-    cancelText.appendChild(cancelTextNode);
-    var saveButton = Blockly.createSvgElement('circle', {
-        'cx': '27.5',
-        'cy': '27.5',
-        'r': '27.5',
-        'class': 'entryFunctionButton'
-    }, btnWrapper);
-    var cancelButton = Blockly.createSvgElement('circle', {
-        'cx': '102.5',
-        'cy': '27.5',
-        'r': '27.5',
-        'class': 'entryFunctionButton'
-    }, btnWrapper);
-
-    saveButton.onclick = function(e) { func.save(); };
-    saveText.onclick = function(e) { func.save(); };
-
-    cancelButton.onclick = function(e) { func.cancelEdit(); };
-    cancelText.onclick = function(e) { func.cancelEdit(); };
-};
-
-Entry.Func.position_ = function() {
-    var metrics = this.workspace.getMetrics();
-    if (!metrics || !this.workspace.visible) {
-      // There are no metrics available (workspace is probably not visible).
-        return;
-    }
-    var wrapper = this.btnWrapper;
-    wrapper.setAttribute('transform', 'translate(30, 501)');
-
-    if (Blockly.RTL) {
-        //I didn't code here anything
-        this.left_ = this.MARGIN_SIDE_;
-    } else {
-        wrapper.left_ = metrics.viewWidth/2 + metrics.absoluteLeft - 60;
-    }
-    wrapper.top_ = metrics.viewHeight + metrics.absoluteTop - 200;
-    wrapper.setAttribute('transform',
-        'translate(' + wrapper.left_ + ',' + wrapper.top_ + ')');
-};
-
-Entry.Func.positionBlock_ = function(block) {
-    var metrics = this.workspace.getMetrics();
-    if (!metrics || !this.workspace.visible)
-        return;
-
-    var originRoot = block.getSvgRoot();
-    var originXY = Blockly.getSvgXY_(originRoot);
-
-    var hw = block.getHeightWidth();
-    var targetX = metrics.viewWidth/2 - 80;
-    var targetY = metrics.viewHeight/2 - 50;
-    block.moveBy(targetX-originXY.x, targetY-originXY.y);
-};
-
-Entry.Func.doWhenInit = function() {
-    var svg = this.svg;
-    svg.appendChild(Blockly.fieldKeydownDom);
-    svg.appendChild(Blockly.fieldDropdownDom);
-    svg.appendChild(Blockly.contextMenu);
-    Blockly.bindEvent_(window, 'resize', this, this.position_);
-    Blockly.bindEvent_(svg, 'mousedown', null, Blockly.onMouseDown_);
-    Blockly.bindEvent_(svg, 'contextmenu', null, Blockly.onContextMenu_);
-};
-
-Entry.Func.doWhenCancel = function() {
-    Blockly.clipboard_ = null;
-    var svg = Blockly.svg;
-    svg.appendChild(Blockly.fieldKeydownDom);
-    svg.appendChild(Blockly.fieldDropdownDom);
-    svg.appendChild(Blockly.contextMenu);
-    Blockly.unbindEvent_(window, 'resize', this, this.position_);
-    Blockly.unbindEvent_(svg, 'mousedown', null, Blockly.onMouseDown_);
-    Blockly.unbindEvent_(svg, 'contextmenu', null, Blockly.onContextMenu_);
-};
-
-Entry.Func.generateWsBlock = function(func, content, id) {
-    var topBlocks = content.childNodes;
-    var createBlock;
-    for (var i in topBlocks) {
-        if (topBlocks[i].getAttribute('type') == 'function_create') {
-            createBlock = topBlocks[i];
-            break;
-        }
-    }
-    var script = new Entry.Script();
-    script.init(createBlock);
-    var field = script;
-    if (field.values)
-        field = script.values.FIELD;
-    var mutationXml = '<mutation hashid="' + id + '">';
-    var fieldXml = '';
-    var description = '';
-    var stringCount = 0;
-    var booleanCount = 0;
-    func.stringHash = {};
-    func.booleanHash = {};
-    while(true) {
-        switch (field.type) {
+Entry.Func.generateWsBlock = function(targetFunc) {
+    this.unbindFuncChangeEvent();
+    targetFunc = targetFunc ? targetFunc : this.targetFunc;
+    var defBlock = targetFunc.content.getEventMap("funcDef")[0];
+    var outputBlock = defBlock.params[0];
+    var booleanIndex = 0;
+    var stringIndex = 0;
+    var schemaParams = [];
+    var schemaTemplate = "";
+    var hashMap = targetFunc.hashMap;
+    var paramMap = targetFunc.paramMap;
+    while(outputBlock) {
+        var value = outputBlock.params[0];
+        switch(outputBlock.type) {
             case 'function_field_label':
-                mutationXml += '<field type="label" content="' +
-                    field.fields.NAME.replace("<", "&lt;").replace(">", "&gt;") + '"></field>';
-                description += field.fields.NAME;
+                schemaTemplate = schemaTemplate + " " + value;
                 break;
             case 'function_field_boolean':
-                var hash = field.values.PARAM.hashId;
-                mutationXml += '<field type="boolean" hashid="' + hash +
-                               '"></field>';
-                fieldXml += '<value name="' + hash + '"><block type="function_param_boolean">' +
-                    '<mutation hashid="'+ hash +'"></mutation></block></value>';
-                func.booleanHash[hash] = booleanCount;
-                booleanCount++;
-                description += '논리값' + booleanCount;
+                Entry.Mutator.mutate(value.type, {
+                    template: Lang.Blocks.FUNCTION_logical_variable +
+                        " " + (booleanIndex ? booleanIndex : "")
+                });
+                hashMap[value.type] = false;
+                paramMap[value.type] = booleanIndex + stringIndex;
+                booleanIndex++;
+                schemaParams.push({
+                    type: "Block",
+                    accept: "boolean"
+                });
+                schemaTemplate += " %" + (booleanIndex + stringIndex);
                 break;
             case 'function_field_string':
-                var hash = field.values.PARAM.hashId;
-                mutationXml += '<field type="string" hashid="' + hash +
-                               '"></field>';
-                fieldXml += '<value name="' + hash + '"><block type="function_param_string">' +
-                    '<mutation hashid="'+ hash +'"></mutation></block></value>';
-                func.stringHash[hash] = stringCount;
-                stringCount++;
-                description += '문자값' + stringCount;
+                Entry.Mutator.mutate(value.type, {
+                    template: Lang.Blocks.FUNCTION_character_variable +
+                        " " + (stringIndex ? stringIndex : "")
+                });
+                hashMap[value.type] = false;
+                paramMap[value.type] = booleanIndex + stringIndex;
+                stringIndex++;
+                schemaTemplate += " %" + (booleanIndex + stringIndex);
+                schemaParams.push({
+                    type: "Block",
+                    accept: "string"
+                });
                 break;
         }
-        if (field.values && field.values.NEXT)
-            field = field.values.NEXT;
-        else break;
-        description += ' ';
+        outputBlock = outputBlock.getOutputBlock();
     }
-    mutationXml += '</mutation>';
-    var blockText = '<xml><block type="function_general">' +
-        mutationXml + fieldXml + '</block></xml>';
-    if (!description) description = "함수";
-    return {
-        block: Blockly.Xml.textToDom(blockText).childNodes[0],
-        description: description
-    };
+    booleanIndex++;
+    schemaTemplate += " %" + (booleanIndex + stringIndex);
+    schemaParams.push({
+        "type": "Indicator",
+        "img": "block_icon/function_03.png",
+        "size": 12
+    });
+    Entry.Mutator.mutate(
+        "func_" + targetFunc.id,
+        {params: schemaParams, template: schemaTemplate}
+    );
+
+    for (var key in hashMap) {
+        var state = hashMap[key];
+        if (state) {
+            var text;
+            if (key.indexOf("string") > -1)
+                text = Lang.Blocks.FUNCTION_character_variable;
+            else
+                text = Lang.Blocks.FUNCTION_logical_variable;
+            Entry.Mutator.mutate(key, {
+                template: text
+            });
+        } else {
+            hashMap[key] = true;
+        }
+    }
+
+    this.bindFuncChangeEvent(targetFunc);
+};
+
+Entry.Func.bindFuncChangeEvent = function(targetFunc) {
+    targetFunc = targetFunc ? targetFunc : this.targetFunc;
+    if (!this._funcChangeEvent && targetFunc.content.getEventMap("funcDef")[0].view)
+        this._funcChangeEvent = targetFunc.content
+            .getEventMap("funcDef")[0].view._contents[1]
+            .changeEvent.attach(this, this.generateWsBlock);
+};
+
+Entry.Func.unbindFuncChangeEvent = function() {
+    if (this._funcChangeEvent)
+        this._funcChangeEvent.destroy();
+    delete this._funcChangeEvent;
 };
 

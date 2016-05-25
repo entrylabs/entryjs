@@ -41,35 +41,7 @@ Entry.Arduino = {
 
 Entry.SensorBoard = {
     name: 'sensorBoard',
-    setZero: Entry.Arduino.setZero,
-    monitorTemplate: {
-        imgPath: "hw/sensorBoard.png",
-        width: 400,
-        height: 400,
-        listPorts: {
-            "2":{name: Lang.Hw.port_en + " 2 " + Lang.Hw.port_ko, type: "input", pos: {x : 0, y: 0}},
-            "3":{name: Lang.Hw.port_en + " 3 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "4":{name: Lang.Hw.port_en + " 4 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "5":{name: Lang.Hw.port_en + " 5 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "a3":{name: Lang.Hw.port_en + " A3 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "a4":{name: Lang.Hw.port_en + " A4 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "a5":{name: Lang.Hw.port_en + " A5 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "6":{name: Lang.Hw.port_en + " 6 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "7":{name: Lang.Hw.port_en + " 7 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "12":{name: Lang.Hw.port_en + " 12 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "13":{name: Lang.Hw.port_en + " 13 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}}
-        },
-        ports : {
-            "0":{name: Lang.Hw.light + " " + Lang.Hw.sensor + "2", type: "input",pos: {x : 116, y: 330}},
-            "slider":{ name: Lang.Blocks.CODEino_sensor_name_2 , type: "input",pos: {x : 230, y: 47}},
-            "1":{name: Lang.Hw.temp, type: "input",pos: {x : 310, y: 332}},
-            "8":{name: Lang.Hw.right_ko + Lang.Hw.switch_ + Lang.Hw.right_en, type: "input",pos: {x : 273, y: 205}},
-            "9":{name: Lang.Hw.left_ko + Lang.Hw.switch_ + Lang.Hw.left_en, type: "input",pos: {x : 112, y: 155}},
-            "10":{name: Lang.Hw.up_ko + Lang.Hw.switch_ + Lang.Hw.up_en, type: "input",pos: {x : 188, y: 83}},
-            "11":{name: Lang.Hw.down_ko + Lang.Hw.switch_ + Lang.Hw.down_en, type: "input",pos: {x : 196, y: 281}}
-      },
-      mode : 'both'
-    }
+    setZero: Entry.Arduino.setZero
 };
 
 Entry.dplay = {
@@ -482,6 +454,95 @@ Entry.block.sensorBoard_led = function (sprite, script) {
     Entry.hw.setDigitalPortValue(script.getField("PORT"),
                                  script.getNumberField("OPERATOR"));
     return script.callReturn();
+};
+
+Entry.block.arduino_download_connector = {
+    skeleton: "basic_button",
+    color: "#eee",
+    template: "%1",
+    params: [
+        {
+            type: "Text",
+            text: "연결 프로그램 다운로드",
+            color: "#333",
+            align: "center"
+        }
+    ],
+    func: function() {},
+    events: {
+        mousedown: [
+            function() {
+                console.log('download connector');
+            }
+        ]
+    }
+};
+
+Entry.block.arduino_download_source = {
+    skeleton: "basic_button",
+    color: "#eee",
+    template: "%1",
+    params: [
+        {
+            type: "Text",
+            text: "엔트리 아두이노 소스",
+            color: "#333",
+            align: "center"
+        }
+    ],
+    func: function() {},
+    events: {
+        mousedown: [
+            function() {
+                console.log('download source');
+            }
+        ]
+    }
+};
+
+Entry.block.arduino_connected = {
+    skeleton: "basic_button",
+    color: "#eee",
+    template: "%1",
+    params: [
+        {
+            type: "Text",
+            text: "연결 됨",
+            color: "#333",
+            align: "center"
+        }
+    ],
+    func: function() {},
+    events: {
+        mousedown: [
+            function() {
+                console.log('download source');
+            }
+        ]
+    }
+};
+
+
+Entry.block.arduino_reconnect = {
+    skeleton: "basic_button",
+    color: "#eee",
+    template: "%1",
+    params: [
+        {
+            type: "Text",
+            text: "다시 연결하기",
+            color: "#333",
+            align: "center"
+        }
+    ],
+    func: function() {},
+    events: {
+        mousedown: [
+            function() {
+                console.log('download source');
+            }
+        ]
+    }
 };
 
 

@@ -7,27 +7,29 @@
  * Helper provide block description with 'blockHelper'
  */
 Entry.Helper = function() {
-    this.generateView();
+    this.visible = false;
 };
 
 var p = Entry.Helper.prototype;
 
-p.generateView = function() {
+p.generateView = function(parentView, option) {
+    if (this.parentView_) return;
+    /** @type {!Element} parent view */
+    this.parentView_ = parentView;
     var helper = this;
     helper.blockHelpData = EntryStatic.blockInfo;
     var blockHelperView = Entry.createElement('div',
                             'entryBlockHelperWorkspace');
-    this._view = blockHelperView;
-    
+    this.view = blockHelperView;
     if (Entry.isForLecture)
         blockHelperView.addClass('lecture');
-
-    // if (!Entry.isForLecture) {
+    helper.parentView_.appendChild(blockHelperView);
+    if (!Entry.isForLecture) {
         var blockHelperHeader = Entry.createElement('div',
                                 'entryBlockHelperHeaderWorkspace');
         blockHelperHeader.innerHTML = Lang.Helper.Block_info;
         blockHelperView.appendChild(blockHelperHeader);
-    // }
+    }
     var blockHelperContent = Entry.createElement('div',
                             'entryBlockHelperContentWorkspace');
     blockHelperContent.addClass('entryBlockHelperIntro');
@@ -39,9 +41,6 @@ p.generateView = function() {
 
     var blockHelperBlock = Entry.createElement('div',
                             'entryBlockHelperBlockWorkspace');
-    this.blockMenu_ = new Blockly.BlockMenu(blockHelperBlock);
-    this.blockMenu_.isViewOnly = true;
-    this.blockMenu_.isCenterAlign = true;
     helper.blockHelperContent_.appendChild(blockHelperBlock);
 
     var blockHelperDescription = Entry.createElement('div',
@@ -49,51 +48,78 @@ p.generateView = function() {
     helper.blockHelperContent_.appendChild(blockHelperDescription);
     blockHelperDescription.innerHTML = Lang.Helper.Block_click_msg;
     this.blockHelperDescription_ = blockHelperDescription;
- 
+
+    this._renderView = new Entry.RenderView($(blockHelperBlock), 'LEFT');
+    this.code = new Entry.Code([]);
+    this._renderView.changeCode(this.code);
+
     this.first = true;
+};
+
+p.bindWorkspace = function(workspace) {
+    if (!workspace) return;
+
+    if (this._blockViewObserver) this._blockViewObserver.destroy();
+
+    this.workspace = workspace;
+    this._blockViewObserver =
+        workspace.observe(this, "_updateSelectedBlock", ['selectedBlockView']);
 };
 
 /**
  * toggle on block helper
  */
+p._updateSelectedBlock = function() {
+    var blockView = this.workspace.selectedBlockView;
+    if (!blockView || !this.visible || blockView == this._blockView) return;
 
-p.getView = function() {
-    this.bindEvent();
-    return this._view;
-};
-
-p.bindEvent = function() {
-    if (!this.blockChangeEvent) {
-        this.blockChangeEvent = Blockly.bindEvent_(Blockly.mainWorkspace.getCanvas(),
-        'blocklySelectChange', this, this.updateSelectedBlock);
-        if (Entry.playground.blockMenu)
-            this.menuBlockChangeEvent = Blockly.bindEvent_(
-                Entry.playground.blockMenu.workspace_.getCanvas(),
-                'blocklySelectChange', this, this.updateSelectedBlock);
-    }
-}
-
-
-p.updateSelectedBlock = function() {
-    if (!Blockly.selected)
-        return;
-    if (this.first) {
-        this.blockHelperContent_.removeClass('entryBlockHelperIntro');
-        this.first = false;
-    }
-    var type = Blockly.selected.type;
+    var type = blockView.block.type;
+    this._blockView = blockView;
     this.renderBlock(type);
 };
 
 p.renderBlock = function(type) {
-    var data = this.blockHelpData[type];
-    if (!data)
-        return;
-    var xmlText = data.xml;
-    var XML = jQuery.parseXML(xmlText);
-    var blockHeight = this.blockMenu_.show(XML.childNodes);
-    this.blockHelperDescription_.innerHTML = Entry.makeAutolink(Lang.Helper[type]);
+    var description = Lang.Helper[type];
+    if (!type || !this.visible || !description || Entry.block[type].isPrimitive) return;
+
+    if (this.first) {
+        this.blockHelperContent_.removeClass('entryBlockHelperIntro');
+        this.first = false;
+    }
+
+    var code = this.code;
+    this.code.clear();
+
+    var def = Entry.block[type].def;
+    def = def || {type:type};
+    this.code.createThread([def]);
+
+    this.code.board.align();
+    this.code.board.resize();
+
+
+    var blockView = this.code.getThreads()[0].getFirstBlock().view;
+    var bBox = blockView.svgGroup.getBBox();
+    var blockWidth = bBox.width;
+    var blockHeight = bBox.height;
+    var offsetX =blockView.getSkeleton().box(blockView).offsetX;
+    if (isNaN(offsetX)) offsetX = 0;
+    this.blockHelperDescription_.innerHTML = description;
+    this._renderView.align();
+
     $(this.blockHelperDescription_).css({
-        top: blockHeight + 40
+        top: blockHeight + 30
+    });
+
+    var renderView = this._renderView;
+    var dom = renderView.svgDom;
+    dom.css({
+        'margin-left':-(blockWidth/2) -20 - offsetX
     });
 };
+
+p.getView = function() {
+    return this.view;
+};
+
+p.resize = function() {};

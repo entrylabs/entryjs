@@ -86,7 +86,8 @@ Entry.StateManager.prototype.addCommand =
             Entry.reporter.report(state);
         this.updateView();
     }
-    Entry.dispatchEvent('saveLocalStorageProject');
+    if (Entry.creationChangedEvent)
+        Entry.creationChangedEvent.notify();
 };
 
 /**
@@ -97,7 +98,12 @@ Entry.StateManager.prototype.cancelLastCommand = function() {
         return;
     this.undoStack_.pop();
     this.updateView();
-    Entry.dispatchEvent('saveLocalStorageProject');
+    if (Entry.creationChangedEvent)
+        Entry.creationChangedEvent.notify();
+};
+
+Entry.StateManager.prototype.getLastCommand = function() {
+    return this.undoStack_[this.undoStack_.length - 1];
 };
 
 /**
@@ -108,11 +114,16 @@ Entry.StateManager.prototype.undo = function() {
         return;
     this.addActivity("undo");
     this.startRestore();
-    var state = this.undoStack_.pop();
-    state.func.apply(state.caller, state.params);
+    while (this.undoStack_.length) {
+        var state = this.undoStack_.pop();
+        state.func.apply(state.caller, state.params);
+        if (state.isPass !== true)
+            break;
+    }
     this.updateView();
     this.endRestore();
-    Entry.dispatchEvent('saveLocalStorageProject');
+    if (Entry.creationChangedEvent)
+        Entry.creationChangedEvent.notify();
 };
 
 /**
@@ -125,7 +136,8 @@ Entry.StateManager.prototype.redo = function() {
     var state = this.redoStack_.pop();
     state.func.apply(state.caller, state.params);
     this.updateView();
-    Entry.dispatchEvent('saveLocalStorageProject');
+    if (Entry.creationChangedEvent)
+        Entry.creationChangedEvent.notify();
 };
 
 /**

@@ -14,6 +14,8 @@ Entry.TEXT_ALIGN_RIGHT = 2;
 
 Entry.TEXT_ALIGNS = ["center", "left", "right"];
 
+Entry.clipboard = null;
+
 /**
  * Load project
  * @param {?Project} project
@@ -28,9 +30,9 @@ Entry.loadProject = function(project) {
     Entry.projectId = project._id;
     Entry.variableContainer.setVariables(project.variables);
     Entry.variableContainer.setMessages(project.messages);
-    Entry.variableContainer.setFunctions(project.functions);
     Entry.scene.addScenes(project.scenes);
     Entry.stage.initObjectContainers();
+    Entry.variableContainer.setFunctions(project.functions);
     Entry.container.setObjects(project.objects);
     Entry.FPS = project.speed ? project.speed : 60;
     createjs.Ticker.setFPS(Entry.FPS);
@@ -51,13 +53,10 @@ Entry.loadProject = function(project) {
  * @param {?Project} project
  */
 Entry.exportProject = function(project) {
-    if (!project) {
-        project = {};
-    }
+    if (!project) project = {};
 
-    if (!Entry.engine.isState('stop')) {
+    if (!Entry.engine.isState('stop'))
         Entry.engine.toggleStop();
-    }
 
     if (Entry.Func &&
         Entry.Func.workspace &&
@@ -275,15 +274,16 @@ Entry.resizeElement = function(interfaceModel) {
             menuWidth = 400;
         interfaceModel.menuWidth = menuWidth;
 
-        Entry.playground.blockMenuView_.style.width = (menuWidth - 64) + 'px';
-        $('.entryBlockMenuWorkspace>svg').css({width: (menuWidth - 64) + 'px'});
-        $('.entryBlocklyWorkspace').css({left: (menuWidth) + 'px'});
+        $('.blockMenuContainer').css({width: (menuWidth - 64) + 'px'});
+        $('.blockMenuContainer>svg').css({width: (menuWidth - 64) + 'px'});
+        Entry.playground.mainWorkspace.blockMenu.setWidth();
+        $('.entryWorkspaceBoard').css({left: (menuWidth) + 'px'});
         Entry.playground.resizeHandle_.style.left = (menuWidth) + 'px';
         Entry.playground.variableViewWrapper_.style.width = menuWidth + 'px';
 
         this.interfaceState = interfaceModel;
     }
-    Blockly.fireUiEvent(window, 'resize');
+    Entry.windowResized.notify();
 };
 
 /**
@@ -333,7 +333,7 @@ Entry.cancelObjectEdit = function(e) {
     var tagName = target.tagName.toUpperCase();
     if (!object.isEditing || (tagName === 'INPUT' && isCurrent))
         return;
-    
+
     object.editObjectValues(false);
 };
 

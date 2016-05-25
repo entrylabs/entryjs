@@ -476,7 +476,6 @@ Entry.HWMonitor = function(hwModule) {
             this._movePort(rPort, xCursor, bP, prevBP);
         }
 
-
     };
 
     p._alignNS = function(ports, yCursor, gap) {
@@ -605,6 +604,5 @@ Entry.HWMonitor = function(hwModule) {
         port.group.attr({ "transform" : "translate(" + groupX + "," + y  + ")"});
         port.path.attr({ "d": path });
     };
-
 
 })(Entry.HWMonitor.prototype)

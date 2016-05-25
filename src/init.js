@@ -4,6 +4,7 @@
 'use strict';
 
 goog.require("Entry.PropertyPanel");
+goog.require("Entry.Commander");
 
 /**
  * Initialize method with options.
@@ -17,7 +18,11 @@ Entry.init = function(container, options) {
         menuWidth: 264
     };
 
-    Entry.Utils.bindGlobalEvent(['mousedown', 'mousemove']);
+    Entry.Utils.bindGlobalEvent([
+        'resize', 'mousedown',
+        'mousemove', 'keydown',
+        'keyup', 'dispose'
+    ]);
 
     /** @type {object} */
     this.options = options;
@@ -69,10 +74,15 @@ Entry.init = function(container, options) {
     Entry.soundQueue.installPlugin(createjs.Sound);
 
     Entry.loadAudio_(
-        [Entry.mediaFilePath + 'media/click.mp3', Entry.mediaFilePath + 'media/click.wav', Entry.mediaFilePath + 'media/click.ogg'], 'click');
+        [Entry.mediaFilePath + 'sounds/click.mp3',
+        Entry.mediaFilePath + 'sounds/click.wav',
+        Entry.mediaFilePath + 'sounds/click.ogg'], 'entryMagneting');
     Entry.loadAudio_(
-        [Entry.mediaFilePath + 'media/delete.mp3', Entry.mediaFilePath + 'media/delete.ogg', Entry.mediaFilePath + 'media/delete.wav'], 'delete');
+        [Entry.mediaFilePath + 'sounds/delete.mp3',
+        Entry.mediaFilePath + 'sounds/delete.ogg',
+        Entry.mediaFilePath + 'sounds/delete.wav'], 'entryDelete');
 
+    createjs.Sound.stop();
 
 };
 
@@ -146,13 +156,7 @@ Entry.initialize_ = function() {
      */
     this.variableContainer = new Entry.VariableContainer();
 
-    /**
-     * Initialize stateManager for redo and undo.
-     * @type {!Entry.StateManager}
-     * @type {!object}
-     */
-    if (this.type == 'workspace' || this.type == 'phone')
-        this.stateManager = new Entry.StateManager();
+    this.commander = new Entry.Commander(this.type);
 
     /**
      * Initialize scenes.
@@ -235,7 +239,7 @@ Entry.createDom = function(container, option) {
             for(var i=0; i<tempList.length; i++) {
                 var list = tempList[i];
                 if(wheelDirection){
-                    if(list.scrollButton_.y >= 46 ) 
+                    if(list.scrollButton_.y >= 46 )
                         list.scrollButton_.y -= 23;
                     else
                         list.scrollButton_.y = 23;
@@ -256,6 +260,10 @@ Entry.createDom = function(container, option) {
         /** @type {!Element} */
         this.containerView = containerView;
         this.container.generateView(this.containerView, option);
+        this.propertyPanel.addMode("object", this.container);
+
+        this.helper.generateView(this.containerView, option);
+        this.propertyPanel.addMode("helper" , this.helper);
 
         var playgroundView = Entry.createElement('div');
         container.appendChild(playgroundView);
@@ -263,11 +271,11 @@ Entry.createDom = function(container, option) {
         this.playgroundView = playgroundView;
         this.playground.generateView(this.playgroundView, option);
 
-        this.propertyPanel.addMode("object", this.container);
-        this.propertyPanel.addMode("helper" , this.helper);
         // this.propertyPanel.addMode("youtube" , this.youtube);
 
+
         this.propertyPanel.select("object");
+        this.helper.bindWorkspace(this.playground.mainWorkspace);
     } else if (option == 'minimize') {
         var canvas = Entry.createElement('canvas');
         canvas.className = 'entryCanvasWorkspace';

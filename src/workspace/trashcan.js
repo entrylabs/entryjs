@@ -3,45 +3,68 @@
 goog.provide("Entry.FieldTrashcan");
 
 Entry.FieldTrashcan = function(board) {
-    this.board = board;
-    this.svgGroup = board.snap.group();
+    if (board) this.setBoard(board);
 
-    this.renderStart();
     this.dragBlock = null;
     this.dragBlockObserver = null;
     this.isOver = false;
-
-    board.observe(this, "updateDragBlock", ["dragBlock"]);
-
-    this.setPosition();
 
     if (Entry.windowResized)
         Entry.windowResized.attach(this, this.setPosition);
 };
 
 (function(p) {
+    p._generateView = function() {
+        this.svgGroup = this.board.svg.elem("g");
+        this.renderStart();
+        this._addControl();
+    };
+
     p.renderStart = function() {
         var path = Entry.mediaFilePath + 'delete_';
-        this.trashcanTop = this.svgGroup.image (
-            path + 'cover.png', 0, 0, 60, 20);
+        this.trashcanTop = this.svgGroup.elem("image", {
+            href: path + 'cover.png',
+            width: 60,
+            height: 20
+        });
 
-        this.trashcan = this.svgGroup.image (
-            path + 'body.png', 0, 20, 60, 60);
+        this.svgGroup.elem("image", {
+            href: path + 'body.png',
+            y: 20,
+            width: 60,
+            height: 60
+        });
+    };
 
-        var filter = this.svgGroup.filter(Snap.filter.shadow(1,1,2));
-        this.svgGroup.attr({filter: filter});
+    p._addControl = function() {
+        var that = this;
+        $(this.svgGroup).bind( 'mousedown', function(e) {
+            if (Entry.Utils.isRightButton(e)) {
+                e.stopPropagation();
+                $('#entryWorkspaceBoard').css('background', 'white');
+            }
+        });
+
     };
 
     p.updateDragBlock = function() {
         var block = this.board.dragBlock;
         var observer = this.dragBlockObserver;
+
+        if (observer) {
+            observer.destroy();
+            this.dragBlockObserver = null;
+        }
+
         if (block) {
-            observer = block.observe(this, "checkBlock", ["x", "y"]);
+            this.dragBlockObserver = block.observe(this, "checkBlock", ["x", "y"]);
         } else {
-            if (observer) observer.destroy();
             if (this.isOver && this.dragBlock) {
-                this.dragBlock.block.doDestroy(true);
-                createjs.Sound.play('entryDelete');
+                var prevBlock = this.dragBlock.block.getPrevBlock();
+                if (!prevBlock) {
+                    this.dragBlock.block.doDestroyBelow(true);
+                    createjs.Sound.play('entryDelete');
+                }
             }
             this.tAnimation(false);
         }
@@ -52,7 +75,7 @@ Entry.FieldTrashcan = function(board) {
         var dragBlock = this.dragBlock;
         if (!dragBlock || !dragBlock.block.isDeletable()) return;
 
-        var boardOffset = this.board.offset;
+        var boardOffset = this.board.offset();
         var position = this.getPosition();
         var trashcanX = position.x + boardOffset.left;
         var trashcanY = position.y + boardOffset.top;
@@ -70,7 +93,7 @@ Entry.FieldTrashcan = function(board) {
 
     p.align = function() {
         var position = this.getPosition();
-        var transform = "t" + position.x + " " + position.y;
+        var transform = "translate(" + position.x + "," + position.y + ")";
 
         this.svgGroup.attr({
             transform: transform
@@ -78,6 +101,7 @@ Entry.FieldTrashcan = function(board) {
     };
 
     p.setPosition = function() {
+        if (!this.board) return;
         var svgDom = this.board.svgDom;
         this._x = svgDom.width()-110;
         this._y = svgDom.height()-110;
@@ -95,16 +119,45 @@ Entry.FieldTrashcan = function(board) {
         if (isOver === this.isOver) return;
 
         isOver = isOver === undefined ? true : isOver;
+        var animation;
         var trashTop = this.trashcanTop;
-        if(isOver) {
-            trashTop.animate({
-                transform: "t5 -20 r30"}, 50);
-        } else {
-            trashTop.animate({
-                transform: "r0"}, 50);
-        }
+        if(isOver)
+            animation = {
+                translateX:15,
+                translateY:-25,
+                rotateZ:30
+            };
+        else
+            animation = {
+                translateX:0,
+                translateY:0,
+                rotateZ: 0
+            };
+
+        $(trashTop).velocity(
+            animation, {duration:50}
+        );
         this.isOver = isOver;
     };
+
+    p.setBoard = function(board) {
+        if (this._dragBlockObserver) this._dragBlockObserver.destroy();
+        this.board = board;
+        if (!this.svgGroup) this._generateView();
+
+        //control z-index
+        var svg = board.svg;
+        var firstChild = svg.firstChild;
+        if (firstChild) svg.insertBefore(this.svgGroup, firstChild);
+        else svg.appendChild(this.svgGroup);
+
+        this._dragBlockObserver = board.observe(this, "updateDragBlock", ["dragBlock"]);
+        this.svgGroup.attr({
+            'filter': 'url(#entryTrashcanFilter_'+ board.suffix +')'
+        });
+        this.setPosition();
+    };
+
 })(Entry.FieldTrashcan.prototype);
 
 

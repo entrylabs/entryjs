@@ -15,14 +15,14 @@ Entry.CodeView = function(code, board) {
     this.set({board: board});
 
 
-    this.svgThreadGroup = board.svgGroup.group();
+    this.svgThreadGroup = board.svgGroup.elem("g");
     this.svgThreadGroup.attr({
         class: 'svgThreadGroup'
     });
 
     this.svgThreadGroup.board = board;
 
-    this.svgBlockGroup = board.svgGroup.group();
+    this.svgBlockGroup = board.svgGroup.elem("g");
     this.svgBlockGroup.attr({
         class: 'svgBlockGroup'
     });
@@ -46,6 +46,12 @@ Entry.CodeView = function(code, board) {
 
     p._setBoard = function() {
         this.set({board:this.code.board});
+    };
+
+    p.reDraw = function() {
+        this.code.map(function(thread) {
+            thread.view.reDraw();
+        });
     };
 
 })(Entry.CodeView.prototype);

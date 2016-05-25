@@ -1,0 +1,241 @@
+.block.selected > g > .blockPath {
+    stroke-width: 3px;
+    stroke: #798EB1;
+}
+
+.block.outputHighlight > g > .blockPath {
+    stroke-width: 2px;
+    stroke: white;
+}
+
+.block.basicButtonView {
+    cursor: pointer;
+}
+
+.block.basicButtonView:hover > g > path {
+    fill: #f4f4f4;
+}
+
+.block {
+    cursor: url('@{image_url}handopen.cur') 8 5, auto;
+    -ms-touch-action: none;
+}
+
+.block.dragging {
+    cursor: url('@{image_url}handclosed.cur') 8 5, auto;
+}
+
+.block.selected > path {
+    stroke-width: 3px;
+    stroke: #798EB1;
+}
+
+.block.activated > g > path {
+    stroke-width: 3px;
+    stroke: red;
+
+    /*stroke-dasharray: 20;*/
+    /*stroke-dashoffset: 1000;*/
+    /*-webkit-animation: activationDash 15s forwards linear;*/
+    /*-webkit-animation-iteration-count: infinite;*/
+    /*-moz-animation: activationDash 15s forwards linear;*/
+    /*-moz-animation-iteration-count: infinite;*/
+    /*animation: activationDash 15s forwards linear;*/
+    /*animation-iteration-count: infinite;*/
+    /*-o-animation: activationDash 15s forwards linear;*/
+    /*-o-animation-iteration-count: infinite;*/
+    /*-ms-animation: activationDash 15s forwards linear;*/
+    /*-ms-animation-iteration-count: infinite;*/
+}
+
+@keyframes activationDash {
+    to {stroke-dashoffset: 0;}
+}
+
+@-o-keyframes activationDash {
+    to {stroke-dashoffset: 0;}
+}
+
+@-ms-keyframes activationDash {
+    to {stroke-dashoffset: 0;}
+}
+
+@-moz-keyframes activationDash {
+    to {stroke-dashoffset: 0;}
+}
+
+@-webkit-keyframes activationDash {
+    to {stroke-dashoffset: 0;}
+}
+
+.block g text,
+.block g image {
+    pointer-events: none;
+}
+
+svg .svgBlockGroup text {
+    white-space: pre;
+}
+
+.entry-field-color {
+    cursor: pointer;
+}
+
+.entry-input-field {
+    cursor: text;
+}
+
+.entry-input-field:hover rect {
+    stroke-width: 1.5px;
+    stroke: white;
+}
+
+.entry-widget-input-field {
+      position: fixed;
+      font-family: ng;
+      font-size: 9pt;
+      border: none;
+      outline: none;
+      line-height: normal;
+ }
+
+ .entry-field-angle {
+     cursor: default;
+ }
+
+.entry-field-angle-circle {
+    stroke: #444;
+    stroke-width: 1;
+    fill: #ddd;
+    fill-opacity: 0.8;
+}
+
+.entry-angle-divider {
+    stroke: #444;
+    stroke-width: 1;
+}
+
+.entry-angle-indicator {
+    stroke: #f00;
+    stroke-width: 2;
+    stroke-linecap: round;
+}
+
+.entry-angle-fill-area {
+    fill: #f88;
+    fill-opacity: 0.8;
+}
+
+.entryWorkspaceFilters {
+    position: absolute;
+    left: -100px;
+    top: -100px;
+}
+
+.entry-widget-keyboard-input {
+     position: fixed;
+}
+
+.entry-widget-dropdown {
+    position: fixed;
+    cursor: pointer;
+    list-style: none;
+    background-color: white;
+    border: 1px gray solid;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    font-size: 9pt;
+    color: #000;
+    z-index: 1001;
+    overflow: auto;
+
+    .rect {
+        height: 20px;
+        padding: 3px 19px 3px 6px;
+        width: 100%;
+
+        .left {
+            display: inline-block;
+            width: 13px;
+        }
+
+        .right {
+            display: inline-block;
+        }
+    }
+
+    .rect:hover {
+        background-color: #127cdb;
+        color: white;
+    }
+}
+
+.blockHoverPattern {
+    .pattern1 {
+        opacity: 0;
+        .animation-duration(0.7s);
+        .animation-direction(alternate);
+        .animation-name(blockPatternAnimation);
+        .animation-iteration-count(infinite);
+    }
+
+    .pattern2 {
+        opacity: 0;
+        .animation-delay(0.33s);
+        .animation-duration(0.7s);
+        .animation-direction(alternate);
+        .animation-name(blockPatternAnimation);
+        .animation-iteration-count(infinite);
+    }
+
+    .pattern3 {
+        opacity: 0;
+        .animation-delay(0.67s);
+        .animation-duration(0.7s);
+        .animation-direction(alternate);
+        .animation-name(blockPatternAnimation);
+        .animation-iteration-count(infinite);
+    }
+
+    .pattern4 {
+        opacity: 0;
+        .animation-delay(1s);
+        .animation-duration(0.7s);
+        .animation-direction(alternate);
+        .animation-name(blockPatternAnimation);
+        .animation-iteration-count(infinite);
+    }
+
+}
+
+//hover block background pattern animation
+@keyframes blockPatternAnimation {
+    from {opacity:0}
+    to {opacity:0.2}
+}
+
+@-o-keyframes blockPatternAnimation {
+    from {opacity:0}
+    to {opacity:0.2}
+}
+
+@-ms-keyframes blockPatternAnimation {
+    from {opacity:0}
+    to {opacity:0.2}
+}
+
+@-moz-keyframes blockPatternAnimation {
+    from {opacity:0}
+    to {opacity:0.2}
+}
+
+@-webkit-keyframes blockPatternAnimation {
+    from {opacity:0}
+    to {opacity:0.2}
+}
+
+.entry-field-dropdown {
+     cursor: default;
+}
+
