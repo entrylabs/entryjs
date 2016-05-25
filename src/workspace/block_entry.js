@@ -9886,10 +9886,7 @@ Entry.block = {
                     "type": "number",
                     "params": [ "2" ]
                 },
-                {
-                    "type": "number",
-                    "params": [ "2" ]
-                },
+                null,
                 null
             ],
             "type": "rotate_by_angle_time"
