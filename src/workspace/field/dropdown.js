@@ -183,40 +183,37 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
                 });
             })(element, value);
         }
-        this._position(true);
-        this.optionGroup.css('width', this.optionGroup.width() + 3);
         this._position();
     };
 
-    p._position = function(reset) {
-        if (!reset) {
-            //inspect enough space below
-            var pos = this.getAbsolutePosFromDocument();
-            pos.y += this.box.height/2;
+    p._position = function() {
+        //inspect enough space below
+        var pos = this.getAbsolutePosFromDocument();
+        pos.y += this.box.height/2;
 
-            var documentHeight = $(document).height();
-            var optionGroupHeight = this.optionGroup.height();
+        var documentHeight = $(document).height();
+        var optionGroupHeight = this.optionGroup.height();
 
-            //not enough space below
-            if (documentHeight < pos.y + optionGroupHeight) {
-                pos.x += this.box.width + 1;
+        //not enough space below
+        if (documentHeight < pos.y + optionGroupHeight) {
+            pos.x += this.box.width + 1;
 
-                var relPos = this.getAbsolutePosFromBoard();
-                var domHeight = this._blockView.getBoard().svgDom.height();
-                domHeight -=  domHeight - relPos.y;
+            var relPos = this.getAbsolutePosFromBoard();
+            var domHeight = this._blockView.getBoard().svgDom.height();
+            domHeight -=  domHeight - relPos.y;
 
-                if (domHeight - 20 < optionGroupHeight) {
-                    domHeight -= domHeight % 20;
-                    this.optionGroup.height(domHeight)
-                }
+            if (domHeight - 20 < optionGroupHeight) {
+                domHeight -= domHeight % 20;
+                this.optionGroup.height(domHeight)
+            }
 
-                pos.y -= this.optionGroup.height();
-            } else pos.x += this.box.width/2 - this.optionGroup.width()/2;
-        } else {
-            pos = { x: 0, y: 0 };
-        }
+            pos.y -= this.optionGroup.height();
+        } else pos.x += this.box.width/2 - this.optionGroup.width()/2;
 
-        this.optionGroup.css({left: pos.x, top: pos.y});
+        this.optionGroup.css({
+            left: pos.x, top: pos.y,
+            width: this.optionGroup.width() + 3
+        });
     };
 
     p.applyValue = function(value) {

@@ -125,8 +125,6 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
                 });
             })(element, value);
         }
-        this._position(true);
-        this.optionGroup.css('width', this.optionGroup.width() +3);
         this._position();
     };
 

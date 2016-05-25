@@ -16841,27 +16841,21 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         });
       })(h, f);
     }
-    this._position(!0);
-    this.optionGroup.css("width", this.optionGroup.width() + 3);
     this._position();
   };
-  b._position = function(a) {
-    if (a) {
-      a = {x:0, y:0};
+  b._position = function() {
+    var a = this.getAbsolutePosFromDocument();
+    a.y += this.box.height / 2;
+    var b = $(document).height(), d = this.optionGroup.height();
+    if (b < a.y + d) {
+      a.x += this.box.width + 1;
+      var b = this.getAbsolutePosFromBoard(), e = this._blockView.getBoard().svgDom.height(), e = e - (e - b.y);
+      e - 20 < d && this.optionGroup.height(e - e % 20);
+      a.y -= this.optionGroup.height();
     } else {
-      a = this.getAbsolutePosFromDocument();
-      a.y += this.box.height / 2;
-      var b = $(document).height(), d = this.optionGroup.height();
-      if (b < a.y + d) {
-        a.x += this.box.width + 1;
-        var b = this.getAbsolutePosFromBoard(), e = this._blockView.getBoard().svgDom.height(), e = e - (e - b.y);
-        e - 20 < d && this.optionGroup.height(e - e % 20);
-        a.y -= this.optionGroup.height();
-      } else {
-        a.x += this.box.width / 2 - this.optionGroup.width() / 2;
-      }
+      a.x += this.box.width / 2 - this.optionGroup.width() / 2;
     }
-    this.optionGroup.css({left:a.x, top:a.y});
+    this.optionGroup.css({left:a.x, top:a.y, width:this.optionGroup.width() + 3});
   };
   b.applyValue = function(a) {
     this.value != a && this.setValue(a);
@@ -16933,8 +16927,6 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
         });
       })(g, e);
     }
-    this._position(!0);
-    this.optionGroup.css("width", this.optionGroup.width() + 3);
     this._position();
   };
 })(Entry.FieldDropdownDynamic.prototype);
