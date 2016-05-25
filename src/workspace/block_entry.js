@@ -3,6 +3,10 @@ if (typeof Entry !== "object")
 
 if (typeof exports == "object") {
     var Lang = require('../../extern/lang/ko.js').Lang;
+    if (typeof Entry !== "object")
+        var Entry = {};
+    Entry.Bitbrick = {};
+    EntryStatic = {};
 }
 
 Entry.block = {
@@ -1596,7 +1600,8 @@ Entry.block = {
                     [ "5", "A5" ]
                 ],
                 "value": "A0",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
             }
         ],
         "events": {},
@@ -1635,7 +1640,8 @@ Entry.block = {
                     [ "13", "13" ]
                 ],
                 "value": "0",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
             }
         ],
         "events": {},
@@ -1666,7 +1672,8 @@ Entry.block = {
                     [ "11", "11" ]
                 ],
                 "value": "3",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
             }
         ],
         "events": {},
@@ -1683,6 +1690,7 @@ Entry.block = {
     },
     "arduino_get_number_sensor_value": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -1713,6 +1721,7 @@ Entry.block = {
     },
     "arduino_get_digital_value": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_boolean_field",
         "statements": [],
         "params": [
@@ -1757,7 +1766,8 @@ Entry.block = {
                     [Lang.Blocks.ARDUINO_off,"off"]
                 ],
                 "value": "on",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
             },
             {
                 "type": "Indicator",
@@ -1843,6 +1853,7 @@ Entry.block = {
     },
     "arduino_convert_scale": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -1935,6 +1946,7 @@ Entry.block = {
     },
     "sensorBoard_get_named_sensor_value": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -1967,6 +1979,7 @@ Entry.block = {
     },
     "sensorBoard_is_button_pressed": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_boolean_field",
         "statements": [],
         "params": [
@@ -2154,6 +2167,7 @@ Entry.block = {
     },
     "CODEino_get_named_sensor_value": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -2189,6 +2203,7 @@ Entry.block = {
     },
     "CODEino_get_sound_status": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_boolean_field",
         "statements": [],
         "params": [
@@ -2222,6 +2237,7 @@ Entry.block = {
     },
     "CODEino_get_light_status": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_boolean_field",
         "statements": [],
         "params": [
@@ -2255,6 +2271,7 @@ Entry.block = {
     },
     "CODEino_is_button_pressed": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_boolean_field",
         "statements": [],
         "params": [
@@ -2292,6 +2309,7 @@ Entry.block = {
     },
     "CODEino_get_accelerometer_direction": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_boolean_field",
         "statements": [],
         "params": [
@@ -2344,6 +2362,7 @@ Entry.block = {
     },
     "CODEino_get_accelerometer_value": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -2396,13 +2415,17 @@ Entry.block = {
     },
     "bitbrick_sensor_value": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
             {
                 "type": "DropdownDynamic",
                 "value": null,
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW,
+                menuName: Entry.Bitbrick.sensorList
+
             }
         ],
         "events": {},
@@ -2423,13 +2446,15 @@ Entry.block = {
     },
     "bitbrick_is_touch_pressed": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_boolean_field",
         "statements": [],
         "params": [
             {
                 "type": "DropdownDynamic",
                 "value": null,
-                "fontSize": 11
+                "fontSize": 11,
+                menuName: Entry.Bitbrick.touchList
             }
         ],
         "events": {},
@@ -2713,7 +2738,8 @@ Entry.block = {
             {
                 "type": "DropdownDynamic",
                 "value": null,
-                "fontSize": 11
+                "fontSize": 11,
+                menuName: Entry.Bitbrick.dcList
             },
             {
                 "type": "Block",
@@ -2762,7 +2788,8 @@ Entry.block = {
             {
                 "type": "DropdownDynamic",
                 "value": null,
-                "fontSize": 11
+                "fontSize": 11,
+                menuName: Entry.Bitbrick.dcList
             },
             {
                 "type": "Dropdown",
@@ -2823,7 +2850,8 @@ Entry.block = {
             {
                 "type": "DropdownDynamic",
                 "value": null,
-                "fontSize": 11
+                "fontSize": 11,
+                menuName: Entry.Bitbrick.servoList
             },
             {
                 "type": "Block",
@@ -2864,13 +2892,15 @@ Entry.block = {
     },
     "bitbrick_convert_scale": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
             {
                 "type": "DropdownDynamic",
                 "value": null,
-                "fontSize": 11
+                "fontSize": 11,
+                menuName: Entry.Bitbrick.sensorList
             },
             {
                 "type": "Block",
@@ -3616,7 +3646,8 @@ Entry.block = {
                 "type": "DropdownDynamic",
                 "value": null,
                 "menuName": "spritesWithMouse",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_CALC
             },
             {
                 "type": "Text",
@@ -3669,7 +3700,8 @@ Entry.block = {
                     [ "y", "y" ]
                 ],
                 "value": "x",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_CALC
             },
             {
                 "type": "Text",
@@ -3711,7 +3743,8 @@ Entry.block = {
                 "type": "DropdownDynamic",
                 "value": null,
                 "menuName": "spritesWithSelf",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_CALC
             },
             {
                 "type": "Text",
@@ -3730,7 +3763,8 @@ Entry.block = {
                     [Lang.Blocks.CALC_picture_name, "picture_name"]
                 ],
                 "value": "x",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_CALC
             }
         ],
         "events": {},
@@ -4180,7 +4214,8 @@ Entry.block = {
                     [Lang.Blocks.CALC_calc_operation_abs,"abs"]
                 ],
                 "value": "square",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_CALC
             }
         ],
         "events": {},
@@ -4338,7 +4373,8 @@ Entry.block = {
                     [Lang.Blocks.CALC_get_date_second,"SECOND"]
                 ],
                 "value": "YEAR",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_CALC
             },
             {
                 "type": "Text",
@@ -4388,7 +4424,8 @@ Entry.block = {
                 "type": "DropdownDynamic",
                 "value": null,
                 "menuName": "sounds",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_CALC
             },
             {
                 "type": "Text",
@@ -4469,7 +4506,8 @@ Entry.block = {
                     [Lang.Blocks.CALC_timer_visible_hide,"HIDE"]
                 ],
                 "value": "SHOW",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_CALC
             },
             {
                 "type": "Text",
@@ -4864,7 +4902,8 @@ Entry.block = {
                     [Lang.Blocks.CALC_change_string_case_sub_2,"toLowerCase"]
                 ],
                 "value": "toUpperCase",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_CALC
             },
             {
                 "type": "Text",
@@ -5082,7 +5121,8 @@ Entry.block = {
                       [Lang.Blocks.CALC_quotient_and_mod_sub_2,"MOD"]
                 ],
                 "value": "QUOTIENT",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_CALC
             }
         ],
         "events": {},
@@ -5141,7 +5181,8 @@ Entry.block = {
                     [Lang.Blocks.CALC_choose_project_timer_action_sub_3,"RESET"]
                 ],
                 "value": "START",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_CALC
             },
             {
                 "type": "Text",
@@ -5539,7 +5580,8 @@ Entry.block = {
                 "type": "DropdownDynamic",
                 "value": null,
                 "menuName": "clone",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_FLOW
             },
             {
                 "type": "Indicator",
@@ -5664,7 +5706,8 @@ Entry.block = {
                     [ Lang.Blocks.FLOW_repeat_while_true_while, "while" ]
                 ],
                 "value": "until",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_FLOW
             },
             {
                 "type": "Indicator",
@@ -5718,7 +5761,8 @@ Entry.block = {
                     [ Lang.Blocks.FLOW_stop_object_other_thread, "otherThread" ]
                 ],
                 "value": "all",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_FLOW
             },
             {
                 "type": "Indicator",
@@ -5849,6 +5893,10 @@ Entry.block = {
                 "accept": "param"
             }
         ],
+        paramsKeyMap:{
+            NAME: 0,
+            NEXT: 1
+        },
         "def": {
             "params": [ "이름" ],
             "type": "function_field_label"
@@ -5869,6 +5917,10 @@ Entry.block = {
                 "accept": "param"
             }
         ],
+        paramsKeyMap:{
+            PARAM: 0,
+            NEXT: 1
+        },
         "def": {
             "params": [
                 {
@@ -5894,6 +5946,10 @@ Entry.block = {
                 "accept": "param"
             }
         ],
+        paramsKeyMap:{
+            PARAM: 0,
+            NEXT: 1
+        },
         "def": {
             "params": [
                 {
@@ -5908,6 +5964,13 @@ Entry.block = {
         "skeleton": "basic_string_field",
         "color": "#ffd974",
         "template": "%1 %2",
+        "events": {
+            "viewAdd": [
+                function() {
+                    Entry.Func.refreshMenuCode();
+                }
+            ]
+        },
         func: function() {
             return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
         },
@@ -5917,13 +5980,20 @@ Entry.block = {
         "skeleton": "basic_boolean_field",
         "color": "#aeb8ff",
         "template": "%1 %2",
+        "events": {
+            "viewAdd": [
+                function() {
+                    Entry.Func.refreshMenuCode();
+                }
+            ]
+        },
         func: function() {
             return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
         },
         "syntax": {"js": [], "py": [""]}
     },
     "function_create": {
-        "skeleton": "basic",
+        "skeleton": "basic_create",
         "color": "#cc7337",
         "event": "funcDef",
         "params": [
@@ -5931,7 +6001,8 @@ Entry.block = {
                 "type": "Block",
                 "accept": "param",
                 "value": {
-                    "type": "function_field_label"
+                    "type": "function_field_label",
+                    "params": [Lang.Blocks.FUNC]
                 }
             },
             {
@@ -5950,7 +6021,13 @@ Entry.block = {
     "function_general": {
         "skeleton": "basic",
         "color": "#cc7337",
-        "params": [],
+        "params": [
+            {
+                "type": "Indicator",
+                "img": "block_icon/function_03.png",
+                "size": 12
+            }
+        ],
         "events": {
             "dataAdd": [
                 function(block) {
@@ -5997,6 +6074,7 @@ Entry.block = {
     },
     "hamster_hand_found": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_boolean_field",
         "statements": [],
         "params": [],
@@ -7665,7 +7743,8 @@ Entry.block = {
                 "type": "DropdownDynamic",
                 "value": null,
                 "menuName": "collision",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_JUDGE
             },
             {
                 "type": "Text",
@@ -8404,7 +8483,8 @@ Entry.block = {
                     [ Lang.Blocks.speak, "speak" ]
                 ],
                 "value": "speak",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_LOOKS
             },
             {
                 "type": "Indicator",
@@ -8476,7 +8556,8 @@ Entry.block = {
                     [ Lang.Blocks.speak, "speak" ]
                 ],
                 "value": "speak",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_LOOKS
             },
             {
                 "type": "Indicator",
@@ -8586,7 +8667,8 @@ Entry.block = {
                     [ Lang.Blocks.LOOKS_change_shape_prev, "prev" ]
                 ],
                 "value": "next",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_LOOKS
             },
             {
                 "type": "Indicator",
@@ -9020,7 +9102,8 @@ Entry.block = {
                 "type": "DropdownDynamic",
                 "value": null,
                 "menuName": "pictures",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_LOOKS
             }
         ],
         "events": {},
@@ -9089,7 +9172,8 @@ Entry.block = {
                     [ Lang.Blocks.transparency, "transparency" ]
                 ],
                 "value": "color",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_LOOKS
             },
             {
                 "type": "Block",
@@ -9147,7 +9231,8 @@ Entry.block = {
                     [ Lang.Blocks.transparency, "transparency" ]
                 ],
                 "value": "color",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_LOOKS
             },
             {
                 "type": "Block",
@@ -9322,7 +9407,8 @@ Entry.block = {
                     [ Lang.Blocks.LOOKS_change_object_index_sub_4, "BACK" ]
                 ],
                 "value": "FRONT",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_LOOKS
             },
             {
                 "type": "Indicator",
@@ -9870,7 +9956,8 @@ Entry.block = {
                 "type": "DropdownDynamic",
                 "value": null,
                 "menuName": "spritesWithMouse",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_MOVING
             },
             {
                 "type": "Indicator",
@@ -10279,7 +10366,8 @@ Entry.block = {
                 "type": "DropdownDynamic",
                 "value": null,
                 "menuName": "spritesWithMouse",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_MOVING
             },
             {
                 "type": "Indicator",
@@ -10421,7 +10509,8 @@ Entry.block = {
                 "type": "DropdownDynamic",
                 "value": null,
                 "menuName": "spritesWithMouse",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_MOVING
             },
             {
                 "type": "Indicator",
@@ -10812,6 +10901,7 @@ Entry.block = {
     "neobot_sensor_value": {
         "color": "#00979D",
         "skeleton": "basic_string_field",
+        "fontColor": "#fff",
         "statements": [],
         "template": "%1  값",
         "params": [{
@@ -10855,7 +10945,8 @@ Entry.block = {
                 ["뒤로", "32"]
             ],
             "value": "16",
-            "fontSize": 11
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
         }, {
             "type": "Dropdown",
             "options": [
@@ -10877,7 +10968,8 @@ Entry.block = {
                 ["15", "15"]
             ],
             "value": "0",
-            "fontSize": 11
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
         }, {
             "type": "Indicator",
             "img": "block_icon/hardware_03.png",
@@ -10939,7 +11031,8 @@ Entry.block = {
                 ["뒤로", "32"]
             ],
             "value": "16",
-            "fontSize": 11
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
         }, {
             "type": "Dropdown",
             "options": [
@@ -10961,7 +11054,8 @@ Entry.block = {
                 ["15", "15"]
             ],
             "value": "0",
-            "fontSize": 11
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
         }, {
             "type": "Indicator",
             "img": "block_icon/hardware_03.png",
@@ -11025,7 +11119,8 @@ Entry.block = {
                     [ "오른쪽", "3" ]
                 ],
                 "value": "1",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
             },
             {
                 "type": "Block",
@@ -11039,7 +11134,8 @@ Entry.block = {
                     [ "빠르게", "3" ]
                 ],
                 "value": "1",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
             },
             {
                 "type": "Dropdown",
@@ -11050,7 +11146,8 @@ Entry.block = {
                     [ "우회전", "4" ]
                 ],
                 "value": "1",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
             },
             {
                 "type": "Indicator",
@@ -11117,7 +11214,8 @@ Entry.block = {
                 ["OUT3", "3"]
             ],
             "value": "1",
-            "fontSize": 11
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
         }, {
             "type": "Dropdown",
             "options": [
@@ -11142,7 +11240,8 @@ Entry.block = {
                 ["180도", "180"]
             ],
             "value": "0",
-            "fontSize": 11
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
         }, {
             "type": "Indicator",
             "img": "block_icon/hardware_03.png",
@@ -11186,7 +11285,8 @@ Entry.block = {
                 ["OUT3", "3"]
             ],
             "value": "1",
-            "fontSize": 11
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
         }, {
             "type": "Block",
             "accept": "string"
@@ -11381,52 +11481,6 @@ Entry.block = {
                     [ "WORD", "WORD" ],
                     [ "DWORD", "DWORD" ]
                 ],
-                "value": "1",
-                "fontSize": 11
-            },
-            {
-                "type": "Indicator",
-                "img": "block_icon/hardware_03.png",
-                "size": 12
-            }
-        ],
-        "events": {},
-        "def": {
-            "params": [ null, null, null ],
-            "type": "neobot_set_sensor_value"
-        },
-        "paramsKeyMap": {
-            "PORT": 0,
-            "VALUE": 1
-        },
-        "class": "neobot_set_value",
-        "isNotFor": [ "neobot" ],
-        "func": function (sprite, script) {
-            var sq = Entry.hw.sendQueue;
-
-            var port = script.getStringField("PORT", script);
-            var value = script.getNumberField("VALUE", script);
-            sq[port] = value;
-            return script.callReturn();
-        },
-        "syntax": {"js": [], "py": [""]}
-    },
-    "robotis_openCM70_cm_custom_value": {
-        "color": "#00979D",
-        "skeleton": "basic_string_field",
-        "statements": [],
-        "params": [
-            {
-                "type": "Block",
-                "accept": "stringMagnet"
-            },
-            {
-                "type": "Dropdown",
-                "options": [
-                    [ "BYTE", "BYTE" ],
-                    [ "WORD", "WORD" ],
-                    [ "DWORD", "DWORD" ]
-                ],
                 "value": "BYTE",
                 "fontSize": 11
             }
@@ -11483,6 +11537,7 @@ Entry.block = {
     },
     "robotis_openCM70_sensor_value": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -11549,6 +11604,7 @@ Entry.block = {
     },
     "robotis_openCM70_aux_sensor_value": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -12550,6 +12606,7 @@ Entry.block = {
     },
     "robotis_carCont_sensor_value": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -12951,7 +13008,8 @@ Entry.block = {
                 "type": "DropdownDynamic",
                 "value": null,
                 "menuName": "scenes",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_START
             },
             {
                 "type": "Indicator",
@@ -12992,7 +13050,8 @@ Entry.block = {
                     [ Lang.Blocks.SCENE_start_scene_pre, "pre" ]
                 ],
                 "value": "next",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_START
             },
             {
                 "type": "Indicator",
@@ -13365,7 +13424,8 @@ Entry.block = {
                 "type": "DropdownDynamic",
                 "value": null,
                 "menuName": "sounds",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_SOUNDS
             }
         ],
         "events": {},
@@ -13415,8 +13475,12 @@ Entry.block = {
             var soundId = script.getStringValue("VALUE", script);
             var sound = sprite.parent.getSound(soundId);
 
-            if (sound)
-                createjs.Sound.play(sound.id);
+            if (sound) createjs.Sound.play(sound.id);
+            //else
+                //Entry.engine.stopProjectWithToast(
+                    //this.block,
+                    //'소리를 찾지 못했습니다.'
+                //);
 
             return script.callReturn();
         },
@@ -14014,7 +14078,8 @@ Entry.block = {
                 "type": "DropdownDynamic",
                 "value": null,
                 "menuName": "messages",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_START
             }
         ],
         "events": {
@@ -14055,7 +14120,8 @@ Entry.block = {
                 "type": "DropdownDynamic",
                 "value": null,
                 "menuName": "messages",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_START
             },
             {
                 "type": "Indicator",
@@ -14110,7 +14176,8 @@ Entry.block = {
                 "type": "DropdownDynamic",
                 "value": null,
                 "menuName": "messages",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_START
             },
             {
                 "type": "Indicator",
@@ -14216,7 +14283,8 @@ Entry.block = {
         "def": {
             "params": [
                 {
-                    "type": "text"
+                    "type": "text",
+                    "params": [ Lang.Blocks.entry ]
                 }
             ],
             "type": "text_write"
@@ -14248,7 +14316,8 @@ Entry.block = {
         "def": {
             "params": [
                 {
-                    "type": "text"
+                    "type": "text",
+                    "params": [ Lang.Blocks.entry ]
                 }
             ],
             "type": "text_append"
@@ -14280,7 +14349,8 @@ Entry.block = {
         "def": {
             "params": [
                 {
-                    "type": "text"
+                    "type": "text",
+                    "params": [ Lang.Blocks.entry ]
                 }
             ],
             "type": "text_prepend"
@@ -14363,7 +14433,8 @@ Entry.block = {
                 "type": "DropdownDynamic",
                 "value": null,
                 "menuName": "variables",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE
             },
             {
                 "type": "Block",
@@ -14430,7 +14501,8 @@ Entry.block = {
                 "type": "DropdownDynamic",
                 "value": null,
                 "menuName": "variables",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE
             },
             {
                 "type": "Block",
@@ -14491,7 +14563,8 @@ Entry.block = {
                 "type": "DropdownDynamic",
                 "value": null,
                 "menuName": "variables",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE
             },
             {
                 "type": "Indicator",
@@ -14540,7 +14613,8 @@ Entry.block = {
                 "type": "DropdownDynamic",
                 "value": null,
                 "menuName": "variables",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE
             },
             {
                 "type": "Indicator",
@@ -14588,7 +14662,8 @@ Entry.block = {
                 "type": "DropdownDynamic",
                 "value": null,
                 "menuName": "variables",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE
             },
             {
                 "type": "Text",
@@ -14751,7 +14826,8 @@ Entry.block = {
                 "type": "DropdownDynamic",
                 "value": null,
                 "menuName": "lists",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE
             },
             {
                 "type": "Indicator",
@@ -14816,7 +14892,8 @@ Entry.block = {
                 "type": "DropdownDynamic",
                 "value": null,
                 "menuName": "lists",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE
             },
             {
                 "type": "Indicator",
@@ -14870,7 +14947,8 @@ Entry.block = {
                 "type": "DropdownDynamic",
                 "value": null,
                 "menuName": "lists",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE
             },
             {
                 "type": "Block",
@@ -14929,7 +15007,8 @@ Entry.block = {
                 "type": "DropdownDynamic",
                 "value": null,
                 "menuName": "lists",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE
             },
             {
                 "type": "Block",
@@ -14997,7 +15076,8 @@ Entry.block = {
                 "type": "DropdownDynamic",
                 "value": null,
                 "menuName": "lists",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE
             },
             {
                 "type": "Text",
@@ -15060,7 +15140,8 @@ Entry.block = {
                 "type": "DropdownDynamic",
                 "value": null,
                 "menuName": "lists",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE
             },
             {
                 "type": "Text",
@@ -15095,7 +15176,8 @@ Entry.block = {
                 "type": "DropdownDynamic",
                 "value": null,
                 "menuName": "lists",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE
             },
             {
                 "type": "Indicator",
@@ -15131,7 +15213,8 @@ Entry.block = {
                 "type": "DropdownDynamic",
                 "value": null,
                 "menuName": "lists",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE
             },
             {
                 "type": "Indicator",
@@ -15198,7 +15281,8 @@ Entry.block = {
                     [Lang.Blocks.CALC_timer_visible_hide,"HIDE"]
                 ],
                 "value": "SHOW",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE
             },
             {
                 "type": "Indicator",
@@ -15251,7 +15335,8 @@ Entry.block = {
                 "type": "DropdownDynamic",
                 "value": null,
                 "menuName": "lists",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_VARIABLE
             },
             {
                 "type": "Text",
@@ -15314,7 +15399,8 @@ Entry.block = {
                     [Lang.Blocks.XBOT_D11_digitalInput, "D11"]
                 ],
                 "value": "D2",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
             }
         ],
         "events": {},
@@ -15574,7 +15660,8 @@ Entry.block = {
                     [Lang.Blocks.XBOT_bothWheel, "bothWheel"]
                 ],
                 "value": "rightWheel",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
             },
             {
                 "type": "Block",
@@ -15906,7 +15993,8 @@ Entry.block = {
                     [ "1", "1" ]
                 ],
                 "value": "0",
-                "fontSize": 11
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
             },
             {
                 "type": "Block",
@@ -15978,7 +16066,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/img/assets/ntry/bitmap/jr/block_play_image.png",
+                "img": "../../../img/assets/ntry/bitmap/jr/block_play_image.png",
                 "highlightColor": "#3BBD70",
                 "position": {
                     "x": 0,
@@ -15986,7 +16074,16 @@ Entry.block = {
                 },
                 "size": 22
             }
-        ]
+        ],
+        func: function() {
+            var entities =
+                Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+
+            for (var key in entities) this._unit = entities[key];
+
+            Ntry.unitComp =
+                Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
+        }
     },
     "jr_repeat": {
         "skeleton": "pebble_loop",
@@ -16019,7 +16116,24 @@ Entry.block = {
                 "text": "반복"
             }
         ],
-        "statements": []
+        statements: [
+            { accept: "pebble_basic" }
+        ],
+        func: function() {
+            if (this.repeatCount === undefined) {
+                this.repeatCount = this.block.params[1];
+                return Entry.STATIC.BREAK;
+            } else if (this.repeatCount > 0) {
+                this.repeatCount--;
+                var statement = this.block.statements[0];
+                if (statement.getBlocks().length === 0)
+                    return;
+                this.executor.stepInto(statement);
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.repeatCount;
+            }
+        }
     },
     "jr_item": {
         "skeleton": "pebble_basic",
@@ -16027,7 +16141,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Indicator",
-                "img": "/img/assets/ntry/bitmap/jr/block_item_image.png",
+                "img": "../../../img/assets/ntry/bitmap/jr/block_item_image.png",
                 "highlightColor": "#FFF",
                 "position": {
                     "x": 83,
@@ -16035,7 +16149,25 @@ Entry.block = {
                 },
                 "size": 22
             }
-        ]
+        ],
+        func: function() {
+            if (!this.isContinue) {
+                this.isContinue = true;
+                this.isAction = true;
+                var self = this;
+                var callBack = function() {
+                    Ntry.dispatchEvent("getItem");
+                    self.isAction = false;
+                };
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.GET_ITEM , callBack);
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
     },
     "cparty_jr_item": {
         "skeleton": "pebble_basic",
@@ -16047,7 +16179,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/img/assets/ntry/bitmap/cpartyjr/pen.png",
+                "img": "../../../img/assets/ntry/bitmap/cpartyjr/pen.png",
                 "highlightColor": "#FFF",
                 "position": {
                     "x": 83,
@@ -16055,7 +16187,26 @@ Entry.block = {
                 },
                 "size": 22
             }
-        ]
+        ],
+        func: function() {
+            if (!this.isContinue) {
+                this.isContinue = true;
+                this.isAction = true;
+                var self = this;
+                var callBack = function() {
+                    Ntry.dispatchEvent("getItem");
+                    self.isAction = false;
+                };
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.GET_ITEM , callBack);
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+
+            }
+        }
     },
     "jr_north": {
         "skeleton": "pebble_basic",
@@ -16067,14 +16218,52 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/img/assets/ntry/bitmap/jr/block_up_image.png",
+                "img": "../../../img/assets/ntry/bitmap/jr/block_up_image.png",
                 "position": {
                     "x": 83,
                     "y": 0
                 },
                 "size": 22
             }
-        ]
+        ],
+        func: function() {
+            if (!this.isContinue) {
+                this.isContinue = true;
+                this.isAction = true;
+                var STATIC = Ntry.STATIC;
+                var self = this;
+                var callBack = function() {
+                    window.setTimeout(
+                        function() { Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
+                            self.isAction = false;
+                            }
+                        );}, 3);
+                };
+                var actionType;
+                switch (Ntry.unitComp.direction) {
+                    case Ntry.STATIC.EAST:
+                        actionType = STATIC.TURN_LEFT;
+                        break;
+                    case Ntry.STATIC.SOUTH:
+                        actionType = STATIC.HALF_ROTATION;
+                        break;
+                    case Ntry.STATIC.WEST:
+                        actionType = STATIC.TURN_RIGHT;
+                        break;
+                    default:
+                        callBack();
+                        break;
+                }
+                if (actionType)
+                    Ntry.dispatchEvent("unitAction", actionType, callBack);
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
     },
     "jr_east": {
         "skeleton": "pebble_basic",
@@ -16086,14 +16275,57 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/img/assets/ntry/bitmap/jr/block_right_image.png",
+                "img": "../../../img/assets/ntry/bitmap/jr/block_right_image.png",
                 "position": {
                     "x": 83,
                     "y": 0
                 },
                 "size": 22
             }
-        ]
+        ],
+        func: function() {
+            var STATIC = Ntry.STATIC;
+
+             if (!this.isContinue) {
+                this.isContinue = true;
+                this.isAction = true;
+                var self = this;
+                var callBack = function() {
+                    window.setTimeout(
+                        function() {
+                            Ntry.dispatchEvent(
+                                "unitAction",
+                                STATIC.WALK,
+                                function() { self.isAction = false; } );},
+                        3);
+                };
+
+                // turn direction
+                var actionType;
+                switch (Ntry.unitComp.direction) {
+                    case STATIC.SOUTH:
+                        actionType = STATIC.TURN_LEFT;
+                        break;
+                    case STATIC.WEST:
+                        actionType = STATIC.HALF_ROTATION;
+                        break;
+                    case STATIC.NORTH:
+                        actionType = STATIC.TURN_RIGHT;
+                        break;
+                    default:
+                        callBack();
+                        break;
+                }
+                if (actionType)
+                    Ntry.dispatchEvent("unitAction", actionType, callBack);
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
     },
     "jr_south": {
         "skeleton": "pebble_basic",
@@ -16105,14 +16337,57 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/img/assets/ntry/bitmap/jr/block_down_image.png",
+                "img": "../../../img/assets/ntry/bitmap/jr/block_down_image.png",
                 "position": {
                     "x": 83,
                     "y": 0
                 },
                 "size": 22
             }
-        ]
+        ],
+        func: function() {
+             if (!this.isContinue) {
+
+                this.isContinue = true;
+                this.isAction = true;
+                var STATIC = Ntry.STATIC;
+                var self = this;
+                var callBack = function() {
+                    window.setTimeout(
+                        function() {
+                            Ntry.dispatchEvent(
+                                "unitAction",
+                                Ntry.STATIC.WALK,
+                                function() { self.isAction = false; } );},
+                    3);
+                };
+
+                // turn direction
+                var actionType;
+                switch (Ntry.unitComp.direction) {
+                    case STATIC.EAST:
+                        actionType = STATIC.TURN_RIGHT;
+                        break;
+                    case STATIC.NORTH:
+                        actionType = STATIC.HALF_ROTATION;
+                        break;
+                    case STATIC.WEST:
+                        actionType = STATIC.TURN_LEFT;
+                        break;
+                    default:
+                        callBack();
+                        break;
+                }
+                if (actionType)
+                    Ntry.dispatchEvent("unitAction", actionType, callBack);
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
     },
     "jr_west": {
         "skeleton": "pebble_basic",
@@ -16124,14 +16399,55 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "/img/assets/ntry/bitmap/jr/block_left_image.png",
+                "img": "../../../img/assets/ntry/bitmap/jr/block_left_image.png",
                 "position": {
                     "x": 83,
                     "y": 0
                 },
                 "size": 22
             }
-        ]
+        ],
+        func: function() {
+            if (!this.isContinue) {
+                this.isContinue = true;
+                this.isAction = true;
+                var STATIC = Ntry.STATIC;
+                var self = this;
+                var callBack = function() {
+                    window.setTimeout(
+                        function() { Ntry.dispatchEvent(
+                            "unitAction",
+                            STATIC.WALK,
+                            function() { self.isAction = false; } );},
+                    3);
+                };
+
+                // turn direction
+                var actionType;
+                switch (Ntry.unitComp.direction) {
+                    case STATIC.SOUTH:
+                        actionType = STATIC.TURN_RIGHT;
+                        break;
+                    case STATIC.EAST:
+                        actionType = STATIC.HALF_ROTATION;
+                        break;
+                    case STATIC.NORTH:
+                        actionType = STATIC.TURN_LEFT;
+                        break;
+                    default:
+                        callBack();
+                        break;
+                }
+                if (actionType)
+                    Ntry.dispatchEvent("unitAction", actionType, callBack);
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
     },
     "jr_start_basic": {
         "skeleton": "basic_event",
@@ -16141,7 +16457,7 @@ Entry.block = {
             {
                 "type": "Indicator",
                 "boxMultiplier": 2,
-                "img": "/img/assets/block_icon/start_icon_play.png",
+                "img": "../../../img/assets/block_icon/start_icon_play.png",
                 "highlightColor": "#3BBD70",
                 "size": 17,
                 "position": {
@@ -16149,56 +16465,164 @@ Entry.block = {
                     "y": -2
                 }
             },
-            "시작하기를 클릭했을때"
-        ]
+            {
+                text: "시작하기를 클릭했을때",
+                type: "Text"
+            }
+        ],
+        func: function() {
+            var entities = Ntry.entityManager.getEntitiesByComponent(
+            Ntry.STATIC.UNIT);
+
+            for (var key in entities)
+                this._unit = entities[key];
+
+            Ntry.unitComp = Ntry.entityManager.getComponent(
+            this._unit.id, Ntry.STATIC.UNIT);
+        }
     },
     "jr_go_straight": {
         "skeleton": "basic",
         "color": "#A751E3",
         "params": [
-            "앞으로 가기",
+            {
+                text: "앞으로 가기",
+                type: "Text"
+            },
             {
                 "type": "Image",
-                "img": "/img/assets/ntry/bitmap/jr/cparty_go_straight.png",
+                "img": "../../../img/assets/ntry/bitmap/jr/cparty_go_straight.png",
                 "size": 24
             }
-        ]
+        ],
+        func: function() {
+            if (!this.isContinue) {
+
+                this.isContinue = true;
+                this.isAction = true;
+                var self = this;
+                var callBack = function() {
+                    self.isAction = false;
+                };
+                // turn direction
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, callBack);
+
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
     },
     "jr_turn_left": {
         "skeleton": "basic",
         "color": "#A751E3",
         "params": [
-            "왼쪽으로 돌기",
+            {
+                text: "왼쪽으로 돌기",
+                type: "Text"
+            },
             {
                 "type": "Image",
-                "img": "/img/assets/ntry/bitmap/jr/cparty_rotate_l.png",
+                "img": "../../../img/assets/ntry/bitmap/jr/cparty_rotate_l.png",
                 "size": 24
             }
-        ]
+        ],
+        func: function() {
+            if (!this.isContinue) {
+
+                this.isContinue = true;
+                this.isAction = true;
+                var self = this;
+                var callBack = function() {
+                    self.isAction = false;
+                };
+
+                // turn direction
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, callBack);
+
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
     },
     "jr_turn_right": {
         "skeleton": "basic",
         "color": "#A751E3",
         "params": [
-            "오른쪽으로 돌기",
+            {
+                text: "오른쪽으로 돌기",
+                type: "Text"
+            },
             {
                 "type": "Image",
-                "img": "/img/assets/ntry/bitmap/jr/cparty_rotate_r.png",
+                "img": "../../../img/assets/ntry/bitmap/jr/cparty_rotate_r.png",
                 "size": 24
             }
-        ]
+        ],
+        func: function() {
+            if (!this.isContinue) {
+
+                this.isContinue = true;
+                this.isAction = true;
+                var self = this;
+                var callBack = function() {
+                    self.isAction = false;
+                };
+
+                // turn direction
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, callBack);
+
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
     },
     "jr_go_slow": {
         "skeleton": "basic",
         "color": "#f46c6c",
         "params": [
-            "천천히 가기",
+            {
+                text: "천천히 가기",
+                type: "Text"
+            },
             {
                 "type": "Image",
-                "img": "/img/assets/ntry/bitmap/jr/cparty_go_slow.png",
+                "img": "../../../img/assets/ntry/bitmap/jr/cparty_go_slow.png",
                 "size": 24
             }
-        ]
+        ],
+        func: function() {
+            if (!this.isContinue) {
+
+                this.isContinue = true;
+                this.isAction = true;
+                var self = this;
+                var callBack = function() {
+                    self.isAction = false;
+                };
+
+                // turn direction
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.GO_SLOW, callBack);
+
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
     },
     "jr_repeat_until_dest": {
         "skeleton": "basic_loop",
@@ -16211,10 +16635,13 @@ Entry.block = {
             "",
             {
                 "type": "Image",
-                "img": "/img/assets/ntry/bitmap/jr/jr_goal_image.png",
+                "img": "../../../img/assets/ntry/bitmap/jr/jr_goal_image.png",
                 "size": 18
             },
-            "만날 때 까지 반복하기",
+            {
+                text: "만날 때 까지 반복하기",
+                type: "Text"
+            },
             {
                 "type": "Image",
                 "img": "/img/assets/week/blocks/for.png",
@@ -16225,19 +16652,33 @@ Entry.block = {
             {
                 "accept": "basic"
             }
-        ]
+        ],
+        func: function() {
+            var statement = this.block.statements[0];
+            if (statement.getBlocks().length === 0)
+                return;
+
+            this.executor.stepInto(statement);
+            return Entry.STATIC.BREAK;
+        }
     },
     "jr_if_construction": {
         "skeleton": "basic_loop",
         "color": "#498DEB",
         "params": [
-            "만약",
+            {
+                text: "만약",
+                type: "Text"
+            },
             {
                 "type": "Image",
-                "img": "/img/assets/ntry/bitmap/jr/jr_construction_image.png",
+                "img": "../../../img/assets/ntry/bitmap/jr/jr_construction_image.png",
                 "size": 18
             },
-            "앞에 있다면",
+            {
+                text: "앞에 있다면",
+                type: "Text"
+            },
             {
                 "type": "Image",
                 "img": "/img/assets/week/blocks/for.png",
@@ -16248,7 +16689,47 @@ Entry.block = {
             {
                 "accept": "basic"
             }
-        ]
+        ],
+        func: function() {
+            if (this.isContinue)
+                return;
+            var entities = Ntry.entityManager.getEntitiesByComponent(
+            Ntry.STATIC.UNIT);
+
+            var entity;
+            for (var key in entities)
+                entity = entities[key];
+
+            var unitComp = Ntry.entityManager.getComponent(
+                entity.id, Ntry.STATIC.UNIT);
+            var gridComp = Ntry.entityManager.getComponent(
+                entity.id, Ntry.STATIC.GRID);
+
+            var grid = {x: gridComp.x, y: gridComp.y};
+            Ntry.addVectorByDirection(grid, unitComp.direction, 1);
+
+            var fitEntities = Ntry.entityManager.find(
+                {
+                    type: Ntry.STATIC.GRID,
+                    x: grid.x,
+                    y: grid.y
+                },
+                {
+                    type: Ntry.STATIC.TILE,
+                    tileType: Ntry.STATIC.OBSTACLE_REPAIR
+                }
+            );
+
+            this.isContinue = true;
+
+            var statement = this.block.statements[0];
+            if (fitEntities.length === 0) return;
+            else if (statement.getBlocks().length === 0) return;
+            else {
+                this.executor.stepInto(statement);
+                return Entry.STATIC.BREAK;
+            }
+        }
     },
     "jr_if_speed": {
         "skeleton": "basic_loop",
@@ -16256,7 +16737,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Image",
-                "img": "/img/assets/ntry/bitmap/jr/jr_speed_image.png",
+                "img": "../../../img/assets/ntry/bitmap/jr/jr_speed_image.png",
                 "size": 18
             },
             {
@@ -16269,7 +16750,47 @@ Entry.block = {
             {
                 "accept": "basic"
             }
-        ]
+        ],
+        func: function()  {
+            if (this.isContinue)
+                return;
+            var entities = Ntry.entityManager.getEntitiesByComponent(
+            Ntry.STATIC.UNIT);
+
+            var entity;
+            for (var key in entities)
+                entity = entities[key];
+
+            var unitComp = Ntry.entityManager.getComponent(
+                entity.id, Ntry.STATIC.UNIT);
+            var gridComp = Ntry.entityManager.getComponent(
+                entity.id, Ntry.STATIC.GRID);
+
+            var grid = {x: gridComp.x, y: gridComp.y};
+            Ntry.addVectorByDirection(grid, unitComp.direction, 1);
+
+            var fitEntities = Ntry.entityManager.find(
+                {
+                    type: Ntry.STATIC.GRID,
+                    x: grid.x,
+                    y: grid.y
+                },
+                {
+                    type: Ntry.STATIC.TILE,
+                    tileType: Ntry.STATIC.OBSTACLE_SLOW
+                }
+            );
+
+            this.isContinue = true;
+
+            var statement = this.block.statements[0];
+            if (fitEntities.length === 0) return;
+            else if(statement.getBlocks().length === 0) return;
+            else {
+                this.executor.stepInto(statement);
+                return Entry.STATIC.BREAK;
+            }
+        }
     },
     "maze_step_start": {
         "skeleton": "basic_event",
@@ -16278,12 +16799,12 @@ Entry.block = {
         "color": "#3BBD70",
         "syntax": [
             "Program"
-        ], 
+        ],
         "params": [
             {
                 "type": "Indicator",
                 "boxMultiplier": 2,
-                "img": "/img/assets/block_icon/start_icon_play.png",
+                "img": "../../../img/assets/block_icon/start_icon_play.png",
                 "highlightColor": "#3BBD70",
                 "size": 17,
                 "position": {
@@ -16473,7 +16994,15 @@ Entry.block = {
             {
                 "accept": "basic"
             }
-        ]
+        ],
+        func: function() {
+            var statement = this.block.statements[0];
+            if (statement.getBlocks().length === 0)
+                return;
+
+            this.executor.stepInto(statement);
+            return Entry.STATIC.BREAK;
+        }
     },
     "maze_step_if_1": {
         "skeleton": "basic_loop",
@@ -16567,7 +17096,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Image",
-                "img": "/img/assets/ntry/bitmap/maze2/obstacle_01.png",
+                "img": "../../../img/assets/ntry/bitmap/maze2/obstacle_01.png",
                 "size": 18
             },
             {
@@ -17066,8 +17595,7 @@ Entry.block = {
                     "type": "arduino_get_number_sensor_value",
                     "params": [
                         {
-                            "type": "arduino_get_sensor_number",
-                            "id": "bl5e"
+                            "type": "arduino_get_sensor_number"
                         }
                     ]
                 },
@@ -17113,13 +17641,13 @@ Entry.block = {
                 ["적외선", "INFR"]
             ],
             "value": "ADJU",
-            "fontSize": 11
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
         }],
         "events": {},
         "def": {
             "params": [{
-                "type": "arduino_get_sensor_number",
-                "id": "4rx2"
+                "type": "arduino_get_sensor_number"
             }, null],
             "type": "dplay_get_value",
             "id": "hh5b"
@@ -17149,13 +17677,13 @@ Entry.block = {
                 ["오른쪽", "LIGHT"]
             ],
             "value": "LEFT",
-            "fontSize": 11
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
         }],
         "events": {},
         "def": {
             "params": [null],
-            "type": "dplay_get_tilt",
-            "id": "edht"
+            "type": "dplay_get_tilt"
         },
         "paramsKeyMap": {
             "STATUS": 0
@@ -17183,7 +17711,8 @@ Entry.block = {
                 ["오른쪽", "6"]
             ],
             "value": "3",
-            "fontSize": 11
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
         }, {
             "type": "Dropdown",
             "options": [
@@ -17192,7 +17721,8 @@ Entry.block = {
                 ["정지", "OFF"]
             ],
             "value": "FRONT",
-            "fontSize": 11
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
         }, {
             "type": "Indicator",
             "img": "block_icon/hardware_03.png",
@@ -17201,8 +17731,7 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [null, null, null],
-            "type": "dplay_DCmotor",
-            "id": "7b8v"
+            "type": "dplay_DCmotor"
         },
         "paramsKeyMap": {
             "PORT": 0,
@@ -17250,7 +17779,8 @@ Entry.block = {
                 ["미", "3"]
             ],
             "value": "1",
-            "fontSize": 11
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
         }, {
             "type": "Block",
             "accept": "string"
@@ -17263,11 +17793,9 @@ Entry.block = {
         "def": {
             "params": [null, {
                 "type": "arduino_text",
-                "params": ["0"],
-                "id": "04wh"
+                "params": ["0"]
             }, null],
-            "type": "dplay_buzzer",
-            "id": "rl5l"
+            "type": "dplay_buzzer"
         },
         "paramsKeyMap": {
             "PORT": 0,
@@ -17345,7 +17873,8 @@ Entry.block = {
                 ["10", "10"]
             ],
             "value": "7",
-            "fontSize": 11
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
         }, {
             "type": "Dropdown",
             "options": [
@@ -17353,7 +17882,8 @@ Entry.block = {
                 ["끄기", "off"]
             ],
             "value": "on",
-            "fontSize": 11
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
         }, {
             "type": "Indicator",
             "img": "block_icon/hardware_03.png",
@@ -17362,8 +17892,7 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [null, null, null],
-            "type": "dplay_select_led",
-            "id": "9kmq"
+            "type": "dplay_select_led"
         },
         "paramsKeyMap": {
             "PORT": 0,
@@ -17398,7 +17927,8 @@ Entry.block = {
                 ["4", "4"]
             ],
             "value": "2",
-            "fontSize": 11
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
         }, {
             "type": "Dropdown",
             "options": [
@@ -17406,13 +17936,13 @@ Entry.block = {
                 ["열림", "OFF"]
             ],
             "value": "ON",
-            "fontSize": 11
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
         }],
         "events": {},
         "def": {
             "params": [null, null],
-            "type": "dplay_get_switch_status",
-            "id": "fik8"
+            "type": "dplay_get_switch_status"
         },
         "paramsKeyMap": {
             "PORT": 0,
@@ -17445,13 +17975,13 @@ Entry.block = {
                 ["어두움", "DARK"]
             ],
             "value": "BRIGHT",
-            "fontSize": 11
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
         }],
         "events": {},
         "def": {
             "params": [null],
-            "type": "dplay_get_light_status",
-            "id": "do3r"
+            "type": "dplay_get_light_status"
         },
         "paramsKeyMap": {
             "STATUS": 0
@@ -17548,8 +18078,7 @@ Entry.block = {
                     "type": "arduino_get_number_sensor_value",
                     "params": [
                         {
-                            "type": "arduino_get_sensor_number",
-                            "id": "bl5e"
+                            "type": "arduino_get_sensor_number"
                         }
                     ]
                 },
@@ -17766,8 +18295,7 @@ Entry.block = {
                     "type": "arduino_get_number_sensor_value",
                     "params": [
                         {
-                            "type": "arduino_get_sensor_number",
-                            "id": "bl5e"
+                            "type": "arduino_get_sensor_number"
                         }
                     ]
                 },
@@ -17792,6 +18320,36 @@ Entry.block = {
         },
         "class": "arduino",
         "syntax": {"js": [], "py": ["hw.CODEino_convert_scale(%1, %2, %3, %4, %5)"]}
+    },
+    "ebs_if": {
+        "parent": "_if",
+        "def": {
+            type: "_if",
+            params: [
+                {
+                    type: 'reach_something',
+                    params: [
+                        null,
+                        "wall"
+                    ]
+                }
+            ]
+        }
+    },
+    "ebs_if2": {
+        "parent": "_if",
+        "def": {
+            type: "_if",
+            params: [
+                {
+                    type: 'reach_something',
+                    params: [
+                        null,
+                        "cwz5"
+                    ]
+                }
+            ]
+        }
     }
 };
 
