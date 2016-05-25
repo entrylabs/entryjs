@@ -17,8 +17,7 @@ Entry.BlockView = function(block, board, mode) {
     this.svgGroup = board.svgBlockGroup.elem("g");
 
     this._schema = Entry.block[block.type];
-
-    if (this._schema.changeEvent) 
+    if (this._schema.changeEvent)
         this._schemaChangeEvent = this._schema.changeEvent.attach(
             this, this._updateSchema);
     var skeleton = this._skeleton = Entry.skeleton[this._schema.skeleton];
@@ -200,7 +199,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
             case Entry.Workspace.MODE_VIMBOARD:
                 var text = this.getBoard().workspace.getCodeToText(this.block);
                 this._contents.push(
-                    new Entry.FieldText({text: text}, this)
+                    new Entry.FieldText({text: text, color: 'white'}, this)
                 );
                 break;
         }

@@ -12,6 +12,7 @@ if (typeof exports == "object") {
 Entry.block = {
     "albert_hand_found": {
         "color": "#00979D",
+        "fontColor": "#fff",
         "skeleton": "basic_boolean_field",
         "statements": [],
         "params": [],
@@ -1988,7 +1989,7 @@ Entry.block = {
                 "options": [
                     [ "빨간", "8" ],
                     [ "파란", "9" ],
-                    [ "노란", "10" ],
+                    [ "노랑", "10" ],
                     [ "초록", "11" ]
                 ],
                 "value": "8",
@@ -2021,6 +2022,7 @@ Entry.block = {
                     [ "빨간", "2" ],
                     [ "초록", "3" ],
                     [ "파란", "4" ],
+                    [ "노랑", "5" ]
                     [ "흰색", "5" ]
                 ],
                 "value": "2",

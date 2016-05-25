@@ -3,12 +3,12 @@
  */
 "use strict";
 
-goog.provide("Entry.Parser_Maze");
+goog.provide("Entry.Parser");
 
-goog.require("Entry.JsToBlockParser");
-goog.require("Entry.BlockToJsParser");
+goog.require("Entry.JSParser");
+goog.require("Entry.BlockParser");
 
-Entry.Parser_Maze = function(mode, syntax, cm) {
+Entry.Parser = function(mode, syntax, cm) {
     this._mode = mode; // maze ai workspace
     this.syntax = {};
     this.codeMirror = cm;
@@ -28,7 +28,7 @@ Entry.Parser_Maze = function(mode, syntax, cm) {
 
     switch (this._lang) {
         case "js":
-            this._parser = new Entry.JsToBlockParser(this.syntax);
+            this._parser = new Entry.JSParser(this.syntax);
 
             var syntax = this.syntax;
 
@@ -54,7 +54,7 @@ Entry.Parser_Maze = function(mode, syntax, cm) {
 
             break;
         case "block":
-            this._parser = new Entry.BlockToJsParser(this.syntax);
+            this._parser = new Entry.BlockParser(this.syntax);
             break;
     }
 };
@@ -201,4 +201,4 @@ Entry.Parser_Maze = function(mode, syntax, cm) {
     }
 
 
-})(Entry.Parser_Maze.prototype);
+})(Entry.Parser.prototype);

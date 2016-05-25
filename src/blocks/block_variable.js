@@ -8,7 +8,8 @@ Entry.block.variableAddButton = {
         {
             type: "Text",
             text: "변수 추가",
-            color: "#333"
+            color: "#333",
+            align: "center"
         }
     ],
     func: function() {},
@@ -19,7 +20,7 @@ Entry.block.variableAddButton = {
             }
         ]
     },
-    syntax: {js:[], py: ["변수 추가"]}
+    syntax: {js:[], py: []}
 };
 
 Entry.block.listAddButton = {
@@ -30,7 +31,8 @@ Entry.block.listAddButton = {
         {
             type: "Text",
             text: "리스트 추가",
-            color: "#333"
+            color: "#333",
+            align: "center"
         }
     ],
     func: function() {},
@@ -41,7 +43,7 @@ Entry.block.listAddButton = {
             }
         ]
     },
-    syntax: {js:[], py: ["리스트 추가"]}
+    syntax: {js:[], py: []}
 };
 
 // (변수▼) 를 () 만큼 바꾸기

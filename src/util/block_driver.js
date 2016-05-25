@@ -18,7 +18,6 @@ Entry.BlockDriver = function() {
 
     p._convertBlock = function(blockType) {
         var blocklyInfo = Blockly.Blocks[blockType];
-
         var blockInfo = EntryStatic.blockInfo[blockType];
         var className, isNotFor;
         if (blockInfo) {
@@ -39,7 +38,6 @@ Entry.BlockDriver = function() {
         var blockObject = mockup.toJSON();
         blockObject.class = className;
         blockObject.isNotFor = isNotFor;
-        blockObject.syntax = blocklyInfo.syntax;
 
         if (_.isEmpty(blockObject.paramsKeyMap))
             delete blockObject.paramsKeyMap
@@ -231,7 +229,6 @@ Entry.BlockMockup = function(blocklyInfo, def, blockType) {
                     text: field,
                     color: opt
                 };
-
                 this.params.push(field);
                 this._addToParamsKeyMap();
                 this.templates.push(this.getFieldCount());
