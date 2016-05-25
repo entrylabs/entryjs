@@ -138,10 +138,7 @@ Entry.Stage.prototype.render = function() {
     var time = new Date().getTime();
     Entry.stage.update();
     time = new Date().getTime() - time;
-    Entry.stage.timer = setTimeout(
-        requestAnimationFrame(Entry.stage.render.bind(this)),
-        16 - time % 16 + 16 * Math.floor(time / 16)
-    );
+    Entry.stage.timer = setTimeout(Entry.stage.render, 16 - time % 16 + 16 * Math.floor(time / 16));
 };
 
 /**

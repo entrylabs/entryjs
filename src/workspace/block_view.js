@@ -400,7 +400,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
                 x: mouseEvent.pageX, y: mouseEvent.pageY
             };
             var doc = $(document);
-            doc.bind('mousemove.block touchmove.block', requestAnimationFrame(onMouseMove.bind(this));
+            doc.bind('mousemove.block touchmove.block', onMouseMove);
             doc.bind('mouseup.block touchend.block', onMouseUp);
             this.dragInstance = new Entry.DragInstance({
                 startX: mouseEvent.pageX,

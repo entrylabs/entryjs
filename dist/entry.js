@@ -11146,7 +11146,7 @@ Entry.Stage.prototype.render = function() {
   var b = (new Date).getTime();
   Entry.stage.update();
   b = (new Date).getTime() - b;
-  Entry.stage.timer = setTimeout(requestAnimationFrame(Entry.stage.render.bind(this)), 16 - b % 16 + 16 * Math.floor(b / 16));
+  Entry.stage.timer = setTimeout(Entry.stage.render, 16 - b % 16 + 16 * Math.floor(b / 16));
 };
 Entry.Stage.prototype.update = function() {
   Entry.engine.isState("stop") && this.objectUpdated ? (this.canvas.update(), this.objectUpdated = !1) : this.canvas.update();
@@ -17393,7 +17393,7 @@ Entry.GlobalSvg = {};
       $("#globalSvg").remove();
       var a = $("body");
       this._container = Entry.Dom("div", {classes:["globalSvgSurface", "entryRemove"], id:"globalSvgSurface", parent:a});
-      this.svgDom = Entry.Dom($('<svg id="globalSvg" width="10" height="10"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:a});
+      this.svgDom = Entry.Dom($('<svg id="globalSvg" width="10" height="10"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this._container});
       this.svg = Entry.SVG("globalSvg");
       this.top = this.left = 0;
       this._inited = !0;
@@ -17435,9 +17435,7 @@ Entry.GlobalSvg = {};
       var b = a.getAbsoluteCoordinate(), a = a.getBoard().offset();
       this.left = b.x + a.left - this._offsetX;
       this.top = b.y + a.top - this._offsetY;
-      b = this.svgDom[0];
-      b.style.left = this.left + "px";
-      b.style.top = this.top + "px";
+      this.svgDom.css({transform:"translate3d(" + this.left + "px," + this.top + "px, 0px)"});
     }
   };
   b.terminateDrag = function(a) {
