@@ -356,7 +356,7 @@ Blockly.Blocks.albert_set_eye_to = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.albert_set_eye_to = function(b, a) {
-  var d = Entry.hw.sendQueue, c = a.getField("DIRECTION", a), e = Number(a.getField("COLOR", a));
+  var d = Entry.hw.sendQueue, c = a.getField("DIRECTION", a), e = +a.getField("COLOR", a);
   "LEFT" == c ? d.leftEye = e : ("RIGHT" != c && (d.leftEye = e), d.rightEye = e);
   return a.callReturn();
 };
@@ -667,7 +667,7 @@ Blockly.Blocks.albert_set_led_to = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.albert_set_led_to = function(b, a) {
-  var d = Entry.hw.sendQueue, c = a.getField("DIRECTION", a), e = Number(a.getField("COLOR", a));
+  var d = Entry.hw.sendQueue, c = a.getField("DIRECTION", a), e = +a.getField("COLOR", a);
   "FRONT" == c ? (d.leftEye = e, d.rightEye = e) : "LEFT" == c ? d.leftEye = e : d.rightEye = e;
   return a.callReturn();
 };
@@ -763,7 +763,7 @@ Entry.block.arduino_get_number = function(b, a) {
   c.open("POST", "http://localhost:23518/arduino/", !1);
   c.send(String(d));
   Entry.assert(200 == c.status, "arduino is not connected");
-  return Number(c.responseText);
+  return +c.responseText;
 };
 Blockly.Blocks.arduino_get_number = {init:function() {
   this.setColour("#00979D");
@@ -845,8 +845,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(b, a) {
-  var d = a.getNumberValue("VALUE"), c = a.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(d, "on" == c ? 255 : 0);
+  var d = a.getNumberValue("VALUE"), c = "on" == a.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(d, c);
   return a.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1046,8 +1046,8 @@ Blockly.Blocks.dplay_select_led = {init:function() {
 Entry.block.dplay_select_led = function(b, a) {
   var d = a.getField("PORT"), c = 7;
   "7" == d ? c = 7 : "8" == d ? c = 8 : "9" == d ? c = 9 : "10" == d && (c = 10);
-  d = a.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
+  d = "on" == a.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(c, d);
   return a.callReturn();
 };
 Blockly.Blocks.dplay_get_switch_status = {init:function() {
@@ -1628,7 +1628,7 @@ Blockly.Blocks.coordinate_mouse = {init:function() {
   this.setInputsInline(!0);
 }, syntax:{js:[], py:['Entry.get_mouse_coordinate("%1")']}};
 Entry.block.coordinate_mouse = function(b, a) {
-  return "x" === a.getField("VALUE", a) ? Number(Entry.stage.mouseCoordinate.x) : Number(Entry.stage.mouseCoordinate.y);
+  return "x" === a.getField("VALUE", a) ? +Entry.stage.mouseCoordinate.x : +Entry.stage.mouseCoordinate.y;
 };
 Blockly.Blocks.coordinate_object = {init:function() {
   this.setColour(calcBlockColor);
@@ -1652,7 +1652,7 @@ Entry.block.coordinate_object = function(b, a) {
       var c = d.parent, c = c.pictures;
       return c.indexOf(d.picture) + 1;
     case "size":
-      return Number(d.getSize().toFixed(1));
+      return +d.getSize().toFixed(1);
     case "picture_name":
       return c = d.parent, c = c.pictures, c[c.indexOf(d.picture)].name;
   }
@@ -2057,10 +2057,10 @@ Entry.block.wait_second = function(b, a) {
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var d = a.getNumberValue("SECOND", a);
+  var d = a.getNumberValue("SECOND", a), d = 60 / (Entry.FPS || 60) * d * 1E3;
   setTimeout(function() {
     a.timeFlag = 0;
-  }, 60 / (Entry.FPS || 60) * d * 1E3);
+  }, d);
   return a;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -2262,9 +2262,9 @@ Entry.block.remove_all_clones = function(b, a) {
   d = null;
   return a.callReturn();
 };
-Entry.block.functionAddButton = {skeleton:"basic_button", color:"#eee", isNotFor:["functionInit"], template:"%1", params:[{type:"Text", text:"\ud568\uc218 \ucd94\uac00", color:"#333"}], events:{mousedown:[function() {
+Entry.block.functionAddButton = {skeleton:"basic_button", color:"#eee", isNotFor:["functionInit"], template:"%1", params:[{type:"Text", text:"\ud568\uc218 \ucd94\uac00", color:"#333", align:"center"}], events:{mousedown:[function() {
   Entry.variableContainer.createFunction();
-}]}, syntax:{js:[], py:["\ud568\uc218 \ucd94\uac00"]}};
+}]}, syntax:{js:[], py:[]}};
 Blockly.Blocks.function_field_label = {init:function() {
   this.setColour("#f9c535");
   this.appendDummyInput().appendField(new Blockly.FieldTextInput(Lang.Blocks.FUNCTION_explanation_1), "NAME");
@@ -2795,7 +2795,7 @@ Blockly.Blocks.hamster_set_following_speed_to = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_set_following_speed_to = function(b, a) {
-  Entry.hw.sendQueue.lineTracerSpeed = Number(a.getField("SPEED", a));
+  Entry.hw.sendQueue.lineTracerSpeed = +a.getField("SPEED", a);
   return a.callReturn();
 };
 Blockly.Blocks.hamster_stop = {init:function() {
@@ -2821,7 +2821,7 @@ Blockly.Blocks.hamster_set_led_to = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_set_led_to = function(b, a) {
-  var d = Entry.hw.sendQueue, c = a.getField("DIRECTION", a), e = Number(a.getField("COLOR", a));
+  var d = Entry.hw.sendQueue, c = a.getField("DIRECTION", a), e = +a.getField("COLOR", a);
   "LEFT" == c ? d.leftLed = e : ("RIGHT" != c && (d.leftLed = e), d.rightLed = e);
   return a.callReturn();
 };
@@ -3020,7 +3020,7 @@ Blockly.Blocks.hamster_set_port_to = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_set_port_to = function(b, a) {
-  var d = Entry.hw.sendQueue, c = a.getField("PORT", a), e = Number(a.getField("MODE", a));
+  var d = Entry.hw.sendQueue, c = a.getField("PORT", a), e = +a.getField("MODE", a);
   "A" == c ? d.ioModeA = e : ("B" != c && (d.ioModeA = e), d.ioModeB = e);
   return a.callReturn();
 };
@@ -3069,7 +3069,7 @@ Blockly.Blocks.is_press_some_key = {init:function() {
   this.setInputsInline(!0);
 }, syntax:{js:[], py:["Entry.is_particular_key_pressed(%1)"]}};
 Entry.block.is_press_some_key = function(b, a) {
-  var d = Number(a.getField("VALUE", a));
+  var d = +a.getField("VALUE", a);
   return 0 <= Entry.pressedKeys.indexOf(d);
 };
 Blockly.Blocks.reach_something = {init:function() {
@@ -3283,13 +3283,13 @@ Entry.block.boolean_basic_operator = function(b, a) {
     case "EQUAL":
       return c == e;
     case "GREATER":
-      return Number(c) > Number(e);
+      return +c > +e;
     case "LESS":
-      return Number(c) < Number(e);
+      return +c < +e;
     case "GREATER_OR_EQUAL":
-      return Number(c) >= Number(e);
+      return +c >= +e;
     case "LESS_OR_EQUAL":
-      return Number(c) <= Number(e);
+      return +c <= +e;
   }
 };
 Blockly.Blocks.show = {init:function() {
@@ -3771,7 +3771,7 @@ Blockly.Blocks.rotate_by_angle_dropdown = {init:function() {
 }};
 Entry.block.rotate_by_angle_dropdown = function(b, a) {
   var d = a.getField("VALUE", a);
-  b.setRotation(b.getRotation() + Number(d));
+  b.setRotation(b.getRotation() + +d);
   return a.callReturn();
 };
 Blockly.Blocks.see_angle = {init:function() {
@@ -3863,8 +3863,8 @@ Blockly.Blocks.locate = {init:function() {
 Entry.block.locate = function(b, a) {
   var d = a.getField("VALUE", a), c;
   "mouse" == d ? (d = Entry.stage.mouseCoordinate.x, c = Entry.stage.mouseCoordinate.y) : (c = Entry.container.getEntity(d), d = c.getX(), c = c.getY());
-  b.setX(Number(d));
-  b.setY(Number(c));
+  b.setX(+d);
+  b.setY(+c);
   b.brush && !b.brush.stop && b.brush.lineTo(d, -1 * c);
   return a.callReturn();
 };
@@ -4060,7 +4060,7 @@ Entry.block.locate_object_time = function(b, a) {
     if (0 != d) {
       "mouse" == c ? (c = e.x - b.getX(), e = e.y - b.getY()) : (e = Entry.container.getEntity(c), c = e.getX() - b.getX(), e = e.getY() - b.getY()), a.isStart = !0, a.frameCount = d, a.dX = c / a.frameCount, a.dY = e / a.frameCount;
     } else {
-      return "mouse" == c ? (c = Number(e.x), e = Number(e.y)) : (e = Entry.container.getEntity(c), c = e.getX(), e = e.getY()), b.setX(c), b.setY(e), b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY()), a.callReturn();
+      return "mouse" == c ? (c = +e.x, e = +e.y) : (e = Entry.container.getEntity(c), c = e.getX(), e = e.getY()), b.setX(c), b.setY(e), b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY()), a.callReturn();
     }
   }
   if (0 != a.frameCount) {
@@ -4452,16 +4452,16 @@ Entry.block.robotis_openCM70_cm_custom_value = function(b, a) {
 Blockly.Blocks.robotis_openCM70_sensor_value = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField(Lang.Blocks.robotis_common_cm);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdown(function() {
-    var b = [];
-    b.push([Lang.Blocks.robotis_cm_sound_detected, "CM_SOUND_DETECTED"]);
-    b.push([Lang.Blocks.robotis_cm_sound_detecting, "CM_SOUND_DETECTING"]);
-    b.push([Lang.Blocks.robotis_cm_user_button, "CM_USER_BUTTON"]);
-    return b;
-  }()), "SENSOR");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown(this.sensorList()), "SENSOR");
   this.appendDummyInput().appendField(Lang.Blocks.robotis_common_value);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
+}, sensorList:function() {
+  var b = [];
+  b.push([Lang.Blocks.robotis_cm_sound_detected, "CM_SOUND_DETECTED"]);
+  b.push([Lang.Blocks.robotis_cm_sound_detecting, "CM_SOUND_DETECTING"]);
+  b.push([Lang.Blocks.robotis_cm_user_button, "CM_USER_BUTTON"]);
+  return b;
 }};
 Entry.block.robotis_openCM70_sensor_value = function(b, a) {
   var d = Entry.Robotis_openCM70.INSTRUCTION.READ, c = 0, e = 0, f = 0, g = 0, h = a.getStringField("SENSOR");
@@ -4475,34 +4475,34 @@ Entry.block.robotis_openCM70_sensor_value = function(b, a) {
 Blockly.Blocks.robotis_openCM70_aux_sensor_value = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField("");
-  this.appendDummyInput().appendField(new Blockly.FieldDropdown(function() {
-    var b = [];
-    b.push([Lang.Blocks.robotis_common_port_3, "PORT_3"]);
-    b.push([Lang.Blocks.robotis_common_port_4, "PORT_4"]);
-    b.push([Lang.Blocks.robotis_common_port_5, "PORT_5"]);
-    b.push([Lang.Blocks.robotis_common_port_6, "PORT_6"]);
-    return b;
-  }()), "PORT");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown(this.portList()), "PORT");
   this.appendDummyInput().appendField(" ");
-  this.appendDummyInput().appendField(new Blockly.FieldDropdown(function() {
-    var b = [];
-    b.push([Lang.Blocks.robotis_aux_servo_position, "AUX_SERVO_POSITION"]);
-    b.push([Lang.Blocks.robotis_aux_ir, "AUX_IR"]);
-    b.push([Lang.Blocks.robotis_aux_touch, "AUX_TOUCH"]);
-    b.push([Lang.Blocks.robotis_aux_brightness, "AUX_BRIGHTNESS"]);
-    b.push([Lang.Blocks.robotis_aux_hydro_themo_humidity, "AUX_HYDRO_THEMO_HUMIDITY"]);
-    b.push([Lang.Blocks.robotis_aux_hydro_themo_temper, "AUX_HYDRO_THEMO_TEMPER"]);
-    b.push([Lang.Blocks.robotis_aux_temperature, "AUX_TEMPERATURE"]);
-    b.push([Lang.Blocks.robotis_aux_ultrasonic, "AUX_ULTRASONIC"]);
-    b.push([Lang.Blocks.robotis_aux_magnetic, "AUX_MAGNETIC"]);
-    b.push([Lang.Blocks.robotis_aux_motion_detection, "AUX_MOTION_DETECTION"]);
-    b.push([Lang.Blocks.robotis_aux_color, "AUX_COLOR"]);
-    b.push([Lang.Blocks.robotis_aux_custom, "AUX_CUSTOM"]);
-    return b;
-  }()), "SENSOR");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown(this.sensorList()), "SENSOR");
   this.appendDummyInput().appendField(Lang.Blocks.robotis_common_value);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
+}, portList:function() {
+  var b = [];
+  b.push([Lang.Blocks.robotis_common_port_3, "PORT_3"]);
+  b.push([Lang.Blocks.robotis_common_port_4, "PORT_4"]);
+  b.push([Lang.Blocks.robotis_common_port_5, "PORT_5"]);
+  b.push([Lang.Blocks.robotis_common_port_6, "PORT_6"]);
+  return b;
+}, sensorList:function() {
+  var b = [];
+  b.push([Lang.Blocks.robotis_aux_servo_position, "AUX_SERVO_POSITION"]);
+  b.push([Lang.Blocks.robotis_aux_ir, "AUX_IR"]);
+  b.push([Lang.Blocks.robotis_aux_touch, "AUX_TOUCH"]);
+  b.push([Lang.Blocks.robotis_aux_brightness, "AUX_BRIGHTNESS"]);
+  b.push([Lang.Blocks.robotis_aux_hydro_themo_humidity, "AUX_HYDRO_THEMO_HUMIDITY"]);
+  b.push([Lang.Blocks.robotis_aux_hydro_themo_temper, "AUX_HYDRO_THEMO_TEMPER"]);
+  b.push([Lang.Blocks.robotis_aux_temperature, "AUX_TEMPERATURE"]);
+  b.push([Lang.Blocks.robotis_aux_ultrasonic, "AUX_ULTRASONIC"]);
+  b.push([Lang.Blocks.robotis_aux_magnetic, "AUX_MAGNETIC"]);
+  b.push([Lang.Blocks.robotis_aux_motion_detection, "AUX_MOTION_DETECTION"]);
+  b.push([Lang.Blocks.robotis_aux_color, "AUX_COLOR"]);
+  b.push([Lang.Blocks.robotis_aux_custom, "AUX_CUSTOM"]);
+  return b;
 }};
 Entry.block.robotis_openCM70_aux_sensor_value = function(b, a) {
   var d = Entry.Robotis_openCM70.INSTRUCTION.READ, c = 0, e = 0, f = 0, g = 0, h = a.getStringField("PORT"), k = a.getStringField("SENSOR"), l = 0;
@@ -5301,14 +5301,14 @@ Entry.block.text_flush = function(b, a) {
   b.setText("");
   return a.callReturn();
 };
-Entry.block.variableAddButton = {skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"\ubcc0\uc218 \ucd94\uac00", color:"#333"}], func:function() {
+Entry.block.variableAddButton = {skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"\ubcc0\uc218 \ucd94\uac00", color:"#333", align:"center"}], func:function() {
 }, events:{mousedown:[function() {
   Entry.variableContainer.openVariableAddPanel("variable");
-}]}, syntax:{js:[], py:["\ubcc0\uc218 \ucd94\uac00"]}};
-Entry.block.listAddButton = {skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"\ub9ac\uc2a4\ud2b8 \ucd94\uac00", color:"#333"}], func:function() {
+}]}, syntax:{js:[], py:[]}};
+Entry.block.listAddButton = {skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"\ub9ac\uc2a4\ud2b8 \ucd94\uac00", color:"#333", align:"center"}], func:function() {
 }, events:{mousedown:[function() {
   Entry.variableContainer.openVariableAddPanel("list");
-}]}, syntax:{js:[], py:["\ub9ac\uc2a4\ud2b8 \ucd94\uac00"]}};
+}]}, syntax:{js:[], py:[]}};
 Blockly.Blocks.change_variable = {init:function() {
   this.setColour("#E457DC");
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_change_variable_1);
@@ -8179,7 +8179,7 @@ Entry.EntryObject.prototype.generateView = function() {
       13 == a.keyCode && d.editObjectValues(!1);
     };
     g.onblur = function(a) {
-      isNaN(g.value) || d.entity.setX(Number(g.value));
+      isNaN(g.value) || d.entity.setX(+g.value);
       d.updateCoordinateView();
       Entry.stage.updateObject();
     };
@@ -8187,7 +8187,7 @@ Entry.EntryObject.prototype.generateView = function() {
       13 == a.keyCode && d.editObjectValues(!1);
     };
     k.onblur = function(a) {
-      isNaN(k.value) || d.entity.setY(Number(k.value));
+      isNaN(k.value) || d.entity.setY(+k.value);
       d.updateCoordinateView();
       Entry.stage.updateObject();
     };
@@ -8195,7 +8195,7 @@ Entry.EntryObject.prototype.generateView = function() {
       13 == a.keyCode && d.editObjectValues(!1);
     };
     n.onblur = function(a) {
-      isNaN(n.value) || d.entity.setSize(Number(n.value));
+      isNaN(n.value) || d.entity.setSize(+n.value);
       d.updateCoordinateView();
       Entry.stage.updateObject();
     };
@@ -8239,7 +8239,7 @@ Entry.EntryObject.prototype.generateView = function() {
     m.onblur = function(a) {
       a = m.value;
       -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da")));
-      isNaN(a) || d.entity.setRotation(Number(a));
+      isNaN(a) || d.entity.setRotation(+a);
       d.updateRotationView();
       Entry.stage.updateObject();
     };
@@ -8249,7 +8249,7 @@ Entry.EntryObject.prototype.generateView = function() {
     q.onblur = function(a) {
       a = q.value;
       -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da")));
-      isNaN(a) || d.entity.setDirection(Number(a));
+      isNaN(a) || d.entity.setDirection(+a);
       d.updateRotationView();
       Entry.stage.updateObject();
     };
@@ -8321,24 +8321,24 @@ Entry.EntryObject.prototype.generateView = function() {
       }
     }), this.view_.appendChild(c), c = Entry.createElement("div"), c.addClass("entryObjectInformationWorkspace"), c.object = this, this.isInformationToggle = !1, b.appendChild(c), this.informationView_ = c, c = Entry.createElement("div"), c.addClass("entryObjectRotateLabelWrapperWorkspace"), this.view_.appendChild(c), this.rotateLabelWrapperView_ = c, e = Entry.createElement("span"), e.addClass("entryObjectRotateSpanWorkspace"), e.innerHTML = Lang.Workspace.rotation + " : ", m = Entry.createElement("input"), 
     m.addClass("entryObjectRotateInputWorkspace"), this.rotateSpan_ = e, this.rotateInput_ = m, h = Entry.createElement("span"), h.addClass("entryObjectDirectionSpanWorkspace"), h.innerHTML = Lang.Workspace.direction + " : ", q = Entry.createElement("input"), q.addClass("entryObjectDirectionInputWorkspace"), this.directionInput_ = q, c.appendChild(e), c.appendChild(m), c.appendChild(h), c.appendChild(q), c.rotateInput_ = m, c.directionInput_ = q, d = this, m.onkeypress = function(a) {
-      13 == a.keyCode && (a = m.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || d.entity.setRotation(Number(a)), d.updateRotationView(), m.blur());
+      13 == a.keyCode && (a = m.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || d.entity.setRotation(+a), d.updateRotationView(), m.blur());
     }, m.onblur = function(a) {
       d.entity.setRotation(d.entity.getRotation());
       Entry.stage.updateObject();
     }, q.onkeypress = function(a) {
-      13 == a.keyCode && (a = q.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || d.entity.setDirection(Number(a)), d.updateRotationView(), q.blur());
+      13 == a.keyCode && (a = q.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || d.entity.setDirection(+a), d.updateRotationView(), q.blur());
     }, q.onblur = function(a) {
       d.entity.setDirection(d.entity.getDirection());
       Entry.stage.updateObject();
     }, b = Entry.createElement("div"), b.addClass("entryObjectRotationWrapperWorkspace"), b.object = this, this.view_.appendChild(b), c = Entry.createElement("span"), c.addClass("entryObjectCoordinateWorkspace"), b.appendChild(c), e = Entry.createElement("span"), e.addClass("entryObjectCoordinateSpanWorkspace"), e.innerHTML = "X:", g = Entry.createElement("input"), g.addClass("entryObjectCoordinateInputWorkspace"), h = Entry.createElement("span"), h.addClass("entryObjectCoordinateSpanWorkspace"), 
     h.innerHTML = "Y:", k = Entry.createElement("input"), k.addClass("entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right"), l = Entry.createElement("span"), l.addClass("entryObjectCoordinateSpanWorkspace"), l.innerHTML = Lang.Workspace.Size, n = Entry.createElement("input"), n.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size"), c.appendChild(e), c.appendChild(g), c.appendChild(h), c.appendChild(k), c.appendChild(l), c.appendChild(n), 
     c.xInput_ = g, c.yInput_ = k, c.sizeInput_ = n, this.coordinateView_ = c, d = this, g.onkeypress = function(a) {
-      13 == a.keyCode && (isNaN(g.value) || d.entity.setX(Number(g.value)), d.updateCoordinateView(), d.blur());
+      13 == a.keyCode && (isNaN(g.value) || d.entity.setX(+g.value), d.updateCoordinateView(), d.blur());
     }, g.onblur = function(a) {
       d.entity.setX(d.entity.getX());
       Entry.stage.updateObject();
     }, k.onkeypress = function(a) {
-      13 == a.keyCode && (isNaN(k.value) || d.entity.setY(Number(k.value)), d.updateCoordinateView(), d.blur());
+      13 == a.keyCode && (isNaN(k.value) || d.entity.setY(+k.value), d.updateCoordinateView(), d.blur());
     }, k.onblur = function(a) {
       d.entity.setY(d.entity.getY());
       Entry.stage.updateObject();
@@ -10545,7 +10545,7 @@ p = Entry.Script.prototype;
 p.init = function(b, a, d) {
   Entry.assert("BLOCK" == b.tagName.toUpperCase(), b.tagName);
   this.type = b.getAttribute("type");
-  this.id = Number(b.getAttribute("id"));
+  this.id = +b.getAttribute("id");
   b.getElementsByTagName("mutation").length && b.getElementsByTagName("mutation")[0].hasAttribute("hashid") && (this.hashId = b.childNodes[0].getAttribute("hashid"));
   "REPEAT" == this.type.substr(0, 6).toUpperCase() && (this.isRepeat = !0);
   a instanceof Entry.Script && (this.previousScript = a, a.parentScript && (this.parentScript = a.parentScript));
@@ -10609,7 +10609,7 @@ p.getValue = function(b) {
   return this.values[b].run();
 };
 p.getNumberValue = function(b) {
-  return Number(this.values[b].run());
+  return +this.values[b].run();
 };
 p.getStringValue = function(b) {
   return String(this.values[b].run());
@@ -10624,7 +10624,7 @@ p.getStringField = function(b) {
   return String(this.fields[b]);
 };
 p.getNumberField = function(b) {
-  return Number(this.fields[b]);
+  return +this.fields[b];
 };
 p.callReturn = function() {
   return this.nextScript ? this.nextScript : this.parentScript ? this.parentScript : null;
@@ -11384,97 +11384,6 @@ Entry.JsToBlockParser = function(b) {
     }
   };
 })(Entry.JsToBlockParser.prototype);
-Entry.Parser_Maze = function(b, a, d) {
-  this._mode = b;
-  this.syntax = {};
-  this.codeMirror = d;
-  this._lang = a || "js";
-  this.availableCode = [];
-  "maze" === b && (this._stageId = Number(Ntry.configManager.getConfig("stageId")), "object" == typeof NtryData && this.setAvailableCode(NtryData.config[this._stageId].availableCode, NtryData.player[this._stageId].code));
-  this.mappingSyntax(b);
-  switch(this._lang) {
-    case "js":
-      this._parser = new Entry.JsToBlockParser(this.syntax);
-      a = this.syntax;
-      var c = {}, e;
-      for (e in a.Scope) {
-        c[e + "();\n"] = a.Scope[e];
-      }
-      "BasicIf" in a && (c.front = "BasicIf");
-      CodeMirror.commands.javascriptComplete = function(a) {
-        CodeMirror.showHint(a, null, {globalScope:c});
-      };
-      d.on("keyup", function(a, b) {
-        !a.state.completionActive && 65 <= b.keyCode && 95 >= b.keyCode && CodeMirror.showHint(a, null, {completeSingle:!1, globalScope:c});
-      });
-      break;
-    case "block":
-      this._parser = new Entry.BlockToJsParser(this.syntax);
-  }
-};
-(function(b) {
-  b.parse = function(a) {
-    var b = null;
-    switch(this._lang) {
-      case "js":
-        try {
-          var c = acorn.parse(a), b = this._parser.Program(c);
-        } catch (e) {
-          this.codeMirror && (e instanceof SyntaxError ? (a = {from:{line:e.loc.line - 1, ch:e.loc.column - 2}, to:{line:e.loc.line - 1, ch:e.loc.column + 1}}, e.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : (a = this.getLineNumber(e.node.start, e.node.end), a.message = e.message, a.severity = "error", this.codeMirror.markText(a.from, a.to, {className:"CodeMirror-lint-mark-error", __annotation:a, clearOnEnter:!0})), Entry.toast.alert("Error", e.message)), b = [];
-        }
-        break;
-      case "block":
-        a = this._parser.Code(a).match(/(.*{.*[\S|\s]+?}|.+)/g), b = Array.isArray(a) ? a.reduce(function(a, b, d) {
-          var c = "";
-          1 === d && (a += "\n");
-          c = -1 < b.indexOf("function") ? b + a : a + b;
-          return c + "\n";
-        }) : "";
-    }
-    return b;
-  };
-  b.getLineNumber = function(a, b) {
-    var c = this.codeMirror.getValue(), e = {from:{}, to:{}}, f = c.substring(0, a).split(/\n/gi);
-    e.from.line = f.length - 1;
-    e.from.ch = f[f.length - 1].length;
-    c = c.substring(0, b).split(/\n/gi);
-    e.to.line = c.length - 1;
-    e.to.ch = c[c.length - 1].length;
-    return e;
-  };
-  b.mappingSyntax = function(a) {
-    for (var b = Object.keys(Entry.block), c = 0;c < b.length;c++) {
-      var e = b[c], f = Entry.block[e];
-      if (f.mode === a && -1 < this.availableCode.indexOf(e) && (f = f.syntax)) {
-        for (var g = this.syntax, h = 0;h < f.length;h++) {
-          var k = f[h];
-          if (h === f.length - 2 && "function" === typeof f[h + 1]) {
-            g[k] = f[h + 1];
-            break;
-          }
-          g[k] || (g[k] = {});
-          h === f.length - 1 ? g[k] = e : g = g[k];
-        }
-      }
-    }
-  };
-  b.setAvailableCode = function(a, b) {
-    var c = [];
-    a.forEach(function(a, b) {
-      a.forEach(function(a, b) {
-        c.push(a.type);
-      });
-    });
-    b instanceof Entry.Code ? b.getBlockList().forEach(function(a) {
-      a.type !== NtryData.START && -1 === c.indexOf(a.type) && c.push(a.type);
-    }) : b.forEach(function(a, b) {
-      a.forEach(function(a, b) {
-        a.type !== NtryData.START && -1 === c.indexOf(a.type) && c.push(a.type);
-      });
-    });
-    this.availableCode = this.availableCode.concat(c);
-  };
-})(Entry.Parser_Maze.prototype);
 Entry.TextCodingUtil = function() {
 };
 (function(b) {
@@ -11635,7 +11544,7 @@ Entry.BlockToPyParser = function() {
       var l = b[k];
       if (0 !== l.length) {
         if (c.test(l)) {
-          if (l = l.split("%")[1], l = Number(l) - 1, f[l] && "Indicator" != f[l].type) {
+          if (l = +l.split("%")[1] - 1, f[l] && "Indicator" != f[l].type) {
             if ("Block" == f[l].type) {
               h += this.Block(g[l]).trim();
             } else {
@@ -11650,7 +11559,7 @@ Entry.BlockToPyParser = function() {
         } else {
           if (e.test(l)) {
             for (var n = l.split(e), m = 0;m < n.length;m++) {
-              l = n[m], 0 !== l.length && (e.test(l) ? (l = Number(l.split("$")[1]) - 1, h += Entry.TextCodingUtil.prototype.indent(this.Thread(a.statements[l]))) : h += l);
+              l = n[m], 0 !== l.length && (e.test(l) ? (l = +l.split("$")[1] - 1, h += Entry.TextCodingUtil.prototype.indent(this.Thread(a.statements[l]))) : h += l);
             }
           } else {
             n = 0, l.search("#"), -1 != l.search("#") && (n = l.indexOf("#"), l = l.substring(n + 1)), h += l;
@@ -12272,7 +12181,7 @@ Entry.Parser = function(b, a, d) {
   this._lang = c || "js";
   this._type = a;
   this.availableCode = [];
-  "maze" === b ? (this._stageId = Number(Ntry.configManager.getConfig("stageId")), this.setAvailableCode(NtryData.config[this._stageId].availableCode, NtryData.player[this._stageId].code)) : b === Entry.Vim.WORKSPACE_MODE && this.mappingSyntax(Entry.Vim.WORKSPACE_MODE);
+  "maze" === b ? (this._stageId = +Ntry.configManager.getConfig("stageId"), this.setAvailableCode(NtryData.config[this._stageId].availableCode, NtryData.player[this._stageId].code)) : b === Entry.Vim.WORKSPACE_MODE && this.mappingSyntax(Entry.Vim.WORKSPACE_MODE);
   this.syntax.js = this.mappingSyntaxJs(b);
   this.syntax.py = this.mappingSyntaxPy(b);
   console.log("py syntax", this.syntax.py);
@@ -12316,7 +12225,7 @@ Entry.Parser = function(b, a, d) {
 };
 (function(b) {
   b.setParser = function(a, b, c) {
-    a === Entry.Vim.MAZE_MODE && (this._stageId = Number(Ntry.configManager.getConfig("stageId")), this.setAvailableCode(NtryData.config[this._stageId].availableCode, NtryData.player[this._stageId].code));
+    a === Entry.Vim.MAZE_MODE && (this._stageId = +Ntry.configManager.getConfig("stageId"), this.setAvailableCode(NtryData.config[this._stageId].availableCode, NtryData.player[this._stageId].code));
     this.mappingSyntax(a);
     this._type = b;
     switch(b) {
@@ -13613,15 +13522,14 @@ Entry.BlockDriver = function() {
     if (e && (f = e.class, g = e.isNotFor, e = e.xml)) {
       var e = $.parseXML(e), h = b(e.childNodes[0])
     }
-    h = (new Entry.BlockMockup(c, h, a)).toJSON();
-    h.class = f;
-    h.isNotFor = g;
-    h.syntax = c.syntax;
-    _.isEmpty(h.paramsKeyMap) && delete h.paramsKeyMap;
-    _.isEmpty(h.statementsKeyMap) && delete h.statementsKeyMap;
-    h.func = Entry.block[a];
-    -1 < "NUMBER TRUE FALSE TEXT FUNCTION_PARAM_BOOLEAN FUNCTION_PARAM_STRING TRUE_UN".split(" ").indexOf(a.toUpperCase()) && (h.isPrimitive = !0);
-    Entry.block[a] = h;
+    c = (new Entry.BlockMockup(c, h, a)).toJSON();
+    c.class = f;
+    c.isNotFor = g;
+    _.isEmpty(c.paramsKeyMap) && delete c.paramsKeyMap;
+    _.isEmpty(c.statementsKeyMap) && delete c.statementsKeyMap;
+    c.func = Entry.block[a];
+    -1 < "NUMBER TRUE FALSE TEXT FUNCTION_PARAM_BOOLEAN FUNCTION_PARAM_STRING TRUE_UN".split(" ").indexOf(a.toUpperCase()) && (c.isPrimitive = !0);
+    Entry.block[a] = c;
   };
 })(Entry.BlockDriver.prototype);
 Entry.BlockMockup = function(b, a, d) {
@@ -14027,7 +13935,7 @@ Entry.getElementsByClassName = function(b) {
   return a;
 };
 Entry.parseNumber = function(b) {
-  return "string" != typeof b || isNaN(Number(b)) ? "number" != typeof b || isNaN(Number(b)) ? !1 : b : Number(b);
+  return "string" != typeof b || isNaN(+b) ? "number" != typeof b || isNaN(+b) ? !1 : b : +b;
 };
 Entry.countStringLength = function(b) {
   var a, d = 0;
@@ -14093,7 +14001,7 @@ Entry.computeInputWidth = function(b) {
   document.body.appendChild(a);
   b = a.offsetWidth;
   document.body.removeChild(a);
-  return Number(b + 10) + "px";
+  return +(b + 10) + "px";
 };
 Entry.isArrowOrBackspace = function(b) {
   return -1 < [37, 38, 39, 40, 8].indexOf(b);
@@ -14258,7 +14166,7 @@ Entry.getMaxFloatPoint = function(b) {
   return Math.min(a, 20);
 };
 Entry.convertToRoundedDecimals = function(b, a) {
-  return isNaN(b) || !this.isFloat(b) ? b : Number(Math.round(b + "e" + a) + "e-" + a);
+  return isNaN(b) || !this.isFloat(b) ? b : +(Math.round(b + "e" + a) + "e-" + a);
 };
 Entry.attachEventListener = function(b, a, d) {
   setTimeout(function() {
@@ -14614,7 +14522,7 @@ Entry.Func.generateBlock = function(b) {
   var a = {template:b.template, params:b.params}, d = /(%\d)/mi, c = b.template.split(d), e = "", f = 0, g = 0, h;
   for (h in c) {
     var k = c[h];
-    d.test(k) ? (k = Number(k.split("%")[1]) - 1, k = b.params[k], "Indicator" !== k.type && ("boolean" === k.accept ? (e += Lang.template.function_param_boolean + (f ? f : ""), f++) : (e += Lang.General.param_string + (g ? g : ""), g++))) : e += k;
+    d.test(k) ? (k = +k.split("%")[1] - 1, k = b.params[k], "Indicator" !== k.type && ("boolean" === k.accept ? (e += Lang.template.function_param_boolean + (f ? f : ""), f++) : (e += Lang.General.param_string + (g ? g : ""), g++))) : e += k;
   }
   return {block:a, description:e};
 };
@@ -14990,7 +14898,7 @@ p.removePortReadable = function(b) {
     var a, d;
     for (d in this.sendQueue.readablePorts) {
       if (this.sendQueue.readablePorts[d] == b) {
-        a = Number(d);
+        a = +d;
         break;
       }
     }
@@ -15056,7 +14964,7 @@ Entry.Variable = function(b) {
   this.isCloud_ = b.isCloud || !1;
   var a = Entry.parseNumber(b.value);
   this.value_ = "number" == typeof a ? a : b.value ? b.value : 0;
-  "slide" == this.type && (this.minValue_ = Number(b.minValue ? b.minValue : 0), this.maxValue_ = Number(b.maxValue ? b.maxValue : 100));
+  "slide" == this.type && (this.minValue_ = +(b.minValue ? b.minValue : 0), this.maxValue_ = +(b.maxValue ? b.maxValue : 100));
   b.isClone || (this.visible_ = b.visible || "boolean" == typeof b.visible ? b.visible : !0, this.x_ = b.x ? b.x : null, this.y_ = b.y ? b.y : null, "list" == this.type && (this.width_ = b.width ? b.width : 100, this.height_ = b.height ? b.height : 120, this.array_ = b.array ? b.array : [], this.scrollPosition = 0), this.BORDER = 6, this.FONT = "10pt NanumGothic");
 };
 Entry.Variable.prototype.generateView = function(b) {
@@ -15225,13 +15133,13 @@ Entry.Variable.prototype.getId = function() {
   return this.id_;
 };
 Entry.Variable.prototype.getValue = function() {
-  return this.isNumber() ? Number(this.value_) : this.value_;
+  return this.isNumber() ? +this.value_ : this.value_;
 };
 Entry.Variable.prototype.isNumber = function() {
   return isNaN(this.value_) ? !1 : !0;
 };
 Entry.Variable.prototype.setValue = function(b) {
-  "slide" != this.type ? this.value_ = b : (b = Number(b), this.value_ = b < this.minValue_ ? this.minValue_ : b > this.maxValue_ ? this.maxValue_ : b, this.isFloatPoint() ? delete this.viewValue_ : this.viewValue_ = this.value_);
+  "slide" != this.type ? this.value_ = b : (b = +b, this.value_ = b < this.minValue_ ? this.minValue_ : b > this.maxValue_ ? this.maxValue_ : b, this.isFloatPoint() ? delete this.viewValue_ : this.viewValue_ = this.value_);
   this.isCloud_ && Entry.variableContainer.updateCloudVariables();
   this.updateView();
 };
@@ -15332,7 +15240,7 @@ Entry.Variable.prototype.updateSlideValueByView = function() {
   var b = Math.max(this.valueSetter_.graphics.command.x - 10, 0) / this.maxWidth;
   0 > b && (b = 0);
   1 < b && (b = 1);
-  var a = parseFloat(this.minValue_), d = parseFloat(this.maxValue_), b = (a + Number(Math.abs(d - a) * b)).toFixed(2), b = parseFloat(b);
+  var a = parseFloat(this.minValue_), d = parseFloat(this.maxValue_), b = (a + Math.abs(d - a) * b).toFixed(2), b = parseFloat(b);
   b < a ? b = this.minValue_ : b > d && (b = this.maxValue_);
   this.isFloatPoint() || (this.viewValue_ = b, b = Math.round(b));
   this.setValue(b);
@@ -16519,7 +16427,7 @@ Entry.VariableContainer.prototype.updateListSettingView = function(b) {
   d.removeClass("entryRemove");
 };
 Entry.VariableContainer.prototype.setListLength = function(b) {
-  b = Number(b);
+  b = +b;
   var a = this.selectedList.array_;
   if (!isNaN(b)) {
     var d = a.length;
@@ -17293,7 +17201,7 @@ Entry.BlockMenu = function(b, a, d, c) {
     if (isNaN(a)) {
       return a;
     }
-    a = Number(a);
+    a = +a;
     for (var b = this._categories, c = this._categoryElems, e = 0;e < b.length;e++) {
       var f = b[e];
       if (!c[f].hasClass("entryRemove") && 0 === a--) {
@@ -17627,7 +17535,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
           var h = e[g].trim();
           if (0 !== h.length) {
             if (c.test(h)) {
-              var k = Number(h.split("%")[1]) - 1, h = f[k], h = new Entry["Field" + h.type](h, this, k, a, g);
+              var k = +h.split("%")[1] - 1, h = f[k], h = new Entry["Field" + h.type](h, this, k, a, g);
               this._contents.push(h);
               this._paramMap[k] = h;
             } else {
@@ -17642,7 +17550,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
         }
         break;
       case Entry.Workspace.MODE_VIMBOARD:
-        g = this.getBoard().workspace.getCodeToText(this.block), this._contents.push(new Entry.FieldText({text:g}, this));
+        g = this.getBoard().workspace.getCodeToText(this.block), this._contents.push(new Entry.FieldText({text:g, color:"white"}, this));
     }
     this.alignContent(!1);
   };
@@ -18375,10 +18283,10 @@ Entry.Scope = function(b, a) {
     return String(this.getValue(a, b));
   };
   b.getNumberValue = function(a, b) {
-    return Number(this.getValue(a));
+    return +this.getValue(a);
   };
   b.getBooleanValue = function(a, b) {
-    return Number(this.getValue(a, b)) ? !0 : !1;
+    return +this.getValue(a, b) ? !0 : !1;
   };
   b.getField = function(a, b) {
     return this.block.params[this._getParamIndex(a)];
@@ -18387,7 +18295,7 @@ Entry.Scope = function(b, a) {
     return String(this.getField(a));
   };
   b.getNumberField = function(a) {
-    return Number(this.getField(a));
+    return +this.getField(a);
   };
   b.getStatement = function(a, b) {
     return this.executor.stepInto(this.block.statements[this._getStatementIndex(a, b)]);
@@ -20321,7 +20229,7 @@ Entry.skeleton.basic_button = {path:function() {
 }, box:function() {
   return {offsetX:-80, offsetY:0, width:140, height:30};
 }, contentPos:function() {
-  return {x:-50, y:15};
+  return {x:0, y:15};
 }, movable:!1, readOnly:!0, nextShadow:!0, classes:["basicButtonView"]};
 Entry.skeleton.basic_without_next = {box:Entry.skeleton.basic.box, contentPos:Entry.skeleton.basic.contentPos, path:function(b) {
   var a = b.contentWidth;
@@ -21068,7 +20976,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     return this.mode;
   };
   b.setMode = function(a, b) {
-    a = Number(a);
+    a = +a;
     var c = this.mode;
     switch(a) {
       case c:
@@ -22118,7 +22026,7 @@ Entry.Xml.getNumberValue = function(b, a, d) {
   }
   for (var c in d) {
     if (d[c].tagName && "VALUE" == d[c].tagName.toUpperCase() && d[c].getAttribute("name") == a) {
-      return Number(Entry.Xml.operate(b, d[c].children[0]));
+      return +Entry.Xml.operate(b, d[c].children[0]);
     }
   }
   return null;
@@ -22141,7 +22049,7 @@ Entry.Xml.getNumberField = function(b, a) {
   }
   for (var c in d) {
     if ("FIELD" == d[c].tagName.toUpperCase() && d[c].getAttribute("name") == b) {
-      return Number(d[c].textContent);
+      return +d[c].textContent;
     }
   }
 };
