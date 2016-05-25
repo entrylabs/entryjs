@@ -10364,7 +10364,7 @@ Entry.Pdf = function(b) {
 p = Entry.Pdf.prototype;
 p.generateView = function(b) {
   var a = Entry.createElement("div", "entryPdfWorkspace");
-  a.addClass("entryHidden");
+  a.addClass("entryRemove");
   this._view = a;
   var c = "/pdfjs/web/viewer.html";
   b && "" != b && (c += "?file=" + b);

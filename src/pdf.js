@@ -9,7 +9,7 @@ var p = Entry.Pdf.prototype;
 p.generateView = function(file) {
     var pdf = this;
     var pdfView = Entry.createElement('div', 'entryPdfWorkspace');
-    pdfView.addClass('entryHidden');
+    pdfView.addClass('entryRemove');
     this._view = pdfView;
 
     var url = '/pdfjs/web/viewer.html';
