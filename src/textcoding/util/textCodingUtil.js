@@ -104,80 +104,7 @@ Entry.TextCodingUtil = function() {
         return result;
     };
 
-    p.particularParam = function(blockType) {
-        console.log("particularParamBlock", blockType);
-        var result;
-        switch(blockType) {
-            case 'rotate_relative': {
-                result = {0: "angle"};
-                break;
-            }
-            case 'direction_relative': {
-                result = {0: "angle"};
-                break;
-            }
-            case 'rotate_by_time': {
-                result = {1: "angle"};
-                break;
-            }
-            case 'direction_relative_duration': {
-                result = {1: "angle"};
-                break;
-            }
-            case 'rotate_absolute': {
-                result = {0: "angle"};
-                break;
-            }
-            case 'direction_absolute': {
-                result = {0: "angle"};
-                break;
-            }
-            case 'move_to_angle': {
-                result = {0: "angle"};
-                break;
-            }
-            case 'change_to_some_shape': {
-                result = {0: "get_pictures"};
-                break;
-            }
-            case 'sound_something_with_block': {
-                result = {0: "get_sounds"};
-                break;
-            }
-            case 'sound_something_second_with_block': {
-                result = {0: "get_sounds"};
-                break;
-            }
-            case 'sound_from_to': {
-                result = {0: "get_sounds"};
-                break;
-            }
-            case 'sound_something_wait_with_block': {
-                result = {0: "get_sounds"};
-                break;
-            }
-            case 'sound_something_second_wait_with_block': {
-                result = {0: "get_sounds"};
-                break;
-            }
-            case 'sound_from_to_and_wait': {
-                result = {0: "get_sounds"};
-                break;
-            }
-            case 'arduino_get_number_sensor_value': {
-                result = {0: "arduino_get_sensor_number"};
-                break;
-            }
-
-            default: {
-                result = null;
-            }
-        }
-        return result;
-    };
-
     p.dropdownDynamicValueConvertor = function(value, param) {
-        console.log("dropdownDynamicValueConvertor", value, param);
         var options = param.options;
         var result = null;
         for(var index in options) {
@@ -190,8 +117,6 @@ Entry.TextCodingUtil = function() {
             if(value == "mouse" || value == "wall" || value == "wall_up" || 
                value == "wall_down" || value == "wall_right" || value == "wall_left")
                 return value;
-
-            console.log("value", value, "option[1]", option[1], "option[0]", option[0]);
 
             if(value == option[1]) {
                 result = option[0];
@@ -208,7 +133,6 @@ Entry.TextCodingUtil = function() {
     };
 
     p.binaryOperatorValueConvertor = function(operator) {
-        console.log("booleanOperatorValueConvertor", operator);
         var result;
         switch(operator) {
             case 'EQUAL': {

@@ -9,8 +9,6 @@ goog.provide("Entry.BlockView");
  *
  */
 Entry.BlockView = function(block, board, mode) {
-    console.log("block type", block.type);
-
     Entry.Model(this, false);
     this.block = block;
     this._board = board;

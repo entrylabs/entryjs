@@ -46,101 +46,27 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         var expression = component.expression;
         
-        if(expression.type == "Literal") {
-            var paramMeta = { type: "Block", accept: "booleanMagnet" };
-            var expressionData = this[expression.type](expression, paramMeta);
-
-            structure.type = expressionData.type;
-
-            result = structure;
-            console.log("ExpressionStatement type literal", result);
-        }
-        else {
+        if(expression.type) {
             var expressionData = this[expression.type](expression);
 
-            structure.type = expressionData.type;
-            structure.params = expressionData.params;
-                
-            result = structure;
-            console.log("ExpressionStatement type not literal", result);
+            if(expressionData.params) {
+                structure.type = expressionData.type;
+                structure.params = expressionData.params;
+
+                result = structure;
+                console.log("ExpressionStatement if statement result", result);
+            }
+            else {
+                structure.type = expressionData.type;
+                    
+                result = structure;
+                console.log("ExpressionStatement else statement result", result);
+            }
+        } else {
+            //To Do
         } 
 
         console.log("ExpressionStatement result", result);
-        return result;
-    };
-
-    p.AssignmentExpression = function(component) {
-        console.log("AssignmentExpression component", component);
-        var reusult;
-        var structure = {};
-
-        var params = [];
-        var param;
-           
-        var left = component.left;
-        if(left.type) {
-            if(left.type == "Literal") {
-                param = this[left.type](left, paramsMeta[0]);
-                console.log("AssignmentExpression left Literal param", param);
-                if(param) 
-                    params.push(param);
-            } else {
-                param = this[left.type](left);
-                if(param) 
-                    params.push(param);
-            }
-            console.log("AssignmentExpression left param", param);
-        } else {
-            left = component.left;
-            this[left.type](left);
-        }
-
-        operator = String(component.operator);
-        console.log("AssignmentExpression operator", operator);
-
-         switch(operator){
-            case "=": break;
-            case "+=": break;    
-            case "-=": break;              
-            case "*=": break;               
-            case "/=": break;                
-            case "%=": break;               
-            case "<<=": break;               
-            case ">>=": break;               
-            case "|=": break;              
-            case "^=": break;               
-            case "&=": break;              
-            default: 
-                operator = operator;
-        }
-
-        if(operator) {
-            operator = Entry.TextCodingUtil.prototype.logicalExpressionConvert(operator);
-            param = operator;
-            params.push(param);
-        }
-
-        var right = component.right;
-        if(right.type) {
-            if(right.type == "Literal") {
-                param = this[right.type](paramsMeta[2], right);
-                console.log("AssignmentExpression right Literal param", param);
-                if(param) 
-                    params.push(param);
-            } else {
-                param = this[right.type](right);
-                if(param) 
-                    params.push(param);
-            }
-            
-            console.log("AssignmentExpression right param", param);
-        } else {
-            right = component.right;
-            this[right.type](right);
-        }
-
-        console.log("AssignmentExpression params", params);
-        console.log("AssignmentExpression result", result);
         return result;
     };
 
@@ -169,31 +95,29 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         var type = this.getBlockType(syntax);
 
-        console.log("CallExpression type1", type);
+        console.log("CallExpression type", type);
         
         if(!type) {
             if(syntax == "__pythonRuntime.functions.range") {
                 var syntax = String("for i in range(%1):\n$1");
                 type = this.getBlockType(syntax);
-                //type = String("repeat_basic");
             }
             else if(syntax == "__pythonRuntime.ops.add") {
                 if(typeof arguments[0].value == "number") {
                     var syntax = String("(%1 %2 %3)");
                     type = this.getBlockType(syntax);
-                    //type = String("calc_basic");
+
                     argumentData = {raw:"PLUS", type:"Literal", value:"PLUS"};
                     arguments.splice(1, 0, argumentData);
                 } else if(typeof arguments[0].value == "string") {
                     var syntax = String("%2 + %4");
                     type = this.getBlockType(syntax);
-                    //type = String("combine_somethig");
                 } 
             }
             else if(syntax == "__pythonRuntime.ops.multiply"){
                 var syntax = String("(%1 %c %3)");
                 type = this.getBlockType(syntax);
-                //type = String("calc_basic");
+        
                 argumentData = {raw:"MULTI", type:"Literal", value:"MULTI"};
                 arguments.splice(1, 0, argumentData);
                 
@@ -204,17 +128,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
         }
 
-        console.log("CallExpression type2", type);
+        var block = Entry.block[type];
+        var paramsMeta = block.params;
+        var paramsDefMeta = block.def.params; 
 
-        var paramsMeta = Entry.block[type].params;
-        console.log("CallExpression paramsMeta", paramsMeta);
-    
-        
-        
         var params = [];
 
         console.log("CallExpression componet.arguments", arguments);
         console.log("CallExpression paramsMeta", paramsMeta);
+        console.log("CallExpression paramsDefMeta", paramsDefMeta); 
         
         for(var p in paramsMeta) {
             var paramType = paramsMeta[p].type;
@@ -233,21 +155,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
         for(var i in arguments) {
             var argument = arguments[i];
             console.log("CallExpression argument", argument);
-            
-            if(argument.type == "Literal") {           
-                console.log("CallExpression argument index", argument.type, i);
-                var param = this[argument.type](argument, paramsMeta[i], type, i);
-                params.push(param); 
-                
-                console.log("CallExpression i", i);
-                        
-            }
-            else {
-                //To Do : when argument.type is not "Literal"
-            }
+                      
+            var param = this[argument.type](argument, paramsMeta[i], paramsDefMeta[i]);
+            params.push(param);   
         }
-      
-        console.log("CallExpression params", params);
         
         data.type = type;
         data.params = params;
@@ -258,35 +169,34 @@ Entry.PyToBlockParser = function(blockSyntax) {
         return result;
     };
 
-    p.Literal = function(component, paramMeta, blockType, particularIndex) {
-        console.log("Literal component paramMeta bockType particularIndex", component, paramMeta, blockType, particularIndex);
+    p.Literal = function(component, paramMeta, paramDefMeta) {
         var result;
+
+        if(!paramMeta) 
+            var paramMeta = { type: "Block" };
+
+        if(!paramDefMeta)
+            var paramDefMeta = {type: "text"};
+
+
+        if(paramMeta.type == "Indicator") { 
+            var param = null;
+            result = param;
+            return result; 
+        } else if(paramMeta.type == "Text") {
+            var param = "";
+            result = param;
+            return result;
+        }
 
         var value = component.value;
 
-        if(paramMeta) {
-            if(paramMeta.type == "Indicator") { 
-                var param = null;
-                result = param;
-                return result; 
-            } else if(paramMeta.type == "Text") {
-                var param = "";
-                result = param;
-                return result;
-            }
-        }
-
-        if(value != undefined && value != null) {
-            console.log("Literal value", value);
-            if(paramMeta) {
-                if(blockType)
-                    var param = this['Param'+paramMeta.type](value, paramMeta, blockType, particularIndex);
-                else 
-                    var param = this['Param'+paramMeta.type](value, paramMeta);
-            } else {
-                var param = value;
-            }
-            result = param;
+        console.log("Literal value", value);
+        
+        if(value != null) {
+            var params = this['Param'+paramMeta.type](value, paramMeta, paramDefMeta);
+    
+            result = params;
         } else {
             // Literal doesn't have value
             var params = [];
@@ -305,29 +215,46 @@ Entry.PyToBlockParser = function(blockSyntax) {
         return result;
     };
 
-    /*p.ParamText = function(value, paramMeta) {
-        console.log("ParamText value, paramMeta", value, paramMeta);
+    p.ParamBlock = function(value, paramMeta, paramDefMeta) {
         var result;
-
-        if(value == "mouse" || value == "wall" || value == "wall_up" || 
-            value == "wall_down" || value == "wall_right" || value == "wall_left")
-                return value;
+        var structure = {};
         
-        var options = paramMeta.options;
-        for(var i in options) {
-            console.log("options", options);
-            if(value == options[i][0]){
-                console.log("options[i][0]", options[i][0]);
-                result = options[i][1];
+        var type;
+        var param = value;
+        var params = [];
+        
+        var paramBlock = Entry.block[paramDefMeta.type];
+        var paramsMeta = paramBlock.params;
+        var paramsDefMeta = paramBlock.paramsDefMeta;
+
+        for(var i in paramsMeta) {
+            if(paramsMeta[i].type == "Block") {
+                param = this.ParamBlock(value, paramsMeta[i], paramsDefMeta[i]);
                 break;
             }
+
+            var options = paramsMeta[i].options;
+            console.log("options", options);
+            for(var j in options) {
+                var option = options[j];
+                if(value == option[0]) {
+                    param = option[1];
+                    break;
+                }
+            }
         }
-        
-        
-        console.log("ParamDropdownDynamic result", result);
+
+        params.push(param);
+
+        structure.type = paramDefMeta.type;
+        structure.params = params;
+            
+        result = structure;
+        console.log("ParamBlock result", result);
 
         return result;
-    };*/
+
+    };
 
     p.ParamColor = function(value, paramMeta) {
         console.log("ParamColor value, paramMeta", value, paramMeta);
@@ -348,7 +275,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         
         console.log("ParamDropdownDynamic result", result);
 
-        return result;
+        return result; 
     };
 
     p.ParamDropdownDynamic = function(value, paramMeta) {
@@ -388,99 +315,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         return result;
     };
 
-    p.ParamBlock = function(value, paramMeta, blockType, particularIndex) {
-        console.log("ParamBlock value, paramMeta blockType particularIndex", value, paramMeta, blockType, particularIndex);
-        var result;
-        var structure = {};
-        
-        var type;
-        var params = [];
-
-        var particularTypeResult = Entry.TextCodingUtil.prototype.particularParam(blockType);
-
-        if(particularTypeResult != null) {
-            var particularType = particularTypeResult[particularIndex];
-
-            if(particularType) {
-                var particularType = particularTypeResult[particularIndex];
-
-                console.log("ParamBlock particularType", particularType);
-                
-                var valueType = particularType;
-
-                structure.type = valueType;
-
-                var paramsMeta = Entry.block[valueType].params;
-                console.log("ParamBlock particular block paramsMeta", paramMeta);
-                var param;
-                for(var i in paramsMeta) {
-                    var paramMeta = paramsMeta[i];
-                    var options = paramMeta.options;
-                    for(var j in options) {
-                        var option = options[j];
-                        if(value == option[0]) 
-                            param = option[1];
-                    }
-                }
-                params.push(param);
-                structure.params = params;
-            } else {
-                var valueType = typeof value;
-                switch(valueType) {
-                    case 'number':
-                        structure.type = "number";
-                        params.push(value);
-                        structure.params = params;
-                        break;
-                    case 'boolean': 
-                        if(value == true) {
-                            structure.type = "True";
-                        }
-                        else if(value == false) {
-                            structure.type = "False";
-                        }
-                        break;
-                    default: 
-                        structure.type = "text";
-                        params.push(value);
-                        structure.params = params;  
-                }
-            }
-
-        } else {
-            var valueType = typeof value;
-            switch(valueType) {
-                case 'number':
-                    structure.type = "number";
-                    params.push(value);
-                    structure.params = params;
-                    break;
-                case 'boolean': 
-                    if(value == true) {
-                        structure.type = "True";
-                    }
-                    else if(value == false) {
-                        structure.type = "False";
-                    }
-                    break;
-                default: 
-                    structure.type = "text";
-                    params.push(value);
-                    structure.params = params;  
-            }
-        } 
-
-        console.log("ParamBlock valueType", valueType);
-        
-        
-
-        result = structure;
-
-        console.log("ParamBlock result", result);
-
-        return result;
-
-    };
+    
 
     p.Indicator = function(blockParam, blockDefParam, arg) {
         var result;
@@ -512,8 +347,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         return result;
     };
-
-    
     
     p.Identifier = function(component) {
         console.log("Identifiler component", component);
@@ -653,11 +486,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("BlockStatement statements", this._blockStatments, "global index", this._blockStatmentIndex);
         console.log("BlockStatement total index", this._blockStatmentIndex, "structure", structure, "stmt", this._blockStatments); 
         this._blockStatmentIndex++;
-        
-        
-      
-        
-
         
         structure.statements = [this._blockStatments];
         result = structure;
@@ -1193,6 +1021,69 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("UpdateExpression result", result);
         return result;
     }; 
+
+    p.AssignmentExpression = function(component) {
+        console.log("AssignmentExpression component", component);
+        var reusult;
+        var structure = {};
+
+        var params = [];
+        var param;
+           
+        var left = component.left;
+        if(left.type) {
+                param = this[left.type](left);
+                console.log("AssignmentExpression left Literal param", param);
+                if(param) 
+                    params.push(param);
+
+            console.log("AssignmentExpression left params", params);
+        } else {
+            left = component.left;
+            this[left.type](left);
+        }
+
+        operator = String(component.operator);
+        console.log("AssignmentExpression operator", operator);
+
+         switch(operator){
+            case "=": break;
+            case "+=": break;    
+            case "-=": break;              
+            case "*=": break;               
+            case "/=": break;                
+            case "%=": break;               
+            case "<<=": break;               
+            case ">>=": break;               
+            case "|=": break;              
+            case "^=": break;               
+            case "&=": break;              
+            default: 
+                operator = operator;
+        }
+
+        if(operator) {
+            operator = Entry.TextCodingUtil.prototype.logicalExpressionConvert(operator);
+            param = operator;
+            params.push(param);
+        }
+
+        var right = component.right;
+        if(right.type) {
+            param = this[right.type](right);
+            console.log("AssignmentExpression right Literal param", param);
+            if(param) 
+                params.push(param);
+            console.log("AssignmentExpression right params", params);
+        } else {
+            right = component.right;
+            this[right.type](right);
+        }
+
+        console.log("AssignmentExpression params", params);
+        console.log("AssignmentExpression result", result);
+        return result;
+    };
 
 
     p.getBlockType = function(syntax) {
