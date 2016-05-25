@@ -271,7 +271,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("ParamDropdown value, paramMeta", value, paramMeta);
         var result;
         
-        result = value;
+        result = String(value);
         
         console.log("ParamDropdownDynamic result", result);
 
@@ -299,6 +299,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
         }
         
+        result = String(result);
         
         console.log("ParamDropdownDynamic result", result);
 
