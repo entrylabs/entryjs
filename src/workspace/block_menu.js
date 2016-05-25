@@ -162,10 +162,14 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     };
 
     p.align = function() {
-        if (!this.code) return;
+        var code = this.code;
+        if (!code) return;
         this._clearSplitters();
 
-        var threads = this.code.getThreads();
+        if (code.view)
+            code.view.reDraw();
+
+        var threads = code.getThreads();
         var vPadding = 15,
             marginFromTop = 10,
             hPadding = this._align == 'LEFT' ? 10 : this.svgDom.width()/2;
@@ -516,8 +520,6 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     p.reDraw = function() {
         this.selectMenu(this.lastSelector, true);
-        var codeView = this.code && this.code.view ? this.code.view : null;
-        if (codeView) codeView.reDraw();
     };
 
     p._handleDragBlock = function() {

@@ -984,8 +984,9 @@ Entry.BlockView.DRAG_RADIUS = 5;
     };
 
     p.reDraw = function() {
+        if (!this.visible) return;
         var block = this.block;
-        this._updateContents();
+        requestAnimationFrame(this._updateContents.bind(this));
         var params = block.params;
         if (params) {
             for (var i=0; i<params.length; i++) {
