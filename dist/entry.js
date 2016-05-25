@@ -15248,6 +15248,7 @@ Entry.BlockMenu = function(b, a, c, d) {
   b.getCategoryCodes = function(a) {
     a = this._convertSelector(a);
     var b = this._categoryCodes[a];
+    b || (b = []);
     b instanceof Entry.Code || (b = this._categoryCodes[a] = new Entry.Code(b));
     return b;
   };
