@@ -16855,7 +16855,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     } else {
       a.x += this.box.width / 2 - this.optionGroup.width() / 2;
     }
-    this.optionGroup.css({left:a.x, top:a.y});
+    this.optionGroup.css({left:a.x, top:a.y, width:this.optionGroup.width() + 3});
   };
   b.applyValue = function(a) {
     this.value != a && this.setValue(a);
