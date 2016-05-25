@@ -984,6 +984,8 @@ Entry.BlockView.DRAG_RADIUS = 5;
     };
 
     p.reDraw = function() {
+        if (!this.visible) return;
+        
         var block = this.block;
         this._updateContents();
         var params = block.params;

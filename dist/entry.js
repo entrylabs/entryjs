@@ -12231,6 +12231,7 @@ Entry.Parser = function(b, a, d) {
     a === Entry.Vim.MAZE_MODE && (this._stageId = Number(Ntry.configManager.getConfig("stageId")), this.setAvailableCode(NtryData.config[this._stageId].availableCode, NtryData.player[this._stageId].code));
     this.mappingSyntax(a);
     this._type = b;
+    console.log("mode", a, "type", b);
     switch(b) {
       case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
         this._parser = new Entry.JsToBlockParser(this.syntax.js);
@@ -12268,7 +12269,6 @@ Entry.Parser = function(b, a, d) {
         };
         c.on("keyup", function(a, b) {
           !a.state.completionActive && 65 <= b.keyCode && 95 >= b.keyCode && CodeMirror.showHint(a, null, {completeSingle:!1});
-          a.state.completionActive || 46 != b.keyCode || CodeMirror.showHint(a, null, {completeSingle:!1, globalScope:e});
         });
     }
   };
@@ -17927,18 +17927,20 @@ Entry.BlockView.DRAG_RADIUS = 5;
     this.svgGroup.removeClass("activated");
   };
   b.reDraw = function() {
-    var a = this.block;
-    this._updateContents();
-    var b = a.params;
-    if (b) {
-      for (var c = 0;c < b.length;c++) {
-        var e = b[c];
-        e instanceof Entry.Block && e.view.reDraw();
+    if (this.visible) {
+      var a = this.block;
+      this._updateContents();
+      var b = a.params;
+      if (b) {
+        for (var c = 0;c < b.length;c++) {
+          var e = b[c];
+          e instanceof Entry.Block && e.view.reDraw();
+        }
       }
-    }
-    if (a = a.statements) {
-      for (c = 0;c < a.length;c++) {
-        a[c].view.reDraw();
+      if (a = a.statements) {
+        for (c = 0;c < a.length;c++) {
+          a[c].view.reDraw();
+        }
       }
     }
   };

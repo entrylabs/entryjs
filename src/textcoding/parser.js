@@ -114,6 +114,8 @@ Entry.Parser = function(mode, type, cm) {
         this.mappingSyntax(mode);
         this._type = type;
 
+        console.log("mode", mode, "type", type);
+
         switch (type) {
             case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
                 this._parser = new Entry.JsToBlockParser(this.syntax.js);
@@ -174,10 +176,6 @@ Entry.Parser = function(mode, type, cm) {
                 cm.on("keyup", function (cm, event) {
                     if (!cm.state.completionActive &&  (event.keyCode >= 65 && event.keyCode <= 95))  {
                         CodeMirror.showHint(cm, null, {completeSingle: false});
-                    }
-
-                    if(!cm.state.completionActive &&  (event.keyCode == 46)) {
-                        CodeMirror.showHint(cm, null, {completeSingle: false, globalScope:assistScope});
                     }
                 });
                 
