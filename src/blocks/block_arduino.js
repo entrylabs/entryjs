@@ -46,7 +46,23 @@ Entry.SensorBoard = {
 
 Entry.dplay = {
     name: 'dplay',
-    setZero: Entry.Arduino.setZero
+    setZero: Entry.Arduino.setZero,
+    timeouts: [],
+    removeTimeout: function(id) {
+      clearTimeout(id);
+      var timeouts = this.timeouts;
+      var index = timeouts.indexOf(id);
+      if(index >= 0) {
+        timeouts.splice(index, 1);
+      }
+    },
+    removeAllTimeouts: function() {
+      var timeouts = this.timeouts;
+      for(var i in timeouts) {
+        clearTimeout(timeouts[i]);
+      }
+      this.timeouts = [];
+    }
 };
 
 Entry.nemoino = {
