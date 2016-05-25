@@ -356,8 +356,13 @@ Blockly.Blocks.albert_set_eye_to = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.albert_set_eye_to = function(b, a) {
+<<<<<<< HEAD
   var d = Entry.hw.sendQueue, c = a.getField("DIRECTION", a), e = Number(a.getField("COLOR", a));
   "LEFT" == c ? d.leftEye = e : ("RIGHT" != c && (d.leftEye = e), d.rightEye = e);
+=======
+  var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a), e = Number(a.getField("COLOR", a));
+  "LEFT" == d ? c.leftEye = e : ("RIGHT" != d && (c.leftEye = e), c.rightEye = e);
+>>>>>>> master
   return a.callReturn();
 };
 Blockly.Blocks.albert_clear_eye = {init:function() {
@@ -667,8 +672,13 @@ Blockly.Blocks.albert_set_led_to = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.albert_set_led_to = function(b, a) {
+<<<<<<< HEAD
   var d = Entry.hw.sendQueue, c = a.getField("DIRECTION", a), e = Number(a.getField("COLOR", a));
   "FRONT" == c ? (d.leftEye = e, d.rightEye = e) : "LEFT" == c ? d.leftEye = e : d.rightEye = e;
+=======
+  var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a), e = Number(a.getField("COLOR", a));
+  "FRONT" == d ? (c.leftEye = e, c.rightEye = e) : "LEFT" == d ? c.leftEye = e : c.rightEye = e;
+>>>>>>> master
   return a.callReturn();
 };
 Blockly.Blocks.albert_clear_led = {init:function() {
@@ -759,11 +769,19 @@ Blockly.Blocks.arduino_get_string = {init:function() {
   this.setInputsInline(!0);
 }};
 Entry.block.arduino_get_number = function(b, a) {
+<<<<<<< HEAD
   var d = a.getValue("VALUE", a), c = new XMLHttpRequest;
   c.open("POST", "http://localhost:23518/arduino/", !1);
   c.send(String(d));
   Entry.assert(200 == c.status, "arduino is not connected");
   return Number(c.responseText);
+=======
+  var c = a.getValue("VALUE", a), d = new XMLHttpRequest;
+  d.open("POST", "http://localhost:23518/arduino/", !1);
+  d.send(String(c));
+  Entry.assert(200 == d.status, "arduino is not connected");
+  return Number(d.responseText);
+>>>>>>> master
 };
 Blockly.Blocks.arduino_get_number = {init:function() {
   this.setColour("#00979D");
@@ -1652,7 +1670,11 @@ Entry.block.coordinate_object = function(b, a) {
       var c = d.parent, c = c.pictures;
       return c.indexOf(d.picture) + 1;
     case "size":
+<<<<<<< HEAD
       return Number(d.getSize().toFixed(1));
+=======
+      return Number(c.getSize().toFixed(1));
+>>>>>>> master
     case "picture_name":
       return c = d.parent, c = c.pictures, c[c.indexOf(d.picture)].name;
   }
@@ -2821,8 +2843,13 @@ Blockly.Blocks.hamster_set_led_to = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_set_led_to = function(b, a) {
+<<<<<<< HEAD
   var d = Entry.hw.sendQueue, c = a.getField("DIRECTION", a), e = Number(a.getField("COLOR", a));
   "LEFT" == c ? d.leftLed = e : ("RIGHT" != c && (d.leftLed = e), d.rightLed = e);
+=======
+  var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a), e = Number(a.getField("COLOR", a));
+  "LEFT" == d ? c.leftLed = e : ("RIGHT" != d && (c.leftLed = e), c.rightLed = e);
+>>>>>>> master
   return a.callReturn();
 };
 Blockly.Blocks.hamster_clear_led = {init:function() {
@@ -3020,8 +3047,13 @@ Blockly.Blocks.hamster_set_port_to = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_set_port_to = function(b, a) {
+<<<<<<< HEAD
   var d = Entry.hw.sendQueue, c = a.getField("PORT", a), e = Number(a.getField("MODE", a));
   "A" == c ? d.ioModeA = e : ("B" != c && (d.ioModeA = e), d.ioModeB = e);
+=======
+  var c = Entry.hw.sendQueue, d = a.getField("PORT", a), e = Number(a.getField("MODE", a));
+  "A" == d ? c.ioModeA = e : ("B" != d && (c.ioModeA = e), c.ioModeB = e);
+>>>>>>> master
   return a.callReturn();
 };
 Blockly.Blocks.hamster_change_output_by = {init:function() {
@@ -3069,8 +3101,13 @@ Blockly.Blocks.is_press_some_key = {init:function() {
   this.setInputsInline(!0);
 }, syntax:{js:[], py:["Entry.is_particular_key_pressed(%1)"]}};
 Entry.block.is_press_some_key = function(b, a) {
+<<<<<<< HEAD
   var d = Number(a.getField("VALUE", a));
   return 0 <= Entry.pressedKeys.indexOf(d);
+=======
+  var c = Number(a.getField("VALUE", a));
+  return 0 <= Entry.pressedKeys.indexOf(c);
+>>>>>>> master
 };
 Blockly.Blocks.reach_something = {init:function() {
   this.setColour("#AEB8FF");
@@ -3283,6 +3320,7 @@ Entry.block.boolean_basic_operator = function(b, a) {
     case "EQUAL":
       return c == e;
     case "GREATER":
+<<<<<<< HEAD
       return Number(c) > Number(e);
     case "LESS":
       return Number(c) < Number(e);
@@ -3290,6 +3328,15 @@ Entry.block.boolean_basic_operator = function(b, a) {
       return Number(c) >= Number(e);
     case "LESS_OR_EQUAL":
       return Number(c) <= Number(e);
+=======
+      return Number(d) > Number(e);
+    case "LESS":
+      return Number(d) < Number(e);
+    case "GREATER_OR_EQUAL":
+      return Number(d) >= Number(e);
+    case "LESS_OR_EQUAL":
+      return Number(d) <= Number(e);
+>>>>>>> master
   }
 };
 Blockly.Blocks.show = {init:function() {
@@ -3770,8 +3817,13 @@ Blockly.Blocks.rotate_by_angle_dropdown = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.rotate_by_angle_dropdown = function(b, a) {
+<<<<<<< HEAD
   var d = a.getField("VALUE", a);
   b.setRotation(b.getRotation() + Number(d));
+=======
+  var c = a.getField("VALUE", a);
+  b.setRotation(b.getRotation() + Number(c));
+>>>>>>> master
   return a.callReturn();
 };
 Blockly.Blocks.see_angle = {init:function() {
@@ -3861,11 +3913,19 @@ Blockly.Blocks.locate = {init:function() {
   this.setNextStatement(!0);
 }, syntax:{js:[], py:["self.move_to_object(%1)"]}};
 Entry.block.locate = function(b, a) {
+<<<<<<< HEAD
   var d = a.getField("VALUE", a), c;
   "mouse" == d ? (d = Entry.stage.mouseCoordinate.x, c = Entry.stage.mouseCoordinate.y) : (c = Entry.container.getEntity(d), d = c.getX(), c = c.getY());
   b.setX(Number(d));
   b.setY(Number(c));
   b.brush && !b.brush.stop && b.brush.lineTo(d, -1 * c);
+=======
+  var c = a.getField("VALUE", a), d;
+  "mouse" == c ? (c = Entry.stage.mouseCoordinate.x, d = Entry.stage.mouseCoordinate.y) : (d = Entry.container.getEntity(c), c = d.getX(), d = d.getY());
+  b.setX(Number(c));
+  b.setY(Number(d));
+  b.brush && !b.brush.stop && b.brush.lineTo(c, -1 * d);
+>>>>>>> master
   return a.callReturn();
 };
 Blockly.Blocks.move_xy_time = {init:function() {
@@ -4060,7 +4120,11 @@ Entry.block.locate_object_time = function(b, a) {
     if (0 != d) {
       "mouse" == c ? (c = e.x - b.getX(), e = e.y - b.getY()) : (e = Entry.container.getEntity(c), c = e.getX() - b.getX(), e = e.getY() - b.getY()), a.isStart = !0, a.frameCount = d, a.dX = c / a.frameCount, a.dY = e / a.frameCount;
     } else {
+<<<<<<< HEAD
       return "mouse" == c ? (c = Number(e.x), e = Number(e.y)) : (e = Entry.container.getEntity(c), c = e.getX(), e = e.getY()), b.setX(c), b.setY(e), b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY()), a.callReturn();
+=======
+      return "mouse" == d ? (d = Number(e.x), e = Number(e.y)) : (e = Entry.container.getEntity(d), d = e.getX(), e = e.getY()), b.setX(d), b.setY(e), b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY()), a.callReturn();
+>>>>>>> master
     }
   }
   if (0 != a.frameCount) {
@@ -6939,23 +7003,23 @@ p.init = function(b) {
 p.generateView = function(b) {
   var a = Entry.createElement("div");
   a.addClass("entryContainerDoneWorkspace");
-  a.addClass("entryHidden");
   this.doneContainer = a;
-  a = Entry.createElement("iframe");
-  a.setAttribute("id", "doneProjectframe");
-  a.setAttribute("frameborder", 0);
-  a.setAttribute("src", "/api/iframe/project/" + b);
-  this.doneProjectFrame = a;
-  this.doneContainer.appendChild(a);
+  var c = Entry.createElement("iframe");
+  c.setAttribute("id", "doneProjectframe");
+  c.setAttribute("frameborder", 0);
+  c.setAttribute("src", "/api/iframe/project/" + b);
+  this.doneProjectFrame = c;
+  this.doneContainer.appendChild(c);
+  a.addClass("entryRemove");
 };
 p.getView = function() {
   return this.doneContainer;
 };
 p.resize = function() {
-  var b = document.getElementById("entryContainerWorkspaceId"), a = document.getElementById("doneProjectframe");
-  w = b.offsetWidth;
-  a.width = w + "px";
-  a.height = 9 * w / 16 + "px";
+  document.getElementById("entryContainerWorkspaceId");
+  var b = document.getElementById("doneProjectframe"), a = this.doneContainer.offsetWidth;
+  b.width = a + "px";
+  b.height = 9 * a / 16 + "px";
 };
 Entry.Engine = function() {
   function b(a) {
@@ -8179,24 +8243,39 @@ Entry.EntryObject.prototype.generateView = function() {
       13 == a.keyCode && d.editObjectValues(!1);
     };
     g.onblur = function(a) {
+<<<<<<< HEAD
       isNaN(g.value) || d.entity.setX(Number(g.value));
       d.updateCoordinateView();
+=======
+      isNaN(g.value) || c.entity.setX(Number(g.value));
+      c.updateCoordinateView();
+>>>>>>> master
       Entry.stage.updateObject();
     };
     k.onkeypress = function(a) {
       13 == a.keyCode && d.editObjectValues(!1);
     };
     k.onblur = function(a) {
+<<<<<<< HEAD
       isNaN(k.value) || d.entity.setY(Number(k.value));
       d.updateCoordinateView();
+=======
+      isNaN(k.value) || c.entity.setY(Number(k.value));
+      c.updateCoordinateView();
+>>>>>>> master
       Entry.stage.updateObject();
     };
     n.onkeypress = function(a) {
       13 == a.keyCode && d.editObjectValues(!1);
     };
     n.onblur = function(a) {
+<<<<<<< HEAD
       isNaN(n.value) || d.entity.setSize(Number(n.value));
       d.updateCoordinateView();
+=======
+      isNaN(n.value) || c.entity.setSize(Number(n.value));
+      c.updateCoordinateView();
+>>>>>>> master
       Entry.stage.updateObject();
     };
     c = Entry.createElement("div");
@@ -8239,8 +8318,13 @@ Entry.EntryObject.prototype.generateView = function() {
     m.onblur = function(a) {
       a = m.value;
       -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da")));
+<<<<<<< HEAD
       isNaN(a) || d.entity.setRotation(Number(a));
       d.updateRotationView();
+=======
+      isNaN(a) || c.entity.setRotation(Number(a));
+      c.updateRotationView();
+>>>>>>> master
       Entry.stage.updateObject();
     };
     q.onkeypress = function(a) {
@@ -8249,8 +8333,13 @@ Entry.EntryObject.prototype.generateView = function() {
     q.onblur = function(a) {
       a = q.value;
       -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da")));
+<<<<<<< HEAD
       isNaN(a) || d.entity.setDirection(Number(a));
       d.updateRotationView();
+=======
+      isNaN(a) || c.entity.setDirection(Number(a));
+      c.updateRotationView();
+>>>>>>> master
       Entry.stage.updateObject();
     };
     c = Entry.createElement("div");
@@ -8319,26 +8408,47 @@ Entry.EntryObject.prototype.generateView = function() {
       if (a = Entry.container.getObject(this.id)) {
         Entry.container.selectObject(a.id), Entry.playground.injectObject(a);
       }
+<<<<<<< HEAD
     }), this.view_.appendChild(c), c = Entry.createElement("div"), c.addClass("entryObjectInformationWorkspace"), c.object = this, this.isInformationToggle = !1, b.appendChild(c), this.informationView_ = c, c = Entry.createElement("div"), c.addClass("entryObjectRotateLabelWrapperWorkspace"), this.view_.appendChild(c), this.rotateLabelWrapperView_ = c, e = Entry.createElement("span"), e.addClass("entryObjectRotateSpanWorkspace"), e.innerHTML = Lang.Workspace.rotation + " : ", m = Entry.createElement("input"), 
     m.addClass("entryObjectRotateInputWorkspace"), this.rotateSpan_ = e, this.rotateInput_ = m, h = Entry.createElement("span"), h.addClass("entryObjectDirectionSpanWorkspace"), h.innerHTML = Lang.Workspace.direction + " : ", q = Entry.createElement("input"), q.addClass("entryObjectDirectionInputWorkspace"), this.directionInput_ = q, c.appendChild(e), c.appendChild(m), c.appendChild(h), c.appendChild(q), c.rotateInput_ = m, c.directionInput_ = q, d = this, m.onkeypress = function(a) {
       13 == a.keyCode && (a = m.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || d.entity.setRotation(Number(a)), d.updateRotationView(), m.blur());
+=======
+    }), this.view_.appendChild(d), d = Entry.createElement("div"), d.addClass("entryObjectInformationWorkspace"), d.object = this, this.isInformationToggle = !1, b.appendChild(d), this.informationView_ = d, d = Entry.createElement("div"), d.addClass("entryObjectRotateLabelWrapperWorkspace"), this.view_.appendChild(d), this.rotateLabelWrapperView_ = d, e = Entry.createElement("span"), e.addClass("entryObjectRotateSpanWorkspace"), e.innerHTML = Lang.Workspace.rotation + " : ", m = Entry.createElement("input"), 
+    m.addClass("entryObjectRotateInputWorkspace"), this.rotateSpan_ = e, this.rotateInput_ = m, h = Entry.createElement("span"), h.addClass("entryObjectDirectionSpanWorkspace"), h.innerHTML = Lang.Workspace.direction + " : ", q = Entry.createElement("input"), q.addClass("entryObjectDirectionInputWorkspace"), this.directionInput_ = q, d.appendChild(e), d.appendChild(m), d.appendChild(h), d.appendChild(q), d.rotateInput_ = m, d.directionInput_ = q, c = this, m.onkeypress = function(a) {
+      13 == a.keyCode && (a = m.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || c.entity.setRotation(Number(a)), c.updateRotationView(), m.blur());
+>>>>>>> master
     }, m.onblur = function(a) {
       d.entity.setRotation(d.entity.getRotation());
       Entry.stage.updateObject();
     }, q.onkeypress = function(a) {
+<<<<<<< HEAD
       13 == a.keyCode && (a = q.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || d.entity.setDirection(Number(a)), d.updateRotationView(), q.blur());
+=======
+      13 == a.keyCode && (a = q.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || c.entity.setDirection(Number(a)), c.updateRotationView(), q.blur());
+>>>>>>> master
     }, q.onblur = function(a) {
       d.entity.setDirection(d.entity.getDirection());
       Entry.stage.updateObject();
+<<<<<<< HEAD
     }, b = Entry.createElement("div"), b.addClass("entryObjectRotationWrapperWorkspace"), b.object = this, this.view_.appendChild(b), c = Entry.createElement("span"), c.addClass("entryObjectCoordinateWorkspace"), b.appendChild(c), e = Entry.createElement("span"), e.addClass("entryObjectCoordinateSpanWorkspace"), e.innerHTML = "X:", g = Entry.createElement("input"), g.addClass("entryObjectCoordinateInputWorkspace"), h = Entry.createElement("span"), h.addClass("entryObjectCoordinateSpanWorkspace"), 
     h.innerHTML = "Y:", k = Entry.createElement("input"), k.addClass("entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right"), l = Entry.createElement("span"), l.addClass("entryObjectCoordinateSpanWorkspace"), l.innerHTML = Lang.Workspace.Size, n = Entry.createElement("input"), n.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size"), c.appendChild(e), c.appendChild(g), c.appendChild(h), c.appendChild(k), c.appendChild(l), c.appendChild(n), 
     c.xInput_ = g, c.yInput_ = k, c.sizeInput_ = n, this.coordinateView_ = c, d = this, g.onkeypress = function(a) {
       13 == a.keyCode && (isNaN(g.value) || d.entity.setX(Number(g.value)), d.updateCoordinateView(), d.blur());
+=======
+    }, b = Entry.createElement("div"), b.addClass("entryObjectRotationWrapperWorkspace"), b.object = this, this.view_.appendChild(b), d = Entry.createElement("span"), d.addClass("entryObjectCoordinateWorkspace"), b.appendChild(d), e = Entry.createElement("span"), e.addClass("entryObjectCoordinateSpanWorkspace"), e.innerHTML = "X:", g = Entry.createElement("input"), g.addClass("entryObjectCoordinateInputWorkspace"), h = Entry.createElement("span"), h.addClass("entryObjectCoordinateSpanWorkspace"), 
+    h.innerHTML = "Y:", k = Entry.createElement("input"), k.addClass("entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right"), l = Entry.createElement("span"), l.addClass("entryObjectCoordinateSpanWorkspace"), l.innerHTML = Lang.Workspace.Size, n = Entry.createElement("input"), n.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size"), d.appendChild(e), d.appendChild(g), d.appendChild(h), d.appendChild(k), d.appendChild(l), d.appendChild(n), 
+    d.xInput_ = g, d.yInput_ = k, d.sizeInput_ = n, this.coordinateView_ = d, c = this, g.onkeypress = function(a) {
+      13 == a.keyCode && (isNaN(g.value) || c.entity.setX(Number(g.value)), c.updateCoordinateView(), c.blur());
+>>>>>>> master
     }, g.onblur = function(a) {
       d.entity.setX(d.entity.getX());
       Entry.stage.updateObject();
     }, k.onkeypress = function(a) {
+<<<<<<< HEAD
       13 == a.keyCode && (isNaN(k.value) || d.entity.setY(Number(k.value)), d.updateCoordinateView(), d.blur());
+=======
+      13 == a.keyCode && (isNaN(k.value) || c.entity.setY(Number(k.value)), c.updateCoordinateView(), c.blur());
+>>>>>>> master
     }, k.onblur = function(a) {
       d.entity.setY(d.entity.getY());
       Entry.stage.updateObject();
@@ -11710,11 +11820,42 @@ Entry.BlockToPyParser = function() {
     console.log("FieldKeyboard After", a);
     return a;
   };
+<<<<<<< HEAD
 })(Entry.BlockToPyParser.prototype);
 Entry.PyToBlockParser = function(b) {
   this.blockSyntax = b;
   this._blockStatmentIndex = 0;
   this._blockStatments = [];
+=======
+})(Entry.JSParser.prototype);
+Entry.Parser = function(b, a, c) {
+  this._mode = b;
+  this.syntax = {};
+  this.codeMirror = c;
+  this._lang = a || "js";
+  this.availableCode = [];
+  "maze" === b && (this._stageId = Number(Ntry.configManager.getConfig("stageId")), "object" == typeof NtryData && this.setAvailableCode(NtryData.config[this._stageId].availableCode, NtryData.player[this._stageId].code));
+  this.mappingSyntax(b);
+  switch(this._lang) {
+    case "js":
+      this._parser = new Entry.JSParser(this.syntax);
+      a = this.syntax;
+      var d = {}, e;
+      for (e in a.Scope) {
+        d[e + "();\n"] = a.Scope[e];
+      }
+      "BasicIf" in a && (d.front = "BasicIf");
+      CodeMirror.commands.javascriptComplete = function(a) {
+        CodeMirror.showHint(a, null, {globalScope:d});
+      };
+      c.on("keyup", function(a, b) {
+        !a.state.completionActive && 65 <= b.keyCode && 95 >= b.keyCode && CodeMirror.showHint(a, null, {completeSingle:!1, globalScope:d});
+      });
+      break;
+    case "block":
+      this._parser = new Entry.BlockParser(this.syntax);
+  }
+>>>>>>> master
 };
 (function(b) {
   b.Program = function(a) {
@@ -11847,6 +11988,7 @@ Entry.PyToBlockParser = function(b) {
   };
   b.Indicator = function(a, b, c) {
   };
+<<<<<<< HEAD
   b.MemberExpression = function(a) {
     console.log("MemberExpression component", a);
     var b = {}, c = a.object;
@@ -11922,6 +12064,21 @@ Entry.PyToBlockParser = function(b) {
     b.statements = [this._blockStatments];
     console.log("BlockStatement statement result", b, "index", this._blockStatmentIndex);
     return b;
+=======
+  b.select = function(a) {
+    for (var b in this.modes) {
+      var d = this.modes[b];
+      d.tabDom.removeClass("selected");
+      d.contentDom.addClass("entryRemove");
+      d.obj.visible = !1;
+    }
+    b = this.modes[a];
+    b.tabDom.addClass("selected");
+    b.contentDom.removeClass("entryRemove");
+    b.obj.resize && b.obj.resize();
+    b.obj.visible = !0;
+    this.selected = a;
+>>>>>>> master
   };
   b.IfStatement = function(a) {
     console.log("IfStatement component", a);
@@ -12991,6 +13148,7 @@ Entry.PyBlockAssembler = function(b) {
 Entry.PyToBlockParserTemp = function(b) {
   this._assembler = new Entry.PyBlockAssembler(b);
 };
+<<<<<<< HEAD
 (function(b) {
   b.Program = function(a) {
     var b = [], c;
@@ -13101,6 +13259,21 @@ Entry.PyToBlockParserTemp = function(b) {
     var b = this[a.test.type](a.test), c = {body:[]};
     if (null === a.alternate) {
       c = null;
+=======
+p = Entry.Script.prototype;
+p.init = function(b, a, c) {
+  Entry.assert("BLOCK" == b.tagName.toUpperCase(), b.tagName);
+  this.type = b.getAttribute("type");
+  this.id = Number(b.getAttribute("id"));
+  b.getElementsByTagName("mutation").length && b.getElementsByTagName("mutation")[0].hasAttribute("hashid") && (this.hashId = b.childNodes[0].getAttribute("hashid"));
+  "REPEAT" == this.type.substr(0, 6).toUpperCase() && (this.isRepeat = !0);
+  a instanceof Entry.Script && (this.previousScript = a, a.parentScript && (this.parentScript = a.parentScript));
+  c instanceof Entry.Script && (this.parentScript = c);
+  b = b.childNodes;
+  for (a = 0;a < b.length;a++) {
+    if (c = b[a], "NEXT" == c.tagName.toUpperCase()) {
+      this.nextScript = new Entry.Script(this.entity), this.register && (this.nextScript.register = this.register), this.nextScript.init(b[a].childNodes[0], this);
+>>>>>>> master
     } else {
       for (var e in a.alternate.body) {
         var f = a.alternate.body[e], g = this[f.type](f);
@@ -13131,7 +13304,106 @@ Entry.PyToBlockParserTemp = function(b) {
     for (var c in a.consequent) {
       a = this[statment.type](statment), (void 0).push(a);
     }
+<<<<<<< HEAD
     return {test:b, consequent:void 0};
+=======
+  }
+  return c;
+};
+p.getStatement = function(b) {
+  return this.statements[b];
+};
+p.compute = function() {
+};
+p.getValue = function(b) {
+  return this.values[b].run();
+};
+p.getNumberValue = function(b) {
+  return Number(this.values[b].run());
+};
+p.getStringValue = function(b) {
+  return String(this.values[b].run());
+};
+p.getBooleanValue = function(b) {
+  return this.values[b].run() ? !0 : !1;
+};
+p.getField = function(b) {
+  return this.fields[b];
+};
+p.getStringField = function(b) {
+  return String(this.fields[b]);
+};
+p.getNumberField = function(b) {
+  return Number(this.fields[b]);
+};
+p.callReturn = function() {
+  return this.nextScript ? this.nextScript : this.parentScript ? this.parentScript : null;
+};
+p.run = function() {
+  return Entry.block[this.type](this.entity, this);
+};
+Entry.Stage = function() {
+  this.variables = {};
+  this.background = new createjs.Shape;
+  this.background.graphics.beginFill("#ffffff").drawRect(-480, -240, 960, 480);
+  this.objectContainers = [];
+  this.selectedObjectContainer = null;
+  this.variableContainer = new createjs.Container;
+  this.dialogContainer = new createjs.Container;
+  this.selectedObject = null;
+  this.isObjectClick = !1;
+};
+Entry.Stage.prototype.initStage = function(b) {
+  this.canvas = new createjs.Stage(b.id);
+  this.canvas.x = 320;
+  this.canvas.y = 180;
+  this.canvas.scaleX = this.canvas.scaleY = 2 / 1.5;
+  createjs.Touch.enable(this.canvas);
+  this.canvas.enableMouseOver(10);
+  this.canvas.mouseMoveOutside = !0;
+  this.canvas.addChild(this.background);
+  this.canvas.addChild(this.variableContainer);
+  this.canvas.addChild(this.dialogContainer);
+  this.inputField = null;
+  this.initCoordinator();
+  this.initHandle();
+  this.mouseCoordinate = {x:0, y:0};
+  if (Entry.isPhone()) {
+    b.ontouchstart = function(a) {
+      Entry.dispatchEvent("canvasClick", a);
+      Entry.stage.isClick = !0;
+    }, b.ontouchend = function(a) {
+      Entry.stage.isClick = !1;
+      Entry.dispatchEvent("canvasClickCanceled", a);
+    };
+  } else {
+    var a = function(a) {
+      Entry.dispatchEvent("canvasClick", a);
+      Entry.stage.isClick = !0;
+    };
+    b.onmousedown = a;
+    b.ontouchstart = a;
+    a = function(a) {
+      Entry.stage.isClick = !1;
+      Entry.dispatchEvent("canvasClickCanceled", a);
+    };
+    b.onmouseup = a;
+    b.ontouchend = a;
+    $(document).click(function(a) {
+      Entry.stage.focused = "entryCanvas" === a.target.id ? !0 : !1;
+    });
+  }
+  Entry.addEventListener("canvasClick", function(a) {
+    Entry.stage.isObjectClick = !1;
+  });
+  a = function(a) {
+    a.preventDefault();
+    var b = this.getBoundingClientRect(), e;
+    -1 < Entry.getBrowserType().indexOf("IE") ? (e = 480 * ((a.pageX - b.left - document.documentElement.scrollLeft) / b.width - .5), a = -270 * ((a.pageY - b.top - document.documentElement.scrollTop) / b.height - .5)) : a.changedTouches ? (e = 480 * ((a.changedTouches[0].pageX - b.left - document.body.scrollLeft) / b.width - .5), a = -270 * ((a.changedTouches[0].pageY - b.top - document.body.scrollTop) / b.height - .5)) : (e = 480 * ((a.pageX - b.left - document.body.scrollLeft) / b.width - .5), 
+    a = -270 * ((a.pageY - b.top - document.body.scrollTop) / b.height - .5));
+    Entry.stage.mouseCoordinate = {x:e.toFixed(1), y:a.toFixed(1)};
+    Entry.dispatchEvent("stageMouseMove");
+>>>>>>> master
   };
   b.ThrowStatement = function(a) {
     console.log("ThrowStatement", a);
@@ -14611,10 +14883,17 @@ Entry.Func.prototype.edit = function() {
 };
 Entry.Func.generateBlock = function(b) {
   b = Entry.block["func_" + b.id];
+<<<<<<< HEAD
   var a = {template:b.template, params:b.params}, d = /(%\d)/mi, c = b.template.split(d), e = "", f = 0, g = 0, h;
   for (h in c) {
     var k = c[h];
     d.test(k) ? (k = Number(k.split("%")[1]) - 1, k = b.params[k], "Indicator" !== k.type && ("boolean" === k.accept ? (e += Lang.template.function_param_boolean + (f ? f : ""), f++) : (e += Lang.General.param_string + (g ? g : ""), g++))) : e += k;
+=======
+  var a = {template:b.template, params:b.params}, c = /(%\d)/mi, d = b.template.split(c), e = "", f = 0, g = 0, h;
+  for (h in d) {
+    var k = d[h];
+    c.test(k) ? (k = Number(k.split("%")[1]) - 1, k = b.params[k], "Indicator" !== k.type && ("boolean" === k.accept ? (e += Lang.template.function_param_boolean + (f ? f : ""), f++) : (e += Lang.General.param_string + (g ? g : ""), g++))) : e += k;
+>>>>>>> master
   }
   return {block:a, description:e};
 };
@@ -14987,10 +15266,17 @@ p.setPortReadable = function(b) {
 };
 p.removePortReadable = function(b) {
   if (this.sendQueue.readablePorts || Array.isArray(this.sendQueue.readablePorts)) {
+<<<<<<< HEAD
     var a, d;
     for (d in this.sendQueue.readablePorts) {
       if (this.sendQueue.readablePorts[d] == b) {
         a = Number(d);
+=======
+    var a, c;
+    for (c in this.sendQueue.readablePorts) {
+      if (this.sendQueue.readablePorts[c] == b) {
+        a = Number(c);
+>>>>>>> master
         break;
       }
     }
@@ -15332,8 +15618,13 @@ Entry.Variable.prototype.updateSlideValueByView = function() {
   var b = Math.max(this.valueSetter_.graphics.command.x - 10, 0) / this.maxWidth;
   0 > b && (b = 0);
   1 < b && (b = 1);
+<<<<<<< HEAD
   var a = parseFloat(this.minValue_), d = parseFloat(this.maxValue_), b = (a + Number(Math.abs(d - a) * b)).toFixed(2), b = parseFloat(b);
   b < a ? b = this.minValue_ : b > d && (b = this.maxValue_);
+=======
+  var a = parseFloat(this.minValue_), c = parseFloat(this.maxValue_), b = (a + Number(Math.abs(c - a) * b)).toFixed(2), b = parseFloat(b);
+  b < a ? b = this.minValue_ : b > c && (b = this.maxValue_);
+>>>>>>> master
   this.isFloatPoint() || (this.viewValue_ = b, b = Math.round(b));
   this.setValue(b);
 };
@@ -17294,7 +17585,11 @@ Entry.BlockMenu = function(b, a, d, c) {
       return a;
     }
     a = Number(a);
+<<<<<<< HEAD
     for (var b = this._categories, c = this._categoryElems, e = 0;e < b.length;e++) {
+=======
+    for (var b = this._categories, d = this._categoryElems, e = 0;e < b.length;e++) {
+>>>>>>> master
       var f = b[e];
       if (!c[f].hasClass("entryRemove") && 0 === a--) {
         return f;
@@ -17626,7 +17921,11 @@ Entry.BlockView.DRAG_RADIUS = 5;
         for (var c = /(%\d)/mi, e = (b.template ? b.template : Lang.template[this.block.type]).split(c), f = b.params, g = 0;g < e.length;g++) {
           var h = e[g].trim();
           if (0 !== h.length) {
+<<<<<<< HEAD
             if (c.test(h)) {
+=======
+            if (d.test(h)) {
+>>>>>>> master
               var k = Number(h.split("%")[1]) - 1, h = f[k], h = new Entry["Field" + h.type](h, this, k, a, g);
               this._contents.push(h);
               this._paramMap[k] = h;
@@ -21065,7 +21364,12 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
   };
   b.setMode = function(a, b) {
     a = Number(a);
+<<<<<<< HEAD
     var c = this.mode;
+=======
+    var d = this.mode;
+    this.mode = a;
+>>>>>>> master
     switch(a) {
       case c:
         return;
@@ -22112,9 +22416,15 @@ Entry.Xml.getNumberValue = function(b, a, d) {
   if (!d.length) {
     return null;
   }
+<<<<<<< HEAD
   for (var c in d) {
     if (d[c].tagName && "VALUE" == d[c].tagName.toUpperCase() && d[c].getAttribute("name") == a) {
       return Number(Entry.Xml.operate(b, d[c].children[0]));
+=======
+  for (var d in c) {
+    if (c[d].tagName && "VALUE" == c[d].tagName.toUpperCase() && c[d].getAttribute("name") == a) {
+      return Number(Entry.Xml.operate(b, c[d].children[0]));
+>>>>>>> master
     }
   }
   return null;
@@ -22135,9 +22445,15 @@ Entry.Xml.getNumberField = function(b, a) {
   if (!d.length) {
     return null;
   }
+<<<<<<< HEAD
   for (var c in d) {
     if ("FIELD" == d[c].tagName.toUpperCase() && d[c].getAttribute("name") == b) {
       return Number(d[c].textContent);
+=======
+  for (var d in c) {
+    if ("FIELD" == c[d].tagName.toUpperCase() && c[d].getAttribute("name") == b) {
+      return Number(c[d].textContent);
+>>>>>>> master
     }
   }
 };
