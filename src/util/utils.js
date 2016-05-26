@@ -1122,9 +1122,11 @@ Entry.Utils.xmlToJsonData = function(xml) {
         var blocks = category.childNodes;
         for (var i in blocks) {
             var block = blocks[i];
-            if (!block.tagName)
-                continue;
-            data.blocks.push(block.getAttribute("type"));
+            if (!block.tagName) continue;
+
+            var type = block.getAttribute('type')
+            if (!type) continue;
+            data.blocks.push(type);
         }
         result.push(data);
     }

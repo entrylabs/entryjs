@@ -16,7 +16,6 @@ p.generateView = function(doneProject) {
     
 	var doneContainer = Entry.createElement('div');
     doneContainer.addClass('entryContainerDoneWorkspace');
-    doneContainer.addClass('entryHidden');
     // var parentcontainer = document.getElementById('entryContainerWorkspaceId');
 
 
@@ -28,12 +27,12 @@ p.generateView = function(doneProject) {
     var url = '/api/iframe/project/';
     var iframe = Entry.createElement('iframe');
     iframe.setAttribute("id", "doneProjectframe");
-    // iframe.setAttribute('width', width-1);
-    // iframe.setAttribute('height', width * 9/16);
     iframe.setAttribute('frameborder', 0);
     iframe.setAttribute('src', url + doneProject);
     this.doneProjectFrame = iframe;
     this.doneContainer.appendChild(iframe);
+    doneContainer.addClass('entryRemove');
+
 }
 
 p.getView = function () {
@@ -44,7 +43,8 @@ p.getView = function () {
 p.resize = function() {
     var container = document.getElementById('entryContainerWorkspaceId');
     var iframe = document.getElementById('doneProjectframe');
-    w = container.offsetWidth;
+    var w = this.doneContainer.offsetWidth;
+
     iframe.width = w+'px';
     iframe.height = w*9/16 + 'px';
 }

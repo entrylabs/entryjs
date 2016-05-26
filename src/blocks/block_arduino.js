@@ -46,7 +46,24 @@ Entry.SensorBoard = {
 
 Entry.dplay = {
     name: 'dplay',
-    setZero: Entry.Arduino.setZero
+    vel_value : 255,        
+    setZero: Entry.Arduino.setZero,
+    timeouts: [],
+    removeTimeout: function(id) {
+      clearTimeout(id);
+      var timeouts = this.timeouts;
+      var index = timeouts.indexOf(id);
+      if(index >= 0) {
+        timeouts.splice(index, 1);
+      }
+    },
+    removeAllTimeouts: function() {
+      var timeouts = this.timeouts;
+      for(var i in timeouts) {
+        clearTimeout(timeouts[i]);
+      }
+      this.timeouts = [];
+    }
 };
 
 Entry.nemoino = {
@@ -919,7 +936,7 @@ Entry.block.dplay_DCmotor = function (sprite, script) {
     var port1 = script.getField("PORT");
     var port2 = 0;
     if (port1 == "3") port2 = 5;
-    else if (port1 == "6") value2 = 11;
+    else if (port1 == "6") port2 = 11;
     var operator = script.getField("OPERATOR");
     var value1 = 0;
     var value2 = 0;
