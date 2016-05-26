@@ -114,8 +114,6 @@ Entry.Parser = function(mode, type, cm) {
         this.mappingSyntax(mode);
         this._type = type;
 
-        console.log("mode", mode, "type", type);
-
         switch (type) {
             case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
                 this._parser = new Entry.JsToBlockParser(this.syntax.js);
@@ -158,25 +156,18 @@ Entry.Parser = function(mode, type, cm) {
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
                 this._parser = new Entry.BlockToPyParser();
 
-                var syntax = this.syntax.py;
-                var assistScope = {};
-
-                for(var key in syntax) {
-                    assistScope[key + '();\n'] = syntax[key];
-                }
-
-                console.log("assistScope", assistScope);
-
                 cm.setOption("mode", {name: "python", globalVars: true});
 
-                CodeMirror.commands.autocomplete = function (cm) {
+                CodeMirror.commands.autoCompletion = function (cm) {
                     CodeMirror.showHint(cm, null, {globalScope:assistScope});
-                }
-
+                }; 
+                
                 cm.on("keyup", function (cm, event) {
-                    if (!cm.state.completionActive &&  (event.keyCode >= 65 && event.keyCode <= 95))  {
-                        CodeMirror.showHint(cm, null, {completeSingle: false});
+                    if (!cm.state.completionActive &&  (event.keyCode >= 65 && event.keyCode <= 195))  {
+                       CodeMirror.showHint(cm, null, {completeSingle: false});  
                     }
+
+                    
                 });
                 
                 break;
@@ -449,8 +440,11 @@ Entry.Parser = function(mode, type, cm) {
             var block = blockList[key];
             var syntax = null;
 
-            if(block.syntax && block.syntax.py)
+            if(block.syntax && block.syntax.py) {
+
                 syntax = block.syntax.py;
+                console.log("syntax", syntax);
+            }
             if (!syntax)
                 continue;
 

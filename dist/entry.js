@@ -11647,7 +11647,7 @@ Entry.PyToBlockParser = function(b) {
     console.log("ExpressionStatement component", a);
     var b = {};
     a = a.expression;
-    a.type && (a = this[a.type](a), a.params ? (b.type = a.type, b.params = a.params, result = b, console.log("ExpressionStatement if statement result", result)) : (b.type = a.type, result = b, console.log("ExpressionStatement else statement result", result)));
+    a.type && (a = this[a.type](a), a.params ? (b.type = a.type, b.params = a.params) : b.type = a.type, result = b);
     console.log("ExpressionStatement result", result);
     return result;
   };
@@ -11660,42 +11660,50 @@ Entry.PyToBlockParser = function(b) {
     var e = "object" != typeof c.object ? String(c.object).concat(".").concat(String(c.property)) : String(c.object.object).concat(".").concat(String(c.object.property)).concat(".").concat(String(c.property));
     console.log("CallExpression syntax", e);
     c = this.getBlockType(e);
-    console.log("CallExpression type", c);
-    c || ("__pythonRuntime.functions.range" == e ? c = this.getBlockType("for i in range(%1):\n$1") : "__pythonRuntime.ops.add" == e ? "number" == typeof arguments[0].value ? (c = this.getBlockType("(%1 %2 %3)"), argumentData = {raw:"PLUS", type:"Literal", value:"PLUS"}, arguments.splice(1, 0, argumentData)) : "string" == typeof arguments[0].value && (c = this.getBlockType("%2 + %4")) : "__pythonRuntime.ops.multiply" == e ? (c = this.getBlockType("(%1 %c %3)"), argumentData = {raw:"MULTI", type:"Literal", 
-    value:"MULTI"}, arguments.splice(1, 0, argumentData)) : "__pythonRuntime.functions.len" == e && (c = this.getBlockType("len(%2)")));
-    var f = Entry.block[c], e = f.params, f = f.def.params, g = [];
-    console.log("CallExpression componet.arguments", arguments);
-    console.log("CallExpression paramsMeta", e);
-    console.log("CallExpression paramsDefMeta", f);
-    for (var h in e) {
-      var k = e[h].type;
-      "Indicator" == k ? (k = {raw:null, type:"Literal", value:null}, h < arguments.length && arguments.splice(h, 0, k)) : "Text" == k && (k = {raw:"", type:"Literal", value:""}, h < arguments.length && arguments.splice(h, 0, k));
+    console.log("CallExpression type before", c);
+    "__pythonRuntime.functions.range" == e ? c = this.getBlockType("%1number#") : "__pythonRuntime.ops.add" == e ? "number" == typeof arguments[0].value ? (c = this.getBlockType("(%1 %2 %3)"), argumentData = {raw:"PLUS", type:"Literal", value:"PLUS"}, arguments.splice(1, 0, argumentData)) : "string" == typeof arguments[0].value && (c = this.getBlockType("%2 + %4")) : "__pythonRuntime.ops.multiply" == e ? (c = this.getBlockType("(%1 %c %3)"), argumentData = {raw:"MULTI", type:"Literal", value:"MULTI"}, 
+    arguments.splice(1, 0, argumentData)) : "__pythonRuntime.functions.len" == e && (c = this.getBlockType("len(%2)"));
+    console.log("CallExpression type after", c);
+    if (c) {
+      var f = Entry.block[c], e = f.params, f = f.def.params, g = [];
+      console.log("CallExpression componet.arguments", arguments);
+      console.log("CallExpression paramsMeta", e);
+      console.log("CallExpression paramsDefMeta", f);
+      for (var h in e) {
+        var k = e[h].type;
+        "Indicator" == k ? (k = {raw:null, type:"Literal", value:null}, h < arguments.length && arguments.splice(h, 0, k)) : "Text" == k && (k = {raw:"", type:"Literal", value:""}, h < arguments.length && arguments.splice(h, 0, k));
+      }
+      for (var l in arguments) {
+        h = arguments[l], console.log("CallExpression argument", h), h = this[h.type](h, e[l], f[l]), g.push(h);
+      }
+      b.type = c;
+      b.params = g;
+    } else {
+      b = null;
     }
-    for (var l in arguments) {
-      h = arguments[l], console.log("CallExpression argument", h), h = this[h.type](h, e[l], f[l]), g.push(h);
-    }
-    b.type = c;
-    b.params = g;
     console.log("CallExpression result", b);
     return b;
   };
   b.Literal = function(a, b, c) {
+    console.log("Literal component", a, "paramMeta", b, "paramDefMeta", c);
+    var e = a.value;
+    console.log("Literal value", e);
     b || (b = {type:"Block"});
-    c || (c = {type:"text"});
+    c || (c = "number" == typeof e ? {type:"number"} : {type:"text"});
     if ("Indicator" == b.type) {
       return null;
     }
     if ("Text" == b.type) {
       return "";
     }
-    var e = a.value;
-    console.log("Literal value", e);
-    null != e ? b = this["Param" + b.type](e, b, c) : (b = [], c = this[a.left.type](a.left), b.push(c), b.push(a.operator), a = this[a.right.type](a.right), b.push(a));
+    console.log("Literal paramMeta", b, "paramDefMeta", c);
+    null != a.value ? (b = this["Param" + b.type](e, b, c), console.log("Literam param", void 0)) : (b = [], c = this[a.left.type](a.left), b.push(c), b.push(a.operator), a = this[a.right.type](a.right), b.push(a));
     a = b;
     console.log("Literal result", a);
     return a;
   };
   b.ParamBlock = function(a, b, c) {
+    console.log("ParamBlock value", a, "paramMeta", b, "paramDefMeta", c);
     b = {};
     var e = a, f = [], g = Entry.block[c.type], h = g.params, g = g.paramsDefMeta, k;
     for (k in h) {
@@ -11713,11 +11721,18 @@ Entry.PyToBlockParser = function(b) {
         }
       }
     }
+    console.log("ParamBlock param", e);
+    if (1 == e || 0 == e) {
+      e = null;
+    }
     f.push(e);
     b.type = c.type;
     b.params = f;
     console.log("ParamBlock result", b);
     return b;
+  };
+  b.ParamTextInput = function(a, b, c) {
+    return a;
   };
   b.ParamColor = function(a, b) {
     console.log("ParamColor value, paramMeta", a, b);
@@ -11800,60 +11815,105 @@ Entry.PyToBlockParser = function(b) {
     return b;
   };
   b.BlockStatement = function(a) {
-    this._blockStatments = [];
-    var b = {};
+    console.log("BlockStatement component", a);
+    var b = {data:[]}, c = [];
     a = a.body;
-    console.log("block body", a);
-    for (var c in a) {
-      var e = a[c];
-      console.log("BlockStatement body", e);
-      if ("ExpressionStatement" == e.type) {
-        e = this[e.type](e), console.log("bodyData", e), this._blockStatments.push(e);
-      } else {
-        if ("ForStatement" != e.type) {
-          if (e = this[e.type](e), e.type && (this._blockStatments.push(e), console.log("body block", e)), e.declarations) {
-            e = e.declarations[0], b.params = e.init.params, b.type = e.init.type, console.log("BlockStatement structure", b);
-          } else {
-            if ("ForInStatement" != e && e.type && (console.log("final", e), e.body)) {
-              e = this[e.type](e);
-              a = e.body.body;
-              for (var f in a) {
-                e = a[f], b = this[e.type](e), console.log("Ex stmtData big", b), b.type && (this._blockStatments.push(b), console.log("BlockStatement stmtData", b, "index", this._blockStatmentIndex));
-              }
-              this._blockStatments.splice(0, this._blockStatments.length / 2);
-              return;
-            }
-          }
-        }
-      }
+    console.log("BlockStatement bodies", a);
+    for (var e in a) {
+      var f = a[e], f = this[f.type](f);
+      f && null == f || (console.log("BlockStatement bodyData", f), c.push(f), console.log("BlockStatement data", c));
     }
-    console.log("BlockStatement structure", b);
-    console.log("BlockStatement statements", this._blockStatments, "global index", this._blockStatmentIndex);
-    console.log("BlockStatement total index", this._blockStatmentIndex, "structure", b, "stmt", this._blockStatments);
-    this._blockStatmentIndex++;
-    b.statements = [this._blockStatments];
-    console.log("BlockStatement statement result", b, "index", this._blockStatmentIndex);
+    b.data = c;
+    console.log("BlockStatement statement result", b);
     return b;
   };
   b.IfStatement = function(a) {
     console.log("IfStatement component", a);
-    var b = {statements:[]}, c, e = [], f = a.test, g = a.alternate;
-    a = a.consequent;
-    if (null != f) {
-      if (e = [], f.type = "Literal", f.value) {
-        c = this.getBlockType(null == g ? "if %1:\n$1" : "if %1:\n$1\nelse:\n$2"), b.type = c, c = Entry.block[c].params, console.log("IfStatement paramsMeta", c), f = this[f.type](f, c[0]), e.push(f), console.log("IfStatement param", f), e.push(null);
+    var b;
+    b = {statements:[]};
+    var c, e = [], f = a.consequent, g = a.alternate;
+    c = null != g ? "if_else" : "_if";
+    console.log("IfStatement type", c);
+    var h = a.test;
+    if (null != h) {
+      if (console.log("IfStatement test", h), "Literal" == h.type) {
+        arguments = [];
+        arguments.push(h.value);
+        var k = Entry.block[c].params, l = Entry.block[c].def.params;
+        console.log("IfStatement paramsMeta", k);
+        console.log("IfStatement paramsDefMeta", l);
+        for (var n in k) {
+          var m = k[n].type;
+          "Indicator" == m ? (m = {raw:null, type:"Literal", value:null}, n < arguments.length && arguments.splice(n, 0, m)) : "Text" == m && (m = {raw:"", type:"Literal", value:""}, n < arguments.length && arguments.splice(n, 0, m));
+        }
+        for (var q in arguments) {
+          console.log("IfStatement argument", arguments[q]), n = this[h.type](h, k[q], l[q]), console.log("IfStatement param", n), e.push(n);
+        }
       } else {
-        c = this[f.left.type](f.left);
-        var h = f.operator, f = this[f.right.type](f.right), f = c.concat(" ").concat(h).concat(" ").concat(f);
-        b.test = f;
+        "BinaryExpression" == h.type && (n = this[h.type](h), e.push(n));
       }
     }
-    null != a && (a = this[a.type](a), console.log("IfStatement consequentData", a), a && b.statements.push(a.statements[0]));
-    null != g && (g = this[g.type](g), console.log("IfStatement alternateData", g), g && b.statements.push(g.statements[0]));
-    console.log("IfStatement params", e);
+    console.log("IfStatement params result", e);
+    if (null != g) {
+      h = [];
+      console.log("IfStatement alternate", g);
+      g = this[g.type](g);
+      console.log("IfStatement alternate data", g);
+      g = g.data;
+      for (q in g) {
+        (k = g[q]) && h.push(k);
+      }
+      0 != h.length && b.statements.push(h);
+    }
+    if (null != f) {
+      g = [];
+      console.log("IfStatement consequent", f);
+      f = this[f.type](f);
+      console.log("IfStatement consequent data", f);
+      f = f.data;
+      console.log("IfStatement consequentsData", f);
+      for (q in f) {
+        h = f[q], console.log("IfStatement consData", h), h.statements ? (console.log("IfStatement data1"), g = h.statements) : h && g.push(h);
+      }
+      0 != g.length && b.statements.push(g);
+    }
+    b.type = c;
     b.params = e;
     console.log("IfStatement result", b);
     return b;
+  };
+  b.ForStatement = function(a) {
+    console.log("ForStatement component", a);
+    var b = {statements:[]}, c = this.getBlockType("for i in range(%1):\n$1");
+    b.type = c;
+    if (c = a.init) {
+      var e = this[c.type](c)
+    }
+    b.init = e;
+    console.log("ForStatement init", c);
+    if (e = a.body.body) {
+      for (var f in e) {
+        0 != f && (c = e[f], console.log("ForStatement bodyData", c, "index", f), c = this[c.type](c), console.log("ForStatement data", c), "index", f, b.statements.push(c));
+      }
+    }
+    console.log("ForStatement bodyData result", b);
+    if (f = a.test) {
+      var g = this[f.type](f)
+    }
+    b.test = g;
+    console.log("ForStatement testData", g);
+    if (a = a.update) {
+      var h = this[a.type](a)
+    }
+    b.update = h;
+    console.log("ForStatement updateData", h);
+    console.log("ForStatement result", b);
+    return b;
+  };
+  b.ForInStatement = function(a) {
+    console.log("ForInStatement component", a);
+    console.log("ForInStatement result", null);
+    return null;
   };
   b.VariableDeclaration = function(a) {
     console.log("VariableDeclaration component", a);
@@ -11924,103 +11984,62 @@ Entry.PyToBlockParser = function(b) {
   };
   b.BinaryExpression = function(a) {
     console.log("BinaryExpression component", a);
-    var b = {params:[]}, c = String(a.operator);
-    switch(c) {
+    var b, c = {}, e = String(a.operator);
+    switch(e) {
       case "==":
-        var e = "%1 %2 %3";
+        var f = "%1 %2 %3";
         break;
       case "!=":
-        e = "%2 != True";
+        f = "%2 != True";
         break;
       case "<":
-        e = "%1 %2 %3";
+        f = "%1 %2 %3";
         break;
       case "<=":
-        e = "%1 %2 %3";
+        f = "%1 %2 %3";
         break;
       case ">":
-        e = "%1 %2 %3";
+        f = "%1 %2 %3";
         break;
       case ">=":
-        e = "%1 %2 %3";
+        f = "%1 %2 %3";
         break;
       case "+":
-        e = "(%1 %2 %3)";
+        f = "(%1 %2 %3)";
         break;
       case "-":
-        e = "(%1 %2 %3)";
+        f = "(%1 %2 %3)";
         break;
       case "*":
-        e = "(%1 %2 %3)";
+        f = "(%1 %2 %3)";
         break;
       case "/":
-        e = "(%1 %2 %3)";
+        f = "(%1 %2 %3)";
     }
-    console.log("BinaryExpression operator", c);
-    console.log("BinaryExpression syntax", e);
-    e = this.getBlockType(e);
-    console.log("BinaryExpression type", e);
-    var f = Entry.block[e].params;
-    console.log("BinaryExpression paramsMeta", f);
-    var g = [], h = a.left;
-    console.log("BinaryExpression left", h);
-    h.type ? ("Literal" == h.type ? (c = this[h.type](h, f[0]), console.log("BinaryExpression left Literal param", c)) : c = this[h.type](h), c && g.push(c), console.log("BinaryExpression left param", c)) : (h = a.left, this[h.type](h));
-    if (c = String(a.operator)) {
-      console.log("BinaryExpression operator", c), (c = Entry.TextCodingUtil.prototype.binaryOperatorConvert(c)) && g.push(c);
+    console.log("BinaryExpression operator", e);
+    console.log("BinaryExpression syntax", f);
+    if (f = this.getBlockType(f)) {
+      console.log("BinaryExpression type", f);
+      b = Entry.block[f].params;
+      console.log("BinaryExpression paramsMeta", b);
+      var g = [], h = a.left;
+      console.log("BinaryExpression left", h);
+      h.type ? ("Literal" == h.type ? (e = this[h.type](h, b[0]), console.log("BinaryExpression left Literal param", e)) : e = this[h.type](h), e && g.push(e), console.log("BinaryExpression left param", e)) : (h = a.left, this[h.type](h));
+      if (e = String(a.operator)) {
+        console.log("BinaryExpression operator", e), (e = Entry.TextCodingUtil.prototype.binaryOperatorConvert(e)) && g.push(e);
+      }
+      e = a.right;
+      e.type ? ("Literal" == e.type ? (e = this[e.type](e, b[2]), console.log("BinaryExpression right Literal param", e)) : e = this[e.type](e), e && g.push(e), console.log("BinaryExpression right param", e)) : (e = a.right, this[e.type](e));
+      "boolean_not" == f && (g = [""], g[1] = this[h.type](h, b[1]), g[2] = "");
+      c.type = f;
+      c.params = g;
+    } else {
+      return b;
     }
-    c = a.right;
-    c.type ? ("Literal" == c.type ? (c = this[c.type](c, f[2]), console.log("BinaryExpression right Literal param", c)) : c = this[c.type](c), c && g.push(c), console.log("BinaryExpression right param", c)) : (c = a.right, this[c.type](c));
-    "boolean_not" == e && (g = [""], g[1] = this[h.type](h, f[1]), g[2] = "");
     console.log("BinaryExpression params", g);
-    b.type = e;
-    b.params = g;
+    b = c;
     console.log("BinaryExpression result", b);
     return b;
-  };
-  b.ForStatement = function(a) {
-    console.log("ForStatement component", a);
-    var b = {statements:[]}, c = a.body;
-    console.log("ForStatement body", c);
-    this[c.type](c);
-    b.body = b.bodyData;
-    console.log("ForStatement statements", b.statements);
-    if (c = a.init) {
-      var e = this[c.type](c)
-    }
-    b.init = e;
-    console.log("ForStatement init", b.init);
-    e = a.test;
-    console.log("ForStatement test type", e.type);
-    if (e) {
-      var f = this[e.type](e)
-    }
-    b.test = f;
-    console.log("ForStatement test", b.test);
-    if (f = a.update) {
-      var g = this[f.type](f)
-    }
-    console.log("ForStatement updateData", g);
-    b.update = g;
-    console.log("ForStatement update", b.update);
-    console.log("ForStatement result", b);
-    return a;
-  };
-  b.ForInStatement = function(a) {
-    console.log("ForInStatement component", a);
-    var b = {statements:[]}, c = a.body;
-    console.log("ForInStatement body", c);
-    this[c.type](c);
-    b.body = b.bodyData;
-    if (c = a.left) {
-      var e = this[c.type](c)
-    }
-    b.left = e;
-    if (e = a.right) {
-      var f = this[e.type](e)
-    }
-    b.right = f;
-    console.log("ForInStatement result", b);
-    return a;
   };
   b.UpdateExpression = function(a) {
     console.log("UpdateExpression", a);
@@ -12231,7 +12250,6 @@ Entry.Parser = function(b, a, d) {
     a === Entry.Vim.MAZE_MODE && (this._stageId = Number(Ntry.configManager.getConfig("stageId")), this.setAvailableCode(NtryData.config[this._stageId].availableCode, NtryData.player[this._stageId].code));
     this.mappingSyntax(a);
     this._type = b;
-    console.log("mode", a, "type", b);
     switch(b) {
       case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
         this._parser = new Entry.JsToBlockParser(this.syntax.js);
@@ -12256,19 +12274,10 @@ Entry.Parser = function(b, a, d) {
         });
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
-        this._parser = new Entry.BlockToPyParser;
-        a = this.syntax.py;
-        e = {};
-        for (f in a) {
-          e[f + "();\n"] = a[f];
-        }
-        console.log("assistScope", e);
-        c.setOption("mode", {name:"python", globalVars:!0});
-        CodeMirror.commands.autocomplete = function(a) {
+        this._parser = new Entry.BlockToPyParser, c.setOption("mode", {name:"python", globalVars:!0}), CodeMirror.commands.autoCompletion = function(a) {
           CodeMirror.showHint(a, null, {globalScope:e});
-        };
-        c.on("keyup", function(a, b) {
-          !a.state.completionActive && 65 <= b.keyCode && 95 >= b.keyCode && CodeMirror.showHint(a, null, {completeSingle:!1});
+        }, c.on("keyup", function(a, b) {
+          !a.state.completionActive && 65 <= b.keyCode && 195 >= b.keyCode && CodeMirror.showHint(a, null, {completeSingle:!1});
         });
     }
   };
@@ -12381,7 +12390,7 @@ Entry.Parser = function(b, a, d) {
       var b = Entry.block, c;
       for (c in b) {
         var e = b[c], f = null;
-        e.syntax && e.syntax.py && (f = e.syntax.py);
+        e.syntax && e.syntax.py && (f = e.syntax.py, console.log("syntax", f));
         f && (f = String(f), f.match(/.*\..*\)/) && (e = f.indexOf("("), f = f.substring(0, e)), a[f] = c);
       }
       return a;

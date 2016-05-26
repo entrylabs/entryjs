@@ -5513,7 +5513,7 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["if %1:\n$1"]}
+        "syntax": {"js": [], "py": ["if %1:\n$1"]} 
     },
     "if_else": {
         "color": "#498deb",
@@ -17391,7 +17391,7 @@ Entry.block = {
                 delete this.isContinue;
             }
         },
-        "syntax": {"js": [], "py": [""]}
+        "syntax": {"js": [], "py": []}
     },
     "maze_step_rotate_left": {
         "skeleton": "basic",
