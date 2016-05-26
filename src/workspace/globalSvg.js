@@ -26,7 +26,7 @@ goog.provide('Entry.GlobalSvg');
         this.svgDom = Entry.Dom(
             $('<svg id="globalSvg" width="10" height="10"' +
               'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
-            { parent: body }
+            { parent: this._container }
         );
 
         this.svg = Entry.SVG('globalSvg');
@@ -108,25 +108,24 @@ goog.provide('Entry.GlobalSvg');
 
     gs.show = function() {
         this._container.removeClass('entryRemove');
-        this.svgDom.css('display', 'block');
     };
 
     gs.hide = function() {
         this._container.addClass('entryRemove');
-        this.svgDom.css('display', 'none');
     };
 
     gs.position = function() {
         var that = this;
         var blockView = this._view;
+        if (!blockView) return;
         var pos = blockView.getAbsoluteCoordinate();
         var offset = blockView.getBoard().offset();
         this.left = pos.x + offset.left - this._offsetX;
         this.top = pos.y + offset.top - this._offsetY;
 
-        var dom = this.svgDom[0];
-        dom.style.left = this.left + 'px';
-        dom.style.top = this.top + 'px';
+        this.svgDom.css({
+            transform: 'translate3d('+ this.left + 'px,' + this.top +'px, 0px)'
+        });
     };
 
     gs.terminateDrag = function(blockView) {

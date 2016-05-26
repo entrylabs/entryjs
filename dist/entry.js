@@ -722,7 +722,18 @@ Entry.Arduino = {name:"arduino", setZero:function() {
 Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a0:{name:Lang.Hw.port_en + " A0 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a1:{name:Lang.Hw.port_en + " A1 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a2:{name:Lang.Hw.port_en + " A2 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a3:{name:Lang.Hw.port_en + " A3 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a4:{name:Lang.Hw.port_en + " A4 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a5:{name:Lang.Hw.port_en + " A5 " + 
 Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}}, mode:"both"}};
 Entry.SensorBoard = {name:"sensorBoard", setZero:Entry.Arduino.setZero};
-Entry.dplay = {name:"dplay", setZero:Entry.Arduino.setZero};
+Entry.dplay = {name:"dplay", vel_value:255, setZero:Entry.Arduino.setZero, timeouts:[], removeTimeout:function(b) {
+  clearTimeout(b);
+  var a = this.timeouts;
+  b = a.indexOf(b);
+  0 <= b && a.splice(b, 1);
+}, removeAllTimeouts:function() {
+  var b = this.timeouts, a;
+  for (a in b) {
+    clearTimeout(b[a]);
+  }
+  this.timeouts = [];
+}};
 Entry.nemoino = {name:"nemoino", setZero:Entry.Arduino.setZero};
 Entry.CODEino = {name:"CODEino", setZero:Entry.Arduino.setZero, monitorTemplate:Entry.Arduino.monitorTemplate};
 Blockly.Blocks.arduino_text = {init:function() {
@@ -1106,7 +1117,7 @@ Blockly.Blocks.dplay_DCmotor = {init:function() {
 }};
 Entry.block.dplay_DCmotor = function(b, a) {
   var c = a.getField("PORT"), d = 0;
-  "3" == c && (d = 5);
+  "3" == c ? d = 5 : "6" == c && (d = 11);
   var e = a.getField("OPERATOR"), f = 0, g = 0;
   "FRONT" == e ? (f = 255, g = 0) : "REAR" == e ? (f = 0, g = 255) : "OFF" == e && (g = f = 0);
   Entry.hw.setDigitalPortValue(c, f);
@@ -15691,8 +15702,9 @@ Entry.BlockView.DRAG_RADIUS = 5;
       c === Entry.Workspace.MODE_VIMBOARD && b.vimBoardEvent(a, "dragOver");
       d = a.originalEvent && a.originalEvent.touches ? a.originalEvent.touches[0] : a;
       var f = m.mouseDownCoordinate, f = Math.sqrt(Math.pow(d.pageX - f.x, 2) + Math.pow(d.pageY - f.y, 2));
-      (m.dragMode == Entry.DRAG_MODE_DRAG || f > Entry.BlockView.DRAG_RADIUS) && m.movable && (m.isInBlockMenu ? e.cloneToGlobal(a) : (a = !1, m.dragMode != Entry.DRAG_MODE_DRAG && (m._toGlobalCoordinate(), m.dragMode = Entry.DRAG_MODE_DRAG, m.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(m, c), a = !0), this.animating && this.set({animating:!1}), 0 === m.dragInstance.height && m.dragInstance.set({height:-1 + m.height}), c = m.dragInstance, m._moveBy(d.pageX - c.offsetX, d.pageY - 
-      c.offsetY, !1), c.set({offsetX:d.pageX, offsetY:d.pageY}), Entry.GlobalSvg.position(), m.originPos || (m.originPos = {x:m.x, y:m.y}), a && e.generateCodeMagnetMap(), m._updateCloseBlock()));
+      (m.dragMode == Entry.DRAG_MODE_DRAG || f > Entry.BlockView.DRAG_RADIUS) && m.movable && (m.isInBlockMenu ? e.cloneToGlobal(a) : (a = !1, m.dragMode != Entry.DRAG_MODE_DRAG && (m._toGlobalCoordinate(), m.dragMode = Entry.DRAG_MODE_DRAG, m.block.getThread().changeEvent.notify(), requestAnimationFrame(function() {
+        Entry.GlobalSvg.setView(m, c);
+      }), a = !0), this.animating && this.set({animating:!1}), 0 === m.dragInstance.height && m.dragInstance.set({height:-1 + m.height}), f = m.dragInstance, m._moveBy(d.pageX - f.offsetX, d.pageY - f.offsetY, !1), f.set({offsetX:d.pageX, offsetY:d.pageY}), requestAnimationFrame(Entry.GlobalSvg.position.bind(Entry.GlobalSvg)), m.originPos || (m.originPos = {x:m.x, y:m.y}), a && e.generateCodeMagnetMap(), m._updateCloseBlock()));
     }
     function d(a) {
       $(document).unbind(".block");
@@ -15729,11 +15741,11 @@ Entry.BlockView.DRAG_RADIUS = 5;
             return;
           }
           f = [];
-          var g = {text:"\ube14\ub85d \ubcf5\uc0ac & \ubd99\uc5ec\ub123\uae30", enable:this.copyable, callback:function() {
+          var g = {text:Lang.Blocks.Duplication_option, enable:this.copyable, callback:function() {
             Entry.do("cloneBlock", k);
-          }}, l = {text:"\ube14\ub85d \ubcf5\uc0ac", enable:this.copyable, callback:function() {
+          }}, l = {text:Lang.Blocks.CONTEXT_COPY_option, enable:this.copyable, callback:function() {
             h.block.copyToClipboard();
-          }}, n = {text:"\ube14\ub85d \uc0ad\uc81c", enable:k.isDeletable(), callback:function() {
+          }}, n = {text:Lang.Blocks.Delete_Blocks, enable:k.isDeletable(), callback:function() {
             Entry.do("destroyBlock", h.block);
           }};
           f.push(g);
@@ -16849,16 +16861,16 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
   b._position = function() {
     var a = this.getAbsolutePosFromDocument();
     a.y += this.box.height / 2;
-    var b = $(document).height(), d = this.optionGroup.height();
+    var b = $(document).height(), d = this.optionGroup.height(), e = this.optionGroup.width();
     if (b < a.y + d) {
       a.x += this.box.width + 1;
-      var b = this.getAbsolutePosFromBoard(), e = this._blockView.getBoard().svgDom.height(), e = e - (e - b.y);
-      e - 20 < d && this.optionGroup.height(e - e % 20);
+      var b = this.getAbsolutePosFromBoard(), f = this._blockView.getBoard().svgDom.height(), f = f - (f - b.y);
+      f - 20 < d && this.optionGroup.height(f - f % 20);
       a.y -= this.optionGroup.height();
     } else {
-      a.x += this.box.width / 2 - this.optionGroup.width() / 2;
+      a.x += this.box.width / 2 - e / 2;
     }
-    this.optionGroup.css({left:a.x, top:a.y, width:this.optionGroup.width() + 3});
+    this.optionGroup.css({left:a.x, top:a.y, width:e + 20});
   };
   b.applyValue = function(a) {
     this.value != a && this.setValue(a);
@@ -17395,7 +17407,7 @@ Entry.GlobalSvg = {};
       $("#globalSvg").remove();
       var a = $("body");
       this._container = Entry.Dom("div", {classes:["globalSvgSurface", "entryRemove"], id:"globalSvgSurface", parent:a});
-      this.svgDom = Entry.Dom($('<svg id="globalSvg" width="10" height="10"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:a});
+      this.svgDom = Entry.Dom($('<svg id="globalSvg" width="10" height="10"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this._container});
       this.svg = Entry.SVG("globalSvg");
       this.top = this.left = 0;
       this._inited = !0;
@@ -17425,19 +17437,18 @@ Entry.GlobalSvg = {};
   };
   b.show = function() {
     this._container.removeClass("entryRemove");
-    this.svgDom.css("display", "block");
   };
   b.hide = function() {
     this._container.addClass("entryRemove");
-    this.svgDom.css("display", "none");
   };
   b.position = function() {
-    var a = this._view, b = a.getAbsoluteCoordinate(), a = a.getBoard().offset();
-    this.left = b.x + a.left - this._offsetX;
-    this.top = b.y + a.top - this._offsetY;
-    b = this.svgDom[0];
-    b.style.left = this.left + "px";
-    b.style.top = this.top + "px";
+    var a = this._view;
+    if (a) {
+      var b = a.getAbsoluteCoordinate(), a = a.getBoard().offset();
+      this.left = b.x + a.left - this._offsetX;
+      this.top = b.y + a.top - this._offsetY;
+      this.svgDom.css({transform:"translate3d(" + this.left + "px," + this.top + "px, 0px)"});
+    }
   };
   b.terminateDrag = function(a) {
     var b = Entry.mouseCoordinate;
@@ -18113,9 +18124,9 @@ Entry.Board.OPTION_CLEAR = 2;
     var a = this;
     this._contextOptions = [{activated:!0, option:{text:"\ubd99\uc5ec\ub123\uae30", enable:!!Entry.clipboard, callback:function() {
       Entry.do("addThread", Entry.clipboard).value.getFirstBlock().copyToClipboard();
-    }}}, {activated:!0, option:{text:"\ube14\ub85d \uc815\ub9ac\ud558\uae30", callback:function() {
+    }}}, {activated:!0, option:{text:Lang.Blocks.tidy_up_block, callback:function() {
       a.alignThreads();
-    }}}, {activated:!0, option:{text:"\ubaa8\ub4e0 \ucf54\ub4dc \uc0ad\uc81c\ud558\uae30", callback:function() {
+    }}}, {activated:!0, option:{text:Lang.Blocks.Clear_all_blocks, callback:function() {
       a.code.clear();
     }}}];
   };

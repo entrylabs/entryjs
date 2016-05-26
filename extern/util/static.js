@@ -305,11 +305,13 @@ EntryStatic.getAllBlocks = function() {
                 "nemoino_convert_scale",
                 //neobot
                 "neobot_sensor_value",
+                "neobot_sensor_convert_scale",
                 "neobot_left_motor",
                 "neobot_stop_left_motor",
                 "neobot_right_motor",
                 "neobot_stop_right_motor",
                 "neobot_all_motor",
+                "neobot_stop_all_motor",
                 "neobot_set_servo",
                 "neobot_set_output",
                 "neobot_set_fnd",

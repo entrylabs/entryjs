@@ -421,7 +421,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
             var options = [];
 
             var copyAndPaste = {
-                text: '블록 복사 & 붙여넣기',
+                text: Lang.Blocks.Duplication_option,
                 enable: this.copyable,
                 callback: function(){
                     Entry.do("cloneBlock", block);
@@ -429,7 +429,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
             };
 
             var copy = {
-                text: '블록 복사',
+                text: Lang.Blocks.CONTEXT_COPY_option,
                 enable: this.copyable,
                 callback: function(){
                     that.block.copyToClipboard();
@@ -437,7 +437,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
             };
 
             var remove = {
-                text: '블록 삭제',
+                text: Lang.Blocks.Delete_Blocks,
                 enable: block.isDeletable(),
                 callback: function(){
                     Entry.do("destroyBlock", that.block);
@@ -484,7 +484,9 @@ Entry.BlockView.DRAG_RADIUS = 5;
                         blockView._toGlobalCoordinate();
                         blockView.dragMode = Entry.DRAG_MODE_DRAG;
                         blockView.block.getThread().changeEvent.notify();
-                        Entry.GlobalSvg.setView(blockView, workspaceMode);
+                        requestAnimationFrame(function(){
+                            Entry.GlobalSvg.setView(blockView, workspaceMode);
+                        });
                         isFirst = true;
                     }
 
@@ -510,7 +512,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
                         offsetY: mouseEvent.pageY
                     });
 
-                    Entry.GlobalSvg.position();
+                    requestAnimationFrame(Entry.GlobalSvg.position.bind(Entry.GlobalSvg));
                     if (!blockView.originPos)
                         blockView.originPos = {x: blockView.x, y: blockView.y};
                     if (isFirst)
