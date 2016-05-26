@@ -13086,25 +13086,13 @@ Entry.Variable.prototype.generateView = function(b) {
       });
       this.valueSetter_.on("pressmove", function(a) {
         if (Entry.engine.isState("run")) {
-          var b = .75 * a.stageX - 240 - this.offsetX, f = this.graphics.command.x;
-          if (0 >= b + f) {
-            c.setSlideCommandX(0, !0);
-          } else {
-            if (b + f > c.maxWidth + 10) {
-              c.setSlideCommandX(c.maxWidth, !0);
-            } else {
-              this.offsetX = -(this.x - .75 * a.stageX + 240);
-              console.log("current", this.graphics.command.x);
-              console.log("hypo", Math.abs(c.getX() - this.offsetX));
-              debugger;
-              c.setSlideCommandX(b);
-            }
-          }
+          var b = this.offsetX;
+          this.offsetX = -(this.x - .75 * a.stageX + 240);
+          b !== this.offsetX && (a = c.getX(), c.setSlideCommandX(a + 10 > this.offsetX ? 0 : a + c.maxWidth + 10 > this.offsetX ? this.offsetX - a : c.maxWidth + 10));
         }
       });
       this.valueSetter_.on("pressup", function(a) {
         c.isAdjusting = !1;
-        delete c.viewValue_;
       });
       this.view_.addChild(this.valueSetter_);
       a = Entry.variableContainer.variables_.length;
@@ -13222,7 +13210,7 @@ Entry.Variable.prototype.isNumber = function() {
   return isNaN(this.value_) ? !1 : !0;
 };
 Entry.Variable.prototype.setValue = function(b) {
-  "slide" != this.type ? this.value_ = b : (b = Number(b), this.value_ = b < this.minValue_ ? this.minValue_ : b > this.maxValue_ ? this.maxValue_ : b, this.isFloatPoint() ? delete this.viewValue_ : this.viewValue_ = this.value_);
+  "slide" != this.type ? this.value_ = b : (b = Number(b), this.value_ = b < this.minValue_ ? this.minValue_ : b > this.maxValue_ ? this.maxValue_ : b);
   this.isCloud_ && Entry.variableContainer.updateCloudVariables();
   this.updateView();
 };
@@ -13311,12 +13299,13 @@ Entry.Variable.prototype.setType = function(b) {
 };
 Entry.Variable.prototype.getSlidePosition = function(b) {
   var a = this.minValue_;
-  return Math.abs((this.viewValue_ || this.value_) - a) / Math.abs(this.maxValue_ - a) * b + 10;
+  return Math.abs(this.value_ - a) / Math.abs(this.maxValue_ - a) * b + 10;
 };
-Entry.Variable.prototype.setSlideCommandX = function(b, a) {
-  var c = this.valueSetter_.graphics.command;
-  b = "undefined" == typeof b ? 10 : b;
-  c.x = a ? b + 10 : c.x + b;
+Entry.Variable.prototype.setSlideCommandX = function(b) {
+  var a = this.valueSetter_.graphics.command;
+  b = Math.max("undefined" == typeof b ? 10 : b, 10);
+  b = Math.min(this.maxWidth + 10, b);
+  a.x = b;
   this.updateSlideValueByView();
 };
 Entry.Variable.prototype.updateSlideValueByView = function() {
@@ -13325,7 +13314,7 @@ Entry.Variable.prototype.updateSlideValueByView = function() {
   1 < b && (b = 1);
   var a = parseFloat(this.minValue_), c = parseFloat(this.maxValue_), b = (a + Number(Math.abs(c - a) * b)).toFixed(2), b = parseFloat(b);
   b < a ? b = this.minValue_ : b > c && (b = this.maxValue_);
-  this.isFloatPoint() || (this.viewValue_ = b, b = Math.round(b));
+  this.isFloatPoint() || (b = Math.round(b));
   this.setValue(b);
 };
 Entry.Variable.prototype.getMinValue = function() {
