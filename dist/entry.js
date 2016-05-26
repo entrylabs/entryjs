@@ -722,7 +722,18 @@ Entry.Arduino = {name:"arduino", setZero:function() {
 Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a0:{name:Lang.Hw.port_en + " A0 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a1:{name:Lang.Hw.port_en + " A1 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a2:{name:Lang.Hw.port_en + " A2 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a3:{name:Lang.Hw.port_en + " A3 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a4:{name:Lang.Hw.port_en + " A4 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a5:{name:Lang.Hw.port_en + " A5 " + 
 Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}}, mode:"both"}};
 Entry.SensorBoard = {name:"sensorBoard", setZero:Entry.Arduino.setZero};
-Entry.dplay = {name:"dplay", setZero:Entry.Arduino.setZero};
+Entry.dplay = {name:"dplay", vel_value:255, setZero:Entry.Arduino.setZero, timeouts:[], removeTimeout:function(b) {
+  clearTimeout(b);
+  var a = this.timeouts;
+  b = a.indexOf(b);
+  0 <= b && a.splice(b, 1);
+}, removeAllTimeouts:function() {
+  var b = this.timeouts, a;
+  for (a in b) {
+    clearTimeout(b[a]);
+  }
+  this.timeouts = [];
+}};
 Entry.nemoino = {name:"nemoino", setZero:Entry.Arduino.setZero};
 Entry.CODEino = {name:"CODEino", setZero:Entry.Arduino.setZero, monitorTemplate:Entry.Arduino.monitorTemplate};
 Blockly.Blocks.arduino_text = {init:function() {
@@ -845,8 +856,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(c, d);
+  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
   return a.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1046,8 +1057,8 @@ Blockly.Blocks.dplay_select_led = {init:function() {
 Entry.block.dplay_select_led = function(b, a) {
   var c = a.getField("PORT"), d = 7;
   "7" == c ? d = 7 : "8" == c ? d = 8 : "9" == c ? d = 9 : "10" == c && (d = 10);
-  c = "on" == a.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(d, c);
+  c = a.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(d, "on" == c ? 255 : 0);
   return a.callReturn();
 };
 Blockly.Blocks.dplay_get_switch_status = {init:function() {
@@ -1106,7 +1117,7 @@ Blockly.Blocks.dplay_DCmotor = {init:function() {
 }};
 Entry.block.dplay_DCmotor = function(b, a) {
   var c = a.getField("PORT"), d = 0;
-  "3" == c && (d = 5);
+  "3" == c ? d = 5 : "6" == c && (d = 11);
   var e = a.getField("OPERATOR"), f = 0, g = 0;
   "FRONT" == e ? (f = 255, g = 0) : "REAR" == e ? (f = 0, g = 255) : "OFF" == e && (g = f = 0);
   Entry.hw.setDigitalPortValue(c, f);
@@ -2057,10 +2068,10 @@ Entry.block.wait_second = function(b, a) {
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
+  var c = a.getNumberValue("SECOND", a);
   setTimeout(function() {
     a.timeFlag = 0;
-  }, c);
+  }, 60 / (Entry.FPS || 60) * c * 1E3);
   return a;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -16847,16 +16858,16 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
   b._position = function() {
     var a = this.getAbsolutePosFromDocument();
     a.y += this.box.height / 2;
-    var b = $(document).height(), d = this.optionGroup.height();
+    var b = $(document).height(), d = this.optionGroup.height(), e = this.optionGroup.width();
     if (b < a.y + d) {
       a.x += this.box.width + 1;
-      var b = this.getAbsolutePosFromBoard(), e = this._blockView.getBoard().svgDom.height(), e = e - (e - b.y);
-      e - 20 < d && this.optionGroup.height(e - e % 20);
+      var b = this.getAbsolutePosFromBoard(), f = this._blockView.getBoard().svgDom.height(), f = f - (f - b.y);
+      f - 20 < d && this.optionGroup.height(f - f % 20);
       a.y -= this.optionGroup.height();
     } else {
-      a.x += this.box.width / 2 - this.optionGroup.width() / 2;
+      a.x += this.box.width / 2 - e / 2;
     }
-    this.optionGroup.css({left:a.x, top:a.y, width:this.optionGroup.width() + 3});
+    this.optionGroup.css({left:a.x, top:a.y, width:e + 20});
   };
   b.applyValue = function(a) {
     this.value != a && this.setValue(a);

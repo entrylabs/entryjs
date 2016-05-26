@@ -193,6 +193,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
         var documentHeight = $(document).height();
         var optionGroupHeight = this.optionGroup.height();
+        var optionGroupWidth = this.optionGroup.width();
 
         //not enough space below
         if (documentHeight < pos.y + optionGroupHeight) {
@@ -208,11 +209,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             }
 
             pos.y -= this.optionGroup.height();
-        } else pos.x += this.box.width/2 - this.optionGroup.width()/2;
+        } else pos.x += this.box.width/2 - optionGroupWidth/2;
 
         this.optionGroup.css({
             left: pos.x, top: pos.y,
-            width: this.optionGroup.width() + 3
+            width: optionGroupWidth + 20
         });
     };
 
