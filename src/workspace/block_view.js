@@ -484,7 +484,9 @@ Entry.BlockView.DRAG_RADIUS = 5;
                         blockView._toGlobalCoordinate();
                         blockView.dragMode = Entry.DRAG_MODE_DRAG;
                         blockView.block.getThread().changeEvent.notify();
-                        Entry.GlobalSvg.setView(blockView, workspaceMode);
+                        requestAnimationFrame(function(){
+                            Entry.GlobalSvg.setView(blockView, workspaceMode);
+                        });
                         isFirst = true;
                     }
 
@@ -510,7 +512,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
                         offsetY: mouseEvent.pageY
                     });
 
-                    Entry.GlobalSvg.position();
+                    requestAnimationFrame(Entry.GlobalSvg.position.bind(Entry.GlobalSvg));
                     if (!blockView.originPos)
                         blockView.originPos = {x: blockView.x, y: blockView.y};
                     if (isFirst)
