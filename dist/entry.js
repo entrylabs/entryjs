@@ -6939,23 +6939,23 @@ p.init = function(b) {
 p.generateView = function(b) {
   var a = Entry.createElement("div");
   a.addClass("entryContainerDoneWorkspace");
-  a.addClass("entryHidden");
   this.doneContainer = a;
-  a = Entry.createElement("iframe");
-  a.setAttribute("id", "doneProjectframe");
-  a.setAttribute("frameborder", 0);
-  a.setAttribute("src", "/api/iframe/project/" + b);
-  this.doneProjectFrame = a;
-  this.doneContainer.appendChild(a);
+  var c = Entry.createElement("iframe");
+  c.setAttribute("id", "doneProjectframe");
+  c.setAttribute("frameborder", 0);
+  c.setAttribute("src", "/api/iframe/project/" + b);
+  this.doneProjectFrame = c;
+  this.doneContainer.appendChild(c);
+  a.addClass("entryRemove");
 };
 p.getView = function() {
   return this.doneContainer;
 };
 p.resize = function() {
-  var b = document.getElementById("entryContainerWorkspaceId"), a = document.getElementById("doneProjectframe");
-  w = b.offsetWidth;
-  a.width = w + "px";
-  a.height = 9 * w / 16 + "px";
+  document.getElementById("entryContainerWorkspaceId");
+  var b = document.getElementById("doneProjectframe"), a = this.doneContainer.offsetWidth;
+  b.width = a + "px";
+  b.height = 9 * a / 16 + "px";
 };
 Entry.Engine = function() {
   function b(a) {
@@ -10531,12 +10531,12 @@ Entry.PropertyPanel = function() {
     for (var b in this.modes) {
       var d = this.modes[b];
       d.tabDom.removeClass("selected");
-      d.contentDom.addClass("entryHidden");
+      d.contentDom.addClass("entryRemove");
       d.obj.visible = !1;
     }
     b = this.modes[a];
     b.tabDom.addClass("selected");
-    b.contentDom.removeClass("entryHidden");
+    b.contentDom.removeClass("entryRemove");
     b.obj.resize && b.obj.resize();
     b.obj.visible = !0;
     this.selected = a;
