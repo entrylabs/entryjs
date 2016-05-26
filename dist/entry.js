@@ -17423,11 +17423,9 @@ Entry.GlobalSvg = {};
   };
   b.show = function() {
     this._container.removeClass("entryRemove");
-    this.svgDom.css("display", "block");
   };
   b.hide = function() {
     this._container.addClass("entryRemove");
-    this.svgDom.css("display", "none");
   };
   b.position = function() {
     var a = this._view;

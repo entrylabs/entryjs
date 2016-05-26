@@ -108,12 +108,10 @@ goog.provide('Entry.GlobalSvg');
 
     gs.show = function() {
         this._container.removeClass('entryRemove');
-        this.svgDom.css('display', 'block');
     };
 
     gs.hide = function() {
         this._container.addClass('entryRemove');
-        this.svgDom.css('display', 'none');
     };
 
     gs.position = function() {
