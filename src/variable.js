@@ -169,6 +169,9 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
                 return;
             }
             this.offsetX = -(this.x - evt.stageX*0.75 +240);
+            console.log('current', this.graphics.command.x);
+            console.log('hypo', Math.abs(slide.getX() - this.offsetX));
+            debugger;
             slide.setSlideCommandX(delta);
         });
         this.valueSetter_.on("pressup", function(evt) {

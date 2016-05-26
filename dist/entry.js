@@ -13087,7 +13087,19 @@ Entry.Variable.prototype.generateView = function(b) {
       this.valueSetter_.on("pressmove", function(a) {
         if (Entry.engine.isState("run")) {
           var b = .75 * a.stageX - 240 - this.offsetX, f = this.graphics.command.x;
-          0 >= b + f ? c.setSlideCommandX(0, !0) : b + f > c.maxWidth + 10 ? c.setSlideCommandX(c.maxWidth, !0) : (this.offsetX = -(this.x - .75 * a.stageX + 240), c.setSlideCommandX(b));
+          if (0 >= b + f) {
+            c.setSlideCommandX(0, !0);
+          } else {
+            if (b + f > c.maxWidth + 10) {
+              c.setSlideCommandX(c.maxWidth, !0);
+            } else {
+              this.offsetX = -(this.x - .75 * a.stageX + 240);
+              console.log("current", this.graphics.command.x);
+              console.log("hypo", Math.abs(c.getX() - this.offsetX));
+              debugger;
+              c.setSlideCommandX(b);
+            }
+          }
         }
       });
       this.valueSetter_.on("pressup", function(a) {
