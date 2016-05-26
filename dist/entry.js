@@ -15160,9 +15160,11 @@ Entry.BlockMenu = function(b, a, c, d) {
     this._scroller && this.svgGroup.appendChild(this._scroller.svgGroup);
   };
   b.align = function() {
-    if (this.code) {
+    var a = this.code;
+    if (a) {
       this._clearSplitters();
-      for (var a = this.code.getThreads(), b = 10, d = "LEFT" == this._align ? 10 : this.svgDom.width() / 2, e, f = 0, g = a.length;f < g;f++) {
+      a.view && a.view.reDraw();
+      for (var a = a.getThreads(), b = 10, d = "LEFT" == this._align ? 10 : this.svgDom.width() / 2, e, f = 0, g = a.length;f < g;f++) {
         var h = a[f].getFirstBlock(), k = h.view, h = Entry.block[h.type];
         this.checkBanClass(h) ? k.set({display:!1}) : (k.set({display:!0}), h = h.class, e && e !== h && (this._createSplitter(b), b += 15), e = h, h = d - k.offsetX, "CENTER" == this._align && (h -= k.width / 2), b -= k.offsetY, k._moveTo(h, b, !1), b += k.height + 15);
       }
@@ -15341,8 +15343,6 @@ Entry.BlockMenu = function(b, a, c, d) {
   };
   b.reDraw = function() {
     this.selectMenu(this.lastSelector, !0);
-    var a = this.code && this.code.view ? this.code.view : null;
-    a && a.reDraw();
   };
   b._handleDragBlock = function() {
     this._boardBlockView = null;
@@ -15979,18 +15979,20 @@ Entry.BlockView.DRAG_RADIUS = 5;
     this.svgGroup.removeClass("activated");
   };
   b.reDraw = function() {
-    var a = this.block;
-    this._updateContents();
-    var b = a.params;
-    if (b) {
-      for (var d = 0;d < b.length;d++) {
-        var e = b[d];
-        e instanceof Entry.Block && e.view.reDraw();
+    if (this.visible) {
+      var a = this.block;
+      requestAnimationFrame(this._updateContents.bind(this));
+      var b = a.params;
+      if (b) {
+        for (var d = 0;d < b.length;d++) {
+          var e = b[d];
+          e instanceof Entry.Block && e.view.reDraw();
+        }
       }
-    }
-    if (a = a.statements) {
-      for (d = 0;d < a.length;d++) {
-        a[d].view.reDraw();
+      if (a = a.statements) {
+        for (d = 0;d < a.length;d++) {
+          a[d].view.reDraw();
+        }
       }
     }
   };
