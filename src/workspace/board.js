@@ -907,7 +907,7 @@ Entry.Board.OPTION_CLEAR = 2;
             {
                 activated: true,
                 option: {
-                    text: '블록 정리하기',
+                    text: Lang.Blocks.tidy_up_block,
                     callback: function(){
                         that.alignThreads();
                     }
@@ -916,7 +916,7 @@ Entry.Board.OPTION_CLEAR = 2;
             {
                 activated: true,
                 option: {
-                    text: '모든 코드 삭제하기',
+                    text: Lang.Blocks.Clear_all_blocks,
                     callback: function(){
                         that.code.clear();
                     }
