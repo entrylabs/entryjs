@@ -183,7 +183,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
                 });
             })(element, value);
         }
-
         this._position();
     };
 
@@ -211,7 +210,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             pos.y -= this.optionGroup.height();
         } else pos.x += this.box.width/2 - this.optionGroup.width()/2;
 
-        this.optionGroup.css({left: pos.x, top: pos.y});
+        this.optionGroup.css({
+            left: pos.x, top: pos.y,
+            width: this.optionGroup.width() + 3
+        });
     };
 
     p.applyValue = function(value) {

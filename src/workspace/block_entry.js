@@ -9886,10 +9886,7 @@ Entry.block = {
                     "type": "number",
                     "params": [ "2" ]
                 },
-                {
-                    "type": "number",
-                    "params": [ "2" ]
-                },
+                null,
                 null
             ],
             "type": "rotate_by_angle_time"
@@ -17202,59 +17199,64 @@ Entry.block = {
             ],
             "type": "dplay_get_number_sensor_value"
         },
-        "class": "arduino_value"
+        "class": "dplay_get"
     },
-    "dplay_get_digital_value": {
-        "parent": "arduino_get_digital_value",
+    "dplay_get_dust_sensor_value": {
+        "parent": "arduino_get_number_sensor_value",
+        "template": "아날로그 %1 번  먼지 센서값",
         "isNotFor": [
             "dplay"
         ],
         "def": {
             "params": [
                 {
-                    "type": "arduino_get_port_number"
+                    "type": "arduino_get_sensor_number"
                 }
             ],
-            "type": "dplay_get_digital_value"
+            "type": "dplay_get_dust_sensor_value"
         },
-        "class": "arduino_value"
+        "class": "dplay_get"
     },
-    "dplay_toggle_led": {
-        "parent": "arduino_toggle_led",
+    "dplay_get_CO2_sensor_value": {
+        "parent": "arduino_get_number_sensor_value",
+        "template": "아날로그 %1 번  이산화탄소 센서값",
         "isNotFor": [
             "dplay"
         ],
         "def": {
             "params": [
                 {
-                    "type": "arduino_get_port_number"
-                },
-                null,
-                null
+                    "type": "arduino_get_sensor_number"
+                }
             ],
-            "type": "dplay_toggle_led"
+            "type": "dplay_get_CO2_sensor_value"
         },
-        "class": "arduino_set"
+        "class": "dplay_get"
     },
-    "dplay_toggle_pwm": {
-        "parent": "arduino_toggle_pwm",
+    "dplay_get_gas_sensor_value": {
+        "parent": "arduino_get_number_sensor_value",
+        "template": "아날로그 %1 번 가스 센서값",
         "isNotFor": [
             "dplay"
         ],
         "def": {
             "params": [
                 {
-                    "type": "arduino_get_pwm_port_number"
-                },
-                {
-                    "type": "arduino_text",
-                    "params": [ "255" ]
-                },
-                null
+                    "type": "arduino_get_sensor_number"
+                }
             ],
-            "type": "dplay_toggle_pwm"
+            "type": "dplay_get_gas_sensor_value",
+            "id": "hh5b"
         },
-        "class": "arduino_set"
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "dplay_get",
+        "isNotFor": ["dplay"],
+        "func": function (sprite, script) {
+            var signal = script.getValue("VALUE", script);
+            return Entry.hw.getAnalogPortValue(signal[1]);
+        }
     },
     "dplay_convert_scale": {
         "parent": "arduino_convert_scale",
@@ -17267,7 +17269,8 @@ Entry.block = {
                     "type": "arduino_get_number_sensor_value",
                     "params": [
                         {
-                            "type": "arduino_get_sensor_number"
+                            "type": "arduino_get_sensor_number",
+                            "id": "bl5e"
                         }
                     ]
                 },
@@ -17290,7 +17293,7 @@ Entry.block = {
             ],
             "type": "dplay_convert_scale"
         },
-        "class": "arduino"
+        "class": "dplay_get"
     },
     "dplay_get_value": {
         "color": "#00979D",
@@ -17304,12 +17307,12 @@ Entry.block = {
         }, {
             "type": "Dropdown",
             "options": [
+                ["적외선", "INFR"],
                 ["가변저항", "ADJU"],
                 ["빛센서", "LIGHT"],
                 ["온도센서", "TEMP"],
-                ["조이스틱 X", "JOYS"],
-                ["조이스틱 Y", "JOYS"],
-                ["적외선", "INFR"]
+                ["조이스틱 X", "JOYSX"],
+                ["조이스틱 Y", "JOYSY"]
             ],
             "value": "ADJU",
             "fontSize": 11,
@@ -17327,257 +17330,27 @@ Entry.block = {
             "VALUE": 0,
             "OPERATOR": 1
         },
-        "class": "dplay_set",
+        "class": "dplay_get",
         "isNotFor": ["dplay"],
         "func": function (sprite, script) {
             var signal = script.getValue("VALUE", script);
             return Entry.hw.getAnalogPortValue(signal[1]);
         }
     },
-    "dplay_get_tilt": {
-        "color": "#00979D",
-        "fontColor": "#FFF",
-        "skeleton": "basic_boolean_field",
-        "statements": [],
-        "template": "기울기센서 상태가 %1  ",
-        "params": [{
-            "type": "Dropdown",
-            "options": [
-                ["왼쪽", "LEFT"],
-                ["오른쪽", "LIGHT"]
-            ],
-            "value": "LEFT",
-            "fontSize": 11,
-            'arrowColor': EntryStatic.ARROW_COLOR_HW
-        }],
-        "events": {},
+    "dplay_get_digital_value": {
+        "parent": "arduino_get_digital_value",
+        "isNotFor": [
+            "dplay"
+        ],
         "def": {
-            "params": [null],
-            "type": "dplay_get_tilt"
-        },
-        "paramsKeyMap": {
-            "STATUS": 0
-        },
-        "class": "dplay_set",
-        "isNotFor": ["dplay"],
-        "func": function (sprite, script) {
-            var value1 = script.getField("STATUS", script);
-            var value2 = 12;
-            if (value1 == "LIGHT") return Entry.hw.getDigitalPortValue(value2) == 1 ? 1 : 0;
-            else return Entry.hw.getDigitalPortValue(value2) == 0 ? 1 : 0;
-        }
-    },
-    "dplay_DCmotor": {
-        "color": "#00979D",
-        "fontColor": "#FFF",
-        "skeleton": "basic",
-        "statements": [],
-        "template": "%1  DC모터 상태를 %2 %3",
-        "params": [{
-            "type": "Dropdown",
-            "options": [
-                ["왼쪽", "3"],
-                ["오른쪽", "6"]
+            "params": [
+                {
+                    "type": "arduino_get_port_number"
+                }
             ],
-            "value": "3",
-            "fontSize": 11,
-            'arrowColor': EntryStatic.ARROW_COLOR_HW
-        }, {
-            "type": "Dropdown",
-            "options": [
-                ["정방향", "FRONT"],
-                ["역방향", "REAR"],
-                ["정지", "OFF"]
-            ],
-            "value": "FRONT",
-            "fontSize": 11,
-            'arrowColor': EntryStatic.ARROW_COLOR_HW
-        }, {
-            "type": "Indicator",
-            "img": "block_icon/hardware_03.png",
-            "size": 12
-        }],
-        "events": {},
-        "def": {
-            "params": [null, null, null],
-            "type": "dplay_DCmotor"
+            "type": "dplay_get_digital_value"
         },
-        "paramsKeyMap": {
-            "PORT": 0,
-            "OPERATOR": 1
-        },
-        "class": "dplay",
-        "isNotFor": ["dplay"],
-        "func": function (sprite, script) {
-            var port1 = script.getField("PORT");
-            var port2 = 0;
-            if (port1 == "3") port2 = 5;
-            else if (port1 == "6") value2 = 11;
-            var operator = script.getField("OPERATOR");
-            var value1 = 0;
-            var value2 = 0;
-            if (operator == "FRONT") {
-                value1 = 255;
-                value2 = 0;
-            }
-            else if (operator == "REAR") {
-                value1 = 0;
-                value2 = 255;
-            }
-            else if (operator == "OFF") {
-                value1 = 0;
-                value2 = 0;
-            }
-            Entry.hw.setDigitalPortValue(port1, value1);
-            Entry.hw.setDigitalPortValue(port2, value2);
-            return script.callReturn();
-        }
-    },
-    "dplay_buzzer": {
-        "color": "#00979D",
-        "fontColor": "#FFF",
-        "skeleton": "basic",
-        "statements": [],
-        "template": "부저를  %1 로 %2 박자로 연주하기 %3",
-        "params": [{
-            "type": "Dropdown",
-            "options": [
-                ["도", "1"],
-                ["레", "2"],
-                ["미", "3"]
-            ],
-            "value": "1",
-            "fontSize": 11,
-            'arrowColor': EntryStatic.ARROW_COLOR_HW
-        }, {
-            "type": "Block",
-            "accept": "string"
-        }, {
-            "type": "Indicator",
-            "img": "block_icon/hardware_03.png",
-            "size": 12
-        }],
-        "events": {},
-        "def": {
-            "params": [null, {
-                "type": "arduino_text",
-                "params": ["0"]
-            }, null],
-            "type": "dplay_buzzer"
-        },
-        "paramsKeyMap": {
-            "PORT": 0,
-            "VALUE": 1
-        },
-        "class": "dplay",
-        "isNotFor": ["dplay"],
-        "func": function (sprite, script) {
-            var port1 = script.getField("PORT");
-            var port = 2;
-            if (port1 == "1") port = 2;
-            else if (port1 == "2") port = 4;
-            else if (port1 == "3") port = 7;
-            var value = script.getNumberValue("VALUE");
-            value = Math.round(value);
-            value = Math.max(value, 0);
-            value = Math.min(value, 100);
-            Entry.hw.setDigitalPortValue(port, value);
-            return script.callReturn();
-        }
-    },
-    "dplay_servo": {
-        "color": "#00979D",
-        "fontColor": "#FFF",
-        "skeleton": "basic",
-        "statements": [],
-        "template": "서보모터 각도를 %1 로 이동 %2",
-        "params": [{
-            "type": "Block",
-            "accept": "string"
-        }, {
-            "type": "Indicator",
-            "img": "block_icon/hardware_03.png",
-            "size": 12
-        }],
-        "events": {},
-        "def": {
-            "params": [{
-                "type": "arduino_text",
-                "params": ["255"],
-                "id": "5ld8"
-            }, null],
-            "type": "dplay_servo",
-            "id": "lo2z"
-        },
-        "paramsKeyMap": {
-            "VALUE": 0
-        },
-        "class": "dplay",
-        "isNotFor": ["dplay"],
-        "func": function (sprite, script) {
-            var port = 9;
-            var value = script.getNumberValue("VALUE");
-            value = Math.round(value);
-            value = Math.max(value, 0);
-            value = Math.min(value, 180);
-            Entry.hw.setDigitalPortValue(port, value);
-            return script.callReturn();
-        }
-    },
-    "dplay_select_led": {
-        "color": "#00979D",
-        "fontColor": "#FFF",
-        "skeleton": "basic",
-        "statements": [],
-        "template": "디지털 %1 LED 상태를 %2 %3",
-        "params": [{
-            "type": "Dropdown",
-            "options": [
-                ["7", "7"],
-                ["8", "8"],
-                ["9", "9"],
-                ["10", "10"]
-            ],
-            "value": "7",
-            "fontSize": 11,
-            'arrowColor': EntryStatic.ARROW_COLOR_HW
-        }, {
-            "type": "Dropdown",
-            "options": [
-                ["켜기", "on"],
-                ["끄기", "off"]
-            ],
-            "value": "on",
-            "fontSize": 11,
-            'arrowColor': EntryStatic.ARROW_COLOR_HW
-        }, {
-            "type": "Indicator",
-            "img": "block_icon/hardware_03.png",
-            "size": 12
-        }],
-        "events": {},
-        "def": {
-            "params": [null, null, null],
-            "type": "dplay_select_led"
-        },
-        "paramsKeyMap": {
-            "PORT": 0,
-            "OPERATOR": 1
-        },
-        "class": "dplay",
-        "isNotFor": ["dplay"],
-        "func": function (sprite, script) {
-            var port1 = script.getField("PORT");
-            var port = 7;
-            if (port1 == "7") port = 7;
-            else if (port1 == "8") port = 8;
-            else if (port1 == "9") port = 9;
-            else if (port1 == "10") port = 10;
-            var operator = script.getField("OPERATOR");
-            var value = operator == "on" ? 255 : 0;
-            Entry.hw.setDigitalPortValue(port, value);
-            return script.callReturn();
-        }
+        "class": "dplay_get"
     },
     "dplay_get_switch_status": {
         "color": "#00979D",
@@ -17613,7 +17386,7 @@ Entry.block = {
             "PORT": 0,
             "STATUS": 1
         },
-        "class": "dplay_set",
+        "class": "dplay_get",
         "isNotFor": ["dplay"],
         "func": function (sprite, script) {
             var port1 = script.getField("PORT");
@@ -17621,41 +17394,694 @@ Entry.block = {
             if (port1 == "2") port = 2;
             else if (port1 == "4") port = 4;
             var value1 = script.getField("STATUS");
-            if (value1 == "OFF") return Entry.hw.getDigitalPortValue(port) == 1 ? 1 : 0;
+            if (value1 == "ON") return Entry.hw.getDigitalPortValue(port) == 1 ? 1 : 0;
             else return Entry.hw.getDigitalPortValue(port) == 0 ? 1 : 0;
         }
     },
-    "dplay_get_light_status": {
+    "dplay_get_tilt": {
         "color": "#00979D",
         "fontColor": "#FFF",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "빛센서가  %1  ",
+        "template": "디지털  %1 번 기울기센서가 %2  ",
         "params": [{
             "type": "Dropdown",
             "options": [
-                ["밝음", "BRIGHT"],
-                ["어두움", "DARK"]
+                ["2", "2"],
+                ["4", "4"]
             ],
-            "value": "BRIGHT",
+            "value": "2",
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
+        }, {
+            "type": "Dropdown",
+            "options": [
+                ["왼쪽", "LEFT"],
+                ["오른쪽", "LIGHT"]
+            ],
+            "value": "LEFT",
             "fontSize": 11,
             'arrowColor': EntryStatic.ARROW_COLOR_HW
         }],
         "events": {},
         "def": {
-            "params": [null],
-            "type": "dplay_get_light_status"
+            "params": [null, null],
+            "type": "dplay_get_tilt"
         },
         "paramsKeyMap": {
-            "STATUS": 0
+            "PORT": 0,
+            "STATUS": 1
+        },
+        "class": "dplay_get",
+        "isNotFor": ["dplay"],
+        "func": function (sprite, script) {
+            var port1 = script.getField("PORT");
+            var port = 2;
+            if (port1 == "2") port = 2;
+            else if (port1 == "4") port = 4;
+            var value1 = script.getField("STATUS");
+            if (value1 == "LIGHT") return Entry.hw.getDigitalPortValue(port) == 1 ? 1 : 0;
+            else return Entry.hw.getDigitalPortValue(port) == 0 ? 1 : 0;
+        }
+    },
+    "dplay_toggle_led": {
+        "parent": "arduino_toggle_led",
+        "isNotFor": [
+            "dplay"
+        ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_port_number"
+                },
+                null,
+                null
+            ],
+            "type": "dplay_toggle_led"
+        },
+        "class": "dplay_set"
+    },
+    "dplay_toggle_pwm": {
+        "parent": "arduino_toggle_pwm",
+        "isNotFor": [
+            "dplay"
+        ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_pwm_port_number"
+                },
+                {
+                    "type": "arduino_text",
+                    "params": [ "255" ]
+                },
+                null
+            ],
+            "type": "dplay_toggle_pwm"
+        },
+        "class": "dplay_set"
+    },
+    "dplay_select_led": {
+        "color": "#00979D",
+        "fontColor": "#FFF",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "디지털 %1 LED 상태를 %2 %3",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["7", "7"],
+                ["8", "8"],
+                ["9", "9"],
+                ["10", "10"],
+                ['12', "12"],
+                ['13', "13"]
+            ],
+            "value": "7",
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
+        }, {
+            "type": "Dropdown",
+            "options": [
+                ["켜기", "ON"],
+                ["끄기", "OFF"]
+            ],
+            "value": "ON",
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [null, null, null],
+            "type": "dplay_select_led"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "OPERATOR": 1
         },
         "class": "dplay_set",
         "isNotFor": ["dplay"],
         "func": function (sprite, script) {
-            var value1 = script.getField("STATUS", script);
-            var value2 = 1;
-            if (value1 == "DARK") return Entry.hw.getAnalogPortValue(value2) > 800 ? 1 : 0;
-            else return Entry.hw.getAnalogPortValue(value2) < 800 ? 1 : 0;
+            var port1 = script.getField("PORT");
+            var port = 7;
+            if (port1 == "7") port = 7;
+            else if (port1 == "8") port = 8;
+            else if (port1 == "9") port = 9;
+            else if (port1 == "10") port = 10;
+            else if (port1 == "12") port = 12;
+            else if (port1 == "13") port = 13;
+            var operator = script.getField("OPERATOR");
+            var value = operator == "ON" ? 255 : 0;
+            Entry.hw.setDigitalPortValue(port, value);
+            return script.callReturn();
+        }
+    },
+    "dplay_DCmotor": {
+        "color": "#00979D",
+        "fontColor": "#FFF",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "%1  DC모터 상태를 %2 %3",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["왼쪽", "1"],
+                ["오른쪽", "2"],
+                ['양쪽', "3"]
+            ],
+            "value": "1",
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
+        }, {
+            "type": "Dropdown",
+            "options": [
+                ["정방향", "FRONT"],
+                ["역방향", "REAR"],
+                ["정지", "OFF"]
+            ],
+            "value": "FRONT",
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [null, null, null],
+            "type": "dplay_DCmotor"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "OPERATOR": 1
+        },
+        "class": "dplay_set",
+        "isNotFor": ["dplay"],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var port = script.getField("PORT");
+            var port1 = 0;
+            var port2 = 0;
+            var port3 = 0;
+            var port4 = 0;
+            if (port == "1") {
+              port1 = 3; port2 = 5;
+            }
+            else if (port == "2") {
+              port1 = 6; port2 = 11;
+            }
+            else if (port == "3") {
+              port1 = 3; port2 = 5; port3 = 11; port4 = 6;
+            }
+            var operator = script.getField("OPERATOR");
+            var value1 = 0;
+            var value2 = 0;
+            var value3 = 0;
+            var value4 = 0;
+            if (operator == "FRONT") {
+                value1 = 255;
+                value2 = 0;
+            }
+            else if (operator == "REAR") {
+                value1 = 0;
+                value2 = 255;
+            }
+            else if (operator == "OFF") {
+                value1 = 0;
+                value2 = 0;
+            }
+            Entry.hw.setDigitalPortValue(port1, value2);
+            Entry.hw.setDigitalPortValue(port2, value1);
+            Entry.hw.setDigitalPortValue(port3, value2);
+            Entry.hw.setDigitalPortValue(port4, value1);
+            return script.callReturn();
+        }
+    },
+    "dplay_DCmotor_speed": {
+        "color": "#00979D",
+        "fontColor": "#FFF",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "%1  DC모터 속도를 %2(으)로 정하기 %3",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["왼쪽", "1"],
+                ["오른쪽", "2"],
+                ['양쪽', "3"]
+            ],
+            "value": "1",
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params":  [null, {
+                "type": "text",
+                "params": ["100"]
+            }, null],
+            "type": "dplay_DCmotor_speed"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "dplay_set",
+        "isNotFor": ["dplay"],
+        "func": function (sprite, script) {
+          var port = script.getField("PORT");
+          var port1 = 0;
+          var port2 = 0;
+          var port3 = 0;
+          var port4 = 0;
+          if (port == "1") {
+            port1 = 3; port2 = 5;
+          }
+          else if (port == "2") {
+            port1 = 11; port2 = 6;
+          }
+          else if (port == "3") {
+            port1 = 3; port2 = 5; port3 = 11; port4 = 6;
+          }
+            var operator = script.getNumberValue("VALUE", script);
+            operator = Math.max(operator, -100);
+            operator = Math.min(operator, 100);
+            var value1 = 0;
+            var value2 = 0;
+            var result = 0;
+            if (operator == 0) {
+                value1 = 0;
+                value2 = 0;
+            }
+            else if (operator > 0) {
+                result = operator + 155;
+                result = Math.round(result);
+                value1 = 0;
+                value2 = result;
+            }
+            else if (operator < 0) {
+                result = operator - 155;
+                result = Math.round(result);
+                value1 = -result;
+                value2 = 0;
+            }
+            Entry.hw.setDigitalPortValue(port1, value1);
+            Entry.hw.setDigitalPortValue(port2, value2);
+            Entry.hw.setDigitalPortValue(port3, value1);
+            Entry.hw.setDigitalPortValue(port4, value2);
+            return script.callReturn();
+        }
+    },
+    "dplay_buzzer": {
+        "color": "#00979D",
+        "fontColor": "#FFF",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "디지털 %1번 부저를  %2 %3 박자로 연주하기 %4",
+        "params": [{
+          "type": "Dropdown",
+          "options": [
+              ["7", "7"],
+              ["8", "8"],
+              ["9", "9"],
+              ["10", "10"],
+              ['12', "12"],
+              ['13', "13"]
+          ],
+          "value": "7",
+          "fontSize": 11,
+          'arrowColor': EntryStatic.ARROW_COLOR_HW
+        }, {
+            "type": "Dropdown",
+            "options": [
+                ["도", "1"],
+                ["레", "2"],
+                ["미", "3"],
+                ['파', "4"],
+                ['솔', "5"],
+                ['라', "6"],
+                ['시', "7"]
+            ],
+            "value": "1",
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [null, null, {
+                "type": "text",
+                "params": ["0"]
+            }, null],
+            "type": "dplay_buzzer"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "SCALE": 1,
+            "VALUE": 2
+        },
+        "class": "dplay_set",
+        "isNotFor": ["dplay"],
+        "func": function (sprite, script) {
+            var port1 = script.getField("PORT");
+            var port = 2;
+            if (port1 == "1") port = 2;
+            else if (port1 == "2") port = 4;
+            else if (port1 == "3") port = 7;
+            var value = script.getNumberValue("VALUE");
+            value = Math.round(value);
+            value = Math.max(value, 0);
+            value = Math.min(value, 100);
+            Entry.hw.setDigitalPortValue(port, value);
+            return script.callReturn();
+        }
+    },
+    "dplay_servo": {
+        "color": "#00979D",
+        "fontColor": "#FFF",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "서보모터 각도를 %1 (도)로 이동 %2",
+        "params": [{
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [{
+                "type": "text",
+                "params": ["180"],
+                "id": "5ld8"
+            }, null],
+            "type": "dplay_servo",
+            "id": "lo2z"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "dplay_set",
+        "isNotFor": ["dplay"],
+        "func": function (sprite, script) {
+            var port = 9;
+            var value = script.getNumberValue("VALUE");
+            value = Math.round(value);
+            value = Math.max(value, 0);
+            value = Math.min(value, 180);
+            Entry.hw.setDigitalPortValue(port, value);
+            return script.callReturn();
+        }
+    },
+    "dplay_Robot_run": {
+        "color": "#00979D",
+        "fontColor": "#FFF",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "로봇을 %1 하기 %2",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+              ['전진',"1"],
+              ['후진',"2"],
+              ['우회전',"3"],
+              ['좌회전',"4"]
+            ],
+            "value": "1",
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params":  [null, null],
+            "type": "dplay_Robot_run"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "dplay_robot",
+        "isNotFor": ["dplay"],
+        "func": function (sprite, script) {
+            var port = script.getField("PORT");
+            var port1 = 3;
+            var port2 = 5;
+            var port3 = 6;
+            var port4 = 11;
+            var value1 = 0;
+            var value2 = 0;
+            var value3 = 0;
+            var value4 = 0;
+            var temp = Entry.dplay.vel_value;
+            if(port == "1") {
+              value1 = 0; value2 = temp; value3 = temp; value4 = 0;
+            }
+            else if(port == "2") {
+              value1 = temp; value2 = 0; value3 = 0; value4 = temp;
+            }
+            else if(port == "3") {
+              value1 = 0; value2 = temp; value3 = 0; value4 = 0;
+            }
+            else if(port == "4") {
+              value1 = 0; value2 = 0; value3 = temp; value4 = 0;
+            }
+            Entry.hw.setDigitalPortValue(port1, value1);
+            Entry.hw.setDigitalPortValue(port2, value2);
+            Entry.hw.setDigitalPortValue(port3, value3);
+            Entry.hw.setDigitalPortValue(port4, value4);
+            return script.callReturn();
+        }
+    },
+    "dplay_Robot_run_sec": {
+        "color": "#00979D",
+        "fontColor": "#FFF",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "로봇을 %1 초 동안 %2 하기 %3",
+        "params": [{
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Dropdown",
+            "options": [
+              ['전진',"1"],
+              ['후진',"2"],
+              ['우회전',"3"],
+              ['좌회전',"4"]
+            ],
+            "value": "1",
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params":  [{
+                "type": "text",
+                "params": ["1"]
+            }, null, null],
+            "type": "dplay_Robot_run_sec"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0,
+            "PORT": 1
+        },
+        "class": "dplay_robot",
+        "isNotFor": ["dplay"],
+        "func": function (sprite, script) {
+            var port1 = 3;
+            var port2 = 5;
+            var port3 = 6;
+            var port4 = 11;
+            var value1 = 0;
+            var value2 = 0;
+            var value3 = 0;
+            var value4 = 0;
+            var temp = Entry.dplay.vel_value;
+            var port = script.getField("PORT");
+            if (!script.isStart) {
+              script.isStart = true;
+              script.timeFlag = 1;
+              var timeValue = script.getNumberValue("VALUE") * 1000;
+              var timer = setTimeout(function() {
+                script.timeFlag = 0;
+                Entry.dplay.removeTimeout(timer);
+              }, timeValue);
+              Entry.dplay.timeouts.push(timer);
+              return script;
+            } else if (script.timeFlag == 1) {
+             if(port == "1") {
+                value1 = 0; value2 = temp; value3 = temp; value4 = 0;
+              }
+              else if(port == "2") {
+                value1 = temp; value2 = 0; value3 = 0; value4 = temp;
+              }
+              else if(port == "3") {
+                value1 = 0; value2 = temp; value3 = 0; value4 = 0;
+              }
+              else if(port == "4") {
+                value1 = 0; value2 = 0; value3 = temp; value4 = 0;
+              }
+              Entry.hw.setDigitalPortValue(port1, value1);
+              Entry.hw.setDigitalPortValue(port2, value2);
+              Entry.hw.setDigitalPortValue(port3, value3);
+              Entry.hw.setDigitalPortValue(port4, value4);
+              return script;
+            } else {
+              delete script.isStart;
+              delete script.timeFlag;
+              Entry.engine.isContinue = false;
+              value1 = 0;
+              value2 = 0;
+              value3 = 0;
+              value4 = 0;
+              return script.callReturn();
+            }
+        }
+    },
+    "dplay_robot_speed_sel": {
+        "color": "#00979D",
+        "fontColor": "#FFF",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "%1 바퀴 속도를 %2(으)로 정하기 %3",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+              ['왼쪽',"1"],
+              ['오른쪽',"2"],
+              ['양쪽', "3"]
+            ],
+            "value": "1",
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params":  [null, {
+                "type": "text",
+                "params": ["100"]
+            }, null],
+            "type": "dplay_robot_speed_sel"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "dplay_robot",
+        "isNotFor": ["dplay"],
+        "func": function (sprite, script) {
+            var port = script.getField("PORT");
+            var port1 = 0;
+            var port2 = 0;
+            var port3 = 0;
+            var port4 = 0;
+            if (port == "1") {
+              port1 = 3; port2 = 5;
+            }
+            else if (port == "2") {
+              port1 = 11; port2 = 6;
+            }
+            else if (port == "3") {
+              port1 = 3; port2 = 5; port3 = 11; port4 = 6;
+            }
+            var operator = script.getNumberValue("VALUE", script);
+            operator = Math.max(operator, -100);
+            operator = Math.min(operator, 100);
+            var value1 = 0;
+            var value2 = 0;
+            var result = 0;
+            if (operator == 0) {
+                value1 = 0;
+                value2 = 0;
+                Entry.dplay.vel_value = value2;
+            }
+            else if (operator > 0) {
+                result = operator + 155;
+                result = Math.round(result);
+                value1 = 0;
+                value2 = result;
+                Entry.dplay.vel_value = value2;
+            }
+            else if (operator < 0) {
+                result = operator - 155;
+                result = Math.round(result);
+                value1 = -result;
+                value2 = 0;
+                Entry.dplay.vel_value = value2;
+            }
+            Entry.hw.setDigitalPortValue(port1, value1);
+            Entry.hw.setDigitalPortValue(port2, value2);
+            Entry.hw.setDigitalPortValue(port3, value1);
+            Entry.hw.setDigitalPortValue(port4, value2);
+            return script.callReturn();
+        }
+    },
+    "dplay_robot_stop": {
+        "color": "#00979D",
+        "fontColor": "#FFF",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "로봇을 정지하기 %1",
+        "params": [{
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params":  [null],
+            "type": "dplay_robot_stop"
+        },
+        "paramsKeyMap": {
+        },
+        "class": "dplay_robot",
+        "isNotFor": ["dplay"],
+        "func": function (sprite, script) {
+            var port1 = 3;
+            var port2 = 5;
+            var port3 = 6;
+            var port4 = 11;
+            var value1 = 0;
+            var value2 = 0;
+            Entry.hw.setDigitalPortValue(port1, value1);
+            Entry.hw.setDigitalPortValue(port2, value2);
+            Entry.hw.setDigitalPortValue(port4, value1);
+            Entry.hw.setDigitalPortValue(port3, value2);
+            return script.callReturn();
         }
     },
     "nemoino_get_number_sensor_value": {
@@ -18018,4 +18444,3 @@ Entry.block = {
 if (typeof exports == "object") {
     exports.block = Entry.block;
 }
-

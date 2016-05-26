@@ -845,8 +845,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
+  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(c, d);
   return a.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1046,8 +1046,8 @@ Blockly.Blocks.dplay_select_led = {init:function() {
 Entry.block.dplay_select_led = function(b, a) {
   var c = a.getField("PORT"), d = 7;
   "7" == c ? d = 7 : "8" == c ? d = 8 : "9" == c ? d = 9 : "10" == c && (d = 10);
-  c = a.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(d, "on" == c ? 255 : 0);
+  c = "on" == a.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(d, c);
   return a.callReturn();
 };
 Blockly.Blocks.dplay_get_switch_status = {init:function() {
@@ -2057,10 +2057,10 @@ Entry.block.wait_second = function(b, a) {
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a);
+  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
   setTimeout(function() {
     a.timeFlag = 0;
-  }, 60 / (Entry.FPS || 60) * c * 1E3);
+  }, c);
   return a;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -10364,7 +10364,7 @@ Entry.Pdf = function(b) {
 p = Entry.Pdf.prototype;
 p.generateView = function(b) {
   var a = Entry.createElement("div", "entryPdfWorkspace");
-  a.addClass("entryHidden");
+  a.addClass("entryRemove");
   this._view = a;
   var c = "/pdfjs/web/viewer.html";
   b && "" != b && (c += "?file=" + b);
@@ -12315,7 +12315,7 @@ Entry.Utils.xmlToJsonData = function(b) {
       var e = {category:d.getAttribute("id"), blocks:[]}, d = d.childNodes;
       for (c in d) {
         var f = d[c];
-        f.tagName && e.blocks.push(f.getAttribute("type"));
+        f.tagName && (f = f.getAttribute("type")) && e.blocks.push(f);
       }
       a.push(e);
     }
@@ -12976,7 +12976,7 @@ p.closeConnection = function() {
   this.socket && this.socket.close();
 };
 p.downloadConnector = function() {
-  window.open("http://download.play-entry.org/apps/Entry_HW_1.5.2.exe", "_blank").focus();
+  window.open("http://download.play-entry.org/apps/Entry_HW_1.5.3_Setup.exe", "_blank").focus();
 };
 p.downloadSource = function() {
   window.open("http://play-entry.com/down/board.ino", "_blank").focus();
@@ -15250,6 +15250,7 @@ Entry.BlockMenu = function(b, a, c, d) {
   b.getCategoryCodes = function(a) {
     a = this._convertSelector(a);
     var b = this._categoryCodes[a];
+    b || (b = []);
     b instanceof Entry.Code || (b = this._categoryCodes[a] = new Entry.Code(b));
     return b;
   };
@@ -16857,7 +16858,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     } else {
       a.x += this.box.width / 2 - this.optionGroup.width() / 2;
     }
-    this.optionGroup.css({left:a.x, top:a.y});
+    this.optionGroup.css({left:a.x, top:a.y, width:this.optionGroup.width() + 3});
   };
   b.applyValue = function(a) {
     this.value != a && this.setValue(a);
