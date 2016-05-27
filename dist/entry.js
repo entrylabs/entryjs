@@ -722,7 +722,18 @@ Entry.Arduino = {name:"arduino", setZero:function() {
 Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a0:{name:Lang.Hw.port_en + " A0 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a1:{name:Lang.Hw.port_en + " A1 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a2:{name:Lang.Hw.port_en + " A2 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a3:{name:Lang.Hw.port_en + " A3 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a4:{name:Lang.Hw.port_en + " A4 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a5:{name:Lang.Hw.port_en + " A5 " + 
 Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}}, mode:"both"}};
 Entry.SensorBoard = {name:"sensorBoard", setZero:Entry.Arduino.setZero};
-Entry.dplay = {name:"dplay", setZero:Entry.Arduino.setZero};
+Entry.dplay = {name:"dplay", vel_value:255, setZero:Entry.Arduino.setZero, timeouts:[], removeTimeout:function(b) {
+  clearTimeout(b);
+  var a = this.timeouts;
+  b = a.indexOf(b);
+  0 <= b && a.splice(b, 1);
+}, removeAllTimeouts:function() {
+  var b = this.timeouts, a;
+  for (a in b) {
+    clearTimeout(b[a]);
+  }
+  this.timeouts = [];
+}};
 Entry.nemoino = {name:"nemoino", setZero:Entry.Arduino.setZero};
 Entry.CODEino = {name:"CODEino", setZero:Entry.Arduino.setZero, monitorTemplate:Entry.Arduino.monitorTemplate};
 Blockly.Blocks.arduino_text = {init:function() {
@@ -845,8 +856,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
+  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(c, d);
   return a.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1046,8 +1057,8 @@ Blockly.Blocks.dplay_select_led = {init:function() {
 Entry.block.dplay_select_led = function(b, a) {
   var c = a.getField("PORT"), d = 7;
   "7" == c ? d = 7 : "8" == c ? d = 8 : "9" == c ? d = 9 : "10" == c && (d = 10);
-  c = a.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(d, "on" == c ? 255 : 0);
+  c = "on" == a.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(d, c);
   return a.callReturn();
 };
 Blockly.Blocks.dplay_get_switch_status = {init:function() {
@@ -1106,7 +1117,7 @@ Blockly.Blocks.dplay_DCmotor = {init:function() {
 }};
 Entry.block.dplay_DCmotor = function(b, a) {
   var c = a.getField("PORT"), d = 0;
-  "3" == c && (d = 5);
+  "3" == c ? d = 5 : "6" == c && (d = 11);
   var e = a.getField("OPERATOR"), f = 0, g = 0;
   "FRONT" == e ? (f = 255, g = 0) : "REAR" == e ? (f = 0, g = 255) : "OFF" == e && (g = f = 0);
   Entry.hw.setDigitalPortValue(c, f);
@@ -2057,10 +2068,10 @@ Entry.block.wait_second = function(b, a) {
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a);
+  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
   setTimeout(function() {
     a.timeFlag = 0;
-  }, 60 / (Entry.FPS || 60) * c * 1E3);
+  }, c);
   return a;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -6955,23 +6966,23 @@ p.init = function(b) {
 p.generateView = function(b) {
   var a = Entry.createElement("div");
   a.addClass("entryContainerDoneWorkspace");
-  a.addClass("entryHidden");
   this.doneContainer = a;
-  a = Entry.createElement("iframe");
-  a.setAttribute("id", "doneProjectframe");
-  a.setAttribute("frameborder", 0);
-  a.setAttribute("src", "/api/iframe/project/" + b);
-  this.doneProjectFrame = a;
-  this.doneContainer.appendChild(a);
+  var c = Entry.createElement("iframe");
+  c.setAttribute("id", "doneProjectframe");
+  c.setAttribute("frameborder", 0);
+  c.setAttribute("src", "/api/iframe/project/" + b);
+  this.doneProjectFrame = c;
+  this.doneContainer.appendChild(c);
+  a.addClass("entryRemove");
 };
 p.getView = function() {
   return this.doneContainer;
 };
 p.resize = function() {
-  var b = document.getElementById("entryContainerWorkspaceId"), a = document.getElementById("doneProjectframe");
-  w = b.offsetWidth;
-  a.width = w + "px";
-  a.height = 9 * w / 16 + "px";
+  document.getElementById("entryContainerWorkspaceId");
+  var b = document.getElementById("doneProjectframe"), a = this.doneContainer.offsetWidth;
+  b.width = a + "px";
+  b.height = 9 * a / 16 + "px";
 };
 Entry.Engine = function() {
   function b(a) {
@@ -10380,7 +10391,7 @@ Entry.Pdf = function(b) {
 p = Entry.Pdf.prototype;
 p.generateView = function(b) {
   var a = Entry.createElement("div", "entryPdfWorkspace");
-  a.addClass("entryHidden");
+  a.addClass("entryRemove");
   this._view = a;
   var c = "/pdfjs/web/viewer.html";
   b && "" != b && (c += "?file=" + b);
@@ -10547,12 +10558,12 @@ Entry.PropertyPanel = function() {
     for (var b in this.modes) {
       var d = this.modes[b];
       d.tabDom.removeClass("selected");
-      d.contentDom.addClass("entryHidden");
+      d.contentDom.addClass("entryRemove");
       d.obj.visible = !1;
     }
     b = this.modes[a];
     b.tabDom.addClass("selected");
-    b.contentDom.removeClass("entryHidden");
+    b.contentDom.removeClass("entryRemove");
     b.obj.resize && b.obj.resize();
     b.obj.visible = !0;
     this.selected = a;
@@ -12331,7 +12342,7 @@ Entry.Utils.xmlToJsonData = function(b) {
       var e = {category:d.getAttribute("id"), blocks:[]}, d = d.childNodes;
       for (c in d) {
         var f = d[c];
-        f.tagName && e.blocks.push(f.getAttribute("type"));
+        f.tagName && (f = f.getAttribute("type")) && e.blocks.push(f);
       }
       a.push(e);
     }
@@ -12992,7 +13003,7 @@ p.closeConnection = function() {
   this.socket && this.socket.close();
 };
 p.downloadConnector = function() {
-  window.open("http://download.play-entry.org/apps/Entry_HW_1.5.2.exe", "_blank").focus();
+  window.open("http://download.play-entry.org/apps/Entry_HW_1.5.3_Setup.exe", "_blank").focus();
 };
 p.downloadSource = function() {
   window.open("http://play-entry.com/down/board.ino", "_blank").focus();
@@ -15176,9 +15187,11 @@ Entry.BlockMenu = function(b, a, c, d) {
     this._scroller && this.svgGroup.appendChild(this._scroller.svgGroup);
   };
   b.align = function() {
-    if (this.code) {
+    var a = this.code;
+    if (a) {
       this._clearSplitters();
-      for (var a = this.code.getThreads(), b = 10, d = "LEFT" == this._align ? 10 : this.svgDom.width() / 2, e, f = 0, g = a.length;f < g;f++) {
+      a.view && a.view.reDraw();
+      for (var a = a.getThreads(), b = 10, d = "LEFT" == this._align ? 10 : this.svgDom.width() / 2, e, f = 0, g = a.length;f < g;f++) {
         var h = a[f].getFirstBlock(), k = h.view, h = Entry.block[h.type];
         this.checkBanClass(h) ? k.set({display:!1}) : (k.set({display:!0}), h = h.class, e && e !== h && (this._createSplitter(b), b += 15), e = h, h = d - k.offsetX, "CENTER" == this._align && (h -= k.width / 2), b -= k.offsetY, k._moveTo(h, b, !1), b += k.height + 15);
       }
@@ -15264,6 +15277,7 @@ Entry.BlockMenu = function(b, a, c, d) {
   b.getCategoryCodes = function(a) {
     a = this._convertSelector(a);
     var b = this._categoryCodes[a];
+    b || (b = []);
     b instanceof Entry.Code || (b = this._categoryCodes[a] = new Entry.Code(b));
     return b;
   };
@@ -15356,8 +15370,6 @@ Entry.BlockMenu = function(b, a, c, d) {
   };
   b.reDraw = function() {
     this.selectMenu(this.lastSelector, !0);
-    var a = this.code && this.code.view ? this.code.view : null;
-    a && a.reDraw();
   };
   b._handleDragBlock = function() {
     this._boardBlockView = null;
@@ -15706,8 +15718,9 @@ Entry.BlockView.DRAG_RADIUS = 5;
       c === Entry.Workspace.MODE_VIMBOARD && b.vimBoardEvent(a, "dragOver");
       d = a.originalEvent && a.originalEvent.touches ? a.originalEvent.touches[0] : a;
       var f = m.mouseDownCoordinate, f = Math.sqrt(Math.pow(d.pageX - f.x, 2) + Math.pow(d.pageY - f.y, 2));
-      (m.dragMode == Entry.DRAG_MODE_DRAG || f > Entry.BlockView.DRAG_RADIUS) && m.movable && (m.isInBlockMenu ? e.cloneToGlobal(a) : (a = !1, m.dragMode != Entry.DRAG_MODE_DRAG && (m._toGlobalCoordinate(), m.dragMode = Entry.DRAG_MODE_DRAG, m.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(m, c), a = !0), this.animating && this.set({animating:!1}), 0 === m.dragInstance.height && m.dragInstance.set({height:-1 + m.height}), c = m.dragInstance, m._moveBy(d.pageX - c.offsetX, d.pageY - 
-      c.offsetY, !1), c.set({offsetX:d.pageX, offsetY:d.pageY}), Entry.GlobalSvg.position(), m.originPos || (m.originPos = {x:m.x, y:m.y}), a && e.generateCodeMagnetMap(), m._updateCloseBlock()));
+      (m.dragMode == Entry.DRAG_MODE_DRAG || f > Entry.BlockView.DRAG_RADIUS) && m.movable && (m.isInBlockMenu ? e.cloneToGlobal(a) : (a = !1, m.dragMode != Entry.DRAG_MODE_DRAG && (m._toGlobalCoordinate(), m.dragMode = Entry.DRAG_MODE_DRAG, m.block.getThread().changeEvent.notify(), requestAnimationFrame(function() {
+        Entry.GlobalSvg.setView(m, c);
+      }), a = !0), this.animating && this.set({animating:!1}), 0 === m.dragInstance.height && m.dragInstance.set({height:-1 + m.height}), f = m.dragInstance, m._moveBy(d.pageX - f.offsetX, d.pageY - f.offsetY, !1), f.set({offsetX:d.pageX, offsetY:d.pageY}), requestAnimationFrame(Entry.GlobalSvg.position.bind(Entry.GlobalSvg)), m.originPos || (m.originPos = {x:m.x, y:m.y}), a && e.generateCodeMagnetMap(), m._updateCloseBlock()));
     }
     function d(a) {
       $(document).unbind(".block");
@@ -15744,11 +15757,11 @@ Entry.BlockView.DRAG_RADIUS = 5;
             return;
           }
           f = [];
-          var g = {text:"\ube14\ub85d \ubcf5\uc0ac & \ubd99\uc5ec\ub123\uae30", enable:this.copyable, callback:function() {
+          var g = {text:Lang.Blocks.Duplication_option, enable:this.copyable, callback:function() {
             Entry.do("cloneBlock", k);
-          }}, l = {text:"\ube14\ub85d \ubcf5\uc0ac", enable:this.copyable, callback:function() {
+          }}, l = {text:Lang.Blocks.CONTEXT_COPY_option, enable:this.copyable, callback:function() {
             h.block.copyToClipboard();
-          }}, n = {text:"\ube14\ub85d \uc0ad\uc81c", enable:k.isDeletable(), callback:function() {
+          }}, n = {text:Lang.Blocks.Delete_Blocks, enable:k.isDeletable(), callback:function() {
             Entry.do("destroyBlock", h.block);
           }};
           f.push(g);
@@ -15994,18 +16007,20 @@ Entry.BlockView.DRAG_RADIUS = 5;
     this.svgGroup.removeClass("activated");
   };
   b.reDraw = function() {
-    var a = this.block;
-    this._updateContents();
-    var b = a.params;
-    if (b) {
-      for (var d = 0;d < b.length;d++) {
-        var e = b[d];
-        e instanceof Entry.Block && e.view.reDraw();
+    if (this.visible) {
+      var a = this.block;
+      requestAnimationFrame(this._updateContents.bind(this));
+      var b = a.params;
+      if (b) {
+        for (var d = 0;d < b.length;d++) {
+          var e = b[d];
+          e instanceof Entry.Block && e.view.reDraw();
+        }
       }
-    }
-    if (a = a.statements) {
-      for (d = 0;d < a.length;d++) {
-        a[d].view.reDraw();
+      if (a = a.statements) {
+        for (d = 0;d < a.length;d++) {
+          a[d].view.reDraw();
+        }
       }
     }
   };
@@ -16862,16 +16877,16 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
   b._position = function() {
     var a = this.getAbsolutePosFromDocument();
     a.y += this.box.height / 2;
-    var b = $(document).height(), d = this.optionGroup.height();
+    var b = $(document).height(), d = this.optionGroup.height(), e = this.optionGroup.width();
     if (b < a.y + d) {
       a.x += this.box.width + 1;
-      var b = this.getAbsolutePosFromBoard(), e = this._blockView.getBoard().svgDom.height(), e = e - (e - b.y);
-      e - 20 < d && this.optionGroup.height(e - e % 20);
+      var b = this.getAbsolutePosFromBoard(), f = this._blockView.getBoard().svgDom.height(), f = f - (f - b.y);
+      f - 20 < d && this.optionGroup.height(f - f % 20);
       a.y -= this.optionGroup.height();
     } else {
-      a.x += this.box.width / 2 - this.optionGroup.width() / 2;
+      a.x += this.box.width / 2 - e / 2;
     }
-    this.optionGroup.css({left:a.x, top:a.y});
+    this.optionGroup.css({left:a.x, top:a.y, width:e + 20});
   };
   b.applyValue = function(a) {
     this.value != a && this.setValue(a);
@@ -17408,7 +17423,7 @@ Entry.GlobalSvg = {};
       $("#globalSvg").remove();
       var a = $("body");
       this._container = Entry.Dom("div", {classes:["globalSvgSurface", "entryRemove"], id:"globalSvgSurface", parent:a});
-      this.svgDom = Entry.Dom($('<svg id="globalSvg" width="10" height="10"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:a});
+      this.svgDom = Entry.Dom($('<svg id="globalSvg" width="10" height="10"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this._container});
       this.svg = Entry.SVG("globalSvg");
       this.top = this.left = 0;
       this._inited = !0;
@@ -17438,19 +17453,18 @@ Entry.GlobalSvg = {};
   };
   b.show = function() {
     this._container.removeClass("entryRemove");
-    this.svgDom.css("display", "block");
   };
   b.hide = function() {
     this._container.addClass("entryRemove");
-    this.svgDom.css("display", "none");
   };
   b.position = function() {
-    var a = this._view, b = a.getAbsoluteCoordinate(), a = a.getBoard().offset();
-    this.left = b.x + a.left - this._offsetX;
-    this.top = b.y + a.top - this._offsetY;
-    b = this.svgDom[0];
-    b.style.left = this.left + "px";
-    b.style.top = this.top + "px";
+    var a = this._view;
+    if (a) {
+      var b = a.getAbsoluteCoordinate(), a = a.getBoard().offset();
+      this.left = b.x + a.left - this._offsetX;
+      this.top = b.y + a.top - this._offsetY;
+      this.svgDom.css({transform:"translate3d(" + this.left + "px," + this.top + "px, 0px)"});
+    }
   };
   b.terminateDrag = function(a) {
     var b = Entry.mouseCoordinate;
@@ -18126,9 +18140,9 @@ Entry.Board.OPTION_CLEAR = 2;
     var a = this;
     this._contextOptions = [{activated:!0, option:{text:"\ubd99\uc5ec\ub123\uae30", enable:!!Entry.clipboard, callback:function() {
       Entry.do("addThread", Entry.clipboard).value.getFirstBlock().copyToClipboard();
-    }}}, {activated:!0, option:{text:"\ube14\ub85d \uc815\ub9ac\ud558\uae30", callback:function() {
+    }}}, {activated:!0, option:{text:Lang.Blocks.tidy_up_block, callback:function() {
       a.alignThreads();
-    }}}, {activated:!0, option:{text:"\ubaa8\ub4e0 \ucf54\ub4dc \uc0ad\uc81c\ud558\uae30", callback:function() {
+    }}}, {activated:!0, option:{text:Lang.Blocks.Clear_all_blocks, callback:function() {
       a.code.clear();
     }}}];
   };
