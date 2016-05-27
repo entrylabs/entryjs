@@ -10710,7 +10710,7 @@ Entry.block = {
         "skeleton": "basic_string_field",
         "fontColor": "#fff",
         "statements": [],
-        "template": "%1 값의 범위를 %2 에서 %3 (으)로 변환",
+        "template": "%1 값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 변환",
         "params": [{
             "type": "Dropdown",
             "options": [
@@ -10728,13 +10728,25 @@ Entry.block = {
         }, {
             "type": "Block",
             "accept": "string"
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Block",
+            "accept": "string"
         }],
         "events": {},
         "def": {
             "params": [null, {
                 "type": "number",
                 "params": [ "0" ]
-            },  {
+            }, {
+                "type": "number",
+                "params": [ "255" ]
+            }, {
+                "type": "number",
+                "params": [ "0" ]
+            }, {
                 "type": "number",
                 "params": [ "100" ]
             }],
@@ -10742,16 +10754,26 @@ Entry.block = {
         },
         "paramsKeyMap": {
             "PORT": 0,
-            "MIN": 1,
-            "MAX": 2
+            "OMIN": 1,
+            "OMAX": 2,
+            "MIN": 3,
+            "MAX": 4
         },
         "class": "neobot_value",
         "isNotFor": ["neobot"],
         "func": function (sprite, script) {
             var port = script.getStringField('PORT');
             var value = Entry.hw.portData[port];
+            var omin = script.getNumberValue("OMIN", script);
+            var omax = script.getNumberValue("OMAX", script);
             var min = script.getNumberValue("MIN", script);
             var max = script.getNumberValue("MAX", script);
+
+            if (omin > omax) {
+                var temp = omin;
+                omin = omax;
+                omax = temp;
+            }
 
             if(min > max) {
                 var temp = min;
@@ -10759,7 +10781,8 @@ Entry.block = {
                 max = temp;
             }
 
-            value = value * ((max - min) / 255);
+            value -= omin;
+            value = value * ((max - min) / (omax - omin));
             value += min;
             value = Math.min(max, value);
             value = Math.max(min, value);
@@ -11193,55 +11216,10 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "FND에 %1 %2 출력 %3",
+        "template": "FND에 %1 출력 %2",
         "params": [{
-            "type": "Dropdown",
-            "options": [
-                ["0", "0"],
-                ["1", "1"],
-                ["2", "2"],
-                ["3", "3"],
-                ["3", "3"],
-                ["4", "4"],
-                ["5", "5"],
-                ["6", "6"],
-                ["7", "7"],
-                ["8", "8"],
-                ["9", "9"],
-                ["A", "A"],
-                ["B", "B"],
-                ["C", "C"],
-                ["D", "D"],
-                ["E", "E"],
-                ["F", "F"]
-            ],
-            "value": "0",
-            "fontSize": 11,
-            'arrowColor': EntryStatic.ARROW_COLOR_HW
-        }, {
-            "type": "Dropdown",
-            "options": [
-                ["0", "0"],
-                ["1", "1"],
-                ["2", "2"],
-                ["3", "3"],
-                ["3", "3"],
-                ["4", "4"],
-                ["5", "5"],
-                ["6", "6"],
-                ["7", "7"],
-                ["8", "8"],
-                ["9", "9"],
-                ["A", "A"],
-                ["B", "B"],
-                ["C", "C"],
-                ["D", "D"],
-                ["E", "E"],
-                ["F", "F"]
-            ],
-            "value": "0",
-            "fontSize": 11,
-            'arrowColor': EntryStatic.ARROW_COLOR_HW
+            "type": "Block",
+            "accept": "string"
         }, {
             "type": "Indicator",
             "img": "block_icon/hardware_03.png",
@@ -11249,20 +11227,23 @@ Entry.block = {
         }],
         "events": {},
         "def": {
-            "params": [null, null],
+            "params": [ {
+                "type": "number",
+                "params": [ "0" ]
+            }, null],
             "type": "neobot_set_fnd"
         },
         "paramsKeyMap": {
-            "LVALUE": 0,
-            "RVALUE": 1
+            "VALUE": 0
         },
         "class": "neobot_output",
         "isNotFor": ["neobot"],
         "func": function (sprite, script) {
-            var lvalue = script.getField('LVALUE', script);
-            var rvalue = script.getField('RVALUE', script);
-            var hexValue = lvalue + rvalue;
-            Entry.hw.sendQueue['FND'] = parseInt(hexValue, 16);
+            var value = script.getNumberValue('VALUE', script);
+            if(value > 99) {
+                value = 99;
+            }
+            Entry.hw.sendQueue['FND'] = parseInt('0x' + value);
             Entry.hw.sendQueue['OPT'] = Entry.hw.sendQueue['OPT'] | 8;
             return script.callReturn();
         }

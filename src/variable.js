@@ -157,23 +157,19 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
         this.valueSetter_.on("pressmove", function(evt) {
             if (!Entry.engine.isState('run')) return;
 
-            var delta = evt.stageX*0.75 -240 - this.offsetX;
-            var commandX = this.graphics.command.x;
-            if (delta + commandX <= 0) {
-                slide.setSlideCommandX(0, true);
-                return;
-            }
-
-            if (delta + commandX > slide.maxWidth + 10) {
-                slide.setSlideCommandX(slide.maxWidth, true);
-                return;
-            }
+            var oldOffsetX = this.offsetX;
             this.offsetX = -(this.x - evt.stageX*0.75 +240);
-            slide.setSlideCommandX(delta);
+            if (oldOffsetX === this.offsetX) return;
+            var slideX = slide.getX();
+            var value;
+            if (slideX + 10 > this.offsetX) value = 0;
+            else if (slideX + slide.maxWidth + 10 > this.offsetX)
+                value = this.offsetX - slideX;
+            else value = slide.maxWidth + 10;
+            slide.setSlideCommandX(value);
         });
         this.valueSetter_.on("pressup", function(evt) {
             slide.isAdjusting = false;
-            delete slide.viewValue_;
         });
         this.view_.addChild(this.valueSetter_);
         var variableLength = Entry.variableContainer.variables_.length;
@@ -554,14 +550,9 @@ Entry.Variable.prototype.setValue = function(value) {
     if (this.type != 'slide') this.value_ = value;
     else {
         value = Number(value);
-
         if (value < this.minValue_) this.value_ = this.minValue_;
         else if (value > this.maxValue_) this.value_ = this.maxValue_;
         else this.value_ = value;
-
-        if (!this.isFloatPoint()) {
-            this.viewValue_ = this.value_;
-        } else delete this.viewValue_;
     }
 
     if (this.isCloud_) Entry.variableContainer.updateCloudVariables();
@@ -761,16 +752,17 @@ Entry.Variable.prototype.setType = function(type) {
 Entry.Variable.prototype.getSlidePosition = function(width) {
     var minValue = this.minValue_;
     var maxValue = this.maxValue_;
-    var value = this.viewValue_ || this.value_;
+    var value = this.value_;
     var ratio = Math.abs(value - minValue) / Math.abs(maxValue - minValue);
     return (width) * ratio + 10;
 };
 
-Entry.Variable.prototype.setSlideCommandX = function(value, isSetter) {
+Entry.Variable.prototype.setSlideCommandX = function(value) {
     var command = this.valueSetter_.graphics.command;
     value = (typeof value == 'undefined') ? 10 : value;
-    if (isSetter) command.x = value + 10;
-    else command.x += value;
+    value = Math.max(value, 10);
+    value = Math.min(this.maxWidth + 10, value);
+    command.x = value;
     this.updateSlideValueByView();
 };
 
@@ -788,14 +780,10 @@ Entry.Variable.prototype.updateSlideValueByView = function() {
         (minValue + Number((Math.abs(maxValue - minValue) * ratio))).toFixed(2);
     value = parseFloat(value);
 
-    if (value < minValue)
-        value = this.minValue_;
-    else if (value > maxValue)
-        value = this.maxValue_;
-    if (!this.isFloatPoint()) {
-        this.viewValue_ = value;
-        value = Math.round(value);
-    }
+    if (value < minValue) value = this.minValue_;
+    else if (value > maxValue) value = this.maxValue_;
+    if (!this.isFloatPoint()) value = Math.round(value);
+
     this.setValue(value);
 };
 
