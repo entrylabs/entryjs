@@ -11816,14 +11816,17 @@ Entry.PyToBlockParser = function(b) {
   };
   b.BlockStatement = function(a) {
     console.log("BlockStatement component", a);
-    var b = {data:[]}, c = [];
+    var b = {statements:[], data:[]}, c = [];
     a = a.body;
     console.log("BlockStatement bodies", a);
     for (var e in a) {
       var f = a[e], f = this[f.type](f);
       f && null == f || (console.log("BlockStatement bodyData", f), c.push(f), console.log("BlockStatement data", c));
     }
+    console.log("BlockStatement final data", c);
     b.data = c;
+    c[0] && c[0].declarations && (b = c[1]);
+    console.log("jhlee data check", c);
     console.log("BlockStatement statement result", b);
     return b;
   };
@@ -11833,25 +11836,29 @@ Entry.PyToBlockParser = function(b) {
     b = {statements:[]};
     var c, e = [], f = a.consequent, g = a.alternate;
     c = null != g ? "if_else" : "_if";
+    b.type = c;
     console.log("IfStatement type", c);
     var h = a.test;
     if (null != h) {
-      if (console.log("IfStatement test", h), "Literal" == h.type) {
+      console.log("IfStatement test", h);
+      if ("Literal" == h.type) {
         arguments = [];
         arguments.push(h.value);
-        var k = Entry.block[c].params, l = Entry.block[c].def.params;
+        var k = Entry.block[c].params;
+        c = Entry.block[c].def.params;
         console.log("IfStatement paramsMeta", k);
-        console.log("IfStatement paramsDefMeta", l);
-        for (var n in k) {
-          var m = k[n].type;
-          "Indicator" == m ? (m = {raw:null, type:"Literal", value:null}, n < arguments.length && arguments.splice(n, 0, m)) : "Text" == m && (m = {raw:"", type:"Literal", value:""}, n < arguments.length && arguments.splice(n, 0, m));
+        console.log("IfStatement paramsDefMeta", c);
+        for (var l in k) {
+          var n = k[l].type;
+          "Indicator" == n ? (n = {raw:null, type:"Literal", value:null}, l < arguments.length && arguments.splice(l, 0, n)) : "Text" == n && (n = {raw:"", type:"Literal", value:""}, l < arguments.length && arguments.splice(l, 0, n));
         }
-        for (var q in arguments) {
-          console.log("IfStatement argument", arguments[q]), n = this[h.type](h, k[q], l[q]), console.log("IfStatement param", n), e.push(n);
+        for (var m in arguments) {
+          console.log("IfStatement argument", arguments[m]), l = this[h.type](h, k[m], c[m]), console.log("IfStatement param", l), l && null != l && e.push(l);
         }
       } else {
-        "BinaryExpression" == h.type && (n = this[h.type](h), e.push(n));
+        "BinaryExpression" == h.type && (l = this[h.type](h), console.log("IfStatement BinaryExpression param", l), l && null != l && e.push(l));
       }
+      e && 0 != e.length && (b.params = e);
     }
     console.log("IfStatement params result", e);
     if (null != g) {
@@ -11860,8 +11867,8 @@ Entry.PyToBlockParser = function(b) {
       g = this[g.type](g);
       console.log("IfStatement alternate data", g);
       g = g.data;
-      for (q in g) {
-        (k = g[q]) && h.push(k);
+      for (m in g) {
+        (k = g[m]) && h.push(k);
       }
       0 != h.length && b.statements.push(h);
     }
@@ -11872,13 +11879,26 @@ Entry.PyToBlockParser = function(b) {
       console.log("IfStatement consequent data", f);
       f = f.data;
       console.log("IfStatement consequentsData", f);
-      for (q in f) {
-        h = f[q], console.log("IfStatement consData", h), h.statements ? (console.log("IfStatement data1"), g = h.statements) : h && g.push(h);
+      for (m in f) {
+        if (h = f[m], console.log("IfStatement consData", h), h.init) {
+          b.type = h.type;
+          console.log("IfStatement Check params", e);
+          if (e && 0 == e.length) {
+            k = h.init.declarations;
+            console.log("IfStatement declarations", k);
+            for (var q in k) {
+              l = k[q].init, e.push(l);
+            }
+            e && 0 != e.length && (b.params = e);
+            console.log("IfStatement consData Params", e);
+          }
+          h.statements && (g = h.statements);
+        } else {
+          h.type && g.push(h);
+        }
       }
       0 != g.length && b.statements.push(g);
     }
-    b.type = c;
-    b.params = e;
     console.log("IfStatement result", b);
     return b;
   };
@@ -17562,7 +17582,12 @@ Entry.BlockView.DRAG_RADIUS = 5;
         }
         break;
       case Entry.Workspace.MODE_VIMBOARD:
-        g = this.getBoard().workspace.getCodeToText(this.block), this._contents.push(new Entry.FieldText({text:g, color:"white"}, this));
+        if ("basic_button" === this._schema.skeleton) {
+          this._startContentRender(Entry.Workspace.MODE_BOARD);
+          return;
+        }
+        g = this.getBoard().workspace.getCodeToText(this.block);
+        this._contents.push(new Entry.FieldText({text:g, color:"white"}, this));
     }
     this.alignContent(!1);
   };

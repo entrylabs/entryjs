@@ -454,7 +454,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.BlockStatement = function(component) { 
         console.log("BlockStatement component", component);
         var result = {};
+        result.statements = [];
         result.data = [];
+
+        var params = [];
+        var statements = [];
 
         var data = [];
 
@@ -474,7 +478,41 @@ Entry.PyToBlockParser = function(blockSyntax) {
             console.log("BlockStatement data", data);
         }
 
+        
+
+        console.log("BlockStatement final data", data);
+
+        
+
+        /*if(data && data[0]) { //For Statement Params
+            var declarations = data[0].declarations;
+
+            for(var d in declarations) {
+                var declaration = declarations[d];
+                var param = declaration.init;
+                params.push(param);
+            }
+
+            if(params && params.length != 0)
+                result.params = params;
+        }
+
+        if(data && data[1]) {
+            result.type = data[1].type;
+
+            statements = data[1].statements;
+            result.statements = statements;
+        }*/
+
+
         result.data = data;
+
+        if(data[0] && data[0].declarations) {
+            result = data[1];
+        }
+
+        console.log("jhlee data check", data);
+        
 
         console.log("BlockStatement statement result", result);
         return result;
@@ -499,6 +537,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
         } else {
              var type = String("_if");
         }
+
+        structure.type = type;
 
         
         console.log("IfStatement type", type);
@@ -534,13 +574,21 @@ Entry.PyToBlockParser = function(blockSyntax) {
                               
                     var param = this[test.type](test, paramsMeta[i], paramsDefMeta[i]);
                     console.log("IfStatement param", param);
-                    params.push(param);   
+                    if(param && param != null)
+                        params.push(param);   
                 }
               
             } else if (test.type == "BinaryExpression") {
                 var param = this[test.type](test);
-                params.push(param);   
-            }           
+                console.log("IfStatement BinaryExpression param", param);
+                if(param && param != null)
+                    params.push(param);   
+                
+            }   
+
+            if(params && params.length != 0) {
+                structure.params = params;         
+            }
         }
 
         console.log("IfStatement params result", params);
@@ -575,23 +623,46 @@ Entry.PyToBlockParser = function(blockSyntax) {
             for(var i in consequentsData) {
                 var consData = consequentsData[i];
                 console.log("IfStatement consData", consData);
-                if(consData.statements) { //For Statement
-                    //var data1 = this[consData.type](consData);
-                    console.log("IfStatement data1");
-                    consStmts = consData.statements;
                     
+                if(consData.init) { //ForStatement Block
+                    structure.type = consData.type; //ForStatement Type
+
+                    console.log("IfStatement Check params", params);
+
+                    if(params && params.length == 0) { //If this params is not "IfStatement"' params 
+                        var declarations = consData.init.declarations;
+                        console.log("IfStatement declarations", declarations);
+
+                        for(var d in declarations) { //ForStatement Params
+                            var declaration = declarations[d];
+                            var param = declaration.init;
+
+                            params.push(param); 
+                        }
+
+                        if(params && params.length != 0) {
+                            structure.params = params;         
+                        }
+
+                        console.log("IfStatement consData Params", params);
+                    }
+
+                    if(consData.statements) { //ForStatement Statements
+                        consStmts = consData.statements;
+                    }
                 }
-                else if(consData) { //If Statement
-                    consStmts.push(consData); 
-                }
+                else if(consData.type) { //IfStatement Block 
+                    consStmts.push(consData); //IfStatement Statements
+                } 
             }
+
             if(consStmts.length != 0)
                 structure.statements.push(consStmts);
         } 
 
         
-        structure.type = type;
-        structure.params = params;
+        
+        
 
         result = structure;
 

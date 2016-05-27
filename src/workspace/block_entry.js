@@ -2023,7 +2023,6 @@ Entry.block = {
                     [ "초록", "3" ],
                     [ "파란", "4" ],
                     [ "노랑", "5" ]
-                    [ "흰색", "5" ]
                 ],
                 "value": "2",
                 "fontSize": 11
@@ -14405,7 +14404,8 @@ Entry.block = {
                     Entry.variableContainer.openVariableAddPanel('variable');
                 }
             ]
-        }
+        },
+        "syntax": {"js": [], "py": ["test varailblsdlf button"]}
     },
     "listAddButton": {
         "skeleton": "basic_button",

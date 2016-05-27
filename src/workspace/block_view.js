@@ -197,6 +197,11 @@ Entry.BlockView.DRAG_RADIUS = 5;
                 }
                 break;
             case Entry.Workspace.MODE_VIMBOARD:
+                if (this._schema.skeleton === 'basic_button') {
+                    this._startContentRender(Entry.Workspace.MODE_BOARD);
+                    return;
+                }
+
                 var text = this.getBoard().workspace.getCodeToText(this.block);
                 this._contents.push(
                     new Entry.FieldText({text: text, color: 'white'}, this)

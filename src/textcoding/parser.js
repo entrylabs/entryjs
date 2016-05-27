@@ -19,7 +19,7 @@ Entry.Parser = function(mode, type, cm) {
     this.codeMirror = cm;
     this._lang = syntax || "js"; //for maze
     this._type = type;
-    this.availableCode = [];
+    this.availableCode = []; 
 
     if (mode === 'maze') {
         this._stageId = Number(Ntry.configManager.getConfig('stageId'));
