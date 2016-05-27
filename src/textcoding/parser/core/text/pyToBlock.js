@@ -181,14 +181,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         console.log("Literal value", value);
 
-        if(!paramMeta) 
+        if(!paramMeta) {
             var paramMeta = { type: "Block" };
 
-        if(!paramDefMeta) {
-            if(typeof value == "number")
-                var paramDefMeta = { type: "number" };
-            else 
-                var paramDefMeta = { type: "text" };
+            if(!paramDefMeta) {
+                if(typeof value == "number")
+                    var paramDefMeta = { type: "number" };
+                else 
+                    var paramDefMeta = { type: "text" };
+            }
         }
 
         if(paramMeta.type == "Indicator") { 
@@ -507,8 +508,18 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         result.data = data;
 
-        if(data[0] && data[0].declarations) {
-            result = data[1];
+        if(data[0] && data[0].declarations && data[1]) {
+            result.type = data[1].type;
+
+            var declarations = data[0].declarations;
+            for(var d in declarations){
+                var declaration = declarations[d];
+                var param = declaration.init;
+                if(param)
+                    params.push(param);
+            }
+            result.params = params;
+            result.statements = data[1].statements;
         }
 
         console.log("jhlee data check", data);
@@ -629,7 +640,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                     console.log("IfStatement Check params", params);
 
-                    if(params && params.length == 0) { //If this params is not "IfStatement"' params 
+                    /*if(params && params.length == 0) { //If this params is not "IfStatement"' params 
                         var declarations = consData.init.declarations;
                         console.log("IfStatement declarations", declarations);
 
@@ -645,7 +656,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         }
 
                         console.log("IfStatement consData Params", params);
-                    }
+                    }*/
 
                     if(consData.statements) { //ForStatement Statements
                         consStmts = consData.statements;

@@ -11688,8 +11688,7 @@ Entry.PyToBlockParser = function(b) {
     console.log("Literal component", a, "paramMeta", b, "paramDefMeta", c);
     var e = a.value;
     console.log("Literal value", e);
-    b || (b = {type:"Block"});
-    c || (c = "number" == typeof e ? {type:"number"} : {type:"text"});
+    b || (b = {type:"Block"}, c || (c = "number" == typeof e ? {type:"number"} : {type:"text"}));
     if ("Indicator" == b.type) {
       return null;
     }
@@ -11816,17 +11815,25 @@ Entry.PyToBlockParser = function(b) {
   };
   b.BlockStatement = function(a) {
     console.log("BlockStatement component", a);
-    var b = {statements:[], data:[]}, c = [];
+    var b = {statements:[], data:[]}, c = [], e = [];
     a = a.body;
     console.log("BlockStatement bodies", a);
-    for (var e in a) {
-      var f = a[e], f = this[f.type](f);
-      f && null == f || (console.log("BlockStatement bodyData", f), c.push(f), console.log("BlockStatement data", c));
+    for (var f in a) {
+      var g = a[f], g = this[g.type](g);
+      g && null == g || (console.log("BlockStatement bodyData", g), e.push(g), console.log("BlockStatement data", e));
     }
-    console.log("BlockStatement final data", c);
-    b.data = c;
-    c[0] && c[0].declarations && (b = c[1]);
-    console.log("jhlee data check", c);
+    console.log("BlockStatement final data", e);
+    b.data = e;
+    if (e[0] && e[0].declarations && e[1]) {
+      b.type = e[1].type;
+      f = e[0].declarations;
+      for (var h in f) {
+        (a = f[h].init) && c.push(a);
+      }
+      b.params = c;
+      b.statements = e[1].statements;
+    }
+    console.log("jhlee data check", e);
     console.log("BlockStatement statement result", b);
     return b;
   };
@@ -11880,22 +11887,7 @@ Entry.PyToBlockParser = function(b) {
       f = f.data;
       console.log("IfStatement consequentsData", f);
       for (m in f) {
-        if (h = f[m], console.log("IfStatement consData", h), h.init) {
-          b.type = h.type;
-          console.log("IfStatement Check params", e);
-          if (e && 0 == e.length) {
-            k = h.init.declarations;
-            console.log("IfStatement declarations", k);
-            for (var q in k) {
-              l = k[q].init, e.push(l);
-            }
-            e && 0 != e.length && (b.params = e);
-            console.log("IfStatement consData Params", e);
-          }
-          h.statements && (g = h.statements);
-        } else {
-          h.type && g.push(h);
-        }
+        h = f[m], console.log("IfStatement consData", h), h.init ? (b.type = h.type, console.log("IfStatement Check params", e), h.statements && (g = h.statements)) : h.type && g.push(h);
       }
       0 != g.length && b.statements.push(g);
     }
