@@ -15735,7 +15735,7 @@ Entry.block = {
         },
         "class": "xbot_sensor",
         "isNotFor": [ "xbot_epor_edge" ],
-        "func": function (script, sprite) {
+        "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
             var note = script.getStringField("NOTE", script);
             var octave = script.getStringField("OCTAVE", script);
