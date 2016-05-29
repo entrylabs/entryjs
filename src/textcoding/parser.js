@@ -163,7 +163,7 @@ Entry.Parser = function(mode, type, cm) {
                 }; 
                 
                 cm.on("keyup", function (cm, event) {
-                    if (!cm.state.completionActive &&  (event.keyCode >= 65 && event.keyCode <= 195))  {
+                    if ((event.keyCode >= 65 && event.keyCode <= 195))  {
                        CodeMirror.showHint(cm, null, {completeSingle: false});  
                     }
 

@@ -12383,7 +12383,7 @@ Entry.Parser = function(b, a, d) {
         this._parser = new Entry.BlockToPyParser, c.setOption("mode", {name:"python", globalVars:!0}), CodeMirror.commands.autoCompletion = function(a) {
           CodeMirror.showHint(a, null, {globalScope:e});
         }, c.on("keyup", function(a, b) {
-          !a.state.completionActive && 65 <= b.keyCode && 195 >= b.keyCode && CodeMirror.showHint(a, null, {completeSingle:!1});
+          65 <= b.keyCode && 195 >= b.keyCode && CodeMirror.showHint(a, null, {completeSingle:!1});
         });
     }
   };
