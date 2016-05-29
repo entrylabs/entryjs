@@ -5055,7 +5055,7 @@ Entry.block = {
 
             return leftValue + rightValue;
         },
-        "syntax": {"js": [], "py": ["%2 + %4"]}
+        "syntax": {"js": [], "py": ["entry.concat(%2, %4)"]}
     },
     "get_sound_volume": {
         "color": "#FFD974",
@@ -13922,7 +13922,7 @@ Entry.block = {
             return script.callReturn();
         },
         "event": "keyPress",
-        "syntax": {"js": [], "py": ["entry.on_key_press(%1)"]}
+        "syntax": {"js": [], "py": ["entry.on_key_press(%2)"]}
     },
     "mouse_clicked": {
         "color": "#3BBD70",
