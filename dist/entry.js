@@ -11966,11 +11966,11 @@ Entry.PyToBlockParser = function(b) {
   };
   b.UnaryExpression = function(a) {
     console.log("UnaryExpression component", a);
-    var b = [];
-    a.prefix && (a = a.operator.concat(a.argument.value), b.push(a));
-    result.params = b;
-    console.log("UnaryExpression result", result);
-    return result;
+    var b;
+    a.prefix && (b = a.operator, a = a.argument, console.log("UnaryExpression operator", b), a.value = Number(b.concat(a.value)), b = this[a.type](a), console.log("UnaryExpression data", b));
+    a = b;
+    console.log("UnaryExpression result", a);
+    return a;
   };
   b.LogicalExpression = function(a) {
     console.log("LogicalExpression component", a);

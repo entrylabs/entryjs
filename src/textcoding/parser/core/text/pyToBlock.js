@@ -603,10 +603,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         console.log("IfStatement params result", params);
 
-        
-
-
-
         if(consequent != null) {
             var consStmts = [];
             console.log("IfStatement consequent", consequent);
@@ -805,15 +801,20 @@ Entry.PyToBlockParser = function(blockSyntax) {
     
     p.UnaryExpression = function(component) {
         console.log("UnaryExpression component", component);
+        var result;
+        var data;
         
-        var params = [];
-        var param;
+
         if(component.prefix){
             var operator = component.operator;
             var argument = component.argument;
             switch(operator){
-                case "-": break;
-                case "+": break;                    
+                case "-": 
+                    operator = operator; 
+                    break;
+                case "+": 
+                    operator = operator; 
+                    break;                   
                 case "!": break;                    
                 case "~": break;                
                 case "typeof": break;                   
@@ -822,12 +823,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 default: 
                     operator = operator;
             }
-            var arg = operator.concat(argument.value);
-            param  = arg;
-            params.push(param);
+
+            console.log("UnaryExpression operator", operator);
+
+            argument.value = Number(operator.concat(argument.value));
+
+            var value = this[argument.type](argument);
+
+            data = value;
+
+            console.log("UnaryExpression data", data);
         }
 
-        result.params = params;
+        result = data;
 
         console.log("UnaryExpression result", result);
         
