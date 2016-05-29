@@ -851,16 +851,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         switch(operator){
             case '&&': 
-                var syntax = String("%1 and %3");
+                var syntax = String("(%1 and %3)");
                 break;
             case '||': 
-                var syntax = String("%1 or %3");
+                var syntax = String("(%1 or %3)");
                 break;
             default: 
-                var syntax = String("%1 and %3");
+                var syntax = String("(%1 and %3)");
                 break;
         }
-        
 
         var type = this.getBlockType(syntax);
 
@@ -1001,40 +1000,40 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         switch(operator){
             case "==": 
-                var syntax = String("%1 %2 %3"); 
+                var syntax = String("(%1 %2boolean_compare# %3)"); 
                 break;
                        
             case "!=": 
-                var syntax = String("%2 != True"); 
+                var syntax = String("(%2 != True)"); 
                 break; break;               
             case "===": break;               
             case "!==": break;               
             case "<": 
-                var syntax = String("%1 %2 %3"); 
+                var syntax = String("(%1 %2boolean_compare# %3)");  
                 break;                 
             case "<=": 
-                var syntax = String("%1 %2 %3"); 
+                var syntax = String("(%1 %2boolean_compare# %3)"); 
                 break;               
             case ">": 
-                var syntax = String("%1 %2 %3"); 
+                var syntax = String("(%1 %2boolean_compare# %3)"); 
                 break;               
             case ">=": 
-                var syntax = String("%1 %2 %3"); 
+                var syntax = String("(%1 %2boolean_compare# %3)"); 
                 break;                
             case "<<": break;              
             case ">>": break;               
             case ">>>": break;                
             case "+": 
-                var syntax = String("(%1 %2 %3)"); 
+                var syntax = String("(%1 %2calc_basic# %3)"); 
                 break;               
             case "-": 
-                var syntax = String("(%1 %2 %3)"); 
+                var syntax = String("(%1 %2calc_basic# %3)"); 
                 break;
             case "*": 
-                var syntax = String("(%1 %2 %3)"); 
+                var syntax = String("(%1 %2calc_basic# %3)"); 
                 break;                 
             case "/": 
-                var syntax = String("(%1 %2 %3)"); 
+                var syntax = String("(%1 %2calc_basic# %3)"); 
                 break;                
             case "%": break;                
             case "|": break;               

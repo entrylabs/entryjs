@@ -11979,13 +11979,13 @@ Entry.PyToBlockParser = function(b) {
     var c = String(a.operator);
     switch(c) {
       case "&&":
-        var e = "%1 and %3";
+        var e = "(%1 and %3)";
         break;
       case "||":
-        e = "%1 or %3";
+        e = "(%1 or %3)";
         break;
       default:
-        e = "%1 and %3";
+        e = "(%1 and %3)";
     }
     var e = this.getBlockType(e), f = [], g = a.left;
     if (g.type) {
@@ -12048,34 +12048,34 @@ Entry.PyToBlockParser = function(b) {
     var b, c = {}, e = String(a.operator);
     switch(e) {
       case "==":
-        var f = "%1 %2 %3";
+        var f = "(%1 %2boolean_compare# %3)";
         break;
       case "!=":
-        f = "%2 != True";
+        f = "(%2 != True)";
         break;
       case "<":
-        f = "%1 %2 %3";
+        f = "(%1 %2boolean_compare# %3)";
         break;
       case "<=":
-        f = "%1 %2 %3";
+        f = "(%1 %2boolean_compare# %3)";
         break;
       case ">":
-        f = "%1 %2 %3";
+        f = "(%1 %2boolean_compare# %3)";
         break;
       case ">=":
-        f = "%1 %2 %3";
+        f = "(%1 %2boolean_compare# %3)";
         break;
       case "+":
-        f = "(%1 %2 %3)";
+        f = "(%1 %2calc_basic# %3)";
         break;
       case "-":
-        f = "(%1 %2 %3)";
+        f = "(%1 %2calc_basic# %3)";
         break;
       case "*":
-        f = "(%1 %2 %3)";
+        f = "(%1 %2calc_basic# %3)";
         break;
       case "/":
-        f = "(%1 %2 %3)";
+        f = "(%1 %2calc_basic# %3)";
     }
     console.log("BinaryExpression operator", e);
     console.log("BinaryExpression syntax", f);

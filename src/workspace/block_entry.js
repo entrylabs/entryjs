@@ -3931,7 +3931,7 @@ Entry.block = {
             else
                 return leftValue / rightValue;
         },
-        "syntax": {"js": [], "py": ["(%1 %2 %3)"]}
+        "syntax": {"js": [], "py": ["(%1 %2calc_basic# %3)"]}
     },
     "calc_plus": {
         "color": "#FFD974",
@@ -8120,7 +8120,7 @@ Entry.block = {
             var rightValue = script.getBooleanValue("RIGHTHAND", script);
             return leftValue && rightValue;
         },
-        "syntax": {"js": [], "py": ["%1 and %3"]}
+        "syntax": {"js": [], "py": ["(%1 and %3)"]}
     },
     "boolean_or": {
         "color": "#AEB8FF",
@@ -8161,7 +8161,7 @@ Entry.block = {
             var rightValue = script.getBooleanValue("RIGHTHAND", script);
             return leftValue || rightValue;
         },
-        "syntax": {"js": [], "py": ["%1 or %3"]}
+        "syntax": {"js": [], "py": ["(%1 or %3)"]}
     },
     "boolean_not": {
         "color": "#AEB8FF",
@@ -8200,7 +8200,7 @@ Entry.block = {
         "func": function (sprite, script) {
             return !script.getBooleanValue("VALUE");
         },
-        "syntax": {"js": [], "py": ["%2 != True"]}
+        "syntax": {"js": [], "py": ["(%2 != True)"]}
     },
     "true_or_false": {
         "color": "#AEB8FF",
@@ -8415,7 +8415,7 @@ Entry.block = {
                     return Number(leftValue) <= Number(rightValue);
             }
         },
-        "syntax": {"js": [], "py": ["%1 %2 %3"]}
+        "syntax": {"js": [], "py": ["(%1 %2boolean_compare# %3)"]}
     },
     "show": {
         "color": "#EC4466",
