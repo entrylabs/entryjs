@@ -452,12 +452,15 @@ Entry.Engine.prototype.run = function() {
  * toggle this engine state run
  */
 Entry.Engine.prototype.toggleRun = function() {
+    ////////////////////////////////////////////////////
+    //Text Coding Mode
     var mainWorkspace = Entry.playground.mainWorkspace; 
     var boardMode = mainWorkspace.mode;
     if(boardMode == Entry.Workspace.MODE_VIMBOARD) {
         mainWorkspace.loadCodeFromText(boardMode); 
-        console.log("Start engine loadCodeFromText");
     }
+    //Text Coding Mode
+    ////////////////////////////////////////////////////
     
     Entry.addActivity("run");
     if (this.state == 'stop') {
@@ -496,8 +499,6 @@ Entry.Engine.prototype.toggleRun = function() {
         Entry.engine.update();
         Entry.engine.isUpdating = true;
     }
-
-    
 
     Entry.stage.selectObject();
     Entry.dispatchEvent('run');

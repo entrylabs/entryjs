@@ -7181,7 +7181,7 @@ Entry.Engine.prototype.run = function() {
 };
 Entry.Engine.prototype.toggleRun = function() {
   var b = Entry.playground.mainWorkspace, a = b.mode;
-  a == Entry.Workspace.MODE_VIMBOARD && (b.loadCodeFromText(a), console.log("Start engine loadCodeFromText"));
+  a == Entry.Workspace.MODE_VIMBOARD && b.loadCodeFromText(a);
   Entry.addActivity("run");
   "stop" == this.state && (Entry.container.mapEntity(function(a) {
     a.takeSnapshot();
