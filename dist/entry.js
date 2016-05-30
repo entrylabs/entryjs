@@ -7180,13 +7180,15 @@ Entry.Engine.prototype.run = function() {
   this.isState("run") ? this.toggleStop() : (this.isState("stop") || this.isState("pause")) && this.toggleRun();
 };
 Entry.Engine.prototype.toggleRun = function() {
+  var b = Entry.playground.mainWorkspace, a = b.mode;
+  a == Entry.Workspace.MODE_VIMBOARD && (b.loadCodeFromText(a), console.log("Start engine loadCodeFromText"));
   Entry.addActivity("run");
-  "stop" == this.state && (Entry.container.mapEntity(function(b) {
-    b.takeSnapshot();
-  }), Entry.variableContainer.mapVariable(function(b) {
-    b.takeSnapshot();
-  }), Entry.variableContainer.mapList(function(b) {
-    b.takeSnapshot();
+  "stop" == this.state && (Entry.container.mapEntity(function(a) {
+    a.takeSnapshot();
+  }), Entry.variableContainer.mapVariable(function(a) {
+    a.takeSnapshot();
+  }), Entry.variableContainer.mapList(function(a) {
+    a.takeSnapshot();
   }), Entry.container.takeSequenceSnapshot(), Entry.scene.takeStartSceneSnapshot(), this.state = "run", this.fireEvent("start"));
   this.state = "run";
   "mobile" == Entry.type && this.view_.addClass("entryEngineBlueWorkspace");
@@ -21148,6 +21150,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
       this.board.alignThreads();
       this.board.reDraw();
     }
+  };
+  b.loadCodeFromText = function(a) {
+    a == Entry.Workspace.MODE_VIMBOARD && (a = this.vimBoard.textToCode(), this.board.code.load(a));
   };
   b.codeToText = function(a) {
     return this.vimBoard.codeToText(a);

@@ -154,6 +154,14 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         this.board.reDraw();
     };
 
+    p.loadCodeFromText = function(mode) {
+        if (mode != Entry.Workspace.MODE_VIMBOARD) return;
+        var changedCode = this.vimBoard.textToCode();
+        var board = this.board;
+        var code = board.code;
+        code.load(changedCode);
+    };
+
     p.codeToText = function(code) {
         return this.vimBoard.codeToText(code);
     };

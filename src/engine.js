@@ -452,6 +452,13 @@ Entry.Engine.prototype.run = function() {
  * toggle this engine state run
  */
 Entry.Engine.prototype.toggleRun = function() {
+    var mainWorkspace = Entry.playground.mainWorkspace; 
+    var boardMode = mainWorkspace.mode;
+    if(boardMode == Entry.Workspace.MODE_VIMBOARD) {
+        mainWorkspace.loadCodeFromText(boardMode); 
+        console.log("Start engine loadCodeFromText");
+    }
+    
     Entry.addActivity("run");
     if (this.state == 'stop') {
         Entry.container.mapEntity(function(entity){
@@ -467,6 +474,7 @@ Entry.Engine.prototype.toggleRun = function() {
         Entry.scene.takeStartSceneSnapshot();
         this.state = 'run';
         this.fireEvent('start');
+
     }
     this.state = 'run';
     if (Entry.type == 'mobile')
@@ -488,6 +496,8 @@ Entry.Engine.prototype.toggleRun = function() {
         Entry.engine.update();
         Entry.engine.isUpdating = true;
     }
+
+    
 
     Entry.stage.selectObject();
     Entry.dispatchEvent('run');

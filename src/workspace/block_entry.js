@@ -14110,7 +14110,7 @@ Entry.block = {
             return script.callReturn();
         },
         "event": "when_message_cast",
-        "syntax": {"js": [], "py": ["entry.on_signal_receive(%1)"]}
+        "syntax": {"js": [], "py": ["entry.on_signal_receive(%2)"]}
     },
     "message_cast": {
         "color": "#3BBD70",
@@ -14405,7 +14405,7 @@ Entry.block = {
                 }
             ]
         },
-        "syntax": {"js": [], "py": ["test varailblsdlf button"]}
+        "syntax": {"js": [], "py": [""]}
     },
     "listAddButton": {
         "skeleton": "basic_button",
@@ -14879,7 +14879,7 @@ Entry.block = {
             list.updateView();
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": [""]}
+        "syntax": {"js": [], "py": ["entry.add_item_to_list(%1, %2)"]}
     },
     "remove_value_from_list": {
         "color": "#E457DC",
@@ -14934,7 +14934,7 @@ Entry.block = {
             list.updateView();
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": [""]}
+        "syntax": {"js": [], "py": ["entry.remove_item_index_list(%1, %2)"]}
     },
     "insert_value_to_list": {
         "color": "#E457DC",
@@ -14998,7 +14998,7 @@ Entry.block = {
             list.updateView();
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": [""]}
+        "syntax": {"js": [], "py": ["entry.insert_item_to_list_index(%1, %2, %3)"]}
     },
     "change_value_list_index": {
         "color": "#E457DC",
@@ -15062,7 +15062,7 @@ Entry.block = {
             list.updateView();
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": [""]}
+        "syntax": {"js": [], "py": ["entry.replace_item_list(%1, %2, %3)"]}
     },
     "value_of_index_from_list": {
         "color": "#E457DC",
@@ -15126,7 +15126,7 @@ Entry.block = {
 
             return list.array_[index-1].data
         },
-        "syntax": {"js": [], "py": [""]}
+        "syntax": {"js": [], "py": ["entry.get_item_list_index(%2, %4)"]}
     },
     "length_of_list": {
         "color": "#E457DC",
@@ -15167,7 +15167,7 @@ Entry.block = {
 
             return list.array_.length;
         },
-        "syntax": {"js": [], "py": [""]}
+        "syntax": {"js": [], "py": ["entry.length_of_list(%2)"]}
     },
     "show_list": {
         "color": "#E457DC",
@@ -15204,7 +15204,7 @@ Entry.block = {
             list.setVisible(true);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": [""]}
+        "syntax": {"js": [], "py": ["entry.show_list(%1)"]}
     },
     "hide_list": {
         "color": "#E457DC",
@@ -15241,7 +15241,7 @@ Entry.block = {
             list.setVisible(false);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": [""]}
+        "syntax": {"js": [], "py": ["entry.hide_list(%1)"]}
     },
     "options_for_list": {
         "color": "#E457DC",
@@ -15386,7 +15386,7 @@ Entry.block = {
             }
             return false;
         },
-        "syntax": {"js": [], "py": [""]}
+        "syntax": {"js": [], "py": ["entry.is_item_included_list(%2, %4)"]}
     },
     "xbot_digitalInput": {
         "color": "#00979D",

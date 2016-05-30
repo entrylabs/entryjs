@@ -996,15 +996,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var result;
         var structure = {}; 
 
-        var operator = String(component.operator);
+        var operator = String(component.operator);  
 
-        switch(operator){
+        switch(operator){ 
             case "==": 
                 var syntax = String("(%1 %2boolean_compare# %3)"); 
                 break;
                        
             case "!=": 
-                var syntax = String("(%2 != True)"); 
+                var syntax = String("(%2 != True)");  
                 break; break;               
             case "===": break;               
             case "!==": break;               
@@ -1018,7 +1018,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var syntax = String("(%1 %2boolean_compare# %3)"); 
                 break;               
             case ">=": 
-                var syntax = String("(%1 %2boolean_compare# %3)"); 
+                var syntax = String("(%1 %2boolean_compare# %3)");  
                 break;                
             case "<<": break;              
             case ">>": break;               
