@@ -1128,6 +1128,7 @@ svg .svgBlockGroup text {
   height: 100%;
 }
 .entryVimBoard {
+  z-index: 0;
   position: absolute;
   top: 0;
   left: 0;
