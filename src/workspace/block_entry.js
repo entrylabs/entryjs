@@ -2362,11 +2362,12 @@ Entry.block = {
             return Math.round(result);
         }
     },
-    "nemoino_get_named_sensor_value": {
+        "nemoino_get_named_sensor_value": {
         "color": "#00979D",
         "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
+        "template": "%1 센서값",
         "params": [
             {
                 "type": "Dropdown",
@@ -2402,6 +2403,7 @@ Entry.block = {
         "fontColor": "#fff",
         "skeleton": "basic_boolean_field",
         "statements": [],
+        "template": "소리센서 %1",
         "params": [
             {
                 "type": "Dropdown",
@@ -2435,6 +2437,7 @@ Entry.block = {
         "fontColor": "#fff",
         "skeleton": "basic_boolean_field",
         "statements": [],
+        "template": "보드의 %1",
         "params": [
             {
                 "type": "Dropdown",
@@ -2469,6 +2472,7 @@ Entry.block = {
         "fontColor": "#fff",
         "skeleton": "basic_boolean_field",
         "statements": [],
+        "template": "3축 가속도센서 %1",
         "params": [
             {
                 "type": "Dropdown",
@@ -2521,6 +2525,7 @@ Entry.block = {
         "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
+        "template": "3축 가속도센서 %1 축의 센서값",
         "params": [
             {
                 "type": "Dropdown",
