@@ -285,6 +285,6 @@ p.checkDevice = function(data) {
 p.banHW = function() {
     var hwOptions = this.hwInfo;
     for (var i in hwOptions)
-        Entry.playground.mainWorkspace.blockMenu.banClass(hwOptions[i].name);
+        Entry.playground.mainWorkspace.blockMenu.banClass(hwOptions[i].name, true);
 
 };
