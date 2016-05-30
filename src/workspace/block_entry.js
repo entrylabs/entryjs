@@ -2022,7 +2022,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Text",
-                "text": !window.isOffline ? Lang.Blocks.ARDUINO_download_connector : Lang.Blocks.ARDUINO_open_connector,
+                "text": !Entry.isOffline ? Lang.Blocks.ARDUINO_download_connector : Lang.Blocks.ARDUINO_open_connector,
                 "color": "#333",
                 "align": "center"
             }
@@ -11071,7 +11071,7 @@ Entry.block = {
                         script.timeFlag = 0;
                     }, duration * 1000);
                     return script;
-                }               
+                }
             } else if (script.timeFlag == 1) {
                 return script;
             } else {
