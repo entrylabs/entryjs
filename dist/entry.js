@@ -19960,7 +19960,6 @@ Entry.Playground.prototype.updateHW = function() {
     var a = Entry.hw;
     a && a.connected ? (b.unbanClass("arduinoConnected", !0), b.banClass("arduinoDisconnected", !0), a.banHW(), a.hwModule && b.unbanClass(a.hwModule.name)) : (b.banClass("arduinoConnected", !0), b.unbanClass("arduinoDisconnected", !0), Entry.hw.banHW());
     b.align();
-    console.log("up hw");
   }
 };
 Entry.Playground.prototype.toggleLineBreak = function(b) {
