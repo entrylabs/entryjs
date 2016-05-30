@@ -2022,7 +2022,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Text",
-                "text": Lang.Blocks.ARDUINO_download_connector,
+                "text": !window.isOffline ? Lang.Blocks.ARDUINO_download_connector : Lang.Blocks.ARDUINO_open_connector,
                 "color": "#333",
                 "align": "center"
             }
