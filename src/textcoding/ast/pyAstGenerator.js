@@ -21,8 +21,12 @@ Entry.PyAstGenerator = function() {
             console.log("astTree", astTree);
             return astTree;
         }
-        catch (e) {
-            console.log("parsing error", e.toString());
+        catch (error) {
+            error.message = "파이썬 문법 오류입니다."
+            throw error;
+
+            //Entry.toast.alert('에러(Error)', error.message);
+            console.log("AST Error", error.toString());
         }
     }
 })(Entry.PyAstGenerator.prototype);

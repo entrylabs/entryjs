@@ -85,17 +85,24 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                 return;
 
             case Entry.Workspace.MODE_VIMBOARD:
-                if (this.board) this.board.hide();
-                if (this.overlayBoard) this.overlayBoard.hide();
-                this.textType = message;
-                this.set({selectedBoard:this.vimBoard});
-                this.vimBoard.show();
-                this.codeToText(this.board.code);
-                this.blockMenu.renderText();
-                this.board.clear();
-                this.mode = mode;
+                try {
+                    if (this.board) this.board.hide();
+                    if (this.overlayBoard) this.overlayBoard.hide();
+                    this.textType = message;
+                    this.set({selectedBoard:this.vimBoard});
+                    this.vimBoard.show();
+                    this.codeToText(this.board.code);
+                    this.blockMenu.renderText();
+                    this.board.clear();
+                    this.mode = mode;
+                } catch(e) {
+                    if (this.board) this.board.hide();
+                    this.set({selectedBoard:this.board});
+                    Entry.dispatchEvent('setProgrammingMode', Entry.Workspace.MODE_BOARD);
+                    throw e;
+                }
                 break;
-            case Entry.Workspace.MODE_BOARD: 
+            case Entry.Workspace.MODE_BOARD:   
                 try {
                     if (this.vimBoard) this.vimBoard.hide();
                     if (this.overlayBoard) this.overlayBoard.hide();
@@ -109,11 +116,15 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     this.mode = mode;
                 } catch(e) {
                     if (this.board) this.board.hide();
+                    if (this.overlayBoard) this.overlayBoard.hide();
                     this.set({selectedBoard:this.vimBoard});
+                    this.vimBoard.show();
+                    
                     Entry.dispatchEvent('setProgrammingMode', Entry.Workspace.MODE_VIMBOARD);
+                    
                     throw e;
                 }
-                Entry.commander.setCurrentEditor("board", this.board);
+                Entry.commander.setCurrentEditor("board", this.board); 
                 break;
             case Entry.Workspace.MODE_OVERLAYBOARD:
                 if (!this.overlayBoard)

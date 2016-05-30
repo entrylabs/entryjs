@@ -123,13 +123,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var syntax = String("len(%2)");
             type = this.getBlockType(syntax);
         } 
-         
-        
 
         console.log("CallExpression type after", type); 
         
         if(type) {
-
             var block = Entry.block[type]; 
             var paramsMeta = block.params;
             var paramsDefMeta = block.def.params; 
@@ -175,6 +172,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
             data.params = params;
         } else {
             data = null;
+            throw {
+                message : '지원하지 않는 표현식 입니다.',
+                node : component
+            };
         }
 
         result = data;

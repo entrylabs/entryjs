@@ -14,6 +14,9 @@ Entry.Vim = function(dom, textType) {
     Entry.Vim.PARSER_TYPE_PY_TO_BLOCK = 1;
     Entry.Vim.PARSER_TYPE_BLOCK_TO_JS = 2;
     Entry.Vim.PARSER_TYPE_BLOCK_TO_PY = 3;
+
+    Entry.Vim.PYTHON_IMPORT_ENTRY = "import Entry\n";
+    Entry.Vim.PYTHON_IMPORT_HW = "import hw\n";
    
 
 
@@ -130,8 +133,10 @@ Entry.Vim = function(dom, textType) {
 
         var textCode = this.codeMirror.getValue();
         var code = this._parser.parse(textCode);
-        if(code.length === 0) {
-            throw ('블록 파싱 오류');
+        if(code.length === 0) {   
+            throw {
+                message : '지원하지 않는 파이썬 코드를 포함하고 있습니다.',
+            };
         }
         return code;
     };
@@ -147,6 +152,11 @@ Entry.Vim = function(dom, textType) {
         } 
 
         var textCode = this._parser.parse(code);
+        textCode = Entry.Vim.PYTHON_IMPORT_ENTRY
+        .concat(Entry.Vim.PYTHON_IMPORT_HW)
+        .concat("\n")
+        .concat(textCode);
+
         this.codeMirror.setValue(textCode);
         // this.codeMirror.getDoc().markText({line:0, ch:0}, {line: 1, ch: 100}, {readOnly: true});
     };

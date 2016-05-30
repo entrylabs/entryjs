@@ -218,9 +218,11 @@ Entry.Parser = function(mode, type, cm) {
                     var pyAstGenerator = new Entry.PyAstGenerator();
                     console.log("code", code);
                     var threaded = code.split('\n\n');
+                    threaded.splice(0, 1);
                     threaded.splice(threaded.length-1, 1);
                     console.log("threaded", threaded);
                     var astArr = [];
+                    
                     for(var index in threaded) {
                         var astTree = pyAstGenerator.generate(threaded[index]);
                         astArr.push(astTree);
@@ -232,7 +234,7 @@ Entry.Parser = function(mode, type, cm) {
                     console.log("result", result);
                 } catch(error) {
                     if (this.codeMirror) {
-                        var annotation;
+                        /*var annotation;
                         if (error instanceof SyntaxError) {
                             annotation = {
                                 from: {line: error.loc.line - 1, ch: error.loc.column - 2},
@@ -250,11 +252,12 @@ Entry.Parser = function(mode, type, cm) {
                                 __annotation: annotation,
                                 clearOnEnter: true
                             });
-                        }
-
-                        Entry.toast.alert('Error', error.message);
+                        }*/
+                        //throw error;
+                        Entry.toast.alert('에러(Error)', error.message); 
+                        document.getElementById("entryCodingModeSelector").value = '2'; 
                     }
-                    result = [];
+                    result = []; 
                 }
                 break;
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:

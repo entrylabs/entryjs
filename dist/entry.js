@@ -11036,7 +11036,7 @@ Entry.PyAstGenerator = function() {
     try {
       return e = b(a, c), console.log("astTree", e), e;
     } catch (f) {
-      console.log("parsing error", f.toString());
+      throw f.message = "\ud30c\uc774\uc36c \ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.", f;
     }
   };
 })(Entry.PyAstGenerator.prototype);
@@ -11681,7 +11681,7 @@ Entry.PyToBlockParser = function(b) {
       b.type = e;
       b.params = h;
     } else {
-      b = null;
+      throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
     }
     console.log("CallExpression result", b);
     return b;
@@ -12405,6 +12405,7 @@ Entry.Parser = function(b, a, d) {
           var e = new Entry.PyAstGenerator;
           console.log("code", a);
           var f = a.split("\n\n");
+          f.splice(0, 1);
           f.splice(f.length - 1, 1);
           console.log("threaded", f);
           a = [];
@@ -12415,7 +12416,7 @@ Entry.Parser = function(b, a, d) {
           b = this._parser.Program(a);
           console.log("result", b);
         } catch (h) {
-          this.codeMirror && (h instanceof SyntaxError ? (b = {from:{line:h.loc.line - 1, ch:h.loc.column - 2}, to:{line:h.loc.line - 1, ch:h.loc.column + 1}}, h.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : (b = this.getLineNumber(h.node.start, h.node.end), b.message = h.message, b.severity = "error", this.codeMirror.markText(b.from, b.to, {className:"CodeMirror-lint-mark-error", __annotation:b, clearOnEnter:!0})), Entry.toast.alert("Error", h.message)), b = [];
+          this.codeMirror && (Entry.toast.alert("\uc5d0\ub7ec(Error)", h.message), document.getElementById("entryCodingModeSelector").value = "2"), b = [];
         }
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
@@ -20992,6 +20993,8 @@ Entry.Vim = function(b, a) {
   Entry.Vim.PARSER_TYPE_PY_TO_BLOCK = 1;
   Entry.Vim.PARSER_TYPE_BLOCK_TO_JS = 2;
   Entry.Vim.PARSER_TYPE_BLOCK_TO_PY = 3;
+  Entry.Vim.PYTHON_IMPORT_ENTRY = "import Entry\n";
+  Entry.Vim.PYTHON_IMPORT_HW = "import hw\n";
   b = "string" === typeof b ? $("#" + b) : $(b);
   if ("DIV" !== b.prop("tagName")) {
     return console.error("Dom is not div element");
@@ -21047,7 +21050,7 @@ Entry.Vim = function(b, a) {
     a = this.codeMirror.getValue();
     a = this._parser.parse(a);
     if (0 === a.length) {
-      throw "\ube14\ub85d \ud30c\uc2f1 \uc624\ub958";
+      throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud30c\uc774\uc36c \ucf54\ub4dc\ub97c \ud3ec\ud568\ud558\uace0 \uc788\uc2b5\ub2c8\ub2e4."};
     }
     return a;
   };
@@ -21055,6 +21058,7 @@ Entry.Vim = function(b, a) {
     var b = this.workspace.textType;
     b === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : b === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
     a = this._parser.parse(a);
+    a = Entry.Vim.PYTHON_IMPORT_ENTRY.concat(Entry.Vim.PYTHON_IMPORT_HW).concat("\n").concat(a);
     this.codeMirror.setValue(a);
   };
   b.getCodeToText = function(a) {
@@ -21109,21 +21113,17 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
       case c:
         return;
       case Entry.Workspace.MODE_VIMBOARD:
-        this.board && this.board.hide();
-        this.overlayBoard && this.overlayBoard.hide();
-        this.textType = b;
-        this.set({selectedBoard:this.vimBoard});
-        this.vimBoard.show();
-        this.codeToText(this.board.code);
-        this.blockMenu.renderText();
-        this.board.clear();
-        this.mode = a;
+        try {
+          this.board && this.board.hide(), this.overlayBoard && this.overlayBoard.hide(), this.textType = b, this.set({selectedBoard:this.vimBoard}), this.vimBoard.show(), this.codeToText(this.board.code), this.blockMenu.renderText(), this.board.clear(), this.mode = a;
+        } catch (e) {
+          throw this.board && this.board.hide(), this.set({selectedBoard:this.board}), Entry.dispatchEvent("setProgrammingMode", Entry.Workspace.MODE_BOARD), e;
+        }
         break;
       case Entry.Workspace.MODE_BOARD:
         try {
           this.vimBoard && this.vimBoard.hide(), this.overlayBoard && this.overlayBoard.hide(), this.board.show(), this.set({selectedBoard:this.board}), this.textToCode(c), this.vimBoard && this.vimBoard.hide(), this.overlayBoard && this.overlayBoard.hide(), this.blockMenu.renderBlock(), this.textType = b, this.mode = a;
         } catch (e) {
-          throw this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), Entry.dispatchEvent("setProgrammingMode", Entry.Workspace.MODE_VIMBOARD), e;
+          throw this.board && this.board.hide(), this.overlayBoard && this.overlayBoard.hide(), this.set({selectedBoard:this.vimBoard}), this.vimBoard.show(), Entry.dispatchEvent("setProgrammingMode", Entry.Workspace.MODE_VIMBOARD), e;
         }
         Entry.commander.setCurrentEditor("board", this.board);
         break;
