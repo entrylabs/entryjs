@@ -13000,7 +13000,7 @@ p.checkDevice = function(b) {
 p.banHW = function() {
   var b = this.hwInfo, a;
   for (a in b) {
-    Entry.playground.mainWorkspace.blockMenu.banClass(b[a].name);
+    Entry.playground.mainWorkspace.blockMenu.banClass(b[a].name, !0);
   }
 };
 Entry.BlockModel = function() {
@@ -15169,12 +15169,13 @@ Entry.BlockMenu = function(b, a, c, d) {
     this.svgGroup.appendChild(this.svgBlockGroup);
     this._scroller && this.svgGroup.appendChild(this._scroller.svgGroup);
   };
-  b.align = function() {
-    var a = this.code;
-    if (a) {
+  b.align = function(a) {
+    var b = this.code;
+    if (b) {
       this._clearSplitters();
-      a.view && a.view.reDraw();
-      for (var a = a.getThreads(), b = 10, d = "LEFT" == this._align ? 10 : this.svgDom.width() / 2, e, f = 0, g = a.length;f < g;f++) {
+      b.view && !a && b.view.reDraw();
+      a = b.getThreads();
+      for (var b = 10, d = "LEFT" == this._align ? 10 : this.svgDom.width() / 2, e, f = 0, g = a.length;f < g;f++) {
         var h = a[f].getFirstBlock(), k = h.view, h = Entry.block[h.type];
         this.checkBanClass(h) ? k.set({display:!1}) : (k.set({display:!0}), h = h.class, e && e !== h && (this._createSplitter(b), b += 15), e = h, h = d - k.offsetX, "CENTER" == this._align && (h -= k.width / 2), b -= k.offsetY, k._moveTo(h, b, !1), b += k.height + 15);
       }
@@ -15315,14 +15316,14 @@ Entry.BlockMenu = function(b, a, c, d) {
       this._categoryCodes[d] = e;
     }
   };
-  b.banClass = function(a) {
+  b.banClass = function(a, b) {
     0 > this._bannedClass.indexOf(a) && this._bannedClass.push(a);
-    this.align();
+    this.align(b);
   };
-  b.unbanClass = function(a) {
-    a = this._bannedClass.indexOf(a);
-    -1 < a && this._bannedClass.splice(a, 1);
-    this.align();
+  b.unbanClass = function(a, b) {
+    var d = this._bannedClass.indexOf(a);
+    -1 < d && this._bannedClass.splice(d, 1);
+    this.align(b);
   };
   b.checkBanClass = function(a) {
     if (a) {
@@ -19952,11 +19953,11 @@ Entry.Playground.prototype.getViewMode = function() {
   return this.viewMode_;
 };
 Entry.Playground.prototype.updateHW = function() {
-  var b = Entry.playground, a = b.mainWorkspace.blockMenu;
-  if (a) {
-    var c = Entry.hw;
-    c && c.connected ? (a.unbanClass("arduinoConnected"), a.banClass("arduinoDisconnected"), c.banHW(), c.hwModule && a.unbanClass(c.hwModule.name)) : (a.banClass("arduinoConnected"), a.unbanClass("arduinoDisconnected"), Entry.hw.banHW());
-    b.object && a.reDraw();
+  var b = Entry.playground.mainWorkspace.blockMenu;
+  if (b) {
+    var a = Entry.hw;
+    a && a.connected ? (b.unbanClass("arduinoConnected", !0), b.banClass("arduinoDisconnected", !0), a.banHW(), a.hwModule && b.unbanClass(a.hwModule.name)) : (b.banClass("arduinoConnected", !0), b.unbanClass("arduinoDisconnected", !0), Entry.hw.banHW());
+    b.align();
   }
 };
 Entry.Playground.prototype.toggleLineBreak = function(b) {

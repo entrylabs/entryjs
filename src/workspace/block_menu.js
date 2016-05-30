@@ -161,12 +161,12 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             this.svgGroup.appendChild(this._scroller.svgGroup);
     };
 
-    p.align = function() {
+    p.align = function(unReDraw) {
         var code = this.code;
         if (!code) return;
         this._clearSplitters();
 
-        if (code.view)
+        if (code.view && !unReDraw)
             code.view.reDraw();
 
         var threads = code.getThreads();
@@ -472,18 +472,18 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         }
     };
 
-    p.banClass = function(className) {
+    p.banClass = function(className, unReDraw) {
         var index = this._bannedClass.indexOf(className);
         if (index < 0)
             this._bannedClass.push(className);
-        this.align();
+        this.align(unReDraw);
     };
 
-    p.unbanClass = function(className) {
+    p.unbanClass = function(className, unReDraw) {
         var index = this._bannedClass.indexOf(className);
         if (index > -1)
             this._bannedClass.splice(index, 1);
-        this.align();
+        this.align(unReDraw);
     };
 
     p.checkBanClass = function(blockInfo) {
