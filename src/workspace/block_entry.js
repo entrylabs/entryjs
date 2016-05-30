@@ -4120,7 +4120,7 @@ Entry.block = {
             var rightValue = script.getNumberValue("RIGHTHAND", script);
             return leftValue % rightValue;
         },
-        "syntax": {"js": [], "py": [""]}
+        "syntax": {"js": [], "py": ["entry.get_remainder(%1, %3)"]}
     },
     "calc_share": {
         "color": "#FFD974",
@@ -14492,7 +14492,7 @@ Entry.block = {
             variable.setValue((value + variable.getValue()).toFixed(fixed));
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": [""]}
+        "syntax": {"js": [], "py": ["entry.change_variable(%1, %2)"]}
     },
     "set_variable": {
         "color": "#E457DC",
@@ -14554,7 +14554,7 @@ Entry.block = {
             variable.setValue(value);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": [""]}
+        "syntax": {"js": [], "py": ["entry.set_variable(%1, %2)"]}
     },
     "show_variable": {
         "color": "#E457DC",
@@ -14604,7 +14604,7 @@ Entry.block = {
             variable.updateView();
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": [""]}
+        "syntax": {"js": [], "py": ["entry.show_variable(%1)"]}
     },
     "hide_variable": {
         "color": "#E457DC",
@@ -14653,7 +14653,7 @@ Entry.block = {
             variable.setVisible(false);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": [""]}
+        "syntax": {"js": [], "py": ["entry.hide_variable(%1)"]}
     },
     "get_variable": {
         "color": "#E457DC",
@@ -14701,7 +14701,7 @@ Entry.block = {
             var variable = Entry.variableContainer.getVariable(variableId, sprite);
             return variable.getValue();
         },
-        "syntax": {"js": [], "py": [""]}
+        "syntax": {"js": [], "py": ["entry.get_variable(%1)"]}
     },
     "ask_and_wait": {
         "color": "#E457DC",

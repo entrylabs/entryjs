@@ -101,7 +101,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
         else if(calleeName == "__pythonRuntime.ops.add") {
             //if(typeof arguments[0].value == "number") {
-                var syntax = String("(%1 %2 %3)");
+                var syntax = String("(%1 %2calc_basic# %3)");
                 type = this.getBlockType(syntax);
 
                 argumentData = {raw:"PLUS", type:"Literal", value:"PLUS"};
@@ -112,7 +112,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             } */
         }
         else if(calleeName == "__pythonRuntime.ops.multiply") {
-            var syntax = String("(%1 %2 %3)");
+            var syntax = String("(%1 %2calc_basic# %3)");
             type = this.getBlockType(syntax);
     
             argumentData = {raw:"MULTI", type:"Literal", value:"MULTI"};

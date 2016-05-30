@@ -11663,7 +11663,7 @@ Entry.PyToBlockParser = function(b) {
     console.log("CallExpression calleeName", c);
     var e = this.getBlockType(c);
     console.log("CallExpression type before", e);
-    "__pythonRuntime.functions.range" == c ? e = this.getBlockType("%1number#") : "__pythonRuntime.ops.add" == c ? (e = this.getBlockType("(%1 %2 %3)"), argumentData = {raw:"PLUS", type:"Literal", value:"PLUS"}, arguments.splice(1, 0, argumentData)) : "__pythonRuntime.ops.multiply" == c ? (e = this.getBlockType("(%1 %2 %3)"), argumentData = {raw:"MULTI", type:"Literal", value:"MULTI"}, arguments.splice(1, 0, argumentData)) : "__pythonRuntime.functions.len" == c && (e = this.getBlockType("len(%2)"));
+    "__pythonRuntime.functions.range" == c ? e = this.getBlockType("%1number#") : "__pythonRuntime.ops.add" == c ? (e = this.getBlockType("(%1 %2calc_basic# %3)"), argumentData = {raw:"PLUS", type:"Literal", value:"PLUS"}, arguments.splice(1, 0, argumentData)) : "__pythonRuntime.ops.multiply" == c ? (e = this.getBlockType("(%1 %2calc_basic# %3)"), argumentData = {raw:"MULTI", type:"Literal", value:"MULTI"}, arguments.splice(1, 0, argumentData)) : "__pythonRuntime.functions.len" == c && (e = this.getBlockType("len(%2)"));
     console.log("CallExpression type after", e);
     if (e) {
       var f = Entry.block[e], g = f.params, f = f.def.params, h = [];

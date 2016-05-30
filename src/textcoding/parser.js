@@ -206,11 +206,11 @@ Entry.Parser = function(mode, type, cm) {
                                 __annotation: annotation,
                                 clearOnEnter: true
                             });
-                        }
+                        } 
 
                         Entry.toast.alert('Error', error.message);
                     }
-                    result = [];
+                    result = []; 
                 }
                 break;
             case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
