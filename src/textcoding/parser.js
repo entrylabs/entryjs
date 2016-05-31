@@ -217,20 +217,35 @@ Entry.Parser = function(mode, type, cm) {
                 try {
                     var pyAstGenerator = new Entry.PyAstGenerator();
                     console.log("code", code);
-                    var threaded = code.split('\n\n');
-                    threaded.splice(0, 1);
-                    threaded.splice(threaded.length-1, 1);
-                    console.log("threaded", threaded);
-                    var astArr = [];
+                    var threads = code.split('\n\n');
+
+                    console.log("threads", threads);
+
+                    for(var i in threads) {
+                        console.log("thread", threads[i]);
+                        console.log("search", threads[i].search("import"));
+
+                        if(threads[i].search("import") != -1) {
+                            threads.splice(i, 1, "");
+
+                        }
+                    }
                     
-                    for(var index in threaded) {
-                        var astTree = pyAstGenerator.generate(threaded[index]);
-                        astArr.push(astTree);
+                    threads.splice(threads.length-1, 1); 
+                    console.log("threads", threads);
+                    var astArray = [];
+                    
+                    for(var index in threads) {
+                        var ast = pyAstGenerator.generate(threads[index]);
+                        if(ast.type == "Program" && ast.body.length != 0)
+                            astArray.push(ast);
                     }
 
-                    console.log("astArr", astArr);
+                    console.log("astArray", astArray);
 
-                    result = this._parser.Program(astArr);
+                    result = this._parser.Program(astArray);
+
+
                     console.log("result", result);
                 } catch(error) {
                     if (this.codeMirror) {

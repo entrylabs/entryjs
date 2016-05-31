@@ -155,7 +155,7 @@ Entry.Vim = function(dom, textType) {
         textCode = Entry.Vim.PYTHON_IMPORT_ENTRY
         .concat(Entry.Vim.PYTHON_IMPORT_HW)
         .concat("\n")
-        .concat(textCode);
+        .concat(textCode); 
 
         this.codeMirror.setValue(textCode);
         // this.codeMirror.getDoc().markText({line:0, ch:0}, {line: 1, ch: 100}, {readOnly: true});

@@ -34,7 +34,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
 
             console.log("thread", thread);
-            code.push(thread);    
+            if(thread.length != 0)
+                code.push(thread);    
         }
         return code;
     };

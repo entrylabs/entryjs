@@ -11641,7 +11641,7 @@ Entry.PyToBlockParser = function(b) {
         e.push(g);
       }
       console.log("thread", e);
-      b.push(e);
+      0 != e.length && b.push(e);
     }
     return b;
   };
@@ -12396,8 +12396,8 @@ Entry.Parser = function(b, a, d) {
       case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
         try {
           var c = (new Entry.JsAstGenerator).generate(a), b = this._parser.Program(c);
-        } catch (h) {
-          this.codeMirror && (h instanceof SyntaxError ? (b = {from:{line:h.loc.line - 1, ch:h.loc.column - 2}, to:{line:h.loc.line - 1, ch:h.loc.column + 1}}, h.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : (b = this.getLineNumber(h.node.start, h.node.end), b.message = h.message, b.severity = "error", this.codeMirror.markText(b.from, b.to, {className:"CodeMirror-lint-mark-error", __annotation:b, clearOnEnter:!0})), Entry.toast.alert("Error", h.message)), b = [];
+        } catch (l) {
+          this.codeMirror && (l instanceof SyntaxError ? (b = {from:{line:l.loc.line - 1, ch:l.loc.column - 2}, to:{line:l.loc.line - 1, ch:l.loc.column + 1}}, l.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : (b = this.getLineNumber(l.node.start, l.node.end), b.message = l.message, b.severity = "error", this.codeMirror.markText(b.from, b.to, {className:"CodeMirror-lint-mark-error", __annotation:b, clearOnEnter:!0})), Entry.toast.alert("Error", l.message)), b = [];
         }
         break;
       case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
@@ -12405,18 +12405,22 @@ Entry.Parser = function(b, a, d) {
           var e = new Entry.PyAstGenerator;
           console.log("code", a);
           var f = a.split("\n\n");
-          f.splice(0, 1);
-          f.splice(f.length - 1, 1);
-          console.log("threaded", f);
-          a = [];
+          console.log("threads", f);
           for (var g in f) {
-            c = e.generate(f[g]), a.push(c);
+            console.log("thread", f[g]), console.log("search", f[g].search("import")), -1 != f[g].search("import") && f.splice(g, 1, "");
           }
-          console.log("astArr", a);
+          f.splice(f.length - 1, 1);
+          console.log("threads", f);
+          a = [];
+          for (var h in f) {
+            var k = e.generate(f[h]);
+            "Program" == k.type && 0 != k.body.length && a.push(k);
+          }
+          console.log("astArray", a);
           b = this._parser.Program(a);
           console.log("result", b);
-        } catch (h) {
-          this.codeMirror && (Entry.toast.alert("\uc5d0\ub7ec(Error)", h.message), document.getElementById("entryCodingModeSelector").value = "2"), b = [];
+        } catch (l) {
+          this.codeMirror && (Entry.toast.alert("\uc5d0\ub7ec(Error)", l.message), document.getElementById("entryCodingModeSelector").value = "2"), b = [];
         }
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
