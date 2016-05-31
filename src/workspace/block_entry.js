@@ -2022,7 +2022,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Text",
-                "text": Lang.Blocks.ARDUINO_download_connector,
+                "text": !Entry.isOffline ? Lang.Blocks.ARDUINO_download_connector : Lang.Blocks.ARDUINO_open_connector,
                 "color": "#333",
                 "align": "center"
             }
@@ -2337,6 +2337,217 @@ Entry.block = {
         },
         "class": "CODEino",
         "isNotFor": [ "CODEino" ],
+        "func": function (sprite, script) {
+            var value1 = Entry.hw.getAnalogPortValue(script.getField("PORT", script));
+            var value2 = 265;
+            var value3 = 402;
+            var value4 = -90;
+            var value5 = 90;
+            var result = value1;
+            if (value2 > value3) {
+                var swap = value2;
+                value2 = value3;
+                value3 = swap;
+            }
+            if (value4 > value5) {
+                var swap = value4;
+                value4 = value5;
+                value5 = swap;
+            }
+            result -= value2;
+            result = result * ((value5 - value4) / (value3 - value2));
+            result += value4;
+            result = Math.min(value5, result);
+            result = Math.max(value4, result);
+            return Math.round(result);
+        }
+    },
+        "nemoino_get_named_sensor_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1 센서값",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["소리","0"],
+                    ["빛","1"],
+                    ["슬라이더","2"],
+                    ["저항-A","3"],
+                    ["저항-B","4"],
+                    ["저항-C","5"],
+                    ["저항-D","6"]
+                ],
+                "value": "0",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "nemoino_get_named_sensor_value"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "nemoino",
+        "isNotFor": [ "nemoino" ],
+        "func": function (sprite, script) {
+            return Entry.hw.getAnalogPortValue(script.getField("PORT", script));
+        }
+    },
+    "nemoino_get_sound_status": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "template": "소리센서 %1",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["소리큼","GREAT"],
+                    ["소리작음","SMALL"]
+                ],
+                "value": "GREAT",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "nemoino_get_sound_status"
+        },
+        "paramsKeyMap": {
+            "STATUS": 0
+        },
+        "class": "nemoino",
+        "isNotFor": [ "nemoino" ],
+        "func": function (sprite, script) {
+            var value1 = script.getField("STATUS", script);
+            var value2 = 0;
+            if (value1 == "GREAT") return Entry.hw.getAnalogPortValue(value2) > 600 ? 1 : 0;
+            else return Entry.hw.getAnalogPortValue(value2) < 600 ? 1 : 0;
+        }
+    },
+    "nemoino_is_button_pressed": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "template": "보드의 %1",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["버튼누름","4"],
+                    ["A연결됨","17"]
+                ],
+                "value": "4",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "nemoino_is_button_pressed"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "nemoino",
+        "isNotFor": [ "nemoino" ],
+        "func": function (sprite, script) {
+            var value = script.getNumberField("PORT", script);
+            if (value > 14) {
+                value = value - 14;
+                return !Entry.hw.getAnalogPortValue(value);
+            } else return !Entry.hw.getDigitalPortValue(value);
+        }
+    },
+    "nemoino_get_accelerometer_direction": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "template": "3축 가속도센서 %1",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["왼쪽 기울임", "LEFT"],
+                    ["오른쪽 기울임", "RIGHT"],
+                    ["위쪽 기울임", "FRONT"],
+                    ["아래쪽 기울임", "REAR"],
+                    ["뒤집힘", "REVERSE"]
+                ],
+                "value": "LEFT",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "nemoino_get_accelerometer_direction"
+        },
+        "paramsKeyMap": {
+            "DIRECTION": 0
+        },
+        "class": "nemoino",
+        "isNotFor": [ "nemoino" ],
+        "func": function (sprite, script) {
+            var value1 = script.getField("DIRECTION", script);
+            var value2 = 0;
+            if (value1 == "LEFT" || value1 =="RIGHT") value2 = 3;
+            else if (value1 == "FRONT" || value1 =="REAR") value2 = 4;
+            else if (value1 == "REVERSE") value2 = 5;
+            var value3 = Entry.hw.getAnalogPortValue(value2);
+            var value4 = 265;
+            var value5 = 402;
+            var value6 = -90;
+            var value7 = 90;
+            var result = value3;
+            result -= value4;
+            result = result * ((value7 - value6) / (value5 - value4));
+            result += value6;
+            result = Math.min(value7, result);
+            result = Math.max(value6, result);
+            result = Math.round(result);
+            if (value1 == "LEFT" || value1 == "REAR") return result < -30 ? 1 : 0;
+            else if (value1 == "RIGHT" || value1 == "FRONT") return result > 30 ? 1 : 0;
+            else if (value1 == "REVERSE") return result < -50 ? 1 : 0;
+        }
+    },
+    "nemoino_get_accelerometer_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "3축 가속도센서 %1 축의 센서값",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "X", "3" ],
+                    [ "Y", "4" ],
+                    [ "Z", "5" ]
+                ],
+                "value": "3",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "nemoino_get_accelerometer_value"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "nemoino",
+        "isNotFor": [ "nemoino" ],
         "func": function (sprite, script) {
             var value1 = Entry.hw.getAnalogPortValue(script.getField("PORT", script));
             var value2 = 265;
@@ -10710,7 +10921,7 @@ Entry.block = {
         "skeleton": "basic_string_field",
         "fontColor": "#fff",
         "statements": [],
-        "template": "%1 값의 범위를 %2 에서 %3 (으)로 변환",
+        "template": "%1 값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 변환",
         "params": [{
             "type": "Dropdown",
             "options": [
@@ -10728,13 +10939,25 @@ Entry.block = {
         }, {
             "type": "Block",
             "accept": "string"
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Block",
+            "accept": "string"
         }],
         "events": {},
         "def": {
             "params": [null, {
                 "type": "number",
                 "params": [ "0" ]
-            },  {
+            }, {
+                "type": "number",
+                "params": [ "255" ]
+            }, {
+                "type": "number",
+                "params": [ "0" ]
+            }, {
                 "type": "number",
                 "params": [ "100" ]
             }],
@@ -10742,16 +10965,26 @@ Entry.block = {
         },
         "paramsKeyMap": {
             "PORT": 0,
-            "MIN": 1,
-            "MAX": 2
+            "OMIN": 1,
+            "OMAX": 2,
+            "MIN": 3,
+            "MAX": 4
         },
         "class": "neobot_value",
         "isNotFor": ["neobot"],
         "func": function (sprite, script) {
             var port = script.getStringField('PORT');
             var value = Entry.hw.portData[port];
+            var omin = script.getNumberValue("OMIN", script);
+            var omax = script.getNumberValue("OMAX", script);
             var min = script.getNumberValue("MIN", script);
             var max = script.getNumberValue("MAX", script);
+
+            if (omin > omax) {
+                var temp = omin;
+                omin = omax;
+                omax = temp;
+            }
 
             if(min > max) {
                 var temp = min;
@@ -10759,7 +10992,8 @@ Entry.block = {
                 max = temp;
             }
 
-            value = value * ((max - min) / 255);
+            value -= omin;
+            value = value * ((max - min) / (omax - omin));
             value += min;
             value = Math.min(max, value);
             value = Math.max(min, value);
@@ -11048,7 +11282,7 @@ Entry.block = {
                         script.timeFlag = 0;
                     }, duration * 1000);
                     return script;
-                }               
+                }
             } else if (script.timeFlag == 1) {
                 return script;
             } else {
@@ -11193,55 +11427,10 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "FND에 %1 %2 출력 %3",
+        "template": "FND에 %1 출력 %2",
         "params": [{
-            "type": "Dropdown",
-            "options": [
-                ["0", "0"],
-                ["1", "1"],
-                ["2", "2"],
-                ["3", "3"],
-                ["3", "3"],
-                ["4", "4"],
-                ["5", "5"],
-                ["6", "6"],
-                ["7", "7"],
-                ["8", "8"],
-                ["9", "9"],
-                ["A", "A"],
-                ["B", "B"],
-                ["C", "C"],
-                ["D", "D"],
-                ["E", "E"],
-                ["F", "F"]
-            ],
-            "value": "0",
-            "fontSize": 11,
-            'arrowColor': EntryStatic.ARROW_COLOR_HW
-        }, {
-            "type": "Dropdown",
-            "options": [
-                ["0", "0"],
-                ["1", "1"],
-                ["2", "2"],
-                ["3", "3"],
-                ["3", "3"],
-                ["4", "4"],
-                ["5", "5"],
-                ["6", "6"],
-                ["7", "7"],
-                ["8", "8"],
-                ["9", "9"],
-                ["A", "A"],
-                ["B", "B"],
-                ["C", "C"],
-                ["D", "D"],
-                ["E", "E"],
-                ["F", "F"]
-            ],
-            "value": "0",
-            "fontSize": 11,
-            'arrowColor': EntryStatic.ARROW_COLOR_HW
+            "type": "Block",
+            "accept": "string"
         }, {
             "type": "Indicator",
             "img": "block_icon/hardware_03.png",
@@ -11249,20 +11438,23 @@ Entry.block = {
         }],
         "events": {},
         "def": {
-            "params": [null, null],
+            "params": [ {
+                "type": "number",
+                "params": [ "0" ]
+            }, null],
             "type": "neobot_set_fnd"
         },
         "paramsKeyMap": {
-            "LVALUE": 0,
-            "RVALUE": 1
+            "VALUE": 0
         },
         "class": "neobot_output",
         "isNotFor": ["neobot"],
         "func": function (sprite, script) {
-            var lvalue = script.getField('LVALUE', script);
-            var rvalue = script.getField('RVALUE', script);
-            var hexValue = lvalue + rvalue;
-            Entry.hw.sendQueue['FND'] = parseInt(hexValue, 16);
+            var value = script.getNumberValue('VALUE', script);
+            if(value > 99) {
+                value = 99;
+            }
+            Entry.hw.sendQueue['FND'] = parseInt('0x' + value);
             Entry.hw.sendQueue['OPT'] = Entry.hw.sendQueue['OPT'] | 8;
             return script.callReturn();
         }
@@ -15735,7 +15927,7 @@ Entry.block = {
         },
         "class": "xbot_sensor",
         "isNotFor": [ "xbot_epor_edge" ],
-        "func": function (script, sprite) {
+        "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
             var note = script.getStringField("NOTE", script);
             var octave = script.getStringField("OCTAVE", script);

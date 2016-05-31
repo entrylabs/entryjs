@@ -298,6 +298,11 @@ EntryStatic.getAllBlocks = function() {
                 "dplay_robot_speed_sel",
                 "dplay_robot_stop",
                 //nemoino
+                "nemoino_get_named_sensor_value",
+                "nemoino_get_sound_status",
+                "nemoino_is_button_pressed",
+                "nemoino_get_accelerometer_direction",
+                "nemoino_get_accelerometer_value",
                 "nemoino_get_number_sensor_value",
                 "nemoino_get_digital_value",
                 "nemoino_toggle_led",
@@ -2016,6 +2021,36 @@ EntryStatic.blockInfo = {
         "isNotFor": ["CODEino"],
         "usage": ["arduino"],
         "class": "CODEino"
+    },
+        "nemoino_get_named_sensor_value": {
+        "xml": "<block type='nemoino_get_named_sensor_value'></block>",
+        "isNotFor": ['nemoino'],
+        "usage": ["arduino"],
+        "class": "nemoino"
+    },
+    "nemoino_get_sound_status": {
+        "xml": "<block type='nemoino_get_sound_status'></block>",
+        "isNotFor": ["nemoino"],
+        "usage": ["arduino"],
+        "class": "nemoino"
+    },
+    "nemoino_is_button_pressed": {
+        "xml": "<block type='nemoino_is_button_pressed'></block>",
+        "isNotFor": ["nemoino"],
+        "usage": ["arduino"],
+        "class": "nemoino"
+    },
+    "nemoino_get_accelerometer_direction": {
+        "xml": "<block type='nemoino_get_accelerometer_direction'></block>",
+        "isNotFor": ["nemoino"],
+        "usage": ["arduino"],
+        "class": "nemoino"
+    },
+    "nemoino_get_accelerometer_value": {
+        "xml": "<block type='nemoino_get_accelerometer_value'></block>",
+        "isNotFor": ["nemoino"],
+        "usage": ["arduino"],
+        "class": "nemoino"
     },
     "dplay_get_tilt": {
         "xml": "<block type='dplay_get_tilt'></block>",
