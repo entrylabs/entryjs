@@ -5746,7 +5746,7 @@ Entry.block = {
             return value ? script.getStatement("DO", script) :
                 script.callReturn();
         },
-        "syntax": {"js": [], "py": ["particular block"]}
+        "syntax": {"js": [], "py": ["not yet supported in textcoding"]}
     },
     "stop_object": {
         "color": "#498deb",

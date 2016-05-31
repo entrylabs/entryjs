@@ -20997,8 +20997,7 @@ Entry.Vim = function(b, a) {
   Entry.Vim.PARSER_TYPE_PY_TO_BLOCK = 1;
   Entry.Vim.PARSER_TYPE_BLOCK_TO_JS = 2;
   Entry.Vim.PARSER_TYPE_BLOCK_TO_PY = 3;
-  Entry.Vim.PYTHON_IMPORT_ENTRY = "import Entry\n";
-  Entry.Vim.PYTHON_IMPORT_HW = "import hw\n";
+  Entry.Vim.PYTHON_IMPORT_HW = "import hw from EntryText";
   b = "string" === typeof b ? $("#" + b) : $(b);
   if ("DIV" !== b.prop("tagName")) {
     return console.error("Dom is not div element");
@@ -21062,7 +21061,7 @@ Entry.Vim = function(b, a) {
     var b = this.workspace.textType;
     b === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : b === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
     a = this._parser.parse(a);
-    a = Entry.Vim.PYTHON_IMPORT_ENTRY.concat(Entry.Vim.PYTHON_IMPORT_HW).concat("\n").concat(a);
+    a = Entry.Vim.PYTHON_IMPORT_HW.concat("\n\n").concat(a);
     this.codeMirror.setValue(a);
   };
   b.getCodeToText = function(a) {
