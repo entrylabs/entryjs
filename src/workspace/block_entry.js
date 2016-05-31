@@ -8722,7 +8722,7 @@ Entry.block = {
         "isNotFor": [ "textBox" ],
         "func": function (sprite, script) {
             var picture;
-            if(!script.fields || script.getStringField("DRIECTION") !== 'prev') {
+            if(script.getStringField("DRIECTION") !== 'prev') {
                 picture = sprite.parent.getNextPicture(sprite.picture.id);
             } else {
                 picture = sprite.parent.getPrevPicture(sprite.picture.id);
