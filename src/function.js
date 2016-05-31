@@ -23,6 +23,7 @@ Entry.Func = function(func) {
         ]
     ]);
     this.block = null;
+    this.blockMenuBlock = null;
     this.hashMap = {};
 
     this.paramMap = {};
@@ -59,6 +60,7 @@ Entry.Func.registerFunction = function(func) {
     this._targetFuncBlock = menuCode.createThread([{
         type: "func_" + func.id
     }]);
+    func.blockMenuBlock = this._targetFuncBlock;
 };
 
 Entry.Func.executeFunction = function(threadHash) {
@@ -82,6 +84,10 @@ Entry.Func.prototype.init = function(model) {
     this.content = Blockly.Xml.textToDom(model.content);
     var xmlText = '<xml>' + model.block + '</xml>';
     this.block = Blockly.Xml.textToDom(xmlText).childNodes[0];
+};
+
+Entry.Func.prototype.destroy = function() {
+    this.blockMenuBlock.destroy();
 };
 
 Entry.Func.edit = function(func) {
