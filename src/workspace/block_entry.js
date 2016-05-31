@@ -17691,14 +17691,14 @@ Entry.block = {
                 Entry.dplay.vel_value = value2;
             }
             else if (operator > 0) {
-                result = operator + 155;
+                result = operator + 154;
                 result = Math.round(result);
                 value1 = 0;
                 value2 = result;
                 Entry.dplay.vel_value = value2;
             }
             else if (operator < 0) {
-                result = operator - 155;
+                result = operator - 154;
                 result = Math.round(result);
                 value1 = -result;
                 value2 = 0;
@@ -18037,14 +18037,14 @@ Entry.block = {
                 Entry.dplay.vel_value = value2;
             }
             else if (operator > 0) {
-                result = operator + 155;
+                result = operator + 154;
                 result = Math.round(result);
                 value1 = 0;
                 value2 = result;
                 Entry.dplay.vel_value = value2;
             }
             else if (operator < 0) {
-                result = operator - 155;
+                result = operator - 154;
                 result = Math.round(result);
                 value1 = -result;
                 value2 = 0;
