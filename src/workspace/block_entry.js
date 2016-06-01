@@ -17586,7 +17586,6 @@ Entry.block = {
         "class": "dplay_set",
         "isNotFor": ["dplay"],
         "func": function (sprite, script) {
-            var sq = Entry.hw.sendQueue;
             var port = script.getField("PORT");
             var port1 = 0;
             var port2 = 0;
@@ -17691,14 +17690,14 @@ Entry.block = {
                 Entry.dplay.vel_value = value2;
             }
             else if (operator > 0) {
-                result = operator + 154;
+                result = operator + 155;
                 result = Math.round(result);
                 value1 = 0;
                 value2 = result;
                 Entry.dplay.vel_value = value2;
             }
             else if (operator < 0) {
-                result = operator - 154;
+                result = operator - 155;
                 result = Math.round(result);
                 value1 = -result;
                 value2 = 0;
@@ -18035,14 +18034,14 @@ Entry.block = {
                 Entry.dplay.vel_value = value2;
             }
             else if (operator > 0) {
-                result = operator + 154;
+                result = operator + 155;
                 result = Math.round(result);
                 value1 = 0;
                 value2 = result;
                 Entry.dplay.vel_value = value2;
             }
             else if (operator < 0) {
-                result = operator - 154;
+                result = operator - 155;
                 result = Math.round(result);
                 value1 = -result;
                 value2 = 0;
