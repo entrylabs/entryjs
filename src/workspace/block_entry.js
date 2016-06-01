@@ -17929,18 +17929,19 @@ Entry.block = {
             else if (port == "3") {
               port1 = 3; port2 = 5; port3 = 11; port4 = 6;
             }
+            var temp = Entry.dplay.vel_value;
             var operator = script.getField("OPERATOR");
             var value1 = 0;
             var value2 = 0;
             var value3 = 0;
             var value4 = 0;
             if (operator == "FRONT") {
-                value1 = 255;
+                value1 = temp;
                 value2 = 0;
             }
             else if (operator == "REAR") {
                 value1 = 0;
-                value2 = 255;
+                value2 = temp;
             }
             else if (operator == "OFF") {
                 value1 = 0;
@@ -18015,18 +18016,21 @@ Entry.block = {
             if (operator == 0) {
                 value1 = 0;
                 value2 = 0;
+                Entry.dplay.vel_value = value2;
             }
             else if (operator > 0) {
-                result = operator + 155;
+                result = operator + 154;
                 result = Math.round(result);
                 value1 = 0;
                 value2 = result;
+                Entry.dplay.vel_value = value2;
             }
             else if (operator < 0) {
-                result = operator - 155;
+                result = operator - 154;
                 result = Math.round(result);
                 value1 = -result;
                 value2 = 0;
+                Entry.dplay.vel_value = value1;
             }
             Entry.hw.setDigitalPortValue(port1, value1);
             Entry.hw.setDigitalPortValue(port2, value2);
@@ -18361,14 +18365,14 @@ Entry.block = {
                 Entry.dplay.vel_value = value2;
             }
             else if (operator > 0) {
-                result = operator + 155;
+                result = operator + 154;
                 result = Math.round(result);
                 value1 = 0;
                 value2 = result;
                 Entry.dplay.vel_value = value2;
             }
             else if (operator < 0) {
-                result = operator - 155;
+                result = operator - 154;
                 result = Math.round(result);
                 value1 = -result;
                 value2 = 0;
