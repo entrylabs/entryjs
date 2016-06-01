@@ -287,6 +287,8 @@ Entry.Utils.bindGlobalEvent = function(options) {
 
 Entry.Utils.makeActivityReporter = function() {
     Entry.activityReporter = new Entry.ActivityReporter();
+    if (Entry.commander)
+        Entry.commander.addReporter(Entry.activityReporter);
     return Entry.activityReporter;
 };
 

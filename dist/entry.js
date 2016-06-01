@@ -356,7 +356,7 @@ Blockly.Blocks.albert_set_eye_to = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.albert_set_eye_to = function(b, a) {
-  var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a), e = +a.getField("COLOR", a);
+  var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a), e = Number(a.getField("COLOR", a));
   "LEFT" == d ? c.leftEye = e : ("RIGHT" != d && (c.leftEye = e), c.rightEye = e);
   return a.callReturn();
 };
@@ -667,7 +667,7 @@ Blockly.Blocks.albert_set_led_to = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.albert_set_led_to = function(b, a) {
-  var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a), e = +a.getField("COLOR", a);
+  var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a), e = Number(a.getField("COLOR", a));
   "FRONT" == d ? (c.leftEye = e, c.rightEye = e) : "LEFT" == d ? c.leftEye = e : c.rightEye = e;
   return a.callReturn();
 };
@@ -774,7 +774,7 @@ Entry.block.arduino_get_number = function(b, a) {
   d.open("POST", "http://localhost:23518/arduino/", !1);
   d.send(String(c));
   Entry.assert(200 == d.status, "arduino is not connected");
-  return +d.responseText;
+  return Number(d.responseText);
 };
 Blockly.Blocks.arduino_get_number = {init:function() {
   this.setColour("#00979D");
@@ -856,8 +856,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(c, d);
+  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
   return a.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1057,8 +1057,8 @@ Blockly.Blocks.dplay_select_led = {init:function() {
 Entry.block.dplay_select_led = function(b, a) {
   var c = a.getField("PORT"), d = 7;
   "7" == c ? d = 7 : "8" == c ? d = 8 : "9" == c ? d = 9 : "10" == c && (d = 10);
-  c = "on" == a.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(d, c);
+  c = a.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(d, "on" == c ? 255 : 0);
   return a.callReturn();
 };
 Blockly.Blocks.dplay_get_switch_status = {init:function() {
@@ -1639,7 +1639,7 @@ Blockly.Blocks.coordinate_mouse = {init:function() {
   this.setInputsInline(!0);
 }};
 Entry.block.coordinate_mouse = function(b, a) {
-  return "x" === a.getField("VALUE", a) ? +Entry.stage.mouseCoordinate.x : +Entry.stage.mouseCoordinate.y;
+  return "x" === a.getField("VALUE", a) ? Number(Entry.stage.mouseCoordinate.x) : Number(Entry.stage.mouseCoordinate.y);
 };
 Blockly.Blocks.coordinate_object = {init:function() {
   this.setColour(calcBlockColor);
@@ -1663,7 +1663,7 @@ Entry.block.coordinate_object = function(b, a) {
       var d = c.parent, d = d.pictures;
       return d.indexOf(c.picture) + 1;
     case "size":
-      return +c.getSize().toFixed(1);
+      return Number(c.getSize().toFixed(1));
     case "picture_name":
       return d = c.parent, d = d.pictures, d[d.indexOf(c.picture)].name;
   }
@@ -2068,10 +2068,10 @@ Entry.block.wait_second = function(b, a) {
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
+  var c = a.getNumberValue("SECOND", a);
   setTimeout(function() {
     a.timeFlag = 0;
-  }, c);
+  }, 60 / (Entry.FPS || 60) * c * 1E3);
   return a;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -2806,7 +2806,7 @@ Blockly.Blocks.hamster_set_following_speed_to = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_set_following_speed_to = function(b, a) {
-  Entry.hw.sendQueue.lineTracerSpeed = +a.getField("SPEED", a);
+  Entry.hw.sendQueue.lineTracerSpeed = Number(a.getField("SPEED", a));
   return a.callReturn();
 };
 Blockly.Blocks.hamster_stop = {init:function() {
@@ -2832,7 +2832,7 @@ Blockly.Blocks.hamster_set_led_to = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_set_led_to = function(b, a) {
-  var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a), e = +a.getField("COLOR", a);
+  var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a), e = Number(a.getField("COLOR", a));
   "LEFT" == d ? c.leftLed = e : ("RIGHT" != d && (c.leftLed = e), c.rightLed = e);
   return a.callReturn();
 };
@@ -3031,7 +3031,7 @@ Blockly.Blocks.hamster_set_port_to = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_set_port_to = function(b, a) {
-  var c = Entry.hw.sendQueue, d = a.getField("PORT", a), e = +a.getField("MODE", a);
+  var c = Entry.hw.sendQueue, d = a.getField("PORT", a), e = Number(a.getField("MODE", a));
   "A" == d ? c.ioModeA = e : ("B" != d && (c.ioModeA = e), c.ioModeB = e);
   return a.callReturn();
 };
@@ -3080,7 +3080,7 @@ Blockly.Blocks.is_press_some_key = {init:function() {
   this.setInputsInline(!0);
 }};
 Entry.block.is_press_some_key = function(b, a) {
-  var c = +a.getField("VALUE", a);
+  var c = Number(a.getField("VALUE", a));
   return 0 <= Entry.pressedKeys.indexOf(c);
 };
 Blockly.Blocks.reach_something = {init:function() {
@@ -3294,13 +3294,13 @@ Entry.block.boolean_basic_operator = function(b, a) {
     case "EQUAL":
       return d == e;
     case "GREATER":
-      return +d > +e;
+      return Number(d) > Number(e);
     case "LESS":
-      return +d < +e;
+      return Number(d) < Number(e);
     case "GREATER_OR_EQUAL":
-      return +d >= +e;
+      return Number(d) >= Number(e);
     case "LESS_OR_EQUAL":
-      return +d <= +e;
+      return Number(d) <= Number(e);
   }
 };
 Blockly.Blocks.show = {init:function() {
@@ -3782,7 +3782,7 @@ Blockly.Blocks.rotate_by_angle_dropdown = {init:function() {
 }};
 Entry.block.rotate_by_angle_dropdown = function(b, a) {
   var c = a.getField("VALUE", a);
-  b.setRotation(b.getRotation() + +c);
+  b.setRotation(b.getRotation() + Number(c));
   return a.callReturn();
 };
 Blockly.Blocks.see_angle = {init:function() {
@@ -3874,8 +3874,8 @@ Blockly.Blocks.locate = {init:function() {
 Entry.block.locate = function(b, a) {
   var c = a.getField("VALUE", a), d;
   "mouse" == c ? (c = Entry.stage.mouseCoordinate.x, d = Entry.stage.mouseCoordinate.y) : (d = Entry.container.getEntity(c), c = d.getX(), d = d.getY());
-  b.setX(+c);
-  b.setY(+d);
+  b.setX(Number(c));
+  b.setY(Number(d));
   b.brush && !b.brush.stop && b.brush.lineTo(c, -1 * d);
   return a.callReturn();
 };
@@ -4071,7 +4071,7 @@ Entry.block.locate_object_time = function(b, a) {
     if (0 != c) {
       "mouse" == d ? (d = e.x - b.getX(), e = e.y - b.getY()) : (e = Entry.container.getEntity(d), d = e.getX() - b.getX(), e = e.getY() - b.getY()), a.isStart = !0, a.frameCount = c, a.dX = d / a.frameCount, a.dY = e / a.frameCount;
     } else {
-      return "mouse" == d ? (d = +e.x, e = +e.y) : (e = Entry.container.getEntity(d), d = e.getX(), e = e.getY()), b.setX(d), b.setY(e), b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY()), a.callReturn();
+      return "mouse" == d ? (d = Number(e.x), e = Number(e.y)) : (e = Entry.container.getEntity(d), d = e.getX(), e = e.getY()), b.setX(d), b.setY(e), b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY()), a.callReturn();
     }
   }
   if (0 != a.frameCount) {
@@ -6042,16 +6042,20 @@ Entry.Commander = function(b) {
   Entry.do = this.do.bind(this);
   Entry.undo = this.undo.bind(this);
   this.editor = {};
+  this.reporters = [];
   Entry.Command.editor = this.editor;
 };
 (function(b) {
   b.do = function(a) {
-    var b = Array.prototype.slice.call(arguments);
-    b.shift();
-    var d = Entry.Command[a];
-    console.log(d.log.apply(this, b));
-    Entry.stateManager && Entry.stateManager.addCommand.apply(Entry.stateManager, [a, this, this.do, d.undo].concat(d.state.apply(this, b)));
-    return {value:Entry.Command[a].do.apply(this, b), isPass:this.isPass.bind(this)};
+    var b = this, d = Array.prototype.slice.call(arguments);
+    d.shift();
+    var e = Entry.Command[a];
+    Entry.stateManager && Entry.stateManager.addCommand.apply(Entry.stateManager, [a, this, this.do, e.undo].concat(e.state.apply(this, d)));
+    e = Entry.Command[a].do.apply(this, d);
+    setTimeout(function() {
+      b.report(a, d);
+    }, 0);
+    return {value:e, isPass:this.isPass.bind(this)};
   };
   b.undo = function() {
     var a = Array.prototype.slice.call(arguments), b = a.shift(), d = Entry.Command[b];
@@ -6073,6 +6077,22 @@ Entry.Commander = function(b) {
       b && (b.isPass = a);
     }
   };
+  b.addReporter = function(a) {
+    this.reporters.push(a);
+  };
+  b.removeReporter = function(a) {
+    a = this.reporters.indexOf(a);
+    -1 < a && this.reporters.splice(a, 1);
+  };
+  b.report = function(a, b) {
+    var d = this.reporters;
+    if (0 !== d.length) {
+      var e = Entry.Command[a].log.apply(this, b);
+      d.forEach(function(a) {
+        a.add(e);
+      });
+    }
+  };
 })(Entry.Commander.prototype);
 (function(b) {
   b.addThread = {type:101, do:function(a) {
@@ -6081,15 +6101,16 @@ Entry.Commander = function(b) {
     a.length && (a[0].id = Entry.Utils.generateId());
     return [a];
   }, log:function(a) {
-    return [b.addThread.type, JSON.stringify(a)];
+    return [b.addThread.type, ["thread", JSON.stringify(a)], ["code", this.editor.board.code.stringify()]];
   }, undo:"destroyThread"};
   b.destroyThread = {type:102, do:function(a) {
     this.editor.board.findById(a[0].id).destroy(!0, !0);
   }, state:function(a) {
     return [this.editor.board.findById(a[0].id).thread.toJSON()];
   }, log:function(a) {
-    a = this.editor.board.findById(a[0].id);
-    return [b.destroyThread.type, a.id];
+    a = a[0].id;
+    this.editor.board.findById(a);
+    return [b.destroyThread.type, ["blockId", a], ["code", this.editor.board.code.stringify()]];
   }, undo:"addThread"};
   b.destroyBlock = {type:103, do:function(a) {
     "string" === typeof a && (a = this.editor.board.findById(a));
@@ -6099,7 +6120,7 @@ Entry.Commander = function(b) {
     return [a.toJSON(), a.pointer()];
   }, log:function(a) {
     "string" === typeof a && (a = this.editor.board.findById(a));
-    return [b.destroyBlock.type, a.id];
+    return [b.destroyBlock.type, ["blockId", a.id], ["code", this.editor.board.code.stringify()]];
   }, undo:"recoverBlock"};
   b.recoverBlock = {type:104, do:function(a, b) {
     var d = this.editor.board.code.createThread([a]).getFirstBlock();
@@ -6109,7 +6130,7 @@ Entry.Commander = function(b) {
     "string" !== typeof a && (a = a.id);
     return [a];
   }, log:function(a, c) {
-    return [b.recoverBlock.type, c, JSON.stringify(a.toJSON())];
+    return [b.recoverBlock.type, ["block", a.stringify()], ["pointer", c], ["code", this.editor.board.code.stringify()]];
   }, undo:"destroyBlock"};
   b.insertBlock = {type:105, do:function(a, b, d) {
     "string" === typeof a && (a = this.editor.board.findById(a));
@@ -6122,8 +6143,7 @@ Entry.Commander = function(b) {
     return d;
   }, log:function(a, c, d) {
     "string" === typeof a && (a = this.editor.board.findById(a));
-    a.getThread();
-    return [b.insertBlock.type, a.id, a.targetPointer()];
+    return [b.insertBlock.type, ["blockId", a.id], ["targetBlockId", c.id], ["count", d], ["code", this.editor.board.code.stringify()]];
   }, undo:"insertBlock"};
   b.separateBlock = {type:106, do:function(a) {
     a.view && a.view._toGlobalCoordinate(Entry.DRAG_MODE_DRAG);
@@ -6136,16 +6156,15 @@ Entry.Commander = function(b) {
   }, log:function(a) {
     "string" === typeof a && (a = this.editor.board.findById(a));
     a.getThread().indexOf(a);
-    return [b.separateBlock.type, a.id, a.targetPointer()];
+    return [b.separateBlock.type, ["blockId", a.id], ["targetPointer", a.targetPointer()], ["code", this.editor.board.code.stringify()]];
   }, undo:"insertBlock"};
   b.moveBlock = {type:107, do:function(a, b, d) {
     void 0 !== b ? (a = this.editor.board.findById(a), a.moveTo(b, d)) : a._updatePos();
   }, state:function(a) {
     "string" === typeof a && (a = this.editor.board.findById(a));
     return [a.id, a.x, a.y];
-  }, log:function(a) {
-    a.getThread();
-    return [b.moveBlock.type, a.id, a.targetPointer()];
+  }, log:function(a, c, d) {
+    return [b.moveBlock.type, ["blockId", a.id], ["x", c], ["y", d], ["code", this.editor.board.code.stringify()]];
   }, undo:"moveBlock"};
   b.cloneBlock = {type:108, do:function(a) {
     "string" === typeof a && (a = this.editor.board.findById(a));
@@ -6155,30 +6174,28 @@ Entry.Commander = function(b) {
     return [a];
   }, log:function(a) {
     "string" === typeof a && (a = this.editor.board.findById(a));
-    a = a.getThread();
-    return [b.cloneBlock.type, JSON.stringify(a.toJSON())];
+    var c = this.editor.board.code.getThreads().pop().getFirstBlock();
+    return [b.cloneBlock.type, ["blockId", a.id], ["clonedBlockId", c.id], ["code", this.editor.board.code.stringify()]];
   }, undo:"uncloneBlock"};
   b.uncloneBlock = {type:109, do:function(a) {
     this.editor.board.code.getThreads().pop().getFirstBlock().destroy(!0, !0);
   }, state:function(a) {
     return [a];
   }, log:function(a) {
-    this.editor.board.code.getThreads().pop();
-    return [b.unclondeBlock.type, a.id];
+    return [b.unclondeBlock.type, ["blockId", a.id], ["code", this.editor.board.code.stringify()]];
   }, undo:"cloneBlock"};
   b.scrollBoard = {type:110, do:function(a, b) {
     this.editor.board.scroller._scroll(a, b);
   }, state:function(a, b) {
     return [-a, -b];
-  }, log:function(a, c) {
-    return [b.scrollBoard.type, a, c];
+  }, log:function(a, b) {
   }, undo:"scrollBoard"};
   b.setFieldValue = {type:111, do:function(a, b, d, e, f) {
     b.setValue(f, !0);
   }, state:function(a, b, d, e, f) {
     return [a, b, d, f, e];
   }, log:function(a, c, d, e, f) {
-    return [b.setFieldValue.type, d, f];
+    return [b.setFieldValue.type, ["pointer", d], ["newValue", f], ["code", this.editor.board.code.stringify()]];
   }, undo:"setFieldValue"};
 })(Entry.Command);
 (function(b) {
@@ -7899,16 +7916,21 @@ Entry.ActivityReporter = function() {
 };
 (function(b) {
   b.add = function(a) {
-    if (!(a instanceof Entry.Activity)) {
-      return console.error("Activity must be an instanceof Entry.MazeActivity");
+    if (a && 0 !== a.length) {
+      if (!(a instanceof Entry.Activity)) {
+        var b = a.shift();
+        a = new Entry.Activity(b, a);
+      }
+      this._activities.push(a);
     }
-    this._activities.push(a);
   };
   b.clear = function() {
     this._activities = [];
   };
   b.get = function() {
     return this._activities;
+  };
+  b.report = function() {
   };
 })(Entry.ActivityReporter.prototype);
 Entry.State = function(b, a, c, d) {
@@ -8206,7 +8228,7 @@ Entry.EntryObject.prototype.generateView = function() {
       13 == a.keyCode && c.editObjectValues(!1);
     };
     g.onblur = function(a) {
-      isNaN(g.value) || c.entity.setX(+g.value);
+      isNaN(g.value) || c.entity.setX(Number(g.value));
       c.updateCoordinateView();
       Entry.stage.updateObject();
     };
@@ -8214,7 +8236,7 @@ Entry.EntryObject.prototype.generateView = function() {
       13 == a.keyCode && c.editObjectValues(!1);
     };
     k.onblur = function(a) {
-      isNaN(k.value) || c.entity.setY(+k.value);
+      isNaN(k.value) || c.entity.setY(Number(k.value));
       c.updateCoordinateView();
       Entry.stage.updateObject();
     };
@@ -8222,7 +8244,7 @@ Entry.EntryObject.prototype.generateView = function() {
       13 == a.keyCode && c.editObjectValues(!1);
     };
     n.onblur = function(a) {
-      isNaN(n.value) || c.entity.setSize(+n.value);
+      isNaN(n.value) || c.entity.setSize(Number(n.value));
       c.updateCoordinateView();
       Entry.stage.updateObject();
     };
@@ -8266,7 +8288,7 @@ Entry.EntryObject.prototype.generateView = function() {
     m.onblur = function(a) {
       a = m.value;
       -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da")));
-      isNaN(a) || c.entity.setRotation(+a);
+      isNaN(a) || c.entity.setRotation(Number(a));
       c.updateRotationView();
       Entry.stage.updateObject();
     };
@@ -8276,7 +8298,7 @@ Entry.EntryObject.prototype.generateView = function() {
     q.onblur = function(a) {
       a = q.value;
       -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da")));
-      isNaN(a) || c.entity.setDirection(+a);
+      isNaN(a) || c.entity.setDirection(Number(a));
       c.updateRotationView();
       Entry.stage.updateObject();
     };
@@ -8348,24 +8370,24 @@ Entry.EntryObject.prototype.generateView = function() {
       }
     }), this.view_.appendChild(d), d = Entry.createElement("div"), d.addClass("entryObjectInformationWorkspace"), d.object = this, this.isInformationToggle = !1, b.appendChild(d), this.informationView_ = d, d = Entry.createElement("div"), d.addClass("entryObjectRotateLabelWrapperWorkspace"), this.view_.appendChild(d), this.rotateLabelWrapperView_ = d, e = Entry.createElement("span"), e.addClass("entryObjectRotateSpanWorkspace"), e.innerHTML = Lang.Workspace.rotation + " : ", m = Entry.createElement("input"), 
     m.addClass("entryObjectRotateInputWorkspace"), this.rotateSpan_ = e, this.rotateInput_ = m, h = Entry.createElement("span"), h.addClass("entryObjectDirectionSpanWorkspace"), h.innerHTML = Lang.Workspace.direction + " : ", q = Entry.createElement("input"), q.addClass("entryObjectDirectionInputWorkspace"), this.directionInput_ = q, d.appendChild(e), d.appendChild(m), d.appendChild(h), d.appendChild(q), d.rotateInput_ = m, d.directionInput_ = q, c = this, m.onkeypress = function(a) {
-      13 == a.keyCode && (a = m.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || c.entity.setRotation(+a), c.updateRotationView(), m.blur());
+      13 == a.keyCode && (a = m.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || c.entity.setRotation(Number(a)), c.updateRotationView(), m.blur());
     }, m.onblur = function(a) {
       c.entity.setRotation(c.entity.getRotation());
       Entry.stage.updateObject();
     }, q.onkeypress = function(a) {
-      13 == a.keyCode && (a = q.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || c.entity.setDirection(+a), c.updateRotationView(), q.blur());
+      13 == a.keyCode && (a = q.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || c.entity.setDirection(Number(a)), c.updateRotationView(), q.blur());
     }, q.onblur = function(a) {
       c.entity.setDirection(c.entity.getDirection());
       Entry.stage.updateObject();
     }, b = Entry.createElement("div"), b.addClass("entryObjectRotationWrapperWorkspace"), b.object = this, this.view_.appendChild(b), d = Entry.createElement("span"), d.addClass("entryObjectCoordinateWorkspace"), b.appendChild(d), e = Entry.createElement("span"), e.addClass("entryObjectCoordinateSpanWorkspace"), e.innerHTML = "X:", g = Entry.createElement("input"), g.addClass("entryObjectCoordinateInputWorkspace"), h = Entry.createElement("span"), h.addClass("entryObjectCoordinateSpanWorkspace"), 
     h.innerHTML = "Y:", k = Entry.createElement("input"), k.addClass("entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right"), l = Entry.createElement("span"), l.addClass("entryObjectCoordinateSpanWorkspace"), l.innerHTML = Lang.Workspace.Size, n = Entry.createElement("input"), n.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size"), d.appendChild(e), d.appendChild(g), d.appendChild(h), d.appendChild(k), d.appendChild(l), d.appendChild(n), 
     d.xInput_ = g, d.yInput_ = k, d.sizeInput_ = n, this.coordinateView_ = d, c = this, g.onkeypress = function(a) {
-      13 == a.keyCode && (isNaN(g.value) || c.entity.setX(+g.value), c.updateCoordinateView(), c.blur());
+      13 == a.keyCode && (isNaN(g.value) || c.entity.setX(Number(g.value)), c.updateCoordinateView(), c.blur());
     }, g.onblur = function(a) {
       c.entity.setX(c.entity.getX());
       Entry.stage.updateObject();
     }, k.onkeypress = function(a) {
-      13 == a.keyCode && (isNaN(k.value) || c.entity.setY(+k.value), c.updateCoordinateView(), c.blur());
+      13 == a.keyCode && (isNaN(k.value) || c.entity.setY(Number(k.value)), c.updateCoordinateView(), c.blur());
     }, k.onblur = function(a) {
       c.entity.setY(c.entity.getY());
       Entry.stage.updateObject();
@@ -10300,7 +10322,7 @@ Entry.Parser = function(b, a, c) {
   this.codeMirror = c;
   this._lang = a || "js";
   this.availableCode = [];
-  "maze" === b && (this._stageId = +Ntry.configManager.getConfig("stageId"), "object" == typeof NtryData && this.setAvailableCode(NtryData.config[this._stageId].availableCode, NtryData.player[this._stageId].code));
+  "maze" === b && (this._stageId = Number(Ntry.configManager.getConfig("stageId")), "object" == typeof NtryData && this.setAvailableCode(NtryData.config[this._stageId].availableCode, NtryData.player[this._stageId].code));
   this.mappingSyntax(b);
   switch(this._lang) {
     case "js":
@@ -10996,7 +11018,7 @@ p = Entry.Script.prototype;
 p.init = function(b, a, c) {
   Entry.assert("BLOCK" == b.tagName.toUpperCase(), b.tagName);
   this.type = b.getAttribute("type");
-  this.id = +b.getAttribute("id");
+  this.id = Number(b.getAttribute("id"));
   b.getElementsByTagName("mutation").length && b.getElementsByTagName("mutation")[0].hasAttribute("hashid") && (this.hashId = b.childNodes[0].getAttribute("hashid"));
   "REPEAT" == this.type.substr(0, 6).toUpperCase() && (this.isRepeat = !0);
   a instanceof Entry.Script && (this.previousScript = a, a.parentScript && (this.parentScript = a.parentScript));
@@ -11060,7 +11082,7 @@ p.getValue = function(b) {
   return this.values[b].run();
 };
 p.getNumberValue = function(b) {
-  return +this.values[b].run();
+  return Number(this.values[b].run());
 };
 p.getStringValue = function(b) {
   return String(this.values[b].run());
@@ -11075,7 +11097,7 @@ p.getStringField = function(b) {
   return String(this.fields[b]);
 };
 p.getNumberField = function(b) {
-  return +this.fields[b];
+  return Number(this.fields[b]);
 };
 p.callReturn = function() {
   return this.nextScript ? this.nextScript : this.parentScript ? this.parentScript : null;
@@ -11905,6 +11927,7 @@ Entry.Utils.bindGlobalEvent = function(b) {
 };
 Entry.Utils.makeActivityReporter = function() {
   Entry.activityReporter = new Entry.ActivityReporter;
+  Entry.commander && Entry.commander.addReporter(Entry.activityReporter);
   return Entry.activityReporter;
 };
 Entry.Utils.initEntryEvent_ = function() {
@@ -12022,7 +12045,7 @@ Entry.getElementsByClassName = function(b) {
   return a;
 };
 Entry.parseNumber = function(b) {
-  return "string" != typeof b || isNaN(+b) ? "number" != typeof b || isNaN(+b) ? !1 : b : +b;
+  return "string" != typeof b || isNaN(Number(b)) ? "number" != typeof b || isNaN(Number(b)) ? !1 : b : Number(b);
 };
 Entry.countStringLength = function(b) {
   var a, c = 0;
@@ -12088,7 +12111,7 @@ Entry.computeInputWidth = function(b) {
   document.body.appendChild(a);
   b = a.offsetWidth;
   document.body.removeChild(a);
-  return +(b + 10) + "px";
+  return Number(b + 10) + "px";
 };
 Entry.isArrowOrBackspace = function(b) {
   return -1 < [37, 38, 39, 40, 8].indexOf(b);
@@ -12253,7 +12276,7 @@ Entry.getMaxFloatPoint = function(b) {
   return Math.min(a, 20);
 };
 Entry.convertToRoundedDecimals = function(b, a) {
-  return isNaN(b) || !this.isFloat(b) ? b : +(Math.round(b + "e" + a) + "e-" + a);
+  return isNaN(b) || !this.isFloat(b) ? b : Number(Math.round(b + "e" + a) + "e-" + a);
 };
 Entry.attachEventListener = function(b, a, c) {
   setTimeout(function() {
@@ -12609,7 +12632,7 @@ Entry.Func.generateBlock = function(b) {
   var a = {template:b.template, params:b.params}, c = /(%\d)/mi, d = b.template.split(c), e = "", f = 0, g = 0, h;
   for (h in d) {
     var k = d[h];
-    c.test(k) ? (k = +k.split("%")[1] - 1, k = b.params[k], "Indicator" !== k.type && ("boolean" === k.accept ? (e += Lang.template.function_param_boolean + (f ? f : ""), f++) : (e += Lang.General.param_string + (g ? g : ""), g++))) : e += k;
+    c.test(k) ? (k = Number(k.split("%")[1]) - 1, k = b.params[k], "Indicator" !== k.type && ("boolean" === k.accept ? (e += Lang.template.function_param_boolean + (f ? f : ""), f++) : (e += Lang.General.param_string + (g ? g : ""), g++))) : e += k;
   }
   return {block:a, description:e};
 };
@@ -12983,7 +13006,7 @@ p.removePortReadable = function(b) {
     var a, c;
     for (c in this.sendQueue.readablePorts) {
       if (this.sendQueue.readablePorts[c] == b) {
-        a = +c;
+        a = Number(c);
         break;
       }
     }
@@ -13049,7 +13072,7 @@ Entry.Variable = function(b) {
   this.isCloud_ = b.isCloud || !1;
   var a = Entry.parseNumber(b.value);
   this.value_ = "number" == typeof a ? a : b.value ? b.value : 0;
-  "slide" == this.type && (this.minValue_ = +(b.minValue ? b.minValue : 0), this.maxValue_ = +(b.maxValue ? b.maxValue : 100));
+  "slide" == this.type && (this.minValue_ = Number(b.minValue ? b.minValue : 0), this.maxValue_ = Number(b.maxValue ? b.maxValue : 100));
   b.isClone || (this.visible_ = b.visible || "boolean" == typeof b.visible ? b.visible : !0, this.x_ = b.x ? b.x : null, this.y_ = b.y ? b.y : null, "list" == this.type && (this.width_ = b.width ? b.width : 100, this.height_ = b.height ? b.height : 120, this.array_ = b.array ? b.array : [], this.scrollPosition = 0), this.BORDER = 6, this.FONT = "10pt NanumGothic");
 };
 Entry.Variable.prototype.generateView = function(b) {
@@ -13218,13 +13241,13 @@ Entry.Variable.prototype.getId = function() {
   return this.id_;
 };
 Entry.Variable.prototype.getValue = function() {
-  return this.isNumber() ? +this.value_ : this.value_;
+  return this.isNumber() ? Number(this.value_) : this.value_;
 };
 Entry.Variable.prototype.isNumber = function() {
   return isNaN(this.value_) ? !1 : !0;
 };
 Entry.Variable.prototype.setValue = function(b) {
-  "slide" != this.type ? this.value_ = b : (b = +b, this.value_ = b < this.minValue_ ? this.minValue_ : b > this.maxValue_ ? this.maxValue_ : b);
+  "slide" != this.type ? this.value_ = b : (b = Number(b), this.value_ = b < this.minValue_ ? this.minValue_ : b > this.maxValue_ ? this.maxValue_ : b);
   this.isCloud_ && Entry.variableContainer.updateCloudVariables();
   this.updateView();
 };
@@ -13326,7 +13349,7 @@ Entry.Variable.prototype.updateSlideValueByView = function() {
   var b = Math.max(this.valueSetter_.graphics.command.x - 10, 0) / this.maxWidth;
   0 > b && (b = 0);
   1 < b && (b = 1);
-  var a = parseFloat(this.minValue_), c = parseFloat(this.maxValue_), b = (a + Math.abs(c - a) * b).toFixed(2), b = parseFloat(b);
+  var a = parseFloat(this.minValue_), c = parseFloat(this.maxValue_), b = (a + Number(Math.abs(c - a) * b)).toFixed(2), b = parseFloat(b);
   b < a ? b = this.minValue_ : b > c && (b = this.maxValue_);
   this.isFloatPoint() || (b = Math.round(b));
   this.setValue(b);
@@ -14513,7 +14536,7 @@ Entry.VariableContainer.prototype.updateListSettingView = function(b) {
   c.removeClass("entryRemove");
 };
 Entry.VariableContainer.prototype.setListLength = function(b) {
-  b = +b;
+  b = Number(b);
   var a = this.selectedList.array_;
   if (!isNaN(b)) {
     var c = a.length;
@@ -15285,7 +15308,7 @@ Entry.BlockMenu = function(b, a, c, d) {
     if (isNaN(a)) {
       return a;
     }
-    a = +a;
+    a = Number(a);
     for (var b = this._categories, d = this._categoryElems, e = 0;e < b.length;e++) {
       var f = b[e];
       if (!d[f].hasClass("entryRemove") && 0 === a--) {
@@ -15617,7 +15640,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
           var h = e[g].trim();
           if (0 !== h.length) {
             if (d.test(h)) {
-              var k = +h.split("%")[1] - 1, h = f[k], h = new Entry["Field" + h.type](h, this, k, a, g);
+              var k = Number(h.split("%")[1]) - 1, h = f[k], h = new Entry["Field" + h.type](h, this, k, a, g);
               this._contents.push(h);
               this._paramMap[k] = h;
             } else {
@@ -16368,10 +16391,10 @@ Entry.Scope = function(b, a) {
     return String(this.getValue(a, b));
   };
   b.getNumberValue = function(a, b) {
-    return +this.getValue(a);
+    return Number(this.getValue(a));
   };
   b.getBooleanValue = function(a, b) {
-    return +this.getValue(a, b) ? !0 : !1;
+    return Number(this.getValue(a, b)) ? !0 : !1;
   };
   b.getField = function(a, b) {
     return this.block.params[this._getParamIndex(a)];
@@ -16380,7 +16403,7 @@ Entry.Scope = function(b, a) {
     return String(this.getField(a));
   };
   b.getNumberField = function(a) {
-    return +this.getField(a);
+    return Number(this.getField(a));
   };
   b.getStatement = function(a, b) {
     return this.executor.stepInto(this.block.statements[this._getStatementIndex(a, b)]);
@@ -18525,6 +18548,9 @@ Entry.Thread = function(b, a, c) {
     }
     return b;
   };
+  b.stringify = function() {
+    return JSON.stringify(this.toJSON());
+  };
 })(Entry.Thread.prototype);
 Entry.Block = function(b, a) {
   var c = this;
@@ -18811,6 +18837,9 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     }
     return b;
   };
+  b.stringify = function() {
+    return JSON.stringify(this.toJSON());
+  };
 })(Entry.Block.prototype);
 Entry.ThreadView = function(b, a) {
   Entry.Model(this, !1);
@@ -19046,7 +19075,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     return this.mode;
   };
   b.setMode = function(a, b) {
-    a = +a;
+    a = Number(a);
     var d = this.mode;
     this.mode = a;
     switch(a) {
@@ -20085,7 +20114,7 @@ Entry.Xml.getNumberValue = function(b, a, c) {
   }
   for (var d in c) {
     if (c[d].tagName && "VALUE" == c[d].tagName.toUpperCase() && c[d].getAttribute("name") == a) {
-      return +Entry.Xml.operate(b, c[d].children[0]);
+      return Number(Entry.Xml.operate(b, c[d].children[0]));
     }
   }
   return null;
@@ -20108,7 +20137,7 @@ Entry.Xml.getNumberField = function(b, a) {
   }
   for (var d in c) {
     if ("FIELD" == c[d].tagName.toUpperCase() && c[d].getAttribute("name") == b) {
-      return +c[d].textContent;
+      return Number(c[d].textContent);
     }
   }
 };

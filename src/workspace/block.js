@@ -298,13 +298,6 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     // command func
     p.doAdd = function() {
         var id = this.id;
-        //if (Entry.activityReporter) {
-            //var data = [
-                //id,
-                //this.getCode().stringify()
-            //];
-            //Entry.activityReporter.add(new Entry.Activity('addBlock', data));
-        //}
         this.getCode().changeEvent.notify();
     };
 
@@ -315,15 +308,6 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
 
         this._updatePos();
         this.getCode().changeEvent.notify();
-        //if (Entry.activityReporter) {
-            //var data = [
-                //id,
-                //moveX,
-                //moveY,
-                //this.getCode().stringify()
-            //];
-            //Entry.activityReporter.add(new Entry.Activity('moveBlock', data));
-        //}
     };
 
     p.doSeparate = function() {
@@ -332,15 +316,6 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         var positionY = this.y;
 
         this.separate();
-        //if (Entry.activityReporter) {
-            //var data = [
-                //id,
-                //positionX,
-                //positionY,
-                //this.getCode().stringify()
-            //];
-            //Entry.activityReporter.add(new Entry.Activity('seperateBlock', data));
-        //}
     };
 
     p.doInsert = function(targetBlock) {
@@ -348,20 +323,6 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
             this.insert(targetBlock);
         else
             this.replace(targetBlock);
-        //if (Entry.activityReporter) {
-            //var id = this.id,
-                //targetId = targetBlock.id,
-                //positionX = this.x,
-                //positionY = this.y,
-                //data = [
-                    //targetId,
-                    //id,
-                    //positionX,
-                    //positionY,
-                    //this.getCode().stringify()
-                //];
-            //Entry.activityReporter.add(new Entry.Activity('insertBlock', data));
-        //}
     };
 
     p.doDestroy = function(animate) {
@@ -371,15 +332,6 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
 
         this.destroy(animate);
         this.getCode().changeEvent.notify();
-        //if (Entry.activityReporter) {
-            //var data = [
-                //id,
-                //positionX,
-                //positionY,
-                //this.getCode().stringify()
-            //];
-            //Entry.activityReporter.add(new Entry.Activity('destroyBlock', data));
-        //}
         return this;
     };
 
@@ -534,6 +486,10 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
             }
         }
         return blocks;
+    };
+
+    p.stringify = function() {
+        return JSON.stringify(this.toJSON());
     };
 
 })(Entry.Block.prototype);
