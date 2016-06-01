@@ -17786,7 +17786,7 @@ Entry.block = {
         "fontColor": "#FFF",
         "skeleton": "basic",
         "statements": [],
-        "template": "서보모터 각도를 %1 (도)로 이동 %2",
+        "template": "서보모터 각도를 %1 (도)로 이동",
         "params": [{
             "type": "Block",
             "accept": "string"
@@ -17800,10 +17800,8 @@ Entry.block = {
             "params": [{
                 "type": "text",
                 "params": ["180"],
-                "id": "5ld8"
             }, null],
             "type": "dplay_servo",
-            "id": "lo2z"
         },
         "paramsKeyMap": {
             "VALUE": 0
@@ -17814,8 +17812,8 @@ Entry.block = {
             var port = 9;
             var value = script.getNumberValue("VALUE");
             value = Math.round(value);
-            value = Math.max(value, 0);
-            value = Math.min(value, 180);
+            value = Math.max(value, 1);
+            value = Math.min(value, 179);
             Entry.hw.setDigitalPortValue(port, value);
             return script.callReturn();
         }
