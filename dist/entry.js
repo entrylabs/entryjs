@@ -12415,7 +12415,7 @@ Entry.Model = function(b, a) {
 Entry.Func = function(b) {
   this.id = b ? b.id : Entry.generateHash();
   this.content = b ? new Entry.Code(b.content) : new Entry.Code([[{type:"function_create", copyable:!1, deletable:!1, x:40, y:40}]]);
-  this.block = null;
+  this.blockMenuBlock = this.block = null;
   this.hashMap = {};
   this.paramMap = {};
   var a = function() {
@@ -12438,7 +12438,7 @@ Entry.Func = function(b) {
 Entry.Func.threads = {};
 Entry.Func.registerFunction = function(b) {
   var a = Entry.playground.mainWorkspace;
-  a && (this._targetFuncBlock = a.getBlockMenu().getCategoryCodes("func").createThread([{type:"func_" + b.id}]));
+  a && (this._targetFuncBlock = a.getBlockMenu().getCategoryCodes("func").createThread([{type:"func_" + b.id}]), b.blockMenuBlock = this._targetFuncBlock);
 };
 Entry.Func.executeFunction = function(b) {
   var a = this.threads[b];
@@ -12455,6 +12455,9 @@ Entry.Func.prototype.init = function(b) {
   this.id = b.id;
   this.content = Blockly.Xml.textToDom(b.content);
   this.block = Blockly.Xml.textToDom("<xml>" + b.block + "</xml>").childNodes[0];
+};
+Entry.Func.prototype.destroy = function() {
+  this.blockMenuBlock.destroy();
 };
 Entry.Func.edit = function(b) {
   this.cancelEdit();
@@ -13668,6 +13671,7 @@ Entry.VariableContainer.prototype.createFunction = function() {
 Entry.VariableContainer.prototype.addFunction = function(b) {
 };
 Entry.VariableContainer.prototype.removeFunction = function(b) {
+  this.functions_[b.id].destroy();
   delete this.functions_[b.id];
   this.updateList();
 };
