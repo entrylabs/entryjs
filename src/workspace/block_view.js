@@ -484,9 +484,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
                         blockView._toGlobalCoordinate();
                         blockView.dragMode = Entry.DRAG_MODE_DRAG;
                         blockView.block.getThread().changeEvent.notify();
-                        requestAnimationFrame(function(){
-                            Entry.GlobalSvg.setView(blockView, workspaceMode);
-                        });
+                        Entry.GlobalSvg.setView(blockView, workspaceMode);
                         isFirst = true;
                     }
 
