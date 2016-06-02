@@ -657,6 +657,7 @@ Entry.VariableContainer.prototype.addFunction = function(variable) {
  * @param {Entry.Variable} variable
  */
 Entry.VariableContainer.prototype.removeFunction = function(func) {
+    this.functions_[func.id].destroy();
     delete this.functions_[func.id];
     this.updateList();
 };
