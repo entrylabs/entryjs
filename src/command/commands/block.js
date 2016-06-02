@@ -189,7 +189,7 @@ goog.require("Entry.Command");
             return [
                 c.moveBlock.type,
                 ['blockId', block.id],
-                ['x', x], ['y', y],
+                ['x', block.x], ['y', block.y],
                 ['code', this.editor.board.code.stringify()]
             ];
         },

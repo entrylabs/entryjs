@@ -6164,7 +6164,7 @@ Entry.Commander = function(b) {
     "string" === typeof a && (a = this.editor.board.findById(a));
     return [a.id, a.x, a.y];
   }, log:function(a, c, d) {
-    return [b.moveBlock.type, ["blockId", a.id], ["x", c], ["y", d], ["code", this.editor.board.code.stringify()]];
+    return [b.moveBlock.type, ["blockId", a.id], ["x", a.x], ["y", a.y], ["code", this.editor.board.code.stringify()]];
   }, undo:"moveBlock"};
   b.cloneBlock = {type:108, do:function(a) {
     "string" === typeof a && (a = this.editor.board.findById(a));
