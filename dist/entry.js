@@ -722,7 +722,7 @@ Entry.Arduino = {name:"arduino", setZero:function() {
 Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a0:{name:Lang.Hw.port_en + " A0 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a1:{name:Lang.Hw.port_en + " A1 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a2:{name:Lang.Hw.port_en + " A2 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a3:{name:Lang.Hw.port_en + " A3 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a4:{name:Lang.Hw.port_en + " A4 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a5:{name:Lang.Hw.port_en + " A5 " + 
 Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}}, mode:"both"}};
 Entry.SensorBoard = {name:"sensorBoard", setZero:Entry.Arduino.setZero};
-Entry.dplay = {name:"dplay", vel_value:255, setZero:Entry.Arduino.setZero, timeouts:[], removeTimeout:function(b) {
+Entry.dplay = {name:"dplay", vel_value:254, setZero:Entry.Arduino.setZero, timeouts:[], removeTimeout:function(b) {
   clearTimeout(b);
   var a = this.timeouts;
   b = a.indexOf(b);
@@ -15707,7 +15707,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
       d = a.originalEvent && a.originalEvent.touches ? a.originalEvent.touches[0] : a;
       var f = m.mouseDownCoordinate, f = Math.sqrt(Math.pow(d.pageX - f.x, 2) + Math.pow(d.pageY - f.y, 2));
       (m.dragMode == Entry.DRAG_MODE_DRAG || f > Entry.BlockView.DRAG_RADIUS) && m.movable && (m.isInBlockMenu ? e.cloneToGlobal(a) : (a = !1, m.dragMode != Entry.DRAG_MODE_DRAG && (m._toGlobalCoordinate(), m.dragMode = Entry.DRAG_MODE_DRAG, m.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(m, c), a = !0), this.animating && this.set({animating:!1}), 0 === m.dragInstance.height && m.dragInstance.set({height:-1 + m.height}), c = m.dragInstance, m._moveBy(d.pageX - c.offsetX, d.pageY - 
-      c.offsetY, !1), c.set({offsetX:d.pageX, offsetY:d.pageY}), requestAnimationFrame(Entry.GlobalSvg.position.bind(Entry.GlobalSvg)), m.originPos || (m.originPos = {x:m.x, y:m.y}), a && e.generateCodeMagnetMap(), m._updateCloseBlock()));
+      c.offsetY, !1), c.set({offsetX:d.pageX, offsetY:d.pageY}), Entry.GlobalSvg.position(), m.originPos || (m.originPos = {x:m.x, y:m.y}), a && e.generateCodeMagnetMap(), m._updateCloseBlock()));
     }
     function d(a) {
       $(document).unbind(".block");
