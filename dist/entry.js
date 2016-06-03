@@ -15230,7 +15230,21 @@ Entry.BlockMenu = function(b, a, c, d) {
   b.cloneToGlobal = function(a) {
     if (!this._boardBlockView && null !== this.dragBlock) {
       var b = this.workspace, d = b.getMode(), e = this.dragBlock, f = this._svgWidth, g = b.selectedBoard;
-      !g || d != Entry.Workspace.MODE_BOARD && d != Entry.Workspace.MODE_OVERLAYBOARD ? Entry.GlobalSvg.setView(e, b.getMode()) && Entry.GlobalSvg.addControl(a) : g.code && (b = e.block, d = b.getThread(), b && d && (b = d.toJSON(!0), this._boardBlockView = Entry.do("addThread", b).value.getFirstBlock().view, g = this.offset().top - g.offset().top, this._boardBlockView._moveTo(e.x - f, e.y + g, !1), this._boardBlockView.onMouseDown.call(this._boardBlockView, a), this._boardBlockView.dragInstance.set({isNew:!0})));
+      if (!g || d != Entry.Workspace.MODE_BOARD && d != Entry.Workspace.MODE_OVERLAYBOARD) {
+        Entry.GlobalSvg.setView(e, b.getMode()) && Entry.GlobalSvg.addControl(a);
+      } else {
+        if (g.code && (b = e.block, d = b.getThread(), b && d)) {
+          b = d.toJSON(!0);
+          this._boardBlockView = Entry.do("addThread", b).value.getFirstBlock().view;
+          var g = this.offset().top - g.offset().top, h, k;
+          if (b = this.dragBlock.mouseDownCoordinate) {
+            h = a.pageX - b.x, k = a.pageY - b.y;
+          }
+          this._boardBlockView._moveTo(e.x - f + (h || 0), e.y + g + (k || 0), !1);
+          this._boardBlockView.onMouseDown.call(this._boardBlockView, a);
+          this._boardBlockView.dragInstance.set({isNew:!0});
+        }
+      }
     }
   };
   b.terminateDrag = function() {
