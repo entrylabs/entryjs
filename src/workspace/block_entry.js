@@ -2362,7 +2362,7 @@ Entry.block = {
             return Math.round(result);
         }
     },
-        "nemoino_get_named_sensor_value": {
+    "nemoino_get_named_sensor_value": {
         "color": "#00979D",
         "fontColor": "#fff",
         "skeleton": "basic_string_field",
