@@ -21,6 +21,13 @@ Entry.Parser = function(mode, type, cm) {
     this._type = type;
     this.availableCode = []; 
 
+    Entry.Parser.PARSE_SYNTAX = 0;
+    Entry.Parser.PARSE_LANGUAGE = 1;
+
+    Entry.Parser.BLOCK_SKELETON_BASIC = "basic";
+    Entry.Parser.BLOCK_SKELETON_BASIC_LOOP = "basic_loop";
+    Entry.Parser.BLOCK_SKELETON_BASIC_DOUBLE_LOOP = "basic_double_loop";
+
     if (mode === 'maze') {
         this._stageId = Number(Ntry.configManager.getConfig('stageId'));
         var configCode = NtryData.config[this._stageId].availableCode;
@@ -116,7 +123,7 @@ Entry.Parser = function(mode, type, cm) {
 
         switch (type) {
             case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
-                this._parser = new Entry.JsToBlockParser(this.syntax.js);
+                this._parser = new Entry.JsToBlockParser(this.syntax);
 
                 break;
 
@@ -154,7 +161,7 @@ Entry.Parser = function(mode, type, cm) {
                 break;
 
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
-                this._parser = new Entry.BlockToPyParser();
+                this._parser = new Entry.BlockToPyParser(this.syntax.py);
 
                 cm.setOption("mode", {name: "python", globalVars: true});
 
@@ -165,16 +172,14 @@ Entry.Parser = function(mode, type, cm) {
                 cm.on("keyup", function (cm, event) {
                     if ((event.keyCode >= 65 && event.keyCode <= 195))  {
                        CodeMirror.showHint(cm, null, {completeSingle: false});  
-                    }
-
-                    
+                    } 
                 });
                 
                 break;
         }
     };
 
-    p.parse = function(code) {
+    p.parse = function(code, parseMode) {
         console.log("PARSER TYPE", this._type);
         
         var type = this._type;
@@ -231,7 +236,6 @@ Entry.Parser = function(mode, type, cm) {
                         }
                     }
                     
-                    threads.splice(threads.length-1, 1); 
                     console.log("threads", threads);
                     var astArray = [];
                     
@@ -271,12 +275,12 @@ Entry.Parser = function(mode, type, cm) {
                         //throw error;
                         Entry.toast.alert('에러(Error)', error.message); 
                         document.getElementById("entryCodingModeSelector").value = '2'; 
+                        throw error;
                     }
                     result = []; 
                 }
                 break;
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
-                this._parser = new Entry.BlockToJsParser(this.syntax.js);
                 var textCode = this._parser.Code(code);
                 var textArr = textCode.match(/(.*{.*[\S|\s]+?}|.+)/g);
                 if(Array.isArray(textArr)) {
@@ -301,7 +305,7 @@ Entry.Parser = function(mode, type, cm) {
                 break;
 
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
-                var textCode = this._parser.Code(code);
+                var textCode = this._parser.Code(code, parseMode);
                 //var textArr = textCode.match(/(.*{.*[\S|\s]+?}|.+)/g);
                /* var textArr = textCode.split("\n\n");
 
@@ -461,7 +465,7 @@ Entry.Parser = function(mode, type, cm) {
             if(block.syntax && block.syntax.py) {
 
                 syntax = block.syntax.py;
-                console.log("syntax", syntax);
+                //console.log("syntax", syntax);
             }
             if (!syntax)
                 continue;

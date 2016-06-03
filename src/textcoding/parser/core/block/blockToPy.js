@@ -5,15 +5,26 @@
 
 goog.provide("Entry.BlockToPyParser");
 
-goog.require("Entry.KeyboardCodeMap");
+goog.require("Entry.KeyboardCode");
 goog.require("Entry.TextCodingUtil");
+goog.require("Entry.Map");
+goog.require("Entry.Queue");
 
-Entry.BlockToPyParser = function() {
+Entry.BlockToPyParser = function(blockSyntax) {
+    this.blockSyntax = blockSyntax;
 
+    var map = new Entry.Map();
+    this._map = map;
+
+    var queue = new Entry.Queue();
+    this._queue = queue;
 };
 
 (function(p){
-    p.Code = function(code) {
+    p.Code = function(code, parseMode) {
+        this._mode = parseMode;
+        console.log("this._mode", this._mode);
+
         if (code instanceof Entry.Thread)
             return this.Thread(code);
         if (code instanceof Entry.Block)
@@ -39,7 +50,18 @@ Entry.BlockToPyParser = function() {
 
         for (var i = 0; i < blocks.length; i++) {
             var block = blocks[i];
+            this._currentMainBlock = block; 
+            this._currentMainBlockSkeleton = this._currentMainBlock._schema.skeleton;
+            this._currentMainBlockParamsKeyMap = this._currentMainBlock._schema.paramsKeyMap;
+            this._currentmainBlockIndex = 0;
+
+            console.log("Thread MainBlock", this._currentMainBlock, "Thread Skeleton", this._currentMainBlockSkeleton,
+                "ParamsKeyMap", this._currentMainBlockParamsKeyMap);
+
             result += (this.Block(block) + '\n');
+
+            this._queue.clear();
+            this._map.clear();
         }
         return result;
     };
@@ -56,30 +78,34 @@ Entry.BlockToPyParser = function() {
         var schemaParams = block._schema.params;
         var dataParams = block.data.params;
 
-        var result = "";    
-        
-        for (var i=0; i<blockTokens.length; i++) { 
+        var result = "";  
+
+        console.log("Block blockTokens", blockTokens);
+
+        for (var i = 0; i < blockTokens.length; i++) { 
             var blockToken = blockTokens[i];
+            console.log("Block blockToken check1", blockToken, "i", i);
             if (blockToken.length === 0) continue;
             if (blockReg.test(blockToken)) {
                 var blockParam = blockToken.split('%')[1];
                 var index = Number(blockParam) - 1;
-                
                 if(schemaParams[index]) {
                     if(schemaParams[index].type == "Indicator") {
                         index++;    
                     } else if(schemaParams[index].type == "Block") {
                         result += this.Block(dataParams[index]).trim();
                     } else {
-                        var param = this['Field' + schemaParams[index].type](dataParams[index], schemaParams[index]);
+                        var param = this['Field' + schemaParams[index].type]
+                                                    (dataParams[index], schemaParams[index]);
                         
                         if(param == null) {
                             if(schemaParams[index].text) {
                                 param = schemaParams[index].text;
                             }
-                            else
-                                param = null;  
-                        } 
+                            else {
+                                param = null;   
+                            }
+                        }  
                         
                         param = Entry.TextCodingUtil.prototype.binaryOperatorValueConvertor(param);   
                         param = String(param);
@@ -88,18 +114,64 @@ Entry.BlockToPyParser = function() {
                            !Entry.TextCodingUtil.prototype.isBinaryOperator(param))
                            param = String("\"" + param + "\"");  
                        
-                        result += param;
+                        console.log("this._currentMainBlockSkeleton", this._currentMainBlockSkeleton, "SYMBOL", Entry.Parser.BLOCK_SKELETON_BASIC);
+
+                        //In PARSE_LANGUAGE Mode
+                        if(this._mode == Entry.Parser.PARSE_LANGUAGE) { //In PASRSE_LANGUAGE Mode
+                            if(this._currentMainBlockSkeleton == Entry.Parser.BLOCK_SKELETON_BASIC) { //If Block Sekeleton is basic
+                                if(this._currentMainBlockParamsKeyMap) {  //If Block has Parameters
+                                    console.log("Check paramsKeyMap", this._currentMainBlockParamsKeyMap); 
+                                    var paramsKey = Object.keys(this._currentMainBlockParamsKeyMap);        
+                                    var variable = String(paramsKey[this._currentmainBlockIndex++]);
+                                    variable = variable.toLowerCase();
+
+                                    var value = param;
+
+                                    console.log("Block param into Queue", param);
+
+                                    this._map.put(variable, value);
+                                    this._queue.enqueue(variable); 
+                                    console.log("Queue", this._queue.toString());
+                                } else {
+                                    console.log("Block Param check1", param);
+                                    result += param;
+                                }
+                            } else {
+                                console.log("Block Param check2", param);
+                                result += param;
+                            }
+                        } else { //Not in the above condition
+                            console.log("Block Param check3", param);
+                            result += param;
+                        }
                     }
                 }
             } else if (statementReg.test(blockToken)) {
                 var statements = blockToken.split(statementReg);
                 for (var j=0; j<statements.length; j++) {
                     var statementToken = statements[j];
+                    console.log("Block statementToken check1", statementToken, "j", j);
                     if (statementToken.length === 0) continue;
                     if (statementReg.test(statementToken)) {
                         var index = Number(statementToken.split('$')[1]) - 1;
                         result += Entry.TextCodingUtil.prototype.indent(this.Thread(block.statements[index]));
-                    } else result += statementToken;
+                    } 
+                    else {
+                        console.log("Block statementToken check2", "j", j);
+                        result += statementToken;  
+                        
+                        //In PARSE_LANGUAGE Mode
+                        if(this._mode == Entry.Parser.PARSE_LANGUAGE) { //In PASRSE_LANGUAGE Mode
+                            if(this._currentMainBlockSkeleton == Entry.Parser.BLOCK_SKELETON_BASIC_LOOP ||
+                            this._currentMainBlockSkeleton == Entry.Parser.BLOCK_SKELETON_BASIC_DOUBLE_LOOP) { //If Block Sekeleton is basic
+                                if(this._currentMainBlockParamsKeyMap) {  //If Block has Parameters
+                                    if(j == 0) { //The beginning of Block Statement
+                                        console.log("This result is the beginning of Block Statement");
+                                    }
+                                }
+                            }
+                        }
+                    } 
                 }
             } else {
                 var tagIndex = 0;
@@ -109,9 +181,30 @@ Entry.BlockToPyParser = function() {
                     blockToken = blockToken.substring(tagIndex+1);
                 }
 
+                console.log("Block blockToken check2", blockToken, "i", i);
                 result += blockToken;
+
+                console.log("this._currentMainBlockSkeleton", this._currentMainBlockSkeleton, "SYMBOL", Entry.Parser.BLOCK_SKELETON_BASIC);
+                if(blockToken && i == blockTokens.length-1) { //This result is the end of CallExpression
+                    console.log("go to makeExpressionWithVariable check1")
+                    if(this._mode == Entry.Parser.PARSE_LANGUAGE) { //In PASRSE_LANGUAGE Mode
+                        console.log("go to makeExpressionWithVariable check2")
+                        if(this._currentMainBlockSkeleton == Entry.Parser.BLOCK_SKELETON_BASIC) { //If Block Sekeleton is basic
+                            console.log("go to makeExpressionWithVariable check3")
+                            if(this._currentMainBlockParamsKeyMap) {  //If Block has Parameters
+                                console.log("result : Block about to enter Language Combination", result);
+                                
+                                var paramsCount = Object.keys(this._currentMainBlockParamsKeyMap).length;
+                                if(paramsCount)
+                                    result = this.makeExpressionWithVariable(result, paramsCount); 
+                            }
+                        }
+                    }
+                }
+
             }
         }
+       
         return result;
     };
 
@@ -190,7 +283,7 @@ Entry.BlockToPyParser = function() {
     p.FieldKeyboard = function(dataParam) {
         console.log("FieldKeyboard Before", dataParam);
 
-        dataParam = Entry.KeyboardCodeMap.prototype.keyCodeToChar[dataParam];
+        dataParam = Entry.KeyboardCode.prototype.keyCodeToChar[dataParam];
 
         if(!dataParam || dataParam == null)
             dataParam = "Q";
@@ -200,6 +293,47 @@ Entry.BlockToPyParser = function() {
         return dataParam;
     };
 
-    
+    p.getBlockType = function(syntax) {
+        return this.blockSyntax[syntax];
+    };
 
+    p.makeExpressionWithVariable = function(exp, paramCount) {
+        var result;
+        var expression = "";
+        var variableDeclarations = "";
+
+        console.log("exp", exp);
+
+        //if(exp.match(/.*\..*\)/)) {
+        var index = exp.indexOf('(');
+        exp = exp.substring(0, index);
+        //}
+        
+        var expression = exp.trim().concat("(");
+
+        for(var i = 0; i < paramCount; i++) {
+            var variable = this._queue.dequeue();
+            console.log("this._queue", this._queue.toString());
+            var value = this._map.get(variable);
+            console.log("this._map", this._map);
+            var variableDeclaration = variable.concat(" = ").concat(value).concat('\n');
+            variableDeclarations += variableDeclaration;
+            
+            if(i == paramCount -1) {
+                expression = expression.concat(variable).concat(')');
+            }
+            else {    
+                expression = expression.concat(variable).concat(', ');
+            }
+       
+        }
+       
+        result = variableDeclarations.concat(expression);
+
+        console.log("makeExpressionWithVariable result", result);
+
+        return result;
+    };
+
+    
 })(Entry.BlockToPyParser.prototype);

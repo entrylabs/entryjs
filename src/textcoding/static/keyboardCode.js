@@ -4,9 +4,9 @@
  */
 "use strict";
 
-goog.provide("Entry.KeyboardCodeMap");
+goog.provide("Entry.KeyboardCode");
 
-Entry.KeyboardCodeMap = function() {
+Entry.KeyboardCode = function() {
 
 };
 
@@ -44,6 +44,6 @@ Entry.KeyboardCodeMap = function() {
 						";":186,"=":187,",":188,"-":189,".":190,"/":191,"`":192,"[":219,"\\":220,"]":221,
 						"'":222};
 
-})(Entry.KeyboardCodeMap.prototype);
+})(Entry.KeyboardCode.prototype);
 
 	

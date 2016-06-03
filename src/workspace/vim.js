@@ -130,11 +130,11 @@ Entry.Vim = function(dom, textType) {
 
         var textCode = this.codeMirror.getValue();
         var code = this._parser.parse(textCode);
-        if(code.length === 0) {   
+        /*if(code.length === 0) {   
             throw {
-                message : '지원하지 않는 파이썬 코드를 포함하고 있습니다.',
+                message : '지원되지 않는 표현식을 포함하고 있습니다.',
             };
-        }
+        }*/
         return code;
     };
 
@@ -148,7 +148,7 @@ Entry.Vim = function(dom, textType) {
             this._parser.setParser(this._mode, this._parserType, this.codeMirror);
         } 
 
-        var textCode = this._parser.parse(code);
+        var textCode = this._parser.parse(code, Entry.Parser.PARSE_LANGUAGE);
         textCode = Entry.Vim.PYTHON_IMPORT_HW
         .concat("\n\n")
         .concat(textCode); 
@@ -166,7 +166,7 @@ Entry.Vim = function(dom, textType) {
             this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
             this._parser.setParser(this._mode, this._parserType, this.codeMirror);
         }
-        var textCode = this._parser.parse(code);
+        var textCode = this._parser.parse(code, Entry.Parser.PARSE_SYNTAX);
         return textCode;
     };
 
