@@ -15114,6 +15114,7 @@ Entry.BlockMenu = function(b, a, c, d) {
   this.visible = !0;
   this._svgId = "blockMenu" + (new Date).getTime();
   this._clearCategory();
+  this._categoryData = c;
   this._generateView(c);
   this._splitters = [];
   this.setWidth();
@@ -15268,11 +15269,9 @@ Entry.BlockMenu = function(b, a, c, d) {
   b.setMenu = function() {
     var a = this._categoryCodes, b = this._categoryElems, d;
     for (d in a) {
-      var e = a[d];
-      e instanceof Entry.Code || (e = a[d] = new Entry.Code(e));
-      for (var e = e.getThreads(), f = e.length, g = 0;g < e.length;g++) {
-        var h = e[g].getFirstBlock();
-        this.checkBanClass(Entry.block[h.type]) && f--;
+      for (var e = a[d], e = e instanceof Entry.Code ? e.getThreads() : e, f = e.length, g = 0;g < e.length;g++) {
+        var h = e[g], h = h instanceof Entry.Thread ? h.getFirstBlock().type : h[0].type;
+        this.checkBanClass(Entry.block[h]) && f--;
       }
       0 === f ? b[d].addClass("entryRemove") : b[d].removeClass("entryRemove");
     }
@@ -15300,6 +15299,7 @@ Entry.BlockMenu = function(b, a, c, d) {
     var d = this._convertSelector(a);
     if (d) {
       "variable" == d && Entry.playground.checkVariables();
+      "arduino" == d && this._generateHwCode();
       var e = this._categoryElems[d], f = this._selectedCategoryView, g = !1, h = this.workspace.board, k = h.view;
       f && f.removeClass("entrySelectedCategory");
       e != f || b ? f || (this.visible || (g = !0, k.addClass("foldOut"), Entry.playground.showTabs()), k.removeClass("folding"), this.visible = !0) : (k.addClass("folding"), this._selectedCategoryView = null, e.removeClass("entrySelectedCategory"), Entry.playground.hideTabs(), g = !0, this.visible = !1);
@@ -15402,6 +15402,7 @@ Entry.BlockMenu = function(b, a, c, d) {
   };
   b.setCategoryData = function(a) {
     this._clearCategory();
+    this._categoryData = a;
     this._generateCategoryView(a);
     this._generateCategoryCodes(a);
   };
@@ -15425,6 +15426,34 @@ Entry.BlockMenu = function(b, a, c, d) {
   b.offset = function() {
     (!this._offset || 0 === this._offset.top && 0 === this._offset.left) && this.updateOffset();
     return this._offset;
+  };
+  b._generateHwCode = function() {
+    var a = this._categoryCodes.arduino;
+    a instanceof Entry.Code && a.clear();
+    for (var b = this._categoryData, d, a = b.length - 1;0 <= a;a--) {
+      if ("arduino" === b[a].category) {
+        d = b[a].blocks;
+        break;
+      }
+    }
+    b = [];
+    for (a = 0;a < d.length;a++) {
+      var e = d[a], f = Entry.block[e];
+      if (!this.checkBanClass(f)) {
+        if (f && f.def) {
+          if (f.defs) {
+            for (a = 0;a < f.defs.length;a++) {
+              b.push([f.defs[a]]);
+            }
+          } else {
+            b.push([f.def]);
+          }
+        } else {
+          b.push([{type:e}]);
+        }
+      }
+    }
+    this._categoryCodes.arduino = b;
   };
 })(Entry.BlockMenu.prototype);
 Entry.BlockMenuScroller = function(b) {
@@ -19975,7 +20004,7 @@ Entry.Playground.prototype.updateHW = function() {
   if (b) {
     var a = Entry.hw;
     a && a.connected ? (b.unbanClass("arduinoConnected", !0), b.banClass("arduinoDisconnected", !0), a.banHW(), a.hwModule && b.unbanClass(a.hwModule.name)) : (b.banClass("arduinoConnected", !0), b.unbanClass("arduinoDisconnected", !0), Entry.hw.banHW());
-    b.align();
+    b.reDraw();
   }
 };
 Entry.Playground.prototype.toggleLineBreak = function(b) {
