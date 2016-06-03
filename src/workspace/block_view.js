@@ -510,7 +510,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
                         offsetY: mouseEvent.pageY
                     });
 
-                    requestAnimationFrame(Entry.GlobalSvg.position.bind(Entry.GlobalSvg));
+                    Entry.GlobalSvg.position();
                     if (!blockView.originPos)
                         blockView.originPos = {x: blockView.x, y: blockView.y};
                     if (isFirst)
