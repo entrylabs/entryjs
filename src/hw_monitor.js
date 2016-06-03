@@ -310,9 +310,13 @@ Entry.HWMonitor = function(hwModule) {
 
             if (port.type == "input") {
                 var value = portData[key];
-                if($.isPlainObject(value) && objectKeys.length > 0) {
-                    objectKeys.forEach(function (valueKey) {
-                        value = value[valueKey];
+                if(objectKeys.length > 0) {
+                    $.each(objectKeys, function (idx, valueKey) {
+                        if($.isPlainObject(value)) {
+                            value = value[valueKey] || 0;
+                        } else {
+                            return false;
+                        }
                     });
                     port.value.textContent = value ? value : 0;
                     port.group.getElementsByTagName('rect')[1].attr({fill : "#00979D"});
@@ -322,9 +326,13 @@ Entry.HWMonitor = function(hwModule) {
                 }
             } else {
                 var value = sendQueue[key];
-                if($.isPlainObject(value) && objectKeys.length > 0) {
-                    objectKeys.forEach(function (valueKey) {
-                        value = value[valueKey];
+                if(objectKeys.length > 0) {
+                    $.each(objectKeys, function (idx, valueKey) {
+                        if($.isPlainObject(value)) {
+                            value = value[valueKey] || 0;
+                        } else {
+                            return false;
+                        }
                     });
                     port.value.textContent = value ? value : 0;
                     port.group.getElementsByTagName('rect')[1].attr({fill : "#A751E3"})

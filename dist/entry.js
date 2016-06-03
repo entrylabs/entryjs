@@ -12781,14 +12781,22 @@ Entry.HWMonitor = function(b) {
     for (var h in f) {
       if (d = f[h], "input" == d.type) {
         var k = a[h];
-        $.isPlainObject(k) && 0 < e.length && e.forEach(function(a) {
-          k = k[a];
+        0 < e.length && $.each(e, function(a, b) {
+          if ($.isPlainObject(k)) {
+            k = k[b] || 0;
+          } else {
+            return !1;
+          }
         });
         d.value.textContent = k ? k : 0;
         d.group.getElementsByTagName("rect")[1].attr({fill:"#00979D"});
       } else {
-        k = b[h], $.isPlainObject(k) && 0 < e.length && e.forEach(function(a) {
-          k = k[a];
+        k = b[h], 0 < e.length && $.each(e, function(a, b) {
+          if ($.isPlainObject(k)) {
+            k = k[b] || 0;
+          } else {
+            return !1;
+          }
         }), d.value.textContent = k ? k : 0, d.group.getElementsByTagName("rect")[1].attr({fill:"#A751E3"});
       }
     }
