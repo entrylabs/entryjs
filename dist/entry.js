@@ -12593,6 +12593,7 @@ Entry.Parser = function(b, a, d) {
           }
           console.log("astArray", e);
           c = this._parser.Program(e);
+          this._parser._map.clear();
           console.log("result", c);
         } catch (n) {
           if (this.codeMirror) {
