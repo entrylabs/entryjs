@@ -57,15 +57,16 @@ Entry.Vim = function(dom, textType) {
             mode:  {name:"javascript", globalVars: true},
             theme: "default",
             indentUnit: 4,
+            indentWithTabs: true,
             styleActiveLine: true,
             extraKeys: {
-                "Ctrl-Space": "autocomplete",
+                "Ctrl-Space": "autocomplete"/*,
                 "Tab": function(cm) {
                     var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
                     cm.replaceSelection(spaces);
-                }
+                }*/
             },
-            // gutters: ["CodeMirror-lint-markers"],
+            //gutters: ["CodeMirror-lint-markers"],
             lint: true,
             viewportMargin: 10
         });

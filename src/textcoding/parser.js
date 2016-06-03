@@ -249,7 +249,7 @@ Entry.Parser = function(mode, type, cm) {
 
                     result = this._parser.Program(astArray);
 
-                    this._parser._map.clear();
+                    this._parser._variableMap.clear();
 
                     console.log("result", result);
                 } catch(error) {

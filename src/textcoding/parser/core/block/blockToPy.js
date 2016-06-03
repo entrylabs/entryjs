@@ -13,8 +13,8 @@ goog.require("Entry.Queue");
 Entry.BlockToPyParser = function(blockSyntax) {
     this.blockSyntax = blockSyntax;
 
-    var map = new Entry.Map();
-    this._map = map;
+    var variableMap = new Entry.Map();
+    this._variableMap = variableMap;
 
     var queue = new Entry.Queue();
     this._queue = queue;
@@ -61,7 +61,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
             result += (this.Block(block) + '\n');
 
             this._queue.clear();
-            this._map.clear();
+            this._variableMap.clear();
         }
         return result;
     };
@@ -129,7 +129,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
                                     console.log("Block param into Queue", param);
 
-                                    this._map.put(variable, value);
+                                    this._variableMap.put(variable, value);
                                     this._queue.enqueue(variable); 
                                     console.log("Queue", this._queue.toString());
                                 } else {
@@ -314,8 +314,8 @@ Entry.BlockToPyParser = function(blockSyntax) {
         for(var i = 0; i < paramCount; i++) {
             var variable = this._queue.dequeue();
             console.log("this._queue", this._queue.toString());
-            var value = this._map.get(variable);
-            console.log("this._map", this._map);
+            var value = this._variableMap.get(variable);
+            console.log("this._variableMap", this._variableMap);
             var variableDeclaration = variable.concat(" = ").concat(value).concat('\n');
             variableDeclarations += variableDeclaration;
             

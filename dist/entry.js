@@ -11564,7 +11564,7 @@ Entry.TextCodingUtil = function() {
 })(Entry.TextCodingUtil.prototype);
 Entry.BlockToPyParser = function(b) {
   this.blockSyntax = b;
-  this._map = new Entry.Map;
+  this._variableMap = new Entry.Map;
   this._queue = new Entry.Queue;
 };
 (function(b) {
@@ -11597,7 +11597,7 @@ Entry.BlockToPyParser = function(b) {
       console.log("Thread MainBlock", this._currentMainBlock, "Thread Skeleton", this._currentMainBlockSkeleton, "ParamsKeyMap", this._currentMainBlockParamsKeyMap);
       b += this.Block(e) + "\n";
       this._queue.clear();
-      this._map.clear();
+      this._variableMap.clear();
     }
     return b;
   };
@@ -11627,7 +11627,7 @@ Entry.BlockToPyParser = function(b) {
                     console.log("Check paramsKeyMap", this._currentMainBlockParamsKeyMap);
                     var n = Object.keys(this._currentMainBlockParamsKeyMap), n = String(n[this._currentmainBlockIndex++]), n = n.toLowerCase(), m = l;
                     console.log("Block param into Queue", l);
-                    this._map.put(n, m);
+                    this._variableMap.put(n, m);
                     this._queue.enqueue(n);
                     console.log("Queue", this._queue.toString());
                   } else {
@@ -11718,8 +11718,8 @@ Entry.BlockToPyParser = function(b) {
     for (var e = a.trim().concat("("), f = 0;f < b;f++) {
       var g = this._queue.dequeue();
       console.log("this._queue", this._queue.toString());
-      var h = this._map.get(g);
-      console.log("this._map", this._map);
+      var h = this._variableMap.get(g);
+      console.log("this._variableMap", this._variableMap);
       h = g.concat(" = ").concat(h).concat("\n");
       c += h;
       e = f == b - 1 ? e.concat(g).concat(")") : e.concat(g).concat(", ");
@@ -11733,7 +11733,7 @@ Entry.PyToBlockParser = function(b) {
   this.blockSyntax = b;
   this._blockStatmentIndex = 0;
   this._blockStatments = [];
-  this._map = new Entry.Map;
+  this._variableMap = new Entry.Map;
 };
 (function(b) {
   b.Program = function(a) {
@@ -11798,7 +11798,7 @@ Entry.PyToBlockParser = function(b) {
   b.Identifier = function(a, b, c, e) {
     console.log("Identifier component", a, "paramMeta", b, "paramDefMeta", c, "aflag", e);
     if (e) {
-      return a = this._map.get(a.name), console.log("Identifier this._map", this._map), console.log("Identifier value", a), a ? (e = {}, e.value = a, b = this.Literal(e, b, c)) : b = null, console.log("Identifiler result", b), b;
+      return a = this._variableMap.get(a.name), console.log("Identifier this._variableMap", this._variableMap), console.log("Identifier value", a), a ? (e = {}, e.value = a, b = this.Literal(e, b, c)) : b = null, console.log("Identifiler result", b), b;
     }
     b = a.name;
     console.log("Identifiler result", b);
@@ -12110,7 +12110,7 @@ Entry.PyToBlockParser = function(b) {
     c = a.id.name;
     a = a.init.value;
     console.log("variable", c, "value", a);
-    c && a && this._map.put(c, a);
+    c && a && this._variableMap.put(c, a);
     console.log("VariableDeclarator result", b);
     return b;
   };
@@ -12334,7 +12334,7 @@ Entry.PyToBlockParser = function(b) {
     c = a.left.name;
     a = a.right.value;
     console.log("variable", c, "value", a);
-    c && a && this._map.put(c, a);
+    c && a && this._variableMap.put(c, a);
     b.right = g;
     result = b;
     console.log("AssignmentExpression result", result);
@@ -12593,7 +12593,7 @@ Entry.Parser = function(b, a, d) {
           }
           console.log("astArray", e);
           c = this._parser.Program(e);
-          this._parser._map.clear();
+          this._parser._variableMap.clear();
           console.log("result", c);
         } catch (n) {
           if (this.codeMirror) {
@@ -21207,10 +21207,7 @@ Entry.Vim = function(b, a) {
     }
     var e;
     this.view = Entry.Dom("div", {parent:a, class:"entryVimBoard"});
-    this.codeMirror = CodeMirror(this.view[0], {lineNumbers:!0, value:"", mode:{name:"javascript", globalVars:!0}, theme:"default", indentUnit:4, styleActiveLine:!0, extraKeys:{"Ctrl-Space":"autocomplete", Tab:function(a) {
-      var b = Array(a.getOption("indentUnit") + 1).join(" ");
-      a.replaceSelection(b);
-    }}, lint:!0, viewportMargin:10});
+    this.codeMirror = CodeMirror(this.view[0], {lineNumbers:!0, value:"", mode:{name:"javascript", globalVars:!0}, theme:"default", indentUnit:4, indentWithTabs:!0, styleActiveLine:!0, extraKeys:{"Ctrl-Space":"autocomplete"}, lint:!0, viewportMargin:10});
     this.doc = this.codeMirror.getDoc();
     e = this;
     a = this.view[0];

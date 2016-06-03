@@ -14,8 +14,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
     this._blockStatmentIndex = 0;
     this._blockStatments = [];
 
-    var map = new Entry.Map();
-    this._map = map;
+    var variableMap = new Entry.Map();
+    this._variableMap = variableMap;
 };
 
 (function(p){
@@ -202,9 +202,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         if(aflag) {
             var variable = component.name;
-            var value = this._map.get(variable);
+            var value = this._variableMap.get(variable);
 
-            console.log("Identifier this._map", this._map);
+            console.log("Identifier this._variableMap", this._variableMap);
             console.log("Identifier value", value);
 
             if(value) {
@@ -904,7 +904,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("variable", variable, "value", value);
 
         if(variable && value)
-            this._map.put(variable, value);
+            this._variableMap.put(variable, value);
         //save the variable to map
 
         result = data;
@@ -1419,7 +1419,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("variable", variable, "value", value);
 
         if(variable && value)
-            this._map.put(variable, value);
+            this._variableMap.put(variable, value);
         //save the variable to map
 
         data.right = rightData;
