@@ -228,7 +228,6 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             if (!board.code) return;
 
             var block = blockView.block;
-            var clonedThread;
             var code = this.code;
             var currentThread = block.getThread();
             if (block && currentThread) {
@@ -239,9 +238,18 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
                 var offset = this.offset();
                 var distance = offset.top - board.offset().top;
 
+                var dx, dy;
+
+                var mouseDownCoordinate = this.dragBlock.mouseDownCoordinate;
+
+                if (mouseDownCoordinate) {
+                    dx = e.pageX - mouseDownCoordinate.x;
+                    dy = e.pageY - mouseDownCoordinate.y;
+                }
+
                 this._boardBlockView._moveTo(
-                    blockView.x-svgWidth,
-                    blockView.y+distance,
+                    blockView.x - svgWidth + (dx || 0),
+                    blockView.y + distance + (dy || 0),
                     false
                 );
                 this._boardBlockView.onMouseDown.call(this._boardBlockView, e);
