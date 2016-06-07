@@ -522,7 +522,6 @@ Entry.skeleton.basic_double_loop = {
         var contentHeight2 = Math.max(blockView.contentHeight%1000 + 2, 30);
         var statementHeight1 = blockView._statements[0] ? blockView._statements[0].height%1000 : 20;
         var statementHeight2 = blockView._statements[1] ? blockView._statements[1].height : 20;
-        statementHeight2 = Math.floor(statementHeight2/1000);
         statementHeight1 = Math.max(statementHeight1, 20);
         statementHeight2 = Math.max(statementHeight2, 20);
         return {
