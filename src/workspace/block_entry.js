@@ -17360,7 +17360,7 @@ Entry.block = {
         "fontColor": "#FFF",
         "skeleton": "basic_boolean_field",
         "statements": [],
-        "template": "디지털  %1 번 스위치가 %2  ",
+        "template": "디지털 %1 번 스위치가 %2  ",
         "params": [{
             "type": "Dropdown",
             "options": [
@@ -17495,8 +17495,6 @@ Entry.block = {
             "options": [
                 ["7", "7"],
                 ["8", "8"],
-                ["9", "9"],
-                ["10", "10"],
                 ['12', "12"],
                 ['13', "13"]
             ],
@@ -17533,8 +17531,6 @@ Entry.block = {
             var port = 7;
             if (port1 == "7") port = 7;
             else if (port1 == "8") port = 8;
-            else if (port1 == "9") port = 9;
-            else if (port1 == "10") port = 10;
             else if (port1 == "12") port = 12;
             else if (port1 == "13") port = 13;
             var operator = script.getField("OPERATOR");
@@ -17630,7 +17626,7 @@ Entry.block = {
         "fontColor": "#FFF",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1  DC모터 속도를 %2(으)로 정하기 %3",
+        "template": "%1 DC모터 속도를 %2(으)로 정하기 %3",
         "params": [{
             "type": "Dropdown",
             "options": [
@@ -17665,6 +17661,23 @@ Entry.block = {
         "isNotFor": ["dplay"],
         "func": function (sprite, script) {
           var port = script.getField("PORT");
+          if (!script.isStart) {
+            script.isStart = true;
+            script.timeFlag = 1;
+            var timeValue = 50;
+            var timer = setTimeout(function() {
+              script.timeFlag = 2;
+              Entry.dplay.removeTimeout(timer);
+            }, timeValue);
+            Entry.dplay.timeouts.push(timer);
+            return script;
+          } else if (script.timeFlag == 1) {
+            Entry.hw.setDigitalPortValue(3, 0);
+            Entry.hw.setDigitalPortValue(5, 0);
+            Entry.hw.setDigitalPortValue(6, 0);
+            Entry.hw.setDigitalPortValue(11, 0);
+            return script;
+          } else if (script.timeFlag == 2) {
           var port1 = 0;
           var port2 = 0;
           var port3 = 0;
@@ -17707,77 +17720,117 @@ Entry.block = {
             Entry.hw.setDigitalPortValue(port2, value2);
             Entry.hw.setDigitalPortValue(port3, value1);
             Entry.hw.setDigitalPortValue(port4, value2);
+            delete script.isStart;
+            delete script.timeFlag;
+            Entry.engine.isContinue = false;
             return script.callReturn();
         }
+      }
     },
     "dplay_buzzer": {
         "color": "#00979D",
-        "fontColor": "#FFF",
         "skeleton": "basic",
         "statements": [],
-        "template": "디지털 %1번 부저를  %2 %3 박자로 연주하기 %4",
-        "params": [{
-          "type": "Dropdown",
-          "options": [
-              ["7", "7"],
-              ["8", "8"],
-              ["9", "9"],
-              ["10", "10"],
-              ['12', "12"],
-              ['13', "13"]
-          ],
-          "value": "7",
-          "fontSize": 11,
-          'arrowColor': EntryStatic.ARROW_COLOR_HW
-        }, {
-            "type": "Dropdown",
-            "options": [
-                ["도", "1"],
-                ["레", "2"],
-                ["미", "3"],
-                ['파', "4"],
-                ['솔', "5"],
-                ['라', "6"],
-                ['시', "7"]
-            ],
-            "value": "1",
-            "fontSize": 11,
-            'arrowColor': EntryStatic.ARROW_COLOR_HW
-        }, {
-            "type": "Block",
-            "accept": "string"
-        }, {
-            "type": "Indicator",
-            "img": "block_icon/hardware_03.png",
-            "size": 12
-        }],
+        "template": "디지털 10번 부저를 %1 %2 %3 박자로 연주하기",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ['도', "1"],
+                    ['도#', "2"],
+                    ['레', "3"],
+                    ['미b', "4"],
+                    ['미', "5"],
+                    ['파', "6"],
+                    ['파#', "7"],
+                    ['솔', "8"],
+                    ['솔#', "9"],
+                    ['라', "10"],
+                    ['시b', "11"],
+                    ['시', "12"],
+                    ['무음', "100"]
+                ],
+                "value": "1",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    ['1', "1"],
+                    ['2', "2"],
+                    ['3', "3"]
+                ],
+                "value": "1",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
         "events": {},
         "def": {
-            "params": [null, null, {
-                "type": "text",
-                "params": ["0"]
-            }, null],
+            "params": [
+                "1",
+                "1",
+                {
+                    "type": "text",
+                    "params": [ "0.5" ]
+                },
+                null
+            ],
             "type": "dplay_buzzer"
         },
         "paramsKeyMap": {
-            "PORT": 0,
-            "SCALE": 1,
+            "NOTE": 0,
+            "OCTAVE": 1,
             "VALUE": 2
         },
         "class": "dplay_set",
         "isNotFor": ["dplay"],
         "func": function (sprite, script) {
-            var port1 = script.getField("PORT");
-            var port = 2;
-            if (port1 == "1") port = 2;
-            else if (port1 == "2") port = 4;
-            else if (port1 == "3") port = 7;
-            var value = script.getNumberValue("VALUE");
-            value = Math.round(value);
-            value = Math.max(value, 0);
-            value = Math.min(value, 100);
-            Entry.hw.setDigitalPortValue(port, value);
-            return script.callReturn();
+            if (!script.isStart) {
+                var note = script.getNumberField("NOTE", script);
+                var octave = script.getNumberField("OCTAVE", script);
+                var beat = script.getNumberValue("VALUE");
+                var tempo = 60;
+                var note_go = note + ((octave-1)*12);
+                var timeValue = beat*60*1000/tempo;
+                script.isStart = true;
+                script.timeFlag = 1;
+                if(note == 100)   Entry.hw.setDigitalPortValue(10, 100);
+                else            Entry.hw.setDigitalPortValue(10, note_go);
+                if(timeValue > 100) {
+                    var timer1 = setTimeout(function() {
+                        Entry.hw.setDigitalPortValue(10, 100);
+                        Entry.dplay.removeTimeout(timer1);
+                    }, timeValue-100);
+                    Entry.dplay.timeouts.push(timer1);
+                }
+                var timer2 = setTimeout(function() {
+                    script.timeFlag = 0;
+                    Entry.dplay.removeTimeout(timer2);
+                }, timeValue);
+                Entry.dplay.timeouts.push(timer2);
+                return script;
+            }
+            else if (script.timeFlag == 1) {
+                return script;
+            }
+            else {
+                Entry.hw.setDigitalPortValue(10, 100);
+                delete script.isStart;
+                delete script.timeFlag;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
         }
     },
     "dplay_servo": {
@@ -17785,7 +17838,7 @@ Entry.block = {
         "fontColor": "#FFF",
         "skeleton": "basic",
         "statements": [],
-        "template": "서보모터 각도를 %1 (도)로 이동",
+        "template": "디지털 9번 서보모터 각도를 %1 (도)로 이동",
         "params": [{
             "type": "Block",
             "accept": "string"
@@ -17813,7 +17866,7 @@ Entry.block = {
             value = Math.round(value);
             value = Math.max(value, 1);
             value = Math.min(value, 179);
-            Entry.hw.setDigitalPortValue(port, value);
+            Entry.hw.setDigitalPortValue(9, value);
             return script.callReturn();
         }
     },
@@ -18008,51 +18061,72 @@ Entry.block = {
         "class": "dplay_robot",
         "isNotFor": ["dplay"],
         "func": function (sprite, script) {
-            var port = script.getField("PORT");
             var port1 = 0;
             var port2 = 0;
             var port3 = 0;
             var port4 = 0;
-            if (port == "1") {
+            var port = script.getField("PORT");
+            if (!script.isStart) {
+              script.isStart = true;
+              script.timeFlag = 1;
+              var timeValue = 50;
+              var timer = setTimeout(function() {
+                script.timeFlag = 2;
+                Entry.dplay.removeTimeout(timer);
+              }, timeValue);
+              Entry.dplay.timeouts.push(timer);
+              return script;
+            } else if (script.timeFlag == 1) {
+              Entry.hw.setDigitalPortValue(3, 0);
+              Entry.hw.setDigitalPortValue(5, 0);
+              Entry.hw.setDigitalPortValue(6, 0);
+              Entry.hw.setDigitalPortValue(11, 0);
+              return script;
+            } else if (script.timeFlag == 2) {
+              if (port == "1") {
               port1 = 3; port2 = 5;
-            }
-            else if (port == "2") {
+              }
+              else if (port == "2") {
               port1 = 11; port2 = 6;
-            }
-            else if (port == "3") {
+              }
+              else if (port == "3") {
               port1 = 3; port2 = 5; port3 = 11; port4 = 6;
-            }
-            var operator = script.getNumberValue("VALUE", script);
-            operator = Math.max(operator, -100);
-            operator = Math.min(operator, 100);
-            var value1 = 0;
-            var value2 = 0;
-            var result = 0;
-            if (operator == 0) {
-                value1 = 0;
-                value2 = 0;
-                Entry.dplay.vel_value = value2;
-            }
-            else if (operator > 0) {
-                result = operator + 155;
-                result = Math.round(result);
-                value1 = 0;
-                value2 = result;
-                Entry.dplay.vel_value = value2;
-            }
-            else if (operator < 0) {
-                result = operator - 155;
-                result = Math.round(result);
-                value1 = -result;
-                value2 = 0;
-                Entry.dplay.vel_value = value2;
-            }
-            Entry.hw.setDigitalPortValue(port1, value1);
-            Entry.hw.setDigitalPortValue(port2, value2);
-            Entry.hw.setDigitalPortValue(port3, value1);
-            Entry.hw.setDigitalPortValue(port4, value2);
-            return script.callReturn();
-        }
+              }
+              var operator = script.getNumberValue("VALUE", script);
+              operator = Math.max(operator, -100);
+              operator = Math.min(operator, 100);
+              var value1 = 0;
+              var value2 = 0;
+              var result = 0;
+              if (operator == 0) {
+                  value1 = 0;
+                  value2 = 0;
+                  Entry.dplay.vel_value = value2;
+              }
+              else if (operator > 0) {
+                  result = operator + 155;
+                  result = Math.round(result);
+                  value1 = 0;
+                  value2 = result;
+                  Entry.dplay.vel_value = value2;
+              }
+              else if (operator < 0) {
+                  result = operator - 155;
+                  result = Math.round(result);
+                  value1 = -result;
+                  value2 = 0;
+                  Entry.dplay.vel_value = value1;
+              }
+              Entry.hw.setDigitalPortValue(port1, value1);
+              Entry.hw.setDigitalPortValue(port2, value2);
+              Entry.hw.setDigitalPortValue(port3, value1);
+              Entry.hw.setDigitalPortValue(port4, value2);
+              delete script.isStart;
+              delete script.timeFlag;
+              Entry.engine.isContinue = false;
+              return script.callReturn();
+              }
+          }
     },
     "dplay_robot_stop": {
         "color": "#00979D",
