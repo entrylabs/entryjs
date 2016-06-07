@@ -118,7 +118,11 @@ Entry.Commander = function(injectType) {
         var reporters = this.reporters;
         if (reporters.length === 0) return;
 
-        var data = Entry.Command[commandType].log.apply(this, argumentsArray)
+        var data;
+
+        if (commandType && Entry.Command[commandType] && Entry.Command[commandType].log)
+            data = Entry.Command[commandType].log.apply(this, argumentsArray)
+        else data = argumentsArray;
         reporters.forEach(function(reporter) {
             reporter.add(data);
         });

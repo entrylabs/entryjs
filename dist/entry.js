@@ -6101,7 +6101,8 @@ Entry.Commander = function(b) {
   b.report = function(a, b) {
     var d = this.reporters;
     if (0 !== d.length) {
-      var e = Entry.Command[a].log.apply(this, b);
+      var e;
+      e = a && Entry.Command[a] && Entry.Command[a].log ? Entry.Command[a].log.apply(this, b) : b;
       d.forEach(function(a) {
         a.add(e);
       });
