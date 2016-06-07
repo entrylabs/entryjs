@@ -46,7 +46,7 @@ Entry.SensorBoard = {
 
 Entry.dplay = {
     name: 'dplay',
-    vel_value : 254,
+    vel_value : 255,
     setZero: Entry.Arduino.setZero,
     timeouts: [],
     removeTimeout: function(id) {

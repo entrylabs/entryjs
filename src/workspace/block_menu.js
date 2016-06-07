@@ -29,6 +29,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     this.visible = true;
     this._svgId = 'blockMenu' + new Date().getTime();
     this._clearCategory();
+    this._categoryData = categoryData;
     this._generateView(categoryData);
 
     this._splitters = [];
@@ -228,7 +229,6 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             if (!board.code) return;
 
             var block = blockView.block;
-            var clonedThread;
             var code = this.code;
             var currentThread = block.getThread();
             if (block && currentThread) {
@@ -239,9 +239,18 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
                 var offset = this.offset();
                 var distance = offset.top - board.offset().top;
 
+                var dx, dy;
+
+                var mouseDownCoordinate = this.dragBlock.mouseDownCoordinate;
+
+                if (mouseDownCoordinate) {
+                    dx = e.pageX - mouseDownCoordinate.x;
+                    dy = e.pageY - mouseDownCoordinate.y;
+                }
+
                 this._boardBlockView._moveTo(
-                    blockView.x-svgWidth,
-                    blockView.y+distance,
+                    blockView.x - svgWidth + (dx || 0),
+                    blockView.y + distance + (dy || 0),
                     false
                 );
                 this._boardBlockView.onMouseDown.call(this._boardBlockView, e);
@@ -346,14 +355,19 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         var elems = this._categoryElems;
         for (var key in categoryCodes) {
             var code = categoryCodes[key];
-            if (!(code instanceof Entry.Code))
-                code = categoryCodes[key] = new Entry.Code(code);
-            var threads = code.getThreads();
+            var threads;
+            if (code instanceof Entry.Code)
+                threads = code.getThreads();
+            else threads = code;
 
             var count = threads.length;
             for (var i=0; i<threads.length; i++) {
-                var block = threads[i].getFirstBlock();
-                if(this.checkBanClass(Entry.block[block.type]))
+                var thread = threads[i];
+                var type;
+                if (thread instanceof Entry.Thread) type = thread.getFirstBlock().type;
+                else type = thread[0].type;
+
+                if(this.checkBanClass(Entry.block[type]))
                     count--;
             }
 
@@ -394,6 +408,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         if (!name) return;
         if (name == 'variable')
             Entry.playground.checkVariables();
+
+        if (name == 'arduino') this._generateHwCode();
 
         var elem = this._categoryElems[name];
         var oldView = this._selectedCategoryView;
@@ -565,6 +581,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     p.setCategoryData = function(data) {
         this._clearCategory();
+        this._categoryData = data;
         this._generateCategoryView(data);
         this._generateCategoryCodes(data);
     };
@@ -601,6 +618,44 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             this.updateOffset();
         }
         return this._offset;
+    };
+
+    p._generateHwCode = function() {
+        var code = this._categoryCodes.arduino;
+
+        if (code instanceof Entry.Code) code.clear();
+
+        var data = this._categoryData;
+        var blocks;
+        for (var i = data.length-1; i >= 0; i--) {
+            var category = data[i].category;
+            if (category === 'arduino') {
+                blocks = data[i].blocks;
+                break;
+            }
+        }
+
+        var codesJSON = [];
+        for (i =0; i<blocks.length; i++) {
+            var type = blocks[i];
+            var block = Entry.block[type];
+            if(!this.checkBanClass(block)) {
+                if (!block || !block.def) {
+                    codesJSON.push([{type:type}]);
+                } else {
+                    if (block.defs) {
+                        for (var i =0; i <block.defs.length; i++)
+                            codesJSON.push([
+                                block.defs[i]
+                            ]);
+                    } else
+                        codesJSON.push([
+                            block.def
+                        ]);
+                }
+            }
+        }
+        this._categoryCodes.arduino = codesJSON;
     };
 
 

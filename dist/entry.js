@@ -722,7 +722,7 @@ Entry.Arduino = {name:"arduino", setZero:function() {
 Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a0:{name:Lang.Hw.port_en + " A0 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a1:{name:Lang.Hw.port_en + " A1 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a2:{name:Lang.Hw.port_en + " A2 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a3:{name:Lang.Hw.port_en + " A3 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a4:{name:Lang.Hw.port_en + " A4 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a5:{name:Lang.Hw.port_en + " A5 " + 
 Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}}, mode:"both"}};
 Entry.SensorBoard = {name:"sensorBoard", setZero:Entry.Arduino.setZero};
-Entry.dplay = {name:"dplay", vel_value:254, setZero:Entry.Arduino.setZero, timeouts:[], removeTimeout:function(b) {
+Entry.dplay = {name:"dplay", vel_value:255, setZero:Entry.Arduino.setZero, timeouts:[], removeTimeout:function(b) {
   clearTimeout(b);
   var a = this.timeouts;
   b = a.indexOf(b);
@@ -11547,7 +11547,7 @@ p.init = function(b) {
 p.generateView = function(b) {
   var a = Entry.createElement("div");
   a.addClass("entryContainerMovieWorkspace");
-  a.addClass("entryHidden");
+  a.addClass("entryRemove");
   this.movieContainer = a;
   a = Entry.createElement("iframe");
   a.setAttribute("id", "tvCastIframe");
@@ -11561,10 +11561,11 @@ p.getView = function() {
   return this.movieContainer;
 };
 p.resize = function() {
-  var b = document.getElementById("entryContainerWorkspaceId"), a = document.getElementById("tvCastIframe");
-  w = b.offsetWidth;
-  a.width = w + "px";
-  a.height = 9 * w / 16 + "px";
+  document.getElementById("entryContainerWorkspaceId");
+  var b = document.getElementById("tvCastIframe");
+  w = this.movieContainer.offsetWidth;
+  b.width = w + "px";
+  b.height = 9 * w / 16 + "px";
 };
 Entry.BlockDriver = function() {
 };
@@ -12897,7 +12898,7 @@ Entry.HW = function() {
   this.settingQueue = {};
   this.socketType = this.hwModule = this.selectedDevice = null;
   Entry.addEventListener("stop", this.setZero);
-  this.hwInfo = {11:Entry.Arduino, 12:Entry.SensorBoard, 13:Entry.CODEino, 15:Entry.dplay, 16:Entry.nemoino, 17:Entry.Xbot, 24:Entry.Hamster, 25:Entry.Albert, 31:Entry.Bitbrick, 42:Entry.Arduino, 51:Entry.Neobot, 71:Entry.Robotis_carCont, 72:Entry.Robotis_openCM70};
+  this.hwInfo = {11:Entry.Arduino, 12:Entry.SensorBoard, 13:Entry.CODEino, 15:Entry.dplay, 16:Entry.nemoino, 17:Entry.Xbot, 24:Entry.Hamster, 25:Entry.Albert, 31:Entry.Bitbrick, 42:Entry.Arduino, 51:Entry.Neobot, 71:Entry.Robotis_carCont, 72:Entry.Robotis_openCM70, 81:Entry.Arduino};
 };
 Entry.HW.TRIAL_LIMIT = 1;
 p = Entry.HW.prototype;
@@ -15132,6 +15133,7 @@ Entry.BlockMenu = function(b, a, c, d) {
   this.visible = !0;
   this._svgId = "blockMenu" + (new Date).getTime();
   this._clearCategory();
+  this._categoryData = c;
   this._generateView(c);
   this._splitters = [];
   this.setWidth();
@@ -15209,7 +15211,21 @@ Entry.BlockMenu = function(b, a, c, d) {
   b.cloneToGlobal = function(a) {
     if (!this._boardBlockView && null !== this.dragBlock) {
       var b = this.workspace, d = b.getMode(), e = this.dragBlock, f = this._svgWidth, g = b.selectedBoard;
-      !g || d != Entry.Workspace.MODE_BOARD && d != Entry.Workspace.MODE_OVERLAYBOARD ? Entry.GlobalSvg.setView(e, b.getMode()) && Entry.GlobalSvg.addControl(a) : g.code && (b = e.block, d = b.getThread(), b && d && (b = d.toJSON(!0), this._boardBlockView = Entry.do("addThread", b).value.getFirstBlock().view, g = this.offset().top - g.offset().top, this._boardBlockView._moveTo(e.x - f, e.y + g, !1), this._boardBlockView.onMouseDown.call(this._boardBlockView, a), this._boardBlockView.dragInstance.set({isNew:!0})));
+      if (!g || d != Entry.Workspace.MODE_BOARD && d != Entry.Workspace.MODE_OVERLAYBOARD) {
+        Entry.GlobalSvg.setView(e, b.getMode()) && Entry.GlobalSvg.addControl(a);
+      } else {
+        if (g.code && (b = e.block, d = b.getThread(), b && d)) {
+          b = d.toJSON(!0);
+          this._boardBlockView = Entry.do("addThread", b).value.getFirstBlock().view;
+          var g = this.offset().top - g.offset().top, h, k;
+          if (b = this.dragBlock.mouseDownCoordinate) {
+            h = a.pageX - b.x, k = a.pageY - b.y;
+          }
+          this._boardBlockView._moveTo(e.x - f + (h || 0), e.y + g + (k || 0), !1);
+          this._boardBlockView.onMouseDown.call(this._boardBlockView, a);
+          this._boardBlockView.dragInstance.set({isNew:!0});
+        }
+      }
     }
   };
   b.terminateDrag = function() {
@@ -15272,11 +15288,9 @@ Entry.BlockMenu = function(b, a, c, d) {
   b.setMenu = function() {
     var a = this._categoryCodes, b = this._categoryElems, d;
     for (d in a) {
-      var e = a[d];
-      e instanceof Entry.Code || (e = a[d] = new Entry.Code(e));
-      for (var e = e.getThreads(), f = e.length, g = 0;g < e.length;g++) {
-        var h = e[g].getFirstBlock();
-        this.checkBanClass(Entry.block[h.type]) && f--;
+      for (var e = a[d], e = e instanceof Entry.Code ? e.getThreads() : e, f = e.length, g = 0;g < e.length;g++) {
+        var h = e[g], h = h instanceof Entry.Thread ? h.getFirstBlock().type : h[0].type;
+        this.checkBanClass(Entry.block[h]) && f--;
       }
       0 === f ? b[d].addClass("entryRemove") : b[d].removeClass("entryRemove");
     }
@@ -15304,6 +15318,7 @@ Entry.BlockMenu = function(b, a, c, d) {
     var d = this._convertSelector(a);
     if (d) {
       "variable" == d && Entry.playground.checkVariables();
+      "arduino" == d && this._generateHwCode();
       var e = this._categoryElems[d], f = this._selectedCategoryView, g = !1, h = this.workspace.board, k = h.view;
       f && f.removeClass("entrySelectedCategory");
       e != f || b ? f || (this.visible || (g = !0, k.addClass("foldOut"), Entry.playground.showTabs()), k.removeClass("folding"), this.visible = !0) : (k.addClass("folding"), this._selectedCategoryView = null, e.removeClass("entrySelectedCategory"), Entry.playground.hideTabs(), g = !0, this.visible = !1);
@@ -15406,6 +15421,7 @@ Entry.BlockMenu = function(b, a, c, d) {
   };
   b.setCategoryData = function(a) {
     this._clearCategory();
+    this._categoryData = a;
     this._generateCategoryView(a);
     this._generateCategoryCodes(a);
   };
@@ -15429,6 +15445,34 @@ Entry.BlockMenu = function(b, a, c, d) {
   b.offset = function() {
     (!this._offset || 0 === this._offset.top && 0 === this._offset.left) && this.updateOffset();
     return this._offset;
+  };
+  b._generateHwCode = function() {
+    var a = this._categoryCodes.arduino;
+    a instanceof Entry.Code && a.clear();
+    for (var b = this._categoryData, d, a = b.length - 1;0 <= a;a--) {
+      if ("arduino" === b[a].category) {
+        d = b[a].blocks;
+        break;
+      }
+    }
+    b = [];
+    for (a = 0;a < d.length;a++) {
+      var e = d[a], f = Entry.block[e];
+      if (!this.checkBanClass(f)) {
+        if (f && f.def) {
+          if (f.defs) {
+            for (a = 0;a < f.defs.length;a++) {
+              b.push([f.defs[a]]);
+            }
+          } else {
+            b.push([f.def]);
+          }
+        } else {
+          b.push([{type:e}]);
+        }
+      }
+    }
+    this._categoryCodes.arduino = b;
   };
 })(Entry.BlockMenu.prototype);
 Entry.BlockMenuScroller = function(b) {
@@ -15726,7 +15770,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
       d = a.originalEvent && a.originalEvent.touches ? a.originalEvent.touches[0] : a;
       var f = m.mouseDownCoordinate, f = Math.sqrt(Math.pow(d.pageX - f.x, 2) + Math.pow(d.pageY - f.y, 2));
       (m.dragMode == Entry.DRAG_MODE_DRAG || f > Entry.BlockView.DRAG_RADIUS) && m.movable && (m.isInBlockMenu ? e.cloneToGlobal(a) : (a = !1, m.dragMode != Entry.DRAG_MODE_DRAG && (m._toGlobalCoordinate(), m.dragMode = Entry.DRAG_MODE_DRAG, m.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(m, c), a = !0), this.animating && this.set({animating:!1}), 0 === m.dragInstance.height && m.dragInstance.set({height:-1 + m.height}), c = m.dragInstance, m._moveBy(d.pageX - c.offsetX, d.pageY - 
-      c.offsetY, !1), c.set({offsetX:d.pageX, offsetY:d.pageY}), requestAnimationFrame(Entry.GlobalSvg.position.bind(Entry.GlobalSvg)), m.originPos || (m.originPos = {x:m.x, y:m.y}), a && e.generateCodeMagnetMap(), m._updateCloseBlock()));
+      c.offsetY, !1), c.set({offsetX:d.pageX, offsetY:d.pageY}), Entry.GlobalSvg.position(), m.originPos || (m.originPos = {x:m.x, y:m.y}), a && e.generateCodeMagnetMap(), m._updateCloseBlock()));
     }
     function d(a) {
       $(document).unbind(".block");
@@ -19979,7 +20023,7 @@ Entry.Playground.prototype.updateHW = function() {
   if (b) {
     var a = Entry.hw;
     a && a.connected ? (b.unbanClass("arduinoConnected", !0), b.banClass("arduinoDisconnected", !0), a.banHW(), a.hwModule && b.unbanClass(a.hwModule.name)) : (b.banClass("arduinoConnected", !0), b.unbanClass("arduinoDisconnected", !0), Entry.hw.banHW());
-    b.align();
+    b.reDraw();
   }
 };
 Entry.Playground.prototype.toggleLineBreak = function(b) {
