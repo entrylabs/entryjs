@@ -34,11 +34,9 @@ Entry.HW = function() {
         '42': Entry.Arduino,
         '51': Entry.Neobot,
         '71': Entry.Robotis_carCont,
-        '72': Entry.Robotis_openCM70
+        '72': Entry.Robotis_openCM70,
+        '81': Entry.Arduino
     };
-
-    this.checkFirstAlertMsg = false;
-    this.checkOldHardwareProgram = false;
 };
 
 Entry.HW.TRIAL_LIMIT = 1;
@@ -71,7 +69,6 @@ p.initSocket = function() {
 
                 socket.onopen = (function()
                 {
-                    this.checkOldHardwareProgram = true;
                     hw.socketType = 'WebSocket';
                     hw.initHardware(socket);
                 }).bind(this);
@@ -202,10 +199,6 @@ p.update = function() {
         return;
     }
 
-    if(!this.checkFirstAlertMsg && this.checkOldHardwareProgram) {
-        alert(Lang.Workspace.hardware_version_alert_text);
-        this.checkFirstAlertMsg = true;
-    }
     this.socket.send(JSON.stringify(this.sendQueue));
 };
 
@@ -222,7 +215,7 @@ p.closeConnection = function() {
 };
 
 p.downloadConnector = function() {
-    var url = "http://download.play-entry.org/apps/Entry_HW_1.5.2.exe";
+    var url = "http://download.play-entry.org/apps/Entry_HW_1.5.3_Setup.exe";
     var win = window.open(url, '_blank');
     win.focus();
 };
@@ -285,6 +278,6 @@ p.checkDevice = function(data) {
 p.banHW = function() {
     var hwOptions = this.hwInfo;
     for (var i in hwOptions)
-        Entry.playground.mainWorkspace.blockMenu.banClass(hwOptions[i].name);
+        Entry.playground.mainWorkspace.blockMenu.banClass(hwOptions[i].name, true);
 
 };

@@ -7,11 +7,14 @@ entryjs는 HTML Canvas와 오디오, 벡터 이미지등을 다루기 위해 몇
 이 라이브러리들이 웹프로젝트에 먼저 로딩된 후에 entryjs를 로딩하여야 합니다.
 
 ### 써드파티 라이브러리
- * jQuery : http://jquery.com/download/
- * jquery-ui : https://github.com/jquery/jquery-ui
- * Underscore : https://github.com/jashkenas/underscore
- * CreateJS (EaselJS, PreloadJS, SoundJS) : http://createjs.com/downloads
- * Web Font Loader : https://github.com/typekit/webfontloader
+ * [jQuery](http://jquery.com/download/) - 1.9.1
+ * [jquery-ui](https://github.com/jquery/jquery-ui) - 1.10.4
+ * [Underscore](https://github.com/jashkenas/underscore) - 1.8.3
+ * [CreateJS](http://createjs.com/downloads)
+   * EaselJS - 0.8.0
+   * PreloadJS - 0.6.0
+   * SoundJS - 0.6.0
+ * [Web Font Loader](https://github.com/typekit/webfontloader) - [1.5.2](https://github.com/components/webfontloader/releases)
 
  위 라이브러리들은 모두 오픈소스로 배포되며, 직접 다운로드 받거나 [npm](http://npmjs.org), [bower](http://bower.io)등을 이용해 설치할 수 있습니다.
 

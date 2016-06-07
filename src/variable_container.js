@@ -657,6 +657,7 @@ Entry.VariableContainer.prototype.addFunction = function(variable) {
  * @param {Entry.Variable} variable
  */
 Entry.VariableContainer.prototype.removeFunction = function(func) {
+    this.functions_[func.id].destroy();
     delete this.functions_[func.id];
     this.updateList();
 };
@@ -2247,25 +2248,27 @@ Entry.VariableContainer.prototype.removeRef = function(type, block) {
     if (type == '_functionRefs') {
         var id = block.type.substr(5);
         var func = Entry.variableContainer.functions_[id];
-        var blocks = func.content.getBlockList();
-        for (var i=0; i<blocks.length; i++) {
-            var block = blocks[i];
-            var events = block.events;
-            if (block.type.indexOf('func_') > -1) {
-                var funcId = block.type.substr(5);
-                if (funcId == id) continue;
-            }
+        if (func) {
+            var blocks = func.content.getBlockList();
+            for (var i=0; i<blocks.length; i++) {
+                var block = blocks[i];
+                var events = block.events;
+                if (block.type.indexOf('func_') > -1) {
+                    var funcId = block.type.substr(5);
+                    if (funcId == id) continue;
+                }
 
-            if (events && events.viewDestroy) {
-                events.viewDestroy.forEach(function(fn) {
-                    if (fn) fn(block);
-                });;
-            }
+                if (events && events.viewDestroy) {
+                    events.viewDestroy.forEach(function(fn) {
+                        if (fn) fn(block);
+                    });;
+                }
 
-            if (events && events.dataDestroy) {
-                events.dataDestroy.forEach(function(fn) {
-                    if (fn) fn(block);
-                });;
+                if (events && events.dataDestroy) {
+                    events.dataDestroy.forEach(function(fn) {
+                        if (fn) fn(block);
+                    });;
+                }
             }
         }
     }

@@ -1609,18 +1609,18 @@ Entry.Playground.prototype.updateHW = function() {
 
     var hw = Entry.hw;
     if (hw && hw.connected) {
-        blockMenu.unbanClass("arduinoConnected");
-        blockMenu.banClass("arduinoDisconnected");
+        blockMenu.unbanClass("arduinoConnected", true);
+        blockMenu.banClass("arduinoDisconnected", true);
 
         hw.banHW();
         if (hw.hwModule)
             blockMenu.unbanClass(hw.hwModule.name);
     } else {
-        blockMenu.banClass("arduinoConnected");
-        blockMenu.unbanClass("arduinoDisconnected");
+        blockMenu.banClass("arduinoConnected", true);
+        blockMenu.unbanClass("arduinoDisconnected", true);
         Entry.hw.banHW();
     }
-    if (self.object) blockMenu.reDraw();
+    blockMenu.reDraw();
 };
 
 Entry.Playground.prototype.toggleLineBreak = function(isLineBreak) {

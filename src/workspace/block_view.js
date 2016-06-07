@@ -429,7 +429,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
             var options = [];
 
             var copyAndPaste = {
-                text: '블록 복사 & 붙여넣기',
+                text: Lang.Blocks.Duplication_option,
                 enable: this.copyable,
                 callback: function(){
                     Entry.do("cloneBlock", block);
@@ -437,7 +437,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
             };
 
             var copy = {
-                text: '블록 복사',
+                text: Lang.Blocks.CONTEXT_COPY_option,
                 enable: this.copyable,
                 callback: function(){
                     that.block.copyToClipboard();
@@ -445,7 +445,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
             };
 
             var remove = {
-                text: '블록 삭제',
+                text: Lang.Blocks.Delete_Blocks,
                 enable: block.isDeletable(),
                 callback: function(){
                     Entry.do("destroyBlock", that.block);
@@ -995,7 +995,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
         if (!this.visible) return;
 
         var block = this.block;
-        this._updateContents();
+        requestAnimationFrame(this._updateContents.bind(this));
         var params = block.params;
         if (params) {
             for (var i=0; i<params.length; i++) {

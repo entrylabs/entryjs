@@ -278,19 +278,31 @@ EntryStatic.getAllBlocks = function() {
                 "arduino_convert_scale",
                 //dplay
                 "dplay_get_number_sensor_value",
-                "dplay_get_digital_value",
-                "dplay_toggle_led",
-                "dplay_toggle_pwm",
-                "dplay_convert_scale",
                 "dplay_get_value",
+                "dplay_get_gas_sensor_value",
+                "dplay_get_dust_sensor_value",
+                "dplay_get_CO2_sensor_value",
+                "dplay_convert_scale",
+                "dplay_get_digital_value",
                 "dplay_get_switch_status",
                 "dplay_get_tilt",
-                "dplay_get_light_status",
+                "dplay_toggle_led",
+                "dplay_toggle_pwm",
                 "dplay_select_led",
                 "dplay_DCmotor",
+                "dplay_DCmotor_speed",
                 "dplay_buzzer",
                 "dplay_servo",
+                "dplay_Robot_run",
+                "dplay_Robot_run_sec",
+                "dplay_robot_speed_sel",
+                "dplay_robot_stop",
                 //nemoino
+                "nemoino_get_named_sensor_value",
+                "nemoino_get_sound_status",
+                "nemoino_is_button_pressed",
+                "nemoino_get_accelerometer_direction",
+                "nemoino_get_accelerometer_value",
                 "nemoino_get_number_sensor_value",
                 "nemoino_get_digital_value",
                 "nemoino_toggle_led",
@@ -298,11 +310,13 @@ EntryStatic.getAllBlocks = function() {
                 "nemoino_convert_scale",
                 //neobot
                 "neobot_sensor_value",
+                "neobot_sensor_convert_scale",
                 "neobot_left_motor",
                 "neobot_stop_left_motor",
                 "neobot_right_motor",
                 "neobot_stop_right_motor",
                 "neobot_all_motor",
+                "neobot_stop_all_motor",
                 "neobot_set_servo",
                 "neobot_set_output",
                 "neobot_set_fnd",
@@ -2007,6 +2021,36 @@ EntryStatic.blockInfo = {
         "isNotFor": ["CODEino"],
         "usage": ["arduino"],
         "class": "CODEino"
+    },
+        "nemoino_get_named_sensor_value": {
+        "xml": "<block type='nemoino_get_named_sensor_value'></block>",
+        "isNotFor": ['nemoino'],
+        "usage": ["arduino"],
+        "class": "nemoino"
+    },
+    "nemoino_get_sound_status": {
+        "xml": "<block type='nemoino_get_sound_status'></block>",
+        "isNotFor": ["nemoino"],
+        "usage": ["arduino"],
+        "class": "nemoino"
+    },
+    "nemoino_is_button_pressed": {
+        "xml": "<block type='nemoino_is_button_pressed'></block>",
+        "isNotFor": ["nemoino"],
+        "usage": ["arduino"],
+        "class": "nemoino"
+    },
+    "nemoino_get_accelerometer_direction": {
+        "xml": "<block type='nemoino_get_accelerometer_direction'></block>",
+        "isNotFor": ["nemoino"],
+        "usage": ["arduino"],
+        "class": "nemoino"
+    },
+    "nemoino_get_accelerometer_value": {
+        "xml": "<block type='nemoino_get_accelerometer_value'></block>",
+        "isNotFor": ["nemoino"],
+        "usage": ["arduino"],
+        "class": "nemoino"
     },
     "dplay_get_tilt": {
         "xml": "<block type='dplay_get_tilt'></block>",

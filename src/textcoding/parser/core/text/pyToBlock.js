@@ -369,25 +369,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var paramsMeta = paramBlock.params;
         var paramsDefMeta = paramBlock.def.params;
 
-
-        for(var i in paramsMeta) { 
-            console.log("aaa", paramsMeta[i], "bbb", paramsDefMeta[i]);
-            param = this['Param'+paramsMeta[i].type](value, paramsMeta[i], paramsDefMeta[i]);
-            
-            /*if(paramsMeta[i].type == "Block") {
-                param = this.ParamBlock(value, paramsMeta[i], paramsDefMeta[i]);
-                break;
-            }*/
-
-            /*var options = paramsMeta[i].options;
-            console.log("options", options);
-            for(var j in options) {
-                var option = options[j];
-                if(value == option[0]) {
-                    param = option[1];
-                    break;
-                }
-            }*/
+        if(paramsMeta && paramsMeta.length != 0) {
+            for(var i in paramsMeta) { 
+                console.log("aaa", paramsMeta[i], "bbb", paramsDefMeta[i]);
+                param = this['Param'+paramsMeta[i].type](value, paramsMeta[i], paramsDefMeta[i]);
+            }
+        } else {
+            param = value;
         }
 
         console.log("ParamBlock param", param);
@@ -1005,65 +993,51 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         var type = this.getBlockType(syntax);
 
-        /*var paramsMeta = Entry.block[type].params;
-        var paramsDefMeta = Entry.block[type].def.params;
-        console.log("LogicalExpression paramsMeta", paramsMeta, "paramsDefMeta", paramsDefMeta);*/
-
-
         var params = [];
-        //var param;
            
         var left = component.left;
-        if(left.type) {
-            if(left.type == "Literal") {
-                var arguments = [];
+        
+        if(left.type == "Literal" || left.type == "Identifier") {
+            var arguments = [];
+            if(left.type == "Literal")
                 arguments.push(left.value);
-                var paramsMeta = Entry.block[type].params;
-                var paramsDefMeta = Entry.block[type].def.params;
-                console.log("LogicalExpression paramsMeta", paramsMeta); 
-                console.log("LogicalExpression paramsDefMeta", paramsDefMeta); 
+            if(left.type == "Identifier")
+                arguments.push(left.name);
+            var paramsMeta = Entry.block[type].params;
+            var paramsDefMeta = Entry.block[type].def.params;
+            console.log("LogicalExpression paramsMeta", paramsMeta); 
+            console.log("LogicalExpression paramsDefMeta", paramsDefMeta); 
 
-                for(var p in paramsMeta) {
-                    var paramType = paramsMeta[p].type;
-                    if(paramType == "Indicator") {
-                        var pendingArg = {raw: null, type: "Literal", value: null}; 
-                        if(p < arguments.length) 
-                            arguments.splice(p, 0, pendingArg);              
-                    }
-                    else if(paramType == "Text") {
-                        var pendingArg = {raw: "", type: "Literal", value: ""};
-                        if(p < arguments.length) 
-                            arguments.splice(p, 0, pendingArg);
-                    }
+            for(var p in paramsMeta) {
+                var paramType = paramsMeta[p].type;
+                if(paramType == "Indicator") {
+                    var pendingArg = {raw: null, type: "Literal", value: null}; 
+                    if(p < arguments.length) 
+                        arguments.splice(p, 0, pendingArg);              
                 }
-
-                for(var i in arguments) {
-                    var argument = arguments[i];
-                    console.log("LogicalExpression argument", argument);
-                              
-                    var param = this[left.type](left, paramsMeta[i], paramsDefMeta[i]);
-                    console.log("LogicalExpression param", param);
-                    if(param && param != null)
-                        params.push(param);   
+                else if(paramType == "Text") {
+                    var pendingArg = {raw: "", type: "Literal", value: ""};
+                    if(p < arguments.length) 
+                        arguments.splice(p, 0, pendingArg);
                 }
-
-
-                /*param = this[left.type](left, paramsMeta[0], paramsDefMeta[0]);
-                console.log("LogicalExpression left Literal param", param);
-                if(param) 
-                    params.push(param);*/
-            } else {
-                param = this[left.type](left);
-                if(param) 
-                    params.push(param);
             }
-            console.log("LogicalExpression left param", param);
+
+            for(var i in arguments) {
+                var argument = arguments[i];
+                console.log("LogicalExpression argument", argument);
+                          
+                var param = this[left.type](left, paramsMeta[i], paramsDefMeta[i], true);
+                console.log("LogicalExpression param", param);
+                if(param && param != null)
+                    params.push(param);   
+            }
         } else {
-            left = component.left;
             param = this[left.type](left);
             if(param) 
-                    params.push(param);
+                params.push(param);
         }
+        console.log("LogicalExpression left param", param);
+        
 
         operator = String(component.operator);
         console.log("LogicalExpression operator", operator);
@@ -1074,57 +1048,48 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
 
         var right = component.right;
-        if(right.type) {
-            if(right.type == "Literal") {
-                var arguments = [];
+       
+        if(right.type == "Literal" || right.type == "Identifier") {
+            var arguments = [];
+            if(right.type == "Literal")
                 arguments.push(right.value);
-                var paramsMeta = Entry.block[type].params;
-                var paramsDefMeta = Entry.block[type].def.params;
-                console.log("LogicalExpression paramsMeta", paramsMeta); 
-                console.log("LogicalExpression paramsDefMeta", paramsDefMeta); 
+            if(right.type == "Identifier")
+                arguments.push(right.name);
+            var paramsMeta = Entry.block[type].params;
+            var paramsDefMeta = Entry.block[type].def.params;
+            console.log("LogicalExpression paramsMeta", paramsMeta); 
+            console.log("LogicalExpression paramsDefMeta", paramsDefMeta); 
 
-                for(var p in paramsMeta) {
-                    var paramType = paramsMeta[p].type;
-                    if(paramType == "Indicator") {
-                        var pendingArg = {raw: null, type: "Literal", value: null}; 
-                        if(p < arguments.length) 
-                            arguments.splice(p, 0, pendingArg);              
-                    }
-                    else if(paramType == "Text") {
-                        var pendingArg = {raw: "", type: "Literal", value: ""};
-                        if(p < arguments.length) 
-                            arguments.splice(p, 0, pendingArg);
-                    }
+            for(var p in paramsMeta) {
+                var paramType = paramsMeta[p].type;
+                if(paramType == "Indicator") {
+                    var pendingArg = {raw: null, type: "Literal", value: null}; 
+                    if(p < arguments.length) 
+                        arguments.splice(p, 0, pendingArg);              
                 }
-
-                for(var i in arguments) {
-                    var argument = arguments[i];
-                    console.log("LogicalExpression argument", argument);
-                              
-                    var param = this[right.type](right, paramsMeta[i], paramsDefMeta[i]);
-                    console.log("LogicalExpression param", param);
-                    if(param && param != null)
-                        params.push(param);   
+                else if(paramType == "Text") {
+                    var pendingArg = {raw: "", type: "Literal", value: ""};
+                    if(p < arguments.length) 
+                        arguments.splice(p, 0, pendingArg);
                 }
-
-
-                /*param = this[right.type](right, paramsMeta[2], paramsDefMeta[2]);
-                console.log("LogicalExpression right Literal param", param);
-                if(param) 
-                    params.push(param);*/
-            } else {
-                param = this[right.type](right);
-                if(param) 
-                    params.push(param);
             }
-            
-            console.log("LogicalExpression right param", param);
+
+            for(var i in arguments) {
+                var argument = arguments[i];
+                console.log("LogicalExpression argument", argument);
+                          
+                var param = this[right.type](right, paramsMeta[i], paramsDefMeta[i], true);
+                console.log("LogicalExpression param", param);
+                if(param && param != null)
+                    params.push(param);   
+            }
         } else {
-            right = component.right;
             param = this[right.type](right);
             if(param) 
-                    params.push(param);
+                params.push(param);
         }
+        
+        console.log("LogicalExpression right param", param);  
 
         structure.type = type;
         structure.params = params;
@@ -1199,89 +1164,24 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var type = this.getBlockType(syntax);
 
         if(type) {
-
             console.log("BinaryExpression type", type);
 
-            /*var paramsMeta = Entry.block[type].params;
-            console.log("BinaryExpression paramsMeta", paramsMeta);
-            var paramsDefMeta = Entry.block[type].def.params;
-            console.log("BinaryExpression paramsDefMeta", paramsDefMeta);
-*/
             var params = []; 
-            //var param;
                
             var left = component.left;
 
             console.log("BinaryExpression left", left);
-            if(left.type) {
-                if(left.type == "Literal") {
-                    var arguments = [];
-                    arguments.push(left.value);
-                    var paramsMeta = Entry.block[type].params;
-                    var paramsDefMeta = Entry.block[type].def.params;
-                    console.log("IfStatement paramsMeta", paramsMeta); 
-                    console.log("IfStatement paramsDefMeta", paramsDefMeta); 
-
-                    for(var p in paramsMeta) {
-                        var paramType = paramsMeta[p].type;
-                        if(paramType == "Indicator") {
-                            var pendingArg = {raw: null, type: "Literal", value: null}; 
-                            if(p < arguments.length) 
-                                arguments.splice(p, 0, pendingArg);              
-                        }
-                        else if(paramType == "Text") {
-                            var pendingArg = {raw: "", type: "Literal", value: ""};
-                            if(p < arguments.length) 
-                                arguments.splice(p, 0, pendingArg);
-                        }
-                    }
-
-                    for(var i in arguments) {
-                        var argument = arguments[i];
-                        console.log("IfStatement argument", argument);
-                                  
-                        var param = this[left.type](left, paramsMeta[i], paramsDefMeta[i]);
-                        console.log("IfStatement param", param);
-                        if(param && param != null)
-                            params.push(param);   
-                    }
-
-                    /*param = this[left.type](left, paramsMeta[0], paramsDefMeta[0]);
-
-                    console.log("BinaryExpression left Literal param", param);
-                    if(param) 
-                        params.push(param);*/
-                } else {
-                    param = this[left.type](left);
-                    if(param) 
-                        params.push(param);
-                }
-                console.log("BinaryExpression left param", param);
-            } /*else {
-                console.log("check 123");
-                left = component.left;
-                this[left.type](left);
-            }*/
-
-            operator = String(component.operator);
-            if(operator) {
-                console.log("BinaryExpression operator", operator);
-                operator = Entry.TextCodingUtil.prototype.binaryOperatorConvert(operator);
-                param = operator;
-                if(param)
-                    params.push(param);
-            }
-
-            var right = component.right;
-            if(right.type) {
-                if(right.type == "Literal") {
-
+            
+            if(left.type == "Literal" || left.type == "Identifier") {
                 var arguments = [];
-                arguments.push(right.value);
+                if(left.type == "Literal")
+                    arguments.push(left.value);
+                if(left.type == "Identifier")
+                    arguments.push(left.name);
                 var paramsMeta = Entry.block[type].params;
                 var paramsDefMeta = Entry.block[type].def.params;
-                console.log("IfStatement paramsMeta", paramsMeta); 
-                console.log("IfStatement paramsDefMeta", paramsDefMeta); 
+                console.log("BinaryExpression paramsMeta", paramsMeta); 
+                console.log("BinaryExpression paramsDefMeta", paramsDefMeta); 
 
                 for(var p in paramsMeta) {
                     var paramType = paramsMeta[p].type;
@@ -1299,36 +1199,92 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                 for(var i in arguments) {
                     var argument = arguments[i];
-                    console.log("IfStatement argument", argument);
+                    console.log("BinaryExpression argument", argument);
                               
-                    var param = this[right.type](right, paramsMeta[i], paramsDefMeta[i]);
-                    console.log("IfStatement param", param);
+                    var param = this[left.type](left, paramsMeta[i], paramsDefMeta[i], true);
+                    console.log("BinaryExpression param", param);
                     if(param && param != null)
                         params.push(param);   
                 }
-
-                    /*param = this[right.type](right, paramsMeta[2], paramsDefMeta[2]);
-                    console.log("BinaryExpression right Literal param", param);
-                    if(param) 
-                        params.push(param);*/
-                } else {
-                    param = this[right.type](right);
-                    if(param) 
-                        params.push(param);
-                }
-                
-                console.log("BinaryExpression right param", param);
-            } /*else {
-                right = component.right;
-                this[right.type](right);
-            }*/
+            } else {
+                param = this[left.type](left);
+                if(param) 
+                    params.push(param);
+            }
+            console.log("BinaryExpression left params", params);
 
             if(type == "boolean_not") {
+                params.splice(0, 0, "");
+                params.splice(2, 0, "");
+
+                console.log("BinaryExpression boolean_not params", params);
+                structure.type = type;
+                structure.params = params;
+
+                result = structure;
+
+                return result;
+            }
+            
+
+            operator = String(component.operator);
+            if(operator) {
+                console.log("BinaryExpression operator", operator);
+                operator = Entry.TextCodingUtil.prototype.binaryOperatorConvert(operator);
+                param = operator;
+                if(param)
+                    params.push(param);
+            }
+
+            var right = component.right;
+           
+            if(right.type == "Literal" || right.type == "Identifier") {
+                var arguments = [];
+                if(right.type == "Literal")
+                    arguments.push(right.value);
+                if(right.type == "Identifier")
+                    arguments.push(right.name);
+                var paramsMeta = Entry.block[type].params;
+                var paramsDefMeta = Entry.block[type].def.params;
+                console.log("BinaryExpression paramsMeta", paramsMeta); 
+                console.log("BinaryExpression paramsDefMeta", paramsDefMeta); 
+
+                for(var p in paramsMeta) {
+                    var paramType = paramsMeta[p].type;
+                    if(paramType == "Indicator") {
+                        var pendingArg = {raw: null, type: "Literal", value: null}; 
+                        if(p < arguments.length) 
+                            arguments.splice(p, 0, pendingArg);              
+                    }
+                    else if(paramType == "Text") {
+                        var pendingArg = {raw: "", type: "Literal", value: ""};
+                        if(p < arguments.length) 
+                            arguments.splice(p, 0, pendingArg);
+                    }
+                }
+
+                for(var i in arguments) {
+                    var argument = arguments[i];
+                    console.log("BinaryExpression argument", argument);
+                              
+                    var param = this[right.type](right, paramsMeta[i], paramsDefMeta[i], true);
+                    console.log("BinaryExpression param", param);
+                    if(param && param != null)
+                        params.push(param);   
+                }
+            } else {
+                param = this[right.type](right);
+                if(param) 
+                    params.push(param);
+            }   
+            console.log("BinaryExpression right param", param);
+            
+            /*if(type == "boolean_not") {
                 params = [];
                 params[0] = "";
-                params[1] = this[left.type](left, paramsMeta[1], paramsDefMeta[2]);
+                params[1] = this[left.type](left, paramsMeta[1], paramsDefMeta[1], true);
                 params[2] = "";
-            }
+            }*/
 
             structure.type = type;
             structure.params = params;

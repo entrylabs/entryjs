@@ -601,10 +601,12 @@ svg .svgBlockGroup text {
   color: #000;
   z-index: 1001;
   overflow: auto;
+  left: 0;
+  top: 0;
 }
 .entry-widget-dropdown .rect {
   height: 20px;
-  padding: 3px 19px 3px 6px;
+  padding: 3px 5px 3px 6px;
   width: 100%;
 }
 .entry-widget-dropdown .rect .left {
@@ -2357,7 +2359,7 @@ svg .svgBlockGroup text {
   overflow: visible;
   z-index: 1111;
   opacity: 0.8;
-  display: none;
+  will-change: transform;
 }
 /* helper */
 @keyframes blockHelperUp {
