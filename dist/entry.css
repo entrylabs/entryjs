@@ -780,8 +780,6 @@ svg .svgBlockGroup text {
   vertical-align: top;
   width: 200px;
   height: 100%;
-  position: relative;
-  z-index: 251;
 }
 .blockMenu {
   height: 100%;
@@ -1130,6 +1128,7 @@ svg .svgBlockGroup text {
   height: 100%;
 }
 .entryVimBoard {
+  z-index: 0;
   position: absolute;
   top: 0;
   left: 0;

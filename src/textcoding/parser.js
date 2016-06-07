@@ -19,7 +19,14 @@ Entry.Parser = function(mode, type, cm) {
     this.codeMirror = cm;
     this._lang = syntax || "js"; //for maze
     this._type = type;
-    this.availableCode = [];
+    this.availableCode = []; 
+
+    Entry.Parser.PARSE_SYNTAX = 0;
+    Entry.Parser.PARSE_LANGUAGE = 1;
+
+    Entry.Parser.BLOCK_SKELETON_BASIC = "basic";
+    Entry.Parser.BLOCK_SKELETON_BASIC_LOOP = "basic_loop";
+    Entry.Parser.BLOCK_SKELETON_BASIC_DOUBLE_LOOP = "basic_double_loop";
 
     if (mode === 'maze') {
         this._stageId = Number(Ntry.configManager.getConfig('stageId'));
@@ -116,7 +123,7 @@ Entry.Parser = function(mode, type, cm) {
 
         switch (type) {
             case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
-                this._parser = new Entry.JsToBlockParser(this.syntax.js);
+                this._parser = new Entry.JsToBlockParser(this.syntax);
 
                 break;
 
@@ -154,38 +161,25 @@ Entry.Parser = function(mode, type, cm) {
                 break;
 
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
-                this._parser = new Entry.BlockToPyParser();
-
-                var syntax = this.syntax.py;
-                var assistScope = {};
-
-                for(var key in syntax) {
-                    assistScope[key + '();\n'] = syntax[key];
-                }
-
-                console.log("assistScope", assistScope);
+                this._parser = new Entry.BlockToPyParser(this.syntax.py);
 
                 cm.setOption("mode", {name: "python", globalVars: true});
 
-                CodeMirror.commands.autocomplete = function (cm) {
+                CodeMirror.commands.autoCompletion = function (cm) {
                     CodeMirror.showHint(cm, null, {globalScope:assistScope});
-                }
-
+                }; 
+                
                 cm.on("keyup", function (cm, event) {
-                    if (!cm.state.completionActive &&  (event.keyCode >= 65 && event.keyCode <= 95))  {
-                        CodeMirror.showHint(cm, null, {completeSingle: false});
-                    }
-
-                    if(!cm.state.completionActive &&  (event.keyCode == 46)) {
-                        CodeMirror.showHint(cm, null, {completeSingle: false, globalScope:assistScope});
-                    }
+                    if ((event.keyCode >= 65 && event.keyCode <= 195))  {
+                       CodeMirror.showHint(cm, null, {completeSingle: false});  
+                    } 
                 });
                 
                 break;
         }
     };
 
-    p.parse = function(code) {
+    p.parse = function(code, parseMode) {
         console.log("PARSER TYPE", this._type);
         
         var type = this._type;
@@ -217,33 +211,50 @@ Entry.Parser = function(mode, type, cm) {
                                 __annotation: annotation,
                                 clearOnEnter: true
                             });
-                        }
+                        } 
 
                         Entry.toast.alert('Error', error.message);
                     }
-                    result = [];
+                    result = []; 
                 }
                 break;
             case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
                 try {
                     var pyAstGenerator = new Entry.PyAstGenerator();
                     console.log("code", code);
-                    var threaded = code.split('\n\n');
-                    threaded.splice(threaded.length-1, 1);
-                    console.log("threaded", threaded);
-                    var astArr = [];
-                    for(var index in threaded) {
-                        var astTree = pyAstGenerator.generate(threaded[index]);
-                        astArr.push(astTree);
+                    var threads = code.split('\n\n');
+
+                    console.log("threads", threads);
+
+                    for(var i in threads) {
+                        console.log("thread", threads[i]);
+                        console.log("search", threads[i].search("import"));
+
+                        if(threads[i].search("import") != -1) {
+                            threads.splice(i, 1, "");
+
+                        }
+                    }
+                    
+                    console.log("threads", threads);
+                    var astArray = [];
+                    
+                    for(var index in threads) {
+                        var ast = pyAstGenerator.generate(threads[index]);
+                        if(ast.type == "Program" && ast.body.length != 0)
+                            astArray.push(ast);
                     }
 
-                    console.log("astArr", astArr);
+                    console.log("astArray", astArray);
 
-                    result = this._parser.Program(astArr);
+                    result = this._parser.Program(astArray);
+
+                    this._parser._variableMap.clear();
+
                     console.log("result", result);
                 } catch(error) {
                     if (this.codeMirror) {
-                        var annotation;
+                        /*var annotation;
                         if (error instanceof SyntaxError) {
                             annotation = {
                                 from: {line: error.loc.line - 1, ch: error.loc.column - 2},
@@ -261,15 +272,16 @@ Entry.Parser = function(mode, type, cm) {
                                 __annotation: annotation,
                                 clearOnEnter: true
                             });
-                        }
-
-                        Entry.toast.alert('Error', error.message);
+                        }*/
+                        //throw error;
+                        Entry.toast.alert('에러(Error)', error.message); 
+                        document.getElementById("entryCodingModeSelector").value = '2'; 
+                        throw error;
                     }
-                    result = [];
+                    result = []; 
                 }
                 break;
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
-                this._parser = new Entry.BlockToJsParser(this.syntax.js);
                 var textCode = this._parser.Code(code);
                 var textArr = textCode.match(/(.*{.*[\S|\s]+?}|.+)/g);
                 if(Array.isArray(textArr)) {
@@ -294,7 +306,7 @@ Entry.Parser = function(mode, type, cm) {
                 break;
 
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
-                var textCode = this._parser.Code(code);
+                var textCode = this._parser.Code(code, parseMode);
                 //var textArr = textCode.match(/(.*{.*[\S|\s]+?}|.+)/g);
                /* var textArr = textCode.split("\n\n");
 
@@ -451,8 +463,11 @@ Entry.Parser = function(mode, type, cm) {
             var block = blockList[key];
             var syntax = null;
 
-            if(block.syntax && block.syntax.py)
+            if(block.syntax && block.syntax.py) {
+
                 syntax = block.syntax.py;
+                //console.log("syntax", syntax);
+            }
             if (!syntax)
                 continue;
 

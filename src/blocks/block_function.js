@@ -9,7 +9,8 @@ Entry.block.functionAddButton = {
         {
             type: "Text",
             text: "함수 추가",
-            color: "#333"
+            color: "#333",
+            align: "center"
         }
     ],
     events: {
@@ -19,7 +20,7 @@ Entry.block.functionAddButton = {
             }
         ]
     },
-    syntax: {js:[], py: ["함수 추가"]}
+    syntax: {js:[], py: []}
 };
 
 Blockly.Blocks.function_field_label = {

@@ -199,30 +199,21 @@ Entry.block.robotis_openCM70_cm_custom_value = function (sprite, script) {
 
 Blockly.Blocks.robotis_openCM70_sensor_value = {
     init: function() {
-        var sensorList = function() {
-            var list = [];
-            list.push([Lang.Blocks.robotis_cm_sound_detected,"CM_SOUND_DETECTED"]);
-            list.push([Lang.Blocks.robotis_cm_sound_detecting,"CM_SOUND_DETECTING"]);
-            list.push([Lang.Blocks.robotis_cm_user_button, "CM_USER_BUTTON"]);
-            
-            return list;
-        }
         this.setColour("#00979D");
         this.appendDummyInput().appendField(Lang.Blocks.robotis_common_cm);
-        this.appendDummyInput().appendField(new Blockly.FieldDropdown(sensorList()), "SENSOR");
+        this.appendDummyInput().appendField(new Blockly.FieldDropdown(this.sensorList()), "SENSOR");
         this.appendDummyInput().appendField(Lang.Blocks.robotis_common_value);
         this.setOutput(true, 'Number');
         this.setInputsInline(true);
     },
-
-    /*sensorList: function() {
+    sensorList: function() {
         var list = [];
         list.push([Lang.Blocks.robotis_cm_sound_detected,"CM_SOUND_DETECTED"]);
         list.push([Lang.Blocks.robotis_cm_sound_detecting,"CM_SOUND_DETECTING"]);
         list.push([Lang.Blocks.robotis_cm_user_button, "CM_USER_BUTTON"]);
 
         return list;
-    }*/
+    }
 };
 
 Entry.block.robotis_openCM70_sensor_value = function (sprite, script) {
@@ -267,45 +258,16 @@ Entry.block.robotis_openCM70_sensor_value = function (sprite, script) {
 
 Blockly.Blocks.robotis_openCM70_aux_sensor_value = {
     init: function() {
-        var portList = function() {
-            var list = [];
-            list.push([Lang.Blocks.robotis_common_port_3,"PORT_3"]);
-            list.push([Lang.Blocks.robotis_common_port_4,"PORT_4"]);
-            list.push([Lang.Blocks.robotis_common_port_5,"PORT_5"]);
-            list.push([Lang.Blocks.robotis_common_port_6,"PORT_6"]);
-          
-            return list;
-        }
-
-        var sensorList = function() {
-            var list = [];
-            list.push([Lang.Blocks.robotis_aux_servo_position,"AUX_SERVO_POSITION"]);
-            list.push([Lang.Blocks.robotis_aux_ir,"AUX_IR"]);
-            list.push([Lang.Blocks.robotis_aux_touch,"AUX_TOUCH"]);
-            list.push([Lang.Blocks.robotis_aux_brightness,"AUX_BRIGHTNESS"]);
-            list.push([Lang.Blocks.robotis_aux_hydro_themo_humidity,"AUX_HYDRO_THEMO_HUMIDITY"]);
-            list.push([Lang.Blocks.robotis_aux_hydro_themo_temper,"AUX_HYDRO_THEMO_TEMPER"]);
-            list.push([Lang.Blocks.robotis_aux_temperature,"AUX_TEMPERATURE"]);
-            list.push([Lang.Blocks.robotis_aux_ultrasonic,"AUX_ULTRASONIC"]);
-            list.push([Lang.Blocks.robotis_aux_magnetic,"AUX_MAGNETIC"]);
-            list.push([Lang.Blocks.robotis_aux_motion_detection,"AUX_MOTION_DETECTION"]);
-            list.push([Lang.Blocks.robotis_aux_color,"AUX_COLOR"]);
-            list.push([Lang.Blocks.robotis_aux_custom,"AUX_CUSTOM"]);            
-        
-            return list;
-        }
-
         this.setColour("#00979D");
         this.appendDummyInput().appendField("");
-        this.appendDummyInput().appendField(new Blockly.FieldDropdown(portList()), "PORT");
+        this.appendDummyInput().appendField(new Blockly.FieldDropdown(this.portList()), "PORT");
         this.appendDummyInput().appendField(' ');
-        this.appendDummyInput().appendField(new Blockly.FieldDropdown(sensorList()), "SENSOR");
+        this.appendDummyInput().appendField(new Blockly.FieldDropdown(this.sensorList()), "SENSOR");
         this.appendDummyInput().appendField(Lang.Blocks.robotis_common_value);
         this.setOutput(true, 'Number');
         this.setInputsInline(true);
     },
-
-    /*portList: function() {
+    portList: function() {
         var list = [];
         list.push([Lang.Blocks.robotis_common_port_3,"PORT_3"]);
         list.push([Lang.Blocks.robotis_common_port_4,"PORT_4"]);
@@ -330,7 +292,7 @@ Blockly.Blocks.robotis_openCM70_aux_sensor_value = {
         list.push([Lang.Blocks.robotis_aux_custom,"AUX_CUSTOM"]);
 
         return list;
-    }*/
+    }
 };
 
 Entry.block.robotis_openCM70_aux_sensor_value = function (sprite, script) {

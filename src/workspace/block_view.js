@@ -17,7 +17,6 @@ Entry.BlockView = function(block, board, mode) {
     this.svgGroup = board.svgBlockGroup.elem("g");
 
     this._schema = Entry.block[block.type];
-
     if (this._schema.changeEvent)
         this._schemaChangeEvent = this._schema.changeEvent.attach(
             this, this._updateSchema);
@@ -198,6 +197,11 @@ Entry.BlockView.DRAG_RADIUS = 5;
                 }
                 break;
             case Entry.Workspace.MODE_VIMBOARD:
+                if (this._schema.skeleton === 'basic_button') {
+                    this._startContentRender(Entry.Workspace.MODE_BOARD);
+                    return;
+                }
+
                 var text = this.getBoard().workspace.getCodeToText(this.block);
                 var fieldText = {text:text};
                 if (this.block._schema.vimModeFontColor)
@@ -988,6 +992,8 @@ Entry.BlockView.DRAG_RADIUS = 5;
     };
 
     p.reDraw = function() {
+        if (!this.visible) return;
+
         var block = this.block;
         this._updateContents();
         var params = block.params;

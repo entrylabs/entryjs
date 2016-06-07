@@ -5,7 +5,7 @@
 
 goog.provide("Entry.PyBlockAssembler");
 
-goog.require("Entry.KeyboardCodeMap");
+goog.require("Entry.KeyboardCode");
 goog.require("Entry.TextCodingUtil");
 
 Entry.PyBlockAssembler = function(blockSyntax) {
