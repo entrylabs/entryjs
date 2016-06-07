@@ -203,8 +203,11 @@ Entry.BlockView.DRAG_RADIUS = 5;
                 }
 
                 var text = this.getBoard().workspace.getCodeToText(this.block);
+                var fieldText = {text:text};
+                if (this.block._schema.vimModeFontColor)
+                    fieldText.color = this.block._schema.vimModeFontColor;
                 this._contents.push(
-                    new Entry.FieldText({text: text, color: 'white'}, this)
+                    new Entry.FieldText(fieldText, this)
                 );
                 break;
         }
@@ -990,7 +993,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
 
     p.reDraw = function() {
         if (!this.visible) return;
-        
+
         var block = this.block;
         this._updateContents();
         var params = block.params;

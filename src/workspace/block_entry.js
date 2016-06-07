@@ -4492,6 +4492,7 @@ Entry.block = {
     },
     "set_visible_project_timer": {
         "color": "#FFD974",
+        vimModeFontColor: "#000",
         "skeleton": "basic",
         "statements": [],
         "params": [
@@ -5166,6 +5167,7 @@ Entry.block = {
     },
     "choose_project_timer_action": {
         "color": "#FFD974",
+        vimModeFontColor: "#000",
         "skeleton": "basic",
         "statements": [],
         "params": [
@@ -5512,7 +5514,7 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["if %1:\n$1"]} 
+        "syntax": {"js": [], "py": ["if %1:\n$1"]}
     },
     "if_else": {
         "color": "#498deb",
@@ -14783,6 +14785,7 @@ Entry.block = {
     },
     "get_canvas_input_value": {
         "color": "#E457DC",
+        vimModeFontColor: "white",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [

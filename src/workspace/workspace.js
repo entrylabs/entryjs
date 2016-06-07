@@ -56,7 +56,7 @@ Entry.Workspace = function(options) {
     Entry.commander.setCurrentEditor("board", this.board);
 };
 
-Entry.Workspace.MODE_BOARD = 0; 
+Entry.Workspace.MODE_BOARD = 0;
 Entry.Workspace.MODE_VIMBOARD = 1;
 Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
@@ -79,7 +79,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     p.setMode = function(mode, message){
         var mode = Number(mode);
         var oldMode = this.mode;
-        
+
         switch (mode) {
             case oldMode:
                 return;
@@ -102,7 +102,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     throw e;
                 }
                 break;
-            case Entry.Workspace.MODE_BOARD:   
+            case Entry.Workspace.MODE_BOARD:
                 try {
                     if (this.vimBoard) this.vimBoard.hide();
                     if (this.overlayBoard) this.overlayBoard.hide();
@@ -119,12 +119,12 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     if (this.overlayBoard) this.overlayBoard.hide();
                     this.set({selectedBoard:this.vimBoard});
                     this.vimBoard.show();
-                    
+
                     Entry.dispatchEvent('setProgrammingMode', Entry.Workspace.MODE_VIMBOARD);
-                    
+
                     throw e;
                 }
-                Entry.commander.setCurrentEditor("board", this.board); 
+                Entry.commander.setCurrentEditor("board", this.board);
                 break;
             case Entry.Workspace.MODE_OVERLAYBOARD:
                 if (!this.overlayBoard)
@@ -160,7 +160,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
         code.load(changedCode);
         code.createView(board);
-       
+
         this.board.alignThreads();
         this.board.reDraw();
     };
