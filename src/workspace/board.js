@@ -362,11 +362,10 @@ Entry.Board.OPTION_CLEAR = 2;
             cx: 102.5, cy: 27.5, r: 27.5, class: 'entryFunctionButton'
         });
 
-        saveButton.onclick = function(e) { that.save(); };
-        saveText.onclick = function(e) { that.save(); };
-
-        cancelButton.onclick = function(e) { that.cancelEdit(); };
-        cancelText.onclick = function(e) { that.cancelEdit(); };
+        $(saveButton).bind('mousedown touchstart', function() {that.save();});
+        $(saveText).bind('mousedown touchstart', function() {that.save();});
+        $(cancelButton).bind('mousedown touchstart', function() {that.cancelEdit();});
+        $(cancelText).bind('mousedown touchstart', function() {that.cancelEdit();});
     };
 
     p.cancelEdit = function() {
