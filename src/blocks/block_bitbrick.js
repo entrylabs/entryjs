@@ -85,6 +85,7 @@ Entry.Bitbrick = {
   dcMaxValue: 100,
   dcMinValue: -100,
   monitorTemplate: {
+        keys: ['value'],
         imgPath: "hw/bitbrick.png",
         width: 400,
         height: 400,
