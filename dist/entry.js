@@ -18406,7 +18406,6 @@ Entry.skeleton.basic_double_loop = {path:function(b) {
 }, box:function(b) {
   var a = b.contentWidth, c = Math.max(Math.floor(b.contentHeight / 1E3) + 2, 30), d = Math.max(b.contentHeight % 1E3 + 2, 30), e = b._statements[0] ? b._statements[0].height % 1E3 : 20;
   b = b._statements[1] ? b._statements[1].height : 20;
-  b = Math.floor(b / 1E3);
   e = Math.max(e, 20);
   b = Math.max(b, 20);
   return {offsetX:-8, offsetY:0, width:a + 30, height:c + d + e + b + 17, marginBottom:0};
