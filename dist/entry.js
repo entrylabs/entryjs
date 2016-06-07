@@ -11547,7 +11547,7 @@ p.init = function(b) {
 p.generateView = function(b) {
   var a = Entry.createElement("div");
   a.addClass("entryContainerMovieWorkspace");
-  a.addClass("entryHidden");
+  a.addClass("entryRemove");
   this.movieContainer = a;
   a = Entry.createElement("iframe");
   a.setAttribute("id", "tvCastIframe");
@@ -11561,10 +11561,11 @@ p.getView = function() {
   return this.movieContainer;
 };
 p.resize = function() {
-  var b = document.getElementById("entryContainerWorkspaceId"), a = document.getElementById("tvCastIframe");
-  w = b.offsetWidth;
-  a.width = w + "px";
-  a.height = 9 * w / 16 + "px";
+  document.getElementById("entryContainerWorkspaceId");
+  var b = document.getElementById("tvCastIframe");
+  w = this.movieContainer.offsetWidth;
+  b.width = w + "px";
+  b.height = 9 * w / 16 + "px";
 };
 Entry.BlockDriver = function() {
 };
@@ -12415,7 +12416,7 @@ Entry.Model = function(b, a) {
 Entry.Func = function(b) {
   this.id = b ? b.id : Entry.generateHash();
   this.content = b ? new Entry.Code(b.content) : new Entry.Code([[{type:"function_create", copyable:!1, deletable:!1, x:40, y:40}]]);
-  this.block = null;
+  this.blockMenuBlock = this.block = null;
   this.hashMap = {};
   this.paramMap = {};
   var a = function() {
@@ -12438,7 +12439,7 @@ Entry.Func = function(b) {
 Entry.Func.threads = {};
 Entry.Func.registerFunction = function(b) {
   var a = Entry.playground.mainWorkspace;
-  a && (this._targetFuncBlock = a.getBlockMenu().getCategoryCodes("func").createThread([{type:"func_" + b.id}]));
+  a && (this._targetFuncBlock = a.getBlockMenu().getCategoryCodes("func").createThread([{type:"func_" + b.id}]), b.blockMenuBlock = this._targetFuncBlock);
 };
 Entry.Func.executeFunction = function(b) {
   var a = this.threads[b];
@@ -12455,6 +12456,9 @@ Entry.Func.prototype.init = function(b) {
   this.id = b.id;
   this.content = Blockly.Xml.textToDom(b.content);
   this.block = Blockly.Xml.textToDom("<xml>" + b.block + "</xml>").childNodes[0];
+};
+Entry.Func.prototype.destroy = function() {
+  this.blockMenuBlock.destroy();
 };
 Entry.Func.edit = function(b) {
   this.cancelEdit();
@@ -12875,8 +12879,7 @@ Entry.HW = function() {
   this.settingQueue = {};
   this.socketType = this.hwModule = this.selectedDevice = null;
   Entry.addEventListener("stop", this.setZero);
-  this.hwInfo = {11:Entry.Arduino, 12:Entry.SensorBoard, 13:Entry.CODEino, 15:Entry.dplay, 16:Entry.nemoino, 17:Entry.Xbot, 24:Entry.Hamster, 25:Entry.Albert, 31:Entry.Bitbrick, 42:Entry.Arduino, 51:Entry.Neobot, 71:Entry.Robotis_carCont, 72:Entry.Robotis_openCM70};
-  this.checkOldHardwareProgram = this.checkFirstAlertMsg = !1;
+  this.hwInfo = {11:Entry.Arduino, 12:Entry.SensorBoard, 13:Entry.CODEino, 15:Entry.dplay, 16:Entry.nemoino, 17:Entry.Xbot, 24:Entry.Hamster, 25:Entry.Albert, 31:Entry.Bitbrick, 42:Entry.Arduino, 51:Entry.Neobot, 71:Entry.Robotis_carCont, 72:Entry.Robotis_openCM70, 81:Entry.Arduino};
 };
 Entry.HW.TRIAL_LIMIT = 1;
 p = Entry.HW.prototype;
@@ -12893,7 +12896,6 @@ p.initSocket = function() {
       } else {
         try {
           a = new WebSocket("ws://127.0.0.1:23518"), a.binaryType = "arraybuffer", a.onopen = function() {
-            this.checkOldHardwareProgram = !0;
             b.socketType = "WebSocket";
             b.initHardware(a);
           }.bind(this), a.onmessage = function(a) {
@@ -12977,7 +12979,7 @@ p.removePortReadable = function(b) {
   }
 };
 p.update = function() {
-  this.socket && 1 == this.socket.readyState && (!this.checkFirstAlertMsg && this.checkOldHardwareProgram && (alert(Lang.Workspace.hardware_version_alert_text), this.checkFirstAlertMsg = !0), this.socket.send(JSON.stringify(this.sendQueue)));
+  this.socket && 1 == this.socket.readyState && this.socket.send(JSON.stringify(this.sendQueue));
 };
 p.updatePortData = function(b) {
   this.portData = b;
@@ -13002,7 +13004,7 @@ p.checkDevice = function(b) {
 p.banHW = function() {
   var b = this.hwInfo, a;
   for (a in b) {
-    Entry.playground.mainWorkspace.blockMenu.banClass(b[a].name);
+    Entry.playground.mainWorkspace.blockMenu.banClass(b[a].name, !0);
   }
 };
 Entry.BlockModel = function() {
@@ -13086,13 +13088,13 @@ Entry.Variable.prototype.generateView = function(b) {
       });
       this.valueSetter_.on("pressmove", function(a) {
         if (Entry.engine.isState("run")) {
-          var b = .75 * a.stageX - 240 - this.offsetX, f = this.graphics.command.x;
-          0 >= b + f ? c.setSlideCommandX(0, !0) : b + f > c.maxWidth + 10 ? c.setSlideCommandX(c.maxWidth, !0) : (this.offsetX = -(this.x - .75 * a.stageX + 240), c.setSlideCommandX(b));
+          var b = this.offsetX;
+          this.offsetX = -(this.x - .75 * a.stageX + 240);
+          b !== this.offsetX && (a = c.getX(), c.setSlideCommandX(a + 10 > this.offsetX ? 0 : a + c.maxWidth + 10 > this.offsetX ? this.offsetX - a : c.maxWidth + 10));
         }
       });
       this.valueSetter_.on("pressup", function(a) {
         c.isAdjusting = !1;
-        delete c.viewValue_;
       });
       this.view_.addChild(this.valueSetter_);
       a = Entry.variableContainer.variables_.length;
@@ -13210,7 +13212,7 @@ Entry.Variable.prototype.isNumber = function() {
   return isNaN(this.value_) ? !1 : !0;
 };
 Entry.Variable.prototype.setValue = function(b) {
-  "slide" != this.type ? this.value_ = b : (b = Number(b), this.value_ = b < this.minValue_ ? this.minValue_ : b > this.maxValue_ ? this.maxValue_ : b, this.isFloatPoint() ? delete this.viewValue_ : this.viewValue_ = this.value_);
+  "slide" != this.type ? this.value_ = b : (b = Number(b), this.value_ = b < this.minValue_ ? this.minValue_ : b > this.maxValue_ ? this.maxValue_ : b);
   this.isCloud_ && Entry.variableContainer.updateCloudVariables();
   this.updateView();
 };
@@ -13299,12 +13301,13 @@ Entry.Variable.prototype.setType = function(b) {
 };
 Entry.Variable.prototype.getSlidePosition = function(b) {
   var a = this.minValue_;
-  return Math.abs((this.viewValue_ || this.value_) - a) / Math.abs(this.maxValue_ - a) * b + 10;
+  return Math.abs(this.value_ - a) / Math.abs(this.maxValue_ - a) * b + 10;
 };
-Entry.Variable.prototype.setSlideCommandX = function(b, a) {
-  var c = this.valueSetter_.graphics.command;
-  b = "undefined" == typeof b ? 10 : b;
-  c.x = a ? b + 10 : c.x + b;
+Entry.Variable.prototype.setSlideCommandX = function(b) {
+  var a = this.valueSetter_.graphics.command;
+  b = Math.max("undefined" == typeof b ? 10 : b, 10);
+  b = Math.min(this.maxWidth + 10, b);
+  a.x = b;
   this.updateSlideValueByView();
 };
 Entry.Variable.prototype.updateSlideValueByView = function() {
@@ -13313,7 +13316,7 @@ Entry.Variable.prototype.updateSlideValueByView = function() {
   1 < b && (b = 1);
   var a = parseFloat(this.minValue_), c = parseFloat(this.maxValue_), b = (a + Number(Math.abs(c - a) * b)).toFixed(2), b = parseFloat(b);
   b < a ? b = this.minValue_ : b > c && (b = this.maxValue_);
-  this.isFloatPoint() || (this.viewValue_ = b, b = Math.round(b));
+  this.isFloatPoint() || (b = Math.round(b));
   this.setValue(b);
 };
 Entry.Variable.prototype.getMinValue = function() {
@@ -13669,6 +13672,7 @@ Entry.VariableContainer.prototype.createFunction = function() {
 Entry.VariableContainer.prototype.addFunction = function(b) {
 };
 Entry.VariableContainer.prototype.removeFunction = function(b) {
+  this.functions_[b.id].destroy();
   delete this.functions_[b.id];
   this.updateList();
 };
@@ -15110,6 +15114,7 @@ Entry.BlockMenu = function(b, a, c, d) {
   this.visible = !0;
   this._svgId = "blockMenu" + (new Date).getTime();
   this._clearCategory();
+  this._categoryData = c;
   this._generateView(c);
   this._splitters = [];
   this.setWidth();
@@ -15170,12 +15175,13 @@ Entry.BlockMenu = function(b, a, c, d) {
     this.svgGroup.appendChild(this.svgBlockGroup);
     this._scroller && this.svgGroup.appendChild(this._scroller.svgGroup);
   };
-  b.align = function() {
-    var a = this.code;
-    if (a) {
+  b.align = function(a) {
+    var b = this.code;
+    if (b) {
       this._clearSplitters();
-      a.view && a.view.reDraw();
-      for (var a = a.getThreads(), b = 10, d = "LEFT" == this._align ? 10 : this.svgDom.width() / 2, e, f = 0, g = a.length;f < g;f++) {
+      b.view && !a && b.view.reDraw();
+      a = b.getThreads();
+      for (var b = 10, d = "LEFT" == this._align ? 10 : this.svgDom.width() / 2, e, f = 0, g = a.length;f < g;f++) {
         var h = a[f].getFirstBlock(), k = h.view, h = Entry.block[h.type];
         this.checkBanClass(h) ? k.set({display:!1}) : (k.set({display:!0}), h = h.class, e && e !== h && (this._createSplitter(b), b += 15), e = h, h = d - k.offsetX, "CENTER" == this._align && (h -= k.width / 2), b -= k.offsetY, k._moveTo(h, b, !1), b += k.height + 15);
       }
@@ -15186,7 +15192,21 @@ Entry.BlockMenu = function(b, a, c, d) {
   b.cloneToGlobal = function(a) {
     if (!this._boardBlockView && null !== this.dragBlock) {
       var b = this.workspace, d = b.getMode(), e = this.dragBlock, f = this._svgWidth, g = b.selectedBoard;
-      !g || d != Entry.Workspace.MODE_BOARD && d != Entry.Workspace.MODE_OVERLAYBOARD ? Entry.GlobalSvg.setView(e, b.getMode()) && Entry.GlobalSvg.addControl(a) : g.code && (b = e.block, d = b.getThread(), b && d && (b = d.toJSON(!0), this._boardBlockView = Entry.do("addThread", b).value.getFirstBlock().view, g = this.offset().top - g.offset().top, this._boardBlockView._moveTo(e.x - f, e.y + g, !1), this._boardBlockView.onMouseDown.call(this._boardBlockView, a), this._boardBlockView.dragInstance.set({isNew:!0})));
+      if (!g || d != Entry.Workspace.MODE_BOARD && d != Entry.Workspace.MODE_OVERLAYBOARD) {
+        Entry.GlobalSvg.setView(e, b.getMode()) && Entry.GlobalSvg.addControl(a);
+      } else {
+        if (g.code && (b = e.block, d = b.getThread(), b && d)) {
+          b = d.toJSON(!0);
+          this._boardBlockView = Entry.do("addThread", b).value.getFirstBlock().view;
+          var g = this.offset().top - g.offset().top, h, k;
+          if (b = this.dragBlock.mouseDownCoordinate) {
+            h = a.pageX - b.x, k = a.pageY - b.y;
+          }
+          this._boardBlockView._moveTo(e.x - f + (h || 0), e.y + g + (k || 0), !1);
+          this._boardBlockView.onMouseDown.call(this._boardBlockView, a);
+          this._boardBlockView.dragInstance.set({isNew:!0});
+        }
+      }
     }
   };
   b.terminateDrag = function() {
@@ -15249,11 +15269,9 @@ Entry.BlockMenu = function(b, a, c, d) {
   b.setMenu = function() {
     var a = this._categoryCodes, b = this._categoryElems, d;
     for (d in a) {
-      var e = a[d];
-      e instanceof Entry.Code || (e = a[d] = new Entry.Code(e));
-      for (var e = e.getThreads(), f = e.length, g = 0;g < e.length;g++) {
-        var h = e[g].getFirstBlock();
-        this.checkBanClass(Entry.block[h.type]) && f--;
+      for (var e = a[d], e = e instanceof Entry.Code ? e.getThreads() : e, f = e.length, g = 0;g < e.length;g++) {
+        var h = e[g], h = h instanceof Entry.Thread ? h.getFirstBlock().type : h[0].type;
+        this.checkBanClass(Entry.block[h]) && f--;
       }
       0 === f ? b[d].addClass("entryRemove") : b[d].removeClass("entryRemove");
     }
@@ -15281,6 +15299,7 @@ Entry.BlockMenu = function(b, a, c, d) {
     var d = this._convertSelector(a);
     if (d) {
       "variable" == d && Entry.playground.checkVariables();
+      "arduino" == d && this._generateHwCode();
       var e = this._categoryElems[d], f = this._selectedCategoryView, g = !1, h = this.workspace.board, k = h.view;
       f && f.removeClass("entrySelectedCategory");
       e != f || b ? f || (this.visible || (g = !0, k.addClass("foldOut"), Entry.playground.showTabs()), k.removeClass("folding"), this.visible = !0) : (k.addClass("folding"), this._selectedCategoryView = null, e.removeClass("entrySelectedCategory"), Entry.playground.hideTabs(), g = !0, this.visible = !1);
@@ -15316,14 +15335,14 @@ Entry.BlockMenu = function(b, a, c, d) {
       this._categoryCodes[d] = e;
     }
   };
-  b.banClass = function(a) {
+  b.banClass = function(a, b) {
     0 > this._bannedClass.indexOf(a) && this._bannedClass.push(a);
-    this.align();
+    this.align(b);
   };
-  b.unbanClass = function(a) {
-    a = this._bannedClass.indexOf(a);
-    -1 < a && this._bannedClass.splice(a, 1);
-    this.align();
+  b.unbanClass = function(a, b) {
+    var d = this._bannedClass.indexOf(a);
+    -1 < d && this._bannedClass.splice(d, 1);
+    this.align(b);
   };
   b.checkBanClass = function(a) {
     if (a) {
@@ -15383,6 +15402,7 @@ Entry.BlockMenu = function(b, a, c, d) {
   };
   b.setCategoryData = function(a) {
     this._clearCategory();
+    this._categoryData = a;
     this._generateCategoryView(a);
     this._generateCategoryCodes(a);
   };
@@ -15406,6 +15426,34 @@ Entry.BlockMenu = function(b, a, c, d) {
   b.offset = function() {
     (!this._offset || 0 === this._offset.top && 0 === this._offset.left) && this.updateOffset();
     return this._offset;
+  };
+  b._generateHwCode = function() {
+    var a = this._categoryCodes.arduino;
+    a instanceof Entry.Code && a.clear();
+    for (var b = this._categoryData, d, a = b.length - 1;0 <= a;a--) {
+      if ("arduino" === b[a].category) {
+        d = b[a].blocks;
+        break;
+      }
+    }
+    b = [];
+    for (a = 0;a < d.length;a++) {
+      var e = d[a], f = Entry.block[e];
+      if (!this.checkBanClass(f)) {
+        if (f && f.def) {
+          if (f.defs) {
+            for (a = 0;a < f.defs.length;a++) {
+              b.push([f.defs[a]]);
+            }
+          } else {
+            b.push([f.def]);
+          }
+        } else {
+          b.push([{type:e}]);
+        }
+      }
+    }
+    this._categoryCodes.arduino = b;
   };
 })(Entry.BlockMenu.prototype);
 Entry.BlockMenuScroller = function(b) {
@@ -15519,6 +15567,7 @@ Entry.BlockView = function(b, a, c) {
   this._paramMap = {};
   d.magnets && d.magnets(this).next && (this.svgGroup.nextMagnet = this.block, this._nextGroup = this.svgGroup.elem("g"), this._observers.push(this.observe(this, "_updateMagnet", ["contentHeight"])));
   this.isInBlockMenu = this.getBoard() instanceof Entry.BlockMenu;
+  console.log(12121);
   var e = this;
   this.mouseHandler = function() {
     var a = e.block.events;
@@ -15702,9 +15751,8 @@ Entry.BlockView.DRAG_RADIUS = 5;
       c === Entry.Workspace.MODE_VIMBOARD && b.vimBoardEvent(a, "dragOver");
       d = a.originalEvent && a.originalEvent.touches ? a.originalEvent.touches[0] : a;
       var f = m.mouseDownCoordinate, f = Math.sqrt(Math.pow(d.pageX - f.x, 2) + Math.pow(d.pageY - f.y, 2));
-      (m.dragMode == Entry.DRAG_MODE_DRAG || f > Entry.BlockView.DRAG_RADIUS) && m.movable && (m.isInBlockMenu ? e.cloneToGlobal(a) : (a = !1, m.dragMode != Entry.DRAG_MODE_DRAG && (m._toGlobalCoordinate(), m.dragMode = Entry.DRAG_MODE_DRAG, m.block.getThread().changeEvent.notify(), requestAnimationFrame(function() {
-        Entry.GlobalSvg.setView(m, c);
-      }), a = !0), this.animating && this.set({animating:!1}), 0 === m.dragInstance.height && m.dragInstance.set({height:-1 + m.height}), f = m.dragInstance, m._moveBy(d.pageX - f.offsetX, d.pageY - f.offsetY, !1), f.set({offsetX:d.pageX, offsetY:d.pageY}), requestAnimationFrame(Entry.GlobalSvg.position.bind(Entry.GlobalSvg)), m.originPos || (m.originPos = {x:m.x, y:m.y}), a && e.generateCodeMagnetMap(), m._updateCloseBlock()));
+      (m.dragMode == Entry.DRAG_MODE_DRAG || f > Entry.BlockView.DRAG_RADIUS) && m.movable && (m.isInBlockMenu ? e.cloneToGlobal(a) : (a = !1, m.dragMode != Entry.DRAG_MODE_DRAG && (m._toGlobalCoordinate(), m.dragMode = Entry.DRAG_MODE_DRAG, m.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(m, c), a = !0), this.animating && this.set({animating:!1}), 0 === m.dragInstance.height && m.dragInstance.set({height:-1 + m.height}), c = m.dragInstance, m._moveBy(d.pageX - c.offsetX, d.pageY - 
+      c.offsetY, !1), c.set({offsetX:d.pageX, offsetY:d.pageY}), Entry.GlobalSvg.position(), m.originPos || (m.originPos = {x:m.x, y:m.y}), a && e.generateCodeMagnetMap(), m._updateCloseBlock()));
     }
     function d(a) {
       $(document).unbind(".block");
@@ -19952,11 +20000,11 @@ Entry.Playground.prototype.getViewMode = function() {
   return this.viewMode_;
 };
 Entry.Playground.prototype.updateHW = function() {
-  var b = Entry.playground, a = b.mainWorkspace.blockMenu;
-  if (a) {
-    var c = Entry.hw;
-    c && c.connected ? (a.unbanClass("arduinoConnected"), a.banClass("arduinoDisconnected"), c.banHW(), c.hwModule && a.unbanClass(c.hwModule.name)) : (a.banClass("arduinoConnected"), a.unbanClass("arduinoDisconnected"), Entry.hw.banHW());
-    b.object && a.reDraw();
+  var b = Entry.playground.mainWorkspace.blockMenu;
+  if (b) {
+    var a = Entry.hw;
+    a && a.connected ? (b.unbanClass("arduinoConnected", !0), b.banClass("arduinoDisconnected", !0), a.banHW(), a.hwModule && b.unbanClass(a.hwModule.name)) : (b.banClass("arduinoConnected", !0), b.unbanClass("arduinoDisconnected", !0), Entry.hw.banHW());
+    b.reDraw();
   }
 };
 Entry.Playground.prototype.toggleLineBreak = function(b) {

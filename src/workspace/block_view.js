@@ -33,6 +33,7 @@ Entry.BlockView = function(block, board, mode) {
     }
 
     this.isInBlockMenu = this.getBoard() instanceof Entry.BlockMenu;
+    console.log(12121);
 
     //if (skeleton.morph)
         //this._observers.push(this.block.observe(this, "_renderPath", skeleton.morph, false));
@@ -484,9 +485,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
                         blockView._toGlobalCoordinate();
                         blockView.dragMode = Entry.DRAG_MODE_DRAG;
                         blockView.block.getThread().changeEvent.notify();
-                        requestAnimationFrame(function(){
-                            Entry.GlobalSvg.setView(blockView, workspaceMode);
-                        });
+                        Entry.GlobalSvg.setView(blockView, workspaceMode);
                         isFirst = true;
                     }
 
@@ -512,7 +511,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
                         offsetY: mouseEvent.pageY
                     });
 
-                    requestAnimationFrame(Entry.GlobalSvg.position.bind(Entry.GlobalSvg));
+                    Entry.GlobalSvg.position();
                     if (!blockView.originPos)
                         blockView.originPos = {x: blockView.x, y: blockView.y};
                     if (isFirst)
