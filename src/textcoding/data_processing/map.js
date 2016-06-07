@@ -49,4 +49,8 @@ Entry.Map = function() {
 		this._map.repo = {};
 	}
 
+	p.toString = function() {
+		return this._map.repo;
+	}
+
 })(Entry.Map.prototype);

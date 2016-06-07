@@ -50,15 +50,9 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
         for (var i = 0; i < blocks.length; i++) {
             var block = blocks[i];
-            this._currentMainBlock = block; 
-            this._currentMainBlockSkeleton = this._currentMainBlock._schema.skeleton;
-            this._currentMainBlockParamsKeyMap = this._currentMainBlock._schema.paramsKeyMap;
-            this._currentmainBlockIndex = 0;
+            
 
-            console.log("Thread MainBlock", this._currentMainBlock, "Thread Skeleton", this._currentMainBlockSkeleton,
-                "ParamsKeyMap", this._currentMainBlockParamsKeyMap);
-
-            result += (this.Block(block) + '\n');
+            result += this.Block(block) + '\n';
 
             this._queue.clear();
             this._variableMap.clear();
@@ -82,9 +76,25 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
         console.log("Block blockTokens", blockTokens);
 
+        var currentBlock = block; 
+        var currentBlockSkeleton = currentBlock._schema.skeleton;
+        var currentBlockParamsKeyMap = currentBlock._schema.paramsKeyMap;
+
+        console.log("currentBlock", currentBlock, "currentBlockSkeleton", currentBlockSkeleton,
+            "currentBlockParamsKeyMap", currentBlockParamsKeyMap);
+
+        if(this._mode == Entry.Parser.PARSE_LANGUAGE) { //In PASRSE_LANGUAGE Mode
+            if(currentBlockSkeleton == Entry.Parser.BLOCK_SKELETON_BASIC) { //If Block Sekeleton is basic
+                if(currentBlockParamsKeyMap) {  //If Block has Parameters
+                    var blockParam = "";
+                    var blockParamIndex = 0;
+                }
+            }
+        }
+
         for (var i = 0; i < blockTokens.length; i++) { 
             var blockToken = blockTokens[i];
-            console.log("Block blockToken check1", blockToken, "i", i);
+            
             if (blockToken.length === 0) continue;
             if (blockReg.test(blockToken)) {
                 var blockParam = blockToken.split('%')[1];
@@ -93,7 +103,34 @@ Entry.BlockToPyParser = function(blockSyntax) {
                     if(schemaParams[index].type == "Indicator") {
                         index++;    
                     } else if(schemaParams[index].type == "Block") {
-                        result += this.Block(dataParams[index]).trim();
+                        var param = this.Block(dataParams[index]).trim();
+                        result += param;
+
+                        console.log("PARAM BLOCK", param);
+                        console.log("PARAM BLOCK RESULT ", result);
+                        
+                        if(this._mode == Entry.Parser.PARSE_LANGUAGE) { //In PASRSE_LANGUAGE Mode
+                            if(currentBlockSkeleton == Entry.Parser.BLOCK_SKELETON_BASIC) { //If Block Sekeleton is basic
+                                if(currentBlockParamsKeyMap) {  //If Block has Parameters
+                                    blockParam = param;
+                                    console.log("basic block param", param, "i", i);
+
+                                    var param = "";
+                                    var paramsKey = Object.keys(currentBlockParamsKeyMap);        
+                                    var variable = String(paramsKey[blockParamIndex++]);
+                                    variable = variable.toLowerCase();
+                                    console.log("variable", variable);
+
+                                    var value = blockParam;
+                                    console.log("value", value);
+
+                                    this._variableMap.put(variable, value);
+                                    this._queue.enqueue(variable); 
+                                    console.log("Variable Map", this._variableMap);
+                                    console.log("Queue", this._queue);
+                                }
+                            }
+                        }
                     } else {
                         var param = this['Field' + schemaParams[index].type]
                                                     (dataParams[index], schemaParams[index]);
@@ -114,57 +151,52 @@ Entry.BlockToPyParser = function(blockSyntax) {
                            !Entry.TextCodingUtil.prototype.isBinaryOperator(param))
                            param = String("\"" + param + "\"");  
                        
-                        console.log("this._currentMainBlockSkeleton", this._currentMainBlockSkeleton, "SYMBOL", Entry.Parser.BLOCK_SKELETON_BASIC);
+                        result += param;
 
-                        //In PARSE_LANGUAGE Mode
+                        console.log("PARAM BLOCK", param);
+                        console.log("PARAM BLOCK RESULT ", result);
+                        
                         if(this._mode == Entry.Parser.PARSE_LANGUAGE) { //In PASRSE_LANGUAGE Mode
-                            if(this._currentMainBlockSkeleton == Entry.Parser.BLOCK_SKELETON_BASIC) { //If Block Sekeleton is basic
-                                if(this._currentMainBlockParamsKeyMap) {  //If Block has Parameters
-                                    console.log("Check paramsKeyMap", this._currentMainBlockParamsKeyMap); 
-                                    var paramsKey = Object.keys(this._currentMainBlockParamsKeyMap);        
-                                    var variable = String(paramsKey[this._currentmainBlockIndex++]);
+                            if(currentBlockSkeleton == Entry.Parser.BLOCK_SKELETON_BASIC) { //If Block Sekeleton is basic
+                                if(currentBlockParamsKeyMap) {  //If Block has Parameters
+                                    blockParam = param;
+                                    console.log("basic block param", param, "i", i);
+
+                                    var param = "";
+                                    var paramsKey = Object.keys(currentBlockParamsKeyMap);        
+                                    var variable = String(paramsKey[blockParamIndex++]);
                                     variable = variable.toLowerCase();
+                                    console.log("variable", variable);
 
-                                    var value = param;
-
-                                    console.log("Block param into Queue", param);
+                                    var value = blockParam;
+                                    console.log("value", value);
 
                                     this._variableMap.put(variable, value);
                                     this._queue.enqueue(variable); 
-                                    console.log("Queue", this._queue.toString());
-                                } else {
-                                    console.log("Block Param check1", param);
-                                    result += param;
+                                    console.log("Variable Map", this._variableMap);
+                                    console.log("Queue", this._queue);
                                 }
-                            } else {
-                                console.log("Block Param check2", param);
-                                result += param;
                             }
-                        } else { //Not in the above condition
-                            console.log("Block Param check3", param);
-                            result += param;
                         }
+
                     }
                 }
             } else if (statementReg.test(blockToken)) {
                 var statements = blockToken.split(statementReg);
                 for (var j=0; j<statements.length; j++) {
                     var statementToken = statements[j];
-                    console.log("Block statementToken check1", statementToken, "j", j);
                     if (statementToken.length === 0) continue;
                     if (statementReg.test(statementToken)) {
                         var index = Number(statementToken.split('$')[1]) - 1;
                         result += Entry.TextCodingUtil.prototype.indent(this.Thread(block.statements[index]));
                     } 
                     else {
-                        console.log("Block statementToken check2", "j", j);
                         result += statementToken;  
                         
-                        //In PARSE_LANGUAGE Mode
                         if(this._mode == Entry.Parser.PARSE_LANGUAGE) { //In PASRSE_LANGUAGE Mode
-                            if(this._currentMainBlockSkeleton == Entry.Parser.BLOCK_SKELETON_BASIC_LOOP ||
-                            this._currentMainBlockSkeleton == Entry.Parser.BLOCK_SKELETON_BASIC_DOUBLE_LOOP) { //If Block Sekeleton is basic
-                                if(this._currentMainBlockParamsKeyMap) {  //If Block has Parameters
+                            if(this._currentBlockSkeleton == Entry.Parser.BLOCK_SKELETON_BASIC_LOOP ||
+                            this._currentBlockSkeleton == Entry.Parser.BLOCK_SKELETON_BASIC_DOUBLE_LOOP) { //If Block Sekeleton is basic
+                                if(this._currentBlockParamsKeyMap) {  //If Block has Parameters
                                     if(j == 0) { //The beginning of Block Statement
                                         console.log("This result is the beginning of Block Statement");
                                     }
@@ -181,30 +213,26 @@ Entry.BlockToPyParser = function(blockSyntax) {
                     blockToken = blockToken.substring(tagIndex+1);
                 }
 
-                console.log("Block blockToken check2", blockToken, "i", i);
                 result += blockToken;
 
-                console.log("this._currentMainBlockSkeleton", this._currentMainBlockSkeleton, "SYMBOL", Entry.Parser.BLOCK_SKELETON_BASIC);
-                if(blockToken && i == blockTokens.length-1) { //This result is the end of CallExpression
-                    console.log("go to makeExpressionWithVariable check1")
-                    if(this._mode == Entry.Parser.PARSE_LANGUAGE) { //In PASRSE_LANGUAGE Mode
-                        console.log("go to makeExpressionWithVariable check2")
-                        if(this._currentMainBlockSkeleton == Entry.Parser.BLOCK_SKELETON_BASIC) { //If Block Sekeleton is basic
-                            console.log("go to makeExpressionWithVariable check3")
-                            if(this._currentMainBlockParamsKeyMap) {  //If Block has Parameters
-                                console.log("result : Block about to enter Language Combination", result);
-                                
-                                var paramsCount = Object.keys(this._currentMainBlockParamsKeyMap).length;
-                                if(paramsCount)
-                                    result = this.makeExpressionWithVariable(result, paramsCount); 
-                            }
-                        }
-                    }
-                }
+                console.log("check result", result);
 
             }
         }
-       
+
+        if(this._mode == Entry.Parser.PARSE_LANGUAGE) { //In PASRSE_LANGUAGE Mode
+            console.log("check1");
+            if(currentBlockSkeleton == Entry.Parser.BLOCK_SKELETON_BASIC) { //If Block Sekeleton is basic
+                console.log("check2");
+                if(currentBlockParamsKeyMap) {  //If Block has Parameters
+                    console.log("check3");
+                    var paramsCount = Object.keys(currentBlockParamsKeyMap).length;
+                    if(paramsCount)
+                        result = this.makeExpressionWithVariable(result, paramsCount); 
+                }
+            }
+        }
+
         return result;
     };
 
@@ -298,35 +326,45 @@ Entry.BlockToPyParser = function(blockSyntax) {
     };
 
     p.makeExpressionWithVariable = function(exp, paramCount) {
+        console.log("makeExpressionWithVariable EXP", exp);
+        console.log("makeExpressionWithVariable Queue", this._queue.toString());
+        console.log("makeExpressionWithVariable VariableMap", this._variableMap.toString());
+
+
         var result;
         var expression = "";
         var variableDeclarations = "";
-
-        console.log("exp", exp);
+        var safeIndex = 0;
+        
 
         //if(exp.match(/.*\..*\)/)) {
         var index = exp.indexOf('(');
         exp = exp.substring(0, index);
         //}
         
-        var expression = exp.trim().concat("(");
-
-        for(var i = 0; i < paramCount; i++) {
-            var variable = this._queue.dequeue();
-            console.log("this._queue", this._queue.toString());
+        var expression = exp.trim().concat("(");  
+        var variable;
+        while(variable = this._queue.dequeue()) { 
+            console.log("makeExpressionWithVariable variable", variable);
+            
             var value = this._variableMap.get(variable);
-            console.log("this._variableMap", this._variableMap);
+            console.log("makeExpressionWithVariable value", value);
+            
             var variableDeclaration = variable.concat(" = ").concat(value).concat('\n');
             variableDeclarations += variableDeclaration;
             
-            if(i == paramCount -1) {
-                expression = expression.concat(variable).concat(')');
-            }
-            else {    
-                expression = expression.concat(variable).concat(', ');
-            }
-       
+            
+
+            expression = expression.concat(variable).concat(',').concat(' ');
+            safeIndex++;
+
+            if(safeIndex > 10)
+                break;
         }
+       
+        var index = expression.lastIndexOf(',');
+        expression = expression.substring(0, index);
+        expression = expression.trim().concat(')');
        
         result = variableDeclarations.concat(expression);
 
