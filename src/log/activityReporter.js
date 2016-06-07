@@ -21,6 +21,7 @@ Entry.ActivityReporter = function() {
     };
 
     p.clear = function() {
+        return;
         this._activities = [];
     };
 
