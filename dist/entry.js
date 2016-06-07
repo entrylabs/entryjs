@@ -6035,6 +6035,17 @@ Entry.Observer = function(b, a, c, d) {
   };
 })(Entry.Observer.prototype);
 Entry.Command = {};
+(function(b) {
+  b["do"] = {type:EntryStatic.COMMAND_TYPES["do"], log:function(a) {
+    return [b["do"].type];
+  }};
+  b.undo = {type:EntryStatic.COMMAND_TYPES.undo, log:function(a) {
+    return [b.undo.type];
+  }};
+  b.redo = {type:EntryStatic.COMMAND_TYPES.redo, log:function(a) {
+    return [b.redo.type];
+  }};
+})(Entry.Command);
 Entry.Commander = function(b) {
   if ("workspace" == b || "phone" == b) {
     Entry.stateManager = new Entry.StateManager;
@@ -6053,17 +6064,20 @@ Entry.Commander = function(b) {
     Entry.stateManager && Entry.stateManager.addCommand.apply(Entry.stateManager, [a, this, this.do, e.undo].concat(e.state.apply(this, d)));
     e = Entry.Command[a].do.apply(this, d);
     setTimeout(function() {
+      b.report("do");
       b.report(a, d);
     }, 0);
     return {value:e, isPass:this.isPass.bind(this)};
   };
   b.undo = function() {
     var a = Array.prototype.slice.call(arguments), b = a.shift(), d = Entry.Command[b];
+    that.report("undo");
     Entry.stateManager && Entry.stateManager.addCommand.apply(Entry.stateManager, [b, this, this.do, d.undo].concat(d.state.apply(this, a)));
     return {value:Entry.Command[b].do.apply(this, a), isPass:this.isPass.bind(this)};
   };
   b.redo = function() {
     var a = Array.prototype.slice.call(arguments), b = a.shift(), d = Entry.Command[b];
+    that.report("redo");
     Entry.stateManager && Entry.stateManager.addCommand.apply(Entry.stateManager, [b, this, this.undo, b].concat(d.state.apply(null, a)));
     d.undo.apply(this, a);
   };
@@ -6095,7 +6109,7 @@ Entry.Commander = function(b) {
   };
 })(Entry.Commander.prototype);
 (function(b) {
-  b.addThread = {type:101, do:function(a) {
+  b.addThread = {type:EntryStatic.COMMAND_TYPES.addThread, do:function(a) {
     return this.editor.board.code.createThread(a);
   }, state:function(a) {
     a.length && (a[0].id = Entry.Utils.generateId());
@@ -6103,7 +6117,7 @@ Entry.Commander = function(b) {
   }, log:function(a) {
     return [b.addThread.type, ["thread", JSON.stringify(a)], ["code", this.editor.board.code.stringify()]];
   }, undo:"destroyThread"};
-  b.destroyThread = {type:102, do:function(a) {
+  b.destroyThread = {type:EntryStatic.COMMAND_TYPES.destroyThread, do:function(a) {
     this.editor.board.findById(a[0].id).destroy(!0, !0);
   }, state:function(a) {
     return [this.editor.board.findById(a[0].id).thread.toJSON()];
@@ -6112,7 +6126,7 @@ Entry.Commander = function(b) {
     this.editor.board.findById(a);
     return [b.destroyThread.type, ["blockId", a], ["code", this.editor.board.code.stringify()]];
   }, undo:"addThread"};
-  b.destroyBlock = {type:103, do:function(a) {
+  b.destroyBlock = {type:EntryStatic.COMMAND_TYPES.destroyBlock, do:function(a) {
     "string" === typeof a && (a = this.editor.board.findById(a));
     a.doDestroy(!0);
   }, state:function(a) {
@@ -6122,7 +6136,7 @@ Entry.Commander = function(b) {
     "string" === typeof a && (a = this.editor.board.findById(a));
     return [b.destroyBlock.type, ["blockId", a.id], ["code", this.editor.board.code.stringify()]];
   }, undo:"recoverBlock"};
-  b.recoverBlock = {type:104, do:function(a, b) {
+  b.recoverBlock = {type:EntryStatic.COMMAND_TYPES.recoverBlock, do:function(a, b) {
     var d = this.editor.board.code.createThread([a]).getFirstBlock();
     "string" === typeof d && (d = this.editor.board.findById(d));
     this.editor.board.insert(d, b);
@@ -6132,7 +6146,7 @@ Entry.Commander = function(b) {
   }, log:function(a, c) {
     return [b.recoverBlock.type, ["block", a.stringify()], ["pointer", c], ["code", this.editor.board.code.stringify()]];
   }, undo:"destroyBlock"};
-  b.insertBlock = {type:105, do:function(a, b, d) {
+  b.insertBlock = {type:EntryStatic.COMMAND_TYPES.insertBlock, do:function(a, b, d) {
     "string" === typeof a && (a = this.editor.board.findById(a));
     this.editor.board.insert(a, b, d);
   }, state:function(a, b) {
@@ -6145,7 +6159,7 @@ Entry.Commander = function(b) {
     "string" === typeof a && (a = this.editor.board.findById(a));
     return [b.insertBlock.type, ["blockId", a.id], ["targetBlockId", c.id], ["count", d], ["code", this.editor.board.code.stringify()]];
   }, undo:"insertBlock"};
-  b.separateBlock = {type:106, do:function(a) {
+  b.separateBlock = {type:EntryStatic.COMMAND_TYPES.separateBlock, do:function(a) {
     a.view && a.view._toGlobalCoordinate(Entry.DRAG_MODE_DRAG);
     a.doSeparate();
   }, state:function(a) {
@@ -6156,9 +6170,9 @@ Entry.Commander = function(b) {
   }, log:function(a) {
     "string" === typeof a && (a = this.editor.board.findById(a));
     a.getThread().indexOf(a);
-    return [b.separateBlock.type, ["blockId", a.id], ["targetPointer", a.targetPointer()], ["code", this.editor.board.code.stringify()]];
+    return [b.separateBlock.type, ["blockId", a.id], ["x", a.x], ["y", a.y], ["code", this.editor.board.code.stringify()]];
   }, undo:"insertBlock"};
-  b.moveBlock = {type:107, do:function(a, b, d) {
+  b.moveBlock = {type:EntryStatic.COMMAND_TYPES.moveBlock, do:function(a, b, d) {
     void 0 !== b ? (a = this.editor.board.findById(a), a.moveTo(b, d)) : a._updatePos();
   }, state:function(a) {
     "string" === typeof a && (a = this.editor.board.findById(a));
@@ -6166,7 +6180,7 @@ Entry.Commander = function(b) {
   }, log:function(a, c, d) {
     return [b.moveBlock.type, ["blockId", a.id], ["x", a.x], ["y", a.y], ["code", this.editor.board.code.stringify()]];
   }, undo:"moveBlock"};
-  b.cloneBlock = {type:108, do:function(a) {
+  b.cloneBlock = {type:EntryStatic.COMMAND_TYPES.cloneBlock, do:function(a) {
     "string" === typeof a && (a = this.editor.board.findById(a));
     this.editor.board.code.createThread(a.copy());
   }, state:function(a) {
@@ -6177,20 +6191,21 @@ Entry.Commander = function(b) {
     var c = this.editor.board.code.getThreads().pop().getFirstBlock();
     return [b.cloneBlock.type, ["blockId", a.id], ["clonedBlockId", c.id], ["code", this.editor.board.code.stringify()]];
   }, undo:"uncloneBlock"};
-  b.uncloneBlock = {type:109, do:function(a) {
+  b.uncloneBlock = {type:EntryStatic.COMMAND_TYPES.uncloneBlock, do:function(a) {
     this.editor.board.code.getThreads().pop().getFirstBlock().destroy(!0, !0);
   }, state:function(a) {
     return [a];
   }, log:function(a) {
+    a = this.editor.board.code.getThreads().pop().getFirstBlock();
     return [b.unclondeBlock.type, ["blockId", a.id], ["code", this.editor.board.code.stringify()]];
   }, undo:"cloneBlock"};
-  b.scrollBoard = {type:110, do:function(a, b) {
+  b.scrollBoard = {type:EntryStatic.COMMAND_TYPES.scrollBoard, do:function(a, b) {
     this.editor.board.scroller._scroll(a, b);
   }, state:function(a, b) {
     return [-a, -b];
   }, log:function(a, b) {
   }, undo:"scrollBoard"};
-  b.setFieldValue = {type:111, do:function(a, b, d, e, f) {
+  b.setFieldValue = {type:EntryStatic.COMMAND_TYPES.setFieldValue, do:function(a, b, d, e, f) {
     b.setValue(f, !0);
   }, state:function(a, b, d, e, f) {
     return [a, b, d, f, e];
@@ -6199,7 +6214,7 @@ Entry.Commander = function(b) {
   }, undo:"setFieldValue"};
 })(Entry.Command);
 (function(b) {
-  b.selectObject = {type:201, do:function(a) {
+  b.selectObject = {type:EntryStatic.COMMAND_TYPES.selectObject, do:function(a) {
     return Entry.container.selectObject(a);
   }, state:function(a) {
     if ((a = Entry.playground) && a.object) {
@@ -7925,6 +7940,7 @@ Entry.ActivityReporter = function() {
     }
   };
   b.clear = function() {
+    this._activities = [];
   };
   b.get = function() {
     return this._activities;

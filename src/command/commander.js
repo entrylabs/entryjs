@@ -46,6 +46,7 @@ Entry.Commander = function(injectType) {
 
         //intentionally delay reporting
         setTimeout(function() {
+            that.report('do');
             that.report(commandType, argumentArray);
         }, 0);
 
@@ -59,6 +60,9 @@ Entry.Commander = function(injectType) {
         var argumentArray = Array.prototype.slice.call(arguments);
         var commandType = argumentArray.shift();
         var commandFunc = Entry.Command[commandType];
+
+        that.report('undo');
+
         if (Entry.stateManager) {
             Entry.stateManager.addCommand.apply(
                 Entry.stateManager,
@@ -76,6 +80,8 @@ Entry.Commander = function(injectType) {
         var argumentArray = Array.prototype.slice.call(arguments);
         var commandType = argumentArray.shift();
         var commandFunc = Entry.Command[commandType];
+
+        that.report('redo');
 
         if (Entry.stateManager) {
             Entry.stateManager.addCommand.apply(
