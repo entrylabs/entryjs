@@ -14582,8 +14582,8 @@ Entry.VariableContainer.prototype.removeRef = function(b, a) {
         break;
       }
     }
-    if ("_functionRefs" == b) {
-      for (var c = a.type.substr(5), e = Entry.variableContainer.functions_[c].content.getBlockList(), d = 0;d < e.length;d++) {
+    if ("_functionRefs" == b && (c = a.type.substr(5), d = Entry.variableContainer.functions_[c])) {
+      for (var e = d.content.getBlockList(), d = 0;d < e.length;d++) {
         a = e[d];
         var f = a.events;
         -1 < a.type.indexOf("func_") && a.type.substr(5) == c || (f && f.viewDestroy && f.viewDestroy.forEach(function(b) {
