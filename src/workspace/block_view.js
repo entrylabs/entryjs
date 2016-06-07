@@ -18,7 +18,7 @@ Entry.BlockView = function(block, board, mode) {
 
     this._schema = Entry.block[block.type];
 
-    if (this._schema.changeEvent) 
+    if (this._schema.changeEvent)
         this._schemaChangeEvent = this._schema.changeEvent.attach(
             this, this._updateSchema);
     var skeleton = this._skeleton = Entry.skeleton[this._schema.skeleton];
@@ -199,8 +199,11 @@ Entry.BlockView.DRAG_RADIUS = 5;
                 break;
             case Entry.Workspace.MODE_VIMBOARD:
                 var text = this.getBoard().workspace.getCodeToText(this.block);
+                var fieldText = {text:text};
+                if (this.block._schema.vimModeFontColor)
+                    fieldText.color = this.block._schema.vimModeFontColor;
                 this._contents.push(
-                    new Entry.FieldText({text: text}, this)
+                    new Entry.FieldText(fieldText, this)
                 );
                 break;
         }

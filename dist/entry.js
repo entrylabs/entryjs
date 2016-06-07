@@ -17642,7 +17642,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
         }
         break;
       case Entry.Workspace.MODE_VIMBOARD:
-        g = this.getBoard().workspace.getCodeToText(this.block), this._contents.push(new Entry.FieldText({text:g}, this));
+        g = {text:this.getBoard().workspace.getCodeToText(this.block)}, this.block._schema.vimModeFontColor && (g.color = this.block._schema.vimModeFontColor), this._contents.push(new Entry.FieldText(g, this));
     }
     this.alignContent(!1);
   };
