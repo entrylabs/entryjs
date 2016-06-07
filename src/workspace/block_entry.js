@@ -3038,7 +3038,7 @@ Entry.block = {
             var value = script.getNumberValue("VALUE") + 1;
             value = Math.min(value, Entry.Bitbrick.servoMaxValue);
             value = Math.max(value, Entry.Bitbrick.servoMinValue);
-            Entry.hw.sendQueue[script.getStringField("PORT")] = value;
+            Entry.hw.sendQueue[script.getStringField("PORT")] = Entry.Bitbrick.servoMaxValue - value;
             return script.callReturn();
         }
     },
