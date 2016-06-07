@@ -33,7 +33,6 @@ Entry.BlockView = function(block, board, mode) {
     }
 
     this.isInBlockMenu = this.getBoard() instanceof Entry.BlockMenu;
-    console.log(12121);
 
     //if (skeleton.morph)
         //this._observers.push(this.block.observe(this, "_renderPath", skeleton.morph, false));

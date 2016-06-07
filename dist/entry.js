@@ -15567,7 +15567,6 @@ Entry.BlockView = function(b, a, c) {
   this._paramMap = {};
   d.magnets && d.magnets(this).next && (this.svgGroup.nextMagnet = this.block, this._nextGroup = this.svgGroup.elem("g"), this._observers.push(this.observe(this, "_updateMagnet", ["contentHeight"])));
   this.isInBlockMenu = this.getBoard() instanceof Entry.BlockMenu;
-  console.log(12121);
   var e = this;
   this.mouseHandler = function() {
     var a = e.block.events;
