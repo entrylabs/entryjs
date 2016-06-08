@@ -674,6 +674,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                     params.push(param);
                             }
                             result.params = params;
+                        } else {
+                            var statement = data[d];
+                            if(statement && statement.type)
+                                    statements.push(statement);
                         }
                     }
                     else {
@@ -683,15 +687,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             for(i in allStatements) {
                                 var statement = allStatements[i];
                                 console.log("BlockStatement statement", statement);
-                                if(statement.type)
+                                if(statement && statement.type)
                                     statements.push(statement);
                             }
                         }
 
                         console.log("BlockStatement statements", statements); 
-
-                        result.statements = statements;
                     }
+                    result.statements = statements;
                 }
             }
         }

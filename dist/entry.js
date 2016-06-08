@@ -11991,34 +11991,35 @@ Entry.PyToBlockParser = function(b) {
   };
   b.BlockStatement = function(a) {
     console.log("BlockStatement component", a);
-    var b = {statements:[], data:[]}, c = [], e = [], f = [], e = a.body;
-    console.log("BlockStatement bodies", e);
-    for (var g in e) {
-      a = e[g], a = this[a.type](a), console.log("BlockStatement bodyData", a), a && null == a || (f.push(a), console.log("BlockStatement data", f));
+    var b = {statements:[], data:[]}, c = [], e = [], f = [];
+    a = a.body;
+    console.log("BlockStatement bodies", a);
+    for (var g in a) {
+      var h = a[g], h = this[h.type](h);
+      console.log("BlockStatement bodyData", h);
+      h && null == h || (f.push(h), console.log("BlockStatement data", f));
     }
     console.log("BlockStatement final data", f);
     b.data = f;
-    for (var h in f) {
+    for (var k in f) {
       if (f[1] && "repeat_basic" == f[1].type) {
-        if (0 == h) {
-          if (f[h].declarations) {
-            e = f[0].declarations;
-            for (h in e) {
-              a = e[h], (a = a.init) && c.push(a);
+        if (0 == k) {
+          if (f[k].declarations) {
+            a = f[0].declarations;
+            for (k in a) {
+              h = a[k], (h = h.init) && c.push(h);
             }
             b.params = c;
           }
         } else {
-          if (1 == h) {
-            b.type = f[h].type;
+          if (1 == k) {
+            b.type = f[k].type;
             e = [];
-            a = f[h].statements[0];
+            a = f[k].statements[0];
             console.log("BlockStatement allStatements", a);
             if (a && 0 != a.length) {
               for (g in a) {
-                var k = a[g];
-                console.log("BlockStatement(for) statement", k);
-                k.type && e.push(k);
+                h = a[g], console.log("BlockStatement(for) statement", h), h.type && e.push(h);
               }
             }
             console.log("BlockStatement(for) statements", e);
@@ -12027,24 +12028,26 @@ Entry.PyToBlockParser = function(b) {
         }
       } else {
         if (f) {
-          if (0 == h) {
-            if (f[h] && f[h].declarations) {
-              e = f[h].declarations;
-              for (h in e) {
-                a = e[h], (a = a.init) && c.push(a);
+          if (0 == k) {
+            if (f[k] && f[k].declarations) {
+              a = f[k].declarations;
+              for (k in a) {
+                h = a[k], (h = h.init) && c.push(h);
               }
               b.params = c;
+            } else {
+              (h = f[k]) && h.type && e.push(h);
             }
           } else {
             e = [];
             if ((a = f) && 0 != a.length) {
               for (g in a) {
-                k = a[g], console.log("BlockStatement statement", k), k.type && e.push(k);
+                h = a[g], console.log("BlockStatement statement", h), h && h.type && e.push(h);
               }
             }
             console.log("BlockStatement statements", e);
-            b.statements = e;
           }
+          b.statements = e;
         }
       }
     }
