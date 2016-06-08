@@ -14621,8 +14621,7 @@ Entry.VariableContainer.prototype._getBlockMenu = function() {
 };
 Entry.VariableContainer.prototype._truncName = function(b, a) {
   b = b.substring(0, this._maxNameLength);
-  str = "variable" == a ? "\ubcc0\uc218" : "\ub9ac\uc2a4\ud2b8";
-  Entry.toast.warning("%1 \uc774\ub984 \uc790\ub3d9 \ubcc0\uacbd".replace("%1", str), "%1\uc758 \uc774\ub984\uc740 10\uae00\uc790\ub97c \ub118\uc744 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.".replace("%1", str));
+  Entry.toast.warning(Lang.Workspace[a + "_name_auto_edited_title"], Lang.Workspace[a + "_name_auto_edited_content"]);
   return b;
 };
 Entry.VariableContainer.prototype._maxNameLength = 10;

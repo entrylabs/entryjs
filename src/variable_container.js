@@ -2288,13 +2288,12 @@ Entry.VariableContainer.prototype._getBlockMenu = function() {
 
 Entry.VariableContainer.prototype._truncName = function(name, type) {
     name = name.substring(0, this._maxNameLength);
-    if (type == 'variable') str = '변수';
-    else str = '리스트';
+    var title, content;
 
-    Entry.toast.warning(
-        '%1 이름 자동 변경'.replace('%1', str),
-        '%1의 이름은 10글자를 넘을 수 없습니다.'.replace('%1', str)
-    );
+    title = Lang.Workspace[type + '_name_auto_edited_title'];
+    content = Lang.Workspace[type + '_name_auto_edited_content']
+
+    Entry.toast.warning(title, content);
 
     return name;
 };
