@@ -16929,16 +16929,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
   b._position = function() {
     var a = this.getAbsolutePosFromDocument();
     a.y += this.box.height / 2;
-    var b = $(document).height(), d = this.optionGroup.height(), e = this.optionGroup.width();
-    if (b < a.y + d) {
-      a.x += this.box.width + 1;
-      var b = this.getAbsolutePosFromBoard(), f = this._blockView.getBoard().svgDom.height(), f = f - (f - b.y);
-      f - 20 < d && this.optionGroup.height(f - f % 20);
-      a.y -= this.optionGroup.height();
+    var b = $(document).height(), d = this.optionGroup.height(), e = this.optionGroup.width() + 20;
+    if (b < a.y + d + 30) {
+      var b = this._blockView.getBoard().svgDom.height(), f = this.getAbsolutePosFromBoard();
+      this._blockView.y < b / 2 ? (a.x += this.box.width / 2 - e / 2, b -= f.y + 30, this.optionGroup.height(b)) : (a.x += this.box.width + 1, b -= b - f.y, b - 30 < d && this.optionGroup.height(b - b % 30), a.y -= this.optionGroup.height());
     } else {
       a.x += this.box.width / 2 - e / 2;
     }
-    this.optionGroup.css({left:a.x, top:a.y, width:e + 20});
+    this.optionGroup.css({left:a.x, top:a.y, width:e});
   };
   b.applyValue = function(a) {
     this.value != a && this.setValue(a);

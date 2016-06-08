@@ -193,27 +193,36 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
         var documentHeight = $(document).height();
         var optionGroupHeight = this.optionGroup.height();
-        var optionGroupWidth = this.optionGroup.width();
+        var optionGroupWidth = this.optionGroup.width() + 20;
 
         //not enough space below
-        if (documentHeight < pos.y + optionGroupHeight) {
-            pos.x += this.box.width + 1;
-
-            var relPos = this.getAbsolutePosFromBoard();
+        if (documentHeight < pos.y + optionGroupHeight + 30) {
             var domHeight = this._blockView.getBoard().svgDom.height();
-            domHeight -=  domHeight - relPos.y;
+            var relPos = this.getAbsolutePosFromBoard();
+            //above the half of dom
+            if (this._blockView.y < domHeight/2) {
+                pos.x += this.box.width/2 - optionGroupWidth/2;
 
-            if (domHeight - 20 < optionGroupHeight) {
-                domHeight -= domHeight % 20;
+                domHeight -= relPos.y + 30;
                 this.optionGroup.height(domHeight)
-            }
+            } else {
+                pos.x += this.box.width + 1;
 
-            pos.y -= this.optionGroup.height();
+                domHeight -=  domHeight - relPos.y;
+
+                if (domHeight - 30 < optionGroupHeight) {
+                    domHeight -= domHeight % 30;
+                    this.optionGroup.height(domHeight)
+                }
+
+                pos.y -= this.optionGroup.height();
+
+            }
         } else pos.x += this.box.width/2 - optionGroupWidth/2;
 
         this.optionGroup.css({
             left: pos.x, top: pos.y,
-            width: optionGroupWidth + 20
+            width: optionGroupWidth
         });
     };
 
