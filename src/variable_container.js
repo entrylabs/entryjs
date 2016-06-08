@@ -65,7 +65,7 @@ Entry.VariableContainer.prototype.createDom = function(view) {
     var variableAddButton = Entry.createElement('li');
     variableAddButton.addClass('entryVariableAddWorkspace');
     variableAddButton.addClass('entryVariableListElementWorkspace');
-    variableAddButton.innerHTML = '+ ' + Lang.Workspace.variable_create;
+    variableAddButton.innerHTML = '+ ' + Lang.Workspace.variable_add;
     var thisPointer = this;
     this.variableAddButton_ = variableAddButton;
 
@@ -127,7 +127,7 @@ Entry.VariableContainer.prototype.createDom = function(view) {
     var functionAddButton = Entry.createElement('li');
     functionAddButton.addClass('entryVariableAddWorkspace');
     functionAddButton.addClass('entryVariableListElementWorkspace');
-    functionAddButton.innerHTML = '+ ' + Lang.Workspace.function_create;
+    functionAddButton.innerHTML = '+ ' + Lang.Workspace.function_add;
     //functionAddButton.innerHTML = '+ ' + Lang.Msgs.to_be_continue;
     this.functionAddButton_ = functionAddButton;
     functionAddButton.bindOnClick(function(e) {

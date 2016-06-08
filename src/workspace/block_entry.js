@@ -14450,7 +14450,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Text",
-                "text": Lang.Workspace.list_create,
+                "text": Lang.Workspace.create_list_block,
                 "color": "#333",
                 "align": "center"
             }
