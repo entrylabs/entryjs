@@ -512,21 +512,17 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("WhileStatement component", component);
         var result;
         var structure = {};
+        structure.statements = [];
         
         var test = component.test;
-        
-        var syntax;
-        var type;
+        console.log("WhileStatement test", test);
 
-       
         if(test.value === true) {
-            syntax = String("while True:\n$1");
-            type = this.getBlockType(syntax);
+            var syntax = String("while True:\n$1");
+            var type = this.getBlockType(syntax);
         } else if(test.value === false) {
-
-        } else {
-
-        }
+            //This Expression Not Supported
+        } 
 
         console.log("WhileStatement type", type);
 
@@ -534,36 +530,65 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("WhileStatement paramsMeta", paramsMeta);
                 
         var params = [];
-        if(test) {
-            if(test.type = "Literal") {
-                var paramMeta = paramsMeta[0];
-                if(paramMeta.type == "Indicator") {
-                    var param = null;
+        if(test.type == "Literal" || test.type == "Identifier") {
+            var arguments = [];
+            arguments.push(test);
+            var paramsMeta = Entry.block[type].params;
+            var paramsDefMeta = Entry.block[type].def.params;
+            console.log("WhileStatement paramsMeta", paramsMeta); 
+            console.log("WhileStatement paramsDefMeta", paramsDefMeta); 
+
+            for(var p in paramsMeta) {
+                var paramType = paramsMeta[p].type;
+                if(paramType == "Indicator") {
+                    var pendingArg = {raw: null, type: "Literal", value: null}; 
+                    if(p < arguments.length) 
+                        arguments.splice(p, 0, pendingArg);              
                 }
-                else {
-                    var param = this[test.type](test, paramMeta);
+                else if(paramType == "Text") {
+                    var pendingArg = {raw: "", type: "Literal", value: ""};
+                    if(p < arguments.length) 
+                        arguments.splice(p, 0, pendingArg);
                 }
-                params.push(param);  
-                        
             }
-            else {
-                //To Do : when argument.type is not "Literal"
+
+            for(var i in arguments) {
+                var argument = arguments[i];
+                console.log("WhileStatement argument", argument);
+                          
+                var param = this[argument.type](argument, paramsMeta[i], paramsDefMeta[i], true);
+                console.log("WhileStatement Literal param", param);
+                if(param && param != null)
+                    params.push(param);   
             }
-        }
+          
+        } else {
+            var param = this[test.type](test);
+            console.log("WhileStatement Not Literal param", param);
+            if(param && param != null)
+                params.push(param);   
+            
+        }   
                 
         var statements = [];
-        var bodies = component.body.body;
+        var body = component.body;
+
+       /* console.log("WhileStatement bodies", bodies);
         
         for(var index in bodies) {
             var body = bodies[index];
+            console.log("WhileStatement body", body);
             var bodyData = this[body.type](body);
             statements.push(bodyData);
-        }
+        }*/
+
+        var bodyData = this[body.type](body);
+
+        console.log("WhileStatement bodyData", bodyData);
 
         structure.type = type;
-        structure.params = params;
-        structure.statements = [];
-        structure.statements.push(statements);
+        structure.params = params; 
+        structure.statements.push(bodyData.statements);
 
         result = structure;
         
@@ -665,7 +690,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                         console.log("BlockStatement statements", statements); 
 
-                        data = statements;
+                        result.statements = statements;
                     }
                 }
             }
@@ -737,11 +762,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("IfStatement type", type);
         
         var test = component.test;
-        if(test != null){
+        //if(test != null){
             console.log("IfStatement test", test);
-            if(test.type == "Literal") {
+            if(test.type == "Literal" || test.type == "Identifier") {
                 var arguments = [];
-                arguments.push(test.value);
+                arguments.push(test);
                 var paramsMeta = Entry.block[type].params;
                 var paramsDefMeta = Entry.block[type].def.params;
                 console.log("IfStatement paramsMeta", paramsMeta); 
@@ -765,7 +790,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     var argument = arguments[i];
                     console.log("IfStatement argument", argument);
                               
-                    var param = this[test.type](test, paramsMeta[i], paramsDefMeta[i]);
+                    var param = this[argument.type](argument, paramsMeta[i], paramsDefMeta[i], true);
                     console.log("IfStatement Literal param", param);
                     if(param && param != null)
                         params.push(param);   
@@ -782,7 +807,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             if(params && params.length != 0) {
                 structure.params = params;         
             }
-        }
+        //}
 
         console.log("IfStatement params result", params);
 
@@ -999,10 +1024,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         
         if(left.type == "Literal" || left.type == "Identifier") {
             var arguments = [];
-            if(left.type == "Literal")
-                arguments.push(left.value);
-            if(left.type == "Identifier")
-                arguments.push(left.name);
+            arguments.push(left);
             var paramsMeta = Entry.block[type].params;
             var paramsDefMeta = Entry.block[type].def.params;
             console.log("LogicalExpression paramsMeta", paramsMeta); 
@@ -1026,7 +1048,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var argument = arguments[i];
                 console.log("LogicalExpression argument", argument);
                           
-                var param = this[left.type](left, paramsMeta[i], paramsDefMeta[i], true);
+                var param = this[argument.type](argument, paramsMeta[i], paramsDefMeta[i], true);
                 console.log("LogicalExpression param", param);
                 if(param && param != null)
                     params.push(param);   
@@ -1051,10 +1073,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
        
         if(right.type == "Literal" || right.type == "Identifier") {
             var arguments = [];
-            if(right.type == "Literal")
-                arguments.push(right.value);
-            if(right.type == "Identifier")
-                arguments.push(right.name);
+            arguments.push(right);
             var paramsMeta = Entry.block[type].params;
             var paramsDefMeta = Entry.block[type].def.params;
             console.log("LogicalExpression paramsMeta", paramsMeta); 
@@ -1078,7 +1097,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var argument = arguments[i];
                 console.log("LogicalExpression argument", argument);
                           
-                var param = this[right.type](right, paramsMeta[i], paramsDefMeta[i], true);
+                var param = this[argument.type](argument, paramsMeta[i], paramsDefMeta[i], true);
                 console.log("LogicalExpression param", param);
                 if(param && param != null)
                     params.push(param);   
@@ -1174,10 +1193,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             
             if(left.type == "Literal" || left.type == "Identifier") {
                 var arguments = [];
-                if(left.type == "Literal")
-                    arguments.push(left.value);
-                if(left.type == "Identifier")
-                    arguments.push(left.name);
+                arguments.push(left);
                 var paramsMeta = Entry.block[type].params;
                 var paramsDefMeta = Entry.block[type].def.params;
                 console.log("BinaryExpression paramsMeta", paramsMeta); 
@@ -1201,7 +1217,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     var argument = arguments[i];
                     console.log("BinaryExpression argument", argument);
                               
-                    var param = this[left.type](left, paramsMeta[i], paramsDefMeta[i], true);
+                    var param = this[argument.type](argument, paramsMeta[i], paramsDefMeta[i], true);
                     console.log("BinaryExpression param", param);
                     if(param && param != null)
                         params.push(param);   
@@ -1240,10 +1256,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
            
             if(right.type == "Literal" || right.type == "Identifier") {
                 var arguments = [];
-                if(right.type == "Literal")
-                    arguments.push(right.value);
-                if(right.type == "Identifier")
-                    arguments.push(right.name);
+                arguments.push(right);
                 var paramsMeta = Entry.block[type].params;
                 var paramsDefMeta = Entry.block[type].def.params;
                 console.log("BinaryExpression paramsMeta", paramsMeta); 
@@ -1267,7 +1280,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     var argument = arguments[i];
                     console.log("BinaryExpression argument", argument);
                               
-                    var param = this[right.type](right, paramsMeta[i], paramsDefMeta[i], true);
+                    var param = this[argument.type](argument, paramsMeta[i], paramsDefMeta[i], true);
                     console.log("BinaryExpression param", param);
                     if(param && param != null)
                         params.push(param);   

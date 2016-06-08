@@ -119,12 +119,12 @@ Entry.Vim = function(dom, textType) {
         this.view.removeClass('entryRemove');
     };
 
-    p.textToCode = function() {
-        var textType = this.workspace.textType;
-        if (textType === Entry.Vim.TEXT_TYPE_JS) {
+    p.textToCode = function(textType) {
+        var type = textType;
+        if (type === Entry.Vim.TEXT_TYPE_JS) {
             this._parserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK;
             this._parser.setParser(this._mode, this._parserType, this.codeMirror);
-        } else if(textType === Entry.Vim.TEXT_TYPE_PY) {
+        } else if(type === Entry.Vim.TEXT_TYPE_PY) {
             this._parserType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK;
             this._parser.setParser(this._mode, this._parserType, this.codeMirror);
         }

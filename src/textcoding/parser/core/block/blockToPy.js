@@ -22,8 +22,8 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
 (function(p){
     p.Code = function(code, parseMode) {
-        this._mode = parseMode;
-        console.log("this._mode", this._mode);
+        this._parseMode = parseMode;
+        console.log("parseMode", this._parseMode);
 
         if (code instanceof Entry.Thread)
             return this.Thread(code);
@@ -32,6 +32,8 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
         var textCode = "",
             threads = code.getThreads();
+
+            console.log("threads", threads);
 
         for (var i = 0; i < threads.length; i++) {
             var thread = threads[i];
@@ -47,6 +49,8 @@ Entry.BlockToPyParser = function(blockSyntax) {
             return this.Block(thread);
         var result = "",
             blocks = thread.getBlocks();
+
+            console.log("blocks", blocks);
 
         for (var i = 0; i < blocks.length; i++) {
             var block = blocks[i];
@@ -83,7 +87,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
         console.log("currentBlock", currentBlock, "currentBlockSkeleton", currentBlockSkeleton,
             "currentBlockParamsKeyMap", currentBlockParamsKeyMap);
 
-        if(this._mode == Entry.Parser.PARSE_LANGUAGE) { //In PASRSE_LANGUAGE Mode
+        if(this._parseMode == Entry.Parser.PARSE_LANGUAGE) { //In PASRSE_LANGUAGE Mode
             if(currentBlockSkeleton == Entry.Parser.BLOCK_SKELETON_BASIC) { //If Block Sekeleton is basic
                 if(currentBlockParamsKeyMap) {  //If Block has Parameters
                     var blockParam = "";
@@ -109,7 +113,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         console.log("PARAM BLOCK", param);
                         console.log("PARAM BLOCK RESULT ", result);
                         
-                        if(this._mode == Entry.Parser.PARSE_LANGUAGE) { //In PASRSE_LANGUAGE Mode
+                        if(this._parseMode == Entry.Parser.PARSE_LANGUAGE) { //In PASRSE_LANGUAGE Mode
                             if(currentBlockSkeleton == Entry.Parser.BLOCK_SKELETON_BASIC) { //If Block Sekeleton is basic
                                 if(currentBlockParamsKeyMap) {  //If Block has Parameters
                                     blockParam = param;
@@ -156,7 +160,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         console.log("PARAM BLOCK", param);
                         console.log("PARAM BLOCK RESULT ", result);
                         
-                        if(this._mode == Entry.Parser.PARSE_LANGUAGE) { //In PASRSE_LANGUAGE Mode
+                        if(this._parseMode == Entry.Parser.PARSE_LANGUAGE) { //In PASRSE_LANGUAGE Mode
                             if(currentBlockSkeleton == Entry.Parser.BLOCK_SKELETON_BASIC) { //If Block Sekeleton is basic
                                 if(currentBlockParamsKeyMap) {  //If Block has Parameters
                                     blockParam = param;
@@ -193,7 +197,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                     else {
                         result += statementToken;  
                         
-                        if(this._mode == Entry.Parser.PARSE_LANGUAGE) { //In PASRSE_LANGUAGE Mode
+                        if(this._parseMode == Entry.Parser.PARSE_LANGUAGE) { //In PASRSE_LANGUAGE Mode
                             if(this._currentBlockSkeleton == Entry.Parser.BLOCK_SKELETON_BASIC_LOOP ||
                             this._currentBlockSkeleton == Entry.Parser.BLOCK_SKELETON_BASIC_DOUBLE_LOOP) { //If Block Sekeleton is basic
                                 if(this._currentBlockParamsKeyMap) {  //If Block has Parameters
@@ -220,7 +224,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
             }
         }
 
-        if(this._mode == Entry.Parser.PARSE_LANGUAGE) { //In PASRSE_LANGUAGE Mode
+        if(this._parseMode == Entry.Parser.PARSE_LANGUAGE) { //In PASRSE_LANGUAGE Mode
             console.log("check1");
             if(currentBlockSkeleton == Entry.Parser.BLOCK_SKELETON_BASIC) { //If Block Sekeleton is basic
                 console.log("check2");

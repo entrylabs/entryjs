@@ -274,7 +274,7 @@ Entry.Parser = function(mode, type, cm) {
                             });
                         }*/
                         //throw error;
-                        Entry.toast.alert('에러(Error)', error.message); 
+                        Entry.toast.alert('[블록 변환 오류]', error.message); 
                         document.getElementById("entryCodingModeSelector").value = '2'; 
                         throw error;
                     }
