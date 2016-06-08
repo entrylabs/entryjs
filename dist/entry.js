@@ -7807,12 +7807,7 @@ p.generateView = function(b, a) {
     this.view = c;
     Entry.isForLecture && c.addClass("lecture");
     this.parentView_.appendChild(c);
-    if (!Entry.isForLecture) {
-      var d = Entry.createElement("div", "entryBlockHelperHeaderWorkspace");
-      d.innerHTML = Lang.Helper.Block_info;
-      c.appendChild(d);
-    }
-    d = Entry.createElement("div", "entryBlockHelperContentWorkspace");
+    var d = Entry.createElement("div", "entryBlockHelperContentWorkspace");
     d.addClass("entryBlockHelperIntro");
     Entry.isForLecture && d.addClass("lecture");
     c.appendChild(d);
