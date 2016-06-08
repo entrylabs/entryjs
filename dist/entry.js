@@ -856,8 +856,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
+  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(c, d);
   return a.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1057,8 +1057,8 @@ Blockly.Blocks.dplay_select_led = {init:function() {
 Entry.block.dplay_select_led = function(b, a) {
   var c = a.getField("PORT"), d = 7;
   "7" == c ? d = 7 : "8" == c ? d = 8 : "9" == c ? d = 9 : "10" == c && (d = 10);
-  c = a.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(d, "on" == c ? 255 : 0);
+  c = "on" == a.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(d, c);
   return a.callReturn();
 };
 Blockly.Blocks.dplay_get_switch_status = {init:function() {
@@ -2068,10 +2068,10 @@ Entry.block.wait_second = function(b, a) {
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a);
+  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
   setTimeout(function() {
     a.timeFlag = 0;
-  }, 60 / (Entry.FPS || 60) * c * 1E3);
+  }, c);
   return a;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -7807,12 +7807,7 @@ p.generateView = function(b, a) {
     this.view = c;
     Entry.isForLecture && c.addClass("lecture");
     this.parentView_.appendChild(c);
-    if (!Entry.isForLecture) {
-      var d = Entry.createElement("div", "entryBlockHelperHeaderWorkspace");
-      d.innerHTML = Lang.Helper.Block_info;
-      c.appendChild(d);
-    }
-    d = Entry.createElement("div", "entryBlockHelperContentWorkspace");
+    var d = Entry.createElement("div", "entryBlockHelperContentWorkspace");
     d.addClass("entryBlockHelperIntro");
     Entry.isForLecture && d.addClass("lecture");
     c.appendChild(d);
@@ -15298,7 +15293,7 @@ Entry.BlockMenu = function(b, a, c, d) {
   b.getCategoryCodes = function(a) {
     a = this._convertSelector(a);
     var b = this._categoryCodes[a];
-    b || (b = []);
+    b || (this._generateCategoryElement(a), b = []);
     b instanceof Entry.Code || (b = this._categoryCodes[a] = new Entry.Code(b));
     return b;
   };
@@ -15427,17 +15422,20 @@ Entry.BlockMenu = function(b, a, c, d) {
   };
   b._generateCategoryView = function(a) {
     if (a) {
-      for (var b = this, d = 0;d < a.length;d++) {
-        var e = a[d].category;
-        (function(a, d) {
-          a.text(Lang.Blocks[d.toUpperCase()]);
-          b._categoryElems[d] = a;
-          a.bindOnClick(function(a) {
-            b.selectMenu(d);
-          });
-        })(Entry.Dom("li", {id:"entryCategory" + e, class:"entryCategoryElementWorkspace", parent:this._categoryCol}), e);
+      for (var b = 0;b < a.length;b++) {
+        this._generateCategoryElement(a[b].category);
       }
     }
+  };
+  b._generateCategoryElement = function(a) {
+    var b = this;
+    (function(a, e) {
+      a.text(Lang.Blocks[e.toUpperCase()]);
+      b._categoryElems[e] = a;
+      a.bindOnClick(function(a) {
+        b.selectMenu(e);
+      });
+    })(Entry.Dom("li", {id:"entryCategory" + a, class:"entryCategoryElementWorkspace", parent:this._categoryCol}), a);
   };
   b.updateOffset = function() {
     this._offset = this.svgDom.offset();
