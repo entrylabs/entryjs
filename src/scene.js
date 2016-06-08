@@ -175,6 +175,7 @@ Entry.Scene.prototype.generateElement = function(scene) {
         var options = [
             {
                 text: Lang.Workspace.duplicate_scene,
+                enable: Entry.engine.isState('stop'),
                 callback: function(){
                     Entry.scene.cloneScene(scene);
                 }

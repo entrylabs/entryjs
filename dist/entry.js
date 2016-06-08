@@ -10838,9 +10838,10 @@ Entry.Scene.prototype.generateElement = function(b) {
   }
   Entry.Utils.disableContextmenu(c);
   $(c).on("contextmenu", function() {
-    Entry.ContextMenu.show([{text:Lang.Workspace.duplicate_scene, callback:function() {
+    var a = [{text:Lang.Workspace.duplicate_scene, enable:!Entry.engine.isState("run"), callback:function() {
       Entry.scene.cloneScene(b);
-    }}], "workspace-contextmenu");
+    }}];
+    Entry.ContextMenu.show(a, "workspace-contextmenu");
   });
   return b.view = c;
 };
