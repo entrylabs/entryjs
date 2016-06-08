@@ -380,8 +380,10 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     p.getCategoryCodes = function(selector) {
         var name = this._convertSelector(selector);
         var code = this._categoryCodes[name];
-        if (!code)
+        if (!code) {
+            this._generateCategoryElement(name);
             code = [];
+        }
         if (!(code instanceof Entry.Code))
             code = this._categoryCodes[name] = new Entry.Code(code);
         return code;
@@ -588,24 +590,28 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     p._generateCategoryView = function(data) {
         if (!data) return;
-        var that = this;
 
         for (var i=0; i<data.length; i++) {
             var name = data[i].category;
-            var element = Entry.Dom('li', {
-                id: 'entryCategory' + name,
-                class: 'entryCategoryElementWorkspace',
-                parent: this._categoryCol
-            });
-
-            (function(elem, name){
-                elem.text(Lang.Blocks[name.toUpperCase()]);
-                that._categoryElems[name] = elem;
-                elem.bindOnClick(function(e) {
-                    that.selectMenu(name);
-                });
-            })(element, name);
+            this._generateCategoryElement(name);
         }
+    };
+
+    p._generateCategoryElement = function(name) {
+        var that = this;
+        var element = Entry.Dom('li', {
+            id: 'entryCategory' + name,
+            class: 'entryCategoryElementWorkspace',
+            parent: this._categoryCol
+        });
+
+        (function(elem, name){
+            elem.text(Lang.Blocks[name.toUpperCase()]);
+            that._categoryElems[name] = elem;
+            elem.bindOnClick(function(e) {
+                that.selectMenu(name);
+            });
+        })(element, name);
     };
 
     p.updateOffset = function () {
