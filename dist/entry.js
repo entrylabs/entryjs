@@ -10833,9 +10833,10 @@ Entry.Scene.prototype.generateElement = function(b) {
   }
   Entry.Utils.disableContextmenu(c);
   $(c).on("contextmenu", function() {
-    Entry.ContextMenu.show([{text:Lang.Workspace.duplicate_scene, callback:function() {
+    var a = [{text:Lang.Workspace.duplicate_scene, enable:Entry.engine.isState("stop"), callback:function() {
       Entry.scene.cloneScene(b);
-    }}], "workspace-contextmenu");
+    }}];
+    Entry.ContextMenu.show(a, "workspace-contextmenu");
   });
   return b.view = c;
 };
@@ -13760,6 +13761,7 @@ Entry.VariableContainer.prototype.addVariable = function(b) {
     var a = this.variableAddPanel;
     b = a.view.name.value.trim();
     b && 0 !== b.length || (b = Lang.Workspace.variable);
+    b.length > this._maxNameLength && (b = this._truncName(b, "variable"));
     b = this.checkAllVariableName(b, "variables_") ? Entry.getOrderedName(b, this.variables_, "name_") : b;
     var c = a.info;
     b = {name:b, isCloud:c.isCloud, object:c.object, variableType:"variable"};
@@ -13868,6 +13870,7 @@ Entry.VariableContainer.prototype.addMessage = function(b) {
   this.messages_.unshift(b);
   Entry.playground.reloadPlayground();
   this.updateList();
+  b.listElement.nameField.focus();
   return new Entry.State(this, this.removeMessage, b);
 };
 Entry.VariableContainer.prototype.removeMessage = function(b) {
@@ -13938,6 +13941,7 @@ Entry.VariableContainer.prototype.addList = function(b) {
     b = a.view.name.value.trim();
     b && 0 !== b.length || (b = Lang.Workspace.list);
     var c = a.info;
+    b.length > this._maxNameLength && (b = this._truncName(b, "list"));
     b = this.checkAllVariableName(b, "lists_") ? Entry.getOrderedName(b, this.lists_, "name_") : b;
     b = {name:b, isCloud:c.isCloud, object:c.object, variableType:"list"};
     a.view.addClass("entryRemove");
@@ -14612,6 +14616,12 @@ Entry.VariableContainer.prototype.removeRef = function(b, a) {
 Entry.VariableContainer.prototype._getBlockMenu = function() {
   return Entry.playground.mainWorkspace.getBlockMenu();
 };
+Entry.VariableContainer.prototype._truncName = function(b, a) {
+  b = b.substring(0, this._maxNameLength);
+  Entry.toast.warning(Lang.Workspace[a + "_name_auto_edited_title"], Lang.Workspace[a + "_name_auto_edited_content"]);
+  return b;
+};
+Entry.VariableContainer.prototype._maxNameLength = 10;
 Entry.block.run = {skeleton:"basic", color:"#3BBD70", contents:["this is", "basic block"], func:function() {
 }};
 Entry.block.mutant = {skeleton:"basic", event:"start", color:"#3BBD70", template:"test mutant block", params:[], func:function() {
@@ -16925,16 +16935,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
   b._position = function() {
     var a = this.getAbsolutePosFromDocument();
     a.y += this.box.height / 2;
-    var b = $(document).height(), d = this.optionGroup.height(), e = this.optionGroup.width();
-    if (b < a.y + d) {
-      a.x += this.box.width + 1;
-      var b = this.getAbsolutePosFromBoard(), f = this._blockView.getBoard().svgDom.height(), f = f - (f - b.y);
-      f - 20 < d && this.optionGroup.height(f - f % 20);
-      a.y -= this.optionGroup.height();
+    var b = $(document).height(), d = this.optionGroup.height(), e = this.optionGroup.width() + 20;
+    if (b < a.y + d + 30) {
+      var b = this._blockView.getBoard().svgDom.height(), f = this.getAbsolutePosFromBoard();
+      this._blockView.y < b / 2 ? (a.x += this.box.width / 2 - e / 2, b -= f.y + 30, this.optionGroup.height(b)) : (a.x += this.box.width + 1, b -= b - f.y, b - 30 < d && this.optionGroup.height(b - b % 30), a.y -= this.optionGroup.height());
     } else {
       a.x += this.box.width / 2 - e / 2;
     }
-    this.optionGroup.css({left:a.x, top:a.y, width:e + 20});
+    this.optionGroup.css({left:a.x, top:a.y, width:e});
   };
   b.applyValue = function(a) {
     this.value != a && this.setValue(a);
