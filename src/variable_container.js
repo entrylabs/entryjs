@@ -1023,6 +1023,7 @@ Entry.VariableContainer.prototype.addMessage = function(message) {
     this.messages_.unshift(message);
     Entry.playground.reloadPlayground();
     this.updateList();
+    message.listElement.nameField.focus();
     return new Entry.State(this,
                            this.removeMessage,
                            message);
