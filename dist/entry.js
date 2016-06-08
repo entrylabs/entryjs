@@ -6200,11 +6200,13 @@ Entry.Commander = function(b) {
     a = this.editor.board.code.getThreads().pop().getFirstBlock();
     return [b.unclondeBlock.type, ["blockId", a.id], ["code", this.editor.board.code.stringify()]];
   }, undo:"cloneBlock"};
-  b.scrollBoard = {type:EntryStatic.COMMAND_TYPES.scrollBoard, do:function(a, b) {
-    this.editor.board.scroller._scroll(a, b);
+  b.scrollBoard = {type:EntryStatic.COMMAND_TYPES.scrollBoard, do:function(a, b, d) {
+    d || this.editor.board.scroller._scroll(a, b);
+    delete this.editor.board.scroller._diffs;
   }, state:function(a, b) {
     return [-a, -b];
-  }, log:function(a, b) {
+  }, log:function(a, c) {
+    return [b.scrollBoard.type, ["dx", a], ["dy", c]];
   }, undo:"scrollBoard"};
   b.setFieldValue = {type:EntryStatic.COMMAND_TYPES.setFieldValue, do:function(a, b, d, e, f) {
     b.setValue(f, !0);
@@ -17700,6 +17702,7 @@ Entry.Scroller = function(b, a, c) {
   this.createScrollBar();
   this.setOpacity(0);
   this._bindEvent();
+  this._scrollCommand = _.debounce(Entry.do, 200);
 };
 Entry.Scroller.RADIUS = 7;
 (function(b) {
@@ -17766,7 +17769,11 @@ Entry.Scroller.RADIUS = 7;
       b = Math.max(-h + Entry.BOARD_PADDING - g, b);
       a = Math.min(e.width() - Entry.BOARD_PADDING - f, a);
       b = Math.min(e.height() - Entry.BOARD_PADDING - g, b);
-      Entry.do("scrollBoard", a, b).isPass();
+      this._scroll(a, b);
+      this._diffs || (this._diffs = [0, 0]);
+      this._diffs[0] += a;
+      this._diffs[1] += b;
+      this._scrollCommand("scrollBoard", this._diffs[0], this._diffs[1], !0);
     }
   };
   b._scroll = function(a, b) {

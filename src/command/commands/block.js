@@ -247,18 +247,19 @@ goog.require("Entry.Command");
 
     c.scrollBoard = {
         type: EntryStatic.COMMAND_TYPES.scrollBoard,
-        do: function(dx, dy) {
-            this.editor.board.scroller._scroll(dx, dy);
+        do: function(dx, dy, isPass) {
+            if (!isPass)
+                this.editor.board.scroller._scroll(dx, dy);
+            delete this.editor.board.scroller._diffs;
         },
         state: function(dx, dy) {
             return [-dx, -dy];
         },
         log: function(dx, dy) {
-            return;
-            //return [
-                //c.scrollBoard.type,
-                //['dx', dx], ['dy', dy]
-            //];
+            return [
+                c.scrollBoard.type,
+                ['dx', dx], ['dy', dy]
+            ];
         },
         undo: "scrollBoard"
     };
