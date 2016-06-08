@@ -13766,6 +13766,7 @@ Entry.VariableContainer.prototype.addVariable = function(b) {
     var a = this.variableAddPanel;
     b = a.view.name.value.trim();
     b && 0 !== b.length || (b = Lang.Workspace.variable);
+    b.length > this._maxNameLength && (b = this._truncName(b, "variable"));
     b = this.checkAllVariableName(b, "variables_") ? Entry.getOrderedName(b, this.variables_, "name_") : b;
     var c = a.info;
     b = {name:b, isCloud:c.isCloud, object:c.object, variableType:"variable"};
@@ -13945,6 +13946,7 @@ Entry.VariableContainer.prototype.addList = function(b) {
     b = a.view.name.value.trim();
     b && 0 !== b.length || (b = Lang.Workspace.list);
     var c = a.info;
+    b.length > this._maxNameLength && (b = this._truncName(b, "list"));
     b = this.checkAllVariableName(b, "lists_") ? Entry.getOrderedName(b, this.lists_, "name_") : b;
     b = {name:b, isCloud:c.isCloud, object:c.object, variableType:"list"};
     a.view.addClass("entryRemove");
@@ -14619,6 +14621,12 @@ Entry.VariableContainer.prototype.removeRef = function(b, a) {
 Entry.VariableContainer.prototype._getBlockMenu = function() {
   return Entry.playground.mainWorkspace.getBlockMenu();
 };
+Entry.VariableContainer.prototype._truncName = function(b, a) {
+  b = b.substring(0, this._maxNameLength);
+  Entry.toast.warning(Lang.Workspace[a + "_name_auto_edited_title"], Lang.Workspace[a + "_name_auto_edited_content"]);
+  return b;
+};
+Entry.VariableContainer.prototype._maxNameLength = 10;
 Entry.block.run = {skeleton:"basic", color:"#3BBD70", contents:["this is", "basic block"], func:function() {
 }};
 Entry.block.mutant = {skeleton:"basic", event:"start", color:"#3BBD70", template:"test mutant block", params:[], func:function() {
