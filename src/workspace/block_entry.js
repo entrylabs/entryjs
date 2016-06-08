@@ -17317,7 +17317,7 @@ Entry.block = {
                 ["조이스틱 X", "JOYSX"],
                 ["조이스틱 Y", "JOYSY"]
             ],
-            "value": "ADJU",
+            "value": "INFR",
             "fontSize": 11,
             'arrowColor': EntryStatic.ARROW_COLOR_HW
         }],
@@ -17660,72 +17660,72 @@ Entry.block = {
         "class": "dplay_set",
         "isNotFor": ["dplay"],
         "func": function (sprite, script) {
-          var port = script.getField("PORT");
-          if (!script.isStart) {
-            script.isStart = true;
-            script.timeFlag = 1;
-            var timeValue = 50;
-            var timer = setTimeout(function() {
-              script.timeFlag = 2;
-              Entry.dplay.removeTimeout(timer);
-            }, timeValue);
-            Entry.dplay.timeouts.push(timer);
-            return script;
-          } else if (script.timeFlag == 1) {
-            Entry.hw.setDigitalPortValue(3, 0);
-            Entry.hw.setDigitalPortValue(5, 0);
-            Entry.hw.setDigitalPortValue(6, 0);
-            Entry.hw.setDigitalPortValue(11, 0);
-            return script;
-          } else if (script.timeFlag == 2) {
           var port1 = 0;
           var port2 = 0;
           var port3 = 0;
           var port4 = 0;
+          var value1 = 0;
+          var value2 = 0;
+          var result = 0;
+          var port = script.getField("PORT");
           if (port == "1") {
-            port1 = 3; port2 = 5;
+              port1 = 3; port2 = 5;
           }
           else if (port == "2") {
-            port1 = 11; port2 = 6;
+              port1 = 11; port2 = 6;
           }
           else if (port == "3") {
-            port1 = 3; port2 = 5; port3 = 11; port4 = 6;
+              port1 = 3; port2 = 5; port3 = 11; port4 = 6;
           }
-            var operator = script.getNumberValue("VALUE", script);
-            operator = Math.max(operator, -100);
-            operator = Math.min(operator, 100);
-            var value1 = 0;
-            var value2 = 0;
-            var result = 0;
-            if (operator == 0) {
-                value1 = 0;
-                value2 = 0;
-                Entry.dplay.vel_value = value2;
-            }
-            else if (operator > 0) {
-                result = operator + 155;
-                result = Math.round(result);
-                value1 = 0;
-                value2 = result;
-                Entry.dplay.vel_value = value2;
-            }
-            else if (operator < 0) {
-                result = operator - 155;
-                result = Math.round(result);
-                value1 = -result;
-                value2 = 0;
-                Entry.dplay.vel_value = value1;
-            }
-            Entry.hw.setDigitalPortValue(port1, value1);
-            Entry.hw.setDigitalPortValue(port2, value2);
-            Entry.hw.setDigitalPortValue(port3, value1);
-            Entry.hw.setDigitalPortValue(port4, value2);
-            delete script.isStart;
-            delete script.timeFlag;
-            Entry.engine.isContinue = false;
-            return script.callReturn();
-        }
-      }
+          var operator = script.getNumberValue("VALUE", script);
+          operator = Math.max(operator, -100);
+          operator = Math.min(operator, 100);
+          if (operator == 0) {
+              value1 = 0;
+              value2 = 0;
+              Entry.dplay.vel_value = value2;
+          }
+          else if (operator > 0) {
+              result = operator + 155;
+              result = Math.round(result);
+              value1 = 0;
+              value2 = result;
+              Entry.dplay.vel_value = value2;
+          }
+          else if (operator < 0) {
+              result = operator - 155;
+              result = Math.round(result);
+              value1 = -result;
+              value2 = 0;
+              Entry.dplay.vel_value = value1;
+          }
+          if (!script.isStart) {
+              script.isStart = true;
+              script.timeFlag = 1;
+              var timeValue = 50;
+              var timer = setTimeout(function() {
+                script.timeFlag = 2;
+                Entry.dplay.removeTimeout(timer);
+              }, timeValue);
+              Entry.dplay.timeouts.push(timer);
+              return script;
+          } else if (script.timeFlag == 1) {
+              Entry.hw.setDigitalPortValue(3, 0);
+              Entry.hw.setDigitalPortValue(5, 0);
+              Entry.hw.setDigitalPortValue(6, 0);
+              Entry.hw.setDigitalPortValue(11, 0);
+              return script;
+          } else if (script.timeFlag == 2) {
+              Entry.hw.setDigitalPortValue(port1, value1);
+              Entry.hw.setDigitalPortValue(port2, value2);
+              Entry.hw.setDigitalPortValue(port3, value1);
+              Entry.hw.setDigitalPortValue(port4, value2);
+              delete script.isStart;
+              delete script.timeFlag;
+              Entry.engine.isContinue = false;
+              return script.callReturn();
+          }
+       }
     },
     "dplay_buzzer": {
         "color": "#00979D",
@@ -17871,7 +17871,7 @@ Entry.block = {
         }
     },
     "dplay_Robot_run": {
-        "color": "#00979D",
+        "color": "#005766",
         "fontColor": "#FFF",
         "skeleton": "basic",
         "statements": [],
@@ -17912,18 +17912,19 @@ Entry.block = {
             var value2 = 0;
             var value3 = 0;
             var value4 = 0;
-            var temp = Entry.dplay.vel_value;
+            var temp_Left = Entry.dplay.Left_value;
+            var temp_Right = Entry.dplay.Right_value;
             if(port == "1") {
-              value1 = 0; value2 = temp; value3 = temp; value4 = 0;
+              value1 = 0; value2 = temp_Left; value3 = temp_Right; value4 = 0;
             }
             else if(port == "2") {
-              value1 = temp; value2 = 0; value3 = 0; value4 = temp;
+              value1 = temp_Left; value2 = 0; value3 = 0; value4 = temp_Right;
             }
             else if(port == "3") {
-              value1 = 0; value2 = temp; value3 = 0; value4 = 0;
+              value1 = 0; value2 = temp_Left; value3 = 0; value4 = 0;
             }
             else if(port == "4") {
-              value1 = 0; value2 = 0; value3 = temp; value4 = 0;
+              value1 = 0; value2 = 0; value3 = temp_Right; value4 = 0;
             }
             Entry.hw.setDigitalPortValue(port1, value1);
             Entry.hw.setDigitalPortValue(port2, value2);
@@ -17933,7 +17934,7 @@ Entry.block = {
         }
     },
     "dplay_Robot_run_sec": {
-        "color": "#00979D",
+        "color": "#005766",
         "fontColor": "#FFF",
         "skeleton": "basic",
         "statements": [],
@@ -17980,7 +17981,8 @@ Entry.block = {
             var value2 = 0;
             var value3 = 0;
             var value4 = 0;
-            var temp = Entry.dplay.vel_value;
+            var temp_Left = Entry.dplay.Left_value;
+            var temp_Right = Entry.dplay.Right_value;
             var port = script.getField("PORT");
             if (!script.isStart) {
               script.isStart = true;
@@ -17994,16 +17996,16 @@ Entry.block = {
               return script;
             } else if (script.timeFlag == 1) {
              if(port == "1") {
-                value1 = 0; value2 = temp; value3 = temp; value4 = 0;
+                value1 = 0; value2 = temp_Left; value3 = temp_Right; value4 = 0;
               }
               else if(port == "2") {
-                value1 = temp; value2 = 0; value3 = 0; value4 = temp;
+                value1 = temp_Left; value2 = 0; value3 = 0; value4 = temp_Right;
               }
               else if(port == "3") {
-                value1 = 0; value2 = temp; value3 = 0; value4 = 0;
+                value1 = 0; value2 = temp_Left; value3 = 0; value4 = 0;
               }
               else if(port == "4") {
-                value1 = 0; value2 = 0; value3 = temp; value4 = 0;
+                value1 = 0; value2 = 0; value3 = temp_Right; value4 = 0;
               }
               Entry.hw.setDigitalPortValue(port1, value1);
               Entry.hw.setDigitalPortValue(port2, value2);
@@ -18023,7 +18025,7 @@ Entry.block = {
         }
     },
     "dplay_robot_speed_sel": {
-        "color": "#00979D",
+        "color": "#005766",
         "fontColor": "#FFF",
         "skeleton": "basic",
         "statements": [],
@@ -18065,71 +18067,237 @@ Entry.block = {
             var port2 = 0;
             var port3 = 0;
             var port4 = 0;
+            var value1 = 0;
+            var value2 = 0;
+            var value3 = 0;
+            var value4 = 0;
+            var result = 0;
             var port = script.getField("PORT");
-            if (!script.isStart) {
-              script.isStart = true;
-              script.timeFlag = 1;
-              var timeValue = 50;
-              var timer = setTimeout(function() {
-                script.timeFlag = 2;
-                Entry.dplay.removeTimeout(timer);
-              }, timeValue);
-              Entry.dplay.timeouts.push(timer);
-              return script;
-            } else if (script.timeFlag == 1) {
-              Entry.hw.setDigitalPortValue(3, 0);
-              Entry.hw.setDigitalPortValue(5, 0);
-              Entry.hw.setDigitalPortValue(6, 0);
-              Entry.hw.setDigitalPortValue(11, 0);
-              return script;
-            } else if (script.timeFlag == 2) {
-              if (port == "1") {
-              port1 = 3; port2 = 5;
-              }
-              else if (port == "2") {
-              port1 = 11; port2 = 6;
-              }
-              else if (port == "3") {
-              port1 = 3; port2 = 5; port3 = 11; port4 = 6;
-              }
-              var operator = script.getNumberValue("VALUE", script);
-              operator = Math.max(operator, -100);
-              operator = Math.min(operator, 100);
-              var value1 = 0;
-              var value2 = 0;
-              var result = 0;
-              if (operator == 0) {
-                  value1 = 0;
-                  value2 = 0;
-                  Entry.dplay.vel_value = value2;
-              }
-              else if (operator > 0) {
+            var operator = script.getNumberValue("VALUE", script);
+            operator = Math.max(operator, -100);
+            operator = Math.min(operator, 100);
+            if (port == "1") {
+                   port1 = 3; port2 = 5;
+                   if(operator > 0) {
+                     result = operator + 155;
+                     result = Math.round(result);
+                     value1 = 0;
+                     value2 = result;
+                     Entry.dplay.Left_value = value2;
+                   }
+                   else if (operator < 0) {
+                     result = operator - 155;
+                     result = Math.round(result);
+                     value1 = -result;
+                     value2 = 0;
+                     Entry.dplay.Left_value = value1;
+                   }
+                   else if( operator == 0) {
+                     value1 = 0;
+                     value2 = 0;
+                     Entry.dplay.Left_value = 0;
+                   }
+            }
+            if (port == "2") {
+                  port3 = 6; port4 = 11;
+                  if(operator > 0) {
+                    result = operator + 155;
+                    result = Math.round(result);
+                    value3 = 0;
+                    value4 = result;
+                    Entry.dplay.Right_value = value4;
+                  }
+                  else if (operator < 0) {
+                    result = operator - 155;
+                    result = Math.round(result);
+                    value3 = -result;
+                    value4 = 0;
+                    Entry.dplay.Right_value = value3;
+                  }
+                  else if( operator == 0) {
+                    value3 = 0;
+                    value4 = 0;
+                    Entry.dplay.Right_value = value3;
+                  }
+            }
+            if (port == "3") {
+                port1 = 3; port2 = 5; port3 = 6; port4 = 11;
+                if(operator > 0) {
                   result = operator + 155;
                   result = Math.round(result);
                   value1 = 0;
                   value2 = result;
-                  Entry.dplay.vel_value = value2;
-              }
-              else if (operator < 0) {
+                  value3 = 0;
+                  value4 = result;
+                  Entry.dplay.Left_value = value2;
+                  Entry.dplay.Right_value = value4;
+                }
+                else if (operator < 0) {
                   result = operator - 155;
                   result = Math.round(result);
                   value1 = -result;
                   value2 = 0;
-                  Entry.dplay.vel_value = value1;
+                  value3 = -result;
+                  value4 = 0;
+                  Entry.dplay.Left_value = value1;
+                  Entry.dplay.Right_value = value3;
+                }
+                else if(operator == 0){
+                  value1 = 0;
+                  value2 = 0;
+                  value3 = 0;
+                  value4 = 0;
+                  Entry.dplay.Left_value = 0;
+                  Entry.dplay.Right_value = 0;
+                }
+            }
+            if (!script.isStart) {
+                  script.isStart = true;
+                  script.timeFlag = 1;
+                  var timeValue = 50;
+                  var timer = setTimeout(function() {
+                    script.timeFlag = 2;
+                    Entry.dplay.removeTimeout(timer);
+                  }, timeValue);
+                  Entry.dplay.timeouts.push(timer);
+                  return script;
+            } else if (script.timeFlag == 1) {
+                  Entry.hw.setDigitalPortValue(3, 0);
+                  Entry.hw.setDigitalPortValue(5, 0);
+                  Entry.hw.setDigitalPortValue(6, 0);
+                  Entry.hw.setDigitalPortValue(11, 0);
+                  return script;
+            } else if (script.timeFlag == 2) {
+                  Entry.hw.setDigitalPortValue(port1, value1);
+                  Entry.hw.setDigitalPortValue(port2, value2);
+                  Entry.hw.setDigitalPortValue(port3, value4);
+                  Entry.hw.setDigitalPortValue(port4, value3);
+                  delete script.isStart;
+                  delete script.timeFlag;
+                  Entry.engine.isContinue = false;
+                  return script.callReturn();
               }
-              Entry.hw.setDigitalPortValue(port1, value1);
-              Entry.hw.setDigitalPortValue(port2, value2);
-              Entry.hw.setDigitalPortValue(port3, value1);
-              Entry.hw.setDigitalPortValue(port4, value2);
-              delete script.isStart;
-              delete script.timeFlag;
-              Entry.engine.isContinue = false;
-              return script.callReturn();
+          }
+    },
+    "dplay_robot_speed_set": {
+        "color": "#005766",
+        "fontColor": "#FFF",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "오른쪽 바퀴 %1 왼쪽 바퀴 %2(으)로 정하기 %3",
+        "params": [{
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params":  [{
+                "type": "text",
+                "params": ["100"]
+            }, {
+                "type": "text",
+                "params": ["100"]
+            }, null],
+            "type": "dplay_robot_speed_set"
+        },
+        "paramsKeyMap": {
+            "R_VALUE": 0,
+            "L_VALUE": 1
+        },
+        "class": "dplay_robot",
+        "isNotFor": ["dplay"],
+        "func": function (sprite, script) {
+            var port1 = 3;
+            var port2 = 5;
+            var port3 = 6;
+            var port4 = 11;
+            var value1 = 0;
+            var value2 = 0;
+            var value3 = 0;
+            var value4 = 0;
+            var result_R = 0;
+            var result_L = 0;
+            var value_L = script.getNumberValue("L_VALUE", script);
+            value_L = Math.max(value_L, -100);
+            value_L = Math.min(value_L, 100);
+            if(value_L > 0) {
+              result_L = value_L + 155;
+              result_L = Math.round(result_L);
+              value1 = 0;
+              value2 = result_L;
+              Entry.dplay.Left_value = value2;
+            }
+            else if (value_L < 0) {
+              result_L = value_L - 155;
+              result_L = Math.round(result_L);
+              value1 = -result_L;
+              value2 = 0;
+              Entry.dplay.Left_value = value1;
+            }
+            else if(value_L == 0){
+              value1 = 0;
+              value2 = 0;
+              Entry.dplay.Left_value = 0;
+            }
+            var value_R = script.getNumberValue("R_VALUE", script);
+            value_R = Math.max(value_R, -100);
+            value_R = Math.min(value_R, 100);
+            if(value_R > 0) {
+              result_R = value_R + 155;
+              result_R = Math.round(result_R);
+              value3 = 0;
+              value4 = result_R;
+              Entry.dplay.Right_value = value4;
+            }
+            else if (value_R < 0) {
+              result_R = value_R - 155;
+              result_R = Math.round(result_R);
+              value3 = -result_R;
+              value4 = 0;
+              Entry.dplay.Right_value = value3;
+            }
+            else if(value_R == 0){
+              value3 = 0;
+              value4 = 0;
+              Entry.dplay.Right_value = 0;
+            }
+            if (!script.isStart) {
+                  script.isStart = true;
+                  script.timeFlag = 1;
+                  var timeValue = 50;
+                  var timer = setTimeout(function() {
+                    script.timeFlag = 2;
+                    Entry.dplay.removeTimeout(timer);
+                  }, timeValue);
+                  Entry.dplay.timeouts.push(timer);
+                  return script;
+            } else if (script.timeFlag == 1) {
+                  Entry.hw.setDigitalPortValue(3, 0);
+                  Entry.hw.setDigitalPortValue(5, 0);
+                  Entry.hw.setDigitalPortValue(6, 0);
+                  Entry.hw.setDigitalPortValue(11, 0);
+                  return script;
+            } else if (script.timeFlag == 2) {
+                  Entry.hw.setDigitalPortValue(port1, value1);
+                  Entry.hw.setDigitalPortValue(port2, value2);
+                  Entry.hw.setDigitalPortValue(port3, value4);
+                  Entry.hw.setDigitalPortValue(port4, value3);
+                  delete script.isStart;
+                  delete script.timeFlag;
+                  Entry.engine.isContinue = false;
+                  return script.callReturn();
               }
           }
     },
     "dplay_robot_stop": {
-        "color": "#00979D",
+        "color": "#005766",
         "fontColor": "#FFF",
         "skeleton": "basic",
         "statements": [],

@@ -296,6 +296,7 @@ EntryStatic.getAllBlocks = function() {
                 "dplay_Robot_run",
                 "dplay_Robot_run_sec",
                 "dplay_robot_speed_sel",
+                "dplay_robot_speed_set",
                 "dplay_robot_stop",
                 //nemoino
                 "nemoino_get_number_sensor_value",
