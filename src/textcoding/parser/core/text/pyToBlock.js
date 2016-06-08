@@ -287,16 +287,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.Literal = function(component, paramMeta, paramDefMeta, aflag) {
         console.log("Literal component", component, "paramMeta", paramMeta, "paramDefMeta", paramDefMeta, "aflag", aflag);
-
         var result;
-
         var value = component.value;
 
         console.log("Literal value", value);
 
         if(!paramMeta) {
-           var paramMeta = { type: "Block" };
-
+            var paramMeta = { type: "Block" };
             if(!paramDefMeta) {
                 if(typeof value == "number")
                     var paramDefMeta = { type: "number" };
@@ -304,7 +301,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     var paramDefMeta = { type: "text" };
             }
         }
-
 
         if(paramMeta.type == "Indicator") { 
             var param = null;
@@ -318,15 +314,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         console.log("Literal paramMeta", paramMeta, "paramDefMeta", paramDefMeta);
 
-
         if(component.value != null) {
             var params = this['Param'+paramMeta.type](value, paramMeta, paramDefMeta);
-
             console.log("Literal param", param);
-    
             result = params;
         } else {
-            // Literal doesn't have value
+            // If 'Literal' doesn't have value
             var params = [];
             var leftParam = this[component.left.type](component.left);
             params.push(leftParam);
@@ -337,12 +330,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             result = params;
         }
-        
         console.log("Literal result", result);
         
         return result;
     };
-
 
 
     p.ParamBlock = function(value, paramMeta, paramDefMeta) {
@@ -393,6 +384,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     };
 
+    p.ParamAngle = function (value, paramMeta, paramDefMeta) {
+        var result;
+
+        result = value;
+
+        return result;
+    };
+
     p.ParamTextInput = function(value, paramMeta, paramDefMeta) {
         var result;
 
@@ -425,9 +424,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 break;
             }
         }
-        
         result = String(result);
-        
         console.log("ParamDropdown result", result);
 
         return result; 
@@ -464,10 +461,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.ParamKeyboard = function(value, paramMeta, paramDefMeta) {
         console.log("ParamKeyboard value, paramMeta", value, paramMeta);
         var result;
+
         result = Entry.KeyboardCode.prototype.keyCharToCode[value];
-
         console.log("ParamKeyboard result", result);
-
         return result;
     };
 
@@ -479,29 +475,22 @@ Entry.PyToBlockParser = function(blockSyntax) {
         return result;
     };
 
-    
-
     p.MemberExpression = function(component) {
         console.log("MemberExpression component", component);
-
         var result;
         var data = {}
         var object = component.object;
-
         var property = component.property;
-
         var objectData = this[object.type](object);
         var propertyData = this[property.type](property);
 
         console.log("MemberExpression objectData", objectData);
         console.log("MemberExpression propertyData", propertyData);
         
-        data.object = objectData;
-        
+        data.object = objectData;      
         data.property = propertyData;
 
         result = data;
-
         console.log("MemberExpression result", result);
 
         return result;
@@ -572,16 +561,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 
         var statements = [];
         var body = component.body;
-
-       /* console.log("WhileStatement bodies", bodies);
-        
-        for(var index in bodies) {
-            var body = bodies[index];
-            console.log("WhileStatement body", body);
-            var bodyData = this[body.type](body);
-            statements.push(bodyData);
-        }*/
-
         var bodyData = this[body.type](body);
 
         console.log("WhileStatement bodyData", bodyData);
@@ -604,11 +583,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         var params = [];
         var statements = [];
-
         var data = [];
 
         var bodies = component.body;
-
         console.log("BlockStatement bodies", bodies);
         
         for(var i in bodies) {

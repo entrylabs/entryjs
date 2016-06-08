@@ -11611,10 +11611,12 @@ Entry.BlockToPyParser = function(b) {
     return b;
   };
   b.Block = function(a) {
-    if (!a._schema || !a._schema.syntax) {
+    if (!a._schema) {
       return "";
     }
     var b = a._schema.syntax.py[0];
+    "func" == a.data.type.substring(0, 4) && (b = a._schema.template.trim());
+    console.log("Block Syntax", b);
     if (!b || null == b) {
       return "";
     }
@@ -11886,6 +11888,9 @@ Entry.PyToBlockParser = function(b) {
     b.params = f;
     console.log("ParamBlock result", b);
     return b;
+  };
+  b.ParamAngle = function(a, b, c) {
+    return a;
   };
   b.ParamTextInput = function(a, b, c) {
     return a;
@@ -12617,7 +12622,7 @@ Entry.Parser = function(b, a, d) {
           console.log("result", c);
         } catch (l) {
           if (this.codeMirror) {
-            throw Entry.toast.alert("[\ube14\ub85d \ubcc0\ud658 \uc624\ub958]", l.message), document.getElementById("entryCodingModeSelector").value = "2", l;
+            throw Entry.toast.alert("[\ud14d\uc2a4\ud2b8\ucf54\ub529(\ud30c\uc774\uc36c) \ubcc0\uc624\ub958]", l.message), document.getElementById("entryCodingModeSelector").value = "2", l;
           }
           c = [];
         }

@@ -9862,7 +9862,7 @@ Entry.block = {
                 dX /= script.frameCount;
                 dY /= script.frameCount;
                 sprite.setX(sprite.getX() + dX);
-                sprite.setY(sprite.getY() + dY);
+                sprite.setY(sprite.getY() + dY);환
                 script.frameCount--;
                 if (sprite.brush && !sprite.brush.stop) {
                     sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);
@@ -9874,7 +9874,7 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["self.move_xy_for_seconds(%1, %2, %3)"]}
+        "syntax": {"js": [], "py": ["self.locate_xy_for_seconds(%1, %2, %3)"]}
     },
     "rotate_by_angle": {
         "color": "#A751E3",
@@ -14633,7 +14633,7 @@ Entry.block = {
             sprite.setText(text);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": [""]}
+        "syntax": {"js": [], "py": ["Entry.write_text(%1)"]}
     },
     "text_append": {
         "color": "#FFCA36",
@@ -14666,7 +14666,7 @@ Entry.block = {
                            Entry.convertToRoundedDecimals(text, 3));
                            return script.callReturn();
         },
-        "syntax": {"js": [], "py": [""]}
+        "syntax": {"js": [], "py": ["Entry.append_text(%1)"]}
     },
     "text_prepend": {
         "color": "#FFCA36",
@@ -14699,7 +14699,7 @@ Entry.block = {
                            Entry.convertToRoundedDecimals(sprite.getText(), 3));
                            return script.callReturn();
         },
-        "syntax": {"js": [], "py": [""]}
+        "syntax": {"js": [], "py": ["Entry.prepend_text(%1)"]}
     },
     "text_flush": {
         "color": "#FFCA36",
@@ -14717,7 +14717,7 @@ Entry.block = {
             sprite.setText('');
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": [""]}
+        "syntax": {"js": [], "py": ["Entry.erase_all_text()"]}
     },
     "variableAddButton": {
         "skeleton": "basic_button",

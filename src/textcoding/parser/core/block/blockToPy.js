@@ -65,9 +65,15 @@ Entry.BlockToPyParser = function(blockSyntax) {
     };
 
     p.Block = function(block) {
-        if(!block._schema || !block._schema.syntax)
+        if(!block._schema)
             return "";
         var syntax = block._schema.syntax.py[0];
+        // User Function
+        var prefix = block.data.type.substring(0, 4);
+        if(prefix == "func")
+            syntax = block._schema.template.trim();
+
+        console.log("Block Syntax", syntax);
         if(!syntax || syntax == null)
             return "";
         var blockReg = /(%.)/mi;
