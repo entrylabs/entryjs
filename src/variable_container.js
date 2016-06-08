@@ -772,6 +772,7 @@ Entry.VariableContainer.prototype.checkAllVariableName = function(name,variable)
     }
     return false;
 };
+
 Entry.VariableContainer.prototype.addVariable = function(variable) {
     if (!variable) {
         var variableContainer = this;
@@ -779,6 +780,9 @@ Entry.VariableContainer.prototype.addVariable = function(variable) {
         var name = panel.view.name.value.trim();
         if (!name || name.length === 0)
             name = Lang.Workspace.variable;
+
+        if (name.length > this._maxNameLength)
+            name = this._truncName(name, 'variable');
 
         name = this.checkAllVariableName(name,'variables_') ? Entry.getOrderedName(name, this.variables_, 'name_') : name;
         var info = panel.info;
@@ -1162,6 +1166,10 @@ Entry.VariableContainer.prototype.addList = function(list) {
             name = Lang.Workspace.list;
 
         var info = panel.info;
+
+        if (name.length > this._maxNameLength)
+            name = this._truncName(name, 'list');
+
         name = this.checkAllVariableName(name, 'lists_') ? Entry.getOrderedName(name, this.lists_, 'name_') : name;
         list = {
             name: name,
@@ -2277,3 +2285,18 @@ Entry.VariableContainer.prototype.removeRef = function(type, block) {
 Entry.VariableContainer.prototype._getBlockMenu = function() {
     return Entry.playground.mainWorkspace.getBlockMenu();
 };
+
+Entry.VariableContainer.prototype._truncName = function(name, type) {
+    name = name.substring(0, this._maxNameLength);
+    if (type == 'variable') str = '변수';
+    else str = '리스트';
+
+    Entry.toast.warning(
+        '%1 이름 자동 변경'.replace('%1', str),
+        '%1의 이름은 10글자를 넘을 수 없습니다.'.replace('%1', str)
+    );
+
+    return name;
+};
+
+Entry.VariableContainer.prototype._maxNameLength = 10;
