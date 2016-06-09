@@ -856,8 +856,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(c, d);
+  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
   return a.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1057,8 +1057,8 @@ Blockly.Blocks.dplay_select_led = {init:function() {
 Entry.block.dplay_select_led = function(b, a) {
   var c = a.getField("PORT"), d = 7;
   "7" == c ? d = 7 : "8" == c ? d = 8 : "9" == c ? d = 9 : "10" == c && (d = 10);
-  c = "on" == a.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(d, c);
+  c = a.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(d, "on" == c ? 255 : 0);
   return a.callReturn();
 };
 Blockly.Blocks.dplay_get_switch_status = {init:function() {
@@ -2068,10 +2068,10 @@ Entry.block.wait_second = function(b, a) {
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
+  var c = a.getNumberValue("SECOND", a);
   setTimeout(function() {
     a.timeFlag = 0;
-  }, c);
+  }, 60 / (Entry.FPS || 60) * c * 1E3);
   return a;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -8608,7 +8608,9 @@ Entry.EntryObject.prototype.getLock = function() {
   return this.lock;
 };
 Entry.EntryObject.prototype.setLock = function(b) {
-  return this.lock = b;
+  this.lock = b;
+  Entry.stage.updateObject();
+  return b;
 };
 Entry.EntryObject.prototype.updateInputViews = function(b) {
   b = b || this.getLock();
@@ -10509,12 +10511,9 @@ Entry.PropertyPanel = function() {
     this._view = Entry.Dom("div", {class:"propertyPanel", parent:$(a)});
     this._tabView = Entry.Dom("div", {class:"propertyTab", parent:this._view});
     this._contentView = Entry.Dom("div", {class:"propertyContent", parent:this._view});
-    var d = Entry.createElement("div");
-    d.addClass("entryObjectSelectedImgWorkspace");
-    this.selectedImgView_ = d;
-    this._view.append(d);
+    this._cover = Entry.Dom("div", {classes:["propertyPanelCover", "entryRemove"], parent:this._view});
+    var d = Entry.Dom("div", {class:"entryObjectSelectedImgWorkspace", parent:this._view});
     this.initializeSplitter(d);
-    this.splitter = d;
   };
   b.addMode = function(a, b) {
     var d = b.getView(), d = Entry.Dom(d, {parent:this._contentView}), e = Entry.Dom("<div>" + Lang.Menus[a] + "</div>", {classes:["propertyTabElement", "propertyTab" + a], parent:this._tabView}), f = this;
@@ -10531,7 +10530,8 @@ Entry.PropertyPanel = function() {
     this._view.css({width:a + "px", top:9 * a / 16 + 123 - 22 + "px"});
     430 <= a ? this._view.removeClass("collapsed") : this._view.addClass("collapsed");
     Entry.dispatchEvent("windowResized");
-    (a = this.modes[this.selected].obj.resize) && "hw" != this.selected ? a() : "hw" == this.selected && this.modes.hw.obj.listPorts ? this.modes[this.selected].obj.resizeList() : "hw" == this.selected && this.modes[this.selected].obj.resize();
+    a = this.selected;
+    "hw" == a ? this.modes.hw.obj.listPorts ? this.modes[a].obj.resizeList() : this.modes[a].obj.resize() : this.modes[a].obj.resize();
   };
   b.select = function(a) {
     for (var b in this.modes) {
@@ -10548,16 +10548,18 @@ Entry.PropertyPanel = function() {
     this.selected = a;
   };
   b.initializeSplitter = function(a) {
-    a.onmousedown = function(a) {
+    var b = this;
+    a.bind("mousedown touchstart", function(a) {
+      b._cover.removeClass("entryRemove");
       Entry.container.disableSort();
       Entry.container.splitterEnable = !0;
       Entry.documentMousemove && (Entry.container.resizeEvent = Entry.documentMousemove.attach(this, function(a) {
         Entry.container.splitterEnable && Entry.resizeElement({canvasWidth:a.clientX || a.x});
       }));
-    };
-    document.addEventListener("mouseup", function(a) {
+    });
+    $(document).bind("mouseup touchend", function(a) {
       if (a = Entry.container.resizeEvent) {
-        Entry.container.splitterEnable = !1, Entry.documentMousemove.detach(a), delete Entry.container.resizeEvent;
+        Entry.container.splitterEnable = !1, Entry.documentMousemove.detach(a), b._cover.addClass("entryRemove"), delete Entry.container.resizeEvent;
       }
       Entry.container.enableSort();
     });
@@ -12334,7 +12336,7 @@ Entry.Utils.stopProjectWithToast = function(b, a) {
   a = a || "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec \ubc1c\uc0dd";
   Entry.toast && Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.check_runtime_error, !0);
   Entry.engine && Entry.engine.toggleStop();
-  "workspace" === Entry.type && (Entry.container.selectObject(b.getCode().object.id), b.view.getBoard().activateBlock(b));
+  "workspace" === Entry.type && (Entry.container.selectObject(b.getCode().object.id, !0), b.view.getBoard().activateBlock(b));
   throw Error(a);
 };
 Entry.Model = function(b, a) {
