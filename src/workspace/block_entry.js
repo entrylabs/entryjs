@@ -3035,10 +3035,10 @@ Entry.block = {
         "class": "condition",
         "isNotFor": [ "bitbrick" ],
         "func": function (sprite, script) {
-            var value = script.getNumberValue("VALUE") + 1;
+            var value = Entry.Bitbrick.servoMaxValue - (script.getNumberValue("VALUE") + 1);
             value = Math.min(value, Entry.Bitbrick.servoMaxValue);
             value = Math.max(value, Entry.Bitbrick.servoMinValue);
-            Entry.hw.sendQueue[script.getStringField("PORT")] = Entry.Bitbrick.servoMaxValue - value;
+            Entry.hw.sendQueue[script.getStringField("PORT")] = value;
             return script.callReturn();
         }
     },
