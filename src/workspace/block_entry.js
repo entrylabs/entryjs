@@ -1903,6 +1903,49 @@ Entry.block = {
             return Math.round(result);
         }
     },
+    "arduino_ext_get_analog_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        'template': "%1 번 아날로그 읽기",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "A0", "0" ],
+                    [ "A1", "1" ],
+                    [ "A2", "2" ],
+                    [ "A3", "3" ],
+                    [ "A4", "4" ],
+                    [ "A5", "5" ]
+                ],
+                "value": "0",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "arduino_ext_get_analog_value"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "ArduinoExt",
+        "isNotFor": [ "ArduinoExt" ],
+        "func": function (sprite, script) {
+            var port = script.getField("PORT", script);
+            if(!Array.isArray(Entry.hw.sendQueue['GET'])) {
+                Entry.hw.sendQueue['GET'] = [];
+            }
+            Entry.hw.sendQueue['GET'] = {
+                type: Entry.ArduinoExt.sensorTypes.ANALOG,
+                port: port
+            };
+            return Entry.hw.portData.ANALOG[port] || 0;
+        }
+    },
     "sensorBoard_get_named_sensor_value": {
         "color": "#00979D",
         "fontColor": "#fff",

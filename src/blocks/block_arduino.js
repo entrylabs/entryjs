@@ -39,6 +39,28 @@ Entry.Arduino = {
     }
 };
 
+Entry.ArduinoExt = {
+    name: 'ArduinoExt',
+    setZero: function () {
+        Entry.hw.sendQueue = {
+            GET: [],
+            SET: [],
+            RESET: []
+        }
+    },
+    sensorTypes: {
+        ALIVE: 0,
+        DIGITAL: 1,
+        ANALOG: 2,
+        PWM: 3,
+        SERVO_PIN: 4,
+        TONE: 5,
+        PULSEIN: 6,
+        ULTRASONIC: 7,
+        TIMER: 8
+    }
+}
+
 Entry.SensorBoard = {
     name: 'sensorBoard',
     setZero: Entry.Arduino.setZero

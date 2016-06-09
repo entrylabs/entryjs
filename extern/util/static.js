@@ -276,6 +276,9 @@ EntryStatic.getAllBlocks = function() {
                 "arduino_toggle_led",
                 "arduino_toggle_pwm",
                 "arduino_convert_scale",
+                //arduinoExt
+                // "arduino_ext_get_digital_value",
+                "arduino_ext_get_analog_value",
                 //dplay
                 "dplay_get_number_sensor_value",
                 "dplay_get_value",
