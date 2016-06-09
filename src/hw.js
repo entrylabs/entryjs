@@ -215,7 +215,7 @@ p.closeConnection = function() {
 };
 
 p.downloadConnector = function() {
-    var url = "http://download.play-entry.org/apps/Entry_HW_1.5.3_Setup.exe";
+    var url = "http://download.play-entry.org/apps/Entry_HW_1.5.4_Setup.exe";
     var win = window.open(url, '_blank');
     win.focus();
 };
