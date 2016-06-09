@@ -12336,7 +12336,7 @@ Entry.Utils.stopProjectWithToast = function(b, a) {
   a = a || "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec \ubc1c\uc0dd";
   Entry.toast && Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.check_runtime_error, !0);
   Entry.engine && Entry.engine.toggleStop();
-  "workspace" === Entry.type && (Entry.container.selectObject(b.getCode().object.id), b.view.getBoard().activateBlock(b));
+  "workspace" === Entry.type && (Entry.container.selectObject(b.getCode().object.id, !0), b.view.getBoard().activateBlock(b));
   throw Error(a);
 };
 Entry.Model = function(b, a) {
