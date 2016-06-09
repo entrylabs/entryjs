@@ -10511,12 +10511,9 @@ Entry.PropertyPanel = function() {
     this._view = Entry.Dom("div", {class:"propertyPanel", parent:$(a)});
     this._tabView = Entry.Dom("div", {class:"propertyTab", parent:this._view});
     this._contentView = Entry.Dom("div", {class:"propertyContent", parent:this._view});
-    var d = Entry.createElement("div");
-    d.addClass("entryObjectSelectedImgWorkspace");
-    this.selectedImgView_ = d;
-    this._view.append(d);
+    this._cover = Entry.Dom("div", {classes:["propertyPanelCover", "entryRemove"], parent:this._view});
+    var d = Entry.Dom("div", {class:"entryObjectSelectedImgWorkspace", parent:this._view});
     this.initializeSplitter(d);
-    this.splitter = d;
   };
   b.addMode = function(a, b) {
     var d = b.getView(), d = Entry.Dom(d, {parent:this._contentView}), e = Entry.Dom("<div>" + Lang.Menus[a] + "</div>", {classes:["propertyTabElement", "propertyTab" + a], parent:this._tabView}), f = this;
@@ -10533,7 +10530,8 @@ Entry.PropertyPanel = function() {
     this._view.css({width:a + "px", top:9 * a / 16 + 123 - 22 + "px"});
     430 <= a ? this._view.removeClass("collapsed") : this._view.addClass("collapsed");
     Entry.dispatchEvent("windowResized");
-    (a = this.modes[this.selected].obj.resize) && "hw" != this.selected ? a() : "hw" == this.selected && this.modes.hw.obj.listPorts ? this.modes[this.selected].obj.resizeList() : "hw" == this.selected && this.modes[this.selected].obj.resize();
+    a = this.selected;
+    "hw" == a ? this.modes.hw.obj.listPorts ? this.modes[a].obj.resizeList() : this.modes[a].obj.resize() : this.modes[a].obj.resize();
   };
   b.select = function(a) {
     for (var b in this.modes) {
@@ -10550,16 +10548,18 @@ Entry.PropertyPanel = function() {
     this.selected = a;
   };
   b.initializeSplitter = function(a) {
-    a.onmousedown = function(a) {
+    var b = this;
+    a.bind("mousedown touchstart", function(a) {
+      b._cover.removeClass("entryRemove");
       Entry.container.disableSort();
       Entry.container.splitterEnable = !0;
       Entry.documentMousemove && (Entry.container.resizeEvent = Entry.documentMousemove.attach(this, function(a) {
         Entry.container.splitterEnable && Entry.resizeElement({canvasWidth:a.clientX || a.x});
       }));
-    };
-    document.addEventListener("mouseup", function(a) {
+    });
+    $(document).bind("mouseup touchend", function(a) {
       if (a = Entry.container.resizeEvent) {
-        Entry.container.splitterEnable = !1, Entry.documentMousemove.detach(a), delete Entry.container.resizeEvent;
+        Entry.container.splitterEnable = !1, Entry.documentMousemove.detach(a), b._cover.addClass("entryRemove"), delete Entry.container.resizeEvent;
       }
       Entry.container.enableSort();
     });

@@ -30,12 +30,17 @@ Entry.PropertyPanel = function() {
             parent: this._view
         });
 
-        var selectedImgView = Entry.createElement('div');
-        selectedImgView.addClass('entryObjectSelectedImgWorkspace');
-        this.selectedImgView_ = selectedImgView;
-        this._view.append(selectedImgView);
-        this.initializeSplitter(selectedImgView);
-        this.splitter = selectedImgView;
+        this._cover = Entry.Dom('div', {
+            classes: ["propertyPanelCover", "entryRemove"],
+            parent: this._view
+        });
+
+        var splitter =
+            Entry.Dom('div', {
+                class: 'entryObjectSelectedImgWorkspace',
+                parent: this._view
+            });
+        this.initializeSplitter(splitter);
     };
 
     p.addMode = function(mode, contentObj) {
@@ -91,14 +96,15 @@ Entry.PropertyPanel = function() {
 
         Entry.dispatchEvent('windowResized');
 
-        var modeResize  = this.modes[this.selected].obj.resize;
-        if(modeResize && this.selected != 'hw')
-            modeResize();
-        else if(this.selected == 'hw' && this.modes.hw.obj.listPorts)
-             this.modes[this.selected].obj.resizeList();
-         else if(this.selected == 'hw')
-            this.modes[this.selected].obj.resize();
-
+        var selected = this.selected;
+        var modeResize  = this.modes[selected].obj.resize;
+        if (selected == 'hw') {
+            if (this.modes.hw.obj.listPorts)
+                this.modes[selected].obj.resizeList();
+            else this.modes[selected].obj.resize();
+        } else {
+            this.modes[selected].obj.resize();
+        }
     };
 
     p.select = function(modeName) {
@@ -118,7 +124,9 @@ Entry.PropertyPanel = function() {
     };
 
     p.initializeSplitter = function(splitter) {
-        splitter.onmousedown = function(e) {
+        var that = this;
+        splitter.bind('mousedown touchstart', function(e) {
+            that._cover.removeClass('entryRemove');
             Entry.container.disableSort();
             Entry.container.splitterEnable = true;
             if (Entry.documentMousemove) {
@@ -130,16 +138,18 @@ Entry.PropertyPanel = function() {
                     }
                 });
             }
-        };
+        });
 
-        document.addEventListener('mouseup', function(e) {
+        $(document).bind('mouseup touchend', function(e) {
             var listener = Entry.container.resizeEvent
             if (listener) {
                 Entry.container.splitterEnable = false;
                 Entry.documentMousemove.detach(listener);
+                that._cover.addClass('entryRemove');
                 delete Entry.container.resizeEvent;
             }
             Entry.container.enableSort();
         });
     };
+
 })(Entry.PropertyPanel.prototype);
