@@ -1148,7 +1148,7 @@ Entry.Utils.stopProjectWithToast = function(block, message) {
         Entry.engine.toggleStop();
 
     if (Entry.type === 'workspace') {
-        Entry.container.selectObject(block.getCode().object.id);
+        Entry.container.selectObject(block.getCode().object.id, true);
         block.view.getBoard().activateBlock(block);
     }
     throw new Error(message);

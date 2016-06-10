@@ -1411,6 +1411,7 @@ Entry.EntryObject.prototype.getLock = function() {
 
 Entry.EntryObject.prototype.setLock = function(bool) {
     this.lock = bool;
+    Entry.stage.updateObject();
     return bool;
 };
 

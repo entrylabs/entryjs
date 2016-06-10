@@ -24,12 +24,12 @@ p.generateView = function(parentView, option) {
     if (Entry.isForLecture)
         blockHelperView.addClass('lecture');
     helper.parentView_.appendChild(blockHelperView);
-    if (!Entry.isForLecture) {
-        var blockHelperHeader = Entry.createElement('div',
-                                'entryBlockHelperHeaderWorkspace');
-        blockHelperHeader.innerHTML = Lang.Helper.Block_info;
-        blockHelperView.appendChild(blockHelperHeader);
-    }
+    // if (!Entry.isForLecture) {
+    //     var blockHelperHeader = Entry.createElement('div',
+    //                             'entryBlockHelperHeaderWorkspace');
+    //     blockHelperHeader.innerHTML = Lang.Helper.Block_info;
+    //     blockHelperView.appendChild(blockHelperHeader);
+    // }
     var blockHelperContent = Entry.createElement('div',
                             'entryBlockHelperContentWorkspace');
     blockHelperContent.addClass('entryBlockHelperIntro');

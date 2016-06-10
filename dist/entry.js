@@ -7858,12 +7858,7 @@ p.generateView = function(b, a) {
     this.view = c;
     Entry.isForLecture && c.addClass("lecture");
     this.parentView_.appendChild(c);
-    if (!Entry.isForLecture) {
-      var d = Entry.createElement("div", "entryBlockHelperHeaderWorkspace");
-      d.innerHTML = Lang.Helper.Block_info;
-      c.appendChild(d);
-    }
-    d = Entry.createElement("div", "entryBlockHelperContentWorkspace");
+    var d = Entry.createElement("div", "entryBlockHelperContentWorkspace");
     d.addClass("entryBlockHelperIntro");
     Entry.isForLecture && d.addClass("lecture");
     c.appendChild(d);
@@ -8669,7 +8664,9 @@ Entry.EntryObject.prototype.getLock = function() {
   return this.lock;
 };
 Entry.EntryObject.prototype.setLock = function(b) {
-  return this.lock = b;
+  this.lock = b;
+  Entry.stage.updateObject();
+  return b;
 };
 Entry.EntryObject.prototype.updateInputViews = function(b) {
   b = b || this.getLock();
@@ -10570,12 +10567,9 @@ Entry.PropertyPanel = function() {
     this._view = Entry.Dom("div", {class:"propertyPanel", parent:$(a)});
     this._tabView = Entry.Dom("div", {class:"propertyTab", parent:this._view});
     this._contentView = Entry.Dom("div", {class:"propertyContent", parent:this._view});
-    var d = Entry.createElement("div");
-    d.addClass("entryObjectSelectedImgWorkspace");
-    this.selectedImgView_ = d;
-    this._view.append(d);
+    this._cover = Entry.Dom("div", {classes:["propertyPanelCover", "entryRemove"], parent:this._view});
+    var d = Entry.Dom("div", {class:"entryObjectSelectedImgWorkspace", parent:this._view});
     this.initializeSplitter(d);
-    this.splitter = d;
   };
   b.addMode = function(a, b) {
     var d = b.getView(), d = Entry.Dom(d, {parent:this._contentView}), e = Entry.Dom("<div>" + Lang.Menus[a] + "</div>", {classes:["propertyTabElement", "propertyTab" + a], parent:this._tabView}), f = this;
@@ -10592,7 +10586,8 @@ Entry.PropertyPanel = function() {
     this._view.css({width:a + "px", top:9 * a / 16 + 123 - 22 + "px"});
     430 <= a ? this._view.removeClass("collapsed") : this._view.addClass("collapsed");
     Entry.dispatchEvent("windowResized");
-    (a = this.modes[this.selected].obj.resize) && "hw" != this.selected ? a() : "hw" == this.selected && this.modes.hw.obj.listPorts ? this.modes[this.selected].obj.resizeList() : "hw" == this.selected && this.modes[this.selected].obj.resize();
+    a = this.selected;
+    "hw" == a ? this.modes.hw.obj.listPorts ? this.modes[a].obj.resizeList() : this.modes[a].obj.resize() : this.modes[a].obj.resize();
   };
   b.select = function(a) {
     for (var b in this.modes) {
@@ -10609,16 +10604,18 @@ Entry.PropertyPanel = function() {
     this.selected = a;
   };
   b.initializeSplitter = function(a) {
-    a.onmousedown = function(a) {
+    var b = this;
+    a.bind("mousedown touchstart", function(a) {
+      b._cover.removeClass("entryRemove");
       Entry.container.disableSort();
       Entry.container.splitterEnable = !0;
       Entry.documentMousemove && (Entry.container.resizeEvent = Entry.documentMousemove.attach(this, function(a) {
         Entry.container.splitterEnable && Entry.resizeElement({canvasWidth:a.clientX || a.x});
       }));
-    };
-    document.addEventListener("mouseup", function(a) {
+    });
+    $(document).bind("mouseup touchend", function(a) {
       if (a = Entry.container.resizeEvent) {
-        Entry.container.splitterEnable = !1, Entry.documentMousemove.detach(a), delete Entry.container.resizeEvent;
+        Entry.container.splitterEnable = !1, Entry.documentMousemove.detach(a), b._cover.addClass("entryRemove"), delete Entry.container.resizeEvent;
       }
       Entry.container.enableSort();
     });
@@ -10894,9 +10891,10 @@ Entry.Scene.prototype.generateElement = function(b) {
   }
   Entry.Utils.disableContextmenu(c);
   $(c).on("contextmenu", function() {
-    Entry.ContextMenu.show([{text:Lang.Workspace.duplicate_scene, callback:function() {
+    var a = [{text:Lang.Workspace.duplicate_scene, enable:Entry.engine.isState("stop"), callback:function() {
       Entry.scene.cloneScene(b);
-    }}], "workspace-contextmenu");
+    }}];
+    Entry.ContextMenu.show(a, "workspace-contextmenu");
   });
   return b.view = c;
 };
@@ -12395,7 +12393,7 @@ Entry.Utils.stopProjectWithToast = function(b, a) {
   a = a || "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec \ubc1c\uc0dd";
   Entry.toast && Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.check_runtime_error, !0);
   Entry.engine && Entry.engine.toggleStop();
-  "workspace" === Entry.type && (Entry.container.selectObject(b.getCode().object.id), b.view.getBoard().activateBlock(b));
+  "workspace" === Entry.type && (Entry.container.selectObject(b.getCode().object.id, !0), b.view.getBoard().activateBlock(b));
   throw Error(a);
 };
 Entry.Model = function(b, a) {
@@ -13455,7 +13453,7 @@ Entry.VariableContainer.prototype.createDom = function(b) {
   c = Entry.createElement("li");
   c.addClass("entryVariableAddWorkspace");
   c.addClass("entryVariableListElementWorkspace");
-  c.innerHTML = "+ " + Lang.Workspace.variable_create;
+  c.innerHTML = "+ " + Lang.Workspace.variable_add;
   var f = this;
   this.variableAddButton_ = c;
   c.bindOnClick(function(b) {
@@ -13489,7 +13487,7 @@ Entry.VariableContainer.prototype.createDom = function(b) {
   c = Entry.createElement("li");
   c.addClass("entryVariableAddWorkspace");
   c.addClass("entryVariableListElementWorkspace");
-  c.innerHTML = "+ " + Lang.Workspace.function_create;
+  c.innerHTML = "+ " + Lang.Workspace.function_add;
   this.functionAddButton_ = c;
   c.bindOnClick(function(b) {
     b = a._getBlockMenu();
@@ -13822,6 +13820,7 @@ Entry.VariableContainer.prototype.addVariable = function(b) {
     var a = this.variableAddPanel;
     b = a.view.name.value.trim();
     b && 0 !== b.length || (b = Lang.Workspace.variable);
+    b.length > this._maxNameLength && (b = this._truncName(b, "variable"));
     b = this.checkAllVariableName(b, "variables_") ? Entry.getOrderedName(b, this.variables_, "name_") : b;
     var c = a.info;
     b = {name:b, isCloud:c.isCloud, object:c.object, variableType:"variable"};
@@ -13930,6 +13929,7 @@ Entry.VariableContainer.prototype.addMessage = function(b) {
   this.messages_.unshift(b);
   Entry.playground.reloadPlayground();
   this.updateList();
+  b.listElement.nameField.focus();
   return new Entry.State(this, this.removeMessage, b);
 };
 Entry.VariableContainer.prototype.removeMessage = function(b) {
@@ -14000,6 +14000,7 @@ Entry.VariableContainer.prototype.addList = function(b) {
     b = a.view.name.value.trim();
     b && 0 !== b.length || (b = Lang.Workspace.list);
     var c = a.info;
+    b.length > this._maxNameLength && (b = this._truncName(b, "list"));
     b = this.checkAllVariableName(b, "lists_") ? Entry.getOrderedName(b, this.lists_, "name_") : b;
     b = {name:b, isCloud:c.isCloud, object:c.object, variableType:"list"};
     a.view.addClass("entryRemove");
@@ -14674,6 +14675,12 @@ Entry.VariableContainer.prototype.removeRef = function(b, a) {
 Entry.VariableContainer.prototype._getBlockMenu = function() {
   return Entry.playground.mainWorkspace.getBlockMenu();
 };
+Entry.VariableContainer.prototype._truncName = function(b, a) {
+  b = b.substring(0, this._maxNameLength);
+  Entry.toast.warning(Lang.Workspace[a + "_name_auto_edited_title"], Lang.Workspace[a + "_name_auto_edited_content"]);
+  return b;
+};
+Entry.VariableContainer.prototype._maxNameLength = 10;
 Entry.block.run = {skeleton:"basic", color:"#3BBD70", contents:["this is", "basic block"], func:function() {
 }};
 Entry.block.mutant = {skeleton:"basic", event:"start", color:"#3BBD70", template:"test mutant block", params:[], func:function() {
@@ -15355,7 +15362,7 @@ Entry.BlockMenu = function(b, a, c, d) {
   b.getCategoryCodes = function(a) {
     a = this._convertSelector(a);
     var b = this._categoryCodes[a];
-    b || (b = []);
+    b || (this._generateCategoryElement(a), b = []);
     b instanceof Entry.Code || (b = this._categoryCodes[a] = new Entry.Code(b));
     return b;
   };
@@ -15484,17 +15491,20 @@ Entry.BlockMenu = function(b, a, c, d) {
   };
   b._generateCategoryView = function(a) {
     if (a) {
-      for (var b = this, d = 0;d < a.length;d++) {
-        var e = a[d].category;
-        (function(a, d) {
-          a.text(Lang.Blocks[d.toUpperCase()]);
-          b._categoryElems[d] = a;
-          a.bindOnClick(function(a) {
-            b.selectMenu(d);
-          });
-        })(Entry.Dom("li", {id:"entryCategory" + e, class:"entryCategoryElementWorkspace", parent:this._categoryCol}), e);
+      for (var b = 0;b < a.length;b++) {
+        this._generateCategoryElement(a[b].category);
       }
     }
+  };
+  b._generateCategoryElement = function(a) {
+    var b = this;
+    (function(a, e) {
+      a.text(Lang.Blocks[e.toUpperCase()]);
+      b._categoryElems[e] = a;
+      a.bindOnClick(function(a) {
+        b.selectMenu(e);
+      });
+    })(Entry.Dom("li", {id:"entryCategory" + a, class:"entryCategoryElementWorkspace", parent:this._categoryCol}), a);
   };
   b.updateOffset = function() {
     this._offset = this.svgDom.offset();
@@ -16984,16 +16994,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
   b._position = function() {
     var a = this.getAbsolutePosFromDocument();
     a.y += this.box.height / 2;
-    var b = $(document).height(), d = this.optionGroup.height(), e = this.optionGroup.width();
-    if (b < a.y + d) {
-      a.x += this.box.width + 1;
-      var b = this.getAbsolutePosFromBoard(), f = this._blockView.getBoard().svgDom.height(), f = f - (f - b.y);
-      f - 20 < d && this.optionGroup.height(f - f % 20);
-      a.y -= this.optionGroup.height();
+    var b = $(document).height(), d = this.optionGroup.height(), e = this.optionGroup.width() + 20;
+    if (b < a.y + d + 30) {
+      var b = this._blockView.getBoard().svgDom.height(), f = this.getAbsolutePosFromBoard();
+      this._blockView.y < b / 2 ? (a.x += this.box.width / 2 - e / 2, b -= f.y + 30, this.optionGroup.height(b)) : (a.x += this.box.width + 1, b -= b - f.y, b - 30 < d && this.optionGroup.height(b - b % 30), a.y -= this.optionGroup.height());
     } else {
       a.x += this.box.width / 2 - e / 2;
     }
-    this.optionGroup.css({left:a.x, top:a.y, width:e + 20});
+    this.optionGroup.css({left:a.x, top:a.y, width:e});
   };
   b.applyValue = function(a) {
     this.value != a && this.setValue(a);
