@@ -6100,7 +6100,14 @@ Entry.Commander = function(b) {
     -1 < a && this.reporters.splice(a, 1);
   };
   b.report = function(a, b) {
-    Entry.Command[a].log.apply(this, b);
+    var d = this.reporters;
+    if (0 !== d.length) {
+      var e;
+      e = a && Entry.Command[a] && Entry.Command[a].log ? Entry.Command[a].log.apply(this, b) : b;
+      d.forEach(function(a) {
+        a.add(e);
+      });
+    }
   };
 })(Entry.Commander.prototype);
 (function(b) {
