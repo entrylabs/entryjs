@@ -16,6 +16,9 @@ Entry.BlockToPyParser = function(blockSyntax) {
     var variableMap = new Entry.Map();
     this._variableMap = variableMap;
 
+    var funcMap = new Entry.Map();
+    this._funcMap = funcMap;
+
     var queue = new Entry.Queue();
     this._queue = queue;
 };
@@ -65,24 +68,36 @@ Entry.BlockToPyParser = function(blockSyntax) {
     };
 
     p.Block = function(block) {
-        if(!block._schema)
-            return "";
-        var syntax = block._schema.syntax.py[0];
+        /*if(!block._schema)
+            return "";*/
+        var result = ""; 
+        var syntax;
+
+        if(block._schema && block._schema.syntax)
+            syntax = block._schema.syntax.py[0];
+        
         // User Function
-        var prefix = block.data.type.substring(0, 4);
-        if(prefix == "func")
-            syntax = block._schema.template.trim();
+        if(this.isFunc(block)) {
+            console.log("Block isFunc", block);
+            result += this.makeFuncDef(block);
+
+            syntax = this.makeFuncSyntax(block);
+            
+            console.log("Func Fianl Syntax", syntax);
+        } else if(this.isFuncParam(block)) {
+            result += block.data.type;
+        }
 
         console.log("Block Syntax", syntax);
+
         if(!syntax || syntax == null)
-            return "";
+            return result;
+
         var blockReg = /(%.)/mi;
         var statementReg = /(\$.)/mi;
         var blockTokens = syntax.split(blockReg);
         var schemaParams = block._schema.params;
         var dataParams = block.data.params;
-
-        var result = "";  
 
         console.log("Block blockTokens", blockTokens);
 
@@ -102,9 +117,11 @@ Entry.BlockToPyParser = function(blockSyntax) {
             }
         }
 
+        console.log("Block schemaParams", schemaParams);
+        console.log("Block dataParams", dataParams);
+
         for (var i = 0; i < blockTokens.length; i++) { 
-            var blockToken = blockTokens[i];
-            
+            var blockToken = blockTokens[i];  
             if (blockToken.length === 0) continue;
             if (blockReg.test(blockToken)) {
                 var blockParam = blockToken.split('%')[1];
@@ -113,7 +130,19 @@ Entry.BlockToPyParser = function(blockSyntax) {
                     if(schemaParams[index].type == "Indicator") {
                         index++;    
                     } else if(schemaParams[index].type == "Block") {
+                        console.log("Block dataParams[index]", dataParams[index]);
                         var param = this.Block(dataParams[index]).trim();
+
+                        console.log("funcMap", this._funcMap.toString());
+                        var funcParam = this._funcMap.get(param);
+
+                        console.log("param", param, "func param", funcParam);
+                        if(funcParam) {
+                            console.log("func param current result", result);
+                            result += funcParam;
+                            continue;
+                        }
+
                         result += param;
 
                         console.log("PARAM BLOCK", param);
@@ -125,7 +154,6 @@ Entry.BlockToPyParser = function(blockSyntax) {
                                     blockParam = param;
                                     console.log("basic block param", param, "i", i);
 
-                                    var param = "";
                                     var paramsKey = Object.keys(currentBlockParamsKeyMap);        
                                     var variable = String(paramsKey[blockParamIndex++]);
                                     variable = variable.toLowerCase();
@@ -136,8 +164,8 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
                                     this._variableMap.put(variable, value);
                                     this._queue.enqueue(variable); 
-                                    console.log("Variable Map", this._variableMap);
-                                    console.log("Queue", this._queue);
+                                    console.log("Variable Map", this._variableMap.toString());
+                                    console.log("Queue", this._queue.toString());
                                 }
                             }
                         }
@@ -190,6 +218,8 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         }
 
                     }
+                } else {
+                    console.log("No Schema")
                 }
             } else if (statementReg.test(blockToken)) {
                 var statements = blockToken.split(statementReg);
@@ -335,50 +365,201 @@ Entry.BlockToPyParser = function(blockSyntax) {
         return this.blockSyntax[syntax];
     };
 
-    p.makeExpressionWithVariable = function(exp, paramCount) {
-        console.log("makeExpressionWithVariable EXP", exp);
+    p.makeExpressionWithVariable = function(blockExp, paramCount) {
+        console.log("makeExpressionWithVariable blockExp", blockExp);
         console.log("makeExpressionWithVariable Queue", this._queue.toString());
         console.log("makeExpressionWithVariable VariableMap", this._variableMap.toString());
-
 
         var result;
         var expression = "";
         var variableDeclarations = "";
         var safeIndex = 0;
         
-
         //if(exp.match(/.*\..*\)/)) {
-        var index = exp.indexOf('(');
-        exp = exp.substring(0, index);
+        var index = blockExp.indexOf('(');
+        var exp = blockExp.substring(0, index);
         //}
         
         var expression = exp.trim().concat("(");  
-        var variable;
-        while(variable = this._queue.dequeue()) { 
-            console.log("makeExpressionWithVariable variable", variable);
-            
-            var value = this._variableMap.get(variable);
-            console.log("makeExpressionWithVariable value", value);
-            
-            var variableDeclaration = variable.concat(" = ").concat(value).concat('\n');
-            variableDeclarations += variableDeclaration;
-            
-            
+        
+        if(this._queue.toString()) {
+            while(variable = this._queue.dequeue()) { 
+                console.log("makeExpressionWithVariable variable", variable);
+                
+                var value = this._variableMap.get(variable);
+                console.log("makeExpressionWithVariable value", value);
+                
+                var variableDeclaration = variable.concat(" = ").concat(value).concat('\n');
+                variableDeclarations += variableDeclaration;
+                
+                expression = expression.concat(variable).concat(',').concat(' ');
+                safeIndex++;
 
-            expression = expression.concat(variable).concat(',').concat(' ');
-            safeIndex++;
-
-            if(safeIndex > 10)
-                break;
+                if(safeIndex > 10)
+                    break;
+            }
+           
+            var index = expression.lastIndexOf(',');
+            expression = expression.substring(0, index);
+            expression = expression.trim().concat(')');
+           
+            result = variableDeclarations.concat(expression);
+        } else {
+            result = blockExp;
         }
-       
-        var index = expression.lastIndexOf(',');
-        expression = expression.substring(0, index);
-        expression = expression.trim().concat(')');
-       
-        result = variableDeclarations.concat(expression);
 
         console.log("makeExpressionWithVariable result", result);
+
+        return result;
+    };
+
+    p.isFunc = function(block) {
+        var prefix = block.data.type.substring(0, 4);
+        if(prefix == "func")
+            return true;
+        else 
+            return false;
+    };
+
+    p.isFuncParam = function(block) {
+        var type = block.data.type;
+        var index = type.search('_');
+        var prefix = type.substring(0, index);
+        console.log("isFuncParam prefix", prefix);
+        if(prefix == "stringParam" || prefix == "booleanParam")
+            return true;
+        else 
+            return false;
+    }
+
+    p.makeFuncSyntax = function(funcBlock) {
+        var syntax = "";
+        var schemaTemplate = funcBlock._schema.template.trim();
+        console.log("Func schemaTemplate", schemaTemplate);
+        var schemaParams = funcBlock._schema.params;
+        console.log("Func schemaParams", schemaParams);
+        
+        var paramReg = /(%.)/mi;
+
+        var funcTokens = schemaTemplate.trim().split(paramReg);
+        console.log("funcTokens", funcTokens);
+
+        var funcName = "";
+        var funcParams = "";
+       
+        for(var f in funcTokens) {
+            var funcToken = funcTokens[f].trim();
+            console.log("funcToken", funcToken);
+            if(paramReg.test(funcToken)) {
+                var num = funcToken.split('%')[1];
+                var index = Number(num) - 1;
+                if(schemaParams[index].type == "Indicator")
+                    continue;
+                funcParams += funcToken.concat(', ');
+            }
+            else {
+                var funcTokenArr = funcToken.split(' ');
+                funcName += funcTokenArr.join('_');
+            }
+        }
+
+        var index = funcParams.lastIndexOf(',');
+        funcParams = funcParams.substring(0, index);
+
+        syntax = funcName.trim().concat('(').concat(funcParams.trim()).concat(')');
+
+        return syntax;
+    };
+
+    p.makeFuncDef = function(funcBlock) {
+        var result = 'def ';
+        var func = this.getFuncInfo(funcBlock);
+
+        if(!func.name) 
+            return;
+        else 
+            result += func.name;
+
+        result = result.concat('(');
+        if(func.params.length != 0) {
+            for(var p in func.params) {
+                result += func.params[p]
+                result = result.concat(', ');
+            }
+            var index = result.lastIndexOf(',');
+            result = result.substring(0, index);
+            result = result.trim();
+        }
+        result = result.concat('):').concat('\n');
+
+        if(func.statements.length) {
+            var stmtResult = "";
+            for(var s in func.statements) {
+                var block = func.statements[s];
+                console.log("makeFuncDef statements", block);
+                stmtResult += this.Block(block).concat('\n');
+
+            }
+            stmtResult = stmtResult.concat('\n');
+            result += Entry.TextCodingUtil.prototype.indent(stmtResult).concat('\n');
+        }
+        
+        console.log("makeFuncDef result", result);
+
+        this._funcMap.clear();
+
+        return result;
+    };
+
+    p.getFuncInfo = function(funcBlock) {
+        var result = {};
+
+        var id = funcBlock.data.type.substring(5);
+        console.log("getFuncInfo id", id);
+        var _functions = Entry.variableContainer.functions_;
+        var func = _functions[id];
+
+        console.log("getFuncInfo func", func);
+
+        var template = func.block.template;
+        var index = template.search(/(%.)/);
+        console.log("getFuncInfo index", index);
+        var funcNameTemplate = template.substring(0, index).trim();
+        var funcNameArr = funcNameTemplate.split(' ');
+
+        var funcName = funcNameArr.join('_');
+        console.log("makeFuncDef funcName", funcName);
+        var funcParamMap = func.paramMap;
+
+        if(funcParamMap) {
+            var funcParams = {};
+            for(var key in funcParamMap) {
+                var index = funcParamMap[key];
+                var i = key.search('_');
+                var nickname = key.substring(0, i);
+                if(nickname == 'stringParam')
+                    var name = 'param' + String(index+1);
+                else if (nickname == 'booleanParam')
+                    var name = 'param' + String(index+1);
+
+                var param = name;
+                funcParams[index] = param;
+                this._funcMap.put(key, param);
+            }
+        }
+
+        var contents  = func.content._data[0]._data;
+        var funcContents = [];
+        for(var c = 1; c < contents.length; c++) {
+            var block = contents[c]
+            funcContents.push(block);
+        }
+
+        console.log("getFuncInfo funcContents", funcContents);
+
+        result.name = funcName;
+        result.params = funcParams;
+        result.statements = funcContents;
 
         return result;
     };

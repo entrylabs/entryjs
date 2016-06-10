@@ -13,13 +13,14 @@ Entry.TextCodingUtil = function() {
 	p.indent = function(textCode) {
         console.log("indent textCode", textCode);
         var result = "\t";
-        var indentedCode = textCode.split("\n");
-        indentedCode.pop();
-        result += indentedCode.join("\n\t");
+        var indentedCodeArr = textCode.split("\n");
+        indentedCodeArr.pop();
+        result += indentedCodeArr.join("\n\t");
+        
+        console.log("indent result", result);
+        
         return result;
     };
-
-    
 
     p.isNumeric = function(value) {
         if(value.match(/^-?\d+$|^-\d+$/) || value.match(/^-?\d+\.\d+$/)) {

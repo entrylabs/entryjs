@@ -22,7 +22,7 @@ Entry.PyAstGenerator = function() {
             return astTree;
         }
         catch (error) {
-            error.message = "  파이썬 문법을 확인해주세요...";
+            error.message = "  파이썬 문법을 확인해주세요";
             throw error;
 
             //Entry.toast.alert('에러(Error)', error.message);

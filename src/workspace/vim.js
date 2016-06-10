@@ -15,7 +15,8 @@ Entry.Vim = function(dom, textType) {
     Entry.Vim.PARSER_TYPE_BLOCK_TO_JS = 2;
     Entry.Vim.PARSER_TYPE_BLOCK_TO_PY = 3;
 
-    Entry.Vim.PYTHON_IMPORT_HW = "import hw from EntryText";
+    Entry.Vim.PYTHON_IMPORT_ENTRY = "import Entry";
+    Entry.Vim.PYTHON_IMPORT_HW = "import Hw";
 
     if (typeof dom === "string")
         dom = $('#' + dom);
@@ -150,7 +151,9 @@ Entry.Vim = function(dom, textType) {
         } 
 
         var textCode = this._parser.parse(code, Entry.Parser.PARSE_LANGUAGE);
-        textCode = Entry.Vim.PYTHON_IMPORT_HW
+        textCode = Entry.Vim.PYTHON_IMPORT_ENTRY
+        .concat("\n")
+        .concat(Entry.Vim.PYTHON_IMPORT_HW)
         .concat("\n\n")
         .concat(textCode); 
 

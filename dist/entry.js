@@ -8231,20 +8231,20 @@ Entry.EntryObject.prototype.generateView = function() {
     h = Entry.createElement("span");
     h.addClass("entryObjectDirectionSpanWorkspace");
     h.innerHTML = Lang.Workspace.direction + " : ";
-    var q = Entry.createElement("input");
-    q.addClass("entryObjectDirectionInputWorkspace");
-    q.setAttribute("readonly", !0);
-    q.bindOnClick(function(a) {
+    var r = Entry.createElement("input");
+    r.addClass("entryObjectDirectionInputWorkspace");
+    r.setAttribute("readonly", !0);
+    r.bindOnClick(function(a) {
       a.stopPropagation();
       this.select();
     });
-    this.directionInput_ = q;
+    this.directionInput_ = r;
     c.appendChild(e);
     c.appendChild(n);
     c.appendChild(h);
-    c.appendChild(q);
+    c.appendChild(r);
     c.rotateInput_ = n;
-    c.directionInput_ = q;
+    c.directionInput_ = r;
     d = this;
     n.onkeypress = function(a) {
       13 == a.keyCode && d.editObjectValues(!1);
@@ -8256,11 +8256,11 @@ Entry.EntryObject.prototype.generateView = function() {
       d.updateRotationView();
       Entry.stage.updateObject();
     };
-    q.onkeypress = function(a) {
+    r.onkeypress = function(a) {
       13 == a.keyCode && d.editObjectValues(!1);
     };
-    q.onblur = function(a) {
-      a = q.value;
+    r.onblur = function(a) {
+      a = r.value;
       -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da")));
       isNaN(a) || d.entity.setDirection(Number(a));
       d.updateRotationView();
@@ -8333,14 +8333,14 @@ Entry.EntryObject.prototype.generateView = function() {
         Entry.container.selectObject(a.id), Entry.playground.injectObject(a);
       }
     }), this.view_.appendChild(c), c = Entry.createElement("div"), c.addClass("entryObjectInformationWorkspace"), c.object = this, this.isInformationToggle = !1, b.appendChild(c), this.informationView_ = c, c = Entry.createElement("div"), c.addClass("entryObjectRotateLabelWrapperWorkspace"), this.view_.appendChild(c), this.rotateLabelWrapperView_ = c, e = Entry.createElement("span"), e.addClass("entryObjectRotateSpanWorkspace"), e.innerHTML = Lang.Workspace.rotation + " : ", n = Entry.createElement("input"), 
-    n.addClass("entryObjectRotateInputWorkspace"), this.rotateSpan_ = e, this.rotateInput_ = n, h = Entry.createElement("span"), h.addClass("entryObjectDirectionSpanWorkspace"), h.innerHTML = Lang.Workspace.direction + " : ", q = Entry.createElement("input"), q.addClass("entryObjectDirectionInputWorkspace"), this.directionInput_ = q, c.appendChild(e), c.appendChild(n), c.appendChild(h), c.appendChild(q), c.rotateInput_ = n, c.directionInput_ = q, d = this, n.onkeypress = function(a) {
+    n.addClass("entryObjectRotateInputWorkspace"), this.rotateSpan_ = e, this.rotateInput_ = n, h = Entry.createElement("span"), h.addClass("entryObjectDirectionSpanWorkspace"), h.innerHTML = Lang.Workspace.direction + " : ", r = Entry.createElement("input"), r.addClass("entryObjectDirectionInputWorkspace"), this.directionInput_ = r, c.appendChild(e), c.appendChild(n), c.appendChild(h), c.appendChild(r), c.rotateInput_ = n, c.directionInput_ = r, d = this, n.onkeypress = function(a) {
       13 == a.keyCode && (a = n.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || d.entity.setRotation(Number(a)), d.updateRotationView(), n.blur());
     }, n.onblur = function(a) {
       d.entity.setRotation(d.entity.getRotation());
       Entry.stage.updateObject();
-    }, q.onkeypress = function(a) {
-      13 == a.keyCode && (a = q.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || d.entity.setDirection(Number(a)), d.updateRotationView(), q.blur());
-    }, q.onblur = function(a) {
+    }, r.onkeypress = function(a) {
+      13 == a.keyCode && (a = r.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || d.entity.setDirection(Number(a)), d.updateRotationView(), r.blur());
+    }, r.onblur = function(a) {
       d.entity.setDirection(d.entity.getDirection());
       Entry.stage.updateObject();
     }, b = Entry.createElement("div"), b.addClass("entryObjectRotationWrapperWorkspace"), b.object = this, this.view_.appendChild(b), c = Entry.createElement("span"), c.addClass("entryObjectCoordinateWorkspace"), b.appendChild(c), e = Entry.createElement("span"), e.addClass("entryObjectCoordinateSpanWorkspace"), e.innerHTML = "X:", g = Entry.createElement("input"), g.addClass("entryObjectCoordinateInputWorkspace"), h = Entry.createElement("span"), h.addClass("entryObjectCoordinateSpanWorkspace"), 
@@ -9096,13 +9096,13 @@ Entry.Painter.prototype.fill = function() {
     d.x = Math.round(d.x);
     d.y = Math.round(d.y);
     for (var c = 4 * (d.y * b + d.x), e = this.colorLayerData.data[c], f = this.colorLayerData.data[c + 1], g = this.colorLayerData.data[c + 2], h = this.colorLayerData.data[c + 3], k, m, d = [[d.x, d.y]], l = Entry.hex2rgb(this.stroke.lineColor);d.length;) {
-      for (var c = d.pop(), n = c[0], q = c[1], c = 4 * (q * b + n);0 <= q && this.matchColor(c, e, f, g, h);) {
-        --q, c -= 4 * b;
+      for (var c = d.pop(), n = c[0], r = c[1], c = 4 * (r * b + n);0 <= r && this.matchColor(c, e, f, g, h);) {
+        --r, c -= 4 * b;
       }
       c += 4 * b;
-      q += 1;
-      for (m = k = !1;q < a - 1 && this.matchColor(c, e, f, g, h);) {
-        q += 1, this.colorPixel(c, l.r, l.g, l.b), 0 < n && (this.matchColor(c - 4, e, f, g, h) ? k || (d.push([n - 1, q]), k = !0) : k && (k = !1)), n < b - 1 && (this.matchColor(c + 4, e, f, g, h) ? m || (d.push([n + 1, q]), m = !0) : m && (m = !1)), c += 4 * b;
+      r += 1;
+      for (m = k = !1;r < a - 1 && this.matchColor(c, e, f, g, h);) {
+        r += 1, this.colorPixel(c, l.r, l.g, l.b), 0 < n && (this.matchColor(c - 4, e, f, g, h) ? k || (d.push([n - 1, r]), k = !0) : k && (k = !1)), n < b - 1 && (this.matchColor(c + 4, e, f, g, h) ? m || (d.push([n + 1, r]), m = !0) : m && (m = !1)), c += 4 * b;
       }
       if (1080 < d.length) {
         break;
@@ -9668,7 +9668,7 @@ Entry.Painter.prototype.generateView = function(b) {
       d.addClass("entryPlaygroundPainterAttrColorElement");
       "transparent" === b ? d.style.backgroundImage = "url(" + (Entry.mediaFilePath + "/transparent.png") + ")" : d.style.backgroundColor = b;
       d.bindOnClick(function(d) {
-        "transparent" === b ? (a.stroke.transparent = !0, a.stroke.lineColor = "#ffffff") : (a.stroke.transparent = !1, r && (document.getElementById("entryPainterShapeBackgroundColor").style.backgroundColor = b, a.stroke.fillColor = b), r || (document.getElementById("entryPainterShapeLineColor").style.backgroundColor = b, a.stroke.lineColor = b));
+        "transparent" === b ? (a.stroke.transparent = !0, a.stroke.lineColor = "#ffffff") : (a.stroke.transparent = !1, q && (document.getElementById("entryPainterShapeBackgroundColor").style.backgroundColor = b, a.stroke.fillColor = b), q || (document.getElementById("entryPainterShapeLineColor").style.backgroundColor = b, a.stroke.lineColor = b));
         document.getElementById("entryPainterAttrCircle").style.backgroundColor = a.stroke.lineColor;
         document.getElementById("entryPainterAttrCircleInput").value = b;
       });
@@ -9705,9 +9705,9 @@ Entry.Painter.prototype.generateView = function(b) {
     n.appendChild(c);
     this.attrThickArea.painterAttrShapeLineColor = c;
     n.bindOnClick(function() {
-      q.style.zIndex = "1";
+      r.style.zIndex = "1";
       this.style.zIndex = "10";
-      r = !1;
+      q = !1;
     });
     this.attrBackgroundArea = Entry.createElement("div", "painterAttrBackgroundArea");
     this.attrBackgroundArea.addClass("entryPlaygroundPainterBackgroundArea");
@@ -9718,15 +9718,15 @@ Entry.Painter.prototype.generateView = function(b) {
     d = Entry.createElement("div");
     d.addClass("paintAttrBackgroundTop");
     c.appendChild(d);
-    var q = Entry.createElement("div", "entryPainterShapeBackgroundColor");
-    q.addClass("painterAttrShapeBackgroundColor");
-    this.attrBackgroundArea.painterAttrShapeBackgroundColor = q;
-    d.appendChild(q);
-    var r = !1;
-    q.bindOnClick(function(a) {
+    var r = Entry.createElement("div", "entryPainterShapeBackgroundColor");
+    r.addClass("painterAttrShapeBackgroundColor");
+    this.attrBackgroundArea.painterAttrShapeBackgroundColor = r;
+    d.appendChild(r);
+    var q = !1;
+    r.bindOnClick(function(a) {
       n.style.zIndex = "1";
       this.style.zIndex = "10";
-      r = !0;
+      q = !0;
     });
     this.attrFontArea = Entry.createElement("div", "painterAttrFont");
     this.attrFontArea.addClass("entryPlaygroundPainterAttrFont");
@@ -11047,7 +11047,7 @@ Entry.PyAstGenerator = function() {
     try {
       return e = b(a, c), console.log("astTree", e), e;
     } catch (f) {
-      throw f.message = "  \ud30c\uc774\uc36c \ubb38\ubc95\uc744 \ud655\uc778\ud574\uc8fc\uc138\uc694...", f;
+      throw f.message = "  \ud30c\uc774\uc36c \ubb38\ubc95\uc744 \ud655\uc778\ud574\uc8fc\uc138\uc694", f;
     }
   };
 })(Entry.PyAstGenerator.prototype);
@@ -11464,7 +11464,9 @@ Entry.TextCodingUtil = function() {
     var b = "\t";
     a = a.split("\n");
     a.pop();
-    return b += a.join("\n\t");
+    b += a.join("\n\t");
+    console.log("indent result", b);
+    return b;
   };
   b.isNumeric = function(a) {
     return a.match(/^-?\d+$|^-\d+$/) || a.match(/^-?\d+\.\d+$/) ? !0 : !1;
@@ -11579,6 +11581,7 @@ Entry.TextCodingUtil = function() {
 Entry.BlockToPyParser = function(b) {
   this.blockSyntax = b;
   this._variableMap = new Entry.Map;
+  this._funcMap = new Entry.Map;
   this._queue = new Entry.Queue;
 };
 (function(b) {
@@ -11611,43 +11614,52 @@ Entry.BlockToPyParser = function(b) {
     return b;
   };
   b.Block = function(a) {
-    if (!a._schema) {
-      return "";
+    var b = "", c;
+    a._schema && a._schema.syntax && (c = a._schema.syntax.py[0]);
+    this.isFunc(a) ? (console.log("Block isFunc", a), b += this.makeFuncDef(a), c = this.makeFuncSyntax(a), console.log("Func Fianl Syntax", c)) : this.isFuncParam(a) && (b += a.data.type);
+    console.log("Block Syntax", c);
+    if (!c || null == c) {
+      return b;
     }
-    var b = a._schema.syntax.py[0];
-    "func" == a.data.type.substring(0, 4) && (b = a._schema.template.trim());
-    console.log("Block Syntax", b);
-    if (!b || null == b) {
-      return "";
-    }
-    var c = /(%.)/mi, e = /(\$.)/mi, f = b.split(c), g = a._schema.params, h = a.data.params, b = "";
-    console.log("Block blockTokens", f);
+    var e = /(%.)/mi, f = /(\$.)/mi;
+    c = c.split(e);
+    var g = a._schema.params, h = a.data.params;
+    console.log("Block blockTokens", c);
     var k = a._schema.skeleton, m = a._schema.paramsKeyMap;
     console.log("currentBlock", a, "currentBlockSkeleton", k, "currentBlockParamsKeyMap", m);
     if (this._parseMode == Entry.Parser.PARSE_LANGUAGE && k == Entry.Parser.BLOCK_SKELETON_BASIC && m) {
       var l = "", n = 0
     }
-    for (var q = 0;q < f.length;q++) {
-      if (l = f[q], 0 !== l.length) {
-        if (c.test(l)) {
-          if (l = l.split("%")[1], l = Number(l) - 1, g[l] && "Indicator" != g[l].type) {
-            if ("Block" == g[l].type) {
-              var r = this.Block(h[l]).trim()
-            } else {
-              r = this["Field" + g[l].type](h[l], g[l]), null == r && (r = g[l].text ? g[l].text : null), r = Entry.TextCodingUtil.prototype.binaryOperatorValueConvertor(r), r = String(r), Entry.TextCodingUtil.prototype.isNumeric(r) || Entry.TextCodingUtil.prototype.isBinaryOperator(r) || (r = String('"' + r + '"'));
-            }
-            b += r;
-            console.log("PARAM BLOCK", r);
-            console.log("PARAM BLOCK RESULT ", b);
-            this._parseMode == Entry.Parser.PARSE_LANGUAGE && k == Entry.Parser.BLOCK_SKELETON_BASIC && m && (l = r, console.log("basic block param", r, "i", q), r = Object.keys(m), r = String(r[n++]), r = r.toLowerCase(), console.log("variable", r), console.log("value", l), this._variableMap.put(r, l), this._queue.enqueue(r), console.log("Variable Map", this._variableMap), console.log("Queue", this._queue));
-          }
-        } else {
-          if (e.test(l)) {
-            for (var r = l.split(e), t = 0;t < r.length;t++) {
-              l = r[t], 0 !== l.length && (e.test(l) ? (l = Number(l.split("$")[1]) - 1, b += Entry.TextCodingUtil.prototype.indent(this.Thread(a.statements[l]))) : (b += l, this._parseMode == Entry.Parser.PARSE_LANGUAGE && (this._currentBlockSkeleton == Entry.Parser.BLOCK_SKELETON_BASIC_LOOP || this._currentBlockSkeleton == Entry.Parser.BLOCK_SKELETON_BASIC_DOUBLE_LOOP) && this._currentBlockParamsKeyMap && 0 == t && console.log("This result is the beginning of Block Statement")));
+    console.log("Block schemaParams", g);
+    console.log("Block dataParams", h);
+    for (var r = 0;r < c.length;r++) {
+      if (l = c[r], 0 !== l.length) {
+        if (e.test(l)) {
+          if (l = l.split("%")[1], l = Number(l) - 1, g[l]) {
+            if ("Indicator" != g[l].type) {
+              if ("Block" == g[l].type) {
+                console.log("Block dataParams[index]", h[l]);
+                var q = this.Block(h[l]).trim();
+                console.log("funcMap", this._funcMap.toString());
+                l = this._funcMap.get(q);
+                console.log("param", q, "func param", l);
+                l ? (console.log("func param current result", b), b += l) : (b += q, console.log("PARAM BLOCK", q), console.log("PARAM BLOCK RESULT ", b), this._parseMode == Entry.Parser.PARSE_LANGUAGE && k == Entry.Parser.BLOCK_SKELETON_BASIC && m && (l = q, console.log("basic block param", q, "i", r), q = Object.keys(m), q = String(q[n++]), q = q.toLowerCase(), console.log("variable", q), console.log("value", l), this._variableMap.put(q, l), this._queue.enqueue(q), console.log("Variable Map", this._variableMap.toString()), 
+                console.log("Queue", this._queue.toString())));
+              } else {
+                q = this["Field" + g[l].type](h[l], g[l]), null == q && (q = g[l].text ? g[l].text : null), q = Entry.TextCodingUtil.prototype.binaryOperatorValueConvertor(q), q = String(q), Entry.TextCodingUtil.prototype.isNumeric(q) || Entry.TextCodingUtil.prototype.isBinaryOperator(q) || (q = String('"' + q + '"')), b += q, console.log("PARAM BLOCK", q), console.log("PARAM BLOCK RESULT ", b), this._parseMode == Entry.Parser.PARSE_LANGUAGE && k == Entry.Parser.BLOCK_SKELETON_BASIC && m && (l = 
+                q, console.log("basic block param", q, "i", r), q = Object.keys(m), q = String(q[n++]), q = q.toLowerCase(), console.log("variable", q), console.log("value", l), this._variableMap.put(q, l), this._queue.enqueue(q), console.log("Variable Map", this._variableMap), console.log("Queue", this._queue));
+              }
             }
           } else {
-            r = 0, l.search("#"), -1 != l.search("#") && (r = l.indexOf("#"), l = l.substring(r + 1)), b += l, console.log("check result", b);
+            console.log("No Schema");
+          }
+        } else {
+          if (f.test(l)) {
+            for (var q = l.split(f), t = 0;t < q.length;t++) {
+              l = q[t], 0 !== l.length && (f.test(l) ? (l = Number(l.split("$")[1]) - 1, b += Entry.TextCodingUtil.prototype.indent(this.Thread(a.statements[l]))) : (b += l, this._parseMode == Entry.Parser.PARSE_LANGUAGE && (this._currentBlockSkeleton == Entry.Parser.BLOCK_SKELETON_BASIC_LOOP || this._currentBlockSkeleton == Entry.Parser.BLOCK_SKELETON_BASIC_DOUBLE_LOOP) && this._currentBlockParamsKeyMap && 0 == t && console.log("This result is the beginning of Block Statement")));
+            }
+          } else {
+            q = 0, l.search("#"), -1 != l.search("#") && (q = l.indexOf("#"), l = l.substring(q + 1)), b += l, console.log("check result", b);
           }
         }
       }
@@ -11709,29 +11721,123 @@ Entry.BlockToPyParser = function(b) {
     return this.blockSyntax[a];
   };
   b.makeExpressionWithVariable = function(a, b) {
-    console.log("makeExpressionWithVariable EXP", a);
+    console.log("makeExpressionWithVariable blockExp", a);
     console.log("makeExpressionWithVariable Queue", this._queue.toString());
     console.log("makeExpressionWithVariable VariableMap", this._variableMap.toString());
     var c, e = c = "", f = 0, g = a.indexOf("(");
-    a = a.substring(0, g);
-    for (c = a.trim().concat("(");g = this._queue.dequeue();) {
-      console.log("makeExpressionWithVariable variable", g);
-      var h = this._variableMap.get(g);
-      console.log("makeExpressionWithVariable value", h);
-      h = g.concat(" = ").concat(h).concat("\n");
-      e += h;
-      c = c.concat(g).concat(",").concat(" ");
-      f++;
-      if (10 < f) {
-        break;
+    c = a.substring(0, g).trim().concat("(");
+    if (this._queue.toString()) {
+      for (;(variable = this._queue.dequeue()) && !(console.log("makeExpressionWithVariable variable", variable), g = this._variableMap.get(variable), console.log("makeExpressionWithVariable value", g), g = variable.concat(" = ").concat(g).concat("\n"), e += g, c = c.concat(variable).concat(",").concat(" "), f++, 10 < f);) {
       }
+      g = c.lastIndexOf(",");
+      c = c.substring(0, g);
+      c = c.trim().concat(")");
+      c = e.concat(c);
+    } else {
+      c = a;
     }
-    g = c.lastIndexOf(",");
-    c = c.substring(0, g);
-    c = c.trim().concat(")");
-    c = e.concat(c);
     console.log("makeExpressionWithVariable result", c);
     return c;
+  };
+  b.isFunc = function(a) {
+    return "func" == a.data.type.substring(0, 4) ? !0 : !1;
+  };
+  b.isFuncParam = function(a) {
+    a = a.data.type;
+    var b = a.search("_");
+    a = a.substring(0, b);
+    console.log("isFuncParam prefix", a);
+    return "stringParam" == a || "booleanParam" == a ? !0 : !1;
+  };
+  b.makeFuncSyntax = function(a) {
+    var b = "", c = a._schema.template.trim();
+    console.log("Func schemaTemplate", c);
+    a = a._schema.params;
+    console.log("Func schemaParams", a);
+    b = /(%.)/mi;
+    c = c.trim().split(b);
+    console.log("funcTokens", c);
+    var e = "", f = "", g;
+    for (g in c) {
+      var h = c[g].trim();
+      console.log("funcToken", h);
+      if (b.test(h)) {
+        var k = h.split("%")[1], k = Number(k) - 1;
+        "Indicator" != a[k].type && (f += h.concat(", "));
+      } else {
+        h = h.split(" "), e += h.join("_");
+      }
+    }
+    k = f.lastIndexOf(",");
+    f = f.substring(0, k);
+    return b = e.trim().concat("(").concat(f.trim()).concat(")");
+  };
+  b.makeFuncDef = function(a) {
+    var b = "def ";
+    a = this.getFuncInfo(a);
+    if (a.name) {
+      b += a.name;
+      b = b.concat("(");
+      if (0 != a.params.length) {
+        for (var c in a.params) {
+          b += a.params[c], b = b.concat(", ");
+        }
+        c = b.lastIndexOf(",");
+        b = b.substring(0, c);
+        b = b.trim();
+      }
+      b = b.concat("):").concat("\n");
+      if (a.statements.length) {
+        c = "";
+        for (var e in a.statements) {
+          var f = a.statements[e];
+          console.log("makeFuncDef statements", f);
+          c += this.Block(f).concat("\n");
+        }
+        c = c.concat("\n");
+        b += Entry.TextCodingUtil.prototype.indent(c).concat("\n");
+      }
+      console.log("makeFuncDef result", b);
+      this._funcMap.clear();
+      return b;
+    }
+  };
+  b.getFuncInfo = function(a) {
+    var b = {};
+    a = a.data.type.substring(5);
+    console.log("getFuncInfo id", a);
+    var c = Entry.variableContainer.functions_[a];
+    console.log("getFuncInfo func", c);
+    a = c.block.template;
+    var e = a.search(/(%.)/);
+    console.log("getFuncInfo index", e);
+    a = a.substring(0, e).trim().split(" ").join("_");
+    console.log("makeFuncDef funcName", a);
+    var f = c.paramMap;
+    if (f) {
+      var g = {}, h;
+      for (h in f) {
+        var e = f[h], k = h.search("_"), k = h.substring(0, k);
+        if ("stringParam" == k) {
+          var m = "param" + String(e + 1)
+        } else {
+          "booleanParam" == k && (m = "param" + String(e + 1));
+        }
+        k = m;
+        g[e] = k;
+        this._funcMap.put(h, k);
+      }
+    }
+    h = c.content._data[0]._data;
+    m = [];
+    for (c = 1;c < h.length;c++) {
+      m.push(h[c]);
+    }
+    console.log("getFuncInfo funcContents", m);
+    b.name = a;
+    b.params = g;
+    b.statements = m;
+    return b;
   };
 })(Entry.BlockToPyParser.prototype);
 Entry.PyToBlockParser = function(b) {
@@ -12622,7 +12728,7 @@ Entry.Parser = function(b, a, d) {
           console.log("result", c);
         } catch (l) {
           if (this.codeMirror) {
-            throw Entry.toast.alert("[\ud14d\uc2a4\ud2b8\ucf54\ub529(\ud30c\uc774\uc36c) \ubcc0\uc624\ub958]", l.message), document.getElementById("entryCodingModeSelector").value = "2", l;
+            throw Entry.toast.alert("[\ud14d\uc2a4\ud2b8\ucf54\ub529(\ud30c\uc774\uc36c) \uc624\ub958]", l.message), document.getElementById("entryCodingModeSelector").value = "2", l;
           }
           c = [];
         }
@@ -15117,12 +15223,12 @@ Entry.HWMonitor = function(b) {
     }
     h < f - e && (f = h / 2 + 3, e = -h / 2 - 3);
     for (;1 < a.length;) {
-      var k = a.shift(), m = a.pop(), l = e, n = f, q = c;
-      h <= f - e ? (e += k.width + 5, f -= m.width + 5, q = 0) : 0 === a.length ? (e = (e + f) / 2 - 3, f = e + 6) : (e = Math.max(e, -g / 2 + k.width) + 15, f = Math.min(f, g / 2 - m.width) - 15);
+      var k = a.shift(), m = a.pop(), l = e, n = f, r = c;
+      h <= f - e ? (e += k.width + 5, f -= m.width + 5, r = 0) : 0 === a.length ? (e = (e + f) / 2 - 3, f = e + 6) : (e = Math.max(e, -g / 2 + k.width) + 15, f = Math.min(f, g / 2 - m.width) - 15);
       this._movePort(k, e, b, l);
       this._movePort(m, f, b, n);
       h -= k.width + m.width + 10;
-      b += q;
+      b += r;
     }
     a.length && this._movePort(a[0], (f + e - a[0].width) / 2, b, 100);
   };
@@ -19796,13 +19902,13 @@ Entry.GlobalSvg = {};
   };
   b.onMouseDown = function(a) {
     function b(a) {
-      var d = a.pageX;
+      var c = a.pageX;
       a = a.pageY;
-      var c = e.left + (d - e._startX), f = e.top + (a - e._startY);
-      e.svgDom.css({left:c, top:f});
-      e._startX = d;
+      var d = e.left + (c - e._startX), f = e.top + (a - e._startY);
+      e.svgDom.css({left:d, top:f});
+      e._startX = c;
       e._startY = a;
-      e.left = c;
+      e.left = d;
       e.top = f;
     }
     function c(a) {
@@ -20293,15 +20399,15 @@ Entry.Board.OPTION_CLEAR = 2;
       a = c + 1;
       n.magnet.next && (a += n.height, h.push({point:c, endPoint:a, startBlock:l, blocks:[]}), h.push({point:a, blocks:[]}), n.absX = k);
       l.statements && (b += .01);
-      for (var q = 0;q < l.statements.length;q++) {
-        a = l.statements[q];
-        var r = l.view._statements[q];
-        r.zIndex = b;
-        r.absX = k + r.x;
-        h.push({point:r.y + c - 30, endPoint:r.y + c, startBlock:r, blocks:[]});
-        h.push({point:r.y + c + r.height, blocks:[]});
+      for (var r = 0;r < l.statements.length;r++) {
+        a = l.statements[r];
+        var q = l.view._statements[r];
+        q.zIndex = b;
+        q.absX = k + q.x;
+        h.push({point:q.y + c - 30, endPoint:q.y + c, startBlock:q, blocks:[]});
+        h.push({point:q.y + c + q.height, blocks:[]});
         b += .01;
-        g = g.concat(this._getNextMagnets(a, b, {x:r.x + k, y:r.y + c}, e));
+        g = g.concat(this._getNextMagnets(a, b, {x:q.x + k, y:q.y + c}, e));
       }
       n.magnet.next && (c += n.magnet.next.y, k += n.magnet.next.x);
     }
@@ -20337,9 +20443,9 @@ Entry.Board.OPTION_CLEAR = 2;
       k += n.x;
       h = h.concat(this._getFieldBlockMetaData(n, k, c, b, e));
       l.statements && (b += .01);
-      for (var q = 0;q < l.statements.length;q++) {
-        a = l.statements[q];
-        var r = l.view._statements[q], g = g.concat(this._getFieldMagnets(a, b, {x:r.x + k, y:r.y + c}, e));
+      for (var r = 0;r < l.statements.length;r++) {
+        a = l.statements[r];
+        var q = l.view._statements[r], g = g.concat(this._getFieldMagnets(a, b, {x:q.x + k, y:q.y + c}, e));
       }
       n.magnet.next && (c += n.magnet.next.y, k += n.magnet.next.x);
     }
@@ -20353,12 +20459,12 @@ Entry.Board.OPTION_CLEAR = 2;
       if (m instanceof Entry.FieldBlock) {
         var l = m._valueBlock;
         if (!l.view.dragInstance && (m.acceptType === f || "boolean" === m.acceptType)) {
-          var n = b + m.box.x, q = c + m.box.y + a.contentHeight % 1E3 * -.5, r = c + m.box.y + m.box.height;
-          m.acceptType === f && (h.push({point:q, endPoint:r, startBlock:l, blocks:[]}), h.push({point:r, blocks:[]}));
+          var n = b + m.box.x, r = c + m.box.y + a.contentHeight % 1E3 * -.5, q = c + m.box.y + m.box.height;
+          m.acceptType === f && (h.push({point:r, endPoint:q, startBlock:l, blocks:[]}), h.push({point:q, blocks:[]}));
           m = l.view;
           m.absX = n;
           m.zIndex = e;
-          h = h.concat(this._getFieldBlockMetaData(m, n + m.contentPos.x, q + m.contentPos.y, e + .01, f));
+          h = h.concat(this._getFieldBlockMetaData(m, n + m.contentPos.x, r + m.contentPos.y, e + .01, f));
         }
       }
     }
@@ -20379,9 +20485,9 @@ Entry.Board.OPTION_CLEAR = 2;
       k += n.x;
       h = h.concat(this._getOutputMetaData(n, k, c, b, e));
       l.statements && (b += .01);
-      for (var q = 0;q < l.statements.length;q++) {
-        a = l.statements[q];
-        var r = l.view._statements[q], g = g.concat(this._getOutputMagnets(a, b, {x:r.x + k, y:r.y + c}, e));
+      for (var r = 0;r < l.statements.length;r++) {
+        a = l.statements[r];
+        var q = l.view._statements[r], g = g.concat(this._getOutputMagnets(a, b, {x:q.x + k, y:q.y + c}, e));
       }
       n.magnet.next && (c += n.magnet.next.y, k += n.magnet.next.x);
     }
@@ -21267,7 +21373,8 @@ Entry.Vim = function(b, a) {
   Entry.Vim.PARSER_TYPE_PY_TO_BLOCK = 1;
   Entry.Vim.PARSER_TYPE_BLOCK_TO_JS = 2;
   Entry.Vim.PARSER_TYPE_BLOCK_TO_PY = 3;
-  Entry.Vim.PYTHON_IMPORT_HW = "import hw from EntryText";
+  Entry.Vim.PYTHON_IMPORT_ENTRY = "import Entry";
+  Entry.Vim.PYTHON_IMPORT_HW = "import Hw";
   b = "string" === typeof b ? $("#" + b) : $(b);
   if ("DIV" !== b.prop("tagName")) {
     return console.error("Dom is not div element");
@@ -21323,7 +21430,7 @@ Entry.Vim = function(b, a) {
     var b = this.workspace.textType;
     b === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : b === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
     a = this._parser.parse(a, Entry.Parser.PARSE_LANGUAGE);
-    a = Entry.Vim.PYTHON_IMPORT_HW.concat("\n\n").concat(a);
+    a = Entry.Vim.PYTHON_IMPORT_ENTRY.concat("\n").concat(Entry.Vim.PYTHON_IMPORT_HW).concat("\n\n").concat(a);
     this.codeMirror.setValue(a);
   };
   b.getCodeToText = function(a) {
@@ -21777,25 +21884,25 @@ Entry.Playground.prototype.generateTextView = function(b) {
   var n = Entry.createElement("div");
   n.addClass("entryPlaygroundFontSizeSlider");
   b.appendChild(n);
-  var q = Entry.createElement("div");
-  q.addClass("entryPlaygroundFontSizeIndicator");
-  n.appendChild(q);
-  this.fontSizeIndiciator = q;
   var r = Entry.createElement("div");
-  r.addClass("entryPlaygroundFontSizeKnob");
+  r.addClass("entryPlaygroundFontSizeIndicator");
   n.appendChild(r);
-  this.fontSizeKnob = r;
+  this.fontSizeIndiciator = r;
+  var q = Entry.createElement("div");
+  q.addClass("entryPlaygroundFontSizeKnob");
+  n.appendChild(q);
+  this.fontSizeKnob = q;
   e = Entry.createElement("div");
   e.addClass("entryPlaygroundFontSizeLabel");
   e.innerHTML = "\uae00\uc790 \ud06c\uae30";
   b.appendChild(e);
   var t = !1, u = 0;
-  r.onmousedown = function(a) {
+  q.onmousedown = function(a) {
     t = !0;
     u = $(n).offset().left;
   };
   document.addEventListener("mousemove", function(a) {
-    t && (a = a.pageX - u, a = Math.max(a, 5), a = Math.min(a, 88), r.style.left = a + "px", a /= .88, q.style.width = a + "%", Entry.playground.object.entity.setFontSize(a));
+    t && (a = a.pageX - u, a = Math.max(a, 5), a = Math.min(a, 88), q.style.left = a + "px", a /= .88, r.style.width = a + "%", Entry.playground.object.entity.setFontSize(a));
   });
   document.addEventListener("mouseup", function(a) {
     t = !1;
