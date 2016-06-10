@@ -17,9 +17,10 @@ goog.require("Entry.Command");
             return [thread];
         },
         log: function(thread) {
+            var lastThread = this.editor.board.code.getThreads().pop();
             return [
                 c.addThread.type,
-                ['thread', JSON.stringify(thread)],
+                ['thread', lastThread.stringify()],
                 ['code', this.editor.board.code.stringify()]
             ];
         },
@@ -88,6 +89,7 @@ goog.require("Entry.Command");
             return [block];
         },
         log: function(block, pointer) {
+            block = this.editor.board.findById(block.id);
             return [
                 c.recoverBlock.type,
                 ['block', block.stringify()],
@@ -121,10 +123,11 @@ goog.require("Entry.Command");
         log: function(block, targetBlock, count) {
             if (typeof block === "string")
                 block = this.editor.board.findById(block);
+
             return [
                 c.insertBlock.type,
                 ['blockId', block.id],
-                ['targetBlockId', targetBlock.id],
+                ['targetPointer', block.targetPointer()],
                 ['count', count],
                 ['code', this.editor.board.code.stringify()]
             ];
@@ -153,8 +156,6 @@ goog.require("Entry.Command");
         log: function(block) {
             if (typeof block === "string")
                 block = this.editor.board.findById(block);
-            var thread = block.getThread();
-            var index = thread.indexOf(block);
 
             return [
                 c.separateBlock.type,
@@ -211,12 +212,11 @@ goog.require("Entry.Command");
         log: function(block) {
             if (typeof block === "string")
                 block = this.editor.board.findById(block);
-            var threads = this.editor.board.code.getThreads();
-            var lastBlock = threads.pop().getFirstBlock();
+            var lastThread = this.editor.board.code.getThreads().pop();
             return [
                 c.cloneBlock.type,
                 ['blockId', block.id],
-                ['clonedBlockId', lastBlock.id],
+                ['thread', lastThread.stringify()],
                 ['code', this.editor.board.code.stringify()]
             ];
         },
@@ -228,17 +228,18 @@ goog.require("Entry.Command");
         do: function(block) {
             var threads = this.editor.board.code.getThreads();
             var lastBlock = threads.pop().getFirstBlock();
+            this._tempStorage = lastBlock.id;
             lastBlock.destroy(true, true);
         },
         state: function(block) {
             return [block];
         },
         log: function(block) {
-            var threads = this.editor.board.code.getThreads();
-            var lastBlock = threads.pop().getFirstBlock();
+            var blockId = this._tempStorage;
+            this._tempStorage = null;
             return [
-                c.unclondeBlock.type,
-                ['blockId', lastBlock.id],
+                c.uncloneBlock.type,
+                ['blockId', blockId],
                 ['code', this.editor.board.code.stringify()]
             ];
         },

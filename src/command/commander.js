@@ -25,6 +25,8 @@ Entry.Commander = function(injectType) {
 
     this.reporters = [];
 
+    this._tempStorage = null;
+
     Entry.Command.editor = this.editor;
 };
 
@@ -61,7 +63,7 @@ Entry.Commander = function(injectType) {
         var commandType = argumentArray.shift();
         var commandFunc = Entry.Command[commandType];
 
-        that.report('undo');
+        this.report('undo');
 
         if (Entry.stateManager) {
             Entry.stateManager.addCommand.apply(
@@ -115,17 +117,18 @@ Entry.Commander = function(injectType) {
     };
 
     p.report = function(commandType, argumentsArray) {
-        var reporters = this.reporters;
-        if (reporters.length === 0) return;
+        //var reporters = this.reporters;
+        //if (reporters.length === 0) return;
 
         var data;
 
-        if (commandType && Entry.Command[commandType] && Entry.Command[commandType].log)
+        //if (commandType && Entry.Command[commandType] && Entry.Command[commandType].log)
             data = Entry.Command[commandType].log.apply(this, argumentsArray)
-        else data = argumentsArray;
-        reporters.forEach(function(reporter) {
-            reporter.add(data);
-        });
-    }
+        //else data = argumentsArray;
+        //reporters.forEach(function(reporter) {
+            //reporter.add(data);
+        //});
+    };
+
 })(Entry.Commander.prototype)
 

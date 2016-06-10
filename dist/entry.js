@@ -6054,6 +6054,7 @@ Entry.Commander = function(b) {
   Entry.undo = this.undo.bind(this);
   this.editor = {};
   this.reporters = [];
+  this._tempStorage = null;
   Entry.Command.editor = this.editor;
 };
 (function(b) {
@@ -6071,7 +6072,7 @@ Entry.Commander = function(b) {
   };
   b.undo = function() {
     var a = Array.prototype.slice.call(arguments), b = a.shift(), d = Entry.Command[b];
-    that.report("undo");
+    this.report("undo");
     Entry.stateManager && Entry.stateManager.addCommand.apply(Entry.stateManager, [b, this, this.do, d.undo].concat(d.state.apply(this, a)));
     return {value:Entry.Command[b].do.apply(this, a), isPass:this.isPass.bind(this)};
   };
@@ -6099,14 +6100,7 @@ Entry.Commander = function(b) {
     -1 < a && this.reporters.splice(a, 1);
   };
   b.report = function(a, b) {
-    var d = this.reporters;
-    if (0 !== d.length) {
-      var e;
-      e = a && Entry.Command[a] && Entry.Command[a].log ? Entry.Command[a].log.apply(this, b) : b;
-      d.forEach(function(a) {
-        a.add(e);
-      });
-    }
+    Entry.Command[a].log.apply(this, b);
   };
 })(Entry.Commander.prototype);
 (function(b) {
@@ -6116,7 +6110,8 @@ Entry.Commander = function(b) {
     a.length && (a[0].id = Entry.Utils.generateId());
     return [a];
   }, log:function(a) {
-    return [b.addThread.type, ["thread", JSON.stringify(a)], ["code", this.editor.board.code.stringify()]];
+    a = this.editor.board.code.getThreads().pop();
+    return [b.addThread.type, ["thread", a.stringify()], ["code", this.editor.board.code.stringify()]];
   }, undo:"destroyThread"};
   b.destroyThread = {type:EntryStatic.COMMAND_TYPES.destroyThread, do:function(a) {
     this.editor.board.findById(a[0].id).destroy(!0, !0);
@@ -6145,6 +6140,7 @@ Entry.Commander = function(b) {
     "string" !== typeof a && (a = a.id);
     return [a];
   }, log:function(a, c) {
+    a = this.editor.board.findById(a.id);
     return [b.recoverBlock.type, ["block", a.stringify()], ["pointer", c], ["code", this.editor.board.code.stringify()]];
   }, undo:"destroyBlock"};
   b.insertBlock = {type:EntryStatic.COMMAND_TYPES.insertBlock, do:function(a, b, d) {
@@ -6158,7 +6154,7 @@ Entry.Commander = function(b) {
     return d;
   }, log:function(a, c, d) {
     "string" === typeof a && (a = this.editor.board.findById(a));
-    return [b.insertBlock.type, ["blockId", a.id], ["targetBlockId", c.id], ["count", d], ["code", this.editor.board.code.stringify()]];
+    return [b.insertBlock.type, ["blockId", a.id], ["targetPointer", a.targetPointer()], ["count", d], ["code", this.editor.board.code.stringify()]];
   }, undo:"insertBlock"};
   b.separateBlock = {type:EntryStatic.COMMAND_TYPES.separateBlock, do:function(a) {
     a.view && a.view._toGlobalCoordinate(Entry.DRAG_MODE_DRAG);
@@ -6170,7 +6166,6 @@ Entry.Commander = function(b) {
     return b;
   }, log:function(a) {
     "string" === typeof a && (a = this.editor.board.findById(a));
-    a.getThread().indexOf(a);
     return [b.separateBlock.type, ["blockId", a.id], ["x", a.x], ["y", a.y], ["code", this.editor.board.code.stringify()]];
   }, undo:"insertBlock"};
   b.moveBlock = {type:EntryStatic.COMMAND_TYPES.moveBlock, do:function(a, b, d) {
@@ -6189,16 +6184,19 @@ Entry.Commander = function(b) {
     return [a];
   }, log:function(a) {
     "string" === typeof a && (a = this.editor.board.findById(a));
-    var c = this.editor.board.code.getThreads().pop().getFirstBlock();
-    return [b.cloneBlock.type, ["blockId", a.id], ["clonedBlockId", c.id], ["code", this.editor.board.code.stringify()]];
+    var c = this.editor.board.code.getThreads().pop();
+    return [b.cloneBlock.type, ["blockId", a.id], ["thread", c.stringify()], ["code", this.editor.board.code.stringify()]];
   }, undo:"uncloneBlock"};
   b.uncloneBlock = {type:EntryStatic.COMMAND_TYPES.uncloneBlock, do:function(a) {
-    this.editor.board.code.getThreads().pop().getFirstBlock().destroy(!0, !0);
+    a = this.editor.board.code.getThreads().pop().getFirstBlock();
+    this._tempStorage = a.id;
+    a.destroy(!0, !0);
   }, state:function(a) {
     return [a];
   }, log:function(a) {
-    a = this.editor.board.code.getThreads().pop().getFirstBlock();
-    return [b.unclondeBlock.type, ["blockId", a.id], ["code", this.editor.board.code.stringify()]];
+    a = this._tempStorage;
+    this._tempStorage = null;
+    return [b.uncloneBlock.type, ["blockId", a], ["code", this.editor.board.code.stringify()]];
   }, undo:"cloneBlock"};
   b.scrollBoard = {type:EntryStatic.COMMAND_TYPES.scrollBoard, do:function(a, b, d) {
     d || this.editor.board.scroller._scroll(a, b);
