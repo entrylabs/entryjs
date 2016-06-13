@@ -22,7 +22,7 @@ Entry.Parser = function(mode, type, cm) {
     this.availableCode = []; 
 
     Entry.Parser.PARSE_SYNTAX = 0;
-    Entry.Parser.PARSE_LANGUAGE = 1;
+    Entry.Parser.PARSE_VARIABLE = 1;
 
     Entry.Parser.BLOCK_SKELETON_BASIC = "basic";
     Entry.Parser.BLOCK_SKELETON_BASIC_LOOP = "basic_loop";

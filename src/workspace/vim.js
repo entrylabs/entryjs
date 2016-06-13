@@ -150,7 +150,7 @@ Entry.Vim = function(dom, textType) {
             this._parser.setParser(this._mode, this._parserType, this.codeMirror);
         } 
 
-        var textCode = this._parser.parse(code, Entry.Parser.PARSE_LANGUAGE);
+        var textCode = this._parser.parse(code, Entry.Parser.PARSE_SYNTAX);
         textCode = Entry.Vim.PYTHON_IMPORT_ENTRY
         .concat("\n")
         .concat(Entry.Vim.PYTHON_IMPORT_HW)

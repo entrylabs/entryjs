@@ -14824,7 +14824,7 @@ Entry.block = {
             variable.setValue((value + variable.getValue()).toFixed(fixed));
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["entry.change_variable(%1, %2)"]}
+        "syntax": {"js": [], "py": ["%1 = %1 + %2"]}
     },
     "set_variable": {
         "color": "#E457DC",
@@ -14886,7 +14886,7 @@ Entry.block = {
             variable.setValue(value);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["entry.set_variable(%1, %2)"]}
+        "syntax": {"js": [], "py": ["%1 = %2"]}
     },
     "show_variable": {
         "color": "#E457DC",
@@ -15033,7 +15033,7 @@ Entry.block = {
             var variable = Entry.variableContainer.getVariable(variableId, sprite);
             return variable.getValue();
         },
-        "syntax": {"js": [], "py": ["entry.get_variable(%1)"]}
+        "syntax": {"js": [], "py": ["%1"]}
     },
     "ask_and_wait": {
         "color": "#E457DC",

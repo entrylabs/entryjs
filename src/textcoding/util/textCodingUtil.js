@@ -190,4 +190,18 @@ Entry.TextCodingUtil = function() {
         return result;
     }; 
 
+    p.variableFilter = function(block, index, param) {
+        console.log("paramFilter block index param", block, index, param);
+        var result = param;
+        var type = block.data.type;
+        if(type == "change_variable" || type == "set_variable" || type == "get_variable") {
+            if(index == 1) {
+                console.log("paramFilter", eval(param));
+                result = eval(param);
+            }
+        }
+
+        return result;
+    }
+
 })(Entry.TextCodingUtil.prototype);

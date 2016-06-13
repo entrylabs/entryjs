@@ -105,13 +105,15 @@ Entry.BlockToPyParser = function(blockSyntax) {
         var currentBlockSkeleton = currentBlock._schema.skeleton;
         var currentBlockParamsKeyMap = currentBlock._schema.paramsKeyMap;
 
+
         console.log("currentBlock", currentBlock, "currentBlockSkeleton", currentBlockSkeleton,
             "currentBlockParamsKeyMap", currentBlockParamsKeyMap);
 
-        if(this._parseMode == Entry.Parser.PARSE_LANGUAGE) { //In PASRSE_LANGUAGE Mode
+        var blockParam = "";
+        if(this._parseMode == Entry.Parser.PARSE_VARIABLE) { //In PASRSE_VARIABLE Mode
             if(currentBlockSkeleton == Entry.Parser.BLOCK_SKELETON_BASIC) { //If Block Sekeleton is basic
                 if(currentBlockParamsKeyMap) {  //If Block has Parameters
-                    var blockParam = "";
+                    blockParam = "";
                     var blockParamIndex = 0;
                 }
             }
@@ -124,8 +126,8 @@ Entry.BlockToPyParser = function(blockSyntax) {
             var blockToken = blockTokens[i];  
             if (blockToken.length === 0) continue;
             if (blockReg.test(blockToken)) {
-                var blockParam = blockToken.split('%')[1];
-                var index = Number(blockParam) - 1;
+                var blockParamIndex = blockToken.split('%')[1];
+                var index = Number(blockParamIndex) - 1;
                 if(schemaParams[index]) {
                     if(schemaParams[index].type == "Indicator") {
                         index++;    
@@ -148,7 +150,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         console.log("PARAM BLOCK", param);
                         console.log("PARAM BLOCK RESULT ", result);
                         
-                        if(this._parseMode == Entry.Parser.PARSE_LANGUAGE) { //In PASRSE_LANGUAGE Mode
+                        if(this._parseMode == Entry.Parser.PARSE_VARIABLE) { //In PARSE_VARIABLE Mode
                             if(currentBlockSkeleton == Entry.Parser.BLOCK_SKELETON_BASIC) { //If Block Sekeleton is basic
                                 if(currentBlockParamsKeyMap) {  //If Block has Parameters
                                     blockParam = param;
@@ -180,7 +182,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                             else {
                                 param = null;   
                             }
-                        }  
+                        }   
                         
                         param = Entry.TextCodingUtil.prototype.binaryOperatorValueConvertor(param);   
                         param = String(param);
@@ -188,13 +190,15 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         if(!Entry.TextCodingUtil.prototype.isNumeric(param) &&
                            !Entry.TextCodingUtil.prototype.isBinaryOperator(param))
                            param = String("\"" + param + "\"");  
+
+                        param = Entry.TextCodingUtil.prototype.variableFilter(block, blockParamIndex, param);
                        
                         result += param;
 
                         console.log("PARAM BLOCK", param);
                         console.log("PARAM BLOCK RESULT ", result);
                         
-                        if(this._parseMode == Entry.Parser.PARSE_LANGUAGE) { //In PASRSE_LANGUAGE Mode
+                        if(this._parseMode == Entry.Parser.PARSE_VARIABLE) { //In PARSE_VARIABLE Mode
                             if(currentBlockSkeleton == Entry.Parser.BLOCK_SKELETON_BASIC) { //If Block Sekeleton is basic
                                 if(currentBlockParamsKeyMap) {  //If Block has Parameters
                                     blockParam = param;
@@ -219,7 +223,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
                     }
                 } else {
-                    console.log("No Schema")
+                    console.log("This Block has No Schema");
                 }
             } else if (statementReg.test(blockToken)) {
                 var statements = blockToken.split(statementReg);
@@ -233,7 +237,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                     else {
                         result += statementToken;  
                         
-                        if(this._parseMode == Entry.Parser.PARSE_LANGUAGE) { //In PASRSE_LANGUAGE Mode
+                        if(this._parseMode == Entry.Parser.PARSE_VARIABLE) { //In PARSE_VARIABLE Mode
                             if(this._currentBlockSkeleton == Entry.Parser.BLOCK_SKELETON_BASIC_LOOP ||
                             this._currentBlockSkeleton == Entry.Parser.BLOCK_SKELETON_BASIC_DOUBLE_LOOP) { //If Block Sekeleton is basic
                                 if(this._currentBlockParamsKeyMap) {  //If Block has Parameters
@@ -260,7 +264,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
             }
         }
 
-        if(this._parseMode == Entry.Parser.PARSE_LANGUAGE) { //In PASRSE_LANGUAGE Mode
+        if(this._parseMode == Entry.Parser.PARSE_VARIABLE) { //In PARSE_VARIABLE Mode
             console.log("check1");
             if(currentBlockSkeleton == Entry.Parser.BLOCK_SKELETON_BASIC) { //If Block Sekeleton is basic
                 console.log("check2");
