@@ -1936,14 +1936,77 @@ Entry.block = {
         "isNotFor": [ "ArduinoExt" ],
         "func": function (sprite, script) {
             var port = script.getField("PORT", script);
-            if(!Array.isArray(Entry.hw.sendQueue['GET'])) {
-                Entry.hw.sendQueue['GET'] = [];
+            var hardwareTime = Entry.hw.portData['TIME'] || 0;
+            var nowTime = new Date().getTime();
+            var sendTime = Entry.hw.sendQueue['TIME'] || nowTime;
+            console.log(nowTime - hardwareTime);
+            Entry.hw.sendQueue['TIME'] = nowTime;
+            if(hardwareTime && (hardwareTime === sendTime && (nowTime - hardwareTime < 64))) {
+                return Entry.hw.portData.ANALOG[port] || 0;
+            } else {
+                if(!Array.isArray(Entry.hw.sendQueue['GET'])) {
+                    Entry.hw.sendQueue['GET'] = [];
+                }
+                Entry.hw.sendQueue['GET'] = {
+                    type: Entry.ArduinoExt.sensorTypes.ANALOG,
+                    port: port
+                };
+                throw new Entry.Utils.AsyncError();
+                return;
             }
-            Entry.hw.sendQueue['GET'] = {
-                type: Entry.ArduinoExt.sensorTypes.ANALOG,
-                port: port
-            };
-            return Entry.hw.portData.ANALOG[port] || 0;
+        }
+    },
+    "arduino_ext_get_ultrasonic_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        'template': "trig %1 번 echo %2 번 울트라소닉 읽기",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "A0", "0" ],
+                    [ "A1", "1" ],
+                    [ "A2", "2" ],
+                    [ "A3", "3" ],
+                    [ "A4", "4" ],
+                    [ "A5", "5" ]
+                ],
+                "value": "0",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "arduino_ext_get_analog_value"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "ArduinoExt",
+        "isNotFor": [ "ArduinoExt" ],
+        "func": function (sprite, script) {
+            var port = script.getField("PORT", script);
+            var hardwareTime = Entry.hw.portData['TIME'] || 0;
+            var nowTime = new Date().getTime();
+            var sendTime = Entry.hw.sendQueue['TIME'] || nowTime;
+            console.log(nowTime - hardwareTime);
+            Entry.hw.sendQueue['TIME'] = nowTime;
+            if(hardwareTime && (hardwareTime === sendTime && (nowTime - hardwareTime < 64))) {
+                return Entry.hw.portData.ANALOG[port] || 0;
+            } else {
+                if(!Array.isArray(Entry.hw.sendQueue['GET'])) {
+                    Entry.hw.sendQueue['GET'] = [];
+                }
+                Entry.hw.sendQueue['GET'] = {
+                    type: Entry.ArduinoExt.sensorTypes.ANALOG,
+                    port: port
+                };
+                throw new Entry.Utils.AsyncError();
+                return;
+            }
         }
     },
     "sensorBoard_get_named_sensor_value": {

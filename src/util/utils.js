@@ -1151,3 +1151,11 @@ Entry.Utils.stopProjectWithToast = function(block, message) {
     }
     throw new Error(message);
 };
+
+Entry.Utils.AsyncError = function (message) {
+    this.name = "AsyncError";
+    this.message = message || "비동기 호출 대기";
+};
+
+Entry.Utils.AsyncError.prototype = new Error();
+Entry.Utils.AsyncError.prototype.constructor  = Entry.Utils.AsyncError;

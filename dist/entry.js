@@ -12344,6 +12344,12 @@ Entry.Utils.stopProjectWithToast = function(b, a) {
   "workspace" === Entry.type && (Entry.container.selectObject(b.getCode().object.id), b.view.getBoard().activateBlock(b));
   throw Error(a);
 };
+Entry.Utils.AsyncError = function(b) {
+  this.name = "AsyncError";
+  this.message = b || "\ube44\ub3d9\uae30 \ud638\ucd9c \ub300\uae30";
+};
+Entry.Utils.AsyncError.prototype = Error();
+Entry.Utils.AsyncError.prototype.constructor = Entry.Utils.AsyncError;
 Entry.Model = function(b, a) {
   var c = Entry.Model;
   c.generateSchema(b);
@@ -16337,17 +16343,16 @@ Entry.Executor = function(b, a) {
   b.execute = function() {
     if (!this.isEnd()) {
       for (;;) {
+        var a = null;
         try {
-          var a = this.scope.block.getSchema().func.call(this.scope, this.entity, this.scope);
+          a = this.scope.block.getSchema().func.call(this.scope, this.entity, this.scope);
         } catch (b) {
-          Entry.Utils.stopProjectWithToast(this.scope.block, "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec");
+          "AsyncError" === b.name ? a = Entry.STATIC.BREAK : Entry.Utils.stopProjectWithToast(this.scope.block, "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec");
         }
         if (void 0 === a || null === a || a === Entry.STATIC.PASS) {
           if (this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this), null === this.scope.block) {
             if (this._callStack.length) {
-              var c = this.scope;
-              this.scope = this._callStack.pop();
-              if (this.scope.isLooped !== c.isLooped) {
+              if (a = this.scope, this.scope = this._callStack.pop(), this.scope.isLooped !== a.isLooped) {
                 break;
               }
             } else {

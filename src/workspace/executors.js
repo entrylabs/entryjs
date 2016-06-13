@@ -17,10 +17,15 @@ Entry.Executor = function(block, entity) {
         if (this.isEnd())
             return;
         while (true) {
+            var returnVal = null;
             try {
-                var returnVal = this.scope.block.getSchema().func.call(this.scope, this.entity, this.scope);
+                returnVal = this.scope.block.getSchema().func.call(this.scope, this.entity, this.scope);
             } catch(e) {
-                Entry.Utils.stopProjectWithToast(this.scope.block, '런타임 에러');
+                if(e.name === 'AsyncError') {
+                    returnVal = Entry.STATIC.BREAK;
+                } else {
+                    Entry.Utils.stopProjectWithToast(this.scope.block, '런타임 에러');
+                }
             }
 
             if (returnVal === undefined || returnVal === null || returnVal === Entry.STATIC.PASS) {
