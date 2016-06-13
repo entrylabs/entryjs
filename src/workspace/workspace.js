@@ -83,7 +83,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
         //Text Type in Text Coding Mode
         var oldTextType = this.textType;
-        this.textType = message; 
+        this.textType = message;
 
         switch (mode) {
             case oldMode:
@@ -129,7 +129,10 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     };
 
     p.changeBoardCode = function(code) {
+        this._syncTextCode();
         this.board.changeCode(code);
+        if (this.mode === Entry.Workspace.MODE_VIMBOARD)
+            this.codeToText(this.board.code);
     };
 
     p.changeOverlayBoardCode = function(code) {
@@ -227,6 +230,18 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         if (!board) return;
         if (board.constructor === Entry.Board)
             this.trashcan.setBoard(board);
+    };
+
+    p._syncTextCode = function() {
+        if (this.mode !== Entry.Workspace.MODE_VIMBOARD)
+            return;
+        var changedCode = this.vimBoard.textToCode(this.textType);
+        var board = this.board;
+        var code = board.code;
+
+        code.load(changedCode);
+        code.createView(board);
+        this.board.alignThreads();
     };
 
 })(Entry.Workspace.prototype);

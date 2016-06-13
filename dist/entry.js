@@ -21534,7 +21534,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     this.changeEvent.notify(b);
   };
   b.changeBoardCode = function(a) {
+    this._syncTextCode();
     this.board.changeCode(a);
+    this.mode === Entry.Workspace.MODE_VIMBOARD && this.codeToText(this.board.code);
   };
   b.changeOverlayBoardCode = function(a) {
     this.overlayBoard && this.overlayBoard.changeCode(a);
@@ -21580,6 +21582,14 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
   b._handleChangeBoard = function() {
     var a = this.selectedBoard;
     a && a.constructor === Entry.Board && this.trashcan.setBoard(a);
+  };
+  b._syncTextCode = function() {
+    if (this.mode === Entry.Workspace.MODE_VIMBOARD) {
+      var a = this.vimBoard.textToCode(this.textType), b = this.board, c = b.code;
+      c.load(a);
+      c.createView(b);
+      this.board.alignThreads();
+    }
   };
 })(Entry.Workspace.prototype);
 Entry.Playground = function() {
