@@ -11950,26 +11950,34 @@ Entry.PyToBlockParser = function(b) {
   };
   b.VariableDeclarator = function(a) {
     console.log("VariableDeclarator component", a);
-    var b = {}, b = {}, c, e = [];
-    c = !1;
-    var f = a.id.name, g = "Literal" == a.init.type ? a.init.value : NaN;
-    console.log("variable", f, "value", g);
-    var h = Entry.variableContainer.variables_, k;
-    for (k in h) {
-      var l = h[k];
-      console.log("VariableDeclarator entryVariable", l);
-      l.name_ == f && (console.log("Check VariableDeclarator Update Variable"), l.setValue(g), Entry.variableContainer.updateList(), Entry.playground.reloadPlayground(), c = !0);
+    var b = {}, b = {}, c, e = [], f = !0;
+    if (!a.id.name.includes("__filbert")) {
+      var g = a.id.name;
+      if ("Literal" == a.init.type) {
+        var h = a.init.value
+      } else {
+        a.init.arguments && a.id.name != a.init.arguments[0].name ? h = NaN : f = !1;
+      }
+      console.log("variable", g, "value", h);
+      if (f) {
+        var k = Entry.variableContainer.variables_;
+        for (c in k) {
+          var l = k[c];
+          console.log("VariableDeclarator entryVariable", l);
+          l.name_ == g && (console.log("Check VariableDeclarator Update Variable"), l.setValue(h), Entry.variableContainer.updateList(), Entry.playground.reloadPlayground());
+        }
+        f || (g = {name:g, value:h, object:Entry.stage.selectedObject.id, variableType:"variable"}, console.log("VariableDeclarator variable", g), Entry.variableContainer.addVariable(g));
+      }
     }
-    c || (f = {name:f, value:g, object:Entry.stage.selectedObject.id, variableType:"variable"}, console.log("VariableDeclarator variable", f), Entry.variableContainer.addVariable(f));
     c = a.id;
-    k = this[c.type](c);
-    console.log("VariableDeclarator idData", k);
-    b.id = k;
+    h = this[c.type](c);
+    console.log("VariableDeclarator idData", h);
+    b.id = h;
     f = a.init;
     a = this[f.type](f);
     console.log("VarialeDeclarator initData", a);
     b.init = a;
-    "Literal" != f.type ? c.name == f.arguments[0].name ? (c = this.getBlockType("%1 = %1 + %2"), "get_variable" == k.type ? e.push(k.params[0]) : e.push(null), e.push(a.params[2])) : (c = this.getBlockType("%1 = %2"), "get_variable" == k.type ? e.push(k.params[0]) : e.push(null), e.push(a)) : (c = this.getBlockType("%1 = %2"), "get_variable" == k.type ? e.push(k.params[0]) : e.push(null), e.push(a));
+    "Literal" != f.type ? f.arguments && c.name == f.arguments[0].name ? (c = this.getBlockType("%1 = %1 + %2"), "get_variable" == h.type ? e.push(h.params[0]) : e.push(null), e.push(a.params[2])) : (c = this.getBlockType("%1 = %2"), "get_variable" == h.type ? e.push(h.params[0]) : e.push(null), e.push(a)) : (c = this.getBlockType("%1 = %2"), "get_variable" == h.type ? e.push(h.params[0]) : e.push(null), e.push(a));
     b.type = c;
     b.params = e;
     console.log("VariableDeclarator result", b);

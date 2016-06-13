@@ -303,48 +303,56 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var data = {};  
         var structure = {};
         var params = []; 
-        var variableFlag = false;
+        var existed = false;
+        var variableFlag = true;
 
 
-        var variable = component.id.name;
-        if(component.init.type == "Literal")
-            var value = component.init.value;
-        else
-            var value = NaN;
+        //Variable Processing except filbtert variable
+        if(!component.id.name.includes('__filbert')) {
+            var variable = component.id.name;
+            if(component.init.type == "Literal") {
+                var value = component.init.value;
+            } else if(component.init.arguments && component.id.name != component.init.arguments[0].name) {
+                var value = NaN;  
+            } else {
+                variableFlag = false;
+            }
 
-        console.log("variable", variable, "value", value);
+            console.log("variable", variable, "value", value);
 
-        var entryVariables = Entry.variableContainer.variables_;
-        var currentObject = Entry.stage.selectedObject.id
+            if(variableFlag) {
+                var entryVariables = Entry.variableContainer.variables_;
+                var currentObject = Entry.stage.selectedObject.id
 
-        for(var i in entryVariables) {
-            var entryVariable = entryVariables[i];
-            console.log("VariableDeclarator entryVariable", entryVariable);
-            if(entryVariable.name_ == variable) {
-                console.log("Check VariableDeclarator Update Variable");
-                
-                entryVariable.setValue(value);
-                Entry.variableContainer.updateList();
-                Entry.playground.reloadPlayground();
-                
-                variableFlag = true;
-            } 
-            
+                for(var i in entryVariables) {
+                    var entryVariable = entryVariables[i];
+                    console.log("VariableDeclarator entryVariable", entryVariable);
+                    if(entryVariable.name_ == variable) {
+                        console.log("Check VariableDeclarator Update Variable");
+                        
+                        entryVariable.setValue(value);
+                        Entry.variableContainer.updateList();
+                        Entry.playground.reloadPlayground();
+                        
+                        existed = true;
+                    } 
+                    
+                }
+
+                if(!variableFlag) {
+                    variable = {
+                        name: variable,
+                        value: value,
+                        object: Entry.stage.selectedObject.id, 
+                        variableType: 'variable'
+                    };
+
+                    console.log("VariableDeclarator variable", variable);
+
+                    Entry.variableContainer.addVariable(variable);
+                }
+            }
         }
-
-        if(!variableFlag) {
-            variable = {
-                name: variable,
-                value: value,
-                object: Entry.stage.selectedObject.id,
-                variableType: 'variable'
-            };
-
-            console.log("VariableDeclarator variable", variable);
-
-            Entry.variableContainer.addVariable(variable);
-        }
-
 
         /*if(variable && value)
             this._variableMap.put(variable, value);
@@ -363,7 +371,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         data.init = initData;
 
         if(init.type != "Literal") {
-            if(id.name == init.arguments[0].name) {
+            if(init.arguments && id.name == init.arguments[0].name) {
                 var syntax = String("%1 = %1 + %2");
                 var type = this.getBlockType(syntax);
                 structure.type = type;
