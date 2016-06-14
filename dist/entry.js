@@ -6035,6 +6035,17 @@ Entry.Observer = function(b, a, c, d) {
   };
 })(Entry.Observer.prototype);
 Entry.Command = {};
+(function(b) {
+  b["do"] = {type:EntryStatic.COMMAND_TYPES["do"], log:function(a) {
+    return [b["do"].type];
+  }};
+  b.undo = {type:EntryStatic.COMMAND_TYPES.undo, log:function(a) {
+    return [b.undo.type];
+  }};
+  b.redo = {type:EntryStatic.COMMAND_TYPES.redo, log:function(a) {
+    return [b.redo.type];
+  }};
+})(Entry.Command);
 Entry.Commander = function(b) {
   if ("workspace" == b || "phone" == b) {
     Entry.stateManager = new Entry.StateManager;
@@ -6042,23 +6053,32 @@ Entry.Commander = function(b) {
   Entry.do = this.do.bind(this);
   Entry.undo = this.undo.bind(this);
   this.editor = {};
+  this.reporters = [];
+  this._tempStorage = null;
   Entry.Command.editor = this.editor;
 };
 (function(b) {
   b.do = function(a) {
-    var b = Array.prototype.slice.call(arguments);
-    b.shift();
-    var d = Entry.Command[a];
-    Entry.stateManager && Entry.stateManager.addCommand.apply(Entry.stateManager, [a, this, this.do, d.undo].concat(d.state.apply(this, b)));
-    return {value:Entry.Command[a].do.apply(this, b), isPass:this.isPass.bind(this)};
+    var b = this, d = Array.prototype.slice.call(arguments);
+    d.shift();
+    var e = Entry.Command[a];
+    Entry.stateManager && Entry.stateManager.addCommand.apply(Entry.stateManager, [a, this, this.do, e.undo].concat(e.state.apply(this, d)));
+    e = Entry.Command[a].do.apply(this, d);
+    setTimeout(function() {
+      b.report("do");
+      b.report(a, d);
+    }, 0);
+    return {value:e, isPass:this.isPass.bind(this)};
   };
   b.undo = function() {
     var a = Array.prototype.slice.call(arguments), b = a.shift(), d = Entry.Command[b];
+    this.report("undo");
     Entry.stateManager && Entry.stateManager.addCommand.apply(Entry.stateManager, [b, this, this.do, d.undo].concat(d.state.apply(this, a)));
     return {value:Entry.Command[b].do.apply(this, a), isPass:this.isPass.bind(this)};
   };
   b.redo = function() {
     var a = Array.prototype.slice.call(arguments), b = a.shift(), d = Entry.Command[b];
+    that.report("redo");
     Entry.stateManager && Entry.stateManager.addCommand.apply(Entry.stateManager, [b, this, this.undo, b].concat(d.state.apply(null, a)));
     d.undo.apply(this, a);
   };
@@ -6072,40 +6092,65 @@ Entry.Commander = function(b) {
       b && (b.isPass = a);
     }
   };
+  b.addReporter = function(a) {
+    this.reporters.push(a);
+  };
+  b.removeReporter = function(a) {
+    a = this.reporters.indexOf(a);
+    -1 < a && this.reporters.splice(a, 1);
+  };
+  b.report = function(a, b) {
+    var d = this.reporters;
+    if (0 !== d.length) {
+      var e;
+      e = a && Entry.Command[a] && Entry.Command[a].log ? Entry.Command[a].log.apply(this, b) : b;
+      d.forEach(function(a) {
+        a.add(e);
+      });
+    }
+  };
 })(Entry.Commander.prototype);
 (function(b) {
-  b.addThread = {type:101, do:function(a) {
+  b.addThread = {type:EntryStatic.COMMAND_TYPES.addThread, do:function(a) {
     return this.editor.board.code.createThread(a);
   }, state:function(a) {
-    0 < a.length && (a[0].id = Entry.Utils.generateId());
+    a.length && (a[0].id = Entry.Utils.generateId());
     return [a];
   }, log:function(a) {
-    return [a.id, a.toJSON()];
+    a = this.editor.board.code.getThreads().pop();
+    return [b.addThread.type, ["thread", a.stringify()], ["code", this.editor.board.code.stringify()]];
   }, undo:"destroyThread"};
-  b.destroyThread = {type:106, do:function(a) {
+  b.destroyThread = {type:EntryStatic.COMMAND_TYPES.destroyThread, do:function(a) {
     this.editor.board.findById(a[0].id).destroy(!0, !0);
   }, state:function(a) {
     return [this.editor.board.findById(a[0].id).thread.toJSON()];
   }, log:function(a) {
+    a = a[0].id;
+    this.editor.board.findById(a);
+    return [b.destroyThread.type, ["blockId", a], ["code", this.editor.board.code.stringify()]];
   }, undo:"addThread"};
-  b.destroyBlock = {type:106, do:function(a) {
+  b.destroyBlock = {type:EntryStatic.COMMAND_TYPES.destroyBlock, do:function(a) {
     "string" === typeof a && (a = this.editor.board.findById(a));
     a.doDestroy(!0);
   }, state:function(a) {
     "string" === typeof a && (a = this.editor.board.findById(a));
     return [a.toJSON(), a.pointer()];
   }, log:function(a) {
+    "string" === typeof a && (a = this.editor.board.findById(a));
+    return [b.destroyBlock.type, ["blockId", a.id], ["code", this.editor.board.code.stringify()]];
   }, undo:"recoverBlock"};
-  b.recoverBlock = {type:106, do:function(a, b) {
+  b.recoverBlock = {type:EntryStatic.COMMAND_TYPES.recoverBlock, do:function(a, b) {
     var d = this.editor.board.code.createThread([a]).getFirstBlock();
     "string" === typeof d && (d = this.editor.board.findById(d));
     this.editor.board.insert(d, b);
   }, state:function(a) {
     "string" !== typeof a && (a = a.id);
     return [a];
-  }, log:function(a) {
+  }, log:function(a, c) {
+    a = this.editor.board.findById(a.id);
+    return [b.recoverBlock.type, ["block", a.stringify()], ["pointer", c], ["code", this.editor.board.code.stringify()]];
   }, undo:"destroyBlock"};
-  b.insertBlock = {type:102, do:function(a, b, d) {
+  b.insertBlock = {type:EntryStatic.COMMAND_TYPES.insertBlock, do:function(a, b, d) {
     "string" === typeof a && (a = this.editor.board.findById(a));
     this.editor.board.insert(a, b, d);
   }, state:function(a, b) {
@@ -6114,9 +6159,11 @@ Entry.Commander = function(b) {
     d.push(e);
     "string" !== typeof a && "basic" === a.getBlockType() && d.push(a.thread.getCount(a));
     return d;
-  }, log:function(a) {
+  }, log:function(a, c, d) {
+    "string" === typeof a && (a = this.editor.board.findById(a));
+    return [b.insertBlock.type, ["blockId", a.id], ["targetPointer", a.targetPointer()], ["count", d], ["code", this.editor.board.code.stringify()]];
   }, undo:"insertBlock"};
-  b.separateBlock = {type:103, do:function(a) {
+  b.separateBlock = {type:EntryStatic.COMMAND_TYPES.separateBlock, do:function(a) {
     a.view && a.view._toGlobalCoordinate(Entry.DRAG_MODE_DRAG);
     a.doSeparate();
   }, state:function(a) {
@@ -6125,48 +6172,57 @@ Entry.Commander = function(b) {
     "basic" === a.getBlockType() && b.push(a.thread.getCount(a));
     return b;
   }, log:function(a) {
+    "string" === typeof a && (a = this.editor.board.findById(a));
+    return [b.separateBlock.type, ["blockId", a.id], ["x", a.x], ["y", a.y], ["code", this.editor.board.code.stringify()]];
   }, undo:"insertBlock"};
-  b.moveBlock = {type:104, do:function(a, b, d) {
+  b.moveBlock = {type:EntryStatic.COMMAND_TYPES.moveBlock, do:function(a, b, d) {
     void 0 !== b ? (a = this.editor.board.findById(a), a.moveTo(b, d)) : a._updatePos();
   }, state:function(a) {
     "string" === typeof a && (a = this.editor.board.findById(a));
     return [a.id, a.x, a.y];
-  }, log:function(a) {
-    return [a.id, a.toJSON()];
+  }, log:function(a, c, d) {
+    return [b.moveBlock.type, ["blockId", a.id], ["x", a.x], ["y", a.y], ["code", this.editor.board.code.stringify()]];
   }, undo:"moveBlock"};
-  b.cloneBlock = {type:105, do:function(a) {
+  b.cloneBlock = {type:EntryStatic.COMMAND_TYPES.cloneBlock, do:function(a) {
     "string" === typeof a && (a = this.editor.board.findById(a));
     this.editor.board.code.createThread(a.copy());
   }, state:function(a) {
     "string" !== typeof a && (a = a.id);
     return [a];
   }, log:function(a) {
-    return [a.id, a.toJSON()];
+    "string" === typeof a && (a = this.editor.board.findById(a));
+    var c = this.editor.board.code.getThreads().pop();
+    return [b.cloneBlock.type, ["blockId", a.id], ["thread", c.stringify()], ["code", this.editor.board.code.stringify()]];
   }, undo:"uncloneBlock"};
-  b.uncloneBlock = {type:105, do:function(a) {
-    this.editor.board.code.getThreads().pop().getFirstBlock().destroy(!0, !0);
+  b.uncloneBlock = {type:EntryStatic.COMMAND_TYPES.uncloneBlock, do:function(a) {
+    a = this.editor.board.code.getThreads().pop().getFirstBlock();
+    this._tempStorage = a.id;
+    a.destroy(!0, !0);
   }, state:function(a) {
     return [a];
   }, log:function(a) {
-    return [a.id, a.toJSON()];
+    a = this._tempStorage;
+    this._tempStorage = null;
+    return [b.uncloneBlock.type, ["blockId", a], ["code", this.editor.board.code.stringify()]];
   }, undo:"cloneBlock"};
-  b.scrollBoard = {type:105, do:function(a, b) {
-    this.editor.board.scroller._scroll(a, b);
+  b.scrollBoard = {type:EntryStatic.COMMAND_TYPES.scrollBoard, do:function(a, b, d) {
+    d || this.editor.board.scroller._scroll(a, b);
+    delete this.editor.board.scroller._diffs;
   }, state:function(a, b) {
     return [-a, -b];
-  }, log:function(a) {
-    return [a.id, a.toJSON()];
+  }, log:function(a, c) {
+    return [b.scrollBoard.type, ["dx", a], ["dy", c]];
   }, undo:"scrollBoard"};
-  b.setFieldValue = {type:106, do:function(a, b, d, e, f) {
+  b.setFieldValue = {type:EntryStatic.COMMAND_TYPES.setFieldValue, do:function(a, b, d, e, f) {
     b.setValue(f, !0);
   }, state:function(a, b, d, e, f) {
     return [a, b, d, f, e];
-  }, log:function(a, b) {
-    return [a.id, b];
+  }, log:function(a, c, d, e, f) {
+    return [b.setFieldValue.type, ["pointer", d], ["newValue", f], ["code", this.editor.board.code.stringify()]];
   }, undo:"setFieldValue"};
 })(Entry.Command);
 (function(b) {
-  b.selectObject = {type:201, do:function(a) {
+  b.selectObject = {type:EntryStatic.COMMAND_TYPES.selectObject, do:function(a) {
     return Entry.container.selectObject(a);
   }, state:function(a) {
     if ((a = Entry.playground) && a.object) {
@@ -7878,16 +7934,21 @@ Entry.ActivityReporter = function() {
 };
 (function(b) {
   b.add = function(a) {
-    if (!(a instanceof Entry.Activity)) {
-      return console.error("Activity must be an instanceof Entry.MazeActivity");
+    if (a && 0 !== a.length) {
+      if (!(a instanceof Entry.Activity)) {
+        var b = a.shift();
+        a = new Entry.Activity(b, a);
+      }
+      this._activities.push(a);
     }
-    this._activities.push(a);
   };
   b.clear = function() {
     this._activities = [];
   };
   b.get = function() {
     return this._activities;
+  };
+  b.report = function() {
   };
 })(Entry.ActivityReporter.prototype);
 Entry.State = function(b, a, c, d) {
@@ -11888,6 +11949,7 @@ Entry.Utils.bindGlobalEvent = function(b) {
 };
 Entry.Utils.makeActivityReporter = function() {
   Entry.activityReporter = new Entry.ActivityReporter;
+  Entry.commander && Entry.commander.addReporter(Entry.activityReporter);
   return Entry.activityReporter;
 };
 Entry.Utils.initEntryEvent_ = function() {
@@ -17653,6 +17715,7 @@ Entry.Scroller = function(b, a, c) {
   this.createScrollBar();
   this.setOpacity(0);
   this._bindEvent();
+  this._scrollCommand = _.debounce(Entry.do, 200);
 };
 Entry.Scroller.RADIUS = 7;
 (function(b) {
@@ -17719,7 +17782,11 @@ Entry.Scroller.RADIUS = 7;
       b = Math.max(-h + Entry.BOARD_PADDING - g, b);
       a = Math.min(e.width() - Entry.BOARD_PADDING - f, a);
       b = Math.min(e.height() - Entry.BOARD_PADDING - g, b);
-      Entry.do("scrollBoard", a, b).isPass();
+      this._scroll(a, b);
+      this._diffs || (this._diffs = [0, 0]);
+      this._diffs[0] += a;
+      this._diffs[1] += b;
+      this._scrollCommand("scrollBoard", this._diffs[0], this._diffs[1], !0);
     }
   };
   b._scroll = function(a, b) {
@@ -18582,6 +18649,9 @@ Entry.Thread = function(b, a, c) {
     }
     return b;
   };
+  b.stringify = function() {
+    return JSON.stringify(this.toJSON());
+  };
 })(Entry.Thread.prototype);
 Entry.Block = function(b, a) {
   var c = this;
@@ -18867,6 +18937,9 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
       }
     }
     return b;
+  };
+  b.stringify = function() {
+    return JSON.stringify(this.toJSON());
   };
 })(Entry.Block.prototype);
 Entry.ThreadView = function(b, a) {
