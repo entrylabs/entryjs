@@ -17729,6 +17729,7 @@ Entry.block = {
     },
     "dplay_buzzer": {
         "color": "#00979D",
+        "fontColor": "#FFF",        
         "skeleton": "basic",
         "statements": [],
         "template": "디지털 10번 부저를 %1 %2 %3 박자로 연주하기",
