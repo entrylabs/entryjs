@@ -18285,6 +18285,10 @@ Entry.Board.OPTION_CLEAR = 2;
     3 === b.length ? a.moveTo(b[0], b[1]) : 4 === b.length && 0 === b[3] ? (b = this.code.getThreads()[b[2]], a.thread.cut(a), b.insertToTop(a), a.getNextBlock().view.bindPrev()) : (b = b instanceof Array ? this.code.getTargetByPointer(b) : b, b instanceof Entry.Block ? ("basic" === a.getBlockType() && a.view.bindPrev(b), a.doInsert(b)) : b instanceof Entry.FieldStatement ? (a.view.bindPrev(b), b.insertTopBlock(a)) : a.doInsert(b));
   };
   b.adjustThreadsPosition = function() {
+    var a = this.code;
+    a && (a = a.getThreads()) && 0 !== a.length && (a = a.sort(function(a, b) {
+      return a.getFirstBlock().view.x - b.getFirstBlock().view.x;
+    }), a = a[0].getFirstBlock()) && (a = a.view, a = a.getAbsoluteCoordinate(), this.scroller.scroll(50 - a.x, 30 - a.y));
   };
   b._initContextOptions = function() {
     var a = this;
@@ -19711,21 +19715,9 @@ Entry.Playground.prototype.injectObject = function(b) {
   }
 };
 Entry.Playground.prototype.injectCode = function() {
-  this.mainWorkspace.changeBoardCode(this.object.script);
-};
-Entry.Playground.prototype.adjustScroll = function(b, a) {
-  var c = Blockly.mainWorkspace.scrollbar.vScroll;
-  Blockly.mainWorkspace.scrollbar.hScroll.svgGroup_.setAttribute("opacity", "1");
-  c.svgGroup_.setAttribute("opacity", "1");
-  if (Blockly.mainWorkspace.getMetrics()) {
-    Blockly.removeAllRanges();
-    var c = Blockly.mainWorkspace.getMetrics(), d, e;
-    d = Math.min(b, -c.contentLeft);
-    e = Math.min(a, -c.contentTop);
-    d = Math.max(d, c.viewWidth - c.contentLeft - c.contentWidth);
-    e = Math.max(e, c.viewHeight - c.contentTop - c.contentHeight);
-    Blockly.mainWorkspace.scrollbar.set(-d - c.contentLeft, -e - c.contentTop);
-  }
+  var b = this.mainWorkspace;
+  b.changeBoardCode(this.object.script);
+  b.getBoard().adjustThreadsPosition();
 };
 Entry.Playground.prototype.injectPicture = function() {
   var b = this.pictureListView_;
