@@ -8585,7 +8585,7 @@ Entry.EntryObject.prototype.setRotateMethod = function(b) {
   Entry.stage.selectedObject && Entry.stage.selectedObject.entity && (Entry.stage.updateObject(), Entry.stage.updateHandle());
 };
 Entry.EntryObject.prototype.initRotateValue = function(b) {
-  this.rotateMethod != b && (this.entity.rotation = 0, this.entity.direction = 90);
+  this.rotateMethod != b && (b = this.entity, b.rotation = 0, b.direction = 90, b.flip = !1);
 };
 Entry.EntryObject.prototype.updateRotateMethodView = function() {
   var b = this.rotateMethod;
@@ -11335,8 +11335,17 @@ Entry.Stage.prototype.updateObject = function() {
 Entry.Stage.prototype.updateHandle = function() {
   this.editEntity = !0;
   var b = this.handle, a = this.selectedObject.entity;
-  a.lineBreak ? (a.setHeight(b.height / a.getScaleY()), a.setWidth(b.width / a.getScaleX())) : (0 !== a.width && (0 > a.getScaleX() ? a.setScaleX(-b.width / a.width) : a.setScaleX(b.width / a.width)), 0 !== a.height && a.setScaleY(b.height / a.height));
-  var c = b.rotation / 180 * Math.PI;
+  if (a.lineBreak) {
+    a.setHeight(b.height / a.getScaleY()), a.setWidth(b.width / a.getScaleX());
+  } else {
+    if (0 !== a.width) {
+      var c = Math.abs(b.width / a.width);
+      a.flip && (c *= -1);
+      a.setScaleX(c);
+    }
+    0 !== a.height && a.setScaleY(b.height / a.height);
+  }
+  c = b.rotation / 180 * Math.PI;
   if ("textBox" == a.type) {
     var d = b.regX / a.scaleX, d = b.regY / a.scaleY;
     if (a.getLineBreak()) {
