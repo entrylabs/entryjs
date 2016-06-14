@@ -9632,13 +9632,16 @@ Entry.Painter.prototype.generateView = function(b) {
     d = Entry.createElement("legend");
     d.innerHTML = Lang.Workspace.picture_size;
     this.attrResizeArea.appendChild(d);
-    d = Entry.createElement("div");
-    d.addClass("entryPlaygroundPainterAttrResizeX");
+    d = Entry.createElement("div", "painterAttrWrapper");
+    d.addClass("painterAttrWrapper");
     this.attrResizeArea.appendChild(d);
     c = Entry.createElement("div");
-    c.addClass("entryPlaygroundPainterAttrResizeXTop");
-    c.innerHTML = "X";
+    c.addClass("entryPlaygroundPainterAttrResizeX");
     d.appendChild(c);
+    e = Entry.createElement("div");
+    e.addClass("entryPlaygroundPainterAttrResizeXTop");
+    e.innerHTML = "X";
+    c.appendChild(e);
     this.objectWidthInput = Entry.createElement("input", "entryPainterAttrWidth");
     this.objectWidthInput.onblur = function() {
       if (isNaN(this.value)) {
@@ -9648,18 +9651,18 @@ Entry.Painter.prototype.generateView = function(b) {
       a.updateImageHandle();
     };
     this.objectWidthInput.addClass("entryPlaygroundPainterNumberInput");
-    d.appendChild(this.objectWidthInput);
-    d = Entry.createElement("div");
-    d.addClass("entryPlaygroundPainterSizeText");
-    d.innerHTML = "x";
-    this.attrResizeArea.appendChild(d);
-    d = Entry.createElement("div");
-    d.addClass("entryPlaygroundAttrReiszeY");
-    this.attrResizeArea.appendChild(d);
+    c.appendChild(this.objectWidthInput);
     c = Entry.createElement("div");
-    c.addClass("entryPlaygroundPainterAttrResizeYTop");
-    c.innerHTML = "Y";
+    c.addClass("entryPlaygroundPainterSizeText");
+    c.innerHTML = "x";
     d.appendChild(c);
+    c = Entry.createElement("div");
+    c.addClass("entryPlaygroundAttrReiszeY");
+    d.appendChild(c);
+    d = Entry.createElement("div");
+    d.addClass("entryPlaygroundPainterAttrResizeYTop");
+    d.innerHTML = "Y";
+    c.appendChild(d);
     this.objectHeightInput = Entry.createElement("input", "entryPainterAttrHeight");
     this.objectHeightInput.onblur = function() {
       if (isNaN(this.value)) {
@@ -9669,17 +9672,17 @@ Entry.Painter.prototype.generateView = function(b) {
       a.updateImageHandle();
     };
     this.objectHeightInput.addClass("entryPlaygroundPainterNumberInput");
-    d.appendChild(this.objectHeightInput);
+    c.appendChild(this.objectHeightInput);
     this.attrRotateArea = Entry.createElement("div", "painterAttrRotateArea");
     this.attrRotateArea.addClass("painterAttrRotateArea");
     g.appendChild(this.attrRotateArea);
+    d = Entry.createElement("div");
+    d.addClass("painterAttrRotateName");
+    d.innerHTML = Lang.Workspace.picture_rotation;
+    this.attrRotateArea.appendChild(d);
     d = Entry.createElement("fieldset", "entryPainterAttrRotate");
     d.addClass("entryPlaygroundPainterAttrRotate");
     this.attrRotateArea.appendChild(d);
-    c = Entry.createElement("div");
-    c.addClass("painterAttrRotateName");
-    c.innerHTML = Lang.Workspace.picture_rotation;
-    this.attrRotateArea.appendChild(c);
     c = Entry.createElement("div");
     c.addClass("painterAttrRotateTop");
     c.innerHTML = "\u03bf";

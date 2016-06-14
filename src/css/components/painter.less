@@ -275,10 +275,7 @@
 }
 
 .entryPlaygroundPainterAttrResize{
-    position: absolute;
-    top: 4px;
-    left: 5px;
-    padding: 4px;
+    padding: 4px 4px 0px 4px;
 }
 .entryPlaygroundPainterAttrResize>legend {
     background-color: transparent;
@@ -298,19 +295,18 @@
     color: white;
 }
 .entryPlaygroundPainterAttrRotate {
-    position: absolute;
-    top:77px;
-    left: 10px;
     width: 40px;
     height: 40px;
     background-color: #643cd9;
     border-radius: 3px;
+    margin-top: -3px;
 }
 .entryPlaygroundPainterSizeText {
-    position: absolute;
-    left: 48px;
     width:10px;
     color:black;
+    display: inline-block;
+    margin-left: 5px;
+    margin-right: 1px;
 }
 .painterAttrRotateTop {
     width: 40px;
@@ -617,10 +613,9 @@
 .entryPlaygroundPainterToolboxCursor:hover {
     .backgroundImage("on_hand.png");
 }
+
 .entryPlaygroundPainterAttrResizeX {
-    position:absolute;
-    top:17px;
-    background-color: transparent;
+    display: inline-block;
     width:40px;
     height:40px;
     background-color: #643cd9;
@@ -663,18 +658,14 @@
     border-radius: 0 0 3px 3px;
     background-color: #643cd9;
 }
-.entryPlaygroundPainterAttrResize {
-    float: left;
-    width: 100px;
-}
 .entryPlaygroundAttrReiszeY {
-    position: absolute;
     top:17px;
     left:60px;
     width:40px;
     height:40px;
     background-color: #643cd9;
     border-radius: 3px;
+    display: inline-block;
 
 }
 .entryPlaygroundPainterspace{
@@ -691,6 +682,9 @@
     height:40px;
     background-color: #643cd9;
     border-radius: 3px;
+}
+#painterAttrRotateArea {
+    padding: 4px 4px 0px 4px;
 }
 .entryPlaygroundPainterRotateAreaTop{
     height: 10px;
@@ -849,13 +843,13 @@
 }
 
 .painterAttrRotateName ,.painterAttrOpacityName  {
-    position:absolute;
     background-color: transparent;
     margin-bottom: 0;
     border-bottom: 0;
     left: 2px;
     padding:2px;
     font-size:9pt;
+    display: block;
 }
 
 .painterAttrThickName {
@@ -1136,3 +1130,6 @@
     height: 40px;
 }
 
+.painterAttrWrapper {
+     margin-top: -7px;
+}
