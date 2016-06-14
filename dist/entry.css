@@ -608,6 +608,8 @@ svg .svgBlockGroup text {
   height: 20px;
   padding: 3px 5px 3px 6px;
   width: 100%;
+  position: relative;
+  overflow: hidden;
 }
 .entry-widget-dropdown .rect .left {
   display: inline-block;
@@ -617,6 +619,17 @@ svg .svgBlockGroup text {
   display: inline-block;
 }
 .entry-widget-dropdown .rect:hover {
+  background-color: #127cdb;
+  color: white;
+}
+.entry-widget-dropdown.rendered .rect .left {
+  position: absolute;
+}
+.entry-widget-dropdown.rendered .rect .right {
+  position: absolute;
+  left: 20px;
+}
+.entry-widget-dropdown.rendered .rect:hover {
   background-color: #127cdb;
   color: white;
 }

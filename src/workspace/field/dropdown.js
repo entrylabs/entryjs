@@ -193,7 +193,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
         var documentHeight = $(document).height();
         var optionGroupHeight = this.optionGroup.height();
-        var optionGroupWidth = this.optionGroup.width() + 20;
+        var optionGroupWidth = this.optionGroup.width() + 30;
 
         //not enough space below
         if (documentHeight < pos.y + optionGroupHeight + 30) {
@@ -220,10 +220,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             }
         } else pos.x += this.box.width/2 - optionGroupWidth/2;
 
+        this.optionGroup.addClass('rendered');
         this.optionGroup.css({
             left: pos.x, top: pos.y,
             width: optionGroupWidth
         });
+        var rights = this.optionGroup.find('.right');
+        rights.width(optionGroupWidth-20);
     };
 
     p.applyValue = function(value) {
