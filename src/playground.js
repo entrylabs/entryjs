@@ -277,26 +277,6 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
         class: "entryWorkspaceBlockMenu"
     });
 
-    // new Entry.BlockDriver().convert();
-    // //attach event for event block
-    // var blocks = Entry.block;
-
-    // blocks.when_run_button_click.event = "start";
-    // blocks.when_some_key_pressed.event = "keyPress";
-    // blocks.when_some_key_click.event = "keyPress";
-    // blocks.when_message_cast.event = "when_message_cast";
-    // blocks.when_scene_start.event = "when_scene_start";
-    // blocks.when_clone_start.event = "when_clone_start";
-    // blocks.mouse_clicked.event = "mouse_clicked";
-    // blocks.mouse_click_cancled.event = "mouse_click_cancled";
-    // blocks.when_object_click.event = "when_object_click";
-    // blocks.when_object_click_canceled.event = "when_object_click_canceled";
-
-    // blocks.if_else.template = "만일 %1 이라면 %2 %3 아니면";
-    // blocks.if_else.params.push({
-    //     type: 'LineBreak'
-    // });
-
     this.mainWorkspace = new Entry.Workspace(
         {
             'blockMenu': {
@@ -826,32 +806,11 @@ Entry.Playground.prototype.injectObject = function(object) {
  */
 Entry.Playground.prototype.injectCode = function() {
     var code = this.object.script;
-    this.mainWorkspace.changeBoardCode(code);
+    var ws = this.mainWorkspace;
+    ws.changeBoardCode(code);
+    ws.getBoard().adjustThreadsPosition();
 };
 
-Entry.Playground.prototype.adjustScroll = function(xc, yc) {
-  var hScroll = Blockly.mainWorkspace.scrollbar.hScroll;
-  var vScroll = Blockly.mainWorkspace.scrollbar.vScroll;
-  hScroll.svgGroup_.setAttribute('opacity', '1');
-  vScroll.svgGroup_.setAttribute('opacity', '1');
-
-  if(Blockly.mainWorkspace.getMetrics()) {
-    Blockly.removeAllRanges();
-    var metrics = Blockly.mainWorkspace.getMetrics();
-    var x = xc;
-    var y = yc;
-    x = Math.min(x, -metrics.contentLeft);
-    y = Math.min(y, -metrics.contentTop);
-    x = Math.max(x, metrics.viewWidth - metrics.contentLeft -
-                 metrics.contentWidth);
-    y = Math.max(y, metrics.viewHeight - metrics.contentTop -
-                 metrics.contentHeight);
-
-    Blockly.mainWorkspace.scrollbar.set(-x - metrics.contentLeft,
-                                        -y - metrics.contentTop);
-
-    }
-};
 /**
  * Inject picture
  */

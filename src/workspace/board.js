@@ -860,28 +860,20 @@ Entry.Board.OPTION_CLEAR = 2;
     };
 
     p.adjustThreadsPosition = function() {
-        return;
         var code = this.code;
         if (!code) return;
 
         var threads = code.getThreads();
-        var arr = [];
+        if (!threads || threads.length === 0) return;
 
-        threads.forEach(function(t) {
-            arr.push({
-                    thread: t,
-                    len: t.countBlock()
-                });
+        threads = threads.sort(function(a,b) {
+            return a.getFirstBlock().view.x - b.getFirstBlock().view.x;
         });
 
-        arr = arr.sort(function(a,b) {
-            return b.len - a.len;
-        });
-
-        var target = arr[0];
-        if (target) {
-            target = target.thread.getFirstBlock().view;
-            var pos = target.getAbsoluteCoordinate();
+        var block  = threads[0].getFirstBlock();
+        if (block) {
+            block = block.view;
+            var pos = block.getAbsoluteCoordinate();
 
             this.scroller.scroll(
                 50 - pos.x, 30 - pos.y
