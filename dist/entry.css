@@ -1895,6 +1895,37 @@ svg .svgBlockGroup text {
   background-repeat: no-repeat;
   background-position: center;
 }
+.entryRunButtonBigMinimize {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 111px;
+  height: 111px;
+  margin: -55px 0 0 -55px;
+  border: none;
+  padding: 0;
+  background-image: url('../images/play_btn.png');
+  background-repeat: no-repeat;
+  background-position: 40px center;
+  background-color: rgba(0, 0, 0, 0.5);
+  -webkit-border-radius: 55px;
+  border-radius: 55px;
+  background-clip: padding-box;
+  z-index: 100;
+  cursor: pointer;
+}
+@media screen and (max-width: 500px) {
+  .entryRunButtonBigMinimize {
+    width: 80px;
+    height: 80px;
+    margin: -40px 0 0 -40px;
+    background-position: 32px center;
+    background-size: 25px;
+  }
+}
+.entryRunButtonBigMinimize:hover {
+  opacity: 0.8;
+}
 .entryEngineButtonWorkspace_w {
   border: none;
   outline: none;

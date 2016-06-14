@@ -82,8 +82,10 @@ Entry.EntryObject = function(model) {
                         fileName.substring(2, 4) + '/image/' + fileName + '.png';
                 }
             }
+            Entry.Loader.addQueue();
             image.onload = function(e) {
                 Entry.container.cachePicture(picture.id, image);
+                Entry.Loader.removeQueue();
             };
         }
     }
