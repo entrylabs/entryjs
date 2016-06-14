@@ -231,13 +231,35 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var paramsDefMeta = block.def.params; 
             
             var params = [];
+            var param;
             for(var i in paramsMeta) { 
                 console.log("Identifiler paramsMeta, paramsDefMeta", paramsMeta[i], paramsDefMeta[i]);
                 if(paramsMeta[i].type == "Text")
                     continue;
-                var param = this['Param'+paramsMeta[i].type](value, paramsMeta[i], paramsDefMeta[i]);
-                params.push(param);
+                param = this['Param'+paramsMeta[i].type](value, paramsMeta[i], paramsDefMeta[i]);
+
+                
             }
+
+            console.log("Identifiler param", param);
+            
+
+            if(!param || param == 'undefined') {
+                console.log("check in");
+                var entryVariables = Entry.variableContainer.variables_;
+                console.log("Identifiler entryVariables", entryVariables);
+                for(var e in entryVariables) {
+                    var entryVariable = entryVariables[e];
+                    if(entryVariable.name_ == value) {
+                        param = entryVariable.id_;
+                        break;
+                    }
+
+                } 
+            }
+
+
+            params.push(param);
 
             structure.type = type;
             structure.params = params;
@@ -259,20 +281,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         var declarations = component.declarations; 
 
-        /*if(declarations[0].init.type == "Literal") {
-            var syntax = String("%1 = %2");
-            var type = this.getBlockType(syntax);
-            structure.type = type;
-
-
-        } else {
-            var syntax = String("%1 = %1 + %2");
-            var type = this.getBlockType(syntax);
-            structure.type = type;
-        }*/
-
-        //console.log("VariableDeclaration Syntax", syntax);
-
         for(var i in declarations) {
 
             var declaration = declarations[i];
@@ -282,9 +290,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
             result.declarations.push(declarationData);
             structure.type = declarationData.type;
             structure.params = declarationData.params;
-
-            /*params.push(declarationData.id.params[0]);
-            params.push(declarationData.init);*/
             
         }
 
@@ -306,13 +311,17 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var existed = false;
         var variableFlag = true;
 
+        var id = component.id;
+        var init = component.init;
 
         //Variable Processing except filbtert variable
-        if(!component.id.name.includes('__filbert')) {
-            var variable = component.id.name;
-            if(component.init.type == "Literal") {
-                var value = component.init.value;
-            } else if(component.init.arguments && component.id.name != component.init.arguments[0].name) {
+        if(!id.name.includes('__filbert')) {
+            var variable = id.name;
+            if(init.type == "Literal") {
+                var value = init.value;
+            } else if(init.type == "Identifier") {
+                var value = init.name;
+            } else if(init.arguments && id.name != init.arguments[0].name) {
                 var value = NaN;  
             } else {
                 variableFlag = false;
@@ -322,12 +331,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             if(variableFlag) {
                 var entryVariables = Entry.variableContainer.variables_;
-                var currentObject = Entry.stage.selectedObject.id
+                if(Entry.stage.selectedObject)
+                    var currentObject = Entry.stage.selectedObject.id
+                else 
+                    var currentObject = null;
 
-                for(var i in entryVariables) {
+                for(var i in entryVariables) { 
                     var entryVariable = entryVariables[i];
                     console.log("VariableDeclarator entryVariable", entryVariable);
-                    if(entryVariable.name_ == variable) {
+                    if(entryVariable.object_ === null && entryVariable.name_ == variable) {
                         console.log("Check VariableDeclarator Update Variable");
                         
                         entryVariable.setValue(value);
@@ -335,15 +347,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         Entry.playground.reloadPlayground();
                         
                         existed = true;
-                    } 
-                    
+                    }       
                 }
 
-                if(!variableFlag) {
+                if(!existed) {
                     variable = {
                         name: variable,
                         value: value,
-                        object: Entry.stage.selectedObject.id, 
+                        //object: currentObject, 
                         variableType: 'variable'
                     };
 
@@ -359,35 +370,51 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         console.log("VariableDeclarator this._variableMap", this._variableMap.toString());*/
 
- 
-        var id = component.id;
-        var idData = this[id.type](id);
-        console.log("VariableDeclarator idData", idData);
-        data.id = idData;
-
-        var init = component.init;
-        var initData = this[init.type](init);
-        console.log("VarialeDeclarator initData", initData);
-        data.init = initData;
 
         if(init.type != "Literal") {
             if(init.arguments && id.name == init.arguments[0].name) {
                 var syntax = String("%1 = %1 + %2");
                 var type = this.getBlockType(syntax);
-                structure.type = type;
+                structure.type = type; 
+            } else {
+                var syntax = String("%1 = %2");
+                var type = this.getBlockType(syntax);
+                structure.type = type;  
+            }
+        } else {
+            var syntax = String("%1 = %2");
+            var type = this.getBlockType(syntax);
+            structure.type = type;   
+        }
 
-                if(idData.type == "get_variable")
+        var block = Entry.block[type]; 
+        var paramsMeta = block.params;
+        var paramsDefMeta = block.def.params; 
+
+        
+        var idData = this[id.type](id);
+        console.log("VariableDeclarator idData", idData);
+        data.id = idData;
+
+        
+        var initData = this[init.type](init);
+        console.log("VarialeDeclarator initData", initData);
+        data.init = initData;
+
+        if(data.init == undefined || data.init == null || data.init == 'undefined')
+            data.init = Number(0);
+
+
+        if(init.type != "Literal") {
+            if(init.arguments && id.name == init.arguments[0].name) {       
+                if(id.type == "Identifier")
                     params.push(idData.params[0]);
                 else
                     params.push(null);
                 params.push(initData.params[2]); 
                 structure.params = params; 
             } else {
-                var syntax = String("%1 = %2");
-                var type = this.getBlockType(syntax);
-                structure.type = type;
-
-                if(idData.type == "get_variable")
+                if(id.type == "Identifier")
                     params.push(idData.params[0]);
                 else
                     params.push(null);
@@ -395,19 +422,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 structure.params = params;
             }
         } else {
-            var syntax = String("%1 = %2");
-            var type = this.getBlockType(syntax);
-            structure.type = type;
-
-            if(idData.type == "get_variable")
+            if(id.type == "Identifier")
                 params.push(idData.params[0]);
             else
                 params.push(null);
             params.push(initData);
             structure.params = params;
         }
-
-
         
         result = data;
         result.type = structure.type;
@@ -578,7 +599,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var options = paramMeta.options;
         console.log("ParamDropdownDynamic options", options);
         for(var i in options) {
-            console.log("options", options);
             if(value == options[i][0]){
                 console.log("options[i][0]", options[i][0]);
                 result = options[i][1];
@@ -1469,16 +1489,17 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("AssignmentExpression component", component);
         var reusult;
         var data = {};
+        var structure = {};
 
         var params = [];
         var param;
+        var existed = false;
            
         var left = component.left;
-        if(left.type) {
-            var leftData = this[left.type](left);
+        var leftData = this[left.type](left);
 
-            console.log("AssignmentExpression leftData", leftData);
-        } 
+        console.log("AssignmentExpression leftData", leftData);
+       
 
         data.left = leftData
 
@@ -1486,7 +1507,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("AssignmentExpression operator", operator);
 
         switch(operator){
-            case "=": break;
+            case "=": 
+                var syntax = String("%1 = %2");
+                var type = this.getBlockType(syntax);
+                structure.type = type;  
+                break;
             case "+=": break;    
             case "-=": break;              
             case "*=": break;               
@@ -1513,19 +1538,84 @@ Entry.PyToBlockParser = function(blockSyntax) {
             console.log("AssignmentExpression rightData", rightData);
         } 
 
-        //save the variable to map  
+        data.right = rightData;
+
+        /*//save the variable to map  
         var variable = leftData;
         var value = rightData;
 
         console.log("variable", variable, "value", value);
 
         if(variable && value)
-            this._variableMap.put(variable, value);
+            this._variableMap.put(variable, value);*/
         //save the variable to map
 
-        data.right = rightData;
+
+        if(left.type == "MemberExpression") {
+            
+            var object = data.left.object;
+            var property = data.left.property;
+            var value = data.right.params[0]; 
+
+
+            var entryVariables = Entry.variableContainer.variables_;
+            if(Entry.stage.selectedObject)
+                var currentObject = Entry.stage.selectedObject.id
+            else 
+                var currentObject = null;
+
+            for(var i in entryVariables) { 
+                var entryVariable = entryVariables[i];
+                console.log("AssignmentExpression entryVariable", entryVariable);
+                if(entryVariable.object_ == currentObject && entryVariable.name_ == property) {
+                    console.log("Check AssignmentExpression Update Variable");
+                    
+                    entryVariable.setValue(value);
+                    Entry.variableContainer.updateList();
+                    Entry.playground.reloadPlayground();
+                    
+                    existed = true;
+                }       
+            }
+
+            if(!existed) {
+                variable = {
+                    name: property,
+                    value: value,
+                    object: currentObject, 
+                    variableType: 'variable'
+                };
+
+                console.log("AssignmentExpression variable", variable);
+
+                Entry.variableContainer.addVariable(variable);
+            }
+
+            console.log("AssignmentExpression object", object, "property", property, "value", value);
+
+            var param = null;
+            var entryVariables = Entry.variableContainer.variables_;
+            console.log("AssignmentExpression entryVariables", entryVariables);
+            for(var e in entryVariables) {
+                var entryVariable = entryVariables[e];
+                if(entryVariable.name_ == property && entryVariable.object_ == currentObject) {
+                    param = entryVariable.id_;
+                    break; 
+                }
+
+            }
+
+            params.push(param);
+            params.push(data.right);
+
+        } 
+
+        structure.params = params;
 
         result = data;
+
+        result.type = structure.type;
+        result.params = structure.params;
 
         console.log("AssignmentExpression result", result);
         

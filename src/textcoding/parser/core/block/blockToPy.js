@@ -133,6 +133,8 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         index++;    
                     } else if(schemaParams[index].type == "Block") {
                         console.log("Block dataParams[index]", dataParams[index]);
+
+                        console.log("Block param current block1", currentBlock);
                         var param = this.Block(dataParams[index]).trim();
 
                         console.log("funcMap", this._funcMap.toString());
@@ -144,6 +146,9 @@ Entry.BlockToPyParser = function(blockSyntax) {
                             result += funcParam;
                             continue;
                         }
+
+                        console.log("Block param current block2", currentBlock);
+                        
 
                         result += param;
 
@@ -192,6 +197,23 @@ Entry.BlockToPyParser = function(blockSyntax) {
                            param = String("\"" + param + "\"");  
 
                         param = Entry.TextCodingUtil.prototype.variableFilter(block, blockParamIndex, param);
+
+                        //Variable Processing
+                        if(currentBlock.data.type == "set_variable") {
+                            console.log("check in set_variable");
+                            var entryVariables = Entry.variableContainer.variables_;
+                            console.log("entryVariables", entryVariables, "param", param);
+                            for(var e in entryVariables) {
+                                var entryVariable = entryVariables[e];
+                                if(entryVariable.name_ == param)
+                                    if(entryVariable.object_) {
+                                        var object = Entry.container.getObject(entryVariable.object_);
+                                        console.log("entry variable object", object);
+                                        param = object.name.concat('.').concat(param);
+                                    }
+
+                            }
+                        }
                        
                         result += param;
 
