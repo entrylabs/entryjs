@@ -17871,7 +17871,7 @@ Entry.block = {
         }
     },
     "dplay_Robot_run": {
-        "color": "#005766",
+        "color": "#00979D",
         "fontColor": "#FFF",
         "skeleton": "basic",
         "statements": [],
@@ -17934,7 +17934,7 @@ Entry.block = {
         }
     },
     "dplay_Robot_run_sec": {
-        "color": "#005766",
+        "color": "#00979D",
         "fontColor": "#FFF",
         "skeleton": "basic",
         "statements": [],
@@ -18025,7 +18025,7 @@ Entry.block = {
         }
     },
     "dplay_robot_speed_sel": {
-        "color": "#005766",
+        "color": "#00979D",
         "fontColor": "#FFF",
         "skeleton": "basic",
         "statements": [],
@@ -18180,7 +18180,7 @@ Entry.block = {
           }
     },
     "dplay_robot_speed_set": {
-        "color": "#005766",
+        "color": "#00979D",
         "fontColor": "#FFF",
         "skeleton": "basic",
         "statements": [],
@@ -18297,7 +18297,7 @@ Entry.block = {
           }
     },
     "dplay_robot_stop": {
-        "color": "#005766",
+        "color": "#00979D",
         "fontColor": "#FFF",
         "skeleton": "basic",
         "statements": [],
