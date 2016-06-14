@@ -82,8 +82,10 @@ Entry.EntryObject = function(model) {
                         fileName.substring(2, 4) + '/image/' + fileName + '.png';
                 }
             }
+            Entry.Loader.addQueue();
             image.onload = function(e) {
                 Entry.container.cachePicture(picture.id, image);
+                Entry.Loader.removeQueue();
             };
         }
     }
@@ -1207,8 +1209,10 @@ Entry.EntryObject.prototype.setRotateMethod = function(rotateMethod) {
 
 Entry.EntryObject.prototype.initRotateValue = function(rotateMethod) {
     if(this.rotateMethod != rotateMethod) {
-        this.entity.rotation = 0.0;
-        this.entity.direction = 90.0;
+        var entity = this.entity;
+        entity.rotation = 0.0;
+        entity.direction = 90.0;
+        entity.flip = false;
     }
 };
 

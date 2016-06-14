@@ -194,23 +194,6 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
             Entry.stage.toggleCoordinator();
         });
 
-        this.runButton = Entry.createElement('button');
-        this.runButton.addClass('entryEngineButtonMinimize');
-        this.runButton.addClass('entryRunButtonMinimize');
-        this.runButton.innerHTML = Lang.Blocks.START;
-        this.view_.appendChild(this.runButton);
-        this.runButton.bindOnClick(function(e) {
-            Entry.engine.toggleRun();
-        });
-
-        this.runButton2 = Entry.createElement('button');
-        this.runButton2.addClass('entryEngineBigButtonMinimize_popup');
-        this.runButton2.addClass('entryEngineBigButtonMinimize_popup_run');
-        this.view_.appendChild(this.runButton2);
-        this.runButton2.bindOnClick(function(e) {
-            Entry.engine.toggleRun();
-        });
-
         this.stopButton = Entry.createElement('button');
         this.stopButton.addClass('entryEngineButtonMinimize');
         this.stopButton.addClass('entryStopButtonMinimize');
@@ -237,6 +220,17 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
         this.mouseView.addClass('entryMouseViewMinimize');
         this.mouseView.addClass('entryRemove');
         this.view_.appendChild(this.mouseView);
+
+        Entry.addEventListener("loadComplete", function() {
+            this.runButton = Entry.Dom("div", {
+                class: "entryRunButtonBigMinimize",
+                parent: $("#entryCanvasWrapper")
+            });
+
+            this.runButton.bindOnClick(function(e) {
+                Entry.engine.toggleRun();
+            });
+        }.bind(this));
     } else if (option == 'phone') {
         this.view_ = controlView;
         this.view_.addClass('entryEngine', 'entryEnginePhone');
