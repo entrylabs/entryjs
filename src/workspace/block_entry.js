@@ -4334,7 +4334,7 @@ Entry.block = {
             var rightValue = script.getNumberValue("RIGHTHAND", script);
             return leftValue % rightValue;
         },
-        "syntax": {"js": [], "py": ["entry.get_remainder(%1, %3)"]}
+        "syntax": {"js": [], "py": ["Entry.get_remainder(%1, %3)"]}
     },
     "calc_share": {
         "color": "#FFD974",

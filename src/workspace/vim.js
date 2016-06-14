@@ -141,6 +141,10 @@ Entry.Vim = function(dom, textType) {
     };
 
     p.codeToText = function(code) {
+        if(Entry.stage.selectedObject)
+            var codeDescription = "# " + Entry.stage.selectedObject.name + " 오브젝트의 파이썬 코드";
+        else
+            var codeDescription = "# 파이썬 코드";
         var textType = this.workspace.textType;
         if (textType === Entry.Vim.TEXT_TYPE_JS) {
             this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS;
@@ -151,7 +155,9 @@ Entry.Vim = function(dom, textType) {
         } 
 
         var textCode = this._parser.parse(code, Entry.Parser.PARSE_SYNTAX);
-        textCode = Entry.Vim.PYTHON_IMPORT_ENTRY
+        textCode = codeDescription
+        .concat("\n\n")
+        .concat(Entry.Vim.PYTHON_IMPORT_ENTRY)
         .concat("\n")
         .concat(Entry.Vim.PYTHON_IMPORT_HW)
         .concat("\n\n")

@@ -344,7 +344,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         
                         entryVariable.setValue(value);
                         Entry.variableContainer.updateList();
-                        Entry.playground.reloadPlayground();
                         
                         existed = true;
                     }       
@@ -632,7 +631,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.MemberExpression = function(component) {
         console.log("MemberExpression component", component);
-        var result;
+        var result = {};
+        var structure = {};
         var data = {};
         var object = component.object;
         var property = component.property;
@@ -653,7 +653,42 @@ Entry.PyToBlockParser = function(blockSyntax) {
         data.object = objectData;      
         data.property = propertyData;
 
+        var entryVariables = Entry.variableContainer.variables_;
+        console.log("AssignmentExpression entryVariables", entryVariables);
+
         result = data;
+        
+        var param;
+        var params = [];
+        for(var e in entryVariables) {
+            var entryVariable = entryVariables[e];
+
+            var targetObject = Entry.container.getObject(entryVariable.object_);
+            if(!targetObject)
+                continue;
+
+            if(entryVariable.name_ == propertyData && targetObject.name == String(objectData)) {
+                param = entryVariable.id_;
+                break;  
+            }
+
+        }
+
+        params.push(param); 
+
+        var syntax = String("%1");
+        var type = this.getBlockType(syntax);
+        console.log("AssignmentExpression type", type);
+
+        if(type) {
+            structure.type = type;
+            structure.params = params;
+
+            result.type = structure.type;
+            result.params = structure.params;
+        }
+
+        
         console.log("MemberExpression result", result);
 
         return result;
@@ -1507,11 +1542,29 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("AssignmentExpression operator", operator);
 
         switch(operator){
-            case "=": 
-                var syntax = String("%1 = %2");
-                var type = this.getBlockType(syntax);
-                structure.type = type;  
+            case "=": {
+                if(left.type == "MemberExpression") {
+                    if(component.right.arguments) {
+                        var leftEx = component.left.object.name.concat(component.left.property.name);
+                        var rightEx = component.right.arguments[0].object.name.concat(component.right.arguments[0].property.name);
+                        console.log("AssignmentExpression leftEx", leftEx, "rightEx", rightEx);
+                        if(component.right.arguments && (leftEx == rightEx)) {
+                            var syntax = String("%1 = %1 + %2");
+                            var type = this.getBlockType(syntax);
+                            structure.type = type; 
+                        } else {
+                            var syntax = String("%1 = %2");
+                            var type = this.getBlockType(syntax);
+                            structure.type = type;      
+                        }
+                    } else {
+                        var syntax = String("%1 = %2");
+                        var type = this.getBlockType(syntax);
+                        structure.type = type; 
+                    }
+                }
                 break;
+            }
             case "+=": break;    
             case "-=": break;              
             case "*=": break;               
@@ -1551,62 +1604,130 @@ Entry.PyToBlockParser = function(blockSyntax) {
         //save the variable to map
 
 
-        if(left.type == "MemberExpression") {
+        if(left.type == "MemberExpression" && syntax == String("%1 = %2")) {
+            var variableFlag = false;
             
             var object = data.left.object;
             var property = data.left.property;
             var value = data.right.params[0]; 
 
 
-            var entryVariables = Entry.variableContainer.variables_;
-            if(Entry.stage.selectedObject)
-                var currentObject = Entry.stage.selectedObject.id
-            else 
-                var currentObject = null;
-
-            for(var i in entryVariables) { 
-                var entryVariable = entryVariables[i];
-                console.log("AssignmentExpression entryVariable", entryVariable);
-                if(entryVariable.object_ == currentObject && entryVariable.name_ == property) {
-                    console.log("Check AssignmentExpression Update Variable");
-                    
-                    entryVariable.setValue(value);
-                    Entry.variableContainer.updateList();
-                    Entry.playground.reloadPlayground();
-                    
-                    existed = true;
-                }       
+            
+            var currentObject = null;
+            if(Entry.stage.selectedObject) {
+                console.log("aa", Entry.stage.selectedObject, "bb", object); 
+                if(Entry.stage.selectedObject.name != String(object)){
+                    currentObject = null;
+                }
+                else {
+                    currentObject = Entry.stage.selectedObject.id;
+                    variableFlag = true;
+                }
+            }
+            else {
+                var objects = Entry.container.objects_;
+                console.log("target object", object, "containter object", objects);
+                for(var o in objects) {
+                    var containerObject = objects[o];
+                    console.log("cotainer detail object", containerObject, "target object", object);
+                    if(containerObject.name == String(object)) {
+                        currentObject = containerObject.id;
+                        variableFlag = true;
+                        break;
+                    }
+                }    
             }
 
-            if(!existed) {
-                variable = {
-                    name: property,
-                    value: value,
-                    object: currentObject, 
-                    variableType: 'variable'
-                };
+            console.log("final currentObject", currentObject); 
 
-                console.log("AssignmentExpression variable", variable);
+            if(variableFlag) {
+                var entryVariables = Entry.variableContainer.variables_;
+                for(var i in entryVariables) { 
+                    var entryVariable = entryVariables[i];
+                    console.log("AssignmentExpression entryVariable", entryVariable);
 
-                Entry.variableContainer.addVariable(variable);
+                    var targetObject = Entry.container.getObject(entryVariable.object_);
+                    if(!targetObject)
+                        continue;
+
+                    console.log("target object", targetObject);
+                    
+                    if(entryVariable.name_ == property && targetObject.name == String(object)) {
+                        console.log("Check AssignmentExpression Update Variable");
+                        
+                        entryVariable.setValue(value);
+                        Entry.variableContainer.updateList();
+                        
+                        existed = true; 
+                    }        
+                }
+
+                if(!existed) {
+                    variable = {
+                        name: property,
+                        value: value,
+                        object: currentObject, 
+                        variableType: 'variable'
+                    };
+
+                    console.log("AssignmentExpression variable", variable);
+
+                    Entry.variableContainer.addVariable(variable);
+                }
             }
 
             console.log("AssignmentExpression object", object, "property", property, "value", value);
 
-            var param = null;
+            var param;
             var entryVariables = Entry.variableContainer.variables_;
             console.log("AssignmentExpression entryVariables", entryVariables);
             for(var e in entryVariables) {
                 var entryVariable = entryVariables[e];
-                if(entryVariable.name_ == property && entryVariable.object_ == currentObject) {
+
+                var targetObject = Entry.container.getObject(entryVariable.object_);
+                if(!targetObject)
+                    continue;
+
+                if(entryVariable.name_ == property && targetObject.name == String(object)) {
                     param = entryVariable.id_;
-                    break; 
+                    break;  
+                }
+
+            }
+
+            if(!param) {
+                result = data;
+                return result;
+            }
+            params.push(param);
+            params.push(data.right);
+
+        } 
+        else if(left.type == "MemberExpression" && syntax == String("%1 = %1 + %2")) {
+            console.log("data", data);
+            var object = data.left.object;
+            var property = data.left.property;
+
+            var entryVariables = Entry.variableContainer.variables_;
+            console.log("AssignmentExpression entryVariables", entryVariables);
+            var param;
+            for(var e in entryVariables) {
+                var entryVariable = entryVariables[e];
+
+                var targetObject = Entry.container.getObject(entryVariable.object_);
+                if(!targetObject)
+                    continue;
+
+                if(entryVariable.name_ == property && targetObject.name == String(object)) {
+                    param = entryVariable.id_;
+                    break;  
                 }
 
             }
 
             params.push(param);
-            params.push(data.right);
+            params.push(data.right.params[2]);
+
 
         } 
 

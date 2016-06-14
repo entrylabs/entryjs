@@ -177,6 +177,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                             }
                         }
                     } else {
+                        var maybeId = dataParams[index];
                         var param = this['Field' + schemaParams[index].type]
                                                     (dataParams[index], schemaParams[index]);
                         
@@ -199,13 +200,15 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         param = Entry.TextCodingUtil.prototype.variableFilter(block, blockParamIndex, param);
 
                         //Variable Processing
-                        if(currentBlock.data.type == "set_variable") {
+                        if(currentBlock.data.type == "get_variable" || 
+                            currentBlock.data.type == "set_variable" || 
+                            currentBlock.data.type == "change_variable") {
                             console.log("check in set_variable");
                             var entryVariables = Entry.variableContainer.variables_;
                             console.log("entryVariables", entryVariables, "param", param);
                             for(var e in entryVariables) {
                                 var entryVariable = entryVariables[e];
-                                if(entryVariable.name_ == param)
+                                if(maybeId == entryVariable.id_)// entryVariable.name_ == param)
                                     if(entryVariable.object_) {
                                         var object = Entry.container.getObject(entryVariable.object_);
                                         console.log("entry variable object", object);
@@ -317,11 +320,13 @@ Entry.BlockToPyParser = function(blockSyntax) {
     p.FieldDropdown = function(dataParam) {
         console.log("FieldDropdown", dataParam);
         
-        return dataParam;
+        return dataParam; 
     };
 
     p.FieldDropdownDynamic = function(dataParam, schemaParam) {
-        console.log("FieldDropdownDynamic", dataParam);
+        console.log("FieldDropdownDynamic", dataParam, schemaParam);
+        var object = Entry.stage.selectedObject;
+        console.log("FieldDropdownDynamic Object", object);
 
         if(dataParam == "null") {
             dataParam = "none";
@@ -329,6 +334,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
             dataParam = Entry.TextCodingUtil.prototype.dropdownDynamicValueConvertor(dataParam, schemaParam);
         }                    
        
+        console.log("FieldDropdownDynamic result ", dataParam);
         return dataParam;
     };
 
