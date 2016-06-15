@@ -1936,21 +1936,39 @@ Entry.block = {
         "isNotFor": [ "ArduinoExt" ],
         "func": function (sprite, script) {
             var port = script.getField("PORT", script);
+            var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.ANALOG);
             var hardwareTime = Entry.hw.portData['TIME'] || 0;
-            var nowTime = new Date().getTime();
-            var sendTime = Entry.hw.sendQueue['TIME'] || nowTime;
-            console.log(nowTime - hardwareTime);
-            Entry.hw.sendQueue['TIME'] = nowTime;
-            if(hardwareTime && (hardwareTime === sendTime && (nowTime - hardwareTime < 64))) {
-                return Entry.hw.portData.ANALOG[port] || 0;
-            } else {
-                if(!Array.isArray(Entry.hw.sendQueue['GET'])) {
-                    Entry.hw.sendQueue['GET'] = [];
+            if(!Entry.ArduinoExt.BlockState[this.type]) {
+                Entry.ArduinoExt.BlockState[this.type] = {
+                    isStart: false,
+                    stamp: 0
                 }
+            }
+
+            var state = Entry.ArduinoExt.BlockState[this.type];
+            if(!state.isStart) {
+                state.isStart = true;
+                state.stamp = nowTime;
+                console.log('GET1 : ' + state.stamp);
+                Entry.hw.sendQueue['TIME'] = nowTime;
+                Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
                 Entry.hw.sendQueue['GET'] = {
                     type: Entry.ArduinoExt.sensorTypes.ANALOG,
                     port: port
                 };
+                throw new Entry.Utils.AsyncError();
+                return;
+            } else if(hardwareTime && (hardwareTime === state.stamp)) {
+                console.log('SHOW1 : ' + state.stamp);
+                delete state.isStart;
+                delete state.stamp;
+                return Entry.hw.portData.ANALOG[port] || 0;
+            } else if(nowTime - state.stamp > 64) {
+                console.log('SHOW1-2 : ' + state.stamp);
+                delete state.isStart;
+                delete state.stamp;
+                return Entry.hw.portData.ANALOG[port] || 0;
+            } else {
                 throw new Entry.Utils.AsyncError();
                 return;
             }
@@ -1966,12 +1984,41 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "A0", "0" ],
-                    [ "A1", "1" ],
-                    [ "A2", "2" ],
-                    [ "A3", "3" ],
-                    [ "A4", "4" ],
-                    [ "A5", "5" ]
+                    [ "0", "0" ],
+                    [ "1", "1" ],
+                    [ "2", "2" ],
+                    [ "3", "3" ],
+                    [ "4", "4" ],
+                    [ "5", "5" ],
+                    [ "6", "6" ],
+                    [ "7", "7" ],
+                    [ "8", "8" ],
+                    [ "9", "9" ],
+                    [ "10", "10" ],
+                    [ "11", "11" ],
+                    [ "12", "12" ],
+                    [ "13", "13" ],
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "0", "0" ],
+                    [ "1", "1" ],
+                    [ "2", "2" ],
+                    [ "3", "3" ],
+                    [ "4", "4" ],
+                    [ "5", "5" ],
+                    [ "6", "6" ],
+                    [ "7", "7" ],
+                    [ "8", "8" ],
+                    [ "9", "9" ],
+                    [ "10", "10" ],
+                    [ "11", "11" ],
+                    [ "12", "12" ],
+                    [ "13", "13" ],
                 ],
                 "value": "0",
                 "fontSize": 11
@@ -1979,33 +2026,287 @@ Entry.block = {
         ],
         "events": {},
         "def": {
-            "params": [ null ],
-            "type": "arduino_ext_get_analog_value"
+            "params": [ '13', '12' ],
+            "type": "arduino_ext_get_ultrasonic_value"
         },
         "paramsKeyMap": {
-            "PORT": 0
+            "PORT1": 0,
+            "PORT2": 1,
         },
         "class": "ArduinoExt",
         "isNotFor": [ "ArduinoExt" ],
         "func": function (sprite, script) {
-            var port = script.getField("PORT", script);
-            var hardwareTime = Entry.hw.portData['TIME'] || 0;
-            var nowTime = new Date().getTime();
-            var sendTime = Entry.hw.sendQueue['TIME'] || nowTime;
-            console.log(nowTime - hardwareTime);
-            Entry.hw.sendQueue['TIME'] = nowTime;
-            if(hardwareTime && (hardwareTime === sendTime && (nowTime - hardwareTime < 64))) {
-                return Entry.hw.portData.ANALOG[port] || 0;
-            } else {
-                if(!Array.isArray(Entry.hw.sendQueue['GET'])) {
-                    Entry.hw.sendQueue['GET'] = [];
+            var port1 = script.getField("PORT1", script);
+            var port2 = script.getField("PORT2", script);
+            if(!Entry.ArduinoExt.BlockState[this.type]) {
+                Entry.ArduinoExt.BlockState[this.type] = {
+                    isStart: false,
+                    stamp: 0
                 }
+            }
+
+            var state = Entry.ArduinoExt.BlockState[this.type];
+            var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.ULTRASONIC);
+            var hardwareTime = Entry.hw.portData['TIME'] || 0;
+            if(!state.isStart) {
+                state.isStart = true;
+                state.stamp = nowTime;
+                console.log('GET2 : ' + state.stamp);
+                Entry.hw.sendQueue['TIME'] = nowTime;
+                Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
                 Entry.hw.sendQueue['GET'] = {
-                    type: Entry.ArduinoExt.sensorTypes.ANALOG,
-                    port: port
+                    type: Entry.ArduinoExt.sensorTypes.ULTRASONIC,
+                    port: [port1, port2]
                 };
                 throw new Entry.Utils.AsyncError();
                 return;
+            } else if(hardwareTime && (hardwareTime === state.stamp)) {
+                console.log('SHOW2 : ' + state.stamp);
+                delete state.isStart;
+                delete state.stamp;
+                return Entry.hw.portData.ULTRASONIC || 0;
+            } else if(nowTime - state.stamp > 64) {
+                console.log('SHOW2-2 : ' + state.stamp);
+                delete state.isStart;
+                delete state.stamp;
+                return Entry.hw.portData.ULTRASONIC || 0;
+            } else {
+                throw new Entry.Utils.AsyncError();
+                return;
+            }
+        }
+    },
+    "arduino_ext_toggle_led": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "%1 %2 %3",
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ARDUINO_on,"255"],
+                    [Lang.Blocks.ARDUINO_off,"0"]
+                ],
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_port_number"
+                },
+                '255',
+                null
+            ],
+            "type": "arduino_ext_toggle_led"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "ArduinoExt",
+        "isNotFor": [ "ArduinoExt" ],
+        "func": function (sprite, script) {
+            var port = script.getNumberValue("PORT");
+            var value = script.getNumberField("VALUE");
+            var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.DIGITAL);
+            Entry.hw.sendQueue['TIME'] = nowTime;
+            Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
+            if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            Entry.hw.sendQueue['SET'][port] = {
+                type: Entry.ArduinoExt.sensorTypes.DIGITAL,
+                data: value
+            };
+            return script.callReturn();
+        }
+    },
+    "arduino_ext_digital_pwm": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "%1 %2 %3",
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_pwm_port_number"
+                },
+                {
+                    "type": "arduino_text",
+                    "params": [ "255" ]
+                },
+                null
+            ],
+            "type": "arduino_ext_digital_pwm"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "ArduinoExt",
+        "isNotFor": [ "ArduinoExt" ],
+        "func": function (sprite, script) {
+            var port = script.getNumberValue("PORT");
+            var value = script.getNumberValue("VALUE");
+            value = Math.round(value);
+            value = Math.max(value, 0);
+            value = Math.min(value, 255);
+            var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.PWM);
+            Entry.hw.sendQueue['TIME'] = nowTime;
+            Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
+            if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            Entry.hw.sendQueue['SET'][port] = {
+                type: Entry.ArduinoExt.sensorTypes.PWM,
+                data: value
+            };
+            return script.callReturn();
+        }
+    },
+    "arduino_ext_set_tone": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "play tone pin %1 on note %2 beat %3 %4",
+        "params": [{
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Dropdown",
+            "options": [
+                ["무음", "0"],
+                ["도", "1"],
+                ["도#", "2"],
+                ["레", "3"],
+                ["레#", "4"],
+                ["미", "5"],
+                ["파", "6"],
+                ["파#", "7"],
+                ["솔", "8"],
+                ["솔#", "9"],
+                ["라", "10"],
+                ["라#", "11"],
+                ["시", "12"]
+            ],
+            "value": "1",
+            "fontSize": 11
+        }, {
+            "type": "Dropdown",
+            "options": [
+                ["1", "0"],
+                ["2", "1"],
+                ["3", "2"],
+                ["4", "3"],
+                ["5", "4"],
+                ["6", "5"]
+            ],
+            "value": "3",
+            "fontSize": 11
+        }, {
+            "type": "Dropdown",
+            "options": [
+                ["온음표", "1"],
+                ["2분음표", "2"],
+                ["4분음표", "4"],
+                ["8분음표", "8"],
+                ["16분음표", "16"]
+            ],
+            "value": "2",
+            "fontSize": 11
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [{
+                    "type": "arduino_get_port_number"
+                },
+                null,
+                null,
+                null
+            ],
+            "type": "arduino_ext_set_tone"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "NOTE": 1,
+            "OCTAVE": 2,
+            "DURATION": 3
+        },
+        "class": "ArduinoExt",
+        "isNotFor": [ "ArduinoExt" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+
+            if (!script.isStart) {
+                var port = script.getNumberValue("PORT", script);
+                var note = script.getNumberField("NOTE", script);
+                var octave = script.getNumberField("OCTAVE", script);
+                var duration = script.getNumberField("DURATION", script);
+                var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.TONE);
+                sq['TIME'] = nowTime;
+                sq['KEY'] = Entry.ArduinoExt.getSensorKey();
+                var value = Entry.ArduinoExt.toneMap[note][octave];
+
+                script.isStart = true;
+                script.timeFlag = 1;
+
+                if(!sq['SET']) {
+                    sq['SET'] = {};
+                }
+                console.log(port);
+                sq['SET'][port] = {
+                    type: Entry.ArduinoExt.sensorTypes.TONE,
+                    data: value
+                };
+
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, 1 / duration * 2000);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                // sq['SET'][port] = {
+                //     type: Entry.ArduinoExt.sensorTypes.TONE,
+                //     data: 0
+                // };
+                Entry.engine.isContinue = false;
+                return script.callReturn();
             }
         }
     },
