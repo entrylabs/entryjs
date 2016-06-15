@@ -15668,6 +15668,7 @@ Entry.BlockMenuScroller.RADIUS = 7;
 Entry.BlockView = function(b, a, c) {
   Entry.Model(this, !1);
   this.block = b;
+  this._lazyUpdatePos = _.debounce(b._updatePos.bind(b), 200);
   this._board = a;
   this._observers = [];
   this.set(b);
@@ -15705,9 +15706,6 @@ Entry.BlockView = function(b, a, c) {
   (a = b.events.viewAdd) && !this.isInBlockMenu && a.forEach(function(a) {
     Entry.Utils.isFunction(a) && a(b);
   });
-  if ("function_general" == this.block.type) {
-    debugger;
-  }
 };
 Entry.BlockView.PARAM_SPACE = 5;
 Entry.BlockView.DRAG_RADIUS = 5;
@@ -15837,6 +15835,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
   };
   b._moveTo = function(a, b, d) {
     this.set({x:a, y:b});
+    this._lazyUpdatePos();
     this.visible && this.display && this._setPosition(d);
   };
   b._moveBy = function(a, b, d) {
@@ -15931,8 +15930,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
       b instanceof Entry.BlockMenu ? (b.terminateDrag(), this.vimBoardEvent(a, "dragEnd", e)) : b.clear();
     } else {
       if (d === Entry.DRAG_MODE_DRAG) {
-        (f = this.dragInstance && this.dragInstance.isNew) && (b.workspace.blockMenu.terminateDrag() || e._updatePos());
-        var g = Entry.GlobalSvg;
+        var f = this.dragInstance && this.dragInstance.isNew, g = Entry.GlobalSvg;
         a = !1;
         var h = this.block.getPrevBlock(this.block);
         a = !1;
