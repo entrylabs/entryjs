@@ -73,7 +73,7 @@ Entry.Hamster = {
             "rightProximity":{name: Lang.Blocks.HAMSTER_sensor_rightProximity, type: "input", pos: {x : 10, y: 108}},
             "leftFloor":{name: Lang.Blocks.HAMSTER_sensor_leftFloor, type: "input", pos: {x: 100, y: 234}},
             "rightFloor":{name: Lang.Blocks.HAMSTER_sensor_rightFloor, type: "input", pos: {x: 13, y: 180}},
-            "lightsensor":{name: Lang.Hw.light + Lang.Hw.sensor, type: "input", pos: {x: 56, y: 189}},
+            "lightsensor":{name: Lang.Blocks.HAMSTER_sensor_light, type: "input", pos: {x: 56, y: 189}},
             "leftWheel":{name: Lang.Hw.leftWheel, type: "output", pos: {x: 209, y: 115}},
             "rightWheel":{name: Lang.Hw.rightWheel, type: "output", pos: {x: 98, y: 30}},
             "leftLed":{name: Lang.Hw.left + " " + Lang.Hw.led, type: "output", pos: {x: 87, y: 210}},
