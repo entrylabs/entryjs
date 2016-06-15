@@ -209,8 +209,12 @@ Entry.EntryObject.prototype.generateView = function() {
 
         var nameView = Entry.createElement('input');
         nameView.bindOnClick(function (e) {
-            e.stopPropagation();
-            this.select();
+            e.preventDefault();
+            Entry.container.selectObject(thisPointer.id);
+            if (!this.readOnly) {
+                this.focus();
+                this.select();
+            }
         });
         nameView.addClass('entryObjectNameWorkspace');
 
