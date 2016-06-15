@@ -156,6 +156,8 @@ svg .svgBlockGroup text {
         height: 20px;
         padding: 3px 5px 3px 6px;
         width: 100%;
+        position: relative;
+        overflow: hidden;
 
         .left {
             display: inline-block;
@@ -164,6 +166,24 @@ svg .svgBlockGroup text {
 
         .right {
             display: inline-block;
+        }
+    }
+
+    .rect:hover {
+        background-color: #127cdb;
+        color: white;
+    }
+}
+
+.entry-widget-dropdown.rendered {
+    .rect {
+        .left {
+            position: absolute;
+        }
+
+        .right {
+            position: absolute;
+            left: 20px;
         }
     }
 

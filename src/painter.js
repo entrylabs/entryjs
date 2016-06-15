@@ -1849,10 +1849,16 @@ Entry.Painter.prototype.generateView = function(painterView) {
         var painterAttrResizeTitle = Entry.createElement('legend');
         painterAttrResizeTitle.innerHTML = Lang.Workspace.picture_size;
         this.attrResizeArea.appendChild(painterAttrResizeTitle);
-//속성x
+        //속성x
+
+        var wrapper = Entry.createElement('div', 'painterAttrWrapper');
+        wrapper.addClass('painterAttrWrapper');
+        this.attrResizeArea.appendChild(wrapper);
+
+
         var entryPlaygroundPainterAttrResizeX = Entry.createElement('div');
         entryPlaygroundPainterAttrResizeX.addClass('entryPlaygroundPainterAttrResizeX');
-        this.attrResizeArea.appendChild(entryPlaygroundPainterAttrResizeX);
+        wrapper.appendChild(entryPlaygroundPainterAttrResizeX);
 
 
         var entryPlaygroundPainterAttrResizeXTop = Entry.createElement('div');
@@ -1878,12 +1884,12 @@ Entry.Painter.prototype.generateView = function(painterView) {
         var entryPlaygroundPainterSizeText = Entry.createElement('div');
         entryPlaygroundPainterSizeText.addClass('entryPlaygroundPainterSizeText');
         entryPlaygroundPainterSizeText.innerHTML = "x";
-        this.attrResizeArea.appendChild(entryPlaygroundPainterSizeText);
-//속성 y
+        wrapper.appendChild(entryPlaygroundPainterSizeText);
+        //속성 y
 
         var entryPlaygroundPainterAttrResizeY = Entry.createElement('div');
         entryPlaygroundPainterAttrResizeY.addClass('entryPlaygroundAttrReiszeY');
-        this.attrResizeArea.appendChild(entryPlaygroundPainterAttrResizeY);
+        wrapper.appendChild(entryPlaygroundPainterAttrResizeY);
 
         var entryPlaygroundPainterAttrResizeYTop = Entry.createElement('div');
         entryPlaygroundPainterAttrResizeYTop.addClass('entryPlaygroundPainterAttrResizeYTop');
@@ -1908,14 +1914,15 @@ Entry.Painter.prototype.generateView = function(painterView) {
         this.attrRotateArea.addClass('painterAttrRotateArea');
         painterAttr.appendChild(this.attrRotateArea);
 
+        var painterAttrRotateName = Entry.createElement('div');
+        painterAttrRotateName.addClass("painterAttrRotateName");
+        painterAttrRotateName.innerHTML = Lang.Workspace.picture_rotation;
+
+        this.attrRotateArea.appendChild(painterAttrRotateName);
         var painterAttrRotate = Entry.createElement('fieldset', 'entryPainterAttrRotate');
         painterAttrRotate.addClass('entryPlaygroundPainterAttrRotate');
         this.attrRotateArea.appendChild(painterAttrRotate);
 
-        var painterAttrRotateName = Entry.createElement('div');
-        painterAttrRotateName.addClass("painterAttrRotateName");
-        painterAttrRotateName.innerHTML = Lang.Workspace.picture_rotation;
-        this.attrRotateArea.appendChild(painterAttrRotateName);
 
         var painterAttrRotateTop = Entry.createElement('div');
         painterAttrRotateTop.addClass('painterAttrRotateTop');

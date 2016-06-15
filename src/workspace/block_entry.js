@@ -3035,10 +3035,10 @@ Entry.block = {
         "class": "condition",
         "isNotFor": [ "bitbrick" ],
         "func": function (sprite, script) {
-            var value = script.getNumberValue("VALUE") + 1;
+            var value = Entry.Bitbrick.servoMaxValue - (script.getNumberValue("VALUE") + 1);
             value = Math.min(value, Entry.Bitbrick.servoMaxValue);
             value = Math.max(value, Entry.Bitbrick.servoMinValue);
-            Entry.hw.sendQueue[script.getStringField("PORT")] = Entry.Bitbrick.servoMaxValue - value;
+            Entry.hw.sendQueue[script.getStringField("PORT")] = value;
             return script.callReturn();
         }
     },
@@ -9651,11 +9651,23 @@ Entry.block = {
                 var timeValue;
                 timeValue = script.getNumberValue("VALUE1", script);
                 script.isStart = true;
-                script.frameCount = Math.floor(timeValue * Entry.FPS)
+                script.frameCount = Math.max(Math.floor(timeValue * Entry.FPS), 1);
                 script.x = script.getNumberValue("VALUE2", script);
                 script.y = script.getNumberValue("VALUE3", script);
+
+                if (script.frameCount == 1) action();
             }
+
             if (script.frameCount != 0) {
+                action();
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.frameCount;
+                return script.callReturn();
+            }
+
+            function action() {
                 var dX = script.x - sprite.getX();
                 var dY = script.y - sprite.getY();
                 dX /= script.frameCount;
@@ -9666,11 +9678,6 @@ Entry.block = {
                 if (sprite.brush && !sprite.brush.stop) {
                     sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);
                 }
-                return script;
-            } else {
-                delete script.isStart;
-                delete script.frameCount;
-                return script.callReturn();
             }
         }
     },
@@ -10058,23 +10065,30 @@ Entry.block = {
                 var xValue = script.getNumberValue("VALUE2", script);
                 var yValue = script.getNumberValue("VALUE3", script);
                 script.isStart = true;
-                script.frameCount = Math.floor(timeValue * Entry.FPS)
+                script.frameCount = Math.max(Math.floor(timeValue * Entry.FPS), 1);
                 script.dX = xValue/script.frameCount;
                 script.dY = yValue/script.frameCount;
+
+                if (script.frameCount == 1) action();
             }
+
             if (script.frameCount != 0) {
-                sprite.setX(sprite.getX() + script.dX);
-                sprite.setY(sprite.getY() + script.dY);
-                script.frameCount--;
-                if (sprite.brush && !sprite.brush.stop) {
-                    sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);
-                }
+                action();
                 return script;
             } else {
                 delete script.isStart;
                 delete script.frameCount;
                 return script.callReturn();
             }
+
+            function action() {
+                sprite.setX(sprite.getX() + script.dX);
+                sprite.setY(sprite.getY() + script.dY);
+                script.frameCount--;
+                if (sprite.brush && !sprite.brush.stop) {
+                    sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);
+                }
+            };
         }
     },
     "rotate_by_angle_time": {
@@ -10814,17 +10828,23 @@ Entry.block = {
                 timeValue = script.getNumberValue("VALUE", script);
                 var angleValue = script.getNumberValue("ANGLE", script);
                 script.isStart = true;
-                script.frameCount = Math.floor(timeValue * Entry.FPS)
+                script.frameCount = Math.max(Math.floor(timeValue * Entry.FPS), 1);
                 script.dAngle = angleValue/script.frameCount;
+
+                if (script.frameCount == 1) action();
             }
             if (script.frameCount != 0) {
-                sprite.setRotation(sprite.getRotation() + script.dAngle);
-                script.frameCount--;
+                action();
                 return script;
             } else {
                 delete script.isStart;
                 delete script.frameCount;
                 return script.callReturn();
+            }
+
+            function action() {
+                sprite.setRotation(sprite.getRotation() + script.dAngle);
+                script.frameCount--;
             }
         }
     },
@@ -10871,18 +10891,24 @@ Entry.block = {
                 timeValue = script.getNumberValue("DURATION", script);
                 var directionValue = script.getNumberValue("AMOUNT", script);
                 script.isStart = true;
-                script.frameCount = Math.floor(timeValue * Entry.FPS)
+                script.frameCount = Math.max(Math.floor(timeValue * Entry.FPS), 1);
                 script.dDirection = directionValue/script.frameCount;
+
+                if (script.frameCount == 1) action();
             }
             if (script.frameCount != 0) {
-                sprite.setDirection(sprite.getDirection() + script.dDirection);
-                script.frameCount--;
+                action();
                 return script;
             } else {
                 delete script.isStart;
                 delete script.frameCount;
                 delete script.dDirection;
                 return script.callReturn();
+            }
+
+            function action() {
+                sprite.setDirection(sprite.getDirection() + script.dDirection);
+                script.frameCount--;
             }
         }
     },
