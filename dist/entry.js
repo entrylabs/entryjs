@@ -6363,7 +6363,6 @@ Entry.Container.prototype.addObject = function(b, a) {
   "number" == typeof a ? b.sprite.category && "background" == b.sprite.category.main ? (c.setLock(!0), this.objects_.push(c)) : this.objects_.splice(a, 0, c) : b.sprite.category && "background" == b.sprite.category.main ? this.objects_.push(c) : this.objects_.unshift(c);
   c.generateView();
   c.pictures.map(function(a) {
-    a.id = Entry.generateHash();
     Entry.playground.generatePictureElement(a);
   });
   c.sounds.map(function(a) {

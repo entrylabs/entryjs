@@ -292,7 +292,6 @@ Entry.Container.prototype.addObject = function(objectModel, index) {
     object.generateView();
     var pictures = object.pictures;
     pictures.map(function (p) {
-        p.id = Entry.generateHash();
         Entry.playground.generatePictureElement(p);
     });
 
