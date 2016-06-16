@@ -81,12 +81,15 @@ Entry.BlockToPyParser = function(blockSyntax) {
             console.log("Block isFunc", block);
             result += this.makeFuncDef(block);
 
-            syntax = this.makeFuncSyntax(block);
+            if(this.isRegisteredFunc(block))
+                syntax = this.makeFuncSyntax(block);
             
             console.log("Func Fianl Syntax", syntax);
-        } else if(this.isFuncParam(block)) {
+        } else if(this.isFuncStmtParam(block)) {
             result += block.data.type;
-        }
+        } /*else if(this.isFuncDefUnit(block)) {
+
+        }*/
 
         console.log("Block Syntax", syntax);
 
@@ -145,6 +148,17 @@ Entry.BlockToPyParser = function(blockSyntax) {
                             console.log("func param current result", result);
                             result += funcParam;
                             continue;
+                        } else {
+                            var funcParamTokens = param.split('_');
+                            console.log("funcParamTokens", funcParamTokens);
+                            var prefix = funcParamTokens[0];
+                            if(funcParamTokens.length == 2) {
+                                if(prefix == "stringParam"){
+                                    param = "string_param";
+                                } else if(prefix == "booleanParam") {
+                                    param = "boolean_param";
+                                } 
+                            }
                         }
 
                         console.log("Block param current block2", currentBlock);
@@ -446,23 +460,39 @@ Entry.BlockToPyParser = function(blockSyntax) {
     };
 
     p.isFunc = function(block) {
-        var prefix = block.data.type.substring(0, 4);
+        var tokens = block.data.type.split('_');
+        var prefix = tokens[0];
+        var funcId = tokens[1];
+        
         if(prefix == "func")
             return true;
         else 
             return false;
     };
 
-    p.isFuncParam = function(block) {
-        var type = block.data.type;
-        var index = type.search('_');
-        var prefix = type.substring(0, index);
-        console.log("isFuncParam prefix", prefix);
+    p.isRegisteredFunc = function(block) {
+        var tokens = block.data.type.split('_');
+        var prefix = tokens[0];
+        var funcId = tokens[1];
+
+        var funcBlock = Entry.variableContainer.functions_[funcId];
+
+        if(funcBlock)
+            return true;
+        else 
+            return false;
+    };
+
+    p.isFuncStmtParam = function(block) {
+        var blockType = block.data.type;
+        var tokens = blockType.split('_');
+        var prefix = tokens[0];
+        console.log("isFuncStmtParam prefix", prefix);
         if(prefix == "stringParam" || prefix == "booleanParam")
             return true;
         else 
             return false;
-    }
+    };
 
     p.makeFuncSyntax = function(funcBlock) {
         var syntax = "";
@@ -507,13 +537,21 @@ Entry.BlockToPyParser = function(blockSyntax) {
         var result = 'def ';
         var func = this.getFuncInfo(funcBlock);
 
-        if(!func.name) 
-            return;
-        else 
+        console.log("makeFuncDef func", func);
+
+        if(!this.isRegisteredFunc(funcBlock)) 
+            func.name = "f";
+
+
+        if(!func.name) { 
+            return result;
+        }
+        else {
             result += func.name;
+        }
 
         result = result.concat('(');
-        if(func.params.length != 0) {
+        if(func.params && func.params.length != 0) {
             for(var p in func.params) {
                 result += func.params[p]
                 result = result.concat(', ');
@@ -524,7 +562,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
         }
         result = result.concat('):').concat('\n');
 
-        if(func.statements.length) {
+        if(func.statements && func.statements.length) {
             var stmtResult = "";
             for(var s in func.statements) {
                 var block = func.statements[s];
@@ -544,12 +582,24 @@ Entry.BlockToPyParser = function(blockSyntax) {
     };
 
     p.getFuncInfo = function(funcBlock) {
+        console.log("getFuncInfo funcBlock", funcBlock);
         var result = {};
 
-        var id = funcBlock.data.type.substring(5);
+        var tokens = funcBlock.data.type.split('_');
+        var prefix = tokens[0];
+        var id = tokens[1];
+
         console.log("getFuncInfo id", id);
-        var _functions = Entry.variableContainer.functions_;
-        var func = _functions[id];
+        if(id) {
+            var _functions = Entry.variableContainer.functions_;
+            var func = _functions[id];
+            if(!func) {
+                result.name = "함수";
+                return result;
+            }
+        } else {
+            return result;
+        }
 
         console.log("getFuncInfo func", func);
 
@@ -560,7 +610,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
         var funcNameArr = funcNameTemplate.split(' ');
 
         var funcName = funcNameArr.join('_');
-        console.log("makeFuncDef funcName", funcName);
+        console.log("getFuncInfo funcName", funcName);
         var funcParamMap = func.paramMap;
 
         if(funcParamMap) {
@@ -570,9 +620,9 @@ Entry.BlockToPyParser = function(blockSyntax) {
                 var i = key.search('_');
                 var nickname = key.substring(0, i);
                 if(nickname == 'stringParam')
-                    var name = 'param' + String(index+1);
+                    var name = 'param' + String(index+1) + '_value';
                 else if (nickname == 'booleanParam')
-                    var name = 'param' + String(index+1);
+                    var name = 'param' + String(index+1) + '_boolean';
 
                 var param = name;
                 funcParams[index] = param;
@@ -589,9 +639,12 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
         console.log("getFuncInfo funcContents", funcContents);
 
-        result.name = funcName;
-        result.params = funcParams;
-        result.statements = funcContents;
+        if(funcName)
+            result.name = funcName;
+        if(Object.keys(funcParams).length != 0)
+            result.params = funcParams;
+        if(funcContents.length != 0)
+            result.statements = funcContents;
 
         return result;
     };

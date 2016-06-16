@@ -6117,7 +6117,9 @@ Entry.block = {
         "def": {
             "params": [ "이름" ],
             "type": "function_field_label"
-        }
+        },
+        //"syntax": {"js": [], "py": ["%1function_field_label#"]}
+        "syntax": {"js": [], "py": ["function_name"]}
     },
     "function_field_string": {
         "skeleton": "basic_param",
@@ -6146,7 +6148,9 @@ Entry.block = {
                 }
             ],
             "type": "function_field_string"
-        }
+        },
+        //"syntax": {"js": [], "py": ["%1function_field_string#"]}
+        "syntax": {"js": [], "py": ["function_param_value"]}
     },
     "function_field_boolean": {
         "skeleton": "basic_param",
@@ -6175,7 +6179,9 @@ Entry.block = {
                 }
             ],
             "type": "function_field_boolean"
-        }
+        },
+        //"syntax": {"js": [], "py": ["%1function_field_boolean#"]}
+        "syntax": {"js": [], "py": ["function_param_boolean"]}
     },
     "function_param_string": {
         "skeleton": "basic_string_field",
@@ -6233,7 +6239,7 @@ Entry.block = {
         },
         func: function() {
         },
-        "syntax": {"js": [], "py": [""]}
+        "syntax": {"js": [], "py": ["%1function_create#"]}
     },
     "function_general": {
         "skeleton": "basic",
