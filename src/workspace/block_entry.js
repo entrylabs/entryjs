@@ -2197,7 +2197,7 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "play tone pin %1 on note %2 beat %3 %4",
+        "template": "play tone pin %1 on note %2 beat %3 %4 %5",
         "params": [{
             "type": "Block",
             "accept": "string"
@@ -2269,9 +2269,9 @@ Entry.block = {
         "isNotFor": [ "ArduinoExt" ],
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
+            var port = script.getNumberValue("PORT", script);
 
             if (!script.isStart) {
-                var port = script.getNumberValue("PORT", script);
                 var note = script.getNumberField("NOTE", script);
                 var octave = script.getNumberField("OCTAVE", script);
                 var duration = script.getNumberField("DURATION", script);
@@ -2279,35 +2279,89 @@ Entry.block = {
                 sq['TIME'] = nowTime;
                 sq['KEY'] = Entry.ArduinoExt.getSensorKey();
                 var value = Entry.ArduinoExt.toneMap[note][octave];
-
+                duration = 1 / duration * 2000;
                 script.isStart = true;
                 script.timeFlag = 1;
 
                 if(!sq['SET']) {
                     sq['SET'] = {};
                 }
-                console.log(port);
+                
                 sq['SET'][port] = {
                     type: Entry.ArduinoExt.sensorTypes.TONE,
-                    data: value
+                    data: {
+                        value: value,
+                        duration: duration
+                    }
                 };
 
                 setTimeout(function() {
                     script.timeFlag = 0;
-                }, 1 / duration * 2000);
+                }, duration + 32);
                 return script;
             } else if (script.timeFlag == 1) {
                 return script;
             } else {
                 delete script.timeFlag;
                 delete script.isStart;
-                // sq['SET'][port] = {
-                //     type: Entry.ArduinoExt.sensorTypes.TONE,
-                //     data: 0
-                // };
+                sq['SET'][port] = {
+                    type: Entry.ArduinoExt.sensorTypes.TONE,
+                    data: 0
+                };
                 Entry.engine.isContinue = false;
                 return script.callReturn();
             }
+        }
+    },
+    "arduino_ext_set_servo": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "set servo pin %1 angle as %2 %3",
+        "params": [{
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [{
+                    "type": "arduino_get_port_number"
+                },
+                null
+            ],
+            "type": "arduino_ext_set_servo"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "ArduinoExt",
+        "isNotFor": [ "ArduinoExt" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var port = script.getNumberValue("PORT", script);
+            var value = script.getNumberValue("VALUE", script);
+            value = Math.min(180, value);
+            value = Math.max(0, value);
+
+            sq['TIME'] = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.SERVO_PIN);
+            sq['KEY'] = Entry.ArduinoExt.getSensorKey();
+            if(!sq['SET']) {
+                sq['SET'] = {};
+            }
+            sq['SET'][port] = {
+                type: Entry.ArduinoExt.sensorTypes.SERVO_PIN,
+                data: value
+            };
+
+            return script.callReturn();
         }
     },
     "sensorBoard_get_named_sensor_value": {

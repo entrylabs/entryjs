@@ -69,13 +69,14 @@ Entry.ArduinoExt = {
                     '12': { type: Entry.ArduinoExt.sensorTypes.DIGITAL, data: 0 },
                     '13': { type: Entry.ArduinoExt.sensorTypes.DIGITAL, data: 0 }
                 },
-                TIME: Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.DIGITAL)
+                TIME: Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.DIGITAL),
+                KEY: Entry.ArduinoExt.getSensorKey()
             }
         } else {
             var keySet = Object.keys(Entry.hw.sendQueue.SET);
-
-            ketSet.forEach(function (key) {
+            keySet.forEach(function (key) {
                 Entry.hw.sendQueue.SET[key].data = 0;
+                Entry.hw.sendQueue.TIME = Entry.ArduinoExt.getSensorTime(Entry.hw.sendQueue.SET[key].type);
             });
         }
         Entry.hw.update();
