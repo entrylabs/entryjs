@@ -15214,7 +15214,7 @@ Entry.block = {
         "isNotFor": [ "list", "listNotExist" ],
         "func": function (sprite, script) {
             var listId = script.getField("LIST", script);
-            var list = Entry.variableContainer.getList(listId);
+            var list = Entry.variableContainer.getList(listId, sprite);
 
             return list.array_.length;
         }
@@ -15421,7 +15421,7 @@ Entry.block = {
         "func": function (sprite, script) {
             var listId = script.getField("LIST", script);
             var data = script.getStringValue("DATA", script);
-            var list = Entry.variableContainer.getList(listId);
+            var list = Entry.variableContainer.getList(listId, sprite);
             if (!list)
                 return false;
             var arr = list.array_;
