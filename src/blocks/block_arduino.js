@@ -77,6 +77,7 @@ Entry.ArduinoExt = {
             keySet.forEach(function (key) {
                 Entry.hw.sendQueue.SET[key].data = 0;
                 Entry.hw.sendQueue.TIME = Entry.ArduinoExt.getSensorTime(Entry.hw.sendQueue.SET[key].type);
+                Entry.hw.sendQueue.KEY = Entry.ArduinoExt.getSensorKey();
             });
         }
         Entry.hw.update();

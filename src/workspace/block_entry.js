@@ -1974,6 +1974,77 @@ Entry.block = {
             }
         }
     },
+    "arduino_ext_get_pulse_in": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        'template': "read pulse pin %1 timeout %2",
+        "statements": [],
+        "params": [{
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }],
+        "events": {},
+        "def": {
+            "params": [{
+                "type": "arduino_get_port_number"
+            }, {
+                "type": "text",
+                "params": ["20000"],
+            }],
+            "type": "arduino_ext_get_pulse_in"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "TIMEOUT": 1,
+        },
+        "class": "ArduinoExt",
+        "isNotFor": [ "ArduinoExt" ],
+        "func": function (sprite, script) {
+            var port = script.getNumberValue("PORT", script);
+            var value = script.getNumberValue("TIMEOUT", script);
+            var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.PULSEIN);
+            var hardwareTime = Entry.hw.portData['TIME'] || 0;
+            if(!Entry.ArduinoExt.BlockState[this.type]) {
+                Entry.ArduinoExt.BlockState[this.type] = {
+                    isStart: false,
+                    stamp: 0
+                }
+            }
+
+            var state = Entry.ArduinoExt.BlockState[this.type];
+            if(!state.isStart) {
+                state.isStart = true;
+                state.stamp = nowTime;
+                console.log('GET4 : ' + state.stamp);
+                Entry.hw.sendQueue['TIME'] = nowTime;
+                Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
+                Entry.hw.sendQueue['GET'] = {
+                    type: Entry.ArduinoExt.sensorTypes.PULSEIN,
+                    port: port,
+                    data: value
+                };
+                throw new Entry.Utils.AsyncError();
+                return;
+            } else if(hardwareTime && (hardwareTime === state.stamp)) {
+                console.log('SHOW4 : ' + state.stamp);
+                delete state.isStart;
+                delete state.stamp;
+                return Entry.hw.portData.PULSEIN[port] || 0;
+            } else if(nowTime - state.stamp > 64) {
+                console.log('SHOW4-2 : ' + state.stamp);
+                delete state.isStart;
+                delete state.stamp;
+                return Entry.hw.portData.PULSEIN[port] || 0;
+            } else {
+                throw new Entry.Utils.AsyncError();
+                return;
+            }
+        }
+    },
     "arduino_ext_get_ultrasonic_value": {
         "color": "#00979D",
         "fontColor": "#fff",
@@ -2362,6 +2433,69 @@ Entry.block = {
             };
 
             return script.callReturn();
+        }
+    },
+    "arduino_ext_get_digital": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_boolean_field",
+        "template": "read digital pin %1",
+        "params": [{
+            "type": "Block",
+            "accept": "string"
+        }],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_port_number"
+                }
+            ],
+            "type": "arduino_ext_get_digital"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "ArduinoExt",
+        "isNotFor": [ "ArduinoExt" ],
+        "func": function (sprite, script) {
+            var port = script.getNumberValue("PORT", script);
+            var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.DIGITAL);
+            var hardwareTime = Entry.hw.portData['TIME'] || 0;
+            if(!Entry.ArduinoExt.BlockState[this.type]) {
+                Entry.ArduinoExt.BlockState[this.type] = {
+                    isStart: false,
+                    stamp: 0
+                }
+            }
+
+            var state = Entry.ArduinoExt.BlockState[this.type];
+            if(!state.isStart) {
+                state.isStart = true;
+                state.stamp = nowTime;
+                console.log('GET3 : ' + state.stamp);
+                Entry.hw.sendQueue['TIME'] = nowTime;
+                Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
+                Entry.hw.sendQueue['GET'] = {
+                    type: Entry.ArduinoExt.sensorTypes.DIGITAL,
+                    port: port
+                };
+                throw new Entry.Utils.AsyncError();
+                return;
+            } else if(hardwareTime && (hardwareTime === state.stamp)) {
+                console.log('SHOW3 : ' + state.stamp);
+                delete state.isStart;
+                delete state.stamp;
+                return Entry.hw.portData.DIGITAL[port] || 0;
+            } else if(nowTime - state.stamp > 64) {
+                console.log('SHOW3-2 : ' + state.stamp);
+                delete state.isStart;
+                delete state.stamp;
+                return Entry.hw.portData.DIGITAL[port] || 0;
+            } else {
+                throw new Entry.Utils.AsyncError();
+                return;
+            }
         }
     },
     "sensorBoard_get_named_sensor_value": {

@@ -284,6 +284,7 @@ EntryStatic.getAllBlocks = function() {
                 "arduino_ext_digital_pwm",
                 "arduino_ext_set_tone",
                 "arduino_ext_set_servo",
+                "arduino_ext_get_digital",
                 //dplay
                 "dplay_get_number_sensor_value",
                 "dplay_get_value",
