@@ -856,8 +856,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
+  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(c, d);
   return a.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1057,8 +1057,8 @@ Blockly.Blocks.dplay_select_led = {init:function() {
 Entry.block.dplay_select_led = function(b, a) {
   var c = a.getField("PORT"), d = 7;
   "7" == c ? d = 7 : "8" == c ? d = 8 : "9" == c ? d = 9 : "10" == c && (d = 10);
-  c = a.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(d, "on" == c ? 255 : 0);
+  c = "on" == a.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(d, c);
   return a.callReturn();
 };
 Blockly.Blocks.dplay_get_switch_status = {init:function() {
@@ -2068,10 +2068,10 @@ Entry.block.wait_second = function(b, a) {
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a);
+  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
   setTimeout(function() {
     a.timeFlag = 0;
-  }, 60 / (Entry.FPS || 60) * c * 1E3);
+  }, c);
   return a;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -8156,8 +8156,9 @@ Entry.EntryObject.prototype.generateView = function() {
     this.view_.appendChild(b);
     d = Entry.createElement("input");
     d.bindOnClick(function(a) {
-      a.stopPropagation();
-      this.select();
+      a.preventDefault();
+      Entry.container.selectObject(c.id);
+      this.readOnly || (this.focus(), this.select());
     });
     d.addClass("entryObjectNameWorkspace");
     b.appendChild(d);
@@ -10909,13 +10910,8 @@ Entry.Scene.prototype.generateElement = function(b) {
 };
 Entry.Scene.prototype.updateView = function() {
   if (!Entry.type || "workspace" == Entry.type) {
-    for (var b = this.listView_;b.hasChildNodes();) {
-      b.lastChild.removeClass("selectedScene"), b.removeChild(b.lastChild);
-    }
-    for (var a in this.getScenes()) {
-      var c = this.scenes_[a];
-      b.appendChild(c.view);
-      this.selectedScene.id == c.id && c.view.addClass("selectedScene");
+    for (var b = this.listView_, a = $(b).children().length;a < this.getScenes().length;a++) {
+      b.appendChild(this.getScenes()[a].view);
     }
     this.addButton_ && (this.getScenes().length < this.maxCount ? this.addButton_.removeClass("entryRemove") : this.addButton_.addClass("entryRemove"));
   }
@@ -10948,18 +10944,29 @@ Entry.Scene.prototype.removeScene = function(b) {
   } else {
     var a = this.getScenes().indexOf(this.getSceneById(b.id));
     this.getScenes().splice(a, 1);
-    this.selectScene();
     for (var a = Entry.container.getSceneObjects(b), c = 0;c < a.length;c++) {
       Entry.container.removeObject(a[c]);
     }
     Entry.stage.removeObjectContainer(b);
-    this.updateView();
+    $(b.view).remove();
+    this.selectScene();
   }
 };
 Entry.Scene.prototype.selectScene = function(b) {
   b = b || this.getScenes()[0];
-  this.selectedScene && this.selectedScene.id == b.id || (Entry.engine.isState("run") && Entry.container.resetSceneDuringRun(), this.selectedScene = b, Entry.container.setCurrentObjects(), Entry.stage.objectContainers && 0 !== Entry.stage.objectContainers.length && Entry.stage.selectObjectContainer(b), (b = Entry.container.getCurrentObjects()[0]) && "minimize" != Entry.type ? (Entry.container.selectObject(b.id), Entry.playground.refreshPlayground()) : (Entry.stage.selectObject(null), Entry.playground.flushPlayground(), 
-  Entry.variableContainer.updateList()), Entry.container.listView_ || Entry.stage.sortZorder(), Entry.container.updateListView(), this.updateView());
+  if (!this.selectedScene || this.selectedScene.id != b.id) {
+    Entry.engine.isState("run") && Entry.container.resetSceneDuringRun();
+    var a = this.selectedScene;
+    a && (a = a.view, a.removeClass("selectedScene"), a = $(a), a.find("input").blur());
+    this.selectedScene = b;
+    b.view.addClass("selectedScene");
+    Entry.container.setCurrentObjects();
+    Entry.stage.objectContainers && 0 !== Entry.stage.objectContainers.length && Entry.stage.selectObjectContainer(b);
+    (b = Entry.container.getCurrentObjects()[0]) && "minimize" != Entry.type ? (Entry.container.selectObject(b.id), Entry.playground.refreshPlayground()) : (Entry.stage.selectObject(null), Entry.playground.flushPlayground(), Entry.variableContainer.updateList());
+    Entry.container.listView_ || Entry.stage.sortZorder();
+    Entry.container.updateListView();
+    this.updateView();
+  }
 };
 Entry.Scene.prototype.toJSON = function() {
   for (var b = [], a = this.getScenes().length, c = 0;c < a;c++) {
@@ -10976,6 +10983,7 @@ Entry.Scene.prototype.moveScene = function(b, a) {
   this.getScenes().splice(a, 0, this.getScenes().splice(b, 1)[0]);
   Entry.container.updateObjectsOrder();
   Entry.stage.sortZorder();
+  $(".entrySceneElementWorkspace").removeAttr("style");
 };
 Entry.Scene.prototype.getSceneById = function(b) {
   for (var a = this.getScenes(), c = 0;c < a.length;c++) {
@@ -11020,7 +11028,6 @@ Entry.Scene.prototype.resize = function() {
     for (g in b) {
       var d = b[g], h = d.view;
       h.addClass("minValue");
-      $(h).removeProp("style");
       $(d.inputWrapper).width(Entry.computeInputWidth(d.name));
       h = $(h);
       f = f + h.width() + c;

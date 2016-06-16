@@ -192,18 +192,9 @@ Entry.Scene.prototype.generateElement = function(scene) {
 Entry.Scene.prototype.updateView = function() {
     if (!Entry.type || Entry.type == 'workspace') {
         var view = this.listView_;
-
-        while (view.hasChildNodes()) {
-            view.lastChild.removeClass('selectedScene');
-            view.removeChild(view.lastChild);
-        }
-
-        for (var i in this.getScenes()) {
-            var scene = this.scenes_[i];
-            view.appendChild(scene.view);
-            if (this.selectedScene.id == scene.id)
-                scene.view.addClass('selectedScene');
-        }
+        var renderedCount = $(view).children().length;
+        for (var i = renderedCount; i < this.getScenes().length; i++)
+            view.appendChild(this.getScenes()[i].view);
 
         if (this.addButton_) {
             var length = this.getScenes().length;
@@ -261,22 +252,24 @@ Entry.Scene.prototype.addScene = function(scene, index) {
  */
 Entry.Scene.prototype.removeScene = function(scene) {
     if (this.getScenes().length <=1) {
-        Entry.toast.alert(Lang.Msgs.runtime_error,
-                          Lang.Workspace.Scene_delete_error,
-                          false);
-         return;
+        Entry.toast.alert(
+            Lang.Msgs.runtime_error,
+            Lang.Workspace.Scene_delete_error,
+            false
+        );
+        return;
     }
 
     var index = this.getScenes().indexOf(this.getSceneById(scene.id));
 
     this.getScenes().splice(index, 1);
-    this.selectScene();
     var objects = Entry.container.getSceneObjects(scene);
 
     for (var i=0; i<objects.length; i++)
         Entry.container.removeObject(objects[i]);
     Entry.stage.removeObjectContainer(scene);
-    this.updateView();
+    $(scene.view).remove();
+    this.selectScene();
 };
 
 /**
@@ -291,7 +284,16 @@ Entry.Scene.prototype.selectScene = function(scene) {
     if (Entry.engine.isState('run'))
         Entry.container.resetSceneDuringRun();
 
+    var prevSelected = this.selectedScene;
+    if (prevSelected) {
+        var prevSelectedView = prevSelected.view;
+        prevSelectedView.removeClass('selectedScene');
+        prevSelectedView = $(prevSelectedView);
+        prevSelectedView.find('input').blur();
+    }
+
     this.selectedScene = scene;
+    scene.view.addClass('selectedScene');
     Entry.container.setCurrentObjects();
     if (Entry.stage.objectContainers &&
         Entry.stage.objectContainers.length !== 0)
@@ -346,6 +348,8 @@ Entry.Scene.prototype.moveScene = function(start, end) {
         end, 0, this.getScenes().splice(start, 1)[0]);
     Entry.container.updateObjectsOrder();
     Entry.stage.sortZorder();
+    //style properties are not removed sometimes
+    $('.entrySceneElementWorkspace').removeAttr('style');
 };
 
 /**
@@ -407,10 +411,12 @@ Entry.Scene.prototype.createScene = function() {
  */
 Entry.Scene.prototype.cloneScene = function(scene) {
     if (this.scenes_.length >= this.maxCount) {
-        Entry.toast.alert(Lang.Msgs.runtime_error,
-                          Lang.Workspace.Scene_add_error,
-                          false);
-         return;
+        Entry.toast.alert(
+            Lang.Msgs.runtime_error,
+            Lang.Workspace.Scene_add_error,
+            false
+        );
+        return;
     }
 
     var clonedScene = {
@@ -446,10 +452,6 @@ Entry.Scene.prototype.resize = function() {
         var scene = scenes[i];
         var view = scene.view;
         view.addClass('minValue');
-
-        //jquery sortable bug
-        //style properties are not removed sometimes
-        $(view).removeProp('style');
 
         var inputWrapper = scene.inputWrapper;
         $(inputWrapper).width(
