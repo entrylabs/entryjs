@@ -2868,6 +2868,12 @@ svg .svgBlockGroup text {
   background-color: white;
   color: black;
 }
+input.entryObjectNameWorkspace:read-only {
+  background-color: transparent;
+}
+input.entryObjectNameWorkspace:-moz-read-only {
+  background-color: transparent;
+}
 .entryObjectNameWorkspace:disabled {
   background-color: transparent;
 }

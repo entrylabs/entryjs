@@ -8156,8 +8156,9 @@ Entry.EntryObject.prototype.generateView = function() {
     this.view_.appendChild(b);
     d = Entry.createElement("input");
     d.bindOnClick(function(a) {
-      a.stopPropagation();
-      this.select();
+      a.preventDefault();
+      Entry.container.selectObject(c.id);
+      this.readOnly || (this.focus(), this.select());
     });
     d.addClass("entryObjectNameWorkspace");
     b.appendChild(d);
