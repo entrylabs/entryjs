@@ -12708,23 +12708,54 @@ Entry.PyToBlockParser = function(b) {
     if ("__getParam0" == a.name) {
       return b;
     }
-    c = this[c.type](c);
-    console.log("FunctionDeclaration bodyData", c);
+    var e = this[c.type](c);
+    console.log("FunctionDeclaration bodyData", e);
     if ("Identifier" == a.type) {
-      var e = this[a.type](a)
+      var f = this[a.type](a)
     }
-    console.log("FunctionDeclaration idData", e);
+    console.log("FunctionDeclaration idData", f);
+    c = [];
     a = [];
-    var e = e.name, f;
-    for (f in c) {
-      if (c[f].declarations) {
-        var g = c[f].declarations;
-        0 < g.length && a.push(g[0].name);
+    var f = f.name, g;
+    for (g in e) {
+      if (e[g].declarations) {
+        var h = e[g].declarations;
+        0 < h.length && c.push(h[0].name);
+      } else {
+        e[g].argument && (h = e[g].argument.statements) && 0 < h.length && (a = h);
       }
     }
-    f = Entry.variableContainer.functions_;
-    for (var h in f) {
-      c = f[h], c.block.template.split("%")[0].trim() == e && Object.keys(c.paramMap);
+    e = new Entry.Queue;
+    e.enqueue(f);
+    e.enqueue(c.length);
+    for (g in a) {
+      e.enqueue(a[g].type);
+      var h = a[g].params, k;
+      for (k in h) {
+        h[k].name;
+      }
+    }
+    var e = Entry.variableContainer.functions_, l;
+    for (l in e) {
+      if (h = e[l], g = h.block.template.split("%")[0].trim(), f == g && (g = Object.keys(h.paramMap), c.length == g)) {
+        var m = funcThread._data;
+        for (g = 1;g < m.length;g++) {
+          k = m[g];
+          var n = a[g - 1];
+          if (n.type == k.data.type && (n = n.params, n.length == k.data.params.length)) {
+            for (k = 0;k < n.length;k++) {
+              if (n[k].name) {
+                for (var q in c) {
+                  if (n[k].name == c[q]) {
+                    for (var t in h.paramMap) {
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
     console.log("FunctionDeclaration result", b);
     return b;

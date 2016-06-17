@@ -1787,79 +1787,100 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         console.log("FunctionDeclaration idData", idData);
 
-        var funcName;
-        var funcParams = [];
-        var funcStatements = [];
+        var textFuncName;
+        var textFuncParams = [];
+        var textFuncStatements = [];
 
-        funcName = idData.name;
+        textFuncName = idData.name;
 
         for(var i in bodyData) {
             if(bodyData[i].declarations) {
                 var declarations = bodyData[i].declarations;
                 if(declarations.length > 0) {
-                    funcParams.push(declarations[0].name);
+                    textFuncParams.push(declarations[0].name);
                 }
             } 
             else if(bodyData[i].argument) {
                 var argument = bodyData[i].argument;
                 var statements = argument.statements;
                 if(statements && statements.length > 0) {
-                    funcStatements = statements;
+                    textFuncStatements = statements;
                 }
             }
         }
 
+        var funcQueue = new Entry.Queue();
+        funcQueue.enqueue(textFuncName);
+        funcQueue.enqueue(textFuncParams.length);
+        for(var i in textFuncStatements) {
+            funcQueue.enqueue(textFuncStatements[i].type);
+            var tfsParams = textFuncStatements[i].params;
+            for(var j in tfsParams) {
+                tfsParams[j].name
+            }
+        }
+
         ////////////////////////////////////////////////////////////////
-        //Find The Function Block
+        //First, Find The Function Block
         ////////////////////////////////////////////////////////////////
+        var foundFlag = false;
+        var matchFlag = true;
         var targetFuncId;
         var entryFunctions = Entry.variableContainer.functions_;
         for(var funcId in entryFunctions) {
-            var func = entryFunctions[funcId];
-            var tokens = func.block.template.split('%');
-            var name = tokens[0].trim();
-            if(name == funcName) {
-                var paramCount = Object.keys(func.paramMap);
-                if(paramCount == funcParams.length) {
-                    
-                }
-            } 
-            else {
-                continue;
-            }
-        }
-
-        /*for(var funcId in entryFunctions) {
-            var func = entryFunctions[funcId];
-            var content = func.content;
-            var funcThreads = content._data;
-            for(var t in funcThreads) {
-                var funcThread = funcThreads[t];
-                if(funcThread._event == "funcDef") {
-                    var funcBlocks = funcThread._data;
-                    for(var b in funcBlocks) {
-                        var funcBlock = funcBlocks[b];
-                        if(funcBlock.data.type == "function_create") {
-                            var params = funcBlock.data.params;
-                            for(var p in params) {
-                                var paramBlock = params[p];
-                                if(paramBlock.data.type = "function_field_label") {
-                                    //paramBlock.data.params[0] == 
+            var blockFunc = entryFunctions[funcId];
+            var tokens = blockFunc.block.template.split('%');
+            var blockFuncName = tokens[0].trim();
+            if(textFuncName == blockFuncName) {
+                foundFlag = true;
+                var blockFuncParamCount = Object.keys(blockFunc.paramMap);
+                if(textFuncParams.length == blockFuncParamCount) {
+                    var contentThread = blockFunc.content._data[0]; //The Function Thread, index 0
+                    var contentBlocks = funcThread._data; //The Function Definition Block, index 0
+                    var blockFuncDef = contentBlocks[0];
+                    for(var i = 1; i < contentBlocks.length; i++) {
+                        var blockFuncContent = contentBlocks[i];
+                        var textFuncStatement = textFuncStatements[i-1];
+                        if(textFuncStatement.type == blockFuncContent.data.type) {
+                            var textFuncStatementParams = textFuncStatement.params;
+                            var blockFuncContentParams = blockFuncContent.data.params;
+                            if(textFuncStatementParams.length == blockFuncContentParams.length) { //Statement Param Length Comparison
+                                for(var j = 0; j < textFuncStatementParams.length; j++) {
+                                    matchFlag = false;
+                                    if(textFuncStatementParams[j].name) {
+                                        for(var k in textFuncParams) {
+                                            if(textFuncStatementParams[j].name == textFuncParams[k]) { // Pram Locatin Comparision
+                                                for(var bfcParam in blockFunc.paramMap) {
+                                                    if(blockFuncContentParams[j].data.type == bfcParam) {
+                                                        if(blockFunc.paramMap[bfcParam] == j) {
+                                                            matchFlag = true;
+                                                        }
+                                                    }
+                                                } 
+                                            }
+                                        }
+                                    } else if(textFuncStatementParams[j].type) {
+                                        if(textFuncStatementParams[j].type == blockFuncContentParams[j].type) {
+                                            matchFlag = true;
+                                        }
+                                    }
                                 }
-                            }
-
-                        }
-
+                            } else {
+                                matchFlag = false;
+                            }  
+                        } else {
+                            matchFlag = false;
+                        } 
                     }
-                }
-            }
-
-        }*/
-
+                } else {
+                    matchFlag = false;
+                }   
+            } 
+        }
 
 
         ////////////////////////////////////////////////////////////////
-        //Find The Function Block
+        //If Not Exist, Create New Function Block
         ////////////////////////////////////////////////////////////////
 
 
