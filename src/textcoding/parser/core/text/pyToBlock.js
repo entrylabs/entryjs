@@ -1973,15 +1973,27 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var paramCount = textFuncParams.length;
             var funcKey = name + paramCount;
             this._funcMap.put(funcKey, targetFuncId);
+            console.log("FunctionDeclaration this._funcMap", this._funcMap);
+
+            result = targetFuncId;
+        } else {
+            ////////////////////////////////////////////////////////////////
+            //If Not Exist, Create New Function Block
+            ////////////////////////////////////////////////////////////////
+
+            var UDF = new Entry.Func();
+            UDF.generateBlock(true);
+            Entry.variableContainer.saveFunction(UDF);
+            Entry.variableContainer.updateList();
+            console.log("FunctionDeclaration UDF", UDF);
+
         }
 
-        console.log("FunctionDeclaration this._funcMap", this._funcMap);
+        
 
-        ////////////////////////////////////////////////////////////////
-        //If Not Exist, Create New Function Block
-        ////////////////////////////////////////////////////////////////
+        
 
-        result = targetFuncId;
+        
 
         console.log("FunctionDeclaration result", result);
         //return result;
