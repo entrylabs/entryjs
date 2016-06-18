@@ -1878,6 +1878,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     var blockFuncContents = funcThread._data; //The Function Definition Block, index 0
                     var blockFuncDef = blockFuncContents[0];
                     for(var i = 1; i < blockFuncContents.length; i++) {
+                        if(!matchFlag)
+                            break;
                         var blockFuncContent = blockFuncContents[i];
                         var textFuncStatement = textFuncStatements[i-1];
                         console.log("blockFuncContent", blockFuncContent);
@@ -1896,7 +1898,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             console.log("blockFuncContentParams", blockFuncContentParams);
                             if(textFuncStatementParams.length == blockFuncContentParams.length) { //Statement Param Length Comparison
                                 for(var j = 0; j < textFuncStatementParams.length; j++) {
+                                    if(!matchFlag)
+                                        break;
                                     if(textFuncStatementParams[j].name) {
+                                        matchFlag = false;
                                         for(var k in textFuncParams) {
                                             if(textFuncStatementParams[j].name == textFuncParams[k]) { // Pram Locatin Comparision
                                                 console.log("textFuncStatementParams[j].name", textFuncStatementParams[j].name);
@@ -1906,23 +1911,33 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                                         console.log("blockFuncContentParams[j].data.type", blockFuncContentParams[j].data.type);
                                                         console.log("bfcParam", bfcParam);
                                                         if(blockFunc.paramMap[bfcParam] == k) {
+                                                            matchFlag = true;
                                                             console.log("Function Definition Param Found", blockFunc.paramMap[bfcParam], "index k", j);
                                                         }
-                                                        else {
+                                                        /*else {
                                                             matchFlag = false; 
-                                                        }
+                                                        }*/
                                                     }
+                                                    /*else {
+                                                        matchFlag = false;
+                                                    }*/
                                                 } 
                                             }
                                         }
-                                    } else if(textFuncStatementParams[j].type) {
+                                    } 
+                                    else if(textFuncStatementParams[j].type) {
+                                        matchFlag = false;
                                         if(textFuncStatementParams[j].params[0] == blockFuncContentParams[j].data.params[0]) {
+                                            matchFlag = true;
                                             console.log("Function Param Found 1", textFuncStatementParams[j].params[0]);
                                             console.log("Function Param Found 2", blockFuncContentParams[j].data.params[0]);
                                         } 
-                                        else {
+                                        /*else {
                                             matchFlag = false;
-                                        }
+                                        }*/
+                                    } 
+                                    else {
+                                        matchFlag = false;
                                     }
                                 }
                             } else {

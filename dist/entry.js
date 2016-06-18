@@ -12743,7 +12743,7 @@ Entry.PyToBlockParser = function(b) {
         console.log("textFuncParams.length", b.length);
         console.log("Object.keys(blockFunc.paramMap).length", Object.keys(m.paramMap).length);
         if (b.length == Object.keys(m.paramMap).length) {
-          for (console.log("textFuncParams.length", b.length), console.log("Object.keys(blockFunc.paramMap).length", Object.keys(m.paramMap).length), h = m.content._data[0]._data, g = 1;g < h.length;g++) {
+          for (console.log("textFuncParams.length", b.length), console.log("Object.keys(blockFunc.paramMap).length", Object.keys(m.paramMap).length), h = m.content._data[0]._data, g = 1;g < h.length && e;g++) {
             var n = h[g], q = c[g - 1];
             console.log("blockFuncContent", n);
             console.log("textFuncStatement", q);
@@ -12757,19 +12757,20 @@ Entry.PyToBlockParser = function(b) {
               console.log("textFuncStatementParams", q);
               console.log("blockFuncContentParams", n);
               if (q.length == n.length) {
-                for (var r = 0;r < q.length;r++) {
+                for (var r = 0;r < q.length && e;r++) {
                   if (q[r].name) {
-                    for (var u in b) {
+                    var e = !1, u;
+                    for (u in b) {
                       if (q[r].name == b[u]) {
                         console.log("textFuncStatementParams[j].name", q[r].name);
                         console.log("textFuncParams[k]", b[u]);
                         for (var v in m.paramMap) {
-                          n[r].data.type == v && (console.log("blockFuncContentParams[j].data.type", n[r].data.type), console.log("bfcParam", v), m.paramMap[v] == u ? console.log("Function Definition Param Found", m.paramMap[v], "index k", r) : e = !1);
+                          n[r].data.type == v && (console.log("blockFuncContentParams[j].data.type", n[r].data.type), console.log("bfcParam", v), m.paramMap[v] == u && (e = !0, console.log("Function Definition Param Found", m.paramMap[v], "index k", r)));
                         }
                       }
                     }
                   } else {
-                    q[r].type && (q[r].params[0] == n[r].data.params[0] ? (console.log("Function Param Found 1", q[r].params[0]), console.log("Function Param Found 2", n[r].data.params[0])) : e = !1);
+                    q[r].type ? (e = !1, q[r].params[0] == n[r].data.params[0] && (e = !0, console.log("Function Param Found 1", q[r].params[0]), console.log("Function Param Found 2", n[r].data.params[0]))) : e = !1;
                   }
                 }
               } else {
