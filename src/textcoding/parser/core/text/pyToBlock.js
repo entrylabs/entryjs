@@ -146,6 +146,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 type = this.getBlockType(syntax);
             } 
 
+            result.callee = calleeName;
+
             console.log("CallExpression type after", type); 
         }
 
@@ -214,13 +216,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                               
             }
             console.log("CallExpression args", args);
+           
             result.arguments = args;
-            if(calleeName == "__pythonRuntime.utils.createParamsObj")
-                result.type = calleeName;
         }
 
+        console.log("CallExpression Function Check result", result);
+
         // Function Check
-        if(result.arguments && result.arguments[0].type == "__pythonRuntime.utils.createParamsObj") {
+        if(result.arguments && result.arguments[0] && result.arguments[0].callee == "__pythonRuntime.utils.createParamsObj") {
             var funcKey = result.callee.name + result.arguments[0].arguments.length;
             var type = this._funcMap.get(funcKey);
             result = {};
@@ -1857,8 +1860,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
         ////////////////////////////////////////////////////////////////
         //First, Find The Function Block
         ////////////////////////////////////////////////////////////////
-        var foundFlag = false;
-        var matchFlag = true;
+        var foundFlag;
+        var matchFlag;
         var targetFuncId;
         var entryFunctions = Entry.variableContainer.functions_;
         for(var funcId in entryFunctions) {
@@ -1866,12 +1869,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var tokens = blockFunc.block.template.split('%');
             var blockFuncName = tokens[0].trim();
             if(textFuncName == blockFuncName) {
-                foundFlag = true; 
+                foundFlag = true;
                 console.log("textFuncName", textFuncName);
                 console.log("blockFuncName", blockFuncName);
                 console.log("textFuncParams.length", textFuncParams.length);
                 console.log("Object.keys(blockFunc.paramMap).length", Object.keys(blockFunc.paramMap).length);
                 if(textFuncParams.length == Object.keys(blockFunc.paramMap).length) {
+                    matchFlag = true;
                     console.log("textFuncParams.length", textFuncParams.length);
                     console.log("Object.keys(blockFunc.paramMap).length", Object.keys(blockFunc.paramMap).length);
                     var funcThread = blockFunc.content._data[0]; //The Function Thread, index 0
@@ -1880,11 +1884,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     for(var i = 1; i < blockFuncContents.length; i++) {
                         if(!matchFlag)
                             break;
+                        matchFlag = false;
                         var blockFuncContent = blockFuncContents[i];
                         var textFuncStatement = textFuncStatements[i-1];
                         console.log("blockFuncContent", blockFuncContent);
                         console.log("textFuncStatement", textFuncStatement);
                         if(textFuncStatement.type == blockFuncContent.data.type) {
+                            matchFlag = true;
                             var textFuncStatementParams = textFuncStatement.params;
                             var blockFuncContentParams = blockFuncContent.data.params;
                             var cleansingParams = [];
@@ -1896,12 +1902,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             blockFuncContentParams = cleansingParams;
                             console.log("textFuncStatementParams", textFuncStatementParams);
                             console.log("blockFuncContentParams", blockFuncContentParams);
-                            if(textFuncStatementParams.length == blockFuncContentParams.length) { //Statement Param Length Comparison
+                            if(textFuncStatementParams.length == blockFuncContentParams.length) { //Statement Param Length Comparison   
+                                matchFlag = true;
                                 for(var j = 0; j < textFuncStatementParams.length; j++) {
                                     if(!matchFlag)
                                         break;
+                                    matchFlag = false;
                                     if(textFuncStatementParams[j].name) {
-                                        matchFlag = false;
                                         for(var k in textFuncParams) {
                                             if(textFuncStatementParams[j].name == textFuncParams[k]) { // Pram Locatin Comparision
                                                 console.log("textFuncStatementParams[j].name", textFuncStatementParams[j].name);
@@ -1912,62 +1919,59 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                                         console.log("bfcParam", bfcParam);
                                                         if(blockFunc.paramMap[bfcParam] == k) {
                                                             matchFlag = true;
+                                                            break;
                                                             console.log("Function Definition Param Found", blockFunc.paramMap[bfcParam], "index k", j);
-                                                        }
-                                                        /*else {
-                                                            matchFlag = false; 
-                                                        }*/
-                                                    }
-                                                    /*else {
-                                                        matchFlag = false;
-                                                    }*/
+                                                        }  
+                                                    }   
                                                 } 
+                                                if(matchFlag)
+                                                    break;
                                             }
                                         }
                                     } 
                                     else if(textFuncStatementParams[j].type) {
-                                        matchFlag = false;
+                                        //matchFlag = false;
                                         if(textFuncStatementParams[j].params[0] == blockFuncContentParams[j].data.params[0]) {
                                             matchFlag = true;
                                             console.log("Function Param Found 1", textFuncStatementParams[j].params[0]);
                                             console.log("Function Param Found 2", blockFuncContentParams[j].data.params[0]);
-                                        } 
-                                        /*else {
-                                            matchFlag = false;
-                                        }*/
-                                    } 
-                                    else {
-                                        matchFlag = false;
-                                    }
+                                        }   
+                                    }    
                                 }
-                            } else {
-                                matchFlag = false;
-                            }  
-                        } else {
-                            matchFlag = false;
+                            }
+                            else {
+                                matchFlag = fasle;
+                                break;
+                            } 
                         } 
+                        else {
+                            matchFlag = false;
+                            break;
+                        }
                     }
-                } else {
+                }
+                else {
                     matchFlag = false;
-                }   
+                }
 
                 // Final Decision In Terms of Conditions
                 if(matchFlag) {
                     var funcPrefix = "func";
                     targetFuncId = funcPrefix.concat('_').concat(funcId);
+                    foundFlag = true;
+                    break;
                 }
                 else {
                     foundFlag = false;
-                    targetFuncId = undefined;
-                }
-
+                    matchFlag = false;
+                }  
             } 
         }
 
         console.log("FunctionDeclaration foundFlag", foundFlag);
         console.log("FunctionDeclaration matchFlag", matchFlag);
 
-        if(targetFuncId) {
+        if(foundFlag) {
             console.log("targetFuncId", targetFuncId);
             var name = textFuncName;
             var paramCount = textFuncParams.length;
@@ -1981,11 +1985,24 @@ Entry.PyToBlockParser = function(blockSyntax) {
             //If Not Exist, Create New Function Block
             ////////////////////////////////////////////////////////////////
 
-            var UDF = new Entry.Func();
-            UDF.generateBlock(true);
-            Entry.variableContainer.saveFunction(UDF);
+            var newFunc = new Entry.Func();
+            newFunc.generateBlock(true);
+            
+            var stringParam = Entry.Func.requestParamBlock("string");
+            console.log("FunctionDeclaration stringParam", stringParam);
+            newFunc.paramMap[stringParam] = 0
+            console.log("FunctionDeclaration paramBlock", newFunc);
+
+            Entry.Func.generateWsBlock(newFunc);
+            
+            var textFuncName;
+            var textFuncParams = [];
+            var textFuncStatements = [];       
+
+            
+            Entry.variableContainer.saveFunction(newFunc);
             Entry.variableContainer.updateList();
-            console.log("FunctionDeclaration UDF", UDF);
+            console.log("FunctionDeclaration newFunc", newFunc);
 
         }
 

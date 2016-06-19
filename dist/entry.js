@@ -11976,6 +11976,7 @@ Entry.PyToBlockParser = function(b) {
       h = this.getBlockType(k);
       console.log("CallExpression type before", h);
       "__pythonRuntime.functions.range" == k ? h = this.getBlockType("%1number#") : "__pythonRuntime.ops.add" == k ? (h = this.getBlockType("(%1 %2calc_basic# %3)"), g = {raw:"PLUS", type:"Literal", value:"PLUS"}, arguments.splice(1, 0, g)) : "__pythonRuntime.ops.multiply" == k ? (h = this.getBlockType("(%1 %2calc_basic# %3)"), g = {raw:"MULTI", type:"Literal", value:"MULTI"}, arguments.splice(1, 0, g)) : "__pythonRuntime.functions.len" == k && (h = this.getBlockType("len(%2)"));
+      b.callee = k;
       console.log("CallExpression type after", h);
     }
     arguments = a.arguments;
@@ -12003,9 +12004,9 @@ Entry.PyToBlockParser = function(b) {
       }
       console.log("CallExpression args", c);
       b.arguments = c;
-      "__pythonRuntime.utils.createParamsObj" == k && (b.type = k);
     }
-    b.arguments && "__pythonRuntime.utils.createParamsObj" == b.arguments[0].type && (h = this._funcMap.get(b.callee.name + b.arguments[0].arguments.length), b = {}, b.type = h);
+    console.log("CallExpression Function Check result", b);
+    b.arguments && b.arguments[0] && "__pythonRuntime.utils.createParamsObj" == b.arguments[0].callee && (h = this._funcMap.get(b.callee.name + b.arguments[0].arguments.length), b = {}, b.type = h);
     console.log("CallExpression result", b);
     return b;
   };
@@ -12736,22 +12737,22 @@ Entry.PyToBlockParser = function(b) {
     console.log("FunctionDeclaration textFuncName", f);
     console.log("FunctionDeclaration textFuncParams", c);
     console.log("FunctionDeclaration textFuncStatements", a);
-    var e = !1, h = !0, k, l = Entry.variableContainer.functions_, m;
-    for (m in l) {
-      var n = l[m];
-      g = n.block.template.split("%")[0].trim();
-      if (f == g) {
-        e = !0;
+    var k, l, m, e = Entry.variableContainer.functions_, n;
+    for (n in e) {
+      if (h = e[n], g = h.block.template.split("%")[0].trim(), f == g) {
+        k = !0;
         console.log("textFuncName", f);
         console.log("blockFuncName", g);
         console.log("textFuncParams.length", c.length);
-        console.log("Object.keys(blockFunc.paramMap).length", Object.keys(n.paramMap).length);
-        if (c.length == Object.keys(n.paramMap).length) {
-          for (console.log("textFuncParams.length", c.length), console.log("Object.keys(blockFunc.paramMap).length", Object.keys(n.paramMap).length), k = n.content._data[0]._data, g = 1;g < k.length && h;g++) {
+        console.log("Object.keys(blockFunc.paramMap).length", Object.keys(h.paramMap).length);
+        if (c.length == Object.keys(h.paramMap).length) {
+          for (l = !0, console.log("textFuncParams.length", c.length), console.log("Object.keys(blockFunc.paramMap).length", Object.keys(h.paramMap).length), k = h.content._data[0]._data, g = 1;g < k.length && l;g++) {
+            l = !1;
             var q = k[g], r = a[g - 1];
             console.log("blockFuncContent", q);
             console.log("textFuncStatement", r);
             if (r.type == q.data.type) {
+              l = !0;
               var r = r.params, q = q.data.params, t = [];
               q.map(function(a, b) {
                 console.log("blockFuncContentParam", a);
@@ -12761,38 +12762,53 @@ Entry.PyToBlockParser = function(b) {
               console.log("textFuncStatementParams", r);
               console.log("blockFuncContentParams", q);
               if (r.length == q.length) {
-                for (var u = 0;u < r.length && h;u++) {
-                  if (r[u].name) {
-                    var h = !1, v;
-                    for (v in c) {
+                l = !0;
+                for (var u = 0;u < r.length && l;u++) {
+                  if (l = !1, r[u].name) {
+                    for (var v in c) {
                       if (r[u].name == c[v]) {
                         console.log("textFuncStatementParams[j].name", r[u].name);
                         console.log("textFuncParams[k]", c[v]);
-                        for (var x in n.paramMap) {
-                          q[u].data.type == x && (console.log("blockFuncContentParams[j].data.type", q[u].data.type), console.log("bfcParam", x), n.paramMap[x] == v && (h = !0, console.log("Function Definition Param Found", n.paramMap[x], "index k", u)));
+                        for (var x in h.paramMap) {
+                          if (q[u].data.type == x && (console.log("blockFuncContentParams[j].data.type", q[u].data.type), console.log("bfcParam", x), h.paramMap[x] == v)) {
+                            l = !0;
+                            break;
+                          }
+                        }
+                        if (l) {
+                          break;
                         }
                       }
                     }
                   } else {
-                    r[u].type ? (h = !1, r[u].params[0] == q[u].data.params[0] && (h = !0, console.log("Function Param Found 1", r[u].params[0]), console.log("Function Param Found 2", q[u].data.params[0]))) : h = !1;
+                    r[u].type && r[u].params[0] == q[u].data.params[0] && (l = !0, console.log("Function Param Found 1", r[u].params[0]), console.log("Function Param Found 2", q[u].data.params[0]));
                   }
                 }
               } else {
-                h = !1;
+                l = fasle;
+                break;
               }
             } else {
-              h = !1;
+              l = !1;
+              break;
             }
           }
         } else {
-          h = !1;
+          l = !1;
         }
-        h ? k = "func".concat("_").concat(m) : (e = !1, k = void 0);
+        if (l) {
+          m = "func".concat("_").concat(n);
+          k = !0;
+          break;
+        } else {
+          l = k = !1;
+        }
       }
     }
-    console.log("FunctionDeclaration foundFlag", e);
-    console.log("FunctionDeclaration matchFlag", h);
-    k ? (console.log("targetFuncId", k), this._funcMap.put(f + c.length, k), console.log("FunctionDeclaration this._funcMap", this._funcMap), b = k) : (m = new Entry.Func, m.generateBlock(!0), Entry.variableContainer.saveFunction(m), Entry.variableContainer.updateList(), console.log("FunctionDeclaration UDF", m));
+    console.log("FunctionDeclaration foundFlag", k);
+    console.log("FunctionDeclaration matchFlag", l);
+    k ? (console.log("targetFuncId", m), this._funcMap.put(f + c.length, m), console.log("FunctionDeclaration this._funcMap", this._funcMap), b = m) : (l = new Entry.Func, l.generateBlock(!0), m = Entry.Func.requestParamBlock("string"), console.log("FunctionDeclaration stringParam", m), l.paramMap[m] = 0, console.log("FunctionDeclaration paramBlock", l), Entry.Func.generateWsBlock(l), c = [], a = [], Entry.variableContainer.saveFunction(l), Entry.variableContainer.updateList(), console.log("FunctionDeclaration newFunc", 
+    l));
     console.log("FunctionDeclaration result", b);
   };
   b.FunctionExpression = function(a) {
