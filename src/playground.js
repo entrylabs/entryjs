@@ -859,7 +859,10 @@ Entry.Playground.prototype.addPicture = function(picture, NotForView) {
  * @param {picture}
  */
 Entry.Playground.prototype.setPicture = function(picture) {
-    var element = Entry.container.getPictureElement(picture.id);
+    var element = Entry.container.getPictureElement(
+        picture.id,
+        picture.objectId
+    );
     var $element = $(element);
     if(element) {
         picture.view = element;
@@ -909,7 +912,7 @@ Entry.Playground.prototype.selectPicture = function(picture) {
 
     var objectId_;
     if(picture && picture.id) {
-        objectId_ = Entry.container.selectPicture(picture.id);
+        objectId_ = Entry.container.selectPicture(picture.id, picture.objectId);
     }
 
     if( this.object.id === objectId_) {

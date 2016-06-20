@@ -68,6 +68,7 @@ Entry.EntryObject = function(model) {
 
         for (var i in this.pictures) {
             var picture = this.pictures[i];
+            picture.objectId = this.id;
             if (!picture.id)
                 picture.id = Entry.generateHash();
             var image = new Image();
@@ -1001,6 +1002,7 @@ Entry.EntryObject.prototype.addPicture = function(picture, index) {
             this.removePicture,
             picture.id
         );
+    picture.objectId = this.id;
     if (!index && index !== 0)
         this.pictures.push(picture);
     else {

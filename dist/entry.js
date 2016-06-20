@@ -722,7 +722,7 @@ Entry.Arduino = {name:"arduino", setZero:function() {
 Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a0:{name:Lang.Hw.port_en + " A0 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a1:{name:Lang.Hw.port_en + " A1 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a2:{name:Lang.Hw.port_en + " A2 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a3:{name:Lang.Hw.port_en + " A3 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a4:{name:Lang.Hw.port_en + " A4 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a5:{name:Lang.Hw.port_en + " A5 " + 
 Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}}, mode:"both"}};
 Entry.SensorBoard = {name:"sensorBoard", setZero:Entry.Arduino.setZero};
-Entry.dplay = {name:"dplay", vel_value:255, setZero:Entry.Arduino.setZero, timeouts:[], removeTimeout:function(b) {
+Entry.dplay = {name:"dplay", vel_value:255, Left_value:255, Right_value:255, setZero:Entry.Arduino.setZero, timeouts:[], removeTimeout:function(b) {
   clearTimeout(b);
   var a = this.timeouts;
   b = a.indexOf(b);
@@ -856,8 +856,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(c, d);
+  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
   return a.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1057,8 +1057,8 @@ Blockly.Blocks.dplay_select_led = {init:function() {
 Entry.block.dplay_select_led = function(b, a) {
   var c = a.getField("PORT"), d = 7;
   "7" == c ? d = 7 : "8" == c ? d = 8 : "9" == c ? d = 9 : "10" == c && (d = 10);
-  c = "on" == a.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(d, c);
+  c = a.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(d, "on" == c ? 255 : 0);
   return a.callReturn();
 };
 Blockly.Blocks.dplay_get_switch_status = {init:function() {
@@ -2068,10 +2068,10 @@ Entry.block.wait_second = function(b, a) {
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
+  var c = a.getNumberValue("SECOND", a);
   setTimeout(function() {
     a.timeFlag = 0;
-  }, c);
+  }, 60 / (Entry.FPS || 60) * c * 1E3);
   return a;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -6313,14 +6313,10 @@ Entry.Container.prototype.setObjects = function(b) {
   b = Entry.type;
   ("workspace" == b || "phone" == b) && (b = this.getCurrentObjects()[0]) && this.selectObject(b.id);
 };
-Entry.Container.prototype.getPictureElement = function(b) {
-  for (var a in this.objects_) {
-    var c = this.objects_[a], d;
-    for (d in c.pictures) {
-      if (b === c.pictures[d].id) {
-        return c.pictures[d].view;
-      }
-    }
+Entry.Container.prototype.getPictureElement = function(b, a) {
+  var c = this.getObject(a).getPicture(b);
+  if (c) {
+    return c.view;
   }
   throw Error("No picture found");
 };
@@ -6343,15 +6339,10 @@ Entry.Container.prototype.setPicture = function(b) {
   }
   throw Error("No picture found");
 };
-Entry.Container.prototype.selectPicture = function(b) {
-  for (var a in this.objects_) {
-    var c = this.objects_[a], d;
-    for (d in c.pictures) {
-      var e = c.pictures[d];
-      if (b === e.id) {
-        return c.selectedPicture = e, c.entity.setImage(e), c.updateThumbnailView(), c.id;
-      }
-    }
+Entry.Container.prototype.selectPicture = function(b, a) {
+  var c = this.getObject(a), d = c.getPicture(b);
+  if (d) {
+    return c.selectedPicture = d, c.entity.setImage(d), c.updateThumbnailView(), c.id;
   }
   throw Error("No picture found");
 };
@@ -8090,6 +8081,7 @@ Entry.EntryObject = function(b) {
     Entry.stage.loadObject(this);
     for (a in this.pictures) {
       var c = this.pictures[a];
+      c.objectId = this.id;
       c.id || (c.id = Entry.generateHash());
       var d = new Image;
       c.fileurl ? d.src = c.fileurl : c.fileurl ? d.src = c.fileurl : (b = c.filename, d.src = Entry.defaultPath + "/uploads/" + b.substring(0, 2) + "/" + b.substring(2, 4) + "/image/" + b + ".png");
@@ -8491,6 +8483,7 @@ Entry.EntryObject.prototype.select = function(b) {
 };
 Entry.EntryObject.prototype.addPicture = function(b, a) {
   Entry.stateManager && Entry.stateManager.addCommand("add sprite", this, this.removePicture, b.id);
+  b.objectId = this.id;
   a || 0 === a ? (this.pictures.splice(a, 0, b), Entry.playground.injectPicture(this)) : this.pictures.push(b);
   return new Entry.State(this, this.removePicture, b.id);
 };
@@ -19755,7 +19748,7 @@ Entry.Playground.prototype.addPicture = function(b, a) {
   this.selectPicture(b);
 };
 Entry.Playground.prototype.setPicture = function(b) {
-  var a = Entry.container.getPictureElement(b.id), c = $(a);
+  var a = Entry.container.getPictureElement(b.id, b.objectId), c = $(a);
   if (a) {
     b.view = a;
     a.picture = b;
@@ -19780,7 +19773,7 @@ Entry.Playground.prototype.selectPicture = function(b) {
     e.id === b.id ? e.view.addClass("entryPictureSelected") : e.view.removeClass("entryPictureSelected");
   }
   var f;
-  b && b.id && (f = Entry.container.selectPicture(b.id));
+  b && b.id && (f = Entry.container.selectPicture(b.id, b.objectId));
   this.object.id === f && Entry.dispatchEvent("pictureSelected", b);
 };
 Entry.Playground.prototype.movePicture = function(b, a) {

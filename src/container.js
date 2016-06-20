@@ -199,16 +199,11 @@ Entry.Container.prototype.setObjects = function(objectModels) {
  * get Pictures element
  * @param {!String} pictureId
  */
-Entry.Container.prototype.getPictureElement = function(pictureId) {
-    for(var i in this.objects_) {
-        var object = this.objects_[i];
-        for (var j in object.pictures) {
-            if (pictureId === object.pictures[j].id) {
-                return object.pictures[j].view;
-            }
-        }
-    }
-    throw new Error('No picture found');
+Entry.Container.prototype.getPictureElement = function(pictureId, objectId) {
+    var object = this.getObject(objectId);
+    var picture = object.getPicture(pictureId);
+    if (picture) return picture.view;
+    else throw new Error('No picture found');
 };
 /**
  * Set Pictures
@@ -238,18 +233,14 @@ Entry.Container.prototype.setPicture = function(picture) {
  * Set Pictures
  * @param {!String} pictureId
  */
-Entry.Container.prototype.selectPicture = function(pictureId) {
-    for(var i in this.objects_) {
-        var object = this.objects_[i];
-        for (var j in object.pictures) {
-            var picture_ = object.pictures[j];
-            if (pictureId === picture_.id) {
-                object.selectedPicture = picture_;
-                object.entity.setImage(picture_);
-                object.updateThumbnailView();
-                return object.id;
-            }
-        }
+Entry.Container.prototype.selectPicture = function(pictureId, objectId) {
+    var object = this.getObject(objectId);
+    var picture_ = object.getPicture(pictureId);
+    if (picture_) {
+        object.selectedPicture = picture_;
+        object.entity.setImage(picture_);
+        object.updateThumbnailView();
+        return object.id;
     }
     throw new Error('No picture found');
 };
