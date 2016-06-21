@@ -28,6 +28,7 @@ Entry.HW = function() {
         '15': Entry.dplay,
         '16': Entry.nemoino,
         '17': Entry.Xbot,
+		'18': Entry.ardublock,
         '24': Entry.Hamster,
         '25': Entry.Albert,
         '31': Entry.Bitbrick,
