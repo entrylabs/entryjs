@@ -12035,8 +12035,7 @@ Entry.PyToBlockParser = function(b) {
           }
         }
       }
-      b.type = c;
-      h && e.push(h);
+      h && (b.type = c, e.push(h));
       0 != e.length && (b.params = e);
     }
     console.log("Identifiler result", b);
@@ -12060,52 +12059,56 @@ Entry.PyToBlockParser = function(b) {
   };
   b.VariableDeclarator = function(a) {
     console.log("VariableDeclarator component", a);
-    var b = {}, c, e, f = [], f = !1, g = !0, h = a.id;
-    a = a.init;
-    if ("__params0" != h.name && "__formalsIndex0" != h.name && "__args0" != h.name) {
-      if (a.callee && "__getParam0" == a.callee.name) {
-        return b.name = h.name, b;
+    var b = {}, c = [], c = !1, e = !0, f = a.id, g = a.init;
+    if ("__params0" != f.name && "__formalsIndex0" != f.name && "__args0" != f.name) {
+      if (g.callee && "__getParam0" == g.callee.name) {
+        return b.name = f.name, b;
       }
-      if (!h.name.includes("__filbert")) {
-        var k = this[h.type](h);
-        console.log("VariableDeclarator idData", k);
-        b.id = k;
-        var l = this[a.type](a);
-        console.log("VariableDeclarator initData", l);
-        b.init = l;
-        var m;
-        a.callee && (m = a.callee.object.object.name.concat(".").concat(a.callee.object.property.name).concat(".").concat(a.callee.property.name));
-        if ("__pythonRuntime.objects.list" == m) {
-          a = k.name;
-          var n = [1, 2], k = Entry.variableContainer.lists_, q;
-          for (q in k) {
-            l = k[q], console.log("VariableDeclarator entryList", l), null === l.object_ && l.name_ == a && (console.log("Check VariableDeclarator Update List"), r.setValue(n), Entry.variableContainer.updateList(), f = !0);
+      if (!f.name.includes("__filbert")) {
+        var h;
+        g.callee && (h = g.callee.object.object.name.concat(".").concat(g.callee.object.property.name).concat(".").concat(g.callee.property.name));
+        if ("__pythonRuntime.objects.list" == h) {
+          e = this[f.type](f);
+          console.log("VariableDeclarator idData", e);
+          b.id = e;
+          var k = this[g.type](g);
+          console.log("VariableDeclarator initData", k);
+          b.init = k;
+          var g = f.name, f = [], arguments = k.arguments, l;
+          for (l in arguments) {
+            k = {}, k.data = String(arguments[l].params[0]), f.push(k);
           }
-          f || (m = {name:a, value:n, variableType:"variable"}, console.log("VariableDeclarator variable", m), Entry.variableContainer.addVariable(m));
+          l = Entry.variableContainer.lists_;
+          for (var m in l) {
+            k = l[m], console.log("VariableDeclarator entryList", k), null === k.object_ && k.name_ == g && (console.log("Check VariableDeclarator Update List", k), console.log("Check VariableDeclarator array", f), list = {x:k.x_, y:k.y_, id:k.id_, visible:k.visible_, name:k.name_, isCloud:k.isClud_, width:k.width_, height:k.height_, array:f}, k.syncModel_(list), k.updateView(), Entry.variableContainer.updateList(), c = !0);
+          }
+          c || (list = {name:g, array:f, variableType:"list"}, console.log("VariableDeclarator list", list), Entry.variableContainer.addList(list), Entry.variableContainer.updateList());
         } else {
-          m = h.name;
-          "Literal" == a.type ? n = a.value : "Identifier" == a.type ? n = a.name : a.arguments && h.name != a.arguments[0].name ? n = NaN : g = !1;
-          console.log("variable", m, "value", n);
-          if (g) {
-            f = !1;
-            c = Entry.variableContainer.variables_;
-            for (q in c) {
-              var r = c[q];
-              console.log("VariableDeclarator entryVariable", r);
-              null === r.object_ && r.name_ == m && (console.log("Check VariableDeclarator Update Variable"), r.setValue(n), Entry.variableContainer.updateList(), f = !0);
+          l = f.name;
+          "Literal" == g.type ? k = g.value : "Identifier" == g.type ? k = g.name : g.arguments && f.name != g.arguments[0].name ? k = NaN : e = !1;
+          console.log("variable", l, "value", k);
+          if (e) {
+            c = !1;
+            e = Entry.variableContainer.variables_;
+            for (m in e) {
+              h = e[m], console.log("VariableDeclarator entryVariable", h), null === h.object_ && h.name_ == l && (console.log("Check VariableDeclarator Update Variable"), l = {x:h.x_, y:h.y_, id:h.id_, visible:h.visible_, value:k, name:h.name_, isCloud:h.isClud_}, h.syncModel_(l), Entry.variableContainer.updateList(), c = !0);
             }
-            f || (m = {name:m, value:n, variableType:"variable"}, console.log("VariableDeclarator variable", m), Entry.variableContainer.addVariable(m));
+            c || (l = {name:l, value:k, variableType:"variable"}, console.log("VariableDeclarator variable", l), Entry.variableContainer.addVariable(l), Entry.variableContainer.updateList());
           }
-          console.log("VariableDeclarator idData.name", k.name, "initData.params[0].name", l.params[0].name);
-          f = [];
-          "Literal" == a.type ? (f.push(k.params[0]), f.push(l)) : l.params[0] && k.name == l.params[0].name ? (f.push(k.params[0]), f.push(l.params[2])) : (f.push(k.params[0]), f.push(l));
-          console.log("VariableDeclarator init.type", a.type);
-          "Literal" == a.type ? n = this.getBlockType("%1 = %2") : (console.log("VariableDeclarator idData.name", k.name, "initData.params[0].name", l.params[0].name), n = l.params[0] && k.name == l.params[0].name ? "%1 = %1 + %2" : "%1 = %2", n = this.getBlockType(n));
-          c = n;
-          e = f;
+          e = this[f.type](f);
+          console.log("VariableDeclarator idData", e);
+          b.id = e;
+          k = this[g.type](g);
+          console.log("VariableDeclarator initData", k);
+          b.init = k;
+          console.log("VariableDeclarator idData.name", e.name, "initData.params[0].name", k.params[0].name);
+          c = [];
+          "Literal" == g.type ? (e.params && e.params[0] ? c.push(e.params[0]) : c.push(e.name), c.push(k)) : k.params && k.params[0] && e.name == k.params[0].name ? (c.push(e.params[0]), c.push(k.params[2])) : (c.push(e.params[0]), c.push(k));
+          console.log("VariableDeclarator init.type", g.type);
+          "Literal" == g.type ? m = this.getBlockType("%1 = %2") : (console.log("VariableDeclarator idData.name", e.name, "initData.params[0].name", k.params[0].name), m = k.params && k.params[0] && e.name == k.params[0].name ? "%1 = %1 + %2" : "%1 = %2", m = this.getBlockType(m));
+          b.type = m;
+          b.params = c;
         }
-        b.type = c;
-        b.params = e;
         console.log("VariableDeclarator result", b);
         return b;
       }

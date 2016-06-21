@@ -280,12 +280,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 } 
             }
 
-            structure.type = type;
-            result.type = structure.type;
-                
-
-            if(param)
+            if(param) {
+                structure.type = type;
+                result.type = structure.type;
                 params.push(param);
+            }
 
             if(params.length != 0) {
                 structure.params = params;
@@ -359,13 +358,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if(id.name.includes('__filbert'))
             return undefined;
 
-        var idData = this[id.type](id);
-        console.log("VariableDeclarator idData", idData);
-        result.id = idData;
-
-        var initData = this[init.type](init);
-        console.log("VariableDeclarator initData", initData);
-        result.init = initData;
+        
 
         var calleeName;
         if(init.callee) {
@@ -374,8 +367,25 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
         
         if(calleeName == "__pythonRuntime.objects.list") { 
-            var listName = idData.name;
-            var value = [1, 2];
+            var idData = this[id.type](id);
+            console.log("VariableDeclarator idData", idData);
+            result.id = idData;
+
+            var initData = this[init.type](init);
+            console.log("VariableDeclarator initData", initData);
+            result.init = initData;
+
+            var listName = id.name;
+            
+            var array = [];
+            var arguments = initData.arguments;
+            for(var a in arguments) {
+                var argument = arguments[a];
+                var item = {};
+                item.data = String(argument.params[0]);
+                array.push(item);
+            }
+
             var entryLists = Entry.variableContainer.lists_;
             if(Entry.stage.selectedObject)
                 var currentObject = Entry.stage.selectedObject.id
@@ -386,26 +396,41 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var entryList = entryLists[i];
                 console.log("VariableDeclarator entryList", entryList);
                 if(entryList.object_ === null && entryList.name_ == listName) {
-                    console.log("Check VariableDeclarator Update List");
+                    console.log("Check VariableDeclarator Update List", entryList);
+                    console.log("Check VariableDeclarator array", array);
                     
-                    entryVariable.setValue(value);
+                    list = {
+                            x: entryList.x_,
+                            y: entryList.y_,
+                            id: entryList.id_,
+                            visible: entryList.visible_,
+                            name: entryList.name_,
+                            isCloud: entryList.isClud_,
+                            width: entryList.width_,
+                            height: entryList.height_,
+                            array: array,
+                        };
+                        
+                    entryList.syncModel_(list);
+                    entryList.updateView();
                     Entry.variableContainer.updateList();
                     
-                    existed = true;
+                    existed = true; 
                 }       
             }
 
             if(!existed) {
-                variable = {
+                list = {
                     name: listName,
-                    value: value,
+                    array: array,
                     //object: currentObject, 
-                    variableType: 'variable'
+                    variableType: 'list'
                 };
 
-                console.log("VariableDeclarator variable", variable);
+                console.log("VariableDeclarator list", list);
 
-                Entry.variableContainer.addVariable(variable);
+                Entry.variableContainer.addList(list);
+                Entry.variableContainer.updateList();
             }
         }
         else {
@@ -436,8 +461,17 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     console.log("VariableDeclarator entryVariable", entryVariable);
                     if(entryVariable.object_ === null && entryVariable.name_ == variable) {
                         console.log("Check VariableDeclarator Update Variable");
+                        variable = {
+                            x: entryVariable.x_,
+                            y: entryVariable.y_,
+                            id: entryVariable.id_,
+                            visible: entryVariable.visible_,
+                            value: value,
+                            name: entryVariable.name_,
+                            isCloud: entryVariable.isClud_,
+                        };
                         
-                        entryVariable.setValue(value);
+                        entryVariable.syncModel_(variable);
                         Entry.variableContainer.updateList();
                         
                         existed = true;
@@ -455,19 +489,31 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     console.log("VariableDeclarator variable", variable);
 
                     Entry.variableContainer.addVariable(variable);
+                    Entry.variableContainer.updateList();
                 }
-            }
-            
-                
+            } 
+
+            var idData = this[id.type](id);
+            console.log("VariableDeclarator idData", idData);
+            result.id = idData;
+
+            var initData = this[init.type](init);
+            console.log("VariableDeclarator initData", initData);
+            result.init = initData;
+
             console.log("VariableDeclarator idData.name", idData.name, "initData.params[0].name", initData.params[0].name);
             
             var params = [];
             if(init.type == "Literal") {
-                params.push(idData.params[0]); 
+                if(idData.params && idData.params[0])
+                    params.push(idData.params[0]); 
+                else
+                    params.push(idData.name); 
+
                 params.push(initData);
             }
             else {
-                if(initData.params[0] && idData.name == initData.params[0].name) {
+                if(initData.params && initData.params[0] && idData.name == initData.params[0].name) {
                     params.push(idData.params[0]);
                     params.push(initData.params[2]);
                 } else {
@@ -485,7 +531,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             } 
             else {
                 console.log("VariableDeclarator idData.name", idData.name, "initData.params[0].name", initData.params[0].name);
-                if(initData.params[0] && idData.name == initData.params[0].name) {
+                if(initData.params && initData.params[0] && idData.name == initData.params[0].name) {
                     var syntax = String("%1 = %1 + %2");
                     var type = this.getBlockType(syntax);
                     structure.type = type; 
@@ -499,10 +545,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
                 
             }
+
+            result.type = structure.type;
+            result.params = structure.params;
         }
 
-        result.type = structure.type;
-        result.params = structure.params;
+        
 
 
         console.log("VariableDeclarator result", result);
