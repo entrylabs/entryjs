@@ -162,7 +162,8 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         }
 
                         console.log("Block param current block2", currentBlock);
-                        
+
+                        param = Entry.TextCodingUtil.prototype.variableFilter(block, blockParamIndex, param);
 
                         result += param;
 
@@ -200,7 +201,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                                 param = schemaParams[index].text;
                             }
                             else {
-                                param = null;   
+                                param = null;    
                             }
                         }   
                         
@@ -209,9 +210,11 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
                         if(!Entry.TextCodingUtil.prototype.isNumeric(param) &&
                            !Entry.TextCodingUtil.prototype.isBinaryOperator(param))
-                           param = String("\"" + param + "\"");  
+                           param = String("\"" + param + "\"");   
 
                         param = Entry.TextCodingUtil.prototype.variableFilter(block, blockParamIndex, param);
+
+                        console.log("param variableFilter", param);
 
                         //Variable Processing
                         if(currentBlock.data.type == "get_variable" || 
@@ -222,13 +225,13 @@ Entry.BlockToPyParser = function(blockSyntax) {
                             console.log("entryVariables", entryVariables, "param", param);
                             for(var e in entryVariables) {
                                 var entryVariable = entryVariables[e];
-                                if(maybeId == entryVariable.id_)// entryVariable.name_ == param)
+                                if(maybeId == entryVariable.id_) {// entryVariable.name_ == param)
                                     if(entryVariable.object_) {
                                         var object = Entry.container.getObject(entryVariable.object_);
                                         console.log("entry variable object", object);
                                         param = object.name.concat('.').concat(param);
                                     }
-
+                                }
                             }
                         }
                        

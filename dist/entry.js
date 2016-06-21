@@ -11621,10 +11621,11 @@ Entry.TextCodingUtil = function() {
     return a;
   };
   b.variableFilter = function(a, b, c) {
-    console.log("paramFilter block index param", a, b, c);
+    console.log("paramFilter block index param", a.data.type, b, c);
     var e = c;
     a = a.data.type;
-    "change_variable" != a && "set_variable" != a && "get_variable" != a || 1 != b || (console.log("paramFilter", eval(c)), e = eval(c));
+    "change_variable" == a || "set_variable" == a || "get_variable" == a ? 1 == b && (console.log("paramFilter", eval(c)), e = eval(c)) : "add_value_to_list" == a || "length_of_list" == a || "is_included_in_list" == a ? 2 == b && (console.log("paramFilter", eval(c)), e = eval(c)) : "value_of_index_from_list" == a ? 2 == b ? (console.log("paramFilter", eval(c)), e = eval(c)) : 4 == b && (e = c - 1) : "remove_value_from_list" == a ? 1 == b ? e = c - 1 : 2 == b && (console.log("paramFilter", eval(c)), 
+    e = eval(c)) : "insert_value_to_list" == a ? 2 == b ? (console.log("paramFilter", eval(c)), e = eval(c)) : 3 == b && (e = c - 1) : "change_value_list_index" == a && (1 == b ? (console.log("paramFilter", eval(c)), e = eval(c)) : 2 == b && (e = c - 1));
     return e;
   };
 })(Entry.TextCodingUtil.prototype);
@@ -11696,8 +11697,8 @@ Entry.BlockToPyParser = function(b) {
                 console.log("funcMap", this._funcMap.toString());
                 m = this._funcMap.get(t);
                 console.log("param", t, "func param", m);
-                m ? (console.log("func param current result", b), b += m) : (m = t.split("_"), console.log("funcParamTokens", m), r = m[0], 2 == m.length && ("stringParam" == r ? t = "string_param" : "booleanParam" == r && (t = "boolean_param")), console.log("Block param current block2", a), b += t, console.log("PARAM BLOCK", t), console.log("PARAM BLOCK RESULT ", b), this._parseMode == Entry.Parser.PARSE_VARIABLE && k == Entry.Parser.BLOCK_SKELETON_BASIC && l && (m = t, console.log("basic block param", 
-                t, "i", q), t = Object.keys(l), n = String(t[n++]), n = n.toLowerCase(), console.log("variable", n), t = m, console.log("value", t), this._variableMap.put(n, t), this._queue.enqueue(n), console.log("Variable Map", this._variableMap.toString()), console.log("Queue", this._queue.toString())));
+                m ? (console.log("func param current result", b), b += m) : (m = t.split("_"), console.log("funcParamTokens", m), r = m[0], 2 == m.length && ("stringParam" == r ? t = "string_param" : "booleanParam" == r && (t = "boolean_param")), console.log("Block param current block2", a), t = Entry.TextCodingUtil.prototype.variableFilter(a, n, t), b += t, console.log("PARAM BLOCK", t), console.log("PARAM BLOCK RESULT ", b), this._parseMode == Entry.Parser.PARSE_VARIABLE && k == Entry.Parser.BLOCK_SKELETON_BASIC && 
+                l && (m = t, console.log("basic block param", t, "i", q), t = Object.keys(l), n = String(t[n++]), n = n.toLowerCase(), console.log("variable", n), t = m, console.log("value", t), this._variableMap.put(n, t), this._queue.enqueue(n), console.log("Variable Map", this._variableMap.toString()), console.log("Queue", this._queue.toString())));
               } else {
                 m = h[r];
                 t = this["Field" + g[r].type](h[r], g[r]);
@@ -11706,6 +11707,7 @@ Entry.BlockToPyParser = function(b) {
                 t = String(t);
                 Entry.TextCodingUtil.prototype.isNumeric(t) || Entry.TextCodingUtil.prototype.isBinaryOperator(t) || (t = String('"' + t + '"'));
                 t = Entry.TextCodingUtil.prototype.variableFilter(a, n, t);
+                console.log("param variableFilter", t);
                 if ("get_variable" == a.data.type || "set_variable" == a.data.type || "change_variable" == a.data.type) {
                   console.log("check in set_variable");
                   r = Entry.variableContainer.variables_;
@@ -11961,52 +11963,63 @@ Entry.PyToBlockParser = function(b) {
   };
   b.CallExpression = function(a) {
     console.log("CallExpression component", a);
-    var b = {}, c, e, f = a.callee, g = this[f.type](f);
-    console.log("CallExpression calleeData", g);
+    var b = {}, c = [], e = a.callee, f = this[e.type](e);
+    console.log("CallExpression calleeData", f);
     arguments = a.arguments;
-    if ("Identifier" == f.type) {
-      console.log("CallExpression Identifier calleeData", g), b.callee = g;
+    if ("Identifier" == e.type) {
+      console.log("CallExpression Identifier calleeData", f), b.callee = f;
     } else {
-      var h = g.object, g = g.property;
-      if (h.statements && "call" == g.name && 0 == g.userCode) {
-        h = h.statements, console.log("CallExpression statement", h), b.statements = h;
+      var g = f.object, h = f.property;
+      if (g.statements && "call" == h.name && 0 == h.userCode) {
+        g = g.statements, console.log("CallExpression statement", g), b.statements = g;
       } else {
-        var k = h.name ? String(h.name).concat(".").concat(String(g.name)) : h.object.name ? String(h.object.name).concat(".").concat(String(h.property.name)).concat(".").concat(String(g.name)) : null
+        var k = g.name ? String(g.name).concat(".").concat(String(h.name)) : g.object.name ? String(g.object.name).concat(".").concat(String(g.property.name)).concat(".").concat(String(h.name)) : null
       }
       console.log("CallExpression calleeName", k);
-      h = this.getBlockType(k);
-      console.log("CallExpression type before", h);
-      "__pythonRuntime.functions.range" == k ? h = this.getBlockType("%1number#") : "__pythonRuntime.ops.add" == k ? (h = this.getBlockType("(%1 %2calc_basic# %3)"), g = {raw:"PLUS", type:"Literal", value:"PLUS"}, arguments.splice(1, 0, g)) : "__pythonRuntime.ops.multiply" == k ? (h = this.getBlockType("(%1 %2calc_basic# %3)"), g = {raw:"MULTI", type:"Literal", value:"MULTI"}, arguments.splice(1, 0, g)) : "__pythonRuntime.functions.len" == k && (h = this.getBlockType("len(%2)"));
+      g = this.getBlockType(k);
+      console.log("CallExpression type before", g);
+      h = k.split(".");
+      console.log("CallExpression calleeTokens", h);
+      if ("__pythonRuntime.functions.range" == k) {
+        var l = "%1number#", g = this.getBlockType(l)
+      } else {
+        "__pythonRuntime.ops.add" == k ? (l = "(%1 %2calc_basic# %3)", g = this.getBlockType(l), e = {raw:"PLUS", type:"Literal", value:"PLUS"}, arguments.splice(1, 0, e)) : "__pythonRuntime.ops.multiply" == k ? (l = "(%1 %2calc_basic# %3)", g = this.getBlockType(l), e = {raw:"MULTI", type:"Literal", value:"MULTI"}, arguments.splice(1, 0, e)) : "__pythonRuntime.functions.len" == k ? (l = "len(%2)", g = this.getBlockType(l)) : "Identifier" == e.object.type && "append" == h[1] ? (l = "%2.append", g = 
+        this.getBlockType(l)) : "Identifier" == e.object.type && "insert" == h[1] ? (l = "%2.insert", g = this.getBlockType(l)) : "Identifier" == e.object.type && "pop" == h[1] && (l = "%2.pop", g = this.getBlockType(l));
+      }
       b.callee = k;
-      console.log("CallExpression type after", h);
+      console.log("CallExpression type after", g);
     }
-    if (h) {
-      var f = Entry.block[h], g = f.params, f = f.def.params, l = [];
+    if (g) {
+      h = Entry.block[g];
+      e = h.params;
+      h = h.def.params;
       console.log("CallExpression component.arguments", arguments);
-      console.log("CallExpression paramsMeta", g);
-      console.log("CallExpression paramsDefMeta", f);
-      for (var m in g) {
-        var n = g[m].type;
+      console.log("CallExpression paramsMeta", e);
+      console.log("CallExpression paramsDefMeta", h);
+      for (var m in e) {
+        var n = e[m].type;
         "Indicator" == n ? (n = {raw:null, type:"Literal", value:null}, m < arguments.length && arguments.splice(m, 0, n)) : "Text" == n && (n = {raw:"", type:"Literal", value:""}, m < arguments.length && arguments.splice(m, 0, n));
       }
       console.log("CallExpression arguments", arguments);
       for (var q in arguments) {
-        m = arguments[q], console.log("CallExpression argument", m, "typeof", typeof m), m = this[m.type](m, g[q], f[q], !0), console.log("CallExpression param", m), "__pythonRuntime.functions.range" == k && m.type ? (h = m.type, l = m.params) : l.push(m);
+        m = arguments[q], console.log("CallExpression argument", m, "typeof", typeof m), m = this[m.type](m, e[q], h[q], !0), console.log("CallExpression param", m), "__pythonRuntime.functions.range" == k && m.type ? (g = m.type, c = m.params) : c.push(m);
       }
-      h && (c = h);
-      l && (e = l);
-      c && (b.type = c);
-      e && (b.params = e);
+      console.log("CallExpression syntax", l);
+      console.log("CallExpression argument params", c);
+      "%2.append" == l || "%2.pop" == l ? (console.log("CallExpression append calleeData", f), q = this.ParamDropdownDynamic(f.object.name, e[1], h[1]), console.log("CallExpression listName", q), c.push(q), console.log("CallExpression params[0]", c[0]), c[0].params[0] += 1) : "%2.insert" == l ? (c.pop(), console.log("CallExpression append calleeData", f), q = this.ParamDropdownDynamic(f.object.name, e[1], h[1]), console.log("CallExpression listName", q), c.splice(0, 0, q), m = this[arguments[1].type](arguments[1], 
+      e[2], h[2], !0), c.splice(0, 0, m), console.log("CallExpression insert params", c), c[2].params[0] += 1) : "len(%2)" == l && (q = this.ParamDropdownDynamic(c[1].name, e[1], h[1]), delete c[1], c[1] = q);
+      g && (b.type = g);
+      c && (b.params = c);
     } else {
       c = [];
       for (q in arguments) {
-        m = arguments[q], console.log("CallExpression argument", m, "typeof", typeof m), g = this[m.type](m), console.log("CallExpression argumentData", g), c.push(g);
+        m = arguments[q], console.log("CallExpression argument", m, "typeof", typeof m), e = this[m.type](m), console.log("CallExpression argumentData", e), c.push(e);
       }
       console.log("CallExpression args", c);
       b.arguments = c;
     }
     console.log("CallExpression Function Check result", b);
-    b.arguments && b.arguments[0] && "__pythonRuntime.utils.createParamsObj" == b.arguments[0].callee && (h = this._funcMap.get(b.callee.name + b.arguments[0].arguments.length), b = {}, b.type = h);
+    b.arguments && b.arguments[0] && "__pythonRuntime.utils.createParamsObj" == b.arguments[0].callee && (g = this._funcMap.get(b.callee.name + b.arguments[0].arguments.length), b = {}, b.type = g);
     console.log("CallExpression result", b);
     return b;
   };
@@ -12213,33 +12226,46 @@ Entry.PyToBlockParser = function(b) {
   };
   b.MemberExpression = function(a) {
     console.log("MemberExpression component", a);
-    var b = {}, c = a.object;
-    a = a.property;
-    c = this[c.type](c);
-    b.object = c;
-    var e = this[a.type](a);
+    var b = {}, c, e = a.object, f = a.property, g = this[e.type](e);
+    b.object = g;
+    e = this[f.type](f);
     b.property = e;
-    console.log("MemberExpression objectData", c);
+    console.log("MemberExpression objectData", g);
     console.log("MemberExpression propertyData", e);
-    var f = Entry.variableContainer.variables_;
-    console.log("MemberExpression entryVariables", f);
     if ("call" == e.name && 0 == e.userCode) {
       return b;
     }
-    var g;
-    a = [];
-    for (var h in f) {
-      var k = f[h], l = Entry.container.getObject(k.object_);
-      if (l && k.name_ == e && l.name == String(c)) {
-        g = k.id_;
-        break;
+    if ("__pythonRuntime.ops.subscriptIndex" == e.callee) {
+      var h = this.getBlockType("%2[%4]");
+      c = h;
+      arguments = e.arguments;
+      f = Entry.block[h];
+      e = this.ParamDropdownDynamic(arguments[0].name, f.params, f.def.params);
+      console.log("MemberExpression listName", e);
+      f = [];
+      f.push("");
+      f.push(e);
+      f.push("");
+      f.push(arguments[1]);
+      f.push("");
+      b.type = c;
+      b.params = f;
+    } else {
+      var f = [], k = Entry.variableContainer.variables_;
+      console.log("MemberExpression entryVariables", k);
+      for (h in k) {
+        var l = k[h], m = Entry.container.getObject(l.object_);
+        if (m && l.name_ == e && m.name == String(g)) {
+          c = l.id_;
+          break;
+        }
       }
+      c && f.push(c);
+      h = this.getBlockType("%1");
+      console.log("MemberExpression type", h);
+      h && (b.type = h);
+      0 != f.length && (b.params = f);
     }
-    g && a.push(g);
-    g = this.getBlockType("%1");
-    console.log("MemberExpression type", g);
-    g && (b.type = g);
-    0 != a.length && (b.params = a);
     console.log("MemberExpression result", b);
     return b;
   };
@@ -12636,95 +12662,93 @@ Entry.PyToBlockParser = function(b) {
     switch(operator) {
       case "=":
         if ("MemberExpression" == h.type) {
-          if (a.right.arguments) {
-            c = a.left.object.name.concat(a.left.property.name);
-            var l = a.right.arguments[0].object.name.concat(a.right.arguments[0].property.name);
-            console.log("AssignmentExpression leftEx", c, "rightEx", l);
-            l = a.right.arguments && c == l ? "%1 = %1 + %2" : "%1 = %2";
+          if ("__pythonRuntime.ops.subscriptIndex" == k.property.callee) {
+            var l = "%1[%2] = %3", m = this.getBlockType(l)
           } else {
-            l = "%1 = %2";
+            a.right.arguments ? (c = a.left.object.name.concat(a.left.property.name), l = a.right.arguments[0].object.name.concat(a.right.arguments[0].property.name), console.log("AssignmentExpression leftEx", c, "rightEx", l), l = a.right.arguments && c == l ? "%1 = %1 + %2" : "%1 = %2") : l = "%1 = %2", m = this.getBlockType(l);
           }
-          c = this.getBlockType(l);
+          c = m;
         }
       ;
     }
     if (operator) {
-      var m = Entry.TextCodingUtil.prototype.logicalExpressionConvert(operator)
+      var n = Entry.TextCodingUtil.prototype.logicalExpressionConvert(operator)
     }
-    b.operator = m;
+    b.operator = n;
     a = a.right;
     if (a.type) {
-      var n = this[a.type](a);
-      console.log("AssignmentExpression rightData", n);
+      var q = this[a.type](a);
+      console.log("AssignmentExpression rightData", q);
     }
-    b.right = n;
-    if ("MemberExpression" == h.type && "%1 = %2" == l) {
-      l = !1;
-      h = b.left.object;
-      n = b.left.property;
-      a = b.right.params[0];
-      m = null;
-      if (Entry.stage.selectedObject) {
-        console.log("aa", Entry.stage.selectedObject, "bb", h), Entry.stage.selectedObject.name != String(h) ? m = null : (m = Entry.stage.selectedObject.id, l = !0);
-      } else {
-        k = Entry.container.objects_;
-        console.log("target object", h, "containter object", k);
-        for (var q in k) {
-          var r = k[q];
-          console.log("cotainer detail object", r, "target object", h);
-          if (r.name == String(h)) {
-            m = r.id;
-            l = !0;
-            break;
-          }
-        }
-      }
-      console.log("final currentObject", m);
-      if (l) {
-        q = Entry.variableContainer.variables_;
-        for (var t in q) {
-          if (l = q[t], console.log("AssignmentExpression entryVariable", l), k = Entry.container.getObject(l.object_)) {
-            console.log("target object", k), l.name_ == n && k.name == String(h) && (console.log("Check AssignmentExpression Update Variable"), l.setValue(a), Entry.variableContainer.updateList(), g = !0);
-          }
-        }
-        g || (variable = {name:n, value:a, object:m, variableType:"variable"}, console.log("AssignmentExpression variable", variable), Entry.variableContainer.addVariable(variable));
-      }
-      console.log("AssignmentExpression object", h, "property", n, "value", a);
-      q = Entry.variableContainer.variables_;
-      console.log("AssignmentExpression entryVariables", q);
-      for (var u in q) {
-        if (l = q[u], (k = Entry.container.getObject(l.object_)) && l.name_ == n && k.name == String(h)) {
-          f = l.id_;
-          break;
-        }
-      }
-      if (!f) {
-        return result = b;
-      }
-      e.push(f);
-      e.push(b.right);
+    b.right = q;
+    console.log("AssignmentExpression syntax", l);
+    if ("%1[%2] = %3" == l) {
+      f = Entry.block[m], g = k.property.arguments[0].name, g = this.ParamDropdownDynamic(g, f.params[0], f.def.params[0]), e.push(g), f = k.property.arguments[1], f.params[0] += 1, e.push(f), e.push(q);
     } else {
-      if ("MemberExpression" == h.type && "%1 = %1 + %2" == l) {
-        console.log("data", b);
-        h = b.left.object;
-        n = b.left.property;
-        q = Entry.variableContainer.variables_;
-        console.log("AssignmentExpression entryVariables", q);
-        for (u in q) {
-          if (l = q[u], (k = Entry.container.getObject(l.object_)) && l.name_ == n && k.name == String(h)) {
-            f = l.id_;
+      if ("MemberExpression" == h.type && "%1 = %2" == l) {
+        n = !1;
+        h = k.object;
+        k = k.property;
+        q = q.params[0];
+        a = null;
+        if (Entry.stage.selectedObject) {
+          console.log("aa", Entry.stage.selectedObject, "bb", h), Entry.stage.selectedObject.name != String(h) ? a = null : (a = Entry.stage.selectedObject.id, n = !0);
+        } else {
+          l = Entry.container.objects_;
+          console.log("target object", h, "containter object", l);
+          for (var r in l) {
+            if (m = l[r], console.log("cotainer detail object", m, "target object", h), m.name == String(h)) {
+              a = m.id;
+              n = !0;
+              break;
+            }
+          }
+        }
+        console.log("final currentObject", a);
+        if (n) {
+          r = Entry.variableContainer.variables_;
+          for (var t in r) {
+            if (n = r[t], console.log("AssignmentExpression entryVariable", n), l = Entry.container.getObject(n.object_)) {
+              console.log("target object", l), n.name_ == k && l.name == String(h) && (console.log("Check AssignmentExpression Update Variable"), n.setValue(q), Entry.variableContainer.updateList(), g = !0);
+            }
+          }
+          g || (variable = {name:k, value:q, object:a, variableType:"variable"}, console.log("AssignmentExpression variable", variable), Entry.variableContainer.addVariable(variable));
+        }
+        console.log("AssignmentExpression object", h, "property", k, "value", q);
+        r = Entry.variableContainer.variables_;
+        console.log("AssignmentExpression entryVariables", r);
+        for (var u in r) {
+          if (n = r[u], (l = Entry.container.getObject(n.object_)) && n.name_ == k && l.name == String(h)) {
+            f = n.id_;
             break;
           }
+        }
+        if (!f) {
+          return b;
         }
         e.push(f);
-        e.push(b.right.params[2]);
+        e.push(b.right);
+      } else {
+        if ("MemberExpression" == h.type && "%1 = %1 + %2" == l) {
+          h = k.object;
+          k = k.property;
+          r = Entry.variableContainer.variables_;
+          console.log("AssignmentExpression entryVariables", r);
+          for (u in r) {
+            if (n = r[u], (l = Entry.container.getObject(n.object_)) && n.name_ == k && l.name == String(h)) {
+              f = n.id_;
+              break;
+            }
+          }
+          e.push(f);
+          e.push(q.params[2]);
+        }
       }
     }
-    result = b;
-    result.type = c;
-    result.params = e;
-    console.log("AssignmentExpression result", result);
-    return result;
+    b.type = c;
+    b.params = e;
+    console.log("AssignmentExpression result", b);
+    return b;
   };
   b.FunctionDeclaration = function(a) {
     console.log("FunctionDeclaration component", a);
@@ -19643,13 +19667,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
       var f = b[c], g = f[0], f = f[1], h = Entry.Dom("li", {class:"rect", parent:this.optionGroup}), k = Entry.Dom("span", {class:"left", parent:h});
       Entry.Dom("span", {class:"right", parent:h}).text(g);
       this.getValue() == f && k.text("\u2713");
-      (function(b, d) {
+      (function(b, c) {
         b.bind("mousedown touchstart", function(a) {
           a.stopPropagation();
         });
         b.bind("mouseup touchend", function(b) {
           b.stopPropagation();
-          a.applyValue(d);
+          a.applyValue(c);
           a.destroyOption();
           a._selectBlockView();
         });
@@ -19729,13 +19753,13 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
       var e = b[c], f = e[0], e = e[1], g = Entry.Dom("li", {class:"rect", parent:this.optionGroup}), h = Entry.Dom("span", {class:"left", parent:g});
       Entry.Dom("span", {class:"right", parent:g}).text(f);
       this.getValue() == e && h.text("\u2713");
-      (function(b, d) {
+      (function(b, c) {
         b.mousedown(function(a) {
           a.stopPropagation();
         });
         b.mouseup(function(b) {
           b.stopPropagation();
-          a.applyValue(d);
+          a.applyValue(c);
           a.destroyOption();
           a._selectBlockView();
         });

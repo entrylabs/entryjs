@@ -15218,7 +15218,7 @@ Entry.block = {
             list.updateView();
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.add_item_to_list(%1, %2)"]}
+        "syntax": {"js": [], "py": ["%2.append(%1)"]}
     },
     "remove_value_from_list": {
         "color": "#E457DC",
@@ -15273,7 +15273,7 @@ Entry.block = {
             list.updateView();
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.remove_item_index_list(%1, %2)"]}
+        "syntax": {"js": [], "py": ["%2.pop(%1)"]}
     },
     "insert_value_to_list": {
         "color": "#E457DC",
@@ -15337,7 +15337,7 @@ Entry.block = {
             list.updateView();
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.insert_item_to_list_index(%1, %2, %3)"]}
+        "syntax": {"js": [], "py": ["%2.insert(%3, %1)"]}
     },
     "change_value_list_index": {
         "color": "#E457DC",
@@ -15401,7 +15401,7 @@ Entry.block = {
             list.updateView();
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.change_item_list(%1, %2, %3)"]}
+        "syntax": {"js": [], "py": ["%1\[%2\] = %3"]}
     },
     "value_of_index_from_list": {
         "color": "#E457DC",
@@ -15465,7 +15465,7 @@ Entry.block = {
 
             return list.array_[index-1].data
         },
-        "syntax": {"js": [], "py": ["Entry.get_item_list_index(%2, %4)"]}
+        "syntax": {"js": [], "py": ["%2\[%4\]"]}
     },
     "length_of_list": {
         "color": "#E457DC",
@@ -15506,7 +15506,7 @@ Entry.block = {
 
             return list.array_.length;
         },
-        "syntax": {"js": [], "py": ["Entry.get_list_length(%2)"]}
+        "syntax": {"js": [], "py": ["len(%2)"]}
     },
     "show_list": {
         "color": "#E457DC",
@@ -15725,7 +15725,7 @@ Entry.block = {
             }
             return false;
         },
-        "syntax": {"js": [], "py": ["Entry.is_item_included_list(%2, %4)"]}
+        "syntax": {"js": [], "py": ["%4 in %2"]}
     },
     "xbot_digitalInput": {
         "color": "#00979D",
