@@ -997,8 +997,94 @@ Entry.BlockView.DRAG_RADIUS = 5;
         }
     };
 
-    p.getParam = function(index) {
-        return this._paramMap[index];
+    p.getParam = function(index) { return this._paramMap[index]; };
+
+    p.getDataUrl = function() {
+        var pngMap = {};
+        var deferred = $.Deferred();
+        var svgData = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">(svgGroup)(defs)</svg>';
+        var svgGroup = this.svgGroup.cloneNode(true);
+        var box = this._skeleton.box(this)
+        svgGroup.setAttribute(
+            'transform',
+            'translate(%X,%Y)'
+                .replace('%X', -box.offsetX)
+                .replace('%Y', -box.offsetY)
+        );
+
+        var defs = this.getBoard().svgDom.find('defs');
+        var bBox = this.svgGroup.getBoundingClientRect();
+
+        var images = svgGroup.getElementsByTagName('image');
+        var counts = 0;
+
+        if (images.length === 0) process();
+        else {
+            for (var i=0; i<images.length; i++) {
+                var img = images[i];
+                (function (img) {
+                    var href = img.getAttribute('href');
+                    loadImage(href, img.getAttribute('width'), img.getAttribute('height'))
+                        .then(function(src) {
+                            img.setAttribute('href', src)
+                            if (++counts == images.length) return process();
+                        });
+                })(img);
+            }
+        }
+        return deferred.promise();
+
+        function process() {
+            svgData = svgData
+                        .replace('(svgGroup)', new XMLSerializer().serializeToString( svgGroup ))
+                        .replace('(defs)', new XMLSerializer().serializeToString( defs[0] ))
+                        .replace(/>\s+/g, ">").replace(/\s+</g, "<");
+
+            loadImage(
+                "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgData))),
+                bBox.width, bBox.height
+            ).then(function(src) {
+                var download = document.createElement('a');
+                download.href = '(src)'.replace('(src)', src);
+                download.download = '엔트리 블록.png';
+                download.click();
+                console.log(download);
+                deferred.resolve(src);
+            }, function(err) {
+                deferred.reject('error occured');
+            });
+        }
+
+        function loadImage(src, width, height) {
+            var deferred = $.Deferred();
+            if (pngMap[src] !== undefined)
+                deferred.resolve(pngMap[src]);
+
+            //float point cropped
+            width = Math.ceil(width);
+            height = Math.ceil(height);
+
+            var img = document.createElement( "img" );
+            img.crossOrigin = 'Anonymous';
+            var canvas = document.createElement( "canvas" );
+            canvas.width = width;
+            canvas.height = height;
+            var ctx = canvas.getContext( "2d" );
+
+            img.onload = function() {
+                ctx.drawImage(img, 0, 0, width, height);
+                var data = canvas.toDataURL( "image/png" );
+                if (/\.png$/.test(src))
+                    pngMap[src] = data;
+                deferred.resolve(data);
+            };
+
+            img.onerror = function() {
+                deferred.reject('error occured');
+            };
+            img.src = src;
+            return deferred.promise();
+        }
     };
 
 

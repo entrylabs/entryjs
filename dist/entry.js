@@ -722,7 +722,7 @@ Entry.Arduino = {name:"arduino", setZero:function() {
 Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a0:{name:Lang.Hw.port_en + " A0 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a1:{name:Lang.Hw.port_en + " A1 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a2:{name:Lang.Hw.port_en + " A2 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a3:{name:Lang.Hw.port_en + " A3 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a4:{name:Lang.Hw.port_en + " A4 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a5:{name:Lang.Hw.port_en + " A5 " + 
 Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}}, mode:"both"}};
 Entry.SensorBoard = {name:"sensorBoard", setZero:Entry.Arduino.setZero};
-Entry.dplay = {name:"dplay", vel_value:255, setZero:Entry.Arduino.setZero, timeouts:[], removeTimeout:function(b) {
+Entry.dplay = {name:"dplay", vel_value:255, Left_value:255, Right_value:255, setZero:Entry.Arduino.setZero, timeouts:[], removeTimeout:function(b) {
   clearTimeout(b);
   var a = this.timeouts;
   b = a.indexOf(b);
@@ -856,8 +856,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(c, d);
+  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
   return a.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1057,8 +1057,8 @@ Blockly.Blocks.dplay_select_led = {init:function() {
 Entry.block.dplay_select_led = function(b, a) {
   var c = a.getField("PORT"), d = 7;
   "7" == c ? d = 7 : "8" == c ? d = 8 : "9" == c ? d = 9 : "10" == c && (d = 10);
-  c = "on" == a.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(d, c);
+  c = a.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(d, "on" == c ? 255 : 0);
   return a.callReturn();
 };
 Blockly.Blocks.dplay_get_switch_status = {init:function() {
@@ -2068,10 +2068,10 @@ Entry.block.wait_second = function(b, a) {
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
+  var c = a.getNumberValue("SECOND", a);
   setTimeout(function() {
     a.timeFlag = 0;
-  }, c);
+  }, 60 / (Entry.FPS || 60) * c * 1E3);
   return a;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -16175,6 +16175,63 @@ Entry.BlockView.DRAG_RADIUS = 5;
   };
   b.getParam = function(a) {
     return this._paramMap[a];
+  };
+  b.getDataUrl = function() {
+    function a() {
+      f = f.replace("(svgGroup)", (new XMLSerializer).serializeToString(g)).replace("(defs)", (new XMLSerializer).serializeToString(k[0])).replace(/>\s+/g, ">").replace(/\s+</g, "<");
+      b("data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(f))), l.width, l.height).then(function(a) {
+        var b = document.createElement("a");
+        b.href = "(src)".replace("(src)", a);
+        b.download = "\uc5d4\ud2b8\ub9ac \ube14\ub85d.png";
+        b.click();
+        console.log(b);
+        e.resolve(a);
+      }, function(a) {
+        e.reject("error occured");
+      });
+    }
+    function b(a, c, e) {
+      var f = $.Deferred();
+      void 0 !== d[a] && f.resolve(d[a]);
+      c = Math.ceil(c);
+      e = Math.ceil(e);
+      var g = document.createElement("img");
+      g.crossOrigin = "Anonymous";
+      var h = document.createElement("canvas");
+      h.width = c;
+      h.height = e;
+      var k = h.getContext("2d");
+      g.onload = function() {
+        k.drawImage(g, 0, 0, c, e);
+        var b = h.toDataURL("image/png");
+        /\.png$/.test(a) && (d[a] = b);
+        f.resolve(b);
+      };
+      g.onerror = function() {
+        f.reject("error occured");
+      };
+      g.src = a;
+      return f.promise();
+    }
+    var d = {}, e = $.Deferred(), f = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">(svgGroup)(defs)</svg>', g = this.svgGroup.cloneNode(!0), h = this._skeleton.box(this);
+    g.setAttribute("transform", "translate(%X,%Y)".replace("%X", -h.offsetX).replace("%Y", -h.offsetY));
+    var k = this.getBoard().svgDom.find("defs"), l = this.svgGroup.getBoundingClientRect(), n = g.getElementsByTagName("image"), m = 0;
+    if (0 === n.length) {
+      a();
+    } else {
+      for (h = 0;h < n.length;h++) {
+        (function(d) {
+          var e = d.getAttribute("href");
+          b(e, d.getAttribute("width"), d.getAttribute("height")).then(function(b) {
+            d.setAttribute("href", b);
+            if (++m == n.length) {
+              return a();
+            }
+          });
+        })(n[h]);
+      }
+    }
+    return e.promise();
   };
 })(Entry.BlockView.prototype);
 Entry.Code = function(b, a) {
