@@ -444,8 +444,15 @@ EntryStatic.getAllBlocks = function() {
                 "xbot_servo",
                 "xbot_oneWheel",
                 "xbot_twoWheel",
-                "xbot_lcd"
+                "xbot_lcd",
                 //end of XBOT Blocks added
+                // ardublock Added 2016-06-01
+                "ardublock_get_number_sensor_value",
+                "ardublock_get_digital_value",
+                "ardublock_toggle_led",
+                "ardublock_toggle_pwm",
+                "ardublock_convert_scale"
+				// ardublock Added 2016-06-01
             ]
         }
     ]
