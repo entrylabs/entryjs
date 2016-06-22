@@ -29,7 +29,7 @@ p.getView = function () {
 
 p.resize = function() {
     var container = document.getElementById('entryContainerWorkspaceId');
-    var iframe = document.getElementById('pdfViewIframe');
+    var iframe = document.getElementById('pdfViewIframe');
     w = container.offsetWidth;
     iframe.width = w+'px';
     iframe.height = w*9/16 + 'px';
