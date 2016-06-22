@@ -1028,8 +1028,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
                 var size = parseInt(text.getAttribute('font-size'));
                 var content = $(text).text();
                 if (boldTypes.indexOf(content) > -1) {
-                    text.setAttribute('font-weight', 'bold');
-                    text.setAttribute('font-size', (size) + 'px');
+                    text.setAttribute('font-weight', '500');
                 }
 
                 if (content == 'q') {

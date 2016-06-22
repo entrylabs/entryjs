@@ -16219,7 +16219,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
       (function(a) {
         a.setAttribute("font-family", "'nanumBarunRegular', 'NanumGothic', '\ub098\ub214\uace0\ub515','NanumGothicWeb', '\ub9d1\uc740 \uace0\ub515', 'Malgun Gothic', Dotum");
         var b = parseInt(a.getAttribute("font-size")), c = $(a).text();
-        -1 < q.indexOf(c) && (a.setAttribute("font-weight", "bold"), a.setAttribute("font-size", b + "px"));
+        -1 < q.indexOf(c) && a.setAttribute("font-weight", "500");
         if ("q" == c) {
           var d = parseInt(a.getAttribute("y"));
           a.setAttribute("y", d - 1);
