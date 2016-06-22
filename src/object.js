@@ -1399,13 +1399,17 @@ Entry.EntryObject.prototype.addCloneVariables = function(object, entity, variabl
     entity.lists = [];
     var keyName = 'object_';
     if (!variables)
-        variables = Entry.findObjsByKey(Entry.variableContainer.variables_,
-                    keyName,
-                    object.id);
+        variables = Entry.findObjsByKey(
+            Entry.variableContainer.variables_,
+            keyName,
+            object.id
+        );
     if (!lists)
-        lists = Entry.findObjsByKey(Entry.variableContainer.lists_,
-                    keyName,
-                    object.id);
+        lists = Entry.findObjsByKey(
+            Entry.variableContainer.lists_,
+            keyName,
+            object.id
+        );
 
     for (var i=0; i<variables.length; i++)
         entity.variables.push(variables[i].clone());

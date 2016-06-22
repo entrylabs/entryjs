@@ -15214,7 +15214,7 @@ Entry.block = {
         "isNotFor": [ "list", "listNotExist" ],
         "func": function (sprite, script) {
             var listId = script.getField("LIST", script);
-            var list = Entry.variableContainer.getList(listId);
+            var list = Entry.variableContainer.getList(listId, sprite);
 
             return list.array_.length;
         }
@@ -15421,7 +15421,7 @@ Entry.block = {
         "func": function (sprite, script) {
             var listId = script.getField("LIST", script);
             var data = script.getStringValue("DATA", script);
-            var list = Entry.variableContainer.getList(listId);
+            var list = Entry.variableContainer.getList(listId, sprite);
             if (!list)
                 return false;
             var arr = list.array_;
@@ -18998,6 +18998,111 @@ Entry.block = {
         },
         "class": "arduino"
     },
+	// ardublock Added 2016-06-01	
+    "ardublock_get_number_sensor_value": {
+        "parent": "arduino_get_number_sensor_value",
+        "isNotFor": [
+            "ardublock"
+        ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_sensor_number"
+                }
+            ],
+            "type": "ardublock_get_number_sensor_value"
+        },
+        "class": "arduino_value"
+    },
+    "ardublock_get_digital_value": {
+        "parent": "arduino_get_digital_value",
+        "isNotFor": [
+            "ardublock"
+        ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_port_number"
+                }
+            ],
+            "type": "ardublock_get_digital_value"
+        },
+        "class": "arduino_value"
+    },
+    "ardublock_toggle_led": {
+        "parent": "arduino_toggle_led",
+        "isNotFor": [
+            "ardublock"
+        ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_port_number"
+                },
+                null,
+                null
+            ],
+            "type": "ardublock_toggle_led"
+        },
+        "class": "arduino_set"
+    },
+    "ardublock_toggle_pwm": {
+        "parent": "arduino_toggle_pwm",
+        "isNotFor": [
+            "ardublock"
+        ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_pwm_port_number"
+                },
+                {
+                    "type": "arduino_text",
+                    "params": [ "255" ]
+                },
+                null
+            ],
+            "type": "ardublock_toggle_pwm"
+        },
+        "class": "arduino_set"
+    },
+    "ardublock_convert_scale": {
+        "parent": "arduino_convert_scale",
+        "isNotFor": [
+            "ardublock"
+        ],
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_number_sensor_value",
+                    "params": [
+                        {
+                            "type": "arduino_get_sensor_number"
+                        }
+                    ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "1023" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "100" ]
+                }
+            ],
+            "type": "ardublock_convert_scale"
+        },
+        "class": "arduino"
+    },
+	// ardublock Added 2016-06-01	
     "ebs_if": {
         "parent": "_if",
         "def": {
