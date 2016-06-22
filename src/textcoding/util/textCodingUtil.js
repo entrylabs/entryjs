@@ -260,7 +260,7 @@ Entry.TextCodingUtil = function() {
                 console.log("paramFilter", eval(param));
                 result = eval(param);
             }
-        } else if(type == "add_value_to_list" || type == "length_of_list" || type == "is_included_in_list") {
+        } else if(type == "length_of_list" || type == "is_included_in_list") {
             if(index == 2) {
                 console.log("paramFilter", eval(param));
                 result = eval(param);
@@ -271,23 +271,26 @@ Entry.TextCodingUtil = function() {
                 result = eval(param);
             } 
             else if(index == 4) {
-                result = param - 1;
+                if(this.isNumeric(param))
+                    result = param - 1;
             }
         } else if(type == "remove_value_from_list") {
-            if(index == 1) {
-                result = param - 1;
-            }
-            else if(index == 2) {
+            if(index == 2) {
                 console.log("paramFilter", eval(param));
                 result = eval(param);
             } 
+            else if(index == 1) {
+                if(this.isNumeric(param))
+                    result = param - 1;
+            }
         } else if(type == "insert_value_to_list") {
             if(index == 2) {
                 console.log("paramFilter", eval(param));
                 result = eval(param);
             } 
             else if(index == 3) {
-                result = param - 1;
+                if(this.isNumeric(param))
+                    result = param - 1;
             }
         } else if(type == "change_value_list_index") {
             if(index == 1) {
@@ -295,11 +298,291 @@ Entry.TextCodingUtil = function() {
                 result = eval(param);
             } 
             else if(index == 2) {
-                result = param - 1;
+                if(this.isNumeric(param))
+                    result = param - 1;
             }
+        } else if(type == "add_value_to_list") {
+            if(index == 2) {
+                console.log("paramFilter", eval(param));
+                result = eval(param);
+            } 
         }
 
         return result;
-    }
+    };
+
+    p.isGlobalVariableExisted = function(name) {
+        var entryVariables = Entry.variableContainer.variables_;
+        for(var i in entryVariables) { 
+            var entryVariable = entryVariables[i];
+            console.log("TextCodingUtil updateGlobalVariable", entryVariable);
+            if(entryVariable.object_ === null && entryVariable.name_ == name) {
+                return true;
+            }       
+
+        }
+
+        return false;
+    };
+
+    p.updateGlobalVariable = function(name, value) {
+        var entryVariables = Entry.variableContainer.variables_;
+        for(var i in entryVariables) { 
+            var entryVariable = entryVariables[i];
+            console.log("TextCodingUtil updateGlobalVariable", entryVariable);
+            if(entryVariable.object_ === null && entryVariable.name_ == name) {
+                variable = {
+                    x: entryVariable.x_,
+                    y: entryVariable.y_,
+                    id: entryVariable.id_,
+                    visible: entryVariable.visible_,
+                    value: value,
+                    name: name,
+                    isCloud: entryVariable.isClud_,
+                };
+                
+                entryVariable.syncModel_(variable);
+                Entry.variableContainer.updateList();
+                
+                break;
+            }       
+        }
+    };
+
+    p.createGlobalVariable = function(name, value) {
+        if(this.isGlobalVariableExisted(name))
+            return;
+
+        var variable = {
+            name: name,
+            value: value,
+            variableType: 'variable'
+        };
+
+        console.log("TextCodingUtil variable", variable);
+
+        Entry.variableContainer.addVariable(variable);
+        Entry.variableContainer.updateList();
+    };
+
+    p.isLocalVariableExisted = function(name, object) {
+        var entryVariables = Entry.variableContainer.variables_;
+        for(var i in entryVariables) { 
+            var entryVariable = entryVariables[i];
+            console.log("TextCodingUtil updateGlobalVariable", entryVariable);
+            if(entryVariable.object_ === object.id && entryVariable.name_ == name) {
+                return true;
+            }       
+
+        }
+
+        return false;
+    };
+
+    p.updateLocalVariable = function(name, value, object) {
+        var entryVariables = Entry.variableContainer.variables_;
+        for(var i in entryVariables) { 
+            var entryVariable = entryVariables[i];
+            console.log("TextCodingUtil updateGlobalVariable", entryVariable);
+            if(entryVariable.object_ === object.id && entryVariable.name_ == name) {
+                var variable = {
+                    x: entryVariable.x_,
+                    y: entryVariable.y_,
+                    id: entryVariable.id_,
+                    visible: entryVariable.visible_,
+                    value: value,
+                    name: name,
+                    isCloud: entryVariable.isClud_,
+                };
+                
+                entryVariable.syncModel_(variable);
+                Entry.variableContainer.updateList();
+                
+                break;
+            }       
+        }
+    };
+
+    p.createLocalVariable = function(name, value, object) {
+        if(this.isLocalVariableExisted(name, object))
+            return;
+
+        var variable = {
+            name: name,
+            value: value,
+            object: object.id,
+            variableType: 'variable'
+        };
+
+        console.log("TextCodingUtil variable name", name);
+
+        Entry.variableContainer.addVariable(variable);
+        Entry.variableContainer.updateList();
+    };
+
+    p.isLocalVariable = function(variableId) {
+        console.log("TextCodingUtil isLocalVariable", variableId);
+        var object = Entry.playground.object;
+        var entryVariables = Entry.variableContainer.variables_;
+        for(var e in entryVariables) {
+            var entryVariable = entryVariables[e];
+            if(entryVariable.object_ == object.id && entryVariable.id_ == variableId) {
+                return true;
+            }
+        }
+
+        return false;
+
+    };
+
+    p.isGlobalListExisted = function(name) {
+        var entryLists = Entry.variableContainer.lists_;
+        for(var i in entryLists) { 
+            var entryList = entryLists[i];
+            console.log("TextCodingUtil entryList", entryList);
+            if(entryList.object_ === null && entryList.name_ == name) {
+                return true;
+            }       
+        }
+
+        return false;
+    };
+
+    p.updateGlobalList = function(name, array) {
+        var entryLists = Entry.variableContainer.lists_;
+        for(var i in entryLists) { 
+            var entryList = entryLists[i];
+            console.log("TextCodingUtil entryList", entryList);
+            if(entryList.object_ === null && entryList.name_ == name) {
+                list = {
+                        x: entryList.x_,
+                        y: entryList.y_,
+                        id: entryList.id_,
+                        visible: entryList.visible_,
+                        name: name,
+                        isCloud: entryList.isClud_,
+                        width: entryList.width_,
+                        height: entryList.height_,
+                        array: array,
+                    };
+                    
+                entryList.syncModel_(list);
+                entryList.updateView();
+                Entry.variableContainer.updateList();
+                
+                break;
+            }       
+        }
+    };
+
+    p.createGlobalList = function(name, array) {
+        if(this.isGlobalListExisted(name))
+            return;
+
+        var list = {
+            name: name,
+            array: array,
+            variableType: 'list'
+        };
+
+        console.log("TextCodingUtil list", list);
+
+        Entry.variableContainer.addList(list);
+        Entry.variableContainer.updateList();
+    };
+
+    p.isLocalListExisted = function(name, object) {
+        console.log("TextCodingUtil isLocalListExisted", name, object);
+        var entryLists = Entry.variableContainer.lists_;
+        for(var i in entryLists) { 
+            var entryList = entryLists[i];
+            console.log("TextCodingUtil entryList", entryList);
+            if(entryList.object_ === object.id && entryList.name_ == name) {
+                return true;
+            }       
+        }
+
+        return false;
+    };
+
+    p.updateLocalList = function(name, array, object) {
+        var entryLists = Entry.variableContainer.lists_;
+        for(var i in entryLists) { 
+            var entryList = entryLists[i];
+            console.log("TextCodingUtil entryList", entryList);
+            if(entryList.object_ === object.id && entryList.name_ == name) {
+                var list = {
+                        x: entryList.x_,
+                        y: entryList.y_,
+                        id: entryList.id_,
+                        visible: entryList.visible_,
+                        name: name,
+                        isCloud: entryList.isClud_,
+                        width: entryList.width_,
+                        height: entryList.height_,
+                        array: array,
+                    };
+                    
+                entryList.syncModel_(list);
+                entryList.updateView();
+                Entry.variableContainer.updateList();
+                
+                break;
+            }       
+        }
+    };
+
+    p.createLocalList = function(name, array, object) {
+        if(this.isLocalListExisted(name, object))
+            return;
+
+        var list = {
+            name: name,
+            array: array,
+            object: object.id,
+            variableType: 'list'
+        };
+
+        console.log("TextCodingUtil list", list);
+
+        Entry.variableContainer.addList(list);
+        Entry.variableContainer.updateList();
+    };
+
+    p.isLocalList = function(listId) {
+        console.log("TextCodingUtil listId", listId);
+        var object = Entry.playground.object;
+        var entryLists = Entry.variableContainer.lists_;
+        for(var e in entryLists) {
+            var entryList = entryLists[e];
+            if(entryList.object_ == object.id && entryList.id_ == listId) {
+                return true;
+            }
+        }
+
+        return false;
+
+    };
+
+    p.isLocalType = function(block, id) {
+        if(block.data.type == "get_variable" || 
+            block.data.type == "set_variable" || 
+            block.data.type == "change_variable" ) {
+            
+            if(this.isLocalVariable(id))
+                return true;
+                
+        } else if(block.data.type == "value_of_index_from_list" || 
+            block.data.type == "add_value_to_list" ||
+            block.data.type == "remove_value_from_list" ||
+            block.data.type == "insert_value_to_list" ||
+            block.data.type == "change_value_list_index" ||
+            block.data.type == "length_of_list" ||
+            block.data.type == "is_included_in_list") {
+
+            if(this.isLocalList(id))
+                return true;
+        }
+    };
 
 })(Entry.TextCodingUtil.prototype);

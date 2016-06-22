@@ -109,7 +109,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var statements = object.statements;
                 console.log("CallExpression statement", statements);
                 result.statements = statements;
-                //return result;
             } else if(object.name) {
                 var calleeName = String(object.name).concat('.').concat(String(property.name));
             } else if(object.object.name) {
@@ -147,22 +146,30 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 argumentData = {raw:"MULTI", type:"Literal", value:"MULTI"};
                 arguments.splice(1, 0, argumentData);  
             } 
+            else if(calleeName == "__pythonRuntime.ops.in") {
+                var syntax = String("%4 in %2");
+                type = this.getBlockType(syntax);   
+            }
             else if(calleeName == "__pythonRuntime.functions.len") {
                 var syntax = String("len(%2)");
                 type = this.getBlockType(syntax);
             } 
-            else if(callee.object.type == "Identifier" && calleeTokens[1] == "append") {
+            else if((callee.object.type == "Identifier" && calleeTokens[1] == "append") ||
+                (callee.object.type == "MemberExpression" && calleeTokens[0] == "self" && calleeTokens[2] == "append")) {
                 var syntax = String("%2.append");
                 type = this.getBlockType(syntax);   
             }
-            else if(callee.object.type == "Identifier" && calleeTokens[1] == "insert") {
+            else if((callee.object.type == "Identifier" && calleeTokens[1] == "insert") || 
+                (callee.object.type == "MemberExpression" && calleeTokens[0] == "self" && calleeTokens[2] == "insert")) {
                 var syntax = String("%2.insert");
                 type = this.getBlockType(syntax);  
             }
-            else if(callee.object.type == "Identifier" && calleeTokens[1] == "pop") {
+            else if((callee.object.type == "Identifier" && calleeTokens[1] == "pop") || 
+                (callee.object.type == "MemberExpression" && calleeTokens[0] == "self" && calleeTokens[2] == "pop")) {
                 var syntax = String("%2.pop");
                 type = this.getBlockType(syntax);   
             }
+
 
             result.callee = calleeName;
 
@@ -213,27 +220,71 @@ Entry.PyToBlockParser = function(blockSyntax) {
             console.log("CallExpression argument params", params);
 
             if(syntax == String("%2.append") || syntax == String("%2.pop")) {
+                if(calleeTokens[0] == "self") {
+                    var object = Entry.playground.object;
+                    var name = calleeTokens[1];
+                    if(!Entry.TextCodingUtil.prototype.isLocalListExisted(name, object))
+                        return result;
+                }
+                else {
+                    var name = calleeTokens[0];
+                    if(!Entry.TextCodingUtil.prototype.isGlobalListExisted(name))
+                        return result;
+                }
+
                 console.log("CallExpression append calleeData", calleeData);
-                var listName = this.ParamDropdownDynamic(calleeData.object.name, paramsMeta[1], paramsDefMeta[1]);
+                var listName = this.ParamDropdownDynamic(name, paramsMeta[1], paramsDefMeta[1]);
                 console.log("CallExpression listName", listName);
                 params.push(listName);
                 console.log("CallExpression params[0]", params[0]);
-                params[0].params[0] += 1;
+                if(syntax == String("%2.pop")) {
+                    if(params[0].type == "number")
+                        params[0].params[0] += 1;
+                    else if(params[0].type == "text") {
+                        params[0].params[0] = String(Number(params[0].params[0]) + 1);
+                    }   
+                }
             } else if(syntax == String("%2.insert")) {
+                if(calleeTokens[0] == "self") {
+                    var object = Entry.playground.object;
+                    var name = calleeTokens[1];
+                    if(!Entry.TextCodingUtil.prototype.isLocalListExisted(name, object))
+                        return result;
+                }
+                else {
+                    var name = calleeTokens[0];
+                    if(!Entry.TextCodingUtil.prototype.isGlobalListExisted(name))
+                        return result;
+                }
+
                 params.pop();
                 console.log("CallExpression append calleeData", calleeData);
-                var listName = this.ParamDropdownDynamic(calleeData.object.name, paramsMeta[1], paramsDefMeta[1]);
+                var listName = this.ParamDropdownDynamic(name, paramsMeta[1], paramsDefMeta[1]);
                 console.log("CallExpression listName", listName);
-                
                 params.splice(0, 0, listName);
                 var param = this[arguments[1].type](arguments[1], paramsMeta[2], paramsDefMeta[2], true);
                 params.splice(0, 0, param);
                 console.log("CallExpression insert params", params);
-                params[2].params[0] += 1;
+                if(params[2].type == "number")
+                    params[2].params[0] += 1;
+                else if(params[2].type == "text") {
+                    params[2].params[0] = String(Number(params[2].params[0]) + 1);
+                }
             } else if(syntax == String("len(%2)")) {
                 var listName = this.ParamDropdownDynamic(params[1].name, paramsMeta[1], paramsDefMeta[1]);
                 delete params[1];
                 params[1] = listName;
+            } else if(syntax == String("%4 in %2")) {
+                var argument = component.arguments[1];
+                var param = this[argument.type](argument, paramsMeta[3], paramsDefMeta[3], true);
+                var listName = component.arguments[3].name;
+                listName = this.ParamDropdownDynamic(listName, paramsMeta[1], paramsDefMeta[1]);
+                params = [];
+                params.push("");
+                params.push(listName);
+                params.push("");
+                params.push(param);
+                params.push("");
             }
              
             if(type) {
@@ -289,10 +340,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var type = this.getBlockType(syntax);
 
         if(type) {
-            var value = component.name;
+            structure.type = type;
+            var name = component.name;
             var block = Entry.block[type]; 
             var paramsMeta = block.params;
             var paramsDefMeta = block.def.params; 
+
+            if(!Entry.TextCodingUtil.prototype.isGlobalVariableExisted(name))
+                return result;
             
             var params = [];
             var param;
@@ -300,31 +355,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 console.log("Identifiler paramsMeta, paramsDefMeta", paramsMeta[i], paramsDefMeta[i]);
                 if(paramsMeta[i].type == "Text")
                     continue;
-                param = this['Param'+paramsMeta[i].type](value, paramsMeta[i], paramsDefMeta[i]); 
+                param = this['Param'+paramsMeta[i].type](name, paramsMeta[i], paramsDefMeta[i]); 
             }
 
             console.log("Identifiler param", param);
-            
 
-            if(!param || param == 'undefined') {
-                console.log("check in");
-                var entryVariables = Entry.variableContainer.variables_;
-                console.log("Identifiler entryVariables", entryVariables);
-                for(var e in entryVariables) {
-                    var entryVariable = entryVariables[e];
-                    if(entryVariable.name_ == value) {
-                        param = entryVariable.id_;
-                        break;
-                    }
-                } 
-            }
-
-            if(param) {
-                structure.type = type;
-                result.type = structure.type;
+            if(param) 
                 params.push(param);
-            }
 
+            result.type = structure.type;
             if(params.length != 0) {
                 structure.params = params;
                 result.params = structure.params;
@@ -377,8 +416,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var result = {}; 
         var structure = {};
         var params = []; 
-        var existed = false;
-        var variableFlag = true;
+        /*var existed = false;
+        var variableFlag = true;*/
 
         var id = component.id;
         var init = component.init;
@@ -397,9 +436,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if(id.name.includes('__filbert'))
             return undefined;
 
-        
-
         var calleeName;
+
         if(init.callee) {
             calleeName = init.callee.object.object.name.concat('.').concat(init.callee.object.property.name).concat('.')
                             .concat(init.callee.property.name);
@@ -414,7 +452,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             console.log("VariableDeclarator initData", initData);
             result.init = initData;
 
-            var listName = id.name;
+            var name = id.name;
             
             var array = [];
             var arguments = initData.arguments;
@@ -425,111 +463,32 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 array.push(item);
             }
 
-            var entryLists = Entry.variableContainer.lists_;
-            if(Entry.stage.selectedObject)
-                var currentObject = Entry.stage.selectedObject.id
-            else 
-                var currentObject = null;
-
-            for(var i in entryLists) { 
-                var entryList = entryLists[i];
-                console.log("VariableDeclarator entryList", entryList);
-                if(entryList.object_ === null && entryList.name_ == listName) {
-                    console.log("Check VariableDeclarator Update List", entryList);
-                    console.log("Check VariableDeclarator array", array);
-                    
-                    list = {
-                            x: entryList.x_,
-                            y: entryList.y_,
-                            id: entryList.id_,
-                            visible: entryList.visible_,
-                            name: entryList.name_,
-                            isCloud: entryList.isClud_,
-                            width: entryList.width_,
-                            height: entryList.height_,
-                            array: array,
-                        };
-                        
-                    entryList.syncModel_(list);
-                    entryList.updateView();
-                    Entry.variableContainer.updateList();
-                    
-                    existed = true; 
-                }       
+            if(Entry.TextCodingUtil.prototype.isGlobalListExisted(name)) {
+                Entry.TextCodingUtil.prototype.updateGlobalList(name, array);
+            } 
+            else {
+                Entry.TextCodingUtil.prototype.createGlobalList(name, array);
             }
-
-            if(!existed) {
-                list = {
-                    name: listName,
-                    array: array,
-                    //object: currentObject, 
-                    variableType: 'list'
-                };
-
-                console.log("VariableDeclarator list", list);
-
-                Entry.variableContainer.addList(list);
-                Entry.variableContainer.updateList();
-            }
-        } else {
-            var variable = id.name;
+        } else { 
+            var name = id.name;
             if(init.type == "Literal") {
                 var value = init.value;
             } else if(init.type == "Identifier") {
                 var value = init.name;
             } else if(init.arguments && id.name != init.arguments[0].name) {
                 var value = NaN;  
-            } else {
+            } /*else {
                 variableFlag = false;
-            }
+            }*/
 
-            console.log("variable", variable, "value", value);
+            console.log("variable name", name, "value", value);
 
-            if(variableFlag) {
-                existed = false;
-
-                var entryVariables = Entry.variableContainer.variables_;
-                if(Entry.stage.selectedObject)
-                    var currentObject = Entry.stage.selectedObject.id
-                else 
-                    var currentObject = null;
-
-                for(var i in entryVariables) { 
-                    var entryVariable = entryVariables[i];
-                    console.log("VariableDeclarator entryVariable", entryVariable);
-                    if(entryVariable.object_ === null && entryVariable.name_ == variable) {
-                        console.log("Check VariableDeclarator Update Variable");
-                        variable = {
-                            x: entryVariable.x_,
-                            y: entryVariable.y_,
-                            id: entryVariable.id_,
-                            visible: entryVariable.visible_,
-                            value: value,
-                            name: entryVariable.name_,
-                            isCloud: entryVariable.isClud_,
-                        };
-                        
-                        entryVariable.syncModel_(variable);
-                        Entry.variableContainer.updateList();
-                        
-                        existed = true;
-                    }       
-                }
-
-                if(!existed) {
-                    variable = {
-                        name: variable,
-                        value: value,
-                        //object: currentObject, 
-                        variableType: 'variable'
-                    };
-
-                    console.log("VariableDeclarator variable", variable);
-
-                    Entry.variableContainer.addVariable(variable);
-                    Entry.variableContainer.updateList();
-                }
+            if(Entry.TextCodingUtil.prototype.isGlobalVariableExisted(name)) {
+                Entry.TextCodingUtil.prototype.updateGlobalVariable(name, value);
             } 
+            else {
+                Entry.TextCodingUtil.prototype.createGlobalVariable(name, value);
+            }
 
             var idData = this[id.type](id);
             console.log("VariableDeclarator idData", idData);
@@ -802,12 +761,21 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("MemberExpression objectData", objectData);
         console.log("MemberExpression propertyData", propertyData);
 
-        
-
         if(propertyData.name == "call" && propertyData.userCode == false) {
             return result;
         }
         else if(propertyData.callee == "__pythonRuntime.ops.subscriptIndex") {
+            var object = Entry.playground.object;
+            if(objectData.object && objectData.object.name == "self") {
+                var name = objectData.property.name;
+                if(!Entry.TextCodingUtil.prototype.isLocalListExisted(name, object))
+                    return result;
+            }
+            else {
+                var name = objectData.name;
+                if(!Entry.TextCodingUtil.prototype.isGlobalListExisted(name))
+                    return result;
+            }
             var syntax = String("%2\[%4\]");
             var type = this.getBlockType(syntax);
             structure.type = type;
@@ -818,7 +786,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var paramsMeta = block.params;
             var paramsDefMeta = block.def.params;
 
-            var listName = this.ParamDropdownDynamic(arguments[0].name, paramsMeta, paramsDefMeta);
+            
+
+            var listName = this.ParamDropdownDynamic(name, paramsMeta[1], paramsDefMeta[1]);
 
             console.log("MemberExpression listName", listName);
 
@@ -826,20 +796,59 @@ Entry.PyToBlockParser = function(blockSyntax) {
             params.push("");
             params.push(listName);
             params.push("");
+            if(arguments[1].type == "number") {
+                arguments[1].params[0] += 1;
+            }
+            else if(arguments[1].type == "text") {
+                arguments[1].params[0] = String(Number(arguments[1].params[0]) + 1);
+            }
+                        
             params.push(arguments[1]);
             params.push("");
 
             structure.params = params;
-
+            
+            
             result.type = structure.type;
             result.params = structure.params;
 
         }
         else {
-
             var param;
             var params = [];
-            var entryVariables = Entry.variableContainer.variables_;
+
+            if(object.name == "self") {
+                var syntax = String("%1");
+                var type = this.getBlockType(syntax);
+
+                structure.type = type;
+
+                var block = Entry.block[type]; 
+                var paramsMeta = block.params;
+                var paramsDefMeta = block.def.params;
+            
+                var name = property.name;
+
+                var object = Entry.playground.object;
+                if(!Entry.TextCodingUtil.prototype.isLocalVariableExisted(name, object))
+                    return result;
+                
+                name = this.ParamDropdownDynamic(name, paramsMeta[0], paramsDefMeta[0]);
+
+                params.push(name);
+
+                result.type = structure.type;
+                    
+                if(params.length != 0) {
+                    structure.params = params;
+                    result.params = structure.params;
+                }
+            }
+            else {
+                return result;
+            }
+
+            /*var entryVariables = Entry.variableContainer.variables_;
             console.log("MemberExpression entryVariables", entryVariables);
             for(var e in entryVariables) {
                 var entryVariable = entryVariables[e];
@@ -856,24 +865,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
             } 
 
             if(param)
-                params.push(param); 
+                params.push(param); */
 
-            var syntax = String("%1");
-            var type = this.getBlockType(syntax);
-            console.log("MemberExpression type", type);
-
-            if(type) {
-                structure.type = type;
-                result.type = structure.type;
-                
-            }
-
-            if(params.length != 0) {
-                structure.params = params;
-                result.params = structure.params;
-            }
+            
         
         }
+
+
         console.log("MemberExpression result", result);
 
         return result;
@@ -1694,10 +1692,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         var params = [];
         var param;
-        var existed = false;
            
         var left = component.left;
-        var leftData = this[left.type](left);
+        if(left.type) {
+            var leftData = this[left.type](left);
+            console.log("AssignmentExpression leftData", leftData);
+        }
 
         console.log("AssignmentExpression leftData", leftData);
        
@@ -1706,33 +1706,69 @@ Entry.PyToBlockParser = function(blockSyntax) {
         operator = String(component.operator);
         console.log("AssignmentExpression operator", operator);
 
+        var right = component.right;
+        if(right.type) {
+            var rightData = this[right.type](right);
+            console.log("AssignmentExpression rightData", rightData);
+        } 
+
+        result.right = rightData;
+
         switch(operator){
             case "=": {
-                if(left.type == "MemberExpression") {
-                    if(leftData.property.callee == "__pythonRuntime.ops.subscriptIndex") {
-                        var syntax = String("%1\[%2\] = %3");
+                if(leftData.object.name == "self") {
+                    var calleeName;
+
+                    if(rightData.callee) {
+                        calleeName = rightData.callee.object.object.name.concat('.').concat(rightData.callee.object.property.name).concat('.')
+                                        .concat(rightData.callee.property.name);
+                    }
+                    
+                    if(calleeName == "__pythonRuntime.objects.list") { 
+                        var name = leftData.property.name;
+                        
+                        var array = [];
+                        var arguments = rightData.arguments;
+                        for(var a in arguments) {
+                            var argument = arguments[a];
+                            var item = {};
+                            item.data = String(argument.params[0]);
+                            array.push(item);
+                        }
+
+                        var object = Entry.playground.object;
+
+                        if(Entry.TextCodingUtil.prototype.isLocalListExisted(name, object)) {
+                            Entry.TextCodingUtil.prototype.updateLocalList(name, array, object);
+                        } 
+                        else {
+                            Entry.TextCodingUtil.prototype.createLocalList(name, array, object);
+                        }
+                    }
+                } else if(leftData.property.callee == "__pythonRuntime.ops.subscriptIndex") {
+                    var syntax = String("%1\[%2\] = %3");
+                    var type = this.getBlockType(syntax);
+                    structure.type = type; 
+                }
+                else if(right.arguments && right.arguments[0].object) {
+                    var leftEx = component.left.object.name.concat(component.left.property.name);
+                    var rightEx = component.right.arguments[0].object.name.concat(component.right.arguments[0].property.name);
+                    console.log("AssignmentExpression leftEx", leftEx, "rightEx", rightEx);
+                    if(component.right.arguments && (leftEx == rightEx)) {
+                        var syntax = String("%1 = %1 + %2");
                         var type = this.getBlockType(syntax);
                         structure.type = type; 
-                    }
-                    else if(component.right.arguments) {
-                        var leftEx = component.left.object.name.concat(component.left.property.name);
-                        var rightEx = component.right.arguments[0].object.name.concat(component.right.arguments[0].property.name);
-                        console.log("AssignmentExpression leftEx", leftEx, "rightEx", rightEx);
-                        if(component.right.arguments && (leftEx == rightEx)) {
-                            var syntax = String("%1 = %1 + %2");
-                            var type = this.getBlockType(syntax);
-                            structure.type = type; 
-                        } else {
-                            var syntax = String("%1 = %2");
-                            var type = this.getBlockType(syntax);
-                            structure.type = type;      
-                        }
                     } else {
                         var syntax = String("%1 = %2");
                         var type = this.getBlockType(syntax);
-                        structure.type = type; 
+                        structure.type = type;      
                     }
-                } 
+                } else {
+                    var syntax = String("%1 = %2");
+                    var type = this.getBlockType(syntax);
+                    structure.type = type; 
+                }
+                
                 break;
             }
             case "+=": break;    
@@ -1755,13 +1791,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         result.operator = operatorData;
 
-        var right = component.right;
-        if(right.type) {
-            var rightData = this[right.type](right);
-            console.log("AssignmentExpression rightData", rightData);
-        } 
-
-        result.right = rightData;
+        
+        
 
         /*//save the variable to map  
         var variable = leftData;
@@ -1775,6 +1806,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         console.log("AssignmentExpression syntax", syntax);
 
+        var object = leftData.object;
+        var property = leftData.property;
+
+        console.log("AssignmentExpression object property value", object, property);
+        
         if(syntax == String("%1\[%2\] = %3")) {
             var block = Entry.block[type]; 
             var paramsMeta = block.params;
@@ -1783,134 +1819,78 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var listName = leftData.property.arguments[0].name;
             listName = this.ParamDropdownDynamic(listName, paramsMeta[0], paramsDefMeta[0]);
 
+            if(!listName)
+                return result;
+
             params.push(listName);
             var param = leftData.property.arguments[1];
-            param.params[0] += 1;
+            console.log("AssignmentExpression param 1", param);
+            /*if(param.type == "number") {
+                param.params[0] += 1;
+            }
+            else if(param.type == "text") { 
+                param.params[0] = String(Number(param.params[0]) + 1);
+            }*/
+            console.log("AssignmentExpression param 2", param);
             params.push(param);
             params.push(rightData);
 
-            structure.params = params;
+            structure.params = params; 
 
         }
-        else if(left.type == "MemberExpression" && syntax == String("%1 = %2")) {
-            var variableFlag = false;
+        else if(syntax == String("%1 = %2")) {
+            if(object.name == "self") {
+                var block = Entry.block[type]; 
+                var paramsMeta = block.params;
+                var paramsDefMeta = block.def.params;
             
-            var object = leftData.object;
-            var property = leftData.property;
-            var value = rightData.params[0]; 
+                var name = property.name;
+                if(rightData.params[0].type == "Literal")
+                    var value = rightData.params[0]; 
+                else
+                    var value = "NaN";
+
+                var object = Entry.playground.object;
+                console.log("final object", object); 
 
 
-            
-            var currentObject = null;
-            if(Entry.stage.selectedObject) {
-                console.log("aa", Entry.stage.selectedObject, "bb", object); 
-                if(Entry.stage.selectedObject.name != String(object)){
-                    currentObject = null;
-                }
+                if(Entry.TextCodingUtil.prototype.isLocalVariableExisted(name, object)) {
+                    Entry.TextCodingUtil.prototype.updateLocalVariable(name, value, object);
+                } 
                 else {
-                    currentObject = Entry.stage.selectedObject.id;
-                    variableFlag = true;
+                    Entry.TextCodingUtil.prototype.createLocalVariable(name, value, object);
                 }
+
+                name = this.ParamDropdownDynamic(name, paramsMeta[0], paramsDefMeta[0]);
+                params.push(name);
+                params.push(rightData);
             }
             else {
-                var objects = Entry.container.objects_;
-                console.log("target object", object, "containter object", objects);
-                for(var o in objects) {
-                    var containerObject = objects[o];
-                    console.log("cotainer detail object", containerObject, "target object", object);
-                    if(containerObject.name == String(object)) {
-                        currentObject = containerObject.id;
-                        variableFlag = true;
-                        break;
-                    }
-                }    
-            }
-
-            console.log("final currentObject", currentObject); 
-
-            if(variableFlag) {
-                var entryVariables = Entry.variableContainer.variables_;
-                for(var i in entryVariables) { 
-                    var entryVariable = entryVariables[i];
-                    console.log("AssignmentExpression entryVariable", entryVariable);
-
-                    var targetObject = Entry.container.getObject(entryVariable.object_);
-                    if(!targetObject)
-                        continue;
-
-                    console.log("target object", targetObject);
-                    
-                    if(entryVariable.name_ == property && targetObject.name == String(object)) {
-                        console.log("Check AssignmentExpression Update Variable");
-                        
-                        entryVariable.setValue(value);
-                        Entry.variableContainer.updateList();
-                        
-                        existed = true; 
-                    }        
-                }
-
-                if(!existed) {
-                    variable = {
-                        name: property,
-                        value: value,
-                        object: currentObject, 
-                        variableType: 'variable'
-                    };
-
-                    console.log("AssignmentExpression variable", variable);
-
-                    Entry.variableContainer.addVariable(variable);
-                }
-            }
-
-            console.log("AssignmentExpression object", object, "property", property, "value", value);
-
-            var param;
-            var entryVariables = Entry.variableContainer.variables_;
-            console.log("AssignmentExpression entryVariables", entryVariables);
-            for(var e in entryVariables) {
-                var entryVariable = entryVariables[e];
-
-                var targetObject = Entry.container.getObject(entryVariable.object_);
-                if(!targetObject)
-                    continue;
-
-                if(entryVariable.name_ == property && targetObject.name == String(object)) {
-                    param = entryVariable.id_;
-                    break;  
-                }
-
-            }
-
-            if(!param) 
                 return result;
-            
-            params.push(param);
-            params.push(result.right);
+            }
 
         } 
-        else if(left.type == "MemberExpression" && syntax == String("%1 = %1 + %2")) {
-            var object = leftData.object;
-            var property = leftData.property;
+        else if(syntax == String("%1 = %1 + %2")) {
+            if(object.name == "self") {
+                var block = Entry.block[type]; 
+                var paramsMeta = block.params;
+                var paramsDefMeta = block.def.params;
 
-            var entryVariables = Entry.variableContainer.variables_;
-            console.log("AssignmentExpression entryVariables", entryVariables);
-            var param;
-            for(var e in entryVariables) {
-                var entryVariable = entryVariables[e];
+                var name = property.name;
 
-                var targetObject = Entry.container.getObject(entryVariable.object_);
-                if(!targetObject)
-                    continue;
+                var object = Entry.playground.object;
+                console.log("final object", object); 
 
-                if(entryVariable.name_ == property && targetObject.name == String(object)) {
-                    param = entryVariable.id_;
-                    break;  
-                }
+                if(!Entry.TextCodingUtil.prototype.isLocalVariableExisted(name, object)) 
+                    return result;
+
+                name = this.ParamDropdownDynamic(name, paramsMeta[0], paramsDefMeta[0]);
+                params.push(name);
+                params.push(rightData.params[2]); 
+            } 
+            else {
+                return result;
             }
-            params.push(param);
-            params.push(rightData.params[2]);
         } 
 
         structure.params = params;
