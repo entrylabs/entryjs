@@ -13242,25 +13242,12 @@ Entry.Parser = function(b, a, d) {
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
         this._parser = new Entry.BlockToJsParser(this.syntax);
         a = this.syntax;
-        var e = {}, f;
-        for (f in a.Scope) {
-          e[f + "();\n"] = a.Scope[f];
+        for (var e in a.Scope) {
         }
-        "BasicIf" in a && (e.front = "BasicIf");
         c.setOption("mode", {name:"javascript", globalVars:!0});
-        CodeMirror.commands.autoCompletion = function(a) {
-          CodeMirror.showHint(a, null, {globalScope:e});
-        };
-        c.on("keyup", function(a, b) {
-          !a.state.completionActive && 65 <= b.keyCode && 95 >= b.keyCode && CodeMirror.showHint(a, null, {completeSingle:!1, globalScope:e});
-        });
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
-        this._parser = new Entry.BlockToPyParser(this.syntax.py), c.setOption("mode", {name:"python", globalVars:!0}), CodeMirror.commands.autoCompletion = function(a) {
-          CodeMirror.showHint(a, null, {globalScope:e});
-        }, c.on("keyup", function(a, b) {
-          65 <= b.keyCode && 195 >= b.keyCode && CodeMirror.showHint(a, null, {completeSingle:!1});
-        });
+        this._parser = new Entry.BlockToPyParser(this.syntax.py), c.setOption("mode", {name:"python", globalVars:!0});
     }
   };
   b.parse = function(a, b) {
@@ -13311,7 +13298,7 @@ Entry.Parser = function(b, a, d) {
         }) : "";
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
-        c = this._parser.Code(a, b);
+        c = this._parser.Code(a, b), console.log("sf");
     }
     return c;
   };
@@ -20472,7 +20459,7 @@ Entry.GlobalSvg = {};
       var c = a.pageX;
       a = a.pageY;
       var d = e.left + (c - e._startX), f = e.top + (a - e._startY);
-      e.svgDom.css({left:d, top:f});
+      e.svgDom.css({transform:"translate3d(" + d + "px," + f + "px, 0px)"});
       e._startX = c;
       e._startY = a;
       e.left = d;

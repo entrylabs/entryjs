@@ -10,7 +10,7 @@ goog.require("Entry.PyAstGenerator");
 
 goog.require("Entry.BlockToJsParser");
 goog.require("Entry.BlockToPyParser");
-goog.require("Entry.JsToBlockParser"); 
+goog.require("Entry.JsToBlockParser");
 goog.require("Entry.PyToBlockParser");
 
 Entry.Parser = function(mode, type, cm) {
@@ -19,7 +19,7 @@ Entry.Parser = function(mode, type, cm) {
     this.codeMirror = cm;
     this._lang = syntax || "js"; //for maze
     this._type = type;
-    this.availableCode = []; 
+    this.availableCode = [];
 
     Entry.Parser.PARSE_SYNTAX = 0;
     Entry.Parser.PARSE_VARIABLE = 1;
@@ -34,7 +34,7 @@ Entry.Parser = function(mode, type, cm) {
         var playerCode = NtryData.player[this._stageId].code;
         this.setAvailableCode(configCode, playerCode);
     } else if (mode === Entry.Vim.WORKSPACE_MODE) {
-        this.mappingSyntax(Entry.Vim.WORKSPACE_MODE); 
+        this.mappingSyntax(Entry.Vim.WORKSPACE_MODE);
     }
 
     this.syntax.js = this.mappingSyntaxJs(mode);
@@ -134,7 +134,7 @@ Entry.Parser = function(mode, type, cm) {
 
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
                 this._parser = new Entry.BlockToJsParser(this.syntax);
-                
+
                 var syntax = this.syntax;
                 var assistScope = {};
 
@@ -148,40 +148,19 @@ Entry.Parser = function(mode, type, cm) {
 
                 cm.setOption("mode", {name: "javascript", globalVars: true});
 
-                CodeMirror.commands.autoCompletion = function (cm) {
-                    CodeMirror.showHint(cm, null, {globalScope:assistScope});
-                }
-
-                cm.on("keyup", function (cm, event) {
-                    if (!cm.state.completionActive &&  (event.keyCode >= 65 && event.keyCode <= 95))  {
-                        CodeMirror.showHint(cm, null, {completeSingle: false, globalScope:assistScope});
-                    }
-                });
-
                 break;
 
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
                 this._parser = new Entry.BlockToPyParser(this.syntax.py);
 
                 cm.setOption("mode", {name: "python", globalVars: true});
-
-                CodeMirror.commands.autoCompletion = function (cm) {
-                    CodeMirror.showHint(cm, null, {globalScope:assistScope});
-                }; 
-                
-                cm.on("keyup", function (cm, event) {
-                    if ((event.keyCode >= 65 && event.keyCode <= 195))  {
-                       CodeMirror.showHint(cm, null, {completeSingle: false});  
-                    } 
-                });
-                
                 break;
         }
     };
 
     p.parse = function(code, parseMode) {
         console.log("PARSER TYPE", this._type);
-        
+
         var type = this._type;
         var result = null;
 
@@ -211,11 +190,11 @@ Entry.Parser = function(mode, type, cm) {
                                 __annotation: annotation,
                                 clearOnEnter: true
                             });
-                        } 
+                        }
 
                         Entry.toast.alert('Error', error.message);
                     }
-                    result = []; 
+                    result = [];
                 }
                 break;
             case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
@@ -235,10 +214,10 @@ Entry.Parser = function(mode, type, cm) {
 
                         }
                     }
-                    
+
                     console.log("threads", threads);
                     var astArray = [];
-                    
+
                     for(var index in threads) {
                         var ast = pyAstGenerator.generate(threads[index]);
                         if(ast.type == "Program" && ast.body.length != 0)
@@ -274,11 +253,11 @@ Entry.Parser = function(mode, type, cm) {
                             });
                         }*/
                         //throw error;
-                        Entry.toast.alert('[텍스트코딩(파이썬) 오류]', error.message); 
-                        document.getElementById("entryCodingModeSelector").value = '2'; 
+                        Entry.toast.alert('[텍스트코딩(파이썬) 오류]', error.message);
+                        document.getElementById("entryCodingModeSelector").value = '2';
                         throw error;
                     }
-                    result = []; 
+                    result = [];
                 }
                 break;
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
@@ -307,6 +286,7 @@ Entry.Parser = function(mode, type, cm) {
 
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
                 var textCode = this._parser.Code(code, parseMode);
+            console.log('sf')
                 //var textArr = textCode.match(/(.*{.*[\S|\s]+?}|.+)/g);
                /* var textArr = textCode.split("\n\n");
 
@@ -362,7 +342,7 @@ Entry.Parser = function(mode, type, cm) {
 
         for (var i = 0; i < types.length; i++) {
             var type = types[i];
-            
+
             var block = Entry.block[type];
 
             if (block.mode === mode && this.availableCode.indexOf(type) > -1) {
@@ -417,13 +397,13 @@ Entry.Parser = function(mode, type, cm) {
         this.availableCode = this.availableCode.concat(availableList);
     };
 
-    
+
     p.mappingSyntaxJs = function(mode) {
         var types = Object.keys(Entry.block);
 
         for (var i = 0; i < types.length; i++) {
             var type = types[i];
-            
+
             var block = Entry.block[type];
 
             if (block.mode === mode && this.availableCode.indexOf(type) > -1) {
@@ -474,7 +454,7 @@ Entry.Parser = function(mode, type, cm) {
             syntax = String(syntax);
             if(syntax.match(/.*\..*\)/)) {
                 var index = syntax.indexOf('(');
-                
+
                 syntax = syntax.substring(0, index);
             }
             syntaxList[syntax] = key;
