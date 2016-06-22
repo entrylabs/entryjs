@@ -86,7 +86,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.CallExpression = function(component) {
         console.log("CallExpression component", component);
         var result = {};
-        var structure = {};
+        var structure = {}; 
+
+        var params = [];
 
         var callee = component.callee;
         var calleeData = this[callee.type](callee);
@@ -123,6 +125,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var type = this.getBlockType(calleeName);
 
             console.log("CallExpression type before", type);
+
+            var calleeTokens = calleeName.split('.');
+            console.log("CallExpression calleeTokens", calleeTokens);
             
             if(calleeName == "__pythonRuntime.functions.range"){
                 var syntax = String("%1number#");
@@ -140,27 +145,34 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 type = this.getBlockType(syntax);
         
                 argumentData = {raw:"MULTI", type:"Literal", value:"MULTI"};
-                arguments.splice(1, 0, argumentData);
-                
+                arguments.splice(1, 0, argumentData);  
             } 
             else if(calleeName == "__pythonRuntime.functions.len") {
                 var syntax = String("len(%2)");
                 type = this.getBlockType(syntax);
             } 
+            else if(callee.object.type == "Identifier" && calleeTokens[1] == "append") {
+                var syntax = String("%2.append");
+                type = this.getBlockType(syntax);   
+            }
+            else if(callee.object.type == "Identifier" && calleeTokens[1] == "insert") {
+                var syntax = String("%2.insert");
+                type = this.getBlockType(syntax);  
+            }
+            else if(callee.object.type == "Identifier" && calleeTokens[1] == "pop") {
+                var syntax = String("%2.pop");
+                type = this.getBlockType(syntax);   
+            }
 
             result.callee = calleeName;
 
             console.log("CallExpression type after", type); 
         }
 
-        
-        
         if(type) {
             var block = Entry.block[type]; 
             var paramsMeta = block.params;
             var paramsDefMeta = block.def.params; 
-
-            var params = [];
 
             console.log("CallExpression component.arguments", arguments);
             console.log("CallExpression paramsMeta", paramsMeta);
@@ -195,17 +207,44 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 } else {
                     params.push(param);
                 }                              
-            }
-            
-            if(type)
-                structure.type = type; 
-            if(params)
-                structure.params = params;
+            } 
 
-            if(structure.type)
+            console.log("CallExpression syntax", syntax);
+            console.log("CallExpression argument params", params);
+
+            if(syntax == String("%2.append") || syntax == String("%2.pop")) {
+                console.log("CallExpression append calleeData", calleeData);
+                var listName = this.ParamDropdownDynamic(calleeData.object.name, paramsMeta[1], paramsDefMeta[1]);
+                console.log("CallExpression listName", listName);
+                params.push(listName);
+                console.log("CallExpression params[0]", params[0]);
+                params[0].params[0] += 1;
+            } else if(syntax == String("%2.insert")) {
+                params.pop();
+                console.log("CallExpression append calleeData", calleeData);
+                var listName = this.ParamDropdownDynamic(calleeData.object.name, paramsMeta[1], paramsDefMeta[1]);
+                console.log("CallExpression listName", listName);
+                
+                params.splice(0, 0, listName);
+                var param = this[arguments[1].type](arguments[1], paramsMeta[2], paramsDefMeta[2], true);
+                params.splice(0, 0, param);
+                console.log("CallExpression insert params", params);
+                params[2].params[0] += 1;
+            } else if(syntax == String("len(%2)")) {
+                var listName = this.ParamDropdownDynamic(params[1].name, paramsMeta[1], paramsDefMeta[1]);
+                delete params[1];
+                params[1] = listName;
+            }
+             
+            if(type) {
+                structure.type = type; 
                 result.type = structure.type;
-            if(structure.params)
+            }
+
+            if(params) {
+                structure.params = params;
                 result.params = structure.params;
+            }   
         } else {
             var args = [];
             for(var i in arguments) { 
@@ -432,8 +471,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 Entry.variableContainer.addList(list);
                 Entry.variableContainer.updateList();
             }
-        }
-        else {
+        } else {
             var variable = id.name;
             if(init.type == "Literal") {
                 var value = init.value;
@@ -751,71 +789,91 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("MemberExpression component", component);
         var result = {};
         var structure = {};
+
         var object = component.object;
         var property = component.property;
         
-        /*if(object.type == "Identifier") {
-            var objectData = this[object.type](object);
-            data.object = objectData;  
-        }
-        else {*/
         var objectData = this[object.type](object);
         result.object = objectData; 
-        //}
         
-        /*if(property.type == "Identifier") {
-            var propertyData = this[property.type](property);
-            data.property = propertyData;
-        }
-        else {*/
         var propertyData = this[property.type](property);
         result.property = propertyData;
-        //}
         
         console.log("MemberExpression objectData", objectData);
         console.log("MemberExpression propertyData", propertyData);
 
-        var entryVariables = Entry.variableContainer.variables_;
-        console.log("MemberExpression entryVariables", entryVariables);
-
-        if(propertyData.name == "call" && propertyData.userCode == false)
-            return result;
         
-        var param;
-        var params = [];
-        for(var e in entryVariables) {
-            var entryVariable = entryVariables[e];
 
-            var targetObject = Entry.container.getObject(entryVariable.object_);
-            if(!targetObject)
-                continue;
+        if(propertyData.name == "call" && propertyData.userCode == false) {
+            return result;
+        }
+        else if(propertyData.callee == "__pythonRuntime.ops.subscriptIndex") {
+            var syntax = String("%2\[%4\]");
+            var type = this.getBlockType(syntax);
+            structure.type = type;
 
-            if(entryVariable.name_ == propertyData && targetObject.name == String(objectData)) {
-                param = entryVariable.id_;
-                break;  
+            var arguments = propertyData.arguments;
+
+            var block = Entry.block[type]; 
+            var paramsMeta = block.params;
+            var paramsDefMeta = block.def.params;
+
+            var listName = this.ParamDropdownDynamic(arguments[0].name, paramsMeta, paramsDefMeta);
+
+            console.log("MemberExpression listName", listName);
+
+            var params = [];
+            params.push("");
+            params.push(listName);
+            params.push("");
+            params.push(arguments[1]);
+            params.push("");
+
+            structure.params = params;
+
+            result.type = structure.type;
+            result.params = structure.params;
+
+        }
+        else {
+
+            var param;
+            var params = [];
+            var entryVariables = Entry.variableContainer.variables_;
+            console.log("MemberExpression entryVariables", entryVariables);
+            for(var e in entryVariables) {
+                var entryVariable = entryVariables[e];
+
+                var targetObject = Entry.container.getObject(entryVariable.object_);
+                if(!targetObject)
+                    continue;
+
+                if(entryVariable.name_ == propertyData && targetObject.name == String(objectData)) {
+                    param = entryVariable.id_;
+                    break;  
+                }
+
+            } 
+
+            if(param)
+                params.push(param); 
+
+            var syntax = String("%1");
+            var type = this.getBlockType(syntax);
+            console.log("MemberExpression type", type);
+
+            if(type) {
+                structure.type = type;
+                result.type = structure.type;
+                
             }
 
-        } 
-
-        if(param)
-            params.push(param); 
-
-        var syntax = String("%1");
-        var type = this.getBlockType(syntax);
-        console.log("MemberExpression type", type);
-
-        if(type) {
-            structure.type = type;
-            result.type = structure.type;
-            
-        }
-
-        if(params.length != 0) {
-            structure.params = params;
-            result.params = structure.params;
-        }
+            if(params.length != 0) {
+                structure.params = params;
+                result.params = structure.params;
+            }
         
-        
+        }
         console.log("MemberExpression result", result);
 
         return result;
@@ -1631,8 +1689,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.AssignmentExpression = function(component) {
         console.log("AssignmentExpression component", component);
-        var reusult;
-        var data = {};
+        var result = {};
         var structure = {};
 
         var params = [];
@@ -1644,7 +1701,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         console.log("AssignmentExpression leftData", leftData);
        
-        data.left = leftData
+        result.left = leftData
 
         operator = String(component.operator);
         console.log("AssignmentExpression operator", operator);
@@ -1652,7 +1709,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
         switch(operator){
             case "=": {
                 if(left.type == "MemberExpression") {
-                    if(component.right.arguments) {
+                    if(leftData.property.callee == "__pythonRuntime.ops.subscriptIndex") {
+                        var syntax = String("%1\[%2\] = %3");
+                        var type = this.getBlockType(syntax);
+                        structure.type = type; 
+                    }
+                    else if(component.right.arguments) {
                         var leftEx = component.left.object.name.concat(component.left.property.name);
                         var rightEx = component.right.arguments[0].object.name.concat(component.right.arguments[0].property.name);
                         console.log("AssignmentExpression leftEx", leftEx, "rightEx", rightEx);
@@ -1670,7 +1732,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         var type = this.getBlockType(syntax);
                         structure.type = type; 
                     }
-                }
+                } 
                 break;
             }
             case "+=": break;    
@@ -1691,7 +1753,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var operatorData = Entry.TextCodingUtil.prototype.logicalExpressionConvert(operator);
         }
 
-        data.operator = operatorData;
+        result.operator = operatorData;
 
         var right = component.right;
         if(right.type) {
@@ -1699,7 +1761,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             console.log("AssignmentExpression rightData", rightData);
         } 
 
-        data.right = rightData;
+        result.right = rightData;
 
         /*//save the variable to map  
         var variable = leftData;
@@ -1711,13 +1773,31 @@ Entry.PyToBlockParser = function(blockSyntax) {
             this._variableMap.put(variable, value);*/
         //save the variable to map
 
+        console.log("AssignmentExpression syntax", syntax);
 
-        if(left.type == "MemberExpression" && syntax == String("%1 = %2")) {
+        if(syntax == String("%1\[%2\] = %3")) {
+            var block = Entry.block[type]; 
+            var paramsMeta = block.params;
+            var paramsDefMeta = block.def.params; 
+
+            var listName = leftData.property.arguments[0].name;
+            listName = this.ParamDropdownDynamic(listName, paramsMeta[0], paramsDefMeta[0]);
+
+            params.push(listName);
+            var param = leftData.property.arguments[1];
+            param.params[0] += 1;
+            params.push(param);
+            params.push(rightData);
+
+            structure.params = params;
+
+        }
+        else if(left.type == "MemberExpression" && syntax == String("%1 = %2")) {
             var variableFlag = false;
             
-            var object = data.left.object;
-            var property = data.left.property;
-            var value = data.right.params[0]; 
+            var object = leftData.object;
+            var property = leftData.property;
+            var value = rightData.params[0]; 
 
 
             
@@ -1803,18 +1883,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             }
 
-            if(!param) {
-                result = data;
+            if(!param) 
                 return result;
-            }
+            
             params.push(param);
-            params.push(data.right);
+            params.push(result.right);
 
         } 
         else if(left.type == "MemberExpression" && syntax == String("%1 = %1 + %2")) {
-            console.log("data", data);
-            var object = data.left.object;
-            var property = data.left.property;
+            var object = leftData.object;
+            var property = leftData.property;
 
             var entryVariables = Entry.variableContainer.variables_;
             console.log("AssignmentExpression entryVariables", entryVariables);
@@ -1832,12 +1910,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
             }
             params.push(param);
-            params.push(data.right.params[2]);
+            params.push(rightData.params[2]);
         } 
 
         structure.params = params;
-
-        result = data;
 
         result.type = structure.type;
         result.params = structure.params;

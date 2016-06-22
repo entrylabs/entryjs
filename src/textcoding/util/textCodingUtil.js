@@ -252,13 +252,50 @@ Entry.TextCodingUtil = function() {
     }; 
 
     p.variableFilter = function(block, index, param) {
-        console.log("paramFilter block index param", block, index, param);
+        console.log("paramFilter block index param", block.data.type, index, param);
         var result = param;
         var type = block.data.type;
-        if(type == "change_variable" || type == "set_variable" || type == "get_variable") {
+        if(type == "change_variable" || type == "set_variable" || type == "get_variable" ) {
             if(index == 1) {
                 console.log("paramFilter", eval(param));
                 result = eval(param);
+            }
+        } else if(type == "add_value_to_list" || type == "length_of_list" || type == "is_included_in_list") {
+            if(index == 2) {
+                console.log("paramFilter", eval(param));
+                result = eval(param);
+            } 
+        } else if(type == "value_of_index_from_list") {
+            if(index == 2) {
+                console.log("paramFilter", eval(param));
+                result = eval(param);
+            } 
+            else if(index == 4) {
+                result = param - 1;
+            }
+        } else if(type == "remove_value_from_list") {
+            if(index == 1) {
+                result = param - 1;
+            }
+            else if(index == 2) {
+                console.log("paramFilter", eval(param));
+                result = eval(param);
+            } 
+        } else if(type == "insert_value_to_list") {
+            if(index == 2) {
+                console.log("paramFilter", eval(param));
+                result = eval(param);
+            } 
+            else if(index == 3) {
+                result = param - 1;
+            }
+        } else if(type == "change_value_list_index") {
+            if(index == 1) {
+                console.log("paramFilter", eval(param));
+                result = eval(param);
+            } 
+            else if(index == 2) {
+                result = param - 1;
             }
         }
 
