@@ -14173,7 +14173,7 @@ Entry.block = {
             return script.callReturn();
         },
         "event": "start",
-        "syntax": {"js": [], "py": ["Entry.on_start_button_click()"]}
+        "syntax": {"js": [], "py": ["Entry.on_start()"]}
     },
     "press_some_key": {
         "color": "#3BBD70",
@@ -14260,7 +14260,7 @@ Entry.block = {
             return script.callReturn();
         },
         "event": "keyPress",
-        "syntax": {"js": [], "py": ["Entry.on_key_press(%2)"]}
+        "syntax": {"js": [], "py": ["Entry.on_press(%2)"]}
     },
     "mouse_clicked": {
         "color": "#3BBD70",
@@ -14448,7 +14448,7 @@ Entry.block = {
             return script.callReturn();
         },
         "event": "when_message_cast",
-        "syntax": {"js": [], "py": ["Entry.on_signal_receive(%2)"]}
+        "syntax": {"js": [], "py": ["Entry.on_signal(%2)"]}
     },
     "message_cast": {
         "color": "#3BBD70",
@@ -14582,7 +14582,7 @@ Entry.block = {
                 return script;
             }
         },
-        "syntax": {"js": [], "py": ["Entry.send_signal_and_wait(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.send_signal_wait(%1)"]}
     },
     "text": {
         "color": "#FFD974",
