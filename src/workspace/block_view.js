@@ -1007,7 +1007,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
         var box = this._skeleton.box(this)
         svgGroup.setAttribute(
             'transform',
-            'translate(%X,%Y)'
+            'scale(1.5) translate(%X,%Y)'
                 .replace('%X', -box.offsetX)
                 .replace('%Y', -box.offsetY)
         );
@@ -1032,9 +1032,16 @@ Entry.BlockView.DRAG_RADIUS = 5;
                     text.setAttribute('font-size', (size) + 'px');
                 }
 
-                if (notResizeTypes.indexOf(content) > -1)
+                if (content == 'q') {
+                    var y = parseInt(text.getAttribute('y'));
+                    text.setAttribute('y', y-1);
+                }
+
+                if (notResizeTypes.indexOf(content) > -1) {
                     text.setAttribute('font-size', (size) + 'px');
-                else text.setAttribute('font-size', (size * 0.95) + 'px');
+                } else text.setAttribute('font-size', (size * 0.95) + 'px');
+
+                text.setAttribute('alignment-baseline', 'baseline');
             })(texts[i]);
         }
 
@@ -1068,7 +1075,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
                     height: bBox.height
                 });
             } else {
-                loadImage( src, bBox.width, bBox.height)
+                loadImage( src, bBox.width, bBox.height, 1.5)
                     .then(function(src) {
                         //var download = document.createElement('a');
                         //download.href = '(src)'.replace('(src)', src);
@@ -1086,11 +1093,14 @@ Entry.BlockView.DRAG_RADIUS = 5;
             }
         }
 
-        function loadImage(src, width, height) {
+        function loadImage(src, width, height, multiplier) {
             var deferred = $.Deferred();
+            if (!multiplier) multiplier = 1;
             if (pngMap[src] !== undefined)
                 deferred.resolve(pngMap[src]);
 
+            width *= multiplier;
+            height *= multiplier;
             //float point cropped
             width = Math.ceil(width);
             height = Math.ceil(height);
@@ -1098,6 +1108,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
             var img = document.createElement( "img" );
             img.crossOrigin = 'Anonymous';
             var canvas = document.createElement( "canvas" );
+
             canvas.width = width;
             canvas.height = height;
             var ctx = canvas.getContext( "2d" );

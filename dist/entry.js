@@ -16181,43 +16181,51 @@ Entry.BlockView.DRAG_RADIUS = 5;
     function b() {
       g = g.replace("(svgGroup)", (new XMLSerializer).serializeToString(h)).replace("(defs)", (new XMLSerializer).serializeToString(l[0])).replace(/>\s+/g, ">").replace(/\s+</g, "<");
       var c = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(g)));
-      a ? f.resolve({src:c, width:n.width, height:n.height}) : d(c, n.width, n.height).then(function(a) {
+      a ? f.resolve({src:c, width:n.width, height:n.height}) : d(c, n.width, n.height, 1.5).then(function(a) {
         f.resolve({src:a, width:n.width, height:n.height});
       }, function(a) {
         f.reject("error occured");
       });
     }
-    function d(a, b, c) {
-      var d = $.Deferred();
-      void 0 !== e[a] && d.resolve(e[a]);
+    function d(a, b, c, d) {
+      var f = $.Deferred();
+      d || (d = 1);
+      void 0 !== e[a] && f.resolve(e[a]);
+      b *= d;
+      c *= d;
       b = Math.ceil(b);
       c = Math.ceil(c);
-      var f = document.createElement("img");
-      f.crossOrigin = "Anonymous";
-      var g = document.createElement("canvas");
-      g.width = b;
-      g.height = c;
-      var h = g.getContext("2d");
-      f.onload = function() {
-        h.drawImage(f, 0, 0, b, c);
-        var k = g.toDataURL("image/png");
-        /\.png$/.test(a) && (e[a] = k);
-        d.resolve(k);
+      var g = document.createElement("img");
+      g.crossOrigin = "Anonymous";
+      var h = document.createElement("canvas");
+      h.width = b;
+      h.height = c;
+      var k = h.getContext("2d");
+      g.onload = function() {
+        k.drawImage(g, 0, 0, b, c);
+        var d = h.toDataURL("image/png");
+        /\.png$/.test(a) && (e[a] = d);
+        f.resolve(d);
       };
-      f.onerror = function() {
-        d.reject("error occured");
+      g.onerror = function() {
+        f.reject("error occured");
       };
-      f.src = a;
-      return d.promise();
+      g.src = a;
+      return f.promise();
     }
     var e = {}, f = $.Deferred(), g = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">(svgGroup)(defs)</svg>', h = this.svgGroup.cloneNode(!0), k = this._skeleton.box(this);
-    h.setAttribute("transform", "translate(%X,%Y)".replace("%X", -k.offsetX).replace("%Y", -k.offsetY));
+    h.setAttribute("transform", "scale(1.5) translate(%X,%Y)".replace("%X", -k.offsetX).replace("%Y", -k.offsetY));
     for (var l = this.getBoard().svgDom.find("defs"), n = this.svgGroup.getBoundingClientRect(), m = h.getElementsByTagName("image"), k = h.getElementsByTagName("text"), q = ["\u2265", "\u2264"], r = "\u2265\u2264-><=+-x/".split(""), t = 0;t < k.length;t++) {
       (function(a) {
         a.setAttribute("font-family", "'nanumBarunRegular', 'NanumGothic', '\ub098\ub214\uace0\ub515','NanumGothicWeb', '\ub9d1\uc740 \uace0\ub515', 'Malgun Gothic', Dotum");
         var b = parseInt(a.getAttribute("font-size")), c = $(a).text();
         -1 < q.indexOf(c) && (a.setAttribute("font-weight", "bold"), a.setAttribute("font-size", b + "px"));
+        if ("q" == c) {
+          var d = parseInt(a.getAttribute("y"));
+          a.setAttribute("y", d - 1);
+        }
         -1 < r.indexOf(c) ? a.setAttribute("font-size", b + "px") : a.setAttribute("font-size", .95 * b + "px");
+        a.setAttribute("alignment-baseline", "baseline");
       })(k[t]);
     }
     var u = 0;
@@ -17250,7 +17258,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
   b.renderStart = function() {
     this.svgGroup && $(this.svgGroup).remove();
     this.svgGroup = this._blockView.contentSvgGroup.elem("g", {class:"entry-input-field"});
-    this.textElement = this.svgGroup.elem("text").attr({x:4, y:4, "font-size":"9pt"});
+    this.textElement = this.svgGroup.elem("text").attr({x:4, y:4, "font-size":"11px"});
     this.textElement.textContent = Entry.getKeyCodeMap()[this.getValue()];
     var a = this.getTextWidth(), b = this.position && this.position.y ? this.position.y : 0;
     this._header = this.svgGroup.elem("rect", {x:0, y:b - 8, width:a, height:16, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
