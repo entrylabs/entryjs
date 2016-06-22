@@ -141,8 +141,9 @@ Entry.Vim = function(dom, textType) {
     };
 
     p.codeToText = function(code) {
+        var object = Entry.playground.object;
         if(Entry.stage.selectedObject)
-            var codeDescription = "# " + Entry.stage.selectedObject.name + " 오브젝트의 파이썬 코드";
+            var codeDescription = "# " + object.name + " 오브젝트의 파이썬 코드";
         else
             var codeDescription = "# 파이썬 코드";
         var textType = this.workspace.textType;
