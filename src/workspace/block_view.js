@@ -999,7 +999,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
 
     p.getParam = function(index) { return this._paramMap[index]; };
 
-    p.getDataUrl = function() {
+    p.getDataUrl = function(notPng) {
         var pngMap = {};
         var deferred = $.Deferred();
         var svgData = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">(svgGroup)(defs)</svg>';
@@ -1016,9 +1016,30 @@ Entry.BlockView.DRAG_RADIUS = 5;
         var bBox = this.svgGroup.getBoundingClientRect();
 
         var images = svgGroup.getElementsByTagName('image');
-        var counts = 0;
+        var texts = svgGroup.getElementsByTagName('text');
 
-        if (images.length === 0) process();
+        var fontFamily =  "'nanumBarunRegular', 'NanumGothic', '나눔고딕','NanumGothicWeb', '맑은 고딕', 'Malgun Gothic', Dotum";
+        var boldTypes = ['≥', '≤'];
+        var notResizeTypes = ['≥', '≤', '-', '>', '<', '=', '+', '-', 'x', '/'];
+
+        for (var i=0; i<texts.length; i++) {
+            (function (text) {
+                text.setAttribute('font-family', fontFamily);
+                var size = parseInt(text.getAttribute('font-size'));
+                var content = $(text).text();
+                if (boldTypes.indexOf(content) > -1) {
+                    text.setAttribute('font-weight', 'bold');
+                    text.setAttribute('font-size', (size) + 'px');
+                }
+
+                if (notResizeTypes.indexOf(content) > -1)
+                    text.setAttribute('font-size', (size) + 'px');
+                else text.setAttribute('font-size', (size * 0.95) + 'px');
+            })(texts[i]);
+        }
+
+        var counts = 0;
+        if (images.length === 0) processSvg();
         else {
             for (var i=0; i<images.length; i++) {
                 var img = images[i];
@@ -1027,32 +1048,42 @@ Entry.BlockView.DRAG_RADIUS = 5;
                     loadImage(href, img.getAttribute('width'), img.getAttribute('height'))
                         .then(function(src) {
                             img.setAttribute('href', src)
-                            if (++counts == images.length) return process();
+                            if (++counts == images.length) return processSvg();
                         });
                 })(img);
             }
         }
         return deferred.promise();
 
-        function process() {
+        function processSvg() {
             svgData = svgData
                         .replace('(svgGroup)', new XMLSerializer().serializeToString( svgGroup ))
                         .replace('(defs)', new XMLSerializer().serializeToString( defs[0] ))
                         .replace(/>\s+/g, ">").replace(/\s+</g, "<");
+            var src = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgData)));
+            if (notPng) {
+                deferred.resolve({
+                    src: src,
+                    width: bBox.width,
+                    height: bBox.height
+                });
+            } else {
+                loadImage( src, bBox.width, bBox.height)
+                    .then(function(src) {
+                        //var download = document.createElement('a');
+                        //download.href = '(src)'.replace('(src)', src);
+                        //download.download = '엔트리 블록.png';
+                        //download.click();
+                        deferred.resolve({
+                            src: src,
+                            width: bBox.width,
+                            height: bBox.height
+                        });
+                }, function(err) {
+                    deferred.reject('error occured');
+                });
 
-            loadImage(
-                "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgData))),
-                bBox.width, bBox.height
-            ).then(function(src) {
-                var download = document.createElement('a');
-                download.href = '(src)'.replace('(src)', src);
-                download.download = '엔트리 블록.png';
-                download.click();
-                console.log(download);
-                deferred.resolve(src);
-            }, function(err) {
-                deferred.reject('error occured');
-            });
+            }
         }
 
         function loadImage(src, width, height) {
