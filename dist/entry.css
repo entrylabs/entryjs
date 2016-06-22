@@ -5131,7 +5131,7 @@ svg .svgBlockGroup text {
 .propertyTabpdf {
   background-image: url("../images/property/pdf_off.png");
 }
-.propertyTabpdf {
+.propertyTabpdf.selected {
   background-image: url("../images/property/pdf_on.png");
 }
 .propertyContent {
