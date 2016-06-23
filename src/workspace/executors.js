@@ -10,7 +10,6 @@ Entry.Executor = function(block, entity) {
     this.entity = entity;
     this._callStack = [];
     this.register = {};
-    this._id = Entry.Utils.generateId();
 };
 
 (function(p) {
