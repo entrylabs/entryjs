@@ -6451,6 +6451,7 @@ Entry.Container.prototype.moveElementByBlock = function(b, a) {
   this.updateListView();
 };
 Entry.Container.prototype.getDropdownList = function(b) {
+  Entry.playground && Entry.playground.object || (b = null);
   var a = [];
   switch(b) {
     case "sprites":
@@ -15715,7 +15716,8 @@ Entry.BlockView = function(b, a, c) {
   this._observers.push(a.code.observe(this, "_setBoard", ["board"], !1));
   this.dragMode = Entry.DRAG_MODE_NONE;
   Entry.Utils.disableContextmenu(this.svgGroup.node);
-  (a = b.events.viewAdd) && !this.isInBlockMenu && a.forEach(function(a) {
+  a = b.events.viewAdd;
+  "workspace" == Entry.type && a && !this.isInBlockMenu && a.forEach(function(a) {
     Entry.Utils.isFunction(a) && a(b);
   });
 };
@@ -16005,7 +16007,8 @@ Entry.BlockView.DRAG_RADIUS = 5;
       a.constructor !== Entry.Block && a.destroy();
     });
     var d = this.block;
-    (a = d.events.viewDestroy) && !this.isInBlockMenu && a.forEach(function(a) {
+    a = d.events.viewDestroy;
+    "workspace" == Entry.type && a && !this.isInBlockMenu && a.forEach(function(a) {
       Entry.Utils.isFunction(a) && a(d);
     });
     this._schemaChangeEvent && this._schemaChangeEvent.destroy();

@@ -66,7 +66,7 @@ Entry.BlockView = function(block, board, mode) {
     this.dragMode = Entry.DRAG_MODE_NONE;
     Entry.Utils.disableContextmenu(this.svgGroup.node);
     var events = block.events.viewAdd;
-    if (events && !this.isInBlockMenu) {
+    if (Entry.type == 'workspace' && events && !this.isInBlockMenu) {
         events.forEach(function(fn) {
             if (Entry.Utils.isFunction(fn)) fn(block);
         });
@@ -693,7 +693,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
 
         var block = this.block;
         var events = block.events.viewDestroy;
-        if (events && !this.isInBlockMenu)
+        if (Entry.type == 'workspace' && events && !this.isInBlockMenu)
             events.forEach(function(fn){
                 if (Entry.Utils.isFunction(fn)) fn(block);
             });

@@ -502,6 +502,8 @@ Entry.Container.prototype.moveElementByBlock = function(currentIndex, targetInde
  * @param {string} menuName
  */
 Entry.Container.prototype.getDropdownList = function(menuName) {
+    if (!Entry.playground || !Entry.playground.object)
+        menuName = null;
     var result = [];
     switch (menuName) {
         case 'sprites':
