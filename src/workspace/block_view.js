@@ -444,9 +444,24 @@ Entry.BlockView.DRAG_RADIUS = 5;
                 }
             };
 
+            var download = {
+                text: '이미지로 저장하기',
+                callback: function(){
+                    that.getDataUrl().then(function(data) {
+                        var download = document.createElement('a');
+                        download.href = data.src;
+                        download.download = '엔트리 블록.png';
+                        download.click();
+                    });
+                }
+            };
+
             options.push(copyAndPaste);
             options.push(copy);
             options.push(remove);
+
+            if (Entry.Utils.isChrome() && Entry.type == 'workspace')
+                options.push(download);
 
             Entry.ContextMenu.show(options);
         }
@@ -1076,10 +1091,6 @@ Entry.BlockView.DRAG_RADIUS = 5;
             } else {
                 loadImage( src, bBox.width, bBox.height, 1.5)
                     .then(function(src) {
-                        //var download = document.createElement('a');
-                        //download.href = '(src)'.replace('(src)', src);
-                        //download.download = '엔트리 블록.png';
-                        //download.click();
                         deferred.resolve({
                             src: src,
                             width: bBox.width,

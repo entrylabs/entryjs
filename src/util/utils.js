@@ -1153,3 +1153,8 @@ Entry.Utils.stopProjectWithToast = function(block, message) {
     }
     throw new Error(message);
 };
+
+Entry.Utils.isChrome = function() {
+    return /chrom(e|ium)/.test(navigator.userAgent.toLowerCase());
+};
+
