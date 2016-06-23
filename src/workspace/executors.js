@@ -22,6 +22,8 @@ Entry.Executor = function(block, entity) {
             } catch(e) {
                 Entry.Utils.stopProjectWithToast(this.scope.block, '런타임 에러');
             }
+            //executor can be ended after block function call
+            if (this.isEnd()) return;
 
             if (returnVal === undefined || returnVal === null || returnVal === Entry.STATIC.PASS) {
                 this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this);
