@@ -61,6 +61,8 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
             result += this.Block(block) + '\n';
 
+            console.log("blockToPy result", result);
+
             this._queue.clear();
             this._variableMap.clear();
         }

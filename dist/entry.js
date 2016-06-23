@@ -11812,7 +11812,7 @@ Entry.BlockToPyParser = function(b) {
     a = a.getBlocks();
     console.log("blocks", a);
     for (var c = 0;c < a.length;c++) {
-      b += this.Block(a[c]) + "\n", this._queue.clear(), this._variableMap.clear();
+      b += this.Block(a[c]) + "\n", console.log("blockToPy result", b), this._queue.clear(), this._variableMap.clear();
     }
     return b;
   };
