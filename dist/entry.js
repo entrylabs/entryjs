@@ -17624,10 +17624,8 @@ Entry.GlobalSvg = {};
     }
   };
   b.terminateDrag = function(a) {
-    var b = Entry.mouseCoordinate;
-    a = a.getBoard();
-    var d = a.workspace.blockMenu, e = d.offset().left, f = d.offset().top, g = d.visible ? d.svgDom.width() : 0;
-    return b.y > a.offset().top - 20 && b.x > e + g ? this.DONE : b.y > f && b.x > e && d.visible ? this.REMOVE : this.RETURN;
+    var b = Entry.mouseCoordinate, d = a.getBoard(), e = d.workspace.blockMenu, f = e.offset().left, g = e.offset().top, h = e.visible ? e.svgDom.width() : 0;
+    return b.y > d.offset().top - 20 && b.x > f + h ? this.DONE : b.y > g && b.x > f && e.visible ? a.block.isDeletable() ? this.REMOVE : this.RETURN : this.RETURN;
   };
   b.addControl = function(a) {
     this.onMouseDown.apply(this, arguments);
