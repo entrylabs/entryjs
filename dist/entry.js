@@ -16334,8 +16334,7 @@ Entry.PARAM = -1;
   b.tick = function() {
     for (var a = this.executors, b = 0;b < a.length;b++) {
       var d = a[b];
-      d.isEnd() || d.execute();
-      d.isEnd() && (a.splice(b, 1), b--, 0 === a.length && this.executeEndEvent.notify());
+      d.isEnd() ? (a.splice(b--, 1), 0 === a.length && this.executeEndEvent.notify()) : d.execute();
     }
   };
   b.removeExecutor = function(a) {
@@ -16343,6 +16342,9 @@ Entry.PARAM = -1;
     -1 < a && this.executors.splice(a, 1);
   };
   b.clearExecutors = function() {
+    this.executors.forEach(function(a) {
+      a.end();
+    });
     this.executors = [];
   };
   b.clearExecutorsByEntity = function(a) {
@@ -16526,6 +16528,9 @@ Entry.Executor = function(b, a) {
           var a = this.scope.block.getSchema().func.call(this.scope, this.entity, this.scope);
         } catch (b) {
           Entry.Utils.stopProjectWithToast(this.scope.block, "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec");
+        }
+        if (this.isEnd()) {
+          break;
         }
         if (void 0 === a || null === a || a === Entry.STATIC.PASS) {
           if (this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this), null === this.scope.block) {
