@@ -308,9 +308,11 @@ Entry.Container.prototype.addObject = function(objectModel, index) {
 Entry.Container.prototype.addCloneObject = function(object, scene) {
     var json = object.toJSON();
     var newObjectId = Entry.generateHash();
-    Entry.variableContainer.addCloneLocalVariables({objectId: json.id,
-                                                    newObjectId: newObjectId,
-                                                    json: json});
+    Entry.variableContainer.addCloneLocalVariables({
+        objectId: json.id,
+        newObjectId: newObjectId,
+        json: json
+    });
     json.id = newObjectId;
     json.scene = scene || Entry.scene.selectedScene;
     this.addObject(json);
