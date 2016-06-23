@@ -522,6 +522,40 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var initData = this[init.type](init);
             console.log("VariableDeclarator initData", initData);
             result.init = initData;
+
+            console.log("VariableDeclarator init.type", init.type);
+            if(init.type == "Literal") {
+                var syntax = String("%1 = %2");
+                var type = this.getBlockType(syntax);
+                structure.type = type;
+                
+            } 
+            else {
+                console.log("VariableDeclarator idData.name", idData.name, "initData.params[0].name", initData.params[0].name);
+                if(initData.params && initData.params[0] && idData.name == initData.params[0].name) {
+                    var syntax = String("%1 = %1 + %2");
+                    var type = this.getBlockType(syntax);
+                    structure.type = type; 
+                    
+
+                    if(initData.operator != "PLUS")
+                        return result;
+                    
+                } else {
+                    var syntax = String("%1 = %2");
+                    var type = this.getBlockType(syntax);
+                    structure.type = type;  
+                   
+                }
+                
+            }
+
+            var block = Entry.block[type]; 
+            var paramsMeta = block.params;
+            var paramsDefMeta = block.def.params;
+
+            if(idData.name)
+                idData.name = this.ParamDropdownDynamic(idData.name, paramsMeta[0], paramsDefMeta[0]);
             
             var params = [];
             if(init.type == "Literal") {
@@ -547,32 +581,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
             } 
             
-            console.log("VariableDeclarator init.type", init.type);
-            if(init.type == "Literal") {
-                var syntax = String("%1 = %2");
-                var type = this.getBlockType(syntax);
-                structure.type = type;
-                structure.params = params;   
-            } 
-            else {
-                console.log("VariableDeclarator idData.name", idData.name, "initData.params[0].name", initData.params[0].name);
-                if(initData.params && initData.params[0] && idData.name == initData.params[0].name) {
-                    var syntax = String("%1 = %1 + %2");
-                    var type = this.getBlockType(syntax);
-                    structure.type = type; 
-                    structure.params = params;
-
-                    if(initData.operator != "PLUS")
-                        return result;
-                    
-                } else {
-                    var syntax = String("%1 = %2");
-                    var type = this.getBlockType(syntax);
-                    structure.type = type;  
-                    structure.params = params;
-                }
-                
-            }
+            structure.params = params;
 
             result.type = structure.type;
             result.params = structure.params;
@@ -1747,17 +1756,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         result.right = rightData;
 
-        switch(operator){
+        switch(operator){ 
             case "=": {
-                if(leftData.object.name == "self") {
-                    var calleeName;
+                if(rightData.callee && rightData.callee.object) {
+                    var calleeName = rightData.callee.object.object.name.concat('.')
+                        .concat(rightData.callee.object.property.name).concat('.')
+                        .concat(rightData.callee.property.name);
+                } /*else if(rightData.callee) {
+                    calleeName = rightData.callee;
+                }*/
 
-                    if(rightData.callee) {
-                        calleeName = rightData.callee.object.object.name.concat('.').concat(rightData.callee.object.property.name).concat('.')
-                                        .concat(rightData.callee.property.name);
-                    }
-                    
-                    if(calleeName == "__pythonRuntime.objects.list") { 
+                if(calleeName == "__pythonRuntime.objects.list") { 
+                    if(leftData.object.name == "self") {
+                        var calleeName;
                         var name = leftData.property.name;
                         
                         var array = [];
@@ -1778,7 +1789,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             Entry.TextCodingUtil.prototype.createLocalList(name, array, object);
                         }
                     }
-                } else if(leftData.property.callee == "__pythonRuntime.ops.subscriptIndex") {
+                } 
+
+                if(leftData.property.callee == "__pythonRuntime.ops.subscriptIndex") {
                     var syntax = String("%1\[%2\] = %3");
                     var type = this.getBlockType(syntax);
                     structure.type = type; 
@@ -1849,8 +1862,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var paramsMeta = block.params;
             var paramsDefMeta = block.def.params; 
 
-            var listName = leftData.property.arguments[0].name;
-            listName = this.ParamDropdownDynamic(listName, paramsMeta[0], paramsDefMeta[0]);
+            /*var listName = leftData.property.arguments[0].property.name;
+            listName = this.ParamDropdownDynamic(listName, paramsMeta[0], paramsDefMeta[0]);*/
+
+            var listName = leftData.params[1];
+
+            console.log("AssignmentExpression listName", listName);
 
             if(!listName)
                 return result;
@@ -1878,7 +1895,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var paramsDefMeta = block.def.params;
             
                 var name = property.name;
-                if(rightData.params[0].type == "Literal")
+                if(rightData.type == "number" || rightData.type == "text")
                     var value = rightData.params[0]; 
                 else
                     var value = "NaN";

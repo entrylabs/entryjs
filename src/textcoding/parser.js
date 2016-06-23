@@ -23,8 +23,9 @@ Entry.Parser = function(mode, type, cm) {
     this._type = type;
     this.availableCode = [];
 
-    Entry.Parser.PARSE_SYNTAX = 0;
-    Entry.Parser.PARSE_VARIABLE = 1;
+    Entry.Parser.PARSE_GENERAL= 0;
+    Entry.Parser.PARSE_SYNTAX = 1;
+    Entry.Parser.PARSE_VARIABLE = 2;
 
     Entry.Parser.BLOCK_SKELETON_BASIC = "basic";
     Entry.Parser.BLOCK_SKELETON_BASIC_LOOP = "basic_loop";
@@ -292,7 +293,7 @@ Entry.Parser = function(mode, type, cm) {
 
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
                 var textCode = this._parser.Code(code, parseMode);
-            console.log('sf')
+            
                 //var textArr = textCode.match(/(.*{.*[\S|\s]+?}|.+)/g);
                /* var textArr = textCode.split("\n\n");
 

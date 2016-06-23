@@ -44,6 +44,8 @@ Entry.BlockToPyParser = function(blockSyntax) {
             textCode += this.Thread(thread) + '\n';
         }
 
+        textCode = textCode.trim();
+
         return textCode;
     };
 
@@ -55,17 +57,54 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
             console.log("blocks", blocks);
 
+        var isEventBlock = false;
+        var rootResult = '';
+        var contentResult = '';
+        var definition = '';
         for (var i = 0; i < blocks.length; i++) {
             var block = blocks[i];
-            
+            console.log("blockToPy block", block);
+            if(this._parseMode == Entry.Parser.PARSE_GENERAL) {
+                if(Entry.TextCodingUtil.prototype.isNoPrintBlock(block))
+                    continue;
+                if(i == 0) {
+                    isEventBlock = Entry.TextCodingUtil.prototype.isEventBlock(block);
+                    if(isEventBlock) {
+                        rootResult = this.Block(block) + '\n';
+                        definition = Entry.TextCodingUtil.prototype.makeDefinition(block) + '\n';
+                    }
+                    else
+                        contentResult += this.Block(block) + '\n';
+                }
+                else if(i != 0) {
+                    contentResult += this.Block(block) + '\n';
+                }
+            } else if(this._parseMode == Entry.Parser.PARSE_SYNTAX) {
+                result += this.Block(block) + '\n';
+            }
 
-            result += this.Block(block) + '\n';
-
-            console.log("blockToPy result", result);
+            console.log("blockToPy rootResult", rootResult);
+            console.log("blockToPy contentResult", contentResult);
 
             this._queue.clear();
             this._variableMap.clear();
         }
+
+        if(this._parseMode == Entry.Parser.PARSE_GENERAL) {
+            if(isEventBlock) {
+                result = definition + Entry.TextCodingUtil.prototype.indent(contentResult) + '\n';
+                var declaration = rootResult.split('def')[1].trim();
+                declaration = declaration.substring(0, declaration.length-1);
+                result = result + '\n' + declaration + '\n';
+
+            }
+            else {
+                result = rootResult + contentResult + '\n';
+            }
+        }
+
+        result = result.trim() + '\n';
+
         return result;
     };
 
