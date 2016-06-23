@@ -13,6 +13,8 @@ goog.require("Entry.BlockToPyParser");
 goog.require("Entry.JsToBlockParser");
 goog.require("Entry.PyToBlockParser");
 
+goog.require("Entry.PyHint");
+
 Entry.Parser = function(mode, type, cm) {
     this._mode = mode; // maze ai workspace
     this.syntax = {}; //for maze
@@ -58,12 +60,15 @@ Entry.Parser = function(mode, type, cm) {
                 assistScope['front'] = 'BasicIf';
             }
 
+            this._hinter = new Entry.PyHint();
+
             CodeMirror.commands.javascriptComplete = function (cm) {
                 CodeMirror.showHint(cm, null, {globalScope:assistScope});
             }
 
             cm.on("keyup", function (cm, event) {
-                if (!cm.state.completionActive &&  (event.keyCode >= 65 && event.keyCode <= 95))  {
+                if ((event.keyCode >= 65 && event.keyCode <= 95) ||
+                    event.keyCode == 167 || event.keyCode == 190) {
                     CodeMirror.showHint(cm, null, {completeSingle: false, globalScope:assistScope});
                 }
             });
@@ -89,7 +94,8 @@ Entry.Parser = function(mode, type, cm) {
             }
 
             cm.on("keyup", function (cm, event) {
-                if (!cm.state.completionActive &&  (event.keyCode >= 65 && event.keyCode <= 95))  {
+                if ((event.keyCode >= 65 && event.keyCode <= 95) ||
+                    event.keyCode == 167 || event.keyCode == 190) {
                     CodeMirror.showHint(cm, null, {completeSingle: false, globalScope:assistScope});
                 }
             });
