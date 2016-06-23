@@ -10,7 +10,9 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
   Entry.container.setObjects(b.objects);
   Entry.FPS = b.speed ? b.speed : 60;
   createjs.Ticker.setFPS(Entry.FPS);
-  "workspace" == this.type && Entry.stateManager.endIgnore();
+  "workspace" == this.type && setTimeout(function() {
+    Entry.stateManager.endIgnore();
+  }, 300);
   Entry.engine.projectTimer || Entry.variableContainer.generateTimer();
   0 === Object.keys(Entry.container.inputValue).length && Entry.variableContainer.generateAnswer();
   Entry.start();
