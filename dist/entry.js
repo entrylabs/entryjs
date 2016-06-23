@@ -12528,8 +12528,10 @@ Entry.Func = function(b) {
 };
 Entry.Func.threads = {};
 Entry.Func.registerFunction = function(b) {
-  var a = Entry.playground.mainWorkspace;
-  a && (this._targetFuncBlock = a.getBlockMenu().getCategoryCodes("func").createThread([{type:"func_" + b.id}]), b.blockMenuBlock = this._targetFuncBlock);
+  if (Entry.playground) {
+    var a = Entry.playground.mainWorkspace;
+    a && (this._targetFuncBlock = a.getBlockMenu().getCategoryCodes("func").createThread([{type:"func_" + b.id}]), b.blockMenuBlock = this._targetFuncBlock);
+  }
 };
 Entry.Func.executeFunction = function(b) {
   var a = this.threads[b];
@@ -12676,8 +12678,11 @@ Entry.Func.createParamBlock = function(b, a, c) {
   return Entry.block[b] = d;
 };
 Entry.Func.updateMenu = function() {
-  var b = Entry.playground.mainWorkspace;
-  b && (b = b.getBlockMenu(), this.targetFunc ? (this.menuCode || this.setupMenuCode(), b.banClass("functionInit"), b.unbanClass("functionEdit")) : (b.unbanClass("functionInit"), b.banClass("functionEdit")), b.reDraw());
+  if (Entry.playground && Entry.playground.mainWorkspace) {
+    var b = Entry.playground.mainWorkspace.getBlockMenu();
+    this.targetFunc ? (this.menuCode || this.setupMenuCode(), b.banClass("functionInit"), b.unbanClass("functionEdit")) : (b.unbanClass("functionInit"), b.banClass("functionEdit"));
+    b.reDraw();
+  }
 };
 Entry.Func.prototype.edit = function() {
   Entry.Func.isEdit || (Entry.Func.isEdit = !0, Entry.Func.svg ? this.parentView.appendChild(this.svg) : Entry.Func.initEditView());
