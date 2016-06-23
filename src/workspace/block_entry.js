@@ -14942,7 +14942,7 @@ Entry.block = {
             variable.updateView();
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["entry.show_variable(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.show_variable(%1)"]}
     },
     "hide_variable": {
         "color": "#E457DC",
@@ -14991,7 +14991,7 @@ Entry.block = {
             variable.setVisible(false);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["entry.hide_variable(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.hide_variable(%1)"]}
     },
     "get_variable": {
         "color": "#E457DC",
