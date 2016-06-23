@@ -13336,7 +13336,7 @@ Entry.block = {
             return script.callReturn();
         },
         "event": "when_scene_start",
-        "syntax": {"js": [], "py": ["Entry.on_scene_start():"]}
+        "syntax": {"js": [], "py": ["Entry.on_scene_start()"]}
     },
     "start_scene": {
         "color": "#3BBD70",
@@ -13375,7 +13375,7 @@ Entry.block = {
             }
             return null;
         },
-        "syntax": {"js": [], "py": ["Entry.start_scene(%1):"]}
+        "syntax": {"js": [], "py": ["Entry.start_scene(%1)"]}
     },
     "start_neighbor_scene": {
         "color": "#3BBD70",
@@ -13432,7 +13432,7 @@ Entry.block = {
             }
             return null;
         },
-        "syntax": {"js": [], "py": ["Entry.start_neighbor_scene(%1):"]}
+        "syntax": {"js": [], "py": ["Entry.start_neighbor_scene(%1)"]}
     },
     "sound_something": {
         "color": "#A4D01D",
@@ -14173,7 +14173,7 @@ Entry.block = {
             return script.callReturn();
         },
         "event": "start",
-        "syntax": {"js": [], "py": ["Entry.on_start():"]}
+        "syntax": {"js": [], "py": ["Entry.on_start()"]}
     },
     "press_some_key": {
         "color": "#3BBD70",
@@ -14260,7 +14260,7 @@ Entry.block = {
             return script.callReturn();
         },
         "event": "keyPress",
-        "syntax": {"js": [], "py": ["Entry.on_press(%2):"]}
+        "syntax": {"js": [], "py": ["Entry.on_press(%2)"]}
     },
     "mouse_clicked": {
         "color": "#3BBD70",
@@ -14288,7 +14288,7 @@ Entry.block = {
             return script.callReturn();
         },
         "event": "mouse_clicked",
-        "syntax": {"js": [], "py": ["Entry.on_mouse_click_down():"]}
+        "syntax": {"js": [], "py": ["Entry.on_mouse_click_down()"]}
     },
     "mouse_click_cancled": {
         "color": "#3BBD70",
@@ -14344,7 +14344,7 @@ Entry.block = {
             return script.callReturn();
         },
         "event": "when_object_click",
-        "syntax": {"js": [], "py": ["Entry.on_object_click_down():"]}
+        "syntax": {"js": [], "py": ["Entry.on_object_click_down()"]}
     },
     "when_object_click_canceled": {
         "color": "#3BBD70",
@@ -14372,7 +14372,7 @@ Entry.block = {
             return script.callReturn();
         },
         "event": "when_object_click_canceled",
-        "syntax": {"js": [], "py": ["Entry.on_object_click_up():"]}
+        "syntax": {"js": [], "py": ["Entry.on_object_click_up()"]}
     },
     "when_some_key_click": {
         "color": "#3BBD70",
@@ -14448,7 +14448,7 @@ Entry.block = {
             return script.callReturn();
         },
         "event": "when_message_cast",
-        "syntax": {"js": [], "py": ["Entry.on_signal(%2):"]}
+        "syntax": {"js": [], "py": ["Entry.on_signal(%2)"]}
     },
     "message_cast": {
         "color": "#3BBD70",
@@ -14504,7 +14504,7 @@ Entry.block = {
                                                          ["when_message_cast", value]);
                                                          return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.send_signal(%1):"]}
+        "syntax": {"js": [], "py": ["Entry.send_signal(%1)"]}
     },
     "message_cast_wait": {
         "color": "#3BBD70",
@@ -14582,7 +14582,7 @@ Entry.block = {
                 return script;
             }
         },
-        "syntax": {"js": [], "py": ["Entry.send_signal_wait(%1):"]}
+        "syntax": {"js": [], "py": ["Entry.send_signal_wait(%1)"]}
     },
     "text": {
         "color": "#FFD974",
