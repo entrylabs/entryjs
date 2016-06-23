@@ -155,7 +155,7 @@ Entry.Vim = function(dom, textType) {
             this._parser.setParser(this._mode, this._parserType, this.codeMirror);
         } 
 
-        var textCode = this._parser.parse(code, Entry.Parser.PARSE_GENERAL);
+        var textCode = this._parser.parse(code, Entry.Parser.PARSE_SYNTAX);
         textCode = codeDescription
         .concat("\n\n")
         .concat(Entry.Vim.PYTHON_IMPORT_ENTRY)
