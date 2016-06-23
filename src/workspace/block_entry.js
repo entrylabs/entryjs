@@ -3220,7 +3220,7 @@ Entry.block = {
 
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["self.start_drawing()"]}
+        "syntax": {"js": [], "py": ["Entry.start_drawing()"]}
     },
     "stop_drawing": {
         "color": "#FF9E20",
@@ -3246,7 +3246,7 @@ Entry.block = {
 
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["self.stop_drawing()"]}
+        "syntax": {"js": [], "py": ["Entry.stop_drawing()"]}
     },
     "set_color": {
         "color": "#FF9E20",
@@ -3291,7 +3291,7 @@ Entry.block = {
 
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["self.set_brush_color(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.set_brush_color(%1)"]}
     },
     "set_random_color": {
         "color": "#FF9E20",
@@ -3327,7 +3327,7 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["self.set_brush_color_random()"]}
+        "syntax": {"js": [], "py": ["Entry.set_brush_color_random()"]}
     },
     "change_thickness": {
         "color": "#FF9E20",
@@ -3380,7 +3380,7 @@ Entry.block = {
 
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["self.change_brush_thickness(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.change_brush_thickness(%1)"]}
     },
     "set_thickness": {
         "color": "#FF9E20",
@@ -3430,7 +3430,7 @@ Entry.block = {
 
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["self.set_brush_thickness(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.set_brush_thickness(%1)"]}
     },
     "change_opacity": {
         "color": "#FF9E20",
@@ -3571,7 +3571,7 @@ Entry.block = {
 
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["self.erase_all_brush()"]}
+        "syntax": {"js": [], "py": ["Entry.erase_all_brush()"]}
     },
     "brush_stamp": {
         "color": "#FF9E20",
@@ -3596,7 +3596,7 @@ Entry.block = {
 
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["self.stamp()"]}
+        "syntax": {"js": [], "py": ["Entry.stamp()"]}
     },
     "change_brush_transparency": {
         "color": "#FF9E20",
@@ -3648,7 +3648,7 @@ Entry.block = {
 
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["self.change_brush_transparency_by_percent(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.change_brush_transparency_by_percent(%1)"]}
     },
     "set_brush_tranparency": {
         "color": "#FF9E20",
@@ -3700,7 +3700,7 @@ Entry.block = {
             return script.callReturn();
 
         },
-        "syntax": {"js": [], "py": ["self.set_brush_transparency_by_percent(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.set_brush_transparency_by_percent(%1)"]}
     },
     "number": {
         "color": "#FFD974",
@@ -5853,7 +5853,7 @@ Entry.block = {
             sprite.removeClone();
             return this.die();
         },
-        "syntax": {"js": [], "py": ["self.remove_clone()"]}
+        "syntax": {"js": [], "py": ["Entry.remove_clone()"]}
     },
     "when_clone_start": {
         "color": "#498deb",
@@ -6312,7 +6312,7 @@ Entry.block = {
             var pd = Entry.hw.portData;
             return pd.leftProximity > 50 || pd.rightProximity > 50;
         },
-        "syntax": {"js": [], "py": ["hw.hamster_hand_found()"]}
+        "syntax": {"js": [], "py": ["Hamster.hand_found()"]}
     },
     "hamster_value": {
         "color": "#00979D",
@@ -6354,7 +6354,7 @@ Entry.block = {
             var dev = script.getField('DEVICE');
             return pd[dev];
         },
-        "syntax": {"js": [], "py": ["hw.hamster_value(%1)"]}
+        "syntax": {"js": [], "py": ["Hamster.value(%1)"]}
     },
     "hamster_move_forward_once": {
         "color": "#00979D",
@@ -6441,7 +6441,7 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["hw.hamster_move_forward_once()"]}
+        "syntax": {"js": [], "py": ["Hamster.move_forward()"]}
     },
     "hamster_turn_once": {
         "color": "#00979D",
@@ -6604,7 +6604,7 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["hw.hamster_turn_once(%1)"]}
+        "syntax": {"js": [], "py": ["Hamster.turn(%1)"]}
     },
     "hamster_move_forward_for_secs": {
         "color": "#00979D",
@@ -6663,7 +6663,7 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["hw.hamster_move_forward_for_secs(%1)"]}
+        "syntax": {"js": [], "py": ["Hamster.move_forward_for_secs(%1)"]}
     },
     "hamster_move_backward_for_secs": {
         "color": "#00979D",
@@ -6722,7 +6722,7 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["hw.hamster_move_backward_for_secs(%1)"]}
+        "syntax": {"js": [], "py": ["Hamster.move_backward_for_secs(%1)"]}
     },
     "hamster_turn_for_secs": {
         "color": "#00979D",
@@ -6798,7 +6798,7 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["hw.hamster_turn_for_secs(%1, %2)"]}
+        "syntax": {"js": [], "py": ["Hamster.turn_for_secs(%1, %2)"]}
     },
     "hamster_change_both_wheels_by": {
         "color": "#00979D",
@@ -6849,7 +6849,7 @@ Entry.block = {
             Entry.Hamster.setLineTracerMode(sq, 0);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["hw.hamster_change_both_wheels_by(%1, %2)"]}
+        "syntax": {"js": [], "py": ["Hamster.add_wheels(%1, %2)"]}
     },
     "hamster_set_both_wheels_to": {
         "color": "#00979D",
@@ -6898,7 +6898,7 @@ Entry.block = {
             Entry.Hamster.setLineTracerMode(sq, 0);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["hw.hamster_set_both_wheels_to(%1, %2)"]}
+        "syntax": {"js": [], "py": ["Hamster.set_wheels(%1, %2)"]}
     },
     "hamster_change_wheel_by": {
         "color": "#00979D",
@@ -6958,7 +6958,7 @@ Entry.block = {
             Entry.Hamster.setLineTracerMode(sq, 0);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["hw.hamster_change_wheel_by(%1, %2)"]}
+        "syntax": {"js": [], "py": ["Hamster.add_wheel(%1, %2)"]}
     },
     "hamster_set_wheel_to": {
         "color": "#00979D",
@@ -7018,7 +7018,7 @@ Entry.block = {
             Entry.Hamster.setLineTracerMode(sq, 0);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["hw.hamster_set_wheel_to(%1, %2)"]}
+        "syntax": {"js": [], "py": ["Hamster.set_wheel(%1, %2)"]}
     },
     "hamster_follow_line_using": {
         "color": "#00979D",
@@ -7076,7 +7076,7 @@ Entry.block = {
             Entry.Hamster.setLineTracerMode(sq, mode);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["hw.hamster_follow_line_using(%1, %2)"]}
+        "syntax": {"js": [], "py": ["Hamster.follow_line(%1, %2)"]}
     },
     "hamster_follow_line_until": {
         "color": "#00979D",
@@ -7152,7 +7152,7 @@ Entry.block = {
                 return script;
             }
         },
-        "syntax": {"js": [], "py": ["hw.hamster_follow_line_until(%1, %2)"]}
+        "syntax": {"js": [], "py": ["Hamster.follow_line_until(%1, %2)"]}
     },
     "hamster_set_following_speed_to": {
         "color": "#00979D",
@@ -7195,7 +7195,7 @@ Entry.block = {
             sq.lineTracerSpeed = Number(script.getField("SPEED", script));
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["hw.hamster_set_following_speed_to(%1)"]}
+        "syntax": {"js": [], "py": ["Hamster.set_follow_speed(%1)"]}
     },
     "hamster_stop": {
         "color": "#00979D",
@@ -7222,7 +7222,7 @@ Entry.block = {
             Entry.Hamster.setLineTracerMode(sq, 0);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["hw.hamster_stop()"]}
+        "syntax": {"js": [], "py": ["Hamster.stop()"]}
     },
     "hamster_set_led_to": {
         "color": "#00979D",
@@ -7284,7 +7284,7 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["hw.hamster_set_led_to(%1, %2)"]}
+        "syntax": {"js": [], "py": ["Hamster.led_on(%1, %2)"]}
     },
     "hamster_clear_led": {
         "color": "#00979D",
@@ -7330,7 +7330,7 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["hw.hamster_clear_led(%1)"]}
+        "syntax": {"js": [], "py": ["Hamster.led_off(%1)"]}
     },
     "hamster_beep": {
         "color": "#00979D",
@@ -7374,7 +7374,7 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["hw.hamster_beep()"]}
+        "syntax": {"js": [], "py": ["Hamster.beep()"]}
     },
     "hamster_change_buzzer_by": {
         "color": "#00979D",
@@ -7414,7 +7414,7 @@ Entry.block = {
             sq.note = 0;
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["hw.hamster_change_buzzer_by(%1)"]}
+        "syntax": {"js": [], "py": ["Hamster.add_buzzer(%1)"]}
     },
     "hamster_set_buzzer_to": {
         "color": "#00979D",
@@ -7453,7 +7453,7 @@ Entry.block = {
             sq.note = 0;
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["hw.hamster_set_buzzer_to(%1)"]}
+        "syntax": {"js": [], "py": ["Hamster.set_buzzer(%1)"]}
     },
     "hamster_clear_buzzer": {
         "color": "#00979D",
@@ -7479,7 +7479,7 @@ Entry.block = {
             sq.note = 0;
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["hw.hamster_clear_buzzer()"]}
+        "syntax": {"js": [], "py": ["Hamster.stop_buzzer()"]}
     },
     "hamster_play_note_for": {
         "color": "#00979D",
@@ -7585,7 +7585,7 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["hw.hamster_play_note_for(%1, %2, %3)"]}
+        "syntax": {"js": [], "py": ["Hamster.play_note(%1, %2, %3)"]}
     },
     "hamster_rest_for": {
         "color": "#00979D",
@@ -7642,7 +7642,7 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["hw.hamster_rest_for(%1)"]}
+        "syntax": {"js": [], "py": ["Hamster.rest(%1)"]}
     },
     "hamster_change_tempo_by": {
         "color": "#00979D",
@@ -7680,7 +7680,7 @@ Entry.block = {
             if (Entry.Hamster.tempo < 1) Entry.Hamster.tempo = 1;
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["hw.hamster_change_tempo_by(%1)"]}
+        "syntax": {"js": [], "py": ["Hamster.add_tempo(%1)"]}
     },
     "hamster_set_tempo_to": {
         "color": "#00979D",
@@ -7718,7 +7718,7 @@ Entry.block = {
             if (Entry.Hamster.tempo < 1) Entry.Hamster.tempo = 1;
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["hw.hamster_set_tempo_to(%1)"]}
+        "syntax": {"js": [], "py": ["Hamster.set_tempo(%1)"]}
     },
     "hamster_set_port_to": {
         "color": "#00979D",
@@ -7778,7 +7778,7 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["hw.hamster_set_port_to(%1, %2)"]}
+        "syntax": {"js": [], "py": ["Hamster.set_port(%1, %2)"]}
     },
     "hamster_change_output_by": {
         "color": "#00979D",
@@ -7837,7 +7837,7 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["hw.hamster_change_output_by(%1, %2)"]}
+        "syntax": {"js": [], "py": ["Hamster.add_output(%1, %2)"]}
     },
     "hamster_set_output_to": {
         "color": "#00979D",
@@ -7896,7 +7896,7 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["hw.hamster_set_output_to(%1, %2)"]}
+        "syntax": {"js": [], "py": ["Hamster.set_output(%1, %2)"]}
     },
     "is_clicked": {
         "color": "#AEB8FF",
@@ -8661,7 +8661,7 @@ Entry.block = {
             sprite.setVisible(true);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["self.show()"]}
+        "syntax": {"js": [], "py": ["Entry.show()"]}
     },
     "hide": {
         "color": "#EC4466",
@@ -8685,7 +8685,7 @@ Entry.block = {
             sprite.setVisible(false);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["self.hide()"]}
+        "syntax": {"js": [], "py": ["Entry.hide()"]}
     },
     "dialog_time": {
         "color": "#EC4466",
@@ -8762,7 +8762,7 @@ Entry.block = {
             } else
                 return script;
         },
-        "syntax": {"js": [], "py": ["self.dialog_for_seconds(%1, %2, %3)"]}
+        "syntax": {"js": [], "py": ["Entry.dialog_for_seconds(%1, %2, %3)"]}
     },
     "dialog": {
         "color": "#EC4466",
@@ -8817,7 +8817,7 @@ Entry.block = {
             sprite.syncDialogVisible(sprite.getVisible());
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["self.dialog(%1, %2)"]}
+        "syntax": {"js": [], "py": ["Entry.dialog(%1, %2)"]}
     },
     "remove_dialog": {
         "color": "#EC4466",
@@ -8841,7 +8841,7 @@ Entry.block = {
             if(sprite.dialog)   sprite.dialog.remove();
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["self.remove_dialog()"]}
+        "syntax": {"js": [], "py": ["Entry.remove_dialog()"]}
     },
     "change_to_nth_shape": {
         "color": "#EC4466",
@@ -8919,7 +8919,7 @@ Entry.block = {
             sprite.setImage(picture);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["self.change_to_adjacent_shape(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.change_to_adjacent_shape(%1)"]}
     },
     "set_effect_volume": {
         "color": "#EC4466",
@@ -8982,7 +8982,7 @@ Entry.block = {
             sprite.applyFilter();
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["self.add_effect(%1, %2)"]}
+        "syntax": {"js": [], "py": ["Entry.add_effect(%1, %2)"]}
     },
     "set_effect": {
         "color": "#EC4466",
@@ -9045,7 +9045,7 @@ Entry.block = {
             sprite.applyFilter();
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["self.set_effect(%1, %2)"]}
+        "syntax": {"js": [], "py": ["Entry.set_effect(%1, %2)"]}
     },
     "erase_all_effects": {
         "color": "#EC4466",
@@ -9069,7 +9069,7 @@ Entry.block = {
             sprite.resetFilter();
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["self.remove_all_effects()"]}
+        "syntax": {"js": [], "py": ["Entry.remove_all_effects()"]}
     },
     "change_scale_percent": {
         "color": "#EC4466",
@@ -9186,7 +9186,7 @@ Entry.block = {
             sprite.setSize(sprite.getSize() + sizeValue);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["self.change_size(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.change_size(%1)"]}
     },
     "set_scale_size": {
         "color": "#EC4466",
@@ -9224,7 +9224,7 @@ Entry.block = {
             sprite.setSize(sizeValue);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["self.set_size(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.set_size(%1)"]}
     },
     "flip_y": {
         "color": "#EC4466",
@@ -9248,7 +9248,7 @@ Entry.block = {
             sprite.setScaleX((-1)*sprite.getScaleX());
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["self.flip_vertical()"]}
+        "syntax": {"js": [], "py": ["Entry.flip_vertical()"]}
     },
     "flip_x": {
         "color": "#EC4466",
@@ -9274,7 +9274,7 @@ Entry.block = {
             sprite.setScaleY((-1)*sprite.getScaleY());
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["self.flip_horizontal()"]}
+        "syntax": {"js": [], "py": ["Entry.flip_horizontal()"]}
     },
     "set_object_order": {
         "color": "#EC4466",
@@ -9380,7 +9380,7 @@ Entry.block = {
             sprite.setImage(picture);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["self.change_to_some_shape(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.change_to_some_shape(%1)"]}
     },
     "add_effect_amount": {
         "color": "#EC4466",
@@ -9439,7 +9439,7 @@ Entry.block = {
             sprite.applyFilter();
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["self.add_effect_by_cbt(%1, %2)"]}
+        "syntax": {"js": [], "py": ["Entry.add_effect_by_cbt(%1, %2)"]}
     },
     "change_effect_amount": {
         "color": "#EC4466",
@@ -9498,7 +9498,7 @@ Entry.block = {
             sprite.applyFilter();
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["self.set_effect_by_cbt(%1, %2)"]}
+        "syntax": {"js": [], "py": ["Entry.set_effect_by_cbt(%1, %2)"]}
     },
     "set_effect_amount": {
         "color": "#EC4466",
@@ -9678,7 +9678,7 @@ Entry.block = {
             Entry.container.moveElementByBlock(currentIndex, targetIndex);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["self.locate_to(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.locate_to(%1)"]}
     },
     "move_direction": {
         "color": "#A751E3",
@@ -9720,7 +9720,7 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["self.move_to_moving_direction(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.move_to_moving_direction(%1)"]}
     },
     "move_x": {
         "color": "#A751E3",
@@ -9761,7 +9761,7 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["self.change_x(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.change_x(%1)"]}
     },
     "move_y": {
         "color": "#A751E3",
@@ -9802,7 +9802,7 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["self.change_y(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.change_y(%1)"]}
     },
     "locate_xy_time": {
         "color": "#A751E3",
@@ -9880,7 +9880,7 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["self.locate_xy_for_seconds(%1, %2, %3)"]}
+        "syntax": {"js": [], "py": ["Entry.locate_xy_for_seconds(%1, %2, %3)"]}
     },
     "rotate_by_angle": {
         "color": "#A751E3",
@@ -10085,7 +10085,7 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["self.move_xy(%1, %2)"]}
+        "syntax": {"js": [], "py": ["Entry.move_xy(%1, %2)"]}
     },
     "locate_x": {
         "color": "#A751E3",
@@ -10126,7 +10126,7 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["self.move_x(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.move_x(%1)"]}
     },
     "locate_y": {
         "color": "#A751E3",
@@ -10168,7 +10168,7 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["self.move_y(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.move_y(%1)"]}
     },
     "locate": {
         "color": "#A751E3",
@@ -10216,7 +10216,7 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["self.move_to_object(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.move_to_object(%1)"]}
     },
     "move_xy_time": {
         "color": "#A751E3",
@@ -10292,7 +10292,7 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["self.move_xy_for_seconds(%1, %2, %3)"]}
+        "syntax": {"js": [], "py": ["Entry.move_xy_for_seconds(%1, %2, %3)"]}
     },
     "rotate_by_angle_time": {
         "color": "#A751E3",
@@ -10533,7 +10533,7 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["self.on_bounce_at_wall()"]}
+        "syntax": {"js": [], "py": ["Entry.on_bounce_at_wall()"]}
     },
     "flip_arrow_horizontal": {
         "color": "#A751E3",
@@ -10637,7 +10637,7 @@ Entry.block = {
             sprite.setRotation(sprite.getRotation() + value - nativeDirection);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["self.look_at_object(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.look_at_object(%1)"]}
     },
     "see_angle_direction": {
         "color": "#A751E3",
@@ -10808,7 +10808,7 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["self.move_at_object_for_seconds(%1, %2)"]}
+        "syntax": {"js": [], "py": ["Entry.move_at_object_for_seconds(%1, %2)"]}
     },
     "rotate_absolute": {
         "color": "#A751E3",
@@ -10843,7 +10843,7 @@ Entry.block = {
             entity.setRotation(value);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["self.set_direction(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.set_direction(%1)"]}
     },
     "rotate_relative": {
         "color": "#A751E3",
@@ -10878,7 +10878,7 @@ Entry.block = {
             entity.setRotation(value + entity.getRotation());
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["self.rotate_direction(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.rotate_direction(%1)"]}
     },
     "direction_absolute": {
         "color": "#A751E3",
@@ -10913,7 +10913,7 @@ Entry.block = {
             entity.setDirection(value);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["self.set_moving_direction(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.set_moving_direction(%1)"]}
     },
     "direction_relative": {
         "color": "#A751E3",
@@ -10948,7 +10948,7 @@ Entry.block = {
             entity.setDirection(value + entity.getDirection());
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["self.rotate_moving_direction(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.rotate_moving_direction(%1)"]}
     },
     "move_to_angle": {
         "color": "#A751E3",
@@ -10997,7 +10997,7 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["self.move_to_direction_by_distance(%1, %2)"]}
+        "syntax": {"js": [], "py": ["Entry.move_to_direction_by_distance(%1, %2)"]}
     },
     "rotate_by_time": {
         "color": "#A751E3",
@@ -11057,7 +11057,7 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["self.rotate_direction_for_seconds(%1, %2)"]}
+        "syntax": {"js": [], "py": ["Entry.rotate_direction_for_seconds(%1, %2)"]}
     },
     "direction_relative_duration": {
         "color": "#A751E3",
@@ -11116,7 +11116,7 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["self.rotate_moving_direction_for_seconds(%1, %2)"]}
+        "syntax": {"js": [], "py": ["Entry.rotate_moving_direction_for_seconds(%1, %2)"]}
     },
     "neobot_sensor_value": {
         "color": "#00979D",
