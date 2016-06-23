@@ -14134,9 +14134,9 @@ Entry.VariableContainer.prototype.getVariableJSON = function() {
   for (a = 0;a < this.lists_.length;a++) {
     b.push(this.lists_[a].toJSON());
   }
-  Entry.engine.projectTimer && b.push(Entry.engine.projectTimer);
+  Entry.engine.projectTimer && b.push(Entry.engine.projectTimer.toJSON());
   a = Entry.container.inputValue;
-  Entry.isEmpty(a) || b.push(a);
+  Entry.isEmpty(a) || b.push(a.toJSON());
   return b;
 };
 Entry.VariableContainer.prototype.getMessageJSON = function() {

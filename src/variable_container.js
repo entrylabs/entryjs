@@ -1329,11 +1329,11 @@ Entry.VariableContainer.prototype.getVariableJSON = function() {
     }
 
     if (Entry.engine.projectTimer)
-        json.push(Entry.engine.projectTimer);
+        json.push(Entry.engine.projectTimer.toJSON());
 
     var answer = Entry.container.inputValue;
     if (!Entry.isEmpty(answer))
-        json.push(answer);
+        json.push(answer.toJSON());
     return json;
 };
 
