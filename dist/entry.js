@@ -7735,26 +7735,29 @@ Entry.EntityObject.prototype.setImage = function(b) {
   Entry.dispatchEvent("updateObject");
 };
 Entry.EntityObject.prototype.applyFilter = function() {
-  var b = this.object, a = this.effect, c = [], d = Entry.adjustValueWithMaxMin;
-  a.brightness = a.brightness;
-  var e = new createjs.ColorMatrix;
-  e.adjustColor(d(a.brightness, -100, 100), 0, 0, 0);
-  e = new createjs.ColorMatrixFilter(e);
-  c.push(e);
-  a.hue = a.hue.mod(360);
-  e = new createjs.ColorMatrix;
-  e.adjustColor(0, 0, 0, a.hue);
-  e = new createjs.ColorMatrixFilter(e);
-  c.push(e);
-  var e = [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1], f = 10.8 * a.hsv * Math.PI / 180, g = Math.cos(f), f = Math.sin(f), h = Math.abs(a.hsv / 100);
-  1 < h && (h -= Math.floor(h));
-  0 < h && .33 >= h ? e = [1, 0, 0, 0, 0, 0, g, f, 0, 0, 0, -1 * f, g, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1] : .66 >= h ? e = [g, 0, f, 0, 0, 0, 1, 0, 0, 0, f, 0, g, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1] : .99 >= h && (e = [g, f, 0, 0, 0, -1 * f, g, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1]);
-  e = (new createjs.ColorMatrix).concat(e);
-  e = new createjs.ColorMatrixFilter(e);
-  c.push(e);
-  b.alpha = a.alpha = d(a.alpha, 0, 1);
-  b.filters = c;
-  b.cache(0, 0, this.getWidth(), this.getHeight());
+  var b = this.effect, a = this.object;
+  if (!_.isEqual(b, this.getInitialEffectValue())) {
+    var c = [], d = Entry.adjustValueWithMaxMin;
+    b.brightness = b.brightness;
+    var e = new createjs.ColorMatrix;
+    e.adjustColor(d(b.brightness, -100, 100), 0, 0, 0);
+    e = new createjs.ColorMatrixFilter(e);
+    c.push(e);
+    b.hue = b.hue.mod(360);
+    e = new createjs.ColorMatrix;
+    e.adjustColor(0, 0, 0, b.hue);
+    e = new createjs.ColorMatrixFilter(e);
+    c.push(e);
+    var e = [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1], f = 10.8 * b.hsv * Math.PI / 180, g = Math.cos(f), f = Math.sin(f), h = Math.abs(b.hsv / 100);
+    1 < h && (h -= Math.floor(h));
+    0 < h && .33 >= h ? e = [1, 0, 0, 0, 0, 0, g, f, 0, 0, 0, -1 * f, g, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1] : .66 >= h ? e = [g, 0, f, 0, 0, 0, 1, 0, 0, 0, f, 0, g, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1] : .99 >= h && (e = [g, f, 0, 0, 0, -1 * f, g, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1]);
+    e = (new createjs.ColorMatrix).concat(e);
+    e = new createjs.ColorMatrixFilter(e);
+    c.push(e);
+    a.alpha = b.alpha = d(b.alpha, 0, 1);
+    a.filters = c;
+    a.cache(0, 0, this.getWidth(), this.getHeight());
+  }
 };
 Entry.EntityObject.prototype.resetFilter = function() {
   "sprite" == this.parent.objectType && (this.object.filters = [], this.setInitialEffectValue(), this.object.alpha = this.effect.alpha, this.object.cache(0, 0, this.getWidth(), this.getHeight()));
@@ -7801,7 +7804,10 @@ Entry.EntityObject.prototype.toJSON = function() {
   return b;
 };
 Entry.EntityObject.prototype.setInitialEffectValue = function() {
-  this.effect = {blur:0, hue:0, hsv:0, brightness:0, contrast:0, saturation:0, alpha:1};
+  this.effect = this.getInitialEffectValue();
+};
+Entry.EntityObject.prototype.getInitialEffectValue = function() {
+  return {blur:0, hue:0, hsv:0, brightness:0, contrast:0, saturation:0, alpha:1};
 };
 Entry.EntityObject.prototype.removeBrush = function() {
   Entry.stage.selectedObjectContainer.removeChild(this.shape);
@@ -11536,6 +11542,7 @@ Entry.StampEntity.prototype.applyFilter = EntityPrototype.applyFilter;
 Entry.StampEntity.prototype.removeClone = EntityPrototype.removeClone;
 Entry.StampEntity.prototype.getWidth = EntityPrototype.getWidth;
 Entry.StampEntity.prototype.getHeight = EntityPrototype.getHeight;
+Entry.StampEntity.prototype.getInitialEffectValue = EntityPrototype.getInitialEffectValue;
 Entry.Toast = function() {
   this.toasts_ = [];
   var b = document.getElementById("entryToastContainer");

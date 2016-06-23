@@ -45,3 +45,5 @@ Entry.StampEntity.prototype.removeClone = EntityPrototype.removeClone;
 Entry.StampEntity.prototype.getWidth = EntityPrototype.getWidth;
 
 Entry.StampEntity.prototype.getHeight = EntityPrototype.getHeight;
+
+Entry.StampEntity.prototype.getInitialEffectValue = EntityPrototype.getInitialEffectValue;
