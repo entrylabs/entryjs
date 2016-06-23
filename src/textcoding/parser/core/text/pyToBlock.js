@@ -137,14 +137,21 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 type = this.getBlockType(syntax);
 
                 argumentData = {raw:"PLUS", type:"Literal", value:"PLUS"};
-                arguments.splice(1, 0, argumentData);
+                console.log("arguments geniuse", arguments);
+                if(arguments.length == 2)
+                    arguments.splice(1, 0, argumentData);
+
+                result.operator = "PLUS";
             }
             else if(calleeName == "__pythonRuntime.ops.multiply") {
                 var syntax = String("(%1 %2calc_basic# %3)");
                 type = this.getBlockType(syntax);
         
                 argumentData = {raw:"MULTI", type:"Literal", value:"MULTI"};
-                arguments.splice(1, 0, argumentData);  
+                if(arguments.length == 2)
+                    arguments.splice(1, 0, argumentData); 
+
+                result.operator = "MULTI";
             } 
             else if(calleeName == "__pythonRuntime.ops.in") {
                 var syntax = String("%4 in %2");
@@ -203,10 +210,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             for(var i in arguments) { 
                 var argument = arguments[i];
-                console.log("CallExpression argument", argument, "typeof", typeof argument);
                 
-                var param = this[argument.type](argument, paramsMeta[i], paramsDefMeta[i], true);
-                console.log("CallExpression param", param);
+                if(argument) {
+                    console.log("CallExpression argument", argument, "typeof", typeof argument);
+                    var param = this[argument.type](argument, paramsMeta[i], paramsDefMeta[i], true);
+                    console.log("CallExpression param", param);
+                } else {
+                    continue;
+                }
 
                 if(calleeName == "__pythonRuntime.functions.range" && param.type) {
                     type = param.type;
@@ -257,12 +268,20 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         return result;
                 }
 
+                console.log("CallExpression insert params", params);
+
                 params.pop();
                 console.log("CallExpression append calleeData", calleeData);
                 var listName = this.ParamDropdownDynamic(name, paramsMeta[1], paramsDefMeta[1]);
                 console.log("CallExpression listName", listName);
                 params.splice(0, 0, listName);
+                console.log("CallExpression check arguments", arguments);
+
+                console.log("CallExpression arguments[1] 2", arguments[1]);
                 var param = this[arguments[1].type](arguments[1], paramsMeta[2], paramsDefMeta[2], true);
+                console.log("CallExpression check param", param);
+
+
                 params.splice(0, 0, param);
                 console.log("CallExpression insert params", params);
                 if(params[2].type == "number")
@@ -436,6 +455,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if(id.name.includes('__filbert'))
             return undefined;
 
+
         var calleeName;
 
         if(init.callee) {
@@ -473,11 +493,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var name = id.name;
             if(init.type == "Literal") {
                 var value = init.value;
-            } else if(init.type == "Identifier") {
+            } 
+            else if(init.type == "Identifier") {
                 var value = init.name;
-            } else if(init.arguments && id.name != init.arguments[0].name) {
+            }
+            else {
+                var value = NaN;
+            } 
+            /*else if(init.arguments && id.name != init.arguments[0].name) {
                 var value = NaN;  
-            } /*else {
+            }*/ /*else {
                 variableFlag = false;
             }*/
 
@@ -490,15 +515,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 Entry.TextCodingUtil.prototype.createGlobalVariable(name, value);
             }
 
-            var idData = this[id.type](id);
+            var idData = this[id.type](id); 
             console.log("VariableDeclarator idData", idData);
             result.id = idData;
 
             var initData = this[init.type](init);
             console.log("VariableDeclarator initData", initData);
             result.init = initData;
-
-            console.log("VariableDeclarator idData.name", idData.name, "initData.params[0].name", initData.params[0].name);
             
             var params = [];
             if(init.type == "Literal") {
@@ -506,15 +529,20 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     params.push(idData.params[0]); 
                 else
                     params.push(idData.name); 
-
                 params.push(initData);
             }
             else {
                 if(initData.params && initData.params[0] && idData.name == initData.params[0].name) {
-                    params.push(idData.params[0]);
+                    if(idData.params && idData.params[0])
+                        params.push(idData.params[0]); 
+                    else
+                        params.push(idData.name); 
                     params.push(initData.params[2]);
                 } else {
-                    params.push(idData.params[0]);
+                    if(idData.params && idData.params[0])
+                        params.push(idData.params[0]); 
+                    else
+                        params.push(idData.name); 
                     params.push(initData);
                 }
             } 
@@ -533,6 +561,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     var type = this.getBlockType(syntax);
                     structure.type = type; 
                     structure.params = params;
+
+                    if(initData.operator != "PLUS")
+                        return result;
                     
                 } else {
                     var syntax = String("%1 = %2");
@@ -1470,7 +1501,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.BinaryExpression = function(component) {
         console.log("BinaryExpression component", component);
         
-        var result;
+        var result = {};
         var structure = {}; 
 
         var operator = String(component.operator);  
@@ -1595,6 +1626,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 param = operator;
                 if(param)
                     params.push(param);
+
+                structure.operator = operator;
             }
 
             var right = component.right;

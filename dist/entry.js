@@ -12129,10 +12129,10 @@ Entry.PyToBlockParser = function(b) {
         var m = "%1number#", h = this.getBlockType(m)
       } else {
         if ("__pythonRuntime.ops.add" == k) {
-          m = "(%1 %2calc_basic# %3)", h = this.getBlockType(m), e = {raw:"PLUS", type:"Literal", value:"PLUS"}, arguments.splice(1, 0, e);
+          m = "(%1 %2calc_basic# %3)", h = this.getBlockType(m), e = {raw:"PLUS", type:"Literal", value:"PLUS"}, console.log("arguments geniuse", arguments), 2 == arguments.length && arguments.splice(1, 0, e), b.operator = "PLUS";
         } else {
           if ("__pythonRuntime.ops.multiply" == k) {
-            m = "(%1 %2calc_basic# %3)", h = this.getBlockType(m), e = {raw:"MULTI", type:"Literal", value:"MULTI"}, arguments.splice(1, 0, e);
+            m = "(%1 %2calc_basic# %3)", h = this.getBlockType(m), e = {raw:"MULTI", type:"Literal", value:"MULTI"}, 2 == arguments.length && arguments.splice(1, 0, e), b.operator = "MULTI";
           } else {
             if ("__pythonRuntime.ops.in" == k) {
               m = "%4 in %2", h = this.getBlockType(m);
@@ -12169,7 +12169,9 @@ Entry.PyToBlockParser = function(b) {
       }
       console.log("CallExpression arguments", arguments);
       for (var r in arguments) {
-        q = arguments[r], console.log("CallExpression argument", q, "typeof", typeof q), q = this[q.type](q, e[r], n[r], !0), console.log("CallExpression param", q), "__pythonRuntime.functions.range" == k && q.type ? (h = q.type, c = q.params) : c.push(q);
+        if (q = arguments[r]) {
+          console.log("CallExpression argument", q, "typeof", typeof q), q = this[q.type](q, e[r], n[r], !0), console.log("CallExpression param", q), "__pythonRuntime.functions.range" == k && q.type ? (h = q.type, c = q.params) : c.push(q);
+        }
       }
       console.log("CallExpression syntax", m);
       console.log("CallExpression argument params", c);
@@ -12200,12 +12202,16 @@ Entry.PyToBlockParser = function(b) {
               return b;
             }
           }
+          console.log("CallExpression insert params", c);
           c.pop();
           console.log("CallExpression append calleeData", f);
           f = this.ParamDropdownDynamic(r, e[1], n[1]);
           console.log("CallExpression listName", f);
           c.splice(0, 0, f);
+          console.log("CallExpression check arguments", arguments);
+          console.log("CallExpression arguments[1] 2", arguments[1]);
           q = this[arguments[1].type](arguments[1], e[2], n[2], !0);
+          console.log("CallExpression check param", q);
           c.splice(0, 0, q);
           console.log("CallExpression insert params", c);
           "number" == c[2].type ? c[2].params[0] += 1 : "text" == c[2].type && (c[2].params[0] = String(Number(c[2].params[0]) + 1));
@@ -12271,31 +12277,56 @@ Entry.PyToBlockParser = function(b) {
   };
   b.VariableDeclarator = function(a) {
     console.log("VariableDeclarator component", a);
-    var b = {}, c = [], c = a.id, e = a.init;
-    if ("__params0" != c.name && "__formalsIndex0" != c.name && "__args0" != c.name) {
+    var b = {}, c, e, f = [], f = a.id;
+    e = a.init;
+    if ("__params0" != f.name && "__formalsIndex0" != f.name && "__args0" != f.name) {
       if (e.callee && "__getParam0" == e.callee.name) {
-        return b.name = c.name, b;
+        return b.name = f.name, b;
       }
-      if (!c.name.includes("__filbert")) {
-        var f;
-        e.callee && (f = e.callee.object.object.name.concat(".").concat(e.callee.object.property.name).concat(".").concat(e.callee.property.name));
-        if ("__pythonRuntime.objects.list" == f) {
-          f = this[c.type](c);
-          console.log("VariableDeclarator idData", f);
-          b.id = f;
-          var g = this[e.type](e);
+      if (!f.name.includes("__filbert")) {
+        var g;
+        e.callee && (g = e.callee.object.object.name.concat(".").concat(e.callee.object.property.name).concat(".").concat(e.callee.property.name));
+        if ("__pythonRuntime.objects.list" == g) {
+          var h = this[f.type](f);
+          console.log("VariableDeclarator idData", h);
+          b.id = h;
+          g = this[e.type](e);
           console.log("VariableDeclarator initData", g);
           b.init = g;
-          f = c.name;
-          var c = [], arguments = g.arguments, h;
-          for (h in arguments) {
-            e = {}, e.data = String(arguments[h].params[0]), c.push(e);
+          h = f.name;
+          e = [];
+          arguments = g.arguments;
+          for (c in arguments) {
+            g = {}, g.data = String(arguments[c].params[0]), e.push(g);
           }
-          Entry.TextCodingUtil.prototype.isGlobalListExisted(f) ? Entry.TextCodingUtil.prototype.updateGlobalList(f, c) : Entry.TextCodingUtil.prototype.createGlobalList(f, c);
+          Entry.TextCodingUtil.prototype.isGlobalListExisted(h) ? Entry.TextCodingUtil.prototype.updateGlobalList(h, e) : Entry.TextCodingUtil.prototype.createGlobalList(h, e);
         } else {
-          f = c.name, "Literal" == e.type ? g = e.value : "Identifier" == e.type ? g = e.name : e.arguments && c.name != e.arguments[0].name && (g = NaN), console.log("variable name", f, "value", g), Entry.TextCodingUtil.prototype.isGlobalVariableExisted(f) ? Entry.TextCodingUtil.prototype.updateGlobalVariable(f, g) : Entry.TextCodingUtil.prototype.createGlobalVariable(f, g), f = this[c.type](c), console.log("VariableDeclarator idData", f), b.id = f, g = this[e.type](e), console.log("VariableDeclarator initData", 
-          g), b.init = g, console.log("VariableDeclarator idData.name", f.name, "initData.params[0].name", g.params[0].name), c = [], "Literal" == e.type ? (f.params && f.params[0] ? c.push(f.params[0]) : c.push(f.name), c.push(g)) : g.params && g.params[0] && f.name == g.params[0].name ? (c.push(f.params[0]), c.push(g.params[2])) : (c.push(f.params[0]), c.push(g)), console.log("VariableDeclarator init.type", e.type), "Literal" == e.type ? h = this.getBlockType("%1 = %2") : (console.log("VariableDeclarator idData.name", 
-          f.name, "initData.params[0].name", g.params[0].name), h = g.params && g.params[0] && f.name == g.params[0].name ? "%1 = %1 + %2" : "%1 = %2", h = this.getBlockType(h)), b.type = h, b.params = c;
+          h = f.name;
+          g = "Literal" == e.type ? e.value : "Identifier" == e.type ? e.name : NaN;
+          console.log("variable name", h, "value", g);
+          Entry.TextCodingUtil.prototype.isGlobalVariableExisted(h) ? Entry.TextCodingUtil.prototype.updateGlobalVariable(h, g) : Entry.TextCodingUtil.prototype.createGlobalVariable(h, g);
+          h = this[f.type](f);
+          console.log("VariableDeclarator idData", h);
+          b.id = h;
+          g = this[e.type](e);
+          console.log("VariableDeclarator initData", g);
+          b.init = g;
+          f = [];
+          "Literal" == e.type ? (h.params && h.params[0] ? f.push(h.params[0]) : f.push(h.name), f.push(g)) : g.params && g.params[0] && h.name == g.params[0].name ? (h.params && h.params[0] ? f.push(h.params[0]) : f.push(h.name), f.push(g.params[2])) : (h.params && h.params[0] ? f.push(h.params[0]) : f.push(h.name), f.push(g));
+          console.log("VariableDeclarator init.type", e.type);
+          if ("Literal" == e.type) {
+            c = this.getBlockType("%1 = %2"), e = f;
+          } else {
+            if (console.log("VariableDeclarator idData.name", h.name, "initData.params[0].name", g.params[0].name), g.params && g.params[0] && h.name == g.params[0].name) {
+              if (c = this.getBlockType("%1 = %1 + %2"), e = f, "PLUS" != g.operator) {
+                return b;
+              }
+            } else {
+              c = this.getBlockType("%1 = %2"), e = f;
+            }
+          }
+          b.type = c;
+          b.params = e;
         }
         console.log("VariableDeclarator result", b);
         return b;
@@ -12733,7 +12764,7 @@ Entry.PyToBlockParser = function(b) {
   };
   b.BinaryExpression = function(a) {
     console.log("BinaryExpression component", a);
-    var b, c = {}, e = String(a.operator);
+    var b = {}, c = {}, e = String(a.operator);
     switch(e) {
       case "==":
         var f = "(%1 %2boolean_compare# %3)";
@@ -12797,7 +12828,7 @@ Entry.PyToBlockParser = function(b) {
         return b.splice(0, 0, ""), b.splice(2, 0, ""), console.log("BinaryExpression boolean_not params", b), c.type = f, c.params = b, c;
       }
       if (e = String(a.operator)) {
-        console.log("BinaryExpression operator", e), (m = e = Entry.TextCodingUtil.prototype.binaryOperatorConvert(e)) && b.push(m);
+        console.log("BinaryExpression operator", e), (m = e = Entry.TextCodingUtil.prototype.binaryOperatorConvert(e)) && b.push(m), c.operator = e;
       }
       e = a.right;
       if ("Literal" == e.type || "Identifier" == e.type) {
@@ -21981,7 +22012,7 @@ Entry.Vim = function(b, a) {
     return this._parser.parse(a);
   };
   b.codeToText = function(a) {
-    var b = Entry.stage.selectedObject ? "# " + Entry.stage.selectedObject.name + " \uc624\ube0c\uc81d\ud2b8\uc758 \ud30c\uc774\uc36c \ucf54\ub4dc" : "# \ud30c\uc774\uc36c \ucf54\ub4dc", c = this.workspace.textType;
+    var b = Entry.playground.object, b = Entry.stage.selectedObject ? "# " + b.name + " \uc624\ube0c\uc81d\ud2b8\uc758 \ud30c\uc774\uc36c \ucf54\ub4dc" : "# \ud30c\uc774\uc36c \ucf54\ub4dc", c = this.workspace.textType;
     c === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : c === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
     a = this._parser.parse(a, Entry.Parser.PARSE_SYNTAX);
     a = b.concat("\n\n").concat(Entry.Vim.PYTHON_IMPORT_ENTRY).concat("\n").concat(Entry.Vim.PYTHON_IMPORT_HW).concat("\n\n").concat(a);
