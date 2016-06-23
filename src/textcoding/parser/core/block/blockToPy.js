@@ -65,7 +65,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
             var block = blocks[i];
             console.log("blockToPy block", block);
             if(this._parseMode == Entry.Parser.PARSE_GENERAL) {
-                if(Entry.TextCodingUtil.prototype.isNoPrintBlock(block))
+                /*if(Entry.TextCodingUtil.prototype.isNoPrintBlock(block))
                     continue;
                 if(i == 0) {
                     isEventBlock = Entry.TextCodingUtil.prototype.isEventBlock(block);
@@ -78,7 +78,8 @@ Entry.BlockToPyParser = function(blockSyntax) {
                 }
                 else if(i != 0) {
                     contentResult += this.Block(block) + '\n';
-                }
+                }*/
+                result += this.Block(block) + '\n';
             } else if(this._parseMode == Entry.Parser.PARSE_SYNTAX) {
                 result += this.Block(block) + '\n';
             }
