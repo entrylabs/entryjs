@@ -76,7 +76,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                     else
                         contentResult += this.Block(block) + '\n';
                 }
-                else if(i != 0) {
+                else if(i != 0) { 
                     contentResult += this.Block(block) + '\n';
                 }
             } else if(this._parseMode == Entry.Parser.PARSE_SYNTAX) {
@@ -87,15 +87,15 @@ Entry.BlockToPyParser = function(blockSyntax) {
             console.log("blockToPy contentResult", contentResult);
 
             this._queue.clear();
-            this._variableMap.clear();
+            this._variableMap.clear(); 
         }
 
         if(this._parseMode == Entry.Parser.PARSE_GENERAL) {
             if(isEventBlock) {
                 result = definition + Entry.TextCodingUtil.prototype.indent(contentResult) + '\n';
-                var declaration = rootResult.split('def')[1].trim();
+                var declaration = rootResult.split('def')[1];
                 declaration = declaration.substring(0, declaration.length-1);
-                result = result + '\n' + declaration + '\n';
+                result = result.trim() + '\n\n' + declaration.trim() + '\n';
 
             }
             else {

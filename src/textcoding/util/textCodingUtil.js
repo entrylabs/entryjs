@@ -587,7 +587,8 @@ Entry.TextCodingUtil = function() {
 
     p.isEventBlock = function(block) {
         var blockType = block.data.type;
-        if( blockType == "when_some_key_pressed" || 
+        if( blockType == "when_run_button_click" || 
+            blockType == "when_some_key_pressed" || 
             blockType == "mouse_clicked" || 
             blockType == "mouse_click_cancled" || 
             blockType == "when_object_click" || 
@@ -637,8 +638,6 @@ Entry.TextCodingUtil = function() {
 
     p.isNoPrintBlock = function(block) {
         var blockType = block.data.type;
-        if(blockType == "when_run_button_click")
-            return true;
 
         return false;
     }
