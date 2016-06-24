@@ -14,8 +14,9 @@ goog.require("Entry.JsToBlockParser");
 goog.require("Entry.PyToBlockParser");
 
 goog.require("Entry.PyHint");
+goog.require("Entry.Console")
 
-Entry.Parser = function(mode, type, cm) {
+Entry.Parser = function(mode, type, cm, syntax) {
     this._mode = mode; // maze ai workspace
     this.syntax = {}; //for maze
     this.codeMirror = cm;
@@ -43,6 +44,9 @@ Entry.Parser = function(mode, type, cm) {
     this.syntax.py = this.mappingSyntaxPy(mode);
 
     console.log("py syntax", this.syntax.py);
+    console.log(this._lang)
+
+    this._console = new Entry.Console();
 
     switch (this._lang) {
         case "js":
@@ -58,12 +62,6 @@ Entry.Parser = function(mode, type, cm) {
 
             if('BasicIf' in syntax) {
                 assistScope['front'] = 'BasicIf';
-            }
-
-            this._hinter = new Entry.PyHint();
-
-            CodeMirror.commands.javascriptComplete = function (cm) {
-                CodeMirror.showHint(cm, null, {globalScope:assistScope});
             }
 
             cm.on("keyup", function (cm, event) {
@@ -176,7 +174,7 @@ Entry.Parser = function(mode, type, cm) {
                     var jsAstGenerator = new Entry.JsAstGenerator();
                     var astTree = jsAstGenerator.generate(code);
                     result = this._parser.Program(astTree);
-                } catch(error) {
+                } catch (error) {
                     if (this.codeMirror) {
                         var annotation;
                         if (error instanceof SyntaxError) {
@@ -292,33 +290,11 @@ Entry.Parser = function(mode, type, cm) {
 
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
                 var textCode = this._parser.Code(code, parseMode);
-            console.log('sf')
-                //var textArr = textCode.match(/(.*{.*[\S|\s]+?}|.+)/g);
-               /* var textArr = textCode.split("\n\n");
 
-                console.log("textArr", textArr);*/
+                if (!this._pyHinter)
+                    this._pyHinter = new Entry.PyHint();
 
                 result = textCode;
-
-                /*if(Array.isArray(textArr)) {
-                    result = textArr.reduce(function (prev, current, index) {
-                        var temp = '';
-
-                        if(index === 1) {
-                            prev = prev + '\n';
-                        }
-                        if(current.indexOf('function') > -1) {
-                            temp = current + prev;
-                        } else {
-                            temp = prev + current;
-                        }
-
-                        return temp + '\n';
-                    });
-                } else {
-                    result = '';
-                }*/
-
                 break;
         }
 

@@ -1489,6 +1489,7 @@ svg .svgBlockGroup text {
   top: 20px;
   cursor: col-resize;
   background-image: url("../images/entry_scroll.png");
+  z-index: 1000;
 }
 .selectedObject .entryObjectSelectedImgWorkspace {
   float: left;
@@ -5917,6 +5918,25 @@ svg .svgBlockGroup text {
 #entryPdfWorkspace iframe {
   width: 100%;
   height: 100%;
+}
+#entryConsole {
+  height: 100%;
+}
+#entryConsole > .CodeMirror {
+  height: 100%;
+  background: black;
+}
+#entryConsole .CodeMirror-cursor {
+  border-left: 1px solid white;
+}
+#entryConsole span {
+  color: white;
+}
+#entryConsole .speak span {
+  color: #fff2a4;
+}
+#entryConsole .ask span {
+  color: #bdd1ff;
 }
 
 

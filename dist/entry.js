@@ -7414,7 +7414,7 @@ Entry.Container.prototype.getInputValue = function() {
   return this.inputValue.getValue();
 };
 Entry.Container.prototype.setInputValue = function(a) {
-  a ? this.inputValue.setValue(a) : this.inputValue.setValue(0);
+  this.inputValue.complete || (a ? this.inputValue.setValue(a) : this.inputValue.setValue(0), Entry.stage.hideInputField(), Entry.console && Entry.console.stopInput(a), this.inputValue.complete = !0);
 };
 Entry.Container.prototype.resetSceneDuringRun = function() {
   this.mapEntityOnScene(function(a) {
@@ -7724,7 +7724,8 @@ Entry.Dialog = function(a, b, d, c) {
   "number" == typeof b && (b = String(b));
   this.message_ = b = b.match(/.{1,15}/g).join("\n");
   this.mode_ = d;
-  "speak" == d && this.generateSpeak();
+  Entry.console && Entry.console.print(b, d);
+  "speak" !== d && "ask" !== d || this.generateSpeak();
   c || Entry.stage.loadDialog(this);
 };
 Entry.Dialog.prototype.generateSpeak = function() {
@@ -13327,15 +13328,12 @@ Entry.Stage.prototype.initStage = function(a) {
     Entry.engine.isState("stop") && Entry.stage.updateObject();
   });
   Entry.addEventListener("canvasInputComplete", function(b) {
-    try {
-      var a = Entry.stage.inputField.value();
-      Entry.stage.hideInputField();
-      if (a) {
-        var e = Entry.container;
-        e.setInputValue(a);
-        e.inputValue.complete = !0;
+    if (!Entry.stage.inputField._isHidden && !Entry.container.inputValue.complete) {
+      try {
+        var a = Entry.stage.inputField.value();
+        a && Entry.container.setInputValue(a);
+      } catch (e) {
       }
-    } catch (f) {
     }
   });
   this.initWall();
@@ -13554,7 +13552,7 @@ Entry.Stage.prototype.showInputField = function(a) {
 Entry.Stage.prototype.hideInputField = function() {
   this.inputField && this.inputField.value() && this.inputField.value("");
   this.inputSubmitButton && (this.canvas.removeChild(this.inputSubmitButton), this.inputSubmitButton = null);
-  this.inputField && this.inputField.hide();
+  this.inputField && (this.inputField.blur(), this.inputField.hide());
 };
 Entry.Stage.prototype.initObjectContainers = function() {
   var a = Entry.scene.scenes_;
@@ -15812,7 +15810,55 @@ Entry.PyToBlockParser = function(a) {
     return b;
   };
 })(Entry.PyToBlockParser.prototype);
-Entry.Parser = function(a, b, d) {
+Entry.Console = function() {
+  Entry.propertyPanel && (this.createView(), Entry.propertyPanel.addMode("console", this), Entry.console = this, this._isEditing = !1, this._inputData = null);
+};
+(function(a) {
+  a.createView = function() {
+    this.view = new Entry.Dom("div", {id:"entryConsole"});
+    this.codeMirror = CodeMirror(this.view[0], {lineNumbers:!1, lineWrapping:!0, value:"", mode:{}, theme:"default", styleActiveLine:!1, lint:!1, viewportMargin:10});
+    this._doc = this.codeMirror.getDoc();
+    this.codeMirror.on("beforeChange", function(b, a) {
+      this._isEditing || a.cancel();
+    }.bind(this));
+    this.codeMirror.on("keyup", function(b, a) {
+      this._isEditing && 13 == a.keyCode && this.endInput();
+    }.bind(this));
+    Entry.addEventListener("stop", this.clear.bind(this));
+    this.clear();
+  };
+  a.getView = function() {
+    return this.view;
+  };
+  a.clear = function() {
+    this.setEditing(!0);
+    this.codeMirror.setValue("Entry Console\n");
+    this.setEditing(!1);
+  };
+  a.print = function(b, a) {
+    this.setEditing(!0);
+    var c = this._doc.getCursor(), e = this._doc.getLine(c.line);
+    this._doc.replaceRange(b + "\n", {line:c.line, ch:e.length - 1});
+    this._doc.addLineClass(c.line, "text", a);
+    "speak" === a && this.setEditing(!1);
+    this.codeMirror.execCommand("goLineEnd");
+    "ask" === a && this.codeMirror.focus();
+  };
+  a.endInput = function() {
+    this._inputData = this._doc.getLine(this._doc.getCursor().line);
+    Entry.container.setInputValue(this._inputData);
+    this.codeMirror.execCommand("newlineAndIndent");
+    this.setEditing(!1);
+  };
+  a.stopInput = function(b) {
+    this.codeMirror.execCommand("newlineAndIndent");
+    this.setEditing(!1);
+  };
+  a.setEditing = function(b) {
+    this._isEditing !== b && (this._isEditing = b);
+  };
+})(Entry.Console.prototype);
+Entry.Parser = function(a, b, d, c) {
   this._mode = a;
   this.syntax = {};
   this.codeMirror = d;
@@ -15828,18 +15874,17 @@ Entry.Parser = function(a, b, d) {
   this.syntax.js = this.mappingSyntaxJs(a);
   this.syntax.py = this.mappingSyntaxPy(a);
   console.log("py syntax", this.syntax.py);
+  console.log(this._lang);
+  this._console = new Entry.Console;
   switch(this._lang) {
     case "js":
       this._parser = new Entry.JsToBlockParser(this.syntax);
-      var c = this.syntax, e = {}, f;
+      c = this.syntax;
+      var e = {}, f;
       for (f in c.Scope) {
         e[f + "();\n"] = c.Scope[f];
       }
       "BasicIf" in c && (e.front = "BasicIf");
-      this._hinter = new Entry.PyHint;
-      CodeMirror.commands.javascriptComplete = function(b) {
-        CodeMirror.showHint(b, null, {globalScope:e});
-      };
       d.on("keyup", function(b, a) {
         (65 <= a.keyCode && 95 >= a.keyCode || 167 == a.keyCode || 190 == a.keyCode) && CodeMirror.showHint(b, null, {completeSingle:!1, globalScope:e});
       });
@@ -15936,7 +15981,7 @@ Entry.Parser = function(a, b, d) {
         }) : "";
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
-        c = this._parser.Code(b, a), console.log("sf");
+        c = this._parser.Code(b, a), this._pyHinter || (this._pyHinter = new Entry.PyHint);
     }
     return c;
   };
@@ -21703,21 +21748,21 @@ Entry.PARAM = -1;
     return this;
   };
   a.clear = function() {
-    for (var b = this._data.length - 1;0 <= b;b--) {
-      this._data[b].destroy(!1);
+    for (var a = this._data.length - 1;0 <= a;a--) {
+      this._data[a].destroy(!1);
     }
     this.clearExecutors();
     this._eventMap = {};
   };
-  a.createView = function(b) {
-    null === this.view ? this.set({view:new Entry.CodeView(this, b), board:b}) : (this.set({board:b}), b.bindCodeView(this.view));
+  a.createView = function(a) {
+    null === this.view ? this.set({view:new Entry.CodeView(this, a), board:a}) : (this.set({board:a}), a.bindCodeView(this.view));
   };
-  a.registerEvent = function(b, a) {
-    this._eventMap[a] || (this._eventMap[a] = []);
-    this._eventMap[a].push(b);
+  a.registerEvent = function(a, d) {
+    this._eventMap[d] || (this._eventMap[d] = []);
+    this._eventMap[d].push(a);
   };
-  a.unregisterEvent = function(b, a) {
-    (a = this._eventMap[a]) && 0 !== a.length && (b = a.indexOf(b), 0 > b || a.splice(b, 1));
+  a.unregisterEvent = function(a, d) {
+    (d = this._eventMap[d]) && 0 !== d.length && (a = d.indexOf(a), 0 > a || d.splice(a, 1));
   };
   a.raiseEvent = function(a, d, c) {
     a = this._eventMap[a];

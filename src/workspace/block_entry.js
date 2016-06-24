@@ -15086,38 +15086,39 @@ Entry.block = {
         "func": function (sprite, script) {
             var inputModel = Entry.container.inputValue,
                 inputView = Entry.stage.inputField,
-                    message = script.getValue("VALUE", script);
+                message = script.getValue("VALUE", script);
 
-                    if (!message)
-                        throw new Error('message can not be empty');
+            if (!message)
+                throw new Error('message can not be empty');
 
-                    if (inputModel.sprite == sprite &&
-                        inputView && !inputView._isHidden) {
-                            return script;
-                        } else if (inputModel.sprite != sprite && script.isInit) {
-                            if(sprite.dialog)
-                                sprite.dialog.remove();
-                            delete script.isInit;
-                            return script.callReturn();
-                        } else if (inputModel.complete &&
-                                   inputModel.sprite == sprite &&
-                                   inputView._isHidden && script.isInit) {
-                                       if(sprite.dialog)
-                                           sprite.dialog.remove();
-                                       delete inputModel.complete;
-                                       delete script.isInit;
-                                       return script.callReturn();
-                                   } else {
-                                       message = Entry.convertToRoundedDecimals(message, 3);
-                                       new Entry.Dialog(sprite, message, 'speak');
-                                       Entry.stage.showInputField();
-                                       inputModel.script = script;
-                                       inputModel.sprite = sprite;
-                                       script.isInit = true;
-                                       return script;
-                                   }
+            if (inputModel.sprite == sprite &&
+                inputView && !inputView._isHidden) {
+                    return script;
+            } else if (inputModel.sprite != sprite && script.isInit) {
+                if(sprite.dialog)
+                    sprite.dialog.remove();
+                delete script.isInit;
+                return script.callReturn();
+            } else if (inputModel.complete &&
+                inputModel.sprite == sprite &&
+                inputView._isHidden && script.isInit) {
+                if(sprite.dialog)
+                    sprite.dialog.remove();
+                delete inputModel.complete;
+                delete script.isInit;
+                return script.callReturn();
+            } else {
+                message = Entry.convertToRoundedDecimals(message, 3);
+                Entry.stage.showInputField();
+                new Entry.Dialog(sprite, message, 'ask');
+                inputModel.script = script;
+                inputModel.sprite = sprite;
+                inputModel.complete = false;
+                script.isInit = true;
+                return script;
+            }
         },
-        "syntax": {"js": [], "py": ["Entry.ask_and_wait(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.input(%1)"]}
     },
     "get_canvas_input_value": {
         "color": "#E457DC",
