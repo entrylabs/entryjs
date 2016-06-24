@@ -9857,40 +9857,40 @@ Entry.Painter.prototype.generateView = function(b) {
     this.attrLineArea = Entry.createElement("div", "painterAttrLineStyle");
     this.attrLineArea.addClass("entryPlaygroundPainterAttrLineStyle");
     g.appendChild(this.attrLineArea);
-    var u = Entry.createElement("div");
-    u.addClass("entryPlaygroundPainterAttrLineStyleLine");
-    this.attrLineArea.appendChild(u);
     var t = Entry.createElement("div");
-    t.addClass("entryPlaygroundPaitnerAttrLineArea");
+    t.addClass("entryPlaygroundPainterAttrLineStyleLine");
     this.attrLineArea.appendChild(t);
+    var u = Entry.createElement("div");
+    u.addClass("entryPlaygroundPaitnerAttrLineArea");
+    this.attrLineArea.appendChild(u);
     d = Entry.createElement("div");
     d.addClass("entryPlaygroundPainterAttrLineStyleLine1");
-    t.appendChild(d);
+    u.appendChild(d);
     d.value = "line";
     var v = Entry.createElement("div");
     v.addClass("painterAttrLineStyleBackgroundLine");
-    u.bindOnClick(function(a) {
-      t.removeClass("entryRemove");
+    t.bindOnClick(function(a) {
+      u.removeClass("entryRemove");
     });
-    t.blur = function(a) {
+    u.blur = function(a) {
       this.addClass("entryRemove");
     };
-    t.onmouseleave = function(a) {
+    u.onmouseleave = function(a) {
       this.addClass("entryRemove");
     };
     d.bindOnClick(function(a) {
-      this.attrLineArea.removeClass(u);
+      this.attrLineArea.removeClass(t);
       this.attrLineArea.appendChild(v);
       this.attrLineArea.onchange(a);
-      t.blur();
+      u.blur();
     });
     v.bindOnClick(function(a) {
-      t.removeClass("entryRemove");
+      u.removeClass("entryRemove");
     });
     this.attrLineArea.onchange = function(b) {
       a.stroke.style = b.target.value;
     };
-    t.blur();
+    u.blur();
   }
 };
 Entry.Painter.prototype.restoreHandle = function() {
@@ -11675,8 +11675,8 @@ Entry.BlockDriver = function() {
         return d;
       }
       for (var e = 0;e < a.length;e++) {
-        var f = a[e], g = f.tagName, h = $(f).children()[0], u = f.getAttribute("name");
-        "value" === g ? "block" == h.nodeName && (d.params || (d.params = []), d.params.push(b(h)), d.index[u] = d.params.length - 1) : "field" === g && (d.params || (d.params = []), d.params.push(f.textContent), d.index[u] = d.params.length - 1);
+        var f = a[e], g = f.tagName, h = $(f).children()[0], t = f.getAttribute("name");
+        "value" === g ? "block" == h.nodeName && (d.params || (d.params = []), d.params.push(b(h)), d.index[t] = d.params.length - 1) : "field" === g && (d.params || (d.params = []), d.params.push(f.textContent), d.index[t] = d.params.length - 1);
       }
       return d;
     }
@@ -15735,6 +15735,7 @@ Entry.BlockView = function(b, a, c) {
 };
 Entry.BlockView.PARAM_SPACE = 5;
 Entry.BlockView.DRAG_RADIUS = 5;
+Entry.BlockView.pngMap = {};
 (function(b) {
   b.schema = {id:0, type:Entry.STATIC.BLOCK_RENDER_MODEL, x:0, y:0, offsetX:0, offsetY:0, width:0, height:0, contentWidth:0, contentHeight:0, magneting:!1, visible:!0, animating:!1, shadow:!0, display:!0};
   b._startRender = function(a, b) {
@@ -16207,72 +16208,72 @@ Entry.BlockView.DRAG_RADIUS = 5;
   };
   b.getDataUrl = function(a) {
     function b() {
-      g = g.replace("(svgGroup)", (new XMLSerializer).serializeToString(h)).replace("(defs)", (new XMLSerializer).serializeToString(q[0])).replace(/>\s+/g, ">").replace(/\s+</g, "<");
-      var c = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(g)));
-      a ? f.resolve({src:c, width:n.width, height:n.height}) : d(c, n.width, n.height, 1.5).then(function(a) {
-        f.resolve({src:a, width:n.width, height:n.height});
+      f = f.replace("(svgGroup)", (new XMLSerializer).serializeToString(g)).replace("(defs)", (new XMLSerializer).serializeToString(l[0])).replace(/>\s+/g, ">").replace(/\s+</g, "<");
+      var c = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(f)));
+      a ? e.resolve({src:c, width:q.width, height:q.height}) : d(c, q.width, q.height, 1.5).then(function(a) {
+        e.resolve({src:a, width:q.width, height:q.height});
       }, function(a) {
-        f.reject("error occured");
+        e.reject("error occured");
       });
     }
     function d(a, b, c, d) {
-      var f = $.Deferred();
+      var e = $.Deferred();
       d || (d = 1);
-      void 0 !== e[a] && f.resolve(e[a]);
+      void 0 !== Entry.BlockView.pngMap[a] && e.resolve(Entry.BlockView.pngMap[a]);
       b *= d;
       c *= d;
       b = Math.ceil(b);
       c = Math.ceil(c);
-      var g = document.createElement("img");
-      g.crossOrigin = "Anonymous";
-      var h = document.createElement("canvas");
-      h.width = b;
-      h.height = c;
-      var k = h.getContext("2d");
-      g.onload = function() {
-        k.drawImage(g, 0, 0, b, c);
-        var d = h.toDataURL("image/png");
-        /\.png$/.test(a) && (e[a] = d);
-        f.resolve(d);
+      var f = document.createElement("img");
+      f.crossOrigin = "Anonymous";
+      var g = document.createElement("canvas");
+      g.width = b;
+      g.height = c;
+      var h = g.getContext("2d");
+      f.onload = function() {
+        h.drawImage(f, 0, 0, b, c);
+        var d = g.toDataURL("image/png");
+        /\.png$/.test(a) && (Entry.BlockView.pngMap[a] = d);
+        e.resolve(d);
       };
-      g.onerror = function() {
-        f.reject("error occured");
+      f.onerror = function() {
+        e.reject("error occured");
       };
-      g.src = a;
-      return f.promise();
+      f.src = a;
+      return e.promise();
     }
-    var e = {}, f = $.Deferred(), g = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">(svgGroup)(defs)</svg>', h = this.svgGroup.cloneNode(!0), k = this._skeleton.box(this), l = a ? 1 : 1.5;
-    h.setAttribute("transform", "scale(%SCALE) translate(%X,%Y)".replace("%X", -k.offsetX).replace("%Y", -k.offsetY).replace("%SCALE", l));
-    for (var q = this.getBoard().svgDom.find("defs"), n = this.svgGroup.getBoundingClientRect(), m = h.getElementsByTagName("image"), k = h.getElementsByTagName("text"), r = ["\u2265", "\u2264"], u = "\u2265\u2264-><=+-x/".split(""), l = 0;l < k.length;l++) {
+    var e = $.Deferred(), f = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">(svgGroup)(defs)</svg>', g = this.svgGroup.cloneNode(!0), h = this._skeleton.box(this), k = a ? 1 : 1.5;
+    g.setAttribute("transform", "scale(%SCALE) translate(%X,%Y)".replace("%X", -h.offsetX).replace("%Y", -h.offsetY).replace("%SCALE", k));
+    for (var l = this.getBoard().svgDom.find("defs"), q = this.svgGroup.getBoundingClientRect(), n = g.getElementsByTagName("image"), h = g.getElementsByTagName("text"), m = ["\u2265", "\u2264"], r = "\u2265\u2264-><=+-x/".split(""), k = 0;k < h.length;k++) {
       (function(a) {
         a.setAttribute("font-family", "'nanumBarunRegular', 'NanumGothic', '\ub098\ub214\uace0\ub515','NanumGothicWeb', '\ub9d1\uc740 \uace0\ub515', 'Malgun Gothic', Dotum");
         var b = parseInt(a.getAttribute("font-size")), c = $(a).text();
-        -1 < r.indexOf(c) && a.setAttribute("font-weight", "500");
+        -1 < m.indexOf(c) && a.setAttribute("font-weight", "500");
         if ("q" == c) {
           var d = parseInt(a.getAttribute("y"));
           a.setAttribute("y", d - 1);
         }
-        -1 < u.indexOf(c) ? a.setAttribute("font-size", b + "px") : a.setAttribute("font-size", .95 * b + "px");
+        -1 < r.indexOf(c) ? a.setAttribute("font-size", b + "px") : a.setAttribute("font-size", .95 * b + "px");
         a.setAttribute("alignment-baseline", "baseline");
-      })(k[l]);
+      })(h[k]);
     }
     var t = 0;
-    if (0 === m.length) {
+    if (0 === n.length) {
       b();
     } else {
-      for (l = 0;l < m.length;l++) {
+      for (k = 0;k < n.length;k++) {
         (function(a) {
           var e = a.getAttribute("href");
           d(e, a.getAttribute("width"), a.getAttribute("height")).then(function(d) {
             a.setAttribute("href", d);
-            if (++t == m.length) {
+            if (++t == n.length) {
               return b();
             }
           });
-        })(m[l]);
+        })(n[k]);
       }
     }
-    return f.promise();
+    return e.promise();
   };
 })(Entry.BlockView.prototype);
 Entry.Code = function(b, a) {
@@ -19715,16 +19716,16 @@ Entry.Playground.prototype.generateTextView = function(b) {
   e.addClass("entryPlaygroundFontSizeLabel");
   e.innerHTML = "\uae00\uc790 \ud06c\uae30";
   b.appendChild(e);
-  var u = !1, t = 0;
+  var t = !1, u = 0;
   r.onmousedown = function(a) {
-    u = !0;
-    t = $(n).offset().left;
+    t = !0;
+    u = $(n).offset().left;
   };
   document.addEventListener("mousemove", function(a) {
-    u && (a = a.pageX - t, a = Math.max(a, 5), a = Math.min(a, 88), r.style.left = a + "px", a /= .88, m.style.width = a + "%", Entry.playground.object.entity.setFontSize(a));
+    t && (a = a.pageX - u, a = Math.max(a, 5), a = Math.min(a, 88), r.style.left = a + "px", a /= .88, m.style.width = a + "%", Entry.playground.object.entity.setFontSize(a));
   });
   document.addEventListener("mouseup", function(a) {
-    u = !1;
+    t = !1;
   });
   b = Entry.createElement("div");
   b.addClass("entryPlaygroundLinebreakWrapper");

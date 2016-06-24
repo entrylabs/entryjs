@@ -75,6 +75,7 @@ Entry.BlockView = function(block, board, mode) {
 
 Entry.BlockView.PARAM_SPACE = 5;
 Entry.BlockView.DRAG_RADIUS = 5;
+Entry.BlockView.pngMap = {};
 
 (function(p) {
     p.schema = {
@@ -1015,7 +1016,6 @@ Entry.BlockView.DRAG_RADIUS = 5;
     p.getParam = function(index) { return this._paramMap[index]; };
 
     p.getDataUrl = function(notPng) {
-        var pngMap = {};
         var deferred = $.Deferred();
         var svgData = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">(svgGroup)(defs)</svg>';
         var svgGroup = this.svgGroup.cloneNode(true);
@@ -1108,8 +1108,8 @@ Entry.BlockView.DRAG_RADIUS = 5;
         function loadImage(src, width, height, multiplier) {
             var deferred = $.Deferred();
             if (!multiplier) multiplier = 1;
-            if (pngMap[src] !== undefined)
-                deferred.resolve(pngMap[src]);
+            if (Entry.BlockView.pngMap[src] !== undefined)
+                deferred.resolve(Entry.BlockView.pngMap[src]);
 
             width *= multiplier;
             height *= multiplier;
@@ -1129,7 +1129,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
                 ctx.drawImage(img, 0, 0, width, height);
                 var data = canvas.toDataURL( "image/png" );
                 if (/\.png$/.test(src))
-                    pngMap[src] = data;
+                    Entry.BlockView.pngMap[src] = data;
                 deferred.resolve(data);
             };
 
@@ -1140,6 +1140,5 @@ Entry.BlockView.DRAG_RADIUS = 5;
             return deferred.promise();
         }
     };
-
 
 })(Entry.BlockView.prototype);
