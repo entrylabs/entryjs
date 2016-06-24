@@ -16753,7 +16753,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
   b.renderStart = function() {
     this.svgGroup && $(this.svgGroup).remove();
     this.svgGroup = this._blockView.contentSvgGroup.elem("g", {class:"entry-input-field"});
-    this.textElement = this.svgGroup.elem("text", {x:4, y:4, "font-size":"9pt"});
+    this.textElement = this.svgGroup.elem("text", {x:4, y:4, "font-size":"11px"});
     this.textElement.textContent = this.getText();
     var a = this.getTextWidth(), b = this.position && this.position.y ? this.position.y : 0;
     this._header = this.svgGroup.elem("rect", {x:0, y:b - 8, rx:3, ry:3, width:a, height:16, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
