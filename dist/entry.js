@@ -15935,12 +15935,7 @@ Entry.BlockView.pngMap = {};
           }}, q = {text:Lang.Blocks.Delete_Blocks, enable:k.isDeletable(), callback:function() {
             Entry.do("destroyBlock", h.block);
           }}, n = {text:"\uc774\ubbf8\uc9c0\ub85c \uc800\uc7a5\ud558\uae30", callback:function() {
-            h.getDataUrl().then(function(a) {
-              var b = document.createElement("a");
-              b.href = a.src;
-              b.download = "\uc5d4\ud2b8\ub9ac \ube14\ub85d.png";
-              b.click();
-            });
+            h.downloadAsImage();
           }};
           f.push(g);
           f.push(l);
@@ -16274,6 +16269,14 @@ Entry.BlockView.pngMap = {};
       }
     }
     return e.promise();
+  };
+  b.downloadAsImage = function() {
+    this.getDataUrl().then(function(a) {
+      var b = document.createElement("a");
+      b.href = a.src;
+      b.download = "\uc5d4\ud2b8\ub9ac \ube14\ub85d.png";
+      b.click();
+    });
   };
 })(Entry.BlockView.prototype);
 Entry.Code = function(b, a) {
@@ -17969,6 +17972,7 @@ Entry.Board = function(b) {
 Entry.Board.OPTION_PASTE = 0;
 Entry.Board.OPTION_ALIGN = 1;
 Entry.Board.OPTION_CLEAR = 2;
+Entry.Board.OPTION_DOWNLOAD = 3;
 (function(b) {
   b.schema = {code:null, dragBlock:null, magnetedBlockView:null, selectedBlockView:null};
   b.createView = function(a) {
@@ -18080,6 +18084,7 @@ Entry.Board.OPTION_CLEAR = 2;
           }
           a = [];
           this._contextOptions[Entry.Board.OPTION_PASTE].option.enable = !!Entry.clipboard;
+          this._contextOptions[Entry.Board.OPTION_DOWNLOAD].option.enable = 0 !== this.code.getThreads().length;
           for (e = 0;e < this._contextOptions.length;e++) {
             this._contextOptions[e].activated && a.push(this._contextOptions[e].option);
           }
@@ -18404,6 +18409,10 @@ Entry.Board.OPTION_CLEAR = 2;
       a.alignThreads();
     }}}, {activated:!0, option:{text:Lang.Blocks.Clear_all_blocks, callback:function() {
       a.code.clear();
+    }}}, {activated:"workspace" === Entry.type && Entry.Utils.isChrome(), option:{text:"\ubaa8\ub4e0 \ube14\ub7ed \uc774\ubbf8\uc9c0\ub85c \uc800\uc7a5\ud558\uae30", enable:!0, callback:function() {
+      a.code.getThreads().forEach(function(a) {
+        (a = a.getFirstBlock()) && a.view.downloadAsImage();
+      });
     }}}];
   };
   b.activateContextOption = function(a) {

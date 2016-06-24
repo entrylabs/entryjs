@@ -448,12 +448,7 @@ Entry.BlockView.pngMap = {};
             var download = {
                 text: '이미지로 저장하기',
                 callback: function(){
-                    that.getDataUrl().then(function(data) {
-                        var download = document.createElement('a');
-                        download.href = data.src;
-                        download.download = '엔트리 블록.png';
-                        download.click();
-                    });
+                    that.downloadAsImage();
                 }
             };
 
@@ -1139,6 +1134,15 @@ Entry.BlockView.pngMap = {};
             img.src = src;
             return deferred.promise();
         }
+    };
+
+    p.downloadAsImage = function() {
+        this.getDataUrl().then(function(data) {
+            var download = document.createElement('a');
+            download.href = data.src;
+            download.download = '엔트리 블록.png';
+            download.click();
+        });
     };
 
 })(Entry.BlockView.prototype);
