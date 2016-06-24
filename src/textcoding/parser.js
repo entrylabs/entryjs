@@ -24,8 +24,9 @@ Entry.Parser = function(mode, type, cm, syntax) {
     this._type = type;
     this.availableCode = [];
 
-    Entry.Parser.PARSE_SYNTAX = 0;
-    Entry.Parser.PARSE_VARIABLE = 1;
+    Entry.Parser.PARSE_GENERAL= 0;
+    Entry.Parser.PARSE_SYNTAX = 1;
+    Entry.Parser.PARSE_VARIABLE = 2;
 
     Entry.Parser.BLOCK_SKELETON_BASIC = "basic";
     Entry.Parser.BLOCK_SKELETON_BASIC_LOOP = "basic_loop";

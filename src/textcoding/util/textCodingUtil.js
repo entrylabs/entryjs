@@ -585,4 +585,61 @@ Entry.TextCodingUtil = function() {
         }
     };
 
+    p.isEventBlock = function(block) {
+        var blockType = block.data.type;
+        if( blockType == "when_run_button_click" || 
+            blockType == "when_some_key_pressed" || 
+            blockType == "mouse_clicked" || 
+            blockType == "mouse_click_cancled" || 
+            blockType == "when_object_click" || 
+            blockType == "when_object_click_canceled" || 
+            blockType == "when_message_cast" || 
+            blockType == "when_scene_start") {
+            return true;
+        } 
+
+        return false;
+    };
+
+    p.makeDefinition = function(block) {
+        var blockType = block.data.type;
+        var syntax = Entry.block[blockType].syntax.py[0];
+
+        var paramReg = /(%.)/mi;
+        var tokens = syntax.split(paramReg);
+
+        var result = '';
+        for (var i = 0; i < tokens.length; i++) { 
+            var token = tokens[i];
+            if (paramReg.test(token)) {
+                result += 'event';
+            } else {
+                result += token;
+            }
+        }
+
+        return result;
+
+        /*switch(blockType) {
+            case "when_some_key_pressed":
+                result = Entry.block[blockType]
+            case "mouse_clicked":
+            case "mouse_click_cancled":
+            case "when_object_click":
+            case "when_object_click_canceled":
+            case "when_message_cast":
+            case "message_cast":
+            case "message_cast_wait":
+            case "when_scene_start":
+            case "start_scene":
+            case "start_neighbor_scene":
+        }*/
+    };
+
+    p.isNoPrintBlock = function(block) {
+        var blockType = block.data.type;
+
+        return false;
+    }
+
 })(Entry.TextCodingUtil.prototype);

@@ -13336,7 +13336,7 @@ Entry.block = {
             return script.callReturn();
         },
         "event": "when_scene_start",
-        "syntax": {"js": [], "py": ["Entry.on_scene_start()"]}
+        "syntax": {"js": [], "py": ["def on_scene_start():"]}
     },
     "start_scene": {
         "color": "#3BBD70",
@@ -14165,7 +14165,7 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [ null ],
-            "type": "when_run_button_click"
+            "type": "when_run_button_click" 
         },
         "class": "event",
         "isNotFor": [],
@@ -14173,7 +14173,7 @@ Entry.block = {
             return script.callReturn();
         },
         "event": "start",
-        "syntax": {"js": [], "py": ["Entry.on_start()"]}
+        "syntax": {"js": [], "py": ["def on_start():"]}
     },
     "press_some_key": {
         "color": "#3BBD70",
@@ -14260,7 +14260,7 @@ Entry.block = {
             return script.callReturn();
         },
         "event": "keyPress",
-        "syntax": {"js": [], "py": ["Entry.on_press(%2)"]}
+        "syntax": {"js": [], "py": ["def on_press(%2):"]}
     },
     "mouse_clicked": {
         "color": "#3BBD70",
@@ -14288,7 +14288,7 @@ Entry.block = {
             return script.callReturn();
         },
         "event": "mouse_clicked",
-        "syntax": {"js": [], "py": ["Entry.on_mouse_click_down()"]}
+        "syntax": {"js": [], "py": ["def on_mouse_click_down():"]}
     },
     "mouse_click_cancled": {
         "color": "#3BBD70",
@@ -14316,7 +14316,7 @@ Entry.block = {
             return script.callReturn();
         },
         "event": "mouse_click_cancled",
-        "syntax": {"js": [], "py": ["Entry.on_mouse_click_up()"]}
+        "syntax": {"js": [], "py": ["def on_mouse_click_up():"]}
     },
     "when_object_click": {
         "color": "#3BBD70",
@@ -14344,7 +14344,7 @@ Entry.block = {
             return script.callReturn();
         },
         "event": "when_object_click",
-        "syntax": {"js": [], "py": ["Entry.on_object_click_down()"]}
+        "syntax": {"js": [], "py": ["def on_object_click_down():"]}
     },
     "when_object_click_canceled": {
         "color": "#3BBD70",
@@ -14372,7 +14372,7 @@ Entry.block = {
             return script.callReturn();
         },
         "event": "when_object_click_canceled",
-        "syntax": {"js": [], "py": ["Entry.on_object_click_up()"]}
+        "syntax": {"js": [], "py": ["def on_object_click_up():"]}
     },
     "when_some_key_click": {
         "color": "#3BBD70",
@@ -14448,7 +14448,7 @@ Entry.block = {
             return script.callReturn();
         },
         "event": "when_message_cast",
-        "syntax": {"js": [], "py": ["Entry.on_signal(%2)"]}
+        "syntax": {"js": [], "py": ["def on_signal(%2):"]}
     },
     "message_cast": {
         "color": "#3BBD70",
