@@ -3380,7 +3380,7 @@ Entry.block = {
 
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.change_brush_thickness(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.add_brush_size(%1)"]}
     },
     "set_thickness": {
         "color": "#FF9E20",
@@ -3430,7 +3430,7 @@ Entry.block = {
 
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.set_brush_thickness(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.set_brush_size(%1)"]}
     },
     "change_opacity": {
         "color": "#FF9E20",
@@ -3571,7 +3571,7 @@ Entry.block = {
 
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.erase_all_brush()"]}
+        "syntax": {"js": [], "py": ["Entry.clear_drawing()"]}
     },
     "brush_stamp": {
         "color": "#FF9E20",
@@ -3648,7 +3648,7 @@ Entry.block = {
 
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.change_brush_transparency_by_percent(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.add_brush_transparency(%1)"]}
     },
     "set_brush_tranparency": {
         "color": "#FF9E20",
@@ -3700,7 +3700,7 @@ Entry.block = {
             return script.callReturn();
 
         },
-        "syntax": {"js": [], "py": ["Entry.set_brush_transparency_by_percent(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.set_brush_transparency(%1)"]}
     },
     "number": {
         "color": "#FFD974",
@@ -3896,7 +3896,7 @@ Entry.block = {
                 );
             }
         },
-        "syntax": {"js": [], "py": ["Entry.get_distance(%2)"]}
+        "syntax": {"js": [], "py": ["Entry.value_of_distance(%2)"]}
     },
     "coordinate_mouse": {
         "color": "#FFD974",
@@ -3942,7 +3942,7 @@ Entry.block = {
                 return Number(Entry.stage.mouseCoordinate.y);
             }
         },
-        "syntax": {"js": [], "py": ["Entry.get_mouse_coordinate_value(%2)"]}
+        "syntax": {"js": [], "py": ["Entry.coordinate_of_mouse(%2)"]}
     },
     "coordinate_object": {
         "color": "#FFD974",
@@ -4024,7 +4024,7 @@ Entry.block = {
                     return picture.name;
             }
         },
-        "syntax": {"js": [], "py": ["Entry.object_coordinate_value(%2, %4)"]}
+        "syntax": {"js": [], "py": ["Entry.value_of(%2, %4)"]}
     },
     "calc_basic": {
         "color": "#FFD974",
@@ -4499,7 +4499,7 @@ Entry.block = {
             }
             return Math.round(returnVal*1000)/1000;
         },
-        "syntax": {"js": [], "py": ["Entry.math_operation(%2, %4)"]}
+        "syntax": {"js": [], "py": ["Entry.value_of_math_operation(%2, %4)"]}
     },
     "calc_rand": {
         "color": "#FFD974",
@@ -4623,7 +4623,7 @@ Entry.block = {
             else
                 return dateTime.getSeconds();
         },
-        "syntax": {"js": [], "py": ["Entry.get_date_time(%2)"]}
+        "syntax": {"js": [], "py": ["Entry.value_of_date_time(%2)"]}
     },
     "get_sound_duration": {
         "color": "#FFD974",
@@ -4667,7 +4667,7 @@ Entry.block = {
                     return soundsArr[i].duration;
             }
         },
-        "syntax": {"js": [], "py": ["Entry.get_sound_duration(%2)"]}
+        "syntax": {"js": [], "py": ["Entry.value_of_sound_duration(%2)"]}
     },
     "reset_project_timer": {
         "color": "#FFD974",
@@ -4767,7 +4767,7 @@ Entry.block = {
 
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.set_timer_visibility(%2)"]}
+        "syntax": {"js": [], "py": ["Entry.set_timer_mode(%2)"]}
     },
     "timer_variable": {
         "color": "#FFD974",
@@ -4831,7 +4831,7 @@ Entry.block = {
         "func": function (sprite, script) {
             return Entry.engine.projectTimer.getValue();
         },
-        "syntax": {"js": [], "py": ["Entry.get_timer_value()"]}
+        "syntax": {"js": [], "py": ["Entry.value_timer()"]}
     },
     "char_at": {
         "color": "#FFD974",
@@ -4893,7 +4893,7 @@ Entry.block = {
             else
                 return str[index];
         },
-        "syntax": {"js": [], "py": ["Entry.char_at(%2, %4)"]}
+        "syntax": {"js": [], "py": ["Entry.string_index_of(%2, %4)"]}
     },
     "length_of_string": {
         "color": "#FFD974",
@@ -4935,7 +4935,7 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getStringValue("STRING", script).length;
         },
-        "syntax": {"js": [], "py": ["len(%2)"]}
+        "syntax": {"js": [], "py": ["Entry.string_length(%2)"]}
     },
     "substring": {
         "color": "#FFD974",
@@ -5014,7 +5014,7 @@ Entry.block = {
             else
                 return str.substring(Math.min(start, end), Math.max(start, end)+1);
         },
-        "syntax": {"js": [], "py": ["Entry.substring(%2, %4, %6)"]}
+        "syntax": {"js": [], "py": ["Entry.string_substring(%2, %4, %6)"]}
     },
     "replace_string": {
         "color": "#FFD974",
@@ -5090,7 +5090,7 @@ Entry.block = {
                     script.getStringValue("NEW_WORD", script)
                 );
         },
-        "syntax": {"js": [], "py": ["Entry.replce_string_with(%2, %4, %6)"]}
+        "syntax": {"js": [], "py": ["Entry.string_replace(%2, %4, %6)"]}
     },
     "change_string_case": {
         "color": "#FFD974",
@@ -5150,7 +5150,7 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getStringValue("STRING", script)[script.getField("CASE", script)]();
         },
-        "syntax": {"js": [], "py": ["Entry.change_string_case(%2, %4)"]}
+        "syntax": {"js": [], "py": ["Entry.string_case(%2, %4)"]}
     },
     "index_of_string": {
         "color": "#FFD974",
@@ -5210,7 +5210,7 @@ Entry.block = {
             var index = str.indexOf(target);
             return index > -1 ? index + 1 : 0;
         },
-        "syntax": {"js": [], "py": ["Entry.index_of_string(%2, %4)"]}
+        "syntax": {"js": [], "py": ["Entry.string_start_index(%2, %4)"]}
     },
     "combine_something": {
         "color": "#FFD974",
@@ -5270,7 +5270,7 @@ Entry.block = {
 
             return leftValue + rightValue;
         },
-        "syntax": {"js": [], "py": ["Entry.concat(%2, %4)"]}
+        "syntax": {"js": [], "py": ["Entry.string_concat(%2, %4)"]}
     },
     "get_sound_volume": {
         "color": "#FFD974",
@@ -5300,7 +5300,7 @@ Entry.block = {
         "func": function (sprite, script) {
             return createjs.Sound.getVolume() * 100;
         },
-        "syntax": {"js": [], "py": ["Entry.get_sound_volume()"]}
+        "syntax": {"js": [], "py": ["Entry.value_of_sound()"]}
     },
     "quotient_and_mod": {
         "color": "#FFD974",
@@ -5377,7 +5377,7 @@ Entry.block = {
             else
                 return left % right;
         },
-        "syntax": {"js": [], "py": ["Entry.get_value_quotient_mod(%2, %4, %6)"]}
+        "syntax": {"js": [], "py": ["Entry.value_div(%2, %4, %6)"]}
     },
     "choose_project_timer_action": {
         "color": "#FFD974",
@@ -5469,7 +5469,7 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.choose_timer_action(%2)"]}
+        "syntax": {"js": [], "py": ["Entry.timer(%2)"]}
     },
     "wait_second": {
         "color": "#498deb",
@@ -5522,7 +5522,7 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["Entry.wait_seconds(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.wait_for_seconds(%1)"]}
     },
     "repeat_basic": {
         "color": "#498deb",
@@ -5676,7 +5676,7 @@ Entry.block = {
                 return script;
             }
         },
-        "syntax": {"js": [], "py": ["Entry.wait_for_true(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.wait_until(%1)"]}
     },
     "_if": {
         "color": "#498deb",
@@ -5881,7 +5881,7 @@ Entry.block = {
             return script.callReturn();
         },
         "event": "when_clone_start",
-        "syntax": {"js": [], "py": ["Entry.on_clone_create()"]}
+        "syntax": {"js": [], "py": ["def entry_event_clone_create()"]}
     },
     "stop_run": {
         "color": "#498deb",
@@ -6072,7 +6072,7 @@ Entry.block = {
 
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.remove_all_clones()"]}
+        "syntax": {"js": [], "py": ["Entry.remove_all_clone()"]}
     },
     "functionAddButton": {
         "skeleton": "basic_button",
@@ -6119,7 +6119,7 @@ Entry.block = {
             "type": "function_field_label"
         },
         //"syntax": {"js": [], "py": ["%1function_field_label#"]}
-        "syntax": {"js": [], "py": ["function_name"]}
+        "syntax": {"js": [], "py": ["name"]}
     },
     "function_field_string": {
         "skeleton": "basic_param",
@@ -6150,7 +6150,7 @@ Entry.block = {
             "type": "function_field_string"
         },
         //"syntax": {"js": [], "py": ["%1function_field_string#"]}
-        "syntax": {"js": [], "py": ["function_param_value"]}
+        "syntax": {"js": [], "py": ["value"]}
     },
     "function_field_boolean": {
         "skeleton": "basic_param",
@@ -6181,7 +6181,7 @@ Entry.block = {
             "type": "function_field_boolean"
         },
         //"syntax": {"js": [], "py": ["%1function_field_boolean#"]}
-        "syntax": {"js": [], "py": ["function_param_boolean"]}
+        "syntax": {"js": [], "py": ["boolean"]}
     },
     "function_param_string": {
         "skeleton": "basic_string_field",
@@ -7950,7 +7950,7 @@ Entry.block = {
             var keycode = Number(script.getField("VALUE", script));
             return Entry.pressedKeys.indexOf(keycode) >= 0;
         },
-        "syntax": {"js": [], "py": ["Entry.is_particular_key_pressed(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.is_pressed(%1)"]}
     },
     "reach_something": {
         "color": "#AEB8FF",
@@ -8066,7 +8066,7 @@ Entry.block = {
             }
             return false;
         },
-        "syntax": {"js": [], "py": ["Entry.is_reached_at(%2)"]}
+        "syntax": {"js": [], "py": ["Entry.is_reached(%2)"]}
     },
     "boolean_comparison": {
         "color": "#AEB8FF",
@@ -8762,7 +8762,7 @@ Entry.block = {
             } else
                 return script;
         },
-        "syntax": {"js": [], "py": ["Entry.dialog_for_seconds(%1, %2, %3)"]}
+        "syntax": {"js": [], "py": ["Entry.print_for_seconds(%1, %2, %3)"]}
     },
     "dialog": {
         "color": "#EC4466",
@@ -8817,7 +8817,7 @@ Entry.block = {
             sprite.syncDialogVisible(sprite.getVisible());
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.dialog(%1, %2)"]}
+        "syntax": {"js": [], "py": ["print(%1)"]}
     },
     "remove_dialog": {
         "color": "#EC4466",
@@ -8841,7 +8841,7 @@ Entry.block = {
             if(sprite.dialog)   sprite.dialog.remove();
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.remove_dialog()"]}
+        "syntax": {"js": [], "py": ["Entry.print_remove()"]}
     },
     "change_to_nth_shape": {
         "color": "#EC4466",
@@ -8919,7 +8919,7 @@ Entry.block = {
             sprite.setImage(picture);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.change_to_adjacent_shape(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.set_shape_of(%1)"]}
     },
     "set_effect_volume": {
         "color": "#EC4466",
@@ -9069,7 +9069,7 @@ Entry.block = {
             sprite.resetFilter();
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.remove_all_effects()"]}
+        "syntax": {"js": [], "py": ["Entry.clear_effect()"]}
     },
     "change_scale_percent": {
         "color": "#EC4466",
@@ -9186,7 +9186,7 @@ Entry.block = {
             sprite.setSize(sprite.getSize() + sizeValue);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.change_size(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.add_size(%1)"]}
     },
     "set_scale_size": {
         "color": "#EC4466",
@@ -9380,7 +9380,7 @@ Entry.block = {
             sprite.setImage(picture);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.change_to_some_shape(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.set_shape(%1)"]}
     },
     "add_effect_amount": {
         "color": "#EC4466",
@@ -9439,7 +9439,7 @@ Entry.block = {
             sprite.applyFilter();
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.add_effect_by_cbt(%1, %2)"]}
+        "syntax": {"js": [], "py": ["Entry.add_effect(%1, %2)"]}
     },
     "change_effect_amount": {
         "color": "#EC4466",
@@ -9498,7 +9498,7 @@ Entry.block = {
             sprite.applyFilter();
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.set_effect_by_cbt(%1, %2)"]}
+        "syntax": {"js": [], "py": ["Entry.set_effect(%1, %2)"]}
     },
     "set_effect_amount": {
         "color": "#EC4466",
@@ -9678,7 +9678,7 @@ Entry.block = {
             Entry.container.moveElementByBlock(currentIndex, targetIndex);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.locate_to(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.set_layer(%1)"]}
     },
     "move_direction": {
         "color": "#A751E3",
@@ -9720,7 +9720,7 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.move_to_moving_direction(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.move(%1)"]}
     },
     "move_x": {
         "color": "#A751E3",
@@ -9761,7 +9761,7 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.change_x(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.set_x(%1)"]}
     },
     "move_y": {
         "color": "#A751E3",
@@ -9802,7 +9802,7 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.change_y(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.set_y(%1)"]}
     },
     "locate_xy_time": {
         "color": "#A751E3",
@@ -9880,7 +9880,7 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["Entry.locate_xy_for_seconds(%1, %2, %3)"]}
+        "syntax": {"js": [], "py": ["Entry.set_xy_for_seconds(%1, %2, %3)"]}
     },
     "rotate_by_angle": {
         "color": "#A751E3",
@@ -10085,7 +10085,7 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.move_xy(%1, %2)"]}
+        "syntax": {"js": [], "py": ["Entry.set_xy(%1, %2)"]}
     },
     "locate_x": {
         "color": "#A751E3",
@@ -10216,7 +10216,7 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.move_to_object(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.set_location(%1)"]}
     },
     "move_xy_time": {
         "color": "#A751E3",
@@ -10292,7 +10292,7 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["Entry.move_xy_for_seconds(%1, %2, %3)"]}
+        "syntax": {"js": [], "py": ["Entry.add_xy_for_seconds(%1, %2, %3)"]}
     },
     "rotate_by_angle_time": {
         "color": "#A751E3",
@@ -10533,7 +10533,7 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.on_bounce_at_wall()"]}
+        "syntax": {"js": [], "py": ["Entry.bounce_wall()"]}
     },
     "flip_arrow_horizontal": {
         "color": "#A751E3",
@@ -10808,7 +10808,7 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["Entry.move_at_object_for_seconds(%1, %2)"]}
+        "syntax": {"js": [], "py": ["Entry.set_location_for_seconds(%1, %2)"]}
     },
     "rotate_absolute": {
         "color": "#A751E3",
@@ -10843,7 +10843,7 @@ Entry.block = {
             entity.setRotation(value);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.set_direction(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.set_rotation(%1)"]}
     },
     "rotate_relative": {
         "color": "#A751E3",
@@ -10878,7 +10878,7 @@ Entry.block = {
             entity.setRotation(value + entity.getRotation());
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.rotate_direction(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.add_rotation(%1)"]}
     },
     "direction_absolute": {
         "color": "#A751E3",
@@ -10913,7 +10913,7 @@ Entry.block = {
             entity.setDirection(value);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.set_moving_direction(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.set_direction(%1)"]}
     },
     "direction_relative": {
         "color": "#A751E3",
@@ -10948,7 +10948,7 @@ Entry.block = {
             entity.setDirection(value + entity.getDirection());
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.rotate_moving_direction(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.add_direction(%1)"]}
     },
     "move_to_angle": {
         "color": "#A751E3",
@@ -10997,7 +10997,7 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.move_to_direction_by_distance(%1, %2)"]}
+        "syntax": {"js": [], "py": ["Entry.move_degree(%1, %2)"]}
     },
     "rotate_by_time": {
         "color": "#A751E3",
@@ -11057,7 +11057,7 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["Entry.rotate_direction_for_seconds(%1, %2)"]}
+        "syntax": {"js": [], "py": ["Entry.add_rotation_for_seconds(%1, %2)"]}
     },
     "direction_relative_duration": {
         "color": "#A751E3",
@@ -11116,7 +11116,7 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["Entry.rotate_moving_direction_for_seconds(%1, %2)"]}
+        "syntax": {"js": [], "py": ["Entry.add_direction_for_seconds(%1, %2)"]}
     },
     "neobot_sensor_value": {
         "color": "#00979D",
@@ -13336,7 +13336,7 @@ Entry.block = {
             return script.callReturn();
         },
         "event": "when_scene_start",
-        "syntax": {"js": [], "py": ["def on_scene_start():"]}
+        "syntax": {"js": [], "py": ["def entry_event_scene_start():"]}
     },
     "start_scene": {
         "color": "#3BBD70",
@@ -13375,7 +13375,7 @@ Entry.block = {
             }
             return null;
         },
-        "syntax": {"js": [], "py": ["Entry.start_scene(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.scene_start(%1)"]}
     },
     "start_neighbor_scene": {
         "color": "#3BBD70",
@@ -13432,7 +13432,7 @@ Entry.block = {
             }
             return null;
         },
-        "syntax": {"js": [], "py": ["Entry.start_neighbor_scene(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.scene_start_of(%1)"]}
     },
     "sound_something": {
         "color": "#A4D01D",
@@ -13686,7 +13686,7 @@ Entry.block = {
             createjs.Sound.setVolume(value);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.change_volume_by_percent(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.add_volume(%1)"]}
     },
     "sound_volume_set": {
         "color": "#A4D01D",
@@ -13728,7 +13728,7 @@ Entry.block = {
             createjs.Sound.setVolume(value);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.set_volume_by_percent(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.set_volume(%1)"]}
     },
     "sound_silent_all": {
         "color": "#A4D01D",
@@ -13752,7 +13752,7 @@ Entry.block = {
             createjs.Sound.stop();
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.stop_all_sounds()"]}
+        "syntax": {"js": [], "py": ["Entry.stop_sound()"]}
     },
     "get_sounds": {
         "color": "#A4D01D",
@@ -14173,7 +14173,7 @@ Entry.block = {
             return script.callReturn();
         },
         "event": "start",
-        "syntax": {"js": [], "py": ["def on_start():"]}
+        "syntax": {"js": [], "py": ["def entry_event_start():"]}
     },
     "press_some_key": {
         "color": "#3BBD70",
@@ -14260,7 +14260,7 @@ Entry.block = {
             return script.callReturn();
         },
         "event": "keyPress",
-        "syntax": {"js": [], "py": ["def on_press(%2):"]}
+        "syntax": {"js": [], "py": ["def entry_event_key(%2):"]}
     },
     "mouse_clicked": {
         "color": "#3BBD70",
@@ -14288,7 +14288,7 @@ Entry.block = {
             return script.callReturn();
         },
         "event": "mouse_clicked",
-        "syntax": {"js": [], "py": ["def on_mouse_click_down():"]}
+        "syntax": {"js": [], "py": ["def entry_event_mouse_down():"]}
     },
     "mouse_click_cancled": {
         "color": "#3BBD70",
@@ -14316,7 +14316,7 @@ Entry.block = {
             return script.callReturn();
         },
         "event": "mouse_click_cancled",
-        "syntax": {"js": [], "py": ["def on_mouse_click_up():"]}
+        "syntax": {"js": [], "py": ["def entry_event_mouse_up():"]}
     },
     "when_object_click": {
         "color": "#3BBD70",
@@ -14344,7 +14344,7 @@ Entry.block = {
             return script.callReturn();
         },
         "event": "when_object_click",
-        "syntax": {"js": [], "py": ["def on_object_click_down():"]}
+        "syntax": {"js": [], "py": ["def entry_event_object_down():"]}
     },
     "when_object_click_canceled": {
         "color": "#3BBD70",
@@ -14372,7 +14372,7 @@ Entry.block = {
             return script.callReturn();
         },
         "event": "when_object_click_canceled",
-        "syntax": {"js": [], "py": ["def on_object_click_up():"]}
+        "syntax": {"js": [], "py": ["def entry_event_object_up():"]}
     },
     "when_some_key_click": {
         "color": "#3BBD70",
@@ -14448,7 +14448,7 @@ Entry.block = {
             return script.callReturn();
         },
         "event": "when_message_cast",
-        "syntax": {"js": [], "py": ["def on_signal(%2):"]}
+        "syntax": {"js": [], "py": ["def entry_event_signal(%2):"]}
     },
     "message_cast": {
         "color": "#3BBD70",
@@ -14723,7 +14723,7 @@ Entry.block = {
             sprite.setText('');
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.erase_all_text()"]}
+        "syntax": {"js": [], "py": ["Entry.clear_text()"]}
     },
     "variableAddButton": {
         "skeleton": "basic_button",
@@ -14830,7 +14830,7 @@ Entry.block = {
             variable.setValue((value + variable.getValue()).toFixed(fixed));
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["%1 = %1 + %2"]}
+        "syntax": {"js": [], "py": ["%1 += %2"]}
     },
     "set_variable": {
         "color": "#E457DC",
@@ -15117,7 +15117,7 @@ Entry.block = {
                                        return script;
                                    }
         },
-        "syntax": {"js": [], "py": ["Entry.ask_and_wait(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.input(%1)"]}
     },
     "get_canvas_input_value": {
         "color": "#E457DC",
@@ -15152,7 +15152,7 @@ Entry.block = {
         "func": function (sprite, script) {
             return Entry.container.getInputValue();
         },
-        "syntax": {"js": [], "py": ["Entry.get_answer()"]}
+        "syntax": {"js": [], "py": ["Entry.output"]}
     },
     "add_value_to_list": {
         "color": "#E457DC",
@@ -15660,7 +15660,7 @@ Entry.block = {
                 Entry.container.inputValue.setVisible(true);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.set_answer_visibility(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.answer_mode(%1)"]}
     },
     "is_included_in_list": {
         "color": "#E457DC",

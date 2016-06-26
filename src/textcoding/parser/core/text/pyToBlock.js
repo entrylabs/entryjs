@@ -34,6 +34,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             for(var index in nodes) {
                 var node = nodes[index];
+                console.log("Program node", node);
                                 
                 var block = this[node.type](node);
                 console.log("result block", block); 
@@ -89,6 +90,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var structure = {}; 
 
         var params = [];
+        var type; 
 
         var callee = component.callee;
         var calleeData = this[callee.type](callee);
@@ -98,7 +100,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         if(callee.type == "Identifier") {
             console.log("CallExpression Identifier calleeData", calleeData);
-            result.callee = calleeData;
+            result.callee = calleeData; 
+    
+            name = Entry.TextCodingUtil.prototype.eventBlockSyntaxFilter(calleeData.name);
+            type = this.getBlockType(name);
         }
         else {
             var object = calleeData.object;
@@ -121,7 +126,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             console.log("CallExpression calleeName", calleeName);
 
-            var type = this.getBlockType(calleeName);
+            type = this.getBlockType(calleeName);
 
             console.log("CallExpression type before", type);
 
@@ -179,9 +184,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
 
             result.callee = calleeName;
-
-            console.log("CallExpression type after", type); 
         }
+
+        console.log("CallExpression type after", type); 
 
         if(type) {
             var block = Entry.block[type]; 
@@ -458,7 +463,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         var calleeName;
 
-        if(init.callee) {
+        if(init.callee) { 
             calleeName = init.callee.object.object.name.concat('.').concat(init.callee.object.property.name).concat('.')
                             .concat(init.callee.property.name);
         }
@@ -533,7 +538,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             else {
                 console.log("VariableDeclarator idData.name", idData.name, "initData.params[0].name", initData.params[0].name);
                 if(initData.params && initData.params[0] && idData.name == initData.params[0].name) {
-                    var syntax = String("%1 = %1 + %2");
+                    var syntax = String("%1 += %2");
                     var type = this.getBlockType(syntax);
                     structure.type = type; 
                     
@@ -555,28 +560,31 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var paramsDefMeta = block.def.params;
 
             if(idData.name)
-                idData.name = this.ParamDropdownDynamic(idData.name, paramsMeta[0], paramsDefMeta[0]);
+                var variableId = this.ParamDropdownDynamic(idData.name, paramsMeta[0], paramsDefMeta[0]);
             
             var params = [];
             if(init.type == "Literal") {
                 if(idData.params && idData.params[0])
                     params.push(idData.params[0]); 
                 else
-                    params.push(idData.name); 
+                    params.push(variableId); 
                 params.push(initData);
             }
             else {
-                if(initData.params && initData.params[0] && idData.name == initData.params[0].name) {
+                console.log("VariableDeclarator idData", idData, "initData", initData);
+                if(initData.params && initData.params[0] && (idData.name == initData.params[0].name)) {
+                    console.log("in initData.params[0]");
                     if(idData.params && idData.params[0])
                         params.push(idData.params[0]); 
                     else
-                        params.push(idData.name); 
+                        params.push(variableId); 
                     params.push(initData.params[2]);
                 } else {
+                    console.log("in initData");
                     if(idData.params && idData.params[0])
                         params.push(idData.params[0]); 
                     else
-                        params.push(idData.name); 
+                        params.push(variableId); 
                     params.push(initData);
                 }
             } 
@@ -1268,7 +1276,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var structure = {};
         structure.statements = [];
 
-        var syntax = String("for i in range(%1):\n$1");
+        var syntax = String("for i in range");
         var type = this.getBlockType(syntax);
 
         structure.type = type;
@@ -1801,7 +1809,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     var rightEx = component.right.arguments[0].object.name.concat(component.right.arguments[0].property.name);
                     console.log("AssignmentExpression leftEx", leftEx, "rightEx", rightEx);
                     if(component.right.arguments && (leftEx == rightEx)) {
-                        var syntax = String("%1 = %1 + %2");
+                        var syntax = String("%1 += %2");
                         var type = this.getBlockType(syntax);
                         structure.type = type; 
                     } else {
@@ -1920,7 +1928,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
 
         } 
-        else if(syntax == String("%1 = %1 + %2")) {
+        else if(syntax == String("%1 += %2")) {
             if(object.name == "self") {
                 var block = Entry.block[type]; 
                 var paramsMeta = block.params;

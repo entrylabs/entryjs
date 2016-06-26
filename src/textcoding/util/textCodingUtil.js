@@ -594,7 +594,8 @@ Entry.TextCodingUtil = function() {
             blockType == "when_object_click" || 
             blockType == "when_object_click_canceled" || 
             blockType == "when_message_cast" || 
-            blockType == "when_scene_start") {
+            blockType == "when_scene_start" ||
+            blockType == "when_clone_start") {
             return true;
         } 
 
@@ -619,27 +620,110 @@ Entry.TextCodingUtil = function() {
         }
 
         return result;
-
-        /*switch(blockType) {
-            case "when_some_key_pressed":
-                result = Entry.block[blockType]
-            case "mouse_clicked":
-            case "mouse_click_cancled":
-            case "when_object_click":
-            case "when_object_click_canceled":
-            case "when_message_cast":
-            case "message_cast":
-            case "message_cast_wait":
-            case "when_scene_start":
-            case "start_scene":
-            case "start_neighbor_scene":
-        }*/
     };
 
-    p.isNoPrintBlock = function(block) {
+    p.isNoPrintBlock = function(block) { 
         var blockType = block.data.type;
 
         return false;
+    };
+
+    p.entryEventFuncFilter = function(threads) { 
+        var result;
+        var eventFound = false;
+        var threadArr = threads.split('\n');
+        
+        for(var i in threadArr) {
+            //if(i == 0) {
+                var thread = threadArr[i]; 
+                var tokens = thread.split('(');
+                var prefix = tokens[0];
+                if( prefix == "def entry_event_start" || 
+                    prefix == "def entry_event_key" || 
+                    prefix == "def entry_event_mouse_down" || 
+                    prefix == "def entry_event_mouse_up" || 
+                    prefix == "def entry_event_object_down" || 
+                    prefix == "def entry_event_signal" || 
+                    prefix == "def entry_event_scene_start" || 
+                    prefix == "def entry_event_clone_create") {
+                
+                    tokens = thread.split("def");
+                    thread = tokens[1].substring(0, tokens[1].length-1).trim() + '\n';
+                    threadArr[i] = thread;
+                } else {
+            
+                    var thread = threadArr[i];
+                    thread = thread.replace('\t', '');
+                    threadArr[i] = thread + '\n'; }
+             
+        }
+
+        console.log("TextCodingUtil entryEventFuncFilter threadArr", threadArr);
+        result = threadArr.join('');
+        return result;
+    };
+
+    p.eventBlockSyntaxFilter = function(name) {      
+        if( name == "entry_event_start" || 
+            name == "entry_event_key" || 
+            name == "entry_event_mouse_down" || 
+            name == "entry_event_mouse_up" || 
+            name == "entry_event_object_down" || 
+            name == "entry_event_signal" || 
+            name == "entry_event_scene_start" || 
+            name == "entry_event_clone_create") {
+            
+            name = "def " + name;
+            return name;
+        }
+
+        return name;
+            
+    };
+
+    p.isEntryEventFunc = function(name) {
+        if( name == "def entry_event_start" || 
+            name == "def entry_event_key" || 
+            name == "def entry_event_mouse_down" || 
+            name == "def entry_event_mouse_up" || 
+            name == "def entry_event_object_down" || 
+            name == "def entry_event_signal" || 
+            name == "def entry_event_scene_start" || 
+            name == "def entry_event_clone_create") {
+            
+            return true;
+        }
+
+        return false;
+            
     }
+
+    p.makeThreads = function(code) {
+        var threads = [];
+        var events = [];
+        var e = {};
+        var ePoint = 0;
+
+        var lines = code.split('\n');
+        var isEvent = false;
+
+        for(var i in lines) {
+            var line = lines[i];
+            if(line.length == 0)
+                continue;
+            var prefix = line.split('(')[0];
+                console.log("makeThreads line", prefix);
+            if(this.isEntryEventFunc(prefix)) {
+                e.start = ePoint;
+                e.end = i;
+                ePoint = i;
+                events.push(e);    
+            } 
+        }
+
+        console.log("makeThreads events", events);
+
+
+    };
 
 })(Entry.TextCodingUtil.prototype);
