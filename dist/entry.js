@@ -6590,7 +6590,7 @@ Entry.Container.prototype.getInputValue = function() {
   return this.inputValue.getValue();
 };
 Entry.Container.prototype.setInputValue = function(b) {
-  b ? this.inputValue.setValue(b) : this.inputValue.setValue(0);
+  this.inputValue.complete || (b ? this.inputValue.setValue(b) : this.inputValue.setValue(0), Entry.stage.hideInputField(), Entry.console && Entry.console.stopInput(b), this.inputValue.complete = !0);
 };
 Entry.Container.prototype.resetSceneDuringRun = function() {
   this.mapEntityOnScene(function(b) {
@@ -6901,7 +6901,8 @@ Entry.Dialog = function(b, a, d, c) {
   "number" == typeof a && (a = String(a));
   this.message_ = a = a.match(/.{1,15}/g).join("\n");
   this.mode_ = d;
-  "speak" == d && this.generateSpeak();
+  Entry.console && Entry.console.print(a, d);
+  "speak" !== d && "ask" !== d || this.generateSpeak();
   c || Entry.stage.loadDialog(this);
 };
 Entry.Dialog.prototype.generateSpeak = function() {
@@ -10716,15 +10717,12 @@ Entry.Stage.prototype.initStage = function(b) {
     Entry.engine.isState("stop") && Entry.stage.updateObject();
   });
   Entry.addEventListener("canvasInputComplete", function(a) {
-    try {
-      var b = Entry.stage.inputField.value();
-      Entry.stage.hideInputField();
-      if (b) {
-        var e = Entry.container;
-        e.setInputValue(b);
-        e.inputValue.complete = !0;
+    if (!Entry.stage.inputField._isHidden && !Entry.container.inputValue.complete) {
+      try {
+        var b = Entry.stage.inputField.value();
+        b && Entry.container.setInputValue(b);
+      } catch (e) {
       }
-    } catch (f) {
     }
   });
   this.initWall();
@@ -10943,7 +10941,7 @@ Entry.Stage.prototype.showInputField = function(b) {
 Entry.Stage.prototype.hideInputField = function() {
   this.inputField && this.inputField.value() && this.inputField.value("");
   this.inputSubmitButton && (this.canvas.removeChild(this.inputSubmitButton), this.inputSubmitButton = null);
-  this.inputField && this.inputField.hide();
+  this.inputField && (this.inputField.blur(), this.inputField.hide());
 };
 Entry.Stage.prototype.initObjectContainers = function() {
   var b = Entry.scene.scenes_;
@@ -11499,6 +11497,54 @@ Entry.KeyboardCode = function() {
   b.keyCharToCode = {Backspace:8, Tab:9, Enter:13, Shift:16, Ctrl:17, Alt:18, "Pause/Break":19, "Caps Lock":20, Esc:27, Space:32, "Page Up":33, "Page Down":34, End:35, Home:36, Left:37, Up:38, Right:39, Down:40, Insert:45, Delete:46, 0:48, 1:49, 2:50, 3:51, 4:52, 5:53, 6:54, 7:55, 8:56, 9:57, A:65, B:66, C:67, D:68, E:69, F:70, G:71, H:72, I:73, J:74, K:75, L:76, M:77, N:78, O:79, P:80, Q:81, R:82, S:83, T:84, U:85, V:86, W:87, X:88, Y:89, Z:90, Windows:91, "Right Click":93, "Numpad 0":96, "Numpad 1":97, 
   "Numpad 2":98, "Numpad 3":99, "Numpad 4":100, "Numpad 5":101, "Numpad 6":102, "Numpad 7":103, "Numpad 8":104, "Numpad 9":105, "Numpad *":106, "Numpad +":107, "Numpad -":109, "Numpad .":110, "Numpad /":111, F1:112, F2:113, F3:114, F4:115, F5:116, F6:117, F7:118, F8:119, F9:120, F10:121, F11:122, F12:123, "Num Lock":144, "Scroll Lock":145, "My Computer":182, "My Calculator":183, ";":186, "=":187, ",":188, "-":189, ".":190, "/":191, "`":192, "[":219, "\\":220, "]":221, "'":222};
 })(Entry.KeyboardCode.prototype);
+Entry.Console = function() {
+  Entry.propertyPanel && (this.createView(), Entry.propertyPanel.addMode("console", this), Entry.console = this, this._isEditing = !1, this._inputData = null);
+};
+(function(b) {
+  b.createView = function() {
+    this.view = new Entry.Dom("div", {id:"entryConsole"});
+    this.codeMirror = CodeMirror(this.view[0], {lineNumbers:!1, lineWrapping:!0, value:"", mode:{}, theme:"default", styleActiveLine:!1, lint:!1, viewportMargin:10});
+    this._doc = this.codeMirror.getDoc();
+    this.codeMirror.on("beforeChange", function(a, b) {
+      this._isEditing || b.cancel();
+    }.bind(this));
+    this.codeMirror.on("keyup", function(a, b) {
+      this._isEditing && 13 == b.keyCode && this.endInput();
+    }.bind(this));
+    Entry.addEventListener("stop", this.clear.bind(this));
+    this.clear();
+  };
+  b.getView = function() {
+    return this.view;
+  };
+  b.clear = function() {
+    this.setEditing(!0);
+    this.codeMirror.setValue("Entry Console\n");
+    this.setEditing(!1);
+  };
+  b.print = function(a, b) {
+    this.setEditing(!0);
+    var c = this._doc.getCursor(), e = this._doc.getLine(c.line);
+    this._doc.replaceRange(a + "\n", {line:c.line, ch:e.length - 1});
+    this._doc.addLineClass(c.line, "text", b);
+    "speak" === b && this.setEditing(!1);
+    this.codeMirror.execCommand("goLineEnd");
+    "ask" === b && this.codeMirror.focus();
+  };
+  b.endInput = function() {
+    this._inputData = this._doc.getLine(this._doc.getCursor().line);
+    Entry.container.setInputValue(this._inputData);
+    this.codeMirror.execCommand("newlineAndIndent");
+    this.setEditing(!1);
+  };
+  b.stopInput = function(a) {
+    this.codeMirror.execCommand("newlineAndIndent");
+    this.setEditing(!1);
+  };
+  b.setEditing = function(a) {
+    this._isEditing !== a && (this._isEditing = a);
+  };
+})(Entry.Console.prototype);
 Entry.TextCodingUtil = function() {
 };
 (function(b) {
@@ -13300,7 +13346,7 @@ Entry.PyToBlockParser = function(b) {
     return a;
   };
 })(Entry.PyToBlockParser.prototype);
-Entry.Parser = function(b, a, d) {
+Entry.Parser = function(b, a, d, c) {
   this._mode = b;
   this.syntax = {};
   this.codeMirror = d;
@@ -13317,18 +13363,17 @@ Entry.Parser = function(b, a, d) {
   this.syntax.js = this.mappingSyntaxJs(b);
   this.syntax.py = this.mappingSyntaxPy(b);
   console.log("py syntax", this.syntax.py);
+  console.log(this._lang);
+  this._console = new Entry.Console;
   switch(this._lang) {
     case "js":
       this._parser = new Entry.JsToBlockParser(this.syntax);
-      var c = this.syntax, e = {}, f;
+      c = this.syntax;
+      var e = {}, f;
       for (f in c.Scope) {
         e[f + "();\n"] = c.Scope[f];
       }
       "BasicIf" in c && (e.front = "BasicIf");
-      this._hinter = new Entry.PyHint;
-      CodeMirror.commands.javascriptComplete = function(a) {
-        CodeMirror.showHint(a, null, {globalScope:e});
-      };
       d.on("keyup", function(a, b) {
         (65 <= b.keyCode && 95 >= b.keyCode || 167 == b.keyCode || 190 == b.keyCode) && CodeMirror.showHint(a, null, {completeSingle:!1, globalScope:e});
       });
@@ -13430,7 +13475,7 @@ Entry.Parser = function(b, a, d) {
         }) : "";
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
-        c = this._parser.Code(a, b);
+        c = this._parser.Code(a, b), this._pyHinter || (this._pyHinter = new Entry.PyHint);
     }
     return c;
   };

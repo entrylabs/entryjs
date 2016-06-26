@@ -24,7 +24,9 @@ Entry.Dialog = function(entity, message, mode, isStamp) {
     message = messageChunks.join('\n');
     this.message_ = message;
     this.mode_ = mode;
-    if (mode == 'speak')
+    if (Entry.console)
+        Entry.console.print(message, mode);
+    if (mode === 'speak' || mode === 'ask')
         this.generateSpeak();
     if (!isStamp)
         Entry.stage.loadDialog(this);
