@@ -36,8 +36,12 @@ Entry.loadProject = function(project) {
     Entry.container.setObjects(project.objects);
     Entry.FPS = project.speed ? project.speed : 60;
     createjs.Ticker.setFPS(Entry.FPS);
-    if (this.type == 'workspace')
-        Entry.stateManager.endIgnore();
+    if (this.type == 'workspace') {
+        setTimeout(function() {
+            Entry.stateManager.endIgnore();
+        }, 300);
+
+    }
 
     if (!Entry.engine.projectTimer)
         Entry.variableContainer.generateTimer();

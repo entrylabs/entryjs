@@ -822,6 +822,9 @@ Entry.EntityObject.prototype.applyFilter = function() {
     var effects = this.effect;
     var object = this.object;
 
+    if (_.isEqual(effects, this.getInitialEffectValue()))
+        return;
+
     (function(e, obj) {
         var f = [];
         var adjust = Entry.adjustValueWithMaxMin;
@@ -993,7 +996,15 @@ Entry.EntityObject.prototype.toJSON = function() {
  * @return {effect}
  */
 Entry.EntityObject.prototype.setInitialEffectValue = function () {
-    this.effect = {
+    this.effect = this.getInitialEffectValue();
+};
+
+/*
+ * Return initial effect value
+ * @return {effect}
+ */
+Entry.EntityObject.prototype.getInitialEffectValue = function () {
+    return  {
         'blur': 0,
         'hue': 0,
         'hsv': 0,
