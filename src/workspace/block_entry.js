@@ -14958,7 +14958,20 @@ Entry.block = {
                 "size": 12
             }
         ],
-        "events": {},
+        "events": {
+            "dataAdd": [
+                function(block) {
+                    var vc = Entry.variableContainer;
+                    if (vc) vc.addRef('_variableRefs', block);
+                }
+            ],
+            "dataDestroy": [
+                function(block) {
+                    var vc = Entry.variableContainer;
+                    if (vc) vc.removeRef('_variableRefs', block);
+                }
+            ]
+        },
         "def": {
             "params": [
                 {
@@ -15016,7 +15029,20 @@ Entry.block = {
                 "size": 12
             }
         ],
-        "events": {},
+        "events": {
+            "dataAdd": [
+                function(block) {
+                    var vc = Entry.variableContainer;
+                    if (vc) vc.addRef('_variableRefs', block);
+                }
+            ],
+            "dataDestroy": [
+                function(block) {
+                    var vc = Entry.variableContainer;
+                    if (vc) vc.removeRef('_variableRefs', block);
+                }
+            ]
+        },
         "def": {
             "params": [
                 {
@@ -15079,7 +15105,20 @@ Entry.block = {
                 "size": 12
             }
         ],
-        "events": {},
+        "events": {
+            "dataAdd": [
+                function(block) {
+                    var vc = Entry.variableContainer;
+                    if (vc) vc.addRef('_variableRefs', block);
+                }
+            ],
+            "dataDestroy": [
+                function(block) {
+                    var vc = Entry.variableContainer;
+                    if (vc) vc.removeRef('_variableRefs', block);
+                }
+            ]
+        },
         "def": {
             "params": [
                 null,
@@ -15148,7 +15187,20 @@ Entry.block = {
                 "color": "white"
             }
         ],
-        "events": {},
+        "events": {
+            "dataAdd": [
+                function(block) {
+                    var vc = Entry.variableContainer;
+                    if (vc) vc.addRef('_variableRefs', block);
+                }
+            ],
+            "dataDestroy": [
+                function(block) {
+                    var vc = Entry.variableContainer;
+                    if (vc) vc.removeRef('_variableRefs', block);
+                }
+            ]
+        },
         "def": {
             "params": [
                 null,
@@ -15202,7 +15254,20 @@ Entry.block = {
                 "color": "white"
             }
         ],
-        "events": {},
+        "events": {
+            "dataAdd": [
+                function(block) {
+                    var vc = Entry.variableContainer;
+                    if (vc) vc.addRef('_variableRefs', block);
+                }
+            ],
+            "dataDestroy": [
+                function(block) {
+                    var vc = Entry.variableContainer;
+                    if (vc) vc.removeRef('_variableRefs', block);
+                }
+            ]
+        },
         "def": {
             "params": [ null, null, null ],
             "type": "length_of_list"
@@ -15237,7 +15302,20 @@ Entry.block = {
                 "size": 12
             }
         ],
-        "events": {},
+        "events": {
+            "dataAdd": [
+                function(block) {
+                    var vc = Entry.variableContainer;
+                    if (vc) vc.addRef('_variableRefs', block);
+                }
+            ],
+            "dataDestroy": [
+                function(block) {
+                    var vc = Entry.variableContainer;
+                    if (vc) vc.removeRef('_variableRefs', block);
+                }
+            ]
+        },
         "def": {
             "params": [ null, null ],
             "type": "show_list"
@@ -15273,7 +15351,20 @@ Entry.block = {
                 "size": 12
             }
         ],
-        "events": {},
+        "events": {
+            "dataAdd": [
+                function(block) {
+                    var vc = Entry.variableContainer;
+                    if (vc) vc.addRef('_variableRefs', block);
+                }
+            ],
+            "dataDestroy": [
+                function(block) {
+                    var vc = Entry.variableContainer;
+                    if (vc) vc.removeRef('_variableRefs', block);
+                }
+            ]
+        },
         "def": {
             "params": [ null, null ],
             "type": "hide_list"
@@ -15401,7 +15492,20 @@ Entry.block = {
                 "color": "white"
             }
         ],
-        "events": {},
+        "events": {
+            "dataAdd": [
+                function(block) {
+                    var vc = Entry.variableContainer;
+                    if (vc) vc.addRef('_variableRefs', block);
+                }
+            ],
+            "dataDestroy": [
+                function(block) {
+                    var vc = Entry.variableContainer;
+                    if (vc) vc.removeRef('_variableRefs', block);
+                }
+            ]
+        },
         "def": {
             "params": [
                 null, null, null,
@@ -18086,7 +18190,7 @@ Entry.block = {
     },
     "dplay_buzzer": {
         "color": "#00979D",
-        "fontColor": "#FFF",        
+        "fontColor": "#FFF",
         "skeleton": "basic",
         "statements": [],
         "template": "디지털 10번 부저를 %1 %2 %3 박자로 연주하기",
@@ -18998,7 +19102,7 @@ Entry.block = {
         },
         "class": "arduino"
     },
-	// ardublock Added 2016-06-01	
+	// ardublock Added 2016-06-01
     "ardublock_get_number_sensor_value": {
         "parent": "arduino_get_number_sensor_value",
         "isNotFor": [
@@ -19102,7 +19206,7 @@ Entry.block = {
         },
         "class": "arduino"
     },
-	// ardublock Added 2016-06-01	
+	// ardublock Added 2016-06-01
     "ebs_if": {
         "parent": "_if",
         "def": {
