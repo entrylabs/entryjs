@@ -5786,7 +5786,7 @@ Entry.block = {
             else
                 return script.getStatement("STACK_ELSE", script);
         },
-        "syntax": {"js": [], "py": ["if %1:\n$1\nelse:\n$2"]}
+        "syntax": {"js": [], "py": ["if %1:\n$1else:\n$2"]}
     },
     "create_clone": {
         "color": "#498deb",

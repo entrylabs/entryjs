@@ -16,7 +16,7 @@ Entry.TextCodingUtil = function() {
         var indentedCodeArr = textCode.split("\n");
         indentedCodeArr.pop();
         result += indentedCodeArr.join("\n\t");
-        
+        result = "\t" + result.trim();//.concat('\n');
         console.log("indent result", result);
         
         return result;
@@ -634,32 +634,43 @@ Entry.TextCodingUtil = function() {
         var threadArr = threads.split('\n');
         
         for(var i in threadArr) {
-            //if(i == 0) {
                 var thread = threadArr[i]; 
-                var tokens = thread.split('(');
-                var prefix = tokens[0];
-                if( prefix == "def entry_event_start" || 
-                    prefix == "def entry_event_key" || 
-                    prefix == "def entry_event_mouse_down" || 
-                    prefix == "def entry_event_mouse_up" || 
-                    prefix == "def entry_event_object_down" || 
-                    prefix == "def entry_event_signal" || 
-                    prefix == "def entry_event_scene_start" || 
-                    prefix == "def entry_event_clone_create") {
+                console.log("entryEventFuncFilter thread", thread);
+
+                //var tokens = thread.split('(');
+                //var prefix = tokens[0];
+                
+                if( thread == "def entry_event_start():" || 
+                    thread == "def entry_event_mouse_down():" || 
+                    thread == "def entry_event_mouse_up():" || 
+                    thread == "def entry_event_object_down():" || 
+                    thread == "def entry_event_scene_start():" || 
+                    thread == "def entry_event_clone_create():") {
                 
                     tokens = thread.split("def");
                     thread = tokens[1].substring(0, tokens[1].length-1).trim() + '\n';
                     threadArr[i] = thread;
-                } else {
-            
-                    var thread = threadArr[i];
-                    thread = thread.replace('\t', '');
-                    threadArr[i] = thread + '\n'; }
-             
+                    eventFound = true;
+                } 
+                else if(new RegExp(/^def entry_event_key(.+):$/).test(thread) || 
+                    new RegExp(/^def entry_event_signal(.+):$/).test(thread)) {
+                    
+                    tokens = thread.split("def");
+                    thread = tokens[1].substring(0, tokens[1].length-1).trim() + '\n';
+                    threadArr[i] = thread;
+                    eventFound = true;
+                } 
+                else {
+                    if(eventFound) {
+                        var thread = threadArr[i];
+                        thread = thread.replace('\t', '');
+                        threadArr[i] = thread;
+                    }
+                }  
         }
 
         console.log("TextCodingUtil entryEventFuncFilter threadArr", threadArr);
-        result = threadArr.join('');
+        result = threadArr.join('\n');
         return result;
     };
 
@@ -696,34 +707,18 @@ Entry.TextCodingUtil = function() {
 
         return false;
             
-    }
+    };
 
-    p.makeThreads = function(code) {
-        var threads = [];
-        var events = [];
-        var e = {};
-        var ePoint = 0;
-
-        var lines = code.split('\n');
-        var isEvent = false;
-
-        for(var i in lines) {
-            var line = lines[i];
-            if(line.length == 0)
-                continue;
-            var prefix = line.split('(')[0];
-                console.log("makeThreads line", prefix);
-            if(this.isEntryEventFunc(prefix)) {
-                e.start = ePoint;
-                e.end = i;
-                ePoint = i;
-                events.push(e);    
-            } 
+    p.searchFuncDefParam = function(block) {
+        console.log("searchFuncDefParam block", block);
+        if(block.data.params[1]){
+            var result = this.searchFuncDefParam(block.data.params[1]);  
+            return result;
         }
-
-        console.log("makeThreads events", events);
-
-
+        else {
+            console.log("searchFuncDefParam block", block);
+            return block;
+        }
     };
 
 })(Entry.TextCodingUtil.prototype);
