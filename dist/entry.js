@@ -11856,7 +11856,7 @@ Entry.Loader.removeQueue = function(b) {
   this.queueCount || (Entry.dispatchEvent("loadComplete"), this.totalCount = 0);
 };
 Entry.Loader.getLoadedPercent = function() {
-  return this.queueCount / this.totalCount;
+  return 0 === this.totalCount ? 1 : this.queueCount / this.totalCount;
 };
 Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BLOCK_RENDER_MODEL:9, BOX_MODEL:10, THREAD_MODEL:11, DRAG_INSTANCE:12, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1, BREAK:2, PASS:3};
 Entry.Utils = {};

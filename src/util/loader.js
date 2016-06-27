@@ -23,5 +23,6 @@ Entry.Loader.removeQueue = function(type) {
 };
 
 Entry.Loader.getLoadedPercent = function() {
-    return this.queueCount / this.totalCount;
+    if (this.totalCount === 0) return 1;
+    else return this.queueCount / this.totalCount;
 };
