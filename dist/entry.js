@@ -859,8 +859,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
+  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(c, d);
   return a.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1060,8 +1060,8 @@ Blockly.Blocks.dplay_select_led = {init:function() {
 Entry.block.dplay_select_led = function(b, a) {
   var c = a.getField("PORT"), d = 7;
   "7" == c ? d = 7 : "8" == c ? d = 8 : "9" == c ? d = 9 : "10" == c && (d = 10);
-  c = a.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(d, "on" == c ? 255 : 0);
+  c = "on" == a.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(d, c);
   return a.callReturn();
 };
 Blockly.Blocks.dplay_get_switch_status = {init:function() {
@@ -2071,10 +2071,10 @@ Entry.block.wait_second = function(b, a) {
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a);
+  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
   setTimeout(function() {
     a.timeFlag = 0;
-  }, 60 / (Entry.FPS || 60) * c * 1E3);
+  }, c);
   return a;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -6316,45 +6316,34 @@ Entry.Container.prototype.setObjects = function(b) {
   b = Entry.type;
   ("workspace" == b || "phone" == b) && (b = this.getCurrentObjects()[0]) && this.selectObject(b.id);
 };
-Entry.Container.prototype.getPictureElement = function(b) {
-  for (var a in this.objects_) {
-    var c = this.objects_[a], d;
-    for (d in c.pictures) {
-      if (b === c.pictures[d].id) {
-        return c.pictures[d].view;
-      }
-    }
+Entry.Container.prototype.getPictureElement = function(b, a) {
+  var c = this.getObject(a).getPicture(b);
+  if (c) {
+    return c.view;
   }
   throw Error("No picture found");
 };
 Entry.Container.prototype.setPicture = function(b) {
-  for (var a in this.objects_) {
-    var c = this.objects_[a], d;
-    for (d in c.pictures) {
-      if (b.id === c.pictures[d].id) {
-        a = {};
-        a.dimension = b.dimension;
-        a.id = b.id;
-        a.filename = b.filename;
-        a.fileurl = b.fileurl;
-        a.name = b.name;
-        a.view = c.pictures[d].view;
-        c.pictures[d] = a;
-        return;
-      }
+  var a = this.getObject(b.objectId), c;
+  for (c in a.pictures) {
+    if (b.id === a.pictures[c].id) {
+      var d = {};
+      d.dimension = b.dimension;
+      d.id = b.id;
+      d.filename = b.filename;
+      d.fileurl = b.fileurl;
+      d.name = b.name;
+      d.view = a.pictures[c].view;
+      a.pictures[c] = d;
+      return;
     }
   }
   throw Error("No picture found");
 };
-Entry.Container.prototype.selectPicture = function(b) {
-  for (var a in this.objects_) {
-    var c = this.objects_[a], d;
-    for (d in c.pictures) {
-      var e = c.pictures[d];
-      if (b === e.id) {
-        return c.selectedPicture = e, c.entity.setImage(e), c.updateThumbnailView(), c.id;
-      }
-    }
+Entry.Container.prototype.selectPicture = function(b, a) {
+  var c = this.getObject(a), d = c.getPicture(b);
+  if (d) {
+    return c.selectedPicture = d, c.entity.setImage(d), c.updateThumbnailView(), c.id;
   }
   throw Error("No picture found");
 };
@@ -6414,6 +6403,7 @@ Entry.Container.prototype.getAllObjects = function() {
   return this.objects_;
 };
 Entry.Container.prototype.getObject = function(b) {
+  !b && Entry.playground && Entry.playground.object && (b = Entry.playground.object.id);
   for (var a = this.objects_.length, c = 0;c < a;c++) {
     var d = this.objects_[c];
     if (d.id == b) {
@@ -8099,6 +8089,7 @@ Entry.EntryObject = function(b) {
     Entry.stage.loadObject(this);
     for (a in this.pictures) {
       var c = this.pictures[a];
+      c.objectId = this.id;
       c.id || (c.id = Entry.generateHash());
       var d = new Image;
       c.fileurl ? d.src = c.fileurl : c.fileurl ? d.src = c.fileurl : (b = c.filename, d.src = Entry.defaultPath + "/uploads/" + b.substring(0, 2) + "/" + b.substring(2, 4) + "/image/" + b + ".png");
@@ -8501,6 +8492,7 @@ Entry.EntryObject.prototype.select = function(b) {
 };
 Entry.EntryObject.prototype.addPicture = function(b, a) {
   Entry.stateManager && Entry.stateManager.addCommand("add sprite", this, this.removePicture, b.id);
+  b.objectId = this.id;
   a || 0 === a ? (this.pictures.splice(a, 0, b), Entry.playground.injectPicture(this)) : this.pictures.push(b);
   return new Entry.State(this, this.removePicture, b.id);
 };
@@ -19769,7 +19761,7 @@ Entry.Playground.prototype.addPicture = function(b, a) {
   this.selectPicture(b);
 };
 Entry.Playground.prototype.setPicture = function(b) {
-  var a = Entry.container.getPictureElement(b.id), c = $(a);
+  var a = Entry.container.getPictureElement(b.id, b.objectId), c = $(a);
   if (a) {
     b.view = a;
     a.picture = b;
@@ -19794,7 +19786,7 @@ Entry.Playground.prototype.selectPicture = function(b) {
     e.id === b.id ? e.view.addClass("entryPictureSelected") : e.view.removeClass("entryPictureSelected");
   }
   var f;
-  b && b.id && (f = Entry.container.selectPicture(b.id));
+  b && b.id && (f = Entry.container.selectPicture(b.id, b.objectId));
   this.object.id === f && Entry.dispatchEvent("pictureSelected", b);
 };
 Entry.Playground.prototype.movePicture = function(b, a) {
