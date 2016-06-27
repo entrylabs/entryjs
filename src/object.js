@@ -124,6 +124,7 @@ Entry.EntryObject.prototype.generateView = function() {
                 },
                 {
                     text: Lang.Workspace.context_duplicate,
+                    enable: !Entry.engine.isState('run'),
                     callback: function(){
                         Entry.container.addCloneObject(object);
                     }
