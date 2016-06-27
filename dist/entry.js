@@ -11845,14 +11845,18 @@ Entry.ContextMenu = {};
     this._className && (this.dom.removeClass(this._className), delete this._className);
   };
 })(Entry.ContextMenu);
-Entry.Loader = {queueCount:0};
+Entry.Loader = {queueCount:0, totalCount:0};
 Entry.Loader.addQueue = function(b) {
   this.queueCount || Entry.dispatchEvent("loadStart");
   this.queueCount++;
+  this.totalCount++;
 };
 Entry.Loader.removeQueue = function(b) {
   this.queueCount--;
-  this.queueCount || Entry.dispatchEvent("loadComplete");
+  this.queueCount || (Entry.dispatchEvent("loadComplete"), this.totalCount = 0);
+};
+Entry.Loader.getLoadedPercent = function() {
+  return this.queueCount / this.totalCount;
 };
 Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BLOCK_RENDER_MODEL:9, BOX_MODEL:10, THREAD_MODEL:11, DRAG_INSTANCE:12, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1, BREAK:2, PASS:3};
 Entry.Utils = {};
@@ -13116,7 +13120,7 @@ p.closeConnection = function() {
   this.socket && this.socket.close();
 };
 p.downloadConnector = function() {
-  window.open("http://download.play-entry.org/apps/Entry_HW_1.5.4_Setup.exe", "_blank").focus();
+  window.open("http://download.play-entry.org/apps/Entry_HW_1.5.5_Setup.exe", "_blank").focus();
 };
 p.downloadSource = function() {
   window.open("http://play-entry.com/down/board.ino", "_blank").focus();
