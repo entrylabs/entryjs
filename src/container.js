@@ -210,6 +210,18 @@ Entry.Container.prototype.getPictureElement = function(pictureId, objectId) {
  * @param {!Object picture} picture
  */
 Entry.Container.prototype.setPicture = function(picture) {
+    var object = this.getObject(picture.objectId);
+    for (var j in object.pictures) {
+        if (picture.id === object.pictures[j].id) {
+            var picture_ = {};
+            picture_.dimension = picture.dimension;
+            picture_.id = picture.id;
+            picture_.filename = picture.filename;
+            picture_.fileurl = picture.fileurl;
+            picture_.name = picture.name;
+            picture_.view = object.pictures[j].view;
+            object.pictures[j] = picture_;
+            return;
         }
     }
     throw new Error('No picture found');
@@ -394,6 +406,8 @@ Entry.Container.prototype.getAllObjects = function() {
  * @return {Entry.EntryObject}
  */
 Entry.Container.prototype.getObject = function(objectId) {
+    if (!objectId && Entry.playground && Entry.playground.object)
+        objectId = Entry.playground.object.id;
     var length = this.objects_.length;
     for (var i = 0; i<length; i++) {
         var object = this.objects_[i];
