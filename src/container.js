@@ -74,6 +74,7 @@ Entry.Container.prototype.generateView = function(containerView, option) {
             var options = [
                 {
                     text: Lang.Blocks.Paste_blocks,
+                    enable: !Entry.engine.isState('run') && !!Entry.container.copiedObject,
                     callback: function(){
                         if (Entry.container.copiedObject)
                             Entry.container.addCloneObject(Entry.container.copiedObject);

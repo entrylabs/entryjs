@@ -143,6 +143,7 @@ Entry.EntryObject.prototype.generateView = function() {
                 },
                 {
                     text: Lang.Blocks.Paste_blocks,
+                    enable: !Entry.engine.isState('run') && !!Entry.container.copiedObject,
                     callback: function(){
                         if (Entry.container.copiedObject)
                             Entry.container.addCloneObject(Entry.container.copiedObject);
