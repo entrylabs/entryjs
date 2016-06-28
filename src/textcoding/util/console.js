@@ -28,25 +28,32 @@ Entry.Console = function() {
             lineNumbers: false,
             lineWrapping: true,
             value: "",
-            mode:  {},
+            mode: {},
             theme: "default",
             styleActiveLine: false,
             //gutters: ["CodeMirror-lint-markers"],
-            lint: false,
-            viewportMargin: 10
+            lint: false
         });
         this._doc = this.codeMirror.getDoc();
 
         this.codeMirror.on('beforeChange', function(cm, change) {
+                console.log(change);
             if (!this._isEditing)
                 change.cancel();
+            else if (change.origin === "+delete" && change.to.ch === 0) {
+                change.cancel();
+            }
         }.bind(this));
 
         this.codeMirror.on("keyup", function (cm, event) {
-            if (this._isEditing && event.keyCode == 13) {
+            if (this._isEditing && event.code == "Enter") {
                 this.endInput();
             }
         }.bind(this));
+
+        this.codeMirror.on("cursorActivity", function(cm, event) {
+            cm.execCommand("goDocEnd");
+        });
 
         Entry.addEventListener("stop", this.clear.bind(this))
 
@@ -59,36 +66,36 @@ Entry.Console = function() {
 
     p.clear = function() {
         this.setEditing(true);
-        this.codeMirror.setValue("Entry Console\n")
+        this.codeMirror.setValue("Entry Console \n")
+        this.codeMirror.execCommand("goDocEnd");
         this.setEditing(false);
     };
 
     p.print = function(message, mode) {
         this.setEditing(true);
+        this.codeMirror.execCommand("goDocEnd");
         var cursor = this._doc.getCursor();
         var line = this._doc.getLine(cursor.line);
         var pos = {
             line: cursor.line,
-            ch: line.length - 1
+            ch: 0
         }
         this._doc.replaceRange(message + '\n', pos);
         this._doc.addLineClass(cursor.line, "text", mode);
         if (mode === 'speak')
             this.setEditing(false);
-        this.codeMirror.execCommand("goLineEnd");
+        this.codeMirror.execCommand("goDocEnd");
         if (mode === 'ask')
             this.codeMirror.focus();
     };
 
     p.endInput = function() {
-        this._inputData = this._doc.getLine(this._doc.getCursor().line);
+        this._inputData = this._doc.getLine(this._doc.getCursor().line - 1);
         Entry.container.setInputValue(this._inputData);
-        this.codeMirror.execCommand("newlineAndIndent")
         this.setEditing(false);
     };
 
     p.stopInput = function(inputValue) {
-        this.codeMirror.execCommand("newlineAndIndent")
         this.setEditing(false);
     };
 

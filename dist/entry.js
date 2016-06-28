@@ -6899,9 +6899,9 @@ Entry.Dialog = function(b, a, d, c) {
   this.padding = 10;
   this.border = 2;
   "number" == typeof a && (a = String(a));
+  Entry.console && Entry.console.print(a, d);
   this.message_ = a = a.match(/.{1,15}/g).join("\n");
   this.mode_ = d;
-  Entry.console && Entry.console.print(a, d);
   "speak" !== d && "ask" !== d || this.generateSpeak();
   c || Entry.stage.loadDialog(this);
 };
@@ -11503,14 +11503,18 @@ Entry.Console = function() {
 (function(b) {
   b.createView = function() {
     this.view = new Entry.Dom("div", {id:"entryConsole"});
-    this.codeMirror = CodeMirror(this.view[0], {lineNumbers:!1, lineWrapping:!0, value:"", mode:{}, theme:"default", styleActiveLine:!1, lint:!1, viewportMargin:10});
+    this.codeMirror = CodeMirror(this.view[0], {lineNumbers:!1, lineWrapping:!0, value:"", mode:{}, theme:"default", styleActiveLine:!1, lint:!1});
     this._doc = this.codeMirror.getDoc();
     this.codeMirror.on("beforeChange", function(a, b) {
-      this._isEditing || b.cancel();
+      console.log(b);
+      this._isEditing ? "+delete" === b.origin && 0 === b.to.ch && b.cancel() : b.cancel();
     }.bind(this));
     this.codeMirror.on("keyup", function(a, b) {
-      this._isEditing && 13 == b.keyCode && this.endInput();
+      this._isEditing && "Enter" == b.code && this.endInput();
     }.bind(this));
+    this.codeMirror.on("cursorActivity", function(a, b) {
+      a.execCommand("goDocEnd");
+    });
     Entry.addEventListener("stop", this.clear.bind(this));
     this.clear();
   };
@@ -11519,26 +11523,27 @@ Entry.Console = function() {
   };
   b.clear = function() {
     this.setEditing(!0);
-    this.codeMirror.setValue("Entry Console\n");
+    this.codeMirror.setValue("Entry Console \n");
+    this.codeMirror.execCommand("goDocEnd");
     this.setEditing(!1);
   };
   b.print = function(a, b) {
     this.setEditing(!0);
-    var c = this._doc.getCursor(), e = this._doc.getLine(c.line);
-    this._doc.replaceRange(a + "\n", {line:c.line, ch:e.length - 1});
+    this.codeMirror.execCommand("goDocEnd");
+    var c = this._doc.getCursor();
+    this._doc.getLine(c.line);
+    this._doc.replaceRange(a + "\n", {line:c.line, ch:0});
     this._doc.addLineClass(c.line, "text", b);
     "speak" === b && this.setEditing(!1);
-    this.codeMirror.execCommand("goLineEnd");
+    this.codeMirror.execCommand("goDocEnd");
     "ask" === b && this.codeMirror.focus();
   };
   b.endInput = function() {
-    this._inputData = this._doc.getLine(this._doc.getCursor().line);
+    this._inputData = this._doc.getLine(this._doc.getCursor().line - 1);
     Entry.container.setInputValue(this._inputData);
-    this.codeMirror.execCommand("newlineAndIndent");
     this.setEditing(!1);
   };
   b.stopInput = function(a) {
-    this.codeMirror.execCommand("newlineAndIndent");
     this.setEditing(!1);
   };
   b.setEditing = function(a) {

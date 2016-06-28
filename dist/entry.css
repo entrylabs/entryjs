@@ -5113,16 +5113,16 @@ svg .svgBlockGroup text {
   background-image: url("../images/property/hw_on.png");
 }
 .propertyTabtvCast {
-  background-image: url("../images/property/vedio_off.png");
+  background-image: url("../images/property/video_off.png");
 }
 .propertyTabtvCast.selected {
-  background-image: url("../images/property/vedio_on.png");
+  background-image: url("../images/property/video_on.png");
 }
 .propertyTabyoutube {
-  background-image: url("../images/property/vedio_off.png");
+  background-image: url("../images/property/video_off.png");
 }
 .propertyTabyoutube.selected {
-  background-image: url("../images/property/vedio_on.png");
+  background-image: url("../images/property/video_on.png");
 }
 .propertyTabgoal {
   background-image: url("../images/property/doneproject.png");
@@ -5133,8 +5133,14 @@ svg .svgBlockGroup text {
 .propertyTabpdf {
   background-image: url("../images/property/pdf_off.png");
 }
-.propertyTabpdf {
+.propertyTabpdf.selected {
   background-image: url("../images/property/pdf_on.png");
+}
+.propertyTabconsole {
+  background-image: url("../images/property/console_off.png");
+}
+.propertyTabconsole.selected {
+  background-image: url("../images/property/console_on.png");
 }
 .propertyContent {
   position: absolute;
