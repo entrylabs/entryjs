@@ -11911,6 +11911,15 @@ Entry.TextCodingUtil = function() {
     console.log("searchFuncDefParam block", a);
     return a;
   };
+  b.getFuncDefParam = function(a) {
+    console.log("searchFuncDefParam block", a);
+    var b = {};
+    if (a.data.params[1]) {
+      return b = this.searchFuncDefParam(a.data.params[1]);
+    }
+    console.log("searchFuncDefParam block", a);
+    return a;
+  };
 })(Entry.TextCodingUtil.prototype);
 Entry.BlockToPyParser = function(b) {
   this.blockSyntax = b;
@@ -12437,9 +12446,21 @@ Entry.PyToBlockParser = function(b) {
         return b.name = e.name, b;
       }
       var g;
-      f.callee && (g = f.callee.object.object.name.concat(".").concat(f.callee.object.property.name).concat(".").concat(f.callee.property.name));
+      console.log("VariableDeclarator init", f);
+      if (f.callee && f.callee.object && f.callee.property) {
+        if (f.callee.object.object && f.callee.object.object.name) {
+          var h = f.callee.object.object.name
+        }
+        if (f.callee.object.property && f.callee.object.property.name) {
+          var k = f.callee.object.property.name
+        }
+        if (f.callee.property.name) {
+          var l = f.callee.property.name
+        }
+        h && k && l && (g = h.concat(".").concat(k).concat(".").concat(l));
+      }
       if ("__pythonRuntime.objects.list" == g) {
-        var h = this[e.type](e);
+        h = this[e.type](e);
         console.log("VariableDeclarator idData", h);
         b.id = h;
         g = this[f.type](f);
@@ -12449,9 +12470,9 @@ Entry.PyToBlockParser = function(b) {
         f = [];
         arguments = g.arguments;
         for (c in arguments) {
-          var k = {};
-          k.data = String(arguments[c].params[0]);
-          f.push(k);
+          var m = {};
+          m.data = String(arguments[c].params[0]);
+          f.push(m);
         }
         Entry.TextCodingUtil.prototype.isGlobalListExisted(h) ? Entry.TextCodingUtil.prototype.updateGlobalList(h, f) : Entry.TextCodingUtil.prototype.createGlobalList(h, f);
       } else {
@@ -12469,18 +12490,20 @@ Entry.PyToBlockParser = function(b) {
         if ("Literal" == f.type) {
           c = e = this.getBlockType("%1 = %2");
         } else {
-          if (console.log("VariableDeclarator idData.name", h.name, "initData.params[0].name", g.params[0].name), g.params && g.params[0] && h.name == g.params[0].name) {
-            if (c = e = this.getBlockType("%1 += %2"), "PLUS" != g.operator) {
+          if (g.params && g.params[0] && g.params[0].name && h.name == g.params[0].name) {
+            if (console.log("VariableDeclarator idData.name", h.name, "initData.params[0].name", g.params[0].name), c = e = this.getBlockType("%1 += %2"), "PLUS" != g.operator) {
               return b;
             }
           } else {
             c = e = this.getBlockType("%1 = %2");
           }
         }
-        var l = Entry.block[e], e = l.params, l = l.def.params;
-        h.name && (k = this.ParamDropdownDynamic(h.name, e[0], l[0]));
+        k = Entry.block[e];
+        e = k.params;
+        k = k.def.params;
+        h.name && (m = this.ParamDropdownDynamic(h.name, e[0], k[0]));
         e = [];
-        "Literal" == f.type ? (h.params && h.params[0] ? e.push(h.params[0]) : e.push(k), e.push(g)) : (console.log("VariableDeclarator idData", h, "initData", g), g.params && g.params[0] && h.name == g.params[0].name ? (console.log("in initData.params[0]"), h.params && h.params[0] ? e.push(h.params[0]) : e.push(k), e.push(g.params[2])) : (console.log("in initData"), h.params && h.params[0] ? e.push(h.params[0]) : e.push(k), e.push(g)));
+        "Literal" == f.type ? (h.params && h.params[0] ? e.push(h.params[0]) : e.push(m), e.push(g)) : (console.log("VariableDeclarator idData", h, "initData", g), g.params && g.params[0] && h.name == g.params[0].name ? (console.log("in initData.params[0]"), h.params && h.params[0] ? e.push(h.params[0]) : e.push(m), e.push(g.params[2])) : (console.log("in initData"), h.params && h.params[0] ? e.push(h.params[0]) : e.push(m), e.push(g)));
         b.type = c;
         b.params = e;
       }

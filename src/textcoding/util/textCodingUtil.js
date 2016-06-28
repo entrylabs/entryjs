@@ -721,4 +721,17 @@ Entry.TextCodingUtil = function() {
         }
     };
 
+    p.getFuncDefParam = function(block) {
+        console.log("searchFuncDefParam block", block);
+        var result = {};
+        if(block.data.params[1]){
+            var result = this.searchFuncDefParam(block.data.params[1]);  
+            return result;
+        }
+        else {
+            console.log("searchFuncDefParam block", block);
+            return block;
+        }
+    };
+
 })(Entry.TextCodingUtil.prototype);

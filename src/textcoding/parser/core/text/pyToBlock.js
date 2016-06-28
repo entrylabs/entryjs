@@ -477,12 +477,21 @@ Entry.PyToBlockParser = function(blockSyntax) {
             return undefined;*/
 
 
-        var calleeName;
+        var calleeName; 
 
-        if(init.callee) { 
-            calleeName = init.callee.object.object.name.concat('.').concat(init.callee.object.property.name).concat('.')
-                            .concat(init.callee.property.name);
-        }
+        console.log("VariableDeclarator init", init);
+
+        if(init.callee && init.callee.object && init.callee.property) {
+            if(init.callee.object.object && init.callee.object.object.name)
+                var objectObjectName  = init.callee.object.object.name;
+            if(init.callee.object.property && init.callee.object.property.name)
+                var objectPropertyName = init.callee.object.property.name;
+            if(init.callee.property.name)
+                var propertyName = init.callee.property.name;
+            
+            if(objectObjectName && objectPropertyName && propertyName)
+                calleeName = objectObjectName.concat('.').concat(objectPropertyName).concat('.').concat(propertyName);
+        } 
         
         if(calleeName == "__pythonRuntime.objects.list") { 
             var idData = this[id.type](id);
@@ -496,7 +505,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var name = id.name;
             
             var array = [];
-            var arguments = initData.arguments;
+            var arguments = initData.arguments; 
             for(var a in arguments) {
                 var argument = arguments[a];
                 var item = {};
@@ -551,14 +560,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 
             } 
             else {
-                console.log("VariableDeclarator idData.name", idData.name, "initData.params[0].name", initData.params[0].name);
-                if(initData.params && initData.params[0] && idData.name == initData.params[0].name) {
+                if(initData.params && initData.params[0] && initData.params[0].name && (idData.name == initData.params[0].name)) {
+                    console.log("VariableDeclarator idData.name", idData.name, "initData.params[0].name", initData.params[0].name);
                     var syntax = String("%1 += %2");
                     var type = this.getBlockType(syntax);
                     structure.type = type; 
                     
 
-                    if(initData.operator != "PLUS")
+                    if(initData.operator != "PLUS") 
                         return result;
                     
                 } else {
