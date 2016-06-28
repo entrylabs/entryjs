@@ -11548,6 +11548,14 @@ Entry.Console = function() {
 Entry.TextCodingUtil = function() {
 };
 (function(b) {
+  b._funcParamQ;
+  b.initQueue = function() {
+    this._funcParamQ = new Entry.Queue;
+    console.log("initQueue this._funcParamQ", this._funcParamQ);
+  };
+  b.clearQueue = function() {
+    this._funcParamQ.clear();
+  };
   b.indent = function(a) {
     console.log("indent textCode", a);
     var b = "\t";
@@ -11913,11 +11921,12 @@ Entry.TextCodingUtil = function() {
   };
   b.getFuncDefParam = function(a) {
     console.log("searchFuncDefParam block", a);
-    var b = {};
     if (a.data.params[1]) {
-      return b = this.searchFuncDefParam(a.data.params[1]);
+      var b = this.searchFuncDefParam(a.data.params[1]);
+      this._funcParamQ.enqueue(a.data.params[1]);
+      return b;
     }
-    console.log("searchFuncDefParam block", a);
+    this._funcParamQ.enqueue(a.data.params[0]);
     return a;
   };
 })(Entry.TextCodingUtil.prototype);
@@ -12299,14 +12308,18 @@ Entry.PyToBlockParser = function(b) {
               if ("__pythonRuntime.functions.len" == k) {
                 m = "len", e = this.getBlockType(m);
               } else {
-                if ("Identifier" == f.object.type && "append" == l[1] || "MemberExpression" == f.object.type && "self" == l[0] && "append" == l[2]) {
-                  m = "%2.append", e = this.getBlockType(m);
+                if ("__pythonRuntime.functions.print" == k) {
+                  m = "print", e = this.getBlockType(m);
                 } else {
-                  if ("Identifier" == f.object.type && "insert" == l[1] || "MemberExpression" == f.object.type && "self" == l[0] && "insert" == l[2]) {
-                    m = "%2.insert", e = this.getBlockType(m);
+                  if ("Identifier" == f.object.type && "append" == l[1] || "MemberExpression" == f.object.type && "self" == l[0] && "append" == l[2]) {
+                    m = "%2.append", e = this.getBlockType(m);
                   } else {
-                    if ("Identifier" == f.object.type && "pop" == l[1] || "MemberExpression" == f.object.type && "self" == l[0] && "pop" == l[2]) {
-                      m = "%2.pop", e = this.getBlockType(m);
+                    if ("Identifier" == f.object.type && "insert" == l[1] || "MemberExpression" == f.object.type && "self" == l[0] && "insert" == l[2]) {
+                      m = "%2.insert", e = this.getBlockType(m);
+                    } else {
+                      if ("Identifier" == f.object.type && "pop" == l[1] || "MemberExpression" == f.object.type && "self" == l[0] && "pop" == l[2]) {
+                        m = "%2.pop", e = this.getBlockType(m);
+                      }
                     }
                   }
                 }
@@ -13076,30 +13089,38 @@ Entry.PyToBlockParser = function(b) {
             n.data = String(arguments[m].params[0]);
             c.push(n);
           }
-          m = Entry.playground.object;
-          Entry.TextCodingUtil.prototype.isLocalListExisted(l, m) ? Entry.TextCodingUtil.prototype.updateLocalList(l, c, m) : Entry.TextCodingUtil.prototype.createLocalList(l, c, m);
+          n = Entry.playground.object;
+          Entry.TextCodingUtil.prototype.isLocalListExisted(l, n) ? Entry.TextCodingUtil.prototype.updateLocalList(l, c, n) : Entry.TextCodingUtil.prototype.createLocalList(l, c, n);
         }
-        "__pythonRuntime.ops.subscriptIndex" == f.property.callee ? l = "%1[%2] = %3" : g.arguments && g.arguments[0].object ? (c = a.left.object.name.concat(a.left.property.name), m = a.right.arguments[0].object.name.concat(a.right.arguments[0].property.name), console.log("AssignmentExpression leftEx", c, "rightEx", m), l = a.right.arguments && c == m ? "%1 += %2" : "%1 = %2") : l = "%1 = %2";
-        c = n = this.getBlockType(l);
+        if (f.property && "__pythonRuntime.ops.subscriptIndex" == f.property.callee) {
+          var l = "%1[%2] = %3", r = this.getBlockType(l)
+        } else {
+          g.arguments && g.arguments[0] ? (c = a.left.name ? a.left.name : a.left.object.name.concat(a.left.property.name), l = a.right.arguments[0].name ? a.right.arguments[0].name : a.right.arguments[0].object.name.concat(a.right.arguments[0].property.name), console.log("AssignmentExpression leftEx", c, "rightEx", l), l = a.right.arguments && c == l ? "%1 += %2" : "%1 = %2") : l = "%1 = %2", r = this.getBlockType(l);
+        }
+        c = r;
     }
     if (operator) {
-      var r = Entry.TextCodingUtil.prototype.logicalExpressionConvert(operator)
+      var q = Entry.TextCodingUtil.prototype.logicalExpressionConvert(operator)
     }
-    b.operator = r;
+    b.operator = q;
     console.log("AssignmentExpression syntax", l);
-    m = f.object;
-    r = f.property;
-    console.log("AssignmentExpression object property value", m, r);
+    f.object ? n = f.object : f.name && (n = f.name);
+    if (f.proprty) {
+      var t = f.property
+    } else {
+      f.name && (t = f.name);
+    }
+    console.log("AssignmentExpression object property value", n, t);
     if ("%1[%2] = %3" == l) {
-      m = Entry.block[n];
-      k = m.params;
-      g = m.def.params;
-      k = f.params[1];
-      console.log("AssignmentExpression listName", k);
-      if (!k) {
+      n = Entry.block[r];
+      k = n.params;
+      q = n.def.params;
+      t = f.params[1];
+      console.log("AssignmentExpression listName", t);
+      if (!t) {
         return b;
       }
-      e.push(k);
+      e.push(t);
       f = f.property.arguments[0];
       console.log("AssignmentExpression param 1", f);
       console.log("AssignmentExpression param 2", f);
@@ -13107,29 +13128,25 @@ Entry.PyToBlockParser = function(b) {
       e.push(h);
     } else {
       if ("%1 = %2" == l) {
-        if (console.log("AssignmentExpression calleeName check", k), "self" == m.name && "__pythonRuntime.objects.list" != k) {
-          m = Entry.block[n], k = m.params, g = m.def.params, l = r.name, f = "number" == h.type || "text" == h.type ? h.params[0] : "NaN", m = Entry.playground.object, console.log("final object", m), Entry.TextCodingUtil.prototype.isLocalVariableExisted(l, m) ? Entry.TextCodingUtil.prototype.updateLocalVariable(l, f, m) : Entry.TextCodingUtil.prototype.createLocalVariable(l, f, m), l = this.ParamDropdownDynamic(l, k[0], g[0]), e.push(l), e.push(h);
+        if (console.log("AssignmentExpression calleeName check", k), n && "self" == n.name && "__pythonRuntime.objects.list" != k) {
+          n = Entry.block[r], k = n.params, q = n.def.params, l = t.name, f = "number" == h.type || "text" == h.type ? h.params[0] : "NaN", n = Entry.playground.object, console.log("final object", n), Entry.TextCodingUtil.prototype.isLocalVariableExisted(l, n) ? Entry.TextCodingUtil.prototype.updateLocalVariable(l, f, n) : Entry.TextCodingUtil.prototype.createLocalVariable(l, f, n), l = this.ParamDropdownDynamic(l, k[0], q[0]), e.push(l), e.push(h);
         } else {
           return b;
         }
       } else {
         if ("%1 += %2" == l) {
-          if ("self" == m.name) {
-            m = Entry.block[n];
-            k = m.params;
-            g = m.def.params;
-            l = r.name;
-            m = Entry.playground.object;
-            console.log("final object", m);
-            if (!Entry.TextCodingUtil.prototype.isLocalVariableExisted(l, m)) {
+          if (n && "self" == n.name) {
+            if (n = Entry.block[r], k = n.params, q = n.def.params, l = t.name, n = Entry.playground.object, console.log("final object", n), !Entry.TextCodingUtil.prototype.isLocalVariableExisted(l, n)) {
               return b;
             }
-            l = this.ParamDropdownDynamic(l, k[0], g[0]);
-            e.push(l);
-            e.push(h.params[2]);
           } else {
-            return b;
+            if (n = Entry.block[r], k = n.params, q = n.def.params, l = t, !Entry.TextCodingUtil.prototype.isGlobalVariableExisted(l)) {
+              return b;
+            }
           }
+          l = this.ParamDropdownDynamic(l, k[0], q[0]);
+          e.push(l);
+          e.push(h.params[2]);
         }
       }
     }
@@ -13166,7 +13183,11 @@ Entry.PyToBlockParser = function(b) {
     console.log("FunctionDeclaration textFuncStatements", c);
     var k, l, m, e = Entry.variableContainer.functions_, n;
     for (n in e) {
-      var h = e[n], r = h.block.template.split("%")[0].trim();
+      h = e[n];
+      Entry.TextCodingUtil.prototype.initQueue();
+      Entry.TextCodingUtil.prototype.getFuncDefParam(h.content._data[0]._data[0].data.params[0].data.params[1]);
+      console.log("Entry.TextCodingUtil._funcParamQ", Entry.TextCodingUtil._funcParamQ);
+      var r = h.block.template.split("%")[0].trim();
       if (f == r) {
         console.log("textFuncName", f);
         console.log("blockFuncName", r);
