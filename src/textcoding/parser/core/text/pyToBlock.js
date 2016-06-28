@@ -169,7 +169,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 type = this.getBlockType(syntax);   
             }
             else if(calleeName == "__pythonRuntime.functions.len") {
-                var syntax = String("len(%2)");
+                var syntax = String("len");
                 type = this.getBlockType(syntax);
             } 
             else if((callee.object.type == "Identifier" && calleeTokens[1] == "append") ||
@@ -300,7 +300,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 else if(params[2].type == "text") {
                     params[2].params[0] = String(Number(params[2].params[0]) + 1);
                 }
-            } else if(syntax == String("len(%2)")) {
+            } else if(syntax == String("len")) {
                 var listName = this.ParamDropdownDynamic(params[1].name, paramsMeta[1], paramsDefMeta[1]);
                 delete params[1];
                 params[1] = listName;
@@ -326,7 +326,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 structure.params = params;
                 result.params = structure.params;
             }   
-        } else {
+        } else { // Function Arguments
             var args = [];
             for(var i in arguments) { 
                 var argument = arguments[i];
@@ -334,22 +334,29 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 
                 var argumentData = this[argument.type](argument);
                 console.log("CallExpression argumentData", argumentData);
-                args.push(argumentData);
+               
+                if(argumentData.callee == "__pythonRuntime.utils.createParamsObj")
+                    args = argumentData.arguments;
+                else 
+                    args.push(argumentData);
                                               
             }
             console.log("CallExpression args", args);
-           
+            
             result.arguments = args;
         }
 
         console.log("CallExpression Function Check result", result);
 
         // Function Check
-        //if(result.arguments && result.arguments[0] && result.arguments[0].callee == "__pythonRuntime.utils.createParamsObj") {
-        if(!type){
-            if(result.callee && result.arguments) {
-                var funcKey = result.callee.name + result.arguments.length;
-                var type = this._funcMap.get(funcKey);
+        if(result.arguments && result.arguments[0] && result.arguments[0].callee == "__pythonRuntime.utils.createParamsObj") {
+            return result;
+        }
+
+        if(result.callee && result.arguments) {
+            var funcKey = result.callee.name + result.arguments.length;
+            var type = this._funcMap.get(funcKey);
+            if(type) {
                 result = {};
                 result.type = type;
             }
@@ -517,13 +524,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             console.log("variable name", name, "value", value);
 
-
-            if(!name.includes('__filbert')) {
-                if(Entry.TextCodingUtil.prototype.isGlobalVariableExisted(name)) {
-                    Entry.TextCodingUtil.prototype.updateGlobalVariable(name, value);
-                } 
-                else {
-                    Entry.TextCodingUtil.prototype.createGlobalVariable(name, value);
+            if(value && value != NaN) {
+                if(!name.includes('__filbert')) {
+                    if(Entry.TextCodingUtil.prototype.isGlobalVariableExisted(name)) {
+                        Entry.TextCodingUtil.prototype.updateGlobalVariable(name, value);
+                    } 
+                    else {
+                        Entry.TextCodingUtil.prototype.createGlobalVariable(name, value);
+                    }
                 }
             }
 
@@ -851,14 +859,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
             params.push("");
             params.push(listName);
             params.push("");
-            if(arguments[1].type == "number") {
-                arguments[1].params[0] += 1;
+            if(arguments[0].type == "number") {
+                arguments[0].params[0] += 1;
             }
-            else if(arguments[1].type == "text") {
-                arguments[1].params[0] = String(Number(arguments[1].params[0]) + 1);
+            else if(arguments[0].type == "text") {
+                arguments[0].params[0] = String(Number(arguments[0].params[0]) + 1);
             }
                         
-            params.push(arguments[1]);
+            params.push(arguments[0]);
             params.push("");
 
             structure.params = params;
@@ -1252,7 +1260,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         result = structure;
 
         console.log("IfStatement result", result);
-        return result;
+        return result; 
     };
 
      p.ForStatement = function(component) {
@@ -1866,7 +1874,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 return result;
 
             params.push(listName);
-            var param = leftData.property.arguments[1];
+            var param = leftData.property.arguments[0];
             console.log("AssignmentExpression param 1", param);
             /*if(param.type == "number") {
                 param.params[0] += 1;
@@ -1882,7 +1890,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         }
         else if(syntax == String("%1 = %2")) {
-            if(object.name == "self") {
+            console.log("AssignmentExpression calleeName check", calleeName);
+            if(object.name == "self" && calleeName != "__pythonRuntime.objects.list") {
                 var block = Entry.block[type]; 
                 var paramsMeta = block.params;
                 var paramsDefMeta = block.def.params;

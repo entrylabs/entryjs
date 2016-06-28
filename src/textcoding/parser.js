@@ -443,8 +443,9 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
             syntax = String(syntax);
             var tokens = syntax.split('(');
-            syntax = tokens[0];
-           /* if(syntax.match(/.*\..*\)/)) {
+            if(tokens[0].length != 0)
+                syntax = tokens[0];
+            /* if(syntax.match(/.*\..*\)/)) {
                 var index = syntax.indexOf('(');
 
                 syntax = syntax.substring(0, index);
