@@ -13,8 +13,10 @@ goog.require("Entry.BlockToPyParser");
 goog.require("Entry.JsToBlockParser");
 goog.require("Entry.PyToBlockParser");
 
+goog.require("Entry.TextCodingUtil");
 goog.require("Entry.PyHint");
 goog.require("Entry.Console")
+
 
 Entry.Parser = function(mode, type, cm, syntax) {
     this._mode = mode; // maze ai workspace
@@ -24,7 +26,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
     this._type = type;
     this.availableCode = [];
 
-    Entry.Parser.PARSE_GENERAL= 0;
+    Entry.Parser.PARSE_GENERAL = 0;
     Entry.Parser.PARSE_SYNTAX = 1;
     Entry.Parser.PARSE_VARIABLE = 2;
 
@@ -206,25 +208,30 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 try {
                     var pyAstGenerator = new Entry.PyAstGenerator();
                     console.log("code", code);
-                    var threads = code.split('\n\n');
 
+                    //Entry.TextCodingUtil.prototype.makeThreads(code);
+                    var threads = code.split('\n\n');
                     console.log("threads", threads);
 
                     for(var i in threads) {
                         console.log("thread", threads[i]);
                         console.log("search", threads[i].search("import"));
-
-                        if(threads[i].search("import") != -1) {
-                            threads.splice(i, 1, "");
-
+                        var thread = threads[i];
+                        if(thread.search("import") != -1) {
+                            threads[i] = "";
+                            continue;
                         }
+
+                        thread = Entry.TextCodingUtil.prototype.entryEventFuncFilter(thread);
+                        threads[i] = thread;
                     }
 
                     console.log("threads", threads);
                     var astArray = [];
 
                     for(var index in threads) {
-                        var ast = pyAstGenerator.generate(threads[index]);
+                        var thread = threads[index];
+                        var ast = pyAstGenerator.generate(thread);
                         if(ast.type == "Program" && ast.body.length != 0)
                             astArray.push(ast);
                     }
@@ -435,11 +442,14 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 continue;
 
             syntax = String(syntax);
-            if(syntax.match(/.*\..*\)/)) {
+            var tokens = syntax.split('(');
+            if(tokens[0].length != 0)
+                syntax = tokens[0];
+            /* if(syntax.match(/.*\..*\)/)) {
                 var index = syntax.indexOf('(');
 
                 syntax = syntax.substring(0, index);
-            }
+            }*/
             syntaxList[syntax] = key;
         }
         return syntaxList;

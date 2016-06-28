@@ -30,7 +30,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
         if (code instanceof Entry.Thread)
             return this.Thread(code);
-        if (code instanceof Entry.Block)
+        if (code instanceof Entry.Block) 
             return this.Block(code);
 
         var textCode = "",
@@ -63,7 +63,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
         var definition = '';
         for (var i = 0; i < blocks.length; i++) {
             var block = blocks[i];
-            console.log("blockToPy block", block);
+            console.log("blockToPy block", block, "this._parseMode", this._parseMode);
             if(this._parseMode == Entry.Parser.PARSE_GENERAL) {
                 if(Entry.TextCodingUtil.prototype.isNoPrintBlock(block))
                     continue;
@@ -71,7 +71,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                     isEventBlock = Entry.TextCodingUtil.prototype.isEventBlock(block);
                     if(isEventBlock) {
                         rootResult = this.Block(block) + '\n';
-                        definition = Entry.TextCodingUtil.prototype.makeDefinition(block) + '\n';
+                        //definition = Entry.TextCodingUtil.prototype.makeDefinition(block) + '\n';
                     }
                     else
                         contentResult += this.Block(block) + '\n';
@@ -80,11 +80,14 @@ Entry.BlockToPyParser = function(blockSyntax) {
                     contentResult += this.Block(block) + '\n';
                 }
             } else if(this._parseMode == Entry.Parser.PARSE_SYNTAX) {
-                result += this.Block(block) + '\n';
+                isEventBlock = Entry.TextCodingUtil.prototype.isEventBlock(block);
+                if(isEventBlock) {
+                    //definition = Entry.TextCodingUtil.prototype.makeDefinition(block) + '\n';
+                    result = definition;
+                } else {
+                    result = this.Block(block) + '\n';
+                } 
             }
-
-            console.log("blockToPy rootResult", rootResult);
-            console.log("blockToPy contentResult", contentResult);
 
             this._queue.clear();
             this._variableMap.clear(); 
@@ -92,10 +95,11 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
         if(this._parseMode == Entry.Parser.PARSE_GENERAL) {
             if(isEventBlock) {
-                result = definition + Entry.TextCodingUtil.prototype.indent(contentResult) + '\n';
-                var declaration = rootResult.split('def')[1];
+                result = rootResult + Entry.TextCodingUtil.prototype.indent(contentResult) + '\n';
+                // Declaration
+                /*var declaration = rootResult.split('def')[1];
                 declaration = declaration.substring(0, declaration.length-1);
-                result = result.trim() + '\n\n' + declaration.trim() + '\n';
+                result = result.trim() + '\n\n' + declaration.trim() + '\n';*/
 
             }
             else {
@@ -598,7 +602,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
             for(var s in func.statements) {
                 var block = func.statements[s];
                 console.log("makeFuncDef statements", block);
-                stmtResult += this.Block(block).concat('\n');
+                stmtResult += this.Block(block).concat('\n'); 
 
             }
             stmtResult = stmtResult.concat('\n');
@@ -651,9 +655,9 @@ Entry.BlockToPyParser = function(blockSyntax) {
                 var i = key.search('_');
                 var nickname = key.substring(0, i);
                 if(nickname == 'stringParam')
-                    var name = 'param' + String(index+1) + '_value';
+                    var name = 'value' + String(index+1);
                 else if (nickname == 'booleanParam')
-                    var name = 'param' + String(index+1) + '_boolean';
+                    var name = 'boolean' + String(index+1);
 
                 var param = name;
                 funcParams[index] = param;
