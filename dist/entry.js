@@ -12807,7 +12807,7 @@ Entry.PyToBlockParser = function(b) {
       f = f.data;
       console.log("IfStatement consequentsData", f);
       for (m in f) {
-        h = f[m], console.log("IfStatement consData", h), h.init && h.type ? (b.type = h.type, (h = h.statements) && (e = h)) : !h.init && h.type && e.push(h);
+        h = f[m], console.log("IfStatement consData", h), h && (h.init && h.type ? (b.type = h.type, (h = h.statements) && (e = h)) : !h.init && h.type && e.push(h));
       }
       0 != e.length && (b.statements[0] = e);
     }

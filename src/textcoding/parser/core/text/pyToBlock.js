@@ -1231,18 +1231,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
             for(var i in consequentsData) {
                 var consData = consequentsData[i];
                 console.log("IfStatement consData", consData);
-                    
-                if(consData.init && consData.type) { //ForStatement Block
-                    structure.type = consData.type; //ForStatement Type
+                if(consData) {    
+                    if(consData.init && consData.type) { //ForStatement Block
+                        structure.type = consData.type; //ForStatement Type
 
-                    var consStatements = consData.statements;
-                    if(consStatements) { //ForStatement Statements
-                        consStmts = consStatements;
+                        var consStatements = consData.statements;
+                        if(consStatements) { //ForStatement Statements
+                            consStmts = consStatements;
+                        }
                     }
+                    else if(!consData.init && consData.type) { //IfStatement Block 
+                        consStmts.push(consData); //IfStatement Statements
+                    } 
                 }
-                else if(!consData.init && consData.type) { //IfStatement Block 
-                    consStmts.push(consData); //IfStatement Statements
-                } 
             }
 
             if(consStmts.length != 0)
