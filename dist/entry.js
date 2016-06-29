@@ -16008,11 +16008,10 @@ Entry.Console = function() {
     this.codeMirror = CodeMirror(this.view[0], {lineNumbers:!1, lineWrapping:!0, value:"", mode:{}, theme:"default", styleActiveLine:!1, lint:!1});
     this._doc = this.codeMirror.getDoc();
     this.codeMirror.on("beforeChange", function(b, a) {
-      console.log(a);
       this._isEditing ? "+delete" === a.origin && 0 === a.to.ch && a.cancel() : a.cancel();
     }.bind(this));
     this.codeMirror.on("keyup", function(b, a) {
-      this._isEditing && "Enter" == a.code && this.endInput();
+      this._isEditing && 13 === a.keyCode && this.endInput();
     }.bind(this));
     this.codeMirror.on("cursorActivity", function(b, a) {
       b.execCommand("goDocEnd");
@@ -16041,7 +16040,7 @@ Entry.Console = function() {
   };
   a.endInput = function() {
     var b = this._doc.getCursor(), a = this.codeMirror.lineInfo(b.line);
-    "answer" === a.textClass ? (this._inputData = a.text, this._doc.replaceRange(a.text + "\n", {line:b.line, ch:0})) : this._inputData = this._doc.getLine(b.line - 1);
+    "answer" === a.textClass ? (this._inputData = a.text, this._doc.replaceRange("\n", {line:b.line, ch:a.text.length})) : this._inputData = this._doc.getLine(b.line - 1);
     Entry.container.setInputValue(this._inputData);
     this.setEditing(!1);
   };

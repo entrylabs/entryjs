@@ -37,7 +37,6 @@ Entry.Console = function() {
         this._doc = this.codeMirror.getDoc();
 
         this.codeMirror.on('beforeChange', function(cm, change) {
-                console.log(change);
             if (!this._isEditing)
                 change.cancel();
             else if (change.origin === "+delete" && change.to.ch === 0) {
@@ -46,7 +45,7 @@ Entry.Console = function() {
         }.bind(this));
 
         this.codeMirror.on("keyup", function (cm, event) {
-            if (this._isEditing && event.code == "Enter") {
+            if (this._isEditing && event.keyCode === 13) {
                 this.endInput();
             }
         }.bind(this));
@@ -97,9 +96,9 @@ Entry.Console = function() {
             this._inputData = lineInfo.text;
             var pos = {
                 line: cursor.line,
-                ch: 0
+                ch: lineInfo.text.length
             }
-            this._doc.replaceRange(lineInfo.text + '\n', pos);
+            this._doc.replaceRange('\n', pos);
         } else
             this._inputData = this._doc.getLine(cursor.line - 1);
         Entry.container.setInputValue(this._inputData);
