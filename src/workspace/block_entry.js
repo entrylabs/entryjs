@@ -8817,7 +8817,7 @@ Entry.block = {
             sprite.syncDialogVisible(sprite.getVisible());
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["print(%1)"]}
+        "syntax": {"js": [], "py": ["Entry.print(%1)"]}
     },
     "remove_dialog": {
         "color": "#EC4466",

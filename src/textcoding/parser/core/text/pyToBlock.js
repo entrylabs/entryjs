@@ -173,10 +173,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var syntax = String("len");
                 type = this.getBlockType(syntax);
             } 
-            else if(calleeName == "__pythonRuntime.functions.print") {
-                var syntax = String("print");
-                type = this.getBlockType(syntax);
-            }
             else if((callee.object.type == "Identifier" && calleeTokens[1] == "append") ||
                 (callee.object.type == "MemberExpression" && calleeTokens[0] == "self" && calleeTokens[2] == "append")) {
                 var syntax = String("%2.append");
@@ -1930,17 +1926,20 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 if(rightData.type == "number" || rightData.type == "text")
                     var value = rightData.params[0]; 
                 else
-                    var value = "NaN";
+                    var value = NaN;
 
-                var object = Entry.playground.object;
-                console.log("final object", object); 
+                if(value && value != NaN) {
+                    var object = Entry.playground.object;
+                    console.log("final value", value); 
+                    console.log("final object", object); 
 
 
-                if(Entry.TextCodingUtil.prototype.isLocalVariableExisted(name, object)) {
-                    Entry.TextCodingUtil.prototype.updateLocalVariable(name, value, object);
-                } 
-                else {
-                    Entry.TextCodingUtil.prototype.createLocalVariable(name, value, object);
+                    if(Entry.TextCodingUtil.prototype.isLocalVariableExisted(name, object)) {
+                        Entry.TextCodingUtil.prototype.updateLocalVariable(name, value, object);
+                    } 
+                    else {
+                        Entry.TextCodingUtil.prototype.createLocalVariable(name, value, object);
+                    }
                 }
 
                 name = this.ParamDropdownDynamic(name, paramsMeta[0], paramsDefMeta[0]);
@@ -1948,7 +1947,36 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 params.push(rightData);
             }
             else {
-                return result;
+                var block = Entry.block[type]; 
+                var paramsMeta = block.params;
+                var paramsDefMeta = block.def.params;
+
+                console.log("property 123", property);
+            
+                var name = property;
+                if(rightData.type == "number" || rightData.type == "text")
+                    var value = rightData.params[0]; 
+                else
+                    var value = NaN;
+
+                if(value && value != NaN) {
+                    var object = Entry.playground.object;
+                    console.log("final object", object); 
+                    console.log("final value", value); 
+
+                    if(Entry.TextCodingUtil.prototype.isGlobalVariableExisted(name, object)) {
+                        Entry.TextCodingUtil.prototype.updateGlobalVariable(name, value, object);
+                    } 
+                    else {
+                        Entry.TextCodingUtil.prototype.createGlobalVariable(name, value, object);
+                    }
+                }
+
+                name = this.ParamDropdownDynamic(name, paramsMeta[0], paramsDefMeta[0]);
+                params.push(name);
+                if(rightData.callee)
+                    delete rightData.callee;
+                params.push(rightData);
             }
 
         } 
@@ -2052,13 +2080,21 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var blockFunc = entryFunctions[funcId];
             Entry.TextCodingUtil.prototype.initQueue();
             Entry.TextCodingUtil.prototype.getFuncDefParam(blockFunc.content._data[0]._data[0].data.params[0].data.params[1]);
-            console.log("Entry.TextCodingUtil._funcParamQ", Entry.TextCodingUtil._funcParamQ);
-            /*var temp = [];
-            temp.push(Entry.TextCodingUtil._funcParamQ.dequeue());
-            temp.push(Entry.TextCodingUtil._funcParamQ.dequeue());
-            temp.push(Entry.TextCodingUtil._funcParamQ.dequeue());
-            console.log("print temp", temp);*/
-            //Entry.TextCodingUtil.prototype.clearQueue();
+            console.log("Entry.TextCodingUtil._funcParamQ", Entry.TextCodingUtil.prototype._funcParamQ);
+            var funcParams = [];
+            
+            var paramMap = {};
+            while(param = Entry.TextCodingUtil.prototype._funcParamQ.dequeue()) {
+                funcParams.push(param);
+                console.log("param", param);
+            }
+            console.log("funcParams", funcParams);
+            for(var p in funcParams) {
+                var funcParam = funcParams[p];
+                paramMap[funcParam] = p;
+            }
+            Entry.TextCodingUtil.prototype.clearQueue();
+            console.log("paramMap", paramMap);
             var tokens = blockFunc.block.template.split('%');
             var blockFuncName = tokens[0].trim();
             if(textFuncName == blockFuncName) {
@@ -2066,88 +2102,20 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 console.log("textFuncName", textFuncName);
                 console.log("blockFuncName", blockFuncName);
                 console.log("textFuncParams.length", textFuncParams.length);
-                console.log("Object.keys(blockFunc.paramMap).length", Object.keys(blockFunc.paramMap).length);
-                if(textFuncParams.length == Object.keys(blockFunc.paramMap).length) {
+                console.log("Object.keys(paramMap).length", Object.keys(paramMap).length);
+                if(textFuncParams.length == Object.keys(paramMap).length) {
                     foundFlag = true;
-                    matchFlag = true; 
+                    
                     console.log("textFuncParams.length", textFuncParams.length);
-                    console.log("Object.keys(blockFunc.paramMap).length", Object.keys(blockFunc.paramMap).length);
+                    console.log("Object.keys(paramMap).length", Object.keys(paramMap).length);
                     var funcThread = blockFunc.content._data[0]; //The Function Thread, index 0
                     var blockFuncContents = funcThread._data; //The Function Definition Block, index 0
                     var blockFuncDef = blockFuncContents[0];
-                    for(var i = 1; i < blockFuncContents.length; i++) {
-                        if(!matchFlag)
-                            break;
-                        matchFlag = false;
-                        var blockFuncContent = blockFuncContents[i];
-                        var textFuncStatement = textFuncStatements[i-1];
-                        console.log("blockFuncContent", blockFuncContent);
-                        console.log("textFuncStatement", textFuncStatement);
-                        if(textFuncStatement.type == blockFuncContent.data.type) {
-                            matchFlag = true;
-                            var textFuncStatementParams = textFuncStatement.params;
-                            var blockFuncContentParams = blockFuncContent.data.params;
-                            var cleansingParams = [];
-                            blockFuncContentParams.map(function(blockFuncContentParam, index) {
-                                console.log("blockFuncContentParam", blockFuncContentParam);
-                                if(blockFuncContentParam)
-                                    cleansingParams.push(blockFuncContentParam);
-                            });
-                            blockFuncContentParams = cleansingParams;
-                            console.log("textFuncStatementParams", textFuncStatementParams);
-                            console.log("blockFuncContentParams", blockFuncContentParams);
-                            if(textFuncStatementParams.length == blockFuncContentParams.length) { //Statement Param Length Comparison   
-                                matchFlag = true;
-                                for(var j = 0; j < textFuncStatementParams.length; j++) {
-                                    if(!matchFlag)
-                                        break;
-                                    matchFlag = false;
-                                    if(textFuncStatementParams[j].name) {
-                                        for(var k in textFuncParams) {
-                                            if(textFuncStatementParams[j].name == textFuncParams[k]) { // Pram Locatin Comparision
-                                                console.log("textFuncStatementParams[j].name", textFuncStatementParams[j].name);
-                                                console.log("textFuncParams[k]", textFuncParams[k]);
-                                                for(var bfcParam in blockFunc.paramMap) {
-                                                    if(blockFuncContentParams[j].data.type == bfcParam) {
-                                                        console.log("blockFuncContentParams[j].data.type", blockFuncContentParams[j].data.type);
-                                                        console.log("bfcParam", bfcParam);
-                                                        if(blockFunc.paramMap[bfcParam] == k) {
-                                                            matchFlag = true;
-                                                            break;
-                                                            console.log("Function Definition Param Found", blockFunc.paramMap[bfcParam], "index k", j);
-                                                        }  
-                                                    }   
-                                                } 
-                                                if(matchFlag) 
-                                                    break;
-                                            }
-                                        }
-                                    } 
-                                    else if(textFuncStatementParams[j].type && textFuncStatementParams[j].params) {
-                                        if(textFuncStatementParams[j].params[0] == blockFuncContentParams[j].data.params[0]) {
-                                            matchFlag = true;
-                                            console.log("Function Param Found 1", textFuncStatementParams[j].params[0]);
-                                            console.log("Function Param Found 2", blockFuncContentParams[j].data.params[0]);
-                                        }   
-                                    } else if(textFuncStatementParams[j].type == "True" || textFuncStatementParams[j].type == "False") {
-                                        if(textFuncStatementParams[j].type == blockFuncContentParams[j].data.type) {
-                                            matchFlag = true;
-                                            console.log("Function Param Found 1", textFuncStatementParams[j].params[0]);
-                                            console.log("Function Param Found 2", blockFuncContentParams[j].data.params[0]);
-                                        } 
-                                    }   
-                                }
-                            }
-                            else {
-                                matchFlag = false;
-                                break;
-                            } 
-                        } 
-                        else {
-                            matchFlag = false;
-                            break;
-                        }
-                    }
+                    var blockFuncCts = blockFuncContents.slice();
+                    blockFuncCts.shift();
+                    console.log("blockFuncContents", blockFuncContents)
+                    matchFlag = Entry.TextCodingUtil.prototype.isFuncContentsMatch(blockFuncCts, textFuncStatements, paramMap);
+                    
                 }
                 else {
                     foundFlag = false;
@@ -2183,10 +2151,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
             this._funcMap.put(funcKey, targetFuncId);
             console.log("FunctionDeclaration this._funcMap", this._funcMap);
 
-            result = targetFuncId;
+            result = targetFuncId; 
         } 
         else if (foundFlag && !matchFlag) {
-            var targetFunc = Entry.variableContainer.functions_[targetFuncId];
+
+            targetFunc = Entry.variableContainer.functions_[targetFuncId];
 
             var thread = targetFunc.content._data[0];
 
@@ -2200,8 +2169,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
 
             targetFunc.generateBlock(true);
+            Entry.Func.targetFunc = targetFunc;
+            //Entry.Func.generateWsBlock(targetFunc);
             Entry.variableContainer.saveFunction(targetFunc);
             Entry.variableContainer.updateList();
+            targetFunc.content.view.reDraw();
+
             console.log("FunctionDeclaration targetFunc", targetFunc);
         }
         else {
@@ -2276,7 +2249,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     thread._data.push(stmtBlock);
                 }
             }
-
 
             Entry.Func.generateWsBlock(newFunc);
             Entry.variableContainer.saveFunction(newFunc);

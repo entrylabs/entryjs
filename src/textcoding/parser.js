@@ -63,7 +63,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 assistScope[key + '();\n'] = syntax.Scope[key];
             }
 
-            if('BasicIf' in syntax) {
+            if('BasicIf' in syntax) { 
                 assistScope['front'] = 'BasicIf';
             }
 

@@ -737,15 +737,99 @@ Entry.TextCodingUtil = function() {
 
     p.getFuncDefParam = function(block) {
         console.log("searchFuncDefParam block", block);
+        this._funcParamQ.enqueue(block.data.params[0].data.type);
         if(block.data.params[1]){
             var result = this.searchFuncDefParam(block.data.params[1]);  
-            this._funcParamQ.enqueue(block.data.params[1]);
-            return result;
+            this._funcParamQ.enqueue(block.data.params[1].data.params[0].data.type);
+            if(block.data.params[1].data.params[1])
+                this._funcParamQ.enqueue(block.data.params[1].data.params[1].data.params[0].data.type);
         }
-        else {
-            this._funcParamQ.enqueue(block.data.params[0]);
-            return block;
+
+        return result;
+        
+    };
+
+    p.isFuncContentsMatch = function(blockFuncContents, textFuncStatements, paramMap) {
+        var matchFlag = true; 
+        for(var i = 0; i < blockFuncContents.length; i++) {
+            if(!matchFlag)
+                break;
+            matchFlag = false;
+            var blockFuncContent = blockFuncContents[i];
+            var textFuncStatement = textFuncStatements[i];
+            console.log("blockFuncContent", blockFuncContent);
+            console.log("textFuncStatement", textFuncStatement);
+            if(textFuncStatement.type == blockFuncContent.data.type) { //Type Check
+                matchFlag = true;
+                var textFuncStatementParams = textFuncStatement.params;
+                var blockFuncContentParams = blockFuncContent.data.params;
+                var cleansingParams = [];
+                blockFuncContentParams.map(function(blockFuncContentParam, index) {
+                    console.log("blockFuncContentParam", blockFuncContentParam);
+                    if(blockFuncContentParam)
+                        cleansingParams.push(blockFuncContentParam);
+                });
+                blockFuncContentParams = cleansingParams;
+                console.log("textFuncStatementParams", textFuncStatementParams);
+                console.log("blockFuncContentParams", blockFuncContentParams);
+                if(textFuncStatementParams.length == blockFuncContentParams.length) { //Statement Param Length Comparison   
+                    matchFlag = true;
+                    for(var j = 0; j < textFuncStatementParams.length; j++) {
+                        if(!matchFlag)
+                            break;
+                        matchFlag = false;
+                        if(textFuncStatementParams[j].name) {
+                            for(var k in textFuncParams) {
+                                if(textFuncStatementParams[j].name == textFuncParams[k]) { // Pram Locatin Comparision
+                                    console.log("textFuncStatementParams[j].name", textFuncStatementParams[j].name);
+                                    console.log("textFuncParams[k]", textFuncParams[k]);
+                                    for(var bfcParam in paramMap) {
+                                        if(blockFuncContentParams[j].data.type == bfcParam) {
+                                            console.log("blockFuncContentParams[j].data.type", blockFuncContentParams[j].data.type);
+                                            console.log("bfcParam", bfcParam);
+                                            if(paramMap[bfcParam] == k) {
+                                                matchFlag = true;
+                                                break;
+                                                console.log("Function Definition Param Found", paramMap[bfcParam], "index k", j);
+                                            }  
+                                        }   
+                                    } 
+                                    if(matchFlag) 
+                                        break;
+                                }
+                            }
+                        } 
+                        else if(textFuncStatementParams[j].type == "True" || textFuncStatementParams[j].type == "False") {
+                            if(textFuncStatementParams[j].type == blockFuncContentParams[j].data.type) {
+                                matchFlag = true;
+                                console.log("Function Param Found 1", textFuncStatementParams[j].type);
+                                console.log("Function Param Found 2", blockFuncContentParams[j].data.type);
+                            }      
+                        } else if(textFuncStatementParams[j].type && textFuncStatementParams[j].params) {
+                            if(textFuncStatementParams[j].params[0] == blockFuncContentParams[j].data.params[0]) {
+                                matchFlag = true;
+                                console.log("Function Param Found 1", textFuncStatementParams[j].params[0]);
+                                console.log("Function Param Found 2", blockFuncContentParams[j].data.params[0]);
+                            }  
+                        }   
+                    }
+
+                    if(matchFlag && textFuncStatement.statements && textFuncStatement.statements.length != 0) {
+                        matchFlag = this.isFuncContentsMatch(blockFuncContent.data.statements[0]._data, textFuncStatement.statements[0]);
+                    }
+                }
+                else {
+                    matchFlag = false;
+                    break;
+                } 
+            } 
+            else {
+                matchFlag = false;
+                break;
+            }
         }
+
+        return matchFlag;
     };
 
 })(Entry.TextCodingUtil.prototype);
