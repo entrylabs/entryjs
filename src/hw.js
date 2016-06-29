@@ -25,6 +25,7 @@ Entry.HW = function() {
         '11': Entry.Arduino,
         '12': Entry.SensorBoard,
         '13': Entry.CODEino,
+        '14': Entry.joystick,
         '15': Entry.dplay,
         '16': Entry.nemoino,
         '17': Entry.Xbot,
