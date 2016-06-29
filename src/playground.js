@@ -337,7 +337,7 @@ Entry.Playground.prototype.generatePictureView = function(PictureView) {
         painterView.addClass('entryPlaygroundPainter');
         PictureView.appendChild(painterView);
 
-        this.painter = new Entry.Painter();
+        this.painter = new Entry.Painter2();
         //this.painter.generateView(painterView);
         this.painter.initialize(painterView);
 
