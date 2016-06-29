@@ -5,11 +5,25 @@
 
 goog.provide("Entry.TextCodingUtil");
 
-Entry.TextCodingUtil = function() {
+goog.require("Entry.Queue");
 
+Entry.TextCodingUtil = function() {
+    
 };
 
 (function(p) {
+    p._funcParamQ;
+
+    p.initQueue = function() {
+        var queue = new Entry.Queue();
+        this._funcParamQ = queue;
+        console.log("initQueue this._funcParamQ", this._funcParamQ);
+    };
+
+    p.clearQueue = function() {
+        this._funcParamQ.clear();
+    };
+
 	p.indent = function(textCode) {
         console.log("indent textCode", textCode);
         var result = "\t";
@@ -723,13 +737,13 @@ Entry.TextCodingUtil = function() {
 
     p.getFuncDefParam = function(block) {
         console.log("searchFuncDefParam block", block);
-        var result = {};
         if(block.data.params[1]){
             var result = this.searchFuncDefParam(block.data.params[1]);  
+            this._funcParamQ.enqueue(block.data.params[1]);
             return result;
         }
         else {
-            console.log("searchFuncDefParam block", block);
+            this._funcParamQ.enqueue(block.data.params[0]);
             return block;
         }
     };

@@ -23,6 +23,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     var paramQ = new Entry.Queue();
     this._paramQ = paramQ;
+
 };
 
 (function(p){
@@ -172,6 +173,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var syntax = String("len");
                 type = this.getBlockType(syntax);
             } 
+            else if(calleeName == "__pythonRuntime.functions.print") {
+                var syntax = String("print");
+                type = this.getBlockType(syntax);
+            }
             else if((callee.object.type == "Identifier" && calleeTokens[1] == "append") ||
                 (callee.object.type == "MemberExpression" && calleeTokens[0] == "self" && calleeTokens[2] == "append")) {
                 var syntax = String("%2.append");
@@ -1802,14 +1807,22 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     }
                 } 
 
-                if(leftData.property.callee == "__pythonRuntime.ops.subscriptIndex") {
+                if(leftData.property && (leftData.property.callee == "__pythonRuntime.ops.subscriptIndex")) {
                     var syntax = String("%1\[%2\] = %3");
                     var type = this.getBlockType(syntax);
                     structure.type = type; 
                 }
-                else if(right.arguments && right.arguments[0].object) {
-                    var leftEx = component.left.object.name.concat(component.left.property.name);
-                    var rightEx = component.right.arguments[0].object.name.concat(component.right.arguments[0].property.name);
+                else if(right.arguments && right.arguments[0]) {
+                    if(component.left.name)
+                        var leftEx = component.left.name;
+                    else
+                        var leftEx = component.left.object.name.concat(component.left.property.name);
+                    
+                    if(component.right.arguments[0].name) 
+                        var rightEx = component.right.arguments[0].name;
+                    else
+                        var rightEx = component.right.arguments[0].object.name.concat(component.right.arguments[0].property.name);
+                    
                     console.log("AssignmentExpression leftEx", leftEx, "rightEx", rightEx);
                     if(component.right.arguments && (leftEx == rightEx)) {
                         var syntax = String("%1 += %2");
@@ -1863,8 +1876,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         console.log("AssignmentExpression syntax", syntax);
 
-        var object = leftData.object;
-        var property = leftData.property;
+        if(leftData.object)
+            var object = leftData.object;
+        else if(leftData.name)
+            var object = leftData.name;
+
+        if(leftData.proprty)
+            var property = leftData.property;
+        else if(leftData.name)
+            var property = leftData.name;
 
         console.log("AssignmentExpression object property value", object, property);
         
@@ -1901,7 +1921,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
         else if(syntax == String("%1 = %2")) {
             console.log("AssignmentExpression calleeName check", calleeName);
-            if(object.name == "self" && calleeName != "__pythonRuntime.objects.list") {
+            if(object && object.name == "self" && calleeName != "__pythonRuntime.objects.list") {
                 var block = Entry.block[type]; 
                 var paramsMeta = block.params;
                 var paramsDefMeta = block.def.params;
@@ -1933,7 +1953,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         } 
         else if(syntax == String("%1 += %2")) {
-            if(object.name == "self") {
+            if(object && object.name == "self") {
                 var block = Entry.block[type]; 
                 var paramsMeta = block.params;
                 var paramsDefMeta = block.def.params;
@@ -1951,7 +1971,18 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 params.push(rightData.params[2]); 
             } 
             else {
-                return result;
+                var block = Entry.block[type]; 
+                var paramsMeta = block.params;
+                var paramsDefMeta = block.def.params;
+
+                var name = property;
+
+                if(!Entry.TextCodingUtil.prototype.isGlobalVariableExisted(name))
+                    return result;
+
+                name = this.ParamDropdownDynamic(name, paramsMeta[0], paramsDefMeta[0]);
+                params.push(name);
+                params.push(rightData.params[2]); 
             }
         } 
 
@@ -2019,6 +2050,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var entryFunctions = Entry.variableContainer.functions_;
         for(var funcId in entryFunctions) {
             var blockFunc = entryFunctions[funcId];
+            Entry.TextCodingUtil.prototype.initQueue();
+            Entry.TextCodingUtil.prototype.getFuncDefParam(blockFunc.content._data[0]._data[0].data.params[0].data.params[1]);
+            console.log("Entry.TextCodingUtil._funcParamQ", Entry.TextCodingUtil._funcParamQ);
+            /*var temp = [];
+            temp.push(Entry.TextCodingUtil._funcParamQ.dequeue());
+            temp.push(Entry.TextCodingUtil._funcParamQ.dequeue());
+            temp.push(Entry.TextCodingUtil._funcParamQ.dequeue());
+            console.log("print temp", temp);*/
+            //Entry.TextCodingUtil.prototype.clearQueue();
             var tokens = blockFunc.block.template.split('%');
             var blockFuncName = tokens[0].trim();
             if(textFuncName == blockFuncName) {
@@ -2029,7 +2069,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 console.log("Object.keys(blockFunc.paramMap).length", Object.keys(blockFunc.paramMap).length);
                 if(textFuncParams.length == Object.keys(blockFunc.paramMap).length) {
                     foundFlag = true;
-                    matchFlag = true;
+                    matchFlag = true; 
                     console.log("textFuncParams.length", textFuncParams.length);
                     console.log("Object.keys(blockFunc.paramMap).length", Object.keys(blockFunc.paramMap).length);
                     var funcThread = blockFunc.content._data[0]; //The Function Thread, index 0
