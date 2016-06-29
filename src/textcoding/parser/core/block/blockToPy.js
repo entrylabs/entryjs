@@ -597,6 +597,8 @@ Entry.BlockToPyParser = function(blockSyntax) {
         }
         result = result.concat('):').concat('\n');
 
+        console.log("curious func statements", func.statements);
+
         if(func.statements && func.statements.length) {
             var stmtResult = "";
             for(var s in func.statements) {

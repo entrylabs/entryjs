@@ -725,7 +725,7 @@ Entry.TextCodingUtil = function() {
 
     p.searchFuncDefParam = function(block) {
         console.log("searchFuncDefParam block", block);
-        if(block.data.params[1]){
+        if(block && block.data && block.data.params && block.data.params[1]){
             var result = this.searchFuncDefParam(block.data.params[1]);  
             return result;
         }
@@ -735,14 +735,16 @@ Entry.TextCodingUtil = function() {
         }
     };
 
-    p.getFuncDefParam = function(block) {
-        console.log("searchFuncDefParam block", block);
-        this._funcParamQ.enqueue(block.data.params[0].data.type);
-        if(block.data.params[1]){
-            var result = this.searchFuncDefParam(block.data.params[1]);  
-            this._funcParamQ.enqueue(block.data.params[1].data.params[0].data.type);
-            if(block.data.params[1].data.params[1])
-                this._funcParamQ.enqueue(block.data.params[1].data.params[1].data.params[0].data.type);
+    p.gatherFuncDefParam = function(block) {
+        console.log("gatherFuncDefParam block", block);
+        if(block) {
+            this._funcParamQ.enqueue(block.data.params[0].data.type);
+            if(block.data.params[1]){
+                var result = this.searchFuncDefParam(block.data.params[1]);  
+                this._funcParamQ.enqueue(block.data.params[1].data.params[0].data.type);
+                if(block.data.params[1].data.params[1])
+                    this._funcParamQ.enqueue(block.data.params[1].data.params[1].data.params[0].data.type);
+            }
         }
 
         return result;
