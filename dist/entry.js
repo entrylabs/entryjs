@@ -11506,11 +11506,10 @@ Entry.Console = function() {
     this.codeMirror = CodeMirror(this.view[0], {lineNumbers:!1, lineWrapping:!0, value:"", mode:{}, theme:"default", styleActiveLine:!1, lint:!1});
     this._doc = this.codeMirror.getDoc();
     this.codeMirror.on("beforeChange", function(a, b) {
-      console.log(b);
       this._isEditing ? "+delete" === b.origin && 0 === b.to.ch && b.cancel() : b.cancel();
     }.bind(this));
     this.codeMirror.on("keyup", function(a, b) {
-      this._isEditing && "Enter" == b.code && this.endInput();
+      this._isEditing && 13 === b.keyCode && this.endInput();
     }.bind(this));
     this.codeMirror.on("cursorActivity", function(a, b) {
       a.execCommand("goDocEnd");
@@ -11531,15 +11530,15 @@ Entry.Console = function() {
     this.setEditing(!0);
     this.codeMirror.execCommand("goDocEnd");
     var c = this._doc.getCursor();
-    this._doc.getLine(c.line);
     this._doc.replaceRange(a + "\n", {line:c.line, ch:0});
     this._doc.addLineClass(c.line, "text", b);
     "speak" === b && this.setEditing(!1);
     this.codeMirror.execCommand("goDocEnd");
-    "ask" === b && this.codeMirror.focus();
+    "ask" === b && (this._doc.addLineClass(c.line + 1, "text", "answer"), this.codeMirror.focus());
   };
   b.endInput = function() {
-    this._inputData = this._doc.getLine(this._doc.getCursor().line - 1);
+    var a = this._doc.getCursor(), b = this.codeMirror.lineInfo(a.line);
+    "answer" === b.textClass ? (this._inputData = b.text, this._doc.replaceRange("\n", {line:a.line, ch:b.text.length})) : this._inputData = this._doc.getLine(a.line - 1);
     Entry.container.setInputValue(this._inputData);
     this.setEditing(!1);
   };
@@ -19040,11 +19039,11 @@ Entry.BlockView.DRAG_RADIUS = 5;
         }
       }
       var m = this;
-      e.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD && a && document.getElementsByClassName("CodeMirror")[0].dispatchEvent(Entry.Utils.createMouseEvent("dragStart", event));
+      e.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD && a && (vimBoard = $(".entryVimBoard>.CodeMirror")[0].dispatchEvent(Entry.Utils.createMouseEvent("dragStart", event)));
     }
   };
   b.vimBoardEvent = function(a, b, c) {
-    a && (a = Entry.Utils.createMouseEvent(b, a), c && (a.block = c), document.getElementsByClassName("CodeMirror")[0].dispatchEvent(a));
+    a && (a = Entry.Utils.createMouseEvent(b, a), c && (a.block = c), $(".entryVimBoard>.CodeMirror")[0].dispatchEvent(a));
   };
   b.terminateDrag = function(a) {
     var b = this.getBoard(), c = this.dragMode, e = this.block, f = b.workspace.getMode();
