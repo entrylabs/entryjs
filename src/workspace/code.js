@@ -115,11 +115,9 @@ Entry.PARAM = -1;
         var executors = this.executors;
         for (var i = 0; i < executors.length; i++) {
             var executor = executors[i];
-            if (!executor.isEnd())
-                executor.execute();
-            if (executor.isEnd()) {
-                executors.splice(i, 1);
-                i--;
+            if (!executor.isEnd()) executor.execute();
+            else {
+                executors.splice(i--, 1);
                 if (executors.length === 0)
                     this.executeEndEvent.notify();
             }
@@ -133,6 +131,9 @@ Entry.PARAM = -1;
     };
 
     p.clearExecutors = function() {
+        this.executors.forEach(function(e) {
+            e.end();
+        });
         this.executors = [];
     };
 

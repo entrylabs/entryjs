@@ -10,7 +10,9 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
   Entry.container.setObjects(b.objects);
   Entry.FPS = b.speed ? b.speed : 60;
   createjs.Ticker.setFPS(Entry.FPS);
-  "workspace" == this.type && Entry.stateManager.endIgnore();
+  "workspace" == this.type && setTimeout(function() {
+    Entry.stateManager.endIgnore();
+  }, 300);
   Entry.engine.projectTimer || Entry.variableContainer.generateTimer();
   0 === Object.keys(Entry.container.inputValue).length && Entry.variableContainer.generateAnswer();
   Entry.start();
@@ -6261,9 +6263,10 @@ Entry.Container.prototype.generateView = function(b, a) {
     Entry.isForLecture && (this.generateTabView(), c.addClass("lecture"));
     Entry.Utils.disableContextmenu(c);
     $(c).on("contextmenu", function(a) {
-      Entry.ContextMenu.show([{text:Lang.Blocks.Paste_blocks, callback:function() {
+      a = [{text:Lang.Blocks.Paste_blocks, enable:!Entry.engine.isState("run") && !!Entry.container.copiedObject, callback:function() {
         Entry.container.copiedObject ? Entry.container.addCloneObject(Entry.container.copiedObject) : Entry.toast.alert(Lang.Workspace.add_object_alert, Lang.Workspace.object_not_found_for_paste);
-      }}], "workspace-contextmenu");
+      }}];
+      Entry.ContextMenu.show(a, "workspace-contextmenu");
     });
     this._view.appendChild(c);
     var d = Entry.createElement("ul");
@@ -6315,45 +6318,34 @@ Entry.Container.prototype.setObjects = function(b) {
   b = Entry.type;
   ("workspace" == b || "phone" == b) && (b = this.getCurrentObjects()[0]) && this.selectObject(b.id);
 };
-Entry.Container.prototype.getPictureElement = function(b) {
-  for (var a in this.objects_) {
-    var c = this.objects_[a], d;
-    for (d in c.pictures) {
-      if (b === c.pictures[d].id) {
-        return c.pictures[d].view;
-      }
-    }
+Entry.Container.prototype.getPictureElement = function(b, a) {
+  var c = this.getObject(a).getPicture(b);
+  if (c) {
+    return c.view;
   }
   throw Error("No picture found");
 };
 Entry.Container.prototype.setPicture = function(b) {
-  for (var a in this.objects_) {
-    var c = this.objects_[a], d;
-    for (d in c.pictures) {
-      if (b.id === c.pictures[d].id) {
-        a = {};
-        a.dimension = b.dimension;
-        a.id = b.id;
-        a.filename = b.filename;
-        a.fileurl = b.fileurl;
-        a.name = b.name;
-        a.view = c.pictures[d].view;
-        c.pictures[d] = a;
-        return;
-      }
+  var a = this.getObject(b.objectId), c;
+  for (c in a.pictures) {
+    if (b.id === a.pictures[c].id) {
+      var d = {};
+      d.dimension = b.dimension;
+      d.id = b.id;
+      d.filename = b.filename;
+      d.fileurl = b.fileurl;
+      d.name = b.name;
+      d.view = a.pictures[c].view;
+      a.pictures[c] = d;
+      return;
     }
   }
   throw Error("No picture found");
 };
-Entry.Container.prototype.selectPicture = function(b) {
-  for (var a in this.objects_) {
-    var c = this.objects_[a], d;
-    for (d in c.pictures) {
-      var e = c.pictures[d];
-      if (b === e.id) {
-        return c.selectedPicture = e, c.entity.setImage(e), c.updateThumbnailView(), c.id;
-      }
-    }
+Entry.Container.prototype.selectPicture = function(b, a) {
+  var c = this.getObject(a), d = c.getPicture(b);
+  if (d) {
+    return c.selectedPicture = d, c.entity.setImage(d), c.updateThumbnailView(), c.id;
   }
   throw Error("No picture found");
 };
@@ -6413,6 +6405,7 @@ Entry.Container.prototype.getAllObjects = function() {
   return this.objects_;
 };
 Entry.Container.prototype.getObject = function(b) {
+  !b && Entry.playground && Entry.playground.object && (b = Entry.playground.object.id);
   for (var a = this.objects_.length, c = 0;c < a;c++) {
     var d = this.objects_[c];
     if (d.id == b) {
@@ -7255,7 +7248,7 @@ Entry.Engine.prototype.toggleRun = function() {
     b.takeSnapshot();
   }), Entry.variableContainer.mapList(function(b) {
     b.takeSnapshot();
-  }), Entry.container.takeSequenceSnapshot(), Entry.scene.takeStartSceneSnapshot(), this.state = "run", this.fireEvent("start"));
+  }), this.projectTimer.takeSnapshot(), Entry.container.inputValue.takeSnapshot(), Entry.container.takeSequenceSnapshot(), Entry.scene.takeStartSceneSnapshot(), this.state = "run", this.fireEvent("start"));
   this.state = "run";
   "mobile" == Entry.type && this.view_.addClass("entryEngineBlueWorkspace");
   this.pauseButton.innerHTML = Lang.Workspace.pause;
@@ -7289,7 +7282,8 @@ Entry.Engine.prototype.toggleStop = function() {
   this.stopProjectTimer();
   b.clearRunningState();
   b.loadSequenceSnapshot();
-  b.setInputValue();
+  this.projectTimer.loadSnapshot();
+  Entry.container.inputValue.loadSnapshot();
   Entry.scene.loadStartSceneSnapshot();
   Entry.Func.clearThreads();
   createjs.Sound.setVolume(1);
@@ -7734,26 +7728,29 @@ Entry.EntityObject.prototype.setImage = function(b) {
   Entry.dispatchEvent("updateObject");
 };
 Entry.EntityObject.prototype.applyFilter = function() {
-  var b = this.object, a = this.effect, c = [], d = Entry.adjustValueWithMaxMin;
-  a.brightness = a.brightness;
-  var e = new createjs.ColorMatrix;
-  e.adjustColor(d(a.brightness, -100, 100), 0, 0, 0);
-  e = new createjs.ColorMatrixFilter(e);
-  c.push(e);
-  a.hue = a.hue.mod(360);
-  e = new createjs.ColorMatrix;
-  e.adjustColor(0, 0, 0, a.hue);
-  e = new createjs.ColorMatrixFilter(e);
-  c.push(e);
-  var e = [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1], f = 10.8 * a.hsv * Math.PI / 180, g = Math.cos(f), f = Math.sin(f), h = Math.abs(a.hsv / 100);
-  1 < h && (h -= Math.floor(h));
-  0 < h && .33 >= h ? e = [1, 0, 0, 0, 0, 0, g, f, 0, 0, 0, -1 * f, g, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1] : .66 >= h ? e = [g, 0, f, 0, 0, 0, 1, 0, 0, 0, f, 0, g, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1] : .99 >= h && (e = [g, f, 0, 0, 0, -1 * f, g, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1]);
-  e = (new createjs.ColorMatrix).concat(e);
-  e = new createjs.ColorMatrixFilter(e);
-  c.push(e);
-  b.alpha = a.alpha = d(a.alpha, 0, 1);
-  b.filters = c;
-  b.cache(0, 0, this.getWidth(), this.getHeight());
+  var b = this.effect, a = this.object;
+  if (!_.isEqual(b, this.getInitialEffectValue())) {
+    var c = [], d = Entry.adjustValueWithMaxMin;
+    b.brightness = b.brightness;
+    var e = new createjs.ColorMatrix;
+    e.adjustColor(d(b.brightness, -100, 100), 0, 0, 0);
+    e = new createjs.ColorMatrixFilter(e);
+    c.push(e);
+    b.hue = b.hue.mod(360);
+    e = new createjs.ColorMatrix;
+    e.adjustColor(0, 0, 0, b.hue);
+    e = new createjs.ColorMatrixFilter(e);
+    c.push(e);
+    var e = [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1], f = 10.8 * b.hsv * Math.PI / 180, g = Math.cos(f), f = Math.sin(f), h = Math.abs(b.hsv / 100);
+    1 < h && (h -= Math.floor(h));
+    0 < h && .33 >= h ? e = [1, 0, 0, 0, 0, 0, g, f, 0, 0, 0, -1 * f, g, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1] : .66 >= h ? e = [g, 0, f, 0, 0, 0, 1, 0, 0, 0, f, 0, g, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1] : .99 >= h && (e = [g, f, 0, 0, 0, -1 * f, g, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1]);
+    e = (new createjs.ColorMatrix).concat(e);
+    e = new createjs.ColorMatrixFilter(e);
+    c.push(e);
+    a.alpha = b.alpha = d(b.alpha, 0, 1);
+    a.filters = c;
+    a.cache(0, 0, this.getWidth(), this.getHeight());
+  }
 };
 Entry.EntityObject.prototype.resetFilter = function() {
   "sprite" == this.parent.objectType && (this.object.filters = [], this.setInitialEffectValue(), this.object.alpha = this.effect.alpha, this.object.cache(0, 0, this.getWidth(), this.getHeight()));
@@ -7800,7 +7797,10 @@ Entry.EntityObject.prototype.toJSON = function() {
   return b;
 };
 Entry.EntityObject.prototype.setInitialEffectValue = function() {
-  this.effect = {blur:0, hue:0, hsv:0, brightness:0, contrast:0, saturation:0, alpha:1};
+  this.effect = this.getInitialEffectValue();
+};
+Entry.EntityObject.prototype.getInitialEffectValue = function() {
+  return {blur:0, hue:0, hsv:0, brightness:0, contrast:0, saturation:0, alpha:1};
 };
 Entry.EntityObject.prototype.removeBrush = function() {
   Entry.stage.selectedObjectContainer.removeChild(this.shape);
@@ -8092,6 +8092,7 @@ Entry.EntryObject = function(b) {
     Entry.stage.loadObject(this);
     for (a in this.pictures) {
       var c = this.pictures[a];
+      c.objectId = this.id;
       c.id || (c.id = Entry.generateHash());
       var d = new Image;
       c.fileurl ? d.src = c.fileurl : c.fileurl ? d.src = c.fileurl : (b = c.filename, d.src = Entry.defaultPath + "/uploads/" + b.substring(0, 2) + "/" + b.substring(2, 4) + "/image/" + b + ".png");
@@ -8114,21 +8115,22 @@ Entry.EntryObject.prototype.generateView = function() {
     Entry.Utils.disableContextmenu(b);
     var a = this;
     $(b).on("contextmenu", function(b) {
-      Entry.ContextMenu.show([{text:Lang.Workspace.context_rename, callback:function(b) {
+      b = [{text:Lang.Workspace.context_rename, callback:function(b) {
         b.stopPropagation();
         b = a;
         b.setLock(!1);
         b.editObjectValues(!0);
         b.nameView_.select();
-      }}, {text:Lang.Workspace.context_duplicate, callback:function() {
+      }}, {text:Lang.Workspace.context_duplicate, enable:!Entry.engine.isState("run"), callback:function() {
         Entry.container.addCloneObject(a);
       }}, {text:Lang.Workspace.context_remove, callback:function() {
         Entry.container.removeObject(a);
       }}, {text:Lang.Workspace.copy_file, callback:function() {
         Entry.container.setCopiedObject(a);
-      }}, {text:Lang.Blocks.Paste_blocks, callback:function() {
+      }}, {text:Lang.Blocks.Paste_blocks, enable:!Entry.engine.isState("run") && !!Entry.container.copiedObject, callback:function() {
         Entry.container.copiedObject ? Entry.container.addCloneObject(Entry.container.copiedObject) : Entry.toast.alert(Lang.Workspace.add_object_alert, Lang.Workspace.object_not_found_for_paste);
-      }}], "workspace-contextmenu");
+      }}];
+      Entry.ContextMenu.show(b, "workspace-contextmenu");
     });
     this.view_ = b;
     var c = this, b = Entry.createElement("ul");
@@ -8493,6 +8495,7 @@ Entry.EntryObject.prototype.select = function(b) {
 };
 Entry.EntryObject.prototype.addPicture = function(b, a) {
   Entry.stateManager && Entry.stateManager.addCommand("add sprite", this, this.removePicture, b.id);
+  b.objectId = this.id;
   a || 0 === a ? (this.pictures.splice(a, 0, b), Entry.playground.injectPicture(this)) : this.pictures.push(b);
   return new Entry.State(this, this.removePicture, b.id);
 };
@@ -11535,6 +11538,7 @@ Entry.StampEntity.prototype.applyFilter = EntityPrototype.applyFilter;
 Entry.StampEntity.prototype.removeClone = EntityPrototype.removeClone;
 Entry.StampEntity.prototype.getWidth = EntityPrototype.getWidth;
 Entry.StampEntity.prototype.getHeight = EntityPrototype.getHeight;
+Entry.StampEntity.prototype.getInitialEffectValue = EntityPrototype.getInitialEffectValue;
 Entry.Toast = function() {
   this.toasts_ = [];
   var b = document.getElementById("entryToastContainer");
@@ -13099,7 +13103,7 @@ p.closeConnection = function() {
   this.socket && this.socket.close();
 };
 p.downloadConnector = function() {
-  window.open("http://download.play-entry.org/apps/Entry_HW_1.5.4_Setup.exe", "_blank").focus();
+  window.open("http://download.play-entry.org/apps/Entry_HW_1.5.6_Setup.exe", "_blank").focus();
 };
 p.downloadSource = function() {
   window.open("http://play-entry.com/down/board.ino", "_blank").focus();
@@ -16247,8 +16251,7 @@ Entry.PARAM = -1;
   b.tick = function() {
     for (var a = this.executors, b = 0;b < a.length;b++) {
       var d = a[b];
-      d.isEnd() || d.execute();
-      d.isEnd() && (a.splice(b, 1), b--, 0 === a.length && this.executeEndEvent.notify());
+      d.isEnd() ? (a.splice(b--, 1), 0 === a.length && this.executeEndEvent.notify()) : d.execute();
     }
   };
   b.removeExecutor = function(a) {
@@ -16256,6 +16259,9 @@ Entry.PARAM = -1;
     -1 < a && this.executors.splice(a, 1);
   };
   b.clearExecutors = function() {
+    this.executors.forEach(function(a) {
+      a.end();
+    });
     this.executors = [];
   };
   b.clearExecutorsByEntity = function(a) {
@@ -16439,6 +16445,9 @@ Entry.Executor = function(b, a) {
           var a = this.scope.block.getSchema().func.call(this.scope, this.entity, this.scope);
         } catch (b) {
           Entry.Utils.stopProjectWithToast(this.scope.block, "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec");
+        }
+        if (this.isEnd()) {
+          break;
         }
         if (void 0 === a || null === a || a === Entry.STATIC.PASS) {
           if (this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this), null === this.scope.block) {
@@ -17618,10 +17627,8 @@ Entry.GlobalSvg = {};
     }
   };
   b.terminateDrag = function(a) {
-    var b = Entry.mouseCoordinate;
-    a = a.getBoard();
-    var d = a.workspace.blockMenu, e = d.offset().left, f = d.offset().top, g = d.visible ? d.svgDom.width() : 0;
-    return b.y > a.offset().top - 20 && b.x > e + g ? this.DONE : b.y > f && b.x > e && d.visible ? this.REMOVE : this.RETURN;
+    var b = Entry.mouseCoordinate, d = a.getBoard(), e = d.workspace.blockMenu, f = e.offset().left, g = e.offset().top, h = e.visible ? e.svgDom.width() : 0;
+    return b.y > d.offset().top - 20 && b.x > f + h ? this.DONE : b.y > g && b.x > f && e.visible ? a.block.isDeletable() ? this.REMOVE : this.RETURN : this.RETURN;
   };
   b.addControl = function(a) {
     this.onMouseDown.apply(this, arguments);
@@ -19757,7 +19764,7 @@ Entry.Playground.prototype.addPicture = function(b, a) {
   this.selectPicture(b);
 };
 Entry.Playground.prototype.setPicture = function(b) {
-  var a = Entry.container.getPictureElement(b.id), c = $(a);
+  var a = Entry.container.getPictureElement(b.id, b.objectId), c = $(a);
   if (a) {
     b.view = a;
     a.picture = b;
@@ -19782,7 +19789,7 @@ Entry.Playground.prototype.selectPicture = function(b) {
     e.id === b.id ? e.view.addClass("entryPictureSelected") : e.view.removeClass("entryPictureSelected");
   }
   var f;
-  b && b.id && (f = Entry.container.selectPicture(b.id));
+  b && b.id && (f = Entry.container.selectPicture(b.id, b.objectId));
   this.object.id === f && Entry.dispatchEvent("pictureSelected", b);
 };
 Entry.Playground.prototype.movePicture = function(b, a) {
