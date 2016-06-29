@@ -8577,8 +8577,18 @@ Entry.block = {
                 delete script.isStart;
                 if(sprite.dialog)   sprite.dialog.remove();
                 return script.callReturn();
-            } else
+            } else {
+                if (!sprite.dialog) {
+                    var message = script.getStringValue("VALUE", script);
+                    var mode = script.getField("OPTION", script);
+                    if (!message && typeof message != 'number')
+                        message = '    ';
+                    message = Entry.convertToRoundedDecimals(message, 3);
+                    new Entry.Dialog(sprite, message, mode);
+                    sprite.syncDialogVisible(sprite.getVisible());
+                }
                 return script;
+            }
         }
     },
     "dialog": {
@@ -8612,8 +8622,7 @@ Entry.block = {
                     "type": "text",
                     "params": [ Lang.Blocks.block_hi ]
                 },
-                null,
-                null
+                null, null
             ],
             "type": "dialog"
         },
@@ -14808,34 +14817,38 @@ Entry.block = {
                 inputView = Entry.stage.inputField,
                     message = script.getValue("VALUE", script);
 
-                    if (!message)
-                        throw new Error('message can not be empty');
+            if (!message)
+                throw new Error('message can not be empty');
 
-                    if (inputModel.sprite == sprite &&
-                        inputView && !inputView._isHidden) {
-                            return script;
-                        } else if (inputModel.sprite != sprite && script.isInit) {
-                            if(sprite.dialog)
-                                sprite.dialog.remove();
-                            delete script.isInit;
-                            return script.callReturn();
-                        } else if (inputModel.complete &&
-                                   inputModel.sprite == sprite &&
-                                   inputView._isHidden && script.isInit) {
-                                       if(sprite.dialog)
-                                           sprite.dialog.remove();
-                                       delete inputModel.complete;
-                                       delete script.isInit;
-                                       return script.callReturn();
-                                   } else {
-                                       message = Entry.convertToRoundedDecimals(message, 3);
-                                       new Entry.Dialog(sprite, message, 'speak');
-                                       Entry.stage.showInputField();
-                                       inputModel.script = script;
-                                       inputModel.sprite = sprite;
-                                       script.isInit = true;
-                                       return script;
-                                   }
+            if (inputModel.sprite == sprite &&
+                inputView && !inputView._isHidden) {
+                if (!sprite.dialog) {
+                    message = Entry.convertToRoundedDecimals(message, 3);
+                    new Entry.Dialog(sprite, message, 'speak');
+                }
+                return script;
+            } else if (inputModel.sprite != sprite && script.isInit) {
+                if(sprite.dialog)
+                    sprite.dialog.remove();
+                delete script.isInit;
+                return script.callReturn();
+            } else if (inputModel.complete &&
+                           inputModel.sprite == sprite &&
+                           inputView._isHidden && script.isInit) {
+               if(sprite.dialog)
+                   sprite.dialog.remove();
+               delete inputModel.complete;
+               delete script.isInit;
+               return script.callReturn();
+            } else {
+                message = Entry.convertToRoundedDecimals(message, 3);
+                new Entry.Dialog(sprite, message, 'speak');
+                Entry.stage.showInputField();
+                inputModel.script = script;
+                inputModel.sprite = sprite;
+                script.isInit = true;
+                return script;
+            }
         }
     },
     "get_canvas_input_value": {
