@@ -457,6 +457,9 @@ Entry.Engine.prototype.toggleRun = function() {
         Entry.variableContainer.mapList(function(variable){
             variable.takeSnapshot();
         });
+        this.projectTimer.takeSnapshot();
+        Entry.container.inputValue.takeSnapshot();
+
         Entry.container.takeSequenceSnapshot();
         Entry.scene.takeStartSceneSnapshot();
         this.state = 'run';
@@ -514,7 +517,8 @@ Entry.Engine.prototype.toggleStop = function() {
     this.stopProjectTimer();
     container.clearRunningState();
     container.loadSequenceSnapshot();
-    container.setInputValue();
+    this.projectTimer.loadSnapshot();
+    Entry.container.inputValue.loadSnapshot();
     Entry.scene.loadStartSceneSnapshot();
     Entry.Func.clearThreads();
     createjs.Sound.setVolume(1);
