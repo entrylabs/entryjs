@@ -7247,7 +7247,7 @@ Entry.Engine.prototype.toggleRun = function() {
     b.takeSnapshot();
   }), Entry.variableContainer.mapList(function(b) {
     b.takeSnapshot();
-  }), Entry.container.takeSequenceSnapshot(), Entry.scene.takeStartSceneSnapshot(), this.state = "run", this.fireEvent("start"));
+  }), this.projectTimer.takeSnapshot(), Entry.container.inputValue.takeSnapshot(), Entry.container.takeSequenceSnapshot(), Entry.scene.takeStartSceneSnapshot(), this.state = "run", this.fireEvent("start"));
   this.state = "run";
   "mobile" == Entry.type && this.view_.addClass("entryEngineBlueWorkspace");
   this.pauseButton.innerHTML = Lang.Workspace.pause;
@@ -7281,7 +7281,8 @@ Entry.Engine.prototype.toggleStop = function() {
   this.stopProjectTimer();
   b.clearRunningState();
   b.loadSequenceSnapshot();
-  b.setInputValue();
+  this.projectTimer.loadSnapshot();
+  Entry.container.inputValue.loadSnapshot();
   Entry.scene.loadStartSceneSnapshot();
   Entry.Func.clearThreads();
   createjs.Sound.setVolume(1);
