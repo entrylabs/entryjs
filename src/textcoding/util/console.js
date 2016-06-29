@@ -75,7 +75,6 @@ Entry.Console = function() {
         this.setEditing(true);
         this.codeMirror.execCommand("goDocEnd");
         var cursor = this._doc.getCursor();
-        var line = this._doc.getLine(cursor.line);
         var pos = {
             line: cursor.line,
             ch: 0
@@ -85,12 +84,24 @@ Entry.Console = function() {
         if (mode === 'speak')
             this.setEditing(false);
         this.codeMirror.execCommand("goDocEnd");
-        if (mode === 'ask')
+        if (mode === 'ask') {
+            this._doc.addLineClass(cursor.line + 1, "text", "answer");
             this.codeMirror.focus();
+        }
     };
 
     p.endInput = function() {
-        this._inputData = this._doc.getLine(this._doc.getCursor().line - 1);
+        var cursor = this._doc.getCursor();
+        var lineInfo = this.codeMirror.lineInfo(cursor.line);
+        if (lineInfo.textClass === "answer") {
+            this._inputData = lineInfo.text;
+            var pos = {
+                line: cursor.line,
+                ch: 0
+            }
+            this._doc.replaceRange(lineInfo.text + '\n', pos);
+        } else
+            this._inputData = this._doc.getLine(cursor.line - 1);
         Entry.container.setInputValue(this._inputData);
         this.setEditing(false);
     };

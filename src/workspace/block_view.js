@@ -463,7 +463,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
 
         if(board.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD) {
             if(e) {
-                document.getElementsByClassName('CodeMirror')[0]
+                vimBoard = $('.entryVimBoard>.CodeMirror')[0]
                     .dispatchEvent(Entry.Utils.createMouseEvent('dragStart', event));
             }
         }
@@ -547,7 +547,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
 
             if (block) dragEvent.block = block;
 
-            var _vimBoard = document.getElementsByClassName('CodeMirror')[0];
+            var _vimBoard = $('.entryVimBoard>.CodeMirror')[0];
             _vimBoard.dispatchEvent(dragEvent);
         }
     };
