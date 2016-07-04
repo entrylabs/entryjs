@@ -13579,7 +13579,7 @@ Entry.Parser = function(b, a, d, c) {
         c.setOption("mode", {name:"javascript", globalVars:!0});
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
-        this._parser = new Entry.BlockToPyParser(this.syntax.py), c.setOption("mode", {name:"python", globalVars:!0}), c.markText({line:0, ch:0}, {line:5}, {readOnly:!0});
+        this._parser = new Entry.BlockToPyParser(this.syntax.py), c.setOption("mode", {name:"python", globalVars:!0}), c.markText({line:0, ch:0}, {line:6}, {readOnly:!0});
     }
   };
   b.parse = function(a, b) {
