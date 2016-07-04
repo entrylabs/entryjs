@@ -11497,6 +11497,32 @@ Entry.block = {
             return script.callReturn();
         }
     },
+    "neobot_set_fnd_off": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "FND 출력 끄기 %1",
+        "params": [{
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [null],
+            "type": "neobot_set_fnd_off"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "neobot_output",
+        "isNotFor": ["neobot"],
+        "func": function (sprite, script) {
+            Entry.hw.sendQueue['FND'] = parseInt('0x00');
+            Entry.hw.sendQueue['OPT'] = Entry.hw.sendQueue['OPT'] & (~8);
+            return script.callReturn();
+        }
+    },
     "neobot_play_note_for": {
         "color": "#00979D",
         "skeleton": "basic",
