@@ -38,7 +38,7 @@ Entry.HW = function() {
         '71': Entry.Robotis_carCont,
         '72': Entry.Robotis_openCM70,
         '81': Entry.Arduino,
-        '121': Entry.EV3
+        '181': Entry.EV3
     };
 };
 
