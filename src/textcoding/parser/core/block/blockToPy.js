@@ -575,7 +575,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
         console.log("makeFuncDef func", func);
 
         if(!this.isRegisteredFunc(funcBlock)) 
-            func.name = "f";
+            func.name = "f"; 
 
 
         if(!func.name) { 

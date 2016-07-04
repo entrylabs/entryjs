@@ -22263,7 +22263,7 @@ Entry.Vim = function(b, a) {
   Entry.Vim.PARSER_TYPE_BLOCK_TO_JS = 2;
   Entry.Vim.PARSER_TYPE_BLOCK_TO_PY = 3;
   Entry.Vim.PYTHON_IMPORT_ENTRY = "import Entry";
-  Entry.Vim.PYTHON_IMPORT_HW = "import Hw";
+  Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino, Dplay \n\t   Neobot, Nemoino, Robotis, Sensorboard, Xbot from Hw";
   b = "string" === typeof b ? $("#" + b) : $(b);
   if ("DIV" !== b.prop("tagName")) {
     return console.error("Dom is not div element");

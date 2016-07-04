@@ -2329,7 +2329,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         }
 
-        console.log("FunctionDeclaration result", result);
+        console.log("FunctionDeclaration result", result);   
         //return result;
     };
 

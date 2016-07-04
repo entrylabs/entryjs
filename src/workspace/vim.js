@@ -16,9 +16,10 @@ Entry.Vim = function(dom, textType) {
     Entry.Vim.PARSER_TYPE_BLOCK_TO_PY = 3;
 
     Entry.Vim.PYTHON_IMPORT_ENTRY = "import Entry";
-    Entry.Vim.PYTHON_IMPORT_HW = "import Hw";
+    Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino, Dplay" + 
+                                    " \n\t   Neobot, Nemoino, Robotis, Sensorboard, Xbot from Hw";
 
-    if (typeof dom === "string")
+    if (typeof dom === "string") 
         dom = $('#' + dom);
     else
         dom = $(dom);
