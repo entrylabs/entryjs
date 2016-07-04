@@ -23,11 +23,8 @@ Entry.EntryObject = function(model) {
         if (!this.objectType)
             this.objectType = 'sprite';
 
-        /** @type {Blockly Xml} */
-        if (model.script)
-            this.script = Blockly.Xml.textToDom(model.script);
-        else
-            this.script = Blockly.Xml.textToDom('<xml></xml>');
+        var script = model.script ? model.script : [];
+        this.script = new Entry.Code(script, this);
 
         /** @type {Array.<picture object>} */
         this.pictures = model.sprite.pictures;
@@ -71,6 +68,7 @@ Entry.EntryObject = function(model) {
 
         for (var i in this.pictures) {
             var picture = this.pictures[i];
+            picture.objectId = this.id;
             if (!picture.id)
                 picture.id = Entry.generateHash();
             var image = new Image();
@@ -85,8 +83,10 @@ Entry.EntryObject = function(model) {
                         fileName.substring(2, 4) + '/image/' + fileName + '.png';
                 }
             }
+            Entry.Loader.addQueue();
             image.onload = function(e) {
                 Entry.container.cachePicture(picture.id, image);
+                Entry.Loader.removeQueue();
             };
         }
     }
@@ -124,6 +124,7 @@ Entry.EntryObject.prototype.generateView = function() {
                 },
                 {
                     text: Lang.Workspace.context_duplicate,
+                    enable: !Entry.engine.isState('run'),
                     callback: function(){
                         Entry.container.addCloneObject(object);
                     }
@@ -142,6 +143,7 @@ Entry.EntryObject.prototype.generateView = function() {
                 },
                 {
                     text: Lang.Blocks.Paste_blocks,
+                    enable: !Entry.engine.isState('run') && !!Entry.container.copiedObject,
                     callback: function(){
                         if (Entry.container.copiedObject)
                             Entry.container.addCloneObject(Entry.container.copiedObject);
@@ -210,8 +212,12 @@ Entry.EntryObject.prototype.generateView = function() {
 
         var nameView = Entry.createElement('input');
         nameView.bindOnClick(function (e) {
-            e.stopPropagation();
-            this.select();
+            e.preventDefault();
+            Entry.container.selectObject(thisPointer.id);
+            if (!this.readOnly) {
+                this.focus();
+                this.select();
+            }
         });
         nameView.addClass('entryObjectNameWorkspace');
 
@@ -232,7 +238,7 @@ Entry.EntryObject.prototype.generateView = function() {
                 self.editObjectValues(false);
             }
 
-                
+
         };
 
         this.nameView_.value = this.name;
@@ -342,7 +348,7 @@ Entry.EntryObject.prototype.generateView = function() {
         xInput.onkeypress = function (e) {
             if (e.keyCode == 13) {
                 thisPointer.editObjectValues(false);
-            }               
+            }
         };
 
         xInput.onblur = function (bool) {
@@ -506,11 +512,11 @@ Entry.EntryObject.prototype.generateView = function() {
         this.updateThumbnailView();
         this.updateCoordinateView();
         this.updateRotateMethodView();
-        this.updateInputViews();    
+        this.updateInputViews();
 
         this.updateCoordinateView(true);
         this.updateRotationView(true);
-    
+
 
         return this.view_;
     } else if (Entry.type == "phone") {
@@ -838,13 +844,8 @@ Entry.EntryObject.prototype.setScript = function(script) {
  * Object script getter
  * @return {!xml script} script
  */
-Entry.EntryObject.prototype.getScriptText = function(script) {
-    var xmlText = Blockly.Xml.domToText(this.script);
-    xmlText = xmlText.replace(/\sxmlns=\"(.*?)\"/,"");
-    xmlText = xmlText.replace(/\sclass=\"(.*?)\"/g,'');
-    xmlText = xmlText.replace(/\sid=\"(.*?)\"/g,"");
-    xmlText = xmlText.replace(/\sinline=\"(.*?)\"/g,"");
-    return xmlText;
+Entry.EntryObject.prototype.getScriptText = function() {
+    return JSON.stringify(this.script.toJSON());
 };
 
 /**
@@ -1003,6 +1004,7 @@ Entry.EntryObject.prototype.addPicture = function(picture, index) {
             this.removePicture,
             picture.id
         );
+    picture.objectId = this.id;
     if (!index && index !== 0)
         this.pictures.push(picture);
     else {
@@ -1215,8 +1217,10 @@ Entry.EntryObject.prototype.setRotateMethod = function(rotateMethod) {
 
 Entry.EntryObject.prototype.initRotateValue = function(rotateMethod) {
     if(this.rotateMethod != rotateMethod) {
-        this.entity.rotation = 0.0;
-        this.entity.direction = 90.0;
+        var entity = this.entity;
+        entity.rotation = 0.0;
+        entity.direction = 90.0;
+        entity.flip = false;
     }
 };
 
@@ -1399,13 +1403,17 @@ Entry.EntryObject.prototype.addCloneVariables = function(object, entity, variabl
     entity.lists = [];
     var keyName = 'object_';
     if (!variables)
-        variables = Entry.findObjsByKey(Entry.variableContainer.variables_,
-                    keyName,
-                    object.id);
+        variables = Entry.findObjsByKey(
+            Entry.variableContainer.variables_,
+            keyName,
+            object.id
+        );
     if (!lists)
-        lists = Entry.findObjsByKey(Entry.variableContainer.lists_,
-                    keyName,
-                    object.id);
+        lists = Entry.findObjsByKey(
+            Entry.variableContainer.lists_,
+            keyName,
+            object.id
+        );
 
     for (var i=0; i<variables.length; i++)
         entity.variables.push(variables[i].clone());
@@ -1419,6 +1427,7 @@ Entry.EntryObject.prototype.getLock = function() {
 
 Entry.EntryObject.prototype.setLock = function(bool) {
     this.lock = bool;
+    Entry.stage.updateObject();
     return bool;
 };
 
@@ -1455,7 +1464,7 @@ Entry.EntryObject.prototype.editObjectValues = function(click) {
     }
 
     if (click) {
-        
+
         $(inputs).removeClass('selectedNotEditingObject');
 
         for(var i=0; i<inputs.length; i++){
@@ -1467,14 +1476,14 @@ Entry.EntryObject.prototype.editObjectValues = function(click) {
         for(var i=0; i<inputs.length; i++){
             inputs[i].blur(true);
         }
-        
+
         this.blurAllInput();
         this.isEditing = false;
     }
 };
 
 Entry.EntryObject.prototype.blurAllInput = function() {
-    var inputs = document.getElementsByClassName('selectedEditingObject');            
+    var inputs = document.getElementsByClassName('selectedEditingObject');
     $(inputs).removeClass('selectedEditingObject');
 
     inputs = [
@@ -1495,7 +1504,7 @@ Entry.EntryObject.prototype.blurAllInput = function() {
 //             this.coordinateView_.yInput_, this.rotateInput_,
 //             this.directionInput_, this.coordinateView_.sizeInput_
 //         ];
-//     for(var i=0; i<inputs.length; i++){     
+//     for(var i=0; i<inputs.length; i++){
 //         inputs[i].setAttribute('disabled', 'disabled');
 //     }
 // };
@@ -1543,4 +1552,8 @@ Entry.EntryObject.prototype.getStampEntities = function() {
             entities.push(entity);
     });
     return entities;
+};
+
+Entry.EntryObject.prototype.clearExecutor = function() {
+    this.script.clearExecutors();
 };

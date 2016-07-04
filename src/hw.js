@@ -25,8 +25,11 @@ Entry.HW = function() {
         '11': Entry.Arduino,
         '12': Entry.SensorBoard,
         '13': Entry.CODEino,
+        '14': Entry.joystick,
         '15': Entry.dplay,
-        '17': Entry.Xbot,        
+        '16': Entry.nemoino,
+        '17': Entry.Xbot,
+        '18': Entry.ardublock,
         '24': Entry.Hamster,
         '25': Entry.Albert,
         '31': Entry.Bitbrick,
@@ -34,7 +37,8 @@ Entry.HW = function() {
         '51': Entry.Neobot,
         '71': Entry.Robotis_carCont,
         '72': Entry.Robotis_openCM70,
-        '81': Entry.EV3
+        '81': Entry.Arduino,
+        '121': Entry.EV3
     };
 };
 
@@ -56,44 +60,43 @@ p.initSocket = function() {
 
         var socket, socketSecurity;
         var protocol = '';
+        this.connected = false;
+        this.connectTrial++;
+
         if(location.protocol.indexOf('https') > -1) {
-            socketSecurity = new WebSocket("wss://localhost:23518");
+            socketSecurity = new WebSocket("wss://hardware.play-entry.org:23518");
         } else {
             try{
-                socket = new WebSocket("ws://localhost:23518");
+                socket = new WebSocket("ws://127.0.0.1:23518");
+                socket.binaryType = "arraybuffer";
+
+                socket.onopen = (function()
+                {
+                    hw.socketType = 'WebSocket';
+                    hw.initHardware(socket);
+                }).bind(this);
+
+                socket.onmessage = (function (evt)
+                {
+                    var data = JSON.parse(evt.data);
+                    hw.checkDevice(data);
+                    hw.updatePortData(data);
+                }).bind(this);
+
+                socket.onclose = function()
+                {
+                    if(hw.socketType === 'WebSocket') {
+                        this.socket = null;
+                        hw.initSocket();
+                    }
+                };
             } catch(e) {}
             try{
-                socketSecurity = new WebSocket("wss://localhost:23518");
+                socketSecurity = new WebSocket("wss://hardware.play-entry.org:23518");
             } catch(e) {
             }
         }
-
-        this.connected = false;
-        socket.binaryType = "arraybuffer";
         socketSecurity.binaryType = "arraybuffer";
-        this.connectTrial++;
-
-        socket.onopen = function()
-        {
-            hw.socketType = 'WebSocket';
-            hw.initHardware(socket);
-        };
-
-        socket.onmessage = function (evt)
-        {
-            var data = JSON.parse(evt.data);
-            hw.checkDevice(data);
-            hw.updatePortData(data);
-        };
-
-        socket.onclose = function()
-        {
-            if(hw.socketType === 'WebSocket') {
-                this.socket = null;
-                hw.initSocket();
-            }
-        };
-
         socketSecurity.onopen = function()
         {
             hw.socketType = 'WebSocketSecurity';
@@ -186,7 +189,6 @@ p.removePortReadable = function(port) {
     if(target != undefined) {
         this.sendQueue.readablePorts = this.sendQueue.readablePorts.slice(0, target).concat(this.sendQueue.readablePorts.slice(target + 1, this.sendQueue.readablePorts.length));
     } else {
-        this.sendQueue = [];
         this.sendQueue.readablePorts = [];
     }
 }
@@ -201,7 +203,6 @@ p.update = function() {
     }
 
     this.socket.send(JSON.stringify(this.sendQueue));
-    // this.sendQueue.readablePorts = [];
 };
 
 p.updatePortData = function(data) {
@@ -217,7 +218,7 @@ p.closeConnection = function() {
 };
 
 p.downloadConnector = function() {
-    var url = "http://github.com/entrylabs/entry-hw/releases/download/1.5.0/Entry_HW_1.5.0_Setup.exe";
+    var url = "http://download.play-entry.org/apps/Entry_HW_1.5.6_Setup.exe";
     var win = window.open(url, '_blank');
     win.focus();
 };
@@ -280,6 +281,6 @@ p.checkDevice = function(data) {
 p.banHW = function() {
     var hwOptions = this.hwInfo;
     for (var i in hwOptions)
-        Entry.playground.blockMenu.banClass(hwOptions[i].name);
+        Entry.playground.mainWorkspace.blockMenu.banClass(hwOptions[i].name, true);
 
 };

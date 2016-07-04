@@ -259,6 +259,12 @@ EntryStatic.getAllBlocks = function() {
             ]
         },
         {
+            category: "func",
+            blocks: [
+                "functionAddButton",
+            ]
+        },
+        {
             category: "arduino",
             blocks: [
                 "arduino_download_connector",
@@ -270,23 +276,58 @@ EntryStatic.getAllBlocks = function() {
                 "arduino_toggle_led",
                 "arduino_toggle_pwm",
                 "arduino_convert_scale",
+                //joystick
+                "joystick_get_number_sensor_value",
+                "joystick_get_digital_value",
+                "joystick_toggle_led",
+                "joystick_toggle_pwm",
+                "joystick_convert_scale",
                 //dplay
                 "dplay_get_number_sensor_value",
+                "dplay_get_value",
+                "dplay_get_gas_sensor_value",
+                "dplay_get_dust_sensor_value",
+                "dplay_get_CO2_sensor_value",
+                "dplay_convert_scale",
                 "dplay_get_digital_value",
+                "dplay_get_switch_status",
+                "dplay_get_tilt",
                 "dplay_toggle_led",
                 "dplay_toggle_pwm",
-                "dplay_convert_scale",
+                "dplay_select_led",
+                "dplay_DCmotor",
+                "dplay_DCmotor_speed",
+                "dplay_buzzer",
+                "dplay_servo",
+                "dplay_Robot_run",
+                "dplay_Robot_run_sec",
+                "dplay_robot_speed_sel",
+                "dplay_robot_speed_set",
+                "dplay_robot_stop",
+                //nemoino
+                "nemoino_get_named_sensor_value",
+                "nemoino_get_sound_status",
+                "nemoino_is_button_pressed",
+                "nemoino_get_accelerometer_direction",
+                "nemoino_get_accelerometer_value",
+                "nemoino_get_number_sensor_value",
+                "nemoino_get_digital_value",
+                "nemoino_toggle_led",
+                "nemoino_toggle_pwm",
+                "nemoino_convert_scale",
                 //neobot
                 "neobot_sensor_value",
-                "neobot_turn_left",
-                "neobot_stop_left",
-                "neobot_turn_right",
-                "neobot_stop_right",
-                "neobot_run_motor",
-                "neobot_servo_1",
-                "neobot_servo_2",
+                "neobot_sensor_convert_scale",
+                "neobot_left_motor",
+                "neobot_stop_left_motor",
+                "neobot_right_motor",
+                "neobot_stop_right_motor",
+                "neobot_all_motor",
+                "neobot_stop_all_motor",
+                "neobot_set_servo",
+                "neobot_set_output",
+                "neobot_set_fnd",
                 "neobot_play_note_for",
-                "neobot_set_sensor_value",
                 "bitbrick_sensor_value",
                 "bitbrick_convert_scale",
                 "bitbrick_is_touch_pressed",
@@ -404,7 +445,14 @@ EntryStatic.getAllBlocks = function() {
                 "xbot_oneWheel",
                 "xbot_twoWheel",
                 "xbot_lcd",
-                //end of XBOT Blocks added                
+                //end of XBOT Blocks added
+                // ardublock Added 2016-06-01
+                "ardublock_get_number_sensor_value",
+                "ardublock_get_digital_value",
+                "ardublock_toggle_led",
+                "ardublock_toggle_pwm",
+                "ardublock_convert_scale",
+                // ardublock Added 2016-06-01
                 "ev3_get_sensor_value",
                 "ev3_touch_sensor",
                 "ev3_color_sensor",
@@ -417,8 +465,8 @@ EntryStatic.getAllBlocks = function() {
 }
 
 EntryStatic.blockInfo = {
-    
-    //XBOT Blocks added    
+
+    //XBOT Blocks added
     "xbot_servo": {
         "isNotFor": ['xbot_epor_edge'],
         "xml": "<block type='xbot_servo'><value name='VALUE'><block type='text'><field name='NAME'>90</field></block></value></block>",
@@ -518,7 +566,7 @@ EntryStatic.blockInfo = {
         "usage": ["start"]
     },
     "when_some_key_pressed": {
-        "xml": "<block type='when_some_key_pressed'></block>",
+        "xml": "<block type='when_some_key_pressed'><field name='VALUE'>67</field></block>",
         "class": "event",
         "isNotFor": [],
         "usage": ["start"]
@@ -1046,7 +1094,7 @@ EntryStatic.blockInfo = {
         "usage": ["list"]
     },
     "boolean_basic_operator": {
-        "xml": "<block type='boolean_basic_operator'> <field name='OPERATOR'>EQUAL</field> <value name='LEFTHAND'> <block type='text'><field name='NAME'>10</field></block> </value> <value name='RIGHTHAND'> <block type='text'><field name='NAME'>10</field></block> </value> </block>",
+        "xml": "<block type='boolean_basic_operator'> <value name='LEFTHAND'> <block type='text'><field name='NAME'>10</field></block> </value><field name='OPERATOR'>EQUAL</field>  <value name='RIGHTHAND'> <block type='text'><field name='NAME'>10</field></block> </value> </block>",
         "xmls": [
             "<block type='boolean_basic_operator'> <field name='OPERATOR'>EQUAL</field> <value name='LEFTHAND'> <block type='text'><field name='NAME'>10</field></block> </value> <value name='RIGHTHAND'> <block type='text'><field name='NAME'>10</field></block> </value> </block>",
             "<block type='boolean_basic_operator'> <field name='OPERATOR'>GREATER</field> <value name='LEFTHAND'> <block type='text'><field name='NAME'>10</field></block> </value> <value name='RIGHTHAND'> <block type='text'><field name='NAME'>10</field></block> </value> </block>",
@@ -1344,6 +1392,12 @@ EntryStatic.blockInfo = {
         "usage": ["arduino"],
         "class": "arduino_value"
     },
+    "nemoino_get_number_sensor_value": {
+        "xml": "<block type='arduino_get_number_sensor_value'><value name='VALUE'><block type='arduino_get_sensor_number'></block></value></block>",
+        "isNotFor": ['nemoino'],
+        "usage": ["arduino"],
+        "class": "arduino_value"
+    },
     "sensorBoard_get_number_sensor_value": {
         "xml": "<block type='arduino_get_number_sensor_value'><value name='VALUE'><block type='arduino_get_sensor_number'></block></value></block>",
         "isNotFor": ['sensorBoard'],
@@ -1365,6 +1419,12 @@ EntryStatic.blockInfo = {
     "dplay_get_digital_value": {
         "xml": "<block type='arduino_get_digital_value'><value name='VALUE'><block type='arduino_get_port_number'></block></value></block>",
         "isNotFor": ['dplay'],
+        "usage": ["arduino"],
+        "class": "arduino_value"
+    },
+    "nemoino_get_digital_value": {
+        "xml": "<block type='arduino_get_digital_value'><value name='VALUE'><block type='arduino_get_port_number'></block></value></block>",
+        "isNotFor": ['nemoino'],
         "usage": ["arduino"],
         "class": "arduino_value"
     },
@@ -1392,6 +1452,12 @@ EntryStatic.blockInfo = {
         "usage": ["arduino"],
         "class": "arduino_set"
     },
+    "nemoino_toggle_led": {
+        "xml": "<block type='arduino_toggle_led'><value name='VALUE'><block type='arduino_get_port_number'></block></value></block>",
+        "isNotFor": ['nemoino'],
+        "usage": ["arduino"],
+        "class": "arduino_set"
+    },
     "sensorBoard_toggle_led": {
         "xml": "<block type='arduino_toggle_led'><value name='VALUE'><block type='arduino_get_port_number'></block></value></block>",
         "isNotFor": ['sensorBoard'],
@@ -1416,6 +1482,12 @@ EntryStatic.blockInfo = {
         "usage": ["arduino"],
         "class": "arduino_set"
     },
+    "nemoino_toggle_pwm": {
+        "xml": "<block type='arduino_toggle_pwm'><value name='PORT'><block type='arduino_get_pwm_port_number'></block></value><value name='VALUE'><block type='arduino_text'><field name='NAME'>255</field></block></value></block>",
+        "isNotFor": ['nemoino'],
+        "usage": ["arduino"],
+        "class": "arduino_set"
+    },
     "sensorBoard_toggle_pwm": {
         "xml": "<block type='arduino_toggle_pwm'><value name='PORT'><block type='arduino_get_pwm_port_number'></block></value><value name='VALUE'><block type='arduino_text'><field name='NAME'>255</field></block></value></block>",
         "isNotFor": ['sensorBoard'],
@@ -1437,6 +1509,12 @@ EntryStatic.blockInfo = {
     "dplay_convert_scale": {
         "xml": "<block type='arduino_convert_scale'><value name='VALUE1'><block type='arduino_get_number_sensor_value'><value name='VALUE'><block type='arduino_get_sensor_number'></block></value></block></value><value name='VALUE2'> <block type='number'><field name='NUM'>0</field></block> </value><value name='VALUE3'> <block type='number'><field name='NUM'>1023</field></block> </value><value name='VALUE4'> <block type='number'><field name='NUM'>0</field></block> </value><value name='VALUE5'> <block type='number'><field name='NUM'>100</field></block> </value></block>",
         "isNotFor": ['dplay'],
+        "usage": ["arduino"],
+        "class": "arduino"
+    },
+    "nemoino_convert_scale": {
+        "xml": "<block type='arduino_convert_scale'><value name='VALUE1'><block type='arduino_get_number_sensor_value'><value name='VALUE'><block type='arduino_get_sensor_number'></block></value></block></value><value name='VALUE2'> <block type='number'><field name='NUM'>0</field></block> </value><value name='VALUE3'> <block type='number'><field name='NUM'>1023</field></block> </value><value name='VALUE4'> <block type='number'><field name='NUM'>0</field></block> </value><value name='VALUE5'> <block type='number'><field name='NUM'>100</field></block> </value></block>",
+        "isNotFor": ['nemoino'],
         "usage": ["arduino"],
         "class": "arduino"
     },
@@ -1579,50 +1657,50 @@ EntryStatic.blockInfo = {
         "xml": "<block type='neobot_sensor_value'></block>",
         "class": "neobot_value"
     },
-    "neobot_turn_left": {
+    "neobot_left_motor": {
         "isNotFor": ['neobot'],
-        "xml": "<block type='neobot_turn_left'></block>",
+        "xml": "<block type='neobot_left_motor'><field name='SPEED'>15</field></block>",
         "class": "neobot_motor"
     },
-    "neobot_stop_left": {
+    "neobot_stop_left_motor": {
         "isNotFor": ['neobot'],
-        "xml": "<block type='neobot_stop_left'></block>",
+        "xml": "<block type='neobot_stop_left_motor'></block>",
         "class": "neobot_motor"
     },
-    "neobot_turn_right": {
+    "neobot_right_motor": {
         "isNotFor": ['neobot'],
-        "xml": "<block type='neobot_turn_right'></block>",
+        "xml": "<block type='neobot_right_motor'><field name='SPEED'>15</field></block>",
         "class": "neobot_motor"
     },
-    "neobot_stop_right": {
+    "neobot_stop_right_motor": {
         "isNotFor": ['neobot'],
-        "xml": "<block type='neobot_stop_right'></block>",
+        "xml": "<block type='neobot_stop_right_motor'></block>",
         "class": "neobot_motor"
     },
-    "neobot_run_motor": {
+    "neobot_all_motor": {
         "isNotFor": ['neobot'],
-        "xml": "<block type='neobot_run_motor'><value name='DURATION'><block type='text'><field name='NAME'>1</field></block></value></block>",
+        "xml": "<block type='neobot_all_motor'><field name='SPEED'>15</field></block>",
         "class": "neobot_motor"
     },
-    "neobot_servo_1": {
+    "neobot_set_servo": {
         "isNotFor": ['neobot'],
-        "xml": "<block type='neobot_servo_1'></block>",
-        "class": "neobot_servo"
+        "xml": "<block type='neobot_set_servo'></block>",
+        "class": "neobot_output"
     },
-    "neobot_servo_2": {
+    "neobot_set_output": {
         "isNotFor": ['neobot'],
-        "xml": "<block type='neobot_servo_2'></block>",
-        "class": "neobot_servo"
+        "xml": "<block type='neobot_set_output'><value name='VALUE'><block type='number'><field name='NUM'>255</field></block></value></block>",
+        "class": "neobot_output"
+    },
+    "neobot_set_fnd": {
+        "isNotFor": ['neobot'],
+        "xml": "<block type='neobot_set_fnd'><value name='VALUE'><block type='number'><field name='NUM'>0</field></block></value></block>",
+        "class": "neobot_output"
     },
     "neobot_play_note_for": {
         "isNotFor": ['neobot'],
-        "xml": "<block type='neobot_play_note_for'></block>",
+        "xml": "<block type='neobot_play_note_for'><field name='NOTE'>1</field><field name='OCTAVE'>2</field><field name='DURATION'>4</field></block>",
         "class": "neobot_note"
-    },
-    "neobot_set_sensor_value": {
-        "isNotFor": ['neobot'],
-        "xml": "<block type='neobot_set_sensor_value'></block>",
-        "class": "neobot_set_value"
     },
     "bitbrick_sensor_value": {
         "isNotFor": ['bitbrick'],
@@ -1991,6 +2069,84 @@ EntryStatic.blockInfo = {
         "isNotFor": ["CODEino"],
         "usage": ["arduino"],
         "class": "CODEino"
+    },
+        "nemoino_get_named_sensor_value": {
+        "xml": "<block type='nemoino_get_named_sensor_value'></block>",
+        "isNotFor": ['nemoino'],
+        "usage": ["arduino"],
+        "class": "nemoino"
+    },
+    "nemoino_get_sound_status": {
+        "xml": "<block type='nemoino_get_sound_status'></block>",
+        "isNotFor": ["nemoino"],
+        "usage": ["arduino"],
+        "class": "nemoino"
+    },
+    "nemoino_is_button_pressed": {
+        "xml": "<block type='nemoino_is_button_pressed'></block>",
+        "isNotFor": ["nemoino"],
+        "usage": ["arduino"],
+        "class": "nemoino"
+    },
+    "nemoino_get_accelerometer_direction": {
+        "xml": "<block type='nemoino_get_accelerometer_direction'></block>",
+        "isNotFor": ["nemoino"],
+        "usage": ["arduino"],
+        "class": "nemoino"
+    },
+    "nemoino_get_accelerometer_value": {
+        "xml": "<block type='nemoino_get_accelerometer_value'></block>",
+        "isNotFor": ["nemoino"],
+        "usage": ["arduino"],
+        "class": "nemoino"
+    },
+    "dplay_get_tilt": {
+        "xml": "<block type='dplay_get_tilt'></block>",
+        "isNotFor": ["dplay"],
+        "usage": ["arduino"],
+        "class": "dplay_set"
+    },
+    "dplay_get_value": {
+        "xml": "<block type='dplay_get_value'><value name='VALUE'><block type='arduino_get_sensor_number'></block></value></block>",
+        "isNotFor": ['dplay'],
+        "usage": ["arduino"],
+        "class": "dplay_set"
+    },
+    "dplay_get_light_status": {
+        "xml": "<block type='dplay_get_light_status'></block>",
+        "isNotFor": ["dplay"],
+        "usage": ["arduino"],
+        "class": "dplay_set"
+    },
+    "dplay_get_switch_status": {
+        "xml": "<block type='dplay_get_switch_status'></block>",
+        "isNotFor": ["dplay"],
+        "usage": ["arduino"],
+        "class": "dplay_set"
+    },
+    "dplay_buzzer": {
+          "xml": "<block type='dplay_buzzer'><value name='VALUE'><block type='arduino_text'><field name='NAME'>0</field></block></value></block>",
+          "isNotFor": ['dplay'],
+          "usage": ["arduino"],
+          "class": "dplay"
+    },
+    "dplay_select_led": {
+        "xml": "<block type='dplay_select_led'><block type='arduino_get_port_number'></block></block>",
+        "isNotFor": ['dplay'],
+        "usage": ["arduino"],
+        "class": "dplay"
+    },
+    "dplay_DCmotor": {
+          "xml": "<block type='dplay_DCmotor'></block>",
+          "isNotFor": ['dplay'],
+          "usage": ["arduino"],
+          "class": "dplay"
+    },
+    "dplay_servo": {
+        "xml": "<block type='dplay_servo'><value name='VALUE'><block type='arduino_text'><field name='NAME'>255</field></block></value></block>",
+        "isNotFor": ['dplay'],
+        "usage": ["arduino"],
+        "class": "dplay"
     },
     "direction_relative_duration": {
         "isNotFor": [""],
@@ -2365,4 +2521,35 @@ EntryStatic.getName = function(str, type) {
     } else {
         return dict[str] ? dict[str] : str;
     }
+};
+
+EntryStatic.ARROW_COLOR_START = '#2f975a';
+EntryStatic.ARROW_COLOR_FLOW = '#3a71bc';
+EntryStatic.ARROW_COLOR_MOVING = '#8641b6';
+EntryStatic.ARROW_COLOR_LOOKS = '#d8234e';
+EntryStatic.ARROW_COLOR_SOUNDS = '#83a617';
+EntryStatic.ARROW_COLOR_JUDGE = '#89a1f7';
+EntryStatic.ARROW_COLOR_CALC = '#e8b349';
+EntryStatic.ARROW_COLOR_VARIABLE = '#ce38ce';
+EntryStatic.ARROW_COLOR_HW = '#097e84';
+
+
+EntryStatic.COMMAND_TYPES = {
+    addThread: 101,
+    destroyThread: 102,
+    destroyBlock: 103,
+    recoverBlock: 104,
+    insertBlock: 105,
+    separateBlock: 106,
+    moveBlock: 107,
+    cloneBlock: 108,
+    uncloneBlock: 109,
+    scrollBoard: 110,
+    setFieldValue: 111,
+
+    selectObject: 201,
+
+    'do': 301,
+    'undo': 302,
+    'redo': 303
 };

@@ -67,6 +67,7 @@ module.exports = function(grunt) {
                 compilerFile: 'node_modules/closurecompiler/compiler/compiler.jar',
                 checkModified: true,
                 compilerOpts: {
+                    create_source_map: 'entry.js.map',
                     compilation_level: 'SIMPLE_OPTIMIZATIONS',
                     language_in: 'ECMASCRIPT5',
                     language_out: 'ECMASCRIPT5',
@@ -74,7 +75,7 @@ module.exports = function(grunt) {
                 }
             },
             targetName: {
-                src: ['src/entry.js', 'src/**/*.js'],
+                src: ['src/entry.js', 'src/**/*.js', '!src/workspace/block_entry.js'],
                 dest: 'dist/entry.js'
             },
             dist: {

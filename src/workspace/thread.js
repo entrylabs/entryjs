@@ -7,23 +7,23 @@ goog.provide("Entry.Thread");
 
 goog.require('Entry.Model');
 goog.require("Entry.Collection");
-goog.require("Entry.DummyBlock");
 
 /*
  *
  */
-Entry.Thread = function(thread, code) {
+Entry.Thread = function(thread, code, parent) {
     this._data = new Entry.Collection();
     this._code = code;
-
     this.changeEvent = new Entry.Event(this);
-    this.changeEvent.attach(this, this.inspectExist);
+    this.changeEvent.attach(this, this.handleChange);
+    this._event = null;
+    this.parent = parent ? parent : code;
 
     this.load(thread);
 };
 
 (function(p) {
-    p.load = function(thread) {
+    p.load = function(thread, mode) {
         if (thread === undefined)
             thread = [];
         if (!(thread instanceof Array)) {
@@ -32,55 +32,38 @@ Entry.Thread = function(thread, code) {
 
         for (var i = 0; i < thread.length; i++) {
             var block = thread[i];
-            if (block instanceof Entry.Block ||
-               block instanceof Entry.DummyBlock) {
+            if (block instanceof Entry.Block || block.isDummy) {
                 block.setThread(this);
                 this._data.push(block);
-            } else {
-                this._data.push(new Entry.Block(block, this));
-            }
+            } else this._data.push(new Entry.Block(block, this));
         }
-        this._setRelation();
 
         var codeView = this._code.view;
-        if (codeView) this.createView(codeView.board);
-    };
-
-    p._setRelation = function() {
-        var blocks = this._data.getAll();
-        if (blocks.length === 0) return;
-
-        var prevBlock = blocks[0];
-        prevBlock.setPrev(null);
-        blocks[blocks.length - 1].setNext(null);
-        for (var i = 1; i < blocks.length; i++) {
-            var block = blocks[i];
-            block.setPrev(prevBlock);
-            prevBlock.setNext(block);
-            prevBlock = block;
-        }
+        if (codeView) this.createView(codeView.board, mode);
     };
 
     p.registerEvent = function(block, eventType) {
+        this._event = eventType;
         this._code.registerEvent(block, eventType);
     };
 
-    p.createView = function(board) {
+    p.unregisterEvent = function(block, eventType) {
+        this._code.unregisterEvent(block, eventType);
+    };
+
+    p.createView = function(board, mode) {
         if (!this.view)
             this.view = new Entry.ThreadView(this, board);
+        var prevBlock = null;
         this._data.map(function(b) {
-            b.createView(board);
+            b.createView(board, mode);
         });
     };
 
-    p.separate = function(block) {
-        if (!this._data.has(block.id))
-            return;
-        if (block.prev) {
-            block.prev.setNext(null);
-            block.setPrev(null);
-        }
-        var blocks = this._data.splice(this._data.indexOf(block));
+    p.separate = function(block, count) {
+        if (!this._data.has(block.id)) return;
+
+        var blocks = this._data.splice(this._data.indexOf(block), count);
         this._code.createThread(blocks);
         this.changeEvent.notify();
     };
@@ -88,44 +71,41 @@ Entry.Thread = function(thread, code) {
     p.cut = function(block) {
         var index = this._data.indexOf(block);
         var splicedData = this._data.splice(index);
-        if (this._data[index - 1])
-            this._data[index - 1].setNext(null);
         this.changeEvent.notify();
         return splicedData;
     };
 
-    p.insertDummyBlock = function(dummyBlock) {
-        this._data.unshift(dummyBlock);
-        if (this._data[1]) {
-            this._data[1].setPrev(dummyBlock);
-            dummyBlock.setNext(this._data[1]);
-        }
-    };
-
     p.insertByBlock = function(block, newBlocks) {
-        var index = this._data.indexOf(block);
-        block.setNext(newBlocks[0]);
-        newBlocks[0].setPrev(block);
-        for (var i in newBlocks) {
+        var index = block ? this._data.indexOf(block) : -1;
+        for (var i = 0; i < newBlocks.length; i++) {
             newBlocks[i].setThread(this);
         }
         this._data.splice.apply(
             this._data,
             [index + 1, 0].concat(newBlocks)
         );
-        this._setRelation();
         this.changeEvent.notify();
     };
 
-    p.clone = function(code) {
+    p.insertToTop = function(newBlock) {
+        newBlock.setThread(this);
+        this._data.unshift.apply(
+            this._data,
+            [newBlock]
+        );
+        this.changeEvent.notify();
+    };
+
+    p.clone = function(code, mode) {
         var code = code || this._code;
         var newThread = new Entry.Thread([], code);
         var data = this._data;
         var cloned = [];
         for (var i=0, len=data.length; i<len; i++) {
+            var block = data[i];
             cloned.push(data[i].clone(newThread));
         }
-        newThread.load(cloned);
+        newThread.load(cloned, mode);
         return newThread;
     };
 
@@ -143,14 +123,19 @@ Entry.Thread = function(thread, code) {
     p.destroy = function(animate) {
         this._code.destroyThread(this, false);
         if (this.view) this.view.destroy(animate);
+
+        var blocks = this._data;
+
+        for (var i=blocks.length-1; i>=0; i--)
+            blocks[i].destroy(animate);
     };
 
-    p.getFirstBlock = function() {
-        return this._data[0];
+    p.getBlock = function(index) {
+        return this._data[index];
     };
 
     p.getBlocks = function() {
-        return this._data;
+        return this._data.map(function(b){return b;});
     };
 
     p.countBlock = function() {
@@ -160,20 +145,20 @@ Entry.Thread = function(thread, code) {
             if (!block.type)
                 continue;
             count++;
-            var schema = Entry.block[block.type];
-            var contents = schema.contents;
-            for (var j = 0; j < contents.length; j++) {
-                var content = contents[j];
-                if (content.type == "Statement") {
-                    count += block.values[content.key].countBlock();
+
+            var statements = block.statements;
+            if (statements) {
+                for (var j = 0; j < statements.length; j++) {
+                    var statement = statements[j];
+                    count += statement.countBlock();
                 }
             }
         }
         return count;
     };
 
-    p.inspectExist = function() {
-        //if (this._data.length === 0) this.destroy();
+    p.handleChange = function() {
+        if (this._data.length === 0) this.destroy();
     };
 
     p.getCode = function() {
@@ -185,22 +170,102 @@ Entry.Thread = function(thread, code) {
     };
 
     p.spliceBlock = function(block) {
-        var blocks = this.getBlocks();
+        var blocks = this._data;
         blocks.remove(block);
 
-        if (blocks.length !== 0) {
-            if (block.prev === null)
-                block.next.setPrev(null);
-            else if (block.next === null)
-                block.prev.setNext(null);
-            else {
-                block.prev.setNext(block.next);
-                block.next.setPrev(block.prev);
-            }
-            this._setRelation();
-        } else this.destroy();
+        if (blocks.length === 0) {
+            var parent = this.view.getParent();
+            if (parent.constructor !== Entry.FieldStatement)
+                 this.destroy();
+        }
 
         this.changeEvent.notify();
+    };
+
+    p.getFirstBlock = function() {
+        return this._data[0];
+    };
+
+    p.getPrevBlock = function(block) {
+        var index = this._data.indexOf(block);
+        return this._data.at(index - 1);
+    };
+
+    p.getNextBlock = function(block) {
+        var index = this._data.indexOf(block);
+        return this._data.at(index + 1);
+    };
+
+    p.getLastBlock = function() {
+        return this._data.at(this._data.length - 1);
+    };
+
+    p.getRootBlock = function() {
+        return this._data.at(0);
+    };
+
+    p.hasBlockType = function(type) {
+        for (var i = 0; i < this._data.length; i++)
+            if (inspectBlock(this._data[i])) return true;
+        return false;
+
+        function inspectBlock(block) {
+            if (type == block.type) return true;
+
+            var params = block.params;
+            for (var k = 0; k < params.length; k++) {
+                var param = params[k];
+                if (param && param.constructor == Entry.Block) {
+                    if (inspectBlock(param)) return true;
+                }
+            }
+            var statements = block.statements;
+            if (statements) {
+                for (var j = 0; j < statements.length; j++) {
+                    if (statements[j].hasBlockType(type))
+                        return true;
+                }
+            }
+            return false;
+        }
+    };
+
+    p.getCount = function(startBlock) {
+        var result = this._data.length;
+        if (startBlock)
+            result -= this._data.indexOf(startBlock);
+        return result
+    };
+
+    p.indexOf = function(block) {
+        return this._data.indexOf(block);
+    };
+
+    p.pointer = function(pointer, block) {
+        var index = this.indexOf(block);
+        pointer.unshift(index);
+        if (this.parent instanceof Entry.Block)
+            pointer.unshift(this.parent.indexOfStatements(this));
+        if (this._code === this.parent) {
+            pointer.unshift(this._code.indexOf(this));
+            var topBlock = this._data[0];
+            pointer.unshift(topBlock.y);
+            pointer.unshift(topBlock.x);
+            return pointer;
+        }
+        return this.parent.pointer(pointer);
+    };
+
+    p.getBlockList = function(excludePrimitive) {
+        var blocks = [];
+        for (var i = 0; i < this._data.length; i++)
+            blocks = blocks.concat(this._data[i].getBlockList(excludePrimitive));
+
+        return blocks;
+    };
+
+    p.stringify = function() {
+        return JSON.stringify(this.toJSON());
     };
 
 })(Entry.Thread.prototype);

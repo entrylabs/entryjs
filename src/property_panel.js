@@ -30,12 +30,17 @@ Entry.PropertyPanel = function() {
             parent: this._view
         });
 
-        var selectedImgView = Entry.createElement('div');
-        selectedImgView.addClass('entryObjectSelectedImgWorkspace');
-        this.selectedImgView_ = selectedImgView;
-        this._view.append(selectedImgView);
-        this.initializeSplitter(selectedImgView);
-        this.splitter = selectedImgView;
+        this._cover = Entry.Dom('div', {
+            classes: ["propertyPanelCover", "entryRemove"],
+            parent: this._view
+        });
+
+        var splitter =
+            Entry.Dom('div', {
+                class: 'entryObjectSelectedImgWorkspace',
+                parent: this._view
+            });
+        this.initializeSplitter(splitter);
     };
 
     p.addMode = function(mode, contentObj) {
@@ -46,7 +51,7 @@ Entry.PropertyPanel = function() {
             parent: this._contentView
         });
 
-        var tabDom = Entry.Dom('<div>' + mode +'</div>', {
+        var tabDom = Entry.Dom('<div>' +Lang.Menus[mode] +'</div>', {
             classes: ["propertyTabElement", "propertyTab" + mode],
             parent: this._tabView
         });
@@ -70,6 +75,7 @@ Entry.PropertyPanel = function() {
             tabDom: tabDom,
             contentDom: contentDom
         };
+
         if(mode == 'hw') {
             $('.propertyTabhw').bind('dblclick',(function(){
                 Entry.dispatchEvent('hwModeChange');
@@ -90,44 +96,60 @@ Entry.PropertyPanel = function() {
 
         Entry.dispatchEvent('windowResized');
 
-        var modeResize  = this.modes[this.selected].obj.resize;
-        if(modeResize && this.selected != 'hw')
-            modeResize();
-        else if(this.selected == 'hw' && this.modes.hw.obj.listPorts)
-             this.modes[this.selected].obj.resizeList();
-         else if(this.selected == 'hw')
-            this.modes[this.selected].obj.resize();
-
+        var selected = this.selected;
+        var modeResize  = this.modes[selected].obj.resize;
+        if (selected == 'hw') {
+            if (this.modes.hw.obj.listPorts)
+                this.modes[selected].obj.resizeList();
+            else this.modes[selected].obj.resize();
+        } else {
+            this.modes[selected].obj.resize();
+        }
     };
 
     p.select = function(modeName) {
         for (var key in this.modes) {
             var mode = this.modes[key];
             mode.tabDom.removeClass("selected");
-            mode.contentDom.addClass("entryHidden");
+            mode.contentDom.addClass("entryRemove");
+            mode.obj.visible = false;
         }
         var selected = this.modes[modeName];
         selected.tabDom.addClass("selected");
-        selected.contentDom.removeClass("entryHidden");
-
+        selected.contentDom.removeClass("entryRemove");
         if(selected.obj.resize)
             selected.obj.resize();
+        selected.obj.visible = true;
         this.selected = modeName;
     };
 
     p.initializeSplitter = function(splitter) {
-        splitter.onmousedown = function(e) {
+        var that = this;
+        splitter.bind('mousedown touchstart', function(e) {
+            that._cover.removeClass('entryRemove');
             Entry.container.disableSort();
             Entry.container.splitterEnable = true;
-        };
-        document.addEventListener('mousemove', function(e) {
-            if (Entry.container.splitterEnable) {
-                Entry.resizeElement({canvasWidth: e.x || e.clientX});
+            if (Entry.documentMousemove) {
+                Entry.container.resizeEvent = Entry.documentMousemove.attach(this, function(e) {
+                    if (Entry.container.splitterEnable) {
+                        Entry.resizeElement({
+                            canvasWidth: e.clientX || e.x
+                        });
+                    }
+                });
             }
         });
-        document.addEventListener('mouseup', function(e) {
-            Entry.container.splitterEnable = false;
+
+        $(document).bind('mouseup touchend', function(e) {
+            var listener = Entry.container.resizeEvent
+            if (listener) {
+                Entry.container.splitterEnable = false;
+                Entry.documentMousemove.detach(listener);
+                that._cover.addClass('entryRemove');
+                delete Entry.container.resizeEvent;
+            }
             Entry.container.enableSort();
         });
     };
-})(Entry.PropertyPanel.prototype)
+
+})(Entry.PropertyPanel.prototype);

@@ -74,6 +74,7 @@ Entry.Container.prototype.generateView = function(containerView, option) {
             var options = [
                 {
                     text: Lang.Blocks.Paste_blocks,
+                    enable: !Entry.engine.isState('run') && !!Entry.container.copiedObject,
                     callback: function(){
                         if (Entry.container.copiedObject)
                             Entry.container.addCloneObject(Entry.container.copiedObject);
@@ -199,36 +200,29 @@ Entry.Container.prototype.setObjects = function(objectModels) {
  * get Pictures element
  * @param {!String} pictureId
  */
-Entry.Container.prototype.getPictureElement = function(pictureId) {
-    for(var i in this.objects_) {
-        var object = this.objects_[i];
-        for (var j in object.pictures) {
-            if (pictureId === object.pictures[j].id) {
-                return object.pictures[j].view;
-            }
-        }
-    }
-    throw new Error('No picture found');
+Entry.Container.prototype.getPictureElement = function(pictureId, objectId) {
+    var object = this.getObject(objectId);
+    var picture = object.getPicture(pictureId);
+    if (picture) return picture.view;
+    else throw new Error('No picture found');
 };
 /**
  * Set Pictures
  * @param {!Object picture} picture
  */
 Entry.Container.prototype.setPicture = function(picture) {
-    for(var i in this.objects_) {
-        var object = this.objects_[i];
-        for (var j in object.pictures) {
-            if (picture.id === object.pictures[j].id) {
-                var picture_ = {};
-                picture_.dimension = picture.dimension;
-                picture_.id = picture.id;
-                picture_.filename = picture.filename;
-                picture_.fileurl = picture.fileurl;
-                picture_.name = picture.name;
-                picture_.view = object.pictures[j].view;
-                object.pictures[j] = picture_;
-                return;
-            }
+    var object = this.getObject(picture.objectId);
+    for (var j in object.pictures) {
+        if (picture.id === object.pictures[j].id) {
+            var picture_ = {};
+            picture_.dimension = picture.dimension;
+            picture_.id = picture.id;
+            picture_.filename = picture.filename;
+            picture_.fileurl = picture.fileurl;
+            picture_.name = picture.name;
+            picture_.view = object.pictures[j].view;
+            object.pictures[j] = picture_;
+            return;
         }
     }
     throw new Error('No picture found');
@@ -238,18 +232,14 @@ Entry.Container.prototype.setPicture = function(picture) {
  * Set Pictures
  * @param {!String} pictureId
  */
-Entry.Container.prototype.selectPicture = function(pictureId) {
-    for(var i in this.objects_) {
-        var object = this.objects_[i];
-        for (var j in object.pictures) {
-            var picture_ = object.pictures[j];
-            if (pictureId === picture_.id) {
-                object.selectedPicture = picture_;
-                object.entity.setImage(picture_);
-                object.updateThumbnailView();
-                return object.id;
-            }
-        }
+Entry.Container.prototype.selectPicture = function(pictureId, objectId) {
+    var object = this.getObject(objectId);
+    var picture_ = object.getPicture(pictureId);
+    if (picture_) {
+        object.selectedPicture = picture_;
+        object.entity.setImage(picture_);
+        object.updateThumbnailView();
+        return object.id;
     }
     throw new Error('No picture found');
 };
@@ -292,7 +282,6 @@ Entry.Container.prototype.addObject = function(objectModel, index) {
     object.generateView();
     var pictures = object.pictures;
     pictures.map(function (p) {
-        p.id = Entry.generateHash();
         Entry.playground.generatePictureElement(p);
     });
 
@@ -318,9 +307,11 @@ Entry.Container.prototype.addObject = function(objectModel, index) {
 Entry.Container.prototype.addCloneObject = function(object, scene) {
     var json = object.toJSON();
     var newObjectId = Entry.generateHash();
-    Entry.variableContainer.addCloneLocalVariables({objectId: json.id,
-                                                    newObjectId: newObjectId,
-                                                    json: json});
+    Entry.variableContainer.addCloneLocalVariables({
+        objectId: json.id,
+        newObjectId: newObjectId,
+        json: json
+    });
     json.id = newObjectId;
     json.scene = scene || Entry.scene.selectedScene;
     this.addObject(json);
@@ -416,6 +407,8 @@ Entry.Container.prototype.getAllObjects = function() {
  * @return {Entry.EntryObject}
  */
 Entry.Container.prototype.getObject = function(objectId) {
+    if (!objectId && Entry.playground && Entry.playground.object)
+        objectId = Entry.playground.object.id;
     var length = this.objects_.length;
     for (var i = 0; i<length; i++) {
         var object = this.objects_[i];
@@ -544,6 +537,8 @@ Entry.Container.prototype.getDropdownList = function(menuName) {
             result.push([Lang.Blocks.wall_left, 'wall_left']);
             break;
         case 'pictures':
+            if (!Entry.playground.object)
+                break;
             var pictures = Entry.playground.object.pictures;
             for (var i = 0; i<pictures.length; i++) {
                 var picture = pictures[i];
@@ -585,6 +580,8 @@ Entry.Container.prototype.getDropdownList = function(menuName) {
             }
             break;
         case 'sounds':
+            if (!Entry.playground.object)
+                break;
             var sounds = Entry.playground.object.sounds;
             for (var i = 0; i<sounds.length; i++) {
                 var sound = sounds[i];
@@ -617,7 +614,7 @@ Entry.Container.prototype.getDropdownList = function(menuName) {
  */
 Entry.Container.prototype.clearRunningState = function() {
     this.mapObject(function(object) {
-        object.entity.clearScript();
+        object.clearExecutor();
         for (var j = object.clonedEntities.length; j>0; j--) {
             var entity = object.clonedEntities[j-1];
             entity.removeClone();
@@ -635,25 +632,29 @@ Entry.Container.prototype.clearRunningState = function() {
  */
 Entry.Container.prototype.mapObject = function(mapFunction, param) {
     var length = this.objects_.length;
+    var output = [];
     for (var i = 0; i<length; i++) {
         var object = this.objects_[i];
-        mapFunction(object, param);
+        output.push(mapFunction(object, param));
     }
+    return output;
 };
 
 
 Entry.Container.prototype.mapObjectOnScene = function(mapFunction, param) {
     var objects = this.getCurrentObjects();
     var length = objects.length;
+    var output = [];
     for (var i = 0; i<length; i++) {
         var object = objects[i];
-        mapFunction(object, param);
+        output.push(mapFunction(object, param));
     }
+    return output;
 };
 
 Entry.Container.prototype.clearRunningStateOnScene = function() {
     this.mapObjectOnScene(function(object) {
-        object.entity.clearScript();
+        object.clearExecutor();
         for (var j = object.clonedEntities.length; j>0; j--) {
             var entity = object.clonedEntities[j-1];
             entity.removeClone();
@@ -671,19 +672,23 @@ Entry.Container.prototype.clearRunningStateOnScene = function() {
  */
 Entry.Container.prototype.mapEntity = function(mapFunction, param) {
     var length = this.objects_.length;
+    var output = [];
     for (var i = 0; i<length; i++) {
         var entity = this.objects_[i].entity;
-        mapFunction(entity, param);
+        output.push(mapFunction(entity, param));
     }
+    return output;
 };
 
 Entry.Container.prototype.mapEntityOnScene = function(mapFunction, param) {
     var objects = this.getCurrentObjects();
     var length = objects.length;
+    var output = [];
     for (var i = 0; i<length; i++) {
         var entity = objects[i].entity;
-        mapFunction(entity, param);
+        output.push(mapFunction(entity, param));
     }
+    return output;
 };
 
 /**
@@ -697,31 +702,35 @@ Entry.Container.prototype.mapEntityOnScene = function(mapFunction, param) {
 Entry.Container.prototype.mapEntityIncludeClone = function(mapFunction, param) {
     var objects = this.objects_;
     var length = objects.length;
+    var output = [];
     for (var i = 0; i<length; i++) {
         var object = objects[i];
         var lenx = object.clonedEntities.length;
-        mapFunction(object.entity, param);
+        output.push(mapFunction(object.entity, param));
         for (var j = 0; j<lenx; j++) {
             var entity = object.clonedEntities[j];
             if (entity && !entity.isStamp)
-                mapFunction(entity, param);
+                output.push(mapFunction(entity, param));
         }
     }
+    return output;
 };
 
 Entry.Container.prototype.mapEntityIncludeCloneOnScene = function(mapFunction, param) {
     var objects = this.getCurrentObjects();
     var length = objects.length;
+    var output = [];
     for (var i = 0; i<length; i++) {
         var object = objects[i];
         var lenx = object.clonedEntities.length;
-        mapFunction(object.entity, param);
+        output.push(mapFunction(object.entity, param));
         for (var j = 0; j<lenx; j++) {
             var entity = object.clonedEntities[j];
             if (entity && !entity.isStamp)
-                mapFunction(entity, param);
+                output.push(mapFunction(entity, param));
         }
     }
+    return output;
 };
 
 /**
@@ -1017,7 +1026,7 @@ Entry.Container.prototype.initYoutube = function(youtubeHash) {
 };
 
 Entry.Container.prototype.initTvcast = function(tvcast) {
-    this.tvcast = tvcast;   
+    this.tvcast = tvcast;
     this.youtubeTab.removeClass('entryRemove');
     var view = this._view;
     var width = view.style.width.substring(0,
@@ -1060,31 +1069,30 @@ Entry.Container.prototype.blurAllInputs = function() {
 
 Entry.Container.prototype.showProjectAnswer = function() {
     var answer = this.inputValue;
-    if (!answer)
-        return;
+    if (!answer) return;
     answer.setVisible(true);
 };
 
 
 Entry.Container.prototype.hideProjectAnswer = function(removeBlock) {
     var answer = this.inputValue;
-    if (!answer || !answer.isVisible() || Entry.engine.isState('run'))
-        return;
-    var objects = Entry.container.getAllObjects();
-    var answerTypes = ['ask_and_wait', 'get_canvas_input_value',
-    'set_visible_answer'];
+    if (!answer || !answer.isVisible() || Entry.engine.isState('run')) return;
 
-    for (var i=0, len=objects.length; i<len; i++) {
-        var blocks = objects[i].script.getElementsByTagName('block');
-        for (var j = 0, bLen=blocks.length; j < bLen; j++) {
-            if (answerTypes.indexOf(blocks[j].getAttribute('type')) > -1) {
-                if (blocks[j].getAttribute('id') == removeBlock.getAttribute('id'))
-                    continue;
-                else
-                    return;
-            }
-        }
+    var objects = Entry.container.getAllObjects();
+    var answerTypes = [
+        'ask_and_wait',
+        'get_canvas_input_value',
+        'set_visible_answer'
+    ];
+
+    for (var i = 0, len = objects.length; i < len; i++) {
+        var code = objects[i].script;
+        for (var j = 0; j < answerTypes.length; j++)
+            if (code.hasBlockType(answerTypes[j])) return;
     }
+
+    //answer related blocks not found
+    //hide canvas answer view
     answer.setVisible(false);
 };
 

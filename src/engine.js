@@ -14,10 +14,10 @@ Entry.Engine = function() {
     this.isUpdating = true;
     this.speeds = [1, 15, 30, 45, 60];
 
-    this.pressedKeys = [];
 
-    Entry.addEventListener('keyPressed', this.captureKeyEvent);
-    Entry.addEventListener('keyUpped', this.captureKeyUpEvent);
+    if (Entry.keyPressed)
+        Entry.keyPressed.attach(this, this.captureKeyEvent);
+
     Entry.addEventListener('canvasClick', function(e){
         Entry.engine.fireEvent('mouse_clicked');
     });
@@ -47,7 +47,7 @@ Entry.Engine = function() {
         $(window).unbind('keydown', arrowHandler);
     });
 
-    function arrowHandler(e){
+    function arrowHandler(e) {
         var arrows = [37,38,39,40,32];
         var code = (e.keyCode || e.which);
         var input = Entry.stage.inputField;
@@ -124,7 +124,6 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
 
         this.view_.appendChild(this.runButton);
         this.runButton.bindOnClick(function(e) {
-            e.preventDefault();
             Entry.engine.toggleRun();
         });
         this.runButton2 = Entry.createElement('button');
@@ -133,7 +132,6 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
 
         this.view_.appendChild(this.runButton2);
         this.runButton2.bindOnClick(function(e) {
-            e.preventDefault();
             Entry.engine.toggleRun();
         });
 
@@ -144,7 +142,6 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
         this.stopButton.innerHTML = Lang.Workspace.stop;
         this.view_.appendChild(this.stopButton);
         this.stopButton.bindOnClick(function(e) {
-            e.preventDefault();
             Entry.engine.toggleStop();
         });
 
@@ -155,7 +152,6 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
         this.stopButton2.innerHTML = Lang.Workspace.stop;
         this.view_.appendChild(this.stopButton2);
         this.stopButton2.bindOnClick(function(e) {
-            e.preventDefault();
             Entry.engine.toggleStop();
         });
 
@@ -165,7 +161,6 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
         this.pauseButton.addClass('entryRemove');
         this.view_.appendChild(this.pauseButton);
         this.pauseButton.bindOnClick(function(e) {
-            e.preventDefault();
             Entry.engine.togglePause();
         });
 
@@ -199,25 +194,6 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
             Entry.stage.toggleCoordinator();
         });
 
-        this.runButton = Entry.createElement('button');
-        this.runButton.addClass('entryEngineButtonMinimize');
-        this.runButton.addClass('entryRunButtonMinimize');
-        this.runButton.innerHTML = Lang.Blocks.START;
-        this.view_.appendChild(this.runButton);
-        this.runButton.bindOnClick(function(e) {
-            e.preventDefault();
-            Entry.engine.toggleRun();
-        });
-
-        this.runButton2 = Entry.createElement('button');
-        this.runButton2.addClass('entryEngineBigButtonMinimize_popup');
-        this.runButton2.addClass('entryEngineBigButtonMinimize_popup_run');
-        this.view_.appendChild(this.runButton2);
-        this.runButton2.bindOnClick(function(e) {
-            e.preventDefault();
-            Entry.engine.toggleRun();
-        });
-
         this.stopButton = Entry.createElement('button');
         this.stopButton.addClass('entryEngineButtonMinimize');
         this.stopButton.addClass('entryStopButtonMinimize');
@@ -226,7 +202,6 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
         this.view_.appendChild(this.stopButton);
         this.stopButton.bindOnClick(function(e) {
             this.blur();
-            e.preventDefault();
             Entry.engine.toggleStop();
         });
 
@@ -238,7 +213,6 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
         this.view_.appendChild(this.pauseButton);
         this.pauseButton.bindOnClick(function(e) {
             this.blur();
-            e.preventDefault();
             Entry.engine.togglePause();
         });
 
@@ -246,6 +220,17 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
         this.mouseView.addClass('entryMouseViewMinimize');
         this.mouseView.addClass('entryRemove');
         this.view_.appendChild(this.mouseView);
+
+        Entry.addEventListener("loadComplete", function() {
+            this.runButton = Entry.Dom("div", {
+                class: "entryRunButtonBigMinimize",
+                parent: $("#entryCanvasWrapper")
+            });
+
+            this.runButton.bindOnClick(function(e) {
+                Entry.engine.toggleRun();
+            });
+        }.bind(this));
     } else if (option == 'phone') {
         this.view_ = controlView;
         this.view_.addClass('entryEngine', 'entryEnginePhone');
@@ -286,7 +271,6 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
 
         this.footerView_.appendChild(this.runButton);
         this.runButton.bindOnClick(function(e) {
-            e.preventDefault();
             Entry.engine.toggleRun();
         });
 
@@ -300,7 +284,6 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
 
         this.footerView_.appendChild(this.stopButton);
         this.stopButton.bindOnClick(function(e) {
-            e.preventDefault();
             Entry.engine.toggleStop();
         });
     }
@@ -415,41 +398,16 @@ Entry.Engine.prototype.update = function() {
  * compute each object with runningScript on entity.
  */
 Entry.Engine.prototype.computeObjects = function() {
-    Entry.container.mapEntityIncludeCloneOnScene(this.computeFunction);
+    Entry.container.mapObjectOnScene(this.computeFunction);
 };
 
 /**
  * Compute function for map.
  * @param {Entry.EntryObject} object
  */
-Entry.Engine.prototype.computeFunction = function(entity) {
-    var scripts = entity.runningScript;
-    for (var i=0; i<scripts.length; i++) {
-        var script = scripts.shift();
-        var isContinue = true;
-        var isSame = false;
-        while (script && isContinue && !isSame) {
-            try {
-                isContinue = !script.isLooped;
-                var newScript = script.run();
-                isSame = (newScript && newScript === script);
-                script = newScript;
-            } catch (exception) {
-                Entry.engine.toggleStop();
-                Entry.engine.isUpdating = false;
-                if (Entry.type == 'workspace') {
-                    Entry.container.selectObject();
-                    Entry.container.selectObject(script.entity.parent.id, true);
-                    Entry.playground.changeViewMode('code');
-                    Blockly.mainWorkspace.activatePreviousBlock(script.id);
-                }
-                Entry.toast.alert(Lang.Msgs.runtime_error, Lang.Workspace.check_runtime_error, true);
-                throw exception;
-            }
-        }
-        if (script)
-            scripts.push(script);
-    }
+Entry.Engine.prototype.computeFunction = function(object) {
+    var code = object.script;
+    code.tick();
 };
 
 Entry.Engine.computeThread = function(entity, script) {
@@ -490,7 +448,6 @@ Entry.Engine.prototype.run = function() {
 Entry.Engine.prototype.toggleRun = function() {
     Entry.addActivity("run");
     if (this.state == 'stop') {
-        Entry.playground.syncObject();
         Entry.container.mapEntity(function(entity){
             entity.takeSnapshot();
         });
@@ -500,10 +457,13 @@ Entry.Engine.prototype.toggleRun = function() {
         Entry.variableContainer.mapList(function(variable){
             variable.takeSnapshot();
         });
+        this.projectTimer.takeSnapshot();
+        Entry.container.inputValue.takeSnapshot();
+
         Entry.container.takeSequenceSnapshot();
         Entry.scene.takeStartSceneSnapshot();
         this.state = 'run';
-        this.fireEvent('when_run_button_click');
+        this.fireEvent('start');
     }
     this.state = 'run';
     if (Entry.type == 'mobile')
@@ -557,7 +517,8 @@ Entry.Engine.prototype.toggleStop = function() {
     this.stopProjectTimer();
     container.clearRunningState();
     container.loadSequenceSnapshot();
-    container.setInputValue();
+    this.projectTimer.loadSnapshot();
+    Entry.container.inputValue.loadSnapshot();
     Entry.scene.loadStartSceneSnapshot();
     Entry.Func.clearThreads();
     createjs.Sound.setVolume(1);
@@ -608,16 +569,8 @@ Entry.Engine.prototype.fireEvent = function(eventName) {
  * @param {string} eventName
  */
 Entry.Engine.prototype.raiseEvent = function(entity, eventName) {
-    var blocks = entity.parent.script.childNodes;
-    //handle clone entity
-    for (var i=0; i<blocks.length; i++) {
-        var block = blocks[i];
-        if (Entry.Xml.isTypeOf(eventName, block)) {
-            var script = new Entry.Script(entity);
-            script.init(block);
-            entity.runningScript.push(script);
-        }
-    }
+    var code = entity.parent.script;
+    code.raiseEvent(eventName, entity);
 };
 
 /**
@@ -638,17 +591,10 @@ Entry.Engine.prototype.raiseEventOnEntity = function(entity, param) {
     if (entity !== param[0])
         return;
     var eventName = param[1];
-    var blocks = entity.parent.script.childNodes;
-    //handle clone entity
-    for (var i=0; i<blocks.length; i++) {
-        var block = blocks[i];
-        if (Entry.Xml.isTypeOf(eventName, block)) {
-            var script = new Entry.Script(entity);
-            script.init(block);
-            entity.runningScript.push(script);
-        }
-    }
+    var code = entity.parent.script;
+    code.raiseEvent(eventName, entity);
 };
+
 /**
  * capture keyboard press input
  * @param {keyboard event} e
@@ -657,8 +603,6 @@ Entry.Engine.prototype.captureKeyEvent = function(e) {
     var keyCode = e.keyCode;
     var type = Entry.type;
 
-    if (Entry.engine.pressedKeys.indexOf(keyCode) < 0)
-        Entry.engine.pressedKeys.push(keyCode);
     //mouse shortcuts
     if (e.ctrlKey && type == 'workspace') {
         if (keyCode == 83) {
@@ -669,16 +613,12 @@ Entry.Engine.prototype.captureKeyEvent = function(e) {
             Entry.engine.run();
         } else if (keyCode == 90) {
             e.preventDefault();
+            console.log('engine');
             Entry.dispatchEvent(e.shiftKey ? 'redo' : 'undo');
-        } else if (keyCode > 48 && keyCode < 58) {
-            e.preventDefault();
-            Entry.playground.selectMenu(keyCode - 49);
         }
     } else if (Entry.engine.isState('run')) {
         Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent,
-                                  ["press_some_key", keyCode]);
-        Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent,
-                                  ["when_some_key_pressed", keyCode]);
+                                  ["keyPress", keyCode]);
     }
 
     if (Entry.engine.isState('stop')) {
@@ -688,16 +628,6 @@ Entry.Engine.prototype.captureKeyEvent = function(e) {
         }
     }
 };
-/**
- * capture keyboard press up input
- * @param {keyboard event} e
- */
-Entry.Engine.prototype.captureKeyUpEvent = function(e) {
-    var keyCode = e.keyCode;
-    if (Entry.engine.pressedKeys.indexOf(keyCode) >= 0)
-        Entry.engine.pressedKeys.splice(
-            Entry.engine.pressedKeys.indexOf(keyCode), 1);
-};
 
 /**
  * this is callback function for map.
@@ -706,19 +636,8 @@ Entry.Engine.prototype.captureKeyUpEvent = function(e) {
  */
 Entry.Engine.prototype.raiseKeyEvent = function(entity, param) {
     var eventName = param[0];
-    var keyCode = param[1];
-    var blocks = entity.parent.script.childNodes;
-    //handle clone entity
-    for (var i=0; i<blocks.length; i++) {
-        var block = blocks[i];
-        var value = Entry.Xml.getField("VALUE", block);
-        if (Entry.Xml.isTypeOf(eventName, block) &&
-           (value == keyCode)) {
-            var script = new Entry.Script(entity);
-            script.init(block);
-            entity.runningScript.push(script);
-        }
-    }
+    var keyCode = String(param[1]);
+    return entity.parent.script.raiseEvent(eventName, entity, keyCode);
 };
 
 /**
@@ -778,25 +697,22 @@ Entry.Engine.prototype.showProjectTimer = function() {
 };
 
 //decide Entry.engine.projectTimer to show
-Entry.Engine.prototype.hideProjectTimer = function(removeBlock) {
+Entry.Engine.prototype.hideProjectTimer = function() {
     var timer = this.projectTimer;
-    if (!timer || !timer.isVisible() || this.isState('run'))
-        return;
+    if (!timer || !timer.isVisible() || this.isState('run')) return;
     var objects = Entry.container.getAllObjects();
-    var timerTypes = ['get_project_timer_value',
-                       'reset_project_timer',
-                        'set_visible_project_timer'];
 
-    for (var i=0, len=objects.length; i<len; i++) {
-        var blocks = objects[i].script.getElementsByTagName('block');
-        for (var j = 0, bLen=blocks.length; j < bLen; j++) {
-            if (timerTypes.indexOf(blocks[j].getAttribute('type')) > -1) {
-                if (blocks[j].getAttribute('id') == removeBlock.getAttribute('id'))
-                    continue;
-                else
-                    return;
-            }
-        }
+    var timerTypes = [
+            'get_project_timer_value',
+            'reset_project_timer',
+            'set_visible_project_timer',
+            'choose_project_timer_action'
+    ];
+
+    for (var i = 0, len = objects.length; i < len; i++) {
+        var code = objects[i].script;
+        for (var j = 0; j < timerTypes.length; j++)
+            if(code.hasBlockType(timerTypes[j])) return;
     }
     timer.setVisible(false);
 };

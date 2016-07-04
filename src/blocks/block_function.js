@@ -1,5 +1,27 @@
 "use strict";
 
+Entry.block.functionAddButton = {
+    skeleton: "basic_button",
+    color: "#eee",
+    isNotFor: ["functionInit"],
+    template: "%1",
+    params: [
+        {
+            type: "Text",
+            text: "함수 추가",
+            color: "#333",
+            align: "center"
+        }
+    ],
+    events: {
+        mousedown: [
+            function() {
+                Entry.variableContainer.createFunction();
+            }
+        ]
+    }
+};
+
 Blockly.Blocks.function_field_label = {
   init: function() {
     this.setColour("#f9c535");
@@ -10,6 +32,23 @@ Blockly.Blocks.function_field_label = {
     this.setOutput(true, 'Param');
     this.setInputsInline(true);
   }
+};
+
+Entry.block.function_field_label = {
+    skeleton: "basic_param",
+    isNotFor: ["functionEdit"],
+    color: "#f9c535",
+    template: "%1%2",
+    params: [
+        {
+            type: "TextInput",
+            value: "함수"
+        },
+        {
+            type: "Output",
+            accept: "paramMagnet"
+        }
+    ]
 };
 
 Blockly.Blocks.function_field_string = {
@@ -24,6 +63,24 @@ Blockly.Blocks.function_field_string = {
   }
 };
 
+Entry.block.function_field_string = {
+    skeleton: "basic_param",
+    isNotFor: ["functionEdit"],
+    color: "#ffd974",
+    template: "%1%2",
+    params: [
+        {
+            type: "Block",
+            accept: "stringMagnet",
+            restore: true
+        },
+        {
+            type: "Output",
+            accept: "paramMagnet"
+        }
+    ]
+};
+
 Blockly.Blocks.function_field_boolean = {
   init: function() {
     this.setColour("#AEB8FF");
@@ -34,6 +91,24 @@ Blockly.Blocks.function_field_boolean = {
     this.setOutput(true, 'Param');
     this.setInputsInline(true);
   }
+};
+
+Entry.block.function_field_boolean = {
+    skeleton: "basic_param",
+    isNotFor: ["functionEdit"],
+    color: "#aeb8ff",
+    template: "%1%2",
+    params: [
+        {
+            type: "Block",
+            accept: "booleanMagnet",
+            restore: true
+        },
+        {
+            type: "Output",
+            accept: "paramMagnet"
+        }
+    ]
 };
 
 Blockly.Blocks.function_param_string = {
@@ -67,6 +142,15 @@ Entry.block.function_param_string = function (sprite, script, register) {
     return script.register[script.hashId].run()
 };
 
+Entry.block.function_param_string = {
+    skeleton: "basic_string_field",
+    color: "#ffd974",
+    template: "문자/숫자값",
+    func: function() {
+        return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
+    }
+};
+
 Blockly.Blocks.function_param_boolean = {
   init: function() {
     this.setEditable(false);
@@ -93,6 +177,15 @@ Entry.block.function_param_boolean = function (sprite, script, register) {
     return script.register[script.hashId].run()
 };
 
+Entry.block.function_param_boolean = {
+    skeleton: "basic_boolean_field",
+    color: "#aeb8ff",
+    template: "판단값",
+    func: function() {
+        return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
+    }
+};
+
 Blockly.Blocks.function_create = {
   init: function() {
     this.appendDummyInput()
@@ -109,6 +202,29 @@ Blockly.Blocks.function_create = {
 
 Entry.block.function_create = function (sprite, script) {
     return script.callReturn();
+};
+
+Entry.block.function_create = {
+    skeleton: "basic",
+    color: "#cc7337",
+    event: "funcDef",
+    template: "함수 정의하기 %1 %2",
+    params: [
+        {
+            type: "Block",
+            accept: "paramMagnet",
+            value: {
+                    type: "function_field_label"
+            }
+        },
+        {
+            type: "Indicator",
+            img: "/lib/entryjs/images/block_icon/function_03.png",
+            size: 12
+        }
+    ],
+    func: function() {
+    }
 };
 
 Blockly.Blocks.function_general = {
@@ -197,3 +313,31 @@ Entry.block.function_general = function (sprite, script) {
         return script;
     }
 };
+
+Entry.block.function_general = {
+    skeleton: "basic",
+    color: "#cc7337",
+    template: "함수",
+    params: [
+    ],
+    func: function(entity) {
+        if (!this.initiated) {
+            this.initiated = true;
+
+            var func = Entry.variableContainer.getFunction(
+                this.block.type.substr(5, 9)
+            );
+            this.funcCode = func.content;
+            this.funcExecutor = this.funcCode.raiseEvent("funcDef", entity)[0];
+            this.funcExecutor.register.params = this.getParams();
+            var paramMap = {};
+            this.funcExecutor.register.paramMap = func.paramMap;
+        }
+        this.funcExecutor.execute();
+        if (!this.funcExecutor.isEnd()) {
+            this.funcCode.removeExecutor(this.funcExecutor);
+            return Entry.STATIC.BREAK;
+        }
+    }
+};
+

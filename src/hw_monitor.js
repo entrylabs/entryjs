@@ -283,6 +283,7 @@ Entry.HWMonitor = function(hwModule) {
         var sendQueue = Entry.hw.sendQueue;
         var readablePort = sendQueue.readablePort;
         var mode = this._hwModule.monitorTemplate.mode;
+        var objectKeys = this._hwModule.monitorTemplate.keys || [];
         var portView = [];
 
         if(mode == "list") {
@@ -309,12 +310,36 @@ Entry.HWMonitor = function(hwModule) {
 
             if (port.type == "input") {
                 var value = portData[key];
-                port.value.textContent = value ? value : 0;
-                port.group.getElementsByTagName('rect')[1].attr({fill : "#00979D"});
+                if(objectKeys.length > 0) {
+                    $.each(objectKeys, function (idx, valueKey) {
+                        if($.isPlainObject(value)) {
+                            value = value[valueKey] || 0;
+                        } else {
+                            return false;
+                        }
+                    });
+                    port.value.textContent = value ? value : 0;
+                    port.group.getElementsByTagName('rect')[1].attr({fill : "#00979D"});
+                } else {
+                    port.value.textContent = value ? value : 0;
+                    port.group.getElementsByTagName('rect')[1].attr({fill : "#00979D"})
+                }
             } else {
                 var value = sendQueue[key];
-                port.value.textContent = value ? value : 0;
-                port.group.getElementsByTagName('rect')[1].attr({fill : "#A751E3"})
+                if(objectKeys.length > 0) {
+                    $.each(objectKeys, function (idx, valueKey) {
+                        if($.isPlainObject(value)) {
+                            value = value[valueKey] || 0;
+                        } else {
+                            return false;
+                        }
+                    });
+                    port.value.textContent = value ? value : 0;
+                    port.group.getElementsByTagName('rect')[1].attr({fill : "#A751E3"})
+                } else {
+                    port.value.textContent = value ? value : 0;
+                    port.group.getElementsByTagName('rect')[1].attr({fill : "#A751E3"})
+                }
             }
         }
     };
@@ -476,7 +501,6 @@ Entry.HWMonitor = function(hwModule) {
             this._movePort(rPort, xCursor, bP, prevBP);
         }
 
-
     };
 
     p._alignNS = function(ports, yCursor, gap) {
@@ -605,6 +629,5 @@ Entry.HWMonitor = function(hwModule) {
         port.group.attr({ "transform" : "translate(" + groupX + "," + y  + ")"});
         port.path.attr({ "d": path });
     };
-
 
 })(Entry.HWMonitor.prototype)

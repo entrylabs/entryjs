@@ -4,11 +4,13 @@
 
 goog.provide("Entry.FieldDropdown");
 
+goog.require("Entry.Field");
 /*
  *
  */
-Entry.FieldDropdown = function(content, blockView) {
+Entry.FieldDropdown = function(content, blockView, index) {
     this._block = blockView.block;
+    this._blockView = blockView;
 
     var box = new Entry.BoxModel();
     this.box = box;
@@ -16,56 +18,84 @@ Entry.FieldDropdown = function(content, blockView) {
     this.svgGroup = null;
 
     this._contents = content;
-    this.key = content.key;
-    this.value = this._block.values[this.key];
+    this._noArrow = content.noArrow;
+    this._arrowColor = content.arrowColor;
+    this._index = index;
+    this.setValue(this.getValue());
 
-    this.renderStart(blockView);
+    this._CONTENT_HEIGHT =
+        content.dropdownHeight || blockView.getSkeleton().dropdownHeight || 16;
+
+    this._FONT_SIZE =
+        content.fontSize || blockView.getSkeleton().fontSize || 12;
+
+    this._ROUND = content.roundValue || 3;
+
+    this.renderStart();
 };
 
-(function(p) {
-    var X_PADDING = 18,
-        TEXT_Y_PADDING = 3,
-        CONTENT_HEIGHT = 23;
+Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
-    p.renderStart = function(blockView) {
+(function(p) {
+
+    p.renderStart = function() {
+        if (this.svgGroup) $(this.svgGroup).remove();
+        //should update value dynamically
+        if (this instanceof Entry.FieldDropdownDynamic) this._updateValue();
+
+        var blockView = this._blockView;
+        var X_PADDING = 16;
         var that = this;
         var contents = this._contents;
 
-        this.svgGroup = blockView.contentSvgGroup.group();
-        this.svgGroup.attr({
+
+        this.svgGroup = blockView.contentSvgGroup.elem("g", {
             class: 'entry-field-dropdown'
         });
 
         this.textElement =
-            this.svgGroup.text(
-                2, TEXT_Y_PADDING,
-                this.getTextByValue(this.value)
-            );
+            this.svgGroup.elem("text", {
+                x: 2
+            });
+        this.textElement.textContent = this.getTextByValue(this.getValue());
+
+        var bBox = this.textElement.getBBox();
+        this.textElement.attr({
+            'style': 'white-space: pre; font-size:' + that._FONT_SIZE + 'px',
+            'y': bBox.height * 0.25
+        });
 
         var width =
-            this.textElement.node.getComputedTextLength() + X_PADDING;
+            this.textElement.getComputedTextLength() + X_PADDING;
 
-        this._header = this.svgGroup.rect(
-                0, -12,
-                width,
-                CONTENT_HEIGHT,
-            3).attr({fill: "#80cbf8"});
+        if (this._noArrow) width -= 12;
 
-        this.svgGroup.append(this.textElement);
 
-        this._arrow = this.svgGroup.polygon(
-            //width-11, -2, width-5, -2, width-8, 2).
-            0, -2, 6, -2, 3, 2).
-            attr({
-                fill: "#127cbd",
-                stroke: "#127cbd",
-                transform: "t"+ (width-11) + " 0",
-            });
+        var CONTENT_HEIGHT = this._CONTENT_HEIGHT;
 
-        this.svgGroup.mouseup(function(e) {
-            if (that._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN)
-                that.renderOptions();
+        this._header = this.svgGroup.elem("rect", {
+            width: width,
+            height: CONTENT_HEIGHT,
+            y: -CONTENT_HEIGHT/2,
+            rx: that._ROUND,
+            ry: that._ROUND,
+            fill: "#fff",
+            'fill-opacity': 0.4
         });
+
+        this.svgGroup.appendChild(this.textElement);
+
+        if (!this._noArrow) {
+            var fillColor = this._arrowColor || blockView._schema.color;
+            this._arrow = this.svgGroup.elem("polygon",{
+                points: "0,-2.1 6.4,-2.1 3.2,2.1",
+                fill: fillColor,
+                stroke: fillColor,
+                transform: "translate("+ (width-11) + ",0)"
+            });
+        }
+
+        this._bindRenderOptions();
 
         this.box.set({
             x: 0,
@@ -76,15 +106,18 @@ Entry.FieldDropdown = function(content, blockView) {
     };
 
     p.resize = function() {
+        var X_PADDING = 18;
         var width =
-            this.textElement.node.getComputedTextLength() + X_PADDING;
+            this.textElement.getComputedTextLength() + X_PADDING;
+
+        if (!this._noArrow) {
+            this._arrow.attr({
+                transform: "translate("+ (width-11) + ",0)"
+            });
+        } else width -= 14;
 
         this._header.attr({
             width: width
-        });
-
-        this._arrow.attr({
-            transform: "t"+ (width-11) + " 0"
         });
 
         this.box.set({width: width});
@@ -93,132 +126,126 @@ Entry.FieldDropdown = function(content, blockView) {
 
     p.renderOptions = function() {
         var that = this;
-        this.destroyOption();
 
         var blockView = this._block.view;
 
-        this.documentDownEvent = Entry.documentMousedown.attach(
-            this, function(){
-                Entry.documentMousedown.detach(this.documentDownEvent);
-                that.optionGroup.remove();
-            }
-        );
+        this._attachDisposeEvent();
 
-        this.optionGroup = blockView.getBoard().svgGroup.group();
-
-        var matrix = blockView.svgGroup.transform().globalMatrix;
-        var x = matrix.e;
-        var y = matrix.f;
-
-        var options = this._contents.options;
-        this.optionGroup.attr({
-            class: 'entry-field-dropdown',
-            transform: "t" + (x -60) + " " + (y + 35)
+        this.optionGroup = Entry.Dom('ul', {
+            class:'entry-widget-dropdown',
+            parent: $('body')
         });
 
-        var resizeList = [];
-        var OPTION_X_PADDING = 50;
-        var maxWidth = 0;
+        this.optionGroup.bind('mousedown touchstart', function(e) {
+            e.stopPropagation();
+        });
 
-        resizeList.push(this.optionGroup.rect(
-            0, 0,
-            0, CONTENT_HEIGHT * options.length
-            ).attr({fill:'white'}));
+        var options = this._contents.options;
+
+        var OPTION_X_PADDING = 30;
+        var maxWidth = 0;
+        var options = this._contents.options;
+
+        var CONTENT_HEIGHT = this._CONTENT_HEIGHT + 4;
 
         for (var i=0, len=options.length; i<len; i++) {
             var option = options[i];
             var text = option[0];
             var value = option[1];
-            var element = this.optionGroup.group().attr({
+            var element = Entry.Dom('li', {
                 class: 'rect',
-                transform: "t" + 0 + " " + i * CONTENT_HEIGHT
+                parent: this.optionGroup
             });
 
-            resizeList.push(element.rect(
-                0, 0,
-                0, CONTENT_HEIGHT
-            ));
+            var left = Entry.Dom('span', {
+                class: 'left',
+                parent: element
+            });
 
+            Entry.Dom('span', {
+                class: 'right',
+                parent: element
+            }).text(text);
 
-            if (this.value == value) {
-                element.text(
-                    5, 13,
-                    '\u2713'
-                ).attr({"alignment-baseline": "central"});
-            }
-
-            var text = element.text(
-                20, 13,
-                text
-            ).attr({"alignment-baseline": "central"});
-
-            maxWidth = Math.max(
-                text.node.getComputedTextLength() + OPTION_X_PADDING,
-                maxWidth
-            );
+            if (this.getValue() == value) left.text('\u2713');
 
             (function(elem, value) {
-                elem.mousedown(function(){
+                //prevent propagation to document
+                elem.bind('mousedown touchstart', function(e) {
+                    e.stopPropagation();
+                });
+
+                elem.bind('mouseup touchend', function(e){
+                    e.stopPropagation();
                     that.applyValue(value);
                     that.destroyOption();
+                    that._selectBlockView();
                 });
             })(element, value);
         }
-
-        var attr = {width:maxWidth};
-        resizeList.forEach(function(elem){
-            elem.attr(attr);
-        });
+        this._position();
     };
 
-    p.align = function(x, y, animate) {
-        animate = animate === undefined ? true : animate;
-        var svgGroup = this.svgGroup;
+    p._position = function() {
+        //inspect enough space below
+        var pos = this.getAbsolutePosFromDocument();
+        pos.y += this.box.height/2;
 
-        var transform = "t" + x + " " + y;
+        var documentHeight = $(document).height();
+        var optionGroupHeight = this.optionGroup.height();
+        var optionGroupWidth = this.optionGroup.width() + 30;
 
-        if (animate)
-            svgGroup.animate({
-                transform: transform
-            }, 300, mina.easeinout);
-        else
-            svgGroup.attr({
-                transform: transform
-            });
+        //not enough space below
+        if (documentHeight < pos.y + optionGroupHeight + 30) {
+            var domHeight = this._blockView.getBoard().svgDom.height();
+            var relPos = this.getAbsolutePosFromBoard();
+            //above the half of dom
+            if (this._blockView.y < domHeight/2) {
+                pos.x += this.box.width/2 - optionGroupWidth/2;
 
-        this.box.set({
-            x: x,
-            y: y
+                domHeight -= relPos.y + 30;
+                this.optionGroup.height(domHeight)
+            } else {
+                pos.x += this.box.width + 1;
+
+                domHeight -=  domHeight - relPos.y;
+
+                if (domHeight - 30 < optionGroupHeight) {
+                    domHeight -= domHeight % 30;
+                    this.optionGroup.height(domHeight)
+                }
+
+                pos.y -= this.optionGroup.height();
+
+            }
+        } else pos.x += this.box.width/2 - optionGroupWidth/2;
+
+        this.optionGroup.addClass('rendered');
+        this.optionGroup.css({
+            left: pos.x, top: pos.y,
+            width: optionGroupWidth
         });
+        var rights = this.optionGroup.find('.right');
+        rights.width(optionGroupWidth-20);
     };
 
     p.applyValue = function(value) {
-        if (this.value == value) return;
-        this._block.values[this.key] = value;
-        this.value = value;
-        this.textElement.node.textContent = this.getTextByValue(value);
+        if (this.value != value)
+            this.setValue(value);
+        this.textElement.textContent = this.getTextByValue(value);
         this.resize();
     };
 
-    p.destroyOption = function() {
-        if (this.documentDownEvent) {
-            Entry.documentMousedown.detach(this.documentDownEvent);
-            delete this.documentDownEvent;
-        }
-
-        if (this.optionGroup) {
-            this.optionGroup.remove();
-            delete this.optionGroup;
-        }
-    };
-
     p.getTextByValue = function(value) {
+        if (!value || value === 'null') return Lang.Blocks.no_target;
+
         var options = this._contents.options;
         for (var i=0, len=options.length; i<len; i++) {
             var option = options[i];
             if (option[1] == value)
                 return option[0];
         }
-        return value;
+        //no match found
+        return Lang.Blocks.no_target;
     };
 })(Entry.FieldDropdown.prototype);

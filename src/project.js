@@ -5,13 +5,13 @@ Entry.getStartProject = function(mediaFilePath) {
         "category" : "기타",
         "scenes" : [
             {
-                "name" : Lang.Blocks.SCENE + " 1",
+                "name" : "장면 1",
                 "id" : "7dwq"
             }
         ],
         "variables" : [
             {
-                "name" : Lang.Blocks.CALC_choose_project_timer_action_1,
+                "name" : "초시계",
                 "id" : "brih",
                 "visible" : false,
                 "value" : "0",
@@ -23,7 +23,7 @@ Entry.getStartProject = function(mediaFilePath) {
                 "isCloud" : false
             },
             {
-                "name" : Lang.Blocks.VARIABLE_get_canvas_input_value,
+                "name" : "대답",
                 "id" : "1vu8",
                 "visible" : false,
                 "value" : "0",
@@ -38,8 +38,24 @@ Entry.getStartProject = function(mediaFilePath) {
         "objects" : [
             {
                 "id" : "7y0y",
-                "name" : Lang.Blocks.entry_bot_name,
-                "script" : "<xml><block type=\"when_run_button_click\" x=\"136\" y=\"47\"><next><block type=\"repeat_basic\"><value name=\"VALUE\"><block type=\"number\"><field name=\"NUM\">10</field></block></value><statement name=\"DO\"><block type=\"move_direction\"><value name=\"VALUE\"><block type=\"number\"><field name=\"NUM\">10</field></block></value></block></statement></block></next></block></xml>",
+                "name" : "엔트리봇",
+                "script" : [
+                    [
+                        {
+                            type: "when_run_button_click",
+                            x: 40,
+                            y: 50
+                        },
+                        {
+                            type: "repeat_basic",
+                            statements: [
+                                [
+                                    {type: "move_direction"}
+                                ]
+                            ]
+                        }
+                    ]
+                ],
                 "selectedPictureId" : "vx80",
                 "objectType" : "sprite",
                 "rotateMethod" : "free",
@@ -51,7 +67,7 @@ Entry.getStartProject = function(mediaFilePath) {
                             "ext" : ".mp3",
                             "id" : "8el5",
                             "fileurl" : mediaFilePath + "media/bark.mp3",
-                            "name" : Lang.Blocks.bark_dog
+                            "name" : "강아지 짖는소리"
                         }
                     ],
                     "pictures" : [
@@ -95,6 +111,5 @@ Entry.getStartProject = function(mediaFilePath) {
             }
         ],
         "speed" : 60
-    };    
-
+    };
 };

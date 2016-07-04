@@ -53,45 +53,207 @@ Entry.Utils.colorDarken = function(color, factor) {
     }
 
     factor = factor === undefined ? 0.7 : factor;
-    r = Math.floor(r * factor).toString(16);
-    g = Math.floor(g * factor).toString(16);
-    b = Math.floor(b * factor).toString(16);
+    r = inspect(Math.floor(r * factor).toString(16));
+    g = inspect(Math.floor(g * factor).toString(16));
+    b = inspect(Math.floor(b * factor).toString(16));
+
+    function inspect(val) {
+        if (val.length != 2) val = '0' + val;
+        return val;
+    }
 
     return '#' + r + g + b;
 };
 
-Entry.Utils.bindGlobalEvent = function(options) {
-    if (options === undefined)
-        options = ['resize', 'mousedown', 'mousemove', 'keydown', 'keyup'];
+Entry.Utils.colorLighten = function(color, amount) {
+    function clamp01(val) {
+        return Math.min(1, Math.max(0, val));
+    }
 
-    if (!Entry.windowReszied && options.indexOf('resize') > -1) {
+    amount = (amount === 0) ? 0 : (amount || 20);
+    var hsl = Entry.Utils.hexToHsl(color);
+    hsl.l += amount / 100;
+    hsl.l = clamp01(hsl.l);
+    return Entry.Utils.hslToHex(hsl);
+};
+
+// Take input from [0, n] and return it as [0, 1]
+Entry.Utils.bound01 = function(n, max) {
+    function isOnePointZero(n) {
+        return typeof n == "string" && n.indexOf('.') != -1 && parseFloat(n) === 1;
+    }
+
+    function isPercentage(n) {
+        return typeof n === "string" && n.indexOf('%') != -1;
+    }
+
+    if (isOnePointZero(n)) { n = "100%"; }
+
+    var processPercent = isPercentage(n);
+    n = Math.min(max, Math.max(0, parseFloat(n)));
+
+    // Automatically convert percentage into number
+    if (processPercent) {
+        n = parseInt(n * max, 10) / 100;
+    }
+
+    // Handle floating point rounding errors
+    if ((Math.abs(n - max) < 0.000001)) {
+        return 1;
+    }
+
+    // Convert into [0, 1] range if it isn't already
+    return (n % max) / parseFloat(max);
+};
+
+// `rgbToHsl`
+// Converts an RGB color value to HSL.
+// *Assumes:* r, g, and b are contained in [0, 255] or [0, 1]
+// *Returns:* { h, s, l } in [0,1]
+Entry.Utils.hexToHsl = function(color) {
+    var r, g, b;
+    if (color.length === 7) {
+        r = parseInt(color.substr(1, 2), 16);
+        g = parseInt(color.substr(3, 2), 16);
+        b = parseInt(color.substr(5, 2), 16);
+    } else {
+        r = parseInt(color.substr(1, 2), 16);
+        g = parseInt(color.substr(2, 2), 16);
+        b = parseInt(color.substr(3, 2), 16);
+    }
+
+    r = Entry.Utils.bound01(r, 255);
+    g = Entry.Utils.bound01(g, 255);
+    b = Entry.Utils.bound01(b, 255);
+
+    var max = Math.max(r, g, b), min = Math.min(r, g, b);
+    var h, s, l = (max + min) / 2;
+
+    if(max == min) {
+        h = s = 0; // achromatic
+    }
+    else {
+        var d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch(max) {
+            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+            case g: h = (b - r) / d + 2; break;
+            case b: h = (r - g) / d + 4; break;
+        }
+
+        h /= 6;
+    }
+
+    var hsl = { h: h, s: s, l: l };
+    return { h: hsl.h * 360, s: hsl.s, l: hsl.l};
+};
+
+// `hslToRgb`
+// Converts an HSL color value to RGB.
+// *Assumes:* h is contained in [0, 1] or [0, 360] and s and l are contained [0, 1] or [0, 100]
+// *Returns:* { r, g, b } in the set [0, 255]
+Entry.Utils.hslToHex = function(color) {
+    var r, g, b;
+
+    var h = Entry.Utils.bound01(color.h, 360);
+    var s = Entry.Utils.bound01(color.s, 1);
+    var l = Entry.Utils.bound01(color.l, 1);
+
+    function hue2rgb(p, q, t) {
+        if(t < 0) t += 1;
+        if(t > 1) t -= 1;
+        if(t < 1/6) return p + (q - p) * 6 * t;
+        if(t < 1/2) return q;
+        if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+        return p;
+    }
+
+    function pad2(c) {
+        return c.length == 1 ? '0' + c : '' + c;
+    }
+
+    if(s === 0) {
+        r = g = b = l; // achromatic
+    }
+    else {
+        var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        var p = 2 * l - q;
+        r = hue2rgb(p, q, h + 1/3);
+        g = hue2rgb(p, q, h);
+        b = hue2rgb(p, q, h - 1/3);
+    }
+
+    var rgb = { r: r * 255, g: g * 255, b: b * 255 };
+
+    var hex = [
+        pad2(Math.round(rgb.r).toString(16)),
+        pad2(Math.round(rgb.g).toString(16)),
+        pad2(Math.round(rgb.b).toString(16))
+    ];
+
+    return '#' + hex.join('');
+};
+
+
+Entry.Utils.bindGlobalEvent = function(options) {
+    var doc = $(document);
+    if (options === undefined)
+        options = [
+            'resize',
+            'mousedown',
+            'mousemove',
+            'keydown',
+            'keyup',
+            'dispose'
+        ];
+
+    if (options.indexOf('resize') > -1) {
+        if (Entry.windowReszied) {
+            $(window).off('resize');
+            Entry.windowReszied.clear()
+        }
         Entry.windowResized = new Entry.Event(window);
         $(window).on('resize', (function(e) {
             Entry.windowResized.notify(e);
         }));
     }
 
-    if (!Entry.documentMousedown && options.indexOf('mousedown') > -1) {
+    if (options.indexOf('mousedown') > -1) {
+        if (Entry.documentMousedown) {
+            doc.off('mousedown');
+            Entry.documentMousedown.clear()
+        }
         Entry.documentMousedown = new Entry.Event(window);
-        $(document).on('mousedown', (function(e) {
+        doc.on('mousedown', (function(e) {
             Entry.documentMousedown.notify(e);
         }));
     }
 
-    if (!Entry.documentMousemove && options.indexOf('mousemove') > -1) {
+    if (options.indexOf('mousemove') > -1) {
+        if (Entry.documentMousemove) {
+            doc.off('touchmove mousemove');
+            Entry.documentMousemove.clear()
+        }
+
         Entry.mouseCoordinate = {};
         Entry.documentMousemove = new Entry.Event(window);
-        $(document).on('mousemove', (function(e) {
+        doc.on('touchmove mousemove', (function(e) {
+            if (e.originalEvent && e.originalEvent.touches)
+                e = e.originalEvent.touches[0];
             Entry.documentMousemove.notify(e);
             Entry.mouseCoordinate.x = e.clientX;
             Entry.mouseCoordinate.y = e.clientY;
         }));
     }
 
-    if (!Entry.keyPressed && options.indexOf('keydown') > -1) {
+    if (options.indexOf('keydown') > -1) {
+        if (Entry.keyPressed)  {
+            doc.off('keydown');
+            Entry.keyPressed.clear()
+        }
         Entry.pressedKeys = [];
         Entry.keyPressed = new Entry.Event(window);
-        $(document).on('keydown', (function(e) {
+        doc.on('keydown', (function(e) {
             var keyCode = e.keyCode;
             if (Entry.pressedKeys.indexOf(keyCode) < 0)
                 Entry.pressedKeys.push(keyCode);
@@ -99,19 +261,34 @@ Entry.Utils.bindGlobalEvent = function(options) {
         }));
     }
 
-    if (!Entry.keyUpped && options.indexOf('keyup') > -1) {
+    if (options.indexOf('keyup') > -1) {
+        if (Entry.keyUpped) {
+            doc.off('keyup');
+            Entry.keyUpped.clear()
+        }
         Entry.keyUpped = new Entry.Event(window);
-        $(document).on('keyup', (function(e) {
+        doc.on('keyup', (function(e) {
             var keyCode = e.keyCode;
             var index = Entry.pressedKeys.indexOf(keyCode);
             if (index > -1) Entry.pressedKeys.splice(index,1);
             Entry.keyUpped.notify(e);
         }));
     }
+
+    if (options.indexOf('dispose') > -1) {
+        if (Entry.disposeEvent) Entry.disposeEvent.clear()
+        Entry.disposeEvent = new Entry.Event(window);
+        if (Entry.documentMousedown)
+            Entry.documentMousedown.attach(this, function(e) {
+                Entry.disposeEvent.notify(e);
+            });
+    }
 };
 
 Entry.Utils.makeActivityReporter = function() {
     Entry.activityReporter = new Entry.ActivityReporter();
+    if (Entry.commander)
+        Entry.commander.addReporter(Entry.activityReporter);
     return Entry.activityReporter;
 };
 
@@ -187,10 +364,8 @@ Entry.createElement = function(type, elementId) {
         }
     };
     element.bindOnClick = function(func) {
-        $(this).on('click touchstart', function(e) {
+        $(this).on('click tab', function(e) {
             e.stopImmediatePropagation();
-            if (e.handled) return;
-            e.handled = true;
             func.call(this, e);
         });
     };
@@ -832,10 +1007,149 @@ Entry.Utils.isRightButton = function(e) {
     return e.button == 2 || e.ctrlKey;
 };
 
+Entry.Utils.isTouchEvent = function(e) {
+    return e.type.toLowerCase() !== 'mousedown';
+};
+
+Entry.Utils.inherit = function(parent, child) {
+    function F() {}
+    F.prototype = parent.prototype;
+    child.prototype = new F();
+    return child;
+};
+
+Entry.bindAnimationCallbackOnce = function($elem, func) {
+    $elem.one("webkitAnimationEnd animationendo animationend", func);
+};
+
+Entry.Utils.isInInput = function(e) {
+    return e.target.type == 'textarea' || e.target.type == 'text';
+};
+
+Entry.Utils.isFunction = function(fn) {
+    return typeof fn === 'function';
+};
+
+Entry.Utils.addFilters = function (boardSvgDom, suffix) {
+        var defs = boardSvgDom.elem('defs');
+
+    //trashcan filter
+    var trashCanFilter = defs.elem('filter', {'id': 'entryTrashcanFilter_' + suffix});
+    trashCanFilter.elem('feGaussianBlur', {'in': 'SourceAlpha', 'stdDeviation': 2, 'result': 'blur'});
+    trashCanFilter.elem('feOffset', {'in': 'blur', 'dx': 1, 'dy': 1, 'result': 'offsetBlur'});
+    var feMerge = trashCanFilter.elem('feMerge');
+    feMerge.elem('feMergeNode', {'in': 'offsetBlur'});
+    feMerge.elem('feMergeNode', {'in': 'SourceGraphic'}, feMerge);
+
+
+    var blockFilter = defs.elem('filter', {'id': 'entryBlockShadowFilter_' + suffix, 'height': '200%'});
+    blockFilter.elem('feOffset', {result: 'offOut', in: 'SourceGraphic', dx: 0, dy:1});
+    blockFilter.elem('feColorMatrix', {
+        result: 'matrixOut', in: 'offOut', type: 'matrix', values: '0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0'
+    });
+    blockFilter.elem('feBlend', {in: 'SourceGraphic', in1:'offOut', mode: 'normal'});
+
+    var blockHighlightFilter = defs.elem('filter', {'id': 'entryBlockHighlightFilter_' + suffix});
+    blockHighlightFilter.elem('feOffset', {result: 'offOut', in:"SourceGraphic", dx:0, dy:0});
+    blockHighlightFilter.elem('feColorMatrix', {
+        result: 'matrixOut', in:"offOut", type: 'matrix', values: '1.3 0 0 0 0 0 1.3 0 0 0 0 0 1.3 0 0 0 0 0 1 0'
+    });
+};
+
+Entry.Utils.addBlockPattern = function (boardSvgDom, suffix) {
+    var pattern = boardSvgDom.elem('pattern', {
+        id: 'blockHoverPattern_' + suffix,
+        class: 'blockHoverPattern',
+        patternUnits: "userSpaceOnUse",
+        patternTransform: "translate(12, 0)",
+        x: 0, y: 0,
+        width: 125,
+        height: 33
+    });
+
+    var group = pattern.elem('g');
+
+    //this rect should be controlled by the board
+    //according to the target block
+    var elem = group.elem("rect", {
+        x: 0, y: 0,
+        width: 125,
+        height: 33
+    });
+
+    var imagePath = Entry.mediaFilePath + 'block_pattern_(order).png';
+    for (var i=1; i<5; i++) {
+        group.elem("image", {
+            class: 'pattern' + i,
+            href: imagePath.replace('(order)', i),
+            x: 0, y: 0,
+            width: 125,
+            height: 33
+        });
+    }
+
+    return elem;
+};
+
 Entry.Utils.COLLISION = {
     NONE: 0,
     UP: 1,
     RIGHT: 2,
     LEFT: 3,
     DOWN: 4
+};
+
+Entry.Utils.createMouseEvent = function(type, event) {
+    var e = document.createEvent('MouseEvent');
+    e.initMouseEvent(
+        type,true,true,window,0,0,0,
+        event.clientX, event.clientY,
+        false,false,false,false,0,null
+    );
+    return e;
+};
+
+Entry.Utils.xmlToJsonData = function(xml) {
+    xml = $.parseXML(xml);
+    var result = [];
+    var categories = xml.childNodes[0].childNodes;
+    for (var i in categories) {
+        var category = categories[i];
+        if (!category.tagName)
+            continue;
+        var data = {
+            category: category.getAttribute("id"),
+            blocks: []
+        };
+        var blocks = category.childNodes;
+        for (var i in blocks) {
+            var block = blocks[i];
+            if (!block.tagName) continue;
+
+            var type = block.getAttribute('type')
+            if (!type) continue;
+            data.blocks.push(type);
+        }
+        result.push(data);
+    }
+    return result;
+};
+
+Entry.Utils.stopProjectWithToast = function(block, message) {
+    message = message || '런타임 에러 발생';
+    if (Entry.toast)
+        Entry.toast.alert(
+            Lang.Msgs.warn,
+            Lang.Workspace.check_runtime_error,
+            true
+        );
+
+    if (Entry.engine)
+        Entry.engine.toggleStop();
+
+    if (Entry.type === 'workspace') {
+        Entry.container.selectObject(block.getCode().object.id, true);
+        block.view.getBoard().activateBlock(block);
+    }
+    throw new Error(message);
 };
