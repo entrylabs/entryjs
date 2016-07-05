@@ -723,6 +723,23 @@ Entry.Arduino = {name:"arduino", setZero:function() {
 " 7 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 8:{name:Lang.Hw.port_en + " 8 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 9:{name:Lang.Hw.port_en + " 9 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 10:{name:Lang.Hw.port_en + " 10 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 11:{name:Lang.Hw.port_en + " 11 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 12:{name:Lang.Hw.port_en + " 12 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 13:{name:Lang.Hw.port_en + " 13 " + 
 Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a0:{name:Lang.Hw.port_en + " A0 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a1:{name:Lang.Hw.port_en + " A1 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a2:{name:Lang.Hw.port_en + " A2 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a3:{name:Lang.Hw.port_en + " A3 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a4:{name:Lang.Hw.port_en + " A4 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a5:{name:Lang.Hw.port_en + " A5 " + 
 Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}}, mode:"both"}};
+Entry.ArduinoExt = {name:"ArduinoExt", getSensorKey:function() {
+  return "xxxxxxxx".replace(/[xy]/g, function(b) {
+    var a = 16 * Math.random() | 0;
+    return ("x" == b ? a : a & 0 | 0).toString(16);
+  }).toUpperCase();
+}, getSensorTime:function(b) {
+  return (new Date).getTime() + b;
+}, setZero:function() {
+  Entry.hw.sendQueue.SET ? Object.keys(Entry.hw.sendQueue.SET).forEach(function(b) {
+    Entry.hw.sendQueue.SET[b].data = 0;
+    Entry.hw.sendQueue.TIME = Entry.ArduinoExt.getSensorTime(Entry.hw.sendQueue.SET[b].type);
+    Entry.hw.sendQueue.KEY = Entry.ArduinoExt.getSensorKey();
+  }) : Entry.hw.sendQueue = {SET:{0:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 1:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 2:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 3:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 4:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 5:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 6:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 7:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 8:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, 
+  data:0}, 9:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 10:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 11:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 12:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 13:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}}, TIME:Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.DIGITAL), KEY:Entry.ArduinoExt.getSensorKey()};
+  Entry.hw.update();
+}, sensorTypes:{ALIVE:0, DIGITAL:1, ANALOG:2, PWM:3, SERVO_PIN:4, TONE:5, PULSEIN:6, ULTRASONIC:7, TIMER:8}, toneMap:{1:[33, 65, 131, 262, 523, 1046, 2093, 4186], 2:[35, 69, 139, 277, 554, 1109, 2217, 4435], 3:[37, 73, 147, 294, 587, 1175, 2349, 4699], 4:[39, 78, 156, 311, 622, 1245, 2849, 4978], 5:[41, 82, 165, 330, 659, 1319, 2637, 5274], 6:[44, 87, 175, 349, 698, 1397, 2794, 5588], 7:[46, 92, 185, 370, 740, 1480, 2960, 5920], 8:[49, 98, 196, 392, 784, 1568, 3136, 6272], 9:[52, 104, 208, 415, 831, 
+1661, 3322, 6645], 10:[55, 110, 220, 440, 880, 1760, 3520, 7040], 11:[58, 117, 233, 466, 932, 1865, 3729, 7459], 12:[62, 123, 247, 494, 988, 1976, 3951, 7902]}, BlockState:{}};
 Entry.SensorBoard = {name:"sensorBoard", setZero:Entry.Arduino.setZero};
 Entry.ardublock = {name:"ardublock", setZero:Entry.Arduino.setZero};
 Entry.dplay = {name:"dplay", vel_value:255, Left_value:255, Right_value:255, setZero:Entry.Arduino.setZero, timeouts:[], removeTimeout:function(b) {
@@ -12436,6 +12453,12 @@ Entry.Utils.stopProjectWithToast = function(b, a) {
   "workspace" === Entry.type && (Entry.container.selectObject(b.getCode().object.id, !0), b.view.getBoard().activateBlock(b));
   throw Error(a);
 };
+Entry.Utils.AsyncError = function(b) {
+  this.name = "AsyncError";
+  this.message = b || "\ube44\ub3d9\uae30 \ud638\ucd9c \ub300\uae30";
+};
+Entry.Utils.AsyncError.prototype = Error();
+Entry.Utils.AsyncError.prototype.constructor = Entry.Utils.AsyncError;
 Entry.Model = function(b, a) {
   var c = Entry.Model;
   c.generateSchema(b);
@@ -12993,7 +13016,7 @@ Entry.HW = function() {
   this.settingQueue = {};
   this.socketType = this.hwModule = this.selectedDevice = null;
   Entry.addEventListener("stop", this.setZero);
-  this.hwInfo = {11:Entry.Arduino, 12:Entry.SensorBoard, 13:Entry.CODEino, 14:Entry.joystick, 15:Entry.dplay, 16:Entry.nemoino, 17:Entry.Xbot, 18:Entry.ardublock, 24:Entry.Hamster, 25:Entry.Albert, 31:Entry.Bitbrick, 42:Entry.Arduino, 51:Entry.Neobot, 71:Entry.Robotis_carCont, 72:Entry.Robotis_openCM70, 81:Entry.Arduino};
+  this.hwInfo = {11:Entry.Arduino, 19:Entry.ArduinoExt, 12:Entry.SensorBoard, 13:Entry.CODEino, 14:Entry.joystick, 15:Entry.dplay, 16:Entry.nemoino, 17:Entry.Xbot, 18:Entry.ardublock, 24:Entry.Hamster, 25:Entry.Albert, 31:Entry.Bitbrick, 42:Entry.Arduino, 51:Entry.Neobot, 71:Entry.Robotis_carCont, 72:Entry.Robotis_openCM70, 81:Entry.Arduino};
 };
 Entry.HW.TRIAL_LIMIT = 1;
 p = Entry.HW.prototype;
@@ -16441,10 +16464,11 @@ Entry.Executor = function(b, a) {
   b.execute = function() {
     if (!this.isEnd()) {
       for (;;) {
+        var a = null;
         try {
-          var a = this.scope.block.getSchema().func.call(this.scope, this.entity, this.scope);
+          a = this.scope.block.getSchema().func.call(this.scope, this.entity, this.scope);
         } catch (b) {
-          Entry.Utils.stopProjectWithToast(this.scope.block, "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec");
+          "AsyncError" === b.name ? a = Entry.STATIC.BREAK : Entry.Utils.stopProjectWithToast(this.scope.block, "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec");
         }
         if (this.isEnd()) {
           break;
@@ -16452,9 +16476,7 @@ Entry.Executor = function(b, a) {
         if (void 0 === a || null === a || a === Entry.STATIC.PASS) {
           if (this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this), null === this.scope.block) {
             if (this._callStack.length) {
-              var c = this.scope;
-              this.scope = this._callStack.pop();
-              if (this.scope.isLooped !== c.isLooped) {
+              if (a = this.scope, this.scope = this._callStack.pop(), this.scope.isLooped !== a.isLooped) {
                 break;
               }
             } else {
