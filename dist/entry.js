@@ -6282,7 +6282,7 @@ Entry.Container.prototype.enableSort = function() {
   }, stop:function(b, a) {
     var c = a.item.data("start_pos"), d = a.item.index();
     Entry.container.moveElement(c, d);
-  }, axis:"y"});
+  }, axis:"y", cancel:"input.selectedEditingObject"});
 };
 Entry.Container.prototype.disableSort = function() {
   $ && $(this.listView_).sortable("destroy");
