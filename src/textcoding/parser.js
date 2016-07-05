@@ -161,7 +161,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 this._parser = new Entry.BlockToPyParser(this.syntax.py);
 
                 cm.setOption("mode", {name: "python", globalVars: true});
-                cm.markText({line: 0, ch: 0}, {line: 6}, {readOnly: true});
+                cm.markText({line: 0, ch: 0}, {line: 5}, {readOnly: true});
                 break;
         }
     };

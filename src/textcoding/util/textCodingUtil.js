@@ -761,6 +761,16 @@ Entry.TextCodingUtil = function() {
             var textFuncStatement = textFuncStatements[i];
             console.log("blockFuncContent", blockFuncContent);
             console.log("textFuncStatement", textFuncStatement);
+            if(blockFuncContent && !textFuncStatement) {
+                matchFlag = fasle;
+                return matchFlag;
+            }
+
+            if(!blockFuncContent && textFuncStatement) {
+                matchFlag = false;
+                return matchFlag;
+            }
+
             if(textFuncStatement.type == blockFuncContent.data.type) { //Type Check
                 matchFlag = true;
                 var textFuncStatementParams = textFuncStatement.params;

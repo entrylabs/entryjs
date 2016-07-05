@@ -143,6 +143,7 @@ Entry.Vim = function(dom, textType) {
 
     p.codeToText = function(code) {
         var object = Entry.playground.object;
+       
         if(Entry.stage.selectedObject)
             var codeDescription = "# " + object.name + " 오브젝트의 파이썬 코드";
         else

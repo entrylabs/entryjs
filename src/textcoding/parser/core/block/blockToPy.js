@@ -648,7 +648,27 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
         var funcName = funcNameArr.join('_');
         console.log("getFuncInfo funcName", funcName);
-        var funcParamMap = func.paramMap;
+        
+        Entry.TextCodingUtil.prototype.initQueue();
+        Entry.TextCodingUtil.prototype.gatherFuncDefParam(func.content._data[0]._data[0].data.params[0].data.params[1]);
+        console.log("Entry.TextCodingUtil._funcParamQ", Entry.TextCodingUtil.prototype._funcParamQ);
+        var funcParams = [];
+        
+        var paramMap = {}; 
+        while(param = Entry.TextCodingUtil.prototype._funcParamQ.dequeue()) {
+            funcParams.push(param);
+            console.log("param", param);
+        }
+        console.log("funcParams", funcParams);
+        for(var p in funcParams) {
+            var funcParam = funcParams[p];
+            paramMap[funcParam] = p;
+        }
+        Entry.TextCodingUtil.prototype.clearQueue();
+        console.log("paramMap", paramMap);
+
+
+        var funcParamMap = paramMap;
 
         if(funcParamMap) {
             var funcParams = {};

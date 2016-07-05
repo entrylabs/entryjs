@@ -354,8 +354,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
             return result;
         }
 
-        if(result.callee && result.arguments) {
-            var funcKey = result.callee.name + result.arguments.length;
+        if(result.callee) {
+            if(result.arguments)
+                var idNumber = result.arguments.length;
+            else
+                var idNumber = 0;
+            var funcKey = result.callee.name + idNumber;
             var type = this._funcMap.get(funcKey);
             if(type) {
                 result = {};
@@ -2114,6 +2118,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     var blockFuncCts = blockFuncContents.slice();
                     blockFuncCts.shift();
                     console.log("blockFuncContents", blockFuncContents)
+                    
                     matchFlag = Entry.TextCodingUtil.prototype.isFuncContentsMatch(blockFuncCts, textFuncStatements, paramMap);
                     
                 }
@@ -2155,69 +2160,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
         } 
         else if (foundFlag && !matchFlag) {
             var targetFunc = Entry.variableContainer.functions_[targetFuncId];
-            Entry.variableContainer.removeFunction(targetFunc);
-            Entry.variableContainer.updateList();
-            this._funcMap.remove(targetFuncId);
-
-            console.log("FunctionDeclaration textFuncName", textFuncName);    
-            console.log("FunctionDeclaration textFuncParams", textFuncParams);    
-            console.log("FunctionDeclaration textFuncStatements", textFuncStatements);
-
-            // Func Create
-            var newFunc = new Entry.Func(); 
-            newFunc.generateBlock(true);
-            
-
-            console.log("FunctionDeclaration newFunc", newFunc);
-
-            // Func Name
-            newFunc.block.template = textFuncName + ' %1';
-
-            var thread = newFunc.content._data[0];
-            var newFuncDefParamBlock = thread._data[0].data.params[0];
-            var newFuncDefParams = newFuncDefParamBlock.data.params;
-            newFuncDefParams[0] = textFuncName;
-            newFunc.description = textFuncName + ' ';
-
-            if(textFuncParams.length > 0) { 
-                var paramFieldBlock = new Entry.Block({ type: "function_field_string" }, thread); 
-                paramFieldBlock.data.params = [];   
-                var stringParam = Entry.Func.requestParamBlock("string");
-                console.log("FunctionDeclaration stringParam", stringParam);
-                var param = new Entry.Block({ type: stringParam }, thread);
-                paramFieldBlock.data.params.push(param);
-
-                newFuncDefParams[1] = paramFieldBlock;
-
-                newFunc.paramMap[stringParam] = Number(0);
-                console.log("FunctionDeclaration paramBlock", newFunc);
-
-                for(var p = 1; p < textFuncParams.length; p++) {
-                    var paramFieldBlock = new Entry.Block({ type: "function_field_string" }, thread);
-                    paramFieldBlock.data.params = [];
-                   
-                    var stringParam = Entry.Func.requestParamBlock("string");
-                    console.log("FunctionDeclaration stringParam", stringParam);
-                    var param = new Entry.Block({ type: stringParam }, thread);
-                    paramFieldBlock.data.params.push(param);
-                                       
-                    var paramBlock = Entry.TextCodingUtil.prototype.searchFuncDefParam(newFuncDefParams[1]);
-                    console.log("FunctionDeclaration paramBlock", paramBlock);
-                    if(paramBlock.data.params.length == 0)
-                        paramBlock.data.params[0] = param;
-                    else if(paramBlock.data.params.length == 1)
-                        paramBlock.data.params[1] = paramFieldBlock;
-                
-                    newFunc.paramMap[stringParam] = Number(p);
-                    console.log("FunctionDeclaration paramBlock", newFunc);
-                } 
-                
-                var paramMap = newFunc.paramMap;
-                var paramMapKeys = Object.keys(paramMap);
-                for(var i in paramMapKeys) {
-                    newFunc.block.template += String(' %' + Number(i+1));
-                }
-            }
+            var thread = targetFunc.content._data[0];
+            thread._data.splice(1, thread._data.length-1);
 
             if(textFuncStatements.length > 0) {
                 for(var s in textFuncStatements) {
@@ -2227,18 +2171,27 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
             }
 
-            Entry.Func.generateWsBlock(newFunc);
-            Entry.variableContainer.saveFunction(newFunc);
+            Entry.variableContainer.saveFunction(targetFunc);
             Entry.variableContainer.updateList();
+
+            result = targetFuncId; 
 
             var name = textFuncName;
             var paramCount = textFuncParams.length;
             var funcKey = name + paramCount;
-            var funcId = newFunc.id;
+            var funcId = targetFuncId;
             var funcPrefix = "func";
             targetFuncId = funcPrefix.concat('_').concat(funcId);
             this._funcMap.put(funcKey, targetFuncId);
 
+            var board = Entry.playground.mainWorkspace.board;
+            var code = board.code;
+
+            code.createView(board);
+
+            Entry.playground.mainWorkspace.board.alignThreads();
+            Entry.playground.mainWorkspace.board.reDraw();
+            
             console.log("FunctionDeclaration result", result);
         }
         else {
@@ -2256,9 +2209,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
             
 
             console.log("FunctionDeclaration newFunc", newFunc);
+            var templateArr = [];
+
+            for(var i = 1; i <= textFuncParams.length+1; i++)
+                templateArr.push('%'+i);
 
             // Func Name
-            newFunc.block.template = textFuncName + ' %1';
+            newFunc.block.template = textFuncName + ' ' + templateArr.join(' ');
+            console.log("newFunc template", newFunc.block.template);
 
             var thread = newFunc.content._data[0];
             var newFuncDefParamBlock = thread._data[0].data.params[0];
@@ -2299,11 +2257,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     console.log("FunctionDeclaration paramBlock", newFunc);
                 } 
                 
-                var paramMap = newFunc.paramMap;
+                /*var paramMap = newFunc.paramMap;
                 var paramMapKeys = Object.keys(paramMap);
                 for(var i in paramMapKeys) {
                     newFunc.block.template += String(' %' + Number(i+1));
-                }
+                }*/
             }
 
             if(textFuncStatements.length > 0) {
