@@ -405,10 +405,10 @@ Entry.Stage.prototype.updateHandle = function() {
         entity.setWidth(handle.width / entity.getScaleX());
     } else {
         if (entity.width !== 0) {
-            if (entity.getScaleX() < 0)
-                entity.setScaleX(-handle.width/entity.width);
-            else
-                entity.setScaleX(handle.width/entity.width);
+            var scaleX = Math.abs(handle.width/entity.width);
+            if (entity.flip) scaleX *= -1;
+
+            entity.setScaleX(scaleX);
         }
 
         if (entity.height !== 0)

@@ -264,4 +264,8 @@ Entry.Thread = function(thread, code, parent) {
         return blocks;
     };
 
+    p.stringify = function() {
+        return JSON.stringify(this.toJSON());
+    };
+
 })(Entry.Thread.prototype);

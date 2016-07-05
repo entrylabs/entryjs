@@ -116,9 +116,16 @@ Entry.SensorBoard = {
     setZero: Entry.Arduino.setZero
 };
 
+Entry.ardublock = {
+    name: 'ardublock',
+    setZero: Entry.Arduino.setZero
+};
+
 Entry.dplay = {
     name: 'dplay',
     vel_value : 255,
+    Left_value : 255,
+    Right_value : 255,    
     setZero: Entry.Arduino.setZero,
     timeouts: [],
     removeTimeout: function(id) {
@@ -140,6 +147,11 @@ Entry.dplay = {
 
 Entry.nemoino = {
     name: 'nemoino',
+    setZero: Entry.Arduino.setZero
+};
+
+Entry.joystick = {
+    name: 'joystick',
     setZero: Entry.Arduino.setZero
 };
 

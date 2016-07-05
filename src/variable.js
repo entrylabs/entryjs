@@ -31,7 +31,8 @@ Entry.Variable = function(variable) {
     if (this.type == 'slide') {
         this.minValue_ = Number(variable.minValue ? variable.minValue : 0);
         this.maxValue_ = Number(variable.maxValue ? variable.maxValue : 100);
-    }
+    } else if (this.type == 'list')
+        this.array_ = variable.array ? variable.array : [];
 
     if (!variable.isClone) {
         /** @type {boolean} */
@@ -44,8 +45,6 @@ Entry.Variable = function(variable) {
         if (this.type == 'list') {
             this.width_ = variable.width ? variable.width : 100;
             this.height_ = variable.height ? variable.height : 120;
-            this.array_ = variable.array ? variable.array : [];
-
             this.scrollPosition = 0;
         }
 

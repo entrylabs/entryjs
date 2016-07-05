@@ -33,6 +33,8 @@ Entry.Scroller = function(board, horizontal, vertical) {
 
 
     this._bindEvent();
+
+    this._scrollCommand = _.debounce(Entry.do, 200);
 };
 
 Entry.Scroller.RADIUS = 7;
@@ -189,7 +191,18 @@ Entry.Scroller.RADIUS = 7;
             y
         );
 
-        Entry.do("scrollBoard", x, y).isPass();
+        this._scroll(x,y);
+        if (!this._diffs) {
+            this._diffs = [0,0];
+        }
+        this._diffs[0] += x;
+        this._diffs[1] += y;
+        this._scrollCommand(
+            'scrollBoard',
+            this._diffs[0],
+            this._diffs[1],
+            true
+        );
     };
 
     p._scroll = function(x, y) {

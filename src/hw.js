@@ -26,9 +26,11 @@ Entry.HW = function() {
         '19': Entry.ArduinoExt,
         '12': Entry.SensorBoard,
         '13': Entry.CODEino,
+        '14': Entry.joystick,
         '15': Entry.dplay,
         '16': Entry.nemoino,
         '17': Entry.Xbot,
+		'18': Entry.ardublock,
         '24': Entry.Hamster,
         '25': Entry.Albert,
         '31': Entry.Bitbrick,
@@ -216,7 +218,7 @@ p.closeConnection = function() {
 };
 
 p.downloadConnector = function() {
-    var url = "http://download.play-entry.org/apps/Entry_HW_1.5.3_Setup.exe";
+    var url = "http://download.play-entry.org/apps/Entry_HW_1.5.6_Setup.exe";
     var win = window.open(url, '_blank');
     win.focus();
 };
