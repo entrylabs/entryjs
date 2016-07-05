@@ -1907,7 +1907,6 @@ Entry.block = {
         "color": "#00979D",
         "fontColor": "#fff",
         "skeleton": "basic_string_field",
-        'template': "%1 번 아날로그 읽기",
         "statements": [],
         "params": [
             {
@@ -1932,7 +1931,7 @@ Entry.block = {
         "paramsKeyMap": {
             "PORT": 0
         },
-        "class": "ArduinoExt",
+        "class": "ArduinoExtGet",
         "isNotFor": [ "ArduinoExt" ],
         "func": function (sprite, script) {
             var port = script.getField("PORT", script);
@@ -1974,82 +1973,10 @@ Entry.block = {
             }
         }
     },
-    "arduino_ext_get_pulse_in": {
-        "color": "#00979D",
-        "fontColor": "#fff",
-        "skeleton": "basic_string_field",
-        'template': "read pulse pin %1 timeout %2",
-        "statements": [],
-        "params": [{
-            "type": "Block",
-            "accept": "string"
-        }, {
-            "type": "Block",
-            "accept": "string"
-        }],
-        "events": {},
-        "def": {
-            "params": [{
-                "type": "arduino_get_port_number"
-            }, {
-                "type": "text",
-                "params": ["20000"],
-            }],
-            "type": "arduino_ext_get_pulse_in"
-        },
-        "paramsKeyMap": {
-            "PORT": 0,
-            "TIMEOUT": 1,
-        },
-        "class": "ArduinoExt",
-        "isNotFor": [ "ArduinoExt" ],
-        "func": function (sprite, script) {
-            var port = script.getNumberValue("PORT", script);
-            var value = script.getNumberValue("TIMEOUT", script);
-            var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.PULSEIN);
-            var hardwareTime = Entry.hw.portData['TIME'] || 0;
-            if(!Entry.ArduinoExt.BlockState[this.type]) {
-                Entry.ArduinoExt.BlockState[this.type] = {
-                    isStart: false,
-                    stamp: 0
-                }
-            }
-
-            var state = Entry.ArduinoExt.BlockState[this.type];
-            if(!state.isStart) {
-                state.isStart = true;
-                state.stamp = nowTime;
-                console.log('GET4 : ' + state.stamp);
-                Entry.hw.sendQueue['TIME'] = nowTime;
-                Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
-                Entry.hw.sendQueue['GET'] = {
-                    type: Entry.ArduinoExt.sensorTypes.PULSEIN,
-                    port: port,
-                    data: value
-                };
-                throw new Entry.Utils.AsyncError();
-                return;
-            } else if(hardwareTime && (hardwareTime === state.stamp)) {
-                console.log('SHOW4 : ' + state.stamp);
-                delete state.isStart;
-                delete state.stamp;
-                return Entry.hw.portData.PULSEIN[port] || 0;
-            } else if(nowTime - state.stamp > 64) {
-                console.log('SHOW4-2 : ' + state.stamp);
-                delete state.isStart;
-                delete state.stamp;
-                return Entry.hw.portData.PULSEIN[port] || 0;
-            } else {
-                throw new Entry.Utils.AsyncError();
-                return;
-            }
-        }
-    },
     "arduino_ext_get_ultrasonic_value": {
         "color": "#00979D",
         "fontColor": "#fff",
         "skeleton": "basic_string_field",
-        'template': "trig %1 번 echo %2 번 울트라소닉 읽기",
         "statements": [],
         "params": [
             {
@@ -2104,7 +2031,7 @@ Entry.block = {
             "PORT1": 0,
             "PORT2": 1,
         },
-        "class": "ArduinoExt",
+        "class": "ArduinoExtGet",
         "isNotFor": [ "ArduinoExt" ],
         "func": function (sprite, script) {
             var port1 = script.getField("PORT1", script);
@@ -2151,7 +2078,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 %2 %3",
         "params": [
             {
                 "type": "Block",
@@ -2209,7 +2135,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "%1 %2 %3",
         "params": [
             {
                 "type": "Block",
@@ -2268,7 +2193,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "play tone pin %1 on note %2 beat %3 %4 %5",
         "params": [{
             "type": "Block",
             "accept": "string"
@@ -2388,7 +2312,6 @@ Entry.block = {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template": "set servo pin %1 angle as %2 %3",
         "params": [{
             "type": "Block",
             "accept": "string"
@@ -2439,7 +2362,6 @@ Entry.block = {
         "color": "#00979D",
         "fontColor": "#fff",
         "skeleton": "basic_boolean_field",
-        "template": "read digital pin %1",
         "params": [{
             "type": "Block",
             "accept": "string"
@@ -2456,7 +2378,7 @@ Entry.block = {
         "paramsKeyMap": {
             "PORT": 0
         },
-        "class": "ArduinoExt",
+        "class": "ArduinoExtGet",
         "isNotFor": [ "ArduinoExt" ],
         "func": function (sprite, script) {
             var port = script.getNumberValue("PORT", script);
