@@ -493,7 +493,7 @@ Entry.Container.prototype.moveElementByBlock = function(currentIndex, targetInde
  * generate list for blockly dropdown dynamic
  * @param {string} menuName
  */
-Entry.Container.prototype.getDropdownList = function(menuName) {
+Entry.Container.prototype.getDropdownList = function(menuName, object) {
     var result = [];
     switch (menuName) {
         case 'sprites':
@@ -537,9 +537,9 @@ Entry.Container.prototype.getDropdownList = function(menuName) {
             result.push([Lang.Blocks.wall_left, 'wall_left']);
             break;
         case 'pictures':
-            if (!Entry.playground.object)
-                break;
-            var pictures = Entry.playground.object.pictures;
+            var object = Entry.playground.object || object;
+            if (!object) break;
+            var pictures = object.pictures;
             for (var i = 0; i<pictures.length; i++) {
                 var picture = pictures[i];
                 result.push([picture.name, picture.id]);
@@ -556,7 +556,9 @@ Entry.Container.prototype.getDropdownList = function(menuName) {
             var variables = Entry.variableContainer.variables_;
             for (var i = 0; i<variables.length; i++) {
                 var variable = variables[i];
-                if (variable.object_ && variable.object_ != Entry.playground.object.id)
+
+                if (variable.object_ && Entry.playground.object &&
+                    variable.object_ != Entry.playground.object.id)
                     continue;
                 result.push([variable.getName(), variable.getId()]);
             }
@@ -580,9 +582,9 @@ Entry.Container.prototype.getDropdownList = function(menuName) {
             }
             break;
         case 'sounds':
-            if (!Entry.playground.object)
-                break;
-            var sounds = Entry.playground.object.sounds;
+            var object = Entry.playground.object || object;
+            if (!object) break;
+            var sounds = object.sounds;
             for (var i = 0; i<sounds.length; i++) {
                 var sound = sounds[i];
                 result.push([sound.name, sound.id]);

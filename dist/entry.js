@@ -6444,104 +6444,104 @@ Entry.Container.prototype.moveElementByBlock = function(b, a) {
   Entry.stage.sortZorder();
   this.updateListView();
 };
-Entry.Container.prototype.getDropdownList = function(b) {
-  var a = [];
+Entry.Container.prototype.getDropdownList = function(b, a) {
+  var c = [];
   switch(b) {
     case "sprites":
-      var c = this.getCurrentObjects(), d = c.length;
-      for (b = 0;b < d;b++) {
-        var e = c[b];
-        a.push([e.name, e.id]);
+      for (var d = this.getCurrentObjects(), e = d.length, f = 0;f < e;f++) {
+        a = d[f], c.push([a.name, a.id]);
       }
       break;
     case "spritesWithMouse":
-      c = this.getCurrentObjects();
-      d = c.length;
-      for (b = 0;b < d;b++) {
-        e = c[b], a.push([e.name, e.id]);
+      d = this.getCurrentObjects();
+      e = d.length;
+      for (f = 0;f < e;f++) {
+        a = d[f], c.push([a.name, a.id]);
       }
-      a.push([Lang.Blocks.mouse_pointer, "mouse"]);
+      c.push([Lang.Blocks.mouse_pointer, "mouse"]);
       break;
     case "spritesWithSelf":
-      c = this.getCurrentObjects();
-      d = c.length;
-      for (b = 0;b < d;b++) {
-        e = c[b], a.push([e.name, e.id]);
+      d = this.getCurrentObjects();
+      e = d.length;
+      for (f = 0;f < e;f++) {
+        a = d[f], c.push([a.name, a.id]);
       }
-      a.push([Lang.Blocks.self, "self"]);
+      c.push([Lang.Blocks.self, "self"]);
       break;
     case "collision":
-      a.push([Lang.Blocks.mouse_pointer, "mouse"]);
-      c = this.getCurrentObjects();
-      d = c.length;
-      for (b = 0;b < d;b++) {
-        e = c[b], a.push([e.name, e.id]);
+      c.push([Lang.Blocks.mouse_pointer, "mouse"]);
+      d = this.getCurrentObjects();
+      e = d.length;
+      for (f = 0;f < e;f++) {
+        a = d[f], c.push([a.name, a.id]);
       }
-      a.push([Lang.Blocks.wall, "wall"]);
-      a.push([Lang.Blocks.wall_up, "wall_up"]);
-      a.push([Lang.Blocks.wall_down, "wall_down"]);
-      a.push([Lang.Blocks.wall_right, "wall_right"]);
-      a.push([Lang.Blocks.wall_left, "wall_left"]);
+      c.push([Lang.Blocks.wall, "wall"]);
+      c.push([Lang.Blocks.wall_up, "wall_up"]);
+      c.push([Lang.Blocks.wall_down, "wall_down"]);
+      c.push([Lang.Blocks.wall_right, "wall_right"]);
+      c.push([Lang.Blocks.wall_left, "wall_left"]);
       break;
     case "pictures":
-      if (!Entry.playground.object) {
+      a = Entry.playground.object || a;
+      if (!a) {
         break;
       }
-      c = Entry.playground.object.pictures;
-      for (b = 0;b < c.length;b++) {
-        d = c[b], a.push([d.name, d.id]);
+      d = a.pictures;
+      for (f = 0;f < d.length;f++) {
+        e = d[f], c.push([e.name, e.id]);
       }
       break;
     case "messages":
-      c = Entry.variableContainer.messages_;
-      for (b = 0;b < c.length;b++) {
-        d = c[b], a.push([d.name, d.id]);
+      d = Entry.variableContainer.messages_;
+      for (f = 0;f < d.length;f++) {
+        e = d[f], c.push([e.name, e.id]);
       }
       break;
     case "variables":
-      c = Entry.variableContainer.variables_;
-      for (b = 0;b < c.length;b++) {
-        d = c[b], d.object_ && d.object_ != Entry.playground.object.id || a.push([d.getName(), d.getId()]);
+      d = Entry.variableContainer.variables_;
+      for (f = 0;f < d.length;f++) {
+        e = d[f], e.object_ && Entry.playground.object && e.object_ != Entry.playground.object.id || c.push([e.getName(), e.getId()]);
       }
-      a && 0 !== a.length || a.push([Lang.Blocks.VARIABLE_variable, "null"]);
+      c && 0 !== c.length || c.push([Lang.Blocks.VARIABLE_variable, "null"]);
       break;
     case "lists":
-      c = Entry.variableContainer.lists_;
-      for (b = 0;b < c.length;b++) {
-        d = c[b], a.push([d.getName(), d.getId()]);
+      d = Entry.variableContainer.lists_;
+      for (f = 0;f < d.length;f++) {
+        e = d[f], c.push([e.getName(), e.getId()]);
       }
-      a && 0 !== a.length || a.push([Lang.Blocks.VARIABLE_list, "null"]);
+      c && 0 !== c.length || c.push([Lang.Blocks.VARIABLE_list, "null"]);
       break;
     case "scenes":
-      c = Entry.scene.scenes_;
-      for (b = 0;b < c.length;b++) {
-        d = c[b], a.push([d.name, d.id]);
+      d = Entry.scene.scenes_;
+      for (f = 0;f < d.length;f++) {
+        e = d[f], c.push([e.name, e.id]);
       }
       break;
     case "sounds":
-      if (!Entry.playground.object) {
+      a = Entry.playground.object || a;
+      if (!a) {
         break;
       }
-      c = Entry.playground.object.sounds;
-      for (b = 0;b < c.length;b++) {
-        d = c[b], a.push([d.name, d.id]);
+      d = a.sounds;
+      for (f = 0;f < d.length;f++) {
+        e = d[f], c.push([e.name, e.id]);
       }
       break;
     case "clone":
-      a.push([Lang.Blocks.oneself, "self"]);
-      d = this.objects_.length;
-      for (b = 0;b < d;b++) {
-        e = this.objects_[b], a.push([e.name, e.id]);
+      c.push([Lang.Blocks.oneself, "self"]);
+      e = this.objects_.length;
+      for (f = 0;f < e;f++) {
+        a = this.objects_[f], c.push([a.name, a.id]);
       }
       break;
     case "objectSequence":
-      for (d = this.getCurrentObjects().length, b = 0;b < d;b++) {
-        a.push([(b + 1).toString(), b.toString()]);
+      for (e = this.getCurrentObjects().length, f = 0;f < e;f++) {
+        c.push([(f + 1).toString(), f.toString()]);
       }
     ;
   }
-  a.length || (a = [[Lang.Blocks.no_target, "null"]]);
-  return a;
+  c.length || (c = [[Lang.Blocks.no_target, "null"]]);
+  return c;
 };
 Entry.Container.prototype.clearRunningState = function() {
   this.mapObject(function(b) {
@@ -14683,7 +14683,7 @@ Entry.VariableContainer.prototype.updateCloudVariables = function() {
   }
 };
 Entry.VariableContainer.prototype.addRef = function(b, a) {
-  if (this.view_ && Entry.playground.mainWorkspace.getMode() === Entry.Workspace.MODE_BOARD) {
+  if (this.view_ && Entry.playground.mainWorkspace && Entry.playground.mainWorkspace.getMode() === Entry.Workspace.MODE_BOARD) {
     var c = {object:a.getCode().object, block:a};
     a.funcBlock && (c.funcBlock = a.funcBlock, delete a.funcBlock);
     this[b].push(c);
@@ -14704,7 +14704,7 @@ Entry.VariableContainer.prototype.addRef = function(b, a) {
   }
 };
 Entry.VariableContainer.prototype.removeRef = function(b, a) {
-  if (Entry.playground.mainWorkspace.getMode() === Entry.Workspace.MODE_BOARD) {
+  if (Entry.playground.mainWorkspace && Entry.playground.mainWorkspace.getMode() === Entry.Workspace.MODE_BOARD) {
     for (var c = this[b], d = 0;d < c.length;d++) {
       if (c[d].block == a) {
         c.splice(d, 1);
@@ -17183,12 +17183,12 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
 (function(b) {
   b.constructor = Entry.FieldDropDownDynamic;
   b._updateValue = function() {
-    var a = [];
-    Entry.container && (a = this._menuName ? Entry.container.getDropdownList(this._menuName) : this._menuGenerator());
-    this._contents.options = a;
-    var a = this._contents.options, b = this.getValue();
-    b && "null" != b || (b = 0 !== a.length ? a[0][1] : null);
-    this.setValue(b);
+    var a = this._block.getCode().object, b = [];
+    Entry.container && (b = this._menuName ? Entry.container.getDropdownList(this._menuName, a) : this._menuGenerator());
+    this._contents.options = b;
+    b = this._contents.options;
+    (a = this.getValue()) && "null" != a || (a = 0 !== b.length ? b[0][1] : null);
+    this.setValue(a);
   };
   b.renderOptions = function() {
     var a = this;

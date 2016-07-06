@@ -2185,7 +2185,7 @@ Entry.VariableContainer.prototype.updateCloudVariables = function() {
 };
 
 Entry.VariableContainer.prototype.addRef = function(type, block) {
-    if (!this.view_ ||
+    if (!this.view_ || !Entry.playground.mainWorkspace ||
         Entry.playground.mainWorkspace.getMode() !== Entry.Workspace.MODE_BOARD)
         return;
 
@@ -2241,6 +2241,7 @@ Entry.VariableContainer.prototype.addRef = function(type, block) {
 };
 
 Entry.VariableContainer.prototype.removeRef = function(type, block) {
+    if (!Entry.playground.mainWorkspace) return;
     var wsMode = Entry.playground.mainWorkspace.getMode();
     if (wsMode !== Entry.Workspace.MODE_BOARD) return;
 
