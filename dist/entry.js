@@ -6260,7 +6260,7 @@ Entry.Container.prototype.generateView = function(b, a) {
     });
     c = Entry.createElement("div");
     c.addClass("entryContainerListWorkspaceWrapper");
-    Entry.isForLecture && (this.generateTabView(), c.addClass("lecture"));
+    Entry.isForLecture && c.addClass("lecture");
     Entry.Utils.disableContextmenu(c);
     $(c).on("contextmenu", function(a) {
       a = [{text:Lang.Blocks.Paste_blocks, enable:!Entry.engine.isState("run") && !!Entry.container.copiedObject, callback:function() {
@@ -6684,118 +6684,6 @@ Entry.Container.prototype.getProjectWithJSON = function(b) {
   b.messages = Entry.variableContainer.getMessageJSON();
   b.scenes = Entry.scene.toJSON();
   return b;
-};
-Entry.Container.prototype.generateTabView = function() {
-  var b = this._view, a = this;
-  this.tabViews = [];
-  var c = Entry.createElement("div");
-  c.addClass("entryContainerTabViewWorkspace");
-  b.appendChild(c);
-  var d = Entry.createElement("span");
-  d.addClass("entryContainerTabItemWorkspace");
-  d.addClass("entryEllipsis");
-  d.innerHTML = Lang.Menus.lecture_container_tab_object;
-  d.bindOnClick(function() {
-    a.changeTabView("object");
-  });
-  this.tabViews.push(d);
-  c.appendChild(d);
-  var e = Entry.createElement("span");
-  e.addClass("entryContainerTabItemWorkspace", "entryRemove");
-  e.addClass("entryEllipsis");
-  e.innerHTML = Lang.Menus.lecture_container_tab_video;
-  e.bindOnClick(function() {
-    a.changeTabView("movie");
-  });
-  this.tabViews.push(e);
-  c.appendChild(e);
-  this.youtubeTab = e;
-  e = Entry.createElement("span");
-  e.addClass("entryContainerTabItemWorkspace", "entryRemove");
-  e.addClass("entryEllipsis");
-  e.innerHTML = Lang.Menus.lecture_container_tab_project;
-  e.bindOnClick(function() {
-    a.changeTabView("done");
-  });
-  this.tabViews.push(e);
-  c.appendChild(e);
-  this.iframeTab = e;
-  e = Entry.createElement("span");
-  e.addClass("entryContainerTabItemWorkspace");
-  e.addClass("entryEllipsis");
-  e.innerHTML = Lang.Menus.lecture_container_tab_help;
-  e.bindOnClick(function() {
-    a.changeTabView("helper");
-  });
-  this.tabViews.push(e);
-  c.appendChild(e);
-  c = Entry.createElement("div");
-  c.addClass("entryContainerMovieWorkspace");
-  c.addClass("entryHide");
-  b.appendChild(c);
-  this.movieContainer = c;
-  c = Entry.createElement("div");
-  c.addClass("entryContainerDoneWorkspace");
-  c.addClass("entryHide");
-  b.appendChild(c);
-  this.doneContainer = c;
-  c = Entry.createElement("div");
-  c.addClass("entryContainerHelperWorkspace");
-  c.addClass("entryHide");
-  b.appendChild(c);
-  this.helperContainer = c;
-  d.addClass("selected");
-};
-Entry.Container.prototype.changeTabView = function(b) {
-  for (var a = this.tabViews, c = 0, d = a.length;c < d;c++) {
-    a[c].removeClass("selected");
-  }
-  this.movieContainer.addClass("entryHide");
-  this.doneContainer.addClass("entryHide");
-  this.helperContainer.addClass("entryHide");
-  "object" == b ? a[0].addClass("selected") : "movie" == b ? (b = this._view, b = b.style.width.substring(0, b.style.width.length - 2), this.movieFrame.setAttribute("width", b), this.movieFrame.setAttribute("height", 9 * b / 16), this.movieContainer.removeClass("entryHide"), a[1].addClass("selected")) : "done" == b ? (c = $(this.doneContainer).height(), b = $(this.doneContainer).width(), 9 * b / 16 + 35 < c ? c = 9 * b / 16 + 35 : b = (c - 35) / 9 * 16, this.doneProjectFrame.setAttribute("width", 
-  b), this.doneProjectFrame.setAttribute("height", c), this.doneContainer.removeClass("entryHide"), a[2].addClass("selected")) : "helper" == b && (Entry.helper.blockHelperOn(), this.helperContainer.removeClass("entryHide"), a[3].addClass("selected"));
-};
-Entry.Container.prototype.initYoutube = function(b) {
-  this.youtubeHash = b;
-  this.youtubeTab.removeClass("entryRemove");
-  b = this._view;
-  b = b.style.width.substring(0, b.style.width.length - 2);
-  var a = this.movieContainer, c = Entry.createElement("iframe");
-  c.setAttribute("width", b);
-  c.setAttribute("height", 9 * b / 16);
-  c.setAttribute("allowfullscreen", "");
-  c.setAttribute("frameborder", 0);
-  c.setAttribute("src", "https://www.youtube.com/embed/" + this.youtubeHash);
-  this.movieFrame = c;
-  a.appendChild(c);
-};
-Entry.Container.prototype.initTvcast = function(b) {
-  this.tvcast = b;
-  this.youtubeTab.removeClass("entryRemove");
-  b = this._view;
-  b = b.style.width.substring(0, b.style.width.length - 2);
-  var a = this.movieContainer, c = Entry.createElement("iframe");
-  c.setAttribute("width", b);
-  c.setAttribute("height", 9 * b / 16);
-  c.setAttribute("allowfullscreen", "");
-  c.setAttribute("frameborder", 0);
-  c.setAttribute("src", this.tvcast);
-  this.movieFrame = c;
-  a.appendChild(c);
-};
-Entry.Container.prototype.initDoneProject = function(b) {
-  this.doneProject = b;
-  this.iframeTab.removeClass("entryRemove");
-  b = this._view;
-  b = b.style.width.substring(0, b.style.width.length - 2);
-  var a = Entry.createElement("iframe");
-  a.setAttribute("width", b);
-  a.setAttribute("height", 9 * b / 16 + 35);
-  a.setAttribute("frameborder", 0);
-  a.setAttribute("src", "/api/iframe/project/" + this.doneProject);
-  this.doneProjectFrame = a;
-  this.doneContainer.appendChild(a);
 };
 Entry.Container.prototype.blurAllInputs = function() {
   this.getSceneObjects().map(function(b) {
@@ -20308,7 +20196,7 @@ p.init = function(b) {
 p.generateView = function(b) {
   var a = Entry.createElement("div");
   a.addClass("entryContainerMovieWorkspace");
-  a.addClass("entryHidden");
+  a.addClass("entryRemove");
   this.movieContainer = a;
   a = Entry.createElement("iframe");
   a.setAttribute("id", "youtubeIframe");
@@ -20322,7 +20210,7 @@ p.getView = function() {
   return this.movieContainer;
 };
 p.resize = function() {
-  var b = document.getElementById("entryContainerWorkspaceId"), a = document.getElementById("youtubeIframe");
+  var b = document.getElementsByClassName("propertyContent")[0], a = document.getElementById("youtubeIframe");
   w = b.offsetWidth;
   a.width = w + "px";
   a.height = 9 * w / 16 + "px";
