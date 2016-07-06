@@ -16241,7 +16241,7 @@ Entry.BlockView.pngMap = {};
       console.log(a);
       return a && "windows" === a.name.toLowerCase() && "7" === a.version[0] ? !0 : !1;
     }
-    var f = $.Deferred(), g = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">(svgGroup)(defs)</svg>', h = this.svgGroup.cloneNode(!0), k = this._skeleton.box(this), l = a ? 1 : 1.5, q = e() ? .85 : .95;
+    var f = $.Deferred(), g = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">(svgGroup)(defs)</svg>', h = this.svgGroup.cloneNode(!0), k = this._skeleton.box(this), l = a ? 1 : 1.5, q = e() ? .88 : .95;
     console.log(e());
     h.setAttribute("transform", "scale(%SCALE) translate(%X,%Y)".replace("%X", -k.offsetX).replace("%Y", -k.offsetY).replace("%SCALE", l));
     for (var n = this.getBoard().svgDom.find("defs"), m = this.svgGroup.getBoundingClientRect(), r = h.getElementsByTagName("image"), k = h.getElementsByTagName("text"), u = ["\u2265", "\u2264"], t = "\u2265\u2264-><=+-x/".split(""), l = 0;l < k.length;l++) {
