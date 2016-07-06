@@ -860,8 +860,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(c, d);
+  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
   return a.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1061,8 +1061,8 @@ Blockly.Blocks.dplay_select_led = {init:function() {
 Entry.block.dplay_select_led = function(b, a) {
   var c = a.getField("PORT"), d = 7;
   "7" == c ? d = 7 : "8" == c ? d = 8 : "9" == c ? d = 9 : "10" == c && (d = 10);
-  c = "on" == a.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(d, c);
+  c = a.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(d, "on" == c ? 255 : 0);
   return a.callReturn();
 };
 Blockly.Blocks.dplay_get_switch_status = {init:function() {
@@ -2072,10 +2072,10 @@ Entry.block.wait_second = function(b, a) {
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
+  var c = a.getNumberValue("SECOND", a);
   setTimeout(function() {
     a.timeFlag = 0;
-  }, c);
+  }, 60 / (Entry.FPS || 60) * c * 1E3);
   return a;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -7617,28 +7617,34 @@ Entry.EntityObject.prototype.setImage = function(b) {
 };
 Entry.EntityObject.prototype.applyFilter = function() {
   var b = this.effect, a = this.object;
-  if (!_.isEqual(b, this.getInitialEffectValue())) {
-    var c = [], d = Entry.adjustValueWithMaxMin;
-    b.brightness = b.brightness;
-    var e = new createjs.ColorMatrix;
-    e.adjustColor(d(b.brightness, -100, 100), 0, 0, 0);
-    e = new createjs.ColorMatrixFilter(e);
-    c.push(e);
-    b.hue = b.hue.mod(360);
-    e = new createjs.ColorMatrix;
-    e.adjustColor(0, 0, 0, b.hue);
-    e = new createjs.ColorMatrixFilter(e);
-    c.push(e);
-    var e = [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1], f = 10.8 * b.hsv * Math.PI / 180, g = Math.cos(f), f = Math.sin(f), h = Math.abs(b.hsv / 100);
-    1 < h && (h -= Math.floor(h));
-    0 < h && .33 >= h ? e = [1, 0, 0, 0, 0, 0, g, f, 0, 0, 0, -1 * f, g, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1] : .66 >= h ? e = [g, 0, f, 0, 0, 0, 1, 0, 0, 0, f, 0, g, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1] : .99 >= h && (e = [g, f, 0, 0, 0, -1 * f, g, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1]);
-    e = (new createjs.ColorMatrix).concat(e);
-    e = new createjs.ColorMatrixFilter(e);
-    c.push(e);
-    a.alpha = b.alpha = d(b.alpha, 0, 1);
-    a.filters = c;
-    a.cache(0, 0, this.getWidth(), this.getHeight());
-  }
+  (function(a, b) {
+    for (var e in a) {
+      if (a[e] !== b[e]) {
+        return !1;
+      }
+    }
+    return !0;
+  })(b, this.getInitialEffectValue()) || (function(a, b) {
+    var e = [], f = Entry.adjustValueWithMaxMin;
+    a.brightness = a.brightness;
+    var g = new createjs.ColorMatrix;
+    g.adjustColor(f(a.brightness, -100, 100), 0, 0, 0);
+    g = new createjs.ColorMatrixFilter(g);
+    e.push(g);
+    a.hue = a.hue.mod(360);
+    g = new createjs.ColorMatrix;
+    g.adjustColor(0, 0, 0, a.hue);
+    g = new createjs.ColorMatrixFilter(g);
+    e.push(g);
+    var g = [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1], h = 10.8 * a.hsv * Math.PI / 180, k = Math.cos(h), h = Math.sin(h), l = Math.abs(a.hsv / 100);
+    1 < l && (l -= Math.floor(l));
+    0 < l && .33 >= l ? g = [1, 0, 0, 0, 0, 0, k, h, 0, 0, 0, -1 * h, k, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1] : .66 >= l ? g = [k, 0, h, 0, 0, 0, 1, 0, 0, 0, h, 0, k, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1] : .99 >= l && (g = [k, h, 0, 0, 0, -1 * h, k, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1]);
+    g = (new createjs.ColorMatrix).concat(g);
+    g = new createjs.ColorMatrixFilter(g);
+    e.push(g);
+    b.alpha = a.alpha = f(a.alpha, 0, 1);
+    b.filters = e;
+  }(b, a), a.cache(0, 0, this.getWidth(), this.getHeight()));
 };
 Entry.EntityObject.prototype.resetFilter = function() {
   "sprite" == this.parent.objectType && (this.object.filters = [], this.setInitialEffectValue(), this.object.alpha = this.effect.alpha, this.object.cache(0, 0, this.getWidth(), this.getHeight()));
