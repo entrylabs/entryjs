@@ -1017,8 +1017,7 @@ Entry.BlockView.pngMap = {};
         var svgGroup = this.svgGroup.cloneNode(true);
         var box = this._skeleton.box(this)
         var scale = notPng ? 1 : 1.5;
-        var fontWeight = isWindow7() ? 0.88 : 0.95;
-        console.log(isWindow7());
+        var fontWeight = isWindow7() ? 0.9 : 0.95;
         svgGroup.setAttribute(
             'transform',
             'scale(%SCALE) translate(%X,%Y)'
@@ -1143,7 +1142,6 @@ Entry.BlockView.pngMap = {};
 
         function isWindow7() {
             var platform = window.platform;
-            console.log(platform);
             if (platform && platform.name.toLowerCase() === 'windows' &&
                     platform.version[0] === '7') {
                 return true;

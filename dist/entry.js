@@ -16202,12 +16202,12 @@ Entry.BlockView.pngMap = {};
   };
   b.getDataUrl = function(a) {
     function b() {
-      g = g.replace("(svgGroup)", (new XMLSerializer).serializeToString(h)).replace("(defs)", (new XMLSerializer).serializeToString(n[0])).replace(/>\s+/g, ">").replace(/\s+</g, "<");
-      var c = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(g)));
-      a ? f.resolve({src:c, width:m.width, height:m.height}) : d(c, m.width, m.height, 1.5).then(function(a) {
-        f.resolve({src:a, width:m.width, height:m.height});
+      f = f.replace("(svgGroup)", (new XMLSerializer).serializeToString(g)).replace("(defs)", (new XMLSerializer).serializeToString(q[0])).replace(/>\s+/g, ">").replace(/\s+</g, "<");
+      var c = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(f)));
+      a ? e.resolve({src:c, width:n.width, height:n.height}) : d(c, n.width, n.height, 1.5).then(function(a) {
+        e.resolve({src:a, width:n.width, height:n.height});
       }, function(a) {
-        f.reject("error occured");
+        e.reject("error occured");
       });
     }
     function d(a, b, c, d) {
@@ -16236,44 +16236,41 @@ Entry.BlockView.pngMap = {};
       f.src = a;
       return e.promise();
     }
-    function e() {
+    var e = $.Deferred(), f = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">(svgGroup)(defs)</svg>', g = this.svgGroup.cloneNode(!0), h = this._skeleton.box(this), k = a ? 1 : 1.5, l = function() {
       var a = window.platform;
-      console.log(a);
       return a && "windows" === a.name.toLowerCase() && "7" === a.version[0] ? !0 : !1;
-    }
-    var f = $.Deferred(), g = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">(svgGroup)(defs)</svg>', h = this.svgGroup.cloneNode(!0), k = this._skeleton.box(this), l = a ? 1 : 1.5, q = e() ? .88 : .95;
-    console.log(e());
-    h.setAttribute("transform", "scale(%SCALE) translate(%X,%Y)".replace("%X", -k.offsetX).replace("%Y", -k.offsetY).replace("%SCALE", l));
-    for (var n = this.getBoard().svgDom.find("defs"), m = this.svgGroup.getBoundingClientRect(), r = h.getElementsByTagName("image"), k = h.getElementsByTagName("text"), u = ["\u2265", "\u2264"], t = "\u2265\u2264-><=+-x/".split(""), l = 0;l < k.length;l++) {
+    }() ? .9 : .95;
+    g.setAttribute("transform", "scale(%SCALE) translate(%X,%Y)".replace("%X", -h.offsetX).replace("%Y", -h.offsetY).replace("%SCALE", k));
+    for (var q = this.getBoard().svgDom.find("defs"), n = this.svgGroup.getBoundingClientRect(), m = g.getElementsByTagName("image"), h = g.getElementsByTagName("text"), r = ["\u2265", "\u2264"], u = "\u2265\u2264-><=+-x/".split(""), k = 0;k < h.length;k++) {
       (function(a) {
         a.setAttribute("font-family", "'nanumBarunRegular', 'NanumGothic', '\ub098\ub214\uace0\ub515','NanumGothicWeb', '\ub9d1\uc740 \uace0\ub515', 'Malgun Gothic', Dotum");
         var b = parseInt(a.getAttribute("font-size")), c = $(a).text();
-        -1 < u.indexOf(c) && a.setAttribute("font-weight", "500");
+        -1 < r.indexOf(c) && a.setAttribute("font-weight", "500");
         if ("q" == c) {
           var d = parseInt(a.getAttribute("y"));
           a.setAttribute("y", d - 1);
         }
-        -1 < t.indexOf(c) ? a.setAttribute("font-size", b + "px") : a.setAttribute("font-size", b * q + "px");
+        -1 < u.indexOf(c) ? a.setAttribute("font-size", b + "px") : a.setAttribute("font-size", b * l + "px");
         a.setAttribute("alignment-baseline", "baseline");
-      })(k[l]);
+      })(h[k]);
     }
-    var v = 0;
-    if (0 === r.length) {
+    var t = 0;
+    if (0 === m.length) {
       b();
     } else {
-      for (l = 0;l < r.length;l++) {
+      for (k = 0;k < m.length;k++) {
         (function(a) {
           var e = a.getAttribute("href");
           d(e, a.getAttribute("width"), a.getAttribute("height")).then(function(d) {
             a.setAttribute("href", d);
-            if (++v == r.length) {
+            if (++t == m.length) {
               return b();
             }
           });
-        })(r[l]);
+        })(m[k]);
       }
     }
-    return f.promise();
+    return e.promise();
   };
   b.downloadAsImage = function() {
     this.getDataUrl().then(function(a) {
