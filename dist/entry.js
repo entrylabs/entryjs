@@ -13806,9 +13806,12 @@ Entry.Stage.prototype.initStage = function(a) {
   Entry.addEventListener("canvasClick", function(a) {
     Entry.stage.isObjectClick = !1;
   });
+  Entry.windowResized.attach(this, function() {
+    this._boundRect = a.getBoundingClientRect();
+  });
   c = function(a) {
     a.preventDefault();
-    var b = this.getBoundingClientRect(), c;
+    var b = Entry.stage._boundRect, c;
     -1 < Entry.getBrowserType().indexOf("IE") ? (c = 480 * ((a.pageX - b.left - document.documentElement.scrollLeft) / b.width - .5), a = -270 * ((a.pageY - b.top - document.documentElement.scrollTop) / b.height - .5)) : a.changedTouches ? (c = 480 * ((a.changedTouches[0].pageX - b.left - document.body.scrollLeft) / b.width - .5), a = -270 * ((a.changedTouches[0].pageY - b.top - document.body.scrollTop) / b.height - .5)) : (c = 480 * ((a.pageX - b.left - document.body.scrollLeft) / b.width - .5), 
     a = -270 * ((a.pageY - b.top - document.body.scrollTop) / b.height - .5));
     Entry.stage.mouseCoordinate = {x:c.toFixed(1), y:a.toFixed(1)};

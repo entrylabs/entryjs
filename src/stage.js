@@ -87,9 +87,14 @@ Entry.Stage.prototype.initStage = function(canvas) {
 //          Entry.container.selectObject();
         Entry.stage.isObjectClick = false;
     });
+
+    Entry.windowResized.attach(this, function() {
+        this._boundRect = canvas.getBoundingClientRect();
+    });
+
     var moveFunc = function(e){
         e.preventDefault();
-        var roundRect = this.getBoundingClientRect();
+        var roundRect = Entry.stage._boundRect;
         var x, y;
         if (Entry.getBrowserType().indexOf("IE") > -1) {
             x = ((e.pageX - roundRect.left - document.documentElement.scrollLeft) / roundRect.width - 0.5) * 480;
@@ -111,6 +116,7 @@ Entry.Stage.prototype.initStage = function(canvas) {
     canvas.onmouseout = function(e) {
         Entry.dispatchEvent('stageMouseOut');
     };
+
     Entry.addEventListener('updateObject', function(e){
         if (Entry.engine.isState('stop'))
             Entry.stage.updateObject();
