@@ -1056,41 +1056,6 @@ Entry.Utils.addFilters = function (boardSvgDom, suffix) {
     });
 };
 
-Entry.Utils.addBlockPattern = function (boardSvgDom, suffix) {
-    var pattern = boardSvgDom.elem('pattern', {
-        id: 'blockHoverPattern_' + suffix,
-        class: 'blockHoverPattern',
-        patternUnits: "userSpaceOnUse",
-        patternTransform: "translate(12, 0)",
-        x: 0, y: 0,
-        width: 125,
-        height: 33
-    });
-
-    var group = pattern.elem('g');
-
-    //this rect should be controlled by the board
-    //according to the target block
-    var elem = group.elem("rect", {
-        x: 0, y: 0,
-        width: 125,
-        height: 33
-    });
-
-    var imagePath = Entry.mediaFilePath + 'block_pattern_(order).png';
-    for (var i=1; i<5; i++) {
-        group.elem("image", {
-            class: 'pattern' + i,
-            href: imagePath.replace('(order)', i),
-            x: 0, y: 0,
-            width: 125,
-            height: 33
-        });
-    }
-
-    return elem;
-};
-
 Entry.Utils.COLLISION = {
     NONE: 0,
     UP: 1,

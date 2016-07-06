@@ -6756,14 +6756,6 @@ Entry.Utils.addFilters = function(a, b) {
   b.elem("feOffset", {result:"offOut", in:"SourceGraphic", dx:0, dy:0});
   b.elem("feColorMatrix", {result:"matrixOut", in:"offOut", type:"matrix", values:"1.3 0 0 0 0 0 1.3 0 0 0 0 0 1.3 0 0 0 0 0 1 0"});
 };
-Entry.Utils.addBlockPattern = function(a, b) {
-  a = a.elem("pattern", {id:"blockHoverPattern_" + b, class:"blockHoverPattern", patternUnits:"userSpaceOnUse", patternTransform:"translate(12, 0)", x:0, y:0, width:125, height:33}).elem("g");
-  b = a.elem("rect", {x:0, y:0, width:125, height:33});
-  for (var c = Entry.mediaFilePath + "block_pattern_(order).png", d = 1;5 > d;d++) {
-    a.elem("image", {class:"pattern" + d, href:c.replace("(order)", d), x:0, y:0, width:125, height:33});
-  }
-  return b;
-};
 Entry.Utils.COLLISION = {NONE:0, UP:1, RIGHT:2, LEFT:3, DOWN:4};
 Entry.Utils.createMouseEvent = function(a, b) {
   var c = document.createEvent("MouseEvent");
@@ -12063,21 +12055,21 @@ Entry.Parser = function(a, b, c) {
         }
         break;
       case "block":
-        b = this._parser.Code(b).match(/(.*{.*[\S|\s]+?}|.+)/g), a = Array.isArray(b) ? b.reduce(function(b, a, c) {
-          1 === c && (b += "\n");
-          return (-1 < a.indexOf("function") ? a + b : b + a) + "\n";
+        b = this._parser.Code(b).match(/(.*{.*[\S|\s]+?}|.+)/g), a = Array.isArray(b) ? b.reduce(function(a, b, c) {
+          1 === c && (a += "\n");
+          return (-1 < b.indexOf("function") ? b + a : a + b) + "\n";
         }) : "";
     }
     return a;
   };
-  a.getLineNumber = function(b, a) {
+  a.getLineNumber = function(a, c) {
     var d = this.codeMirror.getValue(), e = {from:{}, to:{}};
-    b = d.substring(0, b).split(/\n/gi);
-    e.from.line = b.length - 1;
-    e.from.ch = b[b.length - 1].length;
     a = d.substring(0, a).split(/\n/gi);
-    e.to.line = a.length - 1;
-    e.to.ch = a[a.length - 1].length;
+    e.from.line = a.length - 1;
+    e.from.ch = a[a.length - 1].length;
+    c = d.substring(0, c).split(/\n/gi);
+    e.to.line = c.length - 1;
+    e.to.ch = c[c.length - 1].length;
     return e;
   };
   a.mappingSyntax = function(a) {
@@ -17055,7 +17047,6 @@ Entry.BlockMenu = function(a, b, c, d) {
   this.setWidth();
   this.svg = Entry.SVG(this._svgId);
   Entry.Utils.addFilters(this.svg, this.suffix);
-  this.patternRect = Entry.Utils.addBlockPattern(this.svg, this.suffix);
   this.svgGroup = this.svg.elem("g");
   this.svgThreadGroup = this.svgGroup.elem("g");
   this.svgThreadGroup.board = this;
@@ -17316,9 +17307,6 @@ Entry.BlockMenu = function(a, b, c, d) {
     var c = a.keyCode, d = Entry.type;
     a.ctrlKey && "workspace" == d && 48 < c && 58 > c && (a.preventDefault(), this.selectMenu(c - 49));
   };
-  a.setPatternRectFill = function(a) {
-    this.patternRect.attr({fill:a});
-  };
   a._clearCategory = function() {
     this._selectedCategoryView = null;
     this._categories = [];
@@ -17546,11 +17534,6 @@ Entry.BlockView.DRAG_RADIUS = 5;
     this.pathGroup = this.svgGroup.elem("g");
     this._updateMagnet();
     this._path = this.pathGroup.elem("path");
-    this.getBoard().patternRect && ($(this._path).mouseenter(function(a) {
-      d._mouseEnable && d._changeFill(!0);
-    }), $(this._path).mouseleave(function(a) {
-      d._mouseEnable && d._changeFill(!1);
-    }));
     var f = this._schema.color;
     this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN && (f = Entry.Utils.colorLighten(f));
     this._fillColor = f;
@@ -17694,14 +17677,12 @@ Entry.BlockView.DRAG_RADIUS = 5;
       $(document).unbind(".block");
       m.terminateDrag(a);
       e && e.set({dragBlock:null});
-      m._changeFill(!1);
       Entry.GlobalSvg.remove();
       delete this.mouseDownCoordinate;
       delete m.dragInstance;
     }
     b.stopPropagation && b.stopPropagation();
     b.preventDefault && b.preventDefault();
-    this._changeFill(!1);
     var e = this.getBoard();
     Entry.documentMousedown && Entry.documentMousedown.notify(b);
     if (!this.readOnly && !e.viewOnly) {
@@ -17955,14 +17936,6 @@ Entry.BlockView.DRAG_RADIUS = 5;
   a._destroyObservers = function() {
     for (var a = this._observers;a.length;) {
       a.pop().destroy();
-    }
-  };
-  a._changeFill = function(a) {
-    var c = this.getBoard();
-    if (c.patternRect && !c.dragBlock) {
-      var d = this._path, e = this._fillColor;
-      a && (c = this.getBoard(), c.setPatternRectFill(e), e = "url(#blockHoverPattern_" + this.getBoard().suffix + ")");
-      d.attr({fill:e});
     }
   };
   a.addActivated = function() {
@@ -18404,7 +18377,6 @@ Entry.Board.OPTION_CLEAR = 2;
     this.svgBlockGroup.board = this;
     a.isOverlay ? (this.wrapper.addClass("entryOverlayBoard"), this.generateButtons(), this.suffix = "overlayBoard") : this.suffix = "board";
     Entry.Utils.addFilters(this.svg, this.suffix);
-    this.patternRect = Entry.Utils.addBlockPattern(this.svg, this.suffix);
   };
   a.changeCode = function(a) {
     this.code && this.codeListener && this.code.changeEvent.detach(this.codeListener);
@@ -18771,9 +18743,6 @@ Entry.Board.OPTION_CLEAR = 2;
   };
   a.dominate = function(a) {
     a && (a = a.getFirstBlock()) && (this.svgBlockGroup.appendChild(a.view.svgGroup), this.code.dominate(a.thread));
-  };
-  a.setPatternRectFill = function(a) {
-    this.patternRect.attr({fill:a});
   };
   a._removeActivated = function() {
     this._activatedBlockView && (this._activatedBlockView.removeActivated(), this._activatedBlockView = null);

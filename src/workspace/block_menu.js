@@ -37,7 +37,6 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     this.svg = Entry.SVG(this._svgId);
     Entry.Utils.addFilters(this.svg, this.suffix);
-    this.patternRect = Entry.Utils.addBlockPattern(this.svg, this.suffix);
 
     this.svgGroup = this.svg.elem("g");
 
@@ -557,10 +556,6 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
                 this.selectMenu(keyCode - 49);
             }
         }
-    };
-
-    p.setPatternRectFill = function(color) {
-        this.patternRect.attr({fill:color});
     };
 
     p._clearCategory = function() {

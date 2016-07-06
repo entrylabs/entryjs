@@ -113,18 +113,6 @@ Entry.BlockView.DRAG_RADIUS = 5;
 
         this._path = this.pathGroup.elem("path");
 
-        if (this.getBoard().patternRect) {
-            $(this._path).mouseenter(function(e) {
-                if (!that._mouseEnable) return;
-                that._changeFill(true);
-            });
-
-            $(this._path).mouseleave(function(e) {
-                if (!that._mouseEnable) return;
-                that._changeFill(false);
-            });
-        }
-
         var fillColor = this._schema.color;
         if (this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN)
             fillColor = Entry.Utils.colorLighten(fillColor);
@@ -382,7 +370,6 @@ Entry.BlockView.DRAG_RADIUS = 5;
         if (e.stopPropagation) e.stopPropagation();
         if (e.preventDefault) e.preventDefault();
 
-        this._changeFill(false);
         var board = this.getBoard();
         if (Entry.documentMousedown)
             Entry.documentMousedown.notify(e);
@@ -526,7 +513,6 @@ Entry.BlockView.DRAG_RADIUS = 5;
             $(document).unbind('.block');
             blockView.terminateDrag(e);
             if (board) board.set({dragBlock: null});
-            blockView._changeFill(false);
             Entry.GlobalSvg.remove();
             delete this.mouseDownCoordinate;
             delete blockView.dragInstance;
@@ -951,20 +937,6 @@ Entry.BlockView.DRAG_RADIUS = 5;
             var o = observers.pop();
             o.destroy();
         }
-    };
-
-    p._changeFill = function(isPattern) {
-        var board = this.getBoard();
-        if (!board.patternRect || board.dragBlock) return;
-        var path = this._path;
-        var fillColor = this._fillColor;
-
-        if (isPattern) {
-            var board = this.getBoard();
-            board.setPatternRectFill(fillColor);
-            fillColor = "url(#blockHoverPattern_" + this.getBoard().suffix +")";
-        }
-        path.attr({fill:fillColor});
     };
 
     p.addActivated = function() {
