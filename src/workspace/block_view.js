@@ -1145,7 +1145,7 @@ Entry.BlockView.pngMap = {};
             var platform = window.platform;
             console.log(platform);
             if (platform && platform.name.toLowerCase() === 'windows' &&
-                    platform.name.version[0] === '7') {
+                    platform.version[0] === '7') {
                 return true;
             }
             return false;

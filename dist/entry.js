@@ -16239,7 +16239,7 @@ Entry.BlockView.pngMap = {};
     function e() {
       var a = window.platform;
       console.log(a);
-      return a && "windows" === a.name.toLowerCase() && "7" === a.name.version[0] ? !0 : !1;
+      return a && "windows" === a.name.toLowerCase() && "7" === a.version[0] ? !0 : !1;
     }
     var f = $.Deferred(), g = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">(svgGroup)(defs)</svg>', h = this.svgGroup.cloneNode(!0), k = this._skeleton.box(this), l = a ? 1 : 1.5, q = e() ? .85 : .95;
     console.log(e());
