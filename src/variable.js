@@ -19,6 +19,10 @@ Entry.Variable = function(variable) {
     this.object_ = variable.object || null;
     /** @type {boolean} */
     this.isCloud_ = variable.isCloud || false;
+
+    this._nameWidth = null;
+    this._valueWidth = null;
+
     /** @type {number||string} */
     var parsedValue = Entry.parseNumber(variable.value);
     if (typeof parsedValue == 'number')
@@ -328,22 +332,24 @@ Entry.Variable.prototype.updateView = function() {
                     this.textView_.text = this.getName();
             } else
                 this.textView_.text = this.getName();
-            this.valueView_.x = this.textView_.getMeasuredWidth() + 14;
+            if (this._nameWidth === null)
+                this._nameWidth = this.textView_.getMeasuredWidth();
+            this.valueView_.x = this._nameWidth + 14;
             this.valueView_.y = 1;
-            if (this.isNumber()) {
+            if (this.isNumber())
                 this.valueView_.text = this.getValue().toFixed(2).replace('.00', '');
-            }
-            else {
+            else
                 this.valueView_.text = this.getValue();
 
-            }
+            if (this._valueWidth === null)
+                this._valueWidth = this.valueView_.getMeasuredWidth();
             this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1")
                 .rc(0, -14,
-                    this.textView_.getMeasuredWidth() + this.valueView_.getMeasuredWidth() + 26, 20,
+                    this._nameWidth + this._valueWidth + 26, 20,
                     4, 4, 4, 4);
             this.wrapper_.graphics.clear().f("#1bafea").ss(1, 2, 0).s("#1bafea")
-                .rc(this.textView_.getMeasuredWidth() + 7, -11,
-                    this.valueView_.getMeasuredWidth() + 15, 14,
+                .rc(this._nameWidth + 7, -11,
+                    this._valueWidth + 15, 14,
                     7, 7, 7, 7);
         } else if (this.type == 'slide') {
             this.view_.x = this.getX();
@@ -356,7 +362,9 @@ Entry.Variable.prototype.updateView = function() {
                     this.textView_.text = this.getName();
             } else
                 this.textView_.text = this.getName();
-            this.valueView_.x = this.textView_.getMeasuredWidth() + 14;
+            if (this._nameWidth === null)
+                this._nameWidth = this.textView_.getMeasuredWidth();
+            this.valueView_.x = this._nameWidth + 14;
             this.valueView_.y = 1;
             if (this.isNumber()) {
                 this.valueView_.text = this.getValue().toFixed(2).replace('.00', '');
@@ -364,18 +372,20 @@ Entry.Variable.prototype.updateView = function() {
                 this.valueView_.text = this.getValue();
             }
 
-            var width = this.textView_.getMeasuredWidth() + this.valueView_.getMeasuredWidth() + 26;
+            if (this._valueWidth === null)
+                this._valueWidth = this.valueView_.getMeasuredWidth();
+            var width = this._nameWidth + this._valueWidth + 26;
             width = Math.max(width, 90);
             this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1")
                 .rc(0, -14,
                     width, 33,
                     4, 4, 4, 4);
             this.wrapper_.graphics.clear().f("#1bafea").ss(1, 2, 0).s("#1bafea")
-                .rc(this.textView_.getMeasuredWidth() + 7, -11,
-                    this.valueView_.getMeasuredWidth() + 15, 14,
+                .rc(this._nameWidth + 7, -11,
+                    this._valueWidth + 15, 14,
                     7, 7, 7, 7);
 
-            var width = this.textView_.getMeasuredWidth() + this.valueView_.getMeasuredWidth() + 26;
+            var width = this._nameWidth + this._valueWidth + 26;
             width = Math.max(width, 90);
             this.maxWidth = width -20;
 
@@ -447,7 +457,6 @@ Entry.Variable.prototype.updateView = function() {
             this.view_.x = this.getX();
             this.view_.y = this.getY();
             this.textView_.text = this.getName();
-            this.valueView_.x = this.textView_.getMeasuredWidth() + 14;
             this.valueView_.y = 1;
             if (this.isNumber()) {
                 if (parseInt(this.getValue(),10) == this.getValue())
@@ -457,36 +466,46 @@ Entry.Variable.prototype.updateView = function() {
             }
             else {
                 this.valueView_.text = this.getValue();
-
             }
+            if (this._nameWidth === null)
+                this._nameWidth = this.textView_.getMeasuredWidth();
+            if (this._valueWidth === null)
+                this._valueWidth = this.valueView_.getMeasuredWidth();
+
+            this.valueView_.x = this._nameWidth + 14;
             this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1")
                 .rc(0, -14,
-                    this.textView_.getMeasuredWidth() + this.valueView_.getMeasuredWidth() + 26, 20,
+                    this._nameWidth + this._valueWidth + 26, 20,
                     4, 4, 4, 4);
             this.wrapper_.graphics.clear().f("#E457DC").ss(1, 2, 0).s("#E457DC")
-                .rc(this.textView_.getMeasuredWidth() + 7, -11,
-                    this.valueView_.getMeasuredWidth() + 15, 14,
+                .rc(this._nameWidth + 7, -11,
+                    this._valueWidth + 15, 14,
                     7, 7, 7, 7);
         } else {
             this.view_.x = this.getX();
             this.view_.y = this.getY();
             this.textView_.text = this.getName();
-            this.valueView_.x = this.textView_.getMeasuredWidth() + 14;
+
+            if (this._nameWidth === null)
+                this._nameWidth = this.textView_.getMeasuredWidth();
+
+            this.valueView_.x = this._nameWidth + 14;
             this.valueView_.y = 1;
-            if (this.isNumber()) {
+            if (this.isNumber())
                 this.valueView_.text = this.getValue().toFixed(1).replace('.00', '');
-            }
-            else {
+            else
                 this.valueView_.text = this.getValue();
 
-            }
+            if (this._valueWidth === null)
+                this._valueWidth = this.valueView_.getMeasuredWidth();
+
             this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1")
                 .rc(0, -14,
-                    this.textView_.getMeasuredWidth() + this.valueView_.getMeasuredWidth() + 26, 20,
+                    this._nameWidth + this._valueWidth + 26, 20,
                     4, 4, 4, 4);
             this.wrapper_.graphics.clear().f("#ffbb14").ss(1, 2, 0).s("orange")
-                .rc(this.textView_.getMeasuredWidth() + 7, -11,
-                    this.valueView_.getMeasuredWidth() + 15, 14,
+                .rc(this._nameWidth + 7, -11,
+                    this._valueWidth + 15, 14,
                     7, 7, 7, 7);
         }
     }
@@ -509,6 +528,7 @@ Entry.Variable.prototype.setName = function(variableName) {
     Entry.assert(typeof variableName == 'string',
                 'Variable name must be string');
     this.name_ = variableName;
+    this._nameWidth = null;
     this.updateView();
 };
 
@@ -556,6 +576,7 @@ Entry.Variable.prototype.setValue = function(value) {
     }
 
     if (this.isCloud_) Entry.variableContainer.updateCloudVariables();
+    this._valueWidth = null;
     this.updateView();
 };
 

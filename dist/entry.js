@@ -8285,6 +8285,7 @@ Entry.EntityObject.prototype.setDirection = function(a, b) {
   this.object.direction = this.direction;
   this.isClone || this.parent.updateRotationView();
   Entry.dispatchEvent("updateObject");
+  Entry.requestUpdate = !0;
 };
 Entry.EntityObject.prototype.setRotation = function(a) {
   "free" != this.parent.getRotateMethod() && (a = 0);
@@ -8293,6 +8294,7 @@ Entry.EntityObject.prototype.setRotation = function(a) {
   this.updateDialog();
   this.isClone || this.parent.updateRotationView();
   Entry.dispatchEvent("updateObject");
+  Entry.requestUpdate = !0;
 };
 Entry.EntityObject.prototype.getRotation = function() {
   return this.rotation;
@@ -14310,6 +14312,7 @@ Entry.Variable = function(a) {
   this.type = a.variableType ? a.variableType : "variable";
   this.object_ = a.object || null;
   this.isCloud_ = a.isCloud || !1;
+  this._valueWidth = this._nameWidth = null;
   var b = Entry.parseNumber(a.value);
   this.value_ = "number" == typeof b ? b : a.value ? a.value : 0;
   "slide" == this.type ? (this.minValue_ = Number(a.minValue ? a.minValue : 0), this.maxValue_ = Number(a.maxValue ? a.maxValue : 100)) : "list" == this.type && (this.array_ = a.array ? a.array : []);
@@ -14426,16 +14429,18 @@ Entry.Variable.prototype.updateView = function() {
         } else {
           this.textView_.text = this.getName();
         }
-        this.valueView_.x = this.textView_.getMeasuredWidth() + 14;
+        null === this._nameWidth && (this._nameWidth = this.textView_.getMeasuredWidth());
+        this.valueView_.x = this._nameWidth + 14;
         this.valueView_.y = 1;
         this.isNumber() ? this.valueView_.text = this.getValue().toFixed(2).replace(".00", "") : this.valueView_.text = this.getValue();
-        this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1").rc(0, -14, this.textView_.getMeasuredWidth() + this.valueView_.getMeasuredWidth() + 26, 20, 4, 4, 4, 4);
-        this.wrapper_.graphics.clear().f("#1bafea").ss(1, 2, 0).s("#1bafea").rc(this.textView_.getMeasuredWidth() + 7, -11, this.valueView_.getMeasuredWidth() + 15, 14, 7, 7, 7, 7);
+        null === this._valueWidth && (this._valueWidth = this.valueView_.getMeasuredWidth());
+        this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1").rc(0, -14, this._nameWidth + this._valueWidth + 26, 20, 4, 4, 4, 4);
+        this.wrapper_.graphics.clear().f("#1bafea").ss(1, 2, 0).s("#1bafea").rc(this._nameWidth + 7, -11, this._valueWidth + 15, 14, 7, 7, 7, 7);
       } else {
         if ("slide" == this.type) {
-          this.view_.x = this.getX(), this.view_.y = this.getY(), this.object_ ? (a = Entry.container.getObject(this.object_), this.textView_.text = a ? a.name + ":" + this.getName() : this.getName()) : this.textView_.text = this.getName(), this.valueView_.x = this.textView_.getMeasuredWidth() + 14, this.valueView_.y = 1, this.isNumber() ? this.valueView_.text = this.getValue().toFixed(2).replace(".00", "") : this.valueView_.text = this.getValue(), a = this.textView_.getMeasuredWidth() + this.valueView_.getMeasuredWidth() + 
-          26, a = Math.max(a, 90), this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1").rc(0, -14, a, 33, 4, 4, 4, 4), this.wrapper_.graphics.clear().f("#1bafea").ss(1, 2, 0).s("#1bafea").rc(this.textView_.getMeasuredWidth() + 7, -11, this.valueView_.getMeasuredWidth() + 15, 14, 7, 7, 7, 7), a = this.textView_.getMeasuredWidth() + this.valueView_.getMeasuredWidth() + 26, a = Math.max(a, 90), this.maxWidth = a - 20, this.slideBar_.graphics.clear().beginFill("#A0A1A1").s("#A0A1A1").ss(1).dr(10, 
-          10, this.maxWidth, 1.5), a = this.getSlidePosition(this.maxWidth), this.valueSetter_.graphics.clear().beginFill("#1bafea").s("#A0A1A1").ss(1).dc(a, 10.5, 3);
+          this.view_.x = this.getX(), this.view_.y = this.getY(), this.object_ ? (a = Entry.container.getObject(this.object_), this.textView_.text = a ? a.name + ":" + this.getName() : this.getName()) : this.textView_.text = this.getName(), null === this._nameWidth && (this._nameWidth = this.textView_.getMeasuredWidth()), this.valueView_.x = this._nameWidth + 14, this.valueView_.y = 1, this.isNumber() ? this.valueView_.text = this.getValue().toFixed(2).replace(".00", "") : this.valueView_.text = 
+          this.getValue(), null === this._valueWidth && (this._valueWidth = this.valueView_.getMeasuredWidth()), a = this._nameWidth + this._valueWidth + 26, a = Math.max(a, 90), this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1").rc(0, -14, a, 33, 4, 4, 4, 4), this.wrapper_.graphics.clear().f("#1bafea").ss(1, 2, 0).s("#1bafea").rc(this._nameWidth + 7, -11, this._valueWidth + 15, 14, 7, 7, 7, 7), a = this._nameWidth + this._valueWidth + 26, a = Math.max(a, 90), this.maxWidth = a - 20, 
+          this.slideBar_.graphics.clear().beginFill("#A0A1A1").s("#A0A1A1").ss(1).dr(10, 10, this.maxWidth, 1.5), a = this.getSlidePosition(this.maxWidth), this.valueSetter_.graphics.clear().beginFill("#1bafea").s("#A0A1A1").ss(1).dc(a, 10.5, 3);
         } else {
           if ("list" == this.type) {
             this.view_.x = this.getX();
@@ -14462,9 +14467,10 @@ Entry.Variable.prototype.updateView = function() {
               this.view_.addChild(c);
             }
           } else {
-            "answer" == this.type ? (this.view_.x = this.getX(), this.view_.y = this.getY(), this.textView_.text = this.getName(), this.valueView_.x = this.textView_.getMeasuredWidth() + 14, this.valueView_.y = 1, this.isNumber() ? parseInt(this.getValue(), 10) == this.getValue() ? this.valueView_.text = this.getValue() : this.valueView_.text = this.getValue().toFixed(1).replace(".00", "") : this.valueView_.text = this.getValue(), this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1").rc(0, 
-            -14, this.textView_.getMeasuredWidth() + this.valueView_.getMeasuredWidth() + 26, 20, 4, 4, 4, 4), this.wrapper_.graphics.clear().f("#E457DC").ss(1, 2, 0).s("#E457DC").rc(this.textView_.getMeasuredWidth() + 7, -11, this.valueView_.getMeasuredWidth() + 15, 14, 7, 7, 7, 7)) : (this.view_.x = this.getX(), this.view_.y = this.getY(), this.textView_.text = this.getName(), this.valueView_.x = this.textView_.getMeasuredWidth() + 14, this.valueView_.y = 1, this.isNumber() ? this.valueView_.text = 
-            this.getValue().toFixed(1).replace(".00", "") : this.valueView_.text = this.getValue(), this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1").rc(0, -14, this.textView_.getMeasuredWidth() + this.valueView_.getMeasuredWidth() + 26, 20, 4, 4, 4, 4), this.wrapper_.graphics.clear().f("#ffbb14").ss(1, 2, 0).s("orange").rc(this.textView_.getMeasuredWidth() + 7, -11, this.valueView_.getMeasuredWidth() + 15, 14, 7, 7, 7, 7));
+            "answer" == this.type ? (this.view_.x = this.getX(), this.view_.y = this.getY(), this.textView_.text = this.getName(), this.valueView_.y = 1, this.isNumber() ? parseInt(this.getValue(), 10) == this.getValue() ? this.valueView_.text = this.getValue() : this.valueView_.text = this.getValue().toFixed(1).replace(".00", "") : this.valueView_.text = this.getValue(), null === this._nameWidth && (this._nameWidth = this.textView_.getMeasuredWidth()), null === this._valueWidth && (this._valueWidth = 
+            this.valueView_.getMeasuredWidth()), this.valueView_.x = this._nameWidth + 14, this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1").rc(0, -14, this._nameWidth + this._valueWidth + 26, 20, 4, 4, 4, 4), this.wrapper_.graphics.clear().f("#E457DC").ss(1, 2, 0).s("#E457DC").rc(this._nameWidth + 7, -11, this._valueWidth + 15, 14, 7, 7, 7, 7)) : (this.view_.x = this.getX(), this.view_.y = this.getY(), this.textView_.text = this.getName(), null === this._nameWidth && (this._nameWidth = 
+            this.textView_.getMeasuredWidth()), this.valueView_.x = this._nameWidth + 14, this.valueView_.y = 1, this.isNumber() ? this.valueView_.text = this.getValue().toFixed(1).replace(".00", "") : this.valueView_.text = this.getValue(), null === this._valueWidth && (this._valueWidth = this.valueView_.getMeasuredWidth()), this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1").rc(0, -14, this._nameWidth + this._valueWidth + 26, 20, 4, 4, 4, 4), this.wrapper_.graphics.clear().f("#ffbb14").ss(1, 
+            2, 0).s("orange").rc(this._nameWidth + 7, -11, this._valueWidth + 15, 14, 7, 7, 7, 7));
           }
         }
       }
@@ -14478,6 +14484,7 @@ Entry.Variable.prototype.getName = function() {
 Entry.Variable.prototype.setName = function(a) {
   Entry.assert("string" == typeof a, "Variable name must be string");
   this.name_ = a;
+  this._nameWidth = null;
   this.updateView();
 };
 Entry.Variable.prototype.getId = function() {
@@ -14492,6 +14499,7 @@ Entry.Variable.prototype.isNumber = function() {
 Entry.Variable.prototype.setValue = function(a) {
   "slide" != this.type ? this.value_ = a : (a = Number(a), this.value_ = a < this.minValue_ ? this.minValue_ : a > this.maxValue_ ? this.maxValue_ : a);
   this.isCloud_ && Entry.variableContainer.updateCloudVariables();
+  this._valueWidth = null;
   this.updateView();
 };
 Entry.Variable.prototype.isVisible = function() {

@@ -248,6 +248,7 @@ Entry.EntityObject.prototype.setDirection = function(direction, flippable) {
     if (!this.isClone)
         this.parent.updateRotationView();
     Entry.dispatchEvent('updateObject');
+    Entry.requestUpdate = true;
 };
 
 /**
@@ -265,6 +266,7 @@ Entry.EntityObject.prototype.setRotation = function(rotation) {
     if (!this.isClone)
         this.parent.updateRotationView();
     Entry.dispatchEvent('updateObject');
+    Entry.requestUpdate = true;
 };
 
 /**
