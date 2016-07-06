@@ -134,7 +134,8 @@ Entry.Container.prototype.enableSort = function() {
                 var end = ui.item.index();
                 Entry.container.moveElement(start, end);
             },
-            axis: 'y'
+            axis: 'y',
+            cancel: 'input.selectedEditingObject'
         });
 };
 
