@@ -738,6 +738,7 @@ Entry.dplay = {name:"dplay", vel_value:255, Left_value:255, Right_value:255, set
   this.timeouts = [];
 }};
 Entry.nemoino = {name:"nemoino", setZero:Entry.Arduino.setZero};
+Entry.joystick = {name:"joystick", setZero:Entry.Arduino.setZero};
 Entry.CODEino = {name:"CODEino", setZero:Entry.Arduino.setZero, monitorTemplate:Entry.Arduino.monitorTemplate};
 Blockly.Blocks.arduino_text = {init:function() {
   this.setColour("#00979D");
@@ -6262,9 +6263,10 @@ Entry.Container.prototype.generateView = function(b, a) {
     Entry.isForLecture && (this.generateTabView(), c.addClass("lecture"));
     Entry.Utils.disableContextmenu(c);
     $(c).on("contextmenu", function(a) {
-      Entry.ContextMenu.show([{text:Lang.Blocks.Paste_blocks, callback:function() {
+      a = [{text:Lang.Blocks.Paste_blocks, enable:!Entry.engine.isState("run") && !!Entry.container.copiedObject, callback:function() {
         Entry.container.copiedObject ? Entry.container.addCloneObject(Entry.container.copiedObject) : Entry.toast.alert(Lang.Workspace.add_object_alert, Lang.Workspace.object_not_found_for_paste);
-      }}], "workspace-contextmenu");
+      }}];
+      Entry.ContextMenu.show(a, "workspace-contextmenu");
     });
     this._view.appendChild(c);
     var d = Entry.createElement("ul");
@@ -6316,45 +6318,34 @@ Entry.Container.prototype.setObjects = function(b) {
   b = Entry.type;
   ("workspace" == b || "phone" == b) && (b = this.getCurrentObjects()[0]) && this.selectObject(b.id);
 };
-Entry.Container.prototype.getPictureElement = function(b) {
-  for (var a in this.objects_) {
-    var c = this.objects_[a], d;
-    for (d in c.pictures) {
-      if (b === c.pictures[d].id) {
-        return c.pictures[d].view;
-      }
-    }
+Entry.Container.prototype.getPictureElement = function(b, a) {
+  var c = this.getObject(a).getPicture(b);
+  if (c) {
+    return c.view;
   }
   throw Error("No picture found");
 };
 Entry.Container.prototype.setPicture = function(b) {
-  for (var a in this.objects_) {
-    var c = this.objects_[a], d;
-    for (d in c.pictures) {
-      if (b.id === c.pictures[d].id) {
-        a = {};
-        a.dimension = b.dimension;
-        a.id = b.id;
-        a.filename = b.filename;
-        a.fileurl = b.fileurl;
-        a.name = b.name;
-        a.view = c.pictures[d].view;
-        c.pictures[d] = a;
-        return;
-      }
+  var a = this.getObject(b.objectId), c;
+  for (c in a.pictures) {
+    if (b.id === a.pictures[c].id) {
+      var d = {};
+      d.dimension = b.dimension;
+      d.id = b.id;
+      d.filename = b.filename;
+      d.fileurl = b.fileurl;
+      d.name = b.name;
+      d.view = a.pictures[c].view;
+      a.pictures[c] = d;
+      return;
     }
   }
   throw Error("No picture found");
 };
-Entry.Container.prototype.selectPicture = function(b) {
-  for (var a in this.objects_) {
-    var c = this.objects_[a], d;
-    for (d in c.pictures) {
-      var e = c.pictures[d];
-      if (b === e.id) {
-        return c.selectedPicture = e, c.entity.setImage(e), c.updateThumbnailView(), c.id;
-      }
-    }
+Entry.Container.prototype.selectPicture = function(b, a) {
+  var c = this.getObject(a), d = c.getPicture(b);
+  if (d) {
+    return c.selectedPicture = d, c.entity.setImage(d), c.updateThumbnailView(), c.id;
   }
   throw Error("No picture found");
 };
@@ -6414,6 +6405,7 @@ Entry.Container.prototype.getAllObjects = function() {
   return this.objects_;
 };
 Entry.Container.prototype.getObject = function(b) {
+  !b && Entry.playground && Entry.playground.object && (b = Entry.playground.object.id);
   for (var a = this.objects_.length, c = 0;c < a;c++) {
     var d = this.objects_[c];
     if (d.id == b) {
@@ -7257,7 +7249,7 @@ Entry.Engine.prototype.toggleRun = function() {
     b.takeSnapshot();
   }), Entry.variableContainer.mapList(function(b) {
     b.takeSnapshot();
-  }), Entry.container.takeSequenceSnapshot(), Entry.scene.takeStartSceneSnapshot(), this.state = "run", this.fireEvent("start"));
+  }), this.projectTimer.takeSnapshot(), Entry.container.inputValue.takeSnapshot(), Entry.container.takeSequenceSnapshot(), Entry.scene.takeStartSceneSnapshot(), this.state = "run", this.fireEvent("start"));
   this.state = "run";
   "mobile" == Entry.type && this.view_.addClass("entryEngineBlueWorkspace");
   this.pauseButton.innerHTML = Lang.Workspace.pause;
@@ -7291,7 +7283,8 @@ Entry.Engine.prototype.toggleStop = function() {
   this.stopProjectTimer();
   b.clearRunningState();
   b.loadSequenceSnapshot();
-  b.setInputValue();
+  this.projectTimer.loadSnapshot();
+  Entry.container.inputValue.loadSnapshot();
   Entry.scene.loadStartSceneSnapshot();
   Entry.Func.clearThreads();
   createjs.Sound.setVolume(1);
@@ -8100,6 +8093,7 @@ Entry.EntryObject = function(b) {
     Entry.stage.loadObject(this);
     for (a in this.pictures) {
       var c = this.pictures[a];
+      c.objectId = this.id;
       c.id || (c.id = Entry.generateHash());
       var d = new Image;
       c.fileurl ? d.src = c.fileurl : c.fileurl ? d.src = c.fileurl : (b = c.filename, d.src = Entry.defaultPath + "/uploads/" + b.substring(0, 2) + "/" + b.substring(2, 4) + "/image/" + b + ".png");
@@ -8122,21 +8116,22 @@ Entry.EntryObject.prototype.generateView = function() {
     Entry.Utils.disableContextmenu(b);
     var a = this;
     $(b).on("contextmenu", function(b) {
-      Entry.ContextMenu.show([{text:Lang.Workspace.context_rename, callback:function(b) {
+      b = [{text:Lang.Workspace.context_rename, callback:function(b) {
         b.stopPropagation();
         b = a;
         b.setLock(!1);
         b.editObjectValues(!0);
         b.nameView_.select();
-      }}, {text:Lang.Workspace.context_duplicate, callback:function() {
+      }}, {text:Lang.Workspace.context_duplicate, enable:!Entry.engine.isState("run"), callback:function() {
         Entry.container.addCloneObject(a);
       }}, {text:Lang.Workspace.context_remove, callback:function() {
         Entry.container.removeObject(a);
       }}, {text:Lang.Workspace.copy_file, callback:function() {
         Entry.container.setCopiedObject(a);
-      }}, {text:Lang.Blocks.Paste_blocks, callback:function() {
+      }}, {text:Lang.Blocks.Paste_blocks, enable:!Entry.engine.isState("run") && !!Entry.container.copiedObject, callback:function() {
         Entry.container.copiedObject ? Entry.container.addCloneObject(Entry.container.copiedObject) : Entry.toast.alert(Lang.Workspace.add_object_alert, Lang.Workspace.object_not_found_for_paste);
-      }}], "workspace-contextmenu");
+      }}];
+      Entry.ContextMenu.show(b, "workspace-contextmenu");
     });
     this.view_ = b;
     var c = this, b = Entry.createElement("ul");
@@ -8501,6 +8496,7 @@ Entry.EntryObject.prototype.select = function(b) {
 };
 Entry.EntryObject.prototype.addPicture = function(b, a) {
   Entry.stateManager && Entry.stateManager.addCommand("add sprite", this, this.removePicture, b.id);
+  b.objectId = this.id;
   a || 0 === a ? (this.pictures.splice(a, 0, b), Entry.playground.injectPicture(this)) : this.pictures.push(b);
   return new Entry.State(this, this.removePicture, b.id);
 };
@@ -13010,7 +13006,7 @@ Entry.HW = function() {
   this.settingQueue = {};
   this.socketType = this.hwModule = this.selectedDevice = null;
   Entry.addEventListener("stop", this.setZero);
-  this.hwInfo = {11:Entry.Arduino, 12:Entry.SensorBoard, 13:Entry.CODEino, 15:Entry.dplay, 16:Entry.nemoino, 17:Entry.Xbot, 18:Entry.ardublock, 24:Entry.Hamster, 25:Entry.Albert, 31:Entry.Bitbrick, 42:Entry.Arduino, 51:Entry.Neobot, 71:Entry.Robotis_carCont, 72:Entry.Robotis_openCM70, 81:Entry.Arduino};
+  this.hwInfo = {11:Entry.Arduino, 12:Entry.SensorBoard, 13:Entry.CODEino, 14:Entry.joystick, 15:Entry.dplay, 16:Entry.nemoino, 17:Entry.Xbot, 18:Entry.ardublock, 24:Entry.Hamster, 25:Entry.Albert, 31:Entry.Bitbrick, 42:Entry.Arduino, 51:Entry.Neobot, 71:Entry.Robotis_carCont, 72:Entry.Robotis_openCM70, 81:Entry.Arduino};
 };
 Entry.HW.TRIAL_LIMIT = 1;
 p = Entry.HW.prototype;
@@ -13120,7 +13116,7 @@ p.closeConnection = function() {
   this.socket && this.socket.close();
 };
 p.downloadConnector = function() {
-  window.open("http://download.play-entry.org/apps/Entry_HW_1.5.5_Setup.exe", "_blank").focus();
+  window.open("http://download.play-entry.org/apps/Entry_HW_1.5.6_Setup.exe", "_blank").focus();
 };
 p.downloadSource = function() {
   window.open("http://play-entry.com/down/board.ino", "_blank").focus();
@@ -19870,7 +19866,7 @@ Entry.Playground.prototype.addPicture = function(b, a) {
   this.selectPicture(b);
 };
 Entry.Playground.prototype.setPicture = function(b) {
-  var a = Entry.container.getPictureElement(b.id), c = $(a);
+  var a = Entry.container.getPictureElement(b.id, b.objectId), c = $(a);
   if (a) {
     b.view = a;
     a.picture = b;
@@ -19895,7 +19891,7 @@ Entry.Playground.prototype.selectPicture = function(b) {
     e.id === b.id ? e.view.addClass("entryPictureSelected") : e.view.removeClass("entryPictureSelected");
   }
   var f;
-  b && b.id && (f = Entry.container.selectPicture(b.id));
+  b && b.id && (f = Entry.container.selectPicture(b.id, b.objectId));
   this.object.id === f && Entry.dispatchEvent("pictureSelected", b);
 };
 Entry.Playground.prototype.movePicture = function(b, a) {

@@ -25,6 +25,7 @@ Entry.HW = function() {
         '11': Entry.Arduino,
         '12': Entry.SensorBoard,
         '13': Entry.CODEino,
+        '14': Entry.joystick,
         '15': Entry.dplay,
         '16': Entry.nemoino,
         '17': Entry.Xbot,
@@ -216,7 +217,7 @@ p.closeConnection = function() {
 };
 
 p.downloadConnector = function() {
-    var url = "http://download.play-entry.org/apps/Entry_HW_1.5.5_Setup.exe";
+    var url = "http://download.play-entry.org/apps/Entry_HW_1.5.6_Setup.exe";
     var win = window.open(url, '_blank');
     win.focus();
 };
