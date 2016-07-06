@@ -4431,9 +4431,19 @@ Entry.Robotis_carCont = {INSTRUCTION:{NONE:0, WRITE:3, READ:2}, CONTROL_TABLE:{C
   }
 }, update:function() {
   Entry.hw.update();
+  var b = Entry.hw.sendQueue.ROBOTIS_DATA;
+  b && b.forEach(function(a) {
+    a.send = !0;
+  });
   this.setRobotisData(null);
+}, filterSendData:function() {
+  var b = Entry.hw.sendQueue.ROBOTIS_DATA;
+  return b ? b.filter(function(a) {
+    return !0 !== a.send;
+  }) : null;
 }, setRobotisData:function(b) {
-  Entry.hw.sendQueue.ROBOTIS_DATA = null == b ? null : Entry.hw.sendQueue.ROBOTIS_DATA ? Entry.hw.sendQueue.ROBOTIS_DATA.concat(b) : b;
+  var a = this.filterSendData();
+  Entry.hw.sendQueue.ROBOTIS_DATA = null == b ? a : a ? a.concat(b) : b;
 }};
 Entry.Robotis_openCM70 = {INSTRUCTION:{NONE:0, WRITE:3, READ:2}, CONTROL_TABLE:{CM_LED_R:[79, 1], CM_LED_G:[80, 1], CM_LED_B:[81, 1], CM_BUZZER_INDEX:[84, 1], CM_BUZZER_TIME:[85, 1], CM_SOUND_DETECTED:[86, 1], CM_SOUND_DETECTING:[87, 1], CM_USER_BUTTON:[26, 1], CM_MOTION:[66, 1], AUX_SERVO_POSITION:[152, 2], AUX_IR:[168, 2], AUX_TOUCH:[202, 1], AUX_TEMPERATURE:[234, 1], AUX_ULTRASONIC:[242, 1], AUX_MAGNETIC:[250, 1], AUX_MOTION_DETECTION:[258, 1], AUX_COLOR:[266, 1], AUX_CUSTOM:[216, 2], AUX_BRIGHTNESS:[288, 
 2], AUX_HYDRO_THEMO_HUMIDITY:[274, 1], AUX_HYDRO_THEMO_TEMPER:[282, 1], AUX_SERVO_MODE:[126, 1], AUX_SERVO_SPEED:[136, 2], AUX_MOTOR_SPEED:[136, 2], AUX_LED_MODULE:[210, 1]}, setZero:function() {
@@ -12436,6 +12446,12 @@ Entry.Utils.stopProjectWithToast = function(b, a) {
   "workspace" === Entry.type && (Entry.container.selectObject(b.getCode().object.id, !0), b.view.getBoard().activateBlock(b));
   throw Error(a);
 };
+Entry.Utils.AsyncError = function(b) {
+  this.name = "AsyncError";
+  this.message = b || "\ube44\ub3d9\uae30 \ud638\ucd9c \ub300\uae30";
+};
+Entry.Utils.AsyncError.prototype = Error();
+Entry.Utils.AsyncError.prototype.constructor = Entry.Utils.AsyncError;
 Entry.Model = function(b, a) {
   var c = Entry.Model;
   c.generateSchema(b);
@@ -16441,10 +16457,11 @@ Entry.Executor = function(b, a) {
   b.execute = function() {
     if (!this.isEnd()) {
       for (;;) {
+        var a = null;
         try {
-          var a = this.scope.block.getSchema().func.call(this.scope, this.entity, this.scope);
+          a = this.scope.block.getSchema().func.call(this.scope, this.entity, this.scope);
         } catch (b) {
-          Entry.Utils.stopProjectWithToast(this.scope.block, "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec");
+          "AsyncError" === b.name ? a = Entry.STATIC.BREAK : Entry.Utils.stopProjectWithToast(this.scope.block, "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec");
         }
         if (this.isEnd()) {
           break;
@@ -16452,9 +16469,7 @@ Entry.Executor = function(b, a) {
         if (void 0 === a || null === a || a === Entry.STATIC.PASS) {
           if (this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this), null === this.scope.block) {
             if (this._callStack.length) {
-              var c = this.scope;
-              this.scope = this._callStack.pop();
-              if (this.scope.isLooped !== c.isLooped) {
+              if (a = this.scope, this.scope = this._callStack.pop(), this.scope.isLooped !== a.isLooped) {
                 break;
               }
             } else {
