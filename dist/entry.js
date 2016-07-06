@@ -6445,7 +6445,6 @@ Entry.Container.prototype.moveElementByBlock = function(b, a) {
   this.updateListView();
 };
 Entry.Container.prototype.getDropdownList = function(b) {
-  Entry.playground && Entry.playground.object || (b = null);
   var a = [];
   switch(b) {
     case "sprites":
