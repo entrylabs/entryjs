@@ -145,6 +145,10 @@ Entry.Stage.prototype.render = function() {
  * redraw canvas
  */
 Entry.Stage.prototype.update = function() {
+    if (!Entry.requestUpdate) {
+        Entry.requestUpdate = false;
+        return;
+    }
     if (Entry.engine.isState('stop') && this.objectUpdated) {
         this.canvas.update();
         this.objectUpdated = false;
@@ -153,6 +157,7 @@ Entry.Stage.prototype.update = function() {
     }
     if ( this.inputField && !this.inputField._isHidden )
         this.inputField.render();
+    Entry.requestUpdate = false;
 };
 
 /**
@@ -199,7 +204,7 @@ Entry.Stage.prototype.loadVariable = function(variable) {
     var variableView = variable.view_;
     this.variables[variable.id] = variableView;
     this.variableContainer.addChild(variableView);
-    this.canvas.update();
+    Entry.requestUpdate = true;
 };
 
 /**
@@ -209,7 +214,7 @@ Entry.Stage.prototype.loadVariable = function(variable) {
 Entry.Stage.prototype.removeVariable = function(variable) {
     var variableView = variable.view_;
     this.variableContainer.removeChild(variableView);
-    this.canvas.update();
+    Entry.requestUpdate = true;
 };
 
 /**
@@ -310,6 +315,7 @@ Entry.Stage.prototype.initHandle = function() {
  * object -> handle
  */
 Entry.Stage.prototype.updateObject = function() {
+    Entry.requestUpdate = true;
     this.handle.setDraggable(true);
     if (this.editEntity)
         return;

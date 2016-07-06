@@ -490,6 +490,7 @@ Entry.Variable.prototype.updateView = function() {
                     7, 7, 7, 7);
         }
     }
+    Entry.requestUpdate = true;
 };
 
 /**
