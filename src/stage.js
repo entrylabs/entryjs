@@ -140,9 +140,8 @@ Entry.Stage.prototype.initStage = function(canvas) {
 
     function render() {
         Entry.stage.update();
-        requestAnimFrame(render)
     }
-    requestAnimFrame(render);
+    setInterval(render, 1/60);
 };
 
 /**
