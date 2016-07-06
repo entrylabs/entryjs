@@ -9852,40 +9852,40 @@ Entry.Painter.prototype.generateView = function(b) {
     this.attrLineArea = Entry.createElement("div", "painterAttrLineStyle");
     this.attrLineArea.addClass("entryPlaygroundPainterAttrLineStyle");
     g.appendChild(this.attrLineArea);
-    var t = Entry.createElement("div");
-    t.addClass("entryPlaygroundPainterAttrLineStyleLine");
-    this.attrLineArea.appendChild(t);
     var u = Entry.createElement("div");
-    u.addClass("entryPlaygroundPaitnerAttrLineArea");
+    u.addClass("entryPlaygroundPainterAttrLineStyleLine");
     this.attrLineArea.appendChild(u);
+    var t = Entry.createElement("div");
+    t.addClass("entryPlaygroundPaitnerAttrLineArea");
+    this.attrLineArea.appendChild(t);
     d = Entry.createElement("div");
     d.addClass("entryPlaygroundPainterAttrLineStyleLine1");
-    u.appendChild(d);
+    t.appendChild(d);
     d.value = "line";
     var v = Entry.createElement("div");
     v.addClass("painterAttrLineStyleBackgroundLine");
-    t.bindOnClick(function(a) {
-      u.removeClass("entryRemove");
+    u.bindOnClick(function(a) {
+      t.removeClass("entryRemove");
     });
-    u.blur = function(a) {
+    t.blur = function(a) {
       this.addClass("entryRemove");
     };
-    u.onmouseleave = function(a) {
+    t.onmouseleave = function(a) {
       this.addClass("entryRemove");
     };
     d.bindOnClick(function(a) {
-      this.attrLineArea.removeClass(t);
+      this.attrLineArea.removeClass(u);
       this.attrLineArea.appendChild(v);
       this.attrLineArea.onchange(a);
-      u.blur();
+      t.blur();
     });
     v.bindOnClick(function(a) {
-      u.removeClass("entryRemove");
+      t.removeClass("entryRemove");
     });
     this.attrLineArea.onchange = function(b) {
       a.stroke.style = b.target.value;
     };
-    u.blur();
+    t.blur();
   }
 };
 Entry.Painter.prototype.restoreHandle = function() {
@@ -11670,8 +11670,8 @@ Entry.BlockDriver = function() {
         return d;
       }
       for (var e = 0;e < a.length;e++) {
-        var f = a[e], g = f.tagName, h = $(f).children()[0], t = f.getAttribute("name");
-        "value" === g ? "block" == h.nodeName && (d.params || (d.params = []), d.params.push(b(h)), d.index[t] = d.params.length - 1) : "field" === g && (d.params || (d.params = []), d.params.push(f.textContent), d.index[t] = d.params.length - 1);
+        var f = a[e], g = f.tagName, h = $(f).children()[0], u = f.getAttribute("name");
+        "value" === g ? "block" == h.nodeName && (d.params || (d.params = []), d.params.push(b(h)), d.index[u] = d.params.length - 1) : "field" === g && (d.params || (d.params = []), d.params.push(f.textContent), d.index[u] = d.params.length - 1);
       }
       return d;
     }
@@ -16202,12 +16202,12 @@ Entry.BlockView.pngMap = {};
   };
   b.getDataUrl = function(a) {
     function b() {
-      f = f.replace("(svgGroup)", (new XMLSerializer).serializeToString(g)).replace("(defs)", (new XMLSerializer).serializeToString(l[0])).replace(/>\s+/g, ">").replace(/\s+</g, "<");
-      var c = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(f)));
-      a ? e.resolve({src:c, width:q.width, height:q.height}) : d(c, q.width, q.height, 1.5).then(function(a) {
-        e.resolve({src:a, width:q.width, height:q.height});
+      g = g.replace("(svgGroup)", (new XMLSerializer).serializeToString(h)).replace("(defs)", (new XMLSerializer).serializeToString(n[0])).replace(/>\s+/g, ">").replace(/\s+</g, "<");
+      var c = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(g)));
+      a ? f.resolve({src:c, width:m.width, height:m.height}) : d(c, m.width, m.height, 1.5).then(function(a) {
+        f.resolve({src:a, width:m.width, height:m.height});
       }, function(a) {
-        e.reject("error occured");
+        f.reject("error occured");
       });
     }
     function d(a, b, c, d) {
@@ -16236,38 +16236,44 @@ Entry.BlockView.pngMap = {};
       f.src = a;
       return e.promise();
     }
-    var e = $.Deferred(), f = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">(svgGroup)(defs)</svg>', g = this.svgGroup.cloneNode(!0), h = this._skeleton.box(this), k = a ? 1 : 1.5;
-    g.setAttribute("transform", "scale(%SCALE) translate(%X,%Y)".replace("%X", -h.offsetX).replace("%Y", -h.offsetY).replace("%SCALE", k));
-    for (var l = this.getBoard().svgDom.find("defs"), q = this.svgGroup.getBoundingClientRect(), n = g.getElementsByTagName("image"), h = g.getElementsByTagName("text"), m = ["\u2265", "\u2264"], r = "\u2265\u2264-><=+-x/".split(""), k = 0;k < h.length;k++) {
+    function e() {
+      var a = window.platform;
+      console.log(a);
+      return a && "windows" === a.name.toLowerCase() && "7" === a.name.version[0] ? !0 : !1;
+    }
+    var f = $.Deferred(), g = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">(svgGroup)(defs)</svg>', h = this.svgGroup.cloneNode(!0), k = this._skeleton.box(this), l = a ? 1 : 1.5, q = e() ? .85 : .95;
+    console.log(e());
+    h.setAttribute("transform", "scale(%SCALE) translate(%X,%Y)".replace("%X", -k.offsetX).replace("%Y", -k.offsetY).replace("%SCALE", l));
+    for (var n = this.getBoard().svgDom.find("defs"), m = this.svgGroup.getBoundingClientRect(), r = h.getElementsByTagName("image"), k = h.getElementsByTagName("text"), u = ["\u2265", "\u2264"], t = "\u2265\u2264-><=+-x/".split(""), l = 0;l < k.length;l++) {
       (function(a) {
         a.setAttribute("font-family", "'nanumBarunRegular', 'NanumGothic', '\ub098\ub214\uace0\ub515','NanumGothicWeb', '\ub9d1\uc740 \uace0\ub515', 'Malgun Gothic', Dotum");
         var b = parseInt(a.getAttribute("font-size")), c = $(a).text();
-        -1 < m.indexOf(c) && a.setAttribute("font-weight", "500");
+        -1 < u.indexOf(c) && a.setAttribute("font-weight", "500");
         if ("q" == c) {
           var d = parseInt(a.getAttribute("y"));
           a.setAttribute("y", d - 1);
         }
-        -1 < r.indexOf(c) ? a.setAttribute("font-size", b + "px") : a.setAttribute("font-size", .95 * b + "px");
+        -1 < t.indexOf(c) ? a.setAttribute("font-size", b + "px") : a.setAttribute("font-size", b * q + "px");
         a.setAttribute("alignment-baseline", "baseline");
-      })(h[k]);
+      })(k[l]);
     }
-    var t = 0;
-    if (0 === n.length) {
+    var v = 0;
+    if (0 === r.length) {
       b();
     } else {
-      for (k = 0;k < n.length;k++) {
+      for (l = 0;l < r.length;l++) {
         (function(a) {
           var e = a.getAttribute("href");
           d(e, a.getAttribute("width"), a.getAttribute("height")).then(function(d) {
             a.setAttribute("href", d);
-            if (++t == n.length) {
+            if (++v == r.length) {
               return b();
             }
           });
-        })(n[k]);
+        })(r[l]);
       }
     }
-    return e.promise();
+    return f.promise();
   };
   b.downloadAsImage = function() {
     this.getDataUrl().then(function(a) {
@@ -19724,16 +19730,16 @@ Entry.Playground.prototype.generateTextView = function(b) {
   e.addClass("entryPlaygroundFontSizeLabel");
   e.innerHTML = "\uae00\uc790 \ud06c\uae30";
   b.appendChild(e);
-  var t = !1, u = 0;
+  var u = !1, t = 0;
   r.onmousedown = function(a) {
-    t = !0;
-    u = $(n).offset().left;
+    u = !0;
+    t = $(n).offset().left;
   };
   document.addEventListener("mousemove", function(a) {
-    t && (a = a.pageX - u, a = Math.max(a, 5), a = Math.min(a, 88), r.style.left = a + "px", a /= .88, m.style.width = a + "%", Entry.playground.object.entity.setFontSize(a));
+    u && (a = a.pageX - t, a = Math.max(a, 5), a = Math.min(a, 88), r.style.left = a + "px", a /= .88, m.style.width = a + "%", Entry.playground.object.entity.setFontSize(a));
   });
   document.addEventListener("mouseup", function(a) {
-    t = !1;
+    u = !1;
   });
   b = Entry.createElement("div");
   b.addClass("entryPlaygroundLinebreakWrapper");

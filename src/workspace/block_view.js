@@ -1010,12 +1010,15 @@ Entry.BlockView.pngMap = {};
 
     p.getParam = function(index) { return this._paramMap[index]; };
 
+
     p.getDataUrl = function(notPng) {
         var deferred = $.Deferred();
         var svgData = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">(svgGroup)(defs)</svg>';
         var svgGroup = this.svgGroup.cloneNode(true);
         var box = this._skeleton.box(this)
         var scale = notPng ? 1 : 1.5;
+        var fontWeight = isWindow7() ? 0.85 : 0.95;
+        console.log(isWindow7());
         svgGroup.setAttribute(
             'transform',
             'scale(%SCALE) translate(%X,%Y)'
@@ -1050,7 +1053,10 @@ Entry.BlockView.pngMap = {};
 
                 if (notResizeTypes.indexOf(content) > -1) {
                     text.setAttribute('font-size', (size) + 'px');
-                } else text.setAttribute('font-size', (size * 0.95) + 'px');
+                } else {
+                    text.setAttribute('font-size', (size * fontWeight) + 'px');
+                }
+
 
                 text.setAttribute('alignment-baseline', 'baseline');
             })(texts[i]);
@@ -1133,6 +1139,16 @@ Entry.BlockView.pngMap = {};
             };
             img.src = src;
             return deferred.promise();
+        }
+
+        function isWindow7() {
+            var platform = window.platform;
+            console.log(platform);
+            if (platform && platform.name.toLowerCase() === 'windows' &&
+                    platform.name.version[0] === '7') {
+                return true;
+            }
+            return false;
         }
     };
 
