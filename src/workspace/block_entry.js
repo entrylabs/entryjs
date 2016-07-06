@@ -11634,6 +11634,7 @@ Entry.block = {
             var scope = script.executor.scope;
             if(!scope.isStart) {
                 scope.isStart = true;
+                scope.count = 0;
 
                 // instruction / address / length / value / default length
                 var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.READ;
@@ -11664,6 +11665,9 @@ Entry.block = {
                 Entry.Robotis_carCont.update();
 
                 scope.data_default_address = data_default_address;
+                throw new Entry.Utils.AsyncError();
+            }  else if(scope.count < 2) {
+                scope.count++;
                 throw new Entry.Utils.AsyncError();
             } 
             scope.isStart = false;
@@ -11703,6 +11707,7 @@ Entry.block = {
             var scope = script.executor.scope;
             if(!scope.isStart) {
                 scope.isStart = true;
+                scope.count = 0;
                 var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.READ;
                 var data_address = 0;
                 var data_length = 0;
@@ -11738,6 +11743,9 @@ Entry.block = {
                 // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
                 Entry.Robotis_carCont.update();
                 scope.data_default_address = data_default_address;
+                throw new Entry.Utils.AsyncError();
+            } else if(scope.count < 2) {
+                scope.count++;
                 throw new Entry.Utils.AsyncError();
             } 
             scope.isStart = false;
@@ -11798,6 +11806,7 @@ Entry.block = {
             var scope = script.executor.scope;
             if(!scope.isStart) {
                 scope.isStart = true;
+                scope.count = 0;
                 // instruction / address / length / value / default length
                 var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.READ;
                 var data_address = 0;
@@ -11895,7 +11904,10 @@ Entry.block = {
                 scope.data_default_address = data_default_address;
                 console.log(data_default_address);
                 throw new Entry.Utils.AsyncError();
-            }
+            } else if(scope.count < 2) {
+                scope.count++;
+                throw new Entry.Utils.AsyncError();
+            } 
             scope.isStart = false;
             var result = Entry.hw.portData[scope.data_default_address];
             scope.data_default_address = undefined;
