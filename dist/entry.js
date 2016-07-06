@@ -6786,6 +6786,11 @@ Entry.Utils.stopProjectWithToast = function(a, b) {
   "workspace" === Entry.type && (Entry.container.selectObject(a.getCode().object.id, !0), a.view.getBoard().activateBlock(a));
   throw Error(b);
 };
+window.requestAnimFrame = function() {
+  return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function(a) {
+    window.setTimeout(a, 1E3 / 60);
+  };
+}();
 Entry.Model = function(a, b) {
   var c = Entry.Model;
   c.generateSchema(a);
@@ -12032,11 +12037,11 @@ Entry.Parser = function(a, b, c) {
         d[e + "();\n"] = b.Scope[e];
       }
       "BasicIf" in b && (d.front = "BasicIf");
-      CodeMirror.commands.javascriptComplete = function(b) {
-        CodeMirror.showHint(b, null, {globalScope:d});
+      CodeMirror.commands.javascriptComplete = function(a) {
+        CodeMirror.showHint(a, null, {globalScope:d});
       };
-      c.on("keyup", function(b, a) {
-        !b.state.completionActive && 65 <= a.keyCode && 95 >= a.keyCode && CodeMirror.showHint(b, null, {completeSingle:!1, globalScope:d});
+      c.on("keyup", function(a, b) {
+        !a.state.completionActive && 65 <= b.keyCode && 95 >= b.keyCode && CodeMirror.showHint(a, null, {completeSingle:!1, globalScope:d});
       });
       break;
     case "block":
@@ -12044,23 +12049,23 @@ Entry.Parser = function(a, b, c) {
   }
 };
 (function(a) {
-  a.parse = function(b) {
-    var a = null;
+  a.parse = function(a) {
+    var c = null;
     switch(this._lang) {
       case "js":
         try {
-          var d = acorn.parse(b), a = this._parser.Program(d);
+          var d = acorn.parse(a), c = this._parser.Program(d);
         } catch (e) {
-          this.codeMirror && (e instanceof SyntaxError ? (b = {from:{line:e.loc.line - 1, ch:e.loc.column - 2}, to:{line:e.loc.line - 1, ch:e.loc.column + 1}}, e.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : (b = this.getLineNumber(e.node.start, e.node.end), b.message = e.message, b.severity = "error", this.codeMirror.markText(b.from, b.to, {className:"CodeMirror-lint-mark-error", __annotation:b, clearOnEnter:!0})), Entry.toast.alert("Error", e.message)), a = [];
+          this.codeMirror && (e instanceof SyntaxError ? (a = {from:{line:e.loc.line - 1, ch:e.loc.column - 2}, to:{line:e.loc.line - 1, ch:e.loc.column + 1}}, e.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : (a = this.getLineNumber(e.node.start, e.node.end), a.message = e.message, a.severity = "error", this.codeMirror.markText(a.from, a.to, {className:"CodeMirror-lint-mark-error", __annotation:a, clearOnEnter:!0})), Entry.toast.alert("Error", e.message)), c = [];
         }
         break;
       case "block":
-        b = this._parser.Code(b).match(/(.*{.*[\S|\s]+?}|.+)/g), a = Array.isArray(b) ? b.reduce(function(a, b, c) {
+        a = this._parser.Code(a).match(/(.*{.*[\S|\s]+?}|.+)/g), c = Array.isArray(a) ? a.reduce(function(a, b, c) {
           1 === c && (a += "\n");
           return (-1 < b.indexOf("function") ? b + a : a + b) + "\n";
         }) : "";
     }
-    return a;
+    return c;
   };
   a.getLineNumber = function(a, c) {
     var d = this.codeMirror.getValue(), e = {from:{}, to:{}};
@@ -13753,6 +13758,10 @@ Entry.Stage = function() {
   this.isObjectClick = !1;
 };
 Entry.Stage.prototype.initStage = function(a) {
+  function b() {
+    Entry.stage.update();
+    requestAnimFrame(b);
+  }
   this.canvas = new createjs.Stage(a.id);
   this.canvas.x = 320;
   this.canvas.y = 180;
@@ -13776,18 +13785,18 @@ Entry.Stage.prototype.initStage = function(a) {
       Entry.dispatchEvent("canvasClickCanceled", a);
     };
   } else {
-    var b = function(a) {
+    var c = function(a) {
       Entry.dispatchEvent("canvasClick", a);
       Entry.stage.isClick = !0;
     };
-    a.onmousedown = b;
-    a.ontouchstart = b;
-    b = function(a) {
+    a.onmousedown = c;
+    a.ontouchstart = c;
+    c = function(a) {
       Entry.stage.isClick = !1;
       Entry.dispatchEvent("canvasClickCanceled", a);
     };
-    a.onmouseup = b;
-    a.ontouchend = b;
+    a.onmouseup = c;
+    a.ontouchend = c;
     $(document).click(function(a) {
       Entry.stage.focused = "entryCanvas" === a.target.id ? !0 : !1;
     });
@@ -13795,16 +13804,16 @@ Entry.Stage.prototype.initStage = function(a) {
   Entry.addEventListener("canvasClick", function(a) {
     Entry.stage.isObjectClick = !1;
   });
-  b = function(a) {
+  c = function(a) {
     a.preventDefault();
-    var b = this.getBoundingClientRect(), e;
-    -1 < Entry.getBrowserType().indexOf("IE") ? (e = 480 * ((a.pageX - b.left - document.documentElement.scrollLeft) / b.width - .5), a = -270 * ((a.pageY - b.top - document.documentElement.scrollTop) / b.height - .5)) : a.changedTouches ? (e = 480 * ((a.changedTouches[0].pageX - b.left - document.body.scrollLeft) / b.width - .5), a = -270 * ((a.changedTouches[0].pageY - b.top - document.body.scrollTop) / b.height - .5)) : (e = 480 * ((a.pageX - b.left - document.body.scrollLeft) / b.width - .5), 
+    var b = this.getBoundingClientRect(), c;
+    -1 < Entry.getBrowserType().indexOf("IE") ? (c = 480 * ((a.pageX - b.left - document.documentElement.scrollLeft) / b.width - .5), a = -270 * ((a.pageY - b.top - document.documentElement.scrollTop) / b.height - .5)) : a.changedTouches ? (c = 480 * ((a.changedTouches[0].pageX - b.left - document.body.scrollLeft) / b.width - .5), a = -270 * ((a.changedTouches[0].pageY - b.top - document.body.scrollTop) / b.height - .5)) : (c = 480 * ((a.pageX - b.left - document.body.scrollLeft) / b.width - .5), 
     a = -270 * ((a.pageY - b.top - document.body.scrollTop) / b.height - .5));
-    Entry.stage.mouseCoordinate = {x:e.toFixed(1), y:a.toFixed(1)};
+    Entry.stage.mouseCoordinate = {x:c.toFixed(1), y:a.toFixed(1)};
     Entry.dispatchEvent("stageMouseMove");
   };
-  a.onmousemove = b;
-  a.ontouchmove = b;
+  a.onmousemove = c;
+  a.ontouchmove = c;
   a.onmouseout = function(a) {
     Entry.dispatchEvent("stageMouseOut");
   };
@@ -13816,22 +13825,15 @@ Entry.Stage.prototype.initStage = function(a) {
       var b = Entry.stage.inputField.value();
       Entry.stage.hideInputField();
       if (b) {
-        var e = Entry.container;
-        e.setInputValue(b);
-        e.inputValue.complete = !0;
+        var c = Entry.container;
+        c.setInputValue(b);
+        c.inputValue.complete = !0;
       }
-    } catch (f) {
+    } catch (g) {
     }
   });
   this.initWall();
-  this.render();
-};
-Entry.Stage.prototype.render = function() {
-  Entry.stage.timer && clearTimeout(Entry.stage.timer);
-  var a = (new Date).getTime();
-  Entry.stage.update();
-  a = (new Date).getTime() - a;
-  Entry.stage.timer = setTimeout(Entry.stage.render, 16 - a % 16 + 16 * Math.floor(a / 16));
+  requestAnimFrame(b);
 };
 Entry.Stage.prototype.update = function() {
   Entry.requestUpdate && (Entry.engine.isState("stop") && this.objectUpdated ? (this.canvas.update(), this.objectUpdated = !1) : this.canvas.update(), this.inputField && !this.inputField._isHidden && this.inputField.render());

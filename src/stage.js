@@ -5,6 +5,8 @@
 */
 'use strict';
 
+goog.require('Entry.Utils');
+
 /**
  * class for a canvas
  * @constructor
@@ -130,15 +132,11 @@ Entry.Stage.prototype.initStage = function(canvas) {
 
     this.initWall();
 
-    this.render();
-};
-Entry.Stage.prototype.render = function() {
-    if (Entry.stage.timer)
-        clearTimeout(Entry.stage.timer);
-    var time = new Date().getTime();
-    Entry.stage.update();
-    time = new Date().getTime() - time;
-    Entry.stage.timer = setTimeout(Entry.stage.render, 16 - time % 16 + 16 * Math.floor(time / 16));
+    function render() {
+        Entry.stage.update();
+        requestAnimFrame(render)
+    }
+    requestAnimFrame(render);
 };
 
 /**
