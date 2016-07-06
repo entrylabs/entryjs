@@ -1488,6 +1488,7 @@ Entry.Playground.prototype.generateSoundElement = function(sound) {
         }
 
         this.sound.name = this.value;
+        Entry.playground.reloadPlayground();
     };
     nameView.onkeypress = function(e) {
         if (e.keyCode == 13)
