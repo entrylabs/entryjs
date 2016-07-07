@@ -7847,6 +7847,7 @@ Entry.Engine = function() {
   this.popup = null;
   this.isUpdating = !0;
   this.speeds = [1, 15, 30, 45, 60];
+  this._mouseMoved = !1;
   Entry.keyPressed && Entry.keyPressed.attach(this, this.captureKeyEvent);
   Entry.addEventListener("canvasClick", function(b) {
     Entry.engine.fireEvent("mouse_clicked");
@@ -7861,8 +7862,8 @@ Entry.Engine = function() {
     Entry.engine.fireEventOnEntity("when_object_click_canceled", b);
   });
   "phone" != Entry.type && (Entry.addEventListener("stageMouseMove", function(b) {
-    Entry.engine.updateMouseView();
-  }), Entry.addEventListener("stageMouseOut", function(b) {
+    this._mouseMoved = !0;
+  }.bind(this)), Entry.addEventListener("stageMouseOut", function(b) {
     Entry.engine.hideMouseView();
   }));
   Entry.addEventListener("run", function() {
@@ -7871,6 +7872,9 @@ Entry.Engine = function() {
   Entry.addEventListener("stop", function() {
     $(window).unbind("keydown", a);
   });
+  setInterval(function() {
+    this._mouseMoved && (this.updateMouseView(), this._mouseMoved = !1);
+  }.bind(this), 100);
 };
 Entry.Engine.prototype.generateView = function(a, b) {
   if (b && "workspace" != b) {
@@ -8145,7 +8149,7 @@ Entry.Engine.prototype.raiseKeyEvent = function(a, b) {
 };
 Entry.Engine.prototype.updateMouseView = function() {
   var a = Entry.stage.mouseCoordinate;
-  this.mouseView.innerHTML = "X : " + a.x + ", Y : " + a.y;
+  this.mouseView.textContent = "X : " + a.x + ", Y : " + a.y;
   this.mouseView.removeClass("entryRemove");
 };
 Entry.Engine.prototype.hideMouseView = function() {
@@ -13836,7 +13840,7 @@ Entry.Stage.prototype.initStage = function(a) {
   this.initWall();
   setInterval(function() {
     Entry.stage.update();
-  }, 1 / 60);
+  }, 1E3 / 60);
 };
 Entry.Stage.prototype.update = function() {
   Entry.requestUpdate && (Entry.engine.isState("stop") && this.objectUpdated ? (this.canvas.update(), this.objectUpdated = !1) : this.canvas.update(), this.inputField && !this.inputField._isHidden && this.inputField.render());

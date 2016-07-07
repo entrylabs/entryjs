@@ -14,6 +14,7 @@ Entry.Engine = function() {
     this.isUpdating = true;
     this.speeds = [1, 15, 30, 45, 60];
 
+    this._mouseMoved = false;;
 
     if (Entry.keyPressed)
         Entry.keyPressed.attach(this, this.captureKeyEvent);
@@ -32,8 +33,8 @@ Entry.Engine = function() {
     });
     if (Entry.type != 'phone') {
         Entry.addEventListener('stageMouseMove', function(e){
-            Entry.engine.updateMouseView();
-        });
+            this._mouseMoved = true;
+        }.bind(this));
         Entry.addEventListener('stageMouseOut', function(e){
             Entry.engine.hideMouseView();
         });
@@ -57,6 +58,13 @@ Entry.Engine = function() {
         if(arrows.indexOf(code) > -1)
             e.preventDefault();
     }
+
+    setInterval(function() {
+        if (this._mouseMoved) {
+            this.updateMouseView();
+            this._mouseMoved = false;
+        }
+    }.bind(this), 100)
 };
 
 /**
@@ -645,7 +653,7 @@ Entry.Engine.prototype.raiseKeyEvent = function(entity, param) {
  */
 Entry.Engine.prototype.updateMouseView = function() {
     var coordinate = Entry.stage.mouseCoordinate;
-    this.mouseView.innerHTML = 'X : ' + coordinate.x + ', Y : ' + coordinate.y;
+    this.mouseView.textContent = 'X : ' + coordinate.x + ', Y : ' + coordinate.y;
     this.mouseView.removeClass('entryRemove');
 };
 

@@ -141,7 +141,7 @@ Entry.Stage.prototype.initStage = function(canvas) {
     function render() {
         Entry.stage.update();
     }
-    setInterval(render, 1/60);
+    setInterval(render, 1000/60);
 };
 
 /**
