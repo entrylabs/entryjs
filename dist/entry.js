@@ -11228,11 +11228,13 @@ Entry.Stage.prototype.initStage = function(b) {
   this.render();
 };
 Entry.Stage.prototype.render = function() {
-  Entry.stage.timer && clearTimeout(Entry.stage.timer);
-  var b = (new Date).getTime();
-  Entry.stage.update();
-  b = (new Date).getTime() - b;
-  Entry.stage.timer = setTimeout(Entry.stage.render, 16 - b % 16 + 16 * Math.floor(b / 16));
+  if (!Entry.stage.stopped) {
+    Entry.stage.timer && clearTimeout(Entry.stage.timer);
+    var b = (new Date).getTime();
+    Entry.stage.update();
+    b = (new Date).getTime() - b;
+    Entry.stage.timer = setTimeout(Entry.stage.render, 16 - b % 16 + 16 * Math.floor(b / 16));
+  }
 };
 Entry.Stage.prototype.update = function() {
   Entry.engine.isState("stop") && this.objectUpdated ? (this.canvas.update(), this.objectUpdated = !1) : this.canvas.update();
@@ -16013,6 +16015,7 @@ Entry.BlockView.pngMap = {};
     this._board = this._board.code.board;
   };
   b.destroy = function(a) {
+    $(this.svgGroup).unbind(".blockViewMousedown");
     this._destroyObservers();
     var b = this.svgGroup;
     a ? $(b).fadeOut(100, function() {
@@ -16204,11 +16207,14 @@ Entry.BlockView.pngMap = {};
     function b() {
       f = f.replace("(svgGroup)", (new XMLSerializer).serializeToString(g)).replace("(defs)", (new XMLSerializer).serializeToString(q[0])).replace(/>\s+/g, ">").replace(/\s+</g, "<");
       var c = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(f)));
-      a ? e.resolve({src:c, width:n.width, height:n.height}) : d(c, n.width, n.height, 1.5).then(function(a) {
+      f = null;
+      a ? (e.resolve({src:c, width:n.width, height:n.height}), g = null) : d(c, n.width, n.height, 1.5).then(function(a) {
+        g = null;
         e.resolve({src:a, width:n.width, height:n.height});
       }, function(a) {
         e.reject("error occured");
       });
+      c = null;
     }
     function d(a, b, c, d) {
       var e = $.Deferred();
@@ -16659,6 +16665,7 @@ Entry.Field = function() {
 (function(b) {
   b.TEXT_LIMIT_LENGTH = 20;
   b.destroy = function() {
+    $(this.svgGroup).unbind("mouseup touchend");
     this.destroyOption();
   };
   b.command = function() {

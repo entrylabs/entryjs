@@ -133,6 +133,7 @@ Entry.Stage.prototype.initStage = function(canvas) {
     this.render();
 };
 Entry.Stage.prototype.render = function() {
+    if (Entry.stage.stopped) return;
     if (Entry.stage.timer)
         clearTimeout(Entry.stage.timer);
     var time = new Date().getTime();

@@ -689,6 +689,7 @@ Entry.BlockView.pngMap = {};
     };
 
     p.destroy = function(animate) {
+        $(this.svgGroup).unbind('.blockViewMousedown');
         this._destroyObservers();
         var svgGroup = this.svgGroup;
 
@@ -1084,15 +1085,18 @@ Entry.BlockView.pngMap = {};
                         .replace('(defs)', new XMLSerializer().serializeToString( defs[0] ))
                         .replace(/>\s+/g, ">").replace(/\s+</g, "<");
             var src = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgData)));
+            svgData = null;
             if (notPng) {
                 deferred.resolve({
                     src: src,
                     width: bBox.width,
                     height: bBox.height
                 });
+                svgGroup = null;
             } else {
                 loadImage( src, bBox.width, bBox.height, 1.5)
                     .then(function(src) {
+                        svgGroup = null;
                         deferred.resolve({
                             src: src,
                             width: bBox.width,
@@ -1101,8 +1105,8 @@ Entry.BlockView.pngMap = {};
                 }, function(err) {
                     deferred.reject('error occured');
                 });
-
             }
+            src = null;
         }
 
         function loadImage(src, width, height, multiplier) {

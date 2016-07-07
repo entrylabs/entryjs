@@ -14,6 +14,7 @@ Entry.Field = function() {};
     p.TEXT_LIMIT_LENGTH = 20;
 
     p.destroy = function() {
+        $(this.svgGroup).unbind('mouseup touchend');
         this.destroyOption();
     };
 
