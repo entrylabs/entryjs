@@ -68,6 +68,7 @@ Entry.EntryObject = function(model) {
 
         for (var i in this.pictures) {
             var picture = this.pictures[i];
+            picture.objectId = this.id;
             if (!picture.id)
                 picture.id = Entry.generateHash();
             var image = new Image();
@@ -82,8 +83,10 @@ Entry.EntryObject = function(model) {
                         fileName.substring(2, 4) + '/image/' + fileName + '.png';
                 }
             }
+            Entry.Loader.addQueue();
             image.onload = function(e) {
                 Entry.container.cachePicture(picture.id, image);
+                Entry.Loader.removeQueue();
             };
         }
     }
@@ -121,6 +124,7 @@ Entry.EntryObject.prototype.generateView = function() {
                 },
                 {
                     text: Lang.Workspace.context_duplicate,
+                    enable: !Entry.engine.isState('run'),
                     callback: function(){
                         Entry.container.addCloneObject(object);
                     }
@@ -139,6 +143,7 @@ Entry.EntryObject.prototype.generateView = function() {
                 },
                 {
                     text: Lang.Blocks.Paste_blocks,
+                    enable: !Entry.engine.isState('run') && !!Entry.container.copiedObject,
                     callback: function(){
                         if (Entry.container.copiedObject)
                             Entry.container.addCloneObject(Entry.container.copiedObject);
@@ -207,8 +212,12 @@ Entry.EntryObject.prototype.generateView = function() {
 
         var nameView = Entry.createElement('input');
         nameView.bindOnClick(function (e) {
-            e.stopPropagation();
-            this.select();
+            e.preventDefault();
+            Entry.container.selectObject(thisPointer.id);
+            if (!this.readOnly) {
+                this.focus();
+                this.select();
+            }
         });
         nameView.addClass('entryObjectNameWorkspace');
 
@@ -995,6 +1004,7 @@ Entry.EntryObject.prototype.addPicture = function(picture, index) {
             this.removePicture,
             picture.id
         );
+    picture.objectId = this.id;
     if (!index && index !== 0)
         this.pictures.push(picture);
     else {
@@ -1207,8 +1217,10 @@ Entry.EntryObject.prototype.setRotateMethod = function(rotateMethod) {
 
 Entry.EntryObject.prototype.initRotateValue = function(rotateMethod) {
     if(this.rotateMethod != rotateMethod) {
-        this.entity.rotation = 0.0;
-        this.entity.direction = 90.0;
+        var entity = this.entity;
+        entity.rotation = 0.0;
+        entity.direction = 90.0;
+        entity.flip = false;
     }
 };
 
@@ -1391,13 +1403,17 @@ Entry.EntryObject.prototype.addCloneVariables = function(object, entity, variabl
     entity.lists = [];
     var keyName = 'object_';
     if (!variables)
-        variables = Entry.findObjsByKey(Entry.variableContainer.variables_,
-                    keyName,
-                    object.id);
+        variables = Entry.findObjsByKey(
+            Entry.variableContainer.variables_,
+            keyName,
+            object.id
+        );
     if (!lists)
-        lists = Entry.findObjsByKey(Entry.variableContainer.lists_,
-                    keyName,
-                    object.id);
+        lists = Entry.findObjsByKey(
+            Entry.variableContainer.lists_,
+            keyName,
+            object.id
+        );
 
     for (var i=0; i<variables.length; i++)
         entity.variables.push(variables[i].clone());
@@ -1411,6 +1427,7 @@ Entry.EntryObject.prototype.getLock = function() {
 
 Entry.EntryObject.prototype.setLock = function(bool) {
     this.lock = bool;
+    Entry.stage.updateObject();
     return bool;
 };
 

@@ -65,7 +65,7 @@ Entry.VariableContainer.prototype.createDom = function(view) {
     var variableAddButton = Entry.createElement('li');
     variableAddButton.addClass('entryVariableAddWorkspace');
     variableAddButton.addClass('entryVariableListElementWorkspace');
-    variableAddButton.innerHTML = '+ ' + Lang.Workspace.variable_create;
+    variableAddButton.innerHTML = '+ ' + Lang.Workspace.variable_add;
     var thisPointer = this;
     this.variableAddButton_ = variableAddButton;
 
@@ -127,7 +127,7 @@ Entry.VariableContainer.prototype.createDom = function(view) {
     var functionAddButton = Entry.createElement('li');
     functionAddButton.addClass('entryVariableAddWorkspace');
     functionAddButton.addClass('entryVariableListElementWorkspace');
-    functionAddButton.innerHTML = '+ ' + Lang.Workspace.function_create;
+    functionAddButton.innerHTML = '+ ' + Lang.Workspace.function_add;
     //functionAddButton.innerHTML = '+ ' + Lang.Msgs.to_be_continue;
     this.functionAddButton_ = functionAddButton;
     functionAddButton.bindOnClick(function(e) {
@@ -772,6 +772,7 @@ Entry.VariableContainer.prototype.checkAllVariableName = function(name,variable)
     }
     return false;
 };
+
 Entry.VariableContainer.prototype.addVariable = function(variable) {
     if (!variable) {
         var variableContainer = this;
@@ -779,6 +780,9 @@ Entry.VariableContainer.prototype.addVariable = function(variable) {
         var name = panel.view.name.value.trim();
         if (!name || name.length === 0)
             name = Lang.Workspace.variable;
+
+        if (name.length > this._maxNameLength)
+            name = this._truncName(name, 'variable');
 
         name = this.checkAllVariableName(name,'variables_') ? Entry.getOrderedName(name, this.variables_, 'name_') : name;
         var info = panel.info;
@@ -1023,6 +1027,7 @@ Entry.VariableContainer.prototype.addMessage = function(message) {
     this.messages_.unshift(message);
     Entry.playground.reloadPlayground();
     this.updateList();
+    message.listElement.nameField.focus();
     return new Entry.State(this,
                            this.removeMessage,
                            message);
@@ -1162,6 +1167,10 @@ Entry.VariableContainer.prototype.addList = function(list) {
             name = Lang.Workspace.list;
 
         var info = panel.info;
+
+        if (name.length > this._maxNameLength)
+            name = this._truncName(name, 'list');
+
         name = this.checkAllVariableName(name, 'lists_') ? Entry.getOrderedName(name, this.lists_, 'name_') : name;
         list = {
             name: name,
@@ -2277,3 +2286,17 @@ Entry.VariableContainer.prototype.removeRef = function(type, block) {
 Entry.VariableContainer.prototype._getBlockMenu = function() {
     return Entry.playground.mainWorkspace.getBlockMenu();
 };
+
+Entry.VariableContainer.prototype._truncName = function(name, type) {
+    name = name.substring(0, this._maxNameLength);
+    var title, content;
+
+    title = Lang.Workspace[type + '_name_auto_edited_title'];
+    content = Lang.Workspace[type + '_name_auto_edited_content']
+
+    Entry.toast.warning(title, content);
+
+    return name;
+};
+
+Entry.VariableContainer.prototype._maxNameLength = 10;

@@ -648,7 +648,6 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
         var funcName = funcNameArr.join('_');
         console.log("getFuncInfo funcName", funcName);
-        console.log("getFuncInfo", )
         
         Entry.TextCodingUtil.prototype.initQueue();
         Entry.TextCodingUtil.prototype.gatherFuncDefParam(func.content._data[0]._data[0].data.params[0]);

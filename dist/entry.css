@@ -557,6 +557,7 @@ svg .svgBlockGroup text {
   border: none;
   outline: none;
   line-height: normal;
+  z-index: 301;
 }
 .entry-field-angle {
   cursor: default;
@@ -608,6 +609,8 @@ svg .svgBlockGroup text {
   height: 20px;
   padding: 3px 5px 3px 6px;
   width: 100%;
+  position: relative;
+  overflow: hidden;
 }
 .entry-widget-dropdown .rect .left {
   display: inline-block;
@@ -617,6 +620,17 @@ svg .svgBlockGroup text {
   display: inline-block;
 }
 .entry-widget-dropdown .rect:hover {
+  background-color: #127cdb;
+  color: white;
+}
+.entry-widget-dropdown.rendered .rect .left {
+  position: absolute;
+}
+.entry-widget-dropdown.rendered .rect .right {
+  position: absolute;
+  left: 20px;
+}
+.entry-widget-dropdown.rendered .rect:hover {
   background-color: #127cdb;
   color: white;
 }
@@ -1897,6 +1911,37 @@ svg .svgBlockGroup text {
   background-repeat: no-repeat;
   background-position: center;
 }
+.entryRunButtonBigMinimize {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 111px;
+  height: 111px;
+  margin: -55px 0 0 -55px;
+  border: none;
+  padding: 0;
+  background-image: url('../images/play_btn.png');
+  background-repeat: no-repeat;
+  background-position: 40px center;
+  background-color: rgba(0, 0, 0, 0.5);
+  -webkit-border-radius: 55px;
+  border-radius: 55px;
+  background-clip: padding-box;
+  z-index: 100;
+  cursor: pointer;
+}
+@media screen and (max-width: 500px) {
+  .entryRunButtonBigMinimize {
+    width: 80px;
+    height: 80px;
+    margin: -40px 0 0 -40px;
+    background-position: 32px center;
+    background-size: 25px;
+  }
+}
+.entryRunButtonBigMinimize:hover {
+  opacity: 0.8;
+}
 .entryEngineButtonWorkspace_w {
   border: none;
   outline: none;
@@ -2826,6 +2871,12 @@ svg .svgBlockGroup text {
   background-color: white;
   color: black;
 }
+input.entryObjectNameWorkspace:read-only {
+  background-color: transparent;
+}
+input.entryObjectNameWorkspace:-moz-read-only {
+  background-color: transparent;
+}
 .entryObjectNameWorkspace:disabled {
   background-color: transparent;
 }
@@ -3346,10 +3397,7 @@ svg .svgBlockGroup text {
   line-height: 40px;
 }
 .entryPlaygroundPainterAttrResize {
-  position: absolute;
-  top: 4px;
-  left: 5px;
-  padding: 4px;
+  padding: 4px 4px 0px 4px;
 }
 .entryPlaygroundPainterAttrResize > legend {
   background-color: transparent;
@@ -3369,19 +3417,18 @@ svg .svgBlockGroup text {
   color: white;
 }
 .entryPlaygroundPainterAttrRotate {
-  position: absolute;
-  top: 77px;
-  left: 10px;
   width: 40px;
   height: 40px;
   background-color: #643cd9;
   border-radius: 3px;
+  margin-top: -3px;
 }
 .entryPlaygroundPainterSizeText {
-  position: absolute;
-  left: 48px;
   width: 10px;
   color: black;
+  display: inline-block;
+  margin-left: 5px;
+  margin-right: 1px;
 }
 .painterAttrRotateTop {
   width: 40px;
@@ -3672,9 +3719,7 @@ svg .svgBlockGroup text {
   background-image: url("../images/on_hand.png");
 }
 .entryPlaygroundPainterAttrResizeX {
-  position: absolute;
-  top: 17px;
-  background-color: transparent;
+  display: inline-block;
   width: 40px;
   height: 40px;
   background-color: #643cd9;
@@ -3716,18 +3761,14 @@ svg .svgBlockGroup text {
   border-radius: 0 0 3px 3px;
   background-color: #643cd9;
 }
-.entryPlaygroundPainterAttrResize {
-  float: left;
-  width: 100px;
-}
 .entryPlaygroundAttrReiszeY {
-  position: absolute;
   top: 17px;
   left: 60px;
   width: 40px;
   height: 40px;
   background-color: #643cd9;
   border-radius: 3px;
+  display: inline-block;
 }
 .entryPlaygroundPainterspace {
   position: absolute;
@@ -3743,6 +3784,9 @@ svg .svgBlockGroup text {
   height: 40px;
   background-color: #643cd9;
   border-radius: 3px;
+}
+#painterAttrRotateArea {
+  padding: 4px 4px 0px 4px;
 }
 .entryPlaygroundPainterRotateAreaTop {
   height: 10px;
@@ -3881,13 +3925,13 @@ svg .svgBlockGroup text {
 }
 .painterAttrRotateName,
 .painterAttrOpacityName {
-  position: absolute;
   background-color: transparent;
   margin-bottom: 0;
   border-bottom: 0;
   left: 2px;
   padding: 2px;
   font-size: 9pt;
+  display: block;
 }
 .painterAttrThickName {
   position: absolute;
@@ -4150,6 +4194,9 @@ svg .svgBlockGroup text {
 }
 .entryPainterTopMenuEditImport {
   height: 40px;
+}
+.painterAttrWrapper {
+  margin-top: -7px;
 }
 .entryPlayground_text_buttons {
   display: inline-block;
@@ -5149,6 +5196,13 @@ svg .svgBlockGroup text {
   left: 50px;
   right: 0;
   background-color: #363C46;
+}
+.propertyPanelCover {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 .collapsed .propertyContent {
   left: 30px;

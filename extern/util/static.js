@@ -276,6 +276,12 @@ EntryStatic.getAllBlocks = function() {
                 "arduino_toggle_led",
                 "arduino_toggle_pwm",
                 "arduino_convert_scale",
+                //joystick
+                "joystick_get_number_sensor_value",
+                "joystick_get_digital_value",
+                "joystick_toggle_led",
+                "joystick_toggle_pwm",
+                "joystick_convert_scale",
                 //dplay
                 "dplay_get_number_sensor_value",
                 "dplay_get_value",
@@ -296,6 +302,7 @@ EntryStatic.getAllBlocks = function() {
                 "dplay_Robot_run",
                 "dplay_Robot_run_sec",
                 "dplay_robot_speed_sel",
+                "dplay_robot_speed_set",
                 "dplay_robot_stop",
                 //nemoino
                 "nemoino_get_named_sensor_value",
@@ -320,6 +327,7 @@ EntryStatic.getAllBlocks = function() {
                 "neobot_set_servo",
                 "neobot_set_output",
                 "neobot_set_fnd",
+                "neobot_set_fnd_off",
                 "neobot_play_note_for",
                 "bitbrick_sensor_value",
                 "bitbrick_convert_scale",
@@ -437,8 +445,15 @@ EntryStatic.getAllBlocks = function() {
                 "xbot_servo",
                 "xbot_oneWheel",
                 "xbot_twoWheel",
-                "xbot_lcd"
+                "xbot_lcd",
                 //end of XBOT Blocks added
+                // ardublock Added 2016-06-01
+                "ardublock_get_number_sensor_value",
+                "ardublock_get_digital_value",
+                "ardublock_toggle_led",
+                "ardublock_toggle_pwm",
+                "ardublock_convert_scale"
+				// ardublock Added 2016-06-01
             ]
         }
     ]
@@ -2484,3 +2499,24 @@ EntryStatic.ARROW_COLOR_JUDGE = '#89a1f7';
 EntryStatic.ARROW_COLOR_CALC = '#e8b349';
 EntryStatic.ARROW_COLOR_VARIABLE = '#ce38ce';
 EntryStatic.ARROW_COLOR_HW = '#097e84';
+
+
+EntryStatic.COMMAND_TYPES = {
+    addThread: 101,
+    destroyThread: 102,
+    destroyBlock: 103,
+    recoverBlock: 104,
+    insertBlock: 105,
+    separateBlock: 106,
+    moveBlock: 107,
+    cloneBlock: 108,
+    uncloneBlock: 109,
+    scrollBoard: 110,
+    setFieldValue: 111,
+
+    selectObject: 201,
+
+    'do': 301,
+    'undo': 302,
+    'redo': 303
+};

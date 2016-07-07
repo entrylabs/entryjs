@@ -11,6 +11,7 @@ goog.provide("Entry.BlockView");
 Entry.BlockView = function(block, board, mode) {
     Entry.Model(this, false);
     this.block = block;
+    this._lazyUpdatePos = _.debounce(block._updatePos.bind(block), 200);
     this._board = board;
     this._observers = [];
     this.set(block);
@@ -70,8 +71,6 @@ Entry.BlockView = function(block, board, mode) {
             if (Entry.Utils.isFunction(fn)) fn(block);
         });
     }
-    if (this.block.type == 'function_general')
-        debugger;
 };
 
 Entry.BlockView.PARAM_SPACE = 5;
@@ -350,6 +349,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
 
     p._moveTo = function(x, y, animate) {
         this.set({ x: x, y: y });
+        this._lazyUpdatePos();
         if (this.visible && this.display)
             this._setPosition(animate);
     };
@@ -569,14 +569,6 @@ Entry.BlockView.DRAG_RADIUS = 5;
         } else {
             if (dragMode === Entry.DRAG_MODE_DRAG) {
                 var fromBlockMenu = this.dragInstance && this.dragInstance.isNew;
-                if (fromBlockMenu) {
-                    var removed = board.workspace.blockMenu.terminateDrag();
-                    if (!removed) {
-                        block._updatePos();
-                        //Entry.do("addBlock", block);
-                    }
-                }
-
                 var gs = Entry.GlobalSvg;
                 var ripple = false;
                 var prevBlock = this.block.getPrevBlock(this.block);

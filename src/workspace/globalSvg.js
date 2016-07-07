@@ -137,9 +137,10 @@ goog.provide('Entry.GlobalSvg');
         var bWidth = blockMenu.visible ? blockMenu.svgDom.width() : 0;
         if (mousePos.y > (board.offset().top - 20) && mousePos.x > bLeft + bWidth)
             return this.DONE;
-        else if (mousePos.y > bTop && mousePos.x > bLeft && blockMenu.visible)
-            return this.REMOVE;
-        else return this.RETURN;
+        else if (mousePos.y > bTop && mousePos.x > bLeft && blockMenu.visible) {
+            if (!blockView.block.isDeletable()) return this.RETURN;
+            else return this.REMOVE;
+        } else return this.RETURN;
     };
 
     gs.addControl = function(e) {

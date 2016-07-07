@@ -354,7 +354,7 @@ Entry.Func.generateBlock = function(func) {
                     (booleanIndex ? booleanIndex : "");
                 booleanIndex++;
             } else {
-                description += Lang.General.param_string +
+                description += Lang.template.function_param_string +
                     (stringIndex ? stringIndex : "");
                 stringIndex++;
             }
