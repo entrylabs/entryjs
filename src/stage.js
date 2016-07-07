@@ -89,12 +89,12 @@ Entry.Stage.prototype.initStage = function(canvas) {
     });
 
     Entry.windowResized.attach(this, function() {
-        this._boundRect = canvas.getBoundingClientRect();
+        Entry.stage.updateBoundRect();
     });
 
     var moveFunc = function(e){
         e.preventDefault();
-        var roundRect = Entry.stage._boundRect;
+        var roundRect = Entry.stage.getBoundRect();
         var x, y;
         if (Entry.getBrowserType().indexOf("IE") > -1) {
             x = ((e.pageX - roundRect.left - document.documentElement.scrollLeft) / roundRect.width - 0.5) * 480;
@@ -689,5 +689,15 @@ Entry.Stage.prototype.moveSprite = function (e) {
             break;
     }
     this.updateObject();
+};
+
+Entry.Stage.prototype.getBoundRect = function (e) {
+    if (!this._boundRect)
+        this.updateBoundRect();
+    return this._boundRect;
+};
+
+Entry.Stage.prototype.updateBoundRect = function (e) {
+    this._boundRect = this.canvas.canvas.getBoundingClientRect();
 };
 

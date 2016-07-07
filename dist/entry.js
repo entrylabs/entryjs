@@ -8168,9 +8168,11 @@ Entry.Engine.prototype.toggleFullscreen = function() {
     }
     popup.window_.appendChild(Entry.engine.view_);
   }
+  Entry.windowResized.notify();
 };
 Entry.Engine.prototype.exitFullScreen = function() {
   document.webkitIsFullScreen || document.mozIsFullScreen || document.isFullScreen || (Entry.engine.footerView_.removeClass("entryRemove"), Entry.engine.headerView_.removeClass("entryRemove"));
+  Entry.windowResized.notify();
 };
 Entry.Engine.prototype.showProjectTimer = function() {
   Entry.engine.projectTimer && this.projectTimer.setVisible(!0);
@@ -13807,11 +13809,11 @@ Entry.Stage.prototype.initStage = function(a) {
     Entry.stage.isObjectClick = !1;
   });
   Entry.windowResized.attach(this, function() {
-    this._boundRect = a.getBoundingClientRect();
+    Entry.stage.updateBoundRect();
   });
   b = function(a) {
     a.preventDefault();
-    var b = Entry.stage._boundRect, e;
+    var b = Entry.stage.getBoundRect(), e;
     -1 < Entry.getBrowserType().indexOf("IE") ? (e = 480 * ((a.pageX - b.left - document.documentElement.scrollLeft) / b.width - .5), a = -270 * ((a.pageY - b.top - document.documentElement.scrollTop) / b.height - .5)) : a.changedTouches ? (e = 480 * ((a.changedTouches[0].pageX - b.left - document.body.scrollLeft) / b.width - .5), a = -270 * ((a.changedTouches[0].pageY - b.top - document.body.scrollTop) / b.height - .5)) : (e = 480 * ((a.pageX - b.left - document.body.scrollLeft) / b.width - .5), 
     a = -270 * ((a.pageY - b.top - document.body.scrollTop) / b.height - .5));
     Entry.stage.mouseCoordinate = {x:e.toFixed(1), y:a.toFixed(1)};
@@ -14126,6 +14128,13 @@ Entry.Stage.prototype.moveSprite = function(a) {
     }
     this.updateObject();
   }
+};
+Entry.Stage.prototype.getBoundRect = function(a) {
+  this._boundRect || this.updateBoundRect();
+  return this._boundRect;
+};
+Entry.Stage.prototype.updateBoundRect = function(a) {
+  this._boundRect = this.canvas.canvas.getBoundingClientRect();
 };
 Entry.StampEntity = function(a, b) {
   this.parent = a;

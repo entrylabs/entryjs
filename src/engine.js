@@ -683,6 +683,7 @@ Entry.Engine.prototype.toggleFullscreen = function() {
         this.popup.remove();
         this.popup = null;
     }
+    Entry.windowResized.notify();
 };
 
 Entry.Engine.prototype.exitFullScreen = function() {
@@ -693,6 +694,7 @@ Entry.Engine.prototype.exitFullScreen = function() {
         Entry.engine.footerView_.removeClass('entryRemove');
         Entry.engine.headerView_.removeClass('entryRemove');
     }
+    Entry.windowResized.notify();
 };
 
 
