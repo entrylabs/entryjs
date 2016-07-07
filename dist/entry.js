@@ -11680,7 +11680,7 @@ Entry.Painter2 = function() {
 (function(a) {
   a.initialize = function(b) {
     b.style.overflow = "visible";
-    LC.init(b, {imageURLPrefix:"/lib/literallycanvas/img", backgroundColor:"#fff", toolbarPosition:"bottom"});
+    LC.init(b, {imageURLPrefix:"/lib/literallycanvas/lib/img", backgroundColor:"#fff", toolbarPosition:"bottom"});
     this.setupEvent(b);
     b = {width:"960px", height:"540px"};
     $(".lc-drawing canvas").attr(b).css(b);

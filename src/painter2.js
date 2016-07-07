@@ -12,7 +12,7 @@ proto.initialize = function(painterView) {
     painterView.style.overflow = 'visible';
 
     LC.init(painterView, {
-            imageURLPrefix: '/lib/literallycanvas/img',
+            imageURLPrefix: '/lib/literallycanvas/lib/img',
             backgroundColor: '#fff',
             toolbarPosition: 'bottom',
         }
