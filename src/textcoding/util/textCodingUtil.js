@@ -737,13 +737,34 @@ Entry.TextCodingUtil = function() {
 
     p.gatherFuncDefParam = function(block) {
         console.log("gatherFuncDefParam block", block);
-        if(block) {
-            this._funcParamQ.enqueue(block.data.params[0].data.type);
+        if(block && block.data) {
+            if(block.data.params[0]) {
+                if(block.data.params[0].data) {
+                    var param = block.data.params[0].data.type;
+                    if(block.data.type == "function_field_string") {
+                        this._funcParamQ.enqueue(param);
+                    }
+                }
+            }
+
             if(block.data.params[1]){
                 var result = this.searchFuncDefParam(block.data.params[1]);  
-                this._funcParamQ.enqueue(block.data.params[1].data.params[0].data.type);
-                if(block.data.params[1].data.params[1])
-                    this._funcParamQ.enqueue(block.data.params[1].data.params[1].data.params[0].data.type);
+                console.log("gatherFuncDefParam result", result);
+                if(result.data.params[0].data) {
+                    var param = result.data.params[0].data.type;
+                    
+                    if(result.data.type == "function_field_string")
+                        this._funcParamQ.enqueue(param);
+                }
+
+                if(result.data.params[1]) {
+                    if(result.data.params[1].data.params[0].data) {
+                        var param = result.data.params[1].data.params[0].data.type;
+                                        
+                        if(result.data.params[1].data.type == "function_field_string")
+                            this._funcParamQ.enqueue(param);
+                    }
+                }
             }
         }
 

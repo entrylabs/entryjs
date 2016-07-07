@@ -189,7 +189,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 type = this.getBlockType(syntax);   
             }
 
-
             result.callee = calleeName;
         }
 
@@ -360,6 +359,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             else
                 var idNumber = 0;
             var funcKey = result.callee.name + idNumber;
+            console.log("funcKey", funcKey);
             var type = this._funcMap.get(funcKey);
             if(type) {
                 result = {};
@@ -2083,7 +2083,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         for(var funcId in entryFunctions) {
             var blockFunc = entryFunctions[funcId];
             Entry.TextCodingUtil.prototype.initQueue();
-            Entry.TextCodingUtil.prototype.gatherFuncDefParam(blockFunc.content._data[0]._data[0].data.params[0].data.params[1]);
+            Entry.TextCodingUtil.prototype.gatherFuncDefParam(blockFunc.content._data[0]._data[0].data.params[0]);
             console.log("Entry.TextCodingUtil._funcParamQ", Entry.TextCodingUtil.prototype._funcParamQ);
             var funcParams = [];
             
@@ -2118,7 +2118,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     var blockFuncCts = blockFuncContents.slice();
                     blockFuncCts.shift();
                     console.log("blockFuncContents", blockFuncContents)
-                    
+
                     matchFlag = Entry.TextCodingUtil.prototype.isFuncContentsMatch(blockFuncCts, textFuncStatements, paramMap);
                     
                 }
@@ -2183,16 +2183,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var funcPrefix = "func";
             targetFuncId = funcPrefix.concat('_').concat(funcId);
             this._funcMap.put(funcKey, targetFuncId);
-
-            var board = Entry.playground.mainWorkspace.board;
-            var code = board.code;
-
-            code.createView(board);
-
-            Entry.playground.mainWorkspace.board.alignThreads();
-            Entry.playground.mainWorkspace.board.reDraw();
             
             console.log("FunctionDeclaration result", result);
+
+            console.log("overlay", Entry.playground.mainWorkspace.overlayBoard);
         }
         else {
             ////////////////////////////////////////////////////////////////

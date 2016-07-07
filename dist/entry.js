@@ -11925,12 +11925,19 @@ Entry.TextCodingUtil = function() {
   };
   b.gatherFuncDefParam = function(a) {
     console.log("gatherFuncDefParam block", a);
-    if (a && (this._funcParamQ.enqueue(a.data.params[0].data.type), a.data.params[1])) {
-      var b = this.searchFuncDefParam(a.data.params[1]);
-      this._funcParamQ.enqueue(a.data.params[1].data.params[0].data.type);
-      a.data.params[1].data.params[1] && this._funcParamQ.enqueue(a.data.params[1].data.params[1].data.params[0].data.type);
+    if (a && a.data) {
+      if (a.data.params[0] && a.data.params[0].data) {
+        var b = a.data.params[0].data.type;
+        "function_field_string" == a.data.type && this._funcParamQ.enqueue(b);
+      }
+      if (a.data.params[1]) {
+        var c = this.searchFuncDefParam(a.data.params[1]);
+        console.log("gatherFuncDefParam result", c);
+        c.data.params[0].data && (b = c.data.params[0].data.type, "function_field_string" == c.data.type && this._funcParamQ.enqueue(b));
+        c.data.params[1] && c.data.params[1].data.params[0].data && (b = c.data.params[1].data.params[0].data.type, "function_field_string" == c.data.params[1].data.type && this._funcParamQ.enqueue(b));
+      }
     }
-    return b;
+    return c;
   };
   b.isFuncContentsMatch = function(a, b, c) {
     for (var e = !0, f = 0;f < a.length && e;f++) {
@@ -12267,7 +12274,7 @@ Entry.BlockToPyParser = function(b) {
     a = a.substring(0, e).trim().split(" ").join("_");
     console.log("getFuncInfo funcName", a);
     Entry.TextCodingUtil.prototype.initQueue();
-    Entry.TextCodingUtil.prototype.gatherFuncDefParam(c.content._data[0]._data[0].data.params[0].data.params[1]);
+    Entry.TextCodingUtil.prototype.gatherFuncDefParam(c.content._data[0]._data[0].data.params[0]);
     console.log("Entry.TextCodingUtil._funcParamQ", Entry.TextCodingUtil.prototype._funcParamQ);
     for (var f = [], g = {};n = Entry.TextCodingUtil.prototype._funcParamQ.dequeue();) {
       f.push(n), console.log("param", n);
@@ -12475,7 +12482,7 @@ Entry.PyToBlockParser = function(b) {
     if (b.arguments && b.arguments[0] && "__pythonRuntime.utils.createParamsObj" == b.arguments[0].callee) {
       return b;
     }
-    b.callee && (e = this._funcMap.get(b.callee.name + (b.arguments ? b.arguments.length : 0))) && (b = {}, b.type = e);
+    b.callee && (c = b.callee.name + (b.arguments ? b.arguments.length : 0), console.log("funcKey", c), e = this._funcMap.get(c)) && (b = {}, b.type = e);
     console.log("CallExpression result", b);
     return b;
   };
@@ -13253,7 +13260,7 @@ Entry.PyToBlockParser = function(b) {
     for (m in e) {
       var r = e[m];
       Entry.TextCodingUtil.prototype.initQueue();
-      Entry.TextCodingUtil.prototype.gatherFuncDefParam(r.content._data[0]._data[0].data.params[0].data.params[1]);
+      Entry.TextCodingUtil.prototype.gatherFuncDefParam(r.content._data[0]._data[0].data.params[0]);
       console.log("Entry.TextCodingUtil._funcParamQ", Entry.TextCodingUtil.prototype._funcParamQ);
       for (var q = [], h = {};g = Entry.TextCodingUtil.prototype._funcParamQ.dequeue();) {
         q.push(g), console.log("param", g);
@@ -13304,11 +13311,8 @@ Entry.PyToBlockParser = function(b) {
         m = n;
         n = "func".concat("_").concat(m);
         this._funcMap.put(u, n);
-        u = Entry.playground.mainWorkspace.board;
-        u.code.createView(u);
-        Entry.playground.mainWorkspace.board.alignThreads();
-        Entry.playground.mainWorkspace.board.reDraw();
         console.log("FunctionDeclaration result", b);
+        console.log("overlay", Entry.playground.mainWorkspace.overlayBoard);
       } else {
         console.log("FunctionDeclaration textFuncName", f);
         console.log("FunctionDeclaration textFuncParams", c);
