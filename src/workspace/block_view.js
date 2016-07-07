@@ -446,7 +446,7 @@ Entry.BlockView.pngMap = {};
             };
 
             var download = {
-                text: '이미지로 저장하기',
+                text: Lang.Menus.save_as_image,
                 callback: function(){
                     that.downloadAsImage();
                 }

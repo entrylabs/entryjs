@@ -919,7 +919,7 @@ Entry.Board.OPTION_DOWNLOAD = 3;
             {
                 activated: Entry.type === 'workspace' && Entry.Utils.isChrome(),
                 option: {
-                    text: '모든 블럭 이미지로 저장하기',
+                    text: Lang.Menus.save_as_image_all,
                     enable: true,
                     callback: function(){
                         that.code.getThreads().forEach(function(t) {

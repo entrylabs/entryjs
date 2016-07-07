@@ -15935,7 +15935,7 @@ Entry.BlockView.pngMap = {};
             h.block.copyToClipboard();
           }}, q = {text:Lang.Blocks.Delete_Blocks, enable:k.isDeletable(), callback:function() {
             Entry.do("destroyBlock", h.block);
-          }}, n = {text:"\uc774\ubbf8\uc9c0\ub85c \uc800\uc7a5\ud558\uae30", callback:function() {
+          }}, n = {text:Lang.Menus.save_as_image, callback:function() {
             h.downloadAsImage();
           }};
           f.push(g);
@@ -18418,7 +18418,7 @@ Entry.Board.OPTION_DOWNLOAD = 3;
       a.alignThreads();
     }}}, {activated:!0, option:{text:Lang.Blocks.Clear_all_blocks, callback:function() {
       a.code.clear();
-    }}}, {activated:"workspace" === Entry.type && Entry.Utils.isChrome(), option:{text:"\ubaa8\ub4e0 \ube14\ub7ed \uc774\ubbf8\uc9c0\ub85c \uc800\uc7a5\ud558\uae30", enable:!0, callback:function() {
+    }}}, {activated:"workspace" === Entry.type && Entry.Utils.isChrome(), option:{text:Lang.Menus.save_as_image_all, enable:!0, callback:function() {
       a.code.getThreads().forEach(function(a) {
         (a = a.getFirstBlock()) && a.view.downloadAsImage();
       });
