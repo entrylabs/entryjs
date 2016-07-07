@@ -1945,10 +1945,10 @@ Entry.block = {
             }
 
             var state = Entry.ArduinoExt.BlockState[this.type];
+            var ANALOG = Entry.hw.portData.ANALOG;
             if(!state.isStart) {
                 state.isStart = true;
                 state.stamp = nowTime;
-                console.log('GET1 : ' + state.stamp);
                 Entry.hw.sendQueue['TIME'] = nowTime;
                 Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
                 Entry.hw.sendQueue['GET'] = {
@@ -1958,15 +1958,13 @@ Entry.block = {
                 throw new Entry.Utils.AsyncError();
                 return;
             } else if(hardwareTime && (hardwareTime === state.stamp)) {
-                console.log('SHOW1 : ' + state.stamp);
                 delete state.isStart;
                 delete state.stamp;
-                return Entry.hw.portData.ANALOG[port] || 0;
+                return (ANALOG) ? ANALOG[port] || 0 : 0;
             } else if(nowTime - state.stamp > 64) {
-                console.log('SHOW1-2 : ' + state.stamp);
                 delete state.isStart;
                 delete state.stamp;
-                return Entry.hw.portData.ANALOG[port] || 0;
+                return (ANALOG) ? ANALOG[port] || 0 : 0;
             } else {
                 throw new Entry.Utils.AsyncError();
                 return;
@@ -2049,7 +2047,6 @@ Entry.block = {
             if(!state.isStart) {
                 state.isStart = true;
                 state.stamp = nowTime;
-                console.log('GET2 : ' + state.stamp);
                 Entry.hw.sendQueue['TIME'] = nowTime;
                 Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
                 Entry.hw.sendQueue['GET'] = {
@@ -2059,12 +2056,10 @@ Entry.block = {
                 throw new Entry.Utils.AsyncError();
                 return;
             } else if(hardwareTime && (hardwareTime === state.stamp)) {
-                console.log('SHOW2 : ' + state.stamp);
                 delete state.isStart;
                 delete state.stamp;
                 return Entry.hw.portData.ULTRASONIC || 0;
             } else if(nowTime - state.stamp > 64) {
-                console.log('SHOW2-2 : ' + state.stamp);
                 delete state.isStart;
                 delete state.stamp;
                 return Entry.hw.portData.ULTRASONIC || 0;
@@ -2392,10 +2387,10 @@ Entry.block = {
             }
 
             var state = Entry.ArduinoExt.BlockState[this.type];
+            var DIGITAL = Entry.hw.portData.DIGITAL;
             if(!state.isStart) {
                 state.isStart = true;
                 state.stamp = nowTime;
-                console.log('GET3 : ' + state.stamp);
                 Entry.hw.sendQueue['TIME'] = nowTime;
                 Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
                 Entry.hw.sendQueue['GET'] = {
@@ -2405,15 +2400,13 @@ Entry.block = {
                 throw new Entry.Utils.AsyncError();
                 return;
             } else if(hardwareTime && (hardwareTime === state.stamp)) {
-                console.log('SHOW3 : ' + state.stamp);
                 delete state.isStart;
                 delete state.stamp;
-                return Entry.hw.portData.DIGITAL[port] || 0;
+                return (DIGITAL) ? DIGITAL[port] || 0 : 0;
             } else if(nowTime - state.stamp > 64) {
-                console.log('SHOW3-2 : ' + state.stamp);
                 delete state.isStart;
                 delete state.stamp;
-                return Entry.hw.portData.DIGITAL[port] || 0;
+                return (DIGITAL) ? DIGITAL[port] || 0 : 0;
             } else {
                 throw new Entry.Utils.AsyncError();
                 return;
