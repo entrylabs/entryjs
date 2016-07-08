@@ -6260,7 +6260,7 @@ Entry.Container.prototype.generateView = function(b, a) {
     });
     c = Entry.createElement("div");
     c.addClass("entryContainerListWorkspaceWrapper");
-    Entry.isForLecture && (this.generateTabView(), c.addClass("lecture"));
+    Entry.isForLecture && c.addClass("lecture");
     Entry.Utils.disableContextmenu(c);
     $(c).on("contextmenu", function(a) {
       a = [{text:Lang.Blocks.Paste_blocks, enable:!Entry.engine.isState("run") && !!Entry.container.copiedObject, callback:function() {
@@ -6282,7 +6282,7 @@ Entry.Container.prototype.enableSort = function() {
   }, stop:function(b, a) {
     var c = a.item.data("start_pos"), d = a.item.index();
     Entry.container.moveElement(c, d);
-  }, axis:"y"});
+  }, axis:"y", cancel:"input.selectedEditingObject"});
 };
 Entry.Container.prototype.disableSort = function() {
   $ && $(this.listView_).sortable("destroy");
@@ -6684,118 +6684,6 @@ Entry.Container.prototype.getProjectWithJSON = function(b) {
   b.messages = Entry.variableContainer.getMessageJSON();
   b.scenes = Entry.scene.toJSON();
   return b;
-};
-Entry.Container.prototype.generateTabView = function() {
-  var b = this._view, a = this;
-  this.tabViews = [];
-  var c = Entry.createElement("div");
-  c.addClass("entryContainerTabViewWorkspace");
-  b.appendChild(c);
-  var d = Entry.createElement("span");
-  d.addClass("entryContainerTabItemWorkspace");
-  d.addClass("entryEllipsis");
-  d.innerHTML = Lang.Menus.lecture_container_tab_object;
-  d.bindOnClick(function() {
-    a.changeTabView("object");
-  });
-  this.tabViews.push(d);
-  c.appendChild(d);
-  var e = Entry.createElement("span");
-  e.addClass("entryContainerTabItemWorkspace", "entryRemove");
-  e.addClass("entryEllipsis");
-  e.innerHTML = Lang.Menus.lecture_container_tab_video;
-  e.bindOnClick(function() {
-    a.changeTabView("movie");
-  });
-  this.tabViews.push(e);
-  c.appendChild(e);
-  this.youtubeTab = e;
-  e = Entry.createElement("span");
-  e.addClass("entryContainerTabItemWorkspace", "entryRemove");
-  e.addClass("entryEllipsis");
-  e.innerHTML = Lang.Menus.lecture_container_tab_project;
-  e.bindOnClick(function() {
-    a.changeTabView("done");
-  });
-  this.tabViews.push(e);
-  c.appendChild(e);
-  this.iframeTab = e;
-  e = Entry.createElement("span");
-  e.addClass("entryContainerTabItemWorkspace");
-  e.addClass("entryEllipsis");
-  e.innerHTML = Lang.Menus.lecture_container_tab_help;
-  e.bindOnClick(function() {
-    a.changeTabView("helper");
-  });
-  this.tabViews.push(e);
-  c.appendChild(e);
-  c = Entry.createElement("div");
-  c.addClass("entryContainerMovieWorkspace");
-  c.addClass("entryHide");
-  b.appendChild(c);
-  this.movieContainer = c;
-  c = Entry.createElement("div");
-  c.addClass("entryContainerDoneWorkspace");
-  c.addClass("entryHide");
-  b.appendChild(c);
-  this.doneContainer = c;
-  c = Entry.createElement("div");
-  c.addClass("entryContainerHelperWorkspace");
-  c.addClass("entryHide");
-  b.appendChild(c);
-  this.helperContainer = c;
-  d.addClass("selected");
-};
-Entry.Container.prototype.changeTabView = function(b) {
-  for (var a = this.tabViews, c = 0, d = a.length;c < d;c++) {
-    a[c].removeClass("selected");
-  }
-  this.movieContainer.addClass("entryHide");
-  this.doneContainer.addClass("entryHide");
-  this.helperContainer.addClass("entryHide");
-  "object" == b ? a[0].addClass("selected") : "movie" == b ? (b = this._view, b = b.style.width.substring(0, b.style.width.length - 2), this.movieFrame.setAttribute("width", b), this.movieFrame.setAttribute("height", 9 * b / 16), this.movieContainer.removeClass("entryHide"), a[1].addClass("selected")) : "done" == b ? (c = $(this.doneContainer).height(), b = $(this.doneContainer).width(), 9 * b / 16 + 35 < c ? c = 9 * b / 16 + 35 : b = (c - 35) / 9 * 16, this.doneProjectFrame.setAttribute("width", 
-  b), this.doneProjectFrame.setAttribute("height", c), this.doneContainer.removeClass("entryHide"), a[2].addClass("selected")) : "helper" == b && (Entry.helper.blockHelperOn(), this.helperContainer.removeClass("entryHide"), a[3].addClass("selected"));
-};
-Entry.Container.prototype.initYoutube = function(b) {
-  this.youtubeHash = b;
-  this.youtubeTab.removeClass("entryRemove");
-  b = this._view;
-  b = b.style.width.substring(0, b.style.width.length - 2);
-  var a = this.movieContainer, c = Entry.createElement("iframe");
-  c.setAttribute("width", b);
-  c.setAttribute("height", 9 * b / 16);
-  c.setAttribute("allowfullscreen", "");
-  c.setAttribute("frameborder", 0);
-  c.setAttribute("src", "https://www.youtube.com/embed/" + this.youtubeHash);
-  this.movieFrame = c;
-  a.appendChild(c);
-};
-Entry.Container.prototype.initTvcast = function(b) {
-  this.tvcast = b;
-  this.youtubeTab.removeClass("entryRemove");
-  b = this._view;
-  b = b.style.width.substring(0, b.style.width.length - 2);
-  var a = this.movieContainer, c = Entry.createElement("iframe");
-  c.setAttribute("width", b);
-  c.setAttribute("height", 9 * b / 16);
-  c.setAttribute("allowfullscreen", "");
-  c.setAttribute("frameborder", 0);
-  c.setAttribute("src", this.tvcast);
-  this.movieFrame = c;
-  a.appendChild(c);
-};
-Entry.Container.prototype.initDoneProject = function(b) {
-  this.doneProject = b;
-  this.iframeTab.removeClass("entryRemove");
-  b = this._view;
-  b = b.style.width.substring(0, b.style.width.length - 2);
-  var a = Entry.createElement("iframe");
-  a.setAttribute("width", b);
-  a.setAttribute("height", 9 * b / 16 + 35);
-  a.setAttribute("frameborder", 0);
-  a.setAttribute("src", "/api/iframe/project/" + this.doneProject);
-  this.doneProjectFrame = a;
-  this.doneContainer.appendChild(a);
 };
 Entry.Container.prototype.blurAllInputs = function() {
   this.getSceneObjects().map(function(b) {
@@ -7729,28 +7617,34 @@ Entry.EntityObject.prototype.setImage = function(b) {
 };
 Entry.EntityObject.prototype.applyFilter = function() {
   var b = this.effect, a = this.object;
-  if (!_.isEqual(b, this.getInitialEffectValue())) {
-    var c = [], d = Entry.adjustValueWithMaxMin;
-    b.brightness = b.brightness;
-    var e = new createjs.ColorMatrix;
-    e.adjustColor(d(b.brightness, -100, 100), 0, 0, 0);
-    e = new createjs.ColorMatrixFilter(e);
-    c.push(e);
-    b.hue = b.hue.mod(360);
-    e = new createjs.ColorMatrix;
-    e.adjustColor(0, 0, 0, b.hue);
-    e = new createjs.ColorMatrixFilter(e);
-    c.push(e);
-    var e = [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1], f = 10.8 * b.hsv * Math.PI / 180, g = Math.cos(f), f = Math.sin(f), h = Math.abs(b.hsv / 100);
-    1 < h && (h -= Math.floor(h));
-    0 < h && .33 >= h ? e = [1, 0, 0, 0, 0, 0, g, f, 0, 0, 0, -1 * f, g, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1] : .66 >= h ? e = [g, 0, f, 0, 0, 0, 1, 0, 0, 0, f, 0, g, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1] : .99 >= h && (e = [g, f, 0, 0, 0, -1 * f, g, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1]);
-    e = (new createjs.ColorMatrix).concat(e);
-    e = new createjs.ColorMatrixFilter(e);
-    c.push(e);
-    a.alpha = b.alpha = d(b.alpha, 0, 1);
-    a.filters = c;
-    a.cache(0, 0, this.getWidth(), this.getHeight());
-  }
+  (function(a, b) {
+    for (var e in a) {
+      if (a[e] !== b[e]) {
+        return !1;
+      }
+    }
+    return !0;
+  })(b, this.getInitialEffectValue()) || (function(a, b) {
+    var e = [], f = Entry.adjustValueWithMaxMin;
+    a.brightness = a.brightness;
+    var g = new createjs.ColorMatrix;
+    g.adjustColor(f(a.brightness, -100, 100), 0, 0, 0);
+    g = new createjs.ColorMatrixFilter(g);
+    e.push(g);
+    a.hue = a.hue.mod(360);
+    g = new createjs.ColorMatrix;
+    g.adjustColor(0, 0, 0, a.hue);
+    g = new createjs.ColorMatrixFilter(g);
+    e.push(g);
+    var g = [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1], h = 10.8 * a.hsv * Math.PI / 180, k = Math.cos(h), h = Math.sin(h), l = Math.abs(a.hsv / 100);
+    1 < l && (l -= Math.floor(l));
+    0 < l && .33 >= l ? g = [1, 0, 0, 0, 0, 0, k, h, 0, 0, 0, -1 * h, k, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1] : .66 >= l ? g = [k, 0, h, 0, 0, 0, 1, 0, 0, 0, h, 0, k, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1] : .99 >= l && (g = [k, h, 0, 0, 0, -1 * h, k, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1]);
+    g = (new createjs.ColorMatrix).concat(g);
+    g = new createjs.ColorMatrixFilter(g);
+    e.push(g);
+    b.alpha = a.alpha = f(a.alpha, 0, 1);
+    b.filters = e;
+  }(b, a), a.cache(0, 0, this.getWidth(), this.getHeight()));
 };
 Entry.EntityObject.prototype.resetFilter = function() {
   "sprite" == this.parent.objectType && (this.object.filters = [], this.setInitialEffectValue(), this.object.alpha = this.effect.alpha, this.object.cache(0, 0, this.getWidth(), this.getHeight()));
@@ -20233,6 +20127,7 @@ Entry.Playground.prototype.generateSoundElement = function(b) {
         }
       }
       this.sound.name = this.value;
+      Entry.playground.reloadPlayground();
     }
   };
   g.onkeypress = function(a) {
@@ -20445,7 +20340,7 @@ p.init = function(b) {
 p.generateView = function(b) {
   var a = Entry.createElement("div");
   a.addClass("entryContainerMovieWorkspace");
-  a.addClass("entryHidden");
+  a.addClass("entryRemove");
   this.movieContainer = a;
   a = Entry.createElement("iframe");
   a.setAttribute("id", "youtubeIframe");
@@ -20459,7 +20354,7 @@ p.getView = function() {
   return this.movieContainer;
 };
 p.resize = function() {
-  var b = document.getElementById("entryContainerWorkspaceId"), a = document.getElementById("youtubeIframe");
+  var b = document.getElementsByClassName("propertyContent")[0], a = document.getElementById("youtubeIframe");
   w = b.offsetWidth;
   a.width = w + "px";
   a.height = 9 * w / 16 + "px";

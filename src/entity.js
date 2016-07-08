@@ -822,7 +822,7 @@ Entry.EntityObject.prototype.applyFilter = function() {
     var effects = this.effect;
     var object = this.object;
 
-    if (_.isEqual(effects, this.getInitialEffectValue()))
+    if (isEqualEffects(effects, this.getInitialEffectValue()))
         return;
 
     (function(e, obj) {
@@ -897,6 +897,14 @@ Entry.EntityObject.prototype.applyFilter = function() {
 
     object.cache(0,0,this.getWidth(),this.getHeight());
 
+
+    function isEqualEffects(effectsA, effectsB) {
+        for (var key in effectsA) {
+            if (effectsA[key] !== effectsB[key])
+                return false;
+        }
+        return true;
+    }
 };
 
 

@@ -327,6 +327,7 @@ EntryStatic.getAllBlocks = function() {
                 "neobot_set_servo",
                 "neobot_set_output",
                 "neobot_set_fnd",
+                "neobot_set_fnd_off",
                 "neobot_play_note_for",
                 "bitbrick_sensor_value",
                 "bitbrick_convert_scale",
