@@ -16201,20 +16201,20 @@ Entry.BlockView.pngMap = {};
   b.getParam = function(a) {
     return this._paramMap[a];
   };
-  b.getDataUrl = function(a) {
-    function b() {
-      f = f.replace("(svgGroup)", (new XMLSerializer).serializeToString(g)).replace("(defs)", (new XMLSerializer).serializeToString(q[0])).replace(/>\s+/g, ">").replace(/\s+</g, "<");
-      var c = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(f)));
-      f = null;
-      a ? (e.resolve({src:c, width:n.width, height:n.height}), g = null) : d(c, n.width, n.height, 1.5).then(function(a) {
-        g = null;
-        e.resolve({src:a, width:n.width, height:n.height});
+  b.getDataUrl = function(a, b) {
+    function d() {
+      g = g.replace("(svgGroup)", (new XMLSerializer).serializeToString(k)).replace("(defs)", (new XMLSerializer).serializeToString(m[0])).replace(/>\s+/g, ">").replace(/\s+</g, "<");
+      var a = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(g)));
+      g = null;
+      b ? (f.resolve({src:a, width:h.width, height:h.height}), k = null) : e(a, h.width, h.height, 1.5).then(function(a) {
+        k = null;
+        f.resolve({src:a, width:h.width, height:h.height});
       }, function(a) {
-        e.reject("error occured");
+        f.reject("error occured");
       });
-      c = null;
+      a = null;
     }
-    function d(a, b, c, d) {
+    function e(a, b, c, d) {
       var e = $.Deferred();
       d || (d = 1);
       void 0 !== Entry.BlockView.pngMap[a] && e.resolve(Entry.BlockView.pngMap[a]);
@@ -16240,41 +16240,41 @@ Entry.BlockView.pngMap = {};
       f.src = a;
       return e.promise();
     }
-    var e = $.Deferred(), f = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">(svgGroup)(defs)</svg>', g = this.svgGroup.cloneNode(!0), h = this._skeleton.box(this), k = a ? 1 : 1.5, l = function() {
+    var f = $.Deferred(), g = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">(svgGroup)(defs)</svg>', h = this.svgGroup.getBoundingClientRect(), k = a ? this.svgGroup : this.svgGroup.cloneNode(!0), l = this._skeleton.box(this), q = b ? 1 : 1.5, n = function() {
       var a = window.platform;
       return a && "windows" === a.name.toLowerCase() && "7" === a.version[0] ? !0 : !1;
     }() ? .9 : .95;
-    g.setAttribute("transform", "scale(%SCALE) translate(%X,%Y)".replace("%X", -h.offsetX).replace("%Y", -h.offsetY).replace("%SCALE", k));
-    for (var q = this.getBoard().svgDom.find("defs"), n = this.svgGroup.getBoundingClientRect(), m = g.getElementsByTagName("image"), h = g.getElementsByTagName("text"), r = ["\u2265", "\u2264"], u = "\u2265\u2264-><=+-x/".split(""), k = 0;k < h.length;k++) {
+    k.setAttribute("transform", "scale(%SCALE) translate(%X,%Y)".replace("%X", -l.offsetX).replace("%Y", -l.offsetY).replace("%SCALE", q));
+    for (var m = this.getBoard().svgDom.find("defs"), r = k.getElementsByTagName("image"), l = k.getElementsByTagName("text"), u = ["\u2265", "\u2264"], t = "\u2265\u2264-><=+-x/".split(""), q = 0;q < l.length;q++) {
       (function(a) {
         a.setAttribute("font-family", "'nanumBarunRegular', 'NanumGothic', '\ub098\ub214\uace0\ub515','NanumGothicWeb', '\ub9d1\uc740 \uace0\ub515', 'Malgun Gothic', Dotum");
         var b = parseInt(a.getAttribute("font-size")), c = $(a).text();
-        -1 < r.indexOf(c) && a.setAttribute("font-weight", "500");
+        -1 < u.indexOf(c) && a.setAttribute("font-weight", "500");
         if ("q" == c) {
           var d = parseInt(a.getAttribute("y"));
           a.setAttribute("y", d - 1);
         }
-        -1 < u.indexOf(c) ? a.setAttribute("font-size", b + "px") : a.setAttribute("font-size", b * l + "px");
+        -1 < t.indexOf(c) ? a.setAttribute("font-size", b + "px") : a.setAttribute("font-size", b * n + "px");
         a.setAttribute("alignment-baseline", "baseline");
-      })(h[k]);
+      })(l[q]);
     }
-    var t = 0;
-    if (0 === m.length) {
-      b();
+    var v = 0;
+    if (0 === r.length) {
+      d();
     } else {
-      for (k = 0;k < m.length;k++) {
+      for (q = 0;q < r.length;q++) {
         (function(a) {
-          var e = a.getAttribute("href");
-          d(e, a.getAttribute("width"), a.getAttribute("height")).then(function(d) {
-            a.setAttribute("href", d);
-            if (++t == m.length) {
-              return b();
+          var b = a.getAttribute("href");
+          e(b, a.getAttribute("width"), a.getAttribute("height")).then(function(b) {
+            a.setAttribute("href", b);
+            if (++v == r.length) {
+              return d();
             }
           });
-        })(m[k]);
+        })(r[q]);
       }
     }
-    return e.promise();
+    return f.promise();
   };
   b.downloadAsImage = function() {
     this.getDataUrl().then(function(a) {

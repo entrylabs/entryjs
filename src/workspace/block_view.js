@@ -1012,10 +1012,11 @@ Entry.BlockView.pngMap = {};
     p.getParam = function(index) { return this._paramMap[index]; };
 
 
-    p.getDataUrl = function(notPng) {
+    p.getDataUrl = function(notClone, notPng) {
         var deferred = $.Deferred();
         var svgData = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">(svgGroup)(defs)</svg>';
-        var svgGroup = this.svgGroup.cloneNode(true);
+        var bBox = this.svgGroup.getBoundingClientRect();
+        var svgGroup = notClone ? this.svgGroup : this.svgGroup.cloneNode(true);
         var box = this._skeleton.box(this)
         var scale = notPng ? 1 : 1.5;
         var fontWeight = isWindow7() ? 0.9 : 0.95;
@@ -1028,7 +1029,6 @@ Entry.BlockView.pngMap = {};
         );
 
         var defs = this.getBoard().svgDom.find('defs');
-        var bBox = this.svgGroup.getBoundingClientRect();
 
         var images = svgGroup.getElementsByTagName('image');
         var texts = svgGroup.getElementsByTagName('text');
