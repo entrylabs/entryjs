@@ -1020,6 +1020,8 @@ Entry.BlockView.pngMap = {};
         var box = this._skeleton.box(this)
         var scale = notPng ? 1 : 1.5;
         var fontWeight = isWindow7() ? 0.9 : 0.95;
+        if (this.type.indexOf('func_') > -1)
+            fontWeight *= 0.99;
         svgGroup.setAttribute(
             'transform',
             'scale(%SCALE) translate(%X,%Y)'
