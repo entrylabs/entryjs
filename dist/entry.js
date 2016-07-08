@@ -11228,13 +11228,11 @@ Entry.Stage.prototype.initStage = function(b) {
   this.render();
 };
 Entry.Stage.prototype.render = function() {
-  if (!Entry.stage.stopped) {
-    Entry.stage.timer && clearTimeout(Entry.stage.timer);
-    var b = (new Date).getTime();
-    Entry.stage.update();
-    b = (new Date).getTime() - b;
-    Entry.stage.timer = setTimeout(Entry.stage.render, 16 - b % 16 + 16 * Math.floor(b / 16));
-  }
+  Entry.stage.timer && clearTimeout(Entry.stage.timer);
+  var b = (new Date).getTime();
+  Entry.stage.update();
+  b = (new Date).getTime() - b;
+  Entry.stage.timer = setTimeout(Entry.stage.render, 16 - b % 16 + 16 * Math.floor(b / 16));
 };
 Entry.Stage.prototype.update = function() {
   Entry.engine.isState("stop") && this.objectUpdated ? (this.canvas.update(), this.objectUpdated = !1) : this.canvas.update();
