@@ -12443,6 +12443,34 @@ Entry.Utils.stopProjectWithToast = function(b, a) {
 Entry.Utils.isChrome = function() {
   return /chrom(e|ium)/.test(navigator.userAgent.toLowerCase());
 };
+Entry.Utils.waitForWebfonts = function(b, a) {
+  for (var c = 0, d = 0, e = b.length;d < e;++d) {
+    (function(d) {
+      function e() {
+        h && h.offsetWidth != k && (++c, h.parentNode.removeChild(h), h = null);
+        if (c >= b.length && (l && clearInterval(l), c == b.length)) {
+          return a(), !0;
+        }
+      }
+      var h = document.createElement("span");
+      h.innerHTML = "giItT1WQy@!-/#";
+      h.style.position = "absolute";
+      h.style.left = "-10000px";
+      h.style.top = "-10000px";
+      h.style.fontSize = "300px";
+      h.style.fontFamily = "sans-serif";
+      h.style.fontVariant = "normal";
+      h.style.fontStyle = "normal";
+      h.style.fontWeight = "normal";
+      h.style.letterSpacing = "0";
+      document.body.appendChild(h);
+      var k = h.offsetWidth;
+      h.style.fontFamily = d;
+      var l;
+      e() || (l = setInterval(e, 50));
+    })(b[d]);
+  }
+};
 Entry.Model = function(b, a) {
   var c = Entry.Model;
   c.generateSchema(b);
