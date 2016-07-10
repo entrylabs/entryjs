@@ -646,7 +646,8 @@ Entry.BlockToPyParser = function(blockSyntax) {
         var funcNameTemplate = template.substring(0, index).trim();
         var funcNameArr = funcNameTemplate.split(' ');
 
-        var funcName = funcNameArr.join('_');
+        //func name join
+        var funcName = funcNameArr.join('__');
         console.log("getFuncInfo funcName", funcName);
         
         Entry.TextCodingUtil.prototype.initQueue();

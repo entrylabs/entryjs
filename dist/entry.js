@@ -12271,7 +12271,7 @@ Entry.BlockToPyParser = function(b) {
     a = c.block.template;
     var e = a.search(/(%.)/);
     console.log("getFuncInfo index", e);
-    a = a.substring(0, e).trim().split(" ").join("_");
+    a = a.substring(0, e).trim().split(" ").join("__");
     console.log("getFuncInfo funcName", a);
     Entry.TextCodingUtil.prototype.initQueue();
     Entry.TextCodingUtil.prototype.gatherFuncDefParam(c.content._data[0]._data[0].data.params[0]);
@@ -13336,7 +13336,7 @@ Entry.PyToBlockParser = function(b) {
         t = m._data[0].data.params[0];
         n = t.data.params;
         k.description = "";
-        g = f.split("_");
+        g = f.split("__");
         if (0 < g.length) {
           for (e = 1;e < g.length;e++) {
             h = g[e], r = new Entry.Block({type:"function_field_label"}, m), r.data.params = [], r.data.params.push(h), l = Entry.TextCodingUtil.prototype.getLastParam(t), l.data.params[1] = r, k.description += h.concat(" ");
