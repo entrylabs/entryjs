@@ -17,11 +17,15 @@ Entry.TextCodingUtil = function() {
     p.initQueue = function() {
         var queue = new Entry.Queue();
         this._funcParamQ = queue;
+
+        var fNameQueue = new Entry.Queue();
+        this._funcNameQ = fNameQueue;
         console.log("initQueue this._funcParamQ", this._funcParamQ);
     };
 
     p.clearQueue = function() {
         this._funcParamQ.clear();
+        this._funcNameQ.clear();
     };
 
 	p.indent = function(textCode) {
@@ -725,7 +729,19 @@ Entry.TextCodingUtil = function() {
 
     p.searchFuncDefParam = function(block) {
         console.log("searchFuncDefParam block", block);
+        if(block.data.type == "function_field_label") {
+            var name = block.data.params[0];
+            this._funcNameQ.enqueue(name);
+            console.log("searchFuncDefParam name enqueue", name);
+        }
+
         if(block && block.data && block.data.params && block.data.params[1]){
+            if(block.data.type == "function_field_string") {
+                var param = block.data.params[0].data.type;
+                this._funcParamQ.enqueue(param);
+                console.log("searchFuncDefParam param enqueue", param); 
+            }
+
             var result = this.searchFuncDefParam(block.data.params[1]);  
             return result;
         }
@@ -743,7 +759,12 @@ Entry.TextCodingUtil = function() {
                     var param = block.data.params[0].data.type;
                     if(block.data.type == "function_field_string") {
                         this._funcParamQ.enqueue(param);
-                    }
+                        console.log("gatherFuncDefParam param enqueue", this._funcParamQ);
+                    } 
+                } else if(block.data.type == "function_field_label") {
+                    var name = block.data.params[0];
+                    this._funcNameQ.enqueue(name);
+                    console.log("gatherFuncDefParam name enqueue", name);
                 }
             }
 
@@ -753,16 +774,20 @@ Entry.TextCodingUtil = function() {
                 if(result.data.params[0].data) {
                     var param = result.data.params[0].data.type;
                     
-                    if(result.data.type == "function_field_string")
+                    if(result.data.type == "function_field_string") {
                         this._funcParamQ.enqueue(param);
+                        console.log("gatherFuncDefParam param enqueue", this._funcParamQ);
+                    }
                 }
 
                 if(result.data.params[1]) {
                     if(result.data.params[1].data.params[0].data) {
                         var param = result.data.params[1].data.params[0].data.type;
                                         
-                        if(result.data.params[1].data.type == "function_field_string")
+                        if(result.data.params[1].data.type == "function_field_string") {
                             this._funcParamQ.enqueue(param);
+                            console.log("gatherFuncDefParam param enqueue", this._funcParamQ);
+                        } 
                     }
                 }
             }
@@ -770,6 +795,19 @@ Entry.TextCodingUtil = function() {
 
         return result;
         
+    };
+
+    p.getLastParam = function(funcBlock) {
+        console.log("getLastParam funcBlock", funcBlock);
+        if(funcBlock && funcBlock.data && funcBlock.data.params[1]) {
+            var result = this.getLastParam(funcBlock.data.params[1]);
+        }
+        else {
+            return funcBlock;
+        }
+
+        console.log("getLastParam result", result);
+        return result;
     };
 
     p.isFuncContentsMatch = function(blockFuncContents, textFuncStatements, paramMap) {

@@ -213,6 +213,8 @@ Entry.BlockView.DRAG_RADIUS = 5;
         this.alignContent(false);
     };
 
+    p.destroy
+
     p._updateSchema = function() {
         this._startContentRender();
     };

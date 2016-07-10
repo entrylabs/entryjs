@@ -11534,10 +11534,12 @@ Entry.TextCodingUtil = function() {
   b._funcParamQ;
   b.initQueue = function() {
     this._funcParamQ = new Entry.Queue;
+    this._funcNameQ = new Entry.Queue;
     console.log("initQueue this._funcParamQ", this._funcParamQ);
   };
   b.clearQueue = function() {
     this._funcParamQ.clear();
+    this._funcNameQ.clear();
   };
   b.indent = function(a) {
     console.log("indent textCode", a);
@@ -11896,8 +11898,13 @@ Entry.TextCodingUtil = function() {
   };
   b.searchFuncDefParam = function(a) {
     console.log("searchFuncDefParam block", a);
+    if ("function_field_label" == a.data.type) {
+      var b = a.data.params[0];
+      this._funcNameQ.enqueue(b);
+      console.log("searchFuncDefParam name enqueue", b);
+    }
     if (a && a.data && a.data.params && a.data.params[1]) {
-      return this.searchFuncDefParam(a.data.params[1]);
+      return "function_field_string" == a.data.type && (b = a.data.params[0].data.type, this._funcParamQ.enqueue(b), console.log("searchFuncDefParam param enqueue", b)), this.searchFuncDefParam(a.data.params[1]);
     }
     console.log("searchFuncDefParam block", a);
     return a;
@@ -11905,18 +11912,32 @@ Entry.TextCodingUtil = function() {
   b.gatherFuncDefParam = function(a) {
     console.log("gatherFuncDefParam block", a);
     if (a && a.data) {
-      if (a.data.params[0] && a.data.params[0].data) {
-        var b = a.data.params[0].data.type;
-        "function_field_string" == a.data.type && this._funcParamQ.enqueue(b);
+      if (a.data.params[0]) {
+        if (a.data.params[0].data) {
+          var b = a.data.params[0].data.type;
+          "function_field_string" == a.data.type && (this._funcParamQ.enqueue(b), console.log("gatherFuncDefParam param enqueue", this._funcParamQ));
+        } else {
+          "function_field_label" == a.data.type && (b = a.data.params[0], this._funcNameQ.enqueue(b), console.log("gatherFuncDefParam name enqueue", b));
+        }
       }
       if (a.data.params[1]) {
         var c = this.searchFuncDefParam(a.data.params[1]);
         console.log("gatherFuncDefParam result", c);
-        c.data.params[0].data && (b = c.data.params[0].data.type, "function_field_string" == c.data.type && this._funcParamQ.enqueue(b));
-        c.data.params[1] && c.data.params[1].data.params[0].data && (b = c.data.params[1].data.params[0].data.type, "function_field_string" == c.data.params[1].data.type && this._funcParamQ.enqueue(b));
+        c.data.params[0].data && (b = c.data.params[0].data.type, "function_field_string" == c.data.type && (this._funcParamQ.enqueue(b), console.log("gatherFuncDefParam param enqueue", this._funcParamQ)));
+        c.data.params[1] && c.data.params[1].data.params[0].data && (b = c.data.params[1].data.params[0].data.type, "function_field_string" == c.data.params[1].data.type && (this._funcParamQ.enqueue(b), console.log("gatherFuncDefParam param enqueue", this._funcParamQ)));
       }
     }
     return c;
+  };
+  b.getLastParam = function(a) {
+    console.log("getLastParam funcBlock", a);
+    if (a && a.data && a.data.params[1]) {
+      a = this.getLastParam(a.data.params[1]);
+    } else {
+      return a;
+    }
+    console.log("getLastParam result", a);
+    return a;
   };
   b.isFuncContentsMatch = function(a, b, c) {
     for (var e = !0, f = 0;f < a.length && e;f++) {
@@ -13248,11 +13269,17 @@ Entry.PyToBlockParser = function(b) {
       for (var t in q) {
         h[q[t]] = t;
       }
-      Entry.TextCodingUtil.prototype.clearQueue();
       console.log("paramMap", h);
-      g = r.block.template.split("%")[0].trim();
-      if (f == g) {
-        if (console.log("textFuncName", f), console.log("blockFuncName", g), console.log("textFuncParams.length", c.length), console.log("Object.keys(paramMap).length", Object.keys(h).length), c.length == Object.keys(h).length ? (k = !0, console.log("textFuncParams.length", c.length), console.log("Object.keys(paramMap).length", Object.keys(h).length), l = r.content._data[0]._data, g = l.slice(), g.shift(), console.log("blockFuncContents", l), l = Entry.TextCodingUtil.prototype.isFuncContentsMatch(g, 
+      console.log("funcNameQueue", Entry.TextCodingUtil.prototype._funcNameQ);
+      for (g = [];nameToken = Entry.TextCodingUtil.prototype._funcNameQ.dequeue();) {
+        g.push(nameToken), console.log("funcNames", nameToken);
+      }
+      Entry.TextCodingUtil.prototype.clearQueue();
+      blockFuncName = g.join("_").trim();
+      console.log("first blockFuncName", blockFuncName);
+      console.log("first textFuncName", f);
+      if (f == blockFuncName) {
+        if (console.log("textFuncName", f), console.log("blockFuncName", blockFuncName), console.log("textFuncParams.length", c.length), console.log("Object.keys(paramMap).length", Object.keys(h).length), c.length == Object.keys(h).length ? (k = !0, console.log("textFuncParams.length", c.length), console.log("Object.keys(paramMap).length", Object.keys(h).length), l = r.content._data[0]._data, g = l.slice(), g.shift(), console.log("blockFuncContents", l), l = Entry.TextCodingUtil.prototype.isFuncContentsMatch(g, 
         a, h)) : l = k = !1, k && l) {
           n = "func".concat("_").concat(m);
           break;
@@ -13285,13 +13312,13 @@ Entry.PyToBlockParser = function(b) {
         Entry.variableContainer.saveFunction(b);
         Entry.variableContainer.updateList();
         b = n;
+        console.log("textFuncName", f);
         u = c.length;
         u = f + u;
         m = n;
         n = "func".concat("_").concat(m);
         this._funcMap.put(u, n);
         console.log("FunctionDeclaration result", b);
-        console.log("overlay", Entry.playground.mainWorkspace.overlayBoard);
       } else {
         console.log("FunctionDeclaration textFuncName", f);
         console.log("FunctionDeclaration textFuncParams", c);
@@ -13306,12 +13333,21 @@ Entry.PyToBlockParser = function(b) {
         k.block.template = f + " " + n.join(" ");
         console.log("newFunc template", k.block.template);
         m = k.content._data[0];
-        n = m._data[0].data.params[0].data.params;
-        n[0] = f;
-        k.description = f + " ";
+        t = m._data[0].data.params[0];
+        n = t.data.params;
+        k.description = "";
+        g = f.split("_");
+        if (0 < g.length) {
+          for (e = 1;e < g.length;e++) {
+            h = g[e], r = new Entry.Block({type:"function_field_label"}, m), r.data.params = [], r.data.params.push(h), l = Entry.TextCodingUtil.prototype.getLastParam(t), l.data.params[1] = r, k.description += h.concat(" ");
+          }
+          k.description += " ";
+        } else {
+          n[0] = f, k.description = f + " ";
+        }
         if (0 < c.length) {
-          for (l = new Entry.Block({type:"function_field_string"}, m), l.data.params = [], e = Entry.Func.requestParamBlock("string"), console.log("FunctionDeclaration stringParam", e), g = new Entry.Block({type:e}, m), l.data.params.push(g), n[1] = l, k.paramMap[e] = Number(0), console.log("FunctionDeclaration paramBlock", k), t = 1;t < c.length;t++) {
-            l = new Entry.Block({type:"function_field_string"}, m), l.data.params = [], e = Entry.Func.requestParamBlock("string"), console.log("FunctionDeclaration stringParam", e), g = new Entry.Block({type:e}, m), l.data.params.push(g), h = Entry.TextCodingUtil.prototype.searchFuncDefParam(n[1]), console.log("FunctionDeclaration paramBlock", h), 0 == h.data.params.length ? h.data.params[0] = g : 1 == h.data.params.length && (h.data.params[1] = l), k.paramMap[e] = Number(t), console.log("FunctionDeclaration paramBlock", 
+          for (e = new Entry.Block({type:"function_field_string"}, m), e.data.params = [], h = Entry.Func.requestParamBlock("string"), console.log("FunctionDeclaration stringParam", h), g = new Entry.Block({type:h}, m), e.data.params.push(g), l = Entry.TextCodingUtil.prototype.getLastParam(t), l.data.params[1] = e, k.paramMap[h] = Number(0), console.log("FunctionDeclaration paramBlock", k), t = 1;t < c.length;t++) {
+            e = new Entry.Block({type:"function_field_string"}, m), e.data.params = [], h = Entry.Func.requestParamBlock("string"), console.log("FunctionDeclaration stringParam", h), g = new Entry.Block({type:h}, m), e.data.params.push(g), l = Entry.TextCodingUtil.prototype.searchFuncDefParam(n[1]), console.log("FunctionDeclaration paramBlock", l), 0 == l.data.params.length ? l.data.params[0] = g : 1 == l.data.params.length && (l.data.params[1] = e), k.paramMap[h] = Number(t), console.log("FunctionDeclaration paramBlock", 
             k);
           }
         }
@@ -15700,6 +15736,9 @@ Entry.Func.initEditView = function(b) {
   var a = Entry.playground.mainWorkspace;
   a.setMode(Entry.Workspace.MODE_OVERLAYBOARD);
   a.changeOverlayBoardCode(b);
+  b.recreateView();
+  a.changeOverlayBoardCode(b);
+  b.view.board.alignThreads();
   this._workspaceStateEvent = a.changeEvent.attach(this, this.endEdit);
 };
 Entry.Func.endEdit = function(b) {
@@ -18937,6 +18976,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
     }
     this.alignContent(!1);
   };
+  b.destroy;
   b._updateSchema = function() {
     this._startContentRender();
   };
@@ -19363,6 +19403,12 @@ Entry.PARAM = -1;
   b.createView = function(a) {
     null === this.view ? this.set({view:new Entry.CodeView(this, a), board:a}) : (this.set({board:a}), a.bindCodeView(this.view));
   };
+  b.destroyView = function() {
+    this.view && (this.view.destroy(), delete this.view);
+  };
+  b.recreateView = function() {
+    this.view && (this.destroyView(), this.set({view:new Entry.CodeView(this, this.board), board:this.board}));
+  };
   b.registerEvent = function(a, b) {
     this._eventMap[b] || (this._eventMap[b] = []);
     this._eventMap[b].push(a);
@@ -19551,6 +19597,11 @@ Entry.CodeView = function(b, a) {
   b.reDraw = function() {
     this.code.map(function(a) {
       a.view.reDraw();
+    });
+  };
+  b.destroy = function() {
+    this.code.map(function(a) {
+      a.destroyView();
     });
   };
 })(Entry.CodeView.prototype);
@@ -21692,6 +21743,12 @@ Entry.Thread = function(b, a, d) {
       c.createView(a, b);
     });
   };
+  b.destroyView = function() {
+    this.view = null;
+    this._data.map(function(a) {
+      a.destroyView();
+    });
+  };
   b.separate = function(a, b) {
     if (this._data.has(a.id)) {
       var c = this._data.splice(this._data.indexOf(a), b);
@@ -21840,6 +21897,7 @@ Entry.Thread = function(b, a, d) {
     return JSON.stringify(this.toJSON());
   };
 })(Entry.Thread.prototype);
+NaN;
 Entry.Block = function(b, a) {
   var d = this;
   Entry.Model(this, !1);
@@ -21924,6 +21982,9 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
   };
   b.createView = function(a, b) {
     this.view || (this.set({view:new Entry.BlockView(this, a, b)}), this._updatePos());
+  };
+  b.destroyView = function() {
+    this.set({view:null});
   };
   b.clone = function(a) {
     return new Entry.Block(this.toJSON(!0), a);
