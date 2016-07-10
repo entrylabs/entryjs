@@ -556,7 +556,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
             }
             else {
                 var funcTokenArr = funcToken.split(' ');
-                funcName += funcTokenArr.join('_');
+                funcName += funcTokenArr.join('__');
             }
         }
 

@@ -736,7 +736,7 @@ Entry.TextCodingUtil = function() {
         }
 
         if(block && block.data && block.data.params && block.data.params[1]){
-            if(block.data.type == "function_field_string") {
+            if(block.data.type == "function_field_string" || block.data.type == "function_field_boolean") {
                 var param = block.data.params[0].data.type;
                 this._funcParamQ.enqueue(param);
                 console.log("searchFuncDefParam param enqueue", param); 
@@ -757,7 +757,7 @@ Entry.TextCodingUtil = function() {
             if(block.data.params[0]) {
                 if(block.data.params[0].data) {
                     var param = block.data.params[0].data.type;
-                    if(block.data.type == "function_field_string") {
+                    if(block.data.type == "function_field_string" || block.data.type == "function_field_boolean") {
                         this._funcParamQ.enqueue(param);
                         console.log("gatherFuncDefParam param enqueue", this._funcParamQ);
                     } 
@@ -774,7 +774,7 @@ Entry.TextCodingUtil = function() {
                 if(result.data.params[0].data) {
                     var param = result.data.params[0].data.type;
                     
-                    if(result.data.type == "function_field_string") {
+                    if(result.data.type == "function_field_string" || result.data.type == "function_field_boolean") {
                         this._funcParamQ.enqueue(param);
                         console.log("gatherFuncDefParam param enqueue", this._funcParamQ);
                     }
@@ -784,7 +784,7 @@ Entry.TextCodingUtil = function() {
                     if(result.data.params[1].data.params[0].data) {
                         var param = result.data.params[1].data.params[0].data.type;
                                         
-                        if(result.data.params[1].data.type == "function_field_string") {
+                        if(result.data.params[1].data.type == "function_field_string" || result.data.params[1].data.type == "function_field_boolean") {
                             this._funcParamQ.enqueue(param);
                             console.log("gatherFuncDefParam param enqueue", this._funcParamQ);
                         } 

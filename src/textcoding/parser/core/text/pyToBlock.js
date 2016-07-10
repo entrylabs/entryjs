@@ -2117,7 +2117,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
             Entry.TextCodingUtil.prototype.clearQueue();
 
-            blockFuncName = funcNames.join('_').trim();
+            blockFuncName = funcNames.join('__').trim();
             console.log("first blockFuncName", blockFuncName);
             console.log("first textFuncName", textFuncName);
 

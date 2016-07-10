@@ -11904,7 +11904,10 @@ Entry.TextCodingUtil = function() {
       console.log("searchFuncDefParam name enqueue", b);
     }
     if (a && a.data && a.data.params && a.data.params[1]) {
-      return "function_field_string" == a.data.type && (b = a.data.params[0].data.type, this._funcParamQ.enqueue(b), console.log("searchFuncDefParam param enqueue", b)), this.searchFuncDefParam(a.data.params[1]);
+      if ("function_field_string" == a.data.type || "function_field_boolean" == a.data.type) {
+        b = a.data.params[0].data.type, this._funcParamQ.enqueue(b), console.log("searchFuncDefParam param enqueue", b);
+      }
+      return this.searchFuncDefParam(a.data.params[1]);
     }
     console.log("searchFuncDefParam block", a);
     return a;
@@ -11915,7 +11918,9 @@ Entry.TextCodingUtil = function() {
       if (a.data.params[0]) {
         if (a.data.params[0].data) {
           var b = a.data.params[0].data.type;
-          "function_field_string" == a.data.type && (this._funcParamQ.enqueue(b), console.log("gatherFuncDefParam param enqueue", this._funcParamQ));
+          if ("function_field_string" == a.data.type || "function_field_boolean" == a.data.type) {
+            this._funcParamQ.enqueue(b), console.log("gatherFuncDefParam param enqueue", this._funcParamQ);
+          }
         } else {
           "function_field_label" == a.data.type && (b = a.data.params[0], this._funcNameQ.enqueue(b), console.log("gatherFuncDefParam name enqueue", b));
         }
@@ -11923,8 +11928,8 @@ Entry.TextCodingUtil = function() {
       if (a.data.params[1]) {
         var c = this.searchFuncDefParam(a.data.params[1]);
         console.log("gatherFuncDefParam result", c);
-        c.data.params[0].data && (b = c.data.params[0].data.type, "function_field_string" == c.data.type && (this._funcParamQ.enqueue(b), console.log("gatherFuncDefParam param enqueue", this._funcParamQ)));
-        c.data.params[1] && c.data.params[1].data.params[0].data && (b = c.data.params[1].data.params[0].data.type, "function_field_string" == c.data.params[1].data.type && (this._funcParamQ.enqueue(b), console.log("gatherFuncDefParam param enqueue", this._funcParamQ)));
+        c.data.params[0].data && (b = c.data.params[0].data.type, "function_field_string" == c.data.type || "function_field_boolean" == c.data.type) && (this._funcParamQ.enqueue(b), console.log("gatherFuncDefParam param enqueue", this._funcParamQ));
+        c.data.params[1] && c.data.params[1].data.params[0].data && (b = c.data.params[1].data.params[0].data.type, "function_field_string" == c.data.params[1].data.type || "function_field_boolean" == c.data.params[1].data.type) && (this._funcParamQ.enqueue(b), console.log("gatherFuncDefParam param enqueue", this._funcParamQ));
       }
     }
     return c;
@@ -12215,7 +12220,7 @@ Entry.BlockToPyParser = function(b) {
         var k = h.split("%")[1], k = Number(k) - 1;
         "Indicator" != a[k].type && (f += h.concat(", "));
       } else {
-        h = h.split(" "), e += h.join("_");
+        h = h.split(" "), e += h.join("__");
       }
     }
     k = f.lastIndexOf(",");
@@ -13275,7 +13280,7 @@ Entry.PyToBlockParser = function(b) {
         g.push(nameToken), console.log("funcNames", nameToken);
       }
       Entry.TextCodingUtil.prototype.clearQueue();
-      blockFuncName = g.join("_").trim();
+      blockFuncName = g.join("__").trim();
       console.log("first blockFuncName", blockFuncName);
       console.log("first textFuncName", f);
       if (f == blockFuncName) {
