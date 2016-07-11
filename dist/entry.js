@@ -17114,7 +17114,6 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
     var a = this._block.getCode().object, b = [];
     Entry.container && (b = this._menuName ? Entry.container.getDropdownList(this._menuName, a) : this._menuGenerator());
     this._contents.options = b;
-    b = this._contents.options;
     (a = this.getValue()) && "null" != a || (a = 0 !== b.length ? b[0][1] : null);
     this.setValue(a);
   };

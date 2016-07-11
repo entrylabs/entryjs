@@ -50,12 +50,10 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
                 options = Entry.container.getDropdownList(this._menuName, object);
             else
                 options = this._menuGenerator();
-
         }
 
 
         this._contents.options = options;
-        var options = this._contents.options;
         var value = this.getValue();
         if (!value || value == 'null')
             value = (options.length !== 0 ? options[0][1] : null);
