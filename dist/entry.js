@@ -6756,6 +6756,14 @@ Entry.Utils.addFilters = function(a, b) {
   b.elem("feOffset", {result:"offOut", in:"SourceGraphic", dx:0, dy:0});
   b.elem("feColorMatrix", {result:"matrixOut", in:"offOut", type:"matrix", values:"1.3 0 0 0 0 0 1.3 0 0 0 0 0 1.3 0 0 0 0 0 1 0"});
 };
+Entry.Utils.addBlockPattern = function(a, b) {
+  a = a.elem("pattern", {id:"blockHoverPattern_" + b, class:"blockHoverPattern", patternUnits:"userSpaceOnUse", patternTransform:"translate(12, 0)", x:0, y:0, width:125, height:33, style:"display: none"});
+  b = a.elem("g");
+  for (var c = b.elem("rect", {x:0, y:0, width:125, height:33}), d = Entry.mediaFilePath + "block_pattern_(order).png", e = 1;5 > e;e++) {
+    b.elem("image", {class:"pattern" + e, href:d.replace("(order)", e), x:0, y:0, width:125, height:33});
+  }
+  return {pattern:a, rect:c};
+};
 Entry.Utils.COLLISION = {NONE:0, UP:1, RIGHT:2, LEFT:3, DOWN:4};
 Entry.Utils.createMouseEvent = function(a, b) {
   var c = document.createEvent("MouseEvent");
@@ -12235,31 +12243,31 @@ Entry.BlockDriver = function() {
     }
     console.log((new Date).getTime() - b.getTime());
   };
-  a._convertBlock = function(a) {
-    function c(a) {
-      var b = {type:a.getAttribute("type"), index:{}};
-      a = $(a).children();
-      if (!a) {
-        return b;
+  a._convertBlock = function(b) {
+    function a(b) {
+      var d = {type:b.getAttribute("type"), index:{}};
+      b = $(b).children();
+      if (!b) {
+        return d;
       }
-      for (var d = 0;d < a.length;d++) {
-        var e = a[d], f = e.tagName, g = $(e).children()[0], h = e.getAttribute("name");
-        "value" === f ? "block" == g.nodeName && (b.params || (b.params = []), b.params.push(c(g)), b.index[h] = b.params.length - 1) : "field" === f && (b.params || (b.params = []), b.params.push(e.textContent), b.index[h] = b.params.length - 1);
+      for (var e = 0;e < b.length;e++) {
+        var f = b[e], g = f.tagName, h = $(f).children()[0], u = f.getAttribute("name");
+        "value" === g ? "block" == h.nodeName && (d.params || (d.params = []), d.params.push(a(h)), d.index[u] = d.params.length - 1) : "field" === g && (d.params || (d.params = []), d.params.push(f.textContent), d.index[u] = d.params.length - 1);
       }
-      return b;
+      return d;
     }
-    var d = Blockly.Blocks[a], e = EntryStatic.blockInfo[a], f, g;
+    var d = Blockly.Blocks[b], e = EntryStatic.blockInfo[b], f, g;
     if (e && (f = e.class, g = e.isNotFor, e = e.xml)) {
-      var e = $.parseXML(e), h = c(e.childNodes[0])
+      var e = $.parseXML(e), h = a(e.childNodes[0])
     }
-    d = (new Entry.BlockMockup(d, h, a)).toJSON();
+    d = (new Entry.BlockMockup(d, h, b)).toJSON();
     d.class = f;
     d.isNotFor = g;
     _.isEmpty(d.paramsKeyMap) && delete d.paramsKeyMap;
     _.isEmpty(d.statementsKeyMap) && delete d.statementsKeyMap;
-    d.func = Entry.block[a];
-    -1 < "NUMBER TRUE FALSE TEXT FUNCTION_PARAM_BOOLEAN FUNCTION_PARAM_STRING TRUE_UN".split(" ").indexOf(a.toUpperCase()) && (d.isPrimitive = !0);
-    Entry.block[a] = d;
+    d.func = Entry.block[b];
+    -1 < "NUMBER TRUE FALSE TEXT FUNCTION_PARAM_BOOLEAN FUNCTION_PARAM_STRING TRUE_UN".split(" ").indexOf(b.toUpperCase()) && (d.isPrimitive = !0);
+    Entry.block[b] = d;
   };
 })(Entry.BlockDriver.prototype);
 Entry.BlockMockup = function(a, b, c) {
@@ -12278,25 +12286,25 @@ Entry.BlockMockup = function(a, b, c) {
   this.def = this.definition;
 };
 (function(a) {
-  a.simulate = function(a) {
-    a.sensorList && (this.sensorList = a.sensorList);
-    a.portList && (this.portList = a.portList);
-    a.init.call(this);
-    a.whenAdd && (this.events.blockViewAdd || (this.events.blockViewAdd = []), this.events.blockViewAdd.push(a.whenAdd));
-    a.whenRemove && (this.events.blockViewDestroy || (this.events.blockViewDestroy = []), this.events.blockViewDestroy.push(a.whenRemove));
+  a.simulate = function(b) {
+    b.sensorList && (this.sensorList = b.sensorList);
+    b.portList && (this.portList = b.portList);
+    b.init.call(this);
+    b.whenAdd && (this.events.blockViewAdd || (this.events.blockViewAdd = []), this.events.blockViewAdd.push(b.whenAdd));
+    b.whenRemove && (this.events.blockViewDestroy || (this.events.blockViewDestroy = []), this.events.blockViewDestroy.push(b.whenRemove));
   };
   a.toJSON = function() {
-    function a(c) {
-      if (c && (c = c.params)) {
-        for (var d = 0;d < c.length;d++) {
-          var e = c[d];
-          e && (delete e.index, a(e));
+    function b(a) {
+      if (a && (a = a.params)) {
+        for (var c = 0;c < a.length;c++) {
+          var d = a[c];
+          d && (delete d.index, b(d));
         }
       }
     }
-    var c = "";
-    this.output ? c = "Boolean" === this.output ? "basic_boolean_field" : "basic_string_field" : !this.isPrev && this.isNext ? c = "basic_event" : 1 == this.statements.length ? c = "basic_loop" : 2 == this.statements.length ? c = "basic_double_loop" : this.isPrev && this.isNext ? c = "basic" : this.isPrev && !this.isNext && (c = "basic_without_next");
-    a(this.def);
+    var a = "";
+    this.output ? a = "Boolean" === this.output ? "basic_boolean_field" : "basic_string_field" : !this.isPrev && this.isNext ? a = "basic_event" : 1 == this.statements.length ? a = "basic_loop" : 2 == this.statements.length ? a = "basic_double_loop" : this.isPrev && this.isNext ? a = "basic" : this.isPrev && !this.isNext && (a = "basic_without_next");
+    b(this.def);
     var d = /dummy_/mi, e;
     for (e in this.paramsKeyMap) {
       d.test(e) && delete this.paramsKeyMap[e];
@@ -12304,7 +12312,7 @@ Entry.BlockMockup = function(a, b, c) {
     for (e in this.statementsKeyMap) {
       d.test(e) && delete this.statementsKeyMap[e];
     }
-    return {color:this.color, skeleton:c, statements:this.statements, template:this.templates.filter(function(a) {
+    return {color:this.color, skeleton:a, statements:this.statements, template:this.templates.filter(function(a) {
       return "string" === typeof a;
     }).join(" "), params:this.params, events:this.events, def:this.def, paramsKeyMap:this.paramsKeyMap, statementsKeyMap:this.statementsKeyMap};
   };
@@ -16971,6 +16979,9 @@ Entry.BlockMenu = function(a, b, c, d) {
   this.setWidth();
   this.svg = Entry.SVG(this._svgId);
   Entry.Utils.addFilters(this.svg, this.suffix);
+  b = Entry.Utils.addBlockPattern(this.svg, this.suffix);
+  this.patternRect = b.rect;
+  this.pattern = b.pattern;
   this.svgGroup = this.svg.elem("g");
   this.svgThreadGroup = this.svgGroup.elem("g");
   this.svgThreadGroup.board = this;
@@ -17231,6 +17242,13 @@ Entry.BlockMenu = function(a, b, c, d) {
     var c = a.keyCode, d = Entry.type;
     a.ctrlKey && "workspace" == d && 48 < c && 58 > c && (a.preventDefault(), this.selectMenu(c - 49));
   };
+  a.setPatternRectFill = function(a) {
+    this.patternRect.attr({fill:a});
+    this.pattern.attr({style:""});
+  };
+  a.disablePattern = function() {
+    this.pattern.attr({style:"display: none"});
+  };
   a._clearCategory = function() {
     this._selectedCategoryView = null;
     this._categories = [];
@@ -17458,6 +17476,11 @@ Entry.BlockView.DRAG_RADIUS = 5;
     this.pathGroup = this.svgGroup.elem("g");
     this._updateMagnet();
     this._path = this.pathGroup.elem("path");
+    this.getBoard().patternRect && ($(this._path).mouseenter(function(a) {
+      d._mouseEnable && d._changeFill(!0);
+    }), $(this._path).mouseleave(function(a) {
+      d._mouseEnable && d._changeFill(!1);
+    }));
     var f = this._schema.color;
     this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN && (f = Entry.Utils.colorLighten(f));
     this._fillColor = f;
@@ -17601,12 +17624,14 @@ Entry.BlockView.DRAG_RADIUS = 5;
       $(document).unbind(".block");
       m.terminateDrag(a);
       e && e.set({dragBlock:null});
+      m._changeFill(!1);
       Entry.GlobalSvg.remove();
       delete this.mouseDownCoordinate;
       delete m.dragInstance;
     }
     b.stopPropagation && b.stopPropagation();
     b.preventDefault && b.preventDefault();
+    this._changeFill(!1);
     var e = this.getBoard();
     Entry.documentMousedown && Entry.documentMousedown.notify(b);
     if (!this.readOnly && !e.viewOnly) {
@@ -17860,6 +17885,14 @@ Entry.BlockView.DRAG_RADIUS = 5;
   a._destroyObservers = function() {
     for (var a = this._observers;a.length;) {
       a.pop().destroy();
+    }
+  };
+  a._changeFill = function(a) {
+    var c = this.getBoard();
+    if (c.patternRect && !c.dragBlock) {
+      var d = this._fillColor, e = this._path, c = this.getBoard();
+      a ? (c.setPatternRectFill(d), d = "url(#blockHoverPattern_" + this.getBoard().suffix + ")") : c.disablePattern();
+      e.attr({fill:d});
     }
   };
   a.addActivated = function() {
@@ -18301,6 +18334,9 @@ Entry.Board.OPTION_CLEAR = 2;
     this.svgBlockGroup.board = this;
     a.isOverlay ? (this.wrapper.addClass("entryOverlayBoard"), this.generateButtons(), this.suffix = "overlayBoard") : this.suffix = "board";
     Entry.Utils.addFilters(this.svg, this.suffix);
+    a = Entry.Utils.addBlockPattern(this.svg, this.suffix);
+    this.patternRect = a.rect;
+    this.pattern = a.pattern;
   };
   a.changeCode = function(a) {
     this.code && this.codeListener && this.code.changeEvent.detach(this.codeListener);
@@ -18667,6 +18703,13 @@ Entry.Board.OPTION_CLEAR = 2;
   };
   a.dominate = function(a) {
     a && (a = a.getFirstBlock()) && (this.svgBlockGroup.appendChild(a.view.svgGroup), this.code.dominate(a.thread));
+  };
+  a.setPatternRectFill = function(a) {
+    this.patternRect.attr({fill:a});
+    this.pattern.attr({style:""});
+  };
+  a.disablePattern = function() {
+    this.pattern.attr({style:"display: none"});
   };
   a._removeActivated = function() {
     this._activatedBlockView && (this._activatedBlockView.removeActivated(), this._activatedBlockView = null);

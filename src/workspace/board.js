@@ -99,6 +99,9 @@ Entry.Board.OPTION_CLEAR = 2;
         } else this.suffix = 'board';
 
         Entry.Utils.addFilters(this.svg, this.suffix);
+        var returnVal = Entry.Utils.addBlockPattern(this.svg, this.suffix);
+        this.patternRect = returnVal.rect;
+        this.pattern = returnVal.pattern;
     };
 
     p.changeCode = function(code) {
@@ -781,6 +784,21 @@ Entry.Board.OPTION_CLEAR = 2;
         this.svgBlockGroup
             .appendChild(block.view.svgGroup);
         this.code.dominate(block.thread);
+    };
+
+    p.setPatternRectFill = function(color) {
+        this.patternRect.attr({
+            fill:color
+        });
+        this.pattern.attr({
+            style: ""
+        });
+    };
+
+    p.disablePattern = function() {
+        this.pattern.attr({
+            style: "display: none"
+        });
     };
 
     p._removeActivated = function() {
