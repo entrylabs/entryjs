@@ -138,10 +138,17 @@ Entry.Stage.prototype.initStage = function(canvas) {
 
     this.initWall();
 
-    function render() {
-        Entry.stage.update();
-    }
-    setInterval(render, 1000/60);
+
+    this.render();
+};
+
+Entry.Stage.prototype.render = function() {
+    if (Entry.stage.timer)
+        clearTimeout(Entry.stage.timer);
+    var time = new Date().getTime();
+    Entry.stage.update();
+    time = new Date().getTime() - time;
+    Entry.stage.timer = setTimeout(Entry.stage.render, 16 - time % 16 + 16 * Math.floor(time / 16));
 };
 
 /**

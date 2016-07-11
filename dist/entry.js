@@ -12046,11 +12046,11 @@ Entry.Parser = function(a, b, c) {
         d[e + "();\n"] = b.Scope[e];
       }
       "BasicIf" in b && (d.front = "BasicIf");
-      CodeMirror.commands.javascriptComplete = function(b) {
-        CodeMirror.showHint(b, null, {globalScope:d});
+      CodeMirror.commands.javascriptComplete = function(a) {
+        CodeMirror.showHint(a, null, {globalScope:d});
       };
-      c.on("keyup", function(b, a) {
-        !b.state.completionActive && 65 <= a.keyCode && 95 >= a.keyCode && CodeMirror.showHint(b, null, {completeSingle:!1, globalScope:d});
+      c.on("keyup", function(a, b) {
+        !a.state.completionActive && 65 <= b.keyCode && 95 >= b.keyCode && CodeMirror.showHint(a, null, {completeSingle:!1, globalScope:d});
       });
       break;
     case "block":
@@ -12058,32 +12058,32 @@ Entry.Parser = function(a, b, c) {
   }
 };
 (function(a) {
-  a.parse = function(b) {
-    var a = null;
+  a.parse = function(a) {
+    var c = null;
     switch(this._lang) {
       case "js":
         try {
-          var d = acorn.parse(b), a = this._parser.Program(d);
+          var d = acorn.parse(a), c = this._parser.Program(d);
         } catch (e) {
-          this.codeMirror && (e instanceof SyntaxError ? (b = {from:{line:e.loc.line - 1, ch:e.loc.column - 2}, to:{line:e.loc.line - 1, ch:e.loc.column + 1}}, e.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : (b = this.getLineNumber(e.node.start, e.node.end), b.message = e.message, b.severity = "error", this.codeMirror.markText(b.from, b.to, {className:"CodeMirror-lint-mark-error", __annotation:b, clearOnEnter:!0})), Entry.toast.alert("Error", e.message)), a = [];
+          this.codeMirror && (e instanceof SyntaxError ? (a = {from:{line:e.loc.line - 1, ch:e.loc.column - 2}, to:{line:e.loc.line - 1, ch:e.loc.column + 1}}, e.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : (a = this.getLineNumber(e.node.start, e.node.end), a.message = e.message, a.severity = "error", this.codeMirror.markText(a.from, a.to, {className:"CodeMirror-lint-mark-error", __annotation:a, clearOnEnter:!0})), Entry.toast.alert("Error", e.message)), c = [];
         }
         break;
       case "block":
-        b = this._parser.Code(b).match(/(.*{.*[\S|\s]+?}|.+)/g), a = Array.isArray(b) ? b.reduce(function(b, a, c) {
-          1 === c && (b += "\n");
-          return (-1 < a.indexOf("function") ? a + b : b + a) + "\n";
+        a = this._parser.Code(a).match(/(.*{.*[\S|\s]+?}|.+)/g), c = Array.isArray(a) ? a.reduce(function(a, b, c) {
+          1 === c && (a += "\n");
+          return (-1 < b.indexOf("function") ? b + a : a + b) + "\n";
         }) : "";
     }
-    return a;
+    return c;
   };
-  a.getLineNumber = function(b, a) {
+  a.getLineNumber = function(a, c) {
     var d = this.codeMirror.getValue(), e = {from:{}, to:{}};
-    b = d.substring(0, b).split(/\n/gi);
-    e.from.line = b.length - 1;
-    e.from.ch = b[b.length - 1].length;
     a = d.substring(0, a).split(/\n/gi);
-    e.to.line = a.length - 1;
-    e.to.ch = a[a.length - 1].length;
+    e.from.line = a.length - 1;
+    e.from.ch = a[a.length - 1].length;
+    c = d.substring(0, c).split(/\n/gi);
+    e.to.line = c.length - 1;
+    e.to.ch = c[c.length - 1].length;
     return e;
   };
   a.mappingSyntax = function(a) {
@@ -13841,9 +13841,14 @@ Entry.Stage.prototype.initStage = function(a) {
     }
   });
   this.initWall();
-  setInterval(function() {
-    Entry.stage.update();
-  }, 1E3 / 60);
+  this.render();
+};
+Entry.Stage.prototype.render = function() {
+  Entry.stage.timer && clearTimeout(Entry.stage.timer);
+  var a = (new Date).getTime();
+  Entry.stage.update();
+  a = (new Date).getTime() - a;
+  Entry.stage.timer = setTimeout(Entry.stage.render, 16 - a % 16 + 16 * Math.floor(a / 16));
 };
 Entry.Stage.prototype.update = function() {
   Entry.requestUpdate && (Entry.engine.isState("stop") && this.objectUpdated ? (this.canvas.update(), this.objectUpdated = !1) : this.canvas.update(), this.inputField && !this.inputField._isHidden && this.inputField.render());
@@ -19191,10 +19196,12 @@ Entry.Scope = function(a, b) {
     return this.executor.stepInto(this.block.statements[this._getStatementIndex(a, c)]);
   };
   a._getParamIndex = function(a) {
-    return Entry.block[this.type].paramsKeyMap[a];
+    this._schema || (this._schema = Entry.block[this.type]);
+    return this._schema.paramsKeyMap[a];
   };
   a._getStatementIndex = function(a) {
-    return Entry.block[this.type].statementsKeyMap[a];
+    this._schema || (this._schema = Entry.block[this.type]);
+    return this._schema.statementsKeyMap[a];
   };
   a.die = function() {
     this.block = null;
