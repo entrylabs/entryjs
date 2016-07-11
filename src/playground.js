@@ -1260,8 +1260,10 @@ Entry.Playground.prototype.flushPlayground = function () {
 
 Entry.Playground.prototype.refreshPlayground = function () {
     if (Entry.playground && Entry.playground.view_) {
-        this.injectPicture();
-        this.injectSound();
+        if (this.getViewMode() === "picture")
+            this.injectPicture();
+        if (this.getViewMode() === "sound")
+            this.injectSound();
     }
 };
 

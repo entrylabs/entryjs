@@ -7257,6 +7257,7 @@ Entry.Container.prototype.moveElement = function(a, b, c) {
   this.objects_.splice(b, 0, this.objects_.splice(a, 1)[0]);
   this.setCurrentObjects();
   Entry.container.updateListView();
+  Entry.requestUpdate = !0;
   return new Entry.State(Entry.container, Entry.container.moveElement, b, a, !0);
 };
 Entry.Container.prototype.moveElementByBlock = function(a, b) {
@@ -13113,7 +13114,7 @@ Entry.Playground.prototype.flushPlayground = function() {
   }
 };
 Entry.Playground.prototype.refreshPlayground = function() {
-  Entry.playground && Entry.playground.view_ && (this.injectPicture(), this.injectSound());
+  Entry.playground && Entry.playground.view_ && ("picture" === this.getViewMode() && this.injectPicture(), "sound" === this.getViewMode() && this.injectSound());
 };
 Entry.Playground.prototype.updateListViewOrder = function(a) {
   a = "picture" == a ? this.pictureListView_.childNodes : this.soundListView_.childNodes;
