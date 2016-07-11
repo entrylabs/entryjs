@@ -11121,12 +11121,22 @@ Entry.PyHint = function() {
   var a = "Entry;self;Hw;while True;True;False;break;for i in range;if;if else;len;random.randint".split(";"), d = {_global:[]}, c = Entry.block, e;
   for (e in c) {
     var f = c[e].syntax;
-    if (f && f.py && (f = f.py.join(""), f = f.split("."), 1 !== f.length)) {
+    if (f && f.py) {
+      f = f.py.join("");
+      f = f.split(".");
+      console.log("syntax", f, "include", f[0].indexOf("def"));
+      if (-1 < f[0].indexOf("def ")) {
+        f = f[0].split(" ");
+      } else {
+        if (1 === f.length) {
+          continue;
+        }
+      }
       var g = f.shift();
       d[g] || (d[g] = [], d._global.push({displayText:g, text:g}));
       var f = f[0].split(","), h = "(" + Array(f.length).join(" , ") + ")", f = f[0].split("(")[0];
       d[g].push({displayText:f, text:f + h});
-      d._global.push({displayText:g + "." + f, text:g + "." + f + h});
+      "def" == g ? d._global.push({displayText:g + " " + f, text:g + " " + f + h}) : d._global.push({displayText:g + "." + f, text:g + "." + f + h});
     }
   }
 };

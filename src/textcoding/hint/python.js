@@ -66,7 +66,7 @@ Entry.PyHint = function() {
 
     var syntaxMap = {_global: []};
 
-    var blocks = Entry.block;
+    var blocks = Entry.block; 
     for (var key in blocks) {
         var block = blocks[key];
         var syntax = block.syntax;
@@ -74,9 +74,16 @@ Entry.PyHint = function() {
             continue;
         syntax = syntax.py.join("");
         syntax = syntax.split('.');
-        if (syntax.length === 1)
+        console.log("syntax", syntax, "include", syntax[0].indexOf("def"));
+        
+        if(syntax[0].indexOf("def ") > -1) {
+            syntax = syntax[0].split(' ');
+        }
+        else if(syntax.length === 1)
             continue;
+
         var objName = syntax.shift();
+
         if (!syntaxMap[objName]) {
             syntaxMap[objName] = [];
             syntaxMap._global.push({
@@ -84,17 +91,27 @@ Entry.PyHint = function() {
                 text: objName
             });
         }
+
         syntax = syntax[0].split(',');
-        var paramPart = "(" + new Array(syntax.length).join(" , ")+ ")"
+        var paramPart = "(" + new Array(syntax.length).join(" , ") + ")";
         var operator = syntax[0].split('(')[0];
         syntaxMap[objName].push({
             displayText: operator,
             text: operator + paramPart
         });
-        syntaxMap._global.push({
-            displayText: objName + "." + operator,
-            text: objName + "." + operator + paramPart
-        });
+
+        if(objName == "def") {
+            syntaxMap._global.push({
+                displayText: objName + " " + operator,
+                text: objName + " " + operator + paramPart
+            });
+        } 
+        else {
+            syntaxMap._global.push({
+                displayText: objName + "." + operator,
+                text: objName + "." + operator + paramPart
+            });
+        }
     }
 
     function fuzzySearch(arr, start, options) {
