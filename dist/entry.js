@@ -18332,7 +18332,7 @@ Entry.Board.OPTION_DOWNLOAD = 3;
   };
   b._initContextOptions = function() {
     var a = this;
-    this._contextOptions = [{activated:!0, option:{text:"\ubd99\uc5ec\ub123\uae30", enable:!!Entry.clipboard, callback:function() {
+    this._contextOptions = [{activated:!0, option:{text:Lang.Blocks.Paste_blocks, enable:!!Entry.clipboard, callback:function() {
       Entry.do("addThread", Entry.clipboard).value.getFirstBlock().copyToClipboard();
     }}}, {activated:!0, option:{text:Lang.Blocks.tidy_up_block, callback:function() {
       a.alignThreads();

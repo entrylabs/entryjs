@@ -890,7 +890,7 @@ Entry.Board.OPTION_DOWNLOAD = 3;
             {
                 activated: true,
                 option: {
-                    text: '붙여넣기',
+                    text: Lang.Blocks.Paste_blocks,
                     enable: !!Entry.clipboard,
                     callback: function(){
                         Entry.do('addThread', Entry.clipboard).value
