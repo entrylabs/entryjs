@@ -1014,7 +1014,7 @@ Entry.BlockView.pngMap = {};
 
     p.getDataUrl = function(notClone, notPng) {
         var deferred = $.Deferred();
-        var svgData = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">(svgGroup)(defs)</svg>';
+        var svgData = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %W %H">(svgGroup)(defs)</svg>';
         var bBox = this.svgGroup.getBoundingClientRect();
         var svgGroup = notClone ? this.svgGroup : this.svgGroup.cloneNode(true);
         var box = this._skeleton.box(this)
@@ -1053,13 +1053,10 @@ Entry.BlockView.pngMap = {};
                     text.setAttribute('y', y-1);
                 }
 
-                if (notResizeTypes.indexOf(content) > -1) {
+                if (notResizeTypes.indexOf(content) > -1)
                     text.setAttribute('font-size', (size) + 'px');
-                } else {
+                else
                     text.setAttribute('font-size', (size * fontWeight) + 'px');
-                }
-
-
                 text.setAttribute('alignment-baseline', 'baseline');
             })(texts[i]);
         }
@@ -1084,6 +1081,8 @@ Entry.BlockView.pngMap = {};
         function processSvg() {
             svgData = svgData
                         .replace('(svgGroup)', new XMLSerializer().serializeToString( svgGroup ))
+                        .replace('%W', bBox.width * scale)
+                        .replace('%H', bBox.height * scale)
                         .replace('(defs)', new XMLSerializer().serializeToString( defs[0] ))
                         .replace(/>\s+/g, ">").replace(/\s+</g, "<");
             var src = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgData)));
