@@ -314,6 +314,7 @@ Entry.Scene.prototype.selectScene = function(scene) {
         Entry.stage.sortZorder();
     Entry.container.updateListView();
     this.updateView();
+    Entry.requestUpdate = true;
 };
 
 /**

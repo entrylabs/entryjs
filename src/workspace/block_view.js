@@ -956,13 +956,15 @@ Entry.BlockView.DRAG_RADIUS = 5;
     p._changeFill = function(isPattern) {
         var board = this.getBoard();
         if (!board.patternRect || board.dragBlock) return;
-        var path = this._path;
         var fillColor = this._fillColor;
+        var path = this._path;
 
+        var board = this.getBoard();
         if (isPattern) {
-            var board = this.getBoard();
             board.setPatternRectFill(fillColor);
             fillColor = "url(#blockHoverPattern_" + this.getBoard().suffix +")";
+        } else {
+            board.disablePattern();
         }
         path.attr({fill:fillColor});
     };

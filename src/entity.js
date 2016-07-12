@@ -181,6 +181,7 @@ Entry.EntityObject.prototype.setX = function(x) {
     if (!this.isClone)
         this.parent.updateCoordinateView();
     this.updateDialog();
+    Entry.requestUpdate = true;
 };
 
 /**
@@ -204,6 +205,7 @@ Entry.EntityObject.prototype.setY = function(y) {
     if (!this.isClone)
         this.parent.updateCoordinateView();
     this.updateDialog();
+    Entry.requestUpdate = true;
 };
 
 /**
@@ -246,6 +248,7 @@ Entry.EntityObject.prototype.setDirection = function(direction, flippable) {
     if (!this.isClone)
         this.parent.updateRotationView();
     Entry.dispatchEvent('updateObject');
+    Entry.requestUpdate = true;
 };
 
 /**
@@ -263,6 +266,7 @@ Entry.EntityObject.prototype.setRotation = function(rotation) {
     if (!this.isClone)
         this.parent.updateRotationView();
     Entry.dispatchEvent('updateObject');
+    Entry.requestUpdate = true;
 };
 
 /**
@@ -283,7 +287,7 @@ Entry.EntityObject.prototype.setRegX = function(regX) {
     /** @type {number} */
     this.regX = regX;
     this.object.regX = this.regX;
-
+    Entry.requestUpdate = true;
 };
 
 /**
@@ -304,6 +308,7 @@ Entry.EntityObject.prototype.setRegY = function(regY) {
     /** @type {number} */
     this.regY = regY;
     this.object.regY = this.regY;
+    Entry.requestUpdate = true;
 };
 
 /**
@@ -324,6 +329,7 @@ Entry.EntityObject.prototype.setScaleX = function(scaleX) {
     this.object.scaleX = this.scaleX;
     this.parent.updateCoordinateView();
     this.updateDialog();
+    Entry.requestUpdate = true;
 };
 
 /**
@@ -344,6 +350,7 @@ Entry.EntityObject.prototype.setScaleY = function(scaleY) {
     this.object.scaleY = this.scaleY;
     this.parent.updateCoordinateView();
     this.updateDialog();
+    Entry.requestUpdate = true;
 };
 
 /**
@@ -366,6 +373,7 @@ Entry.EntityObject.prototype.setSize = function(size) {
     this.setScaleY(this.getScaleY() * scale);
     if (!this.isClone)
         this.parent.updateCoordinateView();
+    Entry.requestUpdate = true;
 };
 
 /**
@@ -388,6 +396,7 @@ Entry.EntityObject.prototype.setWidth = function(width) {
         this.textObject.lineWidth = this.width;
     this.updateDialog();
     this.updateBG();
+    Entry.requestUpdate = true;
 };
 
 /**
@@ -411,6 +420,7 @@ Entry.EntityObject.prototype.setHeight = function(height) {
     }
     this.updateDialog();
     this.updateBG();
+    Entry.requestUpdate = true;
 };
 
 /**
@@ -432,6 +442,7 @@ Entry.EntityObject.prototype.setColour = function(colour) {
     this.colour = colour;
     if (this.textObject)
         this.textObject.color = this.colour;
+    Entry.requestUpdate = true;
 };
 
 /**
@@ -453,6 +464,7 @@ Entry.EntityObject.prototype.setBGColour = function(colour) {
     this.bgColor = colour;
     this.updateBG();
     //this.object.color = this.colour;
+    Entry.requestUpdate = true;
 };
 
 /**
@@ -468,6 +480,7 @@ Entry.EntityObject.prototype.setUnderLine = function(underLine) {
         underLine = false;
     this.underLine = underLine;
     this.textObject.underLine = underLine;
+    Entry.requestUpdate = true;
 };
 
 Entry.EntityObject.prototype.getUnderLine = function() {
@@ -479,6 +492,7 @@ Entry.EntityObject.prototype.setStrike = function(strike) {
         strike = false;
     this.strike = strike;
     this.textObject.strike = strike;
+    Entry.requestUpdate = true;
 };
 
 Entry.EntityObject.prototype.getStrike = function() {
@@ -543,6 +557,7 @@ Entry.EntityObject.prototype.syncFont = function() {
         this.setWidth(this.textObject.getMeasuredWidth());
     }
     Entry.stage.updateObject();
+    Entry.requestUpdate = true;
 };
 
 /**
@@ -588,6 +603,7 @@ Entry.EntityObject.prototype.setFontSize = function(fontSize) {
  */
 Entry.EntityObject.prototype.setFontBold = function(isFontBold) {
     this.fontBold = isFontBold;
+    Entry.requestUpdate = true;
 };
 
 /**
@@ -604,6 +620,7 @@ Entry.EntityObject.prototype.toggleFontBold = function() {
  */
 Entry.EntityObject.prototype.setFontItalic = function(isFontItalic) {
     this.fontItalic = isFontItalic;
+    Entry.requestUpdate = true;
 };
 
 /**
@@ -750,6 +767,7 @@ Entry.EntityObject.prototype.setVisible = function(visible) {
     this.object.visible = this.visible;
     if (this.dialog)
         this.syncDialogVisible();
+    Entry.requestUpdate = true;
     return this.visible;
 };
 
@@ -806,6 +824,7 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
             thisPointer.object.cache(0,0,thisPointer.getWidth(),thisPointer.getHeight());
             //Entry.dispatchEvent('updateObject');
             thisPointer = null;
+            Entry.requestUpdate = true;
         };
     } else {
         Entry.image = image;
@@ -905,6 +924,7 @@ Entry.EntityObject.prototype.applyFilter = function() {
         }
         return true;
     }
+    Entry.requestUpdate = true;
 };
 
 
@@ -919,6 +939,7 @@ Entry.EntityObject.prototype.resetFilter = function() {
     this.object.alpha = this.effect.alpha;
 
     this.object.cache(0,0,this.getWidth(),this.getHeight());
+    Entry.requestUpdate = true;
 };
 
 /**
@@ -945,6 +966,7 @@ Entry.EntityObject.prototype.loadSnapshot = function() {
         this.syncModel_(this.snapshot_);
     if (this.parent.objectType == 'sprite')
         this.setImage(this.parent.getPicture());
+    Entry.requestUpdate = true;
 };
 
 /**
@@ -1005,6 +1027,7 @@ Entry.EntityObject.prototype.toJSON = function() {
  */
 Entry.EntityObject.prototype.setInitialEffectValue = function () {
     this.effect = this.getInitialEffectValue();
+    Entry.requestUpdate = true;
 };
 
 /*
