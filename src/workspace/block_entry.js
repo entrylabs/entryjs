@@ -5890,8 +5890,17 @@ Entry.block = {
                 case 'thisThread':
                     return this.die();
                 case 'otherThread':
-                    sprite.parent.script.clearExecutors();
-                    sprite.parent.script.addExecutor(this.executor);
+                    var executor = this.executor;
+                    var code = sprite.parent.script;
+                    var executors = code.executors;
+
+                    for (var i = 0 ; i < executors.length; i++) {
+                        var currentExecutor = executors[i];
+                        if (currentExecutor !== executor) {
+                            code.removeExecutor(currentExecutor);
+                            --i;
+                        }
+                    }
                     return script.callReturn();
             }
         }
