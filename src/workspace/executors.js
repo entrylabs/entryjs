@@ -154,11 +154,15 @@ Entry.Scope = function(block, executor) {
     };
 
     p._getParamIndex = function(key) {
-        return Entry.block[this.type].paramsKeyMap[key];
+        if (!this._schema)
+            this._schema = Entry.block[this.type];
+        return this._schema.paramsKeyMap[key];
     };
 
     p._getStatementIndex = function(key) {
-        return Entry.block[this.type].statementsKeyMap[key];
+        if (!this._schema)
+            this._schema = Entry.block[this.type];
+        return this._schema.statementsKeyMap[key];
     };
 
     p.die = function() {

@@ -860,8 +860,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
+  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(c, d);
   return a.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1061,8 +1061,8 @@ Blockly.Blocks.dplay_select_led = {init:function() {
 Entry.block.dplay_select_led = function(b, a) {
   var c = a.getField("PORT"), d = 7;
   "7" == c ? d = 7 : "8" == c ? d = 8 : "9" == c ? d = 9 : "10" == c && (d = 10);
-  c = a.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(d, "on" == c ? 255 : 0);
+  c = "on" == a.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(d, c);
   return a.callReturn();
 };
 Blockly.Blocks.dplay_get_switch_status = {init:function() {
@@ -2072,10 +2072,10 @@ Entry.block.wait_second = function(b, a) {
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a);
+  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
   setTimeout(function() {
     a.timeFlag = 0;
-  }, 60 / (Entry.FPS || 60) * c * 1E3);
+  }, c);
   return a;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -6436,6 +6436,7 @@ Entry.Container.prototype.moveElement = function(b, a, c) {
   this.objects_.splice(a, 0, this.objects_.splice(b, 1)[0]);
   this.setCurrentObjects();
   Entry.container.updateListView();
+  Entry.requestUpdate = !0;
   return new Entry.State(Entry.container, Entry.container.moveElement, a, b, !0);
 };
 Entry.Container.prototype.moveElementByBlock = function(b, a) {
@@ -6915,6 +6916,7 @@ Entry.Engine = function() {
   this.popup = null;
   this.isUpdating = !0;
   this.speeds = [1, 15, 30, 45, 60];
+  this._mouseMoved = !1;
   Entry.keyPressed && Entry.keyPressed.attach(this, this.captureKeyEvent);
   Entry.addEventListener("canvasClick", function(a) {
     Entry.engine.fireEvent("mouse_clicked");
@@ -6929,8 +6931,8 @@ Entry.Engine = function() {
     Entry.engine.fireEventOnEntity("when_object_click_canceled", a);
   });
   "phone" != Entry.type && (Entry.addEventListener("stageMouseMove", function(a) {
-    Entry.engine.updateMouseView();
-  }), Entry.addEventListener("stageMouseOut", function(a) {
+    this._mouseMoved = !0;
+  }.bind(this)), Entry.addEventListener("stageMouseOut", function(a) {
     Entry.engine.hideMouseView();
   }));
   Entry.addEventListener("run", function() {
@@ -6939,6 +6941,9 @@ Entry.Engine = function() {
   Entry.addEventListener("stop", function() {
     $(window).unbind("keydown", b);
   });
+  setInterval(function() {
+    this._mouseMoved && (this.updateMouseView(), this._mouseMoved = !1);
+  }.bind(this), 100);
 };
 Entry.Engine.prototype.generateView = function(b, a) {
   if (a && "workspace" != a) {
@@ -7129,26 +7134,14 @@ Entry.Engine.prototype.run = function() {
   this.isState("run") ? this.toggleStop() : (this.isState("stop") || this.isState("pause")) && this.toggleRun();
 };
 Entry.Engine.prototype.toggleRun = function() {
-  Entry.addActivity("run");
-  "stop" == this.state && (Entry.container.mapEntity(function(b) {
+  "pause" === this.state ? this.togglePause() : (Entry.addActivity("run"), "stop" == this.state && (Entry.container.mapEntity(function(b) {
     b.takeSnapshot();
   }), Entry.variableContainer.mapVariable(function(b) {
     b.takeSnapshot();
   }), Entry.variableContainer.mapList(function(b) {
     b.takeSnapshot();
-  }), this.projectTimer.takeSnapshot(), Entry.container.inputValue.takeSnapshot(), Entry.container.takeSequenceSnapshot(), Entry.scene.takeStartSceneSnapshot(), this.state = "run", this.fireEvent("start"));
-  this.state = "run";
-  "mobile" == Entry.type && this.view_.addClass("entryEngineBlueWorkspace");
-  this.pauseButton.innerHTML = Lang.Workspace.pause;
-  this.runButton.addClass("run");
-  this.runButton.addClass("entryRemove");
-  this.stopButton.removeClass("entryRemove");
-  this.pauseButton && this.pauseButton.removeClass("entryRemove");
-  this.runButton2 && this.runButton2.addClass("entryRemove");
-  this.stopButton2 && this.stopButton2.removeClass("entryRemove");
-  this.isUpdating || (Entry.engine.update(), Entry.engine.isUpdating = !0);
-  Entry.stage.selectObject();
-  Entry.dispatchEvent("run");
+  }), this.projectTimer.takeSnapshot(), Entry.container.inputValue.takeSnapshot(), Entry.container.takeSequenceSnapshot(), Entry.scene.takeStartSceneSnapshot(), this.state = "run", this.fireEvent("start")), this.state = "run", "mobile" == Entry.type && this.view_.addClass("entryEngineBlueWorkspace"), this.pauseButton.innerHTML = Lang.Workspace.pause, this.runButton.addClass("run"), this.runButton.addClass("entryRemove"), this.stopButton.removeClass("entryRemove"), this.pauseButton && this.pauseButton.removeClass("entryRemove"), 
+  this.runButton2 && this.runButton2.addClass("entryRemove"), this.stopButton2 && this.stopButton2.removeClass("entryRemove"), this.isUpdating || (Entry.engine.update(), Entry.engine.isUpdating = !0), Entry.stage.selectObject(), Entry.dispatchEvent("run"));
 };
 Entry.Engine.prototype.toggleStop = function() {
   Entry.addActivity("stop");
@@ -7187,7 +7180,9 @@ Entry.Engine.prototype.toggleStop = function() {
   Entry.stage.hideInputField();
 };
 Entry.Engine.prototype.togglePause = function() {
-  "pause" == this.state ? (this.state = "run", this.pauseButton.innerHTML = Lang.Workspace.pause) : (this.state = "pause", this.pauseButton.innerHTML = Lang.Workspace.restart, this.runButton.removeClass("entryRemove"), this.stopButton.removeClass("entryRemove"));
+  var b = Entry.engine.projectTimer;
+  "pause" == this.state ? (b.pausedTime += (new Date).getTime() - b.pauseStart, b.isPaused ? b.pauseStart = (new Date).getTime() : delete b.pauseStart, this.state = "run", this.pauseButton.innerHTML = Lang.Workspace.pause, this.runButton.addClass("entryRemove"), this.runButton2 && this.runButton2.addClass("entryRemove")) : (this.state = "pause", b.isPaused && (b.pausedTime += (new Date).getTime() - b.pauseStart), b.pauseStart = (new Date).getTime(), this.pauseButton.innerHTML = Lang.Workspace.restart, 
+  this.runButton.removeClass("entryRemove"), this.stopButton.removeClass("entryRemove"), this.runButton2 && this.runButton2.removeClass("entryRemove"));
 };
 Entry.Engine.prototype.fireEvent = function(b) {
   "run" == this.state && Entry.container.mapEntityIncludeCloneOnScene(this.raiseEvent, b);
@@ -7211,7 +7206,7 @@ Entry.Engine.prototype.raiseKeyEvent = function(b, a) {
 };
 Entry.Engine.prototype.updateMouseView = function() {
   var b = Entry.stage.mouseCoordinate;
-  this.mouseView.innerHTML = "X : " + b.x + ", Y : " + b.y;
+  this.mouseView.textContent = "X : " + b.x + ", Y : " + b.y;
   this.mouseView.removeClass("entryRemove");
 };
 Entry.Engine.prototype.hideMouseView = function() {
@@ -7230,9 +7225,11 @@ Entry.Engine.prototype.toggleFullscreen = function() {
     }
     popup.window_.appendChild(Entry.engine.view_);
   }
+  Entry.windowResized.notify();
 };
 Entry.Engine.prototype.exitFullScreen = function() {
   document.webkitIsFullScreen || document.mozIsFullScreen || document.isFullScreen || (Entry.engine.footerView_.removeClass("entryRemove"), Entry.engine.headerView_.removeClass("entryRemove"));
+  Entry.windowResized.notify();
 };
 Entry.Engine.prototype.showProjectTimer = function() {
   Entry.engine.projectTimer && this.projectTimer.setVisible(!0);
@@ -7265,8 +7262,11 @@ Entry.Engine.prototype.stopProjectTimer = function() {
   b && (this.updateProjectTimer(0), b.isPaused = !1, b.isInit = !1, b.pausedTime = 0, clearInterval(b.tick));
 };
 Entry.Engine.prototype.updateProjectTimer = function(b) {
-  var a = Entry.engine.projectTimer, c = (new Date).getTime();
-  a && ("undefined" == typeof b ? a.isPaused || a.setValue((c - a.start - a.pausedTime) / 1E3) : (a.setValue(b), a.pausedTime = 0, a.start = c));
+  var a = Entry.engine, c = a.projectTimer;
+  if (c) {
+    var d = (new Date).getTime();
+    "undefined" == typeof b ? c.isPaused || a.isState("pause") || c.setValue((d - c.start - c.pausedTime) / 1E3) : (c.setValue(b), c.pausedTime = 0, c.start = d);
+  }
 };
 Entry.EntityObject = function(b) {
   this.parent = b;
@@ -7343,13 +7343,13 @@ Entry.EntityObject.prototype.restoreEntity = function(b) {
   Entry.stateManager && Entry.stateManager.addCommand("restore object", this, this.restoreEntity, a);
 };
 Entry.EntityObject.prototype.setX = function(b) {
-  "number" == typeof b && (this.x = b, this.object.x = this.x, this.isClone || this.parent.updateCoordinateView(), this.updateDialog());
+  "number" == typeof b && (this.x = b, this.object.x = this.x, this.isClone || this.parent.updateCoordinateView(), this.updateDialog(), Entry.requestUpdate = !0);
 };
 Entry.EntityObject.prototype.getX = function() {
   return this.x;
 };
 Entry.EntityObject.prototype.setY = function(b) {
-  "number" == typeof b && (this.y = b, this.object.y = -this.y, this.isClone || this.parent.updateCoordinateView(), this.updateDialog());
+  "number" == typeof b && (this.y = b, this.object.y = -this.y, this.isClone || this.parent.updateCoordinateView(), this.updateDialog(), Entry.requestUpdate = !0);
 };
 Entry.EntityObject.prototype.getY = function() {
   return this.y;
@@ -7364,6 +7364,7 @@ Entry.EntityObject.prototype.setDirection = function(b, a) {
   this.object.direction = this.direction;
   this.isClone || this.parent.updateRotationView();
   Entry.dispatchEvent("updateObject");
+  Entry.requestUpdate = !0;
 };
 Entry.EntityObject.prototype.setRotation = function(b) {
   "free" != this.parent.getRotateMethod() && (b = 0);
@@ -7372,6 +7373,7 @@ Entry.EntityObject.prototype.setRotation = function(b) {
   this.updateDialog();
   this.isClone || this.parent.updateRotationView();
   Entry.dispatchEvent("updateObject");
+  Entry.requestUpdate = !0;
 };
 Entry.EntityObject.prototype.getRotation = function() {
   return this.rotation;
@@ -7380,6 +7382,7 @@ Entry.EntityObject.prototype.setRegX = function(b) {
   "textBox" == this.type && (b = 0);
   this.regX = b;
   this.object.regX = this.regX;
+  Entry.requestUpdate = !0;
 };
 Entry.EntityObject.prototype.getRegX = function() {
   return this.regX;
@@ -7388,6 +7391,7 @@ Entry.EntityObject.prototype.setRegY = function(b) {
   "textBox" == this.type && (b = 0);
   this.regY = b;
   this.object.regY = this.regY;
+  Entry.requestUpdate = !0;
 };
 Entry.EntityObject.prototype.getRegY = function() {
   return this.regY;
@@ -7397,6 +7401,7 @@ Entry.EntityObject.prototype.setScaleX = function(b) {
   this.object.scaleX = this.scaleX;
   this.parent.updateCoordinateView();
   this.updateDialog();
+  Entry.requestUpdate = !0;
 };
 Entry.EntityObject.prototype.getScaleX = function() {
   return this.scaleX;
@@ -7406,6 +7411,7 @@ Entry.EntityObject.prototype.setScaleY = function(b) {
   this.object.scaleY = this.scaleY;
   this.parent.updateCoordinateView();
   this.updateDialog();
+  Entry.requestUpdate = !0;
 };
 Entry.EntityObject.prototype.getScaleY = function() {
   return this.scaleY;
@@ -7416,6 +7422,7 @@ Entry.EntityObject.prototype.setSize = function(b) {
   this.setScaleX(this.getScaleX() * b);
   this.setScaleY(this.getScaleY() * b);
   this.isClone || this.parent.updateCoordinateView();
+  Entry.requestUpdate = !0;
 };
 Entry.EntityObject.prototype.getSize = function() {
   return (this.getWidth() * Math.abs(this.getScaleX()) + this.getHeight() * Math.abs(this.getScaleY())) / 2;
@@ -7426,6 +7433,7 @@ Entry.EntityObject.prototype.setWidth = function(b) {
   this.textObject && this.getLineBreak() && (this.textObject.lineWidth = this.width);
   this.updateDialog();
   this.updateBG();
+  Entry.requestUpdate = !0;
 };
 Entry.EntityObject.prototype.getWidth = function() {
   return this.width;
@@ -7435,6 +7443,7 @@ Entry.EntityObject.prototype.setHeight = function(b) {
   this.textObject && (this.object.height = this.height, this.alignTextBox());
   this.updateDialog();
   this.updateBG();
+  Entry.requestUpdate = !0;
 };
 Entry.EntityObject.prototype.getHeight = function() {
   return this.height;
@@ -7443,6 +7452,7 @@ Entry.EntityObject.prototype.setColour = function(b) {
   b || (b = "#000000");
   this.colour = b;
   this.textObject && (this.textObject.color = this.colour);
+  Entry.requestUpdate = !0;
 };
 Entry.EntityObject.prototype.getColour = function() {
   return this.colour;
@@ -7451,6 +7461,7 @@ Entry.EntityObject.prototype.setBGColour = function(b) {
   b || (b = "transparent");
   this.bgColor = b;
   this.updateBG();
+  Entry.requestUpdate = !0;
 };
 Entry.EntityObject.prototype.getBGColour = function() {
   return this.bgColor;
@@ -7459,6 +7470,7 @@ Entry.EntityObject.prototype.setUnderLine = function(b) {
   void 0 === b && (b = !1);
   this.underLine = b;
   this.textObject.underLine = b;
+  Entry.requestUpdate = !0;
 };
 Entry.EntityObject.prototype.getUnderLine = function() {
   return this.underLine;
@@ -7467,6 +7479,7 @@ Entry.EntityObject.prototype.setStrike = function(b) {
   void 0 === b && (b = !1);
   this.strike = b;
   this.textObject.strike = b;
+  Entry.requestUpdate = !0;
 };
 Entry.EntityObject.prototype.getStrike = function() {
   return this.strike;
@@ -7505,6 +7518,7 @@ Entry.EntityObject.prototype.syncFont = function() {
   Entry.stage.update();
   this.getLineBreak() || this.setWidth(this.textObject.getMeasuredWidth());
   Entry.stage.updateObject();
+  Entry.requestUpdate = !0;
 };
 Entry.EntityObject.prototype.getFontType = function() {
   return this.fontType;
@@ -7520,6 +7534,7 @@ Entry.EntityObject.prototype.setFontSize = function(b) {
 };
 Entry.EntityObject.prototype.setFontBold = function(b) {
   this.fontBold = b;
+  Entry.requestUpdate = !0;
 };
 Entry.EntityObject.prototype.toggleFontBold = function() {
   this.fontBold = !this.fontBold;
@@ -7528,6 +7543,7 @@ Entry.EntityObject.prototype.toggleFontBold = function() {
 };
 Entry.EntityObject.prototype.setFontItalic = function(b) {
   this.fontItalic = b;
+  Entry.requestUpdate = !0;
 };
 Entry.EntityObject.prototype.toggleFontItalic = function() {
   this.fontItalic = !this.fontItalic;
@@ -7580,6 +7596,7 @@ Entry.EntityObject.prototype.setVisible = function(b) {
   this.visible = b;
   this.object.visible = this.visible;
   this.dialog && this.syncDialogVisible();
+  Entry.requestUpdate = !0;
   return this.visible;
 };
 Entry.EntityObject.prototype.getVisible = function() {
@@ -7611,6 +7628,7 @@ Entry.EntityObject.prototype.setImage = function(b) {
       f.object.image = e;
       f.object.cache(0, 0, f.getWidth(), f.getHeight());
       f = null;
+      Entry.requestUpdate = !0;
     };
   }
   Entry.dispatchEvent("updateObject");
@@ -7644,10 +7662,10 @@ Entry.EntityObject.prototype.applyFilter = function() {
     e.push(g);
     b.alpha = a.alpha = f(a.alpha, 0, 1);
     b.filters = e;
-  }(b, a), a.cache(0, 0, this.getWidth(), this.getHeight()));
+  }(b, a), a.cache(0, 0, this.getWidth(), this.getHeight()), Entry.requestUpdate = !0);
 };
 Entry.EntityObject.prototype.resetFilter = function() {
-  "sprite" == this.parent.objectType && (this.object.filters = [], this.setInitialEffectValue(), this.object.alpha = this.effect.alpha, this.object.cache(0, 0, this.getWidth(), this.getHeight()));
+  "sprite" == this.parent.objectType && (this.object.filters = [], this.setInitialEffectValue(), this.object.alpha = this.effect.alpha, this.object.cache(0, 0, this.getWidth(), this.getHeight()), Entry.requestUpdate = !0);
 };
 Entry.EntityObject.prototype.updateDialog = function() {
   this.dialog && this.dialog.update();
@@ -7659,6 +7677,7 @@ Entry.EntityObject.prototype.takeSnapshot = function() {
 Entry.EntityObject.prototype.loadSnapshot = function() {
   this.snapshot_ && this.syncModel_(this.snapshot_);
   "sprite" == this.parent.objectType && this.setImage(this.parent.getPicture());
+  Entry.requestUpdate = !0;
 };
 Entry.EntityObject.prototype.removeClone = function() {
   if (this.isClone) {
@@ -7692,6 +7711,7 @@ Entry.EntityObject.prototype.toJSON = function() {
 };
 Entry.EntityObject.prototype.setInitialEffectValue = function() {
   this.effect = this.getInitialEffectValue();
+  Entry.requestUpdate = !0;
 };
 Entry.EntityObject.prototype.getInitialEffectValue = function() {
   return {blur:0, hue:0, hsv:0, brightness:0, contrast:0, saturation:0, alpha:1};
@@ -7994,6 +8014,7 @@ Entry.EntryObject = function(b) {
       d.onload = function(a) {
         Entry.container.cachePicture(c.id, d);
         Entry.Loader.removeQueue();
+        Entry.requestUpdate = !0;
       };
     }
   }
@@ -10865,6 +10886,7 @@ Entry.Scene.prototype.selectScene = function(b) {
     Entry.container.listView_ || Entry.stage.sortZorder();
     Entry.container.updateListView();
     this.updateView();
+    Entry.requestUpdate = !0;
   }
 };
 Entry.Scene.prototype.toJSON = function() {
@@ -11035,382 +11057,6 @@ p.callReturn = function() {
 };
 p.run = function() {
   return Entry.block[this.type](this.entity, this);
-};
-Entry.Stage = function() {
-  this.variables = {};
-  this.background = new createjs.Shape;
-  this.background.graphics.beginFill("#ffffff").drawRect(-480, -240, 960, 480);
-  this.objectContainers = [];
-  this.selectedObjectContainer = null;
-  this.variableContainer = new createjs.Container;
-  this.dialogContainer = new createjs.Container;
-  this.selectedObject = null;
-  this.isObjectClick = !1;
-};
-Entry.Stage.prototype.initStage = function(b) {
-  this.canvas = new createjs.Stage(b.id);
-  this.canvas.x = 320;
-  this.canvas.y = 180;
-  this.canvas.scaleX = this.canvas.scaleY = 2 / 1.5;
-  createjs.Touch.enable(this.canvas);
-  this.canvas.enableMouseOver(10);
-  this.canvas.mouseMoveOutside = !0;
-  this.canvas.addChild(this.background);
-  this.canvas.addChild(this.variableContainer);
-  this.canvas.addChild(this.dialogContainer);
-  this.inputField = null;
-  this.initCoordinator();
-  this.initHandle();
-  this.mouseCoordinate = {x:0, y:0};
-  if (Entry.isPhone()) {
-    b.ontouchstart = function(a) {
-      Entry.dispatchEvent("canvasClick", a);
-      Entry.stage.isClick = !0;
-    }, b.ontouchend = function(a) {
-      Entry.stage.isClick = !1;
-      Entry.dispatchEvent("canvasClickCanceled", a);
-    };
-  } else {
-    var a = function(a) {
-      Entry.dispatchEvent("canvasClick", a);
-      Entry.stage.isClick = !0;
-    };
-    b.onmousedown = a;
-    b.ontouchstart = a;
-    a = function(a) {
-      Entry.stage.isClick = !1;
-      Entry.dispatchEvent("canvasClickCanceled", a);
-    };
-    b.onmouseup = a;
-    b.ontouchend = a;
-    $(document).click(function(a) {
-      Entry.stage.focused = "entryCanvas" === a.target.id ? !0 : !1;
-    });
-  }
-  Entry.addEventListener("canvasClick", function(a) {
-    Entry.stage.isObjectClick = !1;
-  });
-  a = function(a) {
-    a.preventDefault();
-    var b = this.getBoundingClientRect(), e;
-    -1 < Entry.getBrowserType().indexOf("IE") ? (e = 480 * ((a.pageX - b.left - document.documentElement.scrollLeft) / b.width - .5), a = -270 * ((a.pageY - b.top - document.documentElement.scrollTop) / b.height - .5)) : a.changedTouches ? (e = 480 * ((a.changedTouches[0].pageX - b.left - document.body.scrollLeft) / b.width - .5), a = -270 * ((a.changedTouches[0].pageY - b.top - document.body.scrollTop) / b.height - .5)) : (e = 480 * ((a.pageX - b.left - document.body.scrollLeft) / b.width - .5), 
-    a = -270 * ((a.pageY - b.top - document.body.scrollTop) / b.height - .5));
-    Entry.stage.mouseCoordinate = {x:e.toFixed(1), y:a.toFixed(1)};
-    Entry.dispatchEvent("stageMouseMove");
-  };
-  b.onmousemove = a;
-  b.ontouchmove = a;
-  b.onmouseout = function(a) {
-    Entry.dispatchEvent("stageMouseOut");
-  };
-  Entry.addEventListener("updateObject", function(a) {
-    Entry.engine.isState("stop") && Entry.stage.updateObject();
-  });
-  Entry.addEventListener("canvasInputComplete", function(a) {
-    try {
-      var b = Entry.stage.inputField.value();
-      Entry.stage.hideInputField();
-      if (b) {
-        var e = Entry.container;
-        e.setInputValue(b);
-        e.inputValue.complete = !0;
-      }
-    } catch (f) {
-    }
-  });
-  this.initWall();
-  this.render();
-};
-Entry.Stage.prototype.render = function() {
-  Entry.stage.timer && clearTimeout(Entry.stage.timer);
-  var b = (new Date).getTime();
-  Entry.stage.update();
-  b = (new Date).getTime() - b;
-  Entry.stage.timer = setTimeout(Entry.stage.render, 16 - b % 16 + 16 * Math.floor(b / 16));
-};
-Entry.Stage.prototype.update = function() {
-  Entry.engine.isState("stop") && this.objectUpdated ? (this.canvas.update(), this.objectUpdated = !1) : this.canvas.update();
-  this.inputField && !this.inputField._isHidden && this.inputField.render();
-};
-Entry.Stage.prototype.loadObject = function(b) {
-  var a = b.entity.object;
-  this.getObjectContainerByScene(b.scene).addChild(a);
-  this.canvas.update();
-};
-Entry.Stage.prototype.loadEntity = function(b) {
-  Entry.stage.getObjectContainerByScene(b.parent.scene).addChild(b.object);
-  this.sortZorder();
-};
-Entry.Stage.prototype.unloadEntity = function(b) {
-  Entry.stage.getObjectContainerByScene(b.parent.scene).removeChild(b.object);
-};
-Entry.Stage.prototype.loadVariable = function(b) {
-  var a = b.view_;
-  this.variables[b.id] = a;
-  this.variableContainer.addChild(a);
-  this.canvas.update();
-};
-Entry.Stage.prototype.removeVariable = function(b) {
-  this.variableContainer.removeChild(b.view_);
-  this.canvas.update();
-};
-Entry.Stage.prototype.loadDialog = function(b) {
-  this.dialogContainer.addChild(b.object);
-};
-Entry.Stage.prototype.unloadDialog = function(b) {
-  this.dialogContainer.removeChild(b.object);
-};
-Entry.Stage.prototype.sortZorder = function() {
-  for (var b = Entry.container.getCurrentObjects(), a = this.selectedObjectContainer, c = 0, d = b.length - 1;0 <= d;d--) {
-    for (var e = b[d], f = e.entity, e = e.clonedEntities, g = 0, h = e.length;g < h;g++) {
-      e[g].shape && a.setChildIndex(e[g].shape, c++), a.setChildIndex(e[g].object, c++);
-    }
-    f.shape && a.setChildIndex(f.shape, c++);
-    a.setChildIndex(f.object, c++);
-  }
-};
-Entry.Stage.prototype.initCoordinator = function() {
-  var b = new createjs.Container, a = new createjs.Bitmap(Entry.mediaFilePath + "workspace_coordinate.png");
-  a.scaleX = .5;
-  a.scaleY = .5;
-  a.x = -240;
-  a.y = -135;
-  b.addChild(a);
-  this.canvas.addChild(b);
-  b.visible = !1;
-  this.coordinator = b;
-};
-Entry.Stage.prototype.toggleCoordinator = function() {
-  this.coordinator.visible = !this.coordinator.visible;
-};
-Entry.Stage.prototype.selectObject = function(b) {
-  this.selectedObject = b ? b : null;
-  this.updateObject();
-};
-Entry.Stage.prototype.initHandle = function() {
-  this.handle = new EaselHandle(this.canvas);
-  this.handle.setChangeListener(this, this.updateHandle);
-  this.handle.setEditStartListener(this, this.startEdit);
-  this.handle.setEditEndListener(this, this.endEdit);
-};
-Entry.Stage.prototype.updateObject = function() {
-  this.handle.setDraggable(!0);
-  if (!this.editEntity) {
-    var b = this.selectedObject;
-    if (b) {
-      "textBox" == b.objectType ? this.handle.toggleCenter(!1) : this.handle.toggleCenter(!0);
-      "free" == b.getRotateMethod() ? this.handle.toggleRotation(!0) : this.handle.toggleRotation(!1);
-      this.handle.toggleDirection(!0);
-      b.getLock() ? (this.handle.toggleRotation(!1), this.handle.toggleDirection(!1), this.handle.toggleResize(!1), this.handle.toggleCenter(!1), this.handle.setDraggable(!1)) : this.handle.toggleResize(!0);
-      this.handle.setVisible(!0);
-      var a = b.entity;
-      this.handle.setWidth(a.getScaleX() * a.getWidth());
-      this.handle.setHeight(a.getScaleY() * a.getHeight());
-      var c, d;
-      if ("textBox" == a.type) {
-        if (a.getLineBreak()) {
-          c = a.regX * a.scaleX, d = -a.regY * a.scaleY;
-        } else {
-          var e = a.getTextAlign();
-          d = -a.regY * a.scaleY;
-          switch(e) {
-            case Entry.TEXT_ALIGN_LEFT:
-              c = -a.getWidth() / 2 * a.scaleX;
-              break;
-            case Entry.TEXT_ALIGN_CENTER:
-              c = a.regX * a.scaleX;
-              break;
-            case Entry.TEXT_ALIGN_RIGHT:
-              c = a.getWidth() / 2 * a.scaleX;
-          }
-        }
-      } else {
-        c = (a.regX - a.width / 2) * a.scaleX, d = (a.height / 2 - a.regY) * a.scaleY;
-      }
-      e = a.getRotation() / 180 * Math.PI;
-      this.handle.setX(a.getX() - c * Math.cos(e) - d * Math.sin(e));
-      this.handle.setY(-a.getY() - c * Math.sin(e) + d * Math.cos(e));
-      this.handle.setRegX((a.regX - a.width / 2) * a.scaleX);
-      this.handle.setRegY((a.regY - a.height / 2) * a.scaleY);
-      this.handle.setRotation(a.getRotation());
-      this.handle.setDirection(a.getDirection());
-      this.objectUpdated = !0;
-      this.handle.setVisible(b.entity.getVisible());
-      b.entity.getVisible() && this.handle.render();
-    } else {
-      this.handle.setVisible(!1);
-    }
-  }
-};
-Entry.Stage.prototype.updateHandle = function() {
-  this.editEntity = !0;
-  var b = this.handle, a = this.selectedObject.entity;
-  if (a.lineBreak) {
-    a.setHeight(b.height / a.getScaleY()), a.setWidth(b.width / a.getScaleX());
-  } else {
-    if (0 !== a.width) {
-      var c = Math.abs(b.width / a.width);
-      a.flip && (c *= -1);
-      a.setScaleX(c);
-    }
-    0 !== a.height && a.setScaleY(b.height / a.height);
-  }
-  c = b.rotation / 180 * Math.PI;
-  if ("textBox" == a.type) {
-    var d = b.regX / a.scaleX, d = b.regY / a.scaleY;
-    if (a.getLineBreak()) {
-      a.setX(b.x), a.setY(-b.y);
-    } else {
-      switch(a.getTextAlign()) {
-        case Entry.TEXT_ALIGN_LEFT:
-          a.setX(b.x - b.width / 2 * Math.cos(c));
-          a.setY(-b.y + b.width / 2 * Math.sin(c));
-          break;
-        case Entry.TEXT_ALIGN_CENTER:
-          a.setX(b.x);
-          a.setY(-b.y);
-          break;
-        case Entry.TEXT_ALIGN_RIGHT:
-          a.setX(b.x + b.width / 2 * Math.cos(c)), a.setY(-b.y - b.width / 2 * Math.sin(c));
-      }
-    }
-  } else {
-    d = a.width / 2 + b.regX / a.scaleX, a.setX(b.x + b.regX * Math.cos(c) - b.regY * Math.sin(c)), a.setRegX(d), d = a.height / 2 + b.regY / a.scaleY, a.setY(-b.y - b.regX * Math.sin(c) - b.regY * Math.cos(c)), a.setRegY(d);
-  }
-  a.setDirection(b.direction);
-  a.setRotation(b.rotation);
-  this.selectedObject.entity.doCommand();
-  this.editEntity = !1;
-};
-Entry.Stage.prototype.startEdit = function() {
-  this.selectedObject.entity.initCommand();
-};
-Entry.Stage.prototype.endEdit = function() {
-  this.selectedObject.entity.checkCommand();
-};
-Entry.Stage.prototype.initWall = function() {
-  var b = new createjs.Container, a = new Image;
-  a.src = Entry.mediaFilePath + "media/bound.png";
-  b.up = new createjs.Bitmap;
-  b.up.scaleX = 16;
-  b.up.y = -165;
-  b.up.x = -240;
-  b.up.image = a;
-  b.addChild(b.up);
-  b.down = new createjs.Bitmap;
-  b.down.scaleX = 16;
-  b.down.y = 135;
-  b.down.x = -240;
-  b.down.image = a;
-  b.addChild(b.down);
-  b.right = new createjs.Bitmap;
-  b.right.scaleY = 9;
-  b.right.y = -135;
-  b.right.x = 240;
-  b.right.image = a;
-  b.addChild(b.right);
-  b.left = new createjs.Bitmap;
-  b.left.scaleY = 9;
-  b.left.y = -135;
-  b.left.x = -270;
-  b.left.image = a;
-  b.addChild(b.left);
-  this.canvas.addChild(b);
-  this.wall = b;
-};
-Entry.Stage.prototype.showInputField = function(b) {
-  b = 1 / 1.5;
-  this.inputField || (this.inputField = new CanvasInput({canvas:document.getElementById("entryCanvas"), fontSize:30 * b, fontFamily:"NanumGothic", fontColor:"#212121", width:556 * b, height:26 * b, padding:8 * b, borderWidth:1 * b, borderColor:"#000", borderRadius:3 * b, boxShadow:"none", innerShadow:"0px 0px 5px rgba(0, 0, 0, 0.5)", x:202 * b, y:450 * b, topPosition:!0, onsubmit:function() {
-    Entry.dispatchEvent("canvasInputComplete");
-  }}));
-  b = new createjs.Container;
-  var a = new Image;
-  a.src = Entry.mediaFilePath + "confirm_button.png";
-  var c = new createjs.Bitmap;
-  c.scaleX = .23;
-  c.scaleY = .23;
-  c.x = 160;
-  c.y = 89;
-  c.cursor = "pointer";
-  c.image = a;
-  b.addChild(c);
-  b.on("mousedown", function(a) {
-    Entry.dispatchEvent("canvasInputComplete");
-  });
-  this.inputSubmitButton || (this.inputField.value(""), this.canvas.addChild(b), this.inputSubmitButton = b);
-  this.inputField.show();
-};
-Entry.Stage.prototype.hideInputField = function() {
-  this.inputField && this.inputField.value() && this.inputField.value("");
-  this.inputSubmitButton && (this.canvas.removeChild(this.inputSubmitButton), this.inputSubmitButton = null);
-  this.inputField && this.inputField.hide();
-};
-Entry.Stage.prototype.initObjectContainers = function() {
-  var b = Entry.scene.scenes_;
-  if (b && 0 !== b.length) {
-    for (var a = 0;a < b.length;a++) {
-      this.objectContainers[a] = this.createObjectContainer(b[a]);
-    }
-    this.selectedObjectContainer = this.objectContainers[0];
-  } else {
-    b = this.createObjectContainer(Entry.scene.selectedScene), this.objectContainers.push(b), this.selectedObjectContainer = b;
-  }
-  this.canvas.addChild(this.selectedObjectContainer);
-  this.selectObjectContainer(Entry.scene.selectedScene);
-};
-Entry.Stage.prototype.selectObjectContainer = function(b) {
-  if (this.canvas) {
-    for (var a = this.objectContainers, c = 0;c < a.length;c++) {
-      this.canvas.removeChild(a[c]);
-    }
-    this.selectedObjectContainer = this.getObjectContainerByScene(b);
-    this.canvas.addChildAt(this.selectedObjectContainer, 2);
-  }
-};
-Entry.Stage.prototype.reAttachToCanvas = function() {
-  for (var b = [this.selectedObjectContainer, this.variableContainer, this.coordinator, this.handle, this.dialogContainer], a = 0;a < b.length;a++) {
-    this.canvas.removeChild(b[a]), this.canvas.addChild(b[a]);
-  }
-  console.log(this.canvas.getChildIndex(this.selectedObjectContainer));
-};
-Entry.Stage.prototype.createObjectContainer = function(b) {
-  var a = new createjs.Container;
-  a.scene = b;
-  return a;
-};
-Entry.Stage.prototype.removeObjectContainer = function(b) {
-  var a = this.objectContainers;
-  b = this.getObjectContainerByScene(b);
-  this.canvas.removeChild(b);
-  a.splice(this.objectContainers.indexOf(b), 1);
-};
-Entry.Stage.prototype.getObjectContainerByScene = function(b) {
-  for (var a = this.objectContainers, c = 0;c < a.length;c++) {
-    if (a[c].scene.id == b.id) {
-      return a[c];
-    }
-  }
-};
-Entry.Stage.prototype.moveSprite = function(b) {
-  if (this.selectedObject && Entry.stage.focused && !this.selectedObject.getLock()) {
-    var a = 5;
-    b.shiftKey && (a = 1);
-    var c = this.selectedObject.entity;
-    switch(b.keyCode) {
-      case 38:
-        c.setY(c.getY() + a);
-        break;
-      case 40:
-        c.setY(c.getY() - a);
-        break;
-      case 37:
-        c.setX(c.getX() - a);
-        break;
-      case 39:
-        c.setX(c.getX() + a);
-    }
-    this.updateObject();
-  }
 };
 Entry.StampEntity = function(b, a) {
   this.parent = b;
@@ -12295,10 +11941,10 @@ Entry.Utils.addFilters = function(b, a) {
   c.elem("feColorMatrix", {result:"matrixOut", in:"offOut", type:"matrix", values:"1.3 0 0 0 0 0 1.3 0 0 0 0 0 1.3 0 0 0 0 0 1 0"});
 };
 Entry.Utils.addBlockPattern = function(b, a) {
-  for (var c = b.elem("pattern", {id:"blockHoverPattern_" + a, class:"blockHoverPattern", patternUnits:"userSpaceOnUse", patternTransform:"translate(12, 0)", x:0, y:0, width:125, height:33}).elem("g"), d = c.elem("rect", {x:0, y:0, width:125, height:33}), e = Entry.mediaFilePath + "block_pattern_(order).png", f = 1;5 > f;f++) {
-    c.elem("image", {class:"pattern" + f, href:e.replace("(order)", f), x:0, y:0, width:125, height:33});
+  for (var c = b.elem("pattern", {id:"blockHoverPattern_" + a, class:"blockHoverPattern", patternUnits:"userSpaceOnUse", patternTransform:"translate(12, 0)", x:0, y:0, width:125, height:33, style:"display: none"}), d = c.elem("g"), e = d.elem("rect", {x:0, y:0, width:125, height:33}), f = Entry.mediaFilePath + "block_pattern_(order).png", g = 1;5 > g;g++) {
+    d.elem("image", {class:"pattern" + g, href:f.replace("(order)", g), x:0, y:0, width:125, height:33});
   }
-  return d;
+  return {pattern:c, rect:e};
 };
 Entry.Utils.COLLISION = {NONE:0, UP:1, RIGHT:2, LEFT:3, DOWN:4};
 Entry.Utils.createMouseEvent = function(b, a) {
@@ -12330,6 +11976,11 @@ Entry.Utils.stopProjectWithToast = function(b, a) {
   "workspace" === Entry.type && (Entry.container.selectObject(b.getCode().object.id, !0), b.view.getBoard().activateBlock(b));
   throw Error(a);
 };
+window.requestAnimFrame = function() {
+  return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function(b) {
+    window.setTimeout(b, 1E3 / 60);
+  };
+}();
 Entry.Model = function(b, a) {
   var c = Entry.Model;
   c.generateSchema(b);
@@ -13036,6 +12687,393 @@ Entry.ThreadModel = function() {
   Entry.Model(this);
 };
 Entry.ThreadModel.prototype.schema = {id:0, type:Entry.STATIC.THREAD_MODEL, x:0, y:0, width:0, minWidth:0, height:0};
+Entry.Stage = function() {
+  this.variables = {};
+  this.background = new createjs.Shape;
+  this.background.graphics.beginFill("#ffffff").drawRect(-480, -240, 960, 480);
+  this.objectContainers = [];
+  this.selectedObjectContainer = null;
+  this.variableContainer = new createjs.Container;
+  this.dialogContainer = new createjs.Container;
+  this.selectedObject = null;
+  this.isObjectClick = !1;
+};
+Entry.Stage.prototype.initStage = function(b) {
+  this.canvas = new createjs.Stage(b.id);
+  this.canvas.x = 320;
+  this.canvas.y = 180;
+  this.canvas.scaleX = this.canvas.scaleY = 2 / 1.5;
+  createjs.Touch.enable(this.canvas);
+  this.canvas.enableMouseOver(10);
+  this.canvas.mouseMoveOutside = !0;
+  this.canvas.addChild(this.background);
+  this.canvas.addChild(this.variableContainer);
+  this.canvas.addChild(this.dialogContainer);
+  this.inputField = null;
+  this.initCoordinator();
+  this.initHandle();
+  this.mouseCoordinate = {x:0, y:0};
+  if (Entry.isPhone()) {
+    b.ontouchstart = function(a) {
+      Entry.dispatchEvent("canvasClick", a);
+      Entry.stage.isClick = !0;
+    }, b.ontouchend = function(a) {
+      Entry.stage.isClick = !1;
+      Entry.dispatchEvent("canvasClickCanceled", a);
+    };
+  } else {
+    var a = function(a) {
+      Entry.dispatchEvent("canvasClick", a);
+      Entry.stage.isClick = !0;
+    };
+    b.onmousedown = a;
+    b.ontouchstart = a;
+    a = function(a) {
+      Entry.stage.isClick = !1;
+      Entry.dispatchEvent("canvasClickCanceled", a);
+    };
+    b.onmouseup = a;
+    b.ontouchend = a;
+    $(document).click(function(a) {
+      Entry.stage.focused = "entryCanvas" === a.target.id ? !0 : !1;
+    });
+  }
+  Entry.addEventListener("canvasClick", function(a) {
+    Entry.stage.isObjectClick = !1;
+  });
+  Entry.windowResized.attach(this, function() {
+    Entry.stage.updateBoundRect();
+  });
+  a = function(a) {
+    a.preventDefault();
+    var b = Entry.stage.getBoundRect(), e;
+    -1 < Entry.getBrowserType().indexOf("IE") ? (e = 480 * ((a.pageX - b.left - document.documentElement.scrollLeft) / b.width - .5), a = -270 * ((a.pageY - b.top - document.documentElement.scrollTop) / b.height - .5)) : a.changedTouches ? (e = 480 * ((a.changedTouches[0].pageX - b.left - document.body.scrollLeft) / b.width - .5), a = -270 * ((a.changedTouches[0].pageY - b.top - document.body.scrollTop) / b.height - .5)) : (e = 480 * ((a.pageX - b.left - document.body.scrollLeft) / b.width - .5), 
+    a = -270 * ((a.pageY - b.top - document.body.scrollTop) / b.height - .5));
+    Entry.stage.mouseCoordinate = {x:e.toFixed(1), y:a.toFixed(1)};
+    Entry.dispatchEvent("stageMouseMove");
+  };
+  b.onmousemove = a;
+  b.ontouchmove = a;
+  b.onmouseout = function(a) {
+    Entry.dispatchEvent("stageMouseOut");
+  };
+  Entry.addEventListener("updateObject", function(a) {
+    Entry.engine.isState("stop") && Entry.stage.updateObject();
+  });
+  Entry.addEventListener("canvasInputComplete", function(a) {
+    try {
+      var b = Entry.stage.inputField.value();
+      Entry.stage.hideInputField();
+      if (b) {
+        var e = Entry.container;
+        e.setInputValue(b);
+        e.inputValue.complete = !0;
+      }
+    } catch (f) {
+    }
+  });
+  this.initWall();
+  this.render();
+};
+Entry.Stage.prototype.render = function() {
+  Entry.stage.timer && clearTimeout(Entry.stage.timer);
+  var b = (new Date).getTime();
+  Entry.stage.update();
+  b = (new Date).getTime() - b;
+  Entry.stage.timer = setTimeout(Entry.stage.render, 16 - b % 16 + 16 * Math.floor(b / 16));
+};
+Entry.Stage.prototype.update = function() {
+  Entry.requestUpdate && (Entry.engine.isState("stop") && this.objectUpdated ? (this.canvas.update(), this.objectUpdated = !1) : this.canvas.update(), this.inputField && !this.inputField._isHidden && this.inputField.render());
+  Entry.requestUpdate = !1;
+};
+Entry.Stage.prototype.loadObject = function(b) {
+  var a = b.entity.object;
+  this.getObjectContainerByScene(b.scene).addChild(a);
+  this.canvas.update();
+};
+Entry.Stage.prototype.loadEntity = function(b) {
+  Entry.stage.getObjectContainerByScene(b.parent.scene).addChild(b.object);
+  this.sortZorder();
+};
+Entry.Stage.prototype.unloadEntity = function(b) {
+  Entry.stage.getObjectContainerByScene(b.parent.scene).removeChild(b.object);
+};
+Entry.Stage.prototype.loadVariable = function(b) {
+  var a = b.view_;
+  this.variables[b.id] = a;
+  this.variableContainer.addChild(a);
+  Entry.requestUpdate = !0;
+};
+Entry.Stage.prototype.removeVariable = function(b) {
+  this.variableContainer.removeChild(b.view_);
+  Entry.requestUpdate = !0;
+};
+Entry.Stage.prototype.loadDialog = function(b) {
+  this.dialogContainer.addChild(b.object);
+};
+Entry.Stage.prototype.unloadDialog = function(b) {
+  this.dialogContainer.removeChild(b.object);
+};
+Entry.Stage.prototype.sortZorder = function() {
+  for (var b = Entry.container.getCurrentObjects(), a = this.selectedObjectContainer, c = 0, d = b.length - 1;0 <= d;d--) {
+    for (var e = b[d], f = e.entity, e = e.clonedEntities, g = 0, h = e.length;g < h;g++) {
+      e[g].shape && a.setChildIndex(e[g].shape, c++), a.setChildIndex(e[g].object, c++);
+    }
+    f.shape && a.setChildIndex(f.shape, c++);
+    a.setChildIndex(f.object, c++);
+  }
+};
+Entry.Stage.prototype.initCoordinator = function() {
+  var b = new createjs.Container, a = new createjs.Bitmap(Entry.mediaFilePath + "workspace_coordinate.png");
+  a.scaleX = .5;
+  a.scaleY = .5;
+  a.x = -240;
+  a.y = -135;
+  b.addChild(a);
+  this.canvas.addChild(b);
+  b.visible = !1;
+  this.coordinator = b;
+};
+Entry.Stage.prototype.toggleCoordinator = function() {
+  this.coordinator.visible = !this.coordinator.visible;
+};
+Entry.Stage.prototype.selectObject = function(b) {
+  this.selectedObject = b ? b : null;
+  this.updateObject();
+};
+Entry.Stage.prototype.initHandle = function() {
+  this.handle = new EaselHandle(this.canvas);
+  this.handle.setChangeListener(this, this.updateHandle);
+  this.handle.setEditStartListener(this, this.startEdit);
+  this.handle.setEditEndListener(this, this.endEdit);
+};
+Entry.Stage.prototype.updateObject = function() {
+  Entry.requestUpdate = !0;
+  this.handle.setDraggable(!0);
+  if (!this.editEntity) {
+    var b = this.selectedObject;
+    if (b) {
+      "textBox" == b.objectType ? this.handle.toggleCenter(!1) : this.handle.toggleCenter(!0);
+      "free" == b.getRotateMethod() ? this.handle.toggleRotation(!0) : this.handle.toggleRotation(!1);
+      this.handle.toggleDirection(!0);
+      b.getLock() ? (this.handle.toggleRotation(!1), this.handle.toggleDirection(!1), this.handle.toggleResize(!1), this.handle.toggleCenter(!1), this.handle.setDraggable(!1)) : this.handle.toggleResize(!0);
+      this.handle.setVisible(!0);
+      var a = b.entity;
+      this.handle.setWidth(a.getScaleX() * a.getWidth());
+      this.handle.setHeight(a.getScaleY() * a.getHeight());
+      var c, d;
+      if ("textBox" == a.type) {
+        if (a.getLineBreak()) {
+          c = a.regX * a.scaleX, d = -a.regY * a.scaleY;
+        } else {
+          var e = a.getTextAlign();
+          d = -a.regY * a.scaleY;
+          switch(e) {
+            case Entry.TEXT_ALIGN_LEFT:
+              c = -a.getWidth() / 2 * a.scaleX;
+              break;
+            case Entry.TEXT_ALIGN_CENTER:
+              c = a.regX * a.scaleX;
+              break;
+            case Entry.TEXT_ALIGN_RIGHT:
+              c = a.getWidth() / 2 * a.scaleX;
+          }
+        }
+      } else {
+        c = (a.regX - a.width / 2) * a.scaleX, d = (a.height / 2 - a.regY) * a.scaleY;
+      }
+      e = a.getRotation() / 180 * Math.PI;
+      this.handle.setX(a.getX() - c * Math.cos(e) - d * Math.sin(e));
+      this.handle.setY(-a.getY() - c * Math.sin(e) + d * Math.cos(e));
+      this.handle.setRegX((a.regX - a.width / 2) * a.scaleX);
+      this.handle.setRegY((a.regY - a.height / 2) * a.scaleY);
+      this.handle.setRotation(a.getRotation());
+      this.handle.setDirection(a.getDirection());
+      this.objectUpdated = !0;
+      this.handle.setVisible(b.entity.getVisible());
+      b.entity.getVisible() && this.handle.render();
+    } else {
+      this.handle.setVisible(!1);
+    }
+  }
+};
+Entry.Stage.prototype.updateHandle = function() {
+  this.editEntity = !0;
+  var b = this.handle, a = this.selectedObject.entity;
+  if (a.lineBreak) {
+    a.setHeight(b.height / a.getScaleY()), a.setWidth(b.width / a.getScaleX());
+  } else {
+    if (0 !== a.width) {
+      var c = Math.abs(b.width / a.width);
+      a.flip && (c *= -1);
+      a.setScaleX(c);
+    }
+    0 !== a.height && a.setScaleY(b.height / a.height);
+  }
+  c = b.rotation / 180 * Math.PI;
+  if ("textBox" == a.type) {
+    var d = b.regX / a.scaleX, d = b.regY / a.scaleY;
+    if (a.getLineBreak()) {
+      a.setX(b.x), a.setY(-b.y);
+    } else {
+      switch(a.getTextAlign()) {
+        case Entry.TEXT_ALIGN_LEFT:
+          a.setX(b.x - b.width / 2 * Math.cos(c));
+          a.setY(-b.y + b.width / 2 * Math.sin(c));
+          break;
+        case Entry.TEXT_ALIGN_CENTER:
+          a.setX(b.x);
+          a.setY(-b.y);
+          break;
+        case Entry.TEXT_ALIGN_RIGHT:
+          a.setX(b.x + b.width / 2 * Math.cos(c)), a.setY(-b.y - b.width / 2 * Math.sin(c));
+      }
+    }
+  } else {
+    d = a.width / 2 + b.regX / a.scaleX, a.setX(b.x + b.regX * Math.cos(c) - b.regY * Math.sin(c)), a.setRegX(d), d = a.height / 2 + b.regY / a.scaleY, a.setY(-b.y - b.regX * Math.sin(c) - b.regY * Math.cos(c)), a.setRegY(d);
+  }
+  a.setDirection(b.direction);
+  a.setRotation(b.rotation);
+  this.selectedObject.entity.doCommand();
+  this.editEntity = !1;
+};
+Entry.Stage.prototype.startEdit = function() {
+  this.selectedObject.entity.initCommand();
+};
+Entry.Stage.prototype.endEdit = function() {
+  this.selectedObject.entity.checkCommand();
+};
+Entry.Stage.prototype.initWall = function() {
+  var b = new createjs.Container, a = new Image;
+  a.src = Entry.mediaFilePath + "media/bound.png";
+  b.up = new createjs.Bitmap;
+  b.up.scaleX = 16;
+  b.up.y = -165;
+  b.up.x = -240;
+  b.up.image = a;
+  b.addChild(b.up);
+  b.down = new createjs.Bitmap;
+  b.down.scaleX = 16;
+  b.down.y = 135;
+  b.down.x = -240;
+  b.down.image = a;
+  b.addChild(b.down);
+  b.right = new createjs.Bitmap;
+  b.right.scaleY = 9;
+  b.right.y = -135;
+  b.right.x = 240;
+  b.right.image = a;
+  b.addChild(b.right);
+  b.left = new createjs.Bitmap;
+  b.left.scaleY = 9;
+  b.left.y = -135;
+  b.left.x = -270;
+  b.left.image = a;
+  b.addChild(b.left);
+  this.canvas.addChild(b);
+  this.wall = b;
+};
+Entry.Stage.prototype.showInputField = function(b) {
+  b = 1 / 1.5;
+  this.inputField || (this.inputField = new CanvasInput({canvas:document.getElementById("entryCanvas"), fontSize:30 * b, fontFamily:"NanumGothic", fontColor:"#212121", width:556 * b, height:26 * b, padding:8 * b, borderWidth:1 * b, borderColor:"#000", borderRadius:3 * b, boxShadow:"none", innerShadow:"0px 0px 5px rgba(0, 0, 0, 0.5)", x:202 * b, y:450 * b, topPosition:!0, onsubmit:function() {
+    Entry.dispatchEvent("canvasInputComplete");
+  }}));
+  b = new createjs.Container;
+  var a = new Image;
+  a.src = Entry.mediaFilePath + "confirm_button.png";
+  var c = new createjs.Bitmap;
+  c.scaleX = .23;
+  c.scaleY = .23;
+  c.x = 160;
+  c.y = 89;
+  c.cursor = "pointer";
+  c.image = a;
+  b.addChild(c);
+  b.on("mousedown", function(a) {
+    Entry.dispatchEvent("canvasInputComplete");
+  });
+  this.inputSubmitButton || (this.inputField.value(""), this.canvas.addChild(b), this.inputSubmitButton = b);
+  this.inputField.show();
+};
+Entry.Stage.prototype.hideInputField = function() {
+  this.inputField && this.inputField.value() && this.inputField.value("");
+  this.inputSubmitButton && (this.canvas.removeChild(this.inputSubmitButton), this.inputSubmitButton = null);
+  this.inputField && this.inputField.hide();
+};
+Entry.Stage.prototype.initObjectContainers = function() {
+  var b = Entry.scene.scenes_;
+  if (b && 0 !== b.length) {
+    for (var a = 0;a < b.length;a++) {
+      this.objectContainers[a] = this.createObjectContainer(b[a]);
+    }
+    this.selectedObjectContainer = this.objectContainers[0];
+  } else {
+    b = this.createObjectContainer(Entry.scene.selectedScene), this.objectContainers.push(b), this.selectedObjectContainer = b;
+  }
+  this.canvas.addChild(this.selectedObjectContainer);
+  this.selectObjectContainer(Entry.scene.selectedScene);
+};
+Entry.Stage.prototype.selectObjectContainer = function(b) {
+  if (this.canvas) {
+    for (var a = this.objectContainers, c = 0;c < a.length;c++) {
+      this.canvas.removeChild(a[c]);
+    }
+    this.selectedObjectContainer = this.getObjectContainerByScene(b);
+    this.canvas.addChildAt(this.selectedObjectContainer, 2);
+  }
+};
+Entry.Stage.prototype.reAttachToCanvas = function() {
+  for (var b = [this.selectedObjectContainer, this.variableContainer, this.coordinator, this.handle, this.dialogContainer], a = 0;a < b.length;a++) {
+    this.canvas.removeChild(b[a]), this.canvas.addChild(b[a]);
+  }
+  console.log(this.canvas.getChildIndex(this.selectedObjectContainer));
+};
+Entry.Stage.prototype.createObjectContainer = function(b) {
+  var a = new createjs.Container;
+  a.scene = b;
+  return a;
+};
+Entry.Stage.prototype.removeObjectContainer = function(b) {
+  var a = this.objectContainers;
+  b = this.getObjectContainerByScene(b);
+  this.canvas.removeChild(b);
+  a.splice(this.objectContainers.indexOf(b), 1);
+};
+Entry.Stage.prototype.getObjectContainerByScene = function(b) {
+  for (var a = this.objectContainers, c = 0;c < a.length;c++) {
+    if (a[c].scene.id == b.id) {
+      return a[c];
+    }
+  }
+};
+Entry.Stage.prototype.moveSprite = function(b) {
+  if (this.selectedObject && Entry.stage.focused && !this.selectedObject.getLock()) {
+    var a = 5;
+    b.shiftKey && (a = 1);
+    var c = this.selectedObject.entity;
+    switch(b.keyCode) {
+      case 38:
+        c.setY(c.getY() + a);
+        break;
+      case 40:
+        c.setY(c.getY() - a);
+        break;
+      case 37:
+        c.setX(c.getX() - a);
+        break;
+      case 39:
+        c.setX(c.getX() + a);
+    }
+    this.updateObject();
+  }
+};
+Entry.Stage.prototype.getBoundRect = function(b) {
+  this._boundRect || this.updateBoundRect();
+  return this._boundRect;
+};
+Entry.Stage.prototype.updateBoundRect = function(b) {
+  this._boundRect = this.canvas.canvas.getBoundingClientRect();
+};
 Entry.Variable = function(b) {
   Entry.assert("string" == typeof b.name, "Variable name must be given");
   this.name_ = b.name;
@@ -13043,6 +13081,7 @@ Entry.Variable = function(b) {
   this.type = b.variableType ? b.variableType : "variable";
   this.object_ = b.object || null;
   this.isCloud_ = b.isCloud || !1;
+  this._valueWidth = this._nameWidth = null;
   var a = Entry.parseNumber(b.value);
   this.value_ = "number" == typeof a ? a : b.value ? b.value : 0;
   "slide" == this.type ? (this.minValue_ = Number(b.minValue ? b.minValue : 0), this.maxValue_ = Number(b.maxValue ? b.maxValue : 100)) : "list" == this.type && (this.array_ = b.array ? b.array : []);
@@ -13148,58 +13187,64 @@ Entry.Variable.prototype.generateView = function(b) {
   Entry.stage.loadVariable(this);
 };
 Entry.Variable.prototype.updateView = function() {
-  if (this.view_ && this.isVisible()) {
-    if ("variable" == this.type) {
-      this.view_.x = this.getX();
-      this.view_.y = this.getY();
-      if (this.object_) {
-        var b = Entry.container.getObject(this.object_);
-        this.textView_.text = b ? b.name + ":" + this.getName() : this.getName();
-      } else {
-        this.textView_.text = this.getName();
-      }
-      this.valueView_.x = this.textView_.getMeasuredWidth() + 14;
-      this.valueView_.y = 1;
-      this.isNumber() ? this.valueView_.text = this.getValue().toFixed(2).replace(".00", "") : this.valueView_.text = this.getValue();
-      this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1").rc(0, -14, this.textView_.getMeasuredWidth() + this.valueView_.getMeasuredWidth() + 26, 20, 4, 4, 4, 4);
-      this.wrapper_.graphics.clear().f("#1bafea").ss(1, 2, 0).s("#1bafea").rc(this.textView_.getMeasuredWidth() + 7, -11, this.valueView_.getMeasuredWidth() + 15, 14, 7, 7, 7, 7);
-    } else {
-      if ("slide" == this.type) {
-        this.view_.x = this.getX(), this.view_.y = this.getY(), this.object_ ? (b = Entry.container.getObject(this.object_), this.textView_.text = b ? b.name + ":" + this.getName() : this.getName()) : this.textView_.text = this.getName(), this.valueView_.x = this.textView_.getMeasuredWidth() + 14, this.valueView_.y = 1, this.isNumber() ? this.valueView_.text = this.getValue().toFixed(2).replace(".00", "") : this.valueView_.text = this.getValue(), b = this.textView_.getMeasuredWidth() + this.valueView_.getMeasuredWidth() + 
-        26, b = Math.max(b, 90), this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1").rc(0, -14, b, 33, 4, 4, 4, 4), this.wrapper_.graphics.clear().f("#1bafea").ss(1, 2, 0).s("#1bafea").rc(this.textView_.getMeasuredWidth() + 7, -11, this.valueView_.getMeasuredWidth() + 15, 14, 7, 7, 7, 7), b = this.textView_.getMeasuredWidth() + this.valueView_.getMeasuredWidth() + 26, b = Math.max(b, 90), this.maxWidth = b - 20, this.slideBar_.graphics.clear().beginFill("#A0A1A1").s("#A0A1A1").ss(1).dr(10, 
-        10, this.maxWidth, 1.5), b = this.getSlidePosition(this.maxWidth), this.valueSetter_.graphics.clear().beginFill("#1bafea").s("#A0A1A1").ss(1).dc(b, 10.5, 3);
-      } else {
-        if ("list" == this.type) {
-          this.view_.x = this.getX();
-          this.view_.y = this.getY();
-          this.resizeHandle_.x = this.width_ - 2;
-          this.resizeHandle_.y = this.height_ - 2;
-          var a = this.getName();
-          this.object_ && (b = Entry.container.getObject(this.object_)) && (a = b.name + ":" + a);
-          a = 7 < a.length ? a.substr(0, 6) + ".." : a;
-          this.titleView_.text = a;
-          this.titleView_.x = this.width_ / 2;
-          for (this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1").rect(0, 0, this.width_, this.height_);this.view_.children[4];) {
-            this.view_.removeChild(this.view_.children[4]);
-          }
-          b = Math.floor((this.getHeight() - 20) / 20);
-          b < this.array_.length ? (this.scrollButton_.y > this.getHeight() - 40 && (this.scrollButton_.y = this.getHeight() - 40), this.elementView.valueWrapper.graphics.clear().f("#1bafea").rr(20, -2, this.getWidth() - 20 - 10 - 2 * this.BORDER, 17, 2), this.scrollButton_.visible = !0, this.scrollButton_.x = this.getWidth() - 12, this.scrollPosition = Math.floor((this.scrollButton_.y - 23) / (this.getHeight() - 23 - 40) * (this.array_.length - b))) : (this.elementView.valueWrapper.graphics.clear().f("#1bafea").rr(20, 
-          -2, this.getWidth() - 20 - 2 * this.BORDER, 17, 2), this.scrollButton_.visible = !1, this.scrollPosition = 0);
-          for (a = this.scrollPosition;a < this.scrollPosition + b && a < this.array_.length;a++) {
-            this.elementView.indexView.text = a + 1;
-            var c = String(this.array_[a].data), d = Math.floor((this.getWidth() - 50) / 7), c = Entry.cutStringByLength(c, d), c = String(this.array_[a].data).length > c.length ? c + ".." : c;
-            this.elementView.valueView.text = c;
-            c = this.elementView.clone(!0);
-            c.y = 20 * (a - this.scrollPosition) + 23;
-            this.view_.addChild(c);
-          }
+  if (this.view_) {
+    if (this.isVisible()) {
+      if ("variable" == this.type) {
+        this.view_.x = this.getX();
+        this.view_.y = this.getY();
+        if (this.object_) {
+          var b = Entry.container.getObject(this.object_);
+          this.textView_.text = b ? b.name + ":" + this.getName() : this.getName();
         } else {
-          "answer" == this.type ? (this.view_.x = this.getX(), this.view_.y = this.getY(), this.textView_.text = this.getName(), this.valueView_.x = this.textView_.getMeasuredWidth() + 14, this.valueView_.y = 1, this.isNumber() ? parseInt(this.getValue(), 10) == this.getValue() ? this.valueView_.text = this.getValue() : this.valueView_.text = this.getValue().toFixed(1).replace(".00", "") : this.valueView_.text = this.getValue(), this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1").rc(0, 
-          -14, this.textView_.getMeasuredWidth() + this.valueView_.getMeasuredWidth() + 26, 20, 4, 4, 4, 4), this.wrapper_.graphics.clear().f("#E457DC").ss(1, 2, 0).s("#E457DC").rc(this.textView_.getMeasuredWidth() + 7, -11, this.valueView_.getMeasuredWidth() + 15, 14, 7, 7, 7, 7)) : (this.view_.x = this.getX(), this.view_.y = this.getY(), this.textView_.text = this.getName(), this.valueView_.x = this.textView_.getMeasuredWidth() + 14, this.valueView_.y = 1, this.isNumber() ? this.valueView_.text = 
-          this.getValue().toFixed(1).replace(".00", "") : this.valueView_.text = this.getValue(), this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1").rc(0, -14, this.textView_.getMeasuredWidth() + this.valueView_.getMeasuredWidth() + 26, 20, 4, 4, 4, 4), this.wrapper_.graphics.clear().f("#ffbb14").ss(1, 2, 0).s("orange").rc(this.textView_.getMeasuredWidth() + 7, -11, this.valueView_.getMeasuredWidth() + 15, 14, 7, 7, 7, 7));
+          this.textView_.text = this.getName();
+        }
+        null === this._nameWidth && (this._nameWidth = this.textView_.getMeasuredWidth());
+        this.valueView_.x = this._nameWidth + 14;
+        this.valueView_.y = 1;
+        this.isNumber() ? this.valueView_.text = this.getValue().toFixed(2).replace(".00", "") : this.valueView_.text = this.getValue();
+        null === this._valueWidth && (this._valueWidth = this.valueView_.getMeasuredWidth());
+        this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1").rc(0, -14, this._nameWidth + this._valueWidth + 26, 20, 4, 4, 4, 4);
+        this.wrapper_.graphics.clear().f("#1bafea").ss(1, 2, 0).s("#1bafea").rc(this._nameWidth + 7, -11, this._valueWidth + 15, 14, 7, 7, 7, 7);
+      } else {
+        if ("slide" == this.type) {
+          this.view_.x = this.getX(), this.view_.y = this.getY(), this.object_ ? (b = Entry.container.getObject(this.object_), this.textView_.text = b ? b.name + ":" + this.getName() : this.getName()) : this.textView_.text = this.getName(), null === this._nameWidth && (this._nameWidth = this.textView_.getMeasuredWidth()), this.valueView_.x = this._nameWidth + 14, this.valueView_.y = 1, this.isNumber() ? this.valueView_.text = this.getValue().toFixed(2).replace(".00", "") : this.valueView_.text = 
+          this.getValue(), null === this._valueWidth && (this._valueWidth = this.valueView_.getMeasuredWidth()), b = this._nameWidth + this._valueWidth + 26, b = Math.max(b, 90), this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1").rc(0, -14, b, 33, 4, 4, 4, 4), this.wrapper_.graphics.clear().f("#1bafea").ss(1, 2, 0).s("#1bafea").rc(this._nameWidth + 7, -11, this._valueWidth + 15, 14, 7, 7, 7, 7), b = this._nameWidth + this._valueWidth + 26, b = Math.max(b, 90), this.maxWidth = b - 20, 
+          this.slideBar_.graphics.clear().beginFill("#A0A1A1").s("#A0A1A1").ss(1).dr(10, 10, this.maxWidth, 1.5), b = this.getSlidePosition(this.maxWidth), this.valueSetter_.graphics.clear().beginFill("#1bafea").s("#A0A1A1").ss(1).dc(b, 10.5, 3);
+        } else {
+          if ("list" == this.type) {
+            this.view_.x = this.getX();
+            this.view_.y = this.getY();
+            this.resizeHandle_.x = this.width_ - 2;
+            this.resizeHandle_.y = this.height_ - 2;
+            var a = this.getName();
+            this.object_ && (b = Entry.container.getObject(this.object_)) && (a = b.name + ":" + a);
+            a = 7 < a.length ? a.substr(0, 6) + ".." : a;
+            this.titleView_.text = a;
+            this.titleView_.x = this.width_ / 2;
+            for (this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1").rect(0, 0, this.width_, this.height_);this.view_.children[4];) {
+              this.view_.removeChild(this.view_.children[4]);
+            }
+            b = Math.floor((this.getHeight() - 20) / 20);
+            b < this.array_.length ? (this.scrollButton_.y > this.getHeight() - 40 && (this.scrollButton_.y = this.getHeight() - 40), this.elementView.valueWrapper.graphics.clear().f("#1bafea").rr(20, -2, this.getWidth() - 20 - 10 - 2 * this.BORDER, 17, 2), this.scrollButton_.visible = !0, this.scrollButton_.x = this.getWidth() - 12, this.scrollPosition = Math.floor((this.scrollButton_.y - 23) / (this.getHeight() - 23 - 40) * (this.array_.length - b))) : (this.elementView.valueWrapper.graphics.clear().f("#1bafea").rr(20, 
+            -2, this.getWidth() - 20 - 2 * this.BORDER, 17, 2), this.scrollButton_.visible = !1, this.scrollPosition = 0);
+            for (a = this.scrollPosition;a < this.scrollPosition + b && a < this.array_.length;a++) {
+              this.elementView.indexView.text = a + 1;
+              var c = String(this.array_[a].data), d = Math.floor((this.getWidth() - 50) / 7), c = Entry.cutStringByLength(c, d), c = String(this.array_[a].data).length > c.length ? c + ".." : c;
+              this.elementView.valueView.text = c;
+              c = this.elementView.clone(!0);
+              c.y = 20 * (a - this.scrollPosition) + 23;
+              this.view_.addChild(c);
+            }
+          } else {
+            "answer" == this.type ? (this.view_.x = this.getX(), this.view_.y = this.getY(), this.textView_.text = this.getName(), this.valueView_.y = 1, this.isNumber() ? parseInt(this.getValue(), 10) == this.getValue() ? this.valueView_.text = this.getValue() : this.valueView_.text = this.getValue().toFixed(1).replace(".00", "") : this.valueView_.text = this.getValue(), null === this._nameWidth && (this._nameWidth = this.textView_.getMeasuredWidth()), null === this._valueWidth && (this._valueWidth = 
+            this.valueView_.getMeasuredWidth()), this.valueView_.x = this._nameWidth + 14, this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1").rc(0, -14, this._nameWidth + this._valueWidth + 26, 20, 4, 4, 4, 4), this.wrapper_.graphics.clear().f("#E457DC").ss(1, 2, 0).s("#E457DC").rc(this._nameWidth + 7, -11, this._valueWidth + 15, 14, 7, 7, 7, 7)) : (this.view_.x = this.getX(), this.view_.y = this.getY(), this.textView_.text = this.getName(), null === this._nameWidth && (this._nameWidth = 
+            this.textView_.getMeasuredWidth()), this.valueView_.x = this._nameWidth + 14, this.valueView_.y = 1, this.isNumber() ? this.valueView_.text = this.getValue().toFixed(1).replace(".00", "") : this.valueView_.text = this.getValue(), null === this._valueWidth && (this._valueWidth = this.valueView_.getMeasuredWidth()), this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1").rc(0, -14, this._nameWidth + this._valueWidth + 26, 20, 4, 4, 4, 4), this.wrapper_.graphics.clear().f("#ffbb14").ss(1, 
+            2, 0).s("orange").rc(this._nameWidth + 7, -11, this._valueWidth + 15, 14, 7, 7, 7, 7));
+          }
         }
       }
     }
+    Entry.requestUpdate = !0;
   }
 };
 Entry.Variable.prototype.getName = function() {
@@ -13208,6 +13253,7 @@ Entry.Variable.prototype.getName = function() {
 Entry.Variable.prototype.setName = function(b) {
   Entry.assert("string" == typeof b, "Variable name must be string");
   this.name_ = b;
+  this._nameWidth = null;
   this.updateView();
 };
 Entry.Variable.prototype.getId = function() {
@@ -13222,6 +13268,7 @@ Entry.Variable.prototype.isNumber = function() {
 Entry.Variable.prototype.setValue = function(b) {
   "slide" != this.type ? this.value_ = b : (b = Number(b), this.value_ = b < this.minValue_ ? this.minValue_ : b > this.maxValue_ ? this.maxValue_ : b);
   this.isCloud_ && Entry.variableContainer.updateCloudVariables();
+  this._valueWidth = null;
   this.updateView();
 };
 Entry.Variable.prototype.isVisible = function() {
@@ -15137,7 +15184,9 @@ Entry.BlockMenu = function(b, a, c, d) {
   this.setWidth();
   this.svg = Entry.SVG(this._svgId);
   Entry.Utils.addFilters(this.svg, this.suffix);
-  this.patternRect = Entry.Utils.addBlockPattern(this.svg, this.suffix);
+  a = Entry.Utils.addBlockPattern(this.svg, this.suffix);
+  this.patternRect = a.rect;
+  this.pattern = a.pattern;
   this.svgGroup = this.svg.elem("g");
   this.svgThreadGroup = this.svgGroup.elem("g");
   this.svgThreadGroup.board = this;
@@ -15401,6 +15450,10 @@ Entry.BlockMenu = function(b, a, c, d) {
   };
   b.setPatternRectFill = function(a) {
     this.patternRect.attr({fill:a});
+    this.pattern.attr({style:""});
+  };
+  b.disablePattern = function() {
+    this.pattern.attr({style:"display: none"});
   };
   b._clearCategory = function() {
     this._selectedCategoryView = null;
@@ -16044,9 +16097,9 @@ Entry.BlockView.DRAG_RADIUS = 5;
   b._changeFill = function(a) {
     var b = this.getBoard();
     if (b.patternRect && !b.dragBlock) {
-      var d = this._path, e = this._fillColor;
-      a && (b = this.getBoard(), b.setPatternRectFill(e), e = "url(#blockHoverPattern_" + this.getBoard().suffix + ")");
-      d.attr({fill:e});
+      var d = this._fillColor, e = this._path, b = this.getBoard();
+      a ? (b.setPatternRectFill(d), d = "url(#blockHoverPattern_" + this.getBoard().suffix + ")") : b.disablePattern();
+      e.attr({fill:d});
     }
   };
   b.addActivated = function() {
@@ -16440,10 +16493,12 @@ Entry.Scope = function(b, a) {
     return this.executor.stepInto(this.block.statements[this._getStatementIndex(a, b)]);
   };
   b._getParamIndex = function(a) {
-    return Entry.block[this.type].paramsKeyMap[a];
+    this._schema || (this._schema = Entry.block[this.type]);
+    return this._schema.paramsKeyMap[a];
   };
   b._getStatementIndex = function(a) {
-    return Entry.block[this.type].statementsKeyMap[a];
+    this._schema || (this._schema = Entry.block[this.type]);
+    return this._schema.statementsKeyMap[a];
   };
   b.die = function() {
     this.block = null;
@@ -17796,7 +17851,9 @@ Entry.Board.OPTION_CLEAR = 2;
     this.svgBlockGroup.board = this;
     a.isOverlay ? (this.wrapper.addClass("entryOverlayBoard"), this.generateButtons(), this.suffix = "overlayBoard") : this.suffix = "board";
     Entry.Utils.addFilters(this.svg, this.suffix);
-    this.patternRect = Entry.Utils.addBlockPattern(this.svg, this.suffix);
+    a = Entry.Utils.addBlockPattern(this.svg, this.suffix);
+    this.patternRect = a.rect;
+    this.pattern = a.pattern;
   };
   b.changeCode = function(a) {
     this.code && this.codeListener && this.code.changeEvent.detach(this.codeListener);
@@ -18165,6 +18222,10 @@ Entry.Board.OPTION_CLEAR = 2;
   };
   b.setPatternRectFill = function(a) {
     this.patternRect.attr({fill:a});
+    this.pattern.attr({style:""});
+  };
+  b.disablePattern = function() {
+    this.pattern.attr({style:"display: none"});
   };
   b._removeActivated = function() {
     this._activatedBlockView && (this._activatedBlockView.removeActivated(), this._activatedBlockView = null);
@@ -19864,7 +19925,7 @@ Entry.Playground.prototype.flushPlayground = function() {
   }
 };
 Entry.Playground.prototype.refreshPlayground = function() {
-  Entry.playground && Entry.playground.view_ && (this.injectPicture(), this.injectSound());
+  Entry.playground && Entry.playground.view_ && ("picture" === this.getViewMode() && this.injectPicture(), "sound" === this.getViewMode() && this.injectSound());
 };
 Entry.Playground.prototype.updateListViewOrder = function(b) {
   b = "picture" == b ? this.pictureListView_.childNodes : this.soundListView_.childNodes;

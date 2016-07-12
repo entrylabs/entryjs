@@ -9890,8 +9890,8 @@ Entry.block = {
         "isNotFor": [],
         "func": function (sprite, script) {
             var value1 = script.getNumberValue("VALUE1", script);
-            sprite.setX(value1);
             var value2 = script.getNumberValue("VALUE2", script);
+            sprite.setX(value1);
             sprite.setY(value2);
             if (sprite.brush && !sprite.brush.stop) {
                 sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);

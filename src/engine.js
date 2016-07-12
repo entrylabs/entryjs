@@ -14,26 +14,28 @@ Entry.Engine = function() {
     this.isUpdating = true;
     this.speeds = [1, 15, 30, 45, 60];
 
+    this._mouseMoved = false;;
 
     if (Entry.keyPressed)
         Entry.keyPressed.attach(this, this.captureKeyEvent);
 
-    Entry.addEventListener('canvasClick', function(e){
+    Entry.addEventListener('canvasClick', function(e) {
         Entry.engine.fireEvent('mouse_clicked');
     });
-    Entry.addEventListener('canvasClickCanceled', function(e){
+    Entry.addEventListener('canvasClickCanceled', function(e) {
         Entry.engine.fireEvent('mouse_click_cancled');
     });
-    Entry.addEventListener('entityClick', function(entity){
+    Entry.addEventListener('entityClick', function(entity) {
         Entry.engine.fireEventOnEntity('when_object_click', entity);
     });
-    Entry.addEventListener('entityClickCanceled', function(entity){
+    Entry.addEventListener('entityClickCanceled', function(entity) {
         Entry.engine.fireEventOnEntity('when_object_click_canceled', entity);
     });
+
     if (Entry.type != 'phone') {
         Entry.addEventListener('stageMouseMove', function(e){
-            Entry.engine.updateMouseView();
-        });
+            this._mouseMoved = true;
+        }.bind(this));
         Entry.addEventListener('stageMouseOut', function(e){
             Entry.engine.hideMouseView();
         });
@@ -51,12 +53,18 @@ Entry.Engine = function() {
         var arrows = [37,38,39,40,32];
         var code = (e.keyCode || e.which);
         var input = Entry.stage.inputField;
-        if (code == 32 && input &&
-                input.hasFocus())
+        if (code == 32 && input && input.hasFocus())
             return;
         if(arrows.indexOf(code) > -1)
             e.preventDefault();
     }
+
+    setInterval(function() {
+        if (this._mouseMoved) {
+            this.updateMouseView();
+            this._mouseMoved = false;
+        }
+    }.bind(this), 100)
 };
 
 /**
@@ -446,6 +454,11 @@ Entry.Engine.prototype.run = function() {
  * toggle this engine state run
  */
 Entry.Engine.prototype.toggleRun = function() {
+    if (this.state === 'pause') {
+        this.togglePause();
+        return;
+    }
+
     Entry.addActivity("run");
     if (this.state == 'stop') {
         Entry.container.mapEntity(function(entity){
@@ -543,15 +556,30 @@ Entry.Engine.prototype.toggleStop = function() {
  * toggle this engine state pause
  */
 Entry.Engine.prototype.togglePause = function() {
+    var timer = Entry.engine.projectTimer;
     if (this.state == 'pause') {
+        timer.pausedTime += (new Date()).getTime() - timer.pauseStart;
+        if (timer.isPaused)
+            timer.pauseStart = (new Date()).getTime()
+        else delete timer.pauseStart;
         this.state = 'run';
         this.pauseButton.innerHTML = Lang.Workspace.pause;
+        this.runButton.addClass('entryRemove');
+        if (this.runButton2)
+            this.runButton2.addClass('entryRemove');
     } else {
         this.state = 'pause';
+        if (!timer.isPaused)
+            timer.pauseStart = (new Date()).getTime();
+        else {
+            timer.pausedTime += (new Date()).getTime() - timer.pauseStart;
+            timer.pauseStart = (new Date()).getTime();
+        }
         this.pauseButton.innerHTML = Lang.Workspace.restart;
         this.runButton.removeClass('entryRemove');
         this.stopButton.removeClass('entryRemove');
-        //this.pauseButton.addClass('entryRemove');
+        if (this.runButton2)
+            this.runButton2.removeClass('entryRemove');
     }
 };
 
@@ -645,7 +673,7 @@ Entry.Engine.prototype.raiseKeyEvent = function(entity, param) {
  */
 Entry.Engine.prototype.updateMouseView = function() {
     var coordinate = Entry.stage.mouseCoordinate;
-    this.mouseView.innerHTML = 'X : ' + coordinate.x + ', Y : ' + coordinate.y;
+    this.mouseView.textContent = 'X : ' + coordinate.x + ', Y : ' + coordinate.y;
     this.mouseView.removeClass('entryRemove');
 };
 
@@ -675,6 +703,7 @@ Entry.Engine.prototype.toggleFullscreen = function() {
         this.popup.remove();
         this.popup = null;
     }
+    Entry.windowResized.notify();
 };
 
 Entry.Engine.prototype.exitFullScreen = function() {
@@ -685,6 +714,7 @@ Entry.Engine.prototype.exitFullScreen = function() {
         Entry.engine.footerView_.removeClass('entryRemove');
         Entry.engine.headerView_.removeClass('entryRemove');
     }
+    Entry.windowResized.notify();
 };
 
 
@@ -746,12 +776,12 @@ Entry.Engine.prototype.stopProjectTimer = function() {
 };
 
 Entry.Engine.prototype.updateProjectTimer = function(value) {
-    var timer = Entry.engine.projectTimer;
+    var engine = Entry.engine;
+    var timer = engine.projectTimer;
+    if (!timer) return;
     var current = (new Date()).getTime();
-    if (!timer)
-        return;
     if (typeof value == 'undefined') {
-        if (!timer.isPaused)
+        if (!timer.isPaused && !engine.isState('pause'))
             timer.setValue(((current - timer.start - timer.pausedTime)/1000));
     } else {
         timer.setValue(value);
