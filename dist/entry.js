@@ -7129,26 +7129,14 @@ Entry.Engine.prototype.run = function() {
   this.isState("run") ? this.toggleStop() : (this.isState("stop") || this.isState("pause")) && this.toggleRun();
 };
 Entry.Engine.prototype.toggleRun = function() {
-  Entry.addActivity("run");
-  "stop" == this.state && (Entry.container.mapEntity(function(b) {
+  "pause" === this.state ? this.togglePause() : (Entry.addActivity("run"), "stop" == this.state && (Entry.container.mapEntity(function(b) {
     b.takeSnapshot();
   }), Entry.variableContainer.mapVariable(function(b) {
     b.takeSnapshot();
   }), Entry.variableContainer.mapList(function(b) {
     b.takeSnapshot();
-  }), this.projectTimer.takeSnapshot(), Entry.container.inputValue.takeSnapshot(), Entry.container.takeSequenceSnapshot(), Entry.scene.takeStartSceneSnapshot(), this.state = "run", this.fireEvent("start"));
-  this.state = "run";
-  "mobile" == Entry.type && this.view_.addClass("entryEngineBlueWorkspace");
-  this.pauseButton.innerHTML = Lang.Workspace.pause;
-  this.runButton.addClass("run");
-  this.runButton.addClass("entryRemove");
-  this.stopButton.removeClass("entryRemove");
-  this.pauseButton && this.pauseButton.removeClass("entryRemove");
-  this.runButton2 && this.runButton2.addClass("entryRemove");
-  this.stopButton2 && this.stopButton2.removeClass("entryRemove");
-  this.isUpdating || (Entry.engine.update(), Entry.engine.isUpdating = !0);
-  Entry.stage.selectObject();
-  Entry.dispatchEvent("run");
+  }), this.projectTimer.takeSnapshot(), Entry.container.inputValue.takeSnapshot(), Entry.container.takeSequenceSnapshot(), Entry.scene.takeStartSceneSnapshot(), this.state = "run", this.fireEvent("start")), this.state = "run", "mobile" == Entry.type && this.view_.addClass("entryEngineBlueWorkspace"), this.pauseButton.innerHTML = Lang.Workspace.pause, this.runButton.addClass("run"), this.runButton.addClass("entryRemove"), this.stopButton.removeClass("entryRemove"), this.pauseButton && this.pauseButton.removeClass("entryRemove"), 
+  this.runButton2 && this.runButton2.addClass("entryRemove"), this.stopButton2 && this.stopButton2.removeClass("entryRemove"), this.isUpdating || (Entry.engine.update(), Entry.engine.isUpdating = !0), Entry.stage.selectObject(), Entry.dispatchEvent("run"));
 };
 Entry.Engine.prototype.toggleStop = function() {
   Entry.addActivity("stop");
@@ -7187,7 +7175,9 @@ Entry.Engine.prototype.toggleStop = function() {
   Entry.stage.hideInputField();
 };
 Entry.Engine.prototype.togglePause = function() {
-  "pause" == this.state ? (this.state = "run", this.pauseButton.innerHTML = Lang.Workspace.pause) : (this.state = "pause", this.pauseButton.innerHTML = Lang.Workspace.restart, this.runButton.removeClass("entryRemove"), this.stopButton.removeClass("entryRemove"));
+  var b = Entry.engine.projectTimer;
+  "pause" == this.state ? (b.pausedTime += (new Date).getTime() - b.pauseStart, b.isPaused ? b.pauseStart = (new Date).getTime() : delete b.pauseStart, this.state = "run", this.pauseButton.innerHTML = Lang.Workspace.pause, this.runButton.addClass("entryRemove"), this.runButton2 && this.runButton2.addClass("entryRemove")) : (this.state = "pause", b.isPaused && (b.pausedTime += (new Date).getTime() - b.pauseStart), b.pauseStart = (new Date).getTime(), this.pauseButton.innerHTML = Lang.Workspace.restart, 
+  this.runButton.removeClass("entryRemove"), this.stopButton.removeClass("entryRemove"), this.runButton2 && this.runButton2.removeClass("entryRemove"));
 };
 Entry.Engine.prototype.fireEvent = function(b) {
   "run" == this.state && Entry.container.mapEntityIncludeCloneOnScene(this.raiseEvent, b);
@@ -7265,8 +7255,11 @@ Entry.Engine.prototype.stopProjectTimer = function() {
   b && (this.updateProjectTimer(0), b.isPaused = !1, b.isInit = !1, b.pausedTime = 0, clearInterval(b.tick));
 };
 Entry.Engine.prototype.updateProjectTimer = function(b) {
-  var a = Entry.engine.projectTimer, c = (new Date).getTime();
-  a && ("undefined" == typeof b ? a.isPaused || a.setValue((c - a.start - a.pausedTime) / 1E3) : (a.setValue(b), a.pausedTime = 0, a.start = c));
+  var a = Entry.engine, c = a.projectTimer;
+  if (c) {
+    var d = (new Date).getTime();
+    "undefined" == typeof b ? c.isPaused || a.isState("pause") || c.setValue((d - c.start - c.pausedTime) / 1E3) : (c.setValue(b), c.pausedTime = 0, c.start = d);
+  }
 };
 Entry.EntityObject = function(b) {
   this.parent = b;
