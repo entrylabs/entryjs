@@ -87,6 +87,7 @@ Entry.EntryObject = function(model) {
             image.onload = function(e) {
                 Entry.container.cachePicture(picture.id, image);
                 Entry.Loader.removeQueue();
+                Entry.requestUpdate = true;
             };
         }
     }
