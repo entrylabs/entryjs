@@ -337,10 +337,7 @@ Entry.Playground.prototype.generatePictureView = function(PictureView) {
         painterView.addClass('entryPlaygroundPainter');
         PictureView.appendChild(painterView);
 
-        this.painter = new Entry.Painter2();
-        //this.painter.generateView(painterView);
-        this.painter.initialize(painterView);
-
+        this.painter = new Entry.Painter2(painterView);
     } else if (Entry.type == 'phone') {
         var pictureAdd = Entry.createElement('div', 'entryAddPicture');
         pictureAdd.addClass('entryPlaygroundAddPicturePhone');
@@ -1056,6 +1053,7 @@ Entry.Playground.prototype.changeViewMode = function(viewType) {
     if (viewType == 'picture' && (!this.pictureView_.object ||
         this.pictureView_.object != this.object)) {
         this.pictureView_.object = this.object;
+        this.painter.show();
         this.injectPicture();
     } else if (viewType == 'sound' && (!this.soundView_.object ||
         this.soundView_.object != this.object)) {

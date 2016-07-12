@@ -11675,27 +11675,15 @@ Entry.Painter.prototype.selectToolbox = function(a) {
       this.toggleCoordinator();
   }
 };
-Entry.Painter2 = function() {
+Entry.Painter2 = function(a) {
+  this.view = a;
 };
 (function(a) {
-  a.initialize = function(b) {
-    b.style.overflow = "visible";
-    LC.init(b, {imageURLPrefix:"/lib/literallycanvas/lib/img", backgroundColor:"#fff", toolbarPosition:"bottom"});
-    this.setupEvent(b);
-    b = {width:"960px", height:"540px"};
-    $(".lc-drawing canvas").attr(b).css(b);
+  a.initialize = function() {
+    this.lc = LC.init(this.view, {imageURLPrefix:"/lib/literallycanvas/lib/img", backgroundColor:"#fff", toolbarPosition:"bottom"});
   };
-  a.setupEvent = function(b) {
-    Entry.addEventListener("windowResized", function(a) {
-      var d = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-      a = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-      var e = parseInt(document.getElementById("entryCanvas").style.width), d = d - (e + 240);
-      a -= 349;
-      b.style.width = d + "px";
-      e = $(".lc-drawing")[0];
-      e.style.width = d - 62 + "px";
-      e.style.height = a + "px";
-    });
+  a.show = function() {
+    this.lc || this.initialize();
   };
 })(Entry.Painter2.prototype);
 Entry.BlockParser = function(a) {
@@ -12088,10 +12076,10 @@ Entry.Parser = function(a, b, c) {
     e.to.ch = a[a.length - 1].length;
     return e;
   };
-  a.mappingSyntax = function(b) {
-    for (var a = Object.keys(Entry.block), d = 0;d < a.length;d++) {
-      var e = a[d], f = Entry.block[e];
-      if (f.mode === b && -1 < this.availableCode.indexOf(e) && (f = f.syntax)) {
+  a.mappingSyntax = function(a) {
+    for (var c = Object.keys(Entry.block), d = 0;d < c.length;d++) {
+      var e = c[d], f = Entry.block[e];
+      if (f.mode === a && -1 < this.availableCode.indexOf(e) && (f = f.syntax)) {
         for (var g = this.syntax, h = 0;h < f.length;h++) {
           var k = f[h];
           if (h === f.length - 2 && "function" === typeof f[h + 1]) {
@@ -12104,16 +12092,16 @@ Entry.Parser = function(a, b, c) {
       }
     }
   };
-  a.setAvailableCode = function(b, a) {
+  a.setAvailableCode = function(a, c) {
     var d = [];
-    b.forEach(function(a, b) {
+    a.forEach(function(a, b) {
       a.forEach(function(a, b) {
         d.push(a.type);
       });
     });
-    a instanceof Entry.Code ? a.getBlockList().forEach(function(a) {
+    c instanceof Entry.Code ? c.getBlockList().forEach(function(a) {
       a.type !== NtryData.START && -1 === d.indexOf(a.type) && d.push(a.type);
-    }) : a.forEach(function(a, b) {
+    }) : c.forEach(function(a, b) {
       a.forEach(function(a, b) {
         a.type !== NtryData.START && -1 === d.indexOf(a.type) && d.push(a.type);
       });
@@ -12573,8 +12561,7 @@ Entry.Playground.prototype.generatePictureView = function(a) {
     b = Entry.createElement("div", "entryPainter");
     b.addClass("entryPlaygroundPainter");
     a.appendChild(b);
-    this.painter = new Entry.Painter2;
-    this.painter.initialize(b);
+    this.painter = new Entry.Painter2(b);
   } else {
     "phone" == Entry.type && (b = Entry.createElement("div", "entryAddPicture"), b.addClass("entryPlaygroundAddPicturePhone"), b.bindOnClick(function(a) {
       Entry.dispatchEvent("openPictureManager");
@@ -13011,7 +12998,7 @@ Entry.Playground.prototype.changeViewMode = function(a) {
       -1 < d.id.toUpperCase().indexOf(a.toUpperCase()) ? d.removeClass("entryRemove") : d.addClass("entryRemove");
     }
     if ("picture" == a && (!this.pictureView_.object || this.pictureView_.object != this.object)) {
-      this.pictureView_.object = this.object, this.injectPicture();
+      this.pictureView_.object = this.object, this.painter.show(), this.injectPicture();
     } else {
       if ("sound" == a && (!this.soundView_.object || this.soundView_.object != this.object)) {
         this.soundView_.object = this.object, this.injectSound();
