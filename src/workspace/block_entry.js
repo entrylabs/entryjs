@@ -2263,6 +2263,15 @@ Entry.block = {
 
             if (!script.isStart) {
                 var note = script.getNumberField("NOTE", script);
+
+                if(note === 0) {
+                    sq['SET'][port] = {
+                        type: Entry.ArduinoExt.sensorTypes.TONE,
+                        data: 0
+                    };
+                    return script.callReturn();
+                }
+                
                 var octave = script.getNumberField("OCTAVE", script);
                 var duration = script.getNumberField("DURATION", script);
                 var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.TONE);
