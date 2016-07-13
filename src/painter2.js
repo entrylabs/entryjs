@@ -18,12 +18,11 @@ p.initialize = function() {
         return;
     this.lc = LC.init(this.view, {
             imageURLPrefix: '/lib/literallycanvas/lib/img',
-            backgroundColor: '#fff',
-            toolbarPosition: 'bottom',
+            toolbarPosition: 'bottom'
         }
     );
 
-    //
+    var painter = this;
 
     var painterTop = Entry.createElement(document.getElementById("canvas-top-menu"));
     painterTop.addClass('entryPlaygroundPainterTop');
@@ -191,5 +190,18 @@ p.changePicture = function(picture) {
 
     this.lc.saveShape(LC.createShape('Image', {x: 10, y: 10, image: image}));
 };
+
+p.file_save = function() {
+    //this.clearHandle();
+    //this.trim();
+
+    var dataURL = this.lc.getImage().toDataURL();
+    Entry.dispatchEvent('saveCanvasImage',
+                        {file: this.file, image: dataURL});
+
+    this.file.modified = false;
+
+};
+
 
 }(Entry.Painter2.prototype));

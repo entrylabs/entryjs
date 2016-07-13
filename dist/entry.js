@@ -11682,100 +11682,100 @@ Entry.Painter2 = function(a) {
 (function(a) {
   a.initialize = function() {
     if (!this.lc) {
-      this.lc = LC.init(this.view, {imageURLPrefix:"/lib/literallycanvas/lib/img", backgroundColor:"#fff", toolbarPosition:"bottom"});
-      var b = Entry.createElement(document.getElementById("canvas-top-menu"));
-      b.addClass("entryPlaygroundPainterTop");
-      b.addClass("entryPainterTop");
-      var a = Entry.createElement("nav", "entryPainterTopMenu");
-      a.addClass("entryPlaygroundPainterTopMenu");
-      b.appendChild(a);
-      b = Entry.createElement("ul");
-      a.appendChild(b);
-      var d = Entry.createElement("li");
+      this.lc = LC.init(this.view, {imageURLPrefix:"/lib/literallycanvas/lib/img", toolbarPosition:"bottom"});
+      var b = this, a = Entry.createElement(document.getElementById("canvas-top-menu"));
+      a.addClass("entryPlaygroundPainterTop");
+      a.addClass("entryPainterTop");
+      var d = Entry.createElement("nav", "entryPainterTopMenu");
+      d.addClass("entryPlaygroundPainterTopMenu");
       a.appendChild(d);
-      a = Entry.createElement("a", "entryPainterTopMenuFileNew");
-      a.bindOnClick(function() {
-        painter.newPicture();
-      });
-      a.addClass("entryPlaygroundPainterTopMenuFileNew");
-      a.innerHTML = Lang.Workspace.new_picture;
+      a = Entry.createElement("ul");
       d.appendChild(a);
-      d = Entry.createElement("li", "entryPainterTopMenuFile");
-      d.addClass("entryPlaygroundPainterTopMenuFile");
-      d.innerHTML = Lang.Workspace.painter_file;
-      b.appendChild(d);
+      var e = Entry.createElement("li");
+      d.appendChild(e);
+      d = Entry.createElement("a", "entryPainterTopMenuFileNew");
+      d.bindOnClick(function() {
+        b.newPicture();
+      });
+      d.addClass("entryPlaygroundPainterTopMenuFileNew");
+      d.innerHTML = Lang.Workspace.new_picture;
+      e.appendChild(d);
+      e = Entry.createElement("li", "entryPainterTopMenuFile");
+      e.addClass("entryPlaygroundPainterTopMenuFile");
+      e.innerHTML = Lang.Workspace.painter_file;
+      a.appendChild(e);
+      d = Entry.createElement("ul");
+      e.appendChild(d);
+      e = Entry.createElement("li");
+      d.appendChild(e);
+      var f = Entry.createElement("a", "entryPainterTopMenuFileSave");
+      f.bindOnClick(function() {
+        b.file_save(!1);
+      });
+      f.addClass("entryPainterTopMenuFileSave");
+      f.innerHTML = Lang.Workspace.painter_file_save;
+      e.appendChild(f);
+      e = Entry.createElement("li");
+      d.appendChild(e);
+      d = Entry.createElement("a", "entryPainterTopMenuFileSaveAs");
+      d.bindOnClick(function() {
+        b.file.mode = "new";
+        b.file_save(!1);
+      });
+      d.addClass("entryPlaygroundPainterTopMenuFileSaveAs");
+      d.innerHTML = Lang.Workspace.painter_file_saveas;
+      e.appendChild(d);
+      d = Entry.createElement("li", "entryPainterTopMenuEdit");
+      d.addClass("entryPlaygroundPainterTopMenuEdit");
+      d.innerHTML = Lang.Workspace.painter_edit;
+      a.appendChild(d);
       a = Entry.createElement("ul");
       d.appendChild(a);
       d = Entry.createElement("li");
       a.appendChild(d);
-      var e = Entry.createElement("a", "entryPainterTopMenuFileSave");
+      e = Entry.createElement("a", "entryPainterTopMenuEditImportLink");
       e.bindOnClick(function() {
-        painter.file_save(!1);
+        Entry.dispatchEvent("openPictureImport");
       });
-      e.addClass("entryPainterTopMenuFileSave");
-      e.innerHTML = Lang.Workspace.painter_file_save;
+      e.addClass("entryPainterTopMenuEditImport");
+      e.innerHTML = Lang.Workspace.get_file;
       d.appendChild(e);
       d = Entry.createElement("li");
       a.appendChild(d);
-      a = Entry.createElement("a", "entryPainterTopMenuFileSaveAs");
+      e = Entry.createElement("a", "entryPainterTopMenuEditCopy");
+      e.bindOnClick(function() {
+        b.edit_copy();
+      });
+      e.addClass("entryPlaygroundPainterTopMenuEditCopy");
+      e.innerHTML = Lang.Workspace.copy_file;
+      d.appendChild(e);
+      d = Entry.createElement("li");
+      a.appendChild(d);
+      e = Entry.createElement("a", "entryPainterTopMenuEditCut");
+      e.bindOnClick(function() {
+        b.edit_cut();
+      });
+      e.addClass("entryPlaygroundPainterTopMenuEditCut");
+      e.innerHTML = Lang.Workspace.cut_picture;
+      d.appendChild(e);
+      d = Entry.createElement("li");
+      a.appendChild(d);
+      e = Entry.createElement("a", "entryPainterTopMenuEditPaste");
+      e.bindOnClick(function() {
+        b.edit_paste();
+      });
+      e.addClass("entryPlaygroundPainterTopMenuEditPaste");
+      e.innerHTML = Lang.Workspace.paste_picture;
+      d.appendChild(e);
+      d = Entry.createElement("li");
+      a.appendChild(d);
+      a = Entry.createElement("a", "entryPainterTopMenuEditEraseAll");
+      a.addClass("entryPlaygroundPainterTopMenuEditEraseAll");
+      a.innerHTML = Lang.Workspace.remove_all;
       a.bindOnClick(function() {
-        painter.file.mode = "new";
-        painter.file_save(!1);
+        b.clearCanvas();
       });
-      a.addClass("entryPlaygroundPainterTopMenuFileSaveAs");
-      a.innerHTML = Lang.Workspace.painter_file_saveas;
       d.appendChild(a);
-      a = Entry.createElement("li", "entryPainterTopMenuEdit");
-      a.addClass("entryPlaygroundPainterTopMenuEdit");
-      a.innerHTML = Lang.Workspace.painter_edit;
-      b.appendChild(a);
-      b = Entry.createElement("ul");
-      a.appendChild(b);
-      a = Entry.createElement("li");
-      b.appendChild(a);
-      d = Entry.createElement("a", "entryPainterTopMenuEditImportLink");
-      d.bindOnClick(function() {
-        Entry.dispatchEvent("openPictureImport");
-      });
-      d.addClass("entryPainterTopMenuEditImport");
-      d.innerHTML = Lang.Workspace.get_file;
-      a.appendChild(d);
-      a = Entry.createElement("li");
-      b.appendChild(a);
-      d = Entry.createElement("a", "entryPainterTopMenuEditCopy");
-      d.bindOnClick(function() {
-        painter.edit_copy();
-      });
-      d.addClass("entryPlaygroundPainterTopMenuEditCopy");
-      d.innerHTML = Lang.Workspace.copy_file;
-      a.appendChild(d);
-      a = Entry.createElement("li");
-      b.appendChild(a);
-      d = Entry.createElement("a", "entryPainterTopMenuEditCut");
-      d.bindOnClick(function() {
-        painter.edit_cut();
-      });
-      d.addClass("entryPlaygroundPainterTopMenuEditCut");
-      d.innerHTML = Lang.Workspace.cut_picture;
-      a.appendChild(d);
-      a = Entry.createElement("li");
-      b.appendChild(a);
-      d = Entry.createElement("a", "entryPainterTopMenuEditPaste");
-      d.bindOnClick(function() {
-        painter.edit_paste();
-      });
-      d.addClass("entryPlaygroundPainterTopMenuEditPaste");
-      d.innerHTML = Lang.Workspace.paste_picture;
-      a.appendChild(d);
-      a = Entry.createElement("li");
-      b.appendChild(a);
-      b = Entry.createElement("a", "entryPainterTopMenuEditEraseAll");
-      b.addClass("entryPlaygroundPainterTopMenuEditEraseAll");
-      b.innerHTML = Lang.Workspace.remove_all;
-      b.bindOnClick(function() {
-        painter.clearCanvas();
-      });
-      a.appendChild(b);
       Entry.addEventListener("pictureSelected", this.changePicture.bind(this));
     }
   };
@@ -11795,6 +11795,11 @@ Entry.Painter2 = function(a) {
       a.src = b.fileurl ? b.fileurl : Entry.defaultPath + "/uploads/" + b.filename.substring(0, 2) + "/" + b.filename.substring(2, 4) + "/image/" + b.filename + ".png";
       this.lc.saveShape(LC.createShape("Image", {x:10, y:10, image:a}));
     }
+  };
+  a.file_save = function() {
+    var b = this.lc.getImage().toDataURL();
+    Entry.dispatchEvent("saveCanvasImage", {file:this.file, image:b});
+    this.file.modified = !1;
   };
 })(Entry.Painter2.prototype);
 Entry.BlockParser = function(a) {
@@ -12147,11 +12152,11 @@ Entry.Parser = function(a, b, c) {
         d[e + "();\n"] = b.Scope[e];
       }
       "BasicIf" in b && (d.front = "BasicIf");
-      CodeMirror.commands.javascriptComplete = function(a) {
-        CodeMirror.showHint(a, null, {globalScope:d});
+      CodeMirror.commands.javascriptComplete = function(b) {
+        CodeMirror.showHint(b, null, {globalScope:d});
       };
-      c.on("keyup", function(a, b) {
-        !a.state.completionActive && 65 <= b.keyCode && 95 >= b.keyCode && CodeMirror.showHint(a, null, {completeSingle:!1, globalScope:d});
+      c.on("keyup", function(b, a) {
+        !b.state.completionActive && 65 <= a.keyCode && 95 >= a.keyCode && CodeMirror.showHint(b, null, {completeSingle:!1, globalScope:d});
       });
       break;
     case "block":
@@ -12159,23 +12164,23 @@ Entry.Parser = function(a, b, c) {
   }
 };
 (function(a) {
-  a.parse = function(a) {
-    var c = null;
+  a.parse = function(b) {
+    var a = null;
     switch(this._lang) {
       case "js":
         try {
-          var d = acorn.parse(a), c = this._parser.Program(d);
+          var d = acorn.parse(b), a = this._parser.Program(d);
         } catch (e) {
-          this.codeMirror && (e instanceof SyntaxError ? (a = {from:{line:e.loc.line - 1, ch:e.loc.column - 2}, to:{line:e.loc.line - 1, ch:e.loc.column + 1}}, e.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : (a = this.getLineNumber(e.node.start, e.node.end), a.message = e.message, a.severity = "error", this.codeMirror.markText(a.from, a.to, {className:"CodeMirror-lint-mark-error", __annotation:a, clearOnEnter:!0})), Entry.toast.alert("Error", e.message)), c = [];
+          this.codeMirror && (e instanceof SyntaxError ? (b = {from:{line:e.loc.line - 1, ch:e.loc.column - 2}, to:{line:e.loc.line - 1, ch:e.loc.column + 1}}, e.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : (b = this.getLineNumber(e.node.start, e.node.end), b.message = e.message, b.severity = "error", this.codeMirror.markText(b.from, b.to, {className:"CodeMirror-lint-mark-error", __annotation:b, clearOnEnter:!0})), Entry.toast.alert("Error", e.message)), a = [];
         }
         break;
       case "block":
-        a = this._parser.Code(a).match(/(.*{.*[\S|\s]+?}|.+)/g), c = Array.isArray(a) ? a.reduce(function(a, b, c) {
+        b = this._parser.Code(b).match(/(.*{.*[\S|\s]+?}|.+)/g), a = Array.isArray(b) ? b.reduce(function(a, b, c) {
           1 === c && (a += "\n");
           return (-1 < b.indexOf("function") ? b + a : a + b) + "\n";
         }) : "";
     }
-    return c;
+    return a;
   };
   a.getLineNumber = function(a, c) {
     var d = this.codeMirror.getValue(), e = {from:{}, to:{}};
