@@ -100,7 +100,9 @@ Entry.Board.OPTION_DOWNLOAD = 3;
         } else this.suffix = 'board';
 
         Entry.Utils.addFilters(this.svg, this.suffix);
-        this.patternRect = Entry.Utils.addBlockPattern(this.svg, this.suffix);
+        var returnVal = Entry.Utils.addBlockPattern(this.svg, this.suffix);
+        this.patternRect = returnVal.rect;
+        this.pattern = returnVal.pattern;
     };
 
     p.changeCode = function(code) {
@@ -788,7 +790,18 @@ Entry.Board.OPTION_DOWNLOAD = 3;
     };
 
     p.setPatternRectFill = function(color) {
-        this.patternRect.attr({fill:color});
+        this.patternRect.attr({
+            fill:color
+        });
+        this.pattern.attr({
+            style: ""
+        });
+    };
+
+    p.disablePattern = function() {
+        this.pattern.attr({
+            style: "display: none"
+        });
     };
 
     p._removeActivated = function() {

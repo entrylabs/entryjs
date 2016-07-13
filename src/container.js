@@ -471,6 +471,7 @@ Entry.Container.prototype.moveElement = function(start, end, isCallFromState) {
     this.objects_.splice(endIndex, 0, this.objects_.splice(startIndex, 1)[0]);
     this.setCurrentObjects();
     Entry.container.updateListView();
+    Entry.requestUpdate = true;
     return new Entry.State(Entry.container,
                            Entry.container.moveElement,
                            endIndex, startIndex, true);

@@ -5890,8 +5890,17 @@ Entry.block = {
                 case 'thisThread':
                     return this.die();
                 case 'otherThread':
-                    sprite.parent.script.clearExecutors();
-                    sprite.parent.script.addExecutor(this.executor);
+                    var executor = this.executor;
+                    var code = sprite.parent.script;
+                    var executors = code.executors;
+
+                    for (var i = 0 ; i < executors.length; i++) {
+                        var currentExecutor = executors[i];
+                        if (currentExecutor !== executor) {
+                            code.removeExecutor(currentExecutor);
+                            --i;
+                        }
+                    }
                     return script.callReturn();
             }
         }
@@ -9881,8 +9890,8 @@ Entry.block = {
         "isNotFor": [],
         "func": function (sprite, script) {
             var value1 = script.getNumberValue("VALUE1", script);
-            sprite.setX(value1);
             var value2 = script.getNumberValue("VALUE2", script);
+            sprite.setX(value1);
             sprite.setY(value2);
             if (sprite.brush && !sprite.brush.stop) {
                 sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);

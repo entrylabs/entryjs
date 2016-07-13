@@ -1064,7 +1064,8 @@ Entry.Utils.addBlockPattern = function (boardSvgDom, suffix) {
         patternTransform: "translate(12, 0)",
         x: 0, y: 0,
         width: 125,
-        height: 33
+        height: 33,
+        style: "display: none"
     });
 
     var group = pattern.elem('g');
@@ -1088,7 +1089,10 @@ Entry.Utils.addBlockPattern = function (boardSvgDom, suffix) {
         });
     }
 
-    return elem;
+    return {
+        pattern: pattern,
+        rect: elem
+    }
 };
 
 Entry.Utils.COLLISION = {
@@ -1211,3 +1215,12 @@ Entry.Utils.waitForWebfonts = function(fonts, callback) {
         })(fonts[i]);
     }
 };
+window.requestAnimFrame = (function(){
+  return  window.requestAnimationFrame       ||
+          window.webkitRequestAnimationFrame ||
+          window.mozRequestAnimationFrame    ||
+          function( callback ){
+            window.setTimeout(callback, 1000 / 60);
+          };
+})();
+
