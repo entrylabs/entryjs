@@ -6356,7 +6356,7 @@ Entry.parseTexttoXML = function(a) {
   return b;
 };
 Entry.createElement = function(a, b) {
-  a = document.createElement(a);
+  a = a instanceof HTMLElement ? a : document.createElement(a);
   b && (a.id = b);
   a.hasClass = function(b) {
     return this.className.match(new RegExp("(\\s|^)" + b + "(\\s|$)"));
@@ -11677,13 +11677,124 @@ Entry.Painter.prototype.selectToolbox = function(a) {
 };
 Entry.Painter2 = function(a) {
   this.view = a;
+  this.file = {id:Entry.generateHash(), name:"\uc0c8\uadf8\ub9bc", modified:!1, mode:"new"};
 };
 (function(a) {
   a.initialize = function() {
-    this.lc = LC.init(this.view, {imageURLPrefix:"/lib/literallycanvas/lib/img", backgroundColor:"#fff", toolbarPosition:"bottom"});
+    if (!this.lc) {
+      this.lc = LC.init(this.view, {imageURLPrefix:"/lib/literallycanvas/lib/img", backgroundColor:"#fff", toolbarPosition:"bottom"});
+      var b = Entry.createElement(document.getElementById("canvas-top-menu"));
+      b.addClass("entryPlaygroundPainterTop");
+      b.addClass("entryPainterTop");
+      var a = Entry.createElement("nav", "entryPainterTopMenu");
+      a.addClass("entryPlaygroundPainterTopMenu");
+      b.appendChild(a);
+      b = Entry.createElement("ul");
+      a.appendChild(b);
+      var d = Entry.createElement("li");
+      a.appendChild(d);
+      a = Entry.createElement("a", "entryPainterTopMenuFileNew");
+      a.bindOnClick(function() {
+        painter.newPicture();
+      });
+      a.addClass("entryPlaygroundPainterTopMenuFileNew");
+      a.innerHTML = Lang.Workspace.new_picture;
+      d.appendChild(a);
+      d = Entry.createElement("li", "entryPainterTopMenuFile");
+      d.addClass("entryPlaygroundPainterTopMenuFile");
+      d.innerHTML = Lang.Workspace.painter_file;
+      b.appendChild(d);
+      a = Entry.createElement("ul");
+      d.appendChild(a);
+      d = Entry.createElement("li");
+      a.appendChild(d);
+      var e = Entry.createElement("a", "entryPainterTopMenuFileSave");
+      e.bindOnClick(function() {
+        painter.file_save(!1);
+      });
+      e.addClass("entryPainterTopMenuFileSave");
+      e.innerHTML = Lang.Workspace.painter_file_save;
+      d.appendChild(e);
+      d = Entry.createElement("li");
+      a.appendChild(d);
+      a = Entry.createElement("a", "entryPainterTopMenuFileSaveAs");
+      a.bindOnClick(function() {
+        painter.file.mode = "new";
+        painter.file_save(!1);
+      });
+      a.addClass("entryPlaygroundPainterTopMenuFileSaveAs");
+      a.innerHTML = Lang.Workspace.painter_file_saveas;
+      d.appendChild(a);
+      a = Entry.createElement("li", "entryPainterTopMenuEdit");
+      a.addClass("entryPlaygroundPainterTopMenuEdit");
+      a.innerHTML = Lang.Workspace.painter_edit;
+      b.appendChild(a);
+      b = Entry.createElement("ul");
+      a.appendChild(b);
+      a = Entry.createElement("li");
+      b.appendChild(a);
+      d = Entry.createElement("a", "entryPainterTopMenuEditImportLink");
+      d.bindOnClick(function() {
+        Entry.dispatchEvent("openPictureImport");
+      });
+      d.addClass("entryPainterTopMenuEditImport");
+      d.innerHTML = Lang.Workspace.get_file;
+      a.appendChild(d);
+      a = Entry.createElement("li");
+      b.appendChild(a);
+      d = Entry.createElement("a", "entryPainterTopMenuEditCopy");
+      d.bindOnClick(function() {
+        painter.edit_copy();
+      });
+      d.addClass("entryPlaygroundPainterTopMenuEditCopy");
+      d.innerHTML = Lang.Workspace.copy_file;
+      a.appendChild(d);
+      a = Entry.createElement("li");
+      b.appendChild(a);
+      d = Entry.createElement("a", "entryPainterTopMenuEditCut");
+      d.bindOnClick(function() {
+        painter.edit_cut();
+      });
+      d.addClass("entryPlaygroundPainterTopMenuEditCut");
+      d.innerHTML = Lang.Workspace.cut_picture;
+      a.appendChild(d);
+      a = Entry.createElement("li");
+      b.appendChild(a);
+      d = Entry.createElement("a", "entryPainterTopMenuEditPaste");
+      d.bindOnClick(function() {
+        painter.edit_paste();
+      });
+      d.addClass("entryPlaygroundPainterTopMenuEditPaste");
+      d.innerHTML = Lang.Workspace.paste_picture;
+      a.appendChild(d);
+      a = Entry.createElement("li");
+      b.appendChild(a);
+      b = Entry.createElement("a", "entryPainterTopMenuEditEraseAll");
+      b.addClass("entryPlaygroundPainterTopMenuEditEraseAll");
+      b.innerHTML = Lang.Workspace.remove_all;
+      b.bindOnClick(function() {
+        painter.clearCanvas();
+      });
+      a.appendChild(b);
+      Entry.addEventListener("pictureSelected", this.changePicture.bind(this));
+    }
   };
   a.show = function() {
     this.lc || this.initialize();
+  };
+  a.changePicture = function(b) {
+    if (!this.file || this.file.id !== b.id) {
+      this.file.modified && confirm("\uc218\uc815\ub41c \ub0b4\uc6a9\uc744 \uc800\uc7a5\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?") && (this.file_ = JSON.parse(JSON.stringify(this.file)), this.file_save(!0));
+      this.file.modified = !1;
+      this.lc.clear();
+      var a = new Image;
+      a.id = b.id ? b.id : Entry.generateHash();
+      this.file.id = a.id;
+      this.file.name = b.name;
+      this.file.mode = "edit";
+      a.src = b.fileurl ? b.fileurl : Entry.defaultPath + "/uploads/" + b.filename.substring(0, 2) + "/" + b.filename.substring(2, 4) + "/image/" + b.filename + ".png";
+      this.lc.saveShape(LC.createShape("Image", {x:10, y:10, image:a}));
+    }
   };
 })(Entry.Painter2.prototype);
 Entry.BlockParser = function(a) {
@@ -12036,11 +12147,11 @@ Entry.Parser = function(a, b, c) {
         d[e + "();\n"] = b.Scope[e];
       }
       "BasicIf" in b && (d.front = "BasicIf");
-      CodeMirror.commands.javascriptComplete = function(b) {
-        CodeMirror.showHint(b, null, {globalScope:d});
+      CodeMirror.commands.javascriptComplete = function(a) {
+        CodeMirror.showHint(a, null, {globalScope:d});
       };
-      c.on("keyup", function(b, a) {
-        !b.state.completionActive && 65 <= a.keyCode && 95 >= a.keyCode && CodeMirror.showHint(b, null, {completeSingle:!1, globalScope:d});
+      c.on("keyup", function(a, b) {
+        !a.state.completionActive && 65 <= b.keyCode && 95 >= b.keyCode && CodeMirror.showHint(a, null, {completeSingle:!1, globalScope:d});
       });
       break;
     case "block":
@@ -12048,32 +12159,32 @@ Entry.Parser = function(a, b, c) {
   }
 };
 (function(a) {
-  a.parse = function(b) {
-    var a = null;
+  a.parse = function(a) {
+    var c = null;
     switch(this._lang) {
       case "js":
         try {
-          var d = acorn.parse(b), a = this._parser.Program(d);
+          var d = acorn.parse(a), c = this._parser.Program(d);
         } catch (e) {
-          this.codeMirror && (e instanceof SyntaxError ? (b = {from:{line:e.loc.line - 1, ch:e.loc.column - 2}, to:{line:e.loc.line - 1, ch:e.loc.column + 1}}, e.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : (b = this.getLineNumber(e.node.start, e.node.end), b.message = e.message, b.severity = "error", this.codeMirror.markText(b.from, b.to, {className:"CodeMirror-lint-mark-error", __annotation:b, clearOnEnter:!0})), Entry.toast.alert("Error", e.message)), a = [];
+          this.codeMirror && (e instanceof SyntaxError ? (a = {from:{line:e.loc.line - 1, ch:e.loc.column - 2}, to:{line:e.loc.line - 1, ch:e.loc.column + 1}}, e.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : (a = this.getLineNumber(e.node.start, e.node.end), a.message = e.message, a.severity = "error", this.codeMirror.markText(a.from, a.to, {className:"CodeMirror-lint-mark-error", __annotation:a, clearOnEnter:!0})), Entry.toast.alert("Error", e.message)), c = [];
         }
         break;
       case "block":
-        b = this._parser.Code(b).match(/(.*{.*[\S|\s]+?}|.+)/g), a = Array.isArray(b) ? b.reduce(function(b, a, c) {
-          1 === c && (b += "\n");
-          return (-1 < a.indexOf("function") ? a + b : b + a) + "\n";
+        a = this._parser.Code(a).match(/(.*{.*[\S|\s]+?}|.+)/g), c = Array.isArray(a) ? a.reduce(function(a, b, c) {
+          1 === c && (a += "\n");
+          return (-1 < b.indexOf("function") ? b + a : a + b) + "\n";
         }) : "";
     }
-    return a;
+    return c;
   };
-  a.getLineNumber = function(b, a) {
+  a.getLineNumber = function(a, c) {
     var d = this.codeMirror.getValue(), e = {from:{}, to:{}};
-    b = d.substring(0, b).split(/\n/gi);
-    e.from.line = b.length - 1;
-    e.from.ch = b[b.length - 1].length;
     a = d.substring(0, a).split(/\n/gi);
-    e.to.line = a.length - 1;
-    e.to.ch = a[a.length - 1].length;
+    e.from.line = a.length - 1;
+    e.from.ch = a[a.length - 1].length;
+    c = d.substring(0, c).split(/\n/gi);
+    e.to.line = c.length - 1;
+    e.to.ch = c[c.length - 1].length;
     return e;
   };
   a.mappingSyntax = function(a) {

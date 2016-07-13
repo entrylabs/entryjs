@@ -341,7 +341,11 @@ Entry.parseTexttoXML = function(xmlText) {
  * @return {!Element}
  */
 Entry.createElement = function(type, elementId) {
-    var element = document.createElement(type);
+    var element;
+    if (type instanceof HTMLElement)
+        element = type;
+    else
+        var element = document.createElement(type);
     if (elementId)
         element.id = elementId;
 
