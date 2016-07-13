@@ -19480,6 +19480,11 @@ Entry.block = {
             "Scope",
             "move"
         ],
+        statements: [
+            {
+                "accept": "basic"
+            }
+        ],
         "params": [
             {
                 "type": "Image",
@@ -19528,6 +19533,7 @@ Entry.block = {
         "skeleton": "basic_boolean_field",
         "mode": "maze",
         "color": "#2fc9f0",
+        "fontColor": "#fff",
         "syntax": [
             "Scope",
             "move"
@@ -19541,8 +19547,7 @@ Entry.block = {
                     [Lang.Menus.ai_under, "DOWN"]
                 ],
                 "value": "RIGHT",
-                "fontSize": 11,
-                'arrowColor': EntryStatic.ARROW_COLOR_HW
+                "fontSize": 11
             },
             {
                 "type": "Dropdown",
@@ -19554,8 +19559,7 @@ Entry.block = {
                     ["<=","SMALLER_EQUAL"]
                 ],
                 "value": "BIGGER",
-                "fontSize": 11,
-                'arrowColor': EntryStatic.ARROW_COLOR_HW
+                "fontSize": 11
             },
             {
                 "type": "Block",
@@ -19590,6 +19594,7 @@ Entry.block = {
     },
     "ai_boolean_object": {
         "skeleton": "basic_boolean_field",
+        "fontColor": "#fff",
         "mode": "maze",
         "color": "#2fc9f0",
         "syntax": [

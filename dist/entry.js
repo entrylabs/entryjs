@@ -17097,6 +17097,7 @@ Entry.FieldIndicator = function(b, a, c) {
   this._block = a.block;
   this._blockView = a;
   this.box = new Entry.BoxModel;
+  this._block.params[c] && (b = this._block.params[c]);
   this._size = b.size;
   this._imgUrl = this._block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN ? b.img.replace(".png", "_un.png") : b.img;
   this._boxMultiplier = b.boxMultiplier || 2;
