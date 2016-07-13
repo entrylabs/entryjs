@@ -697,6 +697,7 @@ Entry.Engine.prototype.toggleFullscreen = function() {
             $('body').css('overflow', 'hidden');
 
             popup.window_.appendChild(Entry.stage.canvas.canvas);
+            popup.window_.appendChild(Entry.engine.runButton[0]);
         }
         popup.window_.appendChild(Entry.engine.view_);
     } else {

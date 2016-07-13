@@ -73,7 +73,6 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
     Entry.engine.view_.style.width = b + "px";
     Entry.engine.view_.style.height = c + "px";
     Entry.engine.view_.style.top = "40px";
-    Entry.stage.canvas.canvas.style.height = c + "px";
     Entry.stage.canvas.canvas.style.width = b + "px";
     400 <= b ? Entry.engine.view_.removeClass("collapsed") : Entry.engine.view_.addClass("collapsed");
     Entry.playground.view_.style.left = b + .5 + "px";
@@ -8054,6 +8053,7 @@ Entry.Engine.prototype.toggleFullscreen = function() {
       $(this.popup.body_).css("top", a.scrollTop());
       $("body").css("overflow", "hidden");
       popup.window_.appendChild(Entry.stage.canvas.canvas);
+      popup.window_.appendChild(Entry.engine.runButton[0]);
     }
     popup.window_.appendChild(Entry.engine.view_);
   }
@@ -13749,8 +13749,7 @@ Entry.Stage.prototype.render = function() {
   Entry.stage.timer = setTimeout(Entry.stage.render, 16 - a % 16 + 16 * Math.floor(a / 16));
 };
 Entry.Stage.prototype.update = function() {
-  Entry.requestUpdate && (Entry.engine.isState("stop") && this.objectUpdated ? (this.canvas.update(), this.objectUpdated = !1) : this.canvas.update(), this.inputField && !this.inputField._isHidden && this.inputField.render());
-  Entry.requestUpdate = !1;
+  Entry.requestUpdate ? (Entry.engine.isState("stop") && this.objectUpdated ? (this.canvas.update(), this.objectUpdated = !1) : this.canvas.update(), this.inputField && !this.inputField._isHidden && this.inputField.render(), Entry.requestUpdateTwice ? Entry.requestUpdateTwice = !1 : Entry.requestUpdate = !1) : Entry.requestUpdate = !1;
 };
 Entry.Stage.prototype.loadObject = function(a) {
   var b = a.entity.object;
@@ -13960,11 +13959,13 @@ Entry.Stage.prototype.showInputField = function(a) {
   });
   this.inputSubmitButton || (this.inputField.value(""), this.canvas.addChild(a), this.inputSubmitButton = a);
   this.inputField.show();
+  Entry.requestUpdateTwice = !0;
 };
 Entry.Stage.prototype.hideInputField = function() {
   this.inputField && this.inputField.value() && this.inputField.value("");
   this.inputSubmitButton && (this.canvas.removeChild(this.inputSubmitButton), this.inputSubmitButton = null);
   this.inputField && this.inputField.hide();
+  Entry.requestUpdate = !0;
 };
 Entry.Stage.prototype.initObjectContainers = function() {
   var a = Entry.scene.scenes_;
@@ -14404,6 +14405,7 @@ Entry.Variable.prototype.setName = function(a) {
   this.name_ = a;
   this._nameWidth = null;
   this.updateView();
+  Entry.requestUpdateTwice = !0;
 };
 Entry.Variable.prototype.getId = function() {
   return this.id_;
@@ -14419,13 +14421,14 @@ Entry.Variable.prototype.setValue = function(a) {
   this.isCloud_ && Entry.variableContainer.updateCloudVariables();
   this._valueWidth = null;
   this.updateView();
+  Entry.requestUpdateTwice = !0;
 };
 Entry.Variable.prototype.isVisible = function() {
   return this.visible_;
 };
 Entry.Variable.prototype.setVisible = function(a) {
   Entry.assert("boolean" == typeof a, "Variable visible state must be boolean");
-  (this.visible_ = this.view_.visible = a) && this.updateView();
+  this.visible !== a && (this.visible_ = this.view_.visible = a, this.updateView());
 };
 Entry.Variable.prototype.setX = function(a) {
   this.x_ = a;
@@ -14977,7 +14980,7 @@ Entry.VariableContainer.prototype.removeVariable = function(a) {
   return new Entry.State(this, this.addVariable, c);
 };
 Entry.VariableContainer.prototype.changeVariableName = function(a, b) {
-  a.name_ != b && (Entry.isExist(b, "name_", this.variables_) ? (a.listElement.nameField.value = a.name_, Entry.toast.alert(Lang.Workspace.variable_rename_failed, Lang.Workspace.variable_dup)) : 10 < b.length ? (a.listElement.nameField.value = a.name_, Entry.toast.alert(Lang.Workspace.variable_rename_failed, Lang.Workspace.variable_too_long)) : (a.name_ = b, a.updateView(), Entry.playground.reloadPlayground(), Entry.toast.success(Lang.Workspace.variable_rename, Lang.Workspace.variable_rename_ok)));
+  a.name_ != b && (Entry.isExist(b, "name_", this.variables_) ? (a.listElement.nameField.value = a.name_, Entry.toast.alert(Lang.Workspace.variable_rename_failed, Lang.Workspace.variable_dup)) : 10 < b.length ? (a.listElement.nameField.value = a.name_, Entry.toast.alert(Lang.Workspace.variable_rename_failed, Lang.Workspace.variable_too_long)) : (a.setName(b), Entry.playground.reloadPlayground(), Entry.toast.success(Lang.Workspace.variable_rename, Lang.Workspace.variable_rename_ok)));
 };
 Entry.VariableContainer.prototype.changeListName = function(a, b) {
   a.name_ != b && (Entry.isExist(b, "name_", this.lists_) ? (a.listElement.nameField.value = a.name_, Entry.toast.alert(Lang.Workspace.list_rename_failed, Lang.Workspace.list_dup)) : 10 < b.length ? (a.listElement.nameField.value = a.name_, Entry.toast.alert(Lang.Workspace.list_rename_failed, Lang.Workspace.list_too_long)) : (a.name_ = b, a.updateView(), Entry.playground.reloadPlayground(), Entry.toast.success(Lang.Workspace.list_rename, Lang.Workspace.list_rename_ok)));
