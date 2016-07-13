@@ -863,8 +863,7 @@ Entry.VariableContainer.prototype.changeVariableName = function(variable, name) 
                            Lang.Workspace.variable_too_long);
         return;
     }
-    variable.name_ = name;
-    variable.updateView();
+    variable.setName(name);
     Entry.playground.reloadPlayground();
     Entry.toast.success(Lang.Workspace.variable_rename,
                         Lang.Workspace.variable_rename_ok);

@@ -530,6 +530,7 @@ Entry.Variable.prototype.setName = function(variableName) {
     this.name_ = variableName;
     this._nameWidth = null;
     this.updateView();
+    Entry.requestUpdateTwice = true;
 };
 
 /**
@@ -578,6 +579,7 @@ Entry.Variable.prototype.setValue = function(value) {
     if (this.isCloud_) Entry.variableContainer.updateCloudVariables();
     this._valueWidth = null;
     this.updateView();
+    Entry.requestUpdateTwice = true;
 };
 
 /**
@@ -595,10 +597,11 @@ Entry.Variable.prototype.isVisible = function() {
 Entry.Variable.prototype.setVisible = function(visibleState) {
     Entry.assert(typeof visibleState == 'boolean',
                 'Variable visible state must be boolean');
+    if (this.visible === visibleState)
+        return;
     this.view_.visible = visibleState;
     this.visible_ = visibleState;
-    if (visibleState)
-        this.updateView();
+    this.updateView();
 };
 
 /**
