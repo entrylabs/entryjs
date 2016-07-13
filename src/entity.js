@@ -948,6 +948,7 @@ Entry.EntityObject.prototype.resetFilter = function() {
 Entry.EntityObject.prototype.updateDialog = function() {
     if (this.dialog)
         this.dialog.update();
+    Entry.requestUpdate = true;
 };
 
 /**
