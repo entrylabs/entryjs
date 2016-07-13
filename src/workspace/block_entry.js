@@ -19387,6 +19387,297 @@ Entry.block = {
                 }
             ]
         }
+    },
+    "ai_move_right": {
+        "skeleton": "basic",
+        "mode": "maze",
+        "color": "#A751E3",
+        "syntax": [
+            "Scope",
+            "move"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/moveStep.png",
+                "size": 24
+            }
+        ],
+        func: function() {
+            if (!script.isStart) {
+                script.isStart = true;
+                script.isAction = true;
+                Ntry.dispatchEvent("gridChange", function() {
+                    script.isAction = false;
+                });
+                var spaceShipComp = Ntry.entityManager.getComponent(
+                    entity.id, Ntry.STATIC.SPACE_SHIP
+                );
+                spaceShipComp.direction = Ntry.STATIC.EAST;
+                var gridComp = Ntry.entityManager.getComponent(
+                    entity.id, Ntry.STATIC.GRID
+                );
+                Ntry.entityManager.addComponent(
+                    entity.id, {
+                        type: Ntry.STATIC.ANIMATE,
+                        animateType: Ntry.STATIC.ROTATE_TO,
+                        animateValue: 0
+                    }
+                );
+                gridComp.x++;
+                return script;
+            } else if (script.isAction) {
+                return script;
+            } else {
+                delete script.isAction;
+                delete script.isStart;
+                //Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        }
+    },
+    "ai_move_up": {
+        "skeleton": "basic",
+        "mode": "maze",
+        "color": "#A751E3",
+        "syntax": [
+            "Scope",
+            "move"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/ai_move_up.png",
+                "size": 24
+            }
+        ],
+        func: function() {
+        }
+    },
+    "ai_move_down": {
+        "skeleton": "basic",
+        "mode": "maze",
+        "color": "#A751E3",
+        "syntax": [
+            "Scope",
+            "move"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/ai_move_down.png",
+                "size": 24
+            }
+        ],
+        func: function() {
+        }
+    },
+    "ai_repeat_until_reach": {
+        "skeleton": "basic_loop",
+        "mode": "maze",
+        "color": "#498DEB",
+        "syntax": [
+            "Scope",
+            "move"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/for.png",
+                "size": 24
+            }
+        ],
+        func: function() {
+        }
+    },
+    "ai_if_else_1": {
+        "skeleton": "basic_double_loop",
+        "mode": "maze",
+        "color": "#498DEB",
+        "syntax": [
+            "Scope",
+            "move"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/ntry/bitmap/ai/obstacle_1.png",
+                "size": 24
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/for.png",
+                "size": 24
+            },
+            {
+                "type": "LineBreak"
+            }
+        ],
+        func: function() {
+        }
+    },
+    "ai_boolean_distance": {
+        "skeleton": "basic_boolean_field",
+        "mode": "maze",
+        "color": "#2fc9f0",
+        "syntax": [
+            "Scope",
+            "move"
+        ],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Menus.ai_above, "UP"],
+                    [Lang.Menus.ai_front, "RIGHT"],
+                    [Lang.Menus.ai_under, "DOWN"]
+                ],
+                "value": "RIGHT",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [">","BIGGER"],
+                    [">=","BIGGER_EQUAL"],
+                    ["=","EQUAL"],
+                    ["<","SMALLER"],
+                    ["<=","SMALLER_EQUAL"]
+                ],
+                "value": "BIGGER",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        func: function() {
+        }
+    },
+    "ai_distance_value": {
+        "skeleton": "basic_string_field",
+        "mode": "maze",
+        "color": "#ffd974",
+        "syntax": [
+            "Scope",
+            "move"
+        ],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Menus.ai_above, "UP"],
+                    [Lang.Menus.ai_front, "RIGHT"],
+                    [Lang.Menus.ai_under, "DOWN"]
+                ],
+                "value": "RIGHT",
+                "fontSize": 11
+            }
+        ],
+        func: function() {
+        }
+    },
+    "ai_boolean_object": {
+        "skeleton": "basic_boolean_field",
+        "mode": "maze",
+        "color": "#2fc9f0",
+        "syntax": [
+            "Scope",
+            "move"
+        ],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Menus.ai_above, "UP"],
+                    [Lang.Menus.ai_front, "RIGHT"],
+                    [Lang.Menus.ai_under, "DOWN"]
+                ],
+                "value": "RIGHT",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Menus.asteroids, "OBSTACLE"],
+                    [Lang.Menus.wall, "WALL"],
+                    [Lang.Menus.item, "ITEM"]
+                ],
+                "value": "OBSTACLE",
+                "fontSize": 11
+            }
+        ],
+        func: function() {
+        }
+    },
+    "ai_use_item": {
+        "skeleton": "basic",
+        "mode": "maze",
+        "color": "#EACF11",
+        "syntax": [
+            "Scope",
+            "move"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": '/img/assets/week/blocks/item.png',
+                "size": 24
+            }
+        ],
+        func: function() {
+        }
+    },
+    "ai_boolean_and": {
+        "color": "#2fc9f0",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "boolean"
+            },
+            {
+                "type": "Text",
+                "text": Lang.Blocks.JUDGEMENT_boolean_and,
+                "color": "#3D3D3D"
+            },
+            {
+                "type": "Block",
+                "accept": "boolean"
+            }
+        ],
+        "events": {},
+        "func": function (sprite, script) {
+            var leftValue = script.getBooleanValue("LEFTHAND", script);
+            var rightValue = script.getBooleanValue("RIGHTHAND", script);
+            return leftValue && rightValue;
+        }
+    },
+    "ai_True": {
+        "color": "#2fc9f0",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Text",
+                "text": Lang.Blocks.JUDGEMENT_true,
+                "color": "#3D3D3D"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            type: "True"
+        },
+        "func": function (sprite, script) {
+            return true;
+        },
+        "isPrimitive": true
     }
 };
 
