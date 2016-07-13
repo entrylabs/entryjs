@@ -16808,7 +16808,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
   };
   b.applyValue = function() {
     var a = this.optionGroup.val();
-    isNaN(a) || (a = this.modValue(a), this.setValue(a), this.updateGraph(), this.textElement.textContent = this.getValue(), this.optionGroup && this.optionGroup.val(a), this.resize());
+    isNaN(a) || "" === a || (a = this.modValue(a), this.setValue(a), this.updateGraph(), this.textElement.textContent = this.getValue(), this.optionGroup && this.optionGroup.val(a), this.resize());
   };
   b.resize = function() {
     var a = this.getTextWidth();
