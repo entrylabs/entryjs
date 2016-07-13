@@ -7515,8 +7515,18 @@ Entry.EntityObject.prototype.setFont = function(b) {
     Entry.stage.updateObject();
   }
 };
+Entry.EntityObject.prototype.setLineHeight = function() {
+  switch(this.getFontType()) {
+    case "Nanum Gothic Coding":
+      this.textObject.lineHeight = this.fontSize;
+      break;
+    default:
+      this.textObject.lineHeight = 0;
+  }
+};
 Entry.EntityObject.prototype.syncFont = function() {
   this.textObject.font = this.getFont();
+  this.setLineHeight();
   Entry.stage.update();
   this.getLineBreak() || this.setWidth(this.textObject.getMeasuredWidth());
   Entry.stage.updateObject();
