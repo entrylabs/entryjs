@@ -66,7 +66,7 @@ Entry.BlockView = function(block, board, mode) {
     this.dragMode = Entry.DRAG_MODE_NONE;
     Entry.Utils.disableContextmenu(this.svgGroup.node);
     var events = block.events.viewAdd;
-    if (events && !this.isInBlockMenu) {
+    if (Entry.type == 'workspace' && events && !this.isInBlockMenu) {
         events.forEach(function(fn) {
             if (Entry.Utils.isFunction(fn)) fn(block);
         });
@@ -75,6 +75,7 @@ Entry.BlockView = function(block, board, mode) {
 
 Entry.BlockView.PARAM_SPACE = 5;
 Entry.BlockView.DRAG_RADIUS = 5;
+Entry.BlockView.pngMap = {};
 
 (function(p) {
     p.schema = {
@@ -444,9 +445,19 @@ Entry.BlockView.DRAG_RADIUS = 5;
                 }
             };
 
+            var download = {
+                text: Lang.Menus.save_as_image,
+                callback: function(){
+                    that.downloadAsImage();
+                }
+            };
+
             options.push(copyAndPaste);
             options.push(copy);
             options.push(remove);
+
+            if (Entry.Utils.isChrome() && Entry.type == 'workspace')
+                options.push(download);
 
             Entry.ContextMenu.show(options);
         }
@@ -678,6 +689,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
     };
 
     p.destroy = function(animate) {
+        $(this.svgGroup).unbind('.blockViewMousedown');
         this._destroyObservers();
         var svgGroup = this.svgGroup;
 
@@ -693,7 +705,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
 
         var block = this.block;
         var events = block.events.viewDestroy;
-        if (events && !this.isInBlockMenu)
+        if (Entry.type == 'workspace' && events && !this.isInBlockMenu)
             events.forEach(function(fn){
                 if (Entry.Utils.isFunction(fn)) fn(block);
             });
@@ -999,9 +1011,159 @@ Entry.BlockView.DRAG_RADIUS = 5;
         }
     };
 
-    p.getParam = function(index) {
-        return this._paramMap[index];
+    p.getParam = function(index) { return this._paramMap[index]; };
+
+
+    p.getDataUrl = function(notClone, notPng) {
+        var deferred = $.Deferred();
+        var svgData = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %W %H">(svgGroup)(defs)</svg>';
+        var bBox = this.svgGroup.getBoundingClientRect();
+        var svgGroup = notClone ? this.svgGroup : this.svgGroup.cloneNode(true);
+        var box = this._skeleton.box(this)
+        var scale = notPng ? 1 : 1.5;
+        var fontWeight = isWindow7() ? 0.9 : 0.95;
+        if (this.type.indexOf('func_') > -1)
+            fontWeight *= 0.99;
+        svgGroup.setAttribute(
+            'transform',
+            'scale(%SCALE) translate(%X,%Y)'
+                .replace('%X', -box.offsetX)
+                .replace('%Y', -box.offsetY)
+                .replace('%SCALE', scale)
+        );
+
+        var defs = this.getBoard().svgDom.find('defs');
+
+        var images = svgGroup.getElementsByTagName('image');
+        var texts = svgGroup.getElementsByTagName('text');
+
+        var fontFamily =  "'nanumBarunRegular', 'NanumGothic', '나눔고딕','NanumGothicWeb', '맑은 고딕', 'Malgun Gothic', Dotum";
+        var boldTypes = ['≥', '≤'];
+        var notResizeTypes = ['≥', '≤', '-', '>', '<', '=', '+', '-', 'x', '/'];
+
+        for (var i=0; i<texts.length; i++) {
+            (function (text) {
+                text.setAttribute('font-family', fontFamily);
+                var size = parseInt(text.getAttribute('font-size'));
+                var content = $(text).text();
+                if (boldTypes.indexOf(content) > -1) {
+                    text.setAttribute('font-weight', '500');
+                }
+
+                if (content == 'q') {
+                    var y = parseInt(text.getAttribute('y'));
+                    text.setAttribute('y', y-1);
+                }
+
+                if (notResizeTypes.indexOf(content) > -1)
+                    text.setAttribute('font-size', (size) + 'px');
+                else
+                    text.setAttribute('font-size', (size * fontWeight) + 'px');
+                text.setAttribute('alignment-baseline', 'baseline');
+            })(texts[i]);
+        }
+
+        var counts = 0;
+        if (images.length === 0) processSvg();
+        else {
+            for (var i=0; i<images.length; i++) {
+                var img = images[i];
+                (function (img) {
+                    var href = img.getAttribute('href');
+                    loadImage(href, img.getAttribute('width'), img.getAttribute('height'))
+                        .then(function(src) {
+                            img.setAttribute('href', src)
+                            if (++counts == images.length) return processSvg();
+                        });
+                })(img);
+            }
+        }
+        return deferred.promise();
+
+        function processSvg() {
+            svgData = svgData
+                        .replace('(svgGroup)', new XMLSerializer().serializeToString( svgGroup ))
+                        .replace('%W', bBox.width * scale)
+                        .replace('%H', bBox.height * scale)
+                        .replace('(defs)', new XMLSerializer().serializeToString( defs[0] ))
+                        .replace(/>\s+/g, ">").replace(/\s+</g, "<");
+            var src = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgData)));
+            svgData = null;
+            if (notPng) {
+                deferred.resolve({
+                    src: src,
+                    width: bBox.width,
+                    height: bBox.height
+                });
+                svgGroup = null;
+            } else {
+                loadImage( src, bBox.width, bBox.height, 1.5)
+                    .then(function(src) {
+                        svgGroup = null;
+                        deferred.resolve({
+                            src: src,
+                            width: bBox.width,
+                            height: bBox.height
+                        });
+                }, function(err) {
+                    deferred.reject('error occured');
+                });
+            }
+            src = null;
+        }
+
+        function loadImage(src, width, height, multiplier) {
+            var deferred = $.Deferred();
+            if (!multiplier) multiplier = 1;
+            if (Entry.BlockView.pngMap[src] !== undefined)
+                deferred.resolve(Entry.BlockView.pngMap[src]);
+
+            width *= multiplier;
+            height *= multiplier;
+            //float point cropped
+            width = Math.ceil(width);
+            height = Math.ceil(height);
+
+            var img = document.createElement( "img" );
+            img.crossOrigin = 'Anonymous';
+            var canvas = document.createElement( "canvas" );
+
+            canvas.width = width;
+            canvas.height = height;
+            var ctx = canvas.getContext( "2d" );
+
+            img.onload = function() {
+                ctx.drawImage(img, 0, 0, width, height);
+                var data = canvas.toDataURL( "image/png" );
+                if (/\.png$/.test(src))
+                    Entry.BlockView.pngMap[src] = data;
+                deferred.resolve(data);
+            };
+
+            img.onerror = function() {
+                deferred.reject('error occured');
+            };
+            img.src = src;
+            return deferred.promise();
+        }
+
+        function isWindow7() {
+            var platform = window.platform;
+            if (platform && platform.name.toLowerCase() === 'windows' &&
+                    platform.version[0] === '7') {
+                return true;
+            }
+            return false;
+        }
     };
 
+    p.downloadAsImage = function() {
+        this.getDataUrl().then(function(data) {
+            var download = document.createElement('a');
+            download.href = data.src;
+            download.download = '엔트리 블록.png';
+            download.click();
+        });
+    };
 
 })(Entry.BlockView.prototype);

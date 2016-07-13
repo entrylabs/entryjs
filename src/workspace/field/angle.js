@@ -51,7 +51,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
         this.textElement =
             this.svgGroup.elem('text', {
                 x:X_PADDING/2, y:TEXT_Y_PADDING,
-                'font-size': '9pt'
+                'font-size': '11px'
             });
 
         this.textElement.textContent = this.getText();

@@ -14390,6 +14390,11 @@ Entry.block = {
             {
                 "type": "Block",
                 "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/text.png",
+                "size": 12
             }
         ],
         "events": {},
@@ -14398,7 +14403,8 @@ Entry.block = {
                 {
                     "type": "text",
                     "params": [ Lang.Blocks.entry ]
-                }
+                },
+                null
             ],
             "type": "text_write"
         },
@@ -14422,6 +14428,11 @@ Entry.block = {
             {
                 "type": "Block",
                 "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/text.png",
+                "size": 12
             }
         ],
         "events": {},
@@ -14430,7 +14441,8 @@ Entry.block = {
                 {
                     "type": "text",
                     "params": [ Lang.Blocks.entry ]
-                }
+                },
+                null
             ],
             "type": "text_append"
         },
@@ -14454,6 +14466,11 @@ Entry.block = {
             {
                 "type": "Block",
                 "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/text.png",
+                "size": 12
             }
         ],
         "events": {},
@@ -14462,7 +14479,8 @@ Entry.block = {
                 {
                     "type": "text",
                     "params": [ Lang.Blocks.entry ]
-                }
+                },
+                null
             ],
             "type": "text_prepend"
         },
@@ -14482,10 +14500,16 @@ Entry.block = {
         "color": "#FFCA36",
         "skeleton": "basic",
         "statements": [],
-        "params": [],
+        "params": [
+            {
+                "type": "Indicator",
+                "img": "block_icon/text.png",
+                "size": 12
+            }
+        ],
         "events": {},
         "def": {
-            "params": [],
+            "params": [null],
             "type": "text_flush"
         },
         "class": "text",
