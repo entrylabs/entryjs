@@ -19498,6 +19498,14 @@ Entry.block = {
             "Scope",
             "move"
         ],
+        "statements": [
+            {
+                "accept": "basic"
+            },
+            {
+                "accept": "basic"
+            }
+        ],
         "params": [
             {
                 "type": "Image",
