@@ -19427,7 +19427,7 @@ Entry.block = {
                 "size": 24
             }
         ],
-        func: function() {
+        func: function(entity, script) {
             if (!script.isStart) {
                 script.isStart = true;
                 script.isAction = true;
@@ -19449,14 +19449,13 @@ Entry.block = {
                     }
                 );
                 gridComp.x++;
-                return script;
+                return Entry.STATIC.BREAK;
             } else if (script.isAction) {
-                return script;
+                return Entry.STATIC.BREAK;
             } else {
                 delete script.isAction;
                 delete script.isStart;
                 //Entry.engine.isContinue = false;
-                return script.callReturn();
             }
         }
     },
@@ -19475,7 +19474,38 @@ Entry.block = {
                 "size": 24
             }
         ],
-        func: function() {
+        func: function(entity, script) {
+            if (!script.isStart) {
+                script.isStart = true;
+                script.isAction = true;
+                Ntry.dispatchEvent("gridChange", function() {
+                    script.isAction = false;
+                });
+                var spaceShipComp = Ntry.entityManager.getComponent(
+                    entity.id, Ntry.STATIC.SPACE_SHIP
+                );
+                spaceShipComp.direction = Ntry.STATIC.NORTH;
+                var gridComp = Ntry.entityManager.getComponent(
+                    entity.id, Ntry.STATIC.GRID
+                );
+                Ntry.entityManager.addComponent(
+                    entity.id, {
+                         type: Ntry.STATIC.ANIMATE,
+                         animateType: Ntry.STATIC.ROTATE_TO,
+                         animateValue: -45
+                    }
+                );
+                gridComp.x++;
+                gridComp.y--;
+                return script;
+            } else if (script.isAction) {
+                return script;
+            } else {
+                delete script.isAction;
+                delete script.isStart;
+                //Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
         }
     },
     "ai_move_down": {
@@ -19493,7 +19523,38 @@ Entry.block = {
                 "size": 24
             }
         ],
-        func: function() {
+        func: function(entity, script) {
+            if (!script.isStart) {
+                script.isStart = true;
+                script.isAction = true;
+                Ntry.dispatchEvent("gridChange", function() {
+                    script.isAction = false;
+                });
+                var spaceShipComp = Ntry.entityManager.getComponent(
+                    entity.id, Ntry.STATIC.SPACE_SHIP
+                );
+                spaceShipComp.direction = Ntry.STATIC.SOUTH;
+                var gridComp = Ntry.entityManager.getComponent(
+                    entity.id, Ntry.STATIC.GRID
+                );
+                Ntry.entityManager.addComponent(
+                    entity.id, {
+                        type: Ntry.STATIC.ANIMATE,
+                        animateType: Ntry.STATIC.ROTATE_TO,
+                        animateValue: 45
+                    }
+                );
+                gridComp.x++;
+                gridComp.y++;
+                return script;
+            } else if (script.isAction) {
+                return script;
+            } else {
+                delete script.isAction;
+                delete script.isStart;
+                //Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
         }
     },
     "ai_repeat_until_reach": {
@@ -19517,6 +19578,12 @@ Entry.block = {
             }
         ],
         func: function() {
+            var statement = this.block.statements[0];
+            if (statement.getBlocks().length === 0)
+                return;
+
+            this.executor.stepInto(statement);
+            return Entry.STATIC.BREAK;
         }
     },
     "ai_if_else_1": {
@@ -19550,7 +19617,23 @@ Entry.block = {
                 "type": "LineBreak"
             }
         ],
-        func: function() {
+        func: function(entity, script) {
+            if (script.isLooped) {
+                delete script.isLooped;
+                return script.callReturn();
+            }
+            var radar = Ntry.entityManager.getComponent(
+                entity.id, Ntry.STATIC.RADAR
+            );
+
+            var statements = this.block.statements;
+            var index = 1;
+            script.isLooped = true;
+            if (radar.center.type == Ntry.STATIC.AI_METEO &&
+                radar.center.distance == 1)
+                index = 0;
+            this.executor.stepInto(statements[index]);
+            return Entry.STATIC.BREAK;
         }
     },
     "ai_boolean_distance": {
@@ -19590,7 +19673,46 @@ Entry.block = {
                 "accept": "string"
             }
         ],
-        func: function() {
+        func: function(entity, script) {
+            var radar = Ntry.entityManager.getComponent(
+                entity.id, Ntry.STATIC.RADAR
+            );
+
+            var params = this.block.params;
+
+            var direction = params[0];
+            var operator = params[1];
+            var value = this.getParam(2);
+
+            var radarValue;
+            switch (direction) {
+                case "UP":
+                    radarValue = radar.left;
+                    break;
+                case "RIGHT":
+                    radarValue = radar.center;
+                    break;
+                case "DOWN":
+                    radarValue = radar.right;
+                    break;
+            }
+            if (radarValue.type == Ntry.STATIC.AI_GOAL)
+                radarValue = Number.MAX_VALUE;
+            else
+                radarValue = radarValue.distance;
+
+            switch (operator) {
+                case "BIGGER":
+                    return radarValue > value;
+                case "BIGGER_EQUAL":
+                    return radarValue >= value;
+                case "EQUAL":
+                    return radarValue == value;
+                case "SMALLER":
+                    return radarValue < value;
+                case "SMALLER_EQUAL":
+                    return radarValue <= value;
+            }
         }
     },
     "ai_distance_value": {
@@ -19613,7 +19735,24 @@ Entry.block = {
                 "fontSize": 11
             }
         ],
-        func: function() {
+        func: function(entity, script) {
+            var radar = Ntry.entityManager.getComponent(
+                entity.id, Ntry.STATIC.RADAR
+            );
+
+            switch (this.block.params[0]) {
+                case "UP":
+                    radarValue = radar.left;
+                    break;
+                case "RIGHT":
+                    radarValue = radar.center;
+                    break;
+                case "DOWN":
+                    radarValue = radar.right;
+                    break;
+            }
+            return radarValue.type == Ntry.STATIC.AI_GOAL ?
+                Number.MAX_VALUE : radarValue.distance;
         }
     },
     "ai_boolean_object": {
@@ -19648,7 +19787,33 @@ Entry.block = {
                 "fontSize": 11
             }
         ],
-        func: function() {
+        func: function(entity, script) {
+            var radar = Ntry.entityManager.getComponent(
+                entity.id, Ntry.STATIC.RADAR
+            );
+
+            var params = this.block.params;
+
+            var radarValue;
+            switch (params[0]) {
+                case "UP":
+                    radarValue = radar.left.type;
+                    break;
+                case "RIGHT":
+                    radarValue = radar.center.type;
+                    break;
+                case "DOWN":
+                    radarValue = radar.right.type;
+                    break;
+            }
+            switch (params[1]) {
+                case "OBSTACLE":
+                    return radarValue == Ntry.STATIC.AI_METEO;
+                case "WALL":
+                    return radarValue == Ntry.STATIC.AI_WALL;
+                case "ITEM":
+                    return radarValue == Ntry.STATIC.AI_ITEM;
+            }
         }
     },
     "ai_use_item": {
@@ -19666,7 +19831,38 @@ Entry.block = {
                 "size": 24
             }
         ],
-        func: function() {
+        func: function(entity, script) {
+            if (!script.isStart) {
+                Ntry.dispatchEvent("triggerWeapon");
+                script.isStart = true;
+                script.isAction = true;
+                Ntry.dispatchEvent("gridChange", function() {
+                    script.isAction = false;
+                });
+                var spaceShipComp = Ntry.entityManager.getComponent(
+                    entity.id, Ntry.STATIC.SPACE_SHIP
+                );
+                spaceShipComp.direction = Ntry.STATIC.EAST;
+                var gridComp = Ntry.entityManager.getComponent(
+                    entity.id, Ntry.STATIC.GRID
+                );
+                Ntry.entityManager.addComponent(
+                    entity.id, {
+                        type: Ntry.STATIC.ANIMATE,
+                        animateType: Ntry.STATIC.ROTATE_TO,
+                        animateValue: 0
+                    }
+                );
+                gridComp.x++;
+                return script;
+            } else if (script.isAction) {
+                return script;
+            } else {
+                delete script.isAction;
+                delete script.isStart;
+                //Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
         }
     },
     "ai_boolean_and": {
@@ -19690,10 +19886,8 @@ Entry.block = {
             }
         ],
         "events": {},
-        "func": function (sprite, script) {
-            var leftValue = script.getBooleanValue("LEFTHAND", script);
-            var rightValue = script.getBooleanValue("RIGHTHAND", script);
-            return leftValue && rightValue;
+        "func": function () {
+            return this.getParam(0) && this.getParam(2);
         }
     },
     "ai_True": {
