@@ -126,4 +126,5 @@ Entry.Dialog.prototype.createSpeakNotch = function(type) {
 Entry.Dialog.prototype.remove = function() {
     Entry.stage.unloadDialog(this);
     this.parent.dialog = null;
+    Entry.requestUpdate = true;
 };
