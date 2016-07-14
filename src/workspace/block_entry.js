@@ -19648,6 +19648,7 @@ Entry.block = {
     "ai_boolean_and": {
         "color": "#2fc9f0",
         "skeleton": "basic_boolean_field",
+        "fontColor": "#fff",
         "statements": [],
         "params": [
             {
@@ -19657,7 +19658,7 @@ Entry.block = {
             {
                 "type": "Text",
                 "text": Lang.Blocks.JUDGEMENT_boolean_and,
-                "color": "#3D3D3D"
+                "color": "#fff"
             },
             {
                 "type": "Block",
