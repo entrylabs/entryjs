@@ -167,7 +167,10 @@ Entry.Stage.prototype.update = function() {
     }
     if ( this.inputField && !this.inputField._isHidden )
         this.inputField.render();
-    Entry.requestUpdate = false;
+    if (Entry.requestUpdateTwice)
+        Entry.requestUpdateTwice = false;
+    else
+        Entry.requestUpdate = false;
 };
 
 /**
@@ -567,6 +570,7 @@ Entry.Stage.prototype.showInputField = function (sprite) {
     }
 
     this.inputField.show();
+    Entry.requestUpdateTwice = true;
 };
 
 
@@ -584,6 +588,7 @@ Entry.Stage.prototype.hideInputField = function () {
 
     if (this.inputField)
         this.inputField.hide();
+    Entry.requestUpdate = true;
 };
 
 
