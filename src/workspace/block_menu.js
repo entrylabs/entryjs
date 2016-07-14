@@ -12,7 +12,7 @@ goog.require("Entry.Utils");
  */
 Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     Entry.Model(this, false);
-    this._align = align || "CENTER";
+    this.setAlign(align);
     this._scroll = scroll !== undefined ? scroll : false;
     this._bannedClass = [];
     this._categories = [];
@@ -675,6 +675,10 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             }
         }
         this._categoryCodes.arduino = codesJSON;
+    };
+
+    p.setAlign = function(align) {
+        this._align = align || "CENTER";
     };
 
 

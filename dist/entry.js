@@ -15211,7 +15211,7 @@ Entry.block.basic_button = {skeleton:"basic_button", color:"#eee", template:"%1"
 }};
 Entry.BlockMenu = function(b, a, c, d) {
   Entry.Model(this, !1);
-  this._align = a || "CENTER";
+  this.setAlign(a);
   this._scroll = void 0 !== d ? d : !1;
   this._bannedClass = [];
   this._categories = [];
@@ -15573,6 +15573,9 @@ Entry.BlockMenu = function(b, a, c, d) {
       }
     }
     this._categoryCodes.arduino = b;
+  };
+  b.setAlign = function(a) {
+    this._align = a || "CENTER";
   };
 })(Entry.BlockMenu.prototype);
 Entry.BlockMenuScroller = function(b) {
