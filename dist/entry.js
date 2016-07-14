@@ -6879,6 +6879,7 @@ Entry.Dialog.prototype.createSpeakNotch = function(b) {
 Entry.Dialog.prototype.remove = function() {
   Entry.stage.unloadDialog(this);
   this.parent.dialog = null;
+  Entry.requestUpdate = !0;
 };
 Entry.DoneProject = function(b) {
   this.generateView(b);
