@@ -19490,9 +19490,9 @@ Entry.block = {
                 );
                 Ntry.entityManager.addComponent(
                     entity.id, {
-                         type: Ntry.STATIC.ANIMATE,
-                         animateType: Ntry.STATIC.ROTATE_TO,
-                         animateValue: -45
+                        type: Ntry.STATIC.ANIMATE,
+                        animateType: Ntry.STATIC.ROTATE_TO,
+                        animateValue: -45
                     }
                 );
                 gridComp.x++;
@@ -19503,7 +19503,6 @@ Entry.block = {
             } else {
                 delete script.isAction;
                 delete script.isStart;
-                //Entry.engine.isContinue = false;
                 return script.callReturn();
             }
         }
@@ -19552,7 +19551,6 @@ Entry.block = {
             } else {
                 delete script.isAction;
                 delete script.isStart;
-                //Entry.engine.isContinue = false;
                 return script.callReturn();
             }
         }
@@ -19582,8 +19580,7 @@ Entry.block = {
             if (statement.getBlocks().length === 0)
                 return;
 
-            this.executor.stepInto(statement);
-            return Entry.STATIC.BREAK;
+            return this.executor.stepInto(statement);
         }
     },
     "ai_if_else_1": {
