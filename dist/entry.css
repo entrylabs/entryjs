@@ -559,6 +559,10 @@ svg .svgBlockGroup text {
   line-height: normal;
   z-index: 301;
 }
+.entry-widget-input-field::-ms-clear,
+.entry-widget-input-field::-ms-reveal {
+  display: none;
+}
 .entry-field-angle {
   cursor: default;
 }
