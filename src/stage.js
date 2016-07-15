@@ -123,13 +123,13 @@ Entry.Stage.prototype.initStage = function(canvas) {
     });
 
     Entry.addEventListener('canvasInputComplete', function (e){
+        if (Entry.stage.inputField._isHidden || Entry.container.inputValue.complete)
+            return;
         try {
             var inputValue = Entry.stage.inputField.value();
-            Entry.stage.hideInputField();
             if (inputValue) {
                 (function (c){
                     c.setInputValue(inputValue);
-                    c.inputValue.complete = true;
                 })(Entry.container);
             }
         } catch (exception) {}
@@ -586,8 +586,11 @@ Entry.Stage.prototype.hideInputField = function () {
         this.inputSubmitButton = null;
     }
 
-    if (this.inputField)
+	if (this.inputField) {
+		this.inputField.blur();
         this.inputField.hide();
+	}
+
     Entry.requestUpdate = true;
 };
 

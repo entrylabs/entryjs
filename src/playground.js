@@ -23,9 +23,18 @@ Entry.Playground = function() {
      * @type {string}
      */
     this.viewMode_ = 'default';
+    var that = this;
     Entry.addEventListener('textEdited', this.injectText);
     Entry.addEventListener('hwChanged', this.updateHW);
-};
+    Entry.addEventListener('changeMode', function(mode) {
+        that.setMode(mode);
+    });
+}
+
+Entry.Playground.prototype.setMode = function(mode) {
+    console.log("mode", mode);
+    this.mainWorkspace.setMode(mode);
+}
 
 /**
  * Control bar view generator.
@@ -287,14 +296,15 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
             },
             'board': {
                 dom: boardView
-            }/*,
+            },
             'vimBoard': {
                 dom: boardView
-            }*/
+            }
         }
     );
     this.blockMenu = this.mainWorkspace.blockMenu;
     this.board = this.mainWorkspace.board;
+    this.vimBoard = this.mainWorkspace.vimBoard;
 
     if (Entry.hw) this.updateHW();
 };

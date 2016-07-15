@@ -315,6 +315,7 @@ Entry.Board.OPTION_DOWNLOAD = 3;
             blockView._moveTo(left, top, false);
             acculmulatedTop = acculmulatedTop + bBox.height + verticalGap;
         }
+
         this.scroller.resizeScrollBar();
     };
 
