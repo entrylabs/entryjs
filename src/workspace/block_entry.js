@@ -17362,8 +17362,7 @@ Entry.block = {
 
             Ntry.unitComp = Ntry.entityManager.getComponent(
             this._unit.id, Ntry.STATIC.UNIT);
-        },
-        "syntax": {"js": [""], "py": [""]}
+        }
     },
     "maze_step_jump": {
         "skeleton": "basic",
@@ -17928,8 +17927,7 @@ Entry.block = {
                 delete this.isAction;
                 delete this.isContinue;
             }
-        },
-        "syntax": {"js": [], "py": []}
+        }
     },
     "maze_step_rotate_left": {
         "skeleton": "basic",

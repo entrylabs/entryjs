@@ -39,12 +39,10 @@ Entry.Parser = function(mode, type, cm, syntax) {
         var configCode = NtryData.config[this._stageId].availableCode;
         var playerCode = NtryData.player[this._stageId].code;
         this.setAvailableCode(configCode, playerCode);
-    } else if (mode === Entry.Vim.WORKSPACE_MODE) {
-        this.mappingSyntax(Entry.Vim.WORKSPACE_MODE);
     }
 
-    this.syntax.js = this.mappingSyntaxJs(mode);
-    this.syntax.py = this.mappingSyntaxPy(mode);
+    /*this.syntax.js = this.mappingSyntaxJs(mode);
+    this.syntax.py = this.mappingSyntaxPy(mode);*/
 
     console.log("py syntax", this.syntax.py);
     console.log(this._lang)
@@ -107,7 +105,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
             var syntax = this.syntax;
             break;
 
-        case "blockPy":
+        case "blockPy": 
             this._parser = new Entry.BlockToPyParser(this.syntax);
             var syntax = this.syntax;
             break;
@@ -116,26 +114,33 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
 (function(p) {
     p.setParser = function(mode, type, cm) {
+        console.log("mode, type, cm", mode, type, cm);
+        this._mode = mode;
+        this._type = type;
+        this._cm = cm;
+
         if (mode === Entry.Vim.MAZE_MODE) {
             this._stageId = Number(Ntry.configManager.getConfig('stageId'));
             var configCode = NtryData.config[this._stageId].availableCode;
             var playerCode = NtryData.player[this._stageId].code;
             this.setAvailableCode(configCode, playerCode);
-        } else if (mode === Entry.Vim.WORKSPACE_MODE) {
-            //To Do for ws
+            this.syntax = this.mappingSyntax(mode);
+        } else {
+            this.syntax = this.mappingSyntax(mode);
         }
-
-        this.mappingSyntax(mode);
-        this._type = type;
 
         switch (type) {
             case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
                 this._parser = new Entry.JsToBlockParser(this.syntax);
 
+                this._parserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK;
+
                 break;
 
             case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
-                this._parser = new Entry.PyToBlockParser(this.syntax.py);
+                this._parser = new Entry.PyToBlockParser(this.syntax);
+
+                this._parserType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK;
 
                 break;
 
@@ -153,30 +158,41 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     assistScope['front'] = 'BasicIf';
                 }
 
-                cm.setOption("mode", {name: "javascript", globalVars: true});
+                //cm.setOption("mode", {name: "javascript", globalVars: true});
+
+                cm.on("keyup", function (cm, event) {
+                    if ((event.keyCode >= 65 && event.keyCode <= 95) ||
+                        event.keyCode == 167 || event.keyCode == 190) {
+                        CodeMirror.showHint(cm, null, {completeSingle: false, globalScope:assistScope});
+                    }
+                });
+
+                this._parserType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK;
 
                 break;
 
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
-                this._parser = new Entry.BlockToPyParser(this.syntax.py);
+                this._parser = new Entry.BlockToPyParser(this.syntax);
 
                 cm.setOption("mode", {name: "python", globalVars: true});
                 cm.markText({line: 0, ch: 0}, {line: 5}, {readOnly: true});
+
+                this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
+
                 break;
         }
     };
 
     p.parse = function(code, parseMode) {
-        console.log("PARSER TYPE", this._type);
-
         var type = this._type;
         var result = null;
+
+        console.log("parse type", type);
 
         switch (type) {
             case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
                 try {
-                    var jsAstGenerator = new Entry.JsAstGenerator();
-                    var astTree = jsAstGenerator.generate(code);
+                    var astTree = acorn.parse(code);
                     result = this._parser.Program(astTree);
                 } catch (error) {
                     if (this.codeMirror) {
@@ -186,15 +202,14 @@ Entry.Parser = function(mode, type, cm, syntax) {
                                 from: {line: error.loc.line - 1, ch: error.loc.column - 2},
                                 to: {line: error.loc.line - 1, ch: error.loc.column + 1}
                             }
-                            error.message = "문법 오류입니다.";
+                            error.message = "문법 오류입니다."; 
                         } else {
-                            annotation = this.getLineNumber(error.node.start,
-                                                               error.node.end);
+                            annotation = this.getLineNumber(error.node.start, error.node.end);
                             annotation.message = error.message;
                             annotation.severity = "error";
                             this.codeMirror.markText(
                                 annotation.from, annotation.to, {
-                                className: "CodeMirror-lint-mark-error",
+                                className: "CodeMirror-lint-mark-error", 
                                 __annotation: annotation,
                                 clearOnEnter: true
                             });
@@ -246,7 +261,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     console.log("result", result);
                 } catch(error) {
                     if (this.codeMirror) {
-                        /*var annotation;
+                        var annotation;
                         if (error instanceof SyntaxError) {
                             annotation = {
                                 from: {line: error.loc.line - 1, ch: error.loc.column - 2},
@@ -264,7 +279,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                                 __annotation: annotation,
                                 clearOnEnter: true
                             });
-                        }*/
+                        }
                         //throw error;
                         Entry.toast.alert('[텍스트코딩(파이썬) 오류]', error.message);
                         document.getElementById("entryCodingModeSelector").value = '2';
@@ -330,35 +345,72 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
     p.mappingSyntax = function(mode) {
         var types = Object.keys(Entry.block);
+        var syntax = {};
 
         for (var i = 0; i < types.length; i++) {
             var type = types[i];
-
             var block = Entry.block[type];
 
-            if (block.mode === mode && this.availableCode.indexOf(type) > -1) {
-                var syntaxArray = block.syntax;
-                if (!syntaxArray)
-                    continue;
-                var syntax = this.syntax;
-                for (var j = 0; j < syntaxArray.length; j++) {
-                    var key = syntaxArray[j];
-                    if (j === syntaxArray.length - 2 &&
-                       typeof syntaxArray[j + 1] === "function") {
-                        syntax[key] = syntaxArray[j + 1];
-                        break;
+            if(mode === Entry.Vim.MAZE_MODE) {
+                if(this.availableCode.indexOf(type) > -1) {
+                    var syntaxArray = block.syntax;
+                    if (!syntaxArray)
+                        continue;
+
+                    if(block.syntax.py)
+                        continue;
+
+                    var syntaxTemp = syntax;
+                    console.log(syntaxArray)
+                    for (var j = 0; j < syntaxArray.length; j++) {
+                        var key = syntaxArray[j];
+                        if (j === syntaxArray.length - 2 &&
+                            typeof syntaxArray[j + 1] === "function") {
+                            syntaxTemp[key] = syntaxArray[j + 1];
+                            break;
+                        }
+                        if (!syntaxTemp[key]) {
+                            syntaxTemp[key] = {};
+                        }
+                        if (j === syntaxArray.length - 1) {
+                            syntaxTemp[key] = type;
+                        } else {
+                            syntaxTemp = syntaxTemp[key];
+                        }
                     }
-                    if (!syntax[key]) {
-                        syntax[key] = {};
-                    }
-                    if (j === syntaxArray.length - 1) {
-                        syntax[key] = type;
-                    } else {
-                        syntax = syntax[key];
+                }
+            }
+            else {
+                if(mode === Entry.Vim.WORKSPACE_MODE) {
+                    var blockList = Entry.block;
+
+                    for (var key in blockList) {
+                        var pyBlockSyntax = {};
+                        var block = blockList[key];
+                        var pySyntax = null;
+
+                        if(block.syntax && block.syntax.py) {
+                            pySyntax = block.syntax.py;
+                            //console.log("syntax", syntax);
+                        }
+
+                        if (!pySyntax)
+                            continue;
+
+                        pySyntax = String(pySyntax);
+                        var tokens = pySyntax.split('(');
+                        if(tokens[0].length != 0)
+                            pySyntax = tokens[0];
+
+                        syntax[pySyntax] = key;
                     }
                 }
             }
         }
+
+        console.log("mappingSyntax", syntax);
+
+        return syntax;
     };
 
     p.setAvailableCode = function (configCode, playerCode) {
@@ -388,14 +440,17 @@ Entry.Parser = function(mode, type, cm, syntax) {
         this.availableCode = this.availableCode.concat(availableList);
     };
 
-
-    p.mappingSyntaxJs = function(mode) {
+    /*p.mappingSyntaxJs = function() {
+        var mode = "maze";
         var types = Object.keys(Entry.block);
 
         for (var i = 0; i < types.length; i++) {
             var type = types[i];
 
             var block = Entry.block[type];
+
+            if(block.syntax && block.syntax.py)
+                continue;
 
             if (block.mode === mode && this.availableCode.indexOf(type) > -1) {
                 var syntaxArray = block.syntax;
@@ -420,10 +475,13 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 }
             }
         }
+
+        console.log("mappingSyntaxJs", syntax);
         return syntax;
     };
+    */
 
-    p.mappingSyntaxPy = function(mode) {
+    /*p.mappingSyntaxPy = function(mode) {
         if(mode != Entry.Vim.WORKSPACE_MODE) return;
 
         var syntaxList = {};
@@ -446,14 +504,10 @@ Entry.Parser = function(mode, type, cm, syntax) {
             var tokens = syntax.split('(');
             if(tokens[0].length != 0)
                 syntax = tokens[0];
-            /* if(syntax.match(/.*\..*\)/)) {
-                var index = syntax.indexOf('(');
 
-                syntax = syntax.substring(0, index);
-            }*/
             syntaxList[syntax] = key;
         }
         return syntaxList;
-    };
+    };*/
 
 })(Entry.Parser.prototype);

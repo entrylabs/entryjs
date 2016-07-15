@@ -4,8 +4,8 @@ goog.provide("Entry.Vim");
 
 Entry.Vim = function(dom, textType) {
     //Definition For Textmode
-    Entry.Vim.MAZE_MODE = 0; 
-    Entry.Vim.WORKSPACE_MODE = 1; 
+    Entry.Vim.MAZE_MODE = 1; 
+    Entry.Vim.WORKSPACE_MODE = 2; 
 
     Entry.Vim.TEXT_TYPE_JS = 0;
     Entry.Vim.TEXT_TYPE_PY = 1;
@@ -31,9 +31,9 @@ Entry.Vim = function(dom, textType) {
 
     //this._parser = new Entry.Parser("maze", "js", this.codeMirror);
     //this._blockParser = new Entry.Parser("maze", "block");
+    
     this._mode = Entry.Vim.WORKSPACE_MODE;
-    this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS;
-
+    this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
     this._parser = new Entry.Parser(this._mode, this._parserType, this.codeMirror);
     
     //this._pyBlockParser = new Entry.Parser("ws", "blockPy", this.codeMirror);
@@ -122,6 +122,7 @@ Entry.Vim = function(dom, textType) {
     };
 
     p.textToCode = function(textType) {
+        console.log("textToCode", textType);
         var type = textType;
         if (type === Entry.Vim.TEXT_TYPE_JS) {
             this._parserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK;
@@ -141,14 +142,22 @@ Entry.Vim = function(dom, textType) {
         return code;
     };
 
-    p.codeToText = function(code) {
-        var object = Entry.playground.object;
-       
-        if(Entry.stage.selectedObject)
-            var codeDescription = "# " + object.name + " 오브젝트의 파이썬 코드";
-        else
-            var codeDescription = "# 파이썬 코드";
-        var textType = this.workspace.textType;
+    p.codeToText = function(code, mode) {
+        console.log("codeToText mode", mode);
+        var object;
+        var codeDescription;
+        if(mode)
+            this._mode = mode.runType;
+
+        if(Entry.playground) {
+            object = Entry.playground.object;
+            codeDescription = "# " + object.name + " 오브젝트의 파이썬 코드";
+        }
+
+        var textType = mode.textType;
+        console.log("textType 111", textType);
+        console.log("com com", this._mode, this._parserType, this.codeMirror);
+
         if (textType === Entry.Vim.TEXT_TYPE_JS) {
             this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS;
             this._parser.setParser(this._mode, this._parserType, this.codeMirror);
@@ -158,13 +167,16 @@ Entry.Vim = function(dom, textType) {
         } 
 
         var textCode = this._parser.parse(code, Entry.Parser.PARSE_GENERAL);
-        textCode = codeDescription
-        .concat("\n\n")
-        .concat(Entry.Vim.PYTHON_IMPORT_ENTRY)
-        .concat("\n")
-        .concat(Entry.Vim.PYTHON_IMPORT_HW)
-        .concat("\n\n")
-        .concat(textCode); 
+
+        if(textType === Entry.Vim.TEXT_TYPE_PY) {
+            textCode = codeDescription
+            .concat("\n\n")
+            .concat(Entry.Vim.PYTHON_IMPORT_ENTRY)
+            .concat("\n")
+            .concat(Entry.Vim.PYTHON_IMPORT_HW)
+            .concat("\n\n")
+            .concat(textCode); 
+        }
 
         this.codeMirror.setValue(textCode);
         // this.codeMirror.getDoc().markText({line:0, ch:0}, {line: 1, ch: 100}, {readOnly: true});

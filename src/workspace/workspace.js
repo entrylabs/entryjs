@@ -54,6 +54,8 @@ Entry.Workspace = function(options) {
     this.changeEvent = new Entry.Event(this);
 
     Entry.commander.setCurrentEditor("board", this.board);
+
+    this.textType = Entry.Vim.TEXT_TYPE_PY;
 };
 
 Entry.Workspace.MODE_BOARD = 0;
@@ -77,15 +79,21 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     p.getMode = function() {return this.mode;};
 
     p.setMode = function(mode, message){
-        var mode = Number(mode);
+        console.log("setMode Message", mode, message);
+        //var mode = mode;
         var oldMode = this.mode;
-        this.mode = mode;
+        this.mode = mode.boardType;
+        //this.textType = mode.textType;
+        this.runType = mode.runType;
 
         //Text Type in Text Coding Mode
-        var oldTextType = this.textType;
-        this.textType = message;
+        this.oldTextType = this.textType;
+        this.textType = mode.textType;
 
-        switch (mode) {
+        console.log("mode", mode);
+        console.log("oldTextType", this.oldTextType);
+
+        switch (this.mode) {
             case oldMode:
                 return;
 
@@ -94,7 +102,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                 if (this.overlayBoard) this.overlayBoard.hide();
                 this.set({selectedBoard:this.vimBoard});
                 this.vimBoard.show();
-                this.codeToText(this.board.code);
+                this.codeToText(this.board.code, mode);
                 this.blockMenu.renderText();
                 this.board.clear();
                 break;
@@ -103,7 +111,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                 try {
                     this.board.show();
                     this.set({selectedBoard:this.board});
-                    this.textToCode(oldMode, oldTextType);
+                    this.textToCode(oldMode, this.oldTextType);
                     if (this.vimBoard) this.vimBoard.hide();
                     if (this.overlayBoard) this.overlayBoard.hide();
                     this.blockMenu.renderBlock();
@@ -148,6 +156,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
     p.textToCode = function(mode, oldTextType) {
         if (mode != Entry.Workspace.MODE_VIMBOARD) return;
+        console.log("mode mode", mode);
+        console.log("oldTextType", oldTextType);
         var changedCode = this.vimBoard.textToCode(oldTextType);
         var board = this.board;
         var code = board.code;
@@ -167,8 +177,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         code.load(changedCode);
     };
 
-    p.codeToText = function(code) {
-        return this.vimBoard.codeToText(code);
+    p.codeToText = function(code, mode) {
+        return this.vimBoard.codeToText(code, mode);
     };
 
     p.getCodeToText = function(code) {
@@ -238,6 +248,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         if (this.mode !== Entry.Workspace.MODE_VIMBOARD)
             return;
         
+        console.log("p._syncTextCode");
         var changedCode = this.vimBoard.textToCode(this.textType);
         var board = this.board;
         var code = board.code;

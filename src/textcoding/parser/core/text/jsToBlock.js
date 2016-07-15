@@ -19,7 +19,6 @@ Entry.JsToBlockParser = function(syntax) {
         var body = node.body;
 
         //block statement
-
         block.push({
             type: this.syntax.Program
         });
@@ -32,7 +31,8 @@ Entry.JsToBlockParser = function(syntax) {
 
         code.push(block);
         code = code.concat(separatedBlocks);
-        return code;
+        
+        return code; 
     };
 
     p.Identifier = function(node, scope) {
