@@ -19395,6 +19395,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     var a = this.selectedBoard;
     a && a.constructor === Entry.Board && this.trashcan.setBoard(a);
   };
+  b.addVimBoard = function(a) {
+    this.vimBoard || (this.vimBoard = new Entry.Vim(a), this.vimBoard.workspace = this, this.vimBoard.hide());
+  };
 })(Entry.Workspace.prototype);
 Entry.Playground = function() {
   this.enableArduino = this.isTextBGMode_ = !1;

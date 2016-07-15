@@ -212,4 +212,11 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             this.trashcan.setBoard(board);
     };
 
+    p.addVimBoard = function(dom) {
+        if (this.vimBoard) return;
+        this.vimBoard = new Entry.Vim(dom);
+        this.vimBoard.workspace = this;
+        this.vimBoard.hide();
+    };
+
 })(Entry.Workspace.prototype);
