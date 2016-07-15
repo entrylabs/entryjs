@@ -17639,7 +17639,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     b.y -= this.box.height / 2;
     this.optionGroup.css({height:16, left:b.x, top:b.y, width:a.box.width});
     this.optionGroup.focus();
-    this.optionGroup.select();
+    b = this.optionGroup[0];
+    b.setSelectionRange(0, b.value.length, "backward");
   };
   b.applyValue = function(a) {
     a = this.optionGroup.val();
