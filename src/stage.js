@@ -5,6 +5,8 @@
 */
 'use strict';
 
+goog.require('Entry.Utils');
+
 /**
  * class for a canvas
  * @constructor
@@ -85,9 +87,14 @@ Entry.Stage.prototype.initStage = function(canvas) {
 //          Entry.container.selectObject();
         Entry.stage.isObjectClick = false;
     });
+
+    Entry.windowResized.attach(this, function() {
+        Entry.stage.updateBoundRect();
+    });
+
     var moveFunc = function(e){
         e.preventDefault();
-        var roundRect = this.getBoundingClientRect();
+        var roundRect = Entry.stage.getBoundRect();
         var x, y;
         if (Entry.getBrowserType().indexOf("IE") > -1) {
             x = ((e.pageX - roundRect.left - document.documentElement.scrollLeft) / roundRect.width - 0.5) * 480;
@@ -109,6 +116,7 @@ Entry.Stage.prototype.initStage = function(canvas) {
     canvas.onmouseout = function(e) {
         Entry.dispatchEvent('stageMouseOut');
     };
+
     Entry.addEventListener('updateObject', function(e){
         if (Entry.engine.isState('stop'))
             Entry.stage.updateObject();
@@ -130,8 +138,10 @@ Entry.Stage.prototype.initStage = function(canvas) {
 
     this.initWall();
 
+
     this.render();
 };
+
 Entry.Stage.prototype.render = function() {
     if (Entry.stage.timer)
         clearTimeout(Entry.stage.timer);
@@ -145,6 +155,10 @@ Entry.Stage.prototype.render = function() {
  * redraw canvas
  */
 Entry.Stage.prototype.update = function() {
+    if (!Entry.requestUpdate) {
+        Entry.requestUpdate = false;
+        return;
+    }
     if (Entry.engine.isState('stop') && this.objectUpdated) {
         this.canvas.update();
         this.objectUpdated = false;
@@ -153,6 +167,10 @@ Entry.Stage.prototype.update = function() {
     }
     if ( this.inputField && !this.inputField._isHidden )
         this.inputField.render();
+    if (Entry.requestUpdateTwice)
+        Entry.requestUpdateTwice = false;
+    else
+        Entry.requestUpdate = false;
 };
 
 /**
@@ -199,7 +217,7 @@ Entry.Stage.prototype.loadVariable = function(variable) {
     var variableView = variable.view_;
     this.variables[variable.id] = variableView;
     this.variableContainer.addChild(variableView);
-    this.canvas.update();
+    Entry.requestUpdate = true;
 };
 
 /**
@@ -209,7 +227,7 @@ Entry.Stage.prototype.loadVariable = function(variable) {
 Entry.Stage.prototype.removeVariable = function(variable) {
     var variableView = variable.view_;
     this.variableContainer.removeChild(variableView);
-    this.canvas.update();
+    Entry.requestUpdate = true;
 };
 
 /**
@@ -310,6 +328,7 @@ Entry.Stage.prototype.initHandle = function() {
  * object -> handle
  */
 Entry.Stage.prototype.updateObject = function() {
+    Entry.requestUpdate = true;
     this.handle.setDraggable(true);
     if (this.editEntity)
         return;
@@ -551,6 +570,7 @@ Entry.Stage.prototype.showInputField = function (sprite) {
     }
 
     this.inputField.show();
+    Entry.requestUpdateTwice = true;
 };
 
 
@@ -570,6 +590,8 @@ Entry.Stage.prototype.hideInputField = function () {
 		this.inputField.blur();
         this.inputField.hide();
 	}
+
+    Entry.requestUpdate = true;
 };
 
 
@@ -682,5 +704,15 @@ Entry.Stage.prototype.moveSprite = function (e) {
             break;
     }
     this.updateObject();
+};
+
+Entry.Stage.prototype.getBoundRect = function (e) {
+    if (!this._boundRect)
+        this.updateBoundRect();
+    return this._boundRect;
+};
+
+Entry.Stage.prototype.updateBoundRect = function (e) {
+    this._boundRect = this.canvas.canvas.getBoundingClientRect();
 };
 

@@ -244,6 +244,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             this.trashcan.setBoard(board);
     };
 
+
     p._syncTextCode = function() {
         if (this.mode !== Entry.Workspace.MODE_VIMBOARD)
             return;
@@ -255,6 +256,13 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         code.load(changedCode);
         code.createView(board);
         this.board.alignThreads();
+    };
+
+    p.addVimBoard = function(dom) {
+        if (this.vimBoard) return;
+        this.vimBoard = new Entry.Vim(dom);
+        this.vimBoard.workspace = this;
+        this.vimBoard.hide();
     };
 
 })(Entry.Workspace.prototype);

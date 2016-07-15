@@ -6014,8 +6014,17 @@ Entry.block = {
                 case 'thisThread':
                     return this.die();
                 case 'otherThread':
-                    sprite.parent.script.clearExecutors();
-                    sprite.parent.script.addExecutor(this.executor);
+                    var executor = this.executor;
+                    var code = sprite.parent.script;
+                    var executors = code.executors;
+
+                    for (var i = 0 ; i < executors.length; i++) {
+                        var currentExecutor = executors[i];
+                        if (currentExecutor !== executor) {
+                            code.removeExecutor(currentExecutor);
+                            --i;
+                        }
+                    }
                     return script.callReturn();
             }
         },
@@ -10093,8 +10102,8 @@ Entry.block = {
         "isNotFor": [],
         "func": function (sprite, script) {
             var value1 = script.getNumberValue("VALUE1", script);
-            sprite.setX(value1);
             var value2 = script.getNumberValue("VALUE2", script);
+            sprite.setX(value1);
             sprite.setY(value2);
             if (sprite.brush && !sprite.brush.stop) {
                 sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);
@@ -14678,6 +14687,11 @@ Entry.block = {
             {
                 "type": "Block",
                 "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/text.png",
+                "size": 12
             }
         ],
         "events": {},
@@ -14686,7 +14700,8 @@ Entry.block = {
                 {
                     "type": "text",
                     "params": [ Lang.Blocks.entry ]
-                }
+                },
+                null
             ],
             "type": "text_write"
         },
@@ -14711,6 +14726,11 @@ Entry.block = {
             {
                 "type": "Block",
                 "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/text.png",
+                "size": 12
             }
         ],
         "events": {},
@@ -14719,7 +14739,8 @@ Entry.block = {
                 {
                     "type": "text",
                     "params": [ Lang.Blocks.entry ]
-                }
+                },
+                null
             ],
             "type": "text_append"
         },
@@ -14744,6 +14765,11 @@ Entry.block = {
             {
                 "type": "Block",
                 "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/text.png",
+                "size": 12
             }
         ],
         "events": {},
@@ -14752,7 +14778,8 @@ Entry.block = {
                 {
                     "type": "text",
                     "params": [ Lang.Blocks.entry ]
-                }
+                },
+                null
             ],
             "type": "text_prepend"
         },
@@ -14773,10 +14800,16 @@ Entry.block = {
         "color": "#FFCA36",
         "skeleton": "basic",
         "statements": [],
-        "params": [],
+        "params": [
+            {
+                "type": "Indicator",
+                "img": "block_icon/text.png",
+                "size": 12
+            }
+        ],
         "events": {},
         "def": {
-            "params": [],
+            "params": [null],
             "type": "text_flush"
         },
         "class": "text",
@@ -19777,6 +19810,502 @@ Entry.block = {
                 }
             ]
         }
+    },
+    "ai_move_right": {
+        "skeleton": "basic",
+        "mode": "maze",
+        "color": "#A751E3",
+        "syntax": [
+            "Scope",
+            "move"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/moveStep.png",
+                "size": 24
+            }
+        ],
+        func: function(entity, script) {
+            if (!script.isStart) {
+                script.isStart = true;
+                script.isAction = true;
+                Ntry.dispatchEvent("gridChange", function() {
+                    script.isAction = false;
+                });
+                var spaceShipComp = Ntry.entityManager.getComponent(
+                    entity.id, Ntry.STATIC.SPACE_SHIP
+                );
+                spaceShipComp.direction = Ntry.STATIC.EAST;
+                var gridComp = Ntry.entityManager.getComponent(
+                    entity.id, Ntry.STATIC.GRID
+                );
+                Ntry.entityManager.addComponent(
+                    entity.id, {
+                        type: Ntry.STATIC.ANIMATE,
+                        animateType: Ntry.STATIC.ROTATE_TO,
+                        animateValue: 0
+                    }
+                );
+                gridComp.x++;
+                return Entry.STATIC.BREAK;
+            } else if (script.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete script.isAction;
+                delete script.isStart;
+                //Entry.engine.isContinue = false;
+            }
+        }
+    },
+    "ai_move_up": {
+        "skeleton": "basic",
+        "mode": "maze",
+        "color": "#A751E3",
+        "syntax": [
+            "Scope",
+            "move"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/ai_move_up.png",
+                "size": 24
+            }
+        ],
+        func: function(entity, script) {
+            if (!script.isStart) {
+                script.isStart = true;
+                script.isAction = true;
+                Ntry.dispatchEvent("gridChange", function() {
+                    script.isAction = false;
+                });
+                var spaceShipComp = Ntry.entityManager.getComponent(
+                    entity.id, Ntry.STATIC.SPACE_SHIP
+                );
+                spaceShipComp.direction = Ntry.STATIC.NORTH;
+                var gridComp = Ntry.entityManager.getComponent(
+                    entity.id, Ntry.STATIC.GRID
+                );
+                Ntry.entityManager.addComponent(
+                    entity.id, {
+                        type: Ntry.STATIC.ANIMATE,
+                        animateType: Ntry.STATIC.ROTATE_TO,
+                        animateValue: -45
+                    }
+                );
+                gridComp.x++;
+                gridComp.y--;
+                return script;
+            } else if (script.isAction) {
+                return script;
+            } else {
+                delete script.isAction;
+                delete script.isStart;
+                return script.callReturn();
+            }
+        }
+    },
+    "ai_move_down": {
+        "skeleton": "basic",
+        "mode": "maze",
+        "color": "#A751E3",
+        "syntax": [
+            "Scope",
+            "move"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/ai_move_down.png",
+                "size": 24
+            }
+        ],
+        func: function(entity, script) {
+            if (!script.isStart) {
+                script.isStart = true;
+                script.isAction = true;
+                Ntry.dispatchEvent("gridChange", function() {
+                    script.isAction = false;
+                });
+                var spaceShipComp = Ntry.entityManager.getComponent(
+                    entity.id, Ntry.STATIC.SPACE_SHIP
+                );
+                spaceShipComp.direction = Ntry.STATIC.SOUTH;
+                var gridComp = Ntry.entityManager.getComponent(
+                    entity.id, Ntry.STATIC.GRID
+                );
+                Ntry.entityManager.addComponent(
+                    entity.id, {
+                        type: Ntry.STATIC.ANIMATE,
+                        animateType: Ntry.STATIC.ROTATE_TO,
+                        animateValue: 45
+                    }
+                );
+                gridComp.x++;
+                gridComp.y++;
+                return script;
+            } else if (script.isAction) {
+                return script;
+            } else {
+                delete script.isAction;
+                delete script.isStart;
+                return script.callReturn();
+            }
+        }
+    },
+    "ai_repeat_until_reach": {
+        "skeleton": "basic_loop",
+        "mode": "maze",
+        "color": "#498DEB",
+        "syntax": [
+            "Scope",
+            "move"
+        ],
+        statements: [
+            {
+                "accept": "basic"
+            }
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/for.png",
+                "size": 24
+            }
+        ],
+        func: function() {
+            var statement = this.block.statements[0];
+            if (statement.getBlocks().length === 0)
+                return;
+
+            return this.executor.stepInto(statement);
+        }
+    },
+    "ai_if_else_1": {
+        "skeleton": "basic_double_loop",
+        "mode": "maze",
+        "color": "#498DEB",
+        "syntax": [
+            "Scope",
+            "move"
+        ],
+        "statements": [
+            {
+                "accept": "basic"
+            },
+            {
+                "accept": "basic"
+            }
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/ntry/bitmap/ai/obstacle_1.png",
+                "size": 24
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/for.png",
+                "size": 24
+            },
+            {
+                "type": "LineBreak"
+            }
+        ],
+        func: function(entity, script) {
+            if (script.isLooped) {
+                delete script.isLooped;
+                return script.callReturn();
+            }
+            var radar = Ntry.entityManager.getComponent(
+                entity.id, Ntry.STATIC.RADAR
+            );
+
+            var statements = this.block.statements;
+            var index = 1;
+            script.isLooped = true;
+            if (radar.center.type == Ntry.STATIC.AI_METEO &&
+                radar.center.distance == 1)
+                index = 0;
+            this.executor.stepInto(statements[index]);
+            return Entry.STATIC.BREAK;
+        }
+    },
+    "ai_boolean_distance": {
+        "skeleton": "basic_boolean_field",
+        "mode": "maze",
+        "color": "#2fc9f0",
+        "fontColor": "#fff",
+        "syntax": [
+            "Scope",
+            "move"
+        ],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Menus.ai_above, "UP"],
+                    [Lang.Menus.ai_front, "RIGHT"],
+                    [Lang.Menus.ai_under, "DOWN"]
+                ],
+                "value": "RIGHT",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [">","BIGGER"],
+                    [">=","BIGGER_EQUAL"],
+                    ["=","EQUAL"],
+                    ["<","SMALLER"],
+                    ["<=","SMALLER_EQUAL"]
+                ],
+                "value": "BIGGER",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        func: function(entity, script) {
+            var radar = Ntry.entityManager.getComponent(
+                entity.id, Ntry.STATIC.RADAR
+            );
+
+            var params = this.block.params;
+
+            var direction = params[0];
+            var operator = params[1];
+            var value = this.getParam(2);
+
+            var radarValue;
+            switch (direction) {
+                case "UP":
+                    radarValue = radar.left;
+                    break;
+                case "RIGHT":
+                    radarValue = radar.center;
+                    break;
+                case "DOWN":
+                    radarValue = radar.right;
+                    break;
+            }
+            if (radarValue.type == Ntry.STATIC.AI_GOAL)
+                radarValue = Number.MAX_VALUE;
+            else
+                radarValue = radarValue.distance;
+
+            switch (operator) {
+                case "BIGGER":
+                    return radarValue > value;
+                case "BIGGER_EQUAL":
+                    return radarValue >= value;
+                case "EQUAL":
+                    return radarValue == value;
+                case "SMALLER":
+                    return radarValue < value;
+                case "SMALLER_EQUAL":
+                    return radarValue <= value;
+            }
+        }
+    },
+    "ai_distance_value": {
+        "skeleton": "basic_string_field",
+        "mode": "maze",
+        "color": "#ffd974",
+        "syntax": [
+            "Scope",
+            "move"
+        ],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Menus.ai_above, "UP"],
+                    [Lang.Menus.ai_front, "RIGHT"],
+                    [Lang.Menus.ai_under, "DOWN"]
+                ],
+                "value": "RIGHT",
+                "fontSize": 11
+            }
+        ],
+        func: function(entity, script) {
+            var radar = Ntry.entityManager.getComponent(
+                entity.id, Ntry.STATIC.RADAR
+            );
+
+            switch (this.block.params[0]) {
+                case "UP":
+                    radarValue = radar.left;
+                    break;
+                case "RIGHT":
+                    radarValue = radar.center;
+                    break;
+                case "DOWN":
+                    radarValue = radar.right;
+                    break;
+            }
+            return radarValue.type == Ntry.STATIC.AI_GOAL ?
+                Number.MAX_VALUE : radarValue.distance;
+        }
+    },
+    "ai_boolean_object": {
+        "skeleton": "basic_boolean_field",
+        "fontColor": "#fff",
+        "mode": "maze",
+        "color": "#2fc9f0",
+        "syntax": [
+            "Scope",
+            "move"
+        ],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Menus.ai_above, "UP"],
+                    [Lang.Menus.ai_front, "RIGHT"],
+                    [Lang.Menus.ai_under, "DOWN"]
+                ],
+                "value": "RIGHT",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Menus.asteroids, "OBSTACLE"],
+                    [Lang.Menus.wall, "WALL"],
+                    [Lang.Menus.item, "ITEM"]
+                ],
+                "value": "OBSTACLE",
+                "fontSize": 11
+            }
+        ],
+        func: function(entity, script) {
+            var radar = Ntry.entityManager.getComponent(
+                entity.id, Ntry.STATIC.RADAR
+            );
+
+            var params = this.block.params;
+
+            var radarValue;
+            switch (params[0]) {
+                case "UP":
+                    radarValue = radar.left.type;
+                    break;
+                case "RIGHT":
+                    radarValue = radar.center.type;
+                    break;
+                case "DOWN":
+                    radarValue = radar.right.type;
+                    break;
+            }
+            switch (params[1]) {
+                case "OBSTACLE":
+                    return radarValue == Ntry.STATIC.AI_METEO;
+                case "WALL":
+                    return radarValue == Ntry.STATIC.AI_WALL;
+                case "ITEM":
+                    return radarValue == Ntry.STATIC.AI_ITEM;
+            }
+        }
+    },
+    "ai_use_item": {
+        "skeleton": "basic",
+        "mode": "maze",
+        "color": "#EACF11",
+        "syntax": [
+            "Scope",
+            "move"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": '/img/assets/week/blocks/item.png',
+                "size": 24
+            }
+        ],
+        func: function(entity, script) {
+            if (!script.isStart) {
+                Ntry.dispatchEvent("triggerWeapon");
+                script.isStart = true;
+                script.isAction = true;
+                Ntry.dispatchEvent("gridChange", function() {
+                    script.isAction = false;
+                });
+                var spaceShipComp = Ntry.entityManager.getComponent(
+                    entity.id, Ntry.STATIC.SPACE_SHIP
+                );
+                spaceShipComp.direction = Ntry.STATIC.EAST;
+                var gridComp = Ntry.entityManager.getComponent(
+                    entity.id, Ntry.STATIC.GRID
+                );
+                Ntry.entityManager.addComponent(
+                    entity.id, {
+                        type: Ntry.STATIC.ANIMATE,
+                        animateType: Ntry.STATIC.ROTATE_TO,
+                        animateValue: 0
+                    }
+                );
+                gridComp.x++;
+                return script;
+            } else if (script.isAction) {
+                return script;
+            } else {
+                delete script.isAction;
+                delete script.isStart;
+                //Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        }
+    },
+    "ai_boolean_and": {
+        "color": "#2fc9f0",
+        "skeleton": "basic_boolean_field",
+        "fontColor": "#fff",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "boolean"
+            },
+            {
+                "type": "Text",
+                "text": Lang.Blocks.JUDGEMENT_boolean_and,
+                "color": "#fff"
+            },
+            {
+                "type": "Block",
+                "accept": "boolean"
+            }
+        ],
+        "events": {},
+        "func": function () {
+            return this.getParam(0) && this.getParam(2);
+        }
+    },
+    "ai_True": {
+        "color": "#2fc9f0",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Text",
+                "text": Lang.Blocks.JUDGEMENT_true,
+                "color": "#3D3D3D"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            type: "True"
+        },
+        "func": function (sprite, script) {
+            return true;
+        },
+        "isPrimitive": true
     }
 };
 

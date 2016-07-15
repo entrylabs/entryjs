@@ -42,7 +42,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldText);
 
         this._text = this._text.replace(/(\r\n|\n|\r)/gm," ");
         this.textElement = this.svgGroup.elem("text").attr({
-            'style': 'white-space: pre; font-size:' + that._fontSize + 'px',
+            'style': 'white-space: pre;',
+            'font-size': that._fontSize + 'px',
+            'font-family': 'nanumBarunRegular',
             "class": "dragNone",
             "fill": that._color
         });

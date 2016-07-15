@@ -59,6 +59,7 @@ Entry.Dialog.prototype.generateSpeak = function() {
     this.update();
     this.object.addChild(this.notch);
     this.object.addChild(text);
+    Entry.requestUpdate = true;
 };
 
 /**
@@ -87,6 +88,7 @@ Entry.Dialog.prototype.update = function() {
         this.notch = this.createSpeakNotch(notchType);
         this.object.addChild(this.notch);
     }
+    Entry.requestUpdate = true;
 };
 
 /**
@@ -126,4 +128,5 @@ Entry.Dialog.prototype.createSpeakNotch = function(type) {
 Entry.Dialog.prototype.remove = function() {
     Entry.stage.unloadDialog(this);
     this.parent.dialog = null;
+    Entry.requestUpdate = true;
 };

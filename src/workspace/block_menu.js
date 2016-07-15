@@ -12,7 +12,7 @@ goog.require("Entry.Utils");
  */
 Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     Entry.Model(this, false);
-    this._align = align || "CENTER";
+    this.setAlign(align);
     this._scroll = scroll !== undefined ? scroll : false;
     this._bannedClass = [];
     this._categories = [];
@@ -37,7 +37,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     this.svg = Entry.SVG(this._svgId);
     Entry.Utils.addFilters(this.svg, this.suffix);
-    this.patternRect = Entry.Utils.addBlockPattern(this.svg, this.suffix);
+    var returnVal = Entry.Utils.addBlockPattern(this.svg, this.suffix);
+    this.patternRect = returnVal.rect;
+    this.pattern = returnVal.pattern;
 
     this.svgGroup = this.svg.elem("g");
 
@@ -571,7 +573,18 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     };
 
     p.setPatternRectFill = function(color) {
-        this.patternRect.attr({fill:color});
+        this.patternRect.attr({
+            fill:color
+        });
+        this.pattern.attr({
+            style: ""
+        });
+    };
+
+    p.disablePattern = function() {
+        this.pattern.attr({
+            style: "display: none"
+        });
     };
 
     p._clearCategory = function() {
@@ -673,6 +686,10 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             }
         }
         this._categoryCodes.arduino = codesJSON;
+    };
+
+    p.setAlign = function(align) {
+        this._align = align || "CENTER";
     };
 
 

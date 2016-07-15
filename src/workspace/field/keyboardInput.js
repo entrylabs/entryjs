@@ -48,7 +48,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
             this.svgGroup.elem('text').attr({
                 x: X_PADDING/2,
                 y: TEXT_Y_PADDING,
-                'font-size' : '9pt'
+                'font-size' : '11px'
             });
 
         this.textElement.textContent = Entry.getKeyCodeMap()[this.getValue()];
