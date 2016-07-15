@@ -9264,7 +9264,7 @@ p.update = function() {
 };
 p.updatePortData = function(a) {
   this.portData = a;
-  this.hwMonitor && this.hwMonitor.update();
+  this.hwMonitor && "hw" == Entry.propertyPanel.selected && this.hwMonitor.update();
 };
 p.closeConnection = function() {
   this.socket && this.socket.close();
