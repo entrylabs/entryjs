@@ -409,8 +409,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
             });
         }
 
-        console.log('asdfdafdasfdasfdasf');
-
         blocks.forEach(function (item) {
             availableList.push(item.type);
         });
