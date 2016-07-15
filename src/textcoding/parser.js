@@ -34,13 +34,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
     Entry.Parser.BLOCK_SKELETON_BASIC_LOOP = "basic_loop";
     Entry.Parser.BLOCK_SKELETON_BASIC_DOUBLE_LOOP = "basic_double_loop";
 
-    if (mode === 'maze') {
-        this._stageId = Number(Ntry.configManager.getConfig('stageId'));
-        var configCode = NtryData.config[this._stageId].availableCode;
-        var playerCode = NtryData.player[this._stageId].code;
-        this.setAvailableCode(configCode, playerCode);
-    }
-
     /*this.syntax.js = this.mappingSyntaxJs(mode);
     this.syntax.py = this.mappingSyntaxPy(mode);*/
 
@@ -61,7 +54,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 assistScope[key + '();\n'] = syntax.Scope[key];
             }
 
-            if('BasicIf' in syntax) { 
+            if('BasicIf' in syntax) {
                 assistScope['front'] = 'BasicIf';
             }
 
@@ -105,7 +98,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
             var syntax = this.syntax;
             break;
 
-        case "blockPy": 
+        case "blockPy":
             this._parser = new Entry.BlockToPyParser(this.syntax);
             var syntax = this.syntax;
             break;
@@ -119,15 +112,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
         this._type = type;
         this._cm = cm;
 
-        if (mode === Entry.Vim.MAZE_MODE) {
-            this._stageId = Number(Ntry.configManager.getConfig('stageId'));
-            var configCode = NtryData.config[this._stageId].availableCode;
-            var playerCode = NtryData.player[this._stageId].code;
-            this.setAvailableCode(configCode, playerCode);
-            this.syntax = this.mappingSyntax(mode);
-        } else {
-            this.syntax = this.mappingSyntax(mode);
-        }
+        this.syntax = this.mappingSyntax(mode);
 
         switch (type) {
             case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
@@ -202,14 +187,14 @@ Entry.Parser = function(mode, type, cm, syntax) {
                                 from: {line: error.loc.line - 1, ch: error.loc.column - 2},
                                 to: {line: error.loc.line - 1, ch: error.loc.column + 1}
                             }
-                            error.message = "문법 오류입니다."; 
+                            error.message = "문법 오류입니다.";
                         } else {
                             annotation = this.getLineNumber(error.node.start, error.node.end);
                             annotation.message = error.message;
                             annotation.severity = "error";
                             this.codeMirror.markText(
                                 annotation.from, annotation.to, {
-                                className: "CodeMirror-lint-mark-error", 
+                                className: "CodeMirror-lint-mark-error",
                                 __annotation: annotation,
                                 clearOnEnter: true
                             });
@@ -415,27 +400,34 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
     p.setAvailableCode = function (configCode, playerCode) {
         var availableList = [];
-        configCode.forEach(function (items, i) {
-            items.forEach(function (item, i) {
-                availableList.push(item.type);
-            });
-        });
-
-        if (playerCode instanceof Entry.Code) {
-            var blocks = playerCode.getBlockList();
-            blocks.forEach(function(item){
-                if(item.type !== NtryData.START && availableList.indexOf(item.type) === -1)
-                    availableList.push(item.type);
-            });
-        } else {
-            playerCode.forEach(function (items, i) {
-                items.forEach(function (item, i) {
-                    if(item.type !== NtryData.START && availableList.indexOf(item.type) === -1) {
-                        availableList.push(item.type);
-                    }
-                });
+        var blocks;
+        if (configCode instanceof Entry.Code)
+            blocks = configCode.getBlockList();
+        else {
+            configCode.forEach(function (items, i) {
+                blocks.concat(items);
             });
         }
+
+        console.log('asdfdafdasfdasfdasf');
+
+        blocks.forEach(function (item) {
+            availableList.push(item.type);
+        });
+
+        blocks = [];
+        if (playerCode instanceof Entry.Code)
+            blocks = playerCode.getBlockList();
+        else {
+            playerCode.forEach(function (items, i) {
+                blocks.concat(items);
+            });
+        }
+
+        blocks.forEach(function(item) {
+            if(availableList.indexOf(item.type) === -1)
+                availableList.push(item.type);
+        });
 
         this.availableCode = this.availableCode.concat(availableList);
     };

@@ -13199,7 +13199,6 @@ Entry.Parser = function(b, a, d, c) {
   Entry.Parser.BLOCK_SKELETON_BASIC = "basic";
   Entry.Parser.BLOCK_SKELETON_BASIC_LOOP = "basic_loop";
   Entry.Parser.BLOCK_SKELETON_BASIC_DOUBLE_LOOP = "basic_double_loop";
-  "maze" === b && (this._stageId = Number(Ntry.configManager.getConfig("stageId")), this.setAvailableCode(NtryData.config[this._stageId].availableCode, NtryData.player[this._stageId].code));
   console.log("py syntax", this.syntax.py);
   console.log(this._lang);
   this._console = new Entry.Console;
@@ -13245,7 +13244,6 @@ Entry.Parser = function(b, a, d, c) {
     this._mode = a;
     this._type = b;
     this._cm = c;
-    a === Entry.Vim.MAZE_MODE && (this._stageId = Number(Ntry.configManager.getConfig("stageId")), this.setAvailableCode(NtryData.config[this._stageId].availableCode, NtryData.player[this._stageId].code));
     this.syntax = this.mappingSyntax(a);
     switch(b) {
       case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
@@ -13370,18 +13368,20 @@ Entry.Parser = function(b, a, d, c) {
     return c;
   };
   b.setAvailableCode = function(a, b) {
-    var c = [];
-    a.forEach(function(a, b) {
-      a.forEach(function(a, b) {
-        c.push(a.type);
-      });
+    var c = [], e;
+    a instanceof Entry.Code ? e = a.getBlockList() : a.forEach(function(a, b) {
+      e.concat(a);
     });
-    b instanceof Entry.Code ? b.getBlockList().forEach(function(a) {
-      a.type !== NtryData.START && -1 === c.indexOf(a.type) && c.push(a.type);
-    }) : b.forEach(function(a, b) {
-      a.forEach(function(a, b) {
-        a.type !== NtryData.START && -1 === c.indexOf(a.type) && c.push(a.type);
-      });
+    console.log("asdfdafdasfdasfdasf");
+    e.forEach(function(a) {
+      c.push(a.type);
+    });
+    e = [];
+    b instanceof Entry.Code ? e = b.getBlockList() : b.forEach(function(a, b) {
+      e.concat(a);
+    });
+    e.forEach(function(a) {
+      -1 === c.indexOf(a.type) && c.push(a.type);
     });
     this.availableCode = this.availableCode.concat(c);
   };
@@ -22630,6 +22630,9 @@ Entry.Vim = function(b, a) {
     var b = this.workspace.textType;
     b === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : b === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
     return this._parser.parse(a, Entry.Parser.PARSE_SYNTAX);
+  };
+  b.setParserAvailableCode = function(a, b) {
+    this._parser.setAvailableCode(a, b);
   };
 })(Entry.Vim.prototype);
 Entry.Workspace = function(b) {

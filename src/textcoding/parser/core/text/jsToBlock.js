@@ -31,8 +31,8 @@ Entry.JsToBlockParser = function(syntax) {
 
         code.push(block);
         code = code.concat(separatedBlocks);
-        
-        return code; 
+
+        return code;
     };
 
     p.Identifier = function(node, scope) {
@@ -601,7 +601,7 @@ Entry.JsToBlockParser = function(syntax) {
             }
 
             if (this.syntax.BasicIf[test]) {
-                if(!Array.isArray(consequent) && typeof consequent === 'object') 
+                if(!Array.isArray(consequent) && typeof consequent === 'object')
                     consequent = [consequent];
                 return {
                     type: this.syntax.BasicIf[test],
