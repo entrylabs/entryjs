@@ -336,11 +336,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
             if(mode === Entry.Vim.MAZE_MODE) {
                 if(this.availableCode.indexOf(type) > -1) {
                     var syntaxArray = block.syntax;
-                    if (!syntaxArray)
-                        continue;
-
-                    if(block.syntax.py)
-                        continue;
+                    if (!syntaxArray) continue;
 
                     var syntaxTemp = syntax;
                     //console.log("syntaxArray", syntaxArray);
@@ -361,8 +357,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         }
                     }
                 }
-            }
-            else {
+            } else {
                 if(mode === Entry.Vim.WORKSPACE_MODE) {
                     var blockList = Entry.block;
 

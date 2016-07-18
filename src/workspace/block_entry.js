@@ -17087,7 +17087,11 @@ Entry.block = {
                 delete this.isAction;
                 delete this.isContinue;
             }
-        }
+        },
+        "syntax": [
+            "Scope",
+            "move"
+        ]
     },
     "jr_turn_left": {
         "skeleton": "basic",
@@ -17123,7 +17127,11 @@ Entry.block = {
                 delete this.isAction;
                 delete this.isContinue;
             }
-        }
+        },
+        "syntax": [
+            "Scope",
+            "turn_left"
+        ]
     },
     "jr_turn_right": {
         "skeleton": "basic",
@@ -17159,7 +17167,11 @@ Entry.block = {
                 delete this.isAction;
                 delete this.isContinue;
             }
-        }
+        },
+        "syntax": [
+            "Scope",
+            "turn_right"
+        ]
     },
     "jr_go_slow": {
         "skeleton": "basic",
@@ -17195,7 +17207,11 @@ Entry.block = {
                 delete this.isAction;
                 delete this.isContinue;
             }
-        }
+        },
+        "syntax": [
+            "Scope",
+            "slow"
+        ]
     },
     "jr_repeat_until_dest": {
         "skeleton": "basic_loop",
@@ -17205,7 +17221,6 @@ Entry.block = {
             "true"
         ],
         "params": [
-            "",
             {
                 "type": "Image",
                 "img": "../../../img/assets/ntry/bitmap/jr/jr_goal_image.png",
@@ -17302,7 +17317,11 @@ Entry.block = {
                 this.executor.stepInto(statement);
                 return Entry.STATIC.BREAK;
             }
-        }
+        },
+        "syntax": [
+            "BasicIf",
+            "front == 'wall'"
+        ]
     },
     "jr_if_speed": {
         "skeleton": "basic_loop",
@@ -17363,7 +17382,11 @@ Entry.block = {
                 this.executor.stepInto(statement);
                 return Entry.STATIC.BREAK;
             }
-        }
+        },
+        "syntax": [
+            "BasicIf",
+            "front == 'hump'"
+        ]
     },
     "maze_step_start": {
         "skeleton": "basic_event",
@@ -17582,7 +17605,7 @@ Entry.block = {
         "color": "#498DEB",
         "syntax": [
             "BasicIf",
-            "front == wall"
+            "front == 'wall'"
         ],
         "params": [
             {
@@ -17663,7 +17686,7 @@ Entry.block = {
         "color": "#498DEB",
         "syntax": [
             "BasicIf",
-            "front == bee"
+            "front == 'bee'"
         ],
         "params": [
             {
@@ -19864,7 +19887,7 @@ Entry.block = {
         "color": "#A751E3",
         "syntax": [
             "Scope",
-            "move"
+            "up"
         ],
         "params": [
             {
@@ -19912,7 +19935,7 @@ Entry.block = {
         "color": "#A751E3",
         "syntax": [
             "Scope",
-            "move"
+            "down"
         ],
         "params": [
             {
@@ -19959,8 +19982,8 @@ Entry.block = {
         "mode": "maze",
         "color": "#498DEB",
         "syntax": [
-            "Scope",
-            "move"
+            "BasicWhile",
+            "true"
         ],
         statements: [
             {
@@ -19987,8 +20010,8 @@ Entry.block = {
         "mode": "maze",
         "color": "#498DEB",
         "syntax": [
-            "Scope",
-            "move"
+            "BasicIfElse",
+            "front == 'meteo'"
         ],
         "statements": [
             {
@@ -20218,7 +20241,7 @@ Entry.block = {
         "color": "#EACF11",
         "syntax": [
             "Scope",
-            "move"
+            "use_item"
         ],
         "params": [
             {
@@ -20306,6 +20329,48 @@ Entry.block = {
             return true;
         },
         "isPrimitive": true
+    },
+    "ai_if_else": {
+        "color": "#498deb",
+        "skeleton": "basic_double_loop",
+        "statements": [
+            {
+                "accept": "basic"
+            },
+            {
+                "accept": "basic"
+            }
+        ],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "boolean"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/flow_03.png",
+                "size": 12
+            },
+            {
+                "type": "LineBreak"
+            }
+        ],
+        "func": function (sprite, script) {
+            if (script.isCondition) {
+                delete script.isCondition;
+                return script.callReturn();
+            }
+            var value = this.getParam(0);
+            script.isCondition = true;
+            if (value)
+                return this.executor.stepInto(this.block.statements[0]);
+            else
+                return this.executor.stepInto(this.block.statements[1]);
+        },
+        "syntax": [
+            "BasicIf",
+            "front == 'wall'"
+        ]
     }
 };
 

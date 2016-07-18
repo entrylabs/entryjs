@@ -10865,6 +10865,10 @@ Entry.BlockToJsParser = function(b) {
     var b = this.Thread(a.statements[0]);
     return "if (" + a._schema.syntax.concat()[1] + ") {\n" + this.indent(b) + "}\n";
   };
+  b.BasicIfElse = function(a) {
+    var b = this.Thread(a.statements[0]), c = this.Thread(a.statements[1]);
+    return "if (" + a._schema.syntax.concat()[1] + ") {\n" + this.indent(b) + "} else {\n" + this.indent(c) + "}\n";
+  };
   b.BasicWhile = function(a) {
     var b = this.Thread(a.statements[0]);
     return "while (" + a._schema.syntax.concat()[1] + ") {\n" + this.indent(b) + "}\n";
@@ -13329,18 +13333,15 @@ Entry.Parser = function(b, a, d, c) {
     for (var b = Object.keys(Entry.block), c = {}, e = 0;e < b.length;e++) {
       var f = b[e], g = Entry.block[f];
       if (a === Entry.Vim.MAZE_MODE) {
-        if (-1 < this.availableCode.indexOf(f)) {
-          var h = g.syntax;
-          if (h && !g.syntax.py) {
-            for (var g = c, k = 0;k < h.length;k++) {
-              var l = h[k];
-              if (k === h.length - 2 && "function" === typeof h[k + 1]) {
-                g[l] = h[k + 1];
-                break;
-              }
-              g[l] || (g[l] = {});
-              k === h.length - 1 ? g[l] = f : g = g[l];
+        if (-1 < this.availableCode.indexOf(f) && (g = g.syntax)) {
+          for (var h = c, k = 0;k < g.length;k++) {
+            var l = g[k];
+            if (k === g.length - 2 && "function" === typeof g[k + 1]) {
+              h[l] = g[k + 1];
+              break;
             }
+            h[l] || (h[l] = {});
+            k === g.length - 1 ? h[l] = f : h = h[l];
           }
         }
       } else {
@@ -22663,6 +22664,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     this.runType = a.runType;
     this.oldTextType = this.textType;
     this.textType = a.textType;
+    console.log("this.mode", this.mode);
     switch(this.mode) {
       case c:
         return;

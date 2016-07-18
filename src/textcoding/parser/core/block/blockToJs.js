@@ -86,6 +86,16 @@ Entry.BlockToJsParser = function(syntax) {
         return code;
     };
 
+    p.BasicIfElse = function(block) {
+        var s1 = this.Thread(block.statements[0]);
+        var s2 = this.Thread(block.statements[1]);
+        var syntax = block._schema.syntax.concat();
+        var code = "if (" + syntax[1] + ") {\n" +
+            this.indent(s1) + "} else {\n" +
+            this.indent(s2) + "}\n";
+        return code;
+    };
+
     p.BasicWhile = function(block) {
         var statementCode = this.Thread(block.statements[0]);
         var syntax = block._schema.syntax.concat();
