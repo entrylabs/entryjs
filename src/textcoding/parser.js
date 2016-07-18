@@ -25,6 +25,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
     this._lang = syntax || "js"; //for maze
     this._type = type;
     this.availableCode = [];
+    this._syntax_cache = {};
 
     Entry.Parser.PARSE_GENERAL = 0;
     Entry.Parser.PARSE_SYNTAX = 1;
@@ -55,7 +56,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 assistScope[key + '();\n'] = syntax.Scope[key];
             }
 
-            if('BasicIf' in syntax) { 
+            if('BasicIf' in syntax) {
                 assistScope['front'] = 'BasicIf';
             }
 
@@ -99,7 +100,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
             var syntax = this.syntax;
             break;
 
-        case "blockPy": 
+        case "blockPy":
             this._parser = new Entry.BlockToPyParser(this.syntax);
             var syntax = this.syntax;
             break;
@@ -117,10 +118,13 @@ Entry.Parser = function(mode, type, cm, syntax) {
             var configCode = NtryData.config[this._stageId].availableCode;
             var playerCode = NtryData.player[this._stageId].code;
             this.setAvailableCode(configCode, playerCode);
-            this.syntax = this.mappingSyntax(mode);
-        } else {
-            this.syntax = this.mappingSyntax(mode);
         }
+
+
+        this.syntax = this.mappingSyntax(mode);
+
+        if (this._parserType === type)
+            return;
 
         switch (type) {
             case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
@@ -195,14 +199,14 @@ Entry.Parser = function(mode, type, cm, syntax) {
                                 from: {line: error.loc.line - 1, ch: error.loc.column - 2},
                                 to: {line: error.loc.line - 1, ch: error.loc.column + 1}
                             }
-                            error.message = "문법 오류입니다."; 
+                            error.message = "문법 오류입니다.";
                         } else {
                             annotation = this.getLineNumber(error.node.start, error.node.end);
                             annotation.message = error.message;
                             annotation.severity = "error";
                             this.codeMirror.markText(
                                 annotation.from, annotation.to, {
-                                className: "CodeMirror-lint-mark-error", 
+                                className: "CodeMirror-lint-mark-error",
                                 __annotation: annotation,
                                 clearOnEnter: true
                             });
@@ -337,6 +341,9 @@ Entry.Parser = function(mode, type, cm, syntax) {
     };
 
     p.mappingSyntax = function(mode) {
+        if (this._syntax_cache[mode])
+            return this._syntax_cache[mode];
+
         var types = Object.keys(Entry.block);
         var syntax = {};
 
@@ -400,6 +407,9 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 }
             }
         }
+
+        this._syntax_cache[mode] = syntax;
+
 
         return syntax;
     };
