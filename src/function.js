@@ -62,6 +62,7 @@ Entry.Func.registerFunction = function(func) {
         type: "func_" + func.id
     }]);
     func.blockMenuBlock = this._targetFuncBlock;
+    console.log("register end");
 };
 
 Entry.Func.executeFunction = function(threadHash) {
@@ -92,6 +93,7 @@ Entry.Func.prototype.destroy = function() {
 };
 
 Entry.Func.edit = function(func) {
+    console.log("func", func);
     this.cancelEdit();
     this.targetFunc = func;
     this.initEditView(func.content); 
@@ -103,12 +105,15 @@ Entry.Func.initEditView = function(content) {
     if (!this.menuCode)
         this.setupMenuCode();
     var workspace = Entry.playground.mainWorkspace;
-    workspace.setMode(Entry.Workspace.MODE_OVERLAYBOARD);
+    //workspace.setMode(Entry.Workspace.MODE_OVERLAYBOARD);
+    var mode = {boardType: Entry.Workspace.MODE_OVERLAYBOARD};
+    workspace.setMode(mode);
     workspace.changeOverlayBoardCode(content);
     content.recreateView();   
     workspace.changeOverlayBoardCode(content);
     content.view.board.alignThreads();
     this._workspaceStateEvent = workspace.changeEvent.attach(this, this.endEdit);
+
 };
 
 Entry.Func.endEdit = function(message) {
@@ -186,7 +191,8 @@ Entry.Func.cancelEdit = function() {
     this.updateMenu();
     Entry.variableContainer.updateList();
     var workspace = Entry.playground.mainWorkspace;
-    workspace.setMode(Entry.Workspace.MODE_BOARD);
+    var mode = {boardType: Entry.Workspace.MODE_BOARD};
+    workspace.setMode(mode);
 };
 
 Entry.Func.getMenuXml = function() {

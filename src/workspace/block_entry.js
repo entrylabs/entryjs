@@ -9898,7 +9898,7 @@ Entry.block = {
                 dX /= script.frameCount;
                 dY /= script.frameCount;
                 sprite.setX(sprite.getX() + dX);
-                sprite.setY(sprite.getY() + dY);환
+                sprite.setY(sprite.getY() + dY);
                 script.frameCount--;
                 if (sprite.brush && !sprite.brush.stop) {
                     sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);
@@ -10324,7 +10324,7 @@ Entry.block = {
                 }
             };
         },
-        "syntax": {"js": [], "py": ["Entry.add_xy_for_seconds(%1, %2, %3)"]}       
+        "syntax": {"js": [], "py": ["Entry.add_xy_for_seconds(%1, %2, %3)"]}
     },
     "rotate_by_angle_time": {
         "color": "#A751E3",
@@ -14236,7 +14236,7 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [ null ],
-            "type": "when_run_button_click" 
+            "type": "when_run_button_click"
         },
         "class": "event",
         "isNotFor": [],

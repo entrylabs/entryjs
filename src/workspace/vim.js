@@ -122,7 +122,6 @@ Entry.Vim = function(dom, textType) {
     };
 
     p.textToCode = function(textType) {
-        console.log("textToCode", textType);
         var type = textType;
         if (type === Entry.Vim.TEXT_TYPE_JS) {
             this._parserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK;
@@ -143,7 +142,6 @@ Entry.Vim = function(dom, textType) {
     };
 
     p.codeToText = function(code, mode) {
-        console.log("codeToText mode", mode);
         var object;
         var codeDescription;
         if(mode)
@@ -155,8 +153,6 @@ Entry.Vim = function(dom, textType) {
         }
 
         var textType = mode.textType;
-        console.log("textType 111", textType);
-        console.log("com com", this._mode, this._parserType, this.codeMirror);
 
         if (textType === Entry.Vim.TEXT_TYPE_JS) {
             this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS;
