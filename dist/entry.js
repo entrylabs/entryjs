@@ -14491,10 +14491,9 @@ p.getView = function() {
 };
 p.resize = function() {
   document.getElementById("entryContainerWorkspaceId");
-  var b = document.getElementById("tvCastIframe");
-  w = this.movieContainer.offsetWidth;
-  b.width = w + "px";
-  b.height = 9 * w / 16 + "px";
+  var b = document.getElementById("tvCastIframe"), a = this.movieContainer.offsetWidth;
+  b.width = a + "px";
+  b.height = 9 * a / 16 + "px";
 };
 Entry.BlockDriver = function() {
 };
@@ -20079,7 +20078,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     this.textElement = this.svgGroup.elem("text", {x:4, y:4, "font-size":"11px"});
     this.textElement.textContent = this.getText();
     var a = this.getTextWidth(), b = this.position && this.position.y ? this.position.y : 0;
-    this._header = this.svgGroup.elem("rect", {x:0, y:b - 8, rx:3, ry:3, width:a, height:16, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
+    this._header = this.svgGroup.elem("rect", {x:0, y:b - 8, rx:3, ry:3, width:a, height:16, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
     this._bindRenderOptions();
     this.box.set({x:0, y:0, width:a, height:16});
@@ -23812,9 +23811,8 @@ p.getView = function() {
   return this.movieContainer;
 };
 p.resize = function() {
-  var b = document.getElementsByClassName("propertyContent")[0], a = document.getElementById("youtubeIframe");
-  w = b.offsetWidth;
-  a.width = w + "px";
-  a.height = 9 * w / 16 + "px";
+  var b = document.getElementsByClassName("propertyContent")[0], a = document.getElementById("youtubeIframe"), b = b.offsetWidth;
+  a.width = b + "px";
+  a.height = 9 * b / 16 + "px";
 };
 

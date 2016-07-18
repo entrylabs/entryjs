@@ -58,6 +58,6 @@ Entry.CodeView = function(code, board) {
         this.code.map(function(thread) {
             thread.destroyView();
         });
-    }
+    };
 
 })(Entry.CodeView.prototype);

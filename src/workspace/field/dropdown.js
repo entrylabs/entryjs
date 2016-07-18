@@ -205,7 +205,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
                 pos.x += this.box.width/2 - optionGroupWidth/2;
 
                 domHeight -= relPos.y + 30;
-                this.optionGroup.height(domHeight)
+                this.optionGroup.height(domHeight);
             } else {
                 pos.x += this.box.width + 1;
 
@@ -213,7 +213,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
                 if (domHeight - 30 < optionGroupHeight) {
                     domHeight -= domHeight % 30;
-                    this.optionGroup.height(domHeight)
+                    this.optionGroup.height(domHeight);
                 }
 
                 pos.y -= this.optionGroup.height();
