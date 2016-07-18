@@ -41,12 +41,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
         this.setAvailableCode(configCode, playerCode);
     }
 
-    /*this.syntax.js = this.mappingSyntaxJs(mode);
-    this.syntax.py = this.mappingSyntaxPy(mode);*/
-
-    console.log("py syntax", this.syntax.py);
-    console.log(this._lang)
-
     this._console = new Entry.Console();
 
     switch (this._lang) {
@@ -114,7 +108,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
 (function(p) {
     p.setParser = function(mode, type, cm) {
-        console.log("mode, type, cm", mode, type, cm);
         this._mode = mode;
         this._type = type;
         this._cm = cm;
@@ -187,7 +180,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
         var type = this._type;
         var result = null;
 
-        console.log("parse type", type);
+        //console.log("parse type", type);
 
         switch (type) {
             case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
@@ -223,15 +216,15 @@ Entry.Parser = function(mode, type, cm, syntax) {
             case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
                 try {
                     var pyAstGenerator = new Entry.PyAstGenerator();
-                    console.log("code", code);
+                    //console.log("code", code);
 
                     //Entry.TextCodingUtil.prototype.makeThreads(code);
                     var threads = code.split('\n\n');
-                    console.log("threads", threads);
+                    //console.log("threads", threads);
 
                     for(var i in threads) {
-                        console.log("thread", threads[i]);
-                        console.log("search", threads[i].search("import"));
+                        //console.log("thread", threads[i]);
+                        //console.log("search", threads[i].search("import"));
                         var thread = threads[i];
                         if(thread.search("import") != -1) {
                             threads[i] = "";
@@ -242,7 +235,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         threads[i] = thread;
                     }
 
-                    console.log("threads", threads);
+                    //console.log("threads", threads);
                     var astArray = [];
 
                     for(var index in threads) {
@@ -252,13 +245,13 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             astArray.push(ast);
                     }
 
-                    console.log("astArray", astArray);
+                    //console.log("astArray", astArray);
 
                     result = this._parser.Program(astArray);
 
                     this._parser._variableMap.clear();
 
-                    console.log("result", result);
+                    //console.log("result", result);
                 } catch(error) {
                     if (this.codeMirror) {
                         var annotation;
@@ -361,7 +354,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         continue;
 
                     var syntaxTemp = syntax;
-                    console.log(syntaxArray)
+                    //console.log("syntaxArray", syntaxArray);
                     for (var j = 0; j < syntaxArray.length; j++) {
                         var key = syntaxArray[j];
                         if (j === syntaxArray.length - 2 &&
@@ -408,8 +401,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
             }
         }
 
-        console.log("mappingSyntax", syntax);
-
         return syntax;
     };
 
@@ -439,75 +430,5 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
         this.availableCode = this.availableCode.concat(availableList);
     };
-
-    /*p.mappingSyntaxJs = function() {
-        var mode = "maze";
-        var types = Object.keys(Entry.block);
-
-        for (var i = 0; i < types.length; i++) {
-            var type = types[i];
-
-            var block = Entry.block[type];
-
-            if(block.syntax && block.syntax.py)
-                continue;
-
-            if (block.mode === mode && this.availableCode.indexOf(type) > -1) {
-                var syntaxArray = block.syntax;
-                if (!syntaxArray)
-                    continue;
-                var syntax = this.syntax;
-                for (var j = 0; j < syntaxArray.length; j++) {
-                    var key = syntaxArray[j];
-                    if (j === syntaxArray.length - 2 &&
-                       typeof syntaxArray[j + 1] === "function") {
-                        syntax[key] = syntaxArray[j + 1];
-                        break;
-                    }
-                    if (!syntax[key]) {
-                        syntax[key] = {};
-                    }
-                    if (j === syntaxArray.length - 1) {
-                        syntax[key] = type;
-                    } else {
-                        syntax = syntax[key];
-                    }
-                }
-            }
-        }
-
-        console.log("mappingSyntaxJs", syntax);
-        return syntax;
-    };
-    */
-
-    /*p.mappingSyntaxPy = function(mode) {
-        if(mode != Entry.Vim.WORKSPACE_MODE) return;
-
-        var syntaxList = {};
-        var blockList = Entry.block;
-
-        for (var key in blockList) {
-            var pyBlockSyntax = {};
-            var block = blockList[key];
-            var syntax = null;
-
-            if(block.syntax && block.syntax.py) {
-
-                syntax = block.syntax.py;
-                //console.log("syntax", syntax);
-            }
-            if (!syntax)
-                continue;
-
-            syntax = String(syntax);
-            var tokens = syntax.split('(');
-            if(tokens[0].length != 0)
-                syntax = tokens[0];
-
-            syntaxList[syntax] = key;
-        }
-        return syntaxList;
-    };*/
 
 })(Entry.Parser.prototype);
