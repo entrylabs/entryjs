@@ -18,6 +18,8 @@ p.initialize = function() {
         return;
     this.lc = LC.init(this.view, {
             imageURLPrefix: '/lib/literallycanvas/lib/img',
+            zoomMax: 3.0,
+            zoomMin: 0.5,
             toolbarPosition: 'bottom'
         }
     );

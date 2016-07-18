@@ -11682,7 +11682,7 @@ Entry.Painter2 = function(a) {
 (function(a) {
   a.initialize = function() {
     if (!this.lc) {
-      this.lc = LC.init(this.view, {imageURLPrefix:"/lib/literallycanvas/lib/img", toolbarPosition:"bottom"});
+      this.lc = LC.init(this.view, {imageURLPrefix:"/lib/literallycanvas/lib/img", zoomMax:3, zoomMin:.5, toolbarPosition:"bottom"});
       var b = this, a = Entry.createElement(document.getElementById("canvas-top-menu"));
       a.addClass("entryPlaygroundPainterTop");
       a.addClass("entryPainterTop");
