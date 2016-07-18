@@ -13372,7 +13372,6 @@ Entry.Parser = function(b, a, d, c) {
     a instanceof Entry.Code ? e = a.getBlockList() : a.forEach(function(a, b) {
       e.concat(a);
     });
-    console.log("asdfdafdasfdasfdasf");
     e.forEach(function(a) {
       c.push(a.type);
     });
@@ -15990,7 +15989,7 @@ p.update = function() {
 };
 p.updatePortData = function(b) {
   this.portData = b;
-  this.hwMonitor && this.hwMonitor.update();
+  this.hwMonitor && "hw" == Entry.propertyPanel.selected && this.hwMonitor.update();
 };
 p.closeConnection = function() {
   this.socket && this.socket.close();
@@ -20968,7 +20967,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     b.y -= this.box.height / 2;
     this.optionGroup.css({height:16, left:b.x, top:b.y, width:a.box.width});
     this.optionGroup.focus();
-    this.optionGroup.select();
+    b = this.optionGroup[0];
+    b.setSelectionRange(0, b.value.length, "backward");
   };
   b.applyValue = function(a) {
     a = this.optionGroup.val();
@@ -22260,7 +22260,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     e = this.getThread();
     this._schema.event && e.unregisterEvent(this, this._schema.event);
     f && (b ? f.destroy(a, b) : g ? f.view.bindPrev(g) : (g = this.getThread().view.getParent(), g.constructor === Entry.FieldStatement ? (f.view.bindPrev(g), g.insertTopBlock(f)) : g.constructor === Entry.FieldStatement ? f.replace(g._valueBlock) : f.view._toGlobalCoordinate()));
-    this.doNotSplice ? delete this.doNotSplice : e.spliceBlock(this);
+    !this.doNotSplice && e.spliceBlock ? e.spliceBlock(this) : delete this.doNotSplice;
     this.view && this.view.destroy(a);
     this._schemaChangeEvent && this._schemaChangeEvent.destroy();
     (f = this.events.dataDestroy) && this.getCode().object && f.forEach(function(a) {

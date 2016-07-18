@@ -255,7 +255,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
                 } else nextBlock.view.bindPrev(prevBlock);
             }
         }
-        if (!this.doNotSplice) thread.spliceBlock(this);
+        if (!this.doNotSplice && thread.spliceBlock) thread.spliceBlock(this);
         else delete this.doNotSplice;
         if (this.view) this.view.destroy(animate);
         if (this._schemaChangeEvent)
