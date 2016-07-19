@@ -74,7 +74,7 @@ Entry.PyHint = function() {
             continue;
         syntax = syntax.py.join("");
         syntax = syntax.split('.');
-        console.log("syntax", syntax, "include", syntax[0].indexOf("def"));
+        //console.log("syntax", syntax, "include", syntax[0].indexOf("def"));
         
         if(syntax[0].indexOf("def ") > -1) {
             syntax = syntax[0].split(' ');
