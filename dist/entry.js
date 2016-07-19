@@ -10811,6 +10811,7 @@ Entry.PyHint = function() {
 };
 Entry.BlockToJsParser = function(b) {
   this.syntax = b;
+  console.log("BlockToJsParser syntax", this.syntax);
   this._iterVariableCount = 0;
   this._iterVariableChunk = ["i", "j", "k"];
 };
@@ -10848,8 +10849,24 @@ Entry.BlockToJsParser = function(b) {
     return "";
   };
   b.Scope = function(a) {
-    a = a._schema.syntax.concat();
-    return a.splice(1, a.length - 1).join(".") + "();\n";
+    var b = a._schema.syntax.concat(), c = /(%.)/mi, e = b.split(c), f = a._schema.params;
+    a = a.data.params;
+    for (var g = 0;g < e.length;g++) {
+      var h = e[g];
+      if (0 !== h.length && c.test(h)) {
+        if (h = h.split("%")[1], h = Number(h) - 1, f[h]) {
+          if ("Indicator" != f[h].type) {
+            if ("Block" == f[h].type) {
+              var k = this.Block(a[h]).trim()
+            }
+            result += k;
+          }
+        } else {
+          console.log("This Block has No Schema");
+        }
+      }
+    }
+    return b.splice(1, b.length - 1).join(".") + "();\n";
   };
   b.BasicFunction = function(a) {
     a = this.Thread(a.statements[0]);
@@ -10862,12 +10879,15 @@ Entry.BlockToJsParser = function(b) {
     return "for (var " + c + " = 0; " + c + " < " + b + "; " + c + "++){\n" + this.indent(a) + "}\n";
   };
   b.BasicIf = function(a) {
-    var b = this.Thread(a.statements[0]);
-    return "if (" + a._schema.syntax.concat()[1] + ") {\n" + this.indent(b) + "}\n";
-  };
-  b.BasicIfElse = function(a) {
-    var b = this.Thread(a.statements[0]), c = this.Thread(a.statements[1]);
-    return "if (" + a._schema.syntax.concat()[1] + ") {\n" + this.indent(b) + "} else {\n" + this.indent(c) + "}\n";
+    console.log("block", a);
+    if (2 == a.data.statements.length) {
+      var b = this.Thread(a.statements[0]), c = this.Thread(a.statements[1]);
+      a = a._schema.syntax.concat();
+      b = "if (" + a[1] + ") {\n" + this.indent(b) + "}\nelse {\n" + this.indent(c) + "}\n";
+    } else {
+      b = this.Thread(a.statements[0]), a = a._schema.syntax.concat(), b = "if (" + a[1] + ") {\n" + this.indent(b) + "}\n";
+    }
+    return b;
   };
   b.BasicWhile = function(a) {
     var b = this.Thread(a.statements[0]);
@@ -10970,9 +10990,11 @@ Entry.JsToBlockParser = function(b) {
     throw {message:"continue\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
   b.IfStatement = function(a) {
+    console.log("IfStatement", this.syntax.IfStatement);
     if (this.syntax.IfStatement) {
       throw {message:"if\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
     }
+    console.log("IfStatement return", this.BasicIf(a));
     return this.BasicIf(a);
   };
   b.SwitchStatement = function(a) {
@@ -11125,23 +11147,24 @@ Entry.JsToBlockParser = function(b) {
     throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a.test};
   };
   b.BasicIf = function(a) {
-    var b = a.consequent, b = this[b.type](b);
+    console.log("BasicIf node", a);
+    var b = a.consequent, b = this[b.type](b), c = a.alternate, c = this[c.type](c);
     try {
-      var c = "", e = "===" === a.test.operator ? "==" : a.test.operator;
+      var e = "", f = "===" === a.test.operator ? "==" : a.test.operator;
       if ("Identifier" === a.test.left.type && "Literal" === a.test.right.type) {
-        c = a.test.left.name + " " + e + " " + a.test.right.raw;
+        e = a.test.left.name + " " + f + " " + a.test.right.raw;
       } else {
         if ("Literal" === a.test.left.type && "Identifier" === a.test.right.type) {
-          c = a.test.right.name + " " + e + " " + a.test.left.raw;
+          e = a.test.right.name + " " + f + " " + a.test.left.raw;
         } else {
           throw Error();
         }
       }
-      if (this.syntax.BasicIf[c]) {
-        return Array.isArray(b) || "object" !== typeof b || (b = [b]), {type:this.syntax.BasicIf[c], statements:[b]};
+      if (this.syntax.BasicIf[e]) {
+        return Array.isArray(b) || "object" !== typeof b || (b = [b]), Array.isArray(c) || "object" !== typeof c || (c = [c]), {type:this.syntax.BasicIf[e], statements:[b, c]};
       }
       throw Error();
-    } catch (f) {
+    } catch (g) {
       throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a.test};
     }
   };
@@ -22664,7 +22687,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     this.runType = a.runType;
     this.oldTextType = this.textType;
     this.textType = a.textType;
-    console.log("this.mode", this.mode);
     switch(this.mode) {
       case c:
         return;

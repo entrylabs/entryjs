@@ -192,8 +192,11 @@ Entry.JsToBlockParser = function(syntax) {
             consequent = node.consequent,
             alternate  = node.alternate;
 
+        console.log("IfStatement", this.syntax.IfStatement);
+
         var blockType = this.syntax.IfStatement;
         if (!blockType) {
+            console.log("IfStatement return", this.BasicIf(node));
             return this.BasicIf(node);
         } else {
             throw {
@@ -582,8 +585,12 @@ Entry.JsToBlockParser = function(syntax) {
     };
 
     p.BasicIf = function(node) {
+        console.log("BasicIf node", node);
         var consequent = node.consequent;
         consequent = this[consequent.type](consequent);
+        var alternate = node.alternate;
+        alternate = this[alternate.type](alternate);
+
         try{
             var test = '';
             var operator = (node.test.operator === '===') ? '==' : node.test.operator;
@@ -603,9 +610,13 @@ Entry.JsToBlockParser = function(syntax) {
             if (this.syntax.BasicIf[test]) {
                 if(!Array.isArray(consequent) && typeof consequent === 'object')
                     consequent = [consequent];
+
+                if(!Array.isArray(alternate) && typeof alternate === 'object')
+                    alternate = [alternate];
+
                 return {
                     type: this.syntax.BasicIf[test],
-                    statements: [consequent]
+                    statements: [consequent, alternate]
                 }
             } else {
                 throw new Error();

@@ -20010,7 +20010,7 @@ Entry.block = {
         "mode": "maze",
         "color": "#498DEB",
         "syntax": [
-            "BasicIfElse",
+            "BasicIf",
             "front == 'meteo'"
         ],
         "statements": [
@@ -20062,7 +20062,7 @@ Entry.block = {
         "fontColor": "#fff",
         "syntax": [
             "Scope",
-            "move"
+            "distance(%1, %2)"
         ],
         "params": [
             {

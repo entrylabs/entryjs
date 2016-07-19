@@ -7,6 +7,7 @@ goog.provide("Entry.BlockToJsParser");
 
 Entry.BlockToJsParser = function(syntax) {
     this.syntax = syntax;
+    console.log("BlockToJsParser syntax", this.syntax);
 
     this._iterVariableCount = 0;
     this._iterVariableChunk = ["i", "j", "k"];
@@ -57,6 +58,34 @@ Entry.BlockToJsParser = function(syntax) {
 
     p.Scope = function(block) {
         var syntax = block._schema.syntax.concat();
+
+        var blockReg = /(%.)/mi;
+        var blockTokens = syntax.split(blockReg);
+        var schemaParams = block._schema.params;
+        var dataParams = block.data.params;
+
+        for (var i = 0; i < blockTokens.length; i++) { 
+            var blockToken = blockTokens[i];  
+            if (blockToken.length === 0) continue;
+            if (blockReg.test(blockToken)) {
+                var blockParamIndex = blockToken.split('%')[1];
+                var index = Number(blockParamIndex) - 1;
+                if(schemaParams[index]) {
+                    if(schemaParams[index].type == "Indicator") {
+                        index++;    
+                    } else if(schemaParams[index].type == "Block") {
+                        var param = this.Block(dataParams[index]).trim();
+                       
+                        result += param;
+                    } else {
+                        result += param;
+                    }
+                } else {
+                    console.log("This Block has No Schema");
+                }
+            }
+        }
+
         return syntax.splice(1, syntax.length - 1).join(".") + "();\n";
     };
 
@@ -79,20 +108,24 @@ Entry.BlockToJsParser = function(syntax) {
     };
 
     p.BasicIf = function(block) {
-        var statementCode = this.Thread(block.statements[0]);
-        var syntax = block._schema.syntax.concat();
-        var code = "if (" + syntax[1] + ") {\n" +
-            this.indent(statementCode) + "}\n"
-        return code;
-    };
+        console.log("block", block);
+        
+        if(block.data.statements.length == 2) {
+            var statementCode1 = this.Thread(block.statements[0]);
+            var statementCode2 = this.Thread(block.statements[1]);
+            var syntax = block._schema.syntax.concat();
+            
+            var code = "if (" + syntax[1] + ") {\n" +
+                this.indent(statementCode1) + "}\n" +
+                "else {\n" + this.indent(statementCode2) + "}\n";
+        } else {
+            var statementCode1 = this.Thread(block.statements[0]);
+            var syntax = block._schema.syntax.concat();
+            
+            var code = "if (" + syntax[1] + ") {\n" +
+                this.indent(statementCode1) + "}\n" 
+        }
 
-    p.BasicIfElse = function(block) {
-        var s1 = this.Thread(block.statements[0]);
-        var s2 = this.Thread(block.statements[1]);
-        var syntax = block._schema.syntax.concat();
-        var code = "if (" + syntax[1] + ") {\n" +
-            this.indent(s1) + "} else {\n" +
-            this.indent(s2) + "}\n";
         return code;
     };
 
