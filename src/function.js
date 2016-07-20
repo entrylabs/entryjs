@@ -53,6 +53,7 @@ Entry.Func = function(func) {
 Entry.Func.threads = {};
 
 Entry.Func.registerFunction = function(func) {
+    if (!Entry.playground) return;
     var workspace = Entry.playground.mainWorkspace;
     if (!workspace) return;
     var blockMenu = workspace.getBlockMenu();
@@ -304,8 +305,8 @@ Entry.Func.createParamBlock = function(type, blockPrototype, originalType) {
 }
 
 Entry.Func.updateMenu = function() {
+    if (!Entry.playground || !Entry.playground.mainWorkspace) return;
     var workspace = Entry.playground.mainWorkspace;
-    if (!workspace) return;
     var blockMenu = workspace.getBlockMenu();
     if (this.targetFunc) {
         if (!this.menuCode)

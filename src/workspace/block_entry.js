@@ -5890,8 +5890,17 @@ Entry.block = {
                 case 'thisThread':
                     return this.die();
                 case 'otherThread':
-                    sprite.parent.script.clearExecutors();
-                    sprite.parent.script.addExecutor(this.executor);
+                    var executor = this.executor;
+                    var code = sprite.parent.script;
+                    var executors = code.executors;
+
+                    for (var i = 0 ; i < executors.length; i++) {
+                        var currentExecutor = executors[i];
+                        if (currentExecutor !== executor) {
+                            code.removeExecutor(currentExecutor);
+                            --i;
+                        }
+                    }
                     return script.callReturn();
             }
         }
@@ -9881,8 +9890,8 @@ Entry.block = {
         "isNotFor": [],
         "func": function (sprite, script) {
             var value1 = script.getNumberValue("VALUE1", script);
-            sprite.setX(value1);
             var value2 = script.getNumberValue("VALUE2", script);
+            sprite.setX(value1);
             sprite.setY(value2);
             if (sprite.brush && !sprite.brush.stop) {
                 sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);
@@ -11494,6 +11503,32 @@ Entry.block = {
             }
             Entry.hw.sendQueue['FND'] = parseInt('0x' + value);
             Entry.hw.sendQueue['OPT'] = Entry.hw.sendQueue['OPT'] | 8;
+            return script.callReturn();
+        }
+    },
+    "neobot_set_fnd_off": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "FND 출력 끄기 %1",
+        "params": [{
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [null],
+            "type": "neobot_set_fnd_off"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "neobot_output",
+        "isNotFor": ["neobot"],
+        "func": function (sprite, script) {
+            Entry.hw.sendQueue['FND'] = parseInt('0x00');
+            Entry.hw.sendQueue['OPT'] = Entry.hw.sendQueue['OPT'] & (~8);
             return script.callReturn();
         }
     },
@@ -14396,6 +14431,11 @@ Entry.block = {
             {
                 "type": "Block",
                 "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/text.png",
+                "size": 12
             }
         ],
         "events": {},
@@ -14404,7 +14444,8 @@ Entry.block = {
                 {
                     "type": "text",
                     "params": [ Lang.Blocks.entry ]
-                }
+                },
+                null
             ],
             "type": "text_write"
         },
@@ -14428,6 +14469,11 @@ Entry.block = {
             {
                 "type": "Block",
                 "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/text.png",
+                "size": 12
             }
         ],
         "events": {},
@@ -14436,7 +14482,8 @@ Entry.block = {
                 {
                     "type": "text",
                     "params": [ Lang.Blocks.entry ]
-                }
+                },
+                null
             ],
             "type": "text_append"
         },
@@ -14460,6 +14507,11 @@ Entry.block = {
             {
                 "type": "Block",
                 "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/text.png",
+                "size": 12
             }
         ],
         "events": {},
@@ -14468,7 +14520,8 @@ Entry.block = {
                 {
                     "type": "text",
                     "params": [ Lang.Blocks.entry ]
-                }
+                },
+                null
             ],
             "type": "text_prepend"
         },
@@ -14488,10 +14541,16 @@ Entry.block = {
         "color": "#FFCA36",
         "skeleton": "basic",
         "statements": [],
-        "params": [],
+        "params": [
+            {
+                "type": "Indicator",
+                "img": "block_icon/text.png",
+                "size": 12
+            }
+        ],
         "events": {},
         "def": {
-            "params": [],
+            "params": [null],
             "type": "text_flush"
         },
         "class": "text",
