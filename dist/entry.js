@@ -22865,10 +22865,9 @@ Entry.Playground.prototype.generateCodeView = function(b) {
   b = Entry.Dom(b);
   a = Entry.Dom("div", {parent:b, id:"entryWorkspaceBoard", class:"entryWorkspaceBoard"});
   b = Entry.Dom("div", {parent:b, id:"entryWorkspaceBlockMenu", class:"entryWorkspaceBlockMenu"});
-  this.mainWorkspace = new Entry.Workspace({blockMenu:{dom:b, align:"LEFT", categoryData:EntryStatic.getAllBlocks(), scroll:!0}, board:{dom:a}, vimBoard:{dom:a}});
+  this.mainWorkspace = new Entry.Workspace({blockMenu:{dom:b, align:"LEFT", categoryData:EntryStatic.getAllBlocks(), scroll:!0}, board:{dom:a}});
   this.blockMenu = this.mainWorkspace.blockMenu;
   this.board = this.mainWorkspace.board;
-  this.vimBoard = this.mainWorkspace.vimBoard;
   Entry.hw && this.updateHW();
 };
 Entry.Playground.prototype.generatePictureView = function(b) {
