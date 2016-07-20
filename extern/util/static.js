@@ -276,6 +276,14 @@ EntryStatic.getAllBlocks = function() {
                 "arduino_toggle_led",
                 "arduino_toggle_pwm",
                 "arduino_convert_scale",
+                //arduinoExt
+                "arduino_ext_get_analog_value",
+                "arduino_ext_get_ultrasonic_value",
+                "arduino_ext_get_digital",
+                "arduino_ext_toggle_led",
+                "arduino_ext_digital_pwm",
+                "arduino_ext_set_servo",
+                "arduino_ext_set_tone",
                 //joystick
                 "joystick_get_number_sensor_value",
                 "joystick_get_digital_value",

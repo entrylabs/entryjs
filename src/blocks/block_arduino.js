@@ -39,6 +39,78 @@ Entry.Arduino = {
     }
 };
 
+Entry.ArduinoExt = {
+    name: 'ArduinoExt',
+    getSensorKey: function () {
+        return "xxxxxxxx".replace(/[xy]/g, function(f) {
+            var e = Math.random() * 16 | 0, d = f == "x" ? e : (e & 0 * 3 | 0 * 8);
+            return d.toString(16)
+        }).toUpperCase()
+    },
+    getSensorTime: function (type) {
+        return new Date().getTime() + type;
+    },
+    setZero: function () {
+        if(!Entry.hw.sendQueue.SET) {
+            Entry.hw.sendQueue = {
+                SET: {
+                    '0': { type: Entry.ArduinoExt.sensorTypes.DIGITAL, data: 0 },
+                    '1': { type: Entry.ArduinoExt.sensorTypes.DIGITAL, data: 0 },
+                    '2': { type: Entry.ArduinoExt.sensorTypes.DIGITAL, data: 0 },
+                    '3': { type: Entry.ArduinoExt.sensorTypes.DIGITAL, data: 0 },
+                    '4': { type: Entry.ArduinoExt.sensorTypes.DIGITAL, data: 0 },
+                    '5': { type: Entry.ArduinoExt.sensorTypes.DIGITAL, data: 0 },
+                    '6': { type: Entry.ArduinoExt.sensorTypes.DIGITAL, data: 0 },
+                    '7': { type: Entry.ArduinoExt.sensorTypes.DIGITAL, data: 0 },
+                    '8': { type: Entry.ArduinoExt.sensorTypes.DIGITAL, data: 0 },
+                    '9': { type: Entry.ArduinoExt.sensorTypes.DIGITAL, data: 0 },
+                    '10': { type: Entry.ArduinoExt.sensorTypes.DIGITAL, data: 0 },
+                    '11': { type: Entry.ArduinoExt.sensorTypes.DIGITAL, data: 0 },
+                    '12': { type: Entry.ArduinoExt.sensorTypes.DIGITAL, data: 0 },
+                    '13': { type: Entry.ArduinoExt.sensorTypes.DIGITAL, data: 0 }
+                },
+                TIME: Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.DIGITAL),
+                KEY: Entry.ArduinoExt.getSensorKey()
+            }
+        } else {
+            var keySet = Object.keys(Entry.hw.sendQueue.SET);
+            keySet.forEach(function (key) {
+                Entry.hw.sendQueue.SET[key].data = 0;
+                Entry.hw.sendQueue.TIME = Entry.ArduinoExt.getSensorTime(Entry.hw.sendQueue.SET[key].type);
+                Entry.hw.sendQueue.KEY = Entry.ArduinoExt.getSensorKey();
+            });
+        }
+        Entry.hw.update();
+    },
+    sensorTypes: {
+        ALIVE: 0,
+        DIGITAL: 1,
+        ANALOG: 2,
+        PWM: 3,
+        SERVO_PIN: 4,
+        TONE: 5,
+        PULSEIN: 6,
+        ULTRASONIC: 7,
+        TIMER: 8
+    },
+    toneMap: {
+        "1": [33, 65, 131, 262, 523, 1046, 2093, 4186],
+        "2": [35, 69, 139, 277, 554, 1109, 2217, 4435],
+        "3": [37, 73, 147, 294, 587, 1175, 2349, 4699],
+        "4": [39, 78, 156, 311, 622, 1245, 2849, 4978],
+        "5": [41, 82, 165, 330, 659, 1319, 2637, 5274],
+        "6": [44, 87, 175, 349, 698, 1397, 2794, 5588],
+        "7": [46, 92, 185, 370, 740, 1480, 2960, 5920],
+        "8": [49, 98, 196, 392, 784, 1568, 3136, 6272],
+        "9": [52, 104, 208, 415, 831, 1661, 3322, 6645],
+        "10": [55, 110, 220, 440, 880, 1760, 3520, 7040],
+        "11": [58, 117, 233, 466, 932, 1865, 3729, 7459],
+        "12": [62, 123, 247, 494, 988, 1976, 3951, 7902]
+    },
+    BlockState: {
+    }
+}
+
 Entry.SensorBoard = {
     name: 'sensorBoard',
     setZero: Entry.Arduino.setZero
@@ -57,19 +129,19 @@ Entry.dplay = {
     setZero: Entry.Arduino.setZero,
     timeouts: [],
     removeTimeout: function(id) {
-      clearTimeout(id);
-      var timeouts = this.timeouts;
-      var index = timeouts.indexOf(id);
-      if(index >= 0) {
+        clearTimeout(id);
+        var timeouts = this.timeouts;
+        var index = timeouts.indexOf(id);
+        if(index >= 0) {
         timeouts.splice(index, 1);
-      }
+        }
     },
     removeAllTimeouts: function() {
-      var timeouts = this.timeouts;
-      for(var i in timeouts) {
-        clearTimeout(timeouts[i]);
-      }
-      this.timeouts = [];
+        var timeouts = this.timeouts;
+        for(var i in timeouts) {
+            clearTimeout(timeouts[i]);
+        }
+        this.timeouts = [];
     }
 };
 

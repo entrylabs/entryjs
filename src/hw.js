@@ -23,6 +23,7 @@ Entry.HW = function() {
 
     this.hwInfo = {
         '11': Entry.Arduino,
+        '19': Entry.ArduinoExt,
         '12': Entry.SensorBoard,
         '13': Entry.CODEino,
         '14': Entry.joystick,
