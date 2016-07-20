@@ -91,14 +91,18 @@ svg .svgBlockGroup text {
 }
 
 .entry-widget-input-field {
-      position: fixed;
-      font-family: ng;
-      font-size: 9pt;
-      border: none;
-      outline: none;
-      line-height: normal;
-      z-index: 301;
+    position: fixed;
+    font-family: ng;
+    font-size: 9pt;
+    border: none;
+    outline: none;
+    line-height: normal;
+    z-index: 301;
  }
+
+.entry-widget-input-field::-ms-clear, .entry-widget-input-field::-ms-reveal {
+    display: none;
+}
 
  .entry-field-angle {
      cursor: default;

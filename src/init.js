@@ -271,8 +271,6 @@ Entry.createDom = function(container, option) {
         this.playgroundView = playgroundView;
         this.playground.generateView(this.playgroundView, option);
 
-        // this.propertyPanel.addMode("youtube" , this.youtube);
-
 
         this.propertyPanel.select("object");
         this.helper.bindWorkspace(this.playground.mainWorkspace);

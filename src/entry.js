@@ -217,7 +217,6 @@ Entry.resizeElement = function(interfaceModel) {
         Entry.engine.view_.style.width = canvasSize + 'px';
         Entry.engine.view_.style.height = canvasHeight + 'px';
         Entry.engine.view_.style.top = '40px';
-        Entry.stage.canvas.canvas.style.height = canvasHeight + 'px';
         Entry.stage.canvas.canvas.style.width = canvasSize + 'px';
         if (canvasSize >= 400) {
             Entry.engine.view_.removeClass("collapsed");

@@ -207,8 +207,10 @@ p.update = function() {
 
 p.updatePortData = function(data) {
     this.portData = data;
-    if (this.hwMonitor)
+    if (this.hwMonitor
+        && Entry.propertyPanel.selected == 'hw') {
         this.hwMonitor.update();
+    }
 };
 
 p.closeConnection = function() {

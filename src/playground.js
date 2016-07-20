@@ -1260,8 +1260,10 @@ Entry.Playground.prototype.flushPlayground = function () {
 
 Entry.Playground.prototype.refreshPlayground = function () {
     if (Entry.playground && Entry.playground.view_) {
-        this.injectPicture();
-        this.injectSound();
+        if (this.getViewMode() === "picture")
+            this.injectPicture();
+        if (this.getViewMode() === "sound")
+            this.injectSound();
     }
 };
 
@@ -1488,6 +1490,7 @@ Entry.Playground.prototype.generateSoundElement = function(sound) {
         }
 
         this.sound.name = this.value;
+        Entry.playground.reloadPlayground();
     };
     nameView.onkeypress = function(e) {
         if (e.keyCode == 13)
