@@ -22554,8 +22554,8 @@ Entry.Vim = function(b, a) {
     function b(a) {
       var c = e.getCodeToText(a.block);
       e.codeMirror.display.dragFunctions.leave(a);
-      a = new MouseEvent("mousedown", {view:window, bubbles:!0, cancelable:!0, clientX:a.clientX, clientY:a.clientY});
-      e.codeMirror.display.scroller.dispatchEvent(a);
+      a = $.Event("mousedown", {view:window, bubbles:!0, cancelable:!0, clientX:a.clientX, clientY:a.clientY});
+      $(e.codeMirror.display.scroller).trigger(a);
       var c = c.split("\n"), d = c.length - 1, k = 0;
       c.forEach(function(a, b) {
         e.codeMirror.replaceSelection(a);

@@ -80,15 +80,14 @@ Entry.Vim = function(dom, textType) {
         function eventDragEnd(e) {
             var textCode = _self.getCodeToText(e.block);
             _self.codeMirror.display.dragFunctions.leave(e);
-            var mousedown = new MouseEvent('mousedown', {
+            var mousedown = $.Event('mousedown', {
                 'view': window,
                 'bubbles': true,
                 'cancelable': true,
                 'clientX' : e.clientX,
                 'clientY' : e.clientY
             });
-
-            _self.codeMirror.display.scroller.dispatchEvent(mousedown);
+            $(_self.codeMirror.display.scroller).trigger(mousedown);
             var testArr = textCode.split('\n');
             var max = testArr.length - 1;
             var lastLine = 0;
