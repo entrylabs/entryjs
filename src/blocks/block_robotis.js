@@ -77,13 +77,30 @@ Entry.Robotis_carCont = {
     },
     update: function() {
         Entry.hw.update();
+        var ROBOTIS_DATA = Entry.hw.sendQueue['ROBOTIS_DATA'];
+        if(ROBOTIS_DATA){
+            ROBOTIS_DATA.forEach(function (data) {
+                data['send'] = true;
+            });
+        }
         this.setRobotisData(null);
     },
-    setRobotisData: function(data) {
-        if (data == null) {
-            Entry.hw.sendQueue['ROBOTIS_DATA'] = null;
+    filterSendData: function () {
+        var ROBOTIS_DATA = Entry.hw.sendQueue['ROBOTIS_DATA'];
+        if(ROBOTIS_DATA) {
+            return ROBOTIS_DATA.filter(function (data) {
+                return data.send !== true;
+            });
         } else {
-            Entry.hw.sendQueue['ROBOTIS_DATA'] = (Entry.hw.sendQueue['ROBOTIS_DATA']) ? Entry.hw.sendQueue['ROBOTIS_DATA'].concat(data) : data;
+            return null;
+        }
+    },
+    setRobotisData: function(data) {
+        var filterData = this.filterSendData();
+        if (data == null) {
+            Entry.hw.sendQueue['ROBOTIS_DATA'] = filterData;
+        } else {
+            Entry.hw.sendQueue['ROBOTIS_DATA'] = (filterData) ? filterData.concat(data) : data;
         }
     }
 };
