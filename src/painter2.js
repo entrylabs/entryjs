@@ -24,6 +24,65 @@ p.initialize = function() {
         }
     );
 
+    this.lc.on("do", function(e) {
+        Entry.do("editPicture", e.action, this.lc);
+    });
+
+    this.initTopBar();
+};
+
+p.show = function() {
+    if (!this.lc)
+        this.initialize();
+};
+
+p.changePicture = function(picture) {
+    //painter.selectToolbox('cursor');
+    if (this.file && this.file.id === picture.id)
+        return;
+
+    if (this.file.modified) {
+        var save = confirm('수정된 내용을 저장하시겠습니까?');
+        if (save) {
+            this.file_ = JSON.parse(JSON.stringify(this.file));
+            this.file_save(true);
+        }
+    }
+    this.file.modified = false;
+    this.lc.clear();
+
+    var image = new Image();
+    if (picture.id)
+        image.id = picture.id;
+    else
+        image.id = Entry.generateHash();
+
+    this.file.id = image.id;
+    this.file.name = picture.name;
+    this.file.mode = 'edit';
+    if (picture.fileurl) {
+        image.src = picture.fileurl;
+    } else {
+        // deprecated
+        image.src = Entry.defaultPath + '/uploads/' + picture.filename.substring(0,2)+'/' + picture.filename.substring(2,4)+'/image/'+picture.filename+'.png';
+    }
+
+    this.lc.saveShape(LC.createShape('Image', {x: 10, y: 10, image: image}));
+};
+
+p.file_save = function() {
+    //this.clearHandle();
+    //this.trim();
+
+    var dataURL = this.lc.getImage().toDataURL();
+    Entry.dispatchEvent('saveCanvasImage',
+                        {file: this.file, image: dataURL});
+
+    this.file.modified = false;
+
+};
+
+p.initTopBar = function() {
     var painter = this;
 
     var painterTop = Entry.createElement(document.getElementById("canvas-top-menu"));
@@ -151,59 +210,6 @@ p.initialize = function() {
     painterTopMenuEditEraseAll.appendChild(painterTopMenuEditEraseAllLink);
 
     Entry.addEventListener('pictureSelected', this.changePicture.bind(this));
-};
-
-p.show = function() {
-    if (!this.lc)
-        this.initialize();
-};
-
-p.changePicture = function(picture) {
-    //painter.selectToolbox('cursor');
-    if (this.file && this.file.id === picture.id)
-        return;
-
-
-    if (this.file.modified) {
-        var save = confirm('수정된 내용을 저장하시겠습니까?');
-        if (save) {
-            this.file_ = JSON.parse(JSON.stringify(this.file));
-            this.file_save(true);
-        }
-    }
-    this.file.modified = false;
-    this.lc.clear();
-
-    var image = new Image();
-    if (picture.id)
-        image.id = picture.id;
-    else
-        image.id = Entry.generateHash();
-
-    this.file.id = image.id;
-    this.file.name = picture.name;
-    this.file.mode = 'edit';
-    if (picture.fileurl) {
-        image.src = picture.fileurl;
-    } else {
-        // deprecated
-        image.src = Entry.defaultPath + '/uploads/' + picture.filename.substring(0,2)+'/' + picture.filename.substring(2,4)+'/image/'+picture.filename+'.png';
-    }
-
-    this.lc.saveShape(LC.createShape('Image', {x: 10, y: 10, image: image}));
-};
-
-p.file_save = function() {
-    //this.clearHandle();
-    //this.trim();
-
-    var dataURL = this.lc.getImage().toDataURL();
-    Entry.dispatchEvent('saveCanvasImage',
-                        {file: this.file, image: dataURL});
-
-    this.file.modified = false;
-
-};
-
+}
 
 }(Entry.Painter2.prototype));

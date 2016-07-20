@@ -6879,15 +6879,17 @@ Entry.Observer = function(a, b, c, d) {
     return this;
   };
 })(Entry.Observer.prototype);
+Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BLOCK_RENDER_MODEL:9, BOX_MODEL:10, THREAD_MODEL:11, DRAG_INSTANCE:12, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1, BREAK:2, PASS:3, COMMAND_TYPES:{addThread:101, destroyThread:102, destroyBlock:103, recoverBlock:104, insertBlock:105, separateBlock:106, moveBlock:107, cloneBlock:108, uncloneBlock:109, scrollBoard:110, setFieldValue:111, selectObject:201, "do":301, 
+undo:302, redo:303, editPicture:401, uneditPicture:402}};
 Entry.Command = {};
 (function(a) {
-  a["do"] = {type:EntryStatic.COMMAND_TYPES["do"], log:function(b) {
+  a.do = {type:Entry.STATIC.COMMAND_TYPES["do"], log:function(b) {
     return [a["do"].type];
   }};
-  a.undo = {type:EntryStatic.COMMAND_TYPES.undo, log:function(b) {
+  a.undo = {type:Entry.STATIC.COMMAND_TYPES.undo, log:function(b) {
     return [a.undo.type];
   }};
-  a.redo = {type:EntryStatic.COMMAND_TYPES.redo, log:function(b) {
+  a.redo = {type:Entry.STATIC.COMMAND_TYPES.redo, log:function(b) {
     return [a.redo.type];
   }};
 })(Entry.Command);
@@ -6956,7 +6958,7 @@ Entry.Commander = function(a) {
   };
 })(Entry.Commander.prototype);
 (function(a) {
-  a.addThread = {type:EntryStatic.COMMAND_TYPES.addThread, do:function(b) {
+  a.addThread = {type:Entry.STATIC.COMMAND_TYPES.addThread, do:function(b) {
     return this.editor.board.code.createThread(b);
   }, state:function(b) {
     b.length && (b[0].id = Entry.Utils.generateId());
@@ -6965,7 +6967,7 @@ Entry.Commander = function(a) {
     b = this.editor.board.code.getThreads().pop();
     return [a.addThread.type, ["thread", b.stringify()], ["code", this.editor.board.code.stringify()]];
   }, undo:"destroyThread"};
-  a.destroyThread = {type:EntryStatic.COMMAND_TYPES.destroyThread, do:function(b) {
+  a.destroyThread = {type:Entry.STATIC.COMMAND_TYPES.destroyThread, do:function(b) {
     this.editor.board.findById(b[0].id).destroy(!0, !0);
   }, state:function(b) {
     return [this.editor.board.findById(b[0].id).thread.toJSON()];
@@ -6974,7 +6976,7 @@ Entry.Commander = function(a) {
     this.editor.board.findById(b);
     return [a.destroyThread.type, ["blockId", b], ["code", this.editor.board.code.stringify()]];
   }, undo:"addThread"};
-  a.destroyBlock = {type:EntryStatic.COMMAND_TYPES.destroyBlock, do:function(b) {
+  a.destroyBlock = {type:Entry.STATIC.COMMAND_TYPES.destroyBlock, do:function(b) {
     "string" === typeof b && (b = this.editor.board.findById(b));
     b.doDestroy(!0);
   }, state:function(b) {
@@ -6984,7 +6986,7 @@ Entry.Commander = function(a) {
     "string" === typeof b && (b = this.editor.board.findById(b));
     return [a.destroyBlock.type, ["blockId", b.id], ["code", this.editor.board.code.stringify()]];
   }, undo:"recoverBlock"};
-  a.recoverBlock = {type:EntryStatic.COMMAND_TYPES.recoverBlock, do:function(b, a) {
+  a.recoverBlock = {type:Entry.STATIC.COMMAND_TYPES.recoverBlock, do:function(b, a) {
     b = this.editor.board.code.createThread([b]).getFirstBlock();
     "string" === typeof b && (b = this.editor.board.findById(b));
     this.editor.board.insert(b, a);
@@ -6995,7 +6997,7 @@ Entry.Commander = function(a) {
     b = this.editor.board.findById(b.id);
     return [a.recoverBlock.type, ["block", b.stringify()], ["pointer", c], ["code", this.editor.board.code.stringify()]];
   }, undo:"destroyBlock"};
-  a.insertBlock = {type:EntryStatic.COMMAND_TYPES.insertBlock, do:function(b, a, d) {
+  a.insertBlock = {type:Entry.STATIC.COMMAND_TYPES.insertBlock, do:function(b, a, d) {
     "string" === typeof b && (b = this.editor.board.findById(b));
     this.editor.board.insert(b, a, d);
   }, state:function(b, a) {
@@ -7009,7 +7011,7 @@ Entry.Commander = function(a) {
     "string" === typeof b && (b = this.editor.board.findById(b));
     return [a.insertBlock.type, ["blockId", b.id], ["targetPointer", b.targetPointer()], ["count", d], ["code", this.editor.board.code.stringify()]];
   }, undo:"insertBlock"};
-  a.separateBlock = {type:EntryStatic.COMMAND_TYPES.separateBlock, do:function(b) {
+  a.separateBlock = {type:Entry.STATIC.COMMAND_TYPES.separateBlock, do:function(b) {
     b.view && b.view._toGlobalCoordinate(Entry.DRAG_MODE_DRAG);
     b.doSeparate();
   }, state:function(b) {
@@ -7021,7 +7023,7 @@ Entry.Commander = function(a) {
     "string" === typeof b && (b = this.editor.board.findById(b));
     return [a.separateBlock.type, ["blockId", b.id], ["x", b.x], ["y", b.y], ["code", this.editor.board.code.stringify()]];
   }, undo:"insertBlock"};
-  a.moveBlock = {type:EntryStatic.COMMAND_TYPES.moveBlock, do:function(b, a, d) {
+  a.moveBlock = {type:Entry.STATIC.COMMAND_TYPES.moveBlock, do:function(b, a, d) {
     void 0 !== a ? (b = this.editor.board.findById(b), b.moveTo(a, d)) : b._updatePos();
   }, state:function(b) {
     "string" === typeof b && (b = this.editor.board.findById(b));
@@ -7029,7 +7031,7 @@ Entry.Commander = function(a) {
   }, log:function(b, c, d) {
     return [a.moveBlock.type, ["blockId", b.id], ["x", b.x], ["y", b.y], ["code", this.editor.board.code.stringify()]];
   }, undo:"moveBlock"};
-  a.cloneBlock = {type:EntryStatic.COMMAND_TYPES.cloneBlock, do:function(b) {
+  a.cloneBlock = {type:Entry.STATIC.COMMAND_TYPES.cloneBlock, do:function(b) {
     "string" === typeof b && (b = this.editor.board.findById(b));
     this.editor.board.code.createThread(b.copy());
   }, state:function(b) {
@@ -7040,7 +7042,7 @@ Entry.Commander = function(a) {
     var c = this.editor.board.code.getThreads().pop();
     return [a.cloneBlock.type, ["blockId", b.id], ["thread", c.stringify()], ["code", this.editor.board.code.stringify()]];
   }, undo:"uncloneBlock"};
-  a.uncloneBlock = {type:EntryStatic.COMMAND_TYPES.uncloneBlock, do:function(b) {
+  a.uncloneBlock = {type:Entry.STATIC.COMMAND_TYPES.uncloneBlock, do:function(b) {
     b = this.editor.board.code.getThreads().pop().getFirstBlock();
     this._tempStorage = b.id;
     b.destroy(!0, !0);
@@ -7051,7 +7053,7 @@ Entry.Commander = function(a) {
     this._tempStorage = null;
     return [a.uncloneBlock.type, ["blockId", b], ["code", this.editor.board.code.stringify()]];
   }, undo:"cloneBlock"};
-  a.scrollBoard = {type:EntryStatic.COMMAND_TYPES.scrollBoard, do:function(b, a, d) {
+  a.scrollBoard = {type:Entry.STATIC.COMMAND_TYPES.scrollBoard, do:function(b, a, d) {
     d || this.editor.board.scroller._scroll(b, a);
     delete this.editor.board.scroller._diffs;
   }, state:function(b, a) {
@@ -7059,7 +7061,7 @@ Entry.Commander = function(a) {
   }, log:function(b, c) {
     return [a.scrollBoard.type, ["dx", b], ["dy", c]];
   }, undo:"scrollBoard"};
-  a.setFieldValue = {type:EntryStatic.COMMAND_TYPES.setFieldValue, do:function(b, a, d, e, f) {
+  a.setFieldValue = {type:Entry.STATIC.COMMAND_TYPES.setFieldValue, do:function(b, a, d, e, f) {
     a.setValue(f, !0);
   }, state:function(b, a, d, e, f) {
     return [b, a, d, f, e];
@@ -7068,7 +7070,7 @@ Entry.Commander = function(a) {
   }, undo:"setFieldValue"};
 })(Entry.Command);
 (function(a) {
-  a.selectObject = {type:EntryStatic.COMMAND_TYPES.selectObject, do:function(b) {
+  a.selectObject = {type:Entry.STATIC.COMMAND_TYPES.selectObject, do:function(b) {
     return Entry.container.selectObject(b);
   }, state:function(b) {
     if ((b = Entry.playground) && b.object) {
@@ -7077,6 +7079,20 @@ Entry.Commander = function(a) {
   }, log:function(b) {
     return [b];
   }, undo:"selectObject"};
+})(Entry.Command);
+(function(a) {
+  a.editPicture = {type:Entry.STATIC.COMMAND_TYPES.editPicture, do:function(b, a) {
+    Entry.playground.painter.lc.canRedo() && Entry.playground.painter.lc.redo();
+  }, state:function(b) {
+  }, log:function(b) {
+    return [b];
+  }, undo:"uneditPicture"};
+  a.uneditPicture = {type:Entry.STATIC.COMMAND_TYPES.uneditPicture, do:function(b, a) {
+    Entry.playground.painter.lc.undo();
+  }, state:function(b) {
+  }, log:function(b) {
+    return [b];
+  }, undo:"editPicture"};
 })(Entry.Command);
 Entry.Container = function() {
   this.objects_ = [];
@@ -9711,7 +9727,6 @@ Entry.StateManager.prototype.isSaved = function() {
 Entry.StateManager.prototype.addActivity = function(a) {
   Entry.reporter && Entry.reporter.report(new Entry.State(a));
 };
-Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BLOCK_RENDER_MODEL:9, BOX_MODEL:10, THREAD_MODEL:11, DRAG_INSTANCE:12, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1, BREAK:2, PASS:3};
 Entry.BlockModel = function() {
   Entry.Model(this);
 };
@@ -11681,103 +11696,9 @@ Entry.Painter2 = function(a) {
 };
 (function(a) {
   a.initialize = function() {
-    if (!this.lc) {
-      this.lc = LC.init(this.view, {imageURLPrefix:"/lib/literallycanvas/lib/img", zoomMax:3, zoomMin:.5, toolbarPosition:"bottom"});
-      var b = this, a = Entry.createElement(document.getElementById("canvas-top-menu"));
-      a.addClass("entryPlaygroundPainterTop");
-      a.addClass("entryPainterTop");
-      var d = Entry.createElement("nav", "entryPainterTopMenu");
-      d.addClass("entryPlaygroundPainterTopMenu");
-      a.appendChild(d);
-      a = Entry.createElement("ul");
-      d.appendChild(a);
-      var e = Entry.createElement("li");
-      d.appendChild(e);
-      d = Entry.createElement("a", "entryPainterTopMenuFileNew");
-      d.bindOnClick(function() {
-        b.newPicture();
-      });
-      d.addClass("entryPlaygroundPainterTopMenuFileNew");
-      d.innerHTML = Lang.Workspace.new_picture;
-      e.appendChild(d);
-      e = Entry.createElement("li", "entryPainterTopMenuFile");
-      e.addClass("entryPlaygroundPainterTopMenuFile");
-      e.innerHTML = Lang.Workspace.painter_file;
-      a.appendChild(e);
-      d = Entry.createElement("ul");
-      e.appendChild(d);
-      e = Entry.createElement("li");
-      d.appendChild(e);
-      var f = Entry.createElement("a", "entryPainterTopMenuFileSave");
-      f.bindOnClick(function() {
-        b.file_save(!1);
-      });
-      f.addClass("entryPainterTopMenuFileSave");
-      f.innerHTML = Lang.Workspace.painter_file_save;
-      e.appendChild(f);
-      e = Entry.createElement("li");
-      d.appendChild(e);
-      d = Entry.createElement("a", "entryPainterTopMenuFileSaveAs");
-      d.bindOnClick(function() {
-        b.file.mode = "new";
-        b.file_save(!1);
-      });
-      d.addClass("entryPlaygroundPainterTopMenuFileSaveAs");
-      d.innerHTML = Lang.Workspace.painter_file_saveas;
-      e.appendChild(d);
-      d = Entry.createElement("li", "entryPainterTopMenuEdit");
-      d.addClass("entryPlaygroundPainterTopMenuEdit");
-      d.innerHTML = Lang.Workspace.painter_edit;
-      a.appendChild(d);
-      a = Entry.createElement("ul");
-      d.appendChild(a);
-      d = Entry.createElement("li");
-      a.appendChild(d);
-      e = Entry.createElement("a", "entryPainterTopMenuEditImportLink");
-      e.bindOnClick(function() {
-        Entry.dispatchEvent("openPictureImport");
-      });
-      e.addClass("entryPainterTopMenuEditImport");
-      e.innerHTML = Lang.Workspace.get_file;
-      d.appendChild(e);
-      d = Entry.createElement("li");
-      a.appendChild(d);
-      e = Entry.createElement("a", "entryPainterTopMenuEditCopy");
-      e.bindOnClick(function() {
-        b.edit_copy();
-      });
-      e.addClass("entryPlaygroundPainterTopMenuEditCopy");
-      e.innerHTML = Lang.Workspace.copy_file;
-      d.appendChild(e);
-      d = Entry.createElement("li");
-      a.appendChild(d);
-      e = Entry.createElement("a", "entryPainterTopMenuEditCut");
-      e.bindOnClick(function() {
-        b.edit_cut();
-      });
-      e.addClass("entryPlaygroundPainterTopMenuEditCut");
-      e.innerHTML = Lang.Workspace.cut_picture;
-      d.appendChild(e);
-      d = Entry.createElement("li");
-      a.appendChild(d);
-      e = Entry.createElement("a", "entryPainterTopMenuEditPaste");
-      e.bindOnClick(function() {
-        b.edit_paste();
-      });
-      e.addClass("entryPlaygroundPainterTopMenuEditPaste");
-      e.innerHTML = Lang.Workspace.paste_picture;
-      d.appendChild(e);
-      d = Entry.createElement("li");
-      a.appendChild(d);
-      a = Entry.createElement("a", "entryPainterTopMenuEditEraseAll");
-      a.addClass("entryPlaygroundPainterTopMenuEditEraseAll");
-      a.innerHTML = Lang.Workspace.remove_all;
-      a.bindOnClick(function() {
-        b.clearCanvas();
-      });
-      d.appendChild(a);
-      Entry.addEventListener("pictureSelected", this.changePicture.bind(this));
-    }
+    this.lc || (this.lc = LC.init(this.view, {imageURLPrefix:"/lib/literallycanvas/lib/img", zoomMax:3, zoomMin:.5, toolbarPosition:"bottom"}), this.lc.on("do", function(b) {
+      Entry.do("editPicture", b.action, this.lc);
+    }), this.initTopBar());
   };
   a.show = function() {
     this.lc || this.initialize();
@@ -11800,6 +11721,102 @@ Entry.Painter2 = function(a) {
     var b = this.lc.getImage().toDataURL();
     Entry.dispatchEvent("saveCanvasImage", {file:this.file, image:b});
     this.file.modified = !1;
+  };
+  a.initTopBar = function() {
+    var b = this, a = Entry.createElement(document.getElementById("canvas-top-menu"));
+    a.addClass("entryPlaygroundPainterTop");
+    a.addClass("entryPainterTop");
+    var d = Entry.createElement("nav", "entryPainterTopMenu");
+    d.addClass("entryPlaygroundPainterTopMenu");
+    a.appendChild(d);
+    a = Entry.createElement("ul");
+    d.appendChild(a);
+    var e = Entry.createElement("li");
+    d.appendChild(e);
+    d = Entry.createElement("a", "entryPainterTopMenuFileNew");
+    d.bindOnClick(function() {
+      b.newPicture();
+    });
+    d.addClass("entryPlaygroundPainterTopMenuFileNew");
+    d.innerHTML = Lang.Workspace.new_picture;
+    e.appendChild(d);
+    e = Entry.createElement("li", "entryPainterTopMenuFile");
+    e.addClass("entryPlaygroundPainterTopMenuFile");
+    e.innerHTML = Lang.Workspace.painter_file;
+    a.appendChild(e);
+    d = Entry.createElement("ul");
+    e.appendChild(d);
+    e = Entry.createElement("li");
+    d.appendChild(e);
+    var f = Entry.createElement("a", "entryPainterTopMenuFileSave");
+    f.bindOnClick(function() {
+      b.file_save(!1);
+    });
+    f.addClass("entryPainterTopMenuFileSave");
+    f.innerHTML = Lang.Workspace.painter_file_save;
+    e.appendChild(f);
+    e = Entry.createElement("li");
+    d.appendChild(e);
+    d = Entry.createElement("a", "entryPainterTopMenuFileSaveAs");
+    d.bindOnClick(function() {
+      b.file.mode = "new";
+      b.file_save(!1);
+    });
+    d.addClass("entryPlaygroundPainterTopMenuFileSaveAs");
+    d.innerHTML = Lang.Workspace.painter_file_saveas;
+    e.appendChild(d);
+    d = Entry.createElement("li", "entryPainterTopMenuEdit");
+    d.addClass("entryPlaygroundPainterTopMenuEdit");
+    d.innerHTML = Lang.Workspace.painter_edit;
+    a.appendChild(d);
+    a = Entry.createElement("ul");
+    d.appendChild(a);
+    d = Entry.createElement("li");
+    a.appendChild(d);
+    e = Entry.createElement("a", "entryPainterTopMenuEditImportLink");
+    e.bindOnClick(function() {
+      Entry.dispatchEvent("openPictureImport");
+    });
+    e.addClass("entryPainterTopMenuEditImport");
+    e.innerHTML = Lang.Workspace.get_file;
+    d.appendChild(e);
+    d = Entry.createElement("li");
+    a.appendChild(d);
+    e = Entry.createElement("a", "entryPainterTopMenuEditCopy");
+    e.bindOnClick(function() {
+      b.edit_copy();
+    });
+    e.addClass("entryPlaygroundPainterTopMenuEditCopy");
+    e.innerHTML = Lang.Workspace.copy_file;
+    d.appendChild(e);
+    d = Entry.createElement("li");
+    a.appendChild(d);
+    e = Entry.createElement("a", "entryPainterTopMenuEditCut");
+    e.bindOnClick(function() {
+      b.edit_cut();
+    });
+    e.addClass("entryPlaygroundPainterTopMenuEditCut");
+    e.innerHTML = Lang.Workspace.cut_picture;
+    d.appendChild(e);
+    d = Entry.createElement("li");
+    a.appendChild(d);
+    e = Entry.createElement("a", "entryPainterTopMenuEditPaste");
+    e.bindOnClick(function() {
+      b.edit_paste();
+    });
+    e.addClass("entryPlaygroundPainterTopMenuEditPaste");
+    e.innerHTML = Lang.Workspace.paste_picture;
+    d.appendChild(e);
+    d = Entry.createElement("li");
+    a.appendChild(d);
+    a = Entry.createElement("a", "entryPainterTopMenuEditEraseAll");
+    a.addClass("entryPlaygroundPainterTopMenuEditEraseAll");
+    a.innerHTML = Lang.Workspace.remove_all;
+    a.bindOnClick(function() {
+      b.clearCanvas();
+    });
+    d.appendChild(a);
+    Entry.addEventListener("pictureSelected", this.changePicture.bind(this));
   };
 })(Entry.Painter2.prototype);
 Entry.BlockParser = function(a) {
@@ -12175,21 +12192,21 @@ Entry.Parser = function(a, b, c) {
         }
         break;
       case "block":
-        b = this._parser.Code(b).match(/(.*{.*[\S|\s]+?}|.+)/g), a = Array.isArray(b) ? b.reduce(function(a, b, c) {
-          1 === c && (a += "\n");
-          return (-1 < b.indexOf("function") ? b + a : a + b) + "\n";
+        b = this._parser.Code(b).match(/(.*{.*[\S|\s]+?}|.+)/g), a = Array.isArray(b) ? b.reduce(function(b, a, c) {
+          1 === c && (b += "\n");
+          return (-1 < a.indexOf("function") ? a + b : b + a) + "\n";
         }) : "";
     }
     return a;
   };
-  a.getLineNumber = function(a, c) {
+  a.getLineNumber = function(b, a) {
     var d = this.codeMirror.getValue(), e = {from:{}, to:{}};
+    b = d.substring(0, b).split(/\n/gi);
+    e.from.line = b.length - 1;
+    e.from.ch = b[b.length - 1].length;
     a = d.substring(0, a).split(/\n/gi);
-    e.from.line = a.length - 1;
-    e.from.ch = a[a.length - 1].length;
-    c = d.substring(0, c).split(/\n/gi);
-    e.to.line = c.length - 1;
-    e.to.ch = c[c.length - 1].length;
+    e.to.line = a.length - 1;
+    e.to.ch = a[a.length - 1].length;
     return e;
   };
   a.mappingSyntax = function(a) {

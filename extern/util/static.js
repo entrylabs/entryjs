@@ -2494,22 +2494,3 @@ EntryStatic.ARROW_COLOR_VARIABLE = '#ce38ce';
 EntryStatic.ARROW_COLOR_HW = '#097e84';
 
 
-EntryStatic.COMMAND_TYPES = {
-    addThread: 101,
-    destroyThread: 102,
-    destroyBlock: 103,
-    recoverBlock: 104,
-    insertBlock: 105,
-    separateBlock: 106,
-    moveBlock: 107,
-    cloneBlock: 108,
-    uncloneBlock: 109,
-    scrollBoard: 110,
-    setFieldValue: 111,
-
-    selectObject: 201,
-
-    'do': 301,
-    'undo': 302,
-    'redo': 303
-};
