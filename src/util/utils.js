@@ -1139,9 +1139,10 @@ Entry.Utils.xmlToJsonData = function(xml) {
     return result;
 };
 
-Entry.Utils.stopProjectWithToast = function(block, message) {
+Entry.Utils.stopProjectWithToast = function(scope, message, isHide) {
+    var block = scope.block;
     message = message || '런타임 에러 발생';
-    if (Entry.toast)
+    if (Entry.toast && !isHide)
         Entry.toast.alert(
             Lang.Msgs.warn,
             Lang.Workspace.check_runtime_error,
@@ -1152,8 +1153,18 @@ Entry.Utils.stopProjectWithToast = function(block, message) {
         Entry.engine.toggleStop();
 
     if (Entry.type === 'workspace') {
-        Entry.container.selectObject(block.getCode().object.id, true);
-        block.view.getBoard().activateBlock(block);
+        if(scope.block && 'funcBlock' in scope.block) {
+            block = scope.block.funcBlock;
+        } else if(scope.funcExecutor){
+            block = scope.funcExecutor.scope.block;
+            var funcName = scope.type.replace('func_', '');
+            Entry.Func.edit(Entry.variableContainer.functions_[funcName]);
+        }
+
+        if(block) {
+            Entry.container.selectObject(block.getCode().object.id, true);
+            block.view.getBoard().activateBlock(block);
+        }
     }
     throw new Error(message);
 };

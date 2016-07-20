@@ -20,7 +20,12 @@ Entry.Executor = function(block, entity) {
             try {
                 var returnVal = this.scope.block.getSchema().func.call(this.scope, this.entity, this.scope);
             } catch(e) {
-                Entry.Utils.stopProjectWithToast(this.scope.block, '런타임 에러');
+                var errorMsg = '런타임 에러';
+                var isToastHide = false;
+                if(e.message != errorMsg) {
+                    isToastHide = true;
+                }
+                Entry.Utils.stopProjectWithToast(this.scope, errorMsg, isToastHide);
             }
             //executor can be ended after block function call
             if (this.isEnd()) return;
