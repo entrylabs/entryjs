@@ -43,27 +43,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
     switch (this._lang) {
         case "js":
             this._parser = new Entry.JsToBlockParser(this.syntax);
-
-            var syntax = this.syntax;
-
-            var assistScope = {};
-
-            for(var key in syntax.Scope ) {
-                assistScope[key + '();\n'] = syntax.Scope[key];
-            }
-
-            if('BasicIf' in syntax) {
-                assistScope['front'] = 'BasicIf';
-            }
-
-            cm.on("keyup", function (cm, event) {
-                if ((event.keyCode >= 65 && event.keyCode <= 95) ||
-                    event.keyCode == 167 || event.keyCode == 190) {
-                    CodeMirror.showHint(cm, null, {completeSingle: false, globalScope:assistScope});
-                }
-            });
             break;
-
         case "py":
             this._parser = new Entry.PyToBlockParser(this.syntax);
 
@@ -132,7 +112,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 var syntax = this.syntax;
                 var assistScope = {};
 
-                for(var key in syntax.Scope ) {
+                for(var key in syntax.Scope) {
                     assistScope[key + '();\n'] = syntax.Scope[key];
                 }
 
@@ -140,16 +120,16 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     assistScope['front'] = 'BasicIf';
                 }
 
-                //cm.setOption("mode", {name: "javascript", globalVars: true});
-
                 cm.on("keyup", function (cm, event) {
                     if ((event.keyCode >= 65 && event.keyCode <= 95) ||
                         event.keyCode == 167 || event.keyCode == 190) {
-                        CodeMirror.showHint(cm, null, {completeSingle: false, globalScope:assistScope});
+                        CodeMirror.showHint(cm, null, {
+                            completeSingle: false, globalScope:assistScope
+                        });
                     }
                 });
 
-                this._parserType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK;
+                this._parserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK;
 
                 break;
 

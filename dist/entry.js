@@ -13207,20 +13207,11 @@ Entry.Parser = function(b, a, d, c) {
   switch(this._lang) {
     case "js":
       this._parser = new Entry.JsToBlockParser(this.syntax);
-      c = this.syntax;
-      var e = {}, f;
-      for (f in c.Scope) {
-        e[f + "();\n"] = c.Scope[f];
-      }
-      "BasicIf" in c && (e.front = "BasicIf");
-      d.on("keyup", function(a, b) {
-        (65 <= b.keyCode && 95 >= b.keyCode || 167 == b.keyCode || 190 == b.keyCode) && CodeMirror.showHint(a, null, {completeSingle:!1, globalScope:e});
-      });
       break;
     case "py":
       this._parser = new Entry.PyToBlockParser(this.syntax);
       c = this.syntax;
-      e = {};
+      var e = {}, f;
       for (f in c.Scope) {
         e[f + "();\n"] = c.Scope[f];
       }
@@ -13266,7 +13257,7 @@ Entry.Parser = function(b, a, d, c) {
         c.on("keyup", function(a, b) {
           (65 <= b.keyCode && 95 >= b.keyCode || 167 == b.keyCode || 190 == b.keyCode) && CodeMirror.showHint(a, null, {completeSingle:!1, globalScope:e});
         });
-        this._parserType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK;
+        this._parserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK;
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
         this._parser = new Entry.BlockToPyParser(this.syntax), c.setOption("mode", {name:"python", globalVars:!0}), c.markText({line:0, ch:0}, {line:5}, {readOnly:!0}), this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
