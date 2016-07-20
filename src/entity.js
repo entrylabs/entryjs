@@ -548,8 +548,22 @@ Entry.EntityObject.prototype.setFont = function(font) {
     Entry.stage.updateObject();
 };
 
+Entry.EntityObject.prototype.setLineHeight = function() {
+    switch(this.getFontType()) {
+        case "Nanum Gothic Coding": {
+            this.textObject.lineHeight = this.fontSize;
+            break;
+        }
+        default: {
+            this.textObject.lineHeight = 0;
+            break;
+        }
+    }
+};
+
 Entry.EntityObject.prototype.syncFont = function() {
     this.textObject.font = this.getFont();
+    this.setLineHeight();
     Entry.stage.update();
     if (this.getLineBreak()) {
 
