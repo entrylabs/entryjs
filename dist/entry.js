@@ -22664,7 +22664,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     this.runType = a.runType;
     this.oldTextType = this.textType;
     this.textType = a.textType;
-    console.log("this.mode", this.mode);
     switch(this.mode) {
       case c:
         return;

@@ -17210,7 +17210,7 @@ Entry.block = {
         },
         "syntax": [
             "Scope",
-            "slow"
+            "move_slowly"
         ]
     },
     "jr_repeat_until_dest": {
