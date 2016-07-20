@@ -37,7 +37,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
     /*this.syntax.js = this.mappingSyntaxJs(mode);
     this.syntax.py = this.mappingSyntaxPy(mode);*/
 
-    console.log("py syntax", this.syntax.py);
+    //console.log("py syntax", this.syntax.py);
     this._console = new Entry.Console();
 
     switch (this._lang) {

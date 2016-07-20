@@ -13203,7 +13203,6 @@ Entry.Parser = function(b, a, d, c) {
   Entry.Parser.BLOCK_SKELETON_BASIC = "basic";
   Entry.Parser.BLOCK_SKELETON_BASIC_LOOP = "basic_loop";
   Entry.Parser.BLOCK_SKELETON_BASIC_DOUBLE_LOOP = "basic_double_loop";
-  console.log("py syntax", this.syntax.py);
   this._console = new Entry.Console;
   switch(this._lang) {
     case "js":
