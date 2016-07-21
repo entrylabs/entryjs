@@ -298,6 +298,7 @@ Entry.Stage.prototype.initCoordinator = function() {
  */
 Entry.Stage.prototype.toggleCoordinator = function() {
     this.coordinator.visible = !this.coordinator.visible;
+    Entry.requestUpdate = true;
 };
 
 /**
