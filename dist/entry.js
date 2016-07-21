@@ -8168,22 +8168,22 @@ Entry.EntryObject.prototype.generateView = function() {
     var l = Entry.createElement("span");
     l.addClass("entryObjectCoordinateSizeWorkspace");
     l.innerHTML = Lang.Workspace.Size + " : ";
-    var n = Entry.createElement("input");
-    n.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size");
-    n.bindOnClick(function(a) {
+    var m = Entry.createElement("input");
+    m.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size");
+    m.bindOnClick(function(a) {
       a.stopPropagation();
       this.select();
     });
-    n.setAttribute("readonly", !0);
+    m.setAttribute("readonly", !0);
     c.appendChild(e);
     c.appendChild(g);
     c.appendChild(h);
     c.appendChild(k);
     c.appendChild(l);
-    c.appendChild(n);
+    c.appendChild(m);
     c.xInput_ = g;
     c.yInput_ = k;
-    c.sizeInput_ = n;
+    c.sizeInput_ = m;
     this.coordinateView_ = c;
     d = this;
     g.onkeypress = function(a) {
@@ -8202,11 +8202,11 @@ Entry.EntryObject.prototype.generateView = function() {
       d.updateCoordinateView();
       Entry.stage.updateObject();
     };
-    n.onkeypress = function(a) {
+    m.onkeypress = function(a) {
       13 == a.keyCode && d.editObjectValues(!1);
     };
-    n.onblur = function(a) {
-      isNaN(n.value) || d.entity.setSize(Number(n.value));
+    m.onblur = function(a) {
+      isNaN(m.value) || d.entity.setSize(Number(m.value));
       d.updateCoordinateView();
       Entry.stage.updateObject();
     };
@@ -8217,15 +8217,15 @@ Entry.EntryObject.prototype.generateView = function() {
     e = Entry.createElement("span");
     e.addClass("entryObjectRotateSpanWorkspace");
     e.innerHTML = Lang.Workspace.rotation + " : ";
-    var m = Entry.createElement("input");
-    m.addClass("entryObjectRotateInputWorkspace");
-    m.setAttribute("readonly", !0);
-    m.bindOnClick(function(a) {
+    var n = Entry.createElement("input");
+    n.addClass("entryObjectRotateInputWorkspace");
+    n.setAttribute("readonly", !0);
+    n.bindOnClick(function(a) {
       a.stopPropagation();
       this.select();
     });
     this.rotateSpan_ = e;
-    this.rotateInput_ = m;
+    this.rotateInput_ = n;
     h = Entry.createElement("span");
     h.addClass("entryObjectDirectionSpanWorkspace");
     h.innerHTML = Lang.Workspace.direction + " : ";
@@ -8238,17 +8238,17 @@ Entry.EntryObject.prototype.generateView = function() {
     });
     this.directionInput_ = q;
     c.appendChild(e);
-    c.appendChild(m);
+    c.appendChild(n);
     c.appendChild(h);
     c.appendChild(q);
-    c.rotateInput_ = m;
+    c.rotateInput_ = n;
     c.directionInput_ = q;
     d = this;
-    m.onkeypress = function(a) {
+    n.onkeypress = function(a) {
       13 == a.keyCode && d.editObjectValues(!1);
     };
-    m.onblur = function(a) {
-      a = m.value;
+    n.onblur = function(a) {
+      a = n.value;
       -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da")));
       isNaN(a) || d.entity.setRotation(Number(a));
       d.updateRotationView();
@@ -8330,10 +8330,10 @@ Entry.EntryObject.prototype.generateView = function() {
       if (a = Entry.container.getObject(this.id)) {
         Entry.container.selectObject(a.id), Entry.playground.injectObject(a);
       }
-    }), this.view_.appendChild(c), c = Entry.createElement("div"), c.addClass("entryObjectInformationWorkspace"), c.object = this, this.isInformationToggle = !1, b.appendChild(c), this.informationView_ = c, c = Entry.createElement("div"), c.addClass("entryObjectRotateLabelWrapperWorkspace"), this.view_.appendChild(c), this.rotateLabelWrapperView_ = c, e = Entry.createElement("span"), e.addClass("entryObjectRotateSpanWorkspace"), e.innerHTML = Lang.Workspace.rotation + " : ", m = Entry.createElement("input"), 
-    m.addClass("entryObjectRotateInputWorkspace"), this.rotateSpan_ = e, this.rotateInput_ = m, h = Entry.createElement("span"), h.addClass("entryObjectDirectionSpanWorkspace"), h.innerHTML = Lang.Workspace.direction + " : ", q = Entry.createElement("input"), q.addClass("entryObjectDirectionInputWorkspace"), this.directionInput_ = q, c.appendChild(e), c.appendChild(m), c.appendChild(h), c.appendChild(q), c.rotateInput_ = m, c.directionInput_ = q, d = this, m.onkeypress = function(a) {
-      13 == a.keyCode && (a = m.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || d.entity.setRotation(Number(a)), d.updateRotationView(), m.blur());
-    }, m.onblur = function(a) {
+    }), this.view_.appendChild(c), c = Entry.createElement("div"), c.addClass("entryObjectInformationWorkspace"), c.object = this, this.isInformationToggle = !1, b.appendChild(c), this.informationView_ = c, c = Entry.createElement("div"), c.addClass("entryObjectRotateLabelWrapperWorkspace"), this.view_.appendChild(c), this.rotateLabelWrapperView_ = c, e = Entry.createElement("span"), e.addClass("entryObjectRotateSpanWorkspace"), e.innerHTML = Lang.Workspace.rotation + " : ", n = Entry.createElement("input"), 
+    n.addClass("entryObjectRotateInputWorkspace"), this.rotateSpan_ = e, this.rotateInput_ = n, h = Entry.createElement("span"), h.addClass("entryObjectDirectionSpanWorkspace"), h.innerHTML = Lang.Workspace.direction + " : ", q = Entry.createElement("input"), q.addClass("entryObjectDirectionInputWorkspace"), this.directionInput_ = q, c.appendChild(e), c.appendChild(n), c.appendChild(h), c.appendChild(q), c.rotateInput_ = n, c.directionInput_ = q, d = this, n.onkeypress = function(a) {
+      13 == a.keyCode && (a = n.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || d.entity.setRotation(Number(a)), d.updateRotationView(), n.blur());
+    }, n.onblur = function(a) {
       d.entity.setRotation(d.entity.getRotation());
       Entry.stage.updateObject();
     }, q.onkeypress = function(a) {
@@ -8342,8 +8342,8 @@ Entry.EntryObject.prototype.generateView = function() {
       d.entity.setDirection(d.entity.getDirection());
       Entry.stage.updateObject();
     }, b = Entry.createElement("div"), b.addClass("entryObjectRotationWrapperWorkspace"), b.object = this, this.view_.appendChild(b), c = Entry.createElement("span"), c.addClass("entryObjectCoordinateWorkspace"), b.appendChild(c), e = Entry.createElement("span"), e.addClass("entryObjectCoordinateSpanWorkspace"), e.innerHTML = "X:", g = Entry.createElement("input"), g.addClass("entryObjectCoordinateInputWorkspace"), h = Entry.createElement("span"), h.addClass("entryObjectCoordinateSpanWorkspace"), 
-    h.innerHTML = "Y:", k = Entry.createElement("input"), k.addClass("entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right"), l = Entry.createElement("span"), l.addClass("entryObjectCoordinateSpanWorkspace"), l.innerHTML = Lang.Workspace.Size, n = Entry.createElement("input"), n.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size"), c.appendChild(e), c.appendChild(g), c.appendChild(h), c.appendChild(k), c.appendChild(l), c.appendChild(n), 
-    c.xInput_ = g, c.yInput_ = k, c.sizeInput_ = n, this.coordinateView_ = c, d = this, g.onkeypress = function(a) {
+    h.innerHTML = "Y:", k = Entry.createElement("input"), k.addClass("entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right"), l = Entry.createElement("span"), l.addClass("entryObjectCoordinateSpanWorkspace"), l.innerHTML = Lang.Workspace.Size, m = Entry.createElement("input"), m.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size"), c.appendChild(e), c.appendChild(g), c.appendChild(h), c.appendChild(k), c.appendChild(l), c.appendChild(m), 
+    c.xInput_ = g, c.yInput_ = k, c.sizeInput_ = m, this.coordinateView_ = c, d = this, g.onkeypress = function(a) {
       13 == a.keyCode && (isNaN(g.value) || d.entity.setX(Number(g.value)), d.updateCoordinateView(), d.blur());
     }, g.onblur = function(a) {
       d.entity.setX(d.entity.getX());
@@ -9096,14 +9096,14 @@ Entry.Painter.prototype.fill = function() {
     var d = new createjs.Point(this.stage.mouseX, this.stage.mouseY);
     d.x = Math.round(d.x);
     d.y = Math.round(d.y);
-    for (var c = 4 * (d.y * b + d.x), e = this.colorLayerData.data[c], f = this.colorLayerData.data[c + 1], g = this.colorLayerData.data[c + 2], h = this.colorLayerData.data[c + 3], k, l, d = [[d.x, d.y]], n = Entry.hex2rgb(this.stroke.lineColor);d.length;) {
-      for (var c = d.pop(), m = c[0], q = c[1], c = 4 * (q * b + m);0 <= q && this.matchColor(c, e, f, g, h);) {
+    for (var c = 4 * (d.y * b + d.x), e = this.colorLayerData.data[c], f = this.colorLayerData.data[c + 1], g = this.colorLayerData.data[c + 2], h = this.colorLayerData.data[c + 3], k, l, d = [[d.x, d.y]], m = Entry.hex2rgb(this.stroke.lineColor);d.length;) {
+      for (var c = d.pop(), n = c[0], q = c[1], c = 4 * (q * b + n);0 <= q && this.matchColor(c, e, f, g, h);) {
         --q, c -= 4 * b;
       }
       c += 4 * b;
       q += 1;
       for (l = k = !1;q < a - 1 && this.matchColor(c, e, f, g, h);) {
-        q += 1, this.colorPixel(c, n.r, n.g, n.b), 0 < m && (this.matchColor(c - 4, e, f, g, h) ? k || (d.push([m - 1, q]), k = !0) : k && (k = !1)), m < b - 1 && (this.matchColor(c + 4, e, f, g, h) ? l || (d.push([m + 1, q]), l = !0) : l && (l = !1)), c += 4 * b;
+        q += 1, this.colorPixel(c, m.r, m.g, m.b), 0 < n && (this.matchColor(c - 4, e, f, g, h) ? k || (d.push([n - 1, q]), k = !0) : k && (k = !1)), n < b - 1 && (this.matchColor(c + 4, e, f, g, h) ? l || (d.push([n + 1, q]), l = !0) : l && (l = !1)), c += 4 * b;
       }
       if (1080 < d.length) {
         break;
@@ -9647,9 +9647,9 @@ Entry.Painter.prototype.generateView = function(b) {
     this.attrColorArea = Entry.createElement("fieldset", "entryPainterAttrColor");
     this.attrColorArea.addClass("entryPlaygroundPainterAttrColor");
     g.appendChild(this.attrColorArea);
-    var n = Entry.createElement("div");
-    n.addClass("entryPlaygroundPainterAttrColorContainer");
-    this.attrColorArea.appendChild(n);
+    var m = Entry.createElement("div");
+    m.addClass("entryPlaygroundPainterAttrColorContainer");
+    this.attrColorArea.appendChild(m);
     this.attrCircleArea = Entry.createElement("div");
     this.attrCircleArea.addClass("painterAttrCircleArea");
     g.appendChild(this.attrCircleArea);
@@ -9676,7 +9676,7 @@ Entry.Painter.prototype.generateView = function(b) {
         document.getElementById("entryPainterAttrCircle").style.backgroundColor = a.stroke.lineColor;
         document.getElementById("entryPainterAttrCircleInput").value = b;
       });
-      n.appendChild(d);
+      m.appendChild(d);
     });
     this.attrThickArea = Entry.createElement("div", "painterAttrThickArea");
     this.attrThickArea.addClass("entryPlaygroundentryPlaygroundPainterAttrThickArea");
@@ -9685,12 +9685,12 @@ Entry.Painter.prototype.generateView = function(b) {
     c.addClass("painterAttrThickName");
     c.innerHTML = Lang.Workspace.thickness;
     this.attrThickArea.appendChild(c);
-    var m = Entry.createElement("fieldset", "entryPainterAttrThick");
-    m.addClass("entryPlaygroundPainterAttrThick");
-    this.attrThickArea.appendChild(m);
+    var n = Entry.createElement("fieldset", "entryPainterAttrThick");
+    n.addClass("entryPlaygroundPainterAttrThick");
+    this.attrThickArea.appendChild(n);
     c = Entry.createElement("div");
     c.addClass("paintAttrThickTop");
-    m.appendChild(c);
+    n.appendChild(c);
     e = Entry.createElement("select", "entryPainterAttrThick");
     e.addClass("entryPlaygroundPainterAttrThickInput");
     e.size = "1";
@@ -9700,15 +9700,15 @@ Entry.Painter.prototype.generateView = function(b) {
     for (c = 1;10 >= c;c++) {
       d = Entry.createElement("option"), d.value = c, d.innerHTML = c, e.appendChild(d);
     }
-    m.appendChild(e);
+    n.appendChild(e);
     c = Entry.createElement("div", "entryPainterShapeLineColor");
     c.addClass("painterAttrShapeLineColor");
     d = Entry.createElement("div", "entryPainterShapeInnerBackground");
     d.addClass("painterAttrShapeInnerBackground");
     c.appendChild(d);
-    m.appendChild(c);
+    n.appendChild(c);
     this.attrThickArea.painterAttrShapeLineColor = c;
-    m.bindOnClick(function() {
+    n.bindOnClick(function() {
       q.style.zIndex = "1";
       this.style.zIndex = "10";
       r = !1;
@@ -9728,7 +9728,7 @@ Entry.Painter.prototype.generateView = function(b) {
     d.appendChild(q);
     var r = !1;
     q.bindOnClick(function(a) {
-      m.style.zIndex = "1";
+      n.style.zIndex = "1";
       this.style.zIndex = "10";
       r = !0;
     });
@@ -9793,37 +9793,37 @@ Entry.Painter.prototype.generateView = function(b) {
     var t = Entry.createElement("div");
     t.addClass("entryPlaygroundPainterAttrLineStyleLine");
     this.attrLineArea.appendChild(t);
-    var v = Entry.createElement("div");
-    v.addClass("entryPlaygroundPaitnerAttrLineArea");
-    this.attrLineArea.appendChild(v);
+    var u = Entry.createElement("div");
+    u.addClass("entryPlaygroundPaitnerAttrLineArea");
+    this.attrLineArea.appendChild(u);
     c = Entry.createElement("div");
     c.addClass("entryPlaygroundPainterAttrLineStyleLine1");
-    v.appendChild(c);
+    u.appendChild(c);
     c.value = "line";
-    var u = Entry.createElement("div");
-    u.addClass("painterAttrLineStyleBackgroundLine");
+    var v = Entry.createElement("div");
+    v.addClass("painterAttrLineStyleBackgroundLine");
     t.bindOnClick(function(a) {
-      v.removeClass("entryRemove");
+      u.removeClass("entryRemove");
     });
-    v.blur = function(a) {
+    u.blur = function(a) {
       this.addClass("entryRemove");
     };
-    v.onmouseleave = function(a) {
+    u.onmouseleave = function(a) {
       this.addClass("entryRemove");
     };
     c.bindOnClick(function(a) {
       this.attrLineArea.removeClass(t);
-      this.attrLineArea.appendChild(u);
+      this.attrLineArea.appendChild(v);
       this.attrLineArea.onchange(a);
-      v.blur();
+      u.blur();
     });
-    u.bindOnClick(function(a) {
-      v.removeClass("entryRemove");
+    v.bindOnClick(function(a) {
+      u.removeClass("entryRemove");
     });
     this.attrLineArea.onchange = function(b) {
       a.stroke.style = b.target.value;
     };
-    v.blur();
+    u.blur();
   }
 };
 Entry.Painter.prototype.restoreHandle = function() {
@@ -11571,18 +11571,18 @@ Entry.TextCodingUtil = function() {
         break;
       }
       if (h.type == g.data.type) {
-        var e = !0, k = h.params, l = g.data.params, n = [];
+        var e = !0, k = h.params, l = g.data.params, m = [];
         l.map(function(a, b) {
-          a && n.push(a);
+          a && m.push(a);
         });
-        l = n;
+        l = m;
         if (k.length == l.length) {
-          for (var e = !0, m = 0;m < k.length && e;m++) {
-            if (e = !1, k[m].name) {
+          for (var e = !0, n = 0;n < k.length && e;n++) {
+            if (e = !1, k[n].name) {
               for (var q in textFuncParams) {
-                if (k[m].name == textFuncParams[q]) {
+                if (k[n].name == textFuncParams[q]) {
                   for (var r in c) {
-                    if (l[m].data.type == r && c[r] == q) {
+                    if (l[n].data.type == r && c[r] == q) {
                       e = !0;
                       break;
                     }
@@ -11593,7 +11593,7 @@ Entry.TextCodingUtil = function() {
                 }
               }
             } else {
-              "True" == k[m].type || "False" == k[m].type ? k[m].type == l[m].data.type && (e = !0) : k[m].type && k[m].params && k[m].params[0] == l[m].data.params[0] && (e = !0);
+              "True" == k[n].type || "False" == k[n].type ? k[n].type == l[n].data.type && (e = !0) : k[n].type && k[n].params && k[n].params[0] == l[n].data.params[0] && (e = !0);
             }
           }
           e && h.statements && 0 != h.statements.length && (e = this.isFuncContentsMatch(g.data.statements[0]._data, h.statements[0]));
@@ -11660,37 +11660,37 @@ Entry.BlockToPyParser = function(b) {
     }
     var e = /(%.)/mi, f = /(\$.)/mi;
     c = c.split(e);
-    var g = a._schema.params, h = a.data.params, k = a._schema.skeleton, l = a._schema.paramsKeyMap, n = "";
+    var g = a._schema.params, h = a.data.params, k = a._schema.skeleton, l = a._schema.paramsKeyMap, m = "";
     if (this._parseMode == Entry.Parser.PARSE_VARIABLE && k == Entry.Parser.BLOCK_SKELETON_BASIC && l) {
-      var m = 0
+      var n = 0
     }
     for (var q = 0;q < c.length;q++) {
-      if (m = c[q], 0 !== m.length) {
-        if (e.test(m)) {
-          var m = m.split("%")[1], r = Number(m) - 1;
+      if (n = c[q], 0 !== n.length) {
+        if (e.test(n)) {
+          var n = n.split("%")[1], r = Number(n) - 1;
           if (g[r] && "Indicator" != g[r].type) {
             if ("Block" == g[r].type) {
-              if (n = this.Block(h[r]).trim(), r = this._funcMap.get(n)) {
+              if (m = this.Block(h[r]).trim(), r = this._funcMap.get(m)) {
                 b += r;
               } else {
-                var r = n.split("_"), t = r[0];
-                2 == r.length && ("stringParam" == t ? n = "string_param" : "booleanParam" == t && (n = "boolean_param"));
-                n = Entry.TextCodingUtil.prototype.variableFilter(a, m, n);
-                b += n;
-                this._parseMode == Entry.Parser.PARSE_VARIABLE && k == Entry.Parser.BLOCK_SKELETON_BASIC && l && (r = Object.keys(l), m = String(r[m++]), m = m.toLowerCase(), this._variableMap.put(m, n), this._queue.enqueue(m));
+                var r = m.split("_"), t = r[0];
+                2 == r.length && ("stringParam" == t ? m = "string_param" : "booleanParam" == t && (m = "boolean_param"));
+                m = Entry.TextCodingUtil.prototype.variableFilter(a, n, m);
+                b += m;
+                this._parseMode == Entry.Parser.PARSE_VARIABLE && k == Entry.Parser.BLOCK_SKELETON_BASIC && l && (r = Object.keys(l), n = String(r[n++]), n = n.toLowerCase(), this._variableMap.put(n, m), this._queue.enqueue(n));
               }
             } else {
-              n = this["Field" + g[r].type](h[r], g[r]), null == n && (n = g[r].text ? g[r].text : null), n = Entry.TextCodingUtil.prototype.binaryOperatorValueConvertor(n), n = String(n), Entry.TextCodingUtil.prototype.isNumeric(n) || Entry.TextCodingUtil.prototype.isBinaryOperator(n) || (n = String('"' + n + '"')), n = Entry.TextCodingUtil.prototype.variableFilter(a, m, n), Entry.TextCodingUtil.prototype.isLocalType(a, h[r]) && (n = "self".concat(".").concat(n)), b += n, this._parseMode == Entry.Parser.PARSE_VARIABLE && 
-              k == Entry.Parser.BLOCK_SKELETON_BASIC && l && (r = Object.keys(l), m = String(r[m++]), m = m.toLowerCase(), this._variableMap.put(m, n), this._queue.enqueue(m));
+              m = this["Field" + g[r].type](h[r], g[r]), null == m && (m = g[r].text ? g[r].text : null), m = Entry.TextCodingUtil.prototype.binaryOperatorValueConvertor(m), m = String(m), Entry.TextCodingUtil.prototype.isNumeric(m) || Entry.TextCodingUtil.prototype.isBinaryOperator(m) || (m = String('"' + m + '"')), m = Entry.TextCodingUtil.prototype.variableFilter(a, n, m), Entry.TextCodingUtil.prototype.isLocalType(a, h[r]) && (m = "self".concat(".").concat(m)), b += m, this._parseMode == Entry.Parser.PARSE_VARIABLE && 
+              k == Entry.Parser.BLOCK_SKELETON_BASIC && l && (r = Object.keys(l), n = String(r[n++]), n = n.toLowerCase(), this._variableMap.put(n, m), this._queue.enqueue(n));
             }
           }
         } else {
-          if (f.test(m)) {
-            for (m = m.split(f), n = 0;n < m.length;n++) {
-              r = m[n], 0 !== r.length && (f.test(r) ? (r = Number(r.split("$")[1]) - 1, b += Entry.TextCodingUtil.prototype.indent(this.Thread(a.statements[r]))) : b += r);
+          if (f.test(n)) {
+            for (n = n.split(f), m = 0;m < n.length;m++) {
+              r = n[m], 0 !== r.length && (f.test(r) ? (r = Number(r.split("$")[1]) - 1, b += Entry.TextCodingUtil.prototype.indent(this.Thread(a.statements[r]))) : b += r);
             }
           } else {
-            n = 0, m.search("#"), -1 != m.search("#") && (n = m.indexOf("#"), m = m.substring(n + 1)), b += m;
+            m = 0, n.search("#"), -1 != n.search("#") && (m = n.indexOf("#"), n = n.substring(m + 1)), b += n;
           }
         }
       }
@@ -11825,8 +11825,8 @@ Entry.BlockToPyParser = function(b) {
     a = a.substring(0, e).trim().split(" ").join("__");
     Entry.TextCodingUtil.prototype.initQueue();
     Entry.TextCodingUtil.prototype.gatherFuncDefParam(c.content._data[0]._data[0].data.params[0]);
-    for (var f = [], g = {};n = Entry.TextCodingUtil.prototype._funcParamQ.dequeue();) {
-      f.push(n);
+    for (var f = [], g = {};m = Entry.TextCodingUtil.prototype._funcParamQ.dequeue();) {
+      f.push(m);
     }
     for (var h in f) {
       g[f[h]] = h;
@@ -11843,9 +11843,9 @@ Entry.BlockToPyParser = function(b) {
         } else {
           "booleanParam" == h && (l = "boolean" + String(e + 1));
         }
-        var n = l;
-        f[e] = n;
-        this._funcMap.put(k, n);
+        var m = l;
+        f[e] = m;
+        this._funcMap.put(k, m);
       }
     }
     k = c.content._data[0]._data;
@@ -11875,62 +11875,73 @@ Entry.PyToBlockParser = function(b) {
         return;
       }
       var e = [], f = a[c].body;
+      console.log("nodes", f);
       for (c in f) {
         var g = f[c];
-        (g = this[g.type](g)) && g.type && e.push(g);
+        console.log("Program node", g);
+        g = this[g.type](g);
+        console.log("result block", g);
+        g && g.type && e.push(g);
       }
+      console.log("thread", e);
       0 != e.length && b.push(e);
     }
     return b;
   };
   b.ExpressionStatement = function(a) {
+    console.log("ExpressionStatement component", a);
     var b = {};
     a = a.expression;
-    a.type && (a = this[a.type](a), a.type && a.params ? (b.type = a.type, b.params = a.params, result = b) : a.type ? (b.type = a.type, result = b) : result = a);
+    a.type && (a = this[a.type](a), console.log("ExpressionStatement expressionData", a), a.type && a.params ? (b.type = a.type, b.params = a.params, result = b) : a.type ? (b.type = a.type, result = b) : result = a);
+    console.log("ExpressionStatement result", result);
     return result;
   };
   b.CallExpression = function(a) {
-    var b = {}, c = [], e, f = a.callee;
-    e = this[f.type](f);
+    console.log("CallExpression component", a);
+    var b = {}, c = [], e, f = a.callee, g = this[f.type](f);
+    console.log("CallExpression calleeData", g);
     arguments = a.arguments;
     if ("Identifier" == f.type) {
-      b.callee = e, r = Entry.TextCodingUtil.prototype.eventBlockSyntaxFilter(e.name), e = this.getBlockType(r);
+      console.log("CallExpression Identifier calleeData", g), b.callee = g, t = Entry.TextCodingUtil.prototype.eventBlockSyntaxFilter(g.name), e = this.getBlockType(t);
     } else {
-      var g = e.object;
-      e = e.property;
-      if (g.statements && "call" == e.name && 0 == e.userCode) {
-        b.statements = g.statements;
+      var h = g.object;
+      e = g.property;
+      if (h.statements && "call" == e.name && 0 == e.userCode) {
+        e = h.statements, console.log("CallExpression statement", e), b.statements = e;
       } else {
-        var h = g.name ? String(g.name).concat(".").concat(String(e.name)) : g.object.name ? String(g.object.name).concat(".").concat(String(g.property.name)).concat(".").concat(String(e.name)) : null
+        var k = h.name ? String(h.name).concat(".").concat(String(e.name)) : h.object.name ? String(h.object.name).concat(".").concat(String(h.property.name)).concat(".").concat(String(e.name)) : null
       }
-      e = this.getBlockType(h);
-      if (h) {
-        var k = h.split(".")
+      console.log("CallExpression calleeName", k);
+      e = this.getBlockType(k);
+      console.log("CallExpression type before", e);
+      if (k) {
+        var l = k.split(".")
       }
-      if ("__pythonRuntime.functions.range" == h) {
-        var l = "%1number#";
-        e = this.getBlockType(l);
+      console.log("CallExpression calleeTokens", l);
+      if ("__pythonRuntime.functions.range" == k) {
+        var m = "%1number#";
+        e = this.getBlockType(m);
       } else {
-        if ("__pythonRuntime.ops.add" == h) {
-          l = "(%1 %2calc_basic# %3)", e = this.getBlockType(l), f = {raw:"PLUS", type:"Literal", value:"PLUS"}, 2 == arguments.length && arguments.splice(1, 0, f), b.operator = "PLUS";
+        if ("__pythonRuntime.ops.add" == k) {
+          m = "(%1 %2calc_basic# %3)", e = this.getBlockType(m), f = {raw:"PLUS", type:"Literal", value:"PLUS"}, console.log("arguments geniuse", arguments), 2 == arguments.length && arguments.splice(1, 0, f), b.operator = "PLUS";
         } else {
-          if ("__pythonRuntime.ops.multiply" == h) {
-            l = "(%1 %2calc_basic# %3)", e = this.getBlockType(l), f = {raw:"MULTI", type:"Literal", value:"MULTI"}, 2 == arguments.length && arguments.splice(1, 0, f), b.operator = "MULTI";
+          if ("__pythonRuntime.ops.multiply" == k) {
+            m = "(%1 %2calc_basic# %3)", e = this.getBlockType(m), f = {raw:"MULTI", type:"Literal", value:"MULTI"}, 2 == arguments.length && arguments.splice(1, 0, f), b.operator = "MULTI";
           } else {
-            if ("__pythonRuntime.ops.in" == h) {
-              l = "%4 in %2", e = this.getBlockType(l);
+            if ("__pythonRuntime.ops.in" == k) {
+              m = "%4 in %2", e = this.getBlockType(m);
             } else {
-              if ("__pythonRuntime.functions.len" == h) {
-                l = "len", e = this.getBlockType(l);
+              if ("__pythonRuntime.functions.len" == k) {
+                m = "len", e = this.getBlockType(m);
               } else {
-                if ("Identifier" == f.object.type && "append" == k[1] || "MemberExpression" == f.object.type && "self" == k[0] && "append" == k[2]) {
-                  l = "%2.append", e = this.getBlockType(l);
+                if ("Identifier" == f.object.type && "append" == l[1] || "MemberExpression" == f.object.type && "self" == l[0] && "append" == l[2]) {
+                  m = "%2.append", e = this.getBlockType(m);
                 } else {
-                  if ("Identifier" == f.object.type && "insert" == k[1] || "MemberExpression" == f.object.type && "self" == k[0] && "insert" == k[2]) {
-                    l = "%2.insert", e = this.getBlockType(l);
+                  if ("Identifier" == f.object.type && "insert" == l[1] || "MemberExpression" == f.object.type && "self" == l[0] && "insert" == l[2]) {
+                    m = "%2.insert", e = this.getBlockType(m);
                   } else {
-                    if ("Identifier" == f.object.type && "pop" == k[1] || "MemberExpression" == f.object.type && "self" == k[0] && "pop" == k[2]) {
-                      l = "%2.pop", e = this.getBlockType(l);
+                    if ("Identifier" == f.object.type && "pop" == l[1] || "MemberExpression" == f.object.type && "self" == l[0] && "pop" == l[2]) {
+                      m = "%2.pop", e = this.getBlockType(m);
                     }
                   }
                 }
@@ -11939,69 +11950,90 @@ Entry.PyToBlockParser = function(b) {
           }
         }
       }
-      b.callee = h;
+      b.callee = k;
     }
+    console.log("CallExpression type after", e);
     if (e) {
-      var n = Entry.block[e], f = n.params, n = n.def.params, m;
-      for (m in f) {
-        g = f[m].type, "Indicator" == g ? (g = {raw:null, type:"Literal", value:null}, m < arguments.length && arguments.splice(m, 0, g)) : "Text" == g && (g = {raw:"", type:"Literal", value:""}, m < arguments.length && arguments.splice(m, 0, g));
+      var n = Entry.block[e], f = n.params, n = n.def.params;
+      console.log("CallExpression component.arguments", arguments);
+      console.log("CallExpression paramsMeta", f);
+      console.log("CallExpression paramsDefMeta", n);
+      for (var q in f) {
+        h = f[q].type, "Indicator" == h ? (h = {raw:null, type:"Literal", value:null}, q < arguments.length && arguments.splice(q, 0, h)) : "Text" == h && (h = {raw:"", type:"Literal", value:""}, q < arguments.length && arguments.splice(q, 0, h));
       }
-      for (var q in arguments) {
-        if (m = arguments[q]) {
-          m = this[m.type](m, f[q], n[q], !0), "__pythonRuntime.functions.range" == h && m.type ? (e = m.type, c = m.params) : c.push(m);
+      console.log("CallExpression arguments", arguments);
+      for (var r in arguments) {
+        if (q = arguments[r]) {
+          console.log("CallExpression argument", q, "typeof", typeof q), q = this[q.type](q, f[r], n[r], !0), console.log("CallExpression param", q), "__pythonRuntime.functions.range" == k && q.type ? (e = q.type, c = q.params) : c.push(q);
         }
       }
-      if ("%2.append" == l || "%2.pop" == l) {
-        if ("self" == k[0]) {
-          var g = Entry.playground.object, r = k[1];
-          if (!Entry.TextCodingUtil.prototype.isLocalListExisted(r, g)) {
+      console.log("CallExpression syntax", m);
+      console.log("CallExpression argument params", c);
+      if ("%2.append" == m || "%2.pop" == m) {
+        if ("self" == l[0]) {
+          var h = Entry.playground.object, t = l[1];
+          if (!Entry.TextCodingUtil.prototype.isLocalListExisted(t, h)) {
             return b;
           }
         } else {
-          if (r = k[0], !Entry.TextCodingUtil.prototype.isGlobalListExisted(r)) {
+          if (t = l[0], !Entry.TextCodingUtil.prototype.isGlobalListExisted(t)) {
             return b;
           }
         }
-        q = this.ParamDropdownDynamic(r, f[1], n[1]);
-        c.push(q);
-        "%2.pop" == l && ("number" == c[0].type ? c[0].params[0] += 1 : "text" == c[0].type && (c[0].params[0] = String(Number(c[0].params[0]) + 1)));
+        console.log("CallExpression append calleeData", g);
+        r = this.ParamDropdownDynamic(t, f[1], n[1]);
+        console.log("CallExpression listName", r);
+        c.push(r);
+        console.log("CallExpression params[0]", c[0]);
+        "%2.pop" == m && ("number" == c[0].type ? c[0].params[0] += 1 : "text" == c[0].type && (c[0].params[0] = String(Number(c[0].params[0]) + 1)));
       } else {
-        if ("%2.insert" == l) {
-          if ("self" == k[0]) {
-            if (g = Entry.playground.object, r = k[1], !Entry.TextCodingUtil.prototype.isLocalListExisted(r, g)) {
+        if ("%2.insert" == m) {
+          if ("self" == l[0]) {
+            if (h = Entry.playground.object, t = l[1], !Entry.TextCodingUtil.prototype.isLocalListExisted(t, h)) {
               return b;
             }
           } else {
-            if (r = k[0], !Entry.TextCodingUtil.prototype.isGlobalListExisted(r)) {
+            if (t = l[0], !Entry.TextCodingUtil.prototype.isGlobalListExisted(t)) {
               return b;
             }
           }
+          console.log("CallExpression insert params", c);
           c.pop();
-          q = this.ParamDropdownDynamic(r, f[1], n[1]);
+          console.log("CallExpression append calleeData", g);
+          r = this.ParamDropdownDynamic(t, f[1], n[1]);
+          console.log("CallExpression listName", r);
+          c.splice(0, 0, r);
+          console.log("CallExpression check arguments", arguments);
+          console.log("CallExpression arguments[1] 2", arguments[1]);
+          q = this[arguments[1].type](arguments[1], f[2], n[2], !0);
+          console.log("CallExpression check param", q);
           c.splice(0, 0, q);
-          m = this[arguments[1].type](arguments[1], f[2], n[2], !0);
-          c.splice(0, 0, m);
+          console.log("CallExpression insert params", c);
           "number" == c[2].type ? c[2].params[0] += 1 : "text" == c[2].type && (c[2].params[0] = String(Number(c[2].params[0]) + 1));
         } else {
-          "len" == l ? (q = this.ParamDropdownDynamic(c[1].name, f[1], n[1]), delete c[1], c[1] = q) : "%4 in %2" == l && (m = a.arguments[1], m = this[m.type](m, f[3], n[3], !0), q = a.arguments[3].name, q = this.ParamDropdownDynamic(q, f[1], n[1]), c = [], c.push(""), c.push(q), c.push(""), c.push(m), c.push(""));
+          "len" == m ? (r = this.ParamDropdownDynamic(c[1].name, f[1], n[1]), delete c[1], c[1] = r) : "%4 in %2" == m && (q = a.arguments[1], q = this[q.type](q, f[3], n[3], !0), r = a.arguments[3].name, r = this.ParamDropdownDynamic(r, f[1], n[1]), c = [], c.push(""), c.push(r), c.push(""), c.push(q), c.push(""));
         }
       }
       e && (b.type = e);
       c && (b.params = c);
     } else {
       c = [];
-      for (q in arguments) {
-        m = arguments[q], f = this[m.type](m), "__pythonRuntime.utils.createParamsObj" == f.callee ? c = f.arguments : c.push(f);
+      for (r in arguments) {
+        q = arguments[r], console.log("CallExpression argument", q, "typeof", typeof q), f = this[q.type](q), console.log("CallExpression argumentData", f), "__pythonRuntime.utils.createParamsObj" == f.callee ? c = f.arguments : c.push(f);
       }
+      console.log("CallExpression args", c);
       b.arguments = c;
     }
+    console.log("CallExpression Function Check result", b);
     if (b.arguments && b.arguments[0] && "__pythonRuntime.utils.createParamsObj" == b.arguments[0].callee) {
       return b;
     }
-    b.callee && (e = this._funcMap.get(b.callee.name + (b.arguments ? b.arguments.length : 0))) && (b = {}, b.type = e);
+    b.callee && (c = b.callee.name + (b.arguments ? b.arguments.length : 0), console.log("funcKey", c), e = this._funcMap.get(c)) && (b = {}, b.type = e);
+    console.log("CallExpression result", b);
     return b;
   };
   b.Identifier = function(a, b, c) {
+    console.log("Identifier component", a, "paramMeta", b, "paramDefMeta", c);
     b = {};
     b.name = a.name;
     if (!0 === a.userCode || !1 === a.userCode) {
@@ -12015,34 +12047,41 @@ Entry.PyToBlockParser = function(b) {
       }
       var g = [], h, k;
       for (k in f) {
-        "Text" != f[k].type && (h = this["Param" + f[k].type](a, f[k], e[k]));
+        console.log("Identifiler paramsMeta, paramsDefMeta", f[k], e[k]), "Text" != f[k].type && (h = this["Param" + f[k].type](a, f[k], e[k]));
       }
+      console.log("Identifiler param", h);
       h && g.push(h);
       b.type = c;
       0 != g.length && (b.params = g);
     }
+    console.log("Identifiler result", b);
     return b;
   };
   b.VariableDeclaration = function(a) {
+    console.log("VariableDeclaration component", a);
     var b = {declarations:[]}, c, e;
     a = a.declarations;
     for (var f in a) {
-      var g = a[f];
-      (g = this[g.type](g)) && b.declarations.push(g);
+      var g = a[f], g = this[g.type](g);
+      console.log("VariableDeclaration declarationData", g);
+      g && b.declarations.push(g);
       g && g.type && (c = g.type);
       g && g.params && (e = g.params);
     }
     c && (b.type = c);
     e && (b.params = e);
+    console.log("VariableDeclaration result", b);
     return b;
   };
   b.VariableDeclarator = function(a) {
+    console.log("VariableDeclarator component", a);
     var b = {}, c, e = [], e = a.id, f = a.init;
     if ("__params0" != e.name && "__formalsIndex0" != e.name && "__args0" != e.name) {
       if (f.callee && "__getParam0" == f.callee.name) {
         return b.name = e.name, b;
       }
       var g;
+      console.log("VariableDeclarator init", f);
       if (f.callee && f.callee.object && f.callee.property) {
         if (f.callee.object.object && f.callee.object.object.name) {
           var h = f.callee.object.object.name
@@ -12057,30 +12096,37 @@ Entry.PyToBlockParser = function(b) {
       }
       if ("__pythonRuntime.objects.list" == g) {
         h = this[e.type](e);
+        console.log("VariableDeclarator idData", h);
         b.id = h;
         g = this[f.type](f);
+        console.log("VariableDeclarator initData", g);
         b.init = g;
         h = e.name;
         f = [];
         arguments = g.arguments;
         for (c in arguments) {
-          var n = {};
-          n.data = String(arguments[c].params[0]);
-          f.push(n);
+          var m = {};
+          m.data = String(arguments[c].params[0]);
+          f.push(m);
         }
         Entry.TextCodingUtil.prototype.isGlobalListExisted(h) ? Entry.TextCodingUtil.prototype.updateGlobalList(h, f) : Entry.TextCodingUtil.prototype.createGlobalList(h, f);
       } else {
         h = e.name;
-        (g = "Literal" == f.type ? f.value : "Identifier" == f.type ? f.name : NaN) && NaN != g && (h.includes("__filbert") || (Entry.TextCodingUtil.prototype.isGlobalVariableExisted(h) ? Entry.TextCodingUtil.prototype.updateGlobalVariable(h, g) : Entry.TextCodingUtil.prototype.createGlobalVariable(h, g)));
+        g = "Literal" == f.type ? f.value : "Identifier" == f.type ? f.name : NaN;
+        console.log("variable name", h, "value", g);
+        g && NaN != g && (h.includes("__filbert") || (Entry.TextCodingUtil.prototype.isGlobalVariableExisted(h) ? Entry.TextCodingUtil.prototype.updateGlobalVariable(h, g) : Entry.TextCodingUtil.prototype.createGlobalVariable(h, g)));
         h = this[e.type](e);
+        console.log("VariableDeclarator idData", h);
         b.id = h;
         g = this[f.type](f);
+        console.log("VariableDeclarator initData", g);
         b.init = g;
+        console.log("VariableDeclarator init.type", f.type);
         if ("Literal" == f.type) {
           c = e = this.getBlockType("%1 = %2");
         } else {
           if (g.params && g.params[0] && g.params[0].name && h.name == g.params[0].name) {
-            if (c = e = this.getBlockType("%1 += %2"), "PLUS" != g.operator) {
+            if (console.log("VariableDeclarator idData.name", h.name, "initData.params[0].name", g.params[0].name), c = e = this.getBlockType("%1 += %2"), "PLUS" != g.operator) {
               return b;
             }
           } else {
@@ -12090,17 +12136,20 @@ Entry.PyToBlockParser = function(b) {
         k = Entry.block[e];
         e = k.params;
         k = k.def.params;
-        h.name && (n = this.ParamDropdownDynamic(h.name, e[0], k[0]));
+        h.name && (m = this.ParamDropdownDynamic(h.name, e[0], k[0]));
         e = [];
-        "Literal" == f.type ? (h.params && h.params[0] ? e.push(h.params[0]) : e.push(n), e.push(g)) : g.params && g.params[0] && h.name == g.params[0].name ? (h.params && h.params[0] ? e.push(h.params[0]) : e.push(n), e.push(g.params[2])) : (h.params && h.params[0] ? e.push(h.params[0]) : e.push(n), e.push(g));
+        "Literal" == f.type ? (h.params && h.params[0] ? e.push(h.params[0]) : e.push(m), e.push(g)) : (console.log("VariableDeclarator idData", h, "initData", g), g.params && g.params[0] && h.name == g.params[0].name ? (console.log("in initData.params[0]"), h.params && h.params[0] ? e.push(h.params[0]) : e.push(m), e.push(g.params[2])) : (console.log("in initData"), h.params && h.params[0] ? e.push(h.params[0]) : e.push(m), e.push(g)));
         b.type = c;
         b.params = e;
       }
+      console.log("VariableDeclarator result", b);
       return b;
     }
   };
   b.Literal = function(a, b, c, e) {
+    console.log("Literal component", a, "paramMeta", b, "paramDefMeta", c, "aflag", e);
     e = a.value;
+    console.log("Literal value", e);
     b || (b = {type:"Block"}, c || (c = "number" == typeof e ? {type:"number"} : {type:"text"}));
     if ("Indicator" == b.type) {
       return null;
@@ -12108,10 +12157,14 @@ Entry.PyToBlockParser = function(b) {
     if ("Text" == b.type) {
       return "";
     }
-    null != a.value ? b = this["Param" + b.type](e, b, c) : (b = [], c = this[a.left.type](a.left), b.push(c), b.push(a.operator), a = this[a.right.type](a.right), b.push(a));
-    return b;
+    console.log("Literal paramMeta", b, "paramDefMeta", c);
+    null != a.value ? (b = this["Param" + b.type](e, b, c), console.log("Literal param", void 0)) : (b = [], c = this[a.left.type](a.left), b.push(c), b.push(a.operator), a = this[a.right.type](a.right), b.push(a));
+    a = b;
+    console.log("Literal result", a);
+    return a;
   };
   b.ParamBlock = function(a, b, c) {
+    console.log("ParamBlock value", a, "paramMeta", b, "paramDefMeta", c);
     b = {};
     var e = a, f = [];
     if (!0 === a) {
@@ -12123,28 +12176,36 @@ Entry.PyToBlockParser = function(b) {
     var g = Entry.block[c.type], h = g.params, g = g.def.params;
     if (h && 0 != h.length) {
       for (var k in h) {
-        e = this["Param" + h[k].type](a, h[k], g[k]);
+        console.log("aaa", h[k], "bbb", g[k]), e = this["Param" + h[k].type](a, h[k], g[k]);
       }
     } else {
       e = a;
     }
+    console.log("ParamBlock param", e);
     f.push(e);
     b.type = c.type;
     b.params = f;
+    console.log("ParamBlock result", b);
     return b;
   };
   b.ParamAngle = function(a, b, c) {
+    console.log("ParamAngle value, paramMeta, paramDefMeta", a, b, c);
     return a;
   };
   b.ParamTextInput = function(a, b, c) {
+    console.log("ParamTextInput value, paramMeta, paramDefMeta", a, b, c);
     return a;
   };
   b.ParamColor = function(a, b, c) {
+    console.log("ParamColor value, paramMeta, paramDefMeta", a, b, c);
+    console.log("ParamColor result", a);
     return a;
   };
   b.ParamDropdown = function(a, b, c) {
+    console.log("ParamDropdown value, paramMeta, paramDefMeta", a, b, c);
     var e;
     b = b.options;
+    console.log("options", b);
     for (var f in b) {
       if (c = b[f], a == c[1]) {
         e = c[1];
@@ -12152,111 +12213,143 @@ Entry.PyToBlockParser = function(b) {
       }
     }
     e && (e = String(e));
+    console.log("ParamDropdown result", e);
     return e;
   };
   b.ParamDropdownDynamic = function(a, b, c) {
+    console.log("ParamDropdownDynamic value, paramMeta, paramDefMeta", a, b, c);
     var e;
     if ("mouse" == a || "wall" == a || "wall_up" == a || "wall_down" == a || "wall_right" == a || "wall_left" == a) {
       return a;
     }
     b = b.options;
+    console.log("ParamDropdownDynamic options", b);
     for (var f in b) {
       if (a == b[f][0]) {
+        console.log("options[i][0]", b[f][0]);
         e = b[f][1];
         break;
       }
     }
     e && (e = String(e));
+    console.log("ParamDropdownDynamic result", e);
     return e;
   };
   b.ParamKeyboard = function(a, b, c) {
-    return Entry.KeyboardCode.prototype.keyCharToCode[a];
+    console.log("ParamKeyboard value, paramMeta, paramDefMeta", a, b, c);
+    a = Entry.KeyboardCode.prototype.keyCharToCode[a];
+    console.log("ParamKeyboard result", a);
+    return a;
   };
   b.Indicator = function(a, b, c) {
   };
   b.MemberExpression = function(a) {
+    console.log("MemberExpression component", a);
     var b = {}, c, e = a.object, f = a.property;
     c = this[e.type](e);
     b.object = c;
     var g = this[f.type](f);
     b.property = g;
-    if ("call" != g.name || 0 != g.userCode) {
-      if ("__pythonRuntime.ops.subscriptIndex" == g.callee) {
-        e = Entry.playground.object;
-        if (c.object && "self" == c.object.name) {
-          if (f = c.property.name, !Entry.TextCodingUtil.prototype.isLocalListExisted(f, e)) {
-            return b;
-          }
-        } else {
-          if (f = c.name, !Entry.TextCodingUtil.prototype.isGlobalListExisted(f)) {
-            return b;
-          }
+    console.log("MemberExpression objectData", c);
+    console.log("MemberExpression propertyData", g);
+    if ("call" == g.name && 0 == g.userCode) {
+      return b;
+    }
+    if ("__pythonRuntime.ops.subscriptIndex" == g.callee) {
+      e = Entry.playground.object;
+      if (c.object && "self" == c.object.name) {
+        if (f = c.property.name, !Entry.TextCodingUtil.prototype.isLocalListExisted(f, e)) {
+          return b;
         }
-        c = e = this.getBlockType("%2[%4]");
-        var arguments = g.arguments, e = Entry.block[e], h = e.params, k = e.def.params, f = this.ParamDropdownDynamic(f, h[1], k[1]), g = [];
-        g.push("");
-        g.push(f);
-        g.push("");
-        "number" == arguments[0].type ? arguments[0].params[0] += 1 : "text" == arguments[0].type && (arguments[0].params[0] = String(Number(arguments[0].params[0]) + 1));
-        g.push(arguments[0]);
-        g.push("");
-        b.type = c;
-        b.params = g;
       } else {
-        if (g = [], "self" == e.name) {
-          c = e = this.getBlockType("%1");
-          e = Entry.block[e];
-          h = e.params;
-          k = e.def.params;
-          f = f.name;
-          e = Entry.playground.object;
-          if (!Entry.TextCodingUtil.prototype.isLocalVariableExisted(f, e)) {
-            return b;
-          }
-          f = this.ParamDropdownDynamic(f, h[0], k[0]);
-          g.push(f);
-          b.type = c;
-          0 != g.length && (b.params = g);
+        if (f = c.name, !Entry.TextCodingUtil.prototype.isGlobalListExisted(f)) {
+          return b;
         }
       }
+      c = e = this.getBlockType("%2[%4]");
+      var arguments = g.arguments, e = Entry.block[e], h = e.params, k = e.def.params, f = this.ParamDropdownDynamic(f, h[1], k[1]);
+      console.log("MemberExpression listName", f);
+      g = [];
+      g.push("");
+      g.push(f);
+      g.push("");
+      "number" == arguments[0].type ? arguments[0].params[0] += 1 : "text" == arguments[0].type && (arguments[0].params[0] = String(Number(arguments[0].params[0]) + 1));
+      g.push(arguments[0]);
+      g.push("");
+      b.type = c;
+      b.params = g;
+    } else {
+      if (g = [], "self" == e.name) {
+        c = e = this.getBlockType("%1");
+        e = Entry.block[e];
+        h = e.params;
+        k = e.def.params;
+        f = f.name;
+        e = Entry.playground.object;
+        if (!Entry.TextCodingUtil.prototype.isLocalVariableExisted(f, e)) {
+          return b;
+        }
+        f = this.ParamDropdownDynamic(f, h[0], k[0]);
+        g.push(f);
+        b.type = c;
+        0 != g.length && (b.params = g);
+      } else {
+        return b;
+      }
     }
+    console.log("MemberExpression result", b);
     return b;
   };
   b.WhileStatement = function(a) {
-    var b = {statements:[]}, c = a.test;
+    console.log("WhileStatement component", a);
+    var b;
+    b = {statements:[]};
+    var c = a.test;
+    console.log("WhileStatement test", c);
     if (!0 === c.value) {
       var e = this.getBlockType("while True:\n$1")
     }
-    var f = Entry.block[e].params, g = [];
+    console.log("WhileStatement type", e);
+    var f = Entry.block[e].params;
+    console.log("WhileStatement paramsMeta", f);
+    var g = [];
     if ("Literal" == c.type || "Identifier" == c.type) {
       arguments = [];
       arguments.push(c);
-      var f = Entry.block[e].params, c = Entry.block[e].def.params, h;
-      for (h in f) {
+      f = Entry.block[e].params;
+      c = Entry.block[e].def.params;
+      console.log("WhileStatement paramsMeta", f);
+      console.log("WhileStatement paramsDefMeta", c);
+      for (var h in f) {
         var k = f[h].type;
         "Indicator" == k ? (k = {raw:null, type:"Literal", value:null}, h < arguments.length && arguments.splice(h, 0, k)) : "Text" == k && (k = {raw:"", type:"Literal", value:""}, h < arguments.length && arguments.splice(h, 0, k));
       }
       for (var l in arguments) {
-        h = arguments[l], (h = this[h.type](h, f[l], c[l], !0)) && null != h && g.push(h);
+        h = arguments[l], console.log("WhileStatement argument", h), h = this[h.type](h, f[l], c[l], !0), console.log("WhileStatement Literal param", h), h && null != h && g.push(h);
       }
     } else {
-      (h = this[c.type](c)) && null != h && g.push(h);
+      h = this[c.type](c), console.log("WhileStatement Not Literal param", h), h && null != h && g.push(h);
     }
     f = a.body;
     f = this[f.type](f);
-    b.type = e;
-    b.params = g;
-    b.statements.push(f.statements);
+    console.log("WhileStatement bodyData", f);
+    "True" == g[0].type && (b.type = e, b.statements.push(f.statements));
+    console.log("WhileStatement result", b);
     return b;
   };
   b.BlockStatement = function(a) {
+    console.log("BlockStatement component", a);
     var b = {statements:[], data:[]}, c = [], e = [], f = [];
     a = a.body;
+    console.log("BlockStatement bodies", a);
     for (var g in a) {
-      var h = a[g];
-      (h = this[h.type](h)) && null == h || f.push(h);
+      var h = a[g], h = this[h.type](h);
+      console.log("BlockStatement bodyData", h);
+      h && null == h || (f.push(h), console.log("BlockStatement data", f));
     }
+    console.log("BlockStatement final data", f);
     b.data = f;
+    console.log("jhlee data check", f);
     for (var k in f) {
       if (f[1] && "repeat_basic" == f[1].type) {
         if (0 == k) {
@@ -12271,11 +12364,14 @@ Entry.PyToBlockParser = function(b) {
           if (1 == k) {
             b.type = f[k].type;
             e = [];
-            if ((a = f[k].statements[0]) && 0 != a.length) {
+            a = f[k].statements[0];
+            console.log("BlockStatement allStatements", a);
+            if (a && 0 != a.length) {
               for (g in a) {
-                h = a[g], h.type && e.push(h);
+                h = a[g], console.log("BlockStatement(for) statement", h), h.type && e.push(h);
               }
             }
+            console.log("BlockStatement(for) statements", e);
             b.statements.push(e);
           }
         }
@@ -12292,97 +12388,133 @@ Entry.PyToBlockParser = function(b) {
               (h = f[k]) && h.type && e.push(h);
             }
           } else {
-            if (e = [], (a = f) && 0 != a.length) {
+            e = [];
+            if ((a = f) && 0 != a.length) {
               for (g in a) {
-                (h = a[g]) && h.type && e.push(h);
+                h = a[g], console.log("BlockStatement statement", h), h && h.type && e.push(h);
               }
             }
+            console.log("BlockStatement statements", e);
           }
           b.statements = e;
         }
       }
     }
+    console.log("BlockStatement statement result", b);
     return b;
   };
   b.IfStatement = function(a) {
-    var b = {statements:[]}, c, e = [], f = a.consequent, g = a.alternate;
+    console.log("IfStatement component", a);
+    var b;
+    b = {statements:[]};
+    var c, e = [], f = a.consequent, g = a.alternate;
     c = null != g ? "if_else" : "_if";
     b.type = c;
+    console.log("IfStatement type", c);
     var h = a.test;
+    console.log("IfStatement test", h);
     if ("Literal" == h.type || "Identifier" == h.type) {
       arguments = [];
       arguments.push(h);
       h = Entry.block[c].params;
       c = Entry.block[c].def.params;
+      console.log("IfStatement paramsMeta", h);
+      console.log("IfStatement paramsDefMeta", c);
       for (var k in h) {
         var l = h[k].type;
         "Indicator" == l ? (l = {raw:null, type:"Literal", value:null}, k < arguments.length && arguments.splice(k, 0, l)) : "Text" == l && (l = {raw:"", type:"Literal", value:""}, k < arguments.length && arguments.splice(k, 0, l));
       }
-      for (var n in arguments) {
-        k = arguments[n], (k = this[k.type](k, h[n], c[n], !0)) && null != k && e.push(k);
+      for (var m in arguments) {
+        k = arguments[m], console.log("IfStatement argument", k), k = this[k.type](k, h[m], c[m], !0), console.log("IfStatement Literal param", k), k && null != k && e.push(k);
       }
     } else {
-      (k = this[h.type](h)) && null != k && e.push(k);
+      k = this[h.type](h), console.log("IfStatement Not Literal param", k), k && null != k && e.push(k);
     }
     e && 0 != e.length && (b.params = e);
+    console.log("IfStatement params result", e);
     if (null != f) {
       e = [];
-      f = this[f.type](f).data;
-      for (n in f) {
-        if (h = f[n]) {
-          h.init && h.type ? (b.type = h.type, (h = h.statements) && (e = h)) : !h.init && h.type && e.push(h);
-        }
+      console.log("IfStatement consequent", f);
+      f = this[f.type](f);
+      console.log("IfStatement consequent data", f);
+      f = f.data;
+      console.log("IfStatement consequentsData", f);
+      for (m in f) {
+        h = f[m], console.log("IfStatement consData", h), h && (h.init && h.type ? (b.type = h.type, (h = h.statements) && (e = h)) : !h.init && h.type && e.push(h));
       }
       0 != e.length && (b.statements[0] = e);
     }
     if (null != g) {
       f = [];
-      g = this[g.type](g).data;
-      for (n in g) {
-        (e = g[n]) && e.type && f.push(e);
+      console.log("IfStatement alternate", g);
+      g = this[g.type](g);
+      console.log("IfStatement alternate data", g);
+      g = g.data;
+      for (m in g) {
+        (e = g[m]) && e.type && f.push(e);
       }
       0 != f.length && (b.statements[1] = f);
     }
+    console.log("IfStatement result", b);
     return b;
   };
   b.ForStatement = function(a) {
+    console.log("ForStatement component", a);
     var b = {statements:[]}, c = this.getBlockType("for i in range");
     b.type = c;
     if (c = a.init) {
       var e = this[c.type](c)
     }
     b.init = e;
-    if (e = a.body.body) {
+    console.log("ForStatement init", c);
+    e = a.body.body;
+    console.log("ForStatement bodies", e);
+    if (e) {
       for (var f in e) {
-        0 != f && (c = e[f], c = this[c.type](c), b.statements.push(c));
+        0 != f && (c = e[f], console.log("ForStatement bodyData", c, "index", f), c = this[c.type](c), console.log("ForStatement bodyData result", c, "index", f), b.statements.push(c));
       }
     }
+    console.log("ForStatement bodyData result", b);
     if (f = a.test) {
       var g = this[f.type](f)
     }
     b.test = g;
+    console.log("ForStatement testData", g);
     if (a = a.update) {
       var h = this[a.type](a)
     }
     b.update = h;
+    console.log("ForStatement updateData", h);
+    console.log("ForStatement result", b);
     return b;
   };
   b.ForInStatement = function(a) {
+    console.log("ForInStatement component", a);
+    console.log("ForInStatement result", null);
     return null;
   };
   b.BreakStatement = function(a) {
+    console.log("BreakStatement component", a);
     a = {};
     var b = this.getBlockType("break");
+    console.log("BreakStatement type", b);
     a.type = b;
+    console.log("BreakStatement result", a);
     return a;
   };
   b.UnaryExpression = function(a) {
+    console.log("UnaryExpression component", a);
     var b;
-    a.prefix && (b = a.argument, b.value = Number(a.operator.concat(b.value)), b = this[b.type](b));
-    return b;
+    a.prefix && (b = a.operator, a = a.argument, console.log("UnaryExpression operator", b), a.value = Number(b.concat(a.value)), b = this[a.type](a), console.log("UnaryExpression data", b));
+    a = b;
+    console.log("UnaryExpression result", a);
+    return a;
   };
   b.LogicalExpression = function(a) {
-    var b = {}, c = String(a.operator);
+    console.log("LogicalExpression component", a);
+    var b;
+    b = {};
+    var c = String(a.operator);
     switch(c) {
       case "&&":
         var e = "(%1 and %3)";
@@ -12397,40 +12529,52 @@ Entry.PyToBlockParser = function(b) {
     if ("Literal" == c.type || "Identifier" == c.type) {
       arguments = [];
       arguments.push(c);
-      var c = Entry.block[e].params, g = Entry.block[e].def.params, h;
-      for (h in c) {
+      var c = Entry.block[e].params, g = Entry.block[e].def.params;
+      console.log("LogicalExpression paramsMeta", c);
+      console.log("LogicalExpression paramsDefMeta", g);
+      for (var h in c) {
         var k = c[h].type;
         "Indicator" == k ? (k = {raw:null, type:"Literal", value:null}, h < arguments.length && arguments.splice(h, 0, k)) : "Text" == k && (k = {raw:"", type:"Literal", value:""}, h < arguments.length && arguments.splice(h, 0, k));
       }
       for (var l in arguments) {
-        k = arguments[l], (k = this[k.type](k, c[l], g[l], !0)) && null != k && f.push(k);
+        var m = arguments[l];
+        console.log("LogicalExpression argument", m);
+        m = this[m.type](m, c[l], g[l], !0);
+        console.log("LogicalExpression param", m);
+        m && null != m && f.push(m);
       }
     } else {
-      (k = this[c.type](c)) && f.push(k);
+      (m = this[c.type](c)) && f.push(m);
     }
-    if (c = String(a.operator)) {
-      c = Entry.TextCodingUtil.prototype.logicalExpressionConvert(c), f.push(c);
-    }
+    console.log("LogicalExpression left param", m);
+    c = String(a.operator);
+    console.log("LogicalExpression operator", c);
+    c && (m = c = Entry.TextCodingUtil.prototype.logicalExpressionConvert(c), f.push(m));
     c = a.right;
     if ("Literal" == c.type || "Identifier" == c.type) {
       arguments = [];
       arguments.push(c);
       c = Entry.block[e].params;
       g = Entry.block[e].def.params;
+      console.log("LogicalExpression paramsMeta", c);
+      console.log("LogicalExpression paramsDefMeta", g);
       for (h in c) {
         k = c[h].type, "Indicator" == k ? (k = {raw:null, type:"Literal", value:null}, h < arguments.length && arguments.splice(h, 0, k)) : "Text" == k && (k = {raw:"", type:"Literal", value:""}, h < arguments.length && arguments.splice(h, 0, k));
       }
       for (l in arguments) {
-        k = arguments[l], (k = this[k.type](k, c[l], g[l], !0)) && null != k && f.push(k);
+        m = arguments[l], console.log("LogicalExpression argument", m), m = this[m.type](m, c[l], g[l], !0), console.log("LogicalExpression param", m), m && null != m && f.push(m);
       }
     } else {
-      (k = this[c.type](c)) && f.push(k);
+      (m = this[c.type](c)) && f.push(m);
     }
+    console.log("LogicalExpression right param", m);
     b.type = e;
     b.params = f;
+    console.log("LogicalExpression result", b);
     return b;
   };
   b.BinaryExpression = function(a) {
+    console.log("BinaryExpression component", a);
     var b = {}, c = {}, e = String(a.operator);
     switch(e) {
       case "==":
@@ -12463,28 +12607,39 @@ Entry.PyToBlockParser = function(b) {
       case "/":
         f = "(%1 %2calc_basic# %3)";
     }
+    console.log("BinaryExpression operator", e);
+    console.log("BinaryExpression syntax", f);
     if (f = this.getBlockType(f)) {
+      console.log("BinaryExpression type", f);
       b = [];
       e = a.left;
+      console.log("BinaryExpression left", e);
       if ("Literal" == e.type || "Identifier" == e.type) {
         arguments = [];
         arguments.push(e);
-        var e = Entry.block[f].params, g = Entry.block[f].def.params, h;
-        for (h in e) {
+        var e = Entry.block[f].params, g = Entry.block[f].def.params;
+        console.log("BinaryExpression paramsMeta", e);
+        console.log("BinaryExpression paramsDefMeta", g);
+        for (var h in e) {
           var k = e[h].type;
           "Indicator" == k ? (k = {raw:null, type:"Literal", value:null}, h < arguments.length && arguments.splice(h, 0, k)) : "Text" == k && (k = {raw:"", type:"Literal", value:""}, h < arguments.length && arguments.splice(h, 0, k));
         }
         for (var l in arguments) {
-          k = arguments[l], (k = this[k.type](k, e[l], g[l], !0)) && null != k && b.push(k);
+          var m = arguments[l];
+          console.log("BinaryExpression argument", m);
+          m = this[m.type](m, e[l], g[l], !0);
+          console.log("BinaryExpression param", m);
+          m && null != m && b.push(m);
         }
       } else {
-        (k = this[e.type](e)) && b.push(k);
+        (m = this[e.type](e)) && b.push(m);
       }
+      console.log("BinaryExpression left params", b);
       if ("boolean_not" == f) {
-        return b.splice(0, 0, ""), b.splice(2, 0, ""), c.type = f, c.params = b, c;
+        return b.splice(0, 0, ""), b.splice(2, 0, ""), console.log("BinaryExpression boolean_not params", b), c.type = f, c.params = b, c;
       }
       if (e = String(a.operator)) {
-        (k = e = Entry.TextCodingUtil.prototype.binaryOperatorConvert(e)) && b.push(k), c.operator = e;
+        console.log("BinaryExpression operator", e), (m = e = Entry.TextCodingUtil.prototype.binaryOperatorConvert(e)) && b.push(m), c.operator = e;
       }
       e = a.right;
       if ("Literal" == e.type || "Identifier" == e.type) {
@@ -12492,23 +12647,30 @@ Entry.PyToBlockParser = function(b) {
         arguments.push(e);
         e = Entry.block[f].params;
         g = Entry.block[f].def.params;
+        console.log("BinaryExpression paramsMeta", e);
+        console.log("BinaryExpression paramsDefMeta", g);
         for (h in e) {
           k = e[h].type, "Indicator" == k ? (k = {raw:null, type:"Literal", value:null}, h < arguments.length && arguments.splice(h, 0, k)) : "Text" == k && (k = {raw:"", type:"Literal", value:""}, h < arguments.length && arguments.splice(h, 0, k));
         }
         for (l in arguments) {
-          k = arguments[l], (k = this[k.type](k, e[l], g[l], !0)) && null != k && b.push(k);
+          m = arguments[l], console.log("BinaryExpression argument", m), m = this[m.type](m, e[l], g[l], !0), console.log("BinaryExpression param", m), m && null != m && b.push(m);
         }
       } else {
-        (k = this[e.type](e)) && b.push(k);
+        (m = this[e.type](e)) && b.push(m);
       }
+      console.log("BinaryExpression right param", m);
       c.type = f;
       c.params = b;
     } else {
       return b;
     }
-    return c;
+    console.log("BinaryExpression params", b);
+    b = c;
+    console.log("BinaryExpression result", b);
+    return b;
   };
   b.UpdateExpression = function(a) {
+    console.log("UpdateExpression", a);
     var b = {}, c = a.argument;
     if (c) {
       var e = this[c.type](c)
@@ -12516,16 +12678,21 @@ Entry.PyToBlockParser = function(b) {
     b.argument = e;
     b.operator = a.operator;
     b.prefix = a.prefix;
+    console.log("UpdateExpression result", b);
     return b;
   };
   b.AssignmentExpression = function(a) {
+    console.log("AssignmentExpression component", a);
     var b = {}, c, e = [], f, g = a.left;
-    g.type && (f = this[g.type](g));
+    g.type && (f = this[g.type](g), console.log("AssignmentExpression leftData", f));
+    console.log("AssignmentExpression leftData", f);
     b.left = f;
     operator = String(a.operator);
+    console.log("AssignmentExpression operator", operator);
     g = a.right;
     if (g.type) {
-      var h = this[g.type](g)
+      var h = this[g.type](g);
+      console.log("AssignmentExpression rightData", h);
     }
     b.right = h;
     switch(operator) {
@@ -12536,19 +12703,19 @@ Entry.PyToBlockParser = function(b) {
         if ("__pythonRuntime.objects.list" == k && "self" == f.object.name) {
           var l = f.property.name;
           c = [];
-          var arguments = h.arguments, n;
-          for (n in arguments) {
-            var m = {};
-            m.data = String(arguments[n].params[0]);
-            c.push(m);
+          var arguments = h.arguments, m;
+          for (m in arguments) {
+            var n = {};
+            n.data = String(arguments[m].params[0]);
+            c.push(n);
           }
-          m = Entry.playground.object;
-          Entry.TextCodingUtil.prototype.isLocalListExisted(l, m) ? Entry.TextCodingUtil.prototype.updateLocalList(l, c, m) : Entry.TextCodingUtil.prototype.createLocalList(l, c, m);
+          n = Entry.playground.object;
+          Entry.TextCodingUtil.prototype.isLocalListExisted(l, n) ? Entry.TextCodingUtil.prototype.updateLocalList(l, c, n) : Entry.TextCodingUtil.prototype.createLocalList(l, c, n);
         }
         if (f.property && "__pythonRuntime.ops.subscriptIndex" == f.property.callee) {
           var l = "%1[%2] = %3", q = this.getBlockType(l)
         } else {
-          g.arguments && g.arguments[0] ? (c = a.left.name ? a.left.name : a.left.object.name.concat(a.left.property.name), l = a.right.arguments[0].name ? a.right.arguments[0].name : a.right.arguments[0].object.name.concat(a.right.arguments[0].property.name), l = a.right.arguments && c == l ? "%1 += %2" : "%1 = %2") : l = "%1 = %2", q = this.getBlockType(l);
+          g.arguments && g.arguments[0] ? (c = a.left.name ? a.left.name : a.left.object.name.concat(a.left.property.name), l = a.right.arguments[0].name ? a.right.arguments[0].name : a.right.arguments[0].object.name.concat(a.right.arguments[0].property.name), console.log("AssignmentExpression leftEx", c, "rightEx", l), l = a.right.arguments && c == l ? "%1 += %2" : "%1 = %2") : l = "%1 = %2", q = this.getBlockType(l);
         }
         c = q;
     }
@@ -12556,36 +12723,42 @@ Entry.PyToBlockParser = function(b) {
       var r = Entry.TextCodingUtil.prototype.logicalExpressionConvert(operator)
     }
     b.operator = r;
-    f.object ? m = f.object : f.name && (m = f.name);
+    console.log("AssignmentExpression syntax", l);
+    f.object ? n = f.object : f.name && (n = f.name);
     if (f.proprty) {
       var t = f.property
     } else {
       f.name && (t = f.name);
     }
+    console.log("AssignmentExpression object property value", n, t);
     if ("%1[%2] = %3" == l) {
-      m = Entry.block[q];
-      k = m.params;
-      r = m.def.params;
+      n = Entry.block[q];
+      k = n.params;
+      r = n.def.params;
       t = f.params[1];
+      console.log("AssignmentExpression listName", t);
       if (!t) {
         return b;
       }
       e.push(t);
       f = f.property.arguments[0];
+      console.log("AssignmentExpression param 1", f);
+      console.log("AssignmentExpression param 2", f);
       e.push(f);
       e.push(h);
     } else {
       if ("%1 = %2" == l) {
-        m && "self" == m.name && "__pythonRuntime.objects.list" != k ? (m = Entry.block[q], k = m.params, r = m.def.params, l = t.name, (f = "number" == h.type || "text" == h.type ? h.params[0] : NaN) && NaN != f && (m = Entry.playground.object, Entry.TextCodingUtil.prototype.isLocalVariableExisted(l, m) ? Entry.TextCodingUtil.prototype.updateLocalVariable(l, f, m) : Entry.TextCodingUtil.prototype.createLocalVariable(l, f, m)), l = this.ParamDropdownDynamic(l, k[0], r[0]), e.push(l)) : (m = Entry.block[q], 
-        k = m.params, r = m.def.params, l = t, (f = "number" == h.type || "text" == h.type ? h.params[0] : NaN) && NaN != f && (m = Entry.playground.object, Entry.TextCodingUtil.prototype.isGlobalVariableExisted(l, m) ? Entry.TextCodingUtil.prototype.updateGlobalVariable(l, f, m) : Entry.TextCodingUtil.prototype.createGlobalVariable(l, f, m)), l = this.ParamDropdownDynamic(l, k[0], r[0]), e.push(l), h.callee && delete h.callee), e.push(h);
+        console.log("AssignmentExpression calleeName check", k), n && "self" == n.name && "__pythonRuntime.objects.list" != k ? (n = Entry.block[q], k = n.params, r = n.def.params, l = t.name, (f = "number" == h.type || "text" == h.type ? h.params[0] : NaN) && NaN != f && (n = Entry.playground.object, console.log("final value", f), console.log("final object", n), Entry.TextCodingUtil.prototype.isLocalVariableExisted(l, n) ? Entry.TextCodingUtil.prototype.updateLocalVariable(l, f, n) : Entry.TextCodingUtil.prototype.createLocalVariable(l, 
+        f, n)), l = this.ParamDropdownDynamic(l, k[0], r[0]), e.push(l)) : (n = Entry.block[q], k = n.params, r = n.def.params, console.log("property 123", t), l = t, (f = "number" == h.type || "text" == h.type ? h.params[0] : NaN) && NaN != f && (n = Entry.playground.object, console.log("final object", n), console.log("final value", f), Entry.TextCodingUtil.prototype.isGlobalVariableExisted(l, n) ? Entry.TextCodingUtil.prototype.updateGlobalVariable(l, f, n) : Entry.TextCodingUtil.prototype.createGlobalVariable(l, 
+        f, n)), l = this.ParamDropdownDynamic(l, k[0], r[0]), e.push(l), h.callee && delete h.callee), e.push(h);
       } else {
         if ("%1 += %2" == l) {
-          if (m && "self" == m.name) {
-            if (m = Entry.block[q], k = m.params, r = m.def.params, l = t.name, m = Entry.playground.object, !Entry.TextCodingUtil.prototype.isLocalVariableExisted(l, m)) {
+          if (n && "self" == n.name) {
+            if (n = Entry.block[q], k = n.params, r = n.def.params, l = t.name, n = Entry.playground.object, console.log("final object", n), !Entry.TextCodingUtil.prototype.isLocalVariableExisted(l, n)) {
               return b;
             }
           } else {
-            if (m = Entry.block[q], k = m.params, r = m.def.params, l = t, !Entry.TextCodingUtil.prototype.isGlobalVariableExisted(l)) {
+            if (n = Entry.block[q], k = n.params, r = n.def.params, l = t, !Entry.TextCodingUtil.prototype.isGlobalVariableExisted(l)) {
               return b;
             }
           }
@@ -12597,199 +12770,283 @@ Entry.PyToBlockParser = function(b) {
     }
     b.type = c;
     b.params = e;
+    console.log("AssignmentExpression result", b);
     return b;
   };
   b.FunctionDeclaration = function(a) {
-    var b = {}, c = a.body, e = a.id;
-    if ("__getParam0" == e.name) {
+    console.log("FunctionDeclaration component", a);
+    var b = {}, c = a.body;
+    a = a.id;
+    if ("__getParam0" == a.name) {
       return b;
     }
-    a = this[c.type](c);
-    if ("Identifier" == e.type) {
-      var f = this[e.type](e)
+    var e = this[c.type](c);
+    console.log("FunctionDeclaration bodyData", e);
+    if ("Identifier" == a.type) {
+      var f = this[a.type](a)
     }
-    b = [];
+    console.log("FunctionDeclaration idData", f);
     c = [];
-    f = f.name;
-    a = a.data;
-    for (var g in a) {
-      a[g].declarations ? (e = a[g].declarations, 0 < e.length && b.push(e[0].name)) : a[g].argument && (e = a[g].argument.statements) && 0 < e.length && (c = e);
+    a = [];
+    var f = f.name, e = e.data, g;
+    for (g in e) {
+      if (e[g].declarations) {
+        var h = e[g].declarations;
+        0 < h.length && c.push(h[0].name);
+      } else {
+        e[g].argument && (h = e[g].argument.statements) && 0 < h.length && (a = h);
+      }
     }
-    var h, k, l;
-    a = Entry.variableContainer.functions_;
-    for (var n in a) {
-      var m = a[n];
+    console.log("FunctionDeclaration textFuncName", f);
+    console.log("FunctionDeclaration textFuncParams", c);
+    console.log("FunctionDeclaration textFuncStatements", a);
+    var k, l, m, e = Entry.variableContainer.functions_, n;
+    for (n in e) {
+      var q = e[n];
       Entry.TextCodingUtil.prototype.initQueue();
-      Entry.TextCodingUtil.prototype.gatherFuncDefParam(m.content._data[0]._data[0].data.params[0]);
-      for (var q = [], e = {};g = Entry.TextCodingUtil.prototype._funcParamQ.dequeue();) {
-        q.push(g);
+      Entry.TextCodingUtil.prototype.gatherFuncDefParam(q.content._data[0]._data[0].data.params[0]);
+      console.log("Entry.TextCodingUtil._funcParamQ", Entry.TextCodingUtil.prototype._funcParamQ);
+      for (var r = [], h = {};g = Entry.TextCodingUtil.prototype._funcParamQ.dequeue();) {
+        r.push(g), console.log("param", g);
       }
-      for (var r in q) {
-        e[q[r]] = r;
+      console.log("funcParams", r);
+      for (var t in r) {
+        h[r[t]] = t;
       }
+      console.log("paramMap", h);
+      console.log("funcNameQueue", Entry.TextCodingUtil.prototype._funcNameQ);
       for (g = [];nameToken = Entry.TextCodingUtil.prototype._funcNameQ.dequeue();) {
-        g.push(nameToken);
+        g.push(nameToken), console.log("funcNames", nameToken);
       }
       Entry.TextCodingUtil.prototype.clearQueue();
       blockFuncName = g.join("__").trim();
+      console.log("first blockFuncName", blockFuncName);
+      console.log("first textFuncName", f);
       if (f == blockFuncName) {
-        if (b.length == Object.keys(e).length ? (h = !0, k = m.content._data[0]._data.slice(), k.shift(), k = Entry.TextCodingUtil.prototype.isFuncContentsMatch(k, c, e)) : k = h = !1, h && k) {
-          l = "func".concat("_").concat(n);
+        if (console.log("textFuncName", f), console.log("blockFuncName", blockFuncName), console.log("textFuncParams.length", c.length), console.log("Object.keys(paramMap).length", Object.keys(h).length), c.length == Object.keys(h).length ? (k = !0, console.log("textFuncParams.length", c.length), console.log("Object.keys(paramMap).length", Object.keys(h).length), l = q.content._data[0]._data, g = l.slice(), g.shift(), console.log("blockFuncContents", l), l = Entry.TextCodingUtil.prototype.isFuncContentsMatch(g, 
+        a, h)) : l = k = !1, k && l) {
+          m = "func".concat("_").concat(n);
           break;
         } else {
-          if (h && !k) {
-            l = n;
+          if (k && !l) {
+            m = n;
             break;
           }
         }
       }
     }
-    if (h && k) {
-      var t = b.length, t = f + t
+    console.log("FunctionDeclaration foundFlag", k);
+    console.log("FunctionDeclaration matchFlag", l);
+    if (k && l) {
+      console.log("targetFuncId", m);
+      var u = c.length;
+      this._funcMap.put(f + u, m);
+      console.log("FunctionDeclaration this._funcMap", this._funcMap);
+      b = m;
     } else {
-      if (h && !k) {
-        r = Entry.variableContainer.functions_[l];
-        n = r.content._data[0];
+      if (k && !l) {
+        b = Entry.variableContainer.functions_[m];
+        n = b.content._data[0];
         n._data.splice(1, n._data.length - 1);
-        if (0 < c.length) {
-          for (t in c) {
-            h = c[t], h = new Entry.Block(h, n), n._data.push(h);
+        if (0 < a.length) {
+          for (u in a) {
+            t = a[u], t = new Entry.Block(t, n), n._data.push(t);
           }
         }
-        Entry.variableContainer.saveFunction(r);
+        Entry.variableContainer.saveFunction(b);
         Entry.variableContainer.updateList();
-        t = b.length;
-        t = f + t;
-        n = l;
+        b = m;
+        console.log("textFuncName", f);
+        u = c.length;
+        u = f + u;
+        n = m;
+        m = "func".concat("_").concat(n);
+        this._funcMap.put(u, m);
+        console.log("FunctionDeclaration result", b);
       } else {
-        l = new Entry.Func;
-        l.generateBlock(!0);
-        r = [];
-        for (g = 1;g <= b.length + 1;g++) {
-          r.push("%" + g);
+        console.log("FunctionDeclaration textFuncName", f);
+        console.log("FunctionDeclaration textFuncParams", c);
+        console.log("FunctionDeclaration textFuncStatements", a);
+        k = new Entry.Func;
+        k.generateBlock(!0);
+        console.log("FunctionDeclaration newFunc", k);
+        m = [];
+        for (g = 1;g <= c.length + 1;g++) {
+          m.push("%" + g);
         }
-        l.block.template = f + " " + r.join(" ");
-        n = l.content._data[0];
-        r = n._data[0].data.params[0];
-        h = r.data.params;
-        l.description = "";
+        k.block.template = f + " " + m.join(" ");
+        console.log("newFunc template", k.block.template);
+        n = k.content._data[0];
+        t = n._data[0].data.params[0];
+        m = t.data.params;
+        k.description = "";
         g = f.split("__");
         if (0 < g.length) {
-          for (a = 1;a < g.length;a++) {
-            e = g[a], m = new Entry.Block({type:"function_field_label"}, n), m.data.params = [], m.data.params.push(e), k = Entry.TextCodingUtil.prototype.getLastParam(r), k.data.params[1] = m, l.description += e.concat(" ");
+          for (e = 1;e < g.length;e++) {
+            h = g[e], q = new Entry.Block({type:"function_field_label"}, n), q.data.params = [], q.data.params.push(h), l = Entry.TextCodingUtil.prototype.getLastParam(t), l.data.params[1] = q, k.description += h.concat(" ");
           }
-          l.description += " ";
+          k.description += " ";
         } else {
-          h[0] = f, l.description = f + " ";
-        }
-        if (0 < b.length) {
-          for (a = new Entry.Block({type:"function_field_string"}, n), a.data.params = [], e = Entry.Func.requestParamBlock("string"), g = new Entry.Block({type:e}, n), a.data.params.push(g), k = Entry.TextCodingUtil.prototype.getLastParam(r), k.data.params[1] = a, l.paramMap[e] = Number(0), r = 1;r < b.length;r++) {
-            a = new Entry.Block({type:"function_field_string"}, n), a.data.params = [], e = Entry.Func.requestParamBlock("string"), g = new Entry.Block({type:e}, n), a.data.params.push(g), k = Entry.TextCodingUtil.prototype.searchFuncDefParam(h[1]), 0 == k.data.params.length ? k.data.params[0] = g : 1 == k.data.params.length && (k.data.params[1] = a), l.paramMap[e] = Number(r);
-          }
+          m[0] = f, k.description = f + " ";
         }
         if (0 < c.length) {
-          for (t in c) {
-            h = c[t], h = new Entry.Block(h, n), n._data.push(h);
+          for (e = new Entry.Block({type:"function_field_string"}, n), e.data.params = [], h = Entry.Func.requestParamBlock("string"), console.log("FunctionDeclaration stringParam", h), g = new Entry.Block({type:h}, n), e.data.params.push(g), l = Entry.TextCodingUtil.prototype.getLastParam(t), l.data.params[1] = e, k.paramMap[h] = Number(0), console.log("FunctionDeclaration paramBlock", k), t = 1;t < c.length;t++) {
+            e = new Entry.Block({type:"function_field_string"}, n), e.data.params = [], h = Entry.Func.requestParamBlock("string"), console.log("FunctionDeclaration stringParam", h), g = new Entry.Block({type:h}, n), e.data.params.push(g), l = Entry.TextCodingUtil.prototype.searchFuncDefParam(m[1]), console.log("FunctionDeclaration paramBlock", l), 0 == l.data.params.length ? l.data.params[0] = g : 1 == l.data.params.length && (l.data.params[1] = e), k.paramMap[h] = Number(t), console.log("FunctionDeclaration paramBlock", 
+            k);
           }
         }
-        Entry.Func.generateWsBlock(l);
-        Entry.variableContainer.saveFunction(l);
+        if (0 < a.length) {
+          for (u in a) {
+            t = a[u], t = new Entry.Block(t, n), n._data.push(t);
+          }
+        }
+        Entry.Func.generateWsBlock(k);
+        Entry.variableContainer.saveFunction(k);
         Entry.variableContainer.updateList();
-        t = b.length;
-        t = f + t;
-        n = l.id;
+        u = c.length;
+        u = f + u;
+        n = k.id;
+        m = "func".concat("_").concat(n);
+        this._funcMap.put(u, m);
+        console.log("FunctionDeclaration newFunc", k);
       }
-      l = "func".concat("_").concat(n);
     }
-    this._funcMap.put(t, l);
+    console.log("FunctionDeclaration result", b);
   };
   b.FunctionExpression = function(a) {
+    console.log("FunctionExpression component", a);
     var b = {};
     a = a.body;
     a = this[a.type](a);
+    console.log("FunctionExpression bodyData", a);
     b.statements = a.statements;
+    console.log("FunctionExpression result", b);
     return b;
   };
   b.ReturnStatement = function(a) {
+    console.log("ReturnStatement component", a);
     var b = {};
     if (a = a.argument) {
       var c = this[a.type](a)
     }
     c && (b.argument = c);
+    console.log("ReturnStaement result", b);
     return b;
   };
   b.ThisExpression = function(a) {
+    console.log("ThisExpression component", a);
     var b = {};
     if (a = a.userCode) {
       b.userCode = a;
     }
+    console.log("ThisExpression result", b);
     return b;
   };
   b.NewExpression = function(a) {
+    console.log("NewExpression component", a);
     var b = {}, c = a.callee, c = this[c.type](c), arguments = a.arguments, e = [], f;
     for (f in arguments) {
-      var g = arguments[f], g = this[g.type](g);
+      var g = arguments[f];
+      console.log("NewExpression argument", g);
+      g = this[g.type](g);
       e.push(g);
     }
     b.callee = c;
     b.arguments = e;
+    console.log("NewExpression result", b);
     return b;
   };
   b.getBlockType = function(a) {
     return this.blockSyntax[a];
   };
   b.RegExp = function(a) {
+    console.log("RegExp", a);
+    console.log("RegExp result", a);
     return a;
   };
   b.Function = function(a) {
+    console.log("Function component", a);
+    console.log("Function result", a);
     return a;
   };
   b.EmptyStatement = function(a) {
+    console.log("EmptyStatement component", a);
+    console.log("EmptyStatement result", a);
     return a;
   };
   b.DebuggerStatement = function(a) {
+    console.log("DebuggerStatement component", a);
+    console.log("DebuggerStatement result", a);
     return a;
   };
   b.WithStatement = function(a) {
+    console.log("WithStatement component", a);
+    console.log("WithStatement result", a);
     return a;
   };
   b.LabeledStatement = function(a) {
+    console.log("LabeledStatement component", a);
+    console.log("LabeledStatement result", a);
     return a;
   };
   b.ContinueStatement = function(a) {
+    console.log("ContinueStatement component", a);
+    console.log("ContinueStatement result", a);
     return a;
   };
   b.SwitchStatement = function(a) {
+    console.log("SwitchStatement component", a);
+    console.log("SwitchStatement result", a);
     return a;
   };
   b.SwitchCase = function(a) {
+    console.log("SwitchCase component", a);
+    console.log("SwitchCase result", a);
     return a;
   };
   b.ThrowStatement = function(a) {
+    console.log("ThrowStatement component", a);
+    console.log("ThrowStatement result", a);
     return a;
   };
   b.TryStatement = function(a) {
+    console.log("TryStatement component", a);
+    console.log("TryStatement result", a);
     return a;
   };
   b.CatchClause = function(a) {
+    console.log("CatchClause component", a);
+    console.log("CatchClause result", a);
     return a;
   };
   b.DoWhileStatement = function(a) {
+    console.log("DoWhileStatement component", a);
+    console.log("DoWhileStatement result", a);
     return a;
   };
   b.ArrayExpression = function(a) {
+    console.log("ArrayExpression component", a);
+    console.log("ArrayExpression result", a);
     return a;
   };
   b.ObjectExpression = function(a) {
+    console.log("ObjectExpression component", a);
+    console.log("ObjectExpression result", a);
     return a;
   };
   b.Property = function(a) {
+    console.log("Property component", a);
+    console.log("Property result", a);
     return a;
   };
   b.ConditionalExpression = function(a) {
+    console.log("ConditionalExpression component", a);
+    console.log("ConditionalExpression result", a);
     return a;
   };
   b.SequenceExpression = function(a) {
+    console.log("SequenceExpression component", a);
+    console.log("SequenceExpression result", a);
     return a;
   };
 })(Entry.PyToBlockParser.prototype);
@@ -12886,8 +13143,8 @@ Entry.Parser = function(b, a, d, c) {
       case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
         try {
           var e = acorn.parse(a), c = this._parser.Program(e);
-        } catch (m) {
-          this.codeMirror && (m instanceof SyntaxError ? (c = {from:{line:m.loc.line - 1, ch:m.loc.column - 2}, to:{line:m.loc.line - 1, ch:m.loc.column + 1}}, m.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : (c = this.getLineNumber(m.node.start, m.node.end), c.message = m.message, c.severity = "error", this.codeMirror.markText(c.from, c.to, {className:"CodeMirror-lint-mark-error", __annotation:c, clearOnEnter:!0})), Entry.toast.alert("Error", m.message)), c = [];
+        } catch (n) {
+          this.codeMirror && (n instanceof SyntaxError ? (c = {from:{line:n.loc.line - 1, ch:n.loc.column - 2}, to:{line:n.loc.line - 1, ch:n.loc.column + 1}}, n.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : (c = this.getLineNumber(n.node.start, n.node.end), c.message = n.message, c.severity = "error", this.codeMirror.markText(c.from, c.to, {className:"CodeMirror-lint-mark-error", __annotation:c, clearOnEnter:!0})), Entry.toast.alert("Error", n.message)), c = [];
         }
         break;
       case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
@@ -12899,15 +13156,15 @@ Entry.Parser = function(b, a, d, c) {
           }
           var e = [], l;
           for (l in g) {
-            var k = g[l], n = f.generate(k);
-            "Program" == n.type && 0 != n.body.length && e.push(n);
+            var k = g[l], m = f.generate(k);
+            "Program" == m.type && 0 != m.body.length && e.push(m);
           }
           c = this._parser.Program(e);
           this._parser._variableMap.clear();
-        } catch (m) {
+        } catch (n) {
           if (this.codeMirror) {
-            throw m instanceof SyntaxError ? (c = {from:{line:m.loc.line - 1, ch:m.loc.column - 2}, to:{line:m.loc.line - 1, ch:m.loc.column + 1}}, m.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : (c = this.getLineNumber(m.node.start, m.node.end), c.message = m.message, c.severity = "error", this.codeMirror.markText(c.from, c.to, {className:"CodeMirror-lint-mark-error", __annotation:c, clearOnEnter:!0})), Entry.toast.alert("[\ud14d\uc2a4\ud2b8\ucf54\ub529(\ud30c\uc774\uc36c) \uc624\ub958]", 
-            m.message), document.getElementById("entryCodingModeSelector").value = "2", m;
+            throw n instanceof SyntaxError ? (c = {from:{line:n.loc.line - 1, ch:n.loc.column - 2}, to:{line:n.loc.line - 1, ch:n.loc.column + 1}}, n.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : (c = this.getLineNumber(n.node.start, n.node.end), c.message = n.message, c.severity = "error", this.codeMirror.markText(c.from, c.to, {className:"CodeMirror-lint-mark-error", __annotation:c, clearOnEnter:!0})), Entry.toast.alert("[\ud14d\uc2a4\ud2b8\ucf54\ub529(\ud30c\uc774\uc36c) \uc624\ub958]", 
+            n.message), document.getElementById("entryCodingModeSelector").value = "2", n;
           }
           c = [];
         }
@@ -13120,8 +13377,8 @@ Entry.PyBlockAssembler = function(b) {
         for (l in c) {
           a = c[l];
           a = a.options;
-          for (var n in a) {
-            h = a[n], b == h[0] && (k = h[1]);
+          for (var m in a) {
+            h = a[m], b == h[0] && (k = h[1]);
           }
         }
         g.push(k);
@@ -13234,24 +13491,24 @@ Entry.PyBlockAssembler = function(b) {
     var b = {}, c = [], e = [], f = [], g = [], h = a.test, k = a.alternate, l = a.consequent;
     a = this.getBlockType(null == k ? "if %1:\n$1" : "if %1:\n$1\nelse:\n$2");
     if (null != h) {
-      var n = Entry.block[a].params;
-      console.log("IfStatement paramsMeta", n);
+      var m = Entry.block[a].params;
+      console.log("IfStatement paramsMeta", m);
       c = [];
       h.type = "Literal";
-      n = n[0];
-      h = "Indicator" == n.type ? null : this[h.type](n, h);
+      m = m[0];
+      h = "Indicator" == m.type ? null : this[h.type](m, h);
       c.push(h);
     }
     if (null != l) {
-      for (var m in l.body) {
-        if (h = l.body[m]) {
+      for (var n in l.body) {
+        if (h = l.body[n]) {
           h = this[h.type](h), console.log("IfStatement consequent bodyData", h), e.push(h);
         }
       }
     }
     if (null != k) {
-      for (m in k.body) {
-        if (h = k.body[m]) {
+      for (n in k.body) {
+        if (h = k.body[n]) {
           h = this[h.type](h), console.log("IfStatement alternate bodyData", h), f.push(h);
         }
       }
@@ -14255,15 +14512,15 @@ Entry.ContextMenu = {};
       var e = this.dom;
       e.empty();
       for (var f = 0, g = a.length;f < g;f++) {
-        var h = a[f], k = h.text, l = !1 !== h.enable, n = Entry.Dom("li", {class:l ? "menuAble" : "menuDisable", parent:e});
-        n.text(k);
+        var h = a[f], k = h.text, l = !1 !== h.enable, m = Entry.Dom("li", {class:l ? "menuAble" : "menuDisable", parent:e});
+        m.text(k);
         l && h.callback && function(a, b) {
           a.mousedown(function(a) {
             a.preventDefault();
             c.hide();
             b(a);
           });
-        }(n, h.callback);
+        }(m, h.callback);
       }
       e.removeClass("entryRemove");
       this.position(Entry.mouseCoordinate);
@@ -15447,10 +15704,10 @@ Entry.HWMonitor = function(b) {
     }
     h < f - e && (f = h / 2 + 3, e = -h / 2 - 3);
     for (;1 < a.length;) {
-      var k = a.shift(), l = a.pop(), n = e, m = f, q = c;
+      var k = a.shift(), l = a.pop(), m = e, n = f, q = c;
       h <= f - e ? (e += k.width + 5, f -= l.width + 5, q = 0) : 0 === a.length ? (e = (e + f) / 2 - 3, f = e + 6) : (e = Math.max(e, -g / 2 + k.width) + 15, f = Math.min(f, g / 2 - l.width) - 15);
-      this._movePort(k, e, b, n);
-      this._movePort(l, f, b, m);
+      this._movePort(k, e, b, m);
+      this._movePort(l, f, b, n);
       h -= k.width + l.width + 10;
       b += q;
     }
@@ -15463,8 +15720,8 @@ Entry.HWMonitor = function(b) {
     for (var e = listLine = wholeWidth = 0;e < a.length;e++) {
       wholeWidth += a[e].width;
     }
-    for (var f = 0, g = 0, h = initX, k = 0, l = 0, n = 0, e = 0;e < a.length;e++) {
-      l = a[e], e != a.length - 1 && (n = a[e + 1]), g += l.width, lP = initX, k = initY + 30 * f, l.group.attr({transform:"translate(" + lP + "," + k + ")"}), initX += l.width + 10, g > c - (l.width + n.width / 2.2) && (f += 1, initX = h, g = 0);
+    for (var f = 0, g = 0, h = initX, k = 0, l = 0, m = 0, e = 0;e < a.length;e++) {
+      l = a[e], e != a.length - 1 && (m = a[e + 1]), g += l.width, lP = initX, k = initY + 30 * f, l.group.attr({transform:"translate(" + lP + "," + k + ")"}), initX += l.width + 10, g > c - (l.width + m.width / 2.2) && (f += 1, initX = h, g = 0);
     }
   };
   b._movePort = function(a, b, c, e) {
@@ -18829,15 +19086,15 @@ Entry.BlockView.pngMap = {};
             Entry.do("cloneBlock", k);
           }}, l = {text:Lang.Blocks.CONTEXT_COPY_option, enable:this.copyable, callback:function() {
             h.block.copyToClipboard();
-          }}, n = {text:Lang.Blocks.Delete_Blocks, enable:k.isDeletable(), callback:function() {
+          }}, m = {text:Lang.Blocks.Delete_Blocks, enable:k.isDeletable(), callback:function() {
             Entry.do("destroyBlock", h.block);
-          }}, m = {text:Lang.Menus.save_as_image, callback:function() {
+          }}, n = {text:Lang.Menus.save_as_image, callback:function() {
             h.downloadAsImage();
           }};
           f.push(g);
           f.push(l);
-          f.push(n);
-          Entry.Utils.isChrome() && "workspace" == Entry.type && f.push(m);
+          f.push(m);
+          Entry.Utils.isChrome() && "workspace" == Entry.type && f.push(n);
           Entry.ContextMenu.show(f);
         }
       }
@@ -19101,7 +19358,7 @@ Entry.BlockView.pngMap = {};
   };
   b.getDataUrl = function(a, b) {
     function c() {
-      g = g.replace("(svgGroup)", (new XMLSerializer).serializeToString(k)).replace("%W", h.width * n).replace("%H", h.height * n).replace("(defs)", (new XMLSerializer).serializeToString(q[0])).replace(/>\s+/g, ">").replace(/\s+</g, "<");
+      g = g.replace("(svgGroup)", (new XMLSerializer).serializeToString(k)).replace("%W", h.width * m).replace("%H", h.height * m).replace("(defs)", (new XMLSerializer).serializeToString(q[0])).replace(/>\s+/g, ">").replace(/\s+</g, "<");
       var a = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(g)));
       g = null;
       b ? (f.resolve({src:a, width:h.width, height:h.height}), k = null) : e(a, h.width, h.height, 1.5).then(function(a) {
@@ -19138,13 +19395,13 @@ Entry.BlockView.pngMap = {};
       f.src = a;
       return e.promise();
     }
-    var f = $.Deferred(), g = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %W %H">(svgGroup)(defs)</svg>', h = this.svgGroup.getBoundingClientRect(), k = a ? this.svgGroup : this.svgGroup.cloneNode(!0), l = this._skeleton.box(this), n = b ? 1 : 1.5, m = function() {
+    var f = $.Deferred(), g = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %W %H">(svgGroup)(defs)</svg>', h = this.svgGroup.getBoundingClientRect(), k = a ? this.svgGroup : this.svgGroup.cloneNode(!0), l = this._skeleton.box(this), m = b ? 1 : 1.5, n = function() {
       var a = window.platform;
       return a && "windows" === a.name.toLowerCase() && "7" === a.version[0] ? !0 : !1;
     }() ? .9 : .95;
-    -1 < this.type.indexOf("func_") && (m *= .99);
-    k.setAttribute("transform", "scale(%SCALE) translate(%X,%Y)".replace("%X", -l.offsetX).replace("%Y", -l.offsetY).replace("%SCALE", n));
-    for (var q = this.getBoard().svgDom.find("defs"), r = k.getElementsByTagName("image"), l = k.getElementsByTagName("text"), t = ["\u2265", "\u2264"], v = "\u2265\u2264-><=+-x/".split(""), u = 0;u < l.length;u++) {
+    -1 < this.type.indexOf("func_") && (n *= .99);
+    k.setAttribute("transform", "scale(%SCALE) translate(%X,%Y)".replace("%X", -l.offsetX).replace("%Y", -l.offsetY).replace("%SCALE", m));
+    for (var q = this.getBoard().svgDom.find("defs"), r = k.getElementsByTagName("image"), l = k.getElementsByTagName("text"), t = ["\u2265", "\u2264"], u = "\u2265\u2264-><=+-x/".split(""), v = 0;v < l.length;v++) {
       (function(a) {
         a.setAttribute("font-family", "'nanumBarunRegular', 'NanumGothic', '\ub098\ub214\uace0\ub515','NanumGothicWeb', '\ub9d1\uc740 \uace0\ub515', 'Malgun Gothic', Dotum");
         var b = parseInt(a.getAttribute("font-size")), d = $(a).text();
@@ -19153,15 +19410,15 @@ Entry.BlockView.pngMap = {};
           var c = parseInt(a.getAttribute("y"));
           a.setAttribute("y", c - 1);
         }
-        -1 < v.indexOf(d) ? a.setAttribute("font-size", b + "px") : a.setAttribute("font-size", b * m + "px");
+        -1 < u.indexOf(d) ? a.setAttribute("font-size", b + "px") : a.setAttribute("font-size", b * n + "px");
         a.setAttribute("alignment-baseline", "baseline");
-      })(l[u]);
+      })(l[v]);
     }
     var x = 0;
     if (0 === r.length) {
       c();
     } else {
-      for (u = 0;u < r.length;u++) {
+      for (v = 0;v < r.length;v++) {
         (function(a) {
           var b = a.getAttribute("href");
           e(b, a.getAttribute("width"), a.getAttribute("height")).then(function(b) {
@@ -19170,7 +19427,7 @@ Entry.BlockView.pngMap = {};
               return c();
             }
           });
-        })(r[u]);
+        })(r[v]);
       }
     }
     return f.promise();
@@ -21146,19 +21403,19 @@ Entry.Board.OPTION_DOWNLOAD = 3;
     var k = c.x;
     c = c.y;
     for (var l = 0;l < f.length;l++) {
-      var n = f[l], m = n.view;
-      m.zIndex = b;
-      if (m.dragInstance) {
+      var m = f[l], n = m.view;
+      n.zIndex = b;
+      if (n.dragInstance) {
         break;
       }
-      c += m.y;
-      k += m.x;
+      c += n.y;
+      k += n.x;
       a = c + 1;
-      m.magnet.next && (a += m.height, h.push({point:c, endPoint:a, startBlock:n, blocks:[]}), h.push({point:a, blocks:[]}), m.absX = k);
-      n.statements && (b += .01);
-      for (var q = 0;q < n.statements.length;q++) {
-        a = n.statements[q];
-        var r = n.view._statements[q];
+      n.magnet.next && (a += n.height, h.push({point:c, endPoint:a, startBlock:m, blocks:[]}), h.push({point:a, blocks:[]}), n.absX = k);
+      m.statements && (b += .01);
+      for (var q = 0;q < m.statements.length;q++) {
+        a = m.statements[q];
+        var r = m.view._statements[q];
         r.zIndex = b;
         r.absX = k + r.x;
         h.push({point:r.y + c - 30, endPoint:r.y + c, startBlock:r, blocks:[]});
@@ -21166,7 +21423,7 @@ Entry.Board.OPTION_DOWNLOAD = 3;
         b += .01;
         g = g.concat(this._getNextMagnets(a, b, {x:r.x + k, y:r.y + c}, e));
       }
-      m.magnet.next && (c += m.magnet.next.y, k += m.magnet.next.x);
+      n.magnet.next && (c += n.magnet.next.y, k += n.magnet.next.x);
     }
     return g.concat(h);
   };
@@ -21191,20 +21448,20 @@ Entry.Board.OPTION_DOWNLOAD = 3;
     var k = c.x;
     c = c.y;
     for (var l = 0;l < f.length;l++) {
-      var n = f[l], m = n.view;
-      if (m.dragInstance) {
+      var m = f[l], n = m.view;
+      if (n.dragInstance) {
         break;
       }
-      m.zIndex = b;
-      c += m.y;
-      k += m.x;
-      h = h.concat(this._getFieldBlockMetaData(m, k, c, b, e));
-      n.statements && (b += .01);
-      for (var q = 0;q < n.statements.length;q++) {
-        a = n.statements[q];
-        var r = n.view._statements[q], g = g.concat(this._getFieldMagnets(a, b, {x:r.x + k, y:r.y + c}, e));
+      n.zIndex = b;
+      c += n.y;
+      k += n.x;
+      h = h.concat(this._getFieldBlockMetaData(n, k, c, b, e));
+      m.statements && (b += .01);
+      for (var q = 0;q < m.statements.length;q++) {
+        a = m.statements[q];
+        var r = m.view._statements[q], g = g.concat(this._getFieldMagnets(a, b, {x:r.x + k, y:r.y + c}, e));
       }
-      m.magnet.next && (c += m.magnet.next.y, k += m.magnet.next.x);
+      n.magnet.next && (c += n.magnet.next.y, k += n.magnet.next.x);
     }
     return g.concat(h);
   };
@@ -21214,14 +21471,14 @@ Entry.Board.OPTION_DOWNLOAD = 3;
     for (var k = 0;k < g.length;k++) {
       var l = g[k];
       if (l instanceof Entry.FieldBlock) {
-        var n = l._valueBlock;
-        if (!n.view.dragInstance && (l.acceptType === f || "boolean" === l.acceptType)) {
-          var m = b + l.box.x, q = c + l.box.y + a.contentHeight % 1E3 * -.5, r = c + l.box.y + l.box.height;
-          l.acceptType === f && (h.push({point:q, endPoint:r, startBlock:n, blocks:[]}), h.push({point:r, blocks:[]}));
-          l = n.view;
-          l.absX = m;
+        var m = l._valueBlock;
+        if (!m.view.dragInstance && (l.acceptType === f || "boolean" === l.acceptType)) {
+          var n = b + l.box.x, q = c + l.box.y + a.contentHeight % 1E3 * -.5, r = c + l.box.y + l.box.height;
+          l.acceptType === f && (h.push({point:q, endPoint:r, startBlock:m, blocks:[]}), h.push({point:r, blocks:[]}));
+          l = m.view;
+          l.absX = n;
           l.zIndex = e;
-          h = h.concat(this._getFieldBlockMetaData(l, m + l.contentPos.x, q + l.contentPos.y, e + .01, f));
+          h = h.concat(this._getFieldBlockMetaData(l, n + l.contentPos.x, q + l.contentPos.y, e + .01, f));
         }
       }
     }
@@ -21233,20 +21490,20 @@ Entry.Board.OPTION_DOWNLOAD = 3;
     var k = c.x;
     c = c.y;
     for (var l = 0;l < f.length;l++) {
-      var n = f[l], m = n.view;
-      if (m.dragInstance) {
+      var m = f[l], n = m.view;
+      if (n.dragInstance) {
         break;
       }
-      m.zIndex = b;
-      c += m.y;
-      k += m.x;
-      h = h.concat(this._getOutputMetaData(m, k, c, b, e));
-      n.statements && (b += .01);
-      for (var q = 0;q < n.statements.length;q++) {
-        a = n.statements[q];
-        var r = n.view._statements[q], g = g.concat(this._getOutputMagnets(a, b, {x:r.x + k, y:r.y + c}, e));
+      n.zIndex = b;
+      c += n.y;
+      k += n.x;
+      h = h.concat(this._getOutputMetaData(n, k, c, b, e));
+      m.statements && (b += .01);
+      for (var q = 0;q < m.statements.length;q++) {
+        a = m.statements[q];
+        var r = m.view._statements[q], g = g.concat(this._getOutputMagnets(a, b, {x:r.x + k, y:r.y + c}, e));
       }
-      m.magnet.next && (c += m.magnet.next.y, k += m.magnet.next.x);
+      n.magnet.next && (c += n.magnet.next.y, k += n.magnet.next.x);
     }
     return g.concat(h);
   };
@@ -21255,9 +21512,9 @@ Entry.Board.OPTION_DOWNLOAD = 3;
     b += a.contentPos.x;
     c += a.contentPos.y;
     for (a = 0;a < g.length;a++) {
-      var k = g[a], l = b + k.box.x, n = c - 24, m = c;
-      k instanceof Entry.FieldBlock ? (k.acceptType === f && (h.push({point:n, endPoint:m, startBlock:k, blocks:[]}), h.push({point:m, blocks:[]}), k.absX = l, k.zIndex = e, k.width = 20), (n = k._valueBlock) && (h = h.concat(this._getOutputMetaData(n.view, l, c + k.box.y, e + .01, f)))) : k instanceof Entry.FieldOutput && k.acceptType === f && (h.push({point:n, endPoint:m, startBlock:k, blocks:[]}), h.push({point:m, blocks:[]}), k.absX = l, k.zIndex = e, k.width = 20, (n = k._valueBlock) && (n.view.dragInstance || 
-      (h = h.concat(this._getOutputMetaData(n.view, b + k.box.x, c + k.box.y, e + .01, f)))));
+      var k = g[a], l = b + k.box.x, m = c - 24, n = c;
+      k instanceof Entry.FieldBlock ? (k.acceptType === f && (h.push({point:m, endPoint:n, startBlock:k, blocks:[]}), h.push({point:n, blocks:[]}), k.absX = l, k.zIndex = e, k.width = 20), (m = k._valueBlock) && (h = h.concat(this._getOutputMetaData(m.view, l, c + k.box.y, e + .01, f)))) : k instanceof Entry.FieldOutput && k.acceptType === f && (h.push({point:m, endPoint:n, startBlock:k, blocks:[]}), h.push({point:n, blocks:[]}), k.absX = l, k.zIndex = e, k.width = 20, (m = k._valueBlock) && (m.view.dragInstance || 
+      (h = h.concat(this._getOutputMetaData(m.view, b + k.box.x, c + k.box.y, e + .01, f)))));
     }
     return h;
   };
@@ -22605,11 +22862,11 @@ Entry.Playground.prototype.generateTextView = function(b) {
   c.bindOnClick(function() {
     var a = !Entry.playground.object.entity.getStrike() || !1;
     Entry.playground.object.entity.setStrike(a);
-    n.src = Entry.mediaFilePath + "text_button_strike_" + a + ".png";
+    m.src = Entry.mediaFilePath + "text_button_strike_" + a + ".png";
   });
-  var n = Entry.createElement("img", "entryPlaygroundText_strikeImage");
-  c.appendChild(n);
-  n.src = Entry.mediaFilePath + "text_button_strike_false.png";
+  var m = Entry.createElement("img", "entryPlaygroundText_strikeImage");
+  c.appendChild(m);
+  m.src = Entry.mediaFilePath + "text_button_strike_false.png";
   c = Entry.createElement("li");
   e.appendChild(c);
   d = Entry.createElement("a");
@@ -22684,28 +22941,28 @@ Entry.Playground.prototype.generateTextView = function(b) {
   b.addClass("entryPlaygroundFontSizeWrapper");
   a.appendChild(b);
   this.fontSizeWrapper = b;
-  var m = Entry.createElement("div");
-  m.addClass("entryPlaygroundFontSizeSlider");
-  b.appendChild(m);
+  var n = Entry.createElement("div");
+  n.addClass("entryPlaygroundFontSizeSlider");
+  b.appendChild(n);
   var q = Entry.createElement("div");
   q.addClass("entryPlaygroundFontSizeIndicator");
-  m.appendChild(q);
+  n.appendChild(q);
   this.fontSizeIndiciator = q;
   var r = Entry.createElement("div");
   r.addClass("entryPlaygroundFontSizeKnob");
-  m.appendChild(r);
+  n.appendChild(r);
   this.fontSizeKnob = r;
   e = Entry.createElement("div");
   e.addClass("entryPlaygroundFontSizeLabel");
   e.innerHTML = "\uae00\uc790 \ud06c\uae30";
   b.appendChild(e);
-  var t = !1, v = 0;
+  var t = !1, u = 0;
   r.onmousedown = function(a) {
     t = !0;
-    v = $(m).offset().left;
+    u = $(n).offset().left;
   };
   document.addEventListener("mousemove", function(a) {
-    t && (a = a.pageX - v, a = Math.max(a, 5), a = Math.min(a, 88), r.style.left = a + "px", a /= .88, q.style.width = a + "%", Entry.playground.object.entity.setFontSize(a));
+    t && (a = a.pageX - u, a = Math.max(a, 5), a = Math.min(a, 88), r.style.left = a + "px", a /= .88, q.style.width = a + "%", Entry.playground.object.entity.setFontSize(a));
   });
   document.addEventListener("mouseup", function(a) {
     t = !1;
@@ -22722,7 +22979,7 @@ Entry.Playground.prototype.generateTextView = function(b) {
   e = Entry.createElement("img");
   e.bindOnClick(function() {
     Entry.playground.toggleLineBreak(!1);
-    u.innerHTML = Lang.Menus.linebreak_off_desc_1;
+    v.innerHTML = Lang.Menus.linebreak_off_desc_1;
     x.innerHTML = Lang.Menus.linebreak_off_desc_2;
     y.innerHTML = Lang.Menus.linebreak_off_desc_3;
   });
@@ -22732,7 +22989,7 @@ Entry.Playground.prototype.generateTextView = function(b) {
   e = Entry.createElement("img");
   e.bindOnClick(function() {
     Entry.playground.toggleLineBreak(!0);
-    u.innerHTML = Lang.Menus.linebreak_on_desc_1;
+    v.innerHTML = Lang.Menus.linebreak_on_desc_1;
     x.innerHTML = Lang.Menus.linebreak_on_desc_2;
     y.innerHTML = Lang.Menus.linebreak_on_desc_3;
   });
@@ -22742,9 +22999,9 @@ Entry.Playground.prototype.generateTextView = function(b) {
   a = Entry.createElement("div");
   a.addClass("entryPlaygroundLinebreakDescription");
   b.appendChild(a);
-  var u = Entry.createElement("p");
-  u.innerHTML = Lang.Menus.linebreak_off_desc_1;
-  a.appendChild(u);
+  var v = Entry.createElement("p");
+  v.innerHTML = Lang.Menus.linebreak_off_desc_1;
+  a.appendChild(v);
   b = Entry.createElement("ul");
   a.appendChild(b);
   var x = Entry.createElement("li");
