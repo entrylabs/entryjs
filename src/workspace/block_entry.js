@@ -5880,8 +5880,8 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.callReturn();
         },
-        "event": "when_clone_start",
-        "syntax": {"js": [], "py": ["def entry_event_clone_create()"]}
+        "event": "when_clone_start", 
+        "syntax": {"js": [], "py": ["def entry_event_clone_create():"]}
     },
     "stop_run": {
         "color": "#498deb",

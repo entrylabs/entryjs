@@ -44,7 +44,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
             textCode += this.Thread(thread) + '\n';
         }
 
-        textCode = textCode.trim();
+        textCode = textCode.trim(); 
 
         return textCode;
     };
