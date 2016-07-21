@@ -45,6 +45,7 @@ Entry.BlockToJsParser = function(syntax) {
     };
 
     p.Block = function(block) {
+        console.log("Block block", block);
         var syntax = block._schema.syntax;
         if (!syntax)
             return "";
@@ -56,37 +57,56 @@ Entry.BlockToJsParser = function(syntax) {
         return "";
     };
 
-    p.Scope = function(block) {
+    p.Scope = function(block) { 
+        var result = '';
+        console.log("Scope block", block);
+        var paramReg = /(%.)/mi;
         var syntax = block._schema.syntax.concat();
-
-        var blockReg = /(%.)/mi;
-        var blockTokens = syntax.split(blockReg);
+        
+        syntax.shift();
+        console.log("syntax", syntax);
+        var syntaxTokens = syntax[0].split(paramReg);
+        console.log("Scope syntax", syntaxTokens);
+        
         var schemaParams = block._schema.params;
         var dataParams = block.data.params;
 
-        for (var i = 0; i < blockTokens.length; i++) { 
-            var blockToken = blockTokens[i];  
-            if (blockToken.length === 0) continue;
-            if (blockReg.test(blockToken)) {
-                var blockParamIndex = blockToken.split('%')[1];
-                var index = Number(blockParamIndex) - 1;
+        console.log("schemaParams", schemaParams);
+        console.log("dataParams", dataParams);
+        
+        for (var i = 0; i < syntaxTokens.length; i++) { 
+            var syntaxToken = syntaxTokens[i];  
+            console.log("syntaxToken", syntaxToken);
+            if (syntaxToken.length === 0 || syntaxToken === 'Scope') continue;
+            if (paramReg.test(syntaxToken)) {
+                var paramIndex = syntaxToken.split('%')[1];
+                console.log("paramIndex", parseInt(paramIndex));
+                var index = parseInt(paramIndex) -1;
+                console.log("Index", index);
+                console.log("schemaParams[index]", schemaParams[index]);
                 if(schemaParams[index]) {
-                    if(schemaParams[index].type == "Indicator") {
+                    if(schemaParams[index].type == "Image") {
                         index++;    
                     } else if(schemaParams[index].type == "Block") {
-                        var param = this.Block(dataParams[index]).trim();
-                       
+                        var param = this.Block(dataParams[index]);
                         result += param;
                     } else {
-                        result += param;
+                        result += this[schemaParams[index].type](dataParams[index], schemaParams[index]);
                     }
                 } else {
                     console.log("This Block has No Schema");
                 }
             }
+            else {
+                result += syntaxToken; 
+            }
+
         }
 
-        return syntax.splice(1, syntax.length - 1).join(".") + "();\n";
+        console.log("Scope result", result);
+        return result;
+
+        //return syntax.splice(1, syntax.length - 1).join(".") + "();\n";
     };
 
     p.BasicFunction = function(block) {
@@ -103,17 +123,20 @@ Entry.BlockToJsParser = function(syntax) {
         this.unpublishIterateVariable();
         var code = "for (var " + iterVariable + " = 0; " + iterVariable +
             " < " + iterateNumber + "; " + iterVariable + "++){\n" +
-            this.indent(statementCode) + "}\n";
+            this.indent(statementCode) + "}\n"; 
         return code;
     };
 
     p.BasicIf = function(block) {
-        console.log("block", block);
+        console.log("BasicIf block come on", block);
         
         if(block.data.statements.length == 2) {
             var statementCode1 = this.Thread(block.statements[0]);
             var statementCode2 = this.Thread(block.statements[1]);
             var syntax = block._schema.syntax.concat();
+
+            console.log("statementCode1", statementCode1);
+            console.log("statementCode2", statementCode2);
             
             var code = "if (" + syntax[1] + ") {\n" +
                 this.indent(statementCode1) + "}\n" +
@@ -163,6 +186,29 @@ Entry.BlockToJsParser = function(syntax) {
     p.unpublishIterateVariable = function() {
         if (this._iterVariableCount)
             this._iterVariableCount--;
+    };
+
+    p.Dropdown = function(dataParam) {
+        console.log("Dropdown", dataParam);
+
+        var result = "\'" + dataParam + "\'";
+        
+        return result; 
+    };
+
+    p.DropdownDynamic = function(dataParam, schemaParam) {
+        console.log("FieldDropdownDynamic", dataParam, schemaParam);
+        var object = Entry.playground.object;
+        console.log("FieldDropdownDynamic Object", object);
+
+        if(dataParam == "null") {
+            dataParam = "none";
+        } else {
+            dataParam = Entry.TextCodingUtil.prototype.dropdownDynamicValueConvertor(dataParam, schemaParam);
+        }                    
+       
+        console.log("FieldDropdownDynamic result ", dataParam);
+        return dataParam;
     };
 
 })(Entry.BlockToJsParser.prototype);

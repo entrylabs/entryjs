@@ -10842,6 +10842,7 @@ Entry.BlockToJsParser = function(b) {
     return b;
   };
   b.Block = function(a) {
+    console.log("Block block", a);
     var b = a._schema.syntax;
     return b ? this[b[0]](a) : "";
   };
@@ -10849,24 +10850,24 @@ Entry.BlockToJsParser = function(b) {
     return "";
   };
   b.Scope = function(a) {
-    var b = a._schema.syntax.concat(), c = /(%.)/mi, e = b.split(c), f = a._schema.params;
+    var b = "";
+    console.log("Scope block", a);
+    var c = /(%.)/mi, e = a._schema.syntax.concat();
+    e.shift();
+    console.log("syntax", e);
+    e = e[0].split(c);
+    console.log("Scope syntax", e);
+    var f = a._schema.params;
     a = a.data.params;
+    console.log("schemaParams", f);
+    console.log("dataParams", a);
     for (var g = 0;g < e.length;g++) {
       var h = e[g];
-      if (0 !== h.length && c.test(h)) {
-        if (h = h.split("%")[1], h = Number(h) - 1, f[h]) {
-          if ("Indicator" != f[h].type) {
-            if ("Block" == f[h].type) {
-              var k = this.Block(a[h]).trim()
-            }
-            result += k;
-          }
-        } else {
-          console.log("This Block has No Schema");
-        }
-      }
+      console.log("syntaxToken", h);
+      0 !== h.length && "Scope" !== h && (c.test(h) ? (h = h.split("%")[1], console.log("paramIndex", parseInt(h)), h = parseInt(h) - 1, console.log("Index", h), console.log("schemaParams[index]", f[h]), f[h] ? "Image" != f[h].type && ("Block" == f[h].type ? (h = this.Block(a[h]), b += h) : b += this[f[h].type](a[h], f[h])) : console.log("This Block has No Schema")) : b += h);
     }
-    return b.splice(1, b.length - 1).join(".") + "();\n";
+    console.log("Scope result", b);
+    return b;
   };
   b.BasicFunction = function(a) {
     a = this.Thread(a.statements[0]);
@@ -10879,10 +10880,12 @@ Entry.BlockToJsParser = function(b) {
     return "for (var " + c + " = 0; " + c + " < " + b + "; " + c + "++){\n" + this.indent(a) + "}\n";
   };
   b.BasicIf = function(a) {
-    console.log("block", a);
+    console.log("BasicIf block come on", a);
     if (2 == a.data.statements.length) {
       var b = this.Thread(a.statements[0]), c = this.Thread(a.statements[1]);
       a = a._schema.syntax.concat();
+      console.log("statementCode1", b);
+      console.log("statementCode2", c);
       b = "if (" + a[1] + ") {\n" + this.indent(b) + "}\nelse {\n" + this.indent(c) + "}\n";
     } else {
       b = this.Thread(a.statements[0]), a = a._schema.syntax.concat(), b = "if (" + a[1] + ") {\n" + this.indent(b) + "}\n";
@@ -10909,6 +10912,17 @@ Entry.BlockToJsParser = function(b) {
   };
   b.unpublishIterateVariable = function() {
     this._iterVariableCount && this._iterVariableCount--;
+  };
+  b.Dropdown = function(a) {
+    console.log("Dropdown", a);
+    return "'" + a + "'";
+  };
+  b.DropdownDynamic = function(a, b) {
+    console.log("FieldDropdownDynamic", a, b);
+    console.log("FieldDropdownDynamic Object", Entry.playground.object);
+    a = "null" == a ? "none" : Entry.TextCodingUtil.prototype.dropdownDynamicValueConvertor(a, b);
+    console.log("FieldDropdownDynamic result ", a);
+    return a;
   };
 })(Entry.BlockToJsParser.prototype);
 Entry.JsToBlockParser = function(b) {
@@ -11237,21 +11251,17 @@ Entry.TextCodingUtil = function() {
   b.initQueue = function() {
     this._funcParamQ = new Entry.Queue;
     this._funcNameQ = new Entry.Queue;
-    console.log("initQueue this._funcParamQ", this._funcParamQ);
   };
   b.clearQueue = function() {
     this._funcParamQ.clear();
     this._funcNameQ.clear();
   };
   b.indent = function(a) {
-    console.log("indent textCode", a);
     var b = "\t";
     a = a.split("\n");
     a.pop();
     b += a.join("\n\t");
-    b = "\t" + b.trim();
-    console.log("indent result", b);
-    return b;
+    return b = "\t" + b.trim();
   };
   b.isNumeric = function(a) {
     return a.match(/^-?\d+$|^-\d+$/) || a.match(/^-?\d+\.\d+$/) ? !0 : !1;
@@ -11260,7 +11270,6 @@ Entry.TextCodingUtil = function() {
     return "==" == a || ">" == a || "<" == a || ">=" == a || "<=" == a || "+" == a || "-" == a || "*" == a || "/" == a ? !0 : !1;
   };
   b.binaryOperatorConvert = function(a) {
-    console.log("binaryOperatorConvert", a);
     switch(a) {
       case "==":
         a = "EQUAL";
@@ -11293,7 +11302,6 @@ Entry.TextCodingUtil = function() {
     return a;
   };
   b.logicalExpressionConvert = function(a) {
-    console.log("logicalExpressionConvert", a);
     switch(a) {
       case "&&":
         a = null;
@@ -11305,27 +11313,23 @@ Entry.TextCodingUtil = function() {
     return a;
   };
   b.dropdownDynamicValueConvertor = function(a, b) {
-    var c = b.options;
-    console.log("dropdownDynamicValueConvertor value", a, "options", c);
-    var e = null, f;
+    var c = b.options, e = null, f;
     for (f in c) {
       e = c[f];
       if ("null" == e[1]) {
-        return e = "none";
+        return e = "None";
       }
       if ("mouse" == a || "wall" == a || "wall_up" == a || "wall_down" == a || "wall_right" == a || "wall_left" == a) {
         return a;
       }
-      console.log("dropdownDynamicValueConvertor check value", a, "option", e);
       if (a == e[1]) {
         return e = e[0];
       }
     }
     e = a;
     if ("variables" == b.menuName) {
-      var g = Entry.variableContainer.variables_;
-      console.log("dropdownDynamicValueConvertor entryVariables", g);
-      for (var h in g) {
+      var g = Entry.variableContainer.variables_, h;
+      for (h in g) {
         var k = g[h];
         if (k.id_ == a) {
           e = k.name_;
@@ -11334,7 +11338,7 @@ Entry.TextCodingUtil = function() {
       }
     } else {
       if ("lists" == b.menuName) {
-        for (h in g = Entry.variableContainer.lists, console.log("dropdownDynamicValueConvertor entryLists", g), g) {
+        for (h in g = Entry.variableContainer.lists, g) {
           if (k = g[h], k.id_ == a) {
             e = k.name_;
             break;
@@ -11362,13 +11366,11 @@ Entry.TextCodingUtil = function() {
         }
       }
     }
-    console.log("b to py dd", e);
     return e;
   };
   b.binaryOperatorValueConvertor = function(a) {
     switch(a) {
       case "EQUAL":
-        console.log("EQUAL");
         a = "==";
         break;
       case "GREATER":
@@ -11402,22 +11404,19 @@ Entry.TextCodingUtil = function() {
         a = "/";
         break;
     }
-    console.log("binaryOperatorValueConvertor result", a);
     return a;
   };
   b.variableFilter = function(a, b, c) {
-    console.log("paramFilter block index param", a.data.type, b, c);
     var e = c;
     a = a.data.type;
-    "change_variable" == a || "set_variable" == a || "get_variable" == a ? 1 == b && (console.log("paramFilter", eval(c)), e = eval(c)) : "length_of_list" == a || "is_included_in_list" == a ? 2 == b && (console.log("paramFilter", eval(c)), e = eval(c)) : "value_of_index_from_list" == a ? 2 == b ? (console.log("paramFilter", eval(c)), e = eval(c)) : 4 == b && this.isNumeric(c) && (e = c - 1) : "remove_value_from_list" == a ? 2 == b ? (console.log("paramFilter", eval(c)), e = eval(c)) : 1 == b && this.isNumeric(c) && 
-    (e = c - 1) : "insert_value_to_list" == a ? 2 == b ? (console.log("paramFilter", eval(c)), e = eval(c)) : 3 == b && this.isNumeric(c) && (e = c - 1) : "change_value_list_index" == a ? 1 == b ? (console.log("paramFilter", eval(c)), e = eval(c)) : 2 == b && this.isNumeric(c) && (e = c - 1) : "add_value_to_list" == a && 2 == b && (console.log("paramFilter", eval(c)), e = eval(c));
+    "change_variable" == a || "set_variable" == a || "get_variable" == a ? 1 == b && (e = eval(c)) : "length_of_list" == a || "is_included_in_list" == a ? 2 == b && (e = eval(c)) : "value_of_index_from_list" == a ? 2 == b ? e = eval(c) : 4 == b && this.isNumeric(c) && (e = c - 1) : "remove_value_from_list" == a ? 2 == b ? e = eval(c) : 1 == b && this.isNumeric(c) && (e = c - 1) : "insert_value_to_list" == a ? 2 == b ? e = eval(c) : 3 == b && this.isNumeric(c) && (e = c - 1) : "change_value_list_index" == 
+    a ? 1 == b ? e = eval(c) : 2 == b && this.isNumeric(c) && (e = c - 1) : "add_value_to_list" == a && 2 == b && (e = eval(c));
     return e;
   };
   b.isGlobalVariableExisted = function(a) {
     var b = Entry.variableContainer.variables_, c;
     for (c in b) {
       var e = b[c];
-      console.log("TextCodingUtil updateGlobalVariable", e);
       if (null === e.object_ && e.name_ == a) {
         return !0;
       }
@@ -11428,7 +11427,6 @@ Entry.TextCodingUtil = function() {
     var c = Entry.variableContainer.variables_, e;
     for (e in c) {
       var f = c[e];
-      console.log("TextCodingUtil updateGlobalVariable", f);
       if (null === f.object_ && f.name_ == a) {
         variable = {x:f.x_, y:f.y_, id:f.id_, visible:f.visible_, value:b, name:a, isCloud:f.isClud_};
         f.syncModel_(variable);
@@ -11438,18 +11436,12 @@ Entry.TextCodingUtil = function() {
     }
   };
   b.createGlobalVariable = function(a, b) {
-    if (!this.isGlobalVariableExisted(a)) {
-      var c = {name:a, value:b, variableType:"variable"};
-      console.log("TextCodingUtil variable", c);
-      Entry.variableContainer.addVariable(c);
-      Entry.variableContainer.updateList();
-    }
+    this.isGlobalVariableExisted(a) || (Entry.variableContainer.addVariable({name:a, value:b, variableType:"variable"}), Entry.variableContainer.updateList());
   };
   b.isLocalVariableExisted = function(a, b) {
     var c = Entry.variableContainer.variables_, e;
     for (e in c) {
       var f = c[e];
-      console.log("TextCodingUtil updateGlobalVariable", f);
       if (f.object_ === b.id && f.name_ == a) {
         return !0;
       }
@@ -11460,7 +11452,6 @@ Entry.TextCodingUtil = function() {
     var e = Entry.variableContainer.variables_, f;
     for (f in e) {
       var g = e[f];
-      console.log("TextCodingUtil updateGlobalVariable", g);
       if (g.object_ === c.id && g.name_ == a) {
         g.syncModel_({x:g.x_, y:g.y_, id:g.id_, visible:g.visible_, value:b, name:a, isCloud:g.isClud_});
         Entry.variableContainer.updateList();
@@ -11469,10 +11460,9 @@ Entry.TextCodingUtil = function() {
     }
   };
   b.createLocalVariable = function(a, b, c) {
-    this.isLocalVariableExisted(a, c) || (b = {name:a, value:b, object:c.id, variableType:"variable"}, console.log("TextCodingUtil variable name", a), Entry.variableContainer.addVariable(b), Entry.variableContainer.updateList());
+    this.isLocalVariableExisted(a, c) || (Entry.variableContainer.addVariable({name:a, value:b, object:c.id, variableType:"variable"}), Entry.variableContainer.updateList());
   };
   b.isLocalVariable = function(a) {
-    console.log("TextCodingUtil isLocalVariable", a);
     var b = Entry.playground.object, c = Entry.variableContainer.variables_, e;
     for (e in c) {
       var f = c[e];
@@ -11486,7 +11476,6 @@ Entry.TextCodingUtil = function() {
     var b = Entry.variableContainer.lists_, c;
     for (c in b) {
       var e = b[c];
-      console.log("TextCodingUtil entryList", e);
       if (null === e.object_ && e.name_ == a) {
         return !0;
       }
@@ -11497,7 +11486,6 @@ Entry.TextCodingUtil = function() {
     var c = Entry.variableContainer.lists_, e;
     for (e in c) {
       var f = c[e];
-      console.log("TextCodingUtil entryList", f);
       if (null === f.object_ && f.name_ == a) {
         list = {x:f.x_, y:f.y_, id:f.id_, visible:f.visible_, name:a, isCloud:f.isClud_, width:f.width_, height:f.height_, array:b};
         f.syncModel_(list);
@@ -11508,19 +11496,12 @@ Entry.TextCodingUtil = function() {
     }
   };
   b.createGlobalList = function(a, b) {
-    if (!this.isGlobalListExisted(a)) {
-      var c = {name:a, array:b, variableType:"list"};
-      console.log("TextCodingUtil list", c);
-      Entry.variableContainer.addList(c);
-      Entry.variableContainer.updateList();
-    }
+    this.isGlobalListExisted(a) || (Entry.variableContainer.addList({name:a, array:b, variableType:"list"}), Entry.variableContainer.updateList());
   };
   b.isLocalListExisted = function(a, b) {
-    console.log("TextCodingUtil isLocalListExisted", a, b);
     var c = Entry.variableContainer.lists_, e;
     for (e in c) {
       var f = c[e];
-      console.log("TextCodingUtil entryList", f);
       if (f.object_ === b.id && f.name_ == a) {
         return !0;
       }
@@ -11531,7 +11512,6 @@ Entry.TextCodingUtil = function() {
     var e = Entry.variableContainer.lists_, f;
     for (f in e) {
       var g = e[f];
-      console.log("TextCodingUtil entryList", g);
       if (g.object_ === c.id && g.name_ == a) {
         g.syncModel_({x:g.x_, y:g.y_, id:g.id_, visible:g.visible_, name:a, isCloud:g.isClud_, width:g.width_, height:g.height_, array:b});
         g.updateView();
@@ -11541,10 +11521,9 @@ Entry.TextCodingUtil = function() {
     }
   };
   b.createLocalList = function(a, b, c) {
-    this.isLocalListExisted(a, c) || (a = {name:a, array:b, object:c.id, variableType:"list"}, console.log("TextCodingUtil list", a), Entry.variableContainer.addList(a), Entry.variableContainer.updateList());
+    this.isLocalListExisted(a, c) || (Entry.variableContainer.addList({name:a, array:b, object:c.id, variableType:"list"}), Entry.variableContainer.updateList());
   };
   b.isLocalList = function(a) {
-    console.log("TextCodingUtil listId", a);
     var b = Entry.playground.object, c = Entry.variableContainer.lists_, e;
     for (e in c) {
       var f = c[e];
@@ -11585,11 +11564,9 @@ Entry.TextCodingUtil = function() {
     a = a.split("\n");
     for (var c in a) {
       var e = a[c];
-      console.log("entryEventFuncFilter thread", e);
       "def entry_event_start():" == e || "def entry_event_mouse_down():" == e || "def entry_event_mouse_up():" == e || "def entry_event_object_down():" == e || "def entry_event_scene_start():" == e || "def entry_event_clone_create():" == e ? (tokens = e.split("def"), e = tokens[1].substring(0, tokens[1].length - 1).trim() + "\n", a[c] = e, b = !0) : (new RegExp(/^def entry_event_key(.+):$/)).test(e) || (new RegExp(/^def entry_event_signal(.+):$/)).test(e) ? (tokens = e.split("def"), e = tokens[1].substring(0, 
       tokens[1].length - 1).trim() + "\n", a[c] = e, b = !0) : b && (e = a[c], e = e.replace("\t", ""), a[c] = e);
     }
-    console.log("TextCodingUtil entryEventFuncFilter threadArr", a);
     return a.join("\n");
   };
   b.eventBlockSyntaxFilter = function(a) {
@@ -11599,58 +11576,34 @@ Entry.TextCodingUtil = function() {
     return "def entry_event_start" == a || "def entry_event_key" == a || "def entry_event_mouse_down" == a || "def entry_event_mouse_up" == a || "def entry_event_object_down" == a || "def entry_event_signal" == a || "def entry_event_scene_start" == a || "def entry_event_clone_create" == a ? !0 : !1;
   };
   b.searchFuncDefParam = function(a) {
-    console.log("searchFuncDefParam block", a);
-    if ("function_field_label" == a.data.type) {
-      var b = a.data.params[0];
-      this._funcNameQ.enqueue(b);
-      console.log("searchFuncDefParam name enqueue", b);
-    }
-    if (a && a.data && a.data.params && a.data.params[1]) {
-      if ("function_field_string" == a.data.type || "function_field_boolean" == a.data.type) {
-        b = a.data.params[0].data.type, this._funcParamQ.enqueue(b), console.log("searchFuncDefParam param enqueue", b);
-      }
-      return this.searchFuncDefParam(a.data.params[1]);
-    }
-    console.log("searchFuncDefParam block", a);
-    return a;
+    "function_field_label" == a.data.type && this._funcNameQ.enqueue(a.data.params[0]);
+    return a && a.data && a.data.params && a.data.params[1] ? ("function_field_string" != a.data.type && "function_field_boolean" != a.data.type || this._funcParamQ.enqueue(a.data.params[0].data.type), this.searchFuncDefParam(a.data.params[1])) : a;
   };
   b.gatherFuncDefParam = function(a) {
-    console.log("gatherFuncDefParam block", a);
     if (a && a.data) {
       if (a.data.params[0]) {
         if (a.data.params[0].data) {
           var b = a.data.params[0].data.type;
-          if ("function_field_string" == a.data.type || "function_field_boolean" == a.data.type) {
-            this._funcParamQ.enqueue(b), console.log("gatherFuncDefParam param enqueue", this._funcParamQ);
-          }
+          "function_field_string" != a.data.type && "function_field_boolean" != a.data.type || this._funcParamQ.enqueue(b);
         } else {
-          "function_field_label" == a.data.type && (b = a.data.params[0], this._funcNameQ.enqueue(b), console.log("gatherFuncDefParam name enqueue", b));
+          "function_field_label" == a.data.type && this._funcNameQ.enqueue(a.data.params[0]);
         }
       }
       if (a.data.params[1]) {
         var c = this.searchFuncDefParam(a.data.params[1]);
-        console.log("gatherFuncDefParam result", c);
-        c.data.params[0].data && (b = c.data.params[0].data.type, "function_field_string" == c.data.type || "function_field_boolean" == c.data.type) && (this._funcParamQ.enqueue(b), console.log("gatherFuncDefParam param enqueue", this._funcParamQ));
-        c.data.params[1] && c.data.params[1].data.params[0].data && (b = c.data.params[1].data.params[0].data.type, "function_field_string" == c.data.params[1].data.type || "function_field_boolean" == c.data.params[1].data.type) && (this._funcParamQ.enqueue(b), console.log("gatherFuncDefParam param enqueue", this._funcParamQ));
+        c.data.params[0].data && (b = c.data.params[0].data.type, "function_field_string" != c.data.type && "function_field_boolean" != c.data.type || this._funcParamQ.enqueue(b));
+        c.data.params[1] && c.data.params[1].data.params[0].data && (b = c.data.params[1].data.params[0].data.type, "function_field_string" != c.data.params[1].data.type && "function_field_boolean" != c.data.params[1].data.type || this._funcParamQ.enqueue(b));
       }
     }
     return c;
   };
   b.getLastParam = function(a) {
-    console.log("getLastParam funcBlock", a);
-    if (a && a.data && a.data.params[1]) {
-      a = this.getLastParam(a.data.params[1]);
-    } else {
-      return a;
-    }
-    console.log("getLastParam result", a);
+    a && a.data && a.data.params[1] && (a = this.getLastParam(a.data.params[1]));
     return a;
   };
   b.isFuncContentsMatch = function(a, b, c) {
     for (var e = !0, f = 0;f < a.length && e;f++) {
       var e = !1, g = a[f], h = b[f];
-      console.log("blockFuncContent", g);
-      console.log("textFuncStatement", h);
       if (g && !h) {
         e = fasle;
         break;
@@ -11662,21 +11615,16 @@ Entry.TextCodingUtil = function() {
       if (h.type == g.data.type) {
         var e = !0, k = h.params, l = g.data.params, n = [];
         l.map(function(a, b) {
-          console.log("blockFuncContentParam", a);
           a && n.push(a);
         });
         l = n;
-        console.log("textFuncStatementParams", k);
-        console.log("blockFuncContentParams", l);
         if (k.length == l.length) {
           for (var e = !0, m = 0;m < k.length && e;m++) {
             if (e = !1, k[m].name) {
               for (var q in textFuncParams) {
                 if (k[m].name == textFuncParams[q]) {
-                  console.log("textFuncStatementParams[j].name", k[m].name);
-                  console.log("textFuncParams[k]", textFuncParams[q]);
                   for (var r in c) {
-                    if (l[m].data.type == r && (console.log("blockFuncContentParams[j].data.type", l[m].data.type), console.log("bfcParam", r), c[r] == q)) {
+                    if (l[m].data.type == r && c[r] == q) {
                       e = !0;
                       break;
                     }
@@ -11687,7 +11635,7 @@ Entry.TextCodingUtil = function() {
                 }
               }
             } else {
-              "True" == k[m].type || "False" == k[m].type ? k[m].type == l[m].data.type && (e = !0, console.log("Function Param Found 1", k[m].type), console.log("Function Param Found 2", l[m].data.type)) : k[m].type && k[m].params && k[m].params[0] == l[m].data.params[0] && (e = !0, console.log("Function Param Found 1", k[m].params[0]), console.log("Function Param Found 2", l[m].data.params[0]));
+              "True" == k[m].type || "False" == k[m].type ? k[m].type == l[m].data.type && (e = !0) : k[m].type && k[m].params && k[m].params[0] == l[m].data.params[0] && (e = !0);
             }
           }
           e && h.statements && 0 != h.statements.length && (e = this.isFuncContentsMatch(g.data.statements[0]._data, h.statements[0]));
@@ -11833,7 +11781,7 @@ Entry.BlockToPyParser = function(b) {
   };
   b.FieldDropdownDynamic = function(a, b) {
     console.log("FieldDropdownDynamic", a, b);
-    console.log("FieldDropdownDynamic Object", Entry.stage.selectedObject);
+    console.log("FieldDropdownDynamic Object", Entry.playground.object);
     a = "null" == a ? "none" : Entry.TextCodingUtil.prototype.dropdownDynamicValueConvertor(a, b);
     console.log("FieldDropdownDynamic result ", a);
     return a;
