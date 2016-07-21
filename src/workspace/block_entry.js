@@ -1945,6 +1945,525 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": ["Arduino.convert_scale(%1, %2, %3, %4, %5)"]}
     },
+    "arduino_ext_get_analog_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "A0", "0" ],
+                    [ "A1", "1" ],
+                    [ "A2", "2" ],
+                    [ "A3", "3" ],
+                    [ "A4", "4" ],
+                    [ "A5", "5" ]
+                ],
+                "value": "0",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "arduino_ext_get_analog_value"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "ArduinoExtGet",
+        "isNotFor": [ "ArduinoExt" ],
+        "func": function (sprite, script) {
+            var port = script.getField("PORT", script);
+            var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.ANALOG);
+            var hardwareTime = Entry.hw.portData['TIME'] || 0;
+            if(!Entry.ArduinoExt.BlockState[this.type]) {
+                Entry.ArduinoExt.BlockState[this.type] = {
+                    isStart: false,
+                    stamp: 0
+                }
+            }
+
+            var state = Entry.ArduinoExt.BlockState[this.type];
+            var ANALOG = Entry.hw.portData.ANALOG;
+            if(!state.isStart) {
+                state.isStart = true;
+                state.stamp = nowTime;
+                Entry.hw.sendQueue['TIME'] = nowTime;
+                Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
+                Entry.hw.sendQueue['GET'] = {
+                    type: Entry.ArduinoExt.sensorTypes.ANALOG,
+                    port: port
+                };
+                throw new Entry.Utils.AsyncError();
+                return;
+            } else if(hardwareTime && (hardwareTime === state.stamp)) {
+                delete state.isStart;
+                delete state.stamp;
+                return (ANALOG) ? ANALOG[port] || 0 : 0;
+            } else if(nowTime - state.stamp > 64) {
+                delete state.isStart;
+                delete state.stamp;
+                return (ANALOG) ? ANALOG[port] || 0 : 0;
+            } else {
+                throw new Entry.Utils.AsyncError();
+                return;
+            }
+        }
+    },
+    "arduino_ext_get_ultrasonic_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "0", "0" ],
+                    [ "1", "1" ],
+                    [ "2", "2" ],
+                    [ "3", "3" ],
+                    [ "4", "4" ],
+                    [ "5", "5" ],
+                    [ "6", "6" ],
+                    [ "7", "7" ],
+                    [ "8", "8" ],
+                    [ "9", "9" ],
+                    [ "10", "10" ],
+                    [ "11", "11" ],
+                    [ "12", "12" ],
+                    [ "13", "13" ],
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "0", "0" ],
+                    [ "1", "1" ],
+                    [ "2", "2" ],
+                    [ "3", "3" ],
+                    [ "4", "4" ],
+                    [ "5", "5" ],
+                    [ "6", "6" ],
+                    [ "7", "7" ],
+                    [ "8", "8" ],
+                    [ "9", "9" ],
+                    [ "10", "10" ],
+                    [ "11", "11" ],
+                    [ "12", "12" ],
+                    [ "13", "13" ],
+                ],
+                "value": "0",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ '13', '12' ],
+            "type": "arduino_ext_get_ultrasonic_value"
+        },
+        "paramsKeyMap": {
+            "PORT1": 0,
+            "PORT2": 1,
+        },
+        "class": "ArduinoExtGet",
+        "isNotFor": [ "ArduinoExt" ],
+        "func": function (sprite, script) {
+            var port1 = script.getField("PORT1", script);
+            var port2 = script.getField("PORT2", script);
+            if(!Entry.ArduinoExt.BlockState[this.type]) {
+                Entry.ArduinoExt.BlockState[this.type] = {
+                    isStart: false,
+                    stamp: 0
+                }
+            }
+
+            var state = Entry.ArduinoExt.BlockState[this.type];
+            var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.ULTRASONIC);
+            var hardwareTime = Entry.hw.portData['TIME'] || 0;
+            if(!state.isStart) {
+                state.isStart = true;
+                state.stamp = nowTime;
+                Entry.hw.sendQueue['TIME'] = nowTime;
+                Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
+                Entry.hw.sendQueue['GET'] = {
+                    type: Entry.ArduinoExt.sensorTypes.ULTRASONIC,
+                    port: [port1, port2]
+                };
+                throw new Entry.Utils.AsyncError();
+                return;
+            } else if(hardwareTime && (hardwareTime === state.stamp)) {
+                delete state.isStart;
+                delete state.stamp;
+                return Entry.hw.portData.ULTRASONIC || 0;
+            } else if(nowTime - state.stamp > 64) {
+                delete state.isStart;
+                delete state.stamp;
+                return Entry.hw.portData.ULTRASONIC || 0;
+            } else {
+                throw new Entry.Utils.AsyncError();
+                return;
+            }
+        }
+    },
+    "arduino_ext_toggle_led": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ARDUINO_on,"255"],
+                    [Lang.Blocks.ARDUINO_off,"0"]
+                ],
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_port_number"
+                },
+                '255',
+                null
+            ],
+            "type": "arduino_ext_toggle_led"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "ArduinoExt",
+        "isNotFor": [ "ArduinoExt" ],
+        "func": function (sprite, script) {
+            var port = script.getNumberValue("PORT");
+            var value = script.getNumberField("VALUE");
+            var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.DIGITAL);
+            Entry.hw.sendQueue['TIME'] = nowTime;
+            Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
+            if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            Entry.hw.sendQueue['SET'][port] = {
+                type: Entry.ArduinoExt.sensorTypes.DIGITAL,
+                data: value
+            };
+            return script.callReturn();
+        }
+    },
+    "arduino_ext_digital_pwm": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_pwm_port_number"
+                },
+                {
+                    "type": "arduino_text",
+                    "params": [ "255" ]
+                },
+                null
+            ],
+            "type": "arduino_ext_digital_pwm"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "ArduinoExt",
+        "isNotFor": [ "ArduinoExt" ],
+        "func": function (sprite, script) {
+            var port = script.getNumberValue("PORT");
+            var value = script.getNumberValue("VALUE");
+            value = Math.round(value);
+            value = Math.max(value, 0);
+            value = Math.min(value, 255);
+            var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.PWM);
+            Entry.hw.sendQueue['TIME'] = nowTime;
+            Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
+            if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            Entry.hw.sendQueue['SET'][port] = {
+                type: Entry.ArduinoExt.sensorTypes.PWM,
+                data: value
+            };
+            return script.callReturn();
+        }
+    },
+    "arduino_ext_set_tone": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [{
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Dropdown",
+            "options": [
+                ["무음", "0"],
+                ["도", "1"],
+                ["도#", "2"],
+                ["레", "3"],
+                ["레#", "4"],
+                ["미", "5"],
+                ["파", "6"],
+                ["파#", "7"],
+                ["솔", "8"],
+                ["솔#", "9"],
+                ["라", "10"],
+                ["라#", "11"],
+                ["시", "12"]
+            ],
+            "value": "1",
+            "fontSize": 11
+        }, {
+            "type": "Dropdown",
+            "options": [
+                ["1", "0"],
+                ["2", "1"],
+                ["3", "2"],
+                ["4", "3"],
+                ["5", "4"],
+                ["6", "5"]
+            ],
+            "value": "3",
+            "fontSize": 11
+        }, {
+            "type": "Dropdown",
+            "options": [
+                ["온음표", "1"],
+                ["2분음표", "2"],
+                ["4분음표", "4"],
+                ["8분음표", "8"],
+                ["16분음표", "16"]
+            ],
+            "value": "2",
+            "fontSize": 11
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [{
+                    "type": "arduino_get_port_number"
+                },
+                null,
+                null,
+                null
+            ],
+            "type": "arduino_ext_set_tone"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "NOTE": 1,
+            "OCTAVE": 2,
+            "DURATION": 3
+        },
+        "class": "ArduinoExt",
+        "isNotFor": [ "ArduinoExt" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var port = script.getNumberValue("PORT", script);
+
+            if (!script.isStart) {
+                var note = script.getNumberField("NOTE", script);
+
+                if(note === 0) {
+                    sq['SET'][port] = {
+                        type: Entry.ArduinoExt.sensorTypes.TONE,
+                        data: 0
+                    };
+                    return script.callReturn();
+                }
+                
+                var octave = script.getNumberField("OCTAVE", script);
+                var duration = script.getNumberField("DURATION", script);
+                var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.TONE);
+                sq['TIME'] = nowTime;
+                sq['KEY'] = Entry.ArduinoExt.getSensorKey();
+                var value = Entry.ArduinoExt.toneMap[note][octave];
+                duration = 1 / duration * 2000;
+                script.isStart = true;
+                script.timeFlag = 1;
+
+                if(!sq['SET']) {
+                    sq['SET'] = {};
+                }
+                
+                sq['SET'][port] = {
+                    type: Entry.ArduinoExt.sensorTypes.TONE,
+                    data: {
+                        value: value,
+                        duration: duration
+                    }
+                };
+
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, duration + 32);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                sq['SET'][port] = {
+                    type: Entry.ArduinoExt.sensorTypes.TONE,
+                    data: 0
+                };
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        }
+    },
+    "arduino_ext_set_servo": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [{
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [{
+                    "type": "arduino_get_port_number"
+                },
+                null
+            ],
+            "type": "arduino_ext_set_servo"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "ArduinoExt",
+        "isNotFor": [ "ArduinoExt" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var port = script.getNumberValue("PORT", script);
+            var value = script.getNumberValue("VALUE", script);
+            value = Math.min(180, value);
+            value = Math.max(0, value);
+
+            sq['TIME'] = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.SERVO_PIN);
+            sq['KEY'] = Entry.ArduinoExt.getSensorKey();
+            if(!sq['SET']) {
+                sq['SET'] = {};
+            }
+            sq['SET'][port] = {
+                type: Entry.ArduinoExt.sensorTypes.SERVO_PIN,
+                data: value
+            };
+
+            return script.callReturn();
+        }
+    },
+    "arduino_ext_get_digital": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_boolean_field",
+        "params": [{
+            "type": "Block",
+            "accept": "string"
+        }],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_port_number"
+                }
+            ],
+            "type": "arduino_ext_get_digital"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "ArduinoExtGet",
+        "isNotFor": [ "ArduinoExt" ],
+        "func": function (sprite, script) {
+            var port = script.getNumberValue("PORT", script);
+            var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.DIGITAL);
+            var hardwareTime = Entry.hw.portData['TIME'] || 0;
+            if(!Entry.ArduinoExt.BlockState[this.type]) {
+                Entry.ArduinoExt.BlockState[this.type] = {
+                    isStart: false,
+                    stamp: 0
+                }
+            }
+
+            var state = Entry.ArduinoExt.BlockState[this.type];
+            var DIGITAL = Entry.hw.portData.DIGITAL;
+            if(!state.isStart) {
+                state.isStart = true;
+                state.stamp = nowTime;
+                Entry.hw.sendQueue['TIME'] = nowTime;
+                Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
+                Entry.hw.sendQueue['GET'] = {
+                    type: Entry.ArduinoExt.sensorTypes.DIGITAL,
+                    port: port
+                };
+                throw new Entry.Utils.AsyncError();
+                return;
+            } else if(hardwareTime && (hardwareTime === state.stamp)) {
+                delete state.isStart;
+                delete state.stamp;
+                return (DIGITAL) ? DIGITAL[port] || 0 : 0;
+            } else if(nowTime - state.stamp > 64) {
+                delete state.isStart;
+                delete state.stamp;
+                return (DIGITAL) ? DIGITAL[port] || 0 : 0;
+            } else {
+                throw new Entry.Utils.AsyncError();
+                return;
+            }
+        }
+    },
     "sensorBoard_get_named_sensor_value": {
         "color": "#00979D",
         "fontColor": "#fff",
@@ -11913,35 +12432,50 @@ Entry.block = {
         "class": "robotis_openCM70_custom",
         "isNotFor": [ "robotis_openCM70" ],
         "func": function (sprite, script) {
-              // instruction / address / length / value / default length
-            var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.READ;
-            var data_address = 0;
-            var data_length = 0;
-            var data_value = 0;
 
-            var data_default_address = 0;
-            var data_default_length = 0;
+            var scope = script.executor.scope;
+            if(!scope.isStart) {
+                scope.isStart = true;
+                scope.count = 0;
 
-            var size = script.getStringField("SIZE");
+                // instruction / address / length / value / default length
+                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.READ;
+                var data_address = 0;
+                var data_length = 0;
+                var data_value = 0;
 
-            if (size == 'BYTE') {
-                data_length = 1;
-            } else if (size == 'WORD') {
-                data_length = 2;
-            } else if (size == 'DWORD') {
-                data_length = 4;
-            }
+                var data_default_address = 0;
+                var data_default_length = 0;
 
-            data_address = script.getNumberValue('VALUE');
+                var size = script.getStringField("SIZE");
 
-            data_default_address = data_address;
-            data_default_length = data_length;
+                if (size == 'BYTE') {
+                    data_length = 1;
+                } else if (size == 'WORD') {
+                    data_length = 2;
+                } else if (size == 'DWORD') {
+                    data_length = 4;
+                }
 
-            Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
-            // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-            Entry.Robotis_carCont.update();
+                data_address = script.getNumberValue('VALUE');
 
-            return Entry.hw.portData[data_default_address];
+                data_default_address = data_address;
+                data_default_length = data_length;
+
+                Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
+                // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
+                Entry.Robotis_carCont.update();
+
+                scope.data_default_address = data_default_address;
+                throw new Entry.Utils.AsyncError();
+            }  else if(scope.count < 2) {
+                scope.count++;
+                throw new Entry.Utils.AsyncError();
+            } 
+            scope.isStart = false;
+            var result = Entry.hw.portData[scope.data_default_address];
+            scope.data_default_address = undefined;
+            return result;
         },
         "syntax": {"js": [], "py": ["Robotis.opencm70_cm_custom_value(%1, %2)"]}
     },
@@ -11973,42 +12507,54 @@ Entry.block = {
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
         "func": function (sprite, script) {
-            var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.READ;
-            var data_address = 0;
-            var data_length = 0;
-            var data_value = 0;
+            var scope = script.executor.scope;
+            if(!scope.isStart) {
+                scope.isStart = true;
+                scope.count = 0;
+                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.READ;
+                var data_address = 0;
+                var data_length = 0;
+                var data_value = 0;
 
-            var data_default_address = 0;
-            var data_default_length = 0;
+                var data_default_address = 0;
+                var data_default_length = 0;
 
-            var sensor = script.getStringField("SENSOR");
+                var sensor = script.getStringField("SENSOR");
 
-            var increase = 0;
+                var increase = 0;
 
-            if (sensor == 'CM_SOUND_DETECTED') {
-                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0];
-                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1];
-                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0];
-                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1];
-            } else if (sensor == 'CM_SOUND_DETECTING') {
-                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[0];
-                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[1];
-                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[0];
-                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[1];
-            } else if (sensor == 'CM_USER_BUTTON') {
-                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0];
-                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1];
-                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0];
-                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1];
-            }
+                if (sensor == 'CM_SOUND_DETECTED') {
+                    data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0];
+                    data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1];
+                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0];
+                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1];
+                } else if (sensor == 'CM_SOUND_DETECTING') {
+                    data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[0];
+                    data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[1];
+                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[0];
+                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[1];
+                } else if (sensor == 'CM_USER_BUTTON') {
+                    data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0];
+                    data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1];
+                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0];
+                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1];
+                }
 
-            data_default_address = data_default_address + increase * data_default_length;
+                data_default_address = data_default_address + increase * data_default_length;
 
-            Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
-            // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-            Entry.Robotis_carCont.update();
-
-            return Entry.hw.portData[data_default_address];
+                Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
+                // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
+                Entry.Robotis_carCont.update();
+                scope.data_default_address = data_default_address;
+                throw new Entry.Utils.AsyncError();
+            } else if(scope.count < 2) {
+                scope.count++;
+                throw new Entry.Utils.AsyncError();
+            } 
+            scope.isStart = false;
+            var result = Entry.hw.portData[scope.data_default_address];
+            scope.data_default_address = undefined;
+            return result;
         },
         "syntax": {"js": [], "py": ["Robotis.opencm70_sensor_value(%1)"]}
     },
@@ -12061,101 +12607,115 @@ Entry.block = {
         "class": "robotis_openCM70_cm",
         "isNotFor": [ "robotis_openCM70" ],
         "func": function (sprite, script) {
-            // instruction / address / length / value / default length
-            var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.READ;
-            var data_address = 0;
-            var data_length = 0;
-            var data_value = 0;
+            var scope = script.executor.scope;
+            if(!scope.isStart) {
+                scope.isStart = true;
+                scope.count = 0;
+                // instruction / address / length / value / default length
+                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.READ;
+                var data_address = 0;
+                var data_length = 0;
+                var data_value = 0;
 
-            var data_default_address = 0;
-            var data_default_length = 0;
+                var data_default_address = 0;
+                var data_default_length = 0;
 
-            var port = script.getStringField("PORT");
-            var sensor = script.getStringField("SENSOR");
+                var port = script.getStringField("PORT");
+                var sensor = script.getStringField("SENSOR");
 
-            var increase = 0;
-            if (port == 'PORT_3') {
-                increase = 2;
-            } else if (port == 'PORT_4') {
-                increase = 3;
-            } else if (port == 'PORT_5') {
-                increase = 4;
-            } else if (port == 'PORT_6') {
-                increase = 5;
-            }
+                var increase = 0;
+                if (port == 'PORT_3') {
+                    increase = 2;
+                } else if (port == 'PORT_4') {
+                    increase = 3;
+                } else if (port == 'PORT_5') {
+                    increase = 4;
+                } else if (port == 'PORT_6') {
+                    increase = 5;
+                }
 
-            if (sensor == 'AUX_SERVO_POSITION') {
-                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0];
-                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1];
-                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0];
-                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1];
-            } else if (sensor == 'AUX_IR') {
-                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[0];
-                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[1];
-                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[0];
-                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[1];
-            } else if (sensor == 'AUX_TOUCH') {
-                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[0];
-                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[1];
-                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[0];
-                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[1];
-            } else if (sensor == 'AUX_TEMPERATURE') {
-                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[0];
-                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[1];
-                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[0];
-                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[1];
-            } else if (sensor == 'AUX_BRIGHTNESS') {
-                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[0];
-                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[1];
-                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[0];
-                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[1];
-            } else if (sensor == 'AUX_HYDRO_THEMO_HUMIDITY') {
-                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[0];
-                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[1];
-                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[0];
-                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[1];
-            } else if (sensor == 'AUX_HYDRO_THEMO_TEMPER') {
-                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[0];
-                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[1];
-                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[0];
-                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[1];
-            } else if (sensor == 'AUX_ULTRASONIC') {
-                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[0];
-                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[1];
-                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[0];
-                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[1];
-            } else if (sensor == 'AUX_MAGNETIC') {
-                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[0];
-                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[1];
-                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[0];
-                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[1];
-            } else if (sensor == 'AUX_MOTION_DETECTION') {
-                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[0];
-                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[1];
-                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[0];
-                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[1];
-            } else if (sensor == 'AUX_COLOR') {
-                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[0];
-                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[1];
-                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[0];
-                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[1];
-            } else if (sensor == 'AUX_CUSTOM') {
-                data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0];
-                data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1];
-                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0];
-                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1];
-            }
+                if (sensor == 'AUX_SERVO_POSITION') {
+                    data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0];
+                    data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1];
+                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0];
+                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1];
+                } else if (sensor == 'AUX_IR') {
+                    data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[0];
+                    data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[1];
+                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[0];
+                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[1];
+                } else if (sensor == 'AUX_TOUCH') {
+                    data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[0];
+                    data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[1];
+                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[0];
+                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[1];
+                } else if (sensor == 'AUX_TEMPERATURE') {
+                    data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[0];
+                    data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[1];
+                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[0];
+                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[1];
+                } else if (sensor == 'AUX_BRIGHTNESS') {
+                    data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[0];
+                    data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[1];
+                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[0];
+                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[1];
+                } else if (sensor == 'AUX_HYDRO_THEMO_HUMIDITY') {
+                    data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[0];
+                    data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[1];
+                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[0];
+                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[1];
+                } else if (sensor == 'AUX_HYDRO_THEMO_TEMPER') {
+                    data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[0];
+                    data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[1];
+                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[0];
+                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[1];
+                } else if (sensor == 'AUX_ULTRASONIC') {
+                    data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[0];
+                    data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[1];
+                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[0];
+                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[1];
+                } else if (sensor == 'AUX_MAGNETIC') {
+                    data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[0];
+                    data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[1];
+                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[0];
+                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[1];
+                } else if (sensor == 'AUX_MOTION_DETECTION') {
+                    data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[0];
+                    data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[1];
+                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[0];
+                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[1];
+                } else if (sensor == 'AUX_COLOR') {
+                    data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[0];
+                    data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[1];
+                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[0];
+                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[1];
+                } else if (sensor == 'AUX_CUSTOM') {
+                    data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0];
+                    data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1];
+                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0];
+                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1];
+                }
 
-            data_default_address = data_default_address + increase * data_default_length;
-            if (increase != 0) {
-                data_length = 6 * data_default_length;
-            }
+                data_default_address = data_default_address + increase * data_default_length;
+                if (increase != 0) {
+                    data_length = 6 * data_default_length;
+                }
 
-            Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
-            // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-            Entry.Robotis_carCont.update();
+                Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
+                // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
+                Entry.Robotis_carCont.update();
 
-            return Entry.hw.portData[data_default_address];
+                scope.data_default_address = data_default_address;
+                console.log(data_default_address);
+                throw new Entry.Utils.AsyncError();
+            } else if(scope.count < 2) {
+                scope.count++;
+                throw new Entry.Utils.AsyncError();
+            } 
+            scope.isStart = false;
+            var result = Entry.hw.portData[scope.data_default_address];
+            scope.data_default_address = undefined;
+            return result;
         },
         "syntax": {"js": [], "py": ["Robotis.opencm70_aux_sensor_value(%1, %2)"]}
     },
@@ -13057,59 +13617,59 @@ Entry.block = {
             var data_default_address = 0;
             var data_default_length = 0;
 
-              var sensor = script.getStringField("SENSOR");
+            var sensor = script.getStringField("SENSOR");
 
-              if (sensor == 'CM_SPRING_LEFT') {
-                  data_default_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[0];
+            if (sensor == 'CM_SPRING_LEFT') {
+                data_default_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[0];
                 data_default_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[1];
-                  data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[2];
+                data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[2];
                 data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[3];
-              } else if (sensor == 'CM_SPRING_RIGHT') {
+            } else if (sensor == 'CM_SPRING_RIGHT') {
                 data_default_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[0];
                 data_default_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[1];
                 data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[2];
                 data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[3];
-              } else if (sensor == 'CM_SWITCH') {
+            } else if (sensor == 'CM_SWITCH') {
                 data_default_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[0];
                 data_default_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[1];
                 data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[0];
                 data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[1];
-              } else if (sensor == 'CM_SOUND_DETECTED') {
+            } else if (sensor == 'CM_SOUND_DETECTED') {
                 data_default_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0];
                 data_default_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1];
                 data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0];
                 data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1];
-              } else if (sensor == 'CM_SOUND_DETECTING') {
+            } else if (sensor == 'CM_SOUND_DETECTING') {
                 data_default_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[0];
                 data_default_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[1];
                 data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[0];
                 data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[1];
-              } else if (sensor == 'CM_IR_LEFT') {
+            } else if (sensor == 'CM_IR_LEFT') {
                 data_default_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[0];
                 data_default_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[1];
                 data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[2];
                 data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[3];
-              } else if (sensor == 'CM_IR_RIGHT') {
+            } else if (sensor == 'CM_IR_RIGHT') {
                 data_default_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[0];
                 data_default_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[1];
                 data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[2];
                 data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[3];
-              } else if (sensor == 'CM_CALIBRATION_LEFT') {
+            } else if (sensor == 'CM_CALIBRATION_LEFT') {
                 data_default_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[0];
                 data_default_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[1];
                 data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[0];
                 data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[1];
-              } else if (sensor == 'CM_CALIBRATION_RIGHT') {
+            } else if (sensor == 'CM_CALIBRATION_RIGHT') {
                 data_default_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[0];
                 data_default_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[1];
                 data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[0];
                 data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[1];
-              } else if (sensor == 'CM_BUTTON_STATUS') {
+            } else if (sensor == 'CM_BUTTON_STATUS') {
                 data_default_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[0];
                 data_default_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[1];
                 data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[0];
                 data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[1];
-              }
+            }
 
             Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
             // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
@@ -17210,7 +17770,7 @@ Entry.block = {
         },
         "syntax": [
             "Scope",
-            "slow"
+            "move_slowly"
         ]
     },
     "jr_repeat_until_dest": {

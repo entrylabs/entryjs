@@ -67,7 +67,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         });
 
         var width =
-            this.textElement.getComputedTextLength() + X_PADDING;
+            this.textElement.getBBox().width + X_PADDING;
 
         if (this._noArrow) width -= 12;
 
