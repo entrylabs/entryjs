@@ -15237,7 +15237,7 @@ Entry.block = {
             return script.getField('NAME', script);
         },
         "isPrimitive": true,
-        "syntax": {"js": [], "py": ["%1text#"]}
+        "syntax": {"js": ["Scope", "%1"], "py": ["%1text#"]}
     },
     "text_write": {
         "color": "#FFCA36",
@@ -20622,7 +20622,7 @@ Entry.block = {
         "fontColor": "#fff",
         "syntax": [
             "Scope",
-            "distance(%1, %2)"
+            "distance(%1, %2, %3)#"
         ],
         "params": [
             {

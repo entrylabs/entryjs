@@ -45,8 +45,12 @@ Entry.BlockToJsParser = function(syntax) {
     };
 
     p.Block = function(block) {
-        console.log("Block block", block);
-        var syntax = block._schema.syntax;
+        console.log("block", block);
+        if(block._schema.syntax.js)
+            var syntax = block._schema.syntax.js;
+        else
+            var syntax = block._schema.syntax;
+        console.log("syntax", syntax);
         if (!syntax)
             return "";
         var syntaxType = syntax[0];
@@ -58,32 +62,39 @@ Entry.BlockToJsParser = function(syntax) {
     };
 
     p.Scope = function(block) { 
+        var notParenthesis = false;
         var result = '';
         console.log("Scope block", block);
         var paramReg = /(%.)/mi;
-        var syntax = block._schema.syntax.concat();
+        if(block._schema.syntax.js) {
+            var syntax = block._schema.syntax.js.concat();
+            notParenthesis = true;
+        }
+        else {
+            var syntax = block._schema.syntax.concat();
+        }
         
         syntax.shift();
-        console.log("syntax", syntax);
         var syntaxTokens = syntax[0].split(paramReg);
-        console.log("Scope syntax", syntaxTokens);
         
         var schemaParams = block._schema.params;
         var dataParams = block.data.params;
-
         console.log("schemaParams", schemaParams);
         console.log("dataParams", dataParams);
+
         
         for (var i = 0; i < syntaxTokens.length; i++) { 
             var syntaxToken = syntaxTokens[i];  
             console.log("syntaxToken", syntaxToken);
             if (syntaxToken.length === 0 || syntaxToken === 'Scope') continue;
+            if (syntaxToken === 'Judge') {
+                console.log("judge", syntaxToken);
+                notParenthesis = true;
+                continue;
+            }
             if (paramReg.test(syntaxToken)) {
                 var paramIndex = syntaxToken.split('%')[1];
-                console.log("paramIndex", parseInt(paramIndex));
-                var index = parseInt(paramIndex) -1;
-                console.log("Index", index);
-                console.log("schemaParams[index]", schemaParams[index]);
+                var index = parseInt(paramIndex) - 1;
                 if(schemaParams[index]) {
                     if(schemaParams[index].type == "Image") {
                         index++;    
@@ -100,10 +111,17 @@ Entry.BlockToJsParser = function(syntax) {
             else {
                 result += syntaxToken; 
             }
-
         }
 
-        console.log("Scope result", result);
+        console.log("charAt", result.charAt(result.length-1));
+        if(result.charAt(result.length-1) == '#') {
+            notParenthesis = true;
+            result = result.substring(0, result.length-1);
+        }
+
+        if(!notParenthesis)
+            result += "();\n";
+        
         return result;
 
         //return syntax.splice(1, syntax.length - 1).join(".") + "();\n";
@@ -193,6 +211,14 @@ Entry.BlockToJsParser = function(syntax) {
         console.log("Dropdown", dataParam);
 
         var result = "\'" + dataParam + "\'";
+        
+        return result; 
+    };
+
+    p.TextInput = function(dataParam) {
+        console.log("TextInput", dataParam);
+
+        var result = dataParam;
         
         return result; 
     };

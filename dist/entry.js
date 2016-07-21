@@ -10879,32 +10879,37 @@ Entry.BlockToJsParser = function(b) {
     return b;
   };
   b.Block = function(a) {
-    console.log("Block block", a);
-    var b = a._schema.syntax;
+    console.log("block", a);
+    var b = a._schema.syntax.js ? a._schema.syntax.js : a._schema.syntax;
+    console.log("syntax", b);
     return b ? this[b[0]](a) : "";
   };
   b.Program = function(a) {
     return "";
   };
   b.Scope = function(a) {
-    var b = "";
+    var b = !1, c = "";
     console.log("Scope block", a);
-    var c = /(%.)/mi, e = a._schema.syntax.concat();
-    e.shift();
-    console.log("syntax", e);
-    e = e[0].split(c);
-    console.log("Scope syntax", e);
-    var f = a._schema.params;
-    a = a.data.params;
-    console.log("schemaParams", f);
-    console.log("dataParams", a);
-    for (var g = 0;g < e.length;g++) {
-      var h = e[g];
-      console.log("syntaxToken", h);
-      0 !== h.length && "Scope" !== h && (c.test(h) ? (h = h.split("%")[1], console.log("paramIndex", parseInt(h)), h = parseInt(h) - 1, console.log("Index", h), console.log("schemaParams[index]", f[h]), f[h] ? "Image" != f[h].type && ("Block" == f[h].type ? (h = this.Block(a[h]), b += h) : b += this[f[h].type](a[h], f[h])) : console.log("This Block has No Schema")) : b += h);
+    var e = /(%.)/mi;
+    if (a._schema.syntax.js) {
+      var f = a._schema.syntax.js.concat(), b = !0
+    } else {
+      f = a._schema.syntax.concat();
     }
-    console.log("Scope result", b);
-    return b;
+    f.shift();
+    var f = f[0].split(e), g = a._schema.params;
+    a = a.data.params;
+    console.log("schemaParams", g);
+    console.log("dataParams", a);
+    for (var h = 0;h < f.length;h++) {
+      var k = f[h];
+      console.log("syntaxToken", k);
+      0 !== k.length && "Scope" !== k && ("Judge" === k ? (console.log("judge", k), b = !0) : e.test(k) ? (k = k.split("%")[1], k = parseInt(k) - 1, g[k] ? "Image" != g[k].type && ("Block" == g[k].type ? (k = this.Block(a[k]), c += k) : c += this[g[k].type](a[k], g[k])) : console.log("This Block has No Schema")) : c += k);
+    }
+    console.log("charAt", c.charAt(c.length - 1));
+    "#" == c.charAt(c.length - 1) && (b = !0, c = c.substring(0, c.length - 1));
+    b || (c += "();\n");
+    return c;
   };
   b.BasicFunction = function(a) {
     a = this.Thread(a.statements[0]);
@@ -10954,6 +10959,10 @@ Entry.BlockToJsParser = function(b) {
   b.Dropdown = function(a) {
     console.log("Dropdown", a);
     return "'" + a + "'";
+  };
+  b.TextInput = function(a) {
+    console.log("TextInput", a);
+    return a;
   };
   b.DropdownDynamic = function(a, b) {
     console.log("FieldDropdownDynamic", a, b);
