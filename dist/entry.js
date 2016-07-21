@@ -20385,7 +20385,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     this.textElement.textContent = this.getTextByValue(this.getValue());
     var b = this.textElement.getBBox();
     this.textElement.attr({style:"white-space: pre;", "font-size":+this._FONT_SIZE + "px", y:.25 * b.height});
-    b = this.textElement.getComputedTextLength() + 16;
+    b = this.textElement.getBBox().width + 16;
     this._noArrow && (b -= 12);
     var c = this._CONTENT_HEIGHT;
     this._header = this.svgGroup.elem("rect", {width:b, height:c, y:-c / 2, rx:this._ROUND, ry:this._ROUND, fill:"#fff", "fill-opacity":.4});
