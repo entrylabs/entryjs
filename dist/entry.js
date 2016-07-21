@@ -22597,15 +22597,17 @@ Entry.Vim = function(b, a) {
     function b(a) {
       var c = e.getCodeToText(a.block);
       e.codeMirror.display.dragFunctions.leave(a);
-      a = $.Event("mousedown", {view:window, bubbles:!0, cancelable:!0, clientX:a.clientX, clientY:a.clientY});
-      $(e.codeMirror.display.scroller).trigger(a);
-      var c = c.split("\n"), d = c.length - 1, k = 0;
+      var d = Entry.Utils.createMouseEvent("mousedown", a);
+      e.codeMirror.display.scroller.dispatchEvent(d);
+      var c = c.split("\n"), k = c.length - 1, l = 0;
       c.forEach(function(a, b) {
         e.codeMirror.replaceSelection(a);
-        k = e.doc.getCursor().line;
-        e.codeMirror.indentLine(k);
-        0 !== b && d === b || e.codeMirror.replaceSelection("\n");
+        l = e.doc.getCursor().line;
+        e.codeMirror.indentLine(l);
+        0 !== b && k === b || e.codeMirror.replaceSelection("\n");
       });
+      d = Entry.Utils.createMouseEvent("mouseup", a);
+      e.codeMirror.display.scroller.dispatchEvent(d);
     }
     function c(a) {
       e.codeMirror.display.dragFunctions.over(a);
