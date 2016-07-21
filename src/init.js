@@ -349,6 +349,8 @@ Entry.start = function(FPS) {
 Entry.parseOptions = function(options) {
     /** @type {string} */
     this.type = options.type;
+    if (options.device)
+        this.device = options.device;
 
     this.projectSaveable = options.projectsaveable;
     if (this.projectSaveable === undefined)
