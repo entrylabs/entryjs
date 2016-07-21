@@ -10919,6 +10919,7 @@ Entry.BlockToJsParser = function(b) {
   b.BasicIf = function(a) {
     console.log("BasicIf block come on", a);
     if (2 == a.data.statements.length) {
+      console.log("st1", a.statements[0]);
       var b = this.Thread(a.statements[0]), c = this.Thread(a.statements[1]);
       a = a._schema.syntax.concat();
       console.log("statementCode1", b);

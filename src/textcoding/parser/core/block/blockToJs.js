@@ -131,6 +131,7 @@ Entry.BlockToJsParser = function(syntax) {
         console.log("BasicIf block come on", block);
         
         if(block.data.statements.length == 2) {
+            console.log("st1", block.statements[0]);
             var statementCode1 = this.Thread(block.statements[0]);
             var statementCode2 = this.Thread(block.statements[1]);
             var syntax = block._schema.syntax.concat();
