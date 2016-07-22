@@ -20119,13 +20119,13 @@ Entry.Playground.prototype.showTab = function(b) {
   this.tabViewElements[b] && (this.tabViewElements[b].addClass("showTab"), this.tabViewElements[b].removeClass("hideTab"));
 };
 Entry.Playground.prototype.initializeResizeHandle = function(b) {
-  b.onmousedown = function(a) {
+  $(b).bind("mousedown touchstart", function(a) {
     Entry.playground.resizing = !0;
     Entry.documentMousemove && (Entry.playground.resizeEvent = Entry.documentMousemove.attach(this, function(a) {
       Entry.playground.resizing && Entry.resizeElement({menuWidth:a.clientX - Entry.interfaceState.canvasWidth});
     }));
-  };
-  document.addEventListener("mouseup", function(a) {
+  });
+  $(document).bind("mouseup touchend", function(a) {
     if (a = Entry.playground.resizeEvent) {
       Entry.playground.resizing = !1, Entry.documentMousemove.detach(a), delete Entry.playground.resizeEvent;
     }
