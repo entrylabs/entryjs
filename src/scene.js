@@ -155,7 +155,6 @@ Entry.Scene.prototype.generateElement = function(scene) {
     if (Entry.sceneEditable) {
         var removeButton = Entry.createElement('button');
         removeButton.addClass('entrySceneRemoveButtonWorkspace');
-        removeButton.innerHTML = 'x';
         removeButton.scene = scene;
         removeButton.bindOnClick(function (e) {
             e.stopPropagation();
