@@ -6655,7 +6655,7 @@ Entry.Container.prototype.takeSequenceSnapshot = function() {
 Entry.Container.prototype.loadSequenceSnapshot = function() {
   for (var b = this.objects_.length, a = Array(b), c = 0;c < b;c++) {
     var d = this.objects_[c];
-    a[d.index] = d;
+    a[d.index || c] = d;
     delete d.index;
   }
   this.objects_ = a;
@@ -12014,11 +12014,12 @@ Entry.Utils.xmlToJsonData = function(b) {
   }
   return a;
 };
-Entry.Utils.stopProjectWithToast = function(b, a) {
+Entry.Utils.stopProjectWithToast = function(b, a, c) {
+  var d = b.block;
   a = a || "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec \ubc1c\uc0dd";
-  Entry.toast && Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.check_runtime_error, !0);
+  Entry.toast && !c && Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.check_runtime_error, !0);
   Entry.engine && Entry.engine.toggleStop();
-  "workspace" === Entry.type && (Entry.container.selectObject(b.getCode().object.id, !0), b.view.getBoard().activateBlock(b));
+  "workspace" === Entry.type && (b.block && "funcBlock" in b.block ? d = b.block.funcBlock : b.funcExecutor && (d = b.funcExecutor.scope.block, b = b.type.replace("func_", ""), Entry.Func.edit(Entry.variableContainer.functions_[b])), d && (Entry.container.selectObject(d.getCode().object.id, !0), d.view.getBoard().activateBlock(d)));
   throw Error(a);
 };
 Entry.Utils.AsyncError = function(b) {
@@ -16574,7 +16575,13 @@ Entry.Executor = function(b, a) {
         try {
           a = this.scope.block.getSchema().func.call(this.scope, this.entity, this.scope);
         } catch (b) {
-          "AsyncError" === b.name ? a = Entry.STATIC.BREAK : Entry.Utils.stopProjectWithToast(this.scope.block, "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec");
+          if ("AsyncError" === b.name) {
+            a = Entry.STATIC.BREAK;
+          } else {
+            var c = !1;
+            "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec" != b.message && (c = !0);
+            Entry.Utils.stopProjectWithToast(this.scope, "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec", c);
+          }
         }
         if (this.isEnd()) {
           break;
