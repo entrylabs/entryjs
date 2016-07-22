@@ -12064,6 +12064,10 @@ window.requestAnimFrame = function() {
     window.setTimeout(b, 1E3 / 60);
   };
 }();
+Entry.isMobile = function() {
+  var b = window.platform;
+  return b && b.type && "tablet" === b.type;
+};
 Entry.Model = function(b, a) {
   var c = Entry.Model;
   c.generateSchema(b);
@@ -16775,6 +16779,9 @@ Entry.Field = function() {
     a.unshift(Entry.PARAM);
     return this._block.pointer(a);
   };
+  b.getFontSize = function(a) {
+    return a = a || this._blockView.getSkeleton().fontSize || 12;
+  };
 })(Entry.Field.prototype);
 Entry.FieldAngle = function(b, a, c) {
   this._block = a.block;
@@ -17109,8 +17116,8 @@ Entry.FieldDropdown = function(b, a, c) {
   this._arrowColor = b.arrowColor;
   this._index = c;
   this.setValue(this.getValue());
-  this._CONTENT_HEIGHT = b.dropdownHeight || a.getSkeleton().dropdownHeight || 16;
-  this._FONT_SIZE = b.fontSize || a.getSkeleton().fontSize || 12;
+  this._CONTENT_HEIGHT = this.getContentHeight(b.dropdownHeight);
+  this._FONT_SIZE = this.getFontSize(b.fontSize);
   this._ROUND = b.roundValue || 3;
   this.renderStart();
 };
@@ -17119,26 +17126,26 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
   b.renderStart = function() {
     this.svgGroup && $(this.svgGroup).remove();
     this instanceof Entry.FieldDropdownDynamic && this._updateValue();
-    var a = this._blockView;
+    var a = this._blockView, b = Entry.isMobile(), d = b ? 33 : 20, b = b ? 24 : 10;
     this.svgGroup = a.contentSvgGroup.elem("g", {class:"entry-field-dropdown"});
-    this.textElement = this.svgGroup.elem("text", {x:2});
+    this.textElement = this.svgGroup.elem("text", {x:5});
     this.textElement.textContent = this.getTextByValue(this.getValue());
-    var b = this.textElement.getBBox();
-    this.textElement.attr({style:"white-space: pre;", "font-size":+this._FONT_SIZE + "px", y:.25 * b.height});
-    b = this.textElement.getComputedTextLength() + 16;
-    this._noArrow && (b -= 12);
-    var d = this._CONTENT_HEIGHT;
-    this._header = this.svgGroup.elem("rect", {width:b, height:d, y:-d / 2, rx:this._ROUND, ry:this._ROUND, fill:"#fff", "fill-opacity":.4});
+    a = this.textElement.getBBox();
+    this.textElement.attr({style:"white-space: pre;", "font-size":+this._FONT_SIZE + "px", y:.23 * a.height});
+    d = this.textElement.getComputedTextLength() + d;
+    this._noArrow && (d -= b);
+    b = this._CONTENT_HEIGHT;
+    this._header = this.svgGroup.elem("rect", {width:d, height:b, y:-b / 2, rx:this._ROUND, ry:this._ROUND, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
-    this._noArrow || (a = this._arrowColor || a._schema.color, this._arrow = this.svgGroup.elem("polygon", {points:"0,-2.1 6.4,-2.1 3.2,2.1", fill:a, stroke:a, transform:"translate(" + (b - 11) + ",0)"}));
+    this._noArrow || (a = this.getArrow(), this._arrow = this.svgGroup.elem("polygon", {points:a.points, fill:a.color, stroke:a.color, transform:"translate(" + (d - a.width - 5) + "," + -a.height / 2 + ")"}));
     this._bindRenderOptions();
-    this.box.set({x:0, y:0, width:b, height:d});
+    this.box.set({x:0, y:0, width:d, height:b});
   };
   b.resize = function() {
-    var a = this.textElement.getComputedTextLength() + 18;
-    this._noArrow ? a -= 14 : this._arrow.attr({transform:"translate(" + (a - 11) + ",0)"});
-    this._header.attr({width:a});
-    this.box.set({width:a});
+    var a = Entry.isMobile(), b = a ? 33 : 20, a = a ? 24 : 10, b = this.textElement.getComputedTextLength() + b;
+    this._noArrow ? b -= a : (a = this.getArrow(), this._arrow.attr({transform:"translate(" + (b - a.width - 5) + "," + -a.height / 2 + ")"}));
+    this._header.attr({width:b});
+    this.box.set({width:b});
     this._block.view.alignContent();
   };
   b.renderOptions = function() {
@@ -17197,6 +17204,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     }
     return Lang.Blocks.no_target;
   };
+  b.getContentHeight = function(a) {
+    return a = a || this._blockView.getSkeleton().dropdownHeight || (Entry.isMobile() ? 22 : 16);
+  };
+  b.getArrow = function() {
+    var a = Entry.isMobile();
+    return {color:this._arrowColor || this._blockView._schema.color, points:a ? "0,0 19,0 9.5,13" : "0,0 6.4,0 3.2,4.2", height:a ? 13 : 4.2, width:a ? 19 : 6.4};
+  };
 })(Entry.FieldDropdown.prototype);
 Entry.FieldDropdownDynamic = function(b, a, c) {
   this._block = a.block;
@@ -17208,8 +17222,8 @@ Entry.FieldDropdownDynamic = function(b, a, c) {
   this._arrowColor = b.arrowColor;
   c = this._contents.menuName;
   Entry.Utils.isFunction(c) ? this._menuGenerator = c : this._menuName = c;
-  this._CONTENT_HEIGHT = b.dropdownHeight || a.getSkeleton().dropdownHeight || 16;
-  this._FONT_SIZE = b.fontSize || a.getSkeleton().fontSize || 12;
+  this._CONTENT_HEIGHT = this.getContentHeight(b.dropdownHeight);
+  this._FONT_SIZE = this.getFontSize(b.fontSize);
   this._ROUND = b.roundValue || 3;
   this.renderStart(a);
 };

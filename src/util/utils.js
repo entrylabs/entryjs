@@ -1232,3 +1232,10 @@ window.requestAnimFrame = (function(){
           };
 })();
 
+Entry.isMobile = function() {
+    var platform = window.platform;
+    return platform &&
+           platform.type &&
+           platform.type === 'tablet';
+}
+
