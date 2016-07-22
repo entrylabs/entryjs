@@ -198,6 +198,7 @@ Entry.Field = function() {};
         return size;
     };
 
-
-
+    p.getContentHeight = function() {
+        return Entry.isMobile() ? 22: 16;
+    };
 })(Entry.Field.prototype);

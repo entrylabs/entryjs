@@ -1233,9 +1233,21 @@ window.requestAnimFrame = (function(){
 })();
 
 Entry.isMobile = function() {
+    if (Entry.device)
+        return Entry.device === 'tablet';
+
     var platform = window.platform;
-    return platform &&
+    var ret = platform &&
            platform.type &&
-           platform.type === 'tablet';
+           (platform.type === 'tablet' ||
+               platform.type === 'mobile');
+
+    if (ret) {
+        Entry.device = 'tablet';
+        return true;
+    } else {
+        Entry.device = 'desktop';
+        return false;
+    }
 }
 
