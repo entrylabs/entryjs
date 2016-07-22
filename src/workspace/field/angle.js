@@ -25,6 +25,7 @@ Entry.FieldAngle = function(content, blockView, index) {
         value !== undefined ? value : 90
     ));
 
+    this._CONTENT_HEIGHT = this.getContentHeight();
     this.renderStart();
 };
 
@@ -34,7 +35,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
 (function(p) {
     var X_PADDING = 8,
         TEXT_Y_PADDING = 4,
-        CONTENT_HEIGHT = 16,
         RADIUS = 49,
         FILL_PATH = 'M 0,0 v -49 A 49,49 0 %LARGE 1 %X,%Y z';
 
@@ -58,6 +58,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
 
         var width = this.getTextWidth();
 
+        var CONTENT_HEIGHT = this._CONTENT_HEIGHT;
         var y = this.position && this.position.y ? this.position.y : 0;
         y -= CONTENT_HEIGHT/2;
         this._header = this.svgGroup.elem('rect', {
@@ -116,7 +117,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
         var pos = this.getAbsolutePosFromDocument();
         pos.y -= this.box.height/2;
         this.optionGroup.css({
-            height: CONTENT_HEIGHT,
+            height: this._CONTENT_HEIGHT,
             left:pos.x,
             top:pos.y,
             width: that.box.width
@@ -255,5 +256,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
         this.textElement.textContent = this.getText();
         this.command();
     };
+
 })(Entry.FieldAngle.prototype);
 

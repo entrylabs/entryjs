@@ -1207,7 +1207,7 @@ Entry.Playground.prototype.showTab = function(item) {
  * @param {!Element} handle
  */
 Entry.Playground.prototype.initializeResizeHandle = function(handle) {
-    handle.onmousedown = function(e) {
+    $(handle).bind('mousedown touchstart', function(e) {
         Entry.playground.resizing = true;
         if (Entry.documentMousemove) {
             Entry.playground.resizeEvent = Entry.documentMousemove.attach(this, function(e) {
@@ -1218,9 +1218,9 @@ Entry.Playground.prototype.initializeResizeHandle = function(handle) {
                 }
             });
         }
-    };
+    });
 
-    document.addEventListener('mouseup', function(e) {
+    $(document).bind('mouseup touchend', function(e) {
         var listener = Entry.playground.resizeEvent
         if (listener) {
             Entry.playground.resizing = false;

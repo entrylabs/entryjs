@@ -192,6 +192,13 @@ Entry.Field = function() {};
         return this._block.pointer(pointer);
     };
 
+    p.getFontSize = function(size) {
+        size =
+            size || this._blockView.getSkeleton().fontSize || 12;
+        return size;
+    };
 
-
+    p.getContentHeight = function() {
+        return Entry.isMobile() ? 22: 16;
+    };
 })(Entry.Field.prototype);

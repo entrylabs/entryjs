@@ -10840,7 +10840,7 @@ Entry.Scene.prototype.generateElement = function(b) {
   b.inputWrapper = f;
   d.onkeyup = function(c) {
     c = c.keyCode;
-    Entry.isArrowOrBackspace(c) || (b.name = this.value, f.style.width = Entry.computeInputWidth(b.name), a.resize(), 13 == c && this.blur(), 9 < this.value.length && (this.value = this.value.substring(0, 10), this.blur()));
+    Entry.isArrowOrBackspace(c) || (b.name = this.value, f.style.width = Entry.computeInputWidth(b.name), a.resize(), 13 == c && this.blur(), 10 < this.value.length && (this.value = this.value.substring(0, 10), this.blur()));
   };
   d.onblur = function(a) {
     d.value = this.value;
@@ -12064,6 +12064,17 @@ window.requestAnimFrame = function() {
     window.setTimeout(b, 1E3 / 60);
   };
 }();
+Entry.isMobile = function() {
+  if (Entry.device) {
+    return "tablet" === Entry.device;
+  }
+  var b = window.platform;
+  if (b && b.type && ("tablet" === b.type || "mobile" === b.type)) {
+    return Entry.device = "tablet", !0;
+  }
+  Entry.device = "desktop";
+  return !1;
+};
 Entry.Model = function(b, a) {
   var c = Entry.Model;
   c.generateSchema(b);
@@ -16775,6 +16786,12 @@ Entry.Field = function() {
     a.unshift(Entry.PARAM);
     return this._block.pointer(a);
   };
+  b.getFontSize = function(a) {
+    return a = a || this._blockView.getSkeleton().fontSize || 12;
+  };
+  b.getContentHeight = function() {
+    return Entry.isMobile() ? 22 : 16;
+  };
 })(Entry.Field.prototype);
 Entry.FieldAngle = function(b, a, c) {
   this._block = a.block;
@@ -16786,6 +16803,7 @@ Entry.FieldAngle = function(b, a, c) {
   this._index = c;
   b = this.getValue();
   this.setValue(this.modValue(void 0 !== b ? b : 90));
+  this._CONTENT_HEIGHT = this.getContentHeight();
   this.renderStart();
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
@@ -16795,11 +16813,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     this.svgGroup = this._blockView.contentSvgGroup.elem("g", {class:"entry-input-field"});
     this.textElement = this.svgGroup.elem("text", {x:4, y:4, "font-size":"11px"});
     this.textElement.textContent = this.getText();
-    var a = this.getTextWidth(), b = this.position && this.position.y ? this.position.y : 0;
-    this._header = this.svgGroup.elem("rect", {x:0, y:b - 8, rx:3, ry:3, width:a, height:16, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
+    var a = this.getTextWidth(), b = this._CONTENT_HEIGHT, d = this.position && this.position.y ? this.position.y : 0;
+    this._header = this.svgGroup.elem("rect", {x:0, y:d - b / 2, rx:3, ry:3, width:a, height:b, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
     this._bindRenderOptions();
-    this.box.set({x:0, y:0, width:a, height:16});
+    this.box.set({x:0, y:0, width:a, height:b});
   };
   b.renderOptions = function() {
     var a = this;
@@ -16819,7 +16837,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     });
     var b = this.getAbsolutePosFromDocument();
     b.y -= this.box.height / 2;
-    this.optionGroup.css({height:16, left:b.x, top:b.y, width:a.box.width});
+    this.optionGroup.css({height:this._CONTENT_HEIGHT, left:b.x, top:b.y, width:a.box.width});
     this.optionGroup.select();
     this.svgOptionGroup = this.appendSvgOptionGroup();
     this.svgOptionGroup.elem("circle", {x:0, y:0, r:49, class:"entry-field-angle-circle"});
@@ -17052,6 +17070,8 @@ Entry.FieldColor = function(b, a, c) {
   this._position = b.position;
   this.key = b.key;
   this.setValue(this.getValue() || "#FF0000");
+  this._CONTENT_HEIGHT = this.getContentHeight();
+  this._CONTENT_WIDTH = this.getContentWidth();
   this.renderStart(a);
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
@@ -17059,11 +17079,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
   b.renderStart = function() {
     this.svgGroup && $(this.svgGroup).remove();
     this.svgGroup = this._blockView.contentSvgGroup.elem("g", {class:"entry-field-color"});
-    var a = this._position, b;
-    a ? (b = a.x || 0, a = a.y || 0) : (b = 0, a = -8);
-    this._header = this.svgGroup.elem("rect", {x:b, y:a, width:14.5, height:16, fill:this.getValue()});
+    var a = this._CONTENT_HEIGHT, b = this._CONTENT_WIDTH, d = this._position, e;
+    d ? (e = d.x || 0, d = d.y || 0) : (e = 0, d = -a / 2);
+    this._header = this.svgGroup.elem("rect", {x:e, y:d, width:b, height:a, fill:this.getValue()});
     this._bindRenderOptions();
-    this.box.set({x:b, y:a, width:14.5, height:16});
+    this.box.set({x:e, y:d, width:b, height:a});
   };
   b.renderOptions = function() {
     var a = this;
@@ -17094,6 +17114,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
   b.applyValue = function(a) {
     this.value != a && (this.setValue(a), this._header.attr({fill:a}));
   };
+  b.getContentWidth = function() {
+    return Entry.isMobile() ? 20 : 14.5;
+  };
 })(Entry.FieldColor.prototype);
 Entry.FieldColor.getWidgetColorList = function() {
   return ["#FFFFFF #CCCCCC #C0C0C0 #999999 #666666 #333333 #000000".split(" "), "#FFCCCC #FF6666 #FF0000 #CC0000 #990000 #660000 #330000".split(" "), "#FFCC99 #FF9966 #FF9900 #FF6600 #CC6600 #993300 #663300".split(" "), "#FFFF99 #FFFF66 #FFCC66 #FFCC33 #CC9933 #996633 #663333".split(" "), "#FFFFCC #FFFF33 #FFFF00 #FFCC00 #999900 #666600 #333300".split(" "), "#99FF99 #66FF99 #33FF33 #33CC00 #009900 #006600 #003300".split(" "), "#99FFFF #33FFFF #66CCCC #00CCCC #339999 #336666 #003333".split(" "), "#CCFFFF #66FFFF #33CCFF #3366FF #3333FF #000099 #000066".split(" "), 
@@ -17109,8 +17132,8 @@ Entry.FieldDropdown = function(b, a, c) {
   this._arrowColor = b.arrowColor;
   this._index = c;
   this.setValue(this.getValue());
-  this._CONTENT_HEIGHT = b.dropdownHeight || a.getSkeleton().dropdownHeight || 16;
-  this._FONT_SIZE = b.fontSize || a.getSkeleton().fontSize || 12;
+  this._CONTENT_HEIGHT = this.getContentHeight(b.dropdownHeight);
+  this._FONT_SIZE = this.getFontSize(b.fontSize);
   this._ROUND = b.roundValue || 3;
   this.renderStart();
 };
@@ -17119,26 +17142,26 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
   b.renderStart = function() {
     this.svgGroup && $(this.svgGroup).remove();
     this instanceof Entry.FieldDropdownDynamic && this._updateValue();
-    var a = this._blockView;
+    var a = this._blockView, b = Entry.isMobile(), d = b ? 33 : 20, b = b ? 24 : 10;
     this.svgGroup = a.contentSvgGroup.elem("g", {class:"entry-field-dropdown"});
-    this.textElement = this.svgGroup.elem("text", {x:2});
+    this.textElement = this.svgGroup.elem("text", {x:5});
     this.textElement.textContent = this.getTextByValue(this.getValue());
-    var b = this.textElement.getBBox();
-    this.textElement.attr({style:"white-space: pre;", "font-size":+this._FONT_SIZE + "px", y:.25 * b.height});
-    b = this.textElement.getComputedTextLength() + 16;
-    this._noArrow && (b -= 12);
-    var d = this._CONTENT_HEIGHT;
-    this._header = this.svgGroup.elem("rect", {width:b, height:d, y:-d / 2, rx:this._ROUND, ry:this._ROUND, fill:"#fff", "fill-opacity":.4});
+    a = this.textElement.getBBox();
+    this.textElement.attr({style:"white-space: pre;", "font-size":+this._FONT_SIZE + "px", y:.23 * a.height});
+    d = this.textElement.getComputedTextLength() + d;
+    this._noArrow && (d -= b);
+    b = this._CONTENT_HEIGHT;
+    this._header = this.svgGroup.elem("rect", {width:d, height:b, y:-b / 2, rx:this._ROUND, ry:this._ROUND, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
-    this._noArrow || (a = this._arrowColor || a._schema.color, this._arrow = this.svgGroup.elem("polygon", {points:"0,-2.1 6.4,-2.1 3.2,2.1", fill:a, stroke:a, transform:"translate(" + (b - 11) + ",0)"}));
+    this._noArrow || (a = this.getArrow(), this._arrow = this.svgGroup.elem("polygon", {points:a.points, fill:a.color, stroke:a.color, transform:"translate(" + (d - a.width - 5) + "," + -a.height / 2 + ")"}));
     this._bindRenderOptions();
-    this.box.set({x:0, y:0, width:b, height:d});
+    this.box.set({x:0, y:0, width:d, height:b});
   };
   b.resize = function() {
-    var a = this.textElement.getComputedTextLength() + 18;
-    this._noArrow ? a -= 14 : this._arrow.attr({transform:"translate(" + (a - 11) + ",0)"});
-    this._header.attr({width:a});
-    this.box.set({width:a});
+    var a = Entry.isMobile(), b = a ? 33 : 20, a = a ? 24 : 10, b = this.textElement.getComputedTextLength() + b;
+    this._noArrow ? b -= a : (a = this.getArrow(), this._arrow.attr({transform:"translate(" + (b - a.width - 5) + "," + -a.height / 2 + ")"}));
+    this._header.attr({width:b});
+    this.box.set({width:b});
     this._block.view.alignContent();
   };
   b.renderOptions = function() {
@@ -17197,6 +17220,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     }
     return Lang.Blocks.no_target;
   };
+  b.getContentHeight = function(a) {
+    return a = a || this._blockView.getSkeleton().dropdownHeight || (Entry.isMobile() ? 22 : 16);
+  };
+  b.getArrow = function() {
+    var a = Entry.isMobile();
+    return {color:this._arrowColor || this._blockView._schema.color, points:a ? "0,0 19,0 9.5,13" : "0,0 6.4,0 3.2,4.2", height:a ? 13 : 4.2, width:a ? 19 : 6.4};
+  };
 })(Entry.FieldDropdown.prototype);
 Entry.FieldDropdownDynamic = function(b, a, c) {
   this._block = a.block;
@@ -17208,8 +17238,8 @@ Entry.FieldDropdownDynamic = function(b, a, c) {
   this._arrowColor = b.arrowColor;
   c = this._contents.menuName;
   Entry.Utils.isFunction(c) ? this._menuGenerator = c : this._menuName = c;
-  this._CONTENT_HEIGHT = b.dropdownHeight || a.getSkeleton().dropdownHeight || 16;
-  this._FONT_SIZE = b.fontSize || a.getSkeleton().fontSize || 12;
+  this._CONTENT_HEIGHT = this.getContentHeight(b.dropdownHeight);
+  this._FONT_SIZE = this.getFontSize(b.fontSize);
   this._ROUND = b.roundValue || 3;
   this.renderStart(a);
 };
@@ -17322,6 +17352,7 @@ Entry.FieldKeyboard = function(b, a, c) {
   this._contents = b;
   this._index = c;
   this.setValue(String(this.getValue()));
+  this._CONTENT_HEIGHT = this.getContentHeight();
   this._optionVisible = !1;
   this.renderStart(a);
 };
@@ -17330,13 +17361,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
   b.renderStart = function() {
     this.svgGroup && $(this.svgGroup).remove();
     this.svgGroup = this._blockView.contentSvgGroup.elem("g", {class:"entry-input-field"});
-    this.textElement = this.svgGroup.elem("text").attr({x:4, y:4, "font-size":"11px"});
+    this.textElement = this.svgGroup.elem("text").attr({x:5, y:4, "font-size":"11px"});
     this.textElement.textContent = Entry.getKeyCodeMap()[this.getValue()];
-    var a = this.getTextWidth(), b = this.position && this.position.y ? this.position.y : 0;
-    this._header = this.svgGroup.elem("rect", {x:0, y:b - 8, width:a, height:16, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
+    var a = this.getTextWidth() + 1, b = this._CONTENT_HEIGHT, d = this.position && this.position.y ? this.position.y : 0;
+    this._header = this.svgGroup.elem("rect", {x:0, y:d - b / 2, width:a, height:b, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
     this._bindRenderOptions();
-    this.box.set({x:0, y:0, width:a, height:16});
+    this.box.set({x:0, y:0, width:a, height:b});
   };
   b.renderOptions = function() {
     Entry.keyPressed && (this.keyPressed = Entry.keyPressed.attach(this, this._keyboardControl));
@@ -17370,13 +17401,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     this.resize();
   };
   b.resize = function() {
-    var a = this.getTextWidth();
+    var a = this.getTextWidth() + 1;
     this._header.attr({width:a});
     this.box.set({width:a});
     this._blockView.alignContent();
   };
   b.getTextWidth = function() {
-    return this.textElement.getComputedTextLength() + 8;
+    return this.textElement.getComputedTextLength() + 10;
   };
   b.destroy = function() {
     this.destroyOption();
@@ -17647,6 +17678,7 @@ Entry.FieldTextInput = function(b, a, c) {
   this._contents = b;
   this._index = c;
   this.value = this.getValue() || "";
+  this._CONTENT_HEIGHT = this.getContentHeight();
   this.renderStart();
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
@@ -17657,11 +17689,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     this.svgGroup.attr({class:"entry-input-field"});
     this.textElement = this.svgGroup.elem("text", {x:3, y:4, "font-size":"12px"});
     this.textElement.textContent = this.truncate();
-    var a = this.getTextWidth(), b = this.position && this.position.y ? this.position.y : 0;
-    this._header = this.svgGroup.elem("rect", {width:a, height:16, y:b - 8, rx:3, ry:3, fill:"transparent"});
+    var a = this.getTextWidth(), b = this.position && this.position.y ? this.position.y : 0, d = this._CONTENT_HEIGHT;
+    this._header = this.svgGroup.elem("rect", {width:a, height:d, y:b - d / 2, rx:3, ry:3, fill:"transparent"});
     this.svgGroup.appendChild(this.textElement);
     this._bindRenderOptions();
-    this.box.set({x:0, y:0, width:a, height:16});
+    this.box.set({x:0, y:0, width:a, height:d});
   };
   b.renderOptions = function() {
     var a = this;
@@ -17681,7 +17713,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     });
     var b = this.getAbsolutePosFromDocument();
     b.y -= this.box.height / 2;
-    this.optionGroup.css({height:16, left:b.x, top:b.y, width:a.box.width});
+    this.optionGroup.css({height:this._CONTENT_HEIGHT, left:b.x, top:b.y, width:a.box.width});
     this.optionGroup.focus();
     b = this.optionGroup[0];
     b.setSelectionRange(0, b.value.length, "backward");
@@ -20087,13 +20119,13 @@ Entry.Playground.prototype.showTab = function(b) {
   this.tabViewElements[b] && (this.tabViewElements[b].addClass("showTab"), this.tabViewElements[b].removeClass("hideTab"));
 };
 Entry.Playground.prototype.initializeResizeHandle = function(b) {
-  b.onmousedown = function(a) {
+  $(b).bind("mousedown touchstart", function(a) {
     Entry.playground.resizing = !0;
     Entry.documentMousemove && (Entry.playground.resizeEvent = Entry.documentMousemove.attach(this, function(a) {
       Entry.playground.resizing && Entry.resizeElement({menuWidth:a.clientX - Entry.interfaceState.canvasWidth});
     }));
-  };
-  document.addEventListener("mouseup", function(a) {
+  });
+  $(document).bind("mouseup touchend", function(a) {
     if (a = Entry.playground.resizeEvent) {
       Entry.playground.resizing = !1, Entry.documentMousemove.detach(a), delete Entry.playground.resizeEvent;
     }
