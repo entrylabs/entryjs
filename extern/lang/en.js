@@ -822,7 +822,17 @@ Lang.Blocks = {
     "walking_entryBot": "Walking Entrybot",
     "entry": "Entry",
     "hello": "Hello",
-    "nice": "nice to meet you"
+    "nice": "nice to meet you",
+    "M_DCMOTOR": "DC Motor",
+    "M_DIODE": "Light Diode",
+    "M_MELODY": "Melody",
+    "M_TOUCH": "Touch Sensor",
+    "M_LIGHT": "Light Sensor",
+    "M_SOUND": "Sound Sensor",
+    "M_IR": "Infra-Red Sensor",
+    "M_OTHERS": "Others",
+    "M_REMOTE": "Remote Control",
+    "M_SERVO": "Servo Motor"
 };
 Lang.Buttons = {
     "apply": "Apply",
@@ -840,6 +850,7 @@ Lang.Buttons = {
 };
 Lang.ko = "한국어";
 Lang.Menus = {
+    "select_openArea_space": "Select share settings",
     "mission_guide": "Mission guide",
     "of": " 's  ",
     "no_results_found": "No results found",
@@ -907,14 +918,20 @@ Lang.Menus = {
     "edit_done": "Edit complete",
     "alert_group_out": "Do you want to leave the class?",
     "lesson_share_cancel": "Cancel Sharing Lesson",
+    "project_share_cancel": "Cancel Sharing Project",
     "lesson_share_cancel_alert": "and change share settings to Private view?",
     "lesson_share_cancel_alert_en": "Do you want to stop sharing ",
     "course_share_cancel": "Cancel Sharing Courseware",
     "select_lesson_share": "Select lesson to share",
+    "select_project_share": "Select project to share",
     "select_lesson_share_policy_1": "Please check share settings",
+    "select_lesson_share_policyAdd": "Please check share settings",
+    "select_lesson_share_project_1": "Please check share settings",
     "select_lesson_share_policy_2": "and copyright policies",
     "select_lesson_share_area": "Select share settings",
+    "select_project_share_area": "Select share settings",
     "lesson_share_policy": "I agree to Entry's Copyright Policies.",
+    "project_share_policy": "I agree to Entry's Copyright Policies.",
     "alert_agree_share": "To share publicly, you must agree to Entry's copyright policies",
     "alert_agree_all": "Agree to all items",
     "select_course_share": "Select courseware to share",
@@ -2901,7 +2918,13 @@ Lang.Workspace = {
 };
 Lang.code = "view code";
 Lang.EntryStatic = {
+    "groupProject": "open group",
+    "privateProject": "only owner",
+    "privateCurriculum": "only owner",
+    "publicCurriculum": "curriculum share",
+    "publicProject": "project share",
     "group": "open group",
+    "groupCurriculum": "open group",
     "private": "only owner",
     "public": "open lessons",
     "lecture_is_open_true": "open",
@@ -2918,6 +2941,7 @@ Lang.EntryStatic = {
     "category_category_physical": "Physical",
     "category_category_etc": "etc",
     "sort_created": "By Latest",
+    "sort_updated": "By Latest",
     "sort_visit": "By Viewers",
     "sort_likeCnt": "By Likes",
     "sort_comment": "By Comments",

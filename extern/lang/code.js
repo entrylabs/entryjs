@@ -822,7 +822,17 @@ Lang.Blocks = {
     "walking_entryBot": "",
     "entry": "엔트리",
     "hello": "안녕",
-    "nice": "반가워"
+    "nice": "반가워",
+    "M_DCMOTOR": "DC모터",
+    "M_DIODE": "발광다이오드",
+    "M_MELODY": "멜로디",
+    "M_TOUCH": "접촉센서",
+    "M_LIGHT": "빛감지센서",
+    "M_SOUND": "소리센서",
+    "M_IR": "적외선센서",
+    "M_OTHERS": "다른센서",
+    "M_REMOTE": "리모컨",
+    "M_SERVO": "서보모터"
 };
 Lang.Buttons = {
     "apply": "적용하기",
@@ -840,6 +850,7 @@ Lang.Buttons = {
 };
 Lang.ko = "한국어";
 Lang.Menus = {
+    "select_openArea_space": "작품 공유 공간을 선택해 주세요",
     "mission_guide": "미션 해결하기 안내",
     "of": " 의",
     "no_results_found": "검색 결과가 없습니다.",
@@ -907,18 +918,24 @@ Lang.Menus = {
     "edit_done": "수정 완료되었습니다.",
     "alert_group_out": "학급을 정말 나가시겠습니까?",
     "lesson_share_cancel": "강의 공유 취소",
+    "project_share_cancel": "작품 공유 취소",
     "lesson_share_cancel_alert": "이(가) 공유된 모든 공간에서 공유를 취소하고 <나만보기>로 변경하시겠습니까? ",
     "lesson_share_cancel_alert_en": "",
     "course_share_cancel": "강의 모음 공유 취소",
-    "select_lesson_share": "강의 공유 선택",
-    "select_lesson_share_policy_1": "강의를 공유할 공간과",
+    "select_lesson_share": "강의 공유 공간 선택",
+    "select_project_share": "작품 공유 선택",
+    "select_lesson_share_policy_1": "강의를 공유할",
+    "select_lesson_share_policyAdd": "공간을 선택해 주세요",
+    "select_lesson_share_project_1": "작품을 공유할 공간과",
     "select_lesson_share_policy_2": "저작권 정책을 확인해 주세요.",
     "select_lesson_share_area": "강의 공유 공간을 선택해 주세요",
+    "select_project_share_area": "작품 공유 공간을 선택해 주세요",
     "lesson_share_policy": "강의 공유에 따른 엔트리 저작권 정책 동의",
+    "project_share_policy": "작품 공유에 따른 엔트리 저작권 정책 동의",
     "alert_agree_share": "공개하려면 엔트리 저작물 정책에 동의하여야 합니다.",
     "alert_agree_all": "모든 항목에 동의해 주세요.",
-    "select_course_share": "강의 모음 공유 선택",
-    "select_course_share_policy_1": "강의 모음을 공유할 공간과",
+    "select_course_share": "강의 모음 공유 공간 선택",
+    "select_course_share_policy_1": "강의 모음을 공유할",
     "select_course_share_policy_2": "저작권 정책을 확인해 주세요.",
     "select_course_share_area": "강의 모음 공유 공간을 선택해 주세요",
     "course_share_policy": "강의 모음 공유에 따른 엔트리 저작권 정책 동의",
@@ -2901,7 +2918,13 @@ Lang.Workspace = {
 };
 Lang.code = "코드보기";
 Lang.EntryStatic = {
-    "group": "학급 학습하기",
+    "groupProject": "학급 공유하기",
+    "privateProject": "나만보기",
+    "privateCurriculum": "나만보기",
+    "publicCurriculum": "강의 모음 공유하기",
+    "publicProject": "작품 공유하기",
+    "group": "학급 공유하기",
+    "groupCurriculum": "학급 공유하기",
     "private": "나만보기",
     "public": "오픈 강의",
     "lecture_is_open_true": "공개",
@@ -2918,6 +2941,7 @@ Lang.EntryStatic = {
     "category_category_physical": "피지컬",
     "category_category_etc": "기타",
     "sort_created": "최신순",
+    "sort_updated": "최신순",
     "sort_visit": "조회순",
     "sort_likeCnt": "좋아요순",
     "sort_comment": "댓글순",
