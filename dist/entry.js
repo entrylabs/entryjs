@@ -722,6 +722,23 @@ Entry.Arduino = {name:"arduino", setZero:function() {
 " 7 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 8:{name:Lang.Hw.port_en + " 8 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 9:{name:Lang.Hw.port_en + " 9 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 10:{name:Lang.Hw.port_en + " 10 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 11:{name:Lang.Hw.port_en + " 11 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 12:{name:Lang.Hw.port_en + " 12 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 13:{name:Lang.Hw.port_en + " 13 " + 
 Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a0:{name:Lang.Hw.port_en + " A0 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a1:{name:Lang.Hw.port_en + " A1 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a2:{name:Lang.Hw.port_en + " A2 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a3:{name:Lang.Hw.port_en + " A3 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a4:{name:Lang.Hw.port_en + " A4 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a5:{name:Lang.Hw.port_en + " A5 " + 
 Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}}, mode:"both"}};
+Entry.ArduinoExt = {name:"ArduinoExt", getSensorKey:function() {
+  return "xxxxxxxx".replace(/[xy]/g, function(b) {
+    var a = 16 * Math.random() | 0;
+    return ("x" == b ? a : a & 0 | 0).toString(16);
+  }).toUpperCase();
+}, getSensorTime:function(b) {
+  return (new Date).getTime() + b;
+}, setZero:function() {
+  Entry.hw.sendQueue.SET ? Object.keys(Entry.hw.sendQueue.SET).forEach(function(b) {
+    Entry.hw.sendQueue.SET[b].data = 0;
+    Entry.hw.sendQueue.TIME = Entry.ArduinoExt.getSensorTime(Entry.hw.sendQueue.SET[b].type);
+    Entry.hw.sendQueue.KEY = Entry.ArduinoExt.getSensorKey();
+  }) : Entry.hw.sendQueue = {SET:{0:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 1:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 2:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 3:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 4:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 5:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 6:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 7:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 8:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, 
+  data:0}, 9:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 10:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 11:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 12:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}, 13:{type:Entry.ArduinoExt.sensorTypes.DIGITAL, data:0}}, TIME:Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.DIGITAL), KEY:Entry.ArduinoExt.getSensorKey()};
+  Entry.hw.update();
+}, sensorTypes:{ALIVE:0, DIGITAL:1, ANALOG:2, PWM:3, SERVO_PIN:4, TONE:5, PULSEIN:6, ULTRASONIC:7, TIMER:8}, toneMap:{1:[33, 65, 131, 262, 523, 1046, 2093, 4186], 2:[35, 69, 139, 277, 554, 1109, 2217, 4435], 3:[37, 73, 147, 294, 587, 1175, 2349, 4699], 4:[39, 78, 156, 311, 622, 1245, 2849, 4978], 5:[41, 82, 165, 330, 659, 1319, 2637, 5274], 6:[44, 87, 175, 349, 698, 1397, 2794, 5588], 7:[46, 92, 185, 370, 740, 1480, 2960, 5920], 8:[49, 98, 196, 392, 784, 1568, 3136, 6272], 9:[52, 104, 208, 415, 831, 
+1661, 3322, 6645], 10:[55, 110, 220, 440, 880, 1760, 3520, 7040], 11:[58, 117, 233, 466, 932, 1865, 3729, 7459], 12:[62, 123, 247, 494, 988, 1976, 3951, 7902]}, BlockState:{}};
 Entry.SensorBoard = {name:"sensorBoard", setZero:Entry.Arduino.setZero};
 Entry.ardublock = {name:"ardublock", setZero:Entry.Arduino.setZero};
 Entry.dplay = {name:"dplay", vel_value:255, Left_value:255, Right_value:255, setZero:Entry.Arduino.setZero, timeouts:[], removeTimeout:function(b) {
@@ -4430,9 +4447,19 @@ Entry.Robotis_carCont = {INSTRUCTION:{NONE:0, WRITE:3, READ:2}, CONTROL_TABLE:{C
   }
 }, update:function() {
   Entry.hw.update();
+  var b = Entry.hw.sendQueue.ROBOTIS_DATA;
+  b && b.forEach(function(a) {
+    a.send = !0;
+  });
   this.setRobotisData(null);
+}, filterSendData:function() {
+  var b = Entry.hw.sendQueue.ROBOTIS_DATA;
+  return b ? b.filter(function(a) {
+    return !0 !== a.send;
+  }) : null;
 }, setRobotisData:function(b) {
-  Entry.hw.sendQueue.ROBOTIS_DATA = null == b ? null : Entry.hw.sendQueue.ROBOTIS_DATA ? Entry.hw.sendQueue.ROBOTIS_DATA.concat(b) : b;
+  var a = this.filterSendData();
+  Entry.hw.sendQueue.ROBOTIS_DATA = null == b ? a : a ? a.concat(b) : b;
 }};
 Entry.Robotis_openCM70 = {INSTRUCTION:{NONE:0, WRITE:3, READ:2}, CONTROL_TABLE:{CM_LED_R:[79, 1], CM_LED_G:[80, 1], CM_LED_B:[81, 1], CM_BUZZER_INDEX:[84, 1], CM_BUZZER_TIME:[85, 1], CM_SOUND_DETECTED:[86, 1], CM_SOUND_DETECTING:[87, 1], CM_USER_BUTTON:[26, 1], CM_MOTION:[66, 1], AUX_SERVO_POSITION:[152, 2], AUX_IR:[168, 2], AUX_TOUCH:[202, 1], AUX_TEMPERATURE:[234, 1], AUX_ULTRASONIC:[242, 1], AUX_MAGNETIC:[250, 1], AUX_MOTION_DETECTION:[258, 1], AUX_COLOR:[266, 1], AUX_CUSTOM:[216, 2], AUX_BRIGHTNESS:[288, 
 2], AUX_HYDRO_THEMO_HUMIDITY:[274, 1], AUX_HYDRO_THEMO_TEMPER:[282, 1], AUX_SERVO_MODE:[126, 1], AUX_SERVO_SPEED:[136, 2], AUX_MOTOR_SPEED:[136, 2], AUX_LED_MODULE:[210, 1]}, setZero:function() {
@@ -6628,7 +6655,7 @@ Entry.Container.prototype.takeSequenceSnapshot = function() {
 Entry.Container.prototype.loadSequenceSnapshot = function() {
   for (var b = this.objects_.length, a = Array(b), c = 0;c < b;c++) {
     var d = this.objects_[c];
-    a[d.index] = d;
+    a[d.index || c] = d;
     delete d.index;
   }
   this.objects_ = a;
@@ -6879,6 +6906,7 @@ Entry.Dialog.prototype.createSpeakNotch = function(b) {
 Entry.Dialog.prototype.remove = function() {
   Entry.stage.unloadDialog(this);
   this.parent.dialog = null;
+  Entry.requestUpdate = !0;
 };
 Entry.DoneProject = function(b) {
   this.generateView(b);
@@ -7515,8 +7543,18 @@ Entry.EntityObject.prototype.setFont = function(b) {
     Entry.stage.updateObject();
   }
 };
+Entry.EntityObject.prototype.setLineHeight = function() {
+  switch(this.getFontType()) {
+    case "Nanum Gothic Coding":
+      this.textObject.lineHeight = this.fontSize;
+      break;
+    default:
+      this.textObject.lineHeight = 0;
+  }
+};
 Entry.EntityObject.prototype.syncFont = function() {
   this.textObject.font = this.getFont();
+  this.setLineHeight();
   Entry.stage.update();
   this.getLineBreak() || this.setWidth(this.textObject.getMeasuredWidth());
   Entry.stage.updateObject();
@@ -10800,7 +10838,7 @@ Entry.Scene.prototype.generateElement = function(b) {
   b.inputWrapper = f;
   d.onkeyup = function(c) {
     c = c.keyCode;
-    Entry.isArrowOrBackspace(c) || (b.name = this.value, f.style.width = Entry.computeInputWidth(b.name), a.resize(), 13 == c && this.blur(), 9 < this.value.length && (this.value = this.value.substring(0, 10), this.blur()));
+    Entry.isArrowOrBackspace(c) || (b.name = this.value, f.style.width = Entry.computeInputWidth(b.name), a.resize(), 13 == c && this.blur(), 10 < this.value.length && (this.value = this.value.substring(0, 10), this.blur()));
   };
   d.onblur = function(a) {
     d.value = this.value;
@@ -11976,13 +12014,20 @@ Entry.Utils.xmlToJsonData = function(b) {
   }
   return a;
 };
-Entry.Utils.stopProjectWithToast = function(b, a) {
+Entry.Utils.stopProjectWithToast = function(b, a, c) {
+  var d = b.block;
   a = a || "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec \ubc1c\uc0dd";
-  Entry.toast && Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.check_runtime_error, !0);
+  Entry.toast && !c && Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.check_runtime_error, !0);
   Entry.engine && Entry.engine.toggleStop();
-  "workspace" === Entry.type && (Entry.container.selectObject(b.getCode().object.id, !0), b.view.getBoard().activateBlock(b));
+  "workspace" === Entry.type && (b.block && "funcBlock" in b.block ? d = b.block.funcBlock : b.funcExecutor && (d = b.funcExecutor.scope.block, b = b.type.replace("func_", ""), Entry.Func.edit(Entry.variableContainer.functions_[b])), d && (Entry.container.selectObject(d.getCode().object.id, !0), d.view.getBoard().activateBlock(d)));
   throw Error(a);
 };
+Entry.Utils.AsyncError = function(b) {
+  this.name = "AsyncError";
+  this.message = b || "\ube44\ub3d9\uae30 \ud638\ucd9c \ub300\uae30";
+};
+Entry.Utils.AsyncError.prototype = Error();
+Entry.Utils.AsyncError.prototype.constructor = Entry.Utils.AsyncError;
 Entry.Utils.isChrome = function() {
   return /chrom(e|ium)/.test(navigator.userAgent.toLowerCase());
 };
@@ -12581,7 +12626,7 @@ Entry.HW = function() {
   this.settingQueue = {};
   this.socketType = this.hwModule = this.selectedDevice = null;
   Entry.addEventListener("stop", this.setZero);
-  this.hwInfo = {11:Entry.Arduino, 12:Entry.SensorBoard, 13:Entry.CODEino, 14:Entry.joystick, 15:Entry.dplay, 16:Entry.nemoino, 17:Entry.Xbot, 18:Entry.ardublock, 24:Entry.Hamster, 25:Entry.Albert, 31:Entry.Bitbrick, 42:Entry.Arduino, 51:Entry.Neobot, 71:Entry.Robotis_carCont, 72:Entry.Robotis_openCM70, 81:Entry.Arduino};
+  this.hwInfo = {11:Entry.Arduino, 19:Entry.ArduinoExt, 12:Entry.SensorBoard, 13:Entry.CODEino, 14:Entry.joystick, 15:Entry.dplay, 16:Entry.nemoino, 17:Entry.Xbot, 18:Entry.ardublock, 24:Entry.Hamster, 25:Entry.Albert, 31:Entry.Bitbrick, 42:Entry.Arduino, 51:Entry.Neobot, 71:Entry.Robotis_carCont, 72:Entry.Robotis_openCM70, 81:Entry.Arduino};
 };
 Entry.HW.TRIAL_LIMIT = 1;
 p = Entry.HW.prototype;
@@ -12685,13 +12730,13 @@ p.update = function() {
 };
 p.updatePortData = function(b) {
   this.portData = b;
-  this.hwMonitor && this.hwMonitor.update();
+  this.hwMonitor && "hw" == Entry.propertyPanel.selected && this.hwMonitor.update();
 };
 p.closeConnection = function() {
   this.socket && this.socket.close();
 };
 p.downloadConnector = function() {
-  window.open("http://download.play-entry.org/apps/Entry_HW_1.5.6_Setup.exe", "_blank").focus();
+  window.open("http://download.play-entry.org/apps/Entry_HW_1.5.8_Setup.exe", "_blank").focus();
 };
 p.downloadSource = function() {
   window.open("http://play-entry.com/down/board.ino", "_blank").focus();
@@ -12878,6 +12923,7 @@ Entry.Stage.prototype.initCoordinator = function() {
 };
 Entry.Stage.prototype.toggleCoordinator = function() {
   this.coordinator.visible = !this.coordinator.visible;
+  Entry.requestUpdate = !0;
 };
 Entry.Stage.prototype.selectObject = function(b) {
   this.selectedObject = b ? b : null;
@@ -16525,10 +16571,17 @@ Entry.Executor = function(b, a) {
   b.execute = function() {
     if (!this.isEnd()) {
       for (;;) {
+        var a = null;
         try {
-          var a = this.scope.block.getSchema().func.call(this.scope, this.entity, this.scope);
+          a = this.scope.block.getSchema().func.call(this.scope, this.entity, this.scope);
         } catch (b) {
-          Entry.Utils.stopProjectWithToast(this.scope.block, "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec");
+          if ("AsyncError" === b.name) {
+            a = Entry.STATIC.BREAK;
+          } else {
+            var c = !1;
+            "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec" != b.message && (c = !0);
+            Entry.Utils.stopProjectWithToast(this.scope, "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec", c);
+          }
         }
         if (this.isEnd()) {
           break;
@@ -16536,9 +16589,7 @@ Entry.Executor = function(b, a) {
         if (void 0 === a || null === a || a === Entry.STATIC.PASS) {
           if (this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this), null === this.scope.block) {
             if (this._callStack.length) {
-              var c = this.scope;
-              this.scope = this._callStack.pop();
-              if (this.scope.isLooped !== c.isLooped) {
+              if (a = this.scope, this.scope = this._callStack.pop(), this.scope.isLooped !== a.isLooped) {
                 break;
               }
             } else {
@@ -17638,7 +17689,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     b.y -= this.box.height / 2;
     this.optionGroup.css({height:16, left:b.x, top:b.y, width:a.box.width});
     this.optionGroup.focus();
-    this.optionGroup.select();
+    b = this.optionGroup[0];
+    b.setSelectionRange(0, b.value.length, "backward");
   };
   b.applyValue = function(a) {
     a = this.optionGroup.val();
@@ -18920,7 +18972,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     e = this.getThread();
     this._schema.event && e.unregisterEvent(this, this._schema.event);
     f && (b ? f.destroy(a, b) : g ? f.view.bindPrev(g) : (g = this.getThread().view.getParent(), g.constructor === Entry.FieldStatement ? (f.view.bindPrev(g), g.insertTopBlock(f)) : g.constructor === Entry.FieldStatement ? f.replace(g._valueBlock) : f.view._toGlobalCoordinate()));
-    this.doNotSplice ? delete this.doNotSplice : e.spliceBlock(this);
+    !this.doNotSplice && e.spliceBlock ? e.spliceBlock(this) : delete this.doNotSplice;
     this.view && this.view.destroy(a);
     this._schemaChangeEvent && this._schemaChangeEvent.destroy();
     (f = this.events.dataDestroy) && this.getCode().object && f.forEach(function(a) {

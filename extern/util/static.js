@@ -276,6 +276,14 @@ EntryStatic.getAllBlocks = function() {
                 "arduino_toggle_led",
                 "arduino_toggle_pwm",
                 "arduino_convert_scale",
+                //arduinoExt
+                "arduino_ext_get_analog_value",
+                "arduino_ext_get_ultrasonic_value",
+                "arduino_ext_get_digital",
+                "arduino_ext_toggle_led",
+                "arduino_ext_digital_pwm",
+                "arduino_ext_set_servo",
+                "arduino_ext_set_tone",
                 //joystick
                 "joystick_get_number_sensor_value",
                 "joystick_get_digital_value",
@@ -2409,14 +2417,6 @@ EntryStatic.getCategoryByBlock = function(blockName) {
     return false;
 }
 
-// for server node js code
-if (typeof exports == "object") {
-    exports.blockInfo = EntryStatic.blockInfo;
-    exports.getAllBlocks = EntryStatic.getAllBlocks;
-    exports.getCategoryByBlock = EntryStatic.getCategoryByBlock;
-}
-
-
 EntryStatic.objectMainCategories = ['entrybot_friends', 'people', 'animal', 'plant', 'vehicles',
                 'architect', 'food', 'environment', 'stuff', 'fantasy', 'interface',
                 'background'];
@@ -2520,3 +2520,11 @@ EntryStatic.COMMAND_TYPES = {
     'undo': 302,
     'redo': 303
 };
+
+// for server node js code
+if (typeof exports == "object") {
+    exports.blockInfo = EntryStatic.blockInfo;
+    exports.getAllBlocks = EntryStatic.getAllBlocks;
+    exports.getCategoryByBlock = EntryStatic.getCategoryByBlock;
+    exports.EntryStatic = EntryStatic;
+}

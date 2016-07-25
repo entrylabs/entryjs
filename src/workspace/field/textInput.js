@@ -116,7 +116,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         });
 
         this.optionGroup.focus();
-        this.optionGroup.select();
+        var optionGroup = this.optionGroup[0];
+        optionGroup.setSelectionRange(0, optionGroup.value.length, "backward");
     };
 
     p.applyValue = function(event) {
