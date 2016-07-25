@@ -3,6 +3,8 @@
 goog.provide('Entry.ContextMenu');
 
 (function(ctx) {
+    ctx.visible = false;
+
     ctx.createDom = function() {
         this.dom = Entry.Dom('ul', {
             id: 'entry-contextmenu',
@@ -14,7 +16,7 @@ goog.provide('Entry.ContextMenu');
         );
     };
 
-    ctx.show = function(options, className) {
+    ctx.show = function(options, className, coordinate) {
         if (!this.dom) this.createDom();
         if (options.length === 0) return;
         var that = this;
@@ -51,7 +53,8 @@ goog.provide('Entry.ContextMenu');
         }
 
         parent.removeClass('entryRemove');
-        this.position(Entry.mouseCoordinate);
+        this.visible = true;
+        this.position(coordinate || Entry.mouseCoordinate);
     };
 
     ctx.position = function(pos) {
@@ -80,6 +83,7 @@ goog.provide('Entry.ContextMenu');
     };
 
     ctx.hide = function() {
+        this.visible = false;
         this.dom.empty();
         this.dom.addClass('entryRemove');
         if (this._className) {

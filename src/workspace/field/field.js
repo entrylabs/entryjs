@@ -152,6 +152,7 @@ Entry.Field = function() {};
     };
 
     p._isEditable = function() {
+        if (Entry.ContextMenu.visible) return false;
         var dragMode = this._block.view.dragMode;
         if (dragMode == Entry.DRAG_MODE_DRAG) return false;
         var blockView = this._block.view;

@@ -357,7 +357,7 @@ Blockly.Blocks.albert_set_eye_to = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.albert_set_eye_to = function(b, a) {
-  var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a), e = +a.getField("COLOR", a);
+  var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a), e = Number(a.getField("COLOR", a));
   "LEFT" == d ? c.leftEye = e : ("RIGHT" != d && (c.leftEye = e), c.rightEye = e);
   return a.callReturn();
 };
@@ -668,7 +668,7 @@ Blockly.Blocks.albert_set_led_to = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.albert_set_led_to = function(b, a) {
-  var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a), e = +a.getField("COLOR", a);
+  var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a), e = Number(a.getField("COLOR", a));
   "FRONT" == d ? (c.leftEye = e, c.rightEye = e) : "LEFT" == d ? c.leftEye = e : c.rightEye = e;
   return a.callReturn();
 };
@@ -794,7 +794,7 @@ Entry.block.arduino_get_number = function(b, a) {
   d.open("POST", "http://localhost:23518/arduino/", !1);
   d.send(String(c));
   Entry.assert(200 == d.status, "arduino is not connected");
-  return +d.responseText;
+  return Number(d.responseText);
 };
 Blockly.Blocks.arduino_get_number = {init:function() {
   this.setColour("#00979D");
@@ -876,8 +876,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(c, d);
+  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
   return a.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1077,8 +1077,8 @@ Blockly.Blocks.dplay_select_led = {init:function() {
 Entry.block.dplay_select_led = function(b, a) {
   var c = a.getField("PORT"), d = 7;
   "7" == c ? d = 7 : "8" == c ? d = 8 : "9" == c ? d = 9 : "10" == c && (d = 10);
-  c = "on" == a.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(d, c);
+  c = a.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(d, "on" == c ? 255 : 0);
   return a.callReturn();
 };
 Blockly.Blocks.dplay_get_switch_status = {init:function() {
@@ -1659,7 +1659,7 @@ Blockly.Blocks.coordinate_mouse = {init:function() {
   this.setInputsInline(!0);
 }};
 Entry.block.coordinate_mouse = function(b, a) {
-  return "x" === a.getField("VALUE", a) ? +Entry.stage.mouseCoordinate.x : +Entry.stage.mouseCoordinate.y;
+  return "x" === a.getField("VALUE", a) ? Number(Entry.stage.mouseCoordinate.x) : Number(Entry.stage.mouseCoordinate.y);
 };
 Blockly.Blocks.coordinate_object = {init:function() {
   this.setColour(calcBlockColor);
@@ -1683,7 +1683,7 @@ Entry.block.coordinate_object = function(b, a) {
       var d = c.parent, d = d.pictures;
       return d.indexOf(c.picture) + 1;
     case "size":
-      return +c.getSize().toFixed(1);
+      return Number(c.getSize().toFixed(1));
     case "picture_name":
       return d = c.parent, d = d.pictures, d[d.indexOf(c.picture)].name;
   }
@@ -2088,10 +2088,10 @@ Entry.block.wait_second = function(b, a) {
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
+  var c = a.getNumberValue("SECOND", a);
   setTimeout(function() {
     a.timeFlag = 0;
-  }, c);
+  }, 60 / (Entry.FPS || 60) * c * 1E3);
   return a;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -2826,7 +2826,7 @@ Blockly.Blocks.hamster_set_following_speed_to = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_set_following_speed_to = function(b, a) {
-  Entry.hw.sendQueue.lineTracerSpeed = +a.getField("SPEED", a);
+  Entry.hw.sendQueue.lineTracerSpeed = Number(a.getField("SPEED", a));
   return a.callReturn();
 };
 Blockly.Blocks.hamster_stop = {init:function() {
@@ -2852,7 +2852,7 @@ Blockly.Blocks.hamster_set_led_to = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_set_led_to = function(b, a) {
-  var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a), e = +a.getField("COLOR", a);
+  var c = Entry.hw.sendQueue, d = a.getField("DIRECTION", a), e = Number(a.getField("COLOR", a));
   "LEFT" == d ? c.leftLed = e : ("RIGHT" != d && (c.leftLed = e), c.rightLed = e);
   return a.callReturn();
 };
@@ -3051,7 +3051,7 @@ Blockly.Blocks.hamster_set_port_to = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_set_port_to = function(b, a) {
-  var c = Entry.hw.sendQueue, d = a.getField("PORT", a), e = +a.getField("MODE", a);
+  var c = Entry.hw.sendQueue, d = a.getField("PORT", a), e = Number(a.getField("MODE", a));
   "A" == d ? c.ioModeA = e : ("B" != d && (c.ioModeA = e), c.ioModeB = e);
   return a.callReturn();
 };
@@ -3100,7 +3100,7 @@ Blockly.Blocks.is_press_some_key = {init:function() {
   this.setInputsInline(!0);
 }};
 Entry.block.is_press_some_key = function(b, a) {
-  var c = +a.getField("VALUE", a);
+  var c = Number(a.getField("VALUE", a));
   return 0 <= Entry.pressedKeys.indexOf(c);
 };
 Blockly.Blocks.reach_something = {init:function() {
@@ -3314,13 +3314,13 @@ Entry.block.boolean_basic_operator = function(b, a) {
     case "EQUAL":
       return d == e;
     case "GREATER":
-      return +d > +e;
+      return Number(d) > Number(e);
     case "LESS":
-      return +d < +e;
+      return Number(d) < Number(e);
     case "GREATER_OR_EQUAL":
-      return +d >= +e;
+      return Number(d) >= Number(e);
     case "LESS_OR_EQUAL":
-      return +d <= +e;
+      return Number(d) <= Number(e);
   }
 };
 Blockly.Blocks.show = {init:function() {
@@ -3802,7 +3802,7 @@ Blockly.Blocks.rotate_by_angle_dropdown = {init:function() {
 }};
 Entry.block.rotate_by_angle_dropdown = function(b, a) {
   var c = a.getField("VALUE", a);
-  b.setRotation(b.getRotation() + +c);
+  b.setRotation(b.getRotation() + Number(c));
   return a.callReturn();
 };
 Blockly.Blocks.see_angle = {init:function() {
@@ -3894,8 +3894,8 @@ Blockly.Blocks.locate = {init:function() {
 Entry.block.locate = function(b, a) {
   var c = a.getField("VALUE", a), d;
   "mouse" == c ? (c = Entry.stage.mouseCoordinate.x, d = Entry.stage.mouseCoordinate.y) : (d = Entry.container.getEntity(c), c = d.getX(), d = d.getY());
-  b.setX(+c);
-  b.setY(+d);
+  b.setX(Number(c));
+  b.setY(Number(d));
   b.brush && !b.brush.stop && b.brush.lineTo(c, -1 * d);
   return a.callReturn();
 };
@@ -4091,7 +4091,7 @@ Entry.block.locate_object_time = function(b, a) {
     if (0 != c) {
       "mouse" == d ? (d = e.x - b.getX(), e = e.y - b.getY()) : (e = Entry.container.getEntity(d), d = e.getX() - b.getX(), e = e.getY() - b.getY()), a.isStart = !0, a.frameCount = c, a.dX = d / a.frameCount, a.dY = e / a.frameCount;
     } else {
-      return "mouse" == d ? (d = +e.x, e = +e.y) : (e = Entry.container.getEntity(d), d = e.getX(), e = e.getY()), b.setX(d), b.setY(e), b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY()), a.callReturn();
+      return "mouse" == d ? (d = Number(e.x), e = Number(e.y)) : (e = Entry.container.getEntity(d), d = e.getX(), e = e.getY()), b.setX(d), b.setY(e), b.brush && !b.brush.stop && b.brush.lineTo(b.getX(), -1 * b.getY()), a.callReturn();
     }
   }
   if (0 != a.frameCount) {
@@ -8186,29 +8186,29 @@ Entry.EntryObject.prototype.generateView = function() {
     var l = Entry.createElement("span");
     l.addClass("entryObjectCoordinateSizeWorkspace");
     l.innerHTML = Lang.Workspace.Size + " : ";
-    var q = Entry.createElement("input");
-    q.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size");
-    q.bindOnClick(function(a) {
+    var n = Entry.createElement("input");
+    n.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size");
+    n.bindOnClick(function(a) {
       a.stopPropagation();
       this.select();
     });
-    q.setAttribute("readonly", !0);
+    n.setAttribute("readonly", !0);
     d.appendChild(e);
     d.appendChild(g);
     d.appendChild(h);
     d.appendChild(k);
     d.appendChild(l);
-    d.appendChild(q);
+    d.appendChild(n);
     d.xInput_ = g;
     d.yInput_ = k;
-    d.sizeInput_ = q;
+    d.sizeInput_ = n;
     this.coordinateView_ = d;
     c = this;
     g.onkeypress = function(a) {
       13 == a.keyCode && c.editObjectValues(!1);
     };
     g.onblur = function(a) {
-      isNaN(g.value) || c.entity.setX(+g.value);
+      isNaN(g.value) || c.entity.setX(Number(g.value));
       c.updateCoordinateView();
       Entry.stage.updateObject();
     };
@@ -8216,15 +8216,15 @@ Entry.EntryObject.prototype.generateView = function() {
       13 == a.keyCode && c.editObjectValues(!1);
     };
     k.onblur = function(a) {
-      isNaN(k.value) || c.entity.setY(+k.value);
+      isNaN(k.value) || c.entity.setY(Number(k.value));
       c.updateCoordinateView();
       Entry.stage.updateObject();
     };
-    q.onkeypress = function(a) {
+    n.onkeypress = function(a) {
       13 == a.keyCode && c.editObjectValues(!1);
     };
-    q.onblur = function(a) {
-      isNaN(q.value) || c.entity.setSize(+q.value);
+    n.onblur = function(a) {
+      isNaN(n.value) || c.entity.setSize(Number(n.value));
       c.updateCoordinateView();
       Entry.stage.updateObject();
     };
@@ -8235,50 +8235,50 @@ Entry.EntryObject.prototype.generateView = function() {
     e = Entry.createElement("span");
     e.addClass("entryObjectRotateSpanWorkspace");
     e.innerHTML = Lang.Workspace.rotation + " : ";
-    var n = Entry.createElement("input");
-    n.addClass("entryObjectRotateInputWorkspace");
-    n.setAttribute("readonly", !0);
-    n.bindOnClick(function(a) {
-      a.stopPropagation();
-      this.select();
-    });
-    this.rotateSpan_ = e;
-    this.rotateInput_ = n;
-    h = Entry.createElement("span");
-    h.addClass("entryObjectDirectionSpanWorkspace");
-    h.innerHTML = Lang.Workspace.direction + " : ";
     var m = Entry.createElement("input");
-    m.addClass("entryObjectDirectionInputWorkspace");
+    m.addClass("entryObjectRotateInputWorkspace");
     m.setAttribute("readonly", !0);
     m.bindOnClick(function(a) {
       a.stopPropagation();
       this.select();
     });
-    this.directionInput_ = m;
+    this.rotateSpan_ = e;
+    this.rotateInput_ = m;
+    h = Entry.createElement("span");
+    h.addClass("entryObjectDirectionSpanWorkspace");
+    h.innerHTML = Lang.Workspace.direction + " : ";
+    var q = Entry.createElement("input");
+    q.addClass("entryObjectDirectionInputWorkspace");
+    q.setAttribute("readonly", !0);
+    q.bindOnClick(function(a) {
+      a.stopPropagation();
+      this.select();
+    });
+    this.directionInput_ = q;
     d.appendChild(e);
-    d.appendChild(n);
-    d.appendChild(h);
     d.appendChild(m);
-    d.rotateInput_ = n;
-    d.directionInput_ = m;
+    d.appendChild(h);
+    d.appendChild(q);
+    d.rotateInput_ = m;
+    d.directionInput_ = q;
     c = this;
-    n.onkeypress = function(a) {
-      13 == a.keyCode && c.editObjectValues(!1);
-    };
-    n.onblur = function(a) {
-      a = n.value;
-      -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da")));
-      isNaN(a) || c.entity.setRotation(+a);
-      c.updateRotationView();
-      Entry.stage.updateObject();
-    };
     m.onkeypress = function(a) {
       13 == a.keyCode && c.editObjectValues(!1);
     };
     m.onblur = function(a) {
       a = m.value;
       -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da")));
-      isNaN(a) || c.entity.setDirection(+a);
+      isNaN(a) || c.entity.setRotation(Number(a));
+      c.updateRotationView();
+      Entry.stage.updateObject();
+    };
+    q.onkeypress = function(a) {
+      13 == a.keyCode && c.editObjectValues(!1);
+    };
+    q.onblur = function(a) {
+      a = q.value;
+      -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da")));
+      isNaN(a) || c.entity.setDirection(Number(a));
       c.updateRotationView();
       Entry.stage.updateObject();
     };
@@ -8348,26 +8348,26 @@ Entry.EntryObject.prototype.generateView = function() {
       if (a = Entry.container.getObject(this.id)) {
         Entry.container.selectObject(a.id), Entry.playground.injectObject(a);
       }
-    }), this.view_.appendChild(d), d = Entry.createElement("div"), d.addClass("entryObjectInformationWorkspace"), d.object = this, this.isInformationToggle = !1, b.appendChild(d), this.informationView_ = d, d = Entry.createElement("div"), d.addClass("entryObjectRotateLabelWrapperWorkspace"), this.view_.appendChild(d), this.rotateLabelWrapperView_ = d, e = Entry.createElement("span"), e.addClass("entryObjectRotateSpanWorkspace"), e.innerHTML = Lang.Workspace.rotation + " : ", n = Entry.createElement("input"), 
-    n.addClass("entryObjectRotateInputWorkspace"), this.rotateSpan_ = e, this.rotateInput_ = n, h = Entry.createElement("span"), h.addClass("entryObjectDirectionSpanWorkspace"), h.innerHTML = Lang.Workspace.direction + " : ", m = Entry.createElement("input"), m.addClass("entryObjectDirectionInputWorkspace"), this.directionInput_ = m, d.appendChild(e), d.appendChild(n), d.appendChild(h), d.appendChild(m), d.rotateInput_ = n, d.directionInput_ = m, c = this, n.onkeypress = function(a) {
-      13 == a.keyCode && (a = n.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || c.entity.setRotation(+a), c.updateRotationView(), n.blur());
-    }, n.onblur = function(a) {
+    }), this.view_.appendChild(d), d = Entry.createElement("div"), d.addClass("entryObjectInformationWorkspace"), d.object = this, this.isInformationToggle = !1, b.appendChild(d), this.informationView_ = d, d = Entry.createElement("div"), d.addClass("entryObjectRotateLabelWrapperWorkspace"), this.view_.appendChild(d), this.rotateLabelWrapperView_ = d, e = Entry.createElement("span"), e.addClass("entryObjectRotateSpanWorkspace"), e.innerHTML = Lang.Workspace.rotation + " : ", m = Entry.createElement("input"), 
+    m.addClass("entryObjectRotateInputWorkspace"), this.rotateSpan_ = e, this.rotateInput_ = m, h = Entry.createElement("span"), h.addClass("entryObjectDirectionSpanWorkspace"), h.innerHTML = Lang.Workspace.direction + " : ", q = Entry.createElement("input"), q.addClass("entryObjectDirectionInputWorkspace"), this.directionInput_ = q, d.appendChild(e), d.appendChild(m), d.appendChild(h), d.appendChild(q), d.rotateInput_ = m, d.directionInput_ = q, c = this, m.onkeypress = function(a) {
+      13 == a.keyCode && (a = m.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || c.entity.setRotation(Number(a)), c.updateRotationView(), m.blur());
+    }, m.onblur = function(a) {
       c.entity.setRotation(c.entity.getRotation());
       Entry.stage.updateObject();
-    }, m.onkeypress = function(a) {
-      13 == a.keyCode && (a = m.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || c.entity.setDirection(+a), c.updateRotationView(), m.blur());
-    }, m.onblur = function(a) {
+    }, q.onkeypress = function(a) {
+      13 == a.keyCode && (a = q.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || c.entity.setDirection(Number(a)), c.updateRotationView(), q.blur());
+    }, q.onblur = function(a) {
       c.entity.setDirection(c.entity.getDirection());
       Entry.stage.updateObject();
     }, b = Entry.createElement("div"), b.addClass("entryObjectRotationWrapperWorkspace"), b.object = this, this.view_.appendChild(b), d = Entry.createElement("span"), d.addClass("entryObjectCoordinateWorkspace"), b.appendChild(d), e = Entry.createElement("span"), e.addClass("entryObjectCoordinateSpanWorkspace"), e.innerHTML = "X:", g = Entry.createElement("input"), g.addClass("entryObjectCoordinateInputWorkspace"), h = Entry.createElement("span"), h.addClass("entryObjectCoordinateSpanWorkspace"), 
-    h.innerHTML = "Y:", k = Entry.createElement("input"), k.addClass("entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right"), l = Entry.createElement("span"), l.addClass("entryObjectCoordinateSpanWorkspace"), l.innerHTML = Lang.Workspace.Size, q = Entry.createElement("input"), q.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size"), d.appendChild(e), d.appendChild(g), d.appendChild(h), d.appendChild(k), d.appendChild(l), d.appendChild(q), 
-    d.xInput_ = g, d.yInput_ = k, d.sizeInput_ = q, this.coordinateView_ = d, c = this, g.onkeypress = function(a) {
-      13 == a.keyCode && (isNaN(g.value) || c.entity.setX(+g.value), c.updateCoordinateView(), c.blur());
+    h.innerHTML = "Y:", k = Entry.createElement("input"), k.addClass("entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right"), l = Entry.createElement("span"), l.addClass("entryObjectCoordinateSpanWorkspace"), l.innerHTML = Lang.Workspace.Size, n = Entry.createElement("input"), n.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size"), d.appendChild(e), d.appendChild(g), d.appendChild(h), d.appendChild(k), d.appendChild(l), d.appendChild(n), 
+    d.xInput_ = g, d.yInput_ = k, d.sizeInput_ = n, this.coordinateView_ = d, c = this, g.onkeypress = function(a) {
+      13 == a.keyCode && (isNaN(g.value) || c.entity.setX(Number(g.value)), c.updateCoordinateView(), c.blur());
     }, g.onblur = function(a) {
       c.entity.setX(c.entity.getX());
       Entry.stage.updateObject();
     }, k.onkeypress = function(a) {
-      13 == a.keyCode && (isNaN(k.value) || c.entity.setY(+k.value), c.updateCoordinateView(), c.blur());
+      13 == a.keyCode && (isNaN(k.value) || c.entity.setY(Number(k.value)), c.updateCoordinateView(), c.blur());
     }, k.onblur = function(a) {
       c.entity.setY(c.entity.getY());
       Entry.stage.updateObject();
@@ -9114,14 +9114,14 @@ Entry.Painter.prototype.fill = function() {
     var c = new createjs.Point(this.stage.mouseX, this.stage.mouseY);
     c.x = Math.round(c.x);
     c.y = Math.round(c.y);
-    for (var d = 4 * (c.y * b + c.x), e = this.colorLayerData.data[d], f = this.colorLayerData.data[d + 1], g = this.colorLayerData.data[d + 2], h = this.colorLayerData.data[d + 3], k, l, c = [[c.x, c.y]], q = Entry.hex2rgb(this.stroke.lineColor);c.length;) {
-      for (var d = c.pop(), n = d[0], m = d[1], d = 4 * (m * b + n);0 <= m && this.matchColor(d, e, f, g, h);) {
-        --m, d -= 4 * b;
+    for (var d = 4 * (c.y * b + c.x), e = this.colorLayerData.data[d], f = this.colorLayerData.data[d + 1], g = this.colorLayerData.data[d + 2], h = this.colorLayerData.data[d + 3], k, l, c = [[c.x, c.y]], n = Entry.hex2rgb(this.stroke.lineColor);c.length;) {
+      for (var d = c.pop(), m = d[0], q = d[1], d = 4 * (q * b + m);0 <= q && this.matchColor(d, e, f, g, h);) {
+        --q, d -= 4 * b;
       }
       d += 4 * b;
-      m += 1;
-      for (l = k = !1;m < a - 1 && this.matchColor(d, e, f, g, h);) {
-        m += 1, this.colorPixel(d, q.r, q.g, q.b), 0 < n && (this.matchColor(d - 4, e, f, g, h) ? k || (c.push([n - 1, m]), k = !0) : k && (k = !1)), n < b - 1 && (this.matchColor(d + 4, e, f, g, h) ? l || (c.push([n + 1, m]), l = !0) : l && (l = !1)), d += 4 * b;
+      q += 1;
+      for (l = k = !1;q < a - 1 && this.matchColor(d, e, f, g, h);) {
+        q += 1, this.colorPixel(d, n.r, n.g, n.b), 0 < m && (this.matchColor(d - 4, e, f, g, h) ? k || (c.push([m - 1, q]), k = !0) : k && (k = !1)), m < b - 1 && (this.matchColor(d + 4, e, f, g, h) ? l || (c.push([m + 1, q]), l = !0) : l && (l = !1)), d += 4 * b;
       }
       if (1080 < c.length) {
         break;
@@ -9665,9 +9665,9 @@ Entry.Painter.prototype.generateView = function(b) {
     this.attrColorArea = Entry.createElement("fieldset", "entryPainterAttrColor");
     this.attrColorArea.addClass("entryPlaygroundPainterAttrColor");
     g.appendChild(this.attrColorArea);
-    var q = Entry.createElement("div");
-    q.addClass("entryPlaygroundPainterAttrColorContainer");
-    this.attrColorArea.appendChild(q);
+    var n = Entry.createElement("div");
+    n.addClass("entryPlaygroundPainterAttrColorContainer");
+    this.attrColorArea.appendChild(n);
     this.attrCircleArea = Entry.createElement("div");
     this.attrCircleArea.addClass("painterAttrCircleArea");
     g.appendChild(this.attrCircleArea);
@@ -9694,7 +9694,7 @@ Entry.Painter.prototype.generateView = function(b) {
         document.getElementById("entryPainterAttrCircle").style.backgroundColor = a.stroke.lineColor;
         document.getElementById("entryPainterAttrCircleInput").value = b;
       });
-      q.appendChild(c);
+      n.appendChild(c);
     });
     this.attrThickArea = Entry.createElement("div", "painterAttrThickArea");
     this.attrThickArea.addClass("entryPlaygroundentryPlaygroundPainterAttrThickArea");
@@ -9703,12 +9703,12 @@ Entry.Painter.prototype.generateView = function(b) {
     d.addClass("painterAttrThickName");
     d.innerHTML = Lang.Workspace.thickness;
     this.attrThickArea.appendChild(d);
-    var n = Entry.createElement("fieldset", "entryPainterAttrThick");
-    n.addClass("entryPlaygroundPainterAttrThick");
-    this.attrThickArea.appendChild(n);
+    var m = Entry.createElement("fieldset", "entryPainterAttrThick");
+    m.addClass("entryPlaygroundPainterAttrThick");
+    this.attrThickArea.appendChild(m);
     d = Entry.createElement("div");
     d.addClass("paintAttrThickTop");
-    n.appendChild(d);
+    m.appendChild(d);
     e = Entry.createElement("select", "entryPainterAttrThick");
     e.addClass("entryPlaygroundPainterAttrThickInput");
     e.size = "1";
@@ -9718,16 +9718,16 @@ Entry.Painter.prototype.generateView = function(b) {
     for (d = 1;10 >= d;d++) {
       c = Entry.createElement("option"), c.value = d, c.innerHTML = d, e.appendChild(c);
     }
-    n.appendChild(e);
+    m.appendChild(e);
     d = Entry.createElement("div", "entryPainterShapeLineColor");
     d.addClass("painterAttrShapeLineColor");
     c = Entry.createElement("div", "entryPainterShapeInnerBackground");
     c.addClass("painterAttrShapeInnerBackground");
     d.appendChild(c);
-    n.appendChild(d);
+    m.appendChild(d);
     this.attrThickArea.painterAttrShapeLineColor = d;
-    n.bindOnClick(function() {
-      m.style.zIndex = "1";
+    m.bindOnClick(function() {
+      q.style.zIndex = "1";
       this.style.zIndex = "10";
       r = !1;
     });
@@ -9740,13 +9740,13 @@ Entry.Painter.prototype.generateView = function(b) {
     c = Entry.createElement("div");
     c.addClass("paintAttrBackgroundTop");
     d.appendChild(c);
-    var m = Entry.createElement("div", "entryPainterShapeBackgroundColor");
-    m.addClass("painterAttrShapeBackgroundColor");
-    this.attrBackgroundArea.painterAttrShapeBackgroundColor = m;
-    c.appendChild(m);
+    var q = Entry.createElement("div", "entryPainterShapeBackgroundColor");
+    q.addClass("painterAttrShapeBackgroundColor");
+    this.attrBackgroundArea.painterAttrShapeBackgroundColor = q;
+    c.appendChild(q);
     var r = !1;
-    m.bindOnClick(function(a) {
-      n.style.zIndex = "1";
+    q.bindOnClick(function(a) {
+      m.style.zIndex = "1";
       this.style.zIndex = "10";
       r = !0;
     });
@@ -10308,7 +10308,7 @@ Entry.Parser = function(b, a, c) {
   this.codeMirror = c;
   this._lang = a || "js";
   this.availableCode = [];
-  "maze" === b && (this._stageId = +Ntry.configManager.getConfig("stageId"), "object" == typeof NtryData && this.setAvailableCode(NtryData.config[this._stageId].availableCode, NtryData.player[this._stageId].code));
+  "maze" === b && (this._stageId = Number(Ntry.configManager.getConfig("stageId")), "object" == typeof NtryData && this.setAvailableCode(NtryData.config[this._stageId].availableCode, NtryData.player[this._stageId].code));
   this.mappingSyntax(b);
   switch(this._lang) {
     case "js":
@@ -11013,7 +11013,7 @@ p = Entry.Script.prototype;
 p.init = function(b, a, c) {
   Entry.assert("BLOCK" == b.tagName.toUpperCase(), b.tagName);
   this.type = b.getAttribute("type");
-  this.id = +b.getAttribute("id");
+  this.id = Number(b.getAttribute("id"));
   b.getElementsByTagName("mutation").length && b.getElementsByTagName("mutation")[0].hasAttribute("hashid") && (this.hashId = b.childNodes[0].getAttribute("hashid"));
   "REPEAT" == this.type.substr(0, 6).toUpperCase() && (this.isRepeat = !0);
   a instanceof Entry.Script && (this.previousScript = a, a.parentScript && (this.parentScript = a.parentScript));
@@ -11077,7 +11077,7 @@ p.getValue = function(b) {
   return this.values[b].run();
 };
 p.getNumberValue = function(b) {
-  return +this.values[b].run();
+  return Number(this.values[b].run());
 };
 p.getStringValue = function(b) {
   return String(this.values[b].run());
@@ -11092,7 +11092,7 @@ p.getStringField = function(b) {
   return String(this.fields[b]);
 };
 p.getNumberField = function(b) {
-  return +this.fields[b];
+  return Number(this.fields[b]);
 };
 p.callReturn = function() {
   return this.nextScript ? this.nextScript : this.parentScript ? this.parentScript : null;
@@ -11379,6 +11379,7 @@ Entry.BlockMockup = function(b, a, c) {
 })(Entry.BlockMockup.prototype);
 Entry.ContextMenu = {};
 (function(b) {
+  b.visible = !1;
   b.createDom = function() {
     this.dom = Entry.Dom("ul", {id:"entry-contextmenu", parent:$("body")});
     Entry.Utils.disableContextmenu(this.dom);
@@ -11386,26 +11387,27 @@ Entry.ContextMenu = {};
       this.hide();
     });
   };
-  b.show = function(a, b) {
+  b.show = function(a, b, d) {
     this.dom || this.createDom();
     if (0 !== a.length) {
-      var d = this;
+      var e = this;
       void 0 !== b && (this._className = b, this.dom.addClass(b));
-      var e = this.dom;
-      e.empty();
+      b = this.dom;
+      b.empty();
       for (var f = 0, g = a.length;f < g;f++) {
-        var h = a[f], k = h.text, l = !1 !== h.enable, q = Entry.Dom("li", {class:l ? "menuAble" : "menuDisable", parent:e});
-        q.text(k);
+        var h = a[f], k = h.text, l = !1 !== h.enable, n = Entry.Dom("li", {class:l ? "menuAble" : "menuDisable", parent:b});
+        n.text(k);
         l && h.callback && function(a, b) {
           a.mousedown(function(a) {
             a.preventDefault();
-            d.hide();
+            e.hide();
             b(a);
           });
-        }(q, h.callback);
+        }(n, h.callback);
       }
-      e.removeClass("entryRemove");
-      this.position(Entry.mouseCoordinate);
+      b.removeClass("entryRemove");
+      this.visible = !0;
+      this.position(d || Entry.mouseCoordinate);
     }
   };
   b.position = function(a) {
@@ -11417,6 +11419,7 @@ Entry.ContextMenu = {};
     b.css({left:a.x, top:a.y});
   };
   b.hide = function() {
+    this.visible = !1;
     this.dom.empty();
     this.dom.addClass("entryRemove");
     this._className && (this.dom.removeClass(this._className), delete this._className);
@@ -11688,7 +11691,7 @@ Entry.getElementsByClassName = function(b) {
   return a;
 };
 Entry.parseNumber = function(b) {
-  return "string" != typeof b || isNaN(+b) ? "number" != typeof b || isNaN(+b) ? !1 : b : +b;
+  return "string" != typeof b || isNaN(Number(b)) ? "number" != typeof b || isNaN(Number(b)) ? !1 : b : Number(b);
 };
 Entry.countStringLength = function(b) {
   var a, c = 0;
@@ -11754,7 +11757,7 @@ Entry.computeInputWidth = function(b) {
   document.body.appendChild(a);
   b = a.offsetWidth;
   document.body.removeChild(a);
-  return +(b + 10) + "px";
+  return Number(b + 10) + "px";
 };
 Entry.isArrowOrBackspace = function(b) {
   return -1 < [37, 38, 39, 40, 8].indexOf(b);
@@ -11919,7 +11922,7 @@ Entry.getMaxFloatPoint = function(b) {
   return Math.min(a, 20);
 };
 Entry.convertToRoundedDecimals = function(b, a) {
-  return isNaN(b) || !this.isFloat(b) ? b : +(Math.round(b + "e" + a) + "e-" + a);
+  return isNaN(b) || !this.isFloat(b) ? b : Number(Math.round(b + "e" + a) + "e-" + a);
 };
 Entry.attachEventListener = function(b, a, c) {
   setTimeout(function() {
@@ -12336,7 +12339,7 @@ Entry.Func.generateBlock = function(b) {
   var a = {template:b.template, params:b.params}, c = /(%\d)/mi, d = b.template.split(c), e = "", f = 0, g = 0, h;
   for (h in d) {
     var k = d[h];
-    c.test(k) ? (k = +k.split("%")[1] - 1, k = b.params[k], "Indicator" !== k.type && ("boolean" === k.accept ? (e += Lang.template.function_param_boolean + (f ? f : ""), f++) : (e += Lang.template.function_param_string + (g ? g : ""), g++))) : e += k;
+    c.test(k) ? (k = Number(k.split("%")[1]) - 1, k = b.params[k], "Indicator" !== k.type && ("boolean" === k.accept ? (e += Lang.template.function_param_boolean + (f ? f : ""), f++) : (e += Lang.template.function_param_string + (g ? g : ""), g++))) : e += k;
   }
   return {block:a, description:e};
 };
@@ -12599,12 +12602,12 @@ Entry.HWMonitor = function(b) {
     }
     h < f - e && (f = h / 2 + 3, e = -h / 2 - 3);
     for (;1 < a.length;) {
-      var k = a.shift(), l = a.pop(), q = e, n = f, m = d;
-      h <= f - e ? (e += k.width + 5, f -= l.width + 5, m = 0) : 0 === a.length ? (e = (e + f) / 2 - 3, f = e + 6) : (e = Math.max(e, -g / 2 + k.width) + 15, f = Math.min(f, g / 2 - l.width) - 15);
-      this._movePort(k, e, b, q);
-      this._movePort(l, f, b, n);
+      var k = a.shift(), l = a.pop(), n = e, m = f, q = d;
+      h <= f - e ? (e += k.width + 5, f -= l.width + 5, q = 0) : 0 === a.length ? (e = (e + f) / 2 - 3, f = e + 6) : (e = Math.max(e, -g / 2 + k.width) + 15, f = Math.min(f, g / 2 - l.width) - 15);
+      this._movePort(k, e, b, n);
+      this._movePort(l, f, b, m);
       h -= k.width + l.width + 10;
-      b += m;
+      b += q;
     }
     a.length && this._movePort(a[0], (f + e - a[0].width) / 2, b, 100);
   };
@@ -12615,8 +12618,8 @@ Entry.HWMonitor = function(b) {
     for (var e = listLine = wholeWidth = 0;e < a.length;e++) {
       wholeWidth += a[e].width;
     }
-    for (var f = 0, g = 0, h = initX, k = 0, l = 0, q = 0, e = 0;e < a.length;e++) {
-      l = a[e], e != a.length - 1 && (q = a[e + 1]), g += l.width, lP = initX, k = initY + 30 * f, l.group.attr({transform:"translate(" + lP + "," + k + ")"}), initX += l.width + 10, g > d - (l.width + q.width / 2.2) && (f += 1, initX = h, g = 0);
+    for (var f = 0, g = 0, h = initX, k = 0, l = 0, n = 0, e = 0;e < a.length;e++) {
+      l = a[e], e != a.length - 1 && (n = a[e + 1]), g += l.width, lP = initX, k = initY + 30 * f, l.group.attr({transform:"translate(" + lP + "," + k + ")"}), initX += l.width + 10, g > d - (l.width + n.width / 2.2) && (f += 1, initX = h, g = 0);
     }
   };
   b._movePort = function(a, b, d, e) {
@@ -12729,7 +12732,7 @@ p.removePortReadable = function(b) {
     var a, c;
     for (c in this.sendQueue.readablePorts) {
       if (this.sendQueue.readablePorts[c] == b) {
-        a = +c;
+        a = Number(c);
         break;
       }
     }
@@ -13185,7 +13188,7 @@ Entry.Variable = function(b) {
   this._valueWidth = this._nameWidth = null;
   var a = Entry.parseNumber(b.value);
   this.value_ = "number" == typeof a ? a : b.value ? b.value : 0;
-  "slide" == this.type ? (this.minValue_ = +(b.minValue ? b.minValue : 0), this.maxValue_ = +(b.maxValue ? b.maxValue : 100)) : "list" == this.type && (this.array_ = b.array ? b.array : []);
+  "slide" == this.type ? (this.minValue_ = Number(b.minValue ? b.minValue : 0), this.maxValue_ = Number(b.maxValue ? b.maxValue : 100)) : "list" == this.type && (this.array_ = b.array ? b.array : []);
   b.isClone || (this.visible_ = b.visible || "boolean" == typeof b.visible ? b.visible : !0, this.x_ = b.x ? b.x : null, this.y_ = b.y ? b.y : null, "list" == this.type && (this.width_ = b.width ? b.width : 100, this.height_ = b.height ? b.height : 120, this.scrollPosition = 0), this.BORDER = 6, this.FONT = "10pt NanumGothic");
 };
 Entry.Variable.prototype.generateView = function(b) {
@@ -13362,13 +13365,13 @@ Entry.Variable.prototype.getId = function() {
   return this.id_;
 };
 Entry.Variable.prototype.getValue = function() {
-  return this.isNumber() ? +this.value_ : this.value_;
+  return this.isNumber() ? Number(this.value_) : this.value_;
 };
 Entry.Variable.prototype.isNumber = function() {
   return isNaN(this.value_) ? !1 : !0;
 };
 Entry.Variable.prototype.setValue = function(b) {
-  "slide" != this.type ? this.value_ = b : (b = +b, this.value_ = b < this.minValue_ ? this.minValue_ : b > this.maxValue_ ? this.maxValue_ : b);
+  "slide" != this.type ? this.value_ = b : (b = Number(b), this.value_ = b < this.minValue_ ? this.minValue_ : b > this.maxValue_ ? this.maxValue_ : b);
   this.isCloud_ && Entry.variableContainer.updateCloudVariables();
   this._valueWidth = null;
   this.updateView();
@@ -13472,7 +13475,7 @@ Entry.Variable.prototype.updateSlideValueByView = function() {
   var b = Math.max(this.valueSetter_.graphics.command.x - 10, 0) / this.maxWidth;
   0 > b && (b = 0);
   1 < b && (b = 1);
-  var a = parseFloat(this.minValue_), c = parseFloat(this.maxValue_), b = (a + Math.abs(c - a) * b).toFixed(2), b = parseFloat(b);
+  var a = parseFloat(this.minValue_), c = parseFloat(this.maxValue_), b = (a + Number(Math.abs(c - a) * b)).toFixed(2), b = parseFloat(b);
   b < a ? b = this.minValue_ : b > c && (b = this.maxValue_);
   this.isFloatPoint() || (b = Math.round(b));
   this.setValue(b);
@@ -14663,7 +14666,7 @@ Entry.VariableContainer.prototype.updateListSettingView = function(b) {
   c.removeClass("entryRemove");
 };
 Entry.VariableContainer.prototype.setListLength = function(b) {
-  b = +b;
+  b = Number(b);
   var a = this.selectedList.array_;
   if (!isNaN(b)) {
     var c = a.length;
@@ -15456,7 +15459,7 @@ Entry.BlockMenu = function(b, a, c, d) {
     if (isNaN(a)) {
       return a;
     }
-    a = +a;
+    a = Number(a);
     for (var b = this._categories, d = this._categoryElems, e = 0;e < b.length;e++) {
       var f = b[e];
       if (!d[f].hasClass("entryRemove") && 0 === a--) {
@@ -15825,7 +15828,7 @@ Entry.BlockView.pngMap = {};
           var h = e[g].trim();
           if (0 !== h.length) {
             if (d.test(h)) {
-              var k = +h.split("%")[1] - 1, h = f[k], h = new Entry["Field" + h.type](h, this, k, a, g);
+              var k = Number(h.split("%")[1]) - 1, h = f[k], h = new Entry["Field" + h.type](h, this, k, a, g);
               this._contents.push(h);
               this._paramMap[k] = h;
             } else {
@@ -15923,66 +15926,52 @@ Entry.BlockView.pngMap = {};
   b.onMouseDown = function(a) {
     function c(a) {
       a.stopPropagation();
-      var c = e.workspace.getMode(), d;
+      var c = g.workspace.getMode(), d;
       c === Entry.Workspace.MODE_VIMBOARD && b.vimBoardEvent(a, "dragOver");
       d = a.originalEvent && a.originalEvent.touches ? a.originalEvent.touches[0] : a;
-      var f = m.mouseDownCoordinate, f = Math.sqrt(Math.pow(d.pageX - f.x, 2) + Math.pow(d.pageY - f.y, 2));
-      (m.dragMode == Entry.DRAG_MODE_DRAG || f > Entry.BlockView.DRAG_RADIUS) && m.movable && (m.isInBlockMenu ? e.cloneToGlobal(a) : (a = !1, m.dragMode != Entry.DRAG_MODE_DRAG && (m._toGlobalCoordinate(), m.dragMode = Entry.DRAG_MODE_DRAG, m.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(m, c), a = !0), this.animating && this.set({animating:!1}), 0 === m.dragInstance.height && m.dragInstance.set({height:-1 + m.height}), c = m.dragInstance, m._moveBy(d.pageX - c.offsetX, d.pageY - 
-      c.offsetY, !1), c.set({offsetX:d.pageX, offsetY:d.pageY}), Entry.GlobalSvg.position(), m.originPos || (m.originPos = {x:m.x, y:m.y}), a && e.generateCodeMagnetMap(), m._updateCloseBlock()));
+      var h = f.mouseDownCoordinate, h = Math.sqrt(Math.pow(d.pageX - h.x, 2) + Math.pow(d.pageY - h.y, 2));
+      if (f.dragMode == Entry.DRAG_MODE_DRAG || h > Entry.BlockView.DRAG_RADIUS) {
+        e && (clearTimeout(e), e = null), f.movable && (f.isInBlockMenu ? g.cloneToGlobal(a) : (a = !1, f.dragMode != Entry.DRAG_MODE_DRAG && (f._toGlobalCoordinate(), f.dragMode = Entry.DRAG_MODE_DRAG, f.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(f, c), a = !0), this.animating && this.set({animating:!1}), 0 === f.dragInstance.height && f.dragInstance.set({height:-1 + f.height}), c = f.dragInstance, f._moveBy(d.pageX - c.offsetX, d.pageY - c.offsetY, !1), c.set({offsetX:d.pageX, 
+        offsetY:d.pageY}), Entry.GlobalSvg.position(), f.originPos || (f.originPos = {x:f.x, y:f.y}), a && g.generateCodeMagnetMap(), f._updateCloseBlock()));
+      }
     }
     function d(a) {
+      e && (clearTimeout(e), e = null);
       $(document).unbind(".block");
-      m.terminateDrag(a);
-      e && e.set({dragBlock:null});
-      m._changeFill(!1);
+      f.terminateDrag(a);
+      g && g.set({dragBlock:null});
+      f._changeFill(!1);
       Entry.GlobalSvg.remove();
       delete this.mouseDownCoordinate;
-      delete m.dragInstance;
+      delete f.dragInstance;
     }
     a.stopPropagation && a.stopPropagation();
     a.preventDefault && a.preventDefault();
+    var e = null, f = this;
     this._changeFill(!1);
-    var e = this.getBoard();
+    var g = this.getBoard();
     Entry.documentMousedown && Entry.documentMousedown.notify(a);
-    if (!this.readOnly && !e.viewOnly) {
-      e.setSelectedBlock(this);
+    if (!this.readOnly && !g.viewOnly) {
+      g.setSelectedBlock(this);
       this.dominate();
       if (0 === a.button || a.originalEvent && a.originalEvent.touches) {
-        var f;
-        f = a.originalEvent && a.originalEvent.touches ? a.originalEvent.touches[0] : a;
-        this.mouseDownCoordinate = {x:f.pageX, y:f.pageY};
-        var g = $(document);
-        g.bind("mousemove.block touchmove.block", c);
-        g.bind("mouseup.block touchend.block", d);
-        this.dragInstance = new Entry.DragInstance({startX:f.pageX, startY:f.pageY, offsetX:f.pageX, offsetY:f.pageY, height:0, mode:!0});
-        e.set({dragBlock:this});
+        var h = a.type, k;
+        k = a.originalEvent && a.originalEvent.touches ? a.originalEvent.touches[0] : a;
+        this.mouseDownCoordinate = {x:k.pageX, y:k.pageY};
+        var l = $(document);
+        l.bind("mousemove.block touchmove.block", c);
+        l.bind("mouseup.block touchend.block", d);
+        this.dragInstance = new Entry.DragInstance({startX:k.pageX, startY:k.pageY, offsetX:k.pageX, offsetY:k.pageY, height:0, mode:!0});
+        g.set({dragBlock:this});
         this.addDragging();
         this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
+        "touchstart" === h && (e = setTimeout(function() {
+          e && (e = null, d(), f._rightClick(a));
+        }, 1E3));
       } else {
-        if (Entry.Utils.isRightButton(a)) {
-          var h = this, k = h.block;
-          if (this.isInBlockMenu) {
-            return;
-          }
-          f = [];
-          var g = {text:Lang.Blocks.Duplication_option, enable:this.copyable, callback:function() {
-            Entry.do("cloneBlock", k);
-          }}, l = {text:Lang.Blocks.CONTEXT_COPY_option, enable:this.copyable, callback:function() {
-            h.block.copyToClipboard();
-          }}, q = {text:Lang.Blocks.Delete_Blocks, enable:k.isDeletable(), callback:function() {
-            Entry.do("destroyBlock", h.block);
-          }}, n = {text:Lang.Menus.save_as_image, callback:function() {
-            h.downloadAsImage();
-          }};
-          f.push(g);
-          f.push(l);
-          f.push(q);
-          Entry.Utils.isChrome() && "workspace" == Entry.type && f.push(n);
-          Entry.ContextMenu.show(f);
-        }
+        Entry.Utils.isRightButton(a) && this._rightClick(a);
       }
-      var m = this;
-      e.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD && a && document.getElementsByClassName("CodeMirror")[0].dispatchEvent(Entry.Utils.createMouseEvent("dragStart", event));
+      g.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD && a && document.getElementsByClassName("CodeMirror")[0].dispatchEvent(Entry.Utils.createMouseEvent("dragStart", event));
     }
   };
   b.vimBoardEvent = function(a, b, d) {
@@ -16241,7 +16230,7 @@ Entry.BlockView.pngMap = {};
   };
   b.getDataUrl = function(a, b) {
     function d() {
-      g = g.replace("(svgGroup)", (new XMLSerializer).serializeToString(k)).replace("%W", h.width * q).replace("%H", h.height * q).replace("(defs)", (new XMLSerializer).serializeToString(m[0])).replace(/>\s+/g, ">").replace(/\s+</g, "<");
+      g = g.replace("(svgGroup)", (new XMLSerializer).serializeToString(k)).replace("%W", h.width * n).replace("%H", h.height * n).replace("(defs)", (new XMLSerializer).serializeToString(q[0])).replace(/>\s+/g, ">").replace(/\s+</g, "<");
       var a = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(g)));
       g = null;
       b ? (f.resolve({src:a, width:h.width, height:h.height}), k = null) : e(a, h.width, h.height, 1.5).then(function(a) {
@@ -16278,13 +16267,13 @@ Entry.BlockView.pngMap = {};
       f.src = a;
       return e.promise();
     }
-    var f = $.Deferred(), g = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %W %H">(svgGroup)(defs)</svg>', h = this.svgGroup.getBoundingClientRect(), k = a ? this.svgGroup : this.svgGroup.cloneNode(!0), l = this._skeleton.box(this), q = b ? 1 : 1.5, n = function() {
+    var f = $.Deferred(), g = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %W %H">(svgGroup)(defs)</svg>', h = this.svgGroup.getBoundingClientRect(), k = a ? this.svgGroup : this.svgGroup.cloneNode(!0), l = this._skeleton.box(this), n = b ? 1 : 1.5, m = function() {
       var a = window.platform;
       return a && "windows" === a.name.toLowerCase() && "7" === a.version[0] ? !0 : !1;
     }() ? .9 : .95;
-    -1 < this.type.indexOf("func_") && (n *= .99);
-    k.setAttribute("transform", "scale(%SCALE) translate(%X,%Y)".replace("%X", -l.offsetX).replace("%Y", -l.offsetY).replace("%SCALE", q));
-    for (var m = this.getBoard().svgDom.find("defs"), r = k.getElementsByTagName("image"), l = k.getElementsByTagName("text"), v = ["\u2265", "\u2264"], u = "\u2265\u2264-><=+-x/".split(""), t = 0;t < l.length;t++) {
+    -1 < this.type.indexOf("func_") && (m *= .99);
+    k.setAttribute("transform", "scale(%SCALE) translate(%X,%Y)".replace("%X", -l.offsetX).replace("%Y", -l.offsetY).replace("%SCALE", n));
+    for (var q = this.getBoard().svgDom.find("defs"), r = k.getElementsByTagName("image"), l = k.getElementsByTagName("text"), v = ["\u2265", "\u2264"], u = "\u2265\u2264-><=+-x/".split(""), t = 0;t < l.length;t++) {
       (function(a) {
         a.setAttribute("font-family", "'nanumBarunRegular', 'NanumGothic', '\ub098\ub214\uace0\ub515','NanumGothicWeb', '\ub9d1\uc740 \uace0\ub515', 'Malgun Gothic', Dotum");
         var b = parseInt(a.getAttribute("font-size")), c = $(a).text();
@@ -16293,7 +16282,7 @@ Entry.BlockView.pngMap = {};
           var d = parseInt(a.getAttribute("y"));
           a.setAttribute("y", d - 1);
         }
-        -1 < u.indexOf(c) ? a.setAttribute("font-size", b + "px") : a.setAttribute("font-size", b * n + "px");
+        -1 < u.indexOf(c) ? a.setAttribute("font-size", b + "px") : a.setAttribute("font-size", b * m + "px");
         a.setAttribute("alignment-baseline", "baseline");
       })(l[t]);
     }
@@ -16322,6 +16311,28 @@ Entry.BlockView.pngMap = {};
       b.download = "\uc5d4\ud2b8\ub9ac \ube14\ub85d.png";
       b.click();
     });
+  };
+  b._rightClick = function(a) {
+    var b = Entry.disposeEvent;
+    b && b.notify(a);
+    var d = this, e = d.block;
+    if (!this.isInBlockMenu) {
+      var b = [], f = {text:Lang.Blocks.Duplication_option, enable:this.copyable, callback:function() {
+        Entry.do("cloneBlock", e);
+      }}, g = {text:Lang.Blocks.CONTEXT_COPY_option, enable:this.copyable, callback:function() {
+        d.block.copyToClipboard();
+      }}, h = {text:Lang.Blocks.Delete_Blocks, enable:e.isDeletable(), callback:function() {
+        Entry.do("destroyBlock", d.block);
+      }}, k = {text:Lang.Menus.save_as_image, callback:function() {
+        d.downloadAsImage();
+      }};
+      b.push(f);
+      b.push(g);
+      b.push(h);
+      Entry.Utils.isChrome() && "workspace" == Entry.type && b.push(k);
+      a.originalEvent && a.originalEvent.touches && (a = a.originalEvent.touches[0]);
+      Entry.ContextMenu.show(b, null, {x:a.clientX, y:a.clientY});
+    }
   };
 })(Entry.BlockView.prototype);
 Entry.Code = function(b, a) {
@@ -16668,10 +16679,10 @@ Entry.Scope = function(b, a) {
     return String(this.getValue(a, b));
   };
   b.getNumberValue = function(a, b) {
-    return +this.getValue(a);
+    return Number(this.getValue(a));
   };
   b.getBooleanValue = function(a, b) {
-    return +this.getValue(a, b) ? !0 : !1;
+    return Number(this.getValue(a, b)) ? !0 : !1;
   };
   b.getField = function(a, b) {
     return this.block.params[this._getParamIndex(a)];
@@ -16680,7 +16691,7 @@ Entry.Scope = function(b, a) {
     return String(this.getField(a));
   };
   b.getNumberField = function(a) {
-    return +this.getField(a);
+    return Number(this.getField(a));
   };
   b.getStatement = function(a, b) {
     return this.executor.stepInto(this.block.statements[this._getStatementIndex(a, b)]);
@@ -16756,7 +16767,7 @@ Entry.Field = function() {
     this.value != a && (this.value = a, this._block.params[this._index] = a, b && this._blockView.reDraw());
   };
   b._isEditable = function() {
-    if (this._block.view.dragMode == Entry.DRAG_MODE_DRAG) {
+    if (Entry.ContextMenu.visible || this._block.view.dragMode == Entry.DRAG_MODE_DRAG) {
       return !1;
     }
     var a = this._block.view, b = a.getBoard();
@@ -18041,6 +18052,7 @@ Entry.Board.OPTION_PASTE = 0;
 Entry.Board.OPTION_ALIGN = 1;
 Entry.Board.OPTION_CLEAR = 2;
 Entry.Board.OPTION_DOWNLOAD = 3;
+Entry.Board.DRAG_RADIUS = 5;
 (function(b) {
   b.schema = {code:null, dragBlock:null, magnetedBlockView:null, selectedBlockView:null};
   b.createView = function(a) {
@@ -18127,41 +18139,36 @@ Entry.Board.OPTION_DOWNLOAD = 3;
       a.stopPropagation && a.stopPropagation();
       a.preventDefault && a.preventDefault();
       a = a.originalEvent && a.originalEvent.touches ? a.originalEvent.touches[0] : a;
-      var c = f.dragInstance;
-      f.scroller.scroll(a.pageX - c.offsetX, a.pageY - c.offsetY);
-      c.set({offsetX:a.pageX, offsetY:a.pageY});
+      var c = f.mouseDownCoordinate;
+      Math.sqrt(Math.pow(a.pageX - c.x, 2) + Math.pow(a.pageY - c.y, 2)) < Entry.Board.DRAG_RADIUS || (g && (clearTimeout(g), g = null), c = f.dragInstance, f.scroller.scroll(a.pageX - c.offsetX, a.pageY - c.offsetY), c.set({offsetX:a.pageX, offsetY:a.pageY}));
     }
     function d(a) {
+      g && (clearTimeout(g), g = null);
       $(document).unbind(".entryBoard");
+      delete f.mouseDownCoordinate;
       delete f.dragInstance;
     }
     if (this.workspace.getMode() != Entry.Workspace.MODE_VIMBOARD) {
       a.stopPropagation && a.stopPropagation();
       a.preventDefault && a.preventDefault();
+      var e, f = this, g = null;
       if (0 === a.button || a.originalEvent && a.originalEvent.touches) {
-        a = a.originalEvent && a.originalEvent.touches ? a.originalEvent.touches[0] : a;
-        Entry.documentMousedown && Entry.documentMousedown.notify(a);
-        var e = $(document);
-        e.bind("mousemove.entryBoard", b);
-        e.bind("mouseup.entryBoard", d);
-        e.bind("touchmove.entryBoard", b);
-        e.bind("touchend.entryBoard", d);
-        this.dragInstance = new Entry.DragInstance({startX:a.pageX, startY:a.pageY, offsetX:a.pageX, offsetY:a.pageY});
+        var h = a.type;
+        e = a.originalEvent && a.originalEvent.touches ? a.originalEvent.touches[0] : a;
+        Entry.documentMousedown && Entry.documentMousedown.notify(e);
+        var k = $(document);
+        this.mouseDownCoordinate = {x:e.pageX, y:e.pageY};
+        k.bind("mousemove.entryBoard", b);
+        k.bind("mouseup.entryBoard", d);
+        k.bind("touchmove.entryBoard", b);
+        k.bind("touchend.entryBoard", d);
+        this.dragInstance = new Entry.DragInstance({startX:e.pageX, startY:e.pageY, offsetX:e.pageX, offsetY:e.pageY});
+        "touchstart" === h && (g = setTimeout(function() {
+          g && (g = null, d(), f._rightClick(a));
+        }, 1E3));
       } else {
-        if (Entry.Utils.isRightButton(a)) {
-          if (!this.visible) {
-            return;
-          }
-          a = [];
-          this._contextOptions[Entry.Board.OPTION_PASTE].option.enable = !!Entry.clipboard;
-          this._contextOptions[Entry.Board.OPTION_DOWNLOAD].option.enable = 0 !== this.code.getThreads().length;
-          for (e = 0;e < this._contextOptions.length;e++) {
-            this._contextOptions[e].activated && a.push(this._contextOptions[e].option);
-          }
-          Entry.ContextMenu.show(a);
-        }
+        Entry.Utils.isRightButton(a) && this._rightClick(a);
       }
-      var f = this;
     }
   };
   b.mouseWheel = function(a) {
@@ -18295,19 +18302,19 @@ Entry.Board.OPTION_DOWNLOAD = 3;
     var k = d.x;
     d = d.y;
     for (var l = 0;l < f.length;l++) {
-      var q = f[l], n = q.view;
-      n.zIndex = b;
-      if (n.dragInstance) {
+      var n = f[l], m = n.view;
+      m.zIndex = b;
+      if (m.dragInstance) {
         break;
       }
-      d += n.y;
-      k += n.x;
+      d += m.y;
+      k += m.x;
       a = d + 1;
-      n.magnet.next && (a += n.height, h.push({point:d, endPoint:a, startBlock:q, blocks:[]}), h.push({point:a, blocks:[]}), n.absX = k);
-      q.statements && (b += .01);
-      for (var m = 0;m < q.statements.length;m++) {
-        a = q.statements[m];
-        var r = q.view._statements[m];
+      m.magnet.next && (a += m.height, h.push({point:d, endPoint:a, startBlock:n, blocks:[]}), h.push({point:a, blocks:[]}), m.absX = k);
+      n.statements && (b += .01);
+      for (var q = 0;q < n.statements.length;q++) {
+        a = n.statements[q];
+        var r = n.view._statements[q];
         r.zIndex = b;
         r.absX = k + r.x;
         h.push({point:r.y + d - 30, endPoint:r.y + d, startBlock:r, blocks:[]});
@@ -18315,7 +18322,7 @@ Entry.Board.OPTION_DOWNLOAD = 3;
         b += .01;
         g = g.concat(this._getNextMagnets(a, b, {x:r.x + k, y:r.y + d}, e));
       }
-      n.magnet.next && (d += n.magnet.next.y, k += n.magnet.next.x);
+      m.magnet.next && (d += m.magnet.next.y, k += m.magnet.next.x);
     }
     return g.concat(h);
   };
@@ -18340,20 +18347,20 @@ Entry.Board.OPTION_DOWNLOAD = 3;
     var k = d.x;
     d = d.y;
     for (var l = 0;l < f.length;l++) {
-      var q = f[l], n = q.view;
-      if (n.dragInstance) {
+      var n = f[l], m = n.view;
+      if (m.dragInstance) {
         break;
       }
-      n.zIndex = b;
-      d += n.y;
-      k += n.x;
-      h = h.concat(this._getFieldBlockMetaData(n, k, d, b, e));
-      q.statements && (b += .01);
-      for (var m = 0;m < q.statements.length;m++) {
-        a = q.statements[m];
-        var r = q.view._statements[m], g = g.concat(this._getFieldMagnets(a, b, {x:r.x + k, y:r.y + d}, e));
+      m.zIndex = b;
+      d += m.y;
+      k += m.x;
+      h = h.concat(this._getFieldBlockMetaData(m, k, d, b, e));
+      n.statements && (b += .01);
+      for (var q = 0;q < n.statements.length;q++) {
+        a = n.statements[q];
+        var r = n.view._statements[q], g = g.concat(this._getFieldMagnets(a, b, {x:r.x + k, y:r.y + d}, e));
       }
-      n.magnet.next && (d += n.magnet.next.y, k += n.magnet.next.x);
+      m.magnet.next && (d += m.magnet.next.y, k += m.magnet.next.x);
     }
     return g.concat(h);
   };
@@ -18363,14 +18370,14 @@ Entry.Board.OPTION_DOWNLOAD = 3;
     for (var k = 0;k < g.length;k++) {
       var l = g[k];
       if (l instanceof Entry.FieldBlock) {
-        var q = l._valueBlock;
-        if (!q.view.dragInstance && (l.acceptType === f || "boolean" === l.acceptType)) {
-          var n = b + l.box.x, m = d + l.box.y + a.contentHeight % 1E3 * -.5, r = d + l.box.y + l.box.height;
-          l.acceptType === f && (h.push({point:m, endPoint:r, startBlock:q, blocks:[]}), h.push({point:r, blocks:[]}));
-          l = q.view;
-          l.absX = n;
+        var n = l._valueBlock;
+        if (!n.view.dragInstance && (l.acceptType === f || "boolean" === l.acceptType)) {
+          var m = b + l.box.x, q = d + l.box.y + a.contentHeight % 1E3 * -.5, r = d + l.box.y + l.box.height;
+          l.acceptType === f && (h.push({point:q, endPoint:r, startBlock:n, blocks:[]}), h.push({point:r, blocks:[]}));
+          l = n.view;
+          l.absX = m;
           l.zIndex = e;
-          h = h.concat(this._getFieldBlockMetaData(l, n + l.contentPos.x, m + l.contentPos.y, e + .01, f));
+          h = h.concat(this._getFieldBlockMetaData(l, m + l.contentPos.x, q + l.contentPos.y, e + .01, f));
         }
       }
     }
@@ -18382,20 +18389,20 @@ Entry.Board.OPTION_DOWNLOAD = 3;
     var k = d.x;
     d = d.y;
     for (var l = 0;l < f.length;l++) {
-      var q = f[l], n = q.view;
-      if (n.dragInstance) {
+      var n = f[l], m = n.view;
+      if (m.dragInstance) {
         break;
       }
-      n.zIndex = b;
-      d += n.y;
-      k += n.x;
-      h = h.concat(this._getOutputMetaData(n, k, d, b, e));
-      q.statements && (b += .01);
-      for (var m = 0;m < q.statements.length;m++) {
-        a = q.statements[m];
-        var r = q.view._statements[m], g = g.concat(this._getOutputMagnets(a, b, {x:r.x + k, y:r.y + d}, e));
+      m.zIndex = b;
+      d += m.y;
+      k += m.x;
+      h = h.concat(this._getOutputMetaData(m, k, d, b, e));
+      n.statements && (b += .01);
+      for (var q = 0;q < n.statements.length;q++) {
+        a = n.statements[q];
+        var r = n.view._statements[q], g = g.concat(this._getOutputMagnets(a, b, {x:r.x + k, y:r.y + d}, e));
       }
-      n.magnet.next && (d += n.magnet.next.y, k += n.magnet.next.x);
+      m.magnet.next && (d += m.magnet.next.y, k += m.magnet.next.x);
     }
     return g.concat(h);
   };
@@ -18404,9 +18411,9 @@ Entry.Board.OPTION_DOWNLOAD = 3;
     b += a.contentPos.x;
     d += a.contentPos.y;
     for (a = 0;a < g.length;a++) {
-      var k = g[a], l = b + k.box.x, q = d - 24, n = d;
-      k instanceof Entry.FieldBlock ? (k.acceptType === f && (h.push({point:q, endPoint:n, startBlock:k, blocks:[]}), h.push({point:n, blocks:[]}), k.absX = l, k.zIndex = e, k.width = 20), (q = k._valueBlock) && (h = h.concat(this._getOutputMetaData(q.view, l, d + k.box.y, e + .01, f)))) : k instanceof Entry.FieldOutput && k.acceptType === f && (h.push({point:q, endPoint:n, startBlock:k, blocks:[]}), h.push({point:n, blocks:[]}), k.absX = l, k.zIndex = e, k.width = 20, (q = k._valueBlock) && (q.view.dragInstance || 
-      (h = h.concat(this._getOutputMetaData(q.view, b + k.box.x, d + k.box.y, e + .01, f)))));
+      var k = g[a], l = b + k.box.x, n = d - 24, m = d;
+      k instanceof Entry.FieldBlock ? (k.acceptType === f && (h.push({point:n, endPoint:m, startBlock:k, blocks:[]}), h.push({point:m, blocks:[]}), k.absX = l, k.zIndex = e, k.width = 20), (n = k._valueBlock) && (h = h.concat(this._getOutputMetaData(n.view, l, d + k.box.y, e + .01, f)))) : k instanceof Entry.FieldOutput && k.acceptType === f && (h.push({point:n, endPoint:m, startBlock:k, blocks:[]}), h.push({point:m, blocks:[]}), k.absX = l, k.zIndex = e, k.width = 20, (n = k._valueBlock) && (n.view.dragInstance || 
+      (h = h.concat(this._getOutputMetaData(n.view, b + k.box.x, d + k.box.y, e + .01, f)))));
     }
     return h;
   };
@@ -18506,6 +18513,20 @@ Entry.Board.OPTION_DOWNLOAD = 3;
   b.offset = function() {
     (!this._offset || 0 === this._offset.top && 0 === this._offset.left) && this.updateOffset();
     return this._offset;
+  };
+  b._rightClick = function(a) {
+    var b = Entry.disposeEvent;
+    b && b.notify(a);
+    if (this.visible) {
+      var b = [], d = this._contextOptions;
+      d[Entry.Board.OPTION_PASTE].option.enable = !!Entry.clipboard;
+      d[Entry.Board.OPTION_DOWNLOAD].option.enable = 0 !== this.code.getThreads().length;
+      for (var e = 0;e < this._contextOptions.length;e++) {
+        d[e].activated && b.push(d[e].option);
+      }
+      a.originalEvent && a.originalEvent.touches && (a = a.originalEvent.touches[0]);
+      Entry.ContextMenu.show(b, null, {x:a.clientX, y:a.clientY});
+    }
   };
 })(Entry.Board.prototype);
 Entry.skeleton = function() {
@@ -19394,7 +19415,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     return this.mode;
   };
   b.setMode = function(a, b) {
-    a = +a;
+    a = Number(a);
     var d = this.mode;
     this.mode = a;
     switch(a) {
@@ -19705,11 +19726,11 @@ Entry.Playground.prototype.generateTextView = function(b) {
   d.bindOnClick(function() {
     var a = !Entry.playground.object.entity.getStrike() || !1;
     Entry.playground.object.entity.setStrike(a);
-    q.src = Entry.mediaFilePath + "text_button_strike_" + a + ".png";
+    n.src = Entry.mediaFilePath + "text_button_strike_" + a + ".png";
   });
-  var q = Entry.createElement("img", "entryPlaygroundText_strikeImage");
-  d.appendChild(q);
-  q.src = Entry.mediaFilePath + "text_button_strike_false.png";
+  var n = Entry.createElement("img", "entryPlaygroundText_strikeImage");
+  d.appendChild(n);
+  n.src = Entry.mediaFilePath + "text_button_strike_false.png";
   d = Entry.createElement("li");
   e.appendChild(d);
   c = Entry.createElement("a");
@@ -19784,16 +19805,16 @@ Entry.Playground.prototype.generateTextView = function(b) {
   b.addClass("entryPlaygroundFontSizeWrapper");
   a.appendChild(b);
   this.fontSizeWrapper = b;
-  var n = Entry.createElement("div");
-  n.addClass("entryPlaygroundFontSizeSlider");
-  b.appendChild(n);
   var m = Entry.createElement("div");
-  m.addClass("entryPlaygroundFontSizeIndicator");
-  n.appendChild(m);
-  this.fontSizeIndiciator = m;
+  m.addClass("entryPlaygroundFontSizeSlider");
+  b.appendChild(m);
+  var q = Entry.createElement("div");
+  q.addClass("entryPlaygroundFontSizeIndicator");
+  m.appendChild(q);
+  this.fontSizeIndiciator = q;
   var r = Entry.createElement("div");
   r.addClass("entryPlaygroundFontSizeKnob");
-  n.appendChild(r);
+  m.appendChild(r);
   this.fontSizeKnob = r;
   e = Entry.createElement("div");
   e.addClass("entryPlaygroundFontSizeLabel");
@@ -19802,10 +19823,10 @@ Entry.Playground.prototype.generateTextView = function(b) {
   var v = !1, u = 0;
   r.onmousedown = function(a) {
     v = !0;
-    u = $(n).offset().left;
+    u = $(m).offset().left;
   };
   document.addEventListener("mousemove", function(a) {
-    v && (a = a.pageX - u, a = Math.max(a, 5), a = Math.min(a, 88), r.style.left = a + "px", a /= .88, m.style.width = a + "%", Entry.playground.object.entity.setFontSize(a));
+    v && (a = a.pageX - u, a = Math.max(a, 5), a = Math.min(a, 88), r.style.left = a + "px", a /= .88, q.style.width = a + "%", Entry.playground.object.entity.setFontSize(a));
   });
   document.addEventListener("mouseup", function(a) {
     v = !1;
@@ -20422,7 +20443,7 @@ Entry.Xml.getNumberValue = function(b, a, c) {
   }
   for (var d in c) {
     if (c[d].tagName && "VALUE" == c[d].tagName.toUpperCase() && c[d].getAttribute("name") == a) {
-      return +Entry.Xml.operate(b, c[d].children[0]);
+      return Number(Entry.Xml.operate(b, c[d].children[0]));
     }
   }
   return null;
@@ -20445,7 +20466,7 @@ Entry.Xml.getNumberField = function(b, a) {
   }
   for (var d in c) {
     if ("FIELD" == c[d].tagName.toUpperCase() && c[d].getAttribute("name") == b) {
-      return +c[d].textContent;
+      return Number(c[d].textContent);
     }
   }
 };

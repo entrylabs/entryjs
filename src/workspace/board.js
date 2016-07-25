@@ -42,6 +42,8 @@ Entry.Board.OPTION_ALIGN = 1;
 Entry.Board.OPTION_CLEAR = 2;
 Entry.Board.OPTION_DOWNLOAD = 3;
 
+Entry.Board.DRAG_RADIUS = 5;
+
 (function(p) {
     p.schema = {
         code: null,
@@ -180,13 +182,21 @@ Entry.Board.OPTION_DOWNLOAD = 3;
         if (e.preventDefault) e.preventDefault();
 
         var mouseEvent;
+        var board = this;
+        var longPressTimer = null;
         if (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) {
+            var eventType = e.type;
             if (e.originalEvent && e.originalEvent.touches)
-                 mouseEvent = e.originalEvent.touches[0];
+                mouseEvent = e.originalEvent.touches[0];
             else mouseEvent = e;
             if (Entry.documentMousedown)
                 Entry.documentMousedown.notify(mouseEvent);
             var doc = $(document);
+
+            this.mouseDownCoordinate = {
+                x: mouseEvent.pageX, y: mouseEvent.pageY
+            };
+
             doc.bind('mousemove.entryBoard', onMouseMove);
             doc.bind('mouseup.entryBoard', onMouseUp);
             doc.bind('touchmove.entryBoard', onMouseMove);
@@ -197,25 +207,19 @@ Entry.Board.OPTION_DOWNLOAD = 3;
                 offsetX: mouseEvent.pageX,
                 offsetY: mouseEvent.pageY
             });
-        } else if (Entry.Utils.isRightButton(e)) {
-            if (!this.visible) return;
-            var that = this;
 
-            var options = [];
-
-        this._contextOptions[Entry.Board.OPTION_PASTE].option.enable = !!Entry.clipboard;
-        this._contextOptions[Entry.Board.OPTION_DOWNLOAD].option.enable =
-            this.code.getThreads().length !== 0;
-
-            for (var i=0; i<this._contextOptions.length; i++) {
-                if (this._contextOptions[i].activated)
-                    options.push(this._contextOptions[i].option);
+            if (eventType === 'touchstart') {
+                longPressTimer = setTimeout(function() {
+                    if (longPressTimer) {
+                        longPressTimer = null;
+                        onMouseUp();
+                        board._rightClick(e);
+                    }
+                }, 1000);
             }
+        } else if (Entry.Utils.isRightButton(e))
+            this._rightClick(e);
 
-            Entry.ContextMenu.show(options);
-        }
-
-        var board = this;
         function onMouseMove(e) {
             var mouseEvent;
             if (e.stopPropagation) e.stopPropagation();
@@ -224,6 +228,16 @@ Entry.Board.OPTION_DOWNLOAD = 3;
             if (e.originalEvent && e.originalEvent.touches)
                 mouseEvent = e.originalEvent.touches[0];
             else mouseEvent = e;
+
+            var mouseDownCoordinate = board.mouseDownCoordinate;
+            var diff = Math.sqrt(Math.pow(mouseEvent.pageX - mouseDownCoordinate.x, 2) +
+                            Math.pow(mouseEvent.pageY - mouseDownCoordinate.y, 2));
+            if (diff < Entry.Board.DRAG_RADIUS) return;
+            if (longPressTimer) {
+                clearTimeout(longPressTimer);
+                longPressTimer = null;
+            }
+
 
             var dragInstance = board.dragInstance;
             board.scroller.scroll(
@@ -237,7 +251,12 @@ Entry.Board.OPTION_DOWNLOAD = 3;
         }
 
         function onMouseUp(e) {
+            if (longPressTimer) {
+                clearTimeout(longPressTimer);
+                longPressTimer = null;
+            }
             $(document).unbind('.entryBoard');
+            delete board.mouseDownCoordinate;
             delete board.dragInstance;
         }
     };
@@ -975,6 +994,33 @@ Entry.Board.OPTION_DOWNLOAD = 3;
         }
         return this._offset;
     };
+
+    p._rightClick = function(e) {
+        var disposeEvent = Entry.disposeEvent;
+        if (disposeEvent)
+            disposeEvent.notify(e);
+        if (!this.visible) return;
+        var that = this;
+
+        var options = [];
+        var contextOptions = this._contextOptions;
+
+        contextOptions[Entry.Board.OPTION_PASTE].option.enable = !!Entry.clipboard;
+        contextOptions[Entry.Board.OPTION_DOWNLOAD].option.enable =
+            this.code.getThreads().length !== 0;
+
+        for (var i=0; i<this._contextOptions.length; i++) {
+            if (contextOptions[i].activated)
+                options.push(contextOptions[i].option);
+        }
+
+        if (e.originalEvent && e.originalEvent.touches)
+            e = e.originalEvent.touches[0];
+
+        Entry.ContextMenu.show(options, null,
+            { x: e.clientX, y: e.clientY }
+        );
+    }
 
 
 
