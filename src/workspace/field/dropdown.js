@@ -61,7 +61,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
         var bBox = this.textElement.getBBox();
         this.textElement.attr({
-            'style': 'white-space: pre; font-size:' + that._FONT_SIZE + 'px',
+            'style': 'white-space: pre;',
+            'font-size': + that._FONT_SIZE + 'px',
             'y': bBox.height * 0.25
         });
 

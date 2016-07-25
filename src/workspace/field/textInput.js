@@ -46,7 +46,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         this.textElement = this.svgGroup.elem("text", {
             x: X_PADDING/2,
             y: TEXT_Y_PADDING,
-            'font-size' : '9pt'
+            'font-size' : '12px'
         });
         this.textElement.textContent = this.truncate();
 
@@ -116,7 +116,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         });
 
         this.optionGroup.focus();
-        this.optionGroup.select();
+        var optionGroup = this.optionGroup[0];
+        optionGroup.setSelectionRange(0, optionGroup.value.length, "backward");
     };
 
     p.applyValue = function(event) {

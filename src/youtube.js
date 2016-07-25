@@ -1,7 +1,7 @@
 'use strict'
 
 Entry.Youtube = function(youtube) {
-    this.generateView(youtube);                                                                                        
+    this.generateView(youtube);
 }
 
 var p = Entry.Youtube.prototype;
@@ -10,11 +10,12 @@ p.init = function(youtube) {
     this.youtubeHash = youtube;
     this.generateView();
 };
+
 p.generateView = function(youtubeHash) {
 	var movieContainer = Entry.createElement('div');
     movieContainer.addClass('entryContainerMovieWorkspace');
-    movieContainer.addClass('entryHidden');
-    
+    movieContainer.addClass('entryRemove');
+
     this.movieContainer = movieContainer;
     var view = this.movieContainer;
 
@@ -25,7 +26,7 @@ p.generateView = function(youtubeHash) {
     iframe.setAttribute('frameborder', 0);
     iframe.setAttribute('src', url + youtubeHash);
     this.movieFrame = iframe;
-    
+
     this.movieContainer.appendChild(iframe);
 }
 
@@ -34,7 +35,7 @@ p.getView = function () {
 };
 
 p.resize = function() {
-    var container = document.getElementById('entryContainerWorkspaceId');
+    var container = document.getElementsByClassName('propertyContent')[0];
     var iframe = document.getElementById('youtubeIframe');
     w = container.offsetWidth;
     iframe.width = w+'px';

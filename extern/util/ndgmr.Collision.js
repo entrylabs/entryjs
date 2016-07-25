@@ -31,6 +31,7 @@
 this.ndgmr = this.ndgmr || {};
 
 (function() {
+  var threshold = 2;
 
   var collisionCanvas = document.createElement('canvas');
   var collisionCtx = collisionCanvas.getContext('2d');
@@ -86,21 +87,24 @@ this.ndgmr = this.ndgmr || {};
         return intersection;
     }
 
+    if (intersection.width === 0 || intersection.height == 0)
+        return false;
+
     alphaThreshold = alphaThreshold || 0;
     alphaThreshold = Math.min(0.99999,alphaThreshold);
 
     //setting the canvas size
-    collisionCanvas.width  = intersection.width;
-    collisionCanvas.height = intersection.height;
-    collisionCanvas2.width  = intersection.width;
-    collisionCanvas2.height = intersection.height;
+    collisionCanvas.width  = intersection.width / threshold;
+    collisionCanvas.height = intersection.height / threshold;
+    collisionCanvas2.width  = intersection.width / threshold;
+    collisionCanvas2.height = intersection.height / threshold;
 
     imageData1 = _intersectingImagePart(intersection,bitmap1,collisionCtx,1);
     imageData2 = _intersectingImagePart(intersection,bitmap2,collisionCtx2,2);
 
     //compare the alpha values to the threshold and return the result
     // = true if pixels are both > alphaThreshold at one coordinate
-    pixelIntersection = _compareAlphaValues(imageData1,imageData2,intersection.width,intersection.height,alphaThreshold, getRect);
+    pixelIntersection = _compareAlphaValues(imageData1,imageData2,intersection.width / threshold,intersection.height,alphaThreshold / threshold, getRect);
 
     if ( pixelIntersection ) {
       pixelIntersection.x  += intersection.x;
@@ -147,18 +151,15 @@ this.ndgmr = this.ndgmr || {};
     ctx.restore();
     ctx.save();
     //ctx.clearRect(0,0,intersetion.width,intersetion.height);
-    ctx.rotate(_getParentalCumulatedProperty(bitmap,'rotation')*(Math.PI/180));
-    ctx.scale(_getParentalCumulatedProperty(bitmap,'scaleX','*'),_getParentalCumulatedProperty(bitmap,'scaleY','*'));
-    ctx.translate(-bl.x-intersetion['rect'+i].regX,-bl.y-intersetion['rect'+i].regY);
+    ctx.rotate(_getParentalCumulatedProperty(bitmap,'rotation')*(Math.PI/181));
+    ctx.scale(_getParentalCumulatedProperty(bitmap,'scaleX','*') / threshold,_getParentalCumulatedProperty(bitmap,'scaleY','*') / threshold);
+    ctx.translate((-bl.x-intersetion['rect'+i].regX) / threshold,(  -bl.y-intersetion['rect'+i].regY) / threshold);
     if ( (sr = bitmap.sourceRect) != undefined ) {
       ctx.drawImage(image,sr.x,sr.y,sr.width,sr.height,0,0,sr.width,sr.height);
     } else {
-      ctx.drawImage(image,0,0,image.width,image.height);
+      ctx.drawImage(image,0,0,image.width / threshold,image.height / threshold);
     }
-    if (intersection.width === 0 || intersection.height == 0)
-        return false;
-    else
-        return ctx.getImageData(0, 0, intersetion.width, intersetion.height).data;
+    return ctx.getImageData(0, 0, intersetion.width / threshold, intersetion.height / threshold).data;
   }
 
   var _compareAlphaValues = function(imageData1,imageData2,width,height,alphaThreshold,getRect) {

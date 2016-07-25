@@ -1068,7 +1068,8 @@ Entry.Utils.addBlockPattern = function (boardSvgDom, suffix) {
         patternTransform: "translate(12, 0)",
         x: 0, y: 0,
         width: 125,
-        height: 33
+        height: 33,
+        style: "display: none"
     });
 
     var group = pattern.elem('g');
@@ -1092,7 +1093,10 @@ Entry.Utils.addBlockPattern = function (boardSvgDom, suffix) {
         });
     }
 
-    return elem;
+    return {
+        pattern: pattern,
+        rect: elem
+    }
 };
 
 Entry.Utils.COLLISION = {
@@ -1139,9 +1143,10 @@ Entry.Utils.xmlToJsonData = function(xml) {
     return result;
 };
 
-Entry.Utils.stopProjectWithToast = function(block, message) {
+Entry.Utils.stopProjectWithToast = function(scope, message, isHide) {
+    var block = scope.block;
     message = message || '런타임 에러 발생';
-    if (Entry.toast)
+    if (Entry.toast && !isHide)
         Entry.toast.alert(
             Lang.Msgs.warn,
             Lang.Workspace.check_runtime_error,
@@ -1152,8 +1157,93 @@ Entry.Utils.stopProjectWithToast = function(block, message) {
         Entry.engine.toggleStop();
 
     if (Entry.type === 'workspace') {
-        Entry.container.selectObject(block.getCode().object.id, true);
-        block.view.getBoard().activateBlock(block);
+        if(scope.block && 'funcBlock' in scope.block) {
+            block = scope.block.funcBlock;
+        } else if(scope.funcExecutor){
+            block = scope.funcExecutor.scope.block;
+            var funcName = scope.type.replace('func_', '');
+            Entry.Func.edit(Entry.variableContainer.functions_[funcName]);
+        }
+
+        if(block) {
+            Entry.container.selectObject(block.getCode().object.id, true);
+            block.view.getBoard().activateBlock(block);
+        }
     }
     throw new Error(message);
 };
+
+Entry.Utils.AsyncError = function (message) {
+    this.name = "AsyncError";
+    this.message = message || "비동기 호출 대기";
+};
+
+Entry.Utils.AsyncError.prototype = new Error();
+Entry.Utils.AsyncError.prototype.constructor  = Entry.Utils.AsyncError;
+
+Entry.Utils.isChrome = function() {
+    return /chrom(e|ium)/.test(navigator.userAgent.toLowerCase());
+};
+
+Entry.Utils.waitForWebfonts = function(fonts, callback) {
+    var loadedFonts = 0;
+    for(var i = 0, l = fonts.length; i < l; ++i) {
+        (function(font) {
+            var node = document.createElement('span');
+            // Characters that vary significantly among different fonts
+            node.innerHTML = 'giItT1WQy@!-/#';
+            // Visible - so we can measure it - but not on the screen
+            node.style.position      = 'absolute';
+            node.style.left          = '-10000px';
+            node.style.top           = '-10000px';
+            // Large font size makes even subtle changes obvious
+            node.style.fontSize      = '300px';
+            // Reset any font properties
+            node.style.fontFamily    = 'sans-serif';
+            node.style.fontVariant   = 'normal';
+            node.style.fontStyle     = 'normal';
+            node.style.fontWeight    = 'normal';
+            node.style.letterSpacing = '0';
+            document.body.appendChild(node);
+
+            // Remember width with no applied web font
+            var width = node.offsetWidth;
+
+            node.style.fontFamily = font;
+
+            var interval;
+            function checkFont() {
+                // Compare current width with original width
+                if(node && node.offsetWidth != width) {
+                    ++loadedFonts;
+                    node.parentNode.removeChild(node);
+                    node = null;
+                }
+
+                // If all fonts have been loaded
+                if(loadedFonts >= fonts.length) {
+                    if(interval) {
+                        clearInterval(interval);
+                    }
+                    if(loadedFonts == fonts.length) {
+                        callback();
+                        return true;
+                    }
+                }
+            };
+
+            if(!checkFont()) {
+                interval = setInterval(checkFont, 50);
+            }
+        })(fonts[i]);
+    }
+};
+window.requestAnimFrame = (function(){
+  return  window.requestAnimationFrame       ||
+          window.webkitRequestAnimationFrame ||
+          window.mozRequestAnimationFrame    ||
+          function( callback ){
+            window.setTimeout(callback, 1000 / 60);
+          };
+})();
+

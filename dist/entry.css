@@ -559,6 +559,10 @@ svg .svgBlockGroup text {
   line-height: normal;
   z-index: 301;
 }
+.entry-widget-input-field::-ms-clear,
+.entry-widget-input-field::-ms-reveal {
+  display: none;
+}
 .entry-field-angle {
   cursor: default;
 }
@@ -1883,7 +1887,7 @@ svg .svgBlockGroup text {
 }
 .entryPopupWindow > .entryEngineWorkspace_w > .entryEngineButtonWorkspace_w {
   position: absolute;
-  bottom: 1px;
+  bottom: 3px;
 }
 .entryPopupWindow > .entryEngineWorkspace_w > .entryAddButtonWorkspace_w {
   display: none;
@@ -2069,7 +2073,9 @@ svg .svgBlockGroup text {
 .entryPopupWindow .entryMouseViewWorkspace_w {
   font-size: 9pt;
   margin: 0 auto;
-  width: 100%;
+  width: 40%;
+  margin-left: -20%;
+  left: 50%;
   color: #4b37a0;
   line-height: 24px;
   bottom: 1px;
@@ -5111,6 +5117,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
   flex: 1;
 }
 .propertyPanel {
+  z-index: 10;
   position: absolute;
   top: 326px;
   bottom: 0px;
@@ -5346,14 +5353,10 @@ input.entryObjectNameWorkspace:-moz-read-only {
 }
 .entryCanvasWorkspace {
   width: 480px;
-  height: 270px;
   background-color: white;
   display: block;
   position: absolute;
   top: 24px;
-}
-.entryPopupWindow .entryCanvasWorkspace {
-  top: -11px !important;
 }
 .entryCanvasPhone {
   width: 100%;
@@ -5362,7 +5365,6 @@ input.entryObjectNameWorkspace:-moz-read-only {
 }
 .entryPopupWindow > .entryCanvasWorkspace {
   width: 100% !important;
-  height: 100% !important;
   position: relative;
   border-bottom: 1px solid #ccc;
   border-top: 0px;
@@ -5378,8 +5380,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
   bottom: 24px;
   border-bottom: 1px solid #ccc;
   width: 100% !important;
-  height: 100% !important;
-  top: -25px !important;
+  top: 0;
 }
 .entryStateManagerWorkspace {
   float: right;

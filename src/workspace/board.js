@@ -40,6 +40,7 @@ Entry.Board = function(option) {
 Entry.Board.OPTION_PASTE = 0;
 Entry.Board.OPTION_ALIGN = 1;
 Entry.Board.OPTION_CLEAR = 2;
+Entry.Board.OPTION_DOWNLOAD = 3;
 
 (function(p) {
     p.schema = {
@@ -99,7 +100,9 @@ Entry.Board.OPTION_CLEAR = 2;
         } else this.suffix = 'board';
 
         Entry.Utils.addFilters(this.svg, this.suffix);
-        this.patternRect = Entry.Utils.addBlockPattern(this.svg, this.suffix);
+        var returnVal = Entry.Utils.addBlockPattern(this.svg, this.suffix);
+        this.patternRect = returnVal.rect;
+        this.pattern = returnVal.pattern;
     };
 
     p.changeCode = function(code) {
@@ -201,6 +204,8 @@ Entry.Board.OPTION_CLEAR = 2;
             var options = [];
 
         this._contextOptions[Entry.Board.OPTION_PASTE].option.enable = !!Entry.clipboard;
+        this._contextOptions[Entry.Board.OPTION_DOWNLOAD].option.enable =
+            this.code.getThreads().length !== 0;
 
             for (var i=0; i<this._contextOptions.length; i++) {
                 if (this._contextOptions[i].activated)
@@ -785,7 +790,18 @@ Entry.Board.OPTION_CLEAR = 2;
     };
 
     p.setPatternRectFill = function(color) {
-        this.patternRect.attr({fill:color});
+        this.patternRect.attr({
+            fill:color
+        });
+        this.pattern.attr({
+            style: ""
+        });
+    };
+
+    p.disablePattern = function() {
+        this.pattern.attr({
+            style: "display: none"
+        });
     };
 
     p._removeActivated = function() {
@@ -887,7 +903,7 @@ Entry.Board.OPTION_CLEAR = 2;
             {
                 activated: true,
                 option: {
-                    text: '붙여넣기',
+                    text: Lang.Blocks.Paste_blocks,
                     enable: !!Entry.clipboard,
                     callback: function(){
                         Entry.do('addThread', Entry.clipboard).value
@@ -910,6 +926,20 @@ Entry.Board.OPTION_CLEAR = 2;
                     text: Lang.Blocks.Clear_all_blocks,
                     callback: function(){
                         that.code.clear();
+                    }
+                }
+            },
+            {
+                activated: Entry.type === 'workspace' && Entry.Utils.isChrome(),
+                option: {
+                    text: Lang.Menus.save_as_image_all,
+                    enable: true,
+                    callback: function(){
+                        that.code.getThreads().forEach(function(t) {
+                            var topBlock = t.getFirstBlock();
+                            if (!topBlock) return;
+                            topBlock.view.downloadAsImage();
+                        });
                     }
                 }
             }

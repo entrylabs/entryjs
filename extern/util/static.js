@@ -276,6 +276,20 @@ EntryStatic.getAllBlocks = function() {
                 "arduino_toggle_led",
                 "arduino_toggle_pwm",
                 "arduino_convert_scale",
+                //arduinoExt
+                "arduino_ext_get_analog_value",
+                "arduino_ext_get_ultrasonic_value",
+                "arduino_ext_get_digital",
+                "arduino_ext_toggle_led",
+                "arduino_ext_digital_pwm",
+                "arduino_ext_set_servo",
+                "arduino_ext_set_tone",
+                //joystick
+                "joystick_get_number_sensor_value",
+                "joystick_get_digital_value",
+                "joystick_toggle_led",
+                "joystick_toggle_pwm",
+                "joystick_convert_scale",
                 //dplay
                 "dplay_get_number_sensor_value",
                 "dplay_get_value",
@@ -321,6 +335,7 @@ EntryStatic.getAllBlocks = function() {
                 "neobot_set_servo",
                 "neobot_set_output",
                 "neobot_set_fnd",
+                "neobot_set_fnd_off",
                 "neobot_play_note_for",
                 "bitbrick_sensor_value",
                 "bitbrick_convert_scale",

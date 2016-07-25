@@ -65,7 +65,6 @@ Entry.Container.prototype.generateView = function(containerView, option) {
         ulWrapper.addClass('entryContainerListWorkspaceWrapper');
 
         if (Entry.isForLecture) {
-            this.generateTabView();
             ulWrapper.addClass('lecture');
         }
 
@@ -74,6 +73,7 @@ Entry.Container.prototype.generateView = function(containerView, option) {
             var options = [
                 {
                     text: Lang.Blocks.Paste_blocks,
+                    enable: !Entry.engine.isState('run') && !!Entry.container.copiedObject,
                     callback: function(){
                         if (Entry.container.copiedObject)
                             Entry.container.addCloneObject(Entry.container.copiedObject);
@@ -133,7 +133,8 @@ Entry.Container.prototype.enableSort = function() {
                 var end = ui.item.index();
                 Entry.container.moveElement(start, end);
             },
-            axis: 'y'
+            axis: 'y',
+            cancel: 'input.selectedEditingObject'
         });
 };
 
@@ -199,36 +200,29 @@ Entry.Container.prototype.setObjects = function(objectModels) {
  * get Pictures element
  * @param {!String} pictureId
  */
-Entry.Container.prototype.getPictureElement = function(pictureId) {
-    for(var i in this.objects_) {
-        var object = this.objects_[i];
-        for (var j in object.pictures) {
-            if (pictureId === object.pictures[j].id) {
-                return object.pictures[j].view;
-            }
-        }
-    }
-    throw new Error('No picture found');
+Entry.Container.prototype.getPictureElement = function(pictureId, objectId) {
+    var object = this.getObject(objectId);
+    var picture = object.getPicture(pictureId);
+    if (picture) return picture.view;
+    else throw new Error('No picture found');
 };
 /**
  * Set Pictures
  * @param {!Object picture} picture
  */
 Entry.Container.prototype.setPicture = function(picture) {
-    for(var i in this.objects_) {
-        var object = this.objects_[i];
-        for (var j in object.pictures) {
-            if (picture.id === object.pictures[j].id) {
-                var picture_ = {};
-                picture_.dimension = picture.dimension;
-                picture_.id = picture.id;
-                picture_.filename = picture.filename;
-                picture_.fileurl = picture.fileurl;
-                picture_.name = picture.name;
-                picture_.view = object.pictures[j].view;
-                object.pictures[j] = picture_;
-                return;
-            }
+    var object = this.getObject(picture.objectId);
+    for (var j in object.pictures) {
+        if (picture.id === object.pictures[j].id) {
+            var picture_ = {};
+            picture_.dimension = picture.dimension;
+            picture_.id = picture.id;
+            picture_.filename = picture.filename;
+            picture_.fileurl = picture.fileurl;
+            picture_.name = picture.name;
+            picture_.view = object.pictures[j].view;
+            object.pictures[j] = picture_;
+            return;
         }
     }
     throw new Error('No picture found');
@@ -238,18 +232,14 @@ Entry.Container.prototype.setPicture = function(picture) {
  * Set Pictures
  * @param {!String} pictureId
  */
-Entry.Container.prototype.selectPicture = function(pictureId) {
-    for(var i in this.objects_) {
-        var object = this.objects_[i];
-        for (var j in object.pictures) {
-            var picture_ = object.pictures[j];
-            if (pictureId === picture_.id) {
-                object.selectedPicture = picture_;
-                object.entity.setImage(picture_);
-                object.updateThumbnailView();
-                return object.id;
-            }
-        }
+Entry.Container.prototype.selectPicture = function(pictureId, objectId) {
+    var object = this.getObject(objectId);
+    var picture_ = object.getPicture(pictureId);
+    if (picture_) {
+        object.selectedPicture = picture_;
+        object.entity.setImage(picture_);
+        object.updateThumbnailView();
+        return object.id;
     }
     throw new Error('No picture found');
 };
@@ -417,6 +407,8 @@ Entry.Container.prototype.getAllObjects = function() {
  * @return {Entry.EntryObject}
  */
 Entry.Container.prototype.getObject = function(objectId) {
+    if (!objectId && Entry.playground && Entry.playground.object)
+        objectId = Entry.playground.object.id;
     var length = this.objects_.length;
     for (var i = 0; i<length; i++) {
         var object = this.objects_[i];
@@ -479,6 +471,7 @@ Entry.Container.prototype.moveElement = function(start, end, isCallFromState) {
     this.objects_.splice(endIndex, 0, this.objects_.splice(startIndex, 1)[0]);
     this.setCurrentObjects();
     Entry.container.updateListView();
+    Entry.requestUpdate = true;
     return new Entry.State(Entry.container,
                            Entry.container.moveElement,
                            endIndex, startIndex, true);
@@ -501,7 +494,7 @@ Entry.Container.prototype.moveElementByBlock = function(currentIndex, targetInde
  * generate list for blockly dropdown dynamic
  * @param {string} menuName
  */
-Entry.Container.prototype.getDropdownList = function(menuName) {
+Entry.Container.prototype.getDropdownList = function(menuName, object) {
     var result = [];
     switch (menuName) {
         case 'sprites':
@@ -545,9 +538,9 @@ Entry.Container.prototype.getDropdownList = function(menuName) {
             result.push([Lang.Blocks.wall_left, 'wall_left']);
             break;
         case 'pictures':
-            if (!Entry.playground.object)
-                break;
-            var pictures = Entry.playground.object.pictures;
+            var object = Entry.playground.object || object;
+            if (!object) break;
+            var pictures = object.pictures;
             for (var i = 0; i<pictures.length; i++) {
                 var picture = pictures[i];
                 result.push([picture.name, picture.id]);
@@ -564,7 +557,9 @@ Entry.Container.prototype.getDropdownList = function(menuName) {
             var variables = Entry.variableContainer.variables_;
             for (var i = 0; i<variables.length; i++) {
                 var variable = variables[i];
-                if (variable.object_ && variable.object_ != Entry.playground.object.id)
+
+                if (variable.object_ && Entry.playground.object &&
+                    variable.object_ != Entry.playground.object.id)
                     continue;
                 result.push([variable.getName(), variable.getId()]);
             }
@@ -588,9 +583,9 @@ Entry.Container.prototype.getDropdownList = function(menuName) {
             }
             break;
         case 'sounds':
-            if (!Entry.playground.object)
-                break;
-            var sounds = Entry.playground.object.sounds;
+            var object = Entry.playground.object || object;
+            if (!object) break;
+            var sounds = object.sounds;
             for (var i = 0; i<sounds.length; i++) {
                 var sound = sounds[i];
                 result.push([sound.name, sound.id]);
@@ -792,7 +787,8 @@ Entry.Container.prototype.loadSequenceSnapshot = function() {
     var arr = new Array(length);
     for (var i = 0; i<length; i++) {
         var object = this.objects_[i];
-        arr[object.index] = object;
+        var _index = object.index || i;
+        arr[_index] = object;
         delete object.index;
     }
     this.objects_ = arr;
@@ -894,176 +890,6 @@ Entry.Container.prototype.getProjectWithJSON = function(project) {
     project.messages = Entry.variableContainer.getMessageJSON();
     project.scenes = Entry.scene.toJSON();
     return project;
-};
-
-
-Entry.Container.prototype.generateTabView = function() {
-    var view = this._view;
-    var that = this;
-    this.tabViews = [];
-
-    var container = Entry.createElement('div');
-    container.addClass('entryContainerTabViewWorkspace');
-    view.appendChild(container);
-
-    var tab1 = Entry.createElement('span');
-    tab1.addClass('entryContainerTabItemWorkspace');
-    tab1.addClass('entryEllipsis');
-    tab1.innerHTML = Lang.Menus.lecture_container_tab_object;
-    tab1.bindOnClick(function () {
-        that.changeTabView('object');
-    });
-    this.tabViews.push(tab1);
-    container.appendChild(tab1);
-
-    var tab2 = Entry.createElement('span');
-    tab2.addClass('entryContainerTabItemWorkspace', 'entryRemove');
-    tab2.addClass('entryEllipsis');
-    tab2.innerHTML = Lang.Menus.lecture_container_tab_video;
-    tab2.bindOnClick(function () {
-        that.changeTabView('movie');
-    });
-    this.tabViews.push(tab2);
-    container.appendChild(tab2);
-    this.youtubeTab = tab2;
-
-
-    var tab3 = Entry.createElement('span');
-    tab3.addClass('entryContainerTabItemWorkspace', 'entryRemove');
-    tab3.addClass('entryEllipsis');
-    tab3.innerHTML = Lang.Menus.lecture_container_tab_project;
-    tab3.bindOnClick(function () {
-        that.changeTabView('done');
-    });
-    this.tabViews.push(tab3);
-    container.appendChild(tab3);
-    this.iframeTab = tab3;
-
-    var tab4 = Entry.createElement('span');
-    tab4.addClass('entryContainerTabItemWorkspace');
-    tab4.addClass('entryEllipsis');
-    tab4.innerHTML = Lang.Menus.lecture_container_tab_help;
-    tab4.bindOnClick(function () {
-        that.changeTabView('helper');
-    });
-    this.tabViews.push(tab4);
-    container.appendChild(tab4);
-
-    var movieContainer = Entry.createElement('div');
-    movieContainer.addClass('entryContainerMovieWorkspace');
-    movieContainer.addClass('entryHide');
-    view.appendChild(movieContainer);
-    this.movieContainer = movieContainer;
-
-    var doneContainer = Entry.createElement('div');
-    doneContainer.addClass('entryContainerDoneWorkspace');
-    doneContainer.addClass('entryHide');
-    view.appendChild(doneContainer);
-    this.doneContainer = doneContainer;
-
-    var helperContainer = Entry.createElement('div');
-    helperContainer.addClass('entryContainerHelperWorkspace');
-    helperContainer.addClass('entryHide');
-    view.appendChild(helperContainer);
-
-
-    this.helperContainer = helperContainer;
-    // Entry.helper.initBlockHelper(helperContainer);
-
-    tab1.addClass('selected');
-};
-
-
-Entry.Container.prototype.changeTabView = function(tab) {
-    var tabViews = this.tabViews;
-    for (var i=0, len=tabViews.length; i<len; i++)
-        tabViews[i].removeClass('selected');
-
-    this.movieContainer.addClass('entryHide');
-    this.doneContainer.addClass('entryHide');
-    this.helperContainer.addClass('entryHide');
-
-
-
-    if (tab == 'object') {
-        tabViews[0].addClass('selected');
-    } else if (tab == 'movie') {
-        var view = this._view;
-        var width = view.style.width.substring(0,
-                                              view.style.width.length-2);
-        this.movieFrame.setAttribute('width', width);
-        this.movieFrame.setAttribute('height',width*9/16);
-
-        this.movieContainer.removeClass('entryHide');
-        tabViews[1].addClass('selected');
-    } else if (tab == 'done') {
-        var view = this._view;
-        var height = $(this.doneContainer).height();
-        var width = $(this.doneContainer).width();
-        if (width*9/16 + 35 < height)
-            height = width*9/16 + 35;
-        else
-            width = (height - 35)/9*16;
-        this.doneProjectFrame.setAttribute('width', width);
-        this.doneProjectFrame.setAttribute('height', height);
-        this.doneContainer.removeClass('entryHide');
-        tabViews[2].addClass('selected');
-    } else if (tab == 'helper') {
-        Entry.helper.blockHelperOn();
-        this.helperContainer.removeClass('entryHide');
-        tabViews[3].addClass('selected');
-    }
-};
-
-Entry.Container.prototype.initYoutube = function(youtubeHash) {
-    this.youtubeHash = youtubeHash;
-    this.youtubeTab.removeClass('entryRemove');
-    var view = this._view;
-    var width = view.style.width.substring(0,
-                                          view.style.width.length-2);
-    var movieContainer = this.movieContainer;
-    var url = 'https://www.youtube.com/embed/';
-    var iframe = Entry.createElement('iframe');
-    iframe.setAttribute('width', width);
-    iframe.setAttribute('height',width*9/16);
-    iframe.setAttribute('allowfullscreen', '');
-    iframe.setAttribute('frameborder', 0);
-    iframe.setAttribute('src', url + this.youtubeHash);
-    this.movieFrame = iframe;
-    movieContainer.appendChild(iframe);
-};
-
-Entry.Container.prototype.initTvcast = function(tvcast) {
-    this.tvcast = tvcast;
-    this.youtubeTab.removeClass('entryRemove');
-    var view = this._view;
-    var width = view.style.width.substring(0,
-                                          view.style.width.length-2);
-    var movieContainer = this.movieContainer;
-    var iframe = Entry.createElement('iframe');
-    iframe.setAttribute('width', width);
-    iframe.setAttribute('height',width*9/16);
-    iframe.setAttribute('allowfullscreen', '');
-    iframe.setAttribute('frameborder', 0);
-    iframe.setAttribute('src', this.tvcast);
-    this.movieFrame = iframe;
-    movieContainer.appendChild(iframe);
-};
-
-Entry.Container.prototype.initDoneProject = function(projectId) {
-    this.doneProject = projectId;
-    this.iframeTab.removeClass('entryRemove');
-    var view = this._view;
-    var width = view.style.width.substring(0,
-                                          view.style.width.length-2);
-    var url = '/api/iframe/project/';
-    var iframe = Entry.createElement('iframe');
-    iframe.setAttribute('width', width);
-    iframe.setAttribute('height',width*9/16 + 35);
-    iframe.setAttribute('frameborder', 0);
-    iframe.setAttribute('src', url + this.doneProject);
-    this.doneProjectFrame = iframe;
-    this.doneContainer.appendChild(iframe);
 };
 
 Entry.Container.prototype.blurAllInputs = function() {

@@ -138,7 +138,7 @@ Entry.Scene.prototype.generateElement = function(scene) {
         that.resize();
         if (code == 13)
             this.blur();
-        if (this.value.length > 9) {
+        if (this.value.length > 10) {
             this.value = this.value.substring(0,10);
             this.blur();
         }
@@ -314,6 +314,7 @@ Entry.Scene.prototype.selectScene = function(scene) {
         Entry.stage.sortZorder();
     Entry.container.updateListView();
     this.updateView();
+    Entry.requestUpdate = true;
 };
 
 /**

@@ -856,7 +856,10 @@ Entry.Playground.prototype.addPicture = function(picture, NotForView) {
  * @param {picture}
  */
 Entry.Playground.prototype.setPicture = function(picture) {
-    var element = Entry.container.getPictureElement(picture.id);
+    var element = Entry.container.getPictureElement(
+        picture.id,
+        picture.objectId
+    );
     var $element = $(element);
     if(element) {
         picture.view = element;
@@ -906,7 +909,7 @@ Entry.Playground.prototype.selectPicture = function(picture) {
 
     var objectId_;
     if(picture && picture.id) {
-        objectId_ = Entry.container.selectPicture(picture.id);
+        objectId_ = Entry.container.selectPicture(picture.id, picture.objectId);
     }
 
     if( this.object.id === objectId_) {
@@ -1255,8 +1258,10 @@ Entry.Playground.prototype.flushPlayground = function () {
 
 Entry.Playground.prototype.refreshPlayground = function () {
     if (Entry.playground && Entry.playground.view_) {
-        this.injectPicture();
-        this.injectSound();
+        if (this.getViewMode() === "picture")
+            this.injectPicture();
+        if (this.getViewMode() === "sound")
+            this.injectSound();
     }
 };
 
@@ -1483,6 +1488,7 @@ Entry.Playground.prototype.generateSoundElement = function(sound) {
         }
 
         this.sound.name = this.value;
+        Entry.playground.reloadPlayground();
     };
     nameView.onkeypress = function(e) {
         if (e.keyCode == 13)

@@ -17,10 +17,20 @@ Entry.Executor = function(block, entity) {
         if (this.isEnd())
             return;
         while (true) {
+            var returnVal = null;
             try {
-                var returnVal = this.scope.block.getSchema().func.call(this.scope, this.entity, this.scope);
+                returnVal = this.scope.block.getSchema().func.call(this.scope, this.entity, this.scope);
             } catch(e) {
-                Entry.Utils.stopProjectWithToast(this.scope.block, '런타임 에러');
+                if(e.name === 'AsyncError') {
+                    returnVal = Entry.STATIC.BREAK;
+                } else {
+                    var errorMsg = '런타임 에러';
+                    var isToastHide = false;
+                    if(e.message != errorMsg) {
+                        isToastHide = true;
+                    }
+                    Entry.Utils.stopProjectWithToast(this.scope, errorMsg, isToastHide);
+                }
             }
             //executor can be ended after block function call
             if (this.isEnd()) return;
@@ -154,11 +164,15 @@ Entry.Scope = function(block, executor) {
     };
 
     p._getParamIndex = function(key) {
-        return Entry.block[this.type].paramsKeyMap[key];
+        if (!this._schema)
+            this._schema = Entry.block[this.type];
+        return this._schema.paramsKeyMap[key];
     };
 
     p._getStatementIndex = function(key) {
-        return Entry.block[this.type].statementsKeyMap[key];
+        if (!this._schema)
+            this._schema = Entry.block[this.type];
+        return this._schema.statementsKeyMap[key];
     };
 
     p.die = function() {
