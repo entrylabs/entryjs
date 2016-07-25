@@ -153,18 +153,41 @@ Entry.BlockToJsParser = function(syntax) {
             var statementCode1 = this.Thread(block.statements[0]);
             var statementCode2 = this.Thread(block.statements[1]);
             var syntax = block._schema.syntax.concat();
-
-            console.log("statementCode1", statementCode1);
-            console.log("statementCode2", statementCode2);
             
-            var code = "if (" + syntax[1] + ") {\n" +
+            console.log("block.data.params[0] 1", block.data.params[0]);
+            var paramBlock = block.data.params[0];
+
+            if(paramBlock && paramBlock.data.type == "True") {
+                var param = syntax[1];
+            }
+            else {
+                if(paramBlock === undefined)
+                    var param = syntax[1];
+                else
+                    var param = this.Block(paramBlock);
+            }
+            
+            var code = "if (" + param + ") {\n" +
                 this.indent(statementCode1) + "}\n" +
                 "else {\n" + this.indent(statementCode2) + "}\n";
         } else {
             var statementCode1 = this.Thread(block.statements[0]);
             var syntax = block._schema.syntax.concat();
             
-            var code = "if (" + syntax[1] + ") {\n" +
+            console.log("block.data.params[0] 2", block.data.params[0]);
+            var paramBlock = block.data.params[0];
+
+            if(paramBlock && paramBlock.data.type == "True") {
+                var param = syntax[1];
+            }
+            else {
+                if(paramBlock === undefined)
+                    var param = syntax[1];
+                else
+                    var param = this.Block(paramBlock);
+            }
+            
+            var code = "if (" + param + ") {\n" +
                 this.indent(statementCode1) + "}\n" 
         }
 

@@ -156,6 +156,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 try {
                     var astTree = acorn.parse(code);
                     result = this._parser.Program(astTree);
+                    console.log("result", result);
                 } catch (error) {
                     if (this.codeMirror) {
                         var annotation;
@@ -322,6 +323,10 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     //console.log("syntaxArray", syntaxArray);
                     for (var j = 0; j < syntaxArray.length; j++) {
                         var key = syntaxArray[j];
+                        var index = key.indexOf("(");
+                        if(index > -1) {
+                            key = key.substring(0, index);
+                        }
                         if (j === syntaxArray.length - 2 &&
                             typeof syntaxArray[j + 1] === "function") {
                             syntaxTemp[key] = syntaxArray[j + 1];

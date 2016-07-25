@@ -14,6 +14,7 @@ Entry.JsToBlockParser = function(syntax) {
 
 (function(p){
     p.Program = function(node) {
+        console.log("node", node);
         var code = [];
         var block = [];
         var body = node.body;
@@ -40,6 +41,10 @@ Entry.JsToBlockParser = function(syntax) {
             return scope[node.name];
         else
             return this.scope[node.name];
+    };
+
+    p.Literal = function(node) {
+        return node.value;
     };
 
     // Statement
@@ -188,14 +193,16 @@ Entry.JsToBlockParser = function(syntax) {
     };
 
     p.IfStatement = function(node) {
+        console.log("IfStatement node", node);
         var test = node.test,
             consequent = node.consequent,
             alternate  = node.alternate;
 
-        console.log("IfStatement", this.syntax.IfStatement);
+        console.log("syntax", this.syntax);
 
-        var blockType = this.syntax.IfStatement;
-        if (!blockType) {
+        var blockType = this.syntax.BasicIf;
+        console.log("blockType check", blockType);
+        if (blockType) {
             console.log("IfStatement return", this.BasicIf(node));
             return this.BasicIf(node);
         } else {
@@ -483,11 +490,39 @@ Entry.JsToBlockParser = function(syntax) {
     };
 
     p.CallExpression = function(node) {
+        console.log("CallExpression node", node);
         var callee = node.callee,
             args = node.arguments;
+        var params = [];
         var blockType = this[callee.type](callee);
+        console.log("CallExpression blockType", blockType);
+
+        var block = Entry.block[blockType];
+
+        for(var i = 0; i < args.length; i++) {
+            var arg = args[i];
+            var value = this[arg.type](arg);
+            
+            if(block.params[i].type === 'Block') {
+                if(typeof value == 'string')
+                    var paramBlock = {type: 'text', params:[value]};
+                else
+                    var paramBlock = {type: 'number', params:[value]};
+
+                params.push(paramBlock);
+            }
+            else {
+                //var param = block.params[i];
+                //param.value = value;
+                params.push(value);
+            }
+        }
+
+        console.log("type", blockType);
+        console.log("params", params);
         return {
-            type: blockType
+            type: blockType,
+            params: params
         };
     };
 
@@ -518,6 +553,7 @@ Entry.JsToBlockParser = function(syntax) {
             scoper.prototype = this.scope;
             this.scope = new scoper();
         }
+
         this.scopeChain.push(this.scope);
         return this.scanDefinition(node);
     };
@@ -584,27 +620,35 @@ Entry.JsToBlockParser = function(syntax) {
         }
     };
 
-    p.BasicIf = function(node) {
+    p.BasicIf = function(node) { 
         console.log("BasicIf node", node);
         var consequent = node.consequent;
         consequent = this[consequent.type](consequent);
         var alternate = node.alternate;
         alternate = this[alternate.type](alternate);
 
+        console.log("node.test", node.test);
         try{
             var test = '';
             var operator = (node.test.operator === '===') ? '==' : node.test.operator;
 
-            if(node.test.left.type === 'Identifier' && node.test.right.type === 'Literal') {
+            if(node.test.left && node.test.left.type === 'Identifier' && node.test.right && node.test.right.type === 'Literal') {
                 test = node.test.left.name + " " +
                 operator + " " +
                 node.test.right.raw;
-            } else if(node.test.left.type === 'Literal' && node.test.right.type === 'Identifier') {
+            } else if(node.test.left && node.test.left.type === 'Literal' && node.test.right && node.test.right.type === 'Identifier') {
                 test = node.test.right.name + " " +
                 operator + " " +
                 node.test.left.raw;
             } else {
-                throw new Error();
+                var type = "ai_if_else";
+                var params = [];
+                var callExData = this[node.test.type](node.test, this.syntax.Scope);
+                params.push(callExData);
+                
+                console.log("type", type);
+                console.log("params", params); 
+                //throw new Error();
             }
 
             if (this.syntax.BasicIf[test]) {
@@ -614,12 +658,21 @@ Entry.JsToBlockParser = function(syntax) {
                 if(!Array.isArray(alternate) && typeof alternate === 'object')
                     alternate = [alternate];
 
+                console.log("type1", type);
+
                 return {
                     type: this.syntax.BasicIf[test],
+                    params: params,
                     statements: [consequent, alternate]
                 }
             } else {
-                throw new Error();
+                console.log("type2", type);
+                return {
+                    type: type,
+                    params: params,
+                    statements: [consequent, alternate]
+                }
+                //throw new Error();
             }
         } catch (e) {
             throw {
@@ -628,5 +681,4 @@ Entry.JsToBlockParser = function(syntax) {
             };
         }
     };
-
 })(Entry.JsToBlockParser.prototype);

@@ -4242,7 +4242,7 @@ Entry.block = {
             return script.getField('NUM', script);
         },
         "isPrimitive": true,
-        "syntax": {"js": [], "py": ["%1number#"]}
+        "syntax": {"js": ["Scope", "%1"], "py": ["%1number#"]}
     },
     "angle": {
         "color": "#FFD974",
@@ -9000,7 +9000,7 @@ Entry.block = {
             return true;
         },
         "isPrimitive": true,
-        "syntax": {"js": [], "py": ["True"]}
+        "syntax": {"js": ["Scope", "true"], "py": ["True"]}
     },
     "False": {
         "color": "#AEB8FF",
