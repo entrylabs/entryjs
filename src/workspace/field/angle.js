@@ -176,10 +176,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
             absolutePos.y + that.box.height/2 + 1
         ];
 
-
-        var a = that.modValue(
-            compute(zeroPos, mousePos));
-        that.optionGroup.val(a);
+        that.optionGroup.val(that.modValue(
+            compute(zeroPos, mousePos)));
         function compute(zeroPos, mousePos) {
             var dx = mousePos[0] - zeroPos[0];
             var dy = mousePos[1] - zeroPos[1] - RADIUS - 1;

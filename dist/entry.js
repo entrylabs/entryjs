@@ -16880,12 +16880,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     a.originalEvent && a.originalEvent.touches && (a = a.originalEvent.touches[0]);
     a = [a.clientX, a.clientY];
     var b = this.getAbsolutePosFromDocument();
-    a = this.modValue(function(a, b) {
+    this.optionGroup.val(this.modValue(function(a, b) {
       var c = b[0] - a[0], g = b[1] - a[1] - 49 - 1, h = Math.atan(-g / c), h = Entry.toDegrees(h), h = 90 - h;
       0 > c ? h += 180 : 0 < g && (h += 360);
       return 15 * Math.round(h / 15);
-    }([b.x + this.box.width / 2, b.y + this.box.height / 2 + 1], a));
-    this.optionGroup.val(a);
+    }([b.x + this.box.width / 2, b.y + this.box.height / 2 + 1], a)));
     this.applyValue();
   };
   b.updateGraph = function() {
