@@ -2417,14 +2417,6 @@ EntryStatic.getCategoryByBlock = function(blockName) {
     return false;
 }
 
-// for server node js code
-if (typeof exports == "object") {
-    exports.blockInfo = EntryStatic.blockInfo;
-    exports.getAllBlocks = EntryStatic.getAllBlocks;
-    exports.getCategoryByBlock = EntryStatic.getCategoryByBlock;
-}
-
-
 EntryStatic.objectMainCategories = ['entrybot_friends', 'people', 'animal', 'plant', 'vehicles',
                 'architect', 'food', 'environment', 'stuff', 'fantasy', 'interface',
                 'background'];
@@ -2528,3 +2520,11 @@ EntryStatic.COMMAND_TYPES = {
     'undo': 302,
     'redo': 303
 };
+
+// for server node js code
+if (typeof exports == "object") {
+    exports.blockInfo = EntryStatic.blockInfo;
+    exports.getAllBlocks = EntryStatic.getAllBlocks;
+    exports.getCategoryByBlock = EntryStatic.getCategoryByBlock;
+    exports.EntryStatic = EntryStatic;
+}
