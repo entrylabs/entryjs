@@ -876,8 +876,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(c, d);
+  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
   return a.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1077,8 +1077,8 @@ Blockly.Blocks.dplay_select_led = {init:function() {
 Entry.block.dplay_select_led = function(b, a) {
   var c = a.getField("PORT"), d = 7;
   "7" == c ? d = 7 : "8" == c ? d = 8 : "9" == c ? d = 9 : "10" == c && (d = 10);
-  c = "on" == a.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(d, c);
+  c = a.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(d, "on" == c ? 255 : 0);
   return a.callReturn();
 };
 Blockly.Blocks.dplay_get_switch_status = {init:function() {
@@ -2088,10 +2088,10 @@ Entry.block.wait_second = function(b, a) {
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
+  var c = a.getNumberValue("SECOND", a);
   setTimeout(function() {
     a.timeFlag = 0;
-  }, c);
+  }, 60 / (Entry.FPS || 60) * c * 1E3);
   return a;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -16845,7 +16845,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     });
     this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
     this.optionGroup.val(this.value);
-    this.optionGroup.on("mousedown", function(a) {
+    this.optionGroup.on("mousedown touchstart", function(a) {
       a.stopPropagation();
     });
     this.optionGroup.on("keyup", function(b) {
@@ -16856,9 +16856,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     var b = this.getAbsolutePosFromDocument();
     b.y -= this.box.height / 2;
     this.optionGroup.css({height:this._CONTENT_HEIGHT, left:b.x, top:b.y, width:a.box.width});
-    this.optionGroup.select();
     this.svgOptionGroup = this.appendSvgOptionGroup();
     this.svgOptionGroup.elem("circle", {x:0, y:0, r:49, class:"entry-field-angle-circle"});
+    $(this.svgOptionGroup).on("mousedown touchstart", function(b) {
+      b.stopPropagation();
+      a._updateByCoord(b);
+    });
     this._dividerGroup = this.svgOptionGroup.elem("g");
     for (b = 0;360 > b;b += 15) {
       this._dividerGroup.elem("line", {x1:49, y1:0, x2:49 - (0 === b % 45 ? 10 : 5), y2:0, transform:"rotate(" + b + ", 0, 0)", class:"entry-angle-divider"});
@@ -16867,16 +16870,23 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     b.x += this.box.width / 2;
     b.y = b.y + this.box.height / 2 + 49 + 1;
     this.svgOptionGroup.attr({class:"entry-field-angle", transform:"translate(" + b.x + "," + b.y + ")"});
-    var b = a.getAbsolutePosFromDocument(), d = [b.x + a.box.width / 2, b.y + a.box.height / 2 + 1];
-    $(this.svgOptionGroup).mousemove(function(b) {
-      a.optionGroup.val(a.modValue(function(a, b) {
-        var c = b[0] - a[0], d = b[1] - a[1] - 49 - 1, e = Math.atan(-d / c), e = Entry.toDegrees(e), e = 90 - e;
-        0 > c ? e += 180 : 0 < d && (e += 360);
-        return 15 * Math.round(e / 15);
-      }(d, [b.clientX, b.clientY])));
-      a.applyValue();
-    });
+    $(this.svgOptionGroup).bind("mousemove touchmove", this._updateByCoord.bind(this));
+    $(this.svgOptionGroup).bind("mouseup touchend", this.destroyOption.bind(this));
     this.updateGraph();
+    this.optionGroup.focus();
+    this.optionGroup.select();
+  };
+  b._updateByCoord = function(a) {
+    a.originalEvent && a.originalEvent.touches && (a = a.originalEvent.touches[0]);
+    a = [a.clientX, a.clientY];
+    var b = this.getAbsolutePosFromDocument();
+    a = this.modValue(function(a, b) {
+      var c = b[0] - a[0], g = b[1] - a[1] - 49 - 1, h = Math.atan(-g / c), h = Entry.toDegrees(h), h = 90 - h;
+      0 > c ? h += 180 : 0 < g && (h += 360);
+      return 15 * Math.round(h / 15);
+    }([b.x + this.box.width / 2, b.y + this.box.height / 2 + 1], a));
+    this.optionGroup.val(a);
+    this.applyValue();
   };
   b.updateGraph = function() {
     this._fillPath && this._fillPath.remove();

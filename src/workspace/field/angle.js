@@ -101,7 +101,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
 
         this.optionGroup.val(this.value);
 
-        this.optionGroup.on('mousedown', function(e) {
+        this.optionGroup.on('mousedown touchstart', function(e) {
             e.stopPropagation();
         });
 
@@ -123,13 +123,16 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
             width: that.box.width
         });
 
-        this.optionGroup.select();
-
         //svg option dom
         this.svgOptionGroup = this.appendSvgOptionGroup();
         var circle = this.svgOptionGroup.elem('circle', {
             x:0, y:0, r:RADIUS,
             class:'entry-field-angle-circle'
+        });
+
+        $(this.svgOptionGroup).on('mousedown touchstart', function(e) {
+            e.stopPropagation();
+            that._updateByCoord(e);
         });
 
         this._dividerGroup = this.svgOptionGroup.elem('g');
@@ -141,6 +144,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
                 class: 'entry-angle-divider'
             });
         }
+
         var pos = this.getAbsolutePosFromBoard();
         pos.x = pos.x + this.box.width/2;
         pos.y = pos.y + this.box.height/2 + RADIUS + 1;
@@ -150,30 +154,43 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
             transform: "translate(" + pos.x + "," + pos.y + ")"
         });
 
+        $(this.svgOptionGroup).bind('mousemove touchmove',
+            this._updateByCoord.bind(this));
+
+        $(this.svgOptionGroup).bind('mouseup touchend',
+            this.destroyOption.bind(this));
+        this.updateGraph();
+        this.optionGroup.focus();
+        this.optionGroup.select();
+    };
+
+    p._updateByCoord = function(e) {
+        var that = this;
+        if (e.originalEvent && e.originalEvent.touches)
+            e = e.originalEvent.touches[0];
+
+        var mousePos = [e.clientX, e.clientY];
         var absolutePos = that.getAbsolutePosFromDocument();
         var zeroPos = [
             absolutePos.x + that.box.width/2,
             absolutePos.y + that.box.height/2 + 1
         ];
 
-        $(this.svgOptionGroup).mousemove(function(e) {
-            var mousePos = [e.clientX, e.clientY];
 
-            that.optionGroup.val(that.modValue(
-                compute(zeroPos, mousePos)));
-            function compute(zeroPos, mousePos) {
-                var dx = mousePos[0] - zeroPos[0];
-                var dy = mousePos[1] - zeroPos[1] - RADIUS - 1;
-                var angle = Math.atan(-dy / dx);
-                angle = Entry.toDegrees(angle);
-                angle = 90 - angle;
-                if (dx < 0) angle += 180;
-                else if (dy > 0) angle += 360;
-                return Math.round(angle / 15) * 15;
-            }
-            that.applyValue();
-        });
-        this.updateGraph();
+        var a = that.modValue(
+            compute(zeroPos, mousePos));
+        that.optionGroup.val(a);
+        function compute(zeroPos, mousePos) {
+            var dx = mousePos[0] - zeroPos[0];
+            var dy = mousePos[1] - zeroPos[1] - RADIUS - 1;
+            var angle = Math.atan(-dy / dx);
+            angle = Entry.toDegrees(angle);
+            angle = 90 - angle;
+            if (dx < 0) angle += 180;
+            else if (dy > 0) angle += 360;
+            return Math.round(angle / 15) * 15;
+        }
+        that.applyValue();
     };
 
     p.updateGraph = function() {
