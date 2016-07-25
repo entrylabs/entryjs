@@ -876,8 +876,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
+  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(c, d);
   return a.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1077,8 +1077,8 @@ Blockly.Blocks.dplay_select_led = {init:function() {
 Entry.block.dplay_select_led = function(b, a) {
   var c = a.getField("PORT"), d = 7;
   "7" == c ? d = 7 : "8" == c ? d = 8 : "9" == c ? d = 9 : "10" == c && (d = 10);
-  c = a.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(d, "on" == c ? 255 : 0);
+  c = "on" == a.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(d, c);
   return a.callReturn();
 };
 Blockly.Blocks.dplay_get_switch_status = {init:function() {
@@ -2088,10 +2088,10 @@ Entry.block.wait_second = function(b, a) {
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a);
+  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
   setTimeout(function() {
     a.timeFlag = 0;
-  }, 60 / (Entry.FPS || 60) * c * 1E3);
+  }, c);
   return a;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -6655,7 +6655,7 @@ Entry.Container.prototype.takeSequenceSnapshot = function() {
 Entry.Container.prototype.loadSequenceSnapshot = function() {
   for (var b = this.objects_.length, a = Array(b), c = 0;c < b;c++) {
     var d = this.objects_[c];
-    a[d.index] = d;
+    a[d.index || c] = d;
     delete d.index;
   }
   this.objects_ = a;
@@ -12018,11 +12018,12 @@ Entry.Utils.xmlToJsonData = function(b) {
   }
   return a;
 };
-Entry.Utils.stopProjectWithToast = function(b, a) {
+Entry.Utils.stopProjectWithToast = function(b, a, c) {
+  var d = b.block;
   a = a || "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec \ubc1c\uc0dd";
-  Entry.toast && Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.check_runtime_error, !0);
+  Entry.toast && !c && Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.check_runtime_error, !0);
   Entry.engine && Entry.engine.toggleStop();
-  "workspace" === Entry.type && (Entry.container.selectObject(b.getCode().object.id, !0), b.view.getBoard().activateBlock(b));
+  "workspace" === Entry.type && (b.block && "funcBlock" in b.block ? d = b.block.funcBlock : b.funcExecutor && (d = b.funcExecutor.scope.block, b = b.type.replace("func_", ""), Entry.Func.edit(Entry.variableContainer.functions_[b])), d && (Entry.container.selectObject(d.getCode().object.id, !0), d.view.getBoard().activateBlock(d)));
   throw Error(a);
 };
 Entry.Utils.AsyncError = function(b) {
@@ -12750,7 +12751,7 @@ p.closeConnection = function() {
   this.socket && this.socket.close();
 };
 p.downloadConnector = function() {
-  window.open("http://download.play-entry.org/apps/Entry_HW_1.5.6_Setup.exe", "_blank").focus();
+  window.open("http://download.play-entry.org/apps/Entry_HW_1.5.8_Setup.exe", "_blank").focus();
 };
 p.downloadSource = function() {
   window.open("http://play-entry.com/down/board.ino", "_blank").focus();
@@ -16597,7 +16598,13 @@ Entry.Executor = function(b, a) {
         try {
           a = this.scope.block.getSchema().func.call(this.scope, this.entity, this.scope);
         } catch (b) {
-          "AsyncError" === b.name ? a = Entry.STATIC.BREAK : Entry.Utils.stopProjectWithToast(this.scope.block, "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec");
+          if ("AsyncError" === b.name) {
+            a = Entry.STATIC.BREAK;
+          } else {
+            var c = !1;
+            "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec" != b.message && (c = !0);
+            Entry.Utils.stopProjectWithToast(this.scope, "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec", c);
+          }
         }
         if (this.isEnd()) {
           break;
