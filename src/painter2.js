@@ -16,13 +16,39 @@ Entry.Painter2 = function(view) {
 p.initialize = function() {
     if (this.lc)
         return;
+    var imgURL = '/lib/literallycanvas/lib/img';
+    var bgImage = new Image();
+    bgImage.src = imgURL + '/transparent-pattern.png';
     this.lc = LC.init(this.view, {
-            imageURLPrefix: '/lib/literallycanvas/lib/img',
+            imageURLPrefix: imgURL,
             zoomMax: 3.0,
             zoomMin: 0.5,
-            toolbarPosition: 'bottom'
+            toolbarPosition: 'bottom',
+            imageSize: {width: 960, height: 540},
+            backgroundShapes: [
+                LC.createShape(
+                    'Rectangle', {
+                        x: 0, y: 0, width: 960, height: 540,
+                        strokeWidth: 0,
+                        strokeColor: 'transparent',
+                        fillColor: '#e8e8e8',
+                    }
+                ),
+                LC.createShape(
+                    'Rectangle', {
+                        x: 0, y: 0, width: 960, height: 540,
+                        strokeWidth: 0,
+                        strokeColor: 'transparent',
+                        fillPattern: bgImage
+                    }
+                )
+            ]
         }
     );
+
+    bgImage.onload = function() {
+        this.lc.repaintLayer("background")
+    }.bind(this);
 
     this.lc.on("do", function(e) {
         Entry.do("editPicture", e.action, this.lc);
@@ -67,7 +93,11 @@ p.changePicture = function(picture) {
         image.src = Entry.defaultPath + '/uploads/' + picture.filename.substring(0,2)+'/' + picture.filename.substring(2,4)+'/image/'+picture.filename+'.png';
     }
 
-    this.lc.saveShape(LC.createShape('Image', {x: 10, y: 10, image: image}));
+    var dimension = picture.dimension;
+    this.lc.saveShape(LC.createShape('Image',{
+        x: 480 - dimension.width / 2,
+        y: 270 - dimension.height / 2,
+        image: image}));
 };
 
 p.file_save = function() {

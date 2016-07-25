@@ -11696,9 +11696,18 @@ Entry.Painter2 = function(a) {
 };
 (function(a) {
   a.initialize = function() {
-    this.lc || (this.lc = LC.init(this.view, {imageURLPrefix:"/lib/literallycanvas/lib/img", zoomMax:3, zoomMin:.5, toolbarPosition:"bottom"}), this.lc.on("do", function(b) {
-      Entry.do("editPicture", b.action, this.lc);
-    }), this.initTopBar());
+    if (!this.lc) {
+      var b = new Image;
+      b.src = "/lib/literallycanvas/lib/img/transparent-pattern.png";
+      this.lc = LC.init(this.view, {imageURLPrefix:"/lib/literallycanvas/lib/img", zoomMax:3, zoomMin:.5, toolbarPosition:"bottom", imageSize:{width:960, height:540}, backgroundShapes:[LC.createShape("Rectangle", {x:0, y:0, width:960, height:540, strokeWidth:0, strokeColor:"transparent", fillColor:"#e8e8e8"}), LC.createShape("Rectangle", {x:0, y:0, width:960, height:540, strokeWidth:0, strokeColor:"transparent", fillPattern:b})]});
+      b.onload = function() {
+        this.lc.repaintLayer("background");
+      }.bind(this);
+      this.lc.on("do", function(b) {
+        Entry.do("editPicture", b.action, this.lc);
+      });
+      this.initTopBar();
+    }
   };
   a.show = function() {
     this.lc || this.initialize();
@@ -11714,7 +11723,8 @@ Entry.Painter2 = function(a) {
       this.file.name = b.name;
       this.file.mode = "edit";
       a.src = b.fileurl ? b.fileurl : Entry.defaultPath + "/uploads/" + b.filename.substring(0, 2) + "/" + b.filename.substring(2, 4) + "/image/" + b.filename + ".png";
-      this.lc.saveShape(LC.createShape("Image", {x:10, y:10, image:a}));
+      b = b.dimension;
+      this.lc.saveShape(LC.createShape("Image", {x:480 - b.width / 2, y:270 - b.height / 2, image:a}));
     }
   };
   a.file_save = function() {
@@ -12209,10 +12219,10 @@ Entry.Parser = function(a, b, c) {
     e.to.ch = a[a.length - 1].length;
     return e;
   };
-  a.mappingSyntax = function(a) {
-    for (var c = Object.keys(Entry.block), d = 0;d < c.length;d++) {
-      var e = c[d], f = Entry.block[e];
-      if (f.mode === a && -1 < this.availableCode.indexOf(e) && (f = f.syntax)) {
+  a.mappingSyntax = function(b) {
+    for (var a = Object.keys(Entry.block), d = 0;d < a.length;d++) {
+      var e = a[d], f = Entry.block[e];
+      if (f.mode === b && -1 < this.availableCode.indexOf(e) && (f = f.syntax)) {
         for (var g = this.syntax, h = 0;h < f.length;h++) {
           var k = f[h];
           if (h === f.length - 2 && "function" === typeof f[h + 1]) {
@@ -12225,16 +12235,16 @@ Entry.Parser = function(a, b, c) {
       }
     }
   };
-  a.setAvailableCode = function(a, c) {
+  a.setAvailableCode = function(b, a) {
     var d = [];
-    a.forEach(function(a, b) {
+    b.forEach(function(a, b) {
       a.forEach(function(a, b) {
         d.push(a.type);
       });
     });
-    c instanceof Entry.Code ? c.getBlockList().forEach(function(a) {
+    a instanceof Entry.Code ? a.getBlockList().forEach(function(a) {
       a.type !== NtryData.START && -1 === d.indexOf(a.type) && d.push(a.type);
-    }) : c.forEach(function(a, b) {
+    }) : a.forEach(function(a, b) {
       a.forEach(function(a, b) {
         a.type !== NtryData.START && -1 === d.indexOf(a.type) && d.push(a.type);
       });
