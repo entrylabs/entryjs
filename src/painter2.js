@@ -54,6 +54,9 @@ p.initialize = function() {
         Entry.do("editPicture", e.action, this.lc);
     });
 
+    this.lc.on("lc-pointerdrag", this.stagemousemove.bind(this));
+    this.lc.on("lc-pointermove", this.stagemousemove.bind(this));
+
     this.initTopBar();
 };
 
@@ -239,7 +242,17 @@ p.initTopBar = function() {
 
     painterTopMenuEditEraseAll.appendChild(painterTopMenuEditEraseAllLink);
 
+    var painterTopStageXY = Entry.createElement('div', 'entryPainterTopStageXY');
+    this.painterTopStageXY = painterTopStageXY;
+    painterTopStageXY.addClass('entryPlaygroundPainterTopStageXY');
+    painterTop.appendChild(painterTopStageXY);
+
     Entry.addEventListener('pictureSelected', this.changePicture.bind(this));
 }
+
+p.stagemousemove = function(event) {
+    this.painterTopStageXY.textContent = 'x:'+ event.x.toFixed(1) +
+        ', y:'+event.y.toFixed(1);
+};
 
 }(Entry.Painter2.prototype));

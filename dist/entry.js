@@ -11706,6 +11706,8 @@ Entry.Painter2 = function(a) {
       this.lc.on("do", function(b) {
         Entry.do("editPicture", b.action, this.lc);
       });
+      this.lc.on("lc-pointerdrag", this.stagemousemove.bind(this));
+      this.lc.on("lc-pointermove", this.stagemousemove.bind(this));
       this.initTopBar();
     }
   };
@@ -11739,94 +11741,100 @@ Entry.Painter2 = function(a) {
     var d = Entry.createElement("nav", "entryPainterTopMenu");
     d.addClass("entryPlaygroundPainterTopMenu");
     a.appendChild(d);
-    a = Entry.createElement("ul");
-    d.appendChild(a);
-    var e = Entry.createElement("li");
+    var e = Entry.createElement("ul");
     d.appendChild(e);
+    var f = Entry.createElement("li");
+    d.appendChild(f);
     d = Entry.createElement("a", "entryPainterTopMenuFileNew");
     d.bindOnClick(function() {
       b.newPicture();
     });
     d.addClass("entryPlaygroundPainterTopMenuFileNew");
     d.innerHTML = Lang.Workspace.new_picture;
+    f.appendChild(d);
+    d = Entry.createElement("li", "entryPainterTopMenuFile");
+    d.addClass("entryPlaygroundPainterTopMenuFile");
+    d.innerHTML = Lang.Workspace.painter_file;
     e.appendChild(d);
-    e = Entry.createElement("li", "entryPainterTopMenuFile");
-    e.addClass("entryPlaygroundPainterTopMenuFile");
-    e.innerHTML = Lang.Workspace.painter_file;
-    a.appendChild(e);
-    d = Entry.createElement("ul");
-    e.appendChild(d);
-    e = Entry.createElement("li");
-    d.appendChild(e);
-    var f = Entry.createElement("a", "entryPainterTopMenuFileSave");
-    f.bindOnClick(function() {
+    f = Entry.createElement("ul");
+    d.appendChild(f);
+    d = Entry.createElement("li");
+    f.appendChild(d);
+    var g = Entry.createElement("a", "entryPainterTopMenuFileSave");
+    g.bindOnClick(function() {
       b.file_save(!1);
     });
-    f.addClass("entryPainterTopMenuFileSave");
-    f.innerHTML = Lang.Workspace.painter_file_save;
-    e.appendChild(f);
-    e = Entry.createElement("li");
-    d.appendChild(e);
-    d = Entry.createElement("a", "entryPainterTopMenuFileSaveAs");
-    d.bindOnClick(function() {
+    g.addClass("entryPainterTopMenuFileSave");
+    g.innerHTML = Lang.Workspace.painter_file_save;
+    d.appendChild(g);
+    d = Entry.createElement("li");
+    f.appendChild(d);
+    f = Entry.createElement("a", "entryPainterTopMenuFileSaveAs");
+    f.bindOnClick(function() {
       b.file.mode = "new";
       b.file_save(!1);
     });
-    d.addClass("entryPlaygroundPainterTopMenuFileSaveAs");
-    d.innerHTML = Lang.Workspace.painter_file_saveas;
-    e.appendChild(d);
-    d = Entry.createElement("li", "entryPainterTopMenuEdit");
-    d.addClass("entryPlaygroundPainterTopMenuEdit");
-    d.innerHTML = Lang.Workspace.painter_edit;
-    a.appendChild(d);
-    a = Entry.createElement("ul");
-    d.appendChild(a);
-    d = Entry.createElement("li");
-    a.appendChild(d);
-    e = Entry.createElement("a", "entryPainterTopMenuEditImportLink");
-    e.bindOnClick(function() {
+    f.addClass("entryPlaygroundPainterTopMenuFileSaveAs");
+    f.innerHTML = Lang.Workspace.painter_file_saveas;
+    d.appendChild(f);
+    f = Entry.createElement("li", "entryPainterTopMenuEdit");
+    f.addClass("entryPlaygroundPainterTopMenuEdit");
+    f.innerHTML = Lang.Workspace.painter_edit;
+    e.appendChild(f);
+    e = Entry.createElement("ul");
+    f.appendChild(e);
+    f = Entry.createElement("li");
+    e.appendChild(f);
+    d = Entry.createElement("a", "entryPainterTopMenuEditImportLink");
+    d.bindOnClick(function() {
       Entry.dispatchEvent("openPictureImport");
     });
-    e.addClass("entryPainterTopMenuEditImport");
-    e.innerHTML = Lang.Workspace.get_file;
-    d.appendChild(e);
-    d = Entry.createElement("li");
-    a.appendChild(d);
-    e = Entry.createElement("a", "entryPainterTopMenuEditCopy");
-    e.bindOnClick(function() {
+    d.addClass("entryPainterTopMenuEditImport");
+    d.innerHTML = Lang.Workspace.get_file;
+    f.appendChild(d);
+    f = Entry.createElement("li");
+    e.appendChild(f);
+    d = Entry.createElement("a", "entryPainterTopMenuEditCopy");
+    d.bindOnClick(function() {
       b.edit_copy();
     });
-    e.addClass("entryPlaygroundPainterTopMenuEditCopy");
-    e.innerHTML = Lang.Workspace.copy_file;
-    d.appendChild(e);
-    d = Entry.createElement("li");
-    a.appendChild(d);
-    e = Entry.createElement("a", "entryPainterTopMenuEditCut");
-    e.bindOnClick(function() {
+    d.addClass("entryPlaygroundPainterTopMenuEditCopy");
+    d.innerHTML = Lang.Workspace.copy_file;
+    f.appendChild(d);
+    f = Entry.createElement("li");
+    e.appendChild(f);
+    d = Entry.createElement("a", "entryPainterTopMenuEditCut");
+    d.bindOnClick(function() {
       b.edit_cut();
     });
-    e.addClass("entryPlaygroundPainterTopMenuEditCut");
-    e.innerHTML = Lang.Workspace.cut_picture;
-    d.appendChild(e);
-    d = Entry.createElement("li");
-    a.appendChild(d);
-    e = Entry.createElement("a", "entryPainterTopMenuEditPaste");
-    e.bindOnClick(function() {
+    d.addClass("entryPlaygroundPainterTopMenuEditCut");
+    d.innerHTML = Lang.Workspace.cut_picture;
+    f.appendChild(d);
+    f = Entry.createElement("li");
+    e.appendChild(f);
+    d = Entry.createElement("a", "entryPainterTopMenuEditPaste");
+    d.bindOnClick(function() {
       b.edit_paste();
     });
-    e.addClass("entryPlaygroundPainterTopMenuEditPaste");
-    e.innerHTML = Lang.Workspace.paste_picture;
-    d.appendChild(e);
-    d = Entry.createElement("li");
-    a.appendChild(d);
-    a = Entry.createElement("a", "entryPainterTopMenuEditEraseAll");
-    a.addClass("entryPlaygroundPainterTopMenuEditEraseAll");
-    a.innerHTML = Lang.Workspace.remove_all;
-    a.bindOnClick(function() {
+    d.addClass("entryPlaygroundPainterTopMenuEditPaste");
+    d.innerHTML = Lang.Workspace.paste_picture;
+    f.appendChild(d);
+    f = Entry.createElement("li");
+    e.appendChild(f);
+    e = Entry.createElement("a", "entryPainterTopMenuEditEraseAll");
+    e.addClass("entryPlaygroundPainterTopMenuEditEraseAll");
+    e.innerHTML = Lang.Workspace.remove_all;
+    e.bindOnClick(function() {
       b.clearCanvas();
     });
-    d.appendChild(a);
+    f.appendChild(e);
+    this.painterTopStageXY = e = Entry.createElement("div", "entryPainterTopStageXY");
+    e.addClass("entryPlaygroundPainterTopStageXY");
+    a.appendChild(e);
     Entry.addEventListener("pictureSelected", this.changePicture.bind(this));
+  };
+  a.stagemousemove = function(b) {
+    this.painterTopStageXY.textContent = "x:" + b.x.toFixed(1) + ", y:" + b.y.toFixed(1);
   };
 })(Entry.Painter2.prototype);
 Entry.BlockParser = function(a) {
@@ -12544,37 +12552,37 @@ Entry.BlockMockup = function(a, b, c) {
     for (e in this.statementsKeyMap) {
       d.test(e) && delete this.statementsKeyMap[e];
     }
-    return {color:this.color, skeleton:a, statements:this.statements, template:this.templates.filter(function(a) {
-      return "string" === typeof a;
+    return {color:this.color, skeleton:a, statements:this.statements, template:this.templates.filter(function(b) {
+      return "string" === typeof b;
     }).join(" "), params:this.params, events:this.events, def:this.def, paramsKeyMap:this.paramsKeyMap, statementsKeyMap:this.statementsKeyMap};
   };
   a.appendDummyInput = function() {
     return this;
   };
-  a.appendValueInput = function(a) {
-    this.def && this.def.index && (void 0 !== this.def.index[a] ? this.definition.params.push(this.def.params[this.def.index[a]]) : this.definition.params.push(null));
+  a.appendValueInput = function(b) {
+    this.def && this.def.index && (void 0 !== this.def.index[b] ? this.definition.params.push(this.def.params[this.def.index[b]]) : this.definition.params.push(null));
     this.params.push({type:"Block", accept:"string"});
-    this._addToParamsKeyMap(a);
+    this._addToParamsKeyMap(b);
     this.templates.push(this.getFieldCount());
     return this;
   };
-  a.appendStatementInput = function(a) {
-    this._addToStatementsKeyMap(a);
+  a.appendStatementInput = function(b) {
+    this._addToStatementsKeyMap(b);
     this.statements.push({accept:"basic"});
   };
-  a.setCheck = function(a) {
-    var c = this.params;
-    "Boolean" === a && (c[c.length - 1].accept = "boolean");
+  a.setCheck = function(b) {
+    var a = this.params;
+    "Boolean" === b && (a[a.length - 1].accept = "boolean");
   };
-  a.appendField = function(a, c) {
-    if (!a) {
+  a.appendField = function(b, a) {
+    if (!b) {
       return this;
     }
-    "string" === typeof a && 0 < a.length ? c ? (a = {type:"Text", text:a, color:c}, this.params.push(a), this._addToParamsKeyMap(), this.templates.push(this.getFieldCount()), this.def && this.def.index && void 0 !== this.def.index[c] ? this.definition.params.push(this.def.params[this.def.index[c]]) : this.definition.params.push(void 0)) : this.templates.push(a) : a.constructor == Blockly.FieldIcon ? ("start" === a.type ? this.params.push({type:"Indicator", img:a.src_, size:17, position:{x:0, y:-2}}) : 
-    this.params.push({type:"Indicator", img:a.src_, size:12}), this._addToParamsKeyMap(), this.templates.push(this.getFieldCount()), this.definition && this.definition.params.push(null)) : a.constructor == Blockly.FieldDropdown ? (this.params.push({type:"Dropdown", options:a.menuGenerator_, value:a.menuGenerator_[0][1], fontSize:11}), this._addToParamsKeyMap(c), this.templates.push(this.getFieldCount()), this.def && this.def.index && void 0 !== this.def.index[c] ? this.definition.params.push(this.def.params[this.def.index[c]]) : 
-    this.definition.params.push(void 0)) : a.constructor == Blockly.FieldDropdownDynamic ? (this.params.push({type:"DropdownDynamic", value:null, menuName:a.menuName_, fontSize:11}), this.templates.push(this.getFieldCount()), this.def && this.def.index && void 0 !== this.def.index[c] ? this.definition.params.push(this.def.params[this.def.index[c]]) : this.definition.params.push(void 0), this._addToParamsKeyMap(c)) : a.constructor == Blockly.FieldTextInput ? (this.params.push({type:"TextInput", value:10}), 
-    this.templates.push(this.getFieldCount()), this._addToParamsKeyMap(c)) : a.constructor == Blockly.FieldAngle ? (this.params.push({type:"Angle"}), this.templates.push(this.getFieldCount()), this.def && this.def.index && void 0 !== this.def.index[c] ? this.definition.params.push(this.def.params[this.def.index[c]]) : this.definition.params.push(null), this._addToParamsKeyMap(c)) : a.constructor == Blockly.FieldKeydownInput ? (this.params.push({type:"Keyboard", value:81}), this.templates.push(this.getFieldCount()), 
-    void 0 !== this.def.index[c] ? this.definition.params.push(this.def.params[this.def.index[c]]) : this.definition.params.push(void 0), this._addToParamsKeyMap(c)) : a.constructor == Blockly.FieldColour ? (this.params.push({type:"Color"}), this.templates.push(this.getFieldCount()), this._addToParamsKeyMap(c)) : console.log("else", a);
+    "string" === typeof b && 0 < b.length ? a ? (b = {type:"Text", text:b, color:a}, this.params.push(b), this._addToParamsKeyMap(), this.templates.push(this.getFieldCount()), this.def && this.def.index && void 0 !== this.def.index[a] ? this.definition.params.push(this.def.params[this.def.index[a]]) : this.definition.params.push(void 0)) : this.templates.push(b) : b.constructor == Blockly.FieldIcon ? ("start" === b.type ? this.params.push({type:"Indicator", img:b.src_, size:17, position:{x:0, y:-2}}) : 
+    this.params.push({type:"Indicator", img:b.src_, size:12}), this._addToParamsKeyMap(), this.templates.push(this.getFieldCount()), this.definition && this.definition.params.push(null)) : b.constructor == Blockly.FieldDropdown ? (this.params.push({type:"Dropdown", options:b.menuGenerator_, value:b.menuGenerator_[0][1], fontSize:11}), this._addToParamsKeyMap(a), this.templates.push(this.getFieldCount()), this.def && this.def.index && void 0 !== this.def.index[a] ? this.definition.params.push(this.def.params[this.def.index[a]]) : 
+    this.definition.params.push(void 0)) : b.constructor == Blockly.FieldDropdownDynamic ? (this.params.push({type:"DropdownDynamic", value:null, menuName:b.menuName_, fontSize:11}), this.templates.push(this.getFieldCount()), this.def && this.def.index && void 0 !== this.def.index[a] ? this.definition.params.push(this.def.params[this.def.index[a]]) : this.definition.params.push(void 0), this._addToParamsKeyMap(a)) : b.constructor == Blockly.FieldTextInput ? (this.params.push({type:"TextInput", value:10}), 
+    this.templates.push(this.getFieldCount()), this._addToParamsKeyMap(a)) : b.constructor == Blockly.FieldAngle ? (this.params.push({type:"Angle"}), this.templates.push(this.getFieldCount()), this.def && this.def.index && void 0 !== this.def.index[a] ? this.definition.params.push(this.def.params[this.def.index[a]]) : this.definition.params.push(null), this._addToParamsKeyMap(a)) : b.constructor == Blockly.FieldKeydownInput ? (this.params.push({type:"Keyboard", value:81}), this.templates.push(this.getFieldCount()), 
+    void 0 !== this.def.index[a] ? this.definition.params.push(this.def.params[this.def.index[a]]) : this.definition.params.push(void 0), this._addToParamsKeyMap(a)) : b.constructor == Blockly.FieldColour ? (this.params.push({type:"Color"}), this.templates.push(this.getFieldCount()), this._addToParamsKeyMap(a)) : console.log("else", b);
     return this;
   };
   a.setColour = function(a) {
