@@ -7167,8 +7167,10 @@ Entry.Engine.prototype.toggleRun = function() {
   if ("pause" === this.state) {
     this.togglePause();
   } else {
-    var b = Entry.playground.mainWorkspace, a = b.mode;
-    a == Entry.Workspace.MODE_VIMBOARD && b.loadCodeFromText(a);
+    if (Entry.playground && Entry.playground.mainWorkspace) {
+      var b = Entry.playground.mainWorkspace, a = b.mode;
+      a == Entry.Workspace.MODE_VIMBOARD && b.loadCodeFromText(a);
+    }
     Entry.addActivity("run");
     "stop" == this.state && (Entry.container.mapEntity(function(a) {
       a.takeSnapshot();
