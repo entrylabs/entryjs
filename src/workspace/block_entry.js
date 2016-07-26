@@ -20484,6 +20484,135 @@ Entry.block = {
 
       }
     },
+    "neobot_touch_if": {
+        "color": "#498deb",
+        "skeleton": "basic_loop",
+        "template": "%1포트의 접촉 센서가 %2 %3",
+        "statements": [
+            {
+                "accept": "basic"
+            }
+        ],
+        "params": [
+          {
+            "type": "Dropdown",
+            "options": [
+                ["IN 1번", "IN1"],
+                ["IN 2번", "IN2"],
+                ["IN 3번", "IN3"]
+            ],
+            "value": "IN1",
+            "fontSize": 11
+          },
+          {
+            "type": "Dropdown",
+            "options": [
+                ["접촉 되면", "1"],
+                ["접촉 안되면", "0"]
+            ],
+            "value": "1",
+            "fontSize": 11
+          },
+          {
+              "type": "Indicator",
+              "img": "block_icon/flow_03.png",
+              "size": 12
+          }
+        ],
+        "events": {},
+        "def": {
+            "params": [null, null, null],
+            "type": "neobot_touch_if"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "TOUCH": 1
+        },
+        "class": "neobot_touch",
+        //"isNotFor": [mini],
+        "func": function (sprite, script) {
+            if (script.isCondition) {
+                delete script.isCondition;
+                return script.callReturn();
+            }
+            var value = script.getBooleanValue("BOOL", script);
+            if (value) {
+                script.isCondition = true;
+                return script.getStatement("STACK", script);
+            } else {
+                return script.callReturn();
+            }
+        }
+    },
+    "neobot_touch_if_else": {
+        "color": "#498deb",
+        "skeleton": "basic_double_loop",
+        "template": "%1포트의 접촉 센서가 %2 %3 %4 아니면",
+        "statements": [
+            {
+                "accept": "basic"
+            },
+            {
+                "accept": "basic"
+            }
+        ],
+        "params": [
+          {
+            "type": "Dropdown",
+            "options": [
+                ["IN 1번", "IN1"],
+                ["IN 2번", "IN2"],
+                ["IN 3번", "IN3"]
+            ],
+            "value": "IN1",
+            "fontSize": 11
+          },
+          {
+            "type": "Dropdown",
+            "options": [
+                ["접촉 되면", "1"],
+                ["접촉 안되면", "0"]
+            ],
+            "value": "1",
+            "fontSize": 11
+          },
+          {
+              "type": "Indicator",
+              "img": "block_icon/flow_03.png",
+              "size": 12
+          },
+          {
+              "type": "LineBreak"
+          }
+        ],
+        "events": {},
+        "def": {
+            "params": [null, null, null, null],
+            "type": "neobot_touch_if_else"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "TOUCH": 1
+        },
+        "statementsKeyMap": {
+            "STACK_IF": 0,
+            "STACK_ELSE": 1
+        },
+        "class": "neobot_touch",
+        //"isNotFor": [mini],
+        "func": function (sprite, script) {
+            if (script.isCondition) {
+                delete script.isCondition;
+                return script.callReturn();
+            }
+            var value = script.getBooleanValue("BOOL", script);
+            script.isCondition = true;
+            if (value)
+                return script.getStatement("STACK_IF", script);
+            else
+                return script.getStatement("STACK_ELSE", script);
+        }
+    },
     "ebs_if": {
         "parent": "_if",
         "def": {

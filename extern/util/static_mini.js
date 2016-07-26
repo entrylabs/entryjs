@@ -127,7 +127,8 @@ EntryStatic.getAllBlocks = function() {
         {
             category: "m_touch",
             blocks: [
-                "when_run_button_click",
+                "neobot_touch_if",
+                "neobot_touch_if_else"
             ]
         },
         {
