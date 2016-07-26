@@ -623,6 +623,12 @@ Entry.Playground.prototype.generateTextView = function(textView) {
         resizeOffset = $(fontSizeSlider).offset().left;
         //resizeOffset = e.offsetX;
     };
+
+    fontSizeKnob.addEventListener('touchstart', function(e) {
+        isFontSizing = true;
+        resizeOffset = $(fontSizeSlider).offset().left;
+    });
+
     document.addEventListener('mousemove', function(e) {
         if (isFontSizing) {
             var left = e.pageX - resizeOffset;
@@ -634,7 +640,24 @@ Entry.Playground.prototype.generateTextView = function(textView) {
             Entry.playground.object.entity.setFontSize(left);
         }
     });
+
+    document.addEventListener('touchmove', function(e) {
+        if (isFontSizing) {
+            var left = e.touches[0].pageX - resizeOffset;
+            left = Math.max(left, 5);
+            left = Math.min(left, 88);
+            fontSizeKnob.style.left = left + "px";
+            left /= 0.88;
+            fontSizeIndiciator.style.width = left + '%';
+            Entry.playground.object.entity.setFontSize(left);
+        }
+    });
+
     document.addEventListener('mouseup', function(e) {
+        isFontSizing = false;
+    });
+
+    document.addEventListener('touchend', function(e) {
         isFontSizing = false;
     });
 
