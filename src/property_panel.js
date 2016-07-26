@@ -41,6 +41,8 @@ Entry.PropertyPanel = function() {
                 parent: this._view
             });
         this.initializeSplitter(splitter);
+
+        Entry.windowResized.attach(this, this.resize)
     };
 
     p.addMode = function(mode, contentObj) {
@@ -97,6 +99,8 @@ Entry.PropertyPanel = function() {
         Entry.dispatchEvent('windowResized');
 
         var selected = this.selected;
+        if (!selected)
+            return;
         var modeResize  = this.modes[selected].obj.resize;
         if (selected == 'hw') {
             if (this.modes.hw.obj.listPorts)
