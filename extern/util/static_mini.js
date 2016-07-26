@@ -82,25 +82,39 @@ EntryStatic.getAllBlocks = function() {
         {
             category: "start",
             blocks: [
-                "when_run_button_click",
+              "when_run_button_click",
+              "when_some_key_pressed"
             ]
         },
         {
             category: "flow",
             blocks: [
-                "when_run_button_click",
+              "wait_second",
+              "repeat_basic",
+              "repeat_inf",
+              "repeat_while_true",
+              "stop_repeat",
+              "_if",
+              "if_else",
+              "wait_until_true",
+              "stop_object"
             ]
         },
         {
             category: "m_dcmotor",
             blocks: [
-                "when_run_button_click",
+                "neobot_move_for_secs",
+                "neobot_move_for",
+                "neobot_stop_for"
             ]
         },
         {
             category: "m_diode",
             blocks: [
-                "when_run_button_click",
+                "neobot_diode_secs_toggle",
+                "neobot_diode_toggle",
+                "neobot_diode_inout_toggle",
+                "neobot_diode_set_output"
             ]
         },
         {
