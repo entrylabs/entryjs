@@ -12079,6 +12079,9 @@ Entry.isMobile = function() {
   Entry.device = "desktop";
   return !1;
 };
+Entry.Utils.convertMouseEvent = function(b) {
+  return b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
+};
 Entry.Model = function(b, a) {
   var c = Entry.Model;
   c.generateSchema(b);
@@ -15533,6 +15536,36 @@ Entry.BlockMenu = function(b, a, c, d) {
     a.on("wheel", function() {
       b._mouseWheel.apply(b, arguments);
     });
+    b._scroller && $(this.svg).bind("mousedown touchstart", function(a) {
+      b.onMouseDown.apply(b, arguments);
+    });
+  };
+  b.onMouseDown = function(a) {
+    function b(a) {
+      a.stopPropagation && a.stopPropagation();
+      a.preventDefault && a.preventDefault();
+      a = Entry.Utils.convertMouseEvent(a);
+      var c = e.dragInstance;
+      e._scroller.scroll(-a.pageY + c.offsetY);
+      c.set({offsetY:a.pageY});
+    }
+    function d(a) {
+      $(document).unbind(".blockMenu");
+      delete e.dragInstance;
+    }
+    a.stopPropagation && a.stopPropagation();
+    a.preventDefault && a.preventDefault();
+    var e = this;
+    if (0 === a.button || a.originalEvent && a.originalEvent.touches) {
+      a = Entry.Utils.convertMouseEvent(a);
+      Entry.documentMousedown && Entry.documentMousedown.notify(a);
+      var f = $(document);
+      f.bind("mousemove.blockMenu", b);
+      f.bind("mouseup.blockMenu", d);
+      f.bind("touchmove.blockMenu", b);
+      f.bind("touchend.blockMenu", d);
+      this.dragInstance = new Entry.DragInstance({startY:a.pageY, offsetY:a.pageY});
+    }
   };
   b._mouseWheel = function(a) {
     a = a.originalEvent;
@@ -18154,33 +18187,32 @@ Entry.Board.DRAG_RADIUS = 5;
     function b(a) {
       a.stopPropagation && a.stopPropagation();
       a.preventDefault && a.preventDefault();
-      a = a.originalEvent && a.originalEvent.touches ? a.originalEvent.touches[0] : a;
-      var c = f.mouseDownCoordinate;
-      Math.sqrt(Math.pow(a.pageX - c.x, 2) + Math.pow(a.pageY - c.y, 2)) < Entry.Board.DRAG_RADIUS || (g && (clearTimeout(g), g = null), c = f.dragInstance, f.scroller.scroll(a.pageX - c.offsetX, a.pageY - c.offsetY), c.set({offsetX:a.pageX, offsetY:a.pageY}));
+      a = Entry.Utils.convertMouseEvent(a);
+      var c = e.mouseDownCoordinate;
+      Math.sqrt(Math.pow(a.pageX - c.x, 2) + Math.pow(a.pageY - c.y, 2)) < Entry.Board.DRAG_RADIUS || (f && (clearTimeout(f), f = null), c = e.dragInstance, e.scroller.scroll(a.pageX - c.offsetX, a.pageY - c.offsetY), c.set({offsetX:a.pageX, offsetY:a.pageY}));
     }
     function d(a) {
-      g && (clearTimeout(g), g = null);
+      f && (clearTimeout(f), f = null);
       $(document).unbind(".entryBoard");
-      delete f.mouseDownCoordinate;
-      delete f.dragInstance;
+      delete e.mouseDownCoordinate;
+      delete e.dragInstance;
     }
     if (this.workspace.getMode() != Entry.Workspace.MODE_VIMBOARD) {
       a.stopPropagation && a.stopPropagation();
       a.preventDefault && a.preventDefault();
-      var e, f = this, g = null;
+      var e = this, f = null;
       if (0 === a.button || a.originalEvent && a.originalEvent.touches) {
-        var h = a.type;
-        e = a.originalEvent && a.originalEvent.touches ? a.originalEvent.touches[0] : a;
-        Entry.documentMousedown && Entry.documentMousedown.notify(e);
+        var g = a.type, h = Entry.Utils.convertMouseEvent(a);
+        Entry.documentMousedown && Entry.documentMousedown.notify(h);
         var k = $(document);
-        this.mouseDownCoordinate = {x:e.pageX, y:e.pageY};
+        this.mouseDownCoordinate = {x:h.pageX, y:h.pageY};
         k.bind("mousemove.entryBoard", b);
         k.bind("mouseup.entryBoard", d);
         k.bind("touchmove.entryBoard", b);
         k.bind("touchend.entryBoard", d);
-        this.dragInstance = new Entry.DragInstance({startX:e.pageX, startY:e.pageY, offsetX:e.pageX, offsetY:e.pageY});
-        "touchstart" === h && (g = setTimeout(function() {
-          g && (g = null, d(), f._rightClick(a));
+        this.dragInstance = new Entry.DragInstance({startX:h.pageX, startY:h.pageY, offsetX:h.pageX, offsetY:h.pageY});
+        "touchstart" === g && (f = setTimeout(function() {
+          f && (f = null, d(), e._rightClick(a));
         }, 1E3));
       } else {
         Entry.Utils.isRightButton(a) && this._rightClick(a);

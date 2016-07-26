@@ -181,14 +181,11 @@ Entry.Board.DRAG_RADIUS = 5;
         if (e.stopPropagation) e.stopPropagation();
         if (e.preventDefault) e.preventDefault();
 
-        var mouseEvent;
         var board = this;
         var longPressTimer = null;
         if (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) {
             var eventType = e.type;
-            if (e.originalEvent && e.originalEvent.touches)
-                mouseEvent = e.originalEvent.touches[0];
-            else mouseEvent = e;
+            var mouseEvent = Entry.Utils.convertMouseEvent(e);
             if (Entry.documentMousedown)
                 Entry.documentMousedown.notify(mouseEvent);
             var doc = $(document);
@@ -221,13 +218,10 @@ Entry.Board.DRAG_RADIUS = 5;
             this._rightClick(e);
 
         function onMouseMove(e) {
-            var mouseEvent;
             if (e.stopPropagation) e.stopPropagation();
             if (e.preventDefault) e.preventDefault();
 
-            if (e.originalEvent && e.originalEvent.touches)
-                mouseEvent = e.originalEvent.touches[0];
-            else mouseEvent = e;
+            var mouseEvent = Entry.Utils.convertMouseEvent(e);
 
             var mouseDownCoordinate = board.mouseDownCoordinate;
             var diff = Math.sqrt(Math.pow(mouseEvent.pageX - mouseDownCoordinate.x, 2) +

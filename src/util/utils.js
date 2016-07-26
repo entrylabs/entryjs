@@ -1262,3 +1262,8 @@ Entry.isMobile = function() {
     }
 }
 
+Entry.Utils.convertMouseEvent = function(e) {
+    if (e.originalEvent && e.originalEvent.touches)
+        return e.originalEvent.touches[0];
+    else return e;
+}
