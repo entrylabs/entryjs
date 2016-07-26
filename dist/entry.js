@@ -10854,16 +10854,15 @@ Entry.BlockToJsParser = function(b) {
 };
 (function(b) {
   b.Code = function(a) {
-    if (a instanceof Entry.Thread) {
-      return this.Thread(a);
-    }
+    console.log("js code", a);
     if (a instanceof Entry.Block) {
       return this.Block(a);
     }
     var b = "";
-    a = a.getThreads();
+    a = a._data;
+    console.log("threads length", a.length);
     for (var c = 0;c < a.length;c++) {
-      b += this.Thread(a[c]);
+      b += this.Thread(a[c]), console.log("thread sequence", b);
     }
     return b;
   };
@@ -10874,14 +10873,13 @@ Entry.BlockToJsParser = function(b) {
     var b = "";
     a = a.getBlocks();
     for (var c = 0;c < a.length;c++) {
-      b += this.Block(a[c]);
+      var e = a[c], b = c != a.length - 1 ? b + (this.Block(e) + "\n") : b + this.Block(e)
     }
-    return b;
+    return b + "\n\n";
   };
   b.Block = function(a) {
     console.log("block", a);
     var b = a._schema.syntax.js ? a._schema.syntax.js : a._schema.syntax;
-    console.log("syntax", b);
     return b ? this[b[0]](a) : "";
   };
   b.Program = function(a) {
@@ -10904,45 +10902,41 @@ Entry.BlockToJsParser = function(b) {
     for (var h = 0;h < f.length;h++) {
       var k = f[h];
       console.log("syntaxToken", k);
-      0 !== k.length && "Scope" !== k && ("Judge" === k ? (console.log("judge", k), b = !0) : e.test(k) ? (k = k.split("%")[1], k = parseInt(k) - 1, g[k] ? "Image" != g[k].type && ("Block" == g[k].type ? (k = this.Block(a[k]), c += k) : c += this[g[k].type](a[k], g[k])) : console.log("This Block has No Schema")) : c += k);
+      0 !== k.length && "Scope" !== k && ("Judge" === k ? b = !0 : e.test(k) ? (k = k.split("%")[1], k = parseInt(k) - 1, g[k] ? "Image" != g[k].type && ("Block" == g[k].type ? (k = this.Block(a[k]), c += k) : c += this[g[k].type](a[k], g[k])) : console.log("This Block has No Schema")) : c += k);
     }
     console.log("charAt", c.charAt(c.length - 1));
     "#" == c.charAt(c.length - 1) && (b = !0, c = c.substring(0, c.length - 1));
-    b || (c += "();\n");
+    b || (c += "();");
     return c;
   };
   b.BasicFunction = function(a) {
     a = this.Thread(a.statements[0]);
-    return "function promise() {\n" + this.indent(a) + "}\n";
+    return "function promise() {\n\t" + this.indent(a).trim() + "\r}";
   };
   b.BasicIteration = function(a) {
     var b = a.params[0], c = this.publishIterateVariable();
     a = this.Thread(a.statements[0]);
     this.unpublishIterateVariable();
-    return "for (var " + c + " = 0; " + c + " < " + b + "; " + c + "++){\n" + this.indent(a) + "}\n";
+    return "for (var " + c + " = 0; " + c + " < " + b + "; " + c + "++){\n\t" + this.indent(a).trim() + "\r}";
   };
   b.BasicIf = function(a) {
     console.log("BasicIf block come on", a);
     if (2 == a.data.statements.length) {
-      console.log("st1", a.statements[0]);
-      var b = this.Thread(a.statements[0]), c = this.Thread(a.statements[1]), e = a._schema.syntax.concat();
-      console.log("block.data.params[0] 1", a.data.params[0]);
-      e = (a = a.data.params[0]) && "True" == a.data.type ? e[1] : void 0 === a ? e[1] : this.Block(a);
-      b = "if (" + e + ") {\n" + this.indent(b) + "}\nelse {\n" + this.indent(c) + "}\n";
+      var b = this.Thread(a.statements[0]), c = this.Thread(a.statements[1]), e = a._schema.syntax.concat(), e = (a = a.data.params[0]) && "True" == a.data.type ? e[1] : void 0 === a ? e[1] : this.Block(a), b = "if (" + e + ") {\n\t" + this.indent(b).trim() + "\r}\nelse {\n\t" + this.indent(c).trim() + "\r}"
     } else {
-      b = this.Thread(a.statements[0]), e = a._schema.syntax.concat(), console.log("block.data.params[0] 2", a.data.params[0]), e = (a = a.data.params[0]) && "True" == a.data.type ? e[1] : void 0 === a ? e[1] : this.Block(a), b = "if (" + e + ") {\n" + this.indent(b) + "}\n";
+      b = this.Thread(a.statements[0]), e = a._schema.syntax.concat(), console.log("block.data.params[0] 2", a.data.params[0]), e = (a = a.data.params[0]) && "True" == a.data.type ? e[1] : void 0 === a ? e[1] : this.Block(a), b = "if (" + e + ") {\n\t" + this.indent(b).trim() + "\r}";
     }
     return b;
   };
   b.BasicWhile = function(a) {
     var b = this.Thread(a.statements[0]);
-    return "while (" + a._schema.syntax.concat()[1] + ") {\n" + this.indent(b) + "}\n";
+    return "while (" + a._schema.syntax.concat()[1] + ") {\n\t" + this.indent(b).trim() + "\r}";
   };
   b.indent = function(a) {
     var b = "    ";
     a = a.split("\n");
     a.pop();
-    return b += a.join("\n    ") + "\n";
+    return b += a.join("\n    ");
   };
   b.publishIterateVariable = function() {
     var a = "", b = this._iterVariableCount;
@@ -11763,13 +11757,28 @@ Entry.JsToBlockParser = function(b) {
 };
 (function(b) {
   b.Program = function(a) {
-    console.log("node", a);
-    var b = [], c = [];
-    c.push({type:this.syntax.Program});
-    var e = this.initScope(a), c = c.concat(this.BlockStatement(a));
-    this.unloadScope();
-    b.push(c);
-    return b = b.concat(e);
+    console.log("astArr", a);
+    var b = [], c;
+    for (c in a) {
+      if ("Program" != a[c].type) {
+        return;
+      }
+      var e = [];
+      console.log("astArr", a);
+      0 == c && e.push({type:this.syntax.Program});
+      var f = this.initScope(a[c]);
+      console.log("check1", f);
+      var f = this.BlockStatement(a[c]), g;
+      for (g in f) {
+        var h = f[g];
+        e.push(h);
+      }
+      console.log("block", h);
+      this.unloadScope();
+      console.log("thread", e);
+      0 != e.length && b.push(e);
+    }
+    return b;
   };
   b.Identifier = function(a, b) {
     return b ? b[a.name] : this.scope[a.name];
@@ -11809,6 +11818,7 @@ Entry.JsToBlockParser = function(b) {
     return this.BasicIteration(a, h, f);
   };
   b.BlockStatement = function(a) {
+    console.log("BlockStatement node", a);
     var b = [];
     a = a.body;
     for (var c = 0;c < a.length;c++) {
@@ -11820,6 +11830,7 @@ Entry.JsToBlockParser = function(b) {
         f && b.push(f);
       }
     }
+    console.log("BlockStatement blocks", b);
     return b;
   };
   b.EmptyStatement = function(a) {
@@ -13367,43 +13378,40 @@ Entry.Parser = function(b, a, d, c) {
     switch(this._type) {
       case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
         try {
-          var e = acorn.parse(a), c = this._parser.Program(e);
+          var e = a.split("\n\n");
+          console.log("threads", e);
+          var f = [], g;
+          for (g in e) {
+            var h = e[g], k = acorn.parse(h);
+            "Program" == k.type && 0 != k.body.length && f.push(k);
+          }
+          c = this._parser.Program(f);
           console.log("result", c);
         } catch (n) {
-          this.codeMirror && (n instanceof SyntaxError ? (c = {from:{line:n.loc.line - 1, ch:n.loc.column - 2}, to:{line:n.loc.line - 1, ch:n.loc.column + 1}}, n.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : (c = this.getLineNumber(n.node.start, n.node.end), c.message = n.message, c.severity = "error", this.codeMirror.markText(c.from, c.to, {className:"CodeMirror-lint-mark-error", __annotation:c, clearOnEnter:!0})), Entry.toast.alert("Error", n.message)), c = [];
+          this.codeMirror && (n instanceof SyntaxError ? n.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4." : (c = this.getLineNumber(n.node.start, n.node.end), c.message = n.message, c.severity = "error", this.codeMirror.markText(c.from, c.to, {className:"CodeMirror-lint-mark-error", __annotation:c, clearOnEnter:!0})), Entry.toast.alert("Error", n.message)), c = [];
         }
         break;
       case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
         try {
-          var f = new Entry.PyAstGenerator, g = a.split("\n\n"), h;
-          for (h in g) {
-            var k = g[h];
-            -1 != k.search("import") ? g[h] = "" : (k = Entry.TextCodingUtil.prototype.entryEventFuncFilter(k), g[h] = k);
+          var l = new Entry.PyAstGenerator, e = a.split("\n\n"), m;
+          for (m in e) {
+            h = e[m], -1 != h.search("import") ? e[m] = "" : (h = Entry.TextCodingUtil.prototype.entryEventFuncFilter(h), e[m] = h);
           }
-          var e = [], l;
-          for (l in g) {
-            var k = g[l], m = f.generate(k);
-            "Program" == m.type && 0 != m.body.length && e.push(m);
+          f = [];
+          for (g in e) {
+            h = e[g], k = l.generate(h), "Program" == k.type && 0 != k.body.length && f.push(k);
           }
-          c = this._parser.Program(e);
+          c = this._parser.Program(f);
           this._parser._variableMap.clear();
         } catch (n) {
           if (this.codeMirror) {
-            throw n instanceof SyntaxError ? (c = {from:{line:n.loc.line - 1, ch:n.loc.column - 2}, to:{line:n.loc.line - 1, ch:n.loc.column + 1}}, n.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : (c = this.getLineNumber(n.node.start, n.node.end), c.message = n.message, c.severity = "error", this.codeMirror.markText(c.from, c.to, {className:"CodeMirror-lint-mark-error", __annotation:c, clearOnEnter:!0})), Entry.toast.alert("[\ud14d\uc2a4\ud2b8\ucf54\ub529(\ud30c\uc774\uc36c) \uc624\ub958]", 
-            n.message), document.getElementById("entryCodingModeSelector").value = "2", n;
+            throw n instanceof SyntaxError ? n.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4." : (c = this.getLineNumber(n.node.start, n.node.end), c.message = n.message, c.severity = "error", this.codeMirror.markText(c.from, c.to, {className:"CodeMirror-lint-mark-error", __annotation:c, clearOnEnter:!0})), Entry.toast.alert("[\ud14d\uc2a4\ud2b8\ucf54\ub529(\ud30c\uc774\uc36c) \uc624\ub958]", n.message), document.getElementById("entryCodingModeSelector").value = "2", n;
           }
           c = [];
         }
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
         c = this._parser.Code(a);
-        c = c.match(/(.*{.*[\S|\s]+?}|.+)/g);
-        c = Array.isArray(c) ? c.reduce(function(a, b, d) {
-          var c = "";
-          1 === d && (a += "\n");
-          c = -1 < b.indexOf("function") ? b + a : a + b;
-          return c + "\n";
-        }) : "";
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
         c = this._parser.Code(a, b), this._pyHinter || (this._pyHinter = new Entry.PyHint);

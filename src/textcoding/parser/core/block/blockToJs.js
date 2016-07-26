@@ -15,17 +15,21 @@ Entry.BlockToJsParser = function(syntax) {
 
 (function(p){
     p.Code = function(code) {
-        if (code instanceof Entry.Thread)
-            return this.Thread(code);
+        console.log("js code", code);
+        /*if (code instanceof Entry.Thread)
+            return this.Thread(code);*/
         if (code instanceof Entry.Block)
             return this.Block(code);
 
         var textCode = "",
-            threads = code.getThreads();
+            threads = code._data;
+
+            console.log("threads length", threads.length);
 
         for (var i = 0; i < threads.length; i++) {
             var thread = threads[i];
             textCode += this.Thread(thread);
+            console.log("thread sequence", textCode);
         }
 
         return textCode;
@@ -39,9 +43,14 @@ Entry.BlockToJsParser = function(syntax) {
 
         for (var i = 0; i < blocks.length; i++) {
             var block = blocks[i];
-            code += this.Block(block);
+            if(i != blocks.length-1) {
+                code += this.Block(block) + '\n';
+            }
+            else {
+                code += this.Block(block);
+            }
         }
-        return code;
+        return code + '\n\n';   
     };
 
     p.Block = function(block) {
@@ -50,7 +59,7 @@ Entry.BlockToJsParser = function(syntax) {
             var syntax = block._schema.syntax.js;
         else
             var syntax = block._schema.syntax;
-        console.log("syntax", syntax);
+       
         if (!syntax)
             return "";
         var syntaxType = syntax[0];
@@ -88,7 +97,6 @@ Entry.BlockToJsParser = function(syntax) {
             console.log("syntaxToken", syntaxToken);
             if (syntaxToken.length === 0 || syntaxToken === 'Scope') continue;
             if (syntaxToken === 'Judge') {
-                console.log("judge", syntaxToken);
                 notParenthesis = true;
                 continue;
             }
@@ -120,7 +128,7 @@ Entry.BlockToJsParser = function(syntax) {
         }
 
         if(!notParenthesis)
-            result += "();\n";
+            result += "();";
         
         return result;
 
@@ -129,8 +137,8 @@ Entry.BlockToJsParser = function(syntax) {
 
     p.BasicFunction = function(block) {
         var statementCode = this.Thread(block.statements[0]);
-        var code = "function promise() {\n" +
-            this.indent(statementCode) + "}\n"
+        var code = "function promise() {\n\t" +
+            this.indent(statementCode).trim() + "\r}"
         return code;
     };
 
@@ -140,8 +148,8 @@ Entry.BlockToJsParser = function(syntax) {
         var statementCode = this.Thread(block.statements[0]);
         this.unpublishIterateVariable();
         var code = "for (var " + iterVariable + " = 0; " + iterVariable +
-            " < " + iterateNumber + "; " + iterVariable + "++){\n" +
-            this.indent(statementCode) + "}\n"; 
+            " < " + iterateNumber + "; " + iterVariable + "++){\n\t" +
+            this.indent(statementCode).trim() + "\r}"; 
         return code;
     };
 
@@ -149,12 +157,10 @@ Entry.BlockToJsParser = function(syntax) {
         console.log("BasicIf block come on", block);
         
         if(block.data.statements.length == 2) {
-            console.log("st1", block.statements[0]);
             var statementCode1 = this.Thread(block.statements[0]);
             var statementCode2 = this.Thread(block.statements[1]);
             var syntax = block._schema.syntax.concat();
             
-            console.log("block.data.params[0] 1", block.data.params[0]);
             var paramBlock = block.data.params[0];
 
             if(paramBlock && paramBlock.data.type == "True") {
@@ -167,9 +173,9 @@ Entry.BlockToJsParser = function(syntax) {
                     var param = this.Block(paramBlock);
             }
             
-            var code = "if (" + param + ") {\n" +
-                this.indent(statementCode1) + "}\n" +
-                "else {\n" + this.indent(statementCode2) + "}\n";
+            var code = "if (" + param + ") {\n\t" +
+                this.indent(statementCode1).trim() + "\r}\n" +
+                "else {\n\t" + this.indent(statementCode2).trim() + "\r}";
         } else {
             var statementCode1 = this.Thread(block.statements[0]);
             var syntax = block._schema.syntax.concat();
@@ -187,8 +193,8 @@ Entry.BlockToJsParser = function(syntax) {
                     var param = this.Block(paramBlock);
             }
             
-            var code = "if (" + param + ") {\n" +
-                this.indent(statementCode1) + "}\n" 
+            var code = "if (" + param + ") {\n\t" +
+                this.indent(statementCode1).trim() + "\r}" 
         }
 
         return code;
@@ -197,8 +203,8 @@ Entry.BlockToJsParser = function(syntax) {
     p.BasicWhile = function(block) {
         var statementCode = this.Thread(block.statements[0]);
         var syntax = block._schema.syntax.concat();
-        var code = "while (" + syntax[1] + ") {\n" +
-            this.indent(statementCode) + "}\n"
+        var code = "while (" + syntax[1] + ") {\n\t" +
+            this.indent(statementCode).trim() + "\r}"
         return code;
     };
 
@@ -206,7 +212,7 @@ Entry.BlockToJsParser = function(syntax) {
         var result = "    ";
         var indentedCode = textCode.split("\n");
         indentedCode.pop();
-        result += indentedCode.join("\n    ") + "\n";
+        result += indentedCode.join("\n    ");
         return result;
     };
 

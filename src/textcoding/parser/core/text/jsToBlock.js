@@ -14,9 +14,9 @@ Entry.JsToBlockParser = function(syntax) {
 };
 
 (function(p){
-    p.Program = function(node) {
-        console.log("node", node);
-        var code = [];
+    p.Program = function(astArr) {
+        console.log("astArr", astArr);
+        /*var code = [];
         var block = [];
         var body = node.body;
 
@@ -34,6 +34,57 @@ Entry.JsToBlockParser = function(syntax) {
         code.push(block);
         code = code.concat(separatedBlocks);
 
+        return code;*/
+
+
+        var code = [];
+        
+        for(var index in astArr) { 
+            if(astArr[index].type != 'Program') return;
+            var thread = []; 
+            
+
+            console.log("astArr", astArr);
+            if(index == 0) {
+                thread.push({
+                    type: this.syntax.Program
+                });
+            }
+
+            //block statement
+            var separatedBlocks = this.initScope(astArr[index]);
+            console.log("check1", separatedBlocks);
+            var blocks = this.BlockStatement(astArr[index]);
+
+            for(var i in blocks) {
+                var block = blocks[i];
+                thread.push(block);
+            }
+
+            console.log("block", block); 
+            
+            /*var nodes = astArr[index].body;
+            for(var index in nodes) {
+                var node = nodes[index];
+                console.log("Program node", node);
+                                
+                
+
+                console.log("here?", separatedBlocks);
+
+                
+
+                console.log("block block", block);
+
+                if(block && block.type)
+                    thread.push(block); 
+            }*/
+
+            this.unloadScope();
+            console.log("thread", thread);
+            if(thread.length != 0)
+                code.push(thread);    
+        }
         return code;
     };
 
@@ -58,7 +109,7 @@ Entry.JsToBlockParser = function(syntax) {
         return this[expression.type](expression);
     };
 
-    p.ForStatement = function(node) {
+    p.ForStatement = function(node) { 
         var init = node.init,
             test = node.test,
             update = node.update,
@@ -112,6 +163,7 @@ Entry.JsToBlockParser = function(syntax) {
     };
 
     p.BlockStatement = function(node) {
+        console.log("BlockStatement node", node);
         var blocks = [];
         var body = node.body;
 
@@ -131,6 +183,8 @@ Entry.JsToBlockParser = function(syntax) {
             else if (block)
                 blocks.push(block);
         }
+
+        console.log("BlockStatement blocks", blocks);
 
         return blocks;
     };
