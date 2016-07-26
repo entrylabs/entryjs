@@ -114,13 +114,14 @@ EntryStatic.getAllBlocks = function() {
                 "neobot_diode_secs_toggle",
                 "neobot_diode_toggle",
                 "neobot_diode_inout_toggle",
-                "neobot_diode_set_output"
+                "neobot_diode_set_output",
+                "neobot_diode_input_value"
             ]
         },
         {
             category: "m_melody",
             blocks: [
-                "when_run_button_click",
+                "neobot_melody_note_for"
             ]
         },
         {

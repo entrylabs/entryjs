@@ -20339,8 +20339,8 @@ Entry.block = {
             "VALUE": 1,
             "OPERATOR": 2
         },
-        "class": "neobot_output",
-        "isNotFor": ["neobot"],
+        "class": "neobot_diode",
+        //"isNotFor": ["mini"],
         "func": function (sprite, script) {
             var port = script.getStringField('PORT', script);
             var value = script.getNumberValue('VALUE', script);
@@ -20358,6 +20358,131 @@ Entry.block = {
             Entry.hw.sendQueue['OPT'] = Entry.hw.sendQueue['OPT'] & (~option);
             return script.callReturn();
         }
+    },
+    "neobot_diode_input_value": {
+        "color": "#EC4466",
+        "skeleton": "basic_string_field",
+        "fontColor": "#fff",
+        "statements": [],
+        "template": "%1 포트의 값",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["IN 1번", "IN1"],
+                ["IN 2번", "IN2"],
+                ["IN 3번", "IN3"]
+            ],
+            "value": "IN1",
+            "fontSize": 11
+        }],
+        "events": {},
+        "def": {
+            "params": [null],
+            "type": "neobot_diode_input_value"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "neobot_diode",
+        //"isNotFor": ["mini"],
+        "func": function (sprite, script) {
+            var port = script.getStringField('PORT');
+            return Entry.hw.portData[port];
+        }
+    },
+    "neobot_melody_note_for": {
+      "color": "#FF9E20",
+      "skeleton": "basic",
+      "statements": [],
+      "template": "멜로디 %1 을(를) %2 옥타브로 %3 길이만큼 소리내기 %4",
+      "params": [{
+          "type": "Dropdown",
+          "options": [
+              ["무음", "0"],
+              ["도", "1"],
+              ["도#", "2"],
+              ["레", "3"],
+              ["레#", "4"],
+              ["미", "5"],
+              ["파", "6"],
+              ["파#", "7"],
+              ["솔", "8"],
+              ["솔#", "9"],
+              ["라", "10"],
+              ["라#", "11"],
+              ["시", "12"]
+          ],
+          "value": "0",
+          "fontSize": 11
+      }, {
+          "type": "Dropdown",
+          "options": [
+              ["1", "0"],
+              ["2", "1"],
+              ["3", "2"],
+              ["4", "3"],
+              ["5", "4"],
+              ["6", "5"]
+          ],
+          "value": "0",
+          "fontSize": 11
+      }, {
+          "type": "Dropdown",
+          "options": [
+              ["2분음표", "2"],
+              ["4분음표", "4"],
+              ["8분음표", "8"],
+              ["16분음표", "16"]
+          ],
+          "value": "2",
+          "fontSize": 11
+      }, {
+          "type": "Indicator",
+          "img": "block_icon/brush_03.png",
+          "size": 12
+      }],
+      "events": {},
+      "def": {
+          "params": ["1", "2", "2", null],
+          "type": "neobot_melody_note_for"
+      },
+      "paramsKeyMap": {
+          "NOTE": 0,
+          "OCTAVE": 1,
+          "DURATION": 2
+      },
+      "class": "neobot_melody",
+      //"isNotFor": ["mini"],
+      "func": function (sprite, script) {
+          var sq = Entry.hw.sendQueue;
+
+          if (!script.isStart) {
+              var note = script.getNumberField("NOTE", script);
+              var octave = script.getNumberField("OCTAVE", script);
+              var duration = script.getNumberField("DURATION", script);
+              var value = (note > 0) ? note + (12 * octave) : 0;
+
+              script.isStart = true;
+              script.timeFlag = 1;
+              if(value > 65) {
+                  value = 65;
+              }
+              sq.SND = value;
+              setTimeout(function() {
+                  script.timeFlag = 0;
+              }, 1 / duration * 2000);
+              return script;
+          } else if (script.timeFlag == 1) {
+              return script;
+          } else {
+              delete script.timeFlag;
+              delete script.isStart;
+              Entry.hw.sendQueue['SND'] = 0;
+              Entry.engine.isContinue = false;
+              return script.callReturn();
+          }
+
+      }
     },
     "ebs_if": {
         "parent": "_if",
