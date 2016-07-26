@@ -138,7 +138,7 @@ Entry.Scene.prototype.generateElement = function(scene) {
         that.resize();
         if (code == 13)
             this.blur();
-        if (this.value.length > 9) {
+        if (this.value.length > 10) {
             this.value = this.value.substring(0,10);
             this.blur();
         }

@@ -24,7 +24,12 @@ Entry.Executor = function(block, entity) {
                 if(e.name === 'AsyncError') {
                     returnVal = Entry.STATIC.BREAK;
                 } else {
-                    Entry.Utils.stopProjectWithToast(this.scope.block, '런타임 에러');
+                    var errorMsg = '런타임 에러';
+                    var isToastHide = false;
+                    if(e.message != errorMsg) {
+                        isToastHide = true;
+                    }
+                    Entry.Utils.stopProjectWithToast(this.scope, errorMsg, isToastHide);
                 }
             }
             //executor can be ended after block function call
