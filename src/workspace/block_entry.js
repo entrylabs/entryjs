@@ -20622,7 +20622,7 @@ Entry.block = {
         "fontColor": "#fff",
         "syntax": [
             "Scope",
-            "distance(%1, %2, %3)#"
+            "is_distance(%1, %2, %3)#"
         ],
         "params": [
             {
@@ -20700,7 +20700,7 @@ Entry.block = {
         "color": "#ffd974",
         "syntax": [
             "Scope",
-            "move"
+            "distance(%1)#"
         ],
         "params": [
             {
@@ -20741,7 +20741,7 @@ Entry.block = {
         "color": "#2fc9f0",
         "syntax": [
             "Scope",
-            "move"
+            "is_object(%1, %2)#"
         ],
         "params": [
             {
@@ -20849,6 +20849,10 @@ Entry.block = {
         "skeleton": "basic_boolean_field",
         "fontColor": "#fff",
         "statements": [],
+        "syntax": [
+            "Scope",
+            "%1 && %3#"
+        ],
         "params": [
             {
                 "type": "Block",

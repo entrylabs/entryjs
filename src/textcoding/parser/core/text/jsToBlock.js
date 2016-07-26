@@ -4,6 +4,7 @@
 "use strict";
 
 goog.provide("Entry.JsToBlockParser");
+goog.require("Entry.TextCodingUtil");
 
 Entry.JsToBlockParser = function(syntax) {
     this.syntax = syntax;
@@ -44,7 +45,11 @@ Entry.JsToBlockParser = function(syntax) {
     };
 
     p.Literal = function(node) {
-        return node.value;
+        if(node.value === true)
+            return {type:'True'};
+
+        if(node.value === false)
+            return {type:'False'};
     };
 
     // Statement
@@ -426,13 +431,130 @@ Entry.JsToBlockParser = function(syntax) {
     };
 
     p.LogicalExpression = function(node) {
-        var operator = node.operator,
+        console.log("JS LogicalExpression node", node);
+        var result;
+        var structure = {};
+
+        var operator = String(node.operator);
+        console.log("operator", operator);
+
+        switch(operator){
+            case '&&': 
+                var type = "ai_boolean_and";
+                break;
+            default: 
+                var type = "ai_boolean_and";
+                break; 
+        }
+
+        var params = [];    
+        var left = node.left;
+        
+        if(left.type == "Literal" || left.type == "Identifier") {
+            var arguments = [];
+            arguments.push(left);
+            var paramsMeta = Entry.block[type].params;
+            //var paramsDefMeta = Entry.block[type].def.params;
+            console.log("LogicalExpression paramsMeta", paramsMeta); 
+            //console.log("LogicalExpression paramsDefMeta", paramsDefMeta); 
+
+            for(var p in paramsMeta) {
+                var paramType = paramsMeta[p].type;
+                if(paramType == "Indicator") {
+                    var pendingArg = {raw: null, type: "Literal", value: null}; 
+                    if(p < arguments.length) 
+                        arguments.splice(p, 0, pendingArg);              
+                }
+                else if(paramType == "Text") {
+                    var pendingArg = {raw: "", type: "Literal", value: ""};
+                    if(p < arguments.length) 
+                        arguments.splice(p, 0, pendingArg);
+                }
+            }
+
+            for(var i in arguments) {
+                var argument = arguments[i];
+                console.log("LogicalExpression argument", argument);
+                          
+                var param = this[argument.type](argument);
+                console.log("LogicalExpression param", param);
+                if(param && param != null)
+                    params.push(param);   
+            }
+        } else {
+            param = this[left.type](left);
+            if(param) 
+                params.push(param);
+        }
+        console.log("LogicalExpression left param", param);
+        
+        operator = String(node.operator);
+        console.log("LogicalExpression operator", operator);
+        if(operator) {
+            operator = Entry.TextCodingUtil.prototype.logicalExpressionConvert(operator);
+            param = operator;
+            params.push(param);
+        }
+
+        var right = node.right;
+       
+        if(right.type == "Literal" || right.type == "Identifier") {
+            var arguments = [];
+            arguments.push(right);
+            var paramsMeta = Entry.block[type].params;
+            //var paramsDefMeta = Entry.block[type].def.params;
+            console.log("LogicalExpression paramsMeta", paramsMeta); 
+            //console.log("LogicalExpression paramsDefMeta", paramsDefMeta); 
+
+            for(var p in paramsMeta) {
+                var paramType = paramsMeta[p].type;
+                if(paramType == "Indicator") {
+                    var pendingArg = {raw: null, type: "Literal", value: null}; 
+                    if(p < arguments.length) 
+                        arguments.splice(p, 0, pendingArg);              
+                }
+                else if(paramType == "Text") {
+                    var pendingArg = {raw: "", type: "Literal", value: ""};
+                    if(p < arguments.length) 
+                        arguments.splice(p, 0, pendingArg);
+                }
+            }
+
+            for(var i in arguments) {
+                var argument = arguments[i];
+                console.log("LogicalExpression argument", argument);
+                          
+                var param = this[argument.type](argument);
+                console.log("LogicalExpression param", param);
+                if(param && param != null)
+                    params.push(param);    
+            }
+        } else {
+            param = this[right.type](right);
+            if(param) 
+                params.push(param);
+        }
+        
+        console.log("LogicalExpression right param", param);  
+
+        structure.type = type;
+        structure.params = params;
+        
+        result = structure;
+
+        console.log("LogicalExpression result", result);
+
+        return result;
+
+        /*var operator = node.operator,
             left = node.left,
             right = node.right;
-        throw {
-            message : operator + '은(는) 지원하지 않는 명령어 입니다.',
-            node : node
-        };
+        if(operator != "&&") {
+            throw {
+                message : operator + '은(는) 지원하지 않는 명령어 입니다.',
+                node : node
+            };
+        }*/
     };
 
     p.LogicalOperator = function() {
@@ -502,12 +624,17 @@ Entry.JsToBlockParser = function(syntax) {
         for(var i = 0; i < args.length; i++) {
             var arg = args[i];
             var value = this[arg.type](arg);
+
+            console.log("value", value);
             
             if(block.params[i].type === 'Block') {
-                if(typeof value == 'string')
+                if(typeof value == 'string') {
                     var paramBlock = {type: 'text', params:[value]};
-                else
+                } else if (typeof value == 'number') {
                     var paramBlock = {type: 'number', params:[value]};
+                } else {
+                    var paramBlock = value;
+                } 
 
                 params.push(paramBlock);
             }
