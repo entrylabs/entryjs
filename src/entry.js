@@ -225,8 +225,6 @@ Entry.resizeElement = function(interfaceModel) {
         }
         Entry.playground.view_.style.left = (canvasSize + 0.5) + 'px';
 
-        Entry.propertyPanel.resize(canvasSize);
-
         var addButton = Entry.engine.view_.getElementsByClassName('entryAddButtonWorkspace_w')[0];
         if (addButton) {
             if (Entry.objectAddable) {
@@ -286,7 +284,7 @@ Entry.resizeElement = function(interfaceModel) {
 
         this.interfaceState = interfaceModel;
     }
-    Entry.windowResized.notify();
+    Entry.windowResized.notify(canvasSize);
 };
 
 /**
