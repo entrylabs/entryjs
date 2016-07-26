@@ -824,15 +824,15 @@ Lang.Blocks = {
     "hello": "Hello",
     "nice": "nice to meet you",
     "M_DCMOTOR": "DC Motor",
-    "M_DIODE": "Light Diode",
+    "M_DIODE": "Diode",
     "M_MELODY": "Melody",
-    "M_TOUCH": "Touch Sensor",
-    "M_LIGHT": "Light Sensor",
-    "M_SOUND": "Sound Sensor",
-    "M_IR": "Infra-Red Sensor",
+    "M_TOUCH": "Touch",
+    "M_LIGHT": "Light",
+    "M_SOUND": "Sound",
+    "M_IR": "Infra-Red",
     "M_OTHERS": "Others",
-    "M_REMOTE": "Remote Control",
-    "M_SERVO": "Servo Motor"
+    "M_REMOTE": "Remote",
+    "M_SERVO": "Servo"
 };
 Lang.Buttons = {
     "apply": "Apply",

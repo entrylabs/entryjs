@@ -824,7 +824,7 @@ Lang.Blocks = {
     "hello": "안녕",
     "nice": "반가워",
     "M_DCMOTOR": "DC모터",
-    "M_DIODE": "발광다이오드",
+    "M_DIODE": "다이오드",
     "M_MELODY": "멜로디",
     "M_TOUCH": "접촉센서",
     "M_LIGHT": "빛감지센서",
