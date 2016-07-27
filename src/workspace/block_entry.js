@@ -19968,7 +19968,6 @@ Entry.block = {
       }, {
           "type": "Dropdown",
           "options": [
-              ["0", "0"],
               ["1", "1"],
               ["2", "2"],
               ["3", "3"],
@@ -20009,7 +20008,7 @@ Entry.block = {
           "WHEEL": 0,
           "DIRECTION": 1,
           "SPEED": 2,
-          "TIME": 3
+          "SECS": 3
       },
       "class": "neobot_motor",
       //"isNotFor": ["mini"],
@@ -20017,7 +20016,7 @@ Entry.block = {
           var wheel = script.getNumberField('WHEEL');
           var speed = script.getNumberField('SPEED');
           var direction = script.getNumberField('DIRECTION');
-          var time = script.getNumberField('TIME');
+          var secs = script.getNumberField('SECS');
           //TODO: add to whell and secs option.
           Entry.hw.sendQueue['DCL'] = speed + direction;
           return script.callReturn();
@@ -20050,7 +20049,6 @@ Entry.block = {
       }, {
           "type": "Dropdown",
           "options": [
-              ["0", "0"],
               ["1", "1"],
               ["2", "2"],
               ["3", "3"],
@@ -20140,7 +20138,7 @@ Entry.block = {
       }
     },
     "neobot_diode_secs_toggle": {
-      "color": "#EC4466",
+      "color": "#FF9E20",
       "skeleton": "basic",
       "fontColor": "#fff",
       "statements": [],
@@ -20167,7 +20165,7 @@ Entry.block = {
           "fontSize": 11
       },{
           "type": "Indicator",
-          "img": "block_icon/looks_03.png",
+          "img": "block_icon/brush_03.png",
           "size": 12
       }],
       "events": {},
@@ -20194,7 +20192,7 @@ Entry.block = {
       }
     },
     "neobot_diode_toggle": {
-      "color": "#EC4466",
+      "color": "#FF9E20",
       "skeleton": "basic",
       "fontColor": "#fff",
       "statements": [],
@@ -20218,7 +20216,7 @@ Entry.block = {
           "fontSize": 11
       },{
           "type": "Indicator",
-          "img": "block_icon/looks_03.png",
+          "img": "block_icon/brush_03.png",
           "size": 12
       }],
       "events": {},
@@ -20240,7 +20238,7 @@ Entry.block = {
       }
     },
     "neobot_diode_inout_toggle": {
-      "color": "#EC4466",
+      "color": "#FF9E20",
       "skeleton": "basic",
       "fontColor": "#fff",
       "statements": [],
@@ -20273,7 +20271,7 @@ Entry.block = {
           "fontSize": 11
       }, {
           "type": "Indicator",
-          "img": "block_icon/looks_03.png",
+          "img": "block_icon/brush_03.png",
           "size": 12
       }],
       "events": {},
@@ -20297,7 +20295,7 @@ Entry.block = {
       }
     },
     "neobot_diode_set_output": {
-        "color": "#EC4466",
+        "color": "#FF9E20",
         "skeleton": "basic",
         "statements": [],
         "template": "%1포트의 발광다이오드를 %2의 밝기로 %3 %4",
@@ -20323,7 +20321,7 @@ Entry.block = {
             "fontSize": 11
         },{
             "type": "Indicator",
-            "img": "block_icon/looks_03.png",
+            "img": "block_icon/brush_03.png",
             "size": 12
         }],
         "events": {},
@@ -20360,7 +20358,7 @@ Entry.block = {
         }
     },
     "neobot_diode_input_value": {
-        "color": "#EC4466",
+        "color": "#FF9E20",
         "skeleton": "basic_string_field",
         "fontColor": "#fff",
         "statements": [],
@@ -20391,7 +20389,7 @@ Entry.block = {
         }
     },
     "neobot_melody_note_for": {
-      "color": "#FF9E20",
+      "color": "#A4D01D",
       "skeleton": "basic",
       "statements": [],
       "template": "멜로디 %1 을(를) %2 옥타브로 %3 길이만큼 소리내기 %4",
@@ -20412,7 +20410,7 @@ Entry.block = {
               ["라#", "11"],
               ["시", "12"]
           ],
-          "value": "0",
+          "value": "1",
           "fontSize": 11
       }, {
           "type": "Dropdown",
@@ -20424,7 +20422,7 @@ Entry.block = {
               ["5", "4"],
               ["6", "5"]
           ],
-          "value": "0",
+          "value": "1",
           "fontSize": 11
       }, {
           "type": "Dropdown",
@@ -20438,12 +20436,12 @@ Entry.block = {
           "fontSize": 11
       }, {
           "type": "Indicator",
-          "img": "block_icon/brush_03.png",
+          "img": "block_icon/sound_03.png",
           "size": 12
       }],
       "events": {},
       "def": {
-          "params": ["1", "2", "2", null],
+          "params": [null, null, null, null],
           "type": "neobot_melody_note_for"
       },
       "paramsKeyMap": {
@@ -20485,7 +20483,7 @@ Entry.block = {
       }
     },
     "neobot_touch_if": {
-        "color": "#498deb",
+        "color": "#EC4466",
         "skeleton": "basic_loop",
         "template": "%1포트의 접촉 센서가 %2 %3",
         "statements": [
@@ -20515,7 +20513,7 @@ Entry.block = {
           },
           {
               "type": "Indicator",
-              "img": "block_icon/flow_03.png",
+              "img": "block_icon/looks_03.png",
               "size": 12
           }
         ],
@@ -20545,9 +20543,9 @@ Entry.block = {
         }
     },
     "neobot_touch_if_else": {
-        "color": "#498deb",
+        "color": "#EC4466",
         "skeleton": "basic_double_loop",
-        "template": "%1포트의 접촉 센서가 %2 %3 %4 아니면",
+        "template": "%1포트의 접촉 센서가 %2 %3 %4아니면",
         "statements": [
             {
                 "accept": "basic"
@@ -20578,7 +20576,7 @@ Entry.block = {
           },
           {
               "type": "Indicator",
-              "img": "block_icon/flow_03.png",
+              "img": "block_icon/looks_03.png",
               "size": 12
           },
           {
@@ -20599,6 +20597,986 @@ Entry.block = {
             "STACK_ELSE": 1
         },
         "class": "neobot_touch",
+        //"isNotFor": [mini],
+        "func": function (sprite, script) {
+            if (script.isCondition) {
+                delete script.isCondition;
+                return script.callReturn();
+            }
+            var value = script.getBooleanValue("BOOL", script);
+            script.isCondition = true;
+            if (value)
+                return script.getStatement("STACK_IF", script);
+            else
+                return script.getStatement("STACK_ELSE", script);
+        }
+    },
+    "neobot_touch_value": {
+        "color": "#EC4466",
+        "skeleton": "basic_string_field",
+        "fontColor": "#fff",
+        "statements": [],
+        "template": "%1 포트의 접촉 센서 값",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["IN 1번", "IN1"],
+                ["IN 2번", "IN2"],
+                ["IN 3번", "IN3"]
+            ],
+            "value": "IN1",
+            "fontSize": 11
+        }],
+        "events": {},
+        "def": {
+            "params": [null],
+            "type": "neobot_touch_value"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "neobot_diode",
+        //"isNotFor": ["mini"],
+        "func": function (sprite, script) {
+            var port = script.getStringField('PORT');
+            return Entry.hw.portData[port];
+        }
+    },
+    "neobot_touch_value_boolean": {
+        "color": "#EC4466",
+        "skeleton": "basic_boolean_field",
+        "fontColor": "#fff",
+        "template": "%1 포트의 접촉 센서가 %2",
+        "params": [
+          {
+            "type": "Dropdown",
+            "options": [
+                ["IN 1번", "IN1"],
+                ["IN 2번", "IN2"],
+                ["IN 3번", "IN3"]
+            ],
+            "value": "IN1",
+            "fontSize": 11
+          },
+          {
+            "type": "Dropdown",
+            "options": [
+                ["접촉 되면", "1"],
+                ["접촉 안되면", "0"]
+            ],
+            "value": "1",
+            "fontSize": 11
+          }
+        ],
+        "def": {
+            "params": [null, null, null],
+            "type": "neobot_touch_value_boolean"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "TOUCH": 1
+        },
+        "class": "neobot_touch",
+        //"isNotFor": ['mini'],
+        "func": function(sprite, script) {
+            //TODO: check port connection.
+            return true;
+        }
+    },
+    "neobot_light_value_if": {
+        "color": "#FF9E20",
+        "skeleton": "basic_loop",
+        "template": "%1포트의 빛 감지 센서 주위의 밝기 값이 %2 %3 %4",
+        "statements": [
+            {
+                "accept": "basic"
+            }
+        ],
+        "params": [
+          {
+            "type": "Dropdown",
+            "options": [
+                ["IN 1번", "IN1"],
+                ["IN 2번", "IN2"],
+                ["IN 3번", "IN3"]
+            ],
+            "value": "IN1",
+            "fontSize": 11
+          },
+          {
+              "type": "Dropdown",
+              "options": [
+                  [ "=", "EQUAL" ],
+                  [ ">", "GREATER" ],
+                  [ "<", "LESS" ],
+                  [ "≥", "GREATER_OR_EQUAL" ],
+                  [ "≤", "LESS_OR_EQUAL" ]
+              ],
+              "value": "LESS",
+              "fontSize": 11,
+              "noArrow": true
+          },
+          {
+            "type": "Block",
+            "accept": "string"
+          },
+          {
+              "type": "Indicator",
+              "img": "block_icon/brush_03.png",
+              "size": 12
+          }
+        ],
+        "events": {},
+        "def": {
+            "params": [null, null, {
+                "type": "number",
+                "params": ["100"]
+            }, null],
+            "type": "neobot_light_value_if"
+        },
+        "paramsKeyMap": {
+            "LEFTHAND": 0,
+            "OPERATOR": 1,
+            "RIGHTHAND": 2
+        },
+        "class": "neobot_light",
+        //"isNotFor": [mini],
+        "func": function (sprite, script) {
+            if (script.isCondition) {
+                delete script.isCondition;
+                return script.callReturn();
+            }
+            var value = script.getBooleanValue("BOOL", script);
+            if (value) {
+                script.isCondition = true;
+                return script.getStatement("STACK", script);
+            } else {
+                return script.callReturn();
+            }
+        }
+    },
+    "neobot_light_value_if_else": {
+        "color": "#FF9E20",
+        "skeleton": "basic_double_loop",
+        "template": "%1포트의 빛 감지 센서 주위의 밝기 값이 %2 %3 %4 %5아니면",
+        "statements": [
+            {
+                "accept": "basic"
+            },
+            {
+                "accept": "basic"
+            }
+        ],
+        "params": [
+          {
+            "type": "Dropdown",
+            "options": [
+                ["IN 1번", "IN1"],
+                ["IN 2번", "IN2"],
+                ["IN 3번", "IN3"]
+            ],
+            "value": "IN1",
+            "fontSize": 11
+          },
+          {
+              "type": "Dropdown",
+              "options": [
+                  [ "=", "EQUAL" ],
+                  [ ">", "GREATER" ],
+                  [ "<", "LESS" ],
+                  [ "≥", "GREATER_OR_EQUAL" ],
+                  [ "≤", "LESS_OR_EQUAL" ]
+              ],
+              "value": "LESS",
+              "fontSize": 11,
+              "noArrow": true
+          },
+          {
+            "type": "Block",
+            "accept": "string"
+          },
+          {
+              "type": "Indicator",
+              "img": "block_icon/brush_03.png",
+              "size": 12
+          },
+          {
+              "type": "LineBreak"
+          }
+        ],
+        "events": {},
+        "def": {
+            "params": [null, null, {
+                "type": "number",
+                "params": ["100"]
+            }, null, null],
+            "type": "neobot_light_value_if_else"
+        },
+        "paramsKeyMap": {
+            "LEFTHAND": 0,
+            "OPERATOR": 1,
+            "RIGHTHAND": 2
+        },
+        "statementsKeyMap": {
+            "STACK_IF": 0,
+            "STACK_ELSE": 1
+        },
+        "class": "neobot_light",
+        //"isNotFor": [mini],
+        "func": function (sprite, script) {
+            if (script.isCondition) {
+                delete script.isCondition;
+                return script.callReturn();
+            }
+            var value = script.getBooleanValue("BOOL", script);
+            script.isCondition = true;
+            if (value)
+                return script.getStatement("STACK_IF", script);
+            else
+                return script.getStatement("STACK_ELSE", script);
+        }
+    },
+    "neobot_light_value": {
+        "color": "#FF9E20",
+        "skeleton": "basic_string_field",
+        "fontColor": "#fff",
+        "statements": [],
+        "template": "%1 포트의 빛 감지 센서 값",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["IN 1번", "IN1"],
+                ["IN 2번", "IN2"],
+                ["IN 3번", "IN3"]
+            ],
+            "value": "IN1",
+            "fontSize": 11
+        }],
+        "events": {},
+        "def": {
+            "params": [null],
+            "type": "neobot_light_value"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "neobot_light",
+        //"isNotFor": ["mini"],
+        "func": function (sprite, script) {
+            var port = script.getStringField('PORT');
+            return Entry.hw.portData[port];
+        }
+    },
+    "neobot_light_value_boolean": {
+        "color": "#FF9E20",
+        "skeleton": "basic_boolean_field",
+        "fontColor": "#fff",
+        "template": "%1 포트의 빛 감지 센서 값 %2 %3",
+        "params": [
+          {
+            "type": "Dropdown",
+            "options": [
+                ["IN 1번", "IN1"],
+                ["IN 2번", "IN2"],
+                ["IN 3번", "IN3"]
+            ],
+            "value": "IN1",
+            "fontSize": 11
+          },
+          {
+              "type": "Dropdown",
+              "options": [
+                  [ "=", "EQUAL" ],
+                  [ ">", "GREATER" ],
+                  [ "<", "LESS" ],
+                  [ "≥", "GREATER_OR_EQUAL" ],
+                  [ "≤", "LESS_OR_EQUAL" ]
+              ],
+              "value": "LESS",
+              "fontSize": 11,
+              "noArrow": true
+          },
+          {
+            "type": "Block",
+            "accept": "string"
+          }
+        ],
+        "def": {
+            "params": [null, null, {
+                "type": "number",
+                "params": ["100"]
+            }],
+            "type": "neobot_light_value_boolean"
+        },
+        "paramsKeyMap": {
+            "LEFTHAND": 0,
+            "OPERATOR": 1,
+            "RIGHTHAND": 2
+        },
+        "class": "neobot_light",
+        //"isNotFor": ['mini'],
+        "func": function(sprite, script) {
+            var operator = script.getField("OPERATOR", script);
+            var leftValue = script.getStringValue("LEFTHAND", script);
+            var rightValue = script.getStringValue("RIGHTHAND", script);
+
+            switch(operator) {
+                case 'EQUAL':
+                    return leftValue == rightValue;
+                case 'GREATER':
+                    return Number(leftValue) > Number(rightValue);
+                case 'LESS':
+                    return Number(leftValue) < Number(rightValue);
+                case 'GREATER_OR_EQUAL':
+                    return Number(leftValue) >= Number(rightValue);
+                case 'LESS_OR_EQUAL':
+                    return Number(leftValue) <= Number(rightValue);
+            }
+        }
+    },
+    "neobot_sound_value_if": {
+        "color": "#A4D01D",
+        "skeleton": "basic_loop",
+        "template": "%1포트의 소리 센서에 감지되는 소리의 값이 %2 %3 %4",
+        "statements": [
+            {
+                "accept": "basic"
+            }
+        ],
+        "params": [
+          {
+            "type": "Dropdown",
+            "options": [
+                ["IN 1번", "IN1"],
+                ["IN 2번", "IN2"],
+                ["IN 3번", "IN3"]
+            ],
+            "value": "IN1",
+            "fontSize": 11
+          },
+          {
+              "type": "Dropdown",
+              "options": [
+                  [ "=", "EQUAL" ],
+                  [ ">", "GREATER" ],
+                  [ "<", "LESS" ],
+                  [ "≥", "GREATER_OR_EQUAL" ],
+                  [ "≤", "LESS_OR_EQUAL" ]
+              ],
+              "value": "LESS",
+              "fontSize": 11,
+              "noArrow": true
+          },
+          {
+            "type": "Block",
+            "accept": "string"
+          },
+          {
+              "type": "Indicator",
+              "img": "block_icon/sound_03.png",
+              "size": 12
+          }
+        ],
+        "events": {},
+        "def": {
+            "params": [null, null, {
+                "type": "number",
+                "params": ["100"]
+            }, null],
+            "type": "neobot_sound_value_if"
+        },
+        "paramsKeyMap": {
+            "LEFTHAND": 0,
+            "OPERATOR": 1,
+            "RIGHTHAND": 2
+        },
+        "class": "neobot_sound",
+        //"isNotFor": [mini],
+        "func": function (sprite, script) {
+            if (script.isCondition) {
+                delete script.isCondition;
+                return script.callReturn();
+            }
+            var value = script.getBooleanValue("BOOL", script);
+            if (value) {
+                script.isCondition = true;
+                return script.getStatement("STACK", script);
+            } else {
+                return script.callReturn();
+            }
+        }
+    },
+    "neobot_sound_value_if_else": {
+        "color": "#A4D01D",
+        "skeleton": "basic_double_loop",
+        "template": "%1포트의 소리 센서에 감지되는 소리의 값이 %2 %3 %4 %5아니면",
+        "statements": [
+            {
+                "accept": "basic"
+            },
+            {
+                "accept": "basic"
+            }
+        ],
+        "params": [
+          {
+            "type": "Dropdown",
+            "options": [
+                ["IN 1번", "IN1"],
+                ["IN 2번", "IN2"],
+                ["IN 3번", "IN3"]
+            ],
+            "value": "IN1",
+            "fontSize": 11
+          },
+          {
+              "type": "Dropdown",
+              "options": [
+                  [ "=", "EQUAL" ],
+                  [ ">", "GREATER" ],
+                  [ "<", "LESS" ],
+                  [ "≥", "GREATER_OR_EQUAL" ],
+                  [ "≤", "LESS_OR_EQUAL" ]
+              ],
+              "value": "LESS",
+              "fontSize": 11,
+              "noArrow": true
+          },
+          {
+            "type": "Block",
+            "accept": "string"
+          },
+          {
+              "type": "Indicator",
+              "img": "block_icon/sound_03.png",
+              "size": 12
+          },
+          {
+              "type": "LineBreak"
+          }
+        ],
+        "events": {},
+        "def": {
+            "params": [null, null, {
+                "type": "number",
+                "params": ["100"]
+            }, null, null],
+            "type": "neobot_sound_value_if_else"
+        },
+        "paramsKeyMap": {
+            "LEFTHAND": 0,
+            "OPERATOR": 1,
+            "RIGHTHAND": 2
+        },
+        "statementsKeyMap": {
+            "STACK_IF": 0,
+            "STACK_ELSE": 1
+        },
+        "class": "neobot_sound",
+        //"isNotFor": [mini],
+        "func": function (sprite, script) {
+            if (script.isCondition) {
+                delete script.isCondition;
+                return script.callReturn();
+            }
+            var value = script.getBooleanValue("BOOL", script);
+            script.isCondition = true;
+            if (value)
+                return script.getStatement("STACK_IF", script);
+            else
+                return script.getStatement("STACK_ELSE", script);
+        }
+    },
+    "neobot_sound_value": {
+        "color": "#A4D01D",
+        "skeleton": "basic_string_field",
+        "fontColor": "#fff",
+        "statements": [],
+        "template": "%1 포트의 소리 센서에 감지되는 소리 값",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["IN 1번", "IN1"],
+                ["IN 2번", "IN2"],
+                ["IN 3번", "IN3"]
+            ],
+            "value": "IN1",
+            "fontSize": 11
+        }],
+        "events": {},
+        "def": {
+            "params": [null],
+            "type": "neobot_sound_value"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "neobot_sound",
+        //"isNotFor": ["mini"],
+        "func": function (sprite, script) {
+            var port = script.getStringField('PORT');
+            return Entry.hw.portData[port];
+        }
+    },
+    "neobot_sound_value_boolean": {
+        "color": "#A4D01D",
+        "skeleton": "basic_boolean_field",
+        "fontColor": "#fff",
+        "template": "%1 포트의 소리 센서에 감지되는 소리 값 %2 %3",
+        "params": [
+          {
+            "type": "Dropdown",
+            "options": [
+                ["IN 1번", "IN1"],
+                ["IN 2번", "IN2"],
+                ["IN 3번", "IN3"]
+            ],
+            "value": "IN1",
+            "fontSize": 11
+          },
+          {
+              "type": "Dropdown",
+              "options": [
+                  [ "=", "EQUAL" ],
+                  [ ">", "GREATER" ],
+                  [ "<", "LESS" ],
+                  [ "≥", "GREATER_OR_EQUAL" ],
+                  [ "≤", "LESS_OR_EQUAL" ]
+              ],
+              "value": "LESS",
+              "fontSize": 11,
+              "noArrow": true
+          },
+          {
+            "type": "Block",
+            "accept": "string"
+          }
+        ],
+        "def": {
+            "params": [null, null, {
+                "type": "number",
+                "params": ["100"]
+            }],
+            "type": "neobot_sound_value_boolean"
+        },
+        "paramsKeyMap": {
+            "LEFTHAND": 0,
+            "OPERATOR": 1,
+            "RIGHTHAND": 2
+        },
+        "class": "neobot_sound",
+        //"isNotFor": ['mini'],
+        "func": function(sprite, script) {
+            var operator = script.getField("OPERATOR", script);
+            var leftValue = script.getStringValue("LEFTHAND", script);
+            var rightValue = script.getStringValue("RIGHTHAND", script);
+
+            switch(operator) {
+                case 'EQUAL':
+                    return leftValue == rightValue;
+                case 'GREATER':
+                    return Number(leftValue) > Number(rightValue);
+                case 'LESS':
+                    return Number(leftValue) < Number(rightValue);
+                case 'GREATER_OR_EQUAL':
+                    return Number(leftValue) >= Number(rightValue);
+                case 'LESS_OR_EQUAL':
+                    return Number(leftValue) <= Number(rightValue);
+            }
+        }
+    },
+    "neobot_irs_value_if": {
+        "color": "#498deb",
+        "skeleton": "basic_loop",
+        "template": "%1포트의 적외선 센서에 감지되는 크기 값이 %2 %3 %4",
+        "statements": [
+            {
+                "accept": "basic"
+            }
+        ],
+        "params": [
+          {
+            "type": "Dropdown",
+            "options": [
+                ["IN 1번", "IN1"],
+                ["IN 2번", "IN2"],
+                ["IN 3번", "IN3"]
+            ],
+            "value": "IN1",
+            "fontSize": 11
+          },
+          {
+              "type": "Dropdown",
+              "options": [
+                  [ "=", "EQUAL" ],
+                  [ ">", "GREATER" ],
+                  [ "<", "LESS" ],
+                  [ "≥", "GREATER_OR_EQUAL" ],
+                  [ "≤", "LESS_OR_EQUAL" ]
+              ],
+              "value": "LESS",
+              "fontSize": 11,
+              "noArrow": true
+          },
+          {
+            "type": "Block",
+            "accept": "string"
+          },
+          {
+              "type": "Indicator",
+              "img": "block_icon/flow_03.png",
+              "size": 12
+          }
+        ],
+        "events": {},
+        "def": {
+            "params": [null, null, {
+                "type": "number",
+                "params": ["100"]
+            }, null],
+            "type": "neobot_irs_value_if"
+        },
+        "paramsKeyMap": {
+            "LEFTHAND": 0,
+            "OPERATOR": 1,
+            "RIGHTHAND": 2
+        },
+        "class": "neobot_irs",
+        //"isNotFor": [mini],
+        "func": function (sprite, script) {
+            if (script.isCondition) {
+                delete script.isCondition;
+                return script.callReturn();
+            }
+            var value = script.getBooleanValue("BOOL", script);
+            if (value) {
+                script.isCondition = true;
+                return script.getStatement("STACK", script);
+            } else {
+                return script.callReturn();
+            }
+        }
+    },
+    "neobot_irs_value_if_else": {
+        "color": "#498deb",
+        "skeleton": "basic_double_loop",
+        "template": "%1포트의 적외선 센서에 감지되는 크기 값이 %2 %3 %4",
+        "statements": [
+            {
+                "accept": "basic"
+            },
+            {
+                "accept": "basic"
+            }
+        ],
+        "params": [
+          {
+            "type": "Dropdown",
+            "options": [
+                ["IN 1번", "IN1"],
+                ["IN 2번", "IN2"],
+                ["IN 3번", "IN3"]
+            ],
+            "value": "IN1",
+            "fontSize": 11
+          },
+          {
+              "type": "Dropdown",
+              "options": [
+                  [ "=", "EQUAL" ],
+                  [ ">", "GREATER" ],
+                  [ "<", "LESS" ],
+                  [ "≥", "GREATER_OR_EQUAL" ],
+                  [ "≤", "LESS_OR_EQUAL" ]
+              ],
+              "value": "LESS",
+              "fontSize": 11,
+              "noArrow": true
+          },
+          {
+            "type": "Block",
+            "accept": "string"
+          },
+          {
+              "type": "Indicator",
+              "img": "block_icon/sound_03.png",
+              "size": 12
+          },
+          {
+              "type": "LineBreak"
+          }
+        ],
+        "events": {},
+        "def": {
+            "params": [null, null, {
+                "type": "number",
+                "params": ["100"]
+            }, null, null],
+            "type": "neobot_irs_value_if_else"
+        },
+        "paramsKeyMap": {
+            "LEFTHAND": 0,
+            "OPERATOR": 1,
+            "RIGHTHAND": 2
+        },
+        "statementsKeyMap": {
+            "STACK_IF": 0,
+            "STACK_ELSE": 1
+        },
+        "class": "neobot_irs",
+        //"isNotFor": [mini],
+        "func": function (sprite, script) {
+            if (script.isCondition) {
+                delete script.isCondition;
+                return script.callReturn();
+            }
+            var value = script.getBooleanValue("BOOL", script);
+            script.isCondition = true;
+            if (value)
+                return script.getStatement("STACK_IF", script);
+            else
+                return script.getStatement("STACK_ELSE", script);
+        }
+    },
+    "neobot_irs_value": {
+        "color": "#498deb",
+        "skeleton": "basic_string_field",
+        "fontColor": "#fff",
+        "statements": [],
+        "template": "%1 포트의 적외선 센서에 감지되는 크기 값",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["IN 1번", "IN1"],
+                ["IN 2번", "IN2"],
+                ["IN 3번", "IN3"]
+            ],
+            "value": "IN1",
+            "fontSize": 11
+        }],
+        "events": {},
+        "def": {
+            "params": [null],
+            "type": "neobot_irs_value"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "neobot_irs",
+        //"isNotFor": ["mini"],
+        "func": function (sprite, script) {
+            var port = script.getStringField('PORT');
+            return Entry.hw.portData[port];
+        }
+    },
+    "neobot_irs_value_boolean": {
+        "color": "#498deb",
+        "skeleton": "basic_boolean_field",
+        "fontColor": "#fff",
+        "template": "%1 포트의 적외선 센서에 감지되는 크기 값 %2 %3",
+        "params": [
+          {
+            "type": "Dropdown",
+            "options": [
+                ["IN 1번", "IN1"],
+                ["IN 2번", "IN2"],
+                ["IN 3번", "IN3"]
+            ],
+            "value": "IN1",
+            "fontSize": 11
+          },
+          {
+              "type": "Dropdown",
+              "options": [
+                  [ "=", "EQUAL" ],
+                  [ ">", "GREATER" ],
+                  [ "<", "LESS" ],
+                  [ "≥", "GREATER_OR_EQUAL" ],
+                  [ "≤", "LESS_OR_EQUAL" ]
+              ],
+              "value": "LESS",
+              "fontSize": 11,
+              "noArrow": true
+          },
+          {
+            "type": "Block",
+            "accept": "string"
+          }
+        ],
+        "def": {
+            "params": [null, null, {
+                "type": "number",
+                "params": ["100"]
+            }],
+            "type": "neobot_irs_value_boolean"
+        },
+        "paramsKeyMap": {
+            "LEFTHAND": 0,
+            "OPERATOR": 1,
+            "RIGHTHAND": 2
+        },
+        "class": "neobot_irs",
+        //"isNotFor": ['mini'],
+        "func": function(sprite, script) {
+            var operator = script.getField("OPERATOR", script);
+            var leftValue = script.getStringValue("LEFTHAND", script);
+            var rightValue = script.getStringValue("RIGHTHAND", script);
+
+            switch(operator) {
+                case 'EQUAL':
+                    return leftValue == rightValue;
+                case 'GREATER':
+                    return Number(leftValue) > Number(rightValue);
+                case 'LESS':
+                    return Number(leftValue) < Number(rightValue);
+                case 'GREATER_OR_EQUAL':
+                    return Number(leftValue) >= Number(rightValue);
+                case 'LESS_OR_EQUAL':
+                    return Number(leftValue) <= Number(rightValue);
+            }
+        }
+    },
+    "neobot_others_value_if": {
+        "color": "#00979D",
+        "skeleton": "basic_loop",
+        "template": "%1포트의 센서에 감지되는 값이 %2 %3 %4",
+        "statements": [
+            {
+                "accept": "basic"
+            }
+        ],
+        "params": [
+          {
+            "type": "Dropdown",
+            "options": [
+                ["IN 1번", "IN1"],
+                ["IN 2번", "IN2"],
+                ["IN 3번", "IN3"]
+            ],
+            "value": "IN1",
+            "fontSize": 11,
+            "arrowColor": EntryStatic.ARROW_COLOR_HW
+          },
+          {
+              "type": "Dropdown",
+              "options": [
+                  [ "=", "EQUAL" ],
+                  [ ">", "GREATER" ],
+                  [ "<", "LESS" ],
+                  [ "≥", "GREATER_OR_EQUAL" ],
+                  [ "≤", "LESS_OR_EQUAL" ]
+              ],
+              "value": "LESS",
+              "fontSize": 11,
+              "noArrow": true
+          },
+          {
+            "type": "Block",
+            "accept": "string"
+          },
+          {
+              "type": "Indicator",
+              "img": "block_icon/hardware_03.png",
+              "size": 12
+          }
+        ],
+        "events": {},
+        "def": {
+            "params": [null, null, {
+                "type": "number",
+                "params": ["100"]
+            }, null],
+            "type": "neobot_others_value_if"
+        },
+        "paramsKeyMap": {
+            "LEFTHAND": 0,
+            "OPERATOR": 1,
+            "RIGHTHAND": 2
+        },
+        "class": "neobot_others",
+        //"isNotFor": [mini],
+        "func": function (sprite, script) {
+            if (script.isCondition) {
+                delete script.isCondition;
+                return script.callReturn();
+            }
+            var value = script.getBooleanValue("BOOL", script);
+            if (value) {
+                script.isCondition = true;
+                return script.getStatement("STACK", script);
+            } else {
+                return script.callReturn();
+            }
+        }
+    },
+    "neobot_others_value_if_else": {
+        "color": "#00979D",
+        "skeleton": "basic_double_loop",
+        "template": "%1포트의 적외선 센서에 감지되는 크기 값이 %2 %3 %4",
+        "statements": [
+            {
+                "accept": "basic"
+            },
+            {
+                "accept": "basic"
+            }
+        ],
+        "params": [
+          {
+            "type": "Dropdown",
+            "options": [
+                ["IN 1번", "IN1"],
+                ["IN 2번", "IN2"],
+                ["IN 3번", "IN3"]
+            ],
+            "value": "IN1",
+            "fontSize": 11,
+            "arrowColor": EntryStatic.ARROW_COLOR_HW
+          },
+          {
+              "type": "Dropdown",
+              "options": [
+                  [ "=", "EQUAL" ],
+                  [ ">", "GREATER" ],
+                  [ "<", "LESS" ],
+                  [ "≥", "GREATER_OR_EQUAL" ],
+                  [ "≤", "LESS_OR_EQUAL" ]
+              ],
+              "value": "LESS",
+              "fontSize": 11,
+              "noArrow": true
+          },
+          {
+            "type": "Block",
+            "accept": "string"
+          },
+          {
+              "type": "Indicator",
+              "img": "block_icon/hardware_03.png",
+              "size": 12
+          },
+          {
+              "type": "LineBreak"
+          }
+        ],
+        "events": {},
+        "def": {
+            "params": [null, null, {
+                "type": "number",
+                "params": ["100"]
+            }, null, null],
+            "type": "neobot_others_value_if_else"
+        },
+        "paramsKeyMap": {
+            "LEFTHAND": 0,
+            "OPERATOR": 1,
+            "RIGHTHAND": 2
+        },
+        "statementsKeyMap": {
+            "STACK_IF": 0,
+            "STACK_ELSE": 1
+        },
+        "class": "neobot_others",
         //"isNotFor": [mini],
         "func": function (sprite, script) {
             if (script.isCondition) {

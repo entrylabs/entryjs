@@ -128,37 +128,56 @@ EntryStatic.getAllBlocks = function() {
             category: "m_touch",
             blocks: [
                 "neobot_touch_if",
-                "neobot_touch_if_else"
+                "neobot_touch_if_else",
+                "neobot_touch_value",
+                "neobot_touch_value_boolean"
             ]
         },
         {
             category: "m_light",
             blocks: [
-                "when_run_button_click",
+                "neobot_light_value_if",
+                "neobot_light_value_if_else",
+                "neobot_light_value",
+                "neobot_light_value_boolean"
             ]
         },
         {
             category: "m_sound",
             blocks: [
-                "when_run_button_click",
+                "neobot_sound_value_if",
+                "neobot_sound_value_if_else",
+                "neobot_sound_value",
+                "neobot_sound_value_boolean"
             ]
         },
         {
-            category: "m_ir",
+            category: "m_irs",
             blocks: [
-                "when_run_button_click",
+                "neobot_irs_value_if",
+                "neobot_irs_value_if_else",
+                "neobot_irs_value",
+                "neobot_irs_value_boolean"
             ]
         },
         {
             category: "m_others",
             blocks: [
-                "when_run_button_click",
+                "neobot_others_value_if",
+                "neobot_others_value_if_else"
             ]
         },
         {
             category: "m_remote",
             blocks: [
+                "when_run_button_click"
+            ]
+        },
+        {
+            category: "m_servo",
+            blocks: [
                 "when_run_button_click",
+                "neobot_set_servo"
             ]
         }
     ]
