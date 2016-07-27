@@ -876,8 +876,13 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(b, a) {
+<<<<<<< HEAD
   var d = a.getNumberValue("VALUE"), c = a.getField("OPERATOR");
   Entry.hw.setDigitalPortValue(d, "on" == c ? 255 : 0);
+=======
+  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
+>>>>>>> master
   return a.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1075,10 +1080,17 @@ Blockly.Blocks.dplay_select_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.dplay_select_led = function(b, a) {
+<<<<<<< HEAD
   var d = a.getField("PORT"), c = 7;
   "7" == d ? c = 7 : "8" == d ? c = 8 : "9" == d ? c = 9 : "10" == d && (c = 10);
   d = a.getField("OPERATOR");
   Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
+=======
+  var c = a.getField("PORT"), d = 7;
+  "7" == c ? d = 7 : "8" == c ? d = 8 : "9" == c ? d = 9 : "10" == c && (d = 10);
+  c = a.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(d, "on" == c ? 255 : 0);
+>>>>>>> master
   return a.callReturn();
 };
 Blockly.Blocks.dplay_get_switch_status = {init:function() {
@@ -2088,10 +2100,17 @@ Entry.block.wait_second = function(b, a) {
   }
   a.isStart = !0;
   a.timeFlag = 1;
+<<<<<<< HEAD
   var d = a.getNumberValue("SECOND", a);
   setTimeout(function() {
     a.timeFlag = 0;
   }, 60 / (Entry.FPS || 60) * d * 1E3);
+=======
+  var c = a.getNumberValue("SECOND", a);
+  setTimeout(function() {
+    a.timeFlag = 0;
+  }, 60 / (Entry.FPS || 60) * c * 1E3);
+>>>>>>> master
   return a;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -6532,9 +6551,16 @@ Entry.Container.prototype.getDropdownList = function(b, a) {
       d && 0 !== d.length || d.push([Lang.Blocks.VARIABLE_variable, "null"]);
       break;
     case "lists":
+<<<<<<< HEAD
       c = Entry.variableContainer.lists_;
       for (f = 0;f < c.length;f++) {
         e = c[f], d.push([e.getName(), e.getId()]);
+=======
+      a = Entry.playground.object || a;
+      d = Entry.variableContainer.lists_;
+      for (f = 0;f < d.length;f++) {
+        e = d[f], e.object_ && a && e.object_ != a.id || c.push([e.getName(), e.getId()]);
+>>>>>>> master
       }
       d && 0 !== d.length || d.push([Lang.Blocks.VARIABLE_list, "null"]);
       break;
@@ -6655,7 +6681,7 @@ Entry.Container.prototype.takeSequenceSnapshot = function() {
 Entry.Container.prototype.loadSequenceSnapshot = function() {
   for (var b = this.objects_.length, a = Array(b), d = 0;d < b;d++) {
     var c = this.objects_[d];
-    a[c.index] = c;
+    a[c.index || d] = c;
     delete c.index;
   }
   this.objects_ = a;
@@ -7167,8 +7193,10 @@ Entry.Engine.prototype.toggleRun = function() {
   if ("pause" === this.state) {
     this.togglePause();
   } else {
-    var b = Entry.playground.mainWorkspace, a = b.mode;
-    a == Entry.Workspace.MODE_VIMBOARD && b.loadCodeFromText(a);
+    if (Entry.playground && Entry.playground.mainWorkspace) {
+      var b = Entry.playground.mainWorkspace, a = b.mode;
+      a == Entry.Workspace.MODE_VIMBOARD && b.loadCodeFromText(a);
+    }
     Entry.addActivity("run");
     "stop" == this.state && (Entry.container.mapEntity(function(a) {
       a.takeSnapshot();
@@ -10433,7 +10461,7 @@ Entry.Scene.prototype.generateElement = function(b) {
   b.inputWrapper = f;
   c.onkeyup = function(d) {
     d = d.keyCode;
-    Entry.isArrowOrBackspace(d) || (b.name = this.value, f.style.width = Entry.computeInputWidth(b.name), a.resize(), 13 == d && this.blur(), 9 < this.value.length && (this.value = this.value.substring(0, 10), this.blur()));
+    Entry.isArrowOrBackspace(d) || (b.name = this.value, f.style.width = Entry.computeInputWidth(b.name), a.resize(), 13 == d && this.blur(), 10 < this.value.length && (this.value = this.value.substring(0, 10), this.blur()));
   };
   c.onblur = function(a) {
     c.value = this.value;
@@ -15309,11 +15337,12 @@ Entry.Utils.xmlToJsonData = function(b) {
   }
   return a;
 };
-Entry.Utils.stopProjectWithToast = function(b, a) {
+Entry.Utils.stopProjectWithToast = function(b, a, d) {
+  var c = b.block;
   a = a || "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec \ubc1c\uc0dd";
-  Entry.toast && Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.check_runtime_error, !0);
+  Entry.toast && !d && Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.check_runtime_error, !0);
   Entry.engine && Entry.engine.toggleStop();
-  "workspace" === Entry.type && (Entry.container.selectObject(b.getCode().object.id, !0), b.view.getBoard().activateBlock(b));
+  "workspace" === Entry.type && (b.block && "funcBlock" in b.block ? c = b.block.funcBlock : b.funcExecutor && (c = b.funcExecutor.scope.block, b = b.type.replace("func_", ""), Entry.Func.edit(Entry.variableContainer.functions_[b])), c && (Entry.container.selectObject(c.getCode().object.id, !0), c.view.getBoard().activateBlock(c)));
   throw Error(a);
 };
 Entry.Utils.AsyncError = function(b) {
@@ -16034,7 +16063,7 @@ p.closeConnection = function() {
   this.socket && this.socket.close();
 };
 p.downloadConnector = function() {
-  window.open("http://download.play-entry.org/apps/Entry_HW_1.5.6_Setup.exe", "_blank").focus();
+  window.open("http://download.play-entry.org/apps/Entry_HW_1.5.8_Setup.exe", "_blank").focus();
 };
 p.downloadSource = function() {
   window.open("http://play-entry.com/down/board.ino", "_blank").focus();
@@ -19897,7 +19926,13 @@ Entry.Executor = function(b, a) {
         try {
           a = this.scope.block.getSchema().func.call(this.scope, this.entity, this.scope);
         } catch (b) {
-          "AsyncError" === b.name ? a = Entry.STATIC.BREAK : Entry.Utils.stopProjectWithToast(this.scope.block, "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec");
+          if ("AsyncError" === b.name) {
+            a = Entry.STATIC.BREAK;
+          } else {
+            var d = !1;
+            "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec" != b.message && (d = !0);
+            Entry.Utils.stopProjectWithToast(this.scope, "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec", d);
+          }
         }
         if (this.isEnd()) {
           break;
@@ -22616,15 +22651,17 @@ Entry.Vim = function(b, a) {
     function b(a) {
       var c = e.getCodeToText(a.block);
       e.codeMirror.display.dragFunctions.leave(a);
-      a = $.Event("mousedown", {view:window, bubbles:!0, cancelable:!0, clientX:a.clientX, clientY:a.clientY});
-      $(e.codeMirror.display.scroller).trigger(a);
-      var c = c.split("\n"), d = c.length - 1, k = 0;
+      var d = Entry.Utils.createMouseEvent("mousedown", a);
+      e.codeMirror.display.scroller.dispatchEvent(d);
+      var c = c.split("\n"), k = c.length - 1, l = 0;
       c.forEach(function(a, b) {
         e.codeMirror.replaceSelection(a);
-        k = e.doc.getCursor().line;
-        e.codeMirror.indentLine(k);
-        0 !== b && d === b || e.codeMirror.replaceSelection("\n");
+        l = e.doc.getCursor().line;
+        e.codeMirror.indentLine(l);
+        0 !== b && k === b || e.codeMirror.replaceSelection("\n");
       });
+      d = Entry.Utils.createMouseEvent("mouseup", a);
+      e.codeMirror.display.scroller.dispatchEvent(d);
     }
     function c(a) {
       e.codeMirror.display.dragFunctions.over(a);
