@@ -567,9 +567,13 @@ Entry.Container.prototype.getDropdownList = function(menuName, object) {
                 result.push([Lang.Blocks.VARIABLE_variable, 'null']);
             break;
         case 'lists':
+            var object = Entry.playground.object || object;
             var lists = Entry.variableContainer.lists_;
             for (var i = 0; i<lists.length; i++) {
                 var list = lists[i];
+                if (list.object_ && object &&
+                    list.object_ != object.id)
+                    continue;
                 result.push([list.getName(), list.getId()]);
             }
             if (!result || result.length === 0)
