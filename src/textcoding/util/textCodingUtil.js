@@ -908,7 +908,9 @@ Entry.TextCodingUtil = function() {
         var type = block.type;
         console.log("isParamBlock type", type);
         if(type == "ai_boolean_distance" ||
-            type == "ai_distance_value") {
+            type == "ai_distance_value" ||
+            type == "ai_boolean_object" ||
+            type == "ai_boolean_and") {
             return true;
         } else {
             return false;

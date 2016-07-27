@@ -11424,7 +11424,7 @@ Entry.TextCodingUtil = function() {
     console.log("tt block", a);
     a = a.type;
     console.log("isParamBlock type", a);
-    return "ai_boolean_distance" == a || "ai_distance_value" == a ? !0 : !1;
+    return "ai_boolean_distance" == a || "ai_distance_value" == a || "ai_boolean_object" == a || "ai_boolean_and" == a ? !0 : !1;
   };
 })(Entry.TextCodingUtil.prototype);
 Entry.BlockToPyParser = function(b) {
