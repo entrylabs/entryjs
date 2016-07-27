@@ -876,13 +876,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(b, a) {
-<<<<<<< HEAD
   var d = a.getNumberValue("VALUE"), c = a.getField("OPERATOR");
   Entry.hw.setDigitalPortValue(d, "on" == c ? 255 : 0);
-=======
-  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
->>>>>>> master
   return a.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1080,17 +1075,10 @@ Blockly.Blocks.dplay_select_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.dplay_select_led = function(b, a) {
-<<<<<<< HEAD
   var d = a.getField("PORT"), c = 7;
   "7" == d ? c = 7 : "8" == d ? c = 8 : "9" == d ? c = 9 : "10" == d && (c = 10);
   d = a.getField("OPERATOR");
   Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
-=======
-  var c = a.getField("PORT"), d = 7;
-  "7" == c ? d = 7 : "8" == c ? d = 8 : "9" == c ? d = 9 : "10" == c && (d = 10);
-  c = a.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(d, "on" == c ? 255 : 0);
->>>>>>> master
   return a.callReturn();
 };
 Blockly.Blocks.dplay_get_switch_status = {init:function() {
@@ -2100,17 +2088,10 @@ Entry.block.wait_second = function(b, a) {
   }
   a.isStart = !0;
   a.timeFlag = 1;
-<<<<<<< HEAD
   var d = a.getNumberValue("SECOND", a);
   setTimeout(function() {
     a.timeFlag = 0;
   }, 60 / (Entry.FPS || 60) * d * 1E3);
-=======
-  var c = a.getNumberValue("SECOND", a);
-  setTimeout(function() {
-    a.timeFlag = 0;
-  }, 60 / (Entry.FPS || 60) * c * 1E3);
->>>>>>> master
   return a;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -6551,16 +6532,10 @@ Entry.Container.prototype.getDropdownList = function(b, a) {
       d && 0 !== d.length || d.push([Lang.Blocks.VARIABLE_variable, "null"]);
       break;
     case "lists":
-<<<<<<< HEAD
+      a = Entry.playground.object || a;
       c = Entry.variableContainer.lists_;
       for (f = 0;f < c.length;f++) {
-        e = c[f], d.push([e.getName(), e.getId()]);
-=======
-      a = Entry.playground.object || a;
-      d = Entry.variableContainer.lists_;
-      for (f = 0;f < d.length;f++) {
-        e = d[f], e.object_ && a && e.object_ != a.id || c.push([e.getName(), e.getId()]);
->>>>>>> master
+        e = c[f], e.object_ && a && e.object_ != a.id || d.push([e.getName(), e.getId()]);
       }
       d && 0 !== d.length || d.push([Lang.Blocks.VARIABLE_list, "null"]);
       break;
