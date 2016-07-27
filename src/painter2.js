@@ -9,6 +9,12 @@ Entry.Painter2 = function(view) {
         modified: false,
         mode: 'new' // new or edit
     };
+
+    Entry.addEventListener('pictureImport', function(picture) {
+        this.addPicture(picture)
+    }.bind(this));
+
+    this.clipboard = null;
 };
 
 (function(p) {
@@ -54,10 +60,15 @@ p.initialize = function() {
         Entry.do("editPicture", e.action, this.lc);
     });
 
+    this.lc.on("toolChange", function(e) {
+        this.updateEditMenu();
+    }.bind(this));
+
     this.lc.on("lc-pointerdrag", this.stagemousemove.bind(this));
     this.lc.on("lc-pointermove", this.stagemousemove.bind(this));
 
     this.initTopBar();
+    this.updateEditMenu();
 };
 
 p.show = function() {
@@ -80,15 +91,19 @@ p.changePicture = function(picture) {
     this.file.modified = false;
     this.lc.clear();
 
-    var image = new Image();
     if (picture.id)
-        image.id = picture.id;
+        this.file.id = picture.id;
     else
-        image.id = Entry.generateHash();
-
-    this.file.id = image.id;
+        this.file.id = Entry.generateHash();
     this.file.name = picture.name;
     this.file.mode = 'edit';
+
+    this.addPicture(picture);
+};
+
+p.addPicture = function(picture) {
+    var image = new Image();
+
     if (picture.fileurl) {
         image.src = picture.fileurl;
     } else {
@@ -97,10 +112,47 @@ p.changePicture = function(picture) {
     }
 
     var dimension = picture.dimension;
-    this.lc.saveShape(LC.createShape('Image',{
+    var shape = LC.createShape('Image',{
         x: 480 - dimension.width / 2,
         y: 270 - dimension.height / 2,
-        image: image}));
+        image: image
+    });
+    this.lc.saveShape(shape);
+
+    image.onload = function() {
+        this.lc.setTool(this.lc.tools.SelectShape);
+        this.lc.tool.setShape(this.lc, shape);
+    }.bind(this);
+
+};
+
+p.copy = function() {
+    var shape = this.lc.tool.selectedShape;
+    this.clipboard = {
+        className: shape.className,
+        data: shape.toJSON()
+    };
+    this.updateEditMenu();
+};
+
+p.cut = function() {
+    this.copy();
+    var shape = this.lc.tool.selectedShape;
+    this.lc.removeShape(shape);
+    this.lc.tool.setShape(this.lc, null);
+};
+
+p.paste = function() {
+    var shape = this.lc.addShape(this.clipboard);
+    this.lc.setTool(this.lc.tools.SelectShape);
+    this.lc.tool.setShape(this.lc, shape);
+};
+
+p.updateEditMenu = function() {
+    var isSelected = this.lc.tool.name === "SelectShape" ? "block" : "none";
+    this._cutButton.style.display = isSelected;
+    this._copyButton.style.display = isSelected;
+    this._pasteButton.style.display = this.clipboard ? "block" : "none";
 };
 
 p.file_save = function() {
@@ -199,11 +251,12 @@ p.initTopBar = function() {
     var painterTopMenuEditCopyLink = Entry.createElement('a',
                                                 'entryPainterTopMenuEditCopy');
     painterTopMenuEditCopyLink.bindOnClick(function() {
-        painter.edit_copy();
+        painter.copy();
     });
     painterTopMenuEditCopyLink.addClass('entryPlaygroundPainterTopMenuEditCopy');
     painterTopMenuEditCopyLink.innerHTML = Lang.Workspace.copy_file;
     painterTopMenuEditCopy.appendChild(painterTopMenuEditCopyLink);
+    this._copyButton = painterTopMenuEditCopy;
 
     var painterTopMenuEditCut = Entry.createElement('li');
     painterTopMenuEditContainer.appendChild(painterTopMenuEditCut);
@@ -211,11 +264,12 @@ p.initTopBar = function() {
     var painterTopMenuEditCutLink = Entry.createElement('a',
                                                 'entryPainterTopMenuEditCut');
     painterTopMenuEditCutLink.bindOnClick(function() {
-        painter.edit_cut();
+        painter.cut();
     });
     painterTopMenuEditCutLink.addClass('entryPlaygroundPainterTopMenuEditCut');
     painterTopMenuEditCutLink.innerHTML = Lang.Workspace.cut_picture;
     painterTopMenuEditCut.appendChild(painterTopMenuEditCutLink);
+    this._cutButton = painterTopMenuEditCut;
 
     var painterTopMenuEditPaste = Entry.createElement('li');
     painterTopMenuEditContainer.appendChild(painterTopMenuEditPaste);
@@ -223,11 +277,12 @@ p.initTopBar = function() {
     var painterTopMenuEditPasteLink = Entry.createElement('a',
                                                 'entryPainterTopMenuEditPaste');
     painterTopMenuEditPasteLink.bindOnClick(function() {
-        painter.edit_paste();
+        painter.paste();
     });
     painterTopMenuEditPasteLink.addClass('entryPlaygroundPainterTopMenuEditPaste');
     painterTopMenuEditPasteLink.innerHTML = Lang.Workspace.paste_picture;
     painterTopMenuEditPaste.appendChild(painterTopMenuEditPasteLink);
+    this._pasteButton = painterTopMenuEditPaste;
 
     var painterTopMenuEditEraseAll = Entry.createElement('li');
     painterTopMenuEditContainer.appendChild(painterTopMenuEditEraseAll);
@@ -237,7 +292,7 @@ p.initTopBar = function() {
     painterTopMenuEditEraseAllLink.addClass('entryPlaygroundPainterTopMenuEditEraseAll');
     painterTopMenuEditEraseAllLink.innerHTML = Lang.Workspace.remove_all;
     painterTopMenuEditEraseAllLink.bindOnClick(function() {
-        painter.clearCanvas();
+        painter.lc.clear();
     });
 
     painterTopMenuEditEraseAll.appendChild(painterTopMenuEditEraseAllLink);

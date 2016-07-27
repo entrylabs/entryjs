@@ -11693,6 +11693,10 @@ Entry.Painter.prototype.selectToolbox = function(a) {
 Entry.Painter2 = function(a) {
   this.view = a;
   this.file = {id:Entry.generateHash(), name:"\uc0c8\uadf8\ub9bc", modified:!1, mode:"new"};
+  Entry.addEventListener("pictureImport", function(b) {
+    this.addPicture(b);
+  }.bind(this));
+  this.clipboard = null;
 };
 (function(a) {
   a.initialize = function() {
@@ -11706,28 +11710,52 @@ Entry.Painter2 = function(a) {
       this.lc.on("do", function(b) {
         Entry.do("editPicture", b.action, this.lc);
       });
+      this.lc.on("toolChange", function(b) {
+        this.updateEditMenu();
+      }.bind(this));
       this.lc.on("lc-pointerdrag", this.stagemousemove.bind(this));
       this.lc.on("lc-pointermove", this.stagemousemove.bind(this));
       this.initTopBar();
+      this.updateEditMenu();
     }
   };
   a.show = function() {
     this.lc || this.initialize();
   };
   a.changePicture = function(b) {
-    if (!this.file || this.file.id !== b.id) {
-      this.file.modified && confirm("\uc218\uc815\ub41c \ub0b4\uc6a9\uc744 \uc800\uc7a5\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?") && (this.file_ = JSON.parse(JSON.stringify(this.file)), this.file_save(!0));
-      this.file.modified = !1;
-      this.lc.clear();
-      var a = new Image;
-      a.id = b.id ? b.id : Entry.generateHash();
-      this.file.id = a.id;
-      this.file.name = b.name;
-      this.file.mode = "edit";
-      a.src = b.fileurl ? b.fileurl : Entry.defaultPath + "/uploads/" + b.filename.substring(0, 2) + "/" + b.filename.substring(2, 4) + "/image/" + b.filename + ".png";
-      b = b.dimension;
-      this.lc.saveShape(LC.createShape("Image", {x:480 - b.width / 2, y:270 - b.height / 2, image:a}));
-    }
+    this.file && this.file.id === b.id || (this.file.modified && confirm("\uc218\uc815\ub41c \ub0b4\uc6a9\uc744 \uc800\uc7a5\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?") && (this.file_ = JSON.parse(JSON.stringify(this.file)), this.file_save(!0)), this.file.modified = !1, this.lc.clear(), this.file.id = b.id ? b.id : Entry.generateHash(), this.file.name = b.name, this.file.mode = "edit", this.addPicture(b));
+  };
+  a.addPicture = function(b) {
+    var a = new Image;
+    a.src = b.fileurl ? b.fileurl : Entry.defaultPath + "/uploads/" + b.filename.substring(0, 2) + "/" + b.filename.substring(2, 4) + "/image/" + b.filename + ".png";
+    b = b.dimension;
+    var d = LC.createShape("Image", {x:480 - b.width / 2, y:270 - b.height / 2, image:a});
+    this.lc.saveShape(d);
+    a.onload = function() {
+      this.lc.setTool(this.lc.tools.SelectShape);
+      this.lc.tool.setShape(this.lc, d);
+    }.bind(this);
+  };
+  a.copy = function() {
+    var b = this.lc.tool.selectedShape;
+    this.clipboard = {className:b.className, data:b.toJSON()};
+    this.updateEditMenu();
+  };
+  a.cut = function() {
+    this.copy();
+    this.lc.removeShape(this.lc.tool.selectedShape);
+    this.lc.tool.setShape(this.lc, null);
+  };
+  a.paste = function() {
+    var b = this.lc.addShape(this.clipboard);
+    this.lc.setTool(this.lc.tools.SelectShape);
+    this.lc.tool.setShape(this.lc, b);
+  };
+  a.updateEditMenu = function() {
+    var b = "SelectShape" === this.lc.tool.name ? "block" : "none";
+    this._cutButton.style.display = b;
+    this._copyButton.style.display = b;
+    this._pasteButton.style.display = this.clipboard ? "block" : "none";
   };
   a.file_save = function() {
     var b = this.lc.getImage().toDataURL();
@@ -11796,36 +11824,39 @@ Entry.Painter2 = function(a) {
     e.appendChild(f);
     d = Entry.createElement("a", "entryPainterTopMenuEditCopy");
     d.bindOnClick(function() {
-      b.edit_copy();
+      b.copy();
     });
     d.addClass("entryPlaygroundPainterTopMenuEditCopy");
     d.innerHTML = Lang.Workspace.copy_file;
     f.appendChild(d);
+    this._copyButton = f;
     f = Entry.createElement("li");
     e.appendChild(f);
     d = Entry.createElement("a", "entryPainterTopMenuEditCut");
     d.bindOnClick(function() {
-      b.edit_cut();
+      b.cut();
     });
     d.addClass("entryPlaygroundPainterTopMenuEditCut");
     d.innerHTML = Lang.Workspace.cut_picture;
     f.appendChild(d);
+    this._cutButton = f;
     f = Entry.createElement("li");
     e.appendChild(f);
     d = Entry.createElement("a", "entryPainterTopMenuEditPaste");
     d.bindOnClick(function() {
-      b.edit_paste();
+      b.paste();
     });
     d.addClass("entryPlaygroundPainterTopMenuEditPaste");
     d.innerHTML = Lang.Workspace.paste_picture;
     f.appendChild(d);
+    this._pasteButton = f;
     f = Entry.createElement("li");
     e.appendChild(f);
     e = Entry.createElement("a", "entryPainterTopMenuEditEraseAll");
     e.addClass("entryPlaygroundPainterTopMenuEditEraseAll");
     e.innerHTML = Lang.Workspace.remove_all;
     e.bindOnClick(function() {
-      b.clearCanvas();
+      b.lc.clear();
     });
     f.appendChild(e);
     this.painterTopStageXY = e = Entry.createElement("div", "entryPainterTopStageXY");
