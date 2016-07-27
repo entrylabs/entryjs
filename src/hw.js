@@ -23,13 +23,15 @@ Entry.HW = function() {
 
     this.hwInfo = {
         '11': Entry.Arduino,
+        '19': Entry.ArduinoExt,
         '12': Entry.SensorBoard,
         '13': Entry.CODEino,
         '14': Entry.joystick,
         '15': Entry.dplay,
         '16': Entry.nemoino,
         '17': Entry.Xbot,
-		'18': Entry.ardublock,
+	'18': Entry.ardublock,
+        '110': Entry.Cobl,
         '24': Entry.Hamster,
         '25': Entry.Albert,
         '31': Entry.Bitbrick,
@@ -206,8 +208,10 @@ p.update = function() {
 
 p.updatePortData = function(data) {
     this.portData = data;
-    if (this.hwMonitor)
+    if (this.hwMonitor
+        && Entry.propertyPanel.selected == 'hw') {
         this.hwMonitor.update();
+    }
 };
 
 p.closeConnection = function() {
@@ -217,7 +221,7 @@ p.closeConnection = function() {
 };
 
 p.downloadConnector = function() {
-    var url = "http://download.play-entry.org/apps/Entry_HW_1.5.6_Setup.exe";
+    var url = "http://download.play-entry.org/apps/Entry_HW_1.5.8_Setup.exe";
     var win = window.open(url, '_blank');
     win.focus();
 };
