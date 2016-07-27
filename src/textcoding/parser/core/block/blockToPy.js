@@ -374,7 +374,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
     p.FieldDropdownDynamic = function(dataParam, schemaParam) {
         console.log("FieldDropdownDynamic", dataParam, schemaParam);
-        var object = Entry.stage.selectedObject;
+        var object = Entry.playground.object;
         console.log("FieldDropdownDynamic Object", object);
 
         if(dataParam == "null") {

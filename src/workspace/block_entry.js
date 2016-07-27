@@ -4242,7 +4242,7 @@ Entry.block = {
             return script.getField('NUM', script);
         },
         "isPrimitive": true,
-        "syntax": {"js": [], "py": ["%1number#"]}
+        "syntax": {"js": ["Scope", "%1"], "py": ["%1number#"]}
     },
     "angle": {
         "color": "#FFD974",
@@ -9000,7 +9000,7 @@ Entry.block = {
             return true;
         },
         "isPrimitive": true,
-        "syntax": {"js": [], "py": ["True"]}
+        "syntax": {"js": ["Scope", "true"], "py": ["True"]}
     },
     "False": {
         "color": "#AEB8FF",
@@ -15237,7 +15237,7 @@ Entry.block = {
             return script.getField('NAME', script);
         },
         "isPrimitive": true,
-        "syntax": {"js": [], "py": ["%1text#"]}
+        "syntax": {"js": ["Scope", "%1"], "py": ["%1text#"]}
     },
     "text_write": {
         "color": "#FFCA36",
@@ -20570,7 +20570,7 @@ Entry.block = {
         "mode": "maze",
         "color": "#498DEB",
         "syntax": [
-            "BasicIfElse",
+            "BasicIf",
             "front == 'meteo'"
         ],
         "statements": [
@@ -20622,7 +20622,7 @@ Entry.block = {
         "fontColor": "#fff",
         "syntax": [
             "Scope",
-            "move"
+            "is_distance(%1, %2, %3)#"
         ],
         "params": [
             {
@@ -20700,7 +20700,7 @@ Entry.block = {
         "color": "#ffd974",
         "syntax": [
             "Scope",
-            "move"
+            "distance(%1)#"
         ],
         "params": [
             {
@@ -20741,7 +20741,7 @@ Entry.block = {
         "color": "#2fc9f0",
         "syntax": [
             "Scope",
-            "move"
+            "is_object(%1, %2)#"
         ],
         "params": [
             {
@@ -20849,6 +20849,10 @@ Entry.block = {
         "skeleton": "basic_boolean_field",
         "fontColor": "#fff",
         "statements": [],
+        "syntax": [
+            "Scope",
+            "%1 && %3#"
+        ],
         "params": [
             {
                 "type": "Block",

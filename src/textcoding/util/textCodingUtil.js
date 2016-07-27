@@ -20,7 +20,7 @@ Entry.TextCodingUtil = function() {
 
         var fNameQueue = new Entry.Queue();
         this._funcNameQ = fNameQueue;
-        console.log("initQueue this._funcParamQ", this._funcParamQ);
+        //console.log("initQueue this._funcParamQ", this._funcParamQ);
     };
 
     p.clearQueue = function() {
@@ -29,13 +29,13 @@ Entry.TextCodingUtil = function() {
     };
 
 	p.indent = function(textCode) {
-        console.log("indent textCode", textCode);
+        //console.log("indent textCode", textCode);
         var result = "\t";
         var indentedCodeArr = textCode.split("\n");
         indentedCodeArr.pop();
         result += indentedCodeArr.join("\n\t");
         result = "\t" + result.trim();//.concat('\n');
-        console.log("indent result", result);
+        //console.log("indent result", result);
         
         return result;
     };
@@ -58,7 +58,7 @@ Entry.TextCodingUtil = function() {
     };
 
     p.binaryOperatorConvert = function(operator) {
-        console.log("binaryOperatorConvert", operator);
+        //console.log("binaryOperatorConvert", operator);
         var result;
         switch(operator) {
             case '==': {
@@ -105,7 +105,7 @@ Entry.TextCodingUtil = function() {
     };
 
     p.logicalExpressionConvert = function(operator) {
-        console.log("logicalExpressionConvert", operator);
+        //console.log("logicalExpressionConvert", operator);
         var result;
         switch(operator) {
             case '&&': {
@@ -125,13 +125,13 @@ Entry.TextCodingUtil = function() {
 
     p.dropdownDynamicValueConvertor = function(value, param) {
         var options = param.options;
-        console.log("dropdownDynamicValueConvertor value", value, "options", options);
+        //console.log("dropdownDynamicValueConvertor value", value, "options", options);
         var found = false;
         var result = null;
         for(var index in options) {
             var option = options[index];
             if(option[1] == "null") {
-                result = "none";
+                result = "None";
                 found = true;
                 return result; 
             }
@@ -142,7 +142,7 @@ Entry.TextCodingUtil = function() {
                 return value;
             }
 
-            console.log("dropdownDynamicValueConvertor check value", value, "option", option);
+            //console.log("dropdownDynamicValueConvertor check value", value, "option", option);
 
             if(value == option[1]) {
                 result = option[0];
@@ -155,7 +155,7 @@ Entry.TextCodingUtil = function() {
 
         if(!found && param.menuName == "variables") {
             var entryVariables = Entry.variableContainer.variables_;
-            console.log("dropdownDynamicValueConvertor entryVariables", entryVariables);
+            //console.log("dropdownDynamicValueConvertor entryVariables", entryVariables);
             for(var e in entryVariables) {
                 var entryVariable = entryVariables[e];
                 if(entryVariable.id_ == value) {
@@ -167,7 +167,7 @@ Entry.TextCodingUtil = function() {
         } 
         else if(!found && param.menuName == "lists") {
             var entryLists = Entry.variableContainer.lists;
-            console.log("dropdownDynamicValueConvertor entryLists", entryLists);
+            //console.log("dropdownDynamicValueConvertor entryLists", entryLists);
             for(var e in entryLists) {
                 var entryList = entryLists[e];
                 if(entryList.id_ == value) {
@@ -206,7 +206,7 @@ Entry.TextCodingUtil = function() {
             }
         }
 
-        console.log("b to py dd", result);
+        //console.log("b to py dd", result);
 
         return result;
 
@@ -216,7 +216,7 @@ Entry.TextCodingUtil = function() {
         var result;
         switch(operator) {
             case 'EQUAL': {
-                console.log("EQUAL");
+                //console.log("EQUAL");
                 result = "==";
                 break;
             }
@@ -265,27 +265,27 @@ Entry.TextCodingUtil = function() {
             }
         }
 
-        console.log("binaryOperatorValueConvertor result", result);
+        //console.log("binaryOperatorValueConvertor result", result);
         return result;
     }; 
 
     p.variableFilter = function(block, index, param) {
-        console.log("paramFilter block index param", block.data.type, index, param);
+        //console.log("paramFilter block index param", block.data.type, index, param);
         var result = param;
         var type = block.data.type;
         if(type == "change_variable" || type == "set_variable" || type == "get_variable" ) {
             if(index == 1) {
-                console.log("paramFilter", eval(param));
+                //console.log("paramFilter", eval(param));
                 result = eval(param);
             }
         } else if(type == "length_of_list" || type == "is_included_in_list") {
             if(index == 2) {
-                console.log("paramFilter", eval(param));
+                //console.log("paramFilter", eval(param));
                 result = eval(param);
             } 
         } else if(type == "value_of_index_from_list") {
             if(index == 2) {
-                console.log("paramFilter", eval(param));
+                //console.log("paramFilter", eval(param));
                 result = eval(param);
             } 
             else if(index == 4) {
@@ -294,7 +294,7 @@ Entry.TextCodingUtil = function() {
             }
         } else if(type == "remove_value_from_list") {
             if(index == 2) {
-                console.log("paramFilter", eval(param));
+                //console.log("paramFilter", eval(param));
                 result = eval(param);
             } 
             else if(index == 1) {
@@ -303,7 +303,7 @@ Entry.TextCodingUtil = function() {
             }
         } else if(type == "insert_value_to_list") {
             if(index == 2) {
-                console.log("paramFilter", eval(param));
+                //console.log("paramFilter", eval(param));
                 result = eval(param);
             } 
             else if(index == 3) {
@@ -312,7 +312,7 @@ Entry.TextCodingUtil = function() {
             }
         } else if(type == "change_value_list_index") {
             if(index == 1) {
-                console.log("paramFilter", eval(param));
+                //console.log("paramFilter", eval(param));
                 result = eval(param);
             } 
             else if(index == 2) {
@@ -321,7 +321,7 @@ Entry.TextCodingUtil = function() {
             }
         } else if(type == "add_value_to_list") {
             if(index == 2) {
-                console.log("paramFilter", eval(param));
+                //console.log("paramFilter", eval(param));
                 result = eval(param);
             } 
         }
@@ -333,7 +333,7 @@ Entry.TextCodingUtil = function() {
         var entryVariables = Entry.variableContainer.variables_;
         for(var i in entryVariables) { 
             var entryVariable = entryVariables[i];
-            console.log("TextCodingUtil updateGlobalVariable", entryVariable);
+            //console.log("TextCodingUtil updateGlobalVariable", entryVariable);
             if(entryVariable.object_ === null && entryVariable.name_ == name) {
                 return true;
             }       
@@ -347,7 +347,7 @@ Entry.TextCodingUtil = function() {
         var entryVariables = Entry.variableContainer.variables_;
         for(var i in entryVariables) { 
             var entryVariable = entryVariables[i];
-            console.log("TextCodingUtil updateGlobalVariable", entryVariable);
+            //console.log("TextCodingUtil updateGlobalVariable", entryVariable);
             if(entryVariable.object_ === null && entryVariable.name_ == name) {
                 variable = {
                     x: entryVariable.x_,
@@ -377,7 +377,7 @@ Entry.TextCodingUtil = function() {
             variableType: 'variable'
         };
 
-        console.log("TextCodingUtil variable", variable);
+        //console.log("TextCodingUtil variable", variable);
 
         Entry.variableContainer.addVariable(variable);
         Entry.variableContainer.updateList();
@@ -387,7 +387,7 @@ Entry.TextCodingUtil = function() {
         var entryVariables = Entry.variableContainer.variables_;
         for(var i in entryVariables) { 
             var entryVariable = entryVariables[i];
-            console.log("TextCodingUtil updateGlobalVariable", entryVariable);
+            //console.log("TextCodingUtil updateGlobalVariable", entryVariable);
             if(entryVariable.object_ === object.id && entryVariable.name_ == name) {
                 return true;
             }       
@@ -401,7 +401,7 @@ Entry.TextCodingUtil = function() {
         var entryVariables = Entry.variableContainer.variables_;
         for(var i in entryVariables) { 
             var entryVariable = entryVariables[i];
-            console.log("TextCodingUtil updateGlobalVariable", entryVariable);
+            //console.log("TextCodingUtil updateGlobalVariable", entryVariable);
             if(entryVariable.object_ === object.id && entryVariable.name_ == name) {
                 var variable = {
                     x: entryVariable.x_,
@@ -432,14 +432,14 @@ Entry.TextCodingUtil = function() {
             variableType: 'variable'
         };
 
-        console.log("TextCodingUtil variable name", name);
+        //console.log("TextCodingUtil variable name", name);
 
         Entry.variableContainer.addVariable(variable);
         Entry.variableContainer.updateList();
     };
 
     p.isLocalVariable = function(variableId) {
-        console.log("TextCodingUtil isLocalVariable", variableId);
+        //console.log("TextCodingUtil isLocalVariable", variableId);
         var object = Entry.playground.object;
         var entryVariables = Entry.variableContainer.variables_;
         for(var e in entryVariables) {
@@ -457,7 +457,7 @@ Entry.TextCodingUtil = function() {
         var entryLists = Entry.variableContainer.lists_;
         for(var i in entryLists) { 
             var entryList = entryLists[i];
-            console.log("TextCodingUtil entryList", entryList);
+            //console.log("TextCodingUtil entryList", entryList);
             if(entryList.object_ === null && entryList.name_ == name) {
                 return true;
             }       
@@ -470,7 +470,7 @@ Entry.TextCodingUtil = function() {
         var entryLists = Entry.variableContainer.lists_;
         for(var i in entryLists) { 
             var entryList = entryLists[i];
-            console.log("TextCodingUtil entryList", entryList);
+            //console.log("TextCodingUtil entryList", entryList);
             if(entryList.object_ === null && entryList.name_ == name) {
                 list = {
                         x: entryList.x_,
@@ -503,18 +503,18 @@ Entry.TextCodingUtil = function() {
             variableType: 'list'
         };
 
-        console.log("TextCodingUtil list", list);
+        //console.log("TextCodingUtil list", list);
 
         Entry.variableContainer.addList(list);
         Entry.variableContainer.updateList();
     };
 
     p.isLocalListExisted = function(name, object) {
-        console.log("TextCodingUtil isLocalListExisted", name, object);
+        //console.log("TextCodingUtil isLocalListExisted", name, object);
         var entryLists = Entry.variableContainer.lists_;
         for(var i in entryLists) { 
             var entryList = entryLists[i];
-            console.log("TextCodingUtil entryList", entryList);
+            //console.log("TextCodingUtil entryList", entryList);
             if(entryList.object_ === object.id && entryList.name_ == name) {
                 return true;
             }       
@@ -527,7 +527,7 @@ Entry.TextCodingUtil = function() {
         var entryLists = Entry.variableContainer.lists_;
         for(var i in entryLists) { 
             var entryList = entryLists[i];
-            console.log("TextCodingUtil entryList", entryList);
+            //console.log("TextCodingUtil entryList", entryList);
             if(entryList.object_ === object.id && entryList.name_ == name) {
                 var list = {
                         x: entryList.x_,
@@ -561,14 +561,14 @@ Entry.TextCodingUtil = function() {
             variableType: 'list'
         };
 
-        console.log("TextCodingUtil list", list);
+        //console.log("TextCodingUtil list", list);
 
         Entry.variableContainer.addList(list);
         Entry.variableContainer.updateList();
     };
 
     p.isLocalList = function(listId) {
-        console.log("TextCodingUtil listId", listId);
+        //console.log("TextCodingUtil listId", listId);
         var object = Entry.playground.object;
         var entryLists = Entry.variableContainer.lists_;
         for(var e in entryLists) {
@@ -653,7 +653,7 @@ Entry.TextCodingUtil = function() {
         
         for(var i in threadArr) {
                 var thread = threadArr[i]; 
-                console.log("entryEventFuncFilter thread", thread);
+                //console.log("entryEventFuncFilter thread", thread);
 
                 //var tokens = thread.split('(');
                 //var prefix = tokens[0];
@@ -687,7 +687,7 @@ Entry.TextCodingUtil = function() {
                 }  
         }
 
-        console.log("TextCodingUtil entryEventFuncFilter threadArr", threadArr);
+        //console.log("TextCodingUtil entryEventFuncFilter threadArr", threadArr);
         result = threadArr.join('\n');
         return result;
     };
@@ -728,55 +728,55 @@ Entry.TextCodingUtil = function() {
     };
 
     p.searchFuncDefParam = function(block) {
-        console.log("searchFuncDefParam block", block);
+        //console.log("searchFuncDefParam block", block);
         if(block.data.type == "function_field_label") {
             var name = block.data.params[0];
             this._funcNameQ.enqueue(name);
-            console.log("searchFuncDefParam name enqueue", name);
+            //console.log("searchFuncDefParam name enqueue", name);
         }
 
         if(block && block.data && block.data.params && block.data.params[1]){
             if(block.data.type == "function_field_string" || block.data.type == "function_field_boolean") {
                 var param = block.data.params[0].data.type;
                 this._funcParamQ.enqueue(param);
-                console.log("searchFuncDefParam param enqueue", param); 
+                //console.log("searchFuncDefParam param enqueue", param); 
             }
 
             var result = this.searchFuncDefParam(block.data.params[1]);  
             return result;
         }
         else {
-            console.log("searchFuncDefParam block", block);
+            //console.log("searchFuncDefParam block", block);
             return block;
         }
     };
 
     p.gatherFuncDefParam = function(block) {
-        console.log("gatherFuncDefParam block", block);
+        //console.log("gatherFuncDefParam block", block);
         if(block && block.data) {
             if(block.data.params[0]) {
                 if(block.data.params[0].data) {
                     var param = block.data.params[0].data.type;
                     if(block.data.type == "function_field_string" || block.data.type == "function_field_boolean") {
                         this._funcParamQ.enqueue(param);
-                        console.log("gatherFuncDefParam param enqueue", this._funcParamQ);
+                        //console.log("gatherFuncDefParam param enqueue", this._funcParamQ);
                     } 
                 } else if(block.data.type == "function_field_label") {
                     var name = block.data.params[0];
                     this._funcNameQ.enqueue(name);
-                    console.log("gatherFuncDefParam name enqueue", name);
+                    //console.log("gatherFuncDefParam name enqueue", name);
                 }
             }
 
             if(block.data.params[1]){
                 var result = this.searchFuncDefParam(block.data.params[1]);  
-                console.log("gatherFuncDefParam result", result);
+                //console.log("gatherFuncDefParam result", result);
                 if(result.data.params[0].data) {
                     var param = result.data.params[0].data.type;
                     
                     if(result.data.type == "function_field_string" || result.data.type == "function_field_boolean") {
                         this._funcParamQ.enqueue(param);
-                        console.log("gatherFuncDefParam param enqueue", this._funcParamQ);
+                        //console.log("gatherFuncDefParam param enqueue", this._funcParamQ);
                     }
                 }
 
@@ -786,7 +786,7 @@ Entry.TextCodingUtil = function() {
                                         
                         if(result.data.params[1].data.type == "function_field_string" || result.data.params[1].data.type == "function_field_boolean") {
                             this._funcParamQ.enqueue(param);
-                            console.log("gatherFuncDefParam param enqueue", this._funcParamQ);
+                            //console.log("gatherFuncDefParam param enqueue", this._funcParamQ);
                         } 
                     }
                 }
@@ -798,7 +798,7 @@ Entry.TextCodingUtil = function() {
     };
 
     p.getLastParam = function(funcBlock) {
-        console.log("getLastParam funcBlock", funcBlock);
+        //console.log("getLastParam funcBlock", funcBlock);
         if(funcBlock && funcBlock.data && funcBlock.data.params[1]) {
             var result = this.getLastParam(funcBlock.data.params[1]);
         }
@@ -806,7 +806,7 @@ Entry.TextCodingUtil = function() {
             return funcBlock;
         }
 
-        console.log("getLastParam result", result);
+        //console.log("getLastParam result", result);
         return result;
     };
 
@@ -818,8 +818,8 @@ Entry.TextCodingUtil = function() {
             matchFlag = false;
             var blockFuncContent = blockFuncContents[i];
             var textFuncStatement = textFuncStatements[i];
-            console.log("blockFuncContent", blockFuncContent);
-            console.log("textFuncStatement", textFuncStatement);
+            //console.log("blockFuncContent", blockFuncContent);
+            //console.log("textFuncStatement", textFuncStatement);
             if(blockFuncContent && !textFuncStatement) {
                 matchFlag = fasle;
                 return matchFlag;
@@ -836,13 +836,13 @@ Entry.TextCodingUtil = function() {
                 var blockFuncContentParams = blockFuncContent.data.params;
                 var cleansingParams = [];
                 blockFuncContentParams.map(function(blockFuncContentParam, index) {
-                    console.log("blockFuncContentParam", blockFuncContentParam);
+                    //console.log("blockFuncContentParam", blockFuncContentParam);
                     if(blockFuncContentParam)
                         cleansingParams.push(blockFuncContentParam);
                 });
                 blockFuncContentParams = cleansingParams;
-                console.log("textFuncStatementParams", textFuncStatementParams);
-                console.log("blockFuncContentParams", blockFuncContentParams);
+                //console.log("textFuncStatementParams", textFuncStatementParams);
+                //console.log("blockFuncContentParams", blockFuncContentParams);
                 if(textFuncStatementParams.length == blockFuncContentParams.length) { //Statement Param Length Comparison   
                     matchFlag = true;
                     for(var j = 0; j < textFuncStatementParams.length; j++) {
@@ -852,16 +852,16 @@ Entry.TextCodingUtil = function() {
                         if(textFuncStatementParams[j].name) {
                             for(var k in textFuncParams) {
                                 if(textFuncStatementParams[j].name == textFuncParams[k]) { // Pram Locatin Comparision
-                                    console.log("textFuncStatementParams[j].name", textFuncStatementParams[j].name);
-                                    console.log("textFuncParams[k]", textFuncParams[k]);
+                                    //console.log("textFuncStatementParams[j].name", textFuncStatementParams[j].name);
+                                    //console.log("textFuncParams[k]", textFuncParams[k]);
                                     for(var bfcParam in paramMap) {
                                         if(blockFuncContentParams[j].data.type == bfcParam) {
-                                            console.log("blockFuncContentParams[j].data.type", blockFuncContentParams[j].data.type);
-                                            console.log("bfcParam", bfcParam);
+                                            //console.log("blockFuncContentParams[j].data.type", blockFuncContentParams[j].data.type);
+                                            //console.log("bfcParam", bfcParam);
                                             if(paramMap[bfcParam] == k) {
                                                 matchFlag = true;
                                                 break;
-                                                console.log("Function Definition Param Found", paramMap[bfcParam], "index k", j);
+                                                //console.log("Function Definition Param Found", paramMap[bfcParam], "index k", j);
                                             }  
                                         }   
                                     } 
@@ -873,14 +873,14 @@ Entry.TextCodingUtil = function() {
                         else if(textFuncStatementParams[j].type == "True" || textFuncStatementParams[j].type == "False") {
                             if(textFuncStatementParams[j].type == blockFuncContentParams[j].data.type) {
                                 matchFlag = true;
-                                console.log("Function Param Found 1", textFuncStatementParams[j].type);
-                                console.log("Function Param Found 2", blockFuncContentParams[j].data.type);
+                                //console.log("Function Param Found 1", textFuncStatementParams[j].type);
+                                //console.log("Function Param Found 2", blockFuncContentParams[j].data.type);
                             }      
                         } else if(textFuncStatementParams[j].type && textFuncStatementParams[j].params) {
                             if(textFuncStatementParams[j].params[0] == blockFuncContentParams[j].data.params[0]) {
                                 matchFlag = true;
-                                console.log("Function Param Found 1", textFuncStatementParams[j].params[0]);
-                                console.log("Function Param Found 2", blockFuncContentParams[j].data.params[0]);
+                                //console.log("Function Param Found 1", textFuncStatementParams[j].params[0]);
+                                //console.log("Function Param Found 2", blockFuncContentParams[j].data.params[0]);
                             }  
                         }   
                     }

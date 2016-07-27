@@ -4,6 +4,7 @@
 "use strict";
 
 goog.provide("Entry.JsToBlockParser");
+goog.require("Entry.TextCodingUtil");
 
 Entry.JsToBlockParser = function(syntax) {
     this.syntax = syntax;
@@ -13,25 +14,34 @@ Entry.JsToBlockParser = function(syntax) {
 };
 
 (function(p){
-    p.Program = function(node) {
+    p.Program = function(astArr) {
         var code = [];
-        var block = [];
-        var body = node.body;
+        
+        for(var index in astArr) { 
+            if(astArr[index].type != 'Program') return;
+            var thread = []; 
+            
 
-        //block statement
-        block.push({
-            type: this.syntax.Program
-        });
+            console.log("astArr", astArr);
+            if(index == 0) {
+                thread.push({
+                    type: this.syntax.Program
+                });
+            }
 
-        var separatedBlocks = this.initScope(node);
+            //block statement
+            var separatedBlocks = this.initScope(astArr[index]);
+            var blocks = this.BlockStatement(astArr[index]);
 
-        block = block.concat(this.BlockStatement(node));
+            for(var i in blocks) {
+                var block = blocks[i];
+                thread.push(block);
+            }
 
-        this.unloadScope();
-
-        code.push(block);
-        code = code.concat(separatedBlocks);
-
+            this.unloadScope();
+            if(thread.length != 0)
+                code.push(thread);    
+        }
         return code;
     };
 
@@ -42,13 +52,21 @@ Entry.JsToBlockParser = function(syntax) {
             return this.scope[node.name];
     };
 
+    p.Literal = function(node) {
+        if(node.value === true)
+            return {type:'True'};
+
+        if(node.value === false)
+            return {type:'False'};
+    };
+
     // Statement
     p.ExpressionStatement = function(node) {
         var expression = node.expression;
         return this[expression.type](expression);
     };
 
-    p.ForStatement = function(node) {
+    p.ForStatement = function(node) { 
         var init = node.init,
             test = node.test,
             update = node.update,
@@ -192,8 +210,9 @@ Entry.JsToBlockParser = function(syntax) {
             consequent = node.consequent,
             alternate  = node.alternate;
 
-        var blockType = this.syntax.IfStatement;
-        if (!blockType) {
+        var blockType = this.syntax.BasicIf;
+        if (blockType) {
+            console.log("IfStatement return", this.BasicIf(node));
             return this.BasicIf(node);
         } else {
             throw {
@@ -416,13 +435,103 @@ Entry.JsToBlockParser = function(syntax) {
     };
 
     p.LogicalExpression = function(node) {
-        var operator = node.operator,
-            left = node.left,
-            right = node.right;
-        throw {
-            message : operator + '은(는) 지원하지 않는 명령어 입니다.',
-            node : node
-        };
+        var result;
+        var structure = {};
+
+        var operator = String(node.operator);
+        
+        switch(operator){
+            case '&&': 
+                var type = "ai_boolean_and";
+                break;
+            default: 
+                var type = "ai_boolean_and";
+                break; 
+        }
+
+        var params = [];    
+        var left = node.left;
+        
+        if(left.type == "Literal" || left.type == "Identifier") {
+            var arguments = [];
+            arguments.push(left);
+            var paramsMeta = Entry.block[type].params;
+            //var paramsDefMeta = Entry.block[type].def.params;
+            console.log("LogicalExpression paramsMeta", paramsMeta); 
+
+            for(var p in paramsMeta) {
+                var paramType = paramsMeta[p].type;
+                if(paramType == "Indicator") {
+                    var pendingArg = {raw: null, type: "Literal", value: null}; 
+                    if(p < arguments.length) 
+                        arguments.splice(p, 0, pendingArg);              
+                }
+                else if(paramType == "Text") {
+                    var pendingArg = {raw: "", type: "Literal", value: ""};
+                    if(p < arguments.length) 
+                        arguments.splice(p, 0, pendingArg);
+                }
+            }
+
+            for(var i in arguments) {
+                var argument = arguments[i];           
+                var param = this[argument.type](argument);
+                if(param && param != null)
+                    params.push(param);   
+            }
+        } else {
+            param = this[left.type](left);
+            if(param) 
+                params.push(param);
+        }
+        
+        operator = String(node.operator);
+        if(operator) {
+            operator = Entry.TextCodingUtil.prototype.logicalExpressionConvert(operator);
+            param = operator;
+            params.push(param);
+        }
+
+        var right = node.right;
+       
+        if(right.type == "Literal" || right.type == "Identifier") {
+            var arguments = [];
+            arguments.push(right);
+            var paramsMeta = Entry.block[type].params;
+            //var paramsDefMeta = Entry.block[type].def.params;
+
+            for(var p in paramsMeta) {
+                var paramType = paramsMeta[p].type;
+                if(paramType == "Indicator") {
+                    var pendingArg = {raw: null, type: "Literal", value: null}; 
+                    if(p < arguments.length) 
+                        arguments.splice(p, 0, pendingArg);              
+                }
+                else if(paramType == "Text") {
+                    var pendingArg = {raw: "", type: "Literal", value: ""};
+                    if(p < arguments.length) 
+                        arguments.splice(p, 0, pendingArg);
+                }
+            }
+
+            for(var i in arguments) {
+                var argument = arguments[i];
+                var param = this[argument.type](argument);
+                
+                if(param && param != null)
+                    params.push(param);    
+            }
+        } else {
+            param = this[right.type](right);
+            if(param) 
+                params.push(param);
+        }
+
+        structure.type = type;
+        structure.params = params;
+        
+        result = structure;
+        return result;
     };
 
     p.LogicalOperator = function() {
@@ -480,11 +589,37 @@ Entry.JsToBlockParser = function(syntax) {
     };
 
     p.CallExpression = function(node) {
+        console.log("CallExpression node", node);
         var callee = node.callee,
             args = node.arguments;
+        var params = [];
         var blockType = this[callee.type](callee);
+
+        var block = Entry.block[blockType];
+
+        for(var i = 0; i < args.length; i++) {
+            var arg = args[i];
+            var value = this[arg.type](arg);
+            
+            if(block.params[i].type === 'Block') {
+                if(typeof value == 'string') {
+                    var paramBlock = {type: 'text', params:[value]};
+                } else if (typeof value == 'number') {
+                    var paramBlock = {type: 'number', params:[value]};
+                } else {
+                    var paramBlock = value;
+                } 
+
+                params.push(paramBlock);
+            }
+            else {
+                params.push(value);
+            }
+        }
+
         return {
-            type: blockType
+            type: blockType,
+            params: params
         };
     };
 
@@ -515,6 +650,7 @@ Entry.JsToBlockParser = function(syntax) {
             scoper.prototype = this.scope;
             this.scope = new scoper();
         }
+
         this.scopeChain.push(this.scope);
         return this.scanDefinition(node);
     };
@@ -581,34 +717,52 @@ Entry.JsToBlockParser = function(syntax) {
         }
     };
 
-    p.BasicIf = function(node) {
+    p.BasicIf = function(node) { 
         var consequent = node.consequent;
         consequent = this[consequent.type](consequent);
+        var alternate = node.alternate;
+        alternate = this[alternate.type](alternate);
+
         try{
             var test = '';
             var operator = (node.test.operator === '===') ? '==' : node.test.operator;
 
-            if(node.test.left.type === 'Identifier' && node.test.right.type === 'Literal') {
+            if(node.test.left && node.test.left.type === 'Identifier' && node.test.right && node.test.right.type === 'Literal') {
                 test = node.test.left.name + " " +
                 operator + " " +
                 node.test.right.raw;
-            } else if(node.test.left.type === 'Literal' && node.test.right.type === 'Identifier') {
+            } else if(node.test.left && node.test.left.type === 'Literal' && node.test.right && node.test.right.type === 'Identifier') {
                 test = node.test.right.name + " " +
                 operator + " " +
                 node.test.left.raw;
             } else {
-                throw new Error();
+                var type = "ai_if_else";
+                var params = [];
+                var callExData = this[node.test.type](node.test, this.syntax.Scope);
+                params.push(callExData);
+                
+                //throw new Error();
             }
 
             if (this.syntax.BasicIf[test]) {
                 if(!Array.isArray(consequent) && typeof consequent === 'object')
                     consequent = [consequent];
+
+                if(!Array.isArray(alternate) && typeof alternate === 'object')
+                    alternate = [alternate];
+
                 return {
                     type: this.syntax.BasicIf[test],
-                    statements: [consequent]
+                    params: params,
+                    statements: [consequent, alternate]
                 }
             } else {
-                throw new Error();
+                return {
+                    type: type,
+                    params: params,
+                    statements: [consequent, alternate]
+                }
+                //throw new Error();
             }
         } catch (e) {
             throw {
@@ -617,5 +771,4 @@ Entry.JsToBlockParser = function(syntax) {
             };
         }
     };
-
 })(Entry.JsToBlockParser.prototype);

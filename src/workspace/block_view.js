@@ -17,7 +17,10 @@ Entry.BlockView = function(block, board, mode) {
     this.set(block);
     this.svgGroup = board.svgBlockGroup.elem("g");
 
-    this._schema = Entry.block[block.type];
+    if(block.type) {
+        this._schema = Entry.block[block.type];
+    }
+
     if (this._schema.changeEvent)
         this._schemaChangeEvent = this._schema.changeEvent.attach(
             this, this._updateSchema);

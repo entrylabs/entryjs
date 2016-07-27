@@ -154,8 +154,21 @@ Entry.Parser = function(mode, type, cm, syntax) {
         switch (type) {
             case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
                 try {
-                    var astTree = acorn.parse(code);
-                    result = this._parser.Program(astTree);
+                    //var astTree = acorn.parse(code);
+                    var threads = code.split('\n\n');
+                    console.log("threads", threads);
+
+                    var astArray = [];
+
+                    for(var index in threads) {
+                        var thread = threads[index];
+                        var ast = acorn.parse(thread);
+                        if(ast.type == "Program" && ast.body.length != 0)
+                            astArray.push(ast);
+                    }
+
+                    result = this._parser.Program(astArray);
+                    console.log("result", result);
                 } catch (error) {
                     if (this.codeMirror) {
                         var annotation;
@@ -252,7 +265,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 break;
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
                 var textCode = this._parser.Code(code);
-                var textArr = textCode.match(/(.*{.*[\S|\s]+?}|.+)/g);
+                /*var textArr = textCode.match(/(.*{.*[\S|\s]+?}|.+)/g);
+                console.log("textCode", textCode); 
                 if(Array.isArray(textArr)) {
                     result = textArr.reduce(function (prev, current, index) {
                         var temp = '';
@@ -270,7 +284,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     });
                 } else {
                     result = '';
-                }
+                }*/
+                result = textCode;
 
                 break;
 
@@ -322,6 +337,10 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     //console.log("syntaxArray", syntaxArray);
                     for (var j = 0; j < syntaxArray.length; j++) {
                         var key = syntaxArray[j];
+                        var index = key.indexOf("(");
+                        if(index > -1) {
+                            key = key.substring(0, index);
+                        }
                         if (j === syntaxArray.length - 2 &&
                             typeof syntaxArray[j + 1] === "function") {
                             syntaxTemp[key] = syntaxArray[j + 1];
