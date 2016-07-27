@@ -903,4 +903,16 @@ Entry.TextCodingUtil = function() {
         return matchFlag;
     };
 
+    p.isParamBlock = function(block) {
+        console.log("tt block", block);
+        var type = block.type;
+        console.log("isParamBlock type", type);
+        if(type == "ai_boolean_distance" ||
+            type == "ai_distance_value") {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
 })(Entry.TextCodingUtil.prototype);

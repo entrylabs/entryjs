@@ -115,7 +115,17 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                 } catch(e) {
                     if (this.board) this.board.hide();
                     this.set({selectedBoard:this.vimBoard});
-                    Entry.dispatchEvent('setProgrammingMode', Entry.Workspace.MODE_VIMBOARD);
+
+                    mode.boardType = Entry.Workspace.MODE_VIMBOARD;
+                    mode.textType = Entry.Vim.TEXT_TYPE_JS;
+                    mode.runType = Entry.Vim.WORKSPACE_MODE;
+
+                    Entry.dispatchEvent("changeMode", mode, function (mode) {
+                        $scope.programmingMode = String(mode);
+                    });
+
+                    $('.studyMazeModeSelector option:eq(1)').attr("selected", "selected");
+
                     throw e;
                 }
                 Entry.commander.setCurrentEditor("board", this.board);

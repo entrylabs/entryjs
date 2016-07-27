@@ -18,11 +18,10 @@ Entry.JsToBlockParser = function(syntax) {
         var code = [];
         
         for(var index in astArr) { 
-            if(astArr[index].type != 'Program') return;
+            var node = astArr[index];
+            if(node.type != 'Program') return;
             var thread = []; 
             
-
-            console.log("astArr", astArr);
             if(index == 0) {
                 thread.push({
                     type: this.syntax.Program
@@ -30,11 +29,24 @@ Entry.JsToBlockParser = function(syntax) {
             }
 
             //block statement
-            var separatedBlocks = this.initScope(astArr[index]);
-            var blocks = this.BlockStatement(astArr[index]);
+            var separatedBlocks = this.initScope(node);
+            var blocks = this.BlockStatement(node);
 
             for(var i in blocks) {
                 var block = blocks[i];
+                console.log("err i", i);
+                if(Entry.TextCodingUtil.prototype.isParamBlock(block)) {
+                    var targetSyntax = Entry.block[block.type].syntax[1];
+                    var loc = targetSyntax.indexOf("(");
+                    targetSyntax = targetSyntax.substring(0, loc);
+
+                    throw {
+                        title : '파라미터 블록 오류',
+                        message : targetSyntax,
+                        node : node
+                    }; 
+                }
+
                 thread.push(block);
             }
 
@@ -55,9 +67,10 @@ Entry.JsToBlockParser = function(syntax) {
     p.Literal = function(node) {
         if(node.value === true)
             return {type:'True'};
-
-        if(node.value === false)
+        else if(node.value === false)
             return {type:'False'};
+        else 
+            return node.value;
     };
 
     // Statement
@@ -127,6 +140,8 @@ Entry.JsToBlockParser = function(syntax) {
             var childNode = body[i];
 
             var block = this[childNode.type](childNode);
+            console.log("error i", i);
+
             if(!block) {
                 continue;
             }
@@ -134,6 +149,17 @@ Entry.JsToBlockParser = function(syntax) {
                 throw {
                     message : '해당하는 블록이 없습니다.',
                     node : childNode
+                };
+            }
+            else if (Entry.TextCodingUtil.prototype.isParamBlock(block)) {
+                var targetSyntax = Entry.block[block.type].syntax[1];
+                var loc = targetSyntax.indexOf("(");
+                targetSyntax = targetSyntax.substring(0, loc);
+
+                throw {
+                    title : '파라미터 블록 오류',
+                    message : targetSyntax,
+                    node : node
                 };
             }
             else if (block)
@@ -596,6 +622,7 @@ Entry.JsToBlockParser = function(syntax) {
         var blockType = this[callee.type](callee);
 
         var block = Entry.block[blockType];
+        console.log("callex block", block);
 
         for(var i = 0; i < args.length; i++) {
             var arg = args[i];
@@ -610,12 +637,17 @@ Entry.JsToBlockParser = function(syntax) {
                     var paramBlock = value;
                 } 
 
+                console.log("paramBlock", paramBlock);
+
                 params.push(paramBlock);
             }
             else {
+                console.log("value", value);
                 params.push(value);
             }
         }
+
+        console.log("params", params);
 
         return {
             type: blockType,

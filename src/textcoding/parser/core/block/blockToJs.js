@@ -27,7 +27,7 @@ Entry.BlockToJsParser = function(syntax) {
             textCode += this.Thread(thread);
         } 
 
-        return textCode;
+        return textCode.trim();
     };
 
     p.Thread = function(thread) {
@@ -39,10 +39,14 @@ Entry.BlockToJsParser = function(syntax) {
         for (var i = 0; i < blocks.length; i++) {
             var block = blocks[i];
             if(i != blocks.length-1) {
-                code += this.Block(block) + '\n';
+                var block = this.Block(block);
+                console.log("bb", block);
+                code += block + '\n';
             }
             else {
-                code += this.Block(block);
+                var block = this.Block(block);
+                console.log("bb", block);
+                code += block;
             }
         }
         return code + '\n\n';   
@@ -57,7 +61,8 @@ Entry.BlockToJsParser = function(syntax) {
         if (!syntax)
             return "";
         var syntaxType = syntax[0];
-        return this[syntaxType](block);
+        var block = this[syntaxType](block);
+        return block;
     };
 
     p.Program = function(block) {
@@ -117,6 +122,8 @@ Entry.BlockToJsParser = function(syntax) {
 
         if(!notParenthesis)
             result += "();";
+
+        console.log("Scope result", result);
         
         return result;
 

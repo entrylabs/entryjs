@@ -182,15 +182,33 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             annotation = this.getLineNumber(error.node.start, error.node.end);
                             annotation.message = error.message;
                             annotation.severity = "error";
-                            this.codeMirror.markText(
-                                annotation.from, annotation.to, {
-                                className: "CodeMirror-lint-mark-error",
-                                __annotation: annotation,
-                                clearOnEnter: true
-                            });
+                            
                         }
 
-                        Entry.toast.alert('Error', error.message);
+                        var errorLine = this.findErrorLine(error.message);
+                        annotation.from.line = errorLine;
+                        annotation.from.ch = 0;
+                        annotation.to.line = errorLine;
+                        annotation.to.ch = error.message.length;
+
+                        this.codeMirror.markText(
+                            annotation.from, annotation.to, {
+                            className: "CodeMirror-lint-mark-error",
+                            __annotation: annotation,
+                            clearOnEnter: true
+                        });
+
+                        if(error.title)
+                            var errorTitle = error.title;
+                        else 
+                            var errorTitle = '문법 오류';
+
+                        if(error.message && errorLine)
+                            var errorMsg = error.message + ' (line: ' + errorLine + ')';
+                        else
+                            var errorMsg = '자바스크립트 코드를 확인해주세요';
+                        Entry.toast.alert(errorTitle, errorMsg);
+                        throw error;
                     }
                     result = [];
                 }
@@ -198,15 +216,11 @@ Entry.Parser = function(mode, type, cm, syntax) {
             case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
                 try {
                     var pyAstGenerator = new Entry.PyAstGenerator();
-                    //console.log("code", code);
 
                     //Entry.TextCodingUtil.prototype.makeThreads(code);
                     var threads = code.split('\n\n');
-                    //console.log("threads", threads);
 
                     for(var i in threads) {
-                        //console.log("thread", threads[i]);
-                        //console.log("search", threads[i].search("import"));
                         var thread = threads[i];
                         if(thread.search("import") != -1) {
                             threads[i] = "";
@@ -217,9 +231,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         threads[i] = thread;
                     }
 
-                    //console.log("threads", threads);
                     var astArray = [];
-
                     for(var index in threads) {
                         var thread = threads[index];
                         var ast = pyAstGenerator.generate(thread);
@@ -227,13 +239,10 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             astArray.push(ast);
                     }
 
-                    //console.log("astArray", astArray);
-
                     result = this._parser.Program(astArray);
-
                     this._parser._variableMap.clear();
 
-                    //console.log("result", result);
+                    break;
                 } catch(error) {
                     if (this.codeMirror) {
                         var annotation;
@@ -244,20 +253,33 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             }
                             error.message = "문법 오류입니다.";
                         } else {
-                            annotation = this.getLineNumber(error.node.start,
-                                                               error.node.end);
+                            annotation = this.getLineNumber(error.node.start, error.node.end);
                             annotation.message = error.message;
                             annotation.severity = "error";
-                            this.codeMirror.markText(
-                                annotation.from, annotation.to, {
-                                className: "CodeMirror-lint-mark-error",
-                                __annotation: annotation,
-                                clearOnEnter: true
-                            });
+                            
                         }
-                        //throw error;
-                        Entry.toast.alert('[텍스트코딩(파이썬) 오류]', error.message);
-                        document.getElementById("entryCodingModeSelector").value = '2';
+
+                        var line = parseInt(annotation.to.line) + 1;
+                        annotation.from.line = line-1;
+                        annotation.to.line = line;
+
+                        this.codeMirror.markText(
+                            annotation.from, annotation.to, {
+                            className: "CodeMirror-lint-mark-error",
+                            __annotation: annotation,
+                            clearOnEnter: true
+                        });
+
+                        if(error.title)
+                            var errorTitle = error.title;
+                        else 
+                            var errorTitle = '문법 오류';
+
+                        if(error.message && line)
+                            var errorMsg = error.message + ' (line: ' + line + ')';
+                        else
+                            var errorMsg = '파이썬 코드를 확인해주세요';
+                        Entry.toast.alert(errorTitle, errorMsg);
                         throw error;
                     }
                     result = [];
@@ -417,6 +439,18 @@ Entry.Parser = function(mode, type, cm, syntax) {
         });
 
         this.availableCode = this.availableCode.concat(availableList);
+    };
+
+    p.findErrorLine = function(errorText) {
+        var textCode = this.codeMirror.getValue();
+        var textCodeArr = textCode.split('\n');
+        for(var i in textCodeArr) {
+            var code = textCodeArr[i];
+            if(code.indexOf(errorText) > -1)
+                return i;
+        }
+
+        return 0;
     };
 
 })(Entry.Parser.prototype);

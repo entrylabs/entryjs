@@ -20933,7 +20933,7 @@ Entry.block = {
         },
         "syntax": [
             "BasicIf",
-            "front == 'wall'"
+            "true"
         ]
     }
 };
