@@ -15849,7 +15849,7 @@ Entry.BlockView.pngMap = {};
       var l = this._contents[k];
       l instanceof Entry.FieldLineBreak ? (this._alignStatement(a, f), l.align(f), f++, d = l.box.y, b = 8) : (l.align(b, d, a), k === this._contents.length - 1 || l instanceof Entry.FieldText && 0 == l._text.length || (b += Entry.BlockView.PARAM_SPACE));
       l = l.box;
-      0 !== f ? h = Math.max(1E3 * Math.round(l.height), h) : e = Math.max(l.height, e);
+      0 !== f ? h = Math.max(1E6 * Math.round(l.height), h) : e = Math.max(l.height, e);
       b += l.width;
       g = Math.max(g, b);
       this.set({contentWidth:g, contentHeight:e});
@@ -18643,26 +18643,26 @@ Entry.skeleton.basic_without_next = {box:Entry.skeleton.basic.box, contentPos:En
   return {previous:{x:0, y:0}};
 }};
 Entry.skeleton.basic_double_loop = {path:function(b) {
-  var a = b.contentWidth, c = b.contentHeight % 1E3, d = Math.floor(b.contentHeight / 1E3), c = Math.max(30, c + 2), d = Math.max(30, d + 2), a = Math.max(0, a + 5 - c / 2), e = b._statements;
+  var a = b.contentWidth, c = b.contentHeight % 1E6, d = Math.floor(b.contentHeight / 1E6), c = Math.max(30, c + 2), d = Math.max(30, d + 2), a = Math.max(0, a + 5 - c / 2), e = b._statements;
   b = e[0] ? e[0].height : 20;
   e = e[1] ? e[1].height : 20;
   b = Math.max(b, 20);
   e = Math.max(e, 20);
   return "m -8,0 l 8,8 8,-8 h %w a %h1,%h1 0 0,1 0,%wh1 H 24 l -8,8 -8,-8 h -0.4 v %sh1 h 0.4 l 8,8 8,-8 h %bw a %h2,%h2 0 0,1 0,%wh2 H 24 l -8,8 -8,-8 h -0.4 v %sh2 h 0.4 l 8,8 8,-8 h %bw a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z".replace(/%wh1/gi, c).replace(/%wh2/gi, d).replace(/%w/gi, a).replace(/%bw/gi, a - 8).replace(/%h1/gi, c / 2).replace(/%h2/gi, d / 2).replace(/%sh1/gi, b + 1).replace(/%sh2/gi, e + 1);
 }, magnets:function(b) {
-  var a = Math.max(b.contentHeight % 1E3 + 2, 30), c = Math.max(Math.floor(b.contentHeight / 1E3) + 2, 30), d = b._statements[0] ? b._statements[0].height : 20, e = b._statements[1] ? b._statements[1].height : 20, d = Math.max(d, 20), e = Math.max(e, 20);
+  var a = Math.max(b.contentHeight % 1E6 + 2, 30), c = Math.max(Math.floor(b.contentHeight / 1E6) + 2, 30), d = b._statements[0] ? b._statements[0].height : 20, e = b._statements[1] ? b._statements[1].height : 20, d = Math.max(d, 20), e = Math.max(e, 20);
   return {previous:{x:0, y:0}, next:{x:0, y:d + e + a + c + 19 + b.offsetY}};
 }, box:function(b) {
-  var a = b.contentWidth, c = Math.max(Math.floor(b.contentHeight / 1E3) + 2, 30), d = Math.max(b.contentHeight % 1E3 + 2, 30), e = b._statements[0] ? b._statements[0].height % 1E3 : 20;
+  var a = b.contentWidth, c = Math.max(Math.floor(b.contentHeight / 1E6) + 2, 30), d = Math.max(b.contentHeight % 1E6 + 2, 30), e = b._statements[0] ? b._statements[0].height % 1E6 : 20;
   b = b._statements[1] ? b._statements[1].height : 20;
   e = Math.max(e, 20);
   b = Math.max(b, 20);
   return {offsetX:-8, offsetY:0, width:a + 30, height:c + d + e + b + 17, marginBottom:0};
 }, statementPos:function(b) {
-  var a = Math.max(30, b.contentHeight % 1E3 + 2) + 1;
-  return [{x:16, y:a}, {x:16, y:a + Math.max(b._statements[0] ? b._statements[0].height % 1E3 : 20, 20) + Math.max(Math.floor(b.contentHeight / 1E3) + 2, 30) + 1}];
+  var a = Math.max(30, b.contentHeight % 1E6 + 2) + 1;
+  return [{x:16, y:a}, {x:16, y:a + Math.max(b._statements[0] ? b._statements[0].height % 1E6 : 20, 20) + Math.max(Math.floor(b.contentHeight / 1E6) + 2, 30) + 1}];
 }, contentPos:function(b) {
-  return {x:14, y:Math.max(b.contentHeight % 1E3, 28) / 2 + 1};
+  return {x:14, y:Math.max(b.contentHeight % 1E6, 28) / 2 + 1};
 }};
 Entry.Thread = function(b, a, c) {
   this._data = new Entry.Collection;
