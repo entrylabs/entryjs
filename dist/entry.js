@@ -8140,14 +8140,15 @@ Entry.EntryObject.prototype.generateView = function() {
     d.object = this;
     this.editView_ = d;
     this.view_.appendChild(d);
-    Entry.objectEditable ? ($(d).mousedown(function(b) {
+    $(d).mousedown(function(b) {
       var c = a.isEditing;
       b.stopPropagation();
       Entry.documentMousedown.notify(b);
       Entry.engine.isState("run") || !1 !== c || (a.editObjectValues(!c), Entry.playground.object !== a && Entry.container.selectObject(a.id), a.nameView_.select());
-    }), d.blur = function(b) {
+    });
+    d.blur = function(b) {
       a.editObjectComplete();
-    }) : d.addClass("entryRemove");
+    };
     Entry.objectEditable && Entry.objectDeletable && (d = Entry.createElement("div"), d.addClass("entryObjectDeleteWorkspace"), d.object = this, this.deleteView_ = d, this.view_.appendChild(d), d.bindOnClick(function(a) {
       Entry.engine.isState("run") || Entry.container.removeObject(this.object);
     }));
