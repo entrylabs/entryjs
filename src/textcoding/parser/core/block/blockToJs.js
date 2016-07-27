@@ -7,7 +7,6 @@ goog.provide("Entry.BlockToJsParser");
 
 Entry.BlockToJsParser = function(syntax) {
     this.syntax = syntax;
-    console.log("BlockToJsParser syntax", this.syntax);
 
     this._iterVariableCount = 0;
     this._iterVariableChunk = ["i", "j", "k"];
@@ -15,7 +14,6 @@ Entry.BlockToJsParser = function(syntax) {
 
 (function(p){
     p.Code = function(code) {
-        console.log("js code", code);
         /*if (code instanceof Entry.Thread)
             return this.Thread(code);*/
         if (code instanceof Entry.Block)
@@ -24,13 +22,10 @@ Entry.BlockToJsParser = function(syntax) {
         var textCode = "",
             threads = code._data;
 
-            console.log("threads length", threads.length);
-
         for (var i = 0; i < threads.length; i++) {
             var thread = threads[i];
             textCode += this.Thread(thread);
-            console.log("thread sequence", textCode);
-        }
+        } 
 
         return textCode;
     };
@@ -54,7 +49,6 @@ Entry.BlockToJsParser = function(syntax) {
     };
 
     p.Block = function(block) {
-        console.log("block", block);
         if(block._schema.syntax.js)
             var syntax = block._schema.syntax.js;
         else
@@ -73,7 +67,6 @@ Entry.BlockToJsParser = function(syntax) {
     p.Scope = function(block) { 
         var notParenthesis = false;
         var result = '';
-        console.log("Scope block", block);
         var paramReg = /(%.)/mi;
         if(block._schema.syntax.js) {
             var syntax = block._schema.syntax.js.concat();
@@ -88,13 +81,9 @@ Entry.BlockToJsParser = function(syntax) {
         
         var schemaParams = block._schema.params;
         var dataParams = block.data.params;
-        console.log("schemaParams", schemaParams);
-        console.log("dataParams", dataParams);
-
         
         for (var i = 0; i < syntaxTokens.length; i++) { 
             var syntaxToken = syntaxTokens[i];  
-            console.log("syntaxToken", syntaxToken);
             if (syntaxToken.length === 0 || syntaxToken === 'Scope') continue;
             if (syntaxToken === 'Judge') {
                 notParenthesis = true;
@@ -121,7 +110,6 @@ Entry.BlockToJsParser = function(syntax) {
             }
         }
 
-        console.log("charAt", result.charAt(result.length-1));
         if(result.charAt(result.length-1) == '#') {
             notParenthesis = true;
             result = result.substring(0, result.length-1);
@@ -154,8 +142,6 @@ Entry.BlockToJsParser = function(syntax) {
     };
 
     p.BasicIf = function(block) {
-        console.log("BasicIf block come on", block);
-        
         if(block.data.statements.length == 2) {
             var statementCode1 = this.Thread(block.statements[0]);
             var statementCode2 = this.Thread(block.statements[1]);
@@ -180,7 +166,6 @@ Entry.BlockToJsParser = function(syntax) {
             var statementCode1 = this.Thread(block.statements[0]);
             var syntax = block._schema.syntax.concat();
             
-            console.log("block.data.params[0] 2", block.data.params[0]);
             var paramBlock = block.data.params[0];
 
             if(paramBlock && paramBlock.data.type == "True") {
@@ -237,25 +222,19 @@ Entry.BlockToJsParser = function(syntax) {
     };
 
     p.Dropdown = function(dataParam) {
-        console.log("Dropdown", dataParam);
-
         var result = "\'" + dataParam + "\'";
         
         return result; 
     };
 
     p.TextInput = function(dataParam) {
-        console.log("TextInput", dataParam);
-
         var result = dataParam;
         
         return result; 
     };
 
     p.DropdownDynamic = function(dataParam, schemaParam) {
-        console.log("FieldDropdownDynamic", dataParam, schemaParam);
         var object = Entry.playground.object;
-        console.log("FieldDropdownDynamic Object", object);
 
         if(dataParam == "null") {
             dataParam = "none";
@@ -263,7 +242,6 @@ Entry.BlockToJsParser = function(syntax) {
             dataParam = Entry.TextCodingUtil.prototype.dropdownDynamicValueConvertor(dataParam, schemaParam);
         }                    
        
-        console.log("FieldDropdownDynamic result ", dataParam);
         return dataParam;
     };
 

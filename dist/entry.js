@@ -10848,21 +10848,18 @@ Entry.PyHint = function() {
 };
 Entry.BlockToJsParser = function(b) {
   this.syntax = b;
-  console.log("BlockToJsParser syntax", this.syntax);
   this._iterVariableCount = 0;
   this._iterVariableChunk = ["i", "j", "k"];
 };
 (function(b) {
   b.Code = function(a) {
-    console.log("js code", a);
     if (a instanceof Entry.Block) {
       return this.Block(a);
     }
     var b = "";
     a = a._data;
-    console.log("threads length", a.length);
     for (var c = 0;c < a.length;c++) {
-      b += this.Thread(a[c]), console.log("thread sequence", b);
+      b += this.Thread(a[c]);
     }
     return b;
   };
@@ -10878,7 +10875,6 @@ Entry.BlockToJsParser = function(b) {
     return b + "\n\n";
   };
   b.Block = function(a) {
-    console.log("block", a);
     var b = a._schema.syntax.js ? a._schema.syntax.js : a._schema.syntax;
     return b ? this[b[0]](a) : "";
   };
@@ -10886,9 +10882,7 @@ Entry.BlockToJsParser = function(b) {
     return "";
   };
   b.Scope = function(a) {
-    var b = !1, c = "";
-    console.log("Scope block", a);
-    var e = /(%.)/mi;
+    var b = !1, c = "", e = /(%.)/mi;
     if (a._schema.syntax.js) {
       var f = a._schema.syntax.js.concat(), b = !0
     } else {
@@ -10897,14 +10891,10 @@ Entry.BlockToJsParser = function(b) {
     f.shift();
     var f = f[0].split(e), g = a._schema.params;
     a = a.data.params;
-    console.log("schemaParams", g);
-    console.log("dataParams", a);
     for (var h = 0;h < f.length;h++) {
       var k = f[h];
-      console.log("syntaxToken", k);
       0 !== k.length && "Scope" !== k && ("Judge" === k ? b = !0 : e.test(k) ? (k = k.split("%")[1], k = parseInt(k) - 1, g[k] ? "Image" != g[k].type && ("Block" == g[k].type ? (k = this.Block(a[k]), c += k) : c += this[g[k].type](a[k], g[k])) : console.log("This Block has No Schema")) : c += k);
     }
-    console.log("charAt", c.charAt(c.length - 1));
     "#" == c.charAt(c.length - 1) && (b = !0, c = c.substring(0, c.length - 1));
     b || (c += "();");
     return c;
@@ -10920,11 +10910,10 @@ Entry.BlockToJsParser = function(b) {
     return "for (var " + c + " = 0; " + c + " < " + b + "; " + c + "++){\n\t" + this.indent(a).trim() + "\r}";
   };
   b.BasicIf = function(a) {
-    console.log("BasicIf block come on", a);
     if (2 == a.data.statements.length) {
       var b = this.Thread(a.statements[0]), c = this.Thread(a.statements[1]), e = a._schema.syntax.concat(), e = (a = a.data.params[0]) && "True" == a.data.type ? e[1] : void 0 === a ? e[1] : this.Block(a), b = "if (" + e + ") {\n\t" + this.indent(b).trim() + "\r}\nelse {\n\t" + this.indent(c).trim() + "\r}"
     } else {
-      b = this.Thread(a.statements[0]), e = a._schema.syntax.concat(), console.log("block.data.params[0] 2", a.data.params[0]), e = (a = a.data.params[0]) && "True" == a.data.type ? e[1] : void 0 === a ? e[1] : this.Block(a), b = "if (" + e + ") {\n\t" + this.indent(b).trim() + "\r}";
+      b = this.Thread(a.statements[0]), e = a._schema.syntax.concat(), e = (a = a.data.params[0]) && "True" == a.data.type ? e[1] : void 0 === a ? e[1] : this.Block(a), b = "if (" + e + ") {\n\t" + this.indent(b).trim() + "\r}";
     }
     return b;
   };
@@ -10950,19 +10939,13 @@ Entry.BlockToJsParser = function(b) {
     this._iterVariableCount && this._iterVariableCount--;
   };
   b.Dropdown = function(a) {
-    console.log("Dropdown", a);
     return "'" + a + "'";
   };
   b.TextInput = function(a) {
-    console.log("TextInput", a);
     return a;
   };
   b.DropdownDynamic = function(a, b) {
-    console.log("FieldDropdownDynamic", a, b);
-    console.log("FieldDropdownDynamic Object", Entry.playground.object);
-    a = "null" == a ? "none" : Entry.TextCodingUtil.prototype.dropdownDynamicValueConvertor(a, b);
-    console.log("FieldDropdownDynamic result ", a);
-    return a;
+    return a = "null" == a ? "none" : Entry.TextCodingUtil.prototype.dropdownDynamicValueConvertor(a, b);
   };
 })(Entry.BlockToJsParser.prototype);
 Entry.KeyboardCode = function() {
@@ -11757,7 +11740,6 @@ Entry.JsToBlockParser = function(b) {
 };
 (function(b) {
   b.Program = function(a) {
-    console.log("astArr", a);
     var b = [], c;
     for (c in a) {
       if ("Program" != a[c].type) {
@@ -11766,16 +11748,12 @@ Entry.JsToBlockParser = function(b) {
       var e = [];
       console.log("astArr", a);
       0 == c && e.push({type:this.syntax.Program});
-      var f = this.initScope(a[c]);
-      console.log("check1", f);
+      this.initScope(a[c]);
       var f = this.BlockStatement(a[c]), g;
       for (g in f) {
-        var h = f[g];
-        e.push(h);
+        e.push(f[g]);
       }
-      console.log("block", h);
       this.unloadScope();
-      console.log("thread", e);
       0 != e.length && b.push(e);
     }
     return b;
@@ -11818,7 +11796,6 @@ Entry.JsToBlockParser = function(b) {
     return this.BasicIteration(a, h, f);
   };
   b.BlockStatement = function(a) {
-    console.log("BlockStatement node", a);
     var b = [];
     a = a.body;
     for (var c = 0;c < a.length;c++) {
@@ -11830,7 +11807,6 @@ Entry.JsToBlockParser = function(b) {
         f && b.push(f);
       }
     }
-    console.log("BlockStatement blocks", b);
     return b;
   };
   b.EmptyStatement = function(a) {
@@ -11855,11 +11831,7 @@ Entry.JsToBlockParser = function(b) {
     throw {message:"continue\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
   b.IfStatement = function(a) {
-    console.log("IfStatement node", a);
-    console.log("syntax", this.syntax);
-    var b = this.syntax.BasicIf;
-    console.log("blockType check", b);
-    if (b) {
+    if (this.syntax.BasicIf) {
       return console.log("IfStatement return", this.BasicIf(a)), this.BasicIf(a);
     }
     throw {message:"if\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
@@ -11935,11 +11907,7 @@ Entry.JsToBlockParser = function(b) {
     return "= += -= *= /= %= <<= >>= >>>= ,= ^= &=".split(" ");
   };
   b.LogicalExpression = function(a) {
-    console.log("JS LogicalExpression node", a);
-    var b;
-    b = {};
-    var c = String(a.operator);
-    console.log("operator", c);
+    var b = {}, c = String(a.operator);
     switch(c) {
       case "&&":
         var e = "ai_boolean_and";
@@ -11958,38 +11926,30 @@ Entry.JsToBlockParser = function(b) {
         "Indicator" == h ? (h = {raw:null, type:"Literal", value:null}, g < arguments.length && arguments.splice(g, 0, h)) : "Text" == h && (h = {raw:"", type:"Literal", value:""}, g < arguments.length && arguments.splice(g, 0, h));
       }
       for (var k in arguments) {
-        var l = arguments[k];
-        console.log("LogicalExpression argument", l);
-        l = this[l.type](l);
-        console.log("LogicalExpression param", l);
-        l && null != l && f.push(l);
+        c = arguments[k], (c = this[c.type](c)) && null != c && f.push(c);
       }
     } else {
-      (l = this[c.type](c)) && f.push(l);
+      (c = this[c.type](c)) && f.push(c);
     }
-    console.log("LogicalExpression left param", l);
-    c = String(a.operator);
-    console.log("LogicalExpression operator", c);
-    c && (l = c = Entry.TextCodingUtil.prototype.logicalExpressionConvert(c), f.push(l));
+    if (c = String(a.operator)) {
+      c = Entry.TextCodingUtil.prototype.logicalExpressionConvert(c), f.push(c);
+    }
     c = a.right;
     if ("Literal" == c.type || "Identifier" == c.type) {
       arguments = [];
       arguments.push(c);
       c = Entry.block[e].params;
-      console.log("LogicalExpression paramsMeta", c);
       for (g in c) {
         h = c[g].type, "Indicator" == h ? (h = {raw:null, type:"Literal", value:null}, g < arguments.length && arguments.splice(g, 0, h)) : "Text" == h && (h = {raw:"", type:"Literal", value:""}, g < arguments.length && arguments.splice(g, 0, h));
       }
       for (k in arguments) {
-        l = arguments[k], console.log("LogicalExpression argument", l), l = this[l.type](l), console.log("LogicalExpression param", l), l && null != l && f.push(l);
+        c = arguments[k], (c = this[c.type](c)) && null != c && f.push(c);
       }
     } else {
-      (l = this[c.type](c)) && f.push(l);
+      (c = this[c.type](c)) && f.push(c);
     }
-    console.log("LogicalExpression right param", l);
     b.type = e;
     b.params = f;
-    console.log("LogicalExpression result", b);
     return b;
   };
   b.LogicalOperator = function() {
@@ -12020,15 +11980,10 @@ Entry.JsToBlockParser = function(b) {
     console.log("CallExpression node", a);
     var b = a.callee;
     a = a.arguments;
-    var c = [], b = this[b.type](b);
-    console.log("CallExpression blockType", b);
-    for (var e = Entry.block[b], f = 0;f < a.length;f++) {
+    for (var c = [], b = this[b.type](b), e = Entry.block[b], f = 0;f < a.length;f++) {
       var g = a[f], g = this[g.type](g);
-      console.log("value", g);
       "Block" === e.params[f].type ? c.push("string" == typeof g ? {type:"text", params:[g]} : "number" == typeof g ? {type:"number", params:[g]} : g) : c.push(g);
     }
-    console.log("type", b);
-    console.log("params", c);
     return {type:b, params:c};
   };
   b.NewExpression = function(a) {
@@ -12080,9 +12035,7 @@ Entry.JsToBlockParser = function(b) {
     throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a.test};
   };
   b.BasicIf = function(a) {
-    console.log("BasicIf node", a);
     var b = a.consequent, b = this[b.type](b), c = a.alternate, c = this[c.type](c);
-    console.log("node.test", a.test);
     try {
       var e = "", f = "===" === a.test.operator ? "==" : a.test.operator;
       if (a.test.left && "Identifier" === a.test.left.type && a.test.right && "Literal" === a.test.right.type) {
@@ -12093,15 +12046,9 @@ Entry.JsToBlockParser = function(b) {
         } else {
           var g = "ai_if_else", h = [], k = this[a.test.type](a.test, this.syntax.Scope);
           h.push(k);
-          console.log("type", g);
-          console.log("params", h);
         }
       }
-      if (this.syntax.BasicIf[e]) {
-        return Array.isArray(b) || "object" !== typeof b || (b = [b]), Array.isArray(c) || "object" !== typeof c || (c = [c]), console.log("type1", g), {type:this.syntax.BasicIf[e], params:h, statements:[b, c]};
-      }
-      console.log("type2", g);
-      return {type:g, params:h, statements:[b, c]};
+      return this.syntax.BasicIf[e] ? (Array.isArray(b) || "object" !== typeof b || (b = [b]), Array.isArray(c) || "object" !== typeof c || (c = [c]), {type:this.syntax.BasicIf[e], params:h, statements:[b, c]}) : {type:g, params:h, statements:[b, c]};
     } catch (l) {
       throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a.test};
     }
@@ -19081,7 +19028,6 @@ Entry.BlockView = function(b, a, d) {
   this._observers = [];
   this.set(b);
   this.svgGroup = a.svgBlockGroup.elem("g");
-  console.log("block", b, "block type", b.type);
   b.type && (this._schema = Entry.block[b.type]);
   this._schema.changeEvent && (this._schemaChangeEvent = this._schema.changeEvent.attach(this, this._updateSchema));
   var c = this._skeleton = Entry.skeleton[this._schema.skeleton];

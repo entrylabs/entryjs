@@ -15,28 +15,6 @@ Entry.JsToBlockParser = function(syntax) {
 
 (function(p){
     p.Program = function(astArr) {
-        console.log("astArr", astArr);
-        /*var code = [];
-        var block = [];
-        var body = node.body;
-
-        //block statement
-        block.push({
-            type: this.syntax.Program
-        });
-
-        var separatedBlocks = this.initScope(node);
-
-        block = block.concat(this.BlockStatement(node));
-
-        this.unloadScope();
-
-        code.push(block);
-        code = code.concat(separatedBlocks);
-
-        return code;*/
-
-
         var code = [];
         
         for(var index in astArr) { 
@@ -53,7 +31,6 @@ Entry.JsToBlockParser = function(syntax) {
 
             //block statement
             var separatedBlocks = this.initScope(astArr[index]);
-            console.log("check1", separatedBlocks);
             var blocks = this.BlockStatement(astArr[index]);
 
             for(var i in blocks) {
@@ -61,27 +38,7 @@ Entry.JsToBlockParser = function(syntax) {
                 thread.push(block);
             }
 
-            console.log("block", block); 
-            
-            /*var nodes = astArr[index].body;
-            for(var index in nodes) {
-                var node = nodes[index];
-                console.log("Program node", node);
-                                
-                
-
-                console.log("here?", separatedBlocks);
-
-                
-
-                console.log("block block", block);
-
-                if(block && block.type)
-                    thread.push(block); 
-            }*/
-
             this.unloadScope();
-            console.log("thread", thread);
             if(thread.length != 0)
                 code.push(thread);    
         }
@@ -163,7 +120,6 @@ Entry.JsToBlockParser = function(syntax) {
     };
 
     p.BlockStatement = function(node) {
-        console.log("BlockStatement node", node);
         var blocks = [];
         var body = node.body;
 
@@ -183,8 +139,6 @@ Entry.JsToBlockParser = function(syntax) {
             else if (block)
                 blocks.push(block);
         }
-
-        console.log("BlockStatement blocks", blocks);
 
         return blocks;
     };
@@ -252,15 +206,11 @@ Entry.JsToBlockParser = function(syntax) {
     };
 
     p.IfStatement = function(node) {
-        console.log("IfStatement node", node);
         var test = node.test,
             consequent = node.consequent,
             alternate  = node.alternate;
 
-        console.log("syntax", this.syntax);
-
         var blockType = this.syntax.BasicIf;
-        console.log("blockType check", blockType);
         if (blockType) {
             console.log("IfStatement return", this.BasicIf(node));
             return this.BasicIf(node);
@@ -485,13 +435,11 @@ Entry.JsToBlockParser = function(syntax) {
     };
 
     p.LogicalExpression = function(node) {
-        console.log("JS LogicalExpression node", node);
         var result;
         var structure = {};
 
         var operator = String(node.operator);
-        console.log("operator", operator);
-
+        
         switch(operator){
             case '&&': 
                 var type = "ai_boolean_and";
@@ -510,7 +458,6 @@ Entry.JsToBlockParser = function(syntax) {
             var paramsMeta = Entry.block[type].params;
             //var paramsDefMeta = Entry.block[type].def.params;
             console.log("LogicalExpression paramsMeta", paramsMeta); 
-            //console.log("LogicalExpression paramsDefMeta", paramsDefMeta); 
 
             for(var p in paramsMeta) {
                 var paramType = paramsMeta[p].type;
@@ -527,11 +474,8 @@ Entry.JsToBlockParser = function(syntax) {
             }
 
             for(var i in arguments) {
-                var argument = arguments[i];
-                console.log("LogicalExpression argument", argument);
-                          
+                var argument = arguments[i];           
                 var param = this[argument.type](argument);
-                console.log("LogicalExpression param", param);
                 if(param && param != null)
                     params.push(param);   
             }
@@ -540,10 +484,8 @@ Entry.JsToBlockParser = function(syntax) {
             if(param) 
                 params.push(param);
         }
-        console.log("LogicalExpression left param", param);
         
         operator = String(node.operator);
-        console.log("LogicalExpression operator", operator);
         if(operator) {
             operator = Entry.TextCodingUtil.prototype.logicalExpressionConvert(operator);
             param = operator;
@@ -557,8 +499,6 @@ Entry.JsToBlockParser = function(syntax) {
             arguments.push(right);
             var paramsMeta = Entry.block[type].params;
             //var paramsDefMeta = Entry.block[type].def.params;
-            console.log("LogicalExpression paramsMeta", paramsMeta); 
-            //console.log("LogicalExpression paramsDefMeta", paramsDefMeta); 
 
             for(var p in paramsMeta) {
                 var paramType = paramsMeta[p].type;
@@ -576,10 +516,8 @@ Entry.JsToBlockParser = function(syntax) {
 
             for(var i in arguments) {
                 var argument = arguments[i];
-                console.log("LogicalExpression argument", argument);
-                          
                 var param = this[argument.type](argument);
-                console.log("LogicalExpression param", param);
+                
                 if(param && param != null)
                     params.push(param);    
             }
@@ -588,27 +526,12 @@ Entry.JsToBlockParser = function(syntax) {
             if(param) 
                 params.push(param);
         }
-        
-        console.log("LogicalExpression right param", param);  
 
         structure.type = type;
         structure.params = params;
         
         result = structure;
-
-        console.log("LogicalExpression result", result);
-
         return result;
-
-        /*var operator = node.operator,
-            left = node.left,
-            right = node.right;
-        if(operator != "&&") {
-            throw {
-                message : operator + '은(는) 지원하지 않는 명령어 입니다.',
-                node : node
-            };
-        }*/
     };
 
     p.LogicalOperator = function() {
@@ -671,15 +594,12 @@ Entry.JsToBlockParser = function(syntax) {
             args = node.arguments;
         var params = [];
         var blockType = this[callee.type](callee);
-        console.log("CallExpression blockType", blockType);
 
         var block = Entry.block[blockType];
 
         for(var i = 0; i < args.length; i++) {
             var arg = args[i];
             var value = this[arg.type](arg);
-
-            console.log("value", value);
             
             if(block.params[i].type === 'Block') {
                 if(typeof value == 'string') {
@@ -693,14 +613,10 @@ Entry.JsToBlockParser = function(syntax) {
                 params.push(paramBlock);
             }
             else {
-                //var param = block.params[i];
-                //param.value = value;
                 params.push(value);
             }
         }
 
-        console.log("type", blockType);
-        console.log("params", params);
         return {
             type: blockType,
             params: params
@@ -802,13 +718,11 @@ Entry.JsToBlockParser = function(syntax) {
     };
 
     p.BasicIf = function(node) { 
-        console.log("BasicIf node", node);
         var consequent = node.consequent;
         consequent = this[consequent.type](consequent);
         var alternate = node.alternate;
         alternate = this[alternate.type](alternate);
 
-        console.log("node.test", node.test);
         try{
             var test = '';
             var operator = (node.test.operator === '===') ? '==' : node.test.operator;
@@ -827,8 +741,6 @@ Entry.JsToBlockParser = function(syntax) {
                 var callExData = this[node.test.type](node.test, this.syntax.Scope);
                 params.push(callExData);
                 
-                console.log("type", type);
-                console.log("params", params); 
                 //throw new Error();
             }
 
@@ -839,15 +751,12 @@ Entry.JsToBlockParser = function(syntax) {
                 if(!Array.isArray(alternate) && typeof alternate === 'object')
                     alternate = [alternate];
 
-                console.log("type1", type);
-
                 return {
                     type: this.syntax.BasicIf[test],
                     params: params,
                     statements: [consequent, alternate]
                 }
             } else {
-                console.log("type2", type);
                 return {
                     type: type,
                     params: params,
