@@ -164,20 +164,21 @@ EntryStatic.getAllBlocks = function() {
             category: "m_others",
             blocks: [
                 "neobot_others_value_if",
-                "neobot_others_value_if_else"
+                "neobot_others_value_if_else",
+                "neobot_others_value",
+                "neobot_others_value_boolean"
             ]
         },
         {
             category: "m_remote",
             blocks: [
-                "when_run_button_click"
+                "neobot_remote_value"
             ]
         },
         {
             category: "m_servo",
             blocks: [
-                "when_run_button_click",
-                "neobot_set_servo"
+                "neobot_set_servo2"
             ]
         }
     ]
@@ -226,7 +227,7 @@ EntryStatic.blockInfo = {
         "xml": "<block type='xbot_buzzer'><field name='OCTAVE'>4</field><value name='VALUE'><block type='text'><field name='NAME'>0.5</field></block></value></block>",
         "class": "xbot_sensor"
     },
-	"xbot_digitalOutput": {
+    "xbot_digitalOutput": {
         "isNotFor": ["xbot_epor_edge"],
         "xml": "<block type='xbot_digitalOutput'></block>",
         "class": "xbot_sensor"
@@ -1453,7 +1454,7 @@ EntryStatic.blockInfo = {
         "xml": "<block type='bitbrick_convert_scale'><value name='VALUE2'> <block type='number'><field name='NUM'>0</field></block> </value><value name='VALUE3'> <block type='number'><field name='NUM'>1023</field></block> </value><value name='VALUE4'> <block type='number'><field name='NUM'>-100</field></block> </value><value name='VALUE5'> <block type='number'><field name='NUM'>100</field></block> </value></block>",
         "class": "condition"
     },
-	"hamster_hand_found": {
+    "hamster_hand_found": {
         "isNotFor": ["hamster"],
         "xml": "<block type='hamster_hand_found'></block>",
         "class": "hamster_sensor"
@@ -1463,7 +1464,7 @@ EntryStatic.blockInfo = {
         "xml": "<block type='hamster_value'></block>",
         "class": "hamster_sensor"
     },
-	"hamster_move_forward_once": {
+    "hamster_move_forward_once": {
         "isNotFor": ["hamster"],
         "xml": "<block type='hamster_move_forward_once'></block>",
         "class": "hamster_board"
@@ -1488,7 +1489,7 @@ EntryStatic.blockInfo = {
         "xml": "<block type='hamster_turn_for_secs'><value name='VALUE'><block type='text'><field name='NAME'>1</field></block></value></block>",
         "class": "hamster_wheel"
     },
-	"hamster_change_both_wheels_by": {
+    "hamster_change_both_wheels_by": {
         "isNotFor": ["hamster"],
         "xml": "<block type='hamster_change_both_wheels_by'><value name='LEFT'><block type='text'><field name='NAME'>10</field></block></value><value name='RIGHT'><block type='text'><field name='NAME'>10</field></block></value></block>",
         "class": "hamster_wheel"
@@ -1508,17 +1509,17 @@ EntryStatic.blockInfo = {
         "xml": "<block type='hamster_set_wheel_to'><value name='VALUE'><block type='text'><field name='NAME'>30</field></block></value></block>",
         "class": "hamster_wheel"
     },
-	"hamster_follow_line_using": {
+    "hamster_follow_line_using": {
         "isNotFor": ["hamster"],
         "xml": "<block type='hamster_follow_line_using'></block>",
         "class": "hamster_wheel"
     },
-	"hamster_follow_line_until": {
+    "hamster_follow_line_until": {
         "isNotFor": ["hamster"],
         "xml": "<block type='hamster_follow_line_until'></block>",
         "class": "hamster_wheel"
     },
-	"hamster_set_following_speed_to": {
+    "hamster_set_following_speed_to": {
         "isNotFor": ["hamster"],
         "xml": "<block type='hamster_set_following_speed_to'><field name='SPEED'>5</field></block>",
         "class": "hamster_wheel"
@@ -1528,7 +1529,7 @@ EntryStatic.blockInfo = {
         "xml": "<block type='hamster_stop'></block>",
         "class": "hamster_wheel"
     },
-	"hamster_set_led_to": {
+    "hamster_set_led_to": {
         "isNotFor": ["hamster"],
         "xml": "<block type='hamster_set_led_to'></block>",
         "class": "hamster_led"
@@ -1543,7 +1544,7 @@ EntryStatic.blockInfo = {
         "xml": "<block type='hamster_beep'></block>",
         "class": "hamster_buzzer"
     },
-	"hamster_change_buzzer_by": {
+    "hamster_change_buzzer_by": {
         "isNotFor": ["hamster"],
         "xml": "<block type='hamster_change_buzzer_by'><value name='VALUE'><block type='text'><field name='NAME'>10</field></block></value></block>",
         "class": "hamster_buzzer"
@@ -1594,17 +1595,17 @@ EntryStatic.blockInfo = {
         "class": "hamster_port"
     },
 
-	"albert_hand_found": {
+    "albert_hand_found": {
         "isNotFor": ["albert"],
         "xml": "<block type='albert_hand_found'></block>",
         "class": "albert_sensor"
     },
-	"albert_value": {
+    "albert_value": {
         "isNotFor": ["albert"],
         "xml": "<block type='albert_value'></block>",
         "class": "albert_sensor"
     },
-	"albert_move_forward_for_secs": {
+    "albert_move_forward_for_secs": {
         "isNotFor": ["albert"],
         "xml": "<block type='albert_move_forward_for_secs'><value name='VALUE'><block type='text'><field name='NAME'>1</field></block></value></block>",
         "class": "albert_wheel"
@@ -1619,7 +1620,7 @@ EntryStatic.blockInfo = {
         "xml": "<block type='albert_turn_for_secs'><value name='VALUE'><block type='text'><field name='NAME'>1</field></block></value></block>",
         "class": "albert_wheel"
     },
-	"albert_change_both_wheels_by": {
+    "albert_change_both_wheels_by": {
         "isNotFor": ["albert"],
         "xml": "<block type='albert_change_both_wheels_by'><value name='LEFT'><block type='text'><field name='NAME'>10</field></block></value><value name='RIGHT'><block type='text'><field name='NAME'>10</field></block></value></block>",
         "class": "albert_wheel"
@@ -1644,7 +1645,7 @@ EntryStatic.blockInfo = {
         "xml": "<block type='albert_stop'></block>",
         "class": "albert_wheel"
     },
-	"albert_set_pad_size_to": {
+    "albert_set_pad_size_to": {
         "isNotFor": ["albert"],
         "xml": "<block type='albert_set_pad_size_to'><value name='WIDTH'><block type='text'><field name='NAME'>108</field></block></value><value name='HEIGHT'><block type='text'><field name='NAME'>76</field></block></value></block>",
         "class": "albert_wheel"
@@ -1674,7 +1675,7 @@ EntryStatic.blockInfo = {
         "xml": "<block type='albert_beep'></block>",
         "class": "albert_buzzer"
     },
-	"albert_change_buzzer_by": {
+    "albert_change_buzzer_by": {
         "isNotFor": ["albert"],
         "xml": "<block type='albert_change_buzzer_by'><value name='VALUE'><block type='text'><field name='NAME'>10</field></block></value></block>",
         "class": "albert_buzzer"
