@@ -8661,19 +8661,24 @@ Entry.EntryObject.prototype.updateInputViews = function(b) {
 };
 Entry.EntryObject.prototype.editObjectValues = function(b) {
   var a;
-  a = this.getLock() ? [this.nameView_] : [this.nameView_, this.coordinateView_.xInput_, this.coordinateView_.yInput_, this.rotateInput_, this.directionInput_, this.coordinateView_.sizeInput_];
+  a = this.getLock() ? [this.nameView_] : [this.coordinateView_.xInput_, this.coordinateView_.yInput_, this.rotateInput_, this.directionInput_, this.coordinateView_.sizeInput_];
   if (b) {
+    var c = this.nameView_;
     $(a).removeClass("selectedNotEditingObject");
-    for (var c = 0;c < a.length;c++) {
-      window.setTimeout(function() {
-        $(a[c]).removeAttr("readonly");
-      }), a[c].addClass("selectedEditingObject");
+    $(c).removeClass("selectedNotEditingObject");
+    window.setTimeout(function() {
+      $(c).removeAttr("readonly");
+      c.addClass("selectedEditingObject");
+    });
+    for (b = 0;b < a.length;b++) {
+      $(a[b]).removeAttr("readonly"), a[b].addClass("selectedEditingObject");
     }
     this.isEditing = !0;
   } else {
-    for (c = 0;c < a.length;c++) {
-      a[c].blur(!0);
+    for (b = 0;b < a.length;b++) {
+      a[b].blur(!0);
     }
+    this.nameView_.blur(!0);
     this.blurAllInput();
     this.isEditing = !1;
   }

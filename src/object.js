@@ -1456,22 +1456,24 @@ Entry.EntryObject.prototype.editObjectValues = function(click) {
         inputs = [this.nameView_];
     } else {
         inputs = [
-            this.nameView_, this.coordinateView_.xInput_,
+            this.coordinateView_.xInput_,
             this.coordinateView_.yInput_, this.rotateInput_,
             this.directionInput_, this.coordinateView_.sizeInput_
         ];
     }
 
     if (click) {
+        var nameView_ = this.nameView_;
 
         $(inputs).removeClass('selectedNotEditingObject');
+        $(nameView_).removeClass('selectedNotEditingObject');
 
+        window.setTimeout(function() {
+            $(nameView_).removeAttr('readonly');
+            nameView_.addClass("selectedEditingObject");
+        });
         for(var i=0; i<inputs.length; i++){
-
-            window.setTimeout(function() {
-                $(inputs[i]).removeAttr('readonly');
-            });
-    
+            $(inputs[i]).removeAttr('readonly');
             inputs[i].addClass("selectedEditingObject");
         }
         this.isEditing = true;
@@ -1479,6 +1481,8 @@ Entry.EntryObject.prototype.editObjectValues = function(click) {
         for(var i=0; i<inputs.length; i++){
             inputs[i].blur(true);
         }
+
+        this.nameView_.blur(true);
 
         this.blurAllInput();
         this.isEditing = false;
