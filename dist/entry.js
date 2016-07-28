@@ -10128,14 +10128,15 @@ Entry.EntryObject.prototype.generateView = function() {
     d.object = this;
     this.editView_ = d;
     this.view_.appendChild(d);
-    Entry.objectEditable ? ($(d).mousedown(function(a) {
+    $(d).mousedown(function(a) {
       var c = b.isEditing;
       a.stopPropagation();
       Entry.documentMousedown.notify(a);
       Entry.engine.isState("run") || !1 !== c || (b.editObjectValues(!c), Entry.playground.object !== b && Entry.container.selectObject(b.id), b.nameView_.select());
-    }), d.blur = function(a) {
+    });
+    d.blur = function(a) {
       b.editObjectComplete();
-    }) : d.addClass("entryRemove");
+    };
     Entry.objectEditable && Entry.objectDeletable && (d = Entry.createElement("div"), d.addClass("entryObjectDeleteWorkspace"), d.object = this, this.deleteView_ = d, this.view_.appendChild(d), d.bindOnClick(function(b) {
       Entry.engine.isState("run") || Entry.container.removeObject(this.object);
     }));
@@ -17017,26 +17018,26 @@ Entry.skeleton.basic_without_next = {box:Entry.skeleton.basic.box, contentPos:En
   return {previous:{x:0, y:0}};
 }};
 Entry.skeleton.basic_double_loop = {path:function(a) {
-  var b = a.contentWidth, c = a.contentHeight % 1E3, d = Math.floor(a.contentHeight / 1E3), c = Math.max(30, c + 2), d = Math.max(30, d + 2), b = Math.max(0, b + 5 - c / 2), e = a._statements;
+  var b = a.contentWidth, c = a.contentHeight % 1E6, d = Math.floor(a.contentHeight / 1E6), c = Math.max(30, c + 2), d = Math.max(30, d + 2), b = Math.max(0, b + 5 - c / 2), e = a._statements;
   a = e[0] ? e[0].height : 20;
   e = e[1] ? e[1].height : 20;
   a = Math.max(a, 20);
   e = Math.max(e, 20);
   return "m -8,0 l 8,8 8,-8 h %w a %h1,%h1 0 0,1 0,%wh1 H 24 l -8,8 -8,-8 h -0.4 v %sh1 h 0.4 l 8,8 8,-8 h %bw a %h2,%h2 0 0,1 0,%wh2 H 24 l -8,8 -8,-8 h -0.4 v %sh2 h 0.4 l 8,8 8,-8 h %bw a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z".replace(/%wh1/gi, c).replace(/%wh2/gi, d).replace(/%w/gi, b).replace(/%bw/gi, b - 8).replace(/%h1/gi, c / 2).replace(/%h2/gi, d / 2).replace(/%sh1/gi, a + 1).replace(/%sh2/gi, e + 1);
 }, magnets:function(a) {
-  var b = Math.max(a.contentHeight % 1E3 + 2, 30), c = Math.max(Math.floor(a.contentHeight / 1E3) + 2, 30), d = a._statements[0] ? a._statements[0].height : 20, e = a._statements[1] ? a._statements[1].height : 20, d = Math.max(d, 20), e = Math.max(e, 20);
+  var b = Math.max(a.contentHeight % 1E6 + 2, 30), c = Math.max(Math.floor(a.contentHeight / 1E6) + 2, 30), d = a._statements[0] ? a._statements[0].height : 20, e = a._statements[1] ? a._statements[1].height : 20, d = Math.max(d, 20), e = Math.max(e, 20);
   return {previous:{x:0, y:0}, next:{x:0, y:d + e + b + c + 19 + a.offsetY}};
 }, box:function(a) {
-  var b = a.contentWidth, c = Math.max(Math.floor(a.contentHeight / 1E3) + 2, 30), d = Math.max(a.contentHeight % 1E3 + 2, 30), e = a._statements[0] ? a._statements[0].height % 1E3 : 20;
+  var b = a.contentWidth, c = Math.max(Math.floor(a.contentHeight / 1E6) + 2, 30), d = Math.max(a.contentHeight % 1E6 + 2, 30), e = a._statements[0] ? a._statements[0].height % 1E6 : 20;
   a = a._statements[1] ? a._statements[1].height : 20;
   e = Math.max(e, 20);
   a = Math.max(a, 20);
   return {offsetX:-8, offsetY:0, width:b + 30, height:c + d + e + a + 17, marginBottom:0};
 }, statementPos:function(a) {
-  var b = Math.max(30, a.contentHeight % 1E3 + 2) + 1;
-  return [{x:16, y:b}, {x:16, y:b + Math.max(a._statements[0] ? a._statements[0].height % 1E3 : 20, 20) + Math.max(Math.floor(a.contentHeight / 1E3) + 2, 30) + 1}];
+  var b = Math.max(30, a.contentHeight % 1E6 + 2) + 1;
+  return [{x:16, y:b}, {x:16, y:b + Math.max(a._statements[0] ? a._statements[0].height % 1E6 : 20, 20) + Math.max(Math.floor(a.contentHeight / 1E6) + 2, 30) + 1}];
 }, contentPos:function(a) {
-  return {x:14, y:Math.max(a.contentHeight % 1E3, 28) / 2 + 1};
+  return {x:14, y:Math.max(a.contentHeight % 1E6, 28) / 2 + 1};
 }};
 Entry.Block = function(a, b) {
   var c = this;
@@ -17919,7 +17920,7 @@ Entry.BlockView.pngMap = {};
       var l = this._contents[k];
       l instanceof Entry.FieldLineBreak ? (this._alignStatement(a, f), l.align(f), f++, d = l.box.y, c = 8) : (l.align(c, d, a), k === this._contents.length - 1 || l instanceof Entry.FieldText && 0 == l._text.length || (c += Entry.BlockView.PARAM_SPACE));
       l = l.box;
-      0 !== f ? h = Math.max(1E3 * Math.round(l.height), h) : e = Math.max(l.height, e);
+      0 !== f ? h = Math.max(1E6 * Math.round(l.height), h) : e = Math.max(l.height, e);
       c += l.width;
       g = Math.max(g, c);
       this.set({contentWidth:g, contentHeight:e});

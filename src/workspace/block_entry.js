@@ -3684,7 +3684,6 @@ Entry.block = {
         class: "test",
         // 블록 기능정의
         "func": function(sprite, script) {
-              console.log("cobl_read_potenmeter"); 
               return Entry.hw.getAnalogPortValue("potenmeter");
         }
     },
@@ -3705,7 +3704,7 @@ Entry.block = {
         class: "test",
         // 블록 기능정의
         "func": function(sprite, script) {
-                return Entry.hw.getAnalogPortValue("potenmeter");
+                return Entry.hw.getAnalogPortValue("irread1");
         }
     },
     "cobl_read_irread2": {
@@ -3725,7 +3724,6 @@ Entry.block = {
         class: "test",
         // 블록 기능정의
         "func": function(sprite, script) {
-                var signal = script.getValue("irread2", script);
                 return Entry.hw.getAnalogPortValue("irread2");
         }
     },
@@ -3995,14 +3993,14 @@ Entry.block = {
                 type: "Dropdown",
                 options: [
                   ["OFF","OFF"],
-                  ["Red","Red"],
-                  ["Orange","Orange"],
-                  ["Yellow","Yellow"],
-                  ["Green","Green"],
-                  ["Blue","Blue"],
-                  ["Dark Blue","Dark Blue"],
-                  ["Purple","Purple"],
-                  ["White","White"]
+                  ["빨강","Red"],
+                  ["주황","Orange"],
+                  ["노랑","Yellow"],
+                  ["초록","Green"],
+                  ["파랑","Blue"],
+                  ["남색","Dark Blue"],
+                  ["보라","Purple"],
+                  ["흰색","White"]
                 ],
                 fontSize: 11
             }
@@ -4024,8 +4022,9 @@ Entry.block = {
         "func": function(sprite, script) {
                 var port = script.getStringField("PORT");
                 var value = script.getStringField("OPERATOR");
-                Entry.hw.setDigitalPortValue("RainBowLED_IDX", port);
-                Entry.hw.setDigitalPortValue("RainBowLED_COL", value);
+                Entry.hw.setDigitalPortValue("RainBowLED_" + port, value);
+                Entry.hw.update();
+                delete Entry.hw.sendQueue["RainBowLED_" + port];
                 return script.callReturn();
         }
     },
@@ -4070,11 +4069,15 @@ Entry.block = {
                 {
                   console.log("servo 1  degree "+value);
                   Entry.hw.setDigitalPortValue("Servo1", value);
+                  Entry.hw.update();
+                  delete Entry.hw.sendQueue["Servo1"];
                 }
                 if(port == 2)
                 {
                   console.log("servo 2 degree "+value);
                   Entry.hw.setDigitalPortValue("Servo2", value);
+                  Entry.hw.update();
+                  delete Entry.hw.sendQueue["Servo2"];
                 }
                 return script.callReturn();
         }
@@ -4092,29 +4095,29 @@ Entry.block = {
             {
                 type: "Dropdown",
                 options: [
-                    ["(Low)So","L_So"],
-                    ["(Low)So#","L_So#"],
-                    ["(Low)La","L_La"],
-                    ["(Low)La#","L_La#"],
-                    ["(Low)Ti","L_Ti"],
-                    ["Do","Do"],
-                    ["Do#","Do#"],
-                    ["Re","Re"],
-                    ["Re#","Re#"],
-                    ["Mi","Mi"],
-                    ["Fa","Fa"],
-                    ["Fa#","Fa#"],
-                    ["So","So"],
-                    ["So#","So#"],
-                    ["La","La"],
-                    ["La#","La#"],
-                    ["Ti","Ti"],
-                    ["(High)Do","H_Do"],
-                    ["(High)Do#","H_Do#"],
-                    ["(High)Re","H_Re"],
-                    ["(High)R2#","H_Re#"],
-                    ["(High)Mi","H_Mi"],
-                    ["(High)Fa","H_Fa"]
+                ["((낮은)솔","L_So"],
+                ["(낮은)솔#","L_So#"],
+                ["(낮은)라","L_La"],
+                ["(낮은)라#","L_La#"],
+                ["(낮은)시","L_Ti"],
+                ["도","Do"],
+                ["도#","Do#"],
+                ["레","Re"],
+                ["레#","Re#"],
+                ["미","Mi"],
+                ["파","Fa"],
+                ["파#","Fa#"],
+                ["솔","So"],
+                ["솔#","So#"],
+                ["라","La"],
+                ["라#","La#"],
+                ["시","Ti"],
+                ["(높은)도","H_Do"],
+                ["(높은)도#","H_Do#"],
+                ["(높은)레","H_Re"],
+                ["(높은)레#","H_Re#"],
+                ["(높은)미#","H_Mi"],
+                ["(높은)파","H_Fa"]
                 ],
                 fontSize: 11
             }
@@ -4135,6 +4138,9 @@ Entry.block = {
                 var melody = script.getStringField("MELODY");
                 console.log("cobl_melody"+melody);  
                 Entry.hw.setDigitalPortValue("Melody", melody);
+                Entry.hw.update();
+                delete Entry.hw.sendQueue["Melody"];
+
                 return script.callReturn();
         }
     },
@@ -4159,9 +4165,9 @@ Entry.block = {
             {
                 type: "Dropdown",
                 options: [
-                  ["1.Clockwise","1"],
-                  ["2.Counter Clockwise","2"],
-                  ["3.Stop","3"]
+                  ["1.시계방향","1"],
+                  ["2.반시계방향","2"],
+                  ["3.정지","3"]
                 ],
                 fontSize: 11
             },
@@ -4202,10 +4208,16 @@ Entry.block = {
                 if (motor == 1) {
                      Entry.hw.setDigitalPortValue("DC1_DIR", direction);
                      Entry.hw.setDigitalPortValue("DC1_SPEED", speed); 
+                     Entry.hw.update();
+                     delete Entry.hw.sendQueue["DC1_DIR"];
+                     delete Entry.hw.sendQueue["DC1_SPEED"];
                 }
                 if (motor == 2) {
                      Entry.hw.setDigitalPortValue("DC2_DIR", direction);
                      Entry.hw.setDigitalPortValue("DC2_SPEED", speed);
+                     Entry.hw.update();
+                     delete Entry.hw.sendQueue["DC2_DIR"];
+                     delete Entry.hw.sendQueue["DC2_SPEED"];
                 }
                      return script.callReturn();
         }
@@ -4232,6 +4244,7 @@ Entry.block = {
             {
                 type: "Dropdown",
                 options: [
+                  ["0","0"],
                   ["1","1"],
                   ["2","2"],
                   ["3","3"],
@@ -4244,7 +4257,7 @@ Entry.block = {
         def: {
             params: [
                 "1",
-                "1"
+                "0"
             ],
             type: "cobl_extention_port"
         },
@@ -4259,11 +4272,16 @@ Entry.block = {
                var port = script.getStringField("PORT");
                 var level = script.getStringField("LEVEL");
              
-                if(port == 1)
+                if(port == 1){
                   Entry.hw.setDigitalPortValue("EXUSB1", level);
-                if(port == 2)
+                  Entry.hw.update();
+                  delete Entry.hw.sendQueue["EXUSB1"];
+                  }
+                if(port == 2){
                   Entry.hw.setDigitalPortValue("EXUSB2", level);
-
+                  Entry.hw.update();
+                  delete Entry.hw.sendQueue["EXUSB2"];
+                }
                 return script.callReturn();
                }
     },
@@ -4286,6 +4304,7 @@ Entry.block = {
             {
                 type: "Dropdown",
                 options: [
+                  ["0","0"],               
                   ["1","1"],
                   ["2","2"],
                   ["3","3"],
@@ -4301,6 +4320,7 @@ Entry.block = {
             },            {
                 type: "Dropdown",
                 options: [
+                  ["0","0"],               
                   ["1","1"],
                   ["2","2"],
                   ["3","3"],
@@ -4316,6 +4336,7 @@ Entry.block = {
             },            {
                 type: "Dropdown",
                 options: [
+                  ["0","0"],               
                   ["1","1"],
                   ["2","2"],
                   ["3","3"],
@@ -4358,6 +4379,12 @@ Entry.block = {
                 Entry.hw.setDigitalPortValue("ELED_R", r);
                 Entry.hw.setDigitalPortValue("ELED_G", g);
                 Entry.hw.setDigitalPortValue("ELED_B", b);
+                Entry.hw.update();
+                
+                delete Entry.hw.sendQueue["ELED_IDX"];
+                delete Entry.hw.sendQueue["ELED_R"];
+                delete Entry.hw.sendQueue["ELED_G"];
+                delete Entry.hw.sendQueue["ELED_B"];
 
                 return script.callReturn();
         }
@@ -4392,6 +4419,9 @@ Entry.block = {
         "func": function(sprite, script) {
                 var value = script.getNumberValue("VALUE");
                 Entry.hw.setDigitalPortValue("7SEG", value);
+                Entry.hw.update();
+                delete Entry.hw.sendQueue["7SEG"];
+
                 return script.callReturn();
         }
     },
