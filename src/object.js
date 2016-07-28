@@ -250,6 +250,7 @@ Entry.EntryObject.prototype.generateView = function() {
         editView.object = this;
         this.editView_ = editView;
         this.view_.appendChild(editView);
+
         $(editView).mousedown(function(e) {
             var current = object.isEditing;
             e.stopPropagation();
@@ -1466,7 +1467,11 @@ Entry.EntryObject.prototype.editObjectValues = function(click) {
         $(inputs).removeClass('selectedNotEditingObject');
 
         for(var i=0; i<inputs.length; i++){
-            inputs[i].removeAttribute('readonly');
+
+            window.setTimeout(function() {
+                $(inputs[i]).removeAttr('readonly');
+            });
+    
             inputs[i].addClass("selectedEditingObject");
         }
         this.isEditing = true;
