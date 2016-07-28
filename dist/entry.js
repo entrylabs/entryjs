@@ -11760,14 +11760,10 @@ Entry.JsToBlockParser = function(b) {
       var f = [];
       0 == c && f.push({type:this.syntax.Program});
       this.initScope(e);
-      var g = this.BlockStatement(e), h;
-      for (h in g) {
-        var k = g[h];
-        console.log("err i", h);
-        if (Entry.TextCodingUtil.prototype.isParamBlock(k)) {
-          throw a = Entry.block[k.type].syntax[1], b = a.indexOf("("), a = a.substring(0, b), {title:"\ud30c\ub77c\ubbf8\ud130 \ube14\ub85d \uc624\ub958", message:a, node:e};
-        }
-        f.push(k);
+      e = this.BlockStatement(e);
+      console.log("blocks", e);
+      for (var g in e) {
+        f.push(e[g]);
       }
       this.unloadScope();
       0 != f.length && b.push(f);
@@ -11809,13 +11805,12 @@ Entry.JsToBlockParser = function(b) {
   b.BlockStatement = function(a) {
     for (var b = [], c = a.body, e = 0;e < c.length;e++) {
       var f = c[e], g = this[f.type](f);
-      console.log("error i", e);
       if (g) {
         if (void 0 === g.type) {
           throw {message:"\ud574\ub2f9\ud558\ub294 \ube14\ub85d\uc774 \uc5c6\uc2b5\ub2c8\ub2e4.", node:f};
         }
         if (Entry.TextCodingUtil.prototype.isParamBlock(g)) {
-          throw b = Entry.block[g.type].syntax[1], c = b.indexOf("("), b = b.substring(0, c), {title:"\ud30c\ub77c\ubbf8\ud130 \ube14\ub85d \uc624\ub958", message:b, node:a};
+          throw console.log("error i", e), b = Entry.block[g.type].syntax[1], console.log("targetSyntax", b), c = b.indexOf("("), -1 != c && (b = b.substring(0, c)), {title:"\ud30c\ub77c\ubbf8\ud130 \ube14\ub85d \uc624\ub958", message:b, node:a};
         }
         g && b.push(g);
       }
@@ -13353,8 +13348,8 @@ Entry.Parser = function(b, a, d, c) {
           console.log("result", c);
         } catch (m) {
           if (this.codeMirror) {
-            throw m instanceof SyntaxError ? (c = {from:{line:m.loc.line - 1, ch:m.loc.column - 2}, to:{line:m.loc.line - 1, ch:m.loc.column + 1}}, m.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : (c = this.getLineNumber(m.node.start, m.node.end), c.message = m.message, c.severity = "error"), e = this.findErrorLine(m.message), c.from.line = e, c.from.ch = 0, c.to.line = e, c.to.ch = m.message.length, this.codeMirror.markText(c.from, c.to, {className:"CodeMirror-lint-mark-error", __annotation:c, 
-            clearOnEnter:!0}), c = m.title ? m.title : "\ubb38\ubc95 \uc624\ub958", e = m.message && e ? m.message + " (line: " + e + ")" : "\uc790\ubc14\uc2a4\ud06c\ub9bd\ud2b8 \ucf54\ub4dc\ub97c \ud655\uc778\ud574\uc8fc\uc138\uc694", Entry.toast.alert(c, e), m;
+            throw m instanceof SyntaxError ? (c = {from:{line:m.loc.line - 1, ch:m.loc.column - 2}, to:{line:m.loc.line - 1, ch:m.loc.column + 1}}, m.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : (c = this.getLineNumber(m.node.start, m.node.end), c.message = m.message, c.severity = "error"), e = this.findErrorLine(m.message), c.from.line = e, c.from.ch = 0, c.to.line = e, c.to.ch = m.message.length, console.log("errorLine", e), this.codeMirror.markText(c.from, c.to, {className:"CodeMirror-lint-mark-error", 
+            __annotation:c, clearOnEnter:!0}), c = m.title ? m.title : "\ubb38\ubc95 \uc624\ub958", e = m.message && e ? m.message + " (line: " + e + ")" : "\uc790\ubc14\uc2a4\ud06c\ub9bd\ud2b8 \ucf54\ub4dc\ub97c \ud655\uc778\ud574\uc8fc\uc138\uc694", Entry.toast.alert(c, e), m;
           }
           c = [];
         }
@@ -13440,9 +13435,12 @@ Entry.Parser = function(b, a, d, c) {
     this.availableCode = this.availableCode.concat(c);
   };
   b.findErrorLine = function(a) {
-    var b = this.codeMirror.getValue().split("\n"), c;
-    for (c in b) {
-      if (-1 < b[c].indexOf(a)) {
+    var b = this.codeMirror.getValue().split("\n");
+    console.log("textCodeArr", b, "errorMessage", a);
+    for (var c in b) {
+      var e = b[c];
+      console.log("line", e.indexOf(a));
+      if (-1 < e.indexOf(a)) {
         return c;
       }
     }

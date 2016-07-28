@@ -191,6 +191,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         annotation.to.line = errorLine;
                         annotation.to.ch = error.message.length;
 
+                        console.log("errorLine", errorLine);
+
                         this.codeMirror.markText(
                             annotation.from, annotation.to, {
                             className: "CodeMirror-lint-mark-error",
@@ -441,12 +443,15 @@ Entry.Parser = function(mode, type, cm, syntax) {
         this.availableCode = this.availableCode.concat(availableList);
     };
 
-    p.findErrorLine = function(errorText) {
+    p.findErrorLine = function(errorMessage) {
         var textCode = this.codeMirror.getValue();
         var textCodeArr = textCode.split('\n');
+        console.log("textCodeArr", textCodeArr, 'errorMessage', errorMessage);
+
         for(var i in textCodeArr) {
             var code = textCodeArr[i];
-            if(code.indexOf(errorText) > -1)
+            console.log("line", code.indexOf(errorMessage));
+            if(code.indexOf(errorMessage) > -1)
                 return i;
         }
 

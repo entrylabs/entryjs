@@ -32,21 +32,11 @@ Entry.JsToBlockParser = function(syntax) {
             var separatedBlocks = this.initScope(node);
             var blocks = this.BlockStatement(node);
 
+            console.log("blocks", blocks);
+
             for(var i in blocks) {
                 var block = blocks[i];
-                console.log("err i", i);
-                if(Entry.TextCodingUtil.prototype.isParamBlock(block)) {
-                    var targetSyntax = Entry.block[block.type].syntax[1];
-                    var loc = targetSyntax.indexOf("(");
-                    targetSyntax = targetSyntax.substring(0, loc);
-
-                    throw {
-                        title : '파라미터 블록 오류',
-                        message : targetSyntax,
-                        node : node
-                    }; 
-                }
-
+                
                 thread.push(block);
             }
 
@@ -140,7 +130,7 @@ Entry.JsToBlockParser = function(syntax) {
             var childNode = body[i];
 
             var block = this[childNode.type](childNode);
-            console.log("error i", i);
+            
 
             if(!block) {
                 continue;
@@ -151,11 +141,14 @@ Entry.JsToBlockParser = function(syntax) {
                     node : childNode
                 };
             }
-            else if (Entry.TextCodingUtil.prototype.isParamBlock(block)) {
+            else if(Entry.TextCodingUtil.prototype.isParamBlock(block)) {
+                console.log("error i", i);
                 var targetSyntax = Entry.block[block.type].syntax[1];
+                console.log("targetSyntax", targetSyntax);
                 var loc = targetSyntax.indexOf("(");
-                targetSyntax = targetSyntax.substring(0, loc);
-
+                if(loc != -1)  
+                    targetSyntax = targetSyntax.substring(0, loc);
+                    
                 throw {
                     title : '파라미터 블록 오류',
                     message : targetSyntax,
