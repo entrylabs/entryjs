@@ -967,7 +967,7 @@ Entry.BlockView.pngMap = {};
     p.reDraw = function() {
         if (!this.visible) return;
         var block = this.block;
-        requestAnimationFrame(this._updateContents.bind(this));
+        requestAnimFrame(this._updateContents.bind(this));
         var params = block.params;
         if (params) {
             for (var i=0; i<params.length; i++) {

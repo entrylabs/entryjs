@@ -16278,7 +16278,7 @@ Entry.BlockView.pngMap = {};
   b.reDraw = function() {
     if (this.visible) {
       var a = this.block;
-      requestAnimationFrame(this._updateContents.bind(this));
+      requestAnimFrame(this._updateContents.bind(this));
       var b = a.params;
       if (b) {
         for (var d = 0;d < b.length;d++) {
