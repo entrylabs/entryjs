@@ -11703,7 +11703,7 @@ Entry.Painter2 = function(a) {
     if (!this.lc) {
       var b = new Image;
       b.src = "/lib/literallycanvas/lib/img/transparent-pattern.png";
-      this.lc = LC.init(this.view, {imageURLPrefix:"/lib/literallycanvas/lib/img", zoomMax:3, zoomMin:.5, toolbarPosition:"bottom", imageSize:{width:960, height:540}});
+      this.lc = LC.init(this.view, {imageURLPrefix:"/lib/literallycanvas/lib/img", zoomMax:3, zoomMin:.5, toolbarPosition:"bottom", imageSize:{width:960, height:540}, backgroundShapes:[LC.createShape("Rectangle", {x:0, y:0, width:960, height:540, strokeWidth:0, strokeColor:"transparent"})]});
       b.onload = function() {
         this.lc.repaintLayer("background");
       }.bind(this);

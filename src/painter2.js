@@ -30,7 +30,16 @@ p.initialize = function() {
             zoomMax: 3.0,
             zoomMin: 0.5,
             toolbarPosition: 'bottom',
-            imageSize: {width: 960, height: 540}
+            imageSize: {width: 960, height: 540},
+            backgroundShapes: [
+                LC.createShape(
+                    'Rectangle', {
+                        x: 0, y: 0, width: 960, height: 540,
+                        strokeWidth: 0,
+                        strokeColor: 'transparent'
+                    }
+                )
+            ]
         }
     );
 
