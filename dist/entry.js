@@ -22768,11 +22768,13 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
   };
   b.textToCode = function(a, b) {
     if (a == Entry.Workspace.MODE_VIMBOARD) {
-      var c = this.vimBoard.textToCode(b), e = this.board, f = e.code;
-      f.load(c);
-      f.createView(e);
-      this.board.alignThreads();
+      var c = this, e = this.vimBoard.textToCode(b), f = this.board, g = f.code;
+      g.load(e);
+      g.createView(f);
       this.board.reDraw();
+      setTimeout(function() {
+        c.board.alignThreads();
+      }, 0);
     }
   };
   b.loadCodeFromText = function(a) {

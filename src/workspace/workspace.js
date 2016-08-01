@@ -134,7 +134,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     };
 
     p.changeBoardCode = function(code) {
-        this._syncTextCode(); 
+        this._syncTextCode();
         this.board.changeCode(code);
         if (this.mode === Entry.Workspace.MODE_VIMBOARD) {
 
@@ -153,7 +153,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
     p.textToCode = function(mode, oldTextType) {
         if (mode != Entry.Workspace.MODE_VIMBOARD) return;
-        
+        var that = this;
+
         var changedCode = this.vimBoard.textToCode(oldTextType);
         var board = this.board;
         var code = board.code;
@@ -161,8 +162,10 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         code.load(changedCode);
         code.createView(board);
 
-        this.board.alignThreads();
         this.board.reDraw();
+        setTimeout(function() {
+            that.board.alignThreads();
+        }, 0);
     };
 
     p.loadCodeFromText = function(mode) {
@@ -244,7 +247,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     p._syncTextCode = function() {
         if (this.mode !== Entry.Workspace.MODE_VIMBOARD)
             return;
-        
+
         var changedCode = this.vimBoard.textToCode(this.textType);
         var board = this.board;
         var code = board.code;
