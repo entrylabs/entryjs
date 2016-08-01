@@ -249,28 +249,24 @@ Entry.EntryObject.prototype.generateView = function() {
         editView.object = this;
         this.editView_ = editView;
         this.view_.appendChild(editView);
-        if(Entry.objectEditable) {
-            $(editView).mousedown(function(e) {
-                var current = object.isEditing;
-                e.stopPropagation();
-                Entry.documentMousedown.notify(e);
-                if(Entry.engine.isState('run')) return;
+        $(editView).mousedown(function(e) {
+            var current = object.isEditing;
+            e.stopPropagation();
+            Entry.documentMousedown.notify(e);
+            if(Entry.engine.isState('run')) return;
 
-                if (current === false) {
-                    object.editObjectValues(!current);
-                    if (Entry.playground.object !== object)
-                        Entry.container.selectObject(object.id);
-                    object.nameView_.select();
-                    return;
-                }
-            });
+            if (current === false) {
+                object.editObjectValues(!current);
+                if (Entry.playground.object !== object)
+                    Entry.container.selectObject(object.id);
+                object.nameView_.select();
+                return;
+            }
+        });
 
-            editView.blur = function(e){
-                object.editObjectComplete();
-            };
-        } else {
-            editView.addClass("entryRemove");
-        }
+        editView.blur = function(e){
+            object.editObjectComplete();
+        };
 
 
         if (Entry.objectEditable && Entry.objectDeletable) {

@@ -8156,6 +8156,7 @@ Entry.EntryObject.prototype.generateView = function() {
       13 == a.keyCode && f.editObjectValues(!1);
     };
     this.nameView_.value = this.name;
+<<<<<<< HEAD
     c = Entry.createElement("div");
     c.addClass("entryObjectEditWorkspace");
     c.object = this;
@@ -8170,6 +8171,23 @@ Entry.EntryObject.prototype.generateView = function() {
       a.editObjectComplete();
     }) : c.addClass("entryRemove");
     Entry.objectEditable && Entry.objectDeletable && (c = Entry.createElement("div"), c.addClass("entryObjectDeleteWorkspace"), c.object = this, this.deleteView_ = c, this.view_.appendChild(c), c.bindOnClick(function(a) {
+=======
+    d = Entry.createElement("div");
+    d.addClass("entryObjectEditWorkspace");
+    d.object = this;
+    this.editView_ = d;
+    this.view_.appendChild(d);
+    $(d).mousedown(function(b) {
+      var c = a.isEditing;
+      b.stopPropagation();
+      Entry.documentMousedown.notify(b);
+      Entry.engine.isState("run") || !1 !== c || (a.editObjectValues(!c), Entry.playground.object !== a && Entry.container.selectObject(a.id), a.nameView_.select());
+    });
+    d.blur = function(b) {
+      a.editObjectComplete();
+    };
+    Entry.objectEditable && Entry.objectDeletable && (d = Entry.createElement("div"), d.addClass("entryObjectDeleteWorkspace"), d.object = this, this.deleteView_ = d, this.view_.appendChild(d), d.bindOnClick(function(a) {
+>>>>>>> master
       Entry.engine.isState("run") || Entry.container.removeObject(this.object);
     }));
     c = Entry.createElement("div");
@@ -19163,7 +19181,7 @@ Entry.BlockView.pngMap = {};
       var l = this._contents[k];
       l instanceof Entry.FieldLineBreak ? (this._alignStatement(a, f), l.align(f), f++, c = l.box.y, b = 8) : (l.align(b, c, a), k === this._contents.length - 1 || l instanceof Entry.FieldText && 0 == l._text.length || (b += Entry.BlockView.PARAM_SPACE));
       l = l.box;
-      0 !== f ? h = Math.max(1E3 * Math.round(l.height), h) : e = Math.max(l.height, e);
+      0 !== f ? h = Math.max(1E6 * Math.round(l.height), h) : e = Math.max(l.height, e);
       b += l.width;
       g = Math.max(g, b);
       this.set({contentWidth:g, contentHeight:e});
@@ -21969,26 +21987,37 @@ Entry.skeleton.basic_without_next = {box:Entry.skeleton.basic.box, contentPos:En
   return {previous:{x:0, y:0}};
 }};
 Entry.skeleton.basic_double_loop = {path:function(b) {
+<<<<<<< HEAD
   var a = b.contentWidth, d = b.contentHeight % 1E3, c = Math.floor(b.contentHeight / 1E3), d = Math.max(30, d + 2), c = Math.max(30, c + 2), a = Math.max(0, a + 5 - d / 2), e = b._statements;
+=======
+  var a = b.contentWidth, c = b.contentHeight % 1E6, d = Math.floor(b.contentHeight / 1E6), c = Math.max(30, c + 2), d = Math.max(30, d + 2), a = Math.max(0, a + 5 - c / 2), e = b._statements;
+>>>>>>> master
   b = e[0] ? e[0].height : 20;
   e = e[1] ? e[1].height : 20;
   b = Math.max(b, 20);
   e = Math.max(e, 20);
   return "m -8,0 l 8,8 8,-8 h %w a %h1,%h1 0 0,1 0,%wh1 H 24 l -8,8 -8,-8 h -0.4 v %sh1 h 0.4 l 8,8 8,-8 h %bw a %h2,%h2 0 0,1 0,%wh2 H 24 l -8,8 -8,-8 h -0.4 v %sh2 h 0.4 l 8,8 8,-8 h %bw a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z".replace(/%wh1/gi, d).replace(/%wh2/gi, c).replace(/%w/gi, a).replace(/%bw/gi, a - 8).replace(/%h1/gi, d / 2).replace(/%h2/gi, c / 2).replace(/%sh1/gi, b + 1).replace(/%sh2/gi, e + 1);
 }, magnets:function(b) {
+<<<<<<< HEAD
   var a = Math.max(b.contentHeight % 1E3 + 2, 30), d = Math.max(Math.floor(b.contentHeight / 1E3) + 2, 30), c = b._statements[0] ? b._statements[0].height : 20, e = b._statements[1] ? b._statements[1].height : 20, c = Math.max(c, 20), e = Math.max(e, 20);
   return {previous:{x:0, y:0}, next:{x:0, y:c + e + a + d + 19 + b.offsetY}};
 }, box:function(b) {
   var a = b.contentWidth, d = Math.max(Math.floor(b.contentHeight / 1E3) + 2, 30), c = Math.max(b.contentHeight % 1E3 + 2, 30), e = b._statements[0] ? b._statements[0].height % 1E3 : 20;
+=======
+  var a = Math.max(b.contentHeight % 1E6 + 2, 30), c = Math.max(Math.floor(b.contentHeight / 1E6) + 2, 30), d = b._statements[0] ? b._statements[0].height : 20, e = b._statements[1] ? b._statements[1].height : 20, d = Math.max(d, 20), e = Math.max(e, 20);
+  return {previous:{x:0, y:0}, next:{x:0, y:d + e + a + c + 19 + b.offsetY}};
+}, box:function(b) {
+  var a = b.contentWidth, c = Math.max(Math.floor(b.contentHeight / 1E6) + 2, 30), d = Math.max(b.contentHeight % 1E6 + 2, 30), e = b._statements[0] ? b._statements[0].height % 1E6 : 20;
+>>>>>>> master
   b = b._statements[1] ? b._statements[1].height : 20;
   e = Math.max(e, 20);
   b = Math.max(b, 20);
   return {offsetX:-8, offsetY:0, width:a + 30, height:d + c + e + b + 17, marginBottom:0};
 }, statementPos:function(b) {
-  var a = Math.max(30, b.contentHeight % 1E3 + 2) + 1;
-  return [{x:16, y:a}, {x:16, y:a + Math.max(b._statements[0] ? b._statements[0].height % 1E3 : 20, 20) + Math.max(Math.floor(b.contentHeight / 1E3) + 2, 30) + 1}];
+  var a = Math.max(30, b.contentHeight % 1E6 + 2) + 1;
+  return [{x:16, y:a}, {x:16, y:a + Math.max(b._statements[0] ? b._statements[0].height % 1E6 : 20, 20) + Math.max(Math.floor(b.contentHeight / 1E6) + 2, 30) + 1}];
 }, contentPos:function(b) {
-  return {x:14, y:Math.max(b.contentHeight % 1E3, 28) / 2 + 1};
+  return {x:14, y:Math.max(b.contentHeight % 1E6, 28) / 2 + 1};
 }};
 Entry.Thread = function(b, a, d) {
   this._data = new Entry.Collection;
