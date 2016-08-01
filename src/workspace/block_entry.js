@@ -5019,7 +5019,6 @@ Entry.block = {
             return returnVal;
         },
         "syntax": {"js": [], "py": ["Entry.value_of_math_operation(%2, %4)"]}
-        }
     },
     "calc_rand": {
         "color": "#FFD974",
