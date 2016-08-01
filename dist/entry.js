@@ -13315,8 +13315,9 @@ Entry.Parser = function(b, a, d, c) {
           e[f + "();\n"] = a.Scope[f];
         }
         "BasicIf" in a && (e.front = "BasicIf");
-        c.on("keyup", function(a, b) {
-          (65 <= b.keyCode && 95 >= b.keyCode || 167 == b.keyCode || 190 == b.keyCode) && CodeMirror.showHint(a, null, {completeSingle:!1, globalScope:e});
+        c.on("keydown", function(a, b) {
+          var d = b.keyCode;
+          (65 <= d && 95 >= d || 167 == d || !b.shiftKey && 190 == d) && CodeMirror.showHint(a, null, {completeSingle:!1, globalScope:e});
         });
         this._parserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK;
         break;
