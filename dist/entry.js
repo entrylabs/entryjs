@@ -11803,6 +11803,7 @@ Entry.JsToBlockParser = function(b) {
     return this.BasicIteration(a, h, f);
   };
   b.BlockStatement = function(a) {
+    console.log("BlockStatement node", a);
     for (var b = [], c = a.body, e = 0;e < c.length;e++) {
       var f = c[e], g = this[f.type](f);
       if (g) {
@@ -13348,8 +13349,8 @@ Entry.Parser = function(b, a, d, c) {
           console.log("result", c);
         } catch (m) {
           if (this.codeMirror) {
-            throw m instanceof SyntaxError ? (c = {from:{line:m.loc.line - 1, ch:m.loc.column - 2}, to:{line:m.loc.line - 1, ch:m.loc.column + 1}}, m.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : (c = this.getLineNumber(m.node.start, m.node.end), c.message = m.message, c.severity = "error"), e = this.findErrorLine(m.message), c.from.line = e, c.from.ch = 0, c.to.line = e, c.to.ch = m.message.length, console.log("errorLine", e), this.codeMirror.markText(c.from, c.to, {className:"CodeMirror-lint-mark-error", 
-            __annotation:c, clearOnEnter:!0}), c = m.title ? m.title : "\ubb38\ubc95 \uc624\ub958", e = m.message && e ? m.message + " (line: " + e + ")" : "\uc790\ubc14\uc2a4\ud06c\ub9bd\ud2b8 \ucf54\ub4dc\ub97c \ud655\uc778\ud574\uc8fc\uc138\uc694", Entry.toast.alert(c, e), m;
+            throw m instanceof SyntaxError ? (c = {from:{line:m.loc.line - 1, ch:m.loc.column - 2}, to:{line:m.loc.line - 1, ch:m.loc.column + 1}}, m.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : (c = this.getLineNumber(m.node.start, m.node.end), c.message = m.message, c.severity = "error"), this.findErrorInfo(m), this.codeMirror.markText(c.from, c.to, {className:"CodeMirror-lint-mark-error", __annotation:c, clearOnEnter:!0}), c = m.title ? m.title : "\ubb38\ubc95 \uc624\ub958", e = 
+            m.message ? m.message + " (line: )" : "\uc790\ubc14\uc2a4\ud06c\ub9bd\ud2b8 \ucf54\ub4dc\ub97c \ud655\uc778\ud574\uc8fc\uc138\uc694", Entry.toast.alert(c, e), m;
           }
           c = [];
         }
@@ -13434,17 +13435,10 @@ Entry.Parser = function(b, a, d, c) {
     });
     this.availableCode = this.availableCode.concat(c);
   };
-  b.findErrorLine = function(a) {
-    var b = this.codeMirror.getValue().split("\n");
-    console.log("textCodeArr", b, "errorMessage", a);
-    for (var c in b) {
-      var e = b[c];
-      console.log("line", e.indexOf(a));
-      if (-1 < e.indexOf(a)) {
-        return c;
-      }
-    }
-    return 0;
+  b.findErrorInfo = function(a) {
+    var b = this.codeMirror.getValue();
+    console.log("text", b);
+    console.log("error", a);
   };
 })(Entry.Parser.prototype);
 Entry.PyBlockAssembler = function(b) {

@@ -123,6 +123,7 @@ Entry.JsToBlockParser = function(syntax) {
     };
 
     p.BlockStatement = function(node) {
+        console.log("BlockStatement node", node);
         var blocks = [];
         var body = node.body;
 
@@ -131,7 +132,6 @@ Entry.JsToBlockParser = function(syntax) {
 
             var block = this[childNode.type](childNode);
             
-
             if(!block) {
                 continue;
             }

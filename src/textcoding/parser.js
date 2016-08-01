@@ -185,13 +185,12 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             
                         }
 
-                        var errorLine = this.findErrorLine(error.message);
+                        var errorInfo = this.findErrorInfo(error);
+                        /*
                         annotation.from.line = errorLine;
                         annotation.from.ch = 0;
                         annotation.to.line = errorLine;
-                        annotation.to.ch = error.message.length;
-
-                        console.log("errorLine", errorLine);
+                        annotation.to.ch = error.message.length;*/ 
 
                         this.codeMirror.markText(
                             annotation.from, annotation.to, {
@@ -205,8 +204,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         else 
                             var errorTitle = '문법 오류';
 
-                        if(error.message && errorLine)
-                            var errorMsg = error.message + ' (line: ' + errorLine + ')';
+                        if(error.message)
+                            var errorMsg = error.message + ' (line: ' + '' + ')';
                         else
                             var errorMsg = '자바스크립트 코드를 확인해주세요';
                         Entry.toast.alert(errorTitle, errorMsg);
@@ -443,19 +442,11 @@ Entry.Parser = function(mode, type, cm, syntax) {
         this.availableCode = this.availableCode.concat(availableList);
     };
 
-    p.findErrorLine = function(errorMessage) {
-        var textCode = this.codeMirror.getValue();
-        var textCodeArr = textCode.split('\n');
-        console.log("textCodeArr", textCodeArr, 'errorMessage', errorMessage);
-
-        for(var i in textCodeArr) {
-            var code = textCodeArr[i];
-            console.log("line", code.indexOf(errorMessage));
-            if(code.indexOf(errorMessage) > -1)
-                return i;
-        }
-
-        return 0;
+    p.findErrorInfo = function(error) {
+        var text = this.codeMirror.getValue();
+        console.log("text", text);
+        console.log("error", error);
+        
     };
 
 })(Entry.Parser.prototype);
