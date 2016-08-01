@@ -104,7 +104,20 @@ p.renderBlock = function(type) {
     var blockHeight = bBox.height;
     var offsetX =blockView.getSkeleton().box(blockView).offsetX;
     if (isNaN(offsetX)) offsetX = 0;
-    this.blockHelperDescription_.innerHTML = description;
+
+    if (description.startsWith("url(")) {
+        var url = description.substring(4, description.length-1);
+        var that = this;
+        var xhr = $.get(url, function(data) {
+            that.blockHelperDescription_.innerHTML = data;
+        });
+        xhr.fail(function() {
+            that.blockHelperDescription_.innerHTML = that.description;
+        });
+    } else {
+        this.blockHelperDescription_.innerHTML = description;
+    }
+
     this._renderView.align();
 
     $(this.blockHelperDescription_).css({

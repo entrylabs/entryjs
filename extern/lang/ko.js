@@ -3249,7 +3249,7 @@ Lang.Helper = {
     "neobot_set_fnd": "FND로 0~99 까지의 숫자를 표시할 수 있습니다.",
     "neobot_set_fnd_off": "FND에 표시한 숫자를 끌 수 있습니다.",
     "neobot_play_note_for": "주파수 발진 방법을 이용해 멜로디에 반음 단위의 멜로디 음을 발생시킬 수 있습니다.",
-    "neobot_move_for_secs": "neobot_move_for_secs",
+    "neobot_move_for_secs": "url(help/neobot_move_for_secs.html)",
     "neobot_move_for": "neobot_move_for",
     "neobot_stop_for": "neobot_stop_for",
     "neobot_diode_secs_toggle": "neobot_diode_secs_toggle",
