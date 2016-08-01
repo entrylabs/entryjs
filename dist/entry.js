@@ -13325,8 +13325,9 @@ Entry.Parser = function(b, a, d, c) {
           e[f + "();\n"] = a.Scope[f];
         }
         "BasicIf" in a && (e.front = "BasicIf");
-        c.on("keyup", function(a, b) {
-          (65 <= b.keyCode && 95 >= b.keyCode || 167 == b.keyCode || 190 == b.keyCode) && CodeMirror.showHint(a, null, {completeSingle:!1, globalScope:e});
+        c.on("keydown", function(a, b) {
+          var d = b.keyCode;
+          (65 <= d && 95 >= d || 167 == d || !b.shiftKey && 190 == d) && CodeMirror.showHint(a, null, {completeSingle:!1, globalScope:e});
         });
         this._parserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK;
         break;
@@ -21501,7 +21502,7 @@ Entry.Board.OPTION_DOWNLOAD = 3;
   };
   b._keyboardControl = function(a) {
     var b = this.selectedBlockView;
-    b && 46 == a.keyCode && b.block && (Entry.do("destroyBlock", b.block), this.set({selectedBlockView:null}));
+    b && 46 == a.keyCode && (a = b.block) && a.isDeletable() && (Entry.do("destroyBlock", b.block), this.set({selectedBlockView:null}));
   };
   b.hide = function() {
     this.wrapper.addClass("entryRemove");
@@ -22693,6 +22694,8 @@ Entry.Vim = function(b, a) {
     var f = this._parser.parse(a, Entry.Parser.PARSE_GENERAL);
     e === Entry.Vim.TEXT_TYPE_PY && (f = c.concat("\n\n").concat(Entry.Vim.PYTHON_IMPORT_ENTRY).concat("\n").concat(Entry.Vim.PYTHON_IMPORT_HW).concat("\n\n").concat(f));
     this.codeMirror.setValue(f);
+    c = this.codeMirror.getDoc();
+    c.setCursor({line:c.lastLine() - 1});
   };
   b.getCodeToText = function(a) {
     var b = this.workspace.textType;
@@ -22789,11 +22792,13 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
   };
   b.textToCode = function(a, b) {
     if (a == Entry.Workspace.MODE_VIMBOARD) {
-      var c = this.vimBoard.textToCode(b), e = this.board, f = e.code;
-      f.load(c);
-      f.createView(e);
-      this.board.alignThreads();
+      var c = this, e = this.vimBoard.textToCode(b), f = this.board, g = f.code;
+      g.load(e);
+      g.createView(f);
       this.board.reDraw();
+      setTimeout(function() {
+        c.board.alignThreads();
+      }, 0);
     }
   };
   b.loadCodeFromText = function(a) {

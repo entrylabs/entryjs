@@ -120,9 +120,11 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     assistScope['front'] = 'BasicIf';
                 }
 
-                cm.on("keyup", function (cm, event) {
-                    if ((event.keyCode >= 65 && event.keyCode <= 95) ||
-                        event.keyCode == 167 || event.keyCode == 190) {
+                cm.on("keydown", function (cm, event) {
+                    var keyCode = event.keyCode;
+
+                    if ((keyCode >= 65 && keyCode <= 95) ||
+                        keyCode == 167 || (!event.shiftKey && keyCode == 190)) {
                         CodeMirror.showHint(cm, null, {
                             completeSingle: false, globalScope:assistScope
                         });
@@ -289,7 +291,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
                 var textCode = this._parser.Code(code);
                 /*var textArr = textCode.match(/(.*{.*[\S|\s]+?}|.+)/g);
-                console.log("textCode", textCode); 
+                console.log("textCode", textCode);
                 if(Array.isArray(textArr)) {
                     result = textArr.reduce(function (prev, current, index) {
                         var temp = '';
