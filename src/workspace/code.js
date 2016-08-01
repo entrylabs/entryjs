@@ -317,4 +317,8 @@ Entry.PARAM = -1;
 
         return blocks;
     };
+
+    p.raiseBlock = function(block, entity) {
+        this.executors.push(new Entry.Executor(block, entity));
+    };
 })(Entry.Code.prototype);

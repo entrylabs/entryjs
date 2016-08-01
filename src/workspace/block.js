@@ -492,4 +492,8 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         return JSON.stringify(this.toJSON());
     };
 
+    p.raiseBlock = function(entity) {
+        this.thread.raiseBlock(this, entity);
+    };
+
 })(Entry.Block.prototype);

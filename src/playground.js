@@ -25,6 +25,7 @@ Entry.Playground = function() {
     this.viewMode_ = 'default';
     Entry.addEventListener('textEdited', this.injectText);
     Entry.addEventListener('hwChanged', this.updateHW);
+    Entry.addEventListener('executeThread', this.executeThread.bind(this));
 };
 
 /**
@@ -1623,4 +1624,11 @@ Entry.Playground.prototype.hideBlockMenu = function() {
 
 Entry.Playground.prototype.showBlockMenu = function() {
     this.mainWorkspace.getBlockMenu().show();
+};
+
+Entry.Playground.prototype.executeThread = function(block) {
+    if (Entry.engine && Entry.engine.isState('stop')) {
+        Entry.engine.toggleRun(false);
+        block.raiseBlock(this.object.entity);
+    }
 };

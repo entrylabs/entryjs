@@ -14505,7 +14505,8 @@ Entry.block = {
                 "position": {
                     "x": 0,
                     "y": -2
-                }
+                },
+                enableExecute: true
             }
         ],
         "events": {},
@@ -20715,7 +20716,7 @@ Entry.block = {
                 delete script.isCondition;
                 return script.callReturn();
             }
-            
+
             var port = script.getNumberField("PORT", script);
             var touch = script.getNumberField("TOUCH", script);
             var value = Entry.hw.portData['IN' + port];
@@ -20865,7 +20866,7 @@ Entry.block = {
                 delete script.isCondition;
                 return script.callReturn();
             }
-            
+
             var port = script.getNumberField('PORT', script);
             var operator = script.getField('OPERATOR', script);
             var rightValue = script.getNumberValue('RIGHTVALUE', script);
@@ -20969,7 +20970,7 @@ Entry.block = {
                 delete script.isCondition;
                 return script.callReturn();
             }
-            
+
             var port = script.getNumberField('PORT', script);
             var operator = script.getField('OPERATOR', script);
             var rightValue = script.getNumberValue('RIGHTVALUE', script);
@@ -21476,7 +21477,7 @@ Entry.block = {
                 delete script.isCondition;
                 return script.callReturn();
             }
-            
+
             var port = script.getNumberField('PORT', script);
             var operator = script.getField('OPERATOR', script);
             var rightValue = script.getNumberValue('RIGHTVALUE', script);
@@ -21580,7 +21581,7 @@ Entry.block = {
                 delete script.isCondition;
                 return script.callReturn();
             }
-            
+
             var port = script.getNumberField('PORT', script);
             var operator = script.getField('OPERATOR', script);
             var rightValue = script.getNumberValue('RIGHTVALUE', script);
@@ -21784,7 +21785,7 @@ Entry.block = {
                 delete script.isCondition;
                 return script.callReturn();
             }
-            
+
             var port = script.getNumberField('PORT', script);
             var operator = script.getField('OPERATOR', script);
             var rightValue = script.getNumberValue('RIGHTVALUE', script);
@@ -21889,7 +21890,7 @@ Entry.block = {
                 delete script.isCondition;
                 return script.callReturn();
             }
-            
+
             var port = script.getNumberField('PORT', script);
             var operator = script.getField('OPERATOR', script);
             var rightValue = script.getNumberValue('RIGHTVALUE', script);
