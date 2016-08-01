@@ -22674,6 +22674,8 @@ Entry.Vim = function(b, a) {
     var f = this._parser.parse(a, Entry.Parser.PARSE_GENERAL);
     e === Entry.Vim.TEXT_TYPE_PY && (f = c.concat("\n\n").concat(Entry.Vim.PYTHON_IMPORT_ENTRY).concat("\n").concat(Entry.Vim.PYTHON_IMPORT_HW).concat("\n\n").concat(f));
     this.codeMirror.setValue(f);
+    c = this.codeMirror.getDoc();
+    c.setCursor({line:c.lastLine() - 1});
   };
   b.getCodeToText = function(a) {
     var b = this.workspace.textType;
