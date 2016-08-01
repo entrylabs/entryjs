@@ -943,7 +943,7 @@ Entry.Board.DRAG_RADIUS = 5;
                 }
             },
             {
-                activated: Entry.type === 'workspace' && Entry.Utils.isChrome(),
+                activated: Entry.type === 'workspace' && Entry.Utils.isChrome() && !Entry.isMobile(),
                 option: {
                     text: Lang.Menus.save_as_image_all,
                     enable: true,

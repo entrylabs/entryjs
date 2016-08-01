@@ -1186,7 +1186,7 @@ Entry.BlockView.pngMap = {};
         options.push(copy);
         options.push(remove);
 
-        if (Entry.Utils.isChrome() && Entry.type == 'workspace')
+        if (Entry.Utils.isChrome() && Entry.type == 'workspace' && !Entry.isMobile())
             options.push(download);
 
         if (e.originalEvent && e.originalEvent.touches)

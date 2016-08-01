@@ -16397,7 +16397,7 @@ Entry.BlockView.pngMap = {};
       b.push(f);
       b.push(g);
       b.push(h);
-      Entry.Utils.isChrome() && "workspace" == Entry.type && b.push(k);
+      Entry.Utils.isChrome() && "workspace" == Entry.type && !Entry.isMobile() && b.push(k);
       a.originalEvent && a.originalEvent.touches && (a = a.originalEvent.touches[0]);
       Entry.ContextMenu.show(b, null, {x:a.clientX, y:a.clientY});
     }
@@ -18572,7 +18572,7 @@ Entry.Board.DRAG_RADIUS = 5;
       a.alignThreads();
     }}}, {activated:!0, option:{text:Lang.Blocks.Clear_all_blocks, callback:function() {
       a.code.clear();
-    }}}, {activated:"workspace" === Entry.type && Entry.Utils.isChrome(), option:{text:Lang.Menus.save_as_image_all, enable:!0, callback:function() {
+    }}}, {activated:"workspace" === Entry.type && Entry.Utils.isChrome() && !Entry.isMobile(), option:{text:Lang.Menus.save_as_image_all, enable:!0, callback:function() {
       a.code.getThreads().forEach(function(a) {
         (a = a.getFirstBlock()) && a.view.downloadAsImage();
       });
