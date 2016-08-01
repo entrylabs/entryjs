@@ -20715,7 +20715,7 @@ Entry.block = {
                 delete script.isCondition;
                 return script.callReturn();
             }
-            
+
             var port = script.getNumberField("PORT", script);
             var touch = script.getNumberField("TOUCH", script);
             var value = Entry.hw.portData['IN' + port];
@@ -20865,7 +20865,7 @@ Entry.block = {
                 delete script.isCondition;
                 return script.callReturn();
             }
-            
+
             var port = script.getNumberField('PORT', script);
             var operator = script.getField('OPERATOR', script);
             var rightValue = script.getNumberValue('RIGHTVALUE', script);
@@ -20969,7 +20969,7 @@ Entry.block = {
                 delete script.isCondition;
                 return script.callReturn();
             }
-            
+
             var port = script.getNumberField('PORT', script);
             var operator = script.getField('OPERATOR', script);
             var rightValue = script.getNumberValue('RIGHTVALUE', script);
@@ -21476,7 +21476,7 @@ Entry.block = {
                 delete script.isCondition;
                 return script.callReturn();
             }
-            
+
             var port = script.getNumberField('PORT', script);
             var operator = script.getField('OPERATOR', script);
             var rightValue = script.getNumberValue('RIGHTVALUE', script);
@@ -21580,7 +21580,7 @@ Entry.block = {
                 delete script.isCondition;
                 return script.callReturn();
             }
-            
+
             var port = script.getNumberField('PORT', script);
             var operator = script.getField('OPERATOR', script);
             var rightValue = script.getNumberValue('RIGHTVALUE', script);
@@ -21784,7 +21784,7 @@ Entry.block = {
                 delete script.isCondition;
                 return script.callReturn();
             }
-            
+
             var port = script.getNumberField('PORT', script);
             var operator = script.getField('OPERATOR', script);
             var rightValue = script.getNumberValue('RIGHTVALUE', script);
@@ -21889,7 +21889,7 @@ Entry.block = {
                 delete script.isCondition;
                 return script.callReturn();
             }
-            
+
             var port = script.getNumberField('PORT', script);
             var operator = script.getField('OPERATOR', script);
             var rightValue = script.getNumberValue('RIGHTVALUE', script);
@@ -22028,25 +22028,58 @@ Entry.block = {
             return isCheck;
         }
     },
-    "neobot_remote_value": {
-        "color": "#498deb",
-        "skeleton": "basic_string_field",
-        "fontColor": "#fff",
-        "statements": [],
-        "template": "리모컨 값",
-        "params": [],
-        "events": {},
+    "neobot_remote_value_if": {
+        "color": "#00979D",
+        "skeleton": "basic_loop",
+        "template": "리모컨의 %1버튼을 누르면 %2",
+        "statements": [
+            {
+                "accept": "basic"
+            }
+        ],
+        "params": [
+          {
+              "type": "Dropdown",
+              "options": [
+                  ["1번", "1"],
+                  ["2번", "2"],
+                  ["3번", "3"],
+                  ["4번", "4"],
+                  ["5번", "5"],
+                  ["6번", "6"]
+              ],
+              "value": "1",
+              "fontSize": 11
+          },
+          {
+              "type": "Indicator",
+              "img": "block_icon/hardware_03.png",
+              "size": 12
+          }
+        ],
         "def": {
-            "params": [null],
-            "type": "neobot_remote_value"
+            "params": [ null, null ],
+            "type": "neobot_remote_value_if"
         },
         "paramsKeyMap": {
             "PORT": 0
         },
+        "statementsKeyMap": {
+            "STACK": 0
+        },
         "class": "neobot_remote",
         "func": function (sprite, script) {
+            if (script.isCondition) {
+                delete script.isCondition;
+                return script.callReturn();
+            }
             var port = script.getStringField('PORT');
-            return Entry.hw.portData['IR'];
+            if (Entry.hw.portData['IR'] > 0) {
+                return script.getStatement("STACK", script);
+            } else {
+                return script.callReturn();
+            }
+
         }
     },
     "neobot_set_servo2": {
@@ -22097,6 +22130,254 @@ Entry.block = {
             }
             Entry.hw.sendQueue['OPT'] = Entry.hw.sendQueue['OPT'] | option;
             return script.callReturn();
+        }
+    },
+    "neobot_when_run_button_click": {
+        "template": Lang.template["when_run_button_click"],
+        "parent": "when_run_button_click",
+        "color": "#EC4466",
+        "params": [
+            {
+                "type": "Indicator",
+                "img": "block_icon/start_icon_play.png",
+                "size": 17,
+                "position": {
+                    "x": 0,
+                    "y": -2
+                }
+            }
+        ],
+        "def": {
+            "params": [ null ],
+            "type": "neobot_when_run_button_click"
+        }
+    },
+    "neobot_wait_second": {
+      "template": Lang.template["wait_second"],
+      "parent": "wait_second",
+      "color": "#2E386F",
+      "params": [
+          {
+              "type": "Block",
+              "accept": "string"
+          },
+          {
+              "type": "Indicator",
+              "img": "block_icon/flow_03.png",
+              "size": 12
+          }
+      ],
+      "def": {
+          "params": [
+              {
+                  "type": "number",
+                  "params": [ "2" ]
+              },
+              null
+          ],
+          "type": "neobot_wait_second"
+      }
+    },
+    "neobot_repeat_basic": {
+        "template": Lang.template["repeat_basic"],
+        "parent": "repeat_basic",
+        "color": "#2E386F",
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/flow_03.png",
+                "size": 12
+            }
+        ],
+        "def": {
+            "params": [
+                {
+                    "type": "number",
+                    "params": [ "10" ]
+                },
+                null
+            ],
+            "type": "neobot_repeat_basic"
+        },
+    },
+    "neobot_repeat_inf": {
+        "template": Lang.template["repeat_inf"],
+        "parent": "repeat_inf",
+        "color": "#2E386F",
+        "params": [
+            {
+                "type": "Indicator",
+                "img": "block_icon/flow_03.png",
+                "size": 12
+            }
+        ],
+        "def": {
+            "params": [ null ],
+            "type": "neobot_repeat_inf"
+        }
+    },
+    "neobot_repeat_while_true": {
+        "template": Lang.template["repeat_while_true"],
+        "parent": "repeat_while_true",
+        "color": "#2E386F",
+        "params": [
+            {
+                "type": "Block",
+                "accept": "boolean"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ Lang.Blocks.FLOW_repeat_while_true_until, "until" ],
+                    [ Lang.Blocks.FLOW_repeat_while_true_while, "while" ]
+                ],
+                "value": "until",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_FLOW
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/flow_03.png",
+                "size": 12
+            }
+        ],
+        "def": {
+            "params": [
+                {
+                    "type": "True"
+                },
+                null,
+                null
+            ],
+            "type": "neobot_repeat_while_true"
+        }
+    },
+    "neobot_stop_repeat": {
+        "template": Lang.template["stop_repeat"],
+        "parent": "stop_repeat",
+        "color": "#2E386F",
+        "params": [
+            {
+                "type": "Indicator",
+                "img": "block_icon/flow_03.png",
+                "size": 12
+            }
+        ],
+        "def": {
+            "params": [
+                null
+            ],
+            "type": "neobot_stop_repeat"
+        }
+    },
+    "neobot_if": {
+        "template": Lang.template["_if"],
+        "parent": "_if",
+        "color": "#2E386F",
+        "params": [
+            {
+                "type": "Block",
+                "accept": "boolean"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/flow_03.png",
+                "size": 12
+            }
+        ],
+        "def": {
+            "params": [
+                {
+                    "type": "True"
+                },
+                null
+            ],
+            "type": "neobot_if"
+        },
+    },
+    "neobot_if_else": {
+        "template": Lang.template["if_else"],
+        "parent": "if_else",
+        "color": "#2E386F",
+        "params": [
+            {
+                "type": "Block",
+                "accept": "boolean"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/flow_03.png",
+                "size": 12
+            },
+            {
+                "type": "LineBreak"
+            }
+        ],
+        "def": {
+            "params": [
+                {
+                    "type": "True"
+                },
+                null
+            ],
+            "type": "neobot_if_else"
+        }
+    },
+    "neobot_wait_until_true": {
+        "template": Lang.template["wait_until_true"],
+        "parent": "wait_until_true",
+        "color": "#2E386F",
+        "params": [
+            {
+                "type": "Block",
+                "accept": "boolean"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/flow_03.png",
+                "size": 12
+            }
+        ],
+        "def": {
+            "params": [
+                {
+                    "type": "True"
+                },
+                null
+            ],
+            "type": "neobot_wait_until_true"
+        }
+    },
+    "neobot_stop_object": {
+        "template": Lang.template["stop_object"],
+        "parent": "stop_object",
+        "color": "#2E386F",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ Lang.Blocks.FLOW_stop_object_all, "all" ],
+                    [ Lang.Blocks.FLOW_stop_object_this_object, "thisOnly" ],
+                    [ Lang.Blocks.FLOW_stop_object_this_thread, "thisThread" ],
+                    [ Lang.Blocks.FLOW_stop_object_other_thread, "otherThread" ]
+                ],
+                "value": "all",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_FLOW
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/flow_03.png",
+                "size": 12
+            }
+        ],
+        "def": {
+            "params": [ null, null ],
+            "type": "neobot_stop_object"
         }
     },
     "ebs_if": {
