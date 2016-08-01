@@ -272,7 +272,8 @@ Entry.Board.OPTION_DOWNLOAD = 3;
         if (!selected) return;
 
         if (event.keyCode == 46) {
-            if (selected.block) {
+            var block = selected.block;
+            if (block && block.isDeletable()) {
                 Entry.do("destroyBlock", selected.block);
                 this.set({selectedBlockView:null});
             }
