@@ -258,7 +258,7 @@ Entry.BlockView.pngMap = {};
 
             var box = c.box;
             if (statementIndex !== 0) {
-                secondLineHeight = Math.max(Math.round(box.height)*1000, secondLineHeight);
+                secondLineHeight = Math.max(Math.round(box.height)*1000000, secondLineHeight);
             } else
                 cursor.height = Math.max(box.height, cursor.height);
 

@@ -478,8 +478,8 @@ Entry.skeleton.basic_without_next = {
 Entry.skeleton.basic_double_loop = {
     path: function(blockView) {
         var width = blockView.contentWidth;
-        var height1 = blockView.contentHeight%1000;
-        var height2 = Math.floor(blockView.contentHeight/1000);
+        var height1 = blockView.contentHeight%1000000;
+        var height2 = Math.floor(blockView.contentHeight/1000000);
         height1 = Math.max(30, height1 + 2);
         height2 = Math.max(30, height2 + 2);
         width = Math.max(0, width + 5 - height1 / 2);
@@ -501,8 +501,8 @@ Entry.skeleton.basic_double_loop = {
             .replace(/%sh2/gi, statementHeight2 + 1);
     },
     magnets: function(blockView) {
-        var contentHeight1 = Math.max(blockView.contentHeight%1000 + 2, 30);
-        var contentHeight2 = Math.max(Math.floor(blockView.contentHeight/1000) + 2, 30);
+        var contentHeight1 = Math.max(blockView.contentHeight%1000000 + 2, 30);
+        var contentHeight2 = Math.max(Math.floor(blockView.contentHeight/1000000) + 2, 30);
         var statementHeight1 = blockView._statements[0] ? blockView._statements[0].height : 20;
         var statementHeight2 = blockView._statements[1] ? blockView._statements[1].height : 20;
         statementHeight1 = Math.max(statementHeight1, 20);
@@ -518,9 +518,9 @@ Entry.skeleton.basic_double_loop = {
     },
     box: function(blockView) {
         var contentWidth = blockView.contentWidth;
-        var contentHeight1 = Math.max(Math.floor(blockView.contentHeight/1000) + 2, 30);
-        var contentHeight2 = Math.max(blockView.contentHeight%1000 + 2, 30);
-        var statementHeight1 = blockView._statements[0] ? blockView._statements[0].height%1000 : 20;
+        var contentHeight1 = Math.max(Math.floor(blockView.contentHeight/1000000) + 2, 30);
+        var contentHeight2 = Math.max(blockView.contentHeight%1000000 + 2, 30);
+        var statementHeight1 = blockView._statements[0] ? blockView._statements[0].height%1000000 : 20;
         var statementHeight2 = blockView._statements[1] ? blockView._statements[1].height : 20;
         statementHeight1 = Math.max(statementHeight1, 20);
         statementHeight2 = Math.max(statementHeight2, 20);
@@ -532,10 +532,10 @@ Entry.skeleton.basic_double_loop = {
         };
     },
     statementPos: function(blockView) {
-        var statementHeight1 = blockView._statements[0] ? blockView._statements[0].height%1000 : 20;
-        var height1 = Math.max(30, blockView.contentHeight%1000 + 2) + 1;
+        var statementHeight1 = blockView._statements[0] ? blockView._statements[0].height%1000000 : 20;
+        var height1 = Math.max(30, blockView.contentHeight%1000000 + 2) + 1;
         var height2 = height1 + Math.max(statementHeight1, 20) +
-            Math.max(Math.floor(blockView.contentHeight/1000) +2 ,30) +1;
+            Math.max(Math.floor(blockView.contentHeight/1000000) +2 ,30) +1;
 
         return [
             {x: 16, y: height1},
@@ -544,7 +544,7 @@ Entry.skeleton.basic_double_loop = {
     },
     contentPos: function(blockView) {
         // apply scale required.
-        var height = Math.max(blockView.contentHeight%1000, 28);
+        var height = Math.max(blockView.contentHeight%1000000, 28);
         return {x: 14, y: height / 2 + 1};
     }
 };

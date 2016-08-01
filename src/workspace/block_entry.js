@@ -2313,7 +2313,7 @@ Entry.block = {
                     };
                     return script.callReturn();
                 }
-                
+
                 var octave = script.getNumberField("OCTAVE", script);
                 var duration = script.getNumberField("DURATION", script);
                 var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.TONE);
@@ -2327,7 +2327,7 @@ Entry.block = {
                 if(!sq['SET']) {
                     sq['SET'] = {};
                 }
-                
+
                 sq['SET'][port] = {
                     type: Entry.ArduinoExt.sensorTypes.TONE,
                     data: {
@@ -5016,7 +5016,7 @@ Entry.block = {
                 default:
                     returnVal = Math[operator](value);
             }
-            return Math.round(returnVal*1000)/1000;
+            return returnVal;
         },
         "syntax": {"js": [], "py": ["Entry.value_of_math_operation(%2, %4)"]}
     },
@@ -12471,7 +12471,7 @@ Entry.block = {
             }  else if(scope.count < 2) {
                 scope.count++;
                 throw new Entry.Utils.AsyncError();
-            } 
+            }
             scope.isStart = false;
             var result = Entry.hw.portData[scope.data_default_address];
             scope.data_default_address = undefined;
@@ -12550,7 +12550,7 @@ Entry.block = {
             } else if(scope.count < 2) {
                 scope.count++;
                 throw new Entry.Utils.AsyncError();
-            } 
+            }
             scope.isStart = false;
             var result = Entry.hw.portData[scope.data_default_address];
             scope.data_default_address = undefined;
@@ -12711,7 +12711,7 @@ Entry.block = {
             } else if(scope.count < 2) {
                 scope.count++;
                 throw new Entry.Utils.AsyncError();
-            } 
+            }
             scope.isStart = false;
             var result = Entry.hw.portData[scope.data_default_address];
             scope.data_default_address = undefined;
