@@ -268,4 +268,8 @@ Entry.Thread = function(thread, code, parent) {
         return JSON.stringify(this.toJSON());
     };
 
+    p.raiseBlock = function(block, entity) {
+        this._code.raiseBlock(block, entity);
+    };
+
 })(Entry.Thread.prototype);

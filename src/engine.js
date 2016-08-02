@@ -48,6 +48,7 @@ Entry.Engine = function() {
     Entry.addEventListener('stop', function() {
         $(window).unbind('keydown', arrowHandler);
     });
+    Entry.addEventListener('executeBlock', this.executeBlock.bind(this));
 
     function arrowHandler(e) {
         var arrows = [37,38,39,40,32];
@@ -453,7 +454,7 @@ Entry.Engine.prototype.run = function() {
 /**
  * toggle this engine state run
  */
-Entry.Engine.prototype.toggleRun = function() {
+Entry.Engine.prototype.toggleRun = function(fireStart) {
     if (this.state === 'pause') {
         this.togglePause();
         return;
@@ -476,7 +477,8 @@ Entry.Engine.prototype.toggleRun = function() {
         Entry.container.takeSequenceSnapshot();
         Entry.scene.takeStartSceneSnapshot();
         this.state = 'run';
-        this.fireEvent('start');
+        if (fireStart !== false)
+            this.fireEvent('start');
     }
     this.state = 'run';
     if (Entry.type == 'mobile')
@@ -792,4 +794,6 @@ Entry.Engine.prototype.updateProjectTimer = function(value) {
 };
 
 
-
+Entry.Engine.prototype.executeBlock = function() {
+    this.isState('stop') && this.toggleRun(false);
+};

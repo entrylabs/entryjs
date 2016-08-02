@@ -24,6 +24,7 @@ Entry.FieldIndicator = function(content, blockView, index) {
     this._highlightColor =
         content.highlightColor? content.highlightColor : "#F59900";
     this._position = content.position;
+    this._enableExecute = content.enableExecute;
 
     this._index = index;
     this.svgGroup = null;
@@ -38,6 +39,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldIndicator);
 
 (function(p) {
     p.renderStart = function() {
+        var that = this;
         if (this.svgGroup) this.svgGroup.remove();
 
         this.svgGroup = this._blockView.contentSvgGroup.elem("g");
@@ -50,19 +52,28 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldIndicator);
             height: this._size * 2
         });
 
-        var path = "m 0,-%s a %s,%s 0 1,1 -0.1,0 z"
-            .replace(/%s/gi, this._size);
-        this._path = this.svgGroup.elem("path", {
-            d: path,
-            stroke: "none",
-            fill: "none"
-        });
-
         this.box.set({
             width: this._size * this._boxMultiplier +
                 (this._position ? - this._size : 0),
             height: this._size * this._boxMultiplier
         });
+
+        if (this._enableExecute && !this._blockView.isInBlockMenu) {
+            this.svgGroup.elem("rect", {
+                x: this._position ? this._size * -1 : 0,
+                y: this._size * -1,
+                width: this._size * 2,
+                height: this._size * 2,
+                fill: 'transparent'
+            });
+
+            $(this.svgGroup).bind('mouseup touchend', function(e){
+                if (that._isEditable())
+                    Entry.dispatchEvent('executeThread',
+                        that._block);
+            });
+        }
+
     };
 
     p.enableHighlight = function() {

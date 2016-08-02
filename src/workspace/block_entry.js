@@ -14505,7 +14505,8 @@ Entry.block = {
                 "position": {
                     "x": 0,
                     "y": -2
-                }
+                },
+                enableExecute: true
             }
         ],
         "events": {},
