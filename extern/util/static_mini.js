@@ -82,22 +82,21 @@ EntryStatic.getAllBlocks = function() {
         {
             category: "start",
             blocks: [
-              "when_run_button_click",
-              "when_some_key_pressed"
+              "neobot_when_run_button_click"
             ]
         },
         {
             category: "flow",
             blocks: [
-              "wait_second",
-              "repeat_basic",
-              "repeat_inf",
-              "repeat_while_true",
-              "stop_repeat",
-              "_if",
-              "if_else",
-              "wait_until_true",
-              "stop_object"
+              "neobot_wait_second",
+              "neobot_repeat_basic",
+              "neobot_repeat_inf",
+              "neobot_repeat_while_true",
+              "neobot_stop_repeat",
+              "neobot_if",
+              "neobot_if_else",
+              "neobot_wait_until_true",
+              "neobot_stop_object"
             ]
         },
         {
@@ -172,7 +171,7 @@ EntryStatic.getAllBlocks = function() {
         {
             category: "m_remote",
             blocks: [
-                "neobot_remote_value"
+                "neobot_remote_value_if"
             ]
         },
         {
