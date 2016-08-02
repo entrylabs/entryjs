@@ -102,64 +102,69 @@ Entry.EntryObject.prototype.generateView = function() {
         var objectView = Entry.createElement('li', this.id);
         objectView.addClass('entryContainerListElementWorkspace');
         objectView.object = this;
-        objectView.bindOnClick(function(e) {
-            if (Entry.container.getObject(this.id))
-                Entry.container.selectObject(this.id);
-        });
-
         // generate context menu
         Entry.Utils.disableContextmenu(objectView);
         var object = this;
-        $(objectView).on('contextmenu', function(e){
-            var options = [
-                {
-                    text: Lang.Workspace.context_rename,
-                    callback: function(e){
-                        e.stopPropagation();
-                        (function (o){
-                            o.setLock(false);
-                            o.editObjectValues(true);
-                            o.nameView_.select();
-                        })(object);
-                    }
-                },
-                {
-                    text: Lang.Workspace.context_duplicate,
-                    enable: !Entry.engine.isState('run'),
-                    callback: function(){
-                        Entry.container.addCloneObject(object);
-                    }
-                },
-                {
-                    text: Lang.Workspace.context_remove,
-                    callback: function(){
-                        Entry.container.removeObject(object);
-                    }
-                },
-                {
-                    text: Lang.Workspace.copy_file,
-                    callback: function(){
-                        Entry.container.setCopiedObject(object);
-                    }
-                },
-                {
-                    text: Lang.Blocks.Paste_blocks,
-                    enable: !Entry.engine.isState('run') && !!Entry.container.copiedObject,
-                    callback: function(){
-                        if (Entry.container.copiedObject)
-                            Entry.container.addCloneObject(Entry.container.copiedObject);
-                        else
-                            Entry.toast.alert(Lang.Workspace.add_object_alert, Lang.Workspace.object_not_found_for_paste);
-                    }
-                 }
+        longPressTimer = null;
 
-            ];
-            Entry.ContextMenu.show(options, 'workspace-contextmenu');
+        $(objectView).bind('mousedown touchstart', function(e){
+            if (Entry.container.getObject(this.id))
+                Entry.container.selectObject(this.id);
+            var doc = $(document);
+            var eventType = e.type;
+            var handled = false;
 
+            if (Entry.Utils.isRightButton(e)) {
+                e.stopPropagation();
+                Entry.documentMousedown.notify(e);
+                handled = true;
+                object._rightClick(e);
+                return;
+            }
+
+            var mouseDownCoordinate = {
+                x: e.clientX, y: e.clientY
+            };
+
+            if (eventType === 'touchstart' && !handled) {
+                e.stopPropagation();
+                Entry.documentMousedown.notify(e);
+
+                longPressTimer = setTimeout(function() {
+                    if (longPressTimer) {
+                        longPressTimer = null;
+                        object._rightClick(e);
+                    }
+                }, 1000);
+
+                doc.bind('mousemove.object touchmove.object', onMouseMove);
+                doc.bind('mouseup.object touchend.object', onMouseUp);
+            }
+
+
+            function onMouseMove(e) {
+                e.stopPropagation();
+                if (!mouseDownCoordinate) return;
+                var diff = Math.sqrt(Math.pow(e.pageX - mouseDownCoordinate.x, 2) +
+                                Math.pow(e.pageY - mouseDownCoordinate.y, 2));
+                if (diff > 5 && longPressTimer) {
+                    clearTimeout(longPressTimer);
+                    longPressTimer = null;
+                }
+            }
+
+            function onMouseUp(e) {
+                e.stopPropagation();
+                doc.unbind('.object');
+                if (longPressTimer) {
+                    clearTimeout(longPressTimer);
+                    longPressTimer = null;
+                }
+            }
         });
+
         /** @type {!Element} */
         this.view_ = objectView;
-
 
         var thisPointer = this;
         var objectInfoView = Entry.createElement('ul');
@@ -1563,4 +1568,56 @@ Entry.EntryObject.prototype.getStampEntities = function() {
 
 Entry.EntryObject.prototype.clearExecutor = function() {
     this.script.clearExecutors();
+};
+
+Entry.EntryObject.prototype._rightClick = function(e) {
+    var object = this;
+    var options = [
+        {
+            text: Lang.Workspace.context_rename,
+            callback: function(e){
+                e.stopPropagation();
+                (function (o){
+                    o.setLock(false);
+                    o.editObjectValues(true);
+                    o.nameView_.select();
+                })(object);
+            }
+        },
+        {
+            text: Lang.Workspace.context_duplicate,
+            enable: !Entry.engine.isState('run'),
+            callback: function(){
+                Entry.container.addCloneObject(object);
+            }
+        },
+        {
+            text: Lang.Workspace.context_remove,
+            callback: function(){
+                Entry.container.removeObject(object);
+            }
+        },
+        {
+            text: Lang.Workspace.copy_file,
+            callback: function(){
+                Entry.container.setCopiedObject(object);
+            }
+        },
+        {
+            text: Lang.Blocks.Paste_blocks,
+            enable: !Entry.engine.isState('run') && !!Entry.container.copiedObject,
+            callback: function(){
+                if (Entry.container.copiedObject)
+                    Entry.container.addCloneObject(Entry.container.copiedObject);
+                else
+                    Entry.toast.alert(Lang.Workspace.add_object_alert, Lang.Workspace.object_not_found_for_paste);
+            }
+        }
+    ];
+
+    e = Entry.Utils.convertMouseEvent(e);
+    Entry.ContextMenu.show(
+        options, 'workspace-contextmenu',
+        { x: e.clientX, y: e.clientY }
+    );
 };

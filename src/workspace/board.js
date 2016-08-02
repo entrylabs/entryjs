@@ -1008,9 +1008,7 @@ Entry.Board.DRAG_RADIUS = 5;
                 options.push(contextOptions[i].option);
         }
 
-        if (e.originalEvent && e.originalEvent.touches)
-            e = e.originalEvent.touches[0];
-
+        e = Entry.Utils.convertMouseEvent(e);
         Entry.ContextMenu.show(options, null,
             { x: e.clientX, y: e.clientY }
         );

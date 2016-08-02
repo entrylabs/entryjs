@@ -10,6 +10,11 @@ goog.provide('Entry.ContextMenu');
             id: 'entry-contextmenu',
             parent: $('body')
         });
+
+        this.dom.bind('mousedown touchstart', function(e) {
+            e.stopPropagation();
+        });
+
         Entry.Utils.disableContextmenu(this.dom);
         Entry.documentMousedown.attach(
             this, function(){this.hide();}
@@ -39,16 +44,20 @@ goog.provide('Entry.ContextMenu');
                 parent: parent
             });
 
-            elem.text(text);
+            var span = Entry.Dom('span', {
+                parent: elem
+            });
+
+            span.text(text);
 
             if (enable && option.callback) {
-                (function(elem, cb) {
-                    elem.mousedown(function(e){
+                (function(span, cb) {
+                    span.mousedown(function(e){
                         e.preventDefault();
                         that.hide();
                         cb(e);
                     });
-                })(elem, option.callback);
+                })(span, option.callback);
             }
         }
 
