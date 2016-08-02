@@ -20039,7 +20039,7 @@ Entry.block = {
                 var wheel = script.getNumberField('WHEEL');
                 var speed = script.getNumberValue('SPEED');
                 var direction = script.getNumberField('DIRECTION');
-                var duration = script.getNumberField('DURATION');
+                var duration = script.getNumberValue('DURATION');
                 var value = speed + direction;
                 switch(wheel) {
                     case 1: {
