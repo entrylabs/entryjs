@@ -19944,7 +19944,7 @@ Entry.block = {
         "class": "arduino"
     },
     "neobot_motor_speed": {
-        "color": "#A751E3",
+        "color": "#00B200",
         "skeleton": "basic_string_field",
         "statements": [],
         "template": "%1",
@@ -19984,7 +19984,7 @@ Entry.block = {
         }
     },
     "neobot_move_for_secs": {
-        "color": "#A751E3",
+        "color": "#00B200",
         "skeleton": "basic",
         "fontColor": "#fff",
         "statements": [],
@@ -20014,7 +20014,7 @@ Entry.block = {
             "accept": "string"
         }, {
             "type": "Indicator",
-            "img": "block_icon/moving_03.png",
+            "img": "block_icon/neobot/dcmotor.png",
             "size": 12
         }],
         "events": {},
@@ -20095,7 +20095,7 @@ Entry.block = {
         }
     },
     "neobot_move_for": {
-        "color": "#A751E3",
+        "color": "#00B200",
         "skeleton": "basic",
         "fontColor": "#fff",
         "statements": [],
@@ -20122,7 +20122,7 @@ Entry.block = {
             "accept": "string"
         }, {
             "type": "Indicator",
-            "img": "block_icon/moving_03.png",
+            "img": "block_icon/neobot/dcmotor.png",
             "size": 12
         }],
         "events": {},
@@ -20167,7 +20167,7 @@ Entry.block = {
         }
     },
     "neobot_stop_for": {
-        "color": "#A751E3",
+        "color": "#00B200",
         "skeleton": "basic",
         "fontColor": "#fff",
         "statements": [],
@@ -20183,7 +20183,7 @@ Entry.block = {
             "fontSize": 11
         }, {
             "type": "Indicator",
-            "img": "block_icon/moving_03.png",
+            "img": "block_icon/neobot/dcmotor.png",
             "size": 12
         }],
         "events": {},
@@ -20209,7 +20209,7 @@ Entry.block = {
         }
     },
     "neobot_diode_secs_toggle": {
-        "color": "#FF9E20",
+        "color": "#FF8D10",
         "skeleton": "basic",
         "fontColor": "#fff",
         "statements": [],
@@ -20236,7 +20236,7 @@ Entry.block = {
             "fontSize": 11
         },{
             "type": "Indicator",
-            "img": "block_icon/brush_03.png",
+            "img": "block_icon/neobot/diode.png",
             "size": 12
         }],
         "events": {},
@@ -20295,7 +20295,7 @@ Entry.block = {
         }
     },
     "neobot_diode_toggle": {
-        "color": "#FF9E20",
+        "color": "#FF8D10",
         "skeleton": "basic",
         "fontColor": "#fff",
         "statements": [],
@@ -20319,7 +20319,7 @@ Entry.block = {
             "fontSize": 11
         },{
             "type": "Indicator",
-            "img": "block_icon/brush_03.png",
+            "img": "block_icon/neobot/diode.png",
             "size": 12
         }],
         "events": {},
@@ -20355,7 +20355,7 @@ Entry.block = {
         }
     },
     "neobot_diode_inout_toggle": {
-        "color": "#FF9E20",
+        "color": "#FF8D10",
         "skeleton": "basic",
         "fontColor": "#fff",
         "statements": [],
@@ -20374,7 +20374,7 @@ Entry.block = {
             "accept": "string"
         }, {
             "type": "Indicator",
-            "img": "block_icon/brush_03.png",
+            "img": "block_icon/neobot/diode.png",
             "size": 12
         }],
         "events": {},
@@ -20412,7 +20412,7 @@ Entry.block = {
         }
     },
     "neobot_diode_set_output": {
-        "color": "#FF9E20",
+        "color": "#FF8D10",
         "skeleton": "basic",
         "statements": [],
         "template": "%1번 포트의 발광다이오드를 %2의 밝기로 정하기 %3",
@@ -20430,7 +20430,7 @@ Entry.block = {
             "accept": "string"
         }, {
             "type": "Indicator",
-            "img": "block_icon/brush_03.png",
+            "img": "block_icon/neobot/diode.png",
             "size": 12
         }],
         "events": {},
@@ -20465,7 +20465,7 @@ Entry.block = {
         }
     },
     "neobot_diode_input_value": {
-        "color": "#FF9E20",
+        "color": "#FF8D10",
         "skeleton": "basic_string_field",
         "fontColor": "#fff",
         "statements": [],
@@ -20495,7 +20495,7 @@ Entry.block = {
         }
     },
     "neobot_melody_note_for": {
-        "color": "#A4D01D",
+        "color": "#FC327F",
         "skeleton": "basic",
         "statements": [],
         "template": "멜로디 %1 을(를) %2 옥타브로 %3 길이만큼 소리내기 %4",
@@ -20544,7 +20544,7 @@ Entry.block = {
             "fontSize": 11
         }, {
             "type": "Indicator",
-            "img": "block_icon/sound_03.png",
+            "img": "block_icon/neobot/melody.png",
             "size": 12
         }],
         "events": {},
@@ -20596,7 +20596,7 @@ Entry.block = {
         }
     },
     "neobot_touch_if": {
-        "color": "#EC4466",
+        "color": "#2AB4D3",
         "skeleton": "basic_loop",
         "template": "%1번 포트의 접촉 센서가 %2 %3",
         "statements": [
@@ -20623,7 +20623,7 @@ Entry.block = {
         },
         {
             "type": "Indicator",
-            "img": "block_icon/looks_03.png",
+            "img": "block_icon/neobot/touch.png",
             "size": 12
         }],
         "events": {},
@@ -20657,7 +20657,7 @@ Entry.block = {
         }
     },
     "neobot_touch_if_else": {
-        "color": "#EC4466",
+        "color": "#2AB4D3",
         "skeleton": "basic_double_loop",
         "template": "%1포트의 접촉 센서가 %2 %3 %4아니면",
         "statements": [
@@ -20690,7 +20690,7 @@ Entry.block = {
         },
         {
             "type": "Indicator",
-            "img": "block_icon/looks_03.png",
+            "img": "block_icon/neobot/touch.png",
             "size": 12
         },
         {
@@ -20731,7 +20731,7 @@ Entry.block = {
         }
     },
     "neobot_touch_value": {
-        "color": "#EC4466",
+        "color": "#2AB4D3",
         "skeleton": "basic_string_field",
         "fontColor": "#fff",
         "statements": [],
@@ -20762,7 +20762,7 @@ Entry.block = {
         }
     },
     "neobot_touch_value_boolean": {
-        "color": "#EC4466",
+        "color": "#2AB4D3",
         "skeleton": "basic_boolean_field",
         "fontColor": "#fff",
         "template": "%1번 포트의 접촉 센서가 %2",
@@ -20804,7 +20804,7 @@ Entry.block = {
         }
     },
     "neobot_light_value_if": {
-        "color": "#FF9E20",
+        "color": "#498DEB",
         "skeleton": "basic_loop",
         "template": "%1번 포트의 빛 감지 센서 주위의 밝기 값이 %2 %3 %4",
         "statements": [
@@ -20841,7 +20841,7 @@ Entry.block = {
         },
         {
             "type": "Indicator",
-            "img": "block_icon/brush_03.png",
+            "img": "block_icon/neobot/light.png",
             "size": 12
         }],
         "events": {},
@@ -20900,7 +20900,7 @@ Entry.block = {
         }
     },
     "neobot_light_value_if_else": {
-        "color": "#FF9E20",
+        "color": "#498DEB",
         "skeleton": "basic_double_loop",
         "template": "%1번 포트의 빛 감지 센서 주위의 밝기 값이 %2 %3 %4 %5아니면",
         "statements": [
@@ -20940,7 +20940,7 @@ Entry.block = {
         },
         {
             "type": "Indicator",
-            "img": "block_icon/brush_03.png",
+            "img": "block_icon/neobot/light.png",
             "size": 12
         },
         {
@@ -21003,7 +21003,7 @@ Entry.block = {
         }
     },
     "neobot_light_value": {
-        "color": "#FF9E20",
+        "color": "#498DEB",
         "skeleton": "basic_string_field",
         "fontColor": "#fff",
         "statements": [],
@@ -21033,7 +21033,7 @@ Entry.block = {
         }
     },
     "neobot_light_value_boolean": {
-        "color": "#FF9E20",
+        "color": "#498DEB",
         "skeleton": "basic_boolean_field",
         "fontColor": "#fff",
         "template": "%1번 포트의 빛 감지 센서 값 %2 %3",
@@ -21106,7 +21106,7 @@ Entry.block = {
         }
     },
     "neobot_sound_value_if": {
-        "color": "#A4D01D",
+        "color": "#00D67F",
         "skeleton": "basic_loop",
         "template": "%1번 포트의 소리 센서에 감지되는 소리의 값이 %2 %3 %4",
         "statements": [
@@ -21144,7 +21144,7 @@ Entry.block = {
         },
         {
             "type": "Indicator",
-            "img": "block_icon/sound_03.png",
+            "img": "block_icon/neobot/sound.png",
             "size": 12
         }],
         "events": {},
@@ -21204,7 +21204,7 @@ Entry.block = {
         }
     },
     "neobot_sound_value_if_else": {
-        "color": "#A4D01D",
+        "color": "#00D67F",
         "skeleton": "basic_double_loop",
         "template": "%1번 포트의 소리 센서에 감지되는 소리의 값이 %2 %3 %4 %5아니면",
         "statements": [
@@ -21245,7 +21245,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "block_icon/sound_03.png",
+                "img": "block_icon/neobot/sound.png",
                 "size": 12
             },
             {
@@ -21310,7 +21310,7 @@ Entry.block = {
         }
     },
     "neobot_sound_value": {
-        "color": "#A4D01D",
+        "color": "#00D67F",
         "skeleton": "basic_string_field",
         "fontColor": "#fff",
         "statements": [],
@@ -21340,7 +21340,7 @@ Entry.block = {
         }
     },
     "neobot_sound_value_boolean": {
-        "color": "#A4D01D",
+        "color": "#00D67F",
         "skeleton": "basic_boolean_field",
         "fontColor": "#fff",
         "template": "%1번 포트의 소리 센서에 감지되는 소리 값 %2 %3",
@@ -21414,7 +21414,7 @@ Entry.block = {
         }
     },
     "neobot_irs_value_if": {
-        "color": "#498deb",
+        "color": "#C4065C",
         "skeleton": "basic_loop",
         "template": "%1번 포트의 적외선 센서에 감지되는 크기 값이 %2 %3 %4",
         "statements": [
@@ -21452,7 +21452,7 @@ Entry.block = {
         },
         {
             "type": "Indicator",
-            "img": "block_icon/flow_03.png",
+            "img": "block_icon/neobot/irs.png",
             "size": 12
         }],
         "events": {},
@@ -21511,7 +21511,7 @@ Entry.block = {
         }
     },
     "neobot_irs_value_if_else": {
-        "color": "#498deb",
+        "color": "#C4065C",
         "skeleton": "basic_double_loop",
         "template": "%1번 포트의 적외선 센서에 감지되는 크기 값이 %2 %3 %4",
         "statements": [
@@ -21552,7 +21552,7 @@ Entry.block = {
         },
         {
             "type": "Indicator",
-            "img": "block_icon/sound_03.png",
+            "img": "block_icon/neobot/irs.png",
             "size": 12
         },
         {
@@ -21615,7 +21615,7 @@ Entry.block = {
         }
     },
     "neobot_irs_value": {
-        "color": "#498deb",
+        "color": "#C4065C",
         "skeleton": "basic_string_field",
         "fontColor": "#fff",
         "statements": [],
@@ -21646,7 +21646,7 @@ Entry.block = {
         }
     },
     "neobot_irs_value_boolean": {
-        "color": "#498deb",
+        "color": "#C4065C",
         "skeleton": "basic_boolean_field",
         "fontColor": "#fff",
         "template": "%1번 포트의 적외선 센서에 감지되는 크기 값이 %2 %3",
@@ -21721,7 +21721,7 @@ Entry.block = {
         }
     },
     "neobot_others_value_if": {
-        "color": "#00979D",
+        "color": "#E84005",
         "skeleton": "basic_loop",
         "template": "%1번 포트의 센서에 감지되는 값이 %2 %3 %4",
         "statements": [
@@ -21738,8 +21738,7 @@ Entry.block = {
                 ["IN 3", "3"]
             ],
             "value": "1",
-            "fontSize": 11,
-            "arrowColor": EntryStatic.ARROW_COLOR_HW
+            "fontSize": 11
         },
         {
             "type": "Dropdown",
@@ -21760,7 +21759,7 @@ Entry.block = {
         },
         {
             "type": "Indicator",
-            "img": "block_icon/hardware_03.png",
+            "img": "block_icon/neobot/others.png",
             "size": 12
         }],
         "events": {},
@@ -21819,7 +21818,7 @@ Entry.block = {
         }
     },
     "neobot_others_value_if_else": {
-        "color": "#00979D",
+        "color": "#E84005",
         "skeleton": "basic_double_loop",
         "template": "%1번 포트의 적외선 센서에 감지되는 크기 값이 %2 %3 %4",
         "statements": [
@@ -21839,8 +21838,7 @@ Entry.block = {
                 ["IN 3", "3"]
             ],
             "value": "1",
-            "fontSize": 11,
-            "arrowColor": EntryStatic.ARROW_COLOR_HW
+            "fontSize": 11
         },
         {
             "type": "Dropdown",
@@ -21861,7 +21859,7 @@ Entry.block = {
         },
         {
             "type": "Indicator",
-            "img": "block_icon/hardware_03.png",
+            "img": "block_icon/neobot/others.png",
             "size": 12
         },
         {
@@ -21924,7 +21922,7 @@ Entry.block = {
         }
     },
     "neobot_others_value": {
-        "color": "#00979D",
+        "color": "#E84005",
         "skeleton": "basic_string_field",
         "fontColor": "#fff",
         "statements": [],
@@ -21955,7 +21953,7 @@ Entry.block = {
         }
     },
     "neobot_others_value_boolean": {
-        "color": "#00979D",
+        "color": "#E84005",
         "skeleton": "basic_boolean_field",
         "fontColor": "#fff",
         "template": "%1번 포트의 센서에 감지되는 크기 값 %2 %3",
@@ -22030,7 +22028,7 @@ Entry.block = {
         }
     },
     "neobot_remote_value_if": {
-        "color": "#00979D",
+        "color": "#6A37BC",
         "skeleton": "basic_loop",
         "template": "리모컨의 %1버튼을 누르면 %2",
         "statements": [
@@ -22054,7 +22052,7 @@ Entry.block = {
           },
           {
               "type": "Indicator",
-              "img": "block_icon/hardware_03.png",
+              "img": "block_icon/neobot/remote.png",
               "size": 12
           }
         ],
@@ -22084,7 +22082,7 @@ Entry.block = {
         }
     },
     "neobot_set_servo2": {
-        "color": "#00979D",
+        "color": "#D126BD",
         "skeleton": "basic",
         "statements": [],
         "template": "%1 포트의 서보모터를 %2 도 이동 %3",
@@ -22096,14 +22094,13 @@ Entry.block = {
                 ["OUT3", "3"]
             ],
             "value": "1",
-            "fontSize": 11,
-            'arrowColor': EntryStatic.ARROW_COLOR_HW
+            "fontSize": 11
         }, {
             "type": "Block",
             "accept": "string"
         }, {
             "type": "Indicator",
-            "img": "block_icon/hardware_03.png",
+            "img": "block_icon/neobot/servo.png",
             "size": 12
         }],
         "events": {},
@@ -22136,11 +22133,11 @@ Entry.block = {
     "neobot_when_run_button_click": {
         "template": Lang.template["when_run_button_click"],
         "parent": "when_run_button_click",
-        "color": "#EC4466",
+        "color": "#2462E0",
         "params": [
             {
                 "type": "Indicator",
-                "img": "block_icon/start_icon_play.png",
+                "img": "block_icon/neobot/start_icon_play.png",
                 "size": 17,
                 "position": {
                     "x": 0,
@@ -22156,7 +22153,7 @@ Entry.block = {
     "neobot_wait_second": {
       "template": Lang.template["wait_second"],
       "parent": "wait_second",
-      "color": "#2E386F",
+      "color": "#DD1615",
       "params": [
           {
               "type": "Block",
@@ -22164,7 +22161,7 @@ Entry.block = {
           },
           {
               "type": "Indicator",
-              "img": "block_icon/flow_03.png",
+              "img": "block_icon/neobot/flow_03.png",
               "size": 12
           }
       ],
@@ -22182,7 +22179,7 @@ Entry.block = {
     "neobot_repeat_basic": {
         "template": Lang.template["repeat_basic"],
         "parent": "repeat_basic",
-        "color": "#2E386F",
+        "color": "#DD1615",
         "params": [
             {
                 "type": "Block",
@@ -22190,7 +22187,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "block_icon/flow_03.png",
+                "img": "block_icon/neobot/flow_03.png",
                 "size": 12
             }
         ],
@@ -22208,11 +22205,11 @@ Entry.block = {
     "neobot_repeat_inf": {
         "template": Lang.template["repeat_inf"],
         "parent": "repeat_inf",
-        "color": "#2E386F",
+        "color": "#DD1615",
         "params": [
             {
                 "type": "Indicator",
-                "img": "block_icon/flow_03.png",
+                "img": "block_icon/neobot/flow_03.png",
                 "size": 12
             }
         ],
@@ -22224,7 +22221,7 @@ Entry.block = {
     "neobot_repeat_while_true": {
         "template": Lang.template["repeat_while_true"],
         "parent": "repeat_while_true",
-        "color": "#2E386F",
+        "color": "#DD1615",
         "params": [
             {
                 "type": "Block",
@@ -22237,12 +22234,11 @@ Entry.block = {
                     [ Lang.Blocks.FLOW_repeat_while_true_while, "while" ]
                 ],
                 "value": "until",
-                "fontSize": 11,
-                'arrowColor': EntryStatic.ARROW_COLOR_FLOW
+                "fontSize": 11
             },
             {
                 "type": "Indicator",
-                "img": "block_icon/flow_03.png",
+                "img": "block_icon/neobot/flow_03.png",
                 "size": 12
             }
         ],
@@ -22260,11 +22256,11 @@ Entry.block = {
     "neobot_stop_repeat": {
         "template": Lang.template["stop_repeat"],
         "parent": "stop_repeat",
-        "color": "#2E386F",
+        "color": "#DD1615",
         "params": [
             {
                 "type": "Indicator",
-                "img": "block_icon/flow_03.png",
+                "img": "block_icon/neobot/flow_03.png",
                 "size": 12
             }
         ],
@@ -22278,7 +22274,7 @@ Entry.block = {
     "neobot_if": {
         "template": Lang.template["_if"],
         "parent": "_if",
-        "color": "#2E386F",
+        "color": "#DD1615",
         "params": [
             {
                 "type": "Block",
@@ -22286,7 +22282,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "block_icon/flow_03.png",
+                "img": "block_icon/neobot/flow_03.png",
                 "size": 12
             }
         ],
@@ -22303,7 +22299,7 @@ Entry.block = {
     "neobot_if_else": {
         "template": Lang.template["if_else"],
         "parent": "if_else",
-        "color": "#2E386F",
+        "color": "#DD1615",
         "params": [
             {
                 "type": "Block",
@@ -22311,7 +22307,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "block_icon/flow_03.png",
+                "img": "block_icon/neobot/flow_03.png",
                 "size": 12
             },
             {
@@ -22331,7 +22327,7 @@ Entry.block = {
     "neobot_wait_until_true": {
         "template": Lang.template["wait_until_true"],
         "parent": "wait_until_true",
-        "color": "#2E386F",
+        "color": "#DD1615",
         "params": [
             {
                 "type": "Block",
@@ -22339,7 +22335,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "block_icon/flow_03.png",
+                "img": "block_icon/neobot/flow_03.png",
                 "size": 12
             }
         ],
@@ -22356,7 +22352,7 @@ Entry.block = {
     "neobot_stop_object": {
         "template": Lang.template["stop_object"],
         "parent": "stop_object",
-        "color": "#2E386F",
+        "color": "#DD1615",
         "params": [
             {
                 "type": "Dropdown",
@@ -22367,12 +22363,11 @@ Entry.block = {
                     [ Lang.Blocks.FLOW_stop_object_other_thread, "otherThread" ]
                 ],
                 "value": "all",
-                "fontSize": 11,
-                'arrowColor': EntryStatic.ARROW_COLOR_FLOW
+                "fontSize": 11
             },
             {
                 "type": "Indicator",
-                "img": "block_icon/flow_03.png",
+                "img": "block_icon/neobot/flow_03.png",
                 "size": 12
             }
         ],

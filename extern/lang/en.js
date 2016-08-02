@@ -3250,7 +3250,6 @@ Lang.Helper = {
     "neobot_set_fnd_off": "FND에 표시한 숫자를 끌 수 있습니다.",
     "neobot_play_note_for": "주파수 발진 방법을 이용해 멜로디에 반음 단위의 멜로디 음을 발생시킬 수 있습니다.",
     "neobot_when_run_button_click": "url(help/neobot_when_run_button_click.html)",
-    "neobot_press_some_key": "url(help/neobot_press_some_key.html)",
     "neobot_wait_second": "url(help/neobot_wait_second.html)",
     "neobot_repeat_basic": "url(help/neobot_repeat_basic.html)",
     "neobot_repeat_inf": "url(help/neobot_repeat_inf.html)",
