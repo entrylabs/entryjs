@@ -22069,11 +22069,14 @@ Entry.block = {
         },
         "class": "neobot_remote",
         "func": function (sprite, script) {
+            console.log('isCondition=',script.isCondition);
             if (script.isCondition) {
                 delete script.isCondition;
                 return script.callReturn();
             }
             var port = script.getStringField('PORT');
+            console.log('port=', port);
+            console.log('IR=',Entry.hw.portData['IR']);
             if (Entry.hw.portData['IR'] > 0) {
                 return script.getStatement("STACK", script);
             } else {
