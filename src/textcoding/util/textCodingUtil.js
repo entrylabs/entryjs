@@ -917,4 +917,60 @@ Entry.TextCodingUtil = function() {
         }
     };
 
+    p.hasBlockInfo = function(data, blockInfo) {
+        console.log("data", data);
+        console.log("blockInfo", blockInfo);
+        var result = false;
+        for(var key in blockInfo) {
+            var info = blockInfo[key]; 
+            console.log("info", info);
+            console.log("key", key);
+            if(key == data.type) {
+                for(var j in info) {
+                    var loc = info[j];
+                    console.log("loc.start", loc.start, "data.start", data.start, "data.end", data.end, "loc.end", loc.end);
+                    if(loc.start == data.start && loc.end == data.end) {
+                       result = true;
+                       break;
+                    } 
+                }
+            }
+        }
+
+        console.log("result", result);
+        return result;
+    };
+
+    p.updateBlockInfo = function(data, blockInfo) {
+        console.log("data", data);
+        console.log("blockInfo before", blockInfo);
+        var infoArr = blockInfo[data.type];
+        if(infoArr && Array.isArray(infoArr) && infoArr.legnth != 0) {
+            for(var i in infoArr) {
+                var info = infoArr[i];
+                if(info.start == data.start && info.end == data.end) {
+                    break;
+                }
+                else {
+                    var loc = {};
+                    loc.start = data.start;
+                    loc.end = data.end;
+
+                    infoArr.push(loc);
+                }
+
+            }
+        } else {
+            blockInfo[data.type] = []; 
+
+            var loc = {};
+            loc.start = data.start;
+            loc.end = data.end;
+
+            blockInfo[data.type].push(loc);
+        }
+
+        console.log("blockInfo after", blockInfo);
+    };
+
 })(Entry.TextCodingUtil.prototype);

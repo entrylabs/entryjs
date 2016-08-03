@@ -11427,6 +11427,46 @@ Entry.TextCodingUtil = function() {
     console.log("isParamBlock type", a);
     return "ai_boolean_distance" == a || "ai_distance_value" == a || "ai_boolean_object" == a || "ai_boolean_and" == a ? !0 : !1;
   };
+  b.hasBlockInfo = function(a, b) {
+    console.log("data", a);
+    console.log("blockInfo", b);
+    var c = !1, e;
+    for (e in b) {
+      var f = b[e];
+      console.log("info", f);
+      console.log("key", e);
+      if (e == a.type) {
+        for (var g in f) {
+          var h = f[g];
+          console.log("loc.start", h.start, "data.start", a.start, "data.end", a.end, "loc.end", h.end);
+          if (h.start == a.start && h.end == a.end) {
+            c = !0;
+            break;
+          }
+        }
+      }
+    }
+    console.log("result", c);
+    return c;
+  };
+  b.updateBlockInfo = function(a, b) {
+    console.log("data", a);
+    console.log("blockInfo before", b);
+    var c = b[a.type];
+    if (c && Array.isArray(c) && 0 != c.legnth) {
+      for (var e in c) {
+        var f = c[e];
+        if (f.start == a.start && f.end == a.end) {
+          break;
+        } else {
+          f = {}, f.start = a.start, f.end = a.end, c.push(f);
+        }
+      }
+    } else {
+      b[a.type] = [], f = {}, f.start = a.start, f.end = a.end, b[a.type].push(f);
+    }
+    console.log("blockInfo after", b);
+  };
 })(Entry.TextCodingUtil.prototype);
 Entry.BlockToPyParser = function(b) {
   this.blockSyntax = b;
@@ -11749,6 +11789,8 @@ Entry.JsToBlockParser = function(b) {
   this.syntax = b;
   this.scopeChain = [];
   this.scope = null;
+  this._blockCount = 0;
+  this._blockInfo = {};
 };
 (function(b) {
   b.Program = function(a) {
@@ -11761,9 +11803,8 @@ Entry.JsToBlockParser = function(b) {
       var f = [];
       0 == c && f.push({type:this.syntax.Program});
       this.initScope(e);
-      e = this.BlockStatement(e);
-      console.log("blocks", e);
-      for (var g in e) {
+      var e = this.BlockStatement(e), g;
+      for (g in e) {
         f.push(e[g]);
       }
       this.unloadScope();
@@ -11806,13 +11847,21 @@ Entry.JsToBlockParser = function(b) {
   b.BlockStatement = function(a) {
     console.log("BlockStatement node", a);
     for (var b = [], c = a.body, e = 0;e < c.length;e++) {
-      var f = c[e], g = this[f.type](f);
+      console.log("this._blockCount", this._blockCount);
+      var f = c[e];
+      console.log("bodyData", f);
+      console.log("this._blockInfo", this._blockInfo);
+      var g = this[f.type](f);
+      console.log("block123", g);
+      Entry.TextCodingUtil.prototype.hasBlockInfo(f, this._blockInfo) || this._blockCount++;
+      Entry.TextCodingUtil.prototype.updateBlockInfo(f, this._blockInfo);
+      console.log("this._blockInfo", this._blockInfo);
       if (g) {
         if (void 0 === g.type) {
-          throw {message:"\ud574\ub2f9\ud558\ub294 \ube14\ub85d\uc774 \uc5c6\uc2b5\ub2c8\ub2e4.", node:f};
+          throw {title:"\ube14\ub85d\ubcc0\ud658 \uc624\ub958", message:"\uc9c0\uc6d0\ub418\ub294 \ube14\ub85d\uc774 \uc5c6\uc2b5\ub2c8\ub2e4.", node:f, blockCount:this._blockCount};
         }
         if (Entry.TextCodingUtil.prototype.isParamBlock(g)) {
-          throw console.log("error i", e), b = Entry.block[g.type].syntax[1], console.log("targetSyntax", b), c = b.indexOf("("), -1 != c && (b = b.substring(0, c)), {title:"\ud30c\ub77c\ubbf8\ud130 \ube14\ub85d \uc624\ub958", message:b, node:a};
+          throw b = Entry.block[g.type].syntax[1], c = b.indexOf("("), -1 != c && (b = b.substring(0, c)), {title:"\ud30c\ub77c\ubbf8\ud130 \ube14\ub85d \uc624\ub958", message:b, node:a, blockCount:this._blockCount};
         }
         g && b.push(g);
       }
@@ -13350,8 +13399,8 @@ Entry.Parser = function(b, a, d, c) {
           console.log("result", c);
         } catch (m) {
           if (this.codeMirror) {
-            throw m instanceof SyntaxError ? (c = {from:{line:m.loc.line - 1, ch:m.loc.column - 2}, to:{line:m.loc.line - 1, ch:m.loc.column + 1}}, m.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : (c = this.getLineNumber(m.node.start, m.node.end), c.message = m.message, c.severity = "error"), this.findErrorInfo(m), this.codeMirror.markText(c.from, c.to, {className:"CodeMirror-lint-mark-error", __annotation:c, clearOnEnter:!0}), c = m.title ? m.title : "\ubb38\ubc95 \uc624\ub958", e = 
-            m.message ? m.message + " (line: )" : "\uc790\ubc14\uc2a4\ud06c\ub9bd\ud2b8 \ucf54\ub4dc\ub97c \ud655\uc778\ud574\uc8fc\uc138\uc694", Entry.toast.alert(c, e), m;
+            throw m instanceof SyntaxError ? (c = {from:{line:m.loc.line - 1, ch:m.loc.column - 2}, to:{line:m.loc.line - 1, ch:m.loc.column + 1}}, m.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : (c = this.getLineNumber(m.node.start, m.node.end), c.message = m.message, c.severity = "error"), e = this.findErrorInfo(m), console.log("errorInfo", e), c.from.line = e.lineNumber - 1, c.from.ch = e.location.start, c.to.line = e.lineNumber - 1, c.to.ch = e.location.end, this.codeMirror.markText(c.from, 
+            c.to, {className:"CodeMirror-lint-mark-error", __annotation:c, clearOnEnter:!0}), c = m.title ? m.title : "\ubb38\ubc95 \uc624\ub958", e = m.message ? m.message + " (line: " + e.lineNumber - 1 + ")" : "\uc790\ubc14\uc2a4\ud06c\ub9bd\ud2b8 \ucf54\ub4dc\ub97c \ud655\uc778\ud574\uc8fc\uc138\uc694", Entry.toast.alert(c, e), m;
           }
           c = [];
         }
@@ -13437,9 +13486,26 @@ Entry.Parser = function(b, a, d, c) {
     this.availableCode = this.availableCode.concat(c);
   };
   b.findErrorInfo = function(a) {
-    var b = this.codeMirror.getValue();
-    console.log("text", b);
+    var b = this.codeMirror.getValue(), c = 0, e = 0;
+    console.log("text", g);
     console.log("error", a);
+    console.log("contents", b);
+    b = b.split("\n");
+    console.log("textArr", b);
+    for (var f in b) {
+      var g = b[f].trim();
+      console.log("text", g.length);
+      c++;
+      if (0 == g.length || 1 == g.length || -1 < g.indexOf("else")) {
+        console.log("block count1");
+      } else {
+        if (console.log("block count2"), e++, e == a.blockCount) {
+          break;
+        }
+      }
+    }
+    console.log("lineNumber", c, "blockCount", e);
+    return {lineNumber:c, location:a.node};
   };
 })(Entry.Parser.prototype);
 Entry.PyBlockAssembler = function(b) {

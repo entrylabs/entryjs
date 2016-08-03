@@ -186,11 +186,13 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         }
 
                         var errorInfo = this.findErrorInfo(error);
-                        /*
-                        annotation.from.line = errorLine;
-                        annotation.from.ch = 0;
-                        annotation.to.line = errorLine;
-                        annotation.to.ch = error.message.length;*/ 
+
+                        console.log("errorInfo", errorInfo);
+
+                        annotation.from.line = errorInfo.lineNumber-1;
+                        annotation.from.ch = errorInfo.location.start;
+                        annotation.to.line = errorInfo.lineNumber-1;
+                        annotation.to.ch = errorInfo.location.end; 
 
                         this.codeMirror.markText(
                             annotation.from, annotation.to, {
@@ -205,7 +207,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             var errorTitle = '문법 오류';
 
                         if(error.message)
-                            var errorMsg = error.message + ' (line: ' + '' + ')';
+                            var errorMsg = error.message + ' (line: ' + errorInfo.lineNumber-1 + ')';
                         else
                             var errorMsg = '자바스크립트 코드를 확인해주세요';
                         Entry.toast.alert(errorTitle, errorMsg);
@@ -443,10 +445,39 @@ Entry.Parser = function(mode, type, cm, syntax) {
     };
 
     p.findErrorInfo = function(error) {
-        var text = this.codeMirror.getValue();
+        var contents = this.codeMirror.getValue();
+        var lineNumber = 0;
+        var blockCount = 0;
+
         console.log("text", text);
         console.log("error", error);
+        console.log("contents", contents);
         
+        var textArr = contents.split('\n');
+        
+        console.log("textArr", textArr);
+        for(var i in textArr) {
+            var text = textArr[i].trim();
+            console.log("text", text.length);
+            
+            lineNumber++;
+            if(text.length == 0 || text.length == 1 || text.indexOf("else") > -1) {
+                console.log("block count1");
+                continue;
+            }
+            else {
+                console.log("block count2");
+                blockCount++;
+            }
+
+            if(blockCount == error.blockCount)
+                break;
+           
+        }
+
+        console.log("lineNumber", lineNumber, "blockCount", blockCount);
+
+        return {lineNumber: lineNumber, location: error.node}
     };
 
 })(Entry.Parser.prototype);

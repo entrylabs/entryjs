@@ -11,6 +11,9 @@ Entry.JsToBlockParser = function(syntax) {
 
     this.scopeChain = [];
     this.scope = null;
+
+    this._blockCount = 0;
+    this._blockInfo = {};
 };
 
 (function(p){
@@ -31,8 +34,6 @@ Entry.JsToBlockParser = function(syntax) {
             //block statement
             var separatedBlocks = this.initScope(node);
             var blocks = this.BlockStatement(node);
-
-            console.log("blocks", blocks);
 
             for(var i in blocks) {
                 var block = blocks[i];
@@ -128,23 +129,36 @@ Entry.JsToBlockParser = function(syntax) {
         var body = node.body;
 
         for (var i = 0; i < body.length; i++) {
-            var childNode = body[i];
+            console.log("this._blockCount", this._blockCount);
+            var bodyData = body[i];
+            console.log("bodyData", bodyData);
+            console.log("this._blockInfo", this._blockInfo);
+            var block = this[bodyData.type](bodyData);
 
-            var block = this[childNode.type](childNode);
+            console.log("block123", block);
+
+            if(!Entry.TextCodingUtil.prototype.hasBlockInfo(bodyData, this._blockInfo))
+                this._blockCount++;
             
-            if(!block) {
+            Entry.TextCodingUtil.prototype.updateBlockInfo(bodyData, this._blockInfo);
+
+            
+
+            console.log("this._blockInfo", this._blockInfo); 
+            
+            if(!block) {  
                 continue;
             }
             else if(block.type === undefined) {
                 throw {
-                    message : '해당하는 블록이 없습니다.',
-                    node : childNode
+                    title : '블록변환 오류',
+                    message : '지원되는 블록이 없습니다.',
+                    node : bodyData,
+                    blockCount : this._blockCount
                 };
             }
             else if(Entry.TextCodingUtil.prototype.isParamBlock(block)) {
-                console.log("error i", i);
                 var targetSyntax = Entry.block[block.type].syntax[1];
-                console.log("targetSyntax", targetSyntax);
                 var loc = targetSyntax.indexOf("(");
                 if(loc != -1)  
                     targetSyntax = targetSyntax.substring(0, loc);
@@ -152,11 +166,13 @@ Entry.JsToBlockParser = function(syntax) {
                 throw {
                     title : '파라미터 블록 오류',
                     message : targetSyntax,
-                    node : node
+                    node : node,
+                    blockCount : this._blockCount
                 };
             }
-            else if (block)
+            else if (block) {
                 blocks.push(block);
+            }
         }
 
         return blocks;
