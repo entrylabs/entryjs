@@ -272,7 +272,7 @@ Entry.Board.OPTION_DOWNLOAD = 3;
         if (!selected) return;
 
         if (event.keyCode == 46) {
-            if (selected.block) {
+            if (selected.block && !Entry.Utils.isInInput(event)) {
                 Entry.do("destroyBlock", selected.block);
                 this.set({selectedBlockView:null});
             }
