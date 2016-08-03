@@ -20372,9 +20372,9 @@ Entry.block = {
         }, {
             "type": "Dropdown",
             "options": [
-                ["IN 1번", "1"],
-                ["IN 2번", "2"],
-                ["IN 3번", "3"]
+                ["IN 1", "1"],
+                ["IN 2", "2"],
+                ["IN 3", "3"]
             ],
             "value": "1",
             "fontSize": 11
@@ -21638,15 +21638,15 @@ Entry.block = {
         "skeleton": "basic_string_field",
         "fontColor": "#fff",
         "statements": [],
-        "template": "%1 포트의 적외선 센서에 감지되는 크기 값",
+        "template": "%1번 포트의 적외선 센서에 감지되는 크기 값",
         "params": [{
             "type": "Dropdown",
             "options": [
-                ["IN 1번", "IN1"],
-                ["IN 2번", "IN2"],
-                ["IN 3번", "IN3"]
+                ["IN 1", "1"],
+                ["IN 2", "2"],
+                ["IN 3", "3"]
             ],
-            "value": "IN1",
+            "value": "1",
             "fontSize": 11
         }],
         "events": {},
@@ -21945,15 +21945,15 @@ Entry.block = {
         "skeleton": "basic_string_field",
         "fontColor": "#fff",
         "statements": [],
-        "template": "%1 포트의 적외선 센서에 감지되는 크기 값",
+        "template": "%1번 포트의 적외선 센서에 감지되는 크기 값",
         "params": [{
             "type": "Dropdown",
             "options": [
-                ["IN 1번", "IN1"],
-                ["IN 2번", "IN2"],
-                ["IN 3번", "IN3"]
+                ["IN 1", "1"],
+                ["IN 2", "2"],
+                ["IN 3", "3"]
             ],
-            "value": "IN1",
+            "value": "1",
             "fontSize": 11
         }],
         "events": {},
