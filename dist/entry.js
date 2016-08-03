@@ -18155,7 +18155,7 @@ Entry.Board.OPTION_DOWNLOAD = 3;
   };
   b._keyboardControl = function(a) {
     var b = this.selectedBlockView;
-    b && 46 == a.keyCode && b.block && (Entry.do("destroyBlock", b.block), this.set({selectedBlockView:null}));
+    b && 46 == a.keyCode && b.block && !Entry.Utils.isInInput(a) && (Entry.do("destroyBlock", b.block), this.set({selectedBlockView:null}));
   };
   b.hide = function() {
     this.wrapper.addClass("entryRemove");
