@@ -20359,7 +20359,7 @@ Entry.block = {
         "skeleton": "basic",
         "fontColor": "#fff",
         "statements": [],
-        "template": "%1번 포트의 발광다이오드를 %2번 포트의 값으로 정하기 %3",
+        "template": "%1번 포트의 발광다이오드를 %2포트의 %3~%4의 범위로 켜기%5",
         "params": [{
             "type": "Dropdown",
             "options": [
@@ -20370,6 +20370,18 @@ Entry.block = {
             "value": "1",
             "fontSize": 11
         }, {
+            "type": "Dropdown",
+            "options": [
+                ["IN 1번", "1"],
+                ["IN 2번", "2"],
+                ["IN 3번", "3"]
+            ],
+            "value": "1",
+            "fontSize": 11
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
             "type": "Block",
             "accept": "string"
         }, {
@@ -20379,33 +20391,40 @@ Entry.block = {
         }],
         "events": {},
         "def": {
-            "params": [null, {
-                "type": "neobot_diode_input_value",
-            }, null],
+            "params": [null, null,
+                    { "type": "number", "params": ["0"] },
+                    { "type": "number", "params": ["255"] },
+                    null],
             "type": "neobot_diode_inout_toggle"
         },
         "paramsKeyMap": {
-            "PORT": 0,
-            "VALUE": 1
+            "OUTPUT": 0,
+            "INPUT": 1,
+            "MIN": 2,
+            "MAX": 3
         },
         "class": "neobot_diode",
         //"isNotFor": ["mini"],
         "func": function (sprite, script) {
-            var port = script.getNumberField('PORT');
-            var value = script.getNumberValue('VALUE');
-            var option = port;
-
-            if (value < 0) {
-                value = 0;
-            } else if (value > 255) {
-                value = 255;
-            }
-
+            var outputPort = script.getNumberField('OUTPUT');
+            var inputPort = script.getNumberField('INPUT');
+            var option = inputPort;
             if (option === 3) {
                 option = 4;
             }
+            var oMin = script.getNumberValue('MIN');
+            var oMax = script.getNumberValue('MAX');
+            var nMin = 0;
+            var nMax = 255;
+            var x = Entry.hw.portData['IN' + inputPort];
+            var percent = (x - oMin) / (oMax - oMin);
+            result = percent * (nMax - nMin) + nMin;
+            if (result > nMax)
+                result = nMax;
+            if (result < nMin)
+                result = nMin;
 
-            Entry.hw.sendQueue['OUT' + port] = value;
+            Entry.hw.sendQueue['OUT' + outputPort] = result;
             Entry.hw.sendQueue['OPT'] = Entry.hw.sendQueue['OPT'] & (~option);
 
             return script.callReturn();
