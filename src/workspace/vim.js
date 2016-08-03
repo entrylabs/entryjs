@@ -172,6 +172,8 @@ Entry.Vim = function(dom, textType) {
         }
 
         this.codeMirror.setValue(textCode);
+        var doc = this.codeMirror.getDoc();
+        doc.setCursor({ line: doc.lastLine() - 1});
         // this.codeMirror.getDoc().markText({line:0, ch:0}, {line: 1, ch: 100}, {readOnly: true});
     };
 
