@@ -6269,38 +6269,46 @@ Entry.Container = function() {
   this.currentObjects_ = this.copiedObject = null;
 };
 Entry.Container.prototype.generateView = function(b, a) {
+  var c = this;
   this._view = b;
   this._view.addClass("entryContainer");
-  if (a && "workspace" != a) {
-    "phone" == a && (this._view.addClass("entryContainerPhone"), c = Entry.createElement("div"), c.addClass("entryAddObjectWorkspace"), c.innerHTML = Lang.Workspace.add_object, c.bindOnClick(function(a) {
-      Entry.dispatchEvent("openSpriteManager");
-    }), c = Entry.createElement("div"), c.addClass("entryContainerListPhoneWrapper"), this._view.appendChild(c), d = Entry.createElement("ul"), d.addClass("entryContainerListPhone"), c.appendChild(d), this.listView_ = d);
-  } else {
-    this._view.addClass("entryContainerWorkspace");
-    this._view.setAttribute("id", "entryContainerWorkspaceId");
-    var c = Entry.createElement("div");
-    c.addClass("entryAddObjectWorkspace");
-    c.innerHTML = Lang.Workspace.add_object;
-    c.bindOnClick(function(a) {
-      Entry.dispatchEvent("openSpriteManager");
-    });
-    c = Entry.createElement("div");
-    c.addClass("entryContainerListWorkspaceWrapper");
-    Entry.isForLecture && c.addClass("lecture");
-    Entry.Utils.disableContextmenu(c);
-    $(c).on("contextmenu", function(a) {
-      a = [{text:Lang.Blocks.Paste_blocks, enable:!Entry.engine.isState("run") && !!Entry.container.copiedObject, callback:function() {
-        Entry.container.copiedObject ? Entry.container.addCloneObject(Entry.container.copiedObject) : Entry.toast.alert(Lang.Workspace.add_object_alert, Lang.Workspace.object_not_found_for_paste);
-      }}];
-      Entry.ContextMenu.show(a, "workspace-contextmenu");
-    });
-    this._view.appendChild(c);
-    var d = Entry.createElement("ul");
-    d.addClass("entryContainerListWorkspace");
-    c.appendChild(d);
-    this.listView_ = d;
-    this.enableSort();
-  }
+  this._view.addClass("entryContainerWorkspace");
+  this._view.setAttribute("id", "entryContainerWorkspaceId");
+  var d = Entry.createElement("div");
+  d.addClass("entryAddObjectWorkspace");
+  d.innerHTML = Lang.Workspace.add_object;
+  d.bindOnClick(function(a) {
+    Entry.dispatchEvent("openSpriteManager");
+  });
+  var d = Entry.createElement("div"), e = "entryContainerListWorkspaceWrapper";
+  Entry.isForLecture && (e += " lecture");
+  d.addClass(e);
+  Entry.Utils.disableContextmenu(d);
+  $(d).bind("mousedown touchstart", function(a) {
+    function b(a) {
+      q && 5 < Math.sqrt(Math.pow(a.pageX - q.x, 2) + Math.pow(a.pageY - q.y, 2)) && e && (clearTimeout(e), e = null);
+    }
+    function d(a) {
+      a.stopPropagation();
+      l.unbind(".container");
+      e && (clearTimeout(e), e = null);
+    }
+    var e = null, l = $(document), n = a.type, m = !1;
+    if (Entry.Utils.isRightButton(a)) {
+      c._rightClick(a), m = !0;
+    } else {
+      var q = {x:a.clientX, y:a.clientY};
+      "touchstart" !== n || m || (a.stopPropagation(), a = Entry.Utils.convertMouseEvent(a), e = setTimeout(function() {
+        e && (e = null, c._rightClick(a));
+      }, 1E3), l.bind("mousemove.container touchmove.container", b), l.bind("mouseup.container touchend.container", d));
+    }
+  });
+  this._view.appendChild(d);
+  e = Entry.createElement("ul");
+  e.addClass("entryContainerListWorkspace");
+  d.appendChild(e);
+  this.listView_ = e;
+  this.enableSort();
 };
 Entry.Container.prototype.enableSort = function() {
   $ && $(this.listView_).sortable({start:function(b, a) {
@@ -6742,6 +6750,13 @@ Entry.Container.prototype.getView = function() {
 };
 Entry.Container.prototype.resize = function() {
 };
+Entry.Container.prototype._rightClick = function(b) {
+  b.stopPropagation && b.stopPropagation();
+  var a = [{text:Lang.Blocks.Paste_blocks, enable:!Entry.engine.isState("run") && !!Entry.container.copiedObject, callback:function() {
+    Entry.container.copiedObject ? Entry.container.addCloneObject(Entry.container.copiedObject) : Entry.toast.alert(Lang.Workspace.add_object_alert, Lang.Workspace.object_not_found_for_paste);
+  }}];
+  Entry.ContextMenu.show(a, "workspace-contextmenu", {x:b.clientX, y:b.clientY});
+};
 Entry.db = {data:{}, typeMap:{}};
 (function(b) {
   b.add = function(a) {
@@ -7108,21 +7123,33 @@ Entry.Engine.prototype.toggleSpeedPanel = function() {
     this.speedProgress_ = Entry.createElement("table", "entrySpeedProgressWorkspace");
     for (var b = Entry.createElement("tr"), a = this.speeds, c = 0;5 > c;c++) {
       (function(c) {
-        var e = Entry.createElement("td", "progressCell" + c);
-        e.bindOnClick(function() {
+        var d = Entry.createElement("td", "progressCell" + c);
+        d.bindOnClick(function() {
           Entry.engine.setSpeedMeter(a[c]);
         });
-        b.appendChild(e);
+        b.appendChild(d);
       })(c);
     }
     this.view_.insertBefore(this.speedProgress_, this.maximizeButton);
     this.speedProgress_.appendChild(b);
     this.speedHandle_ = Entry.createElement("div", "entrySpeedHandleWorkspace");
-    c = (Entry.interfaceState.canvasWidth - 84) / 5;
-    $(this.speedHandle_).draggable({axis:"x", grid:[c, c], containment:[80, 0, 4 * c + 80, 0], drag:function(a, b) {
-      var c = (b.position.left - 80) / (Entry.interfaceState.canvasWidth - 84) * 5, c = Math.floor(c);
-      0 > c || Entry.engine.setSpeedMeter(Entry.engine.speeds[c]);
-    }});
+    var d = (Entry.interfaceState.canvasWidth - 84) / 5;
+    $(this.speedHandle_).bind("mousedown.speedPanel touchstart.speedPanel", function(a) {
+      function b(a) {
+        a.stopPropagation();
+        a = Entry.Utils.convertMouseEvent(a);
+        a = Math.floor((a.clientX - 80) / (5 * d) * 5);
+        0 > a || 4 < a || Entry.engine.setSpeedMeter(Entry.engine.speeds[a]);
+      }
+      function c(a) {
+        $(document).unbind(".speedPanel");
+      }
+      a.stopPropagation && a.stopPropagation();
+      a.preventDefault && a.preventDefault();
+      if (0 === a.button || a.originalEvent && a.originalEvent.touches) {
+        Entry.Utils.convertMouseEvent(a), a = $(document), a.bind("mousemove.speedPanel touchmove.speedPanel", b), a.bind("mouseup.speedPanel touchend.speedPanel", c);
+      }
+    });
     this.view_.insertBefore(this.speedHandle_, this.maximizeButton);
     this.setSpeedMeter(Entry.FPS);
   }
@@ -8066,28 +8093,29 @@ Entry.EntryObject.prototype.generateView = function() {
     var b = Entry.createElement("li", this.id);
     b.addClass("entryContainerListElementWorkspace");
     b.object = this;
-    b.bindOnClick(function(a) {
-      Entry.container.getObject(this.id) && Entry.container.selectObject(this.id);
-    });
     Entry.Utils.disableContextmenu(b);
     var a = this;
-    $(b).on("contextmenu", function(b) {
-      b = [{text:Lang.Workspace.context_rename, callback:function(b) {
-        b.stopPropagation();
-        b = a;
-        b.setLock(!1);
-        b.editObjectValues(!0);
-        b.nameView_.select();
-      }}, {text:Lang.Workspace.context_duplicate, enable:!Entry.engine.isState("run"), callback:function() {
-        Entry.container.addCloneObject(a);
-      }}, {text:Lang.Workspace.context_remove, callback:function() {
-        Entry.container.removeObject(a);
-      }}, {text:Lang.Workspace.copy_file, callback:function() {
-        Entry.container.setCopiedObject(a);
-      }}, {text:Lang.Blocks.Paste_blocks, enable:!Entry.engine.isState("run") && !!Entry.container.copiedObject, callback:function() {
-        Entry.container.copiedObject ? Entry.container.addCloneObject(Entry.container.copiedObject) : Entry.toast.alert(Lang.Workspace.add_object_alert, Lang.Workspace.object_not_found_for_paste);
-      }}];
-      Entry.ContextMenu.show(b, "workspace-contextmenu");
+    longPressTimer = null;
+    $(b).bind("mousedown touchstart", function(b) {
+      function c(a) {
+        a.stopPropagation();
+        h && 5 < Math.sqrt(Math.pow(a.pageX - h.x, 2) + Math.pow(a.pageY - h.y, 2)) && longPressTimer && (clearTimeout(longPressTimer), longPressTimer = null);
+      }
+      function d(a) {
+        a.stopPropagation();
+        e.unbind(".object");
+        longPressTimer && (clearTimeout(longPressTimer), longPressTimer = null);
+      }
+      Entry.container.getObject(this.id) && Entry.container.selectObject(this.id);
+      var e = $(document), f = b.type, g = !1;
+      if (Entry.Utils.isRightButton(b)) {
+        b.stopPropagation(), Entry.documentMousedown.notify(b), g = !0, a._rightClick(b);
+      } else {
+        var h = {x:b.clientX, y:b.clientY};
+        "touchstart" !== f || g || (b.stopPropagation(), Entry.documentMousedown.notify(b), longPressTimer = setTimeout(function() {
+          longPressTimer && (longPressTimer = null, a._rightClick(b));
+        }, 1E3), e.bind("mousemove.object touchmove.object", c), e.bind("mouseup.object touchend.object", d));
+      }
     });
     this.view_ = b;
     var c = this, b = Entry.createElement("ul");
@@ -8188,22 +8216,22 @@ Entry.EntryObject.prototype.generateView = function() {
     var l = Entry.createElement("span");
     l.addClass("entryObjectCoordinateSizeWorkspace");
     l.innerHTML = Lang.Workspace.Size + " : ";
-    var q = Entry.createElement("input");
-    q.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size");
-    q.bindOnClick(function(a) {
+    var n = Entry.createElement("input");
+    n.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size");
+    n.bindOnClick(function(a) {
       a.stopPropagation();
       this.select();
     });
-    q.setAttribute("readonly", !0);
+    n.setAttribute("readonly", !0);
     d.appendChild(e);
     d.appendChild(g);
     d.appendChild(h);
     d.appendChild(k);
     d.appendChild(l);
-    d.appendChild(q);
+    d.appendChild(n);
     d.xInput_ = g;
     d.yInput_ = k;
-    d.sizeInput_ = q;
+    d.sizeInput_ = n;
     this.coordinateView_ = d;
     c = this;
     g.onkeypress = function(a) {
@@ -8222,11 +8250,11 @@ Entry.EntryObject.prototype.generateView = function() {
       c.updateCoordinateView();
       Entry.stage.updateObject();
     };
-    q.onkeypress = function(a) {
+    n.onkeypress = function(a) {
       13 == a.keyCode && c.editObjectValues(!1);
     };
-    q.onblur = function(a) {
-      isNaN(q.value) || c.entity.setSize(Number(q.value));
+    n.onblur = function(a) {
+      isNaN(n.value) || c.entity.setSize(Number(n.value));
       c.updateCoordinateView();
       Entry.stage.updateObject();
     };
@@ -8237,48 +8265,48 @@ Entry.EntryObject.prototype.generateView = function() {
     e = Entry.createElement("span");
     e.addClass("entryObjectRotateSpanWorkspace");
     e.innerHTML = Lang.Workspace.rotation + " : ";
-    var n = Entry.createElement("input");
-    n.addClass("entryObjectRotateInputWorkspace");
-    n.setAttribute("readonly", !0);
-    n.bindOnClick(function(a) {
-      a.stopPropagation();
-      this.select();
-    });
-    this.rotateSpan_ = e;
-    this.rotateInput_ = n;
-    h = Entry.createElement("span");
-    h.addClass("entryObjectDirectionSpanWorkspace");
-    h.innerHTML = Lang.Workspace.direction + " : ";
     var m = Entry.createElement("input");
-    m.addClass("entryObjectDirectionInputWorkspace");
+    m.addClass("entryObjectRotateInputWorkspace");
     m.setAttribute("readonly", !0);
     m.bindOnClick(function(a) {
       a.stopPropagation();
       this.select();
     });
-    this.directionInput_ = m;
+    this.rotateSpan_ = e;
+    this.rotateInput_ = m;
+    h = Entry.createElement("span");
+    h.addClass("entryObjectDirectionSpanWorkspace");
+    h.innerHTML = Lang.Workspace.direction + " : ";
+    var q = Entry.createElement("input");
+    q.addClass("entryObjectDirectionInputWorkspace");
+    q.setAttribute("readonly", !0);
+    q.bindOnClick(function(a) {
+      a.stopPropagation();
+      this.select();
+    });
+    this.directionInput_ = q;
     d.appendChild(e);
-    d.appendChild(n);
-    d.appendChild(h);
     d.appendChild(m);
-    d.rotateInput_ = n;
-    d.directionInput_ = m;
+    d.appendChild(h);
+    d.appendChild(q);
+    d.rotateInput_ = m;
+    d.directionInput_ = q;
     c = this;
-    n.onkeypress = function(a) {
-      13 == a.keyCode && c.editObjectValues(!1);
-    };
-    n.onblur = function(a) {
-      a = n.value;
-      -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da")));
-      isNaN(a) || c.entity.setRotation(Number(a));
-      c.updateRotationView();
-      Entry.stage.updateObject();
-    };
     m.onkeypress = function(a) {
       13 == a.keyCode && c.editObjectValues(!1);
     };
     m.onblur = function(a) {
       a = m.value;
+      -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da")));
+      isNaN(a) || c.entity.setRotation(Number(a));
+      c.updateRotationView();
+      Entry.stage.updateObject();
+    };
+    q.onkeypress = function(a) {
+      13 == a.keyCode && c.editObjectValues(!1);
+    };
+    q.onblur = function(a) {
+      a = q.value;
       -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da")));
       isNaN(a) || c.entity.setDirection(Number(a));
       c.updateRotationView();
@@ -8350,20 +8378,20 @@ Entry.EntryObject.prototype.generateView = function() {
       if (a = Entry.container.getObject(this.id)) {
         Entry.container.selectObject(a.id), Entry.playground.injectObject(a);
       }
-    }), this.view_.appendChild(d), d = Entry.createElement("div"), d.addClass("entryObjectInformationWorkspace"), d.object = this, this.isInformationToggle = !1, b.appendChild(d), this.informationView_ = d, d = Entry.createElement("div"), d.addClass("entryObjectRotateLabelWrapperWorkspace"), this.view_.appendChild(d), this.rotateLabelWrapperView_ = d, e = Entry.createElement("span"), e.addClass("entryObjectRotateSpanWorkspace"), e.innerHTML = Lang.Workspace.rotation + " : ", n = Entry.createElement("input"), 
-    n.addClass("entryObjectRotateInputWorkspace"), this.rotateSpan_ = e, this.rotateInput_ = n, h = Entry.createElement("span"), h.addClass("entryObjectDirectionSpanWorkspace"), h.innerHTML = Lang.Workspace.direction + " : ", m = Entry.createElement("input"), m.addClass("entryObjectDirectionInputWorkspace"), this.directionInput_ = m, d.appendChild(e), d.appendChild(n), d.appendChild(h), d.appendChild(m), d.rotateInput_ = n, d.directionInput_ = m, c = this, n.onkeypress = function(a) {
-      13 == a.keyCode && (a = n.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || c.entity.setRotation(Number(a)), c.updateRotationView(), n.blur());
-    }, n.onblur = function(a) {
+    }), this.view_.appendChild(d), d = Entry.createElement("div"), d.addClass("entryObjectInformationWorkspace"), d.object = this, this.isInformationToggle = !1, b.appendChild(d), this.informationView_ = d, d = Entry.createElement("div"), d.addClass("entryObjectRotateLabelWrapperWorkspace"), this.view_.appendChild(d), this.rotateLabelWrapperView_ = d, e = Entry.createElement("span"), e.addClass("entryObjectRotateSpanWorkspace"), e.innerHTML = Lang.Workspace.rotation + " : ", m = Entry.createElement("input"), 
+    m.addClass("entryObjectRotateInputWorkspace"), this.rotateSpan_ = e, this.rotateInput_ = m, h = Entry.createElement("span"), h.addClass("entryObjectDirectionSpanWorkspace"), h.innerHTML = Lang.Workspace.direction + " : ", q = Entry.createElement("input"), q.addClass("entryObjectDirectionInputWorkspace"), this.directionInput_ = q, d.appendChild(e), d.appendChild(m), d.appendChild(h), d.appendChild(q), d.rotateInput_ = m, d.directionInput_ = q, c = this, m.onkeypress = function(a) {
+      13 == a.keyCode && (a = m.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || c.entity.setRotation(Number(a)), c.updateRotationView(), m.blur());
+    }, m.onblur = function(a) {
       c.entity.setRotation(c.entity.getRotation());
       Entry.stage.updateObject();
-    }, m.onkeypress = function(a) {
-      13 == a.keyCode && (a = m.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || c.entity.setDirection(Number(a)), c.updateRotationView(), m.blur());
-    }, m.onblur = function(a) {
+    }, q.onkeypress = function(a) {
+      13 == a.keyCode && (a = q.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || c.entity.setDirection(Number(a)), c.updateRotationView(), q.blur());
+    }, q.onblur = function(a) {
       c.entity.setDirection(c.entity.getDirection());
       Entry.stage.updateObject();
     }, b = Entry.createElement("div"), b.addClass("entryObjectRotationWrapperWorkspace"), b.object = this, this.view_.appendChild(b), d = Entry.createElement("span"), d.addClass("entryObjectCoordinateWorkspace"), b.appendChild(d), e = Entry.createElement("span"), e.addClass("entryObjectCoordinateSpanWorkspace"), e.innerHTML = "X:", g = Entry.createElement("input"), g.addClass("entryObjectCoordinateInputWorkspace"), h = Entry.createElement("span"), h.addClass("entryObjectCoordinateSpanWorkspace"), 
-    h.innerHTML = "Y:", k = Entry.createElement("input"), k.addClass("entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right"), l = Entry.createElement("span"), l.addClass("entryObjectCoordinateSpanWorkspace"), l.innerHTML = Lang.Workspace.Size, q = Entry.createElement("input"), q.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size"), d.appendChild(e), d.appendChild(g), d.appendChild(h), d.appendChild(k), d.appendChild(l), d.appendChild(q), 
-    d.xInput_ = g, d.yInput_ = k, d.sizeInput_ = q, this.coordinateView_ = d, c = this, g.onkeypress = function(a) {
+    h.innerHTML = "Y:", k = Entry.createElement("input"), k.addClass("entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right"), l = Entry.createElement("span"), l.addClass("entryObjectCoordinateSpanWorkspace"), l.innerHTML = Lang.Workspace.Size, n = Entry.createElement("input"), n.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size"), d.appendChild(e), d.appendChild(g), d.appendChild(h), d.appendChild(k), d.appendChild(l), d.appendChild(n), 
+    d.xInput_ = g, d.yInput_ = k, d.sizeInput_ = n, this.coordinateView_ = d, c = this, g.onkeypress = function(a) {
       13 == a.keyCode && (isNaN(g.value) || c.entity.setX(Number(g.value)), c.updateCoordinateView(), c.blur());
     }, g.onblur = function(a) {
       c.entity.setX(c.entity.getX());
@@ -8649,17 +8677,24 @@ Entry.EntryObject.prototype.updateInputViews = function(b) {
 };
 Entry.EntryObject.prototype.editObjectValues = function(b) {
   var a;
-  a = this.getLock() ? [this.nameView_] : [this.nameView_, this.coordinateView_.xInput_, this.coordinateView_.yInput_, this.rotateInput_, this.directionInput_, this.coordinateView_.sizeInput_];
+  a = this.getLock() ? [this.nameView_] : [this.coordinateView_.xInput_, this.coordinateView_.yInput_, this.rotateInput_, this.directionInput_, this.coordinateView_.sizeInput_];
   if (b) {
+    var c = this.nameView_;
     $(a).removeClass("selectedNotEditingObject");
+    $(c).removeClass("selectedNotEditingObject");
+    window.setTimeout(function() {
+      $(c).removeAttr("readonly");
+      c.addClass("selectedEditingObject");
+    });
     for (b = 0;b < a.length;b++) {
-      a[b].removeAttribute("readonly"), a[b].addClass("selectedEditingObject");
+      $(a[b]).removeAttr("readonly"), a[b].addClass("selectedEditingObject");
     }
     this.isEditing = !0;
   } else {
     for (b = 0;b < a.length;b++) {
       a[b].blur(!0);
     }
+    this.nameView_.blur(!0);
     this.blurAllInput();
     this.isEditing = !1;
   }
@@ -8693,6 +8728,24 @@ Entry.EntryObject.prototype.getStampEntities = function() {
 };
 Entry.EntryObject.prototype.clearExecutor = function() {
   this.script.clearExecutors();
+};
+Entry.EntryObject.prototype._rightClick = function(b) {
+  var a = this, c = [{text:Lang.Workspace.context_rename, callback:function(b) {
+    b.stopPropagation();
+    a.setLock(!1);
+    a.editObjectValues(!0);
+    a.nameView_.select();
+  }}, {text:Lang.Workspace.context_duplicate, enable:!Entry.engine.isState("run"), callback:function() {
+    Entry.container.addCloneObject(a);
+  }}, {text:Lang.Workspace.context_remove, callback:function() {
+    Entry.container.removeObject(a);
+  }}, {text:Lang.Workspace.copy_file, callback:function() {
+    Entry.container.setCopiedObject(a);
+  }}, {text:Lang.Blocks.Paste_blocks, enable:!Entry.engine.isState("run") && !!Entry.container.copiedObject, callback:function() {
+    Entry.container.copiedObject ? Entry.container.addCloneObject(Entry.container.copiedObject) : Entry.toast.alert(Lang.Workspace.add_object_alert, Lang.Workspace.object_not_found_for_paste);
+  }}];
+  b = Entry.Utils.convertMouseEvent(b);
+  Entry.ContextMenu.show(c, "workspace-contextmenu", {x:b.clientX, y:b.clientY});
 };
 Entry.Painter = function() {
   this.toolbox = {selected:"cursor"};
@@ -9116,14 +9169,14 @@ Entry.Painter.prototype.fill = function() {
     var c = new createjs.Point(this.stage.mouseX, this.stage.mouseY);
     c.x = Math.round(c.x);
     c.y = Math.round(c.y);
-    for (var d = 4 * (c.y * b + c.x), e = this.colorLayerData.data[d], f = this.colorLayerData.data[d + 1], g = this.colorLayerData.data[d + 2], h = this.colorLayerData.data[d + 3], k, l, c = [[c.x, c.y]], q = Entry.hex2rgb(this.stroke.lineColor);c.length;) {
-      for (var d = c.pop(), n = d[0], m = d[1], d = 4 * (m * b + n);0 <= m && this.matchColor(d, e, f, g, h);) {
-        --m, d -= 4 * b;
+    for (var d = 4 * (c.y * b + c.x), e = this.colorLayerData.data[d], f = this.colorLayerData.data[d + 1], g = this.colorLayerData.data[d + 2], h = this.colorLayerData.data[d + 3], k, l, c = [[c.x, c.y]], n = Entry.hex2rgb(this.stroke.lineColor);c.length;) {
+      for (var d = c.pop(), m = d[0], q = d[1], d = 4 * (q * b + m);0 <= q && this.matchColor(d, e, f, g, h);) {
+        --q, d -= 4 * b;
       }
       d += 4 * b;
-      m += 1;
-      for (l = k = !1;m < a - 1 && this.matchColor(d, e, f, g, h);) {
-        m += 1, this.colorPixel(d, q.r, q.g, q.b), 0 < n && (this.matchColor(d - 4, e, f, g, h) ? k || (c.push([n - 1, m]), k = !0) : k && (k = !1)), n < b - 1 && (this.matchColor(d + 4, e, f, g, h) ? l || (c.push([n + 1, m]), l = !0) : l && (l = !1)), d += 4 * b;
+      q += 1;
+      for (l = k = !1;q < a - 1 && this.matchColor(d, e, f, g, h);) {
+        q += 1, this.colorPixel(d, n.r, n.g, n.b), 0 < m && (this.matchColor(d - 4, e, f, g, h) ? k || (c.push([m - 1, q]), k = !0) : k && (k = !1)), m < b - 1 && (this.matchColor(d + 4, e, f, g, h) ? l || (c.push([m + 1, q]), l = !0) : l && (l = !1)), d += 4 * b;
       }
       if (1080 < c.length) {
         break;
@@ -9667,9 +9720,9 @@ Entry.Painter.prototype.generateView = function(b) {
     this.attrColorArea = Entry.createElement("fieldset", "entryPainterAttrColor");
     this.attrColorArea.addClass("entryPlaygroundPainterAttrColor");
     g.appendChild(this.attrColorArea);
-    var q = Entry.createElement("div");
-    q.addClass("entryPlaygroundPainterAttrColorContainer");
-    this.attrColorArea.appendChild(q);
+    var n = Entry.createElement("div");
+    n.addClass("entryPlaygroundPainterAttrColorContainer");
+    this.attrColorArea.appendChild(n);
     this.attrCircleArea = Entry.createElement("div");
     this.attrCircleArea.addClass("painterAttrCircleArea");
     g.appendChild(this.attrCircleArea);
@@ -9696,7 +9749,7 @@ Entry.Painter.prototype.generateView = function(b) {
         document.getElementById("entryPainterAttrCircle").style.backgroundColor = a.stroke.lineColor;
         document.getElementById("entryPainterAttrCircleInput").value = b;
       });
-      q.appendChild(c);
+      n.appendChild(c);
     });
     this.attrThickArea = Entry.createElement("div", "painterAttrThickArea");
     this.attrThickArea.addClass("entryPlaygroundentryPlaygroundPainterAttrThickArea");
@@ -9705,12 +9758,12 @@ Entry.Painter.prototype.generateView = function(b) {
     d.addClass("painterAttrThickName");
     d.innerHTML = Lang.Workspace.thickness;
     this.attrThickArea.appendChild(d);
-    var n = Entry.createElement("fieldset", "entryPainterAttrThick");
-    n.addClass("entryPlaygroundPainterAttrThick");
-    this.attrThickArea.appendChild(n);
+    var m = Entry.createElement("fieldset", "entryPainterAttrThick");
+    m.addClass("entryPlaygroundPainterAttrThick");
+    this.attrThickArea.appendChild(m);
     d = Entry.createElement("div");
     d.addClass("paintAttrThickTop");
-    n.appendChild(d);
+    m.appendChild(d);
     e = Entry.createElement("select", "entryPainterAttrThick");
     e.addClass("entryPlaygroundPainterAttrThickInput");
     e.size = "1";
@@ -9720,16 +9773,16 @@ Entry.Painter.prototype.generateView = function(b) {
     for (d = 1;10 >= d;d++) {
       c = Entry.createElement("option"), c.value = d, c.innerHTML = d, e.appendChild(c);
     }
-    n.appendChild(e);
+    m.appendChild(e);
     d = Entry.createElement("div", "entryPainterShapeLineColor");
     d.addClass("painterAttrShapeLineColor");
     c = Entry.createElement("div", "entryPainterShapeInnerBackground");
     c.addClass("painterAttrShapeInnerBackground");
     d.appendChild(c);
-    n.appendChild(d);
+    m.appendChild(d);
     this.attrThickArea.painterAttrShapeLineColor = d;
-    n.bindOnClick(function() {
-      m.style.zIndex = "1";
+    m.bindOnClick(function() {
+      q.style.zIndex = "1";
       this.style.zIndex = "10";
       r = !1;
     });
@@ -9742,13 +9795,13 @@ Entry.Painter.prototype.generateView = function(b) {
     c = Entry.createElement("div");
     c.addClass("paintAttrBackgroundTop");
     d.appendChild(c);
-    var m = Entry.createElement("div", "entryPainterShapeBackgroundColor");
-    m.addClass("painterAttrShapeBackgroundColor");
-    this.attrBackgroundArea.painterAttrShapeBackgroundColor = m;
-    c.appendChild(m);
+    var q = Entry.createElement("div", "entryPainterShapeBackgroundColor");
+    q.addClass("painterAttrShapeBackgroundColor");
+    this.attrBackgroundArea.painterAttrShapeBackgroundColor = q;
+    c.appendChild(q);
     var r = !1;
-    m.bindOnClick(function(a) {
-      n.style.zIndex = "1";
+    q.bindOnClick(function(a) {
+      m.style.zIndex = "1";
       this.style.zIndex = "10";
       r = !0;
     });
@@ -9810,9 +9863,9 @@ Entry.Painter.prototype.generateView = function(b) {
     this.attrLineArea = Entry.createElement("div", "painterAttrLineStyle");
     this.attrLineArea.addClass("entryPlaygroundPainterAttrLineStyle");
     g.appendChild(this.attrLineArea);
-    var v = Entry.createElement("div");
-    v.addClass("entryPlaygroundPainterAttrLineStyleLine");
-    this.attrLineArea.appendChild(v);
+    var t = Entry.createElement("div");
+    t.addClass("entryPlaygroundPainterAttrLineStyleLine");
+    this.attrLineArea.appendChild(t);
     var u = Entry.createElement("div");
     u.addClass("entryPlaygroundPaitnerAttrLineArea");
     this.attrLineArea.appendChild(u);
@@ -9820,9 +9873,9 @@ Entry.Painter.prototype.generateView = function(b) {
     d.addClass("entryPlaygroundPainterAttrLineStyleLine1");
     u.appendChild(d);
     d.value = "line";
-    var t = Entry.createElement("div");
-    t.addClass("painterAttrLineStyleBackgroundLine");
-    v.bindOnClick(function(a) {
+    var v = Entry.createElement("div");
+    v.addClass("painterAttrLineStyleBackgroundLine");
+    t.bindOnClick(function(a) {
       u.removeClass("entryRemove");
     });
     u.blur = function(a) {
@@ -9832,12 +9885,12 @@ Entry.Painter.prototype.generateView = function(b) {
       this.addClass("entryRemove");
     };
     d.bindOnClick(function(a) {
-      this.attrLineArea.removeClass(v);
-      this.attrLineArea.appendChild(t);
+      this.attrLineArea.removeClass(t);
+      this.attrLineArea.appendChild(v);
       this.attrLineArea.onchange(a);
       u.blur();
     });
-    t.bindOnClick(function(a) {
+    v.bindOnClick(function(a) {
       u.removeClass("entryRemove");
     });
     this.attrLineArea.onchange = function(b) {
@@ -10431,6 +10484,7 @@ Entry.Popup = function() {
   document.body.appendChild(this.body_);
   this.window_ = Entry.createElement("div");
   this.window_.addClass("entryPopupWindow");
+  "tablet" === Entry.device && this.window_.addClass("tablet");
   this.window_.bindOnClick(function() {
   });
   Entry.addEventListener("windowResized", this.resize);
@@ -10472,6 +10526,15 @@ Entry.popupHelper = function(b) {
       b.target == this && this.popup.hide();
     }
   });
+  this.body_.bind("touchstart", function(b) {
+    if (!(d.nowContent && -1 < a.indexOf(d.nowContent.prop("type")))) {
+      var f = $(b.target);
+      c.forEach(function(a) {
+        f.hasClass(a) && this.popup.hide();
+      }.bind(this));
+      b.target == this && this.popup.hide();
+    }
+  });
   window.popupHelper = this;
   this.body_.prop("popup", this);
   Entry.Dom("div", {class:"entryPopupHelperTopSpan", parent:this.body_});
@@ -10492,12 +10555,16 @@ Entry.popupHelper.prototype.addPopup = function(b, a) {
   d.bindOnClick(function() {
     a.closeEvent ? a.closeEvent(this) : this.hide();
   }.bind(this));
-  var e = Entry.Dom("div", {class:"entryPopupHelperWrapper"});
-  e.append(d);
-  a.title && (d = Entry.Dom("div", {class:"entryPopupHelperTitle"}), e.append(d), d.text(a.title));
+  var e = this;
+  d.bind("touchstart", function() {
+    a.closeEvent ? a.closeEvent(e) : e.hide();
+  });
+  var f = Entry.Dom("div", {class:"entryPopupHelperWrapper"});
+  f.append(d);
+  a.title && (d = Entry.Dom("div", {class:"entryPopupHelperTitle"}), f.append(d), d.text(a.title));
   c.addClass(b);
-  c.append(e);
-  c.popupWrapper_ = e;
+  c.append(f);
+  c.popupWrapper_ = f;
   c.prop("type", a.type);
   "function" === typeof a.setPopupLayout && a.setPopupLayout(c);
   this.popupList[b] = c;
@@ -10607,7 +10674,7 @@ Entry.init = function(b, a) {
   "workspace" == this.type && this.isPhone() && (this.type = "phone");
   this.initialize_();
   this.view_ = b;
-  this.view_.setAttribute("class", "entry");
+  "tablet" === this.device ? this.view_.setAttribute("class", "entry tablet") : this.view_.setAttribute("class", "entry");
   Entry.initFonts(a.fonts);
   this.createDom(b, this.type);
   this.loadInterfaceState();
@@ -10726,6 +10793,7 @@ Entry.start = function(b) {
 };
 Entry.parseOptions = function(b) {
   this.type = b.type;
+  b.device && (this.device = b.device);
   this.projectSaveable = b.projectsaveable;
   void 0 === this.projectSaveable && (this.projectSaveable = !0);
   this.objectAddable = b.objectaddable;
@@ -10854,7 +10922,6 @@ Entry.Scene.prototype.generateElement = function(b) {
   if (Entry.sceneEditable) {
     var g = Entry.createElement("button");
     g.addClass("entrySceneRemoveButtonWorkspace");
-    g.innerHTML = "x";
     g.scene = b;
     g.bindOnClick(function(a) {
       a.stopPropagation();
@@ -11253,8 +11320,8 @@ Entry.BlockDriver = function() {
         return d;
       }
       for (var e = 0;e < a.length;e++) {
-        var f = a[e], g = f.tagName, h = $(f).children()[0], v = f.getAttribute("name");
-        "value" === g ? "block" == h.nodeName && (d.params || (d.params = []), d.params.push(b(h)), d.index[v] = d.params.length - 1) : "field" === g && (d.params || (d.params = []), d.params.push(f.textContent), d.index[v] = d.params.length - 1);
+        var f = a[e], g = f.tagName, h = $(f).children()[0], t = f.getAttribute("name");
+        "value" === g ? "block" == h.nodeName && (d.params || (d.params = []), d.params.push(b(h)), d.index[t] = d.params.length - 1) : "field" === g && (d.params || (d.params = []), d.params.push(f.textContent), d.index[t] = d.params.length - 1);
       }
       return d;
     }
@@ -11380,33 +11447,38 @@ Entry.BlockMockup = function(b, a, c) {
 })(Entry.BlockMockup.prototype);
 Entry.ContextMenu = {};
 (function(b) {
+  b.visible = !1;
   b.createDom = function() {
     this.dom = Entry.Dom("ul", {id:"entry-contextmenu", parent:$("body")});
+    this.dom.bind("mousedown touchstart", function(a) {
+      a.stopPropagation();
+    });
     Entry.Utils.disableContextmenu(this.dom);
     Entry.documentMousedown.attach(this, function() {
       this.hide();
     });
   };
-  b.show = function(a, b) {
+  b.show = function(a, b, d) {
     this.dom || this.createDom();
     if (0 !== a.length) {
-      var d = this;
+      var e = this;
       void 0 !== b && (this._className = b, this.dom.addClass(b));
-      var e = this.dom;
-      e.empty();
+      b = this.dom;
+      b.empty();
       for (var f = 0, g = a.length;f < g;f++) {
-        var h = a[f], k = h.text, l = !1 !== h.enable, q = Entry.Dom("li", {class:l ? "menuAble" : "menuDisable", parent:e});
-        q.text(k);
+        var h = a[f], k = h.text, l = !1 !== h.enable, n = Entry.Dom("li", {class:l ? "menuAble" : "menuDisable", parent:b}), n = Entry.Dom("span", {parent:n});
+        n.text(k);
         l && h.callback && function(a, b) {
           a.mousedown(function(a) {
             a.preventDefault();
-            d.hide();
+            e.hide();
             b(a);
           });
-        }(q, h.callback);
+        }(n, h.callback);
       }
-      e.removeClass("entryRemove");
-      this.position(Entry.mouseCoordinate);
+      b.removeClass("entryRemove");
+      this.visible = !0;
+      this.position(d || Entry.mouseCoordinate);
     }
   };
   b.position = function(a) {
@@ -11418,6 +11490,7 @@ Entry.ContextMenu = {};
     b.css({left:a.x, top:a.y});
   };
   b.hide = function() {
+    this.visible = !1;
     this.dom.empty();
     this.dom.addClass("entryRemove");
     this._className && (this.dom.removeClass(this._className), delete this._className);
@@ -12066,6 +12139,20 @@ window.requestAnimFrame = function() {
     window.setTimeout(b, 1E3 / 60);
   };
 }();
+Entry.isMobile = function() {
+  if (Entry.device) {
+    return "tablet" === Entry.device;
+  }
+  var b = window.platform;
+  if (b && b.type && ("tablet" === b.type || "mobile" === b.type)) {
+    return Entry.device = "tablet", !0;
+  }
+  Entry.device = "desktop";
+  return !1;
+};
+Entry.Utils.convertMouseEvent = function(b) {
+  return b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
+};
 Entry.Model = function(b, a) {
   var c = Entry.Model;
   c.generateSchema(b);
@@ -12590,12 +12677,12 @@ Entry.HWMonitor = function(b) {
     }
     h < f - e && (f = h / 2 + 3, e = -h / 2 - 3);
     for (;1 < a.length;) {
-      var k = a.shift(), l = a.pop(), q = e, n = f, m = d;
-      h <= f - e ? (e += k.width + 5, f -= l.width + 5, m = 0) : 0 === a.length ? (e = (e + f) / 2 - 3, f = e + 6) : (e = Math.max(e, -g / 2 + k.width) + 15, f = Math.min(f, g / 2 - l.width) - 15);
-      this._movePort(k, e, b, q);
-      this._movePort(l, f, b, n);
+      var k = a.shift(), l = a.pop(), n = e, m = f, q = d;
+      h <= f - e ? (e += k.width + 5, f -= l.width + 5, q = 0) : 0 === a.length ? (e = (e + f) / 2 - 3, f = e + 6) : (e = Math.max(e, -g / 2 + k.width) + 15, f = Math.min(f, g / 2 - l.width) - 15);
+      this._movePort(k, e, b, n);
+      this._movePort(l, f, b, m);
       h -= k.width + l.width + 10;
-      b += m;
+      b += q;
     }
     a.length && this._movePort(a[0], (f + e - a[0].width) / 2, b, 100);
   };
@@ -12606,8 +12693,8 @@ Entry.HWMonitor = function(b) {
     for (var e = listLine = wholeWidth = 0;e < a.length;e++) {
       wholeWidth += a[e].width;
     }
-    for (var f = 0, g = 0, h = initX, k = 0, l = 0, q = 0, e = 0;e < a.length;e++) {
-      l = a[e], e != a.length - 1 && (q = a[e + 1]), g += l.width, lP = initX, k = initY + 30 * f, l.group.attr({transform:"translate(" + lP + "," + k + ")"}), initX += l.width + 10, g > d - (l.width + q.width / 2.2) && (f += 1, initX = h, g = 0);
+    for (var f = 0, g = 0, h = initX, k = 0, l = 0, n = 0, e = 0;e < a.length;e++) {
+      l = a[e], e != a.length - 1 && (n = a[e + 1]), g += l.width, lP = initX, k = initY + 30 * f, l.group.attr({transform:"translate(" + lP + "," + k + ")"}), initX += l.width + 10, g > d - (l.width + n.width / 2.2) && (f += 1, initX = h, g = 0);
     }
   };
   b._movePort = function(a, b, d, e) {
@@ -15520,6 +15607,36 @@ Entry.BlockMenu = function(b, a, c, d) {
     a.on("wheel", function() {
       b._mouseWheel.apply(b, arguments);
     });
+    b._scroller && $(this.svg).bind("mousedown touchstart", function(a) {
+      b.onMouseDown.apply(b, arguments);
+    });
+  };
+  b.onMouseDown = function(a) {
+    function b(a) {
+      a.stopPropagation && a.stopPropagation();
+      a.preventDefault && a.preventDefault();
+      a = Entry.Utils.convertMouseEvent(a);
+      var c = e.dragInstance;
+      e._scroller.scroll(-a.pageY + c.offsetY);
+      c.set({offsetY:a.pageY});
+    }
+    function d(a) {
+      $(document).unbind(".blockMenu");
+      delete e.dragInstance;
+    }
+    a.stopPropagation && a.stopPropagation();
+    a.preventDefault && a.preventDefault();
+    var e = this;
+    if (0 === a.button || a.originalEvent && a.originalEvent.touches) {
+      a = Entry.Utils.convertMouseEvent(a);
+      Entry.documentMousedown && Entry.documentMousedown.notify(a);
+      var f = $(document);
+      f.bind("mousemove.blockMenu", b);
+      f.bind("mouseup.blockMenu", d);
+      f.bind("touchmove.blockMenu", b);
+      f.bind("touchend.blockMenu", d);
+      this.dragInstance = new Entry.DragInstance({startY:a.pageY, offsetY:a.pageY});
+    }
   };
   b._mouseWheel = function(a) {
     a = a.originalEvent;
@@ -15914,66 +16031,52 @@ Entry.BlockView.pngMap = {};
   b.onMouseDown = function(a) {
     function c(a) {
       a.stopPropagation();
-      var c = e.workspace.getMode(), d;
+      var c = g.workspace.getMode(), d;
       c === Entry.Workspace.MODE_VIMBOARD && b.vimBoardEvent(a, "dragOver");
       d = a.originalEvent && a.originalEvent.touches ? a.originalEvent.touches[0] : a;
-      var f = m.mouseDownCoordinate, f = Math.sqrt(Math.pow(d.pageX - f.x, 2) + Math.pow(d.pageY - f.y, 2));
-      (m.dragMode == Entry.DRAG_MODE_DRAG || f > Entry.BlockView.DRAG_RADIUS) && m.movable && (m.isInBlockMenu ? e.cloneToGlobal(a) : (a = !1, m.dragMode != Entry.DRAG_MODE_DRAG && (m._toGlobalCoordinate(), m.dragMode = Entry.DRAG_MODE_DRAG, m.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(m, c), a = !0), this.animating && this.set({animating:!1}), 0 === m.dragInstance.height && m.dragInstance.set({height:-1 + m.height}), c = m.dragInstance, m._moveBy(d.pageX - c.offsetX, d.pageY - 
-      c.offsetY, !1), c.set({offsetX:d.pageX, offsetY:d.pageY}), Entry.GlobalSvg.position(), m.originPos || (m.originPos = {x:m.x, y:m.y}), a && e.generateCodeMagnetMap(), m._updateCloseBlock()));
+      var h = f.mouseDownCoordinate, h = Math.sqrt(Math.pow(d.pageX - h.x, 2) + Math.pow(d.pageY - h.y, 2));
+      if (f.dragMode == Entry.DRAG_MODE_DRAG || h > Entry.BlockView.DRAG_RADIUS) {
+        e && (clearTimeout(e), e = null), f.movable && (f.isInBlockMenu ? g.cloneToGlobal(a) : (a = !1, f.dragMode != Entry.DRAG_MODE_DRAG && (f._toGlobalCoordinate(), f.dragMode = Entry.DRAG_MODE_DRAG, f.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(f, c), a = !0), this.animating && this.set({animating:!1}), 0 === f.dragInstance.height && f.dragInstance.set({height:-1 + f.height}), c = f.dragInstance, f._moveBy(d.pageX - c.offsetX, d.pageY - c.offsetY, !1), c.set({offsetX:d.pageX, 
+        offsetY:d.pageY}), Entry.GlobalSvg.position(), f.originPos || (f.originPos = {x:f.x, y:f.y}), a && g.generateCodeMagnetMap(), f._updateCloseBlock()));
+      }
     }
     function d(a) {
+      e && (clearTimeout(e), e = null);
       $(document).unbind(".block");
-      m.terminateDrag(a);
-      e && e.set({dragBlock:null});
-      m._changeFill(!1);
+      f.terminateDrag(a);
+      g && g.set({dragBlock:null});
+      f._changeFill(!1);
       Entry.GlobalSvg.remove();
       delete this.mouseDownCoordinate;
-      delete m.dragInstance;
+      delete f.dragInstance;
     }
     a.stopPropagation && a.stopPropagation();
     a.preventDefault && a.preventDefault();
+    var e = null, f = this;
     this._changeFill(!1);
-    var e = this.getBoard();
+    var g = this.getBoard();
     Entry.documentMousedown && Entry.documentMousedown.notify(a);
-    if (!this.readOnly && !e.viewOnly) {
-      e.setSelectedBlock(this);
+    if (!this.readOnly && !g.viewOnly) {
+      g.setSelectedBlock(this);
       this.dominate();
       if (0 === a.button || a.originalEvent && a.originalEvent.touches) {
-        var f;
-        f = a.originalEvent && a.originalEvent.touches ? a.originalEvent.touches[0] : a;
-        this.mouseDownCoordinate = {x:f.pageX, y:f.pageY};
-        var g = $(document);
-        g.bind("mousemove.block touchmove.block", c);
-        g.bind("mouseup.block touchend.block", d);
-        this.dragInstance = new Entry.DragInstance({startX:f.pageX, startY:f.pageY, offsetX:f.pageX, offsetY:f.pageY, height:0, mode:!0});
-        e.set({dragBlock:this});
+        var h = a.type, k;
+        k = a.originalEvent && a.originalEvent.touches ? a.originalEvent.touches[0] : a;
+        this.mouseDownCoordinate = {x:k.pageX, y:k.pageY};
+        var l = $(document);
+        l.bind("mousemove.block touchmove.block", c);
+        l.bind("mouseup.block touchend.block", d);
+        this.dragInstance = new Entry.DragInstance({startX:k.pageX, startY:k.pageY, offsetX:k.pageX, offsetY:k.pageY, height:0, mode:!0});
+        g.set({dragBlock:this});
         this.addDragging();
         this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
+        "touchstart" === h && (e = setTimeout(function() {
+          e && (e = null, d(), f._rightClick(a));
+        }, 1E3));
       } else {
-        if (Entry.Utils.isRightButton(a)) {
-          var h = this, k = h.block;
-          if (this.isInBlockMenu) {
-            return;
-          }
-          f = [];
-          var g = {text:Lang.Blocks.Duplication_option, enable:this.copyable, callback:function() {
-            Entry.do("cloneBlock", k);
-          }}, l = {text:Lang.Blocks.CONTEXT_COPY_option, enable:this.copyable, callback:function() {
-            h.block.copyToClipboard();
-          }}, q = {text:Lang.Blocks.Delete_Blocks, enable:k.isDeletable(), callback:function() {
-            Entry.do("destroyBlock", h.block);
-          }}, n = {text:Lang.Menus.save_as_image, callback:function() {
-            h.downloadAsImage();
-          }};
-          f.push(g);
-          f.push(l);
-          f.push(q);
-          Entry.Utils.isChrome() && "workspace" == Entry.type && f.push(n);
-          Entry.ContextMenu.show(f);
-        }
+        Entry.Utils.isRightButton(a) && this._rightClick(a);
       }
-      var m = this;
-      e.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD && a && document.getElementsByClassName("CodeMirror")[0].dispatchEvent(Entry.Utils.createMouseEvent("dragStart", event));
+      g.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD && a && document.getElementsByClassName("CodeMirror")[0].dispatchEvent(Entry.Utils.createMouseEvent("dragStart", event));
     }
   };
   b.vimBoardEvent = function(a, b, d) {
@@ -16212,7 +16315,7 @@ Entry.BlockView.pngMap = {};
   b.reDraw = function() {
     if (this.visible) {
       var a = this.block;
-      requestAnimationFrame(this._updateContents.bind(this));
+      requestAnimFrame(this._updateContents.bind(this));
       var b = a.params;
       if (b) {
         for (var d = 0;d < b.length;d++) {
@@ -16232,7 +16335,7 @@ Entry.BlockView.pngMap = {};
   };
   b.getDataUrl = function(a, b) {
     function d() {
-      g = g.replace("(svgGroup)", (new XMLSerializer).serializeToString(k)).replace("%W", h.width * q).replace("%H", h.height * q).replace("(defs)", (new XMLSerializer).serializeToString(m[0])).replace(/>\s+/g, ">").replace(/\s+</g, "<");
+      g = g.replace("(svgGroup)", (new XMLSerializer).serializeToString(k)).replace("%W", h.width * n).replace("%H", h.height * n).replace("(defs)", (new XMLSerializer).serializeToString(q[0])).replace(/>\s+/g, ">").replace(/\s+</g, "<");
       var a = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(g)));
       g = null;
       b ? (f.resolve({src:a, width:h.width, height:h.height}), k = null) : e(a, h.width, h.height, 1.5).then(function(a) {
@@ -16269,30 +16372,30 @@ Entry.BlockView.pngMap = {};
       f.src = a;
       return e.promise();
     }
-    var f = $.Deferred(), g = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %W %H">(svgGroup)(defs)</svg>', h = this.svgGroup.getBoundingClientRect(), k = a ? this.svgGroup : this.svgGroup.cloneNode(!0), l = this._skeleton.box(this), q = b ? 1 : 1.5, n = function() {
+    var f = $.Deferred(), g = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %W %H">(svgGroup)(defs)</svg>', h = this.svgGroup.getBoundingClientRect(), k = a ? this.svgGroup : this.svgGroup.cloneNode(!0), l = this._skeleton.box(this), n = b ? 1 : 1.5, m = function() {
       var a = window.platform;
       return a && "windows" === a.name.toLowerCase() && "7" === a.version[0] ? !0 : !1;
     }() ? .9 : .95;
-    -1 < this.type.indexOf("func_") && (n *= .99);
-    k.setAttribute("transform", "scale(%SCALE) translate(%X,%Y)".replace("%X", -l.offsetX).replace("%Y", -l.offsetY).replace("%SCALE", q));
-    for (var m = this.getBoard().svgDom.find("defs"), r = k.getElementsByTagName("image"), l = k.getElementsByTagName("text"), v = ["\u2265", "\u2264"], u = "\u2265\u2264-><=+-x/".split(""), t = 0;t < l.length;t++) {
+    -1 < this.type.indexOf("func_") && (m *= .99);
+    k.setAttribute("transform", "scale(%SCALE) translate(%X,%Y)".replace("%X", -l.offsetX).replace("%Y", -l.offsetY).replace("%SCALE", n));
+    for (var q = this.getBoard().svgDom.find("defs"), r = k.getElementsByTagName("image"), l = k.getElementsByTagName("text"), t = ["\u2265", "\u2264"], u = "\u2265\u2264-><=+-x/".split(""), v = 0;v < l.length;v++) {
       (function(a) {
         a.setAttribute("font-family", "'nanumBarunRegular', 'NanumGothic', '\ub098\ub214\uace0\ub515','NanumGothicWeb', '\ub9d1\uc740 \uace0\ub515', 'Malgun Gothic', Dotum");
         var b = parseInt(a.getAttribute("font-size")), c = $(a).text();
-        -1 < v.indexOf(c) && a.setAttribute("font-weight", "500");
+        -1 < t.indexOf(c) && a.setAttribute("font-weight", "500");
         if ("q" == c) {
           var d = parseInt(a.getAttribute("y"));
           a.setAttribute("y", d - 1);
         }
-        -1 < u.indexOf(c) ? a.setAttribute("font-size", b + "px") : a.setAttribute("font-size", b * n + "px");
+        -1 < u.indexOf(c) ? a.setAttribute("font-size", b + "px") : a.setAttribute("font-size", b * m + "px");
         a.setAttribute("alignment-baseline", "baseline");
-      })(l[t]);
+      })(l[v]);
     }
     var x = 0;
     if (0 === r.length) {
       d();
     } else {
-      for (t = 0;t < r.length;t++) {
+      for (v = 0;v < r.length;v++) {
         (function(a) {
           var b = a.getAttribute("href");
           e(b, a.getAttribute("width"), a.getAttribute("height")).then(function(b) {
@@ -16301,7 +16404,7 @@ Entry.BlockView.pngMap = {};
               return d();
             }
           });
-        })(r[t]);
+        })(r[v]);
       }
     }
     return f.promise();
@@ -16313,6 +16416,28 @@ Entry.BlockView.pngMap = {};
       b.download = "\uc5d4\ud2b8\ub9ac \ube14\ub85d.png";
       b.click();
     });
+  };
+  b._rightClick = function(a) {
+    var b = Entry.disposeEvent;
+    b && b.notify(a);
+    var d = this, e = d.block;
+    if (!this.isInBlockMenu) {
+      var b = [], f = {text:Lang.Blocks.Duplication_option, enable:this.copyable, callback:function() {
+        Entry.do("cloneBlock", e);
+      }}, g = {text:Lang.Blocks.CONTEXT_COPY_option, enable:this.copyable, callback:function() {
+        d.block.copyToClipboard();
+      }}, h = {text:Lang.Blocks.Delete_Blocks, enable:e.isDeletable(), callback:function() {
+        Entry.do("destroyBlock", d.block);
+      }}, k = {text:Lang.Menus.save_as_image, callback:function() {
+        d.downloadAsImage();
+      }};
+      b.push(f);
+      b.push(g);
+      b.push(h);
+      Entry.Utils.isChrome() && "workspace" == Entry.type && !Entry.isMobile() && b.push(k);
+      a.originalEvent && a.originalEvent.touches && (a = a.originalEvent.touches[0]);
+      Entry.ContextMenu.show(b, null, {x:a.clientX, y:a.clientY});
+    }
   };
 })(Entry.BlockView.prototype);
 Entry.Code = function(b, a) {
@@ -16753,7 +16878,7 @@ Entry.Field = function() {
     this.value != a && (this.value = a, this._block.params[this._index] = a, b && this._blockView.reDraw());
   };
   b._isEditable = function() {
-    if (this._block.view.dragMode == Entry.DRAG_MODE_DRAG) {
+    if (Entry.ContextMenu.visible || this._block.view.dragMode == Entry.DRAG_MODE_DRAG) {
       return !1;
     }
     var a = this._block.view, b = a.getBoard();
@@ -16783,6 +16908,12 @@ Entry.Field = function() {
     a.unshift(Entry.PARAM);
     return this._block.pointer(a);
   };
+  b.getFontSize = function(a) {
+    return a = a || this._blockView.getSkeleton().fontSize || 12;
+  };
+  b.getContentHeight = function() {
+    return Entry.isMobile() ? 22 : 16;
+  };
 })(Entry.Field.prototype);
 Entry.FieldAngle = function(b, a, c) {
   this._block = a.block;
@@ -16794,6 +16925,7 @@ Entry.FieldAngle = function(b, a, c) {
   this._index = c;
   b = this.getValue();
   this.setValue(this.modValue(void 0 !== b ? b : 90));
+  this._CONTENT_HEIGHT = this.getContentHeight();
   this.renderStart();
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
@@ -16803,11 +16935,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     this.svgGroup = this._blockView.contentSvgGroup.elem("g", {class:"entry-input-field"});
     this.textElement = this.svgGroup.elem("text", {x:4, y:4, "font-size":"11px"});
     this.textElement.textContent = this.getText();
-    var a = this.getTextWidth(), b = this.position && this.position.y ? this.position.y : 0;
-    this._header = this.svgGroup.elem("rect", {x:0, y:b - 8, rx:3, ry:3, width:a, height:16, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
+    var a = this.getTextWidth(), b = this._CONTENT_HEIGHT, d = this.position && this.position.y ? this.position.y : 0;
+    this._header = this.svgGroup.elem("rect", {x:0, y:d - b / 2, rx:3, ry:3, width:a, height:b, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
     this._bindRenderOptions();
-    this.box.set({x:0, y:0, width:a, height:16});
+    this.box.set({x:0, y:0, width:a, height:b});
   };
   b.renderOptions = function() {
     var a = this;
@@ -16817,7 +16949,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     });
     this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
     this.optionGroup.val(this.value);
-    this.optionGroup.on("mousedown", function(a) {
+    this.optionGroup.on("mousedown touchstart", function(a) {
       a.stopPropagation();
     });
     this.optionGroup.on("keyup", function(b) {
@@ -16827,10 +16959,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     });
     var b = this.getAbsolutePosFromDocument();
     b.y -= this.box.height / 2;
-    this.optionGroup.css({height:16, left:b.x, top:b.y, width:a.box.width});
-    this.optionGroup.select();
+    this.optionGroup.css({height:this._CONTENT_HEIGHT, left:b.x, top:b.y, width:a.box.width});
     this.svgOptionGroup = this.appendSvgOptionGroup();
     this.svgOptionGroup.elem("circle", {x:0, y:0, r:49, class:"entry-field-angle-circle"});
+    $(this.svgOptionGroup).on("mousedown touchstart", function(b) {
+      b.stopPropagation();
+      a._updateByCoord(b);
+    });
     this._dividerGroup = this.svgOptionGroup.elem("g");
     for (b = 0;360 > b;b += 15) {
       this._dividerGroup.elem("line", {x1:49, y1:0, x2:49 - (0 === b % 45 ? 10 : 5), y2:0, transform:"rotate(" + b + ", 0, 0)", class:"entry-angle-divider"});
@@ -16839,16 +16974,22 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     b.x += this.box.width / 2;
     b.y = b.y + this.box.height / 2 + 49 + 1;
     this.svgOptionGroup.attr({class:"entry-field-angle", transform:"translate(" + b.x + "," + b.y + ")"});
-    var b = a.getAbsolutePosFromDocument(), d = [b.x + a.box.width / 2, b.y + a.box.height / 2 + 1];
-    $(this.svgOptionGroup).mousemove(function(b) {
-      a.optionGroup.val(a.modValue(function(a, b) {
-        var c = b[0] - a[0], d = b[1] - a[1] - 49 - 1, e = Math.atan(-d / c), e = Entry.toDegrees(e), e = 90 - e;
-        0 > c ? e += 180 : 0 < d && (e += 360);
-        return 15 * Math.round(e / 15);
-      }(d, [b.clientX, b.clientY])));
-      a.applyValue();
-    });
+    $(this.svgOptionGroup).bind("mousemove touchmove", this._updateByCoord.bind(this));
+    $(this.svgOptionGroup).bind("mouseup touchend", this.destroyOption.bind(this));
     this.updateGraph();
+    this.optionGroup.focus();
+    this.optionGroup.select();
+  };
+  b._updateByCoord = function(a) {
+    a.originalEvent && a.originalEvent.touches && (a = a.originalEvent.touches[0]);
+    a = [a.clientX, a.clientY];
+    var b = this.getAbsolutePosFromDocument();
+    this.optionGroup.val(this.modValue(function(a, b) {
+      var c = b[0] - a[0], g = b[1] - a[1] - 49 - 1, h = Math.atan(-g / c), h = Entry.toDegrees(h), h = 90 - h;
+      0 > c ? h += 180 : 0 < g && (h += 360);
+      return 15 * Math.round(h / 15);
+    }([b.x + this.box.width / 2, b.y + this.box.height / 2 + 1], a)));
+    this.applyValue();
   };
   b.updateGraph = function() {
     this._fillPath && this._fillPath.remove();
@@ -17060,6 +17201,8 @@ Entry.FieldColor = function(b, a, c) {
   this._position = b.position;
   this.key = b.key;
   this.setValue(this.getValue() || "#FF0000");
+  this._CONTENT_HEIGHT = this.getContentHeight();
+  this._CONTENT_WIDTH = this.getContentWidth();
   this.renderStart(a);
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
@@ -17067,11 +17210,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
   b.renderStart = function() {
     this.svgGroup && $(this.svgGroup).remove();
     this.svgGroup = this._blockView.contentSvgGroup.elem("g", {class:"entry-field-color"});
-    var a = this._position, b;
-    a ? (b = a.x || 0, a = a.y || 0) : (b = 0, a = -8);
-    this._header = this.svgGroup.elem("rect", {x:b, y:a, width:14.5, height:16, fill:this.getValue()});
+    var a = this._CONTENT_HEIGHT, b = this._CONTENT_WIDTH, d = this._position, e;
+    d ? (e = d.x || 0, d = d.y || 0) : (e = 0, d = -a / 2);
+    this._header = this.svgGroup.elem("rect", {x:e, y:d, width:b, height:a, fill:this.getValue()});
     this._bindRenderOptions();
-    this.box.set({x:b, y:a, width:14.5, height:16});
+    this.box.set({x:e, y:d, width:b, height:a});
   };
   b.renderOptions = function() {
     var a = this;
@@ -17102,6 +17245,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
   b.applyValue = function(a) {
     this.value != a && (this.setValue(a), this._header.attr({fill:a}));
   };
+  b.getContentWidth = function() {
+    return Entry.isMobile() ? 20 : 14.5;
+  };
 })(Entry.FieldColor.prototype);
 Entry.FieldColor.getWidgetColorList = function() {
   return ["#FFFFFF #CCCCCC #C0C0C0 #999999 #666666 #333333 #000000".split(" "), "#FFCCCC #FF6666 #FF0000 #CC0000 #990000 #660000 #330000".split(" "), "#FFCC99 #FF9966 #FF9900 #FF6600 #CC6600 #993300 #663300".split(" "), "#FFFF99 #FFFF66 #FFCC66 #FFCC33 #CC9933 #996633 #663333".split(" "), "#FFFFCC #FFFF33 #FFFF00 #FFCC00 #999900 #666600 #333300".split(" "), "#99FF99 #66FF99 #33FF33 #33CC00 #009900 #006600 #003300".split(" "), "#99FFFF #33FFFF #66CCCC #00CCCC #339999 #336666 #003333".split(" "), "#CCFFFF #66FFFF #33CCFF #3366FF #3333FF #000099 #000066".split(" "), 
@@ -17117,8 +17263,8 @@ Entry.FieldDropdown = function(b, a, c) {
   this._arrowColor = b.arrowColor;
   this._index = c;
   this.setValue(this.getValue());
-  this._CONTENT_HEIGHT = b.dropdownHeight || a.getSkeleton().dropdownHeight || 16;
-  this._FONT_SIZE = b.fontSize || a.getSkeleton().fontSize || 12;
+  this._CONTENT_HEIGHT = this.getContentHeight(b.dropdownHeight);
+  this._FONT_SIZE = this.getFontSize(b.fontSize);
   this._ROUND = b.roundValue || 3;
   this.renderStart();
 };
@@ -17127,26 +17273,26 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
   b.renderStart = function() {
     this.svgGroup && $(this.svgGroup).remove();
     this instanceof Entry.FieldDropdownDynamic && this._updateValue();
-    var a = this._blockView;
+    var a = this._blockView, b = Entry.isMobile(), d = b ? 33 : 20, b = b ? 24 : 10;
     this.svgGroup = a.contentSvgGroup.elem("g", {class:"entry-field-dropdown"});
-    this.textElement = this.svgGroup.elem("text", {x:2});
+    this.textElement = this.svgGroup.elem("text", {x:5});
     this.textElement.textContent = this.getTextByValue(this.getValue());
-    var b = this.textElement.getBBox();
-    this.textElement.attr({style:"white-space: pre;", "font-size":+this._FONT_SIZE + "px", y:.25 * b.height});
-    b = this.textElement.getComputedTextLength() + 16;
-    this._noArrow && (b -= 12);
-    var d = this._CONTENT_HEIGHT;
-    this._header = this.svgGroup.elem("rect", {width:b, height:d, y:-d / 2, rx:this._ROUND, ry:this._ROUND, fill:"#fff", "fill-opacity":.4});
+    a = this.textElement.getBBox();
+    this.textElement.attr({style:"white-space: pre;", "font-size":+this._FONT_SIZE + "px", y:.23 * a.height});
+    d = this.textElement.getComputedTextLength() + d;
+    this._noArrow && (d -= b);
+    b = this._CONTENT_HEIGHT;
+    this._header = this.svgGroup.elem("rect", {width:d, height:b, y:-b / 2, rx:this._ROUND, ry:this._ROUND, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
-    this._noArrow || (a = this._arrowColor || a._schema.color, this._arrow = this.svgGroup.elem("polygon", {points:"0,-2.1 6.4,-2.1 3.2,2.1", fill:a, stroke:a, transform:"translate(" + (b - 11) + ",0)"}));
+    this._noArrow || (a = this.getArrow(), this._arrow = this.svgGroup.elem("polygon", {points:a.points, fill:a.color, stroke:a.color, transform:"translate(" + (d - a.width - 5) + "," + -a.height / 2 + ")"}));
     this._bindRenderOptions();
-    this.box.set({x:0, y:0, width:b, height:d});
+    this.box.set({x:0, y:0, width:d, height:b});
   };
   b.resize = function() {
-    var a = this.textElement.getComputedTextLength() + 18;
-    this._noArrow ? a -= 14 : this._arrow.attr({transform:"translate(" + (a - 11) + ",0)"});
-    this._header.attr({width:a});
-    this.box.set({width:a});
+    var a = Entry.isMobile(), b = a ? 33 : 20, a = a ? 24 : 10, b = this.textElement.getComputedTextLength() + b;
+    this._noArrow ? b -= a : (a = this.getArrow(), this._arrow.attr({transform:"translate(" + (b - a.width - 5) + "," + -a.height / 2 + ")"}));
+    this._header.attr({width:b});
+    this.box.set({width:b});
     this._block.view.alignContent();
   };
   b.renderOptions = function() {
@@ -17205,6 +17351,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     }
     return Lang.Blocks.no_target;
   };
+  b.getContentHeight = function(a) {
+    return a = a || this._blockView.getSkeleton().dropdownHeight || (Entry.isMobile() ? 22 : 16);
+  };
+  b.getArrow = function() {
+    var a = Entry.isMobile();
+    return {color:this._arrowColor || this._blockView._schema.color, points:a ? "0,0 19,0 9.5,13" : "0,0 6.4,0 3.2,4.2", height:a ? 13 : 4.2, width:a ? 19 : 6.4};
+  };
 })(Entry.FieldDropdown.prototype);
 Entry.FieldDropdownDynamic = function(b, a, c) {
   this._block = a.block;
@@ -17216,8 +17369,8 @@ Entry.FieldDropdownDynamic = function(b, a, c) {
   this._arrowColor = b.arrowColor;
   c = this._contents.menuName;
   Entry.Utils.isFunction(c) ? this._menuGenerator = c : this._menuName = c;
-  this._CONTENT_HEIGHT = b.dropdownHeight || a.getSkeleton().dropdownHeight || 16;
-  this._FONT_SIZE = b.fontSize || a.getSkeleton().fontSize || 12;
+  this._CONTENT_HEIGHT = this.getContentHeight(b.dropdownHeight);
+  this._FONT_SIZE = this.getFontSize(b.fontSize);
   this._ROUND = b.roundValue || 3;
   this.renderStart(a);
 };
@@ -17330,6 +17483,7 @@ Entry.FieldKeyboard = function(b, a, c) {
   this._contents = b;
   this._index = c;
   this.setValue(String(this.getValue()));
+  this._CONTENT_HEIGHT = this.getContentHeight();
   this._optionVisible = !1;
   this.renderStart(a);
 };
@@ -17338,13 +17492,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
   b.renderStart = function() {
     this.svgGroup && $(this.svgGroup).remove();
     this.svgGroup = this._blockView.contentSvgGroup.elem("g", {class:"entry-input-field"});
-    this.textElement = this.svgGroup.elem("text").attr({x:4, y:4, "font-size":"11px"});
+    this.textElement = this.svgGroup.elem("text").attr({x:5, y:4, "font-size":"11px"});
     this.textElement.textContent = Entry.getKeyCodeMap()[this.getValue()];
-    var a = this.getTextWidth(), b = this.position && this.position.y ? this.position.y : 0;
-    this._header = this.svgGroup.elem("rect", {x:0, y:b - 8, width:a, height:16, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
+    var a = this.getTextWidth() + 1, b = this._CONTENT_HEIGHT, d = this.position && this.position.y ? this.position.y : 0;
+    this._header = this.svgGroup.elem("rect", {x:0, y:d - b / 2, width:a, height:b, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
     this._bindRenderOptions();
-    this.box.set({x:0, y:0, width:a, height:16});
+    this.box.set({x:0, y:0, width:a, height:b});
   };
   b.renderOptions = function() {
     Entry.keyPressed && (this.keyPressed = Entry.keyPressed.attach(this, this._keyboardControl));
@@ -17378,13 +17532,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     this.resize();
   };
   b.resize = function() {
-    var a = this.getTextWidth();
+    var a = this.getTextWidth() + 1;
     this._header.attr({width:a});
     this.box.set({width:a});
     this._blockView.alignContent();
   };
   b.getTextWidth = function() {
-    return this.textElement.getComputedTextLength() + 8;
+    return this.textElement.getComputedTextLength() + 10;
   };
   b.destroy = function() {
     this.destroyOption();
@@ -17655,6 +17809,7 @@ Entry.FieldTextInput = function(b, a, c) {
   this._contents = b;
   this._index = c;
   this.value = this.getValue() || "";
+  this._CONTENT_HEIGHT = this.getContentHeight();
   this.renderStart();
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
@@ -17665,11 +17820,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     this.svgGroup.attr({class:"entry-input-field"});
     this.textElement = this.svgGroup.elem("text", {x:3, y:4, "font-size":"12px"});
     this.textElement.textContent = this.truncate();
-    var a = this.getTextWidth(), b = this.position && this.position.y ? this.position.y : 0;
-    this._header = this.svgGroup.elem("rect", {width:a, height:16, y:b - 8, rx:3, ry:3, fill:"transparent"});
+    var a = this.getTextWidth(), b = this.position && this.position.y ? this.position.y : 0, d = this._CONTENT_HEIGHT;
+    this._header = this.svgGroup.elem("rect", {width:a, height:d, y:b - d / 2, rx:3, ry:3, fill:"transparent"});
     this.svgGroup.appendChild(this.textElement);
     this._bindRenderOptions();
-    this.box.set({x:0, y:0, width:a, height:16});
+    this.box.set({x:0, y:0, width:a, height:d});
   };
   b.renderOptions = function() {
     var a = this;
@@ -17689,7 +17844,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     });
     var b = this.getAbsolutePosFromDocument();
     b.y -= this.box.height / 2;
-    this.optionGroup.css({height:16, left:b.x, top:b.y, width:a.box.width});
+    this.optionGroup.css({height:this._CONTENT_HEIGHT, left:b.x, top:b.y, width:a.box.width});
     this.optionGroup.focus();
     b = this.optionGroup[0];
     b.setSelectionRange(0, b.value.length, "backward");
@@ -18017,6 +18172,7 @@ Entry.Board.OPTION_PASTE = 0;
 Entry.Board.OPTION_ALIGN = 1;
 Entry.Board.OPTION_CLEAR = 2;
 Entry.Board.OPTION_DOWNLOAD = 3;
+Entry.Board.DRAG_RADIUS = 5;
 (function(b) {
   b.schema = {code:null, dragBlock:null, magnetedBlockView:null, selectedBlockView:null};
   b.createView = function(a) {
@@ -18102,42 +18258,36 @@ Entry.Board.OPTION_DOWNLOAD = 3;
     function b(a) {
       a.stopPropagation && a.stopPropagation();
       a.preventDefault && a.preventDefault();
-      a = a.originalEvent && a.originalEvent.touches ? a.originalEvent.touches[0] : a;
-      var c = f.dragInstance;
-      f.scroller.scroll(a.pageX - c.offsetX, a.pageY - c.offsetY);
-      c.set({offsetX:a.pageX, offsetY:a.pageY});
+      a = Entry.Utils.convertMouseEvent(a);
+      var c = e.mouseDownCoordinate;
+      Math.sqrt(Math.pow(a.pageX - c.x, 2) + Math.pow(a.pageY - c.y, 2)) < Entry.Board.DRAG_RADIUS || (f && (clearTimeout(f), f = null), c = e.dragInstance, e.scroller.scroll(a.pageX - c.offsetX, a.pageY - c.offsetY), c.set({offsetX:a.pageX, offsetY:a.pageY}));
     }
     function d(a) {
+      f && (clearTimeout(f), f = null);
       $(document).unbind(".entryBoard");
-      delete f.dragInstance;
+      delete e.mouseDownCoordinate;
+      delete e.dragInstance;
     }
     if (this.workspace.getMode() != Entry.Workspace.MODE_VIMBOARD) {
       a.stopPropagation && a.stopPropagation();
       a.preventDefault && a.preventDefault();
+      var e = this, f = null;
       if (0 === a.button || a.originalEvent && a.originalEvent.touches) {
-        a = a.originalEvent && a.originalEvent.touches ? a.originalEvent.touches[0] : a;
-        Entry.documentMousedown && Entry.documentMousedown.notify(a);
-        var e = $(document);
-        e.bind("mousemove.entryBoard", b);
-        e.bind("mouseup.entryBoard", d);
-        e.bind("touchmove.entryBoard", b);
-        e.bind("touchend.entryBoard", d);
-        this.dragInstance = new Entry.DragInstance({startX:a.pageX, startY:a.pageY, offsetX:a.pageX, offsetY:a.pageY});
+        var g = a.type, h = Entry.Utils.convertMouseEvent(a);
+        Entry.documentMousedown && Entry.documentMousedown.notify(h);
+        var k = $(document);
+        this.mouseDownCoordinate = {x:h.pageX, y:h.pageY};
+        k.bind("mousemove.entryBoard", b);
+        k.bind("mouseup.entryBoard", d);
+        k.bind("touchmove.entryBoard", b);
+        k.bind("touchend.entryBoard", d);
+        this.dragInstance = new Entry.DragInstance({startX:h.pageX, startY:h.pageY, offsetX:h.pageX, offsetY:h.pageY});
+        "touchstart" === g && (f = setTimeout(function() {
+          f && (f = null, d(), e._rightClick(a));
+        }, 1E3));
       } else {
-        if (Entry.Utils.isRightButton(a)) {
-          if (!this.visible) {
-            return;
-          }
-          a = [];
-          this._contextOptions[Entry.Board.OPTION_PASTE].option.enable = !!Entry.clipboard;
-          this._contextOptions[Entry.Board.OPTION_DOWNLOAD].option.enable = 0 !== this.code.getThreads().length;
-          for (e = 0;e < this._contextOptions.length;e++) {
-            this._contextOptions[e].activated && a.push(this._contextOptions[e].option);
-          }
-          Entry.ContextMenu.show(a);
-        }
+        Entry.Utils.isRightButton(a) && this._rightClick(a);
       }
-      var f = this;
     }
   };
   b.mouseWheel = function(a) {
@@ -18271,19 +18421,19 @@ Entry.Board.OPTION_DOWNLOAD = 3;
     var k = d.x;
     d = d.y;
     for (var l = 0;l < f.length;l++) {
-      var q = f[l], n = q.view;
-      n.zIndex = b;
-      if (n.dragInstance) {
+      var n = f[l], m = n.view;
+      m.zIndex = b;
+      if (m.dragInstance) {
         break;
       }
-      d += n.y;
-      k += n.x;
+      d += m.y;
+      k += m.x;
       a = d + 1;
-      n.magnet.next && (a += n.height, h.push({point:d, endPoint:a, startBlock:q, blocks:[]}), h.push({point:a, blocks:[]}), n.absX = k);
-      q.statements && (b += .01);
-      for (var m = 0;m < q.statements.length;m++) {
-        a = q.statements[m];
-        var r = q.view._statements[m];
+      m.magnet.next && (a += m.height, h.push({point:d, endPoint:a, startBlock:n, blocks:[]}), h.push({point:a, blocks:[]}), m.absX = k);
+      n.statements && (b += .01);
+      for (var q = 0;q < n.statements.length;q++) {
+        a = n.statements[q];
+        var r = n.view._statements[q];
         r.zIndex = b;
         r.absX = k + r.x;
         h.push({point:r.y + d - 30, endPoint:r.y + d, startBlock:r, blocks:[]});
@@ -18291,7 +18441,7 @@ Entry.Board.OPTION_DOWNLOAD = 3;
         b += .01;
         g = g.concat(this._getNextMagnets(a, b, {x:r.x + k, y:r.y + d}, e));
       }
-      n.magnet.next && (d += n.magnet.next.y, k += n.magnet.next.x);
+      m.magnet.next && (d += m.magnet.next.y, k += m.magnet.next.x);
     }
     return g.concat(h);
   };
@@ -18316,20 +18466,20 @@ Entry.Board.OPTION_DOWNLOAD = 3;
     var k = d.x;
     d = d.y;
     for (var l = 0;l < f.length;l++) {
-      var q = f[l], n = q.view;
-      if (n.dragInstance) {
+      var n = f[l], m = n.view;
+      if (m.dragInstance) {
         break;
       }
-      n.zIndex = b;
-      d += n.y;
-      k += n.x;
-      h = h.concat(this._getFieldBlockMetaData(n, k, d, b, e));
-      q.statements && (b += .01);
-      for (var m = 0;m < q.statements.length;m++) {
-        a = q.statements[m];
-        var r = q.view._statements[m], g = g.concat(this._getFieldMagnets(a, b, {x:r.x + k, y:r.y + d}, e));
+      m.zIndex = b;
+      d += m.y;
+      k += m.x;
+      h = h.concat(this._getFieldBlockMetaData(m, k, d, b, e));
+      n.statements && (b += .01);
+      for (var q = 0;q < n.statements.length;q++) {
+        a = n.statements[q];
+        var r = n.view._statements[q], g = g.concat(this._getFieldMagnets(a, b, {x:r.x + k, y:r.y + d}, e));
       }
-      n.magnet.next && (d += n.magnet.next.y, k += n.magnet.next.x);
+      m.magnet.next && (d += m.magnet.next.y, k += m.magnet.next.x);
     }
     return g.concat(h);
   };
@@ -18339,14 +18489,14 @@ Entry.Board.OPTION_DOWNLOAD = 3;
     for (var k = 0;k < g.length;k++) {
       var l = g[k];
       if (l instanceof Entry.FieldBlock) {
-        var q = l._valueBlock;
-        if (!q.view.dragInstance && (l.acceptType === f || "boolean" === l.acceptType)) {
-          var n = b + l.box.x, m = d + l.box.y + a.contentHeight % 1E3 * -.5, r = d + l.box.y + l.box.height;
-          l.acceptType === f && (h.push({point:m, endPoint:r, startBlock:q, blocks:[]}), h.push({point:r, blocks:[]}));
-          l = q.view;
-          l.absX = n;
+        var n = l._valueBlock;
+        if (!n.view.dragInstance && (l.acceptType === f || "boolean" === l.acceptType)) {
+          var m = b + l.box.x, q = d + l.box.y + a.contentHeight % 1E3 * -.5, r = d + l.box.y + l.box.height;
+          l.acceptType === f && (h.push({point:q, endPoint:r, startBlock:n, blocks:[]}), h.push({point:r, blocks:[]}));
+          l = n.view;
+          l.absX = m;
           l.zIndex = e;
-          h = h.concat(this._getFieldBlockMetaData(l, n + l.contentPos.x, m + l.contentPos.y, e + .01, f));
+          h = h.concat(this._getFieldBlockMetaData(l, m + l.contentPos.x, q + l.contentPos.y, e + .01, f));
         }
       }
     }
@@ -18358,20 +18508,20 @@ Entry.Board.OPTION_DOWNLOAD = 3;
     var k = d.x;
     d = d.y;
     for (var l = 0;l < f.length;l++) {
-      var q = f[l], n = q.view;
-      if (n.dragInstance) {
+      var n = f[l], m = n.view;
+      if (m.dragInstance) {
         break;
       }
-      n.zIndex = b;
-      d += n.y;
-      k += n.x;
-      h = h.concat(this._getOutputMetaData(n, k, d, b, e));
-      q.statements && (b += .01);
-      for (var m = 0;m < q.statements.length;m++) {
-        a = q.statements[m];
-        var r = q.view._statements[m], g = g.concat(this._getOutputMagnets(a, b, {x:r.x + k, y:r.y + d}, e));
+      m.zIndex = b;
+      d += m.y;
+      k += m.x;
+      h = h.concat(this._getOutputMetaData(m, k, d, b, e));
+      n.statements && (b += .01);
+      for (var q = 0;q < n.statements.length;q++) {
+        a = n.statements[q];
+        var r = n.view._statements[q], g = g.concat(this._getOutputMagnets(a, b, {x:r.x + k, y:r.y + d}, e));
       }
-      n.magnet.next && (d += n.magnet.next.y, k += n.magnet.next.x);
+      m.magnet.next && (d += m.magnet.next.y, k += m.magnet.next.x);
     }
     return g.concat(h);
   };
@@ -18380,9 +18530,9 @@ Entry.Board.OPTION_DOWNLOAD = 3;
     b += a.contentPos.x;
     d += a.contentPos.y;
     for (a = 0;a < g.length;a++) {
-      var k = g[a], l = b + k.box.x, q = d - 24, n = d;
-      k instanceof Entry.FieldBlock ? (k.acceptType === f && (h.push({point:q, endPoint:n, startBlock:k, blocks:[]}), h.push({point:n, blocks:[]}), k.absX = l, k.zIndex = e, k.width = 20), (q = k._valueBlock) && (h = h.concat(this._getOutputMetaData(q.view, l, d + k.box.y, e + .01, f)))) : k instanceof Entry.FieldOutput && k.acceptType === f && (h.push({point:q, endPoint:n, startBlock:k, blocks:[]}), h.push({point:n, blocks:[]}), k.absX = l, k.zIndex = e, k.width = 20, (q = k._valueBlock) && (q.view.dragInstance || 
-      (h = h.concat(this._getOutputMetaData(q.view, b + k.box.x, d + k.box.y, e + .01, f)))));
+      var k = g[a], l = b + k.box.x, n = d - 24, m = d;
+      k instanceof Entry.FieldBlock ? (k.acceptType === f && (h.push({point:n, endPoint:m, startBlock:k, blocks:[]}), h.push({point:m, blocks:[]}), k.absX = l, k.zIndex = e, k.width = 20), (n = k._valueBlock) && (h = h.concat(this._getOutputMetaData(n.view, l, d + k.box.y, e + .01, f)))) : k instanceof Entry.FieldOutput && k.acceptType === f && (h.push({point:n, endPoint:m, startBlock:k, blocks:[]}), h.push({point:m, blocks:[]}), k.absX = l, k.zIndex = e, k.width = 20, (n = k._valueBlock) && (n.view.dragInstance || 
+      (h = h.concat(this._getOutputMetaData(n.view, b + k.box.x, d + k.box.y, e + .01, f)))));
     }
     return h;
   };
@@ -18459,7 +18609,7 @@ Entry.Board.OPTION_DOWNLOAD = 3;
       a.alignThreads();
     }}}, {activated:!0, option:{text:Lang.Blocks.Clear_all_blocks, callback:function() {
       a.code.clear();
-    }}}, {activated:"workspace" === Entry.type && Entry.Utils.isChrome(), option:{text:Lang.Menus.save_as_image_all, enable:!0, callback:function() {
+    }}}, {activated:"workspace" === Entry.type && Entry.Utils.isChrome() && !Entry.isMobile(), option:{text:Lang.Menus.save_as_image_all, enable:!0, callback:function() {
       a.code.getThreads().forEach(function(a) {
         (a = a.getFirstBlock()) && a.view.downloadAsImage();
       });
@@ -18482,6 +18632,20 @@ Entry.Board.OPTION_DOWNLOAD = 3;
   b.offset = function() {
     (!this._offset || 0 === this._offset.top && 0 === this._offset.left) && this.updateOffset();
     return this._offset;
+  };
+  b._rightClick = function(a) {
+    var b = Entry.disposeEvent;
+    b && b.notify(a);
+    if (this.visible) {
+      var b = [], d = this._contextOptions;
+      d[Entry.Board.OPTION_PASTE].option.enable = !!Entry.clipboard;
+      d[Entry.Board.OPTION_DOWNLOAD].option.enable = 0 !== this.code.getThreads().length;
+      for (var e = 0;e < this._contextOptions.length;e++) {
+        d[e].activated && b.push(d[e].option);
+      }
+      a = Entry.Utils.convertMouseEvent(a);
+      Entry.ContextMenu.show(b, null, {x:a.clientX, y:a.clientY});
+    }
   };
 })(Entry.Board.prototype);
 Entry.skeleton = function() {
@@ -19681,11 +19845,11 @@ Entry.Playground.prototype.generateTextView = function(b) {
   d.bindOnClick(function() {
     var a = !Entry.playground.object.entity.getStrike() || !1;
     Entry.playground.object.entity.setStrike(a);
-    q.src = Entry.mediaFilePath + "text_button_strike_" + a + ".png";
+    n.src = Entry.mediaFilePath + "text_button_strike_" + a + ".png";
   });
-  var q = Entry.createElement("img", "entryPlaygroundText_strikeImage");
-  d.appendChild(q);
-  q.src = Entry.mediaFilePath + "text_button_strike_false.png";
+  var n = Entry.createElement("img", "entryPlaygroundText_strikeImage");
+  d.appendChild(n);
+  n.src = Entry.mediaFilePath + "text_button_strike_false.png";
   d = Entry.createElement("li");
   e.appendChild(d);
   c = Entry.createElement("a");
@@ -19760,31 +19924,41 @@ Entry.Playground.prototype.generateTextView = function(b) {
   b.addClass("entryPlaygroundFontSizeWrapper");
   a.appendChild(b);
   this.fontSizeWrapper = b;
-  var n = Entry.createElement("div");
-  n.addClass("entryPlaygroundFontSizeSlider");
-  b.appendChild(n);
   var m = Entry.createElement("div");
-  m.addClass("entryPlaygroundFontSizeIndicator");
-  n.appendChild(m);
-  this.fontSizeIndiciator = m;
+  m.addClass("entryPlaygroundFontSizeSlider");
+  b.appendChild(m);
+  var q = Entry.createElement("div");
+  q.addClass("entryPlaygroundFontSizeIndicator");
+  m.appendChild(q);
+  this.fontSizeIndiciator = q;
   var r = Entry.createElement("div");
   r.addClass("entryPlaygroundFontSizeKnob");
-  n.appendChild(r);
+  m.appendChild(r);
   this.fontSizeKnob = r;
   e = Entry.createElement("div");
   e.addClass("entryPlaygroundFontSizeLabel");
   e.innerHTML = "\uae00\uc790 \ud06c\uae30";
   b.appendChild(e);
-  var v = !1, u = 0;
+  var t = !1, u = 0;
   r.onmousedown = function(a) {
-    v = !0;
-    u = $(n).offset().left;
+    t = !0;
+    u = $(m).offset().left;
   };
+  r.addEventListener("touchstart", function(a) {
+    t = !0;
+    u = $(m).offset().left;
+  });
   document.addEventListener("mousemove", function(a) {
-    v && (a = a.pageX - u, a = Math.max(a, 5), a = Math.min(a, 88), r.style.left = a + "px", a /= .88, m.style.width = a + "%", Entry.playground.object.entity.setFontSize(a));
+    t && (a = a.pageX - u, a = Math.max(a, 5), a = Math.min(a, 88), r.style.left = a + "px", a /= .88, q.style.width = a + "%", Entry.playground.object.entity.setFontSize(a));
+  });
+  document.addEventListener("touchmove", function(a) {
+    t && (a = a.touches[0].pageX - u, a = Math.max(a, 5), a = Math.min(a, 88), r.style.left = a + "px", a /= .88, q.style.width = a + "%", Entry.playground.object.entity.setFontSize(a));
   });
   document.addEventListener("mouseup", function(a) {
-    v = !1;
+    t = !1;
+  });
+  document.addEventListener("touchend", function(a) {
+    t = !1;
   });
   b = Entry.createElement("div");
   b.addClass("entryPlaygroundLinebreakWrapper");
@@ -19798,7 +19972,7 @@ Entry.Playground.prototype.generateTextView = function(b) {
   e = Entry.createElement("img");
   e.bindOnClick(function() {
     Entry.playground.toggleLineBreak(!1);
-    t.innerHTML = Lang.Menus.linebreak_off_desc_1;
+    v.innerHTML = Lang.Menus.linebreak_off_desc_1;
     x.innerHTML = Lang.Menus.linebreak_off_desc_2;
     y.innerHTML = Lang.Menus.linebreak_off_desc_3;
   });
@@ -19808,7 +19982,7 @@ Entry.Playground.prototype.generateTextView = function(b) {
   e = Entry.createElement("img");
   e.bindOnClick(function() {
     Entry.playground.toggleLineBreak(!0);
-    t.innerHTML = Lang.Menus.linebreak_on_desc_1;
+    v.innerHTML = Lang.Menus.linebreak_on_desc_1;
     x.innerHTML = Lang.Menus.linebreak_on_desc_2;
     y.innerHTML = Lang.Menus.linebreak_on_desc_3;
   });
@@ -19818,9 +19992,9 @@ Entry.Playground.prototype.generateTextView = function(b) {
   a = Entry.createElement("div");
   a.addClass("entryPlaygroundLinebreakDescription");
   b.appendChild(a);
-  var t = Entry.createElement("p");
-  t.innerHTML = Lang.Menus.linebreak_off_desc_1;
-  a.appendChild(t);
+  var v = Entry.createElement("p");
+  v.innerHTML = Lang.Menus.linebreak_off_desc_1;
+  a.appendChild(v);
   b = Entry.createElement("ul");
   a.appendChild(b);
   var x = Entry.createElement("li");
@@ -20095,13 +20269,13 @@ Entry.Playground.prototype.showTab = function(b) {
   this.tabViewElements[b] && (this.tabViewElements[b].addClass("showTab"), this.tabViewElements[b].removeClass("hideTab"));
 };
 Entry.Playground.prototype.initializeResizeHandle = function(b) {
-  b.onmousedown = function(a) {
+  $(b).bind("mousedown touchstart", function(a) {
     Entry.playground.resizing = !0;
     Entry.documentMousemove && (Entry.playground.resizeEvent = Entry.documentMousemove.attach(this, function(a) {
       Entry.playground.resizing && Entry.resizeElement({menuWidth:a.clientX - Entry.interfaceState.canvasWidth});
     }));
-  };
-  document.addEventListener("mouseup", function(a) {
+  });
+  $(document).bind("mouseup touchend", function(a) {
     if (a = Entry.playground.resizeEvent) {
       Entry.playground.resizing = !1, Entry.documentMousemove.detach(a), delete Entry.playground.resizeEvent;
     }
