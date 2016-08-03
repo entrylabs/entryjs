@@ -6269,38 +6269,46 @@ Entry.Container = function() {
   this.currentObjects_ = this.copiedObject = null;
 };
 Entry.Container.prototype.generateView = function(b, a) {
+  var d = this;
   this._view = b;
   this._view.addClass("entryContainer");
-  if (a && "workspace" != a) {
-    "phone" == a && (this._view.addClass("entryContainerPhone"), d = Entry.createElement("div"), d.addClass("entryAddObjectWorkspace"), d.innerHTML = Lang.Workspace.add_object, d.bindOnClick(function(a) {
-      Entry.dispatchEvent("openSpriteManager");
-    }), d = Entry.createElement("div"), d.addClass("entryContainerListPhoneWrapper"), this._view.appendChild(d), c = Entry.createElement("ul"), c.addClass("entryContainerListPhone"), d.appendChild(c), this.listView_ = c);
-  } else {
-    this._view.addClass("entryContainerWorkspace");
-    this._view.setAttribute("id", "entryContainerWorkspaceId");
-    var d = Entry.createElement("div");
-    d.addClass("entryAddObjectWorkspace");
-    d.innerHTML = Lang.Workspace.add_object;
-    d.bindOnClick(function(a) {
-      Entry.dispatchEvent("openSpriteManager");
-    });
-    d = Entry.createElement("div");
-    d.addClass("entryContainerListWorkspaceWrapper");
-    Entry.isForLecture && d.addClass("lecture");
-    Entry.Utils.disableContextmenu(d);
-    $(d).on("contextmenu", function(a) {
-      a = [{text:Lang.Blocks.Paste_blocks, enable:!Entry.engine.isState("run") && !!Entry.container.copiedObject, callback:function() {
-        Entry.container.copiedObject ? Entry.container.addCloneObject(Entry.container.copiedObject) : Entry.toast.alert(Lang.Workspace.add_object_alert, Lang.Workspace.object_not_found_for_paste);
-      }}];
-      Entry.ContextMenu.show(a, "workspace-contextmenu");
-    });
-    this._view.appendChild(d);
-    var c = Entry.createElement("ul");
-    c.addClass("entryContainerListWorkspace");
-    d.appendChild(c);
-    this.listView_ = c;
-    this.enableSort();
-  }
+  this._view.addClass("entryContainerWorkspace");
+  this._view.setAttribute("id", "entryContainerWorkspaceId");
+  var c = Entry.createElement("div");
+  c.addClass("entryAddObjectWorkspace");
+  c.innerHTML = Lang.Workspace.add_object;
+  c.bindOnClick(function(a) {
+    Entry.dispatchEvent("openSpriteManager");
+  });
+  var c = Entry.createElement("div"), e = "entryContainerListWorkspaceWrapper";
+  Entry.isForLecture && (e += " lecture");
+  c.addClass(e);
+  Entry.Utils.disableContextmenu(c);
+  $(c).bind("mousedown touchstart", function(a) {
+    function b(a) {
+      r && 5 < Math.sqrt(Math.pow(a.pageX - r.x, 2) + Math.pow(a.pageY - r.y, 2)) && e && (clearTimeout(e), e = null);
+    }
+    function c(a) {
+      a.stopPropagation();
+      l.unbind(".container");
+      e && (clearTimeout(e), e = null);
+    }
+    var e = null, l = $(document), m = a.type, n = !1;
+    if (Entry.Utils.isRightButton(a)) {
+      d._rightClick(a), n = !0;
+    } else {
+      var r = {x:a.clientX, y:a.clientY};
+      "touchstart" !== m || n || (a.stopPropagation(), a = Entry.Utils.convertMouseEvent(a), e = setTimeout(function() {
+        e && (e = null, d._rightClick(a));
+      }, 1E3), l.bind("mousemove.container touchmove.container", b), l.bind("mouseup.container touchend.container", c));
+    }
+  });
+  this._view.appendChild(c);
+  e = Entry.createElement("ul");
+  e.addClass("entryContainerListWorkspace");
+  c.appendChild(e);
+  this.listView_ = e;
+  this.enableSort();
 };
 Entry.Container.prototype.enableSort = function() {
   $ && $(this.listView_).sortable({start:function(b, a) {
@@ -6742,6 +6750,13 @@ Entry.Container.prototype.getView = function() {
 };
 Entry.Container.prototype.resize = function() {
 };
+Entry.Container.prototype._rightClick = function(b) {
+  b.stopPropagation && b.stopPropagation();
+  var a = [{text:Lang.Blocks.Paste_blocks, enable:!Entry.engine.isState("run") && !!Entry.container.copiedObject, callback:function() {
+    Entry.container.copiedObject ? Entry.container.addCloneObject(Entry.container.copiedObject) : Entry.toast.alert(Lang.Workspace.add_object_alert, Lang.Workspace.object_not_found_for_paste);
+  }}];
+  Entry.ContextMenu.show(a, "workspace-contextmenu", {x:b.clientX, y:b.clientY});
+};
 Entry.db = {data:{}, typeMap:{}};
 (function(b) {
   b.add = function(a) {
@@ -7109,21 +7124,33 @@ Entry.Engine.prototype.toggleSpeedPanel = function() {
     this.speedProgress_ = Entry.createElement("table", "entrySpeedProgressWorkspace");
     for (var b = Entry.createElement("tr"), a = this.speeds, d = 0;5 > d;d++) {
       (function(d) {
-        var e = Entry.createElement("td", "progressCell" + d);
-        e.bindOnClick(function() {
+        var c = Entry.createElement("td", "progressCell" + d);
+        c.bindOnClick(function() {
           Entry.engine.setSpeedMeter(a[d]);
         });
-        b.appendChild(e);
+        b.appendChild(c);
       })(d);
     }
     this.view_.insertBefore(this.speedProgress_, this.maximizeButton);
     this.speedProgress_.appendChild(b);
     this.speedHandle_ = Entry.createElement("div", "entrySpeedHandleWorkspace");
-    d = (Entry.interfaceState.canvasWidth - 84) / 5;
-    $(this.speedHandle_).draggable({axis:"x", grid:[d, d], containment:[80, 0, 4 * d + 80, 0], drag:function(a, b) {
-      var d = (b.position.left - 80) / (Entry.interfaceState.canvasWidth - 84) * 5, d = Math.floor(d);
-      0 > d || Entry.engine.setSpeedMeter(Entry.engine.speeds[d]);
-    }});
+    var c = (Entry.interfaceState.canvasWidth - 84) / 5;
+    $(this.speedHandle_).bind("mousedown.speedPanel touchstart.speedPanel", function(a) {
+      function b(a) {
+        a.stopPropagation();
+        a = Entry.Utils.convertMouseEvent(a);
+        a = Math.floor((a.clientX - 80) / (5 * c) * 5);
+        0 > a || 4 < a || Entry.engine.setSpeedMeter(Entry.engine.speeds[a]);
+      }
+      function d(a) {
+        $(document).unbind(".speedPanel");
+      }
+      a.stopPropagation && a.stopPropagation();
+      a.preventDefault && a.preventDefault();
+      if (0 === a.button || a.originalEvent && a.originalEvent.touches) {
+        Entry.Utils.convertMouseEvent(a), a = $(document), a.bind("mousemove.speedPanel touchmove.speedPanel", b), a.bind("mouseup.speedPanel touchend.speedPanel", d);
+      }
+    });
     this.view_.insertBefore(this.speedHandle_, this.maximizeButton);
     this.setSpeedMeter(Entry.FPS);
   }
@@ -8087,28 +8114,29 @@ Entry.EntryObject.prototype.generateView = function() {
     var b = Entry.createElement("li", this.id);
     b.addClass("entryContainerListElementWorkspace");
     b.object = this;
-    b.bindOnClick(function(a) {
-      Entry.container.getObject(this.id) && Entry.container.selectObject(this.id);
-    });
     Entry.Utils.disableContextmenu(b);
     var a = this;
-    $(b).on("contextmenu", function(b) {
-      b = [{text:Lang.Workspace.context_rename, callback:function(b) {
-        b.stopPropagation();
-        b = a;
-        b.setLock(!1);
-        b.editObjectValues(!0);
-        b.nameView_.select();
-      }}, {text:Lang.Workspace.context_duplicate, enable:!Entry.engine.isState("run"), callback:function() {
-        Entry.container.addCloneObject(a);
-      }}, {text:Lang.Workspace.context_remove, callback:function() {
-        Entry.container.removeObject(a);
-      }}, {text:Lang.Workspace.copy_file, callback:function() {
-        Entry.container.setCopiedObject(a);
-      }}, {text:Lang.Blocks.Paste_blocks, enable:!Entry.engine.isState("run") && !!Entry.container.copiedObject, callback:function() {
-        Entry.container.copiedObject ? Entry.container.addCloneObject(Entry.container.copiedObject) : Entry.toast.alert(Lang.Workspace.add_object_alert, Lang.Workspace.object_not_found_for_paste);
-      }}];
-      Entry.ContextMenu.show(b, "workspace-contextmenu");
+    longPressTimer = null;
+    $(b).bind("mousedown touchstart", function(b) {
+      function d(a) {
+        a.stopPropagation();
+        h && 5 < Math.sqrt(Math.pow(a.pageX - h.x, 2) + Math.pow(a.pageY - h.y, 2)) && longPressTimer && (clearTimeout(longPressTimer), longPressTimer = null);
+      }
+      function c(a) {
+        a.stopPropagation();
+        e.unbind(".object");
+        longPressTimer && (clearTimeout(longPressTimer), longPressTimer = null);
+      }
+      Entry.container.getObject(this.id) && Entry.container.selectObject(this.id);
+      var e = $(document), f = b.type, g = !1;
+      if (Entry.Utils.isRightButton(b)) {
+        b.stopPropagation(), Entry.documentMousedown.notify(b), g = !0, a._rightClick(b);
+      } else {
+        var h = {x:b.clientX, y:b.clientY};
+        "touchstart" !== f || g || (b.stopPropagation(), Entry.documentMousedown.notify(b), longPressTimer = setTimeout(function() {
+          longPressTimer && (longPressTimer = null, a._rightClick(b));
+        }, 1E3), e.bind("mousemove.object touchmove.object", d), e.bind("mouseup.object touchend.object", c));
+      }
     });
     this.view_ = b;
     var d = this, b = Entry.createElement("ul");
@@ -8270,20 +8298,20 @@ Entry.EntryObject.prototype.generateView = function() {
     h = Entry.createElement("span");
     h.addClass("entryObjectDirectionSpanWorkspace");
     h.innerHTML = Lang.Workspace.direction + " : ";
-    var q = Entry.createElement("input");
-    q.addClass("entryObjectDirectionInputWorkspace");
-    q.setAttribute("readonly", !0);
-    q.bindOnClick(function(a) {
+    var r = Entry.createElement("input");
+    r.addClass("entryObjectDirectionInputWorkspace");
+    r.setAttribute("readonly", !0);
+    r.bindOnClick(function(a) {
       a.stopPropagation();
       this.select();
     });
-    this.directionInput_ = q;
+    this.directionInput_ = r;
     c.appendChild(e);
     c.appendChild(n);
     c.appendChild(h);
-    c.appendChild(q);
+    c.appendChild(r);
     c.rotateInput_ = n;
-    c.directionInput_ = q;
+    c.directionInput_ = r;
     d = this;
     n.onkeypress = function(a) {
       13 == a.keyCode && d.editObjectValues(!1);
@@ -8295,11 +8323,11 @@ Entry.EntryObject.prototype.generateView = function() {
       d.updateRotationView();
       Entry.stage.updateObject();
     };
-    q.onkeypress = function(a) {
+    r.onkeypress = function(a) {
       13 == a.keyCode && d.editObjectValues(!1);
     };
-    q.onblur = function(a) {
-      a = q.value;
+    r.onblur = function(a) {
+      a = r.value;
       -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da")));
       isNaN(a) || d.entity.setDirection(Number(a));
       d.updateRotationView();
@@ -8372,14 +8400,14 @@ Entry.EntryObject.prototype.generateView = function() {
         Entry.container.selectObject(a.id), Entry.playground.injectObject(a);
       }
     }), this.view_.appendChild(c), c = Entry.createElement("div"), c.addClass("entryObjectInformationWorkspace"), c.object = this, this.isInformationToggle = !1, b.appendChild(c), this.informationView_ = c, c = Entry.createElement("div"), c.addClass("entryObjectRotateLabelWrapperWorkspace"), this.view_.appendChild(c), this.rotateLabelWrapperView_ = c, e = Entry.createElement("span"), e.addClass("entryObjectRotateSpanWorkspace"), e.innerHTML = Lang.Workspace.rotation + " : ", n = Entry.createElement("input"), 
-    n.addClass("entryObjectRotateInputWorkspace"), this.rotateSpan_ = e, this.rotateInput_ = n, h = Entry.createElement("span"), h.addClass("entryObjectDirectionSpanWorkspace"), h.innerHTML = Lang.Workspace.direction + " : ", q = Entry.createElement("input"), q.addClass("entryObjectDirectionInputWorkspace"), this.directionInput_ = q, c.appendChild(e), c.appendChild(n), c.appendChild(h), c.appendChild(q), c.rotateInput_ = n, c.directionInput_ = q, d = this, n.onkeypress = function(a) {
+    n.addClass("entryObjectRotateInputWorkspace"), this.rotateSpan_ = e, this.rotateInput_ = n, h = Entry.createElement("span"), h.addClass("entryObjectDirectionSpanWorkspace"), h.innerHTML = Lang.Workspace.direction + " : ", r = Entry.createElement("input"), r.addClass("entryObjectDirectionInputWorkspace"), this.directionInput_ = r, c.appendChild(e), c.appendChild(n), c.appendChild(h), c.appendChild(r), c.rotateInput_ = n, c.directionInput_ = r, d = this, n.onkeypress = function(a) {
       13 == a.keyCode && (a = n.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || d.entity.setRotation(Number(a)), d.updateRotationView(), n.blur());
     }, n.onblur = function(a) {
       d.entity.setRotation(d.entity.getRotation());
       Entry.stage.updateObject();
-    }, q.onkeypress = function(a) {
-      13 == a.keyCode && (a = q.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || d.entity.setDirection(Number(a)), d.updateRotationView(), q.blur());
-    }, q.onblur = function(a) {
+    }, r.onkeypress = function(a) {
+      13 == a.keyCode && (a = r.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || d.entity.setDirection(Number(a)), d.updateRotationView(), r.blur());
+    }, r.onblur = function(a) {
       d.entity.setDirection(d.entity.getDirection());
       Entry.stage.updateObject();
     }, b = Entry.createElement("div"), b.addClass("entryObjectRotationWrapperWorkspace"), b.object = this, this.view_.appendChild(b), c = Entry.createElement("span"), c.addClass("entryObjectCoordinateWorkspace"), b.appendChild(c), e = Entry.createElement("span"), e.addClass("entryObjectCoordinateSpanWorkspace"), e.innerHTML = "X:", g = Entry.createElement("input"), g.addClass("entryObjectCoordinateInputWorkspace"), h = Entry.createElement("span"), h.addClass("entryObjectCoordinateSpanWorkspace"), 
@@ -8670,17 +8698,24 @@ Entry.EntryObject.prototype.updateInputViews = function(b) {
 };
 Entry.EntryObject.prototype.editObjectValues = function(b) {
   var a;
-  a = this.getLock() ? [this.nameView_] : [this.nameView_, this.coordinateView_.xInput_, this.coordinateView_.yInput_, this.rotateInput_, this.directionInput_, this.coordinateView_.sizeInput_];
+  a = this.getLock() ? [this.nameView_] : [this.coordinateView_.xInput_, this.coordinateView_.yInput_, this.rotateInput_, this.directionInput_, this.coordinateView_.sizeInput_];
   if (b) {
+    var d = this.nameView_;
     $(a).removeClass("selectedNotEditingObject");
+    $(d).removeClass("selectedNotEditingObject");
+    window.setTimeout(function() {
+      $(d).removeAttr("readonly");
+      d.addClass("selectedEditingObject");
+    });
     for (b = 0;b < a.length;b++) {
-      a[b].removeAttribute("readonly"), a[b].addClass("selectedEditingObject");
+      $(a[b]).removeAttr("readonly"), a[b].addClass("selectedEditingObject");
     }
     this.isEditing = !0;
   } else {
     for (b = 0;b < a.length;b++) {
       a[b].blur(!0);
     }
+    this.nameView_.blur(!0);
     this.blurAllInput();
     this.isEditing = !1;
   }
@@ -8714,6 +8749,24 @@ Entry.EntryObject.prototype.getStampEntities = function() {
 };
 Entry.EntryObject.prototype.clearExecutor = function() {
   this.script.clearExecutors();
+};
+Entry.EntryObject.prototype._rightClick = function(b) {
+  var a = this, d = [{text:Lang.Workspace.context_rename, callback:function(b) {
+    b.stopPropagation();
+    a.setLock(!1);
+    a.editObjectValues(!0);
+    a.nameView_.select();
+  }}, {text:Lang.Workspace.context_duplicate, enable:!Entry.engine.isState("run"), callback:function() {
+    Entry.container.addCloneObject(a);
+  }}, {text:Lang.Workspace.context_remove, callback:function() {
+    Entry.container.removeObject(a);
+  }}, {text:Lang.Workspace.copy_file, callback:function() {
+    Entry.container.setCopiedObject(a);
+  }}, {text:Lang.Blocks.Paste_blocks, enable:!Entry.engine.isState("run") && !!Entry.container.copiedObject, callback:function() {
+    Entry.container.copiedObject ? Entry.container.addCloneObject(Entry.container.copiedObject) : Entry.toast.alert(Lang.Workspace.add_object_alert, Lang.Workspace.object_not_found_for_paste);
+  }}];
+  b = Entry.Utils.convertMouseEvent(b);
+  Entry.ContextMenu.show(d, "workspace-contextmenu", {x:b.clientX, y:b.clientY});
 };
 Entry.Painter = function() {
   this.toolbox = {selected:"cursor"};
@@ -9138,13 +9191,13 @@ Entry.Painter.prototype.fill = function() {
     d.x = Math.round(d.x);
     d.y = Math.round(d.y);
     for (var c = 4 * (d.y * b + d.x), e = this.colorLayerData.data[c], f = this.colorLayerData.data[c + 1], g = this.colorLayerData.data[c + 2], h = this.colorLayerData.data[c + 3], k, l, d = [[d.x, d.y]], m = Entry.hex2rgb(this.stroke.lineColor);d.length;) {
-      for (var c = d.pop(), n = c[0], q = c[1], c = 4 * (q * b + n);0 <= q && this.matchColor(c, e, f, g, h);) {
-        --q, c -= 4 * b;
+      for (var c = d.pop(), n = c[0], r = c[1], c = 4 * (r * b + n);0 <= r && this.matchColor(c, e, f, g, h);) {
+        --r, c -= 4 * b;
       }
       c += 4 * b;
-      q += 1;
-      for (l = k = !1;q < a - 1 && this.matchColor(c, e, f, g, h);) {
-        q += 1, this.colorPixel(c, m.r, m.g, m.b), 0 < n && (this.matchColor(c - 4, e, f, g, h) ? k || (d.push([n - 1, q]), k = !0) : k && (k = !1)), n < b - 1 && (this.matchColor(c + 4, e, f, g, h) ? l || (d.push([n + 1, q]), l = !0) : l && (l = !1)), c += 4 * b;
+      r += 1;
+      for (l = k = !1;r < a - 1 && this.matchColor(c, e, f, g, h);) {
+        r += 1, this.colorPixel(c, m.r, m.g, m.b), 0 < n && (this.matchColor(c - 4, e, f, g, h) ? k || (d.push([n - 1, r]), k = !0) : k && (k = !1)), n < b - 1 && (this.matchColor(c + 4, e, f, g, h) ? l || (d.push([n + 1, r]), l = !0) : l && (l = !1)), c += 4 * b;
       }
       if (1080 < d.length) {
         break;
@@ -9713,7 +9766,7 @@ Entry.Painter.prototype.generateView = function(b) {
       d.addClass("entryPlaygroundPainterAttrColorElement");
       "transparent" === b ? d.style.backgroundImage = "url(" + (Entry.mediaFilePath + "/transparent.png") + ")" : d.style.backgroundColor = b;
       d.bindOnClick(function(d) {
-        "transparent" === b ? (a.stroke.transparent = !0, a.stroke.lineColor = "#ffffff") : (a.stroke.transparent = !1, r && (document.getElementById("entryPainterShapeBackgroundColor").style.backgroundColor = b, a.stroke.fillColor = b), r || (document.getElementById("entryPainterShapeLineColor").style.backgroundColor = b, a.stroke.lineColor = b));
+        "transparent" === b ? (a.stroke.transparent = !0, a.stroke.lineColor = "#ffffff") : (a.stroke.transparent = !1, q && (document.getElementById("entryPainterShapeBackgroundColor").style.backgroundColor = b, a.stroke.fillColor = b), q || (document.getElementById("entryPainterShapeLineColor").style.backgroundColor = b, a.stroke.lineColor = b));
         document.getElementById("entryPainterAttrCircle").style.backgroundColor = a.stroke.lineColor;
         document.getElementById("entryPainterAttrCircleInput").value = b;
       });
@@ -9750,9 +9803,9 @@ Entry.Painter.prototype.generateView = function(b) {
     n.appendChild(c);
     this.attrThickArea.painterAttrShapeLineColor = c;
     n.bindOnClick(function() {
-      q.style.zIndex = "1";
+      r.style.zIndex = "1";
       this.style.zIndex = "10";
-      r = !1;
+      q = !1;
     });
     this.attrBackgroundArea = Entry.createElement("div", "painterAttrBackgroundArea");
     this.attrBackgroundArea.addClass("entryPlaygroundPainterBackgroundArea");
@@ -9763,15 +9816,15 @@ Entry.Painter.prototype.generateView = function(b) {
     d = Entry.createElement("div");
     d.addClass("paintAttrBackgroundTop");
     c.appendChild(d);
-    var q = Entry.createElement("div", "entryPainterShapeBackgroundColor");
-    q.addClass("painterAttrShapeBackgroundColor");
-    this.attrBackgroundArea.painterAttrShapeBackgroundColor = q;
-    d.appendChild(q);
-    var r = !1;
-    q.bindOnClick(function(a) {
+    var r = Entry.createElement("div", "entryPainterShapeBackgroundColor");
+    r.addClass("painterAttrShapeBackgroundColor");
+    this.attrBackgroundArea.painterAttrShapeBackgroundColor = r;
+    d.appendChild(r);
+    var q = !1;
+    r.bindOnClick(function(a) {
       n.style.zIndex = "1";
       this.style.zIndex = "10";
-      r = !0;
+      q = !0;
     });
     this.attrFontArea = Entry.createElement("div", "painterAttrFont");
     this.attrFontArea.addClass("entryPlaygroundPainterAttrFont");
@@ -10028,6 +10081,7 @@ Entry.Popup = function() {
   document.body.appendChild(this.body_);
   this.window_ = Entry.createElement("div");
   this.window_.addClass("entryPopupWindow");
+  "tablet" === Entry.device && this.window_.addClass("tablet");
   this.window_.bindOnClick(function() {
   });
   Entry.addEventListener("windowResized", this.resize);
@@ -10069,6 +10123,15 @@ Entry.popupHelper = function(b) {
       b.target == this && this.popup.hide();
     }
   });
+  this.body_.bind("touchstart", function(b) {
+    if (!(c.nowContent && -1 < a.indexOf(c.nowContent.prop("type")))) {
+      var f = $(b.target);
+      d.forEach(function(a) {
+        f.hasClass(a) && this.popup.hide();
+      }.bind(this));
+      b.target == this && this.popup.hide();
+    }
+  });
   window.popupHelper = this;
   this.body_.prop("popup", this);
   Entry.Dom("div", {class:"entryPopupHelperTopSpan", parent:this.body_});
@@ -10089,12 +10152,16 @@ Entry.popupHelper.prototype.addPopup = function(b, a) {
   c.bindOnClick(function() {
     a.closeEvent ? a.closeEvent(this) : this.hide();
   }.bind(this));
-  var e = Entry.Dom("div", {class:"entryPopupHelperWrapper"});
-  e.append(c);
-  a.title && (c = Entry.Dom("div", {class:"entryPopupHelperTitle"}), e.append(c), c.text(a.title));
+  var e = this;
+  c.bind("touchstart", function() {
+    a.closeEvent ? a.closeEvent(e) : e.hide();
+  });
+  var f = Entry.Dom("div", {class:"entryPopupHelperWrapper"});
+  f.append(c);
+  a.title && (c = Entry.Dom("div", {class:"entryPopupHelperTitle"}), f.append(c), c.text(a.title));
   d.addClass(b);
-  d.append(e);
-  d.popupWrapper_ = e;
+  d.append(f);
+  d.popupWrapper_ = f;
   d.prop("type", a.type);
   "function" === typeof a.setPopupLayout && a.setPopupLayout(d);
   this.popupList[b] = d;
@@ -10204,7 +10271,7 @@ Entry.init = function(b, a) {
   "workspace" == this.type && this.isPhone() && (this.type = "phone");
   this.initialize_();
   this.view_ = b;
-  this.view_.setAttribute("class", "entry");
+  "tablet" === this.device ? this.view_.setAttribute("class", "entry tablet") : this.view_.setAttribute("class", "entry");
   Entry.initFonts(a.fonts);
   this.createDom(b, this.type);
   this.loadInterfaceState();
@@ -10323,6 +10390,7 @@ Entry.start = function(b) {
 };
 Entry.parseOptions = function(b) {
   this.type = b.type;
+  b.device && (this.device = b.device);
   this.projectSaveable = b.projectsaveable;
   void 0 === this.projectSaveable && (this.projectSaveable = !0);
   this.objectAddable = b.objectaddable;
@@ -10451,7 +10519,6 @@ Entry.Scene.prototype.generateElement = function(b) {
   if (Entry.sceneEditable) {
     var g = Entry.createElement("button");
     g.addClass("entrySceneRemoveButtonWorkspace");
-    g.innerHTML = "x";
     g.scene = b;
     g.bindOnClick(function(a) {
       a.stopPropagation();
@@ -10807,20 +10874,20 @@ Entry.PyHint = function() {
   CodeMirror.registerHelper("hint", "python", function(c) {
     var e = c.getCursor(), f = c.getTokenAt(e);
     /^[\w$_]*$/.test(f.string) || (f = {start:e.ch, end:e.ch, string:"", state:f.state, className:":" == f.string ? "python-type" : null});
-    var g = [], h = f.string, r;
+    var g = [], h = f.string, q;
     if ("variable" == f.type) {
-      r = f.string, null != r && (g = g.concat(b(a, h)), g = g.concat(b(d._global, h, {extract:function(a) {
+      q = f.string, null != q && (g = g.concat(b(a, h)), g = g.concat(b(d._global, h, {extract:function(a) {
         return a.displayText;
       }})));
     } else {
       if ("property" == f.type || "variable-2" == f.type || "." == f.state.lastToken) {
-        r = f.string;
+        q = f.string;
         c = c.getLineTokens(e.line);
         for (var t = c.shift();"variable" !== t.type && "variable-2" !== t.type;) {
           t = c.shift();
         }
         c = t.string;
-        null != r && d[c] && (g = g.concat(b(d[c], h, {extract:function(a) {
+        null != q && d[c] && (g = g.concat(b(d[c], h, {extract:function(a) {
           return a.displayText;
         }})));
         "." == f.state.lastToken && (g = g.concat(d[c]));
@@ -11390,10 +11457,10 @@ Entry.TextCodingUtil = function() {
         if (k.length == l.length) {
           for (var e = !0, n = 0;n < k.length && e;n++) {
             if (e = !1, k[n].name) {
-              for (var q in textFuncParams) {
-                if (k[n].name == textFuncParams[q]) {
-                  for (var r in c) {
-                    if (l[n].data.type == r && c[r] == q) {
+              for (var r in textFuncParams) {
+                if (k[n].name == textFuncParams[r]) {
+                  for (var q in c) {
+                    if (l[n].data.type == q && c[q] == r) {
                       e = !0;
                       break;
                     }
@@ -11487,35 +11554,35 @@ Entry.BlockToPyParser = function(b) {
     }
     console.log("Block schemaParams", g);
     console.log("Block dataParams", h);
-    for (var q = 0;q < c.length;q++) {
-      if (n = c[q], 0 !== n.length) {
+    for (var r = 0;r < c.length;r++) {
+      if (n = c[r], 0 !== n.length) {
         if (e.test(n)) {
           if (n = n.split("%")[1], m = Number(n) - 1, g[m]) {
             if ("Indicator" != g[m].type) {
               if ("Block" == g[m].type) {
                 console.log("Block dataParams[index]", h[m]);
                 console.log("Block param current block1", a);
-                var r = this.Block(h[m]).trim();
+                var q = this.Block(h[m]).trim();
                 console.log("funcMap", this._funcMap.toString());
-                m = this._funcMap.get(r);
-                console.log("param", r, "func param", m);
+                m = this._funcMap.get(q);
+                console.log("param", q, "func param", m);
                 if (m) {
                   console.log("func param current result", b), b += m;
                 } else {
-                  m = r.split("_");
+                  m = q.split("_");
                   console.log("funcParamTokens", m);
                   var t = m[0];
-                  2 == m.length && ("stringParam" == t ? r = "string_param" : "booleanParam" == t && (r = "boolean_param"));
+                  2 == m.length && ("stringParam" == t ? q = "string_param" : "booleanParam" == t && (q = "boolean_param"));
                   console.log("Block param current block2", a);
-                  r = Entry.TextCodingUtil.prototype.variableFilter(a, n, r);
-                  b += r;
-                  console.log("PARAM BLOCK", r);
+                  q = Entry.TextCodingUtil.prototype.variableFilter(a, n, q);
+                  b += q;
+                  console.log("PARAM BLOCK", q);
                   console.log("PARAM BLOCK RESULT ", b);
-                  this._parseMode == Entry.Parser.PARSE_VARIABLE && k == Entry.Parser.BLOCK_SKELETON_BASIC && l && (m = r, console.log("basic block param", r, "i", q), r = Object.keys(l), n = String(r[n++]), n = n.toLowerCase(), console.log("variable", n), r = m, console.log("value", r), this._variableMap.put(n, r), this._queue.enqueue(n), console.log("Variable Map", this._variableMap.toString()), console.log("Queue", this._queue.toString()));
+                  this._parseMode == Entry.Parser.PARSE_VARIABLE && k == Entry.Parser.BLOCK_SKELETON_BASIC && l && (m = q, console.log("basic block param", q, "i", r), q = Object.keys(l), n = String(q[n++]), n = n.toLowerCase(), console.log("variable", n), q = m, console.log("value", q), this._variableMap.put(n, q), this._queue.enqueue(n), console.log("Variable Map", this._variableMap.toString()), console.log("Queue", this._queue.toString()));
                 }
               } else {
-                r = this["Field" + g[m].type](h[m], g[m]), null == r && (r = g[m].text ? g[m].text : null), r = Entry.TextCodingUtil.prototype.binaryOperatorValueConvertor(r), r = String(r), Entry.TextCodingUtil.prototype.isNumeric(r) || Entry.TextCodingUtil.prototype.isBinaryOperator(r) || (r = String('"' + r + '"')), r = Entry.TextCodingUtil.prototype.variableFilter(a, n, r), Entry.TextCodingUtil.prototype.isLocalType(a, h[m]) && (r = "self".concat(".").concat(r)), console.log("param variableFilter", 
-                r), b += r, console.log("PARAM BLOCK", r), console.log("PARAM BLOCK RESULT ", b), this._parseMode == Entry.Parser.PARSE_VARIABLE && k == Entry.Parser.BLOCK_SKELETON_BASIC && l && (m = r, console.log("basic block param", r, "i", q), r = Object.keys(l), n = String(r[n++]), n = n.toLowerCase(), console.log("variable", n), r = m, console.log("value", r), this._variableMap.put(n, r), this._queue.enqueue(n), console.log("Variable Map", this._variableMap), console.log("Queue", this._queue))
+                q = this["Field" + g[m].type](h[m], g[m]), null == q && (q = g[m].text ? g[m].text : null), q = Entry.TextCodingUtil.prototype.binaryOperatorValueConvertor(q), q = String(q), Entry.TextCodingUtil.prototype.isNumeric(q) || Entry.TextCodingUtil.prototype.isBinaryOperator(q) || (q = String('"' + q + '"')), q = Entry.TextCodingUtil.prototype.variableFilter(a, n, q), Entry.TextCodingUtil.prototype.isLocalType(a, h[m]) && (q = "self".concat(".").concat(q)), console.log("param variableFilter", 
+                q), b += q, console.log("PARAM BLOCK", q), console.log("PARAM BLOCK RESULT ", b), this._parseMode == Entry.Parser.PARSE_VARIABLE && k == Entry.Parser.BLOCK_SKELETON_BASIC && l && (m = q, console.log("basic block param", q, "i", r), q = Object.keys(l), n = String(q[n++]), n = n.toLowerCase(), console.log("variable", n), q = m, console.log("value", q), this._variableMap.put(n, q), this._queue.enqueue(n), console.log("Variable Map", this._variableMap), console.log("Queue", this._queue))
                 ;
               }
             }
@@ -11524,11 +11591,11 @@ Entry.BlockToPyParser = function(b) {
           }
         } else {
           if (f.test(n)) {
-            for (n = n.split(f), r = 0;r < n.length;r++) {
-              m = n[r], 0 !== m.length && (f.test(m) ? (m = Number(m.split("$")[1]) - 1, b += Entry.TextCodingUtil.prototype.indent(this.Thread(a.statements[m]))) : (b += m, this._parseMode == Entry.Parser.PARSE_VARIABLE && (this._currentBlockSkeleton == Entry.Parser.BLOCK_SKELETON_BASIC_LOOP || this._currentBlockSkeleton == Entry.Parser.BLOCK_SKELETON_BASIC_DOUBLE_LOOP) && this._currentBlockParamsKeyMap && 0 == r && console.log("This result is the beginning of Block Statement")));
+            for (n = n.split(f), q = 0;q < n.length;q++) {
+              m = n[q], 0 !== m.length && (f.test(m) ? (m = Number(m.split("$")[1]) - 1, b += Entry.TextCodingUtil.prototype.indent(this.Thread(a.statements[m]))) : (b += m, this._parseMode == Entry.Parser.PARSE_VARIABLE && (this._currentBlockSkeleton == Entry.Parser.BLOCK_SKELETON_BASIC_LOOP || this._currentBlockSkeleton == Entry.Parser.BLOCK_SKELETON_BASIC_DOUBLE_LOOP) && this._currentBlockParamsKeyMap && 0 == q && console.log("This result is the beginning of Block Statement")));
             }
           } else {
-            r = 0, n.search("#"), -1 != n.search("#") && (r = n.indexOf("#"), n = n.substring(r + 1)), b += n, console.log("check result", b);
+            q = 0, n.search("#"), -1 != n.search("#") && (q = n.indexOf("#"), n = n.substring(q + 1)), b += n, console.log("check result", b);
           }
         }
       }
@@ -12157,13 +12224,13 @@ Entry.PyToBlockParser = function(b) {
       console.log("CallExpression component.arguments", arguments);
       console.log("CallExpression paramsMeta", f);
       console.log("CallExpression paramsDefMeta", n);
-      for (var q in f) {
-        h = f[q].type, "Indicator" == h ? (h = {raw:null, type:"Literal", value:null}, q < arguments.length && arguments.splice(q, 0, h)) : "Text" == h && (h = {raw:"", type:"Literal", value:""}, q < arguments.length && arguments.splice(q, 0, h));
+      for (var r in f) {
+        h = f[r].type, "Indicator" == h ? (h = {raw:null, type:"Literal", value:null}, r < arguments.length && arguments.splice(r, 0, h)) : "Text" == h && (h = {raw:"", type:"Literal", value:""}, r < arguments.length && arguments.splice(r, 0, h));
       }
       console.log("CallExpression arguments", arguments);
-      for (var r in arguments) {
-        if (q = arguments[r]) {
-          console.log("CallExpression argument", q, "typeof", typeof q), q = this[q.type](q, f[r], n[r], !0), console.log("CallExpression param", q), "__pythonRuntime.functions.range" == k && q.type ? (e = q.type, c = q.params) : c.push(q);
+      for (var q in arguments) {
+        if (r = arguments[q]) {
+          console.log("CallExpression argument", r, "typeof", typeof r), r = this[r.type](r, f[q], n[q], !0), console.log("CallExpression param", r), "__pythonRuntime.functions.range" == k && r.type ? (e = r.type, c = r.params) : c.push(r);
         }
       }
       console.log("CallExpression syntax", m);
@@ -12180,9 +12247,9 @@ Entry.PyToBlockParser = function(b) {
           }
         }
         console.log("CallExpression append calleeData", g);
-        r = this.ParamDropdownDynamic(t, f[1], n[1]);
-        console.log("CallExpression listName", r);
-        c.push(r);
+        q = this.ParamDropdownDynamic(t, f[1], n[1]);
+        console.log("CallExpression listName", q);
+        c.push(q);
         console.log("CallExpression params[0]", c[0]);
         "%2.pop" == m && ("number" == c[0].type ? c[0].params[0] += 1 : "text" == c[0].type && (c[0].params[0] = String(Number(c[0].params[0]) + 1)));
       } else {
@@ -12199,26 +12266,26 @@ Entry.PyToBlockParser = function(b) {
           console.log("CallExpression insert params", c);
           c.pop();
           console.log("CallExpression append calleeData", g);
-          r = this.ParamDropdownDynamic(t, f[1], n[1]);
-          console.log("CallExpression listName", r);
-          c.splice(0, 0, r);
+          q = this.ParamDropdownDynamic(t, f[1], n[1]);
+          console.log("CallExpression listName", q);
+          c.splice(0, 0, q);
           console.log("CallExpression check arguments", arguments);
           console.log("CallExpression arguments[1] 2", arguments[1]);
-          q = this[arguments[1].type](arguments[1], f[2], n[2], !0);
-          console.log("CallExpression check param", q);
-          c.splice(0, 0, q);
+          r = this[arguments[1].type](arguments[1], f[2], n[2], !0);
+          console.log("CallExpression check param", r);
+          c.splice(0, 0, r);
           console.log("CallExpression insert params", c);
           "number" == c[2].type ? c[2].params[0] += 1 : "text" == c[2].type && (c[2].params[0] = String(Number(c[2].params[0]) + 1));
         } else {
-          "len" == m ? (r = this.ParamDropdownDynamic(c[1].name, f[1], n[1]), delete c[1], c[1] = r) : "%4 in %2" == m && (q = a.arguments[1], q = this[q.type](q, f[3], n[3], !0), r = a.arguments[3].name, r = this.ParamDropdownDynamic(r, f[1], n[1]), c = [], c.push(""), c.push(r), c.push(""), c.push(q), c.push(""));
+          "len" == m ? (q = this.ParamDropdownDynamic(c[1].name, f[1], n[1]), delete c[1], c[1] = q) : "%4 in %2" == m && (r = a.arguments[1], r = this[r.type](r, f[3], n[3], !0), q = a.arguments[3].name, q = this.ParamDropdownDynamic(q, f[1], n[1]), c = [], c.push(""), c.push(q), c.push(""), c.push(r), c.push(""));
         }
       }
       e && (b.type = e);
       c && (b.params = c);
     } else {
       c = [];
-      for (r in arguments) {
-        q = arguments[r], console.log("CallExpression argument", q, "typeof", typeof q), f = this[q.type](q), console.log("CallExpression argumentData", f), "__pythonRuntime.utils.createParamsObj" == f.callee ? c = f.arguments : c.push(f);
+      for (q in arguments) {
+        r = arguments[q], console.log("CallExpression argument", r, "typeof", typeof r), f = this[r.type](r), console.log("CallExpression argumentData", f), "__pythonRuntime.utils.createParamsObj" == f.callee ? c = f.arguments : c.push(f);
       }
       console.log("CallExpression args", c);
       b.arguments = c;
@@ -12914,16 +12981,16 @@ Entry.PyToBlockParser = function(b) {
           Entry.TextCodingUtil.prototype.isLocalListExisted(l, n) ? Entry.TextCodingUtil.prototype.updateLocalList(l, c, n) : Entry.TextCodingUtil.prototype.createLocalList(l, c, n);
         }
         if (f.property && "__pythonRuntime.ops.subscriptIndex" == f.property.callee) {
-          var l = "%1[%2] = %3", q = this.getBlockType(l)
+          var l = "%1[%2] = %3", r = this.getBlockType(l)
         } else {
-          g.arguments && g.arguments[0] ? (c = a.left.name ? a.left.name : a.left.object.name.concat(a.left.property.name), l = a.right.arguments[0].name ? a.right.arguments[0].name : a.right.arguments[0].object.name.concat(a.right.arguments[0].property.name), console.log("AssignmentExpression leftEx", c, "rightEx", l), l = a.right.arguments && c == l ? "%1 += %2" : "%1 = %2") : l = "%1 = %2", q = this.getBlockType(l);
+          g.arguments && g.arguments[0] ? (c = a.left.name ? a.left.name : a.left.object.name.concat(a.left.property.name), l = a.right.arguments[0].name ? a.right.arguments[0].name : a.right.arguments[0].object.name.concat(a.right.arguments[0].property.name), console.log("AssignmentExpression leftEx", c, "rightEx", l), l = a.right.arguments && c == l ? "%1 += %2" : "%1 = %2") : l = "%1 = %2", r = this.getBlockType(l);
         }
-        c = q;
+        c = r;
     }
     if (operator) {
-      var r = Entry.TextCodingUtil.prototype.logicalExpressionConvert(operator)
+      var q = Entry.TextCodingUtil.prototype.logicalExpressionConvert(operator)
     }
-    b.operator = r;
+    b.operator = q;
     console.log("AssignmentExpression syntax", l);
     f.object ? n = f.object : f.name && (n = f.name);
     if (f.proprty) {
@@ -12933,9 +13000,9 @@ Entry.PyToBlockParser = function(b) {
     }
     console.log("AssignmentExpression object property value", n, t);
     if ("%1[%2] = %3" == l) {
-      n = Entry.block[q];
+      n = Entry.block[r];
       k = n.params;
-      r = n.def.params;
+      q = n.def.params;
       t = f.params[1];
       console.log("AssignmentExpression listName", t);
       if (!t) {
@@ -12949,21 +13016,21 @@ Entry.PyToBlockParser = function(b) {
       e.push(h);
     } else {
       if ("%1 = %2" == l) {
-        console.log("AssignmentExpression calleeName check", k), n && "self" == n.name && "__pythonRuntime.objects.list" != k ? (n = Entry.block[q], k = n.params, r = n.def.params, l = t.name, (f = "number" == h.type || "text" == h.type ? h.params[0] : NaN) && NaN != f && (n = Entry.playground.object, console.log("final value", f), console.log("final object", n), Entry.TextCodingUtil.prototype.isLocalVariableExisted(l, n) ? Entry.TextCodingUtil.prototype.updateLocalVariable(l, f, n) : Entry.TextCodingUtil.prototype.createLocalVariable(l, 
-        f, n)), l = this.ParamDropdownDynamic(l, k[0], r[0]), e.push(l)) : (n = Entry.block[q], k = n.params, r = n.def.params, console.log("property 123", t), l = t, (f = "number" == h.type || "text" == h.type ? h.params[0] : NaN) && NaN != f && (n = Entry.playground.object, console.log("final object", n), console.log("final value", f), Entry.TextCodingUtil.prototype.isGlobalVariableExisted(l, n) ? Entry.TextCodingUtil.prototype.updateGlobalVariable(l, f, n) : Entry.TextCodingUtil.prototype.createGlobalVariable(l, 
-        f, n)), l = this.ParamDropdownDynamic(l, k[0], r[0]), e.push(l), h.callee && delete h.callee), e.push(h);
+        console.log("AssignmentExpression calleeName check", k), n && "self" == n.name && "__pythonRuntime.objects.list" != k ? (n = Entry.block[r], k = n.params, q = n.def.params, l = t.name, (f = "number" == h.type || "text" == h.type ? h.params[0] : NaN) && NaN != f && (n = Entry.playground.object, console.log("final value", f), console.log("final object", n), Entry.TextCodingUtil.prototype.isLocalVariableExisted(l, n) ? Entry.TextCodingUtil.prototype.updateLocalVariable(l, f, n) : Entry.TextCodingUtil.prototype.createLocalVariable(l, 
+        f, n)), l = this.ParamDropdownDynamic(l, k[0], q[0]), e.push(l)) : (n = Entry.block[r], k = n.params, q = n.def.params, console.log("property 123", t), l = t, (f = "number" == h.type || "text" == h.type ? h.params[0] : NaN) && NaN != f && (n = Entry.playground.object, console.log("final object", n), console.log("final value", f), Entry.TextCodingUtil.prototype.isGlobalVariableExisted(l, n) ? Entry.TextCodingUtil.prototype.updateGlobalVariable(l, f, n) : Entry.TextCodingUtil.prototype.createGlobalVariable(l, 
+        f, n)), l = this.ParamDropdownDynamic(l, k[0], q[0]), e.push(l), h.callee && delete h.callee), e.push(h);
       } else {
         if ("%1 += %2" == l) {
           if (n && "self" == n.name) {
-            if (n = Entry.block[q], k = n.params, r = n.def.params, l = t.name, n = Entry.playground.object, console.log("final object", n), !Entry.TextCodingUtil.prototype.isLocalVariableExisted(l, n)) {
+            if (n = Entry.block[r], k = n.params, q = n.def.params, l = t.name, n = Entry.playground.object, console.log("final object", n), !Entry.TextCodingUtil.prototype.isLocalVariableExisted(l, n)) {
               return b;
             }
           } else {
-            if (n = Entry.block[q], k = n.params, r = n.def.params, l = t, !Entry.TextCodingUtil.prototype.isGlobalVariableExisted(l)) {
+            if (n = Entry.block[r], k = n.params, q = n.def.params, l = t, !Entry.TextCodingUtil.prototype.isGlobalVariableExisted(l)) {
               return b;
             }
           }
-          l = this.ParamDropdownDynamic(l, k[0], r[0]);
+          l = this.ParamDropdownDynamic(l, k[0], q[0]);
           e.push(l);
           e.push(h.params[2]);
         }
@@ -13003,16 +13070,16 @@ Entry.PyToBlockParser = function(b) {
     console.log("FunctionDeclaration textFuncStatements", a);
     var k, l, m, e = Entry.variableContainer.functions_, n;
     for (n in e) {
-      var q = e[n];
+      var r = e[n];
       Entry.TextCodingUtil.prototype.initQueue();
-      Entry.TextCodingUtil.prototype.gatherFuncDefParam(q.content._data[0]._data[0].data.params[0]);
+      Entry.TextCodingUtil.prototype.gatherFuncDefParam(r.content._data[0]._data[0].data.params[0]);
       console.log("Entry.TextCodingUtil._funcParamQ", Entry.TextCodingUtil.prototype._funcParamQ);
-      for (var r = [], h = {};g = Entry.TextCodingUtil.prototype._funcParamQ.dequeue();) {
-        r.push(g), console.log("param", g);
+      for (var q = [], h = {};g = Entry.TextCodingUtil.prototype._funcParamQ.dequeue();) {
+        q.push(g), console.log("param", g);
       }
-      console.log("funcParams", r);
-      for (var t in r) {
-        h[r[t]] = t;
+      console.log("funcParams", q);
+      for (var t in q) {
+        h[q[t]] = t;
       }
       console.log("paramMap", h);
       console.log("funcNameQueue", Entry.TextCodingUtil.prototype._funcNameQ);
@@ -13024,7 +13091,7 @@ Entry.PyToBlockParser = function(b) {
       console.log("first blockFuncName", blockFuncName);
       console.log("first textFuncName", f);
       if (f == blockFuncName) {
-        if (console.log("textFuncName", f), console.log("blockFuncName", blockFuncName), console.log("textFuncParams.length", c.length), console.log("Object.keys(paramMap).length", Object.keys(h).length), c.length == Object.keys(h).length ? (k = !0, console.log("textFuncParams.length", c.length), console.log("Object.keys(paramMap).length", Object.keys(h).length), l = q.content._data[0]._data, g = l.slice(), g.shift(), console.log("blockFuncContents", l), l = Entry.TextCodingUtil.prototype.isFuncContentsMatch(g, 
+        if (console.log("textFuncName", f), console.log("blockFuncName", blockFuncName), console.log("textFuncParams.length", c.length), console.log("Object.keys(paramMap).length", Object.keys(h).length), c.length == Object.keys(h).length ? (k = !0, console.log("textFuncParams.length", c.length), console.log("Object.keys(paramMap).length", Object.keys(h).length), l = r.content._data[0]._data, g = l.slice(), g.shift(), console.log("blockFuncContents", l), l = Entry.TextCodingUtil.prototype.isFuncContentsMatch(g, 
         a, h)) : l = k = !1, k && l) {
           m = "func".concat("_").concat(n);
           break;
@@ -13084,7 +13151,7 @@ Entry.PyToBlockParser = function(b) {
         g = f.split("__");
         if (0 < g.length) {
           for (e = 1;e < g.length;e++) {
-            h = g[e], q = new Entry.Block({type:"function_field_label"}, n), q.data.params = [], q.data.params.push(h), l = Entry.TextCodingUtil.prototype.getLastParam(t), l.data.params[1] = q, k.description += h.concat(" ");
+            h = g[e], r = new Entry.Block({type:"function_field_label"}, n), r.data.params = [], r.data.params.push(h), l = Entry.TextCodingUtil.prototype.getLastParam(t), l.data.params[1] = r, k.description += h.concat(" ");
           }
           k.description += " ";
         } else {
@@ -14678,33 +14745,38 @@ Entry.BlockMockup = function(b, a, d) {
 })(Entry.BlockMockup.prototype);
 Entry.ContextMenu = {};
 (function(b) {
+  b.visible = !1;
   b.createDom = function() {
     this.dom = Entry.Dom("ul", {id:"entry-contextmenu", parent:$("body")});
+    this.dom.bind("mousedown touchstart", function(a) {
+      a.stopPropagation();
+    });
     Entry.Utils.disableContextmenu(this.dom);
     Entry.documentMousedown.attach(this, function() {
       this.hide();
     });
   };
-  b.show = function(a, b) {
+  b.show = function(a, b, c) {
     this.dom || this.createDom();
     if (0 !== a.length) {
-      var c = this;
+      var e = this;
       void 0 !== b && (this._className = b, this.dom.addClass(b));
-      var e = this.dom;
-      e.empty();
+      b = this.dom;
+      b.empty();
       for (var f = 0, g = a.length;f < g;f++) {
-        var h = a[f], k = h.text, l = !1 !== h.enable, m = Entry.Dom("li", {class:l ? "menuAble" : "menuDisable", parent:e});
+        var h = a[f], k = h.text, l = !1 !== h.enable, m = Entry.Dom("li", {class:l ? "menuAble" : "menuDisable", parent:b}), m = Entry.Dom("span", {parent:m});
         m.text(k);
         l && h.callback && function(a, b) {
           a.mousedown(function(a) {
             a.preventDefault();
-            c.hide();
+            e.hide();
             b(a);
           });
         }(m, h.callback);
       }
-      e.removeClass("entryRemove");
-      this.position(Entry.mouseCoordinate);
+      b.removeClass("entryRemove");
+      this.visible = !0;
+      this.position(c || Entry.mouseCoordinate);
     }
   };
   b.position = function(a) {
@@ -14716,6 +14788,7 @@ Entry.ContextMenu = {};
     b.css({left:a.x, top:a.y});
   };
   b.hide = function() {
+    this.visible = !1;
     this.dom.empty();
     this.dom.addClass("entryRemove");
     this._className && (this.dom.removeClass(this._className), delete this._className);
@@ -15364,6 +15437,20 @@ window.requestAnimFrame = function() {
     window.setTimeout(b, 1E3 / 60);
   };
 }();
+Entry.isMobile = function() {
+  if (Entry.device) {
+    return "tablet" === Entry.device;
+  }
+  var b = window.platform;
+  if (b && b.type && ("tablet" === b.type || "mobile" === b.type)) {
+    return Entry.device = "tablet", !0;
+  }
+  Entry.device = "desktop";
+  return !1;
+};
+Entry.Utils.convertMouseEvent = function(b) {
+  return b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
+};
 Entry.Model = function(b, a) {
   var d = Entry.Model;
   d.generateSchema(b);
@@ -15892,12 +15979,12 @@ Entry.HWMonitor = function(b) {
     }
     h < f - e && (f = h / 2 + 3, e = -h / 2 - 3);
     for (;1 < a.length;) {
-      var k = a.shift(), l = a.pop(), m = e, n = f, q = c;
-      h <= f - e ? (e += k.width + 5, f -= l.width + 5, q = 0) : 0 === a.length ? (e = (e + f) / 2 - 3, f = e + 6) : (e = Math.max(e, -g / 2 + k.width) + 15, f = Math.min(f, g / 2 - l.width) - 15);
+      var k = a.shift(), l = a.pop(), m = e, n = f, r = c;
+      h <= f - e ? (e += k.width + 5, f -= l.width + 5, r = 0) : 0 === a.length ? (e = (e + f) / 2 - 3, f = e + 6) : (e = Math.max(e, -g / 2 + k.width) + 15, f = Math.min(f, g / 2 - l.width) - 15);
       this._movePort(k, e, b, m);
       this._movePort(l, f, b, n);
       h -= k.width + l.width + 10;
-      b += q;
+      b += r;
     }
     a.length && this._movePort(a[0], (f + e - a[0].width) / 2, b, 100);
   };
@@ -18825,6 +18912,36 @@ Entry.BlockMenu = function(b, a, d, c) {
     a.on("wheel", function() {
       b._mouseWheel.apply(b, arguments);
     });
+    b._scroller && $(this.svg).bind("mousedown touchstart", function(a) {
+      b.onMouseDown.apply(b, arguments);
+    });
+  };
+  b.onMouseDown = function(a) {
+    function b(a) {
+      a.stopPropagation && a.stopPropagation();
+      a.preventDefault && a.preventDefault();
+      a = Entry.Utils.convertMouseEvent(a);
+      var d = e.dragInstance;
+      e._scroller.scroll(-a.pageY + d.offsetY);
+      d.set({offsetY:a.pageY});
+    }
+    function c(a) {
+      $(document).unbind(".blockMenu");
+      delete e.dragInstance;
+    }
+    a.stopPropagation && a.stopPropagation();
+    a.preventDefault && a.preventDefault();
+    var e = this;
+    if (0 === a.button || a.originalEvent && a.originalEvent.touches) {
+      a = Entry.Utils.convertMouseEvent(a);
+      Entry.documentMousedown && Entry.documentMousedown.notify(a);
+      var f = $(document);
+      f.bind("mousemove.blockMenu", b);
+      f.bind("mouseup.blockMenu", c);
+      f.bind("touchmove.blockMenu", b);
+      f.bind("touchend.blockMenu", c);
+      this.dragInstance = new Entry.DragInstance({startY:a.pageY, offsetY:a.pageY});
+    }
   };
   b._mouseWheel = function(a) {
     a = a.originalEvent;
@@ -19229,66 +19346,52 @@ Entry.BlockView.pngMap = {};
   b.onMouseDown = function(a) {
     function d(a) {
       a.stopPropagation();
-      var d = e.workspace.getMode(), c;
+      var d = g.workspace.getMode(), c;
       d === Entry.Workspace.MODE_VIMBOARD && b.vimBoardEvent(a, "dragOver");
       c = a.originalEvent && a.originalEvent.touches ? a.originalEvent.touches[0] : a;
-      var f = q.mouseDownCoordinate, f = Math.sqrt(Math.pow(c.pageX - f.x, 2) + Math.pow(c.pageY - f.y, 2));
-      (q.dragMode == Entry.DRAG_MODE_DRAG || f > Entry.BlockView.DRAG_RADIUS) && q.movable && (q.isInBlockMenu ? e.cloneToGlobal(a) : (a = !1, q.dragMode != Entry.DRAG_MODE_DRAG && (q._toGlobalCoordinate(), q.dragMode = Entry.DRAG_MODE_DRAG, q.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(q, d), a = !0), this.animating && this.set({animating:!1}), 0 === q.dragInstance.height && q.dragInstance.set({height:-1 + q.height}), d = q.dragInstance, q._moveBy(c.pageX - d.offsetX, c.pageY - 
-      d.offsetY, !1), d.set({offsetX:c.pageX, offsetY:c.pageY}), Entry.GlobalSvg.position(), q.originPos || (q.originPos = {x:q.x, y:q.y}), a && e.generateCodeMagnetMap(), q._updateCloseBlock()));
+      var h = f.mouseDownCoordinate, h = Math.sqrt(Math.pow(c.pageX - h.x, 2) + Math.pow(c.pageY - h.y, 2));
+      if (f.dragMode == Entry.DRAG_MODE_DRAG || h > Entry.BlockView.DRAG_RADIUS) {
+        e && (clearTimeout(e), e = null), f.movable && (f.isInBlockMenu ? g.cloneToGlobal(a) : (a = !1, f.dragMode != Entry.DRAG_MODE_DRAG && (f._toGlobalCoordinate(), f.dragMode = Entry.DRAG_MODE_DRAG, f.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(f, d), a = !0), this.animating && this.set({animating:!1}), 0 === f.dragInstance.height && f.dragInstance.set({height:-1 + f.height}), d = f.dragInstance, f._moveBy(c.pageX - d.offsetX, c.pageY - d.offsetY, !1), d.set({offsetX:c.pageX, 
+        offsetY:c.pageY}), Entry.GlobalSvg.position(), f.originPos || (f.originPos = {x:f.x, y:f.y}), a && g.generateCodeMagnetMap(), f._updateCloseBlock()));
+      }
     }
     function c(a) {
+      e && (clearTimeout(e), e = null);
       $(document).unbind(".block");
-      q.terminateDrag(a);
-      e && e.set({dragBlock:null});
-      q._changeFill(!1);
+      f.terminateDrag(a);
+      g && g.set({dragBlock:null});
+      f._changeFill(!1);
       Entry.GlobalSvg.remove();
       delete this.mouseDownCoordinate;
-      delete q.dragInstance;
+      delete f.dragInstance;
     }
     a.stopPropagation && a.stopPropagation();
     a.preventDefault && a.preventDefault();
+    var e = null, f = this;
     this._changeFill(!1);
-    var e = this.getBoard();
+    var g = this.getBoard();
     Entry.documentMousedown && Entry.documentMousedown.notify(a);
-    if (!this.readOnly && !e.viewOnly) {
-      e.setSelectedBlock(this);
+    if (!this.readOnly && !g.viewOnly) {
+      g.setSelectedBlock(this);
       this.dominate();
       if (0 === a.button || a.originalEvent && a.originalEvent.touches) {
-        var f;
-        f = a.originalEvent && a.originalEvent.touches ? a.originalEvent.touches[0] : a;
-        this.mouseDownCoordinate = {x:f.pageX, y:f.pageY};
-        var g = $(document);
-        g.bind("mousemove.block touchmove.block", d);
-        g.bind("mouseup.block touchend.block", c);
-        this.dragInstance = new Entry.DragInstance({startX:f.pageX, startY:f.pageY, offsetX:f.pageX, offsetY:f.pageY, height:0, mode:!0});
-        e.set({dragBlock:this});
+        var h = a.type, k;
+        k = a.originalEvent && a.originalEvent.touches ? a.originalEvent.touches[0] : a;
+        this.mouseDownCoordinate = {x:k.pageX, y:k.pageY};
+        var l = $(document);
+        l.bind("mousemove.block touchmove.block", d);
+        l.bind("mouseup.block touchend.block", c);
+        this.dragInstance = new Entry.DragInstance({startX:k.pageX, startY:k.pageY, offsetX:k.pageX, offsetY:k.pageY, height:0, mode:!0});
+        g.set({dragBlock:this});
         this.addDragging();
         this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
+        "touchstart" === h && (e = setTimeout(function() {
+          e && (e = null, c(), f._rightClick(a));
+        }, 1E3));
       } else {
-        if (Entry.Utils.isRightButton(a)) {
-          var h = this, k = h.block;
-          if (this.isInBlockMenu) {
-            return;
-          }
-          f = [];
-          var g = {text:Lang.Blocks.Duplication_option, enable:this.copyable, callback:function() {
-            Entry.do("cloneBlock", k);
-          }}, l = {text:Lang.Blocks.CONTEXT_COPY_option, enable:this.copyable, callback:function() {
-            h.block.copyToClipboard();
-          }}, m = {text:Lang.Blocks.Delete_Blocks, enable:k.isDeletable(), callback:function() {
-            Entry.do("destroyBlock", h.block);
-          }}, n = {text:Lang.Menus.save_as_image, callback:function() {
-            h.downloadAsImage();
-          }};
-          f.push(g);
-          f.push(l);
-          f.push(m);
-          Entry.Utils.isChrome() && "workspace" == Entry.type && f.push(n);
-          Entry.ContextMenu.show(f);
-        }
+        Entry.Utils.isRightButton(a) && this._rightClick(a);
       }
-      var q = this;
-      e.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD && a && (vimBoard = $(".entryVimBoard>.CodeMirror")[0].dispatchEvent(Entry.Utils.createMouseEvent("dragStart", event)));
+      g.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD && a && (vimBoard = $(".entryVimBoard>.CodeMirror")[0].dispatchEvent(Entry.Utils.createMouseEvent("dragStart", event)));
     }
   };
   b.vimBoardEvent = function(a, b, c) {
@@ -19527,7 +19630,7 @@ Entry.BlockView.pngMap = {};
   b.reDraw = function() {
     if (this.visible) {
       var a = this.block;
-      requestAnimationFrame(this._updateContents.bind(this));
+      requestAnimFrame(this._updateContents.bind(this));
       var b = a.params;
       if (b) {
         for (var c = 0;c < b.length;c++) {
@@ -19547,7 +19650,7 @@ Entry.BlockView.pngMap = {};
   };
   b.getDataUrl = function(a, b) {
     function c() {
-      g = g.replace("(svgGroup)", (new XMLSerializer).serializeToString(k)).replace("%W", h.width * m).replace("%H", h.height * m).replace("(defs)", (new XMLSerializer).serializeToString(q[0])).replace(/>\s+/g, ">").replace(/\s+</g, "<");
+      g = g.replace("(svgGroup)", (new XMLSerializer).serializeToString(k)).replace("%W", h.width * m).replace("%H", h.height * m).replace("(defs)", (new XMLSerializer).serializeToString(r[0])).replace(/>\s+/g, ">").replace(/\s+</g, "<");
       var a = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(g)));
       g = null;
       b ? (f.resolve({src:a, width:h.width, height:h.height}), k = null) : e(a, h.width, h.height, 1.5).then(function(a) {
@@ -19558,25 +19661,25 @@ Entry.BlockView.pngMap = {};
       });
       a = null;
     }
-    function e(a, b, d, c) {
+    function e(a, b, c, d) {
       var e = $.Deferred();
-      c || (c = 1);
+      d || (d = 1);
       void 0 !== Entry.BlockView.pngMap[a] && e.resolve(Entry.BlockView.pngMap[a]);
-      b *= c;
-      d *= c;
+      b *= d;
+      c *= d;
       b = Math.ceil(b);
-      d = Math.ceil(d);
+      c = Math.ceil(c);
       var f = document.createElement("img");
       f.crossOrigin = "Anonymous";
       var g = document.createElement("canvas");
       g.width = b;
-      g.height = d;
+      g.height = c;
       var h = g.getContext("2d");
       f.onload = function() {
-        h.drawImage(f, 0, 0, b, d);
-        var c = g.toDataURL("image/png");
-        /\.png$/.test(a) && (Entry.BlockView.pngMap[a] = c);
-        e.resolve(c);
+        h.drawImage(f, 0, 0, b, c);
+        var d = g.toDataURL("image/png");
+        /\.png$/.test(a) && (Entry.BlockView.pngMap[a] = d);
+        e.resolve(d);
       };
       f.onerror = function() {
         e.reject("error occured");
@@ -19590,33 +19693,33 @@ Entry.BlockView.pngMap = {};
     }() ? .9 : .95;
     -1 < this.type.indexOf("func_") && (n *= .99);
     k.setAttribute("transform", "scale(%SCALE) translate(%X,%Y)".replace("%X", -l.offsetX).replace("%Y", -l.offsetY).replace("%SCALE", m));
-    for (var q = this.getBoard().svgDom.find("defs"), r = k.getElementsByTagName("image"), l = k.getElementsByTagName("text"), t = ["\u2265", "\u2264"], u = "\u2265\u2264-><=+-x/".split(""), v = 0;v < l.length;v++) {
+    for (var r = this.getBoard().svgDom.find("defs"), q = k.getElementsByTagName("image"), l = k.getElementsByTagName("text"), t = ["\u2265", "\u2264"], u = "\u2265\u2264-><=+-x/".split(""), v = 0;v < l.length;v++) {
       (function(a) {
         a.setAttribute("font-family", "'nanumBarunRegular', 'NanumGothic', '\ub098\ub214\uace0\ub515','NanumGothicWeb', '\ub9d1\uc740 \uace0\ub515', 'Malgun Gothic', Dotum");
-        var b = parseInt(a.getAttribute("font-size")), d = $(a).text();
-        -1 < t.indexOf(d) && a.setAttribute("font-weight", "500");
-        if ("q" == d) {
-          var c = parseInt(a.getAttribute("y"));
-          a.setAttribute("y", c - 1);
+        var b = parseInt(a.getAttribute("font-size")), c = $(a).text();
+        -1 < t.indexOf(c) && a.setAttribute("font-weight", "500");
+        if ("q" == c) {
+          var d = parseInt(a.getAttribute("y"));
+          a.setAttribute("y", d - 1);
         }
-        -1 < u.indexOf(d) ? a.setAttribute("font-size", b + "px") : a.setAttribute("font-size", b * n + "px");
+        -1 < u.indexOf(c) ? a.setAttribute("font-size", b + "px") : a.setAttribute("font-size", b * n + "px");
         a.setAttribute("alignment-baseline", "baseline");
       })(l[v]);
     }
     var x = 0;
-    if (0 === r.length) {
+    if (0 === q.length) {
       c();
     } else {
-      for (v = 0;v < r.length;v++) {
+      for (v = 0;v < q.length;v++) {
         (function(a) {
           var b = a.getAttribute("href");
           e(b, a.getAttribute("width"), a.getAttribute("height")).then(function(b) {
             a.setAttribute("href", b);
-            if (++x == r.length) {
+            if (++x == q.length) {
               return c();
             }
           });
-        })(r[v]);
+        })(q[v]);
       }
     }
     return f.promise();
@@ -19628,6 +19731,28 @@ Entry.BlockView.pngMap = {};
       b.download = "\uc5d4\ud2b8\ub9ac \ube14\ub85d.png";
       b.click();
     });
+  };
+  b._rightClick = function(a) {
+    var b = Entry.disposeEvent;
+    b && b.notify(a);
+    var c = this, e = c.block;
+    if (!this.isInBlockMenu) {
+      var b = [], f = {text:Lang.Blocks.Duplication_option, enable:this.copyable, callback:function() {
+        Entry.do("cloneBlock", e);
+      }}, g = {text:Lang.Blocks.CONTEXT_COPY_option, enable:this.copyable, callback:function() {
+        c.block.copyToClipboard();
+      }}, h = {text:Lang.Blocks.Delete_Blocks, enable:e.isDeletable(), callback:function() {
+        Entry.do("destroyBlock", c.block);
+      }}, k = {text:Lang.Menus.save_as_image, callback:function() {
+        c.downloadAsImage();
+      }};
+      b.push(f);
+      b.push(g);
+      b.push(h);
+      Entry.Utils.isChrome() && "workspace" == Entry.type && !Entry.isMobile() && b.push(k);
+      a.originalEvent && a.originalEvent.touches && (a = a.originalEvent.touches[0]);
+      Entry.ContextMenu.show(b, null, {x:a.clientX, y:a.clientY});
+    }
   };
 })(Entry.BlockView.prototype);
 Entry.Code = function(b, a) {
@@ -20079,7 +20204,7 @@ Entry.Field = function() {
     this.value != a && (this.value = a, this._block.params[this._index] = a, b && this._blockView.reDraw());
   };
   b._isEditable = function() {
-    if (this._block.view.dragMode == Entry.DRAG_MODE_DRAG) {
+    if (Entry.ContextMenu.visible || this._block.view.dragMode == Entry.DRAG_MODE_DRAG) {
       return !1;
     }
     var a = this._block.view, b = a.getBoard();
@@ -20109,6 +20234,12 @@ Entry.Field = function() {
     a.unshift(Entry.PARAM);
     return this._block.pointer(a);
   };
+  b.getFontSize = function(a) {
+    return a = a || this._blockView.getSkeleton().fontSize || 12;
+  };
+  b.getContentHeight = function() {
+    return Entry.isMobile() ? 22 : 16;
+  };
 })(Entry.Field.prototype);
 Entry.FieldAngle = function(b, a, d) {
   this._block = a.block;
@@ -20120,6 +20251,7 @@ Entry.FieldAngle = function(b, a, d) {
   this._index = d;
   b = this.getValue();
   this.setValue(this.modValue(void 0 !== b ? b : 90));
+  this._CONTENT_HEIGHT = this.getContentHeight();
   this.renderStart();
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
@@ -20129,11 +20261,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     this.svgGroup = this._blockView.contentSvgGroup.elem("g", {class:"entry-input-field"});
     this.textElement = this.svgGroup.elem("text", {x:4, y:4, "font-size":"11px"});
     this.textElement.textContent = this.getText();
-    var a = this.getTextWidth(), b = this.position && this.position.y ? this.position.y : 0;
-    this._header = this.svgGroup.elem("rect", {x:0, y:b - 8, rx:3, ry:3, width:a, height:16, fill:"#fff", "fill-opacity":.4});
+    var a = this.getTextWidth(), b = this._CONTENT_HEIGHT, c = this.position && this.position.y ? this.position.y : 0;
+    this._header = this.svgGroup.elem("rect", {x:0, y:c - b / 2, rx:3, ry:3, width:a, height:b, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
     this._bindRenderOptions();
-    this.box.set({x:0, y:0, width:a, height:16});
+    this.box.set({x:0, y:0, width:a, height:b});
   };
   b.renderOptions = function() {
     var a = this;
@@ -20143,20 +20275,23 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     });
     this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
     this.optionGroup.val(this.value);
-    this.optionGroup.on("mousedown", function(a) {
+    this.optionGroup.on("mousedown touchstart", function(a) {
       a.stopPropagation();
     });
     this.optionGroup.on("keyup", function(b) {
-      var c = b.keyCode || b.which;
+      var d = b.keyCode || b.which;
       a.applyValue(b);
-      -1 < [13, 27].indexOf(c) && a.destroyOption();
+      -1 < [13, 27].indexOf(d) && a.destroyOption();
     });
     var b = this.getAbsolutePosFromDocument();
     b.y -= this.box.height / 2;
-    this.optionGroup.css({height:16, left:b.x, top:b.y, width:a.box.width});
-    this.optionGroup.select();
+    this.optionGroup.css({height:this._CONTENT_HEIGHT, left:b.x, top:b.y, width:a.box.width});
     this.svgOptionGroup = this.appendSvgOptionGroup();
     this.svgOptionGroup.elem("circle", {x:0, y:0, r:49, class:"entry-field-angle-circle"});
+    $(this.svgOptionGroup).on("mousedown touchstart", function(b) {
+      b.stopPropagation();
+      a._updateByCoord(b);
+    });
     this._dividerGroup = this.svgOptionGroup.elem("g");
     for (b = 0;360 > b;b += 15) {
       this._dividerGroup.elem("line", {x1:49, y1:0, x2:49 - (0 === b % 45 ? 10 : 5), y2:0, transform:"rotate(" + b + ", 0, 0)", class:"entry-angle-divider"});
@@ -20165,16 +20300,22 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     b.x += this.box.width / 2;
     b.y = b.y + this.box.height / 2 + 49 + 1;
     this.svgOptionGroup.attr({class:"entry-field-angle", transform:"translate(" + b.x + "," + b.y + ")"});
-    var b = a.getAbsolutePosFromDocument(), c = [b.x + a.box.width / 2, b.y + a.box.height / 2 + 1];
-    $(this.svgOptionGroup).mousemove(function(b) {
-      a.optionGroup.val(a.modValue(function(a, b) {
-        var c = b[0] - a[0], d = b[1] - a[1] - 49 - 1, e = Math.atan(-d / c), e = Entry.toDegrees(e), e = 90 - e;
-        0 > c ? e += 180 : 0 < d && (e += 360);
-        return 15 * Math.round(e / 15);
-      }(c, [b.clientX, b.clientY])));
-      a.applyValue();
-    });
+    $(this.svgOptionGroup).bind("mousemove touchmove", this._updateByCoord.bind(this));
+    $(this.svgOptionGroup).bind("mouseup touchend", this.destroyOption.bind(this));
     this.updateGraph();
+    this.optionGroup.focus();
+    this.optionGroup.select();
+  };
+  b._updateByCoord = function(a) {
+    a.originalEvent && a.originalEvent.touches && (a = a.originalEvent.touches[0]);
+    a = [a.clientX, a.clientY];
+    var b = this.getAbsolutePosFromDocument();
+    this.optionGroup.val(this.modValue(function(a, b) {
+      var d = b[0] - a[0], g = b[1] - a[1] - 49 - 1, h = Math.atan(-g / d), h = Entry.toDegrees(h), h = 90 - h;
+      0 > d ? h += 180 : 0 < g && (h += 360);
+      return 15 * Math.round(h / 15);
+    }([b.x + this.box.width / 2, b.y + this.box.height / 2 + 1], a)));
+    this.applyValue();
   };
   b.updateGraph = function() {
     this._fillPath && this._fillPath.remove();
@@ -20386,6 +20527,8 @@ Entry.FieldColor = function(b, a, d) {
   this._position = b.position;
   this.key = b.key;
   this.setValue(this.getValue() || "#FF0000");
+  this._CONTENT_HEIGHT = this.getContentHeight();
+  this._CONTENT_WIDTH = this.getContentWidth();
   this.renderStart(a);
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
@@ -20393,11 +20536,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
   b.renderStart = function() {
     this.svgGroup && $(this.svgGroup).remove();
     this.svgGroup = this._blockView.contentSvgGroup.elem("g", {class:"entry-field-color"});
-    var a = this._position, b;
-    a ? (b = a.x || 0, a = a.y || 0) : (b = 0, a = -8);
-    this._header = this.svgGroup.elem("rect", {x:b, y:a, width:14.5, height:16, fill:this.getValue()});
+    var a = this._CONTENT_HEIGHT, b = this._CONTENT_WIDTH, c = this._position, e;
+    c ? (e = c.x || 0, c = c.y || 0) : (e = 0, c = -a / 2);
+    this._header = this.svgGroup.elem("rect", {x:e, y:c, width:b, height:a, fill:this.getValue()});
     this._bindRenderOptions();
-    this.box.set({x:b, y:a, width:14.5, height:16});
+    this.box.set({x:e, y:c, width:b, height:a});
   };
   b.renderOptions = function() {
     var a = this;
@@ -20428,6 +20571,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
   b.applyValue = function(a) {
     this.value != a && (this.setValue(a), this._header.attr({fill:a}));
   };
+  b.getContentWidth = function() {
+    return Entry.isMobile() ? 20 : 14.5;
+  };
 })(Entry.FieldColor.prototype);
 Entry.FieldColor.getWidgetColorList = function() {
   return ["#FFFFFF #CCCCCC #C0C0C0 #999999 #666666 #333333 #000000".split(" "), "#FFCCCC #FF6666 #FF0000 #CC0000 #990000 #660000 #330000".split(" "), "#FFCC99 #FF9966 #FF9900 #FF6600 #CC6600 #993300 #663300".split(" "), "#FFFF99 #FFFF66 #FFCC66 #FFCC33 #CC9933 #996633 #663333".split(" "), "#FFFFCC #FFFF33 #FFFF00 #FFCC00 #999900 #666600 #333300".split(" "), "#99FF99 #66FF99 #33FF33 #33CC00 #009900 #006600 #003300".split(" "), "#99FFFF #33FFFF #66CCCC #00CCCC #339999 #336666 #003333".split(" "), "#CCFFFF #66FFFF #33CCFF #3366FF #3333FF #000099 #000066".split(" "), 
@@ -20443,8 +20589,8 @@ Entry.FieldDropdown = function(b, a, d) {
   this._arrowColor = b.arrowColor;
   this._index = d;
   this.setValue(this.getValue());
-  this._CONTENT_HEIGHT = b.dropdownHeight || a.getSkeleton().dropdownHeight || 16;
-  this._FONT_SIZE = b.fontSize || a.getSkeleton().fontSize || 12;
+  this._CONTENT_HEIGHT = this.getContentHeight(b.dropdownHeight);
+  this._FONT_SIZE = this.getFontSize(b.fontSize);
   this._ROUND = b.roundValue || 3;
   this.renderStart();
 };
@@ -20453,26 +20599,26 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
   b.renderStart = function() {
     this.svgGroup && $(this.svgGroup).remove();
     this instanceof Entry.FieldDropdownDynamic && this._updateValue();
-    var a = this._blockView;
+    var a = this._blockView, b = Entry.isMobile(), c = b ? 33 : 20, b = b ? 24 : 10;
     this.svgGroup = a.contentSvgGroup.elem("g", {class:"entry-field-dropdown"});
-    this.textElement = this.svgGroup.elem("text", {x:2});
+    this.textElement = this.svgGroup.elem("text", {x:5});
     this.textElement.textContent = this.getTextByValue(this.getValue());
-    var b = this.textElement.getBBox();
-    this.textElement.attr({style:"white-space: pre;", "font-size":+this._FONT_SIZE + "px", y:.25 * b.height});
-    b = this.textElement.getBBox().width + 16;
-    this._noArrow && (b -= 12);
-    var c = this._CONTENT_HEIGHT;
-    this._header = this.svgGroup.elem("rect", {width:b, height:c, y:-c / 2, rx:this._ROUND, ry:this._ROUND, fill:"#fff", "fill-opacity":.4});
+    a = this.textElement.getBBox();
+    this.textElement.attr({style:"white-space: pre;", "font-size":+this._FONT_SIZE + "px", y:.23 * a.height});
+    c = this.textElement.getBBox().width + c;
+    this._noArrow && (c -= b);
+    b = this._CONTENT_HEIGHT;
+    this._header = this.svgGroup.elem("rect", {width:c, height:b, y:-b / 2, rx:this._ROUND, ry:this._ROUND, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
-    this._noArrow || (a = this._arrowColor || a._schema.color, this._arrow = this.svgGroup.elem("polygon", {points:"0,-2.1 6.4,-2.1 3.2,2.1", fill:a, stroke:a, transform:"translate(" + (b - 11) + ",0)"}));
+    this._noArrow || (a = this.getArrow(), this._arrow = this.svgGroup.elem("polygon", {points:a.points, fill:a.color, stroke:a.color, transform:"translate(" + (c - a.width - 5) + "," + -a.height / 2 + ")"}));
     this._bindRenderOptions();
-    this.box.set({x:0, y:0, width:b, height:c});
+    this.box.set({x:0, y:0, width:c, height:b});
   };
   b.resize = function() {
-    var a = this.textElement.getComputedTextLength() + 18;
-    this._noArrow ? a -= 14 : this._arrow.attr({transform:"translate(" + (a - 11) + ",0)"});
-    this._header.attr({width:a});
-    this.box.set({width:a});
+    var a = Entry.isMobile(), b = a ? 33 : 20, a = a ? 24 : 10, b = this.textElement.getComputedTextLength() + b;
+    this._noArrow ? b -= a : (a = this.getArrow(), this._arrow.attr({transform:"translate(" + (b - a.width - 5) + "," + -a.height / 2 + ")"}));
+    this._header.attr({width:b});
+    this.box.set({width:b});
     this._block.view.alignContent();
   };
   b.renderOptions = function() {
@@ -20531,6 +20677,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     }
     return Lang.Blocks.no_target;
   };
+  b.getContentHeight = function(a) {
+    return a = a || this._blockView.getSkeleton().dropdownHeight || (Entry.isMobile() ? 22 : 16);
+  };
+  b.getArrow = function() {
+    var a = Entry.isMobile();
+    return {color:this._arrowColor || this._blockView._schema.color, points:a ? "0,0 19,0 9.5,13" : "0,0 6.4,0 3.2,4.2", height:a ? 13 : 4.2, width:a ? 19 : 6.4};
+  };
 })(Entry.FieldDropdown.prototype);
 Entry.FieldDropdownDynamic = function(b, a, d) {
   this._block = a.block;
@@ -20542,8 +20695,8 @@ Entry.FieldDropdownDynamic = function(b, a, d) {
   this._arrowColor = b.arrowColor;
   d = this._contents.menuName;
   Entry.Utils.isFunction(d) ? this._menuGenerator = d : this._menuName = d;
-  this._CONTENT_HEIGHT = b.dropdownHeight || a.getSkeleton().dropdownHeight || 16;
-  this._FONT_SIZE = b.fontSize || a.getSkeleton().fontSize || 12;
+  this._CONTENT_HEIGHT = this.getContentHeight(b.dropdownHeight);
+  this._FONT_SIZE = this.getFontSize(b.fontSize);
   this._ROUND = b.roundValue || 3;
   this.renderStart(a);
 };
@@ -20657,6 +20810,7 @@ Entry.FieldKeyboard = function(b, a, d) {
   this._contents = b;
   this._index = d;
   this.setValue(String(this.getValue()));
+  this._CONTENT_HEIGHT = this.getContentHeight();
   this._optionVisible = !1;
   this.renderStart(a);
 };
@@ -20665,13 +20819,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
   b.renderStart = function() {
     this.svgGroup && $(this.svgGroup).remove();
     this.svgGroup = this._blockView.contentSvgGroup.elem("g", {class:"entry-input-field"});
-    this.textElement = this.svgGroup.elem("text").attr({x:4, y:4, "font-size":"11px"});
+    this.textElement = this.svgGroup.elem("text").attr({x:5, y:4, "font-size":"11px"});
     this.textElement.textContent = Entry.getKeyCodeMap()[this.getValue()];
-    var a = this.getTextWidth(), b = this.position && this.position.y ? this.position.y : 0;
-    this._header = this.svgGroup.elem("rect", {x:0, y:b - 8, width:a, height:16, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
+    var a = this.getTextWidth() + 1, b = this._CONTENT_HEIGHT, c = this.position && this.position.y ? this.position.y : 0;
+    this._header = this.svgGroup.elem("rect", {x:0, y:c - b / 2, width:a, height:b, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
     this._bindRenderOptions();
-    this.box.set({x:0, y:0, width:a, height:16});
+    this.box.set({x:0, y:0, width:a, height:b});
   };
   b.renderOptions = function() {
     Entry.keyPressed && (this.keyPressed = Entry.keyPressed.attach(this, this._keyboardControl));
@@ -20705,13 +20859,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     this.resize();
   };
   b.resize = function() {
-    var a = this.getTextWidth();
+    var a = this.getTextWidth() + 1;
     this._header.attr({width:a});
     this.box.set({width:a});
     this._blockView.alignContent();
   };
   b.getTextWidth = function() {
-    return this.textElement.getComputedTextLength() + 8;
+    return this.textElement.getComputedTextLength() + 10;
   };
   b.destroy = function() {
     this.destroyOption();
@@ -20982,6 +21136,7 @@ Entry.FieldTextInput = function(b, a, d) {
   this._contents = b;
   this._index = d;
   this.value = this.getValue() || "";
+  this._CONTENT_HEIGHT = this.getContentHeight();
   this.renderStart();
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
@@ -20992,11 +21147,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     this.svgGroup.attr({class:"entry-input-field"});
     this.textElement = this.svgGroup.elem("text", {x:3, y:4, "font-size":"12px"});
     this.textElement.textContent = this.truncate();
-    var a = this.getTextWidth(), b = this.position && this.position.y ? this.position.y : 0;
-    this._header = this.svgGroup.elem("rect", {width:a, height:16, y:b - 8, rx:3, ry:3, fill:"transparent"});
+    var a = this.getTextWidth(), b = this.position && this.position.y ? this.position.y : 0, c = this._CONTENT_HEIGHT;
+    this._header = this.svgGroup.elem("rect", {width:a, height:c, y:b - c / 2, rx:3, ry:3, fill:"transparent"});
     this.svgGroup.appendChild(this.textElement);
     this._bindRenderOptions();
-    this.box.set({x:0, y:0, width:a, height:16});
+    this.box.set({x:0, y:0, width:a, height:c});
   };
   b.renderOptions = function() {
     var a = this;
@@ -21016,7 +21171,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     });
     var b = this.getAbsolutePosFromDocument();
     b.y -= this.box.height / 2;
-    this.optionGroup.css({height:16, left:b.x, top:b.y, width:a.box.width});
+    this.optionGroup.css({height:this._CONTENT_HEIGHT, left:b.x, top:b.y, width:a.box.width});
     this.optionGroup.focus();
     b = this.optionGroup[0];
     b.setSelectionRange(0, b.value.length, "backward");
@@ -21344,6 +21499,7 @@ Entry.Board.OPTION_PASTE = 0;
 Entry.Board.OPTION_ALIGN = 1;
 Entry.Board.OPTION_CLEAR = 2;
 Entry.Board.OPTION_DOWNLOAD = 3;
+Entry.Board.DRAG_RADIUS = 5;
 (function(b) {
   b.schema = {code:null, dragBlock:null, magnetedBlockView:null, selectedBlockView:null};
   b.createView = function(a) {
@@ -21429,42 +21585,36 @@ Entry.Board.OPTION_DOWNLOAD = 3;
     function b(a) {
       a.stopPropagation && a.stopPropagation();
       a.preventDefault && a.preventDefault();
-      a = a.originalEvent && a.originalEvent.touches ? a.originalEvent.touches[0] : a;
-      var c = f.dragInstance;
-      f.scroller.scroll(a.pageX - c.offsetX, a.pageY - c.offsetY);
-      c.set({offsetX:a.pageX, offsetY:a.pageY});
+      a = Entry.Utils.convertMouseEvent(a);
+      var c = e.mouseDownCoordinate;
+      Math.sqrt(Math.pow(a.pageX - c.x, 2) + Math.pow(a.pageY - c.y, 2)) < Entry.Board.DRAG_RADIUS || (f && (clearTimeout(f), f = null), c = e.dragInstance, e.scroller.scroll(a.pageX - c.offsetX, a.pageY - c.offsetY), c.set({offsetX:a.pageX, offsetY:a.pageY}));
     }
     function c(a) {
+      f && (clearTimeout(f), f = null);
       $(document).unbind(".entryBoard");
-      delete f.dragInstance;
+      delete e.mouseDownCoordinate;
+      delete e.dragInstance;
     }
     if (this.workspace.getMode() != Entry.Workspace.MODE_VIMBOARD) {
       a.stopPropagation && a.stopPropagation();
       a.preventDefault && a.preventDefault();
+      var e = this, f = null;
       if (0 === a.button || a.originalEvent && a.originalEvent.touches) {
-        a = a.originalEvent && a.originalEvent.touches ? a.originalEvent.touches[0] : a;
-        Entry.documentMousedown && Entry.documentMousedown.notify(a);
-        var e = $(document);
-        e.bind("mousemove.entryBoard", b);
-        e.bind("mouseup.entryBoard", c);
-        e.bind("touchmove.entryBoard", b);
-        e.bind("touchend.entryBoard", c);
-        this.dragInstance = new Entry.DragInstance({startX:a.pageX, startY:a.pageY, offsetX:a.pageX, offsetY:a.pageY});
+        var g = a.type, h = Entry.Utils.convertMouseEvent(a);
+        Entry.documentMousedown && Entry.documentMousedown.notify(h);
+        var k = $(document);
+        this.mouseDownCoordinate = {x:h.pageX, y:h.pageY};
+        k.bind("mousemove.entryBoard", b);
+        k.bind("mouseup.entryBoard", c);
+        k.bind("touchmove.entryBoard", b);
+        k.bind("touchend.entryBoard", c);
+        this.dragInstance = new Entry.DragInstance({startX:h.pageX, startY:h.pageY, offsetX:h.pageX, offsetY:h.pageY});
+        "touchstart" === g && (f = setTimeout(function() {
+          f && (f = null, c(), e._rightClick(a));
+        }, 1E3));
       } else {
-        if (Entry.Utils.isRightButton(a)) {
-          if (!this.visible) {
-            return;
-          }
-          a = [];
-          this._contextOptions[Entry.Board.OPTION_PASTE].option.enable = !!Entry.clipboard;
-          this._contextOptions[Entry.Board.OPTION_DOWNLOAD].option.enable = 0 !== this.code.getThreads().length;
-          for (e = 0;e < this._contextOptions.length;e++) {
-            this._contextOptions[e].activated && a.push(this._contextOptions[e].option);
-          }
-          Entry.ContextMenu.show(a);
-        }
+        Entry.Utils.isRightButton(a) && this._rightClick(a);
       }
-      var f = this;
     }
   };
   b.mouseWheel = function(a) {
@@ -21608,15 +21758,15 @@ Entry.Board.OPTION_DOWNLOAD = 3;
       a = c + 1;
       n.magnet.next && (a += n.height, h.push({point:c, endPoint:a, startBlock:m, blocks:[]}), h.push({point:a, blocks:[]}), n.absX = k);
       m.statements && (b += .01);
-      for (var q = 0;q < m.statements.length;q++) {
-        a = m.statements[q];
-        var r = m.view._statements[q];
-        r.zIndex = b;
-        r.absX = k + r.x;
-        h.push({point:r.y + c - 30, endPoint:r.y + c, startBlock:r, blocks:[]});
-        h.push({point:r.y + c + r.height, blocks:[]});
+      for (var r = 0;r < m.statements.length;r++) {
+        a = m.statements[r];
+        var q = m.view._statements[r];
+        q.zIndex = b;
+        q.absX = k + q.x;
+        h.push({point:q.y + c - 30, endPoint:q.y + c, startBlock:q, blocks:[]});
+        h.push({point:q.y + c + q.height, blocks:[]});
         b += .01;
-        g = g.concat(this._getNextMagnets(a, b, {x:r.x + k, y:r.y + c}, e));
+        g = g.concat(this._getNextMagnets(a, b, {x:q.x + k, y:q.y + c}, e));
       }
       n.magnet.next && (c += n.magnet.next.y, k += n.magnet.next.x);
     }
@@ -21652,9 +21802,9 @@ Entry.Board.OPTION_DOWNLOAD = 3;
       k += n.x;
       h = h.concat(this._getFieldBlockMetaData(n, k, c, b, e));
       m.statements && (b += .01);
-      for (var q = 0;q < m.statements.length;q++) {
-        a = m.statements[q];
-        var r = m.view._statements[q], g = g.concat(this._getFieldMagnets(a, b, {x:r.x + k, y:r.y + c}, e));
+      for (var r = 0;r < m.statements.length;r++) {
+        a = m.statements[r];
+        var q = m.view._statements[r], g = g.concat(this._getFieldMagnets(a, b, {x:q.x + k, y:q.y + c}, e));
       }
       n.magnet.next && (c += n.magnet.next.y, k += n.magnet.next.x);
     }
@@ -21668,12 +21818,12 @@ Entry.Board.OPTION_DOWNLOAD = 3;
       if (l instanceof Entry.FieldBlock) {
         var m = l._valueBlock;
         if (!m.view.dragInstance && (l.acceptType === f || "boolean" === l.acceptType)) {
-          var n = b + l.box.x, q = c + l.box.y + a.contentHeight % 1E3 * -.5, r = c + l.box.y + l.box.height;
-          l.acceptType === f && (h.push({point:q, endPoint:r, startBlock:m, blocks:[]}), h.push({point:r, blocks:[]}));
+          var n = b + l.box.x, r = c + l.box.y + a.contentHeight % 1E3 * -.5, q = c + l.box.y + l.box.height;
+          l.acceptType === f && (h.push({point:r, endPoint:q, startBlock:m, blocks:[]}), h.push({point:q, blocks:[]}));
           l = m.view;
           l.absX = n;
           l.zIndex = e;
-          h = h.concat(this._getFieldBlockMetaData(l, n + l.contentPos.x, q + l.contentPos.y, e + .01, f));
+          h = h.concat(this._getFieldBlockMetaData(l, n + l.contentPos.x, r + l.contentPos.y, e + .01, f));
         }
       }
     }
@@ -21694,9 +21844,9 @@ Entry.Board.OPTION_DOWNLOAD = 3;
       k += n.x;
       h = h.concat(this._getOutputMetaData(n, k, c, b, e));
       m.statements && (b += .01);
-      for (var q = 0;q < m.statements.length;q++) {
-        a = m.statements[q];
-        var r = m.view._statements[q], g = g.concat(this._getOutputMagnets(a, b, {x:r.x + k, y:r.y + c}, e));
+      for (var r = 0;r < m.statements.length;r++) {
+        a = m.statements[r];
+        var q = m.view._statements[r], g = g.concat(this._getOutputMagnets(a, b, {x:q.x + k, y:q.y + c}, e));
       }
       n.magnet.next && (c += n.magnet.next.y, k += n.magnet.next.x);
     }
@@ -21786,7 +21936,7 @@ Entry.Board.OPTION_DOWNLOAD = 3;
       a.alignThreads();
     }}}, {activated:!0, option:{text:Lang.Blocks.Clear_all_blocks, callback:function() {
       a.code.clear();
-    }}}, {activated:"workspace" === Entry.type && Entry.Utils.isChrome(), option:{text:Lang.Menus.save_as_image_all, enable:!0, callback:function() {
+    }}}, {activated:"workspace" === Entry.type && Entry.Utils.isChrome() && !Entry.isMobile(), option:{text:Lang.Menus.save_as_image_all, enable:!0, callback:function() {
       a.code.getThreads().forEach(function(a) {
         (a = a.getFirstBlock()) && a.view.downloadAsImage();
       });
@@ -21809,6 +21959,20 @@ Entry.Board.OPTION_DOWNLOAD = 3;
   b.offset = function() {
     (!this._offset || 0 === this._offset.top && 0 === this._offset.left) && this.updateOffset();
     return this._offset;
+  };
+  b._rightClick = function(a) {
+    var b = Entry.disposeEvent;
+    b && b.notify(a);
+    if (this.visible) {
+      var b = [], c = this._contextOptions;
+      c[Entry.Board.OPTION_PASTE].option.enable = !!Entry.clipboard;
+      c[Entry.Board.OPTION_DOWNLOAD].option.enable = 0 !== this.code.getThreads().length;
+      for (var e = 0;e < this._contextOptions.length;e++) {
+        c[e].activated && b.push(c[e].option);
+      }
+      a = Entry.Utils.convertMouseEvent(a);
+      Entry.ContextMenu.show(b, null, {x:a.clientX, y:a.clientY});
+    }
   };
 })(Entry.Board.prototype);
 Entry.skeleton = function() {
@@ -23146,27 +23310,37 @@ Entry.Playground.prototype.generateTextView = function(b) {
   var n = Entry.createElement("div");
   n.addClass("entryPlaygroundFontSizeSlider");
   b.appendChild(n);
-  var q = Entry.createElement("div");
-  q.addClass("entryPlaygroundFontSizeIndicator");
-  n.appendChild(q);
-  this.fontSizeIndiciator = q;
   var r = Entry.createElement("div");
-  r.addClass("entryPlaygroundFontSizeKnob");
+  r.addClass("entryPlaygroundFontSizeIndicator");
   n.appendChild(r);
-  this.fontSizeKnob = r;
+  this.fontSizeIndiciator = r;
+  var q = Entry.createElement("div");
+  q.addClass("entryPlaygroundFontSizeKnob");
+  n.appendChild(q);
+  this.fontSizeKnob = q;
   e = Entry.createElement("div");
   e.addClass("entryPlaygroundFontSizeLabel");
   e.innerHTML = "\uae00\uc790 \ud06c\uae30";
   b.appendChild(e);
   var t = !1, u = 0;
-  r.onmousedown = function(a) {
+  q.onmousedown = function(a) {
     t = !0;
     u = $(n).offset().left;
   };
+  q.addEventListener("touchstart", function(a) {
+    t = !0;
+    u = $(n).offset().left;
+  });
   document.addEventListener("mousemove", function(a) {
-    t && (a = a.pageX - u, a = Math.max(a, 5), a = Math.min(a, 88), r.style.left = a + "px", a /= .88, q.style.width = a + "%", Entry.playground.object.entity.setFontSize(a));
+    t && (a = a.pageX - u, a = Math.max(a, 5), a = Math.min(a, 88), q.style.left = a + "px", a /= .88, r.style.width = a + "%", Entry.playground.object.entity.setFontSize(a));
+  });
+  document.addEventListener("touchmove", function(a) {
+    t && (a = a.touches[0].pageX - u, a = Math.max(a, 5), a = Math.min(a, 88), q.style.left = a + "px", a /= .88, r.style.width = a + "%", Entry.playground.object.entity.setFontSize(a));
   });
   document.addEventListener("mouseup", function(a) {
+    t = !1;
+  });
+  document.addEventListener("touchend", function(a) {
     t = !1;
   });
   b = Entry.createElement("div");
@@ -23478,13 +23652,13 @@ Entry.Playground.prototype.showTab = function(b) {
   this.tabViewElements[b] && (this.tabViewElements[b].addClass("showTab"), this.tabViewElements[b].removeClass("hideTab"));
 };
 Entry.Playground.prototype.initializeResizeHandle = function(b) {
-  b.onmousedown = function(a) {
+  $(b).bind("mousedown touchstart", function(a) {
     Entry.playground.resizing = !0;
     Entry.documentMousemove && (Entry.playground.resizeEvent = Entry.documentMousemove.attach(this, function(a) {
       Entry.playground.resizing && Entry.resizeElement({menuWidth:a.clientX - Entry.interfaceState.canvasWidth});
     }));
-  };
-  document.addEventListener("mouseup", function(a) {
+  });
+  $(document).bind("mouseup touchend", function(a) {
     if (a = Entry.playground.resizeEvent) {
       Entry.playground.resizing = !1, Entry.documentMousemove.detach(a), delete Entry.playground.resizeEvent;
     }

@@ -23,11 +23,9 @@ Entry.FieldDropdown = function(content, blockView, index) {
     this._index = index;
     this.setValue(this.getValue());
 
-    this._CONTENT_HEIGHT =
-        content.dropdownHeight || blockView.getSkeleton().dropdownHeight || 16;
+    this._CONTENT_HEIGHT = this.getContentHeight(content.dropdownHeight);
 
-    this._FONT_SIZE =
-        content.fontSize || blockView.getSkeleton().fontSize || 12;
+    this._FONT_SIZE = this.getFontSize(content.fontSize);
 
     this._ROUND = content.roundValue || 3;
 
@@ -37,39 +35,38 @@ Entry.FieldDropdown = function(content, blockView, index) {
 Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
 (function(p) {
-
     p.renderStart = function() {
         if (this.svgGroup) $(this.svgGroup).remove();
         //should update value dynamically
-        if (this instanceof Entry.FieldDropdownDynamic) this._updateValue();
+        if (this instanceof Entry.FieldDropdownDynamic)
+            this._updateValue();
 
         var blockView = this._blockView;
-        var X_PADDING = 16;
+        var isBig = Entry.isMobile();
+        var X_PADDING = isBig ? 33 : 20;
+        var X_PADDING_SUBT = isBig ? 24 : 10;
         var that = this;
         var contents = this._contents;
 
 
-        this.svgGroup = blockView.contentSvgGroup.elem("g", {
-            class: 'entry-field-dropdown'
-        });
+        this.svgGroup = blockView.contentSvgGroup.elem(
+            "g", { class: 'entry-field-dropdown' });
 
         this.textElement =
-            this.svgGroup.elem("text", {
-                x: 2
-            });
+            this.svgGroup.elem("text", { x: 5 });
         this.textElement.textContent = this.getTextByValue(this.getValue());
 
         var bBox = this.textElement.getBBox();
         this.textElement.attr({
             'style': 'white-space: pre;',
             'font-size': + that._FONT_SIZE + 'px',
-            'y': bBox.height * 0.25
+            'y': bBox.height * 0.23
         });
 
         var width =
             this.textElement.getBBox().width + X_PADDING;
 
-        if (this._noArrow) width -= 12;
+        if (this._noArrow) width -= X_PADDING_SUBT;
 
 
         var CONTENT_HEIGHT = this._CONTENT_HEIGHT;
@@ -87,12 +84,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         this.svgGroup.appendChild(this.textElement);
 
         if (!this._noArrow) {
-            var fillColor = this._arrowColor || blockView._schema.color;
+            var arrowInfo = this.getArrow();
             this._arrow = this.svgGroup.elem("polygon",{
-                points: "0,-2.1 6.4,-2.1 3.2,2.1",
-                fill: fillColor,
-                stroke: fillColor,
-                transform: "translate("+ (width-11) + ",0)"
+                points: arrowInfo.points,
+                fill: arrowInfo.color,
+                stroke: arrowInfo.color,
+                transform: "translate("+ (width - arrowInfo.width - 5) + ","
+                    + (-arrowInfo.height/2) +")"
             });
         }
 
@@ -107,15 +105,19 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     };
 
     p.resize = function() {
-        var X_PADDING = 18;
+        var isBig  = Entry.isMobile();
+        var X_PADDING = isBig ? 33 : 20;
+        var X_PADDING_SUBT = isBig ? 24 : 10;
         var width =
             this.textElement.getComputedTextLength() + X_PADDING;
 
         if (!this._noArrow) {
+            var arrowInfo = this.getArrow();
             this._arrow.attr({
-                transform: "translate("+ (width-11) + ",0)"
+                transform: "translate("+ (width - arrowInfo.width - 5) + ","
+                    + (-arrowInfo.height/2) +")"
             });
-        } else width -= 14;
+        } else width -= X_PADDING_SUBT;
 
         this._header.attr({
             width: width
@@ -248,5 +250,28 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         }
         //no match found
         return Lang.Blocks.no_target;
+    };
+
+    p.getContentHeight = function(height) {
+        height =
+            height || this._blockView.getSkeleton().dropdownHeight ||
+            (Entry.isMobile() ? 22: 16);
+        return height;
+    };
+
+    p.getArrow = function() {
+        var isBig = Entry.isMobile();
+        var color = this._arrowColor || this._blockView._schema.color;
+        var points = isBig ?
+                    '0,0 19,0 9.5,13' :
+                    "0,0 6.4,0 3.2,4.2";
+        var height = isBig ? 13 : 4.2;
+        var width = isBig ? 19 : 6.4;
+        return {
+            color: color,
+            points: points,
+            height: height,
+            width: width
+        };
     };
 })(Entry.FieldDropdown.prototype);

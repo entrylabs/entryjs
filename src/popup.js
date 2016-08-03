@@ -21,6 +21,8 @@ Entry.Popup = function() {
     document.body.appendChild(this.body_);
     this.window_ = Entry.createElement('div');
     this.window_.addClass('entryPopupWindow');
+    if (Entry.device === 'tablet')
+        this.window_.addClass('tablet');
     this.window_.bindOnClick(function() {
     });
     Entry.addEventListener('windowResized', this.resize);

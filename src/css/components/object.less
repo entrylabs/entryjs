@@ -373,6 +373,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
     .backgroundImage("layers_icon_rotate01_sel.png");
 }
 
+
 .entryObjectRotateModeBWorkspace {
     .backgroundImage("layers_icon_rotate02_nor.png");
 }
@@ -438,3 +439,163 @@ input.entryObjectNameWorkspace:-moz-read-only {
     background-color: transparent;
 }
 
+
+/* tablet start */
+
+.tablet {
+    .objectInfo_visible {
+        top: 8px;
+        .backgroundImage("layers_icon_visible_big.png");
+    }
+
+    .objectInfo_unvisible {
+        .backgroundImage("layers_icon_unvisible_big.png");
+    }
+
+    .objectInfo_unlock {
+        .backgroundImage("layers_icon_unlock_big.png");
+        top: 35px;
+    }
+
+    .objectInfo_lock {
+        .backgroundImage("layers_icon_lock_big.png");
+    }
+
+    .entryObjectThumbnailWorkspace {
+        width: 52px;
+        height: 52px;
+        top: 8px;
+    }
+
+    .objectInfo_visible, .objectInfo_unvisible, .objectInfo_lock, .objectInfo_unlock {
+        width: 25px;
+        height: 25px;
+    }
+
+    .entryObjectInformationWorkspace {
+        width: 21px;
+        height: 14px;
+        margin-top: 14px;
+        .backgroundImage("layers_arrow_up_nor_big.png");
+    }
+    
+    .selectedObject .entryObjectInformationWorkspace{
+        .backgroundImage("layers_arrow_down_nor_big.png");
+    }
+
+    .entryObjectEditWorkspace {
+        .backgroundImage("layers_icon_edit_nor_new_big.png");
+        right: 60px;
+        top: 23px;   
+    }
+
+    .entryObjectDeleteWorkspace {
+        .backgroundImage("layers_icon_close_nor_new_big.png");
+        right: 28px;
+        top: 23px;
+    }
+
+    .entryObjectEditWorkspace, .entryObjectDeleteWorkspace, .entryObjectRotateModeAWorkspace, .entryObjectRotateModeBWorkspace, .entryObjectRotateModeCWorkspace {
+        width: 24px;
+        height: 24px;
+    }
+
+    .entryObjectRotateModeAWorkspace {
+        .backgroundImage("layers_icon_rotate01_nor_big.png");
+        margin-top: 15px;
+    }
+
+    .entryObjectRotateModeAWorkspace.selected {
+        .backgroundImage("layers_icon_rotate01_sel_big.png");
+    }    
+
+    .entryObjectRotateModeBWorkspace {
+        .backgroundImage("layers_icon_rotate02_nor_big.png");
+        margin-top: 15px;
+    }
+
+    .entryObjectRotateModeBWorkspace.selected {
+        .backgroundImage("layers_icon_rotate02_sel_big.png");
+    }
+
+    .entryObjectRotateModeCWorkspace {
+        .backgroundImage("layers_icon_rotate03_nor_big.png");
+        margin-top: 15px;
+    }
+
+    .entryObjectRotateModeCWorkspace.selected {
+        .backgroundImage("layers_icon_rotate03_sel_big.png");
+    }
+
+    .entryObjectSelectedImgWorkspace {
+        width: 20px;
+        height: 37px;
+        top: 18px;
+        .backgroundImage("entry_scroll_big_2.png");
+    }
+
+    .objectInfoView {
+        height: 69px;
+    }
+
+    .entryObjectCoordinateWorkspace {
+        top: 7px;
+    }
+
+    .entryObjectRotateMethodLabelWorkspace {    
+        padding-top: 20px;
+    }
+
+    .entryObjectRotateLabelWrapperWorkspace {
+        top: 96px;
+    }
+
+    .entryObjectNameWorkspace {
+        left: 25px;
+    }
+
+    .entryObjectWrapperWorkspace {
+        width: 160px;
+    }
+
+    .entryObjectCoordinateInputWorkspace {
+        width: 52px;
+    }
+
+    .entryObjectCoordinateInputWorkspace_size {
+        width: 48px;
+        margin-left: 170px
+    }
+
+    .entryObjectCoordinateInputWorkspace_right {
+        margin-left: 84px;
+    }
+
+    .entryObjectRotateInputWorkspace {
+        width: 50px;
+    }
+
+    .entryObjectDirectionInputWorkspace {
+        width: 38px;
+    }
+
+    .entryObjectCoordinateSpanWorkspace:nth-child(3) {
+        margin-left: 70px;
+    }
+
+    .entryObjectCoordinateSizeWorkspace {
+        margin-left: 139px;
+        width: 30px;
+    }
+
+    .collapsed .entryObjectRotationWrapperWorkspace {
+        height: 90px;
+    }
+
+    .collapsed .rotationMethodWrapper {
+        float: left;
+        top: 39px;
+    }
+}
+
+/* tablet end */
