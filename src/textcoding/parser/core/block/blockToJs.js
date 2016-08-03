@@ -166,9 +166,9 @@ Entry.BlockToJsParser = function(syntax) {
                     var param = this.Block(paramBlock);
             }
             
-            var code = "if (" + param + ") {\n\t" +
-                this.indent(statementCode1).trim() + "\r}\n" +
-                "else {\n\t" + this.indent(statementCode2).trim() + "\r}";
+            var code = "if (" + param + ") {" +
+                this.indent(statementCode1) + "}\n" +
+                "else {" + this.indent(statementCode2) + "}";
         } else {
             var statementCode1 = this.Thread(block.statements[0]);
             var syntax = block._schema.syntax.concat();
@@ -185,8 +185,8 @@ Entry.BlockToJsParser = function(syntax) {
                     var param = this.Block(paramBlock);
             }
             
-            var code = "if (" + param + ") {\n\t" +
-                this.indent(statementCode1).trim() + "\r}" 
+            var code = "if (" + param + ") {" + 
+                this.indent(statementCode1) + "}" 
         }
 
         return code;
@@ -196,15 +196,28 @@ Entry.BlockToJsParser = function(syntax) {
         var statementCode = this.Thread(block.statements[0]);
         var syntax = block._schema.syntax.concat();
         var code = "while (" + syntax[1] + ") {\n\t" +
-            this.indent(statementCode).trim() + "\r}"
+            this.indent(statementCode).trim() + "\n}"
         return code;
     };
 
-    p.indent = function(textCode) {
-        var result = "    ";
+    p.indent = function(textCode) { 
+        var result = "\n";
         var indentedCode = textCode.split("\n");
+        console.log("indentedCode", indentedCode);
         indentedCode.pop();
-        result += indentedCode.join("\n    ");
+
+        for(var i in indentedCode) {
+            var item = indentedCode[i];
+
+            if(item.length == 0)
+                continue;
+            
+            if(i != indentedCode.length-1)
+                result += '\t' + item + '\n'; 
+            else
+                result += item;
+        }
+
         return result;
     };
 

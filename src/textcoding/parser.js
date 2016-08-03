@@ -180,21 +180,23 @@ Entry.Parser = function(mode, type, cm, syntax) {
                                 to: {line: error.loc.line - 1, ch: error.loc.column + 1}
                             }
                             error.message = "문법 오류입니다.";
+                            error.type = 1;
                         } else {
                             annotation = this.getLineNumber(error.node.start, error.node.end);
                             annotation.message = error.message;
                             annotation.severity = "error";
-                            
+
+                            var errorInfo = this.findErrorInfo(error);
+
+                            console.log("errorInfo", errorInfo);
+
+                            annotation.from.line = errorInfo.lineNumber-1;
+                            annotation.from.ch = errorInfo.location.start;
+                            annotation.to.line = errorInfo.lineNumber-1;
+                            annotation.to.ch = errorInfo.location.end; 
+
+                            error.type = 2;
                         }
-
-                        var errorInfo = this.findErrorInfo(error);
-
-                        console.log("errorInfo", errorInfo);
-
-                        annotation.from.line = errorInfo.lineNumber-1;
-                        annotation.from.ch = errorInfo.location.start;
-                        annotation.to.line = errorInfo.lineNumber-1;
-                        annotation.to.ch = errorInfo.location.end; 
 
                         this.codeMirror.markText(
                             annotation.from, annotation.to, {
@@ -208,7 +210,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         else 
                             var errorTitle = '문법 오류';
 
-                        if(error.message)
+                        if(error.type == 2)
                             var errorMsg = error.message + ' (line: ' + errorInfo.lineNumber-1 + ')';
                         else
                             var errorMsg = '자바스크립트 코드를 확인해주세요';
