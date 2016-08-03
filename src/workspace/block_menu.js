@@ -530,9 +530,59 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     p._addControl = function(dom) {
         var that = this;
         var svgDom = this.svgDom;
+
         dom.on('wheel', function(){
             that._mouseWheel.apply(that, arguments);
         });
+
+        if (that._scroller) {
+            $(this.svg).bind('mousedown touchstart', function(e) {
+                that.onMouseDown.apply(that, arguments);
+            });
+        }
+    };
+
+    p.onMouseDown = function(e) {
+        if (e.stopPropagation) e.stopPropagation();
+        if (e.preventDefault) e.preventDefault();
+
+        var blockMenu = this;
+        if (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) {
+            var mouseEvent = Entry.Utils.convertMouseEvent(e);
+
+            if (Entry.documentMousedown)
+                Entry.documentMousedown.notify(mouseEvent);
+            var doc = $(document);
+
+            doc.bind('mousemove.blockMenu', onMouseMove);
+            doc.bind('mouseup.blockMenu', onMouseUp);
+            doc.bind('touchmove.blockMenu', onMouseMove);
+            doc.bind('touchend.blockMenu', onMouseUp);
+            this.dragInstance = new Entry.DragInstance({
+                startY: mouseEvent.pageY,
+                offsetY: mouseEvent.pageY
+            });
+        }
+
+        function onMouseMove(e) {
+            if (e.stopPropagation) e.stopPropagation();
+            if (e.preventDefault) e.preventDefault();
+
+            var mouseEvent = Entry.Utils.convertMouseEvent(e);
+
+            var dragInstance = blockMenu.dragInstance;
+            blockMenu._scroller.scroll(
+                -mouseEvent.pageY + dragInstance.offsetY
+            );
+            dragInstance.set({
+                offsetY: mouseEvent.pageY
+            });
+        }
+
+        function onMouseUp(e) {
+            $(document).unbind('.blockMenu');
+            delete blockMenu.dragInstance;
+        }
     };
 
     p._mouseWheel = function(e) {

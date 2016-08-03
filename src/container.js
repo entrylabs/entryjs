@@ -47,77 +47,86 @@ Entry.Container = function() {
  */
 Entry.Container.prototype.generateView = function(containerView, option) {
     /** @type {!Element} */
+    var that = this;
     this._view = containerView;
     this._view.addClass('entryContainer');
-    if (!option || option == 'workspace') {
-        this._view.addClass('entryContainerWorkspace');
-        this._view.setAttribute('id' , 'entryContainerWorkspaceId');
+    this._view.addClass('entryContainerWorkspace');
+    this._view.setAttribute('id' , 'entryContainerWorkspaceId');
 
-        var addButton = Entry.createElement('div');
-        addButton.addClass('entryAddObjectWorkspace');
-        addButton.innerHTML = Lang.Workspace.add_object;
-        addButton.bindOnClick(function(e){
-            Entry.dispatchEvent('openSpriteManager');
-        });
-        //this._view.appendChild(addButton);
+    var addButton = Entry.createElement('div');
+    addButton.addClass('entryAddObjectWorkspace');
+    addButton.innerHTML = Lang.Workspace.add_object;
+    addButton.bindOnClick(function(e){
+        Entry.dispatchEvent('openSpriteManager');
+    });
+    //this._view.appendChild(addButton);
 
-        var ulWrapper = Entry.createElement('div');
-        ulWrapper.addClass('entryContainerListWorkspaceWrapper');
+    var ulWrapper = Entry.createElement('div');
+    var baseClass = 'entryContainerListWorkspaceWrapper';
+    if (Entry.isForLecture) baseClass += ' lecture';
+    ulWrapper.addClass(baseClass);
 
-        if (Entry.isForLecture) {
-            ulWrapper.addClass('lecture');
+    Entry.Utils.disableContextmenu(ulWrapper);
+
+    $(ulWrapper).bind('mousedown touchstart', function(e){
+        var longPressTimer = null;
+        var doc = $(document);
+        var eventType = e.type;
+        var handled = false;
+
+        if (Entry.Utils.isRightButton(e)) {
+            that._rightClick(e);
+            handled = true;
+            return;
         }
 
-        Entry.Utils.disableContextmenu(ulWrapper);
-        $(ulWrapper).on('contextmenu', function(e){
-            var options = [
-                {
-                    text: Lang.Blocks.Paste_blocks,
-                    enable: !Entry.engine.isState('run') && !!Entry.container.copiedObject,
-                    callback: function(){
-                        if (Entry.container.copiedObject)
-                            Entry.container.addCloneObject(Entry.container.copiedObject);
-                        else
-                            Entry.toast.alert(Lang.Workspace.add_object_alert, Lang.Workspace.object_not_found_for_paste);
-                    }
-                 }
-            ];
-            Entry.ContextMenu.show(options, 'workspace-contextmenu');
-        });
+        var mouseDownCoordinate = {
+            x: e.clientX, y: e.clientY
+        };
 
-        this._view.appendChild(ulWrapper);
+        if (eventType === 'touchstart' && !handled) {
+            e.stopPropagation();
+            e = Entry.Utils.convertMouseEvent(e);
+            longPressTimer = setTimeout(function() {
+                if (longPressTimer) {
+                    longPressTimer = null;
+                    that._rightClick(e);
+                }
+            }, 1000);
+            doc.bind('mousemove.container touchmove.container', onMouseMove);
+            doc.bind('mouseup.container touchend.container', onMouseUp);
+        }
 
-        var listView = Entry.createElement('ul');
-        listView.addClass('entryContainerListWorkspace');
+        function onMouseMove(e) {
+            if (!mouseDownCoordinate) return;
+            var diff = Math.sqrt(Math.pow(e.pageX - mouseDownCoordinate.x, 2) +
+                            Math.pow(e.pageY - mouseDownCoordinate.y, 2));
+            if (diff > 5 && longPressTimer) {
+                clearTimeout(longPressTimer);
+                longPressTimer = null;
+            }
+        }
 
-        ulWrapper.appendChild(listView);
-        //this._view.appendChild(listView);
-        /** @param {!Element} */
-        this.listView_ = listView;
-        this.enableSort();
-    } else if (option == 'phone') {
-        this._view.addClass('entryContainerPhone');
+        function onMouseUp(e) {
+            e.stopPropagation();
+            doc.unbind('.container');
+            if (longPressTimer) {
+                clearTimeout(longPressTimer);
+                longPressTimer = null;
+            }
+        }
+    });
 
-        var addButton = Entry.createElement('div');
-        addButton.addClass('entryAddObjectWorkspace');
-        addButton.innerHTML = Lang.Workspace.add_object;
-        addButton.bindOnClick(function(e){
-            Entry.dispatchEvent('openSpriteManager');
-        });
-        //this._view.appendChild(addButton);
+    this._view.appendChild(ulWrapper);
 
-        var ulWrapper = Entry.createElement('div');
-        ulWrapper.addClass('entryContainerListPhoneWrapper');
-        this._view.appendChild(ulWrapper);
+    var listView = Entry.createElement('ul');
+    listView.addClass('entryContainerListWorkspace');
 
-        var listView = Entry.createElement('ul');
-        listView.addClass('entryContainerListPhone');
-
-        ulWrapper.appendChild(listView);
-        /** @param {!Element} */
-        this.listView_ = listView;
-        //this.enableSort();
-    }
+    ulWrapper.appendChild(listView);
+    //this._view.appendChild(listView);
+    /** @param {!Element} */
+    this.listView_ = listView;
+    this.enableSort();
 };
 /**
  * enable sort.
@@ -947,4 +956,26 @@ Entry.Container.prototype.getView = function() {
 // dummy
 Entry.Container.prototype.resize = function() {
     return;
+};
+
+Entry.Container.prototype._rightClick = function(e) {
+    if (e.stopPropagation)
+        e.stopPropagation();
+    var options = [
+        {
+            text: Lang.Blocks.Paste_blocks,
+            enable: !Entry.engine.isState('run') && !!Entry.container.copiedObject,
+            callback: function(){
+                if (Entry.container.copiedObject)
+                    Entry.container.addCloneObject(Entry.container.copiedObject);
+                else
+                    Entry.toast.alert(Lang.Workspace.add_object_alert, Lang.Workspace.object_not_found_for_paste);
+            }
+         }
+    ];
+
+    Entry.ContextMenu.show(
+        options, 'workspace-contextmenu',
+        { x: e.clientX, y: e.clientY }
+    );
 };

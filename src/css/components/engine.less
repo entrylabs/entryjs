@@ -289,7 +289,7 @@
     margin-top: 5px;
     margin-left: 10px;
     .backgroundImage("speed_edit.png");
-}
+} 
 
 .entryPopupWindow > div > .entrySpeedButtonWorkspace {
     display: none;
@@ -608,3 +608,38 @@
     color: #6c5af2;
     font-size: 9pt;
 }
+
+.tablet {
+    .entrySpeedButtonWorkspace {
+        width: 27px;
+        height: 19px;
+        margin-top: 2px;
+        .backgroundImage("speed_edit_big.png");
+    }
+
+    .entryCoordinateButtonWorkspace_w {
+        .backgroundImage("layers_icon_grid_nor_big.png");
+    }
+
+    .entryMaximizeButtonWorkspace_w {
+        .backgroundImage("layers_icon_fullmode01_nor_1_big.png");
+    }
+
+}
+
+.entryPopupWindow.tablet {
+    .entryEngineWorkspace_w > .entryCoordinateButtonWorkspace_w {
+        bottom: 5px;
+        background-image : url("@{image_url}grid_big.png") !important;
+    }
+
+    .entryEngineWorkspace_w > .entryMaximizeButtonWorkspace_w {
+        right: 0;
+        bottom: 5px;
+        background-image: url("@{image_url}zoom_out_btn_big.png");
+    }
+    
+}
+
+
+

@@ -382,9 +382,7 @@ Entry.BlockView.pngMap = {};
                 events.dblclick.forEach(function(fn){
                     if (fn) fn(that);});
             });
-
         }
-
     };
 
     p.removeControl = function() {
@@ -395,7 +393,9 @@ Entry.BlockView.pngMap = {};
     p.onMouseDown = function(e) {
         if (e.stopPropagation) e.stopPropagation();
         if (e.preventDefault) e.preventDefault();
+        var longPressTimer = null;
 
+        var blockView = this;
         this._changeFill(false);
         var board = this.getBoard();
         if (Entry.documentMousedown)
@@ -404,7 +404,9 @@ Entry.BlockView.pngMap = {};
 
         board.setSelectedBlock(this);
         this.dominate();
+        //left mousedown
         if (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) {
+            var eventType = e.type;
             var mouseEvent;
             if (e.originalEvent && e.originalEvent.touches) {
                 mouseEvent = e.originalEvent.touches[0];
@@ -427,55 +429,19 @@ Entry.BlockView.pngMap = {};
             board.set({dragBlock:this});
             this.addDragging();
             this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
-        } else if (Entry.Utils.isRightButton(e)) {
-            var that = this;
-            var block = that.block;
-            if (this.isInBlockMenu) return;
 
-            var options = [];
+            if (eventType === 'touchstart') {
+                longPressTimer = setTimeout(function() {
+                    if (longPressTimer) {
+                        longPressTimer = null;
+                        onMouseUp();
+                        blockView._rightClick(e);
+                    }
+                }, 1000);
+            }
+        } else if (Entry.Utils.isRightButton(e))
+            this._rightClick(e);
 
-            var copyAndPaste = {
-                text: Lang.Blocks.Duplication_option,
-                enable: this.copyable,
-                callback: function(){
-                    Entry.do("cloneBlock", block);
-                }
-            };
-
-            var copy = {
-                text: Lang.Blocks.CONTEXT_COPY_option,
-                enable: this.copyable,
-                callback: function(){
-                    that.block.copyToClipboard();
-                }
-            };
-
-            var remove = {
-                text: Lang.Blocks.Delete_Blocks,
-                enable: block.isDeletable(),
-                callback: function(){
-                    Entry.do("destroyBlock", that.block);
-                }
-            };
-
-            var download = {
-                text: Lang.Menus.save_as_image,
-                callback: function(){
-                    that.downloadAsImage();
-                }
-            };
-
-            options.push(copyAndPaste);
-            options.push(copy);
-            options.push(remove);
-
-            if (Entry.Utils.isChrome() && Entry.type == 'workspace')
-                options.push(download);
-
-            Entry.ContextMenu.show(options);
-        }
-
-        var blockView = this;
 
         if(board.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD) {
             if(e) {
@@ -500,6 +466,10 @@ Entry.BlockView.pngMap = {};
                             Math.pow(mouseEvent.pageY - mouseDownCoordinate.y, 2));
             if (blockView.dragMode == Entry.DRAG_MODE_DRAG ||
                 diff > Entry.BlockView.DRAG_RADIUS) {
+                if (longPressTimer) {
+                    clearTimeout(longPressTimer);
+                    longPressTimer = null;
+                }
                 if (!blockView.movable) return;
 
                 if (!blockView.isInBlockMenu) {
@@ -547,6 +517,10 @@ Entry.BlockView.pngMap = {};
         }
 
         function onMouseUp(e) {
+            if (longPressTimer) {
+                clearTimeout(longPressTimer);
+                longPressTimer = null;
+            }
             $(document).unbind('.block');
             blockView.terminateDrag(e);
             if (board) board.set({dragBlock: null});
@@ -1006,7 +980,7 @@ Entry.BlockView.pngMap = {};
         if (!this.visible) return;
 
         var block = this.block;
-        requestAnimationFrame(this._updateContents.bind(this));
+        requestAnimFrame(this._updateContents.bind(this));
         var params = block.params;
         if (params) {
             for (var i=0; i<params.length; i++) {
@@ -1178,6 +1152,62 @@ Entry.BlockView.pngMap = {};
             download.download = '엔트리 블록.png';
             download.click();
         });
+    };
+
+    p._rightClick = function(e) {
+        var disposeEvent = Entry.disposeEvent;
+        if (disposeEvent)
+            disposeEvent.notify(e);
+        var that = this;
+        var block = that.block;
+        if (this.isInBlockMenu) return;
+
+        var options = [];
+
+        var copyAndPaste = {
+            text: Lang.Blocks.Duplication_option,
+            enable: this.copyable,
+            callback: function(){
+                Entry.do("cloneBlock", block);
+            }
+        };
+
+        var copy = {
+            text: Lang.Blocks.CONTEXT_COPY_option,
+            enable: this.copyable,
+            callback: function(){
+                that.block.copyToClipboard();
+            }
+        };
+
+        var remove = {
+            text: Lang.Blocks.Delete_Blocks,
+            enable: block.isDeletable(),
+            callback: function(){
+                Entry.do("destroyBlock", that.block);
+            }
+        };
+
+        var download = {
+            text: Lang.Menus.save_as_image,
+            callback: function(){
+                that.downloadAsImage();
+            }
+        };
+
+        options.push(copyAndPaste);
+        options.push(copy);
+        options.push(remove);
+
+        if (Entry.Utils.isChrome() && Entry.type == 'workspace' && !Entry.isMobile())
+            options.push(download);
+
+        if (e.originalEvent && e.originalEvent.touches)
+            e = e.originalEvent.touches[0];
+
+        Entry.ContextMenu.show(options, null,
+            { x: e.clientX, y: e.clientY }
+        );
     };
 
 })(Entry.BlockView.prototype);

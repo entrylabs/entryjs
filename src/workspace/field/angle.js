@@ -25,6 +25,7 @@ Entry.FieldAngle = function(content, blockView, index) {
         value !== undefined ? value : 90
     ));
 
+    this._CONTENT_HEIGHT = this.getContentHeight();
     this.renderStart();
 };
 
@@ -34,7 +35,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
 (function(p) {
     var X_PADDING = 8,
         TEXT_Y_PADDING = 4,
-        CONTENT_HEIGHT = 16,
         RADIUS = 49,
         FILL_PATH = 'M 0,0 v -49 A 49,49 0 %LARGE 1 %X,%Y z';
 
@@ -58,6 +58,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
 
         var width = this.getTextWidth();
 
+        var CONTENT_HEIGHT = this._CONTENT_HEIGHT;
         var y = this.position && this.position.y ? this.position.y : 0;
         y -= CONTENT_HEIGHT/2;
         this._header = this.svgGroup.elem('rect', {
@@ -100,7 +101,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
 
         this.optionGroup.val(this.value);
 
-        this.optionGroup.on('mousedown', function(e) {
+        this.optionGroup.on('mousedown touchstart', function(e) {
             e.stopPropagation();
         });
 
@@ -116,19 +117,22 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
         var pos = this.getAbsolutePosFromDocument();
         pos.y -= this.box.height/2;
         this.optionGroup.css({
-            height: CONTENT_HEIGHT,
+            height: this._CONTENT_HEIGHT,
             left:pos.x,
             top:pos.y,
             width: that.box.width
         });
-
-        this.optionGroup.select();
 
         //svg option dom
         this.svgOptionGroup = this.appendSvgOptionGroup();
         var circle = this.svgOptionGroup.elem('circle', {
             x:0, y:0, r:RADIUS,
             class:'entry-field-angle-circle'
+        });
+
+        $(this.svgOptionGroup).on('mousedown touchstart', function(e) {
+            e.stopPropagation();
+            that._updateByCoord(e);
         });
 
         this._dividerGroup = this.svgOptionGroup.elem('g');
@@ -140,6 +144,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
                 class: 'entry-angle-divider'
             });
         }
+
         var pos = this.getAbsolutePosFromBoard();
         pos.x = pos.x + this.box.width/2;
         pos.y = pos.y + this.box.height/2 + RADIUS + 1;
@@ -149,30 +154,41 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
             transform: "translate(" + pos.x + "," + pos.y + ")"
         });
 
+        $(this.svgOptionGroup).bind('mousemove touchmove',
+            this._updateByCoord.bind(this));
+
+        $(this.svgOptionGroup).bind('mouseup touchend',
+            this.destroyOption.bind(this));
+        this.updateGraph();
+        this.optionGroup.focus();
+        this.optionGroup.select();
+    };
+
+    p._updateByCoord = function(e) {
+        var that = this;
+        if (e.originalEvent && e.originalEvent.touches)
+            e = e.originalEvent.touches[0];
+
+        var mousePos = [e.clientX, e.clientY];
         var absolutePos = that.getAbsolutePosFromDocument();
         var zeroPos = [
             absolutePos.x + that.box.width/2,
             absolutePos.y + that.box.height/2 + 1
         ];
 
-        $(this.svgOptionGroup).mousemove(function(e) {
-            var mousePos = [e.clientX, e.clientY];
-
-            that.optionGroup.val(that.modValue(
-                compute(zeroPos, mousePos)));
-            function compute(zeroPos, mousePos) {
-                var dx = mousePos[0] - zeroPos[0];
-                var dy = mousePos[1] - zeroPos[1] - RADIUS - 1;
-                var angle = Math.atan(-dy / dx);
-                angle = Entry.toDegrees(angle);
-                angle = 90 - angle;
-                if (dx < 0) angle += 180;
-                else if (dy > 0) angle += 360;
-                return Math.round(angle / 15) * 15;
-            }
-            that.applyValue();
-        });
-        this.updateGraph();
+        that.optionGroup.val(that.modValue(
+            compute(zeroPos, mousePos)));
+        function compute(zeroPos, mousePos) {
+            var dx = mousePos[0] - zeroPos[0];
+            var dy = mousePos[1] - zeroPos[1] - RADIUS - 1;
+            var angle = Math.atan(-dy / dx);
+            angle = Entry.toDegrees(angle);
+            angle = 90 - angle;
+            if (dx < 0) angle += 180;
+            else if (dy > 0) angle += 360;
+            return Math.round(angle / 15) * 15;
+        }
+        that.applyValue();
     };
 
     p.updateGraph = function() {
@@ -255,5 +271,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
         this.textElement.textContent = this.getText();
         this.command();
     };
+
 })(Entry.FieldAngle.prototype);
 

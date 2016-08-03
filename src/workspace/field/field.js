@@ -152,6 +152,7 @@ Entry.Field = function() {};
     };
 
     p._isEditable = function() {
+        if (Entry.ContextMenu.visible) return false;
         var dragMode = this._block.view.dragMode;
         if (dragMode == Entry.DRAG_MODE_DRAG) return false;
         var blockView = this._block.view;
@@ -192,6 +193,13 @@ Entry.Field = function() {};
         return this._block.pointer(pointer);
     };
 
+    p.getFontSize = function(size) {
+        size =
+            size || this._blockView.getSkeleton().fontSize || 12;
+        return size;
+    };
 
-
+    p.getContentHeight = function() {
+        return Entry.isMobile() ? 22: 16;
+    };
 })(Entry.Field.prototype);
