@@ -164,9 +164,11 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
                     for(var index in threads) {
                         var thread = threads[index];
+                        thread = thread.trim();
+                        console.log("threads", threads);
                         var ast = acorn.parse(thread);
-                        if(ast.type == "Program" && ast.body.length != 0)
-                            astArray.push(ast);
+                        //if(ast.type == "Program" && ast.body.length != 0)
+                        astArray.push(ast);
                     }
 
                     result = this._parser.Program(astArray);

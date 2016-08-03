@@ -20622,7 +20622,7 @@ Entry.block = {
         "fontColor": "#fff",
         "syntax": [
             "Scope",
-            "is_distance(%1, %2, %3)#"
+            "radar_%1 %2 %3#"
         ],
         "params": [
             {
@@ -20741,7 +20741,7 @@ Entry.block = {
         "color": "#2fc9f0",
         "syntax": [
             "Scope",
-            "is_object(%1, %2)#"
+            "object_%1 == %2#"
         ],
         "params": [
             {

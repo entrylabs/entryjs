@@ -19,18 +19,16 @@ Entry.JsToBlockParser = function(syntax) {
 (function(p){
     p.Program = function(astArr) {
         var code = [];
+        var thread = []; 
+
+        thread.push({
+            type: this.syntax.Program
+        });
         
         for(var index in astArr) { 
             var node = astArr[index];
             if(node.type != 'Program') return;
-            var thread = []; 
             
-            if(index == 0) {
-                thread.push({
-                    type: this.syntax.Program
-                });
-            }
-
             //block statement
             var separatedBlocks = this.initScope(node);
             var blocks = this.BlockStatement(node);
@@ -129,22 +127,13 @@ Entry.JsToBlockParser = function(syntax) {
         var body = node.body;
 
         for (var i = 0; i < body.length; i++) {
-            console.log("this._blockCount", this._blockCount);
             var bodyData = body[i];
-            console.log("bodyData", bodyData);
-            console.log("this._blockInfo", this._blockInfo);
             var block = this[bodyData.type](bodyData);
-
-            console.log("block123", block);
 
             if(!Entry.TextCodingUtil.prototype.hasBlockInfo(bodyData, this._blockInfo))
                 this._blockCount++;
-            
+
             Entry.TextCodingUtil.prototype.updateBlockInfo(bodyData, this._blockInfo);
-
-            
-
-            console.log("this._blockInfo", this._blockInfo); 
             
             if(!block) {  
                 continue;

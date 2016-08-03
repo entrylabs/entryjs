@@ -132,8 +132,8 @@ Entry.BlockToJsParser = function(syntax) {
 
     p.BasicFunction = function(block) {
         var statementCode = this.Thread(block.statements[0]);
-        var code = "function promise() {\n\t" +
-            this.indent(statementCode).trim() + "\r}"
+        var code = "function promise() {\n" +
+            this.indent(statementCode).trim() + "}"
         return code;
     };
 
@@ -143,8 +143,8 @@ Entry.BlockToJsParser = function(syntax) {
         var statementCode = this.Thread(block.statements[0]);
         this.unpublishIterateVariable();
         var code = "for (var " + iterVariable + " = 0; " + iterVariable +
-            " < " + iterateNumber + "; " + iterVariable + "++){\n\t" +
-            this.indent(statementCode).trim() + "\r}"; 
+            " < " + iterateNumber + "; " + iterVariable + "++) {\n" +
+            this.indent(statementCode) + "}"; 
         return code;
     };
 
@@ -166,9 +166,9 @@ Entry.BlockToJsParser = function(syntax) {
                     var param = this.Block(paramBlock);
             }
             
-            var code = "if (" + param + ") {" +
+            var code = "if (" + param + ") {\n" +
                 this.indent(statementCode1) + "}\n" +
-                "else {" + this.indent(statementCode2) + "}";
+                "else {\n" + this.indent(statementCode2) + "}";
         } else {
             var statementCode1 = this.Thread(block.statements[0]);
             var syntax = block._schema.syntax.concat();
@@ -185,7 +185,7 @@ Entry.BlockToJsParser = function(syntax) {
                     var param = this.Block(paramBlock);
             }
             
-            var code = "if (" + param + ") {" + 
+            var code = "if (" + param + ") {\n" + 
                 this.indent(statementCode1) + "}" 
         }
 
@@ -195,28 +195,29 @@ Entry.BlockToJsParser = function(syntax) {
     p.BasicWhile = function(block) {
         var statementCode = this.Thread(block.statements[0]);
         var syntax = block._schema.syntax.concat();
-        var code = "while (" + syntax[1] + ") {\n\t" +
-            this.indent(statementCode).trim() + "\n}"
+        var code = "while (" + syntax[1] + ") {\n" +
+            this.indent(statementCode) + "}"
         return code;
     };
 
-    p.indent = function(textCode) { 
-        var result = "\n";
+    p.indent = function(textCode) {  
+        var result = "";
         var indentedCode = textCode.split("\n");
-        console.log("indentedCode", indentedCode);
-        indentedCode.pop();
+        console.log("indentedCode qqq", indentedCode);
+        //indentedCode.pop();
 
         for(var i in indentedCode) {
             var item = indentedCode[i];
 
             if(item.length == 0)
                 continue;
+
+            console.log("indentedCode", item);
             
-            if(i != indentedCode.length-1)
-                result += '\t' + item + '\n'; 
-            else
-                result += item;
+            result += ("\t" + item + "\n");  
         }
+
+        console.log("indent result", result);
 
         return result;
     };

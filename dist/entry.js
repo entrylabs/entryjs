@@ -10907,35 +10907,35 @@ Entry.BlockToJsParser = function(b) {
   };
   b.BasicFunction = function(a) {
     a = this.Thread(a.statements[0]);
-    return "function promise() {\n\t" + this.indent(a).trim() + "\r}";
+    return "function promise() {\n" + this.indent(a).trim() + "}";
   };
   b.BasicIteration = function(a) {
     var b = a.params[0], c = this.publishIterateVariable();
     a = this.Thread(a.statements[0]);
     this.unpublishIterateVariable();
-    return "for (var " + c + " = 0; " + c + " < " + b + "; " + c + "++){\n\t" + this.indent(a).trim() + "\r}";
+    return "for (var " + c + " = 0; " + c + " < " + b + "; " + c + "++) {\n" + this.indent(a) + "}";
   };
   b.BasicIf = function(a) {
     if (2 == a.data.statements.length) {
-      var b = this.Thread(a.statements[0]), c = this.Thread(a.statements[1]), e = a._schema.syntax.concat(), e = (a = a.data.params[0]) && "True" == a.data.type ? e[1] : void 0 === a ? e[1] : this.Block(a), b = "if (" + e + ") {" + this.indent(b) + "}\nelse {" + this.indent(c) + "}"
+      var b = this.Thread(a.statements[0]), c = this.Thread(a.statements[1]), e = a._schema.syntax.concat(), e = (a = a.data.params[0]) && "True" == a.data.type ? e[1] : void 0 === a ? e[1] : this.Block(a), b = "if (" + e + ") {\n" + this.indent(b) + "}\nelse {\n" + this.indent(c) + "}"
     } else {
-      b = this.Thread(a.statements[0]), e = a._schema.syntax.concat(), e = (a = a.data.params[0]) && "True" == a.data.type ? e[1] : void 0 === a ? e[1] : this.Block(a), b = "if (" + e + ") {" + this.indent(b) + "}";
+      b = this.Thread(a.statements[0]), e = a._schema.syntax.concat(), e = (a = a.data.params[0]) && "True" == a.data.type ? e[1] : void 0 === a ? e[1] : this.Block(a), b = "if (" + e + ") {\n" + this.indent(b) + "}";
     }
     return b;
   };
   b.BasicWhile = function(a) {
     var b = this.Thread(a.statements[0]);
-    return "while (" + a._schema.syntax.concat()[1] + ") {\n\t" + this.indent(b).trim() + "\n}";
+    return "while (" + a._schema.syntax.concat()[1] + ") {\n" + this.indent(b) + "}";
   };
   b.indent = function(a) {
-    var b = "\n";
+    var b = "";
     a = a.split("\n");
-    console.log("indentedCode", a);
-    a.pop();
+    console.log("indentedCode qqq", a);
     for (var c in a) {
       var e = a[c];
-      0 != e.length && (b = c != a.length - 1 ? b + ("\t" + e + "\n") : b + e);
+      0 != e.length && (console.log("indentedCode", e), b += "\t" + e + "\n");
     }
+    console.log("indent result", b);
     return b;
   };
   b.publishIterateVariable = function() {
@@ -11799,21 +11799,20 @@ Entry.JsToBlockParser = function(b) {
 };
 (function(b) {
   b.Program = function(a) {
-    var b = [], c;
-    for (c in a) {
-      var e = a[c];
-      if ("Program" != e.type) {
+    var b = [], c = [];
+    c.push({type:this.syntax.Program});
+    for (var e in a) {
+      var f = a[e];
+      if ("Program" != f.type) {
         return;
       }
-      var f = [];
-      0 == c && f.push({type:this.syntax.Program});
-      this.initScope(e);
-      var e = this.BlockStatement(e), g;
-      for (g in e) {
-        f.push(e[g]);
+      this.initScope(f);
+      var f = this.BlockStatement(f), g;
+      for (g in f) {
+        c.push(f[g]);
       }
       this.unloadScope();
-      0 != f.length && b.push(f);
+      0 != c.length && b.push(c);
     }
     return b;
   };
@@ -11852,15 +11851,9 @@ Entry.JsToBlockParser = function(b) {
   b.BlockStatement = function(a) {
     console.log("BlockStatement node", a);
     for (var b = [], c = a.body, e = 0;e < c.length;e++) {
-      console.log("this._blockCount", this._blockCount);
-      var f = c[e];
-      console.log("bodyData", f);
-      console.log("this._blockInfo", this._blockInfo);
-      var g = this[f.type](f);
-      console.log("block123", g);
+      var f = c[e], g = this[f.type](f);
       Entry.TextCodingUtil.prototype.hasBlockInfo(f, this._blockInfo) || this._blockCount++;
       Entry.TextCodingUtil.prototype.updateBlockInfo(f, this._blockInfo);
-      console.log("this._blockInfo", this._blockInfo);
       if (g) {
         if (void 0 === g.type) {
           throw {title:"\ube14\ub85d\ubcc0\ud658 \uc624\ub958", message:"\uc9c0\uc6d0\ub418\ub294 \ube14\ub85d\uc774 \uc5c6\uc2b5\ub2c8\ub2e4.", node:f, blockCount:this._blockCount};
@@ -13398,8 +13391,10 @@ Entry.Parser = function(b, a, d, c) {
           console.log("threads", e);
           var f = [], g;
           for (g in e) {
-            var h = e[g], k = acorn.parse(h);
-            "Program" == k.type && 0 != k.body.length && f.push(k);
+            var h = e[g], h = h.trim();
+            console.log("threads", e);
+            var k = acorn.parse(h);
+            f.push(k);
           }
           c = this._parser.Program(f);
           console.log("result", c);
