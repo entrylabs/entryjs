@@ -20359,7 +20359,7 @@ Entry.block = {
         "skeleton": "basic",
         "fontColor": "#fff",
         "statements": [],
-        "template": "%1번 포트의 발광다이오드를 %2포트의 %3~%4의 범위로 켜기%5",
+        "template": "%1번 포트의 발광다이오드를 %2번 포트의 %3~%4의 범위로 켜기%5",
         "params": [{
             "type": "Dropdown",
             "options": [
