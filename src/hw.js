@@ -22,23 +22,23 @@ Entry.HW = function() {
     Entry.addEventListener('stop', this.setZero);
 
     this.hwInfo = {
-        '11': Entry.Arduino,
-        '19': Entry.ArduinoExt,
-        '12': Entry.SensorBoard,
-        '13': Entry.CODEino,
-        '14': Entry.joystick,
-        '15': Entry.dplay,
-        '16': Entry.nemoino,
-        '17': Entry.Xbot,
-		'18': Entry.ardublock,
-        '24': Entry.Hamster,
-        '25': Entry.Albert,
-        '31': Entry.Bitbrick,
-        '42': Entry.Arduino,
-        '51': Entry.Neobot,
-        '71': Entry.Robotis_carCont,
-        '72': Entry.Robotis_openCM70,
-        '81': Entry.Arduino
+        '1.1': Entry.Arduino,
+        '1.9': Entry.ArduinoExt,
+        '1.2': Entry.SensorBoard,
+        '1.3': Entry.CODEino,
+        '1.4': Entry.joystick,
+        '1.5': Entry.dplay,
+        '1.6': Entry.nemoino,
+        '1.7': Entry.Xbot,
+		'1.8': Entry.ardublock,
+        '2.4': Entry.Hamster,
+        '2.5': Entry.Albert,
+        '3.1': Entry.Bitbrick,
+        '4.2': Entry.Arduino,
+        '5.1': Entry.Neobot,
+        '7.1': Entry.Robotis_carCont,
+        '7.2': Entry.Robotis_openCM70,
+        '8.1': Entry.Arduino
     };
 };
 
@@ -240,7 +240,7 @@ p.setZero = function() {
 p.checkDevice = function(data) {
     if (data.company === undefined)
         return;
-    var key = ''+data.company + data.model;
+    var key = [Entry.Utils.convertIntToHex(data.company), '.', Entry.Utils.convertIntToHex(data.model)].join('');
     if (key == this.selectedDevice)
         return;
     this.selectedDevice = key;
