@@ -21735,7 +21735,10 @@ Entry.Board.DRAG_RADIUS = 5;
   };
   b._keyboardControl = function(a) {
     var b = this.selectedBlockView;
-    b && 46 == a.keyCode && (a = b.block) && a.isDeletable() && (Entry.do("destroyBlock", b.block), this.set({selectedBlockView:null}));
+    if (b && 46 == a.keyCode) {
+      var c = b.block;
+      c && !Entry.Utils.isInInput(a) && c.isDeletable() && (Entry.do("destroyBlock", b.block), this.set({selectedBlockView:null}));
+    }
   };
   b.hide = function() {
     this.wrapper.addClass("entryRemove");
