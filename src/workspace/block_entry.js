@@ -13656,7 +13656,7 @@ Entry.block = {
                 },
                 null
             ],
-            "type": "robotis_carCont_aux_motor_speed"
+            "type": "robotis_carCont_aux_motor_speed2"
         },
         "paramsKeyMap": {
             "LEFT_ANGLE": 0,
@@ -13667,40 +13667,30 @@ Entry.block = {
         "class": "robotis_carCont_cm",
         "isNotFor": [ "robotis_carCont" ],
         "func": function (sprite, script) {
-            // instruction / address / length / value / default length
-            var direction = script.getField("DIRECTION", script);
-            var directionAngle = script.getField("DIRECTION_ANGLE", script);
-            var value = script.getNumberValue('VALUE');
-            var directionAngle = script.getField("DIRECTION_ANGLE", script);
-            var value = script.getNumberValue('VALUE');
+            var data_instruction = Entry.Robotis_carCont.INSTRUCTION.WRITE,
+                left_address = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_LEFT[0],
+                right_address = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_RIGHT[0],
+                left_length = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_LEFT[1],
+                right_length = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_RIGHT[1];
 
-            var data_instruction = Entry.Robotis_carCont.INSTRUCTION.WRITE;
-            var data_address = 0;
-            var data_length = 0;
-            var data_value = 0;
+            var leftAngle = script.getField("LEFT_ANGLE", script);
+            var leftValue = script.getNumberValue('LEFT_VALUE');
+            var rightAngle = script.getField("RIGHT_ANGLE", script);
+            var rightValue = script.getNumberValue('RIGHT_VALUE');
 
-            if (direction == 'LEFT') {
-                data_address = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_LEFT[0];
-                data_length = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_LEFT[1];
-            } else {
-                data_address = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_RIGHT[0];
-                data_length = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_RIGHT[1];
+            leftValue = Math.min(leftValue, 1023);
+            leftValue = Math.max(leftValue, 0);
+            rightValue = Math.min(rightValue, 1023);
+            rightValue = Math.max(rightValue, 0);
+
+            if(leftAngle === 'CW') {
+                leftValue += 1024;
+            }
+            if(rightAngle === 'CW') {
+                rightValue += 1024;
             }
 
-            if (directionAngle == 'CW') {
-                value = value + 1024;
-                if (value > 2047) {
-                    value = 2047;
-                }
-            } else {
-                if (value > 1023) {
-                    value = 1023;
-                }
-            }
-
-            data_value = value;
-
-            var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
+            var data_sendqueue = [[data_instruction, left_address, left_length, leftValue], [data_instruction, right_address, right_length, rightValue]];
             return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_carCont.delay);
         }
     },
