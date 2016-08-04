@@ -515,16 +515,16 @@ Blockly.ScrollbarSvg = function(workspace, horizontal, opt_pair) {
 
   var pElement = this.workspace_.svgGroup_.parentElement ||
                  this.workspace_.svgGroup_.parentNode;
-  Blockly.bindEvent_(pElement, 'mouseenter', scrollbar, function(e){
-      scrollbar.svgGroup_.setAttribute('opacity', '1');
-  });
-  Blockly.bindEvent_(pElement, 'mouseout', scrollbar, function(e) {
-      var result = Blockly.isChild(pElement, e.toElement);
-      if ( !(result || e.toElement == pElement)) {
-        scrollbar.svgGroup_.setAttribute('opacity', '0');
-      } else
-          return;
-  });
+  //Blockly.bindEvent_(pElement, 'mouseenter', scrollbar, function(e){
+      //scrollbar.svgGroup_.setAttribute('opacity', '1');
+  //});
+  //Blockly.bindEvent_(pElement, 'mouseout', scrollbar, function(e) {
+      //var result = Blockly.isChild(pElement, e.toElement);
+      //if ( !(result || e.toElement == pElement)) {
+        //scrollbar.svgGroup_.setAttribute('opacity', '0');
+      //} else
+          //return;
+  //});
   this.onMouseDownBarWrapper_ = Blockly.bindEvent_(this.svgBackground_,
       'mousedown', scrollbar, scrollbar.onMouseDownBar_);
   this.onMouseDownKnobWrapper_ = Blockly.bindEvent_(this.svgKnob_,
@@ -554,7 +554,7 @@ Blockly.ScrollbarSvg.prototype.uiEffectInc_ = function(e) {
  * set UI effect of this scrollbar.
  */
 Blockly.ScrollbarSvg.prototype.uiEffectDec_ = function(e) {
-    console.log(11);
+    return;
     var pElement = this.workspace_.svgGroup_.parentElement;
     var result = Entry.isChild(pElement, e.toElement);
     var scrollbar = this.svgGroup_;
