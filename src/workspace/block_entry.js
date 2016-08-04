@@ -9329,7 +9329,7 @@ Entry.block = {
             } else if (effect == "opacity") {
                 sprite.effect.alpha = (sprite.effect.alpha + effectValue / 100) ;
             }
-            sprite.applyFilter();
+            sprite.applyFilter(true);
             return script.callReturn();
         }
     },
@@ -9391,7 +9391,7 @@ Entry.block = {
             } else if (effect == "opacity") {
                 sprite.effect.alpha = effectValue / 100;
             }
-            sprite.applyFilter();
+            sprite.applyFilter(true);
             return script.callReturn();
         }
     },
@@ -9774,7 +9774,7 @@ Entry.block = {
             } else if (effect == "transparency") {
                 sprite.effect.alpha = (sprite.effect.alpha - effectValue / 100) ;
             }
-            sprite.applyFilter();
+            sprite.applyFilter(true);
             return script.callReturn();
         }
     },
@@ -9832,7 +9832,7 @@ Entry.block = {
             } else if (effect == "transparency") {
                 sprite.effect.alpha = 1 - (effectValue / 100);
             }
-            sprite.applyFilter();
+            sprite.applyFilter(true);
             return script.callReturn();
         }
     },
@@ -9889,7 +9889,7 @@ Entry.block = {
             } else if (effect == "transparency") {
                 sprite.effect.alpha = (sprite.effect.alpha - effectValue / 100) ;
             }
-            sprite.applyFilter();
+            sprite.applyFilter(true);
             return script.callReturn();
         }
     },
@@ -9946,7 +9946,7 @@ Entry.block = {
             } else if (effect == "transparency") {
                 sprite.effect.alpha = 1 - (effectValue / 100);
             }
-            sprite.applyFilter();
+            sprite.applyFilter(true);
             return script.callReturn();
         }
     },

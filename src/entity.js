@@ -851,11 +851,11 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
 /**
  * Apply easel filter
  */
-Entry.EntityObject.prototype.applyFilter = function() {
+Entry.EntityObject.prototype.applyFilter = function(isForce) {
     var effects = this.effect;
     var object = this.object;
 
-    if (isEqualEffects(effects, this.getInitialEffectValue()))
+    if (!isForce && isEqualEffects(effects, this.getInitialEffectValue()))
         return;
 
     (function(e, obj) {
