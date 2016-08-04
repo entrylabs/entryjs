@@ -13603,6 +13603,107 @@ Entry.block = {
             return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_carCont.delay);
         }
     },
+    "robotis_carCont_aux_motor_speed2": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "왼쪽 감속모터 속도를 %1, 출력값을 %2 (으)로 오른쪽 감속모터 속도를 %3, 출력값을 %4 (으)로 정하기 %5",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.robotis_common_clockwhise,"CW"],
+                    [Lang.Blocks.robotis_common_counter_clockwhise,"CCW"]
+                ],
+                "value": "CW",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.robotis_common_clockwhise,"CW"],
+                    [Lang.Blocks.robotis_common_counter_clockwhise,"CCW"]
+                ],
+                "value": "CW",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "number",
+                    "params": [ "500" ]
+                },
+                null,
+                {
+                    "type": "number",
+                    "params": [ "500" ]
+                },
+                null
+            ],
+            "type": "robotis_carCont_aux_motor_speed"
+        },
+        "paramsKeyMap": {
+            "LEFT_ANGLE": 0,
+            "LEFT_VALUE": 1,
+            "RIGHT_ANGLE": 2,
+            "RIGHT_VALUE": 3,
+        },
+        "class": "robotis_carCont_cm",
+        "isNotFor": [ "robotis_carCont" ],
+        "func": function (sprite, script) {
+            // instruction / address / length / value / default length
+            var direction = script.getField("DIRECTION", script);
+            var directionAngle = script.getField("DIRECTION_ANGLE", script);
+            var value = script.getNumberValue('VALUE');
+            var directionAngle = script.getField("DIRECTION_ANGLE", script);
+            var value = script.getNumberValue('VALUE');
+
+            var data_instruction = Entry.Robotis_carCont.INSTRUCTION.WRITE;
+            var data_address = 0;
+            var data_length = 0;
+            var data_value = 0;
+
+            if (direction == 'LEFT') {
+                data_address = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_LEFT[0];
+                data_length = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_LEFT[1];
+            } else {
+                data_address = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_RIGHT[0];
+                data_length = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_RIGHT[1];
+            }
+
+            if (directionAngle == 'CW') {
+                value = value + 1024;
+                if (value > 2047) {
+                    value = 2047;
+                }
+            } else {
+                if (value > 1023) {
+                    value = 1023;
+                }
+            }
+
+            data_value = value;
+
+            var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
+            return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_carCont.delay);
+        }
+    },
     "robotis_carCont_cm_calibration": {
         "color": "#00979D",
         "skeleton": "basic",
