@@ -973,4 +973,47 @@ Entry.TextCodingUtil = function() {
         console.log("blockInfo after", blockInfo);
     };
 
+    p.studyAdjustSyntax = function(block, syntax) {
+        console.log("syntax", syntax);
+        var result = '';
+        if(block.data.type == 'ai_boolean_distance') {
+            var tokens = syntax.split(' ');
+            console.log("tokens", tokens);
+            var firstParam = tokens[0].split('_');
+            var value = firstParam[1];
+            firstParam[1] = firstParam[1].substring(1, firstParam[1].length-1);
+            firstParam[1] = firstParam[1].toLowerCase();
+            console.log("firstParam[1]", firstParam[1]);
+            firstParam = firstParam.join('_');
+            var secondParam = tokens[1];
+            secondParam = this.studyOperatorConvertor(secondParam);
+            var thirdParam = tokens[2];
+
+            console.log("firstParam", firstParam, "secondParam", secondParam, "thirdParam", thirdParam);
+            
+            result = firstParam + ' ' + secondParam + ' ' + thirdParam;
+
+        } else if(block.data.type == 'ai_boolean_object') {
+
+        }
+
+        console.log("studyAdjustSyntax result", result);
+        return result;
+    };
+
+    p.studyOperatorConvertor = function(operator) {
+        var result;
+        console.log("operator", operator);
+        switch(operator) {
+            case '\'BIGGER\'': result = ">"; break;
+            case '\'BIGGER_EQUAL\'': result = ">="; break; 
+            case '\'EQUAL\'': result = "=="; break;
+            case '\'SMALLER\'': result = "<"; break;
+            case '\'SMALLER_EQUAL\'': result = "<="; break;
+        }
+
+        console.log("studyOperatorConvertor result", result);
+        return result;
+    };
+
 })(Entry.TextCodingUtil.prototype);

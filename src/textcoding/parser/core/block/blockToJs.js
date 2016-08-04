@@ -4,6 +4,7 @@
 "use strict";
 
 goog.provide("Entry.BlockToJsParser");
+goog.require("Entry.TextCodingUtil");
 
 Entry.BlockToJsParser = function(syntax) {
     this.syntax = syntax;
@@ -27,7 +28,7 @@ Entry.BlockToJsParser = function(syntax) {
             textCode += this.Thread(thread);
         } 
 
-        return textCode.trim();
+        return textCode.trim(); 
     };
 
     p.Thread = function(thread) {
@@ -61,6 +62,7 @@ Entry.BlockToJsParser = function(syntax) {
         if (!syntax)
             return "";
         var syntaxType = syntax[0];
+        console.log("syntaxType", syntaxType);
         var block = this[syntaxType](block);
         return block;
     };
@@ -70,6 +72,7 @@ Entry.BlockToJsParser = function(syntax) {
     };
 
     p.Scope = function(block) { 
+        console.log("Scope block", block);
         var notParenthesis = false;
         var result = '';
         var paramReg = /(%.)/mi;
@@ -102,6 +105,7 @@ Entry.BlockToJsParser = function(syntax) {
                         index++;    
                     } else if(schemaParams[index].type == "Block") {
                         var param = this.Block(dataParams[index]);
+                        console.log("param", param);
                         result += param;
                     } else {
                         result += this[schemaParams[index].type](dataParams[index], schemaParams[index]);
@@ -117,11 +121,15 @@ Entry.BlockToJsParser = function(syntax) {
 
         if(result.charAt(result.length-1) == '#') {
             notParenthesis = true;
+            console.log("final result", result);
             result = result.substring(0, result.length-1);
+            result = result.trim();
         }
 
         if(!notParenthesis)
             result += "();";
+
+        result = Entry.TextCodingUtil.prototype.studyAdjustSyntax(block, result);
 
         console.log("Scope result", result);
         
@@ -249,6 +257,7 @@ Entry.BlockToJsParser = function(syntax) {
     };
 
     p.TextInput = function(dataParam) {
+        console.log("TextInput", dataParam);
         var result = dataParam;
         
         return result; 
