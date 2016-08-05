@@ -5213,7 +5213,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
   height: 100%;
   width: 100%;
   z-index: 7000;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.6);
 }
 .entryPopup.popupHelper {
   display: -webkit-box;
