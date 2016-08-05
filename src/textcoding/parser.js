@@ -157,8 +157,11 @@ Entry.Parser = function(mode, type, cm, syntax) {
             case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
                 try {
                     //var astTree = acorn.parse(code);
-                    var threads = code.split('\n\n');
-                    console.log("threads", threads);
+                    //var threads = code.split('\n\n');
+                    var threads = [];
+                    threads.push(code);
+
+                    //console.log("threads", threads);
 
                     var astArray = [];
 
@@ -181,7 +184,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                                 from: {line: error.loc.line - 1, ch: error.loc.column - 2},
                                 to: {line: error.loc.line - 1, ch: error.loc.column + 1}
                             }
-                            error.message = "문법 오류입니다.";
+                            error.message = "문법(Syntax) 오류입니다.";
                             error.type = 1;
                         } else {
                             annotation = this.getLineNumber(error.node.start, error.node.end);
@@ -213,9 +216,10 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             var errorTitle = '문법 오류';
 
                         if(error.type == 2)
-                            var errorMsg = error.message + ' (line: ' + errorInfo.lineNumber-1 + ')';
+                            var errorMsg = 'line : ' + (errorInfo.lineNumber)-1;
                         else
                             var errorMsg = '자바스크립트 코드를 확인해주세요';
+
                         Entry.toast.alert(errorTitle, errorMsg);
                         throw error;
                     }
@@ -455,7 +459,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
         var lineNumber = 0;
         var blockCount = 0;
 
-        console.log("text", text);
         console.log("error", error);
         console.log("contents", contents);
         

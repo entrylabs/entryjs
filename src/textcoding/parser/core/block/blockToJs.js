@@ -25,6 +25,7 @@ Entry.BlockToJsParser = function(syntax) {
 
         for (var i = 0; i < threads.length; i++) {
             var thread = threads[i];
+            console.log("this.Thread", this.Thread(thread));
             textCode += this.Thread(thread);
         } 
 
@@ -50,7 +51,7 @@ Entry.BlockToJsParser = function(syntax) {
                 code += block;
             }
         }
-        return code + '\n\n';   
+        return code + '\n';   
     };
 
     p.Block = function(block) {
@@ -109,12 +110,14 @@ Entry.BlockToJsParser = function(syntax) {
                         result += param;
                     } else {
                         result += this[schemaParams[index].type](dataParams[index], schemaParams[index]);
+                        console.log("222 result", result);
                     }
                 } else {
                     console.log("This Block has No Schema");
                 }
             }
             else {
+                console.log("syntaxToken", syntaxToken);
                 result += syntaxToken; 
             }
         }
@@ -123,13 +126,14 @@ Entry.BlockToJsParser = function(syntax) {
             notParenthesis = true;
             console.log("final result", result);
             result = result.substring(0, result.length-1);
+            console.log()
             result = result.trim();
         }
 
         if(!notParenthesis)
             result += "();";
 
-        result = Entry.TextCodingUtil.prototype.studyAdjustSyntax(block, result);
+        result = Entry.TextCodingUtil.prototype.jsAdjustSyntax(block, result);
 
         console.log("Scope result", result);
         

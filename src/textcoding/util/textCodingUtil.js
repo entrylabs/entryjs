@@ -973,7 +973,7 @@ Entry.TextCodingUtil = function() {
         console.log("blockInfo after", blockInfo);
     };
 
-    p.studyAdjustSyntax = function(block, syntax) {
+    p.jsAdjustSyntax = function(block, syntax) {
         console.log("syntax", syntax);
         var result = '';
         if(block.data.type == 'ai_boolean_distance') {
@@ -986,7 +986,7 @@ Entry.TextCodingUtil = function() {
             console.log("firstParam[1]", firstParam[1]);
             firstParam = firstParam.join('_');
             var secondParam = tokens[1];
-            secondParam = this.studyOperatorConvertor(secondParam);
+            secondParam = this.bTojBinaryOperatorConvertor(secondParam);
             var thirdParam = tokens[2];
 
             console.log("firstParam", firstParam, "secondParam", secondParam, "thirdParam", thirdParam);
@@ -994,14 +994,29 @@ Entry.TextCodingUtil = function() {
             result = firstParam + ' ' + secondParam + ' ' + thirdParam;
 
         } else if(block.data.type == 'ai_boolean_object') {
+            var tokens = syntax.split(' ');
+            console.log("tokens", tokens);
+            var firstParam = tokens[0].split('_');
+            var value = firstParam[1];
+            firstParam[1] = firstParam[1].substring(1, firstParam[1].length-1);
+            firstParam[1] = firstParam[1].toLowerCase();
+            console.log("firstParam[1]", firstParam[1]);
+            firstParam = firstParam.join('_');
+            var secondParam = tokens[1];
+            var thirdParam = tokens[2];
 
+            console.log("firstParam", firstParam, "secondParam", secondParam, "thirdParam", thirdParam);
+            
+            result = firstParam + ' ' + secondParam + ' ' + thirdParam;
+        } else {
+            result = syntax;
         }
 
-        console.log("studyAdjustSyntax result", result);
+        console.log("jsAdjustSyntax result", result);
         return result;
     };
 
-    p.studyOperatorConvertor = function(operator) {
+    p.bTojBinaryOperatorConvertor = function(operator) {
         var result;
         console.log("operator", operator);
         switch(operator) {
@@ -1012,7 +1027,30 @@ Entry.TextCodingUtil = function() {
             case '\'SMALLER_EQUAL\'': result = "<="; break;
         }
 
-        console.log("studyOperatorConvertor result", result);
+        console.log("bTojBinaryOperatorConvertor result", result);
+        return result;
+    };
+
+    p.jTobBinaryOperatorConvertor = function(operator) {
+        var result;
+        console.log("operator", operator);
+        switch(operator) {
+            case '>': result = "BIGGER"; break;
+            case '>=': result = "BIGGER_EQUAL"; break; 
+            case '==': result = "EQUAL"; break;
+            case '<': result = "SMALLER"; break;
+            case '<=': result = "SMALLER_EQUAL"; break;
+        }
+
+        console.log("jTobBinaryOperatorConvertor result", result);
+        return result;
+    };
+
+    p.radarVariableConvertor = function(variable) {
+        console.log("radarVariableConvertor variable", variable);
+        var items = variable.split('_');
+        var result = items[1].toUpperCase();
+
         return result;
     };
 

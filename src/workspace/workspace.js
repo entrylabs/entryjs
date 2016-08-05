@@ -81,6 +81,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     p.setMode = function(mode, message){
         //console.log("setMode Message", mode, message);
         //var mode = mode;
+        console.log("setmode in");
         var oldMode = this.mode;
         this.mode = mode.boardType;
         //this.textType = mode.textType;
@@ -120,13 +121,13 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     mode.textType = Entry.Vim.TEXT_TYPE_JS;
                     mode.runType = Entry.Vim.WORKSPACE_MODE;
 
+                    console.log("mode_board error");
+                    this.mode = Entry.Workspace.MODE_VIMBOARD;
                     Entry.dispatchEvent("changeMode", mode, function (mode) {
                         $scope.programmingMode = String(mode);
                     });
 
-                    $('.studyMazeModeSelector option:eq(1)').attr("selected", "selected");
-
-                    throw e;
+                    //throw e;
                 }
                 Entry.commander.setCurrentEditor("board", this.board);
                 break;
