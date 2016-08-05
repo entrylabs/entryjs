@@ -13668,8 +13668,7 @@ Entry.block = {
         "isNotFor": [ "robotis_carCont" ],
         "func": function (sprite, script) {
              var data_instruction = Entry.Robotis_carCont.INSTRUCTION.WRITE,
-                leftAddress = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_LEFT[0],
-                rightAddress = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_RIGHT[0];
+                address = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_LEFT[0];
 
             var leftAngle = script.getField("LEFT_ANGLE", script);
             var leftValue = script.getNumberValue('LEFT_VALUE');
@@ -13688,8 +13687,7 @@ Entry.block = {
                 rightValue += 1024;
             }
 
-            var value = (leftValue << 16) + rightValue;
-            var address = (rightAddress << 8) + leftAddress;
+            var value = leftValue + (rightValue << 16);
             var data_sendqueue = [[data_instruction, address, 4, value]];
             return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_carCont.delay);
         }
