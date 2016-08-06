@@ -3661,6 +3661,7 @@ Entry.block = {
         },
         // 블록 그룹 정의
         class: "test",
+        isNotFor : [ "cobl" ],
         // 블록 기능정의
         func: function (sprite, script) {
             return Entry.hw.getAnalogPortValue("ultrason");
@@ -3682,6 +3683,7 @@ Entry.block = {
         },
         // 블록 그룹 정의
         class: "test",
+        isNotFor : [ "cobl" ],
         // 블록 기능정의
         "func": function(sprite, script) {
               return Entry.hw.getAnalogPortValue("potenmeter");
@@ -3702,6 +3704,7 @@ Entry.block = {
         },
         // 블록 그룹 정의
         class: "test",
+        isNotFor : [ "cobl" ],
         // 블록 기능정의
         "func": function(sprite, script) {
                 return Entry.hw.getAnalogPortValue("irread1");
@@ -3722,6 +3725,7 @@ Entry.block = {
         },
         // 블록 그룹 정의
         class: "test",
+        isNotFor : [ "cobl" ],
         // 블록 기능정의
         "func": function(sprite, script) {
                 return Entry.hw.getAnalogPortValue("irread2");
@@ -3742,6 +3746,7 @@ Entry.block = {
         },
         // 블록 그룹 정의
         class: "test",
+        isNotFor : [ "cobl" ],
         // 블록 기능정의
         "func": function(sprite, script) {
               return Entry.hw.getAnalogPortValue("joyx");
@@ -3762,6 +3767,7 @@ Entry.block = {
         },
         // 블록 그룹 정의
         class: "test",
+        isNotFor : [ "cobl" ],
         // 블록 기능정의
         "func": function(sprite, script) {
               return Entry.hw.getAnalogPortValue("joyy");
@@ -3824,6 +3830,7 @@ Entry.block = {
         },
         // 블록 그룹 정의
         class: "test",
+        isNotFor : [ "cobl" ],
         // 블록 기능정의
         "func": function(sprite, script) {
               return Entry.hw.getAnalogPortValue("tilt");
@@ -3837,7 +3844,7 @@ Entry.block = {
         // 블록 모양 정의
         skeleton: "basic_string_field",
         // 블록 텍스트
-        template: "8.온도센서@포트%1",
+        template: "8.온도센서@포트%1 %2",
         // 보여질 블록 정의
         params: [
             {
@@ -3847,6 +3854,11 @@ Entry.block = {
                     [ "2", "2" ],
                 ],
                 fontSize: 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
             }
         ],
         def: {
@@ -3861,6 +3873,7 @@ Entry.block = {
 
         // 블록 그룹 정의
         class: "test",
+        isNotFor : [ "cobl" ],
         // 블록 기능정의
         "func": function(sprite, script) {
             //    console.log("-----temptest------")
@@ -3887,7 +3900,7 @@ Entry.block = {
         // 블록 모양 정의
         skeleton: "basic_string_field",
         // 블록 텍스트
-        template: "9.빛센서@포트%1", 
+        template: "9.빛센서@포트%1 %2", 
         // 보여질 블록 정의
         params: [
             {
@@ -3897,6 +3910,11 @@ Entry.block = {
                     [ "2", "2" ],
                 ],
                 fontSize: 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
             }
         ],
         def: {
@@ -3911,6 +3929,7 @@ Entry.block = {
 
         // 블록 그룹 정의
         class: "test",
+        isNotFor : [ "cobl" ],
         // 블록 기능정의
         "func": function(sprite, script) {
                 var signal = script.getValue("VALUE", script);
@@ -3933,7 +3952,7 @@ Entry.block = {
         // 블록 모양 정의
         skeleton: "basic_boolean_field",
         // 블록 텍스트
-        template: "10.버튼스위치@포트%1",
+        template: "10.버튼스위치@포트%1 %2",
           // 보여질 블록 정의
         params: [
             {
@@ -3943,6 +3962,11 @@ Entry.block = {
                     [ "2", "2" ],
                 ],
                 fontSize: 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
             }
         ],
         def: {
@@ -3956,6 +3980,7 @@ Entry.block = {
         },
         // 블록 그룹 정의
         class: "test",
+        isNotFor : [ "cobl" ],
         // 블록 기능정의
         "func": function(sprite, script) {
                 var signal = script.getValue("VALUE", script);
@@ -3978,7 +4003,7 @@ Entry.block = {
         // 블록 모양 정의
         skeleton: "basic",
         // 블록 텍스트
-        template: "11.무지개LED%1%2",
+        template: "11.무지개LED%1%2 %3",
         params: [
             {
                 type: "Dropdown",
@@ -4003,6 +4028,11 @@ Entry.block = {
                   ["흰색","White"]
                 ],
                 fontSize: 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
             }
         ],
         def: {
@@ -4014,10 +4044,11 @@ Entry.block = {
         },
         paramsKeyMap: {
             PORT: 0,
-            OPERATOR: 0    
+            OPERATOR: 1    
         },
         // 블록 그룹 정의
         class: "test",
+        isNotFor : [ "cobl" ],
         // 블록 기능정의
         "func": function(sprite, script) {
                 var port = script.getStringField("PORT");
@@ -4036,12 +4067,17 @@ Entry.block = {
         // 블록 모양 정의
         skeleton: "basic",
         // 블록 텍스트
-        template: "12.각도모터 각도%1(15~165)",
+        template: "12.각도모터 각도%1(15~165) %2",
         // 블록에 사용할 파라미터
         params: [
             {
                 type: "TextInput",
                 value: 0
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
             }
         ],
         def: {
@@ -4055,30 +4091,21 @@ Entry.block = {
 
         // 블록 그룹 정의
         class: "test",
+        isNotFor : [ "cobl" ],
         // 블록 기능정의
         "func": function(sprite, script) {
-                PORT = 1;
                 console.log("servo - test");
-                var port = script.getNumberValue("PORT"); //PORT = 1
-                var value = script.getNumberValue("VALUE");
+                var value = script.getNumberField("VALUE");
                 value = Math.round(value);
                 value = Math.max(value, 15);
                 value = Math.min(value, 165);
 
-                if(port == 1)
-                {
-                  console.log("servo 1  degree "+value);
-                  Entry.hw.setDigitalPortValue("Servo1", value);
-                  Entry.hw.update();
-                  delete Entry.hw.sendQueue["Servo1"];
-                }
-                if(port == 2)
-                {
-                  console.log("servo 2 degree "+value);
-                  Entry.hw.setDigitalPortValue("Servo2", value);
-                  Entry.hw.update();
-                  delete Entry.hw.sendQueue["Servo2"];
-                }
+
+                console.log("servo 1  degree "+value);
+                Entry.hw.setDigitalPortValue("Servo1", value);
+                Entry.hw.update();
+                delete Entry.hw.sendQueue["Servo1"];
+
                 return script.callReturn();
         }
     },
@@ -4090,7 +4117,7 @@ Entry.block = {
         // 블록 모양 정의
         skeleton: "basic",
         // 블록 텍스트
-        template: "13.멜로디%1",
+        template: "13.멜로디%1 ,%2",
         params: [
             {
                 type: "Dropdown",
@@ -4120,6 +4147,11 @@ Entry.block = {
                 ["(높은)파","H_Fa"]
                 ],
                 fontSize: 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
             }
         ],
         def: {
@@ -4133,6 +4165,7 @@ Entry.block = {
         },
         // 블록 그룹 정의
         class: "test",
+        isNotFor : [ "cobl" ],
         // 블록 기능정의
         "func": function(sprite, script) {
                 var melody = script.getStringField("MELODY");
@@ -4152,7 +4185,7 @@ Entry.block = {
         // 블록 모양 정의
         skeleton: "basic",
         // 블록 텍스트
-        template: "14.회전모터%1%2속도%3",
+        template: "14.회전모터%1%2속도%3 %4",
         params: [
             {
                 type: "Dropdown",
@@ -4181,6 +4214,11 @@ Entry.block = {
                   ["5","5"]
                 ],
                 fontSize: 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
             }
         ],
         def: {
@@ -4193,11 +4231,12 @@ Entry.block = {
         },
         paramsKeyMap: {
             MOTOR: 0,
-            DIRECTION: 0,
-            SPEED:0    
+            DIRECTION: 1,
+            SPEED:2    
         },
         // 블록 그룹 정의
         class: "test",
+        isNotFor : [ "cobl" ],
         // 블록 기능정의
         "func": function(sprite, script) {
                 var motor = script.getStringField("MOTOR");
@@ -4230,7 +4269,7 @@ Entry.block = {
         // 블록 모양 정의
         skeleton: "basic",
         // 블록 텍스트
-        template: "15.USB포트%1단계%2",
+        template: "15.USB포트%1단계%2 %3",
         
         params: [
             {
@@ -4252,6 +4291,11 @@ Entry.block = {
                   ["5","5"]
                 ],
                 fontSize: 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
             }
         ],
         def: {
@@ -4263,10 +4307,11 @@ Entry.block = {
         },
         paramsKeyMap: {
             PORT: 0,
-            LEVEL: 0    
+            LEVEL: 1    
         },
         // 블록 그룹 정의
         class: "test",
+        isNotFor : [ "cobl" ],
         // 블록 기능정의
         "func": function(sprite, script) {
                var port = script.getStringField("PORT");
@@ -4293,7 +4338,7 @@ Entry.block = {
         // 블록 모양 정의
         skeleton: "basic",
         // 블록 텍스트
-        template: "16.외부LED%1(1~64)R%2G%3B%4",
+        template: "16.외부LED%1(1~64)R%2G%3B%4 %5",
         // 보여질 블록 정의
        params: [
             {
@@ -4349,6 +4394,11 @@ Entry.block = {
                   ["10","10"]
                 ],
                 fontSize: 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
             }
         ],
         def: {
@@ -4362,15 +4412,16 @@ Entry.block = {
         },
         paramsKeyMap: {
             LED: 0,
-            RED: 0,
-            GREEN : 0,
-            BLUE : 0
+            RED: 1,
+            GREEN : 2,
+            BLUE : 3
         },
         // 블록 그룹 정의
         class: "test",
+        isNotFor : [ "cobl" ],
         // 블록 기능정의
         "func": function(sprite, script) {
-                var led = script.getNumberValue("LED");
+                var led = script.getNumberField("LED");
                 var r = script.getStringField("RED");
                 var g = script.getStringField("GREEN");
                 var b = script.getStringField("BLUE");
@@ -4397,12 +4448,17 @@ Entry.block = {
         // 블록 모양 정의
         skeleton: "basic",
         // 블록 텍스트
-        template: "17.숫자전광판%1(0~9999)",
+        template: "17.숫자전광판%1(0~9999) %2",
         
         params: [
             {
                 type: "TextInput",
                 value: 0
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
             }
         ],
         def: {
@@ -4415,9 +4471,10 @@ Entry.block = {
         },
         // 블록 그룹 정의
         class: "test",
+        isNotFor : [ "cobl" ],
         // 블록 기능정의
         "func": function(sprite, script) {
-                var value = script.getNumberValue("VALUE");
+                var value = script.getNumberField("VALUE");
                 Entry.hw.setDigitalPortValue("7SEG", value);
                 Entry.hw.update();
                 delete Entry.hw.sendQueue["7SEG"];

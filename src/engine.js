@@ -16,6 +16,8 @@ Entry.Engine = function() {
 
     this._mouseMoved = false;;
 
+    this.queue = [];
+
     if (Entry.keyPressed)
         Entry.keyPressed.attach(this, this.captureKeyEvent);
 
@@ -331,23 +333,34 @@ Entry.Engine.prototype.toggleSpeedPanel = function() {
             td.bindOnClick(function () {Entry.engine.setSpeedMeter(speeds[i]);});
             tr.appendChild(td);
         })(i);
-       this.view_.insertBefore(this.speedProgress_, this.maximizeButton);
+        this.view_.insertBefore(this.speedProgress_, this.maximizeButton);
         this.speedProgress_.appendChild(tr);
         this.speedHandle_ = Entry.createElement('div',
             'entrySpeedHandleWorkspace');
         var canvasWidth = Entry.interfaceState.canvasWidth;
         var grid = (canvasWidth - 84) / 5;
-        $(this.speedHandle_).draggable({
-            axis: 'x',
-            grid: [grid, grid],
-            containment: [80, 0, grid * 4 + 80, 0],
-            drag: function(e, ui) {
-                var canvasWidth = Entry.interfaceState.canvasWidth;
-                var level = (ui.position.left - 80) / (canvasWidth - 84) * 5;
-                level = Math.floor(level);
-                if (level < 0)
-                    return;
+
+        $(this.speedHandle_).bind('mousedown.speedPanel touchstart.speedPanel', function(e) {
+            if (e.stopPropagation) e.stopPropagation();
+            if (e.preventDefault) e.preventDefault();
+
+            if (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) {
+                var mouseEvent = Entry.Utils.convertMouseEvent(e);
+                var doc = $(document);
+                doc.bind('mousemove.speedPanel touchmove.speedPanel', onMouseMove);
+                doc.bind('mouseup.speedPanel touchend.speedPanel', onMouseUp);
+            }
+
+            function onMouseMove(e) {
+                e.stopPropagation();
+                var mouseEvent = Entry.Utils.convertMouseEvent(e);
+                var level = Math.floor((mouseEvent.clientX - 80) / (grid*5) * 5);
+                if (level < 0 || level > 4) return;
                 Entry.engine.setSpeedMeter(Entry.engine.speeds[level]);
+            }
+
+            function onMouseUp(e) {
+                $(document).unbind('.speedPanel');
             }
         });
         this.view_.insertBefore(this.speedHandle_, this.maximizeButton);
@@ -361,7 +374,7 @@ Entry.Engine.prototype.setSpeedMeter = function(FPS) {
         return;
     level = Math.min(4, level);
     level = Math.max(0, level);
-   if (this.speedPanelOn) {
+    if (this.speedPanelOn) {
         var canvasWidth = Entry.interfaceState.canvasWidth;
         this.speedHandle_.style.left =
             ((canvasWidth - 80) / 10 * (level * 2 + 1) + 80 - 9) + 'px';
@@ -398,6 +411,7 @@ Entry.Engine.prototype.stop = function() {
 Entry.Engine.prototype.update = function() {
     if (Entry.engine.isState('run')) {
         Entry.engine.computeObjects();
+        Entry.engine.executeQueue();
         Entry.hw.update();
     }
 };
@@ -461,7 +475,7 @@ Entry.Engine.prototype.toggleRun = function() {
 
     Entry.addActivity("run");
     if (this.state == 'stop') {
-        Entry.container.mapEntity(function(entity){
+        Entry.container.mapEntity(function(entity) {
             entity.takeSnapshot();
         });
         Entry.variableContainer.mapVariable(function(variable){
@@ -621,6 +635,19 @@ Entry.Engine.prototype.raiseEventOnEntity = function(entity, param) {
     var eventName = param[1];
     var code = entity.parent.script;
     code.raiseEvent(eventName, entity);
+};
+
+Entry.Engine.prototype.pushQueue = function(entity, param) {
+    if (entity !== param[0]) return;
+
+    var eventName = param[1];
+    var code = entity.parent.script;
+    var queue = {
+        eventName: eventName,
+        entity: entity
+    };
+
+    this.queue.push(queue);
 };
 
 /**
@@ -789,6 +816,15 @@ Entry.Engine.prototype.updateProjectTimer = function(value) {
         timer.pausedTime = 0;
         timer.start = current;
     }
+};
+
+Entry.Engine.prototype.executeQueue = function() {
+    var queue = this.queue;
+    queue.forEach(function(q) {
+        var code = q.entity.parent.script;
+        code.raiseEvent(q.eventName, q.entity);
+    }.bind(this));
+    this.queue = [];
 };
 
 

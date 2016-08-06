@@ -21,6 +21,7 @@ Entry.FieldTextInput = function(content, blockView, index) {
     this._contents = content;
     this._index = index;
     this.value = this.getValue()  || '';
+    this._CONTENT_HEIGHT = this.getContentHeight();
 
     this.renderStart();
 };
@@ -29,8 +30,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
 
 (function(p) {
     var X_PADDING = 6,
-        TEXT_Y_PADDING = 4,
-        CONTENT_HEIGHT = 16;
+        TEXT_Y_PADDING = 4;
 
     p.renderStart = function() {
         if (this.svgGroup) $(this.svgGroup).remove();
@@ -53,6 +53,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         var width = this.getTextWidth();
 
         var y = this.position && this.position.y ? this.position.y : 0;
+        var CONTENT_HEIGHT = this._CONTENT_HEIGHT;
         y -= CONTENT_HEIGHT/2;
         this._header = this.svgGroup.elem("rect", {
             width: width,
@@ -109,7 +110,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         var pos = this.getAbsolutePosFromDocument();
         pos.y -= this.box.height/2;
         this.optionGroup.css({
-            height: CONTENT_HEIGHT,
+            height: this._CONTENT_HEIGHT,
             left:pos.x,
             top:pos.y,
             width: that.box.width
@@ -140,5 +141,4 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     p.getTextWidth = function() {
         return this.textElement.getComputedTextLength() + X_PADDING + 2;
     };
-
 })(Entry.FieldTextInput.prototype);
