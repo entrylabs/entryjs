@@ -825,6 +825,7 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
     var cacheId = pictureModel.id + this.id;
     var image = Entry.container.getCachedPicture(cacheId);
     if (!image) {
+        this.object.cache(0,0,this.getWidth(),this.getHeight());
         image = new Image();
         if (pictureModel.fileurl) {
             image.src = pictureModel.fileurl;
@@ -929,7 +930,6 @@ Entry.EntityObject.prototype.applyFilter = function() {
     })(effects, object);
 
     object.cache(0,0,this.getWidth(),this.getHeight());
-
 
     function isEqualEffects(effectsA, effectsB) {
         for (var key in effectsA) {
