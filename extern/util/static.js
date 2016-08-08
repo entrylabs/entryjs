@@ -460,8 +460,24 @@ EntryStatic.getAllBlocks = function() {
                 "ardublock_get_digital_value",
                 "ardublock_toggle_led",
                 "ardublock_toggle_pwm",
-                "ardublock_convert_scale"
+                "ardublock_convert_scale",
 				// ardublock Added 2016-06-01
+                'codestar_color_single',
+                'codestar_3color',
+                'codestar_vibration',
+                'codestar_buzzer',
+                'codestar_buzzer_stop',
+                'codestar_drive', 
+                'codestar_wheel',
+                'codestar_light',
+                'codestar_button',
+                'codestar_ir', 
+                'codestar_sonar',
+                'codestar_mic',
+                'codestar_temperature',
+                'codestar_geomagnetic',
+                'codestar_irR',
+                'codestar_tilt',
             ]
         }
     ]

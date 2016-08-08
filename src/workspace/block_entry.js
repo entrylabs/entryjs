@@ -19971,6 +19971,569 @@ Entry.block = {
                 }
             ]
         }
+    },
+    codestar_color_single: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        template: '눈 %1 LED %2 %3',
+        params: [{
+            type: 'Dropdown',
+            options: [['빨간색', 7], ['파란색', 8]]
+        }, {
+            type: 'Dropdown',
+            options: [[Lang.Blocks.ARDUINO_on,"on"], [Lang.Blocks.ARDUINO_off,"off"]],
+        }, {
+            type: 'Indicator',
+            img: 'block_icon/hardware_03.png',
+            size: 12
+        }],
+        events: {},
+        def: {
+            params: [7, 'on', null],
+            type: 'codestar_color_single'
+        },
+        paramsKeyMap: {
+            PORT: 0,
+            ONOFF: 1
+        },
+        class: 'codestar_output_sensor',
+        isNotFor: ['codestar'],
+        func: function (sprite, script) {        
+            var port = script.getField('PORT');
+            var onoff = script.getField('ONOFF');
+            var value = onoff == 'on' ? 255 : 0;
+            Entry.hw.setDigitalPortValue(port, value);
+            return script.callReturn();
+        }
+    },
+    codestar_3color: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        template: '3색 LED %1 밝기 %2 %3',
+        params: [{
+            type: 'Dropdown',
+            options: [['빨간색', 9],
+                ['초록색', 10],
+                ['파란색', 11]]
+        }, {
+            type: 'Block',
+            accept: 'string'
+        }, {
+            type: 'Indicator',
+            img: 'block_icon/hardware_03.png',
+            size: 12
+        }],
+        events: {},
+        def: {
+            params: [9, {type:'number', params: [120]}, null],
+            type: 'codestar_3color'
+        },
+        paramsKeyMap: {
+            PORT: 0,
+            VALUE: 1
+        },
+        class: 'codestar_output_sensor',
+        isNotFor: ['codestar'],
+        func: function (sprite, script) {   
+            var port = script.getField('PORT');
+            var value = script.getNumberValue('VALUE');
+            value = Math.round(value);
+            value = Math.max(value, 0);
+            value = Math.min(value, 255);
+            Entry.hw.setDigitalPortValue(port, value);
+            return script.callReturn();
+        }
+    },
+    codestar_vibration: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        template: '진동모터 %1 %2',
+        params: [{
+            type: 'Dropdown',
+            options: [[Lang.Blocks.ARDUINO_on,"on"], [Lang.Blocks.ARDUINO_off,"off"]],
+        }, {
+            type: 'Indicator',
+            img: 'block_icon/hardware_03.png',
+            size: 12
+        }],
+        events: {},
+        def: {
+            params: ['on', null],
+            type: 'codestar_vibration'
+        },
+        paramsKeyMap: {
+            ONOFF: 0
+        },
+        class: 'codestar_output_sensor',
+        isNotFor: ['codestar'],
+        func: function (sprite, script) {  
+            var port = 13;
+            var onoff = script.getField('ONOFF');
+            var value = onoff == 'on' ? 255 : 0;
+            Entry.hw.setDigitalPortValue(port, value);
+            return script.callReturn();
+        }
+    },
+    codestar_buzzer: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        template: '부저 톤%1 %2',
+        params: [{
+            type: 'Dropdown',
+            options: [['G3', 1], ['A3', 2], ['B3', 3], ['C4', 4], ['D4', 5], ['E4', 6], ['F4', 7], ['G4', 8], ['A4', 9], ['B4', 10], ['C5', 11], ['D5', 12], ['E5', 13], ['F5', 14]]
+        }, {
+            type: 'Indicator',
+            img: 'block_icon/hardware_03.png',
+            size: 12
+        }],
+        events: {},
+        def: {
+            params: [4, null],
+            type: 'codestar_buzzer'
+        },
+        paramsKeyMap: {
+            TONE: 0
+        },
+        class: 'codestar_output_sensor',
+        isNotFor: ['codestar'],
+        func: function (sprite, script) {    
+            var tone = script.getField('TONE');
+            Entry.hw.setDigitalPortValue(15, tone);
+            return script.callReturn();
+        }
+    },
+    codestar_buzzer_stop: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        template: '부저 중지 %1',
+        params: [{
+            type: 'Indicator',
+            img: 'block_icon/hardware_03.png',
+            size: 12
+        }],
+        events: {},
+        def: {
+            params: [null],
+            type: 'codestar_buzzer_stop'
+        },
+        paramsKeyMap: {},
+        class: 'codestar_output_sensor',
+        isNotFor: ['codestar'],
+        func: function (sprite, script) {   
+            Entry.hw.setDigitalPortValue(15, 24);       
+            return script.callReturn();
+        }
+    },
+    codestar_servo: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        template: '서버모터 %1 모터값 %2 %3',
+        params: [{
+            type: 'Dropdown',
+            options: [['D3', 'D3'], ['D5', 'D5'], ['D6', 'D6'], ['D9', 'D9'], ['D10', 'D10'], ['D11', 'D11']]
+        }, {
+            type: 'Block',
+            accept: 'string'
+        }, {
+            type: 'Indicator',
+            img: 'block_icon/hardware_03.png',
+            size: 12
+        }],
+        events: {},
+        def: {
+            params: ['D3', {type:'number', params: [90]}, null],
+            type: 'codestar_servo'
+        },
+        paramsKeyMap: {
+            PORT: 0,
+            VALUE: 1
+        },
+        class: 'codestar_motor',
+        isNotFor: ['codestar'],
+        func: function (sprite, script) { 
+            var value = script.getNumberValue('VALUE');
+            var sq = Entry.hw.sendQueue;
+            sq.outport = script.getField('PORT');
+            sq.value = 0;
+            if(!isNaN(value)){
+                var tmp = value;                
+                if(value < 0) tmp = 0;
+                if(value > 255) tmp = 255;
+                sq.value = tmp;
+            }
+            return script.callReturn();
+        }
+    },
+    codestar_drive: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        template: '방향 %1 속도 %2 %3',
+        params: [{
+            type: 'Dropdown',
+            options: [['앞으로', '0'], ['뒤로', '1'], ['왼쪽', '2'], ['오른쪽', '3']]
+        }, {
+            type: 'Block',
+            accept: 'string'
+        }, {
+            type: 'Indicator',
+            img: 'block_icon/hardware_03.png',
+            size: 12
+        }],
+        events: {},
+        def: {
+            params: ['0', {type:'number', params: [100]}, null],
+            type: 'codestar_drive'
+        },
+        paramsKeyMap: {
+            DIRECTION: 0,
+            VALUE: 1
+        },
+        class: 'codestar_motor',
+        isNotFor: ['codestar'],
+        func: function (sprite, script) {    
+            var value = script.getNumberValue('VALUE');
+            var dir = Number(script.getField('DIRECTION'));
+            var id = 0;
+            if(value == 0) value = 1;
+            value = Math.round(value);
+            value = Math.max(value, 0);
+            value = Math.min(value, 255);
+
+            value = Math.round(value/30);
+            if(value == 0) value = 1;
+            var query = (id << 7) + (dir << 5) + value;
+            Entry.hw.setDigitalPortValue(14, query);
+            return script.callReturn();
+        }
+    },
+    codestar_wheel: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        template: '방향 %1 바퀴속도 %2 %3',
+        params: [{
+            type: 'Dropdown',
+            options: [['왼쪽', '0'], ['오른쪽', '1']]
+        }, {
+            type: 'Block',
+            accept: 'string'
+        }, {
+            type: 'Indicator',
+            img: 'block_icon/hardware_03.png',
+            size: 12
+        }],
+        events: {},
+        def: {
+            params: ['0', {type:'number', params: [100]}, null],
+            type: 'codestar_wheel'
+        },
+        paramsKeyMap: {
+            DIRECTION: 0,
+            VALUE: 1
+        },
+        class: 'codestar_motor',
+        isNotFor: ['codestar'],
+        func: function (sprite, script) {   
+            var value = script.getNumberValue('VALUE');
+            var dir = Number(script.getField('DIRECTION'));
+            var id = 1;
+            if(value == 0)value = 1;
+            value = Math.round(value);
+            value = Math.max(value, -255);
+            value = Math.min(value, 255);
+            if( value < 0 ){
+                dir = 2+dir;
+                value *=-1;
+            }
+            value = Math.round(value/30);
+            if(value == 0) value = 1;
+            var query = (id << 7) + (dir << 5) + value;
+            Entry.hw.setDigitalPortValue(14, query);
+            return script.callReturn();
+        }
+    },
+    codestar_light: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_string_field',
+        statements: [],
+        template: '밝기센서 %1',
+        params: [{
+            type: 'Indicator',
+            img: 'block_icon/hardware_03.png',
+            size: 12
+        }],
+        events: {},
+        def: {
+            params: [null],
+            type: 'codestar_light'
+        },
+        paramsKeyMap: {},
+        class: 'codestar_input_sensor',
+        isNotFor: ['codestar'],
+        func: function (sprite, script) {  
+            return Entry.hw.getAnalogPortValue('6');
+        }
+    },
+    codestar_button: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_string_field',
+        statements: [],
+        template: '버튼 %1',
+        params: [{
+            type: 'Indicator',
+            img: 'block_icon/hardware_03.png',
+            size: 12
+        }],
+        events: {},
+        def: {
+            params: [null],
+            type: 'codestar_button'
+        },
+        paramsKeyMap: {},
+        class: 'codestar_input_sensor',
+        isNotFor: ['codestar'],
+        func: function (sprite, script) {
+            return Entry.hw.getDigitalPortValue('12');
+        }
+    },
+    codestar_ir: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_string_field',
+        statements: [],
+        template: 'IR %1 %2',
+        params: [{
+            type: 'Dropdown',
+            options: [['A0', '0'], ['A1', '1'], ['A4', '4'], ['A5', '5']]
+        }, {
+            type: 'Indicator',
+            img: 'block_icon/hardware_03.png',
+            size: 12
+        }],
+        events: {},
+        def: {
+            params: ['0', null],
+            type: 'codestar_ir'
+        },
+        paramsKeyMap: {
+            PORT: 0
+        },
+        class: 'codestar_input_sensor',
+        isNotFor: ['codestar'],
+        func: function (sprite, script) {            
+            var port = script.getField('PORT');
+            return Entry.hw.getAnalogPortValue(port);
+        }
+    },
+    codestar_sonar: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_string_field',
+        statements: [],
+        template: '초음파 %1',
+        params: [{
+            type: 'Indicator',
+            img: 'block_icon/hardware_03.png',
+            size: 12
+        }],
+        events: {},
+        def: {
+            params: [null],
+            type: 'codestar_sonar'
+        },
+        paramsKeyMap: {},
+        class: 'codestar_input_sensor',
+        isNotFor: ['codestar'],
+        func: function (sprite, script) {            
+            return Entry.hw.portData.sonar;
+        }
+    },
+    codestar_variable_R: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_string_field',
+        statements: [],
+        template: '가변저항 %1 %2',
+        params: [{
+            type: 'Dropdown',
+            options: [['A0', '0'], ['A1', '1'], ['A4', '4'], ['A5', '5']]
+        }, {
+            type: 'Indicator',
+            img: 'block_icon/hardware_03.png',
+            size: 12
+        }],
+        events: {},
+        def: {
+            params: ['1', null],
+            type: 'codestar_variable_R'
+        },
+        paramsKeyMap: {
+            PORT: 0
+        },
+        class: 'codestar_input_sensor',
+        isNotFor: ['codestar'],
+        func: function (sprite, script) {            
+            var port = script.getField('PORT');
+            return Entry.hw.getAnalogPortValue(port);
+        }
+    },
+    codestar_mic: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_string_field',
+        statements: [],
+        template: '마이크 %1',
+        params: [{
+            type: 'Indicator',
+            img: 'block_icon/hardware_03.png',
+            size: 12
+        }],
+        events: {},
+        def: {
+            params: [null],
+            type: 'codestar_mic'
+        },
+        paramsKeyMap: {},
+        class: 'codestar_input_sensor',
+        isNotFor: ['codestar'],
+        func: function (sprite, script) {            
+            return Entry.hw.getAnalogPortValue('2');
+        }
+    },
+    codestar_temperature: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_string_field',
+        statements: [],
+        template: '온도 %1',
+        params: [{
+            type: 'Indicator',
+            img: 'block_icon/hardware_03.png',
+            size: 12
+        }],
+        events: {},
+        def: {
+            params: [null],
+            type: 'codestar_temperature'
+        },
+        paramsKeyMap: {},
+        class: 'codestar_input_sensor',
+        isNotFor: ['codestar'],
+        func: function (sprite, script) {            
+            return Entry.hw.portData.temperature;
+        }
+    },
+    codestar_gyroscope: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_string_field',
+        statements: [],
+        template: '3축 자이로 %1 축 %2',
+        params: [{
+            type: 'Dropdown',
+            options: [['x', 'x'], ['y', 'y'], ['z', 'z']]
+        }, {
+            type: 'Indicator',
+            img: 'block_icon/hardware_03.png',
+            size: 12
+        }],
+        events: {},
+        def: {
+            params: ['x', null],
+            type: 'codestar_gyroscope'
+        },
+        paramsKeyMap: {
+            AXIS: 0
+        },
+        class: 'codestar_input_sensor',
+        isNotFor: ['codestar'],
+        func: function (sprite, script) {
+            return Entry.hw.getAnalogPortValue('gyro_'+axis);
+        }
+    },
+    codestar_geomagnetic: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_string_field',
+        statements: [],
+        template: '3축 지자기 %1 축 %2',
+        params: [{
+            type: 'Dropdown',
+            options: [['x', 'x'], ['y', 'y'], ['z', 'z']]
+        },{
+            type: 'Indicator',
+            img: 'block_icon/hardware_03.png',
+            size: 12
+        }],
+        events: {},
+        def: {
+            params: ['x', null],
+            type: 'codestar_geomagnetic'
+        },
+        paramsKeyMap: {
+            AXIS: 0
+        },
+        class: 'codestar_input_sensor',
+        isNotFor: ['codestar'],
+        func: function (sprite, script) {            
+            var axis = script.getField('AXIS');
+            return Entry.hw.getAnalogPortValue('geo_'+axis);
+        }
+    },
+    codestar_irR: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_string_field',
+        statements: [],
+        template: 'IR 리모콘 %1',
+        params: [{
+            type: 'Indicator',
+            img: 'block_icon/hardware_03.png',
+            size: 12
+        }],
+        events: {},
+        def: {
+            params: [null],
+            type: 'codestar_irR'
+        },
+        paramsKeyMap: {},
+        class: 'codestar_input_sensor',
+        isNotFor: ['codestar'],
+        func: function (sprite, script) {
+            return Entry.hw.getDigitalPortValue('4');
+        }
+    },
+    codestar_tilt: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_string_field',
+        statements: [],
+        template: '틸트 %1',
+        params: [{
+            type: 'Indicator',
+            img: 'block_icon/hardware_03.png',
+            size: 12
+        }],
+        events: {},
+        def: {
+            params: [null],
+            type: 'codestar_tilt'
+        },
+        paramsKeyMap: {},
+        class: 'codestar_input_sensor',
+        isNotFor: ['codestar'],
+        func: function (sprite, script) {
+            return Entry.hw.getDigitalPortValue('6');
+        }
     }
 };
 
