@@ -13266,7 +13266,7 @@ Entry.Variable = function(b) {
   this._valueWidth = this._nameWidth = null;
   var a = Entry.parseNumber(b.value);
   this.value_ = "number" == typeof a ? a : b.value ? b.value : 0;
-  "slide" == this.type ? (this.minValue_ = Number(b.minValue ? b.minValue : 0), this.maxValue_ = Number(b.maxValue ? b.maxValue : 100)) : "list" == this.type && (this.array_ = b.array ? b.array : []);
+  "slide" == this.type ? (this.setMinValue(b.minValue), this.setMaxValue(b.maxValue)) : "list" == this.type && (this.array_ = b.array ? b.array : []);
   b.isClone || (this.visible_ = b.visible || "boolean" == typeof b.visible ? b.visible : !0, this.x_ = b.x ? b.x : null, this.y_ = b.y ? b.y : null, "list" == this.type && (this.width_ = b.width ? b.width : 100, this.height_ = b.height ? b.height : 120, this.scrollPosition = 0), this.BORDER = 6, this.FONT = "10pt NanumGothic");
 };
 Entry.Variable.prototype.generateView = function(b) {
@@ -13562,7 +13562,7 @@ Entry.Variable.prototype.getMinValue = function() {
   return this.minValue_;
 };
 Entry.Variable.prototype.setMinValue = function(b) {
-  this.minValue_ = b;
+  this.minValue_ = b = b || 0;
   this.value_ < b && (this.value_ = b);
   this.updateView();
   this.isMinFloat = Entry.isFloat(this.minValue_);
@@ -13571,7 +13571,7 @@ Entry.Variable.prototype.getMaxValue = function() {
   return this.maxValue_;
 };
 Entry.Variable.prototype.setMaxValue = function(b) {
-  this.maxValue_ = b;
+  this.maxValue_ = b = b || 100;
   this.value_ > b && (this.value_ = b);
   this.updateView();
   this.isMaxFloat = Entry.isFloat(this.maxValue_);
@@ -14603,6 +14603,9 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function() {
   e.addClass("entryVariableSettingMinValueInputWorkspace");
   d = b.selectedVariable;
   e.value = d && "slide" == d.type ? d.minValue_ : 0;
+  e.onkeypress = function(a) {
+    13 === a.keyCode && this.blur();
+  };
   e.onblur = function(a) {
     isNaN(this.value) || (a = b.selectedVariable, a.setMinValue(this.value), b.updateVariableSettingView(a));
   };
@@ -14615,6 +14618,9 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function() {
   var g = Entry.createElement("input");
   g.addClass("entryVariableSettingMaxValueInputWorkspace");
   g.value = d && "slide" == d.type ? d.maxValue_ : 100;
+  g.onkeypress = function(a) {
+    13 === a.keyCode && this.blur();
+  };
   g.onblur = function(a) {
     isNaN(this.value) || (a = b.selectedVariable, a.setMaxValue(this.value), b.updateVariableSettingView(a));
   };
