@@ -11179,19 +11179,14 @@ Entry.StampEntity = function(b, a) {
   this.height = a.getHeight();
   "sprite" == this.type && (this.object = a.object.clone(!0), this.object.filters = null, a.effect && (this.effect = Entry.cloneSimpleObject(a.effect), this.applyFilter()));
   this.object.entity = this;
-  if (a.dialog) {
-    var c = a.dialog;
-    new Entry.Dialog(this, c.message_, c.mode_, !0);
-    this.dialog.object = a.dialog.object.clone(!0);
-    Entry.stage.loadDialog(this.dialog);
-  }
 };
-var EntityPrototype = Entry.EntityObject.prototype;
-Entry.StampEntity.prototype.applyFilter = EntityPrototype.applyFilter;
-Entry.StampEntity.prototype.removeClone = EntityPrototype.removeClone;
-Entry.StampEntity.prototype.getWidth = EntityPrototype.getWidth;
-Entry.StampEntity.prototype.getHeight = EntityPrototype.getHeight;
-Entry.StampEntity.prototype.getInitialEffectValue = EntityPrototype.getInitialEffectValue;
+(function(b, a) {
+  b.applyFilter = a.applyFilter;
+  b.removeClone = a.removeClone;
+  b.getWidth = a.getWidth;
+  b.getHeight = a.getHeight;
+  b.getInitialEffectValue = a.getInitialEffectValue;
+})(Entry.StampEntity.prototype, Entry.EntityObject.prototype);
 Entry.Toast = function() {
   this.toasts_ = [];
   var b = document.getElementById("entryToastContainer");
