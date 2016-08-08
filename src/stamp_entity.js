@@ -24,26 +24,22 @@ Entry.StampEntity = function(object, entity) {
             this.effect = Entry.cloneSimpleObject(entity.effect);
             this.applyFilter();
         }
-    } else if (this.type == 'textBox') {
-    }
+    } else if (this.type == 'textBox') {}
 
     this.object.entity = this;
-    if (entity.dialog) {
-        var dialog = entity.dialog;
-        new Entry.Dialog(this, dialog.message_, dialog.mode_, true);
-        this.dialog.object = entity.dialog.object.clone(true);
-        Entry.stage.loadDialog(this.dialog);
-    }
 };
 
-var EntityPrototype = Entry.EntityObject.prototype;
 
-Entry.StampEntity.prototype.applyFilter = EntityPrototype.applyFilter;
+(function(p, origin) {
+    p.applyFilter = origin.applyFilter;
 
-Entry.StampEntity.prototype.removeClone = EntityPrototype.removeClone;
+    p.removeClone = origin.removeClone;
 
-Entry.StampEntity.prototype.getWidth = EntityPrototype.getWidth;
+    p.getWidth = origin.getWidth;
 
-Entry.StampEntity.prototype.getHeight = EntityPrototype.getHeight;
+    p.getHeight = origin.getHeight;
 
-Entry.StampEntity.prototype.getInitialEffectValue = EntityPrototype.getInitialEffectValue;
+    p.getInitialEffectValue = origin.getInitialEffectValue;
+
+})(Entry.StampEntity.prototype, Entry.EntityObject.prototype);
+
