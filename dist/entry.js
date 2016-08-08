@@ -876,8 +876,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
+  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(c, d);
   return a.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1077,8 +1077,8 @@ Blockly.Blocks.dplay_select_led = {init:function() {
 Entry.block.dplay_select_led = function(b, a) {
   var c = a.getField("PORT"), d = 7;
   "7" == c ? d = 7 : "8" == c ? d = 8 : "9" == c ? d = 9 : "10" == c && (d = 10);
-  c = a.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(d, "on" == c ? 255 : 0);
+  c = "on" == a.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(d, c);
   return a.callReturn();
 };
 Blockly.Blocks.dplay_get_switch_status = {init:function() {
@@ -2088,10 +2088,10 @@ Entry.block.wait_second = function(b, a) {
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a);
+  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
   setTimeout(function() {
     a.timeFlag = 0;
-  }, 60 / (Entry.FPS || 60) * c * 1E3);
+  }, c);
   return a;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -12158,6 +12158,9 @@ Entry.isMobile = function() {
 Entry.Utils.convertMouseEvent = function(b) {
   return b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
 };
+Entry.Utils.convertIntToHex = function(b) {
+  return b.toString(16).toUpperCase();
+};
 Entry.Model = function(b, a) {
   var c = Entry.Model;
   c.generateSchema(b);
@@ -12720,7 +12723,7 @@ Entry.HW = function() {
   this.settingQueue = {};
   this.socketType = this.hwModule = this.selectedDevice = null;
   Entry.addEventListener("stop", this.setZero);
-  this.hwInfo = {11:Entry.Arduino, 19:Entry.ArduinoExt, 12:Entry.SensorBoard, 13:Entry.CODEino, 14:Entry.joystick, 15:Entry.dplay, 16:Entry.nemoino, 17:Entry.Xbot, 18:Entry.ardublock, 24:Entry.Hamster, 25:Entry.Albert, 31:Entry.Bitbrick, 42:Entry.Arduino, 51:Entry.Neobot, 71:Entry.Robotis_carCont, 72:Entry.Robotis_openCM70, 81:Entry.Arduino};
+  this.hwInfo = {"1.1":Entry.Arduino, "1.9":Entry.ArduinoExt, "1.2":Entry.SensorBoard, "1.3":Entry.CODEino, "1.4":Entry.joystick, "1.5":Entry.dplay, "1.6":Entry.nemoino, "1.7":Entry.Xbot, "1.8":Entry.ardublock, "2.4":Entry.Hamster, "2.5":Entry.Albert, "3.1":Entry.Bitbrick, "4.2":Entry.Arduino, "5.1":Entry.Neobot, "7.1":Entry.Robotis_carCont, "7.2":Entry.Robotis_openCM70, "8.1":Entry.Arduino};
 };
 Entry.HW.TRIAL_LIMIT = 1;
 p = Entry.HW.prototype;
@@ -12839,8 +12842,8 @@ p.setZero = function() {
   Entry.hw.hwModule && Entry.hw.hwModule.setZero();
 };
 p.checkDevice = function(b) {
-  void 0 !== b.company && (b = "" + b.company + b.model, b != this.selectedDevice && (this.selectedDevice = b, this.hwModule = this.hwInfo[b], Entry.dispatchEvent("hwChanged"), Entry.toast.success("\ud558\ub4dc\uc6e8\uc5b4 \uc5f0\uacb0 \uc131\uacf5", "\ud558\ub4dc\uc6e8\uc5b4 \uc544\uc774\ucf58\uc744 \ub354\ube14\ud074\ub9ad\ud558\uba74, \uc13c\uc11c\uac12\ub9cc \ud655\uc778\ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4.", !0), this.hwModule.monitorTemplate && (this.hwMonitor ? (this.hwMonitor._hwModule = 
-  this.hwModule, this.hwMonitor.initView()) : this.hwMonitor = new Entry.HWMonitor(this.hwModule), Entry.propertyPanel.addMode("hw", this.hwMonitor), b = this.hwModule.monitorTemplate, "both" == b.mode ? (b.mode = "list", this.hwMonitor.generateListView(), b.mode = "general", this.hwMonitor.generateView(), b.mode = "both") : "list" == b.mode ? this.hwMonitor.generateListView() : this.hwMonitor.generateView())));
+  void 0 !== b.company && (b = [Entry.Utils.convertIntToHex(b.company), ".", Entry.Utils.convertIntToHex(b.model)].join(""), b != this.selectedDevice && (this.selectedDevice = b, this.hwModule = this.hwInfo[b], Entry.dispatchEvent("hwChanged"), Entry.toast.success("\ud558\ub4dc\uc6e8\uc5b4 \uc5f0\uacb0 \uc131\uacf5", "\ud558\ub4dc\uc6e8\uc5b4 \uc544\uc774\ucf58\uc744 \ub354\ube14\ud074\ub9ad\ud558\uba74, \uc13c\uc11c\uac12\ub9cc \ud655\uc778\ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4.", !0), this.hwModule.monitorTemplate && 
+  (this.hwMonitor ? (this.hwMonitor._hwModule = this.hwModule, this.hwMonitor.initView()) : this.hwMonitor = new Entry.HWMonitor(this.hwModule), Entry.propertyPanel.addMode("hw", this.hwMonitor), b = this.hwModule.monitorTemplate, "both" == b.mode ? (b.mode = "list", this.hwMonitor.generateListView(), b.mode = "general", this.hwMonitor.generateView(), b.mode = "both") : "list" == b.mode ? this.hwMonitor.generateListView() : this.hwMonitor.generateView())));
 };
 p.banHW = function() {
   var b = this.hwInfo, a;
