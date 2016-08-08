@@ -6963,6 +6963,7 @@ Entry.Engine = function() {
   this.isUpdating = !0;
   this.speeds = [1, 15, 30, 45, 60];
   this._mouseMoved = !1;
+  this.queue = [];
   Entry.keyPressed && Entry.keyPressed.attach(this, this.captureKeyEvent);
   Entry.addEventListener("canvasClick", function(a) {
     Entry.engine.fireEvent("mouse_clicked");
@@ -7168,7 +7169,7 @@ Entry.Engine.prototype.stop = function() {
   this.ticker = null;
 };
 Entry.Engine.prototype.update = function() {
-  Entry.engine.isState("run") && (Entry.engine.computeObjects(), Entry.hw.update());
+  Entry.engine.isState("run") && (Entry.engine.computeObjects(), Entry.engine.executeQueue(), Entry.hw.update());
 };
 Entry.Engine.prototype.computeObjects = function() {
   Entry.container.mapObjectOnScene(this.computeFunction);
@@ -7274,6 +7275,9 @@ Entry.Engine.prototype.fireEventOnEntity = function(b, a) {
 Entry.Engine.prototype.raiseEventOnEntity = function(b, a) {
   b === a[0] && b.parent.script.raiseEvent(a[1], b);
 };
+Entry.Engine.prototype.pushQueue = function(b, a) {
+  b === a[0] && this.queue.push({eventName:a[1], entity:b});
+};
 Entry.Engine.prototype.captureKeyEvent = function(b) {
   var a = b.keyCode, d = Entry.type;
   b.ctrlKey && "workspace" == d ? 83 == a ? (b.preventDefault(), Entry.dispatchEvent("saveWorkspace")) : 82 == a ? (b.preventDefault(), Entry.engine.run()) : 90 == a && (b.preventDefault(), console.log("engine"), Entry.dispatchEvent(b.shiftKey ? "redo" : "undo")) : Entry.engine.isState("run") && Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["keyPress", a]);
@@ -7346,6 +7350,12 @@ Entry.Engine.prototype.updateProjectTimer = function(b) {
     var c = (new Date).getTime();
     "undefined" == typeof b ? d.isPaused || a.isState("pause") || d.setValue((c - d.start - d.pausedTime) / 1E3) : (d.setValue(b), d.pausedTime = 0, d.start = c);
   }
+};
+Entry.Engine.prototype.executeQueue = function() {
+  this.queue.forEach(function(b) {
+    b.entity.parent.script.raiseEvent(b.eventName, b.entity);
+  }.bind(this));
+  this.queue = [];
 };
 Entry.EntityObject = function(b) {
   this.parent = b;
@@ -7692,34 +7702,27 @@ Entry.EntityObject.prototype.getVisible = function() {
   return this.visible;
 };
 Entry.EntityObject.prototype.setImage = function(b) {
+  var a = this;
   delete b._id;
   Entry.assert("sprite" == this.type, "Set image is only for sprite object");
   b.id || (b.id = Entry.generateHash());
   this.picture = b;
-  var a = this.picture.dimension, d = this.getRegX() - this.getWidth() / 2, c = this.getRegY() - this.getHeight() / 2;
-  this.setWidth(a.width);
-  this.setHeight(a.height);
-  a.scaleX || (a.scaleX = this.getScaleX(), a.scaleY = this.getScaleY());
+  var d = this.picture.dimension, c = this.getRegX() - this.getWidth() / 2, e = this.getRegY() - this.getHeight() / 2;
+  this.setWidth(d.width);
+  this.setHeight(d.height);
+  d.scaleX || (d.scaleX = this.getScaleX(), d.scaleY = this.getScaleY());
   this.setScaleX(this.scaleX);
   this.setScaleY(this.scaleY);
-  this.setRegX(this.width / 2 + d);
-  this.setRegY(this.height / 2 + c);
-  var e = Entry.container.getCachedPicture(b.id);
-  if (e) {
-    Entry.image = e, this.object.image = e, this.object.cache(0, 0, this.getWidth(), this.getHeight());
-  } else {
-    e = new Image;
-    b.fileurl ? e.src = b.fileurl : (a = b.filename, e.src = Entry.defaultPath + "/uploads/" + a.substring(0, 2) + "/" + a.substring(2, 4) + "/image/" + a + ".png");
-    var f = this;
-    e.onload = function(a) {
-      Entry.container.cachePicture(b.id, e);
-      Entry.image = e;
-      f.object.image = e;
-      f.object.cache(0, 0, f.getWidth(), f.getHeight());
-      f = null;
-      Entry.requestUpdate = !0;
-    };
-  }
+  this.setRegX(this.width / 2 + c);
+  this.setRegY(this.height / 2 + e);
+  var f = b.id + this.id, g = Entry.container.getCachedPicture(f);
+  g ? (Entry.image = g, this.object.image = g, this.object.cache(0, 0, this.getWidth(), this.getHeight())) : (g = new Image, b.fileurl ? g.src = b.fileurl : (b = b.filename, g.src = Entry.defaultPath + "/uploads/" + b.substring(0, 2) + "/" + b.substring(2, 4) + "/image/" + b + ".png"), g.onload = function(b) {
+    Entry.container.cachePicture(f, g);
+    Entry.image = g;
+    a.object.image = g;
+    a.object.cache(0, 0, a.getWidth(), a.getHeight());
+    Entry.requestUpdate = !0;
+  });
   Entry.dispatchEvent("updateObject");
 };
 Entry.EntityObject.prototype.applyFilter = function() {
@@ -8612,7 +8615,7 @@ Entry.EntryObject.prototype.toggleInformation = function(b) {
 };
 Entry.EntryObject.prototype.addCloneEntity = function(b, a, d) {
   this.clonedEntities.length > Entry.maxCloneLimit || (b = new Entry.EntityObject(this), a ? (b.injectModel(a.picture ? a.picture : null, a.toJSON()), b.snapshot_ = a.snapshot_, a.effect && (b.effect = Entry.cloneSimpleObject(a.effect), b.applyFilter()), a.brush && Entry.setCloneBrush(b, a.brush)) : (b.injectModel(this.entity.picture ? this.entity.picture : null, this.entity.toJSON(b)), b.snapshot_ = this.entity.snapshot_, this.entity.effect && (b.effect = Entry.cloneSimpleObject(this.entity.effect), 
-  b.applyFilter()), this.entity.brush && Entry.setCloneBrush(b, this.entity.brush)), Entry.engine.raiseEventOnEntity(b, [b, "when_clone_start"]), b.isClone = !0, b.isStarted = !0, this.addCloneVariables(this, b, a ? a.variables : null, a ? a.lists : null), this.clonedEntities.push(b), Entry.stage.loadEntity(b));
+  b.applyFilter()), this.entity.brush && Entry.setCloneBrush(b, this.entity.brush)), Entry.engine.pushQueue(b, [b, "when_clone_start"]), b.isClone = !0, b.isStarted = !0, this.addCloneVariables(this, b, a ? a.variables : null, a ? a.lists : null), this.clonedEntities.push(b), Entry.stage.loadEntity(b));
 };
 Entry.EntryObject.prototype.initializeSplitter = function(b) {
   b.onmousedown = function(a) {

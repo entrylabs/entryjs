@@ -16,6 +16,8 @@ Entry.Engine = function() {
 
     this._mouseMoved = false;;
 
+    this.queue = [];
+
     if (Entry.keyPressed)
         Entry.keyPressed.attach(this, this.captureKeyEvent);
 
@@ -409,6 +411,7 @@ Entry.Engine.prototype.stop = function() {
 Entry.Engine.prototype.update = function() {
     if (Entry.engine.isState('run')) {
         Entry.engine.computeObjects();
+        Entry.engine.executeQueue();
         Entry.hw.update();
     }
 };
@@ -646,6 +649,19 @@ Entry.Engine.prototype.raiseEventOnEntity = function(entity, param) {
     code.raiseEvent(eventName, entity);
 };
 
+Entry.Engine.prototype.pushQueue = function(entity, param) {
+    if (entity !== param[0]) return;
+
+    var eventName = param[1];
+    var code = entity.parent.script;
+    var queue = {
+        eventName: eventName,
+        entity: entity
+    };
+
+    this.queue.push(queue);
+};
+
 /**
  * capture keyboard press input
  * @param {keyboard event} e
@@ -812,6 +828,15 @@ Entry.Engine.prototype.updateProjectTimer = function(value) {
         timer.pausedTime = 0;
         timer.start = current;
     }
+};
+
+Entry.Engine.prototype.executeQueue = function() {
+    var queue = this.queue;
+    queue.forEach(function(q) {
+        var code = q.entity.parent.script;
+        code.raiseEvent(q.eventName, q.entity);
+    }.bind(this));
+    this.queue = [];
 };
 
 
