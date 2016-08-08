@@ -195,9 +195,9 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
                             console.log("errorInfo", errorInfo);
 
-                            annotation.from.line = errorInfo.lineNumber-1;
+                            annotation.from.line = errorInfo.lineNumber;
                             annotation.from.ch = errorInfo.location.start;
-                            annotation.to.line = errorInfo.lineNumber-1;
+                            annotation.to.line = errorInfo.lineNumber;
                             annotation.to.ch = errorInfo.location.end; 
 
                             error.type = 2;
@@ -210,15 +210,20 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             clearOnEnter: true
                         });
 
-                        if(error.title)
+                        if(error.title) {
                             var errorTitle = error.title;
-                        else 
+                        }
+                        else {
                             var errorTitle = '문법 오류';
+                        }
 
-                        if(error.type == 2)
-                            var errorMsg = 'line : ' + (errorInfo.lineNumber)-1;
-                        else
+                        if(error.type == 2) {
+                            console.log("errorInfo.lineNumber", errorInfo.lineNumber);
+                            var errorMsg = 'line : ' + (errorInfo.lineNumber);
+                        }
+                        else {
                             var errorMsg = '자바스크립트 코드를 확인해주세요';
+                        }
 
                         Entry.toast.alert(errorTitle, errorMsg);
                         throw error;

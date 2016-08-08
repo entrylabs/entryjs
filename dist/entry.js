@@ -13688,15 +13688,15 @@ Entry.Parser = function(b, a, d, c) {
               c.severity = "error";
               var l = this.findErrorInfo(q);
               console.log("errorInfo", l);
-              c.from.line = l.lineNumber - 1;
+              c.from.line = l.lineNumber;
               c.from.ch = l.location.start;
-              c.to.line = l.lineNumber - 1;
+              c.to.line = l.lineNumber;
               c.to.ch = l.location.end;
               q.type = 2;
             }
             this.codeMirror.markText(c.from, c.to, {className:"CodeMirror-lint-mark-error", __annotation:c, clearOnEnter:!0});
             c = q.title ? q.title : "\ubb38\ubc95 \uc624\ub958";
-            l = 2 == q.type ? "line : " + l.lineNumber - 1 : "\uc790\ubc14\uc2a4\ud06c\ub9bd\ud2b8 \ucf54\ub4dc\ub97c \ud655\uc778\ud574\uc8fc\uc138\uc694";
+            2 == q.type ? (console.log("errorInfo.lineNumber", l.lineNumber), l = "line : " + l.lineNumber) : l = "\uc790\ubc14\uc2a4\ud06c\ub9bd\ud2b8 \ucf54\ub4dc\ub97c \ud655\uc778\ud574\uc8fc\uc138\uc694";
             Entry.toast.alert(c, l);
             throw q;
           }
@@ -21947,10 +21947,7 @@ Entry.Board.DRAG_RADIUS = 5;
   };
   b._keyboardControl = function(a) {
     var b = this.selectedBlockView;
-    if (b && 46 == a.keyCode) {
-      var c = b.block;
-      c && !Entry.Utils.isInInput(a) && c.isDeletable() && (Entry.do("destroyBlock", b.block), this.set({selectedBlockView:null}));
-    }
+    b && 46 == a.keyCode && (b = b.block) && !Entry.Utils.isInInput(a) && b.isDeletable() && (Entry.do("destroyBlock", b), this.set({selectedBlockView:null}));
   };
   b.hide = function() {
     this.wrapper.addClass("entryRemove");
