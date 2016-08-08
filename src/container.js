@@ -764,8 +764,7 @@ Entry.Container.prototype.getCachedPicture = function(pictureId) {
  * @param {!picture object} pictureModel
  */
 Entry.Container.prototype.cachePicture = function(pictureId, image) {
-    //if (!this.cachedPicture[pictureId])
-        this.cachedPicture[pictureId] = image;
+    this.cachedPicture[pictureId] = image;
 };
 
 /**

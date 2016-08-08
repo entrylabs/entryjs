@@ -33,8 +33,8 @@ Entry.Variable = function(variable) {
         this.value_ = variable.value;
 
     if (this.type == 'slide') {
-        this.minValue_ = Number(variable.minValue ? variable.minValue : 0);
-        this.maxValue_ = Number(variable.maxValue ? variable.maxValue : 100);
+        this.setMinValue(variable.minValue);
+        this.setMaxValue(variable.maxValue);
     } else if (this.type == 'list')
         this.array_ = variable.array ? variable.array : [];
 
@@ -816,6 +816,7 @@ Entry.Variable.prototype.getMinValue = function() {
 };
 
 Entry.Variable.prototype.setMinValue = function(minValue) {
+    minValue = minValue || 0;
     this.minValue_ = minValue;
     if (this.value_ < minValue)
         this.value_ = minValue;
@@ -828,6 +829,7 @@ Entry.Variable.prototype.getMaxValue = function() {
 };
 
 Entry.Variable.prototype.setMaxValue = function(maxValue) {
+    maxValue = maxValue || 100;
     this.maxValue_ = maxValue;
     if (this.value_ > maxValue)
         this.value_ = maxValue;

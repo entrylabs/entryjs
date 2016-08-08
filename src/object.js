@@ -1300,8 +1300,8 @@ Entry.EntryObject.prototype.addCloneEntity = function(object, entity, script) {
             Entry.setCloneBrush(clonedEntity, this.entity.brush);
         }
     }
-    Entry.engine.raiseEventOnEntity(clonedEntity,
-                                    [clonedEntity, 'when_clone_start']);
+    Entry.engine.pushQueue(
+        clonedEntity, [clonedEntity, 'when_clone_start']);
     clonedEntity.isClone = true;
     clonedEntity.isStarted = true;
     this.addCloneVariables(this, clonedEntity,
