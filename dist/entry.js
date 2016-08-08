@@ -876,8 +876,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(c, d);
+  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
   return a.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1077,8 +1077,8 @@ Blockly.Blocks.dplay_select_led = {init:function() {
 Entry.block.dplay_select_led = function(b, a) {
   var c = a.getField("PORT"), d = 7;
   "7" == c ? d = 7 : "8" == c ? d = 8 : "9" == c ? d = 9 : "10" == c && (d = 10);
-  c = "on" == a.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(d, c);
+  c = a.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(d, "on" == c ? 255 : 0);
   return a.callReturn();
 };
 Blockly.Blocks.dplay_get_switch_status = {init:function() {
@@ -2088,10 +2088,10 @@ Entry.block.wait_second = function(b, a) {
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
+  var c = a.getNumberValue("SECOND", a);
   setTimeout(function() {
     a.timeFlag = 0;
-  }, c);
+  }, 60 / (Entry.FPS || 60) * c * 1E3);
   return a;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -6962,7 +6962,6 @@ Entry.Engine = function() {
   this.isUpdating = !0;
   this.speeds = [1, 15, 30, 45, 60];
   this._mouseMoved = !1;
-  this.queue = [];
   Entry.keyPressed && Entry.keyPressed.attach(this, this.captureKeyEvent);
   Entry.addEventListener("canvasClick", function(a) {
     Entry.engine.fireEvent("mouse_clicked");
@@ -7168,7 +7167,7 @@ Entry.Engine.prototype.stop = function() {
   this.ticker = null;
 };
 Entry.Engine.prototype.update = function() {
-  Entry.engine.isState("run") && (Entry.engine.computeObjects(), Entry.engine.executeQueue(), Entry.hw.update());
+  Entry.engine.isState("run") && (Entry.engine.computeObjects(), Entry.hw.update());
 };
 Entry.Engine.prototype.computeObjects = function() {
   Entry.container.mapObjectOnScene(this.computeFunction);
@@ -7254,9 +7253,6 @@ Entry.Engine.prototype.fireEventOnEntity = function(b, a) {
 Entry.Engine.prototype.raiseEventOnEntity = function(b, a) {
   b === a[0] && b.parent.script.raiseEvent(a[1], b);
 };
-Entry.Engine.prototype.pushQueue = function(b, a) {
-  b === a[0] && this.queue.push({eventName:a[1], entity:b});
-};
 Entry.Engine.prototype.captureKeyEvent = function(b) {
   var a = b.keyCode, c = Entry.type;
   b.ctrlKey && "workspace" == c ? 83 == a ? (b.preventDefault(), Entry.dispatchEvent("saveWorkspace")) : 82 == a ? (b.preventDefault(), Entry.engine.run()) : 90 == a && (b.preventDefault(), console.log("engine"), Entry.dispatchEvent(b.shiftKey ? "redo" : "undo")) : Entry.engine.isState("run") && Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["keyPress", a]);
@@ -7329,12 +7325,6 @@ Entry.Engine.prototype.updateProjectTimer = function(b) {
     var d = (new Date).getTime();
     "undefined" == typeof b ? c.isPaused || a.isState("pause") || c.setValue((d - c.start - c.pausedTime) / 1E3) : (c.setValue(b), c.pausedTime = 0, c.start = d);
   }
-};
-Entry.Engine.prototype.executeQueue = function() {
-  this.queue.forEach(function(b) {
-    b.entity.parent.script.raiseEvent(b.eventName, b.entity);
-  }.bind(this));
-  this.queue = [];
 };
 Entry.EntityObject = function(b) {
   this.parent = b;
@@ -7695,7 +7685,7 @@ Entry.EntityObject.prototype.setImage = function(b) {
   this.setRegX(this.width / 2 + d);
   this.setRegY(this.height / 2 + e);
   var f = b.id + this.id, g = Entry.container.getCachedPicture(f);
-  g ? (Entry.image = g, this.object.image = g, this.object.cache(0, 0, this.getWidth(), this.getHeight())) : (g = new Image, b.fileurl ? g.src = b.fileurl : (b = b.filename, g.src = Entry.defaultPath + "/uploads/" + b.substring(0, 2) + "/" + b.substring(2, 4) + "/image/" + b + ".png"), g.onload = function(b) {
+  g ? (Entry.image = g, this.object.image = g, this.object.cache(0, 0, this.getWidth(), this.getHeight())) : (this.object.cache(0, 0, this.getWidth(), this.getHeight()), g = new Image, b.fileurl ? g.src = b.fileurl : (b = b.filename, g.src = Entry.defaultPath + "/uploads/" + b.substring(0, 2) + "/" + b.substring(2, 4) + "/image/" + b + ".png"), g.onload = function(b) {
     Entry.container.cachePicture(f, g);
     Entry.image = g;
     a.object.image = g;
@@ -8057,6 +8047,7 @@ Entry.StateManager.prototype.addActivity = function(b) {
   Entry.reporter && Entry.reporter.report(new Entry.State(b));
 };
 Entry.EntryObject = function(b) {
+  var a = this;
   if (b) {
     this.id = b.id;
     this.name = b.name || b.sprite.name;
@@ -8067,8 +8058,8 @@ Entry.EntryObject = function(b) {
     this.pictures = b.sprite.pictures;
     this.sounds = [];
     this.sounds = b.sprite.sounds;
-    for (var a = 0;a < this.sounds.length;a++) {
-      this.sounds[a].id || (this.sounds[a].id = Entry.generateHash()), Entry.initSound(this.sounds[a]);
+    for (var c = 0;c < this.sounds.length;c++) {
+      this.sounds[c].id || (this.sounds[c].id = Entry.generateHash()), Entry.initSound(this.sounds[c]);
     }
     this.lock = b.lock ? b.lock : !1;
     this.isEditing = !1;
@@ -8079,15 +8070,15 @@ Entry.EntryObject = function(b) {
     this.entity.injectModel(this.selectedPicture ? this.selectedPicture : null, b.entity ? b.entity : this.initEntity(b));
     this.clonedEntities = [];
     Entry.stage.loadObject(this);
-    for (a in this.pictures) {
-      var c = this.pictures[a];
-      c.objectId = this.id;
-      c.id || (c.id = Entry.generateHash());
-      var d = new Image;
-      c.fileurl ? d.src = c.fileurl : c.fileurl ? d.src = c.fileurl : (b = c.filename, d.src = Entry.defaultPath + "/uploads/" + b.substring(0, 2) + "/" + b.substring(2, 4) + "/image/" + b + ".png");
+    for (c in this.pictures) {
+      var d = this.pictures[c];
+      d.objectId = this.id;
+      d.id || (d.id = Entry.generateHash());
+      var e = new Image;
+      d.fileurl ? e.src = d.fileurl : d.fileurl ? e.src = d.fileurl : (b = d.filename, e.src = Entry.defaultPath + "/uploads/" + b.substring(0, 2) + "/" + b.substring(2, 4) + "/image/" + b + ".png");
       Entry.Loader.addQueue();
-      d.onload = function(a) {
-        Entry.container.cachePicture(c.id, d);
+      e.onload = function(b) {
+        Entry.container.cachePicture(d.id + a.entity.id, e);
         Entry.Loader.removeQueue();
         Entry.requestUpdate = !0;
       };
@@ -8597,7 +8588,7 @@ Entry.EntryObject.prototype.toggleInformation = function(b) {
 };
 Entry.EntryObject.prototype.addCloneEntity = function(b, a, c) {
   this.clonedEntities.length > Entry.maxCloneLimit || (b = new Entry.EntityObject(this), a ? (b.injectModel(a.picture ? a.picture : null, a.toJSON()), b.snapshot_ = a.snapshot_, a.effect && (b.effect = Entry.cloneSimpleObject(a.effect), b.applyFilter()), a.brush && Entry.setCloneBrush(b, a.brush)) : (b.injectModel(this.entity.picture ? this.entity.picture : null, this.entity.toJSON(b)), b.snapshot_ = this.entity.snapshot_, this.entity.effect && (b.effect = Entry.cloneSimpleObject(this.entity.effect), 
-  b.applyFilter()), this.entity.brush && Entry.setCloneBrush(b, this.entity.brush)), Entry.engine.pushQueue(b, [b, "when_clone_start"]), b.isClone = !0, b.isStarted = !0, this.addCloneVariables(this, b, a ? a.variables : null, a ? a.lists : null), this.clonedEntities.push(b), Entry.stage.loadEntity(b));
+  b.applyFilter()), this.entity.brush && Entry.setCloneBrush(b, this.entity.brush)), Entry.engine.raiseEventOnEntity(b, [b, "when_clone_start"]), b.isClone = !0, b.isStarted = !0, this.addCloneVariables(this, b, a ? a.variables : null, a ? a.lists : null), this.clonedEntities.push(b), Entry.stage.loadEntity(b));
 };
 Entry.EntryObject.prototype.initializeSplitter = function(b) {
   b.onmousedown = function(a) {
