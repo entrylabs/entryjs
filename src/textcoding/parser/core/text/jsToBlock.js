@@ -145,7 +145,7 @@ Entry.JsToBlockParser = function(syntax) {
             else if(block.type === undefined) {
                 throw {
                     title : '블록변환 오류',
-                    message : '지원되는 블록이 없습니다.',
+                    message : '지원하지 않는 블록입니다.',
                     node : bodyData,
                     blockCount : this._blockCount
                 };
@@ -514,17 +514,12 @@ Entry.JsToBlockParser = function(syntax) {
                 operator = operator;
         }
 
-        console.log("BinaryExpression operator", operator); 
-        console.log("BinaryExpression type", type);
-
         if(type) {
             console.log("BinaryExpression type", type);
 
             var params = []; 
                
             var left = node.left;
-
-            console.log("BinaryExpression left", left);
             
             if(left.type == "Literal" || left.type == "Identifier") {
                 var arguments = [];
@@ -564,11 +559,9 @@ Entry.JsToBlockParser = function(syntax) {
                 if(param) 
                     params.push(param);
             }
-            console.log("BinaryExpression left params", params);
             
             operator = String(node.operator);
             if(operator) {
-                console.log("BinaryExpression operator", operator);
                 operator = Entry.TextCodingUtil.prototype.jTobBinaryOperatorConvertor(operator);
                 param = operator;
                 if(param)
@@ -583,9 +576,6 @@ Entry.JsToBlockParser = function(syntax) {
                 var arguments = [];
                 arguments.push(right);
                 var paramsMeta = Entry.block[type].params;
-                //var paramsDefMeta = Entry.block[type].def.params;
-                console.log("BinaryExpression paramsMeta", paramsMeta); 
-                //console.log("BinaryExpression paramsDefMeta", paramsDefMeta); 
 
                 for(var p in paramsMeta) { 
                     var paramType = paramsMeta[p].type;
@@ -602,11 +592,9 @@ Entry.JsToBlockParser = function(syntax) {
                 }
 
                 for(var i in arguments) {
-                    var argument = arguments[i];
-                    console.log("BinaryExpression argument", argument);
-                              
+                    var argument = arguments[i];          
                     var param = this[argument.type](argument);
-                    console.log("BinaryExpression param", param);
+                    
                     if(param && param != null) {
                         params.push(param);   
                     }
@@ -616,7 +604,7 @@ Entry.JsToBlockParser = function(syntax) {
                 if(param) 
                     params.push(param);
             }   
-            console.log("BinaryExpression right param", param);
+            
             if(param == "OBSTACLE" || param == "WALL" || param == "ITEM")
                 params.splice(1, 1);
 
@@ -628,12 +616,8 @@ Entry.JsToBlockParser = function(syntax) {
             return result;
         }
 
-        console.log("BinaryExpression params", params);
-        //result = { type: blockType, params: params }; 
-
         result = structure;
         
-        console.log("BinaryExpression result", result);
         return result;
     };
 
@@ -659,8 +643,6 @@ Entry.JsToBlockParser = function(syntax) {
             var arguments = [];
             arguments.push(left);
             var paramsMeta = Entry.block[type].params;
-            //var paramsDefMeta = Entry.block[type].def.params;
-            console.log("LogicalExpression paramsMeta", paramsMeta); 
 
             for(var p in paramsMeta) {
                 var paramType = paramsMeta[p].type;
@@ -806,9 +788,6 @@ Entry.JsToBlockParser = function(syntax) {
         for(var i = 0; i < args.length; i++) {
             var arg = args[i];
             var value = this[arg.type](arg, type);
-            
-            console.log("block.params[i]", block.params[i]);
-
 
             if(block.params[i].type == "Dropdown") {
                 var paramBlock = value;
@@ -824,8 +803,6 @@ Entry.JsToBlockParser = function(syntax) {
                     var paramBlock = value;
                 } 
 
-                console.log("paramBlock", paramBlock);
-
                 params.push(paramBlock);
             }
             else {
@@ -833,8 +810,6 @@ Entry.JsToBlockParser = function(syntax) {
                 params.push(value);
             }
         }
-
-        console.log("params", params);
 
         return {
             type: type,
@@ -898,7 +873,7 @@ Entry.JsToBlockParser = function(syntax) {
                 }
             }
         }
-        return separatedBlocks;
+        return separatedBlocks; 
     };
 
     p.BasicFunction = function(node, body) {
@@ -909,10 +884,17 @@ Entry.JsToBlockParser = function(syntax) {
     // custom node parser
     p.BasicIteration = function(node, iterCount, body) {
         console.log("BasicIteration node", node);
+        if(iterCount > 10) {
+            throw {
+                message : '반복 숫자값이 10을 넘으면 안됩니다.',
+                node : node.test
+            };
+        }
+
         var blockType = this.syntax.BasicIteration;
         if (!blockType)
             throw {
-                message : 'BasicIteration 지원하지 않는 표현식 입니다.',
+                message : '지원하지 않는 표현식 입니다.',
                 node : node
             };
         return {
@@ -932,7 +914,7 @@ Entry.JsToBlockParser = function(syntax) {
             }
         } else {
             throw {
-                message : 'BasicWhile 지원하지 않는 표현식 입니다.',
+                message : '지원하지 않는 표현식 입니다.',
                 node : node.test
             };
         }
@@ -978,9 +960,6 @@ Entry.JsToBlockParser = function(syntax) {
                 params.push(callExData);
             }
 
-            console.log("type", type, "test", test);
-            console.log("this.syntax", this.syntax);
-
             if (this.syntax.BasicIf[test]) {
                 console.log("target", this.syntax.BasicIf[test]);
                 console.log("consequent", consequent, "alternate", alternate);
@@ -991,19 +970,14 @@ Entry.JsToBlockParser = function(syntax) {
                 if(alternate && alternate.length != 0)
                     stmtAlt = alternate;
 
-                console.log("stmtCons", stmtCons);
-               
-                
                 type = this.syntax.BasicIf[test];
-                console.log("type", type, "params", params);
+    
                 if(type)
                     result.type = type;
                 if(params && params.length != 0)
                     result.params = params;
                
                 result.statements = [stmtCons, stmtAlt];
-
-                console.log("bs result", result);
                 
                 return result;
             } else {
@@ -1020,14 +994,12 @@ Entry.JsToBlockParser = function(syntax) {
                 
                 result.statements = [stmtCons, stmtAlt];
                 
-                console.log("bs result", result);
                 return result;
                 //throw new Error();
             }
         } catch (e) {
             throw {
-                title : "블록 미지원",
-                message : 'BasicIf 지원하지 않는 표현식 입니다.',
+                message : '지원하지 않는 표현식 입니다.',
                 node : node.test
             };
         }

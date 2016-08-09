@@ -12006,7 +12006,7 @@ Entry.JsToBlockParser = function(b) {
       Entry.TextCodingUtil.prototype.updateBlockInfo(e, this._blockInfo);
       if (f) {
         if (void 0 === f.type) {
-          throw {title:"\ube14\ub85d\ubcc0\ud658 \uc624\ub958", message:"\uc9c0\uc6d0\ub418\ub294 \ube14\ub85d\uc774 \uc5c6\uc2b5\ub2c8\ub2e4.", node:e, blockCount:this._blockCount};
+          throw {title:"\ube14\ub85d\ubcc0\ud658 \uc624\ub958", message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ube14\ub85d\uc785\ub2c8\ub2e4.", node:e, blockCount:this._blockCount};
         }
         Entry.TextCodingUtil.prototype.isParamBlock(f) || f && b.push(f);
       }
@@ -12154,13 +12154,10 @@ Entry.JsToBlockParser = function(b) {
       case ">=":
         f = "ai_boolean_distance";
     }
-    console.log("BinaryExpression operator", e);
-    console.log("BinaryExpression type", f);
     if (f) {
       console.log("BinaryExpression type", f);
       b = [];
       e = a.left;
-      console.log("BinaryExpression left", e);
       if ("Literal" == e.type || "Identifier" == e.type) {
         arguments = [];
         arguments.push(e);
@@ -12180,36 +12177,30 @@ Entry.JsToBlockParser = function(b) {
       } else {
         l = this[e.type](e), (l = Entry.TextCodingUtil.prototype.radarVariableConvertor(l)) && b.push(l);
       }
-      console.log("BinaryExpression left params", b);
       if (e = String(a.operator)) {
-        console.log("BinaryExpression operator", e), (l = e = Entry.TextCodingUtil.prototype.jTobBinaryOperatorConvertor(e)) && b.push(l), c.operator = e;
+        (l = e = Entry.TextCodingUtil.prototype.jTobBinaryOperatorConvertor(e)) && b.push(l), c.operator = e;
       }
       e = a.right;
       if ("Literal" == e.type || "Identifier" == e.type) {
         arguments = [];
         arguments.push(e);
         e = Entry.block[f].params;
-        console.log("BinaryExpression paramsMeta", e);
         for (g in e) {
           h = e[g].type, "Indicator" == h ? (h = {raw:null, type:"Literal", value:null}, g < arguments.length && arguments.splice(g, 0, h)) : "Text" == h && (h = {raw:"", type:"Literal", value:""}, g < arguments.length && arguments.splice(g, 0, h));
         }
         for (k in arguments) {
-          l = arguments[k], console.log("BinaryExpression argument", l), l = this[l.type](l), console.log("BinaryExpression param", l), l && null != l && b.push(l);
+          l = arguments[k], (l = this[l.type](l)) && null != l && b.push(l);
         }
       } else {
         (l = this[e.type](e)) && b.push(l);
       }
-      console.log("BinaryExpression right param", l);
       "OBSTACLE" != l && "WALL" != l && "ITEM" != l || b.splice(1, 1);
       c.type = f;
       c.params = b;
     } else {
       return b;
     }
-    console.log("BinaryExpression params", b);
-    b = c;
-    console.log("BinaryExpression result", b);
-    return b;
+    return c;
   };
   b.LogicalExpression = function(a) {
     var b = {}, c = String(a.operator);
@@ -12224,9 +12215,8 @@ Entry.JsToBlockParser = function(b) {
     if ("Literal" == c.type || "Identifier" == c.type) {
       arguments = [];
       arguments.push(c);
-      c = Entry.block[e].params;
-      console.log("LogicalExpression paramsMeta", c);
-      for (var g in c) {
+      var c = Entry.block[e].params, g;
+      for (g in c) {
         var h = c[g].type;
         "Indicator" == h ? (h = {raw:null, type:"Literal", value:null}, g < arguments.length && arguments.splice(g, 0, h)) : "Text" == h && (h = {raw:"", type:"Literal", value:""}, g < arguments.length && arguments.splice(g, 0, h));
       }
@@ -12291,16 +12281,14 @@ Entry.JsToBlockParser = function(b) {
     console.log("callex block", e);
     for (var f = 0;f < a.length;f++) {
       var g = a[f], g = this[g.type](g, b);
-      console.log("block.params[i]", e.params[f]);
       if ("Dropdown" == e.params[f].type) {
         var h = g;
         console.log("Dropdown block", g);
         c.push(h);
       } else {
-        "Block" === e.params[f].type ? (h = "string" == typeof g ? {type:"text", params:[g]} : "number" == typeof g ? {type:"number", params:[g]} : g, console.log("paramBlock", h), c.push(h)) : (console.log("value", g), c.push(g));
+        "Block" === e.params[f].type ? (h = "string" == typeof g ? {type:"text", params:[g]} : "number" == typeof g ? {type:"number", params:[g]} : g, c.push(h)) : (console.log("value", g), c.push(g));
       }
     }
-    console.log("params", c);
     return {type:b, params:c};
   };
   b.NewExpression = function(a) {
@@ -12340,9 +12328,12 @@ Entry.JsToBlockParser = function(b) {
   };
   b.BasicIteration = function(a, b, c) {
     console.log("BasicIteration node", a);
+    if (10 < b) {
+      throw {message:"\ubc18\ubcf5 \uc22b\uc790\uac12\uc774 10\uc744 \ub118\uc73c\uba74 \uc548\ub429\ub2c8\ub2e4.", node:a.test};
+    }
     var e = this.syntax.BasicIteration;
     if (!e) {
-      throw {message:"BasicIteration \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+      throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
     }
     return {params:[b], type:e, statements:[c]};
   };
@@ -12352,7 +12343,7 @@ Entry.JsToBlockParser = function(b) {
     if (this.syntax.BasicWhile[c]) {
       return {type:this.syntax.BasicWhile[c], statements:[b]};
     }
-    throw {message:"BasicWhile \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a.test};
+    throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a.test};
   };
   b.BasicIf = function(a) {
     console.log("BasicIf node", a);
@@ -12388,16 +12379,13 @@ Entry.JsToBlockParser = function(b) {
           }
         }
       }
-      console.log("type", c, "test", h);
-      console.log("this.syntax", this.syntax);
-      this.syntax.BasicIf[h] ? (console.log("target", this.syntax.BasicIf[h]), console.log("consequent", k, "alternate", l), k && 0 != k.length && (e = k), l && 0 != l.length && (f = l), console.log("stmtCons", e), c = this.syntax.BasicIf[h], console.log("type", c, "params", g)) : (k && 0 != k.length && (e = k), l && 0 != l.length && (f = l));
+      this.syntax.BasicIf[h] ? (console.log("target", this.syntax.BasicIf[h]), console.log("consequent", k, "alternate", l), k && 0 != k.length && (e = k), l && 0 != l.length && (f = l), c = this.syntax.BasicIf[h]) : (k && 0 != k.length && (e = k), l && 0 != l.length && (f = l));
       c && (b.type = c);
       g && 0 != g.length && (b.params = g);
       b.statements = [e, f];
-      console.log("bs result", b);
       return b;
     } catch (q) {
-      throw {title:"\ube14\ub85d \ubbf8\uc9c0\uc6d0", message:"BasicIf \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a.test};
+      throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a.test};
     }
   };
 })(Entry.JsToBlockParser.prototype);
@@ -13686,23 +13674,14 @@ Entry.Parser = function(b, a, d, c) {
           console.log("result", c);
         } catch (q) {
           if (this.codeMirror) {
-            if (q instanceof SyntaxError) {
-              c = {from:{line:q.loc.line - 1, ch:q.loc.column - 2}, to:{line:q.loc.line - 1, ch:q.loc.column + 1}}, q.message = "\ubb38\ubc95(Syntax) \uc624\ub958\uc785\ub2c8\ub2e4.", q.type = 1;
-            } else {
-              c = this.getLineNumber(q.node.start, q.node.end);
-              c.message = q.message;
-              c.severity = "error";
-              var l = this.findErrorInfo(q);
-              console.log("errorInfo", l);
-              c.from.line = l.lineNumber;
-              c.from.ch = l.location.start;
-              c.to.line = l.lineNumber;
-              c.to.ch = l.location.end;
-              q.type = 2;
-            }
+            q instanceof SyntaxError ? (c = {from:{line:q.loc.line - 1, ch:q.loc.column - 2}, to:{line:q.loc.line - 1, ch:q.loc.column + 1}}, q.message = "\ubb38\ubc95(Syntax) \uc624\ub958\uc785\ub2c8\ub2e4.", q.type = 1) : (c = this.getLineNumber(q.node.start, q.node.end), c.message = q.message, c.severity = "error", e = this.findErrorInfo(q), console.log("errorInfo", e), c.from.line = e.lineNumber, c.from.ch = e.location.start, c.to.line = e.lineNumber, c.to.ch = e.location.end, q.type = 2);
             this.codeMirror.markText(c.from, c.to, {className:"CodeMirror-lint-mark-error", __annotation:c, clearOnEnter:!0});
             c = q.title ? q.title : "\ubb38\ubc95 \uc624\ub958";
-            2 == q.type ? (console.log("errorInfo.lineNumber", l.lineNumber), l = "line : " + l.lineNumber) : l = "\uc790\ubc14\uc2a4\ud06c\ub9bd\ud2b8 \ucf54\ub4dc\ub97c \ud655\uc778\ud574\uc8fc\uc138\uc694";
+            if (2 == q.type && q.message) {
+              var l = q.message
+            } else {
+              2 != q.type || q.message ? 1 == q.type && (l = "\uc790\ubc14\uc2a4\ud06c\ub9bd\ud2b8 \ubb38\ubc95\uc744 \ud655\uc778\ud574\uc8fc\uc138\uc694.") : l = "\uc790\ubc14\uc2a4\ud06c\ub9bd\ud2b8 \ucf54\ub4dc\ub97c \ud655\uc778\ud574\uc8fc\uc138\uc694.";
+            }
             Entry.toast.alert(c, l);
             throw q;
           }

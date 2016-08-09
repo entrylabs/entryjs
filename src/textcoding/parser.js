@@ -217,12 +217,14 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             var errorTitle = '문법 오류';
                         }
 
-                        if(error.type == 2) {
-                            console.log("errorInfo.lineNumber", errorInfo.lineNumber);
-                            var errorMsg = 'line : ' + (errorInfo.lineNumber);
+                        if(error.type == 2 && error.message) {
+                            var errorMsg = error.message;
                         }
-                        else {
-                            var errorMsg = '자바스크립트 코드를 확인해주세요';
+                        else if(error.type == 2 && !error.message) {
+                            var errorMsg = '자바스크립트 코드를 확인해주세요.';
+                        }
+                        else  if(error.type == 1) {
+                            var errorMsg = '자바스크립트 문법을 확인해주세요.';
                         }
 
                         Entry.toast.alert(errorTitle, errorMsg);
