@@ -13562,7 +13562,7 @@ Entry.Variable.prototype.getMinValue = function() {
 };
 Entry.Variable.prototype.setMinValue = function(b) {
   this.minValue_ = b = b || 0;
-  this.value_ < b && (this.value_ = b);
+  this.value_ < b && this.setValue(b);
   this.updateView();
   this.isMinFloat = Entry.isFloat(this.minValue_);
 };
