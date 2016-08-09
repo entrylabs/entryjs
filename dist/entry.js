@@ -18873,7 +18873,7 @@ Entry.Thread = function(b, a, c) {
     }
     for (var d = 0;d < a.length;d++) {
       var e = a[d];
-      e instanceof Entry.Block || e.isDummy ? (e.setThread(this), this._data.push(e)) : this._data.push(new Entry.Block(e, this));
+      e instanceof Entry.Block || e.isDummy ? (e.setThread(this), this._data.push(e)) : Entry.block[e.type] && this._data.push(new Entry.Block(e, this));
     }
     (d = this._code.view) && this.createView(d.board, b);
   };
