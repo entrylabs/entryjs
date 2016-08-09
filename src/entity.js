@@ -825,6 +825,7 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
     var cacheId = pictureModel.id + this.id;
     var image = Entry.container.getCachedPicture(cacheId);
     if (!image) {
+        this.object.cache(0,0,this.getWidth(),this.getHeight());
         image = new Image();
         if (pictureModel.fileurl) {
             image.src = pictureModel.fileurl;
@@ -851,11 +852,11 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
 /**
  * Apply easel filter
  */
-Entry.EntityObject.prototype.applyFilter = function() {
+Entry.EntityObject.prototype.applyFilter = function(isForce) {
     var effects = this.effect;
     var object = this.object;
 
-    if (isEqualEffects(effects, this.getInitialEffectValue()))
+    if (!isForce && isEqualEffects(effects, this.getInitialEffectValue()))
         return;
 
     (function(e, obj) {
@@ -929,7 +930,6 @@ Entry.EntityObject.prototype.applyFilter = function() {
     })(effects, object);
 
     object.cache(0,0,this.getWidth(),this.getHeight());
-
 
     function isEqualEffects(effectsA, effectsB) {
         for (var key in effectsA) {

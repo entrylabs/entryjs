@@ -1794,6 +1794,11 @@ svg .svgBlockGroup text {
   color: #ccc;
   padding: 3px 20px;
 }
+#entry-contextmenu .divider {
+  padding: 0;
+  height: 1px;
+  background-color: #ccc;
+}
 #entry-contextmenu.workspace-contextmenu {
   font-size: 14px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
@@ -5549,7 +5554,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
   bottom: 24px;
   border-bottom: 1px solid #ccc;
   width: 100% !important;
-  top: 0;
+  top: 0 !important;
 }
 .entryStateManagerWorkspace {
   float: right;

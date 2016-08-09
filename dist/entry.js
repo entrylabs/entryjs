@@ -2821,7 +2821,7 @@ Entry.Hamster = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, outputA:0, outpu
   a.lineTracerModeId = this.lineTracerModeId;
 }, name:"hamster", monitorTemplate:{imgPath:"hw/hamster.png", width:256, height:256, listPorts:{temperature:{name:Lang.Blocks.HAMSTER_sensor_temperature, type:"input", pos:{x:0, y:0}}, accelerationX:{name:Lang.Blocks.HAMSTER_sensor_accelerationX, type:"input", pos:{x:0, y:0}}, accelerationY:{name:Lang.Blocks.HAMSTER_sensor_accelerationY, type:"input", pos:{x:0, y:0}}, accelerationZ:{name:Lang.Blocks.HAMSTER_sensor_accelerationZ, type:"input", pos:{x:0, y:0}}, buzzer:{name:Lang.Hw.buzzer, type:"output", 
 pos:{x:0, y:0}}, note:{name:Lang.Hw.buzzer + "2", type:"output", pos:{x:0, y:0}}, outputA:{name:Lang.Hw.output + "A", type:"output", pos:{x:0, y:0}}, outputB:{name:Lang.Hw.output + "B", type:"output", pos:{x:0, y:0}}}, ports:{leftProximity:{name:Lang.Blocks.HAMSTER_sensor_leftProximity, type:"input", pos:{x:122, y:156}}, rightProximity:{name:Lang.Blocks.HAMSTER_sensor_rightProximity, type:"input", pos:{x:10, y:108}}, leftFloor:{name:Lang.Blocks.HAMSTER_sensor_leftFloor, type:"input", pos:{x:100, 
-y:234}}, rightFloor:{name:Lang.Blocks.HAMSTER_sensor_rightFloor, type:"input", pos:{x:13, y:180}}, lightsensor:{name:Lang.Blocks.HAMSTER_sensor_light, type:"input", pos:{x:56, y:189}}, leftWheel:{name:Lang.Hw.leftWheel, type:"output", pos:{x:209, y:115}}, rightWheel:{name:Lang.Hw.rightWheel, type:"output", pos:{x:98, y:30}}, leftLed:{name:Lang.Hw.left + " " + Lang.Hw.led, type:"output", pos:{x:87, y:210}}, rightLed:{name:Lang.Hw.right + " " + Lang.Hw.led, type:"output", pos:{x:24, y:168}}}, mode:"both"}};
+y:234}}, rightFloor:{name:Lang.Blocks.HAMSTER_sensor_rightFloor, type:"input", pos:{x:13, y:180}}, light:{name:Lang.Blocks.HAMSTER_sensor_light, type:"input", pos:{x:56, y:189}}, leftWheel:{name:Lang.Hw.leftWheel, type:"output", pos:{x:209, y:115}}, rightWheel:{name:Lang.Hw.rightWheel, type:"output", pos:{x:98, y:30}}, leftLed:{name:Lang.Hw.left + " " + Lang.Hw.led, type:"output", pos:{x:87, y:210}}, rightLed:{name:Lang.Hw.right + " " + Lang.Hw.led, type:"output", pos:{x:24, y:168}}}, mode:"both"}};
 Blockly.Blocks.hamster_hand_found = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_hand_found);
@@ -8145,7 +8145,6 @@ Entry.Engine = function() {
   this.isUpdating = !0;
   this.speeds = [1, 15, 30, 45, 60];
   this._mouseMoved = !1;
-  this.queue = [];
   Entry.keyPressed && Entry.keyPressed.attach(this, this.captureKeyEvent);
   Entry.addEventListener("canvasClick", function(b) {
     Entry.engine.fireEvent("mouse_clicked");
@@ -8351,7 +8350,7 @@ Entry.Engine.prototype.stop = function() {
   this.ticker = null;
 };
 Entry.Engine.prototype.update = function() {
-  Entry.engine.isState("run") && (Entry.engine.computeObjects(), Entry.engine.executeQueue(), Entry.hw.update());
+  Entry.engine.isState("run") && (Entry.engine.computeObjects(), Entry.hw.update());
 };
 Entry.Engine.prototype.computeObjects = function() {
   Entry.container.mapObjectOnScene(this.computeFunction);
@@ -8438,6 +8437,7 @@ Entry.Engine.prototype.fireEventOnEntity = function(a, b) {
 Entry.Engine.prototype.raiseEventOnEntity = function(a, b) {
   a === b[0] && a.parent.script.raiseEvent(b[1], a);
 };
+<<<<<<< HEAD
 Entry.Engine.prototype.pushQueue = function(a, b) {
   a === b[0] && this.queue.push({eventName:b[1], entity:a});
 };
@@ -8445,6 +8445,12 @@ Entry.Engine.prototype.captureKeyEvent = function(a) {
   var b = a.keyCode, c = Entry.type;
   a.ctrlKey && "workspace" == c ? 83 == b ? (a.preventDefault(), Entry.dispatchEvent("saveWorkspace")) : 82 == b ? (a.preventDefault(), Entry.engine.run()) : 90 == b && (a.preventDefault(), console.log("engine"), Entry.dispatchEvent(a.shiftKey ? "redo" : "undo")) : Entry.engine.isState("run") && Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["keyPress", b]);
   Entry.engine.isState("stop") && "workspace" === c && 37 <= b && 40 >= b && Entry.stage.moveSprite(a);
+=======
+Entry.Engine.prototype.captureKeyEvent = function(b) {
+  var a = b.keyCode, c = Entry.type;
+  b.ctrlKey && "workspace" == c ? 83 == a ? (b.preventDefault(), Entry.dispatchEvent("saveWorkspace")) : 82 == a ? (b.preventDefault(), Entry.engine.run()) : 90 == a && (b.preventDefault(), console.log("engine"), Entry.dispatchEvent(b.shiftKey ? "redo" : "undo")) : Entry.engine.isState("run") && Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["keyPress", a]);
+  Entry.engine.isState("stop") && "workspace" === c && 37 <= a && 40 >= a && Entry.stage.moveSprite(b);
+>>>>>>> entrylabs/master
 };
 Entry.Engine.prototype.raiseKeyEvent = function(a, b) {
   return a.parent.script.raiseEvent(b[0], a, String(b[1]));
@@ -8514,6 +8520,7 @@ Entry.Engine.prototype.updateProjectTimer = function(a) {
     "undefined" == typeof a ? c.isPaused || b.isState("pause") || c.setValue((d - c.start - c.pausedTime) / 1E3) : (c.setValue(a), c.pausedTime = 0, c.start = d);
   }
 };
+<<<<<<< HEAD
 Entry.Engine.prototype.executeQueue = function() {
   this.queue.forEach(function(a) {
     a.entity.parent.script.raiseEvent(a.eventName, a.entity);
@@ -8523,6 +8530,11 @@ Entry.Engine.prototype.executeQueue = function() {
 Entry.EntityObject = function(a) {
   this.parent = a;
   this.type = a.objectType;
+=======
+Entry.EntityObject = function(b) {
+  this.parent = b;
+  this.type = b.objectType;
+>>>>>>> entrylabs/master
   this.flip = !1;
   this.collision = Entry.Utils.COLLISION.NONE;
   this.id = Entry.generateHash();
@@ -8865,8 +8877,13 @@ Entry.EntityObject.prototype.setImage = function(a) {
   this.setScaleY(this.scaleY);
   this.setRegX(this.width / 2 + d);
   this.setRegY(this.height / 2 + e);
+<<<<<<< HEAD
   var f = a.id + this.id, g = Entry.container.getCachedPicture(f);
   g ? (Entry.image = g, this.object.image = g, this.object.cache(0, 0, this.getWidth(), this.getHeight())) : (g = new Image, a.fileurl ? g.src = a.fileurl : (a = a.filename, g.src = Entry.defaultPath + "/uploads/" + a.substring(0, 2) + "/" + a.substring(2, 4) + "/image/" + a + ".png"), g.onload = function(a) {
+=======
+  var f = b.id + this.id, g = Entry.container.getCachedPicture(f);
+  g ? (Entry.image = g, this.object.image = g, this.object.cache(0, 0, this.getWidth(), this.getHeight())) : (this.object.cache(0, 0, this.getWidth(), this.getHeight()), g = new Image, b.fileurl ? g.src = b.fileurl : (b = b.filename, g.src = Entry.defaultPath + "/uploads/" + b.substring(0, 2) + "/" + b.substring(2, 4) + "/image/" + b + ".png"), g.onload = function(b) {
+>>>>>>> entrylabs/master
     Entry.container.cachePicture(f, g);
     Entry.image = g;
     b.object.image = g;
@@ -8875,15 +8892,23 @@ Entry.EntityObject.prototype.setImage = function(a) {
   });
   Entry.dispatchEvent("updateObject");
 };
+<<<<<<< HEAD
 Entry.EntityObject.prototype.applyFilter = function() {
   var a = this.effect, b = this.object;
   (function(b, a) {
     for (var e in b) {
       if (b[e] !== a[e]) {
+=======
+Entry.EntityObject.prototype.applyFilter = function(b) {
+  function a(a, b) {
+    for (var c in a) {
+      if (a[c] !== b[c]) {
+>>>>>>> entrylabs/master
         return !1;
       }
     }
     return !0;
+<<<<<<< HEAD
   })(a, this.getInitialEffectValue()) || (function(b, a) {
     var e = [], f = Entry.adjustValueWithMaxMin;
     b.brightness = b.brightness;
@@ -8905,6 +8930,33 @@ Entry.EntityObject.prototype.applyFilter = function() {
     a.alpha = b.alpha = f(b.alpha, 0, 1);
     a.filters = e;
   }(a, b), b.cache(0, 0, this.getWidth(), this.getHeight()), Entry.requestUpdate = !0);
+=======
+  }
+  var c = this.effect, d = this.object;
+  if (b || !a(c, this.getInitialEffectValue())) {
+    (function(a, b) {
+      var c = [], d = Entry.adjustValueWithMaxMin;
+      a.brightness = a.brightness;
+      var k = new createjs.ColorMatrix;
+      k.adjustColor(d(a.brightness, -100, 100), 0, 0, 0);
+      k = new createjs.ColorMatrixFilter(k);
+      c.push(k);
+      a.hue = a.hue.mod(360);
+      k = new createjs.ColorMatrix;
+      k.adjustColor(0, 0, 0, a.hue);
+      k = new createjs.ColorMatrixFilter(k);
+      c.push(k);
+      var k = [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1], l = 10.8 * a.hsv * Math.PI / 180, n = Math.cos(l), l = Math.sin(l), m = Math.abs(a.hsv / 100);
+      1 < m && (m -= Math.floor(m));
+      0 < m && .33 >= m ? k = [1, 0, 0, 0, 0, 0, n, l, 0, 0, 0, -1 * l, n, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1] : .66 >= m ? k = [n, 0, l, 0, 0, 0, 1, 0, 0, 0, l, 0, n, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1] : .99 >= m && (k = [n, l, 0, 0, 0, -1 * l, n, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1]);
+      k = (new createjs.ColorMatrix).concat(k);
+      k = new createjs.ColorMatrixFilter(k);
+      c.push(k);
+      b.alpha = a.alpha = d(a.alpha, 0, 1);
+      b.filters = c;
+    })(c, d), d.cache(0, 0, this.getWidth(), this.getHeight()), Entry.requestUpdate = !0;
+  }
+>>>>>>> entrylabs/master
 };
 Entry.EntityObject.prototype.resetFilter = function() {
   "sprite" == this.parent.objectType && (this.object.filters = [], this.setInitialEffectValue(), this.object.alpha = this.effect.alpha, this.object.cache(0, 0, this.getWidth(), this.getHeight()), Entry.requestUpdate = !0);
@@ -9309,6 +9361,7 @@ Entry.HWMonitor = function(a) {
   this.scale = .5;
   this._listPortViews = {};
 };
+<<<<<<< HEAD
 (function(a) {
   a.initView = function() {
     this.svgDom = Entry.Dom($('<svg id="hwMonitor" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'));
@@ -9330,6 +9383,44 @@ Entry.HWMonitor = function(a) {
       var e = this.generatePortView(b[d], "_svgGroup");
       this._portViews[d] = e;
       a.push(e);
+=======
+Entry.EntryObject = function(b) {
+  var a = this;
+  if (b) {
+    this.id = b.id;
+    this.name = b.name || b.sprite.name;
+    this.text = b.text || this.name;
+    this.objectType = b.objectType;
+    this.objectType || (this.objectType = "sprite");
+    this.script = new Entry.Code(b.script ? b.script : [], this);
+    this.pictures = b.sprite.pictures;
+    this.sounds = [];
+    this.sounds = b.sprite.sounds;
+    for (var c = 0;c < this.sounds.length;c++) {
+      this.sounds[c].id || (this.sounds[c].id = Entry.generateHash()), Entry.initSound(this.sounds[c]);
+    }
+    this.lock = b.lock ? b.lock : !1;
+    this.isEditing = !1;
+    "sprite" == this.objectType && (this.selectedPicture = b.selectedPictureId ? this.getPicture(b.selectedPictureId) : this.pictures[0]);
+    this.scene = Entry.scene.getSceneById(b.scene) || Entry.scene.selectedScene;
+    this.setRotateMethod(b.rotateMethod);
+    this.entity = new Entry.EntityObject(this);
+    this.entity.injectModel(this.selectedPicture ? this.selectedPicture : null, b.entity ? b.entity : this.initEntity(b));
+    this.clonedEntities = [];
+    Entry.stage.loadObject(this);
+    for (c in this.pictures) {
+      var d = this.pictures[c];
+      d.objectId = this.id;
+      d.id || (d.id = Entry.generateHash());
+      var e = new Image;
+      d.fileurl ? e.src = d.fileurl : d.fileurl ? e.src = d.fileurl : (b = d.filename, e.src = Entry.defaultPath + "/uploads/" + b.substring(0, 2) + "/" + b.substring(2, 4) + "/image/" + b + ".png");
+      Entry.Loader.addQueue();
+      e.onload = function(b) {
+        Entry.container.cachePicture(d.id + a.entity.id, e);
+        Entry.Loader.removeQueue();
+        Entry.requestUpdate = !0;
+      };
+>>>>>>> entrylabs/master
     }
     a.sort(function(b, a) {
       return b.box.x - a.box.x;
@@ -9652,9 +9743,15 @@ p.removePortReadable = function(a) {
 p.update = function() {
   this.socket && 1 == this.socket.readyState && this.socket.send(JSON.stringify(this.sendQueue));
 };
+<<<<<<< HEAD
 p.updatePortData = function(a) {
   this.portData = a;
   this.hwMonitor && "hw" == Entry.propertyPanel.selected && this.hwMonitor.update();
+=======
+Entry.EntryObject.prototype.addCloneEntity = function(b, a, c) {
+  this.clonedEntities.length > Entry.maxCloneLimit || (b = new Entry.EntityObject(this), a ? (b.injectModel(a.picture ? a.picture : null, a.toJSON()), b.snapshot_ = a.snapshot_, a.effect && (b.effect = Entry.cloneSimpleObject(a.effect), b.applyFilter()), a.brush && Entry.setCloneBrush(b, a.brush)) : (b.injectModel(this.entity.picture ? this.entity.picture : null, this.entity.toJSON(b)), b.snapshot_ = this.entity.snapshot_, this.entity.effect && (b.effect = Entry.cloneSimpleObject(this.entity.effect), 
+  b.applyFilter()), this.entity.brush && Entry.setCloneBrush(b, this.entity.brush)), Entry.engine.raiseEventOnEntity(b, [b, "when_clone_start"]), b.isClone = !0, b.isStarted = !0, this.addCloneVariables(this, b, a ? a.variables : null, a ? a.lists : null), this.clonedEntities.push(b), Entry.stage.loadEntity(b));
+>>>>>>> entrylabs/master
 };
 p.closeConnection = function() {
   this.socket && this.socket.close();
@@ -11212,6 +11309,7 @@ Entry.Painter.prototype.fill = function() {
     this.reloadContext();
   }
 };
+<<<<<<< HEAD
 Entry.Painter.prototype.reloadContext = function() {
   delete this.selectedObject;
   this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -11235,6 +11333,31 @@ Entry.Painter.prototype.move_pen = function() {
   this.oldMidPt.y = a.y;
   this.file.modified = !0;
   this.stage.update();
+=======
+Entry.StampEntity = function(b, a) {
+  this.parent = b;
+  this.type = b.objectType;
+  this.isStamp = this.isClone = !0;
+  this.width = a.getWidth();
+  this.height = a.getHeight();
+  "sprite" == this.type && (this.object = a.object.clone(!0), this.object.filters = null, a.effect && (this.effect = Entry.cloneSimpleObject(a.effect), this.applyFilter()));
+  this.object.entity = this;
+};
+(function(b, a) {
+  b.applyFilter = a.applyFilter;
+  b.removeClone = a.removeClone;
+  b.getWidth = a.getWidth;
+  b.getHeight = a.getHeight;
+  b.getInitialEffectValue = a.getInitialEffectValue;
+})(Entry.StampEntity.prototype, Entry.EntityObject.prototype);
+Entry.Toast = function() {
+  this.toasts_ = [];
+  var b = document.getElementById("entryToastContainer");
+  b && document.body.removeChild(b);
+  this.body_ = Entry.createElement("div", "entryToastContainer");
+  this.body_.addClass("entryToastContainer");
+  document.body.appendChild(this.body_);
+>>>>>>> entrylabs/master
 };
 Entry.Painter.prototype.move_line = function() {
   this.brush.graphics.clear().beginStroke(this.stroke.lineColor).setStrokeStyle(this.stroke.thickness, "round").moveTo(this.oldPt.x, this.oldPt.y).lineTo(this.stage.mouseX, this.stage.mouseY);
@@ -11433,6 +11556,262 @@ Entry.Painter.prototype.initDashedLine = function() {
     this.dashedLineTo(a, d - f, a, b + f, e);
     return this;
   };
+<<<<<<< HEAD
+=======
+  b.setColour = function(a) {
+    this.color = a;
+  };
+  b.setInputsInline = function() {
+  };
+  b.setOutput = function(a, b) {
+    a && (this.output = b);
+  };
+  b.setPreviousStatement = function(a) {
+    this.isPrev = a;
+  };
+  b.setNextStatement = function(a) {
+    this.isNext = a;
+  };
+  b.setEditable = function(a) {
+  };
+  b.getFieldCount = function() {
+    this.fieldCount++;
+    return "%" + this.fieldCount;
+  };
+  b._addToParamsKeyMap = function(a) {
+    a = a ? a : "dummy_" + Entry.Utils.generateId();
+    var b = this.paramsKeyMap;
+    b[a] = Object.keys(b).length;
+  };
+  b._addToStatementsKeyMap = function(a) {
+    a = a ? a : "dummy_" + Entry.Utils.generateId();
+    var b = this.statementsKeyMap;
+    b[a] = Object.keys(b).length;
+  };
+})(Entry.BlockMockup.prototype);
+Entry.ContextMenu = {};
+(function(b) {
+  b.visible = !1;
+  b.createDom = function() {
+    this.dom = Entry.Dom("ul", {id:"entry-contextmenu", parent:$("body")});
+    this.dom.bind("mousedown touchstart", function(a) {
+      a.stopPropagation();
+    });
+    Entry.Utils.disableContextmenu(this.dom);
+    Entry.documentMousedown.attach(this, function() {
+      this.hide();
+    });
+  };
+  b.show = function(a, b, d) {
+    this.dom || this.createDom();
+    if (0 !== a.length) {
+      var e = this;
+      void 0 !== b && (this._className = b, this.dom.addClass(b));
+      var f = this.dom;
+      f.empty();
+      for (var g = 0, h = a.length;g < h;g++) {
+        var k = a[g], l = k.text, n = !1 !== k.enable, m = Entry.Dom("li", {parent:f});
+        if (k.divider) {
+          b = "divider";
+        } else {
+          b = n ? "menuAble" : "menuDisable";
+          var q = Entry.Dom("span", {parent:m});
+          q.text(l);
+          n && k.callback && function(a, b) {
+            a.mousedown(function(a) {
+              a.preventDefault();
+              e.hide();
+              b(a);
+            });
+          }(q, k.callback);
+        }
+        m.addClass(b);
+      }
+      f.removeClass("entryRemove");
+      this.visible = !0;
+      this.position(d || Entry.mouseCoordinate);
+    }
+  };
+  b.position = function(a) {
+    var b = this.dom;
+    b.css({left:0, top:0});
+    var d = b.width(), e = b.height(), f = $(window), g = f.width(), f = f.height();
+    a.x + d > g && (a.x -= d + 3);
+    a.y + e > f && (a.y -= e);
+    b.css({left:a.x, top:a.y});
+  };
+  b.hide = function() {
+    this.visible = !1;
+    this.dom.empty();
+    this.dom.addClass("entryRemove");
+    this._className && (this.dom.removeClass(this._className), delete this._className);
+  };
+})(Entry.ContextMenu);
+Entry.Loader = {queueCount:0, totalCount:0};
+Entry.Loader.addQueue = function(b) {
+  this.queueCount || Entry.dispatchEvent("loadStart");
+  this.queueCount++;
+  this.totalCount++;
+};
+Entry.Loader.removeQueue = function(b) {
+  this.queueCount--;
+  this.queueCount || (Entry.dispatchEvent("loadComplete"), this.totalCount = 0);
+};
+Entry.Loader.getLoadedPercent = function() {
+  return 0 === this.totalCount ? 1 : this.queueCount / this.totalCount;
+};
+Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BLOCK_RENDER_MODEL:9, BOX_MODEL:10, THREAD_MODEL:11, DRAG_INSTANCE:12, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1, BREAK:2, PASS:3};
+Entry.Utils = {};
+Entry.overridePrototype = function() {
+  Number.prototype.mod = function(b) {
+    return (this % b + b) % b;
+  };
+};
+Entry.Utils.generateId = function() {
+  return ("0000" + (Math.random() * Math.pow(36, 4) << 0).toString(36)).substr(-4);
+};
+Entry.Utils.intersectArray = function(b, a) {
+  for (var c = [], d = 0;d < b.length;d++) {
+    for (var e = 0;e < a.length;e++) {
+      if (b[d] == a[e]) {
+        c.push(b[d]);
+        break;
+      }
+    }
+  }
+  return c;
+};
+Entry.Utils.isPointInMatrix = function(b, a, c) {
+  c = void 0 === c ? 0 : c;
+  var d = b.offsetX ? b.x + b.offsetX : b.x, e = b.offsetY ? b.y + b.offsety : b.y;
+  return d - c <= a.x && d + b.width + c >= a.x && e - c <= a.y && e + b.height + c >= a.y;
+};
+Entry.Utils.colorDarken = function(b, a) {
+  function c(a) {
+    2 != a.length && (a = "0" + a);
+    return a;
+  }
+  var d, e, f;
+  7 === b.length ? (d = parseInt(b.substr(1, 2), 16), e = parseInt(b.substr(3, 2), 16), f = parseInt(b.substr(5, 2), 16)) : (d = parseInt(b.substr(1, 2), 16), e = parseInt(b.substr(2, 2), 16), f = parseInt(b.substr(3, 2), 16));
+  a = void 0 === a ? .7 : a;
+  d = c(Math.floor(d * a).toString(16));
+  e = c(Math.floor(e * a).toString(16));
+  f = c(Math.floor(f * a).toString(16));
+  return "#" + d + e + f;
+};
+Entry.Utils.colorLighten = function(b, a) {
+  a = 0 === a ? 0 : a || 20;
+  var c = Entry.Utils.hexToHsl(b);
+  c.l += a / 100;
+  c.l = Math.min(1, Math.max(0, c.l));
+  return Entry.Utils.hslToHex(c);
+};
+Entry.Utils.bound01 = function(b, a) {
+  var c = b;
+  "string" == typeof c && -1 != c.indexOf(".") && 1 === parseFloat(c) && (b = "100%");
+  c = "string" === typeof b && -1 != b.indexOf("%");
+  b = Math.min(a, Math.max(0, parseFloat(b)));
+  c && (b = parseInt(b * a, 10) / 100);
+  return 1E-6 > Math.abs(b - a) ? 1 : b % a / parseFloat(a);
+};
+Entry.Utils.hexToHsl = function(b) {
+  var a, c;
+  7 === b.length ? (a = parseInt(b.substr(1, 2), 16), c = parseInt(b.substr(3, 2), 16), b = parseInt(b.substr(5, 2), 16)) : (a = parseInt(b.substr(1, 2), 16), c = parseInt(b.substr(2, 2), 16), b = parseInt(b.substr(3, 2), 16));
+  a = Entry.Utils.bound01(a, 255);
+  c = Entry.Utils.bound01(c, 255);
+  b = Entry.Utils.bound01(b, 255);
+  var d = Math.max(a, c, b), e = Math.min(a, c, b), f, g = (d + e) / 2;
+  if (d == e) {
+    f = e = 0;
+  } else {
+    var h = d - e, e = .5 < g ? h / (2 - d - e) : h / (d + e);
+    switch(d) {
+      case a:
+        f = (c - b) / h + (c < b ? 6 : 0);
+        break;
+      case c:
+        f = (b - a) / h + 2;
+        break;
+      case b:
+        f = (a - c) / h + 4;
+    }
+    f /= 6;
+  }
+  return {h:360 * f, s:e, l:g};
+};
+Entry.Utils.hslToHex = function(b) {
+  function a(a, b, c) {
+    0 > c && (c += 1);
+    1 < c && --c;
+    return c < 1 / 6 ? a + 6 * (b - a) * c : .5 > c ? b : c < 2 / 3 ? a + (b - a) * (2 / 3 - c) * 6 : a;
+  }
+  function c(a) {
+    return 1 == a.length ? "0" + a : "" + a;
+  }
+  var d, e;
+  e = Entry.Utils.bound01(b.h, 360);
+  d = Entry.Utils.bound01(b.s, 1);
+  b = Entry.Utils.bound01(b.l, 1);
+  if (0 === d) {
+    d = b = e = b;
+  } else {
+    var f = .5 > b ? b * (1 + d) : b + d - b * d, g = 2 * b - f;
+    d = a(g, f, e + 1 / 3);
+    b = a(g, f, e);
+    e = a(g, f, e - 1 / 3);
+  }
+  b *= 255;
+  e *= 255;
+  return "#" + [c(Math.round(255 * d).toString(16)), c(Math.round(b).toString(16)), c(Math.round(e).toString(16))].join("");
+};
+Entry.Utils.bindGlobalEvent = function(b) {
+  var a = $(document);
+  void 0 === b && (b = "resize mousedown mousemove keydown keyup dispose".split(" "));
+  -1 < b.indexOf("resize") && (Entry.windowReszied && ($(window).off("resize"), Entry.windowReszied.clear()), Entry.windowResized = new Entry.Event(window), $(window).on("resize", function(a) {
+    Entry.windowResized.notify(a);
+  }));
+  -1 < b.indexOf("mousedown") && (Entry.documentMousedown && (a.off("mousedown"), Entry.documentMousedown.clear()), Entry.documentMousedown = new Entry.Event(window), a.on("mousedown", function(a) {
+    Entry.documentMousedown.notify(a);
+  }));
+  -1 < b.indexOf("mousemove") && (Entry.documentMousemove && (a.off("touchmove mousemove"), Entry.documentMousemove.clear()), Entry.mouseCoordinate = {}, Entry.documentMousemove = new Entry.Event(window), a.on("touchmove mousemove", function(a) {
+    a.originalEvent && a.originalEvent.touches && (a = a.originalEvent.touches[0]);
+    Entry.documentMousemove.notify(a);
+    Entry.mouseCoordinate.x = a.clientX;
+    Entry.mouseCoordinate.y = a.clientY;
+  }));
+  -1 < b.indexOf("keydown") && (Entry.keyPressed && (a.off("keydown"), Entry.keyPressed.clear()), Entry.pressedKeys = [], Entry.keyPressed = new Entry.Event(window), a.on("keydown", function(a) {
+    var b = a.keyCode;
+    0 > Entry.pressedKeys.indexOf(b) && Entry.pressedKeys.push(b);
+    Entry.keyPressed.notify(a);
+  }));
+  -1 < b.indexOf("keyup") && (Entry.keyUpped && (a.off("keyup"), Entry.keyUpped.clear()), Entry.keyUpped = new Entry.Event(window), a.on("keyup", function(a) {
+    var b = Entry.pressedKeys.indexOf(a.keyCode);
+    -1 < b && Entry.pressedKeys.splice(b, 1);
+    Entry.keyUpped.notify(a);
+  }));
+  -1 < b.indexOf("dispose") && (Entry.disposeEvent && Entry.disposeEvent.clear(), Entry.disposeEvent = new Entry.Event(window), Entry.documentMousedown && Entry.documentMousedown.attach(this, function(a) {
+    Entry.disposeEvent.notify(a);
+  }));
+};
+Entry.Utils.makeActivityReporter = function() {
+  Entry.activityReporter = new Entry.ActivityReporter;
+  Entry.commander && Entry.commander.addReporter(Entry.activityReporter);
+  return Entry.activityReporter;
+};
+Entry.Utils.initEntryEvent_ = function() {
+  Entry.events_ || (Entry.events_ = []);
+};
+Entry.sampleColours = [];
+Entry.assert = function(b, a) {
+  if (!b) {
+    throw Error(a || "Assert failed");
+  }
+};
+Entry.parseTexttoXML = function(b) {
+  var a;
+  window.ActiveXObject ? (a = new ActiveXObject("Microsoft.XMLDOM"), a.async = "false", a.loadXML(b)) : a = (new DOMParser).parseFromString(b, "text/xml");
+  return a;
+>>>>>>> entrylabs/master
 };
 Entry.Painter.prototype.generateView = function(a) {
   var b = this;
@@ -11479,6 +11858,7 @@ Entry.Painter.prototype.generateView = function(a) {
     e.bindOnClick(function() {
       b.selectedObject && (b.selectedObject.scaleY *= -1, b.selectedObject.text ? b.selectTextObject(b.selectedObject) : b.selectObject(b.selectedObject), b.updateImageHandle(), b.stage.update());
     });
+<<<<<<< HEAD
     e.addClass("entryPlaygroundPainterFlipY");
     this.flipObject.appendChild(e);
     Entry.addEventListener("windowResized", function(b) {
@@ -11490,6 +11870,205 @@ Entry.Painter.prototype.generateView = function(a) {
       f.style.height = d + "px";
       g.style.top = d + 30 + "px";
       g.style.height = b - d + "px";
+=======
+  }
+};
+Entry.Utils.isRightButton = function(b) {
+  return 2 == b.button || b.ctrlKey;
+};
+Entry.Utils.isTouchEvent = function(b) {
+  return "mousedown" !== b.type.toLowerCase();
+};
+Entry.Utils.inherit = function(b, a) {
+  function c() {
+  }
+  c.prototype = b.prototype;
+  a.prototype = new c;
+  return a;
+};
+Entry.bindAnimationCallbackOnce = function(b, a) {
+  b.one("webkitAnimationEnd animationendo animationend", a);
+};
+Entry.Utils.isInInput = function(b) {
+  return "textarea" == b.target.type || "text" == b.target.type;
+};
+Entry.Utils.isFunction = function(b) {
+  return "function" === typeof b;
+};
+Entry.Utils.addFilters = function(b, a) {
+  var c = b.elem("defs"), d = c.elem("filter", {id:"entryTrashcanFilter_" + a});
+  d.elem("feGaussianBlur", {"in":"SourceAlpha", stdDeviation:2, result:"blur"});
+  d.elem("feOffset", {"in":"blur", dx:1, dy:1, result:"offsetBlur"});
+  d = d.elem("feMerge");
+  d.elem("feMergeNode", {"in":"offsetBlur"});
+  d.elem("feMergeNode", {"in":"SourceGraphic"}, d);
+  d = c.elem("filter", {id:"entryBlockShadowFilter_" + a, height:"200%"});
+  d.elem("feOffset", {result:"offOut", in:"SourceGraphic", dx:0, dy:1});
+  d.elem("feColorMatrix", {result:"matrixOut", in:"offOut", type:"matrix", values:"0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0"});
+  d.elem("feBlend", {in:"SourceGraphic", in1:"offOut", mode:"normal"});
+  c = c.elem("filter", {id:"entryBlockHighlightFilter_" + a});
+  c.elem("feOffset", {result:"offOut", in:"SourceGraphic", dx:0, dy:0});
+  c.elem("feColorMatrix", {result:"matrixOut", in:"offOut", type:"matrix", values:"1.3 0 0 0 0 0 1.3 0 0 0 0 0 1.3 0 0 0 0 0 1 0"});
+};
+Entry.Utils.addBlockPattern = function(b, a) {
+  for (var c = b.elem("pattern", {id:"blockHoverPattern_" + a, class:"blockHoverPattern", patternUnits:"userSpaceOnUse", patternTransform:"translate(12, 0)", x:0, y:0, width:125, height:33, style:"display: none"}), d = c.elem("g"), e = d.elem("rect", {x:0, y:0, width:125, height:33}), f = Entry.mediaFilePath + "block_pattern_(order).png", g = 1;5 > g;g++) {
+    d.elem("image", {class:"pattern" + g, href:f.replace("(order)", g), x:0, y:0, width:125, height:33});
+  }
+  return {pattern:c, rect:e};
+};
+Entry.Utils.COLLISION = {NONE:0, UP:1, RIGHT:2, LEFT:3, DOWN:4};
+Entry.Utils.createMouseEvent = function(b, a) {
+  var c = document.createEvent("MouseEvent");
+  c.initMouseEvent(b, !0, !0, window, 0, 0, 0, a.clientX, a.clientY, !1, !1, !1, !1, 0, null);
+  return c;
+};
+Entry.Utils.xmlToJsonData = function(b) {
+  b = $.parseXML(b);
+  var a = [];
+  b = b.childNodes[0].childNodes;
+  for (var c in b) {
+    var d = b[c];
+    if (d.tagName) {
+      var e = {category:d.getAttribute("id"), blocks:[]}, d = d.childNodes;
+      for (c in d) {
+        var f = d[c];
+        f.tagName && (f = f.getAttribute("type")) && e.blocks.push(f);
+      }
+      a.push(e);
+    }
+  }
+  return a;
+};
+Entry.Utils.stopProjectWithToast = function(b, a, c) {
+  var d = b.block;
+  a = a || "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec \ubc1c\uc0dd";
+  Entry.toast && !c && Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.check_runtime_error, !0);
+  Entry.engine && Entry.engine.toggleStop();
+  "workspace" === Entry.type && (b.block && "funcBlock" in b.block ? d = b.block.funcBlock : b.funcExecutor && (d = b.funcExecutor.scope.block, b = b.type.replace("func_", ""), Entry.Func.edit(Entry.variableContainer.functions_[b])), d && (Entry.container.selectObject(d.getCode().object.id, !0), d.view.getBoard().activateBlock(d)));
+  throw Error(a);
+};
+Entry.Utils.AsyncError = function(b) {
+  this.name = "AsyncError";
+  this.message = b || "\ube44\ub3d9\uae30 \ud638\ucd9c \ub300\uae30";
+};
+Entry.Utils.AsyncError.prototype = Error();
+Entry.Utils.AsyncError.prototype.constructor = Entry.Utils.AsyncError;
+Entry.Utils.isChrome = function() {
+  return /chrom(e|ium)/.test(navigator.userAgent.toLowerCase());
+};
+Entry.Utils.waitForWebfonts = function(b, a) {
+  for (var c = 0, d = 0, e = b.length;d < e;++d) {
+    (function(d) {
+      function e() {
+        h && h.offsetWidth != k && (++c, h.parentNode.removeChild(h), h = null);
+        if (c >= b.length && (l && clearInterval(l), c == b.length)) {
+          return a(), !0;
+        }
+      }
+      var h = document.createElement("span");
+      h.innerHTML = "giItT1WQy@!-/#";
+      h.style.position = "absolute";
+      h.style.left = "-10000px";
+      h.style.top = "-10000px";
+      h.style.fontSize = "300px";
+      h.style.fontFamily = "sans-serif";
+      h.style.fontVariant = "normal";
+      h.style.fontStyle = "normal";
+      h.style.fontWeight = "normal";
+      h.style.letterSpacing = "0";
+      document.body.appendChild(h);
+      var k = h.offsetWidth;
+      h.style.fontFamily = d;
+      var l;
+      e() || (l = setInterval(e, 50));
+    })(b[d]);
+  }
+};
+window.requestAnimFrame = function() {
+  return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function(b) {
+    window.setTimeout(b, 1E3 / 60);
+  };
+}();
+Entry.isMobile = function() {
+  if (Entry.device) {
+    return "tablet" === Entry.device;
+  }
+  var b = window.platform;
+  if (b && b.type && ("tablet" === b.type || "mobile" === b.type)) {
+    return Entry.device = "tablet", !0;
+  }
+  Entry.device = "desktop";
+  return !1;
+};
+Entry.Utils.convertMouseEvent = function(b) {
+  return b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
+};
+Entry.Utils.convertIntToHex = function(b) {
+  return b.toString(16).toUpperCase();
+};
+Entry.Model = function(b, a) {
+  var c = Entry.Model;
+  c.generateSchema(b);
+  c.generateSetter(b);
+  c.generateObserve(b);
+  (void 0 === a || a) && Object.seal(b);
+  return b;
+};
+(function(b) {
+  b.generateSchema = function(a) {
+    var b = a.schema;
+    if (void 0 !== b) {
+      b = JSON.parse(JSON.stringify(b));
+      a.data = {};
+      for (var d in b) {
+        (function(d) {
+          a.data[d] = b[d];
+          Object.defineProperty(a, d, {get:function() {
+            return a.data[d];
+          }});
+        })(d);
+      }
+      a._toJSON = this._toJSON;
+    }
+  };
+  b.generateSetter = function(a) {
+    a.set = this.set;
+  };
+  b.set = function(a, b) {
+    var d = {}, e;
+    for (e in this.data) {
+      void 0 !== a[e] && (a[e] === this.data[e] ? delete a[e] : (d[e] = this.data[e], this.data[e] = a[e] instanceof Array ? a[e].concat() : a[e]));
+    }
+    b || this.notify(Object.keys(a), d);
+  };
+  b.generateObserve = function(a) {
+    a.observers = [];
+    a.observe = this.observe;
+    a.unobserve = this.unobserve;
+    a.notify = this.notify;
+  };
+  b.observe = function(a, b, d, e) {
+    d = new Entry.Observer(this.observers, a, b, d);
+    if (!1 !== e) {
+      a[b]([]);
+    }
+    return d;
+  };
+  b.unobserve = function(a) {
+    a.destroy();
+  };
+  b.notify = function(a, b) {
+    "string" === typeof a && (a = [a]);
+    var d = this;
+    d.observers.map(function(e) {
+      var f = a;
+      void 0 !== e.attrs && (f = Entry.Utils.intersectArray(e.attrs, a));
+      if (f.length) {
+        e.object[e.funcName](f.map(function(a) {
+          return {name:a, object:d, oldValue:b[a]};
+        }));
+      }
+>>>>>>> entrylabs/master
     });
     var h = Entry.createElement("nav", "entryPainterTopMenu");
     h.addClass("entryPlaygroundPainterTopMenu");
@@ -11527,6 +12106,7 @@ Entry.Painter.prototype.generateView = function(a) {
       b.file.mode = "new";
       b.file_save(!1);
     });
+<<<<<<< HEAD
     k.addClass("entryPlaygroundPainterTopMenuFileSaveAs");
     k.innerHTML = Lang.Workspace.painter_file_saveas;
     h.appendChild(k);
@@ -11692,6 +12272,352 @@ Entry.Painter.prototype.generateView = function(a) {
       }
       b.handle.width = this.value;
       b.updateImageHandle();
+=======
+    this.resizeList();
+  };
+  b.generatePortView = function(a, b) {
+    var d = this[b].elem("g");
+    d.addClass("hwComponent");
+    var e = null, e = this.pathGroup.elem("path").attr({d:"m0,0", fill:"none", stroke:"input" === a.type ? "#00979d" : "#A751E3", "stroke-width":3}), f = d.elem("rect").attr({x:0, y:0, width:150, height:22, rx:4, ry:4, fill:"#fff", stroke:"#a0a1a1"}), g = d.elem("text").attr({x:4, y:12, fill:"#000", "class":"hwComponentName", "alignment-baseline":"central"});
+    g.textContent = a.name;
+    g = g.getComputedTextLength();
+    d.elem("rect").attr({x:g + 8, y:2, width:30, height:18, rx:9, ry:9, fill:"input" === a.type ? "#00979d" : "#A751E3"});
+    var h = d.elem("text").attr({x:g + 13, y:12, fill:"#fff", "class":"hwComponentValue", "alignment-baseline":"central"});
+    h.textContent = 0;
+    g += 40;
+    f.attr({width:g});
+    return {group:d, value:h, type:a.type, path:e, box:{x:a.pos.x - this._template.width / 2, y:a.pos.y - this._template.height / 2, width:g}, width:g};
+  };
+  b.getView = function() {
+    return this.svgDom;
+  };
+  b.update = function() {
+    var a = Entry.hw.portData, b = Entry.hw.sendQueue, d = this._hwModule.monitorTemplate.mode, e = this._hwModule.monitorTemplate.keys || [], f = [];
+    if ("list" == d) {
+      f = this._listPortViews;
+    } else {
+      if ("both" == d) {
+        if (f = this._listPortViews, this._portViews) {
+          for (var g in this._portViews) {
+            f[g] = this._portViews[g];
+          }
+        }
+      } else {
+        f = this._portViews;
+      }
+    }
+    if (b) {
+      for (g in b) {
+        0 != b[g] && f[g] && (f[g].type = "output");
+      }
+    }
+    for (var h in f) {
+      if (d = f[h], "input" == d.type) {
+        var k = a[h];
+        0 < e.length && $.each(e, function(a, b) {
+          if ($.isPlainObject(k)) {
+            k = k[b] || 0;
+          } else {
+            return !1;
+          }
+        });
+        d.value.textContent = k ? k : 0;
+        d.group.getElementsByTagName("rect")[1].attr({fill:"#00979D"});
+      } else {
+        k = b[h], 0 < e.length && $.each(e, function(a, b) {
+          if ($.isPlainObject(k)) {
+            k = k[b] || 0;
+          } else {
+            return !1;
+          }
+        }), d.value.textContent = k ? k : 0, d.group.getElementsByTagName("rect")[1].attr({fill:"#A751E3"});
+      }
+    }
+  };
+  b.resize = function() {
+    this.hwView && this.hwView.attr({transform:"scale(" + this.scale + ")"});
+    if (this.svgDom) {
+      var a = this.svgDom.get(0).getBoundingClientRect()
+    }
+    this._svgGroup.attr({transform:"translate(" + a.width / 2 + "," + a.height / 1.8 + ")"});
+    this._rect = a;
+    0 >= this._template.height || 0 >= a.height || (this.scale = a.height / this._template.height * this._template.height / 1E3, this.align());
+  };
+  b.resizeList = function() {
+    var a = this.svgDom.get(0).getBoundingClientRect();
+    this._svglistGroup.attr({transform:"translate(" + a.width / 2 + "," + a.height / 2 + ")"});
+    this._rect = a;
+    this.alignList();
+  };
+  b.align = function() {
+    var a = [], a = this._portMap.s.concat();
+    this._alignNS(a, this.scale / 3 * this._template.height + 5, 27);
+    a = this._portMap.n.concat();
+    this._alignNS(a, -this._template.height * this.scale / 3 - 32, -27);
+    a = this._portMap.e.concat();
+    this._alignEW(a, -this._template.width * this.scale / 3 - 5, -27);
+    a = this._portMap.w.concat();
+    this._alignEW(a, this._template.width * this.scale / 3 - 32, -27);
+  };
+  b.alignList = function() {
+    for (var a = {}, a = this._hwModule.monitorTemplate.listPorts, b = a.length, d = 0;d < a.length;d++) {
+      a[d].group.attr({transform:"translate(" + this._template.width * (d / b - .5) + "," + (-this._template.width / 2 - 30) + ")"});
+    }
+    a = this._portMapList.n.concat();
+    this._alignNSList(a, -this._template.width * this.scale / 2 - 32, -27);
+  };
+  b._alignEW = function(a, b, d) {
+    var e = a.length, f = this._rect.height - 50;
+    tP = -f / 2;
+    bP = f / 2;
+    height = this._rect.height;
+    listVLine = wholeHeight = 0;
+    mode = this._hwModule.monitorTemplate;
+    for (f = 0;f < e;f++) {
+      wholeHeight += a[f].height + 5;
+    }
+    wholeHeight < bP - tP && (bP = wholeHeight / 2 + 3, tP = -wholeHeight / 2 - 3);
+    for (;1 < e;) {
+      var g = a.shift(), f = a.pop(), h = tP, k = bP, l = d;
+      wholeWidth <= bP - tP ? (tP += g.width + 5, bP -= f.width + 5, l = 0) : 0 === a.length ? (tP = (tP + bP) / 2 - 3, bP = tP + 6) : (tP = Math.max(tP, -width / 2 + g.width) + 15, bP = Math.min(bP, width / 2 - f.width) - 15);
+      wholeWidth -= g.width + f.width + 10;
+      b += l;
+    }
+    a.length && a[0].group.attr({transform:"translate(" + b + ",60)"});
+    g && rPort && (this._movePort(g, b, tP, h), this._movePort(rPort, b, bP, k));
+  };
+  b._alignNS = function(a, b, d) {
+    for (var e = -this._rect.width / 2, f = this._rect.width / 2, g = this._rect.width, h = 0, k = 0;k < a.length;k++) {
+      h += a[k].width + 5;
+    }
+    h < f - e && (f = h / 2 + 3, e = -h / 2 - 3);
+    for (;1 < a.length;) {
+      var k = a.shift(), l = a.pop(), n = e, m = f, q = d;
+      h <= f - e ? (e += k.width + 5, f -= l.width + 5, q = 0) : 0 === a.length ? (e = (e + f) / 2 - 3, f = e + 6) : (e = Math.max(e, -g / 2 + k.width) + 15, f = Math.min(f, g / 2 - l.width) - 15);
+      this._movePort(k, e, b, n);
+      this._movePort(l, f, b, m);
+      h -= k.width + l.width + 10;
+      b += q;
+    }
+    a.length && this._movePort(a[0], (f + e - a[0].width) / 2, b, 100);
+  };
+  b._alignNSList = function(a, b) {
+    var d = this._rect.width;
+    initX = -this._rect.width / 2 + 10;
+    initY = -this._rect.height / 2 + 10;
+    for (var e = listLine = wholeWidth = 0;e < a.length;e++) {
+      wholeWidth += a[e].width;
+    }
+    for (var f = 0, g = 0, h = initX, k = 0, l = 0, n = 0, e = 0;e < a.length;e++) {
+      l = a[e], e != a.length - 1 && (n = a[e + 1]), g += l.width, lP = initX, k = initY + 30 * f, l.group.attr({transform:"translate(" + lP + "," + k + ")"}), initX += l.width + 10, g > d - (l.width + n.width / 2.2) && (f += 1, initX = h, g = 0);
+    }
+  };
+  b._movePort = function(a, b, d, e) {
+    var f = b, g = a.box.x * this.scale, h = a.box.y * this.scale;
+    b > e ? (f = b - a.width, b = b > g && g > e ? "M" + g + "," + d + "L" + g + "," + h : "M" + (b + e) / 2 + "," + d + "l0," + (h > d ? 28 : -3) + "H" + g + "L" + g + "," + h) : b = b < g && g < e ? "m" + g + "," + d + "L" + g + "," + h : "m" + (e + b) / 2 + "," + d + "l0," + (h > d ? 28 : -3) + "H" + g + "L" + g + "," + h;
+    a.group.attr({transform:"translate(" + f + "," + d + ")"});
+    a.path.attr({d:b});
+  };
+})(Entry.HWMonitor.prototype);
+Entry.HW = function() {
+  this.connectTrial = 0;
+  this.isFirstConnect = !0;
+  this.initSocket();
+  this.connected = !1;
+  this.portData = {};
+  this.sendQueue = {};
+  this.outputQueue = {};
+  this.settingQueue = {};
+  this.socketType = this.hwModule = this.selectedDevice = null;
+  Entry.addEventListener("stop", this.setZero);
+  this.hwInfo = {"1.1":Entry.Arduino, "1.9":Entry.ArduinoExt, "1.2":Entry.SensorBoard, "1.3":Entry.CODEino, "1.4":Entry.joystick, "1.5":Entry.dplay, "1.6":Entry.nemoino, "1.7":Entry.Xbot, "1.8":Entry.ardublock, "2.4":Entry.Hamster, "2.5":Entry.Albert, "3.1":Entry.Bitbrick, "4.2":Entry.Arduino, "5.1":Entry.Neobot, "7.1":Entry.Robotis_carCont, "7.2":Entry.Robotis_openCM70, "8.1":Entry.Arduino};
+};
+Entry.HW.TRIAL_LIMIT = 1;
+p = Entry.HW.prototype;
+p.initSocket = function() {
+  try {
+    if (this.connectTrial >= Entry.HW.TRIAL_LIMIT) {
+      this.isFirstConnect || Entry.toast.alert(Lang.Menus.connect_hw, Lang.Menus.connect_fail, !1), this.isFirstConnect = !1;
+    } else {
+      var b = this, a, c;
+      this.connected = !1;
+      this.connectTrial++;
+      if (-1 < location.protocol.indexOf("https")) {
+        c = new WebSocket("wss://hardware.play-entry.org:23518");
+      } else {
+        try {
+          a = new WebSocket("ws://127.0.0.1:23518"), a.binaryType = "arraybuffer", a.onopen = function() {
+            b.socketType = "WebSocket";
+            b.initHardware(a);
+          }.bind(this), a.onmessage = function(a) {
+            a = JSON.parse(a.data);
+            b.checkDevice(a);
+            b.updatePortData(a);
+          }.bind(this), a.onclose = function() {
+            "WebSocket" === b.socketType && (this.socket = null, b.initSocket());
+          };
+        } catch (d) {
+        }
+        try {
+          c = new WebSocket("wss://hardware.play-entry.org:23518");
+        } catch (d) {
+        }
+      }
+      c.binaryType = "arraybuffer";
+      c.onopen = function() {
+        b.socketType = "WebSocketSecurity";
+        b.initHardware(c);
+      };
+      c.onmessage = function(a) {
+        a = JSON.parse(a.data);
+        b.checkDevice(a);
+        b.updatePortData(a);
+      };
+      c.onclose = function() {
+        "WebSocketSecurity" === b.socketType && (this.socket = null, b.initSocket());
+      };
+      Entry.dispatchEvent("hwChanged");
+    }
+  } catch (d) {
+  }
+};
+p.retryConnect = function() {
+  this.connectTrial = 0;
+  this.initSocket();
+};
+p.initHardware = function(b) {
+  this.socket = b;
+  this.connectTrial = 0;
+  this.connected = !0;
+  Entry.dispatchEvent("hwChanged");
+  Entry.playground && Entry.playground.object && Entry.playground.setMenu(Entry.playground.object.objectType);
+};
+p.setDigitalPortValue = function(b, a) {
+  this.sendQueue[b] = a;
+  this.removePortReadable(b);
+};
+p.getAnalogPortValue = function(b) {
+  return this.connected ? this.portData["a" + b] : 0;
+};
+p.getDigitalPortValue = function(b) {
+  if (!this.connected) {
+    return 0;
+  }
+  this.setPortReadable(b);
+  return void 0 !== this.portData[b] ? this.portData[b] : 0;
+};
+p.setPortReadable = function(b) {
+  this.sendQueue.readablePorts || (this.sendQueue.readablePorts = []);
+  var a = !1, c;
+  for (c in this.sendQueue.readablePorts) {
+    if (this.sendQueue.readablePorts[c] == b) {
+      a = !0;
+      break;
+    }
+  }
+  a || this.sendQueue.readablePorts.push(b);
+};
+p.removePortReadable = function(b) {
+  if (this.sendQueue.readablePorts || Array.isArray(this.sendQueue.readablePorts)) {
+    var a, c;
+    for (c in this.sendQueue.readablePorts) {
+      if (this.sendQueue.readablePorts[c] == b) {
+        a = Number(c);
+        break;
+      }
+    }
+    this.sendQueue.readablePorts = void 0 != a ? this.sendQueue.readablePorts.slice(0, a).concat(this.sendQueue.readablePorts.slice(a + 1, this.sendQueue.readablePorts.length)) : [];
+  }
+};
+p.update = function() {
+  this.socket && 1 == this.socket.readyState && this.socket.send(JSON.stringify(this.sendQueue));
+};
+p.updatePortData = function(b) {
+  this.portData = b;
+  this.hwMonitor && "hw" == Entry.propertyPanel.selected && this.hwMonitor.update();
+};
+p.closeConnection = function() {
+  this.socket && this.socket.close();
+};
+p.downloadConnector = function() {
+  window.open("http://download.play-entry.org/apps/Entry_HW_1.5.8_Setup.exe", "_blank").focus();
+};
+p.downloadSource = function() {
+  window.open("http://play-entry.com/down/board.ino", "_blank").focus();
+};
+p.setZero = function() {
+  Entry.hw.hwModule && Entry.hw.hwModule.setZero();
+};
+p.checkDevice = function(b) {
+  void 0 !== b.company && (b = [Entry.Utils.convertIntToHex(b.company), ".", Entry.Utils.convertIntToHex(b.model)].join(""), b != this.selectedDevice && (this.selectedDevice = b, this.hwModule = this.hwInfo[b], Entry.dispatchEvent("hwChanged"), Entry.toast.success("\ud558\ub4dc\uc6e8\uc5b4 \uc5f0\uacb0 \uc131\uacf5", "\ud558\ub4dc\uc6e8\uc5b4 \uc544\uc774\ucf58\uc744 \ub354\ube14\ud074\ub9ad\ud558\uba74, \uc13c\uc11c\uac12\ub9cc \ud655\uc778\ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4.", !0), this.hwModule.monitorTemplate && 
+  (this.hwMonitor ? (this.hwMonitor._hwModule = this.hwModule, this.hwMonitor.initView()) : this.hwMonitor = new Entry.HWMonitor(this.hwModule), Entry.propertyPanel.addMode("hw", this.hwMonitor), b = this.hwModule.monitorTemplate, "both" == b.mode ? (b.mode = "list", this.hwMonitor.generateListView(), b.mode = "general", this.hwMonitor.generateView(), b.mode = "both") : "list" == b.mode ? this.hwMonitor.generateListView() : this.hwMonitor.generateView())));
+};
+p.banHW = function() {
+  var b = this.hwInfo, a;
+  for (a in b) {
+    Entry.playground.mainWorkspace.blockMenu.banClass(b[a].name, !0);
+  }
+};
+Entry.BlockModel = function() {
+  Entry.Model(this);
+};
+Entry.BlockModel.prototype.schema = {id:null, x:0, y:0, type:null, params:{}, statements:{}, prev:null, next:null, view:null};
+Entry.BlockRenderModel = function() {
+  Entry.Model(this);
+};
+Entry.BlockRenderModel.prototype.schema = {id:0, type:Entry.STATIC.BLOCK_RENDER_MODEL, x:0, y:0, width:0, height:0, magneting:!1};
+Entry.BoxModel = function() {
+  Entry.Model(this);
+};
+Entry.BoxModel.prototype.schema = {id:0, type:Entry.STATIC.BOX_MODEL, x:0, y:0, width:0, height:0};
+Entry.DragInstance = function(b) {
+  Entry.Model(this);
+  this.set(b);
+};
+Entry.DragInstance.prototype.schema = {type:Entry.STATIC.DRAG_INSTANCE, startX:0, startY:0, offsetX:0, offsetY:0, absX:0, absY:0, prev:null, height:0, mode:0, isNew:!1};
+Entry.ThreadModel = function() {
+  Entry.Model(this);
+};
+Entry.ThreadModel.prototype.schema = {id:0, type:Entry.STATIC.THREAD_MODEL, x:0, y:0, width:0, minWidth:0, height:0};
+Entry.Stage = function() {
+  this.variables = {};
+  this.background = new createjs.Shape;
+  this.background.graphics.beginFill("#ffffff").drawRect(-480, -240, 960, 480);
+  this.objectContainers = [];
+  this.selectedObjectContainer = null;
+  this.variableContainer = new createjs.Container;
+  this.dialogContainer = new createjs.Container;
+  this.selectedObject = null;
+  this.isObjectClick = !1;
+};
+Entry.Stage.prototype.initStage = function(b) {
+  this.canvas = new createjs.Stage(b.id);
+  this.canvas.x = 320;
+  this.canvas.y = 180;
+  this.canvas.scaleX = this.canvas.scaleY = 2 / 1.5;
+  createjs.Touch.enable(this.canvas);
+  this.canvas.enableMouseOver(10);
+  this.canvas.mouseMoveOutside = !0;
+  this.canvas.addChild(this.background);
+  this.canvas.addChild(this.variableContainer);
+  this.canvas.addChild(this.dialogContainer);
+  this.inputField = null;
+  this.initCoordinator();
+  this.initHandle();
+  this.mouseCoordinate = {x:0, y:0};
+  if (Entry.isPhone()) {
+    b.ontouchstart = function(a) {
+      Entry.dispatchEvent("canvasClick", a);
+      Entry.stage.isClick = !0;
+    }, b.ontouchend = function(a) {
+      Entry.stage.isClick = !1;
+      Entry.dispatchEvent("canvasClickCanceled", a);
+    };
+  } else {
+    var a = function(a) {
+      Entry.dispatchEvent("canvasClick", a);
+      Entry.stage.isClick = !0;
+>>>>>>> entrylabs/master
     };
     this.objectWidthInput.addClass("entryPlaygroundPainterNumberInput");
     c.appendChild(this.objectWidthInput);
@@ -12168,6 +13094,7 @@ Entry.JSParser = function(a) {
       case ">=":
         h = a + 1 - d;
     }
+<<<<<<< HEAD
     return this.BasicIteration(b, h, f);
   };
   a.BlockStatement = function(b) {
@@ -12178,6 +13105,82 @@ Entry.JSParser = function(a) {
       if (f) {
         if (void 0 === f.type) {
           throw {message:"\ud574\ub2f9\ud558\ub294 \ube14\ub85d\uc774 \uc5c6\uc2b5\ub2c8\ub2e4.", node:e};
+=======
+    this.updateObject();
+  }
+};
+Entry.Stage.prototype.getBoundRect = function(b) {
+  this._boundRect || this.updateBoundRect();
+  return this._boundRect;
+};
+Entry.Stage.prototype.updateBoundRect = function(b) {
+  this._boundRect = this.canvas.canvas.getBoundingClientRect();
+};
+Entry.Variable = function(b) {
+  Entry.assert("string" == typeof b.name, "Variable name must be given");
+  this.name_ = b.name;
+  this.id_ = b.id ? b.id : Entry.generateHash();
+  this.type = b.variableType ? b.variableType : "variable";
+  this.object_ = b.object || null;
+  this.isCloud_ = b.isCloud || !1;
+  this._valueWidth = this._nameWidth = null;
+  var a = Entry.parseNumber(b.value);
+  this.value_ = "number" == typeof a ? a : b.value ? b.value : 0;
+  "slide" == this.type ? (this.setMinValue(b.minValue), this.setMaxValue(b.maxValue)) : "list" == this.type && (this.array_ = b.array ? b.array : []);
+  b.isClone || (this.visible_ = b.visible || "boolean" == typeof b.visible ? b.visible : !0, this.x_ = b.x ? b.x : null, this.y_ = b.y ? b.y : null, "list" == this.type && (this.width_ = b.width ? b.width : 100, this.height_ = b.height ? b.height : 120, this.scrollPosition = 0), this.BORDER = 6, this.FONT = "10pt NanumGothic");
+};
+Entry.Variable.prototype.generateView = function(b) {
+  var a = this.type;
+  if ("variable" == a || "timer" == a || "answer" == a) {
+    this.view_ = new createjs.Container, this.rect_ = new createjs.Shape, this.view_.addChild(this.rect_), this.view_.variable = this, this.wrapper_ = new createjs.Shape, this.view_.addChild(this.wrapper_), this.textView_ = new createjs.Text("asdf", this.FONT, "#000000"), this.textView_.textBaseline = "alphabetic", this.textView_.x = 4, this.textView_.y = 1, this.view_.addChild(this.textView_), this.valueView_ = new createjs.Text("asdf", "10pt NanumGothic", "#ffffff"), this.valueView_.textBaseline = 
+    "alphabetic", a = Entry.variableContainer.variables_.length, this.getX() && this.getY() ? (this.setX(this.getX()), this.setY(this.getY())) : (this.setX(-230 + 80 * Math.floor(a / 11)), this.setY(24 * b + 20 - 135 - 264 * Math.floor(a / 11))), this.view_.visible = this.visible_, this.view_.addChild(this.valueView_), this.view_.on("mousedown", function(a) {
+      "workspace" == Entry.type && (this.offset = {x:this.x - (.75 * a.stageX - 240), y:this.y - (.75 * a.stageY - 135)}, this.cursor = "move");
+    }), this.view_.on("pressmove", function(a) {
+      "workspace" == Entry.type && (this.variable.setX(.75 * a.stageX - 240 + this.offset.x), this.variable.setY(.75 * a.stageY - 135 + this.offset.y), this.variable.updateView());
+    });
+  } else {
+    if ("slide" == a) {
+      var c = this;
+      this.view_ = new createjs.Container;
+      this.rect_ = new createjs.Shape;
+      this.view_.addChild(this.rect_);
+      this.view_.variable = this;
+      this.wrapper_ = new createjs.Shape;
+      this.view_.addChild(this.wrapper_);
+      this.textView_ = new createjs.Text("name", this.FONT, "#000000");
+      this.textView_.textBaseline = "alphabetic";
+      this.textView_.x = 4;
+      this.textView_.y = 1;
+      this.view_.addChild(this.textView_);
+      this.valueView_ = new createjs.Text("value", "10pt NanumGothic", "#ffffff");
+      this.valueView_.textBaseline = "alphabetic";
+      this.view_.on("mousedown", function(a) {
+        "workspace" == Entry.type && (this.offset = {x:this.x - (.75 * a.stageX - 240), y:this.y - (.75 * a.stageY - 135)});
+      });
+      this.view_.on("pressmove", function(a) {
+        "workspace" != Entry.type || c.isAdjusting || (this.variable.setX(.75 * a.stageX - 240 + this.offset.x), this.variable.setY(.75 * a.stageY - 135 + this.offset.y), this.variable.updateView());
+      });
+      this.view_.visible = this.visible_;
+      this.view_.addChild(this.valueView_);
+      a = this.textView_.getMeasuredWidth() + this.valueView_.getMeasuredWidth() + 26;
+      a = Math.max(a, 90);
+      this.maxWidth = a - 20;
+      this.slideBar_ = new createjs.Shape;
+      this.slideBar_.graphics.beginFill("#A0A1A1").s("#A0A1A1").ss(1).dr(10, 10, this.maxWidth, 1.5);
+      this.view_.addChild(this.slideBar_);
+      a = this.getSlidePosition(this.maxWidth);
+      this.valueSetter_ = new createjs.Shape;
+      this.valueSetter_.graphics.beginFill("#1bafea").s("#A0A1A1").ss(1).dc(a, 10.5, 3);
+      this.valueSetter_.cursor = "pointer";
+      this.valueSetter_.on("mousedown", function(a) {
+        Entry.engine.isState("run") && (c.isAdjusting = !0, this.offsetX = -(this.x - .75 * a.stageX + 240));
+      });
+      this.valueSetter_.on("pressmove", function(a) {
+        if (Entry.engine.isState("run")) {
+          var b = this.offsetX;
+          this.offsetX = -(this.x - .75 * a.stageX + 240);
+          b !== this.offsetX && (a = c.getX(), c.setSlideCommandX(a + 10 > this.offsetX ? 0 : a + c.maxWidth + 10 > this.offsetX ? this.offsetX - a : c.maxWidth + 10));
+>>>>>>> entrylabs/master
         }
         f && a.push(f);
       }
@@ -12834,6 +13837,7 @@ Entry.Playground = function() {
   Entry.addEventListener("textEdited", this.injectText);
   Entry.addEventListener("hwChanged", this.updateHW);
 };
+<<<<<<< HEAD
 Entry.Playground.prototype.generateView = function(a, b) {
   this.view_ = a;
   this.view_.addClass("entryPlayground");
@@ -12853,10 +13857,18 @@ Entry.Playground.prototype.generateView = function(a, b) {
   }), Entry.addEventListener("stop", function(b) {
     Entry.playground.curtainView_.addClass("entryRemove");
   }));
+=======
+Entry.Variable.prototype.setMinValue = function(b) {
+  this.minValue_ = b = b || 0;
+  this.value_ < b && (this.value_ = b);
+  this.updateView();
+  this.isMinFloat = Entry.isFloat(this.minValue_);
+>>>>>>> entrylabs/master
 };
 Entry.Playground.prototype.generateDefaultView = function(a) {
   return a;
 };
+<<<<<<< HEAD
 Entry.Playground.prototype.generateTabView = function(a) {
   var b = this, c = Entry.createElement("ul");
   c.addClass("entryTabListWorkspace");
@@ -12885,6 +13897,13 @@ Entry.Playground.prototype.generateTabView = function(a) {
     Entry.playground.toggleOnVariableView();
     Entry.playground.changeViewMode("variable");
   }), this.tabViewElements.variable = a);
+=======
+Entry.Variable.prototype.setMaxValue = function(b) {
+  this.maxValue_ = b = b || 100;
+  this.value_ > b && (this.value_ = b);
+  this.updateView();
+  this.isMaxFloat = Entry.isFloat(this.maxValue_);
+>>>>>>> entrylabs/master
 };
 Entry.Playground.prototype.generateCodeView = function(a) {
   var b = this.createVariableView();
@@ -13879,6 +14898,7 @@ Entry.Scene.prototype.generateElement = function(a) {
     a.name = this.value;
     f.style.width = Entry.computeInputWidth(a.name);
   };
+<<<<<<< HEAD
   f.appendChild(d);
   e = Entry.createElement("span");
   e.addClass("entrySceneRemoveButtonCoverWorkspace");
@@ -13899,6 +14919,135 @@ Entry.Scene.prototype.generateElement = function(a) {
       Entry.scene.cloneScene(a);
     }}];
     Entry.ContextMenu.show(b, "workspace-contextmenu");
+=======
+  a.initValueInput = d;
+  c.appendChild(d);
+  c = Entry.createElement("div");
+  c.addClass("entryVariableSettingSplitterWorkspace");
+  a.appendChild(c);
+  c = Entry.createElement("div");
+  c.addClass("entryVariableSettingSlideWrapperWorkspace");
+  a.appendChild(c);
+  d = Entry.createElement("span");
+  d.innerHTML = Lang.Workspace.slide;
+  c.appendChild(d);
+  d = Entry.createElement("span");
+  d.addClass("entryVariableSettingCheckWorkspace");
+  a.slideCheck = d;
+  c.appendChild(d);
+  c.bindOnClick(function(a) {
+    var c;
+    a = b.selectedVariable;
+    var d = b.variables_, f = a.getType();
+    "variable" == f ? (c = a.toJSON(), c.variableType = "slide", c = new Entry.Variable(c), d.splice(d.indexOf(a), 0, c), 0 > c.getValue() && c.setValue(0), 100 < c.getValue() && c.setValue(100), e.removeAttribute("disabled"), g.removeAttribute("disabled")) : "slide" == f && (c = a.toJSON(), c.variableType = "variable", c = new Entry.Variable(c), d.splice(d.indexOf(a), 0, c), e.setAttribute("disabled", "disabled"), g.setAttribute("disabled", "disabled"));
+    b.createVariableView(c);
+    b.removeVariable(a);
+    b.updateSelectedVariable(c);
+    c.generateView();
+  });
+  c = Entry.createElement("div");
+  a.minMaxWrapper = c;
+  c.addClass("entryVariableSettingMinMaxWrapperWorkspace");
+  a.appendChild(c);
+  d = Entry.createElement("span");
+  d.innerHTML = Lang.Workspace.min_value;
+  c.appendChild(d);
+  var e = Entry.createElement("input");
+  e.addClass("entryVariableSettingMinValueInputWorkspace");
+  d = b.selectedVariable;
+  e.value = d && "slide" == d.type ? d.minValue_ : 0;
+  e.onkeypress = function(a) {
+    13 === a.keyCode && this.blur();
+  };
+  e.onblur = function(a) {
+    isNaN(this.value) || (a = b.selectedVariable, a.setMinValue(this.value), b.updateVariableSettingView(a));
+  };
+  a.minValueInput = e;
+  c.appendChild(e);
+  var f = Entry.createElement("span");
+  f.addClass("entryVariableSettingMaxValueSpanWorkspace");
+  f.innerHTML = Lang.Workspace.max_value;
+  c.appendChild(f);
+  var g = Entry.createElement("input");
+  g.addClass("entryVariableSettingMaxValueInputWorkspace");
+  g.value = d && "slide" == d.type ? d.maxValue_ : 100;
+  g.onkeypress = function(a) {
+    13 === a.keyCode && this.blur();
+  };
+  g.onblur = function(a) {
+    isNaN(this.value) || (a = b.selectedVariable, a.setMaxValue(this.value), b.updateVariableSettingView(a));
+  };
+  a.maxValueInput = g;
+  c.appendChild(g);
+};
+Entry.VariableContainer.prototype.updateVariableSettingView = function(b) {
+  var a = this.variableSettingView, c = a.visibleCheck, d = a.initValueInput, e = a.slideCheck, f = a.minValueInput, g = a.maxValueInput, h = a.minMaxWrapper;
+  c.removeClass("entryVariableSettingChecked");
+  b.isVisible() && c.addClass("entryVariableSettingChecked");
+  e.removeClass("entryVariableSettingChecked");
+  "slide" == b.getType() ? (e.addClass("entryVariableSettingChecked"), f.removeAttribute("disabled"), g.removeAttribute("disabled"), f.value = b.getMinValue(), g.value = b.getMaxValue(), h.removeClass("entryVariableMinMaxDisabledWorkspace")) : (h.addClass("entryVariableMinMaxDisabledWorkspace"), f.setAttribute("disabled", "disabled"), g.setAttribute("disabled", "disabled"));
+  d.value = b.getValue();
+  b.listElement.appendChild(a);
+  a.removeClass("entryRemove");
+};
+Entry.VariableContainer.prototype.generateListSettingView = function() {
+  var b = this, a = Entry.createElement("div");
+  a.bindOnClick(function(a) {
+    a.stopPropagation();
+  });
+  this.listSettingView = a;
+  a.addClass("entryListSettingWorkspace");
+  this.listView_.appendChild(a);
+  a.addClass("entryRemove");
+  var c = Entry.createElement("div");
+  c.addClass("entryListSettingVisibleWrapperWorkspace");
+  c.bindOnClick(function(a) {
+    a = b.selectedList;
+    var c = b.listSettingView.visibleCheck;
+    a.setVisible(!a.isVisible());
+    a.isVisible() ? c.addClass("entryListSettingCheckedWorkspace") : c.removeClass("entryListSettingCheckedWorkspace");
+  });
+  a.appendChild(c);
+  var d = Entry.createElement("span");
+  d.innerHTML = Lang.Workspace.show_list_workspace;
+  c.appendChild(d);
+  d = Entry.createElement("span");
+  d.addClass("entryListSettingCheckWorkspace");
+  a.visibleCheck = d;
+  c.appendChild(d);
+  d = Entry.createElement("div");
+  d.addClass("entryListSettingLengthWrapperWorkspace");
+  c = Entry.createElement("span");
+  c.addClass("entryListSettingLengthSpanWorkspace");
+  c.innerHTML = Lang.Workspace.number_of_list;
+  d.appendChild(c);
+  a.appendChild(d);
+  c = Entry.createElement("div");
+  c.addClass("entryListSettingLengthControllerWorkspace");
+  d.appendChild(c);
+  d = Entry.createElement("span");
+  d.addClass("entryListSettingMinusWorkspace");
+  d.bindOnClick(function(a) {
+    b.selectedList.array_.pop();
+    b.updateListSettingView(b.selectedList);
+  });
+  c.appendChild(d);
+  d = Entry.createElement("input");
+  d.addClass("entryListSettingLengthInputWorkspace");
+  d.onblur = function() {
+    b.setListLength(this.value);
+  };
+  d.onkeypress = function(a) {
+    13 == a.keyCode && this.blur();
+  };
+  a.lengthInput = d;
+  c.appendChild(d);
+  d = Entry.createElement("span");
+  d.addClass("entryListSettingPlusWorkspace");
+  d.bindOnClick(function(a) {
+    b.selectedList.array_.push({data:0});
+    b.updateListSettingView(b.selectedList);
+>>>>>>> entrylabs/master
   });
   return a.view = c;
 };
@@ -17298,8 +18447,39 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
   a.setMovable = function(b) {
     this.movable != b && this.set({movable:b});
   };
+<<<<<<< HEAD
   a.setCopyable = function(b) {
     this.copyable != b && this.set({copyable:b});
+=======
+})(Entry.FieldDropdown.prototype);
+Entry.FieldDropdownDynamic = function(b, a, c) {
+  this._block = a.block;
+  this._blockView = a;
+  this.box = new Entry.BoxModel;
+  this.svgGroup = null;
+  this._contents = b;
+  this._index = c;
+  this._arrowColor = b.arrowColor;
+  c = this._contents.menuName;
+  Entry.Utils.isFunction(c) ? this._menuGenerator = c : this._menuName = c;
+  this._CONTENT_HEIGHT = this.getContentHeight(b.dropdownHeight);
+  this._FONT_SIZE = this.getFontSize(b.fontSize);
+  this._ROUND = b.roundValue || 3;
+  this.renderStart(a);
+};
+Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
+(function(b) {
+  b.constructor = Entry.FieldDropDownDynamic;
+  b._updateValue = function() {
+    var a = this._block.getCode().object, b = [];
+    Entry.container && (b = this._menuName ? Entry.container.getDropdownList(this._menuName, a) : this._menuGenerator());
+    this._contents.options = b;
+    a = this.getValue();
+    if (this._blockView.isInBlockMenu || !a || "null" == a) {
+      a = 0 !== b.length ? b[0][1] : null;
+    }
+    this.setValue(a);
+>>>>>>> entrylabs/master
   };
   a.isMovable = function() {
     return this.movable;
