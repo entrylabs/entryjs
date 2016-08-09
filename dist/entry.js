@@ -11707,9 +11707,13 @@ Entry.Painter2 = function(a) {
       b.onload = function() {
         this.lc.repaintLayer("background");
       }.bind(this);
-      this.lc.on("do", function(b) {
-        Entry.do("editPicture", b.action, this.lc);
-      });
+      b = function(b) {
+        var a = Entry.do("editPicture", b, this.lc);
+        b.shape && !b.opts && b.shape.isPass && a.isPass();
+      }.bind(this);
+      this.lc.on("clear", b);
+      this.lc.on("shapeEdit", b);
+      this.lc.on("shapeSave", b);
       this.lc.on("toolChange", function(b) {
         this.updateEditMenu();
       }.bind(this));
@@ -11723,17 +11727,17 @@ Entry.Painter2 = function(a) {
     this.lc || this.initialize();
   };
   a.changePicture = function(b) {
-    this.file && this.file.id === b.id || (this.file.modified && confirm("\uc218\uc815\ub41c \ub0b4\uc6a9\uc744 \uc800\uc7a5\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?") && (this.file_ = JSON.parse(JSON.stringify(this.file)), this.file_save(!0)), this.file.modified = !1, this.lc.clear(), this.file.id = b.id ? b.id : Entry.generateHash(), this.file.name = b.name, this.file.mode = "edit", this.addPicture(b));
+    this.file && this.file.id === b.id || (this.file.modified && confirm("\uc218\uc815\ub41c \ub0b4\uc6a9\uc744 \uc800\uc7a5\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?") && (this.file_ = JSON.parse(JSON.stringify(this.file)), this.file_save(!0)), this.file.modified = !1, this.lc.clear(!1), this.file.id = b.id ? b.id : Entry.generateHash(), this.file.name = b.name, this.file.mode = "edit", this.addPicture(b, !0));
   };
-  a.addPicture = function(b) {
-    var a = new Image;
-    a.src = b.fileurl ? b.fileurl : Entry.defaultPath + "/uploads/" + b.filename.substring(0, 2) + "/" + b.filename.substring(2, 4) + "/image/" + b.filename + ".png";
+  a.addPicture = function(b, a) {
+    var d = new Image;
+    d.src = b.fileurl ? b.fileurl : Entry.defaultPath + "/uploads/" + b.filename.substring(0, 2) + "/" + b.filename.substring(2, 4) + "/image/" + b.filename + ".png";
     b = b.dimension;
-    var d = LC.createShape("Image", {x:480 - b.width / 2, y:270 - b.height / 2, image:a});
-    this.lc.saveShape(d);
-    a.onload = function() {
+    var e = LC.createShape("Image", {x:480 - b.width / 2, y:270 - b.height / 2, image:d});
+    this.lc.saveShape(e, !a);
+    d.onload = function() {
       this.lc.setTool(this.lc.tools.SelectShape);
-      this.lc.tool.setShape(this.lc, d);
+      this.lc.tool.setShape(this.lc, e);
     }.bind(this);
   };
   a.copy = function() {
@@ -12616,35 +12620,35 @@ Entry.BlockMockup = function(a, b, c) {
     void 0 !== this.def.index[a] ? this.definition.params.push(this.def.params[this.def.index[a]]) : this.definition.params.push(void 0), this._addToParamsKeyMap(a)) : b.constructor == Blockly.FieldColour ? (this.params.push({type:"Color"}), this.templates.push(this.getFieldCount()), this._addToParamsKeyMap(a)) : console.log("else", b);
     return this;
   };
-  a.setColour = function(a) {
-    this.color = a;
+  a.setColour = function(b) {
+    this.color = b;
   };
   a.setInputsInline = function() {
   };
-  a.setOutput = function(a, c) {
-    a && (this.output = c);
+  a.setOutput = function(b, a) {
+    b && (this.output = a);
   };
-  a.setPreviousStatement = function(a) {
-    this.isPrev = a;
+  a.setPreviousStatement = function(b) {
+    this.isPrev = b;
   };
-  a.setNextStatement = function(a) {
-    this.isNext = a;
+  a.setNextStatement = function(b) {
+    this.isNext = b;
   };
-  a.setEditable = function(a) {
+  a.setEditable = function(b) {
   };
   a.getFieldCount = function() {
     this.fieldCount++;
     return "%" + this.fieldCount;
   };
-  a._addToParamsKeyMap = function(a) {
-    a = a ? a : "dummy_" + Entry.Utils.generateId();
-    var c = this.paramsKeyMap;
-    c[a] = Object.keys(c).length;
+  a._addToParamsKeyMap = function(b) {
+    b = b ? b : "dummy_" + Entry.Utils.generateId();
+    var a = this.paramsKeyMap;
+    a[b] = Object.keys(a).length;
   };
-  a._addToStatementsKeyMap = function(a) {
-    a = a ? a : "dummy_" + Entry.Utils.generateId();
-    var c = this.statementsKeyMap;
-    c[a] = Object.keys(c).length;
+  a._addToStatementsKeyMap = function(b) {
+    b = b ? b : "dummy_" + Entry.Utils.generateId();
+    var a = this.statementsKeyMap;
+    a[b] = Object.keys(a).length;
   };
 })(Entry.BlockMockup.prototype);
 Entry.Playground = function() {

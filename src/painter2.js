@@ -47,9 +47,16 @@ p.initialize = function() {
         this.lc.repaintLayer("background")
     }.bind(this);
 
-    this.lc.on("do", function(e) {
-        Entry.do("editPicture", e.action, this.lc);
-    });
+    var watchFunc = function(e) {
+        var cmd = Entry.do("editPicture", e, this.lc)
+        if (e.shape && !e.opts && e.shape.isPass) {
+            cmd.isPass()
+        }
+    }.bind(this)
+
+    this.lc.on("clear", watchFunc);
+    this.lc.on("shapeEdit", watchFunc);
+    this.lc.on("shapeSave", watchFunc);
 
     this.lc.on("toolChange", function(e) {
         this.updateEditMenu();
@@ -80,7 +87,7 @@ p.changePicture = function(picture) {
         }
     }
     this.file.modified = false;
-    this.lc.clear();
+    this.lc.clear(false);
 
     if (picture.id)
         this.file.id = picture.id;
@@ -89,10 +96,10 @@ p.changePicture = function(picture) {
     this.file.name = picture.name;
     this.file.mode = 'edit';
 
-    this.addPicture(picture);
+    this.addPicture(picture, true);
 };
 
-p.addPicture = function(picture) {
+p.addPicture = function(picture, isOriginal) {
     var image = new Image();
 
     if (picture.fileurl) {
@@ -108,7 +115,7 @@ p.addPicture = function(picture) {
         y: 270 - dimension.height / 2,
         image: image
     });
-    this.lc.saveShape(shape);
+    this.lc.saveShape(shape, !isOriginal);
 
     image.onload = function() {
         this.lc.setTool(this.lc.tools.SelectShape);
