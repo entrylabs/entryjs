@@ -22,6 +22,26 @@ Entry.HW = function() {
     Entry.addEventListener('stop', this.setZero);
 
     this.hwInfo = {
+<<<<<<< HEAD
+        '11': Entry.Arduino,
+        '19': Entry.ArduinoExt,
+        '12': Entry.SensorBoard,
+        '13': Entry.CODEino,
+        '14': Entry.joystick,
+        '15': Entry.dplay,
+        '16': Entry.nemoino,
+        '17': Entry.Xbot,
+	'18': Entry.ardublock,
+        '110': Entry.Cobl,
+        '24': Entry.Hamster,
+        '25': Entry.Albert,
+        '31': Entry.Bitbrick,
+        '42': Entry.Arduino,
+        '51': Entry.Neobot,
+        '71': Entry.Robotis_carCont,
+        '72': Entry.Robotis_openCM70,
+        '81': Entry.Arduino
+=======
         '1.1': Entry.Arduino,
         '1.9': Entry.ArduinoExt,
         '1.2': Entry.SensorBoard,
@@ -39,6 +59,7 @@ Entry.HW = function() {
         '7.1': Entry.Robotis_carCont,
         '7.2': Entry.Robotis_openCM70,
         '8.1': Entry.Arduino
+>>>>>>> entrylabs/master
     };
 };
 
