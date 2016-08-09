@@ -308,13 +308,19 @@ Entry.PARAM = -1;
         return block;
     };
 
-    p.getBlockList = function(excludePrimitive) {
+    p.getBlockList = function(excludePrimitive, type) {
         var threads = this.getThreads();
         var blocks = [];
 
-        for (var i = 0; i < threads.length; i ++)
-            blocks = blocks.concat(threads[i].getBlockList(excludePrimitive));
+        for (var i = 0; i < threads.length; i++)
+            blocks = blocks.concat(
+                threads[i].getBlockList(excludePrimitive, type));
 
         return blocks;
+    };
+
+    p.removeBlocksByType = function(type) {
+        this.getBlockList(false, type)
+            .forEach(function(b) { b.doDestroy(); });
     };
 })(Entry.Code.prototype);
