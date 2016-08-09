@@ -968,8 +968,8 @@ Entry.JsToBlockParser = function(syntax) {
                 test = "front == \'wall\'";
             } else if(testCondition == "fronthump") {
                 test = "front == \'hump\'";
-            } else if(testCondition == "frontmeteo") {
-                test = "front == \'meteo\'";
+            } else if(testCondition == "frontstone") {
+                test = "front == \'stone\'";
             } else if(testCondition == "frontbee") {
                 test = "front == \'bee\'";
             } else { 
@@ -988,6 +988,9 @@ Entry.JsToBlockParser = function(syntax) {
                 if(consequent && consequent.length != 0)
                     stmtCons = consequent;
 
+                if(alternate && alternate.length != 0)
+                    stmtAlt = alternate;
+
                 console.log("stmtCons", stmtCons);
                
                 
@@ -997,8 +1000,8 @@ Entry.JsToBlockParser = function(syntax) {
                     result.type = type;
                 if(params && params.length != 0)
                     result.params = params;
-                
-                result.statements = [stmtCons];
+               
+                result.statements = [stmtCons, stmtAlt];
 
                 console.log("bs result", result);
                 

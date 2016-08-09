@@ -20571,7 +20571,7 @@ Entry.block = {
         "color": "#498DEB",
         "syntax": [
             "BasicIf",
-            "front == 'meteo'"
+            "front == 'stone'"
         ],
         "statements": [
             {

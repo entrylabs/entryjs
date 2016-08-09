@@ -12375,8 +12375,8 @@ Entry.JsToBlockParser = function(b) {
         if ("fronthump" == m) {
           h = "front == 'hump'";
         } else {
-          if ("frontmeteo" == m) {
-            h = "front == 'meteo'";
+          if ("frontstone" == m) {
+            h = "front == 'stone'";
           } else {
             if ("frontbee" == m) {
               h = "front == 'bee'";
@@ -12390,7 +12390,10 @@ Entry.JsToBlockParser = function(b) {
       }
       console.log("type", c, "test", h);
       console.log("this.syntax", this.syntax);
-      this.syntax.BasicIf[h] ? (console.log("target", this.syntax.BasicIf[h]), console.log("consequent", k, "alternate", l), k && 0 != k.length && (e = k), console.log("stmtCons", e), c = this.syntax.BasicIf[h], console.log("type", c, "params", g), c && (b.type = c), g && 0 != g.length && (b.params = g), b.statements = [e]) : (k && 0 != k.length && (e = k), l && 0 != l.length && (f = l), c && (b.type = c), g && 0 != g.length && (b.params = g), b.statements = [e, f]);
+      this.syntax.BasicIf[h] ? (console.log("target", this.syntax.BasicIf[h]), console.log("consequent", k, "alternate", l), k && 0 != k.length && (e = k), l && 0 != l.length && (f = l), console.log("stmtCons", e), c = this.syntax.BasicIf[h], console.log("type", c, "params", g)) : (k && 0 != k.length && (e = k), l && 0 != l.length && (f = l));
+      c && (b.type = c);
+      g && 0 != g.length && (b.params = g);
+      b.statements = [e, f];
       console.log("bs result", b);
       return b;
     } catch (q) {
