@@ -17668,7 +17668,7 @@ Entry.block = {
         },
         "syntax": [
             "Scope",
-            "turn_left"
+            "left"
         ]
     },
     "jr_turn_right": {
@@ -17708,7 +17708,7 @@ Entry.block = {
         },
         "syntax": [
             "Scope",
-            "turn_right"
+            "right"
         ]
     },
     "jr_go_slow": {
