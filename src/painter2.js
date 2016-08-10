@@ -49,7 +49,8 @@ p.initialize = function() {
 
     var watchFunc = function(e) {
         var cmd = Entry.do("editPicture", e, this.lc)
-        if (e.shape && !e.opts && e.shape.isPass) {
+        if ((e.shape && !e.opts && e.shape.isPass) ||
+            e.opts && e.opts.isPass) {
             cmd.isPass()
         }
     }.bind(this)

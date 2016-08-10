@@ -11709,7 +11709,7 @@ Entry.Painter2 = function(a) {
       }.bind(this);
       b = function(b) {
         var a = Entry.do("editPicture", b, this.lc);
-        b.shape && !b.opts && b.shape.isPass && a.isPass();
+        (b.shape && !b.opts && b.shape.isPass || b.opts && b.opts.isPass) && a.isPass();
       }.bind(this);
       this.lc.on("clear", b);
       this.lc.on("shapeEdit", b);
