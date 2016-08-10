@@ -819,7 +819,7 @@ Entry.Variable.prototype.setMinValue = function(minValue) {
     minValue = minValue || 0;
     this.minValue_ = minValue;
     if (this.value_ < minValue)
-        this.value_ = minValue;
+        this.setValue(minValue);
     this.updateView();
     this.isMinFloat = Entry.isFloat(this.minValue_);
 };
