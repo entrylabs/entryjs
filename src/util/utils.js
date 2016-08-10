@@ -1267,3 +1267,7 @@ Entry.Utils.convertMouseEvent = function(e) {
         return e.originalEvent.touches[0];
     else return e;
 }
+
+Entry.Utils.convertIntToHex = function(num) {
+    return (num).toString(16).toUpperCase();
+}

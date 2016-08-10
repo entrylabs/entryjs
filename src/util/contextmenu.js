@@ -39,26 +39,26 @@ goog.provide('Entry.ContextMenu');
             var text = option.text;
             var enable = option.enable !== false;
 
-            var elem = Entry.Dom('li', {
-                class: enable ? 'menuAble' : 'menuDisable',
-                parent: parent
-            });
+            var elem = Entry.Dom('li', { parent: parent });
 
-            var span = Entry.Dom('span', {
-                parent: elem
-            });
+            if (option.divider) className = 'divider';
+            else {
+                className = enable ? 'menuAble' : 'menuDisable';
+                var span = Entry.Dom('span', { parent: elem });
 
-            span.text(text);
+                span.text(text);
 
-            if (enable && option.callback) {
-                (function(span, cb) {
-                    span.mousedown(function(e){
-                        e.preventDefault();
-                        that.hide();
-                        cb(e);
-                    });
-                })(span, option.callback);
+                if (enable && option.callback) {
+                    (function(span, cb) {
+                        span.mousedown(function(e){
+                            e.preventDefault();
+                            that.hide();
+                            cb(e);
+                        });
+                    })(span, option.callback);
+                }
             }
+            elem.addClass(className);
         }
 
         parent.removeClass('entryRemove');

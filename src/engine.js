@@ -814,5 +814,3 @@ Entry.Engine.prototype.updateProjectTimer = function(value) {
     }
 };
 
-
-

@@ -1340,9 +1340,7 @@ Entry.Playground.prototype.generatePictureElement = function(picture) {
                     }
                 }
             },
-            {
-                divider: true
-            },
+            { divider: true },
             {
                 text: Lang.Workspace.context_download,
                 callback: function(){

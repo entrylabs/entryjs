@@ -2471,7 +2471,7 @@ Entry.Hamster = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, outputA:0, outpu
   b.lineTracerModeId = this.lineTracerModeId;
 }, name:"hamster", monitorTemplate:{imgPath:"hw/hamster.png", width:256, height:256, listPorts:{temperature:{name:Lang.Blocks.HAMSTER_sensor_temperature, type:"input", pos:{x:0, y:0}}, accelerationX:{name:Lang.Blocks.HAMSTER_sensor_accelerationX, type:"input", pos:{x:0, y:0}}, accelerationY:{name:Lang.Blocks.HAMSTER_sensor_accelerationY, type:"input", pos:{x:0, y:0}}, accelerationZ:{name:Lang.Blocks.HAMSTER_sensor_accelerationZ, type:"input", pos:{x:0, y:0}}, buzzer:{name:Lang.Hw.buzzer, type:"output", 
 pos:{x:0, y:0}}, note:{name:Lang.Hw.buzzer + "2", type:"output", pos:{x:0, y:0}}, outputA:{name:Lang.Hw.output + "A", type:"output", pos:{x:0, y:0}}, outputB:{name:Lang.Hw.output + "B", type:"output", pos:{x:0, y:0}}}, ports:{leftProximity:{name:Lang.Blocks.HAMSTER_sensor_leftProximity, type:"input", pos:{x:122, y:156}}, rightProximity:{name:Lang.Blocks.HAMSTER_sensor_rightProximity, type:"input", pos:{x:10, y:108}}, leftFloor:{name:Lang.Blocks.HAMSTER_sensor_leftFloor, type:"input", pos:{x:100, 
-y:234}}, rightFloor:{name:Lang.Blocks.HAMSTER_sensor_rightFloor, type:"input", pos:{x:13, y:180}}, lightsensor:{name:Lang.Blocks.HAMSTER_sensor_light, type:"input", pos:{x:56, y:189}}, leftWheel:{name:Lang.Hw.leftWheel, type:"output", pos:{x:209, y:115}}, rightWheel:{name:Lang.Hw.rightWheel, type:"output", pos:{x:98, y:30}}, leftLed:{name:Lang.Hw.left + " " + Lang.Hw.led, type:"output", pos:{x:87, y:210}}, rightLed:{name:Lang.Hw.right + " " + Lang.Hw.led, type:"output", pos:{x:24, y:168}}}, mode:"both"}};
+y:234}}, rightFloor:{name:Lang.Blocks.HAMSTER_sensor_rightFloor, type:"input", pos:{x:13, y:180}}, light:{name:Lang.Blocks.HAMSTER_sensor_light, type:"input", pos:{x:56, y:189}}, leftWheel:{name:Lang.Hw.leftWheel, type:"output", pos:{x:209, y:115}}, rightWheel:{name:Lang.Hw.rightWheel, type:"output", pos:{x:98, y:30}}, leftLed:{name:Lang.Hw.left + " " + Lang.Hw.led, type:"output", pos:{x:87, y:210}}, rightLed:{name:Lang.Hw.right + " " + Lang.Hw.led, type:"output", pos:{x:24, y:168}}}, mode:"both"}};
 Blockly.Blocks.hamster_hand_found = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_hand_found);
@@ -7692,66 +7692,62 @@ Entry.EntityObject.prototype.getVisible = function() {
   return this.visible;
 };
 Entry.EntityObject.prototype.setImage = function(b) {
+  var a = this;
   delete b._id;
   Entry.assert("sprite" == this.type, "Set image is only for sprite object");
   b.id || (b.id = Entry.generateHash());
   this.picture = b;
-  var a = this.picture.dimension, d = this.getRegX() - this.getWidth() / 2, c = this.getRegY() - this.getHeight() / 2;
-  this.setWidth(a.width);
-  this.setHeight(a.height);
-  a.scaleX || (a.scaleX = this.getScaleX(), a.scaleY = this.getScaleY());
+  var d = this.picture.dimension, c = this.getRegX() - this.getWidth() / 2, e = this.getRegY() - this.getHeight() / 2;
+  this.setWidth(d.width);
+  this.setHeight(d.height);
+  d.scaleX || (d.scaleX = this.getScaleX(), d.scaleY = this.getScaleY());
   this.setScaleX(this.scaleX);
   this.setScaleY(this.scaleY);
-  this.setRegX(this.width / 2 + d);
-  this.setRegY(this.height / 2 + c);
-  var e = Entry.container.getCachedPicture(b.id);
-  if (e) {
-    Entry.image = e, this.object.image = e, this.object.cache(0, 0, this.getWidth(), this.getHeight());
-  } else {
-    e = new Image;
-    b.fileurl ? e.src = b.fileurl : (a = b.filename, e.src = Entry.defaultPath + "/uploads/" + a.substring(0, 2) + "/" + a.substring(2, 4) + "/image/" + a + ".png");
-    var f = this;
-    e.onload = function(a) {
-      Entry.container.cachePicture(b.id, e);
-      Entry.image = e;
-      f.object.image = e;
-      f.object.cache(0, 0, f.getWidth(), f.getHeight());
-      f = null;
-      Entry.requestUpdate = !0;
-    };
-  }
+  this.setRegX(this.width / 2 + c);
+  this.setRegY(this.height / 2 + e);
+  var f = b.id + this.id, g = Entry.container.getCachedPicture(f);
+  g ? (Entry.image = g, this.object.image = g, this.object.cache(0, 0, this.getWidth(), this.getHeight())) : (this.object.cache(0, 0, this.getWidth(), this.getHeight()), g = new Image, b.fileurl ? g.src = b.fileurl : (b = b.filename, g.src = Entry.defaultPath + "/uploads/" + b.substring(0, 2) + "/" + b.substring(2, 4) + "/image/" + b + ".png"), g.onload = function(b) {
+    Entry.container.cachePicture(f, g);
+    Entry.image = g;
+    a.object.image = g;
+    a.object.cache(0, 0, a.getWidth(), a.getHeight());
+    Entry.requestUpdate = !0;
+  });
   Entry.dispatchEvent("updateObject");
 };
-Entry.EntityObject.prototype.applyFilter = function() {
-  var b = this.effect, a = this.object;
-  (function(a, b) {
-    for (var e in a) {
-      if (a[e] !== b[e]) {
+Entry.EntityObject.prototype.applyFilter = function(b) {
+  function a(a, b) {
+    for (var d in a) {
+      if (a[d] !== b[d]) {
         return !1;
       }
     }
     return !0;
-  })(b, this.getInitialEffectValue()) || (function(a, b) {
-    var e = [], f = Entry.adjustValueWithMaxMin;
-    a.brightness = a.brightness;
-    var g = new createjs.ColorMatrix;
-    g.adjustColor(f(a.brightness, -100, 100), 0, 0, 0);
-    g = new createjs.ColorMatrixFilter(g);
-    e.push(g);
-    a.hue = a.hue.mod(360);
-    g = new createjs.ColorMatrix;
-    g.adjustColor(0, 0, 0, a.hue);
-    g = new createjs.ColorMatrixFilter(g);
-    e.push(g);
-    var g = [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1], h = 10.8 * a.hsv * Math.PI / 180, k = Math.cos(h), h = Math.sin(h), l = Math.abs(a.hsv / 100);
-    1 < l && (l -= Math.floor(l));
-    0 < l && .33 >= l ? g = [1, 0, 0, 0, 0, 0, k, h, 0, 0, 0, -1 * h, k, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1] : .66 >= l ? g = [k, 0, h, 0, 0, 0, 1, 0, 0, 0, h, 0, k, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1] : .99 >= l && (g = [k, h, 0, 0, 0, -1 * h, k, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1]);
-    g = (new createjs.ColorMatrix).concat(g);
-    g = new createjs.ColorMatrixFilter(g);
-    e.push(g);
-    b.alpha = a.alpha = f(a.alpha, 0, 1);
-    b.filters = e;
-  }(b, a), a.cache(0, 0, this.getWidth(), this.getHeight()), Entry.requestUpdate = !0);
+  }
+  var d = this.effect, c = this.object;
+  if (b || !a(d, this.getInitialEffectValue())) {
+    (function(a, b) {
+      var d = [], c = Entry.adjustValueWithMaxMin;
+      a.brightness = a.brightness;
+      var k = new createjs.ColorMatrix;
+      k.adjustColor(c(a.brightness, -100, 100), 0, 0, 0);
+      k = new createjs.ColorMatrixFilter(k);
+      d.push(k);
+      a.hue = a.hue.mod(360);
+      k = new createjs.ColorMatrix;
+      k.adjustColor(0, 0, 0, a.hue);
+      k = new createjs.ColorMatrixFilter(k);
+      d.push(k);
+      var k = [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1], l = 10.8 * a.hsv * Math.PI / 180, m = Math.cos(l), l = Math.sin(l), n = Math.abs(a.hsv / 100);
+      1 < n && (n -= Math.floor(n));
+      0 < n && .33 >= n ? k = [1, 0, 0, 0, 0, 0, m, l, 0, 0, 0, -1 * l, m, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1] : .66 >= n ? k = [m, 0, l, 0, 0, 0, 1, 0, 0, 0, l, 0, m, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1] : .99 >= n && (k = [m, l, 0, 0, 0, -1 * l, m, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1]);
+      k = (new createjs.ColorMatrix).concat(k);
+      k = new createjs.ColorMatrixFilter(k);
+      d.push(k);
+      b.alpha = a.alpha = c(a.alpha, 0, 1);
+      b.filters = d;
+    })(d, c), c.cache(0, 0, this.getWidth(), this.getHeight()), Entry.requestUpdate = !0;
+  }
 };
 Entry.EntityObject.prototype.resetFilter = function() {
   "sprite" == this.parent.objectType && (this.object.filters = [], this.setInitialEffectValue(), this.object.alpha = this.effect.alpha, this.object.cache(0, 0, this.getWidth(), this.getHeight()), Entry.requestUpdate = !0);
@@ -8072,6 +8068,7 @@ Entry.StateManager.prototype.addActivity = function(b) {
   Entry.reporter && Entry.reporter.report(new Entry.State(b));
 };
 Entry.EntryObject = function(b) {
+  var a = this;
   if (b) {
     this.id = b.id;
     this.name = b.name || b.sprite.name;
@@ -8082,8 +8079,8 @@ Entry.EntryObject = function(b) {
     this.pictures = b.sprite.pictures;
     this.sounds = [];
     this.sounds = b.sprite.sounds;
-    for (var a = 0;a < this.sounds.length;a++) {
-      this.sounds[a].id || (this.sounds[a].id = Entry.generateHash()), Entry.initSound(this.sounds[a]);
+    for (var d = 0;d < this.sounds.length;d++) {
+      this.sounds[d].id || (this.sounds[d].id = Entry.generateHash()), Entry.initSound(this.sounds[d]);
     }
     this.lock = b.lock ? b.lock : !1;
     this.isEditing = !1;
@@ -8094,15 +8091,15 @@ Entry.EntryObject = function(b) {
     this.entity.injectModel(this.selectedPicture ? this.selectedPicture : null, b.entity ? b.entity : this.initEntity(b));
     this.clonedEntities = [];
     Entry.stage.loadObject(this);
-    for (a in this.pictures) {
-      var d = this.pictures[a];
-      d.objectId = this.id;
-      d.id || (d.id = Entry.generateHash());
-      var c = new Image;
-      d.fileurl ? c.src = d.fileurl : d.fileurl ? c.src = d.fileurl : (b = d.filename, c.src = Entry.defaultPath + "/uploads/" + b.substring(0, 2) + "/" + b.substring(2, 4) + "/image/" + b + ".png");
+    for (d in this.pictures) {
+      var c = this.pictures[d];
+      c.objectId = this.id;
+      c.id || (c.id = Entry.generateHash());
+      var e = new Image;
+      c.fileurl ? e.src = c.fileurl : c.fileurl ? e.src = c.fileurl : (b = c.filename, e.src = Entry.defaultPath + "/uploads/" + b.substring(0, 2) + "/" + b.substring(2, 4) + "/image/" + b + ".png");
       Entry.Loader.addQueue();
-      c.onload = function(a) {
-        Entry.container.cachePicture(d.id, c);
+      e.onload = function(b) {
+        Entry.container.cachePicture(c.id + a.entity.id, e);
         Entry.Loader.removeQueue();
         Entry.requestUpdate = !0;
       };
@@ -10773,19 +10770,14 @@ Entry.StampEntity = function(b, a) {
   this.height = a.getHeight();
   "sprite" == this.type && (this.object = a.object.clone(!0), this.object.filters = null, a.effect && (this.effect = Entry.cloneSimpleObject(a.effect), this.applyFilter()));
   this.object.entity = this;
-  if (a.dialog) {
-    var d = a.dialog;
-    new Entry.Dialog(this, d.message_, d.mode_, !0);
-    this.dialog.object = a.dialog.object.clone(!0);
-    Entry.stage.loadDialog(this.dialog);
-  }
 };
-var EntityPrototype = Entry.EntityObject.prototype;
-Entry.StampEntity.prototype.applyFilter = EntityPrototype.applyFilter;
-Entry.StampEntity.prototype.removeClone = EntityPrototype.removeClone;
-Entry.StampEntity.prototype.getWidth = EntityPrototype.getWidth;
-Entry.StampEntity.prototype.getHeight = EntityPrototype.getHeight;
-Entry.StampEntity.prototype.getInitialEffectValue = EntityPrototype.getInitialEffectValue;
+(function(b, a) {
+  b.applyFilter = a.applyFilter;
+  b.removeClone = a.removeClone;
+  b.getWidth = a.getWidth;
+  b.getHeight = a.getHeight;
+  b.getInitialEffectValue = a.getInitialEffectValue;
+})(Entry.StampEntity.prototype, Entry.EntityObject.prototype);
 Entry.JsAstGenerator = function() {
 };
 (function(b) {
@@ -14761,20 +14753,27 @@ Entry.ContextMenu = {};
     if (0 !== a.length) {
       var e = this;
       void 0 !== b && (this._className = b, this.dom.addClass(b));
-      b = this.dom;
-      b.empty();
-      for (var f = 0, g = a.length;f < g;f++) {
-        var h = a[f], k = h.text, l = !1 !== h.enable, m = Entry.Dom("li", {class:l ? "menuAble" : "menuDisable", parent:b}), m = Entry.Dom("span", {parent:m});
-        m.text(k);
-        l && h.callback && function(a, b) {
-          a.mousedown(function(a) {
-            a.preventDefault();
-            e.hide();
-            b(a);
-          });
-        }(m, h.callback);
+      var f = this.dom;
+      f.empty();
+      for (var g = 0, h = a.length;g < h;g++) {
+        var k = a[g], l = k.text, m = !1 !== k.enable, n = Entry.Dom("li", {parent:f});
+        if (k.divider) {
+          b = "divider";
+        } else {
+          b = m ? "menuAble" : "menuDisable";
+          var r = Entry.Dom("span", {parent:n});
+          r.text(l);
+          m && k.callback && function(a, b) {
+            a.mousedown(function(a) {
+              a.preventDefault();
+              e.hide();
+              b(a);
+            });
+          }(r, k.callback);
+        }
+        n.addClass(b);
       }
-      b.removeClass("entryRemove");
+      f.removeClass("entryRemove");
       this.visible = !0;
       this.position(c || Entry.mouseCoordinate);
     }
@@ -15451,6 +15450,9 @@ Entry.isMobile = function() {
 Entry.Utils.convertMouseEvent = function(b) {
   return b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
 };
+Entry.Utils.convertIntToHex = function(b) {
+  return b.toString(16).toUpperCase();
+};
 Entry.Model = function(b, a) {
   var d = Entry.Model;
   d.generateSchema(b);
@@ -16017,7 +16019,7 @@ Entry.HW = function() {
   this.settingQueue = {};
   this.socketType = this.hwModule = this.selectedDevice = null;
   Entry.addEventListener("stop", this.setZero);
-  this.hwInfo = {11:Entry.Arduino, 19:Entry.ArduinoExt, 12:Entry.SensorBoard, 13:Entry.CODEino, 14:Entry.joystick, 15:Entry.dplay, 16:Entry.nemoino, 17:Entry.Xbot, 18:Entry.ardublock, 24:Entry.Hamster, 25:Entry.Albert, 31:Entry.Bitbrick, 42:Entry.Arduino, 51:Entry.Neobot, 71:Entry.Robotis_carCont, 72:Entry.Robotis_openCM70, 81:Entry.Arduino};
+  this.hwInfo = {"1.1":Entry.Arduino, "1.9":Entry.ArduinoExt, "1.2":Entry.SensorBoard, "1.3":Entry.CODEino, "1.4":Entry.joystick, "1.5":Entry.dplay, "1.6":Entry.nemoino, "1.7":Entry.Xbot, "1.8":Entry.ardublock, "2.4":Entry.Hamster, "2.5":Entry.Albert, "3.1":Entry.Bitbrick, "4.2":Entry.Arduino, "5.1":Entry.Neobot, "7.1":Entry.Robotis_carCont, "7.2":Entry.Robotis_openCM70, "8.1":Entry.Arduino};
 };
 Entry.HW.TRIAL_LIMIT = 1;
 p = Entry.HW.prototype;
@@ -16136,8 +16138,8 @@ p.setZero = function() {
   Entry.hw.hwModule && Entry.hw.hwModule.setZero();
 };
 p.checkDevice = function(b) {
-  void 0 !== b.company && (b = "" + b.company + b.model, b != this.selectedDevice && (this.selectedDevice = b, this.hwModule = this.hwInfo[b], Entry.dispatchEvent("hwChanged"), Entry.toast.success("\ud558\ub4dc\uc6e8\uc5b4 \uc5f0\uacb0 \uc131\uacf5", "\ud558\ub4dc\uc6e8\uc5b4 \uc544\uc774\ucf58\uc744 \ub354\ube14\ud074\ub9ad\ud558\uba74, \uc13c\uc11c\uac12\ub9cc \ud655\uc778\ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4.", !0), this.hwModule.monitorTemplate && (this.hwMonitor ? (this.hwMonitor._hwModule = 
-  this.hwModule, this.hwMonitor.initView()) : this.hwMonitor = new Entry.HWMonitor(this.hwModule), Entry.propertyPanel.addMode("hw", this.hwMonitor), b = this.hwModule.monitorTemplate, "both" == b.mode ? (b.mode = "list", this.hwMonitor.generateListView(), b.mode = "general", this.hwMonitor.generateView(), b.mode = "both") : "list" == b.mode ? this.hwMonitor.generateListView() : this.hwMonitor.generateView())));
+  void 0 !== b.company && (b = [Entry.Utils.convertIntToHex(b.company), ".", Entry.Utils.convertIntToHex(b.model)].join(""), b != this.selectedDevice && (this.selectedDevice = b, this.hwModule = this.hwInfo[b], Entry.dispatchEvent("hwChanged"), Entry.toast.success("\ud558\ub4dc\uc6e8\uc5b4 \uc5f0\uacb0 \uc131\uacf5", "\ud558\ub4dc\uc6e8\uc5b4 \uc544\uc774\ucf58\uc744 \ub354\ube14\ud074\ub9ad\ud558\uba74, \uc13c\uc11c\uac12\ub9cc \ud655\uc778\ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4.", !0), this.hwModule.monitorTemplate && 
+  (this.hwMonitor ? (this.hwMonitor._hwModule = this.hwModule, this.hwMonitor.initView()) : this.hwMonitor = new Entry.HWMonitor(this.hwModule), Entry.propertyPanel.addMode("hw", this.hwMonitor), b = this.hwModule.monitorTemplate, "both" == b.mode ? (b.mode = "list", this.hwMonitor.generateListView(), b.mode = "general", this.hwMonitor.generateView(), b.mode = "both") : "list" == b.mode ? this.hwMonitor.generateListView() : this.hwMonitor.generateView())));
 };
 p.banHW = function() {
   var b = this.hwInfo, a;
@@ -16562,7 +16564,7 @@ Entry.Variable = function(b) {
   this._valueWidth = this._nameWidth = null;
   var a = Entry.parseNumber(b.value);
   this.value_ = "number" == typeof a ? a : b.value ? b.value : 0;
-  "slide" == this.type ? (this.minValue_ = Number(b.minValue ? b.minValue : 0), this.maxValue_ = Number(b.maxValue ? b.maxValue : 100)) : "list" == this.type && (this.array_ = b.array ? b.array : []);
+  "slide" == this.type ? (this.setMinValue(b.minValue), this.setMaxValue(b.maxValue)) : "list" == this.type && (this.array_ = b.array ? b.array : []);
   b.isClone || (this.visible_ = b.visible || "boolean" == typeof b.visible ? b.visible : !0, this.x_ = b.x ? b.x : null, this.y_ = b.y ? b.y : null, "list" == this.type && (this.width_ = b.width ? b.width : 100, this.height_ = b.height ? b.height : 120, this.scrollPosition = 0), this.BORDER = 6, this.FONT = "10pt NanumGothic");
 };
 Entry.Variable.prototype.generateView = function(b) {
@@ -16858,7 +16860,7 @@ Entry.Variable.prototype.getMinValue = function() {
   return this.minValue_;
 };
 Entry.Variable.prototype.setMinValue = function(b) {
-  this.minValue_ = b;
+  this.minValue_ = b = b || 0;
   this.value_ < b && (this.value_ = b);
   this.updateView();
   this.isMinFloat = Entry.isFloat(this.minValue_);
@@ -16867,7 +16869,7 @@ Entry.Variable.prototype.getMaxValue = function() {
   return this.maxValue_;
 };
 Entry.Variable.prototype.setMaxValue = function(b) {
-  this.maxValue_ = b;
+  this.maxValue_ = b = b || 100;
   this.value_ > b && (this.value_ = b);
   this.updateView();
   this.isMaxFloat = Entry.isFloat(this.maxValue_);
@@ -17899,6 +17901,9 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function() {
   e.addClass("entryVariableSettingMinValueInputWorkspace");
   c = b.selectedVariable;
   e.value = c && "slide" == c.type ? c.minValue_ : 0;
+  e.onkeypress = function(a) {
+    13 === a.keyCode && this.blur();
+  };
   e.onblur = function(a) {
     isNaN(this.value) || (a = b.selectedVariable, a.setMinValue(this.value), b.updateVariableSettingView(a));
   };
@@ -17911,6 +17916,9 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function() {
   var g = Entry.createElement("input");
   g.addClass("entryVariableSettingMaxValueInputWorkspace");
   g.value = c && "slide" == c.type ? c.maxValue_ : 100;
+  g.onkeypress = function(a) {
+    13 === a.keyCode && this.blur();
+  };
   g.onblur = function(a) {
     isNaN(this.value) || (a = b.selectedVariable, a.setMaxValue(this.value), b.updateVariableSettingView(a));
   };
@@ -20707,7 +20715,10 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
     var a = this._block.getCode().object, b = [];
     Entry.container && (b = this._menuName ? Entry.container.getDropdownList(this._menuName, a) : this._menuGenerator());
     this._contents.options = b;
-    (a = this.getValue()) && "null" != a || (a = 0 !== b.length ? b[0][1] : null);
+    a = this.getValue();
+    if (this._blockView.isInBlockMenu || !a || "null" == a) {
+      a = 0 !== b.length ? b[0][1] : null;
+    }
     this.setValue(a);
   };
   b.renderOptions = function() {
@@ -21632,10 +21643,7 @@ Entry.Board.DRAG_RADIUS = 5;
   };
   b._keyboardControl = function(a) {
     var b = this.selectedBlockView;
-    if (b && 46 == a.keyCode) {
-      var c = b.block;
-      c && !Entry.Utils.isInInput(a) && c.isDeletable() && (Entry.do("destroyBlock", b.block), this.set({selectedBlockView:null}));
-    }
+    b && 46 == a.keyCode && (b = b.block) && !Entry.Utils.isInInput(a) && b.isDeletable() && (Entry.do("destroyBlock", b), this.set({selectedBlockView:null}));
   };
   b.hide = function() {
     this.wrapper.addClass("entryRemove");

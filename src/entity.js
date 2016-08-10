@@ -798,6 +798,7 @@ Entry.EntityObject.prototype.getVisible = function() {
  * @param {?picture model} pictureModel
  */
 Entry.EntityObject.prototype.setImage = function(pictureModel) {
+    var that = this;
     delete pictureModel._id;
     Entry.assert(this.type == 'sprite', "Set image is only for sprite object");
     if (!pictureModel.id)
@@ -819,8 +820,12 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
     this.setRegX(this.width/2 + absoluteRegX);
     this.setRegY(this.height/2 + absoluteRegY);
 
-    var image = Entry.container.getCachedPicture(pictureModel.id);
+    //pictureId can be duplicated by copy/paste
+    //add entityId in order to differentiate copied pictures
+    var cacheId = pictureModel.id + this.id;
+    var image = Entry.container.getCachedPicture(cacheId);
     if (!image) {
+        this.object.cache(0,0,this.getWidth(),this.getHeight());
         image = new Image();
         if (pictureModel.fileurl) {
             image.src = pictureModel.fileurl;
@@ -829,15 +834,11 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
             image.src = Entry.defaultPath + '/uploads/' + fileName.substring(0, 2) + '/' +
                 fileName.substring(2, 4) + '/image/' + fileName + '.png';
         }
-        image = image;
-        var thisPointer = this;
         image.onload = function(e) {
-            Entry.container.cachePicture(pictureModel.id, image);
+            Entry.container.cachePicture(cacheId, image);
             Entry.image = image;
-            thisPointer.object.image = image;
-            thisPointer.object.cache(0,0,thisPointer.getWidth(),thisPointer.getHeight());
-            //Entry.dispatchEvent('updateObject');
-            thisPointer = null;
+            that.object.image = image;
+            that.object.cache(0,0,that.getWidth(),that.getHeight());
             Entry.requestUpdate = true;
         };
     } else {
@@ -851,11 +852,11 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
 /**
  * Apply easel filter
  */
-Entry.EntityObject.prototype.applyFilter = function() {
+Entry.EntityObject.prototype.applyFilter = function(isForce) {
     var effects = this.effect;
     var object = this.object;
 
-    if (isEqualEffects(effects, this.getInitialEffectValue()))
+    if (!isForce && isEqualEffects(effects, this.getInitialEffectValue()))
         return;
 
     (function(e, obj) {
@@ -929,7 +930,6 @@ Entry.EntityObject.prototype.applyFilter = function() {
     })(effects, object);
 
     object.cache(0,0,this.getWidth(),this.getHeight());
-
 
     function isEqualEffects(effectsA, effectsB) {
         for (var key in effectsA) {

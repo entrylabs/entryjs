@@ -9,6 +9,7 @@
  * @constructor
  */
 Entry.EntryObject = function(model) {
+    var that = this;
     if (model) {
         /** @type {string} */
         this.id = model.id;
@@ -85,7 +86,8 @@ Entry.EntryObject = function(model) {
             }
             Entry.Loader.addQueue();
             image.onload = function(e) {
-                Entry.container.cachePicture(picture.id, image);
+                Entry.container.cachePicture(
+                    picture.id + that.entity.id, image);
                 Entry.Loader.removeQueue();
                 Entry.requestUpdate = true;
             };
@@ -1300,8 +1302,11 @@ Entry.EntryObject.prototype.addCloneEntity = function(object, entity, script) {
             Entry.setCloneBrush(clonedEntity, this.entity.brush);
         }
     }
-    Entry.engine.raiseEventOnEntity(clonedEntity,
-                                    [clonedEntity, 'when_clone_start']);
+    Entry.engine.raiseEventOnEntity(
+        clonedEntity, [clonedEntity, 'when_clone_start']
+    );
+    //Entry.engine.pushQueue(
+        //clonedEntity, [clonedEntity, 'when_clone_start']);
     clonedEntity.isClone = true;
     clonedEntity.isStarted = true;
     this.addCloneVariables(this, clonedEntity,
