@@ -842,9 +842,11 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
             Entry.requestUpdate = true;
         };
     } else {
-        Entry.image = image;
-        this.object.image = image;
-        this.object.cache(0,0,this.getWidth(),this.getHeight());
+        image.onload = function(e) {
+            Entry.image = image;
+            this.object.image = image;
+            this.object.cache(0,0,this.getWidth(),this.getHeight());
+        }
     }
     Entry.dispatchEvent('updateObject');
 };
