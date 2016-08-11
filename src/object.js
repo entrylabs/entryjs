@@ -91,6 +91,10 @@ Entry.EntryObject = function(model) {
                 Entry.Loader.removeQueue();
                 Entry.requestUpdate = true;
             };
+            image.onerror = function() {
+                Entry.Loader.removeQueue();
+                Entry.requestUpdate = false;
+            }
         }
     }
 };
