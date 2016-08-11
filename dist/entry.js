@@ -7690,11 +7690,7 @@ Entry.EntityObject.prototype.setImage = function(b) {
   this.setRegX(this.width / 2 + d);
   this.setRegY(this.height / 2 + e);
   var f = b.id + this.id, g = Entry.container.getCachedPicture(f);
-  g ? g.onload = function(a) {
-    Entry.image = g;
-    this.object.image = g;
-    this.object.cache(0, 0, this.getWidth(), this.getHeight());
-  } : (this.object.cache(0, 0, this.getWidth(), this.getHeight()), g = new Image, b.fileurl ? g.src = b.fileurl : (b = b.filename, g.src = Entry.defaultPath + "/uploads/" + b.substring(0, 2) + "/" + b.substring(2, 4) + "/image/" + b + ".png"), g.onload = function(b) {
+  g ? (Entry.image = g, this.object.image = g, this.object.cache(0, 0, this.getWidth(), this.getHeight())) : (this.object.cache(0, 0, this.getWidth(), this.getHeight()), g = new Image, b.fileurl ? g.src = b.fileurl : (b = b.filename, g.src = Entry.defaultPath + "/uploads/" + b.substring(0, 2) + "/" + b.substring(2, 4) + "/image/" + b + ".png"), g.onload = function(b) {
     Entry.container.cachePicture(f, g);
     Entry.image = g;
     a.object.image = g;
@@ -8083,17 +8079,23 @@ Entry.EntryObject = function(b) {
       var d = this.pictures[c];
       d.objectId = this.id;
       d.id || (d.id = Entry.generateHash());
-      var e = new Image;
-      d.fileurl ? e.src = d.fileurl : d.fileurl ? e.src = d.fileurl : (b = d.filename, e.src = Entry.defaultPath + "/uploads/" + b.substring(0, 2) + "/" + b.substring(2, 4) + "/image/" + b + ".png");
+      b = new Image;
+      if (d.fileurl) {
+        b.src = d.fileurl;
+      } else {
+        if (d.fileurl) {
+          b.src = d.fileurl;
+        } else {
+          var e = d.filename;
+          b.src = Entry.defaultPath + "/uploads/" + e.substring(0, 2) + "/" + e.substring(2, 4) + "/image/" + e + ".png";
+        }
+      }
       Entry.Loader.addQueue();
-      e.onload = function(b) {
-        Entry.container.cachePicture(d.id + a.entity.id, e);
-        Entry.Loader.removeQueue();
-        Entry.requestUpdate = !0;
+      b.onload = function(b) {
+        this.width && this.height && (Entry.container.cachePicture(d.id + a.entity.id, this), Entry.requestUpdate = !0, Entry.Loader.removeQueue());
       };
-      e.onerror = function() {
-        Entry.Loader.removeQueue();
-        Entry.requestUpdate = !1;
+      b.onerror = function(a) {
+        0 != this.width && 0 != this.height || Entry.Loader.removeQueue();
       };
     }
   }

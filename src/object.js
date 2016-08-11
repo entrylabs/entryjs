@@ -86,14 +86,17 @@ Entry.EntryObject = function(model) {
             }
             Entry.Loader.addQueue();
             image.onload = function(e) {
-                Entry.container.cachePicture(
-                    picture.id + that.entity.id, image);
-                Entry.Loader.removeQueue();
-                Entry.requestUpdate = true;
+                if (this.width && this.height) {
+                    Entry.container.cachePicture(
+                        picture.id + that.entity.id, this);
+                    Entry.requestUpdate = true;
+                    Entry.Loader.removeQueue();
+                }
             };
-            image.onerror = function() {
-                Entry.Loader.removeQueue();
-                Entry.requestUpdate = false;
+            image.onerror = function(err) {
+                if (this.width == 0 || this.height == 0) {
+                    Entry.Loader.removeQueue();
+                }
             }
         }
     }
