@@ -243,12 +243,12 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
                 if (!prevBlock) {
                     var parent = this.getThread().view.getParent();
                     if (parent.constructor === Entry.FieldStatement) {
-                        nextBlock.view.bindPrev(parent);
+                        nextBlock.view && nextBlock.view.bindPrev(parent);
                         parent.insertTopBlock(nextBlock);
                     } else if (parent.constructor === Entry.FieldStatement) {
                         nextBlock.replace(parent._valueBlock);
                     } else nextBlock.view._toGlobalCoordinate();
-                } else nextBlock.view.bindPrev(prevBlock);
+                } else nextBlock.view && nextBlock.view.bindPrev(prevBlock);
             }
         }
         if (!this.doNotSplice && thread.spliceBlock) thread.spliceBlock(this);
@@ -460,8 +460,9 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         return pointer;
     };
 
-    p.getBlockList = function(excludePrimitive) {
+    p.getBlockList = function(excludePrimitive, type) {
         var blocks = [];
+        type = type || this.type;
 
         if (!this._schema)
             return [];
@@ -469,20 +470,20 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         if (excludePrimitive && this._schema.isPrimitive)
             return blocks;
 
-        blocks.push(this);
+        type === this.type && blocks.push(this);
 
         var params = this.params;
         for (var k = 0; k < params.length; k++) {
             var param = params[k];
             if (param && param.constructor == Entry.Block) {
-                blocks = blocks.concat(param.getBlockList(excludePrimitive));
+                blocks = blocks.concat(param.getBlockList(excludePrimitive, type));
             }
         }
 
         var statements = this.statements;
         if (statements) {
             for (var j = 0; j < statements.length; j++) {
-                blocks = blocks.concat(statements[j].getBlockList(excludePrimitive));
+                blocks = blocks.concat(statements[j].getBlockList(excludePrimitive, type));
             }
         }
         return blocks;

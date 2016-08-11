@@ -35,7 +35,8 @@ Entry.Thread = function(thread, code, parent) {
             if (block instanceof Entry.Block || block.isDummy) {
                 block.setThread(this);
                 this._data.push(block);
-            } else this._data.push(new Entry.Block(block, this));
+            } else
+                Entry.block[block.type] && this._data.push(new Entry.Block(block, this));
         }
 
         var codeView = this._code.view;
@@ -170,15 +171,7 @@ Entry.Thread = function(thread, code, parent) {
     };
 
     p.spliceBlock = function(block) {
-        var blocks = this._data;
-        blocks.remove(block);
-
-        if (blocks.length === 0) {
-            var parent = this.view.getParent();
-            if (parent.constructor !== Entry.FieldStatement)
-                 this.destroy();
-        }
-
+        this._data.remove(block);
         this.changeEvent.notify();
     };
 
@@ -256,10 +249,10 @@ Entry.Thread = function(thread, code, parent) {
         return this.parent.pointer(pointer);
     };
 
-    p.getBlockList = function(excludePrimitive) {
+    p.getBlockList = function(excludePrimitive, type) {
         var blocks = [];
         for (var i = 0; i < this._data.length; i++)
-            blocks = blocks.concat(this._data[i].getBlockList(excludePrimitive));
+            blocks = blocks.concat(this._data[i].getBlockList(excludePrimitive, type));
 
         return blocks;
     };
