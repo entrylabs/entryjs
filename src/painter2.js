@@ -68,11 +68,21 @@ p.initialize = function() {
 
     this.initTopBar();
     this.updateEditMenu();
+
+    if (Entry.keyPressed)
+        Entry.keyPressed.attach(this, this._keyboardPressControl);
+    if (Entry.keyUpped)
+        Entry.keyUpped.attach(this, this._keyboardUpControl);
 };
 
 p.show = function() {
     if (!this.lc)
         this.initialize();
+    this.isShow = true;
+};
+
+p.hide = function() {
+    this.isShow = false;
 };
 
 p.changePicture = function(picture) {
@@ -126,6 +136,10 @@ p.addPicture = function(picture, isOriginal) {
 };
 
 p.copy = function() {
+    if (this.lc.tool.name !== "SelectShape" ||
+       !this.lc.tool.selectedShape)
+        return;
+
     var shape = this.lc.tool.selectedShape;
     this.clipboard = {
         className: shape.className,
@@ -135,6 +149,9 @@ p.copy = function() {
 };
 
 p.cut = function() {
+    if (this.lc.tool.name !== "SelectShape" ||
+       !this.lc.tool.selectedShape)
+        return;
     this.copy();
     var shape = this.lc.tool.selectedShape;
     this.lc.removeShape(shape);
@@ -142,6 +159,8 @@ p.cut = function() {
 };
 
 p.paste = function() {
+    if (!this.clipboard)
+        return;
     var shape = this.lc.addShape(this.clipboard);
     this.lc.setTool(this.lc.tools.SelectShape);
     this.lc.tool.setShape(this.lc, shape);
@@ -164,6 +183,49 @@ p.file_save = function() {
 
     this.file.modified = false;
 
+};
+
+p.newPicture = function() {
+    var newPicture = {
+        dimension: {
+            height: 1,
+            width: 1
+        },
+        //filename: "_1x1",
+        fileurl: Entry.mediaFilePath + '_1x1.png',
+        name: Lang.Workspace.new_picture
+    };
+
+    newPicture.id = Entry.generateHash();
+    Entry.playground.addPicture(newPicture, true);
+
+    this.lc.clear(false);
+};
+
+p._keyboardPressControl = function(e) {
+    if (!this.isShow || Entry.Utils.isInInput(e)) return;
+    var keyCode = e.keyCode || e.which,
+        ctrlKey = e.ctrlKey;
+
+    if (keyCode == 8 || keyCode == 46) { //destroy
+        this.cut()
+        e.preventDefault();
+    } else if (ctrlKey) {
+        if (keyCode == 67) //copy
+            this.copy()
+        else if (keyCode == 88) { //cut
+            this.cut()
+        }
+    }
+
+    if (ctrlKey && keyCode == 86) { //paste
+        this.paste()
+    }
+    this.lc.trigger("keyDown", e);
+};
+
+p._keyboardUpControl = function(e) {
+    this.lc.trigger("keyUp", e);
 };
 
 p.initTopBar = function() {
