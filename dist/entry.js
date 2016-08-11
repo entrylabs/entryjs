@@ -8092,10 +8092,12 @@ Entry.EntryObject = function(b) {
       }
       Entry.Loader.addQueue();
       b.onload = function(b) {
-        this.width && this.height && (Entry.container.cachePicture(d.id + a.entity.id, this), Entry.requestUpdate = !0, Entry.Loader.removeQueue());
+        Entry.container.cachePicture(d.id + a.entity.id, this);
+        Entry.requestUpdate = !0;
+        Entry.Loader.removeQueue();
       };
       b.onerror = function(a) {
-        0 != this.width && 0 != this.height || Entry.Loader.removeQueue();
+        Entry.Loader.removeQueue();
       };
     }
   }
