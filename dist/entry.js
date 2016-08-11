@@ -11739,7 +11739,7 @@ Entry.Painter2 = function(a) {
     var d = new Image;
     d.src = b.fileurl ? b.fileurl : Entry.defaultPath + "/uploads/" + b.filename.substring(0, 2) + "/" + b.filename.substring(2, 4) + "/image/" + b.filename + ".png";
     b = b.dimension;
-    var e = LC.createShape("Image", {x:480 - b.width / 2, y:270 - b.height / 2, image:d});
+    var e = LC.createShape("Image", {x:480 - b.width / 2, y:270 - b.height / 2, width:b.width, height:b.height, image:d});
     this.lc.saveShape(e, !a);
     d.onload = function() {
       this.lc.setTool(this.lc.tools.SelectShape);

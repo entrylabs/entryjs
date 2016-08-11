@@ -124,6 +124,8 @@ p.addPicture = function(picture, isOriginal) {
     var shape = LC.createShape('Image',{
         x: 480 - dimension.width / 2,
         y: 270 - dimension.height / 2,
+        width: dimension.width,
+        height: dimension.height,
         image: image
     });
     this.lc.saveShape(shape, !isOriginal);
