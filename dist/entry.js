@@ -6650,9 +6650,6 @@ Entry.Container.prototype.getCachedPicture = function(b) {
 Entry.Container.prototype.cachePicture = function(b, a) {
   this.cachedPicture[b] = a;
 };
-Entry.Container.prototype.removeCachedPicture = function(b) {
-  delete this.cachedPicture[b];
-};
 Entry.Container.prototype.toJSON = function() {
   for (var b = [], a = this.objects_.length, c = 0;c < a;c++) {
     b.push(this.objects_[c].toJSON());
