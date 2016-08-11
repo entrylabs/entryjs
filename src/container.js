@@ -766,6 +766,14 @@ Entry.Container.prototype.cachePicture = function(pictureId, image) {
 };
 
 /**
+ * cache picture
+ * @param {!picture object} pictureModel
+ */
+Entry.Container.prototype.removeCachedPicture = function(pictureId) {
+    delete this.cachedPicture[pictureId];
+};
+
+/**
  * convert this object's data to JSON.
  * @return {JSON}
  */
