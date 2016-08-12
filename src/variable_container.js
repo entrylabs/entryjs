@@ -657,8 +657,15 @@ Entry.VariableContainer.prototype.addFunction = function(variable) {
  * @param {Entry.Variable} variable
  */
 Entry.VariableContainer.prototype.removeFunction = function(func) {
-    this.functions_[func.id].destroy();
-    delete this.functions_[func.id];
+    var functionId = func.id;
+    var functions = this.functions_;
+    functions[functionId].destroy();
+    delete functions[functionId];
+    var functionType = 'func_' + functionId;
+
+    Entry.container.removeFuncBlocks(functionType);
+    for (var id in functions)
+        functions[id].content.removeBlocksByType(functionType);
     this.updateList();
 };
 
@@ -731,8 +738,10 @@ Entry.VariableContainer.prototype.createFunctionView = function(func) {
     removeButton.addClass('entryVariableListElementDeleteWorkspace');
     removeButton.bindOnClick(function(e) {
         e.stopPropagation();
-        that.removeFunction(func);
-        that.selected = null;
+        if (confirm(Lang.Workspace.will_you_delete_function)) {
+            that.removeFunction(func);
+            that.selected = null;
+        }
     });
 
     var editButton = Entry.createElement('button');
