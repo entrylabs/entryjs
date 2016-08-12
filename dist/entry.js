@@ -11710,6 +11710,7 @@ Entry.Painter2 = function(a) {
       b = function(b) {
         var a = Entry.do("editPicture", b, this.lc);
         (b.shape && !b.opts && b.shape.isPass || b.opts && b.opts.isPass) && a.isPass();
+        this.file.modified = !0;
       }.bind(this);
       this.lc.on("clear", b);
       this.lc.on("shapeEdit", b);
@@ -11771,14 +11772,13 @@ Entry.Painter2 = function(a) {
   };
   a.file_save = function() {
     var b = this.lc.getImage().toDataURL();
-    Entry.dispatchEvent("saveCanvasImage", {file:this.file, image:b});
+    Entry.dispatchEvent("saveCanvasImage", {file:this.file_, image:b});
     this.file.modified = !1;
   };
   a.newPicture = function() {
     var b = {dimension:{height:1, width:1}, fileurl:Entry.mediaFilePath + "_1x1.png", name:Lang.Workspace.new_picture};
     b.id = Entry.generateHash();
     Entry.playground.addPicture(b, !0);
-    this.lc.clear(!1);
   };
   a._keyboardPressControl = function(b) {
     if (this.isShow && !Entry.Utils.isInInput(b)) {

@@ -53,6 +53,7 @@ p.initialize = function() {
             e.opts && e.opts.isPass) {
             cmd.isPass()
         }
+        this.file.modified = true;
     }.bind(this)
 
     this.lc.on("clear", watchFunc);
@@ -176,15 +177,11 @@ p.updateEditMenu = function() {
 };
 
 p.file_save = function() {
-    //this.clearHandle();
-    //this.trim();
-
     var dataURL = this.lc.getImage().toDataURL();
     Entry.dispatchEvent('saveCanvasImage',
-                        {file: this.file, image: dataURL});
+                        {file: this.file_, image: dataURL});
 
     this.file.modified = false;
-
 };
 
 p.newPicture = function() {
@@ -200,8 +197,6 @@ p.newPicture = function() {
 
     newPicture.id = Entry.generateHash();
     Entry.playground.addPicture(newPicture, true);
-
-    this.lc.clear(false);
 };
 
 p._keyboardPressControl = function(e) {
