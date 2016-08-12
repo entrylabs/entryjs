@@ -68,32 +68,33 @@ Entry.EntryObject = function(model) {
         Entry.stage.loadObject(this);
 
         for (var i in this.pictures) {
-            var picture = this.pictures[i];
-            picture.objectId = this.id;
-            if (!picture.id)
-                picture.id = Entry.generateHash();
-            var image = new Image();
-            if (picture.fileurl) {
-                image.src = picture.fileurl;
-            } else {
+            (function (picture) {
+                picture.objectId = this.id;
+                if (!picture.id)
+                    picture.id = Entry.generateHash();
+                var image = new Image();
                 if (picture.fileurl) {
                     image.src = picture.fileurl;
                 } else {
-                    var fileName = picture.filename;
-                    image.src = Entry.defaultPath + '/uploads/' + fileName.substring(0, 2) + '/' +
-                        fileName.substring(2, 4) + '/image/' + fileName + '.png';
+                    if (picture.fileurl) {
+                        image.src = picture.fileurl;
+                    } else {
+                        var fileName = picture.filename;
+                        image.src = Entry.defaultPath + '/uploads/' + fileName.substring(0, 2) + '/' +
+                            fileName.substring(2, 4) + '/image/' + fileName + '.png';
+                    }
                 }
-            }
-            Entry.Loader.addQueue();
-            image.onload = function(e) {
-                Entry.container.cachePicture(
-                    picture.id + that.entity.id, this);
-                Entry.requestUpdate = true;
-                Entry.Loader.removeQueue();
-            };
-            image.onerror = function(err) {
-                Entry.Loader.removeQueue();
-            }
+                Entry.Loader.addQueue();
+                image.onload = function(e) {
+                    Entry.container.cachePicture(
+                        picture.id + that.entity.id, this);
+                    Entry.requestUpdate = true;
+                    Entry.Loader.removeQueue();
+                };
+                image.onerror = function(err) {
+                    Entry.Loader.removeQueue();
+                }
+            })(this.pictures[i]);
         }
     }
 };

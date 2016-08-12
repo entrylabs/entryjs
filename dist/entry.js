@@ -8076,29 +8076,30 @@ Entry.EntryObject = function(b) {
     this.clonedEntities = [];
     Entry.stage.loadObject(this);
     for (c in this.pictures) {
-      var d = this.pictures[c];
-      d.objectId = this.id;
-      d.id || (d.id = Entry.generateHash());
-      b = new Image;
-      if (d.fileurl) {
-        b.src = d.fileurl;
-      } else {
-        if (d.fileurl) {
-          b.src = d.fileurl;
+      (function(b) {
+        b.objectId = this.id;
+        b.id || (b.id = Entry.generateHash());
+        var c = new Image;
+        if (b.fileurl) {
+          c.src = b.fileurl;
         } else {
-          var e = d.filename;
-          b.src = Entry.defaultPath + "/uploads/" + e.substring(0, 2) + "/" + e.substring(2, 4) + "/image/" + e + ".png";
+          if (b.fileurl) {
+            c.src = b.fileurl;
+          } else {
+            var f = b.filename;
+            c.src = Entry.defaultPath + "/uploads/" + f.substring(0, 2) + "/" + f.substring(2, 4) + "/image/" + f + ".png";
+          }
         }
-      }
-      Entry.Loader.addQueue();
-      b.onload = function(b) {
-        Entry.container.cachePicture(d.id + a.entity.id, this);
-        Entry.requestUpdate = !0;
-        Entry.Loader.removeQueue();
-      };
-      b.onerror = function(a) {
-        Entry.Loader.removeQueue();
-      };
+        Entry.Loader.addQueue();
+        c.onload = function(c) {
+          Entry.container.cachePicture(b.id + a.entity.id, this);
+          Entry.requestUpdate = !0;
+          Entry.Loader.removeQueue();
+        };
+        c.onerror = function(a) {
+          Entry.Loader.removeQueue();
+        };
+      })(this.pictures[c]);
     }
   }
 };
