@@ -306,7 +306,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 }
                 break;
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
-                var textCode = this._parser.Code(code);
+                var textCode = this._parser.Code(code, parseMode);
                 /*var textArr = textCode.match(/(.*{.*[\S|\s]+?}|.+)/g);
                 console.log("textCode", textCode);
                 if(Array.isArray(textArr)) {

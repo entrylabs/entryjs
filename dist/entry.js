@@ -11502,18 +11502,17 @@ Entry.BlockToJsParser = function(b) {
   this._iterVariableChunk = ["i", "j", "k"];
 };
 (function(b) {
-  b.Code = function(a) {
+  b.Code = function(a, b) {
+    this._parseMode = b;
     if (a instanceof Entry.Block) {
       return this.Block(a);
     }
-    var b = "";
-    a = a._data;
-    for (var c = 0;c < a.length;c++) {
-      var e = a[c];
-      console.log("this.Thread", this.Thread(e));
-      b += this.Thread(e);
+    for (var c = "", e = a._data, f = 0;f < e.length;f++) {
+      var g = e[f];
+      console.log("this.Thread", this.Thread(g));
+      c += this.Thread(g);
     }
-    return b.trim();
+    return c.trim();
   };
   b.Thread = function(a) {
     if (a instanceof Entry.Block) {
@@ -11523,7 +11522,7 @@ Entry.BlockToJsParser = function(b) {
     a = a.getBlocks();
     for (var c = 0;c < a.length;c++) {
       var e = a[c];
-      c != a.length - 1 ? (e = this.Block(e), console.log("bb", e), b += e + "\n") : (e = this.Block(e), console.log("bb", e), b += e);
+      c != a.length - 1 ? (e = this.Block(e), console.log("bb", e), this._parseMode == Entry.Parser.PARSE_GENERAL ? b += e + "\n" : this._parseMode == Entry.Parser.PARSE_SYNTAX && (b = e + "\n")) : (e = this.Block(e), console.log("bb", e), this._parseMode == Entry.Parser.PARSE_GENERAL ? b += e : this._parseMode == Entry.Parser.PARSE_SYNTAX && (b = e));
     }
     return b + "\n";
   };
@@ -13706,7 +13705,7 @@ Entry.Parser = function(b, a, d, c) {
         }
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
-        c = l = this._parser.Code(a);
+        c = l = this._parser.Code(a, b);
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
         l = this._parser.Code(a, b), this._pyHinter || (this._pyHinter = new Entry.PyHint), c = l;
@@ -23161,15 +23160,19 @@ Entry.Vim = function(b, a) {
     var e = b.textType;
     e === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : e === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
     var f = this._parser.parse(a, Entry.Parser.PARSE_GENERAL);
+    console.log("codeToText", f);
     e === Entry.Vim.TEXT_TYPE_PY && (f = c.concat("\n\n").concat(Entry.Vim.PYTHON_IMPORT_ENTRY).concat("\n").concat(Entry.Vim.PYTHON_IMPORT_HW).concat("\n\n").concat(f));
     this.codeMirror.setValue(f);
     c = this.codeMirror.getDoc();
     c.setCursor({line:c.lastLine() - 1});
   };
   b.getCodeToText = function(a) {
+    console.log("getCodeToText");
     var b = this.workspace.textType;
     b === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : b === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
-    return this._parser.parse(a, Entry.Parser.PARSE_SYNTAX);
+    a = this._parser.parse(a, Entry.Parser.PARSE_SYNTAX);
+    console.log("getCodeToText", a);
+    return a;
   };
   b.setParserAvailableCode = function(a, b) {
     this._parser.setAvailableCode(a, b);

@@ -161,6 +161,8 @@ Entry.Vim = function(dom, textType) {
 
         var textCode = this._parser.parse(code, Entry.Parser.PARSE_GENERAL);
 
+        console.log("codeToText", textCode);
+
         if(textType === Entry.Vim.TEXT_TYPE_PY) {
             textCode = codeDescription
             .concat("\n\n")
@@ -178,6 +180,7 @@ Entry.Vim = function(dom, textType) {
     };
 
     p.getCodeToText = function(code) {
+        console.log("getCodeToText");
         var textType = this.workspace.textType;
         if (textType === Entry.Vim.TEXT_TYPE_JS){
             this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS;
@@ -187,6 +190,7 @@ Entry.Vim = function(dom, textType) {
             this._parser.setParser(this._mode, this._parserType, this.codeMirror);
         }
         var textCode = this._parser.parse(code, Entry.Parser.PARSE_SYNTAX);
+        console.log("getCodeToText", textCode);
         return textCode;
     };
 

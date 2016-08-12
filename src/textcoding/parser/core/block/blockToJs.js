@@ -14,7 +14,8 @@ Entry.BlockToJsParser = function(syntax) {
 };
 
 (function(p){
-    p.Code = function(code) {
+    p.Code = function(code, parseMode) {
+        this._parseMode = parseMode;
         /*if (code instanceof Entry.Thread)
             return this.Thread(code);*/
         if (code instanceof Entry.Block)
@@ -43,12 +44,22 @@ Entry.BlockToJsParser = function(syntax) {
             if(i != blocks.length-1) {
                 var block = this.Block(block);
                 console.log("bb", block);
-                code += block + '\n';
+                if(this._parseMode == Entry.Parser.PARSE_GENERAL) {
+                    code += block + '\n';
+                } else if(this._parseMode == Entry.Parser.PARSE_SYNTAX) {
+                    code = block + '\n';
+                }
             }
             else {
                 var block = this.Block(block);
                 console.log("bb", block);
-                code += block;
+
+                if(this._parseMode == Entry.Parser.PARSE_GENERAL) {
+                    code += block;
+                } else if(this._parseMode == Entry.Parser.PARSE_SYNTAX) {
+                    code = block;
+                }     
+                
             }
         }
         return code + '\n';   
