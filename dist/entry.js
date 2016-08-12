@@ -19578,9 +19578,13 @@ Entry.BlockView.pngMap = {};
           this._startContentRender(Entry.Workspace.MODE_BOARD);
           return;
         }
-        g = {text:this.getBoard().workspace.getCodeToText(this.block)};
-        this.block._schema.vimModeFontColor && (g.color = this.block._schema.vimModeFontColor);
-        this._contents.push(new Entry.FieldText(g, this));
+        b = this.getBoard().workspace.getCodeToText(this.block);
+        a = !1;
+        /(if)+(.|\n)+(else)+/.test(b) && (g = b.split("\n"), b = g.shift() + " " + g.shift(), a = !0, g = g.join(" "));
+        b = {text:b};
+        this.block._schema.vimModeFontColor && (b.color = this.block._schema.vimModeFontColor);
+        this._contents.push(new Entry.FieldText(b, this));
+        a && (this._contents.push(new Entry.FieldLineBreak(null, this)), b.text = g, this._contents.push(new Entry.FieldText(b, this)));
     }
     this.alignContent(!1);
   };
