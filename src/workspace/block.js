@@ -462,7 +462,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
 
     p.getBlockList = function(excludePrimitive, type) {
         var blocks = [];
-        type = type || this.type;
+        var currentType = type || this.type;
 
         if (!this._schema)
             return [];
@@ -470,7 +470,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         if (excludePrimitive && this._schema.isPrimitive)
             return blocks;
 
-        type === this.type && blocks.push(this);
+        currentType === this.type && blocks.push(this);
 
         var params = this.params;
         for (var k = 0; k < params.length; k++) {

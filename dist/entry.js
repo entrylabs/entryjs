@@ -19303,14 +19303,13 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
   };
   b.getBlockList = function(a, b) {
     var d = [];
-    b = b || this.type;
     if (!this._schema) {
       return [];
     }
     if (a && this._schema.isPrimitive) {
       return d;
     }
-    b === this.type && d.push(this);
+    (b || this.type) === this.type && d.push(this);
     for (var e = this.params, f = 0;f < e.length;f++) {
       var g = e[f];
       g && g.constructor == Entry.Block && (d = d.concat(g.getBlockList(a, b)));
