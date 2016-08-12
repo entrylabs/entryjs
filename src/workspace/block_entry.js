@@ -8359,18 +8359,18 @@ Entry.block = {
                 var wall = Entry.stage.wall;
                 switch(targetSpriteId) {
                     case 'wall':
-                        return  (collision(object,wall.up,ath,true) ||
+                        return  !!(collision(object,wall.up,ath,true) ||
                             collision(object,wall.down,ath,true) ||
                             collision(object,wall.left,ath,true) ||
-                                collision(object,wall.right,ath,true));
+                                collision(object,wall.right,ath, 0, true));
                     case 'wall_up':
-                        return collision(object,wall.up,ath,true);
+                        return !!collision(object,wall.up,ath,true);
                     case 'wall_down':
-                        return collision(object,wall.down,ath,true);
+                        return !!collision(object,wall.down,ath,true);
                     case 'wall_right':
-                        return collision(object,wall.right,ath,true);
+                        return !!collision(object,wall.right,ath,true);
                     case 'wall_left':
-                        return collision(object,wall.left,ath,true);
+                        return !!collision(object,wall.left,ath,true);
                 }
             } else if (targetSpriteId == 'mouse') {
                 var stage = Entry.stage.canvas;
