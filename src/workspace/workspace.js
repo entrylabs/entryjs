@@ -220,7 +220,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
         if (Entry.Utils.isInInput(e)) return;
 
-        var blockView = this.selectedBlockView;
+        var blockView = this.selectedBlockView; 
 
         if (blockView && !blockView.isInBlockMenu && blockView.block.isDeletable()) {
             if (keyCode == 8 || keyCode == 46) { //destroy

@@ -61,6 +61,8 @@ Entry.JsToBlockParser = function(syntax) {
          
         if(type == "ai_distance_value")
             return node.value;
+        else if(type == "ai_boolean_object")
+            return node.value;
         else
             return {type: 'text', params: [node.value] };
     };
@@ -490,11 +492,14 @@ Entry.JsToBlockParser = function(syntax) {
         var structure = {}; 
 
         var operator = String(node.operator);  
+        var nodeName = node.left.name;
 
         switch(operator){ 
             case "==": 
-                if(node.right.value == "OBSTACLE" || node.right.value == "WALL" || node.right.value == "ITEM")
+                if(nodeName == "object_up" || nodeName == "object_right" || nodeName == "object_down")
                     var type = "ai_boolean_object";
+                else if(nodeName == "radar_up" || nodeName == "radar_right" || nodeName == "radar_down")
+                    var type = "ai_boolean_distance";
                 else    
                     var type = "ai_boolean_distance";
                 break;         
@@ -595,10 +600,18 @@ Entry.JsToBlockParser = function(syntax) {
                     var argument = arguments[i];          
                     var param = this[argument.type](argument);
 
+                    console.log("param", param);
+
                     var nameTokens = param.split("_");
                     if(nameTokens[0] == 'radar') {
                         var result = {};
                         result.type = "ai_distance_value";
+                        result.params = [];
+                        result.params.push(nameTokens[1].toUpperCase());
+                        param = result;
+                    } else if(nameTokens[0] == 'object') {
+                        var result = {};
+                        result.type = "ai_boolean_object";
                         result.params = [];
                         result.params.push(nameTokens[1].toUpperCase());
                         param = result;
@@ -614,7 +627,9 @@ Entry.JsToBlockParser = function(syntax) {
                     params.push(param);
             }   
             
-            if(param == "OBSTACLE" || param == "WALL" || param == "ITEM")
+            if((type == "ai_boolean_distance" && param == "OBSTACLE") || 
+                (type == "ai_boolean_distance" && param == "WALL") || 
+                (type == "ai_boolean_distance" && param == "ITEM"))
                 params.splice(1, 1);
 
             structure.type = type;

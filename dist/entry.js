@@ -11957,7 +11957,7 @@ Entry.JsToBlockParser = function(b) {
   };
   b.Literal = function(a, b) {
     console.log("literal node", a, "type", b);
-    return !0 === a.value ? {type:"True"} : !1 === a.value ? {type:"False"} : "ai_distance_value" == b ? a.value : {type:"text", params:[a.value]};
+    return !0 === a.value ? {type:"True"} : !1 === a.value ? {type:"False"} : "ai_distance_value" == b ? a.value : "ai_boolean_object" == b ? a.value : {type:"text", params:[a.value]};
   };
   b.ExpressionStatement = function(a) {
     a = a.expression;
@@ -12127,30 +12127,31 @@ Entry.JsToBlockParser = function(b) {
   };
   b.BinaryExpression = function(a) {
     console.log("BinaryExpression node", a);
-    var b = {}, c = {}, e = String(a.operator);
+    var b = {}, c = {}, e = String(a.operator), f = a.left.name;
     switch(e) {
       case "==":
-        var f = "OBSTACLE" == a.right.value || "WALL" == a.right.value || "ITEM" == a.right.value ? "ai_boolean_object" : "ai_boolean_distance";
+        var g = "object_up" == f || "object_right" == f || "object_down" == f ? "ai_boolean_object" : "ai_boolean_distance";
         break;
       case "<":
-        f = "ai_boolean_distance";
+        g = "ai_boolean_distance";
         break;
       case "<=":
-        f = "ai_boolean_distance";
+        g = "ai_boolean_distance";
         break;
       case ">":
-        f = "ai_boolean_distance";
+        g = "ai_boolean_distance";
         break;
       case ">=":
-        f = "ai_boolean_distance";
+        g = "ai_boolean_distance";
     }
-    if (f) {
-      console.log("BinaryExpression type", f);
-      var g = [], b = a.left;
+    if (g) {
+      console.log("BinaryExpression type", g);
+      f = [];
+      b = a.left;
       if ("Literal" == b.type || "Identifier" == b.type) {
         arguments = [];
         arguments.push(b);
-        b = Entry.block[f].params;
+        b = Entry.block[g].params;
         console.log("BinaryExpression paramsMeta", b);
         for (var h in b) {
           e = b[h].type, "Indicator" == e ? (e = {raw:null, type:"Literal", value:null}, h < arguments.length && arguments.splice(h, 0, e)) : "Text" == e && (e = {raw:"", type:"Literal", value:""}, h < arguments.length && arguments.splice(h, 0, e));
@@ -12160,31 +12161,31 @@ Entry.JsToBlockParser = function(b) {
           console.log("BinaryExpression argument", l);
           l = this[l.type](l);
           console.log("BinaryExpression param", l);
-          (l = Entry.TextCodingUtil.prototype.radarVariableConvertor(l)) && null != l && g.push(l);
+          (l = Entry.TextCodingUtil.prototype.radarVariableConvertor(l)) && null != l && f.push(l);
         }
       } else {
-        l = this[b.type](b), (l = Entry.TextCodingUtil.prototype.radarVariableConvertor(l)) && g.push(l);
+        l = this[b.type](b), (l = Entry.TextCodingUtil.prototype.radarVariableConvertor(l)) && f.push(l);
       }
       if (e = String(a.operator)) {
-        (l = e = Entry.TextCodingUtil.prototype.jTobBinaryOperatorConvertor(e)) && g.push(l), c.operator = e;
+        (l = e = Entry.TextCodingUtil.prototype.jTobBinaryOperatorConvertor(e)) && f.push(l), c.operator = e;
       }
       b = a.right;
       if ("Literal" == b.type || "Identifier" == b.type) {
         arguments = [];
         arguments.push(b);
-        b = Entry.block[f].params;
+        b = Entry.block[g].params;
         for (h in b) {
           e = b[h].type, "Indicator" == e ? (e = {raw:null, type:"Literal", value:null}, h < arguments.length && arguments.splice(h, 0, e)) : "Text" == e && (e = {raw:"", type:"Literal", value:""}, h < arguments.length && arguments.splice(h, 0, e));
         }
         for (k in arguments) {
-          l = arguments[k], l = this[l.type](l), h = l.split("_"), "radar" == h[0] && (b = {type:"ai_distance_value", params:[]}, b.params.push(h[1].toUpperCase()), l = b), l && null != l && g.push(l);
+          l = arguments[k], l = this[l.type](l), console.log("param", l), h = l.split("_"), "radar" == h[0] ? (b = {type:"ai_distance_value", params:[]}, b.params.push(h[1].toUpperCase()), l = b) : "object" == h[0] && (b = {type:"ai_boolean_object", params:[]}, b.params.push(h[1].toUpperCase()), l = b), l && null != l && f.push(l);
         }
       } else {
-        (l = this[b.type](b)) && g.push(l);
+        (l = this[b.type](b)) && f.push(l);
       }
-      "OBSTACLE" != l && "WALL" != l && "ITEM" != l || g.splice(1, 1);
-      c.type = f;
-      c.params = g;
+      ("ai_boolean_distance" == g && "OBSTACLE" == l || "ai_boolean_distance" == g && "WALL" == l || "ai_boolean_distance" == g && "ITEM" == l) && f.splice(1, 1);
+      c.type = g;
+      c.params = f;
     } else {
       return b;
     }
