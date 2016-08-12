@@ -3844,7 +3844,7 @@ Entry.block = {
         // 블록 모양 정의
         skeleton: "basic_string_field",
         // 블록 텍스트
-        template: "8.온도센서@포트%1 %2",
+        template: "8.온도센서@포트%1",
         // 보여질 블록 정의
         params: [
             {
@@ -3854,11 +3854,6 @@ Entry.block = {
                     [ "2", "2" ],
                 ],
                 fontSize: 11
-            },
-            {
-                type: "Indicator",
-                img: "block_icon/hardware_03.png",
-                size: 12
             }
         ],
         def: {
@@ -3878,7 +3873,7 @@ Entry.block = {
         "func": function(sprite, script) {
             //    console.log("-----temptest------")
             //var signal = script.getField("VALUE", script);
-            var signal = script.getValue("VALUE", script);
+            var signal = script.getField("VALUE", script);
             if (signal == 1)
             {
           //    console.log("-----temp1 selected ");
@@ -3900,7 +3895,7 @@ Entry.block = {
         // 블록 모양 정의
         skeleton: "basic_string_field",
         // 블록 텍스트
-        template: "9.빛센서@포트%1 %2", 
+        template: "9.빛센서@포트%1", 
         // 보여질 블록 정의
         params: [
             {
@@ -3910,11 +3905,6 @@ Entry.block = {
                     [ "2", "2" ],
                 ],
                 fontSize: 11
-            },
-            {
-                type: "Indicator",
-                img: "block_icon/hardware_03.png",
-                size: 12
             }
         ],
         def: {
@@ -3932,7 +3922,7 @@ Entry.block = {
         isNotFor : [ "cobl" ],
         // 블록 기능정의
         "func": function(sprite, script) {
-                var signal = script.getValue("VALUE", script);
+                var signal = script.getField("VALUE", script);
                 if (signal == 1)
                 {
                   return Entry.hw.getAnalogPortValue("light1");
@@ -3952,7 +3942,7 @@ Entry.block = {
         // 블록 모양 정의
         skeleton: "basic_boolean_field",
         // 블록 텍스트
-        template: "10.버튼스위치@포트%1 %2",
+        template: "10.버튼스위치@포트%1",
           // 보여질 블록 정의
         params: [
             {
@@ -3962,11 +3952,6 @@ Entry.block = {
                     [ "2", "2" ],
                 ],
                 fontSize: 11
-            },
-            {
-                type: "Indicator",
-                img: "block_icon/hardware_03.png",
-                size: 12
             }
         ],
         def: {
@@ -3983,7 +3968,7 @@ Entry.block = {
         isNotFor : [ "cobl" ],
         // 블록 기능정의
         "func": function(sprite, script) {
-                var signal = script.getValue("VALUE", script);
+                var signal = script.getField("VALUE", script);
                 if (signal == 1)
                 {
                   return Entry.hw.getDigitalPortValue("btn1");
