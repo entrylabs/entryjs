@@ -8362,7 +8362,7 @@ Entry.block = {
                         return  !!(collision(object,wall.up,ath,true) ||
                             collision(object,wall.down,ath,true) ||
                             collision(object,wall.left,ath,true) ||
-                                collision(object,wall.right,ath, 0, true));
+                                collision(object,wall.right,ath, true));
                     case 'wall_up':
                         return !!collision(object,wall.up,ath,true);
                     case 'wall_down':
