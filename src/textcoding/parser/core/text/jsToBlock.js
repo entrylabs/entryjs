@@ -500,8 +500,6 @@ Entry.JsToBlockParser = function(syntax) {
                     var type = "ai_boolean_object";
                 else if(nodeName == "radar_up" || nodeName == "radar_right" || nodeName == "radar_down")
                     var type = "ai_boolean_distance";
-                else    
-                    var type = "ai_boolean_distance";
                 break;         
             case "<": 
                 var type = "ai_boolean_distance";
@@ -600,40 +598,45 @@ Entry.JsToBlockParser = function(syntax) {
                     var argument = arguments[i];          
                     var param = this[argument.type](argument);
 
-                    console.log("param", param);
+                    console.log("param1", param, "type", type);
 
-                    var nameTokens = param.split("_");
-                    if(nameTokens[0] == 'radar') {
-                        var result = {};
-                        result.type = "ai_distance_value";
-                        result.params = [];
-                        result.params.push(nameTokens[1].toUpperCase());
-                        param = result;
-                    } else if(nameTokens[0] == 'object') {
-                        var result = {};
-                        result.type = "ai_boolean_object";
-                        result.params = [];
-                        result.params.push(nameTokens[1].toUpperCase());
-                        param = result;
+                    if(typeof param == "string") {
+                        var nameTokens = param.split("_");
+
+                        if(nameTokens[0] == 'radar') {
+                            var result = {};
+                            result.type = "ai_distance_value";
+                            result.params = [];
+                            result.params.push(nameTokens[1].toUpperCase());
+                            param = result;
+                        } 
                     }
                     
                     if(param && param != null) {
+                        console.log("typebbb", type, "parambbb", param);
+                        if(type == "ai_boolean_object") {
+                            param = param.params[0];
+                            params.splice(1, 1); 
+                            console.log("param vvv", param);
+                        }
+
                         params.push(param);   
                     }
                 }
             } else {
                 param = this[right.type](right);
+                if(type == "ai_boolean_object") {
+                    param = param.params[0];
+                    params.splice(1, 1); 
+                }
+
                 if(param) 
                     params.push(param);
             }   
-            
-            if((type == "ai_boolean_distance" && param == "OBSTACLE") || 
-                (type == "ai_boolean_distance" && param == "WALL") || 
-                (type == "ai_boolean_distance" && param == "ITEM"))
-                params.splice(1, 1);
 
             structure.type = type;
             structure.params = params;
+            console.log("be structure", structure);
         } else {
             structure = null;
 
