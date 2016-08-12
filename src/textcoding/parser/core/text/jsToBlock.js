@@ -48,6 +48,7 @@ Entry.JsToBlockParser = function(syntax) {
 
     p.Identifier = function(node) {
         console.log("Identifier", node);
+
         return node.name;
     };
 
@@ -518,16 +519,14 @@ Entry.JsToBlockParser = function(syntax) {
             console.log("BinaryExpression type", type);
 
             var params = []; 
-               
             var left = node.left;
             
             if(left.type == "Literal" || left.type == "Identifier") {
                 var arguments = [];
                 arguments.push(left);
                 var paramsMeta = Entry.block[type].params;
-                //var paramsDefMeta = Entry.block[type].def.params;
-                console.log("BinaryExpression paramsMeta", paramsMeta); 
-                //console.log("BinaryExpression paramsDefMeta", paramsDefMeta); 
+                
+                console.log("BinaryExpression paramsMeta", paramsMeta);
 
                 for(var p in paramsMeta) {
                     var paramType = paramsMeta[p].type;
@@ -550,6 +549,7 @@ Entry.JsToBlockParser = function(syntax) {
                     var param = this[argument.type](argument);
                     console.log("BinaryExpression param", param);
                     param = Entry.TextCodingUtil.prototype.radarVariableConvertor(param);
+
                     if(param && param != null)
                         params.push(param);   
                 }
@@ -594,6 +594,15 @@ Entry.JsToBlockParser = function(syntax) {
                 for(var i in arguments) {
                     var argument = arguments[i];          
                     var param = this[argument.type](argument);
+
+                    var nameTokens = param.split("_");
+                    if(nameTokens[0] == 'radar') {
+                        var result = {};
+                        result.type = "ai_distance_value";
+                        result.params = [];
+                        result.params.push(nameTokens[1].toUpperCase());
+                        param = result;
+                    }
                     
                     if(param && param != null) {
                         params.push(param);   
@@ -788,6 +797,7 @@ Entry.JsToBlockParser = function(syntax) {
         for(var i = 0; i < args.length; i++) {
             var arg = args[i];
             var value = this[arg.type](arg, type);
+            console.log("value", value);
 
             if(block.params[i].type == "Dropdown") {
                 var paramBlock = value;

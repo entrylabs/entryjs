@@ -11447,7 +11447,8 @@ Entry.TextCodingUtil = function() {
       console.log("firstParam", c, "secondParam", f, "thirdParam", e);
       c = c + " " + f + " " + e;
     } else {
-      "ai_boolean_object" == a.data.type ? (e = b.split(" "), console.log("tokens", e), c = e[0].split("_"), c[1] = c[1].substring(1, c[1].length - 1), c[1] = c[1].toLowerCase(), console.log("firstParam[1]", c[1]), c = c.join("_"), f = e[1], e = e[2], console.log("firstParam", c, "secondParam", f, "thirdParam", e), c = c + " " + f + " " + e) : c = b;
+      "ai_boolean_object" == a.data.type ? (e = b.split(" "), console.log("tokens", e), c = e[0].split("_"), c[1] = c[1].substring(1, c[1].length - 1), c[1] = c[1].toLowerCase(), console.log("firstParam[1]", c[1]), c = c.join("_"), f = e[1], e = e[2], console.log("firstParam", c, "secondParam", f, "thirdParam", e), c = c + " " + f + " " + e) : "ai_distance_value" == a.data.type ? (e = b.split(" "), console.log("tokens", e), c = e[0].split("_"), c[1] = c[1].substring(1, c[1].length - 1), c[1] = c[1].toLowerCase(), 
+      console.log("firstParam[1]", c[1]), c = c.join("_"), console.log("firstParam", c)) : c = b;
     }
     console.log("jsAdjustSyntax result", c);
     return c;
@@ -12156,47 +12157,45 @@ Entry.JsToBlockParser = function(b) {
     }
     if (f) {
       console.log("BinaryExpression type", f);
-      b = [];
-      e = a.left;
-      if ("Literal" == e.type || "Identifier" == e.type) {
+      var g = [], b = a.left;
+      if ("Literal" == b.type || "Identifier" == b.type) {
         arguments = [];
-        arguments.push(e);
-        e = Entry.block[f].params;
-        console.log("BinaryExpression paramsMeta", e);
-        for (var g in e) {
-          var h = e[g].type;
-          "Indicator" == h ? (h = {raw:null, type:"Literal", value:null}, g < arguments.length && arguments.splice(g, 0, h)) : "Text" == h && (h = {raw:"", type:"Literal", value:""}, g < arguments.length && arguments.splice(g, 0, h));
+        arguments.push(b);
+        b = Entry.block[f].params;
+        console.log("BinaryExpression paramsMeta", b);
+        for (var h in b) {
+          e = b[h].type, "Indicator" == e ? (e = {raw:null, type:"Literal", value:null}, h < arguments.length && arguments.splice(h, 0, e)) : "Text" == e && (e = {raw:"", type:"Literal", value:""}, h < arguments.length && arguments.splice(h, 0, e));
         }
         for (var k in arguments) {
           var l = arguments[k];
           console.log("BinaryExpression argument", l);
           l = this[l.type](l);
           console.log("BinaryExpression param", l);
-          (l = Entry.TextCodingUtil.prototype.radarVariableConvertor(l)) && null != l && b.push(l);
+          (l = Entry.TextCodingUtil.prototype.radarVariableConvertor(l)) && null != l && g.push(l);
         }
       } else {
-        l = this[e.type](e), (l = Entry.TextCodingUtil.prototype.radarVariableConvertor(l)) && b.push(l);
+        l = this[b.type](b), (l = Entry.TextCodingUtil.prototype.radarVariableConvertor(l)) && g.push(l);
       }
       if (e = String(a.operator)) {
-        (l = e = Entry.TextCodingUtil.prototype.jTobBinaryOperatorConvertor(e)) && b.push(l), c.operator = e;
+        (l = e = Entry.TextCodingUtil.prototype.jTobBinaryOperatorConvertor(e)) && g.push(l), c.operator = e;
       }
-      e = a.right;
-      if ("Literal" == e.type || "Identifier" == e.type) {
+      b = a.right;
+      if ("Literal" == b.type || "Identifier" == b.type) {
         arguments = [];
-        arguments.push(e);
-        e = Entry.block[f].params;
-        for (g in e) {
-          h = e[g].type, "Indicator" == h ? (h = {raw:null, type:"Literal", value:null}, g < arguments.length && arguments.splice(g, 0, h)) : "Text" == h && (h = {raw:"", type:"Literal", value:""}, g < arguments.length && arguments.splice(g, 0, h));
+        arguments.push(b);
+        b = Entry.block[f].params;
+        for (h in b) {
+          e = b[h].type, "Indicator" == e ? (e = {raw:null, type:"Literal", value:null}, h < arguments.length && arguments.splice(h, 0, e)) : "Text" == e && (e = {raw:"", type:"Literal", value:""}, h < arguments.length && arguments.splice(h, 0, e));
         }
         for (k in arguments) {
-          l = arguments[k], (l = this[l.type](l)) && null != l && b.push(l);
+          l = arguments[k], l = this[l.type](l), h = l.split("_"), "radar" == h[0] && (b = {type:"ai_distance_value", params:[]}, b.params.push(h[1].toUpperCase()), l = b), l && null != l && g.push(l);
         }
       } else {
-        (l = this[e.type](e)) && b.push(l);
+        (l = this[b.type](b)) && g.push(l);
       }
-      "OBSTACLE" != l && "WALL" != l && "ITEM" != l || b.splice(1, 1);
+      "OBSTACLE" != l && "WALL" != l && "ITEM" != l || g.splice(1, 1);
       c.type = f;
-      c.params = b;
+      c.params = g;
     } else {
       return b;
     }
@@ -12281,6 +12280,7 @@ Entry.JsToBlockParser = function(b) {
     console.log("callex block", e);
     for (var f = 0;f < a.length;f++) {
       var g = a[f], g = this[g.type](g, b);
+      console.log("value", g);
       if ("Dropdown" == e.params[f].type) {
         var h = g;
         console.log("Dropdown block", g);

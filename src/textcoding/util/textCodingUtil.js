@@ -1008,6 +1008,19 @@ Entry.TextCodingUtil = function() {
             console.log("firstParam", firstParam, "secondParam", secondParam, "thirdParam", thirdParam);
             
             result = firstParam + ' ' + secondParam + ' ' + thirdParam;
+        } else if(block.data.type == 'ai_distance_value') {
+            var tokens = syntax.split(' ');
+            console.log("tokens", tokens);
+            var firstParam = tokens[0].split('_');
+            var value = firstParam[1];
+            firstParam[1] = firstParam[1].substring(1, firstParam[1].length-1);
+            firstParam[1] = firstParam[1].toLowerCase();
+            console.log("firstParam[1]", firstParam[1]);
+            firstParam = firstParam.join('_');
+
+            console.log("firstParam", firstParam);
+            
+            result = firstParam;
         } else {
             result = syntax;
         }

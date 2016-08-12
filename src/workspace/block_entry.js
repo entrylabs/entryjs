@@ -20700,7 +20700,7 @@ Entry.block = {
         "color": "#ffd974",
         "syntax": [
             "Scope",
-            "distance(%1)#"
+            "radar_%1#"
         ],
         "params": [
             {
