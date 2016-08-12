@@ -279,13 +279,11 @@ Entry.Container.prototype.addObject = function(objectModel, index) {
         if (objectModel.sprite.category && objectModel.sprite.category.main == backgroundStr) {
             object.setLock(true);
             this.objects_.push(object);
-        }
-        else
+        } else
             this.objects_.splice(index, 0, object);
     } else if (objectModel.sprite.category && objectModel.sprite.category.main == backgroundStr) {
         this.objects_.push(object);
-    }
-    else
+    } else
         this.objects_.unshift(object);
 
     object.generateView();
@@ -977,4 +975,10 @@ Entry.Container.prototype._rightClick = function(e) {
         options, 'workspace-contextmenu',
         { x: e.clientX, y: e.clientY }
     );
+};
+
+Entry.Container.prototype.removeFuncBlocks = function(functionType) {
+    this.objects_.forEach(function(object) {
+        object.script.removeBlocksByType(functionType);
+    });
 };

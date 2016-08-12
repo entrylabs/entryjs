@@ -6757,6 +6757,11 @@ Entry.Container.prototype._rightClick = function(b) {
   }}];
   Entry.ContextMenu.show(a, "workspace-contextmenu", {x:b.clientX, y:b.clientY});
 };
+Entry.Container.prototype.removeFuncBlocks = function(b) {
+  this.objects_.forEach(function(a) {
+    a.script.removeBlocksByType(b);
+  });
+};
 Entry.db = {data:{}, typeMap:{}};
 (function(b) {
   b.add = function(a) {
@@ -7706,7 +7711,7 @@ Entry.EntityObject.prototype.setImage = function(b) {
   this.setRegX(this.width / 2 + c);
   this.setRegY(this.height / 2 + e);
   var f = b.id + this.id, g = Entry.container.getCachedPicture(f);
-  g ? (Entry.image = g, this.object.image = g, this.object.cache(0, 0, this.getWidth(), this.getHeight())) : (this.object.cache(0, 0, this.getWidth(), this.getHeight()), g = new Image, b.fileurl ? g.src = b.fileurl : (b = b.filename, g.src = Entry.defaultPath + "/uploads/" + b.substring(0, 2) + "/" + b.substring(2, 4) + "/image/" + b + ".png"), g.onload = function(b) {
+  g ? (Entry.image = g, this.object.image = g, this.object.cache(0, 0, this.getWidth(), this.getHeight())) : (g = new Image, b.fileurl ? g.src = b.fileurl : (b = b.filename, g.src = Entry.defaultPath + "/uploads/" + b.substring(0, 2) + "/" + b.substring(2, 4) + "/image/" + b + ".png"), this.object.image = g, this.object.cache(0, 0, this.getWidth(), this.getHeight()), g.onload = function(b) {
     Entry.container.cachePicture(f, g);
     Entry.image = g;
     a.object.image = g;
@@ -17159,7 +17164,7 @@ Entry.Variable.prototype.getMinValue = function() {
 };
 Entry.Variable.prototype.setMinValue = function(b) {
   this.minValue_ = b = b || 0;
-  this.value_ < b && (this.value_ = b);
+  this.value_ < b && this.setValue(b);
   this.updateView();
   this.isMinFloat = Entry.isFloat(this.minValue_);
 };
@@ -17507,8 +17512,15 @@ Entry.VariableContainer.prototype.createFunction = function() {
 Entry.VariableContainer.prototype.addFunction = function(b) {
 };
 Entry.VariableContainer.prototype.removeFunction = function(b) {
-  this.functions_[b.id].destroy();
-  delete this.functions_[b.id];
+  var a = b.id;
+  b = this.functions_;
+  b[a].destroy();
+  delete b[a];
+  a = "func_" + a;
+  Entry.container.removeFuncBlocks(a);
+  for (var d in b) {
+    b[d].content.removeBlocksByType(a);
+  }
   this.updateList();
 };
 Entry.VariableContainer.prototype.checkListPosition = function(b, a) {
@@ -17546,8 +17558,7 @@ Entry.VariableContainer.prototype.createFunctionView = function(b) {
     c.addClass("entryVariableListElementDeleteWorkspace");
     c.bindOnClick(function(d) {
       d.stopPropagation();
-      a.removeFunction(b);
-      a.selected = null;
+      confirm(Lang.Workspace.will_you_delete_function) && (a.removeFunction(b), a.selected = null);
     });
     var e = Entry.createElement("button");
     e.addClass("entryVariableListElementEditWorkspace");
@@ -20259,11 +20270,16 @@ Entry.PARAM = -1;
     }
     return c;
   };
-  b.getBlockList = function(a) {
-    for (var b = this.getThreads(), c = [], e = 0;e < b.length;e++) {
-      c = c.concat(b[e].getBlockList(a));
+  b.getBlockList = function(a, b) {
+    for (var c = this.getThreads(), e = [], f = 0;f < c.length;f++) {
+      e = e.concat(c[f].getBlockList(a, b));
     }
-    return c;
+    return e;
+  };
+  b.removeBlocksByType = function(a) {
+    this.getBlockList(!1, a).forEach(function(a) {
+      a.doDestroy();
+    });
   };
 })(Entry.Code.prototype);
 Entry.CodeView = function(b, a) {
@@ -22482,7 +22498,7 @@ Entry.Thread = function(b, a, d) {
     }
     for (var c = 0;c < a.length;c++) {
       var e = a[c];
-      e instanceof Entry.Block || e.isDummy ? (e.setThread(this), this._data.push(e)) : this._data.push(new Entry.Block(e, this));
+      e instanceof Entry.Block || e.isDummy ? (e.setThread(this), this._data.push(e)) : Entry.block[e.type] && this._data.push(new Entry.Block(e, this));
     }
     (c = this._code.view) && this.createView(c.board, b);
   };
@@ -22580,9 +22596,7 @@ Entry.Thread = function(b, a, d) {
     this._code = a;
   };
   b.spliceBlock = function(a) {
-    var b = this._data;
-    b.remove(a);
-    0 === b.length && this.view.getParent().constructor !== Entry.FieldStatement && this.destroy();
+    this._data.remove(a);
     this.changeEvent.notify();
   };
   b.getFirstBlock = function() {
@@ -22643,11 +22657,11 @@ Entry.Thread = function(b, a, d) {
     this.parent instanceof Entry.Block && a.unshift(this.parent.indexOfStatements(this));
     return this._code === this.parent ? (a.unshift(this._code.indexOf(this)), c = this._data[0], a.unshift(c.y), a.unshift(c.x), a) : this.parent.pointer(a);
   };
-  b.getBlockList = function(a) {
-    for (var b = [], c = 0;c < this._data.length;c++) {
-      b = b.concat(this._data[c].getBlockList(a));
+  b.getBlockList = function(a, b) {
+    for (var c = [], e = 0;e < this._data.length;e++) {
+      c = c.concat(this._data[e].getBlockList(a, b));
     }
-    return b;
+    return c;
   };
   b.stringify = function() {
     return JSON.stringify(this.toJSON());
@@ -22783,7 +22797,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     this.getCode().unregisterBlock(this);
     e = this.getThread();
     this._schema.event && e.unregisterEvent(this, this._schema.event);
-    f && (b ? f.destroy(a, b) : g ? f.view.bindPrev(g) : (g = this.getThread().view.getParent(), g.constructor === Entry.FieldStatement ? (f.view.bindPrev(g), g.insertTopBlock(f)) : g.constructor === Entry.FieldStatement ? f.replace(g._valueBlock) : f.view._toGlobalCoordinate()));
+    f && (b ? f.destroy(a, b) : g ? f.view && f.view.bindPrev(g) : (g = this.getThread().view.getParent(), g.constructor === Entry.FieldStatement ? (f.view && f.view.bindPrev(g), g.insertTopBlock(f)) : g.constructor === Entry.FieldStatement ? f.replace(g._valueBlock) : f.view._toGlobalCoordinate()));
     !this.doNotSplice && e.spliceBlock ? e.spliceBlock(this) : delete this.doNotSplice;
     this.view && this.view.destroy(a);
     this._schemaChangeEvent && this._schemaChangeEvent.destroy();
@@ -22922,25 +22936,25 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     4 === a.length && 0 === a[3] && a.pop();
     return a;
   };
-  b.getBlockList = function(a) {
-    var b = [];
+  b.getBlockList = function(a, b) {
+    var c = [];
     if (!this._schema) {
       return [];
     }
     if (a && this._schema.isPrimitive) {
-      return b;
+      return c;
     }
-    b.push(this);
-    for (var c = this.params, e = 0;e < c.length;e++) {
-      var f = c[e];
-      f && f.constructor == Entry.Block && (b = b.concat(f.getBlockList(a)));
+    (b || this.type) === this.type && c.push(this);
+    for (var e = this.params, f = 0;f < e.length;f++) {
+      var g = e[f];
+      g && g.constructor == Entry.Block && (c = c.concat(g.getBlockList(a, b)));
     }
-    if (c = this.statements) {
-      for (e = 0;e < c.length;e++) {
-        b = b.concat(c[e].getBlockList(a));
+    if (e = this.statements) {
+      for (f = 0;f < e.length;f++) {
+        c = c.concat(e[f].getBlockList(a, b));
       }
     }
-    return b;
+    return c;
   };
   b.stringify = function() {
     return JSON.stringify(this.toJSON());
