@@ -8526,34 +8526,18 @@ Entry.block = {
                 var wall = Entry.stage.wall;
                 switch(targetSpriteId) {
                     case 'wall':
-                        if (collision(object,wall.up,ath,true) ||
+                        return  (collision(object,wall.up,ath,true) ||
                             collision(object,wall.down,ath,true) ||
                             collision(object,wall.left,ath,true) ||
-                                collision(object,wall.right,ath,true))
-                                return true;
-                        else
-                            return false;
-
-                        case 'wall_up':
-                            if (collision(object,wall.up,ath,true))
-                                return true;
-                            else
-                                return false;
-                            case 'wall_down':
-                                if (collision(object,wall.down,ath,true))
-                                    return true;
-                                else
-                                    return false;
-                            case 'wall_right':
-                                if (collision(object,wall.right,ath,true))
-                                    return true;
-                                else
-                                    return false;
-                            case 'wall_left':
-                                if (collision(object,wall.left,ath,true))
-                                    return true;
-                                else
-                                    return false;
+                                collision(object,wall.right,ath,true));
+                    case 'wall_up':
+                        return collision(object,wall.up,ath,true);
+                    case 'wall_down':
+                        return collision(object,wall.down,ath,true);
+                    case 'wall_right':
+                        return collision(object,wall.right,ath,true);
+                    case 'wall_left':
+                        return collision(object,wall.left,ath,true);
                 }
             } else if (targetSpriteId == 'mouse') {
                 var stage = Entry.stage.canvas;
@@ -8569,24 +8553,18 @@ Entry.block = {
                     var clonedEntities = targetSprite.parent.clonedEntities;
                     for (var i=0, len=clonedEntities.length; i<len; i++) {
                         var entity = clonedEntities[i];
-                        if(entity.isStamp)
-                            continue;
-                        if (!entity.getVisible())
-                            continue;
+                        if(entity.isStamp || !entity.getVisible()) continue;
                         if (Entry.checkCollisionRect(bound, entity.object.getTransformedBounds()))
                             return true;
                     }
                 } else {
                     if (targetSprite.getVisible() &&
                         collision(object,targetSprite.object,ath,true))
-                    return true;
+                        return true;
                     var clonedEntities = targetSprite.parent.clonedEntities;
                     for (var i=0, len=clonedEntities.length; i<len; i++) {
                         var entity = clonedEntities[i];
-                        if(entity.isStamp)
-                            continue;
-                        if (!entity.getVisible())
-                            continue;
+                        if(entity.isStamp || !entity.getVisible()) continue;
                         if (collision(object,entity.object,ath,true))
                             return true;
                     }
@@ -9516,7 +9494,7 @@ Entry.block = {
             } else if (effect == "opacity") {
                 sprite.effect.alpha = (sprite.effect.alpha + effectValue / 100) ;
             }
-            sprite.applyFilter();
+            sprite.applyFilter(true);
             return script.callReturn();
         },
         "syntax": {"js": [], "py": ["Entry.add_effect(%1, %2)"]}
@@ -9579,7 +9557,7 @@ Entry.block = {
             } else if (effect == "opacity") {
                 sprite.effect.alpha = effectValue / 100;
             }
-            sprite.applyFilter();
+            sprite.applyFilter(true);
             return script.callReturn();
         },
         "syntax": {"js": [], "py": ["Entry.set_effect(%1, %2)"]}
@@ -9973,7 +9951,7 @@ Entry.block = {
             } else if (effect == "transparency") {
                 sprite.effect.alpha = (sprite.effect.alpha - effectValue / 100) ;
             }
-            sprite.applyFilter();
+            sprite.applyFilter(true);
             return script.callReturn();
         },
         "syntax": {"js": [], "py": ["Entry.add_effect(%1, %2)"]}
@@ -10032,7 +10010,7 @@ Entry.block = {
             } else if (effect == "transparency") {
                 sprite.effect.alpha = 1 - (effectValue / 100);
             }
-            sprite.applyFilter();
+            sprite.applyFilter(true);
             return script.callReturn();
         },
         "syntax": {"js": [], "py": ["Entry.set_effect(%1, %2)"]}
@@ -10090,7 +10068,7 @@ Entry.block = {
             } else if (effect == "transparency") {
                 sprite.effect.alpha = (sprite.effect.alpha - effectValue / 100) ;
             }
-            sprite.applyFilter();
+            sprite.applyFilter(true);
             return script.callReturn();
         },
         "syntax": {"js": [], "py": [""]}
@@ -10148,7 +10126,7 @@ Entry.block = {
             } else if (effect == "transparency") {
                 sprite.effect.alpha = 1 - (effectValue / 100);
             }
-            sprite.applyFilter();
+            sprite.applyFilter(true);
             return script.callReturn();
         },
         "syntax": {"js": [], "py": [""]}
@@ -17690,7 +17668,7 @@ Entry.block = {
         },
         "syntax": [
             "Scope",
-            "turn_left"
+            "left"
         ]
     },
     "jr_turn_right": {
@@ -17730,7 +17708,7 @@ Entry.block = {
         },
         "syntax": [
             "Scope",
-            "turn_right"
+            "right"
         ]
     },
     "jr_go_slow": {
