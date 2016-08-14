@@ -225,7 +225,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     }
                     result = [];
                     Ntry.dispatchEvent("textError");
-                    throw error;
+                    //throw error;
                 }
                 break;
             case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:

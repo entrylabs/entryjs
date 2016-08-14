@@ -13592,8 +13592,8 @@ Entry.Parser = function(b, a, d, c) {
             }
             Entry.toast.alert(c, l);
           }
+          c = [];
           Ntry.dispatchEvent("textError");
-          throw q;
         }
         break;
       case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
@@ -23142,9 +23142,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         try {
           this.board.show(), this.set({selectedBoard:this.board}), this.textToCode(c, this.oldTextType), this.vimBoard && this.vimBoard.hide(), this.overlayBoard && this.overlayBoard.hide(), this.blockMenu.renderBlock();
         } catch (e) {
-          throw this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), a.boardType = Entry.Workspace.MODE_VIMBOARD, a.textType = Entry.Vim.TEXT_TYPE_JS, a.runType = Entry.Vim.WORKSPACE_MODE, console.log("mode_board error"), this.mode = Entry.Workspace.MODE_VIMBOARD, Entry.dispatchEvent("changeMode", a, function(a) {
+          this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), a.boardType = Entry.Workspace.MODE_VIMBOARD, a.textType = Entry.Vim.TEXT_TYPE_JS, a.runType = Entry.Vim.WORKSPACE_MODE, this.mode = Entry.Workspace.MODE_VIMBOARD, Entry.dispatchEvent("changeMode", a, function(a) {
             $scope.programmingMode = String(a);
-          }), e;
+          });
         }
         Entry.commander.setCurrentEditor("board", this.board);
         break;
