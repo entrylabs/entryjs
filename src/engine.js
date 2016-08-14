@@ -465,6 +465,7 @@ Entry.Engine.prototype.run = function() {
  * toggle this engine state run
  */
 Entry.Engine.prototype.toggleRun = function() {
+    console.log("Entry toggleRun");
     if (this.state === 'pause') {
         this.togglePause();
         return;

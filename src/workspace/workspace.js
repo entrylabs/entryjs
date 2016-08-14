@@ -79,12 +79,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     p.getMode = function() {return this.mode;};
 
     p.setMode = function(mode, message){
-        //console.log("setMode Message", mode, message);
-        //var mode = mode;
-        console.log("setmode in");
         var oldMode = this.mode;
         this.mode = mode.boardType;
-        //this.textType = mode.textType;
         this.runType = mode.runType;
 
         //Text Type in Text Coding Mode
@@ -127,7 +123,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                         $scope.programmingMode = String(mode);
                     });
 
-                    //throw e;
+                    throw e;
                 }
                 Entry.commander.setCurrentEditor("board", this.board);
                 break;

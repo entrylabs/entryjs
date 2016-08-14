@@ -26,7 +26,6 @@ Entry.BlockToJsParser = function(syntax) {
 
         for (var i = 0; i < threads.length; i++) {
             var thread = threads[i];
-            console.log("this.Thread", this.Thread(thread));
             textCode += this.Thread(thread);
         } 
 
@@ -43,7 +42,6 @@ Entry.BlockToJsParser = function(syntax) {
             var block = blocks[i];
             if(i != blocks.length-1) {
                 var block = this.Block(block);
-                console.log("bb", block);
                 if(this._parseMode == Entry.Parser.PARSE_GENERAL) {
                     code += block + '\n';
                 } else if(this._parseMode == Entry.Parser.PARSE_SYNTAX) {
@@ -52,8 +50,6 @@ Entry.BlockToJsParser = function(syntax) {
             }
             else {
                 var block = this.Block(block);
-                console.log("bb", block);
-
                 if(this._parseMode == Entry.Parser.PARSE_GENERAL) {
                     code += block;
                 } else if(this._parseMode == Entry.Parser.PARSE_SYNTAX) {
@@ -74,7 +70,6 @@ Entry.BlockToJsParser = function(syntax) {
         if (!syntax)
             return "";
         var syntaxType = syntax[0];
-        console.log("syntaxType", syntaxType);
         var block = this[syntaxType](block);
         return block;
     };
@@ -84,7 +79,6 @@ Entry.BlockToJsParser = function(syntax) {
     };
 
     p.Scope = function(block) { 
-        console.log("Scope block", block);
         var notParenthesis = false;
         var result = '';
         var paramReg = /(%.)/mi;
@@ -117,25 +111,19 @@ Entry.BlockToJsParser = function(syntax) {
                         index++;    
                     } else if(schemaParams[index].type == "Block") {
                         var param = this.Block(dataParams[index]);
-                        console.log("param", param);
                         result += param;
                     } else {
                         result += this[schemaParams[index].type](dataParams[index], schemaParams[index]);
-                        console.log("222 result", result);
                     }
-                } else {
-                    console.log("This Block has No Schema");
-                }
+                } 
             }
             else {
-                console.log("syntaxToken", syntaxToken);
                 result += syntaxToken; 
             }
         }
 
         if(result.charAt(result.length-1) == '#') {
             notParenthesis = true;
-            console.log("final result", result);
             result = result.substring(0, result.length-1);
             console.log()
             result = result.trim();
@@ -146,8 +134,6 @@ Entry.BlockToJsParser = function(syntax) {
 
         result = Entry.TextCodingUtil.prototype.jsAdjustSyntax(block, result);
 
-        console.log("Scope result", result);
-        
         return result;
 
         //return syntax.splice(1, syntax.length - 1).join(".") + "();\n";
@@ -226,8 +212,6 @@ Entry.BlockToJsParser = function(syntax) {
     p.indent = function(textCode) {  
         var result = "";
         var indentedCode = textCode.split("\n");
-        console.log("indentedCode qqq", indentedCode);
-        //indentedCode.pop();
 
         for(var i in indentedCode) {
             var item = indentedCode[i];
@@ -235,12 +219,8 @@ Entry.BlockToJsParser = function(syntax) {
             if(item.length == 0)
                 continue;
 
-            console.log("indentedCode", item);
-            
             result += ("\t" + item + "\n");  
         }
-
-        console.log("indent result", result);
 
         return result;
     };
@@ -272,7 +252,6 @@ Entry.BlockToJsParser = function(syntax) {
     };
 
     p.TextInput = function(dataParam) {
-        console.log("TextInput", dataParam);
         var result = dataParam;
         
         return result; 

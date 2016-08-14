@@ -151,8 +151,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
         var type = this._type;
         var result = null;
 
-        //console.log("parse type", type);
-
         switch (type) {
             case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
                 try {
@@ -168,14 +166,12 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     for(var index in threads) {
                         var thread = threads[index];
                         thread = thread.trim();
-                        console.log("threads", threads);
                         var ast = acorn.parse(thread);
                         //if(ast.type == "Program" && ast.body.length != 0)
                         astArray.push(ast);
                     }
 
                     result = this._parser.Program(astArray);
-                    console.log("result", result);
                 } catch (error) {
                     if (this.codeMirror) {
                         var annotation;
@@ -192,9 +188,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             annotation.severity = "error";
 
                             var errorInfo = this.findErrorInfo(error);
-
-                            console.log("errorInfo", errorInfo);
-
                             annotation.from.line = errorInfo.lineNumber;
                             annotation.from.ch = errorInfo.location.start;
                             annotation.to.line = errorInfo.lineNumber;
@@ -207,7 +200,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             annotation.from, annotation.to, {
                             className: "CodeMirror-lint-mark-error",
                             __annotation: annotation,
-                            clearOnEnter: true
+                            clearOnEnter: true 
                         });
 
                         if(error.title) {
@@ -228,9 +221,11 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         }
 
                         Entry.toast.alert(errorTitle, errorMsg);
-                        throw error;
+                        
                     }
                     result = [];
+                    Ntry.dispatchEvent("textError");
+                    throw error;
                 }
                 break;
             case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
@@ -465,24 +460,16 @@ Entry.Parser = function(mode, type, cm, syntax) {
         var contents = this.codeMirror.getValue();
         var lineNumber = 0;
         var blockCount = 0;
-
-        console.log("error", error);
-        console.log("contents", contents);
-        
         var textArr = contents.split('\n');
         
-        console.log("textArr", textArr);
         for(var i in textArr) {
             var text = textArr[i].trim();
-            console.log("text", text.length);
-            
+           
             lineNumber++;
             if(text.length == 0 || text.length == 1 || text.indexOf("else") > -1) {
-                console.log("block count1");
                 continue;
             }
             else {
-                console.log("block count2");
                 blockCount++;
             }
 
@@ -490,8 +477,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 break;
            
         }
-
-        console.log("lineNumber", lineNumber, "blockCount", blockCount);
 
         return {lineNumber: lineNumber, location: error.node}
     };
