@@ -3686,7 +3686,7 @@ Entry.block = {
         isNotFor : [ "cobl" ],
         // 블록 기능정의
         "func": function(sprite, script) {
-              return Entry.hw.getAnalogPortValue("potenmeter");
+            return Entry.hw.getAnalogPortValue("potenmeter");
         }
     },
     "cobl_read_irread1": {
@@ -3707,7 +3707,7 @@ Entry.block = {
         isNotFor : [ "cobl" ],
         // 블록 기능정의
         "func": function(sprite, script) {
-                return Entry.hw.getAnalogPortValue("irread1");
+            return Entry.hw.getAnalogPortValue("irread1");
         }
     },
     "cobl_read_irread2": {
@@ -3728,7 +3728,7 @@ Entry.block = {
         isNotFor : [ "cobl" ],
         // 블록 기능정의
         "func": function(sprite, script) {
-                return Entry.hw.getAnalogPortValue("irread2");
+            return Entry.hw.getAnalogPortValue("irread2");
         }
     },
     "cobl_read_joyx": {
@@ -3749,7 +3749,7 @@ Entry.block = {
         isNotFor : [ "cobl" ],
         // 블록 기능정의
         "func": function(sprite, script) {
-              return Entry.hw.getAnalogPortValue("joyx");
+            return Entry.hw.getAnalogPortValue("joyx");
         }
     },
     "cobl_read_joyy": {
@@ -3770,7 +3770,7 @@ Entry.block = {
         isNotFor : [ "cobl" ],
         // 블록 기능정의
         "func": function(sprite, script) {
-              return Entry.hw.getAnalogPortValue("joyy");
+            return Entry.hw.getAnalogPortValue("joyy");
         }
     },
     /*
@@ -3833,7 +3833,7 @@ Entry.block = {
         isNotFor : [ "cobl" ],
         // 블록 기능정의
         "func": function(sprite, script) {
-              return Entry.hw.getAnalogPortValue("tilt");
+            return Entry.hw.getAnalogPortValue("tilt");
         }
     },
     "cobl_read_temps": {
@@ -3876,13 +3876,13 @@ Entry.block = {
             var signal = script.getField("VALUE", script);
             if (signal == 1)
             {
-          //    console.log("-----temp1 selected ");
+            //    console.log("-----temp1 selected ");
               return Entry.hw.getAnalogPortValue("temps1");
             }
 
             if (signal == 2)
             {
-         //     console.log("-----temp2 selected ");
+            //     console.log("-----temp2 selected ");
               return Entry.hw.getAnalogPortValue("temps2");
             }
         }
@@ -3922,16 +3922,16 @@ Entry.block = {
         isNotFor : [ "cobl" ],
         // 블록 기능정의
         "func": function(sprite, script) {
-                var signal = script.getField("VALUE", script);
-                if (signal == 1)
-                {
-                  return Entry.hw.getAnalogPortValue("light1");
-                }
+            var signal = script.getField("VALUE", script);
+            if (signal == 1)
+            {
+              return Entry.hw.getAnalogPortValue("light1");
+            }
 
-                if (signal == 2)
-                {
-                  return Entry.hw.getAnalogPortValue("light2");
-                }
+            if (signal == 2)
+            {
+              return Entry.hw.getAnalogPortValue("light2");
+            }
         }
     },
     "cobl_read_btn": {
@@ -3968,16 +3968,16 @@ Entry.block = {
         isNotFor : [ "cobl" ],
         // 블록 기능정의
         "func": function(sprite, script) {
-                var signal = script.getField("VALUE", script);
-                if (signal == 1)
-                {
-                  return Entry.hw.getDigitalPortValue("btn1");
-                }
+            var signal = script.getField("VALUE", script);
+            if (signal == 1)
+            {
+              return Entry.hw.getDigitalPortValue("btn1");
+            }
 
-                if (signal == 2)
-                {
-                  return Entry.hw.getDigitalPortValue("btn2");
-                }
+            if (signal == 2)
+            {
+              return Entry.hw.getDigitalPortValue("btn2");
+            }
         }
     },
     "cobl_led_control": {
@@ -4036,12 +4036,12 @@ Entry.block = {
         isNotFor : [ "cobl" ],
         // 블록 기능정의
         "func": function(sprite, script) {
-                var port = script.getStringField("PORT");
-                var value = script.getStringField("OPERATOR");
-                Entry.hw.setDigitalPortValue("RainBowLED_" + port, value);
-                Entry.hw.update();
-                delete Entry.hw.sendQueue["RainBowLED_" + port];
-                return script.callReturn();
+            var port = script.getStringField("PORT");
+            var value = script.getStringField("OPERATOR");
+            Entry.hw.setDigitalPortValue("RainBowLED_" + port, value);
+            Entry.hw.update();
+            delete Entry.hw.sendQueue["RainBowLED_" + port];
+            return script.callReturn();
         }
     },
     "cobl_servo_angle_control": {
@@ -4079,19 +4079,19 @@ Entry.block = {
         isNotFor : [ "cobl" ],
         // 블록 기능정의
         "func": function(sprite, script) {
-                console.log("servo - test");
-                var value = script.getNumberField("VALUE");
-                value = Math.round(value);
-                value = Math.max(value, 15);
-                value = Math.min(value, 165);
+            console.log("servo - test");
+            var value = script.getNumberField("VALUE");
+            value = Math.round(value);
+            value = Math.max(value, 15);
+            value = Math.min(value, 165);
 
 
-                console.log("servo 1  degree "+value);
-                Entry.hw.setDigitalPortValue("Servo1", value);
-                Entry.hw.update();
-                delete Entry.hw.sendQueue["Servo1"];
+            console.log("servo 1  degree "+value);
+            Entry.hw.setDigitalPortValue("Servo1", value);
+            Entry.hw.update();
+            delete Entry.hw.sendQueue["Servo1"];
 
-                return script.callReturn();
+            return script.callReturn();
         }
     },
     "cobl_melody": {
@@ -4224,26 +4224,27 @@ Entry.block = {
         isNotFor : [ "cobl" ],
         // 블록 기능정의
         "func": function(sprite, script) {
-                var motor = script.getStringField("MOTOR");
-                var direction = script.getStringField("DIRECTION");
-                var speed = script.getStringField("SPEED");
-                
-                console.log("MOTOR"+motor+"  Direction"+direction+ "  speed"+speed);
-                if (motor == 1) {
-                     Entry.hw.setDigitalPortValue("DC1_DIR", direction);
-                     Entry.hw.setDigitalPortValue("DC1_SPEED", speed); 
-                     Entry.hw.update();
-                     delete Entry.hw.sendQueue["DC1_DIR"];
-                     delete Entry.hw.sendQueue["DC1_SPEED"];
-                }
-                if (motor == 2) {
-                     Entry.hw.setDigitalPortValue("DC2_DIR", direction);
-                     Entry.hw.setDigitalPortValue("DC2_SPEED", speed);
-                     Entry.hw.update();
-                     delete Entry.hw.sendQueue["DC2_DIR"];
-                     delete Entry.hw.sendQueue["DC2_SPEED"];
-                }
-                     return script.callReturn();
+            var motor = script.getStringField("MOTOR");
+            var direction = script.getStringField("DIRECTION");
+            var speed = script.getStringField("SPEED");
+            
+            console.log("MOTOR"+motor+"  Direction"+direction+ "  speed"+speed);
+            if (motor == 1) {
+                Entry.hw.setDigitalPortValue("DC1_DIR", direction);
+                Entry.hw.setDigitalPortValue("DC1_SPEED", speed); 
+                Entry.hw.update();
+                delete Entry.hw.sendQueue["DC1_DIR"];
+                delete Entry.hw.sendQueue["DC1_SPEED"];
+            }
+            if (motor == 2) {
+                Entry.hw.setDigitalPortValue("DC2_DIR", direction);
+                Entry.hw.setDigitalPortValue("DC2_SPEED", speed);
+                Entry.hw.update();
+                delete Entry.hw.sendQueue["DC2_DIR"];
+                delete Entry.hw.sendQueue["DC2_SPEED"];
+            }
+
+            return script.callReturn();
         }
     },
     "cobl_extention_port": {
@@ -4299,21 +4300,22 @@ Entry.block = {
         isNotFor : [ "cobl" ],
         // 블록 기능정의
         "func": function(sprite, script) {
-               var port = script.getStringField("PORT");
-                var level = script.getStringField("LEVEL");
-             
-                if(port == 1){
-                  Entry.hw.setDigitalPortValue("EXUSB1", level);
-                  Entry.hw.update();
-                  delete Entry.hw.sendQueue["EXUSB1"];
-                  }
-                if(port == 2){
-                  Entry.hw.setDigitalPortValue("EXUSB2", level);
-                  Entry.hw.update();
-                  delete Entry.hw.sendQueue["EXUSB2"];
+            var port = script.getStringField("PORT");
+            var level = script.getStringField("LEVEL");
+
+            if(port == 1){
+                Entry.hw.setDigitalPortValue("EXUSB1", level);
+                Entry.hw.update();
+                delete Entry.hw.sendQueue["EXUSB1"];
                 }
-                return script.callReturn();
-               }
+            if(port == 2){
+                Entry.hw.setDigitalPortValue("EXUSB2", level);
+                Entry.hw.update();
+                delete Entry.hw.sendQueue["EXUSB2"];
+                }
+            
+            return script.callReturn();
+        }
     },
     "cobl_external_led": {
           //블록 생상
@@ -4325,7 +4327,7 @@ Entry.block = {
         // 블록 텍스트
         template: "16.외부LED%1(1~64)R%2G%3B%4 %5",
         // 보여질 블록 정의
-       params: [
+        params: [
             {
                 type: "TextInput",
                 value: 0,
@@ -4406,23 +4408,23 @@ Entry.block = {
         isNotFor : [ "cobl" ],
         // 블록 기능정의
         "func": function(sprite, script) {
-                var led = script.getNumberField("LED");
-                var r = script.getStringField("RED");
-                var g = script.getStringField("GREEN");
-                var b = script.getStringField("BLUE");
+            var led = script.getNumberField("LED");
+            var r = script.getStringField("RED");
+            var g = script.getStringField("GREEN");
+            var b = script.getStringField("BLUE");
 
-                Entry.hw.setDigitalPortValue("ELED_IDX", led);
-                Entry.hw.setDigitalPortValue("ELED_R", r);
-                Entry.hw.setDigitalPortValue("ELED_G", g);
-                Entry.hw.setDigitalPortValue("ELED_B", b);
-                Entry.hw.update();
-                
-                delete Entry.hw.sendQueue["ELED_IDX"];
-                delete Entry.hw.sendQueue["ELED_R"];
-                delete Entry.hw.sendQueue["ELED_G"];
-                delete Entry.hw.sendQueue["ELED_B"];
+            Entry.hw.setDigitalPortValue("ELED_IDX", led);
+            Entry.hw.setDigitalPortValue("ELED_R", r);
+            Entry.hw.setDigitalPortValue("ELED_G", g);
+            Entry.hw.setDigitalPortValue("ELED_B", b);
+            Entry.hw.update();
+            
+            delete Entry.hw.sendQueue["ELED_IDX"];
+            delete Entry.hw.sendQueue["ELED_R"];
+            delete Entry.hw.sendQueue["ELED_G"];
+            delete Entry.hw.sendQueue["ELED_B"];
 
-                return script.callReturn();
+            return script.callReturn();
         }
     },
     "cobl_7_segment": {
@@ -4459,12 +4461,12 @@ Entry.block = {
         isNotFor : [ "cobl" ],
         // 블록 기능정의
         "func": function(sprite, script) {
-                var value = script.getNumberField("VALUE");
-                Entry.hw.setDigitalPortValue("7SEG", value);
-                Entry.hw.update();
-                delete Entry.hw.sendQueue["7SEG"];
+            var value = script.getNumberField("VALUE");
+            Entry.hw.setDigitalPortValue("7SEG", value);
+            Entry.hw.update();
+            delete Entry.hw.sendQueue["7SEG"];
 
-                return script.callReturn();
+            return script.callReturn();
         }
     },
 
