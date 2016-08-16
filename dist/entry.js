@@ -11950,7 +11950,7 @@ Entry.setCloneBrush = function(b, a) {
   b.shape = d;
 };
 Entry.isFloat = function(b) {
-  return /\d+\.{1}\d+/.test(b);
+  return /\d+\.{1}\d+$/.test(b);
 };
 Entry.getStringIndex = function(b) {
   if (!b) {
