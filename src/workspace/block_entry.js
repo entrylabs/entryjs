@@ -3645,6 +3645,831 @@ Entry.block = {
             return Math.round(result);
         }
     },
+    "cobl_read_ultrason": 
+    {
+        //블록 생상
+        color: "#00979D",
+        // 폰트색상 basic_string_field는 기본 색상이 검정색(#000) 이다.
+        fontColor: "#fff",
+        // 블록 모양 정의
+        skeleton: "basic_string_field",
+        // 블록 텍스트
+        template: "1. 초음파거리(0~400)",
+        // 보여질 블록 정의
+        def: {
+            type: "cobl_read_ultrason"
+        },
+        // 블록 그룹 정의
+        class: "test",
+        isNotFor : [ "cobl" ],
+        // 블록 기능정의
+        func: function (sprite, script) {
+            return Entry.hw.getAnalogPortValue("ultrason");
+        }
+    },
+
+    "cobl_read_potenmeter": {
+        //블록 생상
+        color: "#00979D",
+        // 폰트색상 basic_string_field는 기본 색상이 검정색(#000) 이다.
+        fontColor: "#fff",
+        // 블록 모양 정의
+        skeleton: "basic_string_field",
+        // 블록 텍스트
+        template: "2.가변저항(0~1023)",
+        // 보여질 블록 정의
+        def: {
+            type: "cobl_read_potenmeter"
+        },
+        // 블록 그룹 정의
+        class: "test",
+        isNotFor : [ "cobl" ],
+        // 블록 기능정의
+        "func": function(sprite, script) {
+            return Entry.hw.getAnalogPortValue("potenmeter");
+        }
+    },
+    "cobl_read_irread1": {
+         //블록 생상
+        color: "#00979D",
+        // 폰트색상 basic_string_field는 기본 색상이 검정색(#000) 이다.
+        fontColor: "#fff",
+        // 블록 모양 정의
+        skeleton: "basic_string_field",
+        // 블록 텍스트
+        template: "3.적외선센서1(0~1023)",
+        // 보여질 블록 정의
+        def: {
+            type: "cobl_read_irread1"
+        },
+        // 블록 그룹 정의
+        class: "test",
+        isNotFor : [ "cobl" ],
+        // 블록 기능정의
+        "func": function(sprite, script) {
+            return Entry.hw.getAnalogPortValue("irread1");
+        }
+    },
+    "cobl_read_irread2": {
+           //블록 생상
+        color: "#00979D",
+        // 폰트색상 basic_string_field는 기본 색상이 검정색(#000) 이다.
+        fontColor: "#fff",
+        // 블록 모양 정의
+        skeleton: "basic_string_field",
+        // 블록 텍스트
+        template: "4.적외선센서2(0~1023)",
+        // 보여질 블록 정의
+        def: {
+            type: "cobl_read_irread2"
+        },
+        // 블록 그룹 정의
+        class: "test",
+        isNotFor : [ "cobl" ],
+        // 블록 기능정의
+        "func": function(sprite, script) {
+            return Entry.hw.getAnalogPortValue("irread2");
+        }
+    },
+    "cobl_read_joyx": {
+           //블록 생상
+        color: "#00979D",
+        // 폰트색상 basic_string_field는 기본 색상이 검정색(#000) 이다.
+        fontColor: "#fff",
+        // 블록 모양 정의
+        skeleton: "basic_string_field",
+        // 블록 텍스트
+        template: "5.조이스틱X축(1, 0, -1)",
+        // 보여질 블록 정의
+        def: {
+            type: "cobl_read_joyx"
+        },
+        // 블록 그룹 정의
+        class: "test",
+        isNotFor : [ "cobl" ],
+        // 블록 기능정의
+        "func": function(sprite, script) {
+            return Entry.hw.getAnalogPortValue("joyx");
+        }
+    },
+    "cobl_read_joyy": {
+          //블록 생상
+        color: "#00979D",
+        // 폰트색상 basic_string_field는 기본 색상이 검정색(#000) 이다.
+        fontColor: "#fff",
+        // 블록 모양 정의
+        skeleton: "basic_string_field",
+        // 블록 텍스트
+        template: "6.조이스틱Y축(1, 0, -1)",
+        // 보여질 블록 정의
+        def: {
+            type: "cobl_read_joyy"
+        },
+        // 블록 그룹 정의
+        class: "test",
+        isNotFor : [ "cobl" ],
+        // 블록 기능정의
+        "func": function(sprite, script) {
+            return Entry.hw.getAnalogPortValue("joyy");
+        }
+    },
+    /*
+    "cobl_read_sens1": {
+           //블록 생상
+        color: "#00979D",
+        // 폰트색상 basic_string_field는 기본 색상이 검정색(#000) 이다.
+        fontColor: "#fff",
+        // 블록 모양 정의
+        skeleton: "basic_string_field",
+        // 블록 텍스트
+        template: "cobl_read_sens1",
+        // 보여질 블록 정의
+        def: {
+            type: "cobl_read_sens1"
+        },
+        // 블록 그룹 정의
+        class: "test",
+        // 블록 기능정의
+        "func": function(sprite, script) {
+              return Entry.hw.getAnalogPortValue("sens1");
+        }
+    },
+    "cobl_read_sens2": {
+           //블록 생상
+        color: "#00979D",
+        // 폰트색상 basic_string_field는 기본 색상이 검정색(#000) 이다.
+        fontColor: "#fff",
+        // 블록 모양 정의
+        skeleton: "basic_string_field",
+        // 블록 텍스트
+        template: "cobl_read_sens2",
+        // 보여질 블록 정의
+        def: {
+            type: "cobl_read_sens2"
+        },
+        // 블록 그룹 정의
+        class: "test",
+        // 블록 기능정의
+        "func": function(sprite, script) {
+              return Entry.hw.getAnalogPortValue("sens2");
+        }
+    },
+    */
+    "cobl_read_tilt": {
+           //블록 생상
+        color: "#00979D",
+        // 폰트색상 basic_string_field는 기본 색상이 검정색(#000) 이다.
+        fontColor: "#fff",
+        // 블록 모양 정의
+        skeleton: "basic_string_field",
+        // 블록 텍스트
+        template: "7.기울기센서(0~4)",
+        // 보여질 블록 정의
+        def: {
+            type: "cobl_read_tilt"
+        },
+        // 블록 그룹 정의
+        class: "test",
+        isNotFor : [ "cobl" ],
+        // 블록 기능정의
+        "func": function(sprite, script) {
+            return Entry.hw.getAnalogPortValue("tilt");
+        }
+    },
+    "cobl_read_temps": {
+           //블록 생상
+        color: "#00979D",
+        // 폰트색상 basic_string_field는 기본 색상이 검정색(#000) 이다.
+        fontColor: "#fff",
+        // 블록 모양 정의
+        skeleton: "basic_string_field",
+        // 블록 텍스트
+        template: "8.온도센서@포트%1",
+        // 보여질 블록 정의
+        params: [
+            {
+                type: "Dropdown",
+                options: [
+                    [ "1", "1" ],
+                    [ "2", "2" ],
+                ],
+                fontSize: 11
+            }
+        ],
+        def: {
+            params: [
+                "1"
+            ],
+            type: "cobl_read_temps"
+        },
+        paramsKeyMap: {
+            VALUE: 0
+        },
+
+        // 블록 그룹 정의
+        class: "test",
+        isNotFor : [ "cobl" ],
+        // 블록 기능정의
+        "func": function(sprite, script) {
+            //    console.log("-----temptest------")
+            //var signal = script.getField("VALUE", script);
+            var signal = script.getField("VALUE", script);
+            if (signal == 1)
+            {
+            //    console.log("-----temp1 selected ");
+              return Entry.hw.getAnalogPortValue("temps1");
+            }
+
+            if (signal == 2)
+            {
+            //     console.log("-----temp2 selected ");
+              return Entry.hw.getAnalogPortValue("temps2");
+            }
+        }
+    },
+    "cobl_read_light": {
+          //블록 생상
+        color: "#00979D",
+        // 폰트색상 basic_string_field는 기본 색상이 검정색(#000) 이다.
+        fontColor: "#fff",
+        // 블록 모양 정의
+        skeleton: "basic_string_field",
+        // 블록 텍스트
+        template: "9.빛센서@포트%1", 
+        // 보여질 블록 정의
+        params: [
+            {
+                type: "Dropdown",
+                options: [
+                    [ "1", "1" ],
+                    [ "2", "2" ],
+                ],
+                fontSize: 11
+            }
+        ],
+        def: {
+            params: [
+                "1"
+            ],
+            type: "cobl_read_light"
+        },
+        paramsKeyMap: {
+            VALUE: 0
+        },
+
+        // 블록 그룹 정의
+        class: "test",
+        isNotFor : [ "cobl" ],
+        // 블록 기능정의
+        "func": function(sprite, script) {
+            var signal = script.getField("VALUE", script);
+            if (signal == 1)
+            {
+              return Entry.hw.getAnalogPortValue("light1");
+            }
+
+            if (signal == 2)
+            {
+              return Entry.hw.getAnalogPortValue("light2");
+            }
+        }
+    },
+    "cobl_read_btn": {
+           //블록 생상
+        color: "#00979D",
+        // 폰트색상 basic_string_field는 기본 색상이 검정색(#000) 이다.
+        fontColor: "#fff",
+        // 블록 모양 정의
+        skeleton: "basic_boolean_field",
+        // 블록 텍스트
+        template: "10.버튼스위치@포트%1",
+          // 보여질 블록 정의
+        params: [
+            {
+                type: "Dropdown",
+                options: [
+                    [ "1", "1" ],
+                    [ "2", "2" ],
+                ],
+                fontSize: 11
+            }
+        ],
+        def: {
+            params: [
+                "1"
+            ],
+            type: "cobl_read_btn"
+        },
+        paramsKeyMap: {
+            VALUE: 0
+        },
+        // 블록 그룹 정의
+        class: "test",
+        isNotFor : [ "cobl" ],
+        // 블록 기능정의
+        "func": function(sprite, script) {
+            var signal = script.getField("VALUE", script);
+            if (signal == 1)
+            {
+              return Entry.hw.getDigitalPortValue("btn1");
+            }
+
+            if (signal == 2)
+            {
+              return Entry.hw.getDigitalPortValue("btn2");
+            }
+        }
+    },
+    "cobl_led_control": {
+           //블록 생상
+        color: "#00979D",
+        // 폰트색상 basic_string_field는 기본 색상이 검정색(#000) 이다.
+        fontColor: "#fff",
+        // 블록 모양 정의
+        skeleton: "basic",
+        // 블록 텍스트
+        template: "11.무지개LED%1%2 %3",
+        params: [
+            {
+                type: "Dropdown",
+                options: [
+                  ["1","1"],
+                  ["2","2"],
+                  ["3","3"]
+                ],
+                fontSize: 11
+            },
+            {
+                type: "Dropdown",
+                options: [
+                  ["OFF","OFF"],
+                  ["빨강","Red"],
+                  ["주황","Orange"],
+                  ["노랑","Yellow"],
+                  ["초록","Green"],
+                  ["파랑","Blue"],
+                  ["남색","Dark Blue"],
+                  ["보라","Purple"],
+                  ["흰색","White"]
+                ],
+                fontSize: 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        def: {
+            params: [
+                "1",
+                "OFF"
+            ],
+            type: "cobl_led_control"
+        },
+        paramsKeyMap: {
+            PORT: 0,
+            OPERATOR: 1    
+        },
+        // 블록 그룹 정의
+        class: "test",
+        isNotFor : [ "cobl" ],
+        // 블록 기능정의
+        "func": function(sprite, script) {
+            var port = script.getStringField("PORT");
+            var value = script.getStringField("OPERATOR");
+            Entry.hw.setDigitalPortValue("RainBowLED_" + port, value);
+            Entry.hw.update();
+            delete Entry.hw.sendQueue["RainBowLED_" + port];
+            return script.callReturn();
+        }
+    },
+    "cobl_servo_angle_control": {
+           //블록 생상
+        color: "#00979D",
+        // 폰트색상 basic_string_field는 기본 색상이 검정색(#000) 이다.
+        fontColor: "#fff",
+        // 블록 모양 정의
+        skeleton: "basic",
+        // 블록 텍스트
+        template: "12.각도모터 각도%1(15~165) %2",
+        // 블록에 사용할 파라미터
+        params: [
+            {
+                type: "TextInput",
+                value: 0
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        def: {
+            type: "cobl_servo_angle_control"
+        },
+        // 파라미터를 사용 할때 쓰는 Key값 정의
+        paramsKeyMap: {
+            // VALUE라는 key에 0번째 파라미터를 정의 하였다.
+            VALUE: 0
+        },
+
+        // 블록 그룹 정의
+        class: "test",
+        isNotFor : [ "cobl" ],
+        // 블록 기능정의
+        "func": function(sprite, script) {
+            console.log("servo - test");
+            var value = script.getNumberField("VALUE");
+            value = Math.round(value);
+            value = Math.max(value, 15);
+            value = Math.min(value, 165);
+
+
+            console.log("servo 1  degree "+value);
+            Entry.hw.setDigitalPortValue("Servo1", value);
+            Entry.hw.update();
+            delete Entry.hw.sendQueue["Servo1"];
+
+            return script.callReturn();
+        }
+    },
+    "cobl_melody": {
+           //블록 생상
+        color: "#00979D",
+        // 폰트색상 basic_string_field는 기본 색상이 검정색(#000) 이다.
+        fontColor: "#fff",
+        // 블록 모양 정의
+        skeleton: "basic",
+        // 블록 텍스트
+        template: "13.멜로디%1 ,%2",
+        params: [
+            {
+                type: "Dropdown",
+                options: [
+                ["((낮은)솔","L_So"],
+                ["(낮은)솔#","L_So#"],
+                ["(낮은)라","L_La"],
+                ["(낮은)라#","L_La#"],
+                ["(낮은)시","L_Ti"],
+                ["도","Do"],
+                ["도#","Do#"],
+                ["레","Re"],
+                ["레#","Re#"],
+                ["미","Mi"],
+                ["파","Fa"],
+                ["파#","Fa#"],
+                ["솔","So"],
+                ["솔#","So#"],
+                ["라","La"],
+                ["라#","La#"],
+                ["시","Ti"],
+                ["(높은)도","H_Do"],
+                ["(높은)도#","H_Do#"],
+                ["(높은)레","H_Re"],
+                ["(높은)레#","H_Re#"],
+                ["(높은)미#","H_Mi"],
+                ["(높은)파","H_Fa"]
+                ],
+                fontSize: 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        def: {
+            params: [
+                "Do"
+            ],
+            type: "cobl_melody"
+        },
+        paramsKeyMap: {
+            MELODY: 0  
+        },
+        // 블록 그룹 정의
+        class: "test",
+        isNotFor : [ "cobl" ],
+        // 블록 기능정의
+        "func": function(sprite, script) {
+                var melody = script.getStringField("MELODY");
+                console.log("cobl_melody"+melody);  
+                Entry.hw.setDigitalPortValue("Melody", melody);
+                Entry.hw.update();
+                delete Entry.hw.sendQueue["Melody"];
+
+                return script.callReturn();
+        }
+    },
+    "cobl_dcmotor": {
+           //블록 생상
+        color: "#00979D",
+        // 폰트색상 basic_string_field는 기본 색상이 검정색(#000) 이다.
+        fontColor: "#fff",
+        // 블록 모양 정의
+        skeleton: "basic",
+        // 블록 텍스트
+        template: "14.회전모터%1%2속도%3 %4",
+        params: [
+            {
+                type: "Dropdown",
+                options: [
+                  ["1","1"],
+                  ["2","2"]
+                ],
+                fontSize: 11
+            },
+            {
+                type: "Dropdown",
+                options: [
+                  ["1.시계방향","1"],
+                  ["2.반시계방향","2"],
+                  ["3.정지","3"]
+                ],
+                fontSize: 11
+            },
+            {
+                type: "Dropdown",
+                options: [
+                  ["1","1"],
+                  ["2","2"],
+                  ["3","3"],
+                  ["4","4"],
+                  ["5","5"]
+                ],
+                fontSize: 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        def: {
+            params: [
+                "1",
+                "1",
+                "1"
+            ],
+            type: "cobl_dcmotor"
+        },
+        paramsKeyMap: {
+            MOTOR: 0,
+            DIRECTION: 1,
+            SPEED:2    
+        },
+        // 블록 그룹 정의
+        class: "test",
+        isNotFor : [ "cobl" ],
+        // 블록 기능정의
+        "func": function(sprite, script) {
+            var motor = script.getStringField("MOTOR");
+            var direction = script.getStringField("DIRECTION");
+            var speed = script.getStringField("SPEED");
+            
+            console.log("MOTOR"+motor+"  Direction"+direction+ "  speed"+speed);
+            if (motor == 1) {
+                Entry.hw.setDigitalPortValue("DC1_DIR", direction);
+                Entry.hw.setDigitalPortValue("DC1_SPEED", speed); 
+                Entry.hw.update();
+                delete Entry.hw.sendQueue["DC1_DIR"];
+                delete Entry.hw.sendQueue["DC1_SPEED"];
+            }
+            if (motor == 2) {
+                Entry.hw.setDigitalPortValue("DC2_DIR", direction);
+                Entry.hw.setDigitalPortValue("DC2_SPEED", speed);
+                Entry.hw.update();
+                delete Entry.hw.sendQueue["DC2_DIR"];
+                delete Entry.hw.sendQueue["DC2_SPEED"];
+            }
+
+            return script.callReturn();
+        }
+    },
+    "cobl_extention_port": {
+           //블록 생상
+        color: "#00979D",
+        // 폰트색상 basic_string_field는 기본 색상이 검정색(#000) 이다.
+        fontColor: "#fff",
+        // 블록 모양 정의
+        skeleton: "basic",
+        // 블록 텍스트
+        template: "15.USB포트%1단계%2 %3",
+        
+        params: [
+            {
+                type: "Dropdown",
+                options: [
+                  ["1","1"],
+                  ["2","2"]
+                ],
+                fontSize: 11
+            },
+            {
+                type: "Dropdown",
+                options: [
+                  ["0","0"],
+                  ["1","1"],
+                  ["2","2"],
+                  ["3","3"],
+                  ["4","4"],
+                  ["5","5"]
+                ],
+                fontSize: 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        def: {
+            params: [
+                "1",
+                "0"
+            ],
+            type: "cobl_extention_port"
+        },
+        paramsKeyMap: {
+            PORT: 0,
+            LEVEL: 1    
+        },
+        // 블록 그룹 정의
+        class: "test",
+        isNotFor : [ "cobl" ],
+        // 블록 기능정의
+        "func": function(sprite, script) {
+            var port = script.getStringField("PORT");
+            var level = script.getStringField("LEVEL");
+
+            if(port == 1){
+                Entry.hw.setDigitalPortValue("EXUSB1", level);
+                Entry.hw.update();
+                delete Entry.hw.sendQueue["EXUSB1"];
+                }
+            if(port == 2){
+                Entry.hw.setDigitalPortValue("EXUSB2", level);
+                Entry.hw.update();
+                delete Entry.hw.sendQueue["EXUSB2"];
+                }
+            
+            return script.callReturn();
+        }
+    },
+    "cobl_external_led": {
+          //블록 생상
+        color: "#00979D",
+        // 폰트색상 basic_string_field는 기본 색상이 검정색(#000) 이다.
+        fontColor: "#fff",
+        // 블록 모양 정의
+        skeleton: "basic",
+        // 블록 텍스트
+        template: "16.외부LED%1(1~64)R%2G%3B%4 %5",
+        // 보여질 블록 정의
+        params: [
+            {
+                type: "TextInput",
+                value: 0,
+                fontSize: 11
+            },
+            {
+                type: "Dropdown",
+                options: [
+                  ["0","0"],               
+                  ["1","1"],
+                  ["2","2"],
+                  ["3","3"],
+                  ["4","4"],
+                  ["5","5"],
+                  ["6","6"],
+                  ["7","7"],
+                  ["8","8"],
+                  ["9","9"],
+                  ["10","10"]
+                ],
+                fontSize: 11
+            },            {
+                type: "Dropdown",
+                options: [
+                  ["0","0"],               
+                  ["1","1"],
+                  ["2","2"],
+                  ["3","3"],
+                  ["4","4"],
+                  ["5","5"],
+                  ["6","6"],
+                  ["7","7"],
+                  ["8","8"],
+                  ["9","9"],
+                  ["10","10"]
+                ],
+                fontSize: 11
+            },            {
+                type: "Dropdown",
+                options: [
+                  ["0","0"],               
+                  ["1","1"],
+                  ["2","2"],
+                  ["3","3"],
+                  ["4","4"],
+                  ["5","5"],
+                  ["6","6"],
+                  ["7","7"],
+                  ["8","8"],
+                  ["9","9"],
+                  ["10","10"]
+                ],
+                fontSize: 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        def: {
+            params: [
+                "1",
+                "1",
+                "1",
+                "1"
+            ],
+            type: "cobl_external_led"
+        },
+        paramsKeyMap: {
+            LED: 0,
+            RED: 1,
+            GREEN : 2,
+            BLUE : 3
+        },
+        // 블록 그룹 정의
+        class: "test",
+        isNotFor : [ "cobl" ],
+        // 블록 기능정의
+        "func": function(sprite, script) {
+            var led = script.getNumberField("LED");
+            var r = script.getStringField("RED");
+            var g = script.getStringField("GREEN");
+            var b = script.getStringField("BLUE");
+
+            Entry.hw.setDigitalPortValue("ELED_IDX", led);
+            Entry.hw.setDigitalPortValue("ELED_R", r);
+            Entry.hw.setDigitalPortValue("ELED_G", g);
+            Entry.hw.setDigitalPortValue("ELED_B", b);
+            Entry.hw.update();
+            
+            delete Entry.hw.sendQueue["ELED_IDX"];
+            delete Entry.hw.sendQueue["ELED_R"];
+            delete Entry.hw.sendQueue["ELED_G"];
+            delete Entry.hw.sendQueue["ELED_B"];
+
+            return script.callReturn();
+        }
+    },
+    "cobl_7_segment": {
+           //블록 생상
+        color: "#00979D",
+        // 폰트색상 basic_string_field는 기본 색상이 검정색(#000) 이다.
+        fontColor: "#fff",
+        // 블록 모양 정의
+        skeleton: "basic",
+        // 블록 텍스트
+        template: "17.숫자전광판%1(0~9999) %2",
+        
+        params: [
+            {
+                type: "TextInput",
+                value: 0
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        def: {
+            type: "cobl_7_segment"
+        },
+        // 파라미터를 사용 할때 쓰는 Key값 정의
+        paramsKeyMap: {
+            // VALUE라는 key에 0번째 파라미터를 정의 하였다.
+            VALUE: 0
+        },
+        // 블록 그룹 정의
+        class: "test",
+        isNotFor : [ "cobl" ],
+        // 블록 기능정의
+        "func": function(sprite, script) {
+            var value = script.getNumberField("VALUE");
+            Entry.hw.setDigitalPortValue("7SEG", value);
+            Entry.hw.update();
+            delete Entry.hw.sendQueue["7SEG"];
+
+            return script.callReturn();
+        }
+    },
+
     "start_drawing": {
         "color": "#FF9E20",
         "skeleton": "basic",
