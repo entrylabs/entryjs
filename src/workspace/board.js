@@ -214,8 +214,7 @@ Entry.Board.DRAG_RADIUS = 5;
                     }
                 }, 1000);
             }
-        } else if (Entry.Utils.isRightButton(e))
-            this._rightClick(e);
+        } else if (Entry.Utils.isRightButton(e)) this._rightClick(e);
 
         function onMouseMove(e) {
             if (e.stopPropagation) e.stopPropagation();

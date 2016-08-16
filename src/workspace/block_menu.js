@@ -239,7 +239,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
                     .getFirstBlock().view;
 
                 var offset = this.offset();
-                var distance = offset.top - board.offset().top;
+                var distance = offset.top - board.offset().top - $(window).scrollTop();
 
                 var dx, dy;
 

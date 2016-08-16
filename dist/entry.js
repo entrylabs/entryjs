@@ -15364,6 +15364,7 @@ Entry.block.test_wrapper = {skeleton:"basic", mode:"maze", color:"#3BBD70", temp
 Entry.block.basic_button = {skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"basic button", color:"#333", align:"center"}], func:function() {
 }};
 Entry.BlockMenu = function(b, a, c, d) {
+  window.a = this;
   Entry.Model(this, !1);
   this._align = a || "CENTER";
   this._scroll = void 0 !== d ? d : !1;
@@ -15464,7 +15465,7 @@ Entry.BlockMenu = function(b, a, c, d) {
         if (g.code && (b = e.block, d = b.getThread(), b && d)) {
           b = d.toJSON(!0);
           this._boardBlockView = Entry.do("addThread", b).value.getFirstBlock().view;
-          var g = this.offset().top - g.offset().top, h, k;
+          var g = this.offset().top - g.offset().top - $(window).scrollTop(), h, k;
           if (b = this.dragBlock.mouseDownCoordinate) {
             h = a.pageX - b.x, k = a.pageY - b.y;
           }
