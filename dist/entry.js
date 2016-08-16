@@ -20143,6 +20143,10 @@ Entry.Playground.prototype.setPicture = function(b) {
   }
   Entry.container.setPicture(b);
 };
+Entry.Playground.prototype.downloadPicture = function(b) {
+  b = Entry.playground.object.getPicture(b);
+  b.fileurl ? window.open(b.fileurl) : window.open("/api/sprite/download/image/" + encodeURIComponent(b.filename) + "/" + encodeURIComponent(b.name) + ".png");
+};
 Entry.Playground.prototype.clonePicture = function(b) {
   b = Entry.playground.object.getPicture(b);
   this.addPicture(b, !0);
@@ -20377,7 +20381,7 @@ Entry.Playground.prototype.generatePictureElement = function(b) {
     }}, {text:Lang.Workspace.context_remove, callback:function() {
       Entry.playground.object.removePicture(b.id) ? (Entry.removeElement(c), Entry.toast.success(Lang.Workspace.shape_remove_ok, b.name + " " + Lang.Workspace.shape_remove_ok_msg)) : Entry.toast.alert(Lang.Workspace.shape_remove_fail, Lang.Workspace.shape_remove_fail_msg);
     }}, {divider:!0}, {text:Lang.Workspace.context_download, callback:function() {
-      b.fileurl ? window.open(b.fileurl) : window.open("/api/sprite/download/image/" + encodeURIComponent(b.filename) + "/" + encodeURIComponent(b.name) + ".png");
+      Entry.playground.downloadPicture(b.id);
     }}], "workspace-contextmenu");
   });
   var d = Entry.createElement("div");
