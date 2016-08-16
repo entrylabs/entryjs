@@ -825,7 +825,6 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
     var cacheId = pictureModel.id + this.id;
     var image = Entry.container.getCachedPicture(cacheId);
     if (!image) {
-        this.object.cache(0,0,this.getWidth(),this.getHeight());
         image = new Image();
         if (pictureModel.fileurl) {
             image.src = pictureModel.fileurl;
@@ -834,6 +833,8 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
             image.src = Entry.defaultPath + '/uploads/' + fileName.substring(0, 2) + '/' +
                 fileName.substring(2, 4) + '/image/' + fileName + '.png';
         }
+        this.object.image = image;
+        this.object.cache(0,0,this.getWidth(),this.getHeight());
         image.onload = function(e) {
             Entry.container.cachePicture(cacheId, image);
             Entry.image = image;
