@@ -2127,6 +2127,282 @@ Entry.block.choose_project_timer_action = function(b, a) {
   "START" == c ? e.isInit ? e.isInit && e.isPaused && (e.pauseStart && (e.pausedTime += (new Date).getTime() - e.pauseStart), delete e.pauseStart, e.isPaused = !1) : d.startProjectTimer() : "STOP" == c ? e.isInit && !e.isPaused && (e.isPaused = !0, e.pauseStart = (new Date).getTime()) : "RESET" == c && e.isInit && (e.setValue(0), e.start = (new Date).getTime(), e.pausedTime = 0, delete e.pauseStart);
   return a.callReturn();
 };
+Entry.Cobl = {name:"cobl", setZero:function() {
+  for (var b = 0;14 > b;b++) {
+    Entry.hw.sendQueue[b] = 0;
+  }
+  Entry.hw.update();
+}};
+Blockly.Blocks.cobl_read_ultrason = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\ucd08\uc74c\ud30c \uac70\ub9ac\uc7ac\uae30(0~400)");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.cobl_read_ultrason = function(b, a) {
+  return Entry.hw.getAnalogPortValue("ultrason");
+};
+Blockly.Blocks.cobl_read_potenmeter = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uac00\ubcc0\uc800\ud56d \uc77d\uae30(0~1023)");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.cobl_read_potenmeter = function(b, a) {
+  console.log("cobl_read_potenmeter");
+  return Entry.hw.getAnalogPortValue("potenmeter");
+};
+Blockly.Blocks.cobl_read_irread1 = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("IR1 \uc77d\uae30(0~1023)");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.cobl_read_irread1 = function(b, a) {
+  return Entry.hw.getAnalogPortValue("potenmeter");
+};
+Blockly.Blocks.cobl_read_irread2 = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("IR2 \uc77d\uae30(0~1023)");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.cobl_read_irread2 = function(b, a) {
+  a.getValue("irread2", a);
+  return Entry.hw.getAnalogPortValue("irread2");
+};
+Blockly.Blocks.cobl_read_joyx = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc870\uc774\uc2a4\ud2f1X\ucd95 \uc77d\uae30(1,0,-1)");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.cobl_read_joyx = function(b, a) {
+  return Entry.hw.getAnalogPortValue("joyx");
+};
+Blockly.Blocks.cobl_read_joyy = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc870\uc774\uc2a4\ud2f1Y\ucd95 \uc77d\uae30(1,0,-1)");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.cobl_read_joyy = function(b, a) {
+  return Entry.hw.getAnalogPortValue("joyy");
+};
+Blockly.Blocks.cobl_read_sens1 = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc13c\uc11c1 \uc77d\uae30(0~1023)");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.cobl_read_sens1 = function(b, a) {
+  return Entry.hw.getAnalogPortValue("sens1");
+};
+Blockly.Blocks.cobl_read_sens2 = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc13c\uc11c2 \uc77d\uae30(0~1023)");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.cobl_read_sens2 = function(b, a) {
+  return Entry.hw.getAnalogPortValue("sens2");
+};
+Blockly.Blocks.cobl_read_tilt = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uae30\uc6b8\uae30\uc13c\uc11c \uc77d\uae30(0~4)");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.cobl_read_tilt = function(b, a) {
+  return Entry.hw.getAnalogPortValue("tilt");
+};
+Blockly.Blocks.cobl_get_port_number = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"]]), "PORT");
+  this.appendDummyInput().appendField(" ");
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.cobl_get_port_number = function(b, a) {
+  return a.getStringField("PORT");
+};
+Blockly.Blocks.cobl_read_temps = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc628\ub3c4\uc13c\uc11c \uc77d\uae30@\ud3ec\ud2b8");
+  this.appendValueInput("VALUE").setCheck("Number");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.cobl_read_temps = function(b, a) {
+  var c = a.getValue("VALUE", a);
+  if (1 == c) {
+    return Entry.hw.getAnalogPortValue("temps1");
+  }
+  if (2 == c) {
+    return Entry.hw.getAnalogPortValue("temps2");
+  }
+};
+Blockly.Blocks.cobl_read_light = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\ubc1d\uae30\uc13c\uc11c \uc77d\uae30@\ud3ec\ud2b8");
+  this.appendValueInput("VALUE").setCheck("Number");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.cobl_read_light = function(b, a) {
+  var c = a.getValue("VALUE", a);
+  if (1 == c) {
+    return Entry.hw.getAnalogPortValue("light1");
+  }
+  if (2 == c) {
+    return Entry.hw.getAnalogPortValue("light2");
+  }
+};
+Blockly.Blocks.cobl_read_btn = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\ubc84\ud2bc\uc13c\uc11c \uc77d\uae30@\ud3ec\ud2b8");
+  this.appendValueInput("VALUE").setCheck("Number");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Boolean");
+}};
+Entry.block.cobl_read_btn = function(b, a) {
+  var c = a.getValue("VALUE", a);
+  if (1 == c) {
+    return Entry.hw.getDigitalPortValue("btn1");
+  }
+  if (2 == c) {
+    return Entry.hw.getDigitalPortValue("btn2");
+  }
+};
+Blockly.Blocks.cobl_led_control = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("Rainbow LED");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"], ["3", "3"]]), "PORT");
+  this.appendDummyInput().appendField(" ");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["OFF", "OFF"], ["Red", "Red"], ["Orange", "Orange"], ["Yellow", "Yellow"], ["Green", "Green"], ["Blue", "Blue"], ["Dark Blue", "Dark Blue"], ["Purple", "Purple"], ["White", "White"]]), "OPERATOR");
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.cobl_led_control = function(b, a) {
+  var c = a.getStringField("PORT"), d = a.getStringField("OPERATOR");
+  Entry.hw.setDigitalPortValue("RainBowLED_IDX", c);
+  Entry.hw.setDigitalPortValue("RainBowLED_COL", d);
+  return a.callReturn();
+};
+Blockly.Blocks.cobl_text = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(new Blockly.FieldTextInput("cobl"), "NAME");
+  this.setOutput(!0, "String");
+  this.setInputsInline(!0);
+}};
+Entry.block.cobl_text = function(b, a) {
+  return a.getStringField("NAME");
+};
+Blockly.Blocks.cobl_servo_angle_control = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("Servo");
+  this.appendValueInput("PORT").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("Angle-");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("(15~165)");
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.cobl_servo_angle_control = function(b, a) {
+  console.log("servo - test");
+  var c = a.getNumberValue("PORT"), d = a.getNumberValue("VALUE"), d = Math.round(d), d = Math.max(d, 15), d = Math.min(d, 165);
+  1 == c && (console.log("servo 1  degree " + d), Entry.hw.setDigitalPortValue("Servo1", d));
+  2 == c && (console.log("servo 2 degree " + d), Entry.hw.setDigitalPortValue("Servo2", d));
+  return a.callReturn();
+};
+Blockly.Blocks.cobl_melody = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("Melody");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["(Low)So", "L_So"], ["(Low)So#", "L_So#"], ["(Low)La", "L_La"], ["(Low)La#", "L_La#"], ["(Low)Ti", "L_Ti"], ["Do", "Do"], ["Do#", "Do#"], ["Re", "Re"], ["Re#", "Re#"], ["Mi", "Mi"], ["Fa", "Fa"], ["Fa#", "Fa#"], ["So", "So"], ["So#", "So#"], ["La", "La"], ["La#", "La#"], ["Ti", "Ti"], ["(High)Do", "H_Do"], ["(High)Do#", "H_Do#"], ["(High)Re", "H_Re"], ["(High)R2#", "H_Re#"], ["(High)Mi", "H_Mi"], ["(High)Fa", "H_Fa"]]), "MELODY");
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.cobl_melody = function(b, a) {
+  var c = a.getStringField("MELODY");
+  console.log("cobl_melody" + c);
+  Entry.hw.setDigitalPortValue("Melody", c);
+  return a.callReturn();
+};
+Blockly.Blocks.cobl_dcmotor = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("DcMotor");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"]]), "MOTOR");
+  this.appendDummyInput().appendField(" ");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["1.Clockwise", "1"], ["2.Counter Clockwise", "2"], ["3.Stop", "3"]]), "DIRECTION");
+  this.appendDummyInput().appendField(" Speed");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"]]), "SPEED");
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.cobl_dcmotor = function(b, a) {
+  var c = a.getStringField("MOTOR"), d = a.getStringField("DIRECTION"), e = a.getStringField("SPEED");
+  console.log("MOTOR" + c + "  Direction" + d + "  speed" + e);
+  1 == c && (Entry.hw.setDigitalPortValue("DC1_DIR", d), Entry.hw.setDigitalPortValue("DC1_SPEED", e));
+  2 == c && (Entry.hw.setDigitalPortValue("DC2_DIR", d), Entry.hw.setDigitalPortValue("DC2_SPEED", e));
+  return a.callReturn();
+};
+Blockly.Blocks.cobl_extention_port = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("Extention Port");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"]]), "PORT");
+  this.appendDummyInput().appendField(" Level");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"]]), "LEVEL");
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.cobl_extention_port = function(b, a) {
+  var c = a.getStringField("PORT"), d = a.getStringField("LEVEL");
+  1 == c && Entry.hw.setDigitalPortValue("EXUSB1", d);
+  2 == c && Entry.hw.setDigitalPortValue("EXUSB2", d);
+  return a.callReturn();
+};
+Blockly.Blocks.cobl_external_led = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("External LED ");
+  this.appendValueInput("LED").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(" (1~64)");
+  this.appendDummyInput().appendField(" R ");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"], ["9", "9"], ["10", "10"]]), "RED");
+  this.appendDummyInput().appendField(" G ");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"], ["9", "9"], ["10", "10"]]), "GREEN");
+  this.appendDummyInput().appendField(" B ");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"], ["9", "9"], ["10", "10"]]), "BLUE");
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.cobl_external_led = function(b, a) {
+  var c = a.getNumberValue("LED"), d = a.getStringField("RED"), e = a.getStringField("GREEN"), f = a.getStringField("BLUE");
+  Entry.hw.setDigitalPortValue("ELED_IDX", c);
+  Entry.hw.setDigitalPortValue("ELED_R", d);
+  Entry.hw.setDigitalPortValue("ELED_G", e);
+  Entry.hw.setDigitalPortValue("ELED_B", f);
+  return a.callReturn();
+};
+Blockly.Blocks.cobl_7_segment = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("7 Segment");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("(0~9999)");
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.cobl_7_segment = function(b, a) {
+  var c = a.getNumberValue("VALUE");
+  Entry.hw.setDigitalPortValue("7SEG", c);
+  return a.callReturn();
+};
 Entry.EV3 = {PORT_MAP:{A:0, B:0, C:0, D:0, 1:void 0, 2:void 0, 3:void 0, 4:void 0}, motorMovementTypes:{Degrees:0, Power:1}, deviceTypes:{NxtTouch:1, NxtLight:2, NxtSound:3, NxtColor:4, NxtUltrasonic:5, NxtTemperature:6, LMotor:7, MMotor:8, Touch:16, Color:29, Ultrasonic:30, Gyroscope:32, Infrared:33, Initializing:125, Empty:126, WrongPort:127, Unknown:255}, colorSensorValue:" 000000 0000FF 00FF00 FFFF00 FF0000 FFFFFF A52A2A".split(" "), timeouts:[], removeTimeout:function(b) {
   clearTimeout(b);
   var a = this.timeouts;
@@ -12934,7 +13210,7 @@ Entry.HW = function() {
   this.settingQueue = {};
   this.socketType = this.hwModule = this.selectedDevice = null;
   Entry.addEventListener("stop", this.setZero);
-  this.hwInfo = {"1.1":Entry.Arduino, "1.9":Entry.ArduinoExt, "1.2":Entry.SensorBoard, "1.3":Entry.CODEino, "1.4":Entry.joystick, "1.5":Entry.dplay, "1.6":Entry.nemoino, "1.7":Entry.Xbot, "1.8":Entry.ardublock, "2.4":Entry.Hamster, "2.5":Entry.Albert, "3.1":Entry.Bitbrick, "4.2":Entry.Arduino, "5.1":Entry.Neobot, "7.1":Entry.Robotis_carCont, "7.2":Entry.Robotis_openCM70, "8.1":Entry.Arduino, "12.1":Entry.EV3};
+  this.hwInfo = {"1.1":Entry.Arduino, "1.9":Entry.ArduinoExt, "1.2":Entry.SensorBoard, "1.3":Entry.CODEino, "1.4":Entry.joystick, "1.5":Entry.dplay, "1.6":Entry.nemoino, "1.7":Entry.Xbot, "1.8":Entry.ardublock, "1.A":Entry.Cobl, "2.4":Entry.Hamster, "2.5":Entry.Albert, "3.1":Entry.Bitbrick, "4.2":Entry.Arduino, "5.1":Entry.Neobot, "7.1":Entry.Robotis_carCont, "7.2":Entry.Robotis_openCM70, "8.1":Entry.Arduino, "12.1":Entry.EV3};
 };
 Entry.HW.TRIAL_LIMIT = 1;
 p = Entry.HW.prototype;
