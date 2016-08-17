@@ -28,6 +28,54 @@ Entry.block = {
             return pd.leftProximity > 40 || pd.rightProximity > 40;
         }
     },
+    "ablert_is_oid_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ALBERT_front_oid ,"FRONT"],
+                    [Lang.Blocks.ALBERT_back_oid,"BACK"]
+                ],
+                "value": "FRONT",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                }
+            ],
+            "type": "albert_is_oid_value"
+        },
+        "paramsKeyMap": {
+            "OID": 0,
+            "VALUE": 1
+        },
+        "class": "albert_sensor",
+        "isNotFor": [ "albert" ],
+        "func": function(sprite, script) {
+            var pd = Entry.hw.portData;
+            var oid = script.getField("OID", script);
+            var value = script.getNumberValue("VALUE");
+            if (oid == 'FRONT') {
+                return pd.frontOid == value;
+            } else {
+                return pd.backOid == value;
+            }
+        }
+    },
     "albert_value": {
         "color": "#00979D",
         "skeleton": "basic_string_field",

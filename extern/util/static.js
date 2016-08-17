@@ -378,6 +378,7 @@ EntryStatic.getAllBlocks = function() {
 				"hamster_change_output_by",
 				"hamster_set_output_to",
                 "albert_hand_found",
+                "albert_is_oid_value",
 				"albert_value",
                 "albert_move_forward_for_secs",
                 "albert_move_backward_for_secs",
