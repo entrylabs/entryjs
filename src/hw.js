@@ -38,7 +38,8 @@ Entry.HW = function() {
         '5.1': Entry.Neobot,
         '7.1': Entry.Robotis_carCont,
         '7.2': Entry.Robotis_openCM70,
-        '8.1': Entry.Arduino
+        '8.1': Entry.Arduino,
+        '12.1': Entry.EV3
     };
 };
 

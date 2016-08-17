@@ -463,8 +463,14 @@ EntryStatic.getAllBlocks = function() {
                 "ardublock_get_digital_value",
                 "ardublock_toggle_led",
                 "ardublock_toggle_pwm",
-                "ardublock_convert_scale"
-				// ardublock Added 2016-06-01
+                "ardublock_convert_scale",
+                // ardublock Added 2016-06-01
+                "ev3_get_sensor_value",
+                "ev3_touch_sensor",
+                "ev3_color_sensor",
+                "ev3_motor_power",
+                "ev3_motor_power_on_time",
+                "ev3_motor_degrees"
             ]
         }
     ]
@@ -518,13 +524,11 @@ EntryStatic.blockInfo = {
         "xml": "<block type='xbot_digitalOutput'></block>",
         "class": "xbot_sensor"
     },
-
-     "xbot_digitalInput": {
+    "xbot_digitalInput": {
         "isNotFor": ["xbot_epor_edge"],
         "xml": "<block type='xbot_digitalInput'></block>",
         "class": "xbot_sensor"
     },
-
     "xbot_analogValue": {
         "isNotFor": ["xbot_epor_edge"],
         "xml": "<block type='xbot_analogValue'></block>",
@@ -535,8 +539,38 @@ EntryStatic.blockInfo = {
         "xml": "<block type='xbot_analogOutput'><value name='VALUE'><block type='text'><field name='NAME'>255</field></block></value></block>",
         "class": "xbot_sensor"
     },
-    //end of XBOT Blocks added
-
+    //end of XBOT Blocks added   
+    //EV3 BLOCK
+    "ev3_get_sensor_value": {
+        "isNotFor": ["EV3"],
+        "xml": "<block type='ev3_get_sensor_value'></block>",
+        "class": "ev3_sensor"
+    },
+    "ev3_touch_sensor": {
+        "isNotFor": ["EV3"],
+        "xml": "<block type='ev3_touch_sensor'></block>",
+        "class": "ev3_sensor"
+    },
+    "ev3_color_sensor": {
+        "isNotFor": ["EV3"],
+        "xml": "<block type='ev3_color_sensor'></block>",
+        "class": "ev3_sensor"
+    },
+    "ev3_motor_power": {
+        "isNotFor": ["EV3"],
+        "xml": "<block type='ev3_motor_power'><value name='VALUE'><block type='number'><field name='NUM'>50</field></block></value></block>",
+        "class": "ev3_output"
+    },
+    "ev3_motor_power_on_time": {
+        "isNotFor": ["EV3"],
+        "xml": "<block type='ev3_motor_power_on_time'><value name='TIME'><block type='number'><field name='NUM'>2</field></block></value><value name='VALUE'><block type='number'><field name='NUM'>50</field></block></value></block>",
+        "class": "ev3_output"
+    },
+    "ev3_motor_degrees": {
+        "isNotFor": ["EV3"],
+        "xml": "<block type='ev3_motor_degrees'><value name='DEGREE'> <block type='angle'></block> </value></block>",
+        "class": "ev3_output"
+    },
     "when_run_button_click": {
         "xml": "<block type='when_run_button_click'></block>",
         "class": "event",

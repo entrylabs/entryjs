@@ -20168,6 +20168,341 @@ Entry.block = {
                 }
             ]
         }
+    },
+    "ev3_color_sensor": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1 의  %2 값",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["1", "1"],
+                ["2", "2"],
+                ["3", "3"],
+                ["4", "4"]
+            ],
+            "value": "1",
+            "fontSize": 11
+        }, {
+            "type": "Dropdown",
+            "options": [
+                ["RGB", "RGB"],
+                ["R", "R"],
+                ["G", "G"],
+                ["B", "B"]
+            ],
+            "value": "RGB",
+            "fontSize": 11
+        }],
+        "events": {},
+        "def": {
+            "params": [null, null],
+            "type": "ev3_color_sensor"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "RGB": 1
+        },
+        "class": "ev3_sensor",
+        "isNotFor": ["EV3"],
+        "func": function (sprite, script) {
+            var port = script.getStringField("PORT", script);
+            var rgb = script.getStringField("RGB", script);
+            var portData = Entry.hw.getDigitalPortValue(script.getNumberField("PORT", script));
+            var result = '';
+            if(portData.type == Entry.EV3.deviceTypes.Color) {
+                if(portData.siValue == 0) {
+                    result = '';
+                } else {
+                    switch(rgb) {
+                        case 'RGB':
+                            result = Entry.EV3.colorSensorValue[portData.siValue];
+                            break;
+                        case 'R':
+                            result = Entry.EV3.colorSensorValue[portData.siValue].substring(0, 2);
+                            break;
+                        case 'G':
+                            result = Entry.EV3.colorSensorValue[portData.siValue].substring(2, 4);
+                            break;
+                        case 'B':
+                            result = Entry.EV3.colorSensorValue[portData.siValue].substring(4, 6);
+                            break;
+                    }
+                }
+            } else {
+                result = '컬러 센서 아님';
+            }
+            return result;
+        }
+    }, 
+    "ev3_get_sensor_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1 의 값",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["1", "1"],
+                ["2", "2"],
+                ["3", "3"],
+                ["4", "4"]
+            ],
+            "value": "1",
+            "fontSize": 11
+        }],
+        "events": {},
+        "def": {
+            "params": [null],
+            "type": "ev3_get_sensor_value"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "ev3_sensor",
+        "isNotFor": ["EV3"],
+        "func": function (sprite, script) {
+            var port = script.getStringField("PORT", script);
+            var portData = Entry.hw.getDigitalPortValue(script.getNumberField("PORT", script));
+            var result;
+            if($.isPlainObject(portData)) {
+                result = portData.siValue || 0;
+            }
+            return result;
+        }
+    }, 
+    "ev3_motor_degrees": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "%1 의 값을 %2 으로  %3 도 만큼 회전 %4",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["A", "A"],
+                ["B", "B"],
+                ["C", "C"],
+                ["D", "D"]
+            ],
+            "value": "A",
+            "fontSize": 11
+        }, {
+            "type": "Dropdown",
+            "options": [
+                ["시계방향", "CW"],
+                ["반시계방향", "CCW"]
+            ],
+            "value": "CW",
+            "fontSize": 11
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [null, null, {
+                "type": "angle"
+            }],
+            "type": "ev3_motor_degrees"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "DIRECTION": 1,
+            "DEGREE": 2
+        },
+        "class": "ev3_output",
+        "isNotFor": ["EV3"],
+        "func": function (sprite, script) {
+            var port = script.getStringField("PORT", script);
+            var degree = script.getValue("DEGREE", script);
+            if(degree <= 0) {
+                degree = 0;
+            } else if(degree >= 720) {
+                degree = 720;
+            }
+            var direction = script.getStringField("DIRECTION", script);
+            Entry.hw.sendQueue[port] = {
+                'id': Math.floor(Math.random() * 100000, 0),
+                'type': Entry.EV3.motorMovementTypes.Degrees,
+                'degree': degree,
+                'power': (direction == 'CW') ? 50 : -50
+            };
+            return script.callReturn();
+        }
+    }, 
+    "ev3_motor_power": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "%1 의 값을 %2 으로 출력 %3",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["A", "A"],
+                ["B", "B"],
+                ["C", "C"],
+                ["D", "D"]
+            ],
+            "value": "A",
+            "fontSize": 11
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [null, {
+                "type": "number",
+                "params": ["50"]
+            }],
+            "type": "ev3_motor_power"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "ev3_output",
+        "isNotFor": ["EV3"],
+        "func": function (sprite, script) {
+            var port = script.getStringField("PORT", script);
+            var value = script.getValue("VALUE", script);
+            Entry.hw.sendQueue[port] = {
+                'id': Math.floor(Math.random() * 100000, 0),
+                'type': Entry.EV3.motorMovementTypes.Power,
+                'power': value,
+            };
+            return script.callReturn();
+        }
+    }, 
+    "ev3_motor_power_on_time": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "%1 의 값을 %2 초 동안 %3 으로 출력 %4",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["A", "A"],
+                ["B", "B"],
+                ["C", "C"],
+                ["D", "D"]
+            ],
+            "value": "A",
+            "fontSize": 11
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [null, {
+                "type": "number",
+                "params": ["2"]
+            }, {
+                "type": "number",
+                "params": ["50"]
+            }],
+            "type": "ev3_motor_power_on_time"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "TIME": 1,
+            "VALUE": 2
+        },
+        "class": "ev3_output",
+        "isNotFor": ["EV3"],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var port = script.getStringField("PORT", script);
+            if (!script.isStart) {
+                var time = script.getValue("TIME", script);
+                var value = script.getValue("VALUE", script);
+                script.isStart = true;
+                script.timeFlag = 1;
+                Entry.hw.sendQueue[port] = {
+                    'id': Math.floor(Math.random() * 100000, 0),
+                    'type': Entry.EV3.motorMovementTypes.Power,
+                    'power': value
+                };
+                var timeValue = time * 1000;
+                var timer = setTimeout(function() {
+                    script.timeFlag = 0;
+                    Entry.EV3.removeTimeout(timer);
+                }, timeValue);
+                Entry.EV3.timeouts.push(timer);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                Entry.engine.isContinue = false;
+                Entry.hw.sendQueue[port] = {
+                    'id': Math.floor(Math.random() * 100000, 0),
+                    'type': Entry.EV3.motorMovementTypes.Power,
+                    'power': 0
+                };
+                return script.callReturn();
+            }
+        }
+    }, 
+    "ev3_touch_sensor": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "template": "%1 의 터치센서가 작동되었는가?",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["1", "1"],
+                ["2", "2"],
+                ["3", "3"],
+                ["4", "4"]
+            ],
+            "value": "1",
+            "fontSize": 11
+        }],
+        "events": {},
+        "def": {
+            "params": [null],
+            "type": "ev3_touch_sensor"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "ev3_sensor",
+        "isNotFor": ["EV3"],
+        "func": function (sprite, script) {
+            var port = script.getStringField("PORT", script);
+            var portData = Entry.hw.getDigitalPortValue(script.getNumberField("PORT", script));
+            var result = false;
+            if(portData.type == Entry.EV3.deviceTypes.Touch) {
+                if(Number(portData.siValue) >= 1) {
+                    result = true;
+                }
+            }
+
+            return result;
+        }
     }
 };
 
