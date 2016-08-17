@@ -35,19 +35,15 @@ Entry.Parser = function(mode, type, cm, syntax) {
     Entry.Parser.BLOCK_SKELETON_BASIC_LOOP = "basic_loop";
     Entry.Parser.BLOCK_SKELETON_BASIC_DOUBLE_LOOP = "basic_double_loop";
 
-    if (mode === 'maze') {
-        this._stageId = Number(Ntry.configManager.getConfig('stageId'));
-        var configCode = NtryData.config[this._stageId].availableCode;
-        var playerCode = NtryData.player[this._stageId].code;
-        this.setAvailableCode(configCode, playerCode);
-    }
+    /*this.syntax.js = this.mappingSyntaxJs(mode);
+    this.syntax.py = this.mappingSyntaxPy(mode);*/
 
+    //console.log("py syntax", this.syntax.py);
     this._console = new Entry.Console();
 
     switch (this._lang) {
         case "js":
             this._parser = new Entry.JsToBlockParser(this.syntax);
-
             var syntax = this.syntax;
 
             var assistScope = {};
@@ -66,8 +62,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     CodeMirror.showHint(cm, null, {completeSingle: false, globalScope:assistScope});
                 }
             });
-            break;
 
+            break;
         case "py":
             this._parser = new Entry.PyToBlockParser(this.syntax);
 
@@ -113,14 +109,14 @@ Entry.Parser = function(mode, type, cm, syntax) {
         this._type = type;
         this._cm = cm;
 
-        if (mode === Entry.Vim.MAZE_MODE) {
+        /*if (mode === Entry.Vim.MAZE_MODE) {
             this._stageId = Number(Ntry.configManager.getConfig('stageId'));
             var configCode = NtryData.config[this._stageId].availableCode;
             var playerCode = NtryData.player[this._stageId].code;
             this.setAvailableCode(configCode, playerCode);
-        }
+        }*/
 
-
+        this.syntax = this.mappingSyntax(mode);
         this.syntax = this.mappingSyntax(mode);
 
         if (this._parserType === type)
@@ -147,7 +143,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 var syntax = this.syntax;
                 var assistScope = {};
 
-                for(var key in syntax.Scope ) {
+                for(var key in syntax.Scope) {
                     assistScope[key + '();\n'] = syntax.Scope[key];
                 }
 
@@ -155,16 +151,18 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     assistScope['front'] = 'BasicIf';
                 }
 
-                //cm.setOption("mode", {name: "javascript", globalVars: true});
+                cm.on("keydown", function (cm, event) {
+                    var keyCode = event.keyCode;
 
-                cm.on("keyup", function (cm, event) {
-                    if ((event.keyCode >= 65 && event.keyCode <= 95) ||
-                        event.keyCode == 167 || event.keyCode == 190) {
-                        CodeMirror.showHint(cm, null, {completeSingle: false, globalScope:assistScope});
+                    if ((keyCode >= 65 && keyCode <= 95) ||
+                        keyCode == 167 || (!event.shiftKey && keyCode == 190)) {
+                        CodeMirror.showHint(cm, null, {
+                            completeSingle: false, globalScope:assistScope
+                        });
                     }
                 });
 
-                this._parserType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK;
+                this._parserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK;
 
                 break;
 
@@ -181,14 +179,115 @@ Entry.Parser = function(mode, type, cm, syntax) {
         var type = this._type;
         var result = null;
 
-        //console.log("parse type", type);
-
         switch (type) {
             case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
                 try {
-                    var astTree = acorn.parse(code);
-                    result = this._parser.Program(astTree);
+                    //var astTree = acorn.parse(code);
+                    //var threads = code.split('\n\n');
+                    var threads = [];
+                    threads.push(code);
+
+                    //console.log("threads", threads);
+
+                    var astArray = [];
+
+                    for(var index in threads) {
+                        var thread = threads[index];
+                        thread = thread.trim();
+                        var ast = acorn.parse(thread);
+                        //if(ast.type == "Program" && ast.body.length != 0)
+                        astArray.push(ast);
+                    }
+
+                    result = this._parser.Program(astArray);
                 } catch (error) {
+                    if (this.codeMirror) {
+                        var annotation;
+                        if (error instanceof SyntaxError) {
+                            annotation = {
+                                from: {line: error.loc.line - 1, ch: error.loc.column - 2},
+                                to: {line: error.loc.line - 1, ch: error.loc.column + 1}
+                            }
+
+                            error.message = "문법(Syntax) 오류입니다.";
+                            error.type = 1;
+                        } else {
+                            annotation = this.getLineNumber(error.node.start, error.node.end);
+                            annotation.message = error.message;
+                            annotation.severity = "error";
+
+                            var errorInfo = this.findErrorInfo(error);
+                            annotation.from.line = errorInfo.lineNumber;
+                            annotation.from.ch = errorInfo.location.start;
+                            annotation.to.line = errorInfo.lineNumber;
+                            annotation.to.ch = errorInfo.location.end; 
+
+                            error.type = 2;
+                        }
+
+                        this.codeMirror.markText(
+                            annotation.from, annotation.to, {
+                            className: "CodeMirror-lint-mark-error",
+                            __annotation: annotation,
+                            clearOnEnter: true 
+                        });
+
+                        if(error.title) {
+                            var errorTitle = error.title;
+                        }
+                        else {
+                            var errorTitle = '문법 오류';
+                        }
+
+                        if(error.type == 2 && error.message) {
+                            var errorMsg = error.message;
+                        }
+                        else if(error.type == 2 && !error.message) {
+                            var errorMsg = '자바스크립트 코드를 확인해주세요.';
+                        }
+                        else  if(error.type == 1) {
+                            var errorMsg = '자바스크립트 문법을 확인해주세요.';
+                        }
+
+                        Entry.toast.alert(errorTitle, errorMsg);
+                        
+                    }
+                    result = [];
+                    Ntry.dispatchEvent("textError");
+                    //throw error;
+                }
+                break;
+            case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
+                try {
+                    var pyAstGenerator = new Entry.PyAstGenerator();
+
+                    //Entry.TextCodingUtil.prototype.makeThreads(code);
+                    var threads = code.split('\n\n');
+
+                    for(var i in threads) {
+                        var thread = threads[i];
+                        if(thread.search("import") != -1) {
+                            threads[i] = "";
+                            continue;
+                        }
+
+                        thread = Entry.TextCodingUtil.prototype.entryEventFuncFilter(thread);
+                        threads[i] = thread;
+                    }
+
+                    var astArray = [];
+                    for(var index in threads) {
+                        var thread = threads[index];
+                        var ast = pyAstGenerator.generate(thread);
+                        if(ast.type == "Program" && ast.body.length != 0)
+                            astArray.push(ast);
+                    }
+
+                    result = this._parser.Program(astArray);
+                    this._parser._variableMap.clear();
+
+                    break;
+                } catch(error) {
                     if (this.codeMirror) {
                         var annotation;
                         if (error instanceof SyntaxError) {
@@ -201,90 +300,39 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             annotation = this.getLineNumber(error.node.start, error.node.end);
                             annotation.message = error.message;
                             annotation.severity = "error";
-                            this.codeMirror.markText(
-                                annotation.from, annotation.to, {
-                                className: "CodeMirror-lint-mark-error",
-                                __annotation: annotation,
-                                clearOnEnter: true
-                            });
+                            
                         }
 
-                        Entry.toast.alert('Error', error.message);
-                    }
-                    result = [];
-                }
-                break;
-            case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
-                try {
-                    var pyAstGenerator = new Entry.PyAstGenerator();
-                    //console.log("code", code);
+                        var line = parseInt(annotation.to.line) + 1;
+                        annotation.from.line = line-1;
+                        annotation.to.line = line;
 
-                    //Entry.TextCodingUtil.prototype.makeThreads(code);
-                    var threads = code.split('\n\n');
-                    //console.log("threads", threads);
+                        this.codeMirror.markText(
+                            annotation.from, annotation.to, {
+                            className: "CodeMirror-lint-mark-error",
+                            __annotation: annotation,
+                            clearOnEnter: true
+                        });
 
-                    for(var i in threads) {
-                        //console.log("thread", threads[i]);
-                        //console.log("search", threads[i].search("import"));
-                        var thread = threads[i];
-                        if(thread.search("import") != -1) {
-                            threads[i] = "";
-                            continue;
-                        }
+                        if(error.title)
+                            var errorTitle = error.title;
+                        else 
+                            var errorTitle = '문법 오류';
 
-                        thread = Entry.TextCodingUtil.prototype.entryEventFuncFilter(thread);
-                        threads[i] = thread;
-                    }
-
-                    //console.log("threads", threads);
-                    var astArray = [];
-
-                    for(var index in threads) {
-                        var thread = threads[index];
-                        var ast = pyAstGenerator.generate(thread);
-                        if(ast.type == "Program" && ast.body.length != 0)
-                            astArray.push(ast);
-                    }
-
-                    //console.log("astArray", astArray);
-
-                    result = this._parser.Program(astArray);
-
-                    this._parser._variableMap.clear();
-
-                    //console.log("result", result);
-                } catch(error) {
-                    if (this.codeMirror) {
-                        var annotation;
-                        if (error instanceof SyntaxError) {
-                            annotation = {
-                                from: {line: error.loc.line - 1, ch: error.loc.column - 2},
-                                to: {line: error.loc.line - 1, ch: error.loc.column + 1}
-                            }
-                            error.message = "문법 오류입니다.";
-                        } else {
-                            annotation = this.getLineNumber(error.node.start,
-                                                               error.node.end);
-                            annotation.message = error.message;
-                            annotation.severity = "error";
-                            this.codeMirror.markText(
-                                annotation.from, annotation.to, {
-                                className: "CodeMirror-lint-mark-error",
-                                __annotation: annotation,
-                                clearOnEnter: true
-                            });
-                        }
-                        //throw error;
-                        Entry.toast.alert('[텍스트코딩(파이썬) 오류]', error.message);
-                        document.getElementById("entryCodingModeSelector").value = '2';
+                        if(error.message && line)
+                            var errorMsg = error.message + ' (line: ' + line + ')';
+                        else
+                            var errorMsg = '파이썬 코드를 확인해주세요';
+                        Entry.toast.alert(errorTitle, errorMsg);
                         throw error;
                     }
                     result = [];
                 }
                 break;
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
-                var textCode = this._parser.Code(code);
-                var textArr = textCode.match(/(.*{.*[\S|\s]+?}|.+)/g);
+                var textCode = this._parser.Code(code, parseMode);
+                /*var textArr = textCode.match(/(.*{.*[\S|\s]+?}|.+)/g);
+                console.log("textCode", textCode);
                 if(Array.isArray(textArr)) {
                     result = textArr.reduce(function (prev, current, index) {
                         var temp = '';
@@ -302,7 +350,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     });
                 } else {
                     result = '';
-                }
+                }*/
+                result = textCode;
 
                 break;
 
@@ -351,16 +400,16 @@ Entry.Parser = function(mode, type, cm, syntax) {
             if(mode === Entry.Vim.MAZE_MODE) {
                 if(this.availableCode.indexOf(type) > -1) {
                     var syntaxArray = block.syntax;
-                    if (!syntaxArray)
-                        continue;
-
-                    if(block.syntax.py)
-                        continue;
+                    if (!syntaxArray) continue;
 
                     var syntaxTemp = syntax;
                     //console.log("syntaxArray", syntaxArray);
                     for (var j = 0; j < syntaxArray.length; j++) {
                         var key = syntaxArray[j];
+                        var index = key.indexOf("(");
+                        if(index > -1) {
+                            key = key.substring(0, index);
+                        }
                         if (j === syntaxArray.length - 2 &&
                             typeof syntaxArray[j + 1] === "function") {
                             syntaxTemp[key] = syntaxArray[j + 1];
@@ -376,8 +425,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         }
                     }
                 }
-            }
-            else {
+            } else {
                 if(mode === Entry.Vim.WORKSPACE_MODE) {
                     var blockList = Entry.block;
 
@@ -413,29 +461,59 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
     p.setAvailableCode = function (configCode, playerCode) {
         var availableList = [];
-        configCode.forEach(function (items, i) {
-            items.forEach(function (item, i) {
-                availableList.push(item.type);
-            });
-        });
-
-        if (playerCode instanceof Entry.Code) {
-            var blocks = playerCode.getBlockList();
-            blocks.forEach(function(item){
-                if(item.type !== NtryData.START && availableList.indexOf(item.type) === -1)
-                    availableList.push(item.type);
-            });
-        } else {
-            playerCode.forEach(function (items, i) {
-                items.forEach(function (item, i) {
-                    if(item.type !== NtryData.START && availableList.indexOf(item.type) === -1) {
-                        availableList.push(item.type);
-                    }
-                });
+        var blocks;
+        if (configCode instanceof Entry.Code)
+            blocks = configCode.getBlockList();
+        else {
+            configCode.forEach(function (items, i) {
+                blocks.concat(items);
             });
         }
 
+        blocks.forEach(function (item) {
+            availableList.push(item.type);
+        });
+
+        blocks = [];
+        if (playerCode instanceof Entry.Code)
+            blocks = playerCode.getBlockList();
+        else {
+            playerCode.forEach(function (items, i) {
+                blocks.concat(items);
+            });
+        }
+
+        blocks.forEach(function(item) {
+            if(availableList.indexOf(item.type) === -1)
+                availableList.push(item.type);
+        });
+
         this.availableCode = this.availableCode.concat(availableList);
+    };
+
+    p.findErrorInfo = function(error) {
+        var contents = this.codeMirror.getValue();
+        var lineNumber = 0;
+        var blockCount = 0;
+        var textArr = contents.split('\n');
+        
+        for(var i in textArr) {
+            var text = textArr[i].trim();
+           
+            lineNumber++;
+            if(text.length == 0 || text.length == 1 || text.indexOf("else") > -1) {
+                continue;
+            }
+            else {
+                blockCount++;
+            }
+
+            if(blockCount == error.blockCount)
+                break;
+           
+        }
+
+        return {lineNumber: lineNumber, location: error.node}
     };
 
 })(Entry.Parser.prototype);

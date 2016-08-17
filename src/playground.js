@@ -293,17 +293,11 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
                 categoryData: EntryStatic.getAllBlocks(),
                 scroll: true
             },
-            'board': {
-                dom: boardView
-            },
-            'vimBoard': {
-                dom: boardView
-            }
+            'board': { dom: boardView }
         }
     );
     this.blockMenu = this.mainWorkspace.blockMenu;
     this.board = this.mainWorkspace.board;
-    this.vimBoard = this.mainWorkspace.vimBoard;
 
     if (Entry.hw) this.updateHW();
 };

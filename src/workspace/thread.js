@@ -234,7 +234,7 @@ Entry.Thread = function(thread, code, parent) {
         var result = this._data.length;
         if (startBlock)
             result -= this._data.indexOf(startBlock);
-        return result
+        return result;
     };
 
     p.indexOf = function(block) {

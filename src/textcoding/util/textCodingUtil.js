@@ -135,6 +135,7 @@ Entry.TextCodingUtil = function() {
                 var None = {};
                 item.None = None;
                 result = item.None;
+
                 found = true;
                 return result; 
             }
@@ -656,10 +657,6 @@ Entry.TextCodingUtil = function() {
         
         for(var i in threadArr) {
                 var thread = threadArr[i]; 
-                //console.log("entryEventFuncFilter thread", thread);
-
-                //var tokens = thread.split('(');
-                //var prefix = tokens[0];
                 
                 if( thread == "def entry_event_start():" || 
                     thread == "def entry_event_mouse_down():" || 
@@ -690,7 +687,6 @@ Entry.TextCodingUtil = function() {
                 }  
         }
 
-        //console.log("TextCodingUtil entryEventFuncFilter threadArr", threadArr);
         result = threadArr.join('\n');
         return result;
     };
@@ -736,50 +732,45 @@ Entry.TextCodingUtil = function() {
             var name = block.data.params[0];
             this._funcNameQ.enqueue(name);
             //console.log("searchFuncDefParam name enqueue", name);
+
         }
 
         if(block && block.data && block.data.params && block.data.params[1]){
             if(block.data.type == "function_field_string" || block.data.type == "function_field_boolean") {
                 var param = block.data.params[0].data.type;
                 this._funcParamQ.enqueue(param);
-                //console.log("searchFuncDefParam param enqueue", param); 
             }
 
             var result = this.searchFuncDefParam(block.data.params[1]);  
             return result;
         }
         else {
-            //console.log("searchFuncDefParam block", block);
             return block;
         }
     };
 
     p.gatherFuncDefParam = function(block) {
-        //console.log("gatherFuncDefParam block", block);
         if(block && block.data) {
             if(block.data.params[0]) {
                 if(block.data.params[0].data) {
                     var param = block.data.params[0].data.type;
                     if(block.data.type == "function_field_string" || block.data.type == "function_field_boolean") {
                         this._funcParamQ.enqueue(param);
-                        //console.log("gatherFuncDefParam param enqueue", this._funcParamQ);
+
                     } 
                 } else if(block.data.type == "function_field_label") {
                     var name = block.data.params[0];
                     this._funcNameQ.enqueue(name);
-                    //console.log("gatherFuncDefParam name enqueue", name);
                 }
             }
-
             if(block.data.params[1]){
                 var result = this.searchFuncDefParam(block.data.params[1]);  
-                //console.log("gatherFuncDefParam result", result);
+
                 if(result.data.params[0].data) {
                     var param = result.data.params[0].data.type;
                     
                     if(result.data.type == "function_field_string" || result.data.type == "function_field_boolean") {
                         this._funcParamQ.enqueue(param);
-                        //console.log("gatherFuncDefParam param enqueue", this._funcParamQ);
                     }
                 }
 
@@ -789,7 +780,6 @@ Entry.TextCodingUtil = function() {
                                         
                         if(result.data.params[1].data.type == "function_field_string" || result.data.params[1].data.type == "function_field_boolean") {
                             this._funcParamQ.enqueue(param);
-                            //console.log("gatherFuncDefParam param enqueue", this._funcParamQ);
                         } 
                     }
                 }
@@ -801,7 +791,6 @@ Entry.TextCodingUtil = function() {
     };
 
     p.getLastParam = function(funcBlock) {
-        //console.log("getLastParam funcBlock", funcBlock);
         if(funcBlock && funcBlock.data && funcBlock.data.params[1]) {
             var result = this.getLastParam(funcBlock.data.params[1]);
         }
@@ -809,7 +798,6 @@ Entry.TextCodingUtil = function() {
             return funcBlock;
         }
 
-        //console.log("getLastParam result", result);
         return result;
     };
 
@@ -821,8 +809,7 @@ Entry.TextCodingUtil = function() {
             matchFlag = false;
             var blockFuncContent = blockFuncContents[i];
             var textFuncStatement = textFuncStatements[i];
-            //console.log("blockFuncContent", blockFuncContent);
-            //console.log("textFuncStatement", textFuncStatement);
+
             if(blockFuncContent && !textFuncStatement) {
                 matchFlag = fasle;
                 return matchFlag;
@@ -839,13 +826,11 @@ Entry.TextCodingUtil = function() {
                 var blockFuncContentParams = blockFuncContent.data.params;
                 var cleansingParams = [];
                 blockFuncContentParams.map(function(blockFuncContentParam, index) {
-                    //console.log("blockFuncContentParam", blockFuncContentParam);
                     if(blockFuncContentParam)
                         cleansingParams.push(blockFuncContentParam);
                 });
                 blockFuncContentParams = cleansingParams;
-                //console.log("textFuncStatementParams", textFuncStatementParams);
-                //console.log("blockFuncContentParams", blockFuncContentParams);
+
                 if(textFuncStatementParams.length == blockFuncContentParams.length) { //Statement Param Length Comparison   
                     matchFlag = true;
                     for(var j = 0; j < textFuncStatementParams.length; j++) {
@@ -876,14 +861,10 @@ Entry.TextCodingUtil = function() {
                         else if(textFuncStatementParams[j].type == "True" || textFuncStatementParams[j].type == "False") {
                             if(textFuncStatementParams[j].type == blockFuncContentParams[j].data.type) {
                                 matchFlag = true;
-                                //console.log("Function Param Found 1", textFuncStatementParams[j].type);
-                                //console.log("Function Param Found 2", blockFuncContentParams[j].data.type);
                             }      
                         } else if(textFuncStatementParams[j].type && textFuncStatementParams[j].params) {
                             if(textFuncStatementParams[j].params[0] == blockFuncContentParams[j].data.params[0]) {
                                 matchFlag = true;
-                                //console.log("Function Param Found 1", textFuncStatementParams[j].params[0]);
-                                //console.log("Function Param Found 2", blockFuncContentParams[j].data.params[0]);
                             }  
                         }   
                     }
@@ -904,6 +885,138 @@ Entry.TextCodingUtil = function() {
         }
 
         return matchFlag;
+    };
+
+    p.isParamBlock = function(block) {
+        var type = block.type;
+        if(type == "ai_boolean_distance" ||
+            type == "ai_distance_value" ||
+            type == "ai_boolean_object" ||
+            type == "ai_boolean_and") {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+    p.hasBlockInfo = function(data, blockInfo) {
+        var result = false;
+        for(var key in blockInfo) {
+            var info = blockInfo[key]; 
+            if(key == data.type) {
+                for(var j in info) {
+                    var loc = info[j];
+                    if(loc.start == data.start && loc.end == data.end) {
+                       result = true;
+                       break;
+                    } 
+                }
+            }
+        }
+
+        return result;
+    };
+
+    p.updateBlockInfo = function(data, blockInfo) {
+        var infoArr = blockInfo[data.type];
+        if(infoArr && Array.isArray(infoArr) && infoArr.legnth != 0) {
+            for(var i in infoArr) {
+                var info = infoArr[i];
+                if(info.start == data.start && info.end == data.end) {
+                    break;
+                }
+                else {
+                    var loc = {};
+                    loc.start = data.start;
+                    loc.end = data.end;
+
+                    infoArr.push(loc);
+                }
+            }
+        } else {
+            blockInfo[data.type] = []; 
+
+            var loc = {};
+            loc.start = data.start;
+            loc.end = data.end;
+
+            blockInfo[data.type].push(loc);
+        }
+    };
+
+    p.jsAdjustSyntax = function(block, syntax) {
+        var result = '';
+        if(block.data.type == 'ai_boolean_distance') {
+            var tokens = syntax.split(' ');
+            var firstParam = tokens[0].split('_');
+            var value = firstParam[1];
+            firstParam[1] = firstParam[1].substring(1, firstParam[1].length-1);
+            firstParam[1] = firstParam[1].toLowerCase();
+            firstParam = firstParam.join('_');
+            var secondParam = tokens[1];
+            secondParam = this.bTojBinaryOperatorConvertor(secondParam);
+            var thirdParam = tokens[2];
+
+            result = firstParam + ' ' + secondParam + ' ' + thirdParam;
+
+        } else if(block.data.type == 'ai_boolean_object') {
+            var tokens = syntax.split(' ');
+            var firstParam = tokens[0].split('_');
+            var value = firstParam[1];
+            firstParam[1] = firstParam[1].substring(1, firstParam[1].length-1);
+            firstParam[1] = firstParam[1].toLowerCase();
+            firstParam = firstParam.join('_');
+            var secondParam = tokens[1];
+            var thirdParam = tokens[2];
+
+            result = firstParam + ' ' + secondParam + ' ' + thirdParam;
+        } else if(block.data.type == 'ai_distance_value') {
+            var tokens = syntax.split(' ');
+            var firstParam = tokens[0].split('_');
+            var value = firstParam[1];
+            firstParam[1] = firstParam[1].substring(1, firstParam[1].length-1);
+            firstParam[1] = firstParam[1].toLowerCase();
+            firstParam = firstParam.join('_');
+            
+            result = firstParam;
+        } else {
+            result = syntax;
+        }
+
+        return result;
+    };
+
+    p.bTojBinaryOperatorConvertor = function(operator) {
+        var result;
+        switch(operator) {
+            case '\'BIGGER\'': result = ">"; break;
+            case '\'BIGGER_EQUAL\'': result = ">="; break; 
+            case '\'EQUAL\'': result = "=="; break;
+            case '\'SMALLER\'': result = "<"; break;
+            case '\'SMALLER_EQUAL\'': result = "<="; break;
+        }
+
+        return result;
+    };
+
+    p.jTobBinaryOperatorConvertor = function(operator) {
+        var result;
+        switch(operator) {
+            case '>': result = "BIGGER"; break;
+            case '>=': result = "BIGGER_EQUAL"; break; 
+            case '==': result = "EQUAL"; break;
+            case '<': result = "SMALLER"; break;
+            case '<=': result = "SMALLER_EQUAL"; break;
+        }
+
+        return result;
+    };
+
+    p.radarVariableConvertor = function(variable) {
+        var items = variable.split('_');
+        var result = items[1].toUpperCase();
+
+        return result;
     };
 
 })(Entry.TextCodingUtil.prototype);

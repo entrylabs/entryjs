@@ -4,8 +4,8 @@ goog.provide("Entry.Vim");
 
 Entry.Vim = function(dom, textType) {
     //Definition For Textmode
-    Entry.Vim.MAZE_MODE = 1; 
-    Entry.Vim.WORKSPACE_MODE = 2; 
+    Entry.Vim.MAZE_MODE = 1;
+    Entry.Vim.WORKSPACE_MODE = 2;
 
     Entry.Vim.TEXT_TYPE_JS = 0;
     Entry.Vim.TEXT_TYPE_PY = 1;
@@ -16,10 +16,10 @@ Entry.Vim = function(dom, textType) {
     Entry.Vim.PARSER_TYPE_BLOCK_TO_PY = 3;
 
     Entry.Vim.PYTHON_IMPORT_ENTRY = "import Entry";
-    Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino, Dplay" + 
+    Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino, Dplay" +
                                     " \n\t   Neobot, Nemoino, Robotis, Sensorboard, Xbot from Hw";
 
-    if (typeof dom === "string") 
+    if (typeof dom === "string")
         dom = $('#' + dom);
     else
         dom = $(dom);
@@ -31,11 +31,11 @@ Entry.Vim = function(dom, textType) {
 
     //this._parser = new Entry.Parser("maze", "js", this.codeMirror);
     //this._blockParser = new Entry.Parser("maze", "block");
-    
+
     this._mode = Entry.Vim.WORKSPACE_MODE;
     this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
     this._parser = new Entry.Parser(this._mode, this._parserType, this.codeMirror);
-    
+
     //this._pyBlockParser = new Entry.Parser("ws", "blockPy", this.codeMirror);
     //this._jsParser = new Entry.Parser("ws", "js", this.codeMirror);
     //this._pyParser = new Entry.Parser("ws", "py", this.codeMirror);
@@ -80,15 +80,9 @@ Entry.Vim = function(dom, textType) {
         function eventDragEnd(e) {
             var textCode = _self.getCodeToText(e.block);
             _self.codeMirror.display.dragFunctions.leave(e);
-            var mousedown = new MouseEvent('mousedown', {
-                'view': window,
-                'bubbles': true,
-                'cancelable': true,
-                'clientX' : e.clientX,
-                'clientY' : e.clientY
-            });
-
-            _self.codeMirror.display.scroller.dispatchEvent(mousedown);
+            var mouseEvent =
+                Entry.Utils.createMouseEvent('mousedown', e);
+            _self.codeMirror.display.scroller.dispatchEvent(mouseEvent);
             var testArr = textCode.split('\n');
             var max = testArr.length - 1;
             var lastLine = 0;
@@ -101,6 +95,9 @@ Entry.Vim = function(dom, textType) {
                     _self.codeMirror.replaceSelection('\n');
                 }
             });
+            mouseEvent =
+                Entry.Utils.createMouseEvent('mouseup', e);
+            _self.codeMirror.display.scroller.dispatchEvent(mouseEvent);
         }
 
         function eventDragOver(e) {
@@ -133,7 +130,7 @@ Entry.Vim = function(dom, textType) {
 
         var textCode = this.codeMirror.getValue();
         var code = this._parser.parse(textCode);
-        /*if(code.length === 0) {   
+        /*if(code.length === 0) {
             throw {
                 message : '지원되지 않는 표현식을 포함하고 있습니다.',
             };
@@ -160,7 +157,7 @@ Entry.Vim = function(dom, textType) {
         } else if(textType === Entry.Vim.TEXT_TYPE_PY) {
             this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
             this._parser.setParser(this._mode, this._parserType, this.codeMirror);
-        } 
+        }
 
         var textCode = this._parser.parse(code, Entry.Parser.PARSE_GENERAL);
 
@@ -171,11 +168,16 @@ Entry.Vim = function(dom, textType) {
             //.concat("\n")
             //.concat(Entry.Vim.PYTHON_IMPORT_HW)
             .concat("\n\n")
-            .concat(textCode); 
+            .concat(textCode);
         }
 
         this.codeMirror.setValue(textCode);
-        this.codeMirror.getDoc().markText({line:1, ch:0}, {line: 4, ch:0}, {readOnly: true});
+        this.codeMirror.getDoc().markText({line:0, ch:0}, {line: 4, ch:0}, {readOnly: true});
+
+        var doc = this.codeMirror.getDoc();
+        doc.setCursor({ line: doc.lastLine() - 1});
+        // this.codeMirror.getDoc().markText({line:0, ch:0}, {line: 1, ch: 100}, {readOnly: true});
+
     };
 
     p.getCodeToText = function(code) {
@@ -188,7 +190,12 @@ Entry.Vim = function(dom, textType) {
             this._parser.setParser(this._mode, this._parserType, this.codeMirror);
         }
         var textCode = this._parser.parse(code, Entry.Parser.PARSE_SYNTAX);
+
         return textCode;
+    };
+
+    p.setParserAvailableCode = function(blockMenuCode, boardCode) {
+        this._parser.setAvailableCode(blockMenuCode, boardCode);
     };
 
 })(Entry.Vim.prototype);

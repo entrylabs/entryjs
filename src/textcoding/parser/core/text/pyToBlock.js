@@ -2224,7 +2224,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var newFunc = new Entry.Func();
             newFunc.generateBlock(true);
             
-
             console.log("FunctionDeclaration newFunc", newFunc);
             var templateArr = [];
 
@@ -2235,15 +2234,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
             newFunc.block.template = textFuncName + ' ' + templateArr.join(' ');
             console.log("newFunc template", newFunc.block.template);
 
-            
-
-
             var thread = newFunc.content._data[0];
             var newFuncDefParamBlock = thread._data[0].data.params[0];
             var newFuncDefParams = newFuncDefParamBlock.data.params;
             newFunc.description = '';
 
-            
             // inject block func name
             // func name join
             var textFuncNameTokens = textFuncName.split('__');

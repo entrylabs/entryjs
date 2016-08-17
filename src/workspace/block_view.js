@@ -17,7 +17,10 @@ Entry.BlockView = function(block, board, mode) {
     this.set(block);
     this.svgGroup = board.svgBlockGroup.elem("g");
 
-    this._schema = Entry.block[block.type];
+    if(block.type) {
+        this._schema = Entry.block[block.type];
+    }
+
     if (this._schema.changeEvent)
         this._schemaChangeEvent = this._schema.changeEvent.attach(
             this, this._updateSchema);
@@ -203,12 +206,29 @@ Entry.BlockView.pngMap = {};
                 }
 
                 var text = this.getBoard().workspace.getCodeToText(this.block);
+
+                var lineBreak = false;
+                var secondLineText;
+                if (/(if)+(.|\n)+(else)+/.test(text)) {
+                    var contents = text.split('\n');
+                    text = contents.shift() + ' ' + contents.shift();
+
+                    lineBreak = true;
+                    secondLineText = contents.join(" ");
+                }
+
                 var fieldText = {text:text};
                 if (this.block._schema.vimModeFontColor)
                     fieldText.color = this.block._schema.vimModeFontColor;
                 this._contents.push(
                     new Entry.FieldText(fieldText, this)
                 );
+
+                if (lineBreak) {
+                    this._contents.push(new Entry.FieldLineBreak(null, this));
+                    fieldText.text = secondLineText;
+                    this._contents.push(new Entry.FieldText(fieldText, this));
+                }
                 break;
         }
         this.alignContent(false);
