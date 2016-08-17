@@ -710,6 +710,86 @@ Entry.block = {
         	}
         }
     },
+    "albert_set_orientation_on_board": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                null
+            ],
+            "type": "albert_set_orientation_on_board"
+        },
+        "paramsKeyMap": {
+            "ORIENTATION": 0
+        },
+        "class": "albert_wheel",
+        "isNotFor": [ "albert" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+        	var pd = Entry.hw.portData;
+        	var controller = Entry.Albert.controller;
+        	if (!script.isStart) {
+        		script.isStart = true;
+        		script.isMoving = true;
+        		script.boardState = 1;
+        		script.theta = -200;
+        		script.targetTheta = script.getNumberValue('ORIENTATION');
+        		controller.clear();
+        		sq.leftWheel = 0;
+        		sq.rightWheel = 0;
+        		return script;
+        	} else if (script.isMoving) {
+        		script.theta = pd.orientation;
+        		switch(script.boardState) {
+        			case 1: {
+        				var current = controller.toRadian(script.theta);
+        				var target = controller.toRadian(script.targetTheta);
+        				if(controller.controlAngle(current, target) == false)
+        					script.boardState = 2;
+        				break;
+        			}
+        			case 2: {
+        				var current = controller.toRadian(script.theta);
+        				var target = controller.toRadian(script.targetTheta);
+        				if(controller.controlAngleFine(current, target) == false) {
+        					sq.leftWheel = 0;
+        					sq.rightWheel = 0;
+        					script.isMoving = false;
+        				}
+        				break;
+        			}
+        		}
+        		return script;
+        	} else {
+        		delete script.isStart;
+        		delete script.isMoving;
+        		delete script.boardState;
+        		delete script.theta;
+        		delete script.targetTheta;
+        		Entry.engine.isContinue = false;
+        		sq.leftWheel = 0;
+        		sq.rightWheel = 0;
+        		return script.callReturn();
+        	}
+        }
+    },
     "albert_set_eye_to": {
         "color": "#00979D",
         "skeleton": "basic",
@@ -6851,18 +6931,18 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.Blocks.HAMSTER_sensor_leftProximity, "leftProximity"],
-                    [Lang.Blocks.HAMSTER_sensor_rightProximity, "rightProximity"],
-                    [Lang.Blocks.HAMSTER_sensor_leftFloor, "leftFloor"],
-                    [Lang.Blocks.HAMSTER_sensor_rightFloor, "rightFloor"],
-                    [Lang.Blocks.HAMSTER_sensor_accelerationX, "accelerationX"],
-                    [Lang.Blocks.HAMSTER_sensor_accelerationY, "accelerationY"],
-                    [Lang.Blocks.HAMSTER_sensor_accelerationZ, "accelerationZ"],
+                    [Lang.Blocks.HAMSTER_sensor_left_proximity, "leftProximity"],
+                    [Lang.Blocks.HAMSTER_sensor_right_proximity, "rightProximity"],
+                    [Lang.Blocks.HAMSTER_sensor_left_floor, "leftFloor"],
+                    [Lang.Blocks.HAMSTER_sensor_right_floor, "rightFloor"],
+                    [Lang.Blocks.HAMSTER_sensor_acceleration_x, "accelerationX"],
+                    [Lang.Blocks.HAMSTER_sensor_acceleration_y, "accelerationY"],
+                    [Lang.Blocks.HAMSTER_sensor_acceleration_z, "accelerationZ"],
                     [Lang.Blocks.HAMSTER_sensor_light, "light"],
                     [Lang.Blocks.HAMSTER_sensor_temperature, "temperature"],
-                    [Lang.Blocks.HAMSTER_sensor_signalStrength, "signalStrength"],
-                    [Lang.Blocks.HAMSTER_sensor_inputA, "inputA"],
-                    [Lang.Blocks.HAMSTER_sensor_inputB, "inputB"]
+                    [Lang.Blocks.HAMSTER_sensor_signal_strength, "signalStrength"],
+                    [Lang.Blocks.HAMSTER_sensor_input_a, "inputA"],
+                    [Lang.Blocks.HAMSTER_sensor_input_b, "inputB"]
                 ],
                 "value": "leftProximity",
                 "fontSize": 11

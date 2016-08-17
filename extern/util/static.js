@@ -390,6 +390,7 @@ EntryStatic.getAllBlocks = function() {
                 "albert_stop",
 				"albert_set_pad_size_to",
                 "albert_move_to_x_y_on_board",
+                "albert_set_orientation_on_board",
 				"albert_set_eye_to",
                 "albert_clear_eye",
                 "albert_body_led",
