@@ -10,7 +10,8 @@ Blockly.Blocks.show = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.show()"]}
 };
 
 Entry.block.show = function (sprite, script) {
@@ -28,7 +29,8 @@ Blockly.Blocks.hide = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.hide()"]}
 };
 
 Entry.block.hide = function (sprite, script) {
@@ -60,7 +62,8 @@ Blockly.Blocks.dialog_time = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.dialog_for_seconds(%1, %2, %3)"]}
 };
 
 Entry.block.dialog_time = function (sprite, script) {
@@ -107,7 +110,8 @@ Blockly.Blocks.dialog = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.dialog(%1, %2)"]}
 };
 
 Entry.block.dialog = function (sprite, script) {
@@ -131,7 +135,8 @@ Blockly.Blocks.remove_dialog = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.remove_dialog()"]}
 };
 
 Entry.block.remove_dialog = function (sprite, script) {
@@ -178,7 +183,8 @@ Blockly.Blocks.change_to_next_shape = {
         this.setInputsInline(true);
         this.setPreviousStatement(true);
         this.setNextStatement(true);
-    }
+    },
+  syntax: {js: [], py: ["self.change_to_adjacent_shape(%1)"]}
 };
 
 Entry.block.change_to_next_shape = function (sprite, script) {
@@ -214,7 +220,8 @@ Blockly.Blocks.set_effect_volume = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.add_effect(%1, %2)"]}
 };
 
 Entry.block.set_effect_volume = function (sprite, script) {
@@ -259,7 +266,8 @@ Blockly.Blocks.set_effect = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.set_effect(%1, %2)"]}
 };
 
 Entry.block.set_effect = function (sprite, script) {
@@ -291,7 +299,8 @@ Blockly.Blocks.erase_all_effects = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.remove_all_effects()"]}
 };
 
 Entry.block.erase_all_effects = function (sprite, script) {
@@ -362,7 +371,8 @@ Blockly.Blocks.change_scale_size = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.change_size(%1)"]}
 };
 
 Entry.block.change_scale_size = function (sprite, script) {
@@ -385,7 +395,8 @@ Blockly.Blocks.set_scale_size = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.set_size(%1)"]}
 };
 
 Entry.block.set_scale_size = function (sprite, script) {
@@ -405,7 +416,8 @@ Blockly.Blocks.flip_y = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.flip_horizontal()"]}
 };
 
 Entry.block.flip_y = function(sprite, script) {
@@ -422,7 +434,8 @@ Blockly.Blocks.flip_x = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.flip_vertical()"]}
 };
 
 Entry.block.flip_x = function(sprite, script) {
@@ -469,7 +482,8 @@ Blockly.Blocks.get_pictures = {
         .appendField(' ');
     this.setOutput(true, 'String');
     this.setInputsInline(true);
-  }
+  },
+  syntax: {js: [], py: []}
 };
 
 Entry.block.get_pictures = function (sprite, script) {
@@ -489,7 +503,8 @@ Blockly.Blocks.change_to_some_shape = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.change_to_some_shape(%1)"]}
 };
 
 Entry.block.change_to_some_shape = function (sprite, script) {
@@ -523,7 +538,8 @@ Blockly.Blocks.add_effect_amount = {
         this.setInputsInline(true);
         this.setPreviousStatement(true);
         this.setNextStatement(true);
-    }
+    },
+    syntax: {js: [], py: ["self.add_effect_by_cbt(%1, %2)"]}
 };
 
 Entry.block.add_effect_amount = function (sprite, script) {
@@ -562,7 +578,8 @@ Blockly.Blocks.change_effect_amount = {
         this.setInputsInline(true);
         this.setPreviousStatement(true);
         this.setNextStatement(true);
-    }
+    },
+    syntax: {js: [], py: ["self.set_effect_by_cbt(%1, %2)"]}
 };
 
 Entry.block.change_effect_amount = function (sprite, script) {
@@ -675,7 +692,8 @@ Blockly.Blocks.change_object_index = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.locate_to(%1)"]}
 };
 
 Entry.block.change_object_index = function(sprite, script) {

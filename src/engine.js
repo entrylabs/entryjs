@@ -470,6 +470,16 @@ Entry.Engine.prototype.toggleRun = function() {
         return;
     }
 
+    ////////////////////////////////////////////////////
+    //Text Coding Mode
+    var mainWorkspace = Entry.playground.mainWorkspace; 
+    var boardMode = mainWorkspace.mode;
+    if(boardMode == Entry.Workspace.MODE_VIMBOARD) {
+        mainWorkspace.loadCodeFromText(boardMode); 
+    }
+    //Text Coding Mode
+    ////////////////////////////////////////////////////
+    
     Entry.addActivity("run");
     if (this.state == 'stop') {
         Entry.container.mapEntity(function(entity) {
@@ -488,6 +498,7 @@ Entry.Engine.prototype.toggleRun = function() {
         Entry.scene.takeStartSceneSnapshot();
         this.state = 'run';
         this.fireEvent('start');
+
     }
     this.state = 'run';
     if (Entry.type == 'mobile')

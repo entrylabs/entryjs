@@ -16,6 +16,9 @@ Entry.FieldIndicator = function(content, blockView, index) {
     var box = new Entry.BoxModel();
     this.box = box;
 
+    if (this._block.params[index])
+        content = this._block.params[index];
+
     this._size = content.size;
     if(this._block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN)
         this._imgUrl = content.img.replace('.png', '_un.png');

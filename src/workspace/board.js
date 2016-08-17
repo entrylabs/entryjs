@@ -328,6 +328,7 @@ Entry.Board.DRAG_RADIUS = 5;
             blockView._moveTo(left, top, false);
             acculmulatedTop = acculmulatedTop + bBox.height + verticalGap;
         }
+
         this.scroller.resizeScrollBar();
     };
 

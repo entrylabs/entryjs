@@ -3,9 +3,9 @@
  */
 "use strict";
 
-goog.provide("Entry.JSParser");
+goog.provide("Entry.JsToBlockParser");
 
-Entry.JSParser = function(syntax) {
+Entry.JsToBlockParser = function(syntax) {
     this.syntax = syntax;
 
     this.scopeChain = [];
@@ -19,7 +19,6 @@ Entry.JSParser = function(syntax) {
         var body = node.body;
 
         //block statement
-
         block.push({
             type: this.syntax.Program
         });
@@ -32,7 +31,8 @@ Entry.JSParser = function(syntax) {
 
         code.push(block);
         code = code.concat(separatedBlocks);
-        return code;
+        
+        return code; 
     };
 
     p.Identifier = function(node, scope) {
@@ -618,4 +618,4 @@ Entry.JSParser = function(syntax) {
         }
     };
 
-})(Entry.JSParser.prototype);
+})(Entry.JsToBlockParser.prototype);
