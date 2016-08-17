@@ -15364,7 +15364,6 @@ Entry.block.test_wrapper = {skeleton:"basic", mode:"maze", color:"#3BBD70", temp
 Entry.block.basic_button = {skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"basic button", color:"#333", align:"center"}], func:function() {
 }};
 Entry.BlockMenu = function(b, a, c, d) {
-  window.a = this;
   Entry.Model(this, !1);
   this._align = a || "CENTER";
   this._scroll = void 0 !== d ? d : !1;
@@ -16556,6 +16555,7 @@ Entry.PARAM = -1;
     }
     var d = new Entry.Thread(a, this);
     void 0 === b ? this._data.push(d) : this._data.insert(d, b);
+    this.changeEvent.notify();
     return d;
   };
   b.cloneThread = function(a, b) {

@@ -159,6 +159,7 @@ Entry.PARAM = -1;
         if (index === undefined) this._data.push(thread);
         else this._data.insert(thread, index);
 
+        this.changeEvent.notify();
         return thread;
     };
 
