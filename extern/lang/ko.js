@@ -3423,6 +3423,7 @@ Lang.Hw = {
 };
 Lang.template = {
     "albert_hand_found": "손 찾음?",
+    "albert_is_oid_value": "OID 값이 %1 인가? %2",
     "albert_value": "%1",
     "albert_move_forward_for_secs": "앞으로 %1 초 이동하기 %2",
     "albert_move_backward_for_secs": "뒤로 %1 초 이동하기 %2",

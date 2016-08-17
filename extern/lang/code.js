@@ -3423,6 +3423,7 @@ Lang.Hw = {
 };
 Lang.template = {
     "albert_hand_found": "Entry.Albert.isHandFound()",
+    "albert_is_oid_value": "Entry.Albert.isOidValue( %1 ) %2",
     "albert_value": "%1",
     "albert_move_forward_for_secs": "Entry.Albert.moveForwardForSecs( %1 ) %2",
     "albert_move_backward_for_secs": "Entry.Albert.moveBackwardForSecs( %1 ) %2",

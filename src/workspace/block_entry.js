@@ -28,10 +28,10 @@ Entry.block = {
             return pd.leftProximity > 40 || pd.rightProximity > 40;
         }
     },
-    "ablert_is_oid_value": {
+    "albert_is_oid_value": {
         "color": "#00979D",
         "fontColor": "#fff",
-        "skeleton": "basic_boolean_field",
+        "skeleton": "basic_string_field",
         "statements": [],
         "params": [
             {
@@ -84,15 +84,15 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.Blocks.ALBERT_sensor_leftProximity ,"leftProximity"],
-                    [Lang.Blocks.ALBERT_sensor_rightProximity,"rightProximity"],
+                    [Lang.Blocks.ALBERT_sensor_left_proximity ,"leftProximity"],
+                    [Lang.Blocks.ALBERT_sensor_right_proximity,"rightProximity"],
                     [Lang.Blocks.ALBERT_sensor_light,"light"],
                     [Lang.Blocks.ALBERT_sensor_battery,"battery"],
-                    [Lang.Blocks.ALBERT_sensor_signalStrength,"signalStrength"],
-                    [Lang.Blocks.ALBERT_sensor_frontOid,"frontOid"],
-                    [Lang.Blocks.ALBERT_sensor_backOid,"backOid"],
-                    [Lang.Blocks.ALBERT_sensor_positionX,"positionX"],
-                    [Lang.Blocks.ALBERT_sensor_positionY,"positionY"],
+                    [Lang.Blocks.ALBERT_sensor_signal_strength,"signalStrength"],
+                    [Lang.Blocks.ALBERT_sensor_front_oid,"frontOid"],
+                    [Lang.Blocks.ALBERT_sensor_back_oid,"backOid"],
+                    [Lang.Blocks.ALBERT_sensor_position_x,"positionX"],
+                    [Lang.Blocks.ALBERT_sensor_position_y,"positionY"],
                     [Lang.Blocks.ALBERT_sensor_orientation,"orientation"]
                 ],
                 "value": "leftProximity",
@@ -596,6 +596,118 @@ Entry.block = {
             sq.padWidth = script.getNumberValue('WIDTH');
             sq.padHeight = script.getNumberValue('HEIGHT');
             return script.callReturn();
+        }
+    },
+    "albert_move_to_x_y_on_board": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                null
+            ],
+            "type": "albert_move_to_x_y_on_board"
+        },
+        "paramsKeyMap": {
+            "X": 0,
+            "Y": 1
+        },
+        "class": "albert_wheel",
+        "isNotFor": [ "albert" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+        	var pd = Entry.hw.portData;
+        	var controller = Entry.Albert.controller;
+        	if (!script.isStart) {
+        		script.isStart = true;
+        		script.isMoving = true;
+        		script.initialized = false;
+        		script.boardState = 1;
+        		script.x = -1;
+        		script.y = -1;
+        		script.theta = -200;
+        		script.targetX = script.getNumberValue('X');
+        		script.targetY = script.getNumberValue('Y');
+        		controller.clear();
+        		sq.leftWheel = 0;
+        		sq.rightWheel = 0;
+        		return script;
+        	} else if (script.isMoving) {
+        		if(pd.positionX >= 0) script.x = pd.positionX;
+        		if(pd.positionY >= 0) script.y = pd.positionY;
+        		script.theta = pd.orientation;
+        		switch(script.boardState) {
+        			case 1: {
+        				if(script.initialized == false) {
+        					if(script.x < 0 || script.y < 0) {
+        						sq.leftWheel = 20;
+        						sq.rightWheel = -20;
+        						return script;
+        					}
+        					script.initialized = true;
+        				}
+        				var current = controller.toRadian(script.theta);
+        				var dx = script.targetX - script.x;
+        				var dy = script.targetY - script.y;
+        				var target = Math.atan2(dy, dx);
+        				if(controller.controlAngle(current, target) == false)
+        					script.boardState = 2;
+        				break;
+        			}
+        			case 2: {
+        				if(controller.controlPosition(script.x, script.y, controller.toRadian(script.theta), script.targetX, script.targetY) == false)
+        					script.boardState = 3;
+        				break;
+        			}
+        			case 3: {
+        				if(controller.controlPositionFine(script.x, script.y, controller.toRadian(script.theta), script.targetX, script.targetY) == false) {
+        					sq.leftWheel = 0;
+        					sq.rightWheel = 0;
+        					script.isMoving = false;
+        				}
+        				break;
+        			}
+        		}
+        		return script;
+        	} else {
+        		delete script.isStart;
+        		delete script.isMoving;
+        		delete script.initialized;
+        		delete script.boardState;
+        		delete script.x;
+        		delete script.y;
+        		delete script.theta;
+        		delete script.targetX;
+        		delete script.targetY;
+        		Entry.engine.isContinue = false;
+        		sq.leftWheel = 0;
+        		sq.rightWheel = 0;
+        		return script.callReturn();
+        	}
         }
     },
     "albert_set_eye_to": {

@@ -3423,6 +3423,7 @@ Lang.Hw = {
 };
 Lang.template = {
     "albert_hand_found": "hand found?",
+    "albert_is_oid_value": "Is %1 oid? %2",
     "albert_value": "%1",
     "albert_move_forward_for_secs": "move forward for %1 secs %2",
     "albert_move_backward_for_secs": "move backward for %1 secs %2",
