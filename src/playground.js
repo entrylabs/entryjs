@@ -32,6 +32,7 @@ Entry.Playground = function() {
 }
 
 Entry.Playground.prototype.setMode = function(mode) {
+    console.log("playground setMode", mode);
     this.mainWorkspace.setMode(mode);
 }
 
@@ -293,11 +294,17 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
                 categoryData: EntryStatic.getAllBlocks(),
                 scroll: true
             },
-            'board': { dom: boardView }
+            'board': { 
+                dom: boardView
+            },
+            'vimBoard': {
+                dom: boardView
+            }
         }
     );
     this.blockMenu = this.mainWorkspace.blockMenu;
     this.board = this.mainWorkspace.board;
+    this.vimBoard = this.mainWorkspace.vimBoard;
 
     if (Entry.hw) this.updateHW();
 };

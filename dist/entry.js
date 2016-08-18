@@ -13432,7 +13432,6 @@ Entry.Parser = function(b, a, d, c) {
   this._lang = c || "js";
   this._type = a;
   this.availableCode = [];
-  this._syntax_cache = {};
   Entry.Parser.PARSE_GENERAL = 0;
   Entry.Parser.PARSE_SYNTAX = 1;
   Entry.Parser.PARSE_VARIABLE = 2;
@@ -13443,20 +13442,11 @@ Entry.Parser = function(b, a, d, c) {
   switch(this._lang) {
     case "js":
       this._parser = new Entry.JsToBlockParser(this.syntax);
-      c = this.syntax;
-      var e = {}, f;
-      for (f in c.Scope) {
-        e[f + "();\n"] = c.Scope[f];
-      }
-      "BasicIf" in c && (e.front = "BasicIf");
-      d.on("keyup", function(a, b) {
-        (65 <= b.keyCode && 95 >= b.keyCode || 167 == b.keyCode || 190 == b.keyCode) && CodeMirror.showHint(a, null, {completeSingle:!1, globalScope:e});
-      });
       break;
     case "py":
       this._parser = new Entry.PyToBlockParser(this.syntax);
       c = this.syntax;
-      e = {};
+      var e = {}, f;
       for (f in c.Scope) {
         e[f + "();\n"] = c.Scope[f];
       }
@@ -13482,34 +13472,31 @@ Entry.Parser = function(b, a, d, c) {
     this._type = b;
     this._cm = c;
     this.syntax = this.mappingSyntax(a);
-    this.syntax = this.mappingSyntax(a);
-    if (this._parserType !== b) {
-      switch(b) {
-        case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
-          this._parser = new Entry.JsToBlockParser(this.syntax);
-          this._parserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK;
-          break;
-        case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
-          this._parser = new Entry.PyToBlockParser(this.syntax);
-          this._parserType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK;
-          break;
-        case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
-          this._parser = new Entry.BlockToJsParser(this.syntax);
-          a = this.syntax;
-          var e = {}, f;
-          for (f in a.Scope) {
-            e[f + "();\n"] = a.Scope[f];
-          }
-          "BasicIf" in a && (e.front = "BasicIf");
-          c.on("keydown", function(a, b) {
-            var d = b.keyCode;
-            (65 <= d && 95 >= d || 167 == d || !b.shiftKey && 190 == d) && CodeMirror.showHint(a, null, {completeSingle:!1, globalScope:e});
-          });
-          this._parserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK;
-          break;
-        case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
-          this._parser = new Entry.BlockToPyParser(this.syntax), c.setOption("mode", {name:"python", globalVars:!0}), this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
-      }
+    switch(b) {
+      case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
+        this._parser = new Entry.JsToBlockParser(this.syntax);
+        this._parserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK;
+        break;
+      case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
+        this._parser = new Entry.PyToBlockParser(this.syntax);
+        this._parserType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK;
+        break;
+      case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
+        this._parser = new Entry.BlockToJsParser(this.syntax);
+        a = this.syntax;
+        var e = {}, f;
+        for (f in a.Scope) {
+          e[f + "();\n"] = a.Scope[f];
+        }
+        "BasicIf" in a && (e.front = "BasicIf");
+        c.on("keydown", function(a, b) {
+          var d = b.keyCode;
+          (65 <= d && 95 >= d || 167 == d || !b.shiftKey && 190 == d) && CodeMirror.showHint(a, null, {completeSingle:!1, globalScope:e});
+        });
+        this._parserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK;
+        break;
+      case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
+        this._parser = new Entry.BlockToPyParser(this.syntax), c.setOption("mode", {name:"python", globalVars:!0}), c.markText({line:0, ch:0}, {line:5}, {readOnly:!0}), this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
     }
   };
   b.parse = function(a, b) {
@@ -13584,9 +13571,6 @@ Entry.Parser = function(b, a, d, c) {
     return e;
   };
   b.mappingSyntax = function(a) {
-    if (this._syntax_cache[a]) {
-      return this._syntax_cache[a];
-    }
     for (var b = Object.keys(Entry.block), c = {}, e = 0;e < b.length;e++) {
       var f = b[e], g = Entry.block[f];
       if (a === Entry.Vim.MAZE_MODE) {
@@ -13610,7 +13594,7 @@ Entry.Parser = function(b, a, d, c) {
         }
       }
     }
-    return this._syntax_cache[a] = c;
+    return c;
   };
   b.setAvailableCode = function(a, b) {
     var c = [], e;
@@ -23016,6 +23000,7 @@ Entry.Vim = function(b, a) {
     var c;
     b && (this._mode = b.runType);
     Entry.playground && (c = Entry.playground.object, c = "# " + c.name + " \uc624\ube0c\uc81d\ud2b8\uc758 \ud30c\uc774\uc36c \ucf54\ub4dc");
+    console.log("codeToText mode", b);
     var e = b.textType;
     e === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : e === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
     var f = this._parser.parse(a, Entry.Parser.PARSE_GENERAL);
@@ -23094,7 +23079,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
           this.board.show(), this.set({selectedBoard:this.board}), this.textToCode(this.oldMode, this.oldTextType), this.vimBoard && this.vimBoard.hide(), this.overlayBoard && this.overlayBoard.hide(), this.blockMenu.renderBlock(), this.oldMode = this.mode, this.oldTextType = this.textType;
         } catch (c) {
           this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), this.mode = Entry.Workspace.MODE_VIMBOARD, console.log("this.oldTextType", this.oldTextType), this.oldTextType == Entry.Vim.PARSER_TYPE_JS_TO_BLOCK ? (a.boardType = Entry.Workspace.MODE_VIMBOARD, a.textType = Entry.Vim.TEXT_TYPE_JS, a.runType = Entry.Vim.MAZE_MODE, this.oldTextType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK, Entry.dispatchEvent("changeMode", a), Ntry.dispatchEvent("textError", a)) : this.oldTextType == Entry.Vim.PARSER_TYPE_PY_TO_BLOCK && 
-          (a.boardType = Entry.Workspace.MODE_VIMBOARD, a.textType = Entry.Vim.TEXT_TYPE_PY, a.runType = Entry.Vim.WORKSPACE_MODE, this.oldTextType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK, Entry.dispatchEvent("changeMode", a));
+          (a.boardType = Entry.Workspace.MODE_VIMBOARD, a.textType = Entry.Vim.TEXT_TYPE_PY, a.runType = Entry.Vim.WORKSPACE_MODE, this.oldTextType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK, console.log("mode", a), Entry.dispatchEvent("changeMode", a));
         }
         Entry.commander.setCurrentEditor("board", this.board);
         break;
@@ -23178,6 +23163,7 @@ Entry.Playground = function() {
   });
 };
 Entry.Playground.prototype.setMode = function(b) {
+  console.log("playground setMode", b);
   this.mainWorkspace.setMode(b);
 };
 Entry.Playground.prototype.generateView = function(b, a) {
@@ -23281,9 +23267,10 @@ Entry.Playground.prototype.generateCodeView = function(b) {
   b = Entry.Dom(b);
   a = Entry.Dom("div", {parent:b, id:"entryWorkspaceBoard", class:"entryWorkspaceBoard"});
   b = Entry.Dom("div", {parent:b, id:"entryWorkspaceBlockMenu", class:"entryWorkspaceBlockMenu"});
-  this.mainWorkspace = new Entry.Workspace({blockMenu:{dom:b, align:"LEFT", categoryData:EntryStatic.getAllBlocks(), scroll:!0}, board:{dom:a}});
+  this.mainWorkspace = new Entry.Workspace({blockMenu:{dom:b, align:"LEFT", categoryData:EntryStatic.getAllBlocks(), scroll:!0}, board:{dom:a}, vimBoard:{dom:a}});
   this.blockMenu = this.mainWorkspace.blockMenu;
   this.board = this.mainWorkspace.board;
+  this.vimBoard = this.mainWorkspace.vimBoard;
   Entry.hw && this.updateHW();
 };
 Entry.Playground.prototype.generatePictureView = function(b) {

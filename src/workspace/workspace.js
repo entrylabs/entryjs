@@ -136,8 +136,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                         mode.textType = Entry.Vim.TEXT_TYPE_PY;
                         mode.runType = Entry.Vim.WORKSPACE_MODE;
                         this.oldTextType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK;
+                        console.log("mode", mode);
                         Entry.dispatchEvent("changeMode", mode);
-                    }
+                    } 
                     
                     //throw e;
                 }

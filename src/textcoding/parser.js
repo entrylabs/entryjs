@@ -25,7 +25,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
     this._lang = syntax || "js"; //for maze
     this._type = type;
     this.availableCode = [];
-    this._syntax_cache = {};
 
     Entry.Parser.PARSE_GENERAL = 0;
     Entry.Parser.PARSE_SYNTAX = 1;
@@ -44,25 +43,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
     switch (this._lang) {
         case "js":
             this._parser = new Entry.JsToBlockParser(this.syntax);
-            var syntax = this.syntax;
-
-            var assistScope = {};
-
-            for(var key in syntax.Scope ) {
-                assistScope[key + '();\n'] = syntax.Scope[key];
-            }
-
-            if('BasicIf' in syntax) {
-                assistScope['front'] = 'BasicIf';
-            }
-
-            cm.on("keyup", function (cm, event) {
-                if ((event.keyCode >= 65 && event.keyCode <= 95) ||
-                    event.keyCode == 167 || event.keyCode == 190) {
-                    CodeMirror.showHint(cm, null, {completeSingle: false, globalScope:assistScope});
-                }
-            });
-
             break;
         case "py":
             this._parser = new Entry.PyToBlockParser(this.syntax);
@@ -109,18 +89,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
         this._type = type;
         this._cm = cm;
 
-        /*if (mode === Entry.Vim.MAZE_MODE) {
-            this._stageId = Number(Ntry.configManager.getConfig('stageId'));
-            var configCode = NtryData.config[this._stageId].availableCode;
-            var playerCode = NtryData.player[this._stageId].code;
-            this.setAvailableCode(configCode, playerCode);
-        }*/
-
         this.syntax = this.mappingSyntax(mode);
-        this.syntax = this.mappingSyntax(mode);
-
-        if (this._parserType === type)
-            return;
 
         switch (type) {
             case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
@@ -168,7 +137,10 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
                 this._parser = new Entry.BlockToPyParser(this.syntax);
+
                 cm.setOption("mode", {name: "python", globalVars: true});
+                cm.markText({line: 0, ch: 0}, {line: 5}, {readOnly: true});
+
                 this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
 
                 break;
@@ -208,7 +180,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
                                 from: {line: error.loc.line - 1, ch: error.loc.column - 2},
                                 to: {line: error.loc.line - 1, ch: error.loc.column + 1}
                             }
-
                             error.message = "문법(Syntax) 오류입니다.";
                             error.type = 1;
                         } else {
@@ -340,7 +311,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 if(Array.isArray(textArr)) {
                     result = textArr.reduce(function (prev, current, index) {
                         var temp = '';
-
                         if(index === 1) {
                             prev = prev + '\n';
                         }
@@ -349,7 +319,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         } else {
                             temp = prev + current;
                         }
-
                         return temp + '\n';
                     });
                 } else {
@@ -391,9 +360,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
     };
 
     p.mappingSyntax = function(mode) {
-        if (this._syntax_cache[mode])
-            return this._syntax_cache[mode];
-
         var types = Object.keys(Entry.block);
         var syntax = {};
 
@@ -456,9 +422,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 }
             }
         }
-
-        this._syntax_cache[mode] = syntax;
-
 
         return syntax;
     };
