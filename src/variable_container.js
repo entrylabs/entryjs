@@ -589,12 +589,6 @@ Entry.VariableContainer.prototype.setVariables = function(variables) {
  * @param {!Array.<function model>} variables
  */
 Entry.VariableContainer.prototype.setFunctions = function(functions) {
-    if (functions) {
-        functions.forEach(function(f) {
-            Entry.generateFunctionSchema(f.id);
-        });
-    }
-
     for (var i in functions) {
         var func = new Entry.Func(functions[i]);
         func.generateBlock();
