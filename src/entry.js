@@ -340,5 +340,17 @@ Entry.cancelObjectEdit = function(e) {
     object.editObjectValues(false);
 };
 
+Entry.generateFunctionSchema = function(functionId) {
+    functionId = 'func_' + functionId;
+    if (Entry.block[functionId]) return;
+    var blockSchema = function () {};
+    var blockPrototype = Entry.block.function_general;
+    blockSchema.prototype = blockPrototype;
+    blockSchema = new blockSchema();
+    blockSchema.changeEvent = new Entry.Event();
+    blockSchema.template = Lang.template.function_general;
+
+    Entry.block[functionId] = blockSchema;
+};
 
 window.Entry = Entry;

@@ -112,6 +112,17 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
     c = c.tagName.toUpperCase();
     !a.isEditing || "INPUT" === c && b || a.editObjectValues(!1);
   }
+}, generateFunctionSchema:function(b) {
+  b = "func_" + b;
+  if (!Entry.block[b]) {
+    var a = function() {
+    };
+    a.prototype = Entry.block.function_general;
+    a = new a;
+    a.changeEvent = new Entry.Event;
+    a.template = Lang.template.function_general;
+    Entry.block[b] = a;
+  }
 }};
 window.Entry = Entry;
 Entry.Albert = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, leftEye:0, rightEye:0, note:0, bodyLed:0, frontLed:0, padWidth:0, padHeight:0}, setZero:function() {
@@ -12238,17 +12249,11 @@ Entry.Func = function(b) {
   this.blockMenuBlock = this.block = null;
   this.hashMap = {};
   this.paramMap = {};
-  var a = function() {
-  };
-  a.prototype = Entry.block.function_general;
-  a = new a;
-  a.changeEvent = new Entry.Event;
-  a.template = Lang.template.function_general;
-  Entry.block["func_" + this.id] = a;
+  Entry.generateFunctionSchema(this.id);
   if (b) {
     b = this.content._blockMap;
-    for (var c in b) {
-      Entry.Func.registerParamBlock(b[c].type);
+    for (var a in b) {
+      Entry.Func.registerParamBlock(b[a].type);
     }
     Entry.Func.generateWsBlock(this);
   }
@@ -13885,6 +13890,9 @@ Entry.VariableContainer.prototype.setVariables = function(b) {
   this.updateList();
 };
 Entry.VariableContainer.prototype.setFunctions = function(b) {
+  b && b.forEach(function(a) {
+    Entry.generateFunctionSchema(a.id);
+  });
   for (var a in b) {
     var c = new Entry.Func(b[a]);
     c.generateBlock();
