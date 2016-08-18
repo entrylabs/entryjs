@@ -191,7 +191,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             annotation.from.line = errorInfo.lineNumber;
                             annotation.from.ch = errorInfo.location.start;
                             annotation.to.line = errorInfo.lineNumber;
-                            annotation.to.ch = errorInfo.location.end; 
+                            annotation.to.ch = errorInfo.location.end;  
+                            
 
                             error.type = 2;
                         }
