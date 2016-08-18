@@ -13885,6 +13885,9 @@ Entry.VariableContainer.prototype.setVariables = function(b) {
   this.updateList();
 };
 Entry.VariableContainer.prototype.setFunctions = function(b) {
+  b && b.forEach(function(a) {
+    Entry.block["func_" + a.id] = !0;
+  });
   for (var a in b) {
     var c = new Entry.Func(b[a]);
     c.generateBlock();
