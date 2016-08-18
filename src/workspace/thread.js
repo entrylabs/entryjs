@@ -35,7 +35,12 @@ Entry.Thread = function(thread, code, parent) {
             if (block instanceof Entry.Block || block.isDummy) {
                 block.setThread(this);
                 this._data.push(block);
-            } else Entry.block[block.type] && this._data.push(new Entry.Block(block, this));
+            } else {
+                var blockType = block.type;
+                if (Entry.block[blockType] ||
+                    Entry.variableContainer.functions_[blockType.split('_')[1]])
+                    this._data.push(new Entry.Block(block, this));
+            }
         }
 
         var codeView = this._code.view;

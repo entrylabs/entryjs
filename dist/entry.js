@@ -13891,8 +13891,8 @@ Entry.VariableContainer.prototype.setVariables = function(b) {
 };
 Entry.VariableContainer.prototype.setFunctions = function(b) {
   b && b.forEach(function(a) {
-    Entry.generateFunctionSchema(a.id);
-  });
+    this.functions_[a.id] = !0;
+  }.bind(this));
   for (var a in b) {
     var c = new Entry.Func(b[a]);
     c.generateBlock();
@@ -18881,7 +18881,12 @@ Entry.Thread = function(b, a, c) {
     }
     for (var d = 0;d < a.length;d++) {
       var e = a[d];
-      e instanceof Entry.Block || e.isDummy ? (e.setThread(this), this._data.push(e)) : Entry.block[e.type] && this._data.push(new Entry.Block(e, this));
+      if (e instanceof Entry.Block || e.isDummy) {
+        e.setThread(this), this._data.push(e);
+      } else {
+        var f = e.type;
+        (Entry.block[f] || Entry.variableContainer.functions_[f.split("_")[1]]) && this._data.push(new Entry.Block(e, this));
+      }
     }
     (d = this._code.view) && this.createView(d.board, b);
   };
