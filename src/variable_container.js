@@ -591,8 +591,8 @@ Entry.VariableContainer.prototype.setVariables = function(variables) {
 Entry.VariableContainer.prototype.setFunctions = function(functions) {
     if (functions) {
         functions.forEach(function(f) {
-            Entry.generateFunctionSchema(f.id);
-        });
+            this.functions_[f.id] = true;
+        }.bind(this));
     }
 
     for (var i in functions) {
