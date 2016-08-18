@@ -207,7 +207,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             var errorTitle = error.title;
                         }
                         else {
-                            var errorTitle = '문법 오류';
+                            var errorTitle = '문법 오류'; 
                         }
 
                         if(error.type == 2 && error.message) {
@@ -221,11 +221,14 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         }
 
                         Entry.toast.alert(errorTitle, errorMsg);
-                        
+                        var mode = {};
+                        mode.boardType = Entry.Workspace.MODE_BOARD;
+                        mode.textType = Entry.Vim.TEXT_TYPE_JS; 
+                        mode.runType = Entry.Vim.MAZE_MODE;
+                        Ntry.dispatchEvent("textError", mode);
+                        throw new Error("text_js_error");
                     }
                     result = [];
-                    Ntry.dispatchEvent("textError");
-                    //throw error;
                 }
                 break;
             case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
