@@ -37,8 +37,9 @@ Entry.Thread = function(thread, code, parent) {
                 this._data.push(block);
             } else {
                 var blockType = block.type;
+                var functions = Entry.functions;
                 if (Entry.block[blockType] ||
-                    Entry.variableContainer.functions_[blockType.split('_')[1]])
+                    (functions && functions.indexOf(blockType.split('_')[1])) > -1)
                     this._data.push(new Entry.Block(block, this));
             }
         }

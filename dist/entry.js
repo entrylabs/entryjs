@@ -1,5 +1,6 @@
 var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:2, TEXT_ALIGNS:["center", "left", "right"], clipboard:null, loadProject:function(b) {
   b || (b = Entry.getStartProject(Entry.mediaFilePath));
+  this.setFuncRefs(b.functions);
   "workspace" == this.type && Entry.stateManager.startIgnore();
   Entry.projectId = b._id;
   Entry.variableContainer.setVariables(b.variables);
@@ -16,6 +17,7 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
   Entry.engine.projectTimer || Entry.variableContainer.generateTimer();
   0 === Object.keys(Entry.container.inputValue).length && Entry.variableContainer.generateAnswer();
   Entry.start();
+  this.removeFuncRefs();
   return b;
 }, exportProject:function(b) {
   b || (b = {});
@@ -123,6 +125,12 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
     a.template = Lang.template.function_general;
     Entry.block[b] = a;
   }
+}, setFuncRefs:function(b) {
+  this.functions = b ? b.map(function(a) {
+    return a.id;
+  }) : [];
+}, removeFuncRefs:function() {
+  delete this.functions;
 }};
 window.Entry = Entry;
 Entry.Albert = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, leftEye:0, rightEye:0, note:0, bodyLed:0, frontLed:0, padWidth:0, padHeight:0}, setZero:function() {
@@ -887,8 +895,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(c, d);
+  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
   return a.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1088,8 +1096,8 @@ Blockly.Blocks.dplay_select_led = {init:function() {
 Entry.block.dplay_select_led = function(b, a) {
   var c = a.getField("PORT"), d = 7;
   "7" == c ? d = 7 : "8" == c ? d = 8 : "9" == c ? d = 9 : "10" == c && (d = 10);
-  c = "on" == a.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(d, c);
+  c = a.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(d, "on" == c ? 255 : 0);
   return a.callReturn();
 };
 Blockly.Blocks.dplay_get_switch_status = {init:function() {
@@ -2099,10 +2107,10 @@ Entry.block.wait_second = function(b, a) {
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
+  var c = a.getNumberValue("SECOND", a);
   setTimeout(function() {
     a.timeFlag = 0;
-  }, c);
+  }, 60 / (Entry.FPS || 60) * c * 1E3);
   return a;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -18897,8 +18905,8 @@ Entry.Thread = function(b, a, c) {
       if (e instanceof Entry.Block || e.isDummy) {
         e.setThread(this), this._data.push(e);
       } else {
-        var f = e.type;
-        (Entry.block[f] || Entry.variableContainer.functions_[f.split("_")[1]]) && this._data.push(new Entry.Block(e, this));
+        var f = e.type, g = Entry.functions;
+        (Entry.block[f] || -1 < (g && g.indexOf(f.split("_")[1]))) && this._data.push(new Entry.Block(e, this));
       }
     }
     (d = this._code.view) && this.createView(d.board, b);
