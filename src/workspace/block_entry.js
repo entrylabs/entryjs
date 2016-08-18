@@ -3966,7 +3966,7 @@ Entry.block = {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic_string_field",
-        template: "8.온도센서@포트%1 %2",
+        template: "8.온도센서@포트%1",
         params: [
             {
                 type: "Dropdown",
@@ -3975,11 +3975,6 @@ Entry.block = {
                     [ "2", "2" ],
                 ],
                 fontSize: 11
-            },
-            {
-                type: "Indicator",
-                img: "block_icon/hardware_03.png",
-                size: 12
             }
         ],
         def: {
@@ -4014,7 +4009,7 @@ Entry.block = {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic_string_field",
-        template: "9.빛센서@포트%1 %2", 
+        template: "9.빛센서@포트%1", 
         params: [
             {
                 type: "Dropdown",
@@ -4023,11 +4018,6 @@ Entry.block = {
                     [ "2", "2" ],
                 ],
                 fontSize: 11
-            },
-            {
-                type: "Indicator",
-                img: "block_icon/hardware_03.png",
-                size: 12
             }
         ],
         def: {
@@ -4058,7 +4048,7 @@ Entry.block = {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic_boolean_field",
-        template: "10.버튼스위치@포트%1 %2",
+        template: "10.버튼스위치@포트%1",
         params: [
             {
                 type: "Dropdown",
@@ -4067,11 +4057,6 @@ Entry.block = {
                     [ "2", "2" ],
                 ],
                 fontSize: 11
-            },
-            {
-                type: "Indicator",
-                img: "block_icon/hardware_03.png",
-                size: 12
             }
         ],
         def: {
