@@ -613,6 +613,8 @@ Entry.JsToBlockParser = function(syntax) {
                             //console.log("param vvv", param);
                         }
 
+                        param = Entry.TextCodingUtil.prototype.tTobDropdownValueConvertor(param);
+
                         params.push(param);   
                     }
                 }

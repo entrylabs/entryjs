@@ -11054,7 +11054,7 @@ Entry.TextCodingUtil = function() {
         return a;
       }
       if (a == e[1]) {
-        return e = e[0];
+        return console.log("dropdownDynamicValueConvertor value", a, e[1]), e = e[0];
       }
     }
     e = a;
@@ -11471,6 +11471,11 @@ Entry.TextCodingUtil = function() {
   b.radarVariableConvertor = function(a) {
     return a.split("_")[1].toUpperCase();
   };
+  b.tTobDropdownValueConvertor = function(a) {
+    var b;
+    "stone" == a ? b = "OBSTACLE" : "wall" == a ? b = a.toUpperCase() : "item" == a && (b = a.toUpperCase());
+    return b;
+  };
 })(Entry.TextCodingUtil.prototype);
 Entry.BlockToJsParser = function(b) {
   this.syntax = b;
@@ -11566,6 +11571,8 @@ Entry.BlockToJsParser = function(b) {
     this._iterVariableCount && this._iterVariableCount--;
   };
   b.Dropdown = function(a) {
+    console.log("Dropdown", a);
+    "OBSTACLE" == a ? a = "stone" : "ITEM" == a ? a = a.toLowerCase() : "WALL" == a && (a = a.toLowerCase());
     return "'" + a + "'";
   };
   b.TextInput = function(a) {
@@ -12050,7 +12057,7 @@ Entry.JsToBlockParser = function(b) {
           e = b[h].type, "Indicator" == e ? (e = {raw:null, type:"Literal", value:null}, h < arguments.length && arguments.splice(h, 0, e)) : "Text" == e && (e = {raw:"", type:"Literal", value:""}, h < arguments.length && arguments.splice(h, 0, e));
         }
         for (k in arguments) {
-          b = arguments[k], b = this[b.type](b), "string" == typeof b && (h = b.split("_"), "radar" == h[0] && (b = {type:"ai_distance_value", params:[]}, b.params.push(h[1].toUpperCase()))), b && null != b && ("ai_boolean_object" == g && (b = b.params[0], f.splice(1, 1)), f.push(b));
+          b = arguments[k], b = this[b.type](b), "string" == typeof b && (h = b.split("_"), "radar" == h[0] && (b = {type:"ai_distance_value", params:[]}, b.params.push(h[1].toUpperCase()))), b && null != b && ("ai_boolean_object" == g && (b = b.params[0], f.splice(1, 1)), b = Entry.TextCodingUtil.prototype.tTobDropdownValueConvertor(b), f.push(b));
         }
       } else {
         b = this[b.type](b), "ai_boolean_object" == g && (b = b.params[0], f.splice(1, 1)), b && f.push(b);

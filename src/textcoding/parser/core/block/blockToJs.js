@@ -246,7 +246,16 @@ Entry.BlockToJsParser = function(syntax) {
     };
 
     p.Dropdown = function(dataParam) {
-        var result = "\'" + dataParam + "\'";
+        console.log("Dropdown", dataParam);
+        var value = dataParam;
+        if(value == 'OBSTACLE')
+            value = 'stone';
+        else if(value == 'ITEM')
+            value = value.toLowerCase();
+        else if(value == "WALL")
+            value = value.toLowerCase();
+
+        var result = "\'" + value + "\'";
         
         return result; 
     };

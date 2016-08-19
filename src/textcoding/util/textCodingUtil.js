@@ -144,11 +144,12 @@ Entry.TextCodingUtil = function() {
                value == "wall_down" || value == "wall_right" || value == "wall_left") {
                 found = true;
                 return value;
-            }
+            } 
 
             //console.log("dropdownDynamicValueConvertor check value", value, "option", option);
 
             if(value == option[1]) {
+                console.log("dropdownDynamicValueConvertor value", value, option[1]);
                 result = option[0];
                 found = true;
                 return result;
@@ -1015,6 +1016,19 @@ Entry.TextCodingUtil = function() {
     p.radarVariableConvertor = function(variable) {
         var items = variable.split('_');
         var result = items[1].toUpperCase();
+
+        return result;
+    };
+
+    p.tTobDropdownValueConvertor = function(value) {
+        var result;
+        if(value == "stone") {
+            result = "OBSTACLE";
+        } else if(value == "wall") {
+            result = value.toUpperCase();
+        } else if(value == "item") {
+            result = value.toUpperCase();
+        }
 
         return result;
     };
