@@ -17792,6 +17792,10 @@ Entry.block = {
     "jr_if_construction": {
         "skeleton": "basic_loop",
         "color": "#498DEB",
+        "syntax": [
+            "BasicIf",
+            "front == 'wall'"
+        ],
         "params": [
             {
                 text: "만약",
@@ -17856,15 +17860,15 @@ Entry.block = {
                 this.executor.stepInto(statement);
                 return Entry.STATIC.BREAK;
             }
-        },
-        "syntax": [
-            "BasicIf",
-            "front == 'wall'"
-        ]
+        }
     },
     "jr_if_speed": {
         "skeleton": "basic_loop",
         "color": "#498DEB",
+        "syntax": [
+            "BasicIf",
+            "front == 'hump'"
+        ],
         "params": [
             {
                 "type": "Image",
@@ -17921,11 +17925,7 @@ Entry.block = {
                 this.executor.stepInto(statement);
                 return Entry.STATIC.BREAK;
             }
-        },
-        "syntax": [
-            "BasicIf",
-            "front == 'hump'"
-        ]
+        }
     },
     "maze_step_start": {
         "skeleton": "basic_event",

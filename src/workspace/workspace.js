@@ -114,6 +114,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     this.textToCode(this.oldMode, this.oldTextType);
                     if (this.vimBoard) this.vimBoard.hide();
                     if (this.overlayBoard) this.overlayBoard.hide(); 
+                    console.log("here??");
                     this.blockMenu.renderBlock();
                     this.oldMode = this.mode;
                     this.oldTextType = this.textType;
@@ -190,6 +191,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         setTimeout(function() {
             that.board.alignThreads();
         }, 0);
+
+        console.log("after4");
     };
 
     p.loadCodeFromText = function(mode) {

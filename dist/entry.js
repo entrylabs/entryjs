@@ -12208,21 +12208,21 @@ Entry.JsToBlockParser = function(b) {
       var l = this[h.type](h)
     }
     try {
-      h = "";
       if (a.test.left && a.test.right) {
         var m = a.test.left.name + a.test.right.value
       }
+      console.log("this.syntax", this.syntax);
       if ("frontwall" == m) {
-        h = "front == 'wall'";
+        c = this.syntax.BasicIf["front == 'wall'"];
       } else {
         if ("fronthump" == m) {
-          h = "front == 'hump'";
+          c = this.syntax.BasicIf["front == 'hump'"];
         } else {
           if ("frontstone" == m) {
-            h = "front == 'stone'";
+            c = this.syntax.BasicIf["front == 'stone'"];
           } else {
             if ("frontbee" == m) {
-              h = "front == 'bee'";
+              c = this.syntax.BasicIf["front == 'bee'"];
             } else {
               c = "ai_if_else";
               var n = this[a.test.type](a.test, this.syntax.Scope);
@@ -12231,10 +12231,8 @@ Entry.JsToBlockParser = function(b) {
           }
         }
       }
-      this.syntax.BasicIf[h] ? (k && 0 != k.length && (e = k), l && 0 != l.length && (f = l), c = this.syntax.BasicIf[h]) : (k && 0 != k.length && (e = k), l && 0 != l.length && (f = l));
-      c && (b.type = c);
-      g && 0 != g.length && (b.params = g);
-      b.statements = [e, f];
+      console.log("type", c);
+      c ? (k && 0 != k.length && b.statements.push(k), l && 0 != l.length && b.statements.push(l), c && (b.type = c), g && 0 != g.length && (b.params = g), console.log("result", b)) : (k && 0 != k.length && (e = k), l && 0 != l.length && (f = l), c && (b.type = c), g && 0 != g.length && (b.params = g), b.statements = [e, f]);
       return b;
     } catch (q) {
       throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a.test};
@@ -23086,7 +23084,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         break;
       case Entry.Workspace.MODE_BOARD:
         try {
-          this.board.show(), this.set({selectedBoard:this.board}), this.textToCode(this.oldMode, this.oldTextType), this.vimBoard && this.vimBoard.hide(), this.overlayBoard && this.overlayBoard.hide(), this.blockMenu.renderBlock(), this.oldMode = this.mode, this.oldTextType = this.textType;
+          this.board.show(), this.set({selectedBoard:this.board}), this.textToCode(this.oldMode, this.oldTextType), this.vimBoard && this.vimBoard.hide(), this.overlayBoard && this.overlayBoard.hide(), console.log("here??"), this.blockMenu.renderBlock(), this.oldMode = this.mode, this.oldTextType = this.textType;
         } catch (c) {
           this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), this.mode = Entry.Workspace.MODE_VIMBOARD, console.log("this.oldTextType", this.oldTextType), this.oldTextType == Entry.Vim.PARSER_TYPE_JS_TO_BLOCK ? (a.boardType = Entry.Workspace.MODE_VIMBOARD, a.textType = Entry.Vim.TEXT_TYPE_JS, a.runType = Entry.Vim.MAZE_MODE, this.oldTextType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK, Entry.dispatchEvent("changeMode", a), Ntry.dispatchEvent("textError", a)) : this.oldTextType == Entry.Vim.PARSER_TYPE_PY_TO_BLOCK && 
           (a.boardType = Entry.Workspace.MODE_VIMBOARD, a.textType = Entry.Vim.TEXT_TYPE_PY, a.runType = Entry.Vim.WORKSPACE_MODE, this.oldTextType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK, console.log("mode", a), Entry.dispatchEvent("changeMode", a));
@@ -23118,6 +23116,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
       setTimeout(function() {
         c.board.alignThreads();
       }, 0);
+      console.log("after4");
     }
   };
   b.loadCodeFromText = function(a) {

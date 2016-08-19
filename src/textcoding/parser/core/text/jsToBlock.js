@@ -968,39 +968,47 @@ Entry.JsToBlockParser = function(syntax) {
             if(node.test.left && node.test.right)
                 var testCondition = node.test.left.name + node.test.right.value;
 
+            console.log("this.syntax", this.syntax);
+
             //console.log("testCondition", testCondition);
             if(testCondition == "frontwall") {
                 test = "front == \'wall\'";
+                type = this.syntax.BasicIf[test];
             } else if(testCondition == "fronthump") {
                 test = "front == \'hump\'";
+                type = this.syntax.BasicIf[test];
             } else if(testCondition == "frontstone") {
                 test = "front == \'stone\'";
+                type = this.syntax.BasicIf[test];
             } else if(testCondition == "frontbee") {
                 test = "front == \'bee\'";
+                type = this.syntax.BasicIf[test];
             } else { 
                 type = "ai_if_else";
                 var callExData = this[node.test.type](node.test, this.syntax.Scope);
                 params.push(callExData);
             }
 
-            if (this.syntax.BasicIf[test]) {
+            if (type) {
                 //console.log("target", this.syntax.BasicIf[test]);
                 //console.log("consequent", consequent, "alternate", alternate);
                 
-                if(consequent && consequent.length != 0)
+                if(consequent && consequent.length != 0){
                     stmtCons = consequent;
+                    result.statements.push(stmtCons);
+                }
 
-                if(alternate && alternate.length != 0)
+                if(alternate && alternate.length != 0) {
                     stmtAlt = alternate;
+                    result.statements.push(stmtAlt);
+                }
 
-                type = this.syntax.BasicIf[test];
-    
                 if(type)
                     result.type = type;
                 if(params && params.length != 0)
                     result.params = params;
-               
-                result.statements = [stmtCons, stmtAlt];
+
+                console.log("result", result);
                 
                 return result;
             } else {
