@@ -1,6 +1,5 @@
 var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:2, TEXT_ALIGNS:["center", "left", "right"], clipboard:null, loadProject:function(b) {
   b || (b = Entry.getStartProject(Entry.mediaFilePath));
-  this.setFuncRefs(b.functions);
   "workspace" == this.type && Entry.stateManager.startIgnore();
   Entry.projectId = b._id;
   Entry.variableContainer.setVariables(b.variables);
@@ -17,7 +16,6 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
   Entry.engine.projectTimer || Entry.variableContainer.generateTimer();
   0 === Object.keys(Entry.container.inputValue).length && Entry.variableContainer.generateAnswer();
   Entry.start();
-  this.removeFuncRefs();
   return b;
 }, exportProject:function(b) {
   b || (b = {});
@@ -125,12 +123,6 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
     a.template = Lang.template.function_general;
     Entry.block[b] = a;
   }
-}, setFuncRefs:function(b) {
-  this.functions = b ? b.map(function(a) {
-    return a.id;
-  }) : [];
-}, removeFuncRefs:function() {
-  delete this.functions;
 }};
 window.Entry = Entry;
 Entry.Albert = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, leftEye:0, rightEye:0, note:0, bodyLed:0, frontLed:0, padWidth:0, padHeight:0}, setZero:function() {
@@ -13928,15 +13920,10 @@ Entry.VariableContainer.prototype.createFunction = function() {
 Entry.VariableContainer.prototype.addFunction = function(b) {
 };
 Entry.VariableContainer.prototype.removeFunction = function(b) {
-  var a = b.id;
-  b = this.functions_;
-  b[a].destroy();
-  delete b[a];
-  a = "func_" + a;
-  Entry.container.removeFuncBlocks(a);
-  for (var c in b) {
-    b[c].content.removeBlocksByType(a);
-  }
+  b = b.id;
+  var a = this.functions_;
+  a[b].destroy();
+  delete a[b];
   this.updateList();
 };
 Entry.VariableContainer.prototype.checkListPosition = function(b, a) {
@@ -18886,12 +18873,7 @@ Entry.Thread = function(b, a, c) {
     }
     for (var d = 0;d < a.length;d++) {
       var e = a[d];
-      if (e instanceof Entry.Block || e.isDummy) {
-        e.setThread(this), this._data.push(e);
-      } else {
-        var f = Entry.functions, g = e.type;
-        (Entry.block[g] || f && -1 < f.indexOf(g.split("_")[1])) && this._data.push(new Entry.Block(e, this));
-      }
+      e instanceof Entry.Block || e.isDummy ? (e.setThread(this), this._data.push(e)) : this._data.push(new Entry.Block(e, this));
     }
     (d = this._code.view) && this.createView(d.board, b);
   };
