@@ -389,11 +389,15 @@ Entry.Board.DRAG_RADIUS = 5;
     };
 
     p.cancelEdit = function() {
+        var mode = {};
+        mode.boardType = Entry.Workspace.MODE_BOARD;
         this.workspace.setMode(Entry.Workspace.MODE_BOARD, "cancelEdit");
     };
 
     p.save = function() {
-        this.workspace.setMode(Entry.Workspace.MODE_BOARD, "save");
+        var mode = {};
+        mode.boardType = Entry.Workspace.MODE_BOARD;
+        this.workspace.setMode(mode, "save");
     };
 
     p.generateCodeMagnetMap = function() {

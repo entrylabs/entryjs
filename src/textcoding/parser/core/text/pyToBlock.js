@@ -97,6 +97,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var params = [];
         var type; 
 
+        var isEntryFunction = false;
+
         var callee = component.callee;
         var calleeData = this[callee.type](callee);
         console.log("CallExpression calleeData", calleeData);
@@ -138,6 +140,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
             if(calleeName)
                 var calleeTokens = calleeName.split('.');
             
+            if(calleeTokens[0] == "Entry")
+                isEntryFunction = true;
+
             console.log("CallExpression calleeTokens", calleeTokens);
             
             if(calleeName == "__pythonRuntime.functions.range"){
@@ -327,6 +332,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 result.params = structure.params;
             }   
         } else { // Function Arguments
+            if(isEntryFunction) {
+                var error = {};
+                error.title = "지원하지 않는 블록";
+                error.message = "블록으로 변환할 수 없는 코드입니다.";
+                error.node = component;
+
+                throw error;
+            }
+
+            console.log("Function Arguments", calleeData);
             var args = [];
             for(var i in arguments) { 
                 var argument = arguments[i];

@@ -139,7 +139,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 this._parser = new Entry.BlockToPyParser(this.syntax);
 
                 cm.setOption("mode", {name: "python", globalVars: true});
-                cm.markText({line: 0, ch: 0}, {line: 5}, {readOnly: true});
+                cm.markText({line: 0, ch: 0}, {line: 3}, {readOnly: true});
 
                 this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
 
@@ -193,7 +193,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             annotation.to.line = errorInfo.lineNumber;
                             annotation.to.ch = errorInfo.location.end;  
                             
-
                             error.type = 2;
                         }
 
@@ -264,18 +263,22 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     break;
                 } catch(error) {
                     if (this.codeMirror) {
+                        console.log("came here error1", error);
                         var annotation;
                         if (error instanceof SyntaxError) {
                             annotation = {
                                 from: {line: error.loc.line - 1, ch: error.loc.column - 2},
                                 to: {line: error.loc.line - 1, ch: error.loc.column + 1}
                             }
-                            error.message = "문법 오류입니다.";
+
+                            error.message = "문법(Syntax) 오류입니다.";
+                            error.type = 1;
                         } else {
                             annotation = this.getLineNumber(error.node.start, error.node.end);
                             annotation.message = error.message;
                             annotation.severity = "error";
-                            
+
+                            error.type = 2; 
                         }
 
                         var line = parseInt(annotation.to.line) + 1;
@@ -289,15 +292,18 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             clearOnEnter: true
                         });
 
+                        console.log("came here error2", error);
+
                         if(error.title)
                             var errorTitle = error.title;
                         else 
                             var errorTitle = '문법 오류';
 
                         if(error.message && line)
-                            var errorMsg = error.message + ' (line: ' + line + ')';
+                            var errorMsg = error.message + ' \n(line: ' + line + ')';
                         else
                             var errorMsg = '파이썬 코드를 확인해주세요';
+                        
                         Entry.toast.alert(errorTitle, errorMsg);
                         throw error;
                     }

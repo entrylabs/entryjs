@@ -152,6 +152,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                 this.overlayBoard.show();
                 this.set({selectedBoard:this.overlayBoard});
                 Entry.commander.setCurrentEditor("board", this.overlayBoard);
+                this.oldMode = this.mode;
                 break;
         }
 
