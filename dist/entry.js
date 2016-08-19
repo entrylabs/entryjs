@@ -12231,7 +12231,6 @@ Entry.JsToBlockParser = function(b) {
           }
         }
       }
-      console.log("type", c);
       c ? (k && 0 != k.length && b.statements.push(k), l && 0 != l.length && b.statements.push(l), c && (b.type = c), g && 0 != g.length && (b.params = g), console.log("result", b)) : (k && 0 != k.length && (e = k), l && 0 != l.length && (f = l), c && (b.type = c), g && 0 != g.length && (b.params = g), b.statements = [e, f]);
       return b;
     } catch (q) {
