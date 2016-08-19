@@ -12946,6 +12946,9 @@ Entry.Stage.prototype.initStage = function(b) {
   Entry.windowResized.attach(this, function() {
     Entry.stage.updateBoundRect();
   });
+  $(window).scroll(function() {
+    Entry.stage.updateBoundRect();
+  });
   a = function(a) {
     a.preventDefault();
     var b = Entry.stage.getBoundRect(), e;
