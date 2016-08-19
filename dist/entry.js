@@ -1,5 +1,6 @@
 var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:2, TEXT_ALIGNS:["center", "left", "right"], clipboard:null, loadProject:function(b) {
   b || (b = Entry.getStartProject(Entry.mediaFilePath));
+  this.setFuncRefs(b.functions);
   "workspace" == this.type && Entry.stateManager.startIgnore();
   Entry.projectId = b._id;
   Entry.variableContainer.setVariables(b.variables);
@@ -123,6 +124,12 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
     a.template = Lang.template.function_general;
     Entry.block[b] = a;
   }
+}, setFuncRefs:function(b) {
+  this.functions = b ? b.map(function(a) {
+    return a.id;
+  }) : [];
+}, removeFuncRefs:function() {
+  delete this.functions;
 }};
 window.Entry = Entry;
 Entry.Albert = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, leftEye:0, rightEye:0, note:0, bodyLed:0, frontLed:0, padWidth:0, padHeight:0}, setZero:function() {
@@ -8087,17 +8094,30 @@ Entry.EntryObject = function(b) {
     this.clonedEntities = [];
     Entry.stage.loadObject(this);
     for (c in this.pictures) {
-      var d = this.pictures[c];
-      d.objectId = this.id;
-      d.id || (d.id = Entry.generateHash());
-      var e = new Image;
-      d.fileurl ? e.src = d.fileurl : d.fileurl ? e.src = d.fileurl : (b = d.filename, e.src = Entry.defaultPath + "/uploads/" + b.substring(0, 2) + "/" + b.substring(2, 4) + "/image/" + b + ".png");
-      Entry.Loader.addQueue();
-      e.onload = function(b) {
-        Entry.container.cachePicture(d.id + a.entity.id, e);
-        Entry.Loader.removeQueue();
-        Entry.requestUpdate = !0;
-      };
+      (function(b) {
+        b.objectId = this.id;
+        b.id || (b.id = Entry.generateHash());
+        var c = new Image;
+        if (b.fileurl) {
+          c.src = b.fileurl;
+        } else {
+          if (b.fileurl) {
+            c.src = b.fileurl;
+          } else {
+            var f = b.filename;
+            c.src = Entry.defaultPath + "/uploads/" + f.substring(0, 2) + "/" + f.substring(2, 4) + "/image/" + f + ".png";
+          }
+        }
+        Entry.Loader.addQueue();
+        c.onload = function(c) {
+          Entry.container.cachePicture(b.id + a.entity.id, this);
+          Entry.requestUpdate = !0;
+          Entry.Loader.removeQueue();
+        };
+        c.onerror = function(a) {
+          Entry.Loader.removeQueue();
+        };
+      })(this.pictures[c]);
     }
   }
 };
@@ -11961,7 +11981,7 @@ Entry.setCloneBrush = function(b, a) {
   b.shape = d;
 };
 Entry.isFloat = function(b) {
-  return /\d+\.{1}\d+/.test(b);
+  return /\d+\.{1}\d+$/.test(b);
 };
 Entry.getStringIndex = function(b) {
   if (!b) {

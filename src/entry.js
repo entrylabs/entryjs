@@ -25,6 +25,8 @@ Entry.loadProject = function(project) {
         project = Entry.getStartProject(Entry.mediaFilePath);
     }
 
+    this.setFuncRefs(project.functions);
+
     if (this.type == 'workspace')
         Entry.stateManager.startIgnore();
     Entry.projectId = project._id;
@@ -49,7 +51,6 @@ Entry.loadProject = function(project) {
     if (Object.keys(Entry.container.inputValue).length === 0)
         Entry.variableContainer.generateAnswer();
     Entry.start();
-
     return project;
 };
 
@@ -353,5 +354,19 @@ Entry.generateFunctionSchema = function(functionId) {
 
     Entry.block[functionId] = blockSchema;
 };
+
+Entry.setFuncRefs = function(functions) {
+    if (!functions) this.functions = [];
+    else {
+        this.functions = functions.map(function(f) {
+            return f.id;
+        });
+    }
+};
+
+Entry.removeFuncRefs = function() {
+    delete this.functions;
+};
+
 
 window.Entry = Entry;
