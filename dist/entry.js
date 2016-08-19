@@ -1,6 +1,5 @@
 var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:2, TEXT_ALIGNS:["center", "left", "right"], clipboard:null, loadProject:function(b) {
   b || (b = Entry.getStartProject(Entry.mediaFilePath));
-  this.setFuncRefs(b.functions);
   "workspace" == this.type && Entry.stateManager.startIgnore();
   Entry.projectId = b._id;
   Entry.variableContainer.setVariables(b.variables);
@@ -124,12 +123,6 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
     a.template = Lang.template.function_general;
     Entry.block[b] = a;
   }
-}, setFuncRefs:function(b) {
-  this.functions = b ? b.map(function(a) {
-    return a.id;
-  }) : [];
-}, removeFuncRefs:function() {
-  delete this.functions;
 }};
 window.Entry = Entry;
 Entry.Albert = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, leftEye:0, rightEye:0, note:0, bodyLed:0, frontLed:0, padWidth:0, padHeight:0}, setZero:function() {
