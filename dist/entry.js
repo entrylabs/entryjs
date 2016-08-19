@@ -13583,14 +13583,17 @@ Entry.Parser = function(b, a, d, c) {
       if (a === Entry.Vim.MAZE_MODE) {
         if (-1 < this.availableCode.indexOf(f) && (g = g.syntax)) {
           for (var h = c, k = 0;k < g.length;k++) {
-            var l = g[k], m = l.indexOf("(");
-            -1 < m && (l = l.substring(0, m));
-            if (k === g.length - 2 && "function" === typeof g[k + 1]) {
-              h[l] = g[k + 1];
-              break;
+            var l = g[k];
+            if (!(-1 < l.indexOf("%"))) {
+              var m = l.indexOf("(");
+              -1 < m && (l = l.substring(0, m));
+              if (k === g.length - 2 && "function" === typeof g[k + 1]) {
+                h[l] = g[k + 1];
+                break;
+              }
+              h[l] || (h[l] = {});
+              k === g.length - 1 ? h[l] = f : h = h[l];
             }
-            h[l] || (h[l] = {});
-            k === g.length - 1 ? h[l] = f : h = h[l];
           }
         }
       } else {

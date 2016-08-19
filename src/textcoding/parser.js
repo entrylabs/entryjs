@@ -376,6 +376,9 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     //console.log("syntaxArray", syntaxArray);
                     for (var j = 0; j < syntaxArray.length; j++) {
                         var key = syntaxArray[j];
+                        if(key.indexOf("%") > -1)
+                            continue;
+
                         var index = key.indexOf("(");
                         if(index > -1) {
                             key = key.substring(0, index);
