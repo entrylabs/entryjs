@@ -17,7 +17,6 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
   Entry.engine.projectTimer || Entry.variableContainer.generateTimer();
   0 === Object.keys(Entry.container.inputValue).length && Entry.variableContainer.generateAnswer();
   Entry.start();
-  this.removeFuncRefs();
   return b;
 }, exportProject:function(b) {
   b || (b = {});
@@ -13911,9 +13910,6 @@ Entry.VariableContainer.prototype.setVariables = function(b) {
   this.updateList();
 };
 Entry.VariableContainer.prototype.setFunctions = function(b) {
-  b && b.forEach(function(a) {
-    this.functions_[a.id] = !0;
-  }.bind(this));
   for (var a in b) {
     var c = new Entry.Func(b[a]);
     c.generateBlock();
@@ -15884,6 +15880,7 @@ Entry.BlockMenuScroller.RADIUS = 7;
   };
 })(Entry.BlockMenuScroller.prototype);
 Entry.BlockView = function(b, a, c) {
+  var d = this;
   Entry.Model(this, !1);
   this.block = b;
   this._lazyUpdatePos = _.debounce(b._updatePos.bind(b), 200);
@@ -15892,39 +15889,42 @@ Entry.BlockView = function(b, a, c) {
   this.set(b);
   this.svgGroup = a.svgBlockGroup.elem("g");
   this._schema = Entry.block[b.type];
-  this._schema.changeEvent && (this._schemaChangeEvent = this._schema.changeEvent.attach(this, this._updateSchema));
-  var d = this._skeleton = Entry.skeleton[this._schema.skeleton];
-  this._contents = [];
-  this._statements = [];
-  this.magnet = {};
-  this._paramMap = {};
-  d.magnets && d.magnets(this).next && (this.svgGroup.nextMagnet = this.block, this._nextGroup = this.svgGroup.elem("g"), this._observers.push(this.observe(this, "_updateMagnet", ["contentHeight"])));
-  this.isInBlockMenu = this.getBoard() instanceof Entry.BlockMenu;
-  var e = this;
-  this.mouseHandler = function() {
-    var a = e.block.events;
-    a && a.mousedown && a.mousedown.forEach(function(a) {
-      a(e);
+  if (void 0 === this._schema) {
+    this.block.destroy(!1, !1);
+  } else {
+    this._schema.changeEvent && (this._schemaChangeEvent = this._schema.changeEvent.attach(this, this._updateSchema));
+    var e = this._skeleton = Entry.skeleton[this._schema.skeleton];
+    this._contents = [];
+    this._statements = [];
+    this.magnet = {};
+    this._paramMap = {};
+    e.magnets && e.magnets(this).next && (this.svgGroup.nextMagnet = this.block, this._nextGroup = this.svgGroup.elem("g"), this._observers.push(this.observe(this, "_updateMagnet", ["contentHeight"])));
+    this.isInBlockMenu = this.getBoard() instanceof Entry.BlockMenu;
+    this.mouseHandler = function() {
+      var a = d.block.events;
+      a && a.mousedown && a.mousedown.forEach(function(a) {
+        a(d);
+      });
+      d.onMouseDown.apply(d, arguments);
+    };
+    this._startRender(b, c);
+    this._observers.push(this.block.observe(this, "_setMovable", ["movable"]));
+    this._observers.push(this.block.observe(this, "_setReadOnly", ["movable"]));
+    this._observers.push(this.block.observe(this, "_setCopyable", ["copyable"]));
+    this._observers.push(this.block.observe(this, "_updateColor", ["deletable"], !1));
+    this._observers.push(this.observe(this, "_updateBG", ["magneting"], !1));
+    this._observers.push(this.observe(this, "_updateOpacity", ["visible"], !1));
+    this._observers.push(this.observe(this, "_updateDisplay", ["display"], !1));
+    this._observers.push(this.observe(this, "_updateShadow", ["shadow"]));
+    this._observers.push(this.observe(this, "_updateMagnet", ["offsetY"]));
+    this._observers.push(a.code.observe(this, "_setBoard", ["board"], !1));
+    this.dragMode = Entry.DRAG_MODE_NONE;
+    Entry.Utils.disableContextmenu(this.svgGroup.node);
+    a = b.events.viewAdd;
+    "workspace" == Entry.type && a && !this.isInBlockMenu && a.forEach(function(a) {
+      Entry.Utils.isFunction(a) && a(b);
     });
-    e.onMouseDown.apply(e, arguments);
-  };
-  this._startRender(b, c);
-  this._observers.push(this.block.observe(this, "_setMovable", ["movable"]));
-  this._observers.push(this.block.observe(this, "_setReadOnly", ["movable"]));
-  this._observers.push(this.block.observe(this, "_setCopyable", ["copyable"]));
-  this._observers.push(this.block.observe(this, "_updateColor", ["deletable"], !1));
-  this._observers.push(this.observe(this, "_updateBG", ["magneting"], !1));
-  this._observers.push(this.observe(this, "_updateOpacity", ["visible"], !1));
-  this._observers.push(this.observe(this, "_updateDisplay", ["display"], !1));
-  this._observers.push(this.observe(this, "_updateShadow", ["shadow"]));
-  this._observers.push(this.observe(this, "_updateMagnet", ["offsetY"]));
-  this._observers.push(a.code.observe(this, "_setBoard", ["board"], !1));
-  this.dragMode = Entry.DRAG_MODE_NONE;
-  Entry.Utils.disableContextmenu(this.svgGroup.node);
-  a = b.events.viewAdd;
-  "workspace" == Entry.type && a && !this.isInBlockMenu && a.forEach(function(a) {
-    Entry.Utils.isFunction(a) && a(b);
-  });
+  }
 };
 Entry.BlockView.PARAM_SPACE = 5;
 Entry.BlockView.DRAG_RADIUS = 5;
@@ -16753,14 +16753,15 @@ Entry.Executor = function(b, a) {
       for (;;) {
         var a = null;
         try {
-          a = this.scope.block.getSchema().func.call(this.scope, this.entity, this.scope);
-        } catch (b) {
-          if ("AsyncError" === b.name) {
+          var b = this.scope.block.getSchema();
+          b && (a = b.func.call(this.scope, this.entity, this.scope));
+        } catch (e) {
+          if ("AsyncError" === e.name) {
             a = Entry.STATIC.BREAK;
           } else {
-            var c = !1;
-            "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec" != b.message && (c = !0);
-            Entry.Utils.stopProjectWithToast(this.scope, "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec", c);
+            var d = !1;
+            "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec" != e.message && (d = !0);
+            Entry.Utils.stopProjectWithToast(this.scope, "\ub7f0\ud0c0\uc784 \uc5d0\ub7ec", d);
           }
         }
         if (this.isEnd()) {
@@ -18902,12 +18903,7 @@ Entry.Thread = function(b, a, c) {
     }
     for (var d = 0;d < a.length;d++) {
       var e = a[d];
-      if (e instanceof Entry.Block || e.isDummy) {
-        e.setThread(this), this._data.push(e);
-      } else {
-        var f = e.type, g = Entry.functions;
-        (Entry.block[f] || -1 < (g && g.indexOf(f.split("_")[1]))) && this._data.push(new Entry.Block(e, this));
-      }
+      e instanceof Entry.Block || e.isDummy ? (e.setThread(this), this._data.push(e)) : this._data.push(new Entry.Block(e, this));
     }
     (d = this._code.view) && this.createView(d.board, b);
   };
@@ -18920,7 +18916,7 @@ Entry.Thread = function(b, a, c) {
   };
   b.createView = function(a, b) {
     this.view || (this.view = new Entry.ThreadView(this, a));
-    this._data.map(function(d) {
+    this._data.getAll().forEach(function(d) {
       d.createView(a, b);
     });
   };
@@ -19195,7 +19191,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     f = this.getNextBlock();
     this.getCode().unregisterBlock(this);
     e = this.getThread();
-    this._schema.event && e.unregisterEvent(this, this._schema.event);
+    this._schema && this._schema.event && e.unregisterEvent(this, this._schema.event);
     f && (b ? f.destroy(a, b) : g ? f.view && f.view.bindPrev(g) : (g = this.getThread().view.getParent(), g.constructor === Entry.FieldStatement ? (f.view && f.view.bindPrev(g), g.insertTopBlock(f)) : g.constructor === Entry.FieldStatement ? f.replace(g._valueBlock) : f.view._toGlobalCoordinate()));
     !this.doNotSplice && e.spliceBlock ? e.spliceBlock(this) : delete this.doNotSplice;
     this.view && this.view.destroy(a);
