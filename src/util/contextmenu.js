@@ -3,18 +3,25 @@
 goog.provide('Entry.ContextMenu');
 
 (function(ctx) {
+    ctx.visible = false;
+
     ctx.createDom = function() {
         this.dom = Entry.Dom('ul', {
             id: 'entry-contextmenu',
             parent: $('body')
         });
+
+        this.dom.bind('mousedown touchstart', function(e) {
+            e.stopPropagation();
+        });
+
         Entry.Utils.disableContextmenu(this.dom);
         Entry.documentMousedown.attach(
             this, function(){this.hide();}
         );
     };
 
-    ctx.show = function(options, className) {
+    ctx.show = function(options, className, coordinate) {
         if (!this.dom) this.createDom();
         if (options.length === 0) return;
         var that = this;
@@ -32,26 +39,31 @@ goog.provide('Entry.ContextMenu');
             var text = option.text;
             var enable = option.enable !== false;
 
-            var elem = Entry.Dom('li', {
-                class: enable ? 'menuAble' : 'menuDisable',
-                parent: parent
-            });
+            var elem = Entry.Dom('li', { parent: parent });
 
-            elem.text(text);
+            if (option.divider) className = 'divider';
+            else {
+                className = enable ? 'menuAble' : 'menuDisable';
+                var span = Entry.Dom('span', { parent: elem });
 
-            if (enable && option.callback) {
-                (function(elem, cb) {
-                    elem.mousedown(function(e){
-                        e.preventDefault();
-                        that.hide();
-                        cb(e);
-                    });
-                })(elem, option.callback);
+                span.text(text);
+
+                if (enable && option.callback) {
+                    (function(span, cb) {
+                        span.mousedown(function(e){
+                            e.preventDefault();
+                            that.hide();
+                            cb(e);
+                        });
+                    })(span, option.callback);
+                }
             }
+            elem.addClass(className);
         }
 
         parent.removeClass('entryRemove');
-        this.position(Entry.mouseCoordinate);
+        this.visible = true;
+        this.position(coordinate || Entry.mouseCoordinate);
     };
 
     ctx.position = function(pos) {
@@ -80,6 +92,7 @@ goog.provide('Entry.ContextMenu');
     };
 
     ctx.hide = function() {
+        this.visible = false;
         this.dom.empty();
         this.dom.addClass('entryRemove');
         if (this._className) {

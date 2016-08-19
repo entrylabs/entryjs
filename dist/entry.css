@@ -1758,6 +1758,12 @@ svg .svgBlockGroup text {
   z-index: 1000;
   background: gray;
 }
+.tablet .entryContainerListElementWorkspace.selectedObject {
+  height: 128px;
+}
+.tablet .collapsed .selectedObject {
+  height: 159px;
+}
 #entry-contextmenu {
   position: fixed;
   background-color: white;
@@ -1771,6 +1777,11 @@ svg .svgBlockGroup text {
   font-size: 13px;
   z-index: 300;
 }
+#entry-contextmenu span {
+  width: 100%;
+  height: 100%;
+  display: inline-block;
+}
 #entry-contextmenu .menuAble {
   cursor: pointer;
   padding: 3px 20px;
@@ -1783,21 +1794,16 @@ svg .svgBlockGroup text {
   color: #ccc;
   padding: 3px 20px;
 }
+#entry-contextmenu .divider {
+  padding: 0;
+  height: 1px;
+  background-color: #ccc;
+}
 #entry-contextmenu.workspace-contextmenu {
-  position: fixed;
-  background-color: white;
-  display: inline-block;
-  list-style: none;
-  padding: 4px 0;
-  border-color: #ccc #666 #666 #ccc;
-  border-style: solid;
-  border-width: 1px;
-  outline: none;
   font-size: 14px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
   min-width: 160px;
   border-radius: 4px;
-  background-clip: padding-box;
   color: #262626;
 }
 #entry-contextmenu.workspace-contextmenu .menuAble {
@@ -2352,6 +2358,27 @@ svg .svgBlockGroup text {
   padding-left: 17px;
   color: #6c5af2;
   font-size: 9pt;
+}
+.tablet .entrySpeedButtonWorkspace {
+  width: 27px;
+  height: 19px;
+  margin-top: 2px;
+  background-image: url("../images/speed_edit_big.png");
+}
+.tablet .entryCoordinateButtonWorkspace_w {
+  background-image: url("../images/layers_icon_grid_nor_big.png");
+}
+.tablet .entryMaximizeButtonWorkspace_w {
+  background-image: url("../images/layers_icon_fullmode01_nor_1_big.png");
+}
+.entryPopupWindow.tablet .entryEngineWorkspace_w > .entryCoordinateButtonWorkspace_w {
+  bottom: 5px;
+  background-image: url("../images/grid_big.png") !important;
+}
+.entryPopupWindow.tablet .entryEngineWorkspace_w > .entryMaximizeButtonWorkspace_w {
+  right: 0;
+  bottom: 5px;
+  background-image: url("../images/zoom_out_btn_big.png");
 }
 .entryFunctionEdit {
   position: absolute;
@@ -3154,6 +3181,136 @@ input.entryObjectNameWorkspace:-moz-read-only {
 .entryObjectDirectionInputWorkspace:focus {
   background-color: transparent;
 }
+/* tablet start */
+.tablet .objectInfo_visible {
+  top: 8px;
+  background-image: url("../images/layers_icon_visible_big.png");
+}
+.tablet .objectInfo_unvisible {
+  background-image: url("../images/layers_icon_unvisible_big.png");
+}
+.tablet .objectInfo_unlock {
+  background-image: url("../images/layers_icon_unlock_big.png");
+  top: 35px;
+}
+.tablet .objectInfo_lock {
+  background-image: url("../images/layers_icon_lock_big.png");
+}
+.tablet .entryObjectThumbnailWorkspace {
+  width: 52px;
+  height: 52px;
+  top: 8px;
+}
+.tablet .objectInfo_visible,
+.tablet .objectInfo_unvisible,
+.tablet .objectInfo_lock,
+.tablet .objectInfo_unlock {
+  width: 25px;
+  height: 25px;
+}
+.tablet .entryObjectInformationWorkspace {
+  width: 21px;
+  height: 14px;
+  margin-top: 14px;
+  background-image: url("../images/layers_arrow_up_nor_big.png");
+}
+.tablet .selectedObject .entryObjectInformationWorkspace {
+  background-image: url("../images/layers_arrow_down_nor_big.png");
+}
+.tablet .entryObjectEditWorkspace {
+  background-image: url("../images/layers_icon_edit_nor_new_big.png");
+  right: 60px;
+  top: 23px;
+}
+.tablet .entryObjectDeleteWorkspace {
+  background-image: url("../images/layers_icon_close_nor_new_big.png");
+  right: 28px;
+  top: 23px;
+}
+.tablet .entryObjectEditWorkspace,
+.tablet .entryObjectDeleteWorkspace,
+.tablet .entryObjectRotateModeAWorkspace,
+.tablet .entryObjectRotateModeBWorkspace,
+.tablet .entryObjectRotateModeCWorkspace {
+  width: 24px;
+  height: 24px;
+}
+.tablet .entryObjectRotateModeAWorkspace {
+  background-image: url("../images/layers_icon_rotate01_nor_big.png");
+  margin-top: 15px;
+}
+.tablet .entryObjectRotateModeAWorkspace.selected {
+  background-image: url("../images/layers_icon_rotate01_sel_big.png");
+}
+.tablet .entryObjectRotateModeBWorkspace {
+  background-image: url("../images/layers_icon_rotate02_nor_big.png");
+  margin-top: 15px;
+}
+.tablet .entryObjectRotateModeBWorkspace.selected {
+  background-image: url("../images/layers_icon_rotate02_sel_big.png");
+}
+.tablet .entryObjectRotateModeCWorkspace {
+  background-image: url("../images/layers_icon_rotate03_nor_big.png");
+  margin-top: 15px;
+}
+.tablet .entryObjectRotateModeCWorkspace.selected {
+  background-image: url("../images/layers_icon_rotate03_sel_big.png");
+}
+.tablet .entryObjectSelectedImgWorkspace {
+  width: 20px;
+  height: 37px;
+  top: 18px;
+  background-image: url("../images/entry_scroll_big_2.png");
+}
+.tablet .objectInfoView {
+  height: 69px;
+}
+.tablet .entryObjectCoordinateWorkspace {
+  top: 7px;
+}
+.tablet .entryObjectRotateMethodLabelWorkspace {
+  padding-top: 20px;
+}
+.tablet .entryObjectRotateLabelWrapperWorkspace {
+  top: 96px;
+}
+.tablet .entryObjectNameWorkspace {
+  left: 25px;
+}
+.tablet .entryObjectWrapperWorkspace {
+  width: 160px;
+}
+.tablet .entryObjectCoordinateInputWorkspace {
+  width: 52px;
+}
+.tablet .entryObjectCoordinateInputWorkspace_size {
+  width: 48px;
+  margin-left: 170px;
+}
+.tablet .entryObjectCoordinateInputWorkspace_right {
+  margin-left: 84px;
+}
+.tablet .entryObjectRotateInputWorkspace {
+  width: 50px;
+}
+.tablet .entryObjectDirectionInputWorkspace {
+  width: 38px;
+}
+.tablet .entryObjectCoordinateSpanWorkspace:nth-child(3) {
+  margin-left: 70px;
+}
+.tablet .entryObjectCoordinateSizeWorkspace {
+  margin-left: 139px;
+  width: 30px;
+}
+.tablet .collapsed .entryObjectRotationWrapperWorkspace {
+  height: 90px;
+}
+.tablet .collapsed .rotationMethodWrapper {
+  float: left;
+  top: 39px;
+}
+/* tablet end */
 /* Painter css start */
 .entryPlaygroundPainter {
   position: absolute;
@@ -5044,6 +5201,12 @@ input.entryObjectNameWorkspace:-moz-read-only {
   color: #B4B4B5;
   font-size: 11px;
 }
+.tablet .entryPlaygroundResizeWorkspace {
+  background-image: url("../images/entry_scroll_02_big_2.png");
+  width: 15px;
+  height: 42px;
+  border-top: none;
+}
 .entryPopup {
   overflow: hidden;
   position: absolute;
@@ -5054,7 +5217,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
   height: 100%;
   width: 100%;
   z-index: 7000;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.6);
 }
 .entryPopup.popupHelper {
   display: -webkit-box;
@@ -5276,7 +5439,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
   display: inline-block;
   margin: 0px;
   height: 20px;
-  width: 100%;
+  width: 90%;
   color: white;
   border: 1px solid transparent;
   background-color: #0e68e3;
@@ -5320,21 +5483,22 @@ input.entryObjectNameWorkspace:-moz-read-only {
   padding: 0;
   width: 12px;
   background-color: #0e68e3;
-  height: 14px;
+  height: 12px;
   position: absolute;
-  right: 45px;
-  top: 12px;
+  right: 50px;
+  top: 14px;
   display: none;
+  background-image: url("../images/scene_delete_unselect.png");
 }
 .selectedScene .entrySceneRemoveButtonWorkspace {
   background-color: white;
-  color: black;
+  background-image: url("../images/scene_delete.png");
 }
 .minValue .entrySceneRemoveButtonWorkspace {
   display: inline-block;
 }
 .entrySceneRemoveButtonWorkspace:hover {
-  color: #FF3E24;
+  background-image: url("../images/scene_delete_hover.png");
 }
 .entrySceneDummyView {
   width: 55px;
@@ -5347,6 +5511,18 @@ input.entryObjectNameWorkspace:-moz-read-only {
   top: 0;
   z-index: 889;
   left: 100px;
+}
+.tablet .entrySceneRemoveButtonWorkspace {
+  width: 14px;
+  height: 14px;
+  right: 48px;
+  background-image: url("../images/scene_delete_unselect_big.png");
+}
+.tablet .selectedScene .entrySceneRemoveButtonWorkspace {
+  background-image: url("../images/scene_delete_big.png");
+}
+.tablet .entrySceneRemoveButtonWorkspace:hover {
+  background-image: url("../images/scene_delete_hover_big.png");
 }
 .entryCanvasWrapper {
   position: absolute;
@@ -5380,7 +5556,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
   bottom: 24px;
   border-bottom: 1px solid #ccc;
   width: 100% !important;
-  top: 0;
+  top: 0 !important;
 }
 .entryStateManagerWorkspace {
   float: right;
@@ -5566,6 +5742,9 @@ input.entryObjectNameWorkspace:-moz-read-only {
   width: 55%;
   border: 1px solid transparent;
   padding-left: 5px;
+  -webkit-text-fill-color: black;
+  -webkit-opacity: 1;
+  color: black;
 }
 .selected .entryVariableListElementNameWorkspace {
   background-color: #d3d3d3;

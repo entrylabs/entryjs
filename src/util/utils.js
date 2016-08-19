@@ -890,7 +890,7 @@ Entry.setCloneBrush = function (sprite, parentBrush) {
 };
 
 Entry.isFloat = function (num) {
-    return /\d+\.{1}\d+/.test(num);
+    return /\d+\.{1}\d+$/.test(num);
 };
 
 Entry.getStringIndex = function(str) {
@@ -1247,3 +1247,31 @@ window.requestAnimFrame = (function(){
           };
 })();
 
+Entry.isMobile = function() {
+    if (Entry.device)
+        return Entry.device === 'tablet';
+
+    var platform = window.platform;
+    var ret = platform &&
+           platform.type &&
+           (platform.type === 'tablet' ||
+               platform.type === 'mobile');
+
+    if (ret) {
+        Entry.device = 'tablet';
+        return true;
+    } else {
+        Entry.device = 'desktop';
+        return false;
+    }
+}
+
+Entry.Utils.convertMouseEvent = function(e) {
+    if (e.originalEvent && e.originalEvent.touches)
+        return e.originalEvent.touches[0];
+    else return e;
+}
+
+Entry.Utils.convertIntToHex = function(num) {
+    return (num).toString(16).toUpperCase();
+}
