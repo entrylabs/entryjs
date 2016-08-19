@@ -663,9 +663,9 @@ Entry.VariableContainer.prototype.removeFunction = function(func) {
     delete functions[functionId];
     var functionType = 'func_' + functionId;
 
-    //Entry.container.removeFuncBlocks(functionType);
-    //for (var id in functions)
-        //functions[id].content.removeBlocksByType(functionType);
+    Entry.container.removeFuncBlocks(functionType);
+    for (var id in functions)
+        functions[id].content.removeBlocksByType(functionType);
     this.updateList();
 };
 
