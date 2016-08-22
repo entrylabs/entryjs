@@ -5,7 +5,7 @@
   height: 100%;
   color: black;
 }
-.CodeMirror * {
+.CodeMirror > * {
   font-family: 'Nanum Gothic Coding' !important;
 }
 /* PADDING */
