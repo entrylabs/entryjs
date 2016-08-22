@@ -185,7 +185,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         } else {
                             annotation = this.getLineNumber(error.node.start, error.node.end);
                             annotation.message = error.message;
-                            annotation.severity = "error";
+                            annotation.severity = "converting error";
 
                             var errorInfo = this.findErrorInfo(error);
                             annotation.from.line = errorInfo.lineNumber;
