@@ -260,6 +260,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
   left: 0;
   top: 0;
   z-index: 3;
+  height: 100% !important;
 }
 .CodeMirror-gutter {
   white-space: normal;
@@ -1148,6 +1149,7 @@ svg .svgBlockGroup text {
   height: 100%;
 }
 .entryVimBoard {
+  z-index: 0;
   position: absolute;
   top: 0;
   left: 0;
@@ -1506,6 +1508,7 @@ svg .svgBlockGroup text {
   top: 20px;
   cursor: col-resize;
   background-image: url("../images/entry_scroll.png");
+  z-index: 1000;
 }
 .selectedObject .entryObjectSelectedImgWorkspace {
   float: left;
@@ -5328,16 +5331,16 @@ input.entryObjectNameWorkspace:-moz-read-only {
   background-image: url("../images/property/hw_on.png");
 }
 .propertyTabtvCast {
-  background-image: url("../images/property/vedio_off.png");
+  background-image: url("../images/property/video_off.png");
 }
 .propertyTabtvCast.selected {
-  background-image: url("../images/property/vedio_on.png");
+  background-image: url("../images/property/video_on.png");
 }
 .propertyTabyoutube {
-  background-image: url("../images/property/vedio_off.png");
+  background-image: url("../images/property/video_off.png");
 }
 .propertyTabyoutube.selected {
-  background-image: url("../images/property/vedio_on.png");
+  background-image: url("../images/property/video_on.png");
 }
 .propertyTabgoal {
   background-image: url("../images/property/doneproject.png");
@@ -5350,6 +5353,12 @@ input.entryObjectNameWorkspace:-moz-read-only {
 }
 .propertyTabpdf.selected {
   background-image: url("../images/property/pdf_on.png");
+}
+.propertyTabconsole {
+  background-image: url("../images/property/console_off.png");
+}
+.propertyTabconsole.selected {
+  background-image: url("../images/property/console_on.png");
 }
 .propertyContent {
   position: absolute;
@@ -6150,6 +6159,25 @@ input.entryObjectNameWorkspace:-moz-read-only {
 #entryPdfWorkspace iframe {
   width: 100%;
   height: 100%;
+}
+#entryConsole {
+  height: 100%;
+}
+#entryConsole > .CodeMirror {
+  height: 100%;
+  background: black;
+}
+#entryConsole .CodeMirror-cursor {
+  border-left: 1px solid white;
+}
+#entryConsole span {
+  color: white;
+}
+#entryConsole .speak span {
+  color: #fff2a4;
+}
+#entryConsole .ask span {
+  color: #bdd1ff;
 }
 
 
