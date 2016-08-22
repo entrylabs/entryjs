@@ -79,7 +79,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     p.getMode = function() {return this.mode;};
 
     p.setMode = function(mode, message){
-        console.log("setMode mode", mode);
+        //console.log(("setMode mode", mode);
         
         this.mode = mode.boardType;
         this.runType = mode.runType;
@@ -102,7 +102,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     this.oldTextType = this.textType;
                 }
                 catch(e) {
-                    console.log("vimboard error");
+                    //console.log(("vimboard error");
                 }
 
                 break;
@@ -114,7 +114,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     this.textToCode(this.oldMode, this.oldTextType);
                     if (this.vimBoard) this.vimBoard.hide();
                     if (this.overlayBoard) this.overlayBoard.hide(); 
-                    console.log("here??");
                     this.blockMenu.renderBlock();
                     this.oldMode = this.mode;
                     this.oldTextType = this.textType;
@@ -123,7 +122,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     this.set({selectedBoard:this.vimBoard});
                     this.mode = Entry.Workspace.MODE_VIMBOARD;
                     
-                    console.log("this.oldTextType", this.oldTextType);
+                    //console.log(("this.oldTextType", this.oldTextType);
 
                     if(this.oldTextType == Entry.Vim.PARSER_TYPE_JS_TO_BLOCK) {
                         mode.boardType = Entry.Workspace.MODE_VIMBOARD;
@@ -137,7 +136,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                         mode.textType = Entry.Vim.TEXT_TYPE_PY;
                         mode.runType = Entry.Vim.WORKSPACE_MODE;
                         this.oldTextType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK;
-                        console.log("mode", mode);
+                        //console.log(("mode", mode);
                         Entry.dispatchEvent("changeMode", mode);
                     } 
                     
@@ -191,8 +190,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         setTimeout(function() {
             that.board.alignThreads();
         }, 0);
-
-        console.log("after4");
     };
 
     p.loadCodeFromText = function(mode) {

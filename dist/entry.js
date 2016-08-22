@@ -11550,7 +11550,7 @@ Entry.BlockToJsParser = function(b) {
       var l = f[k];
       0 !== l.length && "Scope" !== l && ("Judge" === l ? b = !0 : e.test(l) ? (l = l.split("%")[1], l = parseInt(l) - 1, g[l] && "Image" != g[l].type && ("Block" == g[l].type ? (l = this.Block(h[l]), c += l) : c += this[g[l].type](h[l], g[l]))) : c += l);
     }
-    "#" == c.charAt(c.length - 1) && (b = !0, c = c.substring(0, c.length - 1), console.log(), c = c.trim());
+    "#" == c.charAt(c.length - 1) && (b = !0, c = c.substring(0, c.length - 1), c = c.trim());
     b || (c += "();");
     return c = Entry.TextCodingUtil.prototype.jsAdjustSyntax(a, c);
   };
@@ -11597,7 +11597,6 @@ Entry.BlockToJsParser = function(b) {
     this._iterVariableCount && this._iterVariableCount--;
   };
   b.Dropdown = function(a) {
-    console.log("Dropdown", a);
     "OBSTACLE" == a ? a = "stone" : "ITEM" == a ? a = a.toLowerCase() : "WALL" == a && (a = a.toLowerCase());
     return "'" + a + "'";
   };
@@ -23035,7 +23034,6 @@ Entry.Vim = function(b, a) {
     var c;
     b && (this._mode = b.runType);
     Entry.playground && (c = Entry.playground.object, c = "# " + c.name + " \uc624\ube0c\uc81d\ud2b8\uc758 \ud30c\uc774\uc36c \ucf54\ub4dc");
-    console.log("codeToText mode", b);
     var e = b.textType;
     e === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : e === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
     var f = this._parser.parse(a, Entry.Parser.PARSE_GENERAL);
@@ -23095,7 +23093,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     return this.mode;
   };
   b.setMode = function(a, b) {
-    console.log("setMode mode", a);
     this.mode = a.boardType;
     this.runType = a.runType;
     this.textType = a.textType;
@@ -23106,15 +23103,14 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         try {
           this.board && this.board.hide(), this.overlayBoard && this.overlayBoard.hide(), this.set({selectedBoard:this.vimBoard}), this.vimBoard.show(), this.codeToText(this.board.code, a), this.blockMenu.renderText(), this.board.clear(), this.oldMode = this.mode, this.oldTextType = this.textType;
         } catch (c) {
-          console.log("vimboard error");
         }
         break;
       case Entry.Workspace.MODE_BOARD:
         try {
-          this.board.show(), this.set({selectedBoard:this.board}), this.textToCode(this.oldMode, this.oldTextType), this.vimBoard && this.vimBoard.hide(), this.overlayBoard && this.overlayBoard.hide(), console.log("here??"), this.blockMenu.renderBlock(), this.oldMode = this.mode, this.oldTextType = this.textType;
+          this.board.show(), this.set({selectedBoard:this.board}), this.textToCode(this.oldMode, this.oldTextType), this.vimBoard && this.vimBoard.hide(), this.overlayBoard && this.overlayBoard.hide(), this.blockMenu.renderBlock(), this.oldMode = this.mode, this.oldTextType = this.textType;
         } catch (c) {
-          this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), this.mode = Entry.Workspace.MODE_VIMBOARD, console.log("this.oldTextType", this.oldTextType), this.oldTextType == Entry.Vim.PARSER_TYPE_JS_TO_BLOCK ? (a.boardType = Entry.Workspace.MODE_VIMBOARD, a.textType = Entry.Vim.TEXT_TYPE_JS, a.runType = Entry.Vim.MAZE_MODE, this.oldTextType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK, Entry.dispatchEvent("changeMode", a), Ntry.dispatchEvent("textError", a)) : this.oldTextType == Entry.Vim.PARSER_TYPE_PY_TO_BLOCK && 
-          (a.boardType = Entry.Workspace.MODE_VIMBOARD, a.textType = Entry.Vim.TEXT_TYPE_PY, a.runType = Entry.Vim.WORKSPACE_MODE, this.oldTextType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK, console.log("mode", a), Entry.dispatchEvent("changeMode", a));
+          this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), this.mode = Entry.Workspace.MODE_VIMBOARD, this.oldTextType == Entry.Vim.PARSER_TYPE_JS_TO_BLOCK ? (a.boardType = Entry.Workspace.MODE_VIMBOARD, a.textType = Entry.Vim.TEXT_TYPE_JS, a.runType = Entry.Vim.MAZE_MODE, this.oldTextType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK, Entry.dispatchEvent("changeMode", a), Ntry.dispatchEvent("textError", a)) : this.oldTextType == Entry.Vim.PARSER_TYPE_PY_TO_BLOCK && (a.boardType = 
+          Entry.Workspace.MODE_VIMBOARD, a.textType = Entry.Vim.TEXT_TYPE_PY, a.runType = Entry.Vim.WORKSPACE_MODE, this.oldTextType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK, Entry.dispatchEvent("changeMode", a));
         }
         Entry.commander.setCurrentEditor("board", this.board);
         break;
@@ -23143,7 +23139,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
       setTimeout(function() {
         c.board.alignThreads();
       }, 0);
-      console.log("after4");
     }
   };
   b.loadCodeFromText = function(a) {
@@ -23199,7 +23194,6 @@ Entry.Playground = function() {
   });
 };
 Entry.Playground.prototype.setMode = function(b) {
-  console.log("playground setMode", b);
   this.mainWorkspace.setMode(b);
 };
 Entry.Playground.prototype.generateView = function(b, a) {
@@ -23655,8 +23649,7 @@ Entry.Playground.prototype.injectPicture = function() {
     if (this.object) {
       for (var a = this.object.pictures, d = 0, c = a.length;d < c;d++) {
         var e = a[d].view;
-        e || console.log(e);
-        e.orderHolder.innerHTML = d + 1;
+        e || (e.orderHolder.innerHTML = d + 1);
         b.appendChild(e);
       }
       this.selectPicture(this.object.selectedPicture);

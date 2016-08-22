@@ -125,7 +125,6 @@ Entry.BlockToJsParser = function(syntax) {
         if(result.charAt(result.length-1) == '#') {
             notParenthesis = true;
             result = result.substring(0, result.length-1);
-            console.log()
             result = result.trim();
         }
 
@@ -246,7 +245,7 @@ Entry.BlockToJsParser = function(syntax) {
     };
 
     p.Dropdown = function(dataParam) {
-        console.log("Dropdown", dataParam);
+        //console.log("Dropdown", dataParam);
         var value = dataParam;
         if(value == 'OBSTACLE')
             value = 'stone';

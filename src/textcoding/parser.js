@@ -37,7 +37,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
     /*this.syntax.js = this.mappingSyntaxJs(mode);
     this.syntax.py = this.mappingSyntaxPy(mode);*/
 
-    //console.log("py syntax", this.syntax.py);
+    ////console.log("py syntax", this.syntax.py);
     this._console = new Entry.Console();
 
     switch (this._lang) {
@@ -159,7 +159,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     var threads = [];
                     threads.push(code);
 
-                    //console.log("threads", threads);
+                    ////console.log("threads", threads);
 
                     var astArray = [];
 
@@ -306,7 +306,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
                 var textCode = this._parser.Code(code, parseMode);
                 /*var textArr = textCode.match(/(.*{.*[\S|\s]+?}|.+)/g);
-                console.log("textCode", textCode);
+                //console.log("textCode", textCode);
                 if(Array.isArray(textArr)) {
                     result = textArr.reduce(function (prev, current, index) {
                         var temp = '';
@@ -372,7 +372,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     if (!syntaxArray) continue;
 
                     var syntaxTemp = syntax;
-                    //console.log("syntaxArray", syntaxArray);
+                    ////console.log("syntaxArray", syntaxArray);
                     for (var j = 0; j < syntaxArray.length; j++) {
                         var key = syntaxArray[j];
                         if(key.indexOf("%") > -1)
@@ -408,7 +408,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
                         if(block.syntax && block.syntax.py) {
                             pySyntax = block.syntax.py;
-                            //console.log("syntax", syntax);
+                            ////console.log("syntax", syntax);
                         }
 
                         if (!pySyntax)
