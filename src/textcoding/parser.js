@@ -187,12 +187,11 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             annotation.message = error.message;
                             annotation.severity = "converting error";
 
-                            var errorInfo = this.findErrorInfo(error);
+                            /*var errorInfo = this.findErrorInfo(error);
                             annotation.from.line = errorInfo.lineNumber;
                             annotation.from.ch = errorInfo.location.start;
                             annotation.to.line = errorInfo.lineNumber;
-                            annotation.to.ch = errorInfo.location.end;  
-                            
+                            annotation.to.ch = errorInfo.location.end;  */
 
                             error.type = 2;
                         }
@@ -482,6 +481,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 break;
            
         }
+
+        lineNumber -= lineNumber;
 
         return {lineNumber: lineNumber, location: error.node}
     };

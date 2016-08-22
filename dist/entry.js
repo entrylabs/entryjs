@@ -13544,7 +13544,7 @@ Entry.Parser = function(b, a, d, c) {
           c = this._parser.Program(f);
         } catch (q) {
           if (this.codeMirror) {
-            q instanceof SyntaxError ? (c = {from:{line:q.loc.line - 1, ch:q.loc.column - 2}, to:{line:q.loc.line - 1, ch:q.loc.column + 1}}, q.message = "\ubb38\ubc95(Syntax) \uc624\ub958\uc785\ub2c8\ub2e4.", q.type = 1) : (c = this.getLineNumber(q.node.start, q.node.end), c.message = q.message, c.severity = "converting error", e = this.findErrorInfo(q), c.from.line = e.lineNumber, c.from.ch = e.location.start, c.to.line = e.lineNumber, c.to.ch = e.location.end, q.type = 2);
+            q instanceof SyntaxError ? (c = {from:{line:q.loc.line - 1, ch:q.loc.column - 2}, to:{line:q.loc.line - 1, ch:q.loc.column + 1}}, q.message = "\ubb38\ubc95(Syntax) \uc624\ub958\uc785\ub2c8\ub2e4.", q.type = 1) : (c = this.getLineNumber(q.node.start, q.node.end), c.message = q.message, c.severity = "converting error", q.type = 2);
             this.codeMirror.markText(c.from, c.to, {className:"CodeMirror-lint-mark-error", __annotation:c, clearOnEnter:!0});
             c = q.title ? q.title : "\ubb38\ubc95 \uc624\ub958";
             if (2 == q.type && q.message) {
@@ -13655,7 +13655,7 @@ Entry.Parser = function(b, a, d, c) {
         break;
       }
     }
-    return {lineNumber:b, location:a.node};
+    return {lineNumber:b - b, location:a.node};
   };
 })(Entry.Parser.prototype);
 Entry.PyBlockAssembler = function(b) {
