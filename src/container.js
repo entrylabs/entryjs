@@ -820,16 +820,10 @@ Entry.Container.prototype.getInputValue = function() {
  * @param {String} inputValue from canvas
  */
 Entry.Container.prototype.setInputValue = function(inputValue) {
-    if (this.inputValue.complete)
-        return;
     if (!inputValue)
         this.inputValue.setValue(0);
     else
         this.inputValue.setValue(inputValue);
-    Entry.stage.hideInputField();
-    if (Entry.console)
-        Entry.console.stopInput(inputValue);
-    this.inputValue.complete = true;
 };
 
 Entry.Container.prototype.resetSceneDuringRun = function() {

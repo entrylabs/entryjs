@@ -169,7 +169,8 @@ goog.provide('Entry.GlobalSvg');
             var newLeft = that.left + dX;
             var newTop = that.top + dY;
             that.svgDom.css({
-                transform: 'translate3d('+ newLeft + 'px,' + newTop +'px, 0px)'
+                left : newLeft,
+                top :  newTop,
             });
             that._startX = newX;
             that._startY = newY;

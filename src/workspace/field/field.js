@@ -29,7 +29,7 @@ Entry.Field = function() {};
                     this.getValue()
                 );
             }
-        }
+        };
         delete this._startValue;
     };
 

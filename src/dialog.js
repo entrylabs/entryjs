@@ -20,13 +20,11 @@ Entry.Dialog = function(entity, message, mode, isStamp) {
     this.border = 2;
     if (typeof message == 'number')
         message = String(message);
-    if (Entry.console)
-        Entry.console.print(message, mode);
     var messageChunks = message.match(/.{1,15}/g);
     message = messageChunks.join('\n');
     this.message_ = message;
     this.mode_ = mode;
-    if (mode === 'speak' || mode === 'ask')
+    if (mode == 'speak')
         this.generateSpeak();
     if (!isStamp)
         Entry.stage.loadDialog(this);
