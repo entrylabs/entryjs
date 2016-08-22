@@ -19,8 +19,7 @@ Entry.block.variableAddButton = {
                 Entry.variableContainer.openVariableAddPanel('variable');
             }
         ]
-    },
-    syntax: {js:[], py: []}
+    }
 };
 
 Entry.block.listAddButton = {
@@ -42,8 +41,7 @@ Entry.block.listAddButton = {
                 Entry.variableContainer.openVariableAddPanel('list');
             }
         ]
-    },
-    syntax: {js:[], py: []}
+    }
 };
 
 // (변수▼) 를 () 만큼 바꾸기
@@ -252,8 +250,7 @@ Blockly.Blocks.ask_and_wait = {
   },
   whenRemove: function (removeBlock) {
     if (Entry.container) Entry.container.hideProjectAnswer(removeBlock);
-  },
-  syntax: {js:[], py: ["Entry.ask_and_wait(%1)\n"]}
+  }
 };
 
 // Ask and wait until a response provided
@@ -308,8 +305,7 @@ Blockly.Blocks.get_canvas_input_value = {
     },
     whenRemove: function (removeBlock) {
         if (Entry.container) Entry.container.hideProjectAnswer(removeBlock);
-    },
-    syntax: {js:[], py: ["answer"]}
+    }
 };
 
 Entry.block.get_canvas_input_value = function (sprite, script) {
@@ -609,8 +605,7 @@ Blockly.Blocks.set_visible_answer = {
   },
   whenRemove: function (removeBlock) {
         if (Entry.container) Entry.container.hideProjectAnswer(removeBlock);
-  },
-  syntax: {js:[], py: ["Entry.set_visible(\"%1\")\n"]}
+  }
 };
 
 Entry.block.set_visible_answer = function (sprite, script) {

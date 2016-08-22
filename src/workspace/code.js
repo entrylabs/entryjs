@@ -73,23 +73,6 @@ Entry.PARAM = -1;
         }
     };
 
-    p.destroyView = function() {
-        if (!this.view)
-            return;
-        this.view.destroy();
-        delete this.view;
-    };
-
-    p.recreateView = function() {
-        if (!this.view)
-            return;
-        this.destroyView();
-        this.set({
-            view: new Entry.CodeView(this, this.board),
-            board: this.board
-        });
-    };
-
     p.registerEvent = function(block, eventType) {
         if (!this._eventMap[eventType])
             this._eventMap[eventType] = [];

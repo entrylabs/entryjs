@@ -19,8 +19,7 @@ Entry.block.functionAddButton = {
                 Entry.variableContainer.createFunction();
             }
         ]
-    },
-    syntax: {js:[], py: []}
+    }
 };
 
 Blockly.Blocks.function_field_label = {

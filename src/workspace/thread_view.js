@@ -98,7 +98,7 @@ Entry.ThreadView = function(thread, board) {
     };
 
     p.setZIndex = function(zIndex) {
-        this.set({zIndex: zIndex});
-    };
+         this.set({zIndex: zIndex});
+    }
 
 })(Entry.ThreadView.prototype);

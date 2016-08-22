@@ -12,7 +12,7 @@ goog.require("Entry.Utils");
  */
 Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     Entry.Model(this, false);
-    this.setAlign(align);
+    this._align = align || "CENTER";
     this._scroll = scroll !== undefined ? scroll : false;
     this._bannedClass = [];
     this._categories = [];
@@ -150,15 +150,6 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             function() {that.changeEvent.notify();}
         );
         code.createView(this);
-        var workspace = this.workspace;
-        var workspaceMode = workspace.getMode();
-        if (this.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD) {
-            if (!code.mode || code.mode === 'code')
-                this.renderText();
-        } else {
-            if (code.mode === 'text')
-                this.renderBlock();
-        }
         this.align();
     };
 
@@ -311,14 +302,12 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     p.renderText = function() {
         var threads = this.code.getThreads();
-        this.code.mode = 'text';
         for (var i=0; i<threads.length; i++)
             threads[i].view.renderText();
     };
 
     p.renderBlock = function() {
         var threads = this.code.getThreads();
-        this.code.mode = 'code';
         for (var i=0; i<threads.length; i++)
             threads[i].view.renderBlock();
     };
@@ -736,10 +725,6 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             }
         }
         this._categoryCodes.arduino = codesJSON;
-    };
-
-    p.setAlign = function(align) {
-        this._align = align || "CENTER";
     };
 
 

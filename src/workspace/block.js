@@ -1,4 +1,4 @@
--/*
+/*
  *
  */
 "use strict";
@@ -173,10 +173,6 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
             });
             this._updatePos();
         }
-    };
-
-    p.destroyView = function() {
-        this.set({view: null});
     };
 
     p.clone = function(thread) {
