@@ -149,7 +149,7 @@ Entry.Vim = function(dom, textType) {
             codeDescription = "# " + object.name + " 오브젝트의 파이썬 코드";
         }
 
-        console.log("codeToText mode", mode);
+        //console.log("codeToText mode", mode);
 
         var textType = mode.textType;
 
@@ -174,11 +174,11 @@ Entry.Vim = function(dom, textType) {
         }
 
         this.codeMirror.setValue(textCode);
-        this.codeMirror.getDoc().markText({line:0, ch:0}, {line: 4, ch:0}, {readOnly: true});
+        if(textType == Entry.Vim.TEXT_TYPE_PY)
+            this.codeMirror.getDoc().markText({line:0, ch:0}, {line: 4, ch:0}, {readOnly: true});
 
         var doc = this.codeMirror.getDoc();
         doc.setCursor({ line: doc.lastLine() - 1});
-        // this.codeMirror.getDoc().markText({line:0, ch:0}, {line: 1, ch: 100}, {readOnly: true});
     };
 
     p.getCodeToText = function(code) {

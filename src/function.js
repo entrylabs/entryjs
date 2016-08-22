@@ -28,14 +28,7 @@ Entry.Func = function(func) {
 
     this.paramMap = {};
 
-    var blockSchema = function () {};
-    var blockPrototype = Entry.block.function_general;
-    blockSchema.prototype = blockPrototype;
-    blockSchema = new blockSchema();
-    blockSchema.changeEvent = new Entry.Event();
-    blockSchema.template = Lang.template.function_general;
-
-    Entry.block["func_" + this.id] = blockSchema;
+    Entry.generateFunctionSchema(this.id);
 
     if (func) {
         var blockMap = this.content._blockMap;

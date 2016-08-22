@@ -886,7 +886,7 @@ Entry.setCloneBrush = function (sprite, parentBrush) {
 };
 
 Entry.isFloat = function (num) {
-    return /\d+\.{1}\d+/.test(num);
+    return /\d+\.{1}\d+$/.test(num);
 };
 
 Entry.getStringIndex = function(str) {

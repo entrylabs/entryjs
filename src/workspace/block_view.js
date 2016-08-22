@@ -9,6 +9,7 @@ goog.provide("Entry.BlockView");
  *
  */
 Entry.BlockView = function(block, board, mode) {
+    var that = this;
     Entry.Model(this, false);
     this.block = block;
     this._lazyUpdatePos = _.debounce(block._updatePos.bind(block), 200);
@@ -17,8 +18,10 @@ Entry.BlockView = function(block, board, mode) {
     this.set(block);
     this.svgGroup = board.svgBlockGroup.elem("g");
 
-    if(block.type) {
-        this._schema = Entry.block[block.type];
+    this._schema = Entry.block[block.type];
+    if (this._schema === undefined) {
+        this.block.destroy(false, false);
+        return;
     }
 
     if (this._schema.changeEvent)
@@ -38,10 +41,6 @@ Entry.BlockView = function(block, board, mode) {
 
     this.isInBlockMenu = this.getBoard() instanceof Entry.BlockMenu;
 
-    //if (skeleton.morph)
-        //this._observers.push(this.block.observe(this, "_renderPath", skeleton.morph, false));
-
-    var that = this;
     this.mouseHandler = function() {
         var events = that.block.events;
         if (events && events.mousedown)

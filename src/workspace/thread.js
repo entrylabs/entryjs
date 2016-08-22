@@ -35,8 +35,7 @@ Entry.Thread = function(thread, code, parent) {
             if (block instanceof Entry.Block || block.isDummy) {
                 block.setThread(this);
                 this._data.push(block);
-            } else
-                Entry.block[block.type] && this._data.push(new Entry.Block(block, this));
+            } else this._data.push(new Entry.Block(block, this));
         }
 
         var codeView = this._code.view;
@@ -56,7 +55,7 @@ Entry.Thread = function(thread, code, parent) {
         if (!this.view)
             this.view = new Entry.ThreadView(this, board);
         var prevBlock = null;
-        this._data.map(function(b) {
+        this._data.getAll().forEach(function(b) {
             b.createView(board, mode);
         });
     };
