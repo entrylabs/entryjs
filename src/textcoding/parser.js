@@ -26,6 +26,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
     this._type = type;
     this.availableCode = [];
     this._syntax_cache = {};
+    this._threadCount = 0;
 
     Entry.Parser.PARSE_GENERAL = 0;
     Entry.Parser.PARSE_SYNTAX = 1;
@@ -193,6 +194,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     var astArray = [];
 
                     for(var index in threads) {
+                        this._threadCount = index+1;
                         var thread = threads[index];
                         thread = thread.trim();
                         var ast = acorn.parse(thread);
@@ -218,13 +220,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
                             error.type = 2;
                         }
-
-                        
-
-
-
-
-
 
                         this.codeMirror.markText(
                             annotation.from, annotation.to, {
@@ -281,6 +276,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     var astArray = [];
                     for(var index in threads) {
                         var thread = threads[index];
+                        console.log("thread", thread);
                         var ast = pyAstGenerator.generate(thread);
                         if(ast.type == "Program" && ast.body.length != 0)
                             astArray.push(ast);
@@ -291,69 +287,33 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
                     break;
                 } catch(error) {
-                    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                     if (this.codeMirror) {
                         console.log("came here error1", error);
                         var annotation;
                         if (error instanceof SyntaxError) {
+                            console.log("errot type 1");
+                            var errorInfo = this.findErrorInfo(error);
+                            
                             annotation = {
+                                from: {line: (errorInfo.line)+3 , ch: errorInfo.start},
+                                to: {line: (errorInfo.line)+3, ch: errorInfo.end}
+                            }
+
+                            /*annotation = {
                                 from: {line: error.loc.line - 1, ch: error.loc.column - 2},
                                 to: {line: error.loc.line - 1, ch: error.loc.column + 1}
-                            }
+                            }*/
 
                             error.message = "문법(Syntax) 오류입니다.";
                             error.type = 1;
                         } else {
+                            console.log("errot type 2");
                             annotation = this.getLineNumber(error.node.start, error.node.end);
                             annotation.message = error.message;
-                            annotation.severity = "error";
+                            annotation.severity = "block_convert_error";
 
                             error.type = 2; 
                         }
-
-
-                        var line = parseInt(annotation.to.line) + 1;
-                        annotation.from.line = line-1;
-                        annotation.to.line = line;
 
                         this.codeMirror.markText(
                             annotation.from, annotation.to, {
@@ -362,13 +322,14 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             clearOnEnter: true
                         });
 
-
                         console.log("came here error2", error);
 
                         if(error.title)
                             var errorTitle = error.title;
                         else 
                             var errorTitle = '문법 오류';
+
+                        var line = parseInt(errorInfo.line)+4;
 
                         if(error.message && line)
                             var errorMsg = error.message + ' \n(line: ' + line + ')';
@@ -549,28 +510,49 @@ Entry.Parser = function(mode, type, cm, syntax) {
     };
 
     p.findErrorInfo = function(error) {
+        var result = {};
+        var line = 0;
+        var pos = error.pos;
+        var chCount = 0;
         var contents = this.codeMirror.getValue();
-        var lineNumber = 0;
-        var blockCount = 0;
-        var textArr = contents.split('\n');
-        
+
+        var contentsArr = contents.split("\n\n");
+        contentsArr.shift();
+        contentsArr.shift();
+        var text = contentsArr.join("");
+
+        var textArr  = text.split("\n");
+        var targetText;
         for(var i in textArr) {
-            var text = textArr[i].trim();
-           
-            lineNumber++;
-            if(text.length == 0 || text.length == 1 || text.indexOf("else") > -1) {
-                continue;
-            }
-            else {
-                blockCount++;
-            }
+            targetText = textArr[i];
+            console.log("targetText", targetText);
 
-            if(blockCount == error.blockCount)
-                break;  
+
+
+            chCount += targetText.length;
+            line++;
+            if(pos <= chCount+1)
+                break;
+
+            console.log("chCount", chCount);
+            console.log("line", line);
         }
-        lineNumber -= lineNumber;
 
-        return {lineNumber: lineNumber, location: error.node}
+        var firstCh = targetText.charAt(0);
+
+        var start = targetText.indexOf(firstCh);
+        var end = targetText.length;
+
+        result.line = line;
+        result.start = start;
+        result.end = end;
+
+
+        console.log("result", result);
+        return result;
+        
     };
+
+
 
 })(Entry.Parser.prototype);
