@@ -1,14 +1,14 @@
-'use strict'
+'use strict';
 
 Entry.TvCast = function(tvCast) {
 	this.generateView(tvCast);
-}
+};
 
 var p = Entry.TvCast.prototype;
 
 p.init = function(tvCastHash) {
 	this.tvCastHash = tvCastHash;
-}
+};
 
 p.generateView = function(tvCastHash) {
 	var movieContainer = Entry.createElement('div');
@@ -27,16 +27,16 @@ p.generateView = function(tvCastHash) {
     this.movieFrame = iframe;
 
     this.movieContainer.appendChild(this.movieFrame);
-}
+};
 
 p.getView = function () {
 	return this.movieContainer;
-}
+};
 
 p.resize = function() {
     var container = document.getElementById('entryContainerWorkspaceId');
     var iframe = document.getElementById('tvCastIframe');
-    w = this.movieContainer.offsetWidth;
-    iframe.width = w+'px';
-    iframe.height = w*9/16 + 'px';
+    var w = this.movieContainer.offsetWidth;
+    iframe.width = w +'px';
+    iframe.height = w * 9/16 + 'px';
 };

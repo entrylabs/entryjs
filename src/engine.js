@@ -465,10 +465,22 @@ Entry.Engine.prototype.run = function() {
  * toggle this engine state run
  */
 Entry.Engine.prototype.toggleRun = function() {
+    console.log("Entry toggleRun");
     if (this.state === 'pause') {
         this.togglePause();
         return;
     }
+
+    ////////////////////////////////////////////////////
+    //Text Coding Mode
+    if (Entry.playground && Entry.playground.mainWorkspace) {
+        var mainWorkspace = Entry.playground.mainWorkspace;
+        var boardMode = mainWorkspace.mode;
+        if(boardMode == Entry.Workspace.MODE_VIMBOARD)
+            mainWorkspace.loadCodeFromText(boardMode);
+    }
+    //Text Coding Mode
+    ////////////////////////////////////////////////////
 
     Entry.addActivity("run");
     if (this.state == 'stop') {
@@ -488,6 +500,7 @@ Entry.Engine.prototype.toggleRun = function() {
         Entry.scene.takeStartSceneSnapshot();
         this.state = 'run';
         this.fireEvent('start');
+
     }
     this.state = 'run';
     if (Entry.type == 'mobile')

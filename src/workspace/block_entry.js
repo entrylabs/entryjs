@@ -26,7 +26,8 @@ Entry.block = {
         "func": function (sprite, script) {
             var pd = Entry.hw.portData
             return pd.leftProximity > 40 || pd.rightProximity > 40;
-        }
+        },
+        "syntax": {"js": [], "py": ["Albert.hand_found()"]}
     },
     "albert_value": {
         "color": "#00979D",
@@ -67,7 +68,8 @@ Entry.block = {
             var pd = Entry.hw.portData;
             var dev = script.getField('DEVICE');
             return pd[dev];
-        }
+        },
+        "syntax": {"js": [], "py": ["Albert.value(%1)"]}
     },
     "albert_move_forward_for_secs": {
         "color": "#00979D",
@@ -124,7 +126,8 @@ Entry.block = {
                 sq.rightWheel = 0;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["Albert.move_forward_for_secs(%1)"]}
     },
     "albert_move_backward_for_secs": {
         "color": "#00979D",
@@ -183,7 +186,8 @@ Entry.block = {
                 sq.rightWheel = 0;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["Albert.move_backward_for_secs(%1)"]}
     },
     "albert_turn_for_secs": {
         "color": "#00979D",
@@ -258,7 +262,8 @@ Entry.block = {
                 sq.rightWheel = 0;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["Albert.turn_for_secs(%1, %2)"]}
     },
     "albert_change_both_wheels_by": {
         "color": "#00979D",
@@ -307,7 +312,8 @@ Entry.block = {
             sq.leftWheel = sq.leftWheel != undefined ? sq.leftWheel + left : left;
             sq.rightWheel = sq.rightWheel != undefined ? sq.rightWheel + right : right;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Albert.change_both_wheels(%1, %2)"]}
     },
     "albert_set_both_wheels_to": {
         "color": "#00979D",
@@ -354,7 +360,8 @@ Entry.block = {
             sq.leftWheel = script.getNumberValue('LEFT');
             sq.rightWheel = script.getNumberValue('RIGHT');
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Albert.set_both_wheels(%1, %2)"]}
     },
     "albert_change_wheel_by": {
         "color": "#00979D",
@@ -412,7 +419,8 @@ Entry.block = {
                 sq.rightWheel = sq.rightWheel != undefined ? sq.rightWheel + value : value;
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Albert.change_wheel(%1, %2)"]}
     },
     "albert_set_wheel_to": {
         "color": "#00979D",
@@ -470,7 +478,8 @@ Entry.block = {
                 sq.rightWheel = value;
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Albert.set_wheel(%1, %2)"]}
     },
     "albert_stop": {
         "color": "#00979D",
@@ -500,7 +509,8 @@ Entry.block = {
             sq.leftWheel = 0;
             sq.rightWheel = 0;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Albert.stop()"]}
     },
     "albert_set_pad_size_to": {
         "color": "#00979D",
@@ -548,7 +558,8 @@ Entry.block = {
             sq.padWidth = script.getNumberValue('WIDTH');
             sq.padHeight = script.getNumberValue('HEIGHT');
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Albert.set_pad_size(%1, %2)"]}
     },
     "albert_set_eye_to": {
         "color": "#00979D",
@@ -609,7 +620,8 @@ Entry.block = {
                 sq.rightEye = color;
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Albert.set_eye(%1, %2)"]}
     },
     "albert_clear_eye": {
         "color": "#00979D",
@@ -654,7 +666,8 @@ Entry.block = {
                 sq.rightEye = 0;
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Albert.clear_eye(%1)"]}
     },
     "albert_body_led": {
         "color": "#00979D",
@@ -692,7 +705,8 @@ Entry.block = {
             if (state == 'ON') sq.bodyLed = 1;
             else sq.bodyLed = 0;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Albert.body_led(%1)"]}
     },
     "albert_front_led": {
         "color": "#00979D",
@@ -730,7 +744,8 @@ Entry.block = {
             if (state == 'ON') sq.frontLed = 1;
             else sq.frontLed = 0;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Albert.front_led(%1)"]}
     },
     "albert_beep": {
         "color": "#00979D",
@@ -773,7 +788,8 @@ Entry.block = {
                 sq.buzzer = 0;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["Albert.beep()"]}
     },
     "albert_change_buzzer_by": {
         "color": "#00979D",
@@ -812,7 +828,8 @@ Entry.block = {
             sq.buzzer = sq.buzzer != undefined ? sq.buzzer + value : value;
             sq.note = 0;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Albert.change_buzzer(%1)"]}
     },
     "albert_set_buzzer_to": {
         "color": "#00979D",
@@ -850,7 +867,8 @@ Entry.block = {
             sq.buzzer = script.getNumberValue('VALUE');
             sq.note = 0;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Albert.set_buzzer(%1)"]}
     },
     "albert_clear_buzzer": {
         "color": "#00979D",
@@ -875,7 +893,8 @@ Entry.block = {
             sq.buzzer = 0;
             sq.note = 0;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Albert.clear_buzzer()"]}
     },
     "albert_play_note_for": {
         "color": "#00979D",
@@ -980,7 +999,8 @@ Entry.block = {
                 sq.note = 0;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["Albert.play_note(%1, %2, %3)"]}
     },
     "albert_rest_for": {
         "color": "#00979D",
@@ -1036,7 +1056,8 @@ Entry.block = {
                 Entry.engine.isContinue = false;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["Albert.rest(%1)"]}
     },
     "albert_change_tempo_by": {
         "color": "#00979D",
@@ -1073,7 +1094,8 @@ Entry.block = {
             Entry.Albert.tempo += script.getNumberValue('VALUE');
             if (Entry.Albert.tempo < 1) Entry.Albert.tempo = 1;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Albert.change_tempo(%1)"]}
     },
     "albert_set_tempo_to": {
         "color": "#00979D",
@@ -1110,7 +1132,8 @@ Entry.block = {
             Entry.Albert.tempo = script.getNumberValue('VALUE');
             if (Entry.Albert.tempo < 1) Entry.Albert.tempo = 1;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Albert.set_tempo(%1)"]}
     },
     "albert_move_forward": {
         "color": "#00979D",
@@ -1149,7 +1172,8 @@ Entry.block = {
                 sq.rightWheel = 0;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["Albert.move_forward()"]}
     },
     "albert_move_backward": {
         "color": "#00979D",
@@ -1190,7 +1214,8 @@ Entry.block = {
                 sq.rightWheel = 0;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["Albert.move_backward()"]}
     },
     "albert_turn_around": {
         "color": "#00979D",
@@ -1247,7 +1272,8 @@ Entry.block = {
                 sq.rightWheel = 0;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["Albert.turn_around()"]}
     },
     "albert_set_led_to": {
         "color": "#00979D",
@@ -1305,7 +1331,8 @@ Entry.block = {
                 sq.rightEye = color;
 
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Albert.set_led(%1, %2)"]}
     },
     "albert_clear_led": {
         "color": "#00979D",
@@ -1345,7 +1372,8 @@ Entry.block = {
             else sq.rightEye = 0;
 
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Albert.clear_led(%1)"]}
     },
     "albert_change_wheels_by": {
         "color": "#00979D",
@@ -1400,7 +1428,8 @@ Entry.block = {
                 }
 
                 return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Albert.change_wheels(%1, %2)"]}
     },
     "albert_set_wheels_to": {
         "color": "#00979D",
@@ -1448,7 +1477,8 @@ Entry.block = {
             }
 
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Albert.set_wheels(%1, %2)"]}
     },
     "arduino_text": {
         "color": "#00979D",
@@ -1469,7 +1499,8 @@ Entry.block = {
         },
         "func": function (sprite, script) {
             return script.getStringField("NAME");
-        }
+        },
+        "syntax": {"js": [], "py": ["%1arduino_text#"]}
     },
     "arduino_send": {
         "color": "#00979D",
@@ -1495,7 +1526,8 @@ Entry.block = {
             xmlHttp.send(String(signal));
             Entry.assert(xmlHttp.status == 200, "arduino is not connected");
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Arduino.send(%1)"]}
     },
     "arduino_get_number": {
         "color": "#00979D",
@@ -1522,7 +1554,8 @@ Entry.block = {
             Entry.assert(xmlHttp.status == 200, "arduino is not connected");
             var data = xmlHttp.responseText;
             return Number(data);
-        }
+        },
+        "syntax": {"js": [], "py": ["Arduino.number(%1)"]}
     },
     "arduino_get_string": {
         "color": "#00979D",
@@ -1549,7 +1582,8 @@ Entry.block = {
             Entry.assert(xmlHttp.status == 200, "arduino is not connected");
             var data = xmlHttp.responseText;
             return data;
-        }
+        },
+        "syntax": {"js": [], "py": ["Arduino.string(%1)"]}
     },
     "arduino_get_sensor_number": {
         "color": "#00979D",
@@ -1580,7 +1614,8 @@ Entry.block = {
         },
         "func": function (sprite, script) {
             return script.getStringField("PORT");
-        }
+        },
+        "syntax": {"js": [], "py": ["%1arduino_get_sensor_number#"]}
     },
     "arduino_get_port_number": {
         "color": "#00979D",
@@ -1619,7 +1654,8 @@ Entry.block = {
         },
         "func": function (sprite, script) {
             return script.getStringField("PORT");
-        }
+        },
+        "syntax": {"js": [], "py": ["%1arduino_get_sensor_number#"]}
     },
     "arduino_get_pwm_port_number": {
         "color": "#00979D",
@@ -1650,7 +1686,8 @@ Entry.block = {
         },
         "func": function (sprite, script) {
             return script.getStringField("PORT");
-        }
+        },
+        "syntax": {"js": [], "py": ["%1arduino_get_pwm_port_number#"]}
     },
     "arduino_get_number_sensor_value": {
         "color": "#00979D",
@@ -1680,7 +1717,8 @@ Entry.block = {
         "func": function (sprite, script) {
             var signal = script.getValue("VALUE", script);
             return Entry.hw.getAnalogPortValue(signal[1]);
-        }
+        },
+        "syntax": {"js": [], "py": ["Arduino.sensor_value(%1)"]}
     },
     "arduino_get_digital_value": {
         "color": "#00979D",
@@ -1710,7 +1748,8 @@ Entry.block = {
         "func": function (sprite, script) {
             var signal = script.getNumberValue("VALUE", script);
             return Entry.hw.getDigitalPortValue(signal);
-        }
+        },
+        "syntax": {"js": [], "py": ["Arduino.digital_value(%1)"]}
     },
     "arduino_toggle_led": {
         "color": "#00979D",
@@ -1760,7 +1799,8 @@ Entry.block = {
             var value = operator == "on" ? 255 : 0;
             Entry.hw.setDigitalPortValue(port, value);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Arduino.toggle_led(%1, %2)"]}
     },
     "arduino_toggle_pwm": {
         "color": "#00979D",
@@ -1809,7 +1849,8 @@ Entry.block = {
             value = Math.min(value, 255);
             Entry.hw.setDigitalPortValue(port, value);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Arduino.toggle_pwm(%1, %2)"]}
     },
     "arduino_convert_scale": {
         "color": "#00979D",
@@ -1901,7 +1942,8 @@ Entry.block = {
             result = Math.min(value5, result);
             result = Math.max(value4, result);
             return Math.round(result);
-        }
+        },
+        "syntax": {"js": [], "py": ["Arduino.convert_scale(%1, %2, %3, %4, %5)"]}
     },
     "arduino_ext_get_analog_value": {
         "color": "#00979D",
@@ -2431,7 +2473,8 @@ Entry.block = {
         "isNotFor": [ "sensorBoard" ],
         "func": function (sprite, script) {
             return Entry.hw.getAnalogPortValue(script.getField("PORT", script));
-        }
+        },
+        "syntax": {"js": [], "py": ["Sensorboard.sensor_value(%1)"]}
     },
     "sensorBoard_is_button_pressed": {
         "color": "#00979D",
@@ -2463,7 +2506,8 @@ Entry.block = {
         "isNotFor": [ "sensorBoard" ],
         "func": function (sprite, script) {
             return Entry.hw.getDigitalPortValue(script.getNumberField("PORT", script));
-        }
+        },
+        "syntax": {"js": [], "py": ["Sensorboard.is_button_pressed(%1)"]}
     },
     "sensorBoard_led": {
         "color": "#00979D",
@@ -2511,7 +2555,8 @@ Entry.block = {
             Entry.hw.setDigitalPortValue(script.getField("PORT"),
                                          script.getNumberField("OPERATOR"));
                                          return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Sensorboard.led(%1, %2)"]}
     },
     "arduino_download_connector": {
         "skeleton": "basic_button",
@@ -2616,7 +2661,8 @@ Entry.block = {
         },
         "func": function (sprite, script) {
             return script.getStringField("PORT");
-        }
+        },
+        "syntax": {"js": [], "py": ["Codeino.sensor_number(%1)"]}
     },
     "CODEino_get_named_sensor_value": {
         "color": "#00979D",
@@ -2651,7 +2697,8 @@ Entry.block = {
         "isNotFor": [ "CODEino" ],
         "func": function (sprite, script) {
             return Entry.hw.getAnalogPortValue(script.getField("PORT", script));
-        }
+        },
+        "syntax": {"js": [], "py": ["Codeino.sensor_value(%1)"]}
     },
     "CODEino_get_sound_status": {
         "color": "#00979D",
@@ -2684,7 +2731,8 @@ Entry.block = {
             var value2 = 0;
             if (value1 == "GREAT") return Entry.hw.getAnalogPortValue(value2) > 600 ? 1 : 0;
             else return Entry.hw.getAnalogPortValue(value2) < 600 ? 1 : 0;
-        }
+        },
+        "syntax": {"js": [], "py": ["Codeino.sound_status(%1)"]}
     },
     "CODEino_get_light_status": {
         "color": "#00979D",
@@ -2717,7 +2765,8 @@ Entry.block = {
             var value2 = 1;
             if (value1 == "DARK") return Entry.hw.getAnalogPortValue(value2) > 800 ? 1 : 0;
             else return Entry.hw.getAnalogPortValue(value2) < 800 ? 1 : 0;
-        }
+        },
+        "syntax": {"js": [], "py": ["Codeino.light_status(%1)"]}
     },
     "CODEino_is_button_pressed": {
         "color": "#00979D",
@@ -2754,7 +2803,8 @@ Entry.block = {
                 value = value - 14;
                 return !Entry.hw.getAnalogPortValue(value);
             } else return !Entry.hw.getDigitalPortValue(value);
-        }
+        },
+        "syntax": {"js": [], "py": ["Codeino.is_button_pressed(%1)"]}
     },
     "CODEino_get_accelerometer_direction": {
         "color": "#00979D",
@@ -2806,7 +2856,8 @@ Entry.block = {
             if (value1 == "LEFT" || value1 == "REAR") return result < -30 ? 1 : 0;
             else if (value1 == "RIGHT" || value1 == "FRONT") return result > 30 ? 1 : 0;
             else if (value1 == "REVERSE") return result < -50 ? 1 : 0;
-        }
+        },
+        "syntax": {"js": [], "py": ["Codeino.accelerometer_direction(%1)"]}
     },
     "CODEino_get_accelerometer_value": {
         "color": "#00979D",
@@ -2858,7 +2909,8 @@ Entry.block = {
             result = Math.min(value5, result);
             result = Math.max(value4, result);
             return Math.round(result);
-        }
+        },
+        "syntax": {"js": [], "py": ["Codeino.accelerometer_value(%1)"]}
     },
     "nemoino_get_named_sensor_value": {
         "color": "#00979D",
@@ -3102,7 +3154,8 @@ Entry.block = {
         "func": function (sprite, script) {
             var port = script.getStringField("PORT");
             return Entry.hw.portData[port].value;
-        }
+        },
+        "syntax": {"js": [], "py": ["Bitbrick.sensor_value(%1)"]}
     },
     "bitbrick_is_touch_pressed": {
         "color": "#00979D",
@@ -3129,7 +3182,8 @@ Entry.block = {
         "isNotFor": [ "bitbrick" ],
         "func": function (sprite, script) {
             return Entry.hw.portData[script.getStringField("PORT")].value === 0;
-        }
+        },
+        "syntax": {"js": [], "py": ["Bitbrick.is_touch_pressed(%1)"]}
     },
     "bitbrick_turn_off_color_led": {
         "color": "#00979D",
@@ -3155,7 +3209,8 @@ Entry.block = {
             Entry.hw.sendQueue["LEDG"] = 0;
             Entry.hw.sendQueue["LEDB"] = 0;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Bitbrick.turn_off_color_led()"]}
     },
     "bitbrick_turn_on_color_led_by_rgb": {
         "color": "#00979D",
@@ -3219,7 +3274,8 @@ Entry.block = {
                 sq["LEDG"] = adjustor(green, min, max);
                 sq["LEDB"] = adjustor(blue, min, max);
                 return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Bitbrick.color_led_by_rgb(%1, %2, %3)"]}
     },
     "bitbrick_turn_on_color_led_by_picker": {
         "color": "#00979D",
@@ -3251,7 +3307,8 @@ Entry.block = {
             Entry.hw.sendQueue["LEDG"] = parseInt(port.substr(3,2), 16);
             Entry.hw.sendQueue["LEDB"] = parseInt(port.substr(5,2), 16);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Bitbrick.color_led_by_picker(%1)"]}
     },
     "bitbrick_turn_on_color_led_by_value": {
         "color": "#00979D",
@@ -3307,7 +3364,8 @@ Entry.block = {
             Entry.hw.sendQueue["LEDG"] = green;
             Entry.hw.sendQueue["LEDB"] = blue;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Bitbrick.color_led_by_value(%1)"]}
     },
     "bitbrick_buzzer": {
         "color": "#00979D",
@@ -3351,7 +3409,8 @@ Entry.block = {
                 delete script.isStart;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["Bitbrick.buzzer(%1)"]}
     },
     "bitbrick_turn_off_all_motors": {
         "color": "#00979D",
@@ -3381,7 +3440,8 @@ Entry.block = {
                 sq[dc[1]] = 128;
             });
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Bitbrick.turn_off_all_motors()"]}
     },
     "bitbrick_dc_speed": {
         "color": "#00979D",
@@ -3430,7 +3490,8 @@ Entry.block = {
             Entry.hw.sendQueue[script.getStringField("PORT")] =
                 value + 128;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Bitbrick.dc_speed(%1, %2)"]}
     },
     "bitbrick_dc_direction_speed": {
         "color": "#00979D",
@@ -3491,7 +3552,8 @@ Entry.block = {
             Entry.hw.sendQueue[script.getStringField("PORT")] =
                 isFront ? value + 128 : 128 - value;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Bitbrick.dc_direction_speed(%1, %2, %3)"]}
     },
     "bitbrick_servomotor_angle": {
         "color": "#00979D",
@@ -3538,7 +3600,8 @@ Entry.block = {
             value = Math.max(value, Entry.Bitbrick.servoMinValue);
             Entry.hw.sendQueue[script.getStringField("PORT")] = value;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Bitbrick.servomotor_angle(%1, %2)"]}
     },
     "bitbrick_convert_scale": {
         "color": "#00979D",
@@ -3622,7 +3685,8 @@ Entry.block = {
             result = Math.min(value5, result);
             result = Math.max(value4, result);
             return Math.round(result);
-        }
+        },
+        "syntax": {"js": [], "py": ["Bitbrick.convert_scale(%1, %2, %3, %4, %5)"]}
     },
     "start_drawing": {
         "color": "#FF9E20",
@@ -3653,7 +3717,8 @@ Entry.block = {
             sprite.brush.moveTo(sprite.getX(), sprite.getY()*-1);
 
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.start_drawing()"]}
     },
     "stop_drawing": {
         "color": "#FF9E20",
@@ -3678,7 +3743,8 @@ Entry.block = {
                 sprite.brush.stop = true;
 
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.stop_drawing()"]}
     },
     "set_color": {
         "color": "#FF9E20",
@@ -3722,7 +3788,8 @@ Entry.block = {
             }
 
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.set_brush_color(%1)"]}
     },
     "set_random_color": {
         "color": "#FF9E20",
@@ -3757,7 +3824,8 @@ Entry.block = {
                 sprite.brush.moveTo(sprite.getX(), sprite.getY()*-1);
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.set_brush_color_random()"]}
     },
     "change_thickness": {
         "color": "#FF9E20",
@@ -3809,7 +3877,8 @@ Entry.block = {
             }
 
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.add_brush_size(%1)"]}
     },
     "set_thickness": {
         "color": "#FF9E20",
@@ -3858,7 +3927,8 @@ Entry.block = {
             }
 
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.set_brush_size(%1)"]}
     },
     "change_opacity": {
         "color": "#FF9E20",
@@ -3909,7 +3979,8 @@ Entry.block = {
             }
 
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "set_opacity": {
         "color": "#FF9E20",
@@ -3960,7 +4031,8 @@ Entry.block = {
 
             return script.callReturn();
 
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "brush_erase_all": {
         "color": "#FF9E20",
@@ -3996,7 +4068,8 @@ Entry.block = {
             stampEntities = null;
 
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.clear_drawing()"]}
     },
     "brush_stamp": {
         "color": "#FF9E20",
@@ -4020,7 +4093,8 @@ Entry.block = {
             sprite.parent.addStampEntity(sprite);
 
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.stamp()"]}
     },
     "change_brush_transparency": {
         "color": "#FF9E20",
@@ -4071,7 +4145,8 @@ Entry.block = {
             }
 
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.add_brush_transparency(%1)"]}
     },
     "set_brush_tranparency": {
         "color": "#FF9E20",
@@ -4122,7 +4197,8 @@ Entry.block = {
 
             return script.callReturn();
 
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.set_brush_transparency(%1)"]}
     },
     "number": {
         "color": "#FFD974",
@@ -4144,7 +4220,8 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getField('NUM', script);
         },
-        "isPrimitive": true
+        "isPrimitive": true,
+        "syntax": {"js": ["Scope", "%1"], "py": ["%1number#"]}
     },
     "angle": {
         "color": "#FFD974",
@@ -4165,7 +4242,8 @@ Entry.block = {
         },
         "func": function (sprite, script) {
             return script.getNumberField("ANGLE");
-        }
+        },
+        "syntax": {"js": [], "py": ["%1angle#"]}
     },
     "get_x_coordinate": {
         "color": "#FFD974",
@@ -4187,7 +4265,8 @@ Entry.block = {
         "isNotFor": [],
         "func": function (sprite, script) {
             return sprite.getX();
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "get_y_coordinate": {
         "color": "#FFD974",
@@ -4209,7 +4288,8 @@ Entry.block = {
         "isNotFor": [],
         "func": function (sprite, script) {
             return sprite.getY();
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "get_angle": {
         "color": "#FFD974",
@@ -4228,7 +4308,8 @@ Entry.block = {
         },
         "func": function (sprite, script) {
             return parseFloat(sprite.getRotation().toFixed(1));
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "get_rotation_direction": {
         "color": "#FFD974",
@@ -4261,7 +4342,8 @@ Entry.block = {
                 return parseFloat(sprite.getDirection().toFixed(1));
             else
                 return parseFloat(sprite.getRotation().toFixed(1));
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "distance_something": {
         "color": "#FFD974",
@@ -4311,7 +4393,8 @@ Entry.block = {
                         Math.pow(sprite.getY() - targetEntity.getY(), 2)
                 );
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.value_of_distance(%2)"]}
     },
     "coordinate_mouse": {
         "color": "#FFD974",
@@ -4356,7 +4439,8 @@ Entry.block = {
             } else {
                 return Number(Entry.stage.mouseCoordinate.y);
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.coordinate_of_mouse(%2)"]}
     },
     "coordinate_object": {
         "color": "#FFD974",
@@ -4437,7 +4521,8 @@ Entry.block = {
                     var picture = pictures[pictures.indexOf(targetEntity.picture)];
                     return picture.name;
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.value_of(%2, %4)"]}
     },
     "calc_basic": {
         "color": "#FFD974",
@@ -4557,7 +4642,8 @@ Entry.block = {
                 return leftValue * rightValue;
             else
                 return leftValue / rightValue;
-        }
+        },
+        "syntax": {"js": [], "py": ["(%1 %2calc_basic# %3)"]}
     },
     "calc_plus": {
         "color": "#FFD974",
@@ -4590,7 +4676,8 @@ Entry.block = {
             var leftValue = script.getNumberValue("LEFTHAND", script);
             var rightValue = script.getNumberValue("RIGHTHAND", script);
             return leftValue + rightValue;
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "calc_minus": {
         "color": "#FFD974",
@@ -4623,7 +4710,8 @@ Entry.block = {
             var leftValue = script.getNumberValue("LEFTHAND", script);
             var rightValue = script.getNumberValue("RIGHTHAND", script);
             return leftValue - rightValue;
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "calc_times": {
         "color": "#FFD974",
@@ -4656,7 +4744,8 @@ Entry.block = {
             var leftValue = script.getNumberValue("LEFTHAND", script);
             var rightValue = script.getNumberValue("RIGHTHAND", script);
             return leftValue * rightValue;
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "calc_divide": {
         "color": "#FFD974",
@@ -4689,7 +4778,8 @@ Entry.block = {
             var leftValue = script.getNumberValue("LEFTHAND", script);
             var rightValue = script.getNumberValue("RIGHTHAND", script);
             return leftValue / rightValue;
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "calc_mod": {
         "color": "#FFD974",
@@ -4741,7 +4831,8 @@ Entry.block = {
             var leftValue = script.getNumberValue("LEFTHAND", script);
             var rightValue = script.getNumberValue("RIGHTHAND", script);
             return leftValue % rightValue;
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.get_remainder(%1, %3)"]}
     },
     "calc_share": {
         "color": "#FFD974",
@@ -4793,7 +4884,8 @@ Entry.block = {
             var leftValue = script.getNumberValue("LEFTHAND", script);
             var rightValue = script.getNumberValue("RIGHTHAND", script);
             return Math.floor(leftValue/rightValue);
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "calc_operation": {
         "color": "#FFD974",
@@ -4903,8 +4995,10 @@ Entry.block = {
                 default:
                     returnVal = Math[operator](value);
             }
+
             return returnVal;
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.value_of_math_operation(%2, %4)"]}
     },
     "calc_rand": {
         "color": "#FFD974",
@@ -4969,7 +5063,8 @@ Entry.block = {
                 return  (Math.random() * (right - left) + left).toFixed(2);
             else
                 return  Math.floor((Math.random() * (right - left +1) + left));
-        }
+        },
+        "syntax": {"js": [], "py": ["random.randint(%2, %4)"]}
     },
     "get_date": {
         "color": "#FFD974",
@@ -5026,7 +5121,8 @@ Entry.block = {
                 return dateTime.getMinutes();
             else
                 return dateTime.getSeconds();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.value_of_date_time(%2)"]}
     },
     "get_sound_duration": {
         "color": "#FFD974",
@@ -5069,7 +5165,8 @@ Entry.block = {
                 if (soundsArr[i].id == soundId)
                     return soundsArr[i].duration;
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.value_of_sound_duration(%2)"]}
     },
     "reset_project_timer": {
         "color": "#FFD974",
@@ -5103,10 +5200,12 @@ Entry.block = {
         "func": function (sprite, script) {
             Entry.engine.updateProjectTimer(0);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "set_visible_project_timer": {
         "color": "#FFD974",
+        vimModeFontColor: "#000",
         "skeleton": "basic",
         "statements": [],
         "params": [
@@ -5166,7 +5265,8 @@ Entry.block = {
                 timer.setVisible(false);
 
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.set_timer_mode(%2)"]}
     },
     "timer_variable": {
         "color": "#FFD974",
@@ -5190,7 +5290,8 @@ Entry.block = {
         },
         "func": function (sprite, script) {
             return Entry.container.inputValue.getValue();
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "get_project_timer_value": {
         "color": "#FFD974",
@@ -5228,7 +5329,8 @@ Entry.block = {
         "isNotFor": [],
         "func": function (sprite, script) {
             return Entry.engine.projectTimer.getValue();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.value_timer()"]}
     },
     "char_at": {
         "color": "#FFD974",
@@ -5289,7 +5391,8 @@ Entry.block = {
                 throw new Error();
             else
                 return str[index];
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.string_index_of(%2, %4)"]}
     },
     "length_of_string": {
         "color": "#FFD974",
@@ -5330,7 +5433,8 @@ Entry.block = {
         "isNotFor": [],
         "func": function (sprite, script) {
             return script.getStringValue("STRING", script).length;
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.string_length(%2)"]}
     },
     "substring": {
         "color": "#FFD974",
@@ -5408,7 +5512,8 @@ Entry.block = {
                 throw new Error();
             else
                 return str.substring(Math.min(start, end), Math.max(start, end)+1);
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.string_substring(%2, %4, %6)"]}
     },
     "replace_string": {
         "color": "#FFD974",
@@ -5483,7 +5588,8 @@ Entry.block = {
                     new RegExp(script.getStringValue("OLD_WORD", script), 'gm'),
                     script.getStringValue("NEW_WORD", script)
                 );
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.string_replace(%2, %4, %6)"]}
     },
     "change_string_case": {
         "color": "#FFD974",
@@ -5542,7 +5648,8 @@ Entry.block = {
         "isNotFor": [],
         "func": function (sprite, script) {
             return script.getStringValue("STRING", script)[script.getField("CASE", script)]();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.string_case(%2, %4)"]}
     },
     "index_of_string": {
         "color": "#FFD974",
@@ -5601,7 +5708,8 @@ Entry.block = {
             var target = script.getStringValue("RIGHTHAND", script);
             var index = str.indexOf(target);
             return index > -1 ? index + 1 : 0;
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.string_start_index(%2, %4)"]}
     },
     "combine_something": {
         "color": "#FFD974",
@@ -5660,7 +5768,8 @@ Entry.block = {
             var rightValue = script.getStringValue("VALUE2", script);
 
             return leftValue + rightValue;
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.string_concat(%2, %4)"]}
     },
     "get_sound_volume": {
         "color": "#FFD974",
@@ -5689,7 +5798,8 @@ Entry.block = {
         ],
         "func": function (sprite, script) {
             return createjs.Sound.getVolume() * 100;
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.value_of_sound()"]}
     },
     "quotient_and_mod": {
         "color": "#FFD974",
@@ -5765,10 +5875,12 @@ Entry.block = {
                 return Math.floor(left/right);
             else
                 return left % right;
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.value_div(%2, %4, %6)"]}
     },
     "choose_project_timer_action": {
         "color": "#FFD974",
+        vimModeFontColor: "#000",
         "skeleton": "basic",
         "statements": [],
         "params": [
@@ -5855,7 +5967,8 @@ Entry.block = {
 
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.timer(%2)"]}
     },
     "wait_second": {
         "color": "#498deb",
@@ -5907,7 +6020,8 @@ Entry.block = {
                 Entry.engine.isContinue = false;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.wait_for_seconds(%1)"]}
     },
     "repeat_basic": {
         "color": "#498deb",
@@ -5963,7 +6077,8 @@ Entry.block = {
                 delete script.iterCount;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["for i in range(%1):\n$1"]}
     },
     "repeat_inf": {
         "color": "#498deb",
@@ -5994,7 +6109,8 @@ Entry.block = {
             //return script.getStatement("DO", script);
             script.isLooped = true;
             return script.getStatement('DO');
-        }
+        },
+        "syntax": {"js": [], "py": ["while True:\n$1"]}
     },
     "stop_repeat": {
         "color": "#498deb",
@@ -6018,7 +6134,8 @@ Entry.block = {
         "isNotFor": [],
         "func": function (sprite, script) {
             return this.executor.breakLoop();
-        }
+        },
+        "syntax": {"js": [], "py": ["break"]}
     },
     "wait_until_true": {
         "color": "#498deb",
@@ -6057,7 +6174,8 @@ Entry.block = {
             } else {
                 return script;
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.wait_until(%1)"]}
     },
     "_if": {
         "color": "#498deb",
@@ -6108,7 +6226,8 @@ Entry.block = {
             } else {
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["if %1:\n$1"]}
     },
     "if_else": {
         "color": "#498deb",
@@ -6165,7 +6284,8 @@ Entry.block = {
                 return script.getStatement("STACK_IF", script);
             else
                 return script.getStatement("STACK_ELSE", script);
-        }
+        },
+        "syntax": {"js": [], "py": ["if %1:\n$1\nelse:\n$2"]}
     },
     "create_clone": {
         "color": "#498deb",
@@ -6205,7 +6325,8 @@ Entry.block = {
                 object.addCloneEntity(sprite.parent, null, null);
             }
             return returnBlock;
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.create_clone(%1)"]}
     },
     "delete_clone": {
         "color": "#498deb",
@@ -6230,7 +6351,8 @@ Entry.block = {
                 return script.callReturn();
             sprite.removeClone();
             return this.die();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.remove_clone()"]}
     },
     "when_clone_start": {
         "color": "#498deb",
@@ -6257,7 +6379,8 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.callReturn();
         },
-        "event": "when_clone_start"
+        "event": "when_clone_start", 
+        "syntax": {"js": [], "py": ["def entry_event_clone_create():"]}
     },
     "stop_run": {
         "color": "#498deb",
@@ -6276,7 +6399,8 @@ Entry.block = {
         },
         "func": function (sprite, script) {
             return Entry.engine.toggleStop();
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "repeat_while_true": {
         "color": "#498deb",
@@ -6336,7 +6460,8 @@ Entry.block = {
 
             return value ? script.getStatement("DO", script) :
                 script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["not yet supported in textcoding"]}
     },
     "stop_object": {
         "color": "#498deb",
@@ -6401,7 +6526,8 @@ Entry.block = {
                     }
                     return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.stop(%1)"]}
     },
     "restart_project": {
         "color": "#498deb",
@@ -6424,7 +6550,8 @@ Entry.block = {
         "func": function (sprite, script) {
             Entry.engine.toggleStop();
             Entry.engine.toggleRun();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.restart()"]}
     },
     "remove_all_clones": {
         "color": "#498deb",
@@ -6452,7 +6579,8 @@ Entry.block = {
             clonedEntities = null;
 
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.remove_all_clone()"]}
     },
     "functionAddButton": {
         "skeleton": "basic_button",
@@ -6497,7 +6625,9 @@ Entry.block = {
         "def": {
             "params": [ "이름" ],
             "type": "function_field_label"
-        }
+        },
+        //"syntax": {"js": [], "py": ["%1function_field_label#"]}
+        "syntax": {"js": [], "py": ["name"]}
     },
     "function_field_string": {
         "skeleton": "basic_param",
@@ -6526,7 +6656,9 @@ Entry.block = {
                 }
             ],
             "type": "function_field_string"
-        }
+        },
+        //"syntax": {"js": [], "py": ["%1function_field_string#"]}
+        "syntax": {"js": [], "py": ["value"]}
     },
     "function_field_boolean": {
         "skeleton": "basic_param",
@@ -6555,7 +6687,9 @@ Entry.block = {
                 }
             ],
             "type": "function_field_boolean"
-        }
+        },
+        //"syntax": {"js": [], "py": ["%1function_field_boolean#"]}
+        "syntax": {"js": [], "py": ["boolean"]}
     },
     "function_param_string": {
         "skeleton": "basic_string_field",
@@ -6570,7 +6704,8 @@ Entry.block = {
         },
         func: function() {
             return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "function_param_boolean": {
         "skeleton": "basic_boolean_field",
@@ -6585,7 +6720,8 @@ Entry.block = {
         },
         func: function() {
             return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "function_create": {
         "skeleton": "basic_create",
@@ -6610,7 +6746,8 @@ Entry.block = {
             FIELD: 0
         },
         func: function() {
-        }
+        },
+        "syntax": {"js": [], "py": ["%1function_create#"]}
     },
     "function_general": {
         "skeleton": "basic",
@@ -6663,7 +6800,8 @@ Entry.block = {
                 this.funcCode.removeExecutor(this.funcExecutor);
                 return Entry.STATIC.BREAK;
             }
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "hamster_hand_found": {
         "color": "#00979D",
@@ -6681,7 +6819,8 @@ Entry.block = {
         "func": function (sprite, script) {
             var pd = Entry.hw.portData;
             return pd.leftProximity > 50 || pd.rightProximity > 50;
-        }
+        },
+        "syntax": {"js": [], "py": ["Hamster.hand_found()"]}
     },
     "hamster_value": {
         "color": "#00979D",
@@ -6722,7 +6861,8 @@ Entry.block = {
             var pd = Entry.hw.portData;
             var dev = script.getField('DEVICE');
             return pd[dev];
-        }
+        },
+        "syntax": {"js": [], "py": ["Hamster.value(%1)"]}
     },
     "hamster_move_forward_once": {
         "color": "#00979D",
@@ -6808,7 +6948,8 @@ Entry.block = {
                 sq.rightWheel = 0;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["Hamster.move_forward()"]}
     },
     "hamster_turn_once": {
         "color": "#00979D",
@@ -6970,7 +7111,8 @@ Entry.block = {
                 sq.rightWheel = 0;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["Hamster.turn(%1)"]}
     },
     "hamster_move_forward_for_secs": {
         "color": "#00979D",
@@ -7028,7 +7170,8 @@ Entry.block = {
                 sq.rightWheel = 0;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["Hamster.move_forward_for_secs(%1)"]}
     },
     "hamster_move_backward_for_secs": {
         "color": "#00979D",
@@ -7086,7 +7229,8 @@ Entry.block = {
                 sq.rightWheel = 0;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["Hamster.move_backward_for_secs(%1)"]}
     },
     "hamster_turn_for_secs": {
         "color": "#00979D",
@@ -7161,7 +7305,8 @@ Entry.block = {
                 sq.rightWheel = 0;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["Hamster.turn_for_secs(%1, %2)"]}
     },
     "hamster_change_both_wheels_by": {
         "color": "#00979D",
@@ -7211,7 +7356,8 @@ Entry.block = {
             sq.rightWheel = sq.rightWheel != undefined ? sq.rightWheel + right : right;
             Entry.Hamster.setLineTracerMode(sq, 0);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Hamster.add_wheels(%1, %2)"]}
     },
     "hamster_set_both_wheels_to": {
         "color": "#00979D",
@@ -7259,7 +7405,8 @@ Entry.block = {
             sq.rightWheel = script.getNumberValue('RIGHT');
             Entry.Hamster.setLineTracerMode(sq, 0);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Hamster.set_wheels(%1, %2)"]}
     },
     "hamster_change_wheel_by": {
         "color": "#00979D",
@@ -7318,7 +7465,8 @@ Entry.block = {
             }
             Entry.Hamster.setLineTracerMode(sq, 0);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Hamster.add_wheel(%1, %2)"]}
     },
     "hamster_set_wheel_to": {
         "color": "#00979D",
@@ -7377,7 +7525,8 @@ Entry.block = {
             }
             Entry.Hamster.setLineTracerMode(sq, 0);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Hamster.set_wheel(%1, %2)"]}
     },
     "hamster_follow_line_using": {
         "color": "#00979D",
@@ -7434,7 +7583,8 @@ Entry.block = {
             sq.rightWheel = 0;
             Entry.Hamster.setLineTracerMode(sq, mode);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Hamster.follow_line(%1, %2)"]}
     },
     "hamster_follow_line_until": {
         "color": "#00979D",
@@ -7509,7 +7659,8 @@ Entry.block = {
                 }
                 return script;
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["Hamster.follow_line_until(%1, %2)"]}
     },
     "hamster_set_following_speed_to": {
         "color": "#00979D",
@@ -7551,7 +7702,8 @@ Entry.block = {
             var sq = Entry.hw.sendQueue;
             sq.lineTracerSpeed = Number(script.getField("SPEED", script));
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Hamster.set_follow_speed(%1)"]}
     },
     "hamster_stop": {
         "color": "#00979D",
@@ -7577,7 +7729,8 @@ Entry.block = {
             sq.rightWheel = 0;
             Entry.Hamster.setLineTracerMode(sq, 0);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Hamster.stop()"]}
     },
     "hamster_set_led_to": {
         "color": "#00979D",
@@ -7638,7 +7791,8 @@ Entry.block = {
                 sq.rightLed = color;
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Hamster.led_on(%1, %2)"]}
     },
     "hamster_clear_led": {
         "color": "#00979D",
@@ -7683,7 +7837,8 @@ Entry.block = {
                 sq.rightLed = 0;
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Hamster.led_off(%1)"]}
     },
     "hamster_beep": {
         "color": "#00979D",
@@ -7726,7 +7881,8 @@ Entry.block = {
                 sq.buzzer = 0;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["Hamster.beep()"]}
     },
     "hamster_change_buzzer_by": {
         "color": "#00979D",
@@ -7765,7 +7921,8 @@ Entry.block = {
             sq.buzzer = sq.buzzer != undefined ? sq.buzzer + value : value;
             sq.note = 0;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Hamster.add_buzzer(%1)"]}
     },
     "hamster_set_buzzer_to": {
         "color": "#00979D",
@@ -7803,7 +7960,8 @@ Entry.block = {
             sq.buzzer = script.getNumberValue('VALUE');
             sq.note = 0;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Hamster.set_buzzer(%1)"]}
     },
     "hamster_clear_buzzer": {
         "color": "#00979D",
@@ -7828,7 +7986,8 @@ Entry.block = {
             sq.buzzer = 0;
             sq.note = 0;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Hamster.stop_buzzer()"]}
     },
     "hamster_play_note_for": {
         "color": "#00979D",
@@ -7933,7 +8092,8 @@ Entry.block = {
                 sq.note = 0;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["Hamster.play_note(%1, %2, %3)"]}
     },
     "hamster_rest_for": {
         "color": "#00979D",
@@ -7989,7 +8149,8 @@ Entry.block = {
                 Entry.engine.isContinue = false;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["Hamster.rest(%1)"]}
     },
     "hamster_change_tempo_by": {
         "color": "#00979D",
@@ -8026,7 +8187,8 @@ Entry.block = {
             Entry.Hamster.tempo += script.getNumberValue('VALUE');
             if (Entry.Hamster.tempo < 1) Entry.Hamster.tempo = 1;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Hamster.add_tempo(%1)"]}
     },
     "hamster_set_tempo_to": {
         "color": "#00979D",
@@ -8063,7 +8225,8 @@ Entry.block = {
             Entry.Hamster.tempo = script.getNumberValue('VALUE');
             if (Entry.Hamster.tempo < 1) Entry.Hamster.tempo = 1;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Hamster.set_tempo(%1)"]}
     },
     "hamster_set_port_to": {
         "color": "#00979D",
@@ -8122,7 +8285,8 @@ Entry.block = {
                 sq.ioModeB = mode;
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Hamster.set_port(%1, %2)"]}
     },
     "hamster_change_output_by": {
         "color": "#00979D",
@@ -8180,7 +8344,8 @@ Entry.block = {
                 sq.outputB = sq.outputB != undefined ? sq.outputB + value : value;
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Hamster.add_output(%1, %2)"]}
     },
     "hamster_set_output_to": {
         "color": "#00979D",
@@ -8238,7 +8403,8 @@ Entry.block = {
                 sq.outputB = value;
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Hamster.set_output(%1, %2)"]}
     },
     "is_clicked": {
         "color": "#AEB8FF",
@@ -8260,7 +8426,8 @@ Entry.block = {
         "isNotFor": [],
         "func": function (sprite, script) {
             return Entry.stage.isClick;
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.is_mouse_clicked()"]}
     },
     "is_press_some_key": {
         "color": "#AEB8FF",
@@ -8290,7 +8457,8 @@ Entry.block = {
         "func": function (sprite, script) {
             var keycode = Number(script.getField("VALUE", script));
             return Entry.pressedKeys.indexOf(keycode) >= 0;
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.is_pressed(%1)"]}
     },
     "reach_something": {
         "color": "#AEB8FF",
@@ -8383,7 +8551,8 @@ Entry.block = {
                 }
             }
             return false;
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.is_reached(%2)"]}
     },
     "boolean_comparison": {
         "color": "#AEB8FF",
@@ -8429,7 +8598,8 @@ Entry.block = {
                 return leftValue > rightValue;
             else
                 return leftValue < rightValue;
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "boolean_equal": {
         "color": "#AEB8FF",
@@ -8475,7 +8645,8 @@ Entry.block = {
             var leftValue = script.getStringValue("LEFTHAND", script);
             var rightValue = script.getStringValue("RIGHTHAND", script);
             return leftValue == rightValue;
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "boolean_bigger": {
         "color": "#AEB8FF",
@@ -8521,7 +8692,8 @@ Entry.block = {
             var leftValue = script.getNumberValue("LEFTHAND", script);
             var rightValue = script.getNumberValue("RIGHTHAND", script);
             return leftValue > rightValue;
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "boolean_smaller": {
         "color": "#AEB8FF",
@@ -8567,7 +8739,8 @@ Entry.block = {
             var leftValue = script.getNumberValue("LEFTHAND", script);
             var rightValue = script.getNumberValue("RIGHTHAND", script);
             return leftValue < rightValue;
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "boolean_and_or": {
         "color": "#AEB8FF",
@@ -8609,7 +8782,8 @@ Entry.block = {
                 return leftValue && rightValue;
             else
                 return leftValue || rightValue;
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "boolean_and": {
         "color": "#AEB8FF",
@@ -8653,7 +8827,8 @@ Entry.block = {
             var leftValue = script.getBooleanValue("LEFTHAND", script);
             var rightValue = script.getBooleanValue("RIGHTHAND", script);
             return leftValue && rightValue;
-        }
+        },
+        "syntax": {"js": [], "py": ["(%1 and %3)"]}
     },
     "boolean_or": {
         "color": "#AEB8FF",
@@ -8693,7 +8868,8 @@ Entry.block = {
             var leftValue = script.getBooleanValue("LEFTHAND", script);
             var rightValue = script.getBooleanValue("RIGHTHAND", script);
             return leftValue || rightValue;
-        }
+        },
+        "syntax": {"js": [], "py": ["(%1 or %3)"]}
     },
     "boolean_not": {
         "color": "#AEB8FF",
@@ -8731,7 +8907,8 @@ Entry.block = {
         "isNotFor": [],
         "func": function (sprite, script) {
             return !script.getBooleanValue("VALUE");
-        }
+        },
+        "syntax": {"js": [], "py": ["(%2 != True)"]}
     },
     "true_or_false": {
         "color": "#AEB8FF",
@@ -8758,7 +8935,8 @@ Entry.block = {
         "func": function (sprite, script) {
             var value = script.children[0].textContent;
             return value == "true";
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "True": {
         "color": "#AEB8FF",
@@ -8779,7 +8957,8 @@ Entry.block = {
         "func": function (sprite, script) {
             return true;
         },
-        "isPrimitive": true
+        "isPrimitive": true,
+        "syntax": {"js": ["Scope", "true"], "py": ["True"]}
     },
     "False": {
         "color": "#AEB8FF",
@@ -8802,7 +8981,8 @@ Entry.block = {
         "func": function (sprite, script) {
             return false;
         },
-        "isPrimitive": true
+        "isPrimitive": true,
+        "syntax": {"js": [], "py": ["False"]}
     },
     "boolean_basic_operator": {
         "color": "#AEB8FF",
@@ -8942,7 +9122,8 @@ Entry.block = {
                 case 'LESS_OR_EQUAL':
                     return Number(leftValue) <= Number(rightValue);
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["(%1 %2boolean_compare# %3)"]}
     },
     "show": {
         "color": "#EC4466",
@@ -8965,7 +9146,8 @@ Entry.block = {
         "func": function (sprite, script) {
             sprite.setVisible(true);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.show()"]}
     },
     "hide": {
         "color": "#EC4466",
@@ -8988,7 +9170,8 @@ Entry.block = {
         "func": function (sprite, script) {
             sprite.setVisible(false);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.hide()"]}
     },
     "dialog_time": {
         "color": "#EC4466",
@@ -9074,7 +9257,8 @@ Entry.block = {
                 }
                 return script;
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.print_for_seconds(%1, %2, %3)"]}
     },
     "dialog": {
         "color": "#EC4466",
@@ -9127,7 +9311,8 @@ Entry.block = {
             new Entry.Dialog(sprite, message, mode);
             sprite.syncDialogVisible(sprite.getVisible());
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.print(%1)"]}
     },
     "remove_dialog": {
         "color": "#EC4466",
@@ -9150,7 +9335,8 @@ Entry.block = {
         "func": function (sprite, script) {
             if(sprite.dialog)   sprite.dialog.remove();
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.print_remove()"]}
     },
     "change_to_nth_shape": {
         "color": "#EC4466",
@@ -9184,7 +9370,8 @@ Entry.block = {
             var picture = sprite.parent.getPicture(imageId);
             sprite.setImage(picture);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "change_to_next_shape": {
         "color": "#EC4466",
@@ -9226,7 +9413,8 @@ Entry.block = {
             }
             sprite.setImage(picture);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.set_shape_of(%1)"]}
     },
     "set_effect_volume": {
         "color": "#EC4466",
@@ -9288,7 +9476,8 @@ Entry.block = {
             }
             sprite.applyFilter(true);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.add_effect(%1, %2)"]}
     },
     "set_effect": {
         "color": "#EC4466",
@@ -9350,7 +9539,8 @@ Entry.block = {
             }
             sprite.applyFilter(true);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.set_effect(%1, %2)"]}
     },
     "erase_all_effects": {
         "color": "#EC4466",
@@ -9373,7 +9563,8 @@ Entry.block = {
         "func": function (sprite, script) {
             sprite.resetFilter();
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.clear_effect()"]}
     },
     "change_scale_percent": {
         "color": "#EC4466",
@@ -9411,7 +9602,8 @@ Entry.block = {
             sprite.setScaleX(sprite.getScaleX() * scaleValue);
             sprite.setScaleY(sprite.getScaleY() * scaleValue);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "set_scale_percent": {
         "color": "#EC4466",
@@ -9450,7 +9642,8 @@ Entry.block = {
             sprite.setScaleX(scaleValue * snapshot.scaleX);
             sprite.setScaleY(scaleValue * snapshot.scaleY);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "change_scale_size": {
         "color": "#EC4466",
@@ -9487,7 +9680,8 @@ Entry.block = {
             var sizeValue = script.getNumberValue("VALUE", script);
             sprite.setSize(sprite.getSize() + sizeValue);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.add_size(%1)"]}
     },
     "set_scale_size": {
         "color": "#EC4466",
@@ -9524,7 +9718,8 @@ Entry.block = {
             var sizeValue = script.getNumberValue("VALUE", script);
             sprite.setSize(sizeValue);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.set_size(%1)"]}
     },
     "flip_y": {
         "color": "#EC4466",
@@ -9547,7 +9742,8 @@ Entry.block = {
         "func": function (sprite, script) {
             sprite.setScaleX((-1)*sprite.getScaleX());
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.flip_vertical()"]}
     },
     "flip_x": {
         "color": "#EC4466",
@@ -9572,7 +9768,8 @@ Entry.block = {
         "func": function (sprite, script) {
             sprite.setScaleY((-1)*sprite.getScaleY());
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.flip_horizontal()"]}
     },
     "set_object_order": {
         "color": "#EC4466",
@@ -9611,7 +9808,8 @@ Entry.block = {
                 return script.callReturn();
             } else
                 throw new Error('object is not available');
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "get_pictures": {
         "color": "#EC4466",
@@ -9635,7 +9833,8 @@ Entry.block = {
         },
         "func": function (sprite, script) {
             return script.getStringField("VALUE");
-        }
+        },
+        "syntax": {"js": [], "py": ["%1get_pictures#"]}
     },
     "change_to_some_shape": {
         "color": "#EC4466",
@@ -9675,7 +9874,8 @@ Entry.block = {
 
             sprite.setImage(picture);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.set_shape(%1)"]}
     },
     "add_effect_amount": {
         "color": "#EC4466",
@@ -9733,7 +9933,8 @@ Entry.block = {
             }
             sprite.applyFilter(true);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.add_effect(%1, %2)"]}
     },
     "change_effect_amount": {
         "color": "#EC4466",
@@ -9791,7 +9992,8 @@ Entry.block = {
             }
             sprite.applyFilter(true);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.set_effect(%1, %2)"]}
     },
     "set_effect_amount": {
         "color": "#EC4466",
@@ -9848,7 +10050,8 @@ Entry.block = {
             }
             sprite.applyFilter(true);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "set_entity_effect": {
         "color": "#EC4466",
@@ -9905,7 +10108,8 @@ Entry.block = {
             }
             sprite.applyFilter(true);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "change_object_index": {
         "color": "#EC4466",
@@ -9968,7 +10172,8 @@ Entry.block = {
 
             Entry.container.moveElementByBlock(currentIndex, targetIndex);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.set_layer(%1)"]}
     },
     "move_direction": {
         "color": "#A751E3",
@@ -10009,7 +10214,8 @@ Entry.block = {
                 sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.move(%1)"]}
     },
     "move_x": {
         "color": "#A751E3",
@@ -10049,7 +10255,8 @@ Entry.block = {
                 sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.set_x(%1)"]}
     },
     "move_y": {
         "color": "#A751E3",
@@ -10089,7 +10296,8 @@ Entry.block = {
                 sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.set_y(%1)"]}
     },
     "locate_xy_time": {
         "color": "#A751E3",
@@ -10173,7 +10381,8 @@ Entry.block = {
                     sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);
                 }
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.set_xy_for_seconds(%1, %2, %3)"]}
     },
     "rotate_by_angle": {
         "color": "#A751E3",
@@ -10210,7 +10419,8 @@ Entry.block = {
             var value = script.getNumberValue("VALUE", script);
             sprite.setRotation(sprite.getRotation() + value);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "rotate_by_angle_dropdown": {
         "color": "#A751E3",
@@ -10248,7 +10458,8 @@ Entry.block = {
             var value = script.getField("VALUE", script);
             sprite.setRotation(sprite.getRotation() + Number(value));
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "see_angle": {
         "color": "#A751E3",
@@ -10285,7 +10496,8 @@ Entry.block = {
             var value = script.getNumberValue("VALUE", script);
             sprite.setDirection(value);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "see_direction": {
         "color": "#A751E3",
@@ -10322,7 +10534,8 @@ Entry.block = {
                 sprite.setRotation(Math.atan(deltaY / deltaX) / Math.PI * 180 + 270);
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "locate_xy": {
         "color": "#A751E3",
@@ -10373,7 +10586,8 @@ Entry.block = {
                 sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.set_xy(%1, %2)"]}
     },
     "locate_x": {
         "color": "#A751E3",
@@ -10413,7 +10627,8 @@ Entry.block = {
                 sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.move_x(%1)"]}
     },
     "locate_y": {
         "color": "#A751E3",
@@ -10454,7 +10669,8 @@ Entry.block = {
                 sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.move_y(%1)"]}
     },
     "locate": {
         "color": "#A751E3",
@@ -10501,7 +10717,8 @@ Entry.block = {
                 sprite.brush.lineTo(x, y*-1);
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.set_location(%1)"]}
     },
     "move_xy_time": {
         "color": "#A751E3",
@@ -10583,7 +10800,8 @@ Entry.block = {
                     sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);
                 }
             };
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.add_xy_for_seconds(%1, %2, %3)"]}
     },
     "rotate_by_angle_time": {
         "color": "#A751E3",
@@ -10636,7 +10854,8 @@ Entry.block = {
                 delete script.frameCount;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "bounce_wall": {
         "color": "#A751E3",
@@ -10822,7 +11041,8 @@ Entry.block = {
                 }
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.bounce_wall()"]}
     },
     "flip_arrow_horizontal": {
         "color": "#A751E3",
@@ -10842,7 +11062,8 @@ Entry.block = {
         "func": function (sprite, script) {
             sprite.setDirection(sprite.getDirection() + 180);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "flip_arrow_vertical": {
         "color": "#A751E3",
@@ -10862,7 +11083,8 @@ Entry.block = {
         "func": function (sprite, script) {
             sprite.setDirection(sprite.getDirection() + 180);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "see_angle_object": {
         "color": "#A751E3",
@@ -10923,7 +11145,8 @@ Entry.block = {
             var nativeDirection = sprite.getDirection() + sprite.getRotation();
             sprite.setRotation(sprite.getRotation() + value - nativeDirection);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.look_at_object(%1)"]}
     },
     "see_angle_direction": {
         "color": "#A751E3",
@@ -10961,7 +11184,8 @@ Entry.block = {
             var nativeDirection = sprite.getDirection() + sprite.getRotation();
             sprite.setRotation(sprite.getRotation() + value - nativeDirection);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "rotate_direction": {
         "color": "#A751E3",
@@ -10998,7 +11222,8 @@ Entry.block = {
             var value = script.getNumberValue("VALUE", script);
             sprite.setDirection(value + sprite.getDirection());
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "locate_object_time": {
         "color": "#A751E3",
@@ -11091,7 +11316,8 @@ Entry.block = {
                 delete script.frameCount;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.set_location_for_seconds(%1, %2)"]}
     },
     "rotate_absolute": {
         "color": "#A751E3",
@@ -11125,7 +11351,8 @@ Entry.block = {
             var value = script.getNumberValue("VALUE", script);
             entity.setRotation(value);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.set_rotation(%1)"]}
     },
     "rotate_relative": {
         "color": "#A751E3",
@@ -11159,7 +11386,8 @@ Entry.block = {
             var value = script.getNumberValue("VALUE", script);
             entity.setRotation(value + entity.getRotation());
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.add_rotation(%1)"]}
     },
     "direction_absolute": {
         "color": "#A751E3",
@@ -11193,7 +11421,8 @@ Entry.block = {
             var value = script.getNumberValue("VALUE", script);
             entity.setDirection(value);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.set_direction(%1)"]}
     },
     "direction_relative": {
         "color": "#A751E3",
@@ -11227,7 +11456,8 @@ Entry.block = {
             var value = script.getNumberValue("VALUE", script);
             entity.setDirection(value + entity.getDirection());
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.add_direction(%1)"]}
     },
     "move_to_angle": {
         "color": "#A751E3",
@@ -11275,7 +11505,8 @@ Entry.block = {
                 sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.move_degree(%1, %2)"]}
     },
     "rotate_by_time": {
         "color": "#A751E3",
@@ -11340,7 +11571,8 @@ Entry.block = {
                 sprite.setRotation(sprite.getRotation() + script.dAngle);
                 script.frameCount--;
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.add_rotation_for_seconds(%1, %2)"]}
     },
     "direction_relative_duration": {
         "color": "#A751E3",
@@ -11404,7 +11636,9 @@ Entry.block = {
                 sprite.setDirection(sprite.getDirection() + script.dDirection);
                 script.frameCount--;
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.add_direction_for_seconds(%1, %2)"]}
+
     },
     "neobot_sensor_value": {
         "color": "#00979D",
@@ -11427,7 +11661,8 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [null],
-            "type": "neobot_sensor_value"
+            "type": "neobot_sensor_value",
+            "id": "k9wp"
         },
         "paramsKeyMap": {
             "PORT": 0
@@ -11437,7 +11672,8 @@ Entry.block = {
         "func": function (sprite, script) {
             var port = script.getStringField('PORT');
             return Entry.hw.portData[port];
-        }
+        },
+        "syntax": {"js": [], "py": ["Neobot.sensor_value(%1)"]}
     },
     "neobot_sensor_convert_scale": {
         "color": "#00979D",
@@ -11569,7 +11805,8 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [null, "15", null],
-            "type": "neobot_left_motor"
+            "type": "neobot_left_motor",
+            "id": "wguy"
         },
         "paramsKeyMap": {
             "DIRECTION": 0,
@@ -11582,7 +11819,8 @@ Entry.block = {
             var direction = script.getNumberField('DIRECTION');
             Entry.hw.sendQueue['DCL'] = speed + direction;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Neobot.turn_left(%1, %2)"]}
     },
     "neobot_stop_left_motor": {
         "color": "#00979D",
@@ -11604,7 +11842,8 @@ Entry.block = {
         "func": function (sprite, script) {
             Entry.hw.sendQueue['DCL'] = 0;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Neobot.stop_left()"]}
     },
     "neobot_right_motor": {
         "color": "#00979D",
@@ -11651,7 +11890,8 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [null, "15", null],
-            "type": "neobot_right_motor"
+            "type": "neobot_right_motor",
+            "id": "g15e"
         },
         "paramsKeyMap": {
             "DIRECTION": 0,
@@ -11664,7 +11904,8 @@ Entry.block = {
             var direction = script.getNumberField('DIRECTION');
             Entry.hw.sendQueue['DCR'] = speed + direction;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Neobot.turn_right(%1, %2)"]}
     },
     "neobot_stop_right_motor": {
         "color": "#00979D",
@@ -11686,7 +11927,8 @@ Entry.block = {
         "func": function (sprite, script) {
             Entry.hw.sendQueue['DCR'] = 0;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Neobot.stop_right()"]}
     },
     "neobot_all_motor": {
         "color": "#00979D",
@@ -11839,7 +12081,8 @@ Entry.block = {
             Entry.hw.sendQueue['DCL'] = 0;
             Entry.hw.sendQueue['DCR'] = 0;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Neobot.run_motor(%1, %2, %3, %4)"]}
     },
     "neobot_set_servo": {
         "color": "#00979D",
@@ -11867,7 +12110,8 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [null, null, null],
-            "type": "neobot_set_servo"
+            "type": "neobot_set_servo",
+            "id": "eokl"
         },
         "paramsKeyMap": {
             "PORT": 0,
@@ -11890,7 +12134,8 @@ Entry.block = {
             }
             Entry.hw.sendQueue['OPT'] = Entry.hw.sendQueue['OPT'] | option;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Neobot.servo_1(%1, %2)"]}
     },
     "neobot_set_output": {
         "color": "#00979D",
@@ -11919,9 +12164,11 @@ Entry.block = {
         "def": {
             "params": [null, {
                 "type": "number",
-                "params": ["255"]
+                "params": ["255"],
+                "id": "dg6t"
             }, null],
             "type": "neobot_set_output",
+            "id": "au77"
         },
         "paramsKeyMap": {
             "PORT": 0,
@@ -11944,7 +12191,8 @@ Entry.block = {
             Entry.hw.sendQueue['OUT' + port] = value;
             Entry.hw.sendQueue['OPT'] = Entry.hw.sendQueue['OPT'] & (~option);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Neobot.servo_2(%1, %2)"]}
     },
     "neobot_set_fnd": {
         "color": "#00979D",
@@ -12100,7 +12348,8 @@ Entry.block = {
                 return script.callReturn();
             }
 
-        }
+        },
+        "syntax": {"js": [], "py": ["Neobot.play_note(%1, %2, %3)"]}
     },
     "robotis_openCM70_cm_custom_value": {
         "color": "#00979D",
@@ -12185,7 +12434,8 @@ Entry.block = {
             var result = Entry.hw.portData[scope.data_default_address];
             scope.data_default_address = undefined;
             return result;
-        }
+        },
+        "syntax": {"js": [], "py": ["Robotis.opencm70_cm_custom_value(%1, %2)"]}
     },
     "robotis_openCM70_sensor_value": {
         "color": "#00979D",
@@ -12263,7 +12513,8 @@ Entry.block = {
             var result = Entry.hw.portData[scope.data_default_address];
             scope.data_default_address = undefined;
             return result;
-        }
+        },
+        "syntax": {"js": [], "py": ["Robotis.opencm70_sensor_value(%1)"]}
     },
     "robotis_openCM70_aux_sensor_value": {
         "color": "#00979D",
@@ -12423,7 +12674,8 @@ Entry.block = {
             var result = Entry.hw.portData[scope.data_default_address];
             scope.data_default_address = undefined;
             return result;
-        }
+        },
+        "syntax": {"js": [], "py": ["Robotis.opencm70_aux_sensor_value(%1, %2)"]}
     },
     "robotis_openCM70_cm_buzzer_index": {
         "color": "#00979D",
@@ -12545,7 +12797,8 @@ Entry.block = {
 
             var data_sendqueue = [[data_instruction, data_address_1, data_length_1, data_value_1], [data_instruction, data_address_2, data_length_2, data_value_2]];
             return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, cmBuzzerTime * 1000);
-        }
+        },
+        "syntax": {"js": [], "py": ["Robotis.opencm70_cm_buzzer_index(%1, %2)"]}
     },
     "robotis_openCM70_cm_buzzer_melody": {
         "color": "#00979D",
@@ -12622,7 +12875,8 @@ Entry.block = {
 
             var data_sendqueue = [[data_instruction, data_address_1, data_length_1, data_value_1], [data_instruction, data_address_2, data_length_2, data_value_2]];
             return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, 1000);
-        }
+        },
+        "syntax": {"js": [], "py": ["Robotis.opencm70_cm_buzzer_melody(%1)"]}
     },
     "robotis_openCM70_cm_sound_detected_clear": {
         "color": "#00979D",
@@ -12656,7 +12910,8 @@ Entry.block = {
 
             var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
             return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
-        }
+        },
+        "syntax": {"js": [], "py": ["Robotis.opencm70_cm_sound_clear()"]}
     },
     "robotis_openCM70_cm_led": {
         "color": "#00979D",
@@ -12724,7 +12979,8 @@ Entry.block = {
 
             var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
             return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
-        }
+        },
+        "syntax": {"js": [], "py": ["Robotis.opencm70_cm_led(%1, %2)"]}
     },
     "robotis_openCM70_cm_motion": {
         "color": "#00979D",
@@ -12770,7 +13026,8 @@ Entry.block = {
 
             var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
             return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
-        }
+        },
+        "syntax": {"js": [], "py": ["Robotis.opencm70_cm_motion(%1)"]}
     },
     "robotis_openCM70_aux_motor_speed": {
         "color": "#00979D",
@@ -12856,7 +13113,8 @@ Entry.block = {
 
             var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
             return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
-        }
+        },
+        "syntax": {"js": [], "py": ["Robotis.opencm70_aux_motor_speed(%1, %2, %3)"]}
     },
     "robotis_openCM70_aux_servo_mode": {
         "color": "#00979D",
@@ -12918,7 +13176,8 @@ Entry.block = {
 
             var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
             return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
-        }
+        },
+        "syntax": {"js": [], "py": ["Robotis.opencm70_aux_servo_mode(%1, %2)"]}
     },
     "robotis_openCM70_aux_servo_speed": {
         "color": "#00979D",
@@ -13006,7 +13265,8 @@ Entry.block = {
 
             var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
             return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
-        }
+        },
+        "syntax": {"js": [], "py": ["Robotis.opencm70_aux_servo_speed(%1, %2, %3)"]}
     },
     "robotis_openCM70_aux_servo_position": {
         "color": "#00979D",
@@ -13077,7 +13337,8 @@ Entry.block = {
 
             var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
             return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
-        }
+        },
+        "syntax": {"js": [], "py": ["Robotis.opencm70_aux_servo_position(%1, %2)"]}
     },
     "robotis_openCM70_aux_led_module": {
         "color": "#00979D",
@@ -13141,7 +13402,8 @@ Entry.block = {
 
             var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
             return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
-        }
+        },
+        "syntax": {"js": [], "py": ["Robotis.opencm70_aux_led_module(%1, %2)"]}
     },
     "robotis_openCM70_aux_custom": {
         "color": "#00979D",
@@ -13205,7 +13467,8 @@ Entry.block = {
 
             var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
             return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
-        }
+        },
+        "syntax": {"js": [], "py": ["Robotis.opencm70_aux_custom(%1, %2)"]}
     },
     "robotis_openCM70_cm_custom": {
         "color": "#00979D",
@@ -13266,7 +13529,8 @@ Entry.block = {
 
             var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
             return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
-        }
+        },
+        "syntax": {"js": [], "py": ["Robotis.opencm70_cm_custom(%1, %2)"]}
     },
     "robotis_carCont_sensor_value": {
         "color": "#00979D",
@@ -13370,7 +13634,8 @@ Entry.block = {
             Entry.Robotis_carCont.update();
 
             return Entry.hw.portData[data_default_address];
-        }
+        },
+        "syntax": {"js": [], "py": ["Robotis.carcont_sensor_value(%1)"]}
     },
     "robotis_carCont_cm_led": {
         "color": "#00979D",
@@ -13435,7 +13700,8 @@ Entry.block = {
 
             var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
             return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_carCont.delay);
-        }
+        },
+        "syntax": {"js": [], "py": ["Robotis.carcont_cm_led(%1, %2)"]}
     },
     "robotis_carCont_cm_sound_detected_clear": {
         "color": "#00979D",
@@ -13469,7 +13735,8 @@ Entry.block = {
 
             var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
             return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_carCont.delay);
-        }
+        },
+        "syntax": {"js": [], "py": ["Robotis.carcont_cm_sound_clear()"]}
     },
     "robotis_carCont_aux_motor_speed": {
         "color": "#00979D",
@@ -13515,7 +13782,7 @@ Entry.block = {
                 },
                 null
             ],
-            "type": "robotis_carCont_aux_motor_speed"
+            "type": "robotis_carcont_aux_motor_speed"
         },
         "paramsKeyMap": {
             "DIRECTION": 0,
@@ -13558,7 +13825,8 @@ Entry.block = {
 
             var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
             return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_carCont.delay);
-        }
+        },
+        "syntax": {"js": [], "py": ["Robotis.carcont_aux_motor_speed(%1, %2, %3)"]}
     },
     "robotis_carCont_cm_calibration": {
         "color": "#00979D",
@@ -13628,7 +13896,8 @@ Entry.block = {
             // Entry.hw.sendQueue['ROBOTIS_DATA'] = [[data_instruction, data_address, data_length, data_value]];
             // update();
             // return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Robotis.carcont_cm_calibration(%1, %2)"]}
     },
     "when_scene_start": {
         "color": "#3BBD70",
@@ -13655,7 +13924,8 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.callReturn();
         },
-        "event": "when_scene_start"
+        "event": "when_scene_start",
+        "syntax": {"js": [], "py": ["def entry_event_scene_start():"]}
     },
     "start_scene": {
         "color": "#3BBD70",
@@ -13693,7 +13963,8 @@ Entry.block = {
                 Entry.engine.fireEvent('when_scene_start');
             }
             return null;
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.scene_start(%1)"]}
     },
     "start_neighbor_scene": {
         "color": "#3BBD70",
@@ -13749,7 +14020,8 @@ Entry.block = {
                 }
             }
             return null;
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.scene_start_of(%1)"]}
     },
     "sound_something": {
         "color": "#A4D01D",
@@ -13785,7 +14057,8 @@ Entry.block = {
             if (isExist)
                 createjs.Sound.play(soundId);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "sound_something_second": {
         "color": "#A4D01D",
@@ -13839,7 +14112,8 @@ Entry.block = {
                 }, timeValue * 1000);
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "sound_something_wait": {
         "color": "#A4D01D",
@@ -13890,7 +14164,8 @@ Entry.block = {
                 delete script.isPlay;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "sound_something_second_wait": {
         "color": "#A4D01D",
@@ -13956,7 +14231,8 @@ Entry.block = {
                 delete script.playState;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "sound_volume_change": {
         "color": "#A4D01D",
@@ -13998,7 +14274,8 @@ Entry.block = {
                 value = 0;
             createjs.Sound.setVolume(value);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.add_volume(%1)"]}
     },
     "sound_volume_set": {
         "color": "#A4D01D",
@@ -14039,7 +14316,8 @@ Entry.block = {
                 value = 0;
             createjs.Sound.setVolume(value);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.set_volume(%1)"]}
     },
     "sound_silent_all": {
         "color": "#A4D01D",
@@ -14062,7 +14340,8 @@ Entry.block = {
         "func": function (sprite, script) {
             createjs.Sound.stop();
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.stop_sound()"]}
     },
     "get_sounds": {
         "color": "#A4D01D",
@@ -14087,7 +14366,8 @@ Entry.block = {
         },
         "func": function (sprite, script) {
             return script.getStringField("VALUE");
-        }
+        },
+        "syntax": {"js": [], "py": ["%1get_sounds#"]}
     },
     "sound_something_with_block": {
         "color": "#A4D01D",
@@ -14131,7 +14411,8 @@ Entry.block = {
                 //);
 
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.play_sound(%1)"]}
     },
     "sound_something_second_with_block": {
         "color": "#A4D01D",
@@ -14188,7 +14469,8 @@ Entry.block = {
                    */
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.play_sound_for_seconds(%1, %2)"]}
     },
     "sound_something_wait_with_block": {
         "color": "#A4D01D",
@@ -14240,7 +14522,8 @@ Entry.block = {
                 delete script.isPlay;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.play_sound_and_wait(%1)"]}
     },
     "sound_something_second_wait_with_block": {
         "color": "#A4D01D",
@@ -14305,7 +14588,8 @@ Entry.block = {
                 delete script.playState;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.play_sound_for_seconds_and_wait(%1, %2)"]}
     },
     "sound_from_to": {
         "color": "#A4D01D",
@@ -14368,7 +14652,8 @@ Entry.block = {
                 });
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.play_sound_from_to_seconds(%1, %2, %3)"]}
     },
     "sound_from_to_and_wait": {
         "color": "#A4D01D",
@@ -14448,7 +14733,8 @@ Entry.block = {
                 delete script.playState;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.play_sound_from_to_seconds_and_wait(%1, %2, %3)"]}
     },
     "when_run_button_click": {
         "color": "#3BBD70",
@@ -14475,7 +14761,8 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.callReturn();
         },
-        "event": "start"
+        "event": "start",
+        "syntax": {"js": [], "py": ["def entry_event_start():"]}
     },
     "press_some_key": {
         "color": "#3BBD70",
@@ -14526,7 +14813,8 @@ Entry.block = {
         },
         "func": function (sprite, script) {
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "when_some_key_pressed": {
         "color": "#3BBD70",
@@ -14560,7 +14848,8 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.callReturn();
         },
-        "event": "keyPress"
+        "event": "keyPress",
+        "syntax": {"js": [], "py": ["def entry_event_key(%2):"]}
     },
     "mouse_clicked": {
         "color": "#3BBD70",
@@ -14587,7 +14876,8 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.callReturn();
         },
-        "event": "mouse_clicked"
+        "event": "mouse_clicked",
+        "syntax": {"js": [], "py": ["def entry_event_mouse_down():"]}
     },
     "mouse_click_cancled": {
         "color": "#3BBD70",
@@ -14614,7 +14904,8 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.callReturn();
         },
-        "event": "mouse_click_cancled"
+        "event": "mouse_click_cancled",
+        "syntax": {"js": [], "py": ["def entry_event_mouse_up():"]}
     },
     "when_object_click": {
         "color": "#3BBD70",
@@ -14641,7 +14932,8 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.callReturn();
         },
-        "event": "when_object_click"
+        "event": "when_object_click",
+        "syntax": {"js": [], "py": ["def entry_event_object_down():"]}
     },
     "when_object_click_canceled": {
         "color": "#3BBD70",
@@ -14668,7 +14960,8 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.callReturn();
         },
-        "event": "when_object_click_canceled"
+        "event": "when_object_click_canceled",
+        "syntax": {"js": [], "py": ["def entry_event_object_up():"]}
     },
     "when_some_key_click": {
         "color": "#3BBD70",
@@ -14692,7 +14985,8 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.callReturn();
         },
-        "event": "keyPress"
+        "event": "keyPress",
+        "syntax": {"js": [], "py": ["Entry.on_key_press_down(%1)"]}
     },
     "when_message_cast": {
         "color": "#3BBD70",
@@ -14742,7 +15036,8 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.callReturn();
         },
-        "event": "when_message_cast"
+        "event": "when_message_cast",
+        "syntax": {"js": [], "py": ["def entry_event_signal(%2):"]}
     },
     "message_cast": {
         "color": "#3BBD70",
@@ -14797,7 +15092,8 @@ Entry.block = {
             Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent,
                                                          ["when_message_cast", value]);
                                                          return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.send_signal(%1)"]}
     },
     "message_cast_wait": {
         "color": "#3BBD70",
@@ -14874,7 +15170,8 @@ Entry.block = {
                 script.runningScript = runningScript;
                 return script;
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.send_signal_wait(%1)"]}
     },
     "text": {
         "color": "#FFD974",
@@ -14897,7 +15194,8 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getField('NAME', script);
         },
-        "isPrimitive": true
+        "isPrimitive": true,
+        "syntax": {"js": ["Scope", "%1"], "py": ["%1text#"]}
     },
     "text_write": {
         "color": "#FFCA36",
@@ -14935,7 +15233,8 @@ Entry.block = {
             text = Entry.convertToRoundedDecimals(text, 3);
             sprite.setText(text);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.write_text(%1)"]}
     },
     "text_append": {
         "color": "#FFCA36",
@@ -14973,7 +15272,8 @@ Entry.block = {
             sprite.setText(Entry.convertToRoundedDecimals(sprite.getText(),3) +
                            Entry.convertToRoundedDecimals(text, 3));
                            return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.append_text(%1)"]}
     },
     "text_prepend": {
         "color": "#FFCA36",
@@ -15011,7 +15311,8 @@ Entry.block = {
             sprite.setText(Entry.convertToRoundedDecimals(text, 3) +
                            Entry.convertToRoundedDecimals(sprite.getText(), 3));
                            return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.prepend_text(%1)"]}
     },
     "text_flush": {
         "color": "#FFCA36",
@@ -15034,7 +15335,8 @@ Entry.block = {
         "func": function (sprite, script) {
             sprite.setText('');
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.clear_text()"]}
     },
     "variableAddButton": {
         "skeleton": "basic_button",
@@ -15053,7 +15355,8 @@ Entry.block = {
                     Entry.variableContainer.openVariableAddPanel('variable');
                 }
             ]
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "listAddButton": {
         "skeleton": "basic_button",
@@ -15139,7 +15442,8 @@ Entry.block = {
             fixed = Entry.getMaxFloatPoint([value, variable.getValue()]);
             variable.setValue((value + variable.getValue()).toFixed(fixed));
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["%1 += %2"]}
     },
     "set_variable": {
         "color": "#E457DC",
@@ -15200,7 +15504,8 @@ Entry.block = {
             var variable = Entry.variableContainer.getVariable(variableId, sprite);
             variable.setValue(value);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["%1 = %2"]}
     },
     "show_variable": {
         "color": "#E457DC",
@@ -15249,7 +15554,8 @@ Entry.block = {
             variable.setVisible(true);
             variable.updateView();
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.show_variable(%1)"]}
     },
     "hide_variable": {
         "color": "#E457DC",
@@ -15297,7 +15603,8 @@ Entry.block = {
             var variable = Entry.variableContainer.getVariable(variableId, sprite);
             variable.setVisible(false);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.hide_variable(%1)"]}
     },
     "get_variable": {
         "color": "#E457DC",
@@ -15344,7 +15651,8 @@ Entry.block = {
             var variableId = script.getField("VARIABLE", script);
             var variable = Entry.variableContainer.getVariable(variableId, sprite);
             return variable.getValue();
-        }
+        },
+        "syntax": {"js": [], "py": ["%1"]}
     },
     "ask_and_wait": {
         "color": "#E457DC",
@@ -15391,44 +15699,75 @@ Entry.block = {
         "func": function (sprite, script) {
             var inputModel = Entry.container.inputValue,
                 inputView = Entry.stage.inputField,
-                    message = script.getValue("VALUE", script);
+
+                /*message = script.getValue("VALUE", script);
+
+                if (!message)
+                    throw new Error('message can not be empty');
+
+                if (inputModel.sprite == sprite &&
+                    inputView && !inputView._isHidden) {
+                        return script;
+                    } else if (inputModel.sprite != sprite && script.isInit) {
+                        if(sprite.dialog)
+                            sprite.dialog.remove();
+                        delete script.isInit;
+                        return script.callReturn();
+                    } else if (inputModel.complete &&
+                               inputModel.sprite == sprite &&
+                               inputView._isHidden && script.isInit) {
+                                   if(sprite.dialog)
+                                       sprite.dialog.remove();
+                                   delete inputModel.complete;
+                                   delete script.isInit;
+                                   return script.callReturn();
+                               } else {
+                                   message = Entry.convertToRoundedDecimals(message, 3);
+                                   new Entry.Dialog(sprite, message, 'speak');
+                                   Entry.stage.showInputField();
+                                   inputModel.script = script;
+                                   inputModel.sprite = sprite;
+                                   script.isInit = true;
+                                   return script;
+                               }*/
+
+                message = script.getValue("VALUE", script);
 
             if (!message)
                 throw new Error('message can not be empty');
 
             if (inputModel.sprite == sprite &&
                 inputView && !inputView._isHidden) {
-                if (!sprite.dialog) {
-                    message = Entry.convertToRoundedDecimals(message, 3);
-                    new Entry.Dialog(sprite, message, 'speak');
-                }
-                return script;
+                    return script;
             } else if (inputModel.sprite != sprite && script.isInit) {
                 if(sprite.dialog)
                     sprite.dialog.remove();
                 delete script.isInit;
                 return script.callReturn();
             } else if (inputModel.complete &&
-                           inputModel.sprite == sprite &&
-                           inputView._isHidden && script.isInit) {
-               if(sprite.dialog)
-                   sprite.dialog.remove();
-               delete inputModel.complete;
-               delete script.isInit;
-               return script.callReturn();
+                inputModel.sprite == sprite &&
+                inputView._isHidden && script.isInit) {
+                if(sprite.dialog)
+                    sprite.dialog.remove();
+                delete inputModel.complete;
+                delete script.isInit;
+                return script.callReturn();
             } else {
                 message = Entry.convertToRoundedDecimals(message, 3);
-                new Entry.Dialog(sprite, message, 'speak');
                 Entry.stage.showInputField();
+                new Entry.Dialog(sprite, message, 'ask');
                 inputModel.script = script;
                 inputModel.sprite = sprite;
+                inputModel.complete = false;
                 script.isInit = true;
                 return script;
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.input(%1)"]}
     },
     "get_canvas_input_value": {
         "color": "#E457DC",
+        vimModeFontColor: "white",
         "skeleton": "basic_string_field",
         "statements": [],
         "params": [
@@ -15458,7 +15797,8 @@ Entry.block = {
         "isNotFor": [],
         "func": function (sprite, script) {
             return Entry.container.getInputValue();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.output()"]}
     },
     "add_value_to_list": {
         "color": "#E457DC",
@@ -15523,7 +15863,8 @@ Entry.block = {
             list.array_.push({'data' : value});
             list.updateView();
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["%2.append(%1)"]}
     },
     "remove_value_from_list": {
         "color": "#E457DC",
@@ -15590,7 +15931,8 @@ Entry.block = {
 
             list.updateView();
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["%2.pop(%1)"]}
     },
     "insert_value_to_list": {
         "color": "#E457DC",
@@ -15666,7 +16008,8 @@ Entry.block = {
             list.array_.splice(index-1, 0, {'data': data});
             list.updateView();
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["%2.insert(%3, %1)"]}
     },
     "change_value_list_index": {
         "color": "#E457DC",
@@ -15742,7 +16085,8 @@ Entry.block = {
             list.array_[index-1].data = data;
             list.updateView();
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["%1\[%2\] = %3"]}
     },
     "value_of_index_from_list": {
         "color": "#E457DC",
@@ -15818,7 +16162,8 @@ Entry.block = {
                 throw new Error('can not insert value to array');
 
             return list.array_[index-1].data
-        }
+        },
+        "syntax": {"js": [], "py": ["%2\[%4\]"]}
     },
     "length_of_list": {
         "color": "#E457DC",
@@ -15871,7 +16216,8 @@ Entry.block = {
             var list = Entry.variableContainer.getList(listId, sprite);
 
             return list.array_.length;
-        }
+        },
+        "syntax": {"js": [], "py": ["len(%2)"]}
     },
     "show_list": {
         "color": "#E457DC",
@@ -15920,7 +16266,8 @@ Entry.block = {
 
             list.setVisible(true);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.show_list(%1)"]}
     },
     "hide_list": {
         "color": "#E457DC",
@@ -15969,7 +16316,8 @@ Entry.block = {
 
             list.setVisible(false);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.hide_list(%1)"]}
     },
     "options_for_list": {
         "color": "#E457DC",
@@ -15996,7 +16344,8 @@ Entry.block = {
         },
         "func": function (sprite, script) {
             return script.getField("OPERATOR", script);
-        }
+        },
+        "syntax": {"js": [], "py": [""]}
     },
     "set_visible_answer": {
         "color": "#E457DC",
@@ -16047,7 +16396,8 @@ Entry.block = {
             else
                 Entry.container.inputValue.setVisible(true);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Entry.answer_mode(%1)"]}
     },
     "is_included_in_list": {
         "color": "#E457DC",
@@ -16124,7 +16474,8 @@ Entry.block = {
                     return true;
             }
             return false;
-        }
+        },
+        "syntax": {"js": [], "py": ["%4 in %2"]}
     },
     "xbot_digitalInput": {
         "color": "#00979D",
@@ -16157,7 +16508,8 @@ Entry.block = {
             var pd = Entry.hw.portData;
             var dev = script.getField('DEVICE');
             return pd[dev];
-        }
+        },
+        "syntax": {"js": [], "py": ["Xbot.digital_input(%1)"]}
     },
     "xbot_analogValue": {
         "color": "#00979D",
@@ -16192,7 +16544,8 @@ Entry.block = {
             var pd = Entry.hw.portData;
             var dev = script.getField('DEVICE');
             return pd[dev];
-        }
+        },
+        "syntax": {"js": [], "py": ["Xbot.analog_value(%1)"]}
     },
     "xbot_digitalOutput": {
         "color": "#00979D",
@@ -16266,7 +16619,8 @@ Entry.block = {
             }
             //sq.D13 = 1;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Xbot.digital_output(%1, %2)"]}
     },
     "xbot_analogOutput": {
         "color": "#00979D",
@@ -16321,7 +16675,8 @@ Entry.block = {
                 sq.analogD6 = value;
             }
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Xbot.analog_output(%1, %2)"]}
     },
     "xbot_servo": {
         "color": "#00979D",
@@ -16380,7 +16735,8 @@ Entry.block = {
             }
 
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Xbot.servo(%1, %2)"]}
     },
     "xbot_oneWheel": {
         "color": "#00979D",
@@ -16440,7 +16796,8 @@ Entry.block = {
                 sq.rightWheel = sq.leftWheel = speed;
 
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Xbot.one_wheel(%1, %2)"]}
     },
     "xbot_twoWheel": {
         "color": "#00979D",
@@ -16490,7 +16847,8 @@ Entry.block = {
             sq.leftWheel = script.getNumberValue('leftWheel');
 
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Xbot.two_wheel(%1, %2)"]}
     },
     "xbot_rgb": {
         "color": "#00979D",
@@ -16550,7 +16908,8 @@ Entry.block = {
 
             //console.log('ledR' + sq.ledR + ' ledG ' + sq.ledG +' ledB ' + sq.ledB);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Xbot.rgb(%1, %2, %3)"]}
     },
     "xbot_rgb_picker": {
         "color": "#00979D",
@@ -16585,7 +16944,8 @@ Entry.block = {
             sq.ledB = parseInt(parseInt(port.substr(5,2), 16) * 0.3);
 
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Xbot.rgb_picker(%1)"]}
     },
     "xbot_buzzer": {
         "color": "#00979D",
@@ -16709,7 +17069,8 @@ Entry.block = {
             sq.duration =  duration;
 
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Xbot.buzzer(%1, %2, %3)"]}
     },
     "xbot_lcd": {
         "color": "#00979D",
@@ -16769,7 +17130,8 @@ Entry.block = {
             }
             //console.log('ledR' + sq.ledR + ' ledG ' + sq.ledG +' ledB ' + sq.ledB);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Xbot.lcd(%1, %2)"]}
     },
     "run": {
         "skeleton": "basic",
@@ -17243,7 +17605,11 @@ Entry.block = {
                 delete this.isAction;
                 delete this.isContinue;
             }
-        }
+        },
+        "syntax": [
+            "Scope",
+            "move"
+        ]
     },
     "jr_turn_left": {
         "skeleton": "basic",
@@ -17279,7 +17645,11 @@ Entry.block = {
                 delete this.isAction;
                 delete this.isContinue;
             }
-        }
+        },
+        "syntax": [
+            "Scope",
+            "left"
+        ]
     },
     "jr_turn_right": {
         "skeleton": "basic",
@@ -17315,7 +17685,11 @@ Entry.block = {
                 delete this.isAction;
                 delete this.isContinue;
             }
-        }
+        },
+        "syntax": [
+            "Scope",
+            "right"
+        ]
     },
     "jr_go_slow": {
         "skeleton": "basic",
@@ -17351,7 +17725,11 @@ Entry.block = {
                 delete this.isAction;
                 delete this.isContinue;
             }
-        }
+        },
+        "syntax": [
+            "Scope",
+            "move_slowly"
+        ]
     },
     "jr_repeat_until_dest": {
         "skeleton": "basic_loop",
@@ -17393,6 +17771,10 @@ Entry.block = {
     "jr_if_construction": {
         "skeleton": "basic_loop",
         "color": "#498DEB",
+        "syntax": [
+            "BasicIf",
+            "front == 'wall'"
+        ],
         "params": [
             {
                 text: "만약",
@@ -17462,6 +17844,10 @@ Entry.block = {
     "jr_if_speed": {
         "skeleton": "basic_loop",
         "color": "#498DEB",
+        "syntax": [
+            "BasicIf",
+            "front == 'hump'"
+        ],
         "params": [
             {
                 "type": "Image",
@@ -17737,7 +18123,7 @@ Entry.block = {
         "color": "#498DEB",
         "syntax": [
             "BasicIf",
-            "front == wall"
+            "front == 'wall'"
         ],
         "params": [
             {
@@ -17818,7 +18204,7 @@ Entry.block = {
         "color": "#498DEB",
         "syntax": [
             "BasicIf",
-            "front == bee"
+            "front == 'bee'"
         ],
         "params": [
             {
@@ -18252,7 +18638,8 @@ Entry.block = {
             ],
             "type": "dplay_get_number_sensor_value"
         },
-        "class": "dplay_get"
+        "class": "dplay_get",
+        "syntax": {"js": [], "py": ["Dplay.sensor_value(%1)"]}
     },
     "dplay_get_dust_sensor_value": {
         "parent": "arduino_get_number_sensor_value",
@@ -18268,7 +18655,8 @@ Entry.block = {
             ],
             "type": "dplay_get_dust_sensor_value"
         },
-        "class": "dplay_get"
+        "class": "dplay_get",
+        "syntax": {"js": [], "py": ["Dplay.dust_sensor_value(%1)"]}
     },
     "dplay_get_CO2_sensor_value": {
         "parent": "arduino_get_number_sensor_value",
@@ -18284,7 +18672,8 @@ Entry.block = {
             ],
             "type": "dplay_get_CO2_sensor_value"
         },
-        "class": "dplay_get"
+        "class": "dplay_get",
+        "syntax": {"js": [], "py": ["Dplay.co2_sensor_value(%1)"]}
     },
     "dplay_get_gas_sensor_value": {
         "parent": "arduino_get_number_sensor_value",
@@ -18309,7 +18698,9 @@ Entry.block = {
         "func": function (sprite, script) {
             var signal = script.getValue("VALUE", script);
             return Entry.hw.getAnalogPortValue(signal[1]);
-        }
+        },
+        "syntax": {"js": [], "py": ["Dplay.gas_sensor_value(%1)"]}
+
     },
     "dplay_convert_scale": {
         "parent": "arduino_convert_scale",
@@ -18346,7 +18737,8 @@ Entry.block = {
             ],
             "type": "dplay_convert_scale"
         },
-        "class": "dplay_get"
+        "class": "dplay_get",
+        "syntax": {"js": [], "py": ["Dplay.convert_scale(%1, %2, %3, %4, %5)"]}
     },
     "dplay_get_value": {
         "color": "#00979D",
@@ -18388,7 +18780,8 @@ Entry.block = {
         "func": function (sprite, script) {
             var signal = script.getValue("VALUE", script);
             return Entry.hw.getAnalogPortValue(signal[1]);
-        }
+        },
+        "syntax": {"js": [], "py": ["Dplay.value(%1, %2)"]}
     },
     "dplay_get_digital_value": {
         "parent": "arduino_get_digital_value",
@@ -18403,7 +18796,8 @@ Entry.block = {
             ],
             "type": "dplay_get_digital_value"
         },
-        "class": "dplay_get"
+        "class": "dplay_get",
+        "syntax": {"js": [], "py": ["Dplay.digital_value(%1)"]}
     },
     "dplay_get_switch_status": {
         "color": "#00979D",
@@ -18449,7 +18843,8 @@ Entry.block = {
             var value1 = script.getField("STATUS");
             if (value1 == "ON") return Entry.hw.getDigitalPortValue(port) == 1 ? 1 : 0;
             else return Entry.hw.getDigitalPortValue(port) == 0 ? 1 : 0;
-        }
+        },
+        "syntax": {"js": [], "py": ["Dplay.switch_status(%1, %2)"]}
     },
     "dplay_get_tilt": {
         "color": "#00979D",
@@ -18495,7 +18890,8 @@ Entry.block = {
             var value1 = script.getField("STATUS");
             if (value1 == "LIGHT") return Entry.hw.getDigitalPortValue(port) == 1 ? 1 : 0;
             else return Entry.hw.getDigitalPortValue(port) == 0 ? 1 : 0;
-        }
+        },
+        "syntax": {"js": [], "py": ["Dplay.tilt(%1, %2)"]}
     },
     "dplay_toggle_led": {
         "parent": "arduino_toggle_led",
@@ -18512,7 +18908,8 @@ Entry.block = {
             ],
             "type": "dplay_toggle_led"
         },
-        "class": "dplay_set"
+        "class": "dplay_set",
+        "syntax": {"js": [], "py": ["Dplay.toggle_led(%1)"]}
     },
     "dplay_toggle_pwm": {
         "parent": "arduino_toggle_pwm",
@@ -18532,7 +18929,8 @@ Entry.block = {
             ],
             "type": "dplay_toggle_pwm"
         },
-        "class": "dplay_set"
+        "class": "dplay_set",
+        "syntax": {"js": [], "py": ["Dplay.toggle_pwm(%1, %2)"]}
     },
     "dplay_select_led": {
         "color": "#00979D",
@@ -18587,7 +18985,9 @@ Entry.block = {
             var value = operator == "ON" ? 255 : 0;
             Entry.hw.setDigitalPortValue(port, value);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Dplay.select_led(%1, %2)"]}
+
     },
     "dplay_DCmotor": {
         "color": "#00979D",
@@ -18669,7 +19069,8 @@ Entry.block = {
             Entry.hw.setDigitalPortValue(port3, value2);
             Entry.hw.setDigitalPortValue(port4, value1);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Dplay.dc_motor(%1, %2)"]}
     },
     "dplay_DCmotor_speed": {
         "color": "#00979D",
@@ -18775,7 +19176,8 @@ Entry.block = {
               Entry.engine.isContinue = false;
               return script.callReturn();
           }
-       }
+       },
+       "syntax": {"js": [], "py": ["Dplay.dc_motor_speed(%1, %2)"]}
     },
     "dplay_buzzer": {
         "color": "#00979D",
@@ -18882,7 +19284,8 @@ Entry.block = {
                 Entry.engine.isContinue = false;
                 return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["Dplay.buzzer(%1, %2, %3)"]}
     },
     "dplay_servo": {
         "color": "#00979D",
@@ -18919,7 +19322,8 @@ Entry.block = {
             value = Math.min(value, 179);
             Entry.hw.setDigitalPortValue(9, value);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Dplay.servo(%1)"]}
     },
     "dplay_Robot_run": {
         "color": "#00979D",
@@ -18982,7 +19386,8 @@ Entry.block = {
             Entry.hw.setDigitalPortValue(port3, value3);
             Entry.hw.setDigitalPortValue(port4, value4);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Dplay.robot_run(%1)"]}
     },
     "dplay_Robot_run_sec": {
         "color": "#00979D",
@@ -19073,7 +19478,8 @@ Entry.block = {
               value4 = 0;
               return script.callReturn();
             }
-        }
+        },
+        "syntax": {"js": [], "py": ["Dplay.robot_run_sec(%1, %2)"]}
     },
     "dplay_robot_speed_sel": {
         "color": "#00979D",
@@ -19344,8 +19750,9 @@ Entry.block = {
                   delete script.timeFlag;
                   Entry.engine.isContinue = false;
                   return script.callReturn();
-              }
-          }
+            }
+        },
+        "syntax": {"js": [], "py": ["Dplay.robot_speed_sel(%1, %2)"]}
     },
     "dplay_robot_stop": {
         "color": "#00979D",
@@ -19379,7 +19786,8 @@ Entry.block = {
             Entry.hw.setDigitalPortValue(port4, value1);
             Entry.hw.setDigitalPortValue(port3, value2);
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": ["Dplay.robot_stop()"]}
     },
     "nemoino_get_number_sensor_value": {
         "parent": "arduino_get_number_sensor_value",
@@ -19394,7 +19802,8 @@ Entry.block = {
             ],
             "type": "nemoino_get_number_sensor_value"
         },
-        "class": "arduino_value"
+        "class": "arduino_value",
+        "syntax": {"js": [], "py": ["Nemoino.sensor_value(%1)"]}
     },
     "nemoino_get_digital_value": {
         "parent": "arduino_get_digital_value",
@@ -19409,7 +19818,8 @@ Entry.block = {
             ],
             "type": "nemoino_get_digital_value"
         },
-        "class": "arduino_value"
+        "class": "arduino_value",
+        "syntax": {"js": [], "py": ["Nemoino.digital_value(%1)"]}
     },
     "nemoino_toggle_led": {
         "parent": "arduino_toggle_led",
@@ -19426,7 +19836,8 @@ Entry.block = {
             ],
             "type": "nemoino_toggle_led"
         },
-        "class": "arduino_set"
+        "class": "arduino_set",
+        "syntax": {"js": [], "py": ["Nemoino.toggle_led(%1)"]}
     },
     "nemoino_toggle_pwm": {
         "parent": "arduino_toggle_pwm",
@@ -19446,7 +19857,8 @@ Entry.block = {
             ],
             "type": "nemoino_toggle_pwm"
         },
-        "class": "arduino_set"
+        "class": "arduino_set",
+        "syntax": {"js": [], "py": ["Nemoino.toggle_pwm(%1, %2)"]}
     },
     "nemoino_convert_scale": {
         "parent": "arduino_convert_scale",
@@ -19482,7 +19894,8 @@ Entry.block = {
             ],
             "type": "nemoino_convert_scale"
         },
-        "class": "arduino"
+        "class": "arduino",
+        "syntax": {"js": [], "py": ["Nemoino.convert_scale(%1, %2, %3, %4, %5)"]}
     },
     "sensorBoard_get_number_sensor_value": {
         "parent": "arduino_get_number_sensor_value",
@@ -19497,7 +19910,8 @@ Entry.block = {
             ],
             "type": "sensorBoard_get_number_sensor_value"
         },
-        "class": "arduino_value"
+        "class": "arduino_value",
+        "syntax": {"js": [], "py": ["hw.sensorBoard_get_number_sensor_value(%1)"]}
     },
     "sensorBoard_get_digital_value": {
         "parent": "arduino_get_digital_value",
@@ -19512,7 +19926,8 @@ Entry.block = {
             ],
             "type": "sensorBoard_get_digital_value"
         },
-        "class": "arduino_value"
+        "class": "arduino_value",
+        "syntax": {"js": [], "py": ["hw.sensorBoard_get_digital_value(%1)"]}
     },
     "sensorBoard_toggle_led": {
         "parent": "arduino_toggle_led",
@@ -19529,7 +19944,8 @@ Entry.block = {
             ],
             "type": "sensorBoard_toggle_led"
         },
-        "class": "arduino_set"
+        "class": "arduino_set",
+        "syntax": {"js": [], "py": ["hw.sensorBoard_toggle_led(%1)"]}
     },
     "sensorBoard_toggle_pwm": {
         "parent": "arduino_toggle_pwm",
@@ -19549,7 +19965,8 @@ Entry.block = {
             ],
             "type": "sensorBoard_toggle_pwm"
         },
-        "class": "arduino_set"
+        "class": "arduino_set",
+        "syntax": {"js": [], "py": ["hw.sensorBoard_toggle_pwm(%1, %2)"]}
     },
     "sensorBoard_convert_scale": {
         "parent": "arduino_convert_scale",
@@ -19586,7 +20003,8 @@ Entry.block = {
             ],
             "type": "sensorBoard_convert_scale"
         },
-        "class": "arduino"
+        "class": "arduino",
+        "syntax": {"js": [], "py": ["hw.sensorBoard_convert_scale(%1, %2, %3, %4, %5)"]}
     },
     "CODEino_get_number_sensor_value": {
         "parent": "arduino_get_number_sensor_value",
@@ -19601,7 +20019,8 @@ Entry.block = {
             ],
             "type": "CODEino_get_number_sensor_value"
         },
-        "class": "arduino_value"
+        "class": "arduino_value",
+        "syntax": {"js": [], "py": ["hw.CODEino_get_number_sensor_value(%1)"]}
     },
     "CODEino_get_digital_value": {
         "parent": "arduino_get_digital_value",
@@ -19616,7 +20035,8 @@ Entry.block = {
             ],
             "type": "CODEino_get_digital_value"
         },
-        "class": "arduino_value"
+        "class": "arduino_value",
+        "syntax": {"js": [], "py": ["hw.CODEino_get_digital_value(%1)"]}
     },
     "CODEino_toggle_led": {
         "parent": "arduino_toggle_led",
@@ -19633,7 +20053,8 @@ Entry.block = {
             ],
             "type": "CODEino_toggle_led"
         },
-        "class": "arduino_set"
+        "class": "arduino_set",
+        "syntax": {"js": [], "py": ["hw.CODEino_toggle_led(%1)"]}
     },
     "CODEino_toggle_pwm": {
         "parent": "arduino_toggle_pwm",
@@ -19653,7 +20074,8 @@ Entry.block = {
             ],
             "type": "CODEino_toggle_pwm"
         },
-        "class": "arduino_set"
+        "class": "arduino_set",
+        "syntax": {"js": [], "py": ["hw.CODEino_toggle_pwm(%1, %2)"]}
     },
     "CODEino_convert_scale": {
         "parent": "arduino_convert_scale",
@@ -19689,7 +20111,8 @@ Entry.block = {
             ],
             "type": "CODEino_convert_scale"
         },
-        "class": "arduino"
+        "class": "arduino",
+        "syntax": {"js": [], "py": ["hw.CODEino_convert_scale(%1, %2, %3, %4, %5)"]}
     },
 	// ardublock Added 2016-06-01
     "ardublock_get_number_sensor_value": {
@@ -19928,6 +20351,548 @@ Entry.block = {
                 }
             ]
         }
+    },
+    "ai_move_right": {
+        "skeleton": "basic",
+        "mode": "maze",
+        "color": "#A751E3",
+        "syntax": [
+            "Scope",
+            "move"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/moveStep.png",
+                "size": 24
+            }
+        ],
+        func: function(entity, script) {
+            if (!script.isStart) {
+                script.isStart = true;
+                script.isAction = true;
+                Ntry.dispatchEvent("gridChange", function() {
+                    script.isAction = false;
+                });
+                var spaceShipComp = Ntry.entityManager.getComponent(
+                    entity.id, Ntry.STATIC.SPACE_SHIP
+                );
+                spaceShipComp.direction = Ntry.STATIC.EAST;
+                var gridComp = Ntry.entityManager.getComponent(
+                    entity.id, Ntry.STATIC.GRID
+                );
+                Ntry.entityManager.addComponent(
+                    entity.id, {
+                        type: Ntry.STATIC.ANIMATE,
+                        animateType: Ntry.STATIC.ROTATE_TO,
+                        animateValue: 0
+                    }
+                );
+                gridComp.x++;
+                return Entry.STATIC.BREAK;
+            } else if (script.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete script.isAction;
+                delete script.isStart;
+                //Entry.engine.isContinue = false;
+            }
+        }
+    },
+    "ai_move_up": {
+        "skeleton": "basic",
+        "mode": "maze",
+        "color": "#A751E3",
+        "syntax": [
+            "Scope",
+            "up"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/ai_move_up.png",
+                "size": 24
+            }
+        ],
+        func: function(entity, script) {
+            if (!script.isStart) {
+                script.isStart = true;
+                script.isAction = true;
+                Ntry.dispatchEvent("gridChange", function() {
+                    script.isAction = false;
+                });
+                var spaceShipComp = Ntry.entityManager.getComponent(
+                    entity.id, Ntry.STATIC.SPACE_SHIP
+                );
+                spaceShipComp.direction = Ntry.STATIC.NORTH;
+                var gridComp = Ntry.entityManager.getComponent(
+                    entity.id, Ntry.STATIC.GRID
+                );
+                Ntry.entityManager.addComponent(
+                    entity.id, {
+                        type: Ntry.STATIC.ANIMATE,
+                        animateType: Ntry.STATIC.ROTATE_TO,
+                        animateValue: -45
+                    }
+                );
+                gridComp.x++;
+                gridComp.y--;
+                return script;
+            } else if (script.isAction) {
+                return script;
+            } else {
+                delete script.isAction;
+                delete script.isStart;
+                return script.callReturn();
+            }
+        }
+    },
+    "ai_move_down": {
+        "skeleton": "basic",
+        "mode": "maze",
+        "color": "#A751E3",
+        "syntax": [
+            "Scope",
+            "down"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/ai_move_down.png",
+                "size": 24
+            }
+        ],
+        func: function(entity, script) {
+            if (!script.isStart) {
+                script.isStart = true;
+                script.isAction = true;
+                Ntry.dispatchEvent("gridChange", function() {
+                    script.isAction = false;
+                });
+                var spaceShipComp = Ntry.entityManager.getComponent(
+                    entity.id, Ntry.STATIC.SPACE_SHIP
+                );
+                spaceShipComp.direction = Ntry.STATIC.SOUTH;
+                var gridComp = Ntry.entityManager.getComponent(
+                    entity.id, Ntry.STATIC.GRID
+                );
+                Ntry.entityManager.addComponent(
+                    entity.id, {
+                        type: Ntry.STATIC.ANIMATE,
+                        animateType: Ntry.STATIC.ROTATE_TO,
+                        animateValue: 45
+                    }
+                );
+                gridComp.x++;
+                gridComp.y++;
+                return script;
+            } else if (script.isAction) {
+                return script;
+            } else {
+                delete script.isAction;
+                delete script.isStart;
+                return script.callReturn();
+            }
+        }
+    },
+    "ai_repeat_until_reach": {
+        "skeleton": "basic_loop",
+        "mode": "maze",
+        "color": "#498DEB",
+        "syntax": [
+            "BasicWhile",
+            "true"
+        ],
+        statements: [
+            {
+                "accept": "basic"
+            }
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/for.png",
+                "size": 24
+            }
+        ],
+        func: function() {
+            var statement = this.block.statements[0];
+            if (statement.getBlocks().length === 0)
+                return;
+
+            return this.executor.stepInto(statement);
+        }
+    },
+    "ai_if_else_1": {
+        "skeleton": "basic_double_loop",
+        "mode": "maze",
+        "color": "#498DEB",
+        "syntax": [
+            "BasicIf",
+            "front == 'stone'"
+        ],
+        "statements": [
+            {
+                "accept": "basic"
+            },
+            {
+                "accept": "basic"
+            }
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/ntry/bitmap/ai/obstacle_1.png",
+                "size": 24
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/for.png",
+                "size": 24
+            },
+            {
+                "type": "LineBreak"
+            }
+        ],
+        func: function(entity, script) {
+            if (script.isLooped) {
+                delete script.isLooped;
+                return script.callReturn();
+            }
+            var radar = Ntry.entityManager.getComponent(
+                entity.id, Ntry.STATIC.RADAR
+            );
+
+            var statements = this.block.statements;
+            var index = 1;
+            script.isLooped = true;
+            if (radar.center.type == Ntry.STATIC.AI_METEO &&
+                radar.center.distance == 1)
+                index = 0;
+            this.executor.stepInto(statements[index]);
+            return Entry.STATIC.BREAK;
+        }
+    },
+    "ai_boolean_distance": {
+        "skeleton": "basic_boolean_field",
+        "mode": "maze",
+        "color": "#2fc9f0",
+        "fontColor": "#fff",
+        "syntax": [
+            "Scope",
+            "radar_%1 %2 %3#"
+        ],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Menus.ai_above, "UP"],
+                    [Lang.Menus.ai_front, "RIGHT"],
+                    [Lang.Menus.ai_under, "DOWN"]
+                ],
+                "value": "RIGHT",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [">","BIGGER"],
+                    [">=","BIGGER_EQUAL"],
+                    ["=","EQUAL"],
+                    ["<","SMALLER"],
+                    ["<=","SMALLER_EQUAL"]
+                ],
+                "value": "BIGGER",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        func: function(entity, script) {
+            var radar = Ntry.entityManager.getComponent(
+                entity.id, Ntry.STATIC.RADAR
+            );
+
+            var params = this.block.params;
+
+            var direction = params[0];
+            var operator = params[1];
+            var value = this.getParam(2);
+
+            var radarValue;
+            switch (direction) {
+                case "UP":
+                    radarValue = radar.left;
+                    break;
+                case "RIGHT":
+                    radarValue = radar.center;
+                    break;
+                case "DOWN":
+                    radarValue = radar.right;
+                    break;
+            }
+            if (radarValue.type == Ntry.STATIC.AI_GOAL)
+                radarValue = Number.MAX_VALUE;
+            else
+                radarValue = radarValue.distance;
+
+            switch (operator) {
+                case "BIGGER":
+                    return radarValue > value;
+                case "BIGGER_EQUAL":
+                    return radarValue >= value;
+                case "EQUAL":
+                    return radarValue == value;
+                case "SMALLER":
+                    return radarValue < value;
+                case "SMALLER_EQUAL":
+                    return radarValue <= value;
+            }
+        }
+    },
+    "ai_distance_value": {
+        "skeleton": "basic_string_field",
+        "mode": "maze",
+        "color": "#ffd974",
+        "syntax": [
+            "Scope",
+            "radar_%1#"
+        ],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Menus.ai_above, "UP"],
+                    [Lang.Menus.ai_front, "RIGHT"],
+                    [Lang.Menus.ai_under, "DOWN"]
+                ],
+                "value": "RIGHT",
+                "fontSize": 11
+            }
+        ],
+        func: function(entity, script) {
+            var radar = Ntry.entityManager.getComponent(
+                entity.id, Ntry.STATIC.RADAR
+            );
+
+            switch (this.block.params[0]) {
+                case "UP":
+                    radarValue = radar.left;
+                    break;
+                case "RIGHT":
+                    radarValue = radar.center;
+                    break;
+                case "DOWN":
+                    radarValue = radar.right;
+                    break;
+            }
+            return radarValue.type == Ntry.STATIC.AI_GOAL ?
+                Number.MAX_VALUE : radarValue.distance;
+        }
+    },
+    "ai_boolean_object": {
+        "skeleton": "basic_boolean_field",
+        "fontColor": "#fff",
+        "mode": "maze",
+        "color": "#2fc9f0",
+        "syntax": [
+            "Scope",
+            "object_%1 == %2#"
+        ],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Menus.ai_above, "UP"],
+                    [Lang.Menus.ai_front, "RIGHT"],
+                    [Lang.Menus.ai_under, "DOWN"]
+                ],
+                "value": "RIGHT",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Menus.asteroids, "OBSTACLE"],
+                    [Lang.Menus.wall, "WALL"],
+                    [Lang.Menus.item, "ITEM"]
+                ],
+                "value": "OBSTACLE",
+                "fontSize": 11
+            }
+        ],
+        func: function(entity, script) {
+            var radar = Ntry.entityManager.getComponent(
+                entity.id, Ntry.STATIC.RADAR
+            );
+
+            var params = this.block.params;
+
+            var radarValue;
+            switch (params[0]) {
+                case "UP":
+                    radarValue = radar.left.type;
+                    break;
+                case "RIGHT":
+                    radarValue = radar.center.type;
+                    break;
+                case "DOWN":
+                    radarValue = radar.right.type;
+                    break;
+            }
+            switch (params[1]) {
+                case "OBSTACLE":
+                    return radarValue == Ntry.STATIC.AI_METEO;
+                case "WALL":
+                    return radarValue == Ntry.STATIC.AI_WALL;
+                case "ITEM":
+                    return radarValue == Ntry.STATIC.AI_ITEM;
+            }
+        }
+    },
+    "ai_use_item": {
+        "skeleton": "basic",
+        "mode": "maze",
+        "color": "#EACF11",
+        "syntax": [
+            "Scope",
+            "use_item"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": '/img/assets/week/blocks/item.png',
+                "size": 24
+            }
+        ],
+        func: function(entity, script) {
+            if (!script.isStart) {
+                Ntry.dispatchEvent("triggerWeapon");
+                script.isStart = true;
+                script.isAction = true;
+                Ntry.dispatchEvent("gridChange", function() {
+                    script.isAction = false;
+                });
+                var spaceShipComp = Ntry.entityManager.getComponent(
+                    entity.id, Ntry.STATIC.SPACE_SHIP
+                );
+                spaceShipComp.direction = Ntry.STATIC.EAST;
+                var gridComp = Ntry.entityManager.getComponent(
+                    entity.id, Ntry.STATIC.GRID
+                );
+                Ntry.entityManager.addComponent(
+                    entity.id, {
+                        type: Ntry.STATIC.ANIMATE,
+                        animateType: Ntry.STATIC.ROTATE_TO,
+                        animateValue: 0
+                    }
+                );
+                gridComp.x++;
+                return script;
+            } else if (script.isAction) {
+                return script;
+            } else {
+                delete script.isAction;
+                delete script.isStart;
+                //Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        }
+    },
+    "ai_boolean_and": {
+        "color": "#2fc9f0",
+        "skeleton": "basic_boolean_field",
+        "fontColor": "#fff",
+        "statements": [],
+        "syntax": [
+            "Scope",
+            "%1 && %3#"
+        ],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "boolean"
+            },
+            {
+                "type": "Text",
+                "text": Lang.Blocks.JUDGEMENT_boolean_and,
+                "color": "#fff"
+            },
+            {
+                "type": "Block",
+                "accept": "boolean"
+            }
+        ],
+        "events": {},
+        "func": function () {
+            return this.getParam(0) && this.getParam(2);
+        }
+    },
+    "ai_True": {
+        "color": "#2fc9f0",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Text",
+                "text": Lang.Blocks.JUDGEMENT_true,
+                "color": "#3D3D3D"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            type: "True"
+        },
+        "func": function (sprite, script) {
+            return true;
+        },
+        "isPrimitive": true
+    },
+    "ai_if_else": {
+        "color": "#498deb",
+        "skeleton": "basic_double_loop",
+        "statements": [
+            {
+                "accept": "basic"
+            },
+            {
+                "accept": "basic"
+            }
+        ],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "boolean"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/flow_03.png",
+                "size": 12
+            },
+            {
+                "type": "LineBreak"
+            }
+        ],
+        "func": function (sprite, script) {
+            if (script.isCondition) {
+                delete script.isCondition;
+                return script.callReturn();
+            }
+            var value = this.getParam(0);
+            script.isCondition = true;
+            if (value)
+                return this.executor.stepInto(this.block.statements[0]);
+            else
+                return this.executor.stepInto(this.block.statements[1]);
+        },
+        "syntax": [
+            "BasicIf",
+            "true"
+        ]
     }
 };
 
