@@ -13547,7 +13547,6 @@ Entry.Parser = function(b, a, d, c) {
           e.push(a);
           var f = [], g;
           for (g in e) {
-            this._threadCount = g + 1;
             var h = e[g], h = h.trim(), k = acorn.parse(h);
             f.push(k);
           }
@@ -13563,11 +13562,11 @@ Entry.Parser = function(b, a, d, c) {
               2 != q.type || q.message ? 1 == q.type && (l = "\uc790\ubc14\uc2a4\ud06c\ub9bd\ud2b8 \ubb38\ubc95\uc744 \ud655\uc778\ud574\uc8fc\uc138\uc694.") : l = "\uc790\ubc14\uc2a4\ud06c\ub9bd\ud2b8 \ucf54\ub4dc\ub97c \ud655\uc778\ud574\uc8fc\uc138\uc694.";
             }
             Entry.toast.alert(c, l);
-            l = {};
-            l.boardType = Entry.Workspace.MODE_BOARD;
-            l.textType = Entry.Vim.TEXT_TYPE_JS;
-            l.runType = Entry.Vim.MAZE_MODE;
-            Ntry.dispatchEvent("textError", l);
+            var m = {};
+            m.boardType = Entry.Workspace.MODE_BOARD;
+            m.textType = Entry.Vim.TEXT_TYPE_JS;
+            m.runType = Entry.Vim.MAZE_MODE;
+            Ntry.dispatchEvent("textError", m);
             throw Error("text_js_error");
           }
           c = [];
@@ -13575,43 +13574,30 @@ Entry.Parser = function(b, a, d, c) {
         break;
       case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
         try {
-          var m = new Entry.PyAstGenerator, e = a.split("\n\n"), n;
-          for (n in e) {
-            h = e[n], -1 != h.search("import") ? e[n] = "" : (h = Entry.TextCodingUtil.prototype.entryEventFuncFilter(h), e[n] = h);
+          var n = new Entry.PyAstGenerator, e = a.split("\n\n"), r;
+          for (r in e) {
+            h = e[r], -1 != h.search("import") ? e[r] = "" : "#" == h.charAt(0) ? e[r] = "" : (h = Entry.TextCodingUtil.prototype.entryEventFuncFilter(h), e[r] = h);
           }
           f = [];
+          l = 0;
           for (g in e) {
-            h = e[g], console.log("thread", h), k = m.generate(h), "Program" == k.type && 0 != k.body.length && f.push(k);
+            h = e[g], console.log("thread", h), 0 != h.length && (l++, this._threadCount = parseInt(l)), k = n.generate(h), "Program" == k.type && 0 != k.body.length && f.push(k);
           }
           c = this._parser.Program(f);
           this._parser._variableMap.clear();
         } catch (q) {
           if (this.codeMirror) {
-            console.log("came here error1", q);
-            if (q instanceof SyntaxError) {
-              console.log("errot type 1");
-              var r = this.findErrorInfo(q), c = {from:{line:r.line + 3, ch:r.start}, to:{line:r.line + 3, ch:r.end}};
-              q.message = "\ubb38\ubc95(Syntax) \uc624\ub958\uc785\ub2c8\ub2e4.";
-              q.type = 1;
-            } else {
-              console.log("errot type 2"), c = this.getLineNumber(q.node.start, q.node.end), c.message = q.message, c.severity = "block_convert_error", q.type = 2;
-            }
-            this.codeMirror.markText(c.from, c.to, {className:"CodeMirror-lint-mark-error", __annotation:c, clearOnEnter:!0});
-            console.log("came here error2", q);
-            c = q.title ? q.title : "\ubb38\ubc95 \uc624\ub958";
-            l = parseInt(r.line) + 4;
-            l = q.message && l ? q.message + " \n(line: " + l + ")" : "\ud30c\uc774\uc36c \ucf54\ub4dc\ub97c \ud655\uc778\ud574\uc8fc\uc138\uc694";
-            Entry.toast.alert(c, l);
-            throw q;
+            throw console.log("came here error1", q), q instanceof SyntaxError ? (console.log("errot type 1"), m = this.findErrorInfo(q), c = {from:{line:m.line + 3, ch:m.start}, to:{line:m.line + 3, ch:m.end}}, q.message = "\ubb38\ubc95(Syntax) \uc624\ub958\uc785\ub2c8\ub2e4.", q.type = 1) : (console.log("errot type 2"), c = this.getLineNumber(q.node.start, q.node.end), c.message = q.message, c.severity = "block_convert_error", q.type = 2), this.codeMirror.markText(c.from, c.to, {className:"CodeMirror-lint-mark-error", 
+            __annotation:c, clearOnEnter:!0}), console.log("came here error2", q), c = q.title ? q.title : "\ubb38\ubc95 \uc624\ub958", m = parseInt(m.line) + 4, l = q.message && m ? q.message + " \n(line: " + m + ")" : "\ud30c\uc774\uc36c \ucf54\ub4dc\ub97c \ud655\uc778\ud574\uc8fc\uc138\uc694", Entry.toast.alert(c, l), q;
           }
           c = [];
         }
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
-        c = l = this._parser.Code(a, b);
+        c = m = this._parser.Code(a, b);
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
-        l = this._parser.Code(a, b), this._pyHinter || (this._pyHinter = new Entry.PyHint), c = l;
+        m = this._parser.Code(a, b), this._pyHinter || (this._pyHinter = new Entry.PyHint), c = m;
     }
     return c;
   };
@@ -13674,28 +13660,43 @@ Entry.Parser = function(b, a, d, c) {
   };
   b.findErrorInfo = function(a) {
     var b = {}, c = 0;
-    a = a.pos;
+    a = a.pos - 1;
     var e = 0, f = this.codeMirror.getValue().split("\n\n");
     f.shift();
     f.shift();
-    var f = f.join("").split("\n"), g, h;
+    var g = 0, h;
     for (h in f) {
-      g = f[h];
-      console.log("targetText", g);
-      e += g.length;
-      c++;
-      if (a <= e + 1) {
+      g = f[h].length;
+      console.log("textLength", g);
+      if (h == this._threadCount - 1) {
         break;
       }
+      a += g;
+    }
+    console.log("pos2", a);
+    h = f.join("\n").split("\n");
+    var k;
+    console.log("pos", a);
+    console.log("textArr", h);
+    for (var l in h) {
+      k = h[l];
+      console.log("targetText", k);
+      console.log("this._threadCount", this._threadCount);
+      e += k.length;
+      if (a <= e + 1 + (this._threadCount - 1)) {
+        c++;
+        break;
+      }
+      c = parseInt(l) + 1;
       console.log("chCount", e);
       console.log("line", c);
     }
-    h = g.charAt(0);
-    h = g.indexOf(h);
-    g = g.length;
-    b.line = c;
-    b.start = h;
-    b.end = g;
+    l = k.charAt(0);
+    l = k.indexOf(l);
+    k = k.length;
+    b.line = c + (this._threadCount - 1);
+    b.start = l;
+    b.end = k;
     console.log("result", b);
     return b;
   };

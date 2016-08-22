@@ -194,7 +194,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     var astArray = [];
 
                     for(var index in threads) {
-                        this._threadCount = index+1;
                         var thread = threads[index];
                         thread = thread.trim();
                         var ast = acorn.parse(thread);
@@ -267,6 +266,9 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         if(thread.search("import") != -1) {
                             threads[i] = "";
                             continue;
+                        } else if(thread.charAt(0) == '#') {
+                            threads[i] = "";
+                            continue;
                         }
 
                         thread = Entry.TextCodingUtil.prototype.entryEventFuncFilter(thread);
@@ -274,9 +276,15 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     }
 
                     var astArray = [];
+                    var tCount = 0;
                     for(var index in threads) {
+                        
                         var thread = threads[index];
                         console.log("thread", thread);
+                        if(thread.length != 0) {
+                            tCount++;
+                            this._threadCount = parseInt(tCount);
+                        }
                         var ast = pyAstGenerator.generate(thread);
                         if(ast.type == "Program" && ast.body.length != 0)
                             astArray.push(ast);
@@ -512,27 +520,47 @@ Entry.Parser = function(mode, type, cm, syntax) {
     p.findErrorInfo = function(error) {
         var result = {};
         var line = 0;
-        var pos = error.pos;
+        var pos = error.pos-1;
         var chCount = 0;
         var contents = this.codeMirror.getValue();
 
         var contentsArr = contents.split("\n\n");
         contentsArr.shift();
         contentsArr.shift();
-        var text = contentsArr.join("");
+
+        var textLength = 0;
+
+        for(var c in contentsArr) {
+            var content = contentsArr[c];
+            textLength = content.length;
+            console.log("textLength", textLength);
+            if(c == this._threadCount-1)
+                break;
+            pos += textLength;
+        }
+
+        console.log("pos2", pos);
+
+        var text = contentsArr.join("\n");
 
         var textArr  = text.split("\n");
         var targetText;
+        console.log("pos", pos);
+        console.log("textArr", textArr);
         for(var i in textArr) {
             targetText = textArr[i];
             console.log("targetText", targetText);
-
+            console.log("this._threadCount", this._threadCount); 
 
 
             chCount += targetText.length;
-            line++;
-            if(pos <= chCount+1)
+            
+            if(pos <= chCount + 1 + (this._threadCount -1)) {
+                line++;
                 break;
+            }
+
+            line = parseInt(i)+1;
 
             console.log("chCount", chCount);
             console.log("line", line);
@@ -543,7 +571,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
         var start = targetText.indexOf(firstCh);
         var end = targetText.length;
 
-        result.line = line;
+        result.line = line + (this._threadCount -1);
         result.start = start;
         result.end = end;
 
