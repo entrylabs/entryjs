@@ -97,8 +97,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var params = [];
         var type; 
 
-        var isEntryFunction = false;
-
         var callee = component.callee;
         var calleeData = this[callee.type](callee);
         console.log("CallExpression calleeData", calleeData);
@@ -140,9 +138,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
             if(calleeName)
                 var calleeTokens = calleeName.split('.');
             
-            if(calleeTokens[0] == "Entry")
-                isEntryFunction = true;
-
             console.log("CallExpression calleeTokens", calleeTokens);
             
             if(calleeName == "__pythonRuntime.functions.range"){
@@ -332,16 +327,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 result.params = structure.params;
             }   
         } else { // Function Arguments
-            if(isEntryFunction) {
-                var error = {};
-                error.title = "지원하지 않는 블록";
-                error.message = "블록으로 변환할 수 없는 코드입니다.";
-                error.node = component;
-
-                throw error;
-            }
-
-            console.log("Function Arguments", calleeData);
             var args = [];
             for(var i in arguments) { 
                 var argument = arguments[i];
@@ -1134,7 +1119,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
         //////////////////////////////////////////////////////////////////////
         /*if(data[0] && data[0].declarations && data[1]) {
             result.type = data[1].type;
-
             var declarations = data[0].declarations;
             for(var d in declarations){
                 var declaration = declarations[d];
@@ -1143,7 +1127,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     params.push(param);
             }
             result.params = params;
-
             var statements = []
             var allStatements = data[1].statements[0];
             console.log("BlockStatement allStatements", allStatements);
@@ -1155,9 +1138,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         statements.push(statement);
                 }
             }
-
             console.log("BlockStatement statements", statements); 
-
             result.statements.push(statements);
             
         }*/
@@ -1884,9 +1865,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         /*//save the variable to map  
         var variable = leftData;
         var value = rightData;
-
         console.log("variable", variable, "value", value);
-
         if(variable && value)
             this._variableMap.put(variable, value);*/
         //save the variable to map

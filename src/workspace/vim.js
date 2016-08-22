@@ -181,7 +181,8 @@ Entry.Vim = function(dom, textType) {
         doc.setCursor({ line: doc.lastLine() - 1});
     };
 
-    p.getCodeToText = function(code) {
+    p.getCodeToText = function(code) { 
+        console.log("getCodeToText", code);
         var textType = this.workspace.textType;
         if (textType === Entry.Vim.TEXT_TYPE_JS){
             this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS;
