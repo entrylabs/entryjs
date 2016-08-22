@@ -620,6 +620,12 @@ Entry.Playground.prototype.generateTextView = function(textView) {
         resizeOffset = $(fontSizeSlider).offset().left;
         //resizeOffset = e.offsetX;
     };
+
+    fontSizeKnob.addEventListener('touchstart', function(e) {
+        isFontSizing = true;
+        resizeOffset = $(fontSizeSlider).offset().left;
+    });
+
     document.addEventListener('mousemove', function(e) {
         if (isFontSizing) {
             var left = e.pageX - resizeOffset;
@@ -631,7 +637,24 @@ Entry.Playground.prototype.generateTextView = function(textView) {
             Entry.playground.object.entity.setFontSize(left);
         }
     });
+
+    document.addEventListener('touchmove', function(e) {
+        if (isFontSizing) {
+            var left = e.touches[0].pageX - resizeOffset;
+            left = Math.max(left, 5);
+            left = Math.min(left, 88);
+            fontSizeKnob.style.left = left + "px";
+            left /= 0.88;
+            fontSizeIndiciator.style.width = left + '%';
+            Entry.playground.object.entity.setFontSize(left);
+        }
+    });
+
     document.addEventListener('mouseup', function(e) {
+        isFontSizing = false;
+    });
+
+    document.addEventListener('touchend', function(e) {
         isFontSizing = false;
     });
 
@@ -883,6 +906,20 @@ Entry.Playground.prototype.setPicture = function(picture) {
     Entry.container.setPicture(picture);
     // Entry.playground.object.setPicture(picture);
 };
+
+/**
+ * Download a picture
+ * @param {!String} pictureId
+ */
+Entry.Playground.prototype.downloadPicture = function(pictureId) {
+    var picture = Entry.playground.object.getPicture(pictureId);
+    if (picture.fileurl) {
+        window.open(picture.fileurl);
+    } else {
+        window.open('/api/sprite/download/image/'+
+                encodeURIComponent(picture.filename)+'/'+encodeURIComponent(picture.name) + '.png');
+    }
+}
 
 /**
  * Clone picture
@@ -1205,7 +1242,7 @@ Entry.Playground.prototype.showTab = function(item) {
  * @param {!Element} handle
  */
 Entry.Playground.prototype.initializeResizeHandle = function(handle) {
-    handle.onmousedown = function(e) {
+    $(handle).bind('mousedown touchstart', function(e) {
         Entry.playground.resizing = true;
         if (Entry.documentMousemove) {
             Entry.playground.resizeEvent = Entry.documentMousemove.attach(this, function(e) {
@@ -1216,9 +1253,9 @@ Entry.Playground.prototype.initializeResizeHandle = function(handle) {
                 }
             });
         }
-    };
+    });
 
-    document.addEventListener('mouseup', function(e) {
+    $(document).bind('mouseup touchend', function(e) {
         var listener = Entry.playground.resizeEvent
         if (listener) {
             Entry.playground.resizing = false;
@@ -1312,19 +1349,11 @@ Entry.Playground.prototype.generatePictureElement = function(picture) {
                     }
                 }
             },
-            {
-                divider: true
-            },
+            { divider: true },
             {
                 text: Lang.Workspace.context_download,
                 callback: function(){
-                    if (picture.fileurl) {
-                        window.open(picture.fileurl);
-                    } else {
-                        // deprecated
-                        window.open('/api/sprite/download/image/'+
-                                encodeURIComponent(picture.filename)+'/'+encodeURIComponent(picture.name) + '.png');
-                    }
+                    Entry.playground.downloadPicture(picture.id);
                 }
             }
         ];

@@ -9,6 +9,7 @@
  * @constructor
  */
 Entry.EntryObject = function(model) {
+    var that = this;
     if (model) {
         /** @type {string} */
         this.id = model.id;
@@ -67,28 +68,33 @@ Entry.EntryObject = function(model) {
         Entry.stage.loadObject(this);
 
         for (var i in this.pictures) {
-            var picture = this.pictures[i];
-            picture.objectId = this.id;
-            if (!picture.id)
-                picture.id = Entry.generateHash();
-            var image = new Image();
-            if (picture.fileurl) {
-                image.src = picture.fileurl;
-            } else {
+            (function (picture) {
+                picture.objectId = this.id;
+                if (!picture.id)
+                    picture.id = Entry.generateHash();
+                var image = new Image();
                 if (picture.fileurl) {
                     image.src = picture.fileurl;
                 } else {
-                    var fileName = picture.filename;
-                    image.src = Entry.defaultPath + '/uploads/' + fileName.substring(0, 2) + '/' +
-                        fileName.substring(2, 4) + '/image/' + fileName + '.png';
+                    if (picture.fileurl) {
+                        image.src = picture.fileurl;
+                    } else {
+                        var fileName = picture.filename;
+                        image.src = Entry.defaultPath + '/uploads/' + fileName.substring(0, 2) + '/' +
+                            fileName.substring(2, 4) + '/image/' + fileName + '.png';
+                    }
                 }
-            }
-            Entry.Loader.addQueue();
-            image.onload = function(e) {
-                Entry.container.cachePicture(picture.id, image);
-                Entry.Loader.removeQueue();
-                Entry.requestUpdate = true;
-            };
+                Entry.Loader.addQueue();
+                image.onload = function(e) {
+                    Entry.container.cachePicture(
+                        picture.id + that.entity.id, this);
+                    Entry.requestUpdate = true;
+                    Entry.Loader.removeQueue();
+                };
+                image.onerror = function(err) {
+                    Entry.Loader.removeQueue();
+                }
+            })(this.pictures[i]);
         }
     }
 };
@@ -102,64 +108,69 @@ Entry.EntryObject.prototype.generateView = function() {
         var objectView = Entry.createElement('li', this.id);
         objectView.addClass('entryContainerListElementWorkspace');
         objectView.object = this;
-        objectView.bindOnClick(function(e) {
-            if (Entry.container.getObject(this.id))
-                Entry.container.selectObject(this.id);
-        });
-
         // generate context menu
         Entry.Utils.disableContextmenu(objectView);
         var object = this;
-        $(objectView).on('contextmenu', function(e){
-            var options = [
-                {
-                    text: Lang.Workspace.context_rename,
-                    callback: function(e){
-                        e.stopPropagation();
-                        (function (o){
-                            o.setLock(false);
-                            o.editObjectValues(true);
-                            o.nameView_.select();
-                        })(object);
-                    }
-                },
-                {
-                    text: Lang.Workspace.context_duplicate,
-                    enable: !Entry.engine.isState('run'),
-                    callback: function(){
-                        Entry.container.addCloneObject(object);
-                    }
-                },
-                {
-                    text: Lang.Workspace.context_remove,
-                    callback: function(){
-                        Entry.container.removeObject(object);
-                    }
-                },
-                {
-                    text: Lang.Workspace.copy_file,
-                    callback: function(){
-                        Entry.container.setCopiedObject(object);
-                    }
-                },
-                {
-                    text: Lang.Blocks.Paste_blocks,
-                    enable: !Entry.engine.isState('run') && !!Entry.container.copiedObject,
-                    callback: function(){
-                        if (Entry.container.copiedObject)
-                            Entry.container.addCloneObject(Entry.container.copiedObject);
-                        else
-                            Entry.toast.alert(Lang.Workspace.add_object_alert, Lang.Workspace.object_not_found_for_paste);
-                    }
-                 }
+        longPressTimer = null;
 
-            ];
-            Entry.ContextMenu.show(options, 'workspace-contextmenu');
+        $(objectView).bind('mousedown touchstart', function(e){
+            if (Entry.container.getObject(this.id))
+                Entry.container.selectObject(this.id);
+            var doc = $(document);
+            var eventType = e.type;
+            var handled = false;
 
+            if (Entry.Utils.isRightButton(e)) {
+                e.stopPropagation();
+                Entry.documentMousedown.notify(e);
+                handled = true;
+                object._rightClick(e);
+                return;
+            }
+
+            var mouseDownCoordinate = {
+                x: e.clientX, y: e.clientY
+            };
+
+            if (eventType === 'touchstart' && !handled) {
+                e.stopPropagation();
+                Entry.documentMousedown.notify(e);
+
+                longPressTimer = setTimeout(function() {
+                    if (longPressTimer) {
+                        longPressTimer = null;
+                        object._rightClick(e);
+                    }
+                }, 1000);
+
+                doc.bind('mousemove.object touchmove.object', onMouseMove);
+                doc.bind('mouseup.object touchend.object', onMouseUp);
+            }
+
+
+            function onMouseMove(e) {
+                e.stopPropagation();
+                if (!mouseDownCoordinate) return;
+                var diff = Math.sqrt(Math.pow(e.pageX - mouseDownCoordinate.x, 2) +
+                                Math.pow(e.pageY - mouseDownCoordinate.y, 2));
+                if (diff > 5 && longPressTimer) {
+                    clearTimeout(longPressTimer);
+                    longPressTimer = null;
+                }
+            }
+
+            function onMouseUp(e) {
+                e.stopPropagation();
+                doc.unbind('.object');
+                if (longPressTimer) {
+                    clearTimeout(longPressTimer);
+                    longPressTimer = null;
+                }
+            }
         });
+
         /** @type {!Element} */
         this.view_ = objectView;
-
 
         var thisPointer = this;
         var objectInfoView = Entry.createElement('ul');
@@ -211,6 +222,7 @@ Entry.EntryObject.prototype.generateView = function() {
         wrapperView.addClass('entryObjectWrapperWorkspace');
         this.view_.appendChild(wrapperView);
 
+
         var nameView = Entry.createElement('input');
         nameView.bindOnClick(function (e) {
             e.preventDefault();
@@ -249,28 +261,25 @@ Entry.EntryObject.prototype.generateView = function() {
         editView.object = this;
         this.editView_ = editView;
         this.view_.appendChild(editView);
-        if(Entry.objectEditable) {
-            $(editView).mousedown(function(e) {
-                var current = object.isEditing;
-                e.stopPropagation();
-                Entry.documentMousedown.notify(e);
-                if(Entry.engine.isState('run')) return;
 
-                if (current === false) {
-                    object.editObjectValues(!current);
-                    if (Entry.playground.object !== object)
-                        Entry.container.selectObject(object.id);
-                    object.nameView_.select();
-                    return;
-                }
-            });
+        $(editView).mousedown(function(e) {
+            var current = object.isEditing;
+            e.stopPropagation();
+            Entry.documentMousedown.notify(e);
+            if(Entry.engine.isState('run')) return;
 
-            editView.blur = function(e){
-                object.editObjectComplete();
-            };
-        } else {
-            editView.addClass("entryRemove");
-        }
+            if (current === false) {
+                object.editObjectValues(!current);
+                if (Entry.playground.object !== object)
+                    Entry.container.selectObject(object.id);
+                object.nameView_.select();
+                return;
+            }
+        });
+
+        editView.blur = function(e){
+            object.editObjectComplete();
+        };
 
 
         if (Entry.objectEditable && Entry.objectDeletable) {
@@ -1297,8 +1306,11 @@ Entry.EntryObject.prototype.addCloneEntity = function(object, entity, script) {
             Entry.setCloneBrush(clonedEntity, this.entity.brush);
         }
     }
-    Entry.engine.raiseEventOnEntity(clonedEntity,
-                                    [clonedEntity, 'when_clone_start']);
+    Entry.engine.raiseEventOnEntity(
+        clonedEntity, [clonedEntity, 'when_clone_start']
+    );
+    //Entry.engine.pushQueue(
+        //clonedEntity, [clonedEntity, 'when_clone_start']);
     clonedEntity.isClone = true;
     clonedEntity.isStarted = true;
     this.addCloneVariables(this, clonedEntity,
@@ -1458,18 +1470,24 @@ Entry.EntryObject.prototype.editObjectValues = function(click) {
         inputs = [this.nameView_];
     } else {
         inputs = [
-            this.nameView_, this.coordinateView_.xInput_,
+            this.coordinateView_.xInput_,
             this.coordinateView_.yInput_, this.rotateInput_,
             this.directionInput_, this.coordinateView_.sizeInput_
         ];
     }
 
     if (click) {
+        var nameView_ = this.nameView_;
 
         $(inputs).removeClass('selectedNotEditingObject');
+        $(nameView_).removeClass('selectedNotEditingObject');
 
+        window.setTimeout(function() {
+            $(nameView_).removeAttr('readonly');
+            nameView_.addClass("selectedEditingObject");
+        });
         for(var i=0; i<inputs.length; i++){
-            inputs[i].removeAttribute('readonly');
+            $(inputs[i]).removeAttr('readonly');
             inputs[i].addClass("selectedEditingObject");
         }
         this.isEditing = true;
@@ -1477,6 +1495,8 @@ Entry.EntryObject.prototype.editObjectValues = function(click) {
         for(var i=0; i<inputs.length; i++){
             inputs[i].blur(true);
         }
+
+        this.nameView_.blur(true);
 
         this.blurAllInput();
         this.isEditing = false;
@@ -1557,4 +1577,56 @@ Entry.EntryObject.prototype.getStampEntities = function() {
 
 Entry.EntryObject.prototype.clearExecutor = function() {
     this.script.clearExecutors();
+};
+
+Entry.EntryObject.prototype._rightClick = function(e) {
+    var object = this;
+    var options = [
+        {
+            text: Lang.Workspace.context_rename,
+            callback: function(e){
+                e.stopPropagation();
+                (function (o){
+                    o.setLock(false);
+                    o.editObjectValues(true);
+                    o.nameView_.select();
+                })(object);
+            }
+        },
+        {
+            text: Lang.Workspace.context_duplicate,
+            enable: !Entry.engine.isState('run'),
+            callback: function(){
+                Entry.container.addCloneObject(object);
+            }
+        },
+        {
+            text: Lang.Workspace.context_remove,
+            callback: function(){
+                Entry.container.removeObject(object);
+            }
+        },
+        {
+            text: Lang.Workspace.copy_file,
+            callback: function(){
+                Entry.container.setCopiedObject(object);
+            }
+        },
+        {
+            text: Lang.Blocks.Paste_blocks,
+            enable: !Entry.engine.isState('run') && !!Entry.container.copiedObject,
+            callback: function(){
+                if (Entry.container.copiedObject)
+                    Entry.container.addCloneObject(Entry.container.copiedObject);
+                else
+                    Entry.toast.alert(Lang.Workspace.add_object_alert, Lang.Workspace.object_not_found_for_paste);
+            }
+        }
+    ];
+
+    e = Entry.Utils.convertMouseEvent(e);
+    Entry.ContextMenu.show(
+        options, 'workspace-contextmenu',
+        { x: e.clientX, y: e.clientY }
+    );
 };

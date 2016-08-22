@@ -1937,18 +1937,11 @@ Entry.block = {
             var port = script.getField("PORT", script);
             var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.ANALOG);
             var hardwareTime = Entry.hw.portData['TIME'] || 0;
-            if(!Entry.ArduinoExt.BlockState[this.type]) {
-                Entry.ArduinoExt.BlockState[this.type] = {
-                    isStart: false,
-                    stamp: 0
-                }
-            }
-
-            var state = Entry.ArduinoExt.BlockState[this.type];
+            var scope = script.executor.scope;
             var ANALOG = Entry.hw.portData.ANALOG;
-            if(!state.isStart) {
-                state.isStart = true;
-                state.stamp = nowTime;
+            if(!scope.isStart) {
+                scope.isStart = true;
+                scope.stamp = nowTime;
                 Entry.hw.sendQueue['TIME'] = nowTime;
                 Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
                 Entry.hw.sendQueue['GET'] = {
@@ -1957,13 +1950,13 @@ Entry.block = {
                 };
                 throw new Entry.Utils.AsyncError();
                 return;
-            } else if(hardwareTime && (hardwareTime === state.stamp)) {
-                delete state.isStart;
-                delete state.stamp;
+            } else if(hardwareTime && (hardwareTime === scope.stamp)) {
+                delete scope.isStart;
+                delete scope.stamp;
                 return (ANALOG) ? ANALOG[port] || 0 : 0;
-            } else if(nowTime - state.stamp > 64) {
-                delete state.isStart;
-                delete state.stamp;
+            } else if(nowTime - scope.stamp > 64) {
+                delete scope.isStart;
+                delete scope.stamp;
                 return (ANALOG) ? ANALOG[port] || 0 : 0;
             } else {
                 throw new Entry.Utils.AsyncError();
@@ -2034,19 +2027,12 @@ Entry.block = {
         "func": function (sprite, script) {
             var port1 = script.getField("PORT1", script);
             var port2 = script.getField("PORT2", script);
-            if(!Entry.ArduinoExt.BlockState[this.type]) {
-                Entry.ArduinoExt.BlockState[this.type] = {
-                    isStart: false,
-                    stamp: 0
-                }
-            }
-
-            var state = Entry.ArduinoExt.BlockState[this.type];
+            var scope = script.executor.scope;
             var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.ULTRASONIC);
             var hardwareTime = Entry.hw.portData['TIME'] || 0;
-            if(!state.isStart) {
-                state.isStart = true;
-                state.stamp = nowTime;
+            if(!scope.isStart) {
+                scope.isStart = true;
+                scope.stamp = nowTime;
                 Entry.hw.sendQueue['TIME'] = nowTime;
                 Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
                 Entry.hw.sendQueue['GET'] = {
@@ -2055,13 +2041,13 @@ Entry.block = {
                 };
                 throw new Entry.Utils.AsyncError();
                 return;
-            } else if(hardwareTime && (hardwareTime === state.stamp)) {
-                delete state.isStart;
-                delete state.stamp;
+            } else if(hardwareTime && (hardwareTime === scope.stamp)) {
+                delete scope.isStart;
+                delete scope.stamp;
                 return Entry.hw.portData.ULTRASONIC || 0;
-            } else if(nowTime - state.stamp > 64) {
-                delete state.isStart;
-                delete state.stamp;
+            } else if(nowTime - scope.stamp > 64) {
+                delete scope.isStart;
+                delete scope.stamp;
                 return Entry.hw.portData.ULTRASONIC || 0;
             } else {
                 throw new Entry.Utils.AsyncError();
@@ -2271,7 +2257,7 @@ Entry.block = {
                     };
                     return script.callReturn();
                 }
-                
+
                 var octave = script.getNumberField("OCTAVE", script);
                 var duration = script.getNumberField("DURATION", script);
                 var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.TONE);
@@ -2285,7 +2271,7 @@ Entry.block = {
                 if(!sq['SET']) {
                     sq['SET'] = {};
                 }
-                
+
                 sq['SET'][port] = {
                     type: Entry.ArduinoExt.sensorTypes.TONE,
                     data: {
@@ -2388,18 +2374,11 @@ Entry.block = {
             var port = script.getNumberValue("PORT", script);
             var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.DIGITAL);
             var hardwareTime = Entry.hw.portData['TIME'] || 0;
-            if(!Entry.ArduinoExt.BlockState[this.type]) {
-                Entry.ArduinoExt.BlockState[this.type] = {
-                    isStart: false,
-                    stamp: 0
-                }
-            }
-
-            var state = Entry.ArduinoExt.BlockState[this.type];
+            var scope = script.executor.scope;
             var DIGITAL = Entry.hw.portData.DIGITAL;
-            if(!state.isStart) {
-                state.isStart = true;
-                state.stamp = nowTime;
+            if(!scope.isStart) {
+                scope.isStart = true;
+                scope.stamp = nowTime;
                 Entry.hw.sendQueue['TIME'] = nowTime;
                 Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
                 Entry.hw.sendQueue['GET'] = {
@@ -2408,13 +2387,13 @@ Entry.block = {
                 };
                 throw new Entry.Utils.AsyncError();
                 return;
-            } else if(hardwareTime && (hardwareTime === state.stamp)) {
-                delete state.isStart;
-                delete state.stamp;
+            } else if(hardwareTime && (hardwareTime === scope.stamp)) {
+                delete scope.isStart;
+                delete scope.stamp;
                 return (DIGITAL) ? DIGITAL[port] || 0 : 0;
-            } else if(nowTime - state.stamp > 64) {
-                delete state.isStart;
-                delete state.stamp;
+            } else if(nowTime - scope.stamp > 64) {
+                delete scope.isStart;
+                delete scope.stamp;
                 return (DIGITAL) ? DIGITAL[port] || 0 : 0;
             } else {
                 throw new Entry.Utils.AsyncError();
@@ -4924,7 +4903,7 @@ Entry.block = {
                 default:
                     returnVal = Math[operator](value);
             }
-            return Math.round(returnVal*1000)/1000;
+            return returnVal;
         }
     },
     "calc_rand": {
@@ -8359,34 +8338,18 @@ Entry.block = {
                 var wall = Entry.stage.wall;
                 switch(targetSpriteId) {
                     case 'wall':
-                        if (collision(object,wall.up,ath,true) ||
+                        return  !!(collision(object,wall.up,ath,true) ||
                             collision(object,wall.down,ath,true) ||
                             collision(object,wall.left,ath,true) ||
-                                collision(object,wall.right,ath,true))
-                                return true;
-                        else
-                            return false;
-
-                        case 'wall_up':
-                            if (collision(object,wall.up,ath,true))
-                                return true;
-                            else
-                                return false;
-                            case 'wall_down':
-                                if (collision(object,wall.down,ath,true))
-                                    return true;
-                                else
-                                    return false;
-                            case 'wall_right':
-                                if (collision(object,wall.right,ath,true))
-                                    return true;
-                                else
-                                    return false;
-                            case 'wall_left':
-                                if (collision(object,wall.left,ath,true))
-                                    return true;
-                                else
-                                    return false;
+                                collision(object,wall.right,ath, true));
+                    case 'wall_up':
+                        return !!collision(object,wall.up,ath,true);
+                    case 'wall_down':
+                        return !!collision(object,wall.down,ath,true);
+                    case 'wall_right':
+                        return !!collision(object,wall.right,ath,true);
+                    case 'wall_left':
+                        return !!collision(object,wall.left,ath,true);
                 }
             } else if (targetSpriteId == 'mouse') {
                 var stage = Entry.stage.canvas;
@@ -8402,24 +8365,18 @@ Entry.block = {
                     var clonedEntities = targetSprite.parent.clonedEntities;
                     for (var i=0, len=clonedEntities.length; i<len; i++) {
                         var entity = clonedEntities[i];
-                        if(entity.isStamp)
-                            continue;
-                        if (!entity.getVisible())
-                            continue;
+                        if(entity.isStamp || !entity.getVisible()) continue;
                         if (Entry.checkCollisionRect(bound, entity.object.getTransformedBounds()))
                             return true;
                     }
                 } else {
                     if (targetSprite.getVisible() &&
                         collision(object,targetSprite.object,ath,true))
-                    return true;
+                        return true;
                     var clonedEntities = targetSprite.parent.clonedEntities;
                     for (var i=0, len=clonedEntities.length; i<len; i++) {
                         var entity = clonedEntities[i];
-                        if(entity.isStamp)
-                            continue;
-                        if (!entity.getVisible())
-                            continue;
+                        if(entity.isStamp || !entity.getVisible()) continue;
                         if (collision(object,entity.object,ath,true))
                             return true;
                     }
@@ -9329,7 +9286,7 @@ Entry.block = {
             } else if (effect == "opacity") {
                 sprite.effect.alpha = (sprite.effect.alpha + effectValue / 100) ;
             }
-            sprite.applyFilter();
+            sprite.applyFilter(true);
             return script.callReturn();
         }
     },
@@ -9391,7 +9348,7 @@ Entry.block = {
             } else if (effect == "opacity") {
                 sprite.effect.alpha = effectValue / 100;
             }
-            sprite.applyFilter();
+            sprite.applyFilter(true);
             return script.callReturn();
         }
     },
@@ -9774,7 +9731,7 @@ Entry.block = {
             } else if (effect == "transparency") {
                 sprite.effect.alpha = (sprite.effect.alpha - effectValue / 100) ;
             }
-            sprite.applyFilter();
+            sprite.applyFilter(true);
             return script.callReturn();
         }
     },
@@ -9832,7 +9789,7 @@ Entry.block = {
             } else if (effect == "transparency") {
                 sprite.effect.alpha = 1 - (effectValue / 100);
             }
-            sprite.applyFilter();
+            sprite.applyFilter(true);
             return script.callReturn();
         }
     },
@@ -9889,7 +9846,7 @@ Entry.block = {
             } else if (effect == "transparency") {
                 sprite.effect.alpha = (sprite.effect.alpha - effectValue / 100) ;
             }
-            sprite.applyFilter();
+            sprite.applyFilter(true);
             return script.callReturn();
         }
     },
@@ -9946,7 +9903,7 @@ Entry.block = {
             } else if (effect == "transparency") {
                 sprite.effect.alpha = 1 - (effectValue / 100);
             }
-            sprite.applyFilter();
+            sprite.applyFilter(true);
             return script.callReturn();
         }
     },
@@ -12223,7 +12180,7 @@ Entry.block = {
             }  else if(scope.count < 2) {
                 scope.count++;
                 throw new Entry.Utils.AsyncError();
-            } 
+            }
             scope.isStart = false;
             var result = Entry.hw.portData[scope.data_default_address];
             scope.data_default_address = undefined;
@@ -12301,7 +12258,7 @@ Entry.block = {
             } else if(scope.count < 2) {
                 scope.count++;
                 throw new Entry.Utils.AsyncError();
-            } 
+            }
             scope.isStart = false;
             var result = Entry.hw.portData[scope.data_default_address];
             scope.data_default_address = undefined;
@@ -12461,7 +12418,7 @@ Entry.block = {
             } else if(scope.count < 2) {
                 scope.count++;
                 throw new Entry.Utils.AsyncError();
-            } 
+            }
             scope.isStart = false;
             var result = Entry.hw.portData[scope.data_default_address];
             scope.data_default_address = undefined;

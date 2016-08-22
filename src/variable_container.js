@@ -657,8 +657,15 @@ Entry.VariableContainer.prototype.addFunction = function(variable) {
  * @param {Entry.Variable} variable
  */
 Entry.VariableContainer.prototype.removeFunction = function(func) {
-    this.functions_[func.id].destroy();
-    delete this.functions_[func.id];
+    var functionId = func.id;
+    var functions = this.functions_;
+    functions[functionId].destroy();
+    delete functions[functionId];
+    var functionType = 'func_' + functionId;
+
+    Entry.container.removeFuncBlocks(functionType);
+    for (var id in functions)
+        functions[id].content.removeBlocksByType(functionType);
     this.updateList();
 };
 
@@ -731,8 +738,10 @@ Entry.VariableContainer.prototype.createFunctionView = function(func) {
     removeButton.addClass('entryVariableListElementDeleteWorkspace');
     removeButton.bindOnClick(function(e) {
         e.stopPropagation();
-        that.removeFunction(func);
-        that.selected = null;
+        if (confirm(Lang.Workspace.will_you_delete_function)) {
+            that.removeFunction(func);
+            that.selected = null;
+        }
     });
 
     var editButton = Entry.createElement('button');
@@ -1883,6 +1892,9 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function () {
         minValueInput.value = v.minValue_;
     else
         minValueInput.value = 0;
+    minValueInput.onkeypress = function (e) {
+        e.keyCode === 13  && this.blur();
+    };
     minValueInput.onblur = function (e) {
         if (!isNaN(this.value)) {
             var v = that.selectedVariable;
@@ -1903,6 +1915,9 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function () {
         maxValueInput.value = v.maxValue_;
     else
         maxValueInput.value = 100;
+    maxValueInput.onkeypress = function (e) {
+        e.keyCode === 13  && this.blur();
+    };
     maxValueInput.onblur = function (e) {
         if (!isNaN(this.value)) {
             var v = that.selectedVariable;

@@ -36,7 +36,11 @@ Entry.init = function(container, options) {
     this.initialize_();
     /** @type {!Element} */
     this.view_ = container;
-    this.view_.setAttribute('class', 'entry');
+    if (this.device === 'tablet')
+        this.view_.setAttribute('class', 'entry tablet');
+    else
+        this.view_.setAttribute('class', 'entry');
+
     Entry.initFonts(options.fonts);
     this.createDom(container, this.type);
     this.loadInterfaceState();
@@ -58,6 +62,10 @@ Entry.init = function(container, options) {
 
     Entry.addEventListener("saveWorkspace", function(e) {
         Entry.addActivity("save");
+    });
+
+    Entry.addEventListener("showBlockHelper", function(e) {
+        Entry.propertyPanel.select("helper");
     });
 
     if (Entry.getBrowserType().substr(0,2) == 'IE' && !window.flashaudio) {
@@ -349,6 +357,8 @@ Entry.start = function(FPS) {
 Entry.parseOptions = function(options) {
     /** @type {string} */
     this.type = options.type;
+    if (options.device)
+        this.device = options.device;
 
     this.projectSaveable = options.projectsaveable;
     if (this.projectSaveable === undefined)

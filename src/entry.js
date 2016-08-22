@@ -334,11 +334,23 @@ Entry.cancelObjectEdit = function(e) {
     var target = e.target;
     var isCurrent = $(objectView).find(target).length !== 0;
     var tagName = target.tagName.toUpperCase();
-    if (!object.isEditing || (tagName === 'INPUT' && isCurrent))
+    var type = e.type
+    if (!object.isEditing || (tagName === 'INPUT' && isCurrent || type === 'touchstart'))
         return;
-
     object.editObjectValues(false);
 };
 
+Entry.generateFunctionSchema = function(functionId) {
+    functionId = 'func_' + functionId;
+    if (Entry.block[functionId]) return;
+    var blockSchema = function () {};
+    var blockPrototype = Entry.block.function_general;
+    blockSchema.prototype = blockPrototype;
+    blockSchema = new blockSchema();
+    blockSchema.changeEvent = new Entry.Event();
+    blockSchema.template = Lang.template.function_general;
+
+    Entry.block[functionId] = blockSchema;
+};
 
 window.Entry = Entry;

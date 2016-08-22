@@ -21,6 +21,7 @@ Entry.FieldKeyboard = function(content, blockView, index) {
     this._contents = content;
     this._index = index;
     this.setValue(String(this.getValue()));
+    this._CONTENT_HEIGHT = this.getContentHeight();
 
     this._optionVisible = false;
 
@@ -30,9 +31,8 @@ Entry.FieldKeyboard = function(content, blockView, index) {
 Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
 
 (function(p) {
-    var X_PADDING = 8,
-        TEXT_Y_PADDING = 4,
-        CONTENT_HEIGHT = 16;
+    var X_PADDING = 10,
+        TEXT_Y_PADDING = 4;
 
     p.renderStart = function() {
         if (this.svgGroup) $(this.svgGroup).remove();
@@ -53,8 +53,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
 
         this.textElement.textContent = Entry.getKeyCodeMap()[this.getValue()];
 
-        var width = this.getTextWidth();
+        var width = this.getTextWidth() + 1;
 
+        var CONTENT_HEIGHT = this._CONTENT_HEIGHT;
         var y = this.position && this.position.y ? this.position.y : 0;
         y -= CONTENT_HEIGHT/2;
         this._header = this.svgGroup.elem('rect', {
@@ -138,7 +139,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     };
 
     p.resize = function() {
-        var width = this.getTextWidth();
+        var width = this.getTextWidth() + 1;
 
         this._header.attr({width: width});
 
