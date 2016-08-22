@@ -92,6 +92,10 @@ Entry.Stage.prototype.initStage = function(canvas) {
         Entry.stage.updateBoundRect();
     });
 
+    $(window).scroll(function() {
+        Entry.stage.updateBoundRect();
+    });
+
     var moveFunc = function(e){
         e.preventDefault();
         var roundRect = Entry.stage.getBoundRect();

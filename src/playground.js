@@ -921,6 +921,20 @@ Entry.Playground.prototype.setPicture = function(picture) {
 };
 
 /**
+ * Download a picture
+ * @param {!String} pictureId
+ */
+Entry.Playground.prototype.downloadPicture = function(pictureId) {
+    var picture = Entry.playground.object.getPicture(pictureId);
+    if (picture.fileurl) {
+        window.open(picture.fileurl);
+    } else {
+        window.open('/api/sprite/download/image/'+
+                encodeURIComponent(picture.filename)+'/'+encodeURIComponent(picture.name) + '.png');
+    }
+}
+
+/**
  * Clone picture
  * @param {!String} pictureId
  */
@@ -1351,13 +1365,7 @@ Entry.Playground.prototype.generatePictureElement = function(picture) {
             {
                 text: Lang.Workspace.context_download,
                 callback: function(){
-                    if (picture.fileurl) {
-                        window.open(picture.fileurl);
-                    } else {
-                        // deprecated
-                        window.open('/api/sprite/download/image/'+
-                                encodeURIComponent(picture.filename)+'/'+encodeURIComponent(picture.name) + '.png');
-                    }
+                    Entry.playground.downloadPicture(picture.id);
                 }
             }
         ];

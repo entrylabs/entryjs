@@ -1979,18 +1979,11 @@ Entry.block = {
             var port = script.getField("PORT", script);
             var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.ANALOG);
             var hardwareTime = Entry.hw.portData['TIME'] || 0;
-            if(!Entry.ArduinoExt.BlockState[this.type]) {
-                Entry.ArduinoExt.BlockState[this.type] = {
-                    isStart: false,
-                    stamp: 0
-                }
-            }
-
-            var state = Entry.ArduinoExt.BlockState[this.type];
+            var scope = script.executor.scope;
             var ANALOG = Entry.hw.portData.ANALOG;
-            if(!state.isStart) {
-                state.isStart = true;
-                state.stamp = nowTime;
+            if(!scope.isStart) {
+                scope.isStart = true;
+                scope.stamp = nowTime;
                 Entry.hw.sendQueue['TIME'] = nowTime;
                 Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
                 Entry.hw.sendQueue['GET'] = {
@@ -1999,13 +1992,13 @@ Entry.block = {
                 };
                 throw new Entry.Utils.AsyncError();
                 return;
-            } else if(hardwareTime && (hardwareTime === state.stamp)) {
-                delete state.isStart;
-                delete state.stamp;
+            } else if(hardwareTime && (hardwareTime === scope.stamp)) {
+                delete scope.isStart;
+                delete scope.stamp;
                 return (ANALOG) ? ANALOG[port] || 0 : 0;
-            } else if(nowTime - state.stamp > 64) {
-                delete state.isStart;
-                delete state.stamp;
+            } else if(nowTime - scope.stamp > 64) {
+                delete scope.isStart;
+                delete scope.stamp;
                 return (ANALOG) ? ANALOG[port] || 0 : 0;
             } else {
                 throw new Entry.Utils.AsyncError();
@@ -2076,19 +2069,12 @@ Entry.block = {
         "func": function (sprite, script) {
             var port1 = script.getField("PORT1", script);
             var port2 = script.getField("PORT2", script);
-            if(!Entry.ArduinoExt.BlockState[this.type]) {
-                Entry.ArduinoExt.BlockState[this.type] = {
-                    isStart: false,
-                    stamp: 0
-                }
-            }
-
-            var state = Entry.ArduinoExt.BlockState[this.type];
+            var scope = script.executor.scope;
             var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.ULTRASONIC);
             var hardwareTime = Entry.hw.portData['TIME'] || 0;
-            if(!state.isStart) {
-                state.isStart = true;
-                state.stamp = nowTime;
+            if(!scope.isStart) {
+                scope.isStart = true;
+                scope.stamp = nowTime;
                 Entry.hw.sendQueue['TIME'] = nowTime;
                 Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
                 Entry.hw.sendQueue['GET'] = {
@@ -2097,13 +2083,13 @@ Entry.block = {
                 };
                 throw new Entry.Utils.AsyncError();
                 return;
-            } else if(hardwareTime && (hardwareTime === state.stamp)) {
-                delete state.isStart;
-                delete state.stamp;
+            } else if(hardwareTime && (hardwareTime === scope.stamp)) {
+                delete scope.isStart;
+                delete scope.stamp;
                 return Entry.hw.portData.ULTRASONIC || 0;
-            } else if(nowTime - state.stamp > 64) {
-                delete state.isStart;
-                delete state.stamp;
+            } else if(nowTime - scope.stamp > 64) {
+                delete scope.isStart;
+                delete scope.stamp;
                 return Entry.hw.portData.ULTRASONIC || 0;
             } else {
                 throw new Entry.Utils.AsyncError();
@@ -2430,18 +2416,11 @@ Entry.block = {
             var port = script.getNumberValue("PORT", script);
             var nowTime = Entry.ArduinoExt.getSensorTime(Entry.ArduinoExt.sensorTypes.DIGITAL);
             var hardwareTime = Entry.hw.portData['TIME'] || 0;
-            if(!Entry.ArduinoExt.BlockState[this.type]) {
-                Entry.ArduinoExt.BlockState[this.type] = {
-                    isStart: false,
-                    stamp: 0
-                }
-            }
-
-            var state = Entry.ArduinoExt.BlockState[this.type];
+            var scope = script.executor.scope;
             var DIGITAL = Entry.hw.portData.DIGITAL;
-            if(!state.isStart) {
-                state.isStart = true;
-                state.stamp = nowTime;
+            if(!scope.isStart) {
+                scope.isStart = true;
+                scope.stamp = nowTime;
                 Entry.hw.sendQueue['TIME'] = nowTime;
                 Entry.hw.sendQueue['KEY'] = Entry.ArduinoExt.getSensorKey();
                 Entry.hw.sendQueue['GET'] = {
@@ -2450,13 +2429,13 @@ Entry.block = {
                 };
                 throw new Entry.Utils.AsyncError();
                 return;
-            } else if(hardwareTime && (hardwareTime === state.stamp)) {
-                delete state.isStart;
-                delete state.stamp;
+            } else if(hardwareTime && (hardwareTime === scope.stamp)) {
+                delete scope.isStart;
+                delete scope.stamp;
                 return (DIGITAL) ? DIGITAL[port] || 0 : 0;
-            } else if(nowTime - state.stamp > 64) {
-                delete state.isStart;
-                delete state.stamp;
+            } else if(nowTime - scope.stamp > 64) {
+                delete scope.isStart;
+                delete scope.stamp;
                 return (DIGITAL) ? DIGITAL[port] || 0 : 0;
             } else {
                 throw new Entry.Utils.AsyncError();
