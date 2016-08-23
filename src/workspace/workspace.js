@@ -100,7 +100,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     this.oldTextType = this.textType;
                 }
                 catch(e) {
-                    console.log("vimboard error");
+                    //console.log(("vimboard error");
                 }
 
                 break;
@@ -120,8 +120,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     this.set({selectedBoard:this.vimBoard});
                     this.mode = Entry.Workspace.MODE_VIMBOARD;
 
-                    console.log("this.oldTextType", this.oldTextType);
-
                     if(this.oldTextType == Entry.Vim.PARSER_TYPE_JS_TO_BLOCK) {
                         mode.boardType = Entry.Workspace.MODE_VIMBOARD;
                         mode.textType = Entry.Vim.TEXT_TYPE_JS;
@@ -134,7 +132,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                         mode.textType = Entry.Vim.TEXT_TYPE_PY;
                         mode.runType = Entry.Vim.WORKSPACE_MODE;
                         this.oldTextType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK;
-                        console.log("mode", mode);
+                        //console.log(("mode", mode);
                         Entry.dispatchEvent("changeMode", mode);
                     }
 
@@ -188,8 +186,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         setTimeout(function() {
             that.board.alignThreads();
         }, 0);
-
-        console.log("after4");
     };
 
     p.loadCodeFromText = function(mode) {

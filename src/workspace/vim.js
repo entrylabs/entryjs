@@ -149,7 +149,7 @@ Entry.Vim = function(dom, textType) {
             codeDescription = "# " + object.name + " 오브젝트의 파이썬 코드";
         }
 
-        console.log("codeToText mode", mode);
+        //console.log("codeToText mode", mode);
 
         var textType = mode.textType;
 
