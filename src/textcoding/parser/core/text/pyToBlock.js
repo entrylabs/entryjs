@@ -24,39 +24,63 @@ Entry.PyToBlockParser = function(blockSyntax) {
     var paramQ = new Entry.Queue();
     this._paramQ = paramQ;
 
+    this._threadCount = 0;
+    this._blockCount = 0;
 };
 
 (function(p){
     p.Program = function(astArr) { 
-        var code = [];
-        
-        for(var index in astArr) { 
-            if(astArr[index].type != 'Program') return;
-            var thread = []; 
-            var nodes = astArr[index].body;
+        try {
+            var code = [];
+            
+            this._threadCount = 0;
+            this._blockCount = 0;
+            for(var index in astArr) { 
+                if(astArr[index].type != 'Program') return;
+                this._threadCount++;
+                var thread = []; 
+                var nodes = astArr[index].body;
 
-            console.log("nodes", nodes);
+                console.log("nodes", nodes);
 
-            for(var index in nodes) {
-                var node = nodes[index];
-                console.log("Program node", node);
-                                
-                var block = this[node.type](node);
-                console.log("result block", block); 
+                for(var index in nodes) {
+                    var node = nodes[index];
+                    console.log("Program node", node);
+                                    
+                    var block = this[node.type](node);
+                    console.log("result block", block); 
 
-                if(block && block.type)
-                    thread.push(block); 
+                    if(block && block.type) {
+                        console.log("block.type", block.type);
+                        if(Entry.TextCodingUtil.prototype.isJudgementBlock(block.type)) {
+                            continue;
+                        }
+                        else if(Entry.TextCodingUtil.prototype.isCalculationBlock(block.type)) {
+                            continue;
+                        }
+                        else if(Entry.TextCodingUtil.prototype.isMaterialBlock(block.type)) {
+                            continue;
+                        }
+
+                        thread.push(block); 
+                    }
+                }
+
+                console.log("thread", thread);
+                if(thread.length != 0)
+                    code.push(thread);    
             }
-
-            console.log("thread", thread);
-            if(thread.length != 0)
-                code.push(thread);    
+            return code;
+        } catch(error) {
+            error.line = this._blockCount;
+            console.log("Program catch error", error);
+            throw error;
         }
-        return code;
     };
 
     p.ExpressionStatement = function(component) {    
         console.log("ExpressionStatement component", component);
+        this._blockCount++;
         var reusult;
         var structure = {};
 
@@ -72,8 +96,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 structure.params = expressionData.params;
 
                 result = structure;
-            }
-            else if(expressionData.type) {
+            } else if(expressionData.type) {
                 structure.type = expressionData.type;
                     
                 result = structure;
@@ -85,6 +108,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         } 
 
         console.log("ExpressionStatement result", result);
+        
         return result;
     };
 
@@ -327,6 +351,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 result.params = structure.params;
             }   
         } else { // Function Arguments
+            if(calleeData.object.name) {
+                var error = {};
+                error.title = "블록변환(Converting) 오류";
+                error.message = "블록으로 변환될 수 없는 코드입니다.";
+                throw error;
+            }
+
             var args = [];
             for(var i in arguments) { 
                 var argument = arguments[i];
@@ -934,6 +965,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
     
     p.WhileStatement = function(component) {
         console.log("WhileStatement component", component);
+        this._blockCount++;
         var result;
         var structure = {};
         structure.statements = [];
@@ -1278,6 +1310,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
      p.ForStatement = function(component) {
         console.log("ForStatement component", component);
+        this._blockCount++;
         var result;
         var structure = {};
         structure.statements = [];
@@ -1328,6 +1361,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         result = structure;
         
         console.log("ForStatement result", result);
+        
         return result;
     };
 

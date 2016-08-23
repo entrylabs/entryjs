@@ -304,29 +304,45 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     if (this.codeMirror) {
                         console.log("came here error1", error);
                         var annotation;
+                        var line;
                         if (error instanceof SyntaxError) {
-                            console.log("errot type 1", error.loc);
-                            var errorInfo = this.findErrorInfo(error);
+                            console.log("py error type 1", error.loc);
+                            var errorInfo = this.findSyntaxErrorInfo(error);
 
                             annotation = {
                                 from: {line: (errorInfo.line)-1, ch: errorInfo.start},
                                 to: {line: (errorInfo.line)-1, ch: errorInfo.end}
                             }
 
+                            if(!error.message)
+                                error.message = "파이썬 문법 오류입니다.";
+
+                            error.type = 1;
+
                             /*annotation = {
                                 from: {line: error.loc.line - 1, ch: error.loc.column - 2},
                                 to: {line: error.loc.line - 1, ch: error.loc.column + 1}
                             }*/
-
-                            error.message = "파이썬 문법 오류입니다.";
-                            error.type = 1;
                         } else {
-                            console.log("errot type 2");
-                            annotation = this.getLineNumber(error.node.start, error.node.end);
-                            annotation.message = error.message;
-                            annotation.severity = "block_convert_error";
+                            console.log("py error type 2");
+                            var errorInfo = error;
+                            errorInfo.line += 4;
 
-                            error.type = 2; 
+                            var ch = this.findConvertingTargetChInfo(errorInfo.line);
+                            
+                            annotation = {
+                                from: {line: errorInfo.line-1, ch: ch.start},
+                                to: {line: errorInfo.line-1, ch: ch.end}
+                            }
+
+                            if(!error.message)
+                                error.message = "지원하지 않는 코드입니다.";
+
+                            error.type = 2;  
+                             
+                            /*annotation = this.getLineNumber(error.node.start, error.node.end);
+                            annotation.message = error.message;
+                            annotation.severity = "block_convert_error";*/   
                         }
 
                         console.log("annotation", annotation);
@@ -345,7 +361,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         else 
                             var errorTitle = '문법 오류(Syntax Error)';
 
-                        var line = parseInt(errorInfo.line);
+                        line = parseInt(errorInfo.line);
 
                         if(error.message && line)
                             var errorMsg = error.message + ' \n(line: ' + line + ')';
@@ -525,7 +541,34 @@ Entry.Parser = function(mode, type, cm, syntax) {
         this.availableCode = this.availableCode.concat(availableList);
     };
 
-    p.findErrorInfo = function(error) {
+    p.findConvertingTargetChInfo = function(errorLine) {
+        var result = {};
+
+        var contents = this.codeMirror.getValue();
+        var contentsArr = contents.split("\n");
+
+        console.log("contentsArr", contentsArr);
+        var currentLineCount = (this._pyThreadCount-1) * this._pyBlockCount;
+        result.line = currentLineCount + (this._pyThreadCount-1);
+
+        for(var i = 4; i < contentsArr.length; i++) {
+            var targetText = contentsArr[i];
+            console.log("targetText", targetText);
+            console.log("this._pyThreadCount", this._pyThreadCount); 
+
+            if(i == (errorLine)-1) {
+                result.start = 0;
+                result.end = targetText.length;
+                break;
+            }
+        }
+        
+        console.log("findConvertingErrorInfo result", result);
+        return result;
+        
+    };
+
+    p.findSyntaxErrorInfo = function(error) {
         var result = {};
         var line = error.loc.line;
         var column = error.loc.column
@@ -555,12 +598,12 @@ Entry.Parser = function(mode, type, cm, syntax) {
             }
         }
         
-        console.log("result", result);
+        console.log("findSyntaxErrorInfo result", result);
         return result;
         
     };
 
-    p.findErrorInfo2 = function(error) {
+    p.findSyntaxErrorInfo2 = function(error) {
         var result = {};
         var line = 0;
         var column = error.loc.column;

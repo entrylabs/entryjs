@@ -964,6 +964,60 @@ Entry.TextCodingUtil = function() {
         }
     };
 
+    p.isJudgementBlock = function(blockType) {
+        if(blockType == "is_clicked" ||
+            blockType == "is_press_some_key" || 
+            blockType == "reach_something" ||
+            blockType == "boolean_basic_operator" ||
+            blockType == "boolean_and" ||
+            blockType == "boolean_or" ||
+            blockType == "boolean_not") {
+
+            return true;
+        }
+
+        return false;
+    };
+
+    p.isCalculationBlock = function(blockType) {
+        if(blockType == "calc_basic" ||
+            blockType == "calc_rand" || 
+            blockType == "coordinate_mouse" ||
+            blockType == "coordinate_object" ||
+            blockType == "get_sound_volume" ||
+            blockType == "quotient_and_mod" ||
+            blockType == "calc_operation" ||
+            blockType == "get_project_timer_value" || 
+            blockType == "get_date" ||
+            blockType == "distance_something" ||
+            blockType == "get_sound_duration" ||
+            blockType == "length_of_string" ||
+            blockType == "combine_something" ||
+            blockType == "char_at" || 
+            blockType == "substring" ||
+            blockType == "index_of_string" ||
+            blockType == "replace_string" ||
+            blockType == "change_string_case") {
+
+            return true;
+        }
+
+        return false;
+    };
+
+    p.isMaterialBlock = function(blockType) {
+        if(blockType == "get_canvas_input_value" ||
+            blockType == "get_variable" || 
+            blockType == "value_of_index_from_list" ||
+            blockType == "length_of_list" ||
+            blockType == "is_included_in_list") {
+
+            return true;
+        }
+
+        return false;
+    };
+
     p.jsAdjustSyntax = function(block, syntax) {
         var result = '';
         if(block.data.type == 'ai_boolean_distance') {
