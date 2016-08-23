@@ -23095,7 +23095,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     return this.mode;
   };
   b.setMode = function(a, b) {
-    console.log("setMode mode", a);
     this.mode = a.boardType;
     this.runType = a.runType;
     this.textType = a.textType;
@@ -23111,7 +23110,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         break;
       case Entry.Workspace.MODE_BOARD:
         try {
-          this.board.show(), this.set({selectedBoard:this.board}), this.textToCode(this.oldMode, this.oldTextType), this.vimBoard && this.vimBoard.hide(), this.overlayBoard && this.overlayBoard.hide(), console.log("here??"), this.blockMenu.renderBlock(), this.oldMode = this.mode, this.oldTextType = this.textType;
+          this.board.show(), this.set({selectedBoard:this.board}), this.textToCode(this.oldMode, this.oldTextType), this.vimBoard && this.vimBoard.hide(), this.overlayBoard && this.overlayBoard.hide(), this.blockMenu.renderBlock(), this.oldMode = this.mode, this.oldTextType = this.textType;
         } catch (c) {
           this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), this.mode = Entry.Workspace.MODE_VIMBOARD, console.log("this.oldTextType", this.oldTextType), this.oldTextType == Entry.Vim.PARSER_TYPE_JS_TO_BLOCK ? (a.boardType = Entry.Workspace.MODE_VIMBOARD, a.textType = Entry.Vim.TEXT_TYPE_JS, a.runType = Entry.Vim.MAZE_MODE, this.oldTextType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK, Entry.dispatchEvent("changeMode", a), Ntry.dispatchEvent("textError", a)) : this.oldTextType == Entry.Vim.PARSER_TYPE_PY_TO_BLOCK && 
           (a.boardType = Entry.Workspace.MODE_VIMBOARD, a.textType = Entry.Vim.TEXT_TYPE_PY, a.runType = Entry.Vim.WORKSPACE_MODE, this.oldTextType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK, console.log("mode", a), Entry.dispatchEvent("changeMode", a));

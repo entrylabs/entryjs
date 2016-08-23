@@ -79,8 +79,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     p.getMode = function() {return this.mode;};
 
     p.setMode = function(mode, message){
-        console.log("setMode mode", mode);
-        
         this.mode = mode.boardType;
         this.runType = mode.runType;
         this.textType = mode.textType;
@@ -113,8 +111,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     this.set({selectedBoard:this.board});
                     this.textToCode(this.oldMode, this.oldTextType);
                     if (this.vimBoard) this.vimBoard.hide();
-                    if (this.overlayBoard) this.overlayBoard.hide(); 
-                    console.log("here??");
+                    if (this.overlayBoard) this.overlayBoard.hide();
                     this.blockMenu.renderBlock();
                     this.oldMode = this.mode;
                     this.oldTextType = this.textType;
@@ -122,12 +119,12 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     if (this.board) this.board.hide();
                     this.set({selectedBoard:this.vimBoard});
                     this.mode = Entry.Workspace.MODE_VIMBOARD;
-                    
+
                     console.log("this.oldTextType", this.oldTextType);
 
                     if(this.oldTextType == Entry.Vim.PARSER_TYPE_JS_TO_BLOCK) {
                         mode.boardType = Entry.Workspace.MODE_VIMBOARD;
-                        mode.textType = Entry.Vim.TEXT_TYPE_JS; 
+                        mode.textType = Entry.Vim.TEXT_TYPE_JS;
                         mode.runType = Entry.Vim.MAZE_MODE;
                         this.oldTextType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK;
                         Entry.dispatchEvent("changeMode", mode);
@@ -139,8 +136,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                         this.oldTextType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK;
                         console.log("mode", mode);
                         Entry.dispatchEvent("changeMode", mode);
-                    } 
-                    
+                    }
+
                     //throw e;
                 }
                 Entry.commander.setCurrentEditor("board", this.board);
@@ -236,7 +233,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
         if (Entry.Utils.isInInput(e)) return;
 
-        var blockView = this.selectedBlockView; 
+        var blockView = this.selectedBlockView;
 
         if (blockView && !blockView.isInBlockMenu && blockView.block.isDeletable()) {
             if (keyCode == 8 || keyCode == 46) { //destroy
