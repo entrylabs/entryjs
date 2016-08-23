@@ -19,7 +19,9 @@ Entry.Executor = function(block, entity) {
         while (true) {
             var returnVal = null;
             try {
-                returnVal = this.scope.block.getSchema().func.call(this.scope, this.entity, this.scope);
+                var schema = this.scope.block.getSchema();
+                if (schema)
+                    returnVal = schema.func.call(this.scope, this.entity, this.scope);
             } catch(e) {
                 if(e.name === 'AsyncError') {
                     returnVal = Entry.STATIC.BREAK;

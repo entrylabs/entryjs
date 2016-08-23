@@ -235,7 +235,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
 
         this.getCode().unregisterBlock(this);
         var thread = this.getThread();
-        if (this._schema.event)
+        if (this._schema && this._schema.event)
             thread.unregisterEvent(this, this._schema.event);
         if (nextBlock) {
             if (next) nextBlock.destroy(animate, next);
