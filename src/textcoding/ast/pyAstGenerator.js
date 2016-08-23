@@ -11,6 +11,7 @@ Entry.PyAstGenerator = function() {
 
 (function(p){
     p.generate = function(code) {
+        //var filbertParse = filbert.parse;
     	var filbertParse = filbert.parse;
         var ranges = false;
         var locations = false;

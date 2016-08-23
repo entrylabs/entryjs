@@ -11321,16 +11321,21 @@ Entry.TextCodingUtil = function() {
     a = a.split("\n");
     for (var c in a) {
       var e = a[c];
-      "def entry_event_start():" == e || "def entry_event_mouse_down():" == e || "def entry_event_mouse_up():" == e || "def entry_event_object_down():" == e || "def entry_event_scene_start():" == e || "def entry_event_clone_create():" == e ? (tokens = e.split("def"), e = tokens[1].substring(0, tokens[1].length - 1).trim() + "\n", a[c] = e, b = !0) : (new RegExp(/^def entry_event_key(.+):$/)).test(e) || (new RegExp(/^def entry_event_signal(.+):$/)).test(e) ? (tokens = e.split("def"), e = tokens[1].substring(0, 
-      tokens[1].length - 1).trim() + "\n", a[c] = e, b = !0) : b && (e = a[c], e = e.replace("\t", ""), a[c] = e);
+      "def entry_event_start():" == e || "def entry_event_mouse_down():" == e || "def entry_event_mouse_up():" == e || "def entry_event_object_down():" == e || "def entry_event_scene_start():" == e || "def entry_event_clone_create():" == e ? (tokens = e.split("def"), e = tokens[1].substring(0, tokens[1].length - 1).trim(), a[c] = e, b = !0) : (new RegExp(/^def entry_event_key(.+):$/)).test(e) || (new RegExp(/^def entry_event_signal(.+):$/)).test(e) ? (tokens = e.split("def"), e = tokens[1].substring(0, 
+      tokens[1].length - 1).trim(), a[c] = e, b = !0) : b && (e = a[c], e = e.replace("\t", ""), a[c] = e);
     }
     return a.join("\n");
   };
   b.eventBlockSyntaxFilter = function(a) {
-    return "entry_event_start" == a || "entry_event_key" == a || "entry_event_mouse_down" == a || "entry_event_mouse_up" == a || "entry_event_object_down" == a || "entry_event_signal" == a || "entry_event_scene_start" == a || "entry_event_clone_create" == a ? "def " + a : a;
+    if ("entry_event_start" == a || "entry_event_key" == a || "entry_event_mouse_down" == a || "entry_event_mouse_up" == a || "entry_event_object_down" == a || "entry_event_signal" == a || "entry_event_scene_start" == a || "entry_event_clone_create" == a) {
+      return "def " + a;
+    }
   };
   b.isEntryEventFunc = function(a) {
     return "def entry_event_start" == a || "def entry_event_key" == a || "def entry_event_mouse_down" == a || "def entry_event_mouse_up" == a || "def entry_event_object_down" == a || "def entry_event_signal" == a || "def entry_event_scene_start" == a || "def entry_event_clone_create" == a ? !0 : !1;
+  };
+  b.isEntryEventFuncName = function(a) {
+    return "entry_event_start" == a || "entry_event_key" == a || "entry_event_mouse_down" == a || "entry_event_mouse_up" == a || "entry_event_object_down" == a || "entry_event_signal" == a || "entry_event_scene_start" == a || "entry_event_clone_create" == a ? !0 : !1;
   };
   b.searchFuncDefParam = function(a) {
     "function_field_label" == a.data.type && this._funcNameQ.enqueue(a.data.params[0]);
@@ -13462,7 +13467,7 @@ Entry.Parser = function(b, a, d, c) {
   this._type = a;
   this.availableCode = [];
   this._syntax_cache = {};
-  this._threadCount = 0;
+  this._pyBlockCount = this._pyThreadCount = 0;
   Entry.Parser.PARSE_GENERAL = 0;
   Entry.Parser.PARSE_SYNTAX = 1;
   Entry.Parser.PARSE_VARIABLE = 2;
@@ -13574,6 +13579,7 @@ Entry.Parser = function(b, a, d, c) {
         break;
       case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
         try {
+          this._pyThreadCount = this._pyBlockCount = 0;
           var n = new Entry.PyAstGenerator, e = a.split("\n\n"), r;
           for (r in e) {
             h = e[r], -1 != h.search("import") ? e[r] = "" : "#" == h.charAt(0) ? e[r] = "" : (h = Entry.TextCodingUtil.prototype.entryEventFuncFilter(h), e[r] = h);
@@ -13581,14 +13587,14 @@ Entry.Parser = function(b, a, d, c) {
           f = [];
           l = 0;
           for (g in e) {
-            h = e[g], console.log("thread", h), 0 != h.length && (l++, this._threadCount = parseInt(l)), k = n.generate(h), "Program" == k.type && 0 != k.body.length && f.push(k);
+            h = e[g], 0 != h.length && (l++, this._pyThreadCount = parseInt(l)), k = n.generate(h), 0 != h.length && (this._pyBlockCount += h.split("\n").length, console.log("this._pyBlockCount", this._pyBlockCount)), "Program" == k.type && 0 != k.body.length && f.push(k);
           }
           c = this._parser.Program(f);
           this._parser._variableMap.clear();
         } catch (q) {
           if (this.codeMirror) {
-            throw console.log("came here error1", q), q instanceof SyntaxError ? (console.log("errot type 1"), m = this.findErrorInfo(q), c = {from:{line:m.line + 3, ch:m.start}, to:{line:m.line + 3, ch:m.end}}, q.message = "\ubb38\ubc95(Syntax) \uc624\ub958\uc785\ub2c8\ub2e4.", q.type = 1) : (console.log("errot type 2"), c = this.getLineNumber(q.node.start, q.node.end), c.message = q.message, c.severity = "block_convert_error", q.type = 2), this.codeMirror.markText(c.from, c.to, {className:"CodeMirror-lint-mark-error", 
-            __annotation:c, clearOnEnter:!0}), console.log("came here error2", q), c = q.title ? q.title : "\ubb38\ubc95 \uc624\ub958", m = parseInt(m.line) + 4, l = q.message && m ? q.message + " \n(line: " + m + ")" : "\ud30c\uc774\uc36c \ucf54\ub4dc\ub97c \ud655\uc778\ud574\uc8fc\uc138\uc694", Entry.toast.alert(c, l), q;
+            throw console.log("came here error1", q), q instanceof SyntaxError ? (console.log("errot type 1", q.loc), m = this.findErrorInfo(q), c = {from:{line:m.line - 1, ch:m.start}, to:{line:m.line - 1, ch:m.end}}, q.message = "\ud30c\uc774\uc36c \ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.", q.type = 1) : (console.log("errot type 2"), c = this.getLineNumber(q.node.start, q.node.end), c.message = q.message, c.severity = "block_convert_error", q.type = 2), console.log("annotation", c), this.codeMirror.markText(c.from, 
+            c.to, {className:"CodeMirror-lint-mark-error", __annotation:c, clearOnEnter:!0}), console.log("came here error2", q), c = q.title ? q.title : "\ubb38\ubc95 \uc624\ub958(Syntax Error)", m = parseInt(m.line), l = q.message && m ? q.message + " \n(line: " + m + ")" : "\ud30c\uc774\uc36c \ucf54\ub4dc\ub97c \ud655\uc778\ud574\uc8fc\uc138\uc694", Entry.toast.alert(c, l), q;
           }
           c = [];
         }
@@ -13659,44 +13665,70 @@ Entry.Parser = function(b, a, d, c) {
     this.availableCode = this.availableCode.concat(c);
   };
   b.findErrorInfo = function(a) {
-    var b = {}, c = 0;
-    a = a.pos - 1;
-    var e = 0, f = this.codeMirror.getValue().split("\n\n");
-    f.shift();
-    f.shift();
-    var g = 0, h;
-    for (h in f) {
-      g = f[h].length;
-      console.log("textLength", g);
-      if (h == this._threadCount - 1) {
+    var b = {}, c = a.loc.line;
+    a = a.loc.column;
+    b.line = c;
+    var e = this.codeMirror.getValue().split("\n");
+    console.log("contentsArr", e);
+    for (var f = (this._pyThreadCount - 1) * this._pyBlockCount, g = 4;g < e.length;g++) {
+      var h = e[g];
+      console.log("targetText", h);
+      console.log("this._pyThreadCount", this._pyThreadCount);
+      if (g + 1 == c + 4) {
+        console.log("i+1", g + 1);
+        b.line = g + 1 + f + (this._pyThreadCount - 1);
+        0 == a && --b.line;
+        b.start = 0;
+        b.end = h.length;
         break;
       }
-      a += g;
+    }
+    console.log("result", b);
+    return b;
+  };
+  b.findErrorInfo2 = function(a) {
+    var b = {}, c = 0, e = a.loc.column;
+    a = a.pos;
+    console.log("real pos", a);
+    var f = 0, g = this.codeMirror.getValue().split("\n\n");
+    g.shift();
+    g.shift();
+    var h = 0, k;
+    for (k in g) {
+      h = g[k].length;
+      console.log("textLength", h);
+      if (k == this._pyThreadCount - 1) {
+        break;
+      }
+      a += h;
     }
     console.log("pos2", a);
-    h = f.join("\n").split("\n");
-    var k;
+    k = g.join("\n").split("\n");
+    var l;
     console.log("pos", a);
-    console.log("textArr", h);
-    for (var l in h) {
-      k = h[l];
-      console.log("targetText", k);
-      console.log("this._threadCount", this._threadCount);
-      e += k.length;
-      if (a <= e + 1 + (this._threadCount - 1)) {
+    console.log("textArr", k);
+    for (var m in k) {
+      l = k[m];
+      console.log("targetText", l);
+      console.log("this._pyThreadCount", this._pyThreadCount);
+      g = l.length;
+      -1 < l.indexOf(":") && --g;
+      f += g;
+      console.log("chCount", f);
+      if (a < f + 1 + (this._pyThreadCount - 1)) {
         c++;
         break;
       }
-      c = parseInt(l) + 1;
-      console.log("chCount", e);
+      c = parseInt(m) + 1;
       console.log("line", c);
     }
-    l = k.charAt(0);
-    l = k.indexOf(l);
-    k = k.length;
-    b.line = c + (this._threadCount - 1);
-    b.start = l;
-    b.end = k;
+    m = l.charAt(0);
+    m = l.indexOf(m);
+    l = l.length;
+    0 == e && --c;
+    b.line = c + (this._pyThreadCount - 1);
+    b.start = m;
+    b.end = l;
     console.log("result", b);
     return b;
   };

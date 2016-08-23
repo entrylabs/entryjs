@@ -26,7 +26,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
     this._type = type;
     this.availableCode = [];
     this._syntax_cache = {};
-    this._threadCount = 0;
+    this._pyThreadCount = 0;
+    this._pyBlockCount = 0;
 
     Entry.Parser.PARSE_GENERAL = 0;
     Entry.Parser.PARSE_SYNTAX = 1;
@@ -256,6 +257,9 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 break;
             case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
                 try {
+                    this._pyBlockCount = 0;
+                    this._pyThreadCount = 0;
+
                     var pyAstGenerator = new Entry.PyAstGenerator();
 
                     //Entry.TextCodingUtil.prototype.makeThreads(code);
@@ -278,14 +282,16 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     var astArray = [];
                     var tCount = 0;
                     for(var index in threads) {
-                        
                         var thread = threads[index];
-                        console.log("thread", thread);
                         if(thread.length != 0) {
                             tCount++;
-                            this._threadCount = parseInt(tCount);
+                            this._pyThreadCount = parseInt(tCount);
                         }
                         var ast = pyAstGenerator.generate(thread);
+                        if(thread.length != 0) {
+                            this._pyBlockCount += thread.split("\n").length;
+                            console.log("this._pyBlockCount", this._pyBlockCount);
+                        }
                         if(ast.type == "Program" && ast.body.length != 0)
                             astArray.push(ast);
                     }
@@ -299,12 +305,12 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         console.log("came here error1", error);
                         var annotation;
                         if (error instanceof SyntaxError) {
-                            console.log("errot type 1");
+                            console.log("errot type 1", error.loc);
                             var errorInfo = this.findErrorInfo(error);
-                            
+
                             annotation = {
-                                from: {line: (errorInfo.line)+3 , ch: errorInfo.start},
-                                to: {line: (errorInfo.line)+3, ch: errorInfo.end}
+                                from: {line: (errorInfo.line)-1, ch: errorInfo.start},
+                                to: {line: (errorInfo.line)-1, ch: errorInfo.end}
                             }
 
                             /*annotation = {
@@ -312,7 +318,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                                 to: {line: error.loc.line - 1, ch: error.loc.column + 1}
                             }*/
 
-                            error.message = "문법(Syntax) 오류입니다.";
+                            error.message = "파이썬 문법 오류입니다.";
                             error.type = 1;
                         } else {
                             console.log("errot type 2");
@@ -322,6 +328,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
                             error.type = 2; 
                         }
+
+                        console.log("annotation", annotation);
 
                         this.codeMirror.markText(
                             annotation.from, annotation.to, {
@@ -335,9 +343,9 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         if(error.title)
                             var errorTitle = error.title;
                         else 
-                            var errorTitle = '문법 오류';
+                            var errorTitle = '문법 오류(Syntax Error)';
 
-                        var line = parseInt(errorInfo.line)+4;
+                        var line = parseInt(errorInfo.line);
 
                         if(error.message && line)
                             var errorMsg = error.message + ' \n(line: ' + line + ')';
@@ -519,8 +527,46 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
     p.findErrorInfo = function(error) {
         var result = {};
+        var line = error.loc.line;
+        var column = error.loc.column
+        var pos = error.pos;
+
+        result.line = line;
+
+        var contents = this.codeMirror.getValue();
+        var contentsArr = contents.split("\n");
+
+        console.log("contentsArr", contentsArr);
+        var currentLineCount = (this._pyThreadCount-1) * this._pyBlockCount;
+        for(var i = 4; i < contentsArr.length; i++) {
+
+            var targetText = contentsArr[i];
+            console.log("targetText", targetText);
+            console.log("this._pyThreadCount", this._pyThreadCount); 
+
+            if((i+1) == line+4) {
+                console.log("i+1", i +1);
+                result.line = i + 1 + currentLineCount + (this._pyThreadCount-1);
+                if(column == 0)
+                    result.line -= 1;
+                result.start = 0;
+                result.end = targetText.length;
+                break;
+            }
+        }
+        
+        console.log("result", result);
+        return result;
+        
+    };
+
+    p.findErrorInfo2 = function(error) {
+        var result = {};
         var line = 0;
-        var pos = error.pos-1;
+        var column = error.loc.column;
+        var pos = error.pos;
+        console.log("real pos", pos);
+
         var chCount = 0;
         var contents = this.codeMirror.getValue();
 
@@ -534,7 +580,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
             var content = contentsArr[c];
             textLength = content.length;
             console.log("textLength", textLength);
-            if(c == this._threadCount-1)
+            if(c == this._pyThreadCount-1)
                 break;
             pos += textLength;
         }
@@ -550,19 +596,23 @@ Entry.Parser = function(mode, type, cm, syntax) {
         for(var i in textArr) {
             targetText = textArr[i];
             console.log("targetText", targetText);
-            console.log("this._threadCount", this._threadCount); 
+            console.log("this._pyThreadCount", this._pyThreadCount); 
 
+            var len = targetText.length;
+            if(targetText.indexOf(":") > -1)
+                len -= 1;
 
-            chCount += targetText.length;
+            chCount += len;
+            console.log("chCount", chCount);
             
-            if(pos <= chCount + 1 + (this._threadCount -1)) {
+            if(pos < chCount + 1 + (this._pyThreadCount -1)) {
                 line++;
                 break;
             }
 
             line = parseInt(i)+1;
 
-            console.log("chCount", chCount);
+            
             console.log("line", line);
         }
 
@@ -571,7 +621,10 @@ Entry.Parser = function(mode, type, cm, syntax) {
         var start = targetText.indexOf(firstCh);
         var end = targetText.length;
 
-        result.line = line + (this._threadCount -1);
+        if(column == 0)
+            line -= 1;
+
+        result.line = line + (this._pyThreadCount -1);
         result.start = start;
         result.end = end;
 

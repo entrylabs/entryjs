@@ -667,7 +667,7 @@ Entry.TextCodingUtil = function() {
                     thread == "def entry_event_clone_create():") {
                 
                     tokens = thread.split("def");
-                    thread = tokens[1].substring(0, tokens[1].length-1).trim() + '\n';
+                    thread = tokens[1].substring(0, tokens[1].length-1).trim();
                     threadArr[i] = thread;
                     eventFound = true;
                 } 
@@ -675,7 +675,7 @@ Entry.TextCodingUtil = function() {
                     new RegExp(/^def entry_event_signal(.+):$/).test(thread)) {
                     
                     tokens = thread.split("def");
-                    thread = tokens[1].substring(0, tokens[1].length-1).trim() + '\n';
+                    thread = tokens[1].substring(0, tokens[1].length-1).trim();
                     threadArr[i] = thread;
                     eventFound = true;
                 } 
@@ -692,7 +692,8 @@ Entry.TextCodingUtil = function() {
         return result;
     };
 
-    p.eventBlockSyntaxFilter = function(name) {      
+    p.eventBlockSyntaxFilter = function(name) { 
+        var result;     
         if( name == "entry_event_start" || 
             name == "entry_event_key" || 
             name == "entry_event_mouse_down" || 
@@ -703,12 +704,14 @@ Entry.TextCodingUtil = function() {
             name == "entry_event_clone_create") {
             
             name = "def " + name;
+            result = name;
             return name;
         }
 
-        return name;
+        return result;
             
     };
+
 
     p.isEntryEventFunc = function(name) {
         if( name == "def entry_event_start" || 
@@ -725,6 +728,22 @@ Entry.TextCodingUtil = function() {
 
         return false;
             
+    };
+
+    p.isEntryEventFuncName = function(name) {
+        if( name == "entry_event_start" || 
+            name == "entry_event_key" || 
+            name == "entry_event_mouse_down" || 
+            name == "entry_event_mouse_up" || 
+            name == "entry_event_object_down" || 
+            name == "entry_event_signal" || 
+            name == "entry_event_scene_start" || 
+            name == "entry_event_clone_create") {
+            
+            return true;
+        }
+
+        return false;
     };
 
     p.searchFuncDefParam = function(block) {
