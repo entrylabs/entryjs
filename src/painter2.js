@@ -94,7 +94,6 @@ p.changePicture = function(picture) {
     if (this.file.modified) {
         var save = confirm('수정된 내용을 저장하시겠습니까?');
         if (save) {
-            this.file_ = JSON.parse(JSON.stringify(this.file));
             this.file_save(true);
         }
     }
@@ -178,6 +177,7 @@ p.updateEditMenu = function() {
 
 p.file_save = function() {
     var dataURL = this.lc.getImage().toDataURL();
+    this.file_ = JSON.parse(JSON.stringify(this.file));
     Entry.dispatchEvent('saveCanvasImage',
                         {file: this.file_, image: dataURL});
 
