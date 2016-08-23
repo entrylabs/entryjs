@@ -225,6 +225,12 @@ p.downloadConnector = function() {
     win.focus();
 };
 
+p.downloadGuide = function() {
+    var url = "http://download.play-entry.org/data/%EC%97%94%ED%8A%B8%EB%A6%AC-%ED%95%98%EB%93%9C%EC%9B%A8%EC%96%B4%EC%97%B0%EA%B2%B0%EB%A7%A4%EB%89%B4%EC%96%BC_16_08_17.hwp";
+    var win = window.open(url, '_blank');
+    win.focus();
+};
+
 p.downloadSource = function() {
     var url = "http://play-entry.com/down/board.ino";
     var win = window.open(url, '_blank');

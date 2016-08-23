@@ -2533,6 +2533,26 @@ Entry.block = {
             ]
         }
     },
+    "download_guide": {
+        "skeleton": "basic_button",
+        "isNotFor": ["arduinoDisconnected"],
+        "color": "#eee",
+        "params": [
+            {
+                "type": "Text",
+                "text": Lang.Blocks.download_guide,
+                "color": "#333",
+                "align": "center"
+            }
+        ],
+        "events": {
+            "mousedown": [
+                function() {
+                    Entry.hw.downloadGuide();
+                }
+            ]
+        }
+    },
     "arduino_download_source": {
         "skeleton": "basic_button",
         "isNotFor": ["arduinoDisconnected"],
