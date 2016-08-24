@@ -19035,8 +19035,13 @@ Entry.BlockMenu = function(b, a, d, c) {
   b.selectMenu = function(a, b) {
     var c = this._convertSelector(a);
     if (c) {
-      "variable" == c && Entry.playground.checkVariables();
-      "arduino" == c && this._generateHwCode();
+      switch(c) {
+        case "variable":
+          Entry.playground.checkVariables();
+          break;
+        case "arduino":
+          this._generateHwCode();
+      }
       var e = this._categoryElems[c], f = this._selectedCategoryView, g = !1, h = this.workspace.board, k = h.view;
       f && f.removeClass("entrySelectedCategory");
       e != f || b ? f || (this.visible || (g = !0, k.addClass("foldOut"), Entry.playground.showTabs()), k.removeClass("folding"), this.visible = !0) : (k.addClass("folding"), this._selectedCategoryView = null, e.removeClass("entrySelectedCategory"), Entry.playground.hideTabs(), g = !0, this.visible = !1);

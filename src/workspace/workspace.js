@@ -159,7 +159,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         this._syncTextCode();
         this.board.changeCode(code);
         if (this.mode === Entry.Workspace.MODE_VIMBOARD) {
-
             this.codeToText(this.board.code);
         }
     };

@@ -426,10 +426,14 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             this.align();
             return;
         }
-        if (name == 'variable')
-            Entry.playground.checkVariables();
-
-        if (name == 'arduino') this._generateHwCode();
+        switch (name) {
+            case 'variable':
+                Entry.playground.checkVariables();
+                break;
+            case 'arduino':
+                this._generateHwCode();
+                break;
+        }
 
         var elem = this._categoryElems[name];
         var oldView = this._selectedCategoryView;
