@@ -222,7 +222,7 @@ p.closeConnection = function() {
 };
 
 p.downloadConnector = function() {
-    var url = "http://download.play-entry.org/apps/Entry_HW_1.5.8_Setup.exe";
+    var url = "http://download.play-entry.org/apps/Entry_HW_1.5.9_Setup.exe";
     var win = window.open(url, '_blank');
     win.focus();
 };
