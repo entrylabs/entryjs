@@ -156,6 +156,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 try {
                     //var astTree = acorn.parse(code);
                     //var threads = code.split('\n\n');
+                    console.log("js code", code);
                     var threads = [];
                     threads.push(code);
 
@@ -183,9 +184,9 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             error.message = "문법(Syntax) 오류입니다.";
                             error.type = 1;
                         } else {
-                            annotation = this.getLineNumber(error.node.start, error.node.end);
-                            annotation.message = error.message;
-                            annotation.severity = "converting error";
+                            console.log("error", error);
+                            if(error && error.node)
+                                annotation = this.getLineNumber(error.node.start, error.node.end);
 
                             /*var errorInfo = this.findErrorInfo(error);
                             annotation.from.line = errorInfo.lineNumber;
@@ -226,7 +227,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         mode.textType = Entry.Vim.TEXT_TYPE_JS; 
                         mode.runType = Entry.Vim.MAZE_MODE;
                         Ntry.dispatchEvent("textError", mode);
-                        throw new Error("text_js_error");
+                        throw error;
                     }
                     result = [];
                 }

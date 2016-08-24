@@ -79,9 +79,13 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     p.getMode = function() {return this.mode;};
 
     p.setMode = function(mode, message){
-        this.mode = mode.boardType;
-        this.runType = mode.runType;
-        this.textType = mode.textType;
+        if (typeof mode === 'number') {
+            this.mode = mode;
+        } else {
+            this.mode = mode.boardType;
+            this.runType = mode.runType || this.runType;
+            this.textType = mode.textType || this.textType;
+        }
 
         switch (this.mode) {
             case this.oldMode:
@@ -98,10 +102,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     this.board.clear();
                     this.oldMode = this.mode;
                     this.oldTextType = this.textType;
-                }
-                catch(e) {
-                    //console.log(("vimboard error");
-                }
+                } catch(e) {}
 
                 break;
 
@@ -147,6 +148,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                 this.overlayBoard.show();
                 this.set({selectedBoard:this.overlayBoard});
                 Entry.commander.setCurrentEditor("board", this.overlayBoard);
+                this.oldMode = this.mode;
                 break;
         }
 

@@ -129,6 +129,7 @@ Entry.Vim = function(dom, textType) {
         }
 
         var textCode = this.codeMirror.getValue();
+        console.log("textCode", textCode);
         var code = this._parser.parse(textCode);
         /*if(code.length === 0) {
             throw {
