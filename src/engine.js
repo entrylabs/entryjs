@@ -465,7 +465,6 @@ Entry.Engine.prototype.run = function() {
  * toggle this engine state run
  */
 Entry.Engine.prototype.toggleRun = function() {
-    console.log("Entry toggleRun");
     if (this.state === 'pause') {
         this.togglePause();
         return;
@@ -665,7 +664,6 @@ Entry.Engine.prototype.captureKeyEvent = function(e) {
             Entry.engine.run();
         } else if (keyCode == 90) {
             e.preventDefault();
-            console.log('engine');
             Entry.dispatchEvent(e.shiftKey ? 'redo' : 'undo');
         }
     } else if (Entry.engine.isState('run')) {

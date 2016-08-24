@@ -105,7 +105,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                 } catch(e) {}
 
                 break;
-
             case Entry.Workspace.MODE_BOARD:
                 try {
                     this.board.show();
@@ -113,7 +112,10 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     this.textToCode(this.oldMode, this.oldTextType);
                     if (this.vimBoard) this.vimBoard.hide();
                     if (this.overlayBoard) this.overlayBoard.hide();
-                    this.blockMenu.renderBlock();
+                    this.blockMenu.renderBlock(function() {
+                        this.blockMenu.reDraw();
+                        }.bind(this)
+                    );
                     this.oldMode = this.mode;
                     this.oldTextType = this.textType;
                 } catch(e) {
@@ -159,7 +161,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         this._syncTextCode();
         this.board.changeCode(code);
         if (this.mode === Entry.Workspace.MODE_VIMBOARD) {
-
             this.codeToText(this.board.code);
         }
     };

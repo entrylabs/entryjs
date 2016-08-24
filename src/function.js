@@ -55,7 +55,6 @@ Entry.Func.registerFunction = function(func) {
         type: "func_" + func.id
     }]);
     func.blockMenuBlock = this._targetFuncBlock;
-    console.log("register end");
 };
 
 Entry.Func.executeFunction = function(threadHash) {
@@ -86,10 +85,9 @@ Entry.Func.prototype.destroy = function() {
 };
 
 Entry.Func.edit = function(func) {
-    console.log("func", func);
     this.cancelEdit();
     this.targetFunc = func;
-    this.initEditView(func.content); 
+    this.initEditView(func.content);
     this.bindFuncChangeEvent();
     this.updateMenu();
 };
@@ -102,7 +100,7 @@ Entry.Func.initEditView = function(content) {
     var mode = {boardType: Entry.Workspace.MODE_OVERLAYBOARD};
     workspace.setMode(mode);
     workspace.changeOverlayBoardCode(content);
-    content.recreateView();   
+    content.recreateView();
     workspace.changeOverlayBoardCode(content);
     content.view.board.alignThreads();
     this._workspaceStateEvent = workspace.changeEvent.attach(this, this.endEdit);
