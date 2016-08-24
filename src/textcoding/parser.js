@@ -305,10 +305,18 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         console.log("came here error1", error);
                         var annotation;
                         var line;
+                        var isSyntaxLineEmpty = false;
                         if (error instanceof SyntaxError) {
                             console.log("py error type 1", error.loc);
                             var errorInfo = this.findSyntaxErrorInfo(error);
 
+                            var updateLineInfo = this.updateLineEmpty(errorInfo.line);
+
+                            if(updateLineInfo.isLineEmpty) {
+                                errorInfo.start = updateLineInfo.start;
+                                errorInfo.end = updateLineInfo.end;
+                            }
+                            
                             annotation = {
                                 from: {line: (errorInfo.line)-1, ch: errorInfo.start},
                                 to: {line: (errorInfo.line)-1, ch: errorInfo.end}
@@ -346,13 +354,19 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         }
 
                         console.log("annotation", annotation);
-
-                        this.codeMirror.markText(
-                            annotation.from, annotation.to, {
+                        
+                        var option = {
                             className: "CodeMirror-lint-mark-error",
                             __annotation: annotation,
-                            clearOnEnter: true
-                        });
+                            clearOnEnter: true,
+                            inclusiveLeft: true,
+                            inclusiveRigth: true,
+                            clearWhenEmpty: false 
+                        };
+
+                        this.codeMirror.markText(
+                            annotation.from, annotation.to, option);
+                        
 
                         console.log("came here error2", error);
 
@@ -578,20 +592,37 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
         var contents = this.codeMirror.getValue();
         var contentsArr = contents.split("\n");
+        contentsArr.shift();
+        contentsArr.shift();
+        contentsArr.shift();
+        contentsArr.shift();
+
+        var cleansedContents = contentsArr.join("^");
+        console.log("cleansedContents before", cleansedContents);
+        cleansedContents = cleansedContents.replace(/\^/gi, "\n");
+
+        console.log("replace");
+        console.log("cleansedContents after", cleansedContents);
+
+        var contentsThreads = cleansedContents.split("\n\n");
+        contents = contentsThreads[this._pyThreadCount-1];
+
+        var contentsArr = contents.split("\n"); 
 
         console.log("contentsArr", contentsArr);
         var currentLineCount = (this._pyThreadCount-1) * this._pyBlockCount;
-        for(var i = 4; i < contentsArr.length; i++) {
+        for(var i = 0; i < contentsArr.length; i++) {
 
             var targetText = contentsArr[i];
             console.log("targetText", targetText);
             console.log("this._pyThreadCount", this._pyThreadCount); 
 
-            if((i+1) == line+4) {
-                console.log("i+1", i +1);
+            if((i+1) == line) {
+                console.log("i+1", i+1);
                 result.line = i + 1 + currentLineCount + (this._pyThreadCount-1);
                 if(column == 0)
                     result.line -= 1;
+                result.line += 4;
                 result.start = 0;
                 result.end = targetText.length;
                 break;
@@ -603,78 +634,29 @@ Entry.Parser = function(mode, type, cm, syntax) {
         
     };
 
-    p.findSyntaxErrorInfo2 = function(error) {
+    p.updateLineEmpty = function(lineNumber) {
         var result = {};
-        var line = 0;
-        var column = error.loc.column;
-        var pos = error.pos;
-        console.log("real pos", pos);
-
-        var chCount = 0;
         var contents = this.codeMirror.getValue();
+        var contentsArr = contents.split("\n");
+        console.log("contentsArr", contentsArr);
 
-        var contentsArr = contents.split("\n\n");
-        contentsArr.shift();
-        contentsArr.shift();
+        var text = contentsArr[lineNumber-1];
 
-        var textLength = 0;
+        if(text.length == 0) {
+            contentsArr[lineNumber-1] = "~ remove this empty line ~";
+            var newContents = contentsArr.join("\n");
+            console.log("newContents", newContents);
+            this.codeMirror.setValue(newContents);
+            result.isLineEmpty = true;
+            result.start = 0;
+            result.end = contentsArr[lineNumber-1].length;
 
-        for(var c in contentsArr) {
-            var content = contentsArr[c];
-            textLength = content.length;
-            console.log("textLength", textLength);
-            if(c == this._pyThreadCount-1)
-                break;
-            pos += textLength;
+            return result;
         }
 
-        console.log("pos2", pos);
+        result.isLineEmpty = false;
 
-        var text = contentsArr.join("\n");
-
-        var textArr  = text.split("\n");
-        var targetText;
-        console.log("pos", pos);
-        console.log("textArr", textArr);
-        for(var i in textArr) {
-            targetText = textArr[i];
-            console.log("targetText", targetText);
-            console.log("this._pyThreadCount", this._pyThreadCount); 
-
-            var len = targetText.length;
-            if(targetText.indexOf(":") > -1)
-                len -= 1;
-
-            chCount += len;
-            console.log("chCount", chCount);
-            
-            if(pos < chCount + 1 + (this._pyThreadCount -1)) {
-                line++;
-                break;
-            }
-
-            line = parseInt(i)+1;
-
-            
-            console.log("line", line);
-        }
-
-        var firstCh = targetText.charAt(0);
-
-        var start = targetText.indexOf(firstCh);
-        var end = targetText.length;
-
-        if(column == 0)
-            line -= 1;
-
-        result.line = line + (this._pyThreadCount -1);
-        result.start = start;
-        result.end = end;
-
-
-        console.log("result", result);
         return result;
-        
     };
 
 

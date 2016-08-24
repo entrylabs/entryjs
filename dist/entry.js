@@ -12798,7 +12798,7 @@ Entry.PyToBlockParser = function(b) {
             console.log("BlockStatement allStatements", a);
             if (a && 0 != a.length) {
               for (g in a) {
-                h = a[g], console.log("BlockStatement(for) statement", h), h.type && e.push(h);
+                h = a[g], console.log("BlockStatement(for) statement", h), h.type && !Entry.TextCodingUtil.prototype.isJudgementBlock(h.type) && (Entry.TextCodingUtil.prototype.isCalculationBlock(h.type) || Entry.TextCodingUtil.prototype.isMaterialBlock(h.type) || e.push(h));
               }
             }
             console.log("BlockStatement(for) statements", e);
@@ -12815,13 +12815,27 @@ Entry.PyToBlockParser = function(b) {
               }
               b.params = c;
             } else {
-              (h = f[k]) && h.type && e.push(h);
+              if ((h = f[k]) && h.type) {
+                console.log("statement2 type", h.type);
+                if (Entry.TextCodingUtil.prototype.isJudgementBlock(h.type)) {
+                  continue;
+                } else {
+                  if (Entry.TextCodingUtil.prototype.isCalculationBlock(h.type)) {
+                    continue;
+                  } else {
+                    if (Entry.TextCodingUtil.prototype.isMaterialBlock(h.type)) {
+                      continue;
+                    }
+                  }
+                }
+                e.push(h);
+              }
             }
           } else {
             e = [];
             if ((a = f) && 0 != a.length) {
               for (g in a) {
-                h = a[g], console.log("BlockStatement statement", h), h && h.type && e.push(h);
+                h = a[g], console.log("BlockStatement statement", h), h && h.type && (console.log("statement3 type", h.type), Entry.TextCodingUtil.prototype.isJudgementBlock(h.type) || Entry.TextCodingUtil.prototype.isCalculationBlock(h.type) || Entry.TextCodingUtil.prototype.isMaterialBlock(h.type) || e.push(h));
               }
             }
             console.log("BlockStatement statements", e);
@@ -13615,9 +13629,9 @@ Entry.Parser = function(b, a, d, c) {
           this._parser._variableMap.clear();
         } catch (q) {
           if (this.codeMirror) {
-            throw console.log("came here error1", q), q instanceof SyntaxError ? (console.log("py error type 1", q.loc), l = this.findSyntaxErrorInfo(q), c = {from:{line:l.line - 1, ch:l.start}, to:{line:l.line - 1, ch:l.end}}, q.message || (q.message = "\ud30c\uc774\uc36c \ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4."), q.type = 1) : (console.log("py error type 2"), l = q, l.line += 4, c = this.findConvertingTargetChInfo(l.line), c = {from:{line:l.line - 1, ch:c.start}, to:{line:l.line - 1, ch:c.end}}, 
-            q.message || (q.message = "\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4."), q.type = 2), console.log("annotation", c), this.codeMirror.markText(c.from, c.to, {className:"CodeMirror-lint-mark-error", __annotation:c, clearOnEnter:!0}), console.log("came here error2", q), c = q.title ? q.title : "\ubb38\ubc95 \uc624\ub958(Syntax Error)", l = parseInt(l.line), l = q.message && l ? q.message + " \n(line: " + l + ")" : "\ud30c\uc774\uc36c \ucf54\ub4dc\ub97c \ud655\uc778\ud574\uc8fc\uc138\uc694", 
-            Entry.toast.alert(c, l), q;
+            throw console.log("came here error1", q), q instanceof SyntaxError ? (console.log("py error type 1", q.loc), l = this.findSyntaxErrorInfo(q), c = this.updateLineEmpty(l.line), c.isLineEmpty && (l.start = c.start, l.end = c.end), c = {from:{line:l.line - 1, ch:l.start}, to:{line:l.line - 1, ch:l.end}}, q.message || (q.message = "\ud30c\uc774\uc36c \ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4."), q.type = 1) : (console.log("py error type 2"), l = q, l.line += 4, c = this.findConvertingTargetChInfo(l.line), 
+            c = {from:{line:l.line - 1, ch:c.start}, to:{line:l.line - 1, ch:c.end}}, q.message || (q.message = "\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4."), q.type = 2), console.log("annotation", c), this.codeMirror.markText(c.from, c.to, {className:"CodeMirror-lint-mark-error", __annotation:c, clearOnEnter:!0, inclusiveLeft:!0, inclusiveRigth:!0, clearWhenEmpty:!1}), console.log("came here error2", q), c = q.title ? q.title : "\ubb38\ubc95 \uc624\ub958(Syntax Error)", 
+            l = parseInt(l.line), l = q.message && l ? q.message + " \n(line: " + l + ")" : "\ud30c\uc774\uc36c \ucf54\ub4dc\ub97c \ud655\uc778\ud574\uc8fc\uc138\uc694", Entry.toast.alert(c, l), q;
           }
           c = [];
         }
@@ -13708,16 +13722,28 @@ Entry.Parser = function(b, a, d, c) {
     var b = {}, c = a.loc.line;
     a = a.loc.column;
     b.line = c;
-    var e = this.codeMirror.getValue().split("\n");
+    var e = this.codeMirror.getValue(), e = e.split("\n");
+    e.shift();
+    e.shift();
+    e.shift();
+    e.shift();
+    e = e.join("^");
+    console.log("cleansedContents before", e);
+    e = e.replace(/\^/gi, "\n");
+    console.log("replace");
+    console.log("cleansedContents after", e);
+    e = e.split("\n\n")[this._pyThreadCount - 1];
+    e = e.split("\n");
     console.log("contentsArr", e);
-    for (var f = (this._pyThreadCount - 1) * this._pyBlockCount, g = 4;g < e.length;g++) {
+    for (var f = (this._pyThreadCount - 1) * this._pyBlockCount, g = 0;g < e.length;g++) {
       var h = e[g];
       console.log("targetText", h);
       console.log("this._pyThreadCount", this._pyThreadCount);
-      if (g + 1 == c + 4) {
+      if (g + 1 == c) {
         console.log("i+1", g + 1);
         b.line = g + 1 + f + (this._pyThreadCount - 1);
         0 == a && --b.line;
+        b.line += 4;
         b.start = 0;
         b.end = h.length;
         break;
@@ -13726,50 +13752,20 @@ Entry.Parser = function(b, a, d, c) {
     console.log("findSyntaxErrorInfo result", b);
     return b;
   };
-  b.findSyntaxErrorInfo2 = function(a) {
-    var b = {}, c = 0, e = a.loc.column;
-    a = a.pos;
-    console.log("real pos", a);
-    var f = 0, g = this.codeMirror.getValue().split("\n\n");
-    g.shift();
-    g.shift();
-    var h = 0, k;
-    for (k in g) {
-      h = g[k].length;
-      console.log("textLength", h);
-      if (k == this._pyThreadCount - 1) {
-        break;
-      }
-      a += h;
+  b.updateLineEmpty = function(a) {
+    var b = {}, c = this.codeMirror.getValue().split("\n");
+    console.log("contentsArr", c);
+    if (0 == c[a - 1].length) {
+      c[a - 1] = "~ remove this empty line ~";
+      var e = c.join("\n");
+      console.log("newContents", e);
+      this.codeMirror.setValue(e);
+      b.isLineEmpty = !0;
+      b.start = 0;
+      b.end = c[a - 1].length;
+      return b;
     }
-    console.log("pos2", a);
-    k = g.join("\n").split("\n");
-    var l;
-    console.log("pos", a);
-    console.log("textArr", k);
-    for (var m in k) {
-      l = k[m];
-      console.log("targetText", l);
-      console.log("this._pyThreadCount", this._pyThreadCount);
-      g = l.length;
-      -1 < l.indexOf(":") && --g;
-      f += g;
-      console.log("chCount", f);
-      if (a < f + 1 + (this._pyThreadCount - 1)) {
-        c++;
-        break;
-      }
-      c = parseInt(m) + 1;
-      console.log("line", c);
-    }
-    m = l.charAt(0);
-    m = l.indexOf(m);
-    l = l.length;
-    0 == e && --c;
-    b.line = c + (this._pyThreadCount - 1);
-    b.start = m;
-    b.end = l;
-    console.log("result", b);
+    b.isLineEmpty = !1;
     return b;
   };
 })(Entry.Parser.prototype);

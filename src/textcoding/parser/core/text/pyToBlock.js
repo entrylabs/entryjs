@@ -1099,9 +1099,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         for(var i in allStatements) {
                             var statement = allStatements[i];
                             console.log("BlockStatement(for) statement", statement);
-                            if(statement.type)
+                            if(statement.type) {
+                                if(Entry.TextCodingUtil.prototype.isJudgementBlock(statement.type)) {
+                                    continue;
+                                }
+                                else if(Entry.TextCodingUtil.prototype.isCalculationBlock(statement.type)) {
+                                    continue;
+                                }
+                                else if(Entry.TextCodingUtil.prototype.isMaterialBlock(statement.type)) {
+                                    continue;
+                                }
                                 statements.push(statement);
-                        }
+                            }
+                        } 
                     }
 
                     console.log("BlockStatement(for) statements", statements); 
@@ -1123,8 +1133,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             result.params = params;
                         } else {
                             var statement = data[d];
-                            if(statement && statement.type)
-                                    statements.push(statement);
+                            if(statement && statement.type) {
+                                console.log("statement2 type", statement.type);
+                                if(Entry.TextCodingUtil.prototype.isJudgementBlock(statement.type)) {
+                                    continue;
+                                }
+                                else if(Entry.TextCodingUtil.prototype.isCalculationBlock(statement.type)) {
+                                    continue;
+                                }
+                                else if(Entry.TextCodingUtil.prototype.isMaterialBlock(statement.type)) {
+                                    continue;
+                                }
+                                statements.push(statement);
+                            }
                         }
                     }
                     else {
@@ -1134,8 +1155,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             for(i in allStatements) {
                                 var statement = allStatements[i];
                                 console.log("BlockStatement statement", statement);
-                                if(statement && statement.type)
+                                if(statement && statement.type){
+                                    console.log("statement3 type", statement.type);
+                                    if(Entry.TextCodingUtil.prototype.isJudgementBlock(statement.type)) {
+                                        continue;
+                                    }
+                                    else if(Entry.TextCodingUtil.prototype.isCalculationBlock(statement.type)) {
+                                        continue;
+                                    }
+                                    else if(Entry.TextCodingUtil.prototype.isMaterialBlock(statement.type)) {
+                                        continue;
+                                    }
                                     statements.push(statement);
+                                }
                             }
                         }
 
