@@ -6977,7 +6977,7 @@ Entry.Observer = function(a, b, c, d) {
   };
 })(Entry.Observer.prototype);
 Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BLOCK_RENDER_MODEL:9, BOX_MODEL:10, THREAD_MODEL:11, DRAG_INSTANCE:12, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1, BREAK:2, PASS:3, COMMAND_TYPES:{addThread:101, destroyThread:102, destroyBlock:103, recoverBlock:104, insertBlock:105, separateBlock:106, moveBlock:107, cloneBlock:108, uncloneBlock:109, scrollBoard:110, setFieldValue:111, selectObject:201, "do":301, 
-undo:302, redo:303, editPicture:401, uneditPicture:402}};
+undo:302, redo:303, editPicture:401, uneditPicture:402, processPicture:403, unprocessPicture:404}};
 Entry.Command = {};
 (function(a) {
   a.do = {type:Entry.STATIC.COMMAND_TYPES["do"], log:function(b) {
@@ -7190,6 +7190,18 @@ Entry.Commander = function(a) {
   }, log:function(b) {
     return [b];
   }, undo:"editPicture"};
+  a.processPicture = {type:Entry.STATIC.COMMAND_TYPES.processPicture, do:function(b, a) {
+    Entry.playground.painter.lc.canRedo() && Entry.playground.painter.lc.redo();
+  }, state:function(b) {
+  }, log:function(b) {
+    return [b];
+  }, undo:"unprocessPicture", isPass:!0};
+  a.unprocessPicture = {type:Entry.STATIC.COMMAND_TYPES.unprocessPicture, do:function(b, a) {
+    Entry.playground.painter.lc.undo();
+  }, state:function(b) {
+  }, log:function(b) {
+    return [b];
+  }, undo:"processPicture", isPass:!0};
 })(Entry.Command);
 Entry.Container = function() {
   this.objects_ = [];
@@ -9753,9 +9765,13 @@ Entry.StateManager.prototype.undo = function() {
 };
 Entry.StateManager.prototype.redo = function() {
   if (this.canRedo() && !this.isRestoring()) {
-    this.addActivity("redo");
-    var a = this.redoStack_.pop();
-    a.func.apply(a.caller, a.params);
+    for (this.addActivity("redo");this.redoStack_.length;) {
+      var a = this.redoStack_.pop();
+      a.func.apply(a.caller, a.params);
+      if (!0 !== a.isPass) {
+        break;
+      }
+    }
     this.updateView();
     Entry.creationChangedEvent && Entry.creationChangedEvent.notify();
   }
@@ -11823,8 +11839,7 @@ Entry.Painter2 = function(a) {
         this.lc.repaintLayer("background");
       }.bind(this);
       b = function(b) {
-        var a = Entry.do("editPicture", b, this.lc);
-        (b.shape && !b.opts && b.shape.isPass || b.opts && b.opts.isPass) && a.isPass();
+        b.shape && !b.opts && b.shape.isPass || b.opts && b.opts.isPass ? Entry.do("processPicture", b, this.lc) : Entry.do("editPicture", b, this.lc);
         this.file.modified = !0;
       }.bind(this);
       this.lc.on("clear", b);
@@ -17690,42 +17705,42 @@ Entry.BlockMenu = function(a, b, c, d) {
       a.onMouseDown.apply(a, arguments);
     });
   };
-  a.onMouseDown = function(a) {
-    function c(a) {
-      a.stopPropagation && a.stopPropagation();
-      a.preventDefault && a.preventDefault();
-      a = Entry.Utils.convertMouseEvent(a);
-      var b = e.dragInstance;
-      e._scroller.scroll(-a.pageY + b.offsetY);
-      b.set({offsetY:a.pageY});
+  a.onMouseDown = function(b) {
+    function a(b) {
+      b.stopPropagation && b.stopPropagation();
+      b.preventDefault && b.preventDefault();
+      b = Entry.Utils.convertMouseEvent(b);
+      var c = e.dragInstance;
+      e._scroller.scroll(-b.pageY + c.offsetY);
+      c.set({offsetY:b.pageY});
     }
-    function d(a) {
+    function d(b) {
       $(document).unbind(".blockMenu");
       delete e.dragInstance;
     }
-    a.stopPropagation && a.stopPropagation();
-    a.preventDefault && a.preventDefault();
+    b.stopPropagation && b.stopPropagation();
+    b.preventDefault && b.preventDefault();
     var e = this;
-    if (0 === a.button || a.originalEvent && a.originalEvent.touches) {
-      a = Entry.Utils.convertMouseEvent(a);
-      Entry.documentMousedown && Entry.documentMousedown.notify(a);
+    if (0 === b.button || b.originalEvent && b.originalEvent.touches) {
+      b = Entry.Utils.convertMouseEvent(b);
+      Entry.documentMousedown && Entry.documentMousedown.notify(b);
       var f = $(document);
-      f.bind("mousemove.blockMenu", c);
+      f.bind("mousemove.blockMenu", a);
       f.bind("mouseup.blockMenu", d);
-      f.bind("touchmove.blockMenu", c);
+      f.bind("touchmove.blockMenu", a);
       f.bind("touchend.blockMenu", d);
-      this.dragInstance = new Entry.DragInstance({startY:a.pageY, offsetY:a.pageY});
+      this.dragInstance = new Entry.DragInstance({startY:b.pageY, offsetY:b.pageY});
     }
   };
-  a._mouseWheel = function(a) {
-    a = a.originalEvent;
-    a.preventDefault();
-    var c = Entry.disposeEvent;
-    c && c.notify(a);
-    this._scroller.scroll(-a.wheelDeltaY || a.deltaY / 3);
+  a._mouseWheel = function(b) {
+    b = b.originalEvent;
+    b.preventDefault();
+    var a = Entry.disposeEvent;
+    a && a.notify(b);
+    this._scroller.scroll(-b.wheelDeltaY || b.deltaY / 3);
   };
-  a.dominate = function(a) {
-    this.svgBlockGroup.appendChild(a.view.svgGroup);
+  a.dominate = function(b) {
+    this.svgBlockGroup.appendChild(b.view.svgGroup);
   };
   a.reDraw = function() {
     this.selectMenu(this.lastSelector, !0);
@@ -17734,12 +17749,12 @@ Entry.BlockMenu = function(a, b, c, d) {
     this._boardBlockView = null;
     this._scroller && this._scroller.setOpacity(0);
   };
-  a._captureKeyEvent = function(a) {
-    var c = a.keyCode, d = Entry.type;
-    a.ctrlKey && "workspace" == d && 48 < c && 58 > c && (a.preventDefault(), this.selectMenu(c - 49));
+  a._captureKeyEvent = function(b) {
+    var a = b.keyCode, d = Entry.type;
+    b.ctrlKey && "workspace" == d && 48 < a && 58 > a && (b.preventDefault(), this.selectMenu(a - 49));
   };
-  a.setPatternRectFill = function(a) {
-    this.patternRect.attr({fill:a});
+  a.setPatternRectFill = function(b) {
+    this.patternRect.attr({fill:b});
     this.pattern.attr({style:""});
   };
   a.disablePattern = function() {
@@ -17748,28 +17763,28 @@ Entry.BlockMenu = function(a, b, c, d) {
   a._clearCategory = function() {
     this._selectedCategoryView = null;
     this._categories = [];
-    var a = this._categoryElems, c;
-    for (c in a) {
-      a[c].remove();
+    var b = this._categoryElems, a;
+    for (a in b) {
+      b[a].remove();
     }
     this._categoryElems = {};
-    a = this._categoryCodes;
-    for (c in a) {
-      var d = a[c];
+    b = this._categoryCodes;
+    for (a in b) {
+      var d = b[a];
       d.constructor == Entry.Code && d.clear();
     }
     this._categoryCodes = null;
   };
-  a.setCategoryData = function(a) {
+  a.setCategoryData = function(b) {
     this._clearCategory();
-    this._categoryData = a;
-    this._generateCategoryView(a);
-    this._generateCategoryCodes(a);
+    this._categoryData = b;
+    this._generateCategoryView(b);
+    this._generateCategoryCodes(b);
   };
-  a._generateCategoryView = function(a) {
-    if (a) {
-      for (var c = 0;c < a.length;c++) {
-        this._generateCategoryElement(a[c].category);
+  a._generateCategoryView = function(b) {
+    if (b) {
+      for (var a = 0;a < b.length;a++) {
+        this._generateCategoryElement(b[a].category);
       }
     }
   };

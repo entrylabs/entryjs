@@ -33,5 +33,34 @@ goog.require("Entry.STATIC");
         },
         undo: "editPicture"
     };
+
+    c.processPicture = {
+        type: Entry.STATIC.COMMAND_TYPES.processPicture,
+        do: function(action, lc) {
+            if (Entry.playground.painter.lc.canRedo())
+                Entry.playground.painter.lc.redo()
+        },
+        state: function(objectId) {
+        },
+        log: function(objectId) {
+            return [objectId];
+        },
+        undo: "unprocessPicture",
+        isPass: true
+    };
+
+    c.unprocessPicture = {
+        type: Entry.STATIC.COMMAND_TYPES.unprocessPicture,
+        do: function(action, lc) {
+            Entry.playground.painter.lc.undo()
+        },
+        state: function(objectId) {
+        },
+        log: function(objectId) {
+            return [objectId];
+        },
+        undo: "processPicture",
+        isPass: true
+    };
 })(Entry.Command);
 

@@ -48,10 +48,11 @@ p.initialize = function() {
     }.bind(this);
 
     var watchFunc = function(e) {
-        var cmd = Entry.do("editPicture", e, this.lc)
         if ((e.shape && !e.opts && e.shape.isPass) ||
             e.opts && e.opts.isPass) {
-            cmd.isPass()
+            Entry.do("processPicture", e, this.lc)
+        } else {
+            Entry.do("editPicture", e, this.lc)
         }
         this.file.modified = true;
     }.bind(this)

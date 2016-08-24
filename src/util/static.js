@@ -49,6 +49,8 @@ Entry.STATIC = {
         'redo': 303,
 
         editPicture: 401,
-        uneditPicture: 402
+        uneditPicture: 402,
+        processPicture: 403,
+        unprocessPicture: 404
     }
 };
