@@ -104,7 +104,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                 }
 
                 break;
-
             case Entry.Workspace.MODE_BOARD:
                 try {
                     this.board.show();
@@ -112,7 +111,10 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     this.textToCode(this.oldMode, this.oldTextType);
                     if (this.vimBoard) this.vimBoard.hide();
                     if (this.overlayBoard) this.overlayBoard.hide();
-                    this.blockMenu.renderBlock();
+                    this.blockMenu.renderBlock(function() {
+                        this.blockMenu.reDraw();
+                        }.bind(this)
+                    );
                     this.oldMode = this.mode;
                     this.oldTextType = this.textType;
                 } catch(e) {

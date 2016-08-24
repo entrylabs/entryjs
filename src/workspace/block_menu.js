@@ -316,11 +316,13 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             threads[i].view.renderText();
     };
 
-    p.renderBlock = function() {
+    p.renderBlock = function(cb) {
         var threads = this.code.getThreads();
         this.code.mode = 'code';
         for (var i=0; i<threads.length; i++)
             threads[i].view.renderBlock();
+
+        cb && cb();
     };
 
     p._createSplitter = function(topPos) {
@@ -420,7 +422,10 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     p.selectMenu = function(selector, doNotFold) {
         var name = this._convertSelector(selector);
-        if (!name) return;
+        if (!name) {
+            this.align();
+            return;
+        }
         if (name == 'variable')
             Entry.playground.checkVariables();
 
