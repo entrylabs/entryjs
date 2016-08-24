@@ -12030,66 +12030,61 @@ Entry.JsToBlockParser = function(b) {
     return "= += -= *= /= %= <<= >>= >>>= ,= ^= &=".split(" ");
   };
   b.BinaryExpression = function(a) {
-    var b = {}, c = {}, e = String(a.operator), f = a.left.name;
-    switch(e) {
+    var b = {}, c = {}, b = String(a.operator), e = a.left.name;
+    switch(b) {
       case "==":
-        if ("object_up" == f || "object_right" == f || "object_down" == f) {
-          var g = "ai_boolean_object"
-        } else {
-          if ("radar_up" == f || "radar_right" == f || "radar_down" == f) {
-            g = "ai_boolean_distance";
-          }
-        }
+        var f = "object_up" == e || "object_right" == e || "object_down" == e ? "ai_boolean_object" : "radar_up" == e || "radar_right" == e || "radar_down" == e ? "ai_boolean_distance" : null;
         break;
       case "<":
-        g = "ai_boolean_distance";
+        f = "ai_boolean_distance";
         break;
       case "<=":
-        g = "ai_boolean_distance";
+        f = "ai_boolean_distance";
         break;
       case ">":
-        g = "ai_boolean_distance";
+        f = "ai_boolean_distance";
         break;
       case ">=":
-        g = "ai_boolean_distance";
+        f = "ai_boolean_distance";
     }
-    if (g) {
-      f = [];
+    if (f) {
+      e = [];
       b = a.left;
       if ("Literal" == b.type || "Identifier" == b.type) {
         arguments = [];
         arguments.push(b);
-        var b = Entry.block[g].params, h;
-        for (h in b) {
-          e = b[h].type, "Indicator" == e ? (e = {raw:null, type:"Literal", value:null}, h < arguments.length && arguments.splice(h, 0, e)) : "Text" == e && (e = {raw:"", type:"Literal", value:""}, h < arguments.length && arguments.splice(h, 0, e));
+        var b = Entry.block[f].params, g;
+        for (g in b) {
+          var h = b[g].type;
+          "Indicator" == h ? (h = {raw:null, type:"Literal", value:null}, g < arguments.length && arguments.splice(g, 0, h)) : "Text" == h && (h = {raw:"", type:"Literal", value:""}, g < arguments.length && arguments.splice(g, 0, h));
         }
         for (var k in arguments) {
-          b = arguments[k], b = this[b.type](b), (b = Entry.TextCodingUtil.prototype.radarVariableConvertor(b)) && null != b && f.push(b);
+          b = arguments[k], h = this[b.type](b), (h = Entry.TextCodingUtil.prototype.radarVariableConvertor(h)) && null != h && e.push(h);
         }
       } else {
-        b = this[b.type](b), (b = Entry.TextCodingUtil.prototype.radarVariableConvertor(b)) && f.push(b);
+        h = this[b.type](b), (h = Entry.TextCodingUtil.prototype.radarVariableConvertor(h)) && e.push(h);
       }
-      if (e = String(a.operator)) {
-        (b = e = Entry.TextCodingUtil.prototype.jTobBinaryOperatorConvertor(e)) && f.push(b), c.operator = e;
+      if (b = String(a.operator)) {
+        (h = b = Entry.TextCodingUtil.prototype.jTobBinaryOperatorConvertor(b)) && e.push(h), c.operator = b;
       }
       b = a.right;
       if ("Literal" == b.type || "Identifier" == b.type) {
         arguments = [];
         arguments.push(b);
-        b = Entry.block[g].params;
-        for (h in b) {
-          e = b[h].type, "Indicator" == e ? (e = {raw:null, type:"Literal", value:null}, h < arguments.length && arguments.splice(h, 0, e)) : "Text" == e && (e = {raw:"", type:"Literal", value:""}, h < arguments.length && arguments.splice(h, 0, e));
+        b = Entry.block[f].params;
+        for (g in b) {
+          h = b[g].type, "Indicator" == h ? (h = {raw:null, type:"Literal", value:null}, g < arguments.length && arguments.splice(g, 0, h)) : "Text" == h && (h = {raw:"", type:"Literal", value:""}, g < arguments.length && arguments.splice(g, 0, h));
         }
         for (k in arguments) {
-          b = arguments[k], b = this[b.type](b), "string" == typeof b && (h = b.split("_"), "radar" == h[0] && (b = {type:"ai_distance_value", params:[]}, b.params.push(h[1].toUpperCase()))), b && null != b && ("ai_boolean_object" == g && (b = b.params[0], f.splice(1, 1)), b = Entry.TextCodingUtil.prototype.tTobDropdownValueConvertor(b), f.push(b));
+          b = arguments[k], h = this[b.type](b), "string" == typeof h && (g = h.split("_"), "radar" == g[0] && (b = {type:"ai_distance_value", params:[]}, b.params.push(g[1].toUpperCase()), h = b)), h && null != h && ("ai_boolean_object" == f && (h = h.params[0], e.splice(1, 1)), h = Entry.TextCodingUtil.prototype.tTobDropdownValueConvertor(h), e.push(h));
         }
       } else {
-        b = this[b.type](b), "ai_boolean_object" == g && (b = b.params[0], f.splice(1, 1)), b && f.push(b);
+        h = this[b.type](b), "ai_boolean_object" == f && (h = h.params[0], e.splice(1, 1)), h && e.push(h);
       }
-      c.type = g;
-      c.params = f;
+      c.type = f;
+      c.params = e;
     } else {
-      return b;
+      throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a.test};
     }
     return c;
   };

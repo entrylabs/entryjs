@@ -493,6 +493,8 @@ Entry.JsToBlockParser = function(syntax) {
                     var type = "ai_boolean_object";
                 else if(nodeName == "radar_up" || nodeName == "radar_right" || nodeName == "radar_down")
                     var type = "ai_boolean_distance";
+                else
+                    var type = null;
                 break;         
             case "<": 
                 var type = "ai_boolean_distance";
@@ -633,9 +635,10 @@ Entry.JsToBlockParser = function(syntax) {
             structure.params = params;
             ////console.log("be structure", structure);
         } else {
-            structure = null;
-
-            return result;
+            throw {
+                message : '지원하지 않는 표현식 입니다.',
+                node : node.test
+            };
         }
 
         result = structure;
