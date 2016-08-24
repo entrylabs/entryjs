@@ -98,6 +98,7 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
         this.view_.appendChild(this.maximizeButton);
         this.maximizeButton.bindOnClick(function(e) {
             Entry.engine.toggleFullscreen();
+            this.blur();
         });
 
 
@@ -112,7 +113,7 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
                 this.removeClass('toggleOn');
             else
                 this.addClass('toggleOn');
-            coordinateButton.blur();
+            this.blur();
             Entry.stage.toggleCoordinator();
         });
 
@@ -122,6 +123,7 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
         this.addButton.innerHTML = Lang.Workspace.add_object;
         this.addButton.bindOnClick(function(e) {
             Entry.dispatchEvent('openSpriteManager');
+            this.blur();
         });
         this.view_.appendChild(this.addButton);
 
@@ -133,6 +135,7 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
         this.view_.appendChild(this.runButton);
         this.runButton.bindOnClick(function(e) {
             Entry.engine.toggleRun();
+            this.blur();
         });
         this.runButton2 = Entry.createElement('button');
         this.runButton2.addClass('entryEngineButtonWorkspace_w');
@@ -140,6 +143,7 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
 
         this.view_.appendChild(this.runButton2);
         this.runButton2.bindOnClick(function(e) {
+            this.blur();
             Entry.engine.toggleRun();
         });
 
@@ -150,6 +154,7 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
         this.stopButton.innerHTML = Lang.Workspace.stop;
         this.view_.appendChild(this.stopButton);
         this.stopButton.bindOnClick(function(e) {
+            this.blur();
             Entry.engine.toggleStop();
         });
 
@@ -160,6 +165,7 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
         this.stopButton2.innerHTML = Lang.Workspace.stop;
         this.view_.appendChild(this.stopButton2);
         this.stopButton2.bindOnClick(function(e) {
+            this.blur();
             Entry.engine.toggleStop();
         });
 
@@ -169,6 +175,7 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
         this.pauseButton.addClass('entryRemove');
         this.view_.appendChild(this.pauseButton);
         this.pauseButton.bindOnClick(function(e) {
+            this.blur();
             Entry.engine.togglePause();
         });
 
