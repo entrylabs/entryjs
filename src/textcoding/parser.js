@@ -37,7 +37,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
     /*this.syntax.js = this.mappingSyntaxJs(mode);
     this.syntax.py = this.mappingSyntaxPy(mode);*/
 
-    ////console.log("py syntax", this.syntax.py);
+    //////console.log("py syntax", this.syntax.py);
     this._console = new Entry.Console();
 
     switch (this._lang) {
@@ -151,16 +151,18 @@ Entry.Parser = function(mode, type, cm, syntax) {
         var type = this._type;
         var result = null;
 
+        //console.log("type", type);
+
         switch (type) {
             case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
                 try {
                     //var astTree = acorn.parse(code);
                     //var threads = code.split('\n\n');
-                    console.log("js code", code);
+                    //console.log("code", code);
                     var threads = [];
                     threads.push(code);
 
-                    ////console.log("threads", threads);
+                    //////console.log("threads", threads);
 
                     var astArray = [];
 
@@ -175,18 +177,23 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     result = this._parser.Program(astArray);
                 } catch (error) {
                     if (this.codeMirror) {
+                        //console.log("error.loc", error.loc);
                         var annotation;
                         if (error instanceof SyntaxError) {
                             annotation = {
+                                from: {line: error.loc.line - 1, ch: 0},
+                                to: {line: error.loc.line - 1, ch: error.loc.column}
+                            }
+                            /*annotation = {
                                 from: {line: error.loc.line - 1, ch: error.loc.column - 2},
                                 to: {line: error.loc.line - 1, ch: error.loc.column + 1}
-                            }
+                            }*/
                             error.message = "문법(Syntax) 오류입니다.";
                             error.type = 1;
                         } else {
-                            console.log("error", error);
-                            if(error && error.node)
-                                annotation = this.getLineNumber(error.node.start, error.node.end);
+                            annotation = this.getLineNumber(error.node.start, error.node.end);
+                            annotation.message = error.message;
+                            annotation.severity = "converting error";
 
                             /*var errorInfo = this.findErrorInfo(error);
                             annotation.from.line = errorInfo.lineNumber;
@@ -307,7 +314,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
                 var textCode = this._parser.Code(code, parseMode);
                 /*var textArr = textCode.match(/(.*{.*[\S|\s]+?}|.+)/g);
-                //console.log("textCode", textCode);
+                ////console.log("textCode", textCode);
                 if(Array.isArray(textArr)) {
                     result = textArr.reduce(function (prev, current, index) {
                         var temp = '';
@@ -373,7 +380,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     if (!syntaxArray) continue;
 
                     var syntaxTemp = syntax;
-                    ////console.log("syntaxArray", syntaxArray);
+                    //////console.log("syntaxArray", syntaxArray);
                     for (var j = 0; j < syntaxArray.length; j++) {
                         var key = syntaxArray[j];
                         if(key.indexOf("%") > -1)
@@ -409,7 +416,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
                         if(block.syntax && block.syntax.py) {
                             pySyntax = block.syntax.py;
-                            ////console.log("syntax", syntax);
+                            //////console.log("syntax", syntax);
                         }
 
                         if (!pySyntax)

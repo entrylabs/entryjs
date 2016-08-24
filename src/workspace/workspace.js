@@ -83,8 +83,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             this.mode = mode;
         } else {
             this.mode = mode.boardType;
-            this.runType = mode.runType || this.runType;
-            this.textType = mode.textType || this.textType;
+            this.runType = mode.runType;
+            this.textType = mode.textType;
         }
 
         switch (this.mode) {
@@ -100,9 +100,11 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     this.codeToText(this.board.code, mode);
                     this.blockMenu.renderText();
                     this.board.clear();
-                    this.oldMode = this.mode;
+                    //this.oldMode = this.mode;
                     this.oldTextType = this.textType;
-                } catch(e) {}
+                } catch(e) {
+                    //console.log("vimBoard error");
+                }
 
                 break;
             case Entry.Workspace.MODE_BOARD:
@@ -116,7 +118,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                         this.blockMenu.reDraw();
                         }.bind(this)
                     );
-                    this.oldMode = this.mode;
+                    //this.oldMode = this.mode;
                     this.oldTextType = this.textType;
                 } catch(e) {
                     if (this.board) this.board.hide();
@@ -135,7 +137,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                         mode.textType = Entry.Vim.TEXT_TYPE_PY;
                         mode.runType = Entry.Vim.WORKSPACE_MODE;
                         this.oldTextType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK;
-                        //console.log(("mode", mode);
+                        ////console.log(("mode", mode);
                         Entry.dispatchEvent("changeMode", mode);
                     }
 
@@ -150,9 +152,11 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                 this.overlayBoard.show();
                 this.set({selectedBoard:this.overlayBoard});
                 Entry.commander.setCurrentEditor("board", this.overlayBoard);
-                this.oldMode = this.mode;
+                //this.oldMode = this.mode;
                 break;
         }
+
+        this.oldMode = this.mode;
 
         this.changeEvent.notify(message);
     };

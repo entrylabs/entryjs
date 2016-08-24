@@ -119,6 +119,7 @@ Entry.Vim = function(dom, textType) {
     };
 
     p.textToCode = function(textType) {
+        //console.log("textToCode", textType);
         var type = textType;
         if (type === Entry.Vim.TEXT_TYPE_JS) {
             this._parserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK;
@@ -129,8 +130,8 @@ Entry.Vim = function(dom, textType) {
         }
 
         var textCode = this.codeMirror.getValue();
-        console.log("textCode", textCode);
         var code = this._parser.parse(textCode);
+        //console.log("code", code);
         /*if(code.length === 0) {
             throw {
                 message : '지원되지 않는 표현식을 포함하고 있습니다.',
@@ -150,7 +151,7 @@ Entry.Vim = function(dom, textType) {
             codeDescription = "# " + object.name + " 오브젝트의 파이썬 코드";
         }
 
-        //console.log("codeToText mode", mode);
+        ////console.log("codeToText mode", mode);
 
         var textType = mode.textType;
 
@@ -183,7 +184,7 @@ Entry.Vim = function(dom, textType) {
     };
 
     p.getCodeToText = function(code) {
-        var textType = this.workspace.textType;
+        var textType = this.workspace.oldTextType;
         if (textType === Entry.Vim.TEXT_TYPE_JS){
             this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS;
             this._parser.setParser(this._mode, this._parserType, this.codeMirror);
