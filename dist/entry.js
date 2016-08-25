@@ -7336,14 +7336,14 @@ Entry.Engine.prototype.generateView = function(b, a) {
     this.view_.appendChild(this.maximizeButton);
     this.maximizeButton.bindOnClick(function(a) {
       Entry.engine.toggleFullscreen();
+      this.blur();
     });
-    var d = Entry.createElement("button");
-    this.coordinateButton = d;
+    this.coordinateButton = Entry.createElement("button");
     this.coordinateButton.addClass("entryEngineButtonWorkspace_w", "entryEngineTopWorkspace", "entryCoordinateButtonWorkspace_w");
     this.view_.appendChild(this.coordinateButton);
     this.coordinateButton.bindOnClick(function(a) {
       this.hasClass("toggleOn") ? this.removeClass("toggleOn") : this.addClass("toggleOn");
-      d.blur();
+      this.blur();
       Entry.stage.toggleCoordinator();
     });
     this.addButton = Entry.createElement("button");
@@ -7352,6 +7352,7 @@ Entry.Engine.prototype.generateView = function(b, a) {
     this.addButton.innerHTML = Lang.Workspace.add_object;
     this.addButton.bindOnClick(function(a) {
       Entry.dispatchEvent("openSpriteManager");
+      this.blur();
     });
     this.view_.appendChild(this.addButton);
     this.runButton = Entry.createElement("button");
@@ -7361,12 +7362,14 @@ Entry.Engine.prototype.generateView = function(b, a) {
     this.view_.appendChild(this.runButton);
     this.runButton.bindOnClick(function(a) {
       Entry.engine.toggleRun();
+      this.blur();
     });
     this.runButton2 = Entry.createElement("button");
     this.runButton2.addClass("entryEngineButtonWorkspace_w");
     this.runButton2.addClass("entryRunButtonWorkspace_w2");
     this.view_.appendChild(this.runButton2);
     this.runButton2.bindOnClick(function(a) {
+      this.blur();
       Entry.engine.toggleRun();
     });
     this.stopButton = Entry.createElement("button");
@@ -7376,6 +7379,7 @@ Entry.Engine.prototype.generateView = function(b, a) {
     this.stopButton.innerHTML = Lang.Workspace.stop;
     this.view_.appendChild(this.stopButton);
     this.stopButton.bindOnClick(function(a) {
+      this.blur();
       Entry.engine.toggleStop();
     });
     this.stopButton2 = Entry.createElement("button");
@@ -7385,6 +7389,7 @@ Entry.Engine.prototype.generateView = function(b, a) {
     this.stopButton2.innerHTML = Lang.Workspace.stop;
     this.view_.appendChild(this.stopButton2);
     this.stopButton2.bindOnClick(function(a) {
+      this.blur();
       Entry.engine.toggleStop();
     });
     this.pauseButton = Entry.createElement("button");
@@ -7393,6 +7398,7 @@ Entry.Engine.prototype.generateView = function(b, a) {
     this.pauseButton.addClass("entryRemove");
     this.view_.appendChild(this.pauseButton);
     this.pauseButton.bindOnClick(function(a) {
+      this.blur();
       Entry.engine.togglePause();
     });
     this.mouseView = Entry.createElement("div");
