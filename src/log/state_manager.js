@@ -133,8 +133,12 @@ Entry.StateManager.prototype.redo = function() {
     if (!this.canRedo() || this.isRestoring())
         return;
     this.addActivity("redo");
-    var state = this.redoStack_.pop();
-    state.func.apply(state.caller, state.params);
+    while (this.redoStack_.length) {
+        var state = this.redoStack_.pop();
+        state.func.apply(state.caller, state.params);
+        if (state.isPass !== true)
+            break;
+    }
     this.updateView();
     if (Entry.creationChangedEvent)
         Entry.creationChangedEvent.notify();
