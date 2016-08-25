@@ -79,11 +79,13 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     p.getMode = function() {return this.mode;};
 
     p.setMode = function(mode, message){
-        //console.log(("setMode mode", mode);
-        
-        this.mode = mode.boardType;
-        this.runType = mode.runType;
-        this.textType = mode.textType;
+        if (typeof mode === 'number') {
+            this.mode = mode;
+        } else {
+            this.mode = mode.boardType;
+            this.runType = mode.runType;
+            this.textType = mode.textType;
+        }
 
         switch (this.mode) {
             case this.oldMode:
@@ -98,7 +100,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     this.codeToText(this.board.code, mode);
                     this.blockMenu.renderText();
                     this.board.clear();
-                    this.oldMode = this.mode;
+                    //this.oldMode = this.mode;
                     this.oldTextType = this.textType;
                 }
                 catch(e) {
@@ -115,7 +117,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     if (this.vimBoard) this.vimBoard.hide();
                     if (this.overlayBoard) this.overlayBoard.hide(); 
                     this.blockMenu.renderBlock();
-                    this.oldMode = this.mode;
+                    //this.oldMode = this.mode;
                     this.oldTextType = this.textType;
                 } catch(e) {
                     if (this.board) this.board.hide();
@@ -151,9 +153,11 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                 this.overlayBoard.show();
                 this.set({selectedBoard:this.overlayBoard});
                 Entry.commander.setCurrentEditor("board", this.overlayBoard);
-                this.oldMode = this.mode;
+                //this.oldMode = this.mode;
                 break;
         }
+
+        this.oldMode = this.mode;
 
         this.changeEvent.notify(message);
     };
