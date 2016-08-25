@@ -4,10 +4,11 @@
 "use strict";
 
 goog.require("Entry.Command");
+goog.require("Entry.STATIC");
 
 (function(c) {
     c.addThread = {
-        type: EntryStatic.COMMAND_TYPES.addThread,
+        type: Entry.STATIC.COMMAND_TYPES.addThread,
         do: function(thread) {
             return this.editor.board.code.createThread(thread);
         },
@@ -28,7 +29,7 @@ goog.require("Entry.Command");
     };
 
     c.destroyThread = {
-        type: EntryStatic.COMMAND_TYPES.destroyThread,
+        type: Entry.STATIC.COMMAND_TYPES.destroyThread,
         do: function(thread) {
             var blockId = thread[0].id;
             var block = this.editor.board.findById(blockId);
@@ -52,7 +53,7 @@ goog.require("Entry.Command");
     };
 
     c.destroyBlock = {
-        type: EntryStatic.COMMAND_TYPES.destroyBlock,
+        type: Entry.STATIC.COMMAND_TYPES.destroyBlock,
         do: function(block) {
             if (typeof block === "string")
                 block = this.editor.board.findById(block);
@@ -76,7 +77,7 @@ goog.require("Entry.Command");
     };
 
     c.recoverBlock = {
-        type: EntryStatic.COMMAND_TYPES.recoverBlock,
+        type: Entry.STATIC.COMMAND_TYPES.recoverBlock,
         do: function(blockModel, pointer) {
             var block = this.editor.board.code.createThread([blockModel]).getFirstBlock();
             if (typeof block === "string")
@@ -101,7 +102,7 @@ goog.require("Entry.Command");
     };
 
     c.insertBlock = {
-        type: EntryStatic.COMMAND_TYPES.insertBlock,
+        type: Entry.STATIC.COMMAND_TYPES.insertBlock,
         do: function(block, targetBlock, count) {
             if (typeof block === "string")
                 block = this.editor.board.findById(block);
@@ -136,7 +137,7 @@ goog.require("Entry.Command");
     };
 
     c.separateBlock = {
-        type: EntryStatic.COMMAND_TYPES.separateBlock,
+        type: Entry.STATIC.COMMAND_TYPES.separateBlock,
         do: function(block) {
             if (block.view)
                 block.view._toGlobalCoordinate(Entry.DRAG_MODE_DRAG);
@@ -168,7 +169,7 @@ goog.require("Entry.Command");
     };
 
     c.moveBlock = {
-        type: EntryStatic.COMMAND_TYPES.moveBlock,
+        type: Entry.STATIC.COMMAND_TYPES.moveBlock,
         do: function(block, x, y) {
             if (x !== undefined) { // do from undo stack
                 block = this.editor.board.findById(block);
@@ -198,7 +199,7 @@ goog.require("Entry.Command");
     };
 
     c.cloneBlock = {
-        type: EntryStatic.COMMAND_TYPES.cloneBlock,
+        type: Entry.STATIC.COMMAND_TYPES.cloneBlock,
         do: function(block) {
             if (typeof block === "string")
                 block = this.editor.board.findById(block);
@@ -224,7 +225,7 @@ goog.require("Entry.Command");
     };
 
     c.uncloneBlock = {
-        type: EntryStatic.COMMAND_TYPES.uncloneBlock,
+        type: Entry.STATIC.COMMAND_TYPES.uncloneBlock,
         do: function(block) {
             var threads = this.editor.board.code.getThreads();
             var lastBlock = threads.pop().getFirstBlock();
@@ -247,7 +248,7 @@ goog.require("Entry.Command");
     };
 
     c.scrollBoard = {
-        type: EntryStatic.COMMAND_TYPES.scrollBoard,
+        type: Entry.STATIC.COMMAND_TYPES.scrollBoard,
         do: function(dx, dy, isPass) {
             if (!isPass)
                 this.editor.board.scroller._scroll(dx, dy);
@@ -266,7 +267,7 @@ goog.require("Entry.Command");
     };
 
     c.setFieldValue = {
-        type: EntryStatic.COMMAND_TYPES.setFieldValue,
+        type: Entry.STATIC.COMMAND_TYPES.setFieldValue,
         do: function(block, field, pointer, oldValue, newValue) {
             field.setValue(newValue, true);
         },

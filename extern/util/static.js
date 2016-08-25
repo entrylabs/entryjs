@@ -349,51 +349,73 @@ EntryStatic.getAllBlocks = function() {
                 "bitbrick_dc_speed",
                 "bitbrick_dc_direction_speed",
                 "bitbrick_servomotor_angle",
-				"hamster_hand_found",
+                "cobl_read_ultrason",
+                "cobl_read_potenmeter",
+                "cobl_read_irread1",
+                "cobl_read_irread2",
+                "cobl_read_joyx",
+                "cobl_read_joyy",
+                //"cobl_read_sens1",
+                //"cobl_read_sens2",
+                "cobl_read_tilt",
+                "cobl_read_temps",
+                "cobl_read_light",
+                "cobl_read_btn",
+                "cobl_led_control",
+                "cobl_servo_angle_control",
+                "cobl_melody",
+                "cobl_dcmotor",
+                "cobl_extention_port",
+                "cobl_external_led",
+                "cobl_7_segment",
+                "hamster_hand_found",
                 "hamster_value",
-				"hamster_move_forward_once",
-				"hamster_turn_once",
+                "hamster_move_forward_once",
+                "hamster_turn_once",
                 "hamster_move_forward_for_secs",
                 "hamster_move_backward_for_secs",
                 "hamster_turn_for_secs",
-				"hamster_change_both_wheels_by",
+                "hamster_change_both_wheels_by",
                 "hamster_set_both_wheels_to",
                 "hamster_change_wheel_by",
                 "hamster_set_wheel_to",
-				"hamster_follow_line_using",
-				"hamster_follow_line_until",
-				"hamster_set_following_speed_to",
+                "hamster_follow_line_using",
+                "hamster_follow_line_until",
+                "hamster_set_following_speed_to",
                 "hamster_stop",
-				"hamster_set_led_to",
+                "hamster_set_led_to",
                 "hamster_clear_led",
                 "hamster_beep",
-				"hamster_change_buzzer_by",
+                "hamster_change_buzzer_by",
                 "hamster_set_buzzer_to",
                 "hamster_clear_buzzer",
                 "hamster_play_note_for",
                 "hamster_rest_for",
                 "hamster_change_tempo_by",
                 "hamster_set_tempo_to",
-				"hamster_set_port_to",
-				"hamster_change_output_by",
-				"hamster_set_output_to",
+                "hamster_set_port_to",
+                "hamster_change_output_by",
+                "hamster_set_output_to",
                 "albert_hand_found",
-				"albert_value",
+                "albert_is_oid_value",
+                "albert_value",
                 "albert_move_forward_for_secs",
                 "albert_move_backward_for_secs",
                 "albert_turn_for_secs",
-				"albert_change_both_wheels_by",
+                "albert_change_both_wheels_by",
                 "albert_set_both_wheels_to",
                 "albert_change_wheel_by",
                 "albert_set_wheel_to",
                 "albert_stop",
-				"albert_set_pad_size_to",
-				"albert_set_eye_to",
+                "albert_set_pad_size_to",
+                "albert_move_to_x_y_on_board",
+                "albert_set_orientation_on_board",
+                "albert_set_eye_to",
                 "albert_clear_eye",
                 "albert_body_led",
                 "albert_front_led",
                 "albert_beep",
-				"albert_change_buzzer_by",
+                "albert_change_buzzer_by",
                 "albert_set_buzzer_to",
                 "albert_clear_buzzer",
                 "albert_play_note_for",
@@ -460,8 +482,14 @@ EntryStatic.getAllBlocks = function() {
                 "ardublock_get_digital_value",
                 "ardublock_toggle_led",
                 "ardublock_toggle_pwm",
-                "ardublock_convert_scale"
-				// ardublock Added 2016-06-01
+                "ardublock_convert_scale",
+                // ardublock Added 2016-06-01
+                "ev3_get_sensor_value",
+                "ev3_touch_sensor",
+                "ev3_color_sensor",
+                "ev3_motor_power",
+                "ev3_motor_power_on_time",
+                "ev3_motor_degrees"
             ]
         }
     ]
@@ -510,18 +538,16 @@ EntryStatic.blockInfo = {
         "xml": "<block type='xbot_buzzer'><field name='OCTAVE'>4</field><value name='VALUE'><block type='text'><field name='NAME'>0.5</field></block></value></block>",
         "class": "xbot_sensor"
     },
-	"xbot_digitalOutput": {
+    "xbot_digitalOutput": {
         "isNotFor": ["xbot_epor_edge"],
         "xml": "<block type='xbot_digitalOutput'></block>",
         "class": "xbot_sensor"
     },
-
-     "xbot_digitalInput": {
+    "xbot_digitalInput": {
         "isNotFor": ["xbot_epor_edge"],
         "xml": "<block type='xbot_digitalInput'></block>",
         "class": "xbot_sensor"
     },
-
     "xbot_analogValue": {
         "isNotFor": ["xbot_epor_edge"],
         "xml": "<block type='xbot_analogValue'></block>",
@@ -532,8 +558,38 @@ EntryStatic.blockInfo = {
         "xml": "<block type='xbot_analogOutput'><value name='VALUE'><block type='text'><field name='NAME'>255</field></block></value></block>",
         "class": "xbot_sensor"
     },
-    //end of XBOT Blocks added
-
+    //end of XBOT Blocks added   
+    //EV3 BLOCK
+    "ev3_get_sensor_value": {
+        "isNotFor": ["EV3"],
+        "xml": "<block type='ev3_get_sensor_value'></block>",
+        "class": "ev3_sensor"
+    },
+    "ev3_touch_sensor": {
+        "isNotFor": ["EV3"],
+        "xml": "<block type='ev3_touch_sensor'></block>",
+        "class": "ev3_sensor"
+    },
+    "ev3_color_sensor": {
+        "isNotFor": ["EV3"],
+        "xml": "<block type='ev3_color_sensor'></block>",
+        "class": "ev3_sensor"
+    },
+    "ev3_motor_power": {
+        "isNotFor": ["EV3"],
+        "xml": "<block type='ev3_motor_power'><value name='VALUE'><block type='number'><field name='NUM'>50</field></block></value></block>",
+        "class": "ev3_output"
+    },
+    "ev3_motor_power_on_time": {
+        "isNotFor": ["EV3"],
+        "xml": "<block type='ev3_motor_power_on_time'><value name='TIME'><block type='number'><field name='NUM'>2</field></block></value><value name='VALUE'><block type='number'><field name='NUM'>50</field></block></value></block>",
+        "class": "ev3_output"
+    },
+    "ev3_motor_degrees": {
+        "isNotFor": ["EV3"],
+        "xml": "<block type='ev3_motor_degrees'><value name='DEGREE'> <block type='angle'></block> </value></block>",
+        "class": "ev3_output"
+    },
     "when_run_button_click": {
         "xml": "<block type='when_run_button_click'></block>",
         "class": "event",
@@ -1737,7 +1793,7 @@ EntryStatic.blockInfo = {
         "xml": "<block type='bitbrick_convert_scale'><value name='VALUE2'> <block type='number'><field name='NUM'>0</field></block> </value><value name='VALUE3'> <block type='number'><field name='NUM'>1023</field></block> </value><value name='VALUE4'> <block type='number'><field name='NUM'>-100</field></block> </value><value name='VALUE5'> <block type='number'><field name='NUM'>100</field></block> </value></block>",
         "class": "condition"
     },
-	"hamster_hand_found": {
+    "hamster_hand_found": {
         "isNotFor": ["hamster"],
         "xml": "<block type='hamster_hand_found'></block>",
         "class": "hamster_sensor"
@@ -1747,7 +1803,7 @@ EntryStatic.blockInfo = {
         "xml": "<block type='hamster_value'></block>",
         "class": "hamster_sensor"
     },
-	"hamster_move_forward_once": {
+    "hamster_move_forward_once": {
         "isNotFor": ["hamster"],
         "xml": "<block type='hamster_move_forward_once'></block>",
         "class": "hamster_board"
@@ -1772,7 +1828,7 @@ EntryStatic.blockInfo = {
         "xml": "<block type='hamster_turn_for_secs'><value name='VALUE'><block type='text'><field name='NAME'>1</field></block></value></block>",
         "class": "hamster_wheel"
     },
-	"hamster_change_both_wheels_by": {
+    "hamster_change_both_wheels_by": {
         "isNotFor": ["hamster"],
         "xml": "<block type='hamster_change_both_wheels_by'><value name='LEFT'><block type='text'><field name='NAME'>10</field></block></value><value name='RIGHT'><block type='text'><field name='NAME'>10</field></block></value></block>",
         "class": "hamster_wheel"
@@ -1792,17 +1848,17 @@ EntryStatic.blockInfo = {
         "xml": "<block type='hamster_set_wheel_to'><value name='VALUE'><block type='text'><field name='NAME'>30</field></block></value></block>",
         "class": "hamster_wheel"
     },
-	"hamster_follow_line_using": {
+    "hamster_follow_line_using": {
         "isNotFor": ["hamster"],
         "xml": "<block type='hamster_follow_line_using'></block>",
         "class": "hamster_wheel"
     },
-	"hamster_follow_line_until": {
+    "hamster_follow_line_until": {
         "isNotFor": ["hamster"],
         "xml": "<block type='hamster_follow_line_until'></block>",
         "class": "hamster_wheel"
     },
-	"hamster_set_following_speed_to": {
+    "hamster_set_following_speed_to": {
         "isNotFor": ["hamster"],
         "xml": "<block type='hamster_set_following_speed_to'><field name='SPEED'>5</field></block>",
         "class": "hamster_wheel"
@@ -1812,7 +1868,7 @@ EntryStatic.blockInfo = {
         "xml": "<block type='hamster_stop'></block>",
         "class": "hamster_wheel"
     },
-	"hamster_set_led_to": {
+    "hamster_set_led_to": {
         "isNotFor": ["hamster"],
         "xml": "<block type='hamster_set_led_to'></block>",
         "class": "hamster_led"
@@ -1827,7 +1883,7 @@ EntryStatic.blockInfo = {
         "xml": "<block type='hamster_beep'></block>",
         "class": "hamster_buzzer"
     },
-	"hamster_change_buzzer_by": {
+    "hamster_change_buzzer_by": {
         "isNotFor": ["hamster"],
         "xml": "<block type='hamster_change_buzzer_by'><value name='VALUE'><block type='text'><field name='NAME'>10</field></block></value></block>",
         "class": "hamster_buzzer"
@@ -1878,17 +1934,17 @@ EntryStatic.blockInfo = {
         "class": "hamster_port"
     },
 
-	"albert_hand_found": {
+    "albert_hand_found": {
         "isNotFor": ["albert"],
         "xml": "<block type='albert_hand_found'></block>",
         "class": "albert_sensor"
     },
-	"albert_value": {
+    "albert_value": {
         "isNotFor": ["albert"],
         "xml": "<block type='albert_value'></block>",
         "class": "albert_sensor"
     },
-	"albert_move_forward_for_secs": {
+    "albert_move_forward_for_secs": {
         "isNotFor": ["albert"],
         "xml": "<block type='albert_move_forward_for_secs'><value name='VALUE'><block type='text'><field name='NAME'>1</field></block></value></block>",
         "class": "albert_wheel"
@@ -1903,7 +1959,7 @@ EntryStatic.blockInfo = {
         "xml": "<block type='albert_turn_for_secs'><value name='VALUE'><block type='text'><field name='NAME'>1</field></block></value></block>",
         "class": "albert_wheel"
     },
-	"albert_change_both_wheels_by": {
+    "albert_change_both_wheels_by": {
         "isNotFor": ["albert"],
         "xml": "<block type='albert_change_both_wheels_by'><value name='LEFT'><block type='text'><field name='NAME'>10</field></block></value><value name='RIGHT'><block type='text'><field name='NAME'>10</field></block></value></block>",
         "class": "albert_wheel"
@@ -1928,7 +1984,7 @@ EntryStatic.blockInfo = {
         "xml": "<block type='albert_stop'></block>",
         "class": "albert_wheel"
     },
-	"albert_set_pad_size_to": {
+    "albert_set_pad_size_to": {
         "isNotFor": ["albert"],
         "xml": "<block type='albert_set_pad_size_to'><value name='WIDTH'><block type='text'><field name='NAME'>108</field></block></value><value name='HEIGHT'><block type='text'><field name='NAME'>76</field></block></value></block>",
         "class": "albert_wheel"
@@ -1958,7 +2014,7 @@ EntryStatic.blockInfo = {
         "xml": "<block type='albert_beep'></block>",
         "class": "albert_buzzer"
     },
-	"albert_change_buzzer_by": {
+    "albert_change_buzzer_by": {
         "isNotFor": ["albert"],
         "xml": "<block type='albert_change_buzzer_by'><value name='VALUE'><block type='text'><field name='NAME'>10</field></block></value></block>",
         "class": "albert_buzzer"
