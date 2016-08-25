@@ -4009,7 +4009,7 @@ Entry.block = {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic_string_field",
-        template: "9.빛센서@포트%1", 
+        template: "9.빛센서@포트%1",
         params: [
             {
                 type: "Dropdown",
@@ -4128,7 +4128,7 @@ Entry.block = {
         },
         paramsKeyMap: {
             PORT: 0,
-            OPERATOR: 1    
+            OPERATOR: 1
         },
         class: "cobl",
         isNotFor : [ "cobl" ],
@@ -4226,7 +4226,7 @@ Entry.block = {
             type: "cobl_melody"
         },
         paramsKeyMap: {
-            MELODY: 0  
+            MELODY: 0
         },
         class: "cobl",
         isNotFor : [ "cobl" ],
@@ -4291,7 +4291,7 @@ Entry.block = {
         paramsKeyMap: {
             MOTOR: 0,
             DIRECTION: 1,
-            SPEED:2    
+            SPEED:2
         },
         class: "cobl",
         isNotFor : [ "cobl" ],
@@ -4299,10 +4299,10 @@ Entry.block = {
             var motor = script.getStringField("MOTOR");
             var direction = script.getStringField("DIRECTION");
             var speed = script.getStringField("SPEED");
-            
+
             if (motor == 1) {
                 Entry.hw.setDigitalPortValue("DC1_DIR", direction);
-                Entry.hw.setDigitalPortValue("DC1_SPEED", speed); 
+                Entry.hw.setDigitalPortValue("DC1_SPEED", speed);
                 Entry.hw.update();
                 delete Entry.hw.sendQueue["DC1_DIR"];
                 delete Entry.hw.sendQueue["DC1_SPEED"];
@@ -4323,7 +4323,7 @@ Entry.block = {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic",
-        template: "15.USB포트%1단계%2 %3",        
+        template: "15.USB포트%1단계%2 %3",
         params: [
             {
                 type: "Dropdown",
@@ -4360,14 +4360,14 @@ Entry.block = {
         },
         paramsKeyMap: {
             PORT: 0,
-            LEVEL: 1    
+            LEVEL: 1
         },
         class: "cobl",
         isNotFor : [ "cobl" ],
         "func": function(sprite, script) {
             var port = script.getStringField("PORT");
             var level = script.getStringField("LEVEL");
-         
+
             if(port == 1){
                 Entry.hw.setDigitalPortValue("EXUSB1", level);
                 Entry.hw.update();
@@ -4396,7 +4396,7 @@ Entry.block = {
             {
                 type: "Dropdown",
                 options: [
-                  ["0","0"],               
+                  ["0","0"],
                   ["1","1"],
                   ["2","2"],
                   ["3","3"],
@@ -4412,7 +4412,7 @@ Entry.block = {
             },            {
                 type: "Dropdown",
                 options: [
-                  ["0","0"],               
+                  ["0","0"],
                   ["1","1"],
                   ["2","2"],
                   ["3","3"],
@@ -4428,7 +4428,7 @@ Entry.block = {
             },            {
                 type: "Dropdown",
                 options: [
-                  ["0","0"],               
+                  ["0","0"],
                   ["1","1"],
                   ["2","2"],
                   ["3","3"],
@@ -4476,7 +4476,7 @@ Entry.block = {
             Entry.hw.setDigitalPortValue("ELED_G", g);
             Entry.hw.setDigitalPortValue("ELED_B", b);
             Entry.hw.update();
-            
+
             delete Entry.hw.sendQueue["ELED_IDX"];
             delete Entry.hw.sendQueue["ELED_R"];
             delete Entry.hw.sendQueue["ELED_G"];
@@ -4489,7 +4489,7 @@ Entry.block = {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic",
-        template: "17.숫자전광판%1(0~9999) %2",        
+        template: "17.숫자전광판%1(0~9999) %2",
         params: [
             {
                 type: "TextInput",
@@ -7270,7 +7270,9 @@ Entry.block = {
 
             switch(target) {
                 case 'all':
-                    container.clearRunningState();
+                    container.mapObject(function(obj) {
+                        obj.script.clearExecutors();
+                    }, null);
                     return this.die();
                 case 'thisOnly':
                     sprite.parent.script.clearExecutorsByEntity(sprite);
@@ -20889,7 +20891,7 @@ Entry.block = {
             }
             return result;
         }
-    }, 
+    },
     "ev3_get_sensor_value": {
         "color": "#00979D",
         "fontColor": "#fff",
@@ -20926,7 +20928,7 @@ Entry.block = {
             }
             return result;
         }
-    }, 
+    },
     "ev3_motor_degrees": {
         "color": "#00979D",
         "skeleton": "basic",
@@ -20989,7 +20991,7 @@ Entry.block = {
             };
             return script.callReturn();
         }
-    }, 
+    },
     "ev3_motor_power": {
         "color": "#00979D",
         "skeleton": "basic",
@@ -21037,7 +21039,7 @@ Entry.block = {
             };
             return script.callReturn();
         }
-    }, 
+    },
     "ev3_motor_power_on_time": {
         "color": "#00979D",
         "skeleton": "basic",
@@ -21116,7 +21118,7 @@ Entry.block = {
                 return script.callReturn();
             }
         }
-    }, 
+    },
     "ev3_touch_sensor": {
         "color": "#00979D",
         "fontColor": "#fff",

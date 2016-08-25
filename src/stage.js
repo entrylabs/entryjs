@@ -200,6 +200,7 @@ Entry.Stage.prototype.loadEntity = function(entity) {
     objContainer.addChild(entity.object);
     this.sortZorder();
     //this.canvas.update();
+    Entry.requestUpdate = true;
 };
 
 /**
@@ -211,6 +212,7 @@ Entry.Stage.prototype.unloadEntity = function(entity) {
     var objContainer = Entry.stage.getObjectContainerByScene(scene);
     objContainer.removeChild(entity.object);
    //this.canvas.update();
+    Entry.requestUpdate = true;
 };
 
 /**
