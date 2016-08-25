@@ -13726,9 +13726,11 @@ Entry.Stage.prototype.loadObject = function(b) {
 Entry.Stage.prototype.loadEntity = function(b) {
   Entry.stage.getObjectContainerByScene(b.parent.scene).addChild(b.object);
   this.sortZorder();
+  Entry.requestUpdate = !0;
 };
 Entry.Stage.prototype.unloadEntity = function(b) {
   Entry.stage.getObjectContainerByScene(b.parent.scene).removeChild(b.object);
+  Entry.requestUpdate = !0;
 };
 Entry.Stage.prototype.loadVariable = function(b) {
   var a = b.view_;
