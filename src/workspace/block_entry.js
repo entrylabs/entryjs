@@ -6377,7 +6377,9 @@ Entry.block = {
 
             switch(target) {
                 case 'all':
-                    container.clearRunningState();
+                    container.mapObject(function(obj) {
+                        obj.script.clearExecutors();
+                    }, null);
                     return this.die();
                 case 'thisOnly':
                     sprite.parent.script.clearExecutorsByEntity(sprite);
