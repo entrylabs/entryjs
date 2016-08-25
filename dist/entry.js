@@ -11497,9 +11497,7 @@ Entry.TextCodingUtil = function() {
     return a.split("_")[1].toUpperCase();
   };
   b.tTobDropdownValueConvertor = function(a) {
-    var b;
-    "stone" == a ? b = "OBSTACLE" : "wall" == a ? b = a.toUpperCase() : "item" == a && (b = a.toUpperCase());
-    return b;
+    return "stone" == a ? "OBSTACLE" : "wall" == a ? a.toUpperCase() : "item" == a ? a.toUpperCase() : a;
   };
 })(Entry.TextCodingUtil.prototype);
 Entry.BlockToJsParser = function(b) {

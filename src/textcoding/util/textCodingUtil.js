@@ -1028,6 +1028,8 @@ Entry.TextCodingUtil = function() {
             result = value.toUpperCase();
         } else if(value == "item") {
             result = value.toUpperCase();
+        } else {
+            result = value;
         }
 
         return result;
