@@ -18452,6 +18452,213 @@ Entry.block = {
             return Entry.STATIC.BREAK;
         }
     },
+    // TODO: 해당 부분 수정 필요
+    "maze_step_if_5": {
+        "skeleton": "basic_loop",
+        "mode": "maze",
+        "color": "#498DEB",
+        "syntax": [
+            "BasicIf",
+            "front == bee"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "../../../img/assets/ntry/bitmap/maze2/obstacle_01.png",
+                "size": 18
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/if.png",
+                "size": 24
+            }
+        ],
+        "statements": [
+            {
+                "accept": "basic"
+            }
+        ],
+        func: function() {
+            if (this.isContinue) return;
+
+            var entities =
+                Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+
+            var entity;
+            for (var key in entities)
+                entity = entities[key];
+
+            var unitComp = Ntry.entityManager.getComponent(
+                entity.id, Ntry.STATIC.UNIT);
+            var gridComp = Ntry.entityManager.getComponent(
+                entity.id, Ntry.STATIC.GRID);
+
+            var grid = {x: gridComp.x, y: gridComp.y};
+            Ntry.addVectorByDirection(grid, unitComp.direction, 1);
+
+            var fitEntities = Ntry.entityManager.find(
+                {
+                    type: Ntry.STATIC.GRID,
+                    x: grid.x,
+                    y: grid.y
+                },
+                {
+                    type: Ntry.STATIC.TILE,
+                    tileType: Ntry.STATIC.OBSTACLE_BEE
+                }
+            );
+
+            this.isContinue = true;
+
+            var statement = this.block.statements[0];
+            if (fitEntities.length === 0) {
+                return;
+            } else if (statement.getBlocks().length === 0)
+                return;
+            else {
+                this.executor.stepInto(statement);
+                return Entry.STATIC.BREAK;
+            }
+        }
+    },
+    // TODO: 해당 부분 수정 필요
+    "maze_step_if_6": {
+        "skeleton": "basic_loop",
+        "mode": "maze",
+        "color": "#498DEB",
+        "syntax": [
+            "BasicIf",
+            "front == bee"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "../../../img/assets/ntry/bitmap/maze2/obstacle_01.png",
+                "size": 18
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/if.png",
+                "size": 24
+            }
+        ],
+        "statements": [
+            {
+                "accept": "basic"
+            }
+        ],
+        func: function() {
+            if (this.isContinue) return;
+
+            var entities =
+                Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+
+            var entity;
+            for (var key in entities)
+                entity = entities[key];
+
+            var unitComp = Ntry.entityManager.getComponent(
+                entity.id, Ntry.STATIC.UNIT);
+            var gridComp = Ntry.entityManager.getComponent(
+                entity.id, Ntry.STATIC.GRID);
+
+            var grid = {x: gridComp.x, y: gridComp.y};
+            Ntry.addVectorByDirection(grid, unitComp.direction, 1);
+
+            var fitEntities = Ntry.entityManager.find(
+                {
+                    type: Ntry.STATIC.GRID,
+                    x: grid.x,
+                    y: grid.y
+                },
+                {
+                    type: Ntry.STATIC.TILE,
+                    tileType: Ntry.STATIC.OBSTACLE_BEE
+                }
+            );
+
+            this.isContinue = true;
+
+            var statement = this.block.statements[0];
+            if (fitEntities.length === 0) {
+                return;
+            } else if (statement.getBlocks().length === 0)
+                return;
+            else {
+                this.executor.stepInto(statement);
+                return Entry.STATIC.BREAK;
+            }
+        }
+    },
+    // TODO: 해당 부분 수정 필요
+    "maze_step_if_7": {
+        "skeleton": "basic_loop",
+        "mode": "maze",
+        "color": "#498DEB",
+        "syntax": [
+            "BasicIf",
+            "front == bee"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "../../../img/assets/ntry/bitmap/maze2/obstacle_01.png",
+                "size": 18
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/if.png",
+                "size": 24
+            }
+        ],
+        "statements": [
+            {
+                "accept": "basic"
+            }
+        ],
+        func: function() {
+            if (this.isContinue) return;
+
+            var entities =
+                Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+
+            var entity;
+            for (var key in entities)
+                entity = entities[key];
+
+            var unitComp = Ntry.entityManager.getComponent(
+                entity.id, Ntry.STATIC.UNIT);
+            var gridComp = Ntry.entityManager.getComponent(
+                entity.id, Ntry.STATIC.GRID);
+
+            var grid = {x: gridComp.x, y: gridComp.y};
+            Ntry.addVectorByDirection(grid, unitComp.direction, 1);
+
+            var fitEntities = Ntry.entityManager.find(
+                {
+                    type: Ntry.STATIC.GRID,
+                    x: grid.x,
+                    y: grid.y
+                },
+                {
+                    type: Ntry.STATIC.TILE,
+                    tileType: Ntry.STATIC.OBSTACLE_BEE
+                }
+            );
+
+            this.isContinue = true;
+
+            var statement = this.block.statements[0];
+            if (fitEntities.length === 0) {
+                return;
+            } else if (statement.getBlocks().length === 0)
+                return;
+            else {
+                this.executor.stepInto(statement);
+                return Entry.STATIC.BREAK;
+            }
+        }
+    },
     "test_wrapper": {
         "skeleton": "basic",
         "mode": "maze",
