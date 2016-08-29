@@ -18039,7 +18039,7 @@ Entry.block = {
                 "accept": "basic"
             }
         ],
-    func: function() {
+        func: function() {
             if (this.isContinue) return;
 
             var entities =
@@ -18189,6 +18189,267 @@ Entry.block = {
                 delete this.isAction;
                 delete this.isContinue;
             }
+        }
+    },
+    "maze_moon_kick": {
+        "skeleton": "basic",
+        "mode": "maze",
+        "color": "#2EB0E8",
+        "syntax": [
+            "Scope",
+            "right"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/maze/sprite/moon_icon.png",
+                "size": 24
+            }
+        ],
+        func: function() {
+            // TODO: func 내용은 변경해야 함.
+
+            if (!this.isContinue) {
+
+                this.isContinue = true;
+                this.isAction = true;
+                var self = this;
+                var callBack = function() {
+                    self.isAction = false;
+                };
+
+                // turn direction
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, callBack);
+
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
+    },
+    "maze_cony_flower_throw": {
+        "skeleton": "basic",
+        "mode": "maze",
+        "color": "#D8617D",
+        "syntax": [
+            "Scope",
+            "right"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/maze/sprite/cony_icon.png",
+                "size": 24
+            }
+        ],
+        func: function() {
+            // TODO: func 내용은 변경해야 함.
+
+            if (!this.isContinue) {
+
+                this.isContinue = true;
+                this.isAction = true;
+                var self = this;
+                var callBack = function() {
+                    self.isAction = false;
+                };
+
+                // turn direction
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, callBack);
+
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
+    },
+    "maze_james_heart": {
+        "skeleton": "basic",
+        "mode": "maze",
+        "color": "#D39D18",
+        "syntax": [
+            "Scope",
+            "right"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/maze/sprite/james_icon.png",
+                "size": 24
+            }
+        ],
+        func: function() {
+            // TODO: func 내용은 변경해야 함.
+
+            if (!this.isContinue) {
+
+                this.isContinue = true;
+                this.isAction = true;
+                var self = this;
+                var callBack = function() {
+                    self.isAction = false;
+                };
+
+                // turn direction
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, callBack);
+
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
+    },
+    "maze_brown_punch": {
+        "skeleton": "basic",
+        "mode": "maze",
+        "color": "#6C483A",
+        "syntax": [
+            "Scope",
+            "right"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/maze/sprite/brown_icon.png",
+                "size": 24
+            }
+        ],
+        func: function() {
+            // TODO: func 내용은 변경해야 함.
+
+            if (!this.isContinue) {
+
+                this.isContinue = true;
+                this.isAction = true;
+                var self = this;
+                var callBack = function() {
+                    self.isAction = false;
+                };
+
+                // turn direction
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, callBack);
+
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
+    },
+    "maze_repeat_until_3": {
+        "skeleton": "basic_loop",
+        "mode": "maze",
+        "color": "#498DEB",
+        "syntax": [
+            "BasicWhile",
+            "true"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/maze/bitmap/stage1/tile_1_goal_01.png",
+                "size": 18
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/for.png",
+                "size": 24
+            }
+        ],
+        "statements": [
+            {
+                "accept": "basic"
+            }
+        ],
+        func: function() {
+            // TODO: func 내용은 변경해야 함.
+            var statement = this.block.statements[0];
+            if (statement.getBlocks().length === 0)
+                return;
+
+            this.executor.stepInto(statement);
+            return Entry.STATIC.BREAK;
+        }
+    },
+    "maze_repeat_until_4": {
+        "skeleton": "basic_loop",
+        "mode": "maze",
+        "color": "#498DEB",
+        "syntax": [
+            "BasicWhile",
+            "true"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/maze/bitmap/stage1/tile_1_goal_02.png",
+                "size": 18
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/for.png",
+                "size": 24
+            }
+        ],
+        "statements": [
+            {
+                "accept": "basic"
+            }
+        ],
+        func: function() {
+            // TODO: func 내용은 변경해야 함.
+            var statement = this.block.statements[0];
+            if (statement.getBlocks().length === 0)
+                return;
+
+            this.executor.stepInto(statement);
+            return Entry.STATIC.BREAK;
+        }
+    },
+    "maze_repeat_until_5": {
+        "skeleton": "basic_loop",
+        "mode": "maze",
+        "color": "#498DEB",
+        "syntax": [
+            "BasicWhile",
+            "true"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/maze/bitmap/stage1/tile_1_goal_03.png",
+                "size": 18
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/for.png",
+                "size": 24
+            }
+        ],
+        "statements": [
+            {
+                "accept": "basic"
+            }
+        ],
+        func: function() {
+            // TODO: func 내용은 변경해야 함.
+            var statement = this.block.statements[0];
+            if (statement.getBlocks().length === 0)
+                return;
+
+            this.executor.stepInto(statement);
+            return Entry.STATIC.BREAK;
         }
     },
     "test_wrapper": {
