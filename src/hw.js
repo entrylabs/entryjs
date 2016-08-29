@@ -40,6 +40,8 @@ Entry.HW = function() {
         '7.1': Entry.Robotis_carCont,
         '7.2': Entry.Robotis_openCM70,
         '8.1': Entry.Arduino,
+        '10.1': Entry.Roborobo_Roduino,
+        '10.2': Entry.Roborobo_SchoolKit,
         '12.1': Entry.EV3
     };
 };
