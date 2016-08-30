@@ -21962,7 +21962,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     this.textElement.textContent = this.getTextByValue(this.getValue());
     a = this.textElement.getBBox();
     this.textElement.attr({style:"white-space: pre;", "font-size":+this._FONT_SIZE + "px", y:.23 * a.height});
-    c = this.textElement.getComputedTextLength() + c;
+    c = this.textElement.getBoundingClientRect().width + c;
     this._noArrow && (c -= b);
     b = this._CONTENT_HEIGHT;
     this._header = this.svgGroup.elem("rect", {width:c, height:b, y:-b / 2, rx:this._ROUND, ry:this._ROUND, fill:"#fff", "fill-opacity":.4});
@@ -21972,7 +21972,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     this.box.set({x:0, y:0, width:c, height:b});
   };
   b.resize = function() {
-    var a = Entry.isMobile(), b = a ? 33 : 20, a = a ? 24 : 10, b = this.textElement.getComputedTextLength() + b;
+    var a = Entry.isMobile(), b = a ? 33 : 20, a = a ? 24 : 10, b = this.textElement.getBoundingClientRect().width + b;
     this._noArrow ? b -= a : (a = this.getArrow(), this._arrow.attr({transform:"translate(" + (b - a.width - 5) + "," + -a.height / 2 + ")"}));
     this._header.attr({width:b});
     this.box.set({width:b});
