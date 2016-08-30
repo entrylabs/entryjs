@@ -268,6 +268,7 @@ EntryStatic.getAllBlocks = function() {
             category: "arduino",
             blocks: [
                 "arduino_download_connector",
+                "download_guide",
                 "arduino_download_source",
                 "arduino_connected",
                 "arduino_reconnect",
@@ -1404,6 +1405,12 @@ EntryStatic.blockInfo = {
     },
     "arduino_download_connector": {
         "xml": "<btn text=\"Lang.Blocks.ARDUINO_download_connector\" onclick=\"Entry.hw.downloadConnector()\"></btn>",
+        "isNotFor": ["arduinoDisconnected"],
+        "usage": ["arduino"],
+        "class": "button"
+    },
+    "download_guide": {
+        "xml": "<btn text=\"Lang.Blocks.download_guide\" onclick=\"Entry.hw.downloadGuide()\"></btn>",
         "isNotFor": ["arduinoDisconnected"],
         "usage": ["arduino"],
         "class": "button"
