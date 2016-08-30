@@ -177,6 +177,7 @@ p.updateEditMenu = function() {
 };
 
 p.file_save = function() {
+    this.lc.trigger("dispose")
     var dataURL = this.lc.getImage().toDataURL();
     this.file_ = JSON.parse(JSON.stringify(this.file));
     Entry.dispatchEvent('saveCanvasImage',
