@@ -343,6 +343,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                                 errorInfo.line = updateLineInfo.line;
                                 errorInfo.start = updateLineInfo.start;
                                 errorInfo.end = updateLineInfo.end;
+                                error.message = updateLineInfo.message;
                             }
                             
                             annotation = {
@@ -404,17 +405,26 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             var errorTitle = error.title;
                         else {
                             if(error.type == 1)
-                                var errorTitle = '블록변환 오류(Converting Error)';
-                            else if(error.type == 2)
                                 var errorTitle = '문법 오류(Syntax Error)';
+                            else if(error.type == 2)
+                                var errorTitle = '블록변환 오류(Converting Error)';
                         }
 
                         line = parseInt(errorInfo.line);
 
                         if(error.message && line)
                             var errorMsg = error.message + ' \n(line: ' + line + ')';
-                        else
-                            var errorMsg = '파이썬 코드를 확인해주세요';
+                        else {
+                            if(error.message) {
+                                var errorMsg = error.message;
+                            }
+                            else {
+                                if(error.type == 1)
+                                    var errorMsg = '파이썬 문법을 확인해주세요';
+                                else if(error.type == 2)
+                                    var errorMsg = '블록으로 변환되는 코드인지 확인해주세요';
+                            }
+                        }
                         
                         Entry.toast.alert(errorTitle, errorMsg);
                         
@@ -597,20 +607,22 @@ Entry.Parser = function(mode, type, cm, syntax) {
         var contentsArr = contents.split("\n");
         console.log("contentsArr44", contentsArr);
         
+        var index = 0;
         for(var i = 4; i < contentsArr.length; i++) {
             var line = contentsArr[i];
             console.log("ljh line", line);
             if(line.trim().length == 0)
                 errorLine++;
+            else 
+                index++;
             console.log("iiiiii", i); 
-            if(i == blockCount + 3) {
-
-                errorLine += i;
+            if(index == blockCount) {
+                errorLine += index;
                 break;
             }
         }
 
-        errorLine += 1;
+        errorLine += 4;
         console.log("errorLine kk", errorLine);
 
         return errorLine;
@@ -716,18 +728,22 @@ Entry.Parser = function(mode, type, cm, syntax) {
             console.log("targetText", targetText);
             console.log("this._pyThreadCount", this._pyThreadCount); 
 
-            if(targetText.trim().length == 0)
-                line++;
 
-            if((i+1) == line) {
+            if(i+1 == line) {
                 console.log("i+1", i+1);
                 result.line = i + 1 + currentLineCount + (this._pyThreadCount-1);
-                if(column == 0 && (i+1) != 1)
+                if(column == 0 && (i+1) == 2) {
+                    console.log("type1");
                     result.line -= 1;
-                else if(column == 1 && (i+1) != 1) 
+                }
+                else if(column == 1 && (i+1) != 1) {
+                    console.log("type2");
                     result.line -= 1;
-                else if(line == 1 && column == 0)
+                }
+                else if(line == 1 && column == 0) {
+                    console.log("type3");
                     result.line -= 1;
+                }
 
                 result.line += 4;
                 result.start = 0;
@@ -751,7 +767,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
         var text = contentsArr[lineNumber-1];
 
         if(text.trim().length == 0) {
-            contentsArr[lineNumber-1] = ".......";
+            contentsArr[lineNumber-1] = "     ";
             var newContents = contentsArr.join("\n");
             console.log("newContents", newContents);
             this.codeMirror.setValue(newContents);
@@ -759,6 +775,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
             result.line = lineNumber;
             result.start = 0;
             result.end = contentsArr[lineNumber-1].length;
+            result.message = '들여쓰기(Indentation)가 정확한지 확인해주세요.';
 
             return result;
         }

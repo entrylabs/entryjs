@@ -65,8 +65,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         }
 
                         thread.push(block); 
-
-                    }
+                    } 
                 }
 
                 console.log("thread", thread);
@@ -115,6 +114,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
         } 
 
+        if(!result.type && result.name) {
+            var error = {};
+            error.title = "블록변환(Converting) 오류";
+            error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + result.name + "\'" + "을 삭제하세요.";
+            error.line = this._blockCount; 
+            console.log("send error", error); 
+            throw error;   
+        }
+
         console.log("ExpressionStatement result", result);
         
         return result;
@@ -149,7 +157,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     console.log("callex error calleeData", calleeData);
                     var error = {};
                     error.title = "블록변환(Converting) 오류";
-                    error.message = "블록으로 변환될 수 없는 코드입니다.";
+                    error.message = "블록으로 변환될 수 없는 코드입니다. \'range()\'를 사용하세요.";
                     error.line = this._blockCount; 
                     console.log("send error", error);
                     throw error;
@@ -240,7 +248,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     console.log("callex error calleeData", calleeData);
                     var error = {};
                     error.title = "블록변환(Converting) 오류";
-                    error.message = "블록으로 변환될 수 없는 코드입니다.";
+                    error.message = "블록으로 변환될 수 없는 코드입니다. 변환가능한 \'Entry.xxx\' 함수를 사용하세요.";
                     error.line = this._blockCount; 
                     console.log("send error", error);
                     throw error;
@@ -284,6 +292,29 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     console.log("CallExpression argument", argument, "typeof", typeof argument);
                     var param = this[argument.type](argument, paramsMeta[i], paramsDefMeta[i], true);
                     console.log("CallExpression param", param);
+                    
+                    if(param === undefined) {
+                        var error = {};
+                        error.title = "블록변환(Converting) 오류";
+                        error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + argument.value + "\'" + " 을 올바른 파라미터 값 또는 타입으로 변경하세요.";
+                        error.line = this._blockCount; 
+                        console.log("send error", error); 
+                        throw error;
+                    }
+                    console.log("param.name", typeof param.name); 
+
+                    if(param.name && (typeof param.name != 'function')) {
+                        console.log("babo");
+                        if(calleeName == '__pythonRuntime.functions.range')
+                            this._blockCount++;
+                        console.log("callex error calleeData", calleeData);
+                        var error = {};
+                        error.title = "블록변환(Converting) 오류";
+                        error.message = "블록으로 변환될 수 없는 코드입니다." + " \'" + param.name + "\'' 을 올바른 파라미터 값 또는 타입으로 변경하세요.";
+                        error.line = this._blockCount; 
+                        console.log("send error", error);
+                        throw error;
+                    }
                 } else {
                     continue;
                 }
@@ -1003,8 +1034,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if(test.value === true) {
             var syntax = String("while True:\n$1");
             var type = this.getBlockType(syntax);
-        } else if(test.value === false) {
-            //This Expression Not Supported
+        } else {
+                var error = {};
+                error.title = "블록변환(Converting) 오류";
+                error.message = "블록으로 변환될 수 없는 코드입니다. \'True\' 를 사용하세요.";
+                error.line = this._blockCount; 
+                console.log("send error", error); 
+                throw error;     
         } 
 
         console.log("WhileStatement type", type);
@@ -1063,7 +1099,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             structure.type = type;
             //structure.params = params; 
             structure.statements.push(bodyData.statements);
-        }
+        } 
 
         result = structure;
         
@@ -1073,9 +1109,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.BlockStatement = function(component) { 
         console.log("BlockStatement component", component);
-        if(component.body[0].declarations && component.body[0].declarations[0].init.callee.name != undefined &&
-            component.body[0].declarations[0].init.callee.name != 'range')
+        if(component.body[0].declarations && component.body[0].declarations[0].init &&
+            component.body[0].declarations[0].init.callee &&
+            component.body[0].declarations[0].init.callee.name) {
             this._blockCount++;
+            console.log("BlockStatement blockCount++");
+        }
+        
         var result = {};
         result.statements = [];
         result.data = [];
@@ -1139,6 +1179,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                     continue;
                                 }
                                 statements.push(statement);
+                            } else {
+                                var error = {};
+                                error.title = "블록변환(Converting) 오류";
+                                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + statement.name + "\'" + "을 제거하세요.";
+                                error.line = this._blockCount; 
+                                console.log("send error", error); 
+                                throw error;   
                             }
                         } 
                     }
@@ -1256,8 +1303,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var consequent = component.consequent;
         var alternate = component.alternate;
 
+        var test = component.test; 
+        if(test.operator !== 'instanceof') {
+            this._blockCount++;
+            console.log("IfStatement blockCount++");
+        }
+
         if(alternate != null) {
-            var type = String("if_else")
+            var type = String("if_else");
         } else {
             var type = String("_if");
         }
@@ -1266,53 +1319,60 @@ Entry.PyToBlockParser = function(blockSyntax) {
     
         console.log("IfStatement type", type);
         
-        var test = component.test;
-        //if(test != null){
-            console.log("IfStatement test", test);
-            if(test.type == "Literal" || test.type == "Identifier") {
-                var arguments = [];
-                arguments.push(test);
-                var paramsMeta = Entry.block[type].params;
-                var paramsDefMeta = Entry.block[type].def.params;
-                console.log("IfStatement paramsMeta", paramsMeta); 
-                console.log("IfStatement paramsDefMeta", paramsDefMeta); 
+        
+        console.log("IfStatement test", test);
+        if(test.type == "Literal" || test.type == "Identifier") {
+            var arguments = [];
+            arguments.push(test);
+            var paramsMeta = Entry.block[type].params;
+            var paramsDefMeta = Entry.block[type].def.params;
+            console.log("IfStatement paramsMeta", paramsMeta); 
+            console.log("IfStatement paramsDefMeta", paramsDefMeta); 
 
-                for(var p in paramsMeta) {
-                    var paramType = paramsMeta[p].type;
-                    if(paramType == "Indicator") {
-                        var pendingArg = {raw: null, type: "Literal", value: null}; 
-                        if(p < arguments.length) 
-                            arguments.splice(p, 0, pendingArg);              
-                    }
-                    else if(paramType == "Text") {
-                        var pendingArg = {raw: "", type: "Literal", value: ""};
-                        if(p < arguments.length) 
-                            arguments.splice(p, 0, pendingArg);
-                    }
+            for(var p in paramsMeta) {
+                var paramType = paramsMeta[p].type;
+                if(paramType == "Indicator") {
+                    var pendingArg = {raw: null, type: "Literal", value: null}; 
+                    if(p < arguments.length) 
+                        arguments.splice(p, 0, pendingArg);              
                 }
-
-                for(var i in arguments) {
-                    var argument = arguments[i];
-                    console.log("IfStatement argument", argument);
-                              
-                    var param = this[argument.type](argument, paramsMeta[i], paramsDefMeta[i], true);
-                    console.log("IfStatement Literal param", param);
-                    if(param && param != null)
-                        params.push(param);   
+                else if(paramType == "Text") {
+                    var pendingArg = {raw: "", type: "Literal", value: ""};
+                    if(p < arguments.length) 
+                        arguments.splice(p, 0, pendingArg);
                 }
-              
-            } else {
-                var param = this[test.type](test);
-                console.log("IfStatement Not Literal param", param);
-                if(param && param != null)
-                    params.push(param);   
-                
-            }   
-
-            if(params && params.length != 0) {
-                structure.params = params;         
             }
-        //}
+
+            for(var i in arguments) {
+                var argument = arguments[i];
+                console.log("IfStatement argument", argument);
+                          
+                var param = this[argument.type](argument, paramsMeta[i], paramsDefMeta[i], true);
+                console.log("IfStatement Literal param", param);
+                if(param && param != null) {
+                    params.push(param);   
+
+                    if(!param.type) {
+                        var error = {};
+                        error.title = "블록변환(Converting) 오류";
+                        error.message = "블록으로 변환될 수 없는 코드입니다. \'True\' 또는 \'False\'를 사용하세요.";
+                        error.line = this._blockCount; 
+                        console.log("send error", error);
+                        throw error;
+                    }
+                }
+            }
+        } else {
+            var param = this[test.type](test);
+            console.log("IfStatement Not Literal param", param);
+            if(param && param != null)
+                params.push(param);   
+        }   
+
+        if(params && params.length != 0) {
+            structure.params = params;     
+        }
+        
 
         console.log("IfStatement params result", params);
 
