@@ -946,8 +946,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(c, d);
+  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
   return a.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1151,8 +1151,8 @@ Blockly.Blocks.dplay_select_led = {init:function() {
 Entry.block.dplay_select_led = function(b, a) {
   var c = a.getField("PORT"), d = 7;
   "7" == c ? d = 7 : "8" == c ? d = 8 : "9" == c ? d = 9 : "10" == c && (d = 10);
-  c = "on" == a.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(d, c);
+  c = a.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(d, "on" == c ? 255 : 0);
   return a.callReturn();
 };
 Blockly.Blocks.dplay_get_switch_status = {init:function() {
@@ -2576,10 +2576,10 @@ Entry.block.wait_second = function(b, a) {
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
+  var c = a.getNumberValue("SECOND", a);
   setTimeout(function() {
     a.timeFlag = 0;
-  }, c);
+  }, 60 / (Entry.FPS || 60) * c * 1E3);
   return a;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -11023,6 +11023,7 @@ Entry.Popup.prototype.remove = function() {
   window.popup = null;
   Entry.removeEventListener("windowResized", this.resize);
   Entry.engine.popup = null;
+  Entry.windowResized.notify();
 };
 Entry.Popup.prototype.resize = function(b) {
   b = window.popup.window_;
@@ -11030,6 +11031,7 @@ Entry.Popup.prototype.resize = function(b) {
   9 * a <= 16 * c ? c = a / 16 * 9 : a = 16 * c / 9;
   b.style.width = String(a) + "px";
   b.style.height = String(c + 35) + "px";
+  Entry.stage && Entry.stage.updateBoundRect();
 };
 Entry.popupHelper = function(b) {
   this.popupList = {};
@@ -14005,11 +14007,10 @@ Entry.Stage.prototype.moveSprite = function(b) {
   }
 };
 Entry.Stage.prototype.getBoundRect = function(b) {
-  this._boundRect || this.updateBoundRect();
-  return this._boundRect;
+  return this._boundRect ? this._boundRect : this.updateBoundRect();
 };
 Entry.Stage.prototype.updateBoundRect = function(b) {
-  this._boundRect = this.canvas.canvas.getBoundingClientRect();
+  return this._boundRect = this.canvas.canvas.getBoundingClientRect();
 };
 Entry.Variable = function(b) {
   Entry.assert("string" == typeof b.name, "Variable name must be given");
