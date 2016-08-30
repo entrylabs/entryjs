@@ -44,11 +44,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 console.log("nodes", nodes);
 
                 for(var index in nodes) {
+                    
                     var node = nodes[index];
                     console.log("Program node", node);
                                     
                     var block = this[node.type](node);
                     console.log("result block", block); 
+                    console.log("this._block")
 
                     if(block && block.type) {
                         console.log("block.type", block.type);
@@ -63,6 +65,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         }
 
                         thread.push(block); 
+
                     }
                 }
 
@@ -72,15 +75,20 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
             return code;
         } catch(error) {
-            error.line = this._blockCount;
-            console.log("Program catch error", error);
-            throw error;
+            console.log("error", error);
+            var err = {};
+            err.line = this._blockCount; 
+            err.title = error.title;
+            err.message = error.message;
+            console.log("Program catch error", err); 
+            throw err;
         }
     };
 
     p.ExpressionStatement = function(component) {    
         console.log("ExpressionStatement component", component);
         this._blockCount++;
+        console.log("ExpressionStatement blockCount++");
         var reusult;
         var structure = {};
 
@@ -133,6 +141,20 @@ Entry.PyToBlockParser = function(blockSyntax) {
     
             name = Entry.TextCodingUtil.prototype.eventBlockSyntaxFilter(calleeData.name);
             type = this.getBlockType(name);
+
+            console.log("bb type", type);
+
+            if(!type) {
+                if(calleeData.name) {
+                    console.log("callex error calleeData", calleeData);
+                    var error = {};
+                    error.title = "블록변환(Converting) 오류";
+                    error.message = "블록으로 변환될 수 없는 코드입니다.";
+                    error.line = this._blockCount; 
+                    console.log("send error", error);
+                    throw error;
+                }
+            }
         }
         else {
             var object = calleeData.object;
@@ -211,6 +233,18 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 (callee.object.type == "MemberExpression" && calleeTokens[0] == "self" && calleeTokens[2] == "pop")) {
                 var syntax = String("%2.pop");
                 type = this.getBlockType(syntax);   
+            }
+
+            if(!type) {
+                if(calleeData.object.name) {
+                    console.log("callex error calleeData", calleeData);
+                    var error = {};
+                    error.title = "블록변환(Converting) 오류";
+                    error.message = "블록으로 변환될 수 없는 코드입니다.";
+                    error.line = this._blockCount; 
+                    console.log("send error", error);
+                    throw error;
+                } 
             }
 
             result.callee = calleeName;
@@ -351,13 +385,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 result.params = structure.params;
             }   
         } else { // Function Arguments
-            if(calleeData.object.name) {
-                var error = {};
-                error.title = "블록변환(Converting) 오류";
-                error.message = "블록으로 변환될 수 없는 코드입니다.";
-                throw error;
-            }
-
             var args = [];
             for(var i in arguments) { 
                 var argument = arguments[i];
@@ -1046,6 +1073,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.BlockStatement = function(component) { 
         console.log("BlockStatement component", component);
+        if(component.body[0].declarations && component.body[0].declarations[0].init.callee.name != undefined &&
+            component.body[0].declarations[0].init.callee.name != 'range')
+            this._blockCount++;
         var result = {};
         result.statements = [];
         result.data = [];
@@ -1056,7 +1086,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         var bodies = component.body;
         console.log("BlockStatement bodies", bodies);
-        
+
         for(var i in bodies) {
             var body = bodies[i];
             var bodyData = this[body.type](body);
@@ -1094,7 +1124,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     result.type = data[d].type;
                     var statements = [];
                     var allStatements = data[d].statements[0]; //Consequent Data of "IF" Statement
-                    console.log("BlockStatement allStatements", allStatements);
                     if(allStatements && allStatements.length != 0) {
                         for(var i in allStatements) {
                             var statement = allStatements[i];
@@ -1343,6 +1372,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
      p.ForStatement = function(component) {
         console.log("ForStatement component", component);
         this._blockCount++;
+        console.log("ForStatement blockCount++");
         var result;
         var structure = {};
         structure.statements = [];

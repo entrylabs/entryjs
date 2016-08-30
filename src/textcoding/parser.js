@@ -362,7 +362,9 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         } else {
                             console.log("py error type 2", error);
                             var errorInfo = error;
-                            errorInfo.line += 4;
+                            
+                            var errorLine = this.findErrorLineForConverting(errorInfo.line);
+                            errorInfo.line = errorLine;
 
                             var ch = this.findConvertingTargetChInfo(errorInfo.line);
                             
@@ -400,8 +402,12 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
                         if(error.title)
                             var errorTitle = error.title;
-                        else 
-                            var errorTitle = '문법 오류(Syntax Error)';
+                        else {
+                            if(error.type == 1)
+                                var errorTitle = '블록변환 오류(Converting Error)';
+                            else if(error.type == 2)
+                                var errorTitle = '문법 오류(Syntax Error)';
+                        }
 
                         line = parseInt(errorInfo.line);
 
@@ -581,6 +587,33 @@ Entry.Parser = function(mode, type, cm, syntax) {
         });
 
         this.availableCode = this.availableCode.concat(availableList);
+    };
+
+    p.findErrorLineForConverting = function(blockCount) {
+        console.log("blockCount", blockCount); 
+        var errorLine = 0;
+
+        var contents = this.codeMirror.getValue();
+        var contentsArr = contents.split("\n");
+        console.log("contentsArr44", contentsArr);
+        
+        for(var i = 4; i < contentsArr.length; i++) {
+            var line = contentsArr[i];
+            console.log("ljh line", line);
+            if(line.trim().length == 0)
+                errorLine++;
+            console.log("iiiiii", i); 
+            if(i == blockCount + 3) {
+
+                errorLine += i;
+                break;
+            }
+        }
+
+        errorLine += 1;
+        console.log("errorLine kk", errorLine);
+
+        return errorLine;
     };
 
     p.findConvertingTargetChInfo = function(errorLine) {
