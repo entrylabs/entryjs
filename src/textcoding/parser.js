@@ -316,6 +316,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             this._pyBlockCount[idx] =  tToken.length;
                             console.log("this._pyBlockCount", this._pyBlockCount);
                         }
+
                         if(ast.type == "Program" && ast.body.length != 0) 
                             astArray.push(ast);
                     }
@@ -334,11 +335,12 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             console.log("py error type 1", error.loc);
                             var errorInfo = this.findSyntaxErrorInfo(error);
 
-                            errorInfo.line -= 1;
+                            //errorInfo.line -= 1;
 
                             var updateLineInfo = this.updateLineEmpty(errorInfo.line);
 
                             if(updateLineInfo.isLineEmpty) {
+                                errorInfo.line = updateLineInfo.line;
                                 errorInfo.start = updateLineInfo.start;
                                 errorInfo.end = updateLineInfo.end;
                             }
@@ -365,8 +367,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             var ch = this.findConvertingTargetChInfo(errorInfo.line);
                             
                             annotation = {
-                                from: {line: errorInfo.line, ch: ch.start},
-                                to: {line: errorInfo.line, ch: ch.end}
+                                from: {line: errorInfo.line - 1, ch: ch.start},
+                                to: {line: errorInfo.line - 1, ch: ch.end}
                             }
 
                             if(!error.message)
@@ -681,11 +683,19 @@ Entry.Parser = function(mode, type, cm, syntax) {
             console.log("targetText", targetText);
             console.log("this._pyThreadCount", this._pyThreadCount); 
 
+            if(targetText.trim().length == 0)
+                line++;
+
             if((i+1) == line) {
                 console.log("i+1", i+1);
                 result.line = i + 1 + currentLineCount + (this._pyThreadCount-1);
-                if(column == 0 && (i+1) != 1) 
+                if(column == 0 && (i+1) != 1)
                     result.line -= 1;
+                else if(column == 1 && (i+1) != 1) 
+                    result.line -= 1;
+                else if(line == 1 && column == 0)
+                    result.line -= 1;
+
                 result.line += 4;
                 result.start = 0;
                 result.end = targetText.length; 
@@ -699,6 +709,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
     };
 
     p.updateLineEmpty = function(lineNumber) {
+        console.log("lineNumber", lineNumber);
         var result = {};
         var contents = this.codeMirror.getValue();
         var contentsArr = contents.split("\n");
@@ -712,6 +723,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
             console.log("newContents", newContents);
             this.codeMirror.setValue(newContents);
             result.isLineEmpty = true;
+            result.line = lineNumber;
             result.start = 0;
             result.end = contentsArr[lineNumber-1].length;
 

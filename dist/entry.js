@@ -13646,8 +13646,8 @@ Entry.Parser = function(b, a, d, c) {
           this._parser._variableMap.clear();
         } catch (t) {
           if (this.codeMirror) {
-            throw console.log("came here error", t), t instanceof SyntaxError ? (console.log("py error type 1", t.loc), l = this.findSyntaxErrorInfo(t), --l.line, c = this.updateLineEmpty(l.line), c.isLineEmpty && (l.start = c.start, l.end = c.end), c = {from:{line:l.line - 1, ch:l.start}, to:{line:l.line - 1, ch:l.end}}, t.message || (t.message = "\ud30c\uc774\uc36c \ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4."), t.type = 1) : (console.log("py error type 2", t), l = t, l.line += 4, c = this.findConvertingTargetChInfo(l.line), 
-            c = {from:{line:l.line, ch:c.start}, to:{line:l.line, ch:c.end}}, t.message || (t.message = "\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4."), t.type = 2), console.log("annotation", c), this._marker = this.codeMirror.markText(c.from, c.to, {className:"CodeMirror-lint-mark-error", __annotation:c, clearOnEnter:!0, inclusiveLeft:!0, inclusiveRigth:!0, clearWhenEmpty:!1}), console.log("came here error2", t), c = t.title ? t.title : "\ubb38\ubc95 \uc624\ub958(Syntax Error)", 
+            throw console.log("came here error", t), t instanceof SyntaxError ? (console.log("py error type 1", t.loc), l = this.findSyntaxErrorInfo(t), c = this.updateLineEmpty(l.line), c.isLineEmpty && (l.line = c.line, l.start = c.start, l.end = c.end), c = {from:{line:l.line - 1, ch:l.start}, to:{line:l.line - 1, ch:l.end}}, t.message || (t.message = "\ud30c\uc774\uc36c \ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4."), t.type = 1) : (console.log("py error type 2", t), l = t, l.line += 4, c = this.findConvertingTargetChInfo(l.line), 
+            c = {from:{line:l.line - 1, ch:c.start}, to:{line:l.line - 1, ch:c.end}}, t.message || (t.message = "\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4."), t.type = 2), console.log("annotation", c), this._marker = this.codeMirror.markText(c.from, c.to, {className:"CodeMirror-lint-mark-error", __annotation:c, clearOnEnter:!0, inclusiveLeft:!0, inclusiveRigth:!0, clearWhenEmpty:!1}), console.log("came here error2", t), c = t.title ? t.title : "\ubb38\ubc95 \uc624\ub958(Syntax Error)", 
             l = parseInt(l.line), l = t.message && l ? t.message + " \n(line: " + l + ")" : "\ud30c\uc774\uc36c \ucf54\ub4dc\ub97c \ud655\uc778\ud574\uc8fc\uc138\uc694", Entry.toast.alert(c, l), t;
           }
           c = [];
@@ -13771,10 +13771,10 @@ Entry.Parser = function(b, a, d, c) {
     console.log("currentLineCount", f);
     console.log("this.pyBlockcount", this._pyBlockCount);
     for (g = 0;g < a.length;g++) {
-      if (h = a[g], console.log("targetText", h), console.log("this._pyThreadCount", this._pyThreadCount), g + 1 == c) {
+      if (h = a[g], console.log("targetText", h), console.log("this._pyThreadCount", this._pyThreadCount), 0 == h.trim().length && c++, g + 1 == c) {
         console.log("i+1", g + 1);
         b.line = g + 1 + f + (this._pyThreadCount - 1);
-        0 == e && 1 != g + 1 && --b.line;
+        0 == e && 1 != g + 1 ? --b.line : 1 == e && 1 != g + 1 ? --b.line : 1 == c && 0 == e && --b.line;
         b.line += 4;
         b.start = 0;
         b.end = h.length;
@@ -13785,6 +13785,7 @@ Entry.Parser = function(b, a, d, c) {
     return b;
   };
   b.updateLineEmpty = function(a) {
+    console.log("lineNumber", a);
     var b = {}, c = this.codeMirror.getValue().split("\n");
     console.log("contentsArr2", c);
     if (0 == c[a - 1].trim().length) {
@@ -13793,6 +13794,7 @@ Entry.Parser = function(b, a, d, c) {
       console.log("newContents", e);
       this.codeMirror.setValue(e);
       b.isLineEmpty = !0;
+      b.line = a;
       b.start = 0;
       b.end = c[a - 1].length;
       return b;
