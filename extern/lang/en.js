@@ -3821,13 +3821,17 @@ Lang.template = {
     "roduino_motor": "%1 %2 %3",
     "roduino_set_color_pin": "Color Sensor R : %1, G : %2, B : %3 %4",
     "roduino_get_color": "Color Sensor %1 Detected ",
+    "roduino_on_block": "On",
+    "roduino_off_block": "Off",
     
     "schoolkit_get_in_port_number": "%1  ",
     "schoolkit_get_out_port_number": "%1  ",
     "schoolkit_get_input_value": "Digital %1 Sensor value  ",
     "schoolkit_set_output": "Digital %1 Pin %2 %3",
-    "schoolkit_motor": "%1 %2 value %3 %4",
+    "schoolkit_motor": "%1 Speed %2 %3 %4",
     "schoolkit_set_servo_value": "Servo %1 Pin %2˚ %3",
+    "schoolkit_on_block": "On",
+    "schoolkit_off_block": "Off",
     
     "run": "",
     "mutant": "test mutant block",

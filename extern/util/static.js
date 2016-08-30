@@ -492,6 +492,8 @@ EntryStatic.getAllBlocks = function() {
                 "ev3_motor_power_on_time",
                 "ev3_motor_degrees",
                 
+                "roduino_on_block",
+                "roduino_off_block",
                 "roduino_get_analog_value",
                 "roduino_get_digital_value",
                 "roduino_get_color",
@@ -500,6 +502,8 @@ EntryStatic.getAllBlocks = function() {
                 "roduino_motor",
                 "roduino_set_color_pin",
                 
+                "schoolkit_on_block",
+                "schoolkit_off_block",
                 "schoolkit_get_input_value",
                 "schoolkit_set_output",
                 "schoolkit_motor",

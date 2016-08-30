@@ -69,6 +69,32 @@ Entry.Roborobo_SchoolKit = {
 };
 
 // Roduino
+Blockly.Blocks.roduino_on_block = {
+    init: function() {
+        this.setColour("#00979D");
+        this.appendDummyInput().appendField(Lang.Blocks.roborobo_on);
+        this.setOutput(true, 'Number');
+        this.setInputsInline(true);        
+    }
+}
+
+Entry.block.roduino_on_block = function (sprite, script) {
+    return "1";
+};
+
+Blockly.Blocks.roduino_off_block = {
+    init: function() {
+        this.setColour("#00979D");
+        this.appendDummyInput().appendField(Lang.Blocks.roborobo_off);        
+        this.setOutput(true, 'Number');
+        this.setInputsInline(true);
+    }
+}
+
+Entry.block.roduino_off_block = function (sprite, script) {
+    return "0";
+};
+
 Blockly.Blocks.roduino_get_analog_number = {
   init: function() {
     this.setColour("#00979D");
@@ -190,14 +216,14 @@ Blockly.Blocks.roduino_get_digital_value = {
         .appendField(Lang.Blocks.roborobo_num_sensor_value_2)
         .appendField(" ");
     this.setInputsInline(true);
-    this.setOutput(true, 'Boolean');
+    this.setOutput(true, 'Number');
   }
 };
 
 Entry.block.roduino_get_digital_value = function (sprite, script) {
     var signal = script.getNumberValue("VALUE");
     Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_READ, signal]);
-    return Entry.hw.portData[signal - 2] == 1 ? true : false;
+    return Entry.hw.portData[signal - 2];
 };
 
 Blockly.Blocks.roduino_get_color = {
@@ -213,12 +239,12 @@ Blockly.Blocks.roduino_get_color = {
             ]), "VALUE")
         .appendField(Lang.Blocks.roborobo_color_detected);
         this.setInputsInline(true);
-        this.setOutput(true, 'Boolean');
+        this.setOutput(true, 'Number');
     }
 };
 
 Entry.block.roduino_get_color = function (sprite, script) {
-    var flag = false;
+    var flag = 0;
     var signal = script.getField("VALUE", script);
     var value =
     [
@@ -230,22 +256,22 @@ Entry.block.roduino_get_color = function (sprite, script) {
     switch(signal) {
         case "red":
             if(value[0] == 1 && value[1] == 0 && value[2] == 0) {
-                flag = true;
+                flag = 1;
             }
         break;
         case "green":
             if(value[0] == 0 && value[1] == 1 && value[2] == 0) {
-                flag = true;
+                flag = 1;
             }
         break;
         case "blue":
             if(value[0] == 0 && value[1] == 0 && value[2] == 1) {
-                flag = true;
+                flag = 1;
             }
         break;
         case "yellow":
             if(value[0] == 1 && value[1] == 1 && value[2] == 1) {
-                flag = true;
+                flag = 1;
             }
         break;
     }
@@ -360,6 +386,32 @@ Entry.block.roduino_set_color_pin = function (sprite, script) {
 };
 
 // SchoolKit
+Blockly.Blocks.schoolkit_on_block = {
+    init: function() {
+        this.setColour("#00979D");
+        this.appendDummyInput().appendField(Lang.Blocks.roborobo_on);        
+        this.setOutput(true, 'Number');
+        this.setInputsInline(true);
+    }
+}
+
+Entry.block.schoolkit_on_block = function (sprite, script) {
+    return "1";
+};
+
+Blockly.Blocks.schoolkit_off_block = {
+    init: function() {
+        this.setColour("#00979D");
+        this.appendDummyInput().appendField(Lang.Blocks.roborobo_off);        
+        this.setOutput(true, 'Number');
+        this.setInputsInline(true);
+    }
+}
+
+Entry.block.schoolkit_off_block = function (sprite, script) {
+    return "0";
+};
+
 Blockly.Blocks.schoolkit_get_out_port_number = {
   init: function() {
     this.setColour("#00979D");
@@ -452,7 +504,7 @@ Blockly.Blocks.schoolkit_get_input_value = {
 Entry.block.schoolkit_get_input_value = function (sprite, script) {
     var signal = script.getNumberValue("VALUE");
     Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.DIGITAL_READ, signal]);
-    return Entry.hw.portData[signal - 7] == 0 ? true : false;
+    return Entry.hw.portData[signal - 7];
 };
 
 Blockly.Blocks.schoolkit_motor = {

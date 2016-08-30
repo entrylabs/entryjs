@@ -5057,6 +5057,24 @@ Entry.Roborobo_SchoolKit = {name:"roborobo_schoolkit", INSTRUCTION:{DIGITAL_READ
     c = (new Date).getTime();
   }
 }, ColorPin:[0, 0, 0]};
+Blockly.Blocks.roduino_on_block = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.roborobo_on);
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.roduino_on_block = function(a, b) {
+  return "1";
+};
+Blockly.Blocks.roduino_off_block = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.roborobo_off);
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.roduino_off_block = function(a, b) {
+  return "0";
+};
 Blockly.Blocks.roduino_get_analog_number = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField(new Blockly.FieldDropdown([["0", "0"], ["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"]]), "PORT");
@@ -5096,35 +5114,35 @@ Blockly.Blocks.roduino_get_digital_value = {init:function() {
   this.appendValueInput("VALUE").setCheck("Number");
   this.appendDummyInput().appendField(Lang.Blocks.roborobo_num_sensor_value_2).appendField(" ");
   this.setInputsInline(!0);
-  this.setOutput(!0, "Boolean");
+  this.setOutput(!0, "Number");
 }};
 Entry.block.roduino_get_digital_value = function(a, b) {
   a = b.getNumberValue("VALUE");
   Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_READ, a]);
-  return 1 == Entry.hw.portData[a - 2] ? !0 : !1;
+  return Entry.hw.portData[a - 2];
 };
 Blockly.Blocks.roduino_get_color = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField(Lang.Blocks.roborobo_color + " ").appendField(new Blockly.FieldDropdown([[Lang.Blocks.roborobo_color_red, "red"], [Lang.Blocks.roborobo_color_green, "green"], [Lang.Blocks.roborobo_color_blue, "blue"], [Lang.Blocks.roborobo_color_yellow, "yellow"]]), "VALUE").appendField(Lang.Blocks.roborobo_color_detected);
   this.setInputsInline(!0);
-  this.setOutput(!0, "Boolean");
+  this.setOutput(!0, "Number");
 }};
 Entry.block.roduino_get_color = function(a, b) {
-  a = !1;
+  a = 0;
   b = b.getField("VALUE", b);
   var c = [Entry.hw.portData[Entry.Roborobo_Roduino.ColorPin[0] - 2], Entry.hw.portData[Entry.Roborobo_Roduino.ColorPin[1] - 2], Entry.hw.portData[Entry.Roborobo_Roduino.ColorPin[2] - 2]];
   switch(b) {
     case "red":
-      1 == c[0] && 0 == c[1] && 0 == c[2] && (a = !0);
+      1 == c[0] && 0 == c[1] && 0 == c[2] && (a = 1);
       break;
     case "green":
-      0 == c[0] && 1 == c[1] && 0 == c[2] && (a = !0);
+      0 == c[0] && 1 == c[1] && 0 == c[2] && (a = 1);
       break;
     case "blue":
-      0 == c[0] && 0 == c[1] && 1 == c[2] && (a = !0);
+      0 == c[0] && 0 == c[1] && 1 == c[2] && (a = 1);
       break;
     case "yellow":
-      1 == c[0] && 1 == c[1] && 1 == c[2] && (a = !0);
+      1 == c[0] && 1 == c[1] && 1 == c[2] && (a = 1);
   }
   return a;
 };
@@ -5183,6 +5201,24 @@ Entry.block.roduino_set_color_pin = function(a, b) {
   Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.COLOR, a, c, d]);
   return b.callReturn();
 };
+Blockly.Blocks.schoolkit_on_block = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.roborobo_on);
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.schoolkit_on_block = function(a, b) {
+  return "1";
+};
+Blockly.Blocks.schoolkit_off_block = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.roborobo_off);
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.schoolkit_off_block = function(a, b) {
+  return "0";
+};
 Blockly.Blocks.schoolkit_get_out_port_number = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField(new Blockly.FieldDropdown([["OUT1", "2"], ["OUT2", "3"], ["OUT3", "4"], ["OUT4", "5"], ["OUT5", "6"]]), "PORT");
@@ -5230,7 +5266,7 @@ Blockly.Blocks.schoolkit_get_input_value = {init:function() {
 Entry.block.schoolkit_get_input_value = function(a, b) {
   a = b.getNumberValue("VALUE");
   Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.DIGITAL_READ, a]);
-  return 0 == Entry.hw.portData[a - 7] ? !0 : !1;
+  return Entry.hw.portData[a - 7];
 };
 Blockly.Blocks.schoolkit_motor = {init:function() {
   this.setColour("#00979D");

@@ -21179,6 +21179,54 @@ Entry.block = {
             return result;
         }
     },
+    "roduino_on_block": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "roduino_on_block"
+        },
+        "paramsKeyMap": {
+        },
+        "class": "roduino_value",
+        "isNotFor": [ "roborobo_roduino" ],
+        "func": function (sprite, script) {
+            return 1;
+        }
+    },
+    "roduino_off_block": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "roduino_off_block"
+        },
+        "paramsKeyMap": {
+        },
+        "class": "roduino_value",
+        "isNotFor": [ "roborobo_roduino" ],
+        "func": function (sprite, script) {
+            return 1;
+        }
+    },
     "roduino_get_analog_number": {
         "color": "#00979D",
         "skeleton": "basic_string_field",
@@ -21276,7 +21324,7 @@ Entry.block = {
     "roduino_get_digital_value": {
         "color": "#00979D",
         "fontColor": "#fff",
-        "skeleton": "basic_boolean_field",
+        "skeleton": "basic_string_field",
         "statements": [],
         "params": [
             {
@@ -21301,13 +21349,13 @@ Entry.block = {
         "func": function (sprite, script) {
             var signal = script.getNumberValue("VALUE", script);
             Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_READ, signal]);
-            return Entry.hw.portData[signal - 2] == 1 ? true : false;
+            return Entry.hw.portData[signal - 2];
         }
     },
     "roduino_get_color": {
         "color": "#00979D",
         "fontColor": "#fff",
-        "skeleton": "basic_boolean_field",
+        "skeleton": "basic_string_field",
         "statements": [],
         "params": [
             {
@@ -21334,7 +21382,7 @@ Entry.block = {
         "class": "roduino_value",
         "isNotFor": [ "roborobo_roduino" ],
         "func": function (sprite, script) {
-            var flag = false;
+            var flag = 0;
             var signal = script.getField("VALUE", script);
             var value =
             [
@@ -21346,22 +21394,22 @@ Entry.block = {
             switch(signal) {
                 case "red":
                     if(value[0] == 0 && value[1] == 0 && value[2] == 1) {
-                        flag = true;
+                        flag = 1;
                     }
                 break;
                 case "green":
                     if(value[0] == 0 && value[1] == 1 && value[2] == 0) {
-                        flag = true;
+                        flag = 1;
                     }
                 break;
                 case "blue":
                     if(value[0] == 1 && value[1] == 0 && value[2] == 0) {
-                        flag = true;
+                        flag = 1;
                     }
                 break;
                 case "yellow":
                     if(value[0] == 1 && value[1] == 1 && value[2] == 1) {
-                        flag = true;
+                        flag = 1;
                     }
                 break;
             }
@@ -21614,13 +21662,61 @@ Entry.block = {
         "func": function (sprite, script) {
             var redPin = script.getNumberValue("RED", script);
             var greenPin = script.getNumberValue("GREEN", script);
-            var bluePin = script.getNumberValue("BLUE", script);            
+            var bluePin = script.getNumberValue("BLUE", script);
             
             Entry.Roborobo_Roduino.ColorPin = [ redPin, greenPin, bluePin ];
-            Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.COLOR, redPin, greenPin, bluePin]);              
+            Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.COLOR, redPin, greenPin, bluePin]);
             return script.callReturn();
         }
-    },    
+    },
+    "schoolkit_on_block": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "schoolkit_on_block"
+        },
+        "paramsKeyMap": {
+        },
+        "class": "schoolkit_value",
+        "isNotFor": [ "roborobo_schoolkit" ],
+        "func": function (sprite, script) {
+            return 1;
+        }
+    },
+    "schoolkit_off_block": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "schoolkit_off_block"
+        },
+        "paramsKeyMap": {
+        },
+        "class": "schoolkit_value",
+        "isNotFor": [ "roborobo_schoolkit" ],
+        "func": function (sprite, script) {
+            return 1;
+        }
+    },
     "schoolkit_get_out_port_number": {
         "color": "#00979D",
         "skeleton": "basic_string_field",
@@ -21737,7 +21833,7 @@ Entry.block = {
     "schoolkit_get_input_value": {
         "color": "#00979D",
         "fontColor": "#fff",
-        "skeleton": "basic_boolean_field",
+        "skeleton": "basic_string_field",
         "statements": [],
         "params": [
             {
@@ -21762,7 +21858,7 @@ Entry.block = {
         "func": function (sprite, script) {
             var signal = script.getNumberValue("VALUE", script);
             Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.DIGITAL_READ, signal]);
-            return Entry.hw.portData[signal - 7] == 1 ? true : false;
+            return Entry.hw.portData[signal - 7];
         }
     },
     "schoolkit_motor": {
