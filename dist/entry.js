@@ -10442,6 +10442,7 @@ Entry.Painter2 = function(b) {
     this._pasteButton.style.display = this.clipboard ? "block" : "none";
   };
   b.file_save = function() {
+    this.lc.trigger("dispose");
     var a = this.lc.getImage().toDataURL();
     this.file_ = JSON.parse(JSON.stringify(this.file));
     Entry.dispatchEvent("saveCanvasImage", {file:this.file_, image:a});
