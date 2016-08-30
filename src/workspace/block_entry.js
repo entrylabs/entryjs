@@ -21200,7 +21200,7 @@ Entry.block = {
         "class": "roduino_value",
         "isNotFor": [ "roborobo_roduino" ],
         "func": function (sprite, script) {
-            return 1;
+            return "1";
         }
     },
     "roduino_off_block": {
@@ -21224,7 +21224,7 @@ Entry.block = {
         "class": "roduino_value",
         "isNotFor": [ "roborobo_roduino" ],
         "func": function (sprite, script) {
-            return 1;
+            return "0";
         }
     },
     "roduino_get_analog_number": {
@@ -21690,7 +21690,7 @@ Entry.block = {
         "class": "schoolkit_value",
         "isNotFor": [ "roborobo_schoolkit" ],
         "func": function (sprite, script) {
-            return 1;
+            return "1";
         }
     },
     "schoolkit_off_block": {
@@ -21714,7 +21714,7 @@ Entry.block = {
         "class": "schoolkit_value",
         "isNotFor": [ "roborobo_schoolkit" ],
         "func": function (sprite, script) {
-            return 1;
+            return "0";
         }
     },
     "schoolkit_get_out_port_number": {
