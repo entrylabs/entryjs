@@ -116,9 +116,9 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     assistScope[key + '();\n'] = syntax.Scope[key];
                 }
 
-                if('BasicIf' in syntax) {
-                    assistScope['front'] = 'BasicIf';
-                }
+                //if('BasicIf' in syntax) {
+                    //assistScope['front'] = 'BasicIf';
+                //}
 
                 cm.on("keydown", function (cm, event) {
                     var keyCode = event.keyCode;
@@ -208,14 +208,14 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             annotation.from, annotation.to, {
                             className: "CodeMirror-lint-mark-error",
                             __annotation: annotation,
-                            clearOnEnter: true 
+                            clearOnEnter: true
                         });
 
                         if(error.title) {
                             var errorTitle = error.title;
                         }
                         else {
-                            var errorTitle = '문법 오류'; 
+                            var errorTitle = '문법 오류';
                         }
 
                         if(error.type == 2 && error.message) {
@@ -231,7 +231,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         Entry.toast.alert(errorTitle, errorMsg);
                         var mode = {};
                         mode.boardType = Entry.Workspace.MODE_BOARD;
-                        mode.textType = Entry.Vim.TEXT_TYPE_JS; 
+                        mode.textType = Entry.Vim.TEXT_TYPE_JS;
                         mode.runType = Entry.Vim.MAZE_MODE;
                         Ntry.dispatchEvent("textError", mode);
                         throw error;
@@ -282,7 +282,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             annotation = this.getLineNumber(error.node.start, error.node.end);
                             annotation.message = error.message;
                             annotation.severity = "error";
-                            
+
                         }
 
                         var line = parseInt(annotation.to.line) + 1;
@@ -298,7 +298,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
                         if(error.title)
                             var errorTitle = error.title;
-                        else 
+                        else
                             var errorTitle = '문법 오류';
 
                         if(error.message && line)
@@ -473,10 +473,10 @@ Entry.Parser = function(mode, type, cm, syntax) {
         var lineNumber = 0;
         var blockCount = 0;
         var textArr = contents.split('\n');
-        
+
         for(var i in textArr) {
             var text = textArr[i].trim();
-           
+
             lineNumber++;
             if(text.length == 0 || text.length == 1 || text.indexOf("else") > -1) {
                 continue;
@@ -487,7 +487,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
             if(blockCount == error.blockCount)
                 break;
-           
+
         }
 
         lineNumber -= lineNumber;

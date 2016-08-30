@@ -14263,7 +14263,6 @@ Entry.Parser = function(b, a, d, c) {
         for (f in a.Scope) {
           e[f + "();\n"] = a.Scope[f];
         }
-        "BasicIf" in a && (e.front = "BasicIf");
         c.on("keydown", function(a, b) {
           var d = b.keyCode;
           (65 <= d && 95 >= d || 167 == d || !b.shiftKey && 190 == d) && CodeMirror.showHint(a, null, {completeSingle:!1, globalScope:e});
