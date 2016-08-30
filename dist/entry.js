@@ -15660,17 +15660,18 @@ Entry.BlockMockup = function(b, a, d) {
 Entry.ContextMenu = {};
 (function(b) {
   b.visible = !1;
+  b._hideEvent = null;
   b.createDom = function() {
     this.dom = Entry.Dom("ul", {id:"entry-contextmenu", parent:$("body")});
     this.dom.bind("mousedown touchstart", function(a) {
       a.stopPropagation();
     });
     Entry.Utils.disableContextmenu(this.dom);
-    Entry.documentMousedown.attach(this, function() {
-      this.hide();
-    });
   };
   b.show = function(a, b, c) {
+    this._hideEvent = Entry.documentMousedown.attach(this, function() {
+      this.hide();
+    });
     this.dom || this.createDom();
     if (0 !== a.length) {
       var e = this;
@@ -15713,6 +15714,7 @@ Entry.ContextMenu = {};
     this.dom.empty();
     this.dom.addClass("entryRemove");
     this._className && (this.dom.removeClass(this._className), delete this._className);
+    this._hideEvent && (Entry.documentMousedown.detach(this._hideEvent), this._hideEvent = null);
   };
 })(Entry.ContextMenu);
 Entry.Loader = {queueCount:0, totalCount:0};
