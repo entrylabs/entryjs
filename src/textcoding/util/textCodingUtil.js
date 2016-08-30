@@ -657,7 +657,7 @@ Entry.TextCodingUtil = function() {
         var threadArr = threads.split('\n');
         
         for(var i in threadArr) {
-                var thread = threadArr[i]; 
+                var thread = threadArr[i].trim(); 
                 
                 if( thread == "def entry_event_start():" || 
                     thread == "def entry_event_mouse_down():" || 
