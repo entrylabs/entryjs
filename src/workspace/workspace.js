@@ -120,7 +120,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     //this.oldMode = this.mode;
                     this.oldTextType = this.textType;
                 } catch(e) {
-                    this.changedCode = [];
+                    this.board.code.clear();
                     if (this.board) this.board.hide();
                     this.set({selectedBoard:this.vimBoard});
                     this.mode = Entry.Workspace.MODE_VIMBOARD;
@@ -189,9 +189,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         var board = this.board;
         var code = board.code;
 
-        this.changedCode = changedCode;
-
-        code.load(this.changedCode);
+        code.load(changedCode);
         code.createView(board);
 
         this.board.reDraw();

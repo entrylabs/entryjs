@@ -1106,4 +1106,20 @@ Entry.TextCodingUtil = function() {
         return result;
     };
 
+    p.includeEntryEventKeyBlock = function(thread) {
+        var result = false;
+        var threadArr = thread.split('\n');
+        for(var i in threadArr) {
+            var text = threadArr[i];
+            if(new RegExp(/^def entry_event_key(.+):$/).test(text)) {
+                result = true;
+                break;
+            }
+        }
+
+        console.log("includeEntryEventKeyBlock result", result);
+
+        return result;
+    };
+
 })(Entry.TextCodingUtil.prototype);

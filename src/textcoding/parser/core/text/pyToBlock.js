@@ -300,10 +300,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         error.line = this._blockCount; 
                         console.log("send error", error); 
                         throw error;
-                    }
-                    console.log("param.name", typeof param.name); 
+                    } 
 
-                    if(param.name && (typeof param.name != 'function')) {
+                    if(param != null && param.name && (typeof param.name != 'function')) {
                         console.log("babo");
                         if(calleeName == '__pythonRuntime.functions.range')
                             this._blockCount++;
@@ -1307,6 +1306,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var alternate = component.alternate;
 
         var test = component.test; 
+
+        
+
+
         if(test.operator !== 'instanceof') {
             this._blockCount++;
             console.log("IfStatement blockCount++");
@@ -1324,6 +1327,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
         
         
         console.log("IfStatement test", test);
+
+
         if(test.type == "Literal" || test.type == "Identifier") {
             var arguments = [];
             arguments.push(test);
@@ -1507,6 +1512,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
     
     p.BreakStatement = function(component) {
         console.log("BreakStatement component", component);
+        this._blockCount++;
+        console.log("BreakStatement blockCount++");
         var result;
         var structure = {};
 
@@ -1537,13 +1544,55 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 case "+": 
                     operator = operator; 
                     break;                   
-                case "!": break;                    
-                case "~": break;                
-                case "typeof": break;                   
-                case "void": break;                 
-                case "delete": break;                   
+                case "!": 
+                    var error = {};
+                    error.title = "블록변환(Converting) 오류";
+                    error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
+                    error.line = this._blockCount; 
+                    console.log("send error", error); 
+                    throw error;
+                    break;                    
+                case "~":
+                    var error = {};
+                    error.title = "블록변환(Converting) 오류";
+                    error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
+                    error.line = this._blockCount; 
+                    console.log("send error", error); 
+                    throw error;
+                    break;                 
+                case "typeof":
+                    var error = {};
+                    error.title = "블록변환(Converting) 오류";
+                    error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
+                    error.line = this._blockCount; 
+                    console.log("send error", error); 
+                    throw error;
+                    break;                    
+                case "void":
+                    var error = {};
+                    error.title = "블록변환(Converting) 오류";
+                    error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
+                    error.line = this._blockCount; 
+                    console.log("send error", error); 
+                    throw error;
+                    break;                  
+                case "delete":
+                    var error = {};
+                    error.title = "블록변환(Converting) 오류";
+                    error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
+                    error.line = this._blockCount; 
+                    console.log("send error", error); 
+                    throw error;
+                    break;                    
                 default: 
                     operator = operator;
+                    var error = {};
+                    error.title = "블록변환(Converting) 오류";
+                    error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
+                    error.line = this._blockCount; 
+                    console.log("send error", error); 
+                    throw error;
+                    break;
             }
 
             console.log("UnaryExpression operator", operator);
@@ -1620,6 +1669,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 params.push(param);
         }
         console.log("LogicalExpression left param", param);
+
+        if(!param.type && param.name) {
+            var error = {};
+            error.title = "블록변환(Converting) 오류";
+            error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + param.name + "\'" + "을 수정하세요";
+            error.line = this._blockCount; 
+            console.log("send error", error);   
+            throw error;     
+        } 
         
         operator = String(component.operator);
         console.log("LogicalExpression operator", operator);
@@ -1668,7 +1726,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 params.push(param);
         }
         
-        console.log("LogicalExpression right param", param);  
+        console.log("LogicalExpression right param", param); 
+
+        if(!param.type && param.name) {
+            var error = {};
+            error.title = "블록변환(Converting) 오류";
+            error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + param.name + "\'" + "을 수정하세요";
+            error.line = this._blockCount; 
+            console.log("send error", error);   
+            throw error;     
+        }  
 
         structure.type = type;
         structure.params = params;
@@ -1691,13 +1758,26 @@ Entry.PyToBlockParser = function(blockSyntax) {
         switch(operator){ 
             case "==": 
                 var syntax = String("(%1 %2boolean_compare# %3)"); 
-                break;
-                       
+                break;      
             case "!=": 
                 var syntax = String("(%2 != True)");  
-                break; break;               
-            case "===": break;               
-            case "!==": break;               
+                break;               
+            case "===": 
+                var error = {};
+                error.title = "블록변환(Converting) 오류";
+                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
+                error.line = this._blockCount; 
+                console.log("send error", error); 
+                throw error;
+                break; 
+            case "!==":
+                var error = {};
+                error.title = "블록변환(Converting) 오류";
+                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
+                error.line = this._blockCount; 
+                console.log("send error", error); 
+                throw error;
+                break;               
             case "<": 
                 var syntax = String("(%1 %2boolean_compare# %3)");  
                 break;                 
@@ -1710,9 +1790,30 @@ Entry.PyToBlockParser = function(blockSyntax) {
             case ">=": 
                 var syntax = String("(%1 %2boolean_compare# %3)");  
                 break;                
-            case "<<": break;              
-            case ">>": break;               
-            case ">>>": break;                
+            case "<<":   
+                var error = {};
+                error.title = "블록변환(Converting) 오류";
+                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
+                error.line = this._blockCount; 
+                console.log("send error", error); 
+                throw error;
+                break;          
+            case ">>": 
+                var error = {};
+                error.title = "블록변환(Converting) 오류";
+                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
+                error.line = this._blockCount; 
+                console.log("send error", error); 
+                throw error;
+                break;              
+            case ">>>": 
+                var error = {};
+                error.title = "블록변환(Converting) 오류";
+                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
+                error.line = this._blockCount; 
+                console.log("send error", error); 
+                throw error;
+                break;                
             case "+": 
                 var syntax = String("(%1 %2calc_basic# %3)"); 
                 break;               
@@ -1725,15 +1826,65 @@ Entry.PyToBlockParser = function(blockSyntax) {
             case "/": 
                 var syntax = String("(%1 %2calc_basic# %3)"); 
                 break;                
-            case "%": break;                
-            case "|": break;               
-            case "^": break;                
-            case "|": break;
-            case "&": break;                
-            case "in": break;                 
-            case "instanceof": break;                  
+            case "%":  
+                var error = {};
+                error.title = "블록변환(Converting) 오류";
+                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
+                error.line = this._blockCount; 
+                console.log("send error", error); 
+                throw error;
+                break;               
+            case "|":  
+                var error = {};
+                error.title = "블록변환(Converting) 오류";
+                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
+                error.line = this._blockCount; 
+                console.log("send error", error); 
+                throw error;
+                break;              
+            case "^": 
+                var error = {};
+                error.title = "블록변환(Converting) 오류";
+                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
+                error.line = this._blockCount; 
+                console.log("send error", error); 
+                throw error;
+                break;                
+            case "|": 
+                var error = {};
+                error.title = "블록변환(Converting) 오류";
+                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
+                error.line = this._blockCount; 
+                console.log("send error", error); 
+                throw error;
+                break;
+            case "&":   
+                var error = {};
+                error.title = "블록변환(Converting) 오류";
+                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
+                error.line = this._blockCount; 
+                console.log("send error", error); 
+                throw error;
+                break;              
+            case "in":     
+                var error = {};
+                error.title = "블록변환(Converting) 오류";
+                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
+                error.line = this._blockCount; 
+                console.log("send error", error); 
+                throw error;
+                break;             
+            case "instanceof": 
+                break;                  
             default: 
                 operator = operator;
+                var error = {};
+                error.title = "블록변환(Converting) 오류";
+                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
+                error.line = this._blockCount; 
+                console.log("send error", error); 
+                throw error;
+                break;
         }
 
         console.log("BinaryExpression operator", operator); 
@@ -1998,18 +2149,95 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 
                 break;
             }
-            case "+=": break;    
-            case "-=": break;              
-            case "*=": break;               
-            case "/=": break;                
-            case "%=": break;               
-            case "<<=": break;               
-            case ">>=": break;               
-            case "|=": break;              
-            case "^=": break;               
-            case "&=": break;              
+            case "+=":  
+                var error = {};
+                error.title = "블록변환(Converting) 오류";
+                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
+                error.line = this._blockCount; 
+                console.log("send error", error); 
+                throw error;
+                break;   
+            case "-=":
+                var error = {};
+                error.title = "블록변환(Converting) 오류";
+                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
+                error.line = this._blockCount; 
+                console.log("send error", error); 
+                throw error;
+                break;               
+            case "*=":
+                var error = {};
+                error.title = "블록변환(Converting) 오류";
+                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
+                error.line = this._blockCount; 
+                console.log("send error", error); 
+                throw error;
+                break;                
+            case "/=":
+                var error = {};
+                error.title = "블록변환(Converting) 오류";
+                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
+                error.line = this._blockCount; 
+                console.log("send error", error); 
+                throw error;
+                break;                 
+            case "%=":
+                var error = {};
+                error.title = "블록변환(Converting) 오류";
+                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
+                error.line = this._blockCount; 
+                console.log("send error", error); 
+                throw error;
+                break;                
+            case "<<=":
+                var error = {};
+                error.title = "블록변환(Converting) 오류";
+                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
+                error.line = this._blockCount; 
+                console.log("send error", error); 
+                throw error;
+                break;                
+            case ">>=":
+                var error = {};
+                error.title = "블록변환(Converting) 오류";
+                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
+                error.line = this._blockCount; 
+                console.log("send error", error); 
+                throw error;
+                break;                
+            case "|=":
+                var error = {};
+                error.title = "블록변환(Converting) 오류";
+                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
+                error.line = this._blockCount; 
+                console.log("send error", error); 
+                throw error;
+                break;               
+            case "^=":
+                var error = {};
+                error.title = "블록변환(Converting) 오류";
+                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
+                error.line = this._blockCount; 
+                console.log("send error", error); 
+                throw error;
+                break;                
+            case "&=":
+                var error = {};
+                error.title = "블록변환(Converting) 오류";
+                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
+                error.line = this._blockCount; 
+                console.log("send error", error); 
+                throw error;
+                break;               
             default: 
                 operator = operator;
+                var error = {};
+                error.title = "블록변환(Converting) 오류";
+                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
+                error.line = this._blockCount; 
+                console.log("send error", error); 
+                throw error;
+                break;
         }
 
         if(operator) {
@@ -2564,6 +2792,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
         result = component;
 
         console.log("RegExp result", result);
+
+        //Convertin Error Control
+        var error = {};
+        error.title = "블록변환(Converting) 오류";
+        error.message = "블록으로 변환될 수 없는 코드입니다." + "RegExp" + " 표현식은 지원하지 않습니다.";
+        error.line = this._blockCount; 
+        console.log("send error", error); 
+        throw error;
+        //Converting Error Control
+
         return result;
     };
 
@@ -2574,6 +2812,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
         result = component;
 
         console.log("Function result", result);
+
+        //Convertin Error Control
+        var error = {};
+        error.title = "블록변환(Converting) 오류";
+        error.message = "블록으로 변환될 수 없는 코드입니다." + "Function" + " 표현식은 지원하지 않습니다.";
+        error.line = this._blockCount; 
+        console.log("send error", error); 
+        throw error;
+        //Converting Error Control
+
         return result;
     };
 
@@ -2584,6 +2832,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
         result = component;
 
         console.log("EmptyStatement result", result);
+
+        //Convertin Error Control
+        var error = {};
+        error.title = "블록변환(Converting) 오류";
+        error.message = "블록으로 변환될 수 없는 코드입니다." + "EmptyStatement" + " 표현식은 지원하지 않습니다.";
+        error.line = this._blockCount; 
+        console.log("send error", error); 
+        throw error;
+        //Converting Error Control
+
         return result;
     };
 
@@ -2594,6 +2852,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
         result = component;
 
         console.log("DebuggerStatement result", result);
+
+        //Convertin Error Control
+        var error = {};
+        error.title = "블록변환(Converting) 오류";
+        error.message = "블록으로 변환될 수 없는 코드입니다." + "DebuggerStatement" + " 표현식은 지원하지 않습니다.";
+        error.line = this._blockCount; 
+        console.log("send error", error); 
+        throw error;
+        //Converting Error Control
+
         return result;
     };
 
@@ -2604,6 +2872,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
         result = component;
 
         console.log("WithStatement result", result);
+
+        //Convertin Error Control
+        var error = {};
+        error.title = "블록변환(Converting) 오류";
+        error.message = "블록으로 변환될 수 없는 코드입니다." + "WithStatement" + " 표현식은 지원하지 않습니다.";
+        error.line = this._blockCount; 
+        console.log("send error", error); 
+        throw error;
+        //Converting Error Control
+
         return result;
     };
 
@@ -2614,6 +2892,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
         result = component;
 
         console.log("LabeledStatement result", result);
+
+        //Convertin Error Control
+        var error = {};
+        error.title = "블록변환(Converting) 오류";
+        error.message = "블록으로 변환될 수 없는 코드입니다." + "LabeledStatement" + " 표현식은 지원하지 않습니다.";
+        error.line = this._blockCount; 
+        console.log("send error", error); 
+        throw error;
+        //Converting Error Control
+
         return result;
     };
 
@@ -2624,6 +2912,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
         result = component;
 
         console.log("ContinueStatement result", result);
+
+        //Convertin Error Control
+        var error = {};
+        error.title = "블록변환(Converting) 오류";
+        error.message = "블록으로 변환될 수 없는 코드입니다." + "ContinueStatement" + " 표현식은 지원하지 않습니다.";
+        error.line = this._blockCount; 
+        console.log("send error", error); 
+        throw error;
+        //Converting Error Control
+
         return result;
     };
 
@@ -2634,6 +2932,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
         result = component;
 
         console.log("SwitchStatement result", result);
+
+        //Convertin Error Control
+        var error = {};
+        error.title = "블록변환(Converting) 오류";
+        error.message = "블록으로 변환될 수 없는 코드입니다." + "SwitchStatement" + " 표현식은 지원하지 않습니다.";
+        error.line = this._blockCount; 
+        console.log("send error", error); 
+        throw error;
+        //Converting Error Control
+
         return result;
     };
 
@@ -2644,6 +2952,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
         result = component;
 
         console.log("SwitchCase result", result);
+
+        //Convertin Error Control
+        var error = {};
+        error.title = "블록변환(Converting) 오류";
+        error.message = "블록으로 변환될 수 없는 코드입니다." + "SwitchCase" + " 표현식은 지원하지 않습니다.";
+        error.line = this._blockCount; 
+        console.log("send error", error); 
+        throw error;
+        //Converting Error Control
+
         return result;
     };
 
@@ -2654,6 +2972,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
         result = component;
 
         console.log("ThrowStatement result", result);
+
+        //Convertin Error Control
+        var error = {};
+        error.title = "블록변환(Converting) 오류";
+        error.message = "블록으로 변환될 수 없는 코드입니다." + "ThrowStatement" + " 표현식은 지원하지 않습니다.";
+        error.line = this._blockCount; 
+        console.log("send error", error); 
+        throw error;
+        //Converting Error Control
+
         return result;
     };
 
@@ -2664,6 +2992,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
         result = component;
 
         console.log("TryStatement result", result);
+
+        //Convertin Error Control
+        var error = {};
+        error.title = "블록변환(Converting) 오류";
+        error.message = "블록으로 변환될 수 없는 코드입니다." + "TryStatement" + " 표현식은 지원하지 않습니다.";
+        error.line = this._blockCount; 
+        console.log("send error", error); 
+        throw error;
+        //Converting Error Control
+
         return result;
     };
 
@@ -2674,6 +3012,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
         result = component;
 
         console.log("CatchClause result", result);
+
+        //Convertin Error Control
+        var error = {};
+        error.title = "블록변환(Converting) 오류";
+        error.message = "블록으로 변환될 수 없는 코드입니다." + "CatchClause" + " 표현식은 지원하지 않습니다.";
+        error.line = this._blockCount; 
+        console.log("send error", error); 
+        throw error;
+        //Converting Error Control
+
         return result;
     };
 
@@ -2684,6 +3032,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
         result = component;
 
         console.log("DoWhileStatement result", result);
+
+        //Convertin Error Control
+        var error = {};
+        error.title = "블록변환(Converting) 오류";
+        error.message = "블록으로 변환될 수 없는 코드입니다." + "DoWhileStatement" + " 표현식은 지원하지 않습니다.";
+        error.line = this._blockCount; 
+        console.log("send error", error); 
+        throw error;
+        //Converting Error Control
+
         return result;
     };
 
@@ -2694,6 +3052,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
         result = component;
 
         console.log("ArrayExpression result", result);
+
+        //Convertin Error Control
+        var error = {};
+        error.title = "블록변환(Converting) 오류";
+        error.message = "블록으로 변환될 수 없는 코드입니다." + "ArrayExpression" + " 표현식은 지원하지 않습니다.";
+        error.line = this._blockCount; 
+        console.log("send error", error); 
+        throw error;
+        //Converting Error Control
+
         return result;
     };
 
@@ -2704,6 +3072,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
         result = component;
 
         console.log("ObjectExpression result", result);
+
+        //Convertin Error Control
+        var error = {};
+        error.title = "블록변환(Converting) 오류";
+        error.message = "블록으로 변환될 수 없는 코드입니다." + "ObjectExpression" + " 표현식은 지원하지 않습니다.";
+        error.line = this._blockCount; 
+        console.log("send error", error); 
+        throw error;
+        //Converting Error Control
+
         return result;
     };
 
@@ -2714,6 +3092,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
         result = component;
 
         console.log("Property result", result);
+
+        //Convertin Error Control
+        var error = {};
+        error.title = "블록변환(Converting) 오류";
+        error.message = "블록으로 변환될 수 없는 코드입니다." + "Property" + " 표현식은 지원하지 않습니다.";
+        error.line = this._blockCount; 
+        console.log("send error", error); 
+        throw error;
+        //Converting Error Control
+
         return result;
     };
 
@@ -2724,6 +3112,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
         result = component;
 
         console.log("ConditionalExpression result", result);
+
+        //Convertin Error Control
+        var error = {};
+        error.title = "블록변환(Converting) 오류";
+        error.message = "블록으로 변환될 수 없는 코드입니다." + "ConditionalExpression" + " 표현식은 지원하지 않습니다.";
+        error.line = this._blockCount; 
+        console.log("send error", error); 
+        throw error;
+        //Converting Error Control
+
         return result;
     };
 
@@ -2734,6 +3132,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
         result = component;
 
         console.log("SequenceExpression result", result);
+
+        //Convertin Error Control
+        var error = {};
+        error.title = "블록변환(Converting) 오류";
+        error.message = "블록으로 변환될 수 없는 코드입니다." + "SequenceExpression" + " 표현식은 지원하지 않습니다.";
+        error.line = this._blockCount; 
+        console.log("send error", error); 
+        throw error;
+        //Converting Error Control
+
         return result;
     };
     

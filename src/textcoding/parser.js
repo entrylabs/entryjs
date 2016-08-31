@@ -295,8 +295,10 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         if(thread.length != 0 && thread != "") {
                             tCount++;
                             this._pyThreadCount = parseInt(tCount);
-                            
-                            ast = pyAstGenerator.generate(thread);
+
+                            if(!Entry.TextCodingUtil.prototype.includeEntryEventKeyBlock(thread)) {
+                                ast = pyAstGenerator.generate(thread);
+                            }
                             console.log("success??", ast);
                             thread = Entry.TextCodingUtil.prototype.entryEventFuncFilter(thread);
                             console.log("real thread", thread);
@@ -405,6 +407,10 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         
 
                         console.log("came here error2", error);
+
+                        console.log("came here error2 title", error.title);
+                        console.log("came here error2 message", error.message);
+
 
                         if(error.title)
                             var errorTitle = error.title;
@@ -622,11 +628,12 @@ Entry.Parser = function(mode, type, cm, syntax) {
         for(var i = 4; i < contentsArr.length; i++) {
             var line = contentsArr[i];
             console.log("ljh line", line);
-            if(line.trim().length == 0)
+            if(line.trim().length == 0 || line.trim() == "else:")
                 errorLine++;
             else 
                 index++;
             console.log("iiiiii", i); 
+            console.log("index", index, "blockCount", blockCount);
             if(index == blockCount) {
                 errorLine += index;
                 break;
@@ -752,6 +759,9 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 notShowTextLine = false;
 
 
+            if(line > contentsArr.length)
+                line = contentsArr.length;
+
             if(i+1 == line) {
                 console.log("i+1", i+1);
                 result.line = i + 1 + currentLineCount + (this._pyThreadCount-1) + initEmptyLine;
@@ -767,7 +777,10 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 else if(line == 1 && column == 0) {
                     console.log("type3");
                     result.line -= 1;
-                } 
+                } else if(column == 2) {
+                    console.log("type3");
+                    result.line -= 1;
+                }
 
                 result.line += 4;
                 result.start = 0;
