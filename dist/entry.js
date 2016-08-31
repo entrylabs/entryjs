@@ -133,9 +133,10 @@ Entry.Albert = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, leftEye:0, rightE
   b = Entry.Albert;
   b.tempo = 60;
   b.removeAllTimeouts();
-}, monitorTemplate:{imgPath:"hw/albert.png", width:387, height:503, listPorts:{oid:{name:"OID", type:"input", pos:{x:0, y:0}}, buzzer:{name:Lang.Hw.buzzer, type:"output", pos:{x:0, y:0}}, note:{name:Lang.Hw.note, type:"output", pos:{x:0, y:0}}}, ports:{leftProximity:{name:Lang.Blocks.ALBERT_sensor_leftProximity, type:"input", pos:{x:178, y:401}}, rightProximity:{name:Lang.Blocks.ALBERT_sensor_rightProximity, type:"input", pos:{x:66, y:359}}, battery:{name:Lang.Blocks.ALBERT_sensor_battery, type:"input", 
-pos:{x:88, y:368}}, light:{name:Lang.Blocks.ALBERT_sensor_light, type:"input", pos:{x:127, y:391}}, leftWheel:{name:Lang.Hw.leftWheel, type:"output", pos:{x:299, y:406}}, rightWheel:{name:Lang.Hw.rightWheel, type:"output", pos:{x:22, y:325}}, leftEye:{name:Lang.Hw.leftEye, type:"output", pos:{x:260, y:26}}, rightEye:{name:Lang.Hw.rightEye, type:"output", pos:{x:164, y:13}}, bodyLed:{name:Lang.Hw.body + " " + Lang.Hw.led, type:"output", pos:{x:367, y:308}}, frontLed:{name:Lang.Hw.front + " " + Lang.Hw.led, 
-pos:{x:117, y:410}}}, mode:"both"}, tempo:60, timeouts:[], removeTimeout:function(b) {
+}, monitorTemplate:{imgPath:"hw/albert.png", width:387, height:503, listPorts:{temperature:{name:Lang.Blocks.ALBERT_sensor_temperature, type:"input", pos:{x:0, y:0}}, accelerationX:{name:Lang.Blocks.ALBERT_sensor_acceleration_x, type:"input", pos:{x:0, y:0}}, accelerationY:{name:Lang.Blocks.ALBERT_sensor_acceleration_y, type:"input", pos:{x:0, y:0}}, accelerationZ:{name:Lang.Blocks.ALBERT_sensor_acceleration_z, type:"input", pos:{x:0, y:0}}, frontOid:{name:Lang.Blocks.ALBERT_sensor_front_oid, type:"input", 
+pos:{x:0, y:0}}, backOid:{name:Lang.Blocks.ALBERT_sensor_back_oid, type:"input", pos:{x:0, y:0}}, positionX:{name:Lang.Blocks.ALBERT_sensor_position_x, type:"input", pos:{x:0, y:0}}, positionY:{name:Lang.Blocks.ALBERT_sensor_position_y, type:"input", pos:{x:0, y:0}}, orientation:{name:Lang.Blocks.ALBERT_sensor_orientation, type:"input", pos:{x:0, y:0}}, buzzer:{name:Lang.Hw.buzzer, type:"output", pos:{x:0, y:0}}, note:{name:Lang.Hw.note, type:"output", pos:{x:0, y:0}}}, ports:{leftProximity:{name:Lang.Blocks.ALBERT_sensor_leftProximity, 
+type:"input", pos:{x:178, y:401}}, rightProximity:{name:Lang.Blocks.ALBERT_sensor_rightProximity, type:"input", pos:{x:66, y:359}}, battery:{name:Lang.Blocks.ALBERT_sensor_battery, type:"input", pos:{x:88, y:368}}, light:{name:Lang.Blocks.ALBERT_sensor_light, type:"input", pos:{x:127, y:391}}, leftWheel:{name:Lang.Hw.leftWheel, type:"output", pos:{x:299, y:406}}, rightWheel:{name:Lang.Hw.rightWheel, type:"output", pos:{x:22, y:325}}, leftEye:{name:Lang.Hw.leftEye, type:"output", pos:{x:260, y:26}}, 
+rightEye:{name:Lang.Hw.rightEye, type:"output", pos:{x:164, y:13}}, bodyLed:{name:Lang.Hw.body + " " + Lang.Hw.led_en, type:"output", pos:{x:367, y:308}}, frontLed:{name:Lang.Hw.front + " " + Lang.Hw.led_en, pos:{x:117, y:410}}}, mode:"both"}, tempo:60, timeouts:[], removeTimeout:function(b) {
   clearTimeout(b);
   var a = this.timeouts;
   b = a.indexOf(b);
@@ -146,7 +147,84 @@ pos:{x:117, y:410}}}, mode:"both"}, tempo:60, timeouts:[], removeTimeout:functio
     clearTimeout(b[a]);
   }
   this.timeouts = [];
-}, name:"albert"};
+}, controller:{PI:3.14159265, PI2:6.2831853, prevDirection:0, prevDirectionFine:0, directionFineCount:0, positionCount:0, finalPositionCount:0, GAIN_ANGLE:30, GAIN_ANGLE_FINE:30, GAIN_POSITION_FINE:30, STRAIGHT_SPEED:20, MAX_BASE_SPEED:20, GAIN_BASE_SPEED:1, GAIN_POSITION:35, POSITION_TOLERANCE_FINE:3, POSITION_TOLERANCE_FINE_LARGE:5, POSITION_TOLERANCE_ROUGH:5, POSITION_TOLERANCE_ROUGH_LARGE:10, ORIENTATION_TOLERANCE_FINE:.08, ORIENTATION_TOLERANCE_ROUGH:.09, ORIENTATION_TOLERANCE_ROUGH_LARGE:.18, 
+MINIMUM_WHEEL_SPEED:18, MINIMUM_WHEEL_SPEED_FINE:15, clear:function() {
+  this.finalPositionCount = this.positionCount = this.directionFineCount = this.prevDirectionFine = this.prevDirection = 0;
+}, controlAngleFine:function(b, a) {
+  var d = Entry.hw.sendQueue, c = this.validateRadian(a - b), e = Math.abs(c);
+  if (e < this.ORIENTATION_TOLERANCE_FINE) {
+    return !1;
+  }
+  var f = 0 < c ? 1 : -1;
+  if (0 > f * this.prevDirectionFine && 5 < ++this.directionFineCount) {
+    return !1;
+  }
+  this.prevDirectionFine = f;
+  f = 0;
+  0 < c ? (f = Math.log(1 + e) * this.GAIN_ANGLE_FINE, f < this.MINIMUM_WHEEL_SPEED && (f = this.MINIMUM_WHEEL_SPEED)) : (f = -Math.log(1 + e) * this.GAIN_ANGLE_FINE, f > -this.MINIMUM_WHEEL_SPEED && (f = -this.MINIMUM_WHEEL_SPEED));
+  f = parseInt(f);
+  d.leftWheel = -f;
+  d.rightWheel = f;
+  return !0;
+}, controlAngle:function(b, a) {
+  var d = Entry.hw.sendQueue, c = this.validateRadian(a - b), e = Math.abs(c);
+  if (e < this.ORIENTATION_TOLERANCE_ROUGH) {
+    return !1;
+  }
+  var f = 0 < c ? 1 : -1;
+  if (e < this.ORIENTATION_TOLERANCE_ROUGH_LARGE && 0 > f * this.prevDirection) {
+    return !1;
+  }
+  this.prevDirection = f;
+  f = 0;
+  0 < c ? (f = Math.log(1 + e) * this.GAIN_ANGLE, f < this.MINIMUM_WHEEL_SPEED && (f = this.MINIMUM_WHEEL_SPEED)) : (f = -Math.log(1 + e) * this.GAIN_ANGLE, f > -this.MINIMUM_WHEEL_SPEED && (f = -this.MINIMUM_WHEEL_SPEED));
+  f = parseInt(f);
+  d.leftWheel = -f;
+  d.rightWheel = f;
+  return !0;
+}, controlPositionFine:function(b, a, d, c, e) {
+  var f = Entry.hw.sendQueue;
+  d = this.validateRadian(Math.atan2(e - a, c - b) - d);
+  var g = Math.abs(d);
+  b = c - b;
+  a = e - a;
+  a = Math.sqrt(b * b + a * a);
+  if (a < this.POSITION_TOLERANCE_FINE) {
+    return !1;
+  }
+  if (a < this.POSITION_TOLERANCE_FINE_LARGE && 5 < ++this.finalPositionCount) {
+    return this.finalPositionCount = 0, !1;
+  }
+  a = 0;
+  a = 0 < d ? Math.log(1 + g) * this.GAIN_POSITION_FINE : -Math.log(1 + g) * this.GAIN_POSITION_FINE;
+  a = parseInt(a);
+  f.leftWheel = this.MINIMUM_WHEEL_SPEED_FINE - a;
+  f.rightWheel = this.MINIMUM_WHEEL_SPEED_FINE + a;
+  return !0;
+}, controlPosition:function(b, a, d, c, e) {
+  var f = Entry.hw.sendQueue;
+  d = this.validateRadian(Math.atan2(e - a, c - b) - d);
+  var g = Math.abs(d);
+  b = c - b;
+  a = e - a;
+  a = Math.sqrt(b * b + a * a);
+  if (a < this.POSITION_TOLERANCE_ROUGH) {
+    return !1;
+  }
+  if (a < this.POSITION_TOLERANCE_ROUGH_LARGE) {
+    if (10 < ++this.positionCount) {
+      return this.positionCount = 0, !1;
+    }
+  } else {
+    this.positionCount = 0;
+  }
+  .01 > g ? (f.leftWheel = this.STRAIGHT_SPEED, f.rightWheel = this.STRAIGHT_SPEED) : (a = (this.MINIMUM_WHEEL_SPEED + .5 / g) * this.GAIN_BASE_SPEED, a > this.MAX_BASE_SPEED && (a = this.MAX_BASE_SPEED), e = 0, e = 0 < d ? Math.log(1 + g) * this.GAIN_POSITION : -Math.log(1 + g) * this.GAIN_POSITION, a = parseInt(a), e = parseInt(e), f.leftWheel = a - e, f.rightWheel = a + e);
+  return !0;
+}, validateRadian:function(b) {
+  return b > this.PI ? b - this.PI2 : b < -this.PI ? b + this.PI2 : b;
+}, toRadian:function(b) {
+  return 3.14159265 * b / 180;
+}}, name:"albert"};
 Blockly.Blocks.albert_hand_found = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField(Lang.Blocks.ALBERT_hand_found);
@@ -157,10 +235,22 @@ Entry.block.albert_hand_found = function(b, a) {
   var d = Entry.hw.portData;
   return 40 < d.leftProximity || 40 < d.rightProximity;
 };
+Blockly.Blocks.albert_is_oid_value = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_is_oid_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.ALBERT_front_oid, "FRONT"], [Lang.Blocks.ALBERT_back_oid, "BACK"]]), "OID").appendField(Lang.Blocks.ALBERT_is_oid_2);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_is_oid_3);
+  this.setOutput(!0, "Boolean");
+  this.setInputsInline(!0);
+}};
+Entry.block.albert_is_oid_value = function(b, a) {
+  var d = Entry.hw.portData, c = a.getField("OID", a), e = a.getNumberValue("VALUE");
+  return "FRONT" == c ? d.frontOid == e : d.backOid == e;
+};
 Blockly.Blocks.albert_value = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([[Lang.Blocks.ALBERT_sensor_leftProximity, "leftProximity"], [Lang.Blocks.ALBERT_sensor_rightProximity, "rightProximity"], [Lang.Blocks.ALBERT_sensor_light, "light"], [Lang.Blocks.ALBERT_sensor_battery, "battery"], [Lang.Blocks.ALBERT_sensor_signalStrength, "signalStrength"], [Lang.Blocks.ALBERT_sensor_frontOid, "frontOid"], [Lang.Blocks.ALBERT_sensor_backOid, "backOid"], [Lang.Blocks.ALBERT_sensor_positionX, "positionX"], 
-  [Lang.Blocks.ALBERT_sensor_positionY, "positionY"], [Lang.Blocks.ALBERT_sensor_orientation, "orientation"]]), "DEVICE");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([[Lang.Blocks.ALBERT_sensor_left_proximity, "leftProximity"], [Lang.Blocks.ALBERT_sensor_right_proximity, "rightProximity"], [Lang.Blocks.ALBERT_sensor_acceleration_x, "accelerationX"], [Lang.Blocks.ALBERT_sensor_acceleration_y, "accelerationY"], [Lang.Blocks.ALBERT_sensor_acceleration_z, "accelerationZ"], [Lang.Blocks.ALBERT_sensor_front_oid, "frontOid"], [Lang.Blocks.ALBERT_sensor_back_oid, "backOid"], [Lang.Blocks.ALBERT_sensor_position_x, 
+  "positionX"], [Lang.Blocks.ALBERT_sensor_position_y, "positionY"], [Lang.Blocks.ALBERT_sensor_orientation, "orientation"], [Lang.Blocks.ALBERT_sensor_light, "light"], [Lang.Blocks.ALBERT_sensor_temperature, "temperature"], [Lang.Blocks.ALBERT_sensor_battery, "battery"], [Lang.Blocks.ALBERT_sensor_signal_strength, "signalStrength"]]), "DEVICE");
   this.setInputsInline(!0);
   this.setOutput(!0, "Number");
 }};
@@ -236,7 +326,7 @@ Entry.block.albert_move_backward_for_secs = function(b, a) {
 };
 Blockly.Blocks.albert_turn_for_secs = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_turn_for_secs_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"]]), "DIRECTION").appendField(Lang.Blocks.ALBERT_turn_for_secs_2);
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_turn_for_secs_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.ALBERT_turn_left, "LEFT"], [Lang.Blocks.ALBERT_turn_right, "RIGHT"]]), "DIRECTION").appendField(Lang.Blocks.ALBERT_turn_for_secs_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.ALBERT_turn_for_secs_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
@@ -302,7 +392,7 @@ Entry.block.albert_set_both_wheels_to = function(b, a) {
 };
 Blockly.Blocks.albert_change_wheel_by = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_change_wheel_by_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]]), "DIRECTION").appendField(Lang.Blocks.ALBERT_change_wheel_by_2);
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_change_wheel_by_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.ALBERT_left_wheel, "LEFT"], [Lang.Blocks.ALBERT_right_wheel, "RIGHT"], [Lang.Blocks.ALBERT_both_wheels, "BOTH"]]), "DIRECTION").appendField(Lang.Blocks.ALBERT_change_wheel_by_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.ALBERT_change_wheel_by_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
@@ -316,7 +406,7 @@ Entry.block.albert_change_wheel_by = function(b, a) {
 };
 Blockly.Blocks.albert_set_wheel_to = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_set_wheel_to_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]]), "DIRECTION").appendField(Lang.Blocks.ALBERT_set_wheel_to_2);
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_set_wheel_to_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.ALBERT_left_wheel, "LEFT"], [Lang.Blocks.ALBERT_right_wheel, "RIGHT"], [Lang.Blocks.ALBERT_both_wheels, "BOTH"]]), "DIRECTION").appendField(Lang.Blocks.ALBERT_set_wheel_to_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.ALBERT_set_wheel_to_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
@@ -343,11 +433,11 @@ Entry.block.albert_stop = function(b, a) {
 };
 Blockly.Blocks.albert_set_pad_size_to = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_set_pad_size_to_1);
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_set_board_size_to_1);
   this.appendValueInput("WIDTH").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_set_pad_size_to_2);
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_set_board_size_to_2);
   this.appendValueInput("HEIGHT").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_set_pad_size_to_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_set_board_size_to_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -358,10 +448,121 @@ Entry.block.albert_set_pad_size_to = function(b, a) {
   d.padHeight = a.getNumberValue("HEIGHT");
   return a.callReturn();
 };
+Blockly.Blocks.albert_move_to_x_y_on_board = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_move_to_x_y_1);
+  this.appendValueInput("X").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_move_to_x_y_2);
+  this.appendValueInput("Y").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_move_to_x_y_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_move_to_x_y_on_board = function(b, a) {
+  var d = Entry.hw.sendQueue, c = Entry.hw.portData, e = Entry.Albert.controller;
+  if (a.isStart) {
+    if (a.isMoving) {
+      0 <= c.positionX && (a.x = c.positionX);
+      0 <= c.positionY && (a.y = c.positionY);
+      a.theta = c.orientation;
+      switch(a.boardState) {
+        case 1:
+          if (0 == a.initialized) {
+            if (0 > a.x || 0 > a.y) {
+              d.leftWheel = 20;
+              d.rightWheel = -20;
+              break;
+            }
+            a.initialized = !0;
+          }
+          d = e.toRadian(a.theta);
+          0 == e.controlAngle(d, Math.atan2(a.targetY - a.y, a.targetX - a.x)) && (a.boardState = 2);
+          break;
+        case 2:
+          0 == e.controlPosition(a.x, a.y, e.toRadian(a.theta), a.targetX, a.targetY) && (a.boardState = 3);
+          break;
+        case 3:
+          0 == e.controlPositionFine(a.x, a.y, e.toRadian(a.theta), a.targetX, a.targetY) && (d.leftWheel = 0, d.rightWheel = 0, a.isMoving = !1);
+      }
+      return a;
+    }
+    delete a.isStart;
+    delete a.isMoving;
+    delete a.initialized;
+    delete a.boardState;
+    delete a.x;
+    delete a.y;
+    delete a.theta;
+    delete a.targetX;
+    delete a.targetY;
+    Entry.engine.isContinue = !1;
+    d.leftWheel = 0;
+    d.rightWheel = 0;
+    return a.callReturn();
+  }
+  a.isStart = !0;
+  a.isMoving = !0;
+  a.initialized = !1;
+  a.boardState = 1;
+  a.x = -1;
+  a.y = -1;
+  a.theta = -200;
+  a.targetX = a.getNumberValue("X");
+  a.targetY = a.getNumberValue("Y");
+  e.clear();
+  d.leftWheel = 0;
+  d.rightWheel = 0;
+  return a;
+};
+Blockly.Blocks.albert_set_orientation_on_board = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_set_orientation_to_1);
+  this.appendValueInput("ORIENTATION").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_set_orientation_to_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_set_orientation_on_board = function(b, a) {
+  var d = Entry.hw.sendQueue, c = Entry.hw.portData, e = Entry.Albert.controller;
+  if (a.isStart) {
+    if (a.isMoving) {
+      a.theta = c.orientation;
+      switch(a.boardState) {
+        case 1:
+          var c = e.toRadian(a.theta), f = e.toRadian(a.targetTheta);
+          0 == e.controlAngle(c, f) && (a.boardState = 2);
+          break;
+        case 2:
+          c = e.toRadian(a.theta), f = e.toRadian(a.targetTheta), 0 == e.controlAngleFine(c, f) && (d.leftWheel = 0, d.rightWheel = 0, a.isMoving = !1);
+      }
+      return a;
+    }
+    delete a.isStart;
+    delete a.isMoving;
+    delete a.boardState;
+    delete a.theta;
+    delete a.targetTheta;
+    Entry.engine.isContinue = !1;
+    d.leftWheel = 0;
+    d.rightWheel = 0;
+    return a.callReturn();
+  }
+  a.isStart = !0;
+  a.isMoving = !0;
+  a.boardState = 1;
+  a.theta = -200;
+  a.targetTheta = a.getNumberValue("ORIENTATION");
+  e.clear();
+  d.leftWheel = 0;
+  d.rightWheel = 0;
+  return a;
+};
 Blockly.Blocks.albert_set_eye_to = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_set_eye_to_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]]), "DIRECTION").appendField(Lang.Blocks.ALBERT_set_eye_to_2).appendField(new Blockly.FieldDropdown([[Lang.General.red, "4"], [Lang.General.yellow, "6"], [Lang.General.green, "2"], [Lang.Blocks.ALBERT_color_cyan, "3"], [Lang.General.blue, "1"], [Lang.Blocks.ALBERT_color_magenta, "5"], [Lang.General.white, 
-  "7"]]), "COLOR").appendField(Lang.Blocks.ALBERT_set_eye_to_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_set_eye_to_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.ALBERT_left_eye, "LEFT"], [Lang.Blocks.ALBERT_right_eye, "RIGHT"], [Lang.Blocks.ALBERT_both_eyes, "BOTH"]]), "DIRECTION").appendField(Lang.Blocks.ALBERT_set_eye_to_2).appendField(new Blockly.FieldDropdown([[Lang.General.red, "4"], [Lang.General.yellow, "6"], [Lang.General.green, "2"], [Lang.Blocks.ALBERT_color_cyan, "3"], [Lang.General.blue, "1"], [Lang.Blocks.ALBERT_color_magenta, 
+  "5"], [Lang.Blocks.ALBERT_color_white, "7"]]), "COLOR").appendField(Lang.Blocks.ALBERT_set_eye_to_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -373,7 +574,7 @@ Entry.block.albert_set_eye_to = function(b, a) {
 };
 Blockly.Blocks.albert_clear_eye = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_clear_eye_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]]), "DIRECTION").appendField(Lang.Blocks.ALBERT_clear_eye_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_clear_eye_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.ALBERT_left_eye, "LEFT"], [Lang.Blocks.ALBERT_right_eye, "RIGHT"], [Lang.Blocks.ALBERT_both_eyes, "BOTH"]]), "DIRECTION").appendField(Lang.Blocks.ALBERT_clear_eye_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -385,7 +586,7 @@ Entry.block.albert_clear_eye = function(b, a) {
 };
 Blockly.Blocks.albert_body_led = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_body_led_1).appendField(new Blockly.FieldDropdown([[Lang.General.turn_on, "ON"], [Lang.General.turn_off, "OFF"]]), "STATE").appendField(Lang.Blocks.ALBERT_body_led_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_turn_body_led_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.ALBERT_turn_on, "ON"], [Lang.Blocks.ALBERT_turn_off, "OFF"]]), "STATE").appendField(Lang.Blocks.ALBERT_turn_body_led_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -397,7 +598,7 @@ Entry.block.albert_body_led = function(b, a) {
 };
 Blockly.Blocks.albert_front_led = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_front_led_1).appendField(new Blockly.FieldDropdown([[Lang.General.turn_on, "ON"], [Lang.General.turn_off, "OFF"]]), "STATE").appendField(Lang.Blocks.ALBERT_front_led_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.ALBERT_turn_front_led_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.ALBERT_turn_on, "ON"], [Lang.Blocks.ALBERT_turn_off, "OFF"]]), "STATE").appendField(Lang.Blocks.ALBERT_turn_front_led_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -579,147 +780,6 @@ Blockly.Blocks.albert_set_tempo_to = {init:function() {
 Entry.block.albert_set_tempo_to = function(b, a) {
   Entry.Albert.tempo = a.getNumberValue("VALUE");
   1 > Entry.Albert.tempo && (Entry.Albert.tempo = 1);
-  return a.callReturn();
-};
-Blockly.Blocks.albert_move_forward = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_move_forward).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.albert_move_forward = function(b, a) {
-  var d = Entry.hw.sendQueue;
-  if (a.isStart) {
-    if (1 == a.timeFlag) {
-      return a;
-    }
-    delete a.timeFlag;
-    delete a.isStart;
-    Entry.engine.isContinue = !1;
-    d.leftWheel = 0;
-    d.rightWheel = 0;
-    return a.callReturn();
-  }
-  a.isStart = !0;
-  a.timeFlag = 1;
-  d.leftWheel = 30;
-  d.rightWheel = 30;
-  setTimeout(function() {
-    a.timeFlag = 0;
-  }, 1E3);
-  return a;
-};
-Blockly.Blocks.albert_move_backward = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_move_backward).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.albert_move_backward = function(b, a) {
-  var d = Entry.hw.sendQueue;
-  if (a.isStart) {
-    if (1 == a.timeFlag) {
-      return d.leftWheel = -30, d.rightWheel = -30, a;
-    }
-    delete a.timeFlag;
-    delete a.isStart;
-    Entry.engine.isContinue = !1;
-    d.leftWheel = 0;
-    d.rightWheel = 0;
-    return a.callReturn();
-  }
-  a.isStart = !0;
-  a.timeFlag = 1;
-  setTimeout(function() {
-    a.timeFlag = 0;
-  }, 1E3);
-  return a;
-};
-Blockly.Blocks.albert_turn_around = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_turn_around_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_turn_around_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.albert_turn_around = function(b, a) {
-  var d = Entry.hw.sendQueue;
-  if (a.isStart) {
-    if (1 == a.timeFlag) {
-      return d.leftWheel = a.leftValue, d.rightWheel = a.rightValue, a;
-    }
-    delete a.timeFlag;
-    delete a.isStart;
-    delete a.leftValue;
-    delete a.rightValue;
-    Entry.engine.isContinue = !1;
-    d.leftWheel = 0;
-    d.rightWheel = 0;
-    return a.callReturn();
-  }
-  d = "LEFT" == a.getField("DIRECTION", a);
-  a.leftValue = d ? -30 : 30;
-  a.rightValue = d ? 30 : -30;
-  a.isStart = !0;
-  a.timeFlag = 1;
-  setTimeout(function() {
-    a.timeFlag = 0;
-  }, 1E3);
-  return a;
-};
-Blockly.Blocks.albert_set_led_to = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_led_to_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "FRONT"]]), "DIRECTION").appendField(Lang.Blocks.ALBERT_set_led_to_2).appendField(new Blockly.FieldDropdown([[Lang.General.red, "4"], [Lang.General.yellow, "6"], [Lang.General.green, "2"], [Lang.General.skyblue, "3"], [Lang.General.blue, "1"], [Lang.General.purple, "5"], [Lang.General.white, "7"]]), "COLOR").appendField(Lang.Blocks.HAMSTER_set_led_to_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 
-  "block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.albert_set_led_to = function(b, a) {
-  var d = Entry.hw.sendQueue, c = a.getField("DIRECTION", a), e = Number(a.getField("COLOR", a));
-  "FRONT" == c ? (d.leftEye = e, d.rightEye = e) : "LEFT" == c ? d.leftEye = e : d.rightEye = e;
-  return a.callReturn();
-};
-Blockly.Blocks.albert_clear_led = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_clear_led_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "FRONT"]]), "DIRECTION").appendField(Lang.Blocks.ALBERT_clear_led_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.albert_clear_led = function(b, a) {
-  var d = Entry.hw.sendQueue, c = a.getField("DIRECTION", a);
-  "FRONT" == c ? (d.leftEye = 0, d.rightEye = 0) : "LEFT" == c ? d.leftEye = 0 : d.rightEye = 0;
-  return a.callReturn();
-};
-Blockly.Blocks.albert_change_wheels_by = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_wheels_by_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "FRONT"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_change_wheels_by_2);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_wheels_by_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.albert_change_wheels_by = function(b, a) {
-  var d = Entry.hw.sendQueue, c = Entry.hw.portData, e = a.getField("DIRECTION"), f = a.getNumberValue("VALUE");
-  "LEFT" == e ? d.leftWheel = void 0 != d.leftWheel ? d.leftWheel + f : c.leftWheel + f : ("RIGHT" != e && (d.leftWheel = void 0 != d.leftWheel ? d.leftWheel + f : c.leftWheel + f), d.rightWheel = void 0 != d.rightWheel ? d.rightWheel + f : c.rightWheel + f);
-  return a.callReturn();
-};
-Blockly.Blocks.albert_set_wheels_to = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_wheels_to_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "FRONT"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_set_wheels_to_2);
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_wheels_to_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.albert_set_wheels_to = function(b, a) {
-  var d = Entry.hw.sendQueue, c = a.getField("DIRECTION"), e = a.getNumberValue("VALUE");
-  "LEFT" == c ? d.leftWheel = e : ("RIGHT" != c && (d.leftWheel = e), d.rightWheel = e);
   return a.callReturn();
 };
 Entry.Arduino = {name:"arduino", setZero:function() {
@@ -970,6 +1030,10 @@ Entry.block.sensorBoard_led = function(b, a) {
 Entry.block.arduino_download_connector = {skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"\uc5f0\uacb0 \ud504\ub85c\uadf8\ub7a8 \ub2e4\uc6b4\ub85c\ub4dc", color:"#333", align:"center"}], func:function() {
 }, events:{mousedown:[function() {
   console.log("download connector");
+}]}};
+Entry.block.download_guide = {skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"\uc5f0\uacb0 \uc548\ub0b4 \ub2e4\uc6b4\ub85c\ub4dc", color:"#333", align:"center"}], func:function() {
+}, events:{mousedown:[function() {
+  console.log("download guide");
 }]}};
 Entry.block.arduino_download_source = {skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"\uc5d4\ud2b8\ub9ac \uc544\ub450\uc774\ub178 \uc18c\uc2a4", color:"#333", align:"center"}], func:function() {
 }, events:{mousedown:[function() {
@@ -1417,7 +1481,7 @@ Blockly.Blocks.start_drawing = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.start_drawing()"]}};
+}};
 Entry.block.start_drawing = function(b, a) {
   b.brush ? b.brush.stop = !1 : Entry.setBasicBrush(b);
   Entry.stage.sortZorder();
@@ -1430,7 +1494,7 @@ Blockly.Blocks.stop_drawing = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.stop_drawing()"]}};
+}};
 Entry.block.stop_drawing = function(b, a) {
   b.brush && b.shape && (b.brush.stop = !0);
   return a.callReturn();
@@ -1443,7 +1507,7 @@ Blockly.Blocks.set_color = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.set_brush_color(%1)"]}};
+}};
 Entry.block.set_color = function(b, a) {
   var d = a.getField("VALUE", a);
   b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
@@ -1456,7 +1520,7 @@ Blockly.Blocks.set_random_color = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.set_brush_color_random()"]}};
+}};
 Entry.block.set_random_color = function(b, a) {
   b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
   if (b.brush) {
@@ -1476,7 +1540,7 @@ Blockly.Blocks.change_thickness = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.change_brush_thickness(%1)"]}};
+}};
 Entry.block.change_thickness = function(b, a) {
   var d = a.getNumberValue("VALUE", a);
   b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
@@ -1491,7 +1555,7 @@ Blockly.Blocks.set_thickness = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.set_brush_thickness(%1)"]}};
+}};
 Entry.block.set_thickness = function(b, a) {
   var d = a.getNumberValue("VALUE", a);
   b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
@@ -1506,7 +1570,7 @@ Blockly.Blocks.change_opacity = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.change_brush_opacity(%1)"]}};
+}};
 Entry.block.change_opacity = function(b, a) {
   var d = a.getNumberValue("VALUE", a);
   b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
@@ -1522,7 +1586,7 @@ Blockly.Blocks.set_opacity = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.set_brush_opacity(%1)"]}};
+}};
 Entry.block.set_opacity = function(b, a) {
   var d = a.getNumberValue("VALUE", a);
   b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
@@ -1535,7 +1599,7 @@ Blockly.Blocks.brush_erase_all = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.erase_all_brush()"]}};
+}};
 Entry.block.brush_erase_all = function(b, a) {
   var d = b.brush;
   if (d) {
@@ -1556,7 +1620,7 @@ Blockly.Blocks.brush_stamp = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.stamp()"]}};
+}};
 Entry.block.brush_stamp = function(b, a) {
   b.parent.addStampEntity(b);
   return a.callReturn();
@@ -1569,7 +1633,7 @@ Blockly.Blocks.change_brush_transparency = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.change_brush_transparency_by_percent(%1)"]}};
+}};
 Entry.block.change_brush_transparency = function(b, a) {
   var d = a.getNumberValue("VALUE", a);
   b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
@@ -1585,7 +1649,7 @@ Blockly.Blocks.set_brush_tranparency = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.set_brush_transparency_by_percent(%1)"]}};
+}};
 Entry.block.set_brush_tranparency = function(b, a) {
   var d = a.getNumberValue("VALUE", a);
   b.brush || (Entry.setBasicBrush(b), b.brush.stop = !0);
@@ -1598,7 +1662,7 @@ Blockly.Blocks.number = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldTextInput(""), "NUM");
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:["%1"]}};
+}};
 Entry.block.number = function(b, a) {
   return a.getField("NUM", a);
 };
@@ -1607,7 +1671,7 @@ Blockly.Blocks.angle = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldAngle("90"), "ANGLE");
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:[" %1 "]}};
+}};
 Entry.block.angle = function(b, a) {
   return a.getNumberField("ANGLE");
 };
@@ -1616,7 +1680,7 @@ Blockly.Blocks.get_x_coordinate = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.CALC_get_x_coordinate, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:["Entry.get_x()"]}};
+}};
 Entry.block.get_x_coordinate = function(b, a) {
   return b.getX();
 };
@@ -1625,7 +1689,7 @@ Blockly.Blocks.get_y_coordinate = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.CALC_get_y_coordinate, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:["Entry.get_y()"]}};
+}};
 Entry.block.get_y_coordinate = function(b, a) {
   return b.getY();
 };
@@ -1644,7 +1708,7 @@ Blockly.Blocks.get_rotation_direction = {init:function() {
   this.appendDummyInput().appendField(" ");
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:["Entry.get_direction()"]}};
+}};
 Entry.block.get_rotation_direction = function(b, a) {
   return "DIRECTION" == a.getField("OPERATOR", a).toUpperCase() ? parseFloat(b.getDirection().toFixed(1)) : parseFloat(b.getRotation().toFixed(1));
 };
@@ -1653,7 +1717,7 @@ Blockly.Blocks.distance_something = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.CALC_distance_something_1, calcFontColor).appendField(new Blockly.FieldDropdownDynamic("spritesWithMouse", null, !0, calcArrowColor), "VALUE").appendField(Lang.Blocks.CALC_distance_something_2, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:["Entry.get_distance(%1)"]}};
+}};
 Entry.block.distance_something = function(b, a) {
   var d = a.getField("VALUE", a);
   if ("mouse" == d) {
@@ -1667,7 +1731,7 @@ Blockly.Blocks.coordinate_mouse = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.CALC_coordinate_mouse_1, calcFontColor).appendField(new Blockly.FieldDropdown([["x", "x"], ["y", "y"]], null, !0, calcArrowColor), "VALUE").appendField(Lang.Blocks.CALC_coordinate_mouse_2, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:['Entry.get_mouse_coordinate("%1")']}};
+}};
 Entry.block.coordinate_mouse = function(b, a) {
   return "x" === a.getField("VALUE", a) ? Number(Entry.stage.mouseCoordinate.x) : Number(Entry.stage.mouseCoordinate.y);
 };
@@ -1677,7 +1741,7 @@ Blockly.Blocks.coordinate_object = {init:function() {
   [Lang.Blocks.CALC_coordinate_size_value, "size"], [Lang.Blocks.CALC_picture_index, "picture_index"], [Lang.Blocks.CALC_picture_name, "picture_name"]], null, !0, calcArrowColor), "COORDINATE").appendField(Lang.Blocks.CALC_coordinate_object_3, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:['Entry.get_object_coordinate("%1", "%2")']}};
+}};
 Entry.block.coordinate_object = function(b, a) {
   var d = a.getField("VALUE", a), d = "self" == d ? b : Entry.container.getEntity(d);
   switch(a.getField("COORDINATE", a)) {
@@ -1705,7 +1769,7 @@ Blockly.Blocks.calc_basic = {init:function() {
   this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:["%1 %2 %3"]}};
+}};
 Entry.block.calc_basic = function(b, a) {
   var d = a.getField("OPERATOR", a), c = a.getNumberValue("LEFTHAND", a), e = a.getNumberValue("RIGHTHAND", a);
   return "PLUS" == d ? c + e : "MINUS" == d ? c - e : "MULTI" == d ? c * e : c / e;
@@ -1796,7 +1860,7 @@ Blockly.Blocks.calc_operation = {init:function() {
   this.setOutput(!0, "Number");
   this.appendDummyInput().appendField(" ");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:['Entry.calculate(%1, "%2")']}};
+}};
 Entry.block.calc_operation = function(b, a) {
   var d = a.getNumberValue("LEFTHAND", a), c = a.getField("VALUE", a);
   if (-1 < ["asin_radian", "acos_radian"].indexOf(c) && (1 < d || -1 > d)) {
@@ -1846,7 +1910,7 @@ Blockly.Blocks.calc_rand = {init:function() {
   this.setOutput(!0, "Number");
   this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_calc_rand_3, calcFontColor);
   this.setInputsInline(!0);
-}, syntax:{js:[], py:["random.randrange(%1, %2)"]}};
+}};
 Entry.block.calc_rand = function(b, a) {
   var d = a.getStringValue("LEFTHAND", a), c = a.getStringValue("RIGHTHAND", a), e = Math.min(d, c), f = Math.max(d, c), d = Entry.isFloat(d);
   return Entry.isFloat(c) || d ? (Math.random() * (f - e) + e).toFixed(2) : Math.floor(Math.random() * (f - e + 1) + e);
@@ -1857,7 +1921,7 @@ Blockly.Blocks.get_date = {init:function() {
   this.appendDummyInput().appendField(" ").appendField(Lang.Blocks.CALC_get_date_2, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:['Entry.get_date_time("%1")']}};
+}};
 Entry.block.get_date = function(b, a) {
   var d = a.getField("VALUE", a), c = new Date;
   return "YEAR" == d ? c.getFullYear() : "MONTH" == d ? c.getMonth() + 1 : "DAY" == d ? c.getDate() : "HOUR" == d ? c.getHours() : "MINUTE" == d ? c.getMinutes() : c.getSeconds();
@@ -1869,7 +1933,7 @@ Blockly.Blocks.get_sound_duration = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.CALC_get_sound_duration_2, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:["Entry.get_sound_duration(%1)"]}};
+}};
 Entry.block.get_sound_duration = function(b, a) {
   for (var d = a.getField("VALUE", a), c = b.parent.sounds, e = 0;e < c.length;e++) {
     if (c[e].id == d) {
@@ -1904,7 +1968,7 @@ Blockly.Blocks.set_visible_project_timer = {init:function() {
   Entry.engine && Entry.engine.showProjectTimer();
 }, whenRemove:function(b) {
   Entry.engine && Entry.engine.hideProjectTimer(b);
-}, syntax:{js:[], py:['Entry.show_timer("%1")']}};
+}};
 Entry.block.set_visible_project_timer = function(b, a) {
   var d = a.getField("ACTION", a), c = Entry.engine.projectTimer;
   "SHOW" == d ? c.setVisible(!0) : c.setVisible(!1);
@@ -1928,7 +1992,7 @@ Blockly.Blocks.get_project_timer_value = {init:function() {
   Entry.engine && Entry.engine.showProjectTimer();
 }, whenRemove:function(b) {
   Entry.engine && Entry.engine.hideProjectTimer(b);
-}, syntax:{js:[], py:["Entry.get_timer_value()"]}};
+}};
 Entry.block.get_project_timer_value = function(b, a) {
   return Entry.engine.projectTimer.getValue();
 };
@@ -1941,7 +2005,7 @@ Blockly.Blocks.char_at = {init:function() {
   this.setOutput(!0, "Number");
   this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_char_at_3, calcFontColor);
   this.setInputsInline(!0);
-}, syntax:{js:[], py:['"%1"[%2]']}};
+}};
 Entry.block.char_at = function(b, a) {
   var d = a.getStringValue("LEFTHAND", a), c = a.getNumberValue("RIGHTHAND", a) - 1;
   if (0 > c || c > d.length - 1) {
@@ -1956,7 +2020,7 @@ Blockly.Blocks.length_of_string = {init:function() {
   this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_length_of_string_2, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:["len(%1)"]}};
+}};
 Entry.block.length_of_string = function(b, a) {
   return a.getStringValue("STRING", a).length;
 };
@@ -1971,7 +2035,7 @@ Blockly.Blocks.substring = {init:function() {
   this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_substring_4, calcFontColor);
   this.setOutput(!0, "String");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:['"%1"[%2:%3]']}};
+}};
 Entry.block.substring = function(b, a) {
   var d = a.getStringValue("STRING", a), c = a.getNumberValue("START", a) - 1, e = a.getNumberValue("END", a) - 1, f = d.length - 1;
   if (0 > c || 0 > e || c > f || e > f) {
@@ -1990,7 +2054,7 @@ Blockly.Blocks.replace_string = {init:function() {
   this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_replace_string_4, calcFontColor);
   this.setOutput(!0, "String");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:['"%1".replace("%2", "%3")']}};
+}};
 Entry.block.replace_string = function(b, a) {
   return a.getStringValue("STRING", a).replace(new RegExp(a.getStringValue("OLD_WORD", a), "gm"), a.getStringValue("NEW_WORD", a));
 };
@@ -2003,7 +2067,7 @@ Blockly.Blocks.change_string_case = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.CALC_change_string_case_3, calcFontColor);
   this.setOutput(!0, "String");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:['Entry.change_string_case("%1", "%2")']}};
+}};
 Entry.block.change_string_case = function(b, a) {
   return a.getStringValue("STRING", a)[a.getField("CASE", a)]();
 };
@@ -2016,7 +2080,7 @@ Blockly.Blocks.index_of_string = {init:function() {
   this.setOutput(!0, "Number");
   this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_index_of_string_3, calcFontColor);
   this.setInputsInline(!0);
-}, syntax:{js:[], py:['"%1".index(%2)']}};
+}};
 Entry.block.index_of_string = function(b, a) {
   var d = a.getStringValue("LEFTHAND", a), c = a.getStringValue("RIGHTHAND", a), d = d.indexOf(c);
   return -1 < d ? d + 1 : 0;
@@ -2030,7 +2094,7 @@ Blockly.Blocks.combine_something = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_combine_something_3, calcFontColor);
   this.setInputsInline(!0);
   this.setOutput(!0, "String");
-}, syntax:{js:[], py:['"%1".index(%2)']}};
+}};
 Entry.block.combine_something = function(b, a) {
   var d = a.getStringValue("VALUE1", a), c = a.getStringValue("VALUE2", a);
   return d + c;
@@ -2040,7 +2104,7 @@ Blockly.Blocks.get_sound_volume = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.CALC_get_sound_volume, calcFontColor).appendField(" ", calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:["Entry.get_sound_volume()"]}};
+}};
 Entry.block.get_sound_volume = function(b, a) {
   return 100 * createjs.Sound.getVolume();
 };
@@ -2052,7 +2116,7 @@ Blockly.Blocks.quotient_and_mod = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.CALC_quotient_and_mod_4, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:['Entry.get_quotient_remainder(%1, %2, "%3"']}};
+}};
 Entry.block.quotient_and_mod = function(b, a) {
   var d = a.getNumberValue("LEFTHAND", a), c = a.getNumberValue("RIGHTHAND", a);
   if (isNaN(d) || isNaN(c)) {
@@ -2071,10 +2135,424 @@ Blockly.Blocks.choose_project_timer_action = {init:function() {
   Entry.engine && Entry.engine.showProjectTimer();
 }, whenRemove:function(b) {
   Entry.engine && Entry.engine.hideProjectTimer(b);
-}, syntax:{js:[], py:['Entry.act_timer("%1")']}};
+}};
 Entry.block.choose_project_timer_action = function(b, a) {
   var d = a.getField("ACTION"), c = Entry.engine, e = c.projectTimer;
   "START" == d ? e.isInit ? e.isInit && e.isPaused && (e.pauseStart && (e.pausedTime += (new Date).getTime() - e.pauseStart), delete e.pauseStart, e.isPaused = !1) : c.startProjectTimer() : "STOP" == d ? e.isInit && !e.isPaused && (e.isPaused = !0, e.pauseStart = (new Date).getTime()) : "RESET" == d && e.isInit && (e.setValue(0), e.start = (new Date).getTime(), e.pausedTime = 0, delete e.pauseStart);
+  return a.callReturn();
+};
+Entry.Cobl = {name:"cobl", setZero:function() {
+  for (var b = 0;14 > b;b++) {
+    Entry.hw.sendQueue[b] = 0;
+  }
+  Entry.hw.update();
+}};
+Blockly.Blocks.cobl_read_ultrason = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\ucd08\uc74c\ud30c \uac70\ub9ac\uc7ac\uae30(0~400)");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.cobl_read_ultrason = function(b, a) {
+  return Entry.hw.getAnalogPortValue("ultrason");
+};
+Blockly.Blocks.cobl_read_potenmeter = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uac00\ubcc0\uc800\ud56d \uc77d\uae30(0~1023)");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.cobl_read_potenmeter = function(b, a) {
+  console.log("cobl_read_potenmeter");
+  return Entry.hw.getAnalogPortValue("potenmeter");
+};
+Blockly.Blocks.cobl_read_irread1 = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("IR1 \uc77d\uae30(0~1023)");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.cobl_read_irread1 = function(b, a) {
+  return Entry.hw.getAnalogPortValue("potenmeter");
+};
+Blockly.Blocks.cobl_read_irread2 = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("IR2 \uc77d\uae30(0~1023)");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.cobl_read_irread2 = function(b, a) {
+  a.getValue("irread2", a);
+  return Entry.hw.getAnalogPortValue("irread2");
+};
+Blockly.Blocks.cobl_read_joyx = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc870\uc774\uc2a4\ud2f1X\ucd95 \uc77d\uae30(1,0,-1)");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.cobl_read_joyx = function(b, a) {
+  return Entry.hw.getAnalogPortValue("joyx");
+};
+Blockly.Blocks.cobl_read_joyy = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc870\uc774\uc2a4\ud2f1Y\ucd95 \uc77d\uae30(1,0,-1)");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.cobl_read_joyy = function(b, a) {
+  return Entry.hw.getAnalogPortValue("joyy");
+};
+Blockly.Blocks.cobl_read_sens1 = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc13c\uc11c1 \uc77d\uae30(0~1023)");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.cobl_read_sens1 = function(b, a) {
+  return Entry.hw.getAnalogPortValue("sens1");
+};
+Blockly.Blocks.cobl_read_sens2 = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc13c\uc11c2 \uc77d\uae30(0~1023)");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.cobl_read_sens2 = function(b, a) {
+  return Entry.hw.getAnalogPortValue("sens2");
+};
+Blockly.Blocks.cobl_read_tilt = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uae30\uc6b8\uae30\uc13c\uc11c \uc77d\uae30(0~4)");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.cobl_read_tilt = function(b, a) {
+  return Entry.hw.getAnalogPortValue("tilt");
+};
+Blockly.Blocks.cobl_get_port_number = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"]]), "PORT");
+  this.appendDummyInput().appendField(" ");
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.cobl_get_port_number = function(b, a) {
+  return a.getStringField("PORT");
+};
+Blockly.Blocks.cobl_read_temps = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc628\ub3c4\uc13c\uc11c \uc77d\uae30@\ud3ec\ud2b8");
+  this.appendValueInput("VALUE").setCheck("Number");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.cobl_read_temps = function(b, a) {
+  var d = a.getValue("VALUE", a);
+  if (1 == d) {
+    return Entry.hw.getAnalogPortValue("temps1");
+  }
+  if (2 == d) {
+    return Entry.hw.getAnalogPortValue("temps2");
+  }
+};
+Blockly.Blocks.cobl_read_light = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\ubc1d\uae30\uc13c\uc11c \uc77d\uae30@\ud3ec\ud2b8");
+  this.appendValueInput("VALUE").setCheck("Number");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.cobl_read_light = function(b, a) {
+  var d = a.getValue("VALUE", a);
+  if (1 == d) {
+    return Entry.hw.getAnalogPortValue("light1");
+  }
+  if (2 == d) {
+    return Entry.hw.getAnalogPortValue("light2");
+  }
+};
+Blockly.Blocks.cobl_read_btn = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\ubc84\ud2bc\uc13c\uc11c \uc77d\uae30@\ud3ec\ud2b8");
+  this.appendValueInput("VALUE").setCheck("Number");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Boolean");
+}};
+Entry.block.cobl_read_btn = function(b, a) {
+  var d = a.getValue("VALUE", a);
+  if (1 == d) {
+    return Entry.hw.getDigitalPortValue("btn1");
+  }
+  if (2 == d) {
+    return Entry.hw.getDigitalPortValue("btn2");
+  }
+};
+Blockly.Blocks.cobl_led_control = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("Rainbow LED");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"], ["3", "3"]]), "PORT");
+  this.appendDummyInput().appendField(" ");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["OFF", "OFF"], ["Red", "Red"], ["Orange", "Orange"], ["Yellow", "Yellow"], ["Green", "Green"], ["Blue", "Blue"], ["Dark Blue", "Dark Blue"], ["Purple", "Purple"], ["White", "White"]]), "OPERATOR");
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.cobl_led_control = function(b, a) {
+  var d = a.getStringField("PORT"), c = a.getStringField("OPERATOR");
+  Entry.hw.setDigitalPortValue("RainBowLED_IDX", d);
+  Entry.hw.setDigitalPortValue("RainBowLED_COL", c);
+  return a.callReturn();
+};
+Blockly.Blocks.cobl_text = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(new Blockly.FieldTextInput("cobl"), "NAME");
+  this.setOutput(!0, "String");
+  this.setInputsInline(!0);
+}};
+Entry.block.cobl_text = function(b, a) {
+  return a.getStringField("NAME");
+};
+Blockly.Blocks.cobl_servo_angle_control = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("Servo");
+  this.appendValueInput("PORT").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("Angle-");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("(15~165)");
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.cobl_servo_angle_control = function(b, a) {
+  console.log("servo - test");
+  var d = a.getNumberValue("PORT"), c = a.getNumberValue("VALUE"), c = Math.round(c), c = Math.max(c, 15), c = Math.min(c, 165);
+  1 == d && (console.log("servo 1  degree " + c), Entry.hw.setDigitalPortValue("Servo1", c));
+  2 == d && (console.log("servo 2 degree " + c), Entry.hw.setDigitalPortValue("Servo2", c));
+  return a.callReturn();
+};
+Blockly.Blocks.cobl_melody = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("Melody");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["(Low)So", "L_So"], ["(Low)So#", "L_So#"], ["(Low)La", "L_La"], ["(Low)La#", "L_La#"], ["(Low)Ti", "L_Ti"], ["Do", "Do"], ["Do#", "Do#"], ["Re", "Re"], ["Re#", "Re#"], ["Mi", "Mi"], ["Fa", "Fa"], ["Fa#", "Fa#"], ["So", "So"], ["So#", "So#"], ["La", "La"], ["La#", "La#"], ["Ti", "Ti"], ["(High)Do", "H_Do"], ["(High)Do#", "H_Do#"], ["(High)Re", "H_Re"], ["(High)R2#", "H_Re#"], ["(High)Mi", "H_Mi"], ["(High)Fa", "H_Fa"]]), "MELODY");
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.cobl_melody = function(b, a) {
+  var d = a.getStringField("MELODY");
+  console.log("cobl_melody" + d);
+  Entry.hw.setDigitalPortValue("Melody", d);
+  return a.callReturn();
+};
+Blockly.Blocks.cobl_dcmotor = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("DcMotor");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"]]), "MOTOR");
+  this.appendDummyInput().appendField(" ");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["1.Clockwise", "1"], ["2.Counter Clockwise", "2"], ["3.Stop", "3"]]), "DIRECTION");
+  this.appendDummyInput().appendField(" Speed");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"]]), "SPEED");
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.cobl_dcmotor = function(b, a) {
+  var d = a.getStringField("MOTOR"), c = a.getStringField("DIRECTION"), e = a.getStringField("SPEED");
+  console.log("MOTOR" + d + "  Direction" + c + "  speed" + e);
+  1 == d && (Entry.hw.setDigitalPortValue("DC1_DIR", c), Entry.hw.setDigitalPortValue("DC1_SPEED", e));
+  2 == d && (Entry.hw.setDigitalPortValue("DC2_DIR", c), Entry.hw.setDigitalPortValue("DC2_SPEED", e));
+  return a.callReturn();
+};
+Blockly.Blocks.cobl_extention_port = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("Extention Port");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"]]), "PORT");
+  this.appendDummyInput().appendField(" Level");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"]]), "LEVEL");
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.cobl_extention_port = function(b, a) {
+  var d = a.getStringField("PORT"), c = a.getStringField("LEVEL");
+  1 == d && Entry.hw.setDigitalPortValue("EXUSB1", c);
+  2 == d && Entry.hw.setDigitalPortValue("EXUSB2", c);
+  return a.callReturn();
+};
+Blockly.Blocks.cobl_external_led = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("External LED ");
+  this.appendValueInput("LED").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(" (1~64)");
+  this.appendDummyInput().appendField(" R ");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"], ["9", "9"], ["10", "10"]]), "RED");
+  this.appendDummyInput().appendField(" G ");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"], ["9", "9"], ["10", "10"]]), "GREEN");
+  this.appendDummyInput().appendField(" B ");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"], ["9", "9"], ["10", "10"]]), "BLUE");
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.cobl_external_led = function(b, a) {
+  var d = a.getNumberValue("LED"), c = a.getStringField("RED"), e = a.getStringField("GREEN"), f = a.getStringField("BLUE");
+  Entry.hw.setDigitalPortValue("ELED_IDX", d);
+  Entry.hw.setDigitalPortValue("ELED_R", c);
+  Entry.hw.setDigitalPortValue("ELED_G", e);
+  Entry.hw.setDigitalPortValue("ELED_B", f);
+  return a.callReturn();
+};
+Blockly.Blocks.cobl_7_segment = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("7 Segment");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("(0~9999)");
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.cobl_7_segment = function(b, a) {
+  var d = a.getNumberValue("VALUE");
+  Entry.hw.setDigitalPortValue("7SEG", d);
+  return a.callReturn();
+};
+Entry.EV3 = {PORT_MAP:{A:0, B:0, C:0, D:0, 1:void 0, 2:void 0, 3:void 0, 4:void 0}, motorMovementTypes:{Degrees:0, Power:1}, deviceTypes:{NxtTouch:1, NxtLight:2, NxtSound:3, NxtColor:4, NxtUltrasonic:5, NxtTemperature:6, LMotor:7, MMotor:8, Touch:16, Color:29, Ultrasonic:30, Gyroscope:32, Infrared:33, Initializing:125, Empty:126, WrongPort:127, Unknown:255}, colorSensorValue:" 000000 0000FF 00FF00 FFFF00 FF0000 FFFFFF A52A2A".split(" "), timeouts:[], removeTimeout:function(b) {
+  clearTimeout(b);
+  var a = this.timeouts;
+  b = a.indexOf(b);
+  0 <= b && a.splice(b, 1);
+}, removeAllTimeouts:function() {
+  var b = this.timeouts, a;
+  for (a in b) {
+    clearTimeout(b[a]);
+  }
+  this.timeouts = [];
+}, setZero:function() {
+  var b = this.PORT_MAP;
+  Object.keys(b).forEach(function(a) {
+    /[A-D]/i.test(a) ? Entry.hw.sendQueue[a] = {type:Entry.EV3.motorMovementTypes.Power, power:0} : Entry.hw.sendQueue[a] = b[a];
+  });
+  Entry.hw.update();
+}, name:"EV3"};
+Blockly.Blocks.ev3_get_sensor_value = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"]]), "PORT").appendField("\uc758 \uac12");
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.ev3_get_sensor_value = function(b, a) {
+  a.getStringField("PORT", a);
+  var d = Entry.hw.getDigitalPortValue(a.getNumberField("PORT", a)), c;
+  $.isPlainObject(d) && (c = d.siValue || 0);
+  return c;
+};
+Blockly.Blocks.ev3_touch_sensor = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"]]), "PORT").appendField("\uc758 \ud130\uce58\uc13c\uc11c\uac00 \uc791\ub3d9\ub418\uc5c8\ub294\uac00?");
+  this.setOutput(!0, "Boolean");
+  this.setInputsInline(!0);
+}};
+Entry.block.ev3_touch_sensor = function(b, a) {
+  a.getStringField("PORT", a);
+  var d = Entry.hw.getDigitalPortValue(a.getNumberField("PORT", a)), c = !1;
+  d.type == Entry.EV3.deviceTypes.Touch && 1 <= Number(d.siValue) && (c = !0);
+  return c;
+};
+Blockly.Blocks.ev3_color_sensor = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"]]), "PORT").appendField("\uc758 ").appendField(new Blockly.FieldDropdown([["RGB", "RGB"], ["R", "R"], ["G", "G"], ["B", "B"]]), "RGB").appendField("\uac12");
+  this.setOutput(!0, "String");
+  this.setInputsInline(!0);
+}};
+Entry.block.ev3_color_sensor = function(b, a) {
+  a.getStringField("PORT", a);
+  var d = a.getStringField("RGB", a), c = Entry.hw.getDigitalPortValue(a.getNumberField("PORT", a)), e = "";
+  if (c.type == Entry.EV3.deviceTypes.Color) {
+    if (0 == c.siValue) {
+      e = "";
+    } else {
+      switch(d) {
+        case "RGB":
+          e = Entry.EV3.colorSensorValue[c.siValue];
+          break;
+        case "R":
+          e = Entry.EV3.colorSensorValue[c.siValue].substring(0, 2);
+          break;
+        case "G":
+          e = Entry.EV3.colorSensorValue[c.siValue].substring(2, 4);
+          break;
+        case "B":
+          e = Entry.EV3.colorSensorValue[c.siValue].substring(4, 6);
+      }
+    }
+  } else {
+    e = "\uceec\ub7ec \uc13c\uc11c \uc544\ub2d8";
+  }
+  return e;
+};
+Blockly.Blocks.ev3_motor_power = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["A", "A"], ["B", "B"], ["C", "C"], ["D", "D"]]), "PORT").appendField("\uc758 \uac12\uc744");
+  this.appendValueInput("VALUE").setCheck(["Number"]);
+  this.appendDummyInput().appendField("\uc73c\ub85c \ucd9c\ub825");
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.ev3_motor_power = function(b, a) {
+  var d = a.getStringField("PORT", a), c = a.getValue("VALUE", a);
+  Entry.hw.sendQueue[d] = {id:Math.floor(1E5 * Math.random(), 0), type:Entry.EV3.motorMovementTypes.Power, power:c};
+  return a.callReturn();
+};
+Blockly.Blocks.ev3_motor_power_on_time = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["A", "A"], ["B", "B"], ["C", "C"], ["D", "D"]]), "PORT").appendField("\uc758 \uac12\uc744");
+  this.appendValueInput("TIME").setCheck(["Number"]);
+  this.appendDummyInput().appendField("\ucd08 \ub3d9\uc548");
+  this.appendValueInput("VALUE").setCheck(["Number"]);
+  this.appendDummyInput().appendField("\uc73c\ub85c \ucd9c\ub825");
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.ev3_motor_power_on_time = function(b, a) {
+  var d = a.getStringField("PORT", a);
+  if (a.isStart) {
+    if (1 == a.timeFlag) {
+      return a;
+    }
+    delete a.isStart;
+    delete a.timeFlag;
+    Entry.engine.isContinue = !1;
+    Entry.hw.sendQueue[d] = {id:Math.floor(1E5 * Math.random(), 0), type:Entry.EV3.motorMovementTypes.Power, power:0};
+    return a.callReturn();
+  }
+  var c = a.getValue("TIME", a), e = a.getValue("VALUE", a);
+  a.isStart = !0;
+  a.timeFlag = 1;
+  Entry.hw.sendQueue[d] = {id:Math.floor(1E5 * Math.random(), 0), type:Entry.EV3.motorMovementTypes.Power, power:e};
+  var f = setTimeout(function() {
+    a.timeFlag = 0;
+    Entry.EV3.removeTimeout(f);
+  }, 1E3 * c);
+  Entry.EV3.timeouts.push(f);
+  return a;
+};
+Blockly.Blocks.ev3_motor_degrees = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["A", "A"], ["B", "B"], ["C", "C"], ["D", "D"]]), "PORT").appendField("\uc758 \uac12\uc744").appendField(new Blockly.FieldDropdown([["\uc2dc\uacc4\ubc29\ud5a5", "CW"], ["\ubc18\uc2dc\uacc4\ubc29\ud5a5", "CCW"]]), "DIRECTION").appendField("\uc73c\ub85c ");
+  this.appendValueInput("DEGREE").setCheck(["Number"]);
+  this.appendDummyInput().appendField("\ub3c4 \ub9cc\ud07c \ud68c\uc804");
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.ev3_motor_degrees = function(b, a) {
+  var d = a.getStringField("PORT", a), c = a.getValue("DEGREE", a);
+  0 >= c ? c = 0 : 720 <= c && (c = 720);
+  var e = a.getStringField("DIRECTION", a);
+  Entry.hw.sendQueue[d] = {id:Math.floor(1E5 * Math.random(), 0), type:Entry.EV3.motorMovementTypes.Degrees, degree:c, power:"CW" == e ? 50 : -50};
   return a.callReturn();
 };
 Blockly.Blocks.wait_second = {init:function() {
@@ -2085,7 +2563,7 @@ Blockly.Blocks.wait_second = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["Entry.wait_seconds(%1)"]}};
+}};
 Entry.block.wait_second = function(b, a) {
   if (a.isStart) {
     if (1 == a.timeFlag) {
@@ -2113,7 +2591,7 @@ Blockly.Blocks.repeat_basic = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["for i in range(%1):\n$1"]}};
+}};
 Entry.block.repeat_basic = function(b, a) {
   var d;
   if (!a.isLooped) {
@@ -2137,7 +2615,7 @@ Blockly.Blocks.repeat_inf = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["while True:\n$1"]}};
+}};
 Entry.block.repeat_inf = function(b, a) {
   a.isLooped = !0;
   return a.getStatement("DO");
@@ -2148,7 +2626,7 @@ Blockly.Blocks.stop_repeat = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["break"]}};
+}};
 Entry.block.stop_repeat = function(b, a) {
   return this.executor.break();
 };
@@ -2160,7 +2638,7 @@ Blockly.Blocks.wait_until_true = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["Entry.wait_for_true(%1)"]}};
+}};
 Entry.block.wait_until_true = function(b, a) {
   return a.getBooleanValue("BOOL", a) ? a.callReturn() : a;
 };
@@ -2173,7 +2651,7 @@ Blockly.Blocks._if = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["if %1:\n$1"]}};
+}};
 Entry.block._if = function(b, a) {
   return a.isLooped ? (delete a.isLooped, a.callReturn()) : a.getBooleanValue("BOOL", a) ? (a.isLooped = !0, a.getStatement("STACK", a)) : a.callReturn();
 };
@@ -2188,7 +2666,7 @@ Blockly.Blocks.if_else = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["if %1:\n$1\nelse:\n$2"]}};
+}};
 Entry.block.if_else = function(b, a) {
   if (a.isLooped) {
     return delete a.isLooped, a.callReturn();
@@ -2205,7 +2683,7 @@ Blockly.Blocks.create_clone = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["Entry.create_clone(%1)"]}};
+}};
 Entry.block.create_clone = function(b, a) {
   var d = a.getField("VALUE", a), c = a.callReturn();
   "self" == d ? b.parent.addCloneEntity(b.parent, b, null) : Entry.container.getObject(d).addCloneEntity(b.parent, null, null);
@@ -2216,7 +2694,7 @@ Blockly.Blocks.delete_clone = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.FLOW_delete_clone).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/flow_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
-}, syntax:{js:[], py:["self.remove_clone()"]}};
+}};
 Entry.block.delete_clone = function(b, a) {
   if (!b.isClone) {
     return a.callReturn();
@@ -2228,7 +2706,7 @@ Blockly.Blocks.when_clone_start = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_clone.png", "*", "start")).appendField(Lang.Blocks.FLOW_when_clone_start);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["Entry.on_clone_create()"]}};
+}};
 Entry.block.when_clone_start = function(b, a) {
   return a.callReturn();
 };
@@ -2250,7 +2728,7 @@ Blockly.Blocks.repeat_while_true = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["particular block"]}};
+}};
 Entry.block.repeat_while_true = function(b, a) {
   var d = a.getBooleanValue("BOOL", a);
   "until" == a.getField("OPTION", a) && (d = !d);
@@ -2264,7 +2742,7 @@ Blockly.Blocks.stop_object = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["Entry.stop(%1)"]}};
+}};
 Entry.block.stop_object = function(b, a) {
   var d = a.getField("TARGET", a), c = Entry.container;
   switch(d) {
@@ -2283,7 +2761,7 @@ Blockly.Blocks.restart_project = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.FLOW_restart).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/flow_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
-}, syntax:{js:[], py:["Entry.restart()"]}};
+}};
 Entry.block.restart_project = function(b, a) {
   Entry.engine.toggleStop();
   Entry.engine.toggleRun();
@@ -2294,7 +2772,7 @@ Blockly.Blocks.remove_all_clones = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["Entry.remove_all_clones()"]}};
+}};
 Entry.block.remove_all_clones = function(b, a) {
   var d = b.parent.getClonedEntities();
   d.map(function(a) {
@@ -2305,7 +2783,7 @@ Entry.block.remove_all_clones = function(b, a) {
 };
 Entry.block.functionAddButton = {skeleton:"basic_button", color:"#eee", isNotFor:["functionInit"], template:"%1", params:[{type:"Text", text:"\ud568\uc218 \ucd94\uac00", color:"#333", align:"center"}], events:{mousedown:[function() {
   Entry.variableContainer.createFunction();
-}]}, syntax:{js:[], py:[]}};
+}]}};
 Blockly.Blocks.function_field_label = {init:function() {
   this.setColour("#f9c535");
   this.appendDummyInput().appendField(new Blockly.FieldTextInput(Lang.Blocks.FUNCTION_explanation_1), "NAME");
@@ -2479,9 +2957,10 @@ Entry.Hamster = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, outputA:0, outpu
   this.lineTracerModeId = this.lineTracerModeId + 1 & 255;
   b.lineTracerMode = a;
   b.lineTracerModeId = this.lineTracerModeId;
-}, name:"hamster", monitorTemplate:{imgPath:"hw/hamster.png", width:256, height:256, listPorts:{temperature:{name:Lang.Blocks.HAMSTER_sensor_temperature, type:"input", pos:{x:0, y:0}}, accelerationX:{name:Lang.Blocks.HAMSTER_sensor_accelerationX, type:"input", pos:{x:0, y:0}}, accelerationY:{name:Lang.Blocks.HAMSTER_sensor_accelerationY, type:"input", pos:{x:0, y:0}}, accelerationZ:{name:Lang.Blocks.HAMSTER_sensor_accelerationZ, type:"input", pos:{x:0, y:0}}, buzzer:{name:Lang.Hw.buzzer, type:"output", 
-pos:{x:0, y:0}}, note:{name:Lang.Hw.buzzer + "2", type:"output", pos:{x:0, y:0}}, outputA:{name:Lang.Hw.output + "A", type:"output", pos:{x:0, y:0}}, outputB:{name:Lang.Hw.output + "B", type:"output", pos:{x:0, y:0}}}, ports:{leftProximity:{name:Lang.Blocks.HAMSTER_sensor_leftProximity, type:"input", pos:{x:122, y:156}}, rightProximity:{name:Lang.Blocks.HAMSTER_sensor_rightProximity, type:"input", pos:{x:10, y:108}}, leftFloor:{name:Lang.Blocks.HAMSTER_sensor_leftFloor, type:"input", pos:{x:100, 
-y:234}}, rightFloor:{name:Lang.Blocks.HAMSTER_sensor_rightFloor, type:"input", pos:{x:13, y:180}}, light:{name:Lang.Blocks.HAMSTER_sensor_light, type:"input", pos:{x:56, y:189}}, leftWheel:{name:Lang.Hw.leftWheel, type:"output", pos:{x:209, y:115}}, rightWheel:{name:Lang.Hw.rightWheel, type:"output", pos:{x:98, y:30}}, leftLed:{name:Lang.Hw.left + " " + Lang.Hw.led, type:"output", pos:{x:87, y:210}}, rightLed:{name:Lang.Hw.right + " " + Lang.Hw.led, type:"output", pos:{x:24, y:168}}}, mode:"both"}};
+}, name:"hamster", monitorTemplate:{imgPath:"hw/hamster.png", width:256, height:256, listPorts:{temperature:{name:Lang.Blocks.HAMSTER_sensor_temperature, type:"input", pos:{x:0, y:0}}, inputA:{name:Lang.Blocks.HAMSTER_sensor_input_a, type:"input", pos:{x:0, y:0}}, inputB:{name:Lang.Blocks.HAMSTER_sensor_input_b, type:"input", pos:{x:0, y:0}}, accelerationX:{name:Lang.Blocks.HAMSTER_sensor_acceleration_x, type:"input", pos:{x:0, y:0}}, accelerationY:{name:Lang.Blocks.HAMSTER_sensor_acceleration_y, 
+type:"input", pos:{x:0, y:0}}, accelerationZ:{name:Lang.Blocks.HAMSTER_sensor_acceleration_z, type:"input", pos:{x:0, y:0}}, buzzer:{name:Lang.Hw.buzzer, type:"output", pos:{x:0, y:0}}, note:{name:Lang.Hw.note, type:"output", pos:{x:0, y:0}}, outputA:{name:Lang.Hw.output + "A", type:"output", pos:{x:0, y:0}}, outputB:{name:Lang.Hw.output + "B", type:"output", pos:{x:0, y:0}}}, ports:{leftProximity:{name:Lang.Blocks.HAMSTER_sensor_left_proximity, type:"input", pos:{x:122, y:156}}, rightProximity:{name:Lang.Blocks.HAMSTER_sensor_right_proximity, 
+type:"input", pos:{x:10, y:108}}, leftFloor:{name:Lang.Blocks.HAMSTER_sensor_left_floor, type:"input", pos:{x:100, y:234}}, rightFloor:{name:Lang.Blocks.HAMSTER_sensor_right_floor, type:"input", pos:{x:13, y:180}}, light:{name:Lang.Blocks.HAMSTER_sensor_light, type:"input", pos:{x:56, y:189}}, leftWheel:{name:Lang.Hw.leftWheel, type:"output", pos:{x:209, y:115}}, rightWheel:{name:Lang.Hw.rightWheel, type:"output", pos:{x:98, y:30}}, leftLed:{name:Lang.Hw.left + " " + Lang.Hw.led_en, type:"output", 
+pos:{x:87, y:210}}, rightLed:{name:Lang.Hw.right + " " + Lang.Hw.led_en, type:"output", pos:{x:24, y:168}}}, mode:"both"}};
 Blockly.Blocks.hamster_hand_found = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_hand_found);
@@ -2494,8 +2973,8 @@ Entry.block.hamster_hand_found = function(b, a) {
 };
 Blockly.Blocks.hamster_value = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([[Lang.Blocks.HAMSTER_sensor_leftProximity, "leftProximity"], [Lang.Blocks.HAMSTER_sensor_rightProximity, "rightProximity"], [Lang.Blocks.HAMSTER_sensor_leftFloor, "leftFloor"], [Lang.Blocks.HAMSTER_sensor_rightFloor, "rightFloor"], [Lang.Blocks.HAMSTER_sensor_accelerationX, "accelerationX"], [Lang.Blocks.HAMSTER_sensor_accelerationY, "accelerationY"], [Lang.Blocks.HAMSTER_sensor_accelerationZ, "accelerationZ"], [Lang.Blocks.HAMSTER_sensor_light, 
-  "light"], [Lang.Blocks.HAMSTER_sensor_temperature, "temperature"], [Lang.Blocks.HAMSTER_sensor_signalStrength, "signalStrength"], [Lang.Blocks.HAMSTER_sensor_inputA, "inputA"], [Lang.Blocks.HAMSTER_sensor_inputB, "inputB"]]), "DEVICE");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([[Lang.Blocks.HAMSTER_sensor_left_proximity, "leftProximity"], [Lang.Blocks.HAMSTER_sensor_right_proximity, "rightProximity"], [Lang.Blocks.HAMSTER_sensor_left_floor, "leftFloor"], [Lang.Blocks.HAMSTER_sensor_right_floor, "rightFloor"], [Lang.Blocks.HAMSTER_sensor_acceleration_x, "accelerationX"], [Lang.Blocks.HAMSTER_sensor_acceleration_y, "accelerationY"], [Lang.Blocks.HAMSTER_sensor_acceleration_z, "accelerationZ"], 
+  [Lang.Blocks.HAMSTER_sensor_light, "light"], [Lang.Blocks.HAMSTER_sensor_temperature, "temperature"], [Lang.Blocks.HAMSTER_sensor_signal_strength, "signalStrength"], [Lang.Blocks.HAMSTER_sensor_input_a, "inputA"], [Lang.Blocks.HAMSTER_sensor_input_b, "inputB"]]), "DEVICE");
   this.setInputsInline(!0);
   this.setOutput(!0, "Number");
 }};
@@ -2559,7 +3038,7 @@ Entry.block.hamster_move_forward_once = function(b, a) {
 };
 Blockly.Blocks.hamster_turn_once = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_turn_once_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_turn_once_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_turn_once_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.HAMSTER_turn_once_left, "LEFT"], [Lang.Blocks.HAMSTER_turn_once_right, "RIGHT"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_turn_once_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2693,7 +3172,7 @@ Entry.block.hamster_move_backward_for_secs = function(b, a) {
 };
 Blockly.Blocks.hamster_turn_for_secs = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_turn_for_secs_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_turn_for_secs_2);
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_turn_for_secs_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.HAMSTER_turn_left, "LEFT"], [Lang.Blocks.HAMSTER_turn_right, "RIGHT"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_turn_for_secs_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_turn_for_secs_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
@@ -2762,7 +3241,7 @@ Entry.block.hamster_set_both_wheels_to = function(b, a) {
 };
 Blockly.Blocks.hamster_change_wheel_by = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_wheel_by_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_change_wheel_by_2);
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_wheel_by_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.HAMSTER_left_wheel, "LEFT"], [Lang.Blocks.HAMSTER_right_wheel, "RIGHT"], [Lang.Blocks.HAMSTER_both_wheels, "BOTH"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_change_wheel_by_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_wheel_by_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
@@ -2777,7 +3256,7 @@ Entry.block.hamster_change_wheel_by = function(b, a) {
 };
 Blockly.Blocks.hamster_set_wheel_to = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_wheel_to_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_set_wheel_to_2);
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_wheel_to_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.HAMSTER_left_wheel, "LEFT"], [Lang.Blocks.HAMSTER_right_wheel, "RIGHT"], [Lang.Blocks.HAMSTER_both_wheels, "BOTH"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_set_wheel_to_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_wheel_to_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
@@ -2792,7 +3271,7 @@ Entry.block.hamster_set_wheel_to = function(b, a) {
 };
 Blockly.Blocks.hamster_follow_line_using = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_follow_line_using_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.HAMSTER_color_black, "BLACK"], [Lang.General.white, "WHITE"]]), "COLOR").appendField(Lang.Blocks.HAMSTER_follow_line_using_2).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_follow_line_using_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_follow_line_using_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.HAMSTER_color_black, "BLACK"], [Lang.Blocks.HAMSTER_color_white, "WHITE"]]), "COLOR").appendField(Lang.Blocks.HAMSTER_follow_line_using_2).appendField(new Blockly.FieldDropdown([[Lang.Blocks.HAMSTER_left_floor_sensor, "LEFT"], [Lang.Blocks.HAMSTER_right_floor_sensor, "RIGHT"], [Lang.Blocks.HAMSTER_both_floor_sensors, "BOTH"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_follow_line_using_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 
   "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
@@ -2809,8 +3288,8 @@ Entry.block.hamster_follow_line_using = function(b, a) {
 };
 Blockly.Blocks.hamster_follow_line_until = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_follow_line_until_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.HAMSTER_color_black, "BLACK"], [Lang.General.white, "WHITE"]]), "COLOR").appendField(Lang.Blocks.HAMSTER_follow_line_until_2).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.Blocks.HAMSTER_front, "FRONT"], [Lang.Blocks.HAMSTER_rear, "REAR"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_follow_line_until_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 
-  "block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_follow_line_until_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.HAMSTER_color_black, "BLACK"], [Lang.Blocks.HAMSTER_color_white, "WHITE"]]), "COLOR").appendField(Lang.Blocks.HAMSTER_follow_line_until_2).appendField(new Blockly.FieldDropdown([[Lang.Blocks.HAMSTER_left_intersection, "LEFT"], [Lang.Blocks.HAMSTER_right_intersection, "RIGHT"], [Lang.Blocks.HAMSTER_front_intersection, "FRONT"], [Lang.Blocks.HAMSTER_rear_intersection, "REAR"]]), 
+  "DIRECTION").appendField(Lang.Blocks.HAMSTER_follow_line_until_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2855,8 +3334,8 @@ Entry.block.hamster_stop = function(b, a) {
 };
 Blockly.Blocks.hamster_set_led_to = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_led_to_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_set_led_to_2).appendField(new Blockly.FieldDropdown([[Lang.General.red, "4"], [Lang.General.yellow, "6"], [Lang.General.green, "2"], [Lang.Blocks.HAMSTER_color_cyan, "3"], [Lang.General.blue, "1"], [Lang.Blocks.HAMSTER_color_magenta, "5"], [Lang.General.white, 
-  "7"]]), "COLOR").appendField(Lang.Blocks.HAMSTER_set_led_to_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_led_to_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.HAMSTER_left_led, "LEFT"], [Lang.Blocks.HAMSTER_right_led, "RIGHT"], [Lang.Blocks.HAMSTER_both_leds, "BOTH"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_set_led_to_2).appendField(new Blockly.FieldDropdown([[Lang.General.red, "4"], [Lang.General.yellow, "6"], [Lang.General.green, "2"], [Lang.Blocks.HAMSTER_color_cyan, "3"], [Lang.General.blue, "1"], [Lang.Blocks.HAMSTER_color_magenta, 
+  "5"], [Lang.Blocks.HAMSTER_color_white, "7"]]), "COLOR").appendField(Lang.Blocks.HAMSTER_set_led_to_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2868,7 +3347,7 @@ Entry.block.hamster_set_led_to = function(b, a) {
 };
 Blockly.Blocks.hamster_clear_led = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_clear_led_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "BOTH"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_clear_led_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_clear_led_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.HAMSTER_left_led, "LEFT"], [Lang.Blocks.HAMSTER_right_led, "RIGHT"], [Lang.Blocks.HAMSTER_both_leds, "BOTH"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_clear_led_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -3054,7 +3533,7 @@ Entry.block.hamster_set_tempo_to = function(b, a) {
 };
 Blockly.Blocks.hamster_set_port_to = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_port_to_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.HAMSTER_port_a, "A"], [Lang.Blocks.HAMSTER_port_b, "B"], [Lang.Blocks.HAMSTER_port_ab, "AB"]]), "PORT").appendField(Lang.Blocks.HAMSTER_set_port_to_2).appendField(new Blockly.FieldDropdown([[Lang.Blocks.HAMSTER_analog_input, "0"], [Lang.Blocks.HAMSTER_digital_input, "1"], [Lang.Blocks.HAMSTER_servo_output, "8"], [Lang.Blocks.HAMSTER_pwm_output, "9"], [Lang.Blocks.HAMSTER_digital_output, 
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_port_to_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.HAMSTER_port_a, "A"], [Lang.Blocks.HAMSTER_port_b, "B"], [Lang.Blocks.HAMSTER_port_a_b, "AB"]]), "PORT").appendField(Lang.Blocks.HAMSTER_set_port_to_2).appendField(new Blockly.FieldDropdown([[Lang.Blocks.HAMSTER_analog_input, "0"], [Lang.Blocks.HAMSTER_digital_input, "1"], [Lang.Blocks.HAMSTER_servo_output, "8"], [Lang.Blocks.HAMSTER_pwm_output, "9"], [Lang.Blocks.HAMSTER_digital_output, 
   "10"]]), "MODE").appendField(Lang.Blocks.HAMSTER_set_port_to_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
@@ -3067,7 +3546,7 @@ Entry.block.hamster_set_port_to = function(b, a) {
 };
 Blockly.Blocks.hamster_change_output_by = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_output_by_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.HAMSTER_port_a, "A"], [Lang.Blocks.HAMSTER_port_b, "B"], [Lang.Blocks.HAMSTER_port_ab, "AB"]]), "PORT").appendField(Lang.Blocks.HAMSTER_change_output_by_2);
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_output_by_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.HAMSTER_port_a, "A"], [Lang.Blocks.HAMSTER_port_b, "B"], [Lang.Blocks.HAMSTER_port_a_b, "AB"]]), "PORT").appendField(Lang.Blocks.HAMSTER_change_output_by_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_output_by_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
@@ -3081,7 +3560,7 @@ Entry.block.hamster_change_output_by = function(b, a) {
 };
 Blockly.Blocks.hamster_set_output_to = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_output_to_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.HAMSTER_port_a, "A"], [Lang.Blocks.HAMSTER_port_b, "B"], [Lang.Blocks.HAMSTER_port_ab, "AB"]]), "PORT").appendField(Lang.Blocks.HAMSTER_set_output_to_2);
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_output_to_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.HAMSTER_port_a, "A"], [Lang.Blocks.HAMSTER_port_b, "B"], [Lang.Blocks.HAMSTER_port_a_b, "AB"]]), "PORT").appendField(Lang.Blocks.HAMSTER_set_output_to_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_output_to_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
@@ -3098,7 +3577,7 @@ Blockly.Blocks.is_clicked = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.JUDGEMENT_is_clicked, "#3D3D3D");
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:["Entry.is_mouse_clicked()"]}};
+}};
 Entry.block.is_clicked = function(b, a) {
   return Entry.stage.isClick;
 };
@@ -3108,7 +3587,7 @@ Blockly.Blocks.is_press_some_key = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldKeydownInput("81"), "VALUE").appendField(Lang.Blocks.JUDGEMENT_is_press_some_key_2, "#3D3D3D");
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:["Entry.is_particular_key_pressed(%1)"]}};
+}};
 Entry.block.is_press_some_key = function(b, a) {
   var d = Number(a.getField("VALUE", a));
   return 0 <= Entry.pressedKeys.indexOf(d);
@@ -3120,7 +3599,7 @@ Blockly.Blocks.reach_something = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.JUDGEMENT_reach_something_2, "#3D3D3D");
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:["Entry.is_reached_at(%2)"]}};
+}};
 Entry.block.reach_something = function(b, a) {
   if (!b.getVisible()) {
     return !1;
@@ -3241,7 +3720,7 @@ Blockly.Blocks.boolean_and_or = {init:function() {
   this.appendValueInput("RIGHTHAND").setCheck("Boolean");
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
-}, syntax:{py:["%1 or %2"]}};
+}};
 Entry.block.boolean_and_or = function(b, a) {
   var d = a.getField("OPERATOR", a), c = a.getBooleanValue("LEFTHAND", a), e = a.getBooleanValue("RIGHTHAND", a);
   return "AND" == d ? c && e : c || e;
@@ -3253,7 +3732,7 @@ Blockly.Blocks.boolean_and = {init:function() {
   this.appendValueInput("RIGHTHAND").setCheck("Boolean");
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
-}, syntax:{py:["%1 && %3"]}};
+}};
 Entry.block.boolean_and = function(b, a) {
   var d = a.getBooleanValue("LEFTHAND", a), c = a.getBooleanValue("RIGHTHAND", a);
   return d && c;
@@ -3265,7 +3744,7 @@ Blockly.Blocks.boolean_or = {init:function() {
   this.appendValueInput("RIGHTHAND").setCheck("Boolean");
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
-}, syntax:{py:["%1 || %3"]}};
+}};
 Entry.block.boolean_or = function(b, a) {
   var d = a.getBooleanValue("LEFTHAND", a), c = a.getBooleanValue("RIGHTHAND", a);
   return d || c;
@@ -3278,7 +3757,7 @@ Blockly.Blocks.boolean_not = {init:function() {
   this.appendDummyInput();
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
-}, syntax:{py:["!%2"]}};
+}};
 Entry.block.boolean_not = function(b, a) {
   return !a.getBooleanValue("VALUE");
 };
@@ -3297,7 +3776,7 @@ Blockly.Blocks.True = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.JUDGEMENT_true, "#3D3D3D").appendField(" ");
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:["True"]}};
+}};
 Entry.block.True = function(b, a) {
   return !0;
 };
@@ -3306,7 +3785,7 @@ Blockly.Blocks.False = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.JUDGEMENT_false, "#3D3D3D").appendField(" ");
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
-}, syntax:{py:["false"]}};
+}};
 Entry.block.False = function(b, a) {
   return !1;
 };
@@ -3317,7 +3796,7 @@ Blockly.Blocks.boolean_basic_operator = {init:function() {
   this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:["%1 %2 %3"]}};
+}};
 Entry.block.boolean_basic_operator = function(b, a) {
   var d = a.getField("OPERATOR", a), c = a.getStringValue("LEFTHAND", a), e = a.getStringValue("RIGHTHAND", a);
   switch(d) {
@@ -3339,7 +3818,7 @@ Blockly.Blocks.show = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.show()"]}};
+}};
 Entry.block.show = function(b, a) {
   b.setVisible(!0);
   return a.callReturn();
@@ -3350,7 +3829,7 @@ Blockly.Blocks.hide = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.hide()"]}};
+}};
 Entry.block.hide = function(b, a) {
   b.setVisible(!1);
   return a.callReturn();
@@ -3367,7 +3846,7 @@ Blockly.Blocks.dialog_time = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.dialog_for_seconds(%1, %2, %3)"]}};
+}};
 Entry.block.dialog_time = function(b, a) {
   if (!a.isStart) {
     var d = a.getNumberValue("SECOND", a), c = a.getStringValue("VALUE", a), e = a.getField("OPTION", a);
@@ -3393,7 +3872,7 @@ Blockly.Blocks.dialog = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.dialog(%1, %2)"]}};
+}};
 Entry.block.dialog = function(b, a) {
   var d = a.getStringValue("VALUE", a);
   d || "number" == typeof d || (d = "    ");
@@ -3408,7 +3887,7 @@ Blockly.Blocks.remove_dialog = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.remove_dialog()"]}};
+}};
 Entry.block.remove_dialog = function(b, a) {
   b.dialog && b.dialog.remove();
   return a.callReturn();
@@ -3433,7 +3912,7 @@ Blockly.Blocks.change_to_next_shape = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.change_to_adjacent_shape(%1)"]}};
+}};
 Entry.block.change_to_next_shape = function(b, a) {
   var d;
   d = a.fields && "prev" === a.getStringField("DRIECTION") ? b.parent.getPrevPicture(b.picture.id) : b.parent.getNextPicture(b.picture.id);
@@ -3450,7 +3929,7 @@ Blockly.Blocks.set_effect_volume = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.add_effect(%1, %2)"]}};
+}};
 Entry.block.set_effect_volume = function(b, a) {
   var d = a.getField("EFFECT", a), c = a.getNumberValue("VALUE", a);
   "color" == d ? b.effect.hue = c + b.effect.hue : "lens" != d && "swriling" != d && "pixel" != d && "mosaic" != d && ("brightness" == d ? b.effect.brightness = c + b.effect.brightness : "blur" != d && "opacity" == d && (b.effect.alpha += c / 100));
@@ -3467,7 +3946,7 @@ Blockly.Blocks.set_effect = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.set_effect(%1, %2)"]}};
+}};
 Entry.block.set_effect = function(b, a) {
   var d = a.getField("EFFECT", a), c = a.getNumberValue("VALUE", a);
   "color" == d ? b.effect.hue = c : "lens" != d && "swriling" != d && "pixel" != d && "mosaic" != d && ("brightness" == d ? b.effect.brightness = c : "blur" != d && "opacity" == d && (b.effect.alpha = c / 100));
@@ -3480,7 +3959,7 @@ Blockly.Blocks.erase_all_effects = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.remove_all_effects()"]}};
+}};
 Entry.block.erase_all_effects = function(b, a) {
   b.resetFilter();
   return a.callReturn();
@@ -3523,7 +4002,7 @@ Blockly.Blocks.change_scale_size = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.change_size(%1)"]}};
+}};
 Entry.block.change_scale_size = function(b, a) {
   var d = a.getNumberValue("VALUE", a);
   b.setSize(b.getSize() + d);
@@ -3537,7 +4016,7 @@ Blockly.Blocks.set_scale_size = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.set_size(%1)"]}};
+}};
 Entry.block.set_scale_size = function(b, a) {
   var d = a.getNumberValue("VALUE", a);
   b.setSize(d);
@@ -3549,7 +4028,7 @@ Blockly.Blocks.flip_y = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.flip_horizontal()"]}};
+}};
 Entry.block.flip_y = function(b, a) {
   b.setScaleX(-1 * b.getScaleX());
   return a.callReturn();
@@ -3560,7 +4039,7 @@ Blockly.Blocks.flip_x = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.flip_vertical()"]}};
+}};
 Entry.block.flip_x = function(b, a) {
   b.setScaleY(-1 * b.getScaleY());
   return a.callReturn();
@@ -3588,7 +4067,7 @@ Blockly.Blocks.get_pictures = {init:function() {
   this.appendDummyInput().appendField(" ");
   this.setOutput(!0, "String");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:[]}};
+}};
 Entry.block.get_pictures = function(b, a) {
   return a.getStringField("VALUE");
 };
@@ -3600,7 +4079,7 @@ Blockly.Blocks.change_to_some_shape = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.change_to_some_shape(%1)"]}};
+}};
 Entry.block.change_to_some_shape = function(b, a) {
   var d = a.getStringValue("VALUE");
   Entry.parseNumber(d);
@@ -3618,7 +4097,7 @@ Blockly.Blocks.add_effect_amount = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.add_effect_by_cbt(%1, %2)"]}};
+}};
 Entry.block.add_effect_amount = function(b, a) {
   var d = a.getField("EFFECT", a), c = a.getNumberValue("VALUE", a);
   "color" == d ? b.effect.hsv = c + b.effect.hsv : "brightness" == d ? b.effect.brightness = c + b.effect.brightness : "transparency" == d && (b.effect.alpha -= c / 100);
@@ -3635,7 +4114,7 @@ Blockly.Blocks.change_effect_amount = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.set_effect_by_cbt(%1, %2)"]}};
+}};
 Entry.block.change_effect_amount = function(b, a) {
   var d = a.getField("EFFECT", a), c = a.getNumberValue("VALUE", a);
   "color" == d ? b.effect.hsv = c : "brightness" == d ? b.effect.brightness = c : "transparency" == d && (b.effect.alpha = 1 - c / 100);
@@ -3683,7 +4162,7 @@ Blockly.Blocks.change_object_index = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.locate_to(%1)"]}};
+}};
 Entry.block.change_object_index = function(b, a) {
   var d, c = a.getField("LOCATION", a), e = Entry.container.getCurrentObjects(), f = e.indexOf(b.parent), e = e.length - 1;
   if (0 > f) {
@@ -3713,7 +4192,7 @@ Blockly.Blocks.move_direction = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.move_to_moving_direction(%1)"]}};
+}};
 Entry.block.move_direction = function(b, a) {
   var d = a.getNumberValue("VALUE", a);
   b.setX(b.getX() + d * Math.cos((b.getRotation() + b.getDirection() - 90) / 180 * Math.PI));
@@ -3729,7 +4208,7 @@ Blockly.Blocks.move_x = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.change_x(%1)"]}};
+}};
 Entry.block.move_x = function(b, a) {
   var d = a.getNumberValue("VALUE", a);
   b.setX(b.getX() + d);
@@ -3744,7 +4223,7 @@ Blockly.Blocks.move_y = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.move_y(%1)"]}};
+}};
 Entry.block.move_y = function(b, a) {
   var d = a.getNumberValue("VALUE", a);
   b.setY(b.getY() + d);
@@ -3763,7 +4242,7 @@ Blockly.Blocks.locate_xy_time = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.move_xy_for_seconds(%1, %2, %3)"]}};
+}};
 Entry.block.locate_xy_time = function(b, a) {
   if (!a.isStart) {
     var d;
@@ -3853,7 +4332,7 @@ Blockly.Blocks.locate_xy = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.move_xy(%1, %2)"]}};
+}};
 Entry.block.locate_xy = function(b, a) {
   var d = a.getNumberValue("VALUE1", a);
   b.setX(d);
@@ -3870,7 +4349,7 @@ Blockly.Blocks.locate_x = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.move_x(%1)"]}};
+}};
 Entry.block.locate_x = function(b, a) {
   var d = a.getNumberValue("VALUE", a);
   b.setX(d);
@@ -3885,7 +4364,7 @@ Blockly.Blocks.locate_y = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.move_y(%1)"]}};
+}};
 Entry.block.locate_y = function(b, a) {
   var d = a.getNumberValue("VALUE", a);
   b.setY(d);
@@ -3900,7 +4379,7 @@ Blockly.Blocks.locate = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.move_to_object(%1)"]}};
+}};
 Entry.block.locate = function(b, a) {
   var d = a.getField("VALUE", a), c;
   "mouse" == d ? (d = Entry.stage.mouseCoordinate.x, c = Entry.stage.mouseCoordinate.y) : (c = Entry.container.getEntity(d), d = c.getX(), c = c.getY());
@@ -3921,7 +4400,7 @@ Blockly.Blocks.move_xy_time = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.move_xy_for_seconds(%1, %2, %3)"]}};
+}};
 Entry.block.move_xy_time = function(b, a) {
   if (!a.isStart) {
     var d;
@@ -3992,7 +4471,7 @@ Blockly.Blocks.bounce_wall = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.on_bounce_at_wall()"]}};
+}};
 Entry.block.bounce_wall = function(b, a) {
   var d = b.parent.getRotateMethod(), c = "free" == d ? (b.getRotation() + b.getDirection()).mod(360) : b.getDirection(), e = Entry.Utils.COLLISION.NONE;
   if (90 > c && 0 <= c || 360 > c && 270 <= c) {
@@ -4040,7 +4519,7 @@ Blockly.Blocks.see_angle_object = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.look_at_object(%1)"]}};
+}};
 Entry.block.see_angle_object = function(b, a) {
   var d = a.getField("VALUE", a), c = b.getX(), e = b.getY();
   if (b.parent.id == d) {
@@ -4090,7 +4569,7 @@ Blockly.Blocks.locate_object_time = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.move_at_object_for_seconds(%1, %2)"]}};
+}};
 Entry.block.locate_object_time = function(b, a) {
   if (!a.isStart) {
     var d, c, e;
@@ -4119,7 +4598,7 @@ Blockly.Blocks.rotate_absolute = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.set_direction(%1)"]}};
+}};
 Entry.block.rotate_absolute = function(b, a) {
   var d = a.getNumberValue("VALUE", a);
   b.setRotation(d);
@@ -4133,7 +4612,7 @@ Blockly.Blocks.rotate_relative = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.rotate_direction(%1)"]}};
+}};
 Entry.block.rotate_relative = function(b, a) {
   var d = a.getNumberValue("VALUE", a);
   b.setRotation(d + b.getRotation());
@@ -4147,7 +4626,7 @@ Blockly.Blocks.direction_absolute = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.set_moving_direction(%1)"]}};
+}};
 Entry.block.direction_absolute = function(b, a) {
   var d = a.getNumberValue("VALUE", a);
   b.setDirection(d);
@@ -4161,7 +4640,7 @@ Blockly.Blocks.direction_relative = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.rotate_moving_direction(%1)"]}};
+}};
 Entry.block.direction_relative = function(b, a) {
   var d = a.getNumberValue("VALUE", a);
   b.setDirection(d + b.getDirection());
@@ -4177,7 +4656,7 @@ Blockly.Blocks.move_to_angle = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.move_to_direction_by_distance(%1, %2)"]}};
+}};
 Entry.block.move_to_angle = function(b, a) {
   var d = a.getNumberValue("VALUE", a), c = a.getNumberValue("ANGLE", a);
   b.setX(b.getX() + d * Math.cos((c - 90) / 180 * Math.PI));
@@ -4196,7 +4675,7 @@ Blockly.Blocks.rotate_by_time = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.rotate_direction_for_seconds(%1, %2)"]}};
+}};
 Entry.block.rotate_by_time = function(b, a) {
   if (!a.isStart) {
     var d;
@@ -4223,7 +4702,7 @@ Blockly.Blocks.direction_relative_duration = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["self.rotate_moving_direction_for_seconds(%1, %2)"]}};
+}};
 Entry.block.direction_relative_duration = function(b, a) {
   if (!a.isStart) {
     var d;
@@ -4820,7 +5299,7 @@ Blockly.Blocks.when_scene_start = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_scene_1_2.png", "*", "start")).appendField(Lang.Blocks.SCENE_when_scene_start);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["Entry.on_start_scene()"]}};
+}};
 Entry.block.when_scene_start = function(b, a) {
   return a.callReturn();
 };
@@ -4830,7 +5309,7 @@ Blockly.Blocks.start_scene = {init:function() {
   this.setInputsInline(!0);
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
-}, syntax:{js:[], py:["Entry.on_start_scene(%1)"]}};
+}};
 Entry.block.start_scene = function(b, a) {
   var d = a.getField("VALUE", a);
   if (d = Entry.scene.getSceneById(d)) {
@@ -4844,7 +5323,7 @@ Blockly.Blocks.start_neighbor_scene = {init:function() {
   this.setInputsInline(!0);
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
-}, syntax:{js:[], py:['Entry.start_neighbor_scene("%1")']}};
+}};
 Entry.block.start_neighbor_scene = function(b, a) {
   var d = Entry.scene.selectedScene, c = Entry.scene.getScenes(), d = c.indexOf(d);
   "next" == a.getField("OPERATOR", a) ? d + 1 < c.length && (c = Entry.scene.getSceneById(c[d + 1].id)) && (Entry.scene.selectScene(c), Entry.engine.fireEvent("when_scene_start")) : 0 < d && (c = Entry.scene.getSceneById(c[d - 1].id)) && (Entry.scene.selectScene(c), Entry.engine.fireEvent("when_scene_start"));
@@ -4953,7 +5432,7 @@ Blockly.Blocks.sound_volume_change = {init:function() {
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-}, syntax:{js:[], py:["Entry.change_volume_by_percent(%1)"]}};
+}};
 Entry.block.sound_volume_change = function(b, a) {
   var d = a.getNumberValue("VALUE", a) / 100, d = d + createjs.Sound.getVolume();
   1 < d && (d = 1);
@@ -4969,7 +5448,7 @@ Blockly.Blocks.sound_volume_set = {init:function() {
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-}, syntax:{js:[], py:["Entry.set_volume_by_percent(%1)"]}};
+}};
 Entry.block.sound_volume_set = function(b, a) {
   var d = a.getNumberValue("VALUE", a) / 100;
   1 < d && (d = 1);
@@ -4983,7 +5462,7 @@ Blockly.Blocks.sound_silent_all = {init:function() {
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-}, syntax:{js:[], py:["Entry.stop_all_sounds()"]}};
+}};
 Entry.block.sound_silent_all = function(b, a) {
   createjs.Sound.stop();
   return a.callReturn();
@@ -5007,7 +5486,7 @@ Blockly.Blocks.sound_something_with_block = {init:function() {
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-}, syntax:{js:[], py:["Entry.play_sound(%1)"]}};
+}};
 Entry.block.sound_something_with_block = function(b, a) {
   var d = a.getStringValue("VALUE", a);
   (d = b.parent.getSound(d)) && createjs.Sound.play(d.id);
@@ -5023,7 +5502,7 @@ Blockly.Blocks.sound_something_second_with_block = {init:function() {
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-}, syntax:{js:[], py:["Entry.play_sound_for_seconds(%1, %2)"]}};
+}};
 Entry.block.sound_something_second_with_block = function(b, a) {
   var d = a.getStringValue("VALUE", a), c = a.getNumberValue("SECOND", a);
   (d = b.parent.getSound(d)) && createjs.Sound.play(d.id, {startTime:0, duration:1E3 * c});
@@ -5037,7 +5516,7 @@ Blockly.Blocks.sound_something_wait_with_block = {init:function() {
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-}, syntax:{js:[], py:["Entry.play_sound_and_wait(%1)"]}};
+}};
 Entry.block.sound_something_wait_with_block = function(b, a) {
   if (a.isPlay) {
     if (1 == a.playState) {
@@ -5067,7 +5546,7 @@ Blockly.Blocks.sound_something_second_wait_with_block = {init:function() {
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-}, syntax:{js:[], py:["Entry.play_sound_for_seconds_and_wait(%1, %2)"]}};
+}};
 Entry.block.sound_something_second_wait_with_block = function(b, a) {
   if (a.isPlay) {
     if (1 == a.playState) {
@@ -5103,7 +5582,7 @@ Blockly.Blocks.sound_from_to = {init:function() {
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-}, syntax:{js:[], py:["Entry.play_sound_from_to_seconds(%1, %2, %3)"]}};
+}};
 Entry.block.sound_from_to = function(b, a) {
   var d = a.getStringValue("VALUE", a);
   if (d = b.parent.getSound(d)) {
@@ -5124,7 +5603,7 @@ Blockly.Blocks.sound_from_to_and_wait = {init:function() {
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-}, syntax:{js:[], py:["Entry.play_sound_from_to_seconds_and_wait(%1, %2, %3)"]}};
+}};
 Entry.block.sound_from_to_and_wait = function(b, a) {
   if (a.isPlay) {
     if (1 == a.playState) {
@@ -5151,7 +5630,7 @@ Blockly.Blocks.when_run_button_click = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_play.png", "*", "start")).appendField(Lang.Blocks.START_when_run_button_click);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["Entry.on_start_button_click()"]}};
+}};
 Entry.block.when_run_button_click = function(b, a) {
   return a.callReturn();
 };
@@ -5161,7 +5640,7 @@ Blockly.Blocks.press_some_key = {init:function() {
   "13"], [Lang.Blocks.START_press_some_key_space, "32"]]), "VALUE").appendField(Lang.Blocks.START_press_some_key_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["Entry.is_key_pressed()"]}};
+}};
 Entry.block.press_some_key = function(b, a) {
   return a.callReturn();
 };
@@ -5170,7 +5649,7 @@ Blockly.Blocks.when_some_key_pressed = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_keyboard.png", "*", "start")).appendField(Lang.Blocks.START_press_some_key_1).appendField(new Blockly.FieldKeydownInput("81"), "VALUE").appendField(Lang.Blocks.START_press_some_key_2);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["Entry.on_key_press(%1)"]}};
+}};
 Entry.block.when_some_key_pressed = function(b, a) {
   return a.callReturn();
 };
@@ -5179,7 +5658,7 @@ Blockly.Blocks.mouse_clicked = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_mouse.png", "*", "start")).appendField(Lang.Blocks.START_mouse_clicked);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["Entry.on_mouse_click_down()"]}};
+}};
 Entry.block.mouse_clicked = function(b, a) {
   return a.callReturn();
 };
@@ -5188,7 +5667,7 @@ Blockly.Blocks.mouse_click_cancled = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_mouse.png", "*", "start")).appendField(Lang.Blocks.START_mouse_click_cancled);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["Entry.on_mouse_click_up()"]}};
+}};
 Entry.block.mouse_click_cancled = function(b, a) {
   return a.callReturn();
 };
@@ -5197,7 +5676,7 @@ Blockly.Blocks.when_object_click = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_mouse.png", "*", "start")).appendField(Lang.Blocks.START_when_object_click);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["Entry.on_object_click_down()"]}};
+}};
 Entry.block.when_object_click = function(b, a) {
   return a.callReturn();
 };
@@ -5206,7 +5685,7 @@ Blockly.Blocks.when_object_click_canceled = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_mouse.png", "*", "start")).appendField(Lang.Blocks.START_when_object_click_canceled);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["Entry.on_object_click_up()"]}};
+}};
 Entry.block.when_object_click_canceled = function(b, a) {
   return a.callReturn();
 };
@@ -5215,7 +5694,7 @@ Blockly.Blocks.when_some_key_click = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_keyboard.png", "*", "start")).appendField(Lang.Blocks.START_when_some_key_click);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["Entry.on_key_press_down(%1)"]}};
+}};
 Entry.block.when_some_key_click = function(b, a) {
   return a.callReturn();
 };
@@ -5224,7 +5703,7 @@ Blockly.Blocks.when_message_cast = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_signal.png", "*", "start")).appendField(Lang.Blocks.START_when_message_cast_1).appendField(new Blockly.FieldDropdownDynamic("messages"), "VALUE").appendField(Lang.Blocks.START_when_message_cast_2);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["Entry.on_signal_receive(%1)"]}, whenAdd:function(b) {
+}, whenAdd:function(b) {
   var a = Entry.variableContainer;
   a && a.addRef("_messageRefs", b);
 }, whenRemove:function(b) {
@@ -5241,7 +5720,7 @@ Blockly.Blocks.message_cast = {init:function() {
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-}, syntax:{js:[], py:["Entry.send_signal(%1)"]}, whenAdd:function(b) {
+}, whenAdd:function(b) {
   var a = Entry.variableContainer;
   a && a.addRef("_messageRefs", b);
 }, whenRemove:function(b) {
@@ -5262,7 +5741,7 @@ Blockly.Blocks.message_cast_wait = {init:function() {
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-}, syntax:{js:[], py:["Entry.send_signal_and_wait(%1)"]}, whenAdd:function(b) {
+}, whenAdd:function(b) {
   var a = Entry.variableContainer;
   a && a.addRef("_messageRefs", b);
 }, whenRemove:function(b) {
@@ -5295,7 +5774,7 @@ Blockly.Blocks.text = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldTextInput(Lang.Blocks.TEXT_text), "NAME");
   this.setOutput(!0, "String");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:["%1"]}};
+}};
 Entry.block.text = function(b, a) {
   return a.getField("NAME", a);
 };
@@ -5355,11 +5834,11 @@ Entry.block.text_flush = function(b, a) {
 Entry.block.variableAddButton = {skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"\ubcc0\uc218 \ucd94\uac00", color:"#333", align:"center"}], func:function() {
 }, events:{mousedown:[function() {
   Entry.variableContainer.openVariableAddPanel("variable");
-}]}, syntax:{js:[], py:[]}};
+}]}};
 Entry.block.listAddButton = {skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"\ub9ac\uc2a4\ud2b8 \ucd94\uac00", color:"#333", align:"center"}], func:function() {
 }, events:{mousedown:[function() {
   Entry.variableContainer.openVariableAddPanel("list");
-}]}, syntax:{js:[], py:[]}};
+}]}};
 Blockly.Blocks.change_variable = {init:function() {
   this.setColour("#E457DC");
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_change_variable_1);
@@ -5482,7 +5961,7 @@ Blockly.Blocks.ask_and_wait = {init:function() {
   Entry.container && Entry.container.showProjectAnswer();
 }, whenRemove:function(b) {
   Entry.container && Entry.container.hideProjectAnswer(b);
-}, syntax:{js:[], py:["Entry.ask_and_wait(%1)\n"]}};
+}};
 Entry.block.ask_and_wait = function(b, a) {
   var d = Entry.container.inputValue, c = Entry.stage.inputField, e = a.getValue("VALUE", a);
   if (!e) {
@@ -5515,7 +5994,7 @@ Blockly.Blocks.get_canvas_input_value = {init:function() {
   Entry.container && Entry.container.showProjectAnswer();
 }, whenRemove:function(b) {
   Entry.container && Entry.container.hideProjectAnswer(b);
-}, syntax:{js:[], py:["answer"]}};
+}};
 Entry.block.get_canvas_input_value = function(b, a) {
   return Entry.container.getInputValue();
 };
@@ -5685,7 +6164,7 @@ Blockly.Blocks.set_visible_answer = {init:function() {
   Entry.container && Entry.container.showProjectAnswer();
 }, whenRemove:function(b) {
   Entry.container && Entry.container.hideProjectAnswer(b);
-}, syntax:{js:[], py:['Entry.set_visible("%1")\n']}};
+}};
 Entry.block.set_visible_answer = function(b, a) {
   "HIDE" == a.getField("BOOL", a) ? Entry.container.inputValue.setVisible(!1) : Entry.container.inputValue.setVisible(!0);
   return a.callReturn();
@@ -6074,204 +6553,6 @@ Entry.Observer = function(b, a, d, c) {
     return this;
   };
 })(Entry.Observer.prototype);
-Entry.Command = {};
-(function(b) {
-  b["do"] = {type:EntryStatic.COMMAND_TYPES["do"], log:function(a) {
-    return [b["do"].type];
-  }};
-  b.undo = {type:EntryStatic.COMMAND_TYPES.undo, log:function(a) {
-    return [b.undo.type];
-  }};
-  b.redo = {type:EntryStatic.COMMAND_TYPES.redo, log:function(a) {
-    return [b.redo.type];
-  }};
-})(Entry.Command);
-Entry.Commander = function(b) {
-  if ("workspace" == b || "phone" == b) {
-    Entry.stateManager = new Entry.StateManager;
-  }
-  Entry.do = this.do.bind(this);
-  Entry.undo = this.undo.bind(this);
-  this.editor = {};
-  this.reporters = [];
-  this._tempStorage = null;
-  Entry.Command.editor = this.editor;
-};
-(function(b) {
-  b.do = function(a) {
-    var b = this, c = Array.prototype.slice.call(arguments);
-    c.shift();
-    var e = Entry.Command[a];
-    Entry.stateManager && Entry.stateManager.addCommand.apply(Entry.stateManager, [a, this, this.do, e.undo].concat(e.state.apply(this, c)));
-    e = Entry.Command[a].do.apply(this, c);
-    setTimeout(function() {
-      b.report("do");
-      b.report(a, c);
-    }, 0);
-    return {value:e, isPass:this.isPass.bind(this)};
-  };
-  b.undo = function() {
-    var a = Array.prototype.slice.call(arguments), b = a.shift(), c = Entry.Command[b];
-    this.report("undo");
-    Entry.stateManager && Entry.stateManager.addCommand.apply(Entry.stateManager, [b, this, this.do, c.undo].concat(c.state.apply(this, a)));
-    return {value:Entry.Command[b].do.apply(this, a), isPass:this.isPass.bind(this)};
-  };
-  b.redo = function() {
-    var a = Array.prototype.slice.call(arguments), b = a.shift(), c = Entry.Command[b];
-    that.report("redo");
-    Entry.stateManager && Entry.stateManager.addCommand.apply(Entry.stateManager, [b, this, this.undo, b].concat(c.state.apply(null, a)));
-    c.undo.apply(this, a);
-  };
-  b.setCurrentEditor = function(a, b) {
-    this.editor[a] = b;
-  };
-  b.isPass = function(a) {
-    a = void 0 === a ? !0 : a;
-    if (Entry.stateManager) {
-      var b = Entry.stateManager.getLastCommand();
-      b && (b.isPass = a);
-    }
-  };
-  b.addReporter = function(a) {
-    this.reporters.push(a);
-  };
-  b.removeReporter = function(a) {
-    a = this.reporters.indexOf(a);
-    -1 < a && this.reporters.splice(a, 1);
-  };
-  b.report = function(a, b) {
-    var c = this.reporters;
-    if (0 !== c.length) {
-      var e;
-      e = a && Entry.Command[a] && Entry.Command[a].log ? Entry.Command[a].log.apply(this, b) : b;
-      c.forEach(function(a) {
-        a.add(e);
-      });
-    }
-  };
-})(Entry.Commander.prototype);
-(function(b) {
-  b.addThread = {type:EntryStatic.COMMAND_TYPES.addThread, do:function(a) {
-    return this.editor.board.code.createThread(a);
-  }, state:function(a) {
-    a.length && (a[0].id = Entry.Utils.generateId());
-    return [a];
-  }, log:function(a) {
-    a = this.editor.board.code.getThreads().pop();
-    return [b.addThread.type, ["thread", a.stringify()], ["code", this.editor.board.code.stringify()]];
-  }, undo:"destroyThread"};
-  b.destroyThread = {type:EntryStatic.COMMAND_TYPES.destroyThread, do:function(a) {
-    this.editor.board.findById(a[0].id).destroy(!0, !0);
-  }, state:function(a) {
-    return [this.editor.board.findById(a[0].id).thread.toJSON()];
-  }, log:function(a) {
-    a = a[0].id;
-    this.editor.board.findById(a);
-    return [b.destroyThread.type, ["blockId", a], ["code", this.editor.board.code.stringify()]];
-  }, undo:"addThread"};
-  b.destroyBlock = {type:EntryStatic.COMMAND_TYPES.destroyBlock, do:function(a) {
-    "string" === typeof a && (a = this.editor.board.findById(a));
-    a.doDestroy(!0);
-  }, state:function(a) {
-    "string" === typeof a && (a = this.editor.board.findById(a));
-    return [a.toJSON(), a.pointer()];
-  }, log:function(a) {
-    "string" === typeof a && (a = this.editor.board.findById(a));
-    return [b.destroyBlock.type, ["blockId", a.id], ["code", this.editor.board.code.stringify()]];
-  }, undo:"recoverBlock"};
-  b.recoverBlock = {type:EntryStatic.COMMAND_TYPES.recoverBlock, do:function(a, b) {
-    var c = this.editor.board.code.createThread([a]).getFirstBlock();
-    "string" === typeof c && (c = this.editor.board.findById(c));
-    this.editor.board.insert(c, b);
-  }, state:function(a) {
-    "string" !== typeof a && (a = a.id);
-    return [a];
-  }, log:function(a, d) {
-    a = this.editor.board.findById(a.id);
-    return [b.recoverBlock.type, ["block", a.stringify()], ["pointer", d], ["code", this.editor.board.code.stringify()]];
-  }, undo:"destroyBlock"};
-  b.insertBlock = {type:EntryStatic.COMMAND_TYPES.insertBlock, do:function(a, b, c) {
-    "string" === typeof a && (a = this.editor.board.findById(a));
-    this.editor.board.insert(a, b, c);
-  }, state:function(a, b) {
-    "string" === typeof a && (a = this.editor.board.findById(a));
-    var c = [a.id], e = a.targetPointer();
-    c.push(e);
-    "string" !== typeof a && "basic" === a.getBlockType() && c.push(a.thread.getCount(a));
-    return c;
-  }, log:function(a, d, c) {
-    "string" === typeof a && (a = this.editor.board.findById(a));
-    return [b.insertBlock.type, ["blockId", a.id], ["targetPointer", a.targetPointer()], ["count", c], ["code", this.editor.board.code.stringify()]];
-  }, undo:"insertBlock"};
-  b.separateBlock = {type:EntryStatic.COMMAND_TYPES.separateBlock, do:function(a) {
-    a.view && a.view._toGlobalCoordinate(Entry.DRAG_MODE_DRAG);
-    a.doSeparate();
-  }, state:function(a) {
-    var b = [a.id], c = a.targetPointer();
-    b.push(c);
-    "basic" === a.getBlockType() && b.push(a.thread.getCount(a));
-    return b;
-  }, log:function(a) {
-    "string" === typeof a && (a = this.editor.board.findById(a));
-    return [b.separateBlock.type, ["blockId", a.id], ["x", a.x], ["y", a.y], ["code", this.editor.board.code.stringify()]];
-  }, undo:"insertBlock"};
-  b.moveBlock = {type:EntryStatic.COMMAND_TYPES.moveBlock, do:function(a, b, c) {
-    void 0 !== b ? (a = this.editor.board.findById(a), a.moveTo(b, c)) : a._updatePos();
-  }, state:function(a) {
-    "string" === typeof a && (a = this.editor.board.findById(a));
-    return [a.id, a.x, a.y];
-  }, log:function(a, d, c) {
-    return [b.moveBlock.type, ["blockId", a.id], ["x", a.x], ["y", a.y], ["code", this.editor.board.code.stringify()]];
-  }, undo:"moveBlock"};
-  b.cloneBlock = {type:EntryStatic.COMMAND_TYPES.cloneBlock, do:function(a) {
-    "string" === typeof a && (a = this.editor.board.findById(a));
-    this.editor.board.code.createThread(a.copy());
-  }, state:function(a) {
-    "string" !== typeof a && (a = a.id);
-    return [a];
-  }, log:function(a) {
-    "string" === typeof a && (a = this.editor.board.findById(a));
-    var d = this.editor.board.code.getThreads().pop();
-    return [b.cloneBlock.type, ["blockId", a.id], ["thread", d.stringify()], ["code", this.editor.board.code.stringify()]];
-  }, undo:"uncloneBlock"};
-  b.uncloneBlock = {type:EntryStatic.COMMAND_TYPES.uncloneBlock, do:function(a) {
-    a = this.editor.board.code.getThreads().pop().getFirstBlock();
-    this._tempStorage = a.id;
-    a.destroy(!0, !0);
-  }, state:function(a) {
-    return [a];
-  }, log:function(a) {
-    a = this._tempStorage;
-    this._tempStorage = null;
-    return [b.uncloneBlock.type, ["blockId", a], ["code", this.editor.board.code.stringify()]];
-  }, undo:"cloneBlock"};
-  b.scrollBoard = {type:EntryStatic.COMMAND_TYPES.scrollBoard, do:function(a, b, c) {
-    c || this.editor.board.scroller._scroll(a, b);
-    delete this.editor.board.scroller._diffs;
-  }, state:function(a, b) {
-    return [-a, -b];
-  }, log:function(a, d) {
-    return [b.scrollBoard.type, ["dx", a], ["dy", d]];
-  }, undo:"scrollBoard"};
-  b.setFieldValue = {type:EntryStatic.COMMAND_TYPES.setFieldValue, do:function(a, b, c, e, f) {
-    b.setValue(f, !0);
-  }, state:function(a, b, c, e, f) {
-    return [a, b, c, f, e];
-  }, log:function(a, d, c, e, f) {
-    return [b.setFieldValue.type, ["pointer", c], ["newValue", f], ["code", this.editor.board.code.stringify()]];
-  }, undo:"setFieldValue"};
-})(Entry.Command);
-(function(b) {
-  b.selectObject = {type:EntryStatic.COMMAND_TYPES.selectObject, do:function(a) {
-    return Entry.container.selectObject(a);
-  }, state:function(a) {
-    if ((a = Entry.playground) && a.object) {
-      return [a.object.id];
-    }
-  }, log:function(a) {
-    return [a];
-  }, undo:"selectObject"};
-})(Entry.Command);
 Entry.Container = function() {
   this.objects_ = [];
   this.cachedPicture = {};
@@ -7056,6 +7337,7 @@ Entry.Engine.prototype.generateView = function(b, a) {
     this.view_.appendChild(this.maximizeButton);
     this.maximizeButton.bindOnClick(function(a) {
       Entry.engine.toggleFullscreen();
+      this.blur();
     });
     var c = Entry.createElement("button");
     this.coordinateButton = c;
@@ -7064,6 +7346,7 @@ Entry.Engine.prototype.generateView = function(b, a) {
     this.coordinateButton.bindOnClick(function(a) {
       this.hasClass("toggleOn") ? this.removeClass("toggleOn") : this.addClass("toggleOn");
       c.blur();
+      this.blur();
       Entry.stage.toggleCoordinator();
     });
     this.addButton = Entry.createElement("button");
@@ -7072,6 +7355,7 @@ Entry.Engine.prototype.generateView = function(b, a) {
     this.addButton.innerHTML = Lang.Workspace.add_object;
     this.addButton.bindOnClick(function(a) {
       Entry.dispatchEvent("openSpriteManager");
+      this.blur();
     });
     this.view_.appendChild(this.addButton);
     this.runButton = Entry.createElement("button");
@@ -7081,12 +7365,14 @@ Entry.Engine.prototype.generateView = function(b, a) {
     this.view_.appendChild(this.runButton);
     this.runButton.bindOnClick(function(a) {
       Entry.engine.toggleRun();
+      this.blur();
     });
     this.runButton2 = Entry.createElement("button");
     this.runButton2.addClass("entryEngineButtonWorkspace_w");
     this.runButton2.addClass("entryRunButtonWorkspace_w2");
     this.view_.appendChild(this.runButton2);
     this.runButton2.bindOnClick(function(a) {
+      this.blur();
       Entry.engine.toggleRun();
     });
     this.stopButton = Entry.createElement("button");
@@ -7096,6 +7382,7 @@ Entry.Engine.prototype.generateView = function(b, a) {
     this.stopButton.innerHTML = Lang.Workspace.stop;
     this.view_.appendChild(this.stopButton);
     this.stopButton.bindOnClick(function(a) {
+      this.blur();
       Entry.engine.toggleStop();
     });
     this.stopButton2 = Entry.createElement("button");
@@ -7105,6 +7392,7 @@ Entry.Engine.prototype.generateView = function(b, a) {
     this.stopButton2.innerHTML = Lang.Workspace.stop;
     this.view_.appendChild(this.stopButton2);
     this.stopButton2.bindOnClick(function(a) {
+      this.blur();
       Entry.engine.toggleStop();
     });
     this.pauseButton = Entry.createElement("button");
@@ -7113,6 +7401,7 @@ Entry.Engine.prototype.generateView = function(b, a) {
     this.pauseButton.addClass("entryRemove");
     this.view_.appendChild(this.pauseButton);
     this.pauseButton.bindOnClick(function(a) {
+      this.blur();
       Entry.engine.togglePause();
     });
     this.mouseView = Entry.createElement("div");
@@ -7207,7 +7496,6 @@ Entry.Engine.prototype.run = function() {
   this.isState("run") ? this.toggleStop() : (this.isState("stop") || this.isState("pause")) && this.toggleRun();
 };
 Entry.Engine.prototype.toggleRun = function() {
-  console.log("Entry toggleRun");
   if ("pause" === this.state) {
     this.togglePause();
   } else {
@@ -7292,7 +7580,7 @@ Entry.Engine.prototype.raiseEventOnEntity = function(b, a) {
 };
 Entry.Engine.prototype.captureKeyEvent = function(b) {
   var a = b.keyCode, d = Entry.type;
-  b.ctrlKey && "workspace" == d ? 83 == a ? (b.preventDefault(), Entry.dispatchEvent("saveWorkspace")) : 82 == a ? (b.preventDefault(), Entry.engine.run()) : 90 == a && (b.preventDefault(), console.log("engine"), Entry.dispatchEvent(b.shiftKey ? "redo" : "undo")) : Entry.engine.isState("run") && Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["keyPress", a]);
+  b.ctrlKey && "workspace" == d ? 83 == a ? (b.preventDefault(), Entry.dispatchEvent("saveWorkspace")) : 82 == a ? (b.preventDefault(), Entry.engine.run()) : 90 == a && (b.preventDefault(), Entry.dispatchEvent(b.shiftKey ? "redo" : "undo")) : Entry.engine.isState("run") && Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["keyPress", a]);
   Entry.engine.isState("stop") && "workspace" === d && 37 <= a && 40 >= a && Entry.stage.moveSprite(b);
 };
 Entry.Engine.prototype.raiseKeyEvent = function(b, a) {
@@ -8039,9 +8327,13 @@ Entry.StateManager.prototype.undo = function() {
 };
 Entry.StateManager.prototype.redo = function() {
   if (this.canRedo() && !this.isRestoring()) {
-    this.addActivity("redo");
-    var b = this.redoStack_.pop();
-    b.func.apply(b.caller, b.params);
+    for (this.addActivity("redo");this.redoStack_.length;) {
+      var b = this.redoStack_.pop();
+      b.func.apply(b.caller, b.params);
+      if (!0 !== b.isPass) {
+        break;
+      }
+    }
     this.updateView();
     Entry.creationChangedEvent && Entry.creationChangedEvent.notify();
   }
@@ -10071,6 +10363,638 @@ Entry.Painter.prototype.selectToolbox = function(b) {
       this.toggleCoordinator();
   }
 };
+Entry.Painter2 = function(b) {
+  this.view = b;
+  this.file = {id:Entry.generateHash(), name:"\uc0c8\uadf8\ub9bc", modified:!1, mode:"new"};
+  Entry.addEventListener("pictureImport", function(a) {
+    this.addPicture(a);
+  }.bind(this));
+  this.clipboard = null;
+};
+(function(b) {
+  b.initialize = function() {
+    if (!this.lc) {
+      var a = new Image;
+      a.src = "/lib/literallycanvas/lib/img/transparent-pattern.png";
+      this.lc = LC.init(this.view, {imageURLPrefix:"/lib/literallycanvas/lib/img", zoomMax:3, zoomMin:.5, toolbarPosition:"bottom", imageSize:{width:960, height:540}, backgroundShapes:[LC.createShape("Rectangle", {x:0, y:0, width:960, height:540, strokeWidth:0, strokeColor:"transparent"})]});
+      a.onload = function() {
+        this.lc.repaintLayer("background");
+      }.bind(this);
+      a = function(a) {
+        a.shape && !a.opts && a.shape.isPass || a.opts && a.opts.isPass ? Entry.do("processPicture", a, this.lc) : Entry.do("editPicture", a, this.lc);
+        this.file.modified = !0;
+      }.bind(this);
+      this.lc.on("clear", a);
+      this.lc.on("shapeEdit", a);
+      this.lc.on("shapeSave", a);
+      this.lc.on("toolChange", function(a) {
+        this.updateEditMenu();
+      }.bind(this));
+      this.lc.on("lc-pointerdrag", this.stagemousemove.bind(this));
+      this.lc.on("lc-pointermove", this.stagemousemove.bind(this));
+      this.initTopBar();
+      this.updateEditMenu();
+      Entry.keyPressed && Entry.keyPressed.attach(this, this._keyboardPressControl);
+      Entry.keyUpped && Entry.keyUpped.attach(this, this._keyboardUpControl);
+    }
+  };
+  b.show = function() {
+    this.lc || this.initialize();
+    this.isShow = !0;
+  };
+  b.hide = function() {
+    this.isShow = !1;
+  };
+  b.changePicture = function(a) {
+    this.file && this.file.id === a.id || (this.file.modified && confirm("\uc218\uc815\ub41c \ub0b4\uc6a9\uc744 \uc800\uc7a5\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?") && this.file_save(!0), this.file.modified = !1, this.lc.clear(!1), this.file.id = a.id ? a.id : Entry.generateHash(), this.file.name = a.name, this.file.mode = "edit", this.addPicture(a, !0));
+  };
+  b.addPicture = function(a, b) {
+    var c = new Image;
+    c.src = a.fileurl ? a.fileurl : Entry.defaultPath + "/uploads/" + a.filename.substring(0, 2) + "/" + a.filename.substring(2, 4) + "/image/" + a.filename + ".png";
+    var e = a.dimension, f = LC.createShape("Image", {x:480, y:270, width:e.width, height:e.height, image:c});
+    this.lc.saveShape(f, !b);
+    c.onload = function() {
+      this.lc.setTool(this.lc.tools.SelectShape);
+      this.lc.tool.setShape(this.lc, f);
+    }.bind(this);
+  };
+  b.copy = function() {
+    if ("SelectShape" === this.lc.tool.name && this.lc.tool.selectedShape) {
+      var a = this.lc.tool.selectedShape;
+      this.clipboard = {className:a.className, data:a.toJSON()};
+      this.updateEditMenu();
+    }
+  };
+  b.cut = function() {
+    "SelectShape" === this.lc.tool.name && this.lc.tool.selectedShape && (this.copy(), this.lc.removeShape(this.lc.tool.selectedShape), this.lc.tool.setShape(this.lc, null));
+  };
+  b.paste = function() {
+    if (this.clipboard) {
+      var a = this.lc.addShape(this.clipboard);
+      this.lc.setTool(this.lc.tools.SelectShape);
+      this.lc.tool.setShape(this.lc, a);
+    }
+  };
+  b.updateEditMenu = function() {
+    var a = "SelectShape" === this.lc.tool.name ? "block" : "none";
+    this._cutButton.style.display = a;
+    this._copyButton.style.display = a;
+    this._pasteButton.style.display = this.clipboard ? "block" : "none";
+  };
+  b.file_save = function() {
+    this.lc.trigger("dispose");
+    var a = this.lc.getImage().toDataURL();
+    this.file_ = JSON.parse(JSON.stringify(this.file));
+    Entry.dispatchEvent("saveCanvasImage", {file:this.file_, image:a});
+    this.file.modified = !1;
+  };
+  b.newPicture = function() {
+    var a = {dimension:{height:1, width:1}, fileurl:Entry.mediaFilePath + "_1x1.png", name:Lang.Workspace.new_picture};
+    a.id = Entry.generateHash();
+    Entry.playground.addPicture(a, !0);
+  };
+  b._keyboardPressControl = function(a) {
+    if (this.isShow && !Entry.Utils.isInInput(a)) {
+      var b = a.keyCode || a.which, c = a.ctrlKey;
+      8 == b || 46 == b ? (this.cut(), a.preventDefault()) : c && (67 == b ? this.copy() : 88 == b && this.cut());
+      c && 86 == b && this.paste();
+      this.lc.trigger("keyDown", a);
+    }
+  };
+  b._keyboardUpControl = function(a) {
+    this.lc.trigger("keyUp", a);
+  };
+  b.initTopBar = function() {
+    var a = this, b = Entry.createElement(document.getElementById("canvas-top-menu"));
+    b.addClass("entryPlaygroundPainterTop");
+    b.addClass("entryPainterTop");
+    var c = Entry.createElement("nav", "entryPainterTopMenu");
+    c.addClass("entryPlaygroundPainterTopMenu");
+    b.appendChild(c);
+    var e = Entry.createElement("ul");
+    c.appendChild(e);
+    var f = Entry.createElement("li");
+    c.appendChild(f);
+    c = Entry.createElement("a", "entryPainterTopMenuFileNew");
+    c.bindOnClick(function() {
+      a.newPicture();
+    });
+    c.addClass("entryPlaygroundPainterTopMenuFileNew");
+    c.innerHTML = Lang.Workspace.new_picture;
+    f.appendChild(c);
+    c = Entry.createElement("li", "entryPainterTopMenuFile");
+    c.addClass("entryPlaygroundPainterTopMenuFile");
+    c.innerHTML = Lang.Workspace.painter_file;
+    e.appendChild(c);
+    f = Entry.createElement("ul");
+    c.appendChild(f);
+    c = Entry.createElement("li");
+    f.appendChild(c);
+    var g = Entry.createElement("a", "entryPainterTopMenuFileSave");
+    g.bindOnClick(function() {
+      a.file_save(!1);
+    });
+    g.addClass("entryPainterTopMenuFileSave");
+    g.innerHTML = Lang.Workspace.painter_file_save;
+    c.appendChild(g);
+    c = Entry.createElement("li");
+    f.appendChild(c);
+    f = Entry.createElement("a", "entryPainterTopMenuFileSaveAs");
+    f.bindOnClick(function() {
+      a.file.mode = "new";
+      a.file_save(!1);
+    });
+    f.addClass("entryPlaygroundPainterTopMenuFileSaveAs");
+    f.innerHTML = Lang.Workspace.painter_file_saveas;
+    c.appendChild(f);
+    f = Entry.createElement("li", "entryPainterTopMenuEdit");
+    f.addClass("entryPlaygroundPainterTopMenuEdit");
+    f.innerHTML = Lang.Workspace.painter_edit;
+    e.appendChild(f);
+    e = Entry.createElement("ul");
+    f.appendChild(e);
+    f = Entry.createElement("li");
+    e.appendChild(f);
+    c = Entry.createElement("a", "entryPainterTopMenuEditImportLink");
+    c.bindOnClick(function() {
+      Entry.dispatchEvent("openPictureImport");
+    });
+    c.addClass("entryPainterTopMenuEditImport");
+    c.innerHTML = Lang.Workspace.get_file;
+    f.appendChild(c);
+    f = Entry.createElement("li");
+    e.appendChild(f);
+    c = Entry.createElement("a", "entryPainterTopMenuEditCopy");
+    c.bindOnClick(function() {
+      a.copy();
+    });
+    c.addClass("entryPlaygroundPainterTopMenuEditCopy");
+    c.innerHTML = Lang.Workspace.copy_file;
+    f.appendChild(c);
+    this._copyButton = f;
+    f = Entry.createElement("li");
+    e.appendChild(f);
+    c = Entry.createElement("a", "entryPainterTopMenuEditCut");
+    c.bindOnClick(function() {
+      a.cut();
+    });
+    c.addClass("entryPlaygroundPainterTopMenuEditCut");
+    c.innerHTML = Lang.Workspace.cut_picture;
+    f.appendChild(c);
+    this._cutButton = f;
+    f = Entry.createElement("li");
+    e.appendChild(f);
+    c = Entry.createElement("a", "entryPainterTopMenuEditPaste");
+    c.bindOnClick(function() {
+      a.paste();
+    });
+    c.addClass("entryPlaygroundPainterTopMenuEditPaste");
+    c.innerHTML = Lang.Workspace.paste_picture;
+    f.appendChild(c);
+    this._pasteButton = f;
+    f = Entry.createElement("li");
+    e.appendChild(f);
+    e = Entry.createElement("a", "entryPainterTopMenuEditEraseAll");
+    e.addClass("entryPlaygroundPainterTopMenuEditEraseAll");
+    e.innerHTML = Lang.Workspace.remove_all;
+    e.bindOnClick(function() {
+      a.lc.clear();
+    });
+    f.appendChild(e);
+    this.painterTopStageXY = e = Entry.createElement("div", "entryPainterTopStageXY");
+    e.addClass("entryPlaygroundPainterTopStageXY");
+    b.appendChild(e);
+    Entry.addEventListener("pictureSelected", this.changePicture.bind(this));
+  };
+  b.stagemousemove = function(a) {
+    this.painterTopStageXY.textContent = "x:" + a.x.toFixed(1) + ", y:" + a.y.toFixed(1);
+  };
+})(Entry.Painter2.prototype);
+Entry.BlockParser = function(b) {
+  this.syntax = b;
+  this._iterVariableCount = 0;
+  this._iterVariableChunk = ["i", "j", "k"];
+};
+(function(b) {
+  b.Code = function(a) {
+    if (a instanceof Entry.Thread) {
+      return this.Thread(a);
+    }
+    if (a instanceof Entry.Block) {
+      return this.Block(a);
+    }
+    var b = "";
+    a = a.getThreads();
+    for (var c = 0;c < a.length;c++) {
+      b += this.Thread(a[c]);
+    }
+    return b;
+  };
+  b.Thread = function(a) {
+    if (a instanceof Entry.Block) {
+      return this.Block(a);
+    }
+    var b = "";
+    a = a.getBlocks();
+    for (var c = 0;c < a.length;c++) {
+      b += this.Block(a[c]);
+    }
+    return b;
+  };
+  b.Block = function(a) {
+    var b = a._schema.syntax;
+    return b ? this[b[0]](a) : "";
+  };
+  b.Program = function(a) {
+    return "";
+  };
+  b.Scope = function(a) {
+    a = a._schema.syntax.concat();
+    return a.splice(1, a.length - 1).join(".") + "();\n";
+  };
+  b.BasicFunction = function(a) {
+    a = this.Thread(a.statements[0]);
+    return "function promise() {\n" + this.indent(a) + "}\n";
+  };
+  b.BasicIteration = function(a) {
+    var b = a.params[0], c = this.publishIterateVariable();
+    a = this.Thread(a.statements[0]);
+    this.unpublishIterateVariable();
+    return "for (var " + c + " = 0; " + c + " < " + b + "; " + c + "++){\n" + this.indent(a) + "}\n";
+  };
+  b.BasicIf = function(a) {
+    var b = this.Thread(a.statements[0]);
+    return "if (" + a._schema.syntax.concat()[1] + ") {\n" + this.indent(b) + "}\n";
+  };
+  b.BasicWhile = function(a) {
+    var b = this.Thread(a.statements[0]);
+    return "while (" + a._schema.syntax.concat()[1] + ") {\n" + this.indent(b) + "}\n";
+  };
+  b.indent = function(a) {
+    var b = "    ";
+    a = a.split("\n");
+    a.pop();
+    return b += a.join("\n    ") + "\n";
+  };
+  b.publishIterateVariable = function() {
+    var a = "", b = this._iterVariableCount;
+    do {
+      a = this._iterVariableChunk[b % 3] + a, b = parseInt(b / 3) - 1, 0 === b && (a = this._iterVariableChunk[0] + a);
+    } while (0 < b);
+    this._iterVariableCount++;
+    return a;
+  };
+  b.unpublishIterateVariable = function() {
+    this._iterVariableCount && this._iterVariableCount--;
+  };
+})(Entry.BlockParser.prototype);
+Entry.JSParser = function(b) {
+  this.syntax = b;
+  this.scopeChain = [];
+  this.scope = null;
+};
+(function(b) {
+  b.Program = function(a) {
+    var b = [], c = [];
+    c.push({type:this.syntax.Program});
+    var e = this.initScope(a), c = c.concat(this.BlockStatement(a));
+    this.unloadScope();
+    b.push(c);
+    return b = b.concat(e);
+  };
+  b.Identifier = function(a, b) {
+    return b ? b[a.name] : this.scope[a.name];
+  };
+  b.ExpressionStatement = function(a) {
+    a = a.expression;
+    return this[a.type](a);
+  };
+  b.ForStatement = function(a) {
+    var b = a.init, c = a.test, e = a.update, f = a.body;
+    if (this.syntax.ForStatement) {
+      throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+    }
+    var f = this[f.type](f), b = b.declarations[0].init.value, g = c.operator, c = c.right.value, h = 0;
+    "++" != e.operator && (e = b, b = c, c = e);
+    switch(g) {
+      case "<":
+        h = c - b;
+        break;
+      case "<=":
+        h = c + 1 - b;
+        break;
+      case ">":
+        h = b - c;
+        break;
+      case ">=":
+        h = b + 1 - c;
+    }
+    return this.BasicIteration(a, h, f);
+  };
+  b.BlockStatement = function(a) {
+    var b = [];
+    a = a.body;
+    for (var c = 0;c < a.length;c++) {
+      var e = a[c], f = this[e.type](e);
+      if (f) {
+        if (void 0 === f.type) {
+          throw {message:"\ud574\ub2f9\ud558\ub294 \ube14\ub85d\uc774 \uc5c6\uc2b5\ub2c8\ub2e4.", node:e};
+        }
+        f && b.push(f);
+      }
+    }
+    return b;
+  };
+  b.EmptyStatement = function(a) {
+    throw {message:"empty\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+  };
+  b.DebuggerStatement = function(a) {
+    throw {message:"debugger\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+  };
+  b.WithStatement = function(a) {
+    throw {message:"with\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+  };
+  b.ReturnStaement = function(a) {
+    throw {message:"return\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+  };
+  b.LabeledStatement = function(a) {
+    throw {message:"label\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+  };
+  b.BreakStatement = function(a) {
+    throw {message:"break\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+  };
+  b.ContinueStatement = function(a) {
+    throw {message:"continue\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+  };
+  b.IfStatement = function(a) {
+    if (this.syntax.IfStatement) {
+      throw {message:"if\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+    }
+    return this.BasicIf(a);
+  };
+  b.SwitchStatement = function(a) {
+    throw {message:"switch\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+  };
+  b.SwitchCase = function(a) {
+    throw {message:"switch ~ case\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+  };
+  b.ThrowStatement = function(a) {
+    throw {message:"throw\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+  };
+  b.TryStatement = function(a) {
+    throw {message:"try\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+  };
+  b.CatchClause = function(a) {
+    throw {message:"catch\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+  };
+  b.WhileStatement = function(a) {
+    var b = a.body, c = this.syntax.WhileStatement, b = this[b.type](b);
+    if (c) {
+      throw {message:"while\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+    }
+    return this.BasicWhile(a, b);
+  };
+  b.DoWhileStatement = function(a) {
+    throw {message:"do ~ while\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+  };
+  b.ForInStatement = function(a) {
+    throw {message:"for ~ in\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+  };
+  b.FunctionDeclaration = function(a) {
+    if (this.syntax.FunctionDeclaration) {
+      throw {message:"function\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+    }
+    return null;
+  };
+  b.VariableDeclaration = function(a) {
+    throw {message:"var\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+  };
+  b.ThisExpression = function(a) {
+    return this.scope.this;
+  };
+  b.ArrayExpression = function(a) {
+    throw {message:"array\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+  };
+  b.ObjectExpression = function(a) {
+    throw {message:"object\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+  };
+  b.Property = function(a) {
+    throw {message:"init, get, set\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+  };
+  b.FunctionExpression = function(a) {
+    throw {message:"function\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+  };
+  b.UnaryExpression = function(a) {
+    throw {message:a.operator + "\uc740(\ub294) \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \uba85\ub839\uc5b4 \uc785\ub2c8\ub2e4.", node:a};
+  };
+  b.UnaryOperator = function() {
+    return "- + ! ~ typeof void delete".split(" ");
+  };
+  b.updateOperator = function() {
+    return ["++", "--"];
+  };
+  b.BinaryOperator = function() {
+    return "== != === !== < <= > >= << >> >>> + - * / % , ^ & in instanceof".split(" ");
+  };
+  b.AssignmentExpression = function(a) {
+    throw {message:a.operator + "\uc740(\ub294) \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \uba85\ub839\uc5b4 \uc785\ub2c8\ub2e4.", node:a};
+  };
+  b.AssignmentOperator = function() {
+    return "= += -= *= /= %= <<= >>= >>>= ,= ^= &=".split(" ");
+  };
+  b.LogicalExpression = function(a) {
+    throw {message:a.operator + "\uc740(\ub294) \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \uba85\ub839\uc5b4 \uc785\ub2c8\ub2e4.", node:a};
+  };
+  b.LogicalOperator = function() {
+    return ["||", "&&"];
+  };
+  b.MemberExpression = function(a) {
+    var b = a.object, c = a.property;
+    console.log(b.type);
+    b = this[b.type](b);
+    console.log(b);
+    c = this[c.type](c, b);
+    if (Object(b) !== b || Object.getPrototypeOf(b) !== Object.prototype) {
+      throw {message:b + "\uc740(\ub294) \uc798\ubabb\ub41c \uba64\ubc84 \ubcc0\uc218\uc785\ub2c8\ub2e4.", node:a};
+    }
+    b = c;
+    if (!b) {
+      throw {message:c + "\uc774(\uac00) \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", node:a};
+    }
+    return b;
+  };
+  b.ConditionalExpression = function(a) {
+    throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+  };
+  b.UpdateExpression = function(a) {
+    throw {message:a.operator + "\uc740(\ub294) \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \uba85\ub801\uc5b4 \uc785\ub2c8\ub2e4.", node:a};
+  };
+  b.CallExpression = function(a) {
+    a = a.callee;
+    return {type:this[a.type](a)};
+  };
+  b.NewExpression = function(a) {
+    throw {message:"new\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+  };
+  b.SequenceExpression = function(a) {
+    throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+  };
+  b.initScope = function(a) {
+    if (null === this.scope) {
+      var b = function() {
+      };
+      b.prototype = this.syntax.Scope;
+    } else {
+      b = function() {
+      }, b.prototype = this.scope;
+    }
+    this.scope = new b;
+    this.scopeChain.push(this.scope);
+    return this.scanDefinition(a);
+  };
+  b.unloadScope = function() {
+    this.scopeChain.pop();
+    this.scope = this.scopeChain.length ? this.scopeChain[this.scopeChain.length - 1] : null;
+  };
+  b.scanDefinition = function(a) {
+    a = a.body;
+    for (var b = [], c = 0;c < a.length;c++) {
+      var e = a[c];
+      "FunctionDeclaration" === e.type && (this.scope[e.id.name] = this.scope.promise, this.syntax.BasicFunction && (e = e.body, b.push([{type:this.syntax.BasicFunction, statements:[this[e.type](e)]}])));
+    }
+    return b;
+  };
+  b.BasicFunction = function(a, b) {
+    return null;
+  };
+  b.BasicIteration = function(a, b, c) {
+    var e = this.syntax.BasicIteration;
+    if (!e) {
+      throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+    }
+    return {params:[b], type:e, statements:[c]};
+  };
+  b.BasicWhile = function(a, b) {
+    var c = a.test.raw;
+    if (this.syntax.BasicWhile[c]) {
+      return {type:this.syntax.BasicWhile[c], statements:[b]};
+    }
+    throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a.test};
+  };
+  b.BasicIf = function(a) {
+    var b = a.consequent, b = this[b.type](b);
+    try {
+      var c = "", e = "===" === a.test.operator ? "==" : a.test.operator;
+      if ("Identifier" === a.test.left.type && "Literal" === a.test.right.type) {
+        c = a.test.left.name + " " + e + " " + a.test.right.raw;
+      } else {
+        if ("Literal" === a.test.left.type && "Identifier" === a.test.right.type) {
+          c = a.test.right.name + " " + e + " " + a.test.left.raw;
+        } else {
+          throw Error();
+        }
+      }
+      if (this.syntax.BasicIf[c]) {
+        return Array.isArray(b) || "object" !== typeof b || (b = [b]), {type:this.syntax.BasicIf[c], statements:[b]};
+      }
+      throw Error();
+    } catch (f) {
+      throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a.test};
+    }
+  };
+})(Entry.JSParser.prototype);
+Entry.ParserOld = {};
+Entry.Parser = function(b, a, d) {
+  this._mode = b;
+  this.syntax = {};
+  this.codeMirror = d;
+  this._lang = a || "js";
+  this.availableCode = [];
+  "maze" === b && (this._stageId = Number(Ntry.configManager.getConfig("stageId")), "object" == typeof NtryData && this.setAvailableCode(NtryData.config[this._stageId].availableCode, NtryData.player[this._stageId].code));
+  this.mappingSyntax(b);
+  switch(this._lang) {
+    case "js":
+      this._parser = new Entry.JSParser(this.syntax);
+      a = this.syntax;
+      var c = {}, e;
+      for (e in a.Scope) {
+        c[e + "();\n"] = a.Scope[e];
+      }
+      "BasicIf" in a && (c.front = "BasicIf");
+      CodeMirror.commands.javascriptComplete = function(a) {
+        CodeMirror.showHint(a, null, {globalScope:c});
+      };
+      d.on("keyup", function(a, b) {
+        !a.state.completionActive && 65 <= b.keyCode && 95 >= b.keyCode && CodeMirror.showHint(a, null, {completeSingle:!1, globalScope:c});
+      });
+      break;
+    case "block":
+      this._parser = new Entry.BlockParser(this.syntax);
+  }
+};
+(function(b) {
+  b.parse = function(a) {
+    var b = null;
+    switch(this._lang) {
+      case "js":
+        try {
+          var c = acorn.parse(a), b = this._parser.Program(c);
+        } catch (e) {
+          this.codeMirror && (e instanceof SyntaxError ? (a = {from:{line:e.loc.line - 1, ch:e.loc.column - 2}, to:{line:e.loc.line - 1, ch:e.loc.column + 1}}, e.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : (a = this.getLineNumber(e.node.start, e.node.end), a.message = e.message, a.severity = "error", this.codeMirror.markText(a.from, a.to, {className:"CodeMirror-lint-mark-error", __annotation:a, clearOnEnter:!0})), Entry.toast.alert("Error", e.message)), b = [];
+        }
+        break;
+      case "block":
+        a = this._parser.Code(a).match(/(.*{.*[\S|\s]+?}|.+)/g), b = Array.isArray(a) ? a.reduce(function(a, b, d) {
+          var c = "";
+          1 === d && (a += "\n");
+          c = -1 < b.indexOf("function") ? b + a : a + b;
+          return c + "\n";
+        }) : "";
+    }
+    return b;
+  };
+  b.getLineNumber = function(a, b) {
+    var c = this.codeMirror.getValue(), e = {from:{}, to:{}}, f = c.substring(0, a).split(/\n/gi);
+    e.from.line = f.length - 1;
+    e.from.ch = f[f.length - 1].length;
+    c = c.substring(0, b).split(/\n/gi);
+    e.to.line = c.length - 1;
+    e.to.ch = c[c.length - 1].length;
+    return e;
+  };
+  b.mappingSyntax = function(a) {
+    for (var b = Object.keys(Entry.block), c = 0;c < b.length;c++) {
+      var e = b[c], f = Entry.block[e];
+      if (f.mode === a && -1 < this.availableCode.indexOf(e) && (f = f.syntax)) {
+        for (var g = this.syntax, h = 0;h < f.length;h++) {
+          var k = f[h];
+          if (h === f.length - 2 && "function" === typeof f[h + 1]) {
+            g[k] = f[h + 1];
+            break;
+          }
+          g[k] || (g[k] = {});
+          h === f.length - 1 ? g[k] = e : g = g[k];
+        }
+      }
+    }
+  };
+  b.setAvailableCode = function(a, b) {
+    var c = [];
+    a.forEach(function(a, b) {
+      a.forEach(function(a, b) {
+        c.push(a.type);
+      });
+    });
+    b instanceof Entry.Code ? b.getBlockList().forEach(function(a) {
+      a.type !== NtryData.START && -1 === c.indexOf(a.type) && c.push(a.type);
+    }) : b.forEach(function(a, b) {
+      a.forEach(function(a, b) {
+        a.type !== NtryData.START && -1 === c.indexOf(a.type) && c.push(a.type);
+      });
+    });
+    this.availableCode = this.availableCode.concat(c);
+  };
+})(Entry.Parser.prototype);
 Entry.Pdf = function(b) {
   this.generateView(b);
 };
@@ -10284,173 +11208,6 @@ Entry.PropertyPanel = function() {
     });
   };
 })(Entry.PropertyPanel.prototype);
-Entry.init = function(b, a) {
-  Entry.assert("object" === typeof a, "Init option is not object");
-  this.events_ = {};
-  this.interfaceState = {menuWidth:264};
-  Entry.Utils.bindGlobalEvent("resize mousedown mousemove keydown keyup dispose".split(" "));
-  this.options = a;
-  this.parseOptions(a);
-  this.mediaFilePath = (a.libDir ? a.libDir : "/lib") + "/entryjs/images/";
-  this.defaultPath = a.defaultDir || "";
-  this.blockInjectPath = a.blockInjectDir || "";
-  "workspace" == this.type && this.isPhone() && (this.type = "phone");
-  this.initialize_();
-  this.view_ = b;
-  "tablet" === this.device ? this.view_.setAttribute("class", "entry tablet") : this.view_.setAttribute("class", "entry");
-  Entry.initFonts(a.fonts);
-  this.createDom(b, this.type);
-  this.loadInterfaceState();
-  this.overridePrototype();
-  this.maxCloneLimit = 302;
-  this.cloudSavable = !0;
-  this.startTime = (new Date).getTime();
-  document.onkeydown = function(a) {
-    Entry.dispatchEvent("keyPressed", a);
-  };
-  document.onkeyup = function(a) {
-    Entry.dispatchEvent("keyUpped", a);
-  };
-  window.onresize = function(a) {
-    Entry.dispatchEvent("windowResized", a);
-  };
-  window.onbeforeunload = this.beforeUnload;
-  Entry.addEventListener("saveWorkspace", function(a) {
-    Entry.addActivity("save");
-  });
-  Entry.addEventListener("showBlockHelper", function(a) {
-    Entry.propertyPanel.select("helper");
-  });
-  "IE" != Entry.getBrowserType().substr(0, 2) || window.flashaudio ? createjs.Sound.registerPlugins([createjs.WebAudioPlugin]) : (createjs.FlashAudioPlugin.swfPath = this.mediaFilePath + "media/", createjs.Sound.registerPlugins([createjs.FlashAudioPlugin]), window.flashaudio = !0);
-  Entry.soundQueue = new createjs.LoadQueue;
-  Entry.soundQueue.installPlugin(createjs.Sound);
-  Entry.loadAudio_([Entry.mediaFilePath + "sounds/click.mp3", Entry.mediaFilePath + "sounds/click.wav", Entry.mediaFilePath + "sounds/click.ogg"], "entryMagneting");
-  Entry.loadAudio_([Entry.mediaFilePath + "sounds/delete.mp3", Entry.mediaFilePath + "sounds/delete.ogg", Entry.mediaFilePath + "sounds/delete.wav"], "entryDelete");
-  createjs.Sound.stop();
-};
-Entry.loadAudio_ = function(b, a) {
-  if (window.Audio && b.length) {
-    for (;0 < b.length;) {
-      var d = b[0];
-      d.match(/\/([^.]+)./);
-      Entry.soundQueue.loadFile({id:a, src:d, type:createjs.LoadQueue.SOUND});
-      break;
-    }
-  }
-};
-Entry.initialize_ = function() {
-  this.stage = new Entry.Stage;
-  Entry.engine && Entry.engine.clearTimer();
-  this.engine = new Entry.Engine;
-  this.propertyPanel = new Entry.PropertyPanel;
-  this.container = new Entry.Container;
-  this.helper = new Entry.Helper;
-  this.youtube = new Entry.Youtube;
-  this.variableContainer = new Entry.VariableContainer;
-  this.commander = new Entry.Commander(this.type);
-  this.scene = new Entry.Scene;
-  this.playground = new Entry.Playground;
-  this.toast = new Entry.Toast;
-  this.hw && this.hw.closeConnection();
-  this.hw = new Entry.HW;
-  if (Entry.enableActivityLogging) {
-    this.reporter = new Entry.Reporter(!1);
-  } else {
-    if ("workspace" == this.type || "phone" == this.type) {
-      this.reporter = new Entry.Reporter(!0);
-    }
-  }
-};
-Entry.createDom = function(b, a) {
-  if (a && "workspace" != a) {
-    "minimize" == a ? (d = Entry.createElement("canvas"), d.className = "entryCanvasWorkspace", d.id = "entryCanvas", d.width = 640, d.height = 360, c = Entry.createElement("div", "entryCanvasWrapper"), c.appendChild(d), b.appendChild(c), this.canvas_ = d, this.stage.initStage(this.canvas_), c = Entry.createElement("div"), b.appendChild(c), this.engineView = c, this.engine.generateView(this.engineView, a)) : "phone" == a && (this.stateManagerView = d = Entry.createElement("div"), this.stateManager.generateView(this.stateManagerView, 
-    a), c = Entry.createElement("div"), b.appendChild(c), this.engineView = c, this.engine.generateView(this.engineView, a), d = Entry.createElement("canvas"), d.addClass("entryCanvasPhone"), d.id = "entryCanvas", d.width = 640, d.height = 360, c.insertBefore(d, this.engine.footerView_), this.canvas_ = d, this.stage.initStage(this.canvas_), d = Entry.createElement("div"), b.appendChild(d), this.containerView = d, this.container.generateView(this.containerView, a), d = Entry.createElement("div"), 
-    b.appendChild(d), this.playgroundView = d, this.playground.generateView(this.playgroundView, a));
-  } else {
-    Entry.documentMousedown.attach(this, this.cancelObjectEdit);
-    var d = Entry.createElement("div");
-    b.appendChild(d);
-    this.sceneView = d;
-    this.scene.generateView(this.sceneView, a);
-    d = Entry.createElement("div");
-    this.sceneView.appendChild(d);
-    this.stateManagerView = d;
-    this.stateManager.generateView(this.stateManagerView, a);
-    var c = Entry.createElement("div");
-    b.appendChild(c);
-    this.engineView = c;
-    this.engine.generateView(this.engineView, a);
-    d = Entry.createElement("canvas");
-    d.addClass("entryCanvasWorkspace");
-    d.id = "entryCanvas";
-    d.width = 640;
-    d.height = 360;
-    c.insertBefore(d, this.engine.addButton);
-    d.addEventListener("mousewheel", function(a) {
-      var b = Entry.variableContainer.getListById(Entry.stage.mouseCoordinate);
-      a = 0 < a.wheelDelta ? !0 : !1;
-      for (var d = 0;d < b.length;d++) {
-        var c = b[d];
-        c.scrollButton_.y = a ? 46 <= c.scrollButton_.y ? c.scrollButton_.y - 23 : 23 : c.scrollButton_.y + 23;
-        c.updateView();
-      }
-    });
-    this.canvas_ = d;
-    this.stage.initStage(this.canvas_);
-    d = Entry.createElement("div");
-    this.propertyPanel.generateView(b, a);
-    this.containerView = d;
-    this.container.generateView(this.containerView, a);
-    this.propertyPanel.addMode("object", this.container);
-    this.helper.generateView(this.containerView, a);
-    this.propertyPanel.addMode("helper", this.helper);
-    d = Entry.createElement("div");
-    b.appendChild(d);
-    this.playgroundView = d;
-    this.playground.generateView(this.playgroundView, a);
-    this.propertyPanel.select("object");
-    this.helper.bindWorkspace(this.playground.mainWorkspace);
-  }
-};
-Entry.start = function(b) {
-  this.FPS || (this.FPS = 60);
-  Entry.assert("number" == typeof this.FPS, "FPS must be number");
-  Entry.engine.start(this.FPS);
-};
-Entry.parseOptions = function(b) {
-  this.type = b.type;
-  b.device && (this.device = b.device);
-  this.projectSaveable = b.projectsaveable;
-  void 0 === this.projectSaveable && (this.projectSaveable = !0);
-  this.objectAddable = b.objectaddable;
-  void 0 === this.objectAddable && (this.objectAddable = !0);
-  this.objectEditable = b.objectEditable;
-  void 0 === this.objectEditable && (this.objectEditable = !0);
-  this.objectEditable || (this.objectAddable = !1);
-  this.objectDeletable = b.objectdeletable;
-  void 0 === this.objectDeletable && (this.objectDeletable = !0);
-  this.soundEditable = b.soundeditable;
-  void 0 === this.soundEditable && (this.soundEditable = !0);
-  this.pictureEditable = b.pictureeditable;
-  void 0 === this.pictureEditable && (this.pictureEditable = !0);
-  this.sceneEditable = b.sceneEditable;
-  void 0 === this.sceneEditable && (this.sceneEditable = !0);
-  this.functionEnable = b.functionEnable;
-  void 0 === this.functionEnable && (this.functionEnable = !0);
-  this.messageEnable = b.messageEnable;
-  void 0 === this.messageEnable && (this.messageEnable = !0);
-  this.variableEnable = b.variableEnable;
-  void 0 === this.variableEnable && (this.variableEnable = !0);
-  this.listEnable = b.listEnable;
-  void 0 === this.listEnable && (this.listEnable = !0);
-  this.hasVariableManager = b.hasvariablemanager;
-  this.variableEnable || this.messageEnable || this.listEnable || this.functionEnable ? void 0 === this.hasVariableManager && (this.hasVariableManager = !0) : this.hasVariableManager = !1;
-  this.isForLecture = b.isForLecture;
-};
-Entry.initFonts = function(b) {
-  this.fonts = b;
-  b || (this.fonts = []);
-};
 Entry.Reporter = function(b) {
   this.projectId = this.userId = null;
   this.isRealTime = b;
@@ -11364,16 +12121,18 @@ Entry.TextCodingUtil = function() {
     return a;
   };
   b.isFuncContentsMatch = function(a, b, c) {
+    console.log("blockFuncContents, textFuncStatements, paramMap", a, b, c);
     for (var e = !0, f = 0;f < a.length && e;f++) {
       var e = !1, g = a[f], h = b[f];
       if (g && !h) {
-        e = fasle;
+        e = !1;
         break;
       }
       if (!g && h) {
         e = !1;
         break;
       }
+      console.log("function");
       if (h.type == g.data.type) {
         var e = !0, k = h.params, l = g.data.params, m = [];
         l.map(function(a, b) {
@@ -11447,6 +12206,20 @@ Entry.TextCodingUtil = function() {
       b[a.type] = [], f = {}, f.start = a.start, f.end = a.end, b[a.type].push(f);
     }
   };
+  b.assembleRepeatWhileTrueBlock = function(a, b) {
+    console.log("assembleRepeatWhileTrueBlock >>", "block", a, "syntax", b);
+    var c;
+    if ("repeat_while_true" == a.data.type) {
+      c = b.split(" ");
+      var e = c[2];
+      console.log("option", e, "option.length", e.length);
+      '"until"' == e ? (c[2] = "!= True:\n\tif(" + c[1] + " == True)\n\t\tbreak", c = c.join(" ")) : '"while"' == e ? (c[2] = "== True:", c = c.join(" ")) : c = b;
+    } else {
+      c = b;
+    }
+    console.log("assembleRepeatWhileTrueBlock result", c);
+    return c;
+  };
   b.isJudgementBlock = function(a) {
     return "is_clicked" == a || "is_press_some_key" == a || "reach_something" == a || "boolean_basic_operator" == a || "boolean_and" == a || "boolean_or" == a || "boolean_not" == a ? !0 : !1;
   };
@@ -11512,9 +12285,7 @@ Entry.TextCodingUtil = function() {
     return a.split("_")[1].toUpperCase();
   };
   b.tTobDropdownValueConvertor = function(a) {
-    var b;
-    "stone" == a ? b = "OBSTACLE" : "wall" == a ? b = a.toUpperCase() : "item" == a && (b = a.toUpperCase());
-    return b;
+    return "stone" == a ? "OBSTACLE" : "wall" == a ? a.toUpperCase() : "item" == a ? a.toUpperCase() : a;
   };
   b.includeEntryEventKeyBlock = function(a) {
     var b = !1;
@@ -11701,11 +12472,12 @@ Entry.BlockToPyParser = function(b) {
                 2 == r.length && ("stringParam" == u ? m = "string_param" : "booleanParam" == u && (m = "boolean_param"));
                 m = Entry.TextCodingUtil.prototype.variableFilter(a, n, m);
                 b += m;
+                console.log("block param", m);
                 this._parseMode == Entry.Parser.PARSE_VARIABLE && k == Entry.Parser.BLOCK_SKELETON_BASIC && l && (r = Object.keys(l), n = String(r[n++]), n = n.toLowerCase(), this._variableMap.put(n, m), this._queue.enqueue(n));
               }
             } else {
-              m = this["Field" + g[r].type](h[r], g[r]), null == m && (m = g[r].text ? g[r].text : null), m = Entry.TextCodingUtil.prototype.binaryOperatorValueConvertor(m), m = String(m), Entry.TextCodingUtil.prototype.isNumeric(m) || Entry.TextCodingUtil.prototype.isBinaryOperator(m) || (m = String('"' + m + '"')), m = Entry.TextCodingUtil.prototype.variableFilter(a, n, m), Entry.TextCodingUtil.prototype.isLocalType(a, h[r]) && (m = "self".concat(".").concat(m)), b += m, this._parseMode == Entry.Parser.PARSE_VARIABLE && 
-              k == Entry.Parser.BLOCK_SKELETON_BASIC && l && (r = Object.keys(l), n = String(r[n++]), n = n.toLowerCase(), this._variableMap.put(n, m), this._queue.enqueue(n));
+              m = this["Field" + g[r].type](h[r], g[r]), null == m && (m = g[r].text ? g[r].text : null), m = Entry.TextCodingUtil.prototype.binaryOperatorValueConvertor(m), m = String(m), Entry.TextCodingUtil.prototype.isNumeric(m) || Entry.TextCodingUtil.prototype.isBinaryOperator(m) || (m = String('"' + m + '"')), m = Entry.TextCodingUtil.prototype.variableFilter(a, n, m), Entry.TextCodingUtil.prototype.isLocalType(a, h[r]) && (m = "self".concat(".").concat(m)), console.log("currentBlock", a), 
+              b += m, console.log("btop parser param result", b), b = Entry.TextCodingUtil.prototype.assembleRepeatWhileTrueBlock(a, b), this._parseMode == Entry.Parser.PARSE_VARIABLE && k == Entry.Parser.BLOCK_SKELETON_BASIC && l && (r = Object.keys(l), n = String(r[n++]), n = n.toLowerCase(), this._variableMap.put(n, m), this._queue.enqueue(n));
             }
           }
         } else {
@@ -11714,7 +12486,7 @@ Entry.BlockToPyParser = function(b) {
               r = n[m], 0 !== r.length && (f.test(r) ? (r = Number(r.split("$")[1]) - 1, b += Entry.TextCodingUtil.prototype.indent(this.Thread(a.statements[r]))) : b += r);
             }
           } else {
-            m = 0, n.search("#"), -1 != n.search("#") && (m = n.indexOf("#"), n = n.substring(m + 1)), b += n;
+            m = 0, n.search("#"), -1 != n.search("#") && (m = n.indexOf("#"), n = n.substring(m + 1)), b += n, console.log("btop parser block result", b);
           }
         }
       }
@@ -12057,66 +12829,61 @@ Entry.JsToBlockParser = function(b) {
     return "= += -= *= /= %= <<= >>= >>>= ,= ^= &=".split(" ");
   };
   b.BinaryExpression = function(a) {
-    var b = {}, c = {}, e = String(a.operator), f = a.left.name;
-    switch(e) {
+    var b = {}, c = {}, b = String(a.operator), e = a.left.name;
+    switch(b) {
       case "==":
-        if ("object_up" == f || "object_right" == f || "object_down" == f) {
-          var g = "ai_boolean_object"
-        } else {
-          if ("radar_up" == f || "radar_right" == f || "radar_down" == f) {
-            g = "ai_boolean_distance";
-          }
-        }
+        var f = "object_up" == e || "object_right" == e || "object_down" == e ? "ai_boolean_object" : "radar_up" == e || "radar_right" == e || "radar_down" == e ? "ai_boolean_distance" : null;
         break;
       case "<":
-        g = "ai_boolean_distance";
+        f = "ai_boolean_distance";
         break;
       case "<=":
-        g = "ai_boolean_distance";
+        f = "ai_boolean_distance";
         break;
       case ">":
-        g = "ai_boolean_distance";
+        f = "ai_boolean_distance";
         break;
       case ">=":
-        g = "ai_boolean_distance";
+        f = "ai_boolean_distance";
     }
-    if (g) {
-      f = [];
+    if (f) {
+      e = [];
       b = a.left;
       if ("Literal" == b.type || "Identifier" == b.type) {
         arguments = [];
         arguments.push(b);
-        var b = Entry.block[g].params, h;
-        for (h in b) {
-          e = b[h].type, "Indicator" == e ? (e = {raw:null, type:"Literal", value:null}, h < arguments.length && arguments.splice(h, 0, e)) : "Text" == e && (e = {raw:"", type:"Literal", value:""}, h < arguments.length && arguments.splice(h, 0, e));
+        var b = Entry.block[f].params, g;
+        for (g in b) {
+          var h = b[g].type;
+          "Indicator" == h ? (h = {raw:null, type:"Literal", value:null}, g < arguments.length && arguments.splice(g, 0, h)) : "Text" == h && (h = {raw:"", type:"Literal", value:""}, g < arguments.length && arguments.splice(g, 0, h));
         }
         for (var k in arguments) {
-          b = arguments[k], b = this[b.type](b), (b = Entry.TextCodingUtil.prototype.radarVariableConvertor(b)) && null != b && f.push(b);
+          b = arguments[k], h = this[b.type](b), (h = Entry.TextCodingUtil.prototype.radarVariableConvertor(h)) && null != h && e.push(h);
         }
       } else {
-        b = this[b.type](b), (b = Entry.TextCodingUtil.prototype.radarVariableConvertor(b)) && f.push(b);
+        h = this[b.type](b), (h = Entry.TextCodingUtil.prototype.radarVariableConvertor(h)) && e.push(h);
       }
-      if (e = String(a.operator)) {
-        (b = e = Entry.TextCodingUtil.prototype.jTobBinaryOperatorConvertor(e)) && f.push(b), c.operator = e;
+      if (b = String(a.operator)) {
+        (h = b = Entry.TextCodingUtil.prototype.jTobBinaryOperatorConvertor(b)) && e.push(h), c.operator = b;
       }
       b = a.right;
       if ("Literal" == b.type || "Identifier" == b.type) {
         arguments = [];
         arguments.push(b);
-        b = Entry.block[g].params;
-        for (h in b) {
-          e = b[h].type, "Indicator" == e ? (e = {raw:null, type:"Literal", value:null}, h < arguments.length && arguments.splice(h, 0, e)) : "Text" == e && (e = {raw:"", type:"Literal", value:""}, h < arguments.length && arguments.splice(h, 0, e));
+        b = Entry.block[f].params;
+        for (g in b) {
+          h = b[g].type, "Indicator" == h ? (h = {raw:null, type:"Literal", value:null}, g < arguments.length && arguments.splice(g, 0, h)) : "Text" == h && (h = {raw:"", type:"Literal", value:""}, g < arguments.length && arguments.splice(g, 0, h));
         }
         for (k in arguments) {
-          b = arguments[k], b = this[b.type](b), "string" == typeof b && (h = b.split("_"), "radar" == h[0] && (b = {type:"ai_distance_value", params:[]}, b.params.push(h[1].toUpperCase()))), b && null != b && ("ai_boolean_object" == g && (b = b.params[0], f.splice(1, 1)), b = Entry.TextCodingUtil.prototype.tTobDropdownValueConvertor(b), f.push(b));
+          b = arguments[k], h = this[b.type](b), "string" == typeof h && (g = h.split("_"), "radar" == g[0] && (b = {type:"ai_distance_value", params:[]}, b.params.push(g[1].toUpperCase()), h = b)), h && null != h && ("ai_boolean_object" == f && (h = h.params[0], e.splice(1, 1)), h = Entry.TextCodingUtil.prototype.tTobDropdownValueConvertor(h), e.push(h));
         }
       } else {
-        b = this[b.type](b), "ai_boolean_object" == g && (b = b.params[0], f.splice(1, 1)), b && f.push(b);
+        h = this[b.type](b), "ai_boolean_object" == f && (h = h.params[0], e.splice(1, 1)), h && e.push(h);
       }
-      c.type = g;
-      c.params = f;
+      c.type = f;
+      c.params = e;
     } else {
-      return b;
+      throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a.test};
     }
     return c;
   };
@@ -12169,11 +12936,7 @@ Entry.JsToBlockParser = function(b) {
     return ["||", "&&"];
   };
   b.MemberExpression = function(a) {
-    var b = a.object, c = a.property;
-    console.log(b.type);
-    b = this[b.type](b);
-    console.log(b);
-    c = this[c.type](c, b);
+    var b = a.object, c = a.property, b = this[b.type](b), c = this[c.type](c, b);
     if (Object(b) !== b || Object.getPrototypeOf(b) !== Object.prototype) {
       throw {message:b + "\uc740(\ub294) \uc798\ubabb\ub41c \uba64\ubc84 \ubcc0\uc218\uc785\ub2c8\ub2e4.", node:a};
     }
@@ -12259,32 +13022,33 @@ Entry.JsToBlockParser = function(b) {
       var l = this[h.type](h)
     }
     try {
-      if (a.test.left && a.test.right) {
-        var m = a.test.left.name + a.test.right.value
-      }
-      console.log("this.syntax", this.syntax);
-      if ("frontwall" == m) {
+      var m = a.test.operator ? "===" === a.test.operator ? "==" : a.test.operator : null, n = a.test.left && a.test.right ? a.test.left.name + a.test.right.value : null;
+      if ("frontwall" == n && "==" == m) {
         c = this.syntax.BasicIf["front == 'wall'"];
       } else {
-        if ("fronthump" == m) {
+        if ("fronthump" == n && "==" == m) {
           c = this.syntax.BasicIf["front == 'hump'"];
         } else {
-          if ("frontstone" == m) {
+          if ("frontstone" == n && "==" == m) {
             c = this.syntax.BasicIf["front == 'stone'"];
           } else {
-            if ("frontbee" == m) {
+            if ("frontbee" == n && "==" == m) {
               c = this.syntax.BasicIf["front == 'bee'"];
             } else {
-              c = "ai_if_else";
-              var n = this[a.test.type](a.test, this.syntax.Scope);
-              g.push(n);
+              if (a.test.value || a.test.left && a.test.right) {
+                c = "ai_if_else";
+                var q = this[a.test.type](a.test, this.syntax.Scope);
+                g.push(q);
+              } else {
+                throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a.test};
+              }
             }
           }
         }
       }
-      c ? (k && 0 != k.length && b.statements.push(k), l && 0 != l.length && b.statements.push(l), c && (b.type = c), g && 0 != g.length && (b.params = g), console.log("result", b)) : (k && 0 != k.length && (e = k), l && 0 != l.length && (f = l), c && (b.type = c), g && 0 != g.length && (b.params = g), b.statements = [e, f]);
+      c ? (k && 0 != k.length && b.statements.push(k), l && 0 != l.length && b.statements.push(l), c && (b.type = c), g && 0 != g.length && (b.params = g)) : (k && 0 != k.length && (e = k), l && 0 != l.length && (f = l), c && (b.type = c), g && 0 != g.length && (b.params = g), b.statements = [e, f]);
       return b;
-    } catch (q) {
+    } catch (r) {
       throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a.test};
     }
   };
@@ -12345,7 +13109,7 @@ Entry.PyToBlockParser = function(b) {
     console.log("CallExpression calleeData", g);
     arguments = a.arguments;
     if ("Identifier" == f.type) {
-      if (console.log("CallExpression Identifier calleeData", g), b.callee = g, u = Entry.TextCodingUtil.prototype.eventBlockSyntaxFilter(g.name), e = this.getBlockType(u), console.log("bb type", e), !e && g.name) {
+      if (console.log("CallExpression Identifier calleeData", g), b.callee = g, u = Entry.TextCodingUtil.prototype.eventBlockSyntaxFilter(g.name), e = this.getBlockType(u), console.log("bb type", e), !e && g.name && 0 != arguments.length && "Literal" == arguments[0].type) {
         throw console.log("callex error calleeData", g), b = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4. 'range()'\ub97c \uc0ac\uc6a9\ud558\uc138\uc694."}, b.line = this._blockCount, console.log("send error", b), b;
       }
     } else {
@@ -13737,7 +14501,6 @@ Entry.Parser = function(b, a, d, c) {
         for (f in a.Scope) {
           e[f + "();\n"] = a.Scope[f];
         }
-        "BasicIf" in a && (e.front = "BasicIf");
         c.on("keydown", function(a, b) {
           var d = b.keyCode;
           (65 <= d && 95 >= d || 167 == d || !b.shiftKey && 190 == d) && CodeMirror.showHint(a, null, {completeSingle:!1, globalScope:e});
@@ -13763,7 +14526,7 @@ Entry.Parser = function(b, a, d, c) {
           c = this._parser.Program(f);
         } catch (t) {
           if (this.codeMirror) {
-            t instanceof SyntaxError ? (e = {from:{line:t.loc.line - 1, ch:t.loc.column - 2}, to:{line:t.loc.line - 1, ch:t.loc.column + 1}}, t.message = "\ubb38\ubc95(Syntax) \uc624\ub958\uc785\ub2c8\ub2e4.", t.type = 1) : (e = this.getLineNumber(t.node.start, t.node.end), e.message = t.message, e.severity = "converting error", t.type = 2);
+            t instanceof SyntaxError ? (e = {from:{line:t.loc.line - 1, ch:0}, to:{line:t.loc.line - 1, ch:t.loc.column}}, t.message = "\ubb38\ubc95(Syntax) \uc624\ub958\uc785\ub2c8\ub2e4.", t.type = 1) : (e = this.getLineNumber(t.node.start, t.node.end), e.message = t.message, e.severity = "converting error", t.type = 2);
             this.codeMirror.markText(e.from, e.to, {className:"CodeMirror-lint-mark-error", __annotation:e, clearOnEnter:!0});
             var l = t.title ? t.title : "\ubb38\ubc95 \uc624\ub958";
             if (2 == t.type && t.message) {
@@ -13777,7 +14540,7 @@ Entry.Parser = function(b, a, d, c) {
             l.textType = Entry.Vim.TEXT_TYPE_JS;
             l.runType = Entry.Vim.MAZE_MODE;
             Ntry.dispatchEvent("textError", l);
-            throw Error("text_js_error");
+            throw t;
           }
           c = [];
         }
@@ -15125,9 +15888,10 @@ p.getView = function() {
 };
 p.resize = function() {
   document.getElementById("entryContainerWorkspaceId");
-  var b = document.getElementById("tvCastIframe"), a = this.movieContainer.offsetWidth;
-  b.width = a + "px";
-  b.height = 9 * a / 16 + "px";
+  var b = document.getElementById("tvCastIframe");
+  w = this.movieContainer.offsetWidth;
+  b.width = w + "px";
+  b.height = 9 * w / 16 + "px";
 };
 Entry.BlockDriver = function() {
 };
@@ -15192,9 +15956,9 @@ Entry.BlockMockup = function(b, a, d) {
   b.toJSON = function() {
     function a(b) {
       if (b && (b = b.params)) {
-        for (var d = 0;d < b.length;d++) {
-          var c = b[d];
-          c && (delete c.index, a(c));
+        for (var c = 0;c < b.length;c++) {
+          var d = b[c];
+          d && (delete d.index, a(d));
         }
       }
     }
@@ -15275,17 +16039,18 @@ Entry.BlockMockup = function(b, a, d) {
 Entry.ContextMenu = {};
 (function(b) {
   b.visible = !1;
+  b._hideEvent = null;
   b.createDom = function() {
     this.dom = Entry.Dom("ul", {id:"entry-contextmenu", parent:$("body")});
     this.dom.bind("mousedown touchstart", function(a) {
       a.stopPropagation();
     });
     Entry.Utils.disableContextmenu(this.dom);
-    Entry.documentMousedown.attach(this, function() {
-      this.hide();
-    });
   };
   b.show = function(a, b, c) {
+    this._hideEvent = Entry.documentMousedown.attach(this, function() {
+      this.hide();
+    });
     this.dom || this.createDom();
     if (0 !== a.length) {
       var e = this;
@@ -15328,6 +16093,7 @@ Entry.ContextMenu = {};
     this.dom.empty();
     this.dom.addClass("entryRemove");
     this._className && (this.dom.removeClass(this._className), delete this._className);
+    this._hideEvent && (Entry.documentMousedown.detach(this._hideEvent), this._hideEvent = null);
   };
 })(Entry.ContextMenu);
 Entry.Loader = {queueCount:0, totalCount:0};
@@ -15343,7 +16109,399 @@ Entry.Loader.removeQueue = function(b) {
 Entry.Loader.getLoadedPercent = function() {
   return 0 === this.totalCount ? 1 : this.queueCount / this.totalCount;
 };
-Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BLOCK_RENDER_MODEL:9, BOX_MODEL:10, THREAD_MODEL:11, DRAG_INSTANCE:12, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1, BREAK:2, PASS:3};
+Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BLOCK_RENDER_MODEL:9, BOX_MODEL:10, THREAD_MODEL:11, DRAG_INSTANCE:12, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1, BREAK:2, PASS:3, COMMAND_TYPES:{addThread:101, destroyThread:102, destroyBlock:103, recoverBlock:104, insertBlock:105, separateBlock:106, moveBlock:107, cloneBlock:108, uncloneBlock:109, scrollBoard:110, setFieldValue:111, selectObject:201, "do":301, 
+undo:302, redo:303, editPicture:401, uneditPicture:402, processPicture:403, unprocessPicture:404}};
+Entry.Command = {};
+(function(b) {
+  b.do = {type:Entry.STATIC.COMMAND_TYPES["do"], log:function(a) {
+    return [b["do"].type];
+  }};
+  b.undo = {type:Entry.STATIC.COMMAND_TYPES.undo, log:function(a) {
+    return [b.undo.type];
+  }};
+  b.redo = {type:Entry.STATIC.COMMAND_TYPES.redo, log:function(a) {
+    return [b.redo.type];
+  }};
+})(Entry.Command);
+Entry.Commander = function(b) {
+  if ("workspace" == b || "phone" == b) {
+    Entry.stateManager = new Entry.StateManager;
+  }
+  Entry.do = this.do.bind(this);
+  Entry.undo = this.undo.bind(this);
+  this.editor = {};
+  this.reporters = [];
+  this._tempStorage = null;
+  Entry.Command.editor = this.editor;
+};
+(function(b) {
+  b.do = function(a) {
+    var b = this, c = Array.prototype.slice.call(arguments);
+    c.shift();
+    var e = Entry.Command[a];
+    Entry.stateManager && Entry.stateManager.addCommand.apply(Entry.stateManager, [a, this, this.do, e.undo].concat(e.state.apply(this, c)));
+    e = Entry.Command[a].do.apply(this, c);
+    setTimeout(function() {
+      b.report("do");
+      b.report(a, c);
+    }, 0);
+    return {value:e, isPass:this.isPass.bind(this)};
+  };
+  b.undo = function() {
+    var a = Array.prototype.slice.call(arguments), b = a.shift(), c = Entry.Command[b];
+    this.report("undo");
+    Entry.stateManager && Entry.stateManager.addCommand.apply(Entry.stateManager, [b, this, this.do, c.undo].concat(c.state.apply(this, a)));
+    return {value:Entry.Command[b].do.apply(this, a), isPass:this.isPass.bind(this)};
+  };
+  b.redo = function() {
+    var a = Array.prototype.slice.call(arguments), b = a.shift(), c = Entry.Command[b];
+    that.report("redo");
+    Entry.stateManager && Entry.stateManager.addCommand.apply(Entry.stateManager, [b, this, this.undo, b].concat(c.state.apply(null, a)));
+    c.undo.apply(this, a);
+  };
+  b.setCurrentEditor = function(a, b) {
+    this.editor[a] = b;
+  };
+  b.isPass = function(a) {
+    a = void 0 === a ? !0 : a;
+    if (Entry.stateManager) {
+      var b = Entry.stateManager.getLastCommand();
+      b && (b.isPass = a);
+    }
+  };
+  b.addReporter = function(a) {
+    this.reporters.push(a);
+  };
+  b.removeReporter = function(a) {
+    a = this.reporters.indexOf(a);
+    -1 < a && this.reporters.splice(a, 1);
+  };
+  b.report = function(a, b) {
+    var c = this.reporters;
+    if (0 !== c.length) {
+      var e;
+      e = a && Entry.Command[a] && Entry.Command[a].log ? Entry.Command[a].log.apply(this, b) : b;
+      c.forEach(function(a) {
+        a.add(e);
+      });
+    }
+  };
+})(Entry.Commander.prototype);
+(function(b) {
+  b.addThread = {type:Entry.STATIC.COMMAND_TYPES.addThread, do:function(a) {
+    return this.editor.board.code.createThread(a);
+  }, state:function(a) {
+    a.length && (a[0].id = Entry.Utils.generateId());
+    return [a];
+  }, log:function(a) {
+    a = this.editor.board.code.getThreads().pop();
+    return [b.addThread.type, ["thread", a.stringify()], ["code", this.editor.board.code.stringify()]];
+  }, undo:"destroyThread"};
+  b.destroyThread = {type:Entry.STATIC.COMMAND_TYPES.destroyThread, do:function(a) {
+    this.editor.board.findById(a[0].id).destroy(!0, !0);
+  }, state:function(a) {
+    return [this.editor.board.findById(a[0].id).thread.toJSON()];
+  }, log:function(a) {
+    a = a[0].id;
+    this.editor.board.findById(a);
+    return [b.destroyThread.type, ["blockId", a], ["code", this.editor.board.code.stringify()]];
+  }, undo:"addThread"};
+  b.destroyBlock = {type:Entry.STATIC.COMMAND_TYPES.destroyBlock, do:function(a) {
+    "string" === typeof a && (a = this.editor.board.findById(a));
+    a.doDestroy(!0);
+  }, state:function(a) {
+    "string" === typeof a && (a = this.editor.board.findById(a));
+    return [a.toJSON(), a.pointer()];
+  }, log:function(a) {
+    "string" === typeof a && (a = this.editor.board.findById(a));
+    return [b.destroyBlock.type, ["blockId", a.id], ["code", this.editor.board.code.stringify()]];
+  }, undo:"recoverBlock"};
+  b.recoverBlock = {type:Entry.STATIC.COMMAND_TYPES.recoverBlock, do:function(a, b) {
+    var c = this.editor.board.code.createThread([a]).getFirstBlock();
+    "string" === typeof c && (c = this.editor.board.findById(c));
+    this.editor.board.insert(c, b);
+  }, state:function(a) {
+    "string" !== typeof a && (a = a.id);
+    return [a];
+  }, log:function(a, d) {
+    a = this.editor.board.findById(a.id);
+    return [b.recoverBlock.type, ["block", a.stringify()], ["pointer", d], ["code", this.editor.board.code.stringify()]];
+  }, undo:"destroyBlock"};
+  b.insertBlock = {type:Entry.STATIC.COMMAND_TYPES.insertBlock, do:function(a, b, c) {
+    "string" === typeof a && (a = this.editor.board.findById(a));
+    this.editor.board.insert(a, b, c);
+  }, state:function(a, b) {
+    "string" === typeof a && (a = this.editor.board.findById(a));
+    var c = [a.id], e = a.targetPointer();
+    c.push(e);
+    "string" !== typeof a && "basic" === a.getBlockType() && c.push(a.thread.getCount(a));
+    return c;
+  }, log:function(a, d, c) {
+    "string" === typeof a && (a = this.editor.board.findById(a));
+    return [b.insertBlock.type, ["blockId", a.id], ["targetPointer", a.targetPointer()], ["count", c], ["code", this.editor.board.code.stringify()]];
+  }, undo:"insertBlock"};
+  b.separateBlock = {type:Entry.STATIC.COMMAND_TYPES.separateBlock, do:function(a) {
+    a.view && a.view._toGlobalCoordinate(Entry.DRAG_MODE_DRAG);
+    a.doSeparate();
+  }, state:function(a) {
+    var b = [a.id], c = a.targetPointer();
+    b.push(c);
+    "basic" === a.getBlockType() && b.push(a.thread.getCount(a));
+    return b;
+  }, log:function(a) {
+    "string" === typeof a && (a = this.editor.board.findById(a));
+    return [b.separateBlock.type, ["blockId", a.id], ["x", a.x], ["y", a.y], ["code", this.editor.board.code.stringify()]];
+  }, undo:"insertBlock"};
+  b.moveBlock = {type:Entry.STATIC.COMMAND_TYPES.moveBlock, do:function(a, b, c) {
+    void 0 !== b ? (a = this.editor.board.findById(a), a.moveTo(b, c)) : a._updatePos();
+  }, state:function(a) {
+    "string" === typeof a && (a = this.editor.board.findById(a));
+    return [a.id, a.x, a.y];
+  }, log:function(a, d, c) {
+    return [b.moveBlock.type, ["blockId", a.id], ["x", a.x], ["y", a.y], ["code", this.editor.board.code.stringify()]];
+  }, undo:"moveBlock"};
+  b.cloneBlock = {type:Entry.STATIC.COMMAND_TYPES.cloneBlock, do:function(a) {
+    "string" === typeof a && (a = this.editor.board.findById(a));
+    this.editor.board.code.createThread(a.copy());
+  }, state:function(a) {
+    "string" !== typeof a && (a = a.id);
+    return [a];
+  }, log:function(a) {
+    "string" === typeof a && (a = this.editor.board.findById(a));
+    var d = this.editor.board.code.getThreads().pop();
+    return [b.cloneBlock.type, ["blockId", a.id], ["thread", d.stringify()], ["code", this.editor.board.code.stringify()]];
+  }, undo:"uncloneBlock"};
+  b.uncloneBlock = {type:Entry.STATIC.COMMAND_TYPES.uncloneBlock, do:function(a) {
+    a = this.editor.board.code.getThreads().pop().getFirstBlock();
+    this._tempStorage = a.id;
+    a.destroy(!0, !0);
+  }, state:function(a) {
+    return [a];
+  }, log:function(a) {
+    a = this._tempStorage;
+    this._tempStorage = null;
+    return [b.uncloneBlock.type, ["blockId", a], ["code", this.editor.board.code.stringify()]];
+  }, undo:"cloneBlock"};
+  b.scrollBoard = {type:Entry.STATIC.COMMAND_TYPES.scrollBoard, do:function(a, b, c) {
+    c || this.editor.board.scroller._scroll(a, b);
+    delete this.editor.board.scroller._diffs;
+  }, state:function(a, b) {
+    return [-a, -b];
+  }, log:function(a, d) {
+    return [b.scrollBoard.type, ["dx", a], ["dy", d]];
+  }, undo:"scrollBoard"};
+  b.setFieldValue = {type:Entry.STATIC.COMMAND_TYPES.setFieldValue, do:function(a, b, c, e, f) {
+    b.setValue(f, !0);
+  }, state:function(a, b, c, e, f) {
+    return [a, b, c, f, e];
+  }, log:function(a, d, c, e, f) {
+    return [b.setFieldValue.type, ["pointer", c], ["newValue", f], ["code", this.editor.board.code.stringify()]];
+  }, undo:"setFieldValue"};
+})(Entry.Command);
+(function(b) {
+  b.selectObject = {type:Entry.STATIC.COMMAND_TYPES.selectObject, do:function(a) {
+    return Entry.container.selectObject(a);
+  }, state:function(a) {
+    if ((a = Entry.playground) && a.object) {
+      return [a.object.id];
+    }
+  }, log:function(a) {
+    return [a];
+  }, undo:"selectObject"};
+})(Entry.Command);
+(function(b) {
+  b.editPicture = {type:Entry.STATIC.COMMAND_TYPES.editPicture, do:function(a, b) {
+    Entry.playground.painter.lc.canRedo() && Entry.playground.painter.lc.redo();
+  }, state:function(a) {
+  }, log:function(a) {
+    return [a];
+  }, undo:"uneditPicture"};
+  b.uneditPicture = {type:Entry.STATIC.COMMAND_TYPES.uneditPicture, do:function(a, b) {
+    Entry.playground.painter.lc.undo();
+  }, state:function(a) {
+  }, log:function(a) {
+    return [a];
+  }, undo:"editPicture"};
+  b.processPicture = {type:Entry.STATIC.COMMAND_TYPES.processPicture, do:function(a, b) {
+    Entry.playground.painter.lc.canRedo() && Entry.playground.painter.lc.redo();
+  }, state:function(a) {
+  }, log:function(a) {
+    return [a];
+  }, undo:"unprocessPicture", isPass:!0};
+  b.unprocessPicture = {type:Entry.STATIC.COMMAND_TYPES.unprocessPicture, do:function(a, b) {
+    Entry.playground.painter.lc.undo();
+  }, state:function(a) {
+  }, log:function(a) {
+    return [a];
+  }, undo:"processPicture", isPass:!0};
+})(Entry.Command);
+Entry.init = function(b, a) {
+  Entry.assert("object" === typeof a, "Init option is not object");
+  this.events_ = {};
+  this.interfaceState = {menuWidth:264};
+  Entry.Utils.bindGlobalEvent("resize mousedown mousemove keydown keyup dispose".split(" "));
+  this.options = a;
+  this.parseOptions(a);
+  this.mediaFilePath = (a.libDir ? a.libDir : "/lib") + "/entryjs/images/";
+  this.defaultPath = a.defaultDir || "";
+  this.blockInjectPath = a.blockInjectDir || "";
+  "workspace" == this.type && this.isPhone() && (this.type = "phone");
+  this.initialize_();
+  this.view_ = b;
+  "tablet" === this.device ? this.view_.setAttribute("class", "entry tablet") : this.view_.setAttribute("class", "entry");
+  Entry.initFonts(a.fonts);
+  this.createDom(b, this.type);
+  this.loadInterfaceState();
+  this.overridePrototype();
+  this.maxCloneLimit = 302;
+  this.cloudSavable = !0;
+  this.startTime = (new Date).getTime();
+  document.onkeydown = function(a) {
+    Entry.dispatchEvent("keyPressed", a);
+  };
+  document.onkeyup = function(a) {
+    Entry.dispatchEvent("keyUpped", a);
+  };
+  window.onresize = function(a) {
+    Entry.dispatchEvent("windowResized", a);
+  };
+  window.onbeforeunload = this.beforeUnload;
+  Entry.addEventListener("saveWorkspace", function(a) {
+    Entry.addActivity("save");
+  });
+  Entry.addEventListener("showBlockHelper", function(a) {
+    Entry.propertyPanel.select("helper");
+  });
+  "IE" != Entry.getBrowserType().substr(0, 2) || window.flashaudio ? createjs.Sound.registerPlugins([createjs.WebAudioPlugin]) : (createjs.FlashAudioPlugin.swfPath = this.mediaFilePath + "media/", createjs.Sound.registerPlugins([createjs.FlashAudioPlugin]), window.flashaudio = !0);
+  Entry.soundQueue = new createjs.LoadQueue;
+  Entry.soundQueue.installPlugin(createjs.Sound);
+  Entry.loadAudio_([Entry.mediaFilePath + "sounds/click.mp3", Entry.mediaFilePath + "sounds/click.wav", Entry.mediaFilePath + "sounds/click.ogg"], "entryMagneting");
+  Entry.loadAudio_([Entry.mediaFilePath + "sounds/delete.mp3", Entry.mediaFilePath + "sounds/delete.ogg", Entry.mediaFilePath + "sounds/delete.wav"], "entryDelete");
+  createjs.Sound.stop();
+};
+Entry.loadAudio_ = function(b, a) {
+  if (window.Audio && b.length) {
+    for (;0 < b.length;) {
+      var d = b[0];
+      d.match(/\/([^.]+)./);
+      Entry.soundQueue.loadFile({id:a, src:d, type:createjs.LoadQueue.SOUND});
+      break;
+    }
+  }
+};
+Entry.initialize_ = function() {
+  this.stage = new Entry.Stage;
+  Entry.engine && Entry.engine.clearTimer();
+  this.engine = new Entry.Engine;
+  this.propertyPanel = new Entry.PropertyPanel;
+  this.container = new Entry.Container;
+  this.helper = new Entry.Helper;
+  this.youtube = new Entry.Youtube;
+  this.variableContainer = new Entry.VariableContainer;
+  this.commander = new Entry.Commander(this.type);
+  this.scene = new Entry.Scene;
+  this.playground = new Entry.Playground;
+  this.toast = new Entry.Toast;
+  this.hw && this.hw.closeConnection();
+  this.hw = new Entry.HW;
+  if (Entry.enableActivityLogging) {
+    this.reporter = new Entry.Reporter(!1);
+  } else {
+    if ("workspace" == this.type || "phone" == this.type) {
+      this.reporter = new Entry.Reporter(!0);
+    }
+  }
+};
+Entry.createDom = function(b, a) {
+  if (a && "workspace" != a) {
+    "minimize" == a ? (d = Entry.createElement("canvas"), d.className = "entryCanvasWorkspace", d.id = "entryCanvas", d.width = 640, d.height = 360, c = Entry.createElement("div", "entryCanvasWrapper"), c.appendChild(d), b.appendChild(c), this.canvas_ = d, this.stage.initStage(this.canvas_), c = Entry.createElement("div"), b.appendChild(c), this.engineView = c, this.engine.generateView(this.engineView, a)) : "phone" == a && (this.stateManagerView = d = Entry.createElement("div"), this.stateManager.generateView(this.stateManagerView, 
+    a), c = Entry.createElement("div"), b.appendChild(c), this.engineView = c, this.engine.generateView(this.engineView, a), d = Entry.createElement("canvas"), d.addClass("entryCanvasPhone"), d.id = "entryCanvas", d.width = 640, d.height = 360, c.insertBefore(d, this.engine.footerView_), this.canvas_ = d, this.stage.initStage(this.canvas_), d = Entry.createElement("div"), b.appendChild(d), this.containerView = d, this.container.generateView(this.containerView, a), d = Entry.createElement("div"), 
+    b.appendChild(d), this.playgroundView = d, this.playground.generateView(this.playgroundView, a));
+  } else {
+    Entry.documentMousedown.attach(this, this.cancelObjectEdit);
+    var d = Entry.createElement("div");
+    b.appendChild(d);
+    this.sceneView = d;
+    this.scene.generateView(this.sceneView, a);
+    d = Entry.createElement("div");
+    this.sceneView.appendChild(d);
+    this.stateManagerView = d;
+    this.stateManager.generateView(this.stateManagerView, a);
+    var c = Entry.createElement("div");
+    b.appendChild(c);
+    this.engineView = c;
+    this.engine.generateView(this.engineView, a);
+    d = Entry.createElement("canvas");
+    d.addClass("entryCanvasWorkspace");
+    d.id = "entryCanvas";
+    d.width = 640;
+    d.height = 360;
+    c.insertBefore(d, this.engine.addButton);
+    d.addEventListener("mousewheel", function(a) {
+      var b = Entry.variableContainer.getListById(Entry.stage.mouseCoordinate);
+      a = 0 < a.wheelDelta ? !0 : !1;
+      for (var c = 0;c < b.length;c++) {
+        var d = b[c];
+        d.scrollButton_.y = a ? 46 <= d.scrollButton_.y ? d.scrollButton_.y - 23 : 23 : d.scrollButton_.y + 23;
+        d.updateView();
+      }
+    });
+    this.canvas_ = d;
+    this.stage.initStage(this.canvas_);
+    d = Entry.createElement("div");
+    this.propertyPanel.generateView(b, a);
+    this.containerView = d;
+    this.container.generateView(this.containerView, a);
+    this.propertyPanel.addMode("object", this.container);
+    this.helper.generateView(this.containerView, a);
+    this.propertyPanel.addMode("helper", this.helper);
+    d = Entry.createElement("div");
+    b.appendChild(d);
+    this.playgroundView = d;
+    this.playground.generateView(this.playgroundView, a);
+    this.propertyPanel.select("object");
+    this.helper.bindWorkspace(this.playground.mainWorkspace);
+  }
+};
+Entry.start = function(b) {
+  this.FPS || (this.FPS = 60);
+  Entry.assert("number" == typeof this.FPS, "FPS must be number");
+  Entry.engine.start(this.FPS);
+};
+Entry.parseOptions = function(b) {
+  this.type = b.type;
+  b.device && (this.device = b.device);
+  this.projectSaveable = b.projectsaveable;
+  void 0 === this.projectSaveable && (this.projectSaveable = !0);
+  this.objectAddable = b.objectaddable;
+  void 0 === this.objectAddable && (this.objectAddable = !0);
+  this.objectEditable = b.objectEditable;
+  void 0 === this.objectEditable && (this.objectEditable = !0);
+  this.objectEditable || (this.objectAddable = !1);
+  this.objectDeletable = b.objectdeletable;
+  void 0 === this.objectDeletable && (this.objectDeletable = !0);
+  this.soundEditable = b.soundeditable;
+  void 0 === this.soundEditable && (this.soundEditable = !0);
+  this.pictureEditable = b.pictureeditable;
+  void 0 === this.pictureEditable && (this.pictureEditable = !0);
+  this.sceneEditable = b.sceneEditable;
+  void 0 === this.sceneEditable && (this.sceneEditable = !0);
+  this.functionEnable = b.functionEnable;
+  void 0 === this.functionEnable && (this.functionEnable = !0);
+  this.messageEnable = b.messageEnable;
+  void 0 === this.messageEnable && (this.messageEnable = !0);
+  this.variableEnable = b.variableEnable;
+  void 0 === this.variableEnable && (this.variableEnable = !0);
+  this.listEnable = b.listEnable;
+  void 0 === this.listEnable && (this.listEnable = !0);
+  this.hasVariableManager = b.hasvariablemanager;
+  this.variableEnable || this.messageEnable || this.listEnable || this.functionEnable ? void 0 === this.hasVariableManager && (this.hasVariableManager = !0) : this.hasVariableManager = !1;
+  this.isForLecture = b.isForLecture;
+};
+Entry.initFonts = function(b) {
+  this.fonts = b;
+  b || (this.fonts = []);
+};
 Entry.Utils = {};
 Entry.overridePrototype = function() {
   Number.prototype.mod = function(b) {
@@ -15423,10 +16581,10 @@ Entry.Utils.hexToHsl = function(b) {
   return {h:360 * f, s:e, l:g};
 };
 Entry.Utils.hslToHex = function(b) {
-  function a(a, b, d) {
-    0 > d && (d += 1);
-    1 < d && --d;
-    return d < 1 / 6 ? a + 6 * (b - a) * d : .5 > d ? b : d < 2 / 3 ? a + (b - a) * (2 / 3 - d) * 6 : a;
+  function a(a, b, c) {
+    0 > c && (c += 1);
+    1 < c && --c;
+    return c < 1 / 6 ? a + 6 * (b - a) * c : .5 > c ? b : c < 2 / 3 ? a + (b - a) * (2 / 3 - c) * 6 : a;
   }
   function d(a) {
     return 1 == a.length ? "0" + a : "" + a;
@@ -15496,7 +16654,8 @@ Entry.parseTexttoXML = function(b) {
   return a;
 };
 Entry.createElement = function(b, a) {
-  var d = document.createElement(b);
+  var d;
+  d = b instanceof HTMLElement ? b : document.createElement(b);
   a && (d.id = a);
   d.hasClass = function(a) {
     return this.className.match(new RegExp("(\\s|^)" + a + "(\\s|$)"));
@@ -16083,7 +17242,7 @@ Entry.Func.threads = {};
 Entry.Func.registerFunction = function(b) {
   if (Entry.playground) {
     var a = Entry.playground.mainWorkspace;
-    a && (this._targetFuncBlock = a.getBlockMenu().getCategoryCodes("func").createThread([{type:"func_" + b.id}]), b.blockMenuBlock = this._targetFuncBlock, console.log("register end"));
+    a && (this._targetFuncBlock = a.getBlockMenu().getCategoryCodes("func").createThread([{type:"func_" + b.id}]), b.blockMenuBlock = this._targetFuncBlock);
   }
 };
 Entry.Func.executeFunction = function(b) {
@@ -16106,7 +17265,6 @@ Entry.Func.prototype.destroy = function() {
   this.blockMenuBlock.destroy();
 };
 Entry.Func.edit = function(b) {
-  console.log("func", b);
   this.cancelEdit();
   this.targetFunc = b;
   this.initEditView(b.content);
@@ -16116,7 +17274,7 @@ Entry.Func.edit = function(b) {
 Entry.Func.initEditView = function(b) {
   this.menuCode || this.setupMenuCode();
   var a = Entry.playground.mainWorkspace;
-  a.setMode({boardType:Entry.Workspace.MODE_OVERLAYBOARD});
+  a.setMode(Entry.Workspace.MODE_OVERLAYBOARD);
   a.changeOverlayBoardCode(b);
   b.recreateView();
   a.changeOverlayBoardCode(b);
@@ -16171,7 +17329,7 @@ Entry.Func.syncFuncName = function(b) {
   Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, a);
 };
 Entry.Func.cancelEdit = function() {
-  this.targetFunc && (Entry.Func.isEdit = !1, this.targetFunc.block || (this._targetFuncBlock.destroy(), delete Entry.variableContainer.functions_[this.targetFunc.id], delete Entry.variableContainer.selected), delete this.targetFunc, this.updateMenu(), Entry.variableContainer.updateList(), Entry.playground.mainWorkspace.setMode({boardType:Entry.Workspace.MODE_BOARD}));
+  this.targetFunc && (Entry.Func.isEdit = !1, this.targetFunc.block || (this._targetFuncBlock.destroy(), delete Entry.variableContainer.functions_[this.targetFunc.id], delete Entry.variableContainer.selected), delete this.targetFunc, this.updateMenu(), Entry.variableContainer.updateList(), Entry.playground.mainWorkspace.setMode(Entry.Workspace.MODE_BOARD));
 };
 Entry.Func.getMenuXml = function() {
   var b = [];
@@ -16550,7 +17708,7 @@ Entry.HW = function() {
   this.settingQueue = {};
   this.socketType = this.hwModule = this.selectedDevice = null;
   Entry.addEventListener("stop", this.setZero);
-  this.hwInfo = {"1.1":Entry.Arduino, "1.9":Entry.ArduinoExt, "1.2":Entry.SensorBoard, "1.3":Entry.CODEino, "1.4":Entry.joystick, "1.5":Entry.dplay, "1.6":Entry.nemoino, "1.7":Entry.Xbot, "1.8":Entry.ardublock, "2.4":Entry.Hamster, "2.5":Entry.Albert, "3.1":Entry.Bitbrick, "4.2":Entry.Arduino, "5.1":Entry.Neobot, "7.1":Entry.Robotis_carCont, "7.2":Entry.Robotis_openCM70, "8.1":Entry.Arduino};
+  this.hwInfo = {"1.1":Entry.Arduino, "1.9":Entry.ArduinoExt, "1.2":Entry.SensorBoard, "1.3":Entry.CODEino, "1.4":Entry.joystick, "1.5":Entry.dplay, "1.6":Entry.nemoino, "1.7":Entry.Xbot, "1.8":Entry.ardublock, "1.A":Entry.Cobl, "2.4":Entry.Hamster, "2.5":Entry.Albert, "3.1":Entry.Bitbrick, "4.2":Entry.Arduino, "5.1":Entry.Neobot, "7.1":Entry.Robotis_carCont, "7.2":Entry.Robotis_openCM70, "8.1":Entry.Arduino, "12.1":Entry.EV3};
 };
 Entry.HW.TRIAL_LIMIT = 1;
 p = Entry.HW.prototype;
@@ -16660,7 +17818,10 @@ p.closeConnection = function() {
   this.socket && this.socket.close();
 };
 p.downloadConnector = function() {
-  window.open("http://download.play-entry.org/apps/Entry_HW_1.5.8_Setup.exe", "_blank").focus();
+  window.open("http://download.play-entry.org/apps/Entry_HW_1.5.9_Setup.exe", "_blank").focus();
+};
+p.downloadGuide = function() {
+  window.open("http://download.play-entry.org/data/%EC%97%94%ED%8A%B8%EB%A6%AC-%ED%95%98%EB%93%9C%EC%9B%A8%EC%96%B4%EC%97%B0%EA%B2%B0%EB%A7%A4%EB%89%B4%EC%96%BC_16_08_17.hwp", "_blank").focus();
 };
 p.downloadSource = function() {
   window.open("http://play-entry.com/down/board.ino", "_blank").focus();
@@ -16776,12 +17937,15 @@ Entry.Stage.prototype.initStage = function(b) {
     Entry.engine.isState("stop") && Entry.stage.updateObject();
   });
   Entry.addEventListener("canvasInputComplete", function(a) {
-    if (!Entry.stage.inputField._isHidden && !Entry.container.inputValue.complete) {
-      try {
-        var b = Entry.stage.inputField.value();
-        b && Entry.container.setInputValue(b);
-      } catch (e) {
+    try {
+      var b = Entry.stage.inputField.value();
+      Entry.stage.hideInputField();
+      if (b) {
+        var e = Entry.container;
+        e.setInputValue(b);
+        e.inputValue.complete = !0;
       }
+    } catch (f) {
     }
   });
   this.initWall();
@@ -16805,9 +17969,11 @@ Entry.Stage.prototype.loadObject = function(b) {
 Entry.Stage.prototype.loadEntity = function(b) {
   Entry.stage.getObjectContainerByScene(b.parent.scene).addChild(b.object);
   this.sortZorder();
+  Entry.requestUpdate = !0;
 };
 Entry.Stage.prototype.unloadEntity = function(b) {
   Entry.stage.getObjectContainerByScene(b.parent.scene).removeChild(b.object);
+  Entry.requestUpdate = !0;
 };
 Entry.Stage.prototype.loadVariable = function(b) {
   var a = b.view_;
@@ -17011,7 +18177,7 @@ Entry.Stage.prototype.showInputField = function(b) {
 Entry.Stage.prototype.hideInputField = function() {
   this.inputField && this.inputField.value() && this.inputField.value("");
   this.inputSubmitButton && (this.canvas.removeChild(this.inputSubmitButton), this.inputSubmitButton = null);
-  this.inputField && (this.inputField.blur(), this.inputField.hide());
+  this.inputField && this.inputField.hide();
   Entry.requestUpdate = !0;
 };
 Entry.Stage.prototype.initObjectContainers = function() {
@@ -19193,7 +20359,8 @@ Entry.block.basic_button = {skeleton:"basic_button", color:"#eee", template:"%1"
 }};
 Entry.BlockMenu = function(b, a, d, c) {
   Entry.Model(this, !1);
-  this.setAlign(a);
+  this._align = a || "CENTER";
+  this.setAlign(this._align);
   this._scroll = void 0 !== c ? c : !1;
   this._bannedClass = [];
   this._categories = [];
@@ -19338,12 +20505,13 @@ Entry.BlockMenu = function(b, a, d, c) {
       a[b].view.renderText();
     }
   };
-  b.renderBlock = function() {
-    var a = this.code.getThreads();
+  b.renderBlock = function(a) {
+    var b = this.code.getThreads();
     this.code.mode = "code";
-    for (var b = 0;b < a.length;b++) {
-      a[b].view.renderBlock();
+    for (var c = 0;c < b.length;c++) {
+      b[c].view.renderBlock();
     }
+    a && a();
   };
   b._createSplitter = function(a) {
     a = this.svgBlockGroup.elem("line", {x1:20, y1:a, x2:this._svgWidth - 20, y2:a, stroke:"#b5b5b5"});
@@ -19398,8 +20566,13 @@ Entry.BlockMenu = function(b, a, d, c) {
   b.selectMenu = function(a, b) {
     var c = this._convertSelector(a);
     if (c) {
-      "variable" == c && Entry.playground.checkVariables();
-      "arduino" == c && this._generateHwCode();
+      switch(c) {
+        case "variable":
+          Entry.playground.checkVariables();
+          break;
+        case "arduino":
+          this._generateHwCode();
+      }
       var e = this._categoryElems[c], f = this._selectedCategoryView, g = !1, h = this.workspace.board, k = h.view;
       f && f.removeClass("entrySelectedCategory");
       e != f || b ? f || (this.visible || (g = !0, k.addClass("foldOut"), Entry.playground.showTabs()), k.removeClass("folding"), this.visible = !0) : (k.addClass("folding"), this._selectedCategoryView = null, e.removeClass("entrySelectedCategory"), Entry.playground.hideTabs(), g = !0, this.visible = !1);
@@ -19410,6 +20583,8 @@ Entry.BlockMenu = function(b, a, d, c) {
       });
       this.visible && (f = this._categoryCodes[c], this._selectedCategoryView = e, e.addClass("entrySelectedCategory"), f.constructor !== Entry.Code && (f = this._categoryCodes[c] = new Entry.Code(f)), this.changeCode(f));
       this.lastSelector = c;
+    } else {
+      this.align();
     }
   };
   b._generateCategoryCodes = function(a) {
@@ -19815,14 +20990,13 @@ Entry.BlockView.pngMap = {};
         b = this.getBoard().workspace.getCodeToText(this.block);
         a = !1;
         /(if)+(.|\n)+(else)+/.test(b) && (g = b.split("\n"), b = g.shift() + " " + g.shift(), a = !0, g = g.join(" "));
-        b = {text:b};
+        b = {text:b, color:"white"};
         this.block._schema.vimModeFontColor && (b.color = this.block._schema.vimModeFontColor);
         this._contents.push(new Entry.FieldText(b, this));
         a && (this._contents.push(new Entry.FieldLineBreak(null, this)), b.text = g, this._contents.push(new Entry.FieldText(b, this)));
     }
     this.alignContent(!1);
   };
-  b.destroy;
   b._updateSchema = function() {
     this._startContentRender();
   };
@@ -19947,7 +21121,7 @@ Entry.BlockView.pngMap = {};
       } else {
         Entry.Utils.isRightButton(a) && this._rightClick(a);
       }
-      g.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD && a && (vimBoard = $(".entryVimBoard>.CodeMirror")[0].dispatchEvent(Entry.Utils.createMouseEvent("dragStart", event)));
+      g.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD && a && (vimBoard = $(".entryVimBoard>.CodeMirror")[0], document.getElementsByClassName("CodeMirror")[0].dispatchEvent(Entry.Utils.createMouseEvent("dragStart", event)));
     }
   };
   b.vimBoardEvent = function(a, b, c) {
@@ -20824,7 +21998,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     this.textElement = this.svgGroup.elem("text", {x:4, y:4, "font-size":"11px"});
     this.textElement.textContent = this.getText();
     var a = this.getTextWidth(), b = this._CONTENT_HEIGHT, c = this.position && this.position.y ? this.position.y : 0;
-    this._header = this.svgGroup.elem("rect", {x:0, y:c - b / 2, rx:3, ry:3, width:a, height:b, fill:"#fff", "fill-opacity":.4});
+    this._header = this.svgGroup.elem("rect", {x:0, y:c - b / 2, rx:3, ry:3, width:a, height:b, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
     this._bindRenderOptions();
     this.box.set({x:0, y:0, width:a, height:b});
@@ -21167,7 +22341,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     this.textElement.textContent = this.getTextByValue(this.getValue());
     a = this.textElement.getBBox();
     this.textElement.attr({style:"white-space: pre;", "font-size":+this._FONT_SIZE + "px", y:.23 * a.height});
-    c = this.textElement.getBBox().width + c;
+    c = this.textElement.getBoundingClientRect().width + c;
     this._noArrow && (c -= b);
     b = this._CONTENT_HEIGHT;
     this._header = this.svgGroup.elem("rect", {width:c, height:b, y:-b / 2, rx:this._ROUND, ry:this._ROUND, fill:"#fff", "fill-opacity":.4});
@@ -21177,7 +22351,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     this.box.set({x:0, y:0, width:c, height:b});
   };
   b.resize = function() {
-    var a = Entry.isMobile(), b = a ? 33 : 20, a = a ? 24 : 10, b = this.textElement.getComputedTextLength() + b;
+    var a = Entry.isMobile(), b = a ? 33 : 20, a = a ? 24 : 10, b = this.textElement.getBoundingClientRect().width + b;
     this._noArrow ? b -= a : (a = this.getArrow(), this._arrow.attr({transform:"translate(" + (b - a.width - 5) + "," + -a.height / 2 + ")"}));
     this._header.attr({width:b});
     this.box.set({width:b});
@@ -21331,7 +22505,6 @@ Entry.FieldIndicator = function(b, a, d) {
   this._block = a.block;
   this._blockView = a;
   this.box = new Entry.BoxModel;
-  this._block.params[d] && (b = this._block.params[d]);
   this._size = b.size;
   this._imgUrl = this._block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN ? b.img.replace(".png", "_un.png") : b.img;
   this._boxMultiplier = b.boxMultiplier || 2;
@@ -21676,7 +22849,7 @@ Entry.FieldText = function(b, a, d) {
   this._text = this.getValue() || b.text;
   this.setValue(null);
   this.textElement = null;
-  this.renderStart();
+  this.renderStart(a);
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldText);
 (function(b) {
@@ -22197,7 +23370,7 @@ Entry.Board.DRAG_RADIUS = 5;
   };
   b._keyboardControl = function(a) {
     var b = this.selectedBlockView;
-    b && 46 == a.keyCode && (b = b.block) && !Entry.Utils.isInInput(a) && b.isDeletable() && (Entry.do("destroyBlock", b), this.set({selectedBlockView:null}));
+    b && 46 == a.keyCode && b.block && !Entry.Utils.isInInput(a) && (Entry.do("destroyBlock", b.block), this.set({selectedBlockView:null}));
   };
   b.hide = function() {
     this.wrapper.addClass("entryRemove");
@@ -22909,7 +24082,6 @@ Entry.Thread = function(b, a, d) {
     return JSON.stringify(this.toJSON());
   };
 })(Entry.Thread.prototype);
-NaN;
 Entry.Block = function(b, a) {
   var d = this;
   Entry.Model(this, !1);
@@ -23366,8 +24538,8 @@ Entry.Vim = function(b, a) {
         e.codeMirror.indentLine(l);
         0 !== b && k === b || e.codeMirror.replaceSelection("\n");
       });
-      d = Entry.Utils.createMouseEvent("mouseup", a);
-      e.codeMirror.display.scroller.dispatchEvent(d);
+      a = Entry.Utils.createMouseEvent("mouseup", a);
+      e.codeMirror.display.scroller.dispatchEvent(a);
     }
     function c(a) {
       e.codeMirror.display.dragFunctions.over(a);
@@ -23408,7 +24580,6 @@ Entry.Vim = function(b, a) {
     c.setCursor({line:c.lastLine() - 1});
   };
   b.getCodeToText = function(a) {
-    console.log("getCodeToText", a);
     var b = this.workspace.oldTextType;
     b === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : b === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
     return this._parser.parse(a, Entry.Parser.PARSE_SYNTAX);
@@ -23470,7 +24641,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         break;
       case Entry.Workspace.MODE_BOARD:
         try {
-          this.board.show(), this.set({selectedBoard:this.board}), this.textToCode(this.oldMode, this.oldTextType), this.vimBoard && this.vimBoard.hide(), this.overlayBoard && this.overlayBoard.hide(), this.blockMenu.renderBlock(), this.oldTextType = this.textType;
+          this.board.show(), this.set({selectedBoard:this.board}), this.textToCode(this.oldMode, this.oldTextType), this.vimBoard && this.vimBoard.hide(), this.overlayBoard && this.overlayBoard.hide(), this.blockMenu.renderBlock(function() {
+            this.blockMenu.reDraw();
+          }.bind(this)), this.oldTextType = this.textType;
         } catch (c) {
           this.board.code.clear(), this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), this.mode = Entry.Workspace.MODE_VIMBOARD, this.oldTextType == Entry.Vim.PARSER_TYPE_JS_TO_BLOCK ? (a.boardType = Entry.Workspace.MODE_VIMBOARD, a.textType = Entry.Vim.TEXT_TYPE_JS, a.runType = Entry.Vim.MAZE_MODE, this.oldTextType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK, Entry.dispatchEvent("changeMode", a), Ntry.dispatchEvent("textError", a)) : this.oldTextType == Entry.Vim.PARSER_TYPE_PY_TO_BLOCK && 
           (a.boardType = Entry.Workspace.MODE_VIMBOARD, a.textType = Entry.Vim.TEXT_TYPE_PY, a.runType = Entry.Vim.WORKSPACE_MODE, this.oldTextType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK, Entry.dispatchEvent("changeMode", a));
@@ -23504,9 +24677,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         c.board.alignThreads();
       }, 0);
     }
-  };
-  b.loadCodeFromText = function(a) {
-    a == Entry.Workspace.MODE_VIMBOARD && (a = this.vimBoard.textToCode(this.textType), this.board.code.load(a));
   };
   b.codeToText = function(a, b) {
     return this.vimBoard.codeToText(a, b);
@@ -23692,8 +24862,7 @@ Entry.Playground.prototype.generatePictureView = function(b) {
     a = Entry.createElement("div", "entryPainter");
     a.addClass("entryPlaygroundPainter");
     b.appendChild(a);
-    this.painter = new Entry.Painter;
-    this.painter.initialize(a);
+    this.painter = new Entry.Painter2(a);
   } else {
     "phone" == Entry.type && (a = Entry.createElement("div", "entryAddPicture"), a.addClass("entryPlaygroundAddPicturePhone"), a.bindOnClick(function(a) {
       Entry.dispatchEvent("openPictureManager");
@@ -24013,7 +25182,8 @@ Entry.Playground.prototype.injectPicture = function() {
     if (this.object) {
       for (var a = this.object.pictures, d = 0, c = a.length;d < c;d++) {
         var e = a[d].view;
-        e || (e.orderHolder.innerHTML = d + 1);
+        e || console.log(e);
+        e.orderHolder.innerHTML = d + 1;
         b.appendChild(e);
       }
       this.selectPicture(this.object.selectedPicture);
@@ -24139,18 +25309,8 @@ Entry.Playground.prototype.changeViewMode = function(b) {
       var c = d[a];
       -1 < c.id.toUpperCase().indexOf(b.toUpperCase()) ? c.removeClass("entryRemove") : c.addClass("entryRemove");
     }
-    if ("picture" == b && (!this.pictureView_.object || this.pictureView_.object != this.object)) {
-      this.pictureView_.object = this.object, this.injectPicture();
-    } else {
-      if ("sound" == b && (!this.soundView_.object || this.soundView_.object != this.object)) {
-        this.soundView_.object = this.object, this.injectSound();
-      } else {
-        if ("text" == b && "textBox" == this.object.objectType || this.textView_.object != this.object) {
-          this.textView_.object = this.object, this.injectText();
-        }
-      }
-    }
-    "code" == b && this.resizeHandle_ && this.resizeHandle_.removeClass("entryRemove");
+    "picture" == b ? (this.painter.show(), this.pictureView_.object && this.pictureView_.object == this.object || (this.pictureView_.object = this.object, this.injectPicture())) : this.painter.hide();
+    "sound" != b || this.soundView_.object && this.soundView_.object == this.object ? "text" == b && "textBox" == this.object.objectType || this.textView_.object != this.object ? (this.textView_.object = this.object, this.injectText()) : "code" == b && this.resizeHandle_ && this.resizeHandle_.removeClass("entryRemove") : (this.soundView_.object = this.object, this.injectSound());
     Entry.engine.isState("run") && this.curtainView_.removeClass("entryRemove");
     this.viewMode_ = b;
     this.toggleOffVariableView();
@@ -24597,8 +25757,9 @@ p.getView = function() {
   return this.movieContainer;
 };
 p.resize = function() {
-  var b = document.getElementsByClassName("propertyContent")[0], a = document.getElementById("youtubeIframe"), b = b.offsetWidth;
-  a.width = b + "px";
-  a.height = 9 * b / 16 + "px";
+  var b = document.getElementsByClassName("propertyContent")[0], a = document.getElementById("youtubeIframe");
+  w = b.offsetWidth;
+  a.width = w + "px";
+  a.height = 9 * w / 16 + "px";
 };
 

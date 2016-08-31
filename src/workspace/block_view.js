@@ -207,7 +207,6 @@ Entry.BlockView.pngMap = {};
                 }
 
                 var text = this.getBoard().workspace.getCodeToText(this.block);
-
                 var lineBreak = false;
                 var secondLineText;
                 if (/(if)+(.|\n)+(else)+/.test(text)) {
@@ -218,7 +217,7 @@ Entry.BlockView.pngMap = {};
                     secondLineText = contents.join(" ");
                 }
 
-                var fieldText = {text:text};
+                var fieldText = {text:text, color: 'white'};
                 if (this.block._schema.vimModeFontColor)
                     fieldText.color = this.block._schema.vimModeFontColor;
                 this._contents.push(
@@ -234,8 +233,6 @@ Entry.BlockView.pngMap = {};
         }
         this.alignContent(false);
     };
-
-    p.destroy
 
     p._updateSchema = function() {
         this._startContentRender();
@@ -463,7 +460,8 @@ Entry.BlockView.pngMap = {};
 
         if(board.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD) {
             if(e) {
-                vimBoard = $('.entryVimBoard>.CodeMirror')[0]
+                vimBoard = $('.entryVimBoard>.CodeMirror')[0];
+                document.getElementsByClassName('CodeMirror')[0]
                     .dispatchEvent(Entry.Utils.createMouseEvent('dragStart', event));
             }
         }
@@ -557,7 +555,6 @@ Entry.BlockView.pngMap = {};
 
             var _vimBoard =
                 document.getElementsByClassName('CodeMirror')[0];
-
             _vimBoard.dispatchEvent(dragEvent);
         }
     };
@@ -998,7 +995,6 @@ Entry.BlockView.pngMap = {};
 
     p.reDraw = function() {
         if (!this.visible) return;
-
         var block = this.block;
         requestAnimFrame(this._updateContents.bind(this));
         var params = block.params;

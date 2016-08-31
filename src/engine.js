@@ -98,6 +98,7 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
         this.view_.appendChild(this.maximizeButton);
         this.maximizeButton.bindOnClick(function(e) {
             Entry.engine.toggleFullscreen();
+            this.blur();
         });
 
 
@@ -113,6 +114,7 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
             else
                 this.addClass('toggleOn');
             coordinateButton.blur();
+            this.blur();
             Entry.stage.toggleCoordinator();
         });
 
@@ -122,6 +124,7 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
         this.addButton.innerHTML = Lang.Workspace.add_object;
         this.addButton.bindOnClick(function(e) {
             Entry.dispatchEvent('openSpriteManager');
+            this.blur();
         });
         this.view_.appendChild(this.addButton);
 
@@ -133,6 +136,7 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
         this.view_.appendChild(this.runButton);
         this.runButton.bindOnClick(function(e) {
             Entry.engine.toggleRun();
+            this.blur();
         });
         this.runButton2 = Entry.createElement('button');
         this.runButton2.addClass('entryEngineButtonWorkspace_w');
@@ -140,6 +144,7 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
 
         this.view_.appendChild(this.runButton2);
         this.runButton2.bindOnClick(function(e) {
+            this.blur();
             Entry.engine.toggleRun();
         });
 
@@ -150,6 +155,7 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
         this.stopButton.innerHTML = Lang.Workspace.stop;
         this.view_.appendChild(this.stopButton);
         this.stopButton.bindOnClick(function(e) {
+            this.blur();
             Entry.engine.toggleStop();
         });
 
@@ -160,6 +166,7 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
         this.stopButton2.innerHTML = Lang.Workspace.stop;
         this.view_.appendChild(this.stopButton2);
         this.stopButton2.bindOnClick(function(e) {
+            this.blur();
             Entry.engine.toggleStop();
         });
 
@@ -169,6 +176,7 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
         this.pauseButton.addClass('entryRemove');
         this.view_.appendChild(this.pauseButton);
         this.pauseButton.bindOnClick(function(e) {
+            this.blur();
             Entry.engine.togglePause();
         });
 
@@ -465,13 +473,11 @@ Entry.Engine.prototype.run = function() {
  * toggle this engine state run
  */
 Entry.Engine.prototype.toggleRun = function() {
-    console.log("Entry toggleRun");
     if (this.state === 'pause') {
         this.togglePause();
         return;
     }
 
-    ////////////////////////////////////////////////////
     //Text Coding Mode
     if (Entry.playground && Entry.playground.mainWorkspace) {
         var mainWorkspace = Entry.playground.mainWorkspace;
@@ -479,8 +485,6 @@ Entry.Engine.prototype.toggleRun = function() {
         if(boardMode == Entry.Workspace.MODE_VIMBOARD)
             mainWorkspace.loadCodeFromText(boardMode);
     }
-    //Text Coding Mode
-    ////////////////////////////////////////////////////
 
     Entry.addActivity("run");
     if (this.state == 'stop') {
@@ -500,7 +504,6 @@ Entry.Engine.prototype.toggleRun = function() {
         Entry.scene.takeStartSceneSnapshot();
         this.state = 'run';
         this.fireEvent('start');
-
     }
     this.state = 'run';
     if (Entry.type == 'mobile')
@@ -665,7 +668,6 @@ Entry.Engine.prototype.captureKeyEvent = function(e) {
             Entry.engine.run();
         } else if (keyCode == 90) {
             e.preventDefault();
-            console.log('engine');
             Entry.dispatchEvent(e.shiftKey ? 'redo' : 'undo');
         }
     } else if (Entry.engine.isState('run')) {

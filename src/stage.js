@@ -127,13 +127,13 @@ Entry.Stage.prototype.initStage = function(canvas) {
     });
 
     Entry.addEventListener('canvasInputComplete', function (e){
-        if (Entry.stage.inputField._isHidden || Entry.container.inputValue.complete)
-            return;
         try {
             var inputValue = Entry.stage.inputField.value();
+            Entry.stage.hideInputField();
             if (inputValue) {
                 (function (c){
                     c.setInputValue(inputValue);
+                    c.inputValue.complete = true;
                 })(Entry.container);
             }
         } catch (exception) {}
@@ -199,7 +199,7 @@ Entry.Stage.prototype.loadEntity = function(entity) {
     var objContainer = Entry.stage.getObjectContainerByScene(scene);
     objContainer.addChild(entity.object);
     this.sortZorder();
-    //this.canvas.update();
+    Entry.requestUpdate = true;
 };
 
 /**
@@ -210,7 +210,7 @@ Entry.Stage.prototype.unloadEntity = function(entity) {
     var scene = entity.parent.scene;
     var objContainer = Entry.stage.getObjectContainerByScene(scene);
     objContainer.removeChild(entity.object);
-   //this.canvas.update();
+    Entry.requestUpdate = true;
 };
 
 /**
@@ -591,11 +591,8 @@ Entry.Stage.prototype.hideInputField = function () {
         this.inputSubmitButton = null;
     }
 
-	if (this.inputField) {
-		this.inputField.blur();
+    if (this.inputField)
         this.inputField.hide();
-	}
-
     Entry.requestUpdate = true;
 };
 

@@ -153,7 +153,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             console.log("bb type", type);
 
             if(!type) {
-                if(calleeData.name) {
+                if(calleeData.name && arguments.length != 0 && arguments[0].type == "Literal") {
                     console.log("callex error calleeData", calleeData);
                     var error = {};
                     error.title = "블록변환(Converting) 오류";

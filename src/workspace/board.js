@@ -285,9 +285,8 @@ Entry.Board.DRAG_RADIUS = 5;
         if (!selected) return;
 
         if (event.keyCode == 46) {
-            var block = selected.block;
-            if (block && !Entry.Utils.isInInput(event) && block.isDeletable()) {
-                Entry.do("destroyBlock", block);
+            if (selected.block && !Entry.Utils.isInInput(event)) {
+                Entry.do("destroyBlock", selected.block);
                 this.set({selectedBlockView:null});
             }
         }
@@ -329,7 +328,6 @@ Entry.Board.DRAG_RADIUS = 5;
             blockView._moveTo(left, top, false);
             acculmulatedTop = acculmulatedTop + bBox.height + verticalGap;
         }
-
         this.scroller.resizeScrollBar();
     };
 

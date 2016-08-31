@@ -54,8 +54,8 @@ Entry.Workspace = function(options) {
     this.changeEvent = new Entry.Event(this);
 
     Entry.commander.setCurrentEditor("board", this.board);
-
     this.textType = Entry.Vim.TEXT_TYPE_PY;
+
 };
 
 Entry.Workspace.MODE_BOARD = 0;
@@ -116,7 +116,10 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     this.textToCode(this.oldMode, this.oldTextType);
                     if (this.vimBoard) this.vimBoard.hide();
                     if (this.overlayBoard) this.overlayBoard.hide(); 
-                    this.blockMenu.renderBlock();
+                    this.blockMenu.renderBlock(function() {
+                       this.blockMenu.reDraw();
+                       }.bind(this)
+                   );
                     //this.oldMode = this.mode;
                     this.oldTextType = this.textType;
                 } catch(e) {
@@ -167,9 +170,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         this._syncTextCode();
         this.board.changeCode(code);
         if (this.mode === Entry.Workspace.MODE_VIMBOARD) {
-
             this.codeToText(this.board.code);
         }
+
     };
 
     p.changeOverlayBoardCode = function(code) {
@@ -196,14 +199,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         setTimeout(function() {
             that.board.alignThreads();
         }, 0);
-    };
-
-    p.loadCodeFromText = function(mode) {
-        if (mode != Entry.Workspace.MODE_VIMBOARD) return;
-        var changedCode = this.vimBoard.textToCode(this.textType);
-        var board = this.board;
-        var code = board.code;
-        code.load(changedCode);
     };
 
     p.codeToText = function(code, mode) {
@@ -239,7 +234,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
         if (Entry.Utils.isInInput(e)) return;
 
-        var blockView = this.selectedBlockView; 
+        var blockView = this.selectedBlockView;
 
         if (blockView && !blockView.isInBlockMenu && blockView.block.isDeletable()) {
             if (keyCode == 8 || keyCode == 46) { //destroy
@@ -272,7 +267,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         if (board.constructor === Entry.Board)
             this.trashcan.setBoard(board);
     };
-
 
     p._syncTextCode = function() {
         if (this.mode !== Entry.Workspace.MODE_VIMBOARD)

@@ -822,6 +822,7 @@ Entry.TextCodingUtil = function() {
     };
 
     p.isFuncContentsMatch = function(blockFuncContents, textFuncStatements, paramMap) {
+        console.log("blockFuncContents, textFuncStatements, paramMap", blockFuncContents, textFuncStatements, paramMap);
         var matchFlag = true; 
         for(var i = 0; i < blockFuncContents.length; i++) {
             if(!matchFlag)
@@ -831,7 +832,7 @@ Entry.TextCodingUtil = function() {
             var textFuncStatement = textFuncStatements[i];
 
             if(blockFuncContent && !textFuncStatement) {
-                matchFlag = fasle;
+                matchFlag = false;
                 return matchFlag;
             }
 
@@ -839,6 +840,8 @@ Entry.TextCodingUtil = function() {
                 matchFlag = false;
                 return matchFlag;
             }
+
+            console.log("function");
 
             if(textFuncStatement.type == blockFuncContent.data.type) { //Type Check
                 matchFlag = true;
@@ -962,6 +965,35 @@ Entry.TextCodingUtil = function() {
 
             blockInfo[data.type].push(loc);
         }
+    };
+
+    p.assembleRepeatWhileTrueBlock = function(block, syntax) {
+        console.log("assembleRepeatWhileTrueBlock >>", "block", block, "syntax", syntax);
+        var result;
+        if(block.data.type == "repeat_while_true") {
+            var blockArr = syntax.split(" ");
+            var option = blockArr[2];
+            console.log("option", option, "option.length", option.length);
+
+            if(option == '\"until\"') {
+                blockArr[2] = "!= True:\n\tif(" + blockArr[1] + " == True)\n\t\tbreak";
+                result = blockArr.join(" ");
+            }
+            else if(option == '\"while\"') {
+                blockArr[2] = "== True:";
+                result = blockArr.join(" ");
+            }
+            else {
+                result = syntax;
+            }
+        } 
+        else {
+            result = syntax;
+        }
+
+        console.log("assembleRepeatWhileTrueBlock result", result);
+
+        return result;
     };
 
     p.isJudgementBlock = function(blockType) {
@@ -1101,6 +1133,8 @@ Entry.TextCodingUtil = function() {
             result = value.toUpperCase();
         } else if(value == "item") {
             result = value.toUpperCase();
+        } else {
+            result = value;
         }
 
         return result;

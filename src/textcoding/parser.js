@@ -40,8 +40,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
     /*this.syntax.js = this.mappingSyntaxJs(mode);
     this.syntax.py = this.mappingSyntaxPy(mode);*/
 
-    //console.log("py syntax", this.syntax.py);
     //this._console = new Entry.Console();
+
 
     switch (this._lang) {
         case "js":
@@ -120,10 +120,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
         this.syntax = this.mappingSyntax(mode);
 
-        
-
-
-
         switch (type) {
             case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
                 this._parser = new Entry.JsToBlockParser(this.syntax);
@@ -149,9 +145,9 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     assistScope[key + '();\n'] = syntax.Scope[key];
                 }
 
-                if('BasicIf' in syntax) {
-                    assistScope['front'] = 'BasicIf';
-                }
+                //if('BasicIf' in syntax) {
+                    //assistScope['front'] = 'BasicIf';
+                //}
 
                 cm.on("keydown", function (cm, event) {
                     var keyCode = event.keyCode;
@@ -182,15 +178,18 @@ Entry.Parser = function(mode, type, cm, syntax) {
         var type = this._type;
         var result = null;
 
+        //console.log("type", type);
+
         switch (type) {
             case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
                 try {
                     //var astTree = acorn.parse(code);
                     //var threads = code.split('\n\n');
+                    //console.log("code", code);
                     var threads = [];
                     threads.push(code);
 
-                    ////console.log("threads", threads);
+                    //////console.log("threads", threads);
 
                     var astArray = [];
 
@@ -205,12 +204,17 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     result = this._parser.Program(astArray);
                 } catch (error) {
                     if (this.codeMirror) {
+                        //console.log("error.loc", error.loc);
                         var annotation;
                         if (error instanceof SyntaxError) {
                             annotation = {
+                                from: {line: error.loc.line - 1, ch: 0},
+                                to: {line: error.loc.line - 1, ch: error.loc.column}
+                            }
+                            /*annotation = {
                                 from: {line: error.loc.line - 1, ch: error.loc.column - 2},
                                 to: {line: error.loc.line - 1, ch: error.loc.column + 1}
-                            }
+                            }*/
                             error.message = "문법(Syntax) 오류입니다.";
                             error.type = 1;
                         } else {
@@ -225,14 +229,14 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             annotation.from, annotation.to, {
                             className: "CodeMirror-lint-mark-error",
                             __annotation: annotation,
-                            clearOnEnter: true 
+                            clearOnEnter: true
                         });
 
                         if(error.title) {
                             var errorTitle = error.title;
                         }
                         else {
-                            var errorTitle = '문법 오류'; 
+                            var errorTitle = '문법 오류';
                         }
 
                         if(error.type == 2 && error.message) {
@@ -247,10 +251,10 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         Entry.toast.alert(errorTitle, errorMsg);
                         var mode = {};
                         mode.boardType = Entry.Workspace.MODE_BOARD;
-                        mode.textType = Entry.Vim.TEXT_TYPE_JS; 
+                        mode.textType = Entry.Vim.TEXT_TYPE_JS;
                         mode.runType = Entry.Vim.MAZE_MODE;
                         Ntry.dispatchEvent("textError", mode);
-                        throw new Error("text_js_error");
+                        throw error;
                     }
                     result = [];
                 }
@@ -382,6 +386,10 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             var errorLine = this.findErrorLineForConverting(errorInfo.line);
                             errorInfo.line = errorLine;
 
+                            /*annotation = this.getLineNumber(error.node.start, error.node.end);
+                            annotation.message = error.message;
+                            annotation.severity = "error";*/
+
                             var ch = this.findConvertingTargetChInfo(errorInfo.line);
                             
                             annotation = {
@@ -462,7 +470,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
                 var textCode = this._parser.Code(code, parseMode);
                 /*var textArr = textCode.match(/(.*{.*[\S|\s]+?}|.+)/g);
-                //console.log("textCode", textCode);
+                ////console.log("textCode", textCode);
                 if(Array.isArray(textArr)) {
                     result = textArr.reduce(function (prev, current, index) {
                         var temp = '';
@@ -537,7 +545,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         continue;
 
                     var syntaxTemp = syntax;
-                    //console.log("syntaxArray", syntaxArray);
+
                     for (var j = 0; j < syntaxArray.length; j++) {
                         var key = syntaxArray[j];
                         if (j === syntaxArray.length - 2 &&
@@ -567,7 +575,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
                         if(block.syntax && block.syntax.py) {
                             pySyntax = block.syntax.py;
-                            //console.log("syntax", syntax);
                         }
 
                         if (!pySyntax)
@@ -804,6 +811,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     result.end = targetText.length;  
 
                 break;
+
             }
         }
         

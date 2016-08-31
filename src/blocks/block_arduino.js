@@ -579,6 +579,28 @@ Entry.block.arduino_download_connector = {
     }
 };
 
+Entry.block.download_guide = {
+    skeleton: "basic_button",
+    color: "#eee",
+    template: "%1",
+    params: [
+        {
+            type: "Text",
+            text: "연결 안내 다운로드",
+            color: "#333",
+            align: "center"
+        }
+    ],
+    func: function() {},
+    events: {
+        mousedown: [
+            function() {
+                console.log('download guide');
+            }
+        ]
+    }
+};
+
 Entry.block.arduino_download_source = {
     skeleton: "basic_button",
     color: "#eee",

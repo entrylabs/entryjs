@@ -212,6 +212,8 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
                         result += param;
 
+                        console.log("block param", param);
+
                         //console.log("PARAM BLOCK", param);
                         //console.log("PARAM BLOCK RESULT ", result);
                         
@@ -267,7 +269,13 @@ Entry.BlockToPyParser = function(blockSyntax) {
                             
                         //console.log("param variableFilter", param);
 
+                        console.log("currentBlock", currentBlock); 
+
+
                         result += param;
+                        console.log("btop parser param result", result);
+
+                        result = Entry.TextCodingUtil.prototype.assembleRepeatWhileTrueBlock(currentBlock, result);
 
                         //console.log("PARAM BLOCK", param);
                         //console.log("PARAM BLOCK RESULT ", result);
@@ -332,6 +340,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                 }
 
                 result += blockToken;
+                console.log("btop parser block result", result);
 
                 //console.log("check result", result);
 

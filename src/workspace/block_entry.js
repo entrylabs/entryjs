@@ -27,7 +27,55 @@ Entry.block = {
             var pd = Entry.hw.portData
             return pd.leftProximity > 40 || pd.rightProximity > 40;
         },
-        "syntax": {"js": [], "py": ["Albert.hand_found()"]}
+	"syntax": {"js": [], "py": ["Albert.hand_found()"]}
+    },
+    "albert_is_oid_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ALBERT_front_oid ,"FRONT"],
+                    [Lang.Blocks.ALBERT_back_oid,"BACK"]
+                ],
+                "value": "FRONT",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                }
+            ],
+            "type": "albert_is_oid_value"
+        },
+        "paramsKeyMap": {
+            "OID": 0,
+            "VALUE": 1
+        },
+        "class": "albert_sensor",
+        "isNotFor": [ "albert" ],
+        "func": function(sprite, script) {
+            var pd = Entry.hw.portData;
+            var oid = script.getField("OID", script);
+            var value = script.getNumberValue("VALUE");
+            if (oid == 'FRONT') {
+                return pd.frontOid == value;
+            } else {
+                return pd.backOid == value;
+            }
+        }
     },
     "albert_value": {
         "color": "#00979D",
@@ -37,15 +85,15 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.Blocks.ALBERT_sensor_leftProximity ,"leftProximity"],
-                    [Lang.Blocks.ALBERT_sensor_rightProximity,"rightProximity"],
+                    [Lang.Blocks.ALBERT_sensor_left_proximity ,"leftProximity"],
+                    [Lang.Blocks.ALBERT_sensor_right_proximity,"rightProximity"],
                     [Lang.Blocks.ALBERT_sensor_light,"light"],
                     [Lang.Blocks.ALBERT_sensor_battery,"battery"],
-                    [Lang.Blocks.ALBERT_sensor_signalStrength,"signalStrength"],
-                    [Lang.Blocks.ALBERT_sensor_frontOid,"frontOid"],
-                    [Lang.Blocks.ALBERT_sensor_backOid,"backOid"],
-                    [Lang.Blocks.ALBERT_sensor_positionX,"positionX"],
-                    [Lang.Blocks.ALBERT_sensor_positionY,"positionY"],
+                    [Lang.Blocks.ALBERT_sensor_signal_strength,"signalStrength"],
+                    [Lang.Blocks.ALBERT_sensor_front_oid,"frontOid"],
+                    [Lang.Blocks.ALBERT_sensor_back_oid,"backOid"],
+                    [Lang.Blocks.ALBERT_sensor_position_x,"positionX"],
+                    [Lang.Blocks.ALBERT_sensor_position_y,"positionY"],
                     [Lang.Blocks.ALBERT_sensor_orientation,"orientation"]
                 ],
                 "value": "leftProximity",
@@ -559,7 +607,199 @@ Entry.block = {
             sq.padHeight = script.getNumberValue('HEIGHT');
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Albert.set_pad_size(%1, %2)"]}
+	"syntax": {"js": [], "py": ["Albert.set_pad_size(%1, %2)"]}
+    },
+    "albert_move_to_x_y_on_board": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                null
+            ],
+            "type": "albert_move_to_x_y_on_board"
+        },
+        "paramsKeyMap": {
+            "X": 0,
+            "Y": 1
+        },
+        "class": "albert_wheel",
+        "isNotFor": [ "albert" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            var controller = Entry.Albert.controller;
+            if (!script.isStart) {
+                script.isStart = true;
+                script.isMoving = true;
+                script.initialized = false;
+                script.boardState = 1;
+                script.x = -1;
+                script.y = -1;
+                script.theta = -200;
+                script.targetX = script.getNumberValue('X');
+                script.targetY = script.getNumberValue('Y');
+                controller.clear();
+                sq.leftWheel = 0;
+                sq.rightWheel = 0;
+                return script;
+            } else if (script.isMoving) {
+                if(pd.positionX >= 0) script.x = pd.positionX;
+                if(pd.positionY >= 0) script.y = pd.positionY;
+                script.theta = pd.orientation;
+                switch(script.boardState) {
+                    case 1: {
+                        if(script.initialized == false) {
+                            if(script.x < 0 || script.y < 0) {
+                                sq.leftWheel = 20;
+                                sq.rightWheel = -20;
+                                return script;
+                            }
+                            script.initialized = true;
+                        }
+                        var current = controller.toRadian(script.theta);
+                        var dx = script.targetX - script.x;
+                        var dy = script.targetY - script.y;
+                        var target = Math.atan2(dy, dx);
+                        if(controller.controlAngle(current, target) == false)
+                            script.boardState = 2;
+                        break;
+                    }
+                    case 2: {
+                        if(controller.controlPosition(script.x, script.y, controller.toRadian(script.theta), script.targetX, script.targetY) == false)
+                            script.boardState = 3;
+                        break;
+                    }
+                    case 3: {
+                        if(controller.controlPositionFine(script.x, script.y, controller.toRadian(script.theta), script.targetX, script.targetY) == false) {
+                            sq.leftWheel = 0;
+                            sq.rightWheel = 0;
+                            script.isMoving = false;
+                        }
+                        break;
+                    }
+                }
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.isMoving;
+                delete script.initialized;
+                delete script.boardState;
+                delete script.x;
+                delete script.y;
+                delete script.theta;
+                delete script.targetX;
+                delete script.targetY;
+                Entry.engine.isContinue = false;
+                sq.leftWheel = 0;
+                sq.rightWheel = 0;
+                return script.callReturn();
+            }
+        }
+    },
+    "albert_set_orientation_on_board": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                null
+            ],
+            "type": "albert_set_orientation_on_board"
+        },
+        "paramsKeyMap": {
+            "ORIENTATION": 0
+        },
+        "class": "albert_wheel",
+        "isNotFor": [ "albert" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            var controller = Entry.Albert.controller;
+            if (!script.isStart) {
+                script.isStart = true;
+                script.isMoving = true;
+                script.boardState = 1;
+                script.theta = -200;
+                script.targetTheta = script.getNumberValue('ORIENTATION');
+                controller.clear();
+                sq.leftWheel = 0;
+                sq.rightWheel = 0;
+                return script;
+            } else if (script.isMoving) {
+                script.theta = pd.orientation;
+                switch(script.boardState) {
+                    case 1: {
+                        var current = controller.toRadian(script.theta);
+                        var target = controller.toRadian(script.targetTheta);
+                        if(controller.controlAngle(current, target) == false)
+                            script.boardState = 2;
+                        break;
+                    }
+                    case 2: {
+                        var current = controller.toRadian(script.theta);
+                        var target = controller.toRadian(script.targetTheta);
+                        if(controller.controlAngleFine(current, target) == false) {
+                            sq.leftWheel = 0;
+                            sq.rightWheel = 0;
+                            script.isMoving = false;
+                        }
+                        break;
+                    }
+                }
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.isMoving;
+                delete script.boardState;
+                delete script.theta;
+                delete script.targetTheta;
+                Entry.engine.isContinue = false;
+                sq.leftWheel = 0;
+                sq.rightWheel = 0;
+                return script.callReturn();
+            }
+        }
     },
     "albert_set_eye_to": {
         "color": "#00979D",
@@ -2578,6 +2818,26 @@ Entry.block = {
             ]
         }
     },
+    "download_guide": {
+        "skeleton": "basic_button",
+        "isNotFor": ["arduinoDisconnected"],
+        "color": "#eee",
+        "params": [
+            {
+                "type": "Text",
+                "text": Lang.Blocks.download_guide,
+                "color": "#333",
+                "align": "center"
+            }
+        ],
+        "events": {
+            "mousedown": [
+                function() {
+                    Entry.hw.downloadGuide();
+                }
+            ]
+        }
+    },
     "arduino_download_source": {
         "skeleton": "basic_button",
         "isNotFor": ["arduinoDisconnected"],
@@ -3686,7 +3946,660 @@ Entry.block = {
             result = Math.max(value4, result);
             return Math.round(result);
         },
-        "syntax": {"js": [], "py": ["Bitbrick.convert_scale(%1, %2, %3, %4, %5)"]}
+	"syntax": {"js": [], "py": ["Bitbrick.convert_scale(%1, %2, %3, %4, %5)"]}
+    },
+    "cobl_read_ultrason": {
+        color: "#00979D",
+        fontColor: "#fff",
+        skeleton: "basic_string_field",
+        template: "1. 초음파거리(0~400)",
+        def: {
+            type: "cobl_read_ultrason"
+        },
+        class: "cobl",
+        isNotFor : [ "cobl" ],
+        func: function (sprite, script) {
+            return Entry.hw.getAnalogPortValue("ultrason");
+        }
+    },
+    "cobl_read_potenmeter": {
+        color: "#00979D",
+        fontColor: "#fff",
+        skeleton: "basic_string_field",
+        template: "2.가변저항(0~1023)",
+        def: {
+            type: "cobl_read_potenmeter"
+        },
+        class: "cobl",
+        isNotFor : [ "cobl" ],
+        func: function(sprite, script) {
+            return Entry.hw.getAnalogPortValue("potenmeter");
+        }
+    },
+    "cobl_read_irread1": {
+        color: "#00979D",
+        fontColor: "#fff",
+        skeleton: "basic_string_field",
+        template: "3.적외선센서1(0~1023)",
+        def: {
+            type: "cobl_read_irread1"
+        },
+        class: "cobl",
+        isNotFor : [ "cobl" ],
+        func: function(sprite, script) {
+            return Entry.hw.getAnalogPortValue("irread1");
+        }
+    },
+    "cobl_read_irread2": {
+        color: "#00979D",
+        fontColor: "#fff",
+        skeleton: "basic_string_field",
+        template: "4.적외선센서2(0~1023)",
+        def: {
+            type: "cobl_read_irread2"
+        },
+        class: "cobl",
+        isNotFor : [ "cobl" ],
+        "func": function(sprite, script) {
+            return Entry.hw.getAnalogPortValue("irread2");
+        }
+    },
+    "cobl_read_joyx": {
+        color: "#00979D",
+        fontColor: "#fff",
+        skeleton: "basic_string_field",
+        template: "5.조이스틱X축(1, 0, -1)",
+        def: {
+            type: "cobl_read_joyx"
+        },
+        class: "cobl",
+        isNotFor : [ "cobl" ],
+        "func": function(sprite, script) {
+            return Entry.hw.getAnalogPortValue("joyx");
+        }
+    },
+    "cobl_read_joyy": {
+        color: "#00979D",
+        fontColor: "#fff",
+        skeleton: "basic_string_field",
+        template: "6.조이스틱Y축(1, 0, -1)",
+        def: {
+            type: "cobl_read_joyy"
+        },
+        class: "cobl",
+        isNotFor : [ "cobl" ],
+        "func": function(sprite, script) {
+            return Entry.hw.getAnalogPortValue("joyy");
+        }
+    },
+    "cobl_read_tilt": {
+        color: "#00979D",
+        fontColor: "#fff",
+        skeleton: "basic_string_field",
+        template: "7.기울기센서(0~4)",
+        def: {
+            type: "cobl_read_tilt"
+        },
+        class: "cobl",
+        isNotFor : [ "cobl" ],
+        "func": function(sprite, script) {
+              return Entry.hw.getAnalogPortValue("tilt");
+        }
+    },
+    "cobl_read_temps": {
+        color: "#00979D",
+        fontColor: "#fff",
+        skeleton: "basic_string_field",
+        template: "8.온도센서@포트%1",
+        params: [
+            {
+                type: "Dropdown",
+                options: [
+                    [ "1", "1" ],
+                    [ "2", "2" ],
+                ],
+                fontSize: 11
+            }
+        ],
+        def: {
+            params: [
+                "1"
+            ],
+            type: "cobl_read_temps"
+        },
+        paramsKeyMap: {
+            VALUE: 0
+        },
+        class: "cobl",
+        isNotFor : [ "cobl" ],
+        "func": function(sprite, script) {
+            //    console.log("-----temptest------")
+            //var signal = script.getField("VALUE", script);
+            var signal = script.getValue("VALUE", script);
+            if (signal == 1)
+            {
+                //    console.log("-----temp1 selected ");
+                return Entry.hw.getAnalogPortValue("temps1");
+            }
+
+            if (signal == 2)
+            {
+                //     console.log("-----temp2 selected ");
+                return Entry.hw.getAnalogPortValue("temps2");
+            }
+        }
+    },
+    "cobl_read_light": {
+        color: "#00979D",
+        fontColor: "#fff",
+        skeleton: "basic_string_field",
+        template: "9.빛센서@포트%1",
+        params: [
+            {
+                type: "Dropdown",
+                options: [
+                    [ "1", "1" ],
+                    [ "2", "2" ],
+                ],
+                fontSize: 11
+            }
+        ],
+        def: {
+            params: [
+                "1"
+            ],
+            type: "cobl_read_light"
+        },
+        paramsKeyMap: {
+            VALUE: 0
+        },
+        class: "cobl",
+        isNotFor : [ "cobl" ],
+        "func": function(sprite, script) {
+            var signal = script.getValue("VALUE", script);
+            if (signal == 1)
+            {
+                return Entry.hw.getAnalogPortValue("light1");
+            }
+
+            if (signal == 2)
+            {
+                return Entry.hw.getAnalogPortValue("light2");
+            }
+        }
+    },
+    "cobl_read_btn": {
+        color: "#00979D",
+        fontColor: "#fff",
+        skeleton: "basic_boolean_field",
+        template: "10.버튼스위치@포트%1",
+        params: [
+            {
+                type: "Dropdown",
+                options: [
+                    [ "1", "1" ],
+                    [ "2", "2" ],
+                ],
+                fontSize: 11
+            }
+        ],
+        def: {
+            params: [
+                "1"
+            ],
+            type: "cobl_read_btn"
+        },
+        paramsKeyMap: {
+            VALUE: 0
+        },
+        class: "cobl",
+        isNotFor : [ "cobl" ],
+        "func": function(sprite, script) {
+            var signal = script.getValue("VALUE", script);
+            if (signal == 1)
+            {
+                return Entry.hw.getDigitalPortValue("btn1");
+            }
+
+            if (signal == 2)
+            {
+                return Entry.hw.getDigitalPortValue("btn2");
+            }
+        }
+    },
+    "cobl_led_control": {
+        color: "#00979D",
+        fontColor: "#fff",
+        skeleton: "basic",
+        template: "11.무지개LED%1%2 %3",
+        params: [
+            {
+                type: "Dropdown",
+                options: [
+                  ["1","1"],
+                  ["2","2"],
+                  ["3","3"]
+                ],
+                fontSize: 11
+            },
+            {
+                type: "Dropdown",
+                options: [
+                  ["OFF","OFF"],
+                  ["빨강","Red"],
+                  ["주황","Orange"],
+                  ["노랑","Yellow"],
+                  ["초록","Green"],
+                  ["파랑","Blue"],
+                  ["남색","Dark Blue"],
+                  ["보라","Purple"],
+                  ["흰색","White"]
+                ],
+                fontSize: 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        def: {
+            params: [
+                "1",
+                "OFF"
+            ],
+            type: "cobl_led_control"
+        },
+        paramsKeyMap: {
+            PORT: 0,
+            OPERATOR: 1
+        },
+        class: "cobl",
+        isNotFor : [ "cobl" ],
+        "func": function(sprite, script) {
+            var port = script.getStringField("PORT");
+            var value = script.getStringField("OPERATOR");
+            Entry.hw.setDigitalPortValue("RainBowLED_" + port, value);
+            Entry.hw.update();
+            delete Entry.hw.sendQueue["RainBowLED_" + port];
+            return script.callReturn();
+        }
+    },
+    "cobl_servo_angle_control": {
+        color: "#00979D",
+        fontColor: "#fff",
+        skeleton: "basic",
+        template: "12.각도모터 각도%1(15~165) %2",
+        params: [
+            {
+                type: "TextInput",
+                value: 0
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        def: {
+            type: "cobl_servo_angle_control"
+        },
+        paramsKeyMap: {
+            VALUE: 0
+        },
+        class: "cobl",
+        isNotFor : [ "cobl" ],
+        "func": function(sprite, script) {
+            var value = script.getNumberField("VALUE");
+            value = Math.round(value);
+            value = Math.max(value, 15);
+            value = Math.min(value, 165);
+
+            Entry.hw.setDigitalPortValue("Servo1", value);
+            Entry.hw.update();
+            delete Entry.hw.sendQueue["Servo1"];
+
+            return script.callReturn();
+        }
+    },
+    "cobl_melody": {
+        color: "#00979D",
+        fontColor: "#fff",
+        skeleton: "basic",
+        template: "13.멜로디%1 ,%2",
+        params: [
+            {
+                type: "Dropdown",
+                options: [
+                ["((낮은)솔","L_So"],
+                ["(낮은)솔#","L_So#"],
+                ["(낮은)라","L_La"],
+                ["(낮은)라#","L_La#"],
+                ["(낮은)시","L_Ti"],
+                ["도","Do"],
+                ["도#","Do#"],
+                ["레","Re"],
+                ["레#","Re#"],
+                ["미","Mi"],
+                ["파","Fa"],
+                ["파#","Fa#"],
+                ["솔","So"],
+                ["솔#","So#"],
+                ["라","La"],
+                ["라#","La#"],
+                ["시","Ti"],
+                ["(높은)도","H_Do"],
+                ["(높은)도#","H_Do#"],
+                ["(높은)레","H_Re"],
+                ["(높은)레#","H_Re#"],
+                ["(높은)미#","H_Mi"],
+                ["(높은)파","H_Fa"]
+                ],
+                fontSize: 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        def: {
+            params: [
+                "Do"
+            ],
+            type: "cobl_melody"
+        },
+        paramsKeyMap: {
+            MELODY: 0
+        },
+        class: "cobl",
+        isNotFor : [ "cobl" ],
+        "func": function(sprite, script) {
+            var melody = script.getStringField("MELODY");
+
+            Entry.hw.setDigitalPortValue("Melody", melody);
+            Entry.hw.update();
+            delete Entry.hw.sendQueue["Melody"];
+
+            return script.callReturn();
+        }
+    },
+    "cobl_dcmotor": {
+        color: "#00979D",
+        fontColor: "#fff",
+        skeleton: "basic",
+        template: "14.회전모터%1%2속도%3 %4",
+        params: [
+            {
+                type: "Dropdown",
+                options: [
+                  ["1","1"],
+                  ["2","2"]
+                ],
+                fontSize: 11
+            },
+            {
+                type: "Dropdown",
+                options: [
+                  ["1.시계방향","1"],
+                  ["2.반시계방향","2"],
+                  ["3.정지","3"]
+                ],
+                fontSize: 11
+            },
+            {
+                type: "Dropdown",
+                options: [
+                  ["1","1"],
+                  ["2","2"],
+                  ["3","3"],
+                  ["4","4"],
+                  ["5","5"]
+                ],
+                fontSize: 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        def: {
+            params: [
+                "1",
+                "1",
+                "1"
+            ],
+            type: "cobl_dcmotor"
+        },
+        paramsKeyMap: {
+            MOTOR: 0,
+            DIRECTION: 1,
+            SPEED:2
+        },
+        class: "cobl",
+        isNotFor : [ "cobl" ],
+        "func": function(sprite, script) {
+            var motor = script.getStringField("MOTOR");
+            var direction = script.getStringField("DIRECTION");
+            var speed = script.getStringField("SPEED");
+
+            if (motor == 1) {
+                Entry.hw.setDigitalPortValue("DC1_DIR", direction);
+                Entry.hw.setDigitalPortValue("DC1_SPEED", speed);
+                Entry.hw.update();
+                delete Entry.hw.sendQueue["DC1_DIR"];
+                delete Entry.hw.sendQueue["DC1_SPEED"];
+            }
+
+            if (motor == 2) {
+                Entry.hw.setDigitalPortValue("DC2_DIR", direction);
+                Entry.hw.setDigitalPortValue("DC2_SPEED", speed);
+                Entry.hw.update();
+                delete Entry.hw.sendQueue["DC2_DIR"];
+                delete Entry.hw.sendQueue["DC2_SPEED"];
+            }
+
+            return script.callReturn();
+        }
+    },
+    "cobl_extention_port": {
+        color: "#00979D",
+        fontColor: "#fff",
+        skeleton: "basic",
+        template: "15.USB포트%1단계%2 %3",
+        params: [
+            {
+                type: "Dropdown",
+                options: [
+                  ["1","1"],
+                  ["2","2"]
+                ],
+                fontSize: 11
+            },
+            {
+                type: "Dropdown",
+                options: [
+                  ["0","0"],
+                  ["1","1"],
+                  ["2","2"],
+                  ["3","3"],
+                  ["4","4"],
+                  ["5","5"]
+                ],
+                fontSize: 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        def: {
+            params: [
+                "1",
+                "0"
+            ],
+            type: "cobl_extention_port"
+        },
+        paramsKeyMap: {
+            PORT: 0,
+            LEVEL: 1
+        },
+        class: "cobl",
+        isNotFor : [ "cobl" ],
+        "func": function(sprite, script) {
+            var port = script.getStringField("PORT");
+            var level = script.getStringField("LEVEL");
+
+            if(port == 1){
+                Entry.hw.setDigitalPortValue("EXUSB1", level);
+                Entry.hw.update();
+                delete Entry.hw.sendQueue["EXUSB1"];
+            }
+
+            if(port == 2){
+                Entry.hw.setDigitalPortValue("EXUSB2", level);
+                Entry.hw.update();
+                delete Entry.hw.sendQueue["EXUSB2"];
+            }
+            return script.callReturn();
+        }
+    },
+    "cobl_external_led": {
+        color: "#00979D",
+        fontColor: "#fff",
+        skeleton: "basic",
+        template: "16.외부LED%1(1~64)R%2G%3B%4 %5",
+        params: [
+            {
+                type: "TextInput",
+                value: 0,
+                fontSize: 11
+            },
+            {
+                type: "Dropdown",
+                options: [
+                  ["0","0"],
+                  ["1","1"],
+                  ["2","2"],
+                  ["3","3"],
+                  ["4","4"],
+                  ["5","5"],
+                  ["6","6"],
+                  ["7","7"],
+                  ["8","8"],
+                  ["9","9"],
+                  ["10","10"]
+                ],
+                fontSize: 11
+            },            {
+                type: "Dropdown",
+                options: [
+                  ["0","0"],
+                  ["1","1"],
+                  ["2","2"],
+                  ["3","3"],
+                  ["4","4"],
+                  ["5","5"],
+                  ["6","6"],
+                  ["7","7"],
+                  ["8","8"],
+                  ["9","9"],
+                  ["10","10"]
+                ],
+                fontSize: 11
+            },            {
+                type: "Dropdown",
+                options: [
+                  ["0","0"],
+                  ["1","1"],
+                  ["2","2"],
+                  ["3","3"],
+                  ["4","4"],
+                  ["5","5"],
+                  ["6","6"],
+                  ["7","7"],
+                  ["8","8"],
+                  ["9","9"],
+                  ["10","10"]
+                ],
+                fontSize: 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        def: {
+            params: [
+                "1",
+                "1",
+                "1",
+                "1"
+            ],
+            type: "cobl_external_led"
+        },
+        paramsKeyMap: {
+            LED: 0,
+            RED: 1,
+            GREEN : 2,
+            BLUE : 3
+        },
+        class: "cobl",
+        isNotFor : [ "cobl" ],
+        "func": function(sprite, script) {
+            var led = script.getNumberField("LED");
+            var r = script.getStringField("RED");
+            var g = script.getStringField("GREEN");
+            var b = script.getStringField("BLUE");
+
+            Entry.hw.setDigitalPortValue("ELED_IDX", led);
+            Entry.hw.setDigitalPortValue("ELED_R", r);
+            Entry.hw.setDigitalPortValue("ELED_G", g);
+            Entry.hw.setDigitalPortValue("ELED_B", b);
+            Entry.hw.update();
+
+            delete Entry.hw.sendQueue["ELED_IDX"];
+            delete Entry.hw.sendQueue["ELED_R"];
+            delete Entry.hw.sendQueue["ELED_G"];
+            delete Entry.hw.sendQueue["ELED_B"];
+
+            return script.callReturn();
+        }
+    },
+    "cobl_7_segment": {
+        color: "#00979D",
+        fontColor: "#fff",
+        skeleton: "basic",
+        template: "17.숫자전광판%1(0~9999) %2",
+        params: [
+            {
+                type: "TextInput",
+                value: 0
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        def: {
+            type: "cobl_7_segment"
+        },
+        paramsKeyMap: {
+            VALUE: 0
+        },
+        class: "cobl",
+        isNotFor : [ "cobl" ],
+        "func": function(sprite, script) {
+            var value = script.getNumberField("VALUE");
+            Entry.hw.setDigitalPortValue("7SEG", value);
+            Entry.hw.update();
+            delete Entry.hw.sendQueue["7SEG"];
+            return script.callReturn();
+        }
     },
     "start_drawing": {
         "color": "#FF9E20",
@@ -6379,7 +7292,7 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.callReturn();
         },
-        "event": "when_clone_start", 
+        "event": "when_clone_start",
         "syntax": {"js": [], "py": ["def entry_event_clone_create():"]}
     },
     "stop_run": {
@@ -6461,7 +7374,7 @@ Entry.block = {
             return value ? script.getStatement("DO", script) :
                 script.callReturn();
         },
-        "syntax": {"js": [], "py": ["not yet supported in textcoding"]}
+        "syntax": {"js": [], "py": ["while %1 %2\n$1"]}
     },
     "stop_object": {
         "color": "#498deb",
@@ -6502,7 +7415,9 @@ Entry.block = {
 
             switch(target) {
                 case 'all':
-                    container.clearRunningState();
+                    container.mapObject(function(obj) {
+                        obj.script.clearExecutors();
+                    }, null);
                     return this.die();
                 case 'thisOnly':
                     sprite.parent.script.clearExecutorsByEntity(sprite);
@@ -6830,18 +7745,18 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.Blocks.HAMSTER_sensor_leftProximity, "leftProximity"],
-                    [Lang.Blocks.HAMSTER_sensor_rightProximity, "rightProximity"],
-                    [Lang.Blocks.HAMSTER_sensor_leftFloor, "leftFloor"],
-                    [Lang.Blocks.HAMSTER_sensor_rightFloor, "rightFloor"],
-                    [Lang.Blocks.HAMSTER_sensor_accelerationX, "accelerationX"],
-                    [Lang.Blocks.HAMSTER_sensor_accelerationY, "accelerationY"],
-                    [Lang.Blocks.HAMSTER_sensor_accelerationZ, "accelerationZ"],
+                    [Lang.Blocks.HAMSTER_sensor_left_proximity, "leftProximity"],
+                    [Lang.Blocks.HAMSTER_sensor_right_proximity, "rightProximity"],
+                    [Lang.Blocks.HAMSTER_sensor_left_floor, "leftFloor"],
+                    [Lang.Blocks.HAMSTER_sensor_right_floor, "rightFloor"],
+                    [Lang.Blocks.HAMSTER_sensor_acceleration_x, "accelerationX"],
+                    [Lang.Blocks.HAMSTER_sensor_acceleration_y, "accelerationY"],
+                    [Lang.Blocks.HAMSTER_sensor_acceleration_z, "accelerationZ"],
                     [Lang.Blocks.HAMSTER_sensor_light, "light"],
                     [Lang.Blocks.HAMSTER_sensor_temperature, "temperature"],
-                    [Lang.Blocks.HAMSTER_sensor_signalStrength, "signalStrength"],
-                    [Lang.Blocks.HAMSTER_sensor_inputA, "inputA"],
-                    [Lang.Blocks.HAMSTER_sensor_inputB, "inputB"]
+                    [Lang.Blocks.HAMSTER_sensor_signal_strength, "signalStrength"],
+                    [Lang.Blocks.HAMSTER_sensor_input_a, "inputA"],
+                    [Lang.Blocks.HAMSTER_sensor_input_b, "inputB"]
                 ],
                 "value": "leftProximity",
                 "fontSize": 11
@@ -11661,8 +12576,7 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [null],
-            "type": "neobot_sensor_value",
-            "id": "k9wp"
+            "type": "neobot_sensor_value"
         },
         "paramsKeyMap": {
             "PORT": 0
@@ -11805,8 +12719,7 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [null, "15", null],
-            "type": "neobot_left_motor",
-            "id": "wguy"
+            "type": "neobot_left_motor"
         },
         "paramsKeyMap": {
             "DIRECTION": 0,
@@ -11890,8 +12803,7 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [null, "15", null],
-            "type": "neobot_right_motor",
-            "id": "g15e"
+            "type": "neobot_right_motor"
         },
         "paramsKeyMap": {
             "DIRECTION": 0,
@@ -12110,8 +13022,7 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [null, null, null],
-            "type": "neobot_set_servo",
-            "id": "eokl"
+            "type": "neobot_set_servo"
         },
         "paramsKeyMap": {
             "PORT": 0,
@@ -12164,11 +13075,9 @@ Entry.block = {
         "def": {
             "params": [null, {
                 "type": "number",
-                "params": ["255"],
-                "id": "dg6t"
+                "params": ["255"]
             }, null],
             "type": "neobot_set_output",
-            "id": "au77"
         },
         "paramsKeyMap": {
             "PORT": 0,
@@ -13782,7 +14691,7 @@ Entry.block = {
                 },
                 null
             ],
-            "type": "robotis_carcont_aux_motor_speed"
+            "type": "robotis_carCont_aux_motor_speed"
         },
         "paramsKeyMap": {
             "DIRECTION": 0,
@@ -20114,7 +21023,7 @@ Entry.block = {
         "class": "arduino",
         "syntax": {"js": [], "py": ["hw.CODEino_convert_scale(%1, %2, %3, %4, %5)"]}
     },
-	// ardublock Added 2016-06-01
+    // ardublock Added 2016-06-01
     "ardublock_get_number_sensor_value": {
         "parent": "arduino_get_number_sensor_value",
         "isNotFor": [
@@ -20218,7 +21127,7 @@ Entry.block = {
         },
         "class": "arduino"
     },
-	// ardublock Added 2016-06-01
+    // ardublock Added 2016-06-01
     "joystick_get_number_sensor_value": {
         "parent": "arduino_get_number_sensor_value",
         "isNotFor": [
@@ -20870,7 +21779,7 @@ Entry.block = {
             },
             {
                 "type": "Indicator",
-                "img": "block_icon/flow_03.png",
+                "img": "block_icon/if.png",
                 "size": 12
             },
             {
@@ -20893,6 +21802,341 @@ Entry.block = {
             "BasicIf",
             "true"
         ]
+    },
+    "ev3_color_sensor": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1 의  %2 값",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["1", "1"],
+                ["2", "2"],
+                ["3", "3"],
+                ["4", "4"]
+            ],
+            "value": "1",
+            "fontSize": 11
+        }, {
+            "type": "Dropdown",
+            "options": [
+                ["RGB", "RGB"],
+                ["R", "R"],
+                ["G", "G"],
+                ["B", "B"]
+            ],
+            "value": "RGB",
+            "fontSize": 11
+        }],
+        "events": {},
+        "def": {
+            "params": [null, null],
+            "type": "ev3_color_sensor"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "RGB": 1
+        },
+        "class": "ev3_sensor",
+        "isNotFor": ["EV3"],
+        "func": function (sprite, script) {
+            var port = script.getStringField("PORT", script);
+            var rgb = script.getStringField("RGB", script);
+            var portData = Entry.hw.getDigitalPortValue(script.getNumberField("PORT", script));
+            var result = '';
+            if(portData.type == Entry.EV3.deviceTypes.Color) {
+                if(portData.siValue == 0) {
+                    result = '';
+                } else {
+                    switch(rgb) {
+                        case 'RGB':
+                            result = Entry.EV3.colorSensorValue[portData.siValue];
+                            break;
+                        case 'R':
+                            result = Entry.EV3.colorSensorValue[portData.siValue].substring(0, 2);
+                            break;
+                        case 'G':
+                            result = Entry.EV3.colorSensorValue[portData.siValue].substring(2, 4);
+                            break;
+                        case 'B':
+                            result = Entry.EV3.colorSensorValue[portData.siValue].substring(4, 6);
+                            break;
+                    }
+                }
+            } else {
+                result = '컬러 센서 아님';
+            }
+            return result;
+        }
+    },
+    "ev3_get_sensor_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1 의 값",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["1", "1"],
+                ["2", "2"],
+                ["3", "3"],
+                ["4", "4"]
+            ],
+            "value": "1",
+            "fontSize": 11
+        }],
+        "events": {},
+        "def": {
+            "params": [null],
+            "type": "ev3_get_sensor_value"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "ev3_sensor",
+        "isNotFor": ["EV3"],
+        "func": function (sprite, script) {
+            var port = script.getStringField("PORT", script);
+            var portData = Entry.hw.getDigitalPortValue(script.getNumberField("PORT", script));
+            var result;
+            if($.isPlainObject(portData)) {
+                result = portData.siValue || 0;
+            }
+            return result;
+        }
+    },
+    "ev3_motor_degrees": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "%1 의 값을 %2 으로  %3 도 만큼 회전 %4",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["A", "A"],
+                ["B", "B"],
+                ["C", "C"],
+                ["D", "D"]
+            ],
+            "value": "A",
+            "fontSize": 11
+        }, {
+            "type": "Dropdown",
+            "options": [
+                ["시계방향", "CW"],
+                ["반시계방향", "CCW"]
+            ],
+            "value": "CW",
+            "fontSize": 11
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [null, null, {
+                "type": "angle"
+            }],
+            "type": "ev3_motor_degrees"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "DIRECTION": 1,
+            "DEGREE": 2
+        },
+        "class": "ev3_output",
+        "isNotFor": ["EV3"],
+        "func": function (sprite, script) {
+            var port = script.getStringField("PORT", script);
+            var degree = script.getValue("DEGREE", script);
+            if(degree <= 0) {
+                degree = 0;
+            } else if(degree >= 720) {
+                degree = 720;
+            }
+            var direction = script.getStringField("DIRECTION", script);
+            Entry.hw.sendQueue[port] = {
+                'id': Math.floor(Math.random() * 100000, 0),
+                'type': Entry.EV3.motorMovementTypes.Degrees,
+                'degree': degree,
+                'power': (direction == 'CW') ? 50 : -50
+            };
+            return script.callReturn();
+        }
+    },
+    "ev3_motor_power": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "%1 의 값을 %2 으로 출력 %3",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["A", "A"],
+                ["B", "B"],
+                ["C", "C"],
+                ["D", "D"]
+            ],
+            "value": "A",
+            "fontSize": 11
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [null, {
+                "type": "number",
+                "params": ["50"]
+            }],
+            "type": "ev3_motor_power"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "ev3_output",
+        "isNotFor": ["EV3"],
+        "func": function (sprite, script) {
+            var port = script.getStringField("PORT", script);
+            var value = script.getValue("VALUE", script);
+            Entry.hw.sendQueue[port] = {
+                'id': Math.floor(Math.random() * 100000, 0),
+                'type': Entry.EV3.motorMovementTypes.Power,
+                'power': value,
+            };
+            return script.callReturn();
+        }
+    },
+    "ev3_motor_power_on_time": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "%1 의 값을 %2 초 동안 %3 으로 출력 %4",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["A", "A"],
+                ["B", "B"],
+                ["C", "C"],
+                ["D", "D"]
+            ],
+            "value": "A",
+            "fontSize": 11
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [null, {
+                "type": "number",
+                "params": ["2"]
+            }, {
+                "type": "number",
+                "params": ["50"]
+            }],
+            "type": "ev3_motor_power_on_time"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "TIME": 1,
+            "VALUE": 2
+        },
+        "class": "ev3_output",
+        "isNotFor": ["EV3"],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var port = script.getStringField("PORT", script);
+            if (!script.isStart) {
+                var time = script.getValue("TIME", script);
+                var value = script.getValue("VALUE", script);
+                script.isStart = true;
+                script.timeFlag = 1;
+                Entry.hw.sendQueue[port] = {
+                    'id': Math.floor(Math.random() * 100000, 0),
+                    'type': Entry.EV3.motorMovementTypes.Power,
+                    'power': value
+                };
+                var timeValue = time * 1000;
+                var timer = setTimeout(function() {
+                    script.timeFlag = 0;
+                    Entry.EV3.removeTimeout(timer);
+                }, timeValue);
+                Entry.EV3.timeouts.push(timer);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                Entry.engine.isContinue = false;
+                Entry.hw.sendQueue[port] = {
+                    'id': Math.floor(Math.random() * 100000, 0),
+                    'type': Entry.EV3.motorMovementTypes.Power,
+                    'power': 0
+                };
+                return script.callReturn();
+            }
+        }
+    },
+    "ev3_touch_sensor": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "template": "%1 의 터치센서가 작동되었는가?",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["1", "1"],
+                ["2", "2"],
+                ["3", "3"],
+                ["4", "4"]
+            ],
+            "value": "1",
+            "fontSize": 11
+        }],
+        "events": {},
+        "def": {
+            "params": [null],
+            "type": "ev3_touch_sensor"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "ev3_sensor",
+        "isNotFor": ["EV3"],
+        "func": function (sprite, script) {
+            var port = script.getStringField("PORT", script);
+            var portData = Entry.hw.getDigitalPortValue(script.getNumberField("PORT", script));
+            var result = false;
+            if(portData.type == Entry.EV3.deviceTypes.Touch) {
+                if(Number(portData.siValue) >= 1) {
+                    result = true;
+                }
+            }
+
+            return result;
+        }
     }
 };
 

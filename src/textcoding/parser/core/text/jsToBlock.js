@@ -51,7 +51,7 @@ Entry.JsToBlockParser = function(syntax) {
     };
 
     p.Literal = function(node, type) {
-        //console.log("literal node", node, "type", type);
+        ////console.log("literal node", node, "type", type);
         if(node.value === true)
             return {type:'True'};
         else if(node.value === false)
@@ -165,7 +165,7 @@ Entry.JsToBlockParser = function(syntax) {
     };
 
     p.EmptyStatement = function(node) {
-        //console.log("EmptyStatement", node);
+        ////console.log("EmptyStatement", node);
         throw {
             message : 'empty는 지원하지 않는 표현식 입니다.',
             node : node
@@ -173,7 +173,7 @@ Entry.JsToBlockParser = function(syntax) {
     };
 
     p.DebuggerStatement = function(node) {
-        //console.log("DebuggerStatement", node);
+        ////console.log("DebuggerStatement", node);
         throw {
             message : 'debugger는 지원하지 않는 표현식 입니다.',
             node : node
@@ -181,7 +181,7 @@ Entry.JsToBlockParser = function(syntax) {
     };
 
     p.WithStatement = function(node) {
-        //console.log("WithStatement", node);
+        ////console.log("WithStatement", node);
         var object = node.object,
             body = node.body;
 
@@ -193,7 +193,7 @@ Entry.JsToBlockParser = function(syntax) {
 
     //control flow
     p.ReturnStaement = function(node) {
-        //console.log("ReturnStaement", node);
+        ////console.log("ReturnStaement", node);
         var args = node.arguments;
 
         throw {
@@ -203,7 +203,7 @@ Entry.JsToBlockParser = function(syntax) {
     };
 
     p.LabeledStatement = function(node) {
-        //console.log("LabeledStatement", node);
+        ////console.log("LabeledStatement", node);
         var label = node.label,
             body = node.body;
 
@@ -214,7 +214,7 @@ Entry.JsToBlockParser = function(syntax) {
     };
 
     p.BreakStatement = function(node) {
-        //console.log("BreakStatement", node);
+        ////console.log("BreakStatement", node);
         var label = node.label;
 
         throw {
@@ -224,7 +224,7 @@ Entry.JsToBlockParser = function(syntax) {
     };
 
     p.ContinueStatement = function(node) {
-        //console.log("ContinueStatement", node);
+        ////console.log("ContinueStatement", node);
         var label = node.label;
 
         throw {
@@ -241,7 +241,7 @@ Entry.JsToBlockParser = function(syntax) {
 
         var blockType = this.syntax.BasicIf;
         if (blockType) {
-            //console.log("IfStatement return", this.BasicIf(node));
+            ////console.log("IfStatement return", this.BasicIf(node));
             return this.BasicIf(node);
         } else {
             throw {
@@ -253,7 +253,7 @@ Entry.JsToBlockParser = function(syntax) {
     };
 
     p.SwitchStatement = function(node) {
-        //console.log("SwitchStatement", node);
+        ////console.log("SwitchStatement", node);
         var discriminant = node.discriminant,
             cases = node.cases;
 
@@ -264,7 +264,7 @@ Entry.JsToBlockParser = function(syntax) {
     };
 
     p.SwitchCase = function(node) {
-        //console.log("SwitchCase", node);
+        ////console.log("SwitchCase", node);
         var test = node.test,
             consequent = node.consequent;
 
@@ -277,7 +277,7 @@ Entry.JsToBlockParser = function(syntax) {
     //throwstatement
 
     p.ThrowStatement = function(node) {
-        //console.log("ThrowStatement", node);
+        ////console.log("ThrowStatement", node);
         var args = node.arguments;
 
         throw {
@@ -287,7 +287,7 @@ Entry.JsToBlockParser = function(syntax) {
     };
 
     p.TryStatement = function(node) {
-        //console.log("TryStatement", node);
+        ////console.log("TryStatement", node);
         var block = node.block,
             handler = node.handler,
             finalizer = node.finalizer;
@@ -299,7 +299,7 @@ Entry.JsToBlockParser = function(syntax) {
     };
 
     p.CatchClause = function(node) {
-        //console.log("CatchClause", node);
+        ////console.log("CatchClause", node);
         var param = node.param,
             body = node.body;
 
@@ -310,7 +310,7 @@ Entry.JsToBlockParser = function(syntax) {
     };
 
     p.WhileStatement = function(node) {
-        //console.log("WhileStatement", node);
+        ////console.log("WhileStatement", node);
         var test = node.test,
             body = node.body;
         var blockType = this.syntax.WhileStatement;
@@ -328,7 +328,7 @@ Entry.JsToBlockParser = function(syntax) {
     };
 
     p.DoWhileStatement = function(node) {
-        //console.log("DoWhileStatement", node);
+        ////console.log("DoWhileStatement", node);
         var body = node.body,
             test = node.test;
 
@@ -340,7 +340,7 @@ Entry.JsToBlockParser = function(syntax) {
 
 
     p.ForInStatement = function(node) {
-        //console.log("ForInStatement", node);
+        ////console.log("ForInStatement", node);
         var left = node.left,
             right = node.right,
             body = node.body;
@@ -354,7 +354,7 @@ Entry.JsToBlockParser = function(syntax) {
     //Declaration
 
     p.FunctionDeclaration = function(node) {
-        //console.log("FunctionDeclaration", node);
+        ////console.log("FunctionDeclaration", node);
         var id = node.id;
 
         var blockType = this.syntax.FunctionDeclaration;
@@ -370,7 +370,7 @@ Entry.JsToBlockParser = function(syntax) {
     };
 
     p.VariableDeclaration = function(node) {
-        //console.log("VariableDeclaration", node);
+        ////console.log("VariableDeclaration", node);
         var declaration = node.declarations,
             kind = node.kind;
 
@@ -382,12 +382,12 @@ Entry.JsToBlockParser = function(syntax) {
 
     // Expression
     p.ThisExpression = function(node) {
-        //console.log("ThisExpression", node);
+        ////console.log("ThisExpression", node);
         return this.scope.this;
     };
 
     p.ArrayExpression = function(node) {
-        //console.log("ArrayExpression", node);
+        ////console.log("ArrayExpression", node);
         var elements = node.elements;
 
         throw {
@@ -397,7 +397,7 @@ Entry.JsToBlockParser = function(syntax) {
     };
 
     p.ObjectExpression = function(node) {
-        //console.log("ObjectExpression", node);
+        ////console.log("ObjectExpression", node);
         var property = node.property;
 
         throw {
@@ -407,7 +407,7 @@ Entry.JsToBlockParser = function(syntax) {
     };
 
     p.Property = function(node) {
-        //console.log("Property", node);
+        ////console.log("Property", node);
         var key = node.key,
             value = node.value,
             kind = node.kind;
@@ -419,7 +419,7 @@ Entry.JsToBlockParser = function(syntax) {
     };
 
     p.FunctionExpression = function(node) {
-        //console.log("FunctionExpression", node);
+        ////console.log("FunctionExpression", node);
         throw {
             message : 'function은 지원하지 않는 표현식 입니다.',
             node : node
@@ -428,7 +428,7 @@ Entry.JsToBlockParser = function(syntax) {
     // unary expression
 
     p.UnaryExpression = function(node) {
-        //console.log("UnaryExpression", node);
+        ////console.log("UnaryExpression", node);
         var operator = node.operator,
             prefix = node.prefix,
             args  = node.argument;
@@ -479,7 +479,7 @@ Entry.JsToBlockParser = function(syntax) {
     };
 
     p.BinaryExpression = function(node) {
-        //console.log("BinaryExpression node", node);
+        ////console.log("BinaryExpression node", node);
         
         var result = {};
         var structure = {}; 
@@ -493,6 +493,8 @@ Entry.JsToBlockParser = function(syntax) {
                     var type = "ai_boolean_object";
                 else if(nodeName == "radar_up" || nodeName == "radar_right" || nodeName == "radar_down")
                     var type = "ai_boolean_distance";
+                else
+                    var type = null;
                 break;         
             case "<": 
                 var type = "ai_boolean_distance";
@@ -522,7 +524,7 @@ Entry.JsToBlockParser = function(syntax) {
                 arguments.push(left);
                 var paramsMeta = Entry.block[type].params;
                 
-                //console.log("BinaryExpression paramsMeta", paramsMeta);
+                ////console.log("BinaryExpression paramsMeta", paramsMeta);
 
                 for(var p in paramsMeta) {
                     var paramType = paramsMeta[p].type;
@@ -540,10 +542,10 @@ Entry.JsToBlockParser = function(syntax) {
 
                 for(var i in arguments) {
                     var argument = arguments[i];
-                    //console.log("BinaryExpression argument", argument);
+                    ////console.log("BinaryExpression argument", argument);
                               
                     var param = this[argument.type](argument);
-                    //console.log("BinaryExpression param", param);
+                    ////console.log("BinaryExpression param", param);
                     param = Entry.TextCodingUtil.prototype.radarVariableConvertor(param);
 
                     if(param && param != null)
@@ -591,7 +593,7 @@ Entry.JsToBlockParser = function(syntax) {
                     var argument = arguments[i];          
                     var param = this[argument.type](argument);
 
-                    //console.log("param1", param, "type", type);
+                    ////console.log("param1", param, "type", type);
 
                     if(typeof param == "string") {
                         var nameTokens = param.split("_");
@@ -606,11 +608,11 @@ Entry.JsToBlockParser = function(syntax) {
                     }
                     
                     if(param && param != null) {
-                        //console.log("typebbb", type, "parambbb", param);
+                        ////console.log("typebbb", type, "parambbb", param);
                         if(type == "ai_boolean_object") {
                             param = param.params[0];
                             params.splice(1, 1); 
-                            //console.log("param vvv", param);
+                            ////console.log("param vvv", param);
                         }
 
                         param = Entry.TextCodingUtil.prototype.tTobDropdownValueConvertor(param);
@@ -631,11 +633,12 @@ Entry.JsToBlockParser = function(syntax) {
 
             structure.type = type;
             structure.params = params;
-            //console.log("be structure", structure);
+            ////console.log("be structure", structure);
         } else {
-            structure = null;
-
-            return result;
+            throw {
+                message : '지원하지 않는 표현식 입니다.',
+                node : node.test
+            };
         }
 
         result = structure;
@@ -750,9 +753,9 @@ Entry.JsToBlockParser = function(syntax) {
             property = node.property,
             computed = node.computed;
 
-        console.log(object.type)
+        //console.log(object.type)
         object = this[object.type](object);
-        console.log(object);
+        //console.log(object);
 
         property = this[property.type](property, object);
 
@@ -796,25 +799,25 @@ Entry.JsToBlockParser = function(syntax) {
     };
 
     p.CallExpression = function(node) {
-        //console.log("CallExpression node", node);
+        ////console.log("CallExpression node", node);
         var callee = node.callee,
             args = node.arguments;
         var params = [];
         var blockType = this[callee.type](callee);
-        //console.log("blockType", blockType);
+        ////console.log("blockType", blockType);
 
         var type = this.syntax.Scope[blockType];
         var block = Entry.block[type];
-        //console.log("callex block", block);
+        ////console.log("callex block", block);
 
         for(var i = 0; i < args.length; i++) {
             var arg = args[i];
             var value = this[arg.type](arg, type);
-            //console.log("value", value);
+            ////console.log("value", value);
 
             if(block.params[i].type == "Dropdown") {
                 var paramBlock = value;
-                //console.log("Dropdown block", value);
+                ////console.log("Dropdown block", value);
                 params.push(paramBlock);
             }
             else if(block.params[i].type === 'Block') {
@@ -829,7 +832,7 @@ Entry.JsToBlockParser = function(syntax) {
                 params.push(paramBlock);
             }
             else {
-                //console.log("value", value);
+                ////console.log("value", value);
                 params.push(value);
             }
         }
@@ -900,13 +903,13 @@ Entry.JsToBlockParser = function(syntax) {
     };
 
     p.BasicFunction = function(node, body) {
-        //console.log("BasicFunction node", node);
+        ////console.log("BasicFunction node", node);
         return null;
     };
 
     // custom node parser
     p.BasicIteration = function(node, iterCount, body) {
-        //console.log("BasicIteration node", node);
+        ////console.log("BasicIteration node", node);
         if(iterCount > 10) {
             throw {
                 message : '반복 숫자값이 10을 넘으면 안됩니다.',
@@ -928,7 +931,7 @@ Entry.JsToBlockParser = function(syntax) {
     };
 
     p.BasicWhile = function(node, body) {
-        //console.log("BasicWhile node", node);
+        ////console.log("BasicWhile node", node);
         var raw = node.test.raw;
         if (this.syntax.BasicWhile[raw]) {
             return {
@@ -944,7 +947,7 @@ Entry.JsToBlockParser = function(syntax) {
     };
 
     p.BasicIf = function(node) { 
-        //console.log("BasicIf node", node);
+        //console.log("BasicIf node", node);  
         var result = {};
         result.params = [];
         result.statements = [];
@@ -964,34 +967,81 @@ Entry.JsToBlockParser = function(syntax) {
             var test = ''; 
             if(node.test.operator)
                 var operator = (node.test.operator === '===') ? '==' : node.test.operator;
+            else 
+                var operator = null;
 
             if(node.test.left && node.test.right)
                 var testCondition = node.test.left.name + node.test.right.value;
+            else
+                var testCondition = null;
 
-            console.log("this.syntax", this.syntax);
-
+            //console.log("this.syntax", this.syntax);
             //console.log("testCondition", testCondition);
-            if(testCondition == "frontwall") {
+
+            //console.log("node.test", node.test);
+
+            ////console.log("testCondition", testCondition);
+            if(testCondition == "frontwall" && (operator == "==")) {
                 test = "front == \'wall\'";
                 type = this.syntax.BasicIf[test];
-            } else if(testCondition == "fronthump") {
+            } else if(testCondition == "fronthump" && (operator == "==")) {
                 test = "front == \'hump\'";
                 type = this.syntax.BasicIf[test];
-            } else if(testCondition == "frontstone") {
+            } else if(testCondition == "frontstone" && (operator == "==")) {
                 test = "front == \'stone\'";
-                type = this.syntax.BasicIf[test];
-            } else if(testCondition == "frontbee") {
+                type = this.syntax.BasicIf[test]; 
+            } else if(testCondition == "frontbee" && (operator == "==")) {
                 test = "front == \'bee\'";
-                type = this.syntax.BasicIf[test];
-            } else { 
-                type = "ai_if_else";
-                var callExData = this[node.test.type](node.test, this.syntax.Scope);
-                params.push(callExData);
+                type = this.syntax.BasicIf[test]; 
+            } else {
+                if(node.test.value || (node.test.left && node.test.right)) {
+                    type = "ai_if_else";
+                    var callExData = this[node.test.type](node.test, this.syntax.Scope);
+                    params.push(callExData);
+                } else {
+                    throw {
+                        message : '지원하지 않는 표현식 입니다.',
+                        node : node.test
+                    };
+                }
+
             }
+            /*else if(node.test.left && (node.test.left.name == "object_up" || node.test.left.name == "object_right" || node.test.left.name == "object_down")) {
+                if(node.test.right && (node.test.right.raw == "\'obstacle\'" || node.test.right.raw == "\'wall\'" || node.test.right.raw == "\'item\'")) {
+                    if(node.test.operator == "==") {
+                        //console.log("tttest", test);
+                        type = "ai_if_else";
+                        var callExData = this[node.test.type](node.test, this.syntax.Scope);
+                        params.push(callExData);
+                    } else {
+                        throw {
+                            message : '지원하지 않는 표현식 입니다.',
+                            node : node.test
+                        };
+                    }
+                } else {
+                    throw {
+                        message : '지원하지 않는 표현식 입니다.',
+                        node : node.test
+                    };
+                }
+            } else {
+                //console.log("node.test.raw", node.test.raw);
+                if(node.test.raw && (node.test.raw == "true" || node.test.raw == "false")) {
+                    type = "ai_if_else";
+                    var callExData = this[node.test.type](node.test, this.syntax.Scope);
+                    params.push(callExData);
+                } else {
+                    throw {
+                        message : '지원하지 않는 표현식 입니다.',
+                        node : node.test
+                    };
+                }
+            }*/
 
             if (type) {
-                //console.log("target", this.syntax.BasicIf[test]);
-                //console.log("consequent", consequent, "alternate", alternate);
+                ////console.log("target", this.syntax.BasicIf[test]);
+                ////console.log("consequent", consequent, "alternate", alternate);
                 
                 if(consequent && consequent.length != 0){
                     stmtCons = consequent;
@@ -1008,7 +1058,7 @@ Entry.JsToBlockParser = function(syntax) {
                 if(params && params.length != 0)
                     result.params = params;
 
-                console.log("result", result);
+                //console.log("result", result);
                 
                 return result;
             } else {

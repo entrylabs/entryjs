@@ -28,7 +28,6 @@ Entry.Vim = function(dom, textType) {
         return console.error("Dom is not div element");
 
     this.createDom(dom);
-
     //this._parser = new Entry.Parser("maze", "js", this.codeMirror);
     //this._blockParser = new Entry.Parser("maze", "block");
 
@@ -68,7 +67,7 @@ Entry.Vim = function(dom, textType) {
                     cm.replaceSelection(spaces);
                 }*/
             },
-            //gutters: ["CodeMirror-lint-markers"],
+            // gutters: ["CodeMirror-lint-markers"],
             lint: true,
             viewportMargin: 10
         });
@@ -80,9 +79,8 @@ Entry.Vim = function(dom, textType) {
         function eventDragEnd(e) {
             var textCode = _self.getCodeToText(e.block);
             _self.codeMirror.display.dragFunctions.leave(e);
-            var mouseEvent =
-                Entry.Utils.createMouseEvent('mousedown', e);
-            _self.codeMirror.display.scroller.dispatchEvent(mouseEvent);
+            var mousedown = Entry.Utils.createMouseEvent('mousedown', e);
+            _self.codeMirror.display.scroller.dispatchEvent(mousedown);
             var testArr = textCode.split('\n');
             var max = testArr.length - 1;
             var lastLine = 0;
@@ -95,9 +93,8 @@ Entry.Vim = function(dom, textType) {
                     _self.codeMirror.replaceSelection('\n');
                 }
             });
-            mouseEvent =
-                Entry.Utils.createMouseEvent('mouseup', e);
-            _self.codeMirror.display.scroller.dispatchEvent(mouseEvent);
+            var mouseup = Entry.Utils.createMouseEvent('mouseup', e);
+            _self.codeMirror.display.scroller.dispatchEvent(mouseup);
         }
 
         function eventDragOver(e) {
@@ -119,6 +116,7 @@ Entry.Vim = function(dom, textType) {
     };
 
     p.textToCode = function(textType) {
+        //console.log("textToCode", textType);
         var type = textType;
         if (type === Entry.Vim.TEXT_TYPE_JS) {
             this._parserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK;
@@ -130,6 +128,7 @@ Entry.Vim = function(dom, textType) {
 
         var textCode = this.codeMirror.getValue();
         var code = this._parser.parse(textCode);
+        //console.log("code", code);
         /*if(code.length === 0) {
             throw {
                 message : '지원되지 않는 표현식을 포함하고 있습니다.',
@@ -149,7 +148,7 @@ Entry.Vim = function(dom, textType) {
             codeDescription = "# " + object.name + " 오브젝트의 파이썬 코드";
         }
 
-        //console.log("codeToText mode", mode);
+        ////console.log("codeToText mode", mode);
 
         var textType = mode.textType;
 
@@ -172,7 +171,6 @@ Entry.Vim = function(dom, textType) {
             .concat("\n\n")
             .concat(textCode);
         }
-
         this.codeMirror.setValue(textCode);
         if(textType == Entry.Vim.TEXT_TYPE_PY)
             this.codeMirror.getDoc().markText({line:0, ch:0}, {line: 4, ch:0}, {readOnly: true});
@@ -181,8 +179,7 @@ Entry.Vim = function(dom, textType) {
         doc.setCursor({ line: doc.lastLine() - 1});
     };
 
-    p.getCodeToText = function(code) { 
-        console.log("getCodeToText", code);
+    p.getCodeToText = function(code) {
         var textType = this.workspace.oldTextType;
         if (textType === Entry.Vim.TEXT_TYPE_JS){
             this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS;
@@ -192,10 +189,9 @@ Entry.Vim = function(dom, textType) {
             this._parser.setParser(this._mode, this._parserType, this.codeMirror);
         }
         var textCode = this._parser.parse(code, Entry.Parser.PARSE_SYNTAX);
-
         return textCode;
     };
-
+    
     p.setParserAvailableCode = function(blockMenuCode, boardCode) {
         this._parser.setAvailableCode(blockMenuCode, boardCode);
     };
