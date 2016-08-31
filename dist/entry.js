@@ -12750,6 +12750,7 @@ Entry.PyToBlockParser = function(b) {
   b.WhileStatement = function(a) {
     console.log("WhileStatement component", a);
     this._blockCount++;
+    console.log("WhileStatement blockCount++");
     var b;
     b = {statements:[]};
     var c = a.test;
@@ -12789,7 +12790,7 @@ Entry.PyToBlockParser = function(b) {
   };
   b.BlockStatement = function(a) {
     console.log("BlockStatement component", a);
-    a.body[0].declarations && a.body[0].declarations[0].init && a.body[0].declarations[0].init.callee && a.body[0].declarations[0].init.callee.name && (this._blockCount++, console.log("BlockStatement blockCount++"));
+    a.body && 0 != a.body.length && a.body[0].declarations && a.body[0].declarations[0].init && a.body[0].declarations[0].init.callee && a.body[0].declarations[0].init.callee.name && (this._blockCount++, console.log("BlockStatement blockCount++"));
     var b = {statements:[], data:[]}, c = [], e = [], f = [];
     a = a.body;
     console.log("BlockStatement bodies", a);
@@ -13672,10 +13673,10 @@ Entry.Parser = function(b, a, d, c) {
           this._parser._variableMap.clear();
         } catch (t) {
           if (this.codeMirror) {
-            throw console.log("came here error", t), t instanceof SyntaxError ? (console.log("py error type 1", t.loc), c = this.findSyntaxErrorInfo(t), e = this.updateLineEmpty(c.line), e.isLineEmpty && (c.line = e.line, c.start = e.start, c.end = e.end, t.message = e.message), e = {from:{line:c.line - 1, ch:c.start}, to:{line:c.line - 1, ch:c.end}}, t.message || (t.message = "\ud30c\uc774\uc36c \ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4."), t.type = 1) : (console.log("py error type 2", t), c = 
-            t, e = this.findErrorLineForConverting(c.line), c.line = e, e = this.findConvertingTargetChInfo(c.line), e = {from:{line:c.line - 1, ch:e.start}, to:{line:c.line - 1, ch:e.end}}, t.message || (t.message = "\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4."), t.type = 2), console.log("annotation", e), this._marker = this.codeMirror.markText(e.from, e.to, {className:"CodeMirror-lint-mark-error", __annotation:e, clearOnEnter:!0, inclusiveLeft:!0, inclusiveRigth:!0, clearWhenEmpty:!1}), 
-            console.log("came here error2", t), t.title ? l = t.title : 1 == t.type ? l = "\ubb38\ubc95 \uc624\ub958(Syntax Error)" : 2 == t.type && (l = "\ube14\ub85d\ubcc0\ud658 \uc624\ub958(Converting Error)"), c = parseInt(c.line), t.message && c ? m = t.message + " \n(line: " + c + ")" : t.message ? m = t.message : 1 == t.type ? m = "\ud30c\uc774\uc36c \ubb38\ubc95\uc744 \ud655\uc778\ud574\uc8fc\uc138\uc694" : 2 == t.type && (m = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub418\ub294 \ucf54\ub4dc\uc778\uc9c0 \ud655\uc778\ud574\uc8fc\uc138\uc694"), 
-            Entry.toast.alert(l, m), t;
+            throw console.log("came here error", t), t instanceof SyntaxError ? (console.log("py error type 1", t.loc), c = this.findSyntaxErrorInfo(t), c.unknown && (t.message = "\ud574\ub2f9 \uad6c\ubb38 \ubc94\uc704\uc548\uc5d0\uc11c \ubb38\ubc95\uc624\ub958\uac00 \uc874\uc7ac\ud569\ub2c8\ub2e4."), e = this.updateLineEmpty(c.line), e.isLineEmpty && (c.line = e.line, c.start = e.start, c.end = e.end, t.message = e.message), e = {from:{line:c.line - 1, ch:c.start}, to:{line:c.line - 1, ch:c.end}}, 
+            t.message || (t.message = "\ud30c\uc774\uc36c \ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4."), t.type = 1) : (console.log("py error type 2", t), c = t, e = this.findErrorLineForConverting(c.line), c.line = e, e = this.findConvertingTargetChInfo(c.line), e = {from:{line:c.line - 1, ch:e.start}, to:{line:c.line - 1, ch:e.end}}, t.message || (t.message = "\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4."), t.type = 2), console.log("annotation", e), this._marker = this.codeMirror.markText(e.from, 
+            e.to, {className:"CodeMirror-lint-mark-error", __annotation:e, clearOnEnter:!0, inclusiveLeft:!0, inclusiveRigth:!0, clearWhenEmpty:!1}), console.log("came here error2", t), t.title ? l = t.title : 1 == t.type ? l = "\ubb38\ubc95 \uc624\ub958(Syntax Error)" : 2 == t.type && (l = "\ube14\ub85d\ubcc0\ud658 \uc624\ub958(Converting Error)"), c = parseInt(c.line), t.message && c ? m = t.message + " \n(line: " + c + ")" : t.message ? m = t.message : 1 == t.type ? m = "\ud30c\uc774\uc36c \ubb38\ubc95\uc744 \ud655\uc778\ud574\uc8fc\uc138\uc694" : 
+            2 == t.type && (m = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub418\ub294 \ucf54\ub4dc\uc778\uc9c0 \ud655\uc778\ud574\uc8fc\uc138\uc694"), Entry.toast.alert(l, m), t;
           }
           c = [];
         }
@@ -13749,6 +13750,9 @@ Entry.Parser = function(b, a, d, c) {
     console.log("blockCount", a);
     var b = 0, c = this.codeMirror.getValue().split("\n");
     console.log("contentsArr44", c);
+    if (a > c.length - 4) {
+      return b = c.length;
+    }
     for (var e = 0, f = 4;f < c.length;f++) {
       var g = c[f];
       console.log("ljh line", g);
@@ -13819,6 +13823,7 @@ Entry.Parser = function(b, a, d, c) {
       if (h = a[g], console.log("targetText", h), console.log("this._pyThreadCount", this._pyThreadCount), g + 1 == c) {
         console.log("i+1", g + 1);
         b.line = g + 1 + f + (this._pyThreadCount - 1);
+        console.log("column", e);
         0 == e && 2 == g + 1 ? (console.log("type1"), --b.line) : 1 == e && 1 != g + 1 ? (console.log("type2"), --b.line) : 1 == c && 0 == e && (console.log("type3"), --b.line);
         b.line += 4;
         b.start = 0;
@@ -13826,13 +13831,14 @@ Entry.Parser = function(b, a, d, c) {
         break;
       }
     }
+    isNaN(e) && (console.log("here"), b.line = a.length, b.unknown = !0);
     console.log("findSyntaxErrorInfo result", b);
     return b;
   };
   b.updateLineEmpty = function(a) {
     console.log("lineNumber", a);
     var b = {}, c = this.codeMirror.getValue().split("\n");
-    console.log("contentsArr2", c);
+    console.log("contentsArr222", c);
     if (0 == c[a - 1].trim().length) {
       c[a - 1] = "     ";
       var e = c.join("\n");

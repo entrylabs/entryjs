@@ -337,6 +337,9 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
                             //errorInfo.line -= 1;
 
+                            if(errorInfo.unknown)
+                                error.message = '해당 구문 범위안에서 문법오류가 존재합니다.';
+
                             var updateLineInfo = this.updateLineEmpty(errorInfo.line);
 
                             if(updateLineInfo.isLineEmpty) {
@@ -606,6 +609,12 @@ Entry.Parser = function(mode, type, cm, syntax) {
         var contents = this.codeMirror.getValue();
         var contentsArr = contents.split("\n");
         console.log("contentsArr44", contentsArr);
+
+        if(blockCount > contentsArr.length - 4) {
+            errorLine = contentsArr.length;
+            return errorLine;
+        }
+
         
         var index = 0;
         for(var i = 4; i < contentsArr.length; i++) {
@@ -728,12 +737,12 @@ Entry.Parser = function(mode, type, cm, syntax) {
             console.log("targetText", targetText);
             console.log("this._pyThreadCount", this._pyThreadCount); 
 
-
             if(i+1 == line) {
                 console.log("i+1", i+1);
                 result.line = i + 1 + currentLineCount + (this._pyThreadCount-1);
+                console.log("column", column);
                 if(column == 0 && (i+1) == 2) {
-                    console.log("type1");
+                    console.log("type1"); 
                     result.line -= 1;
                 }
                 else if(column == 1 && (i+1) != 1) {
@@ -743,7 +752,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 else if(line == 1 && column == 0) {
                     console.log("type3");
                     result.line -= 1;
-                }
+                } 
+                
 
                 result.line += 4;
                 result.start = 0;
@@ -752,6 +762,12 @@ Entry.Parser = function(mode, type, cm, syntax) {
             }
         }
         
+        if(isNaN(column)) {
+            console.log("here");
+            result.line = contentsArr.length;
+            result.unknown = true;
+        }
+
         console.log("findSyntaxErrorInfo result", result);
         return result;
         
@@ -762,7 +778,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
         var result = {};
         var contents = this.codeMirror.getValue();
         var contentsArr = contents.split("\n");
-        console.log("contentsArr2", contentsArr);
+        console.log("contentsArr222", contentsArr);
 
         var text = contentsArr[lineNumber-1];
 

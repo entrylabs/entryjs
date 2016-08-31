@@ -1024,6 +1024,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.WhileStatement = function(component) {
         console.log("WhileStatement component", component);
         this._blockCount++;
+        console.log("WhileStatement blockCount++");
         var result;
         var structure = {};
         structure.statements = [];
@@ -1109,7 +1110,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.BlockStatement = function(component) { 
         console.log("BlockStatement component", component);
-        if(component.body[0].declarations && component.body[0].declarations[0].init &&
+        if(component.body && component.body.length != 0 && 
+            component.body[0].declarations && 
+            component.body[0].declarations[0].init &&
             component.body[0].declarations[0].init.callee &&
             component.body[0].declarations[0].init.callee.name) {
             this._blockCount++;
