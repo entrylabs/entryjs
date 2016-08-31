@@ -304,8 +304,10 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         }
 
                         if(!ast) {
-                            tCount--;
-                            this._pyThreadCount--; 
+                            if(this._pyThreadCount > 1) {
+                                tCount--;
+                                this._pyThreadCount--; 
+                            }
                             continue;
                         }
                         
@@ -732,14 +734,27 @@ Entry.Parser = function(mode, type, cm, syntax) {
         console.log("currentLineCount", currentLineCount);
         console.log("this.pyBlockcount", this._pyBlockCount);
 
+        var initEmptyLine = 0;
+        var notShowTextLine = true;
+
+        if(isNaN(column)) {
+            line = contentsArr.length;
+        }
+        
         for(var i = 0; i < contentsArr.length; i++) {
             var targetText = contentsArr[i];
             console.log("targetText", targetText);
             console.log("this._pyThreadCount", this._pyThreadCount); 
 
+            if(targetText.trim().length == 0 && notShowTextLine)
+                initEmptyLine++;
+            else
+                notShowTextLine = false;
+
+
             if(i+1 == line) {
                 console.log("i+1", i+1);
-                result.line = i + 1 + currentLineCount + (this._pyThreadCount-1);
+                result.line = i + 1 + currentLineCount + (this._pyThreadCount-1) + initEmptyLine;
                 console.log("column", column);
                 if(column == 0 && (i+1) == 2) {
                     console.log("type1"); 
@@ -753,7 +768,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     console.log("type3");
                     result.line -= 1;
                 } 
-                
 
                 result.line += 4;
                 result.start = 0;
@@ -763,9 +777,11 @@ Entry.Parser = function(mode, type, cm, syntax) {
         }
         
         if(isNaN(column)) {
-            console.log("here");
-            result.line = contentsArr.length;
-            result.unknown = true;
+            console.log("initEmptyLine", initEmptyLine);
+            result.line = currentLineCount + (this._pyThreadCount-1) + 4 + 1 + initEmptyLine;
+            result.start = 0;
+            result.end = contentsArr[line-1].length; 
+            result.unknown = true; 
         }
 
         console.log("findSyntaxErrorInfo result", result);
@@ -782,7 +798,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
         var text = contentsArr[lineNumber-1];
 
-        if(text.trim().length == 0) {
+        if(text.trim().length == 0 && lineNumber > 3) {
             contentsArr[lineNumber-1] = "     ";
             var newContents = contentsArr.join("\n");
             console.log("newContents", newContents);

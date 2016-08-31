@@ -13666,7 +13666,7 @@ Entry.Parser = function(b, a, d, c) {
               }
               "Program" == k.type && 0 != k.body.length && f.push(k);
             } else {
-              q--, this._pyThreadCount--;
+              1 < this._pyThreadCount && (q--, this._pyThreadCount--);
             }
           }
           c = this._parser.Program(f);
@@ -13819,19 +13819,26 @@ Entry.Parser = function(b, a, d, c) {
     }
     console.log("currentLineCount", f);
     console.log("this.pyBlockcount", this._pyBlockCount);
-    for (g = 0;g < a.length;g++) {
-      if (h = a[g], console.log("targetText", h), console.log("this._pyThreadCount", this._pyThreadCount), g + 1 == c) {
-        console.log("i+1", g + 1);
-        b.line = g + 1 + f + (this._pyThreadCount - 1);
+    g = 0;
+    h = !0;
+    isNaN(e) && (c = a.length);
+    for (var k = 0;k < a.length;k++) {
+      var l = a[k];
+      console.log("targetText", l);
+      console.log("this._pyThreadCount", this._pyThreadCount);
+      0 == l.trim().length && h ? g++ : h = !1;
+      if (k + 1 == c) {
+        console.log("i+1", k + 1);
+        b.line = k + 1 + f + (this._pyThreadCount - 1) + g;
         console.log("column", e);
-        0 == e && 2 == g + 1 ? (console.log("type1"), --b.line) : 1 == e && 1 != g + 1 ? (console.log("type2"), --b.line) : 1 == c && 0 == e && (console.log("type3"), --b.line);
+        0 == e && 2 == k + 1 ? (console.log("type1"), --b.line) : 1 == e && 1 != k + 1 ? (console.log("type2"), --b.line) : 1 == c && 0 == e && (console.log("type3"), --b.line);
         b.line += 4;
         b.start = 0;
-        b.end = h.length;
+        b.end = l.length;
         break;
       }
     }
-    isNaN(e) && (console.log("here"), b.line = a.length, b.unknown = !0);
+    isNaN(e) && (console.log("initEmptyLine", g), b.line = f + (this._pyThreadCount - 1) + 4 + 1 + g, b.start = 0, b.end = a[c - 1].length, b.unknown = !0);
     console.log("findSyntaxErrorInfo result", b);
     return b;
   };
@@ -13839,7 +13846,7 @@ Entry.Parser = function(b, a, d, c) {
     console.log("lineNumber", a);
     var b = {}, c = this.codeMirror.getValue().split("\n");
     console.log("contentsArr222", c);
-    if (0 == c[a - 1].trim().length) {
+    if (0 == c[a - 1].trim().length && 3 < a) {
       c[a - 1] = "     ";
       var e = c.join("\n");
       console.log("newContents", e);
@@ -19511,9 +19518,9 @@ Entry.BlockMenuScroller.RADIUS = 7;
       a.stopPropagation && a.stopPropagation();
       a.preventDefault && a.preventDefault();
       a = a.originalEvent && a.originalEvent.touches ? a.originalEvent.touches[0] : a;
-      var d = e.dragInstance;
-      e.scroll(a.pageY - d.offsetY);
-      d.set({offsetY:a.pageY});
+      var c = e.dragInstance;
+      e.scroll(a.pageY - c.offsetY);
+      c.set({offsetY:a.pageY});
     }
     function c(a) {
       $(document).unbind(".scroll");
