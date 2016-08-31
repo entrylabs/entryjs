@@ -12413,7 +12413,6 @@ Entry.block = {
                 Entry.Robotis_carCont.update();
 
                 scope.data_default_address = data_default_address;
-                console.log(data_default_address);
                 throw new Entry.Utils.AsyncError();
             } else if(scope.count < 2) {
                 scope.count++;
@@ -18331,12 +18330,13 @@ Entry.block = {
                 this.isContinue = true;
                 this.isAction = true;
                 var self = this;
-                var callBack = function() {
+                var callback = function() {
+                    Ntry.dispatchEvent('destoryObstacle', 1);
                     self.isAction = false;
                 };
 
                 // turn direction
-                Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, callBack);
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.ATTACK, callback);
 
                 return Entry.STATIC.BREAK;
             } else if (this.isAction) {
