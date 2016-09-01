@@ -18534,7 +18534,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Image",
-                "img": "../../../img/assets/ntry/bitmap/maze2/obstacle_01.png",
+                "img": "../../../img/assets/maze/bitmap/stage4/road_4_01.png",
                 "size": 18
             },
             {
@@ -18551,8 +18551,7 @@ Entry.block = {
         func: function() {
             if (this.isContinue) return;
 
-            var entities =
-                Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+            var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
 
             var entity;
             for (var key in entities)
@@ -18574,18 +18573,18 @@ Entry.block = {
                 },
                 {
                     type: Ntry.STATIC.TILE,
-                    tileType: Ntry.STATIC.OBSTACLE_BEE
+                    tileType: Ntry.STATIC.ROAD
                 }
             );
 
             this.isContinue = true;
 
             var statement = this.block.statements[0];
-            if (fitEntities.length === 0) {
+            if (fitEntities.length > 0) {
                 return;
-            } else if (statement.getBlocks().length === 0)
+            } else if (statement.getBlocks().length === 0){
                 return;
-            else {
+            } else {
                 this.executor.stepInto(statement);
                 return Entry.STATIC.BREAK;
             }
