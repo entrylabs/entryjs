@@ -976,7 +976,7 @@ Entry.TextCodingUtil = function() {
             console.log("option", option, "option.length", option.length);
 
             if(option == '\"until\"') {
-                blockArr[2] = "!= True:\n\tif(" + blockArr[1] + " == True)\n\t\tbreak";
+                blockArr[2] = "!= True:\n\tif " + blockArr[1] + " == True:\n\t\tbreak";
                 result = blockArr.join(" ");
             }
             else if(option == '\"while\"') {

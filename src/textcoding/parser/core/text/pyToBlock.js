@@ -1034,13 +1034,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if(test.value === true) {
             var syntax = String("while True:\n$1");
             var type = this.getBlockType(syntax);
-        } else {
-                var error = {};
-                error.title = "블록변환(Converting) 오류";
-                error.message = "블록으로 변환될 수 없는 코드입니다. \'True\' 를 사용하세요.";
-                error.line = this._blockCount; 
-                console.log("send error", error); 
-                throw error;     
+        }
+        else if(test.operator == "!=") {
+            var syntax = String("while %1 %2\n$1");
+            var type = this.getBlockType(syntax);
+        } 
+
+        if(test.type == "Identifier") {
+            var error = {};
+            error.title = "블록변환(Converting) 오류";
+            error.message = "블록으로 변환될 수 없는 코드입니다. \'True\' 를 사용하세요.";
+            error.line = this._blockCount; 
+            console.log("send error", error); 
+            throw error;     
         } 
 
         console.log("WhileStatement type", type);
@@ -1049,7 +1055,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("WhileStatement paramsMeta", paramsMeta);
                 
         var params = [];
-        if(test.type == "Literal" || test.type == "Identifier") {
+        if(test.type == "Literal" || test.type == "Identifier" || test.type == "BinaryExpression") {
             var arguments = [];
             arguments.push(test);
             var paramsMeta = Entry.block[type].params;
@@ -1095,12 +1101,22 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         console.log("WhileStatement bodyData", bodyData);
 
-        if(params[0].type == "True") {
-            structure.type = type;
-            //structure.params = params; 
+        
+        structure.type = type;
+        if(type == "repeat_while_true" || test.operator == "!=") {
+            var stmts = bodyData.statements;
+            for(var i in stmts) {
+                var stmt = stmts[i];
+                if(stmt.type == "_if") {
+                    stmts.splice(i,1);
+                    break;
+                }
+            }
             structure.statements.push(bodyData.statements);
-        } 
-
+        } else {
+            structure.statements.push(bodyData.statements);
+        }
+        
         result = structure;
         
         console.log("WhileStatement result", result); 
@@ -1532,11 +1548,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.UnaryExpression = function(component) {
         console.log("UnaryExpression component", component);
         var result;
-        var data;    
+        var data;
+        var structure = {};    
 
         if(component.prefix){
+            var type;
+            var syntax;
             var operator = component.operator;
             var argument = component.argument;
+
             switch(operator){
                 case "-": 
                     operator = operator; 
@@ -1545,12 +1565,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     operator = operator; 
                     break;                   
                 case "!": 
-                    var error = {};
-                    error.title = "블록변환(Converting) 오류";
-                    error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
-                    error.line = this._blockCount; 
-                    console.log("send error", error); 
-                    throw error;
+                    syntax = String("(not %2)");  
+                    type = this.getBlockType(syntax);
                     break;                    
                 case "~":
                     var error = {};
@@ -1596,13 +1612,68 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
 
             console.log("UnaryExpression operator", operator);
-            argument.value = Number(operator.concat(argument.value));
-            var value = this[argument.type](argument);
-            data = value;
-            console.log("UnaryExpression data", data);
+            var params = [];
+            if(operator == "+" || operator == "-") {
+                argument.value = Number(operator.concat(argument.value));
+                var value = this[argument.type](argument);
+                data = value;
+                console.log("UnaryExpression data", data);
+                structure.data = data;
+            } 
+            else if(operator == "!") {
+                if(argument.type == "Literal" || argument.type == "Identifier") {
+                    var arguments = [];
+                    arguments.push(argument);
+                    var paramsMeta = Entry.block[type].params;
+                    var paramsDefMeta = Entry.block[type].def.params;
+                    console.log("UnaryExpression paramsMeta", paramsMeta); 
+                    console.log("UnaryExpression paramsDefMeta", paramsDefMeta); 
+
+                    for(var p in paramsMeta) {
+                        var paramType = paramsMeta[p].type;
+                        if(paramType == "Indicator") {
+                            var pendingArg = {raw: null, type: "Literal", value: null}; 
+                            if(p < arguments.length) 
+                                arguments.splice(p, 0, pendingArg);              
+                        }
+                        else if(paramType == "Text") {
+                            var pendingArg = {raw: "", type: "Literal", value: ""};
+                            if(p < arguments.length) 
+                                arguments.splice(p, 0, pendingArg);
+                        }
+                    }
+        
+                    for(var i in arguments) {
+                        var argument = arguments[i];
+                        console.log("UnaryExpression argument", argument);
+                                  
+                        var param = this[argument.type](argument, paramsMeta[i], paramsDefMeta[i], true);
+                        console.log("UnaryExpression param", param);
+                        if(param && param != null) {
+                            params.push(param);
+                            params.splice(0, 0, "");
+                            params.splice(2, 0, "");
+                               
+                        }
+                    }  
+                } else {
+                    param = this[argument.type](argument);
+                    if(param) {
+                        params.push(param);
+                        params.splice(0, 0, "");
+                        params.splice(2, 0, "");
+                    }
+                } 
+            }
         }
 
-        result = data;
+        console.log("syntax", syntax);
+        console.log("type", type);
+
+        structure.type = type;
+        structure.params = params;
+
+        result = structure;
 
         console.log("UnaryExpression result", result);
         
@@ -1760,7 +1831,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var syntax = String("(%1 %2boolean_compare# %3)"); 
                 break;      
             case "!=": 
-                var syntax = String("(%2 != True)");  
+                //used in repeat_while_true block
                 break;               
             case "===": 
                 var error = {};

@@ -12213,7 +12213,7 @@ Entry.TextCodingUtil = function() {
       c = b.split(" ");
       var e = c[2];
       console.log("option", e, "option.length", e.length);
-      '"until"' == e ? (c[2] = "!= True:\n\tif(" + c[1] + " == True)\n\t\tbreak", c = c.join(" ")) : '"while"' == e ? (c[2] = "== True:", c = c.join(" ")) : c = b;
+      '"until"' == e ? (c[2] = "!= True:\n\tif " + c[1] + " == True:\n\t\tbreak", c = c.join(" ")) : '"while"' == e ? (c[2] = "== True:", c = c.join(" ")) : c = b;
     } else {
       c = b;
     }
@@ -13533,33 +13533,44 @@ Entry.PyToBlockParser = function(b) {
     if (!0 === c.value) {
       var e = this.getBlockType("while True:\n$1")
     } else {
+      "!=" == c.operator && (e = this.getBlockType("while %1 %2\n$1"));
+    }
+    if ("Identifier" == c.type) {
       throw b = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4. 'True' \ub97c \uc0ac\uc6a9\ud558\uc138\uc694."}, b.line = this._blockCount, console.log("send error", b), b;
     }
     console.log("WhileStatement type", e);
     var f = Entry.block[e].params;
     console.log("WhileStatement paramsMeta", f);
     var g = [];
-    if ("Literal" == c.type || "Identifier" == c.type) {
+    if ("Literal" == c.type || "Identifier" == c.type || "BinaryExpression" == c.type) {
       arguments = [];
       arguments.push(c);
-      f = Entry.block[e].params;
-      c = Entry.block[e].def.params;
+      var f = Entry.block[e].params, h = Entry.block[e].def.params;
       console.log("WhileStatement paramsMeta", f);
-      console.log("WhileStatement paramsDefMeta", c);
-      for (var h in f) {
-        var k = f[h].type;
-        "Indicator" == k ? (k = {raw:null, type:"Literal", value:null}, h < arguments.length && arguments.splice(h, 0, k)) : "Text" == k && (k = {raw:"", type:"Literal", value:""}, h < arguments.length && arguments.splice(h, 0, k));
+      console.log("WhileStatement paramsDefMeta", h);
+      for (var k in f) {
+        var l = f[k].type;
+        "Indicator" == l ? (l = {raw:null, type:"Literal", value:null}, k < arguments.length && arguments.splice(k, 0, l)) : "Text" == l && (l = {raw:"", type:"Literal", value:""}, k < arguments.length && arguments.splice(k, 0, l));
       }
-      for (var l in arguments) {
-        h = arguments[l], console.log("WhileStatement argument", h), h = this[h.type](h, f[l], c[l], !0), console.log("WhileStatement Literal param", h), h && null != h && g.push(h);
+      for (var m in arguments) {
+        k = arguments[m], console.log("WhileStatement argument", k), k = this[k.type](k, f[m], h[m], !0), console.log("WhileStatement Literal param", k), k && null != k && g.push(k);
       }
     } else {
-      h = this[c.type](c), console.log("WhileStatement Not Literal param", h), h && null != h && g.push(h);
+      k = this[c.type](c), console.log("WhileStatement Not Literal param", k), k && null != k && g.push(k);
     }
     f = a.body;
     f = this[f.type](f);
     console.log("WhileStatement bodyData", f);
-    "True" == g[0].type && (b.type = e, b.statements.push(f.statements));
+    b.type = e;
+    if ("repeat_while_true" == e || "!=" == c.operator) {
+      for (m in c = f.statements, c) {
+        if ("_if" == c[m].type) {
+          c.splice(m, 1);
+          break;
+        }
+      }
+    }
+    b.statements.push(f.statements);
     console.log("WhileStatement result", b);
     return b;
   };
@@ -13753,33 +13764,60 @@ Entry.PyToBlockParser = function(b) {
   };
   b.UnaryExpression = function(a) {
     console.log("UnaryExpression component", a);
-    var b;
+    var b, c;
+    b = {};
     if (a.prefix) {
-      b = a.operator;
-      a = a.argument;
-      switch(b) {
+      var e, f, g = a.operator, h = a.argument;
+      switch(g) {
         case "-":
           break;
         case "+":
           break;
         case "!":
-          throw a = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, a.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + b + "' \ud45c\ud604\uc2dd\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", a.line = this._blockCount, console.log("send error", a), a;;
+          f = "(not %2)";
+          e = this.getBlockType(f);
+          break;
         case "~":
-          throw a = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, a.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + b + "' \ud45c\ud604\uc2dd\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", a.line = this._blockCount, console.log("send error", a), a;;
+          throw b = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + g + "' \ud45c\ud604\uc2dd\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", b.line = this._blockCount, console.log("send error", b), b;;
         case "typeof":
-          throw a = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, a.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + b + "' \ud45c\ud604\uc2dd\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", a.line = this._blockCount, console.log("send error", a), a;;
+          throw b = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + g + "' \ud45c\ud604\uc2dd\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", b.line = this._blockCount, console.log("send error", b), b;;
         case "void":
-          throw a = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, a.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + b + "' \ud45c\ud604\uc2dd\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", a.line = this._blockCount, console.log("send error", a), a;;
+          throw b = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + g + "' \ud45c\ud604\uc2dd\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", b.line = this._blockCount, console.log("send error", b), b;;
         case "delete":
-          throw a = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, a.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + b + "' \ud45c\ud604\uc2dd\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", a.line = this._blockCount, console.log("send error", a), a;;
+          throw b = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + g + "' \ud45c\ud604\uc2dd\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", b.line = this._blockCount, console.log("send error", b), b;;
         default:
-          throw a = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, a.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + b + "' \ud45c\ud604\uc2dd\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", a.line = this._blockCount, console.log("send error", a), a;;
+          throw b = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + g + "' \ud45c\ud604\uc2dd\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", b.line = this._blockCount, console.log("send error", b), b;;
       }
-      console.log("UnaryExpression operator", b);
-      a.value = Number(b.concat(a.value));
-      b = this[a.type](a);
-      console.log("UnaryExpression data", b);
+      console.log("UnaryExpression operator", g);
+      var k = [];
+      if ("+" == g || "-" == g) {
+        h.value = Number(g.concat(h.value)), c = this[h.type](h), console.log("UnaryExpression data", c), b.data = c;
+      } else {
+        if ("!" == g) {
+          if ("Literal" == h.type || "Identifier" == h.type) {
+            arguments = [];
+            arguments.push(h);
+            var g = Entry.block[e].params, l = Entry.block[e].def.params;
+            console.log("UnaryExpression paramsMeta", g);
+            console.log("UnaryExpression paramsDefMeta", l);
+            for (var m in g) {
+              h = g[m].type, "Indicator" == h ? (h = {raw:null, type:"Literal", value:null}, m < arguments.length && arguments.splice(m, 0, h)) : "Text" == h && (h = {raw:"", type:"Literal", value:""}, m < arguments.length && arguments.splice(m, 0, h));
+            }
+            for (c in arguments) {
+              h = arguments[c], console.log("UnaryExpression argument", h), m = this[h.type](h, g[c], l[c], !0), console.log("UnaryExpression param", m), m && null != m && (k.push(m), k.splice(0, 0, ""), k.splice(2, 0, ""));
+            }
+          } else {
+            if (m = this[h.type](h)) {
+              k.push(m), k.splice(0, 0, ""), k.splice(2, 0, "");
+            }
+          }
+        }
+      }
     }
+    console.log("syntax", f);
+    console.log("type", e);
+    b.type = e;
+    b.params = k;
     console.log("UnaryExpression result", b);
     return b;
   };
@@ -13860,7 +13898,6 @@ Entry.PyToBlockParser = function(b) {
         var f = "(%1 %2boolean_compare# %3)";
         break;
       case "!=":
-        f = "(%2 != True)";
         break;
       case "===":
         throw c = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, c.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + e + "' \ud45c\ud604\uc2dd\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", c.line = this._blockCount, console.log("send error", c), c;;
