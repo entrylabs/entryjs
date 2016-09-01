@@ -3328,7 +3328,6 @@ input.entryObjectNameWorkspace:-moz-read-only {
 .entryPlaygroundPainterTop {
   position: absolute;
   display: block;
-  width: 100%;
   left: 55px;
   background-color: #634cd9;
   height: 29px;
