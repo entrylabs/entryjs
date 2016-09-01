@@ -30,6 +30,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
 (function(p){
     p.Program = function(astArr) { 
+        console.log("this.syntax", this.blockSyntax);
         try {
             var code = [];
             
@@ -1030,15 +1031,41 @@ Entry.PyToBlockParser = function(blockSyntax) {
         
         var test = component.test;
         console.log("WhileStatement test", test);
+        var whileType = "basic";
 
+        var condBody = component.body;
         if(test.value === true) {
-            var syntax = String("while True:\n$1");
-            var type = this.getBlockType(syntax);
+            if(condBody && condBody.body && condBody.body[0].type == "IfStatement") {
+                var ifStatement = condBody.body[0];
+                var cons = ifStatement.consequent;
+                var ifTest = ifStatement.test;
+                if(ifTest && ifTest.operator == "!" && cons && cons.body && cons.body.length == 1 && cons.body[0].type == "BreakStatement") {
+                    var syntax = String("while %1 %2\n$1");
+                    var type = this.getBlockType(syntax);
+                    whileType = "while";
+                }
+                else if(ifTest && cons && cons.body && cons.body.length == 1 && cons.body[0].type == "BreakStatement") {
+                    var syntax = String("while %1 %2\n$1");
+                    var type = this.getBlockType(syntax);
+                    whileType = "until";
+                }
+                else {
+                    var syntax = String("while True:\n$1");
+                    var type = this.getBlockType(syntax);
+                }
+            } else {
+                var syntax = String("while True:\n$1");
+                var type = this.getBlockType(syntax);
+            }
         }
-        else if(test.operator == "!=") {
+        /*else if(test.operator == "!=") {
             var syntax = String("while %1 %2\n$1");
             var type = this.getBlockType(syntax);
         } 
+        else if(test.operator == "==") {
+            var syntax = String("while %1 %2\n$1");
+            var type = this.getBlockType(syntax);
+        }*/
 
         if(test.type == "Identifier") {
             var error = {};
@@ -1050,6 +1077,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
         } 
 
         console.log("WhileStatement type", type);
+
+        if(!type) {
+            var error = {};
+            error.title = "블록변환(Converting) 오류";
+            error.message = "블록으로 변환될 수 없는 코드입니다." + "\'while\'문의 파라미터를 확인하세요.";
+            error.line = this._blockCount; 
+            console.log("send error", error); 
+            throw error; 
+        }
 
         var paramsMeta = Entry.block[type].params;
         console.log("WhileStatement paramsMeta", paramsMeta);
@@ -1091,8 +1127,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var param = this[test.type](test);
             console.log("WhileStatement Not Literal param", param);
             if(param && param != null)
-                params.push(param);   
-            
+                params.push(param);       
         }   
                 
         var statements = [];
@@ -1101,21 +1136,38 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         console.log("WhileStatement bodyData", bodyData);
 
-        
         structure.type = type;
-        if(type == "repeat_while_true" || test.operator == "!=") {
-            var stmts = bodyData.statements;
-            for(var i in stmts) {
-                var stmt = stmts[i];
-                if(stmt.type == "_if") {
-                    stmts.splice(i,1);
-                    break;
+        if(type == "repeat_while_true") {
+            if(whileType == "until") {
+                if(bodyData.data && bodyData.data[0]) {
+                    var ifStmt = bodyData.data[0];
+                    var param = ifStmt.params[0];
+                    params = [];
+                    params.push(param);
+                    var option = "until";
+                    params.push(option);
+                }
+
+
+            }
+            else if(whileType == "while") {
+                if(bodyData.data && bodyData.data[0]) {
+                    var ifStmt = bodyData.data[0];
+                    var param = ifStmt.params[0].params[1];
+
+                    params = [];
+                    params.push(param);
+                    var option = "while";
+                    params.push(option); 
                 }
             }
-            structure.statements.push(bodyData.statements);
-        } else {
-            structure.statements.push(bodyData.statements);
-        }
+            bodyData.statements.shift();
+        } 
+
+        console.log("WhileStatement params", params);
+        
+        structure.statements.push(bodyData.statements);
+        structure.params = params;
         
         result = structure;
         
@@ -1565,8 +1617,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     operator = operator; 
                     break;                   
                 case "!": 
-                    syntax = String("(not %2)");  
-                    type = this.getBlockType(syntax);
+                    operator = operator;
+                    type = "boolean_not";
                     break;                    
                 case "~":
                     var error = {};
@@ -1592,7 +1644,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     console.log("send error", error); 
                     throw error;
                     break;                  
-                case "delete":
+                case "delete": 
                     var error = {};
                     error.title = "블록변환(Converting) 오류";
                     error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
@@ -1611,6 +1663,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     break;
             }
 
+            console.log("UnaryExpression type", type);
             console.log("UnaryExpression operator", operator);
             var params = [];
             if(operator == "+" || operator == "-") {
@@ -1831,16 +1884,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var syntax = String("(%1 %2boolean_compare# %3)"); 
                 break;      
             case "!=": 
-                //used in repeat_while_true block
-                break;               
+                var syntax = String("not (%2)"); 
+                break;                    
             case "===": 
-                var error = {};
-                error.title = "블록변환(Converting) 오류";
-                error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
-                error.line = this._blockCount; 
-                console.log("send error", error); 
-                throw error;
-                break; 
+                var syntax = String("(%1 %2boolean_compare# %3)"); 
+                break;      
             case "!==":
                 var error = {};
                 error.title = "블록변환(Converting) 오류";
@@ -1848,7 +1896,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 error.line = this._blockCount; 
                 console.log("send error", error); 
                 throw error;
-                break;               
+                break;                     
             case "<": 
                 var syntax = String("(%1 %2boolean_compare# %3)");  
                 break;                 
@@ -1861,7 +1909,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             case ">=": 
                 var syntax = String("(%1 %2boolean_compare# %3)");  
                 break;                
-            case "<<":   
+            case "<<":    
                 var error = {};
                 error.title = "블록변환(Converting) 오류";
                 error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + operator + "\'" + " 표현식은 지원하지 않습니다.";
@@ -1946,6 +1994,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 throw error;
                 break;             
             case "instanceof": 
+                //used in BlockStatement
                 break;                  
             default: 
                 operator = operator;
@@ -2074,18 +2123,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }   
             console.log("BinaryExpression right param", param);
             
-            /*if(type == "boolean_not") {
+            if(type == "boolean_not") {
                 params = [];
                 params[0] = "";
                 params[1] = this[left.type](left, paramsMeta[1], paramsDefMeta[1], true);
                 params[2] = "";
-            }*/
+            }
 
             structure.type = type;
             structure.params = params;
         } else {
-            structure = null;
-
             return result;
         }
 

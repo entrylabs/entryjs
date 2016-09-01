@@ -9823,7 +9823,7 @@ Entry.block = {
         "func": function (sprite, script) {
             return !script.getBooleanValue("VALUE");
         },
-        "syntax": {"js": [], "py": ["(not %2)"]}
+        "syntax": {"js": [], "py": ["not (%2)"]}
     },
     "true_or_false": {
         "color": "#AEB8FF",

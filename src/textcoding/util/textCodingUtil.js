@@ -968,20 +968,29 @@ Entry.TextCodingUtil = function() {
     };
 
     p.assembleRepeatWhileTrueBlock = function(block, syntax) {
-        console.log("assembleRepeatWhileTrueBlock >>", "block", block, "syntax", syntax);
-        var result;
+        console.log("assembleRepeatWhileTrueBlock >>", "block", block.data.type, "syntax", syntax);
+        var result = '';
         if(block.data.type == "repeat_while_true") {
             var blockArr = syntax.split(" ");
-            var option = blockArr[2];
+            var lastIndex = blockArr.length-1;
+            var option = blockArr[lastIndex];
             console.log("option", option, "option.length", option.length);
 
             if(option == '\"until\"') {
-                blockArr[2] = "!= True:\n\tif " + blockArr[1] + " == True:\n\t\tbreak";
-                result = blockArr.join(" ");
+                blockArr.shift();
+                blockArr.pop();
+                var condition = blockArr.join(" ");
+                var restContext = "True:\n\tif " + condition + ":\n\t\tbreak";
+                var whileStatement = "while";
+                result = whileStatement + " " + restContext;
             }
             else if(option == '\"while\"') {
-                blockArr[2] = "== True:";
-                result = blockArr.join(" ");
+                blockArr.shift();
+                blockArr.pop();
+                var condition = blockArr.join(" ");
+                var restContext = "True:\n\tif " + "not (" + condition + "):\n\t\tbreak";
+                var whileStatement = "while";
+                result = whileStatement + " " + restContext;
             }
             else {
                 result = syntax;

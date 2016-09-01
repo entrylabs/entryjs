@@ -12207,13 +12207,12 @@ Entry.TextCodingUtil = function() {
     }
   };
   b.assembleRepeatWhileTrueBlock = function(a, b) {
-    console.log("assembleRepeatWhileTrueBlock >>", "block", a, "syntax", b);
-    var c;
+    console.log("assembleRepeatWhileTrueBlock >>", "block", a.data.type, "syntax", b);
+    var c = "";
     if ("repeat_while_true" == a.data.type) {
-      c = b.split(" ");
-      var e = c[2];
+      var c = b.split(" "), e = c[c.length - 1];
       console.log("option", e, "option.length", e.length);
-      '"until"' == e ? (c[2] = "!= True:\n\tif " + c[1] + " == True:\n\t\tbreak", c = c.join(" ")) : '"while"' == e ? (c[2] = "== True:", c = c.join(" ")) : c = b;
+      '"until"' == e ? (c.shift(), c.pop(), c = c.join(" "), c = "while " + ("True:\n\tif " + c + ":\n\t\tbreak")) : '"while"' == e ? (c.shift(), c.pop(), c = c.join(" "), c = "while " + ("True:\n\tif not (" + c + "):\n\t\tbreak")) : c = b;
     } else {
       c = b;
     }
@@ -13064,6 +13063,7 @@ Entry.PyToBlockParser = function(b) {
 };
 (function(b) {
   b.Program = function(a) {
+    console.log("this.syntax", this.blockSyntax);
     try {
       var b = [];
       this._blockCount = this._threadCount = 0;
@@ -13530,47 +13530,50 @@ Entry.PyToBlockParser = function(b) {
     b = {statements:[]};
     var c = a.test;
     console.log("WhileStatement test", c);
+    var e = "basic", f = a.body;
     if (!0 === c.value) {
-      var e = this.getBlockType("while True:\n$1")
-    } else {
-      "!=" == c.operator && (e = this.getBlockType("while %1 %2\n$1"));
+      if (f && f.body && "IfStatement" == f.body[0].type) {
+        var f = f.body[0], g = f.consequent;
+        (f = f.test) && "!" == f.operator && g && g.body && 1 == g.body.length && "BreakStatement" == g.body[0].type ? (g = this.getBlockType("while %1 %2\n$1"), e = "while") : f && g && g.body && 1 == g.body.length && "BreakStatement" == g.body[0].type ? (g = this.getBlockType("while %1 %2\n$1"), e = "until") : g = this.getBlockType("while True:\n$1");
+      } else {
+        g = this.getBlockType("while True:\n$1");
+      }
     }
     if ("Identifier" == c.type) {
       throw b = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4. 'True' \ub97c \uc0ac\uc6a9\ud558\uc138\uc694."}, b.line = this._blockCount, console.log("send error", b), b;
     }
-    console.log("WhileStatement type", e);
-    var f = Entry.block[e].params;
-    console.log("WhileStatement paramsMeta", f);
-    var g = [];
+    console.log("WhileStatement type", g);
+    if (!g) {
+      throw b = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'while'\ubb38\uc758 \ud30c\ub77c\ubbf8\ud130\ub97c \ud655\uc778\ud558\uc138\uc694."}, b.line = this._blockCount, console.log("send error", b), b;
+    }
+    var h = Entry.block[g].params;
+    console.log("WhileStatement paramsMeta", h);
+    f = [];
     if ("Literal" == c.type || "Identifier" == c.type || "BinaryExpression" == c.type) {
       arguments = [];
       arguments.push(c);
-      var f = Entry.block[e].params, h = Entry.block[e].def.params;
-      console.log("WhileStatement paramsMeta", f);
-      console.log("WhileStatement paramsDefMeta", h);
-      for (var k in f) {
-        var l = f[k].type;
+      h = Entry.block[g].params;
+      c = Entry.block[g].def.params;
+      console.log("WhileStatement paramsMeta", h);
+      console.log("WhileStatement paramsDefMeta", c);
+      for (var k in h) {
+        var l = h[k].type;
         "Indicator" == l ? (l = {raw:null, type:"Literal", value:null}, k < arguments.length && arguments.splice(k, 0, l)) : "Text" == l && (l = {raw:"", type:"Literal", value:""}, k < arguments.length && arguments.splice(k, 0, l));
       }
       for (var m in arguments) {
-        k = arguments[m], console.log("WhileStatement argument", k), k = this[k.type](k, f[m], h[m], !0), console.log("WhileStatement Literal param", k), k && null != k && g.push(k);
+        k = arguments[m], console.log("WhileStatement argument", k), k = this[k.type](k, h[m], c[m], !0), console.log("WhileStatement Literal param", k), k && null != k && f.push(k);
       }
     } else {
-      k = this[c.type](c), console.log("WhileStatement Not Literal param", k), k && null != k && g.push(k);
+      k = this[c.type](c), console.log("WhileStatement Not Literal param", k), k && null != k && f.push(k);
     }
-    f = a.body;
-    f = this[f.type](f);
-    console.log("WhileStatement bodyData", f);
-    b.type = e;
-    if ("repeat_while_true" == e || "!=" == c.operator) {
-      for (m in c = f.statements, c) {
-        if ("_if" == c[m].type) {
-          c.splice(m, 1);
-          break;
-        }
-      }
-    }
-    b.statements.push(f.statements);
+    m = a.body;
+    m = this[m.type](m);
+    console.log("WhileStatement bodyData", m);
+    b.type = g;
+    "repeat_while_true" == g && ("until" == e ? m.data && m.data[0] && (e = m.data[0], k = e.params[0], f = [], f.push(k), f.push("until")) : "while" == e && m.data && m.data[0] && (e = m.data[0], k = e.params[0].params[1], f = [], f.push(k), f.push("while")), m.statements.shift());
+    console.log("WhileStatement params", f);
+    b.statements.push(m.statements);
+    b.params = f;
     console.log("WhileStatement result", b);
     return b;
   };
@@ -13767,57 +13770,57 @@ Entry.PyToBlockParser = function(b) {
     var b, c;
     b = {};
     if (a.prefix) {
-      var e, f, g = a.operator, h = a.argument;
-      switch(g) {
+      var e, f = a.operator, g = a.argument;
+      switch(f) {
         case "-":
           break;
         case "+":
           break;
         case "!":
-          f = "(not %2)";
-          e = this.getBlockType(f);
+          e = "boolean_not";
           break;
         case "~":
-          throw b = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + g + "' \ud45c\ud604\uc2dd\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", b.line = this._blockCount, console.log("send error", b), b;;
+          throw b = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + f + "' \ud45c\ud604\uc2dd\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", b.line = this._blockCount, console.log("send error", b), b;;
         case "typeof":
-          throw b = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + g + "' \ud45c\ud604\uc2dd\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", b.line = this._blockCount, console.log("send error", b), b;;
+          throw b = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + f + "' \ud45c\ud604\uc2dd\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", b.line = this._blockCount, console.log("send error", b), b;;
         case "void":
-          throw b = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + g + "' \ud45c\ud604\uc2dd\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", b.line = this._blockCount, console.log("send error", b), b;;
+          throw b = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + f + "' \ud45c\ud604\uc2dd\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", b.line = this._blockCount, console.log("send error", b), b;;
         case "delete":
-          throw b = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + g + "' \ud45c\ud604\uc2dd\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", b.line = this._blockCount, console.log("send error", b), b;;
+          throw b = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + f + "' \ud45c\ud604\uc2dd\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", b.line = this._blockCount, console.log("send error", b), b;;
         default:
-          throw b = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + g + "' \ud45c\ud604\uc2dd\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", b.line = this._blockCount, console.log("send error", b), b;;
+          throw b = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + f + "' \ud45c\ud604\uc2dd\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", b.line = this._blockCount, console.log("send error", b), b;;
       }
-      console.log("UnaryExpression operator", g);
-      var k = [];
-      if ("+" == g || "-" == g) {
-        h.value = Number(g.concat(h.value)), c = this[h.type](h), console.log("UnaryExpression data", c), b.data = c;
+      console.log("UnaryExpression type", e);
+      console.log("UnaryExpression operator", f);
+      var h = [];
+      if ("+" == f || "-" == f) {
+        g.value = Number(f.concat(g.value)), c = this[g.type](g), console.log("UnaryExpression data", c), b.data = c;
       } else {
-        if ("!" == g) {
-          if ("Literal" == h.type || "Identifier" == h.type) {
+        if ("!" == f) {
+          if ("Literal" == g.type || "Identifier" == g.type) {
             arguments = [];
-            arguments.push(h);
-            var g = Entry.block[e].params, l = Entry.block[e].def.params;
-            console.log("UnaryExpression paramsMeta", g);
-            console.log("UnaryExpression paramsDefMeta", l);
-            for (var m in g) {
-              h = g[m].type, "Indicator" == h ? (h = {raw:null, type:"Literal", value:null}, m < arguments.length && arguments.splice(m, 0, h)) : "Text" == h && (h = {raw:"", type:"Literal", value:""}, m < arguments.length && arguments.splice(m, 0, h));
+            arguments.push(g);
+            var f = Entry.block[e].params, k = Entry.block[e].def.params;
+            console.log("UnaryExpression paramsMeta", f);
+            console.log("UnaryExpression paramsDefMeta", k);
+            for (var l in f) {
+              g = f[l].type, "Indicator" == g ? (g = {raw:null, type:"Literal", value:null}, l < arguments.length && arguments.splice(l, 0, g)) : "Text" == g && (g = {raw:"", type:"Literal", value:""}, l < arguments.length && arguments.splice(l, 0, g));
             }
             for (c in arguments) {
-              h = arguments[c], console.log("UnaryExpression argument", h), m = this[h.type](h, g[c], l[c], !0), console.log("UnaryExpression param", m), m && null != m && (k.push(m), k.splice(0, 0, ""), k.splice(2, 0, ""));
+              g = arguments[c], console.log("UnaryExpression argument", g), l = this[g.type](g, f[c], k[c], !0), console.log("UnaryExpression param", l), l && null != l && (h.push(l), h.splice(0, 0, ""), h.splice(2, 0, ""));
             }
           } else {
-            if (m = this[h.type](h)) {
-              k.push(m), k.splice(0, 0, ""), k.splice(2, 0, "");
+            if (l = this[g.type](g)) {
+              h.push(l), h.splice(0, 0, ""), h.splice(2, 0, "");
             }
           }
         }
       }
     }
-    console.log("syntax", f);
+    console.log("syntax", void 0);
     console.log("type", e);
     b.type = e;
-    b.params = k;
+    b.params = h;
     console.log("UnaryExpression result", b);
     return b;
   };
@@ -13898,9 +13901,11 @@ Entry.PyToBlockParser = function(b) {
         var f = "(%1 %2boolean_compare# %3)";
         break;
       case "!=":
+        f = "not (%2)";
         break;
       case "===":
-        throw c = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, c.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + e + "' \ud45c\ud604\uc2dd\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", c.line = this._blockCount, console.log("send error", c), c;;
+        f = "(%1 %2boolean_compare# %3)";
+        break;
       case "!==":
         throw c = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, c.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + e + "' \ud45c\ud604\uc2dd\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", c.line = this._blockCount, console.log("send error", c), c;;
       case "<":
@@ -13954,54 +13959,53 @@ Entry.PyToBlockParser = function(b) {
     console.log("BinaryExpression syntax", f);
     if (f = this.getBlockType(f)) {
       console.log("BinaryExpression type", f);
-      b = [];
-      e = a.left;
-      console.log("BinaryExpression left", e);
-      if ("Literal" == e.type || "Identifier" == e.type) {
+      var b = [], g = a.left;
+      console.log("BinaryExpression left", g);
+      if ("Literal" == g.type || "Identifier" == g.type) {
         arguments = [];
-        arguments.push(e);
-        var e = Entry.block[f].params, g = Entry.block[f].def.params;
-        console.log("BinaryExpression paramsMeta", e);
-        console.log("BinaryExpression paramsDefMeta", g);
-        for (var h in e) {
-          var k = e[h].type;
-          "Indicator" == k ? (k = {raw:null, type:"Literal", value:null}, h < arguments.length && arguments.splice(h, 0, k)) : "Text" == k && (k = {raw:"", type:"Literal", value:""}, h < arguments.length && arguments.splice(h, 0, k));
+        arguments.push(g);
+        var h = Entry.block[f].params, k = Entry.block[f].def.params;
+        console.log("BinaryExpression paramsMeta", h);
+        console.log("BinaryExpression paramsDefMeta", k);
+        for (var l in h) {
+          e = h[l].type, "Indicator" == e ? (e = {raw:null, type:"Literal", value:null}, l < arguments.length && arguments.splice(l, 0, e)) : "Text" == e && (e = {raw:"", type:"Literal", value:""}, l < arguments.length && arguments.splice(l, 0, e));
         }
-        for (var l in arguments) {
-          var m = arguments[l];
-          console.log("BinaryExpression argument", m);
-          m = this[m.type](m, e[l], g[l], !0);
-          console.log("BinaryExpression param", m);
-          m && null != m && b.push(m);
+        for (var m in arguments) {
+          var n = arguments[m];
+          console.log("BinaryExpression argument", n);
+          n = this[n.type](n, h[m], k[m], !0);
+          console.log("BinaryExpression param", n);
+          n && null != n && b.push(n);
         }
       } else {
-        (m = this[e.type](e)) && b.push(m);
+        (n = this[g.type](g)) && b.push(n);
       }
       console.log("BinaryExpression left params", b);
       if ("boolean_not" == f) {
         return b.splice(0, 0, ""), b.splice(2, 0, ""), console.log("BinaryExpression boolean_not params", b), c.type = f, c.params = b, c;
       }
       if (e = String(a.operator)) {
-        console.log("BinaryExpression operator", e), (m = e = Entry.TextCodingUtil.prototype.binaryOperatorConvert(e)) && b.push(m), c.operator = e;
+        console.log("BinaryExpression operator", e), (n = e = Entry.TextCodingUtil.prototype.binaryOperatorConvert(e)) && b.push(n), c.operator = e;
       }
       e = a.right;
       if ("Literal" == e.type || "Identifier" == e.type) {
         arguments = [];
         arguments.push(e);
-        e = Entry.block[f].params;
-        g = Entry.block[f].def.params;
-        console.log("BinaryExpression paramsMeta", e);
-        console.log("BinaryExpression paramsDefMeta", g);
-        for (h in e) {
-          k = e[h].type, "Indicator" == k ? (k = {raw:null, type:"Literal", value:null}, h < arguments.length && arguments.splice(h, 0, k)) : "Text" == k && (k = {raw:"", type:"Literal", value:""}, h < arguments.length && arguments.splice(h, 0, k));
+        h = Entry.block[f].params;
+        k = Entry.block[f].def.params;
+        console.log("BinaryExpression paramsMeta", h);
+        console.log("BinaryExpression paramsDefMeta", k);
+        for (l in h) {
+          e = h[l].type, "Indicator" == e ? (e = {raw:null, type:"Literal", value:null}, l < arguments.length && arguments.splice(l, 0, e)) : "Text" == e && (e = {raw:"", type:"Literal", value:""}, l < arguments.length && arguments.splice(l, 0, e));
         }
-        for (l in arguments) {
-          m = arguments[l], console.log("BinaryExpression argument", m), m = this[m.type](m, e[l], g[l], !0), console.log("BinaryExpression param", m), m && null != m && b.push(m);
+        for (m in arguments) {
+          n = arguments[m], console.log("BinaryExpression argument", n), n = this[n.type](n, h[m], k[m], !0), console.log("BinaryExpression param", n), n && null != n && b.push(n);
         }
       } else {
-        (m = this[e.type](e)) && b.push(m);
+        (n = this[e.type](e)) && b.push(n);
       }
-      console.log("BinaryExpression right param", m);
+      console.log("BinaryExpression right param", n);
+      "boolean_not" == f && (b = [""], b[1] = this[g.type](g, h[1], k[1], !0), b[2] = "");
       c.type = f;
       c.params = b;
     } else {
