@@ -22549,7 +22549,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     this._blockView.alignContent();
   };
   b.getTextWidth = function() {
-    return this.textElement.getComputedTextLength() + 6 + 2;
+    return this.textElement.getBoundingClientRect().width + 6 + 2;
   };
 })(Entry.FieldTextInput.prototype);
 Entry.GlobalSvg = {};
