@@ -24193,7 +24193,7 @@ Entry.Vim = function(b, a) {
     e === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : e === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
     var f = this._parser.parse(a, Entry.Parser.PARSE_GENERAL);
     e === Entry.Vim.TEXT_TYPE_PY && (f = c.concat("\n\n").concat(Entry.Vim.PYTHON_IMPORT_ENTRY).concat("\n\n").concat(f));
-    this.codeMirror.setValue(f);
+    this.codeMirror.setValue(f + "\n");
     e == Entry.Vim.TEXT_TYPE_PY && this.codeMirror.getDoc().markText({line:0, ch:0}, {line:4, ch:0}, {readOnly:!0});
     c = this.codeMirror.getDoc();
     c.setCursor({line:c.lastLine() - 1});
