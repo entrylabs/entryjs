@@ -23004,8 +23004,8 @@ Entry.Board.DRAG_RADIUS = 5;
   b.alignThreads = function() {
     for (var a = this.svgDom.height(), b = this.code.getThreads(), c = 15, e = 0, a = a - 30, f = 50, g = 0;g < b.length;g++) {
       var h = b[g].getFirstBlock();
-      if (h && h.isMovable()) {
-        var h = h.view, k = h.svgGroup.getBBox(), l = c + 15;
+      if (h && (h = h.view, h.movable)) {
+        var k = h.svgGroup.getBBox(), l = c + 15;
         l > a && (f = f + e + 10, e = 0, c = 15);
         e = Math.max(e, k.width);
         l = c + 15;
