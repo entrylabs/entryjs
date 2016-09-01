@@ -12994,9 +12994,7 @@ Entry.JsToBlockParser = function(b) {
             } else {
               if (a.test.value || a.test.left && a.test.right) {
                 c = "ai_if_else";
-                var q = this[a.test.type](a.test, this.syntax.Scope);
-                console.log("callExData", q);
-                var r = q.params[2];
+                var q = this[a.test.type](a.test, this.syntax.Scope), r = q.params[2];
                 if ("number" != typeof r.params[0] && "ai_distance_value" != r.type) {
                   throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a.test};
                 }

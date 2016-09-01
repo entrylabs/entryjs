@@ -991,7 +991,6 @@ Entry.JsToBlockParser = function(syntax) {
                 if(node.test.value || (node.test.left && node.test.right)) {
                     type = "ai_if_else";
                     var callExData = this[node.test.type](node.test, this.syntax.Scope);
-                    console.log("callExData", callExData);
                     var value = callExData.params[2];
 
                     if(typeof value.params[0] != "number" && value.type != "ai_distance_value") {
