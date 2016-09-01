@@ -18597,12 +18597,12 @@ Entry.block = {
         "color": "#498DEB",
         "syntax": [
             "BasicIf",
-            "front == bee"
+            "front == ice"
         ],
         "params": [
             {
                 "type": "Image",
-                "img": "../../../img/assets/ntry/bitmap/maze2/obstacle_01.png",
+                "img": "../../../img/assets/maze/bitmap/stage4/obj_ice_01.png",
                 "size": 18
             },
             {
@@ -18642,7 +18642,7 @@ Entry.block = {
                 },
                 {
                     type: Ntry.STATIC.TILE,
-                    tileType: Ntry.STATIC.OBSTACLE_BEE
+                    tileType: Ntry.STATIC.OBSTACLE_ICE
                 }
             );
 
