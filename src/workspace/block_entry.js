@@ -18331,8 +18331,9 @@ Entry.block = {
                 this.isAction = true;
                 var self = this;
                 var callback = function() {
-                    Ntry.dispatchEvent('destoryObstacle', 1);
-                    self.isAction = false;
+                    Ntry.dispatchEvent('destoryObstacle', 1, function () {
+                        self.isAction = false;
+                    });
                 };
 
                 // turn direction
