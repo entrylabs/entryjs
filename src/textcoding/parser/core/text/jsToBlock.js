@@ -975,12 +975,6 @@ Entry.JsToBlockParser = function(syntax) {
             else
                 var testCondition = null;
 
-            //console.log("this.syntax", this.syntax);
-            //console.log("testCondition", testCondition);
-
-            //console.log("node.test", node.test);
-
-            ////console.log("testCondition", testCondition);
             if(testCondition == "frontwall" && (operator == "==")) {
                 test = "front == \'wall\'";
                 type = this.syntax.BasicIf[test];
@@ -997,6 +991,15 @@ Entry.JsToBlockParser = function(syntax) {
                 if(node.test.value || (node.test.left && node.test.right)) {
                     type = "ai_if_else";
                     var callExData = this[node.test.type](node.test, this.syntax.Scope);
+                    console.log("callExData", callExData);
+                    var value = callExData.params[2];
+
+                    if(typeof value.params[0] != "number" && value.type != "ai_distance_value") {
+                        throw {
+                            message : '지원하지 않는 표현식 입니다.',
+                            node : node.test
+                        };
+                    }
                     params.push(callExData);
                 } else {
                     throw {
@@ -1006,43 +1009,8 @@ Entry.JsToBlockParser = function(syntax) {
                 }
 
             }
-            /*else if(node.test.left && (node.test.left.name == "object_up" || node.test.left.name == "object_right" || node.test.left.name == "object_down")) {
-                if(node.test.right && (node.test.right.raw == "\'obstacle\'" || node.test.right.raw == "\'wall\'" || node.test.right.raw == "\'item\'")) {
-                    if(node.test.operator == "==") {
-                        //console.log("tttest", test);
-                        type = "ai_if_else";
-                        var callExData = this[node.test.type](node.test, this.syntax.Scope);
-                        params.push(callExData);
-                    } else {
-                        throw {
-                            message : '지원하지 않는 표현식 입니다.',
-                            node : node.test
-                        };
-                    }
-                } else {
-                    throw {
-                        message : '지원하지 않는 표현식 입니다.',
-                        node : node.test
-                    };
-                }
-            } else {
-                //console.log("node.test.raw", node.test.raw);
-                if(node.test.raw && (node.test.raw == "true" || node.test.raw == "false")) {
-                    type = "ai_if_else";
-                    var callExData = this[node.test.type](node.test, this.syntax.Scope);
-                    params.push(callExData);
-                } else {
-                    throw {
-                        message : '지원하지 않는 표현식 입니다.',
-                        node : node.test
-                    };
-                }
-            }*/
-
-            if (type) {
-                ////console.log("target", this.syntax.BasicIf[test]);
-                ////console.log("consequent", consequent, "alternate", alternate);
-                
+            
+            if (type) {    
                 if(consequent && consequent.length != 0){
                     stmtCons = consequent;
                     result.statements.push(stmtCons);
@@ -1057,8 +1025,6 @@ Entry.JsToBlockParser = function(syntax) {
                     result.type = type;
                 if(params && params.length != 0)
                     result.params = params;
-
-                //console.log("result", result);
                 
                 return result;
             } else {
