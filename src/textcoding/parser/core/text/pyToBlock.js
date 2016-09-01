@@ -1058,6 +1058,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var type = this.getBlockType(syntax);
             }
         }
+
+        console.log("while type", type);
         /*else if(test.operator == "!=") {
             var syntax = String("while %1 %2\n$1");
             var type = this.getBlockType(syntax);

@@ -12454,7 +12454,7 @@ Entry.BlockToPyParser = function(b) {
   b.Block = function(a) {
     var b = "", c;
     a._schema && a._schema.syntax && (c = a._schema.syntax.py[0]);
-    this.isFunc(a) ? (b += this.makeFuncDef(a), this.isRegisteredFunc(a) && (c = this.makeFuncSyntax(a))) : this.isFuncStmtParam(a) && (b += a.data.type);
+    this.isFunc(a) ? (b += this.makeFuncDef(a), this.isRegisteredFunc(a) && (c = this.makeFuncSyntax(a), console.log("Func Fianl Syntax", c))) : this.isFuncStmtParam(a) && (b += a.data.type);
     if (!c || null == c) {
       return b;
     }
@@ -13545,6 +13545,7 @@ Entry.PyToBlockParser = function(b) {
         g = this.getBlockType("while True:\n$1");
       }
     }
+    console.log("while type", g);
     if ("Identifier" == c.type) {
       throw b = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4. 'True' \ub97c \uc0ac\uc6a9\ud558\uc138\uc694."}, b.line = this._blockCount, console.log("send error", b), b;
     }

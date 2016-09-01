@@ -126,10 +126,10 @@ Entry.BlockToPyParser = function(blockSyntax) {
             //console.log("Block isFunc", block);
             result += this.makeFuncDef(block);
 
-            if(this.isRegisteredFunc(block))
+            if(this.isRegisteredFunc(block)) {
                 syntax = this.makeFuncSyntax(block);
-            
-            //console.log("Func Fianl Syntax", syntax);
+                console.log("Func Fianl Syntax", syntax);
+            }  
         } else if(this.isFuncStmtParam(block)) {
             result += block.data.type;
         } /*else if(this.isFuncDefUnit(block)) {
@@ -238,8 +238,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                                 }
                             }
                         }
-                    } else {
-                        
+                    } else { 
                         var param = this['Field' + schemaParams[index].type]
                                                     (dataParams[index], schemaParams[index]);
                         
@@ -259,8 +258,6 @@ Entry.BlockToPyParser = function(blockSyntax) {
                            !Entry.TextCodingUtil.prototype.isBinaryOperator(param))
                            param = String("\"" + param + "\""); 
 
-
-
                         param = Entry.TextCodingUtil.prototype.variableFilter(block, blockParamIndex, param);
 
                         //Local Type Processing
@@ -270,7 +267,6 @@ Entry.BlockToPyParser = function(blockSyntax) {
                         //console.log("param variableFilter", param);
 
                         console.log("currentBlock", currentBlock); 
-
 
                         result += param;
                         console.log("btop parser param result", result);
