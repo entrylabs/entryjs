@@ -2638,7 +2638,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     var blockFuncDef = blockFuncContents[0];
                     var blockFuncCts = blockFuncContents.slice();
                     blockFuncCts.shift();
-                    console.log("blockFuncContents", blockFuncContents)
+                    console.log("blockFuncContents", blockFuncContents);
+
+                    console.log("paramMap", paramMap);
 
                     matchFlag = Entry.TextCodingUtil.prototype.isFuncContentsMatch(blockFuncCts, textFuncStatements, paramMap);
                     

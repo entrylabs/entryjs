@@ -12135,6 +12135,12 @@ Entry.TextCodingUtil = function() {
       console.log("function");
       if (h.type == g.data.type) {
         var e = !0, k = h.params, l = g.data.params, m = [];
+        if (void 0 == k || null == k) {
+          k = [];
+        }
+        if (void 0 == l || null == l) {
+          l = [];
+        }
         l.map(function(a, b) {
           a && m.push(a);
         });
@@ -12142,8 +12148,8 @@ Entry.TextCodingUtil = function() {
         if (k.length == l.length) {
           for (var e = !0, n = 0;n < k.length && e;n++) {
             if (e = !1, k[n].name) {
-              for (var q in textFuncParams) {
-                if (k[n].name == textFuncParams[q]) {
+              for (var q in l) {
+                if (k[n].name == l[q]) {
                   for (var r in c) {
                     if (l[n].data.type == r && c[r] == q) {
                       e = !0;
@@ -14187,7 +14193,7 @@ Entry.PyToBlockParser = function(b) {
       console.log("first blockFuncName", blockFuncName);
       console.log("first textFuncName", f);
       if (f == blockFuncName) {
-        if (console.log("textFuncName", f), console.log("blockFuncName", blockFuncName), console.log("textFuncParams.length", c.length), console.log("Object.keys(paramMap).length", Object.keys(h).length), c.length == Object.keys(h).length ? (k = !0, console.log("textFuncParams.length", c.length), console.log("Object.keys(paramMap).length", Object.keys(h).length), l = q.content._data[0]._data, g = l.slice(), g.shift(), console.log("blockFuncContents", l), l = Entry.TextCodingUtil.prototype.isFuncContentsMatch(g, 
+        if (console.log("textFuncName", f), console.log("blockFuncName", blockFuncName), console.log("textFuncParams.length", c.length), console.log("Object.keys(paramMap).length", Object.keys(h).length), c.length == Object.keys(h).length ? (k = !0, console.log("textFuncParams.length", c.length), console.log("Object.keys(paramMap).length", Object.keys(h).length), l = q.content._data[0]._data, g = l.slice(), g.shift(), console.log("blockFuncContents", l), console.log("paramMap", h), l = Entry.TextCodingUtil.prototype.isFuncContentsMatch(g, 
         a, h)) : l = k = !1, k && l) {
           m = "func".concat("_").concat(n);
           break;

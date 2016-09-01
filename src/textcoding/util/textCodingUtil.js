@@ -848,6 +848,11 @@ Entry.TextCodingUtil = function() {
                 var textFuncStatementParams = textFuncStatement.params;
                 var blockFuncContentParams = blockFuncContent.data.params;
                 var cleansingParams = [];
+                if(textFuncStatementParams == undefined || textFuncStatementParams == null) 
+                    textFuncStatementParams = [];
+                if(blockFuncContentParams == undefined || blockFuncContentParams == null)
+                    blockFuncContentParams = [];
+                
                 blockFuncContentParams.map(function(blockFuncContentParam, index) {
                     if(blockFuncContentParam)
                         cleansingParams.push(blockFuncContentParam);
@@ -861,8 +866,8 @@ Entry.TextCodingUtil = function() {
                             break;
                         matchFlag = false;
                         if(textFuncStatementParams[j].name) {
-                            for(var k in textFuncParams) {
-                                if(textFuncStatementParams[j].name == textFuncParams[k]) { // Pram Locatin Comparision
+                            for(var k in blockFuncContentParams) {
+                                if(textFuncStatementParams[j].name == blockFuncContentParams[k]) { // Param Locatin Comparision
                                     //console.log("textFuncStatementParams[j].name", textFuncStatementParams[j].name);
                                     //console.log("textFuncParams[k]", textFuncParams[k]);
                                     for(var bfcParam in paramMap) {
