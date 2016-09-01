@@ -29,9 +29,9 @@ Entry.Parser = function(mode, type, cm, syntax) {
     this._pyThreadCount = 1;
     this._pyBlockCount = {};
 
-    Entry.Parser.PARSE_GENERAL = 0;
-    Entry.Parser.PARSE_SYNTAX = 1;
-    Entry.Parser.PARSE_VARIABLE = 2;
+    Entry.Parser.PARSE_GENERAL = 1;
+    Entry.Parser.PARSE_SYNTAX = 2;
+    Entry.Parser.PARSE_VARIABLE = 3;
 
     Entry.Parser.BLOCK_SKELETON_BASIC = "basic";
     Entry.Parser.BLOCK_SKELETON_BASIC_LOOP = "basic_loop";
@@ -494,6 +494,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 break;
 
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
+                console.log("parser parsemode", parseMode);
                 var textCode = this._parser.Code(code, parseMode);
 
                 if (!this._pyHinter)

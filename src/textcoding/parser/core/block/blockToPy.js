@@ -115,6 +115,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
     };
 
     p.Block = function(block) {
+        console.log("this._parseMode", this._parseMode);
         /*if(!block._schema)
             return "";*/
         var result = ""; 
@@ -127,6 +128,8 @@ Entry.BlockToPyParser = function(blockSyntax) {
         if(this.isFunc(block)) {
             //console.log("Block isFunc", block);
             result += this.makeFuncDef(block);
+
+            console.log("result0", result);
 
             if(this.isRegisteredFunc(block)) {
                 syntax = this.makeFuncSyntax(block);
@@ -142,6 +145,8 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
         if(!syntax || syntax == null)
             return result;
+
+        console.log("result1", result);
 
         var blockReg = /(%.)/mi;
         var statementReg = /(\$.)/mi;
@@ -358,6 +363,10 @@ Entry.BlockToPyParser = function(blockSyntax) {
             }
         }
 
+        if(this._parseMode == Entry.Parser.PARSE_SYNTAX) {
+            return syntax;
+        }
+    
         return result;
     };
 

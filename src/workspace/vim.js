@@ -77,7 +77,8 @@ Entry.Vim = function(dom, textType) {
         _self = this;
         target = this.view[0];
         function eventDragEnd(e) {
-            var textCode = _self.getCodeToText(e.block);
+            console.log("drag");
+            var textCode = _self.getCodeToText(e.block, Entry.Parser.PARSE_GENERAL);
             _self.codeMirror.display.dragFunctions.leave(e);
             var mousedown = Entry.Utils.createMouseEvent('mousedown', e);
             _self.codeMirror.display.scroller.dispatchEvent(mousedown);
@@ -95,7 +96,7 @@ Entry.Vim = function(dom, textType) {
             });
             var mouseup = Entry.Utils.createMouseEvent('mouseup', e);
             _self.codeMirror.display.scroller.dispatchEvent(mouseup);
-        }
+        } 
 
         function eventDragOver(e) {
             _self.codeMirror.display.dragFunctions.over(e);
@@ -179,7 +180,8 @@ Entry.Vim = function(dom, textType) {
         doc.setCursor({ line: doc.lastLine() - 1});
     };
 
-    p.getCodeToText = function(code) {
+    p.getCodeToText = function(code, parseType) {
+        console.log("parseType", parseType);
         var textType = this.workspace.oldTextType;
         if (textType === Entry.Vim.TEXT_TYPE_JS){
             this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS;
@@ -188,7 +190,12 @@ Entry.Vim = function(dom, textType) {
             this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
             this._parser.setParser(this._mode, this._parserType, this.codeMirror);
         }
-        var textCode = this._parser.parse(code, Entry.Parser.PARSE_SYNTAX);
+
+        if(parseType)
+            var textCode = this._parser.parse(code, parseType);
+        else
+            var textCode = this._parser.parse(code, Entry.Parser.PARSE_SYNTAX);
+
         return textCode;
     };
     
