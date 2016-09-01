@@ -12437,13 +12437,14 @@ Entry.BlockToPyParser = function(b) {
     a = a.getBlocks();
     for (var c = !1, e = "", f = "", g = 0;g < a.length;g++) {
       var h = a[g];
+      console.log("blockToPy block", h, "this._parseMode", this._parseMode);
       if (this._parseMode == Entry.Parser.PARSE_GENERAL) {
         if (Entry.TextCodingUtil.prototype.isNoPrintBlock(h)) {
           continue;
         }
         0 == g ? (c = Entry.TextCodingUtil.prototype.isEventBlock(h)) ? e = this.Block(h) + "\n" : f += this.Block(h) + "\n" : 0 != g && (f += this.Block(h) + "\n");
       } else {
-        this._parseMode == Entry.Parser.PARSE_SYNTAX && (b = (c = Entry.TextCodingUtil.prototype.isEventBlock(h)) ? "" : this.Block(h) + "\n");
+        this._parseMode == Entry.Parser.PARSE_SYNTAX && (b = (c = Entry.TextCodingUtil.prototype.isEventBlock(h)) ? "" : this.Block(h) + "\n", console.log("syntax mode result", b));
       }
       this._queue.clear();
       this._variableMap.clear();

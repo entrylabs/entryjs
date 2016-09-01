@@ -63,7 +63,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
         var definition = '';
         for (var i = 0; i < blocks.length; i++) {
             var block = blocks[i];
-            //console.log("blockToPy block", block, "this._parseMode", this._parseMode);
+            console.log("blockToPy block", block, "this._parseMode", this._parseMode);
             if(this._parseMode == Entry.Parser.PARSE_GENERAL) {
                 if(Entry.TextCodingUtil.prototype.isNoPrintBlock(block))
                     continue;
@@ -87,6 +87,8 @@ Entry.BlockToPyParser = function(blockSyntax) {
                 } else {
                     result = this.Block(block) + '\n';
                 } 
+
+                console.log("syntax mode result", result);
             }
 
             this._queue.clear();
