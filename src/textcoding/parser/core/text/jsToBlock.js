@@ -485,13 +485,13 @@ Entry.JsToBlockParser = function(syntax) {
         var structure = {}; 
 
         var operator = String(node.operator);  
-        var nodeName = node.left.name;
+        var nodeLeftName = node.left.name;
 
         switch(operator){ 
             case "==": 
-                if(nodeName == "object_up" || nodeName == "object_right" || nodeName == "object_down")
+                if(nodeLeftName == "object_up" || nodeLeftName == "object_right" || nodeLeftName == "object_down")
                     var type = "ai_boolean_object";
-                else if(nodeName == "radar_up" || nodeName == "radar_right" || nodeName == "radar_down")
+                else if(nodeLeftName == "radar_up" || nodeLeftName == "radar_right" || nodeLeftName == "radar_down")
                     var type = "ai_boolean_distance";
                 else
                     var type = null;
@@ -617,7 +617,15 @@ Entry.JsToBlockParser = function(syntax) {
 
                         param = Entry.TextCodingUtil.prototype.tTobDropdownValueConvertor(param);
 
-                        params.push(param);   
+                        params.push(param);  
+
+                        console.log("rigth param", params); 
+                        if(params[2].type != "text" && params[2].type != "ai_distance_value") {
+                           throw {
+                                message : '지원하지 않는 표현식 입니다.',
+                                node : node.test
+                            }; 
+                        }
                     }
                 }
             } else {
@@ -730,6 +738,32 @@ Entry.JsToBlockParser = function(syntax) {
                 
                 if(param && param != null)
                     params.push(param);    
+            }
+
+            //console.log("&& params", params); 
+
+            if(params[0].type != "True" && 
+                params[0].type != "ai_boolean_distance" && 
+                params[0].type != "ai_boolean_object" && 
+                params[0].type != "ai_boolean_and" &&
+                params[0].type != "ai_distance_value")
+            { 
+                throw {
+                    message : '지원하지 않는 명렁어 입니다.',
+                    node : node
+                } 
+            } 
+
+            if(params[2].type != "True" && 
+                params[2].type != "ai_boolean_distance" && 
+                params[2].type != "ai_boolean_object" && 
+                params[2].type != "ai_boolean_and" &&
+                params[2].type != "ai_distance_value")
+            {
+                throw {
+                    message : '지원하지 않는 명렁어 입니다.',
+                    node : node
+                }
             }
         } else {
             param = this[right.type](right);
@@ -993,12 +1027,14 @@ Entry.JsToBlockParser = function(syntax) {
                     var callExData = this[node.test.type](node.test, this.syntax.Scope);
                     var value = callExData.params[2];
 
+                    /*console.log("callExData", callExData);
+
                     if(typeof value.params[0] != "number" && value.type != "ai_distance_value") {
                         throw {
                             message : '지원하지 않는 표현식 입니다.',
                             node : node.test
                         };
-                    }
+                    }*/
                     params.push(callExData);
                 } else {
                     throw {
