@@ -21393,7 +21393,7 @@ Entry.block = {
             
             switch(signal) {
                 case "red":
-                    if(value[0] == 0 && value[1] == 0 && value[2] == 1) {
+                    if(value[0] == 1 && value[1] == 0 && value[2] == 0) {
                         flag = 1;
                     }
                 break;
@@ -21403,7 +21403,7 @@ Entry.block = {
                     }
                 break;
                 case "blue":
-                    if(value[0] == 1 && value[1] == 0 && value[2] == 0) {
+                    if(value[0] == 0 && value[1] == 0 && value[2] == 1) {
                         flag = 1;
                     }
                 break;
