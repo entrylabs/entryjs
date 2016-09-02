@@ -24766,6 +24766,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
   };
   b._syncTextCode = function() {
     if (this.mode === Entry.Workspace.MODE_VIMBOARD) {
+      console.log("workspace textType", this.textType);
       var a = this.vimBoard.textToCode(this.textType), b = this.board, c = b.code;
       c.load(a);
       c.createView(b);

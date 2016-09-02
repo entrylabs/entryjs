@@ -272,6 +272,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         if (this.mode !== Entry.Workspace.MODE_VIMBOARD)
             return;
 
+        console.log("workspace textType", this.textType);
+
         var changedCode = this.vimBoard.textToCode(this.textType);
         var board = this.board;
         var code = board.code;
