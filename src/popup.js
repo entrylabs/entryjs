@@ -48,6 +48,7 @@ Entry.Popup.prototype.remove = function() {
     window.popup = null;
     Entry.removeEventListener('windowResized', this.resize);
     Entry.engine.popup = null;
+    Entry.windowResized.notify();
 };
 
 /**
@@ -70,4 +71,6 @@ Entry.Popup.prototype.resize = function(e) {
         popupWindow.style.width = String(maxWidth) + 'px';
         popupWindow.style.height = String(maxHeight) + 'px';
     }
+
+    Entry.stage && Entry.stage.updateBoundRect();
 };
