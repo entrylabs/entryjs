@@ -134,6 +134,9 @@ Entry.BlockToPyParser = function(blockSyntax) {
             if(this.isRegisteredFunc(block)) {
                 syntax = this.makeFuncSyntax(block);
                 console.log("Func Fianl Syntax", syntax);
+                if(this._parseMode == Entry.Parser.PARSE_SYNTAX) {
+                    return syntax;
+                }
             }  
         } else if(this.isFuncStmtParam(block)) {
             result += block.data.type;
@@ -363,9 +366,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
             }
         }
 
-        if(this._parseMode == Entry.Parser.PARSE_SYNTAX) {
-            return syntax;
-        }
+        
     
         return result;
     };
