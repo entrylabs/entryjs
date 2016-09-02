@@ -16773,6 +16773,9 @@ Entry.Utils.convertMouseEvent = function(b) {
 Entry.Utils.convertIntToHex = function(b) {
   return b.toString(16).toUpperCase();
 };
+Entry.Utils.hasSpecialCharacter = function(b) {
+  return /!|@|#|\$|%|\^|&|\*|\(|\)|\+|=|-|\[|\]|\\|\'|;|,|\.|\/|{|}|\||\"|:|<|>|\?/g.test(b);
+};
 Entry.Model = function(b, a) {
   var d = Entry.Model;
   d.generateSchema(b);
