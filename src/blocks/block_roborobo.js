@@ -140,50 +140,6 @@ Entry.block.roduino_get_port_number = function (sprite, script) {
     return script.getStringField("PORT");
 };
 
-// Blockly.Blocks.roduino_set_pin_mode = {
-    // init: function() {
-        // this.setColour("#00979D");       
-        // this.appendDummyInput().appendField(Lang.Blocks.roborobo_num_pin_1);        
-        // this.appendValueInput("PIN")
-            // .setCheck(["Number", "String", null]);        
-        // this.appendDummyInput()
-            // .appendField(Lang.Blocks.roborobo_num_pin_2)
-            // .appendField(new Blockly.FieldDropdown([
-                // [Lang.Blocks.roborobo_input_mode,"input"],
-                // [Lang.Blocks.roborobo_output_mode,"output"],
-                // [Lang.Blocks.roborobo_pwm_mode,"pwm"],
-                // [Lang.Blocks.roborobo_servo_mode,"servo"]
-                // ]), "MODE")
-            // .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/hardware_03.png', '*'));        
-        // this.setInputsInline(true);
-        // this.setPreviousStatement(true);
-        // this.setNextStatement(true);
-    // }
-// };
-// 
-// Entry.block.roduino_set_pin_mode = function (sprite, script) {
-    // var modeValue = 0;
-    // var pin = script.getNumberValue("PIN");
-    // var mode = script.getField("MODE");
-// 
-    // switch(mode) {
-        // case "input":
-            // modeValue = 0;
-        // break;
-        // case "output":
-            // modeValue = 1;
-        // break;
-        // case "pwm":
-            // modeValue = 3;
-        // break;
-        // case "servo":
-            // modeValue = 4;
-        // break;
-    // }
-    // Entry.Roduino.setSendData([Entry.Roduino.INSTRUCTION.DIGITAL_SET_MODE, pin, modeValue]);
-    // return script.callReturn();
-// };
-
 Blockly.Blocks.roduino_get_analog_value = {
   init: function() {
     this.setColour("#00979D");

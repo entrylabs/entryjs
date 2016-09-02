@@ -3812,7 +3812,6 @@ Lang.template = {
     "xbot_buzzer": "play note %1   %2 for %3 sec of Melody Playing %4",
     "xbot_lcd": "LCD %1 th Line ,  Text %2 %3",
     
-    //"roduino_set_pin_mode": "Digital %1 Pin %2 %3",
     "roduino_get_analog_number": "%1  ",
     "roduino_get_port_number": "%1  ",
     "roduino_get_analog_value": "Analog %1 Sensor value  ",
