@@ -18213,12 +18213,14 @@ Entry.block = {
                 this.isContinue = true;
                 this.isAction = true;
                 var self = this;
-                var callBack = function() {
-                    self.isAction = false;
+                var callback = function() {
+                    Ntry.dispatchEvent('destroyObstacle', 1, function () {
+                        self.isAction = false;
+                    });
                 };
 
                 // turn direction
-                Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, callBack);
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.ATTACK, callback);
 
                 return Entry.STATIC.BREAK;
             } else if (this.isAction) {
@@ -18245,20 +18247,44 @@ Entry.block = {
             }
         ],
         func: function() {
-            // TODO: func 내용은 변경해야 함.
-
+            var self = this;
             if (!this.isContinue) {
-
                 this.isContinue = true;
                 this.isAction = true;
-                var self = this;
-                var callBack = function() {
-                    self.isAction = false;
-                };
 
-                // turn direction
-                Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, callBack);
+                var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+                var unitId;
+                $.each(entities, function (id, entity) {
+                    unitId = id;
+                    components = entity.components;
+                });
 
+                var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
+
+                var particle = Ntry.entityManager.addEntity();
+
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.ATTACK, function () {
+                    $.each(components, function(type, component) {
+                        Ntry.entityManager.appendEntity();
+                        if(+type != Ntry.STATIC.UNIT) {
+                            Ntry.entityManager.addComponent(particle.id, component);
+                        } else {
+                            Ntry.entityManager.addComponent(particle.id, {
+                                type: Ntry.STATIC.PARTICLE,
+                                direction: component.direction,
+                                collisionList: [ Ntry.STATIC.OBSTACLE ],
+                            });
+                        }
+                    });
+                    Ntry.dispatchEvent("particleAction", {
+                        entityId: particle.id,
+                        actionType: Ntry.STATIC.RANGE_ATTACK,
+                        callback: function () {
+                            Ntry.entityManager.removeEntity(particle.id);
+                            self.isAction = false;
+                        }
+                    });                    
+                });
                 return Entry.STATIC.BREAK;
             } else if (this.isAction) {
                 return Entry.STATIC.BREAK;
@@ -18331,8 +18357,12 @@ Entry.block = {
                 this.isAction = true;
                 var self = this;
                 var callback = function() {
-                    Ntry.dispatchEvent('destoryObstacle', 1, function () {
-                        self.isAction = false;
+                    Ntry.dispatchEvent('destroyObstacle', 1, function (state) {
+                        switch(state) {
+                            case Ntry.STATIC.OBSTACLE_DESTROY_SUCCESS:
+                                self.isAction = false;
+                                break;
+                        }
                     });
                 };
 
