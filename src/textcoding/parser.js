@@ -40,7 +40,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
     /*this.syntax.js = this.mappingSyntaxJs(mode);
     this.syntax.py = this.mappingSyntaxPy(mode);*/
 
-    //this._console = new Entry.Console();
+    this._console = new Entry.Console();
 
 
     switch (this._lang) {

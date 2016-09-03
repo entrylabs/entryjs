@@ -11159,6 +11159,7 @@ Entry.PropertyPanel = function() {
     this.initializeSplitter(c);
   };
   b.addMode = function(a, b) {
+    console.log("addMode", a);
     var c = b.getView(), c = Entry.Dom(c, {parent:this._contentView}), e = Entry.Dom("<div>" + Lang.Menus[a] + "</div>", {classes:["propertyTabElement", "propertyTab" + a], parent:this._tabView}), f = this;
     e.bind("click", function() {
       f.select(a);
@@ -14502,6 +14503,7 @@ Entry.Parser = function(b, a, d, c) {
   Entry.Parser.BLOCK_SKELETON_BASIC = "basic";
   Entry.Parser.BLOCK_SKELETON_BASIC_LOOP = "basic_loop";
   Entry.Parser.BLOCK_SKELETON_BASIC_DOUBLE_LOOP = "basic_double_loop";
+  this._console = new Entry.Console;
   switch(this._lang) {
     case "js":
       this._parser = new Entry.JsToBlockParser(this.syntax);
@@ -21188,7 +21190,7 @@ Entry.BlockView.pngMap = {};
     }
   };
   b.vimBoardEvent = function(a, b, c) {
-    a && (a = Entry.Utils.createMouseEvent(b, a), c && (a.block = c), document.getElementsByClassName("CodeMirror")[0].dispatchEvent(a));
+    a && (a = Entry.Utils.createMouseEvent(b, a), c && (a.block = c), $(".entryVimBoard>.CodeMirror")[0].dispatchEvent(a));
   };
   b.terminateDrag = function(a) {
     var b = this.getBoard(), c = this.dragMode, e = this.block, f = b.workspace.getMode();

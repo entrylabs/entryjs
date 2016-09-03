@@ -554,7 +554,7 @@ Entry.BlockView.pngMap = {};
             if (block) dragEvent.block = block;
 
             var _vimBoard =
-                document.getElementsByClassName('CodeMirror')[0];
+                $('.entryVimBoard>.CodeMirror')[0];
             _vimBoard.dispatchEvent(dragEvent);
         }
     };

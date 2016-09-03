@@ -5356,6 +5356,12 @@ input.entryObjectNameWorkspace:-moz-read-only {
 .propertyTabpdf.selected {
   background-image: url("../images/property/pdf_on.png");
 }
+.propertyTabconsole {
+  background-image: url("../images/property/console_off.png");
+}
+.propertyTabconsole.selected {
+  background-image: url("../images/property/console_on.png");
+}
 .propertyContent {
   position: absolute;
   top: 0;
@@ -6155,6 +6161,25 @@ input.entryObjectNameWorkspace:-moz-read-only {
 #entryPdfWorkspace iframe {
   width: 100%;
   height: 100%;
+}
+#entryConsole {
+  height: 100%;
+}
+#entryConsole > .CodeMirror {
+  height: 100%;
+  background: black;
+}
+#entryConsole .CodeMirror-cursor {
+  border-left: 1px solid white;
+}
+#entryConsole span {
+  color: white;
+}
+#entryConsole .speak span {
+  color: #fff2a4;
+}
+#entryConsole .ask span {
+  color: #bdd1ff;
 }
 
 
