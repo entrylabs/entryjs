@@ -128,6 +128,8 @@ Entry.Vim = function(dom, textType) {
         }
 
         var textCode = this.codeMirror.getValue();
+        console.log("textCode 111", textCode);
+        console.log("type", type);
         var code = this._parser.parse(textCode);
         //console.log("code", code);
         /*if(code.length === 0) {
@@ -139,6 +141,7 @@ Entry.Vim = function(dom, textType) {
     };
 
     p.codeToText = function(code, mode) {
+        console.log("mode", mode);
         var object;
         var codeDescription;
         if(mode)

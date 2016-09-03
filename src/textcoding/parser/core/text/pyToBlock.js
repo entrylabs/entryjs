@@ -674,6 +674,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
 
             var block = Entry.block[type]; 
+            console.log("vblock", block);
             var paramsMeta = block.params;
             var paramsDefMeta = block.def.params;
 
@@ -2900,6 +2901,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.getBlockType = function(syntax) {
+        console.log("why syntax", syntax);
         return this.blockSyntax[syntax];
     };
 

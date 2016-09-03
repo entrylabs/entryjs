@@ -13371,6 +13371,7 @@ Entry.PyToBlockParser = function(b) {
           }
         }
         k = Entry.block[e];
+        console.log("vblock", k);
         e = k.params;
         k = k.def.params;
         h.name && (m = this.ParamDropdownDynamic(h.name, e[0], k[0]));
@@ -14337,6 +14338,7 @@ Entry.PyToBlockParser = function(b) {
     return b;
   };
   b.getBlockType = function(a) {
+    console.log("why syntax", a);
     return this.blockSyntax[a];
   };
   b.RegExp = function(a) {
@@ -14541,6 +14543,7 @@ Entry.Parser = function(b, a, d, c) {
     this._mode = a;
     this._type = b;
     this._cm = c;
+    console.log("real mode", a);
     this.syntax = this.mappingSyntax(a);
     switch(b) {
       case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
@@ -14569,6 +14572,8 @@ Entry.Parser = function(b, a, d, c) {
     }
   };
   b.parse = function(a, b) {
+    console.log("this.syntax", this.syntax);
+    console.log("this._syntax_cache", this._syntax_cache);
     var c = null;
     switch(this._type) {
       case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
@@ -14827,6 +14832,7 @@ Entry.Parser = function(b, a, d, c) {
     return b;
   };
   b.makeCodeToThreads = function(a) {
+    console.log("mct code", a);
     a = a.split("\n");
     console.log("codeArr", a);
     var b = "", c = [], e;
@@ -24621,10 +24627,13 @@ Entry.Vim = function(b, a) {
   };
   b.textToCode = function(a) {
     a === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : a === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
-    a = this.codeMirror.getValue();
-    return this._parser.parse(a);
+    var b = this.codeMirror.getValue();
+    console.log("textCode 111", b);
+    console.log("type", a);
+    return this._parser.parse(b);
   };
   b.codeToText = function(a, b) {
+    console.log("mode", b);
     var c;
     b && (this._mode = b.runType);
     Entry.playground && (c = Entry.playground.object, c = "# " + c.name + " \uc624\ube0c\uc81d\ud2b8\uc758 \ud30c\uc774\uc36c \ucf54\ub4dc");
@@ -24716,9 +24725,10 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     this.changeEvent.notify(b);
   };
   b.changeBoardCode = function(a) {
+    console.log("code123", a);
     this._syncTextCode();
     this.board.changeCode(a);
-    this.mode === Entry.Workspace.MODE_VIMBOARD && this.codeToText(this.board.code);
+    this.mode === Entry.Workspace.MODE_VIMBOARD && (a = {}, a.textType = this.textType, a.boardType = this.boardType, a.runType = this.runType, this.codeToText(this.board.code, a));
   };
   b.changeOverlayBoardCode = function(a) {
     this.overlayBoard && this.overlayBoard.changeCode(a);
@@ -24736,6 +24746,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         c.board.alignThreads();
       }, 0);
     }
+  };
+  b.loadCodeFromText = function(a) {
+    a == Entry.Workspace.MODE_VIMBOARD && (a = this.vimBoard.textToCode(this.textType), this.board.code.load(a));
   };
   b.codeToText = function(a, b) {
     return this.vimBoard.codeToText(a, b);

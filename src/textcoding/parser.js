@@ -118,6 +118,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
             this.setAvailableCode(configCode, playerCode);
         }*/
 
+        console.log("real mode", mode);
+
         this.syntax = this.mappingSyntax(mode);
 
         switch (type) {
@@ -175,6 +177,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
     };
 
     p.parse = function(code, parseMode) {
+        console.log("this.syntax", this.syntax); 
+        console.log("this._syntax_cache", this._syntax_cache); 
         var type = this._type;
         var result = null;
 
@@ -594,7 +598,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
         this._syntax_cache[mode] = syntax;
 
-
         return syntax;
     };
 
@@ -872,6 +875,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
     };
 
     p.makeCodeToThreads = function(code) {
+        console.log("mct code", code);
         var codeArr = code.split("\n");
         console.log("codeArr", codeArr); 
         var thread = '';
