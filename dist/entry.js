@@ -13197,7 +13197,7 @@ Entry.PyToBlockParser = function(b) {
           if (void 0 === h) {
             throw b = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + q.value + "' \uc744 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694.", b.line = this._blockCount, console.log("send error", b), b;
           }
-          if (null != h && h.name && "function" != typeof h.name) {
+          if (null != h && h.name) {
             throw console.log("babo"), "__pythonRuntime.functions.range" == k && this._blockCount++, console.log("callex error calleeData", g), b = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4. '" + h.name + "'' \uc744 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694.", b.line = this._blockCount, console.log("send error", 
             b), b;
           }

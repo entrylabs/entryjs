@@ -302,7 +302,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         throw error;
                     } 
 
-                    if(param != null && param.name && (typeof param.name != 'function')) {
+                    if(param != null && param.name) {
                         console.log("babo");
                         if(calleeName == '__pythonRuntime.functions.range')
                             this._blockCount++;
