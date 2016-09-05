@@ -1247,7 +1247,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                             var error = {};
                                             error.title = "블록변환(Converting) 오류";
                                             error.message = "블록으로 변환될 수 없는 코드입니다." + "파라미터 " + "\'" + value + "\'" + "을(를) 양수값으로 변경해주세요.";
-                                            error.line = this._blockCount; 
+                                            error.line = this._blockCount--; 
                                             console.log("send error", error); 
                                             throw error;   
                                         }
@@ -1259,7 +1259,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                                 var error = {};
                                                 error.title = "블록변환(Converting) 오류";
                                                 error.message = "블록으로 변환될 수 없는 코드입니다." + "파라미터 " + "\'" + value + "\'" + "을(를) 숫자타입(양수값)으로 변경해주세요.";
-                                                error.line = this._blockCount; 
+                                                error.line = this._blockCount--; 
                                                 console.log("send error", error); 
                                                 throw error; 
                                             }    
