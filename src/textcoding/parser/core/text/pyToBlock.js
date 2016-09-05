@@ -51,7 +51,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                     
                     var block = this[node.type](node);
                     console.log("result block", block); 
-                    console.log("this._block")
 
                     if(block && block.type) {
                         console.log("block.type", block.type);
@@ -323,7 +322,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     type = param.type;
                     params = param.params;
                 } else {
-                    params.push(param);
+                    if(param.data && param.data.type) {
+                        params.push(param.data);
+                    } else {
+                        if(calleeName == "__pythonRuntime.functions.range"){
+                            //do something for range in for statement
+                        }
+                        params.push(param);
+                    }
                 }                              
             } 
 
@@ -1227,8 +1233,41 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         for(var d in declarations){
                             var declaration = declarations[d];
                             var param = declaration.init;
-                            if(param)
-                                params.push(param);
+                            console.log("ppp param", param);
+                            if(param) {
+                                if(param.params && param.params[0])
+                                {   
+                                    var p = param.params[0];
+                                    if(p.type == "number" && p.params && p.params[0]) {
+                                        var value = p.params[0];
+                                        if(value >= 0) {
+                                            params.push(param);
+                                        }
+                                        else {
+                                            var error = {};
+                                            error.title = "블록변환(Converting) 오류";
+                                            error.message = "블록으로 변환될 수 없는 코드입니다." + "파라미터 " + "\'" + value + "\'" + "을(를) 양수값으로 변경해주세요.";
+                                            error.line = this._blockCount; 
+                                            console.log("send error", error); 
+                                            throw error;   
+                                        }
+                                    } 
+                                    else {
+                                        if(param.callee == "__pythonRuntime.functions.range") {
+                                            var value = param.params[0];
+                                            if(typeof value != "number") { 
+                                                var error = {};
+                                                error.title = "블록변환(Converting) 오류";
+                                                error.message = "블록으로 변환될 수 없는 코드입니다." + "파라미터 " + "\'" + value + "\'" + "을(를) 숫자타입(양수값)으로 변경해주세요.";
+                                                error.line = this._blockCount; 
+                                                console.log("send error", error); 
+                                                throw error; 
+                                            }    
+                                        }
+                                        params.push(param);
+                                    }
+                                }
+                            }
                         }
                         result.params = params;
                     }
@@ -2728,7 +2767,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var newFunc = new Entry.Func();
             newFunc.generateBlock(true);
             
-            console.log("FunctionDeclaration newFunc", newFunc);
+            console.log("FunctionDeclaration newFunc before", newFunc);
             var templateArr = [];
 
             for(var i = 1; i <= textFuncParams.length+1; i++)
@@ -2746,7 +2785,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             // inject block func name
             // func name join
             var textFuncNameTokens = textFuncName.split('__');
-            if(textFuncNameTokens.length > 0) {
+            if(textFuncNameTokens.length > 1) {
                 for(var n = 1; n < textFuncNameTokens.length; n++) {
                     var token = textFuncNameTokens[n];
                     var nameFieldBlock = new Entry.Block({ type: "function_field_label" }, thread); 
@@ -2826,7 +2865,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var funcPrefix = "func";
             targetFuncId = funcPrefix.concat('_').concat(funcId);
             this._funcMap.put(funcKey, targetFuncId);
-            console.log("FunctionDeclaration newFunc", newFunc);
+            console.log("FunctionDeclaration newFunc after", newFunc);
 
         }
 

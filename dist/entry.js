@@ -13095,7 +13095,6 @@ Entry.PyToBlockParser = function(b) {
           console.log("Program node", g);
           var h = this[g.type](g);
           console.log("result block", h);
-          console.log("this._block");
           h && h.type && (console.log("block.type", h.type), Entry.TextCodingUtil.prototype.isJudgementBlock(h.type) || Entry.TextCodingUtil.prototype.isCalculationBlock(h.type) || Entry.TextCodingUtil.prototype.isMaterialBlock(h.type) || e.push(h));
         }
         console.log("thread", e);
@@ -13202,7 +13201,7 @@ Entry.PyToBlockParser = function(b) {
             throw console.log("babo"), "__pythonRuntime.functions.range" == k && this._blockCount++, console.log("callex error calleeData", g), b = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4. '" + h.name + "'' \uc744 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694.", b.line = this._blockCount, console.log("send error", 
             b), b;
           }
-          "__pythonRuntime.functions.range" == k && h.type ? (e = h.type, c = h.params) : c.push(h);
+          "__pythonRuntime.functions.range" == k && h.type ? (e = h.type, c = h.params) : h.data && h.data.type ? c.push(h.data) : c.push(h);
         }
       }
       console.log("CallExpression syntax", m);
@@ -13615,7 +13614,21 @@ Entry.PyToBlockParser = function(b) {
           if (f[k].declarations) {
             a = f[0].declarations;
             for (k in a) {
-              h = a[k], (h = h.init) && c.push(h);
+              if (h = a[k], h = h.init, console.log("ppp param", h), h && h.params && h.params[0]) {
+                var l = h.params[0];
+                if ("number" == l.type && l.params && l.params[0]) {
+                  if (l = l.params[0], 0 <= l) {
+                    c.push(h);
+                  } else {
+                    throw b = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud30c\ub77c\ubbf8\ud130 '" + l + "'\uc744(\ub97c) \uc591\uc218\uac12\uc73c\ub85c \ubcc0\uacbd\ud574\uc8fc\uc138\uc694.", b.line = this._blockCount, console.log("send error", b), b;
+                  }
+                } else {
+                  if ("__pythonRuntime.functions.range" == h.callee && (l = h.params[0], "number" != typeof l)) {
+                    throw b = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud30c\ub77c\ubbf8\ud130 '" + l + "'\uc744(\ub97c) \uc22b\uc790\ud0c0\uc785(\uc591\uc218\uac12)\uc73c\ub85c \ubcc0\uacbd\ud574\uc8fc\uc138\uc694.", b.line = this._blockCount, console.log("send error", b), b;
+                  }
+                  c.push(h);
+                }
+              }
             }
             b.params = c;
           }
@@ -14251,7 +14264,7 @@ Entry.PyToBlockParser = function(b) {
         console.log("FunctionDeclaration textFuncStatements", a);
         k = new Entry.Func;
         k.generateBlock(!0);
-        console.log("FunctionDeclaration newFunc", k);
+        console.log("FunctionDeclaration newFunc before", k);
         m = [];
         for (g = 1;g <= c.length + 1;g++) {
           m.push("%" + g);
@@ -14263,7 +14276,7 @@ Entry.PyToBlockParser = function(b) {
         m = u.data.params;
         k.description = "";
         g = f.split("__");
-        if (0 < g.length) {
+        if (1 < g.length) {
           for (e = 1;e < g.length;e++) {
             h = g[e], q = new Entry.Block({type:"function_field_label"}, n), q.data.params = [], q.data.params.push(h), l = Entry.TextCodingUtil.prototype.getLastParam(u), l.data.params[1] = q, k.description += h.concat(" ");
           }
@@ -14290,7 +14303,7 @@ Entry.PyToBlockParser = function(b) {
         n = k.id;
         m = "func".concat("_").concat(n);
         this._funcMap.put(t, m);
-        console.log("FunctionDeclaration newFunc", k);
+        console.log("FunctionDeclaration newFunc after", k);
       }
     }
     console.log("FunctionDeclaration result", b);
