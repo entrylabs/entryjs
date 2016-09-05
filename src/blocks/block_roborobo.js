@@ -12,7 +12,6 @@ Entry.Roborobo_Roduino = {
         COLOR: 7
     },
     setZero: function() {
-        console.log("Entry.Roborobo_Roduino.setZero");
         for (var i = 0; i < 5; i++) {
             Entry.hw.sendQueue[i] = 0;
         }
@@ -23,7 +22,6 @@ Entry.Roborobo_Roduino = {
         Entry.hw.sendQueue = data;
         Entry.hw.update();
         this.wait(32);
-        console.log("Entry.hw.sendQueue : " + data);
     },
     wait: function(ms) {
         var start = new Date().getTime();
@@ -45,7 +43,6 @@ Entry.Roborobo_SchoolKit = {
         SERVO: 5
     },
     setZero: function() {
-        console.log("Entry.Roborobo_SchoolKit.setZero");
         for (var i = 0; i < 5; i++) {
             Entry.hw.sendQueue[i] = 0;
         }
@@ -56,7 +53,6 @@ Entry.Roborobo_SchoolKit = {
         Entry.hw.sendQueue = data;
         Entry.hw.update();
         this.wait(32);
-        console.log("Entry.hw.sendQueue : " + data);
     },
     wait: function(ms) {
         var start = new Date().getTime();
