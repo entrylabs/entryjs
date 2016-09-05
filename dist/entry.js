@@ -13507,8 +13507,8 @@ Entry.PyToBlockParser = function(b) {
       g.push("");
       g.push(f);
       g.push("");
-      "number" == arguments[0].type ? arguments[0].params[0] += 1 : "text" == arguments[0].type && (arguments[0].params[0] = String(Number(arguments[0].params[0]) + 1));
-      g.push(arguments[0]);
+      "number" == arguments[1].type ? arguments[1].params[0] += 1 : "text" == arguments[1].type && (arguments[1].params[0] = String(Number(arguments[1].params[0]) + 1));
+      g.push(arguments[1]);
       g.push("");
       b.type = c;
       b.params = g;

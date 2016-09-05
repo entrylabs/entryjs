@@ -963,14 +963,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
             params.push("");
             params.push(listName);
             params.push("");
-            if(arguments[0].type == "number") {
-                arguments[0].params[0] += 1;
+            if(arguments[1].type == "number") {
+                arguments[1].params[0] += 1;
             }
-            else if(arguments[0].type == "text") {
-                arguments[0].params[0] = String(Number(arguments[0].params[0]) + 1);
+            else if(arguments[1].type == "text") {
+                arguments[1].params[0] = String(Number(arguments[1].params[0]) + 1);
             }
                         
-            params.push(arguments[0]);
+            params.push(arguments[1]);
             params.push("");
 
             structure.params = params;
