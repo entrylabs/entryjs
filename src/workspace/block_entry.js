@@ -18288,7 +18288,7 @@ Entry.block = {
                 var particle = Ntry.entityManager.addEntity();
                 Ntry.dispatchEvent("unitAction", Ntry.STATIC.ATTACK, function () {
                     $.each(components, function(type, component) {
-                        Ntry.entityManager.appendEntity();
+                        // Ntry.entityManager.appendEntity();
                         if(+type != Ntry.STATIC.UNIT) {
                             Ntry.entityManager.addComponent(particle.id, component);
                         } else {
@@ -18360,8 +18360,11 @@ Entry.block = {
 
                 Ntry.dispatchEvent("unitAction", Ntry.STATIC.ATTACK, function () {
                     $.each(components, function(type, component) {
-                        Ntry.entityManager.appendEntity();
-                        if(+type != Ntry.STATIC.UNIT) {
+                        if(+type === Ntry.STATIC.SPRITE) {
+                            var cloneComponent = $.extend({}, component);                        
+                            cloneComponent.zIndex = 50;
+                            Ntry.entityManager.addComponent(particle.id, cloneComponent);
+                        } else if(+type != Ntry.STATIC.UNIT) {
                             Ntry.entityManager.addComponent(particle.id, component);
                         } else {
                             Ntry.entityManager.addComponent(particle.id, {
