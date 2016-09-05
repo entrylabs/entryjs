@@ -287,8 +287,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             for(var i in arguments) { 
                 var argument = arguments[i];
+                console.log("kkk argument", argument, "typeof", typeof argument);
                 
-                if(argument) {
+                if(argument && typeof argument != Object) {
                     console.log("CallExpression argument", argument, "typeof", typeof argument);
                     var param = this[argument.type](argument, paramsMeta[i], paramsDefMeta[i], true);
                     console.log("CallExpression param", param);
@@ -299,10 +300,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + argument.value + "\'" + " 을 올바른 파라미터 값 또는 타입으로 변경하세요.";
                         error.line = this._blockCount; 
                         console.log("send error", error); 
-                        throw error;
+                        throw error; 
                     } 
 
-                    if(param != null && param.name) {
+                    if(param != null && param.name && (typeof param.name != 'function')) {
                         console.log("babo");
                         if(calleeName == '__pythonRuntime.functions.range')
                             this._blockCount++;
@@ -322,13 +323,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     type = param.type;
                     params = param.params;
                 } else {
-                    if(param.data && param.data.type) {
+                    if(param && param.data && param.data.type) {
                         params.push(param.data);
                     } else {
                         if(calleeName == "__pythonRuntime.functions.range"){
                             //do something for range in for statement
+                        } else if(param) {
+                            params.push(param);
                         }
-                        params.push(param);
                     }
                 }                              
             } 

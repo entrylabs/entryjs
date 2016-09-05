@@ -13190,18 +13190,18 @@ Entry.PyToBlockParser = function(b) {
       }
       console.log("CallExpression arguments", arguments);
       for (var r in arguments) {
-        if (q = arguments[r]) {
+        if (q = arguments[r], console.log("kkk argument", q, "typeof", typeof q), q && typeof q != Object) {
           console.log("CallExpression argument", q, "typeof", typeof q);
           h = this[q.type](q, f[r], n[r], !0);
           console.log("CallExpression param", h);
           if (void 0 === h) {
             throw b = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + q.value + "' \uc744 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694.", b.line = this._blockCount, console.log("send error", b), b;
           }
-          if (null != h && h.name) {
+          if (null != h && h.name && "function" != typeof h.name) {
             throw console.log("babo"), "__pythonRuntime.functions.range" == k && this._blockCount++, console.log("callex error calleeData", g), b = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4. '" + h.name + "'' \uc744 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694.", b.line = this._blockCount, console.log("send error", 
             b), b;
           }
-          "__pythonRuntime.functions.range" == k && h.type ? (e = h.type, c = h.params) : h.data && h.data.type ? c.push(h.data) : c.push(h);
+          "__pythonRuntime.functions.range" == k && h.type ? (e = h.type, c = h.params) : h && h.data && h.data.type ? c.push(h.data) : "__pythonRuntime.functions.range" != k && h && c.push(h);
         }
       }
       console.log("CallExpression syntax", m);
