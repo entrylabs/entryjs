@@ -13190,7 +13190,7 @@ Entry.PyToBlockParser = function(b) {
       }
       console.log("CallExpression arguments", arguments);
       for (var r in arguments) {
-        q = arguments[r], console.log("kkk argument", q, "typeof", typeof q), q && (console.log("CallExpression argument", q, "typeof", typeof q), q = this[q.type](q, f[r], n[r], !0), console.log("CallExpression param", q), "__pythonRuntime.functions.range" == k && q && q.type ? q && null != q && (e = q.type, c = q.params) : c.push(q));
+        q = arguments[r], console.log("kkk argument", q, "typeof", typeof q), q && (console.log("CallExpression argument", q, "typeof", typeof q), q = this[q.type](q, f[r], n[r], !0), console.log("CallExpression param", q), "__pythonRuntime.functions.range" == k && q && q.type ? q && null != q && (e = q.type, c = q.params) : (q.data && (q = q.data), c.push(q)));
       }
       console.log("CallExpression syntax", m);
       console.log("CallExpression argument params", c);
@@ -13819,35 +13819,34 @@ Entry.PyToBlockParser = function(b) {
       }
       console.log("UnaryExpression type", e);
       console.log("UnaryExpression operator", f);
-      var h = [];
+      c = [];
       if ("+" == f || "-" == f) {
-        g.value = Number(f.concat(g.value)), c = this[g.type](g), console.log("UnaryExpression data", c), b.data = c;
+        g.value = Number(f.concat(g.value)), c = this[g.type](g), console.log("UnaryExpression data", c), b.data = c, b.params = c;
       } else {
         if ("!" == f) {
           if ("Literal" == g.type || "Identifier" == g.type) {
             arguments = [];
             arguments.push(g);
-            var f = Entry.block[e].params, k = Entry.block[e].def.params;
+            var f = Entry.block[e].params, h = Entry.block[e].def.params;
             console.log("UnaryExpression paramsMeta", f);
-            console.log("UnaryExpression paramsDefMeta", k);
-            for (var l in f) {
-              g = f[l].type, "Indicator" == g ? (g = {raw:null, type:"Literal", value:null}, l < arguments.length && arguments.splice(l, 0, g)) : "Text" == g && (g = {raw:"", type:"Literal", value:""}, l < arguments.length && arguments.splice(l, 0, g));
+            console.log("UnaryExpression paramsDefMeta", h);
+            for (var k in f) {
+              g = f[k].type, "Indicator" == g ? (g = {raw:null, type:"Literal", value:null}, k < arguments.length && arguments.splice(k, 0, g)) : "Text" == g && (g = {raw:"", type:"Literal", value:""}, k < arguments.length && arguments.splice(k, 0, g));
             }
-            for (c in arguments) {
-              g = arguments[c], console.log("UnaryExpression argument", g), l = this[g.type](g, f[c], k[c], !0), console.log("UnaryExpression param", l), l && null != l && (h.push(l), h.splice(0, 0, ""), h.splice(2, 0, ""));
+            for (var l in arguments) {
+              g = arguments[l], console.log("UnaryExpression argument", g), k = this[g.type](g, f[l], h[l], !0), console.log("UnaryExpression param", k), k && null != k && (c.push(k), c.splice(0, 0, ""), c.splice(2, 0, ""));
             }
           } else {
-            if (l = this[g.type](g)) {
-              h.push(l), h.splice(0, 0, ""), h.splice(2, 0, "");
+            if (k = this[g.type](g)) {
+              c.push(k), c.splice(0, 0, ""), c.splice(2, 0, "");
             }
           }
+          b.params = c;
         }
       }
     }
     console.log("syntax", void 0);
     console.log("type", e);
-    b.type = e;
-    b.params = h;
     console.log("UnaryExpression result", b);
     return b;
   };

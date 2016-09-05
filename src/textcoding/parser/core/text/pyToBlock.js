@@ -325,6 +325,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         params = param.params;
                     }
                 } else {
+                    if(param.data) {
+                        param = param.data;
+                    } 
                     params.push(param);
                 }                              
             } 
@@ -1726,6 +1729,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 data = value;
                 console.log("UnaryExpression data", data);
                 structure.data = data;
+                structure.params = data;
             } 
             else if(operator == "!") {
                 if(argument.type == "Literal" || argument.type == "Identifier") {
@@ -1771,15 +1775,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         params.splice(2, 0, "");
                     }
                 } 
+                structure.params = params;
             }
         }
 
         console.log("syntax", syntax);
         console.log("type", type);
-
-        structure.type = type;
-        structure.params = params;
-
+        
         result = structure;
 
         console.log("UnaryExpression result", result);
