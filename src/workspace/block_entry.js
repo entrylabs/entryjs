@@ -18209,13 +18209,30 @@ Entry.block = {
             // TODO: func 내용은 변경해야 함.
 
             if (!this.isContinue) {
+                var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+                var unitId;
+                $.each(entities, function (id, entity) {
+                    unitId = id;
+                    components = entity.components;
+                });
+                var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
+                var unitGrid = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID);
+                var isCollisionPossible = Ntry.checkCollisionTile([Ntry.STATIC.OBSTACLE_BRICK], unitGrid, unitComp.direction, 1);
 
+                if(!isCollisionPossible) {
+                    Ntry.dispatchEvent("complete",false, Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
+                    return;
+                }
                 this.isContinue = true;
                 this.isAction = true;
                 var self = this;
                 var callback = function() {
-                    Ntry.dispatchEvent('destroyObstacle', 1, function () {
-                        self.isAction = false;
+                    Ntry.dispatchEvent('destroyObstacle', 1, function (state) {
+                        switch(state) {
+                            case Ntry.STATIC.OBSTACLE_DESTROY_SUCCESS:
+                                self.isAction = false;
+                                break;
+                        }
                     });
                 };
 
@@ -18260,9 +18277,15 @@ Entry.block = {
                 });
 
                 var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
+                var unitGrid = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID);
+                var isCollisionPossible = Ntry.checkCollisionTile([Ntry.STATIC.OBSTACLE_SPIDER], unitGrid, unitComp.direction);
+
+                if(!isCollisionPossible) {
+                    Ntry.dispatchEvent("complete",false, Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
+                    return;
+                }
 
                 var particle = Ntry.entityManager.addEntity();
-
                 Ntry.dispatchEvent("unitAction", Ntry.STATIC.ATTACK, function () {
                     $.each(components, function(type, component) {
                         Ntry.entityManager.appendEntity();
@@ -18272,13 +18295,13 @@ Entry.block = {
                             Ntry.entityManager.addComponent(particle.id, {
                                 type: Ntry.STATIC.PARTICLE,
                                 direction: component.direction,
-                                collisionList: [ Ntry.STATIC.OBSTACLE ],
+                                collisionList: [ Ntry.STATIC.OBSTACLE_SPIDER ],
                             });
                         }
                     });
                     Ntry.dispatchEvent("particleAction", {
                         entityId: particle.id,
-                        actionType: Ntry.STATIC.RANGE_ATTACK,
+                        actionType: Ntry.STATIC.FLOWER_ATTACK,
                         callback: function () {
                             Ntry.entityManager.removeEntity(particle.id);
                             self.isAction = false;
@@ -18310,20 +18333,54 @@ Entry.block = {
             }
         ],
         func: function() {
-            // TODO: func 내용은 변경해야 함.
-
+            var self = this;
             if (!this.isContinue) {
+                
+                var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+
+                var unitId;
+                $.each(entities, function (id, entity) {
+                    unitId = id;
+                    components = entity.components;
+                });
+
+                var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
+                var unitGrid = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID);
+                var isCollisionPossible = Ntry.checkCollisionTile([Ntry.STATIC.OBSTACLE_ENERMY1], unitGrid, unitComp.direction);
+
+                if(!isCollisionPossible) {
+                    Ntry.dispatchEvent("complete",false, Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
+                    return;
+                }
 
                 this.isContinue = true;
                 this.isAction = true;
-                var self = this;
-                var callBack = function() {
-                    self.isAction = false;
-                };
 
-                // turn direction
-                Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, callBack);
+                var particle = Ntry.entityManager.addEntity();
 
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.ATTACK, function () {
+                    $.each(components, function(type, component) {
+                        Ntry.entityManager.appendEntity();
+                        if(+type != Ntry.STATIC.UNIT) {
+                            Ntry.entityManager.addComponent(particle.id, component);
+                        } else {
+                            Ntry.entityManager.addComponent(particle.id, {
+                                type: Ntry.STATIC.PARTICLE,
+                                direction: component.direction,
+                                collisionList: [ Ntry.STATIC.OBSTACLE_ENERMY1 ],
+                            });
+                        }
+                    });
+
+                    Ntry.dispatchEvent("particleAction", {
+                        entityId: particle.id,
+                        actionType: Ntry.STATIC.HEART_ATTACK,
+                        callback: function () {
+                            Ntry.entityManager.removeEntity(particle.id);
+                            self.isAction = false;
+                        }
+                    });                    
+                });
                 return Entry.STATIC.BREAK;
             } else if (this.isAction) {
                 return Entry.STATIC.BREAK;
@@ -18349,13 +18406,25 @@ Entry.block = {
             }
         ],
         func: function() {
-            // TODO: func 내용은 변경해야 함.
-
             if (!this.isContinue) {
+                var self = this;
+                var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+                var unitId;
+                $.each(entities, function (id, entity) {
+                    unitId = id;
+                    components = entity.components;
+                });
+                var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
+                var unitGrid = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID);
+                var isCollisionPossible = Ntry.checkCollisionTile([Ntry.STATIC.OBSTACLE_ICE], unitGrid, unitComp.direction, 1);
 
+                if(!isCollisionPossible) {
+                    Ntry.dispatchEvent("complete",false, Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
+                    return;
+                }
                 this.isContinue = true;
                 this.isAction = true;
-                var self = this;
+
                 var callback = function() {
                     Ntry.dispatchEvent('destroyObstacle', 1, function (state) {
                         switch(state) {
