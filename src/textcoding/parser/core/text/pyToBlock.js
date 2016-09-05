@@ -289,19 +289,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var argument = arguments[i];
                 console.log("kkk argument", argument, "typeof", typeof argument);
                 
-                if(argument && typeof argument != Object) {
+                if(argument) {
                     console.log("CallExpression argument", argument, "typeof", typeof argument);
                     var param = this[argument.type](argument, paramsMeta[i], paramsDefMeta[i], true);
                     console.log("CallExpression param", param);
                     
-                    if(!param && param != null) {
+                    if(!param && param == null) {
                         var error = {};
                         error.title = "블록변환(Converting) 오류";
                         error.message = "블록으로 변환될 수 없는 코드입니다." + "\'" + argument.value + "\'" + " 을 올바른 파라미터 값 또는 타입으로 변경하세요.";
                         error.line = this._blockCount; 
                         console.log("send error", error); 
                         throw error; 
-                    } 
+                    }
 
                     /*if(param != null && param.name) {
                         console.log("babo");
@@ -323,15 +323,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     type = param.type;
                     params = param.params;
                 } else {
-                    if(param && param.data && param.data.type) {
-                        params.push(param.data);
-                    } else {
-                        if(calleeName == "__pythonRuntime.functions.range"){
-                            //do something for range in for statement
-                        } else if(param) {
-                            params.push(param);
-                        }
-                    }
+                    params.push(param);
                 }                              
             } 
 
@@ -1239,35 +1231,51 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             if(param) {
                                 if(param.params && param.params[0])
                                 {   
-                                    var p = param.params[0];
-                                    if(p.type == "number" && p.params && p.params[0]) {
-                                        var value = p.params[0];
-                                        if(value >= 0) {
-                                            params.push(param);
-                                        }
-                                        else {
-                                            var error = {};
-                                            error.title = "블록변환(Converting) 오류";
-                                            error.message = "블록으로 변환될 수 없는 코드입니다." + "파라미터 " + "\'" + value + "\'" + "을(를) 양수값으로 변경해주세요.";
-                                            error.line = this._blockCount--; 
-                                            console.log("send error", error); 
-                                            throw error;   
-                                        }
-                                    } 
-                                    else {
-                                        if(param.callee == "__pythonRuntime.functions.range") {
-                                            var value = param.params[0];
-                                            if(typeof value != "number") { 
+                                    if(param.type == "number" || param.type == "text") {
+                                        var p = param.params[0];
+                                        if(p.type == "number" && p.params && p.params[0]) {
+                                            var value = p.params[0];
+                                            if(value >= 0) {
+                                                params.push(param);
+                                            }
+                                            else if(value.name) {
                                                 var error = {};
                                                 error.title = "블록변환(Converting) 오류";
-                                                error.message = "블록으로 변환될 수 없는 코드입니다." + "파라미터 " + "\'" + value + "\'" + "을(를) 숫자타입(양수값)으로 변경해주세요.";
+                                                error.message = "블록으로 변환될 수 없는 코드입니다." + "파라미터 " + "\'" + value + "\'" + "을(를) 양수값으로 변경해주세요.";
                                                 error.line = this._blockCount--; 
                                                 console.log("send error", error); 
-                                                throw error; 
-                                            }    
+                                                throw error;
+                                            }
+                                            else {
+                                                var error = {};
+                                                error.title = "블록변환(Converting) 오류";
+                                                error.message = "블록으로 변환될 수 없는 코드입니다." + "파라미터 " + "\'" + value + "\'" + "을(를) 양수값으로 변경해주세요.";
+                                                error.line = this._blockCount--; 
+                                                console.log("send error", error); 
+                                                throw error;   
+                                            }
+                                        } 
+                                        else {
+                                            if(param.callee == "__pythonRuntime.functions.range") {
+                                                var value = param.params[0];
+                                                if(typeof value != "number") { 
+                                                    var error = {};
+                                                    error.title = "블록변환(Converting) 오류";
+                                                    error.message = "블록으로 변환될 수 없는 코드입니다." + "파라미터 " + "\'" + value + "\'" + "을(를) 숫자타입(양수값)으로 변경해주세요.";
+                                                    error.line = this._blockCount--; 
+                                                    console.log("send error", error); 
+                                                    throw error; 
+                                                }    
+                                            }
+                                            params.push(param);
                                         }
+                                    } else {
+                                        console.log("ttt param1", param);
                                         params.push(param);
                                     }
+                                } else {
+                                    console.log("ttt param2", param);
+                                    params.push(param);
                                 }
                             }
                         }

@@ -13190,14 +13190,14 @@ Entry.PyToBlockParser = function(b) {
       }
       console.log("CallExpression arguments", arguments);
       for (var r in arguments) {
-        if (q = arguments[r], console.log("kkk argument", q, "typeof", typeof q), q && typeof q != Object) {
+        if (q = arguments[r], console.log("kkk argument", q, "typeof", typeof q), q) {
           console.log("CallExpression argument", q, "typeof", typeof q);
           h = this[q.type](q, f[r], n[r], !0);
           console.log("CallExpression param", h);
-          if (!h && null != h) {
+          if (!h && null == h) {
             throw b = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + q.value + "' \uc744 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694.", b.line = this._blockCount, console.log("send error", b), b;
           }
-          "__pythonRuntime.functions.range" == k && h.type ? (e = h.type, c = h.params) : h && h.data && h.data.type ? c.push(h.data) : "__pythonRuntime.functions.range" != k && h && c.push(h);
+          "__pythonRuntime.functions.range" == k && h.type ? (e = h.type, c = h.params) : c.push(h);
         }
       }
       console.log("CallExpression syntax", m);
@@ -13610,19 +13610,27 @@ Entry.PyToBlockParser = function(b) {
           if (f[k].declarations) {
             a = f[0].declarations;
             for (k in a) {
-              if (h = a[k], h = h.init, console.log("ppp param", h), h && h.params && h.params[0]) {
-                var l = h.params[0];
-                if ("number" == l.type && l.params && l.params[0]) {
-                  if (l = l.params[0], 0 <= l) {
-                    c.push(h);
+              if (h = a[k], h = h.init, console.log("ppp param", h), h) {
+                if (h.params && h.params[0]) {
+                  if ("number" == h.type || "text" == h.type) {
+                    var l = h.params[0];
+                    if ("number" == l.type && l.params && l.params[0]) {
+                      if (l = l.params[0], 0 <= l) {
+                        c.push(h);
+                      } else {
+                        throw b = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud30c\ub77c\ubbf8\ud130 '" + l + "'\uc744(\ub97c) \uc591\uc218\uac12\uc73c\ub85c \ubcc0\uacbd\ud574\uc8fc\uc138\uc694.", b.line = this._blockCount--, console.log("send error", b), b;
+                      }
+                    } else {
+                      if ("__pythonRuntime.functions.range" == h.callee && (l = h.params[0], "number" != typeof l)) {
+                        throw b = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud30c\ub77c\ubbf8\ud130 '" + l + "'\uc744(\ub97c) \uc22b\uc790\ud0c0\uc785(\uc591\uc218\uac12)\uc73c\ub85c \ubcc0\uacbd\ud574\uc8fc\uc138\uc694.", b.line = this._blockCount--, console.log("send error", b), b;
+                      }
+                      c.push(h);
+                    }
                   } else {
-                    throw b = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud30c\ub77c\ubbf8\ud130 '" + l + "'\uc744(\ub97c) \uc591\uc218\uac12\uc73c\ub85c \ubcc0\uacbd\ud574\uc8fc\uc138\uc694.", b.line = this._blockCount--, console.log("send error", b), b;
+                    console.log("ttt param1", h), c.push(h);
                   }
                 } else {
-                  if ("__pythonRuntime.functions.range" == h.callee && (l = h.params[0], "number" != typeof l)) {
-                    throw b = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud30c\ub77c\ubbf8\ud130 '" + l + "'\uc744(\ub97c) \uc22b\uc790\ud0c0\uc785(\uc591\uc218\uac12)\uc73c\ub85c \ubcc0\uacbd\ud574\uc8fc\uc138\uc694.", b.line = this._blockCount--, console.log("send error", b), b;
-                  }
-                  c.push(h);
+                  console.log("ttt param2", h), c.push(h);
                 }
               }
             }
