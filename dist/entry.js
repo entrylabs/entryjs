@@ -13190,15 +13190,7 @@ Entry.PyToBlockParser = function(b) {
       }
       console.log("CallExpression arguments", arguments);
       for (var r in arguments) {
-        if (q = arguments[r], console.log("kkk argument", q, "typeof", typeof q), q) {
-          console.log("CallExpression argument", q, "typeof", typeof q);
-          h = this[q.type](q, f[r], n[r], !0);
-          console.log("CallExpression param", h);
-          if (!h && null == h) {
-            throw b = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + q.value + "' \uc744 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694.", b.line = this._blockCount, console.log("send error", b), b;
-          }
-          "__pythonRuntime.functions.range" == k && h.type ? (e = h.type, c = h.params) : c.push(h);
-        }
+        q = arguments[r], console.log("kkk argument", q, "typeof", typeof q), q && (console.log("CallExpression argument", q, "typeof", typeof q), q = this[q.type](q, f[r], n[r], !0), console.log("CallExpression param", q), "__pythonRuntime.functions.range" == k && q && q.type ? q && null != q && (e = q.type, c = q.params) : c.push(q));
       }
       console.log("CallExpression syntax", m);
       console.log("CallExpression argument params", c);
@@ -13238,13 +13230,13 @@ Entry.PyToBlockParser = function(b) {
           c.splice(0, 0, r);
           console.log("CallExpression check arguments", arguments);
           console.log("CallExpression arguments[1] 2", arguments[1]);
-          h = this[arguments[1].type](arguments[1], f[2], n[2], !0);
-          console.log("CallExpression check param", h);
-          c.splice(0, 0, h);
+          q = this[arguments[1].type](arguments[1], f[2], n[2], !0);
+          console.log("CallExpression check param", q);
+          c.splice(0, 0, q);
           console.log("CallExpression insert params", c);
           "number" == c[2].type ? c[2].params[0] += 1 : "text" == c[2].type && (c[2].params[0] = String(Number(c[2].params[0]) + 1));
         } else {
-          "len" == m ? (r = this.ParamDropdownDynamic(c[1].name, f[1], n[1]), delete c[1], c[1] = r) : "%4 in %2" == m && (q = a.arguments[1], h = this[q.type](q, f[3], n[3], !0), r = a.arguments[3].name, r = this.ParamDropdownDynamic(r, f[1], n[1]), c = [], c.push(""), c.push(r), c.push(""), c.push(h), c.push(""));
+          "len" == m ? (r = this.ParamDropdownDynamic(c[1].name, f[1], n[1]), delete c[1], c[1] = r) : "%4 in %2" == m && (q = a.arguments[1], q = this[q.type](q, f[3], n[3], !0), r = a.arguments[3].name, r = this.ParamDropdownDynamic(r, f[1], n[1]), c = [], c.push(""), c.push(r), c.push(""), c.push(q), c.push(""));
         }
       }
       e && (b.type = e);
