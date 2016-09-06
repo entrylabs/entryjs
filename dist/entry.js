@@ -14016,7 +14016,7 @@ Entry.PyToBlockParser = function(b) {
           console.log("BinaryExpression param", m);
           console.log("check binary", typeof m, "$", m.type, "$", m.isCallParam);
           if (m && null != m) {
-            if ("object" == typeof m && !m.type && m.isCallParam) {
+            if (!m.name.includes("__filbert") && "object" == typeof m && !m.type && m.isCallParam) {
               throw c = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud574\ub2f9 \ubcc0\uc218\ub098 \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694."}, c.line = this._blockCount, console.log("send error", c), c;
             }
             b.push(m);
@@ -14045,7 +14045,7 @@ Entry.PyToBlockParser = function(b) {
         }
         for (n in arguments) {
           if (m = arguments[n], console.log("BinaryExpression argument", m), m = this[m.type](m, h[n], k[n], !0), console.log("BinaryExpression param", m), m && null != m) {
-            if ("object" == typeof m && !m.type && m.isCallParam) {
+            if (!m.name.includes("__filbert") && "object" == typeof m && !m.type && m.isCallParam) {
               throw c = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud574\ub2f9 \ubcc0\uc218\ub098 \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694."}, c.line = this._blockCount, console.log("send error", c), c;
             }
             b.push(m);

@@ -2120,14 +2120,17 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     var param = this[argument.type](argument, paramsMeta[i], paramsDefMeta[i], true);
                     console.log("BinaryExpression param", param);
                     console.log("check binary", typeof param, "$", param.type, "$", param.isCallParam);
+
                     if(param && param != null) {
-                        if(typeof param == "object" && !param.type && param.isCallParam) { 
-                            var error = {};
-                            error.title = "블록변환(Converting) 오류";
-                            error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
-                            error.line = this._blockCount; 
-                            console.log("send error", error); 
-                            throw error;  
+                        if(!param.name.includes("__filbert")) {
+                            if(typeof param == "object" && !param.type && param.isCallParam) { 
+                                var error = {};
+                                error.title = "블록변환(Converting) 오류";
+                                error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
+                                error.line = this._blockCount; 
+                                console.log("send error", error); 
+                                throw error;  
+                            }
                         }
                         params.push(param);   
                     }
@@ -2194,13 +2197,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     var param = this[argument.type](argument, paramsMeta[i], paramsDefMeta[i], true);
                     console.log("BinaryExpression param", param);
                     if(param && param != null) {
-                        if(typeof param == "object" && !param.type && param.isCallParam) { 
-                            var error = {};
-                            error.title = "블록변환(Converting) 오류";
-                            error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
-                            error.line = this._blockCount; 
-                            console.log("send error", error); 
-                            throw error;  
+                        if(!param.name.includes("__filbert")) {
+                            if(typeof param == "object" && !param.type && param.isCallParam) { 
+                                var error = {};
+                                error.title = "블록변환(Converting) 오류";
+                                error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
+                                error.line = this._blockCount; 
+                                console.log("send error", error); 
+                                throw error;  
+                            }
                         }
                         params.push(param);   
                     }
