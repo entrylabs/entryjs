@@ -103,7 +103,7 @@ Entry.PyHint = function() {
         if(objName == "def") {
             syntaxMap._global.push({
                 displayText: objName + " " + operator,
-                text: objName + " " + operator + paramPart
+                text: objName + " " + operator + paramPart + ":"
             });
         } 
         else {

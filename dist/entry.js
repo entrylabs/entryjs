@@ -11694,7 +11694,7 @@ Entry.PyHint = function() {
       d[g] || (d[g] = [], d._global.push({displayText:g, text:g}));
       var f = f[0].split(","), h = "(" + Array(f.length).join(" , ") + ")", f = f[0].split("(")[0];
       d[g].push({displayText:f, text:f + h});
-      "def" == g ? d._global.push({displayText:g + " " + f, text:g + " " + f + h}) : d._global.push({displayText:g + "." + f, text:g + "." + f + h});
+      "def" == g ? d._global.push({displayText:g + " " + f, text:g + " " + f + h + ":"}) : d._global.push({displayText:g + "." + f, text:g + "." + f + h});
     }
   }
 };
@@ -13361,7 +13361,7 @@ Entry.PyToBlockParser = function(b) {
         h = e.name;
         g = "Literal" == f.type ? f.value : "Identifier" == f.type ? f.name : NaN;
         console.log("variable name", h, "value", g);
-        g && NaN != g && (h.includes("__filbert") || (Entry.TextCodingUtil.prototype.isGlobalVariableExisted(h) ? Entry.TextCodingUtil.prototype.updateGlobalVariable(h, g) : Entry.TextCodingUtil.prototype.createGlobalVariable(h, g)));
+        g && NaN != g && h && !h.includes("__filbert") && (Entry.TextCodingUtil.prototype.isGlobalVariableExisted(h) ? Entry.TextCodingUtil.prototype.updateGlobalVariable(h, g) : Entry.TextCodingUtil.prototype.createGlobalVariable(h, g));
         h = this[e.type](e);
         console.log("VariableDeclarator idData", h);
         b.id = h;
@@ -14027,7 +14027,7 @@ Entry.PyToBlockParser = function(b) {
           console.log("BinaryExpression param", n);
           console.log("check binary", typeof n, "$", n.type, "$", n.isCallParam);
           if (n && null != n) {
-            if (!n.name.includes("__filbert") && "object" == typeof n && !n.type && n.isCallParam) {
+            if (n.name && !n.name.includes("__filbert") && "object" == typeof n && !n.type && n.isCallParam) {
               throw c = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud574\ub2f9 \ubcc0\uc218\ub098 \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694."}, c.line = this._blockCount, console.log("send error", c), c;
             }
             b.push(n);
@@ -14056,7 +14056,7 @@ Entry.PyToBlockParser = function(b) {
         }
         for (m in arguments) {
           if (n = arguments[m], console.log("BinaryExpression argument", n), n = this[n.type](n, h[m], k[m], !0), console.log("BinaryExpression param", n), n && null != n) {
-            if (!n.name.includes("__filbert") && "object" == typeof n && !n.type && n.isCallParam) {
+            if (n.name && !n.name.includes("__filbert") && "object" == typeof n && !n.type && n.isCallParam) {
               throw c = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud574\ub2f9 \ubcc0\uc218\ub098 \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694."}, c.line = this._blockCount, console.log("send error", c), c;
             }
             b.push(n);

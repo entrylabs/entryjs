@@ -707,7 +707,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             console.log("variable name", name, "value", value);
 
             if(value && value != NaN) {
-                if(!name.includes('__filbert')) {
+                if(name && !name.includes('__filbert')) {
                     if(Entry.TextCodingUtil.prototype.isGlobalVariableExisted(name)) {
                         Entry.TextCodingUtil.prototype.updateGlobalVariable(name, value);
                     } 
@@ -2181,7 +2181,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     console.log("check binary", typeof param, "$", param.type, "$", param.isCallParam);
 
                     if(param && param != null) {
-                        if(!param.name.includes("__filbert")) {
+                        if(param.name && !param.name.includes("__filbert")) {
                             if(typeof param == "object" && !param.type && param.isCallParam) { 
                                 var error = {};
                                 error.title = "블록변환(Converting) 오류";
@@ -2256,7 +2256,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     var param = this[argument.type](argument, paramsMeta[i], paramsDefMeta[i], true);
                     console.log("BinaryExpression param", param);
                     if(param && param != null) {
-                        if(!param.name.includes("__filbert")) {
+                        if(param.name && !param.name.includes("__filbert")) {
                             if(typeof param == "object" && !param.type && param.isCallParam) { 
                                 var error = {};
                                 error.title = "블록변환(Converting) 오류";
