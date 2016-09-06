@@ -60,6 +60,13 @@ Entry.Thread = function(thread, code, parent) {
         });
     };
 
+    p.destroyView = function() {
+        this.view = null;
+        this._data.map(function(b) {
+            b.destroyView();
+        });
+    };
+
     p.separate = function(block, count) {
         if (!this._data.has(block.id)) return;
 
@@ -226,7 +233,7 @@ Entry.Thread = function(thread, code, parent) {
         var result = this._data.length;
         if (startBlock)
             result -= this._data.indexOf(startBlock);
-        return result
+        return result;
     };
 
     p.indexOf = function(block) {

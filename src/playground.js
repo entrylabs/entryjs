@@ -23,8 +23,17 @@ Entry.Playground = function() {
      * @type {string}
      */
     this.viewMode_ = 'default';
+    var that = this;
     Entry.addEventListener('textEdited', this.injectText);
     Entry.addEventListener('hwChanged', this.updateHW);
+    Entry.addEventListener('changeMode', function(mode) {
+        that.setMode(mode);
+    });
+};
+
+Entry.Playground.prototype.setMode = function(mode) {
+    //console.log("playground setMode", mode);
+    this.mainWorkspace.setMode(mode);
 };
 
 /**

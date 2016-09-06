@@ -4,8 +4,10 @@ goog.provide('Entry.ContextMenu');
 
 (function(ctx) {
     ctx.visible = false;
+    ctx._hideEvent = null;
 
     ctx.createDom = function() {
+
         this.dom = Entry.Dom('ul', {
             id: 'entry-contextmenu',
             parent: $('body')
@@ -16,12 +18,12 @@ goog.provide('Entry.ContextMenu');
         });
 
         Entry.Utils.disableContextmenu(this.dom);
-        Entry.documentMousedown.attach(
-            this, function(){this.hide();}
-        );
     };
 
     ctx.show = function(options, className, coordinate) {
+        this._hideEvent = Entry.documentMousedown.attach(
+            this, function(){this.hide();}
+        );
         if (!this.dom) this.createDom();
         if (options.length === 0) return;
         var that = this;
@@ -98,6 +100,10 @@ goog.provide('Entry.ContextMenu');
         if (this._className) {
             this.dom.removeClass(this._className);
             delete this._className;
+        }
+        if (this._hideEvent) {
+            Entry.documentMousedown.detach(this._hideEvent);
+            this._hideEvent = null;
         }
     };
 

@@ -3,7 +3,7 @@
  */
 "use strict";
 
-goog.provide("Entry.Parser");
+goog.provide("Entry.ParserOld");
 
 goog.require("Entry.JSParser");
 goog.require("Entry.BlockParser");

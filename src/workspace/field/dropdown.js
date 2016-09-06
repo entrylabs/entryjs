@@ -64,7 +64,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         });
 
         var width =
-            this.textElement.getComputedTextLength() + X_PADDING;
+            this.textElement.getBoundingClientRect().width + X_PADDING;
 
         if (this._noArrow) width -= X_PADDING_SUBT;
 
@@ -109,7 +109,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         var X_PADDING = isBig ? 33 : 20;
         var X_PADDING_SUBT = isBig ? 24 : 10;
         var width =
-            this.textElement.getComputedTextLength() + X_PADDING;
+            this.textElement.getBoundingClientRect().width + X_PADDING;
 
         if (!this._noArrow) {
             var arrowInfo = this.getArrow();

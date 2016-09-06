@@ -5,7 +5,7 @@
   height: 100%;
   color: black;
 }
-.CodeMirror > * {
+.CodeMirror * {
   font-family: 'Nanum Gothic Coding' !important;
 }
 /* PADDING */
@@ -260,6 +260,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
   left: 0;
   top: 0;
   z-index: 3;
+  height: 100% !important;
 }
 .CodeMirror-gutter {
   white-space: normal;
@@ -1148,6 +1149,7 @@ svg .svgBlockGroup text {
   height: 100%;
 }
 .entryVimBoard {
+  z-index: 0;
   position: absolute;
   top: 0;
   left: 0;
@@ -1506,6 +1508,7 @@ svg .svgBlockGroup text {
   top: 20px;
   cursor: col-resize;
   background-image: url("../images/entry_scroll.png");
+  z-index: 1000;
 }
 .selectedObject .entryObjectSelectedImgWorkspace {
   float: left;

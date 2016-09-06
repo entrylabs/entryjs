@@ -175,6 +175,10 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         }
     };
 
+    p.destroyView = function() {
+        this.set({view: null});
+    };
+
     p.clone = function(thread) {
         return new Entry.Block(
             this.toJSON(true),

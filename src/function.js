@@ -98,6 +98,9 @@ Entry.Func.initEditView = function(content) {
     var workspace = Entry.playground.mainWorkspace;
     workspace.setMode(Entry.Workspace.MODE_OVERLAYBOARD);
     workspace.changeOverlayBoardCode(content);
+    content.recreateView();
+    workspace.changeOverlayBoardCode(content);
+    content.view.board.alignThreads();
     this._workspaceStateEvent = workspace.changeEvent.attach(this, this.endEdit);
 };
 
