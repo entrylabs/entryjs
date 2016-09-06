@@ -21336,7 +21336,7 @@ Entry.CodeView = function(b, a) {
   this.svgBlockGroup.attr({class:"svgBlockGroup"});
   this.svgBlockGroup.board = a;
   a.bindCodeView(this);
-  this.code.map(function(b) {
+  this.code._data.getAll().forEach(function(b) {
     b.createView(a);
   });
   b.observe(this, "_setBoard", ["board"]);
