@@ -18216,8 +18216,8 @@ Entry.block = {
                     components = entity.components;
                 });
                 var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
-                var unitGrid = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID);
-                var isCollisionPossible = Ntry.checkCollisionTile([Ntry.STATIC.OBSTACLE_BRICK], unitGrid, unitComp.direction, 1);
+                var unitGrid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
+                var isCollisionPossible = Ntry.checkCollisionTile(unitGrid, unitComp.direction, [Ntry.STATIC.OBSTACLE_BRICK], 1);
 
                 if(!isCollisionPossible) {
                     Ntry.dispatchEvent("complete",false, Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
@@ -18277,9 +18277,12 @@ Entry.block = {
                 });
 
                 var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
-                var unitGrid = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID);
-                var isCollisionPossible = Ntry.checkCollisionTile([Ntry.STATIC.OBSTACLE_SPIDER], unitGrid, unitComp.direction);
-
+                var unitGrid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
+                var isCollisionPossible = Ntry.checkCollisionTile(unitGrid, unitComp.direction, [Ntry.STATIC.OBSTACLE_SPIDER]);
+                var particleZIndex = 150;
+                if(unitComp.direction === Ntry.STATIC.NORTH) {
+                    particleZIndex = 50;
+                }
                 if(!isCollisionPossible) {
                     Ntry.dispatchEvent("complete",false, Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
                     return;
@@ -18288,8 +18291,11 @@ Entry.block = {
                 var particle = Ntry.entityManager.addEntity();
                 Ntry.dispatchEvent("unitAction", Ntry.STATIC.ATTACK, function () {
                     $.each(components, function(type, component) {
-                        // Ntry.entityManager.appendEntity();
-                        if(+type != Ntry.STATIC.UNIT) {
+                        if(+type === Ntry.STATIC.SPRITE) {
+                            var cloneComponent = $.extend({}, component);                        
+                            cloneComponent.zIndex = particleZIndex;
+                            Ntry.entityManager.addComponent(particle.id, cloneComponent);
+                        } else if(+type != Ntry.STATIC.UNIT) {
                             Ntry.entityManager.addComponent(particle.id, component);
                         } else {
                             Ntry.entityManager.addComponent(particle.id, {
@@ -18345,11 +18351,14 @@ Entry.block = {
                 });
 
                 var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
-                var unitGrid = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID);
-                var isCollisionPossible = Ntry.checkCollisionTile([Ntry.STATIC.OBSTACLE_ENERMY1], unitGrid, unitComp.direction);
-
+                var unitGrid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
+                var isCollisionPossible = Ntry.checkCollisionTile(unitGrid, unitComp.direction, [Ntry.STATIC.OBSTACLE_ENERMY1]);
+                var particleZIndex = 150;
+                if(unitComp.direction === Ntry.STATIC.NORTH) {
+                    particleZIndex = 50;
+                }
                 if(!isCollisionPossible) {
-                    Ntry.dispatchEvent("complete",false, Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
+                    Ntry.dispatchEvent("complete", false, Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
                     return;
                 }
 
@@ -18362,7 +18371,7 @@ Entry.block = {
                     $.each(components, function(type, component) {
                         if(+type === Ntry.STATIC.SPRITE) {
                             var cloneComponent = $.extend({}, component);                        
-                            cloneComponent.zIndex = 50;
+                            cloneComponent.zIndex = particleZIndex;
                             Ntry.entityManager.addComponent(particle.id, cloneComponent);
                         } else if(+type != Ntry.STATIC.UNIT) {
                             Ntry.entityManager.addComponent(particle.id, component);
@@ -18418,11 +18427,12 @@ Entry.block = {
                     components = entity.components;
                 });
                 var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
-                var unitGrid = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID);
-                var isCollisionPossible = Ntry.checkCollisionTile([Ntry.STATIC.OBSTACLE_ICE], unitGrid, unitComp.direction, 1);
+                var unitGrid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
+                var isCollisionPossible = Ntry.checkCollisionTile(unitGrid, unitComp.direction, [Ntry.STATIC.OBSTACLE_ICE], 1);
 
+                console.log(isCollisionPossible);
                 if(!isCollisionPossible) {
-                    Ntry.dispatchEvent("complete",false, Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
+                    Ntry.dispatchEvent("complete", false, Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
                     return;
                 }
                 this.isContinue = true;
