@@ -4029,7 +4029,7 @@ Entry.block = {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic_string_field",
-        template: "9.빛센서@포트%1", 
+        template: "9.빛센서@포트%1",
         params: [
             {
                 type: "Dropdown",
@@ -4148,7 +4148,7 @@ Entry.block = {
         },
         paramsKeyMap: {
             PORT: 0,
-            OPERATOR: 1    
+            OPERATOR: 1
         },
         class: "cobl",
         isNotFor : [ "cobl" ],
@@ -4246,7 +4246,7 @@ Entry.block = {
             type: "cobl_melody"
         },
         paramsKeyMap: {
-            MELODY: 0  
+            MELODY: 0
         },
         class: "cobl",
         isNotFor : [ "cobl" ],
@@ -4311,7 +4311,7 @@ Entry.block = {
         paramsKeyMap: {
             MOTOR: 0,
             DIRECTION: 1,
-            SPEED:2    
+            SPEED:2
         },
         class: "cobl",
         isNotFor : [ "cobl" ],
@@ -4319,10 +4319,10 @@ Entry.block = {
             var motor = script.getStringField("MOTOR");
             var direction = script.getStringField("DIRECTION");
             var speed = script.getStringField("SPEED");
-            
+
             if (motor == 1) {
                 Entry.hw.setDigitalPortValue("DC1_DIR", direction);
-                Entry.hw.setDigitalPortValue("DC1_SPEED", speed); 
+                Entry.hw.setDigitalPortValue("DC1_SPEED", speed);
                 Entry.hw.update();
                 delete Entry.hw.sendQueue["DC1_DIR"];
                 delete Entry.hw.sendQueue["DC1_SPEED"];
@@ -4343,7 +4343,7 @@ Entry.block = {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic",
-        template: "15.USB포트%1단계%2 %3",        
+        template: "15.USB포트%1단계%2 %3",
         params: [
             {
                 type: "Dropdown",
@@ -4380,14 +4380,14 @@ Entry.block = {
         },
         paramsKeyMap: {
             PORT: 0,
-            LEVEL: 1    
+            LEVEL: 1
         },
         class: "cobl",
         isNotFor : [ "cobl" ],
         "func": function(sprite, script) {
             var port = script.getStringField("PORT");
             var level = script.getStringField("LEVEL");
-         
+
             if(port == 1){
                 Entry.hw.setDigitalPortValue("EXUSB1", level);
                 Entry.hw.update();
@@ -4416,7 +4416,7 @@ Entry.block = {
             {
                 type: "Dropdown",
                 options: [
-                  ["0","0"],               
+                  ["0","0"],
                   ["1","1"],
                   ["2","2"],
                   ["3","3"],
@@ -4432,7 +4432,7 @@ Entry.block = {
             },            {
                 type: "Dropdown",
                 options: [
-                  ["0","0"],               
+                  ["0","0"],
                   ["1","1"],
                   ["2","2"],
                   ["3","3"],
@@ -4448,7 +4448,7 @@ Entry.block = {
             },            {
                 type: "Dropdown",
                 options: [
-                  ["0","0"],               
+                  ["0","0"],
                   ["1","1"],
                   ["2","2"],
                   ["3","3"],
@@ -4496,7 +4496,7 @@ Entry.block = {
             Entry.hw.setDigitalPortValue("ELED_G", g);
             Entry.hw.setDigitalPortValue("ELED_B", b);
             Entry.hw.update();
-            
+
             delete Entry.hw.sendQueue["ELED_IDX"];
             delete Entry.hw.sendQueue["ELED_R"];
             delete Entry.hw.sendQueue["ELED_G"];
@@ -4509,7 +4509,7 @@ Entry.block = {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic",
-        template: "17.숫자전광판%1(0~9999) %2",        
+        template: "17.숫자전광판%1(0~9999) %2",
         params: [
             {
                 type: "TextInput",
@@ -20911,7 +20911,7 @@ Entry.block = {
             }
             return result;
         }
-    }, 
+    },
     "ev3_get_sensor_value": {
         "color": "#00979D",
         "fontColor": "#fff",
@@ -20948,7 +20948,7 @@ Entry.block = {
             }
             return result;
         }
-    }, 
+    },
     "ev3_motor_degrees": {
         "color": "#00979D",
         "skeleton": "basic",
@@ -21011,7 +21011,7 @@ Entry.block = {
             };
             return script.callReturn();
         }
-    }, 
+    },
     "ev3_motor_power": {
         "color": "#00979D",
         "skeleton": "basic",
@@ -21059,7 +21059,7 @@ Entry.block = {
             };
             return script.callReturn();
         }
-    }, 
+    },
     "ev3_motor_power_on_time": {
         "color": "#00979D",
         "skeleton": "basic",
@@ -21138,7 +21138,7 @@ Entry.block = {
                 return script.callReturn();
             }
         }
-    }, 
+    },
     "ev3_touch_sensor": {
         "color": "#00979D",
         "fontColor": "#fff",
@@ -21178,7 +21178,760 @@ Entry.block = {
 
             return result;
         }
-    }
+    },
+    "roduino_on_block": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "roduino_on_block"
+        },
+        "paramsKeyMap": {
+        },
+        "class": "roduino_value",
+        "isNotFor": [ "roborobo_roduino" ],
+        "func": function (sprite, script) {
+            return "1";
+        }
+    },
+    "roduino_off_block": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "roduino_off_block"
+        },
+        "paramsKeyMap": {
+        },
+        "class": "roduino_value",
+        "isNotFor": [ "roborobo_roduino" ],
+        "func": function (sprite, script) {
+            return "0";
+        }
+    },
+    "roduino_get_analog_number": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ '0', "0" ],
+                    [ '1', "1" ],
+                    [ '2', "2" ],
+                    [ '3', "3" ],
+                    [ '4', "4" ],
+                    [ '5', "5" ]
+                ],
+                "value": "0",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "func": function (sprite, script) {
+            return script.getStringField("PORT");
+        }
+    },
+    "roduino_get_port_number": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ '2', "2" ],
+                    [ '3', "3" ],
+                    [ '4', "4" ],
+                    [ '5', "5" ],
+                    [ '6', "6" ],
+                    [ '7', "7" ],
+                    [ '8', "8" ]
+                ],
+                "value": "2",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "func": function (sprite, script) {
+            return script.getStringField("PORT");
+        }
+    },
+    "roduino_get_analog_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "roduino_get_analog_number"
+                }
+            ],
+            "type": "roduino_get_analog_value"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "roduino_value",
+        "isNotFor": [ "roborobo_roduino" ],
+        "func": function (sprite, script) {
+            var signal = parseInt(script.getValue("VALUE", script));
+            Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.ANALOG_READ, signal]);
+            return Entry.hw.getAnalogPortValue(signal);
+        }
+    },
+    "roduino_get_digital_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "roduino_get_port_number"
+                }
+            ],
+            "type": "roduino_get_digital_value"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "roduino_value",
+        "isNotFor": [ "roborobo_roduino" ],
+        "func": function (sprite, script) {
+            var signal = script.getNumberValue("VALUE", script);
+            Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_READ, signal]);
+            return Entry.hw.portData[signal - 2];
+        }
+    },
+    "roduino_get_color": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.roborobo_color_red, "red"],
+                    [Lang.Blocks.roborobo_color_green, "green"],
+                    [Lang.Blocks.roborobo_color_blue, "blue"],
+                    [Lang.Blocks.roborobo_color_yellow, "yellow"]
+                ],
+                "value": "red",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "roduino_get_color"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "roduino_value",
+        "isNotFor": [ "roborobo_roduino" ],
+        "func": function (sprite, script) {
+            var flag = 0;
+            var signal = script.getField("VALUE", script);
+            var value =
+            [
+                Entry.hw.portData[Entry.Roborobo_Roduino.ColorPin[0] - 2],
+                Entry.hw.portData[Entry.Roborobo_Roduino.ColorPin[1] - 2],
+                Entry.hw.portData[Entry.Roborobo_Roduino.ColorPin[2] - 2]
+            ];
+            
+            switch(signal) {
+                case "red":
+                    if(value[0] == 1 && value[1] == 0 && value[2] == 0) {
+                        flag = 1;
+                    }
+                break;
+                case "green":
+                    if(value[0] == 0 && value[1] == 1 && value[2] == 0) {
+                        flag = 1;
+                    }
+                break;
+                case "blue":
+                    if(value[0] == 0 && value[1] == 0 && value[2] == 1) {
+                        flag = 1;
+                    }
+                break;
+                case "yellow":
+                    if(value[0] == 1 && value[1] == 1 && value[2] == 1) {
+                        flag = 1;
+                    }
+                break;
+            }
+            return flag;
+        }
+    },
+    "roduino_set_digital": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ Lang.Blocks.roborobo_on, "on" ],
+                    [ Lang.Blocks.roborobo_off, "off" ]
+                ],
+                "value": "on",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "roduino_get_port_number"
+                },
+                null,
+                null
+            ],
+            "type": "roduino_set_digital"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0,
+            "OPERATOR": 1
+        },
+        "class": "roduino_set",
+        "isNotFor": [ "roborobo_roduino" ],
+        "func": function (sprite, script) {
+            var pin = script.getNumberValue("VALUE", script);
+            var operator = script.getField("OPERATOR");
+            var value = operator == "on" ? 1 : 0;
+            
+            Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_WRITE, pin, value]);
+            return script.callReturn();
+        }
+    },
+    "roduino_motor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ Lang.Blocks.roborobo_motor1, "motor1" ],
+                    [ Lang.Blocks.roborobo_motor2, "motor2" ]                    
+                ],
+                "value": "motor1",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ Lang.Blocks.roborobo_motor_CW, "cw" ],
+                    [ Lang.Blocks.roborobo_motor_CCW, "ccw" ],
+                    [ Lang.Blocks.roborobo_motor_stop, "stop" ]
+                ],
+                "value": "cw",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                null,
+                null
+            ],
+            "type": "roduino_motor"
+        },
+        "paramsKeyMap": {
+            "MODE": 0,
+            "OPERATOR": 1
+        },
+        "class": "roduino_set",
+        "isNotFor": [ "roborobo_roduino" ],
+        "func": function (sprite, script) {
+            var pin1 = pin2 = 0;
+            var value1 = value2 = 0;
+            var mode = script.getField("MODE");
+            var operator = script.getField("OPERATOR");
+            
+            if(mode == "motor1") {
+                pin1 = 9;
+                pin2 = 10;
+            } else {
+                pin1 = 11;
+                pin2 = 12;
+            }
+            
+            if (operator == "cw") {
+                value1 = 1;
+                value2 = 0;
+            } else if (operator == "ccw") {
+                value1 = 0;
+                value2 = 1;
+            } else {
+                value1 = 0;
+                value2 = 0;
+            }
+            Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.MOTOR, pin1, value1, pin2, value2]);
+            return script.callReturn();
+        }
+    },
+    "roduino_set_color_pin": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "number",
+                    "params": [ "2" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "3" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "4" ]
+                },
+                null
+            ],
+            "type": "roduino_set_color_pin"
+        },
+        "paramsKeyMap": {
+            "RED": 0,
+            "GREEN": 1,
+            "BLUE": 2
+        },
+        "class": "roduino_set",
+        "isNotFor": [ "roborobo_roduino" ],
+        "func": function (sprite, script) {
+            var redPin = script.getNumberValue("RED", script);
+            var greenPin = script.getNumberValue("GREEN", script);
+            var bluePin = script.getNumberValue("BLUE", script);
+            
+            Entry.Roborobo_Roduino.ColorPin = [ redPin, greenPin, bluePin ];
+            Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_Roduino.INSTRUCTION.COLOR, redPin, greenPin, bluePin]);
+            return script.callReturn();
+        }
+    },
+    "schoolkit_on_block": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "schoolkit_on_block"
+        },
+        "paramsKeyMap": {
+        },
+        "class": "schoolkit_value",
+        "isNotFor": [ "roborobo_schoolkit" ],
+        "func": function (sprite, script) {
+            return "1";
+        }
+    },
+    "schoolkit_off_block": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "schoolkit_off_block"
+        },
+        "paramsKeyMap": {
+        },
+        "class": "schoolkit_value",
+        "isNotFor": [ "roborobo_schoolkit" ],
+        "func": function (sprite, script) {
+            return "0";
+        }
+    },
+    "schoolkit_get_out_port_number": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "OUT1", 2 ],
+                    [ "OUT2", 3 ],
+                    [ "OUT3", 4 ],
+                    [ "OUT4", 5 ],
+                    [ "OUT5", 6 ]
+                ],
+                "value": 2,
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "func": function (sprite, script) {
+            return script.getNumberField("PORT");
+        }
+    },
+    "schoolkit_get_in_port_number": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "IN1", 7 ],
+                    [ "IN2", 8 ],
+                    [ "IN3", 9 ],
+                    [ "IN4", 10 ],
+                    [ "IN5", 11 ],
+                    [ "IN6", 12 ],
+                    [ "IN7", 13 ]
+                ],
+                "value": 7,
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "func": function (sprite, script) {
+            return script.getNumberField("PORT");
+        }
+    },    
+    "schoolkit_set_output": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ Lang.Blocks.roborobo_on, "on" ],
+                    [ Lang.Blocks.roborobo_off, "off" ]
+                ],
+                "value": "on",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "schoolkit_get_out_port_number"
+                },
+                null,
+                null
+            ],
+            "type": "schoolkit_set_output"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0,
+            "OPERATOR": 1
+        },
+        "class": "schoolkit_set",
+        "isNotFor": [ "roborobo_schoolkit" ],
+        "func": function (sprite, script) {
+            var pin = script.getNumberValue("VALUE", script);
+            var operator = script.getField("OPERATOR");
+            var value = operator == "on" ? 1 : 0;
+            
+            Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.DIGITAL_WRITE, pin, value]);
+            return script.callReturn();
+        }
+    },
+    "schoolkit_get_input_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "schoolkit_get_in_port_number"
+                }
+            ],
+            "type": "schoolkit_get_input_value"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "schoolkit_value",
+        "isNotFor": [ "roborobo_schoolkit" ],
+        "func": function (sprite, script) {
+            var signal = script.getNumberValue("VALUE", script);
+            Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.DIGITAL_READ, signal]);
+            return Entry.hw.portData[signal - 7];
+        }
+    },
+    "schoolkit_motor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ Lang.Blocks.roborobo_motor1, "motor1" ],
+                    [ Lang.Blocks.roborobo_motor2, "motor2" ]                    
+                ],
+                "value": "motor1",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ Lang.Blocks.roborobo_motor_CW, "cw" ],
+                    [ Lang.Blocks.roborobo_motor_CCW, "ccw" ],
+                    [ Lang.Blocks.roborobo_motor_stop, "stop" ]
+                ],
+                "value": "cw",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            },            
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,                
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                null,
+                null
+            ],
+            "type": "schoolkit_motor"
+        },
+        "paramsKeyMap": {
+            "MODE": 0,            
+            "VALUE": 1,
+            "OPERATOR": 2            
+        },
+        "class": "schoolkit_set",
+        "isNotFor": [ "roborobo_schoolkit" ],
+        "func": function (sprite, script) {
+            var pin = 0;
+            var operatorValue = 0;
+            var mode = script.getField("MODE");
+            var operator = script.getField("OPERATOR");
+            var value = script.getNumberValue("VALUE");
+            
+            if(mode == "motor1") {
+                pin = 7;
+            } else {
+                pin = 8;
+            }
+            if(value > 255) {
+                value = 255;
+            } else if(value < 0) {
+                value = 0;
+            }
+            
+            if (operator == "cw") {
+                operatorValue = 1;
+                Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR, operatorValue, pin, value]);
+            } else if (operator == "ccw") {
+                operatorValue = 2;
+                Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR, operatorValue, pin, value]);
+            } else if(operator == "stop") {
+                Entry.Roborobo_SchoolKit.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.MOTOR, operatorValue, pin, value]);
+            }
+            return script.callReturn();
+        }
+    },
+    "schoolkit_set_servo_value": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "schoolkit_get_out_port_number"
+                },
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                null
+            ],
+            "type": "schoolkit_set_servo_value"
+        },
+        "paramsKeyMap": {
+            "PIN": 0,
+            "VALUE": 1
+        },
+        "class": "schoolkit_set",
+        "isNotFor": [ "roborobo_schoolkit" ],
+        "func": function (sprite, script) {
+            var pin = script.getNumberValue("PIN", script);
+            var value = script.getNumberValue("VALUE");
+            
+            if(value < 0) {
+                value = 0;
+            } else if(value > 180) {
+                value = 180;
+            }
+            
+            Entry.Roborobo_Roduino.setSendData([Entry.Roborobo_SchoolKit.INSTRUCTION.SERVO, pin, value]);
+            return script.callReturn();
+        }
+    }     
 };
 
 (function() {
