@@ -1743,6 +1743,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 console.log("UnaryExpression data", data);
                 structure.data = data;
                 structure.params = data;
+                result = structure.params;
             } 
             else if(operator == "!") {
                 if(argument.type == "Literal" || argument.type == "Identifier") {
@@ -1788,15 +1789,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         params.splice(2, 0, "");
                     }
                 } 
+                structure.type = type;
                 structure.params = params;
+                result = structure;
             }
         }
 
         console.log("syntax", syntax);
         console.log("type", type);
         
-        result = structure.params;
-
         console.log("UnaryExpression result", result);
         
         return result;

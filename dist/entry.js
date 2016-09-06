@@ -13805,60 +13805,61 @@ Entry.PyToBlockParser = function(b) {
   };
   b.UnaryExpression = function(a) {
     console.log("UnaryExpression component", a);
-    var b, c, e;
+    var b, c, e = {};
     if (a.prefix) {
-      var f = a.operator, g = a.argument;
-      switch(f) {
+      var f, g = a.operator, h = a.argument;
+      switch(g) {
         case "-":
           break;
         case "+":
           break;
         case "!":
-          b = "boolean_not";
+          f = "boolean_not";
           break;
         case "~":
-          throw b = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + f + "' \ud45c\ud604\uc2dd\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", b.line = this._blockCount, console.log("send error", b), b;;
+          throw e = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, e.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + g + "' \ud45c\ud604\uc2dd\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", e.line = this._blockCount, console.log("send error", e), e;;
         case "typeof":
-          throw b = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + f + "' \ud45c\ud604\uc2dd\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", b.line = this._blockCount, console.log("send error", b), b;;
+          throw e = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, e.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + g + "' \ud45c\ud604\uc2dd\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", e.line = this._blockCount, console.log("send error", e), e;;
         case "void":
-          throw b = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + f + "' \ud45c\ud604\uc2dd\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", b.line = this._blockCount, console.log("send error", b), b;;
+          throw e = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, e.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + g + "' \ud45c\ud604\uc2dd\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", e.line = this._blockCount, console.log("send error", e), e;;
         case "delete":
-          throw b = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + f + "' \ud45c\ud604\uc2dd\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", b.line = this._blockCount, console.log("send error", b), b;;
+          throw e = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, e.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + g + "' \ud45c\ud604\uc2dd\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", e.line = this._blockCount, console.log("send error", e), e;;
         default:
-          throw b = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, b.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + f + "' \ud45c\ud604\uc2dd\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", b.line = this._blockCount, console.log("send error", b), b;;
+          throw e = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958"}, e.message = "\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.'" + g + "' \ud45c\ud604\uc2dd\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", e.line = this._blockCount, console.log("send error", e), e;;
       }
-      console.log("UnaryExpression type", b);
-      console.log("UnaryExpression operator", f);
+      console.log("UnaryExpression type", f);
+      console.log("UnaryExpression operator", g);
       c = [];
-      if ("+" == f || "-" == f) {
-        g.value = Number(f.concat(g.value)), c = this[g.type](g), console.log("UnaryExpression data", c), e = c;
+      if ("+" == g || "-" == g) {
+        h.value = Number(g.concat(h.value)), c = this[h.type](h), console.log("UnaryExpression data", c), e.data = c, e.params = c, b = e.params;
       } else {
-        if ("!" == f) {
-          if ("Literal" == g.type || "Identifier" == g.type) {
+        if ("!" == g) {
+          if ("Literal" == h.type || "Identifier" == h.type) {
             arguments = [];
-            arguments.push(g);
-            f = Entry.block[b].params;
-            e = Entry.block[b].def.params;
-            console.log("UnaryExpression paramsMeta", f);
-            console.log("UnaryExpression paramsDefMeta", e);
-            for (var h in f) {
-              g = f[h].type, "Indicator" == g ? (g = {raw:null, type:"Literal", value:null}, h < arguments.length && arguments.splice(h, 0, g)) : "Text" == g && (g = {raw:"", type:"Literal", value:""}, h < arguments.length && arguments.splice(h, 0, g));
+            arguments.push(h);
+            g = Entry.block[f].params;
+            b = Entry.block[f].def.params;
+            console.log("UnaryExpression paramsMeta", g);
+            console.log("UnaryExpression paramsDefMeta", b);
+            for (var k in g) {
+              h = g[k].type, "Indicator" == h ? (h = {raw:null, type:"Literal", value:null}, k < arguments.length && arguments.splice(k, 0, h)) : "Text" == h && (h = {raw:"", type:"Literal", value:""}, k < arguments.length && arguments.splice(k, 0, h));
             }
-            for (var k in arguments) {
-              g = arguments[k], console.log("UnaryExpression argument", g), h = this[g.type](g, f[k], e[k], !0), console.log("UnaryExpression param", h), h && null != h && (c.push(h), c.splice(0, 0, ""), c.splice(2, 0, ""));
+            for (var l in arguments) {
+              h = arguments[l], console.log("UnaryExpression argument", h), k = this[h.type](h, g[l], b[l], !0), console.log("UnaryExpression param", k), k && null != k && (c.push(k), c.splice(0, 0, ""), c.splice(2, 0, ""));
             }
           } else {
-            if (h = this[g.type](g)) {
-              c.push(h), c.splice(0, 0, ""), c.splice(2, 0, "");
+            if (k = this[h.type](h)) {
+              c.push(k), c.splice(0, 0, ""), c.splice(2, 0, "");
             }
           }
-          e = c;
+          e.type = f;
+          e.params = c;
+          b = e;
         }
       }
     }
     console.log("syntax", void 0);
-    console.log("type", b);
-    b = e;
+    console.log("type", f);
     console.log("UnaryExpression result", b);
     return b;
   };
