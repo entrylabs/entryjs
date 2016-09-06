@@ -620,7 +620,8 @@ Entry.JsToBlockParser = function(syntax) {
                         params.push(param);  
 
                         console.log("rigth param", params); 
-                        if(params[2].type != "text" && params[2].type != "ai_distance_value") {
+                        
+                        if(params[2] && params[2].type != "text" && params[2].type != "ai_distance_value") {
                            throw {
                                 message : '지원하지 않는 표현식 입니다.',
                                 node : node.test
