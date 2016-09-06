@@ -299,7 +299,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     console.log("top", typeof param);
 
                     if(!permitParamName) { 
-                        if(param && typeof param == "object" && !param.type) { 
+                        if(param && typeof param == "object" && !param.type && param.isCallParam) { 
                             var error = {};
                             error.title = "블록변환(Converting) 오류";
                             error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
@@ -493,6 +493,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var paramsDefMeta = block.def.params; 
 
             if(!Entry.TextCodingUtil.prototype.isGlobalVariableExisted(name)) {
+                if(paramMeta && paramDefMeta) {
+                    result.isCallParam = true;
+                } else {
+                    result.isCallParam = false;
+                }
                 return result;
             } 
             
@@ -2107,14 +2112,24 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     }
                 }
 
-                for(var i in arguments) {
+                for(var i in arguments) { 
                     var argument = arguments[i];
                     console.log("BinaryExpression argument", argument);
                               
                     var param = this[argument.type](argument, paramsMeta[i], paramsDefMeta[i], true);
                     console.log("BinaryExpression param", param);
-                    if(param && param != null)
+                    console.log("check binary", typeof param, "$", param.type, "$", param.isCallParam);
+                    if(param && param != null) {
+                        if(typeof param == "object" && !param.type && param.isCallParam) { 
+                            var error = {};
+                            error.title = "블록변환(Converting) 오류";
+                            error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
+                            error.line = this._blockCount; 
+                            console.log("send error", error); 
+                            throw error;  
+                        }
                         params.push(param);   
+                    }
                 }
             } else {
                 param = this[left.type](left);
@@ -2177,8 +2192,17 @@ Entry.PyToBlockParser = function(blockSyntax) {
                               
                     var param = this[argument.type](argument, paramsMeta[i], paramsDefMeta[i], true);
                     console.log("BinaryExpression param", param);
-                    if(param && param != null)
+                    if(param && param != null) {
+                        if(typeof param == "object" && !param.type && param.isCallParam) { 
+                            var error = {};
+                            error.title = "블록변환(Converting) 오류";
+                            error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
+                            error.line = this._blockCount; 
+                            console.log("send error", error); 
+                            throw error;  
+                        }
                         params.push(param);   
+                    }
                 }
             } else {
                 param = this[right.type](right);

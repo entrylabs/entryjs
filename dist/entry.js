@@ -13195,7 +13195,7 @@ Entry.PyToBlockParser = function(b) {
           q = this[q.type](q, g[u], r[u], !0);
           console.log("CallExpression param", q);
           console.log("top", typeof q);
-          if (!b && q && "object" == typeof q && !q.type) {
+          if (!b && q && "object" == typeof q && !q.type && q.isCallParam) {
             throw c = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud574\ub2f9 \ubcc0\uc218\ub098 \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694."}, c.line = this._blockCount, console.log("send error", c), c;
           }
           "__pythonRuntime.functions.range" == l && q && q.type ? q && null != q && (f = q.type, e = q.params) : (q && q.data && (q = q.data), e.push(q));
@@ -13268,28 +13268,30 @@ Entry.PyToBlockParser = function(b) {
   };
   b.Identifier = function(a, b, c) {
     console.log("Identifier component", a, "paramMeta", b, "paramDefMeta", c);
-    b = {};
-    b.name = a.name;
+    var e = {};
+    e.name = a.name;
     if (!0 === a.userCode || !1 === a.userCode) {
-      b.userCode = a.userCode;
+      e.userCode = a.userCode;
     }
-    if (c = this.getBlockType("%1")) {
+    var f = this.getBlockType("%1");
+    if (f) {
       a = a.name;
-      var e = Entry.block[c], f = e.params, e = e.def.params;
+      var g = Entry.block[f], h = g.params, g = g.def.params;
       if (!Entry.TextCodingUtil.prototype.isGlobalVariableExisted(a)) {
-        return b;
+        return e.isCallParam = b && c ? !0 : !1, e;
       }
-      var g = [], h, k;
-      for (k in f) {
-        console.log("Identifiler paramsMeta, paramsDefMeta", f[k], e[k]), "Text" != f[k].type && (h = this["Param" + f[k].type](a, f[k], e[k]));
+      b = [];
+      var k, l;
+      for (l in h) {
+        console.log("Identifiler paramsMeta, paramsDefMeta", h[l], g[l]), "Text" != h[l].type && (k = this["Param" + h[l].type](a, h[l], g[l]));
       }
-      console.log("Identifiler param", h);
-      h && g.push(h);
-      b.type = c;
-      0 != g.length && (b.params = g);
+      console.log("Identifiler param", k);
+      k && b.push(k);
+      e.type = f;
+      0 != b.length && (e.params = b);
     }
-    console.log("Identifiler result", b);
-    return b;
+    console.log("Identifiler result", e);
+    return e;
   };
   b.VariableDeclaration = function(a) {
     console.log("VariableDeclaration component", a);
@@ -14011,7 +14013,13 @@ Entry.PyToBlockParser = function(b) {
           console.log("BinaryExpression argument", m);
           m = this[m.type](m, h[n], k[n], !0);
           console.log("BinaryExpression param", m);
-          m && null != m && b.push(m);
+          console.log("check binary", typeof m, "$", m.type, "$", m.isCallParam);
+          if (m && null != m) {
+            if ("object" == typeof m && !m.type && m.isCallParam) {
+              throw c = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud574\ub2f9 \ubcc0\uc218\ub098 \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694."}, c.line = this._blockCount, console.log("send error", c), c;
+            }
+            b.push(m);
+          }
         }
       } else {
         (m = this[g.type](g)) && b.push(m);
@@ -14035,7 +14043,12 @@ Entry.PyToBlockParser = function(b) {
           e = h[l].type, "Indicator" == e ? (e = {raw:null, type:"Literal", value:null}, l < arguments.length && arguments.splice(l, 0, e)) : "Text" == e && (e = {raw:"", type:"Literal", value:""}, l < arguments.length && arguments.splice(l, 0, e));
         }
         for (n in arguments) {
-          m = arguments[n], console.log("BinaryExpression argument", m), m = this[m.type](m, h[n], k[n], !0), console.log("BinaryExpression param", m), m && null != m && b.push(m);
+          if (m = arguments[n], console.log("BinaryExpression argument", m), m = this[m.type](m, h[n], k[n], !0), console.log("BinaryExpression param", m), m && null != m) {
+            if ("object" == typeof m && !m.type && m.isCallParam) {
+              throw c = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud574\ub2f9 \ubcc0\uc218\ub098 \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694."}, c.line = this._blockCount, console.log("send error", c), c;
+            }
+            b.push(m);
+          }
         }
       } else {
         (m = this[e.type](e)) && b.push(m);
