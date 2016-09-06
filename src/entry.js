@@ -49,6 +49,7 @@ Entry.loadProject = function(project) {
     if (Object.keys(Entry.container.inputValue).length === 0)
         Entry.variableContainer.generateAnswer();
     Entry.start();
+    Entry.Loader.isLoaded() && Entry.Loader.handleLoad();
     return project;
 };
 
