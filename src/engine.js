@@ -113,6 +113,7 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
                 this.removeClass('toggleOn');
             else
                 this.addClass('toggleOn');
+            coordinateButton.blur();
             this.blur();
             Entry.stage.toggleCoordinator();
         });
@@ -477,6 +478,14 @@ Entry.Engine.prototype.toggleRun = function() {
         return;
     }
 
+    //Text Coding Mode
+    if (Entry.playground && Entry.playground.mainWorkspace) {
+        var mainWorkspace = Entry.playground.mainWorkspace;
+        var boardMode = mainWorkspace.mode;
+        if(boardMode == Entry.Workspace.MODE_VIMBOARD)
+            mainWorkspace.loadCodeFromText(boardMode);
+    }
+
     Entry.addActivity("run");
     if (this.state == 'stop') {
         Entry.container.mapEntity(function(entity) {
@@ -659,7 +668,6 @@ Entry.Engine.prototype.captureKeyEvent = function(e) {
             Entry.engine.run();
         } else if (keyCode == 90) {
             e.preventDefault();
-            console.log('engine');
             Entry.dispatchEvent(e.shiftKey ? 'redo' : 'undo');
         }
     } else if (Entry.engine.isState('run')) {

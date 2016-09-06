@@ -199,10 +199,34 @@ Entry.BlockView.pngMap = {};
                 }
                 break;
             case Entry.Workspace.MODE_VIMBOARD:
+                if (this._schema.skeleton === 'basic_button') {
+                    this._startContentRender(Entry.Workspace.MODE_BOARD);
+                    return;
+                }
+
                 var text = this.getBoard().workspace.getCodeToText(this.block);
+                var lineBreak = false;
+                var secondLineText;
+                if (/(if)+(.|\n)+(else)+/.test(text)) {
+                    var contents = text.split('\n');
+                    text = contents.shift() + ' ' + contents.shift();
+
+                    lineBreak = true;
+                    secondLineText = contents.join(" ");
+                }
+
+                var fieldText = {text:text, color: 'white'};
+                if (this.block._schema.vimModeFontColor)
+                    fieldText.color = this.block._schema.vimModeFontColor;
                 this._contents.push(
-                    new Entry.FieldText({text: text, color: 'white'}, this)
+                    new Entry.FieldText(fieldText, this)
                 );
+
+                if (lineBreak) {
+                    this._contents.push(new Entry.FieldLineBreak(null, this));
+                    fieldText.text = secondLineText;
+                    this._contents.push(new Entry.FieldText(fieldText, this));
+                }
                 break;
         }
         this.alignContent(false);
@@ -434,6 +458,7 @@ Entry.BlockView.pngMap = {};
 
         if(board.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD) {
             if(e) {
+                vimBoard = $('.entryVimBoard>.CodeMirror')[0];
                 document.getElementsByClassName('CodeMirror')[0]
                     .dispatchEvent(Entry.Utils.createMouseEvent('dragStart', event));
             }

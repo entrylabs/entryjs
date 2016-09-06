@@ -316,6 +316,7 @@ Entry.Board.DRAG_RADIUS = 5;
             var block = threads[i].getFirstBlock();
             if (!block) continue;
             var blockView = block.view;
+            if (!blockView.movable) continue;
             var bBox = blockView.svgGroup.getBBox();
             var top = acculmulatedTop + verticalGap;
             if (top > limitTopPosition) {

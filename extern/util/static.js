@@ -559,7 +559,7 @@ EntryStatic.blockInfo = {
         "xml": "<block type='xbot_analogOutput'><value name='VALUE'><block type='text'><field name='NAME'>255</field></block></value></block>",
         "class": "xbot_sensor"
     },
-    //end of XBOT Blocks added   
+    //end of XBOT Blocks added
     //EV3 BLOCK
     "ev3_get_sensor_value": {
         "isNotFor": ["EV3"],
