@@ -337,20 +337,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             }
                         }
                     } 
-
-
-                    /*if(param != null && param.name) {
-                        console.log("babo");
-                        if(calleeName == '__pythonRuntime.functions.range')
-                            this._blockCount++;
-                        console.log("callex error calleeData", calleeData);
-                        var error = {};
-                        error.title = "블록변환(Converting) 오류";
-                        error.message = "블록으로 변환될 수 없는 코드입니다." + " \'" + param.name + "\'' 을 올바른 파라미터 값 또는 타입으로 변경하세요.";
-                        error.line = this._blockCount; 
-                        console.log("send error", error);
-                        throw error;
-                    }*/
                 } else {
                     continue;
                 }
@@ -497,12 +483,25 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 console.log("CallExpression argument", argument, "typeof", typeof argument);
                 
                 var argumentData = this[argument.type](argument);
-                console.log("CallExpression argumentData", argumentData);
+                console.log("CallExpression argument", argument);
+                console.log("CallExpression argumentData", argumentData, "??", argumentData.type);
                
-                if(argumentData.callee == "__pythonRuntime.utils.createParamsObj")
+                if(argumentData.callee == "__pythonRuntime.utils.createParamsObj") {
                     args = argumentData.arguments;
-                else 
+                }
+                else if(!argumentData.type) {
+                    if(argument.type != "ThisExpression") {
+                        var error = {};
+                        error.title = "블록변환(Converting) 오류";
+                        error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
+                        error.line = this._blockCount; 
+                        console.log("send error", error); 
+                        throw error;
+                    }
+                }
+                else { 
                     args.push(argumentData);
+                }
                                               
             }
             console.log("CallExpression args", args);
@@ -1115,7 +1114,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         var condBody = component.body;
         if(test.value === true) {
-            if(condBody && condBody.body && condBody.body[0].type == "IfStatement") {
+            if(condBody && condBody.body && condBody.body.length != 0 && condBody.body[0].type == "IfStatement") {
                 var ifStatement = condBody.body[0];
                 var cons = ifStatement.consequent;
                 var ifTest = ifStatement.test;
@@ -2537,7 +2536,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         else if(leftData.name)
             var object = leftData.name;
 
-        if(leftData.proprty)
+        if(leftData.property)
             var property = leftData.property;
         else if(leftData.name)
             var property = leftData.name;
@@ -2593,10 +2592,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
         else if(syntax == String("%1 = %2")) {
             console.log("AssignmentExpression calleeName check", calleeName);
-            if(object && object.name == "self" && calleeName != "__pythonRuntime.objects.list") {
+            //if(object && object.name == "self" && calleeName != "__pythonRuntime.objects.list") {
+            if(object && object.name == "self") {
                 var block = Entry.block[type]; 
                 var paramsMeta = block.params;
                 var paramsDefMeta = block.def.params;
+
+                console.log("assi property", property);
             
                 var name = property.name;
                 if(rightData.type == "number" || rightData.type == "text")

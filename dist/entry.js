@@ -12079,21 +12079,21 @@ Entry.TextCodingUtil = function() {
     a = a.split("\n");
     for (var c in a) {
       var e = a[c].trim();
-      "def entry_event_start():" == e || "def entry_event_mouse_down():" == e || "def entry_event_mouse_up():" == e || "def entry_event_object_down():" == e || "def entry_event_scene_start():" == e || "def entry_event_clone_create():" == e ? (tokens = e.split("def"), e = tokens[1].substring(0, tokens[1].length - 1).trim(), a[c] = e, b = !0) : (new RegExp(/^def entry_event_key(.+):$/)).test(e) || (new RegExp(/^def entry_event_signal(.+):$/)).test(e) ? (tokens = e.split("def"), e = tokens[1].substring(0, 
-      tokens[1].length - 1).trim(), a[c] = e, b = !0) : b && (e = a[c], e = e.replace("\t", ""), a[c] = e);
+      "def entry_event_start():" == e || "def entry_event_mouse_down():" == e || "def entry_event_mouse_up():" == e || "def entry_event_object_down():" == e || "def entry_event_object_up():" == e || "def entry_event_scene_start():" == e || "def entry_event_clone_create():" == e ? (tokens = e.split("def"), e = tokens[1].substring(0, tokens[1].length - 1).trim(), a[c] = e, b = !0) : (new RegExp(/^def entry_event_key(.+):$/)).test(e) || (new RegExp(/^def entry_event_signal(.+):$/)).test(e) ? (tokens = 
+      e.split("def"), e = tokens[1].substring(0, tokens[1].length - 1).trim(), a[c] = e, b = !0) : b && (e = a[c], e = e.replace("\t", ""), a[c] = e);
     }
     return a.join("\n");
   };
   b.eventBlockSyntaxFilter = function(a) {
-    if ("entry_event_start" == a || "entry_event_key" == a || "entry_event_mouse_down" == a || "entry_event_mouse_up" == a || "entry_event_object_down" == a || "entry_event_signal" == a || "entry_event_scene_start" == a || "entry_event_clone_create" == a) {
+    if ("entry_event_start" == a || "entry_event_key" == a || "entry_event_mouse_down" == a || "entry_event_mouse_up" == a || "entry_event_object_down" == a || "entry_event_object_up" == a || "entry_event_signal" == a || "entry_event_scene_start" == a || "entry_event_clone_create" == a) {
       return "def " + a;
     }
   };
   b.isEntryEventFunc = function(a) {
-    return "def entry_event_start" == a || "def entry_event_key" == a || "def entry_event_mouse_down" == a || "def entry_event_mouse_up" == a || "def entry_event_object_down" == a || "def entry_event_signal" == a || "def entry_event_scene_start" == a || "def entry_event_clone_create" == a ? !0 : !1;
+    return "def entry_event_start" == a || "def entry_event_key" == a || "def entry_event_mouse_down" == a || "def entry_event_mouse_up" == a || "def entry_event_object_down" == a || "def entry_event_object_up" == a || "def entry_event_signal" == a || "def entry_event_scene_start" == a || "def entry_event_clone_create" == a ? !0 : !1;
   };
   b.isEntryEventFuncName = function(a) {
-    return "entry_event_start" == a || "entry_event_key" == a || "entry_event_mouse_down" == a || "entry_event_mouse_up" == a || "entry_event_object_down" == a || "entry_event_signal" == a || "entry_event_scene_start" == a || "entry_event_clone_create" == a ? !0 : !1;
+    return "entry_event_start" == a || "entry_event_key" == a || "entry_event_mouse_down" == a || "entry_event_mouse_up" == a || "entry_event_object_down" == a || "entry_event_object_up" == a || "entry_event_signal" == a || "entry_event_scene_start" == a || "entry_event_clone_create" == a ? !0 : !1;
   };
   b.searchFuncDefParam = function(a) {
     "function_field_label" == a.data.type && this._funcNameQ.enqueue(a.data.params[0]);
@@ -12148,7 +12148,7 @@ Entry.TextCodingUtil = function() {
         l = m;
         if (k.length == l.length) {
           for (var e = !0, n = 0;n < k.length && e;n++) {
-            if (e = !1, k[n].name) {
+            if (e = !1, console.log("blockFuncContentParams", l), console.log("blockFuncContentParams[j]", l[n]), k[n].name) {
               for (var r in l) {
                 if (k[n].name == l[r]) {
                   for (var q in c) {
@@ -12163,7 +12163,7 @@ Entry.TextCodingUtil = function() {
                 }
               }
             } else {
-              "True" == k[n].type || "False" == k[n].type ? k[n].type == l[n].data.type && (e = !0) : k[n].type && k[n].params && k[n].params[0] == l[n].data.params[0] && (e = !0);
+              "True" == k[n].type || "False" == k[n].type ? k[n].type == l[n].type && (e = !0) : k[n].type && k[n].params && k[n].params[0] == l[n].data.params[0] && (e = !0);
             }
           }
           e && h.statements && 0 != h.statements.length && (e = this.isFuncContentsMatch(g.data.statements[0]._data, h.statements[0]));
@@ -13264,7 +13264,17 @@ Entry.PyToBlockParser = function(b) {
     } else {
       f = [];
       for (u in arguments) {
-        t = arguments[u], console.log("CallExpression argument", t, "typeof", typeof t), h = this[t.type](t), console.log("CallExpression argumentData", h), "__pythonRuntime.utils.createParamsObj" == h.callee ? f = h.arguments : f.push(h);
+        if (t = arguments[u], console.log("CallExpression argument", t, "typeof", typeof t), h = this[t.type](t), console.log("CallExpression argument", t), console.log("CallExpression argumentData", h, "??", h.type), "__pythonRuntime.utils.createParamsObj" == h.callee) {
+          f = h.arguments;
+        } else {
+          if (h.type) {
+            f.push(h);
+          } else {
+            if ("ThisExpression" != t.type) {
+              throw e = {title:"\ube14\ub85d\ubcc0\ud658(Converting) \uc624\ub958", message:"\ube14\ub85d\uc73c\ub85c \ubcc0\ud658\ub420 \uc218 \uc5c6\ub294 \ucf54\ub4dc\uc785\ub2c8\ub2e4.\ud574\ub2f9 \ubcc0\uc218\ub098 \ub9ac\uc2a4\ud2b8\ub97c \uc0dd\uc131\ud558\uac70\ub098 \uc62c\ubc14\ub978 \ud30c\ub77c\ubbf8\ud130 \uac12 \ub610\ub294 \ud0c0\uc785\uc73c\ub85c \ubcc0\uacbd\ud558\uc138\uc694."}, e.line = this._blockCount, console.log("send error", e), e;
+            }
+          }
+        }
       }
       console.log("CallExpression args", f);
       e.arguments = f;
@@ -13558,7 +13568,7 @@ Entry.PyToBlockParser = function(b) {
     console.log("WhileStatement test", c);
     var e = "basic", f = a.body;
     if (!0 === c.value) {
-      if (f && f.body && "IfStatement" == f.body[0].type) {
+      if (f && f.body && 0 != f.body.length && "IfStatement" == f.body[0].type) {
         var f = f.body[0], g = f.consequent;
         (f = f.test) && "!" == f.operator && g && g.body && 1 == g.body.length && "BreakStatement" == g.body[0].type ? (g = this.getBlockType("while %1 %2\n$1"), e = "while") : f && g && g.body && 1 == g.body.length && "BreakStatement" == g.body[0].type ? (g = this.getBlockType("while %1 %2\n$1"), e = "until") : g = this.getBlockType("while True:\n$1");
       } else {
@@ -14154,7 +14164,7 @@ Entry.PyToBlockParser = function(b) {
     b.operator = t;
     console.log("AssignmentExpression syntax", g);
     h.object ? q = h.object : h.name && (q = h.name);
-    h.proprty ? f = h.property : h.name && (f = h.name);
+    h.property ? f = h.property : h.name && (f = h.name);
     console.log("AssignmentExpression object property value", q, f);
     if ("%1[%2] = %3" == g) {
       q = Entry.block[r];
@@ -14176,7 +14186,7 @@ Entry.PyToBlockParser = function(b) {
       4 == e.length && e.splice(1, 1);
     } else {
       if ("%1 = %2" == g) {
-        console.log("AssignmentExpression calleeName check", m), q && "self" == q.name && "__pythonRuntime.objects.list" != m ? (q = Entry.block[r], m = q.params, t = q.def.params, g = f.name, (h = "number" == l.type || "text" == l.type ? l.params[0] : NaN) && NaN != h && (q = Entry.playground.object, console.log("final value", h), console.log("final object", q), Entry.TextCodingUtil.prototype.isLocalVariableExisted(g, q) ? Entry.TextCodingUtil.prototype.updateLocalVariable(g, h, q) : Entry.TextCodingUtil.prototype.createLocalVariable(g, 
+        console.log("AssignmentExpression calleeName check", m), q && "self" == q.name ? (q = Entry.block[r], m = q.params, t = q.def.params, console.log("assi property", f), g = f.name, (h = "number" == l.type || "text" == l.type ? l.params[0] : NaN) && NaN != h && (q = Entry.playground.object, console.log("final value", h), console.log("final object", q), Entry.TextCodingUtil.prototype.isLocalVariableExisted(g, q) ? Entry.TextCodingUtil.prototype.updateLocalVariable(g, h, q) : Entry.TextCodingUtil.prototype.createLocalVariable(g, 
         h, q)), g = this.ParamDropdownDynamic(g, m[0], t[0]), e.push(g)) : (q = Entry.block[r], m = q.params, t = q.def.params, console.log("property 123", f), g = f, (h = "number" == l.type || "text" == l.type ? l.params[0] : NaN) && NaN != h && (q = Entry.playground.object, console.log("final object", q), console.log("final value", h), Entry.TextCodingUtil.prototype.isGlobalVariableExisted(g, q) ? Entry.TextCodingUtil.prototype.updateGlobalVariable(g, h, q) : Entry.TextCodingUtil.prototype.createGlobalVariable(g, 
         h, q)), g = this.ParamDropdownDynamic(g, m[0], t[0]), e.push(g), l.callee && delete l.callee), e.push(l);
       } else {

@@ -663,6 +663,7 @@ Entry.TextCodingUtil = function() {
                     thread == "def entry_event_mouse_down():" || 
                     thread == "def entry_event_mouse_up():" || 
                     thread == "def entry_event_object_down():" || 
+                    thread == "def entry_event_object_up():" || 
                     thread == "def entry_event_scene_start():" || 
                     thread == "def entry_event_clone_create():") {
                 
@@ -698,7 +699,8 @@ Entry.TextCodingUtil = function() {
             name == "entry_event_key" || 
             name == "entry_event_mouse_down" || 
             name == "entry_event_mouse_up" || 
-            name == "entry_event_object_down" || 
+            name == "entry_event_object_down" ||
+            name == "entry_event_object_up" ||  
             name == "entry_event_signal" || 
             name == "entry_event_scene_start" || 
             name == "entry_event_clone_create") {
@@ -719,6 +721,7 @@ Entry.TextCodingUtil = function() {
             name == "def entry_event_mouse_down" || 
             name == "def entry_event_mouse_up" || 
             name == "def entry_event_object_down" || 
+            name == "def entry_event_object_up" || 
             name == "def entry_event_signal" || 
             name == "def entry_event_scene_start" || 
             name == "def entry_event_clone_create") {
@@ -735,7 +738,8 @@ Entry.TextCodingUtil = function() {
             name == "entry_event_key" || 
             name == "entry_event_mouse_down" || 
             name == "entry_event_mouse_up" || 
-            name == "entry_event_object_down" || 
+            name == "entry_event_object_down" ||
+            name == "entry_event_object_up" || 
             name == "entry_event_signal" || 
             name == "entry_event_scene_start" || 
             name == "entry_event_clone_create") {
@@ -865,6 +869,8 @@ Entry.TextCodingUtil = function() {
                         if(!matchFlag)
                             break;
                         matchFlag = false;
+                        console.log("blockFuncContentParams", blockFuncContentParams);
+                        console.log("blockFuncContentParams[j]", blockFuncContentParams[j]);
                         if(textFuncStatementParams[j].name) {
                             for(var k in blockFuncContentParams) {
                                 if(textFuncStatementParams[j].name == blockFuncContentParams[k]) { // Param Locatin Comparision
@@ -887,7 +893,7 @@ Entry.TextCodingUtil = function() {
                             }
                         } 
                         else if(textFuncStatementParams[j].type == "True" || textFuncStatementParams[j].type == "False") {
-                            if(textFuncStatementParams[j].type == blockFuncContentParams[j].data.type) {
+                            if(textFuncStatementParams[j].type == blockFuncContentParams[j].type) {
                                 matchFlag = true;
                             }      
                         } else if(textFuncStatementParams[j].type && textFuncStatementParams[j].params) {
