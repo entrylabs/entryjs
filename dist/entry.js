@@ -18012,12 +18012,9 @@ Entry.Variable.prototype.updateView = function() {
       if ("variable" == this.type) {
         this.view_.x = this.getX();
         this.view_.y = this.getY();
-        if (this.object_) {
-          var b = Entry.container.getObject(this.object_);
-          this.textView_.text = b ? b.name + ":" + this.getName() : this.getName();
-        } else {
-          this.textView_.text = this.getName();
-        }
+        var b = this.textView_.text, a;
+        a = this.object_ ? (a = Entry.container.getObject(this.object_)) ? a.name + ":" + this.getName() : this.getName() : this.getName();
+        b !== a && (this.textView_.text = a, this._nameWidth = null);
         null === this._nameWidth && (this._nameWidth = this.textView_.getMeasuredWidth());
         this.valueView_.x = this._nameWidth + 14;
         this.valueView_.y = 1;
@@ -18027,19 +18024,19 @@ Entry.Variable.prototype.updateView = function() {
         this.wrapper_.graphics.clear().f("#1bafea").ss(1, 2, 0).s("#1bafea").rc(this._nameWidth + 7, -11, this._valueWidth + 15, 14, 7, 7, 7, 7);
       } else {
         if ("slide" == this.type) {
-          this.view_.x = this.getX(), this.view_.y = this.getY(), this.object_ ? (b = Entry.container.getObject(this.object_), this.textView_.text = b ? b.name + ":" + this.getName() : this.getName()) : this.textView_.text = this.getName(), null === this._nameWidth && (this._nameWidth = this.textView_.getMeasuredWidth()), this.valueView_.x = this._nameWidth + 14, this.valueView_.y = 1, this.isNumber() ? this.valueView_.text = this.getValue().toFixed(2).replace(".00", "") : this.valueView_.text = 
-          this.getValue(), null === this._valueWidth && (this._valueWidth = this.valueView_.getMeasuredWidth()), b = this._nameWidth + this._valueWidth + 26, b = Math.max(b, 90), this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1").rc(0, -14, b, 33, 4, 4, 4, 4), this.wrapper_.graphics.clear().f("#1bafea").ss(1, 2, 0).s("#1bafea").rc(this._nameWidth + 7, -11, this._valueWidth + 15, 14, 7, 7, 7, 7), b = this._nameWidth + this._valueWidth + 26, b = Math.max(b, 90), this.maxWidth = b - 20, 
-          this.slideBar_.graphics.clear().beginFill("#A0A1A1").s("#A0A1A1").ss(1).dr(10, 10, this.maxWidth, 1.5), b = this.getSlidePosition(this.maxWidth), this.valueSetter_.graphics.clear().beginFill("#1bafea").s("#A0A1A1").ss(1).dc(b, 10.5, 3);
+          this.view_.x = this.getX(), this.view_.y = this.getY(), b = this.textView_.text, a = this.object_ ? (a = Entry.container.getObject(this.object_)) ? a.name + ":" + this.getName() : this.getName() : this.getName(), b !== a && (this.textView_.text = a, this._nameWidth = null), null === this._nameWidth && (this._nameWidth = this.textView_.getMeasuredWidth()), this.valueView_.x = this._nameWidth + 14, this.valueView_.y = 1, this.isNumber() ? this.valueView_.text = this.getValue().toFixed(2).replace(".00", 
+          "") : this.valueView_.text = this.getValue(), null === this._valueWidth && (this._valueWidth = this.valueView_.getMeasuredWidth()), b = this._nameWidth + this._valueWidth + 26, b = Math.max(b, 90), this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1").rc(0, -14, b, 33, 4, 4, 4, 4), this.wrapper_.graphics.clear().f("#1bafea").ss(1, 2, 0).s("#1bafea").rc(this._nameWidth + 7, -11, this._valueWidth + 15, 14, 7, 7, 7, 7), b = this._nameWidth + this._valueWidth + 26, b = Math.max(b, 
+          90), this.maxWidth = b - 20, this.slideBar_.graphics.clear().beginFill("#A0A1A1").s("#A0A1A1").ss(1).dr(10, 10, this.maxWidth, 1.5), b = this.getSlidePosition(this.maxWidth), this.valueSetter_.graphics.clear().beginFill("#1bafea").s("#A0A1A1").ss(1).dc(b, 10.5, 3);
         } else {
           if ("list" == this.type) {
             this.view_.x = this.getX();
             this.view_.y = this.getY();
             this.resizeHandle_.x = this.width_ - 2;
             this.resizeHandle_.y = this.height_ - 2;
-            var a = this.getName();
-            this.object_ && (b = Entry.container.getObject(this.object_)) && (a = b.name + ":" + a);
-            a = 7 < a.length ? a.substr(0, 6) + ".." : a;
-            this.titleView_.text = a;
+            b = this.getName();
+            this.object_ && (a = Entry.container.getObject(this.object_)) && (b = a.name + ":" + b);
+            b = 7 < b.length ? b.substr(0, 6) + ".." : b;
+            this.titleView_.text = b;
             this.titleView_.x = this.width_ / 2;
             for (this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1").rect(0, 0, this.width_, this.height_);this.view_.children[4];) {
               this.view_.removeChild(this.view_.children[4]);
