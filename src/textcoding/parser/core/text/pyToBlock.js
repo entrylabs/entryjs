@@ -303,12 +303,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                     if(!permitParamName) { 
                         if(param && typeof param == "object" && !param.type && param.isCallParam) { 
-                            var error = {};
-                            error.title = "블록변환(Converting) 오류";
-                            error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
-                            error.line = this._blockCount; 
-                            console.log("send error", error); 
-                            throw error;  
+                            if(param.name && !Entry.TextCodingUtil.prototype.isGlobalVariableExisted(param.name)) {
+                                var error = {};
+                                error.title = "블록변환(Converting) 오류";
+                                error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
+                                error.line = this._blockCount; 
+                                console.log("send error", error); 
+                                throw error;  
+                            }
                         }
                     }
 
@@ -2399,7 +2401,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     
                     if(component.right.arguments[0].name) 
                         var rightEx = component.right.arguments[0].name;
-                    else
+                    else if(component.right.arguments[0].object)
                         var rightEx = component.right.arguments[0].object.name.concat(component.right.arguments[0].property.name);
                     
                     console.log("AssignmentExpression leftEx", leftEx, "rightEx", rightEx);
