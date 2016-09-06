@@ -305,8 +305,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
                             error.line = this._blockCount; 
                             console.log("send error", error); 
-                            throw error; 
-                            
+                            throw error;  
                         }
                     }
 
@@ -1791,7 +1790,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("syntax", syntax);
         console.log("type", type);
         
-        result = structure;
+        result = structure.params;
 
         console.log("UnaryExpression result", result);
         
