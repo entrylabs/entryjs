@@ -131,6 +131,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.CallExpression = function(component) {
         console.log("CallExpression component", component);
+        var propertyType;
         var permitParamName = false;
         var result = {};
         var structure = {}; 
@@ -222,7 +223,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
             } 
             else if(calleeName == "__pythonRuntime.ops.in") {
                 var syntax = String("%4 in %2");
-                type = this.getBlockType(syntax);   
+                type = this.getBlockType(syntax);
+                permitParamName = true;  
+                propertyType = "list"; 
             }
             else if(calleeName == "__pythonRuntime.functions.len") {
                 var syntax = String("len");
@@ -232,17 +235,20 @@ Entry.PyToBlockParser = function(blockSyntax) {
             else if((callee.object.type == "Identifier" && calleeTokens[1] == "append") ||
                 (callee.object.type == "MemberExpression" && calleeTokens[0] == "self" && calleeTokens[2] == "append")) {
                 var syntax = String("%2.append");
-                type = this.getBlockType(syntax);   
+                type = this.getBlockType(syntax);
+                propertyType = "list";    
             }
             else if((callee.object.type == "Identifier" && calleeTokens[1] == "insert") || 
                 (callee.object.type == "MemberExpression" && calleeTokens[0] == "self" && calleeTokens[2] == "insert")) {
                 var syntax = String("%2.insert");
                 type = this.getBlockType(syntax);  
+                propertyType = "list"; 
             }
             else if((callee.object.type == "Identifier" && calleeTokens[1] == "pop") || 
                 (callee.object.type == "MemberExpression" && calleeTokens[0] == "self" && calleeTokens[2] == "pop")) {
                 var syntax = String("%2.pop");
                 type = this.getBlockType(syntax);   
+                propertyType = "list"; 
             }
 
             if(!type) {
@@ -308,6 +314,31 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             throw error;  
                         }
                     }
+
+                    if(propertyType == "list") { 
+                        console.log("list param check", param);
+                        if(param && typeof param == "object") {
+                            if(param.isCallParam) {
+                                if(param.name && !Entry.TextCodingUtil.prototype.isGlobalListExisted(param.name)) {
+                                    var error = {};
+                                    error.title = "블록변환(Converting) 오류";
+                                    error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
+                                    error.line = this._blockCount; 
+                                    console.log("send error", error); 
+                                    throw error; 
+                                }
+                            }
+                            else if(param.type == "text" || param.type == "number") {
+                                var error = {};
+                                error.title = "블록변환(Converting) 오류";
+                                error.message = "블록으로 변환될 수 없는 코드입니다." + "해당 변수나 리스트를 생성하거나 올바른 파라미터 값 또는 타입으로 변경하세요.";
+                                error.line = this._blockCount; 
+                                console.log("send error", error); 
+                                throw error; 
+                            }
+                        }
+                    } 
+
 
                     /*if(param != null && param.name) {
                         console.log("babo");
