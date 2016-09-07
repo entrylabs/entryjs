@@ -27,9 +27,9 @@ Entry.BlockToJsParser = function(syntax) {
         for (var i = 0; i < threads.length; i++) {
             var thread = threads[i];
             textCode += this.Thread(thread);
-        } 
+        }
 
-        return textCode.trim(); 
+        return textCode.trim();
     };
 
     p.Thread = function(thread) {
@@ -54,11 +54,11 @@ Entry.BlockToJsParser = function(syntax) {
                     code += block;
                 } else if(this._parseMode == Entry.Parser.PARSE_SYNTAX) {
                     code = block;
-                }     
-                
+                }
+
             }
         }
-        return code + '\n';   
+        return code + '\n';
     };
 
     p.Block = function(block) {
@@ -66,7 +66,7 @@ Entry.BlockToJsParser = function(syntax) {
             var syntax = block._schema.syntax.js;
         else
             var syntax = block._schema.syntax;
-       
+
         if (!syntax)
             return "";
         var syntaxType = syntax[0];
@@ -78,7 +78,7 @@ Entry.BlockToJsParser = function(syntax) {
         return "";
     };
 
-    p.Scope = function(block) { 
+    p.Scope = function(block) {
         var notParenthesis = false;
         var result = '';
         var paramReg = /(%.)/mi;
@@ -89,15 +89,15 @@ Entry.BlockToJsParser = function(syntax) {
         else {
             var syntax = block._schema.syntax.concat();
         }
-        
+
         syntax.shift();
         var syntaxTokens = syntax[0].split(paramReg);
-        
+
         var schemaParams = block._schema.params;
         var dataParams = block.data.params;
-        
-        for (var i = 0; i < syntaxTokens.length; i++) { 
-            var syntaxToken = syntaxTokens[i];  
+
+        for (var i = 0; i < syntaxTokens.length; i++) {
+            var syntaxToken = syntaxTokens[i];
             if (syntaxToken.length === 0 || syntaxToken === 'Scope') continue;
             if (syntaxToken === 'Judge') {
                 notParenthesis = true;
@@ -108,17 +108,17 @@ Entry.BlockToJsParser = function(syntax) {
                 var index = parseInt(paramIndex) - 1;
                 if(schemaParams[index]) {
                     if(schemaParams[index].type == "Image") {
-                        index++;    
+                        index++;
                     } else if(schemaParams[index].type == "Block") {
                         var param = this.Block(dataParams[index]);
                         result += param;
                     } else {
                         result += this[schemaParams[index].type](dataParams[index], schemaParams[index]);
                     }
-                } 
+                }
             }
             else {
-                result += syntaxToken; 
+                result += syntaxToken;
             }
         }
 
@@ -131,7 +131,7 @@ Entry.BlockToJsParser = function(syntax) {
         if(!notParenthesis)
             result += "();";
 
-        result = Entry.TextCodingUtil.prototype.jsAdjustSyntax(block, result);
+        result = Entry.TextCodingUtil.jsAdjustSyntax(block, result);
 
         return result;
 
@@ -152,7 +152,7 @@ Entry.BlockToJsParser = function(syntax) {
         this.unpublishIterateVariable();
         var code = "for (var " + iterVariable + " = 0; " + iterVariable +
             " < " + iterateNumber + "; " + iterVariable + "++) {\n" +
-            this.indent(statementCode) + "}"; 
+            this.indent(statementCode) + "}";
         return code;
     };
 
@@ -161,7 +161,7 @@ Entry.BlockToJsParser = function(syntax) {
             var statementCode1 = this.Thread(block.statements[0]);
             var statementCode2 = this.Thread(block.statements[1]);
             var syntax = block._schema.syntax.concat();
-            
+
             var paramBlock = block.data.params[0];
 
             if(paramBlock && paramBlock.data.type == "True") {
@@ -173,14 +173,14 @@ Entry.BlockToJsParser = function(syntax) {
                 else
                     var param = this.Block(paramBlock);
             }
-            
+
             var code = "if (" + param + ") {\n" +
                 this.indent(statementCode1) + "}\n" +
                 "else {\n" + this.indent(statementCode2) + "}";
         } else {
             var statementCode1 = this.Thread(block.statements[0]);
             var syntax = block._schema.syntax.concat();
-            
+
             var paramBlock = block.data.params[0];
 
             if(paramBlock && paramBlock.data.type == "True") {
@@ -192,9 +192,9 @@ Entry.BlockToJsParser = function(syntax) {
                 else
                     var param = this.Block(paramBlock);
             }
-            
-            var code = "if (" + param + ") {\n" + 
-                this.indent(statementCode1) + "}" 
+
+            var code = "if (" + param + ") {\n" +
+                this.indent(statementCode1) + "}"
         }
 
         return code;
@@ -208,7 +208,7 @@ Entry.BlockToJsParser = function(syntax) {
         return code;
     };
 
-    p.indent = function(textCode) {  
+    p.indent = function(textCode) {
         var result = "";
         var indentedCode = textCode.split("\n");
 
@@ -218,7 +218,7 @@ Entry.BlockToJsParser = function(syntax) {
             if(item.length == 0)
                 continue;
 
-            result += ("\t" + item + "\n");  
+            result += ("\t" + item + "\n");
         }
 
         return result;
@@ -255,14 +255,14 @@ Entry.BlockToJsParser = function(syntax) {
             value = value.toLowerCase();
 
         var result = "\'" + value + "\'";
-        
-        return result; 
+
+        return result;
     };
 
     p.TextInput = function(dataParam) {
         var result = dataParam;
-        
-        return result; 
+
+        return result;
     };
 
     p.DropdownDynamic = function(dataParam, schemaParam) {
@@ -271,9 +271,9 @@ Entry.BlockToJsParser = function(syntax) {
         if(dataParam == "null") {
             dataParam = "none";
         } else {
-            dataParam = Entry.TextCodingUtil.prototype.dropdownDynamicValueConvertor(dataParam, schemaParam);
-        }                    
-       
+            dataParam = Entry.TextCodingUtil.dropdownDynamicValueConvertor(dataParam, schemaParam);
+        }
+
         return dataParam;
     };
 

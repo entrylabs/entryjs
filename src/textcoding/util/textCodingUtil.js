@@ -7,14 +7,12 @@ goog.provide("Entry.TextCodingUtil");
 
 goog.require("Entry.Queue");
 
-Entry.TextCodingUtil = function() {
+Entry.TextCodingUtil = {};
 
-};
+(function(tu) {
+    tu._funcParamQ;
 
-(function(p) {
-    p._funcParamQ;
-
-    p.initQueue = function() {
+    tu.initQueue = function() {
         var queue = new Entry.Queue();
         this._funcParamQ = queue;
 
@@ -23,12 +21,12 @@ Entry.TextCodingUtil = function() {
         //console.log("initQueue this._funcParamQ", this._funcParamQ);
     };
 
-    p.clearQueue = function() {
+    tu.clearQueue = function() {
         this._funcParamQ.clear();
         this._funcNameQ.clear();
     };
 
-	p.indent = function(textCode) {
+	tu.indent = function(textCode) {
         //console.log("indent textCode", textCode);
         var result = "\t";
         var indentedCodeArr = textCode.split("\n");
@@ -40,7 +38,7 @@ Entry.TextCodingUtil = function() {
         return result;
     };
 
-    p.isNumeric = function(value) {
+    tu.isNumeric = function(value) {
         if(value.match(/^-?\d+$|^-\d+$/) || value.match(/^-?\d+\.\d+$/)) {
             return true;
         }
@@ -48,7 +46,7 @@ Entry.TextCodingUtil = function() {
         return false;
     };
 
-    p.isBinaryOperator = function(value) {
+    tu.isBinaryOperator = function(value) {
         if(value == "==" || value == ">" || value == "<" || value == ">="|| value == "<=" ||
             value == "+" || value == "-" || value == "*" || value == "/") {
             return true;
@@ -57,7 +55,7 @@ Entry.TextCodingUtil = function() {
         return false;
     };
 
-    p.binaryOperatorConvert = function(operator) {
+    tu.binaryOperatorConvert = function(operator) {
         //console.log("binaryOperatorConvert", operator);
         var result;
         switch(operator) {
@@ -104,7 +102,7 @@ Entry.TextCodingUtil = function() {
         return result;
     };
 
-    p.logicalExpressionConvert = function(operator) {
+    tu.logicalExpressionConvert = function(operator) {
         //console.log("logicalExpressionConvert", operator);
         var result;
         switch(operator) {
@@ -123,7 +121,7 @@ Entry.TextCodingUtil = function() {
         return result;
     };
 
-    p.dropdownDynamicValueConvertor = function(value, param) {
+    tu.dropdownDynamicValueConvertor = function(value, param) {
         var options = param.options;
         //console.log("dropdownDynamicValueConvertor value", value, "options", options);
         var found = false;
@@ -217,7 +215,7 @@ Entry.TextCodingUtil = function() {
 
     };
 
-    p.binaryOperatorValueConvertor = function(operator) {
+    tu.binaryOperatorValueConvertor = function(operator) {
         var result;
         switch(operator) {
             case 'EQUAL': {
@@ -274,7 +272,7 @@ Entry.TextCodingUtil = function() {
         return result;
     };
 
-    p.variableListFilter = function(block, index, param) {
+    tu.variableListFilter = function(block, index, param) {
         console.log("paramFilter block index param", block.data.type, index, param);
         var result = param;
         var type = block.data.type;
@@ -334,7 +332,7 @@ Entry.TextCodingUtil = function() {
         return result;
     };
 
-    p.variableListSpaceMessage = function() {
+    tu.variableListSpaceMessage = function() {
         console.log("variableListSpaceMessage");
         var error = {};
         error.title = "파이썬변환(Converting) 오류";
@@ -344,7 +342,7 @@ Entry.TextCodingUtil = function() {
         throw error;
     };
 
-    p.isGlobalVariableExisted = function(name) {
+    tu.isGlobalVariableExisted = function(name) {
         var entryVariables = Entry.variableContainer.variables_;
         for(var i in entryVariables) {
             var entryVariable = entryVariables[i];
@@ -358,7 +356,7 @@ Entry.TextCodingUtil = function() {
         return false;
     };
 
-    p.updateGlobalVariable = function(name, value) {
+    tu.updateGlobalVariable = function(name, value) {
         var entryVariables = Entry.variableContainer.variables_;
         for(var i in entryVariables) {
             var entryVariable = entryVariables[i];
@@ -382,7 +380,7 @@ Entry.TextCodingUtil = function() {
         }
     };
 
-    p.createGlobalVariable = function(name, value) {
+    tu.createGlobalVariable = function(name, value) {
         if(this.isGlobalVariableExisted(name))
             return;
 
@@ -398,7 +396,7 @@ Entry.TextCodingUtil = function() {
         Entry.variableContainer.updateList();
     };
 
-    p.isLocalVariableExisted = function(name, object) {
+    tu.isLocalVariableExisted = function(name, object) {
         var entryVariables = Entry.variableContainer.variables_;
         for(var i in entryVariables) {
             var entryVariable = entryVariables[i];
@@ -412,7 +410,7 @@ Entry.TextCodingUtil = function() {
         return false;
     };
 
-    p.updateLocalVariable = function(name, value, object) {
+    tu.updateLocalVariable = function(name, value, object) {
         var entryVariables = Entry.variableContainer.variables_;
         for(var i in entryVariables) {
             var entryVariable = entryVariables[i];
@@ -436,7 +434,7 @@ Entry.TextCodingUtil = function() {
         }
     };
 
-    p.createLocalVariable = function(name, value, object) {
+    tu.createLocalVariable = function(name, value, object) {
         if(this.isLocalVariableExisted(name, object))
             return;
 
@@ -453,7 +451,7 @@ Entry.TextCodingUtil = function() {
         Entry.variableContainer.updateList();
     };
 
-    p.isLocalVariable = function(variableId) {
+    tu.isLocalVariable = function(variableId) {
         //console.log("TextCodingUtil isLocalVariable", variableId);
         var object = Entry.playground.object;
         var entryVariables = Entry.variableContainer.variables_;
@@ -468,7 +466,7 @@ Entry.TextCodingUtil = function() {
 
     };
 
-    p.isGlobalListExisted = function(name) {
+    tu.isGlobalListExisted = function(name) {
         var entryLists = Entry.variableContainer.lists_;
         for(var i in entryLists) {
             var entryList = entryLists[i];
@@ -481,7 +479,7 @@ Entry.TextCodingUtil = function() {
         return false;
     };
 
-    p.updateGlobalList = function(name, array) {
+    tu.updateGlobalList = function(name, array) {
         var entryLists = Entry.variableContainer.lists_;
         for(var i in entryLists) {
             var entryList = entryLists[i];
@@ -508,7 +506,7 @@ Entry.TextCodingUtil = function() {
         }
     };
 
-    p.createGlobalList = function(name, array) {
+    tu.createGlobalList = function(name, array) {
         if(this.isGlobalListExisted(name))
             return;
 
@@ -524,7 +522,7 @@ Entry.TextCodingUtil = function() {
         Entry.variableContainer.updateList();
     };
 
-    p.isLocalListExisted = function(name, object) {
+    tu.isLocalListExisted = function(name, object) {
         //console.log("TextCodingUtil isLocalListExisted", name, object);
         var entryLists = Entry.variableContainer.lists_;
         for(var i in entryLists) {
@@ -538,7 +536,7 @@ Entry.TextCodingUtil = function() {
         return false;
     };
 
-    p.updateLocalList = function(name, array, object) {
+    tu.updateLocalList = function(name, array, object) {
         var entryLists = Entry.variableContainer.lists_;
         for(var i in entryLists) {
             var entryList = entryLists[i];
@@ -565,7 +563,7 @@ Entry.TextCodingUtil = function() {
         }
     };
 
-    p.createLocalList = function(name, array, object) {
+    tu.createLocalList = function(name, array, object) {
         if(this.isLocalListExisted(name, object))
             return;
 
@@ -582,7 +580,7 @@ Entry.TextCodingUtil = function() {
         Entry.variableContainer.updateList();
     };
 
-    p.isLocalList = function(listId) {
+    tu.isLocalList = function(listId) {
         //console.log("TextCodingUtil listId", listId);
         var object = Entry.playground.object;
         var entryLists = Entry.variableContainer.lists_;
@@ -597,7 +595,7 @@ Entry.TextCodingUtil = function() {
 
     };
 
-    p.isLocalType = function(block, id) {
+    tu.isLocalType = function(block, id) {
         if(block.data.type == "get_variable" ||
             block.data.type == "set_variable" ||
             block.data.type == "change_variable" ) {
@@ -618,7 +616,7 @@ Entry.TextCodingUtil = function() {
         }
     };
 
-    p.isEventBlock = function(block) {
+    tu.isEventBlock = function(block) {
         var blockType = block.data.type;
         if( blockType == "when_run_button_click" ||
             blockType == "when_some_key_pressed" ||
@@ -635,7 +633,7 @@ Entry.TextCodingUtil = function() {
         return false;
     };
 
-    p.makeDefinition = function(block) {
+    tu.makeDefinition = function(block) {
         var blockType = block.data.type;
         var syntax = Entry.block[blockType].syntax.py[0];
 
@@ -655,13 +653,13 @@ Entry.TextCodingUtil = function() {
         return result;
     };
 
-    p.isNoPrintBlock = function(block) {
+    tu.isNoPrintBlock = function(block) {
         var blockType = block.data.type;
 
         return false;
     };
 
-    p.entryEventFuncFilter = function(threads) {
+    tu.entryEventFuncFilter = function(threads) {
         var result;
         var eventFound = false;
         var threadArr = threads.split('\n');
@@ -703,7 +701,7 @@ Entry.TextCodingUtil = function() {
         return result;
     };
 
-    p.eventBlockSyntaxFilter = function(name) {
+    tu.eventBlockSyntaxFilter = function(name) {
         var result;
         if( name == "entry_event_start" ||
             name == "entry_event_key" ||
@@ -725,7 +723,7 @@ Entry.TextCodingUtil = function() {
     };
 
 
-    p.isEntryEventFunc = function(name) {
+    tu.isEntryEventFunc = function(name) {
         if( name == "def entry_event_start" ||
             name == "def entry_event_key" ||
             name == "def entry_event_mouse_down" ||
@@ -743,7 +741,7 @@ Entry.TextCodingUtil = function() {
 
     };
 
-    p.isEntryEventFuncName = function(name) {
+    tu.isEntryEventFuncName = function(name) {
         if( name == "entry_event_start" ||
             name == "entry_event_key" ||
             name == "entry_event_mouse_down" ||
@@ -760,7 +758,7 @@ Entry.TextCodingUtil = function() {
         return false;
     };
 
-    p.searchFuncDefParam = function(block) {
+    tu.searchFuncDefParam = function(block) {
         //console.log("searchFuncDefParam block", block);
         if(block.data.type == "function_field_label") {
             var name = block.data.params[0];
@@ -783,7 +781,7 @@ Entry.TextCodingUtil = function() {
         }
     };
 
-    p.gatherFuncDefParam = function(block) {
+    tu.gatherFuncDefParam = function(block) {
         if(block && block.data) {
             if(block.data.params[0]) {
                 if(block.data.params[0].data) {
@@ -824,7 +822,7 @@ Entry.TextCodingUtil = function() {
 
     };
 
-    p.getLastParam = function(funcBlock) {
+    tu.getLastParam = function(funcBlock) {
         if(funcBlock && funcBlock.data && funcBlock.data.params[1]) {
             var result = this.getLastParam(funcBlock.data.params[1]);
         }
@@ -835,7 +833,7 @@ Entry.TextCodingUtil = function() {
         return result;
     };
 
-    p.isFuncContentsMatch = function(blockFuncContents, textFuncStatements, paramMap) {
+    tu.isFuncContentsMatch = function(blockFuncContents, textFuncStatements, paramMap) {
         console.log("blockFuncContents, textFuncStatements, paramMap", blockFuncContents, textFuncStatements, paramMap);
         var matchFlag = true;
 
@@ -937,7 +935,7 @@ Entry.TextCodingUtil = function() {
         return matchFlag;
     };
 
-    p.isParamBlock = function(block) {
+    tu.isParamBlock = function(block) {
         var type = block.type;
         if(type == "ai_boolean_distance" ||
             type == "ai_distance_value" ||
@@ -949,7 +947,7 @@ Entry.TextCodingUtil = function() {
         }
     };
 
-    p.hasBlockInfo = function(data, blockInfo) {
+    tu.hasBlockInfo = function(data, blockInfo) {
         var result = false;
         for(var key in blockInfo) {
             var info = blockInfo[key];
@@ -967,7 +965,7 @@ Entry.TextCodingUtil = function() {
         return result;
     };
 
-    p.updateBlockInfo = function(data, blockInfo) {
+    tu.updateBlockInfo = function(data, blockInfo) {
         var infoArr = blockInfo[data.type];
         if(infoArr && Array.isArray(infoArr) && infoArr.legnth != 0) {
             for(var i in infoArr) {
@@ -994,7 +992,7 @@ Entry.TextCodingUtil = function() {
         }
     };
 
-    p.assembleRepeatWhileTrueBlock = function(block, syntax) {
+    tu.assembleRepeatWhileTrueBlock = function(block, syntax) {
         console.log("assembleRepeatWhileTrueBlock >>", "block", block.data.type, "syntax", syntax);
         var result = '';
         if(block.data.type == "repeat_while_true") {
@@ -1032,7 +1030,7 @@ Entry.TextCodingUtil = function() {
         return result;
     };
 
-    p.isJudgementBlock = function(blockType) {
+    tu.isJudgementBlock = function(blockType) {
         if(blockType == "is_clicked" ||
             blockType == "is_press_some_key" ||
             blockType == "reach_something" ||
@@ -1047,7 +1045,7 @@ Entry.TextCodingUtil = function() {
         return false;
     };
 
-    p.isCalculationBlock = function(blockType) {
+    tu.isCalculationBlock = function(blockType) {
         if(blockType == "calc_basic" ||
             blockType == "calc_rand" ||
             blockType == "coordinate_mouse" ||
@@ -1073,7 +1071,7 @@ Entry.TextCodingUtil = function() {
         return false;
     };
 
-    p.isMaterialBlock = function(blockType) {
+    tu.isMaterialBlock = function(blockType) {
         if(blockType == "get_canvas_input_value" ||
             blockType == "get_variable" ||
             blockType == "value_of_index_from_list" ||
@@ -1086,7 +1084,7 @@ Entry.TextCodingUtil = function() {
         return false;
     };
 
-    p.jsAdjustSyntax = function(block, syntax) {
+    tu.jsAdjustSyntax = function(block, syntax) {
         var result = '';
         if(block.data.type == 'ai_boolean_distance') {
             var tokens = syntax.split(' ');
@@ -1128,7 +1126,7 @@ Entry.TextCodingUtil = function() {
         return result;
     };
 
-    p.bTojBinaryOperatorConvertor = function(operator) {
+    tu.bTojBinaryOperatorConvertor = function(operator) {
         var result;
         switch(operator) {
             case '\'BIGGER\'': result = ">"; break;
@@ -1141,7 +1139,7 @@ Entry.TextCodingUtil = function() {
         return result;
     };
 
-    p.jTobBinaryOperatorConvertor = function(operator) {
+    tu.jTobBinaryOperatorConvertor = function(operator) {
         var result;
         switch(operator) {
             case '>': result = "BIGGER"; break;
@@ -1154,14 +1152,14 @@ Entry.TextCodingUtil = function() {
         return result;
     };
 
-    p.radarVariableConvertor = function(variable) {
+    tu.radarVariableConvertor = function(variable) {
         var items = variable.split('_');
         var result = items[1].toUpperCase();
 
         return result;
     };
 
-    p.tTobDropdownValueConvertor = function(value) {
+    tu.tTobDropdownValueConvertor = function(value) {
         var result;
         if(value == "stone") {
             result = "OBSTACLE";
@@ -1176,7 +1174,7 @@ Entry.TextCodingUtil = function() {
         return result;
     };
 
-    p.includeEntryEventKeyBlock = function(thread) {
+    tu.includeEntryEventKeyBlock = function(thread) {
         var result = false;
         var threadArr = thread.split('\n');
         for(var i in threadArr) {
@@ -1192,7 +1190,7 @@ Entry.TextCodingUtil = function() {
         return result;
     };
 
-    p.isNamesIncludeSpace = function() {
+    tu.isNamesIncludeSpace = function() {
         var vc = Entry.variableContainer;
         //inspect variables
         var targets = vc.variables_ || [];
@@ -1228,4 +1226,4 @@ Entry.TextCodingUtil = function() {
     };
 
 
-})(Entry.TextCodingUtil.prototype);
+})(Entry.TextCodingUtil);
