@@ -9,6 +9,7 @@ goog.provide("Entry.BlockView");
  *
  */
 Entry.BlockView = function(block, board, mode) {
+    var that = this;
     Entry.Model(this, false);
     this.block = block;
     this._lazyUpdatePos = _.debounce(block._updatePos.bind(block), 200);
@@ -18,6 +19,11 @@ Entry.BlockView = function(block, board, mode) {
     this.svgGroup = board.svgBlockGroup.elem("g");
 
     this._schema = Entry.block[block.type];
+    if (this._schema === undefined) {
+        this.block.destroy(false, false);
+        return;
+    }
+
     if (this._schema.changeEvent)
         this._schemaChangeEvent = this._schema.changeEvent.attach(
             this, this._updateSchema);
@@ -35,10 +41,6 @@ Entry.BlockView = function(block, board, mode) {
 
     this.isInBlockMenu = this.getBoard() instanceof Entry.BlockMenu;
 
-    //if (skeleton.morph)
-        //this._observers.push(this.block.observe(this, "_renderPath", skeleton.morph, false));
-
-    var that = this;
     this.mouseHandler = function() {
         var events = that.block.events;
         if (events && events.mousedown)
@@ -197,10 +199,34 @@ Entry.BlockView.pngMap = {};
                 }
                 break;
             case Entry.Workspace.MODE_VIMBOARD:
+                if (this._schema.skeleton === 'basic_button') {
+                    this._startContentRender(Entry.Workspace.MODE_BOARD);
+                    return;
+                }
+
                 var text = this.getBoard().workspace.getCodeToText(this.block);
+                var lineBreak = false;
+                var secondLineText;
+                if (/(if)+(.|\n)+(else)+/.test(text)) {
+                    var contents = text.split('\n');
+                    text = contents.shift() + ' ' + contents.shift();
+
+                    lineBreak = true;
+                    secondLineText = contents.join(" ");
+                }
+
+                var fieldText = {text:text, color: 'white'};
+                if (this.block._schema.vimModeFontColor)
+                    fieldText.color = this.block._schema.vimModeFontColor;
                 this._contents.push(
-                    new Entry.FieldText({text: text, color: 'white'}, this)
+                    new Entry.FieldText(fieldText, this)
                 );
+
+                if (lineBreak) {
+                    this._contents.push(new Entry.FieldLineBreak(null, this));
+                    fieldText.text = secondLineText;
+                    this._contents.push(new Entry.FieldText(fieldText, this));
+                }
                 break;
         }
         this.alignContent(false);
@@ -432,6 +458,7 @@ Entry.BlockView.pngMap = {};
 
         if(board.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD) {
             if(e) {
+                vimBoard = $('.entryVimBoard>.CodeMirror')[0];
                 document.getElementsByClassName('CodeMirror')[0]
                     .dispatchEvent(Entry.Utils.createMouseEvent('dragStart', event));
             }

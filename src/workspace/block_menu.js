@@ -13,6 +13,7 @@ goog.require("Entry.Utils");
 Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     Entry.Model(this, false);
     this._align = align || "CENTER";
+    this.setAlign(this._align);
     this._scroll = scroll !== undefined ? scroll : false;
     this._bannedClass = [];
     this._categories = [];
@@ -150,6 +151,16 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             function() {that.changeEvent.notify();}
         );
         code.createView(this);
+        var workspace = this.workspace;
+        var workspaceMode = workspace.getMode();
+        if (this.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD) {
+            if (!code.mode || code.mode === 'code')
+                this.renderText();
+        } else {
+            if (code.mode === 'text')
+                this.renderBlock();
+        }
+
         this.align();
     };
 
@@ -300,16 +311,21 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     p.show = function() {this.view.removeClass('entryRemove');};
 
-    p.renderText = function() {
+    p.renderText = function(cb) {
         var threads = this.code.getThreads();
+        this.code.mode = 'text';
         for (var i=0; i<threads.length; i++)
             threads[i].view.renderText();
+        cb && cb();
     };
 
-    p.renderBlock = function() {
+    p.renderBlock = function(cb) {
         var threads = this.code.getThreads();
+        this.code.mode = 'code';
         for (var i=0; i<threads.length; i++)
             threads[i].view.renderBlock();
+
+        cb && cb();
     };
 
     p._createSplitter = function(topPos) {
@@ -409,12 +425,18 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     p.selectMenu = function(selector, doNotFold) {
         var name = this._convertSelector(selector);
-        if (!name) return;
-        if (name == 'variable')
-            Entry.playground.checkVariables();
-
-        if (name == 'arduino') this._generateHwCode();
-
+        if (!name) {
+            this.align();
+            return;
+        }
+        switch (name) {
+            case 'variable':
+                Entry.playground.checkVariables();
+                break;
+            case 'arduino':
+                this._generateHwCode();
+                break;
+        }
         var elem = this._categoryElems[name];
         var oldView = this._selectedCategoryView;
         var className = 'entrySelectedCategory';
@@ -727,5 +749,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         this._categoryCodes.arduino = codesJSON;
     };
 
+    p.setAlign = function(align) {
+        this._align = align || "CENTER";
+    };
 
 })(Entry.BlockMenu.prototype);

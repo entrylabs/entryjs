@@ -341,7 +341,11 @@ Entry.parseTexttoXML = function(xmlText) {
  * @return {!Element}
  */
 Entry.createElement = function(type, elementId) {
-    var element = document.createElement(type);
+    var element;
+    if (type instanceof HTMLElement)
+        element = type;
+    else
+        var element = document.createElement(type);
     if (elementId)
         element.id = elementId;
 
@@ -1270,4 +1274,9 @@ Entry.Utils.convertMouseEvent = function(e) {
 
 Entry.Utils.convertIntToHex = function(num) {
     return (num).toString(16).toUpperCase();
+}
+
+Entry.Utils.hasSpecialCharacter = function(str) {
+    var reg = /!|@|#|\$|%|\^|&|\*|\(|\)|\+|=|-|\[|\]|\\|\'|;|,|\.|\/|{|}|\||\"|:|<|>|\?/g;
+    return reg.test(str);
 }

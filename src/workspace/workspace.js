@@ -54,6 +54,8 @@ Entry.Workspace = function(options) {
     this.changeEvent = new Entry.Event(this);
 
     Entry.commander.setCurrentEditor("board", this.board);
+    this.textType = Entry.Vim.TEXT_TYPE_PY;
+
 };
 
 Entry.Workspace.MODE_BOARD = 0;
@@ -77,50 +79,97 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     p.getMode = function() {return this.mode;};
 
     p.setMode = function(mode, message){
-        mode = Number(mode);
-        var oldMode = this.mode;
-        this.mode = mode;
-        switch (mode) {
-            case oldMode:
-                return;
-            case Entry.Workspace.MODE_VIMBOARD:
-                if (this.board) this.board.hide();
-                if (this.overlayBoard) this.overlayBoard.hide();
-                this.set({selectedBoard:this.vimBoard});
-                this.vimBoard.show();
-                this.vimBoard.codeToText(this.board.code);
-                this.blockMenu.renderText();
-                this.board.clear();
-                break;
-            case Entry.Workspace.MODE_BOARD:
-                try {
-                    this.board.show();
-                    this.set({selectedBoard:this.board});
-                    this.textToCode(oldMode);
-                    if (this.vimBoard) this.vimBoard.hide();
-                    if (this.overlayBoard) this.overlayBoard.hide();
-                    this.blockMenu.renderBlock();
-                } catch(e) {
-                    if (this.board) this.board.hide();
-                    this.set({selectedBoard:this.vimBoard});
-                    Entry.dispatchEvent('setProgrammingMode', Entry.Workspace.MODE_VIMBOARD);
-                    throw e;
-                }
-                Entry.commander.setCurrentEditor("board", this.board);
-                break;
-            case Entry.Workspace.MODE_OVERLAYBOARD:
-                if (!this.overlayBoard)
-                    this.initOverlayBoard();
-                this.overlayBoard.show();
-                this.set({selectedBoard:this.overlayBoard});
-                Entry.commander.setCurrentEditor("board", this.overlayBoard);
-                break;
-        }
-        this.changeEvent.notify(message);
+       if (typeof mode === 'number')
+           this.mode = mode;
+       else {
+           this.mode = mode.boardType;
+           this.runType = mode.runType;
+           this.textType = mode.textType;
+       }
+
+       switch (this.mode) {
+           case this.oldMode:
+               return;
+
+           case Entry.Workspace.MODE_VIMBOARD:
+               try {
+                   if (this.board) this.board.hide();
+                   if (this.overlayBoard) this.overlayBoard.hide();
+                   this.set({selectedBoard:this.vimBoard});
+                   this.vimBoard.show();
+                   this.codeToText(this.board.code, mode);
+                   this.blockMenu.renderText(function() {
+                       this.blockMenu.reDraw();
+                   }.bind(this));
+                   this.board.clear();
+                   //this.oldMode = this.mode;
+                   this.oldTextType = this.textType;
+               } catch(e) {
+                   //console.log("vimBoard error");
+               }
+
+               break;
+           case Entry.Workspace.MODE_BOARD:
+               try {
+                   this.board.show();
+                   this.set({selectedBoard:this.board});
+                   this.textToCode(this.oldMode, this.oldTextType);
+                   if (this.vimBoard) this.vimBoard.hide();
+                   if (this.overlayBoard) this.overlayBoard.hide();
+                   this.blockMenu.renderBlock(function() {
+                       this.blockMenu.reDraw();
+                       }.bind(this)
+                   );
+                   //this.oldMode = this.mode;
+                   this.oldTextType = this.textType;
+               } catch(e) {
+                   if (this.board) this.board.hide();
+                   this.set({selectedBoard:this.vimBoard});
+                   this.mode = Entry.Workspace.MODE_VIMBOARD;
+
+                   if(this.oldTextType == Entry.Vim.PARSER_TYPE_JS_TO_BLOCK) {
+                       mode.boardType = Entry.Workspace.MODE_VIMBOARD;
+                       mode.textType = Entry.Vim.TEXT_TYPE_JS;
+                       mode.runType = Entry.Vim.MAZE_MODE;
+                       this.oldTextType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK;
+                       Entry.dispatchEvent("changeMode", mode);
+                       Ntry.dispatchEvent("textError", mode);
+                   } else if(this.oldTextType == Entry.Vim.PARSER_TYPE_PY_TO_BLOCK) {
+                       mode.boardType = Entry.Workspace.MODE_VIMBOARD;
+                       mode.textType = Entry.Vim.TEXT_TYPE_PY;
+                       mode.runType = Entry.Vim.WORKSPACE_MODE;
+                       this.oldTextType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK;
+                       ////console.log(("mode", mode);
+                       Entry.dispatchEvent("changeMode", mode);
+                   }
+
+                   //throw e;
+               }
+               Entry.commander.setCurrentEditor("board", this.board);
+               break;
+
+           case Entry.Workspace.MODE_OVERLAYBOARD:
+               if (!this.overlayBoard)
+                   this.initOverlayBoard();
+               this.overlayBoard.show();
+               this.set({selectedBoard:this.overlayBoard});
+               Entry.commander.setCurrentEditor("board", this.overlayBoard);
+               //this.oldMode = this.mode;
+               break;
+       }
+
+       this.oldMode = this.mode;
+
+       this.changeEvent.notify(message);
     };
 
     p.changeBoardCode = function(code) {
+        this._syncTextCode();
         this.board.changeCode(code);
+        if (this.mode === Entry.Workspace.MODE_VIMBOARD) {
+            this.codeToText(this.board.code);
+        }
+
     };
 
     p.changeOverlayBoardCode = function(code) {
@@ -132,21 +181,25 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         this.blockMenu.changeCode(code);
     };
 
-    p.textToCode = function(mode) {
+    p.textToCode = function(mode, oldTextType) {
         if (mode != Entry.Workspace.MODE_VIMBOARD) return;
-        var changedCode = this.vimBoard.textToCode();
+        var that = this;
+
+        var changedCode = this.vimBoard.textToCode(oldTextType);
         var board = this.board;
         var code = board.code;
 
         code.load(changedCode);
         code.createView(board);
-        board.reDraw();
 
-        this.board.alignThreads();
+        this.board.reDraw();
+        setTimeout(function() {
+            that.board.alignThreads();
+        }, 0);
     };
 
-    p.codeToText = function(code) {
-        return this.vimBoard.codeToText(code);
+    p.codeToText = function(code, mode) {
+        return this.vimBoard.codeToText(code, mode);
     };
 
     p.getCodeToText = function(code) {
@@ -210,6 +263,25 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         if (!board) return;
         if (board.constructor === Entry.Board)
             this.trashcan.setBoard(board);
+    };
+
+    p._syncTextCode = function() {
+        if (this.mode !== Entry.Workspace.MODE_VIMBOARD)
+            return;
+
+        var changedCode = this.vimBoard.textToCode(this.textType);
+        var board = this.board;
+        var code = board.code;
+        code.load(changedCode);
+        code.createView(board);
+        this.board.alignThreads();
+    };
+
+    p.addVimBoard = function(dom) {
+        if (this.vimBoard) return;
+        this.vimBoard = new Entry.Vim(dom);
+        this.vimBoard.workspace = this;
+        this.vimBoard.hide();
     };
 
 })(Entry.Workspace.prototype);

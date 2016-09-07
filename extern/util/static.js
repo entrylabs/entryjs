@@ -268,6 +268,7 @@ EntryStatic.getAllBlocks = function() {
             category: "arduino",
             blocks: [
                 "arduino_download_connector",
+                "download_guide",
                 "arduino_download_source",
                 "arduino_connected",
                 "arduino_reconnect",
@@ -558,7 +559,7 @@ EntryStatic.blockInfo = {
         "xml": "<block type='xbot_analogOutput'><value name='VALUE'><block type='text'><field name='NAME'>255</field></block></value></block>",
         "class": "xbot_sensor"
     },
-    //end of XBOT Blocks added   
+    //end of XBOT Blocks added
     //EV3 BLOCK
     "ev3_get_sensor_value": {
         "isNotFor": ["EV3"],
@@ -1389,6 +1390,12 @@ EntryStatic.blockInfo = {
     },
     "arduino_download_connector": {
         "xml": "<btn text=\"Lang.Blocks.ARDUINO_download_connector\" onclick=\"Entry.hw.downloadConnector()\"></btn>",
+        "isNotFor": ["arduinoDisconnected"],
+        "usage": ["arduino"],
+        "class": "button"
+    },
+    "download_guide": {
+        "xml": "<btn text=\"Lang.Blocks.download_guide\" onclick=\"Entry.hw.downloadGuide()\"></btn>",
         "isNotFor": ["arduinoDisconnected"],
         "usage": ["arduino"],
         "class": "button"

@@ -324,14 +324,19 @@ Entry.Variable.prototype.updateView = function() {
         if (this.type == 'variable') {
             this.view_.x = this.getX();
             this.view_.y = this.getY();
+            var oldContent = this.textView_.text;
+            var newContent;
             if (this.object_) {
                 var obj = Entry.container.getObject(this.object_);
-                if (obj)
-                    this.textView_.text = obj.name + ':' + this.getName();
-                else
-                    this.textView_.text = this.getName();
-            } else
-                this.textView_.text = this.getName();
+                if (obj) newContent = obj.name + ':' + this.getName();
+                else newContent = this.getName();
+            } else newContent = this.getName();
+
+            if (oldContent !== newContent) {
+                this.textView_.text = newContent;
+                this._nameWidth = null;
+            }
+
             if (this._nameWidth === null)
                 this._nameWidth = this.textView_.getMeasuredWidth();
             this.valueView_.x = this._nameWidth + 14;
@@ -354,14 +359,19 @@ Entry.Variable.prototype.updateView = function() {
         } else if (this.type == 'slide') {
             this.view_.x = this.getX();
             this.view_.y = this.getY();
+            var oldContent = this.textView_.text;
+            var newContent;
             if (this.object_) {
                 var obj = Entry.container.getObject(this.object_);
-                if (obj)
-                    this.textView_.text = obj.name + ':' + this.getName();
-                else
-                    this.textView_.text = this.getName();
-            } else
-                this.textView_.text = this.getName();
+                if (obj) newContent = obj.name + ':' + this.getName();
+                else newContent = this.getName();
+            } else newContent = this.getName();
+
+            if (oldContent !== newContent) {
+                this.textView_.text = newContent;
+                this._nameWidth = null;
+            }
+
             if (this._nameWidth === null)
                 this._nameWidth = this.textView_.getMeasuredWidth();
             this.valueView_.x = this._nameWidth + 14;
