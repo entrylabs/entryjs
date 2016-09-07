@@ -17407,7 +17407,7 @@ Entry.Func.initEditView = function(b) {
   a.changeOverlayBoardCode(b);
   b.recreateView();
   a.changeOverlayBoardCode(b);
-  b.view.board.alignThreads();
+  b.view.board.alignThreads(!0);
   this._workspaceStateEvent = a.changeEvent.attach(this, this.endEdit);
 };
 Entry.Func.endEdit = function(b) {
@@ -23509,16 +23509,17 @@ Entry.Board.DRAG_RADIUS = 5;
     this.wrapper.removeClass("entryRemove");
     this.visible = !0;
   };
-  b.alignThreads = function() {
-    for (var a = this.svgDom.height(), b = this.code.getThreads(), c = 15, e = 0, a = a - 30, f = 50, g = 0;g < b.length;g++) {
-      var h = b[g].getFirstBlock();
-      if (h) {
-        var h = h.view, k = h.svgGroup.getBBox(), l = c + 15;
-        l > a && (f = f + e + 10, e = 0, c = 15);
-        e = Math.max(e, k.width);
-        l = c + 15;
-        h._moveTo(f, l, !1);
-        c = c + k.height + 15;
+  b.alignThreads = function(a) {
+    for (var b = this.svgDom.height(), c = this.code.getThreads(), e = 15, f = 0, b = b - 30, g = 50, h = 0;h < c.length;h++) {
+      var k = c[h], l = k.getFirstBlock();
+      if (l) {
+        a && k.view.reDraw();
+        var k = l.view, l = k.svgGroup.getBBox(), m = e + 15;
+        m > b && (g = g + f + 10, f = 0, e = 15);
+        f = Math.max(f, l.width);
+        m = e + 15;
+        k._moveTo(g, m, !1);
+        e = e + l.height + 15;
       }
     }
     this.scroller.resizeScrollBar();
