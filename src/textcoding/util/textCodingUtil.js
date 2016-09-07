@@ -279,8 +279,6 @@ Entry.TextCodingUtil = function() {
         var result = param;
         var type = block.data.type;
         if(type == "change_variable" || type == "set_variable" || type == "get_variable" ) {
-            /*if(param.includes(" "))
-                this.variableListSpaceMessage();*/
             if(index == 1) {
                 //console.log("paramFilter", eval(param));
                 result = eval(param);

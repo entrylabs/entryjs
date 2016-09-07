@@ -33,6 +33,7 @@ Entry.Playground = function() {
 
 Entry.Playground.prototype.setMode = function(mode) {
     console.log("playground setMode", mode);
+    
     if(!mode.noChange)
         this.mainWorkspace.setMode(mode);
 };
