@@ -2740,7 +2740,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var argument = funcBodyData[i].argument;
                 var statements = argument.statements;
                 if(statements && statements.length > 0) {
-                    textFuncStatements = statements;
+                    var cleansedStmt = [];
+                    for(var s in statements) {
+                        var stmt = statements[s];
+                        if(stmt) {
+                            cleansedStmt.push(stmt);
+                        }
+
+                    }
+                    textFuncStatements = cleansedStmt; 
                 }
             }
         }
@@ -3009,7 +3017,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         console.log("FunctionExpression bodyData", bodyData);
 
-        result.statements = bodyData.statements;
+        if(bodyData.data && bodyData.data.length != 0)
+            result.statements = bodyData.data;
+        else
+            result.statements = bodyData.statements;
 
         console.log("FunctionExpression result", result);
         return result;
