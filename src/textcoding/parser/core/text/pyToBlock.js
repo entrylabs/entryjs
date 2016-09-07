@@ -982,7 +982,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         console.log("ParamKeyboard value, paramMeta, paramDefMeta", value, paramMeta, paramDefMeta);
         var result;
 
-        result = Entry.KeyboardCode.prototype.keyCharToCode[value];
+        result = Entry.KeyboardCode.keyCharToCode[value];
         console.log("ParamKeyboard result", result);
         return result;
     };
