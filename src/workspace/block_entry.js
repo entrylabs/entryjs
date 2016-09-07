@@ -31,7 +31,7 @@ Entry.block = {
     "albert_is_oid_value": {
         "color": "#00979D",
         "fontColor": "#fff",
-        "skeleton": "basic_string_field",
+        "skeleton": "basic_boolean_field",
         "statements": [],
         "params": [
             {
@@ -86,14 +86,18 @@ Entry.block = {
                 "options": [
                     [Lang.Blocks.ALBERT_sensor_left_proximity ,"leftProximity"],
                     [Lang.Blocks.ALBERT_sensor_right_proximity,"rightProximity"],
-                    [Lang.Blocks.ALBERT_sensor_light,"light"],
-                    [Lang.Blocks.ALBERT_sensor_battery,"battery"],
-                    [Lang.Blocks.ALBERT_sensor_signal_strength,"signalStrength"],
+                    [Lang.Blocks.ALBERT_sensor_acceleration_x, "accelerationX"],
+                    [Lang.Blocks.ALBERT_sensor_acceleration_y,"accelerationY"],
+                    [Lang.Blocks.ALBERT_sensor_acceleration_z,"accelerationZ"],
                     [Lang.Blocks.ALBERT_sensor_front_oid,"frontOid"],
                     [Lang.Blocks.ALBERT_sensor_back_oid,"backOid"],
                     [Lang.Blocks.ALBERT_sensor_position_x,"positionX"],
                     [Lang.Blocks.ALBERT_sensor_position_y,"positionY"],
-                    [Lang.Blocks.ALBERT_sensor_orientation,"orientation"]
+                    [Lang.Blocks.ALBERT_sensor_orientation,"orientation"],
+                    [Lang.Blocks.ALBERT_sensor_light,"light"],
+                    [Lang.Blocks.ALBERT_sensor_temperature, "temperature"],
+                    [Lang.Blocks.ALBERT_sensor_battery,"battery"],
+                    [Lang.Blocks.ALBERT_sensor_signal_strength,"signalStrength"]
                 ],
                 "value": "leftProximity",
                 "fontSize": 11
@@ -241,8 +245,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.General.left,"LEFT"],
-                    [Lang.General.right,"RIGHT"]
+                    [Lang.Blocks.ALBERT_turn_left,"LEFT"],
+                    [Lang.Blocks.ALBERT_turn_right,"RIGHT"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -412,9 +416,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.General.left,"LEFT"],
-                    [Lang.General.right,"RIGHT"],
-                    [Lang.General.both,"BOTH"]
+                    [Lang.Blocks.ALBERT_left_wheel,"LEFT"],
+                    [Lang.Blocks.ALBERT_right_wheel,"RIGHT"],
+                    [Lang.Blocks.ALBERT_both_wheels,"BOTH"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -470,9 +474,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.General.left,"LEFT"],
-                    [Lang.General.right,"RIGHT"],
-                    [Lang.General.both,"BOTH"]
+                    [Lang.Blocks.ALBERT_left_wheel,"LEFT"],
+                    [Lang.Blocks.ALBERT_right_wheel,"RIGHT"],
+                    [Lang.Blocks.ALBERT_both_wheels,"BOTH"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -798,9 +802,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.General.left,"LEFT"],
-                    [Lang.General.right,"RIGHT"],
-                    [Lang.General.both,"BOTH"]
+                    [Lang.Blocks.ALBERT_left_eye,"LEFT"],
+                    [Lang.Blocks.ALBERT_right_eye,"RIGHT"],
+                    [Lang.Blocks.ALBERT_both_eyes,"BOTH"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -808,13 +812,13 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.General.red,"4"],
-                    [Lang.General.yellow,"6"],
-                    [Lang.General.green,"2"],
+                    [Lang.Blocks.ALBERT_color_red,"4"],
+                    [Lang.Blocks.ALBERT_color_yellow,"6"],
+                    [Lang.Blocks.ALBERT_color_green,"2"],
                     [Lang.Blocks.ALBERT_color_cyan,"3"],
-                    [Lang.General.blue,"1"],
+                    [Lang.Blocks.ALBERT_color_blue,"1"],
                     [Lang.Blocks.ALBERT_color_magenta,"5"],
-                    [Lang.General.white,"7"]
+                    [Lang.Blocks.ALBERT_color_white,"7"]
                 ],
                 "value": "4",
                 "fontSize": 11
@@ -859,9 +863,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.General.left,"LEFT"],
-                    [Lang.General.right,"RIGHT"],
-                    [Lang.General.both,"BOTH"]
+                    [Lang.Blocks.ALBERT_left_eye,"LEFT"],
+                    [Lang.Blocks.ALBERT_right_eye,"RIGHT"],
+                    [Lang.Blocks.ALBERT_both_eyes,"BOTH"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -904,8 +908,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "켜기", "ON" ],
-                    [ "끄기", "OFF" ]
+                    [ Lang.Blocks.ALBERT_turn_on, "ON" ],
+                    [ Lang.Blocks.ALBERT_turn_off, "OFF" ]
                 ],
                 "value": "ON",
                 "fontSize": 11
@@ -942,8 +946,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "켜기", "ON" ],
-                    [ "끄기", "OFF" ]
+                    [ Lang.Blocks.ALBERT_turn_on, "ON" ],
+                    [ Lang.Blocks.ALBERT_turn_off, "OFF" ]
                 ],
                 "value": "ON",
                 "fontSize": 11
@@ -1125,18 +1129,18 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.General.note_c + '',"4"],
-                    [Lang.General.note_c + '#',"5"],
-                    [Lang.General.note_d + '',"6"],
-                    [Lang.General.note_e + 'b',"7"],
-                    [Lang.General.note_e + '',"8"],
-                    [Lang.General.note_f + '',"9"],
-                    [Lang.General.note_f + '#',"10"],
-                    [Lang.General.note_g + '',"11"],
-                    [Lang.General.note_g + '#',"12"],
-                    [Lang.General.note_a + '',"13"],
-                    [Lang.General.note_b + 'b',"14"],
-                    [Lang.General.note_b + '',"15"]
+                    [Lang.Blocks.ALBERT_note_c + '',"4"],
+                    [Lang.Blocks.ALBERT_note_c + '#',"5"],
+                    [Lang.Blocks.ALBERT_note_d + '',"6"],
+                    [Lang.Blocks.ALBERT_note_e + 'b',"7"],
+                    [Lang.Blocks.ALBERT_note_e + '',"8"],
+                    [Lang.Blocks.ALBERT_note_f + '',"9"],
+                    [Lang.Blocks.ALBERT_note_f + '#',"10"],
+                    [Lang.Blocks.ALBERT_note_g + '',"11"],
+                    [Lang.Blocks.ALBERT_note_g + '#',"12"],
+                    [Lang.Blocks.ALBERT_note_a + '',"13"],
+                    [Lang.Blocks.ALBERT_note_b + 'b',"14"],
+                    [Lang.Blocks.ALBERT_note_b + '',"15"]
                 ],
                 "value": "4",
                 "fontSize": 11
@@ -1440,8 +1444,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽", "LEFT" ],
-                    [ "오른쪽", "RIGHT" ]
+                    [ Lang.Blocks.ALBERT_turn_left, "LEFT" ],
+                    [ Lang.Blocks.ALBERT_turn_right, "RIGHT" ]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -1497,9 +1501,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽", "LEFT" ],
-                    [ "오른쪽", "RIGHT" ],
-                    [ "양쪽", "FRONT" ]
+                    [ Lang.Blocks.HAMSTER_left_led, "LEFT" ],
+                    [ Lang.Blocks.HAMSTER_right_led, "RIGHT" ],
+                    [ Lang.Blocks.HAMSTER_both_leds, "FRONT" ]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -1507,13 +1511,13 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "빨간색", "4" ],
-                    [ "노란색", "6" ],
-                    [ "초록색", "2" ],
-                    [ "하늘색", "3" ],
-                    [ "파란색", "1" ],
-                    [ "보라색", "5" ],
-                    [ "하얀색", "7" ]
+                    [ Lang.Blocks.HAMSTER_color_red, "4" ],
+                    [ Lang.Blocks.HAMSTER_color_yellow, "6" ],
+                    [ Lang.Blocks.HAMSTER_color_green, "2" ],
+                    [ Lang.Blocks.HAMSTER_color_cyan, "3" ],
+                    [ Lang.Blocks.HAMSTER_color_blue, "1" ],
+                    [ Lang.Blocks.HAMSTER_color_magenta, "5" ],
+                    [ Lang.Blocks.HAMSTER_color_white, "7" ]
                 ],
                 "value": "4",
                 "fontSize": 11
@@ -1555,9 +1559,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽", "LEFT" ],
-                    [ "오른쪽", "RIGHT" ],
-                    [ "양쪽", "FRONT" ]
+                    [ Lang.Blocks.HAMSTER_left_led, "LEFT" ],
+                    [ Lang.Blocks.HAMSTER_right_led, "RIGHT" ],
+                    [ Lang.Blocks.HAMSTER_both_leds, "FRONT" ]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -1595,9 +1599,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽", "LEFT" ],
-                    [ "오른쪽", "RIGHT" ],
-                    [ "양쪽", "FRONT" ]
+                    [ Lang.Blocks.ALBERT_left_wheel, "LEFT" ],
+                    [ Lang.Blocks.ALBERT_right_wheel, "RIGHT" ],
+                    [ Lang.Blocks.ALBERT_both_wheels, "FRONT" ]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -1650,9 +1654,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "왼쪽", "LEFT" ],
-                    [ "오른쪽", "RIGHT" ],
-                    [ "양쪽", "FRONT" ]
+                    [ Lang.Blocks.ALBERT_left_wheel, "LEFT" ],
+                    [ Lang.Blocks.ALBERT_right_wheel, "RIGHT" ],
+                    [ Lang.Blocks.ALBERT_both_wheels, "FRONT" ]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -7058,8 +7062,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.General.left,"LEFT"],
-                    [Lang.General.right,"RIGHT"]
+                    [Lang.Blocks.HAMSTER_turn_once_left,"LEFT"],
+                    [Lang.Blocks.HAMSTER_turn_right,"RIGHT"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -7336,8 +7340,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.General.left,"LEFT"],
-                    [Lang.General.right,"RIGHT"]
+                    [Lang.Blocks.HAMSTER_turn_once_left,"LEFT"],
+                    [Lang.Blocks.HAMSTER_turn_right,"RIGHT"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -7509,9 +7513,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.General.left,"LEFT"],
-                    [Lang.General.right,"RIGHT"],
-                    [Lang.General.both,"BOTH"]
+                    [Lang.Blocks.HAMSTER_left_wheel,"LEFT"],
+                    [Lang.Blocks.HAMSTER_right_wheel,"RIGHT"],
+                    [Lang.Blocks.HAMSTER_both_wheels,"BOTH"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -7568,9 +7572,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.General.left,"LEFT"],
-                    [Lang.General.right,"RIGHT"],
-                    [Lang.General.both,"BOTH"]
+                    [Lang.Blocks.HAMSTER_left_wheel,"LEFT"],
+                    [Lang.Blocks.HAMSTER_right_wheel,"RIGHT"],
+                    [Lang.Blocks.HAMSTER_both_wheels,"BOTH"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -7628,7 +7632,7 @@ Entry.block = {
                 "type": "Dropdown",
                 "options": [
                     [Lang.Blocks.HAMSTER_color_black,"BLACK"],
-                    [Lang.General.white,"WHITE"]
+                    [Lang.Blocks.HAMSTER_color_white,"WHITE"]
                 ],
                 "value": "BLACK",
                 "fontSize": 11
@@ -7636,9 +7640,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.General.left,"LEFT"],
-                    [Lang.General.right,"RIGHT"],
-                    [Lang.General.both,"BOTH"]
+                    [Lang.Blocks.HAMSTER_left_floor_sensor,"LEFT"],
+                    [Lang.Blocks.HAMSTER_right_floor_sensor,"RIGHT"],
+                    [Lang.Blocks.HAMSTER_both_floor_sensors,"BOTH"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -7685,7 +7689,7 @@ Entry.block = {
                 "type": "Dropdown",
                 "options": [
                     [Lang.Blocks.HAMSTER_color_black,"BLACK"],
-                    [Lang.General.white,"WHITE"]
+                    [Lang.Blocks.HAMSTER_color_white,"WHITE"]
                 ],
                 "value": "BLACK",
                 "fontSize": 11
@@ -7693,8 +7697,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.General.left,"LEFT"],
-                    [Lang.General.right,"RIGHT"],
+                    [Lang.Blocks.HAMSTER_left_floor_sensor,"LEFT"],
+                    [Lang.Blocks.HAMSTER_right_floor_sensor,"RIGHT"],
                     [Lang.Blocks.HAMSTER_front,"FRONT"],
                     [Lang.Blocks.HAMSTER_rear,"REAR"]
                 ],
@@ -7827,9 +7831,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.General.left,"LEFT"],
-                    [Lang.General.right,"RIGHT"],
-                    [Lang.General.both,"BOTH"]
+                    [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                    [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                    [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -7837,13 +7841,13 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.General.red,"4"],
-                    [Lang.General.yellow,"6"],
-                    [Lang.General.green,"2"],
+                    [Lang.Blocks.HAMSTER_color_red,"4"],
+                    [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                    [Lang.Blocks.HAMSTER_color_green,"2"],
                     [Lang.Blocks.HAMSTER_color_cyan,"3"],
-                    [Lang.General.blue,"1"],
+                    [Lang.Blocks.HAMSTER_color_blue,"1"],
                     [Lang.Blocks.HAMSTER_color_magenta,"5"],
-                    [Lang.General.white,"7"]
+                    [Lang.Blocks.HAMSTER_color_white,"7"]
                 ],
                 "value": "4",
                 "fontSize": 11
@@ -7888,9 +7892,9 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.General.left,"LEFT"],
-                    [Lang.General.right,"RIGHT"],
-                    [Lang.General.both,"BOTH"]
+                    [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                    [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                    [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
                 ],
                 "value": "LEFT",
                 "fontSize": 11
@@ -8078,18 +8082,18 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.General.note_c + '',"4"],
-                    [Lang.General.note_c + '#',"5"],
-                    [Lang.General.note_d + '',"6"],
-                    [Lang.General.note_e + 'b',"7"],
-                    [Lang.General.note_e + '',"8"],
-                    [Lang.General.note_f + '',"9"],
-                    [Lang.General.note_f + '#',"10"],
-                    [Lang.General.note_g + '',"11"],
-                    [Lang.General.note_g + '#',"12"],
-                    [Lang.General.note_a + '',"13"],
-                    [Lang.General.note_b + 'b',"14"],
-                    [Lang.General.note_b + '',"15"]
+                    [Lang.Blocks.ALBERT_note_c + '',"4"],
+                    [Lang.Blocks.ALBERT_note_c + '#',"5"],
+                    [Lang.Blocks.ALBERT_note_d + '',"6"],
+                    [Lang.Blocks.ALBERT_note_e + 'b',"7"],
+                    [Lang.Blocks.ALBERT_note_e + '',"8"],
+                    [Lang.Blocks.ALBERT_note_f + '',"9"],
+                    [Lang.Blocks.ALBERT_note_f + '#',"10"],
+                    [Lang.Blocks.ALBERT_note_g + '',"11"],
+                    [Lang.Blocks.ALBERT_note_g + '#',"12"],
+                    [Lang.Blocks.ALBERT_note_a + '',"13"],
+                    [Lang.Blocks.ALBERT_note_b + 'b',"14"],
+                    [Lang.Blocks.ALBERT_note_b + '',"15"]
                 ],
                 "value": "4",
                 "fontSize": 11

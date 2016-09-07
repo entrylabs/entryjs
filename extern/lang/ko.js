@@ -3391,12 +3391,13 @@ Lang.Fonts = {
     "gothic_coding": "코딩고딕체"
 };
 Lang.Hw = {
-    "note": "노트",
+    "note": "음표",
     "leftWheel": "왼쪽 바퀴",
     "rightWheel": "오른쪽 바퀴",
     "leftEye": "왼쪽 눈",
     "rightEye": "오른쪽 눈",
     "led": "불빛",
+    "led_en": "LED",
     "body": "몸통",
     "front": "앞쪽",
     "port_en": "",
@@ -3419,11 +3420,11 @@ Lang.Hw = {
     "sub": "서보",
     "motor": "모터",
     "": "",
-    "buzzer": "부저"
+    "buzzer": "버저"
 };
 Lang.template = {
     "albert_hand_found": "손 찾음?",
-    "albert_is_oid_value": "OID 값이 %1 인가? %2",
+    "albert_is_oid_value": " %1 OID 값이 %2 인가? ",
     "albert_value": "%1",
     "albert_move_forward_for_secs": "앞으로 %1 초 이동하기 %2",
     "albert_move_backward_for_secs": "뒤로 %1 초 이동하기 %2",
@@ -3434,6 +3435,8 @@ Lang.template = {
     "albert_set_wheel_to": "%1 바퀴 %2 (으)로 정하기 %3",
     "albert_stop": "정지하기 %1",
     "albert_set_pad_size_to": "패드 크기를 폭 %1 높이 %2 (으)로 정하기 %3",
+    "albert_move_to_x_y_on_board": "밑판 x: %1 y: %2 위치로 이동하기 %3",
+    "albert_set_orientation_on_board": "말판 %1 방향으로 바라보기 %2",
     "albert_set_eye_to": "%1 눈을 %2 으로 정하기 %3",
     "albert_clear_eye": "%1 눈 끄기 %2",
     "albert_body_led": "몸통 LED %1 %2",
