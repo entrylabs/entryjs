@@ -31,6 +31,7 @@ Entry.HW = function() {
         '1.6': Entry.nemoino,
         '1.7': Entry.Xbot,
         '1.8': Entry.ardublock,
+        '1.A': Entry.Cobl,
         '2.4': Entry.Hamster,
         '2.5': Entry.Albert,
         '3.1': Entry.Bitbrick,
@@ -38,7 +39,8 @@ Entry.HW = function() {
         '5.1': Entry.Neobot,
         '7.1': Entry.Robotis_carCont,
         '7.2': Entry.Robotis_openCM70,
-        '8.1': Entry.Arduino
+        '8.1': Entry.Arduino,
+        '12.1': Entry.EV3
     };
 };
 

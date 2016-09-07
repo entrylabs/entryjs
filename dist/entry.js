@@ -2196,6 +2196,431 @@ Entry.block.choose_project_timer_action = function(a, b) {
   "START" == a ? d.isInit ? d.isInit && d.isPaused && (d.pauseStart && (d.pausedTime += (new Date).getTime() - d.pauseStart), delete d.pauseStart, d.isPaused = !1) : c.startProjectTimer() : "STOP" == a ? d.isInit && !d.isPaused && (d.isPaused = !0, d.pauseStart = (new Date).getTime()) : "RESET" == a && d.isInit && (d.setValue(0), d.start = (new Date).getTime(), d.pausedTime = 0, delete d.pauseStart);
   return b.callReturn();
 };
+Entry.Cobl = {name:"cobl", setZero:function() {
+  for (var a = 0;14 > a;a++) {
+    Entry.hw.sendQueue[a] = 0;
+  }
+  Entry.hw.update();
+}};
+Blockly.Blocks.cobl_read_ultrason = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\ucd08\uc74c\ud30c \uac70\ub9ac\uc7ac\uae30(0~400)");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.cobl_read_ultrason = function(a, b) {
+  return Entry.hw.getAnalogPortValue("ultrason");
+};
+Blockly.Blocks.cobl_read_potenmeter = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uac00\ubcc0\uc800\ud56d \uc77d\uae30(0~1023)");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.cobl_read_potenmeter = function(a, b) {
+  console.log("cobl_read_potenmeter");
+  return Entry.hw.getAnalogPortValue("potenmeter");
+};
+Blockly.Blocks.cobl_read_irread1 = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("IR1 \uc77d\uae30(0~1023)");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.cobl_read_irread1 = function(a, b) {
+  return Entry.hw.getAnalogPortValue("potenmeter");
+};
+Blockly.Blocks.cobl_read_irread2 = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("IR2 \uc77d\uae30(0~1023)");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.cobl_read_irread2 = function(a, b) {
+  b.getValue("irread2", b);
+  return Entry.hw.getAnalogPortValue("irread2");
+};
+Blockly.Blocks.cobl_read_joyx = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc870\uc774\uc2a4\ud2f1X\ucd95 \uc77d\uae30(1,0,-1)");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.cobl_read_joyx = function(a, b) {
+  return Entry.hw.getAnalogPortValue("joyx");
+};
+Blockly.Blocks.cobl_read_joyy = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc870\uc774\uc2a4\ud2f1Y\ucd95 \uc77d\uae30(1,0,-1)");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.cobl_read_joyy = function(a, b) {
+  return Entry.hw.getAnalogPortValue("joyy");
+};
+Blockly.Blocks.cobl_read_sens1 = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc13c\uc11c1 \uc77d\uae30(0~1023)");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.cobl_read_sens1 = function(a, b) {
+  return Entry.hw.getAnalogPortValue("sens1");
+};
+Blockly.Blocks.cobl_read_sens2 = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc13c\uc11c2 \uc77d\uae30(0~1023)");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.cobl_read_sens2 = function(a, b) {
+  return Entry.hw.getAnalogPortValue("sens2");
+};
+Blockly.Blocks.cobl_read_tilt = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uae30\uc6b8\uae30\uc13c\uc11c \uc77d\uae30(0~4)");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.cobl_read_tilt = function(a, b) {
+  return Entry.hw.getAnalogPortValue("tilt");
+};
+Blockly.Blocks.cobl_get_port_number = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"]]), "PORT");
+  this.appendDummyInput().appendField(" ");
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.cobl_get_port_number = function(a, b) {
+  return b.getStringField("PORT");
+};
+Blockly.Blocks.cobl_read_temps = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc628\ub3c4\uc13c\uc11c \uc77d\uae30@\ud3ec\ud2b8");
+  this.appendValueInput("VALUE").setCheck("Number");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.cobl_read_temps = function(a, b) {
+  a = b.getValue("VALUE", b);
+  if (1 == a) {
+    return Entry.hw.getAnalogPortValue("temps1");
+  }
+  if (2 == a) {
+    return Entry.hw.getAnalogPortValue("temps2");
+  }
+};
+Blockly.Blocks.cobl_read_light = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\ubc1d\uae30\uc13c\uc11c \uc77d\uae30@\ud3ec\ud2b8");
+  this.appendValueInput("VALUE").setCheck("Number");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.cobl_read_light = function(a, b) {
+  a = b.getValue("VALUE", b);
+  if (1 == a) {
+    return Entry.hw.getAnalogPortValue("light1");
+  }
+  if (2 == a) {
+    return Entry.hw.getAnalogPortValue("light2");
+  }
+};
+Blockly.Blocks.cobl_read_btn = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\ubc84\ud2bc\uc13c\uc11c \uc77d\uae30@\ud3ec\ud2b8");
+  this.appendValueInput("VALUE").setCheck("Number");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Boolean");
+}};
+Entry.block.cobl_read_btn = function(a, b) {
+  a = b.getValue("VALUE", b);
+  if (1 == a) {
+    return Entry.hw.getDigitalPortValue("btn1");
+  }
+  if (2 == a) {
+    return Entry.hw.getDigitalPortValue("btn2");
+  }
+};
+Blockly.Blocks.cobl_led_control = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("Rainbow LED");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"], ["3", "3"]]), "PORT");
+  this.appendDummyInput().appendField(" ");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["OFF", "OFF"], ["Red", "Red"], ["Orange", "Orange"], ["Yellow", "Yellow"], ["Green", "Green"], ["Blue", "Blue"], ["Dark Blue", "Dark Blue"], ["Purple", "Purple"], ["White", "White"]]), "OPERATOR");
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.cobl_led_control = function(a, b) {
+  a = b.getStringField("PORT");
+  var c = b.getStringField("OPERATOR");
+  Entry.hw.setDigitalPortValue("RainBowLED_IDX", a);
+  Entry.hw.setDigitalPortValue("RainBowLED_COL", c);
+  return b.callReturn();
+};
+Blockly.Blocks.cobl_text = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(new Blockly.FieldTextInput("cobl"), "NAME");
+  this.setOutput(!0, "String");
+  this.setInputsInline(!0);
+}};
+Entry.block.cobl_text = function(a, b) {
+  return b.getStringField("NAME");
+};
+Blockly.Blocks.cobl_servo_angle_control = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("Servo");
+  this.appendValueInput("PORT").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("Angle-");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("(15~165)");
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.cobl_servo_angle_control = function(a, b) {
+  console.log("servo - test");
+  a = b.getNumberValue("PORT");
+  var c = b.getNumberValue("VALUE"), c = Math.round(c), c = Math.max(c, 15), c = Math.min(c, 165);
+  1 == a && (console.log("servo 1  degree " + c), Entry.hw.setDigitalPortValue("Servo1", c));
+  2 == a && (console.log("servo 2 degree " + c), Entry.hw.setDigitalPortValue("Servo2", c));
+  return b.callReturn();
+};
+Blockly.Blocks.cobl_melody = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("Melody");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["(Low)So", "L_So"], ["(Low)So#", "L_So#"], ["(Low)La", "L_La"], ["(Low)La#", "L_La#"], ["(Low)Ti", "L_Ti"], ["Do", "Do"], ["Do#", "Do#"], ["Re", "Re"], ["Re#", "Re#"], ["Mi", "Mi"], ["Fa", "Fa"], ["Fa#", "Fa#"], ["So", "So"], ["So#", "So#"], ["La", "La"], ["La#", "La#"], ["Ti", "Ti"], ["(High)Do", "H_Do"], ["(High)Do#", "H_Do#"], ["(High)Re", "H_Re"], ["(High)R2#", "H_Re#"], ["(High)Mi", "H_Mi"], ["(High)Fa", "H_Fa"]]), "MELODY");
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.cobl_melody = function(a, b) {
+  a = b.getStringField("MELODY");
+  console.log("cobl_melody" + a);
+  Entry.hw.setDigitalPortValue("Melody", a);
+  return b.callReturn();
+};
+Blockly.Blocks.cobl_dcmotor = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("DcMotor");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"]]), "MOTOR");
+  this.appendDummyInput().appendField(" ");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["1.Clockwise", "1"], ["2.Counter Clockwise", "2"], ["3.Stop", "3"]]), "DIRECTION");
+  this.appendDummyInput().appendField(" Speed");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"]]), "SPEED");
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.cobl_dcmotor = function(a, b) {
+  a = b.getStringField("MOTOR");
+  var c = b.getStringField("DIRECTION"), d = b.getStringField("SPEED");
+  console.log("MOTOR" + a + "  Direction" + c + "  speed" + d);
+  1 == a && (Entry.hw.setDigitalPortValue("DC1_DIR", c), Entry.hw.setDigitalPortValue("DC1_SPEED", d));
+  2 == a && (Entry.hw.setDigitalPortValue("DC2_DIR", c), Entry.hw.setDigitalPortValue("DC2_SPEED", d));
+  return b.callReturn();
+};
+Blockly.Blocks.cobl_extention_port = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("Extention Port");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"]]), "PORT");
+  this.appendDummyInput().appendField(" Level");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"]]), "LEVEL");
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.cobl_extention_port = function(a, b) {
+  a = b.getStringField("PORT");
+  var c = b.getStringField("LEVEL");
+  1 == a && Entry.hw.setDigitalPortValue("EXUSB1", c);
+  2 == a && Entry.hw.setDigitalPortValue("EXUSB2", c);
+  return b.callReturn();
+};
+Blockly.Blocks.cobl_external_led = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("External LED ");
+  this.appendValueInput("LED").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(" (1~64)");
+  this.appendDummyInput().appendField(" R ");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"], ["9", "9"], ["10", "10"]]), "RED");
+  this.appendDummyInput().appendField(" G ");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"], ["9", "9"], ["10", "10"]]), "GREEN");
+  this.appendDummyInput().appendField(" B ");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"], ["8", "8"], ["9", "9"], ["10", "10"]]), "BLUE");
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.cobl_external_led = function(a, b) {
+  a = b.getNumberValue("LED");
+  var c = b.getStringField("RED"), d = b.getStringField("GREEN"), e = b.getStringField("BLUE");
+  Entry.hw.setDigitalPortValue("ELED_IDX", a);
+  Entry.hw.setDigitalPortValue("ELED_R", c);
+  Entry.hw.setDigitalPortValue("ELED_G", d);
+  Entry.hw.setDigitalPortValue("ELED_B", e);
+  return b.callReturn();
+};
+Blockly.Blocks.cobl_7_segment = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("7 Segment");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("(0~9999)");
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.cobl_7_segment = function(a, b) {
+  a = b.getNumberValue("VALUE");
+  Entry.hw.setDigitalPortValue("7SEG", a);
+  return b.callReturn();
+};
+Entry.EV3 = {PORT_MAP:{A:0, B:0, C:0, D:0, 1:void 0, 2:void 0, 3:void 0, 4:void 0}, motorMovementTypes:{Degrees:0, Power:1}, deviceTypes:{NxtTouch:1, NxtLight:2, NxtSound:3, NxtColor:4, NxtUltrasonic:5, NxtTemperature:6, LMotor:7, MMotor:8, Touch:16, Color:29, Ultrasonic:30, Gyroscope:32, Infrared:33, Initializing:125, Empty:126, WrongPort:127, Unknown:255}, colorSensorValue:" 000000 0000FF 00FF00 FFFF00 FF0000 FFFFFF A52A2A".split(" "), timeouts:[], removeTimeout:function(a) {
+  clearTimeout(a);
+  var b = this.timeouts;
+  a = b.indexOf(a);
+  0 <= a && b.splice(a, 1);
+}, removeAllTimeouts:function() {
+  var a = this.timeouts, b;
+  for (b in a) {
+    clearTimeout(a[b]);
+  }
+  this.timeouts = [];
+}, setZero:function() {
+  var a = this.PORT_MAP;
+  Object.keys(a).forEach(function(b) {
+    /[A-D]/i.test(b) ? Entry.hw.sendQueue[b] = {type:Entry.EV3.motorMovementTypes.Power, power:0} : Entry.hw.sendQueue[b] = a[b];
+  });
+  Entry.hw.update();
+}, name:"EV3"};
+Blockly.Blocks.ev3_get_sensor_value = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"]]), "PORT").appendField("\uc758 \uac12");
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.ev3_get_sensor_value = function(a, b) {
+  b.getStringField("PORT", b);
+  a = Entry.hw.getDigitalPortValue(b.getNumberField("PORT", b));
+  var c;
+  $.isPlainObject(a) && (c = a.siValue || 0);
+  return c;
+};
+Blockly.Blocks.ev3_touch_sensor = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"]]), "PORT").appendField("\uc758 \ud130\uce58\uc13c\uc11c\uac00 \uc791\ub3d9\ub418\uc5c8\ub294\uac00?");
+  this.setOutput(!0, "Boolean");
+  this.setInputsInline(!0);
+}};
+Entry.block.ev3_touch_sensor = function(a, b) {
+  b.getStringField("PORT", b);
+  a = Entry.hw.getDigitalPortValue(b.getNumberField("PORT", b));
+  b = !1;
+  a.type == Entry.EV3.deviceTypes.Touch && 1 <= Number(a.siValue) && (b = !0);
+  return b;
+};
+Blockly.Blocks.ev3_color_sensor = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"]]), "PORT").appendField("\uc758 ").appendField(new Blockly.FieldDropdown([["RGB", "RGB"], ["R", "R"], ["G", "G"], ["B", "B"]]), "RGB").appendField("\uac12");
+  this.setOutput(!0, "String");
+  this.setInputsInline(!0);
+}};
+Entry.block.ev3_color_sensor = function(a, b) {
+  b.getStringField("PORT", b);
+  a = b.getStringField("RGB", b);
+  b = Entry.hw.getDigitalPortValue(b.getNumberField("PORT", b));
+  var c = "";
+  if (b.type == Entry.EV3.deviceTypes.Color) {
+    if (0 == b.siValue) {
+      c = "";
+    } else {
+      switch(a) {
+        case "RGB":
+          c = Entry.EV3.colorSensorValue[b.siValue];
+          break;
+        case "R":
+          c = Entry.EV3.colorSensorValue[b.siValue].substring(0, 2);
+          break;
+        case "G":
+          c = Entry.EV3.colorSensorValue[b.siValue].substring(2, 4);
+          break;
+        case "B":
+          c = Entry.EV3.colorSensorValue[b.siValue].substring(4, 6);
+      }
+    }
+  } else {
+    c = "\uceec\ub7ec \uc13c\uc11c \uc544\ub2d8";
+  }
+  return c;
+};
+Blockly.Blocks.ev3_motor_power = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["A", "A"], ["B", "B"], ["C", "C"], ["D", "D"]]), "PORT").appendField("\uc758 \uac12\uc744");
+  this.appendValueInput("VALUE").setCheck(["Number"]);
+  this.appendDummyInput().appendField("\uc73c\ub85c \ucd9c\ub825");
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.ev3_motor_power = function(a, b) {
+  a = b.getStringField("PORT", b);
+  var c = b.getValue("VALUE", b);
+  Entry.hw.sendQueue[a] = {id:Math.floor(1E5 * Math.random(), 0), type:Entry.EV3.motorMovementTypes.Power, power:c};
+  return b.callReturn();
+};
+Blockly.Blocks.ev3_motor_power_on_time = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["A", "A"], ["B", "B"], ["C", "C"], ["D", "D"]]), "PORT").appendField("\uc758 \uac12\uc744");
+  this.appendValueInput("TIME").setCheck(["Number"]);
+  this.appendDummyInput().appendField("\ucd08 \ub3d9\uc548");
+  this.appendValueInput("VALUE").setCheck(["Number"]);
+  this.appendDummyInput().appendField("\uc73c\ub85c \ucd9c\ub825");
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.ev3_motor_power_on_time = function(a, b) {
+  a = b.getStringField("PORT", b);
+  if (b.isStart) {
+    if (1 == b.timeFlag) {
+      return b;
+    }
+    delete b.isStart;
+    delete b.timeFlag;
+    Entry.engine.isContinue = !1;
+    Entry.hw.sendQueue[a] = {id:Math.floor(1E5 * Math.random(), 0), type:Entry.EV3.motorMovementTypes.Power, power:0};
+    return b.callReturn();
+  }
+  var c = b.getValue("TIME", b), d = b.getValue("VALUE", b);
+  b.isStart = !0;
+  b.timeFlag = 1;
+  Entry.hw.sendQueue[a] = {id:Math.floor(1E5 * Math.random(), 0), type:Entry.EV3.motorMovementTypes.Power, power:d};
+  var e = setTimeout(function() {
+    b.timeFlag = 0;
+    Entry.EV3.removeTimeout(e);
+  }, 1E3 * c);
+  Entry.EV3.timeouts.push(e);
+  return b;
+};
+Blockly.Blocks.ev3_motor_degrees = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["A", "A"], ["B", "B"], ["C", "C"], ["D", "D"]]), "PORT").appendField("\uc758 \uac12\uc744").appendField(new Blockly.FieldDropdown([["\uc2dc\uacc4\ubc29\ud5a5", "CW"], ["\ubc18\uc2dc\uacc4\ubc29\ud5a5", "CCW"]]), "DIRECTION").appendField("\uc73c\ub85c ");
+  this.appendValueInput("DEGREE").setCheck(["Number"]);
+  this.appendDummyInput().appendField("\ub3c4 \ub9cc\ud07c \ud68c\uc804");
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.ev3_motor_degrees = function(a, b) {
+  a = b.getStringField("PORT", b);
+  var c = b.getValue("DEGREE", b);
+  0 >= c ? c = 0 : 720 <= c && (c = 720);
+  var d = b.getStringField("DIRECTION", b);
+  Entry.hw.sendQueue[a] = {id:Math.floor(1E5 * Math.random(), 0), type:Entry.EV3.motorMovementTypes.Degrees, degree:c, power:"CW" == d ? 50 : -50};
+  return b.callReturn();
+};
 Blockly.Blocks.wait_second = {init:function() {
   this.setColour("#498deb");
   this.appendDummyInput().appendField(Lang.Blocks.FLOW_wait_second_1);
@@ -9332,7 +9757,7 @@ Entry.HW = function() {
   this.settingQueue = {};
   this.socketType = this.hwModule = this.selectedDevice = null;
   Entry.addEventListener("stop", this.setZero);
-  this.hwInfo = {"1.1":Entry.Arduino, "1.9":Entry.ArduinoExt, "1.2":Entry.SensorBoard, "1.3":Entry.CODEino, "1.4":Entry.joystick, "1.5":Entry.dplay, "1.6":Entry.nemoino, "1.7":Entry.Xbot, "1.8":Entry.ardublock, "2.4":Entry.Hamster, "2.5":Entry.Albert, "3.1":Entry.Bitbrick, "4.2":Entry.Arduino, "5.1":Entry.Neobot, "7.1":Entry.Robotis_carCont, "7.2":Entry.Robotis_openCM70, "8.1":Entry.Arduino};
+  this.hwInfo = {"1.1":Entry.Arduino, "1.9":Entry.ArduinoExt, "1.2":Entry.SensorBoard, "1.3":Entry.CODEino, "1.4":Entry.joystick, "1.5":Entry.dplay, "1.6":Entry.nemoino, "1.7":Entry.Xbot, "1.8":Entry.ardublock, "1.A":Entry.Cobl, "2.4":Entry.Hamster, "2.5":Entry.Albert, "3.1":Entry.Bitbrick, "4.2":Entry.Arduino, "5.1":Entry.Neobot, "7.1":Entry.Robotis_carCont, "7.2":Entry.Robotis_openCM70, "8.1":Entry.Arduino, "12.1":Entry.EV3};
 };
 Entry.HW.TRIAL_LIMIT = 1;
 p = Entry.HW.prototype;
@@ -17681,70 +18106,70 @@ Entry.BlockMenuScroller.RADIUS = 7;
   a.resizeScrollBar = function() {
     this._updateRatio();
     if (this._visible && 0 !== this.vRatio) {
-      var a = this.board.blockMenuContainer;
-      this.vScrollbar.attr({width:9, height:a.height() / this.vRatio, x:a.width() - 9});
+      var b = this.board.blockMenuContainer;
+      this.vScrollbar.attr({width:9, height:b.height() / this.vRatio, x:b.width() - 9});
     }
   };
-  a.updateScrollBar = function(a) {
-    this.vY += a;
+  a.updateScrollBar = function(b) {
+    this.vY += b;
     this.vScrollbar.attr({y:this.vY});
   };
-  a.scroll = function(a) {
-    this.isVisible() && (a = this._adjustValue(a) - this.vY, 0 !== a && (this.board.code.moveBy(0, -a * this.vRatio), this.updateScrollBar(a)));
+  a.scroll = function(b) {
+    this.isVisible() && (b = this._adjustValue(b) - this.vY, 0 !== b && (this.board.code.moveBy(0, -b * this.vRatio), this.updateScrollBar(b)));
   };
-  a._adjustValue = function(a) {
-    var c = this.board.svgDom.height(), c = c - c / this.vRatio;
-    a = this.vY + a;
-    a = Math.max(0, a);
-    return a = Math.min(c, a);
+  a._adjustValue = function(b) {
+    var a = this.board.svgDom.height(), a = a - a / this.vRatio;
+    b = this.vY + b;
+    b = Math.max(0, b);
+    return b = Math.min(a, b);
   };
-  a.setVisible = function(a) {
-    a != this.isVisible() && (this._visible = a, this.svgGroup.attr({display:!0 === a ? "block" : "none"}));
+  a.setVisible = function(b) {
+    b != this.isVisible() && (this._visible = b, this.svgGroup.attr({display:!0 === b ? "block" : "none"}));
   };
-  a.setOpacity = function(a) {
-    this._opacity != a && (this.vScrollbar.attr({opacity:a}), this._opacity = a);
+  a.setOpacity = function(b) {
+    this._opacity != b && (this.vScrollbar.attr({opacity:b}), this._opacity = b);
   };
   a.isVisible = function() {
     return this._visible;
   };
   a._updateRatio = function() {
-    var a = this.board, c = a.svgBlockGroup.getBoundingClientRect(), d = a.blockMenuContainer.height(), a = a.offset();
-    this.vRatio = c = (c.height + (c.top - a.top) + 10) / d;
-    1 >= c ? this.setVisible(!1) : this.setVisible(!0);
+    var b = this.board, a = b.svgBlockGroup.getBoundingClientRect(), d = b.blockMenuContainer.height(), b = b.offset();
+    this.vRatio = a = (a.height + (a.top - b.top) + 10) / d;
+    1 >= a ? this.setVisible(!1) : this.setVisible(!0);
   };
   a._reset = function() {
     this.vY = 0;
     this.vScrollbar.attr({y:this.vY});
     this.resizeScrollBar();
   };
-  a.onMouseDown = function(a) {
-    function c(a) {
-      a.stopPropagation && a.stopPropagation();
-      a.preventDefault && a.preventDefault();
-      a = a.originalEvent && a.originalEvent.touches ? a.originalEvent.touches[0] : a;
-      var b = e.dragInstance;
-      e.scroll(a.pageY - b.offsetY);
-      b.set({offsetY:a.pageY});
+  a.onMouseDown = function(b) {
+    function a(b) {
+      b.stopPropagation && b.stopPropagation();
+      b.preventDefault && b.preventDefault();
+      b = b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
+      var c = e.dragInstance;
+      e.scroll(b.pageY - c.offsetY);
+      c.set({offsetY:b.pageY});
     }
-    function d(a) {
+    function d(b) {
       $(document).unbind(".scroll");
       delete e.dragInstance;
     }
     var e = this;
-    a.stopPropagation && a.stopPropagation();
-    a.preventDefault && a.preventDefault();
-    if (0 === a.button || a.originalEvent && a.originalEvent.touches) {
-      Entry.documentMousedown && Entry.documentMousedown.notify(a);
+    b.stopPropagation && b.stopPropagation();
+    b.preventDefault && b.preventDefault();
+    if (0 === b.button || b.originalEvent && b.originalEvent.touches) {
+      Entry.documentMousedown && Entry.documentMousedown.notify(b);
       var f;
-      f = a.originalEvent && a.originalEvent.touches ? a.originalEvent.touches[0] : a;
+      f = b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
       var g = $(document);
-      g.bind("mousemove.scroll", c);
+      g.bind("mousemove.scroll", a);
       g.bind("mouseup.scroll", d);
-      g.bind("touchmove.scroll", c);
+      g.bind("touchmove.scroll", a);
       g.bind("touchend.scroll", d);
       e.dragInstance = new Entry.DragInstance({startY:f.pageY, offsetY:f.pageY});
     }
-    a.stopPropagation();
+    b.stopPropagation();
   };
   a._addControl = function() {
     $(this.vScrollbar).bind("mousedown touchstart", this.mouseHandler);
@@ -17769,9 +18194,9 @@ Entry.BlockView = function(a, b, c) {
   this.isInBlockMenu = this.getBoard() instanceof Entry.BlockMenu;
   var e = this;
   this.mouseHandler = function() {
-    var a = e.block.events;
-    a && a.mousedown && a.mousedown.forEach(function(a) {
-      a(e);
+    var b = e.block.events;
+    b && b.mousedown && b.mousedown.forEach(function(b) {
+      b(e);
     });
     e.onMouseDown.apply(e, arguments);
   };
@@ -17798,21 +18223,21 @@ Entry.BlockView.DRAG_RADIUS = 5;
 Entry.BlockView.pngMap = {};
 (function(a) {
   a.schema = {id:0, type:Entry.STATIC.BLOCK_RENDER_MODEL, x:0, y:0, offsetX:0, offsetY:0, width:0, height:0, contentWidth:0, contentHeight:0, magneting:!1, visible:!0, animating:!1, shadow:!0, display:!0};
-  a._startRender = function(a, c) {
+  a._startRender = function(b, a) {
     var d = this;
-    a = this._skeleton;
+    b = this._skeleton;
     this.svgGroup.attr({class:"block"});
-    var e = a.classes;
-    e && 0 !== e.length && e.forEach(function(a) {
-      d.svgGroup.addClass(a);
+    var e = b.classes;
+    e && 0 !== e.length && e.forEach(function(b) {
+      d.svgGroup.addClass(b);
     });
-    e = a.path(this);
+    e = b.path(this);
     this.pathGroup = this.svgGroup.elem("g");
     this._updateMagnet();
     this._path = this.pathGroup.elem("path");
-    this.getBoard().patternRect && ($(this._path).mouseenter(function(a) {
+    this.getBoard().patternRect && ($(this._path).mouseenter(function(b) {
       d._mouseEnable && d._changeFill(!0);
-    }), $(this._path).mouseleave(function(a) {
+    }), $(this._path).mouseleave(function(b) {
       d._mouseEnable && d._changeFill(!1);
     }));
     var f = this._schema.color;
@@ -17823,33 +18248,33 @@ Entry.BlockView.pngMap = {};
       f = this.getBoard().suffix, this.pathGroup.attr({filter:"url(#entryBlockShadowFilter_" + f + ")"});
     } else {
       if (this.magnet.string || this.magnet.boolean) {
-        e.stroke = a.outerLine;
+        e.stroke = b.outerLine;
       }
     }
-    a.outerLine && (e["stroke-width"] = "0.6");
+    b.outerLine && (e["stroke-width"] = "0.6");
     this._path.attr(e);
     this._moveTo(this.x, this.y, !1);
-    this._startContentRender(c);
+    this._startContentRender(a);
     !0 !== this._board.disableMouseEvent && this._addControl();
     this.bindPrev();
   };
-  a._startContentRender = function(a) {
-    a = void 0 === a ? Entry.Workspace.MODE_BOARD : a;
+  a._startContentRender = function(b) {
+    b = void 0 === b ? Entry.Workspace.MODE_BOARD : b;
     this.contentSvgGroup && this.contentSvgGroup.remove();
-    var c = this._schema;
-    c.statements && c.statements.length && this.statementSvgGroup && this.statementSvgGroup.remove();
+    var a = this._schema;
+    a.statements && a.statements.length && this.statementSvgGroup && this.statementSvgGroup.remove();
     this._contents = [];
     this.contentSvgGroup = this.svgGroup.elem("g");
-    c.statements && c.statements.length && (this.statementSvgGroup = this.svgGroup.elem("g"));
-    switch(a) {
+    a.statements && a.statements.length && (this.statementSvgGroup = this.svgGroup.elem("g"));
+    switch(b) {
       case Entry.Workspace.MODE_BOARD:
       ;
       case Entry.Workspace.MODE_OVERLAYBOARD:
-        for (var d = /(%\d)/mi, e = (c.template ? c.template : Lang.template[this.block.type]).split(d), f = c.params, g = 0;g < e.length;g++) {
+        for (var d = /(%\d)/mi, e = (a.template ? a.template : Lang.template[this.block.type]).split(d), f = a.params, g = 0;g < e.length;g++) {
           var h = e[g].trim();
           if (0 !== h.length) {
             if (d.test(h)) {
-              var k = Number(h.split("%")[1]) - 1, h = f[k], h = new Entry["Field" + h.type](h, this, k, a, g);
+              var k = Number(h.split("%")[1]) - 1, h = f[k], h = new Entry["Field" + h.type](h, this, k, b, g);
               this._contents.push(h);
               this._paramMap[k] = h;
             } else {
@@ -17857,9 +18282,9 @@ Entry.BlockView.pngMap = {};
             }
           }
         }
-        if ((a = c.statements) && a.length) {
-          for (g = 0;g < a.length;g++) {
-            this._statements.push(new Entry.FieldStatement(a[g], this, g));
+        if ((b = a.statements) && b.length) {
+          for (g = 0;g < b.length;g++) {
+            this._statements.push(new Entry.FieldStatement(b[g], this, g));
           }
         }
         break;
@@ -17871,72 +18296,72 @@ Entry.BlockView.pngMap = {};
   a._updateSchema = function() {
     this._startContentRender();
   };
-  a.changeType = function(a) {
+  a.changeType = function(b) {
     this._schemaChangeEvent && this._schemaChangeEvent.destroy();
-    this._schema = Entry.block[a];
+    this._schema = Entry.block[b];
     this._schema.changeEvent && (this._schemaChangeEvent = this._schema.changeEvent.attach(this, this._updateSchema));
     this._updateSchema();
   };
-  a.alignContent = function(a) {
-    !0 !== a && (a = !1);
-    for (var c = 0, d = 0, e = 0, f = 0, g = 0, h = 0, k = 0;k < this._contents.length;k++) {
+  a.alignContent = function(b) {
+    !0 !== b && (b = !1);
+    for (var a = 0, d = 0, e = 0, f = 0, g = 0, h = 0, k = 0;k < this._contents.length;k++) {
       var l = this._contents[k];
-      l instanceof Entry.FieldLineBreak ? (this._alignStatement(a, f), l.align(f), f++, d = l.box.y, c = 8) : (l.align(c, d, a), k === this._contents.length - 1 || l instanceof Entry.FieldText && 0 == l._text.length || (c += Entry.BlockView.PARAM_SPACE));
+      l instanceof Entry.FieldLineBreak ? (this._alignStatement(b, f), l.align(f), f++, d = l.box.y, a = 8) : (l.align(a, d, b), k === this._contents.length - 1 || l instanceof Entry.FieldText && 0 == l._text.length || (a += Entry.BlockView.PARAM_SPACE));
       l = l.box;
       0 !== f ? h = Math.max(1E6 * Math.round(l.height), h) : e = Math.max(l.height, e);
-      c += l.width;
-      g = Math.max(g, c);
+      a += l.width;
+      g = Math.max(g, a);
       this.set({contentWidth:g, contentHeight:e});
     }
     this.set({contentHeight:e + h});
-    this._statements.length != f && this._alignStatement(a, f);
-    a = this.getContentPos();
-    this.contentSvgGroup.attr("transform", "translate(" + a.x + "," + a.y + ")");
-    this.contentPos = a;
+    this._statements.length != f && this._alignStatement(b, f);
+    b = this.getContentPos();
+    this.contentSvgGroup.attr("transform", "translate(" + b.x + "," + b.y + ")");
+    this.contentPos = b;
     this._render();
     this._updateMagnet();
   };
-  a._alignStatement = function(a, c) {
-    var d = this._skeleton.statementPos ? this._skeleton.statementPos(this) : [], e = this._statements[c];
-    e && (c = d[c]) && e.align(c.x, c.y, a);
+  a._alignStatement = function(b, a) {
+    var d = this._skeleton.statementPos ? this._skeleton.statementPos(this) : [], e = this._statements[a];
+    e && (a = d[a]) && e.align(a.x, a.y, b);
   };
   a._render = function() {
     this._renderPath();
     this.set(this._skeleton.box(this));
   };
   a._renderPath = function() {
-    var a = this._skeleton.path(this);
-    this._path.attr({d:a});
+    var b = this._skeleton.path(this);
+    this._path.attr({d:b});
     this.set({animating:!1});
   };
-  a._setPosition = function(a) {
+  a._setPosition = function(b) {
     this.svgGroup.attr("transform", "translate(" + this.x + "," + this.y + ")");
   };
-  a._toLocalCoordinate = function(a) {
+  a._toLocalCoordinate = function(b) {
     this._moveTo(0, 0, !1);
-    a.appendChild(this.svgGroup);
+    b.appendChild(this.svgGroup);
   };
-  a._toGlobalCoordinate = function(a) {
-    a = this.getAbsoluteCoordinate(a);
-    this._moveTo(a.x, a.y, !1);
+  a._toGlobalCoordinate = function(b) {
+    b = this.getAbsoluteCoordinate(b);
+    this._moveTo(b.x, b.y, !1);
     this.getBoard().svgBlockGroup.appendChild(this.svgGroup);
   };
-  a._moveTo = function(a, c, d) {
-    this.set({x:a, y:c});
+  a._moveTo = function(b, a, d) {
+    this.set({x:b, y:a});
     this._lazyUpdatePos();
     this.visible && this.display && this._setPosition(d);
   };
-  a._moveBy = function(a, c, d) {
-    return this._moveTo(this.x + a, this.y + c, d);
+  a._moveBy = function(b, a, d) {
+    return this._moveTo(this.x + b, this.y + a, d);
   };
   a._addControl = function() {
-    var a = this;
+    var b = this;
     this._mouseEnable = !0;
-    $(this.svgGroup).bind("mousedown.blockViewMousedown touchstart.blockViewMousedown", a.mouseHandler);
-    var c = a.block.events;
-    c && c.dblclick && $(this.svgGroup).dblclick(function() {
-      c.dblclick.forEach(function(c) {
-        c && c(a);
+    $(this.svgGroup).bind("mousedown.blockViewMousedown touchstart.blockViewMousedown", b.mouseHandler);
+    var a = b.block.events;
+    a && a.dblclick && $(this.svgGroup).dblclick(function() {
+      a.dblclick.forEach(function(a) {
+        a && a(b);
       });
     });
   };
@@ -17956,10 +18381,10 @@ Entry.BlockView.pngMap = {};
         offsetY:d.pageY}), Entry.GlobalSvg.position(), f.originPos || (f.originPos = {x:f.x, y:f.y}), b && g.generateCodeMagnetMap(), f._updateCloseBlock()));
       }
     }
-    function d(a) {
+    function d(b) {
       e && (clearTimeout(e), e = null);
       $(document).unbind(".block");
-      f.terminateDrag(a);
+      f.terminateDrag(b);
       g && g.set({dragBlock:null});
       f._changeFill(!1);
       Entry.GlobalSvg.remove();
@@ -17995,25 +18420,25 @@ Entry.BlockView.pngMap = {};
       g.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD && b && document.getElementsByClassName("CodeMirror")[0].dispatchEvent(Entry.Utils.createMouseEvent("dragStart", event));
     }
   };
-  a.vimBoardEvent = function(a, c, d) {
-    a && (a = Entry.Utils.createMouseEvent(c, a), d && (a.block = d), document.getElementsByClassName("CodeMirror")[0].dispatchEvent(a));
+  a.vimBoardEvent = function(b, a, d) {
+    b && (b = Entry.Utils.createMouseEvent(a, b), d && (b.block = d), document.getElementsByClassName("CodeMirror")[0].dispatchEvent(b));
   };
-  a.terminateDrag = function(a) {
-    var c = this.getBoard(), d = this.dragMode, e = this.block, f = c.workspace.getMode();
+  a.terminateDrag = function(b) {
+    var a = this.getBoard(), d = this.dragMode, e = this.block, f = a.workspace.getMode();
     this.removeDragging();
     this.set({visible:!0});
     this.dragMode = Entry.DRAG_MODE_NONE;
     if (f === Entry.Workspace.MODE_VIMBOARD) {
-      c instanceof Entry.BlockMenu ? (c.terminateDrag(), this.vimBoardEvent(a, "dragEnd", e)) : c.clear();
+      a instanceof Entry.BlockMenu ? (a.terminateDrag(), this.vimBoardEvent(b, "dragEnd", e)) : a.clear();
     } else {
       if (d === Entry.DRAG_MODE_DRAG) {
         var f = this.dragInstance && this.dragInstance.isNew, g = Entry.GlobalSvg, h = this.block.getPrevBlock(this.block);
-        a = !1;
+        b = !1;
         switch(Entry.GlobalSvg.terminateDrag(this)) {
           case g.DONE:
-            g = c.magnetedBlockView;
+            g = a.magnetedBlockView;
             g instanceof Entry.BlockView && (g = g.block);
-            h && !g ? Entry.do("separateBlock", e) : h || g || f ? g ? ("next" === g.view.magneting ? (h = e.getLastBlock(), this.dragMode = d, c.separate(e), this.dragMode = Entry.DRAG_MODE_NONE, Entry.do("insertBlock", g, h).isPass(f), Entry.ConnectionRipple.setView(g.view).dispose()) : (Entry.do("insertBlock", e, g).isPass(f), a = !0), createjs.Sound.play("entryMagneting")) : Entry.do("moveBlock", e).isPass(f) : e.getThread().view.isGlobal() ? Entry.do("moveBlock", e) : Entry.do("separateBlock", 
+            h && !g ? Entry.do("separateBlock", e) : h || g || f ? g ? ("next" === g.view.magneting ? (h = e.getLastBlock(), this.dragMode = d, a.separate(e), this.dragMode = Entry.DRAG_MODE_NONE, Entry.do("insertBlock", g, h).isPass(f), Entry.ConnectionRipple.setView(g.view).dispose()) : (Entry.do("insertBlock", e, g).isPass(f), b = !0), createjs.Sound.play("entryMagneting")) : Entry.do("moveBlock", e).isPass(f) : e.getThread().view.isGlobal() ? Entry.do("moveBlock", e) : Entry.do("separateBlock", 
             e);
             break;
           case g.RETURN:
@@ -18024,8 +18449,8 @@ Entry.BlockView.pngMap = {};
           case g.REMOVE:
             createjs.Sound.play("entryDelete"), f ? this.block.destroy(!1, !0) : this.block.doDestroyBelow(!1);
         }
-        c.setMagnetedBlock(null);
-        a && Entry.ConnectionRipple.setView(e.view).dispose();
+        a.setMagnetedBlock(null);
+        b && Entry.ConnectionRipple.setView(e.view).dispose();
       }
     }
     this.destroyShadow();
@@ -18033,24 +18458,24 @@ Entry.BlockView.pngMap = {};
     this.dominate();
   };
   a._updateCloseBlock = function() {
-    var a = this.getBoard(), c;
+    var b = this.getBoard(), a;
     if (this._skeleton.magnets) {
       for (var d in this.magnet) {
-        if (c = "next" === d ? this.getBoard().getNearestMagnet(this.x, this.y + this.getBelowHeight(), d) : this.getBoard().getNearestMagnet(this.x, this.y, d)) {
-          return a.setMagnetedBlock(c.view, d);
+        if (a = "next" === d ? this.getBoard().getNearestMagnet(this.x, this.y + this.getBelowHeight(), d) : this.getBoard().getNearestMagnet(this.x, this.y, d)) {
+          return b.setMagnetedBlock(a.view, d);
         }
       }
-      a.setMagnetedBlock(null);
+      b.setMagnetedBlock(null);
     }
   };
   a.dominate = function() {
     this.block.getThread().view.dominate();
   };
   a.getSvgRoot = function() {
-    for (var a = this.getBoard().svgBlockGroup, c = this.svgGroup;c.parentNode !== a;) {
-      c = c.parentNode;
+    for (var b = this.getBoard().svgBlockGroup, a = this.svgGroup;a.parentNode !== b;) {
+      a = a.parentNode;
     }
-    return c;
+    return a;
   };
   a.getBoard = function() {
     return this._board;
@@ -18058,20 +18483,20 @@ Entry.BlockView.pngMap = {};
   a._setBoard = function() {
     this._board = this._board.code.board;
   };
-  a.destroy = function(a) {
+  a.destroy = function(b) {
     $(this.svgGroup).unbind(".blockViewMousedown");
     this._destroyObservers();
-    var c = this.svgGroup;
-    a ? $(c).fadeOut(100, function() {
-      c.remove();
-    }) : c.remove();
-    this._contents.forEach(function(a) {
-      a.constructor !== Entry.Block && a.destroy();
+    var a = this.svgGroup;
+    b ? $(a).fadeOut(100, function() {
+      a.remove();
+    }) : a.remove();
+    this._contents.forEach(function(b) {
+      b.constructor !== Entry.Block && b.destroy();
     });
     var d = this.block;
-    a = d.events.viewDestroy;
-    "workspace" == Entry.type && a && !this.isInBlockMenu && a.forEach(function(a) {
-      Entry.Utils.isFunction(a) && a(d);
+    b = d.events.viewDestroy;
+    "workspace" == Entry.type && b && !this.isInBlockMenu && b.forEach(function(b) {
+      Entry.Utils.isFunction(b) && b(d);
     });
     this._schemaChangeEvent && this._schemaChangeEvent.destroy();
   };
@@ -18084,37 +18509,37 @@ Entry.BlockView.pngMap = {};
   };
   a._updateMagnet = function() {
     if (this._skeleton.magnets) {
-      var a = this._skeleton.magnets(this);
-      a.next && this._nextGroup.attr("transform", "translate(" + a.next.x + "," + a.next.y + ")");
-      this.magnet = a;
+      var b = this._skeleton.magnets(this);
+      b.next && this._nextGroup.attr("transform", "translate(" + b.next.x + "," + b.next.y + ")");
+      this.magnet = b;
       this.block.getThread().changeEvent.notify();
     }
   };
   a._updateBG = function() {
     if (this._board.dragBlock && this._board.dragBlock.dragInstance) {
-      var a = this.svgGroup;
+      var b = this.svgGroup;
       if (this.magnet.next) {
-        if (a = this.magneting) {
-          var c = this._board.dragBlock.getShadow(), d = this.getAbsoluteCoordinate(), e;
-          if ("previous" === a) {
+        if (b = this.magneting) {
+          var a = this._board.dragBlock.getShadow(), d = this.getAbsoluteCoordinate(), e;
+          if ("previous" === b) {
             e = this.magnet.next, e = "translate(" + (d.x + e.x) + "," + (d.y + e.y) + ")";
           } else {
-            if ("next" === a) {
+            if ("next" === b) {
               e = this.magnet.previous;
               var f = this._board.dragBlock.getBelowHeight();
               e = "translate(" + (d.x + e.x) + "," + (d.y + e.y - f) + ")";
             }
           }
-          $(c).attr({transform:e, display:"block"});
-          this._clonedShadow = c;
+          $(a).attr({transform:e, display:"block"});
+          this._clonedShadow = a;
           this.background && (this.background.remove(), this.nextBackground.remove(), delete this.background, delete this.nextBackground);
-          "previous" === a && (a = this._board.dragBlock.getBelowHeight() + this.offsetY, this.originalHeight = this.offsetY, this.set({offsetY:a}));
+          "previous" === b && (b = this._board.dragBlock.getBelowHeight() + this.offsetY, this.originalHeight = this.offsetY, this.set({offsetY:b}));
         } else {
-          this._clonedShadow && (this._clonedShadow.attr({display:"none"}), delete this._clonedShadow), a = this.originalHeight, void 0 !== a && (this.background && (this.background.remove(), this.nextBackground.remove(), delete this.background, delete this.nextBackground), this.set({offsetY:a}), delete this.originalHeight);
+          this._clonedShadow && (this._clonedShadow.attr({display:"none"}), delete this._clonedShadow), b = this.originalHeight, void 0 !== b && (this.background && (this.background.remove(), this.nextBackground.remove(), delete this.background, delete this.nextBackground), this.set({offsetY:b}), delete this.originalHeight);
         }
-        (a = this.block.thread.changeEvent) && a.notify();
+        (b = this.block.thread.changeEvent) && b.notify();
       } else {
-        this.magneting ? (a.attr({filter:"url(#entryBlockHighlightFilter_" + this.getBoard().suffix + ")"}), a.addClass("outputHighlight")) : (a.removeClass("outputHighlight"), a.removeAttr("filter"));
+        this.magneting ? (b.attr({filter:"url(#entryBlockHighlightFilter_" + this.getBoard().suffix + ")"}), b.addClass("outputHighlight")) : (b.removeClass("outputHighlight"), b.removeAttr("filter"));
       }
     }
   };
@@ -18158,22 +18583,22 @@ Entry.BlockView.pngMap = {};
   a._setCopyable = function() {
     this.copyable = null !== this.block.isCopyable() ? this.block.isCopyable() : void 0 !== this._skeleton.copyable ? this._skeleton.copyable : !0;
   };
-  a.bumpAway = function(a, c) {
+  a.bumpAway = function(b, a) {
     var d = this;
-    a = a || 15;
-    c ? window.setTimeout(function() {
-      d._moveBy(a, a, !1);
-    }, c) : d._moveBy(a, a, !1);
+    b = b || 15;
+    a ? window.setTimeout(function() {
+      d._moveBy(b, b, !1);
+    }, a) : d._moveBy(b, b, !1);
   };
-  a.bindPrev = function(a) {
-    if (a) {
-      if (this._toLocalCoordinate(a.view._nextGroup), (a = a.getNextBlock()) && a !== this.block) {
-        var c = this.block.getLastBlock();
-        c.view.magnet.next ? a.view._toLocalCoordinate(c.view._nextGroup) : (a.view._toGlobalCoordinate(), a.separate(), a.view.bumpAway(null, 100));
+  a.bindPrev = function(b) {
+    if (b) {
+      if (this._toLocalCoordinate(b.view._nextGroup), (b = b.getNextBlock()) && b !== this.block) {
+        var a = this.block.getLastBlock();
+        a.view.magnet.next ? b.view._toLocalCoordinate(a.view._nextGroup) : (b.view._toGlobalCoordinate(), b.separate(), b.view.bumpAway(null, 100));
       }
     } else {
-      if (a = this.block.getPrevBlock()) {
-        this._toLocalCoordinate(a.view._nextGroup), (a = this.block.getNextBlock()) && a.view && a.view._toLocalCoordinate(this._nextGroup);
+      if (b = this.block.getPrevBlock()) {
+        this._toLocalCoordinate(b.view._nextGroup), (b = this.block.getNextBlock()) && b.view && b.view._toLocalCoordinate(this._nextGroup);
       }
     }
   };
