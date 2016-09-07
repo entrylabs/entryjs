@@ -1199,16 +1199,22 @@ Entry.TextCodingUtil = function() {
 
         //inspect lists
         targets = vc.lists_ || [];
-        for (var i=0; i<targets.length; i++) {
+        for (i=0; i<targets.length; i++) {
             if (test(targets[i].name_))
                 return "리스트 이름이 공백 포함";
         }
 
         //inspect messages
         targets = vc.messages_ || [];
-        for (var i=0; i<targets.length; i++) {
+        for (i=0; i<targets.length; i++) {
             if (test(targets[i].name_))
                 return "메시지 이름이 공백 포함";
+        }
+
+        //inspect functions
+        targets = vc.functions_ || {};
+        for (i in targets) {
+            console.log(targets[i]);
         }
 
         return false;

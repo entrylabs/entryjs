@@ -12331,6 +12331,10 @@ Entry.TextCodingUtil = function() {
         return "\uba54\uc2dc\uc9c0 \uc774\ub984\uc774 \uacf5\ubc31 \ud3ec\ud568";
       }
     }
+    b = a.functions_ || {};
+    for (c in b) {
+      console.log(b[c]);
+    }
     return !1;
   };
 })(Entry.TextCodingUtil.prototype);
