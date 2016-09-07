@@ -12313,6 +12313,26 @@ Entry.TextCodingUtil = function() {
     console.log("includeEntryEventKeyBlock result", b);
     return b;
   };
+  b.isNamesIncludeSpace = function() {
+    for (var a = Entry.variableContainer, b = a.variables_ || [], c = 0;c < b.length;c++) {
+      if (/ /.test(b[c].name_)) {
+        return "\ubcc0\uc218 \uc774\ub984\uc774 \uacf5\ubc31 \ud3ec\ud568";
+      }
+    }
+    b = a.lists_ || [];
+    for (c = 0;c < b.length;c++) {
+      if (/ /.test(b[c].name_)) {
+        return "\ub9ac\uc2a4\ud2b8 \uc774\ub984\uc774 \uacf5\ubc31 \ud3ec\ud568";
+      }
+    }
+    b = a.messages_ || [];
+    for (c = 0;c < b.length;c++) {
+      if (/ /.test(b[c].name_)) {
+        return "\uba54\uc2dc\uc9c0 \uc774\ub984\uc774 \uacf5\ubc31 \ud3ec\ud568";
+      }
+    }
+    return !1;
+  };
 })(Entry.TextCodingUtil.prototype);
 Entry.BlockToJsParser = function(b) {
   this.syntax = b;

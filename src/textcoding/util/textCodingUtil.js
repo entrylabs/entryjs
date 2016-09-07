@@ -8,7 +8,7 @@ goog.provide("Entry.TextCodingUtil");
 goog.require("Entry.Queue");
 
 Entry.TextCodingUtil = function() {
-    
+
 };
 
 (function(p) {
@@ -36,7 +36,7 @@ Entry.TextCodingUtil = function() {
         result += indentedCodeArr.join("\n\t");
         result = "\t" + result.trim();//.concat('\n');
         //console.log("indent result", result);
-        
+
         return result;
     };
 
@@ -45,7 +45,7 @@ Entry.TextCodingUtil = function() {
             return true;
         }
 
-        return false; 
+        return false;
     };
 
     p.isBinaryOperator = function(value) {
@@ -53,7 +53,7 @@ Entry.TextCodingUtil = function() {
             value == "+" || value == "-" || value == "*" || value == "/") {
             return true;
         }
-        
+
         return false;
     };
 
@@ -137,14 +137,14 @@ Entry.TextCodingUtil = function() {
                 result = item.None;
 
                 found = true;
-                return result; 
+                return result;
             }
 
-            if(value == "mouse" || value == "wall" || value == "wall_up" || 
+            if(value == "mouse" || value == "wall" || value == "wall_up" ||
                value == "wall_down" || value == "wall_right" || value == "wall_left") {
                 found = true;
                 return value;
-            } 
+            }
 
             //console.log("dropdownDynamicValueConvertor check value", value, "option", option);
 
@@ -165,11 +165,11 @@ Entry.TextCodingUtil = function() {
                 var entryVariable = entryVariables[e];
                 if(entryVariable.id_ == value) {
                     result = entryVariable.name_;
-                    break; 
+                    break;
                 }
 
             }
-        } 
+        }
         else if(!found && param.menuName == "lists") {
             var entryLists = Entry.variableContainer.lists;
             //console.log("dropdownDynamicValueConvertor entryLists", entryLists);
@@ -177,11 +177,11 @@ Entry.TextCodingUtil = function() {
                 var entryList = entryLists[e];
                 if(entryList.id_ == value) {
                     result = entryList.name_;
-                    break; 
+                    break;
                 }
 
             }
-        } 
+        }
         else if(!found && param.menuName == "pictures") {
             var objects = Entry.container.getAllObjects();
             for(var o in objects) {
@@ -272,7 +272,7 @@ Entry.TextCodingUtil = function() {
 
         //console.log("binaryOperatorValueConvertor result", result);
         return result;
-    }; 
+    };
 
     p.variableListFilter = function(block, index, param) {
         console.log("paramFilter block index param", block.data.type, index, param);
@@ -289,12 +289,12 @@ Entry.TextCodingUtil = function() {
             if(index == 2) {
                 //console.log("paramFilter", eval(param));
                 result = eval(param);
-            } 
+            }
         } else if(type == "value_of_index_from_list") {
             if(index == 2) {
                 //console.log("paramFilter", eval(param));
                 result = eval(param);
-            } 
+            }
             else if(index == 4) {
                 if(this.isNumeric(param))
                     result = param - 1;
@@ -303,7 +303,7 @@ Entry.TextCodingUtil = function() {
             if(index == 2) {
                 //console.log("paramFilter", eval(param));
                 result = eval(param);
-            } 
+            }
             else if(index == 1) {
                 if(this.isNumeric(param))
                     result = param - 1;
@@ -312,7 +312,7 @@ Entry.TextCodingUtil = function() {
             if(index == 2) {
                 //console.log("paramFilter", eval(param));
                 result = eval(param);
-            } 
+            }
             else if(index == 3) {
                 if(this.isNumeric(param))
                     result = param - 1;
@@ -321,7 +321,7 @@ Entry.TextCodingUtil = function() {
             if(index == 1) {
                 //console.log("paramFilter", eval(param));
                 result = eval(param);
-            } 
+            }
             else if(index == 2) {
                 if(this.isNumeric(param))
                     result = param - 1;
@@ -330,7 +330,7 @@ Entry.TextCodingUtil = function() {
             if(index == 2) {
                 //console.log("paramFilter", eval(param));
                 result = eval(param);
-            } 
+            }
         }
 
         return result;
@@ -341,19 +341,19 @@ Entry.TextCodingUtil = function() {
         var error = {};
         error.title = "파이썬변환(Converting) 오류";
         error.message = "공백(띄어쓰기)이 포함된 변수 또는 리스트는 변환할 수 없습니다.";
-        error.line = this._blockCount; 
-        console.log("send error", error); 
-        throw error; 
+        error.line = this._blockCount;
+        console.log("send error", error);
+        throw error;
     };
 
     p.isGlobalVariableExisted = function(name) {
         var entryVariables = Entry.variableContainer.variables_;
-        for(var i in entryVariables) { 
+        for(var i in entryVariables) {
             var entryVariable = entryVariables[i];
             //console.log("TextCodingUtil updateGlobalVariable", entryVariable);
             if(entryVariable.object_ === null && entryVariable.name_ == name) {
                 return true;
-            }       
+            }
 
         }
 
@@ -362,7 +362,7 @@ Entry.TextCodingUtil = function() {
 
     p.updateGlobalVariable = function(name, value) {
         var entryVariables = Entry.variableContainer.variables_;
-        for(var i in entryVariables) { 
+        for(var i in entryVariables) {
             var entryVariable = entryVariables[i];
             //console.log("TextCodingUtil updateGlobalVariable", entryVariable);
             if(entryVariable.object_ === null && entryVariable.name_ == name) {
@@ -375,12 +375,12 @@ Entry.TextCodingUtil = function() {
                     name: name,
                     isCloud: entryVariable.isClud_,
                 };
-                
+
                 entryVariable.syncModel_(variable);
                 Entry.variableContainer.updateList();
-                
+
                 break;
-            }       
+            }
         }
     };
 
@@ -402,12 +402,12 @@ Entry.TextCodingUtil = function() {
 
     p.isLocalVariableExisted = function(name, object) {
         var entryVariables = Entry.variableContainer.variables_;
-        for(var i in entryVariables) { 
+        for(var i in entryVariables) {
             var entryVariable = entryVariables[i];
             //console.log("TextCodingUtil updateGlobalVariable", entryVariable);
             if(entryVariable.object_ === object.id && entryVariable.name_ == name) {
                 return true;
-            }       
+            }
 
         }
 
@@ -416,7 +416,7 @@ Entry.TextCodingUtil = function() {
 
     p.updateLocalVariable = function(name, value, object) {
         var entryVariables = Entry.variableContainer.variables_;
-        for(var i in entryVariables) { 
+        for(var i in entryVariables) {
             var entryVariable = entryVariables[i];
             //console.log("TextCodingUtil updateGlobalVariable", entryVariable);
             if(entryVariable.object_ === object.id && entryVariable.name_ == name) {
@@ -429,12 +429,12 @@ Entry.TextCodingUtil = function() {
                     name: name,
                     isCloud: entryVariable.isClud_,
                 };
-                
+
                 entryVariable.syncModel_(variable);
                 Entry.variableContainer.updateList();
-                
+
                 break;
-            }       
+            }
         }
     };
 
@@ -472,12 +472,12 @@ Entry.TextCodingUtil = function() {
 
     p.isGlobalListExisted = function(name) {
         var entryLists = Entry.variableContainer.lists_;
-        for(var i in entryLists) { 
+        for(var i in entryLists) {
             var entryList = entryLists[i];
             //console.log("TextCodingUtil entryList", entryList);
             if(entryList.object_ === null && entryList.name_ == name) {
                 return true;
-            }       
+            }
         }
 
         return false;
@@ -485,7 +485,7 @@ Entry.TextCodingUtil = function() {
 
     p.updateGlobalList = function(name, array) {
         var entryLists = Entry.variableContainer.lists_;
-        for(var i in entryLists) { 
+        for(var i in entryLists) {
             var entryList = entryLists[i];
             //console.log("TextCodingUtil entryList", entryList);
             if(entryList.object_ === null && entryList.name_ == name) {
@@ -500,13 +500,13 @@ Entry.TextCodingUtil = function() {
                         height: entryList.height_,
                         array: array,
                     };
-                    
+
                 entryList.syncModel_(list);
                 entryList.updateView();
                 Entry.variableContainer.updateList();
-                
+
                 break;
-            }       
+            }
         }
     };
 
@@ -529,12 +529,12 @@ Entry.TextCodingUtil = function() {
     p.isLocalListExisted = function(name, object) {
         //console.log("TextCodingUtil isLocalListExisted", name, object);
         var entryLists = Entry.variableContainer.lists_;
-        for(var i in entryLists) { 
+        for(var i in entryLists) {
             var entryList = entryLists[i];
             //console.log("TextCodingUtil entryList", entryList);
             if(entryList.object_ === object.id && entryList.name_ == name) {
                 return true;
-            }       
+            }
         }
 
         return false;
@@ -542,7 +542,7 @@ Entry.TextCodingUtil = function() {
 
     p.updateLocalList = function(name, array, object) {
         var entryLists = Entry.variableContainer.lists_;
-        for(var i in entryLists) { 
+        for(var i in entryLists) {
             var entryList = entryLists[i];
             //console.log("TextCodingUtil entryList", entryList);
             if(entryList.object_ === object.id && entryList.name_ == name) {
@@ -557,13 +557,13 @@ Entry.TextCodingUtil = function() {
                         height: entryList.height_,
                         array: array,
                     };
-                    
+
                 entryList.syncModel_(list);
                 entryList.updateView();
                 Entry.variableContainer.updateList();
-                
+
                 break;
-            }       
+            }
         }
     };
 
@@ -600,14 +600,14 @@ Entry.TextCodingUtil = function() {
     };
 
     p.isLocalType = function(block, id) {
-        if(block.data.type == "get_variable" || 
-            block.data.type == "set_variable" || 
+        if(block.data.type == "get_variable" ||
+            block.data.type == "set_variable" ||
             block.data.type == "change_variable" ) {
-            
+
             if(this.isLocalVariable(id))
                 return true;
-                
-        } else if(block.data.type == "value_of_index_from_list" || 
+
+        } else if(block.data.type == "value_of_index_from_list" ||
             block.data.type == "add_value_to_list" ||
             block.data.type == "remove_value_from_list" ||
             block.data.type == "insert_value_to_list" ||
@@ -622,17 +622,17 @@ Entry.TextCodingUtil = function() {
 
     p.isEventBlock = function(block) {
         var blockType = block.data.type;
-        if( blockType == "when_run_button_click" || 
-            blockType == "when_some_key_pressed" || 
-            blockType == "mouse_clicked" || 
-            blockType == "mouse_click_cancled" || 
-            blockType == "when_object_click" || 
-            blockType == "when_object_click_canceled" || 
-            blockType == "when_message_cast" || 
+        if( blockType == "when_run_button_click" ||
+            blockType == "when_some_key_pressed" ||
+            blockType == "mouse_clicked" ||
+            blockType == "mouse_click_cancled" ||
+            blockType == "when_object_click" ||
+            blockType == "when_object_click_canceled" ||
+            blockType == "when_message_cast" ||
             blockType == "when_scene_start" ||
             blockType == "when_clone_start") {
             return true;
-        } 
+        }
 
         return false;
     };
@@ -645,7 +645,7 @@ Entry.TextCodingUtil = function() {
         var tokens = syntax.split(paramReg);
 
         var result = '';
-        for (var i = 0; i < tokens.length; i++) { 
+        for (var i = 0; i < tokens.length; i++) {
             var token = tokens[i];
             if (paramReg.test(token)) {
                 result += 'event';
@@ -657,105 +657,105 @@ Entry.TextCodingUtil = function() {
         return result;
     };
 
-    p.isNoPrintBlock = function(block) { 
+    p.isNoPrintBlock = function(block) {
         var blockType = block.data.type;
 
         return false;
     };
 
-    p.entryEventFuncFilter = function(threads) { 
+    p.entryEventFuncFilter = function(threads) {
         var result;
         var eventFound = false;
         var threadArr = threads.split('\n');
-        
+
         for(var i in threadArr) {
-                var thread = threadArr[i].trim(); 
-                
-                if( thread == "def entry_event_start():" || 
-                    thread == "def entry_event_mouse_down():" || 
-                    thread == "def entry_event_mouse_up():" || 
-                    thread == "def entry_event_object_down():" || 
-                    thread == "def entry_event_object_up():" || 
-                    thread == "def entry_event_scene_start():" || 
+                var thread = threadArr[i].trim();
+
+                if( thread == "def entry_event_start():" ||
+                    thread == "def entry_event_mouse_down():" ||
+                    thread == "def entry_event_mouse_up():" ||
+                    thread == "def entry_event_object_down():" ||
+                    thread == "def entry_event_object_up():" ||
+                    thread == "def entry_event_scene_start():" ||
                     thread == "def entry_event_clone_create():") {
-                
+
                     tokens = thread.split("def");
                     thread = tokens[1].substring(0, tokens[1].length-1).trim();
                     threadArr[i] = thread;
                     eventFound = true;
-                } 
-                else if(new RegExp(/^def entry_event_key(.+):$/).test(thread) || 
+                }
+                else if(new RegExp(/^def entry_event_key(.+):$/).test(thread) ||
                     new RegExp(/^def entry_event_signal(.+):$/).test(thread)) {
-                    
+
                     tokens = thread.split("def");
                     thread = tokens[1].substring(0, tokens[1].length-1).trim();
                     threadArr[i] = thread;
                     eventFound = true;
-                } 
+                }
                 else {
                     if(eventFound) {
                         var thread = threadArr[i];
                         thread = thread.replace('\t', '');
                         threadArr[i] = thread;
                     }
-                }  
+                }
         }
 
         result = threadArr.join('\n');
         return result;
     };
 
-    p.eventBlockSyntaxFilter = function(name) { 
-        var result;     
-        if( name == "entry_event_start" || 
-            name == "entry_event_key" || 
-            name == "entry_event_mouse_down" || 
-            name == "entry_event_mouse_up" || 
+    p.eventBlockSyntaxFilter = function(name) {
+        var result;
+        if( name == "entry_event_start" ||
+            name == "entry_event_key" ||
+            name == "entry_event_mouse_down" ||
+            name == "entry_event_mouse_up" ||
             name == "entry_event_object_down" ||
-            name == "entry_event_object_up" ||  
-            name == "entry_event_signal" || 
-            name == "entry_event_scene_start" || 
+            name == "entry_event_object_up" ||
+            name == "entry_event_signal" ||
+            name == "entry_event_scene_start" ||
             name == "entry_event_clone_create") {
-            
+
             name = "def " + name;
             result = name;
             return name;
         }
 
         return result;
-            
+
     };
 
 
     p.isEntryEventFunc = function(name) {
-        if( name == "def entry_event_start" || 
-            name == "def entry_event_key" || 
-            name == "def entry_event_mouse_down" || 
-            name == "def entry_event_mouse_up" || 
-            name == "def entry_event_object_down" || 
-            name == "def entry_event_object_up" || 
-            name == "def entry_event_signal" || 
-            name == "def entry_event_scene_start" || 
+        if( name == "def entry_event_start" ||
+            name == "def entry_event_key" ||
+            name == "def entry_event_mouse_down" ||
+            name == "def entry_event_mouse_up" ||
+            name == "def entry_event_object_down" ||
+            name == "def entry_event_object_up" ||
+            name == "def entry_event_signal" ||
+            name == "def entry_event_scene_start" ||
             name == "def entry_event_clone_create") {
-            
+
             return true;
         }
 
         return false;
-            
+
     };
 
     p.isEntryEventFuncName = function(name) {
-        if( name == "entry_event_start" || 
-            name == "entry_event_key" || 
-            name == "entry_event_mouse_down" || 
-            name == "entry_event_mouse_up" || 
+        if( name == "entry_event_start" ||
+            name == "entry_event_key" ||
+            name == "entry_event_mouse_down" ||
+            name == "entry_event_mouse_up" ||
             name == "entry_event_object_down" ||
-            name == "entry_event_object_up" || 
-            name == "entry_event_signal" || 
-            name == "entry_event_scene_start" || 
+            name == "entry_event_object_up" ||
+            name == "entry_event_signal" ||
+            name == "entry_event_scene_start" ||
             name == "entry_event_clone_create") {
-            
+
             return true;
         }
 
@@ -777,7 +777,7 @@ Entry.TextCodingUtil = function() {
                 this._funcParamQ.enqueue(param);
             }
 
-            var result = this.searchFuncDefParam(block.data.params[1]);  
+            var result = this.searchFuncDefParam(block.data.params[1]);
             return result;
         }
         else {
@@ -793,18 +793,18 @@ Entry.TextCodingUtil = function() {
                     if(block.data.type == "function_field_string" || block.data.type == "function_field_boolean") {
                         this._funcParamQ.enqueue(param);
 
-                    } 
+                    }
                 } else if(block.data.type == "function_field_label") {
                     var name = block.data.params[0];
                     this._funcNameQ.enqueue(name);
                 }
             }
             if(block.data.params[1]){
-                var result = this.searchFuncDefParam(block.data.params[1]);  
+                var result = this.searchFuncDefParam(block.data.params[1]);
 
                 if(result.data.params[0].data) {
                     var param = result.data.params[0].data.type;
-                    
+
                     if(result.data.type == "function_field_string" || result.data.type == "function_field_boolean") {
                         this._funcParamQ.enqueue(param);
                     }
@@ -813,17 +813,17 @@ Entry.TextCodingUtil = function() {
                 if(result.data.params[1]) {
                     if(result.data.params[1].data.params[0].data) {
                         var param = result.data.params[1].data.params[0].data.type;
-                                        
+
                         if(result.data.params[1].data.type == "function_field_string" || result.data.params[1].data.type == "function_field_boolean") {
                             this._funcParamQ.enqueue(param);
-                        } 
+                        }
                     }
                 }
             }
         }
 
         return result;
-        
+
     };
 
     p.getLastParam = function(funcBlock) {
@@ -839,7 +839,7 @@ Entry.TextCodingUtil = function() {
 
     p.isFuncContentsMatch = function(blockFuncContents, textFuncStatements, paramMap) {
         console.log("blockFuncContents, textFuncStatements, paramMap", blockFuncContents, textFuncStatements, paramMap);
-        var matchFlag = true; 
+        var matchFlag = true;
         for(var i = 0; i < blockFuncContents.length; i++) {
             if(!matchFlag)
                 break;
@@ -864,18 +864,18 @@ Entry.TextCodingUtil = function() {
                 var textFuncStatementParams = textFuncStatement.params;
                 var blockFuncContentParams = blockFuncContent.data.params;
                 var cleansingParams = [];
-                if(textFuncStatementParams == undefined || textFuncStatementParams == null) 
+                if(textFuncStatementParams == undefined || textFuncStatementParams == null)
                     textFuncStatementParams = [];
                 if(blockFuncContentParams == undefined || blockFuncContentParams == null)
                     blockFuncContentParams = [];
-                
+
                 blockFuncContentParams.map(function(blockFuncContentParam, index) {
                     if(blockFuncContentParam)
                         cleansingParams.push(blockFuncContentParam);
                 });
                 blockFuncContentParams = cleansingParams;
 
-                if(textFuncStatementParams.length == blockFuncContentParams.length) { //Statement Param Length Comparison   
+                if(textFuncStatementParams.length == blockFuncContentParams.length) { //Statement Param Length Comparison
                     matchFlag = true;
                     for(var j = 0; j < textFuncStatementParams.length; j++) {
                         if(!matchFlag)
@@ -896,23 +896,23 @@ Entry.TextCodingUtil = function() {
                                                 matchFlag = true;
                                                 break;
                                                 //console.log("Function Definition Param Found", paramMap[bfcParam], "index k", j);
-                                            }  
-                                        }   
-                                    } 
-                                    if(matchFlag) 
+                                            }
+                                        }
+                                    }
+                                    if(matchFlag)
                                         break;
                                 }
                             }
-                        } 
+                        }
                         else if(textFuncStatementParams[j].type == "True" || textFuncStatementParams[j].type == "False") {
                             if(textFuncStatementParams[j].type == blockFuncContentParams[j].type) {
                                 matchFlag = true;
-                            }      
+                            }
                         } else if(textFuncStatementParams[j].type && textFuncStatementParams[j].params) {
                             if(textFuncStatementParams[j].params[0] == blockFuncContentParams[j].data.params[0]) {
                                 matchFlag = true;
-                            }  
-                        }   
+                            }
+                        }
                     }
 
                     if(matchFlag && textFuncStatement.statements && textFuncStatement.statements.length != 0) {
@@ -922,8 +922,8 @@ Entry.TextCodingUtil = function() {
                 else {
                     matchFlag = false;
                     break;
-                } 
-            } 
+                }
+            }
             else {
                 matchFlag = false;
                 break;
@@ -948,14 +948,14 @@ Entry.TextCodingUtil = function() {
     p.hasBlockInfo = function(data, blockInfo) {
         var result = false;
         for(var key in blockInfo) {
-            var info = blockInfo[key]; 
+            var info = blockInfo[key];
             if(key == data.type) {
                 for(var j in info) {
                     var loc = info[j];
                     if(loc.start == data.start && loc.end == data.end) {
                        result = true;
                        break;
-                    } 
+                    }
                 }
             }
         }
@@ -980,7 +980,7 @@ Entry.TextCodingUtil = function() {
                 }
             }
         } else {
-            blockInfo[data.type] = []; 
+            blockInfo[data.type] = [];
 
             var loc = {};
             loc.start = data.start;
@@ -1018,7 +1018,7 @@ Entry.TextCodingUtil = function() {
             else {
                 result = syntax;
             }
-        } 
+        }
         else {
             result = syntax;
         }
@@ -1030,7 +1030,7 @@ Entry.TextCodingUtil = function() {
 
     p.isJudgementBlock = function(blockType) {
         if(blockType == "is_clicked" ||
-            blockType == "is_press_some_key" || 
+            blockType == "is_press_some_key" ||
             blockType == "reach_something" ||
             blockType == "boolean_basic_operator" ||
             blockType == "boolean_and" ||
@@ -1045,19 +1045,19 @@ Entry.TextCodingUtil = function() {
 
     p.isCalculationBlock = function(blockType) {
         if(blockType == "calc_basic" ||
-            blockType == "calc_rand" || 
+            blockType == "calc_rand" ||
             blockType == "coordinate_mouse" ||
             blockType == "coordinate_object" ||
             blockType == "get_sound_volume" ||
             blockType == "quotient_and_mod" ||
             blockType == "calc_operation" ||
-            blockType == "get_project_timer_value" || 
+            blockType == "get_project_timer_value" ||
             blockType == "get_date" ||
             blockType == "distance_something" ||
             blockType == "get_sound_duration" ||
             blockType == "length_of_string" ||
             blockType == "combine_something" ||
-            blockType == "char_at" || 
+            blockType == "char_at" ||
             blockType == "substring" ||
             blockType == "index_of_string" ||
             blockType == "replace_string" ||
@@ -1071,7 +1071,7 @@ Entry.TextCodingUtil = function() {
 
     p.isMaterialBlock = function(blockType) {
         if(blockType == "get_canvas_input_value" ||
-            blockType == "get_variable" || 
+            blockType == "get_variable" ||
             blockType == "value_of_index_from_list" ||
             blockType == "length_of_list" ||
             blockType == "is_included_in_list") {
@@ -1115,7 +1115,7 @@ Entry.TextCodingUtil = function() {
             firstParam[1] = firstParam[1].substring(1, firstParam[1].length-1);
             firstParam[1] = firstParam[1].toLowerCase();
             firstParam = firstParam.join('_');
-            
+
             result = firstParam;
         } else {
             result = syntax;
@@ -1128,7 +1128,7 @@ Entry.TextCodingUtil = function() {
         var result;
         switch(operator) {
             case '\'BIGGER\'': result = ">"; break;
-            case '\'BIGGER_EQUAL\'': result = ">="; break; 
+            case '\'BIGGER_EQUAL\'': result = ">="; break;
             case '\'EQUAL\'': result = "=="; break;
             case '\'SMALLER\'': result = "<"; break;
             case '\'SMALLER_EQUAL\'': result = "<="; break;
@@ -1141,7 +1141,7 @@ Entry.TextCodingUtil = function() {
         var result;
         switch(operator) {
             case '>': result = "BIGGER"; break;
-            case '>=': result = "BIGGER_EQUAL"; break; 
+            case '>=': result = "BIGGER_EQUAL"; break;
             case '==': result = "EQUAL"; break;
             case '<': result = "SMALLER"; break;
             case '<=': result = "SMALLER_EQUAL"; break;
@@ -1187,5 +1187,35 @@ Entry.TextCodingUtil = function() {
 
         return result;
     };
+
+    p.isNamesIncludeSpace = function() {
+        var vc = Entry.variableContainer;
+        //inspect variables
+        var targets = vc.variables_ || [];
+        for (var i=0; i<targets.length; i++) {
+            if (test(targets[i].name_))
+                return "변수 이름이 공백 포함";
+        }
+
+        //inspect lists
+        targets = vc.lists_ || [];
+        for (var i=0; i<targets.length; i++) {
+            if (test(targets[i].name_))
+                return "리스트 이름이 공백 포함";
+        }
+
+        //inspect messages
+        targets = vc.messages_ || [];
+        for (var i=0; i<targets.length; i++) {
+            if (test(targets[i].name_))
+                return "메시지 이름이 공백 포함";
+        }
+
+        return false;
+        function test(name) {
+            return / /.test(name);
+        }
+    };
+
 
 })(Entry.TextCodingUtil.prototype);
