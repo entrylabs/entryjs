@@ -302,7 +302,7 @@ Entry.Board.DRAG_RADIUS = 5;
         this.visible = true;
     };
 
-    p.alignThreads = function() {
+    p.alignThreads = function(reDraw) {
         var domHeight = this.svgDom.height();
         var threads = this.code.getThreads();
 
@@ -313,8 +313,10 @@ Entry.Board.DRAG_RADIUS = 5;
         var left = 50;
 
         for (var i =0; i < threads.length; i++) {
-            var block = threads[i].getFirstBlock();
+            var thread = threads[i];
+            var block = thread.getFirstBlock();
             if (!block) continue;
+            reDraw && thread.view.reDraw();
             var blockView = block.view;
             var bBox = blockView.svgGroup.getBBox();
             var top = acculmulatedTop + verticalGap;
