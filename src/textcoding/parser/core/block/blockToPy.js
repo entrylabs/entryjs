@@ -451,7 +451,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
     p.FieldKeyboard = function(dataParam) {
         //console.log("FieldKeyboard Before", dataParam);
 
-        dataParam = Entry.KeyboardCode.prototype.keyCodeToChar[dataParam];
+        dataParam = Entry.KeyboardCode.keyCodeToChar[dataParam];
 
         if(!dataParam || dataParam == null)
             dataParam = "Q";
