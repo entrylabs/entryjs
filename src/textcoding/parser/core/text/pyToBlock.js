@@ -2850,6 +2850,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             result = targetFuncId; 
         } 
         else if (foundFlag && !matchFlag) {
+            console.log("this is function changed...");
             var targetFunc = Entry.variableContainer.functions_[targetFuncId];
             var thread = targetFunc.content._data[0];
             thread._data.splice(1, thread._data.length-1);

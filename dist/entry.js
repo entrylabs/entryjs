@@ -12131,7 +12131,11 @@ Entry.TextCodingUtil = function() {
   };
   b.isFuncContentsMatch = function(a, b, c) {
     console.log("blockFuncContents, textFuncStatements, paramMap", a, b, c);
-    for (var e = !0, f = 0;f < a.length && e;f++) {
+    var e = !0;
+    if (b.length != a.length) {
+      return !1;
+    }
+    for (var f = 0;f < a.length && e;f++) {
       var e = !1, g = a[f], h = b[f];
       if (g && !h) {
         e = !1;
@@ -14315,6 +14319,7 @@ Entry.PyToBlockParser = function(b) {
       b = m;
     } else {
       if (k && !l) {
+        console.log("this is function changed...");
         b = Entry.variableContainer.functions_[m];
         n = b.content._data[0];
         n._data.splice(1, n._data.length - 1);

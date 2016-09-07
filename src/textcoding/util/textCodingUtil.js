@@ -838,6 +838,12 @@ Entry.TextCodingUtil = function() {
     p.isFuncContentsMatch = function(blockFuncContents, textFuncStatements, paramMap) {
         console.log("blockFuncContents, textFuncStatements, paramMap", blockFuncContents, textFuncStatements, paramMap);
         var matchFlag = true;
+
+        if(textFuncStatements.length != blockFuncContents.length) {
+            matchFlag = false;
+            return matchFlag;
+        }
+
         for(var i = 0; i < blockFuncContents.length; i++) {
             if(!matchFlag)
                 break;
