@@ -177,8 +177,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
     };
 
     p.parse = function(code, parseMode) {
-        console.log("this.syntax", this.syntax); 
-        console.log("this._syntax_cache", this._syntax_cache); 
+        console.log("this.syntax", this.syntax);
+        console.log("this._syntax_cache", this._syntax_cache);
         var type = this._type;
         var result = null;
 
@@ -267,7 +267,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 try {
                     this._pyBlockCount = {};
                     this._pyThreadCount = 1;
-                    //this._marker.clear(); 
+                    //this._marker.clear();
 
                     var pyAstGenerator = new Entry.PyAstGenerator();
 
@@ -298,7 +298,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     threads.shift();
 
                     for(var index in threads) {
-                        var thread = threads[index]; 
+                        var thread = threads[index];
                         console.log("ttt thread", thread);
                         if(thread.length != 0 && thread != "") {
                             tCount++;
@@ -308,7 +308,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                                 ast = pyAstGenerator.generate(thread);
                             }*/
                             console.log("success??", ast);
-                            thread = Entry.TextCodingUtil.prototype.entryEventFuncFilter(thread);
+                            thread = Entry.TextCodingUtil.entryEventFuncFilter(thread);
                             console.log("real thread", thread);
                             ast = pyAstGenerator.generate(thread);
                         }
@@ -316,11 +316,11 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         if(!ast) {
                             if(this._pyThreadCount > 1) {
                                 tCount--;
-                                this._pyThreadCount--; 
+                                this._pyThreadCount--;
                             }
                             continue;
                         }
-                        
+
                         if(thread.length != 0 && thread != "") {
                             var tToken = thread.split('\n');
                             tToken.pop();
@@ -329,7 +329,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             console.log("this._pyBlockCount", this._pyBlockCount);
                         }
 
-                        if(ast.type == "Program" && ast.body.length != 0) 
+                        if(ast.type == "Program" && ast.body.length != 0)
                             astArray.push(ast);
                     }
 
@@ -338,7 +338,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
                     break;
                 } catch(error) {
-                    if (this.codeMirror) { 
+                    if (this.codeMirror) {
                         this._threeLine = false;
                         console.log("came here error", error);
                         var annotation;
@@ -363,7 +363,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                                 errorInfo.end = updateLineInfo.end;
                                 error.message = updateLineInfo.message;
                             }
-                            
+
                             annotation = {
                                 from: {line: errorInfo.line-1, ch: errorInfo.start},
                                 to: {line: errorInfo.line-1, ch: errorInfo.end}
@@ -386,7 +386,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         } else {
                             console.log("py error type 2", error);
                             var errorInfo = error;
-                            
+
                             var errorLine = this.findErrorLineForConverting(errorInfo.line);
                             errorInfo.line = errorLine;
 
@@ -395,7 +395,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             annotation.severity = "error";*/
 
                             var ch = this.findConvertingTargetChInfo(errorInfo.line);
-                            
+
                             annotation = {
                                 from: {line: errorInfo.line - 1, ch: ch.start},
                                 to: {line: errorInfo.line - 1, ch: ch.end}
@@ -404,31 +404,31 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             if(!error.message)
                                 error.message = "지원하지 않는 코드입니다.";
 
-                            error.type = 2;  
-                             
+                            error.type = 2;
+
                             /*annotation = this.getLineNumber(error.node.start, error.node.end);
                             annotation.message = error.message;
-                            annotation.severity = "block_convert_error";*/   
+                            annotation.severity = "block_convert_error";*/
                         }
 
                         console.log("annotation", annotation);
-                        
+
                         var option = {
                             className: "CodeMirror-lint-mark-error",
                             __annotation: annotation,
                             clearOnEnter: true,
                             inclusiveLeft: true,
                             inclusiveRigth: true,
-                            clearWhenEmpty: false 
+                            clearWhenEmpty: false
                         };
 
                         console.log("this._threeLine", this._threeLine);
 
-                        
+
 
                         this._marker = this.codeMirror.markText(
                             annotation.from, annotation.to, option);
-                        
+
 
                         console.log("came here error2", error);
 
@@ -445,7 +445,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                                 var errorTitle = '블록변환 오류(Converting Error)';
                         }
 
-                        line = parseInt(errorInfo.line); 
+                        line = parseInt(errorInfo.line);
 
                         if(error.message && line)
                             var errorMsg = error.message + ' \n(line: ' + (annotation.from.line+1) + '~' + (annotation.to.line+1)  + ')';
@@ -460,9 +460,9 @@ Entry.Parser = function(mode, type, cm, syntax) {
                                     var errorMsg = '블록으로 변환되는 코드인지 확인해주세요';
                             }
                         }
-                        
+
                         Entry.toast.alert(errorTitle, errorMsg);
-                        
+
                         throw error;
                     }
 
@@ -491,7 +491,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 } else {
                     result = '';
                 }*/
-                
+
 
                 result = textCode;
 
@@ -635,7 +635,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
     };
 
     p.findErrorLineForConverting = function(blockCount) {
-        console.log("blockCount", blockCount); 
+        console.log("blockCount", blockCount);
         var errorLine = 0;
 
         var contents = this.codeMirror.getValue();
@@ -647,16 +647,16 @@ Entry.Parser = function(mode, type, cm, syntax) {
             return errorLine;
         }
 
-        
+
         var index = 0;
         for(var i = 4; i < contentsArr.length; i++) {
             var line = contentsArr[i];
             console.log("ljh line", line);
             if(line.trim().length == 0 || line.trim() == "else:")
                 errorLine++;
-            else 
+            else
                 index++;
-            console.log("iiiiii", i); 
+            console.log("iiiiii", i);
             console.log("index", index, "blockCount", blockCount);
             if(index == blockCount) {
                 errorLine += index;
@@ -677,16 +677,16 @@ Entry.Parser = function(mode, type, cm, syntax) {
         var contentsArr = contents.split("\n");
 
         console.log("contentsArr1", contentsArr);
-        
+
         console.log("errorline", errorLine);
         var currentLineCount = 0;
-        console.log("this._pythre", this._pyThreadCount); 
+        console.log("this._pythre", this._pyThreadCount);
         for(var c = 1; c < this._pyThreadCount; c++) {
             console.log("aaa", this._pyBlockCount);
             var idx = c.toString();
             console.log("idx", idx);
-            var count = this._pyBlockCount[idx]; 
-            console.log("count c", count);  
+            var count = this._pyBlockCount[idx];
+            console.log("count c", count);
             currentLineCount += count;
         }
 
@@ -697,20 +697,20 @@ Entry.Parser = function(mode, type, cm, syntax) {
         for(var i = 0; i < contentsArr.length; i++) {
             var targetText = contentsArr[i];
             console.log("targetText", targetText);
-            console.log("this._pyThreadCount", this._pyThreadCount); 
+            console.log("this._pyThreadCount", this._pyThreadCount);
 
             if(targetText.trim().length != 0) {
                 if((i+1) == errorLine) {
                     result.start = 0;
                     result.end = targetText.length;
-                    break; 
+                    break;
                 }
             }
         }
-        
+
         console.log("findConvertingErrorInfo result", result);
         return result;
-        
+
     };
 
     p.findSyntaxErrorInfo = function(error) {
@@ -728,7 +728,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
         var contentsArr = contents.split("\n");
         contentsArr.shift();
         contentsArr.shift();
-        contentsArr.shift(); 
+        contentsArr.shift();
         contentsArr.shift();
 
         console.log("findSyntaxErrorInfo contentsArr1", contentsArr);
@@ -743,13 +743,13 @@ Entry.Parser = function(mode, type, cm, syntax) {
         console.log("findSyntaxErrorInfo contentsArr2", contentsArr);
 
         var currentLineCount = 0;
-        console.log("this._pythre", this._pyThreadCount); 
+        console.log("this._pythre", this._pyThreadCount);
         for(var c = 1; c < this._pyThreadCount; c++) {
             console.log("aaa", this._pyBlockCount);
             var idx = c.toString();
             console.log("idx", idx);
-            var count = this._pyBlockCount[idx]; 
-            console.log("count c", count);  
+            var count = this._pyBlockCount[idx];
+            console.log("count c", count);
             currentLineCount += count;
         }
 
@@ -762,11 +762,11 @@ Entry.Parser = function(mode, type, cm, syntax) {
         if(isNaN(column)) {
             line = contentsArr.length;
         }
-        
+
         for(var i = 0; i < contentsArr.length; i++) {
             var targetText = contentsArr[i];
             console.log("targetText", targetText);
-            console.log("this._pyThreadCount", this._pyThreadCount); 
+            console.log("this._pyThreadCount", this._pyThreadCount);
 
             if(targetText.trim().length == 0 && notShowTextLine)
                 initEmptyLine++;
@@ -782,7 +782,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 result.line = i + 1 + currentLineCount + (this._pyThreadCount-1) + initEmptyLine;
                 console.log("column", column);
                 if(column == 0 && (i+1) == 2) {
-                    console.log("type1"); 
+                    console.log("type1");
                     result.line -= 1;
                     this._threeLine = true;
                 }
@@ -795,7 +795,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     console.log("type3");
                     result.line -= 1;
                     this._threeLine = true;
-                } 
+                }
                 else if(column == 2) {
                     console.log("type4");
                     result.line -= 1;
@@ -813,19 +813,19 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 if(targetText.length == 0)
                     result.end = 5;
                 else
-                    result.end = targetText.length;  
+                    result.end = targetText.length;
 
                 break;
 
             }
         }
-        
+
         if(isNaN(column)) {
             console.log("initEmptyLine", initEmptyLine);
             result.line = currentLineCount + (this._pyThreadCount-1) + 4 + 1 + initEmptyLine;
             result.start = 0;
-            result.end = contentsArr[line-1].length; 
-            result.unknown = true; 
+            result.end = contentsArr[line-1].length;
+            result.unknown = true;
         }
 
         if(this._threeLine) {
@@ -844,7 +844,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
         console.log("findSyntaxErrorInfo result", result);
         return result;
-        
+
     };
 
     p.updateLineEmpty = function(lineNumber) {
@@ -878,7 +878,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
     p.makeCodeToThreads = function(code) {
         console.log("mct code", code);
         var codeArr = code.split("\n");
-        console.log("codeArr", codeArr); 
+        console.log("codeArr", codeArr);
         var thread = '';
         var threadArr = [];
 
