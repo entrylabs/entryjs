@@ -2726,15 +2726,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var textFuncParams = [];
         var textFuncStatements = [];
 
-        /*var idDataTokens = idData.name.split('_');
-        if(idDataTokens.length > 0) {
-            var funcName = idDataTokens.join(' ');
-            textFuncName = ' ' + funcName;
-        }
-        else {*/
-            textFuncName = idData.name;
-        //}
-
+        textFuncName = idData.name;
+        
         var funcBodyData = bodyData.data;
         for(var i in funcBodyData) {
             if(funcBodyData[i].declarations) {
