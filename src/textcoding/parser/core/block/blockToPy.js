@@ -218,7 +218,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
 
                         //console.log("Block param current block2", currentBlock);
 
-                        param = Entry.TextCodingUtil.prototype.variableFilter(block, blockParamIndex, param);
+                        param = Entry.TextCodingUtil.prototype.variableListFilter(block, blockParamIndex, param);
 
                         result += param;
 
@@ -268,8 +268,9 @@ Entry.BlockToPyParser = function(blockSyntax) {
                            !Entry.TextCodingUtil.prototype.isBinaryOperator(param))
                            param = String("\"" + param + "\""); 
 
-                        param = Entry.TextCodingUtil.prototype.variableFilter(block, blockParamIndex, param);
+                        param = Entry.TextCodingUtil.prototype.variableListFilter(block, blockParamIndex, param);
 
+                        console.log("here pa param", param);
                         //Local Type Processing
                         if(Entry.TextCodingUtil.prototype.isLocalType(currentBlock, dataParams[index]))
                             param = "self".concat('.').concat(param);
@@ -339,6 +340,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
                 }
             } else {
                 var tagIndex = 0;
+                console.log("block Token shit", blockToken);
                 var bb = blockToken.search('#');
                 if(blockToken.search('#') != -1) {
                     var tagIndex = blockToken.indexOf('#');

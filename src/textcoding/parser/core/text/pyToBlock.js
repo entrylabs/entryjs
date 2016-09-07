@@ -476,7 +476,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 structure.params = params;
                 result.params = structure.params;
             }   
-        } else { // Function Arguments
+        } else { //special param
             var args = [];
             for(var i in arguments) { 
                 var argument = arguments[i];
@@ -489,7 +489,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 if(argumentData.callee == "__pythonRuntime.utils.createParamsObj") {
                     args = argumentData.arguments;
                 }
-                else if(!argumentData.type) {
+                else if(!argumentData.type && argumentData.isCallParam) {
                     if(argument.type != "ThisExpression") {
                         var error = {};
                         error.title = "블록변환(Converting) 오류";

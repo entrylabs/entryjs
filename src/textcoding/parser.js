@@ -498,13 +498,23 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 break;
 
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
-                console.log("parser parsemode", parseMode);
-                var textCode = this._parser.Code(code, parseMode);
+                try{
+                    console.log("parser parsemode", parseMode);
+                    var textCode = this._parser.Code(code, parseMode);
 
-                if (!this._pyHinter)
-                    this._pyHinter = new Entry.PyHint();
+                    if (!this._pyHinter)
+                        this._pyHinter = new Entry.PyHint();
 
-                result = textCode;
+                    result = textCode;
+                    
+                }
+                catch(error) {
+                    var errorTitle = error.title;
+                    var errorMsg = error.message;
+                    
+                    Entry.toast.alert(errorTitle, errorMsg);
+                }
+
                 break;
         }
 

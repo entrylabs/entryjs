@@ -274,11 +274,13 @@ Entry.TextCodingUtil = function() {
         return result;
     }; 
 
-    p.variableFilter = function(block, index, param) {
-        //console.log("paramFilter block index param", block.data.type, index, param);
+    p.variableListFilter = function(block, index, param) {
+        console.log("paramFilter block index param", block.data.type, index, param);
         var result = param;
         var type = block.data.type;
         if(type == "change_variable" || type == "set_variable" || type == "get_variable" ) {
+            /*if(param.includes(" "))
+                this.variableListSpaceMessage();*/
             if(index == 1) {
                 //console.log("paramFilter", eval(param));
                 result = eval(param);
@@ -332,6 +334,16 @@ Entry.TextCodingUtil = function() {
         }
 
         return result;
+    };
+
+    p.variableListSpaceMessage = function() {
+        console.log("variableListSpaceMessage");
+        var error = {};
+        error.title = "파이썬변환(Converting) 오류";
+        error.message = "공백(띄어쓰기)이 포함된 변수 또는 리스트는 변환할 수 없습니다.";
+        error.line = this._blockCount; 
+        console.log("send error", error); 
+        throw error; 
     };
 
     p.isGlobalVariableExisted = function(name) {
