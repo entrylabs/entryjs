@@ -98,7 +98,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                    this.set({selectedBoard:this.vimBoard});
                    this.vimBoard.show();
                    this.codeToText(this.board.code, mode);
-                   this.blockMenu.renderText();
+                   this.blockMenu.renderText(function() {
+                       this.blockMenu.reDraw();
+                   }.bind(this));
                    this.board.clear();
                    //this.oldMode = this.mode;
                    this.oldTextType = this.textType;

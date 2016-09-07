@@ -20142,12 +20142,13 @@ Entry.BlockMenu = function(b, a, d, c) {
   b.show = function() {
     this.view.removeClass("entryRemove");
   };
-  b.renderText = function() {
-    var a = this.code.getThreads();
+  b.renderText = function(a) {
+    var b = this.code.getThreads();
     this.code.mode = "text";
-    for (var b = 0;b < a.length;b++) {
-      a[b].view.renderText();
+    for (var c = 0;c < b.length;c++) {
+      b[c].view.renderText();
     }
+    a && a();
   };
   b.renderBlock = function(a) {
     var b = this.code.getThreads();
@@ -24277,7 +24278,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         return;
       case Entry.Workspace.MODE_VIMBOARD:
         try {
-          this.board && this.board.hide(), this.overlayBoard && this.overlayBoard.hide(), this.set({selectedBoard:this.vimBoard}), this.vimBoard.show(), this.codeToText(this.board.code, a), this.blockMenu.renderText(), this.board.clear(), this.oldTextType = this.textType;
+          this.board && this.board.hide(), this.overlayBoard && this.overlayBoard.hide(), this.set({selectedBoard:this.vimBoard}), this.vimBoard.show(), this.codeToText(this.board.code, a), this.blockMenu.renderText(function() {
+            this.blockMenu.reDraw();
+          }.bind(this)), this.board.clear(), this.oldTextType = this.textType;
         } catch (c) {
         }
         break;
