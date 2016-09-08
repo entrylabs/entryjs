@@ -278,6 +278,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                 mode.boardType = Entry.Workspace.MODE_BOARD;
                 mode.textType = -1;
                 this.setMode(mode);
+                $('.entryModeSelector span ul li:eq(0)').triggerHandler('click');
             }
             if (keyCode == 80) { //setMode(python)
                 var mode = {};
@@ -285,6 +286,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                 mode.textType = Entry.Vim.TEXT_TYPE_PY;
                 mode.runType = Entry.Vim.WORKSPACE_MODE;
                 Entry.dispatchEvent("changeMode", mode);
+                $('.entryModeSelector span ul li:eq(1)').triggerHandler('click');
             }
         }
     };

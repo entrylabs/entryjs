@@ -12316,29 +12316,34 @@ Entry.TextCodingUtil = {};
     return b;
   };
   b.isNamesIncludeSpace = function() {
-    for (var a = Entry.variableContainer, b = a.variables_ || [], c = 0;c < b.length;c++) {
-      if (/ /.test(b[c].name_)) {
-        return "\ubcc0\uc218 \uc774\ub984\uc5d0 \uacf5\ubc31(\ub744\uc5b4\uc4f0\uae30)\uc774 \ud3ec\ud568\ub418\uc5b4 \uc788\uc2b5\ub2c8\ub2e4.";
+    var a = Entry.variableContainer;
+    if (a) {
+      for (var b = a.variables_ || [], c = 0;c < b.length;c++) {
+        if (/ /.test(b[c].name_)) {
+          return "\ubcc0\uc218 \uc774\ub984\uc5d0 \uacf5\ubc31(\ub744\uc5b4\uc4f0\uae30)\uc774 \ud3ec\ud568\ub418\uc5b4 \uc788\uc2b5\ub2c8\ub2e4.";
+        }
       }
-    }
-    b = a.lists_ || [];
-    for (c = 0;c < b.length;c++) {
-      if (/ /.test(b[c].name_)) {
-        return "\ub9ac\uc2a4\ud2b8 \uc774\ub984\uc5d0 \uacf5\ubc31(\ub744\uc5b4\uc4f0\uae30)\uc774 \ud3ec\ud568\ub418\uc5b4 \uc788\uc2b5\ub2c8\ub2e4.";
+      b = a.lists_ || [];
+      for (c = 0;c < b.length;c++) {
+        if (/ /.test(b[c].name_)) {
+          return "\ub9ac\uc2a4\ud2b8 \uc774\ub984\uc5d0 \uacf5\ubc31(\ub744\uc5b4\uc4f0\uae30)\uc774 \ud3ec\ud568\ub418\uc5b4 \uc788\uc2b5\ub2c8\ub2e4.";
+        }
       }
-    }
-    b = a.functions_ || {};
-    for (c in b) {
-      if (a = b[c], console.log("function space", a), a = a.content._data[0]._data[0], "function_create" == a.data.type) {
-        if (2 == a.params.length) {
-          if (a = a.params[0], "function_field_label" == a.data.type) {
-            if (a = a.data.params, 2 == a.length) {
-              if (void 0 == a[1]) {
-                if (/ /.test(a[0])) {
-                  return "\ud568\uc218 \uc774\ub984\uc5d0 \uacf5\ubc31(\ub744\uc5b4\uc4f0\uae30)\uc774 \ud3ec\ud568\ub418\uc5b4 \uc788\uc2b5\ub2c8\ub2e4.";
+      b = a.functions_ || {};
+      for (c in b) {
+        if (a = b[c], console.log("function space", a), a = a.content._data[0]._data[0], "function_create" == a.data.type) {
+          if (2 == a.params.length) {
+            if (a = a.params[0], "function_field_label" == a.data.type) {
+              if (a = a.data.params, 2 == a.length) {
+                if (void 0 == a[1]) {
+                  if (/ /.test(a[0])) {
+                    return "\ud568\uc218 \uc774\ub984\uc5d0 \uacf5\ubc31(\ub744\uc5b4\uc4f0\uae30)\uc774 \ud3ec\ud568\ub418\uc5b4 \uc788\uc2b5\ub2c8\ub2e4.";
+                  }
+                } else {
+                  return "\ud568\uc218 \uc774\ub984 \ub77c\ubca8\uc774 2\uac1c \uc774\uc0c1\uc73c\ub85c \uad6c\uc131\ub41c \ud568\uc218\ub97c \ud3ec\ud568\ud558\uace0 \uc788\uc2b5\ub2c8\ub2e4.";
                 }
               } else {
-                return "\ud568\uc218 \uc774\ub984 \ub77c\ubca8\uc774 2\uac1c \uc774\uc0c1\uc73c\ub85c \uad6c\uc131\ub418\uc5b4 \uc788\uc2b5\ub2c8\ub2e4.";
+                return "\uc815\uc0c1\uc801\uc774\uc9c0 \uc54a\uc740 \ud568\uc218\uac00 \ud3ec\ud568\ub418\uc5b4 \uc788\uc2b5\ub2c8\ub2e4.";
               }
             } else {
               return "\uc815\uc0c1\uc801\uc774\uc9c0 \uc54a\uc740 \ud568\uc218\uac00 \ud3ec\ud568\ub418\uc5b4 \uc788\uc2b5\ub2c8\ub2e4.";
@@ -12349,11 +12354,9 @@ Entry.TextCodingUtil = {};
         } else {
           return "\uc815\uc0c1\uc801\uc774\uc9c0 \uc54a\uc740 \ud568\uc218\uac00 \ud3ec\ud568\ub418\uc5b4 \uc788\uc2b5\ub2c8\ub2e4.";
         }
-      } else {
-        return "\uc815\uc0c1\uc801\uc774\uc9c0 \uc54a\uc740 \ud568\uc218\uac00 \ud3ec\ud568\ub418\uc5b4 \uc788\uc2b5\ub2c8\ub2e4.";
       }
+      return !1;
     }
-    return !1;
   };
 })(Entry.TextCodingUtil);
 Entry.BlockToJsParser = function(b) {
@@ -24891,7 +24894,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     if (!Entry.Utils.isInInput(a)) {
       var e = this.selectedBlockView;
       e && !e.isInBlockMenu && e.block.isDeletable() && (8 == b || 46 == b ? (Entry.do("destroyBlock", e.block), a.preventDefault()) : c && (67 == b ? e.block.copyToClipboard() : 88 == b && (a = e.block, a.copyToClipboard(), a.destroy(!0, !0), e.getBoard().setSelectedBlock(null))));
-      c && (86 == b && (c = this.selectedBoard) && c instanceof Entry.Board && Entry.clipboard && Entry.do("addThread", Entry.clipboard).value.getFirstBlock().copyToClipboard(), 66 == b && (c = {}, c.boardType = Entry.Workspace.MODE_BOARD, c.textType = -1, this.setMode(c)), 80 == b && (c = {}, c.boardType = Entry.Workspace.MODE_VIMBOARD, c.textType = Entry.Vim.TEXT_TYPE_PY, c.runType = Entry.Vim.WORKSPACE_MODE, Entry.dispatchEvent("changeMode", c)));
+      c && (86 == b && (c = this.selectedBoard) && c instanceof Entry.Board && Entry.clipboard && Entry.do("addThread", Entry.clipboard).value.getFirstBlock().copyToClipboard(), 66 == b && (c = {}, c.boardType = Entry.Workspace.MODE_BOARD, c.textType = -1, this.setMode(c), $(".entryModeSelector span ul li:eq(0)").triggerHandler("click")), 80 == b && (c = {}, c.boardType = Entry.Workspace.MODE_VIMBOARD, c.textType = Entry.Vim.TEXT_TYPE_PY, c.runType = Entry.Vim.WORKSPACE_MODE, Entry.dispatchEvent("changeMode", 
+      c), $(".entryModeSelector span ul li:eq(1)").triggerHandler("click")));
     }
   };
   b._handleChangeBoard = function() {

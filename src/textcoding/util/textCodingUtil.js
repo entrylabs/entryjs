@@ -1192,6 +1192,8 @@ Entry.TextCodingUtil = {};
 
     tu.isNamesIncludeSpace = function() { 
         var vc = Entry.variableContainer;
+        if(!vc)
+            return;
         //inspect variables
         var targets = vc.variables_ || [];
         for (var i=0; i<targets.length; i++) {
@@ -1234,7 +1236,7 @@ Entry.TextCodingUtil = {};
                                     return "함수 이름에 공백(띄어쓰기)이 포함되어 있습니다.";
                             } 
                             else {
-                                return "함수 이름 라벨이 2개 이상으로 구성되어 있습니다.";
+                                return "함수 이름 라벨이 2개 이상으로 구성된 함수를 포함하고 있습니다.";
                             }
                         }
                         else {
