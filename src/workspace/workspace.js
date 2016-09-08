@@ -267,13 +267,14 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         }
 
         if (ctrlKey) {
+            console.log("keyCode", keyCode);
             if (keyCode == 86) { //paste
                 var board = this.selectedBoard;
                 if (board && board instanceof Entry.Board && Entry.clipboard)
                     Entry.do('addThread', Entry.clipboard).value
                         .getFirstBlock().copyToClipboard();
             }
-            if (keyCode == 66) { //setMode(block) for textcoding
+            if (keyCode == 219) { //setMode(block) for textcoding
                 var message =Entry.TextCodingUtil.isNamesIncludeSpace()
                 if(message) {
                     alert(message);
@@ -286,7 +287,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                 this.setMode(mode);
                 $('.entryModeSelector span ul li:eq(0)').triggerHandler('click');
             }
-            if (keyCode == 80) { //setMode(python) for textcoding
+            if (keyCode == 221) { //setMode(python) for textcoding
                 var message =Entry.TextCodingUtil.isNamesIncludeSpace()
                 if(message) {
                     alert(message);

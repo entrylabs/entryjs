@@ -11663,8 +11663,10 @@ Entry.PyHint = function() {
     k = f.string;
     "def" == f.string ? g = g.concat(b(h, k, {extract:function(a) {
       return a.displayText;
-    }})) : /^[\w$_]*$/.test(f.string) || (f = {start:e.ch, end:e.ch, string:"", state:f.state, className:":" == f.string ? "python-type" : null});
-    if ("variable" == f.type) {
+    }})) : /^[\w$_]*$/.test(f.string) || (console.log("test", f.string), f = {start:e.ch, end:e.ch, string:"", state:f.state, className:":" == f.string ? "python-type" : null});
+    console.log("token token", f.string);
+    console.log("token type", f.type);
+    if ("variable" == f.type || "set" == f.string || "print" == f.string || "is" == f.string) {
       h = f.string, console.log("base1", h), null != h && (g = g.concat(b(d, k)), g = g.concat(b(c._global, k, {extract:function(a) {
         return a.displayText;
       }})));
@@ -24916,8 +24918,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
       var e = this.selectedBlockView;
       e && !e.isInBlockMenu && e.block.isDeletable() && (8 == b || 46 == b ? (Entry.do("destroyBlock", e.block), a.preventDefault()) : c && (67 == b ? e.block.copyToClipboard() : 88 == b && (a = e.block, a.copyToClipboard(), a.destroy(!0, !0), e.getBoard().setSelectedBlock(null))));
       if (c) {
+        console.log("keyCode", b);
         86 == b && (c = this.selectedBoard) && c instanceof Entry.Board && Entry.clipboard && Entry.do("addThread", Entry.clipboard).value.getFirstBlock().copyToClipboard();
-        if (66 == b) {
+        if (219 == b) {
           if (c = Entry.TextCodingUtil.isNamesIncludeSpace()) {
             alert(c);
             return;
@@ -24928,7 +24931,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
           this.setMode(c);
           $(".entryModeSelector span ul li:eq(0)").triggerHandler("click");
         }
-        80 == b && ((c = Entry.TextCodingUtil.isNamesIncludeSpace()) ? alert(c) : (c = {}, c.boardType = Entry.Workspace.MODE_VIMBOARD, c.textType = Entry.Vim.TEXT_TYPE_PY, c.runType = Entry.Vim.WORKSPACE_MODE, Entry.dispatchEvent("changeMode", c), $(".entryModeSelector span ul li:eq(1)").triggerHandler("click")));
+        221 == b && ((c = Entry.TextCodingUtil.isNamesIncludeSpace()) ? alert(c) : (c = {}, c.boardType = Entry.Workspace.MODE_VIMBOARD, c.textType = Entry.Vim.TEXT_TYPE_PY, c.runType = Entry.Vim.WORKSPACE_MODE, Entry.dispatchEvent("changeMode", c), $(".entryModeSelector span ul li:eq(1)").triggerHandler("click")));
       }
     }
   };

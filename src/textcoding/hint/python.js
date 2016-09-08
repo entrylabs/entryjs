@@ -40,7 +40,6 @@ Entry.PyHint = function() {
                     text: defToken + "():"
                 });
             }
-
         }
 
         var found = [], current = token.string;
@@ -49,17 +48,18 @@ Entry.PyHint = function() {
             found = found.concat(fuzzySearch(
                     defMaps, current,
                     {extract: function(e) {return e.displayText}}));
-        } 
+        }
         else if (!/^[\w$_]*$/.test(token.string)) {
-            token = {start: cur.ch, end: cur.ch, string: "", state: token.state,
-                className: token.string == ":" ? "python-type" : null};
+            console.log("test", token.string);
+                token = {start: cur.ch, end: cur.ch, string: "", state: token.state,
+                    className: token.string == ":" ? "python-type" : null};
         }
 
-        
-
+        console.log("token token", token.string);
+        console.log("token type", token.type);
         var base;
 
-        if (token.type == "variable") {
+        if (token.type == "variable" || token.string == "set" || token.string == "print" || token.string == "is") {
             base = token.string;
             console.log("base1", base);
             if (base != null) {
