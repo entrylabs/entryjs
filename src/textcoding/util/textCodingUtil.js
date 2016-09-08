@@ -1190,33 +1190,66 @@ Entry.TextCodingUtil = {};
         return result;
     };
 
-    tu.isNamesIncludeSpace = function() {
+    tu.isNamesIncludeSpace = function() { 
         var vc = Entry.variableContainer;
         //inspect variables
         var targets = vc.variables_ || [];
         for (var i=0; i<targets.length; i++) {
             if (test(targets[i].name_))
-                return "변수 이름이 공백 포함";
+                return "변수 이름에 공백(띄어쓰기)이 포함되어 있습니다.";
         }
 
         //inspect lists
         targets = vc.lists_ || [];
         for (i=0; i<targets.length; i++) {
             if (test(targets[i].name_))
-                return "리스트 이름이 공백 포함";
+                return "리스트 이름에 공백(띄어쓰기)이 포함되어 있습니다.";
         }
 
+        //this is OK...
         //inspect messages
-        targets = vc.messages_ || [];
+        /*targets = vc.messages_ || [];
         for (i=0; i<targets.length; i++) {
             if (test(targets[i].name_))
                 return "메시지 이름이 공백 포함";
-        }
+        }*/
 
         //inspect functions
         targets = vc.functions_ || {};
         for (i in targets) {
-            console.log(targets[i]);
+            var target = targets[i];
+            console.log("function space", target);
+
+            var funcThread = target.content._data[0];
+            var funcBlock = funcThread._data[0];
+            if(funcBlock.data.type == "function_create") {
+                if(funcBlock.params.length == 2) {
+                    var paramBlock = funcBlock.params[0];
+                    if(paramBlock.data.type == "function_field_label") {
+                        var paramBlockParams = paramBlock.data.params;
+                        if(paramBlockParams.length == 2) {
+                            if(paramBlockParams[1] == undefined) {
+                                var name = paramBlockParams[0];
+                                if (test(name)) 
+                                    return "함수 이름에 공백(띄어쓰기)이 포함되어 있습니다.";
+                            } 
+                            else {
+                                return "함수 이름 라벨이 2개 이상으로 구성되어 있습니다.";
+                            }
+                        }
+                        else {
+                            return "정상적이지 않은 함수가 포함되어 있습니다.";
+                        }
+                    } 
+                    else {
+                        return "정상적이지 않은 함수가 포함되어 있습니다.";
+                    }
+                } else {
+                    return "정상적이지 않은 함수가 포함되어 있습니다.";
+                }
+            } else {
+                return "정상적이지 않은 함수가 포함되어 있습니다.";
+            }
         }
 
         return false;

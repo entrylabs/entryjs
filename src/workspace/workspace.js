@@ -79,9 +79,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     p.getMode = function() {return this.mode;};
 
     p.setMode = function(mode, message){
-
-        
-        
         if (typeof mode === 'number') {
             this.mode = mode;
         } else {

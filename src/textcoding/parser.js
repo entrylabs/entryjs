@@ -442,7 +442,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             if(error.type == 1)
                                 var errorTitle = '문법 오류(Syntax Error)';
                             else if(error.type == 2)
-                                var errorTitle = '블록변환 오류(Converting Error)';
+                                var errorTitle = '지원되지 않는 코드';
                         }
 
                         line = parseInt(errorInfo.line);
@@ -455,7 +455,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             }
                             else {
                                 if(error.type == 1)
-                                    var errorMsg = '파이썬 문법을 확인해주세요';
+                                    var errorMsg = '파이썬에서 지원하지 않는 문법입니다.';
                                 else if(error.type == 2)
                                     var errorMsg = '블록으로 변환되는 코드인지 확인해주세요';
                             }
